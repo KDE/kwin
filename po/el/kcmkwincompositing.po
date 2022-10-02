@@ -1,0 +1,1014 @@
+# translation of kcmkwincompositing.po to Greek
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Spiros Georgaras <sng@hellug.gr>, 2007.
+# Toussis Manolis <manolis@koppermind.homelinux.org>, 2007, 2008, 2009.
+# George Pantsis <gpantsis@gmail.com>, 2008.
+# Petros Vidalis <p_vidalis@hotmail.com>, 2009.
+# Dimitrios Glentadakis <dglent@gmail.com>, 2011, 2012.
+# Antonis Geralis <capoiosct@gmail.com>, 2012.
+# Stelios <sstavra@gmail.com>, 2012, 2013.
+# Dimitris Kardarakos <dimkard@gmail.com>, 2014, 2015, 2016.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwincompositing\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"PO-Revision-Date: 2016-09-16 14:32+0200\n"
+"Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
+"Language-Team: Greek <kde-i18n-el@kde.org>\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 2.0\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
+#: compositing.ui:31
+#, fuzzy, kde-format
+#| msgid ""
+#| "OpenGL compositing (the default) has crashed KWin in the past.\n"
+#| "This was most likely due to a driver bug.\n"
+#| "If you think that you have meanwhile upgraded to a stable driver,\n"
+#| "you can reset this protection but be aware that this might result in an "
+#| "immediate crash!\n"
+#| "Alternatively, you might want to use the XRender backend instead."
+msgid ""
+"OpenGL compositing (the default) has crashed KWin in the past.\n"
+"This was most likely due to a driver bug.\n"
+"If you think that you have meanwhile upgraded to a stable driver,\n"
+"you can reset this protection but be aware that this might result in an "
+"immediate crash!"
+msgstr ""
+"Η σύνθεση OpenGL (η προκαθορισμένη) προκάλεσε την κατάρρευση του KWin στο "
+"παρελθόν.\n"
+"Αυτό πιθανότατα οφείλεται σε ένα σφάλμα του οδηγού.\n"
+"Αν πιστεύετε ότι έχετε πλέον αναβαθμίσει σε έναν σταθερό οδηγό,\n"
+"μπορείτε να επαναφέρετε αυτήν την προστασία αλλά \n"
+"θα πρέπει να γνωρίζετε ότι μπορεί να προκαλέσει άμεση κατάρρευση!\n"
+"Εναλλακτικά, μπορείτε να χρησιμοποιήσετε το σύστημα υποστήριξης XRender."
+
+#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
+#: compositing.ui:44
+#, kde-format
+msgid ""
+"Scale method \"Accurate\" is not supported by all hardware and can cause "
+"performance regressions and rendering artifacts."
+msgstr ""
+"Η μέθοδος κλιμάκωσης \"Ακριβείας\" δεν υποστηρίζεται από όλες τις συσκευές "
+"γραφικών και μπορεί να προκαλέσει χειροτέρευση των επιδόσεων και σφάλματα "
+"απεικόνισης."
+
+#. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
+#: compositing.ui:67
+#, kde-format
+msgid ""
+"Keeping the window thumbnail always interferes with the minimized state of "
+"windows. This can result in windows not suspending their work when minimized."
+msgstr ""
+"Η διατήρηση της εικόνας επισκόπησης παραθύρου πάντοτε επιδρά στην κατάσταση "
+"ελαχιστοποίησης των παραθύρων. Αυτό μπορεί να έχει ως αποτέλεσμα τα παράθυρα "
+"να μην μπαίνουν σε αδράνεια όταν ελαχιστοποιούνται."
+
+#. i18n: ectx: property (text), widget (QLabel, compositingLabel)
+#: compositing.ui:79
+#, fuzzy, kde-format
+#| msgid "Compositing type:"
+msgid "Compositing:"
+msgstr "Τύπος σύνθεσης:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
+#: compositing.ui:86
+#, fuzzy, kde-format
+#| msgid "Enable compositor on startup"
+msgid "Enable on startup"
+msgstr "Ενεργοποίηση του συνθέτη κατά την εκκίνηση"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:95
+#, kde-format
+msgid ""
+"Applications can set a hint to block compositing when the window is open.\n"
+" This brings performance improvements for e.g. games.\n"
+" The setting can be overruled by window-specific rules."
+msgstr ""
+"Οι εφαρμογές μπορούν να καθορίζουν μια υπόδειξη για τη φραγή της σύνθεσης "
+"όταν το παράθυρο είναι ανοιχτό\n"
+" Αυτό έχει ως αποτέλεσμα τη βελτίωση της απόδοσης π.χ. στα παιχνίδια.\n"
+" Η επιλογή μπορεί να παρακαμφθεί από κανόνες παραθύρων."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:98
+#, kde-format
+msgid "Allow applications to block compositing"
+msgstr "Να επιτρέπεται στις εφαρμογές η φραγή σύνθεσης"
+
+#. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
+#: compositing.ui:105
+#, kde-format
+msgid "Animation speed:"
+msgstr "Ταχύτητα κίνησης:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: compositing.ui:142
+#, kde-format
+msgid "Very slow"
+msgstr "Πολύ αργά"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: compositing.ui:162
+#, kde-format
+msgid "Instant"
+msgstr "Στιγμιαία"
+
+#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
+#: compositing.ui:174
+#, kde-format
+msgid "Scale method:"
+msgstr "Μέθοδος κλιμάκωσης:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:184
+#, kde-format
+msgid "Smooth"
+msgstr "Με εξομάλυνση"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:189
+#, kde-format
+msgid "Accurate"
+msgstr "Ακριβείας"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: compositing.ui:199
+#, kde-format
+msgid "Tearing prevention (\"vsync\"):"
+msgstr "Αποτροπή κοψίματος εικόνας (VSync):"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:207
+#, kde-format
+msgid "Automatic"
+msgstr "Αυτόματα"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:212
+#, kde-format
+msgid "Only when cheap"
+msgstr "Μόνο όταν είναι φθηνό"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:217
+#, kde-format
+msgid "Full screen repaints"
+msgstr "Πλήρης ανασχεδίαση οθόνης"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:222
+#, kde-format
+msgid "Re-use screen content"
+msgstr "Επαναχρησιμοποίηση περιεχομένου οθόνης"
+
+#. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
+#: compositing.ui:230
+#, kde-format
+msgid "Keep window thumbnails:"
+msgstr "Διατήρηση επισκόπησης παραθύρων:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:238
+#, kde-format
+msgid "Never"
+msgstr "Ποτέ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:243
+#, kde-format
+msgid "Only for Shown Windows"
+msgstr "Μόνο για ορατά παράθυρα"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:248
+#, kde-format
+msgid "Always"
+msgstr "Πάντα"
+
+#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
+#: compositing.ui:256
+#, kde-format
+msgid "Latency:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:264
+#, kde-format
+msgid "Force lowest latency (may cause dropped frames)"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:269
+#, kde-format
+msgid "Prefer lower latency"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:274
+#, kde-format
+msgid "Balance of latency and smoothness"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:279
+#, kde-format
+msgid "Prefer smoother animations"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:284
+#, fuzzy, kde-format
+#| msgid "Various animations"
+msgid "Force smoothest animations"
+msgstr "Διάφορες κινήσεις"
+
+#: main.cpp:79
+#, kde-format
+msgid "Re-enable OpenGL detection"
+msgstr "Επανενεργοποίηση ανίχνευσης OpenGL"
+
+#: main.cpp:135
+#, kde-format
+msgid ""
+"\"Only when cheap\" only prevents tearing for full screen changes like a "
+"video."
+msgstr ""
+"Το \"Μόνο όταν είναι φθηνό\" αποτρέπει τα κοψίματα στην εικόνα μόνο για "
+"αλλαγές πλήρους οθόνης, όπως το βίντεο."
+
+#: main.cpp:139
+#, kde-format
+msgid "\"Full screen repaints\" can cause performance problems."
+msgstr ""
+"Η \"Πλήρης ανασχεδίαση οθόνης\" μπορεί να προκαλέσει προβλήματα επιδόσεων."
+
+#: main.cpp:143
+#, kde-format
+msgid ""
+"\"Re-use screen content\" causes severe performance problems on MESA drivers."
+msgstr ""
+"Η \"Επαναχρησιμοποίηση περιεχομένου οθόνης\" προκαλεί σοβαρά προβλήματα "
+"επιδόσεων στους οδηγούς MESA."
+
+#~ msgid "Rendering backend:"
+#~ msgstr "Σύστημα υποστήριξης αποτύπωσης:"
+
+#~ msgid "OpenGL 3.1"
+#~ msgstr "OpenGL 3.1"
+
+#~ msgid "OpenGL 2.0"
+#~ msgstr "OpenGL 2.0"
+
+#~ msgid "Crisp"
+#~ msgstr "Απευθείας"
+
+#~ msgid "Smooth (slower)"
+#~ msgstr "Με εξομάλυνση (αργό)"
+
+#~ msgid "XRender"
+#~ msgstr "XRender"
+
+#~ msgctxt "OpenGL Platform Interface"
+#~ msgid "EGL"
+#~ msgstr "EGL"
+
+#~ msgctxt "OpenGL Platform Interface"
+#~ msgid "GLX"
+#~ msgstr "GLX"
+
+#~ msgid ""
+#~ "Author: %1\n"
+#~ "License: %2"
+#~ msgstr ""
+#~ "Συγγραφέας: %1\n"
+#~ "Άδεια χρήσης: %2"
+
+#~ msgid ""
+#~ "Hint: To find out or configure how to activate an effect, look at the "
+#~ "effect's settings."
+#~ msgstr ""
+#~ "Υπόδειξη: για να δείτε ή να διαμορφώσετε την ενεργοποίηση ενός εφέ, "
+#~ "ανατρέξτε στις ρυθμίσεις του."
+
+#, fuzzy
+#~| msgid "Search"
+#~ msgid "Search..."
+#~ msgstr "Αναζήτηση"
+
+#~ msgid "Configure filter"
+#~ msgstr "Διαμόρφωση φίλτρου"
+
+#~ msgid "Exclude Desktop Effects not supported by the Compositor"
+#~ msgstr ""
+#~ "Εξαίρεση των εφέ επιφάνειας εργασίας που δεν υποστηρίζονται από τον "
+#~ "συνθέτη"
+
+#~ msgid "Exclude internal Desktop Effects"
+#~ msgstr "Εξαίρεση εσωτερικών εφέ επιφάνειας εργασίας"
+
+#, fuzzy
+#~| msgid "Get New Effects ..."
+#~ msgid "Get New Desktop Effects..."
+#~ msgstr "Ανάκτηση νέων εφέ ..."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Σπύρος Γεωργαράς, Τούσης Μανώλης, Γιώργος Πάντσης"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "sng@hellug.gr, manolis@koppermind.homelinux.org, gpantsis@gmail.com"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Accessibility"
+#~ msgstr "Προσβασιμότητα"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Appearance"
+#~ msgstr "Εμφάνιση"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Candy"
+#~ msgstr "Διακόσμηση"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Focus"
+#~ msgstr "Εστίαση"
+
+#, fuzzy
+#~| msgctxt "Category of Desktop Effects, used as section header"
+#~| msgid "Virtual Desktop Switching Animation"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Show Desktop Animation"
+#~ msgstr "Εφέ εναλλαγής εικονικών επιφανειών εργασίας"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Tools"
+#~ msgstr "Εργαλεία"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Virtual Desktop Switching Animation"
+#~ msgstr "Εφέ εναλλαγής εικονικών επιφανειών εργασίας"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Management"
+#~ msgstr "Διαχείριση παραθύρων"
+
+#, fuzzy
+#~| msgctxt "Category of Desktop Effects, used as section header"
+#~| msgid "Virtual Desktop Switching Animation"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Open/Close Animation"
+#~ msgstr "Εφέ εναλλαγής εικονικών επιφανειών εργασίας"
+
+#~ msgid "KWin development team"
+#~ msgstr "Η ομάδα ανάπτυξης του KWin"
+
+#~ msgid "Experimental:"
+#~ msgstr "Πειραματικές:"
+
+#~ msgid "Enable color correction"
+#~ msgstr "Ενεργοποίηση διόρθωσης χρώματος"
+
+#~ msgid ""
+#~ "Having full screen windows bypass the compositor is not supported on "
+#~ "every hardware."
+#~ msgstr ""
+#~ "Η παράκαμψη του συνθέτη για τα παράθυρα πλήρους οθόνης δεν υποστηρίζεται "
+#~ "από όλες τις κάρτες γραφικών."
+
+#~ msgid "Expert:"
+#~ msgstr "Για προχωρημένους:"
+
+#~ msgid "Suspend compositor for full screen windows"
+#~ msgstr "Αναστολή συνθέτη για παράθυρα πλήρους οθόνης"
+
+#~ msgid "OpenGL interface:"
+#~ msgstr "Διεπαφή OpenGL:"
+
+#~ msgid ""
+#~ "EGL is not supported by all OpenGL drivers. If not supported the "
+#~ "Compositor will be disabled."
+#~ msgstr ""
+#~ "Το EGL δεν υποστηρίζεται από όλους τους οδηγούς OpenGL. Αν δεν "
+#~ "υποστηρίζεται ο συνθέτης θα απενεργοποιηθεί."
+
+#~ msgid "Animation Speed:"
+#~ msgstr "Ταχύτητα κίνησης:"
+
+#~ msgid "Scale Method:"
+#~ msgstr "Μέθοδος κλιμάκωσης:"
+
+#~ msgid "Tearing Prevention (VSync):"
+#~ msgstr "Αποτροπή κοψίματος εικόνας (VSync):"
+
+#~ msgid "Keep Window Thumbnails:"
+#~ msgstr "Διατήρηση επισκόπησης παραθύρων:"
+
+#~ msgid "Always (Breaks Animations)"
+#~ msgstr "Πάντα (Σπάει την κίνηση)"
+
+#~ msgid "OpenGL Platform Interface:"
+#~ msgstr "Διεπαφή πλατφόρμας OpenGL:"
+
+#~ msgid "Form"
+#~ msgstr "Form"
+
+#~ msgid "1 second remaining:"
+#~ msgid_plural "%1 seconds remaining:"
+#~ msgstr[0] "Απομένει 1 δευτερόλεπτο:"
+#~ msgstr[1] "Απομένουν %1 δευτερόλεπτα:"
+
+#~ msgid "Confirm Desktop Effects Change"
+#~ msgstr "Επιβεβαίωση τροποποιήσεων εφέ επιφάνειας εργασίας"
+
+#~ msgid "&Accept Configuration"
+#~ msgstr "&Αποδοχή διαμόρφωσης"
+
+#~ msgid "&Return to Previous Configuration"
+#~ msgstr "&Επιστροφή στην προηγούμενη διαμόρφωση"
+
+#~ msgid ""
+#~ "Desktop effects settings have changed.\n"
+#~ "Do you want to keep the new settings?\n"
+#~ "They will be automatically reverted in 10 seconds."
+#~ msgstr ""
+#~ "Οι ρυθμίσεις εφέ της επιφάνειας εργασίας τροποποιήθηκαν.\n"
+#~ "Επιθυμείτε να αποθηκεύσετε τις τρέχουσες ρυθμίσεις;\n"
+#~ "Θα ανακληθούν αυτόματα σε 10 δευτερόλεπτα."
+
+#~ msgctxt ""
+#~ "Action to open a dialog showing detailed information why an effect could "
+#~ "not be loaded"
+#~ msgid "Details"
+#~ msgstr "Λεπτομέρειες"
+
+#~ msgctxt "Prevent warning from bein displayed again"
+#~ msgid "Don't show again!"
+#~ msgstr "Να μην εμφανιστεί ξανά!"
+
+#~ msgid "Use GLSL shaders"
+#~ msgstr "Χρήση των « shaders » GLSL"
+
+#~ msgid "None"
+#~ msgstr "Καμία"
+
+#~ msgid "The painting is not synchronized with the screen."
+#~ msgstr "Η σχεδίαση δεν συγχρονίζεται με την οθόνη."
+
+#~ msgid ""
+#~ "Tries to re-use older buffers and if that is not possible,\n"
+#~ "picks a strategy matching your hardware."
+#~ msgstr ""
+#~ "Επιχειρεί να επαναχρησιμοποιήσει παλιές ενδιάμεσες μνήμες και αν αυτό δεν "
+#~ "είναι εφικτό,\n"
+#~ "επιλέγει μια στρατηγική που ταιριάζει με το υλικό σας."
+
+#~ msgid ""
+#~ "When major regions of the screen are updated,\n"
+#~ "the entire screen will be repainted.\n"
+#~ "Can cause tearing with small updates."
+#~ msgstr ""
+#~ "Όταν μεγάλες περιοχές της οθόνης ενημερώνονται,\n"
+#~ "όλη η οθόνη θα ανασχεδιαστεί.\n"
+#~ "Ίσως προκαλέσει διάλυση για μικρές ενημερώσεις."
+
+#~ msgid ""
+#~ "The complete screen is repainted for every frame.\n"
+#~ "Can be slow with large blurred areas."
+#~ msgstr ""
+#~ "Η πλήρης οθόνη ανασχεδιάζεται για κάθε πλαίσιο.\n"
+#~ "Ίσως να γίνεται με μειωμένη ταχύτητα για μεγάλες ασαφείς περιοχές."
+
+#~ msgid ""
+#~ "WARNING:\n"
+#~ "This strategy is usually slow with Open Source drivers.\n"
+#~ "Undamaged pixels will be copied from GL_FRONT to GL_BACK"
+#~ msgstr ""
+#~ "ΠΡΟΕΙΔΟΠΟΙΗΣΗ:\n"
+#~ "Η στρατηγική αυτή είναι συνήθως αργή με οδηγούς ανοιχτού κώδικα.\n"
+#~ "Τα άθικτα εικονοστοιχεία θα αντιγραφούν από GL_FRONT σε GL_BACK"
+
+#~ msgid "kcmkwincompositing"
+#~ msgstr "kcmkwincompositing"
+
+#~ msgid "KWin Desktop Effects Configuration Module"
+#~ msgstr "Άρθρωμα διαμόρφωσης εφέ της επιφάνειας εργασίας KWin"
+
+#~ msgid "(c) 2007 Rivo Laks"
+#~ msgstr "(c) 2007 Rivo Laks"
+
+#~ msgid "Rivo Laks"
+#~ msgstr "Rivo Laks"
+
+#~ msgid "No effect"
+#~ msgstr "Κανένα εφέ"
+
+#~ msgid ""
+#~ "Failed to activate desktop effects using the given configuration options. "
+#~ "Settings will be reverted to their previous values.\n"
+#~ "\n"
+#~ "Check your X configuration. You may also consider changing advanced "
+#~ "options, especially changing the compositing type."
+#~ msgstr ""
+#~ "Αποτυχία ενεργοποίησης των εφέ επιφάνειας εργασίας με τη χρήση της "
+#~ "δοσμένης διαμόρφωσης. Οι ρυθμίσεις θα επιστρέψουν στις προηγούμενες τιμές "
+#~ "τους.\n"
+#~ "\n"
+#~ "Ελέγξτε τη διαμόρφωση του X. Ίσως θα πρέπει κάνετε τροποποιήσεις στις "
+#~ "προχωρημένες επιλογές, ειδικότερα να τροποποιήσετε τον τύπο σύνθεσης."
+
+#~ msgid "Demos"
+#~ msgstr "Παρουσιάσεις"
+
+#~ msgid "Tests"
+#~ msgstr "Έλεγχοι"
+
+#~ msgid ""
+#~ "Desktop effects are not available on this system due to the following "
+#~ "technical issues:"
+#~ msgstr ""
+#~ "Τα εφέ της επιφάνειας εργασίας δεν είναι διαθέσιμα σε αυτό το σύστημα "
+#~ "λόγω των παρακάτω τεχνικών ζητημάτων:"
+
+#~ msgctxt ""
+#~ "Reason shown when trying to activate desktop effects and KWin (most "
+#~ "likely) crashes"
+#~ msgid "Window Manager seems not to be running"
+#~ msgstr "Ο διαχειριστής παραθύρων δε φαίνεται να εκτελείται"
+
+#~ msgid ""
+#~ "Your settings have been saved but as KDE is currently running in failsafe "
+#~ "mode desktop effects cannot be enabled at this time.\n"
+#~ "\n"
+#~ "Please exit failsafe mode to enable desktop effects."
+#~ msgstr ""
+#~ "Οι ρυθμίσεις σας έχουν αποθηκευτεί αλλά καθώς το KDE αυτή την στιγμή "
+#~ "βρίσκεται σε κατάσταση ασφαλής λειτουργίας τα εφέ της επιφάνειας εργασίας "
+#~ "δεν μπορούν να ενεργοποιηθούν αυτή την στιγμή.\n"
+#~ "Παρακαλώ βγείτε από την κατάσταση ασφαλής λειτουργίας για να μπορέσουν να "
+#~ "ενεργοποιηθούν τα εφέ της επιφάνειας εργασίας."
+
+#~ msgctxt "Error Message shown when a desktop effect could not be loaded"
+#~ msgid "One desktop effect could not be loaded."
+#~ msgid_plural "%1 desktop effects could not be loaded."
+#~ msgstr[0] "Αδυναμία φόρτωσης ενός εφέ της επιφάνειας εργασίας."
+#~ msgstr[1] "Αδυναμία φόρτωσης %1 εφέ της επιφάνειας εργασίας."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated due to unknown reason"
+#~ msgid "%1 effect failed to load due to unknown reason."
+#~ msgstr "Το %1 εφέ απέτυχε να φορτωθεί για άγνωστη αιτία."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires hardware "
+#~ "shaders"
+#~ msgid "%1 effect requires hardware support."
+#~ msgstr "Το %1 εφέ απαιτεί υποστήριξη υλικού."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires OpenGL"
+#~ msgid "%1 effect requires OpenGL."
+#~ msgstr "Το %1 εφέ απαιτεί OpenGL."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires OpenGL 2"
+#~ msgid "%1 effect requires OpenGL 2."
+#~ msgstr "Το %1 εφέ απαιτεί OpenGL 2."
+
+#~ msgctxt "Window title"
+#~ msgid "List of effects which could not be loaded"
+#~ msgstr "Η λίστα με τα εφέ τα οποία δεν κατάφεραν να φορτωθούν"
+
+#~ msgid ""
+#~ "For technical reasons it is not possible to determine all possible error "
+#~ "causes."
+#~ msgstr ""
+#~ "Για τεχνικούς λόγους δεν είναι δυνατός ο προσδιορισμός όλων των πιθανών "
+#~ "αιτιών σφαλμάτων."
+
+#~ msgctxt ""
+#~ "Error Message shown when compositing is not active after tried activation"
+#~ msgid "Desktop effect system is not running."
+#~ msgstr "Το σύστημα των εφέ της επιφάνειας εργασίας δεν εκτελείται."
+
+#~ msgid "<h1>Desktop Effects</h1>"
+#~ msgstr "<h1>Εφέ επιφάνειας εργασίας</h1>"
+
+#~ msgid "General"
+#~ msgstr "Γενικά"
+
+#~ msgid "Pressing this button can crash the desktop."
+#~ msgstr ""
+#~ "Το πάτημα αυτού του κουμπιού μπορεί να προκαλέσει την κατάρρευση της "
+#~ "επιφάνειας εργασίας"
+
+#~ msgid "I have saved my data."
+#~ msgstr "Έχω αποθηκεύσει τα δεδομένα μου."
+
+#~ msgid "Activation"
+#~ msgstr "Ενεργοποίηση"
+
+#~ msgid "Desktop effects can be toggled anytime using this shortcut:"
+#~ msgstr "Τα εφέ γίνονται ενεργά ή ανενεργά με τη συντόμευση:"
+
+#~ msgctxt "@title:group a few general options to set up desktop effects"
+#~ msgid "Simple effect setup"
+#~ msgstr "Εύκολη ρύθμιση των εφέ"
+
+#~ msgid "Improved window management"
+#~ msgstr "Βελτιωμένη διαχείριση παραθύρων"
+
+#~ msgid "Effect for desktop switching:"
+#~ msgstr "Εφέ εναλλαγής επιφάνειας εργασίας:"
+
+#~ msgid "Very Fast"
+#~ msgstr "Πολύ γρήγορα"
+
+#~ msgid "Fast"
+#~ msgstr "Γρήγορα"
+
+#~ msgid "Normal"
+#~ msgstr "Κανονικά"
+
+#~ msgid "Slow"
+#~ msgstr "Αργά"
+
+#~ msgid "Extremely Slow"
+#~ msgstr "Υπερβολικά αργά"
+
+#~ msgid ""
+#~ "You can find more effects, as well as effect-specific settings, in the "
+#~ "\"All Effects\" tab above."
+#~ msgstr ""
+#~ "Μπορείτε να βρείτε περισσότερα εφέ καθώς και τις ρυθμίσεις τους, στην "
+#~ "καρτέλα \"Όλα τα εφέ\"."
+
+#~ msgid "All Effects"
+#~ msgstr "Όλα τα εφέ"
+
+#~ msgid "Advanced"
+#~ msgstr "Για προχωρημένους"
+
+#~ msgid "OpenGL Options"
+#~ msgstr "Επιλογές OpenGL"
+
+#~ msgid ""
+#~ "<p>Activates color correction if possible, using the Kolor-Manager. "
+#~ "Requires OpenGL 2 Shaders to be enabled and Kolor-Manager to be "
+#~ "installed. May fail silently.</p><p><strong>Experimental</strong>.</p>"
+#~ msgstr ""
+#~ "<p>Ενεργοποιεί τη διόρθωση χρώματος αν είναι εφικτό, με χρήση του Kolor-"
+#~ "Manager. Απαιτεί να έχουν ενεργοποιηθεί οι OpenGL 2 Shaders και το Kolor-"
+#~ "Manager να είναι εγκατεστημένο. Ίσως να αποτύχει σιωπηρά.</"
+#~ "p><p><strong>Πειραματικό</strong>.</p>"
+
+#~ msgid "General Options"
+#~ msgstr "Γενικές επιλογές"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Crisp:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"fast\")</span> -  Pretty fast "
+#~ "on all GPUs but looks bricky</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Smooth:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"good\") </span>- linear "
+#~ "blending.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Fast enough on newer "
+#~ "nvidia GPUs and maybe others but also can be <span style=\" text-"
+#~ "decoration: underline;\">very</span> slow, you will have to try it.</p></"
+#~ "body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Απευθείας:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRender γρήγορο</span> -  Αρκετά γρήγορο σε όλες τις GPU "
+#~ "αλλά φαίνεται κοκκιδωτό</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Με εξομάλυνση:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRender ποιότητας </span>- γραμμική ανάμειξη.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Αρκετά γρήγορο στις "
+#~ "νεότερες nvidia GPU ίσως και σε άλλες αλλά μπορεί να είναι <span style=\" "
+#~ "text-decoration: underline;\">πολύ</span> αργό, θα πρέπει να το "
+#~ "δοκιμάσετε πρώτα.</p></body></html>"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Crisp:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_NEAREST</span> -  (very) fast on all GPUs but looks "
+#~ "bricky</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Smooth:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_LINEAR</span> - fast on most GPUs but a little blurry</"
+#~ "p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Accurate:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Lanczos filter, "
+#~ "requires glsl shader support.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Might be slow on weaker "
+#~ "GPUs and even cause various troubles with broken drivers (from "
+#~ "overbrightening to segfaults).</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Fall back to \"Smooth\" "
+#~ "if you have problems.</p></body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Απευθείας:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_NEAREST</span> -  (πολύ) γρήγορο σε όλες τις GPU αλλά "
+#~ "φαίνεται κοκκιδωτό</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Με εξομάλυνση:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_LINEAR</span> - γρήγορο στις περισσότερες GPU αλλά "
+#~ "φαίνεται θολό</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Ακριβείας:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Φίλτρο Lanczos, απαιτεί "
+#~ "υποστήριξη glsl shader.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Μπορεί να είναι αργό σε "
+#~ "χαμηλής απόδοσης GPU και να προκαλέσει δυσλειτουργίες με κακογραμμένους "
+#~ "οδηγούς (από προβλήματα υπερβολικής λαμπρότητας ως και την κατάρρευση.)</"
+#~ "p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Επιστρέψτε στην επιλογή "
+#~ "« Με εξομάλυνση » σε περίπτωση προβλημάτων.</p></body></html>"
+
+#~ msgid "OpenGL 1.2"
+#~ msgstr "OpenGL 1.2"
+
+#~ msgid "Qt graphics system:"
+#~ msgstr "Γραφικό σύστημα Qt:"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">It is <span style=\" "
+#~ "font-weight:600;\">strongly recommended</span> to use the <span style=\" "
+#~ "font-weight:600;\">native</span> system when using the <span style=\" "
+#~ "font-weight:600;\">XRender</span> backend.</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">On the other hand, many "
+#~ "decorations perform better with the <span style=\" font-weight:600;"
+#~ "\">raster</span> system on the <span style=\" font-weight:600;\">default "
+#~ "and generally preferred OpenGL</span> backend (though some don't - also "
+#~ "the impact here can be anything between \"slight\" and \"incredible\" "
+#~ "depending on the GPU and driver)</p></body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Συνιστάται <span style="
+#~ "\" font-weight:600;\">έντονα</span> η χρήση του <span style=\" font-"
+#~ "weight:600;\">εγγενούς</span> συστήματος όταν χρησιμοποιείται το <span "
+#~ "style=\" font-weight:600;\">XRender</span> σύστημα υποστήριξης.</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Από την άλλη πλευρά, "
+#~ "πολλές διακοσμήσεις έχουν καλύτερες επιδόσεις με το <span style=\" font-"
+#~ "weight:600;\">raster</span> σύστημα στο <span style=\" font-weight:600;"
+#~ "\">προεπιλεγμένο και γενικά προτιμώμενο OpenGL</span> σύστημα υποστήριξης "
+#~ "(αν και μερικές δεν έχουν - επίσης το αντίκτυπο εδώ μπορεί να είναι "
+#~ "οτιδήποτε μεταξύ «ελαφρύ» και «απίστευτο», ανάλογα με τη GPU και τον "
+#~ "οδηγό)</p></body></html>"
+
+#~ msgid "Native"
+#~ msgstr "Εγγενές"
+
+#~ msgid "Raster"
+#~ msgstr "Χρωματικό πλέγμα"
+
+#~ msgid ""
+#~ "If enabled all rendering will be performed with Shaders written in the "
+#~ "OpenGL Shading Language.\n"
+#~ "On legacy hardware disabling Shaders can improve the performance."
+#~ msgstr ""
+#~ "Όταν είναι ενεργοποιημένο όλες οι αποτυπώσεις θα πραγματοποιούνται με τα "
+#~ "Shaders γραμμένα στη γλώσσα των shaders του OpenGL.\n"
+#~ "Σε παλαιό υλικό η απενεργοποίηση των Shaders μπορεί να βελτιώσει τις "
+#~ "επιδόσεις."
+
+#~ msgid "Use OpenGL 2 Shaders"
+#~ msgstr "Χρήση των Open GL 2 Shaders"
+
+#~ msgid "Use VSync"
+#~ msgstr "Χρήση VSync"
+
+#~ msgid "Effect for window switching:"
+#~ msgstr "Εφέ εναλλαγής παραθύρου:"
+
+#~ msgid "Enable direct rendering"
+#~ msgstr "Ενεργοποίηση απευθείας αποτύπωσης"
+
+#~ msgid "Disable functionality checks"
+#~ msgstr "Απενεργοποίηση ελέγχων λειτουργικότητας"
+
+#~ msgid "Desktop effects are temporarily disabled"
+#~ msgstr "Τα εφέ της επιφάνειας εργασίας είναι προσωρινά απενεργοποιημένα"
+
+#~ msgid "Resume Desktop Effects"
+#~ msgstr "Επαναφορά των εφέ επιφάνειας εργασίας"
+
+#~ msgid "Desktop effects are disabled"
+#~ msgstr "Τα εφέ της επιφάνειας εργασίας είναι απενεργοποιημένα"
+
+#~ msgid "Common Settings"
+#~ msgstr "Κοινές ρυθμίσεις"
+
+#~ msgid "Compositing State"
+#~ msgstr "Κατάσταση σύνθεσης εικόνας"
+
+#~ msgid "Shadows"
+#~ msgstr "Σκιάσεις"
+
+#~ msgid "Texture From Pixmap"
+#~ msgstr "Υφή από εικόνα"
+
+#~ msgid "Shared Memory"
+#~ msgstr "Κοινόχρηστη μνήμη"
+
+#~ msgid "Fallback"
+#~ msgstr "Αναπλήρωση"
+
+#~ msgid ""
+#~ "Enabling this option allows compositing to be activated even if some of "
+#~ "the internal checks fail. Doing so may make the whole desktop unusable "
+#~ "and its use is not recommened. Use only if KWin refuses to activate "
+#~ "compositing on a system that should be capable of compositing.\n"
+#~ msgstr ""
+#~ "Ενεργοποιώντας αυτήν την επιλογή επιτρέπεται η ενεργοποίηση της "
+#~ "λειτουργίας σύνθεσης ακόμα και αν αποτύχουν μερικοί από τους εσωτερικούς "
+#~ "ελέγχους. Έτσι μπορεί να γίνει άχρηστη ολόκληρη η επιφάνεια εργασίας και "
+#~ "για αυτό δεν συνιστάται η χρήση αυτής της επιλογής. Να χρησιμοποιείται "
+#~ "μόνο αν το KWin αρνείται να ενεργοποιήσει την λειτουργία σύνθεσης σε ένα "
+#~ "σύστημα που είναι ικανό ως προς την λειτουργία αυτή.\n"
+
+#~ msgid "Nearest (fastest)"
+#~ msgstr "Γειτονιάς (γρηγορότερο)"
+
+#~ msgid "Bilinear"
+#~ msgstr "Διγραμμικό"
+
+#~ msgid "Trilinear (best quality)"
+#~ msgstr "Τριγραμμικό (καλύτερη ποιότητα)"
+
+#~ msgid "Compositing is not supported on your system."
+#~ msgstr "Η λειτουργία σύνθεσης δεν υποστηρίζεται από το σύστημά σας."
+
+#~ msgid "Compositing is active"
+#~ msgstr "Η σύνθεση εικόνας είναι ενεργή"
+
+#~ msgid "Suspend Compositing"
+#~ msgstr "Αναστολή σύνθεσης εικόνας"
+
+#~ msgid "Resume Compositing"
+#~ msgstr "Συνέχιση σύνθεσης εικόνας"
+
+#~ msgid "Compositing is disabled"
+#~ msgstr "Η σύνθεση εικόνας είναι ανενεργή"
+
+#~ msgid "All Desktops"
+#~ msgstr "Όλες οι επιφάνειες εργασίας"
+
+#~ msgid "Current Desktop"
+#~ msgstr "Τρέχουσα επιφάνεια εργασίας"
+
+#~ msgid "Cube"
+#~ msgstr "Κύβος"
+
+#~ msgid "Cylinder"
+#~ msgstr "Κύλινδρος"
+
+#~ msgid "Sphere"
+#~ msgstr "Σφαίρα"
+
+#~ msgid "Screen Edges"
+#~ msgstr "Άκρα οθόνης"
+
+#~ msgid ""
+#~ "Active screen edges allow you to activate effects by pushing your mouse "
+#~ "cursor against the edge of the screen. Here you can configure which "
+#~ "effect will get activated on each edge and corner of the screen."
+#~ msgstr ""
+#~ "Τα ενεργά άκρα οθόνης σας επιτρέπουν την ενεργοποίηση εφέ με τη κίνηση "
+#~ "του ποντικιού στα άκρα της οθόνης σας. Εδώ μπορείτε να ρυθμίσετε ακριβώς "
+#~ "το εφέ που θα ενεργοποιείται σε κάθε άκρο και γωνία της οθόνης."
+
+#~ msgid ""
+#~ "If you are looking for the setting to enable switching of desktops by "
+#~ "pushing your mouse cursor against the edge of the screen you can find it "
+#~ "in the \"Window Behavior\" advanced tab under the name of \"Active "
+#~ "Desktop Borders\"."
+#~ msgstr ""
+#~ "Αν αναζητάτε την επιλογή ενεργοποίησης εναλλαγής επιφανειών εργασίας με "
+#~ "κίνηση του ποντικιού στα άκρα της οθόνης, μπορείτε να τη βρείτε στην "
+#~ "προχωρημένη καρτέλα \"Συμπεριφορά παραθύρου\" στην επιλογή \"Ενεργά όρια "
+#~ "επιφάνειας εργασίας\"."
+
+#~ msgid "Advanced Compositing Options"
+#~ msgstr "Προχωρημένες επιλογές σύνθεσης"
+
+#~ msgid "Misc"
+#~ msgstr "Διάφορα"

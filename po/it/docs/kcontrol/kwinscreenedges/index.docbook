@@ -1,0 +1,106 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Italian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinscreenedges" lang="&language;">
+<articleinfo>
+
+<title
+>Bordi dello schermo</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Paolo</firstname
+><surname
+>Zamponi</surname
+><affiliation
+><address
+><email
+>zapaolo@email.it</email
+></address
+></affiliation
+><contrib
+>Aggiornamento della traduzione</contrib
+></othercredit
+><othercredit role="translator"
+><firstname
+>Federico</firstname
+><surname
+>Zenith</surname
+><affiliation
+><address
+><email
+>federico.zenith@member.fsf.org</email
+></address
+></affiliation
+><contrib
+>Traduzione in italiano</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>09/04/2021</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Impostazioni di sistema</keyword>
+<keyword
+>desktop</keyword>
+<keyword
+>effetti</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>I bordi attivi dello schermo permettono di attivare degli effetti spingendo il puntatore del mouse sui bordi dello schermo. Qui puoi configurare quali effetti verranno attivati su ogni bordo o angolo dello schermo. </para>
+
+<para
+>Fai clic con qualsiasi pulsante del mouse su un quadratino e seleziona un effetto nel menu contestuale. I bordi con un quadratino blu hanno già un effetto associato, un quadratino grigio indica invece che non vi è stato associato nessun effetto.</para>
+
+<para
+>Il numero di oggetti accessibili nel menu contestuale dipende dalle impostazioni nel modulo <ulink url="help:/kcontrol/kwineffects/index.html"
+> <guilabel
+>Effetti del desktop</guilabel
+></ulink
+> nella categoria <guilabel
+>Spazio di lavoro</guilabel
+>. Seleziona il tuo effetto preferito nel gruppo <guilabel
+>Gestione delle finestre</guilabel
+>. Ciò attiva gli elementi corrispondenti nel menu contestuale.</para>
+
+<para
+>Se stai cercando l'impostazione per abilitare il cambio di desktop spingendo il puntatore del mouse sui bordi dello schermo, scegli uno degli effetti di <guilabel
+>Presenta le finestre</guilabel
+> dal menu contestuale.</para>
+
+<para
+>Puoi abilitare <guilabel
+>Massimizza: Finestre trascinate al bordo superiore</guilabel
+> o <guilabel
+>Adatta: Finestre trascinate al bordo destro o sinistro</guilabel
+> ed impostare una percentuale dello schermo che attiverà l'affiancamento. </para>
+
+<para
+>Usando l'elemento <guilabel
+>Cambia desktop sul bordo</guilabel
+> configura se vuoi passare ad un altro desktop quando spingi il puntatore del mouse su un bordo dello schermo, &eg; solo quando sposti una finestra. </para>
+<para
+>Il <guilabel
+>Ritardo di attivazione</guilabel
+> è il tempo necessario in cui il puntatore del mouse deve essere spinto contro un bordo prima che l'azione venga attivata. </para>
+<para
+>Il <guilabel
+>Ritardo riattivazione</guilabel
+> è il tempo necessario dopo aver attivato un'azione perché ne possa essere attivata un'altra. </para>
+</article>

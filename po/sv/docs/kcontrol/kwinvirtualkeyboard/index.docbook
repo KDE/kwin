@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Swedish "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinvirtualkeyboard" lang="&language;">
+<articleinfo>
+
+<title
+>Virtuellt tangentbord</title>
+<authorgroup>
+<author
+><firstname
+>Yuri</firstname
+> <surname
+>Chornoivan</surname
+> </author>
+<othercredit role="translator"
+> <firstname
+>Stefan</firstname
+> <surname
+>Asserhäll</surname
+> <affiliation
+><address
+><email
+>stefan.asserhall@bredband.net</email
+></address
+></affiliation
+> <contrib
+>Översättare</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-27</date>
+<releaseinfo
+>Plasma 5.22</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systeminställningar</keyword>
+<keyword
+>virtuell</keyword>
+<keyword
+>tangentbord</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Modulen låter dig välja det virtuella tangentbordet som ska användas. Det virtuella tangentbordet aktiveras automatiskt när inget maskinvarutangentbord detekteras. </para>
+
+<para
+>Välj ett <ulink url="https://en.wikipedia.org/wiki/Virtual_keyboard"
+>virtuellt tangentbord</ulink
+> i listan eller välj <guilabel
+>Inget</guilabel
+> om du inte vill använda något virtuellt tangentbord. </para>
+
+<para
+>Det är lämpligt att installera motsvarande indatametodgränssnitt innan modulen används. </para>
+
+</article>

@@ -1,0 +1,471 @@
+# translation of kwin_clients.po to Maithili
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Sangeeta Kumari <sangeeta09@gmail.com>, 2009.
+# Rajesh Ranjan <rajesh672@gmail.com>, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2010-09-24 21:47+0530\n"
+"Last-Translator: Rajesh Ranjan <rajesh672@gmail.com>\n"
+"Language-Team: Maithili <bhashaghar@googlegroups.com>\n"
+"Language: mai\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"\n"
+"\n"
+"\n"
+"\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Tiny"
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "नन्हा"
+
+#: aurorae/src/aurorae.cpp:726
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Button size:"
+#| msgid "Normal"
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "सामान्य"
+
+#: aurorae/src/aurorae.cpp:727
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Button size:"
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "पैघ"
+
+#: aurorae/src/aurorae.cpp:728
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Button size:"
+#| msgid "Very Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "बहुत बड"
+
+#: aurorae/src/aurorae.cpp:729
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Button size:"
+#| msgid "Huge"
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "विशाल"
+
+#: aurorae/src/aurorae.cpp:730
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Very Huge"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "अत्यंत विशाल"
+
+#: aurorae/src/aurorae.cpp:731
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Oversized"
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "वृहताकार"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "कान्फिग समाद "
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "शीर्षक पंक्तिबद्धता (&A)"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "बामाँ"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "केंद्र"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "दहिन्ना"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "बटन केँ एनिमेट करू"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "ई विकल्प केँ चेक करू जँ अहाँ चाहैत छी जे शीर्षक पट्टी 3 डी रूपेँ, ओकरा पाछाँ ओकर छाया "
+#~ "सहित."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "छायायुक्त पाठ उपयोग करू (&t)"
+
+#, fuzzy
+#~| msgid "Enable animations"
+#~ msgid "Title transitions"
+#~ msgstr "एनिमेशन सक्षम करू"
+
+#, fuzzy
+#~| msgid "Decoration Options"
+#~ msgid "Hide Advanced Configuration Options"
+#~ msgstr "सजावट विकल्प"
+
+#, fuzzy
+#~| msgid "Decoration Options"
+#~ msgid "Show Advanced Configuration Options"
+#~ msgstr "सजावट विकल्प"
+
+#, fuzzy
+#~| msgid "Animate buttons"
+#~ msgid "Animations"
+#~ msgstr "बटन केँ एनिमेट करू"
+
+#, fuzzy
+#~| msgid "Actions Settings"
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "क्रिया बिन्यास"
+
+#~ msgid "Regular Expression"
+#~ msgstr "नियमित (रेगुलर) एक्सप्रेशन."
+
+#~ msgid "Window Title"
+#~ msgstr "विंडो क' शीर्षक"
+
+#~ msgid "General"
+#~ msgstr "सामान्य"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Normal"
+#~ msgstr "सामान्य"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "पैघ"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "बहुत बड"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "विशाल"
+
+#, fuzzy
+#~| msgid "Title alignment:"
+#~ msgid "Tit&le alignment:"
+#~ msgstr "शीर्षक पंक्तिबद्धता"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Button size:"
+#~| msgid "Small"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "छोट"
+
+#~ msgid "Enable animations"
+#~ msgstr "एनिमेशन सक्षम करू"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "मेनू बटन केँ डबल क्लिक कए विंडो बन्न करू"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title"
+#~ msgstr "विंडो न्यूनतम करू"
+
+#~ msgid "Shadows"
+#~ msgstr "छाया"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Window Glow"
+#~ msgstr "विंडो न्यूनतम करू"
+
+#, fuzzy
+#~| msgid "Config Dialog"
+#~ msgid "Dialog"
+#~ msgstr "कान्फिग समाद "
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Use window title"
+#~ msgstr "विंडो न्यूनतम करू"
+
+#~ msgid "Decoration Options"
+#~ msgstr "सजावट विकल्प"
+
+#~ msgctxt "outline window title"
+#~ msgid "Disabled"
+#~ msgstr "अक्षम"
+
+#~ msgctxt "outline window title"
+#~ msgid "Enabled"
+#~ msgstr "सक्षम"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title:"
+#~ msgstr "विंडो न्यूनतम करू"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Hide window title bar"
+#~ msgstr "विंडो न्यूनतम करू"
+
+#, fuzzy
+#~| msgid "Disabled"
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Disabled"
+#~ msgstr "अक्षम"
+
+#, fuzzy
+#~| msgctxt "outline window title"
+#~| msgid "Enabled"
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Enabled"
+#~ msgstr "सक्षम"
+
+#~ msgid "Move Up"
+#~ msgstr "उप्पर जाउ"
+
+#~ msgid "Move Down"
+#~ msgstr "नीच्चाँ जाउ"
+
+#~ msgid "Add"
+#~ msgstr "जोड़ू"
+
+#~ msgid "Remove"
+#~ msgstr "हटाबू"
+
+#~ msgid "Edit"
+#~ msgstr "संपादन"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Inactive Windows"
+#~ msgstr "विंडो न्यूनतम करू"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Windows"
+#~ msgstr "विंडो न्यूनतम करू"
+
+#~ msgid "Oxygen"
+#~ msgstr "आक्सीजन"
+
+#~ msgid "Help"
+#~ msgstr "मद्दति "
+
+#~ msgid "Minimize"
+#~ msgstr "छोट करू"
+
+#~ msgid "Maximize"
+#~ msgstr "पैघ करू"
+
+#~ msgid "Close"
+#~ msgstr "बन्न करू"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "आनसभ केर उप्पर राखू"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "आनसभ केर नीच्चाँ राखू"
+
+#~ msgid "On All Desktops"
+#~ msgstr "सभटा डेस्कटाप पर"
+
+#~ msgid "Shade Button"
+#~ msgstr "छाया बटन"
+
+#~ msgid "Menu"
+#~ msgstr "मेनू "
+
+#~ msgid "Not on all desktops"
+#~ msgstr "सभटा डेस्कटाप पर नहि"
+
+#~ msgid "On all desktops"
+#~ msgstr "सभटा डेस्कटाप पर"
+
+#~ msgid "Unshade"
+#~ msgstr "अछायांकित करु"
+
+#~ msgid "Shade"
+#~ msgstr "छायांकित"
+
+#~ msgid "Resize"
+#~ msgstr "आकार बदलू"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>बी II पूर्वावलोकन</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "पूर्व अवस्थामे पहुँचाबू"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "शीर्षक पट्टी रंगों केर उपयोग सँ विंडो फ्रेम बनाबू (&t)"
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "रिसाइज हैंडल बनाबू (&r)"
+
+#~ msgid "Actions Settings"
+#~ msgstr "क्रिया बिन्यास"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "मेन्यू बटन मे दोहरा-क्लिक करब पर क्रिया:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "किछु नहि करू"
+
+#~ msgid "Minimize Window"
+#~ msgstr "विंडो न्यूनतम करू"
+
+#~ msgid "Shade Window"
+#~ msgstr "छाया विंडो"
+
+#~ msgid "Close Window"
+#~ msgstr "विंडो बन्न करू"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "मेनू बटन केर दोहरा क्लिक पर कोनो क्रिया सम्बद्ध कएल जाए सकैत अछि. जँ कोनो असमंजस छी "
+#~ "तँ एकरा वहिना रहए दिअ'."
+
+#~ msgid "Laptop"
+#~ msgstr "लैपटाप"
+
+#~ msgid "Solid Color"
+#~ msgstr "ठोस रँग"
+
+#~ msgid "Radial Gradient"
+#~ msgstr "अरीय ढाल"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "संगीता कुमारी"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "sangeeta09@gmail.com"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Save"
+#~ msgstr "छायांकित"
+
+#~ msgid "Plastik"
+#~ msgstr "प्लास्टिक"
+
+#~ msgid "All Desktops"
+#~ msgstr "सभ डेस्कटॉप"
+
+#~ msgid "Above"
+#~ msgstr "उप्पर"
+
+#~ msgid "Below"
+#~ msgstr "नीच्चाँ"
+
+#~ msgid "Close Item"
+#~ msgstr "बन्न करू"
+
+#~ msgid "&Left"
+#~ msgstr "बम्माँ (&L)"
+
+#~ msgid "&Center"
+#~ msgstr "केंद्र (&C)"
+
+#~ msgid "&Right"
+#~ msgstr "दहिन्ना (&R)"
+
+#, fuzzy
+#~| msgid "Solid Color"
+#~ msgid "O&utline Color:"
+#~ msgstr "ठोस रँग"
+
+#~ msgid "Do not keep above others"
+#~ msgstr "आन केर उप्पर नहि राखू"
+
+#~ msgid "Keep above others"
+#~ msgstr "आन केर उप्पर राखू"
+
+#~ msgid "Do not keep below others"
+#~ msgstr "आन केर नीच्चाँ नहि राखू"
+
+#~ msgid "Keep below others"
+#~ msgstr "आन केर नीच्चाँ राखू"
+
+#~ msgid "Variable"
+#~ msgstr "परिवर्तनीय"
+
+#~ msgid "Maximum"
+#~ msgstr "अधिकतम"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadow style:"
+#~ msgstr "छाया"
+
+#~ msgctxt "draw separator"
+#~ msgid "Enabled"
+#~ msgstr "सक्षम"
+
+#~ msgctxt "draw separator"
+#~ msgid "Disabled"
+#~ msgstr "अक्षम"

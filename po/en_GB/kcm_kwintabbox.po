@@ -1,0 +1,412 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Andrew Coles <andrew_coles@yahoo.co.uk>, 2009, 2010.
+# Steve Allewell <steve.allewell@gmail.com>, 2014, 2018, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-15 00:48+0000\n"
+"PO-Revision-Date: 2022-07-22 16:19+0100\n"
+"Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
+"Language-Team: British English <kde-l10n-en_gb@kde.org>\n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 22.04.3\n"
+
+#: kwintabboxconfigform.cpp:77
+#, kde-format
+msgid "KWin"
+msgstr "KWin"
+
+#: layoutpreview.cpp:133
+#, kde-format
+msgid "Show Desktop"
+msgstr "Show Desktop"
+
+#: layoutpreview.cpp:163
+#, kde-format
+msgctxt "An example Desktop Name"
+msgid "Desktop 1"
+msgstr "Desktop 1"
+
+#: main.cpp:58
+#, kde-format
+msgid "Main"
+msgstr "Main"
+
+#: main.cpp:59
+#, kde-format
+msgid "Alternative"
+msgstr "Alternative"
+
+#: main.cpp:61
+#, kde-format
+msgid "Get New Task Switchers..."
+msgstr "Get New Task Switchers..."
+
+#: main.cpp:75
+#, kde-format
+msgid ""
+"Focus policy settings limit the functionality of navigating through windows."
+msgstr ""
+"Focus policy settings limit the functionality of navigating through windows."
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#: main.ui:32
+#, kde-format
+msgid "Content"
+msgstr "Content"
+
+#. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
+#: main.ui:41
+#, kde-format
+msgid "Include \"Show Desktop\" icon"
+msgstr "Include \"Show Desktop\" icon"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
+#: main.ui:55
+#, kde-format
+msgid "Recently used"
+msgstr "Recently used"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
+#: main.ui:60
+#, kde-format
+msgid "Stacking order"
+msgstr "Stacking order"
+
+#. i18n: ectx: property (text), widget (QCheckBox, oneAppWindow)
+#: main.ui:68
+#, kde-format
+msgid "Only one window per application"
+msgstr "Only one window per application"
+
+#. i18n: ectx: property (text), widget (QCheckBox, orderMinimized)
+#: main.ui:78
+#, kde-format
+msgid "Order minimized windows after unminimized windows"
+msgstr "Order minimised windows after non-minimised windows"
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: main.ui:88
+#, kde-format
+msgid "Sort order:"
+msgstr "Sort order:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: main.ui:114
+#, kde-format
+msgid "Filter windows by"
+msgstr "Filter windows by"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterDesktops)
+#: main.ui:123
+#, kde-format
+msgid "Virtual desktops"
+msgstr "Virtual desktops"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentDesktop)
+#: main.ui:167
+#, kde-format
+msgid "Current desktop"
+msgstr "Current desktop"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherDesktops)
+#: main.ui:174
+#, kde-format
+msgid "All other desktops"
+msgstr "All other desktops"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterActivities)
+#: main.ui:184
+#, kde-format
+msgid "Activities"
+msgstr "Activities"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentActivity)
+#: main.ui:228
+#, kde-format
+msgid "Current activity"
+msgstr "Current activity"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherActivities)
+#: main.ui:235
+#, kde-format
+msgid "All other activities"
+msgstr "All other activities"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterScreens)
+#: main.ui:245
+#, kde-format
+msgid "Screens"
+msgstr "Screens"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentScreen)
+#: main.ui:289
+#, kde-format
+msgid "Current screen"
+msgstr "Current screen"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherScreens)
+#: main.ui:296
+#, kde-format
+msgid "All other screens"
+msgstr "All other screens"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterMinimization)
+#: main.ui:306
+#, kde-format
+msgid "Minimization"
+msgstr "Minimisation"
+
+#. i18n: ectx: property (text), widget (QRadioButton, visibleWindows)
+#: main.ui:350
+#, kde-format
+msgid "Visible windows"
+msgstr "Visible windows"
+
+#. i18n: ectx: property (text), widget (QRadioButton, hiddenWindows)
+#: main.ui:357
+#, kde-format
+msgid "Hidden windows"
+msgstr "Hidden windows"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
+#: main.ui:396
+#, kde-format
+msgid "Shortcuts"
+msgstr "Shortcuts"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: main.ui:405 main.ui:448
+#, kde-format
+msgid "Forward"
+msgstr "Forward"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: main.ui:428
+#, kde-format
+msgid "All windows"
+msgstr "All windows"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: main.ui:438 main.ui:458
+#, kde-format
+msgid "Reverse"
+msgstr "Reverse"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: main.ui:480
+#, kde-format
+msgid "Current application"
+msgstr "Current application"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: main.ui:499
+#, kde-format
+msgid "Visualization"
+msgstr "Visualisation"
+
+#. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
+#: main.ui:529
+#, kde-format
+msgid "The effect to replace the list window when desktop effects are active."
+msgstr "The effect to replace the list window when desktop effects are active."
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
+#: main.ui:559
+#, kde-format
+msgid ""
+"The currently selected window will be highlighted by fading out all other "
+"windows. This option requires desktop effects to be active."
+msgstr ""
+"The currently selected window will be highlighted by fading out all other "
+"windows. This option requires desktop effects to be active."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
+#: main.ui:562
+#, kde-format
+msgid "Show selected window"
+msgstr "Show selected window"
+
+#, fuzzy
+#~| msgid "Show outline of selected window"
+#~ msgid "Outline selected window"
+#~ msgstr "Show outline of selected window"
+
+#~ msgid ""
+#~ "These settings are used by the \"Walk Through Windows Alternative\" "
+#~ "actions."
+#~ msgstr ""
+#~ "These settings are used by the \"Walk Through Windows Alternative\" "
+#~ "actions."
+
+#~ msgid "Walk Through Windows"
+#~ msgstr "Walk Through Windows"
+
+#~ msgid "Walk Through Windows (Reverse)"
+#~ msgstr "Walk Through Windows (Reverse)"
+
+#~ msgid "Walk Through Windows Alternative"
+#~ msgstr "Walk Through Windows Alternative"
+
+#~ msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgstr "Walk Through Windows Alternative (Reverse)"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative"
+#~ msgid "Walk Through Windows of Current Application"
+#~ msgstr "Walk Through Windows Alternative"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgid "Walk Through Windows of Current Application (Reverse)"
+#~ msgstr "Walk Through Windows Alternative (Reverse)"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative"
+#~ msgid "Walk Through Windows of Current Application Alternative"
+#~ msgstr "Walk Through Windows Alternative"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+#~ msgstr "Walk Through Windows Alternative (Reverse)"
+
+#~ msgid "Configure Layout"
+#~ msgstr "Configure Layout"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Andrew Coles"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "andrew_coles@yahoo.co.uk"
+
+#~ msgid "These settings are used by the \"Walk Through Windows\" actions."
+#~ msgstr "These settings are used by the \"Walk Through Windows\" actions."
+
+#, fuzzy
+#~| msgid "All Desktops Grouped by Applications"
+#~ msgid "All windows from all applications"
+#~ msgstr "All Desktops Grouped by Applications"
+
+#, fuzzy
+#~| msgid "Adds an entry to minimize all windows."
+#~ msgid "Exclude minimized windows"
+#~ msgstr "Adds an entry to minimise all windows."
+
+#, fuzzy
+#~| msgid "Adds an entry to minimize all windows."
+#~ msgid "Show desktop to minimize all windows"
+#~ msgstr "Adds an entry to minimise all windows."
+
+#~ msgid "Highlight selected window"
+#~ msgstr "Highlight selected window"
+
+#~ msgid "Effect:"
+#~ msgstr "Effect:"
+
+#~ msgid "Display list while switching"
+#~ msgstr "Display list while switching"
+
+#, fuzzy
+#~| msgid "Informative"
+#~ msgctxt "Name for a window switcher layout showing icon, name and desktop"
+#~ msgid "Informative"
+#~ msgstr "Informative"
+
+#, fuzzy
+#~| msgid "Compact"
+#~ msgctxt "Name for a window switcher layout showing only icon and name"
+#~ msgid "Compact"
+#~ msgstr "Compact"
+
+#, fuzzy
+#~| msgid "Text Only"
+#~ msgctxt "Name for a window switcher layout showing only the name"
+#~ msgid "Text"
+#~ msgstr "Text Only"
+
+#, fuzzy
+#~| msgid "Large Icons"
+#~ msgctxt "Name for a window switcher layout showing large icons"
+#~ msgid "Large Icons"
+#~ msgstr "Large Icons"
+
+#, fuzzy
+#~| msgid "Small Icons"
+#~ msgctxt "Name for a window switcher layout showing small icons"
+#~ msgid "Small Icons"
+#~ msgstr "Small Icons"
+
+#~ msgid "No Effect"
+#~ msgstr "No Effect"
+
+#~ msgid "Configure Layout..."
+#~ msgstr "Configure Layout..."
+
+#~ msgid "Item Layout"
+#~ msgstr "Item Layout"
+
+#~ msgid "Item layout:"
+#~ msgstr "Item layout:"
+
+#~ msgid "Layout:"
+#~ msgstr "Layout:"
+
+#~ msgid "Vertical"
+#~ msgstr "Vertical"
+
+#~ msgid "Horizontal"
+#~ msgstr "Horizontal"
+
+#~ msgid "Tabular"
+#~ msgstr "Tabular"
+
+#~ msgid "Width:"
+#~ msgstr "Width:"
+
+#~ msgid "Minimum width, as a percentage of screen width."
+#~ msgstr "Minimum width, as a percentage of screen width."
+
+#~ msgid " %"
+#~ msgstr " %"
+
+#~ msgid "Height:"
+#~ msgstr "Height:"
+
+#~ msgid "Minimum height, as a percentage of screen height."
+#~ msgstr "Minimum height, as a percentage of screen height."
+
+#~ msgid "Show Selected Item"
+#~ msgstr "Show Selected Item"
+
+#~ msgid "Selected item view:"
+#~ msgstr "Selected item view:"
+
+#~ msgid "Top"
+#~ msgstr "Top"
+
+#~ msgid "Bottom"
+#~ msgstr "Bottom"
+
+#~ msgid "Left"
+#~ msgstr "Left"
+
+#~ msgid "Right"
+#~ msgstr "Right"
+
+#~ msgid "Selected item layout:"
+#~ msgstr "Selected item layout:"
+
+#~ msgid "General"
+#~ msgstr "General"

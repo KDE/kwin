@@ -1,0 +1,54 @@
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the kwin package.
+#
+# Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2021.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2021-04-27 00:19+0000\n"
+"PO-Revision-Date: 2021-06-28 21:56+0400\n"
+"Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
+"Language-Team: ar\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"X-Generator: Lokalize 21.07.70\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "زايد السعيدي"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "zayed.alsaidi@gmail.com"
+
+#: kcmvirtualkeyboard.cpp:31
+#, kde-format
+msgid "Virtual Keyboard"
+msgstr "لوحة المفاتيح الوهميّة"
+
+#: kcmvirtualkeyboard.cpp:33
+#, kde-format
+msgid "Choose Virtual Keyboard"
+msgstr "اختر لوحة المفاتيح الوهمية"
+
+#: kcmvirtualkeyboard.cpp:70
+#, kde-format
+msgid "None"
+msgstr "بلا"
+
+#: kcmvirtualkeyboard.cpp:74
+#, kde-format
+msgid "Do not use any virtual keyboard"
+msgstr "لا تستعمل أي لوحة مفاتيح وهمية"
+
+#: package/contents/ui/main.qml:16
+#, kde-format
+msgid "This module lets you choose the virtual keyboard to use."
+msgstr "هذه الوحدة تجعلك تختار لوحة مفاتيح وهمية."

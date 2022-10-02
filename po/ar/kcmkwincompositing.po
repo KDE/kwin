@@ -1,0 +1,661 @@
+# translation of kcmkwincompositing.po to Arabic
+# translation of kcmkwincompositing.po to
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Youssef Chahibi <chahibi@gmail.com>, 2007.
+# Abdulaziz AlSharif <a.a-a.s@hotmail.com>, 2007.
+# zayed <zayed.alsaidi@gmail.com>, 2008.
+# Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2010, 2021.
+# Abdalrahim G. Fakhouri <abdilra7eem@yahoo.com>, 2014.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwincompositing\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"PO-Revision-Date: 2021-12-18 21:25+0400\n"
+"Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
+"Language-Team: ar\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 21.07.70\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
+#: compositing.ui:31
+#, kde-format
+msgid ""
+"OpenGL compositing (the default) has crashed KWin in the past.\n"
+"This was most likely due to a driver bug.\n"
+"If you think that you have meanwhile upgraded to a stable driver,\n"
+"you can reset this protection but be aware that this might result in an "
+"immediate crash!"
+msgstr ""
+"أدى التركيب في OpenGL (الافتراضي) إلى تعطل كوين في الماضي. \n"
+"كان هذا على الأرجح بسبب خطأ في المعرف. \n"
+"إذا كنت تعتقد أنك قمت في هذه الأثناء بالترقية إلى تعريف ثابت مستقر، \n"
+"فيمكنك إعادة تعيين هذه الحماية ولكن يجب أن تدرك أن هذا قد يؤدي إلى انهيار "
+"فوري!"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
+#: compositing.ui:44
+#, kde-format
+msgid ""
+"Scale method \"Accurate\" is not supported by all hardware and can cause "
+"performance regressions and rendering artifacts."
+msgstr ""
+"طريقة التحجيم \"الدقيق\" غير مدعومة من قبل جميع الأجهزة ويمكن أن تتسبب في "
+"تراجع الأداء و حدوث عيوب في العرض."
+
+#. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
+#: compositing.ui:67
+#, kde-format
+msgid ""
+"Keeping the window thumbnail always interferes with the minimized state of "
+"windows. This can result in windows not suspending their work when minimized."
+msgstr ""
+"الحفاظ على مصغر النافذة يتعارض دائمًا مع الحالة التصغير للنوافذ. يمكن أن يؤدي "
+"هذا إلى عدم تعليق النوافذ لعملهم عند تصغيره."
+
+#. i18n: ectx: property (text), widget (QLabel, compositingLabel)
+#: compositing.ui:79
+#, kde-format
+msgid "Compositing:"
+msgstr "التركيب:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
+#: compositing.ui:86
+#, kde-format
+msgid "Enable on startup"
+msgstr "مكّن عند بدء التشغيل"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:95
+#, kde-format
+msgid ""
+"Applications can set a hint to block compositing when the window is open.\n"
+" This brings performance improvements for e.g. games.\n"
+" The setting can be overruled by window-specific rules."
+msgstr ""
+"يمكن للتطبيقات تعيين تلميح لمنع التركيب عندما تكون النافذة مفتوحة. \n"
+"  يؤدي هذا إلى تحسينات في الأداء على سبيل المثال للألعاب. \n"
+"  يمكن إلغاء الإعداد من خلال القواعد الخاصة بالنافذة."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:98
+#, kde-format
+msgid "Allow applications to block compositing"
+msgstr "اسمح للتطبيقات بمنع التركيب"
+
+#. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
+#: compositing.ui:105
+#, kde-format
+msgid "Animation speed:"
+msgstr "سرعة التحريك:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: compositing.ui:142
+#, kde-format
+msgid "Very slow"
+msgstr "بطيء جدا"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: compositing.ui:162
+#, kde-format
+msgid "Instant"
+msgstr "لحظي"
+
+#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
+#: compositing.ui:174
+#, kde-format
+msgid "Scale method:"
+msgstr "طريقة التحجيم:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:184
+#, kde-format
+msgid "Smooth"
+msgstr "سَلِس"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:189
+#, kde-format
+msgid "Accurate"
+msgstr "دقيق"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: compositing.ui:199
+#, kde-format
+msgid "Tearing prevention (\"vsync\"):"
+msgstr "منع التمزيق (المزامنة العمودية vsync):"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:207
+#, kde-format
+msgid "Automatic"
+msgstr "آليّ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:212
+#, kde-format
+msgid "Only when cheap"
+msgstr "فقط عندما يكون سهلا"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:217
+#, kde-format
+msgid "Full screen repaints"
+msgstr "إعادة رسم كامل الشاشة"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:222
+#, kde-format
+msgid "Re-use screen content"
+msgstr "إعادة استخدام محتوى الشاشة"
+
+#. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
+#: compositing.ui:230
+#, kde-format
+msgid "Keep window thumbnails:"
+msgstr "حافظ على مصغرات النافذة:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:238
+#, kde-format
+msgid "Never"
+msgstr "البتة"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:243
+#, kde-format
+msgid "Only for Shown Windows"
+msgstr "فقط للنوافذ المعروضة"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:248
+#, kde-format
+msgid "Always"
+msgstr "دائما"
+
+#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
+#: compositing.ui:256
+#, kde-format
+msgid "Latency:"
+msgstr "وقت الاستجابة"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:264
+#, kde-format
+msgid "Force lowest latency (may cause dropped frames)"
+msgstr "أجبر وقت استجابة أقل (يمكن أن يسقط إطارات)"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:269
+#, kde-format
+msgid "Prefer lower latency"
+msgstr "فضّل وقت للاستجابة أقل"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:274
+#, kde-format
+msgid "Balance of latency and smoothness"
+msgstr "توازن بين وقت الاستجابة و السلاسة"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:279
+#, kde-format
+msgid "Prefer smoother animations"
+msgstr "فضل التحريك السلس"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:284
+#, kde-format
+msgid "Force smoothest animations"
+msgstr "فرض التحريك الأكثر سلاسة"
+
+#: main.cpp:79
+#, kde-format
+msgid "Re-enable OpenGL detection"
+msgstr "أعد تفعيل اكتشاف OpenGL"
+
+#: main.cpp:135
+#, kde-format
+msgid ""
+"\"Only when cheap\" only prevents tearing for full screen changes like a "
+"video."
+msgstr "\"فقط عندما يكون سهلا\" يمنع تمزيق تغييرات ملء الشاشة مثل الفيديو."
+
+#: main.cpp:139
+#, kde-format
+msgid "\"Full screen repaints\" can cause performance problems."
+msgstr "\"إعادة رسم كامل الشاشة\" يمكن أن يسبب مشاكل في الأداء."
+
+#: main.cpp:143
+#, kde-format
+msgid ""
+"\"Re-use screen content\" causes severe performance problems on MESA drivers."
+msgstr "\"إعادة استخدام محتوى الشاشة\" يسبب مشاكل أداء فادحة على معرفات MESA."
+
+#, fuzzy
+#~ msgid "Rendering backend:"
+#~ msgstr "خلفية التصيير:"
+
+#, fuzzy
+#~| msgid "OpenGL"
+#~ msgid "OpenGL 3.1"
+#~ msgstr "OpenGL"
+
+#, fuzzy
+#~| msgid "OpenGL"
+#~ msgid "OpenGL 2.0"
+#~ msgstr "OpenGL"
+
+#~ msgid "Crisp"
+#~ msgstr "الحدة"
+
+#~ msgid "Smooth (slower)"
+#~ msgstr "سَلِس (بطيء)"
+
+#~ msgid "XRender"
+#~ msgstr "XRender"
+
+#~ msgctxt "OpenGL Platform Interface"
+#~ msgid "EGL"
+#~ msgstr "EGL"
+
+#~ msgctxt "OpenGL Platform Interface"
+#~ msgid "GLX"
+#~ msgstr "GLX"
+
+#~ msgid ""
+#~ "Author: %1\n"
+#~ "License: %2"
+#~ msgstr ""
+#~ "المؤلف: %1\n"
+#~ "الترخيص: %2"
+
+#~ msgid ""
+#~ "Hint: To find out or configure how to activate an effect, look at the "
+#~ "effect's settings."
+#~ msgstr ""
+#~ "تلميحة: لإيجاد أو لضبط كيفية تفعيل هذا التأثير ، انظر إلى إعدادات التأثير"
+
+#, fuzzy
+#~| msgid "Search"
+#~ msgid "Search..."
+#~ msgstr "بحث"
+
+#, fuzzy
+#~| msgid "Texture filter:"
+#~ msgid "Configure filter"
+#~ msgstr "مرشح النسيج:"
+
+#~ msgid "Exclude Desktop Effects not supported by the Compositor"
+#~ msgstr "استثنِ مؤثرات سطح المكتب التي لا يدعمها برنامج المؤثرات"
+
+#~ msgid "Exclude internal Desktop Effects"
+#~ msgstr "استثنِ مؤثرات سطح المكتب الداخلية"
+
+#, fuzzy
+#~| msgid "Get New Effects ..."
+#~ msgid "Get New Desktop Effects..."
+#~ msgstr "احصل على مؤثرات جديدة ..."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "يوسف الشهيبي, زايد السعيدي"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "chahibi@gmail.com,zayed.alsaidi@gmail.com"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Accessibility"
+#~ msgstr "إتاحة الوصول"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Appearance"
+#~ msgstr "المظهر"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Candy"
+#~ msgstr "حلوى"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Focus"
+#~ msgstr "التركيز"
+
+#, fuzzy
+#~| msgctxt "Category of Desktop Effects, used as section header"
+#~| msgid "Virtual Desktop Switching Animation"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Show Desktop Animation"
+#~ msgstr "مؤثر التبديل بين أسطح المكتب الافتراضية"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Tools"
+#~ msgstr "أدوات"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Virtual Desktop Switching Animation"
+#~ msgstr "مؤثر التبديل بين أسطح المكتب الافتراضية"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Management"
+#~ msgstr "إدارة النوافذ"
+
+#, fuzzy
+#~| msgctxt "Category of Desktop Effects, used as section header"
+#~| msgid "Virtual Desktop Switching Animation"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Open/Close Animation"
+#~ msgstr "مؤثر التبديل بين أسطح المكتب الافتراضية"
+
+#~ msgid "KWin development team"
+#~ msgstr "فريق تطوير KWin"
+
+#~ msgid "Experimental:"
+#~ msgstr "تجريبي:"
+
+#~ msgid "Enable color correction"
+#~ msgstr "فعّل تصحيح الألوان"
+
+#~ msgid "Expert:"
+#~ msgstr "خبير:"
+
+#~ msgid "Suspend compositor for full screen windows"
+#~ msgstr "أوقف تأثيرات سطح المكتب للنوافذ المالئة للشاشة"
+
+#, fuzzy
+#~| msgid "OpenGL Platform Interface:"
+#~ msgid "OpenGL interface:"
+#~ msgstr "واجهة منصة OpenGL:"
+
+#~ msgid "Animation Speed:"
+#~ msgstr "سرعة التحريك:"
+
+#~ msgid "Scale Method:"
+#~ msgstr "طريقة التحجيم:"
+
+#~ msgid "Tearing Prevention (VSync):"
+#~ msgstr "منع التكسير (المزامنة العمودية):"
+
+#~ msgid "Keep Window Thumbnails:"
+#~ msgstr "حافظ على مصغرات النافذة:"
+
+#~ msgid "Always (Breaks Animations)"
+#~ msgstr "دائما (يكسر المؤثرات)"
+
+#~ msgid "OpenGL Platform Interface:"
+#~ msgstr "واجهة منصة OpenGL:"
+
+#~ msgid "1 second remaining:"
+#~ msgid_plural "%1 seconds remaining:"
+#~ msgstr[0] "لم يبقى شيء:"
+#~ msgstr[1] "بقى ثانية واحدة:"
+#~ msgstr[2] "بقى ثانيتين:"
+#~ msgstr[3] "بقى %1 ثوان:"
+#~ msgstr[4] "بقى %1 ثانية:"
+#~ msgstr[5] "بقى %1 ثانية:"
+
+#~ msgid "Confirm Desktop Effects Change"
+#~ msgstr "أكد تغير تأثيرات سطح المكتب"
+
+#~ msgid "&Accept Configuration"
+#~ msgstr "ا&قبل الضبط"
+
+#~ msgid "&Return to Previous Configuration"
+#~ msgstr "ا&رجع إلى الإعدادات السابقة"
+
+#~ msgid ""
+#~ "Desktop effects settings have changed.\n"
+#~ "Do you want to keep the new settings?\n"
+#~ "They will be automatically reverted in 10 seconds."
+#~ msgstr ""
+#~ "إعدادات تأثيرات سطح المكتب تغيرت.\n"
+#~ "هل ترغب في الاحتفاظ بالإعدادات الجديدة؟\n"
+#~ "سيتم استرجاعهن في 10 ثوان."
+
+#~ msgid "kcmkwincompositing"
+#~ msgstr "kcmkwincompositing"
+
+#~ msgid "KWin Desktop Effects Configuration Module"
+#~ msgstr "وحدة ضبط تأثيرات كوين لسطح المكتب"
+
+#~ msgid "(c) 2007 Rivo Laks"
+#~ msgstr "(c) 2007 Rivo Laks"
+
+#~ msgid "Rivo Laks"
+#~ msgstr "Rivo Laks"
+
+#, fuzzy
+#~| msgid "No Effect"
+#~ msgid "No effect"
+#~ msgstr "بدون تأثير"
+
+#~ msgid ""
+#~ "Failed to activate desktop effects using the given configuration options. "
+#~ "Settings will be reverted to their previous values.\n"
+#~ "\n"
+#~ "Check your X configuration. You may also consider changing advanced "
+#~ "options, especially changing the compositing type."
+#~ msgstr ""
+#~ "فشل في تفعيل تأثيرات سطح المكتب باستخدمات خيارات الضبط المعطاة. الإعدادات "
+#~ "القديمة ستسترجع .\n"
+#~ "\n"
+#~ "تأكد من ضبط خادم العرض أكس ، و ربما قد تحتاج تغير بعض الخيارات المتقدمة "
+#~ "خصوصا تغير نوع التركيب."
+
+#~ msgid "Demos"
+#~ msgstr "عروض توضيحية"
+
+#~ msgid "Tests"
+#~ msgstr "اختبارات"
+
+#~ msgid ""
+#~ "Desktop effects are not available on this system due to the following "
+#~ "technical issues:"
+#~ msgstr ""
+#~ "تأثيرات سطح المكتب غير متوفرة لهذا النظام بسبب المشاكل الفنية التالية:"
+
+#~ msgid ""
+#~ "Your settings have been saved but as KDE is currently running in failsafe "
+#~ "mode desktop effects cannot be enabled at this time.\n"
+#~ "\n"
+#~ "Please exit failsafe mode to enable desktop effects."
+#~ msgstr ""
+#~ "لقد حفظت الإعدادات ولكن كدي تعمل الآن تحت نمط السقوط الآمن failsafe ، لا "
+#~ "يمكن تفعيل تأثيرات سطح المكتب الآن.\n"
+#~ "\n"
+#~ "الرجاء الخروج من وضع السقوط الآمن لتفعيل تأثيرات سطح المكتب."
+
+#, fuzzy
+#~| msgid "The following desktop effects could not be activated:"
+#~ msgctxt "Error Message shown when a desktop effect could not be loaded"
+#~ msgid "One desktop effect could not be loaded."
+#~ msgid_plural "%1 desktop effects could not be loaded."
+#~ msgstr[0] "تأثيرات سطح المكتب التالية لا يمكن تنشيطها:"
+#~ msgstr[1] "تأثيرات سطح المكتب التالية لا يمكن تنشيطها:"
+#~ msgstr[2] "تأثيرات سطح المكتب التالية لا يمكن تنشيطها:"
+#~ msgstr[3] "تأثيرات سطح المكتب التالية لا يمكن تنشيطها:"
+#~ msgstr[4] "تأثيرات سطح المكتب التالية لا يمكن تنشيطها:"
+#~ msgstr[5] "تأثيرات سطح المكتب التالية لا يمكن تنشيطها:"
+
+#, fuzzy
+#~| msgid "The following desktop effects could not be activated:"
+#~ msgctxt "Window title"
+#~ msgid "List of effects which could not be loaded"
+#~ msgstr "تأثيرات سطح المكتب التالية لا يمكن تنشيطها:"
+
+#, fuzzy
+#~| msgid "Desktop effects are active"
+#~ msgctxt ""
+#~ "Error Message shown when compositing is not active after tried activation"
+#~ msgid "Desktop effect system is not running."
+#~ msgstr "تأثيرات سطح المكتب نشطة"
+
+#~ msgid "<h1>Desktop Effects</h1>"
+#~ msgstr "<h1>تأثيرات سطح المكتب</h1>"
+
+#~ msgid "General"
+#~ msgstr "عام"
+
+#~ msgid "Improved window management"
+#~ msgstr "إدارة النوافذ المحسنة"
+
+#~ msgid "Effect for desktop switching:"
+#~ msgstr "تأثير لتبديل سطح المكتب:"
+
+#~ msgid "Very Fast"
+#~ msgstr "سريع جدا"
+
+#~ msgid "Fast"
+#~ msgstr "سريع"
+
+#~ msgid "Normal"
+#~ msgstr "عادي"
+
+#~ msgid "Slow"
+#~ msgstr "بطيء"
+
+#~ msgid "Extremely Slow"
+#~ msgstr "بطيء للغاية"
+
+#~ msgid ""
+#~ "You can find more effects, as well as effect-specific settings, in the "
+#~ "\"All Effects\" tab above."
+#~ msgstr ""
+#~ "يمكنك الحصول على المزيد من التأثير بالإضافة إعدادات خاصة بتأثيرات في لسان"
+#~ "\"كل التأثيرات\" الذي بالأعلى."
+
+#~ msgid "All Effects"
+#~ msgstr "كل التأثيرات"
+
+#~ msgid "Advanced"
+#~ msgstr "متقدم"
+
+#~ msgid "OpenGL Options"
+#~ msgstr "خيارات OpenGL "
+
+#, fuzzy
+#~| msgid "XRender Options"
+#~ msgid "General Options"
+#~ msgstr "خيارات XRender"
+
+#, fuzzy
+#~| msgid "OpenGL"
+#~ msgid "OpenGL 1.2"
+#~ msgstr "OpenGL"
+
+#~ msgid "Use VSync"
+#~ msgstr "استخدم VSync"
+
+#~ msgid "Effect for window switching:"
+#~ msgstr "تأثير لتبديل النوافذ:"
+
+#~ msgid "Enable direct rendering"
+#~ msgstr "فعل العرض المباشر"
+
+#~ msgid "Disable functionality checks"
+#~ msgstr "عطل اختبارات الوظائف"
+
+#~ msgid "Desktop effects are temporarily disabled"
+#~ msgstr "عطلت تأثيرات سطح المكتب بشكل مؤقت"
+
+#~ msgid "Resume Desktop Effects"
+#~ msgstr "استعد تأثيرات سطح المكتب"
+
+#~ msgid "Desktop effects are disabled"
+#~ msgstr "تأثيرات سطح المكتب معطلة"
+
+#~ msgid "Common Settings"
+#~ msgstr "تأثيرات العامة"
+
+#~ msgid "Compositing State"
+#~ msgstr "حالة التركيب"
+
+#~ msgid "Shadows"
+#~ msgstr "ظلال"
+
+#~ msgid "OpenGL mode:"
+#~ msgstr "نمط OpenGL:"
+
+#~ msgid "Texture From Pixmap"
+#~ msgstr "النسيج من صور النقطية"
+
+#~ msgid "Shared Memory"
+#~ msgstr "ذاكرة مشتركة"
+
+#~ msgid "Fallback"
+#~ msgstr "الإحتياطي"
+
+#~ msgid ""
+#~ "Enabling this option allows compositing to be activated even if some of "
+#~ "the internal checks fail. Doing so may make the whole desktop unusable "
+#~ "and its use is not recommened. Use only if KWin refuses to activate "
+#~ "compositing on a system that should be capable of compositing.\n"
+#~ msgstr ""
+#~ "تفعيل هذا الخيار يسمح بتفعيل التركيب حتى ولو فشلت بعض الاختبارات "
+#~ "الداخلية. هذا قد يؤدي إلى زعزعة استقرار سطح المكتب ككل ، و لا يوصى "
+#~ "باستعمالها. استخدمها فقط إذا رفض كوين تفعيل التركيب في نظام لديه قدرات "
+#~ "التركيب أصلا.\n"
+
+#~ msgid "Nearest (fastest)"
+#~ msgstr "أقرب (الأسرع)"
+
+#~ msgid "Bilinear"
+#~ msgstr "ثنائي خطّي"
+
+#~ msgid "Trilinear (best quality)"
+#~ msgstr "ثلاثي خطي (أفضل جودة)"
+
+#~ msgid "Compositing is not supported on your system."
+#~ msgstr "التركيب ليس مدعوم في نظامك."
+
+#~ msgid "Compositing is active"
+#~ msgstr "التركيب نشط"
+
+#~ msgid "Suspend Compositing"
+#~ msgstr "التركيب معلق"
+
+#~ msgid "Resume Compositing"
+#~ msgstr "استأنف التركيب"
+
+#~ msgid "Compositing is disabled"
+#~ msgstr "التركيب معطل"
+
+#~ msgid "All Desktops"
+#~ msgstr "كل الأسطح"
+
+#~ msgid "Current Desktop"
+#~ msgstr "سطح المكتب الحالي"
+
+#, fuzzy
+#~| msgid "Bilinear"
+#~ msgid "Cylinder"
+#~ msgstr "ثنائي خطّي"
+
+#~ msgid "Screen Edges"
+#~ msgstr "حواف الشاشة"
+
+#~ msgid ""
+#~ "Active screen edges allow you to activate effects by pushing your mouse "
+#~ "cursor against the edge of the screen. Here you can configure which "
+#~ "effect will get activated on each edge and corner of the screen."
+#~ msgstr ""
+#~ "حواف الشاشة النشطة تسمح لك بتفعيل التأثير بدفع مؤشر الفأرة إلى حافة "
+#~ "الشاشة. هنا يمكنك ضبط أي تأثير تريد أن تفعيله على كل حافة و زاوية من "
+#~ "الشاشة."
+
+#~ msgid ""
+#~ "If you are looking for the setting to enable switching of desktops by "
+#~ "pushing your mouse cursor against the edge of the screen you can find it "
+#~ "in the \"Window Behavior\" advanced tab under the name of \"Active "
+#~ "Desktop Borders\"."
+#~ msgstr ""
+#~ "إذا كنت تبحث عن إعداد لتفعيل تبديل أسطح المكتب بواسطة دفع المؤشر الفأرة "
+#~ "إلى حافة الشاشة ؛ فإن ستجده في اللسان المتقدم \"سلوك النافذة\" تحت اسم "
+#~ "\"حدود سطح المكتب النشطة\"."

@@ -1,0 +1,105 @@
+# Translation for kcm_kwin_effects.po to Euskara/Basque (eu).
+# Copyright (C) 2019-2022, This file is copyright:
+# This file is distributed under the same license as the kwin package.
+# KDE euskaratzeko proiektuko arduraduna <xalba@ni.eus>.
+#
+# Translators:
+# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2019.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-03-26 00:45+0000\n"
+"PO-Revision-Date: 2019-11-02 18:36+0100\n"
+"Last-Translator: Iñigo Salvador Azurmendi <xalba@euskalnet.net>\n"
+"Language-Team: Basque <kde-i18n-eu@kde.org>\n"
+"Language: eu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 19.08.2\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Iñigo Salvador Azurmendi"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "xalba@euskalnet.net"
+
+#: kcm.cpp:35
+#, kde-format
+msgid "Desktop Effects"
+msgstr "Mahaigaineko efektuak"
+
+#: kcm.cpp:39
+#, kde-format
+msgid "Vlad Zahorodnii"
+msgstr "Vlad Zahorodnii"
+
+#: package/contents/ui/Effect.qml:92
+#, kde-format
+msgid ""
+"Author: %1\n"
+"License: %2"
+msgstr ""
+"Egilea: %1\n"
+"Lizentzia: %2"
+
+#: package/contents/ui/Effect.qml:121
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Show/Hide Video"
+msgstr "Erakutsi/ezkutatu bideoa"
+
+#: package/contents/ui/Effect.qml:128
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Configure..."
+msgstr "Konfiguratu..."
+
+#: package/contents/ui/main.qml:20
+#, kde-format
+msgid "This module lets you configure desktop effects."
+msgstr "Modulu honek mahaigaineko efektuak konfiguratzen uzten dizu."
+
+#: package/contents/ui/main.qml:27
+#, kde-format
+msgid ""
+"Hint: To find out or configure how to activate an effect, look at the "
+"effect's settings."
+msgstr ""
+"Argibidea: efektu bat nola aktibatu jakiteko, edo hura konfiguratzeko, "
+"begiratu efektuen ezarpenetan."
+
+#: package/contents/ui/main.qml:47
+#, kde-format
+msgid "Configure Filter"
+msgstr "Konfiguratu iragazkia"
+
+#: package/contents/ui/main.qml:59
+#, kde-format
+msgid "Exclude unsupported effects"
+msgstr "Kanporatu onartzen ez diren efektuak"
+
+#: package/contents/ui/main.qml:67
+#, kde-format
+msgid "Exclude internal effects"
+msgstr "Kanporatu barneko efektuak"
+
+#: package/contents/ui/main.qml:125
+#, kde-format
+msgid "Get New Desktop Effects..."
+msgstr "Jaitsi mahaigaineko efektu berriak..."
+
+#~ msgid "Download New Desktop Effects"
+#~ msgstr "Jaitsi mahaigaineko efektu berriak"
+
+#~ msgid "Exclude Desktop Effects not supported by the Compositor"
+#~ msgstr "Kanporatu konposatzaileak onartzen ez dituen mahaigaineko efektuak"
+
+#~ msgid "Search..."
+#~ msgstr "Bilatu..."

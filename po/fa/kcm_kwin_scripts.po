@@ -1,0 +1,98 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Mohammad Reza Mirdamadi <mohi@linuxshop.ir>, 2013.
+# ehsan <ehsan.abdolahy@gmail.com>, 2016.
+# Mohi Mirdamadi <mohi@ubuntu.ir>, ۲۰۱۶.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-09-20 00:47+0000\n"
+"PO-Revision-Date: ۲۰۱۶-۰۸-۲۰ ۱۶:۵۲+0330\n"
+"Last-Translator: Mohi Mirdamadi <mohi@ubuntu.ir>\n"
+"Language-Team: Persian <kde-i18n-fa@kde.org>\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Lokalize 2.0\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "محمدرضا میردامادی, احسان عبدالهی"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "mohi@ubuntu.ir, ehsan.abdolahy@gmail.com"
+
+#: module.cpp:57
+#, kde-format
+msgid "Import KWin Script"
+msgstr "وارد کردن دست‌نوشته‌ی KWin..."
+
+#: module.cpp:58
+#, kde-format
+msgid "*.kwinscript|KWin scripts (*.kwinscript)"
+msgstr "*.kwinscript|KWin دست‌نوشته‌ها (*.kwinscript)"
+
+#: module.cpp:96
+#, kde-format
+msgctxt "Placeholder is error message returned from the install service"
+msgid ""
+"Cannot import selected script.\n"
+"%1"
+msgstr ""
+
+#: module.cpp:108
+#, kde-format
+msgctxt "Placeholder is name of the script that was imported"
+msgid "The script \"%1\" was successfully imported."
+msgstr ""
+
+#: module.cpp:148
+#, kde-format
+msgid "Error when uninstalling KWin Script: %1"
+msgstr ""
+
+#: package/contents/ui/main.qml:47
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Delete..."
+msgstr ""
+
+#: package/contents/ui/main.qml:60
+#, kde-format
+msgid "Install from File..."
+msgstr ""
+
+#: package/contents/ui/main.qml:64
+#, fuzzy, kde-format
+#| msgid "Get New Script..."
+msgid "Get New Scripts..."
+msgstr "دریافت دست‌نوشته جدید..."
+
+#~ msgid "KWin Scripts"
+#~ msgstr "دست نوشته‌های KWin"
+
+#~ msgid "Configure KWin scripts"
+#~ msgstr "پیکربندی دست‌نوشته‌های KWin"
+
+#~ msgid "Tamás Krutki"
+#~ msgstr "Tamás Krutki"
+
+#~ msgid "KWin script configuration"
+#~ msgstr "پیکربندی دست‌نوشته‌ی KWin"
+
+#~ msgid "Import KWin script..."
+#~ msgstr "واردات دست‌نوشته‌ی KWin..."
+
+#~ msgid ""
+#~ "Cannot import selected script: maybe a script already exists with the "
+#~ "same name or there is a permission problem."
+#~ msgstr ""
+#~ "نمی‌توانید دست‌نوشته‌ی انتخاب شده را وارد کنید: شاید یک دست‌نوشته از قبل با "
+#~ "همین نام وارده کرده‌اید یا یک مشکل مجوز دارید."

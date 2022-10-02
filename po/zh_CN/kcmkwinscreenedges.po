@@ -1,0 +1,233 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: kdeorg\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-15 00:48+0000\n"
+"PO-Revision-Date: 2022-09-20 01:56\n"
+"Last-Translator: \n"
+"Language-Team: Chinese Simplified\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: kdeorg\n"
+"X-Crowdin-Project-ID: 269464\n"
+"X-Crowdin-Language: zh-CN\n"
+"X-Crowdin-File: /kf5-trunk/messages/kwin/kcmkwinscreenedges.pot\n"
+"X-Crowdin-File-ID: 4403\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "KDE 中国, Feng Chao, Guo Yunhe, Tyson Tan"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr ""
+"kde-china@kde.org, chaofeng111@gmail.com, i@guoyunhe.me, tysontan@tysontan."
+"com"
+
+#: main.cpp:130 touch.cpp:124
+#, kde-format
+msgid "No Action"
+msgstr "无操作"
+
+#: main.cpp:131 touch.cpp:125
+#, kde-format
+msgid "Peek at Desktop"
+msgstr "暂时显示桌面"
+
+#: main.cpp:132 touch.cpp:126
+#, kde-format
+msgid "Lock Screen"
+msgstr "锁定屏幕"
+
+#: main.cpp:133 touch.cpp:127
+#, kde-format
+msgid "Show KRunner"
+msgstr "显示 KRunner"
+
+#: main.cpp:134 touch.cpp:128
+#, kde-format
+msgid "Activity Manager"
+msgstr "活动管理器"
+
+#: main.cpp:135 touch.cpp:129
+#, kde-format
+msgid "Application Launcher"
+msgstr "应用程序启动器"
+
+#: main.cpp:139 touch.cpp:133
+#, kde-format
+msgid "Present Windows"
+msgstr "窗口平铺展示"
+
+#: main.cpp:140 touch.cpp:134
+#, kde-format
+msgid "%1 - All Desktops"
+msgstr "%1 - 全部桌面"
+
+#: main.cpp:141 touch.cpp:135
+#, kde-format
+msgid "%1 - Current Desktop"
+msgstr "%1 - 当前桌面"
+
+#: main.cpp:142 touch.cpp:136
+#, kde-format
+msgid "%1 - Current Application"
+msgstr "%1 - 当前程序"
+
+#: main.cpp:144 touch.cpp:138
+#, kde-format
+msgid "Toggle window switching"
+msgstr "触发窗口切换"
+
+#: main.cpp:145 touch.cpp:139
+#, kde-format
+msgid "Toggle alternative window switching"
+msgstr "触发备选窗口切换"
+
+#. i18n: ectx: property (text), widget (QLabel, infoLabel)
+#: main.ui:23
+#, kde-format
+msgid ""
+"You can trigger an action by pushing the mouse cursor against the "
+"corresponding screen edge or corner."
+msgstr "您可以将鼠标光标推到屏幕边缘或者四角来触发指定操作。"
+
+#. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
+#: main.ui:67
+#, kde-format
+msgid "&Maximize:"
+msgstr "最大化(&M)："
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderMaximize)
+#: main.ui:77
+#, kde-format
+msgid "Windows dragged to top edge"
+msgstr "将窗口拖到屏幕上边缘"
+
+#. i18n: ectx: property (text), widget (QLabel, quickTileLabel)
+#: main.ui:84
+#, kde-format
+msgid "&Tile:"
+msgstr "左右并排平铺(&T)："
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderTiling)
+#: main.ui:94
+#, kde-format
+msgid "Windows dragged to left or right edge"
+msgstr "将窗口拖到屏幕左/右边缘"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: main.ui:101
+#, kde-format
+msgid "Behavior:"
+msgstr "行为："
+
+#. i18n: ectx: property (text), widget (QCheckBox, remainActiveOnFullscreen)
+#: main.ui:108
+#, kde-format
+msgid "Remain active when windows are fullscreen"
+msgstr "窗口全屏时保持激活状态"
+
+#. i18n: ectx: property (text), widget (QLabel, electricBorderCornerRatioLabel)
+#: main.ui:115
+#, kde-format
+msgid "Trigger &quarter tiling in:"
+msgstr "四分并排平铺(&Q)："
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, electricBorderCornerRatioSpin)
+#: main.ui:130
+#, no-c-format, kde-format
+msgid "%"
+msgstr "%"
+
+#. i18n: ectx: property (prefix), widget (QSpinBox, electricBorderCornerRatioSpin)
+#: main.ui:133
+#, kde-format
+msgid "Outer "
+msgstr "离中间点 "
+
+#. i18n: ectx: property (text), widget (QLabel, label_1)
+#: main.ui:149
+#, kde-format
+msgid "of the screen"
+msgstr "屏幕高度后触发"
+
+#. i18n: ectx: property (toolTip), widget (QLabel, desktopSwitchLabel)
+#: main.ui:174
+#, kde-format
+msgid ""
+"Change desktop when the mouse cursor is pushed against the edge of the screen"
+msgstr "鼠标光标推到屏幕边缘时切换虚拟桌面"
+
+#. i18n: ectx: property (text), widget (QLabel, desktopSwitchLabel)
+#: main.ui:177
+#, kde-format
+msgid "&Switch desktop on edge:"
+msgstr "鼠标靠边时切换桌面(&S)："
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
+#: main.ui:188
+#, kde-format
+msgctxt "Switch desktop on edge"
+msgid "Disabled"
+msgstr "已禁用"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
+#: main.ui:193
+#, kde-format
+msgid "Only When Moving Windows"
+msgstr "只在移动窗口时"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
+#: main.ui:198
+#, kde-format
+msgid "Always Enabled"
+msgstr "总是启用"
+
+#. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)
+#: main.ui:206
+#, kde-format
+msgid ""
+"Amount of time required for the mouse cursor to be pushed against the edge "
+"of the screen before the action is triggered"
+msgstr "鼠标光标推到屏幕边缘后触发操作前的等待时间"
+
+#. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
+#: main.ui:209
+#, kde-format
+msgid "Activation &delay:"
+msgstr "触发延迟(&D)："
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ElectricBorderDelay)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ElectricBorderCooldown)
+#: main.ui:219 main.ui:254
+#, kde-format
+msgid " ms"
+msgstr " 毫秒"
+
+#. i18n: ectx: property (toolTip), widget (QLabel, triggerCooldownLabel)
+#: main.ui:238
+#, kde-format
+msgid ""
+"Amount of time required after triggering an action until the next trigger "
+"can occur"
+msgstr "触发一个操作后，下一个操作被触发前的等待时间"
+
+#. i18n: ectx: property (text), widget (QLabel, triggerCooldownLabel)
+#: main.ui:241
+#, kde-format
+msgid "&Reactivation delay:"
+msgstr "再次触发延迟(&R)："
+
+#. i18n: ectx: property (text), widget (QLabel, label_1)
+#: touch.ui:17
+#, kde-format
+msgid ""
+"You can trigger an action by swiping from the screen edge towards the center "
+"of the screen."
+msgstr "您可以从屏幕边缘向屏幕内滑动手指触发操作。"

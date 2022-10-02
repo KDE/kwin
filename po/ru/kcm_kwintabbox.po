@@ -1,0 +1,420 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Alexander Potashev <aspotashev@gmail.com>, 2009, 2010, 2012, 2018.
+# Alexey D. <lq07829icatm@rambler.ru>, 2012.
+# Alexander Yavorsky <kekcuha@gmail.com>, 2020, 2021, 2022.
+# Olesya Gerasimenko <translation-team@basealt.ru>, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-15 00:48+0000\n"
+"PO-Revision-Date: 2022-06-27 10:47+0300\n"
+"Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
+"Language-Team: Russian <kde-russian@lists.kde.ru>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 22.04.2\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
+"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Environment: kde\n"
+"X-Accelerator-Marker: &\n"
+"X-Text-Markup: kde4\n"
+
+#: kwintabboxconfigform.cpp:77
+#, kde-format
+msgid "KWin"
+msgstr "KWin"
+
+#: layoutpreview.cpp:133
+#, kde-format
+msgid "Show Desktop"
+msgstr "Показать рабочий стол"
+
+#: layoutpreview.cpp:163
+#, kde-format
+msgctxt "An example Desktop Name"
+msgid "Desktop 1"
+msgstr "Рабочий стол 1"
+
+#: main.cpp:58
+#, kde-format
+msgid "Main"
+msgstr "Основные"
+
+#: main.cpp:59
+#, kde-format
+msgid "Alternative"
+msgstr "Альтернативные"
+
+#: main.cpp:61
+#, kde-format
+msgid "Get New Task Switchers..."
+msgstr "Загрузить визуализации переключения окон..."
+
+#: main.cpp:75
+#, kde-format
+msgid ""
+"Focus policy settings limit the functionality of navigating through windows."
+msgstr "Параметры смены фокуса не позволяют настроить переключение окон."
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#: main.ui:32
+#, kde-format
+msgid "Content"
+msgstr "Содержание списка окон"
+
+# BUGME: item->icon, because it's a full-featured item with text rather than just an icon (with some of the visualization modes). --aspotashev
+#. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
+#: main.ui:41
+#, kde-format
+msgid "Include \"Show Desktop\" icon"
+msgstr "Включать пункт «Показать рабочий стол»"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
+#: main.ui:55
+#, kde-format
+msgid "Recently used"
+msgstr "По времени последнего переключения на окно"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
+#: main.ui:60
+#, kde-format
+msgid "Stacking order"
+msgstr "По порядку наложения окон"
+
+#. i18n: ectx: property (text), widget (QCheckBox, oneAppWindow)
+#: main.ui:68
+#, kde-format
+msgid "Only one window per application"
+msgstr "По одному окну на каждое приложение"
+
+#. i18n: ectx: property (text), widget (QCheckBox, orderMinimized)
+#: main.ui:78
+#, kde-format
+msgid "Order minimized windows after unminimized windows"
+msgstr "Упорядочивать свёрнутые окна после разворачивания"
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: main.ui:88
+#, kde-format
+msgid "Sort order:"
+msgstr "Сортировка:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: main.ui:114
+#, kde-format
+msgid "Filter windows by"
+msgstr "Фильтровать окна по"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterDesktops)
+#: main.ui:123
+#, kde-format
+msgid "Virtual desktops"
+msgstr "Рабочим столам:"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentDesktop)
+#: main.ui:167
+#, kde-format
+msgid "Current desktop"
+msgstr "С текущего рабочего стола"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherDesktops)
+#: main.ui:174
+#, kde-format
+msgid "All other desktops"
+msgstr "С других рабочих столов"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterActivities)
+#: main.ui:184
+#, kde-format
+msgid "Activities"
+msgstr "Комнатам:"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentActivity)
+#: main.ui:228
+#, kde-format
+msgid "Current activity"
+msgstr "Из текущей комнаты"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherActivities)
+#: main.ui:235
+#, kde-format
+msgid "All other activities"
+msgstr "Из других комнат"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterScreens)
+#: main.ui:245
+#, kde-format
+msgid "Screens"
+msgstr "Экранам:"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentScreen)
+#: main.ui:289
+#, kde-format
+msgid "Current screen"
+msgstr "С текущего экрана"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherScreens)
+#: main.ui:296
+#, kde-format
+msgid "All other screens"
+msgstr "С других экранов"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterMinimization)
+#: main.ui:306
+#, kde-format
+msgid "Minimization"
+msgstr "Видимости:"
+
+#. i18n: ectx: property (text), widget (QRadioButton, visibleWindows)
+#: main.ui:350
+#, kde-format
+msgid "Visible windows"
+msgstr "Только видимые окна"
+
+#. i18n: ectx: property (text), widget (QRadioButton, hiddenWindows)
+#: main.ui:357
+#, kde-format
+msgid "Hidden windows"
+msgstr "Только свёрнутые окна"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
+#: main.ui:396
+#, kde-format
+msgid "Shortcuts"
+msgstr "Комбинации клавиш"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: main.ui:405 main.ui:448
+#, kde-format
+msgid "Forward"
+msgstr "Вперёд:"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: main.ui:428
+#, kde-format
+msgid "All windows"
+msgstr "Все окна"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: main.ui:438 main.ui:458
+#, kde-format
+msgid "Reverse"
+msgstr "Назад:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: main.ui:480
+#, kde-format
+msgid "Current application"
+msgstr "Окна текущего приложения"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: main.ui:499
+#, kde-format
+msgid "Visualization"
+msgstr "Визуализация"
+
+#. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
+#: main.ui:529
+#, kde-format
+msgid "The effect to replace the list window when desktop effects are active."
+msgstr ""
+"Визуализация переключения окон, используемая при включённых эффектах "
+"рабочего стола."
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
+#: main.ui:559
+#, kde-format
+msgid ""
+"The currently selected window will be highlighted by fading out all other "
+"windows. This option requires desktop effects to be active."
+msgstr ""
+"Выбранное окно будет выделено затенением всех остальных окон. Для работы "
+"должны быть включены эффекты рабочего стола."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
+#: main.ui:562
+#, kde-format
+msgid "Show selected window"
+msgstr "Показывать выбранное окно"
+
+#~ msgid "Tabbox layout preview"
+#~ msgstr "Предварительный вид списка окон"
+
+#~ msgid "Outline selected window"
+#~ msgstr "Показывать границу выбранного окна"
+
+#~ msgid ""
+#~ "These settings are used by the \"Walk Through Windows Alternative\" "
+#~ "actions."
+#~ msgstr ""
+#~ "Параметры действий «На одно окно вперёд/назад (альтернативный режим)»."
+
+#~ msgid "Walk Through Windows"
+#~ msgstr "На одно окно вперёд"
+
+#~ msgid "Walk Through Windows (Reverse)"
+#~ msgstr "На одно окно назад"
+
+#~ msgid "Walk Through Windows Alternative"
+#~ msgstr "На одно окно вперёд (альтернативный режим)"
+
+#~ msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgstr "На одно окно назад (альтернативный режим)"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative"
+#~ msgid "Walk Through Windows of Current Application"
+#~ msgstr "На одно окно вперёд (альтернативный режим)"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgid "Walk Through Windows of Current Application (Reverse)"
+#~ msgstr "На одно окно назад (альтернативный режим)"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative"
+#~ msgid "Walk Through Windows of Current Application Alternative"
+#~ msgstr "На одно окно вперёд (альтернативный режим)"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+#~ msgstr "На одно окно назад (альтернативный режим)"
+
+#~ msgid "Configure Layout"
+#~ msgstr "Настройка вида"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Александр Поташев"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "aspotashev@gmail.com"
+
+#~ msgid "These settings are used by the \"Walk Through Windows\" actions."
+#~ msgstr "Параметры действий «На одно окно вперёд/назад»"
+
+#, fuzzy
+#~| msgid "All Desktops Grouped by Applications"
+#~ msgid "All windows from all applications"
+#~ msgstr "Со всех рабочих столов с группировкой по приложениям"
+
+#, fuzzy
+#~| msgid "Adds an entry to minimize all windows."
+#~ msgid "Exclude minimized windows"
+#~ msgstr "Добавить пункт в списке окон для сворачивания всех окон"
+
+#, fuzzy
+#~| msgid "Adds an entry to minimize all windows."
+#~ msgid "Show desktop to minimize all windows"
+#~ msgstr "Добавить пункт в списке окон для сворачивания всех окон"
+
+#~ msgid "Highlight selected window"
+#~ msgstr "Подсвечивать выбранное окно"
+
+#~ msgid "Effect:"
+#~ msgstr "Переключатель:"
+
+#~ msgid "Display list while switching"
+#~ msgstr "Показывать список при переключении"
+
+#, fuzzy
+#~| msgid "Informative"
+#~ msgctxt "Name for a window switcher layout showing icon, name and desktop"
+#~ msgid "Informative"
+#~ msgstr "Подробный"
+
+#, fuzzy
+#~| msgid "Compact"
+#~ msgctxt "Name for a window switcher layout showing only icon and name"
+#~ msgid "Compact"
+#~ msgstr "Краткий"
+
+#, fuzzy
+#~| msgid "Text Only"
+#~ msgctxt "Name for a window switcher layout showing only the name"
+#~ msgid "Text"
+#~ msgstr "Только заголовки окон"
+
+#, fuzzy
+#~| msgid "Large Icons"
+#~ msgctxt "Name for a window switcher layout showing large icons"
+#~ msgid "Large Icons"
+#~ msgstr "Большие значки"
+
+#, fuzzy
+#~| msgid "Small Icons"
+#~ msgctxt "Name for a window switcher layout showing small icons"
+#~ msgid "Small Icons"
+#~ msgstr "Маленькие значки"
+
+#~ msgid "No Effect"
+#~ msgstr "Классический (без эффектов)"
+
+#~ msgid "Configure Layout..."
+#~ msgstr "Настроить вид..."
+
+#~ msgid "Item Layout"
+#~ msgstr "Содержимое"
+
+#~ msgid "Item layout:"
+#~ msgstr "Вид элемента:"
+
+#~ msgid "Layout:"
+#~ msgstr "Расположение:"
+
+#~ msgid "Vertical"
+#~ msgstr "Вертикальное"
+
+#~ msgid "Horizontal"
+#~ msgstr "Горизонтальное"
+
+#~ msgid "Tabular"
+#~ msgstr "Таблица"
+
+#~ msgid "Width:"
+#~ msgstr "Ширина:"
+
+#~ msgid "Minimum width, as a percentage of screen width."
+#~ msgstr "Минимальная ширина в процентах от ширины экрана."
+
+#~ msgid " %"
+#~ msgstr " %"
+
+#~ msgid "Height:"
+#~ msgstr "Высота:"
+
+#~ msgid "Minimum height, as a percentage of screen height."
+#~ msgstr "Минимальная высота в процентах от высоты экрана."
+
+#~ msgid "Show Selected Item"
+#~ msgstr "Показывать отдельно выбранный элемент"
+
+#~ msgid "Selected item view:"
+#~ msgstr "Расположение:"
+
+#~ msgid "Top"
+#~ msgstr "Сверху"
+
+#~ msgid "Bottom"
+#~ msgstr "Снизу"
+
+#~ msgid "Left"
+#~ msgstr "Слева"
+
+#~ msgid "Right"
+#~ msgstr "Справа"
+
+#~ msgid "Selected item layout:"
+#~ msgstr "Вид:"
+
+#~ msgid "General"
+#~ msgstr "Основные параметры"

@@ -1,0 +1,93 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Diego Iastrubni <elcuco@kde.org>, 2012, 2013.
+# elkana bardugo <ttv200@gmail.com>, 2016.
+# Elkana Bardugo <ttv200@gmail.com>, 2017. #zanata
+msgid ""
+msgstr ""
+"Project-Id-Version: kcm-kwin-scripts\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-09-20 00:47+0000\n"
+"PO-Revision-Date: 2017-05-16 11:31-0400\n"
+"Last-Translator: Elkana Bardugo <ttv200@gmail.com>\n"
+"Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
+"Language: he\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Zanata 3.9.6\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "צוות התרגום של KDE ישראל"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "kde-l10n-he@kde.org"
+
+#: module.cpp:57
+#, kde-format
+msgid "Import KWin Script"
+msgstr "ייבא סקריפט של KWin"
+
+#: module.cpp:58
+#, kde-format
+msgid "*.kwinscript|KWin scripts (*.kwinscript)"
+msgstr "*.kwinscript|KWin סקריפט (*.kwinscript)"
+
+#: module.cpp:96
+#, kde-format
+msgctxt "Placeholder is error message returned from the install service"
+msgid ""
+"Cannot import selected script.\n"
+"%1"
+msgstr ""
+"אי אפשר לייבא את הסקריפט.\n"
+"%1"
+
+#: module.cpp:108
+#, kde-format
+msgctxt "Placeholder is name of the script that was imported"
+msgid "The script \"%1\" was successfully imported."
+msgstr "הסקריפט \"%1\" יובא בהצלחה"
+
+#: module.cpp:148
+#, kde-format
+msgid "Error when uninstalling KWin Script: %1"
+msgstr ""
+
+#: package/contents/ui/main.qml:47
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Delete..."
+msgstr ""
+
+#: package/contents/ui/main.qml:60
+#, kde-format
+msgid "Install from File..."
+msgstr ""
+
+#: package/contents/ui/main.qml:64
+#, fuzzy, kde-format
+#| msgid "Get New Script..."
+msgid "Get New Scripts..."
+msgstr "קבל סקריפט חדש..."
+
+#~ msgid "KWin Scripts"
+#~ msgstr "סקריפטים של KWin"
+
+#~ msgid "Configure KWin scripts"
+#~ msgstr "הגדרה של סקריפטים של KWin"
+
+#~ msgid "Tamás Krutki"
+#~ msgstr "Tamás Krutki"
+
+#~ msgid "KWin script configuration"
+#~ msgstr "הגדרות של סקריפטים של KWin"
+
+#~ msgid "Import KWin script..."
+#~ msgstr "ייבוא סקריפט של KWin.."

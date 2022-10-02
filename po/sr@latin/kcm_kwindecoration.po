@@ -1,0 +1,246 @@
+# Translation of kcmkwindecoration.po into Serbian.
+# Toplica Tanaskovic <toptan@kde.org.yu>, 2003, 2004.
+# Chusslove Illich <caslav.ilic@gmx.net>, 2005, 2007, 2008, 2009, 2010, 2012, 2013, 2014, 2015.
+# Dalibor Djuric <daliborddjuric@gmail.com>, 2009, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwindecoration\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2020-05-31 18:12+0200\n"
+"PO-Revision-Date: 2015-10-14 18:13+0200\n"
+"Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
+"Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
+"Language: sr@latin\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
+"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Accelerator-Marker: &\n"
+"X-Text-Markup: kde4\n"
+"X-Associated-UI-Catalogs: kwidgetsaddons5_qt\n"
+"X-Environment: kde\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr ""
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:68
+#, kde-format
+msgid "Menu"
+msgstr "Meni"
+
+#: declarative-plugin/buttonsmodel.cpp:70
+#, kde-format
+msgid "Application menu"
+msgstr "Meni programa"
+
+#: declarative-plugin/buttonsmodel.cpp:72
+#, kde-format
+msgid "On all desktops"
+msgstr "Na sve površi"
+
+#: declarative-plugin/buttonsmodel.cpp:74
+#, kde-format
+msgid "Minimize"
+msgstr "Minimizuj"
+
+#: declarative-plugin/buttonsmodel.cpp:76
+#, kde-format
+msgid "Maximize"
+msgstr "Maksimizuj"
+
+#: declarative-plugin/buttonsmodel.cpp:78
+#, kde-format
+msgid "Close"
+msgstr "Zatvori"
+
+#: declarative-plugin/buttonsmodel.cpp:80
+#, kde-format
+msgid "Context help"
+msgstr "Kontekstna pomoć"
+
+#: declarative-plugin/buttonsmodel.cpp:82
+#, kde-format
+msgid "Shade"
+msgstr "Namotaj"
+
+#: declarative-plugin/buttonsmodel.cpp:84
+#, kde-format
+msgid "Keep below"
+msgstr "Drži ispod"
+
+#: declarative-plugin/buttonsmodel.cpp:86
+#, kde-format
+msgid "Keep above"
+msgstr "Drži iznad"
+
+#: kcm.cpp:62
+#, fuzzy, kde-format
+#| msgid "Get New Decorations..."
+msgid "Window Decorations"
+msgstr "Dobavi nove dekoracije..."
+
+#: kcm.cpp:66
+#, kde-format
+msgid "Valerio Pilo"
+msgstr ""
+
+#: kcm.cpp:67
+#, kde-format
+msgid "Author"
+msgstr ""
+
+#: kcm.cpp:116
+#, fuzzy, kde-format
+#| msgid "Get New Decorations..."
+msgid "Download New Window Decorations"
+msgstr "Dobavi nove dekoracije..."
+
+#: package/contents/ui/Buttons.qml:87
+#, kde-format
+msgid "Titlebar"
+msgstr "Naslovna traka"
+
+#: package/contents/ui/Buttons.qml:228
+#, fuzzy, kde-format
+#| msgid "Drop here to remove button"
+msgid "Drop button here to remove it"
+msgstr "Uklonite dugme ispuštanjem ovde."
+
+#: package/contents/ui/Buttons.qml:246
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr "Prevlačite dugmad između ovog mesta i naslovne trake."
+
+#: package/contents/ui/main.qml:27
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr ""
+
+#: package/contents/ui/main.qml:61
+#, fuzzy, kde-format
+#| msgid "Theme"
+msgctxt "tab label"
+msgid "Theme"
+msgstr "Tema"
+
+#: package/contents/ui/main.qml:65
+#, fuzzy, kde-format
+#| msgid "Titlebar"
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "Naslovna traka"
+
+#: package/contents/ui/main.qml:90
+#, kde-format
+msgctxt "checkbox label"
+msgid "Use theme's default window border size"
+msgstr ""
+
+#: package/contents/ui/main.qml:121
+#, fuzzy, kde-format
+#| msgid "Get New Decorations..."
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr "Dobavi nove dekoracije..."
+
+#: package/contents/ui/main.qml:138
+#, fuzzy, kde-format
+#| msgid "Close windows by double clicking &the menu button"
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr "Zatvori prozor dvoklikom na &dugme menija"
+
+#: package/contents/ui/main.qml:151
+#, fuzzy, kde-format
+#| msgid ""
+#| "Close by double clicking:\n"
+#| " To open the menu, keep the button pressed until it appears."
+msgctxt "popup tip"
+msgid ""
+"Close by double clicking: Keep the window's Menu button pressed until it "
+"appears."
+msgstr ""
+"Zatvorite dvoklikom.\n"
+"Da otvorite meni, držite dugme pritisnuto dok se ne pojavi."
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr ""
+
+#: package/contents/ui/Themes.qml:100
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr ""
+
+#: utils.cpp:38
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "No Borders"
+msgid "No Borders"
+msgstr "bez ivica"
+
+#: utils.cpp:39
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "No Side Borders"
+msgid "No Side Borders"
+msgstr "bez bočnih ivica"
+
+#: utils.cpp:40
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Tiny"
+msgid "Tiny"
+msgstr "sićušne"
+
+#: utils.cpp:41
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Normal"
+msgid "Normal"
+msgstr "normalne"
+
+#: utils.cpp:42
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Large"
+msgid "Large"
+msgstr "velike"
+
+#: utils.cpp:43
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Very Large"
+msgid "Very Large"
+msgstr "vrlo velike"
+
+#: utils.cpp:44
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Huge"
+msgid "Huge"
+msgstr "ogromne"
+
+#: utils.cpp:45
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Very Huge"
+msgid "Very Huge"
+msgstr "vrlo ogromne"
+
+#: utils.cpp:46
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Oversized"
+msgid "Oversized"
+msgstr "neizmerne"

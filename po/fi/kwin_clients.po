@@ -1,0 +1,894 @@
+# Finnish messages fro kwin_clients.
+# Copyright © 2011, 2012 This_file_is_part_of_KDE
+# This file is distributed under the same license as the kdebase package.
+# Ilpo Kantonen <ilpo@iki.fi>, 2004, 2005.
+# Kim Enkovaara <kim.enkovaara@iki.fi>, 2005.
+# Teemu Rytilahti <teemu.rytilahti@kde-fi.org>, 2008.
+# Teemu Rytilahti <teemu.rytilahti@d5k.net>, 2008.
+# Tommi Nieminen <translator@legisign.org>, 2009, 2010, 2012, 2015.
+# Lasse Liehu <lliehu@kolumbus.fi>, 2010, 2011, 2012, 2013, 2014, 2015.
+# Jorma Karvonen <karvonen.jorma@gmail.com>, 2011.
+#
+# KDE Finnish translation sprint participants:
+# Author: Lliehu
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2015-01-16 12:58+0200\n"
+"Last-Translator: Lasse Liehu <lasse.liehu@gmail.com>\n"
+"Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-POT-Import-Date: 2012-12-01 22:22:29+0000\n"
+"X-Generator: Lokalize 1.5\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "Pikkuruinen"
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "Tavallinen"
+
+#: aurorae/src/aurorae.cpp:727
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "Suuri"
+
+#: aurorae/src/aurorae.cpp:728
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "Hyvin suuri"
+
+#: aurorae/src/aurorae.cpp:729
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "Valtava"
+
+#: aurorae/src/aurorae.cpp:730
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "Hyvin valtava"
+
+#: aurorae/src/aurorae.cpp:731
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "Ylikokoinen"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr "Painikkeen koko:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "Asetusikkuna"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "&Otsikon sijainti"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "Vasemmalla"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "Keskitetty"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "Oikealla"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"Kun valittuna, ikkunan koristekehykset piirretään otsikkopalkin väreissä. "
+"Muuten ne piirretään normaalilla taustan värillä."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "Väritetty ikkunareunus"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"Valitse tämä, jos haluat painikkeiden tulevan esiin kun hiiren osoitin "
+"koskettaa niitä ja päinvastoin."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "Animoi painikkeet"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "Valitse tämä asetus, jos haluat että otsikkopalkin teksti on "
+#~ "kolmiulotteisen näköinen."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "Käytä varjostet&tua tekstiä"
+
+#~ msgid "Button mouseover transition"
+#~ msgstr "Painikkeen hiiri yllä -siirtymä"
+
+#~ msgid "Configure window buttons' mouseover highlight animation"
+#~ msgstr "Aseta ikkunapainikkeiden hiiri yllä -korostusanimointi"
+
+#~ msgid "Title transitions"
+#~ msgstr "Otsikon siirtymät"
+
+#~ msgid "Configure fading transitions when window title is changed"
+#~ msgstr "Aseta häivytyssiirtymät ikkunan otsikon muuttuessa"
+
+#~ msgid "Window active state change transitions"
+#~ msgstr "Ikkunan aktiivisen tilan muutoksen siirtymät"
+
+#~ msgid ""
+#~ "Configure fading between window shadow and glow when window's active "
+#~ "state is changed"
+#~ msgstr ""
+#~ "Aseta häivytys ikkunan varjosta hehkuun ikkunan aktiivisuustilan "
+#~ "muuttuessa"
+
+#~ msgid "Window grouping animations"
+#~ msgstr "Ikkunan ryhmittelyn animoinnit"
+
+#~ msgid ""
+#~ "Configure window titlebar animations when windows are grouped/ungrouped"
+#~ msgstr ""
+#~ "Aseta ryhmiteltyjen/ryhmittämättömien ikkunoiden otsikkopalkkianimoinnit"
+
+#~ msgid "Hide Advanced Configuration Options"
+#~ msgstr "Piilota lisäasetukset"
+
+#~ msgid "Show Advanced Configuration Options"
+#~ msgstr "Näytä lisäasetukset"
+
+#~ msgid "Animations"
+#~ msgstr "Animoinnit"
+
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "Kysymys – Oxygenin asetukset"
+
+#~ msgid "Remove selected exception?"
+#~ msgstr "Poistetaanko valittu poikkeus?"
+
+#~ msgid "Warning - Oxygen Settings"
+#~ msgstr "Varoitus – Oxygenin asetukset"
+
+#~ msgid "Regular Expression syntax is incorrect"
+#~ msgstr "Säännöllisen lausekkeen syntaksi on virheellinen"
+
+#~ msgid "Exception Type"
+#~ msgstr "Poikkeustyyppi"
+
+#~ msgid "Regular Expression"
+#~ msgstr "Säännöllinen lauseke"
+
+#~ msgid "Window Title"
+#~ msgstr "Ikkunan otsikko"
+
+#~ msgid "Window Class Name"
+#~ msgstr "Ikkunaluokan nimi"
+
+#~ msgid "Enable/disable this exception"
+#~ msgstr "Ota poikkeus käyttöön tai poista se käytöstä"
+
+#~ msgid "General"
+#~ msgstr "Yleistä"
+
+#~ msgid "Border si&ze:"
+#~ msgstr "&Reunuksen koko:"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "Ei reunusta"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Borders"
+#~ msgstr "Ei sivureunusta"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Normal"
+#~ msgstr "Tavallinen"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "Suuri"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "Hyvin suuri"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "Valtava"
+
+#~ msgid "Tit&le alignment:"
+#~ msgstr "Otsikon &sijainti:"
+
+#~ msgid "Center (Full Width)"
+#~ msgstr "Keskitetty (täysi leveys)"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "Pieni"
+
+#~ msgid "Enable animations"
+#~ msgstr "Käytä animaatioita"
+
+#~ msgid "Fine Tuning"
+#~ msgstr "Hienosäätö"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "Sulje ikkunat kaksoisnapsauttamalla valikkopainiketta"
+
+#~ msgid "Never Draw Separator"
+#~ msgstr "Älä koskaan nosta erotinta"
+
+#~ msgid "Draw Separator When Window is Active"
+#~ msgstr "Nosta erotin, kun ikkuna on aktiivinen"
+
+#~ msgid "Always Draw Separator"
+#~ msgstr "Nosta erotin aina"
+
+#~ msgid "Separator disp&lay:"
+#~ msgstr "&Erotinnäyttö:"
+
+#~ msgid "Outline active window title"
+#~ msgstr "Piirrä aktiivisen ikkunan otsikolle reunaviiva"
+
+#~ msgid "Use narrow space between decoration buttons"
+#~ msgstr "Käytä kapeaa tilaa koristepainikkeiden välissä"
+
+#~ msgid "Add handle to resize windows with no border"
+#~ msgstr "Lisää kahva reunattomien ikkunoiden koon muuttamiseksi"
+
+#~ msgid "Display window borders for maximized windows"
+#~ msgstr "Näytä ikkunoiden reunat suurennetuille ikkunoille"
+
+#~ msgid "Shadows"
+#~ msgstr "Varjot"
+
+#~ msgid "Window Drop-Down Shadow"
+#~ msgstr "Ikkunan varjo"
+
+#~ msgid "Active Window Glow"
+#~ msgstr "Aktiivisen ikkunan hehku"
+
+#~ msgid "Window-Specific Overrides"
+#~ msgstr "Ikkunakohtaiset asetukset"
+
+#~ msgid "Dialog"
+#~ msgstr "Valintaikkuna"
+
+#~ msgid "Information about Selected Window"
+#~ msgstr "Tietoa valitusta ikkunasta"
+
+#~ msgid "Class: "
+#~ msgstr "Luokka: "
+
+#~ msgid "Title: "
+#~ msgstr "Otsikko: "
+
+#~ msgid "Window Property Selection"
+#~ msgstr "Ikkunan ominaisuuksien valinta"
+
+#~ msgid "Use window class (whole application)"
+#~ msgstr "Käytä ikkunaluokkaa (koko sovellus)"
+
+#~ msgid "Use window title"
+#~ msgstr "Käytä ikkunan otsikkoa"
+
+#~ msgid "Window Identification"
+#~ msgstr "Ikkunan tunnistus"
+
+#~ msgid "Matching window property: "
+#~ msgstr "Täsmäävä ikkunan ominaisuus: "
+
+#~ msgid "Regular expression to match: "
+#~ msgstr "Täsmätään säännölliseen lausekkeeseen: "
+
+#~ msgid "Detect Window Properties"
+#~ msgstr "Tunnista ikkunan ominaisuudet"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Koristuksen valinnat"
+
+#~ msgctxt "outline window title"
+#~ msgid "Disabled"
+#~ msgstr "Ei käytössä"
+
+#~ msgctxt "outline window title"
+#~ msgid "Enabled"
+#~ msgstr "Käytössä"
+
+#~ msgid "Border size:"
+#~ msgstr "Reunuksen koko:"
+
+#~ msgid "Outline active window title:"
+#~ msgstr "Piirrä aktiivisen ikkunan otsikolle reunaviiva:"
+
+#~ msgid "Separator display:"
+#~ msgstr "Erotinnäyttö:"
+
+#~ msgid "Hide window title bar"
+#~ msgstr "Piilota ikkunan otsikkopalkki"
+
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Disabled"
+#~ msgstr "Ei näkyvissä"
+
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Enabled"
+#~ msgstr "Näkyvissä"
+
+#~ msgid "Move Up"
+#~ msgstr "Siirrä ylemmäs"
+
+#~ msgid "Move Down"
+#~ msgstr "Siirrä alemmas"
+
+#~ msgid "Add"
+#~ msgstr "Lisää"
+
+#~ msgid "Remove"
+#~ msgstr "Poista"
+
+#~ msgid "Edit"
+#~ msgstr "Muokkaa"
+
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "Oxygen-varjoesittely"
+
+#~ msgid "Draw window background"
+#~ msgstr "Piirrä ikkunan tausta"
+
+#~ msgid "Inactive Windows"
+#~ msgstr "Passiiviset ikkunat"
+
+#~ msgid "Active Windows"
+#~ msgstr "Aktiiviset ikkunat"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+#~ msgid "Window Actions Menu"
+#~ msgstr "Ikkunan valikko"
+
+#~ msgid "Application Menu"
+#~ msgstr "Sovelluksen valikko"
+
+#~ msgid "Help"
+#~ msgstr "Ohje"
+
+#~ msgid "Minimize"
+#~ msgstr "Pienennä"
+
+#~ msgid "Maximize"
+#~ msgstr "Suurenna"
+
+#~ msgid "Close"
+#~ msgstr "Sulje"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "Pidä ylinnä"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "Pidä alinna"
+
+#~ msgid "On All Desktops"
+#~ msgstr "Kaikilla työpöydillä"
+
+#~ msgid "Shade Button"
+#~ msgstr "Varjostuspainike"
+
+#~ msgid "Menu"
+#~ msgstr "Valikko"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "Ei kaikilla työpöydillä"
+
+#~ msgid "On all desktops"
+#~ msgstr "Kaikilla työpöydillä"
+
+#~ msgid "Unshade"
+#~ msgstr "Rullaa auki"
+
+#~ msgid "Shade"
+#~ msgstr "Rullaa kiinni"
+
+#~ msgid "Resize"
+#~ msgstr "Muuta kokoa"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>B II esikatselu</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "Palauta"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "Piirrä ikkunan kehykset käyttäen &otsikkopalkin värejä"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "Kun valittuna, ikkunan koristekehykset piirretään otsikkopalkin väreissä. "
+#~ "Muuten ne piirretään normaalilla reunojen värillä."
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "Piirrä &koonmuutoskahva"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "Jos tämä asetus on valittuna, koristeisiin piirretään ikkunoiden koon "
+#~ "muutoskahva ikkunan oikeaan alareunaan."
+
+#~ msgid "Auto-move titlebar"
+#~ msgstr "Siirrä otsikkopalkkia automaattisesti"
+
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr ""
+#~ "Jos valittu, otsikkopalkit siirretään automaattisesti näkyville, muutoin "
+#~ "ne on siirrettävä käsin Vaihto+vedolla."
+
+#~ msgid "Actions Settings"
+#~ msgstr "Toimintojen asetukset"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "Valikkopainikkeen kaksoisnapsautus:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "Älä tee mitään"
+
+#~ msgid "Minimize Window"
+#~ msgstr "Pienennä ikkuna"
+
+#~ msgid "Shade Window"
+#~ msgstr "Varjosta ikkuna"
+
+#~ msgid "Close Window"
+#~ msgstr "Sulje ikkuna"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "Valikkopainikkeen kaksoisnapsautukselle voidaan määritellä toiminne. Jätä "
+#~ "kohta tyhjäksi, jos et tarvitse sitä."
+
+#~ msgid "Laptop"
+#~ msgstr "Kannettava"
+
+#~ msgid "Bac&kground style: "
+#~ msgstr "&Taustan tyyli: "
+
+#~ msgid "Solid Color"
+#~ msgstr "Tasainen väri"
+
+#~ msgid "Radial Gradient"
+#~ msgstr "Säteittäinen väriliuku"
+
+#~ msgid "Follow Style Hint"
+#~ msgstr "Noudata tyylivihjettä"
+
+#~ msgid "Background style:"
+#~ msgstr "Taustan tyyli:"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Tommi Nieminen"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "translator@legisign.org"
+
+#~ msgid "Oxygen decoration shadows demonstration"
+#~ msgstr "Oxygen-kehysten varjoesittely"
+
+#~ msgid "(c) 2011, Hugo Pereira Da Costa"
+#~ msgstr "© 2011, Hugo Pereira Da Costa"
+
+#~ msgid "Hugo Pereira Da Costa"
+#~ msgstr "Hugo Pereira Da Costa"
+
+#~ msgid "Save"
+#~ msgstr "Tallenna"
+
+#~ msgid "Save shadows as pixmaps in provided directory"
+#~ msgstr "Tallenna varjot bittikarttoina annettuun hakemistoon"
+
+#, fuzzy
+#~ msgid "Large"
+#~ msgstr "Suuri"
+
+#, fuzzy
+#~ msgid "Small"
+#~ msgstr "Pieni"
+
+#~ msgid "Extra size grip display: "
+#~ msgstr "Erityiskokoisen kahvan näyttö: "
+
+#~ msgid "Extra size grip display:"
+#~ msgstr "Erikoiskokoisen kahvan näyttö:"
+
+#~ msgid "Inner Color:"
+#~ msgstr "Sisempi väri:"
+
+#~ msgid "Outer Color:"
+#~ msgstr "Ulompi väri:"
+
+#~ msgid "Vertical Offset:"
+#~ msgstr "Pystysiirtymä:"
+
+#~ msgid "Size: "
+#~ msgstr "Koko: "
+
+#~ msgid "px"
+#~ msgstr " px"
+
+#~ msgid "Always Hide Extra Size Grip"
+#~ msgstr "Piilota aina erityiskokoinen kahva"
+
+#~ msgid "Show Extra Size Grip When Needed"
+#~ msgstr "Näytä erityiskokoinen kahva tarvittaessa"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "Valitse tämä, jos haluat ikkunoiden sulkeutuvan kun kaksoisnapsautat "
+#~ "valikkopainiketta, kuten Microsoft Windowsissa."
+
+#~ msgid "Plastik"
+#~ msgstr "Plastik"
+
+#~ msgid "All Desktops"
+#~ msgstr "Kaikilla työpöydillä"
+
+#~ msgid "Above"
+#~ msgstr "Ylinnä"
+
+#~ msgid "Below"
+#~ msgstr "Alinna"
+
+#~ msgid "Close Item"
+#~ msgstr "Sulje kohde"
+
+#~ msgid "Tabstrip"
+#~ msgstr "Välilehtinauha"
+
+#~ msgid "&Left"
+#~ msgstr "&Vasemmalla"
+
+#~ msgid "&Center"
+#~ msgstr "&Keskitetty"
+
+#~ msgid "&Right"
+#~ msgstr "&Oikealla"
+
+#~ msgid "Display window icons"
+#~ msgstr "Näytä ikkunan kuvakkeet"
+
+#, fuzzy
+#~| msgid "Outer Color:"
+#~ msgid "O&utline Color:"
+#~ msgstr "Ulompi väri:"
+
+#~ msgid "Do not keep above others"
+#~ msgstr "Älä pidä muiden yläpuolella"
+
+#~ msgid "Keep above others"
+#~ msgstr "Pidä muiden yläpuolella"
+
+#~ msgid "Do not keep below others"
+#~ msgstr "Älä pidä muiden alla"
+
+#~ msgid "Keep below others"
+#~ msgstr "Pidä muiden alla"
+
+#~ msgid "Enable title transition animations"
+#~ msgstr "Ota käyttöön otsakkeen siirrosanimaatiot"
+
+#~ msgid "Variable"
+#~ msgstr "Muuttuja"
+
+#~ msgid "Maximum"
+#~ msgstr "Suurin mahdollinen"
+
+#~ msgid "Enable window grouping"
+#~ msgstr "Ryhmittele ikkunat"
+
+#~ msgid "Shadow caching:"
+#~ msgstr "Varjojen välimuisti:"
+
+#~ msgid "TextLabel"
+#~ msgstr "Tekstinimiö"
+
+#~ msgid "Use Oxygen Shadows"
+#~ msgstr "Käytä Oxygenin varjoja"
+
+#~ msgid "Use Desktop Effects Shadows"
+#~ msgstr "Käytä työpöytätehosteiden varjoja"
+
+#~ msgid "Do Not Draw Shadows"
+#~ msgstr "Älä piirrä varjoja"
+
+#~ msgid "Shadow style:"
+#~ msgstr "Varjojen tyyli:"
+
+#~ msgctxt "draw separator"
+#~ msgid "Enabled"
+#~ msgstr "Käytössä"
+
+#~ msgctxt "draw separator"
+#~ msgid "Disabled"
+#~ msgstr "Ei käytössä"
+
+#~ msgid "Draw separator between title bar and window contents: "
+#~ msgstr "Piirrä erotin otsikkopalkin ja ikkunan sisällön väliin: "
+
+#~ msgid "Draw Separator between title bar and active window contents "
+#~ msgstr "Piirrä erotin otsikkopalkin ja ikkunan aktiivisen sisällön välille "
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "Asenna KWM-teema"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "Polku teematiedostoon"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWM Teema</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "Tahmea"
+
+#~ msgid "Unsticky"
+#~ msgstr "Ei tahmea"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>Keramik-esikatselu</b></center>"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "Piirrä otsikkorivi &pistetehosteella"
+
+#~ msgid ""
+#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
+#~ "otherwise, they are drawn without the stipple."
+#~ msgstr ""
+#~ "Tällä valinnalla aktiiviset ikkunoiden otiskot näkyvät täplitettynä, "
+#~ "muutoin niitä ei täplitetä."
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "Piirrä &kiinniottopalkki ikkunoiden alle"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
+#~ "otherwise, no grab bar is drawn."
+#~ msgstr ""
+#~ "Tällä valinnalla koristeissa on tarrautumiskahva ikkunan alla. Muutoin "
+#~ "tarrautumiskahvaa ei näytetä."
+
+#~ msgid "Draw &gradients"
+#~ msgstr "Piirrä &väriliu’ut"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with gradients for high-color "
+#~ "displays; otherwise, no gradients are drawn."
+#~ msgstr ""
+#~ "Tällä valinnalla koristeet ovat kaltevat high-color -näytöillä. Muutoin "
+#~ "kaltevuutta ei näytetä."
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"
+
+#~ msgid ""
+#~ "When selected, the window decoration borders are drawn using the titlebar "
+#~ "colors; otherwise, they are drawn using normal border colors instead."
+#~ msgstr ""
+#~ "Tällä valinnalla ikkunan koristeen kehykset näytetään otsikkopalkin "
+#~ "värein. Muutoin ne näytetään normaaleilla kehysväreillä."
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "&Erittäin ohut kvartsi"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "Kvartsinen ikkunakoriste erittäin pienellä otsikkopalkilla."
+
+#~ msgid "Quartz"
+#~ msgstr "Kvartsi"
+
+#~ msgid "Redmond"
+#~ msgstr "Redmond"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "&Näytä ikkunakoon vaihtopidike"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "Jos kohta on valittuna, kaikkiin ikkunoihin piirretään koonmuutoskahva "
+#~ "oikeaan alakulmaan. Tällöin ikkunoiden koon muuttaminen on helpompaa "
+#~ "erityisesti kannettavien osoitinlaitteilla."
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr "Tässä kohdassa voit määritellä koonmuutoskahvan koon."
+
+#~ msgid "Medium"
+#~ msgstr "Keskikokoinen"
+
+#~ msgid "Modern System"
+#~ msgstr "Moderni järjestelmä"
+
+#~ msgid "Web"
+#~ msgstr "Web"
+
+#~ msgid "Keramik"
+#~ msgstr "Keramik"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "Näytä ikkunan &kuvake otsikkokuplassa"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "Valitse tämä asetus, jos haluat että ikkunan kuvake piirretään "
+#~ "otsikkokuplaan otsikkotekstin viereen."
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "Piirrä &pienet otsikkokuplat aktiivisiin ikkunoihin"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "Valitse tämä asetus, jos haluat että otsikkokupla on saman kokoinen "
+#~ "aktiivissa ja epäaktiivisissa ikkunoissa. Tämä asetus on hyödyllinen "
+#~ "kannettavissa koneissa, tai matalan tarkkuuden näytöissä, joissa haluat "
+#~ "maksimoida vapaan tilan työpöydällä."
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "Piirrä &tarrautumispalkit ikkunoiden alle"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "Valitse tämä asetus, jos haluat että tarrautumispalkki piirretään ikkunan "
+#~ "alle. Kun asetusta ei ole valittu, vain ohut kehys piirretään palkin "
+#~ "tilalle."
+
+#~ msgid "Aurorae Theme Engine"
+#~ msgstr "Aurorae-teemamoottori"
+
+#~ msgid "Drag or Type Theme URL"
+#~ msgstr "Vedä tähän tai kirjoita teeman osoite"
+
+#~ msgid "Unable to find the theme archive %1."
+#~ msgstr "Teema-arkistoa %1 ei löydy."
+
+#~ msgid ""
+#~ "Unable to download theme archive;\n"
+#~ "please check that address %1 is correct."
+#~ msgstr ""
+#~ "Teema-arkistoa ei saatu ladatuksi:\n"
+#~ "tarkista, että osoite %1 on oikein."
+
+#~ msgid "Theme:"
+#~ msgstr "Teema:"
+
+#~ msgid "Get New Themes..."
+#~ msgstr "Hae uusia teemoja..."
+
+#~ msgid "Install New Theme..."
+#~ msgstr "Asenna uusi teema..."
+
+#~ msgid "Glow active window"
+#~ msgstr "Himmennä aktiivista ikkunaa"
+
+#~ msgid "Draw separator between title bar and active window contents:"
+#~ msgstr "Nosta erotin otsakepalkin ja aktiivin ikkunasisällön väliin:"
+
+#~ msgid ""
+#~ "When enabled, this option makes an horizontal separator appear between "
+#~ "the window title bar and the window contents."
+#~ msgstr ""
+#~ "Kun valittuna, tämä valitsin sijoittaa vaakasuoran erottimen ikkunan "
+#~ "otsakepalkin ja ikkunan sisällön väliin."
+
+#~ msgid "Oxygen team"
+#~ msgstr "Oxygen-ryhmä"
+
+#~ msgid ""
+#~ "When enabled, this option increases the visibility of the window titlebar "
+#~ "by showing stripes"
+#~ msgstr ""
+#~ "Kun valittuna, ikkunan otsikkopalkin näkyvyyttä lisätään näyttämällä "
+#~ "raidat"
+
+#~ msgid "Show stripes next to the title"
+#~ msgstr "Näytä raidat otsikkopalkissa"
+
+#~ msgid ""
+#~ "When enabled, this option increases the visibility of the window titlebar "
+#~ "by adding an horizontal bar between the title bar and the window contents"
+#~ msgstr ""
+#~ "Kun valittuna, tämä valitsin kasvattaa ikkunan otsikkopalkin näkyvyyttä "
+#~ "lisäämällä vaakasuoran palkin otsikkopalkin ja ikkunan sisällön väliin."
+
+#~ msgid "Draw separator between title bar and window contents"
+#~ msgstr "Nosta erotin otsikkopalkin ja ikkunan sisällän väliin"
+
+#~ msgid "Show stripes next to the title:"
+#~ msgstr "Näytä raidat otsikon vieressä:"
+
+#~ msgid "Blend title bar colors with window content:"
+#~ msgstr "Sekoita otsikkorivin värit ikkunan sisällön kanssa:"
+
+#~ msgid "Blend title bar colors with window contents"
+#~ msgstr "Sekoita otsikkorivin värit ikkunan sisällön kanssa"
+
+#~ msgid "Ozone"
+#~ msgstr "Ozone"
+
+#~ msgid "Overwrite default title bar colors:"
+#~ msgstr "Korvaa otsikkopalkin oletusvärit:"
+
+#~ msgid ""
+#~ "When enabled, this option makes the window title bar use the same colors "
+#~ "as the window contents, instead of using the system title bar colors."
+#~ msgstr ""
+#~ "Jos tämä asetus on valittuna, ikkunan otsikkorivi käyttää samoja värejä "
+#~ "kuin ikkunan sisältö järjestelmän otsikkorivin värien sijaan."

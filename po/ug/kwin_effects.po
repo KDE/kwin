@@ -1,0 +1,1745 @@
+# Uyghur translation for kwin_effects.
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+# Sahran <sahran.ug@gmail.com>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_effects\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-09-28 00:51+0000\n"
+"PO-Revision-Date: 2013-09-08 07:05+0900\n"
+"Last-Translator: Gheyret Kenji <gheyret@gmail.com>\n"
+"Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
+"Language: ug\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
+#: blur/blur_config.ui:17
+#, fuzzy, kde-format
+#| msgid "&Strength:"
+msgid "Blur strength:"
+msgstr "كۈچلۈكلۈكى(&S):"
+
+#. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
+#. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
+#: blur/blur_config.ui:42 blur/blur_config.ui:108
+#, kde-format
+msgid "Light"
+msgstr "ئاق"
+
+#. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
+#. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
+#: blur/blur_config.ui:74 blur/blur_config.ui:137
+#, kde-format
+msgid "Strong"
+msgstr "كۈچلۈك"
+
+#. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
+#: blur/blur_config.ui:83
+#, fuzzy, kde-format
+#| msgid "&Strength:"
+msgid "Noise strength:"
+msgstr "كۈچلۈكلۈكى(&S):"
+
+#: colorpicker/colorpicker.cpp:101
+#, kde-format
+msgid ""
+"Select a position for color picking with left click or enter.\n"
+"Escape or right click to cancel."
+msgstr ""
+
+#: desktopgrid/desktopgrid_config.cpp:49 invert/invert_config.cpp:35
+#: magnifier/magnifier_config.cpp:55 mouseclick/mouseclick_config.cpp:48
+#: mousemark/mousemark_config.cpp:50 overview/kcm/overvieweffectkcm.cpp:35
+#: showpaint/showpaint_config.cpp:33
+#: thumbnailaside/thumbnailaside_config.cpp:54
+#: trackmouse/trackmouse_config.cpp:52
+#: windowview/kcm/windowvieweffectkcm.cpp:36 zoom/zoom_config.cpp:58
+#, kde-format
+msgid "KWin"
+msgstr ""
+
+#: desktopgrid/desktopgrid_config.cpp:54 desktopgrid/desktopgrideffect.cpp:35
+#, kde-format
+msgid "Show Desktop Grid"
+msgstr "ئۈستەلئۈستى سېتكىسىنى كۆرسەت"
+
+#: desktopgrid/desktopgrid_config.cpp:61
+#, kde-format
+msgctxt "Desktop name alignment:"
+msgid "Disabled"
+msgstr "ئىناۋەتسىز قىلىنغان"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: desktopgrid/desktopgrid_config.cpp:62 glide/glide_config.ui:70
+#: glide/glide_config.ui:168
+#, kde-format
+msgid "Top"
+msgstr "ئۈستى"
+
+#: desktopgrid/desktopgrid_config.cpp:63
+#, kde-format
+msgid "Top-Right"
+msgstr "ئوڭ ئۇستى"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: desktopgrid/desktopgrid_config.cpp:64 glide/glide_config.ui:75
+#: glide/glide_config.ui:173
+#, kde-format
+msgid "Right"
+msgstr "ئوڭ"
+
+#: desktopgrid/desktopgrid_config.cpp:65
+#, kde-format
+msgid "Bottom-Right"
+msgstr "تۆۋەن ئوڭ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: desktopgrid/desktopgrid_config.cpp:66 glide/glide_config.ui:80
+#: glide/glide_config.ui:178
+#, kde-format
+msgid "Bottom"
+msgstr "ئاستى"
+
+#: desktopgrid/desktopgrid_config.cpp:67
+#, kde-format
+msgid "Bottom-Left"
+msgstr "تۆۋەن سول"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: desktopgrid/desktopgrid_config.cpp:68 glide/glide_config.ui:85
+#: glide/glide_config.ui:183
+#, kde-format
+msgid "Left"
+msgstr "سول"
+
+#: desktopgrid/desktopgrid_config.cpp:69
+#, kde-format
+msgid "Top-Left"
+msgstr "سول ئۇستى"
+
+#: desktopgrid/desktopgrid_config.cpp:70
+#, kde-format
+msgid "Center"
+msgstr "مەركەز"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: desktopgrid/desktopgrid_config.ui:17 mousemark/mousemark_config.ui:17
+#: thumbnailaside/thumbnailaside_config.ui:17
+#, kde-format
+msgid "Appearance"
+msgstr "كۆرۈنۈشى"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
+#: desktopgrid/desktopgrid_config.ui:30
+#, kde-format
+msgid "Pager"
+msgstr "چاقىرغۇ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
+#: desktopgrid/desktopgrid_config.ui:35
+#, kde-format
+msgid "Automatic"
+msgstr "ئاپتوماتىك"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
+#: desktopgrid/desktopgrid_config.ui:40
+#, kde-format
+msgid "Custom"
+msgstr "ئىختىيارى"
+
+#. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
+#: desktopgrid/desktopgrid_config.ui:48
+#, fuzzy, kde-format
+#| msgid "Number of &rows:"
+msgid "N&umber of rows:"
+msgstr "قۇر سانى(&R):"
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: desktopgrid/desktopgrid_config.ui:103
+#, kde-format
+msgid "Desktop &name alignment:"
+msgstr "ئۈستەلئۈستى ئاتىنىڭ توغرىلىنىشى(&N):"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShowAddRemove)
+#: desktopgrid/desktopgrid_config.ui:116
+#, kde-format
+msgid "Show buttons to alter count of virtual desktops"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: desktopgrid/desktopgrid_config.ui:123
+#, fuzzy, kde-format
+#| msgid "&Layout mode:"
+msgid "&Grid layout mode:"
+msgstr "جايلاشتۇرۇش ئۇسۇلى(&L):"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: desktopgrid/desktopgrid_config.ui:137 overview/kcm/overvieweffectkcm.ui:30
+#: windowview/kcm/windowvieweffectkcm.ui:30
+#, kde-format
+msgid "Closest"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: desktopgrid/desktopgrid_config.ui:142 overview/kcm/overvieweffectkcm.ui:35
+#: windowview/kcm/windowvieweffectkcm.ui:35
+#, kde-format
+msgid "Natural"
+msgstr "تەبىئىي"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: desktopgrid/desktopgrid_config.ui:150
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Windows layout:"
+msgstr "كۆزنەكلەر"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: desktopgrid/desktopgrid_config.ui:166
+#, kde-format
+msgid "Activation"
+msgstr "ئاكتىپلاش"
+
+#. i18n: ectx: property (text), widget (QLabel, label_Strength)
+#: diminactive/diminactive_config.ui:17
+#, fuzzy, kde-format
+#| msgid "&Strength:"
+msgid "Strength:"
+msgstr "كۈچلۈكلۈكى(&S):"
+
+#. i18n: ectx: property (text), widget (QLabel, label_Dim)
+#: diminactive/diminactive_config.ui:40
+#, kde-format
+msgid "Dim:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
+#: diminactive/diminactive_config.ui:47
+#, fuzzy, kde-format
+#| msgid "Do not animate panels"
+msgid "Docks and panels"
+msgstr "تاختايلارنى جانلاندۇرما"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
+#: diminactive/diminactive_config.ui:54
+#, fuzzy, kde-format
+#| msgctxt "@title:group actions when clicking on desktop"
+#| msgid "Desktop"
+msgid "Desktop"
+msgstr "ئۈستەلئۈستى"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
+#: diminactive/diminactive_config.ui:61
+#, fuzzy, kde-format
+#| msgid "Inactive windows:"
+msgid "Keep above windows"
+msgstr "پاسسىپ كۆزنەكلەر:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
+#: diminactive/diminactive_config.ui:68
+#, kde-format
+msgid "By window group"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
+#: diminactive/diminactive_config.ui:75
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Fullscreen windows"
+msgstr "كۆزنەكلەر"
+
+#. i18n: ectx: property (text), widget (QLabel, label_Duration)
+#: glide/glide_config.ui:19 scale/package/contents/ui/config.ui:17
+#, fuzzy, kde-format
+#| msgid "Duration"
+msgid "Duration:"
+msgstr "ۋاقتى"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
+#: glide/glide_config.ui:32 scale/package/contents/ui/config.ui:30
+#, fuzzy, kde-format
+#| msgctxt "Duration of rotation"
+#| msgid "Default"
+msgid "Default"
+msgstr "كۆڭۈلدىكى"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
+#: glide/glide_config.ui:35 scale/package/contents/ui/config.ui:33
+#, kde-format
+msgid " milliseconds"
+msgstr " مىللىي سېكۇنت"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
+#: glide/glide_config.ui:50
+#, fuzzy, kde-format
+#| msgid "Animation"
+msgid "Window Open Animation"
+msgstr "جانلاندۇرۇم"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
+#. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
+#: glide/glide_config.ui:56 glide/glide_config.ui:154
+#, fuzzy, kde-format
+#| msgid "Rotation duration:"
+msgid "Rotation edge:"
+msgstr "چۆرگىلىتىش ۋاقتى:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
+#. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
+#: glide/glide_config.ui:93 glide/glide_config.ui:191
+#, fuzzy, kde-format
+#| msgid "Rotation duration:"
+msgid "Rotation angle:"
+msgstr "چۆرگىلىتىش ۋاقتى:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InDistance)
+#. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
+#: glide/glide_config.ui:119 glide/glide_config.ui:198
+#, kde-format
+msgid "Distance:"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
+#: glide/glide_config.ui:148
+#, fuzzy, kde-format
+#| msgid "Animation"
+msgid "Window Close Animation"
+msgstr "جانلاندۇرۇم"
+
+#: invert/invert.cpp:42 invert/invert_config.cpp:38
+#, kde-format
+msgid "Toggle Invert Effect"
+msgstr "تەتۈر قىلىش ئۈنۈمىنى ئالماشتۇر"
+
+#: invert/invert.cpp:50 invert/invert_config.cpp:44
+#, kde-format
+msgid "Toggle Invert Effect on Window"
+msgstr "كۆزنەك تەتۈر قىلىش ئۈنۈمىنى ئالماشتۇر"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
+#: login/package/contents/ui/config.ui:17
+#, kde-format
+msgid "Fade to black (fullscreen splash screens only)"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: magiclamp/magiclamp_config.ui:17
+#, kde-format
+msgid "Animation duration:"
+msgstr "جانلاندۇرۇم ۋاقتى:"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_AnimationDuration)
+#: magiclamp/magiclamp_config.ui:36
+#, kde-format
+msgctxt "Duration of rotation"
+msgid "Default"
+msgstr "كۆڭۈلدىكى"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
+#: magiclamp/magiclamp_config.ui:39
+#, kde-format
+msgid "milliseconds"
+msgstr "مىللىي سېكۇنت"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupSize)
+#: magnifier/magnifier_config.ui:17
+#, kde-format
+msgid "Size"
+msgstr "چوڭلۇقى"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: magnifier/magnifier_config.ui:23
+#, kde-format
+msgid "&Width:"
+msgstr "كەڭلىك(&W):"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
+#: magnifier/magnifier_config.ui:42 magnifier/magnifier_config.ui:74
+#, kde-format
+msgid " px"
+msgstr " px"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: magnifier/magnifier_config.ui:55
+#, kde-format
+msgid "&Height:"
+msgstr "ئېگىزلىك(&H):"
+
+#: mouseclick/mouseclick.cpp:34 mouseclick/mouseclick_config.cpp:51
+#, fuzzy, kde-format
+#| msgid "Toggle Invert Effect"
+msgid "Toggle Mouse Click Effect"
+msgstr "تەتۈر قىلىش ئۈنۈمىنى ئالماشتۇر"
+
+#: mouseclick/mouseclick.cpp:42
+#, fuzzy, kde-format
+#| msgid "Left"
+msgctxt "Left mouse button"
+msgid "Left"
+msgstr "سول"
+
+#: mouseclick/mouseclick.cpp:43
+#, fuzzy, kde-format
+#| msgid "Middle"
+msgctxt "Middle mouse button"
+msgid "Middle"
+msgstr "ئوتتۇرا"
+
+#: mouseclick/mouseclick.cpp:44
+#, fuzzy, kde-format
+#| msgid "Right"
+msgctxt "Right mouse button"
+msgid "Right"
+msgstr "ئوڭ"
+
+#: mouseclick/mouseclick.h:61
+#, kde-format
+msgid "↓"
+msgstr ""
+
+#: mouseclick/mouseclick.h:62
+#, kde-format
+msgid "↑"
+msgstr ""
+
+#. i18n: ectx: attribute (title), widget (QWidget, basic_tab)
+#: mouseclick/mouseclick_config.ui:21
+#, kde-format
+msgid "Basic Settings"
+msgstr "ئاساسىي تەڭشەكلەر"
+
+#. i18n: ectx: property (text), widget (QLabel, button1_label)
+#: mouseclick/mouseclick_config.ui:37
+#, kde-format
+msgid "Left Mouse Button Color:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, button2_label)
+#: mouseclick/mouseclick_config.ui:50
+#, kde-format
+msgid "Middle Mouse Button Color:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, button3_label)
+#: mouseclick/mouseclick_config.ui:70
+#, kde-format
+msgid "Right Mouse Button Color:"
+msgstr ""
+
+#. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
+#: mouseclick/mouseclick_config.ui:91
+#, kde-format
+msgid "Advanced Settings"
+msgstr "ئالىي تەڭشەك"
+
+#. i18n: ectx: property (title), widget (QGroupBox, rings)
+#: mouseclick/mouseclick_config.ui:97
+#, kde-format
+msgid "Rings"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, ring_line_width_label)
+#: mouseclick/mouseclick_config.ui:103
+#, kde-format
+msgid "Line Width:"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, kcfg_LineWidth)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
+#: mouseclick/mouseclick_config.ui:119 mouseclick/mouseclick_config.ui:171
+#, fuzzy, kde-format
+#| msgid " pixel"
+#| msgid_plural " pixels"
+msgid " pixel"
+msgstr " چېكىت"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingLife)
+#: mouseclick/mouseclick_config.ui:132
+#, kde-format
+msgid " msec"
+msgstr " مىللىسېكۇنت"
+
+#. i18n: ectx: property (text), widget (QLabel, ring_duration_label)
+#: mouseclick/mouseclick_config.ui:145
+#, kde-format
+msgid "Ring Duration:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, ring_radius_label)
+#: mouseclick/mouseclick_config.ui:155
+#, kde-format
+msgid "Ring Radius:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, ring_count_label)
+#: mouseclick/mouseclick_config.ui:184
+#, kde-format
+msgid "Ring Count:"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, font)
+#: mouseclick/mouseclick_config.ui:210
+#, kde-format
+msgid "Text"
+msgstr "تېكىست"
+
+#. i18n: ectx: property (text), widget (QLabel, font_label)
+#: mouseclick/mouseclick_config.ui:216
+#, kde-format
+msgid "Font:"
+msgstr "خەت نۇسخا:"
+
+#. i18n: ectx: property (text), widget (QLabel, showtext_label)
+#: mouseclick/mouseclick_config.ui:233
+#, kde-format
+msgid "Show Text:"
+msgstr ""
+
+#: mousemark/mousemark.cpp:36
+#, kde-format
+msgid "Clear All Mouse Marks"
+msgstr "بارلىق چاشقىنەك بەلگىلىرىنى تازىلا"
+
+#: mousemark/mousemark.cpp:43 mousemark/mousemark_config.cpp:59
+#, kde-format
+msgid "Clear Last Mouse Mark"
+msgstr "ئەڭ ئاخىرقى چاشقىنەك بەلگىسىنى تازىلا"
+
+#: mousemark/mousemark_config.cpp:53
+#, kde-format
+msgid "Clear Mouse Marks"
+msgstr "چاشقىنەك بەلگىسىنى تازىلا"
+
+#: mousemark/mousemark_config.cpp:100
+#, fuzzy, kde-format
+#| msgid " pixel"
+#| msgid_plural " pixels"
+msgctxt "Suffix"
+msgid " pixel"
+msgid_plural " pixels"
+msgstr[0] " چېكىت"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: mousemark/mousemark_config.ui:23
+#, kde-format
+msgid "Wid&th:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: mousemark/mousemark_config.ui:36
+#, kde-format
+msgid "&Color:"
+msgstr "رەڭ(&C):"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: mousemark/mousemark_config.ui:82
+#, kde-format
+msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+msgstr "Shift+Meta نى بېسىپ تۇرۇپ چاشقىنەكنى يۆتكەش ئارقىلىق سىزىدۇ."
+
+#: outputlocator/outputlocator.cpp:48
+#, kde-format
+msgctxt "@label"
+msgid "Unknown"
+msgstr ""
+
+#: overview/kcm/overvieweffectkcm.cpp:41 overview/overvieweffect.cpp:31
+#, fuzzy, kde-format
+#| msgid "Toggle Invert Effect"
+msgid "Toggle Overview"
+msgstr "تەتۈر قىلىش ئۈنۈمىنى ئالماشتۇر"
+
+#. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
+#: overview/kcm/overvieweffectkcm.ui:22
+#: windowview/kcm/windowvieweffectkcm.ui:22
+#, kde-format
+msgid "Layout mode:"
+msgstr "جايلاشتۇرۇش ئۇسۇلى:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
+#: overview/kcm/overvieweffectkcm.ui:53
+#, fuzzy, kde-format
+#| msgid "Background"
+msgid "Blur background:"
+msgstr "تەگلىك"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: overview/kcm/overvieweffectkcm.ui:70
+#, fuzzy, kde-format
+#| msgid "Ignore &minimized windows"
+msgid "Ignore minimized windows:"
+msgstr "ئەڭ كىچىك ھالەتتىكى كۆزنەكلەرگە پىسەنت قىلما(&M)"
+
+#: overview/qml/DesktopBar.qml:186
+#, kde-format
+msgid "Delete Virtual Desktop"
+msgstr ""
+
+#: overview/qml/DesktopBar.qml:282
+#, fuzzy, kde-format
+#| msgctxt "@title:group actions when clicking on desktop"
+#| msgid "Desktop"
+msgid "Add Virtual Desktop"
+msgstr "ئۈستەلئۈستى"
+
+#: overview/qml/ScreenView.qml:226
+#, fuzzy, kde-format
+#| msgid "Moving windows:"
+msgid "No matching windows"
+msgstr "يۆتكىلىۋاتقان كۆزنەكلەر:"
+
+#: private/qml/WindowHeapDelegate.qml:152
+#, kde-format
+msgid "Drag Down To Close"
+msgstr ""
+
+#: private/qml/WindowHeapDelegate.qml:462
+#, fuzzy, kde-format
+#| msgid "Scale window"
+msgctxt "@info:tooltip as in: 'close this window'"
+msgid "Close window"
+msgstr "ئۆلچەك كۆزنەك"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InScale)
+#: scale/package/contents/ui/config.ui:46
+#, fuzzy, kde-format
+#| msgid "Animation"
+msgid "Window open scale:"
+msgstr "جانلاندۇرۇم"
+
+#. i18n: ectx: property (text), widget (QLabel, label_OutScale)
+#: scale/package/contents/ui/config.ui:53
+#, fuzzy, kde-format
+#| msgid "Animation"
+msgid "Window close scale:"
+msgstr "جانلاندۇرۇم"
+
+#: screenshot/screenshotdbusinterface1.cpp:480
+#, kde-format
+msgctxt "Notification caption that a screenshot got saved to file"
+msgid "Screenshot"
+msgstr ""
+
+#: screenshot/screenshotdbusinterface1.cpp:481
+#, kde-format
+msgctxt "Notification with path to screenshot file"
+msgid "Screenshot saved to %1"
+msgstr ""
+
+#: screenshot/screenshotdbusinterface1.cpp:797
+#: screenshot/screenshotdbusinterface2.cpp:472
+#, kde-format
+msgid ""
+"Select window to screen shot with left click or enter.\n"
+"Escape or right click to cancel."
+msgstr ""
+
+#: screenshot/screenshotdbusinterface1.cpp:800
+#: screenshot/screenshotdbusinterface2.cpp:490
+#, kde-format
+msgid ""
+"Create screen shot with left click or enter.\n"
+"Escape or right click to cancel."
+msgstr ""
+
+#: showfps/qml/main.qml:110
+#, fuzzy, kde-format
+#| msgid "Duration"
+msgctxt "@label"
+msgid "Paint Duration"
+msgstr "ۋاقتى"
+
+#: showfps/qml/main.qml:162
+#, kde-format
+msgctxt "@label"
+msgid "Paint Amount"
+msgstr ""
+
+#: showfps/qml/main.qml:175
+#, kde-format
+msgctxt "@label"
+msgid "Current FPS"
+msgstr ""
+
+#: showfps/qml/main.qml:184
+#, fuzzy, kde-format
+#| msgid "Maximum &width:"
+msgctxt "@label"
+msgid "Maximum FPS"
+msgstr "ئەڭ چوڭ كەڭلىكى(&W):"
+
+#: showfps/qml/main.qml:192
+#, kde-format
+msgctxt "@label"
+msgid "This effect is not a benchmark"
+msgstr ""
+
+#: showpaint/showpaint.cpp:38 showpaint/showpaint_config.cpp:38
+#, fuzzy, kde-format
+#| msgid "Show &panels"
+msgid "Toggle Show Paint"
+msgstr "تاختايلارنى كۆرسەت(&P)"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
+#: slide/slide_config.ui:17
+#, kde-format
+msgid "Gap between desktops"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
+#: slide/slide_config.ui:23
+#, fuzzy, kde-format
+#| msgid "Horizontal"
+msgid "Horizontal:"
+msgstr "توغرا يۆنىلىش"
+
+#. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
+#: slide/slide_config.ui:46
+#, fuzzy, kde-format
+#| msgid "Vertical"
+msgid "Vertical:"
+msgstr "تىك يۆنىلىش"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideDocks)
+#: slide/slide_config.ui:72
+#, kde-format
+msgid "Slide docks"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
+#: slide/slide_config.ui:79
+#, fuzzy, kde-format
+#| msgid "Slide when grouping"
+msgid "Slide desktop background"
+msgstr "گۇرۇپپىلاۋاتقاندا سىيرىسۇن"
+
+#: thumbnailaside/thumbnailaside.cpp:29
+#: thumbnailaside/thumbnailaside_config.cpp:59
+#, kde-format
+msgid "Toggle Thumbnail for Current Window"
+msgstr "نۆۋەتتىكى كۆزنەكنىڭ Thumbnail نى ئالماشتۇر"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: thumbnailaside/thumbnailaside_config.ui:23
+#, kde-format
+msgid "Maximum &width:"
+msgstr "ئەڭ چوڭ كەڭلىكى(&W):"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: thumbnailaside/thumbnailaside_config.ui:36
+#, kde-format
+msgid "&Spacing:"
+msgstr "بوشلۇق(&S):"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Spacing)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_MaxWidth)
+#: thumbnailaside/thumbnailaside_config.ui:55
+#: thumbnailaside/thumbnailaside_config.ui:106
+#, kde-format
+msgid " pixels"
+msgstr " چېكىت"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: thumbnailaside/thumbnailaside_config.ui:68
+#, kde-format
+msgid "&Opacity:"
+msgstr "غۇۋالىقى(&O):"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Opacity)
+#: thumbnailaside/thumbnailaside_config.ui:87
+#, no-c-format, kde-format
+msgid " %"
+msgstr " %"
+
+#: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
+#, kde-format
+msgid "Track mouse"
+msgstr "چاشقىنەكنى ئىزلا"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: trackmouse/trackmouse_config.ui:26
+#, kde-format
+msgid "Trigger effect with:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
+#: trackmouse/trackmouse_config.ui:33
+#, kde-format
+msgid "Keyboard shortcut:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
+#: trackmouse/trackmouse_config.ui:43
+#, fuzzy, kde-format
+#| msgid "Modifiers"
+msgid "Modifier keys:"
+msgstr "سۈپەتلىگۈچىلەر"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Alt)
+#: trackmouse/trackmouse_config.ui:65
+#, kde-format
+msgid "Alt"
+msgstr "Alt"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Control)
+#: trackmouse/trackmouse_config.ui:72
+#, kde-format
+msgid "Ctrl"
+msgstr "Ctrl"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Shift)
+#: trackmouse/trackmouse_config.ui:79
+#, kde-format
+msgid "Shift"
+msgstr "Shift"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Meta)
+#: trackmouse/trackmouse_config.ui:86
+#, kde-format
+msgid "Meta"
+msgstr "Meta"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
+#: translucency/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Translucency"
+msgstr "يېرىم سۈزۈكلۈك"
+
+#. i18n: ectx: property (title), widget (QGroupBox, m_opacityGroupBox)
+#: translucency/package/contents/ui/config.ui:20
+#, kde-format
+msgid "General Translucency Settings"
+msgstr "ئادەتتىكى يېرىم سۈزۈكلۈك تەڭشىكى"
+
+#. i18n: ectx: property (text), widget (QLabel, comboboxpopup_label)
+#: translucency/package/contents/ui/config.ui:64
+#, kde-format
+msgid "Combobox popups:"
+msgstr "بىرىكمە قاڭقىش كۆزنىكى:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: translucency/package/contents/ui/config.ui:121
+#: translucency/package/contents/ui/config.ui:431
+#, kde-format
+msgid "Opaque"
+msgstr "گۇڭگا"
+
+#. i18n: ectx: property (text), widget (QLabel, dialogs_label)
+#: translucency/package/contents/ui/config.ui:137
+#, kde-format
+msgid "Dialogs:"
+msgstr "سۆزلەشكۈلەر:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: translucency/package/contents/ui/config.ui:156
+#: translucency/package/contents/ui/config.ui:418
+#, kde-format
+msgid "Transparent"
+msgstr "سۈزۈك"
+
+#. i18n: ectx: property (text), widget (QLabel, menus_label)
+#: translucency/package/contents/ui/config.ui:188
+#, kde-format
+msgid "Menus:"
+msgstr "تىزىملىكلەر:"
+
+#. i18n: ectx: property (text), widget (QLabel, moveresize_label)
+#: translucency/package/contents/ui/config.ui:207
+#, kde-format
+msgid "Moving windows:"
+msgstr "يۆتكىلىۋاتقان كۆزنەكلەر:"
+
+#. i18n: ectx: property (text), widget (QLabel, inactive_label)
+#: translucency/package/contents/ui/config.ui:226
+#, kde-format
+msgid "Inactive windows:"
+msgstr "پاسسىپ كۆزنەكلەر:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
+#: translucency/package/contents/ui/config.ui:267
+#, kde-format
+msgid "Set menu translucency independently"
+msgstr "تىزىملىك يېرىم سۈزۈكلۈكىنى ئايرىم بەلگىلە"
+
+#. i18n: ectx: property (text), widget (QLabel, dropdownmenus_label)
+#: translucency/package/contents/ui/config.ui:285
+#, kde-format
+msgid "Dropdown menus:"
+msgstr "Dropdown تىزىملىكلىرى:"
+
+#. i18n: ectx: property (text), widget (QLabel, popupmenus_label)
+#: translucency/package/contents/ui/config.ui:329
+#, kde-format
+msgid "Popup menus:"
+msgstr "سەكرىمە تىزىملىكلەر:"
+
+#. i18n: ectx: property (text), widget (QLabel, tornoffmenus_label)
+#: translucency/package/contents/ui/config.ui:367
+#, kde-format
+msgid "Torn-off menus:"
+msgstr "قاتلانغان تىزىملىك:"
+
+#: windowview/kcm/windowvieweffectkcm.cpp:42 windowview/windowvieweffect.cpp:45
+#, kde-format
+msgid "Toggle Present Windows (Current desktop)"
+msgstr "بار كۆزنەكلەرنى ئالماشتۇر(نۆۋەتتىكى ئۈستەلئۈستى)"
+
+#: windowview/kcm/windowvieweffectkcm.cpp:49 windowview/windowvieweffect.cpp:55
+#, kde-format
+msgid "Toggle Present Windows (All desktops)"
+msgstr "بار كۆزنەكلەرنى ئالماشتۇر(بارلىق ئۈستەلئۈستى)"
+
+#: windowview/kcm/windowvieweffectkcm.cpp:56 windowview/windowvieweffect.cpp:65
+#, kde-format
+msgid "Toggle Present Windows (Window class)"
+msgstr "بار كۆزنەكلەرنى ئالماشتۇر(كۆزنەك تىپى(class))"
+
+#: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:75
+#, fuzzy, kde-format
+#| msgid "Toggle Present Windows (Current desktop)"
+msgid "Toggle Present Windows (Window class on current desktop)"
+msgstr "بار كۆزنەكلەرنى ئالماشتۇر(نۆۋەتتىكى ئۈستەلئۈستى)"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
+#: windowview/kcm/windowvieweffectkcm.ui:53
+#, kde-format
+msgid "Ignore &minimized windows"
+msgstr "ئەڭ كىچىك ھالەتتىكى كۆزنەكلەرگە پىسەنت قىلما(&M)"
+
+#: windowview/qml/main.qml:106
+#, kde-format
+msgid "No Matches"
+msgstr ""
+
+#: windowview/qml/main.qml:106
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "No Windows"
+msgstr "كۆزنەكلەر"
+
+#. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
+#: wobblywindows/wobblywindows_config.ui:20
+#, kde-format
+msgid "Advanced"
+msgstr "ئالىي"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: wobblywindows/wobblywindows_config.ui:26
+#, kde-format
+msgid "&Stiffness:"
+msgstr "قاتتىقلىق(&S)"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: wobblywindows/wobblywindows_config.ui:68
+#, kde-format
+msgid "Dra&g:"
+msgstr "سۆرەش(&G):"
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: wobblywindows/wobblywindows_config.ui:81
+#, kde-format
+msgid "&Move factor:"
+msgstr "يۆتكەش ئامىلى(&M):"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_MoveWobble)
+#: wobblywindows/wobblywindows_config.ui:155
+#, kde-format
+msgid "Wo&bble when moving"
+msgstr "يۆتكىگەندە تىترەت(&B)"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ResizeWobble)
+#: wobblywindows/wobblywindows_config.ui:162
+#, kde-format
+msgid "Wobble when &resizing"
+msgstr "چوڭلۇقىنى ئۆزگەرتكەندە تىترەت(&R)"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AdvancedMode)
+#: wobblywindows/wobblywindows_config.ui:182
+#, kde-format
+msgid "Enable &advanced mode"
+msgstr "ئالىي ھالەتنى ئىناۋەتلىك قىل(&A)"
+
+#. i18n: ectx: property (title), widget (QGroupBox, basicGroup)
+#: wobblywindows/wobblywindows_config.ui:192
+#, kde-format
+msgid "&Wobbliness"
+msgstr "تىترىشى(&W)"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: wobblywindows/wobblywindows_config.ui:201
+#, kde-format
+msgid "Less"
+msgstr "كىچىك"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: wobblywindows/wobblywindows_config.ui:224
+#, kde-format
+msgid "More"
+msgstr "تېخىمۇ كۆپ"
+
+#: zoom/zoom.cpp:68
+#, kde-format
+msgid "Move Zoomed Area to Left"
+msgstr ""
+
+#: zoom/zoom.cpp:76
+#, kde-format
+msgid "Move Zoomed Area to Right"
+msgstr ""
+
+#: zoom/zoom.cpp:84
+#, kde-format
+msgid "Move Zoomed Area Upwards"
+msgstr ""
+
+#: zoom/zoom.cpp:92
+#, kde-format
+msgid "Move Zoomed Area Downwards"
+msgstr ""
+
+#: zoom/zoom.cpp:101 zoom/zoom_config.cpp:108
+#, kde-format
+msgid "Move Mouse to Focus"
+msgstr "چاشقىنەكنى فوكۇسقا يۆتكە"
+
+#: zoom/zoom.cpp:109 zoom/zoom_config.cpp:115
+#, kde-format
+msgid "Move Mouse to Center"
+msgstr "چاشقىنەكنى مەركەزگە يۆتكە"
+
+#: zoom/zoom_config.cpp:80
+#, kde-format
+msgid "Move Left"
+msgstr "سولغا يۆتكە"
+
+#: zoom/zoom_config.cpp:87
+#, kde-format
+msgid "Move Right"
+msgstr "ئوڭغا يۆتكە"
+
+#: zoom/zoom_config.cpp:94
+#, kde-format
+msgid "Move Up"
+msgstr "ئۈستىگە"
+
+#: zoom/zoom_config.cpp:101
+#, kde-format
+msgid "Move Down"
+msgstr "پەسكە"
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label)
+#. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
+#: zoom/zoom_config.ui:25 zoom/zoom_config.ui:41
+#, kde-format
+msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+msgstr ""
+"چوڭايتىش ۋە كىچىكلىتىش ئېلىپ بارغاندا بەلگىلەنگەن چوڭايتىش ۋە كىچىكلىتىش "
+"نىسبىتى بويىچە چوڭ-كىچىكلىكىنى ئۆزگەرتىدۇ."
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: zoom/zoom_config.ui:28
+#, kde-format
+msgid "Zoom Factor:"
+msgstr "چوڭايتىش ۋە كىچىكلىتىش نىسبىتى:"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
+#: zoom/zoom_config.ui:66
+#, fuzzy, kde-format
+#| msgid ""
+#| "Enable tracking of the focused location. This needs QAccessible to be "
+#| "enabled per application (\"export QT_ACCESSIBILITY=1\")."
+msgid ""
+"Enable tracking of the focused location. This needs QAccessible to be "
+"enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+msgstr ""
+"فوكۇس ئورنىنى ئىزلاشنى قوزغىتىدۇ. پروگراممىغا نىسبەتەن قوزغىتىشتا (\"export "
+"QT_ACCESSIBILITY=1\")"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
+#: zoom/zoom_config.ui:69
+#, kde-format
+msgid "Enable Focus Tracking"
+msgstr "فوكۇسنى ئىزلاشنى ئىناۋەتلىك قىل"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
+#: zoom/zoom_config.ui:76
+#, fuzzy, kde-format
+#| msgid ""
+#| "Enable tracking of the focused location. This needs QAccessible to be "
+#| "enabled per application (\"export QT_ACCESSIBILITY=1\")."
+msgid ""
+"Enable tracking of the text cursor. This needs QAccessible to be enabled per "
+"application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+msgstr ""
+"فوكۇس ئورنىنى ئىزلاشنى قوزغىتىدۇ. پروگراممىغا نىسبەتەن قوزغىتىشتا (\"export "
+"QT_ACCESSIBILITY=1\")"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
+#: zoom/zoom_config.ui:79
+#, fuzzy, kde-format
+#| msgid "Enable Focus Tracking"
+msgid "Enable Text Cursor Tracking"
+msgstr "فوكۇسنى ئىزلاشنى ئىناۋەتلىك قىل"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: zoom/zoom_config.ui:86
+#, kde-format
+msgid "Mouse Pointer:"
+msgstr "چاشقىنەك كۆرسەتكۈچى:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
+#: zoom/zoom_config.ui:99
+#, kde-format
+msgid "Visibility of the mouse-pointer."
+msgstr "چاشقىنەك كۆرسەتكۈچىنىڭ كۆرۈنۈشچانلىقى."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: zoom/zoom_config.ui:103
+#, kde-format
+msgid "Scale"
+msgstr "نىسبىتى"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: zoom/zoom_config.ui:108
+#, kde-format
+msgid "Keep"
+msgstr "تەگمە"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: zoom/zoom_config.ui:113
+#, kde-format
+msgid "Hide"
+msgstr "يوشۇر"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
+#: zoom/zoom_config.ui:121
+#, kde-format
+msgid "Track moving of the mouse."
+msgstr "چاشقىنەك يۆتكىلىشىنى ئىزلايدۇ."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: zoom/zoom_config.ui:125
+#, kde-format
+msgid "Proportional"
+msgstr "ئوڭ تاناسىپ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: zoom/zoom_config.ui:130
+#, kde-format
+msgid "Centered"
+msgstr "ئوتتۇرىدا"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: zoom/zoom_config.ui:135
+#, kde-format
+msgid "Push"
+msgstr "قويۇش"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: zoom/zoom_config.ui:140
+#, kde-format
+msgid "Disabled"
+msgstr "ئىناۋەتسىز قىلىنغان"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: zoom/zoom_config.ui:148
+#, kde-format
+msgid "Mouse Tracking:"
+msgstr "چاشقىنەكنى ئىزلاش:"
+
+#~ msgid "&Radius:"
+#~ msgstr "رادىئۇس(&R)"
+
+#~ msgid "Text position:"
+#~ msgstr "تېكىست ئورنى:"
+
+#~ msgid "Inside Graph"
+#~ msgstr "گرافىك ئىچىدە"
+
+#~ msgid "Nowhere"
+#~ msgstr "ھېچيەر"
+
+#~ msgid "Top Left"
+#~ msgstr "سول ئۈستى"
+
+#~ msgid "Top Right"
+#~ msgstr "ئوڭ ئۈستى"
+
+#~ msgid "Bottom Left"
+#~ msgstr "سول ئاستى"
+
+#~ msgid "Bottom Right"
+#~ msgstr "ئوڭ ئاستى"
+
+#~ msgid "Text font:"
+#~ msgstr "تېكىست خەت نۇسخىسى:"
+
+#~ msgid "Text color:"
+#~ msgstr "تېكىست رەڭگى:"
+
+#~ msgid "Text alpha:"
+#~ msgstr "تېكىستنىڭ ئالفا قىممىتى:"
+
+#, fuzzy
+#~| msgid "Show caps"
+#~ msgid "Show graph:"
+#~ msgstr "چوقىسىنى كۆرسەت"
+
+#~ msgid "Zoom &duration:"
+#~ msgstr "چوڭىيىش-كىچىكلەش ۋاقتى(&D):"
+
+#~ msgctxt "Duration of zoom"
+#~ msgid "Default"
+#~ msgstr "كۆڭۈلدىكى"
+
+#, fuzzy
+#~| msgid "&Border width:"
+#~ msgid "Border wid&th:"
+#~ msgstr "گىرۋەك كەڭلىكى(&B)"
+
+#, fuzzy
+#~| msgid "Show desktop"
+#~ msgid "Switch desktop only"
+#~ msgstr "ئۈستەلئۈستىنى كۆرسەت"
+
+#~ msgid "Natural Layout Settings"
+#~ msgstr "تەبىئىي جايلاشتۇرۇش تەڭشىكى"
+
+#~ msgid "Fill &gaps"
+#~ msgstr "يوچۇقلارنى تولدۇر(&G)"
+
+#~ msgid "Faster"
+#~ msgstr "تېزرەك"
+
+#~ msgid "Nicer"
+#~ msgstr "ياخشىراق"
+
+#~ msgid "Left button:"
+#~ msgstr "سول توپچا:"
+
+#~ msgid "No action"
+#~ msgstr "مەشغۇلات يوق"
+
+#~ msgid "Activate window"
+#~ msgstr "كۆزنەكنى ئاكتىپلا"
+
+#~ msgid "End effect"
+#~ msgstr "ئۇنۇمنى ئاخىرلاشتۇر"
+
+#~ msgid "Bring window to current desktop"
+#~ msgstr "كۆزنەكنى نۆۋەتتىكى ئۈستەلئۈستىگە ئېلىپ كەل"
+
+#~ msgid "Send window to all desktops"
+#~ msgstr "كۆزنەكنى ھەممە ئۈستەلئۈستىگە ئەۋەت"
+
+#~ msgid "(Un-)Minimize window"
+#~ msgstr "كۆنەكنى كىچىكلەت(مە)"
+
+#~ msgid "Middle button:"
+#~ msgstr "ئوتتۇرا توپچا:"
+
+#~ msgid "Right button:"
+#~ msgstr "ئوڭ توپچا"
+
+#~ msgctxt "@title:group actions when clicking on desktop"
+#~ msgid "Desktop"
+#~ msgstr "ئۈستەلئۈستى"
+
+#~ msgid "Show desktop"
+#~ msgstr "ئۈستەلئۈستىنى كۆرسەت"
+
+#~ msgid "Display window &titles"
+#~ msgstr "كۆزنەك ماۋزۇسىنى كۆرسەت(&T)"
+
+#~ msgid "Display window &icons"
+#~ msgstr "كۆزنەك سىنبەلگىسىنى كۆرسەت(&I)"
+
+#~ msgid "Show &panels"
+#~ msgstr "تاختايلارنى كۆرسەت(&P)"
+
+#~ msgid "Regular Grid"
+#~ msgstr "مۇنتىزىم سېتكا"
+
+#~ msgid "Flexible Grid"
+#~ msgstr "جانلىق سېتكا"
+
+#~ msgid "Provide buttons to close the windows"
+#~ msgstr "كۆزنەكلەرنى ياپىدىغان توپچىلارنى تەمىنلەيدۇ"
+
+#~ msgid "Scale window"
+#~ msgstr "ئۆلچەك كۆزنەك"
+
+#~ msgid "Show outline"
+#~ msgstr "ئىزناسىنى كۆرسەت"
+
+#~ msgid "Toggle window geometry display (effect only)"
+#~ msgstr "كۆزنەك گېئومېتىرىيىلىك كۆرسىتىشنى ئالماشتۇر(ئۈنۈملا)"
+
+#~ msgid "Toggle KWin composited geometry display"
+#~ msgstr "KWin بىرىكمە گېئومېتىرىيىلىك كۆرسىتىشنى ئالماشتۇر"
+
+#~ msgid "Display for moving windows"
+#~ msgstr "يۆتكىلىۋاتقان كۆزنەكلەرنى كۆرسىتىش"
+
+#~ msgid "Display for resizing windows"
+#~ msgstr "چوڭلۇقى ئۆزگىرىۋاتقان كۆزنەكلەرنى كۆرسىتىش"
+
+#, fuzzy
+#~| msgctxt "High saturation"
+#~| msgid "Colored"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Color Picker"
+#~ msgstr "رەڭلىك"
+
+#, fuzzy
+#~| msgid "Background color:"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Background contrast"
+#~ msgstr "تەگلىك رەڭگى:"
+
+#, fuzzy
+#~| msgid "Show Desktop Grid"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Desktop Grid"
+#~ msgstr "ئۈستەلئۈستى سېتكىسىنى كۆرسەت"
+
+#, fuzzy
+#~| msgid "Inactive windows:"
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Darken inactive windows"
+#~ msgstr "پاسسىپ كۆزنەكلەر:"
+
+#, fuzzy
+#~| msgid "Send window to all desktops"
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Closed windows fall into pieces"
+#~ msgstr "كۆزنەكنى ھەممە ئۈستەلئۈستىگە ئەۋەت"
+
+#, fuzzy
+#~| msgid "Invert mouse"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Invert"
+#~ msgstr "چاشقىنەكنى تەتۈر قىل"
+
+#, fuzzy
+#~| msgid "Modifiers"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Magnifier"
+#~ msgstr "سۈپەتلىگۈچىلەر"
+
+#, fuzzy
+#~| msgid "Animation"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Mouse Click Animation"
+#~ msgstr "جانلاندۇرۇم"
+
+#, fuzzy
+#~| msgid "Clear Mouse Marks"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Mouse Mark"
+#~ msgstr "چاشقىنەك بەلگىسىنى تازىلا"
+
+#, fuzzy
+#~| msgid "Windows"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Present Windows"
+#~ msgstr "كۆزنەكلەر"
+
+#, fuzzy
+#~| msgid "Close window"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Resize Window"
+#~ msgstr "كۆزنەك يېپىش"
+
+#, fuzzy
+#~| msgid "Transparent"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Transform"
+#~ msgstr "سۈزۈك"
+
+#, fuzzy
+#~| msgid "Show &panels"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Show Paint"
+#~ msgstr "تاختايلارنى كۆرسەت(&P)"
+
+#, fuzzy
+#~| msgid "Slide when switching tabs"
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Slide desktops when switching virtual desktops"
+#~ msgstr "بەتكۈچلەرنى ئالماشتۇرۇۋاتقاندا سىيرىسۇن"
+
+#, fuzzy
+#~| msgid "Thumbnail Bar"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Thumbnail Aside"
+#~ msgstr "Thumbnail بالدىقى"
+
+#, fuzzy
+#~| msgid "Mouse Pointer:"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Touch Points"
+#~ msgstr "چاشقىنەك كۆرسەتكۈچى:"
+
+#, fuzzy
+#~| msgid "Track mouse"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Track Mouse"
+#~ msgstr "چاشقىنەكنى ئىزلا"
+
+#, fuzzy
+#~| msgid "Display window &icons"
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Display window geometries on move/resize"
+#~ msgstr "كۆزنەك سىنبەلگىسىنى كۆرسەت(&I)"
+
+#, fuzzy
+#~| msgid "Windows"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Wobbly Windows"
+#~ msgstr "كۆزنەكلەر"
+
+#, fuzzy
+#~| msgid "Zoom"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Zoom"
+#~ msgstr "كېڭەيت-تارايت"
+
+#~ msgctxt "Special entry in alt+tab list for minimizing all windows"
+#~ msgid "Show Desktop"
+#~ msgstr "ئۈستەلئۈستىنى كۆرسەت"
+
+#~ msgid "Zoom"
+#~ msgstr "كېڭەيت-تارايت"
+
+#~ msgid "Define how far away the windows should appear"
+#~ msgstr "كۆزنەكنىڭ قانچىلىك يىراقلىقتا كۆرۈنىدىغانلىقىنى بەلگىلەيدۇ"
+
+#~ msgid "Near"
+#~ msgstr "يېقىن"
+
+#~ msgid "Far"
+#~ msgstr "يىراق"
+
+#~ msgid "Animation"
+#~ msgstr "جانلاندۇرۇم"
+
+#~ msgid "Animate switch"
+#~ msgstr "ئۈزچاتنى جانلاندۇر"
+
+#~ msgid "Animation on tab box open"
+#~ msgstr "بەتكۈچ كۆزنەكچىسىدە جانلاندۇرۇم ئوچۇق"
+
+#~ msgid "Animation on tab box close"
+#~ msgstr "بەتكۈچ كۆزنەكچىسىدە جانلاندۇرۇم يېپىق"
+
+#~ msgid "Reflections"
+#~ msgstr "سېيماسى"
+
+#~ msgid "Rear color"
+#~ msgstr "ئارقا رەڭ"
+
+#~ msgid "Front color"
+#~ msgstr "ئالدى رەڭ"
+
+#~ msgid "Desktop Cube"
+#~ msgstr "ئۈستەلئۈستى كۈپى"
+
+#~ msgid "Desktop Cylinder"
+#~ msgstr "ئۈستەلئۈستى سىلىندىرى"
+
+#~ msgid "Desktop Sphere"
+#~ msgstr "ئۈستەلئۈستى شارى"
+
+#~ msgctxt "@title:tab Basic Settings"
+#~ msgid "Basic"
+#~ msgstr "ئاساس"
+
+#~ msgctxt "@title:tab Advanced Settings"
+#~ msgid "Advanced"
+#~ msgstr "ئالىي"
+
+#~ msgid "Tab 1"
+#~ msgstr "بەتكۈچ 1"
+
+#~ msgid "Background color:"
+#~ msgstr "تەگلىك رەڭگى:"
+
+#~ msgid "Wallpaper:"
+#~ msgstr "تام قەغىزى:"
+
+#~ msgid "Display desktop name"
+#~ msgstr "ئۈستەلئۈستى ئاتىنى كۆرسەت"
+
+#~ msgid "Reflection"
+#~ msgstr "سېيماسى"
+
+#~ msgid "Rotation duration:"
+#~ msgstr "چۆرگىلىتىش ۋاقتى:"
+
+#~ msgid "Windows hover above cube"
+#~ msgstr "كۆزنەكنى كۇب ئۈستىدە لەيلەت"
+
+#~ msgid "Opacity"
+#~ msgstr "غۇۋالىقى"
+
+#~ msgid "Do not change opacity of windows"
+#~ msgstr "كۆزنەكلەرنىڭ غۇۋالىقىنى ئۆزگەرتمە"
+
+#~ msgid "Tab 2"
+#~ msgstr "بەتكۈچ 2"
+
+#~ msgid "Caps"
+#~ msgstr "Caps"
+
+#~ msgid "Cap color:"
+#~ msgstr "چوقا رەڭگى:"
+
+#~ msgid "Display image on caps"
+#~ msgstr "سۈرەتلەرنى چوقىدا كۆرسەت"
+
+#~ msgid "Define how far away the object should appear"
+#~ msgstr "نەڭنىڭ قانچىلىك يىراقلىقتا كۆرۈنىدىغانلىقىنى بەلگىلەيدۇ"
+
+#~ msgid "Additional Options"
+#~ msgstr "قوشۇمچە تاللانمىلار"
+
+#~ msgid ""
+#~ "If enabled the effect will be deactivated after rotating the cube with "
+#~ "the mouse,\n"
+#~ "otherwise it will remain active"
+#~ msgstr ""
+#~ "ئىناۋەتلىك قىلىنسا، كۈپنى چاشقىنەك بىلەن چۆرگىلەتكەندىن كېيىن ئۈنۈم "
+#~ "ئاكتىپسىزلىنىدۇ،\n"
+#~ "ئۇنداق بولمىسا ئاكتىپ ھالەتتە تۇرۇۋېرىدۇ"
+
+#~ msgid "Close after mouse dragging"
+#~ msgstr "چاشقىنەكنى سۆرىگەندىن كېيىن ياپ"
+
+#~ msgid "Use this effect for walking through the desktops"
+#~ msgstr ""
+#~ "بۇ ئۈنۈمنى ئىشلىتىپ ھەر خىل ئۈستەلئۈستى ئۈنۈملىرىنى كۆرسەتكىلى بولىدۇ"
+
+#~ msgid "Invert cursor keys"
+#~ msgstr "نۇربەلگە كۇنۇپكىلىرىنى تەتۈر قىل"
+
+#~ msgid "Invert mouse"
+#~ msgstr "چاشقىنەكنى تەتۈر قىل"
+
+#~ msgid "Sphere Cap Deformation"
+#~ msgstr "شار چوقىسىنىڭ شەكىل ئۆزگەرتىشى"
+
+#~ msgid "Sphere"
+#~ msgstr "شار"
+
+#~ msgid "Plane"
+#~ msgstr "تەكشىلىك"
+
+#~ msgid "Do not animate windows on all desktops"
+#~ msgstr "بارلىق ئۈستەلئۈستىلىرىدىكى كۆزنەكلەرنى جانلاندۇرما"
+
+#~ msgid "Do not animate panels"
+#~ msgstr "تاختايلارنى جانلاندۇرما"
+
+#~ msgid "Use pager layout for animation"
+#~ msgstr "جانلاندۇرۇم ئۈچۈن چاقىرغۇ(pager) جايلاشتۇرۇشىنى ئىشلەت"
+
+#~ msgid "Start animation when moving windows towards screen edges"
+#~ msgstr "كۆزنەكلەرنى ئېكران گىرۋىكىگە يۆتكىگەندە جانلاندۇرۇمنى باشلا"
+
+#, fuzzy
+#~| msgid "Desktop Cube"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Desktop Cube"
+#~ msgstr "ئۈستەلئۈستى كۈپى"
+
+#, fuzzy
+#~| msgid "Desktop Cube"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Desktop Cube Animation"
+#~ msgstr "ئۈستەلئۈستى كۈپى"
+
+#~ msgid "Toggle Flip Switch (Current desktop)"
+#~ msgstr "Toggle Flip Switch (نۆۋەتتىكى ئۈستەلئۈستى)"
+
+#~ msgid "Toggle Flip Switch (All desktops)"
+#~ msgstr "Toggle Flip Switch (بارلىق ئۈستەلئۈستى)"
+
+#~ msgid "Flip animation duration:"
+#~ msgstr "ھەرىكەتچان جانلاندۇرۇم داۋاملىشىش ۋاقتى:"
+
+#~ msgctxt "Duration of flip animation"
+#~ msgid "Default"
+#~ msgstr "كۆڭۈلدىكى"
+
+#~ msgid "Angle:"
+#~ msgstr "بۇلۇڭ:"
+
+#~ msgid " °"
+#~ msgstr " °"
+
+#~ msgid "Horizontal position of front:"
+#~ msgstr "ئالدى يۈزنىڭ توغرا يۆنىلىشتىكى ئورنى:"
+
+#~ msgid "Vertical position of front:"
+#~ msgstr "ئالدى يۈزنىڭ تىك يۆنىلىشتىكى ئورنى:"
+
+#~ msgid ""
+#~ "Filter:\n"
+#~ "%1"
+#~ msgstr ""
+#~ "سۈزگۈچ:\n"
+#~ "%1"
+
+#~ msgid "Use Present Windows effect to layout the windows"
+#~ msgstr "نۆۋەتتىكى كۆزنەكلەر ئۈنۈمىنى كۆزنەكلەرنىڭ ئورۇنلاشتۇرۇلۇشىغا ئىشلەت"
+
+#~ msgid "When the focus changes, move the zoom area to the focused location."
+#~ msgstr ""
+#~ "فوكۇس ئۆزگەرسە، چوڭايتىش ۋە كىچىكلىتىش رايونىمۇ فوكۇس بار ئورۇنغا "
+#~ "يۆتكىلىدۇ."
+
+#~ msgid "Follow Focus"
+#~ msgstr "فوكۇسقا ئەگەش"
+
+#, fuzzy
+#~| msgid "Scale"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Scale"
+#~ msgstr "نىسبىتى"
+
+#, fuzzy
+#~| msgid "Animation"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Minimize Animation"
+#~ msgstr "جانلاندۇرۇم"
+
+#, fuzzy
+#~| msgid "Ignore &minimized windows"
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Animate the minimizing of windows"
+#~ msgstr "ئەڭ كىچىك ھالەتتىكى كۆزنەكلەرگە پىسەنت قىلما(&M)"
+
+#~ msgid "Shortcut"
+#~ msgstr "تېزلەتمە"
+
+#~ msgid "Apply effect to &panels"
+#~ msgstr "ئۈنۈملەرنى تاختايلارغا قوللان"
+
+#~ msgid "Apply effect to the desk&top"
+#~ msgstr "ئۈنۈملەرنى ئۈستەلئۈستىگە قوللان(&T)"
+
+#~ msgid "Apply effect to &keep-above windows"
+#~ msgstr "ئۈنۈملەرنى ئەڭ ئۇستىدىكى كۆزنەكلەرگە قوللان(&K)"
+
+#~ msgid "Apply effect to &groups"
+#~ msgstr "ئۈنۈملەرنى گۇرۇپپىلارغا قوللان(&G)"
+
+#~ msgid "Glide Effect:"
+#~ msgstr "Glide ئۈنۈمى:"
+
+#~ msgid "In"
+#~ msgstr "ئىچى"
+
+#~ msgid "Out"
+#~ msgstr "سىرتى"
+
+#~ msgid "Glide Angle:"
+#~ msgstr "Glide بۇلۇڭى:"
+
+#~ msgid "-90"
+#~ msgstr "-90"
+
+#~ msgid "90"
+#~ msgstr "90"
+
+#, fuzzy
+#~| msgctxt "Duration of rotation"
+#~| msgid "Default"
+#~ msgctxt "Duration of the slide animation"
+#~ msgid "Default"
+#~ msgstr "كۆڭۈلدىكى"
+
+#~ msgid "Strength of the effect:"
+#~ msgstr "ئۇنۇمنىڭ كۈچلۈكلۈكى"
+
+#~ msgid "Brightness of the background:"
+#~ msgstr "تەگلىكنىڭ يورۇقلۇقى:"
+
+#~ msgctxt "Less brightness"
+#~ msgid "Darker"
+#~ msgstr "قارىراق"
+
+#~ msgctxt "More brightness"
+#~ msgid "Lighter"
+#~ msgstr "يورۇقراق"
+
+#~ msgid "Saturation of the background:"
+#~ msgstr "تەگلىكنىڭ رەڭلىكلىكى:"
+
+#~ msgctxt "No saturation"
+#~ msgid "Gray"
+#~ msgstr "كۈلرەڭ"
+
+#~ msgid "Duration of the fade:"
+#~ msgstr "ئۆڭۈش ۋاقتى:"
+
+#~ msgid "ms"
+#~ msgstr "ms"
+
+#~ msgid "The blur effect must be enabled before it can be used."
+#~ msgstr "blur ئۈنۈمىنى ئىشلىتىشتىن بۇرۇن ئىناۋەتلىك قىلىش كېرەك."
+
+#~ msgid "Apply blur effect to background"
+#~ msgstr "تەگلىككە blur ئۈنۈمى قوللان"
+
+#~ msgid "Decorations:"
+#~ msgstr "بېزەكلىرى:"
+
+#~ msgid "Background window &opacity:"
+#~ msgstr "تەگ كۆزنەكنىڭ غۇۋالىقى(&O):"
+
+#~ msgid "&Elevate selected window"
+#~ msgstr "تاللانغان كۆزنەكنى يۇقىرىلات(&E)"
+
+#~ msgid "&Animate walk through windows"
+#~ msgstr "كۆزىتىش كۆزنىكىنى جانلاندۇر(&A)"
+
+#~ msgid "Use additional thumbnail bar"
+#~ msgstr "قوشۇمچە thumbnail بالدىقى ئىشلەت"
+
+#~ msgid ""
+#~ "Only show thumbnail bar if there are at least specified number of windows"
+#~ msgstr "بەلگىلەن ساندىكى كۆزنەكلەر بار چاغدىلا thumbnail بالدىقىنى كۆرسەت"
+
+#~ msgid "Dynamic mode"
+#~ msgstr "دىنامىك ھالەت"
+
+#~ msgid "Number of windows:"
+#~ msgstr "كۆزنەك سانى:"
+
+#~ msgid " row"
+#~ msgid_plural " rows"
+#~ msgstr[0] " قۇرلار"
+
+#~ msgctxt "Duration of fading"
+#~ msgid "Default"
+#~ msgstr "كۆڭۈلدىكى"
+
+#~ msgid "Toggle Video Recording"
+#~ msgstr "سىن ئېلىشنى ئالماشتۇر "
+
+#~ msgid "Path to save video:"
+#~ msgstr "سىن ساقلايدىغان يول:"

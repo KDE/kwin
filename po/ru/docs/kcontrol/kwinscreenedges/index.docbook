@@ -1,0 +1,92 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Russian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinscreenedges" lang="&language;">
+<articleinfo>
+
+<title
+>Края экрана</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Олеся</firstname
+><surname
+>Герасименко</surname
+><affiliation
+><address
+><email
+>gammaray@basealt.ru</email
+></address
+></affiliation
+><contrib
+>Перевод на русский язык</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>9 апреля 2021 г.</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Параметры системы</keyword>
+<keyword
+>рабочий стол</keyword>
+<keyword
+>эффекты</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Активные края экрана позволяют запускать эффекты при подведении курсора мыши к краю или углу экрана. Здесь можно настроить, какие эффекты будут запускаться при подведении курсора мыши к какому-либо краю или углу экрана. </para>
+
+<para
+>Щёлкните по квадрату любой кнопкой мыши и выберите эффект в контекстном меню. Если квадрат у края экрана — синего цвета, для данного края уже выбран эффект. Если квадрат — серого цвета, эффект для края не выбран.</para>
+
+<para
+>Количество доступных для выбора пунктов в контекстном меню зависит от выбранных параметров в модуле настройки <ulink url="help:/kcontrol/kwineffects/index.html"
+> <guilabel
+>Эффекты</guilabel
+></ulink
+> в категории <guilabel
+>Рабочая среда</guilabel
+>. Нужные эффекты можно выбрать в группе <guilabel
+>Управление окнами</guilabel
+>, после этого в контекстном меню появятся соответствующие пункты.</para>
+
+<para
+>Чтобы переключать рабочие столы подведением курсора мыши к краю экрана, следует выбрать в контекстном меню один из эффектов <guilabel
+>Все окна</guilabel
+>.</para>
+
+<para
+>Можно включить параметры <guilabel
+>Распахивать окна: При перемещении к верхнему краю экрана</guilabel
+> или <guilabel
+>Растягивать окна: При перемещении к правому или левому краю экрана</guilabel
+> и задать процентный размер края экрана, при котором активируется мозаичный режим. </para>
+
+<para
+>В группе параметров <guilabel
+>Смена рабочего стола при движении мыши за край экрана</guilabel
+> настраивается переключение на другой рабочий стол при движении мыши за край экрана: например, можно задать переключение только при перемещении окна. </para>
+<para
+><guilabel
+>Задержка перед реакцией на подведение мыши к краю экрана</guilabel
+> — задержка между подведением к краю экрана и выполнением действия. </para>
+<para
+><guilabel
+>Задержка перед повторной реакцией</guilabel
+> — задержка между выполнением действий. </para>
+</article>

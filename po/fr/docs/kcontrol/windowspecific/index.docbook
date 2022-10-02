@@ -1,0 +1,2203 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % French "INCLUDE">
+]>
+<book id="windowspecific" lang="&language;">
+<bookinfo>
+<title
+>Règles de la fenêtre</title>
+<authorgroup>
+<author
+>&Lauri.Watts; &Lauri.Watts.mail;</author>
+<author>
+<personname
+><firstname
+>Des parties de cette documentation ont été converties depuis la page de « KDE Userbase » <ulink url=" http://userbase.kde.org/KWin Rules"
+>Règles de KWin</ulink
+> et mis à jour par l'équipe de documentation de &kde; pour Plasma 5.8.</firstname
+> <surname
+></surname
+> </personname>
+      </author>
+&traducteurLudovicGrossard; &traducteurFrederickAngelique; 
+      </authorgroup>
+<legalnotice
+>&FDLNotice;</legalnotice>
+<date
+>23-06-2016</date>
+      <releaseinfo
+>Plasma 5.8</releaseinfo>
+<abstract>
+<para
+>Vous pouvez ajuster ici les paramètres spécifiquement pour certaines fenêtres.</para>
+      </abstract>
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>paramètres des fenêtres</keyword>
+<keyword
+>placement des fenêtres</keyword>
+<keyword
+>taille des fenêtres</keyword>
+</keywordset>
+</bookinfo>
+<chapter id="window-specific">
+<title
+>Paramètres spécifiques à la fenêtre ; démarrage rapide</title>
+
+<para
+>Vous pouvez ajuster ici les paramètres spécifiquement pour certaines fenêtres.</para>
+
+<note>
+<para
+>Remarquez que la configuration de ce module n'aura aucun effet si vous n'utilisez pas &kwin; comme votre gestionnaire de fenêtres. Si vous utilisez un autre gestionnaire de fenêtres, consultez sa documentation pour savoir comment personnaliser le comportement des fenêtres.</para>
+</note>
+
+<para
+>Une grande partie des paramètres que vous pouvez ajuster ici sont ceux que vous pouvez ajuster de façon globale dans le module <guilabel
+>Comportement des fenêtres</guilabel
+> de la &configurationDuSysteme;, mais certains sont encore plus détaillés.</para>
+
+<para
+>Ils englobent la taille et la position de la fenêtre, si elle doit ou non toujours rester au-dessus ou en dessous des autres, la manière d'éviter les vols de focus non désirés, ainsi que les paramètres de transparence.</para>
+
+<para
+>Vous pouvez accéder à ce module de deux façons : depuis la barre de titre de l'application que vous voulez configurer, ou depuis la &configurationDuSysteme;. Si vous le lancez depuis le &configurationDuSysteme;, vous pouvez utiliser le bouton <guibutton
+>Nouveau...</guibutton
+> pour créer un nouveau profil de fenêtre, et le bouton <guibutton
+>Détecter les propriétés de la fenêtre</guibutton
+>  de la boîte de dialogue qui apparaît pour remplir partiellement les informations requises pour l'application que vous voulez configurer.</para>
+
+<para
+>Vous pouvez aussi à tout moment <guibutton
+>Modifier...</guibutton
+> ou <guibutton
+>Supprimer</guibutton
+> n'importe quel profil de paramètres enregistré, et réorganiser la liste. La réorganisation de la liste en utilisant les boutons <guibutton
+>Monter</guibutton
+> et <guibutton
+>Descendre</guibutton
+> agissent sur la façon dont ils sont appliqués.</para>
+
+</chapter>
+<!--userbase <timestamp
+>2012-03-09T20:50:14Z</timestamp
+>-->
+
+<!--userbase-content-->
+<chapter id="overview"
+><title
+>Aperçu</title
+> 
+<para
+>&kwin; permet à l'utilisateur final de définir des règles pour modifier les attributs de la fenêtre d'une application. </para>
+<para
+>Par exemple, lorsqu'une application est démarrée, on peut la forcer à toujours fonctionner sur le <emphasis
+>bureau virtuel 2</emphasis
+>. Ou un défaut dans une application peut être contourné en forçant la fenêtre au dessus des autres. </para>
+<para
+>Des <link linkend="examples"
+>exemples</link
+> pas à pas sont fournis avec des informations détaillées sur la façon d'utiliser <link linkend="kwin-rule-editor"
+>l'éditeur de règle &kwin;</link
+> pour spécifier les <link linkend="window-matching"
+>correspondances de fenêtre</link
+> et les <link linkend="window-attributes"
+>attributs des fenêtres</link
+>. </para>
+</chapter>
+<chapter id="examples-and-application-workaround"
+><title
+>Exemples et contournement d'applications</title
+> 
+<para
+>Afin de voir ce qui est possible, des <link linkend="examples"
+>exemples</link
+> détaillés sont fournis, et peuvent également servir de modèle pour vos propres règles. </para>
+<para
+>Une page spécifique est dédiée aux <link linkend="application-workarounds"
+>contournements d'applications</link
+>. </para>
+</chapter>
+<chapter id="kwin-rule-editor"
+><title
+>Éditeur de règles de KWin</title
+> 
+<sect1 id="invoking-the-kwin-rule-editor"
+><title
+>Appeler l'éditeur de règle de KWin</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-ordering.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Il y a plusieurs façons d'appeler l'éditeur de règle de KWin. En voici deux :  </para>
+<itemizedlist>
+<listitem
+><para
+>Faites un clic droit sur la barre de titre de n'importe quelle fenêtre, choisissez <menuchoice
+><guimenu
+>Actions supplémentaires</guimenu
+><guimenuitem
+>Réglages du gestionnaire de fenêtres...</guimenuitem
+></menuchoice
+> et dans la fenêtre de <guilabel
+>Configuration</guilabel
+>, choisissez <guilabel
+>Règles de la fenêtre</guilabel
+> ou</para
+></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem
+><para
+><menuchoice
+><guimenu
+>Configuration du système</guimenu
+> <guisubmenu
+>Comportement des fenêtres</guisubmenu
+> <guimenuitem
+>Règles de la fenêtre</guimenuitem
+></menuchoice
+></para
+></listitem>
+</itemizedlist>
+<para
+>La fenêtre principale est utilisée pour :  </para>
+<itemizedlist>
+<listitem
+><para
+>affecter les règles avec <guilabel
+>Nouveau...</guilabel
+>, <guilabel
+>Modifier...</guilabel
+> et <guilabel
+>Supprimer...</guilabel
+></para
+></listitem>
+<listitem
+><para
+>partager les règles avec d'autres via <guilabel
+>Importer</guilabel
+> et <guilabel
+>Exporter</guilabel
+></para
+></listitem>
+<listitem
+><para
+>s'assurer de <link linkend="rule-evaluation"
+>l'évaluation de la règle</link
+> désirée en utilisant <guilabel
+>Monter</guilabel
+> et <guilabel
+>Descendre</guilabel
+></para
+></listitem>
+</itemizedlist>
+<sect2 id="rule-evaluation"
+><title
+>Évaluation des règles</title
+> 
+<para
+>Lorsqu'une application démarre (ou que les règles sont modifiées), &kwin; évalue les règles du haut de la liste vers le bas. Pour toutes les règles qui correspondent à une fenêtre, tous les attributs communs sont appliqués à la fenêtre lorsque celle-ci est affichée. </para>
+<para
+>Si au moins deux règles correspondantes active le même attribut, le paramètre de la <emphasis
+>première</emphasis
+> règle dans la liste est utilisé. </para>
+<para
+><tip
+><para
+>Vous pouvez adapter les fenêtres filles de l'application en plaçant les règles les plus restrictives en premier - rendez-vous à l'exemple de <link linkend="application-on-all-desktops-and-handle-one-child-window-uniquely"
+>Kopete et la fenêtre de Chat de Kopete</link
+>.</para
+></tip>
+</para>
+</sect2>
+</sect1>
+<sect1 id="rule-editor"
+><title
+>Éditeur de règles</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>L'éditeur est composé de quatre onglets : </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Correspondance de Fenêtre</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Taille et Position</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Arrangement &amp; Accès</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Apparence &amp; Corrections</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Comme son nom l'indique, la <guilabel
+>Correspondance de fenêtre</guilabel
+> est utilisée pour spécifier des critères pour correspondre à une fenêtre ou plus. Les trois autres onglets sont utilisés pour modifier les attributs des fenêtres correspondantes. </para>
+<para
+><tip
+><para
+>Les panneaux peuvent aussi être affectés.</para
+></tip>
+</para>
+<sect2 id="window-matching"
+><title
+>Correspondance de Fenêtre</title
+> 
+<para
+>Chaque règle de fenêtre a un utilisateur spécifique des critères de <link linkend="window-matching"
+>Correspondance de fenêtre</link
+>. &kwin; utilise les critères pour déterminer quand la règle est applicable pour une application. </para>
+</sect2>
+<sect2 id="window-attributes"
+><title
+>Attribut de la fenêtre</title
+> 
+<para
+>Outre les critères de correspondance de fenêtre, chaque fenêtre possède un jeu d'<link linkend="window-attributes"
+>Attributs de fenêtre</link
+>. Les attributs outrepassent la configuration de l'application correspondante et sont appliqués avant que la fenêtre soit affichée par &kwin;. </para>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="window-matching0"
+><title
+>Correspondance de Fenêtre</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>L'onglet de <guilabel
+>Correspondance de fenêtre</guilabel
+> est utilisée pour spécifier les critères que &kwin; utilisent pour évaluer quand la règle est applicable pour une fenêtre donnée. </para>
+<para
+>Aucun (correspond à n'importe quelle fenêtre) ou plusieurs des critères suivants peuvent être spécifiés : </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Classe de fenêtre (application)</guilabel
+> - correspondance de classe.<itemizedlist
+> <listitem
+><para
+><guilabel
+>Correspondance à la classe de fenêtre entière</guilabel
+> - inclus la classe secondaire correspondante.</para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Rôle de fenêtre</guilabel
+> - restreint la correspondance à la fonction de la fenêtre (&pex; une <emphasis
+>fenêtre principale</emphasis
+>, une <emphasis
+>fenêtre de discussions</emphasis
+>, &etc;)</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Types de fenêtre</guilabel
+> - restreint la correspondance au type de fenêtre : <guilabel
+>fenêtre normale</guilabel
+>, <guilabel
+>fenêtre de dialogue</guilabel
+>, &etc;</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Titre de la fenêtre</guilabel
+> - restreint la correspondance au titre de la fenêtre.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Machine (nom d'hôte)</guilabel
+> - restreint la correspondance au nom d'hôte associé à la fenêtre.</para
+></listitem>
+</itemizedlist>
+<para
+><tip
+><para
+>Même s'il est possible de saisir manuellement les informations ci-dessus, la méthode à préférer est d'utiliser le bouton <guilabel
+>Détecter les propriétés de la fenêtre</guilabel
+>.</para
+></tip>
+</para>
+<para
+>Pour chaque champs, les opérateurs suivants peuvent être appliqués au lieu du champs de valeur : </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Sans importance</guilabel
+> - ignore le champs.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Correspondance exacte</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Correspondre à une sous-chaîne</guilabel
+></para
+></listitem>
+</itemizedlist>
+<para
+><note
+><para
+><guilabel
+>Correspondance exacte</guilabel
+> et <guilabel
+>Correspondance à une sous-chaîne</guilabel
+> recherche une correspondance qui n'est pas sensible à la casse. Par exemple, <emphasis
+>AB</emphasis
+> correspond aux chaînes de caractères <emphasis
+>AB</emphasis
+>, <emphasis
+>ab</emphasis
+>, <emphasis
+>Ab</emphasis
+> et <emphasis
+>aB</emphasis
+>.</para
+></note>
+</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Expression rationnelle</guilabel
+> - Les expressions rationnelles de Qt sont disponibles. Veuillez consulter la page <ulink url="http://qt-project.org/doc/qt-4.8/qregexp.html"
+>concernant la correspondance de modèle utilisant les expressions rationnelles</ulink
+>.</para
+></listitem>
+</itemizedlist>
+<sect1 id="detect-window-properties"
+><title
+>Détecter les propriétés de la fenêtre</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-detect-window.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>La fonction de <guilabel
+>détecter les propriétés de la fenêtre</guilabel
+> simplifie le processus de saisie des critères de correspondance. </para>
+<orderedlist>
+<listitem
+><para
+>Lancez l'application pour laquelle vous voulez créer une règle.</para
+></listitem>
+<listitem
+><para
+>Ensuite, dans l'onglet <guilabel
+>Correspondance de fenêtre</guilabel
+>, réglez le délai en seconde avant que la fonction de <guilabel
+>détecter les propriétés de la fenêtre</guilabel
+> ne s'exécute. La valeur par défaut est zéro seconde.</para
+></listitem>
+<listitem
+><para
+>Appuyez sur le bouton <guilabel
+>Détecter les propriétés de la fenêtre</guilabel
+> et</para
+></listitem>
+<listitem
+><para
+>Quand le curseur de la souris devient une paire de ciseaux, placez-le dans la fenêtre de l'application (pas sur la barre de titre) et faites un clic gauche.</para
+></listitem>
+<listitem
+><para
+>Une nouvelle fenêtre s'ouvre avec des informations sur la fenêtre sélectionnée. Choisissez les champs désirés :<itemizedlist>
+<listitem
+><para
+><guilabel
+>Nom de la classe secondaire</guilabel
+> - certaines applications ont un nom de classe secondaire. Cette valeur peut être utilisée pour restreindre les fenêtres à cette valeur.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Rôle de la fenêtre</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Type de fenêtre
+></guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Titre de la fenêtre</guilabel
+></para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+</orderedlist>
+<para
+>Appuyez sur le bouton <guilabel
+>Ok</guilabel
+> pour remplir les critères de <guilabel
+>correspondance de fenêtre</guilabel
+>. </para>
+<para
+>En utilisant une combinaison d'informations, une règle peut appliquer à une application entière (par <guilabel
+>classe</guilabel
+>) ou à un <guilabel
+>type</guilabel
+> spécifique de fenêtre dans la <guilabel
+>classe</guilabel
+> - appelé une <guilabel
+>barre d'outils</guilabel
+>. </para>
+</sect1>
+</chapter>
+<chapter id="window-attributes1"
+><title
+>Attribut de la fenêtre</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-window-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Les attributs qui peuvent être paramétrés sont classés par fonction dans trois onglets : </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Taille et Position</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Arrangement &amp; Accès</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Apparence &amp; Corrections</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Chaque attribut a un jeu de paramètres qui détermine sa disposition. </para>
+<sect1 id="parameters"
+><title
+>Paramètres</title>
+<para
+>Chaque attribut, au minimum, accepte un des paramètres suivants. De plus, des arguments d'attributs spécifiques sont listés dans chaque définition d'<link linkend="attributes"
+>attribut</link
+>. </para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ne pas affecter</emphasis
+></term>
+    <listitem>
+    <para
+>Assure une règle subséquente, qui correspond à la fenêtre, et n'affecte pas l'attribut.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Appliquer initialement</emphasis
+></term>
+    <listitem>
+    <para
+>Ouvre la fenêtre avec l'attribut et permet de le modifier pendant l'exécution.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Se souvenir</emphasis
+></term>
+    <listitem>
+    <para
+>Utilisez la configuration de l'attribut comme défini dans la règle et si elle a changé pendant l'exécution, enregistrez et utilisez la nouvelle valeur à la place.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Forcer</emphasis
+></term>
+    <listitem>
+    <para
+>Il est impossible de modifier la configuration en cours d'exécution.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Appliquer maintenant, Forcer temporairement</emphasis
+></term>
+    <listitem>
+    <para
+>Appliquer/Forcer ce paramètre une fois et ne prend pas en compte l'attribut. La différence entre les deux est à l'exécution, <guilabel
+>Appliquer maintenant</guilabel
+> permet de modifier l'attribut et <guilabel
+>Forcer temporairement</guilabel
+> l'interdit jusqu'à ce que toutes les fenêtres affectées soient fermées.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>Pour <guilabel
+>Appliquer maintenant</guilabel
+>, si la règle n'a pas d'autres attributs paramétrés, elle est supprimée après l'évaluation tandis que pour <guilabel
+>Forcer temporairement</guilabel
+>, la règle est supprimée après que la dernière fenêtre affectée soit fermée.</para
+></warning>
+</para>
+</sect1>
+<sect1 id="attributes"
+><title
+>Attributs</title>
+<para
+><tip
+><para
+>Le bouton <guilabel
+>Détecter les propriétés de la fenêtre</guilabel
+> remplit les valeurs des attributs spécifiques - pour plus d'informations rendez-vous à la <link linkend="window-matching"
+>Correspondance de fenêtre</link
+>. &pex; les valeurs de hauteur et largeur de l'attribut <guilabel
+>Taille</guilabel
+> sont paramétrées à la hauteur et largeur de la fenêtre détectée.</para
+></tip>
+</para>
+<para
+><tip
+><para
+>Les arguments <guilabel
+>Oui/Non</guilabel
+> sont utilisés pour activer ou désactiver les attributs. Prenez du recul avec la grammaire, cela vous aidera à mieux comprendre comment un paramètre est traité. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> &pex;, quand l'attribut <guilabel
+>Ignorer la barre des tâches</guilabel
+> est paramétré sur <guilabel
+>Non</guilabel
+>, cela signifie qu'il ne faut pas ignorer la barre des tâches. En d'autres termes, la fenêtre est affichée dans la barre des tâche. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+></para
+></tip>
+</para>
+<sect2 id="size--position"
+><title
+>Taille &amp; Position</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Position</emphasis
+></term>
+    <listitem>
+    <para
+>Place le coin supérieur gauche de la fenêtre aux coordonnées x,y spécifiées.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>L'origine de &kwin;, (0,0), est le coin supérieur gauche du bureau.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Taille</emphasis
+></term>
+    <listitem>
+    <para
+>La largeur et la hauteur de la fenêtre.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Maximisée horizontalement, Maximisée verticalement</emphasis
+></term>
+    <listitem>
+    <para
+>Ces attributs sont utilisés pour modifier l'attribut « maximum horizontal » / « minimum horizontal » de la fenêtre.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Bureau, activité, écran</emphasis
+></term>
+    <listitem>
+    <para
+>Placez la fenêtre sur le <emphasis
+>Bureau (virtuel)</emphasis
+> spécifié, <emphasis
+>Activités</emphasis
+> ou <emphasis
+>Écran</emphasis
+>. Utilisez <guilabel
+>Tous les bureaux</guilabel
+> pour placer la fenêtre sur tous les <emphasis
+>bureaux virtuels</emphasis
+>.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Plein écran, Minimisée, Ombrée</emphasis
+></term>
+    <listitem>
+    <para
+>Modifie les attributs de fenêtre « Plein écran », « Minimisée » et « Ombrée ». Par exemple, une fenêtre peut être minimisée dès son ouverture ou si elle est minimisée dés son ouverture, elle peut être forcée à ne pas l'être.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>L'attribut Maximisée est émulé en utilisant les attributs <guilabel
+>Maximisée horizontalement</guilabel
+> et <guilabel
+>Maximisée verticalement</guilabel
+> ou <guilabel
+>Placement initial</guilabel
+> avec l'argument <guilabel
+>Maximiser</guilabel
+>.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Placement initial</emphasis
+></term>
+    <listitem>
+    <para
+>Outrepasse la stratégie globale de placement de la fenêtre avec l'une des suivantes :</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Par défaut</guilabel
+> - utilise la stratégie globale de placement de fenêtre.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Pas de placement</guilabel
+> - coin en haut à gauche.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Chevauchement minimal</guilabel
+> - place là où il n'y a aucune fenêtre.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Maximiser</guilabel
+> - démarre la fenêtre maximisée.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>En cascade</guilabel
+> - placée en cascade par titre.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Centré</guilabel
+> - au centre du bureau.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Aléatoire</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Sur le coin supérieur gauche</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Sous la souris</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Sur la fenêtre principale</guilabel
+> - restreint le placement d'une fenêtre fille aux limites de la fenêtre mère.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ignorer la géométrie demandée</emphasis
+></term>
+    <listitem>
+    <para
+>Accepter ou ignorer la position géométrique de la fenêtre demandée. Pour éviter les conflits entre la stratégie de placement par défaut et la demande de la fenêtre, la stratégie de placement est ignorée quand la demande de la fenêtre est acceptée.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Taille minimale, taille maximale</emphasis
+></term>
+    <listitem>
+    <para
+>La taille minimale et maximale permises pour la fenêtre.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Respecter les restrictions de géométrie</emphasis
+></term>
+    <listitem>
+    <para
+>Accepte ou non la proportion demandée par la fenêtre ou <emphasis
+>incrémente de base</emphasis
+>. Pour mieux comprendre cet attribut, quelques connaissances sont requises. Brièvement, les fenêtres doivent demander au gestionnaire de fenêtres, un incrément de base : le nombre minimal de <emphasis
+>hauteur</emphasis
+> X <emphasis
+>largeur</emphasis
+> pixels par demande de re-dimensionnement. Typiquement, c'est 1x1. D'autres fenêtres, par exemple les émulateurs de terminal ou les éditeurs, utilisent des polices à chasse fixe et demande leur incrément de base selon la taille d'un caractère.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="arrangement--access"
+><title
+>Arrangement &amp; Accès</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Conserver au-dessus, en-dessous</emphasis
+></term>
+    <listitem>
+    <para
+>Garde la fenêtre au-dessus/en-dessous des autres.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Regroupement automatique des identiques</emphasis
+></term>
+    <listitem>
+    <para
+>(Dés)active le regroupement des fenêtres (appelé également <emphasis
+>Onglets de fenêtres</emphasis
+>).</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Regroupement automatique au premier plan</emphasis
+></term>
+    <listitem>
+    <para
+>Rend la fenêtre active quand elle est ajoutée à ce regroupement automatique.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Regroupement automatique par identifiant</emphasis
+></term>
+    <listitem>
+    <para
+>Crée un groupe via un identifiant utilisateur défini. Plus d'une règle peuvent partager le même identifiant pour permettre à des fenêtres sans rapport apparent d'être regroupées.</para>
+     </listitem>
+  </varlistentry>
+
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ignorer la barre des tâches</emphasis
+></term>
+    <listitem>
+    <para
+>Affiche la fenêtre dans la barre des tâches.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ignorer le gestionnaire de bureaux</emphasis
+></term>
+    <listitem>
+    <para
+>Autorise ou non l'affichage de la fenêtre dans le gestionnaire de pages.</para>
+     </listitem>
+  </varlistentry>
+    </variablelist>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ignorer le changeur de tâches</emphasis
+></term>
+    <listitem>
+    <para
+>Affiche ou non la fenêtre dans la liste de <guilabel
+>ALT+TAB</guilabel
+>.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Raccourci</emphasis
+></term>
+    <listitem>
+    <para
+>Assigne un raccourci à la fenêtre. Quand vous appuyez sur le bouton <guilabel
+>Modifier...</guilabel
+>, des instructions supplémentaires sont présentées.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="appearance--fixes"
+><title
+>Apparence &amp; Corrections</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Pas de barre de titre et de cadre</emphasis
+></term>
+    <listitem>
+    <para
+>Affiche ou non la barre de titre et le cadre autour de la fenêtre.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Thème de couleurs pour la barre de titre</emphasis
+></term>
+    <listitem>
+    <para
+>Sélectionner un thème de couleurs pour la barre de titre de la fenêtre.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Activer/désactiver l'opacité</emphasis
+></term>
+    <listitem>
+    <para
+>Quand la fenêtre est active/inactive, réglez son opacité au pourcentage voulu.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+><guilabel
+>Activer/Désactiver l'opacité</guilabel
+> ne peut être affecté uniquement quand les <guilabel
+>Effets de bureau</guilabel
+> sont activés.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Prévention de vol du focus</emphasis
+></term>
+    <listitem>
+    <para
+>Quand une fenêtre veut prendre le focus, contrôle sur une échelle (de <guilabel
+>Aucune</guilabel
+> à <guilabel
+>Extrême</guilabel
+>) pour accepter sa demande et la placer au-dessus de toutes les autres, ou ignore sa demande (éventuellement en la laissant en-dessous d'autres fenêtres) :</para>
+<itemizedlist>
+<listitem
+><para
+>Aucune - Toujours accorder la prise de focus de la fenêtre.</para
+></listitem>
+<listitem
+><para
+>Basse</para
+></listitem>
+<listitem
+><para
+>Normale</para
+></listitem>
+<listitem
+><para
+>Haute</para
+></listitem>
+<listitem
+><para
+>Extrême - La demande de prise de focus de la fenêtre est refusée. La prise de focus est uniquement accordée par demande explicite faite avec la souris.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Rendez-vous à <guilabel
+>Accepter le focus</guilabel
+> pour rendre une fenêtre en lecture seule - qui n'accepte plus aucune touche tapée.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Accepter le focus</emphasis
+></term>
+    <listitem>
+    <para
+>La fenêtre accepte ou non les entrées clavier. Rend ou non la fenêtre en lecture seule.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ignorer les raccourcis globaux</emphasis
+></term>
+    <listitem>
+    <para
+>Ignore ou non les raccourcis globaux (comme défini dans la <menuchoice
+><guimenu
+>Configuration du système</guimenu
+><guisubmenu
+>Raccourcis et gestes</guisubmenu
+><guimenuitem
+>Raccourcis globaux de clavier</guimenuitem
+></menuchoice
+> ou en exécutant la commande <varname
+>kcmshell5 keys</varname
+> dans <guilabel
+>konsole</guilabel
+>) quand la fenêtre est active</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Fermable</emphasis
+></term>
+    <listitem>
+    <para
+>Affiche ou non le bouton <guilabel
+>Fermer</guilabel
+> dans la barre de titre.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Une fenêtre de terminal peut toujours être fermée par l'utilisateur en sortant de la session du shell. Cependant, l'utilisation de l'attribut <guilabel
+>Accepter le focus</guilabel
+> pour désactiver les entrées clavier rendra plus difficile la fermeture de la fenêtre.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Type de fenêtre</emphasis
+></term>
+    <listitem>
+    <para
+>Modifie le type de la fenêtre et hérite des caractéristiques de cette fenêtre :</para>
+<itemizedlist>
+<listitem
+><para
+>Fenêtre normale</para
+></listitem>
+<listitem
+><para
+>Fenêtre de dialogue</para
+></listitem>
+<listitem
+><para
+>Fenêtre d'utilitaire</para
+></listitem>
+<listitem
+><para
+>Dock (tableau de bord)</para
+></listitem>
+<listitem
+><para
+>Barre d'outils</para
+></listitem>
+<listitem
+><para
+>Menu détachable</para
+></listitem>
+<listitem
+><para
+>Écran de démarrage</para
+></listitem>
+<listitem
+><para
+>Bureau</para
+></listitem>
+<listitem
+><para
+>Barre de menu autonome</para
+></listitem>
+<listitem
+><para
+>Incrustation vidéo (OSD)</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>A utiliser avec précaution puisque des résultats inattendus peuvent apparaître. Par exemple, un <guilabel
+>écran de démarrage</guilabel
+> est automatiquement fermé par &kwin; lors d'un simple clic.</para
+></warning>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Mode composite par blocs</emphasis
+></term>
+    <listitem>
+    <para
+>Désactive ou non le mode de composition quand la fenêtre <emphasis
+>existe</emphasis
+>. Si le mode de composition est activé et que la règle énonce la désactivation du mode de composition, quand <emphasis
+>n'importe quelle</emphasis
+> fenêtre correspondante existe, le mode de composition sera désactivé. Le mode de composition est réactivé quand la dernière fenêtre correspondante est fermée.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+</sect1>
+</chapter>
+<chapter id="examples"
+><title
+>Exemples</title>
+<para
+><note
+><para
+>Le premier exemple détaille toutes les étapes nécessaires pour créer les règles. Afin de conserver une taille raisonnable de cette page, les exemples suivants ne détailleront seulement la démarche spécifique à l'exemple.</para
+></note>
+</para>
+<para
+><note
+><para
+>L'attribut <guilabel
+>gestionnaire de bureaux</guilabel
+> fait référence au <guilabel
+>gestionnaire de bureaux virtuels</guilabel
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></note>
+</para>
+<sect1 id="pin-a-window-to-a-desktop-and-set-other-attributes"
+><title
+>Épingler une fenêtre à un bureau et paramétrer d'autres attributs</title>
+<para
+>Épinglez &akregator; au <emphasis
+>2ème Bureau virtuel</emphasis
+>. De plus, lancez l'application avec une taille et un emplacement préférés. Pour chaque attribut, utilisez le <link linkend="parameters"
+>paramètre</link
+> <emphasis
+>Appliquer initialement</emphasis
+>. Ainsi il pourra être remplacé pendant l'exécution. </para>
+<para
+>La règle &kwin; est créée comme suit : </para>
+<orderedlist>
+<listitem
+><para
+>Lancez &akregator; sur le <emphasis
+>bureau deux</emphasis
+>, placez et redimensionnez la fenêtre ainsi : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-fav.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Faites un clic droit sur la barre de titre et choisissez <menuchoice
+><guimenu
+>Actions supplémentaires</guimenu
+><guimenuitem
+>Réglages du gestionnaire de fenêtres...</guimenuitem
+></menuchoice
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="config-win-behavior.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Choisissez <guilabel
+>Règles de la fenêtre</guilabel
+> dans la colonne de gauche et appuyez sur le bouton <guilabel
+>Nouveau...</guilabel
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>La fenêtre <guilabel
+>Modifier les paramètres spécifiques de fenêtre</guilabel
+> est affichée. <guilabel
+>Correspondance de fenêtre</guilabel
+> est l'onglet affiché par défaut : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-init.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Appuyez sur le bouton <guilabel
+>Détecter les propriétés de la fenêtre</guilabel
+> avec <guilabel
+>0s retard</guilabel
+>, le curseur devient immédiatement une paire de ciseaux. Cliquez (n'importe où) dans la fenêtre de &akregator; (mais pas dans la barre de titre). Les critères de la fenêtre sont affichés. Correspondance uniquement par nom de la classe primaire donc laissez les cases décochées - pour plus d'informations rendez-vous à la <link linkend="window-matching"
+>correspondance de fenêtre</link
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akgregator-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>En appuyant sur le bouton <guilabel
+>Ok</guilabel
+> la fenêtre précédente remplit les données dans l'onglet <guilabel
+>Correspondance de fenêtre</guilabel
+>. Saisissez une description parlante dans le champ <guilabel
+>Description</guilabel
+> (qui est affiché dans la fenêtre de la <guilabel
+>Règle de KWin</guilabel
+>) : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-ready-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Active les attributs de fenêtre : <guilabel
+>Position</guilabel
+>, <guilabel
+>Taille</guilabel
+> et <guilabel
+>Bureau</guilabel
+>. Les valeurs initiales sont paramétrées par la fonction <guilabel
+>Détecter les propriétés de la fenêtre</guilabel
+> et peuvent être remplacées : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>En appuyant sur <guilabel
+>Ok</guilabel
+> dans la fenêtre précédente, vous retournez à la fenêtre principale des <guilabel
+>Règles de KWin</guilabel
+>. La nouvelle règle avec sa description est affichée dans la liste : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main-n-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Appuyez sur <guilabel
+>Ok</guilabel
+> pour fermer la fenêtre.</para
+></listitem>
+<listitem
+><para
+>Fini.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="application-on-all-desktops-and-handle-one-child-window-uniquely"
+><title
+>Application sur tous les bureaux et ne manipuler qu'une seule fenêtre fille</title>
+<para
+>Hormis pour les fenêtres de conversation, affichez &kopete; et ses fenêtres filles sur tous les bureaux et ne les affichez pas dans la boîte à miniatures ni dans le gestionnaire de bureaux. Pour les fenêtres de conversation filles, traitez-les comme la fenêtre mère mais affichez-les dans la boîte à miniatures. </para>
+<para
+>Pour chaque attribut, utilisez le <link linkend="parameters"
+>paramètre</link
+> <guilabel
+>Forcer</guilabel
+>, ainsi il ne pourra pas être modifié. </para>
+<para
+>Pour implémenter les restrictions énoncées ci-dessus, il est nécessaire de créer deux règles : </para>
+<orderedlist>
+<listitem
+><para
+>Une règle pour la <guilabel
+>fenêtre de conversation de Kopete</guilabel
+> et</para
+></listitem>
+<listitem
+><para
+>Une règle pour &kopete;</para
+></listitem>
+</orderedlist>
+<para
+>La correspondance de critères de la règle de la <guilabel
+>fenêtre de discussions de Kopete</guilabel
+> est plus restrictive que la règle de <emphasis
+>Kopete</emphasis
+> vu qu'elle a besoin de correspondre à un rôle de fenêtre spécifique : la fenêtre de discussions. À cause de <link linkend="rule-evaluation"
+>l'évaluation de la règle</link
+>, la règle de la <guilabel
+>fenêtre de discussions de Kopete</guilabel
+> doit précéder la règle de &kopete; dans la <link linkend="kopete-kwin-rule-list"
+>liste des règles de KWin pour Kopete</link
+>. </para>
+<sect2 id="kopete-chat-rule"
+><title
+>Règle de la fenêtre de conversation de Kopete</title>
+<para
+>En supposant qu'une <guilabel
+>fenêtre de conversation de Kopete</guilabel
+> soit ouverte : </para>
+<orderedlist>
+<listitem
+><para
+>Utilisez le bouton <guilabel
+>Détecter les propriétés de la fenêtre</guilabel
+> et choisissez la <guilabel
+>fenêtre de discussions de Kopete</guilabel
+>. Cochez la case <guilabel
+>Rôle de la fenêtre</guilabel
+> pour restreindre les critères aux fenêtres de discussions - pour plus d'informations rendez-vous à la <link linkend="window-matching"
+>correspondance de fenêtre</link
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Cliquer sur <guilabel
+>Ok</guilabel
+> dans la fenêtre précédent remplit les champs dans l'onglet <guilabel
+>Correspondance de fenêtre</guilabel
+>. Saisissez une description parlante dans le champ <guilabel
+>Description</guilabel
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete-chat.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Activez les attributs suivants : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Appuyez sur le bouton Ok pour terminer la création de la règle.</para
+></listitem>
+</orderedlist>
+<para
+><note
+><para
+>L'attribut <guilabel
+>Ignorer la barre des tâches</guilabel
+> est paramétré sur <guilabel
+>Non</guilabel
+> pour afficher la fenêtre dans la barre des tâches ce qui se traduit approximativement par : <emphasis
+>non</emphasis
+> <emphasis
+>ne pas</emphasis
+> <emphasis
+>ignorer la barre des tâches</emphasis
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>.</para
+></note>
+</para>
+</sect2>
+<sect2 id="kopete-rule"
+><title
+>Règle de Kopete</title>
+<para
+>En supposant que &kopete; soit ouvert : </para>
+<orderedlist>
+<listitem
+><para
+>Utilisez le bouton <guilabel
+>Détecter les propriétés de la fenêtre</guilabel
+> et choisissez la fenêtre de &kopete;. Correspondance uniquement par le nom de la classe primaire donc laissez les cases décochées - pour des informations supplémentaires rendez-vous à la <link linkend="window-matching"
+>correspondance de fenêtre</link
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Cliquer sur <guilabel
+>Ok</guilabel
+> dans la fenêtre précédent remplit les champs dans l'onglet <guilabel
+>Correspondance de fenêtre</guilabel
+>. Saisissez une description parlante dans le champ <guilabel
+>Description</guilabel
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Activez les attributs suivants : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Appuyez sur le bouton Ok pour terminer la création de la règle.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="kopete-kwin-rule-list"
+><title
+>Liste des règles de KWin pour Kopete</title>
+<para
+>Comme abordé, à cause de <link linkend="rule-evaluation"
+>l'évaluation de la règle</link
+>, la règle de la <guilabel
+>fenêtre de conversation de Kopete</guilabel
+> doit précéder la règle de &kopete;. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-kopete-rules.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+</sect1>
+<sect1 id="suppress-a-window-from-showing-on-pager"
+><title
+>Supprimer une fenêtre de l'affichage du gestionnaire de bureaux</title>
+<para
+><guilabel
+>KNotes</guilabel
+> ne permet pas actuellement d'ignorer le gestionnaire de bureaux pour ses notes, cependant une règle résout facilement cette lacune. </para>
+<para
+>En supposant qu'une fenêtre de <emphasis
+>post it</emphasis
+> soit disponible : </para>
+<orderedlist>
+<listitem
+><para
+>Utilisez le bouton <guilabel
+>Détecter les propriétés de la fenêtre</guilabel
+> et choisissez n'importe quelle fenêtre <emphasis
+>post it</emphasis
+>. Correspondance uniquement par le nom de la classe primaire donc laissez les cases décochées - pour des informations supplémentaires rendez-vous à la <link linkend="window-matching"
+>correspondance de fenêtre</link
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Cliquer sur <guilabel
+>Ok</guilabel
+> dans la fenêtre précédent remplit les champs dans l'onglet <guilabel
+>Correspondance de fenêtre</guilabel
+>. Saisissez une description parlante dans le champ <guilabel
+>Description</guilabel
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-knotes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Activer l'attribut <guilabel
+>Ignorer le gestionnaire de bureaux</guilabel
+> avec le <link linkend="parameters"
+>paramètre</link
+> <guilabel
+>Forcer</guilabel
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Appuyez sur le bouton Ok pour terminer la création de la règle.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="force-a-window-to-the-top"
+><title
+>Forcer une fenêtre à s'afficher au-dessus des autres</title>
+<para
+>Pour afficher une fenêtre active au-dessus des autres, paramétrez son attribut <guilabel
+>Prévention du vol de focus</guilabel
+> à <guilabel
+>Aucune</guilabel
+>, typiquement, en conjonction avec le <link linkend="parameters"
+>paramètre</link
+> <guilabel
+>Forcer</guilabel
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="focus-stealing-pop2top-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect1>
+<sect1 id="multiple-rules-per-application"
+><title
+>Plusieurs règles par application</title>
+<para
+><application
+>Thunderbird</application
+> a plusieurs fenêtres filles différentes. Par exemple : </para>
+<itemizedlist>
+<listitem
+><para
+>Épinglez la fenêtre principale de <application
+>Thunderbird</application
+> sur le <emphasis
+>Bureau virtuel 1</emphasis
+> avec une taille et un emplacement spécifique sur le bureau.</para
+></listitem>
+<listitem
+><para
+>Permettre à la fenêtre de composition de <application
+>Thunderbird</application
+> de s'afficher sur n'importe quel bureau et quand elle est active, prendre le focus de force et l'afficher au-dessus de toutes les autres fenêtres.</para
+></listitem>
+<listitem
+><para
+>Faire afficher la fenêtre de rappel de <application
+>Thunderbird</application
+> au-dessus des autres et ne pas lui donner le focus, ainsi elle ne sera pas mise de côté par inadvertance.</para
+></listitem>
+</itemizedlist>
+<para
+>Chaque critère de correspondance de la règle est suffisamment restrictif donc leur ordre dans la fenêtre principale de &kwin; n'a pas d'importance sur <link linkend="rule-evaluation"
+>l'évaluation de la règle</link
+>. </para>
+<sect2 id="thunderbird---main"
+><title
+>Thunderbird - Fenêtre principale</title>
+<para
+>En supposant que la <guilabel
+>fenêtre principale de Thunderbird</guilabel
+> soit ouverte, dimensionnée et placée ainsi :  </para>
+<orderedlist>
+<listitem
+><para
+>Utilisez le bouton <guilabel
+>Détecter les propriétés de la fenêtre</guilabel
+> et choisissez la <guilabel
+>fenêtre principale de Thunderbird</guilabel
+>. Cochez la case <guilabel
+>Rôle de la fenêtre</guilabel
+> pour restreindre les critères à la fenêtre principale - pour plus d'informations rendez-vous à la <link linkend="window-matching"
+>correspondance de fenêtre</link
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Cliquer sur <guilabel
+>Ok</guilabel
+> dans la fenêtre précédent remplit les champs dans l'onglet <guilabel
+>Correspondance de fenêtre</guilabel
+>. Saisissez une description parlante dans le champ <guilabel
+>Description</guilabel
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Activez les attributs suivants : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Appuyez sur le bouton Ok pour terminer la création de la règle.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---composer"
+><title
+>Thunderbird - Fenêtre de composition</title>
+<para
+>En supposant qu'une <guilabel
+>fenêtre de composition de Thunderbird</guilabel
+> soit ouverte : </para>
+<orderedlist>
+<listitem
+><para
+>Utilisez le bouton <guilabel
+>Détecter les propriétés de la fenêtre</guilabel
+> et choisissez la <guilabel
+>fenêtre de composition de Thunderbird</guilabel
+>. Cochez les cases <guilabel
+>Rôle de la fenêtre</guilabel
+> et <guilabel
+>Type de fenêtre</guilabel
+> pour restreindre les critères aux fenêtres de composition - pour plus d'informations rendez-vous à la <link linkend="window-matching"
+>correspondance de fenêtre</link
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Cliquer sur <guilabel
+>Ok</guilabel
+> dans la fenêtre précédent remplit les champs dans l'onglet <guilabel
+>Correspondance de fenêtre</guilabel
+>. Saisissez une description parlante dans le champ <guilabel
+>Description</guilabel
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-compose.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Activez les attributs suivants : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Appuyez sur le bouton Ok pour terminer la création de la règle.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---reminder"
+><title
+>Thunderbird - Fenêtre de rappel</title>
+<para
+>En supposant qu'une <guilabel
+>fenêtre de rappel de Thunderbird</guilabel
+> soit ouverte : </para>
+<orderedlist>
+<listitem
+><para
+>Utilisez le bouton <guilabel
+>Détecter les propriétés de la fenêtre</guilabel
+> et choisissez la <guilabel
+>fenêtre de rappel de Thunderbird</guilabel
+>. Cochez les cases <guilabel
+>Nom de la classe secondaire</guilabel
+> et <guilabel
+>Type de fenêtre</guilabel
+> pour restreindre les critères aux fenêtres de rappel - pour plus d'informations rendez-vous à la <link linkend="window-matching"
+>correspondance de fenêtre</link
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Cliquer sur <guilabel
+>Ok</guilabel
+> dans la fenêtre précédent remplit les champs dans l'onglet <guilabel
+>Correspondance de fenêtre</guilabel
+>. Saisissez une description parlante dans le champ <guilabel
+>Description</guilabel
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-reminder.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Activez les attributs suivants : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Appuyez sur le bouton Ok pour terminer la création de la règle.</para
+></listitem>
+</orderedlist>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="application-workarounds"
+><title
+>Solutions de contournement pour certaines applications</title>
+<para
+>Voici des solutions de contournements pour certaines applications dont le comportement est inattendu. </para>
+<para
+><tip
+><para
+>Si vous n'êtes pas familier avec la création de règles pour &kwin;, rendez-vous aux <link linkend="pin-a-window-to-a-desktop-and-set-other-attributes"
+>exemples détaillés</link
+> pour fonder votre nouvelle règle.</para
+></tip>
+</para>
+<sect1 id="full-screen-re-size-error"
+><title
+>Erreur en plein écran/redimensionnement</title>
+<para
+>&Emacs; et <guilabel
+>gVim</guilabel
+>, quand ils sont maximisés (mode plein écran) et sous certaines conditions peuvent rencontrer des erreurs de redimensionnement de fenêtre - rendez-vous au rapport de bug <ulink url="https://bugs.kde.org/show_bug.cgi?id=252314"
+>Emacs window resizes...</ulink
+>. Une règle &kwin; contournera ce problème. </para>
+<para
+>En supposant qu'une fenêtre &Emacs; soit ouverte : </para>
+<orderedlist>
+<listitem
+><para
+>Utilisez le bouton <guilabel
+>Détecter les propriétés de la fenêtre</guilabel
+> et choisissez la fenêtre &Emacs;. Correspondance uniquement par le <guilabel
+>nom de la classe primaire</guilabel
+> donc laissez les cases décochées - pour des informations supplémentaires rendez-vous à la <link linkend="window-matching"
+>correspondance de fenêtre</link
+> <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Cliquer sur <guilabel
+>Ok</guilabel
+> dans la fenêtre précédent remplit les champs dans l'onglet <guilabel
+>Correspondance de fenêtre</guilabel
+>. Saisissez une description parlante dans le champ <guilabel
+>Description</guilabel
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-emacs.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Ignore la demande de plein écran de &Emacs; en activant l'attribut <guilabel
+>Respecter les restrictions de géométrie</guilabel
+>, le positionnant sur <guilabel
+>Non</guilabel
+> pour ignorer les restrictions et choisir le <link linkend="parameters"
+>paramètre</link
+> <guilabel
+>Forcer</guilabel
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Appuyez sur le bouton Ok pour terminer la création de la règle.</para
+></listitem>
+</orderedlist>
+</sect1>
+</chapter>
+
+<!--userbase-content-->
+<chapter id="credits">
+<title
+>Remerciements et licence</title>
+      <para
+>Documentation sous licence : veuillez consulter la base utilisateur de l'<ulink url="https://userbase.kde.org/index.php?title=KWin Rules&amp;action=history"
+>page d'historique des règles de KWin</ulink
+></para>
+      <para
+>Traduction française par &LudovicGrossard; &FrederickAngelique;.</para
+> &underFDL; </chapter>
+&documentation.index;
+</book>

@@ -1,0 +1,256 @@
+# translation of kcm_kwindesktop.po to marathi
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Sandeep Shedmake <sandeep.shedmake@gmail.com>, 2009.
+# Chetan Khona <chetan@kompkin.com>, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcm_kwindesktop\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"PO-Revision-Date: 2013-02-23 17:39+0530\n"
+"Last-Translator: Chetan Khona <chetan@kompkin.com>\n"
+"Language-Team: American English <kde-i18n-doc@kde.org>\n"
+"Language: mr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.5\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "चेतन खोना"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "chetan@kompkin.com"
+
+#: desktopsmodel.cpp:467
+#, kde-format
+msgid "There was an error connecting to the compositor."
+msgstr ""
+
+#: desktopsmodel.cpp:666
+#, kde-format
+msgid "There was an error saving the settings to the compositor."
+msgstr ""
+
+#: desktopsmodel.cpp:669
+#, kde-format
+msgid "There was an error requesting information from the compositor."
+msgstr ""
+
+#: package/contents/ui/main.qml:17
+#, kde-format
+msgid ""
+"This module lets you configure the navigation, number and layout of virtual "
+"desktops."
+msgstr ""
+
+#: package/contents/ui/main.qml:91
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Rename"
+msgstr ""
+
+#: package/contents/ui/main.qml:102
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Confirm new name"
+msgstr ""
+
+#: package/contents/ui/main.qml:110
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove"
+msgstr ""
+
+#: package/contents/ui/main.qml:137
+#, kde-format
+msgid ""
+"Virtual desktops have been changed outside this settings application. Saving "
+"now will overwrite the changes."
+msgstr ""
+
+#: package/contents/ui/main.qml:153
+#, kde-format
+msgid "Row %1"
+msgstr ""
+
+#: package/contents/ui/main.qml:166
+#, kde-format
+msgctxt "@action:button"
+msgid "Add"
+msgstr ""
+
+#: package/contents/ui/main.qml:169
+#, fuzzy, kde-format
+#| msgid "Desktops"
+msgid "New Desktop"
+msgstr "डेस्कटॉप्स"
+
+#: package/contents/ui/main.qml:184
+#, kde-format
+msgid "1 Row"
+msgid_plural "%1 Rows"
+msgstr[0] ""
+msgstr[1] ""
+
+#: package/contents/ui/main.qml:200
+#, kde-format
+msgid "Options:"
+msgstr ""
+
+#: package/contents/ui/main.qml:202
+#, fuzzy, kde-format
+#| msgid "Desktop navigation wraps around"
+msgid "Navigation wraps around"
+msgstr "डेस्कटॉप संचारण आसपास आवरण करा"
+
+#: package/contents/ui/main.qml:220
+#, kde-format
+msgid "Show animation when switching:"
+msgstr ""
+
+#: package/contents/ui/main.qml:271
+#, kde-format
+msgid "Show on-screen display when switching:"
+msgstr ""
+
+#: package/contents/ui/main.qml:290
+#, kde-format
+msgid "%1 ms"
+msgstr ""
+
+#: package/contents/ui/main.qml:314
+#, kde-format
+msgid "Show desktop layout indicators"
+msgstr "डेस्कटॉप रचनेचे संकेत दर्शवा"
+
+#: virtualdesktops.cpp:33
+#, fuzzy, kde-format
+#| msgid "Desktops"
+msgid "Virtual Desktops"
+msgstr "डेस्कटॉप्स"
+
+#~ msgid "Desktop %1:"
+#~ msgstr "डेस्कटॉप %1 :"
+
+#~ msgid "Here you can enter the name for desktop %1"
+#~ msgstr "येथे डेस्कटॉप %1 करिता नाव दाखल केले जाऊ शकते"
+
+#~ msgid "Desktop %1"
+#~ msgstr "डेस्कटॉप %1"
+
+#~ msgid ""
+#~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "
+#~ "virtual desktops you want and how these should be labeled."
+#~ msgstr ""
+#~ "<h1>अनेक डेस्कटॉप</h1>या विभागात, आवश्यक आभासी डेस्कटॉप संयोजीत केले जाऊ शकतात व "
+#~ "त्यांस कसे लेबल करायचे ते निश्चित केले जाऊ शकते."
+
+#~ msgid "Switch to Next Desktop"
+#~ msgstr "पुढील डेस्कटॉप वर जा"
+
+#~ msgid "Switch to Previous Desktop"
+#~ msgstr "मागील डेस्कटॉप वर जा"
+
+#~ msgid "Switch One Desktop to the Right"
+#~ msgstr "उजव्या डेस्कटॉप वर जा"
+
+#~ msgid "Switch One Desktop to the Left"
+#~ msgstr "डाव्या डेस्कटॉप वर जा"
+
+#~ msgid "Switch One Desktop Up"
+#~ msgstr "वरील डेस्कटॉप वर जा"
+
+#~ msgid "Switch One Desktop Down"
+#~ msgstr "खालील डेस्कटॉप वर जा"
+
+#~ msgid "Desktop Switching"
+#~ msgstr "डेस्कटॉप बदल"
+
+#~ msgid "Switch to Desktop %1"
+#~ msgstr "%1 या डेस्कटॉप वर जा "
+
+#~ msgid "No Animation"
+#~ msgstr "ऍनीमेशन नाही"
+
+#~ msgid "No suitable Shortcut for Desktop %1 found"
+#~ msgstr "%1 डेस्कटॉप करिता योग्य शॉर्टकट सापडला नाही"
+
+#~ msgid "Assigned global Shortcut \"%1\" to Desktop %2"
+#~ msgstr "%2 या डेस्कटॉप करिता \"%1\" हा शॉर्टकट लागू केला"
+
+#~ msgid "Shortcut conflict: Could not set Shortcut %1 for Desktop %2"
+#~ msgstr "शॉर्टकट मतभेद : %2 या डेस्कटॉप करिता \"%1\" हा शॉर्टकट लागू केला नाही"
+
+#~ msgid "Layout"
+#~ msgstr "रचना"
+
+#~ msgid ""
+#~ "Here you can set how many virtual desktops you want on your KDE desktop."
+#~ msgstr ""
+#~ "येथे तुम्ही तुमच्या केडीई डेस्कटॉप करिता किती आभासी डेस्कटॉप पाहिजेत ते निश्चित करू शकता."
+
+#, fuzzy
+#~| msgid "Number of desktops:"
+#~ msgid "&Number of desktops:"
+#~ msgstr "डेस्कटॉपची संख्या :"
+
+#, fuzzy
+#~| msgid "Number of rows:"
+#~ msgid "N&umber of rows:"
+#~ msgstr "ओळींची संख्या :"
+
+#~ msgid "Desktop Names"
+#~ msgstr "डेस्कटॉप नावे"
+
+#~ msgid "Switching"
+#~ msgstr "बदल"
+
+#~ msgid ""
+#~ "Enable this option if you want keyboard or active desktop border "
+#~ "navigation beyond the edge of a desktop to take you to the opposite edge "
+#~ "of the new desktop."
+#~ msgstr ""
+#~ "जर संचारण करताना एका डेस्कटॉपच्या किनाऱ्यावरुन नवीन डेस्कटॉपच्या विरुद्ध किनाऱ्यावर "
+#~ "जायचे असेल तर हा पर्याय कार्यान्वित करा."
+
+#~ msgid "Desktop Effect Animation"
+#~ msgstr "डेस्कटॉप परिणाम ऍनीमेशन"
+
+#~ msgid "Animation:"
+#~ msgstr "ऍनीमेशन :"
+
+#~ msgid "Desktop Switch On-Screen Display"
+#~ msgstr "डेस्कटॉप बदलाचे स्क्रीनवर दृश्य"
+
+#~ msgid "Duration:"
+#~ msgstr "कालावधी :"
+
+#~ msgid " msec"
+#~ msgstr " msec"
+
+#~ msgid ""
+#~ "Enabling this option will show a small preview of the desktop layout "
+#~ "indicating the selected desktop."
+#~ msgstr ""
+#~ "हा पर्याय कार्यान्वित केल्यास डेस्कटॉप रचनेचे लहान पूर्वावलोकन दिसेल ज्यावर वर्तमान "
+#~ "डेस्कटॉप साठी संकेत असेल."
+
+#~ msgid "Shortcuts"
+#~ msgstr "शॉर्टकट्स"
+
+#~ msgid "Show shortcuts for all possible desktops"
+#~ msgstr "सर्व शक्य असलेल्या डेस्कटॉप्सचे शॉर्टकट्स दर्शवा"
+
+#~ msgid "Different widgets for each desktop"
+#~ msgstr "प्रत्येक डेस्कटॉप करिता वेगवेगळ्या विजेट्स"
+
+#~ msgid "Mouse wheel over desktop background switches desktop"
+#~ msgstr "डेस्कटॉप पार्श्वभूमी वरील माउस फिरविल्यास डेस्कटॉप बदलविले जाते"

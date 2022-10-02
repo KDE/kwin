@@ -1,0 +1,273 @@
+# translation of kcm_kwindesktop.po to Latvian
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Oskars <osk@one.lv>, 2007.
+# Viesturs Zarins <viesturs.zarins@mii.lu.lv>, 2008.
+# Viesturs Zariņš <viesturs.zarins@mii.lu.lv>, 2009.
+# Rūdofls Mazurs <rudolfs.mazurs@gmail.com>, 2011.
+# Maris Nartiss <maris.kde@gmail.com>, 2016.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcm_kwindesktop\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"PO-Revision-Date: 2016-08-05 10:24+0300\n"
+"Last-Translator: Maris Nartiss <maris.kde@gmail.com>\n"
+"Language-Team: Latvian <lata-l10n@googlegroups.com>\n"
+"Language: lv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.5\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
+"2);\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Viesturs Zariņš, Māris Nartišs"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "viesturs.zarins@mii.lu.lv,maris.kde@gmail.com"
+
+#: desktopsmodel.cpp:467
+#, kde-format
+msgid "There was an error connecting to the compositor."
+msgstr ""
+
+#: desktopsmodel.cpp:666
+#, kde-format
+msgid "There was an error saving the settings to the compositor."
+msgstr ""
+
+#: desktopsmodel.cpp:669
+#, kde-format
+msgid "There was an error requesting information from the compositor."
+msgstr ""
+
+#: package/contents/ui/main.qml:17
+#, kde-format
+msgid ""
+"This module lets you configure the navigation, number and layout of virtual "
+"desktops."
+msgstr ""
+
+#: package/contents/ui/main.qml:91
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Rename"
+msgstr ""
+
+#: package/contents/ui/main.qml:102
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Confirm new name"
+msgstr ""
+
+#: package/contents/ui/main.qml:110
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove"
+msgstr ""
+
+#: package/contents/ui/main.qml:137
+#, kde-format
+msgid ""
+"Virtual desktops have been changed outside this settings application. Saving "
+"now will overwrite the changes."
+msgstr ""
+
+#: package/contents/ui/main.qml:153
+#, kde-format
+msgid "Row %1"
+msgstr ""
+
+#: package/contents/ui/main.qml:166
+#, kde-format
+msgctxt "@action:button"
+msgid "Add"
+msgstr ""
+
+#: package/contents/ui/main.qml:169
+#, fuzzy, kde-format
+#| msgid "Desktops"
+msgid "New Desktop"
+msgstr "Darbvirsmas"
+
+#: package/contents/ui/main.qml:184
+#, kde-format
+msgid "1 Row"
+msgid_plural "%1 Rows"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: package/contents/ui/main.qml:200
+#, kde-format
+msgid "Options:"
+msgstr ""
+
+#: package/contents/ui/main.qml:202
+#, fuzzy, kde-format
+#| msgid "Desktop navigation wraps around"
+msgid "Navigation wraps around"
+msgstr "Darbvirsmas navigācija apgriežas apkārt"
+
+#: package/contents/ui/main.qml:220
+#, kde-format
+msgid "Show animation when switching:"
+msgstr ""
+
+#: package/contents/ui/main.qml:271
+#, kde-format
+msgid "Show on-screen display when switching:"
+msgstr ""
+
+#: package/contents/ui/main.qml:290
+#, kde-format
+msgid "%1 ms"
+msgstr ""
+
+#: package/contents/ui/main.qml:314
+#, kde-format
+msgid "Show desktop layout indicators"
+msgstr "Rādīt darbvirsmas izkārtojuma indikatorus"
+
+#: virtualdesktops.cpp:33
+#, fuzzy, kde-format
+#| msgid "Desktops"
+msgid "Virtual Desktops"
+msgstr "Darbvirsmas"
+
+#~ msgid "Desktop %1:"
+#~ msgstr "%1. darbvirsma:"
+
+#~ msgid "Here you can enter the name for desktop %1"
+#~ msgstr "Šeit var ievadīt %1. darbvirsmas nosaukumu"
+
+#~ msgid "Desktop %1"
+#~ msgstr "%1. darbvirsma"
+
+#~ msgid ""
+#~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "
+#~ "virtual desktops you want and how these should be labeled."
+#~ msgstr ""
+#~ "<h1>Daudzkārtējas darbvirsmas</h1>Šajā modulī jūs varat konfigurēt "
+#~ "virtuālo darbvirsmu skaitu un nosaukumus."
+
+#~ msgid "Switch to Next Desktop"
+#~ msgstr "Pārslēgties uz nākamo darbvirsmi"
+
+#~ msgid "Switch to Previous Desktop"
+#~ msgstr "Pārslēgties uz iepriekšējo darbvirsmu"
+
+#~ msgid "Switch One Desktop to the Right"
+#~ msgstr "Pārslēgties vienu darbvirsmu pa labi"
+
+#~ msgid "Switch One Desktop to the Left"
+#~ msgstr "Pārslēgties vienu darbvirsmu pa kreisi"
+
+#~ msgid "Switch One Desktop Up"
+#~ msgstr "Pārslēgties vienu darbvirsmu uz augšu"
+
+#~ msgid "Switch One Desktop Down"
+#~ msgstr "Pārslēgties vienu darbvirsmu uz leju"
+
+#~ msgid "Walk Through Desktops"
+#~ msgstr "Iet cauri darbvirsmām"
+
+#~ msgid "Walk Through Desktops (Reverse)"
+#~ msgstr "Iet cauri darbvirsmām (pretēji)"
+
+#~ msgid "Walk Through Desktop List"
+#~ msgstr "Iet cauri darbvirsmu sarakstam"
+
+#~ msgid "Walk Through Desktop List (Reverse)"
+#~ msgstr "Iet cauri darbvirsmu sarakstam (pretēji)"
+
+#~ msgid "Desktop Switching"
+#~ msgstr "Darbvirsmu pārslēgšana"
+
+#~ msgid "Switch to Desktop %1"
+#~ msgstr "Pārslēgties uz %1. darbvirsmu"
+
+#~ msgid "No Animation"
+#~ msgstr "Nav animācijas"
+
+#~ msgid "No suitable Shortcut for Desktop %1 found"
+#~ msgstr "Nav atrasts piemērots īsceļš %1. darbvirsmai"
+
+#~ msgid "Assigned global Shortcut \"%1\" to Desktop %2"
+#~ msgstr "Piešķirts globālais īsceļš \"%1\" %2. darbvirsmai"
+
+#~ msgid "Shortcut conflict: Could not set Shortcut %1 for Desktop %2"
+#~ msgstr "Īsceļu konflikts: Nevar piešķirts īsceļu \"%1\" %2. darbvirsmai"
+
+#~ msgid "KWin development team"
+#~ msgstr "KWin izstrādes komanda"
+
+#~ msgid "Layout"
+#~ msgstr "Izkārtojums"
+
+#~ msgid ""
+#~ "Here you can set how many virtual desktops you want on your KDE desktop."
+#~ msgstr ""
+#~ "Šeit varat norādīt cik daudz virtuālo darbvirsmu vēlaties jūsu KDE "
+#~ "darbvirsmā."
+
+#~ msgid "&Number of desktops:"
+#~ msgstr "Darbvirsmu &skaits:"
+
+#~ msgid "N&umber of rows:"
+#~ msgstr "Rind&u skaits:"
+
+#~ msgid "Desktop Names"
+#~ msgstr "Darbvirsmu nosaukumi"
+
+#~ msgid "Switching"
+#~ msgstr "Pārslēgšanās"
+
+#~ msgid ""
+#~ "Enable this option if you want keyboard or active desktop border "
+#~ "navigation beyond the edge of a desktop to take you to the opposite edge "
+#~ "of the new desktop."
+#~ msgstr ""
+#~ "Ieslēdziet šo iespēju, ja vēlaties ka darbvirsmas pārslēgšana no pēdējās "
+#~ "uz priekšu noved jūs atpakaļ uz pirmo darbvirsmu un otrādi."
+
+#~ msgid "Desktop Effect Animation"
+#~ msgstr "Darbvirsmas animācijas efekts"
+
+#~ msgid "Animation:"
+#~ msgstr "Animācija:"
+
+#~ msgid "Desktop Switch On-Screen Display"
+#~ msgstr "Darbvirsmas pārslēgšanas virsekrāna displejs"
+
+#~ msgid "Duration:"
+#~ msgstr "Ilgums:"
+
+#~ msgid " msec"
+#~ msgstr " msek"
+
+#~ msgid ""
+#~ "Enabling this option will show a small preview of the desktop layout "
+#~ "indicating the selected desktop."
+#~ msgstr ""
+#~ "Ieslēdzot šo iespēju, tiks parādīts neliels darbavirsmu izkārtojuma "
+#~ "priekšskatījums, parādot aktīvo darbvirsmu."
+
+#~ msgid "Shortcuts"
+#~ msgstr "Īsceļi"
+
+#~ msgid "Show shortcuts for all possible desktops"
+#~ msgstr "Rādīt īsceļus visām iespējamajām darbavirsmām"
+
+#~ msgid "Different widgets for each desktop"
+#~ msgstr "Katrai darbvirsmai savas logdaļas"
+
+#~ msgid "Mouse wheel over desktop background switches desktop"
+#~ msgstr "Peles ritentiņš pārslēdz darbvirsmas"

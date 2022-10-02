@@ -1,0 +1,268 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Italian "INCLUDE">
+]>
+<article id="kwintabbox" lang="&language;">
+<articleinfo>
+<title
+>Selettore delle attività</title>
+<authorgroup>
+<author
+>&Martin.Graesslin;&Martin.Graesslin.mail;</author>
+<othercredit role="translator"
+><firstname
+>Paolo</firstname
+><surname
+>Zamponi</surname
+><affiliation
+><address
+><email
+>zapaolo@email.it</email
+></address
+></affiliation
+><contrib
+>Traduzione in italiano</contrib
+></othercredit
+><othercredit role="translator"
+><firstname
+>Federico</firstname
+><surname
+>Zenith</surname
+><affiliation
+><address
+><email
+>federico.zenith@member.fsf.org</email
+></address
+></affiliation
+><contrib
+>Traduzione in italiano</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>31/12/2020</date>
+<releaseinfo
+>&plasma; 5.21</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Impostazioni di sistema</keyword>
+<keyword
+>desktop</keyword>
+<keyword
+>finestra</keyword>
+<keyword
+>navigazione</keyword>
+<keyword
+>passa a</keyword>
+<keyword
+>alt-tab</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="windows-navigating">
+<title
+>Navigare tra le finestre</title>
+
+<para
+>Il selettore delle attività permette all'utente di passare facilmente tra le finestre attualmente aperte usando la tastiera. È molto configurabile e permette all'utente di controllare il suo comportamento, l'aspetto visivo, le scorciatoie di tastiera ed il filtraggio delle finestre.</para>
+
+<para
+>Il selettore delle attività è spesso invocato usando la combinazione di tasti <keycombo
+>&Alt;&Tab;</keycombo
+>, che però può essere cambiata. Quando invocato, esso mostra un elenco di tutte le finestre attualmente aperte, che sono filtrate facoltativamente oppure ampliate in base alle impostazioni della configurazione. Per esempio, l'elenco può essere filtrato in modo da mostrare solo le finestre che soddisfano certi criteri, ad esempio quelle che sono attualmente visibili. Quando l'elenco viene mostrato l'utente può passare ciclicamente in avanti o all'indietro tra tutte le finestre elencate usando ripetutamente la combinazione di tasti del selettore delle attività: rilasciandola, la finestra che era selezionata nell'elenco verrà attivata.</para>
+
+<para
+>Dato che il selettore delle attività offre molte opzioni di configurazione, possono essere definite due raccolte di impostazioni di configurazione, che sono chiamate <guilabel
+>Principale</guilabel
+> e <guilabel
+>Alternativo</guilabel
+>. Ciascuna può avere un insieme di combinazioni di tasti unico assegnato ad esse.</para>
+
+<para
+>Le opzioni di configurazione per le raccolte Principale Alternativo sono presentate in quattro raggruppamenti, come di seguito elencati:</para>
+
+<sect2 id="visualization">
+<title
+>Visualizzazione</title>
+<para
+>Questo gruppo di opzioni di configurazione controlla come viene visualizzato l'elenco delle finestre nello schermo. La visualizzazione predefinita si chiama <guilabel
+>Brezza</guilabel
+>, che elenca tutte le finestre aperte nella parte sinistra delle schermo. Tra le altre visualizzazioni ci sono <guilabel
+>Selezione circolare</guilabel
+> (un carosello 3D), <guilabel
+>Selezione a pila</guilabel
+> (una pila di carte 3D) e <guilabel
+>Medio arrotondato</guilabel
+> (un elenco di icone in stile Microsoft &Windows;), ma puoi scaricarne ed installarne molte altre facendo clic sul pulsante <guibutton
+>Recupera nuovi selettori delle attività...</guibutton
+>, che è situato in basso a destra nella finestra.</para>
+
+<para
+>Una volta che la visualizzazione è stata selezionata dall'elenco a tendina puoi fare clic sul pulsante a destra dell'elenco, per vedere un'anteprima o per configurare le opzioni di visualizzazione specifiche.</para>
+
+<para
+>La casella <guilabel
+>Mostra la finestra selezionata</guilabel
+> determina quanto chiaramente l'utente vedrà la finestra che verrà attivata. Se questa casella è spuntata, tutte le finestre verranno oscurate tranne quella che è attualmente evidenziata nel selettore delle attività.</para>
+
+<note
+><para
+>Ci possono essere dei casi in cui la visualizzazione desiderata del selettore delle attività non può essere mostrata. Una di queste situazioni si può verificare quando un processo chiamato «composizione» è stato disattivato oppure disabilitato. Se ciò dovesse succedere l'elenco delle finestre verrebbe comunque visualizzato, ma in una forma molto semplice.</para
+></note>
+</sect2>
+
+<sect2 id="shortcuts">
+<title
+>Scorciatoie</title>
+<para
+>Questa sezione ti permette di definire fino a quattro scorciatoie di tastiera per la configurazione del selettore delle attività <guilabel
+>Principale</guilabel
+>, e altrettante per quella dell'<guilabel
+>Alternativo</guilabel
+>. Le scorciatoie del <guilabel
+>Principale</guilabel
+> sono predefinite, mentre quelle dell'<guilabel
+>Alternativo</guilabel
+> devono essere definite manualmente.</para>
+<para
+>Nella sezione <guilabel
+>Tutte le finestre</guilabel
+>, con le scorciatoie <guilabel
+>In avanti</guilabel
+> e <guilabel
+>All'indietro</guilabel
+> passerai ciclicamente in avanti e all'indietro nell'elenco delle finestre aperte.</para>
+<para
+>Nella sezione <guilabel
+>Applicazione attuale</guilabel
+> è possibile impostare le scorciatoie per passare ciclicamente <guilabel
+>In avanti</guilabel
+> e <guilabel
+>All'indietro</guilabel
+> tra le finestre dell'applicazione attualmente attiva. Ad esempio, se hai tre finestre aperte del navigatore di file &dolphin; sarai in grado di usare queste scorciatoie per passare con semplicità tra queste tre finestre di &dolphin;.</para>
+<para
+>Per modificare una scorciatoia di tastiera fai clic sul pulsante <guibutton
+>In avanti</guibutton
+>, oppure <guibutton
+>All'indietro</guibutton
+>, e digita la scorciatoia di tastiera desiderata. Assicurati che faccia parte della scorciatoia un tasto modificatore, tipo &Ctrl; o &Alt;, diversamente potresti non essere in grado di navigare correttamente nell'elenco delle finestre.</para>
+
+<note
+><para
+>Per invocare il selettore delle attività può essere usata una qualsiasi delle scorciatoie di tastiera definite. Per invocarlo invece senza usare la tastiera puoi definire delle azioni per i bordi dello schermo nel modulo <ulink url="help:/kcontrol/kwinscreenedges/index.html"
+><guilabel
+>Bordi dello schermo</guilabel
+></ulink
+> delle &systemsettings;.</para
+></note>
+</sect2>
+
+<sect2 id="content">
+<title
+>Contenuto</title>
+<para
+>Le opzioni in questa sezione controllano parzialmente quali finestre appariranno nell'elenco del selettore delle attività.</para>
+
+<para
+>L'elenco a tendina <guilabel
+>Ordinamento</guilabel
+> specifica se le finestre debbano essere elencate nel loro <guilabel
+>Ordine di impilamento</guilabel
+> oppure per <guilabel
+>Usate di recente</guilabel
+>: il primo è l'ordine nel quale le finestre appaiono sullo schermo, mentre l'altro è l'ordine nel quale le finestre sono state utilizzate. <guilabel
+>Usate di recente</guilabel
+> rende il passaggio tra le due finestre più utilizzate veramente semplice, perché queste appariranno sempre nelle prime due posizioni dell'elenco.</para>
+
+<para
+>L'opzione <guilabel
+>Includi l'icona «Mostra il desktop»</guilabel
+> aggiungerà un'opzione Mostra il desktop all'elenco delle finestre: ciò permetterà all'utente di selezionare il desktop come una delle «finestre» da mostrare.</para>
+
+<para
+>L'opzione <guilabel
+>Solo una finestra per applicazione</guilabel
+> diminuisce il disordine, in quanto mostra solo una finestra per ogni applicazione. Se un'applicazione ha più finestre aperte, allora nell'elenco verrà mostrata quella attivata più di recente, mentre le altre non compariranno.</para>
+</sect2>
+
+<sect2 id="filter-windows-by">
+<title
+>Filtra le finestre per</title>
+<para
+>Questa sezione contiene le opzioni per filtrare ulteriormente l'elenco delle finestre del selettore delle attività.</para>
+
+<para
+>L'opzione <guilabel
+>Desktop virtuali</guilabel
+> filtra l'elenco delle finestre a seconda di quale desktop virtuale è attualmente attivo. Se metti costantemente certe finestre in dei desktop virtuali specifici, questa opzione di filtraggio può rendere semplice il passaggio alle finestre all'interno o attraverso questi desktop virtuali. Seleziona <guilabel
+>Desktop attuale</guilabel
+> per mostrare solamente le finestre nel desktop virtuale corrente, oppure <guilabel
+>Tutti gli altri desktop</guilabel
+> per mostrare solamente le finestre nei desktop virtuali che non sono attualmente attivi.</para>
+
+<para
+>L'opzione <guilabel
+>Attività</guilabel
+> filtra l'elenco delle finestre a seconda di quale attività è attualmente attiva. Come per il filtraggio in base al desktop virtuale, questa opzione può rendere più semplice il passaggio alle applicazioni all'interno o attraverso a tutte le Attività. Seleziona <guilabel
+>Attività attuale</guilabel
+> per mostrare solamente le finestre che fanno parte dell'attività corrente, oppure <guilabel
+>Tutte le altre attività</guilabel
+> per mostrare solamente le finestre che fanno parte delle Attività che non sono attualmente attive.</para>
+
+<para
+>L'opzione <guilabel
+>Schermi</guilabel
+> filtra l'elenco delle finestre a seconda di quale schermo è attualmente attivo. Seleziona <guilabel
+>Schermo attuale</guilabel
+> per mostrare solamente le finestre che sono nello schermo che contiene il puntatore del mouse, oppure <guilabel
+>Tutti gli altri schermi</guilabel
+> per mostrare le finestre che sono in tutti gli altri schermi. Questa opzione può essere utile agli utenti che vogliono passare rapidamente tra le finestre che sono nello stesso schermo in una configurazione a più schermi.</para>
+<note
+><para
+>Lo schermo attivo è quello in cui si trova il puntatore del mouse, non quello che contiene la finestra attiva.</para
+></note>
+
+<para
+>L'opzione <guilabel
+>Minimizzazione</guilabel
+> filtra l'elenco delle finestre a seconda che siano nascoste oppure no. Seleziona <guilabel
+>Finestre visibili</guilabel
+> per mostrare solamente le finestre che non sono state minimizzate, oppure <guilabel
+>Finestre nascoste</guilabel
+> per mostrare solo quelle che lo sono.</para>
+
+<para
+>Se deselezioni un'opzione in questa sezione, allora non verrà applicato nessun filtraggio per essa. Ad esempio, se selezioni le opzioni Schermi e deselezioni le altre tre, allora l'elenco delle finestre del selettore delle attività verrà filtrato solamente in base a quali finestre sono nello schermo corrente.</para>
+<para
+>Tutte le opzioni descritte nella sezione qui sopra lavorano insieme per fornire un controllo molto fine del comportamento e dell'aspetto del selettore delle attività. Ad esempio, potresti scegliere di invocare la raccolta <guilabel
+>Principale</guilabel
+> delle impostazioni con la combinazione di tasti <keycombo
+>&Alt;&Tab;</keycombo
+>, in modo da mostrare le finestre aperte in un carosello, oppure solo una finestra per applicazione o anche di elencare solamente le finestre che sono nel desktop corrente e nello schermo attualmente attivo. Ciò può fornirti un passaggio tra le finestre sensibile al contesto molto veloce se hai sia i desktop virtuali «Lavoro» che «Casa», mantenendo i fogli elettronici per lavoro e per casa sullo stesso schermo.</para>
+
+<para
+>La disponibilità della configurazione di un selettore delle attività <guilabel
+>Alternativo</guilabel
+> ti offre una seconda modalità di filtrare e di navigare facilmente tra le finestre nell'elenco. Con otto combinazioni di tasti disponibili nelle due configurazioni del selettore delle attività dovrebbe essere possibile navigare facilmente e velocemente tra un gran numero di finestre.</para>
+</sect2>
+</sect1>
+</article>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+kate: space-indent on; indent-width 2; tab-width 2; indent-mode none;
+-->

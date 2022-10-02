@@ -1,0 +1,112 @@
+# Frederik Schwarzer <schwarzer@kde.org>, 2012, 2020.
+# Burkhard Lück <lueck@hube-lueck.de>, 2012, 2013, 2017, 2018.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcm-kwin-scripts\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-09-20 00:47+0000\n"
+"PO-Revision-Date: 2020-08-31 22:06+0200\n"
+"Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
+"Language-Team: German <kde-i18n-de@kde.org>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Frederik Schwarzer"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "schwarzer@kde.org"
+
+#: module.cpp:57
+#, kde-format
+msgid "Import KWin Script"
+msgstr "KWin-Skript importieren"
+
+#: module.cpp:58
+#, kde-format
+msgid "*.kwinscript|KWin scripts (*.kwinscript)"
+msgstr "*.kwinscript|KWin-Skripte (*.kwinscript)"
+
+#: module.cpp:96
+#, kde-format
+msgctxt "Placeholder is error message returned from the install service"
+msgid ""
+"Cannot import selected script.\n"
+"%1"
+msgstr ""
+"Ausgewähltes KWin-Skript kann nicht exportiert werden.\n"
+"%1"
+
+#: module.cpp:108
+#, kde-format
+msgctxt "Placeholder is name of the script that was imported"
+msgid "The script \"%1\" was successfully imported."
+msgstr "Das Skript „%1“ wurde erfolgreich importiert."
+
+#: module.cpp:148
+#, kde-format
+msgid "Error when uninstalling KWin Script: %1"
+msgstr "Fehler bei der Deinstallation des KWin-Skripts: %1"
+
+#: package/contents/ui/main.qml:47
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Delete..."
+msgstr ""
+
+#: package/contents/ui/main.qml:60
+#, kde-format
+msgid "Install from File..."
+msgstr "Aus Datei installieren ..."
+
+#: package/contents/ui/main.qml:64
+#, kde-format
+msgid "Get New Scripts..."
+msgstr "Neue Skripte holen ..."
+
+#~ msgid "KWin Scripts"
+#~ msgstr "KWin-Skripte"
+
+#~ msgid "Configure KWin scripts"
+#~ msgstr "KWin-Skripte einrichten"
+
+#~ msgid "Tamás Krutki"
+#~ msgstr "Tamás Krutki"
+
+#~ msgid "KWin script configuration"
+#~ msgstr "Einrichtung für KWin-Skripte"
+
+#~ msgid "Import KWin script..."
+#~ msgstr "KWin-Skript importieren ..."
+
+#~ msgid ""
+#~ "Cannot import selected script: maybe a script already exists with the "
+#~ "same name or there is a permission problem."
+#~ msgstr ""
+#~ "Das ausgewählte Skript kann nicht importiert werden: Möglicherweise gibt "
+#~ "es bereits ein Skript mit diesem Namen oder die Berechtigungen sind nicht "
+#~ "ausreichend."
+
+#~ msgid "The selected script was exported successfully."
+#~ msgstr "Das ausgewählte Skript wurde erfolgreich exportiert."
+
+#~ msgid "An error occurred, the selected script could not be exported."
+#~ msgstr ""
+#~ "Es ist ein Fehler aufgetreten, das ausgewählte Skript kann nicht "
+#~ "exportiert werden."
+
+#~ msgid "Do you really want to delete the selected script?"
+#~ msgstr "Möchten Sie das ausgewählte Skript wirklich löschen?"
+
+#~ msgid "Remove KWin script"
+#~ msgstr "KWin-Skript entfernen"
+
+#~ msgid "Remove selected KWin script"
+#~ msgstr "Ausgewähltes KWin-Skript entfernen"

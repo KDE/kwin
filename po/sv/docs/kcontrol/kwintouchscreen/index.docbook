@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Swedish "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwintouchscreen" lang="&language;">
+<articleinfo>
+
+<title
+>Pekskärm</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+> <firstname
+>Stefan</firstname
+> <surname
+>Asserhäll</surname
+> <affiliation
+><address
+><email
+>stefan.asserhall@bredband.net</email
+></address
+></affiliation
+> <contrib
+>Översättare</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-10</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systeminställningar</keyword>
+<keyword
+>peka</keyword>
+<keyword
+>skärm</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Att svepa från skärmkanten mot mitten av skärmen låter dig aktivera effekter. Här kan du ställa in vilken effekt som aktiveras för varje kant av skärmen. </para>
+
+<para
+>Klicka med någon musknapp på en ruta och välj en effekt i den sammanhangsberoende menyn. Kanter med en blå ruta har redan en tilldelad effekt, medan en gråfärgad ruta anger att ingen effekt har valts för kanten.</para>
+
+<para
+>Antal tillgängliga alternativ i den sammanhangsberoende menyn beror på inställningarna i modulen <ulink url="help:/kcontrol/kwineffects/index.html"
+><guilabel
+>Skrivbordseffekter</guilabel
+></ulink
+> under kategorin <guilabel
+>Arbetsyta</guilabel
+>. Välj dina favoriteffekter i gruppen <guilabel
+>Fönsterhantering</guilabel
+>. Det aktiverar motsvarande alternativ i den sammanhangsberoende menyn.</para>
+</article>

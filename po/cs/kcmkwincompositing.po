@@ -1,0 +1,235 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Lukáš Tinkl <lukas@kde.org>, 2010, 2011, 2012.
+# Vít Pelčák <vit@pelcak.org>, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017.
+# Tomáš Chvátal <tomas.chvatal@gmail.com>, 2013.
+# Vit Pelcak <vpelcak@suse.cz>, 2017, 2018, 2019, 2021, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwincompositing\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"PO-Revision-Date: 2022-01-11 09:48+0100\n"
+"Last-Translator: Vit Pelcak <vpelcak@suse.cz>\n"
+"Language-Team: Czech <kde-i18n-doc@kde.org>\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Lokalize 21.12.0\n"
+"X-Language: cs_CZ\n"
+"X-Source-Language: en_US\n"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
+#: compositing.ui:31
+#, kde-format
+msgid ""
+"OpenGL compositing (the default) has crashed KWin in the past.\n"
+"This was most likely due to a driver bug.\n"
+"If you think that you have meanwhile upgraded to a stable driver,\n"
+"you can reset this protection but be aware that this might result in an "
+"immediate crash!"
+msgstr ""
+"Kompozice OpenGL (výchozí) vedla v minulosti k pádu KWinu.\n"
+"K tomu nejspíš došlo kvůli chybě v ovladači.\n"
+"Pokud si myslíte, že jste mezitím aktualizovali na stabilní verzi ovladače,\n"
+"můžete resetovat ochranu, ale mějte na paměti, že to může vést k okamžitému "
+"pádu."
+
+#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
+#: compositing.ui:44
+#, kde-format
+msgid ""
+"Scale method \"Accurate\" is not supported by all hardware and can cause "
+"performance regressions and rendering artifacts."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
+#: compositing.ui:67
+#, kde-format
+msgid ""
+"Keeping the window thumbnail always interferes with the minimized state of "
+"windows. This can result in windows not suspending their work when minimized."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, compositingLabel)
+#: compositing.ui:79
+#, kde-format
+msgid "Compositing:"
+msgstr "Kompozice:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
+#: compositing.ui:86
+#, kde-format
+msgid "Enable on startup"
+msgstr "Povolit při spuštění"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:95
+#, kde-format
+msgid ""
+"Applications can set a hint to block compositing when the window is open.\n"
+" This brings performance improvements for e.g. games.\n"
+" The setting can be overruled by window-specific rules."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:98
+#, kde-format
+msgid "Allow applications to block compositing"
+msgstr "Povolit aplikacím blokovat kompozici"
+
+#. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
+#: compositing.ui:105
+#, kde-format
+msgid "Animation speed:"
+msgstr "Rychlost animace:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: compositing.ui:142
+#, kde-format
+msgid "Very slow"
+msgstr "Velmi pomalu"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: compositing.ui:162
+#, kde-format
+msgid "Instant"
+msgstr "Okamžitě"
+
+#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
+#: compositing.ui:174
+#, kde-format
+msgid "Scale method:"
+msgstr "Metoda škálování:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:184
+#, kde-format
+msgid "Smooth"
+msgstr "Jemná"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:189
+#, kde-format
+msgid "Accurate"
+msgstr "Přesná"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: compositing.ui:199
+#, kde-format
+msgid "Tearing prevention (\"vsync\"):"
+msgstr "Zabránění trhání (\"VSync\"):"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:207
+#, kde-format
+msgid "Automatic"
+msgstr "Automaticky"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:212
+#, kde-format
+msgid "Only when cheap"
+msgstr "Pouze pokud není náročné"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:217
+#, kde-format
+msgid "Full screen repaints"
+msgstr "Překreslení celé obrazovky"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:222
+#, kde-format
+msgid "Re-use screen content"
+msgstr "Znovu využít obsah obrazovky"
+
+#. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
+#: compositing.ui:230
+#, kde-format
+msgid "Keep window thumbnails:"
+msgstr "Zachovat miniatury oken:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:238
+#, kde-format
+msgid "Never"
+msgstr "Nikdy"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:243
+#, kde-format
+msgid "Only for Shown Windows"
+msgstr "Pouze pro zobrazená okna"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:248
+#, kde-format
+msgid "Always"
+msgstr "Vždy"
+
+#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
+#: compositing.ui:256
+#, kde-format
+msgid "Latency:"
+msgstr "Latence:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:264
+#, kde-format
+msgid "Force lowest latency (may cause dropped frames)"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:269
+#, kde-format
+msgid "Prefer lower latency"
+msgstr "Preferovat nižší latenci"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:274
+#, kde-format
+msgid "Balance of latency and smoothness"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:279
+#, kde-format
+msgid "Prefer smoother animations"
+msgstr "Preferovat plynulejší animace"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:284
+#, kde-format
+msgid "Force smoothest animations"
+msgstr "Vynutit nejplynulejší animace"
+
+#: main.cpp:79
+#, kde-format
+msgid "Re-enable OpenGL detection"
+msgstr "Znovu povolit detekci OpenGL"
+
+#: main.cpp:135
+#, kde-format
+msgid ""
+"\"Only when cheap\" only prevents tearing for full screen changes like a "
+"video."
+msgstr ""
+"\"Pouze pokud není náročné\" zabrání trhání pouze po změny na celé obrazovce "
+"jako třeba při přehrávání videa."
+
+#: main.cpp:139
+#, kde-format
+msgid "\"Full screen repaints\" can cause performance problems."
+msgstr "\"Překreslení celé obrazovky\" může způsobit výkonnostní problémy"
+
+#: main.cpp:143
+#, kde-format
+msgid ""
+"\"Re-use screen content\" causes severe performance problems on MESA drivers."
+msgstr ""
+"\"Znovu využít obsah obrazovky\" způsobuje na ovladačích MESA vážné "
+"výkonnostní problémy."

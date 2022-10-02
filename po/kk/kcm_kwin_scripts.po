@@ -1,0 +1,96 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Sairan Kikkarin <sairan@computer.org>, 2012, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-09-20 00:47+0000\n"
+"PO-Revision-Date: 2013-10-04 02:05+0600\n"
+"Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
+"Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
+"Language: kk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.2\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Сайран Киккарин"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "sairan@computer.org"
+
+#: module.cpp:57
+#, kde-format
+msgid "Import KWin Script"
+msgstr "KWin скриптін импорттау"
+
+#: module.cpp:58
+#, kde-format
+msgid "*.kwinscript|KWin scripts (*.kwinscript)"
+msgstr "*.kwinscript|KWin скриптер (*.kwinscript)"
+
+#: module.cpp:96
+#, kde-format
+msgctxt "Placeholder is error message returned from the install service"
+msgid ""
+"Cannot import selected script.\n"
+"%1"
+msgstr ""
+
+#: module.cpp:108
+#, kde-format
+msgctxt "Placeholder is name of the script that was imported"
+msgid "The script \"%1\" was successfully imported."
+msgstr ""
+
+#: module.cpp:148
+#, kde-format
+msgid "Error when uninstalling KWin Script: %1"
+msgstr ""
+
+#: package/contents/ui/main.qml:47
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Delete..."
+msgstr ""
+
+#: package/contents/ui/main.qml:60
+#, kde-format
+msgid "Install from File..."
+msgstr ""
+
+#: package/contents/ui/main.qml:64
+#, fuzzy, kde-format
+#| msgid "Get New Script..."
+msgid "Get New Scripts..."
+msgstr "Жаңа скриптін табу..."
+
+#~ msgid "KWin Scripts"
+#~ msgstr "KWin скрипттері"
+
+#~ msgid "Configure KWin scripts"
+#~ msgstr "KWin скрипттерін баптау"
+
+#~ msgid "Tamás Krutki"
+#~ msgstr "Tamás Krutki"
+
+#~ msgid "KWin script configuration"
+#~ msgstr "KWin скрипт баптауы"
+
+#~ msgid "Import KWin script..."
+#~ msgstr "KWin скриптін импорттау..."
+
+#~ msgid ""
+#~ "Cannot import selected script: maybe a script already exists with the "
+#~ "same name or there is a permission problem."
+#~ msgstr ""
+#~ "Таңдалған скрипт импортталмады: былай аталған скрипт бар не рұқсаттарыңыз "
+#~ "жетіспейді."

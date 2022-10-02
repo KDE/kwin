@@ -1,0 +1,429 @@
+# translation of kwin_clients.po to Bengali INDIA
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Runa Bhattacharjee <runab@redhat.com>, 2008.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2008-12-30 18:00+0530\n"
+"Last-Translator: Runa Bhattacharjee <runab@redhat.com>\n"
+"Language-Team: Bengali INDIA <fedora-trans-bn_IN@redhat.com>\n"
+"Language: bn_IN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr ""
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr ""
+
+#: aurorae/src/aurorae.cpp:727
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "বড়"
+
+#: aurorae/src/aurorae.cpp:728
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "বড়"
+
+#: aurorae/src/aurorae.cpp:729
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "বড়"
+
+#: aurorae/src/aurorae.cpp:730
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "বড়"
+
+#: aurorae/src/aurorae.cpp:731
+#, fuzzy, kde-format
+#| msgid "Resize"
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "মাপ পরিবর্তন"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "কনফিগ ডায়লগ"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "শিরোনামের অবস্থান (&A)"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "বাঁদিকে"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "কেন্দ্রস্থিত"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "ডানদিকে"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "উইন্ডোর রঙিন প্রান্ত"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "বাটন অ্যানিমেট করা হবে"
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "ছায়াবৃত লেখা ব্যবহার করা হবে (&t)"
+
+#, fuzzy
+#~| msgid "Animate buttons"
+#~ msgid "Animations"
+#~ msgstr "বাটন অ্যানিমেট করা হবে"
+
+#, fuzzy
+#~| msgid "Actions Settings"
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "কর্ম সংক্রান্ত বৈশিষ্ট্য"
+
+#, fuzzy
+#~| msgid "Center"
+#~ msgid "General"
+#~ msgstr "কেন্দ্রস্থিত"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "বড়"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "বড়"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "বড়"
+
+#, fuzzy
+#~| msgid "Title &Alignment"
+#~ msgid "Tit&le alignment:"
+#~ msgstr "শিরোনামের অবস্থান (&A)"
+
+#, fuzzy
+#~| msgid "Small"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "ছোট"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "মেনু বাটনের উপর দুইবার ক্লিক করে উইন্ডো বন্ধ করুন"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title"
+#~ msgstr "উইন্ডো আড়াল করুন"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadows"
+#~ msgstr "ছায়াবৃত"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Window Glow"
+#~ msgstr "উইন্ডো আড়াল করুন"
+
+#, fuzzy
+#~| msgid "Config Dialog"
+#~ msgid "Dialog"
+#~ msgstr "কনফিগ ডায়লগ"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Use window title"
+#~ msgstr "উইন্ডো আড়াল করুন"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title:"
+#~ msgstr "উইন্ডো আড়াল করুন"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Hide window title bar"
+#~ msgstr "উইন্ডো আড়াল করুন"
+
+#, fuzzy
+#~| msgid "Restore"
+#~ msgid "Remove"
+#~ msgstr "পুর্বাবস্থা"
+
+#, fuzzy
+#~| msgid "Oxygen"
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "Oxygen"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Inactive Windows"
+#~ msgstr "উইন্ডো আড়াল করুন"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Windows"
+#~ msgstr "উইন্ডো আড়াল করুন"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+#~ msgid "Help"
+#~ msgstr "সাহায্য"
+
+#~ msgid "Minimize"
+#~ msgstr "আড়াল করুন"
+
+#~ msgid "Maximize"
+#~ msgstr "বড় করুন"
+
+#~ msgid "Close"
+#~ msgstr "বন্ধ করুন"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "অন্যান্যদের উপর"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "অন্যান্যদের নীচে"
+
+#~ msgid "On All Desktops"
+#~ msgstr "সকল ডেস্কটপে"
+
+#~ msgid "Menu"
+#~ msgstr "মেনু"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "সকল ডেস্কটপে প্রযোজ্য নয়"
+
+#~ msgid "On all desktops"
+#~ msgstr "সকল ডেস্কটপে প্রযোজ্য"
+
+#~ msgid "Unshade"
+#~ msgstr "ছায়াবিহীন"
+
+#~ msgid "Shade"
+#~ msgstr "ছায়াবৃত"
+
+#~ msgid "Resize"
+#~ msgstr "মাপ পরিবর্তন"
+
+#~ msgid "Restore"
+#~ msgstr "পুর্বাবস্থা"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "শিরোনামের রঙ সহযোগে উইন্ডোর প্রান্ত আঁকা হবে (&t)"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "নির্বাচিত হলে, উইন্ডোর প্রান্ত আঁকার জন্য শিরোনামের রঙ ব্যবহার করা হবে; অন্যথা, "
+#~ "প্রান্তের স্বাভাবিক রঙ প্রয়োগ করা হবে।"
+
+#~ msgid "Actions Settings"
+#~ msgstr "কর্ম সংক্রান্ত বৈশিষ্ট্য"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "মেনু বাটনের উপর দুইবার ক্লিক করুন:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "কিছু করা হবে না"
+
+#~ msgid "Minimize Window"
+#~ msgstr "উইন্ডো আড়াল করুন"
+
+#~ msgid "Shade Window"
+#~ msgstr "উইন্ডোর ছায়াবৃত করুন"
+
+#~ msgid "Close Window"
+#~ msgstr "উইন্ডো বন্ধ করুন"
+
+#~ msgid "Laptop"
+#~ msgstr "ল্যাপ-টপ"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Save"
+#~ msgstr "ছায়াবৃত"
+
+#~ msgid "Large"
+#~ msgstr "বড়"
+
+#~ msgid "Small"
+#~ msgstr "ছোট"
+
+#~ msgid "Plastik"
+#~ msgstr "Plastik"
+
+#, fuzzy
+#~| msgid "On All Desktops"
+#~ msgid "All Desktops"
+#~ msgstr "সকল ডেস্কটপে"
+
+#, fuzzy
+#~| msgid "Close"
+#~ msgid "Close Item"
+#~ msgstr "বন্ধ করুন"
+
+#~ msgid "&Left"
+#~ msgstr "বাঁদিকে (&L)"
+
+#, fuzzy
+#~| msgid "Center"
+#~ msgid "&Center"
+#~ msgstr "কেন্দ্রস্থিত"
+
+#~ msgid "&Right"
+#~ msgstr "ডানদিকে (&R)"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Do not keep above others"
+#~ msgstr "অন্যান্যদের উপর"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above others"
+#~ msgstr "অন্যান্যদের উপর"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Do not keep below others"
+#~ msgstr "অন্যান্যদের নীচে"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below others"
+#~ msgstr "অন্যান্যদের নীচে"
+
+#, fuzzy
+#~| msgid "Maximize"
+#~ msgid "Maximum"
+#~ msgstr "বড় করুন"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadow style:"
+#~ msgstr "ছায়াবৃত"
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "নতুন KWM থিম ইনস্টল করতে ব্যবহৃত"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "থিম কনফিগ ফাইলের পাথ"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWMTheme</b></center>"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>Keramik-র ঝলক</b></center>"
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"
+
+#~ msgid "Redmond"
+#~ msgstr "Redmond"
+
+#~ msgid "Medium"
+#~ msgstr "মাঝারি"
+
+#~ msgid "Web"
+#~ msgstr "ওয়েব"
+
+#~ msgid "Keramik"
+#~ msgstr "Keramik"
+
+#, fuzzy
+#~| msgid "Installs a KWM theme"
+#~ msgid "Get New Themes..."
+#~ msgstr "নতুন KWM থিম ইনস্টল করতে ব্যবহৃত"
+
+#, fuzzy
+#~| msgid "Installs a KWM theme"
+#~ msgid "Install New Theme..."
+#~ msgstr "নতুন KWM থিম ইনস্টল করতে ব্যবহৃত"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Glow active window"
+#~ msgstr "উইন্ডো আড়াল করুন"
+
+#~ msgid "Ozone"
+#~ msgstr "Ozone"
+
+#, fuzzy
+#~| msgid "Draw window frames using &titlebar colors"
+#~ msgid "Overwrite default title bar colors:"
+#~ msgstr "শিরোনামের রঙ সহযোগে উইন্ডোর প্রান্ত আঁকা হবে (&t)"

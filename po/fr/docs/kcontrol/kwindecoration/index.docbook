@@ -1,0 +1,176 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % French "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwindecoration" lang="&language;">
+<articleinfo>
+<authorgroup>
+<author
+>&Rik.Hemsley; &Rik.Hemsley.mail;</author>
+<author
+>&Anne-Marie.Mahfouf; &Anne-Marie.Mahfouf.mail;</author>
+&traducteurYvesDessertine; &traducteurLudovicGrossard; 
+</authorgroup>
+
+<date
+>09-04-2021</date>
+<releaseinfo
+>Plasma 5.21</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Configuration du système</keyword>
+<keyword
+>kwin</keyword>
+<keyword
+>fenêtre</keyword>
+<keyword
+>bord</keyword>
+<keyword
+>thème</keyword>
+<keyword
+>style</keyword>
+</keywordset>
+</articleinfo>
+<sect1 id="window-deco">
+<title
+>Décorations des fenêtres</title>
+
+<para
+>Ce module vous permet de sélectionner un style pour les boutons et les bords de fenêtre.</para>
+
+<sect2>
+<title
+>Décorations des fenêtres</title>
+
+<para>
+<screenshot>
+<screeninfo
+>Module de configuration des décorations de fenêtre</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Module de configuration des décorations de fenêtre</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+
+<para
+>Choisir un style de décoration de fenêtre dans la liste d'aperçus, en utilisant le champ de recherche en haut de l'écran ou télécharger un nouveau style en utilisant le bouton <guibutton
+>Obtenir de nouvelles décorations de fenêtres</guibutton
+>.</para>
+
+<para
+>La décoration de fenêtre par défaut est appelée <quote
+>Breeze</quote
+>.</para>
+
+<para
+>Chaque style a une apparence différente, mais aussi un <quote
+>comportement</quote
+> particulier. Certains ont des bordures de <quote
+>redimensionnement</quote
+> tout autour (parfois invisibles), facilitant la modification de taille, mais pas le déplacement de la fenêtre. D'autres n'ont pas de bords à certaines extrémités.</para>
+
+<para
+>Nous vous encourageons a expérimenter les différents styles pour trouver celui qui vous convient le mieux.</para>
+
+<para
+>Dans l'aperçu de chaque style, vous trouvez un bouton Configurer <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure.png" format="PNG"/></imageobject
+></inlinemediaobject
+> pour ouvrir des boîtes de dialogue de configuration pour la décoration.</para>
+
+<para
+>Les options dans la boîte de dialogue de configuration sont appliquées à toutes les fenêtres. Certaines décorations de fenêtres (&pex; <quote
+>Breeze</quote
+>) présentent un onglet <guilabel
+>Prédominance des paramètres spécifiques de fenêtres</guilabel
+>. Avec cet onglet, vous pouvez modifier la taille de la bordure et la visibilité de la barre de titre de la fenêtre pour une fenêtre particulière.</para>
+
+<para
+>Différentes options pour des fenêtres spécifiques vous sont proposées dans le module &systemsettings;, <ulink url="help:/kcontrol/windowspecific"
+>Règles de fenêtres</ulink
+>. </para>
+
+<tip>
+<para
+>Pour des raisons d'accessibilité, certaines décorations de fenêtres prennent en compte des bords très larges. Si cette option est disponible, vous pouvez également choisir la  <guilabel
+>taille de la bordure</guilabel
+> ici. Ces bordures larges sont plus faciles à voir pour les mal voyants et plus faciles à déplacer pour les personnes à mobilité réduite ou ayant des difficultés à manipuler la souris.</para>
+</tip>
+
+</sect2>
+
+<sect2>
+<title
+>Décorations</title>
+
+<para
+>Dans cette boîte de dialogue, vous pouvez modifier la décoration de la fenêtre. Les options disponibles dépendent du style sélectionné. </para>
+<para>
+<screenshot>
+<screeninfo
+>Options de la décoration « Breeze » </screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="decoration.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Options de la décoration « Breeze » </phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+<sect2>
+<title
+>Boutons de barre de titre</title>
+
+<para
+>Cet onglet vous permet de personnaliser l'emplacement du bouton sur la barre de titre. Vous pouvez faire glisser les boutons, &pex; le <guilabel
+>Menu d'application</guilabel
+> dans la barre de titre, les supprimer ou les faire glisser autour des boutons jusqu'à trouver l'ordre qui vous convient. </para>
+
+<screenshot>
+<screeninfo
+>Options de boutons</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="button.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Options de boutons</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+
+<para
+>Activer <guilabel
+>Fermer les fenêtre par un double-clic sur le bouton de menu</guilabel
+> pour avoir une option supplémentaire pour le bouton « Fermer » ou si vous avez supprimé le bouton « Fermer »de la barre de titre.  </para>
+
+<para
+>Cochez l'élément <guilabel
+>Afficher les infobulles pour les boutons de la barre de titre</guilabel
+> si vous voulez voir les infobulles par défaut lorsque vous survolez les boutons de la barre de titre avec le pointeur de la souris. </para>
+
+</sect2>
+
+</sect1>
+
+</article>

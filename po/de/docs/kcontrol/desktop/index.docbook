@@ -1,0 +1,156 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % German "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="desktop" lang="&language;">
+<title
+>Virtuelle Arbeitsflächen</title>
+<articleinfo>
+
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<author
+>&Jost.Schenck; &Jost.Schenck.mail;</author>
+<othercredit role="translator"
+><firstname
+>Frank</firstname
+><surname
+>Schütte</surname
+><affiliation
+><address
+><email
+>F.Schuette@t-online.de</email
+></address
+></affiliation
+><contrib
+>Deutsche Übersetzung</contrib
+></othercredit
+> <othercredit role="translator"
+><firstname
+>Frank</firstname
+><surname
+>Brücker</surname
+><affiliation
+><address
+><email
+>f.bruecker@gmx.de</email
+></address
+></affiliation
+><contrib
+>Überarbeitung der Übersetzung</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-09</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systemeinstellungen</keyword>
+<keyword
+>virtuell</keyword>
+<keyword
+>Arbeitsfläche</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>&kde; bietet die Möglichkeit mehrere virtuelle Arbeitsflächen zu benutzen. </para>
+<para
+>Sie können den Namen einer Arbeitsfläche ändern, indem Sie auf den Knopf <guibutton
+>Umbenennen</guibutton
+> klicken und dann Text eingeben. Dieser Knopf wird dann angezeigt, wenn sich der Mauszeiger auf dem Arbeitsflächeneintrag befindet. </para>
+<para
+>Mit dem Symbol Papierkorb rechts neben dem Arbeitsflächeneintrag können eine Arbeitsfläche entfernen. </para>
+<para
+>Drücken Sie auf <guibutton
+>Hinzufügen</guibutton
+>, um eine weitere Arbeitsfläche mit dem Standardnamen <guilabel
+>Neue Arbeitsfläche</guilabel
+> zu erstellen. </para>
+<para
+>Sie können die Anzahl der Zeilen in der Kontrollleiste einstellen. Verwenden Sie dazu das Eingabefeld unterhalb der Liste. Die Arbeitsflächen werden automatisch anhand der Zeilen neu angeordnet. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Automatisch zur Gegenseite navigieren</guilabel
+></term>
+<listitem
+><para
+>Aktivieren Sie diese Einstellung, wenn Sie möchten, dass die Navigation über eine Arbeitsfläche hinaus Sie automatisch zum entgegengesetzten Rand der neuen Arbeitsfläche bringt. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Animation beim Wechseln anzeigen</guilabel
+></term>
+<listitem
+><para
+>Als Animation stehen <guilabel
+>Gleiten</guilabel
+>, <guilabel
+>Animierter Arbeitsflächen-Würfel</guilabel
+> und <guilabel
+>Animation ein-/ausblenden</guilabel
+> im Auswahlfeld zur Verfügung. Mit dem Ankreuzfeld können Sie die Animation auch abschalten. Gibt es für die gewählte Animation Einstellungsoptionen, klicken Sie auf das Werkzeugsymbol rechts neben dem Auswahlfeld, um einen Einrichtungsdialog zu öffnen. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>On-Screen-Display beim Wechseln anzeigen</guilabel
+></term>
+<listitem
+><para
+>Ist diese Einstellung aktiv, wird beim Wechseln der Arbeitsfläche eine OnScreen-Anzeige verwendet. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Arbeitsflächenvorschau anzeigen</guilabel
+></term>
+<listitem
+><para
+>Wenn Sie diese Einstellung aktivieren, erhalten Sie eine kleine Vorschau, die das Layout der gewählten Arbeitsfläche anzeigt. </para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>Bewegen Sie das Mausrads über einem leeren Bereich der Arbeitsfläche oder dem Symbol vom <guilabel
+>Arbeitsflächen-Umschalter</guilabel
+> in der Kontrollleiste, erfolgt ein Wechsel zur nächsten virtuellen Arbeitsfläche (in numerischer Reihenfolge). Die (numerische) Richtung wird hierbei durch die Bewegungsrichtung (rauf oder runter) des Mausrades bestimmt.</para>
+<para
+>Dieses Standardverhalten können Sie auf der Seite <guilabel
+>Maus-Aktionen</guilabel
+> in den <guilabel
+>Einstellungen für die Arbeitsfläche</guilabel
+> (<keycombo action="simul"
+>&Alt;<keycap
+>D</keycap
+></keycombo
+>, <keycombo action="simul"
+>&Alt;<keycap
+>S</keycap
+></keycombo
+>) ändern.</para>
+
+</article>

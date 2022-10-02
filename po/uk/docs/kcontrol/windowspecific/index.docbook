@@ -1,0 +1,2228 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Ukrainian "INCLUDE">
+]>
+<book id="windowspecific" lang="&language;">
+<bookinfo>
+<title
+>Правила вікон</title>
+<authorgroup>
+<author
+>&Lauri.Watts; &Lauri.Watts.mail;</author>
+<author>
+<personname
+><firstname
+>Частину цієї документації було створено на основі сторінки UserBase KDE <ulink url="https://userbase.kde.org/KWin Rules"
+>Правила KWin</ulink
+>. Згодом документацію оновлено командою з документування &kde;.</firstname
+> <surname
+></surname
+> </personname>
+      </author>
+<othercredit role="translator"
+><firstname
+>Юрій</firstname
+><surname
+>Чорноіван</surname
+><affiliation
+><address
+><email
+>yurchor@ukr.net</email
+></address
+></affiliation
+><contrib
+>Переклад українською</contrib
+></othercredit
+> 
+      </authorgroup>
+<legalnotice
+>&FDLNotice;</legalnotice>
+<date
+>23 червня 2016 року</date>
+      <releaseinfo
+>Плазма 5.8</releaseinfo>
+<abstract>
+<para
+>Тут ви можете налаштувати параметри окремих вікон.</para>
+      </abstract>
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>параметри вікон</keyword>
+<keyword
+>розташування вікон</keyword>
+<keyword
+>розмір вікон</keyword>
+</keywordset>
+</bookinfo>
+<chapter id="window-specific">
+<title
+>Параметри, притаманні вікнам: короткий вступ</title>
+
+<para
+>Тут ви можете налаштувати параметри окремих вікон.</para>
+
+<note>
+<para
+>Будь ласка, пам’ятайте, що ці налаштування не матимуть жодного впливу на вигляд, якщо ви не використовуєте як засіб для керування вікнами &kwin;. Якщо ви користуєтеся іншим засобом для керування вікнами, будь ласка, зверніться до документації цього засобу, щоб дізнатися про те, як можна налаштувати поведінку вікон.</para>
+</note>
+
+<para
+>Багато з параметрів, які ви можете встановити тут, ви також можете встановити і на загальному рівні у модулі <guilabel
+>Поведінка вікон</guilabel
+> Параметрів системи, але тут ці параметри представлено детальніше.</para>
+
+<para
+>Серед цих параметрів геометрія, розташування вікна, те, чи слід розташовувати вікно над або під іншими вікнами, запобігання втраті фокуса і параметри прозорості.</para>
+
+<para
+>Доступ до цього модуля можна отримати двома способами: за допомогою смужки заголовка вікна програми, яку ви бажаєте налаштувати або за допомогою Параметрів системи. Якщо ви почнете з Параметрів системи, ви можете скористатися кнопкою <guibutton
+>Створити...</guibutton
+>, щоб створити новий профіль вікна, і кнопкою <guibutton
+>Визначити властивості вікна</guibutton
+> у остаточному діалоговому вікні для того, щоб частково заповнити потрібні поля даних для програми, яку ви бажаєте налаштувати.</para>
+
+<para
+>Крім того, ви будь-коли можете скористатися кнопками <guibutton
+>Змінити...</guibutton
+> або <guibutton
+>Вилучити</guibutton
+> для зміни або вилучення будь-якого зі збережених профілів або перевпорядкувати список. Перевпорядкування списку за допомогою кнопок <guibutton
+>Пересунути вгору</guibutton
+> і <guibutton
+>Пересунути вниз</guibutton
+> призначене для визначення способу їхнього застосування.</para>
+
+</chapter>
+<!--userbase <timestamp
+>2012-03-09T20:50:14Z</timestamp
+>-->
+
+<!--userbase-content-->
+<chapter id="overview"
+><title
+>Огляд</title
+> 
+<para
+>У &kwin; передбачено можливість визначення користувачами правил, які визначають поведінку вікон програм. </para>
+<para
+>Наприклад, вікно запущеної програми може бути завжди розташовано на <emphasis
+>Віртуальній стільниці 2</emphasis
+> або ваду у програмі можна обійти примусовим визначенням розташування вікна програми над іншими вікнами. </para>
+<para
+>У цьому довіднику наведено покрокові <link linkend="examples"
+>приклади</link
+>, а також докладні дані щодо використання <link linkend="kwin-rule-editor"
+>редактора правил &kwin;</link
+> для визначення <link linkend="window-matching"
+>відповідності вікон</link
+> та <link linkend="window-attributes"
+>атрибутів вікон</link
+>. </para>
+</chapter>
+<chapter id="examples-and-application-workaround"
+><title
+>Приклади та маскування вад у програмах</title
+> 
+<para
+>Щоб ознайомитися з докладним переліком можливостей, скористайтеся <link linkend="examples"
+>прикладами</link
+>, які можуть стати основою для створення ваших власних правил. </para>
+<para
+>Окрему сторінку присвячено <link linkend="application-workarounds"
+>маскуванню вад у програмах</link
+>. </para>
+</chapter>
+<chapter id="kwin-rule-editor"
+><title
+>Редактор правил KWin</title
+> 
+<sect1 id="invoking-the-kwin-rule-editor"
+><title
+>Як запустити редактор правил KWin</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-ordering.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Передбачено декілька способів запуску редактора правил &kwin;. Нижче наведено два з цих способів: </para>
+<itemizedlist>
+<listitem
+><para
+>Клацніть правою кнопкою миші на смужці заголовка вікна і виберіть у контекстному меню пункт <menuchoice
+><guimenu
+>Додаткові дії</guimenu
+><guimenuitem
+>Параметри керування вікнами...</guimenuitem
+></menuchoice
+>. У вікні <guilabel
+>Налаштування</guilabel
+> виберіть пункт <guilabel
+>Правила вікон</guilabel
+>.</para
+></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem
+><para
+><menuchoice
+><guimenu
+>Системні параметри</guimenu
+><guisubmenu
+>Поведінка вікон</guisubmenu
+><guimenuitem
+>Правила вікон</guimenuitem
+></menuchoice
+></para
+></listitem>
+</itemizedlist>
+<para
+>Головним вікном налаштування можна скористатися для виконання таких дій: </para>
+<itemizedlist>
+<listitem
+><para
+>Керування правилами за допомогою кнопок <guilabel
+>Створити...</guilabel
+>, <guilabel
+>Змінити...</guilabel
+> і <guilabel
+>Вилучити</guilabel
+>.</para
+></listitem>
+<listitem
+><para
+>Імпортування та оприлюднення правил за допомогою кнопок <guilabel
+>Імпортувати</guilabel
+> і <guilabel
+>Оприлюднити</guilabel
+></para
+></listitem>
+<listitem
+><para
+>Визначення бажаного <link linkend="rule-evaluation"
+>порядку використання правил</link
+> за допомогою кнопок <guilabel
+>Пересунути вверх</guilabel
+> і <guilabel
+>Пересунути вниз</guilabel
+>.</para
+></listitem>
+</itemizedlist>
+<sect2 id="rule-evaluation"
+><title
+>Визначення пріоритетності правил</title
+> 
+<para
+>Під час запуску програми (або після внесення змін до правил вікон) &kwin; використовує правила спочатку з верхньої частини списку, а потім з його кінця. Буде використано всі правила, яким відповідає вікно, а потім буде показано саме вікно. </para>
+<para
+>Якщо одним з атрибутів вікна керує декілька правил, буде використано значення, що визначається <emphasis
+>першим</emphasis
+> правилом у списку. </para>
+<para
+><tip
+><para
+>Ви можете керувати дочірніми вікнами програми, розташовуючи правила з меншою кількістю обмежень першими. Ознайомтеся з прикладом для <link linkend="application-on-all-desktops-and-handle-one-child-window-uniquely"
+>вікна Kopete та вікна балачки Kopete</link
+>..</para
+></tip>
+</para>
+</sect2>
+</sect1>
+<sect1 id="rule-editor"
+><title
+>Редактор правил</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Вікно редактора містить чотири вкладки: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Відповідність вікон</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Розмір і розташування</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Впорядкування і доступ</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Вигляд і виправлення</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Як можна зрозуміти з назви, <guilabel
+>Відповідність вікон</guilabel
+> використовується для визначення критеріїв відповідності одному або декільком вікнам. Інші три вкладки призначено для внесення змін до атрибутів відповідних правилу вікон. </para>
+<para
+><tip
+><para
+>Правила можуть стосуватися і панелей.</para
+></tip>
+</para>
+<sect2 id="window-matching"
+><title
+>Відповідність вікон</title
+> 
+<para
+>Для кожного з правил вікон користувач визначає критерії <link linkend="window-matching"
+>відповідності вікон</link
+>. &kwin; використовує критерії для визначення, чи можна застосовувати правило до вікна програми. </para>
+</sect2>
+<sect2 id="window-attributes"
+><title
+>Атрибути вікон</title
+> 
+<para
+>Окрім критерії відповідності вікон, у кожному правилі є набір <link linkend="window-attributes"
+>атрибутів вікна</link
+>. Атрибути перевизначають відповідні параметри програми і застосовуються до того, як вікно програми буде показано &kwin;. </para>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="window-matching0"
+><title
+>Відповідність вікон</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>За допомогою вкладки <guilabel
+>Відповідність вікон</guilabel
+> можна вказати критерії, за якими &kwin; визначатиме, чи слід застосовувати певне правило до певного вікна. </para>
+<para
+>Можна не вказувати жодного критерію (відповідність будь-якому вікну) або вказати декілька з наведених нижче варіантів: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Клас вікна (програма)</guilabel
+> — відповідність за класом.<itemizedlist
+> <listitem
+><para
+><guilabel
+>Відповідає цілому класу вікон</guilabel
+> — встановлювати відповідність і для вторинних елементів класу.</para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Роль вікна</guilabel
+> — обмежити відповідність призначенням вікна (наприклад, <emphasis
+>головне вікно</emphasis
+>, <emphasis
+>вікно балачки</emphasis
+> тощо)</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Типи вікон</guilabel
+> — обмежити відповідність певним типом вікна: <guilabel
+>Звичайне вікно</guilabel
+>, <guilabel
+>Діалогове вікно</guilabel
+> тощо.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Заголовок вікна</guilabel
+> — обмежити відповідність вікнами з певним заголовком.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Вузол (назва вузла)</guilabel
+> — обмежити відповідність назвою вузла (комп’ютера), пов’язаною з вікном.</para
+></listitem>
+</itemizedlist>
+<para
+><tip
+><para
+>Хоча згадані вище дані можна ввести вручну, краще скористатися для введення цих даних кнопкою <guilabel
+>Визначити властивості вікна</guilabel
+>.</para
+></tip>
+</para>
+<para
+>Для кожного з полів можна застосувати до значення поля один з таких операторів: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Неважливо</guilabel
+> — ігнорувати значення поля.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Повна відповідність</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Відповідність підрядка</guilabel
+></para
+></listitem>
+</itemizedlist>
+<para
+><note
+><para
+>У обох варіантах, <guilabel
+>Повна відповідність</guilabel
+> та <guilabel
+>Відповідність підрядка</guilabel
+>, реалізовано встановлення відповідності без врахування регістру символів. Наприклад, рядок <emphasis
+>AB</emphasis
+> відповідає рядкам <emphasis
+>AB</emphasis
+>, <emphasis
+>ab</emphasis
+>, <emphasis
+>Ab</emphasis
+> і <emphasis
+>aB</emphasis
+>.</para
+></note>
+</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Формальний вираз</guilabel
+> — відповідність за формальним виразом Qt, див. <ulink url="https://doc.qt.io/qt-5/qregexp.html"
+>довідник зі встановлення відповідності за допомогою формальних виразів</ulink
+>.</para
+></listitem>
+</itemizedlist>
+<sect1 id="detect-window-properties"
+><title
+>Визначити властивості вікна</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-detect-window.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>За допомогою кнопки <guilabel
+>Визначити властивості вікна</guilabel
+> можна значно спростити процедуру введення критеріїв відповідності. </para>
+<orderedlist>
+<listitem
+><para
+>Щоб створити правило для вікна певної програми, спочатку запустіть цю програму.</para
+></listitem>
+<listitem
+><para
+>Далі, за допомогою вкладки <guilabel
+>Відповідність вікон</guilabel
+> встановіть затримку у секундах перед виконанням дії <guilabel
+>Визначити властивості вікна</guilabel
+>. Типовою є затримка у нуль секунд.</para
+></listitem>
+<listitem
+><para
+>Натисніть кнопку <guilabel
+>Визначити властивості вікна</guilabel
+> і</para
+></listitem>
+<listitem
+><para
+>Коли вигляд вказівника миші зміниться на перехрестя, наведіть його на вікно програми (не на смужку заголовка) і клацніть лівою кнопкою миші.</para
+></listitem>
+<listitem
+><para
+>У відповідь буде відкрито вікно з даними щодо вибраного вікна. Виберіть потрібні вам поля:<itemizedlist>
+<listitem
+><para
+><guilabel
+>Назва вторинного класу</guilabel
+> — у деяких програмах передбачено назву вторинного класу. За допомогою цього значення ви можете обмежити перелік вікон цим значенням.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Роль вікна</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Тип вікна</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Заголовок вікна</guilabel
+></para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+</orderedlist>
+<para
+>Натисніть кнопку <guilabel
+>Гаразд</guilabel
+> для заповненні полів критеріїв вікна <guilabel
+>Відповідність вікон</guilabel
+>. </para>
+<para
+>На основі поєднання цих даних правило може бути застосовано до всіх вікон програми (за <guilabel
+>Класом</guilabel
+>) або до певного вікна за <guilabel
+>Типом</guilabel
+> у <guilabel
+>Класі</guilabel
+>, скажімо <guilabel
+>Панель інструментів</guilabel
+>. </para>
+</sect1>
+</chapter>
+<chapter id="window-attributes1"
+><title
+>Атрибути вікон</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-window-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Атрибути, які можна визначити для вікна згруповано за функціями на три вкладки: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Розмір і розташування</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Впорядкування і доступ</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Вигляд і виправлення</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Для кожного атрибута передбачено набір параметрів, який визначає розташування вікна. </para>
+<sect1 id="parameters"
+><title
+>Параметри</title>
+<para
+>Мінімально, кожен з атрибутів приймає один з вказаних нижче параметрів. Крім того, наведено специфічні для атрибутів аргументи для кожного визначення <link linkend="attributes"
+>атрибута</link
+>. </para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Не впливати</emphasis
+></term>
+    <listitem>
+    <para
+>Забезпечити те, що наступне правило, яке відповідає вікну, не впливатиме на атрибут.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Застосовувати спочатку</emphasis
+></term>
+    <listitem>
+    <para
+>Відкрити вікно з відповідним атрибутом і надати змогу змінювати його у динамічному режимі.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Запам'ятати</emphasis
+></term>
+    <listitem>
+    <para
+>Використовувати параметр атрибута, визначений у правилі, і якщо його змінено у динамічному режимі, зберегти і використати нове значення.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Примусово встановити</emphasis
+></term>
+    <listitem>
+    <para
+>Значення цього параметра не можна змінювати у динамічному режимі.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Застосувати зараз, Встановити тимчасово</emphasis
+></term>
+    <listitem>
+    <para
+>Застосувати одразу або примусово визначити тимчасово параметр один раз і зняти призначення атрибута. Відмінність між цими двома варіантами є те, що у динамічному режимі: <guilabel
+>Застосувати зараз</guilabel
+> надає змогу змінювати атрибут, а <guilabel
+>Встановити тимчасово</guilabel
+> забороняє зміну параметра, аж до закриття всіх відповідних вікон.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>У разі використання варіанта <guilabel
+>Застосувати зараз</guilabel
+>, якщо у правилі не встановлено інших атрибутів, правило вилучається після встановлення відповідності, а у разі використання <guilabel
+>Встановити тимчасово</guilabel
+> правило вилучається після закриття останнього відповідного вікна.</para
+></warning>
+</para>
+</sect1>
+<sect1 id="attributes"
+><title
+>Атрибути</title>
+<para
+><tip
+><para
+>Кнопка <guilabel
+>Визначити властивості вікна</guilabel
+> заповнює значення специфічних для атрибутів значень. Щоб дізнатися більше, зверніться до розділу <link linkend="window-matching"
+>Відповідність вікон</link
+>. Наприклад, значення атрибутів висоти і ширини атрибута <guilabel
+>Розмір</guilabel
+> встановлюються у значення висоти і ширини визначеного вікна.</para
+></tip>
+</para>
+<para
+><tip
+><para
+>Атрибути <guilabel
+>Так/Ні</guilabel
+> використовуються для вмикання або вимикання атрибутів. Прості знання граматики допоможуть вам зрозуміти спосіб обробки параметра. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Наприклад, якщо встановлено значення <guilabel
+>Ні</guilabel
+> для атрибута <guilabel
+>Ігнорувати смужку задач</guilabel
+>, &kwin; не ігноруватиме смужку задач. Іншими словами, пункт вікна буде показано на смужці задач. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+></para
+></tip>
+</para>
+<sect2 id="size--position"
+><title
+>Розмір і розташування</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Позиція</emphasis
+></term>
+    <listitem>
+    <para
+>Розташувати верхній лівий кут вікна у точці з координатами x, y.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Початок координат &kwin;, точку (0,0), розташовано у верхньому лівому куті стільниці.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Розмір</emphasis
+></term>
+    <listitem>
+    <para
+>Ширина і висота вікна.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Максимізація горизонтально, Максимізація вертикально</emphasis
+></term>
+    <listitem>
+    <para
+>Ці атрибути використовуються для перемикання атрибута максимізації у горизонтальному напрямку, мінімізації у горизонтальному напрямку.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Стільниця, Простір дій, Екран</emphasis
+></term>
+    <listitem>
+    <para
+>Розташовувати вікно на вказаній <emphasis
+>(віртуальній) стільниці</emphasis
+>, у <emphasis
+>просторі дій</emphasis
+> чи на <emphasis
+>екрані</emphasis
+>. Скористайтеся варіантом <guilabel
+>Всі стільниці</guilabel
+>, щоб вікно було розташовано на всіх <emphasis
+>Віртуальних стільницях</emphasis
+>.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>На весь екран, Мінімізація, Затінення</emphasis
+></term>
+    <listitem>
+    <para
+>Увімкнути або вимкнути атрибут повноекранного показу, мінімізації і затінення вікна. Наприклад, вікно може відкриватися у режимі мінімізації і, якщо вікно запускається мінімізованим, у примусовому або непримусовому режимі.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Атрибут максимізації емулюється за допомогою атрибутів <guilabel
+>Максимізація горизонтально</guilabel
+> і <guilabel
+>Максимізація вертикально</guilabel
+> або атрибута <guilabel
+>Початкове розташування</guilabel
+> з аргументом <guilabel
+>Максимізація</guilabel
+>.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Початкове розташування</emphasis
+></term>
+    <listitem>
+    <para
+>Перевизначити загальні параметри розташовування вікон у один з таких способів:</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Типовий</guilabel
+> — використовувати загальну стратегію розташовування вікон.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Немає розташування</guilabel
+> — верхній лівий кут.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Мінімальне перекриття</guilabel
+> — розташувати у області, у якій немає інших вікон.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Максимізовано</guilabel
+> — відкривати вікно максимізованим.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Уступами</guilabel
+> — розташувати уступами за заголовком.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>У центрі</guilabel
+> — розташувати у центрі стільниці.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Випадковий</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>У лівому верхньому куті</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Під мишкою</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>На головному вікні</guilabel
+> — обмежити розташування дочірніх вікон межами основного вікна.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ігнорувати запитану позицію</emphasis
+></term>
+    <listitem>
+    <para
+>Визначити, слід приймати чи ігнорувати запитане геометрією вікна розташування. Щоб уникнути конфліктів між типовою стратегією розташовування вікон і запитами вікна, стратегія розташовування ігнорується, якщо буде прийнято запит вікна.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Мінімальний розмір, Максимальний розмір</emphasis
+></term>
+    <listitem>
+    <para
+>Мінімальний і максимальний розміри, які можна використовувати для вікна.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Зважати на обмеження розмірів</emphasis
+></term>
+    <listitem>
+    <para
+>Увімкнути або вимкнути дотримання запитаного вікном співвідношення розмірів або дотримання <emphasis
+>базового збільшення</emphasis
+>. З метою кращого розумінні атрибута потрібне певне пояснення. Якщо коротко, вікна мають запитати у засобу керування вікнами базовий крок зростання: мінімальне число пікселів для <emphasis
+>висоти</emphasis
+> і <emphasis
+>ширини</emphasis
+> на один запит зі зміни розмірів. Типовим є крок 1x1. Інші ж вікна, наприклад, вікна емуляторів термінала і редакторів використовують шрифти з фіксованим розміром символів і запитують базові кроки відповідно до розміру одного символу.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="arrangement--access"
+><title
+>Впорядкування і доступ</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Тримати зверху, Тримати знизу</emphasis
+></term>
+    <listitem>
+    <para
+>Увімкнути або вимкнути утримування вікна над або під іншими вікнами.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Автоматично групувати з тотожними</emphasis
+></term>
+    <listitem>
+    <para
+>Увімкнути або вимкнути групування (яке типово називають <emphasis
+>використанням вкладок</emphasis
+>) вікон.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Автоматичне групування на передньому плані</emphasis
+></term>
+    <listitem>
+    <para
+>Увімкнути або вимкнути активізацію вікна під час додавання вікна до поточної групи <guilabel
+>Автоматично групувати</guilabel
+>.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Автоматично групувати за ідентифікатором</emphasis
+></term>
+    <listitem>
+    <para
+>Створити групу на основі визначеного користувачем ідентифікатора. Один ідентифікатор можна використовувати у декількох правилах з метою забезпечення групування безпосередньо не пов’язаних вікон.</para>
+     </listitem>
+  </varlistentry>
+
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ігнорувати смужку задач</emphasis
+></term>
+    <listitem>
+    <para
+>Увімкнути або вимкнути показ пункту вікна на смужці задач.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ігнорувати пейджер</emphasis
+></term>
+    <listitem>
+    <para
+>Увімкнути або вимкнути показ пункту вікна на панелі пейджера.</para>
+     </listitem>
+  </varlistentry>
+    </variablelist>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Пропустити перемикач</emphasis
+></term>
+    <listitem>
+    <para
+>Увімкнути або вимкнути показ вікна у списку перемикання, що викликається комбінацією клавіш <keycombo
+>&Alt;&Tab;</keycombo
+>.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Скорочення</emphasis
+></term>
+    <listitem>
+    <para
+>Призначити до вікна клавіатурне скорочення. У разі натискання кнопки <guilabel
+>Редагувати...</guilabel
+> буде відкрито вікно з подальшими настановами.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="appearance--fixes"
+><title
+>Вигляд і виправлення</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Без смужки заголовка і обрамлення</emphasis
+></term>
+    <listitem>
+    <para
+>Увімкнути або вимкнути показ смужки заголовка і рамки навколо вікна.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Схема кольорів смужки заголовка</emphasis
+></term>
+    <listitem>
+    <para
+>Вибрати схему кольорів для смужки заголовка вікна.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Прозорість активного/неактивного</emphasis
+></term>
+    <listitem>
+    <para
+>Якщо вікно є активним або неактивним, встановити його непрозорість у вказане значення у відсотках.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+><guilabel
+>Прозорість активного/неактивного</guilabel
+> може вплинути на показ вікна, лише якщо увімкнено <guilabel
+>Ефекти стільниці</guilabel
+>.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Запобігання викраденню фокуса</emphasis
+></term>
+    <listitem>
+    <para
+>Якщо вікно надсилає запит щодо отримання фокуса, керує ступенем (від <guilabel
+>Немає</guilabel
+> до <guilabel
+>Екстремального</guilabel
+>) задоволення запиту та розташування вікна над іншими вікнами або ігнорування цього запиту (потенційно залишаючи вікно під іншими вікнами):</para>
+<itemizedlist>
+<listitem
+><para
+>Немає — завжди надавати вікну фокус.</para
+></listitem>
+<listitem
+><para
+>Низький</para
+></listitem>
+<listitem
+><para
+>Звичайний</para
+></listitem>
+<listitem
+><para
+>Високий</para
+></listitem>
+<listitem
+><para
+>Екстремальний — відмовляти у запитах щодо отримання вікном фокуса. Фокус буде надано лише у відповідь на явне визначення фокуса мишею.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Зверніться до пункту <guilabel
+>Приймає фокус</guilabel
+>, якщо вам потрібно зробити вікно придатним лише для читання (не приймати жодних введених з клавіатури символів).</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Приймає фокус</emphasis
+></term>
+    <listitem>
+    <para
+>Увімкнути або вимкнути отримання вікном введених з клавіатури символів. Зробити вікно придатним лише для читання.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ігнорувати загальні скорочення</emphasis
+></term>
+    <listitem>
+    <para
+>Увімкнути або вимкнути використання загальних клавіатурних скорочень (як визначено на сторінці, яку можна відкрити такою послідовністю переходів: <menuchoice
+><guimenu
+>Системні параметри</guimenu
+><guisubmenu
+>Скорочення і жести</guisubmenu
+><guimenuitem
+>Загальні скорочення</guimenuitem
+></menuchoice
+> або за допомогою команди <command
+>kcmshell5 keys</command
+>, відданої з вікна <guilabel
+>konsole</guilabel
+>), доки вікно є активним.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Можна закрити</emphasis
+></term>
+    <listitem>
+    <para
+>Увімкнути або вимкнути показ кнопки <guilabel
+>Закрити</guilabel
+> на смужці заголовка вікна.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Вікно термінала все одно може бути закрите користувачем завершенням сеансу оболонки, але використання атрибута <guilabel
+>Приймає фокус</guilabel
+>, щоб вимкнути введення з клавіатури, зробить складнішим закриття цього вікна.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Тип вікна</emphasis
+></term>
+    <listitem>
+    <para
+>Змінити тип вікна і успадкувати характеристики цього вікна:</para>
+<itemizedlist>
+<listitem
+><para
+>Звичайне вікно</para
+></listitem>
+<listitem
+><para
+>Діалогове вікно</para
+></listitem>
+<listitem
+><para
+>Допоміжне вікно</para
+></listitem>
+<listitem
+><para
+>Швартування (панель)</para
+></listitem>
+<listitem
+><para
+>Пенал</para
+></listitem>
+<listitem
+><para
+>Відірване меню</para
+></listitem>
+<listitem
+><para
+>Вікно вітання</para
+></listitem>
+<listitem
+><para
+>Стільниця</para
+></listitem>
+<listitem
+><para
+>Незалежна смужка меню</para
+></listitem>
+<listitem
+><para
+>Екранна панель</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>Користуйтеся цим атрибутом обережно, оскільки можна отримати несподівані результати. Наприклад, <guilabel
+>Вікно вітання</guilabel
+> буде автоматично закрито &kwin; після клацання.</para
+></warning>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Блоковий композитний режим</emphasis
+></term>
+    <listitem>
+    <para
+>Увімкнути або вимкнути композитне відтворення, доки вікно <emphasis
+>існує</emphasis
+>. Якщо композитний режим увімкнено і правило визначає вимикання композитного режиму, доки існує <emphasis
+>хоч одне</emphasis
+> відповідне вікно, композитне відтворення буде вимкнено. Композитне відтворення буде повторно увімкнено, щойно буде закрито останнє відповідне вікно.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+</sect1>
+</chapter>
+<chapter id="examples"
+><title
+>Приклади</title>
+<para
+><note
+><para
+>У першому прикладі докладно описано всі необхідні кроки для створення правил. З метою уникнення непотрібного роздуття об’єму цієї довідки у наступних прикладах буде наведено лише список кроків, специфічних для відповідного прикладу.</para
+></note>
+</para>
+<para
+><note
+><para
+>Атрибут <guilabel
+>Пейджер</guilabel
+> стосується <guilabel
+>Керування віртуальними стільницями</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></note>
+</para>
+<sect1 id="pin-a-window-to-a-desktop-and-set-other-attributes"
+><title
+>Фіксування вікна на стільниці і встановлення інших атрибутів</title>
+<para
+>Зафіксуємо вікно &akregator; на <emphasis
+>Віртуальній стільниці 2</emphasis
+>. Крім того, нехай програма запускається з вікно бажаного розміру у бажаній позиції. Для кожного атрибута скористаємося <link linkend="parameters"
+>параметр</link
+> <guilabel
+>Застосувати спочатку</guilabel
+>, щоб параметри вікна можна було перевизначити у динамічному режимі. </para>
+<para
+>Правило &kwin; створюється таким чином: </para>
+<orderedlist>
+<listitem
+><para
+>Запустіть &akregator; на <emphasis
+>другій стільниці</emphasis
+> і встановіть бажані розмір і розташування вікна: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-fav.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Клацніть правою кнопкою миші на смужці заголовка і виберіть у контекстному меню пункт <menuchoice
+><guimenu
+>Додаткові дії</guimenu
+><guimenuitem
+>Параметри керування вікнами...</guimenuitem
+></menuchoice
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="config-win-behavior.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Виберіть пункт <guilabel
+>Правила вікон</guilabel
+> на лівій панелі і натисніть кнопку <guilabel
+>Створити...</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Буде показано вікно <guilabel
+>Зміна параметрів вікон</guilabel
+>. Вкладку <guilabel
+>Відповідність вікон</guilabel
+> буде типово відкрито: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-init.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Натисніть кнопку <guilabel
+>Визначити властивості вікна</guilabel
+>. З затримкою <guilabel
+>затримка у 0 с</guilabel
+> курсор негайно змінить вигляд на перехрестя. Клацніть у довільній точці вікна &akregator; (саме вікна, а не смужки заголовка). Буде показано вікно з критеріями вікна програми. Використайте відповідність лише за назвою основного класу, отже решту пунктів можна не позначати. Додаткові дані можна отримати з розділу <link linkend="window-matching"
+>відповідність вікон</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akgregator-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Натисніть кнопку <guilabel
+>Гаразд</guilabel
+> і у попередньому вікні буде заповнено пункти параметрів вікна на вкладці <guilabel
+>Відповідність вікон</guilabel
+>. Введіть зрозумілий <guilabel
+>Опис</guilabel
+> (цей опис буде показано у вікні <guilabel
+>Правило KWin</guilabel
+>): <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-ready-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Увімкніть атрибути вікна: <guilabel
+>Позиція</guilabel
+>, <guilabel
+>Розмір</guilabel
+> і <guilabel
+>Стільниця</guilabel
+>. Початкові значення буде встановлено на основі визначених за допомогою кнопки <guilabel
+>Визначити властивості вікна</guilabel
+>, — їх можна буде перевизначити: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Натискання кнопки <guilabel
+>Гаразд</guilabel
+> у попередньому вікні поверне вас до основного вікна <guilabel
+>Правила KWin</guilabel
+>. У списку буде показано нове правило з його описом: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main-n-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Натисніть <guilabel
+>Гаразд</guilabel
+>, щоб закрити вікно.</para
+></listitem>
+<listitem
+><para
+>Ось і все.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="application-on-all-desktops-and-handle-one-child-window-uniquely"
+><title
+>Вікно програми на всіх стільницях, всі дочірні вікна мають власні правила</title>
+<para
+>Нехай потрібно, щоб, окрім вікон балачок, вікно &kopete; і всі його дочірні вікна було показано на всіх стільницях і не було показано у системному лотку і на панелі пейджера. Дочірні вікна вікон балачки обробляти як батьківські вікна, але показувати пункти цих вікон у системному лотку. </para>
+<para
+>Для кожного атрибута скористайтеся <link linkend="parameters"
+>параметром</link
+> <guilabel
+>Примусово</guilabel
+>, щоб значення атрибута не було перевизначено. </para>
+<para
+>З метою отримання описаних вище результатів слід створити два правила: </para>
+<orderedlist>
+<listitem
+><para
+>Правило для <guilabel
+>Вікна балачки Kopete</guilabel
+> і</para
+></listitem>
+<listitem
+><para
+>Правило для &kopete;</para
+></listitem>
+</orderedlist>
+<para
+>Критерій відповідності правила <guilabel
+>Балачки Kopete</guilabel
+> є більш строгим за правило <emphasis
+>Kopete</emphasis
+>, оскільки цей критерій відповідає певній <guilabel
+>Ролі вікна</guilabel
+>: вікно має бути вікно балачки. Через обробку <link linkend="rule-evaluation"
+>пріоритетів правил</link
+> правило <guilabel
+>Балачка Kopete</guilabel
+> має передувати правилу &kopete; у <link linkend="kopete-kwin-rule-list"
+>списку <guilabel
+>Правило KWin</guilabel
+> для <guilabel
+>Kopete</guilabel
+>.</link
+> </para>
+<sect2 id="kopete-chat-rule"
+><title
+>Правило для вікна балачки Kopete</title>
+<para
+>Якщо відкрито вікно <guilabel
+>Балачка Kopete</guilabel
+>: </para>
+<orderedlist>
+<listitem
+><para
+>Скористайтеся кнопкою <guilabel
+>Визначити властивості вікна</guilabel
+> і виберіть вікно <guilabel
+>Балачка Kopete</guilabel
+>. Позначте пункт <guilabel
+>Роль вікна</guilabel
+>, щоб обмежити відповідність критеріями вікна балачки. Докладніші відомості можна знайти у розділі, присвяченому <link linkend="window-matching"
+>відповідності вікон</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Натисніть кнопку <guilabel
+>Гаразд</guilabel
+> і у попередньому вікні буде заповнено пункти параметрів вікна на вкладці <guilabel
+>Відповідність вікон</guilabel
+>. Введіть зрозумілий <guilabel
+>Опис</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete-chat.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Позначте такі атрибути: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Натисніть відповідну кнопку, щоб завершити введення правила.</para
+></listitem>
+</orderedlist>
+<para
+><note
+><para
+>Значення атрибута <guilabel
+>Ігнорувати смужку задач</guilabel
+> <guilabel
+>Ні</guilabel
+> для показу пункту вікна на смужці задач можна не зовсім точно пояснити так: <guilabel
+>Ні</guilabel
+>, <emphasis
+>не</emphasis
+> <guilabel
+>Ігнорувати смужку задач</guilabel
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>.</para
+></note>
+</para>
+</sect2>
+<sect2 id="kopete-rule"
+><title
+>Правило для Kopete</title>
+<para
+>Якщо відкрито вікно &kopete;: </para>
+<orderedlist>
+<listitem
+><para
+>Скористайтеся кнопкою <guilabel
+>Визначити властивості вікна</guilabel
+> і виберіть вікно &kopete;. Будемо встановлювати відповідність лише за назвою основного класу, отже не позначайте інші пункти. Докладніші відомості можна знайти у розділі, присвяченому <link linkend="window-matching"
+>відповідності вікон</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Натисніть кнопку <guilabel
+>Гаразд</guilabel
+> і у попередньому вікні буде заповнено пункти параметрів вікна на вкладці <guilabel
+>Відповідність вікон</guilabel
+>. Введіть зрозумілий <guilabel
+>Опис</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Позначте такі атрибути: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Натисніть відповідну кнопку, щоб завершити введення правила.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="kopete-kwin-rule-list"
+><title
+>Список правила KWin для Kopete</title>
+<para
+>Як ми вже згадували, через порядок <link linkend="rule-evaluation"
+>обробки правил</link
+> правило <guilabel
+>Балачка Kopete</guilabel
+> має передувати правилу <guilabel
+>Kopete</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-kopete-rules.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+</sect1>
+<sect1 id="suppress-a-window-from-showing-on-pager"
+><title
+>Придушення показу вікна на панелі пейджера</title>
+<para
+>У поточній версії <guilabel
+>KNotes</guilabel
+> не передбачено ігнорування вікнами нотаток панелі пейджера, але відповідне правило розв’язує цю проблему. </para>
+<para
+>Припустимо, що на стільниці показано вікно <emphasis
+>липкої нотатки</emphasis
+>: </para>
+<orderedlist>
+<listitem
+><para
+>Скористайтеся кнопкою <guilabel
+>Визначити властивості вікна</guilabel
+> і виберіть будь-яке вікно <emphasis
+>липкої нотатки</emphasis
+>. Будемо встановлювати відповідність лише за назвою основного класу, отже не позначайте інші пункти. Докладніші відомості можна знайти у розділі, присвяченому <link linkend="window-matching"
+>відповідності вікон</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Натисніть кнопку <guilabel
+>Гаразд</guilabel
+> і у попередньому вікні буде заповнено пункти параметрів вікна на вкладці <guilabel
+>Відповідність вікон</guilabel
+>. Введіть зрозумілий <guilabel
+>Опис</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-knotes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Позначте атрибут <guilabel
+>Ігнорувати пейджер</guilabel
+> з <link linkend="parameters"
+>параметром</link
+> <guilabel
+>Примусово</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Натисніть відповідну кнопку, щоб завершити введення правила.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="force-a-window-to-the-top"
+><title
+>Примусове розташовування вікна понад іншими</title>
+<para
+>Щоб активне вікно було показано згори, встановіть для його атрибута <guilabel
+>Запобігання викраденню фокуса</guilabel
+> значення <guilabel
+>Немає</guilabel
+>, типово у поєднанні з <link linkend="parameters"
+>параметром</link
+> <guilabel
+>Примусово</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="focus-stealing-pop2top-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect1>
+<sect1 id="multiple-rules-per-application"
+><title
+>Декілька правил для вікон однієї програми</title>
+<para
+>У <application
+>Thunderbird</application
+> є декілька різних дочірніх вікон. У нашому прикладі ми визначимо таку поведінку цих вікон: </para>
+<itemizedlist>
+<listitem
+><para
+>Зафіксувати головне вікно <application
+>Thunderbird</application
+> на <emphasis
+>Віртуальній стільниці 1</emphasis
+> і визначити його розмір і розташування на стільниці.</para
+></listitem>
+<listitem
+><para
+>Дозволити розташування вікна редактора повідомлень <application
+>Thunderbird</application
+> на будь-якій стільниці. Коли його буде активовано, примусово отримати фокус і розташувати його над іншими вікнами.</para
+></listitem>
+<listitem
+><para
+>Показати вікно нагадування <application
+>Thunderbird</application
+> над іншими вікнами і передати йому фокус, щоб його було ненавмисне закрито.</para
+></listitem>
+</itemizedlist>
+<para
+>Всі критерій відповідності правила є достатньо строгими, отже їхній порядок у основному вікні &kwin; не є важливим для <link linkend="rule-evaluation"
+>обробки правила</link
+>. </para>
+<sect2 id="thunderbird---main"
+><title
+>Thunderbird — головне вікно</title>
+<para
+>Нехай основне вікно <guilabel
+>Thunderbird</guilabel
+> вже відкрито, встановлено його бажані розміри і розташування: </para>
+<orderedlist>
+<listitem
+><para
+>Скористайтеся кнопкою <guilabel
+>Визначити властивості вікна</guilabel
+> і виберіть основне вікно <guilabel
+>Thunderbird</guilabel
+>. Позначте пункт <guilabel
+>Роль вікна</guilabel
+>, щоб обмежити відповідність критеріями основного вікна. Докладніші відомості можна знайти у розділі, присвяченому <link linkend="window-matching"
+>відповідності вікон</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Натисніть кнопку <guilabel
+>Гаразд</guilabel
+> і у попередньому вікні буде заповнено пункти параметрів вікна на вкладці <guilabel
+>Відповідність вікон</guilabel
+>. Введіть зрозумілий <guilabel
+>Опис</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Позначте такі атрибути: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Натисніть відповідну кнопку, щоб завершити введення правила.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---composer"
+><title
+>Thunderbird — редактор повідомлень</title>
+<para
+>Якщо вже відкрито вікно <guilabel
+>Редактор повідомлень Thunderbird</guilabel
+>: </para>
+<orderedlist>
+<listitem
+><para
+>Скористайтеся кнопкою <guilabel
+>Визначити властивості вікна</guilabel
+> і виберіть основне вікно <guilabel
+>Редактор повідомлення Thunderbird</guilabel
+>. Позначте пункт <guilabel
+>Роль вікна</guilabel
+> і <guilabel
+>Тип вікна</guilabel
+>, щоб обмежити відповідність критеріями вікна редактора повідомлень. Докладніші відомості можна знайти у розділі, присвяченому <link linkend="window-matching"
+>відповідності вікон</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Натисніть кнопку <guilabel
+>Гаразд</guilabel
+> і у попередньому вікні буде заповнено пункти параметрів вікна на вкладці <guilabel
+>Відповідність вікон</guilabel
+>. Введіть зрозумілий <guilabel
+>Опис</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-compose.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Позначте такі атрибути: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Натисніть відповідну кнопку, щоб завершити введення правила.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---reminder"
+><title
+>Thunderbird — нагадування</title>
+<para
+>Якщо вже відкрито вікно <guilabel
+>Нагадування Thunderbird</guilabel
+>: </para>
+<orderedlist>
+<listitem
+><para
+>Скористайтеся кнопкою <guilabel
+>Визначити властивості вікна</guilabel
+> і виберіть основне вікно <guilabel
+>Нагадування Thunderbird</guilabel
+>. Позначте пункт <guilabel
+>Назва вторинного класу</guilabel
+> і <guilabel
+>Тип вікна</guilabel
+>, щоб обмежити відповідність критеріями вікна нагадування. Докладніші відомості можна знайти у розділі, присвяченому <link linkend="window-matching"
+>відповідності вікон</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Натисніть кнопку <guilabel
+>Гаразд</guilabel
+> і у попередньому вікні буде заповнено пункти параметрів вікна на вкладці <guilabel
+>Відповідність вікон</guilabel
+>. Введіть зрозумілий <guilabel
+>Опис</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-reminder.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Позначте такі атрибути: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Натисніть відповідну кнопку, щоб завершити введення правила.</para
+></listitem>
+</orderedlist>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="application-workarounds"
+><title
+>Маскування вад у програмах</title>
+<para
+>Нижче наведено шляхи маскування вад у програмах з певними особливостями поведінки. </para>
+<para
+><tip
+><para
+>Якщо у вас ще немає досвіду у створенні правил &kwin;, ознайомтеся з <link linkend="pin-a-window-to-a-desktop-and-set-other-attributes"
+>докладним прикладом</link
+>, яким можна скористатися як основою для нового правила.</para
+></tip>
+</para>
+<sect1 id="full-screen-re-size-error"
+><title
+>Помилка, пов’язана зі зміною розмірів вікон до повноекранного</title>
+<para
+>Якщо вікно &Emacs; або <guilabel
+>gVim</guilabel
+> максимізовано (розгорнуто на весь екран), за певних обставин ви можете зіткнутися з вадами, пов’язаними зі зміною розмірів вікна. Докладніше про це можна дізнатися з <ulink url="https://bugs.kde.org/show_bug.cgi?id=252314"
+>відповідного повідомлення про ваду</ulink
+>. За допомогою правила &kwin; можна уникнути цієї вади. </para>
+<para
+>Якщо відкрито вікно &Emacs;: </para>
+<orderedlist>
+<listitem
+><para
+>Скористайтеся кнопкою <guilabel
+>Визначити властивості вікна</guilabel
+> і виберіть вікно &Emacs;. Будемо встановлювати відповідність лише за <guilabel
+>назвою основного класу</guilabel
+>, отже не позначайте інші пункти. Докладніші відомості можна знайти у розділі, присвяченому <link linkend="window-matching"
+>відповідності вікон</link
+> <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Натисніть кнопку <guilabel
+>Гаразд</guilabel
+> і у попередньому вікні буде заповнено пункти параметрів вікна на вкладці <guilabel
+>Відповідність вікон</guilabel
+>. Введіть зрозумілий <guilabel
+>Опис</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-emacs.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Ігноруємо запит на розгортання вікна &Emacs; на весь екран позначенням атрибута <guilabel
+>Зважати на обмеження розмірів</guilabel
+> і вимиканням його (<guilabel
+>Ні</guilabel
+>), щоб ігнорувати обмеження, і визначаємо для <link linkend="parameters"
+>параметра</link
+> значення <guilabel
+>Примусово</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Натисніть відповідну кнопку, щоб завершити введення правила.</para
+></listitem>
+</orderedlist>
+</sect1>
+</chapter>
+
+<!--userbase-content-->
+<chapter id="credits">
+<title
+>Авторські права та ліцензування</title>
+      <para
+>Список власників авторських прав на документацію до програми можна знайти у <ulink url="https://userbase.kde.org/index.php?title=KWin Rules&amp;action=history"
+>журналі сторінки KWin Rules</ulink
+> UserBase.</para>
+      <para
+>Переклад українською: Юрій Чорноіван<email
+>yurchor@ukr.net</email
+></para
+> &underFDL; </chapter>
+&documentation.index;
+</book>

@@ -1,0 +1,2227 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Portuguese "INCLUDE">
+]>
+<book id="windowspecific" lang="&language;">
+<bookinfo>
+<title
+>Regras das Janelas</title>
+<authorgroup>
+<author
+>&Lauri.Watts; &Lauri.Watts.mail;</author>
+<author>
+<personname
+><firstname
+>Partes deste documento foram convertidas a partir da página <ulink url=" http://userbase.kde.org/KWin Rules"
+>Regras do KWin</ulink
+> e foram actualizadas pela equipa de Documentação do &kde; para o Plasma 5.8.</firstname
+> <surname
+></surname
+> </personname>
+      </author>
+<othercredit role="translator"
+><firstname
+>José</firstname
+><surname
+>Pires</surname
+><affiliation
+><address
+><email
+>zepires@gmail.com</email
+></address
+></affiliation
+><contrib
+>Tradução</contrib
+></othercredit
+> 
+      </authorgroup>
+<legalnotice
+>&FDLNotice;</legalnotice>
+<date
+>2016-06-23</date>
+      <releaseinfo
+>Plasma 5.8</releaseinfo>
+<abstract>
+<para
+>Aqui você poderá personalizar as opções das janelas especificamente para algumas janelas em particular.</para>
+      </abstract>
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>configuração da janela</keyword>
+<keyword
+>colocação da janela</keyword>
+<keyword
+>tamanho da janela</keyword>
+</keywordset>
+</bookinfo>
+<chapter id="window-specific">
+<title
+>Configuração Específica da Janela: Introdução</title>
+
+<para
+>Aqui você poderá personalizar as opções das janelas especificamente para algumas janelas em particular.</para>
+
+<note>
+<para
+>Lembre-se que a configuração neste módulo não tomará efeito se não utilizar o gestor de janelas o &kwin; como o seu gestor de janelas. Se usar um gestor de janelas diferente, veja a documentação dele para aprender como configurar o comportamento das janelas.</para>
+</note>
+
+<para
+>Muitas das opções que poderá configurar aqui são as que pode também configurar, a nível global, no módulo de <guilabel
+>Comportamento das Janelas</guilabel
+> do &kcontrol;, contudo alguns destes estão ainda mais detalhados.</para>
+
+<para
+>Eles respeitam à geometria, colocação, se uma janela deve-se manter sobre ou sob as outras, deverá evitar o roubo do foco e os efeitos de transparência.</para>
+
+<para
+>Você poderá aceder a este módulo de duas formas: na barra de título da aplicação que deseja configurar ou no &systemsettings;. Se a iniciar dentro do &systemsettings;, poderá usar o botão <guibutton
+>Nova...</guibutton
+> para criar um perfil de janelas e o botão <guibutton
+>Detectar</guibutton
+> na janela resultante para preencher parcialmente a informação necessária para a aplicação que deseja configurar.</para>
+
+<para
+>Poderá também, em qualquer altura, <guibutton
+>Modificar...</guibutton
+> ou <guibutton
+>Apagar</guibutton
+> os perfis configurados ou reordenar a lista. A mudança de ordem da lista com os botões <guibutton
+>Subir</guibutton
+> e <guibutton
+>Descer</guibutton
+> faz efeito na forma como estes são aplicados.</para>
+
+</chapter>
+<!--userbase <timestamp
+>2012-03-09T20:50:14Z</timestamp
+>-->
+
+<!--userbase-content-->
+<chapter id="overview"
+><title
+>Introdução</title
+> 
+<para
+>O &kwin; permite ao utilizador final definir regras para alterar os atributos da janela de uma aplicação. </para>
+<para
+>Por exemplo, quando é iniciada uma aplicação, poderá ser forçada a executar-se sempre no <emphasis
+>Ecrã Virtual 2</emphasis
+>. Por outro lado, um defeito numa aplicação poderá ser contornado para forçar a janela a ficar sobre as outras. </para>
+<para
+>São fornecidos <link linkend="examples"
+>exemplos</link
+> passo-a-passo com informação detalhada sobre a utilização do <link linkend="kwin-rule-editor"
+>Editor de Regras do &kwin;</link
+> para definir a <link linkend="window-matching"
+>Correspondência de Janelas</link
+> e os <link linkend="window-attributes"
+>Atributos da Janela</link
+>. </para>
+</chapter>
+<chapter id="examples-and-application-workaround"
+><title
+>Exemplos e Abordagem Alternativa da Aplicação</title
+> 
+<para
+>Para ver o que é possível, são fornecidos <link linkend="examples"
+>exemplos</link
+> detalhados que poderão também ser usados para modelar as suas próprias regras. </para>
+<para
+>Está dedicada uma página especial para tratar dos <link linkend="application-workarounds"
+>Comportamentos Alternativos da Aplicação</link
+>. </para>
+</chapter>
+<chapter id="kwin-rule-editor"
+><title
+>Editor de Regras do KWin</title
+> 
+<sect1 id="invoking-the-kwin-rule-editor"
+><title
+>Invocar o Editor de Regras do KWin</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-ordering.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Existem diversas formas de invocar o Editor de Regras do &kwin;. Em baixo existem duas: </para>
+<itemizedlist>
+<listitem
+><para
+>Carregue com o botão direito no título de qualquer janela, escolha a opção <menuchoice
+><guimenu
+>Mais Acções</guimenu
+><guimenuitem
+>Configurar o Comportamento da Janela...</guimenuitem
+></menuchoice
+> e, na janela <guilabel
+>Configurar</guilabel
+>, seleccione as <guilabel
+>Regras da Janela</guilabel
+> ou</para
+></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem
+><para
+><menuchoice
+><guimenu
+>Configuração do Sistema</guimenu
+><guisubmenu
+>Comportamento das Janelas</guisubmenu
+><guimenuitem
+>Regras das Janelas</guimenuitem
+></menuchoice
+></para
+></listitem>
+</itemizedlist>
+<para
+>A janela principal é usada para: </para>
+<itemizedlist>
+<listitem
+><para
+>Afectar regras com os botões <guilabel
+>Novo...</guilabel
+>, <guilabel
+>Modificar...</guilabel
+> e <guilabel
+>Apagar</guilabel
+></para
+></listitem>
+<listitem
+><para
+>Partilhar regras com os outros com as opções <guilabel
+>Importar</guilabel
+> e <guilabel
+>Exportar</guilabel
+></para
+></listitem>
+<listitem
+><para
+>Garantir a <link linkend="rule-evaluation"
+>avaliação de regras</link
+> deseja com as opções <guilabel
+>Subir</guilabel
+> e <guilabel
+>Descer</guilabel
+></para
+></listitem>
+</itemizedlist>
+<sect2 id="rule-evaluation"
+><title
+>Avaliação das Regras</title
+> 
+<para
+>Quando uma aplicação é iniciada (ou as regras são modificadas), o &kwin; avalia as regras desde o topo da lista até ao seu fundo. Para todas as regras correspondentes a uma janela, o conjunto de atributos em si é aplicado à janela, sendo apresentada então a dita. </para>
+<para
+>Caso duas ou mais regras correspondentes activem o mesmo atributo, a configuração da <emphasis
+>primeira</emphasis
+> regra da lista será a usada. </para>
+<para
+><tip
+><para
+>Poderá ajustar as janelas-filhas da aplicação, colocando em primeiro lugar as regras mais restritas - veja o exemplo do <link linkend="application-on-all-desktops-and-handle-one-child-window-uniquely"
+>Kopete e da Janela de Conversação do Kopete</link
+>.</para
+></tip>
+</para>
+</sect2>
+</sect1>
+<sect1 id="rule-editor"
+><title
+>Editor de Regras</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>O editor é composto por quatro páginas: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Correspondência da janela</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Tamanho &amp; Posição</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Organização &amp; Acesso</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Aparência &amp; Correcções</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Como o nome implica, a <guilabel
+>Correspondência de janelas</guilabel
+> é usada para definir um critério de correspondência para uma ou mais janelas. As outras três páginas são usadas para alterar os atributos das janelas correspondentes. </para>
+<para
+><tip
+><para
+>Os painéis também podem ser afectados.</para
+></tip>
+</para>
+<sect2 id="window-matching"
+><title
+>Correspondência das Janelas</title
+> 
+<para
+>Cada regra da janela tem critérios de <link linkend="window-matching"
+>Correspondência da Janela</link
+> definidos pelo utilizador. O &kwin; usa os critérios para determinar se a regra se aplica a uma dada aplicação. </para>
+</sect2>
+<sect2 id="window-attributes"
+><title
+>Atributos das Janelas</title
+> 
+<para
+>Em conjunto com os critérios de Correspondência das Janelas, cada regra da janela tem um conjunto de <link linkend="window-attributes"
+>Atributos da Janela</link
+>. Os atributos substituem as definições correspondentes da aplicação e são aplicados antes de a aplicação ser apresentada pelo &kwin;. </para>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="window-matching0"
+><title
+>Correspondência das Janelas</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>A página de <guilabel
+>Correspondência das Janelas</guilabel
+> é usada para indicar os critérios que o &kwin; usa para avaliar se a regra se aplica a uma dada janela. </para>
+<para
+>Poderá definir zero (corresponde a qualquer janela) ou mais elementos como os seguintes: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Classe da janela (aplicação)</guilabel
+> - corresponde à classe.<itemizedlist
+> <listitem
+><para
+><guilabel
+>Corresponde à classe completa da janela</guilabel
+> - inclui a correspondência com a classe secundária.</para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Papel da janela</guilabel
+> - restringe a correspondência à função da janela (&eg; uma <emphasis
+>janela principal</emphasis
+>, uma <emphasis
+>janela de conversação</emphasis
+>, &etc;)</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Tipos de janela</guilabel
+> - restringe a correspondência ao tipo da janela: <guilabel
+>Janela Normal</guilabel
+>, <guilabel
+>Janela de Diálogo</guilabel
+>, &etc;</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Título da janela</guilabel
+> - restringe a correspondência ao título da janela.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Máquina (nome)</guilabel
+> - restringe a correspondência ao nome da máquina associado à janela.</para
+></listitem>
+</itemizedlist>
+<para
+><tip
+><para
+>Embora seja possível indicar manualmente a informação acima, o método preferido é usar o botão <guilabel
+>Detectar as Propriedades da Janela</guilabel
+>.</para
+></tip>
+</para>
+<para
+>Para cada campo, poder-se-ão aplicar os seguintes operadores ao valor do campo: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Não é importante</guilabel
+> - ignora o campo.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Correspondência Perfeita</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Correspondência a Sub-Sequência de Texto</guilabel
+></para
+></listitem>
+</itemizedlist>
+<para
+><note
+><para
+>Tanto a <guilabel
+>Correspondência Exacta</guilabel
+> como a <guilabel
+>Correspondência de Sub-Texto</guilabel
+> implementam uma correspondência sem distinção entre maiúsculas e minúsculas. Por exemplo, <emphasis
+>AB</emphasis
+> corresponde ao texto <emphasis
+>AB</emphasis
+>, <emphasis
+>ab</emphasis
+>, <emphasis
+>Ab</emphasis
+> e <emphasis
+>aB</emphasis
+>.</para
+></note>
+</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Expressão Regular</guilabel
+> - são implementadas as expressões regulares do Qt - veja a <ulink url="http://doc.qt.io/qt-5/qregexp.html"
+>correspondência de padrões com expressões regulares</ulink
+>.</para
+></listitem>
+</itemizedlist>
+<sect1 id="detect-window-properties"
+><title
+>Detectar as Propriedades da Janela</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-detect-window.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>A função <guilabel
+>Detectar as Propriedades da Janela</guilabel
+> simplifica o processo de introdução dos critérios de correspondência. </para>
+<orderedlist>
+<listitem
+><para
+>Para a aplicação onde deseja criar uma regra, inicie a aplicação.</para
+></listitem>
+<listitem
+><para
+>De seguida, na página <guilabel
+>Correspondência da janela</guilabel
+>, defina o número de segundos de atraso antes de iniciar a função <guilabel
+>Detectar as Propriedades da Janela</guilabel
+>. O valor por omissão é de zero segundos.</para
+></listitem>
+<listitem
+><para
+>Carregue em <guilabel
+>Detectar as Propriedades da Janela</guilabel
+> e</para
+></listitem>
+<listitem
+><para
+>Quando o cursor mudar para uma mira, coloque-o dentro da janela da aplicação (não a barra do título) e carregue com o botão esquerdo.</para
+></listitem>
+<listitem
+><para
+>É apresentada uma nova janela com informações acerca da janela seleccionada. Escolha os campos desejados:<itemizedlist>
+<listitem
+><para
+><guilabel
+>Nome da classe secundária</guilabel
+> - algumas aplicações têm um nome de classe secundário. Este valor poderá ser usado para restringir as janelas por este valor.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Papel da janela</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Tipo da janela</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Título da janela</guilabel
+></para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+</orderedlist>
+<para
+>Carregue no botão <guilabel
+>OK</guilabel
+> para preencher de volta os critérios de <guilabel
+>Correspondência da Janela</guilabel
+>. </para>
+<para
+>Ao usar uma combinação da informação, uma regra poderá aplicar-se a uma aplicação inteira (por <guilabel
+>Classe</guilabel
+>) ou a uma janela específica pelo <guilabel
+>Tipo</guilabel
+> dentro da <guilabel
+>Classe</guilabel
+> - por exemplo, uma <guilabel
+>Barra de Ferramentas</guilabel
+>. </para>
+</sect1>
+</chapter>
+<chapter id="window-attributes1"
+><title
+>Atributos das Janelas</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-window-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Os atributos que poderão ser definidos são agrupados pela função em três páginas: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Tamanho &amp; Posição</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Organização &amp; Acesso</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Aparência &amp; Correcções</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Cada atributo tem um conjunto de parâmetros que define a sua disposição. </para>
+<sect1 id="parameters"
+><title
+>Parâmetros</title>
+<para
+>Cada atributo, no mínimo, aceita um dos seguintes parâmetros. Para além disso, os argumentos específicos dos atributos são apresentados dentro de cada definição de <link linkend="attributes"
+>atributo</link
+>. </para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Não Afectar</emphasis
+></term>
+    <listitem>
+    <para
+>Garante que uma regra subsequente, correspondente à janela, não afecta o atributo.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Aplicar Inicialmente</emphasis
+></term>
+    <listitem>
+    <para
+>Inicia a janela com o atributo e permite a sua alteração durante a execução.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Recordar</emphasis
+></term>
+    <listitem>
+    <para
+>Usa a definição do atributo associada à regra e, caso seja alterada durante a execução, grava e usa o novo valor em alternativa.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Obrigar</emphasis
+></term>
+    <listitem>
+    <para
+>A definição não poderá ser alterada durante a execução.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Aplicar Agora, Forçar Temporariamente</emphasis
+></term>
+    <listitem>
+    <para
+>Aplica/força a opção uma vez e limpa o atributo. A diferença entre os dois ocorre durante a execução, em que o <guilabel
+>Aplicar Agora</guilabel
+> permite a alteração do atributo e o <guilabel
+>Forçar Temporariamente</guilabel
+> proíbe a sua alteração até que todas as janelas afectadas tenham saído.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>Para o <guilabel
+>Aplicar Agora</guilabel
+>, se a regra não tiver outros atributos definidos, a regra é apagada depois da avaliação, enquanto no <guilabel
+>Forçar Temporariamente</guilabel
+>, a regra é apagada depois de a última janela afectada terminar.</para
+></warning>
+</para>
+</sect1>
+<sect1 id="attributes"
+><title
+>Atributos</title>
+<para
+><tip
+><para
+>O botão <guilabel
+>Detectar as Propriedades da Janela</guilabel
+> volta a preencher os valores específicos do atributo - para mais informações veja a <link linkend="window-matching"
+>Correspondência de Janelas</link
+>. Por exemplo, os valores da altura e largura do atributo <guilabel
+>Tamanho</guilabel
+> são definidos com a altura e largura da janela detectada.</para
+></tip>
+</para>
+<para
+><tip
+><para
+>Os argumentos <guilabel
+>Sim/Não</guilabel
+> são usados para activar ou desactivar atributos. Alguma liberdade na gramática ajuda uma pessoa a compreender como será processada uma opção. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Por exemplo, o atributo <guilabel
+>Ignorar a barra de tarefas</guilabel
+>, quando for igual a <guilabel
+>Não</guilabel
+>, significa que não será ignorado pela barra de tarefas. Por outras palavras, irá mostrar a janela na barra de tarefas. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+></para
+></tip>
+</para>
+<sect2 id="size--position"
+><title
+>Tamanho &amp; Posição</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Posição</emphasis
+></term>
+    <listitem>
+    <para
+>Coloca o canto superior esquerdo da janela nas coordenadas (x, y) indicadas.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>A origem do &kwin;, (0,0), é o canto superior esquerdo do ecrã.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Tamanho</emphasis
+></term>
+    <listitem>
+    <para
+>A largura e a altura da janela.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Maximizado na horizontal, Maximizado na vertical</emphasis
+></term>
+    <listitem>
+    <para
+>Estes atributos são usados para activar ou desactivar o atributo de maximização horizontal/vertical da janela.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ecrã Virtual, Actividade, Ecrã</emphasis
+></term>
+    <listitem>
+    <para
+>Coloca a janela no <emphasis
+>Ecrã (Virtual)</emphasis
+>, <emphasis
+>Actividade</emphasis
+> ou <emphasis
+>Ecrã</emphasis
+>. Use a opção <guilabel
+>Todos os Ecrãs</guilabel
+> para colocar a janela em todos os <emphasis
+>Ecrãs Virtuais</emphasis
+>.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ecrã Completo, Minimizado, Enrolado</emphasis
+></term>
+    <listitem>
+    <para
+>Activa ou desactiva os atributos da janela para Ecrã Completo, Minimizar e Enrolar. Por exemplo, uma janela poderá ser iniciada Minimizada, ou caso tenha sido iniciada como tal, ser forçada a não ser iniciada desta forma.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>O atributo de maximização é emulado com o uso dos atributos <guilabel
+>Maximizado na horizontal</guilabel
+> e <guilabel
+>Maximizado na vertical</guilabel
+> ou da <guilabel
+>Colocação inicial</guilabel
+> com o argumento <guilabel
+>Maximização</guilabel
+>.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Colocação inicial</emphasis
+></term>
+    <listitem>
+    <para
+>Substitui a estratégia global de colocação de janelas por uma das seguintes:</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Por omissão</guilabel
+> - usa a estratégia global de colocação de janelas.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Sem Colocação</guilabel
+> - canto superior-esquerdo.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Inteligente</guilabel
+> - coloca onde não existir outra janela qualquer.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Maximização</guilabel
+> - inicia a janela no modo maximizado.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Cascata</guilabel
+> - coloca em escadinha pelo título.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Centrado</guilabel
+> - no centro do ecrã.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Aleatório</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Canto Superior Esquerdo</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Sob o Rato</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Na Janela Principal</guilabel
+> - restringe a colocação de uma janela-filha aos limites da janela-mãe.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ignorar a geometria pedida</emphasis
+></term>
+    <listitem>
+    <para
+>Define se aceita ou ignora a posição da geometria pedida pela janela. Para evitar conflitos entre a estratégia de colocação predefinida e o pedido da janela, a estratégia de colocação é ignorada quando for aceite o pedido da janela.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Tamanho mínimo, Tamanho máximo</emphasis
+></term>
+    <listitem>
+    <para
+>Os tamanhos máximo e mínimo permitidos para a janela.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Obedecer às restrições de geometria</emphasis
+></term>
+    <listitem>
+    <para
+>Active ou desactive se deseja aderir às proporções pedidas pela janela ou se faz um <emphasis
+>incremento de base</emphasis
+>. Para poder compreender este atributo, é necessário algum conhecimento de fundo. Em resumo, as janelas deverão pedir do Gestor de Janelas um incremento de base: o número mínimo de <emphasis
+>altura</emphasis
+> X <emphasis
+>largura</emphasis
+> pixels por pedido de dimensionamento. Tipicamente é igual a 1x1. Outras janelas, como por exemplo os emuladores de terminal ou os editores, que usam tipos de letra monoespaçados, poderão pedir o seu incremento de base de acordo com o tamanho de um carácter.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="arrangement--access"
+><title
+>Organização &amp; Acesso</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Manter acima, Manter abaixo</emphasis
+></term>
+    <listitem>
+    <para
+>Activa ou desactiva se deseja manter a janela acima ou abaixo de todas as outras.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Auto-agrupar com as idênticas</emphasis
+></term>
+    <listitem>
+    <para
+>Activa o agrupamento (também conhecido por <emphasis
+>separação em abas</emphasis
+>) das janelas.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Auto-agrupar em primeiro plano</emphasis
+></term>
+    <listitem>
+    <para
+>Activa ou desactiva se deseja tornar a janela activa, quando for adicionada ao grupo para auto-agrupar actual.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Auto-agrupar pelo ID</emphasis
+></term>
+    <listitem>
+    <para
+>Cria um grupo com base num ID definido pelo utilizador. O mesmo ID poderá ser partilhado por mais de uma regra para que as janelas aparentemente distintas sejam agrupadas.</para>
+     </listitem>
+  </varlistentry>
+
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ignorar a barra de tarefas</emphasis
+></term>
+    <listitem>
+    <para
+>Activa ou desactiva a visibilidade da janela na barra de tarefas.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ignorar o paginador</emphasis
+></term>
+    <listitem>
+    <para
+>Activa ou desactiva a visibilidade da janela no paginador.</para>
+     </listitem>
+  </varlistentry>
+    </variablelist>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ignorar a mudança de janelas</emphasis
+></term>
+    <listitem>
+    <para
+>Activa ou desactiva a visibilidade da janela na lista do <guilabel
+>ALT+TAB</guilabel
+>.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Atalho</emphasis
+></term>
+    <listitem>
+    <para
+>Atribui um atalho à janela. Quando carregar em <guilabel
+>Editar...</guilabel
+>, serão apresentadas instruções adicionais.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="appearance--fixes"
+><title
+>Aparência &amp; Correcções</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Sem barra de título nem contorno</emphasis
+></term>
+    <listitem>
+    <para
+>Activa ou desactiva a barra de título e o contorno à volta da janela.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Esquema de cores da barra de título</emphasis
+></term>
+    <listitem>
+    <para
+>Selecciona um esquema de cores para a barra de título da janela.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Opacidade activa/inactiva</emphasis
+></term>
+    <listitem>
+    <para
+>Quando a janela está activa/inactiva, configura a sua opacidade com a percentagem indicada.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>A <guilabel
+>Opacidade activa/inactiva</guilabel
+> só poderá ser afectada quando os <guilabel
+>Efeitos do Ecrã</guilabel
+> estiverem activos.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Prevenção de captura do foco</emphasis
+></term>
+    <listitem>
+    <para
+>Quando uma janela desejar obter o foco (ficar em primeiro plano), pode controlar numa escala (de <guilabel
+>Nenhuma</guilabel
+> até <guilabel
+>Extrema</guilabel
+>) se deve respeitar o pedido e colocar acima de todas as outras janelas ou ignorar o seu pedido (deixando potencialmente a janela por baixo de outras):</para>
+<itemizedlist>
+<listitem
+><para
+>Nenhuma - Atribui sempre o foco à janela.</para
+></listitem>
+<listitem
+><para
+>Baixa</para
+></listitem>
+<listitem
+><para
+>Normal</para
+></listitem>
+<listitem
+><para
+>Alta</para
+></listitem>
+<listitem
+><para
+>Extrema - O pedido de foco da janela é negado. Só poderá ser atribuído explicitamente com o rato.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Veja em <guilabel
+>Aceitar o foco</guilabel
+> para tornar uma janela apenas para leitura - não aceitando quaisquer dados do teclado.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Aceitar o foco</emphasis
+></term>
+    <listitem>
+    <para
+>Activa ou desactiva se a janela aceita dados do teclado. Torna a janela apenas para leitura.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ignorar os atalhos globais</emphasis
+></term>
+    <listitem>
+    <para
+>Active ou desactive se deseja ignorar os atalhos globais (definidos em <menuchoice
+><guimenu
+>Configuração do Sistema</guimenu
+><guisubmenu
+>Atalhos e Gestos</guisubmenu
+><guimenuitem
+>Atalhos Globais</guimenuitem
+></menuchoice
+> ou ao executar <command
+>kcmshell5 keys</command
+> no <guilabel
+>konsole</guilabel
+>) enquanto a janela estiver activa.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Pode Ser Fechada</emphasis
+></term>
+    <listitem>
+    <para
+>Activa ou desactiva a visibilidade do botão para <guilabel
+>Fechar</guilabel
+> na barra do título.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Uma janela de terminal poderá ser à mesma fechada pelo utilizador se terminar a sessão da consola; contudo, se usar o <guilabel
+>Aceitar o foco</guilabel
+> para desactivar os dados do teclado, irá complicar o fecho da janela.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Tipo de janela</emphasis
+></term>
+    <listitem>
+    <para
+>Muda a janela para outro tipo e herda as características dessa janela:</para>
+<itemizedlist>
+<listitem
+><para
+>Janela Normal</para
+></listitem>
+<listitem
+><para
+>Janela de Diálogo</para
+></listitem>
+<listitem
+><para
+>Janela Utilitária</para
+></listitem>
+<listitem
+><para
+>Atracar (painel)</para
+></listitem>
+<listitem
+><para
+>Barra de Ferramentas</para
+></listitem>
+<listitem
+><para
+>Menu Separado</para
+></listitem>
+<listitem
+><para
+>Ecrã Inicial</para
+></listitem>
+<listitem
+><para
+>Ecrã</para
+></listitem>
+<listitem
+><para
+>Menu Autónomo</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>Use com cuidado, porque poderá introduzir resultados indesejados. Por exemplo, um <guilabel
+>Ecrã Inicial</guilabel
+> é fechado automaticamente pelo &kwin; quando se carregar nele.</para
+></warning>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Composição por blocos</emphasis
+></term>
+    <listitem>
+    <para
+>Active ou desactive se deseja desactivar a composição enquanto a janela <emphasis
+>existir</emphasis
+>. Se a composição estiver activa e se a regra indicar para desactivar a composição enquanto existir <emphasis
+>qualquer</emphasis
+> janela correspondente, a composição será desactivada. A composição será reactivada quando a última janela correspondente terminar.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+</sect1>
+</chapter>
+<chapter id="examples"
+><title
+>Exemplos</title>
+<para
+><note
+><para
+>O primeiro exemplo diz em detalhe todos os passos necessários para criar as regras. Para manter esta página com um tamanho razoável, os exemplos seguintes só irão apresentar os passos específicos do exemplo.</para
+></note>
+</para>
+<para
+><note
+><para
+>O atributo <guilabel
+>Paginador</guilabel
+> refere-se ao <guilabel
+>Gestor de Ecrãs Virtuais</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></note>
+</para>
+<sect1 id="pin-a-window-to-a-desktop-and-set-other-attributes"
+><title
+>Fixar uma Janela num Ecrã e Definir Outros Atributos</title>
+<para
+>Fixe o &akregator; ao <emphasis
+>Ecrã Virtual 2</emphasis
+>. Para além disso, inicie a aplicação com um dado tamanho e posição preferidos. Para cada atributo, use o <link linkend="parameters"
+>parâmetro</link
+> <guilabel
+>Aplicar Inicialmente</guilabel
+> para que possa ser substituído durante a sua execução. </para>
+<para
+>A regra do &kwin; é criada da seguinte forma: </para>
+<orderedlist>
+<listitem
+><para
+>Inicie o &akregator; no <emphasis
+>ecrã dois</emphasis
+>, definindo a sua posição e tamanho de forma adequada: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-fav.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Carregue com o botão direito no título e seleccione <menuchoice
+><guimenu
+>Mais Acções</guimenu
+><guimenuitem
+>Configuração do Gestor de Janelas...</guimenuitem
+></menuchoice
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="config-win-behavior.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Seleccione a opção <guilabel
+>Regras da Janela</guilabel
+> na coluna esquerda e carregue no botão <guilabel
+>Novo...</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>É apresentada a janela <guilabel
+>Editar as Opções Específicas da Janela</guilabel
+>. A página da <guilabel
+>Correspondência de janelas</guilabel
+> é a predefinida: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-init.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Carregue em <guilabel
+>Detectar as Propriedades da Janela</guilabel
+> para, com um <guilabel
+>atraso de 0s</guilabel
+>, o cursor mudar imediatamente para uma mira. Carregue dentro da janela do &akregator; (mas fora da barra do título). Serão apresentados os critérios da janela. Corresponda apenas pelo <guilabel
+>nome primário da classe</guilabel
+>, deixando então as opções desligadas - para mais informações, veja a <link linkend="window-matching"
+>correspondência de janelas</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akgregator-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Se carregar em <guilabel
+>OK</guilabel
+> na janela anterior, irá preencher de volta os resultados na página de <guilabel
+>Correspondência da Janela</guilabel
+>. Indique uma <guilabel
+>Descrição</guilabel
+> válida (a qual será apresentada na janela da <guilabel
+>Regra do KWin</guilabel
+>): <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-ready-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Active os atributos da janela: <guilabel
+>Posição</guilabel
+>, <guilabel
+>Tamanho</guilabel
+> e <guilabel
+>Ecrã</guilabel
+>. Os valores iniciais são definidos pela opção <guilabel
+>Detectar as Propriedades da Janela</guilabel
+> e poderão ser substituídas: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Se carregar em <guilabel
+>OK</guilabel
+> na janela anterior, voltará às <guilabel
+>Regras do KWin</guilabel
+> principais. É apresentada a nova regra com a sua descrição: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main-n-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Carregue em <guilabel
+>OK</guilabel
+> para fechar a janela.</para
+></listitem>
+<listitem
+><para
+>Terminado.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="application-on-all-desktops-and-handle-one-child-window-uniquely"
+><title
+>Aplicação em Todos os Ecrãs e Lidar com uma Única Janela-Filha</title>
+<para
+>Excepto nas janelas de conversação, mostre o &kopete; e as suas janelas-filhas em todos os ecrãs, ignorando a bandeja do sistema e o paginador. Para as janelas-filhas de conversação, trate-as como a janela-mãe, excepto a sua apresentação na bandeja. </para>
+<para
+>Para cada atributo, use o <link linkend="parameters"
+>parâmetro</link
+> <guilabel
+>Forçar</guilabel
+> para que não possa ser substituído. </para>
+<para
+>Para implementar o requisito acima, terá de criar duas regras: </para>
+<orderedlist>
+<listitem
+><para
+>Uma regra para a <guilabel
+>Conversa do Kopete</guilabel
+> e</para
+></listitem>
+<listitem
+><para
+>Uma regra para o &kopete;</para
+></listitem>
+</orderedlist>
+<para
+>O critério de correspondência da <emphasis
+>Conversa do Kopete</emphasis
+> é mais restrito que a regra do <emphasis
+>Kopete</emphasis
+>, dado que necessita de corresponder a um <guilabel
+>Papel da Janela</guilabel
+> específico: a janela de conversação. Devido ao processamento da <link linkend="rule-evaluation"
+>avaliação da regra</link
+>, a regra da <guilabel
+>Conversa do Kopete</guilabel
+> dever-se-á anteceder à regra do &kopete; na lista de <link linkend="kopete-kwin-rule-list"
+><guilabel
+>Regras do KWin</guilabel
+> para o <guilabel
+>Kopete</guilabel
+></link
+>. </para>
+<sect2 id="kopete-chat-rule"
+><title
+>Regra da Conversa do Kopete</title>
+<para
+>Assumindo que está aberta uma janela de <guilabel
+>Conversa do Kopete</guilabel
+>: </para>
+<orderedlist>
+<listitem
+><para
+>Use o <guilabel
+>Detectar as Propriedades da Janela</guilabel
+> e seleccione a janela de <guilabel
+>Conversa do Kopete</guilabel
+>. Assinale a opção <guilabel
+>Papel da janela</guilabel
+> para restringir o critério às janelas de conversação - para mais informações, veja a <link linkend="window-matching"
+>correspondência de janelas</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Se carregar em <guilabel
+>OK</guilabel
+> na janela anterior irá preencher de volta os resultados na página de <guilabel
+>Correspondência da Janela</guilabel
+>. Indique um texto adequado na <guilabel
+>Descrição</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete-chat.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Active os seguintes atributos: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Vá percorrendo até completar a introdução da regra.</para
+></listitem>
+</orderedlist>
+<para
+><note
+><para
+>O atributo <guilabel
+>Ignorar a barra de tarefas</guilabel
+> é configurado como <guilabel
+>Não</guilabel
+> para mostrar a janela na barra de tarefas, o que se traduz de certa forma em: <guilabel
+>não</guilabel
+> <emphasis
+>não</emphasis
+> <guilabel
+>ignorar a barra de de tarefas</guilabel
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>.</para
+></note>
+</para>
+</sect2>
+<sect2 id="kopete-rule"
+><title
+>Regra do Kopete</title>
+<para
+>Assumindo que está aberta uma janela do &kopete;: </para>
+<orderedlist>
+<listitem
+><para
+>Use o <guilabel
+>Detectar as Propriedades da Janela</guilabel
+> e seleccione a janela do &kopete;. Corresponda apenas pelo <guilabel
+>nome da classe primário</guilabel
+>, por isso deixe as opções desligadas - para mais informações, veja a <link linkend="window-matching"
+>correspondência de janelas</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Se carregar em <guilabel
+>OK</guilabel
+> na janela anterior irá preencher de volta os resultados na página de <guilabel
+>Correspondência da Janela</guilabel
+>. Indique um texto adequado na <guilabel
+>Descrição</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Active os seguintes atributos: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Vá percorrendo até completar a introdução da regra.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="kopete-kwin-rule-list"
+><title
+>Lista de Regras do KWin para o Kopete</title>
+<para
+>Como foi mencionado, devido ao processamento da <link linkend="rule-evaluation"
+>avaliação da regra</link
+>, a regra da <guilabel
+>Conversa do Kopete</guilabel
+> deverá ser anterior à regra do &kopete;: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-kopete-rules.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+</sect1>
+<sect1 id="suppress-a-window-from-showing-on-pager"
+><title
+>Impedir uma Janela de Aparecer no Paginador</title>
+<para
+>O <guilabel
+>KNotes</guilabel
+> de momento não permite que as suas notas ignorem o paginador; contudo, uma regra resolve de forma simples esta limitação. </para>
+<para
+>Assumindo que está disponível uma janela com uma <emphasis
+>nota autocolante</emphasis
+>: </para>
+<orderedlist>
+<listitem
+><para
+>Use o <guilabel
+>Detectar as Propriedades da Janela</guilabel
+> e seleccione qualquer janela de <guilabel
+>notas autocolantes</guilabel
+>. Corresponda apenas pelo <guilabel
+>nome da classe primário</guilabel
+>, por isso deixe as opções desligadas - para mais informações, veja a <link linkend="window-matching"
+>correspondência de janelas</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Se carregar em <guilabel
+>OK</guilabel
+> na janela anterior irá preencher de volta os resultados na página de <guilabel
+>Correspondência da Janela</guilabel
+>. Indique um texto adequado na <guilabel
+>Descrição</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-knotes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Active o atributo <guilabel
+>Ignorar o Paginador</guilabel
+> com o <link linkend="parameters"
+>parâmetro</link
+> <guilabel
+>Forçar</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Vá percorrendo até completar a introdução da regra.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="force-a-window-to-the-top"
+><title
+>Forçar uma Janela no Topo</title>
+<para
+>Para colocar uma janela activa sempre no topo, defina o seu atributo de <guilabel
+>Prevenção da captura do foco</guilabel
+> como sendo <guilabel
+>Nenhum</guilabel
+>, tipicamente, em conjunto com o parâmetro <link linkend="parameters"
+>parâmetro</link
+> <guilabel
+>Forçar</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="focus-stealing-pop2top-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect1>
+<sect1 id="multiple-rules-per-application"
+><title
+>Várias Regras por Aplicação</title>
+<para
+>O <application
+>Thunderbird</application
+> tem diversas janelas-filhas diferentes. Este exemplo: </para>
+<itemizedlist>
+<listitem
+><para
+>Fixe a janela principal do <application
+>Thunderbird</application
+> no <emphasis
+>Ecrã Virtual 1</emphasis
+> com um dado tamanho e localização específicos.</para
+></listitem>
+<listitem
+><para
+>Permita à janela de composição do <application
+>Thunderbird</application
+> aparecer em qualquer ecrã e, quando activada, forçar o foco e colocá-la no topo de todas as janelas.</para
+></listitem>
+<listitem
+><para
+>Coloque a chamada de atenção do <application
+>Thunderbird</application
+> no topo e não lhe atribua o foco, para que não seja ignorada de forma inadvertida.</para
+></listitem>
+</itemizedlist>
+<para
+>Cada critério de correspondência da regra é suficientemente restritivo pelo que a sua ordem na janela principal do &kwin; não é importante para afectar a <link linkend="rule-evaluation"
+>avaliação de regras</link
+>. </para>
+<sect2 id="thunderbird---main"
+><title
+>Thunderbird - Principal</title>
+<para
+>Se assumir que a janela principal do <guilabel
+>Thunderbird</guilabel
+> está aberta, com o tamanho e posição adequados: </para>
+<orderedlist>
+<listitem
+><para
+>Use o <guilabel
+>Detectar as Propriedades da Janela</guilabel
+> e seleccione a janela principal do <guilabel
+>Thunderbird</guilabel
+>. Corresponda apenas pelo <guilabel
+>nome da classe primário</guilabel
+> para restringir à janela principal - para mais informações, veja a <link linkend="window-matching"
+>correspondência de janelas</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Se carregar em <guilabel
+>OK</guilabel
+> na janela anterior irá preencher de volta os resultados na página de <guilabel
+>Correspondência da Janela</guilabel
+>. Indique um texto adequado na <guilabel
+>Descrição</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Active os seguintes atributos: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Vá percorrendo até completar a introdução da regra.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---composer"
+><title
+>Thunderbird - Compositor</title>
+<para
+>Se assumir que está aberta uma janela do <guilabel
+>Compositor do Thunderbird</guilabel
+>: </para>
+<orderedlist>
+<listitem
+><para
+>Use o <guilabel
+>Detectar as Propriedades da Janela</guilabel
+> e seleccione a janela de composição do <guilabel
+>Thunderbird</guilabel
+>. Assinale as opções do <guilabel
+>Tipo de janela</guilabel
+> e de <guilabel
+>Papel da janela</guilabel
+> para restringir às janelas de composição - para mais informações, veja a <link linkend="window-matching"
+>correspondência de janelas</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Se carregar em <guilabel
+>OK</guilabel
+> na janela anterior irá preencher de volta os resultados na página de <guilabel
+>Correspondência da Janela</guilabel
+>. Indique um texto adequado na <guilabel
+>Descrição</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-compose.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Active os seguintes atributos: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Vá percorrendo até completar a introdução da regra.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---reminder"
+><title
+>Thunderbird - Chamada de Atenção</title>
+<para
+>Se assumir que uma janela de chamada de atenção do <guilabel
+>Thunderbird</guilabel
+> está aberta: </para>
+<orderedlist>
+<listitem
+><para
+>Use o <guilabel
+>Detectar as Propriedades da Janela</guilabel
+> e seleccione a janela de chamadas de atenção do <guilabel
+>Thunderbird</guilabel
+>. Assinale as opções do <guilabel
+>Tipo de janela</guilabel
+> e do <guilabel
+>Nome da classe secundário</guilabel
+> para restringir às janelas de chamadas de atenção - para mais informações, veja a <link linkend="window-matching"
+>correspondência de janelas</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Se carregar em <guilabel
+>OK</guilabel
+> na janela anterior irá preencher de volta os resultados na página de <guilabel
+>Correspondência da Janela</guilabel
+>. Indique um texto adequado na <guilabel
+>Descrição</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-reminder.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Active os seguintes atributos: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Vá percorrendo até completar a introdução da regra.</para
+></listitem>
+</orderedlist>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="application-workarounds"
+><title
+>Comportamentos Alternativos da Aplicação</title>
+<para
+>Em baixo encontram-se alguns comportamentos alternativos para aplicações mal-comportadas. </para>
+<para
+><tip
+><para
+>Se não estiver familiarizado com a criação de regras do &kwin;, veja este <link linkend="pin-a-window-to-a-desktop-and-set-other-attributes"
+>exemplo detalhado</link
+> para basear a sua nova regra.</para
+></tip>
+</para>
+<sect1 id="full-screen-re-size-error"
+><title
+>Erro de Dimensionamento para Todo o Ecrã</title>
+<para
+>O &Emacs; e o <guilabel
+>gVim</guilabel
+>, quando maximizados (no modo de ecrã completo) e sob determinadas condições poderão encontrar algumas questões de dimensionamento de janelas - veja em <ulink url="https://bugs.kde.org/show_bug.cgi?id=252314"
+>Emacs window resizes ...</ulink
+>. Poderá com uma regra do &kwin; contornar este problema. </para>
+<para
+>Assumindo que está aberta uma janela do &Emacs;: </para>
+<orderedlist>
+<listitem
+><para
+>Use a opção <guilabel
+>Detectar as Propriedades da Janela</guilabel
+> e seleccione a janela do &Emacs;. Faça a correspondência apenas pelo <guilabel
+>nome da classe primário</guilabel
+>, deixando as opções desligadas - para mais informações, veja a <link linkend="window-matching"
+>correspondência de janelas</link
+> <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Se carregar em <guilabel
+>OK</guilabel
+> na janela anterior irá preencher de volta os resultados na página de <guilabel
+>Correspondência da Janela</guilabel
+>. Indique uma <guilabel
+>Descrição</guilabel
+> adequada: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-emacs.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Ignore o pedido de ecrã completo do &Emacs;, activando o atributo <guilabel
+>Obedecer às restrições de geometria</guilabel
+>, desactivando-o (<guilabel
+>Não</guilabel
+>) para ignorar e coloque em <guilabel
+>Forçar</guilabel
+> o <link linkend="parameters"
+>parâmetro</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Vá percorrendo até completar a introdução da regra.</para
+></listitem>
+</orderedlist>
+</sect1>
+</chapter>
+
+<!--userbase-content-->
+<chapter id="credits">
+<title
+>Créditos e Licença</title>
+      <para
+>'Copyright' da documentação -  veja o <ulink url="http://userbase.kde.org/index.php?title=KWin Rules&amp;action=history"
+>histórico da página de Regras do KWin</ulink
+></para>
+      <para
+>Tradução de José Nuno Pires <email
+>zepires@gmail.com</email
+></para
+> 
+&underFDL; </chapter>
+&documentation.index;
+</book>

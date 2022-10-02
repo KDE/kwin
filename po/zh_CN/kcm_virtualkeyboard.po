@@ -1,0 +1,53 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: kdeorg\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2021-04-27 00:19+0000\n"
+"PO-Revision-Date: 2022-09-20 01:56\n"
+"Last-Translator: \n"
+"Language-Team: Chinese Simplified\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: kdeorg\n"
+"X-Crowdin-Project-ID: 269464\n"
+"X-Crowdin-Language: zh-CN\n"
+"X-Crowdin-File: /kf5-trunk/messages/kwin/kcm_virtualkeyboard.pot\n"
+"X-Crowdin-File-ID: 25404\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Tyson Tan"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "tysontan@tysontan.com"
+
+#: kcmvirtualkeyboard.cpp:31
+#, kde-format
+msgid "Virtual Keyboard"
+msgstr "虚拟键盘"
+
+#: kcmvirtualkeyboard.cpp:33
+#, kde-format
+msgid "Choose Virtual Keyboard"
+msgstr "选择虚拟键盘"
+
+#: kcmvirtualkeyboard.cpp:70
+#, kde-format
+msgid "None"
+msgstr "无"
+
+#: kcmvirtualkeyboard.cpp:74
+#, kde-format
+msgid "Do not use any virtual keyboard"
+msgstr "不使用虚拟键盘"
+
+#: package/contents/ui/main.qml:16
+#, kde-format
+msgid "This module lets you choose the virtual keyboard to use."
+msgstr "此模块用于选择虚拟键盘。"

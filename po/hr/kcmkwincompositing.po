@@ -1,0 +1,743 @@
+# Translation of kcmkwincompositing to Croatian
+#
+# Zarko Pintar <zarko.pintar@gmail.com>, 2009.
+# Andrej Dundovic <adundovi@gmail.com>, 2009, 2010.
+# Marko Dimjasevic <marko@dimjasevic.net>, 2009, 2011.
+# Marko Dimjašević <marko@dimjasevic.net>, 2011.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwincompositing\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"PO-Revision-Date: 2011-07-12 16:57+0200\n"
+"Last-Translator: Marko Dimjašević <marko@dimjasevic.net>\n"
+"Language-Team: Croatian <kde-croatia-list@lists.sourceforge.net>\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 1.2\n"
+"X-Environment: kde\n"
+"X-Accelerator-Marker: &\n"
+"X-Text-Markup: kde4\n"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
+#: compositing.ui:31
+#, kde-format
+msgid ""
+"OpenGL compositing (the default) has crashed KWin in the past.\n"
+"This was most likely due to a driver bug.\n"
+"If you think that you have meanwhile upgraded to a stable driver,\n"
+"you can reset this protection but be aware that this might result in an "
+"immediate crash!"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
+#: compositing.ui:44
+#, kde-format
+msgid ""
+"Scale method \"Accurate\" is not supported by all hardware and can cause "
+"performance regressions and rendering artifacts."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
+#: compositing.ui:67
+#, kde-format
+msgid ""
+"Keeping the window thumbnail always interferes with the minimized state of "
+"windows. This can result in windows not suspending their work when minimized."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, compositingLabel)
+#: compositing.ui:79
+#, fuzzy, kde-format
+#| msgid "Compositing type:"
+msgid "Compositing:"
+msgstr "Tip 3D efekata:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
+#: compositing.ui:86
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Enable desktop effects at startup"
+msgid "Enable on startup"
+msgstr "Omogući efekte radne površine pri pokretanju"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:95
+#, kde-format
+msgid ""
+"Applications can set a hint to block compositing when the window is open.\n"
+" This brings performance improvements for e.g. games.\n"
+" The setting can be overruled by window-specific rules."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:98
+#, kde-format
+msgid "Allow applications to block compositing"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
+#: compositing.ui:105
+#, fuzzy, kde-format
+#| msgid "Animation speed:"
+msgid "Animation speed:"
+msgstr "Brzina animacije:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: compositing.ui:142
+#, fuzzy, kde-format
+#| msgid "Very Slow"
+msgid "Very slow"
+msgstr "Vrlo polako"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: compositing.ui:162
+#, kde-format
+msgid "Instant"
+msgstr "Trenutno"
+
+#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
+#: compositing.ui:174
+#, fuzzy, kde-format
+#| msgid "Scale method:"
+msgid "Scale method:"
+msgstr "Metoda rastezanja:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:184
+#, kde-format
+msgid "Smooth"
+msgstr "Uglađeno"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:189
+#, kde-format
+msgid "Accurate"
+msgstr "Precizno"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: compositing.ui:199
+#, kde-format
+msgid "Tearing prevention (\"vsync\"):"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:207
+#, kde-format
+msgid "Automatic"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:212
+#, kde-format
+msgid "Only when cheap"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:217
+#, kde-format
+msgid "Full screen repaints"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:222
+#, kde-format
+msgid "Re-use screen content"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
+#: compositing.ui:230
+#, fuzzy, kde-format
+#| msgid "Keep window thumbnails:"
+msgid "Keep window thumbnails:"
+msgstr "Zadrži prozorske sličice:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:238
+#, fuzzy, kde-format
+#| msgctxt ""
+#| "Windows are unmapped as they are requested. This can lead to not having "
+#| "updated thumbnials for windows on other desktops."
+#| msgid "Never"
+msgid "Never"
+msgstr "Nikada"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:243
+#, fuzzy, kde-format
+#| msgctxt ""
+#| "Windows are not unmapped if the window is somewhere visible on any of the "
+#| "virtual desktops."
+#| msgid "Only for Shown Windows"
+msgid "Only for Shown Windows"
+msgstr "Samo za prikazane prozore"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:248
+#, kde-format
+msgid "Always"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
+#: compositing.ui:256
+#, kde-format
+msgid "Latency:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:264
+#, kde-format
+msgid "Force lowest latency (may cause dropped frames)"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:269
+#, kde-format
+msgid "Prefer lower latency"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:274
+#, kde-format
+msgid "Balance of latency and smoothness"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:279
+#, kde-format
+msgid "Prefer smoother animations"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:284
+#, fuzzy, kde-format
+#| msgid "Various animations"
+msgid "Force smoothest animations"
+msgstr "Razne animacije"
+
+#: main.cpp:79
+#, kde-format
+msgid "Re-enable OpenGL detection"
+msgstr "Ponovno omogući otkrivanje OpenGL-a"
+
+#: main.cpp:135
+#, kde-format
+msgid ""
+"\"Only when cheap\" only prevents tearing for full screen changes like a "
+"video."
+msgstr ""
+
+#: main.cpp:139
+#, kde-format
+msgid "\"Full screen repaints\" can cause performance problems."
+msgstr ""
+
+#: main.cpp:143
+#, kde-format
+msgid ""
+"\"Re-use screen content\" causes severe performance problems on MESA drivers."
+msgstr ""
+
+#, fuzzy
+#~| msgid "OpenGL"
+#~ msgid "OpenGL 3.1"
+#~ msgstr "OpenGL"
+
+#, fuzzy
+#~| msgid "OpenGL"
+#~ msgid "OpenGL 2.0"
+#~ msgstr "OpenGL"
+
+#~ msgid "Crisp"
+#~ msgstr "Krto"
+
+#~ msgid "Smooth (slower)"
+#~ msgstr "Uglađeno (sporije)"
+
+#~ msgid "XRender"
+#~ msgstr "XRender"
+
+#~ msgid ""
+#~ "Hint: To find out or configure how to activate an effect, look at the "
+#~ "effect's settings."
+#~ msgstr ""
+#~ "Savjet: Za pronaći gdje ili kako konfigurirati, odnosno aktivirati efekt, "
+#~ "pogledajte na postavke efekta."
+
+#, fuzzy
+#~| msgid "Texture filter:"
+#~ msgid "Configure filter"
+#~ msgstr "Filter teksture:"
+
+#, fuzzy
+#~| msgid "Suspend Desktop Effects"
+#~ msgid "Exclude internal Desktop Effects"
+#~ msgstr "Obustavi efekte radne površine"
+
+#, fuzzy
+#~| msgid "Resume Desktop Effects"
+#~ msgid "Get New Desktop Effects..."
+#~ msgstr "Vrati efekte radne površine"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Žarko Pintar, Andrej Dundović"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "zarko.pintar@gmail.com, adundovi@gmail.com"
+
+#, fuzzy
+#~| msgid "Accessibility"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Accessibility"
+#~ msgstr "Pristupačnost"
+
+#, fuzzy
+#~| msgid "Appearance"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Appearance"
+#~ msgstr "Izgled"
+
+#, fuzzy
+#~| msgid "Candy"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Candy"
+#~ msgstr "Slatkiš"
+
+#, fuzzy
+#~| msgid "Focus"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Focus"
+#~ msgstr "Fokus"
+
+#, fuzzy
+#~| msgid "Tools"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Tools"
+#~ msgstr "Alati"
+
+#, fuzzy
+#~| msgid "Window Management"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Management"
+#~ msgstr "Upravljanje prozorima"
+
+#, fuzzy
+#~| msgid "Suspend desktop effects for fullscreen windows"
+#~ msgid "Suspend compositor for full screen windows"
+#~ msgstr ""
+#~ "Obustavi efekte radne površine za prozore rastegnute preko cijelog zaslona"
+
+#, fuzzy
+#~| msgid "OpenGL mode:"
+#~ msgid "OpenGL interface:"
+#~ msgstr "OpenGL način:"
+
+#, fuzzy
+#~| msgid "Animation speed:"
+#~ msgid "Animation Speed:"
+#~ msgstr "Brzina animacije:"
+
+#, fuzzy
+#~| msgid "Scale method:"
+#~ msgid "Scale Method:"
+#~ msgstr "Metoda rastezanja:"
+
+#, fuzzy
+#~| msgid "Keep window thumbnails:"
+#~ msgid "Keep Window Thumbnails:"
+#~ msgstr "Zadrži prozorske sličice:"
+
+#, fuzzy
+#~| msgctxt ""
+#~| "A window thumbnail requires to have the corresponding window mapped. To "
+#~| "have thumbnails at all time, windows are not unmapped. This can break "
+#~| "window minimization as it is modelled as unmapping of windows."
+#~| msgid "Always (Breaks minimization)"
+#~ msgid "Always (Breaks Animations)"
+#~ msgstr "Uvijek (uništava minimizaciju)"
+
+#~ msgid "1 second remaining:"
+#~ msgid_plural "%1 seconds remaining:"
+#~ msgstr[0] "%1 preostala sekunda:"
+#~ msgstr[1] "%1 preostale sekunde:"
+#~ msgstr[2] "%1 sekundi preostalo:"
+
+#~ msgid "Confirm Desktop Effects Change"
+#~ msgstr "Prihvati izmjenu efekata radne površine"
+
+#~ msgid "&Accept Configuration"
+#~ msgstr "&Prihvati konfiguraciju"
+
+#~ msgid "&Return to Previous Configuration"
+#~ msgstr "&Vrati na prethodnu konfiguraciju"
+
+#~ msgid ""
+#~ "Desktop effects settings have changed.\n"
+#~ "Do you want to keep the new settings?\n"
+#~ "They will be automatically reverted in 10 seconds."
+#~ msgstr ""
+#~ "Postavke efekata radne površine su izmjenjene.\n"
+#~ "Želite li zadržati nove postavke?\n"
+#~ "Automatski će biti vraćene na stare za 10 sekundi."
+
+#~ msgid "Use GLSL shaders"
+#~ msgstr "Koristi sjenčanje GLSL"
+
+#~ msgid "kcmkwincompositing"
+#~ msgstr "kcmkwincompositing"
+
+#~ msgid "KWin Desktop Effects Configuration Module"
+#~ msgstr "KWin Desktop Effects konfiguracijski modul"
+
+#~ msgid "(c) 2007 Rivo Laks"
+#~ msgstr "© 2007 Rivo Laks"
+
+#~ msgid "Rivo Laks"
+#~ msgstr "Rivo Laks"
+
+#~ msgid "No Effect"
+#~ msgstr "Bez efekta"
+
+#~ msgid ""
+#~ "Failed to activate desktop effects using the given configuration options. "
+#~ "Settings will be reverted to their previous values.\n"
+#~ "\n"
+#~ "Check your X configuration. You may also consider changing advanced "
+#~ "options, especially changing the compositing type."
+#~ msgstr ""
+#~ "Ne mogu aktivirati efekte radne površine sa zadanim konfiguracijskim "
+#~ "opcijama. Postavke će biti vraćene na stare vrijednosti.\n"
+#~ "\n"
+#~ "Provjerite vašu X konfiguraciju. Također možete razmotriti izmjenu "
+#~ "naprednih opcija, posebno promjenu tipa 3D efekata."
+
+#~ msgid "Demos"
+#~ msgstr "Demonstracije"
+
+#~ msgid "Tests"
+#~ msgstr "Testovi"
+
+#~ msgid ""
+#~ "Desktop effects are not available on this system due to the following "
+#~ "technical issues:"
+#~ msgstr ""
+#~ "3D efekti nisu dostupni na ovom sustavu zbog sljedećih tehničkih predmeta:"
+
+#~ msgid ""
+#~ "Your settings have been saved but as KDE is currently running in failsafe "
+#~ "mode desktop effects cannot be enabled at this time.\n"
+#~ "\n"
+#~ "Please exit failsafe mode to enable desktop effects."
+#~ msgstr ""
+#~ "Vaše postavke biti će spremljene ali kako KDE trenutno radi u sigurnosnom "
+#~ "načinu, efekti radne površine ne mogu biti omogućeni u ovom trenutku.\n"
+#~ "\n"
+#~ "Molim vas da izađite iz sigurnosnog načina rada kako bi ste omogućili "
+#~ "efekte."
+
+#~ msgid "The following desktop effects could not be activated:"
+#~ msgstr "Sljedeći efekti radne površine nisu mogli biti aktivirani:"
+
+#~ msgid "<h1>Desktop Effects</h1>"
+#~ msgstr "<h1>Efekti radne površine</h1>"
+
+#~ msgid "General"
+#~ msgstr "Općenito"
+
+#~ msgid "Pressing this button can crash the desktop."
+#~ msgstr "Pritiskanje ovog gumba može uzrokovati rušenje radne površine."
+
+#~ msgid "I have saved my data."
+#~ msgstr "Spremio sam svoje podatke."
+
+#~ msgid "Activation"
+#~ msgstr "Aktiviranje"
+
+#~ msgid "Desktop effects can be toggled anytime using this shortcut:"
+#~ msgstr ""
+#~ "Efekti radne površine možete bilo kada uključiti i isključiti koristeći "
+#~ "ovaj prečac:"
+
+#, fuzzy
+#~| msgid "Simple effect setup"
+#~ msgctxt "@title:group a few general options to set up desktop effects"
+#~ msgid "Simple effect setup"
+#~ msgstr "Postavljanje jednostavnih efekata"
+
+#~ msgid "Improved window management"
+#~ msgstr "Poboljšano upravljanje prozorima"
+
+#~ msgid "Effect for window switching:"
+#~ msgstr "Efekt za prebacivanje prozora:"
+
+#~ msgid "Effect for desktop switching:"
+#~ msgstr "efekt za prebacivanje radnih površina:"
+
+#~ msgid "Very Fast"
+#~ msgstr "Vrlo brzo"
+
+#~ msgid "Fast"
+#~ msgstr "Brzo"
+
+#~ msgid "Normal"
+#~ msgstr "Normalno"
+
+#~ msgid "Slow"
+#~ msgstr "Sporo"
+
+#~ msgid "Extremely Slow"
+#~ msgstr "Ekstremno sporo"
+
+#~ msgid ""
+#~ "You can find more effects, as well as effect-specific settings, in the "
+#~ "\"All Effects\" tab above."
+#~ msgstr ""
+#~ "Možete pronaći još efekata, kao i postavke vezane uz efekte u \"Svi efekti"
+#~ "\" kartici iznad."
+
+#~ msgid "All Effects"
+#~ msgstr "Svi efekti"
+
+#~ msgid "Advanced"
+#~ msgstr "Napredno"
+
+#~ msgid "General Options"
+#~ msgstr "Opće opcije"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Crisp:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"fast\")</span> -  Pretty fast "
+#~ "on all GPUs but looks bricky</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Smooth:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"good\") </span>- linear "
+#~ "blending.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Fast enough on newer "
+#~ "nvidia GPUs and maybe others but also can be <span style=\" text-"
+#~ "decoration: underline;\">very</span> slow, you will have to try it.</p></"
+#~ "body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Krto:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"fast\")</span> –  Poprilično "
+#~ "brzo na svim GPU-ovima, no izgleda kockasto</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Uglađeno:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"good\") </span>- linearno "
+#~ "stapanje.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Dovoljno brzo na "
+#~ "novijim nvidijinim GPU-ovima i možda i na ostali, no također može biti "
+#~ "<span style=\" text-decoration: underline;\">vrlo</span> sporo; morat "
+#~ "ćete isprobati.</p></body></html>"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Crisp:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_NEAREST</span> -  (very) fast on all GPUs but looks "
+#~ "bricky</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Smooth:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_LINEAR</span> - fast on most GPUs but a little blurry</"
+#~ "p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Accurate:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Lanczos filter, "
+#~ "requires shader support (glsl or arb).</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Might be slow on weaker "
+#~ "GPUs and even cause various troubles with broken drivers (from "
+#~ "overbrightening to segfaults.)</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Fall back to \"Smooth\" "
+#~ "if you have problems.</p></body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Kruto:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_NEAREST</span> –  (poprilično) brzo na svim GPU-ovima, "
+#~ "no izgleda kockasto</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Uglađeno:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_LINEAR</span> – brzo na većini GPU-ova, no malo je "
+#~ "zamagljeno</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Precizno:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Filtar Lanczos, treba "
+#~ "podršku za sjenčanje (glsl ili arb).</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Može biti sporo na "
+#~ "slabijim GPU-ovima ili čak uzrokovati razne probleme s nevaljalim "
+#~ "upravljačkim programima (od prejakog osvjetljenja do \"segfaultova\".)</"
+#~ "p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Vratite na \"Uglađeno\" "
+#~ "ako imate problema.</p></body></html>"
+
+#~ msgid "OpenGL Options"
+#~ msgstr "OpenGL opcije"
+
+#~ msgid "Use VSync"
+#~ msgstr "Koristi VSync"
+
+#~ msgid ""
+#~ "If enabled all rendering will be performed with Shaders written in the "
+#~ "OpenGL Shading Language.\n"
+#~ "On legacy hardware disabling Shaders can improve the performance."
+#~ msgstr ""
+#~ "Ako je omogućeno, svo iscrtavanje će se izvršiti uz Sjenčanje napisano u "
+#~ "OpenGL-ovom jeziku za sjenčanje.\n"
+#~ " Na starom hardveru onemogućavanje Sjenčanja može poboljšati performanse."
+
+#~ msgid "Use OpenGL 2 Shaders"
+#~ msgstr "Koristi OpenGL 2 Sjenčanje"
+
+#~ msgid "Enable direct rendering"
+#~ msgstr "Omogući direktno renderiranje"
+
+#~ msgid "Disable functionality checks"
+#~ msgstr "Onemogući provjere funkcionalnosti"
+
+#~ msgid "Desktop effects are active"
+#~ msgstr "Efekti radne površine su aktivni"
+
+#~ msgid "Desktop effects are temporarily disabled"
+#~ msgstr "3D efekti privremeno su onemogućeni"
+
+#~ msgid "Desktop effects are disabled"
+#~ msgstr "Efekti radne površine su onemogućeni"
+
+#~ msgid "Common Settings"
+#~ msgstr "Česte postavke"
+
+#~ msgid "Compositing State"
+#~ msgstr "Stanje 3D efekata"
+
+#~ msgid "Shadows"
+#~ msgstr "Sjene"
+
+#~ msgid "Texture From Pixmap"
+#~ msgstr "Teksture iz Pixmap-a"
+
+#~ msgid "Shared Memory"
+#~ msgstr "Dijeljena memorija"
+
+#~ msgid "Fallback"
+#~ msgstr "Pričuvni"
+
+#~ msgid ""
+#~ "Enabling this option allows compositing to be activated even if some of "
+#~ "the internal checks fail. Doing so may make the whole desktop unusable "
+#~ "and its use is not recommened. Use only if KWin refuses to activate "
+#~ "compositing on a system that should be capable of compositing.\n"
+#~ msgstr ""
+#~ "Omogućavanje ove opcije dozvoljava aktiviranje 3D efekata čak i ako su "
+#~ "neke od internih provjera neuspješne. Čineći ovo možete prouzročiti da je "
+#~ "cijela radna površina neupotrebljiva te se njezina upotreba ne "
+#~ "preporučuje. Ovo koristite samo ako KWin odbija aktivirati 3D efekte na "
+#~ "računalu koje je sposobno izvršavati 3D efekte.\n"
+
+#~ msgid "Nearest (fastest)"
+#~ msgstr "Najbliži (najbrže)"
+
+#~ msgid "Bilinear"
+#~ msgstr "Bilinearno"
+
+#~ msgid "Trilinear (best quality)"
+#~ msgstr "Trilinear (najbolja kvaliteta)"
+
+#~ msgid "Compositing is not supported on your system."
+#~ msgstr "3D efekti nisu podržani od strane vašeg računala."
+
+#~ msgid "Compositing is active"
+#~ msgstr "3D efekti su aktivni"
+
+#~ msgid "Suspend Compositing"
+#~ msgstr "Zaustavi 3D efekte"
+
+#~ msgid "Resume Compositing"
+#~ msgstr "Vrati 3D efekte"
+
+#~ msgid "Compositing is disabled"
+#~ msgstr "3D efekti su onemogućeni"

@@ -1,0 +1,274 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+# Shinjo Park <kde@peremen.name>, 2009, 2010, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2020, 2021, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwinscreenedges\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-15 00:48+0000\n"
+"PO-Revision-Date: 2022-08-09 13:30+0200\n"
+"Last-Translator: Shinjo Park <kde@peremen.name>\n"
+"Language-Team: Korean <kde-kr@kde.org>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Lokalize 21.12.3\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "박신조"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "kde@peremen.name"
+
+#: main.cpp:130 touch.cpp:124
+#, kde-format
+msgid "No Action"
+msgstr "동작 없음"
+
+#: main.cpp:131 touch.cpp:125
+#, kde-format
+msgid "Peek at Desktop"
+msgstr "바탕 화면 멀리 보기"
+
+#: main.cpp:132 touch.cpp:126
+#, kde-format
+msgid "Lock Screen"
+msgstr "잠금 화면"
+
+#: main.cpp:133 touch.cpp:127
+#, kde-format
+msgid "Show KRunner"
+msgstr "KRunner 표시"
+
+#: main.cpp:134 touch.cpp:128
+#, kde-format
+msgid "Activity Manager"
+msgstr "활동 관리자"
+
+#: main.cpp:135 touch.cpp:129
+#, kde-format
+msgid "Application Launcher"
+msgstr "프로그램 실행기"
+
+#: main.cpp:139 touch.cpp:133
+#, kde-format
+msgid "Present Windows"
+msgstr "창 진열하기"
+
+#: main.cpp:140 touch.cpp:134
+#, kde-format
+msgid "%1 - All Desktops"
+msgstr "%1 - 모든 바탕 화면"
+
+#: main.cpp:141 touch.cpp:135
+#, kde-format
+msgid "%1 - Current Desktop"
+msgstr "%1 - 현재 바탕 화면"
+
+#: main.cpp:142 touch.cpp:136
+#, kde-format
+msgid "%1 - Current Application"
+msgstr "%1 - 현재 프로그램"
+
+#: main.cpp:144 touch.cpp:138
+#, kde-format
+msgid "Toggle window switching"
+msgstr "창 전환 사용/사용 안 함"
+
+#: main.cpp:145 touch.cpp:139
+#, kde-format
+msgid "Toggle alternative window switching"
+msgstr "대체 창 전환 사용/사용 안 함"
+
+#. i18n: ectx: property (text), widget (QLabel, infoLabel)
+#: main.ui:23
+#, kde-format
+msgid ""
+"You can trigger an action by pushing the mouse cursor against the "
+"corresponding screen edge or corner."
+msgstr "동작을 실행하려면 화면의 원하는 쪽 경계나 모서리로 마우스를 미십시오."
+
+#. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
+#: main.ui:67
+#, kde-format
+msgid "&Maximize:"
+msgstr "최대화(&M):"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderMaximize)
+#: main.ui:77
+#, kde-format
+msgid "Windows dragged to top edge"
+msgstr "위쪽 경계로 창 끌기"
+
+#. i18n: ectx: property (text), widget (QLabel, quickTileLabel)
+#: main.ui:84
+#, kde-format
+msgid "&Tile:"
+msgstr "바둑판식 배열(&T):"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderTiling)
+#: main.ui:94
+#, kde-format
+msgid "Windows dragged to left or right edge"
+msgstr "화면 왼쪽이나 오른쪽 경계선으로 창 끌기"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: main.ui:101
+#, kde-format
+msgid "Behavior:"
+msgstr "행동:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, remainActiveOnFullscreen)
+#: main.ui:108
+#, kde-format
+msgid "Remain active when windows are fullscreen"
+msgstr "전체 화면인 창이 있어도 활성화"
+
+#. i18n: ectx: property (text), widget (QLabel, electricBorderCornerRatioLabel)
+#: main.ui:115
+#, kde-format
+msgid "Trigger &quarter tiling in:"
+msgstr "화면의 1/4 비율 배치 활성화(&Q):"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, electricBorderCornerRatioSpin)
+#: main.ui:130
+#, no-c-format, kde-format
+msgid "%"
+msgstr "%"
+
+#. i18n: ectx: property (prefix), widget (QSpinBox, electricBorderCornerRatioSpin)
+#: main.ui:133
+#, kde-format
+msgid "Outer "
+msgstr "외부"
+
+#. i18n: ectx: property (text), widget (QLabel, label_1)
+#: main.ui:149
+#, kde-format
+msgid "of the screen"
+msgstr "화면의"
+
+#. i18n: ectx: property (toolTip), widget (QLabel, desktopSwitchLabel)
+#: main.ui:174
+#, kde-format
+msgid ""
+"Change desktop when the mouse cursor is pushed against the edge of the screen"
+msgstr "화면 경계선 쪽으로 마우스 커서를 밀 때 바탕 화면 전환"
+
+#. i18n: ectx: property (text), widget (QLabel, desktopSwitchLabel)
+#: main.ui:177
+#, kde-format
+msgid "&Switch desktop on edge:"
+msgstr "경계면에서 바탕 화면 전환(&S):"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
+#: main.ui:188
+#, kde-format
+msgctxt "Switch desktop on edge"
+msgid "Disabled"
+msgstr "사용 안 함"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
+#: main.ui:193
+#, kde-format
+msgid "Only When Moving Windows"
+msgstr "창을 이동할 때만"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
+#: main.ui:198
+#, kde-format
+msgid "Always Enabled"
+msgstr "항상 사용함"
+
+#. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)
+#: main.ui:206
+#, kde-format
+msgid ""
+"Amount of time required for the mouse cursor to be pushed against the edge "
+"of the screen before the action is triggered"
+msgstr "마우스 커서를 다음 시간 이상 밀고 있으면 동작이 활성화됩니다"
+
+#. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
+#: main.ui:209
+#, kde-format
+msgid "Activation &delay:"
+msgstr "지연 시간(&D):"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ElectricBorderDelay)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ElectricBorderCooldown)
+#: main.ui:219 main.ui:254
+#, kde-format
+msgid " ms"
+msgstr " 밀리초"
+
+#. i18n: ectx: property (toolTip), widget (QLabel, triggerCooldownLabel)
+#: main.ui:238
+#, kde-format
+msgid ""
+"Amount of time required after triggering an action until the next trigger "
+"can occur"
+msgstr "동작이 실행된 이후 다음 동작이 실행될 때까지 기다릴 시간입니다"
+
+#. i18n: ectx: property (text), widget (QLabel, triggerCooldownLabel)
+#: main.ui:241
+#, kde-format
+msgid "&Reactivation delay:"
+msgstr "재활성화 지연 시간(&R):"
+
+#. i18n: ectx: property (text), widget (QLabel, label_1)
+#: touch.ui:17
+#, kde-format
+msgid ""
+"You can trigger an action by swiping from the screen edge towards the center "
+"of the screen."
+msgstr "동작을 실행하려면 화면 경계선에서 화면 중심으로 미십시오."
+
+#~ msgid "Show Desktop"
+#~ msgstr "바탕 화면 표시"
+
+#~ msgid "Desktop Grid"
+#~ msgstr "바탕 화면 모눈"
+
+#~ msgid "Toggle Overview"
+#~ msgstr "한눈에 보기 전환"
+
+#~ msgid "%1 - Cube"
+#~ msgstr "%1 - 큐브"
+
+#~ msgid "%1 - Cylinder"
+#~ msgstr "%1 - 실린더"
+
+#~ msgid "%1 - Sphere"
+#~ msgstr "%1 - 구"
+
+#~ msgid "Active Screen Corners and Edges"
+#~ msgstr "활성 화면 모서리 및 경계"
+
+#~ msgid "Window Management"
+#~ msgstr "창 관리"
+
+#~ msgid "Maximize windows by dragging them to the top edge of the screen"
+#~ msgstr "화면 위쪽 경계선으로 창을 끌어서 최대화하기"
+
+#~ msgid "Quarter tiling triggered in the outer"
+#~ msgstr "화면 외부의"
+
+#~ msgid "Other Settings"
+#~ msgstr "기타 설정"
+
+#~ msgctxt "Open krunner"
+#~ msgid "Run Command"
+#~ msgstr "명령 실행"
+
+#~ msgid "Show Dashboard"
+#~ msgstr "대시보드 보이기"
+
+#~ msgid "Prevent Screen Locking"
+#~ msgstr "화면 잠금 방지하기"

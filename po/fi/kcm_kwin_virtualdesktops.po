@@ -1,0 +1,279 @@
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the kwin package.
+# Tommi Nieminen <translator@legisign.org>, 2019, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"PO-Revision-Date: 2021-06-11 12:32+0300\n"
+"Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
+"Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 20.04.2\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Tommi Nieminen"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "translator@legisign.org"
+
+#: desktopsmodel.cpp:467
+#, kde-format
+msgid "There was an error connecting to the compositor."
+msgstr "Koostimeen yhdistettäessä tapahtui virhe."
+
+#: desktopsmodel.cpp:666
+#, kde-format
+msgid "There was an error saving the settings to the compositor."
+msgstr "Koostimen asetuksia tallennettaessa tapahtui virhe."
+
+#: desktopsmodel.cpp:669
+#, kde-format
+msgid "There was an error requesting information from the compositor."
+msgstr "Koostimen tietoja kysellessä tapahtui virhe."
+
+#: package/contents/ui/main.qml:17
+#, kde-format
+msgid ""
+"This module lets you configure the navigation, number and layout of virtual "
+"desktops."
+msgstr ""
+"Tässä osiossa voit asettaa virtuaalityöpöytien määrän, asettelun ja niiden "
+"välillä siirtymisen."
+
+#: package/contents/ui/main.qml:91
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Rename"
+msgstr "Muuta nimeä"
+
+#: package/contents/ui/main.qml:102
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Confirm new name"
+msgstr "Vahvista uusi nimi"
+
+#: package/contents/ui/main.qml:110
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove"
+msgstr "Poista"
+
+#: package/contents/ui/main.qml:137
+#, kde-format
+msgid ""
+"Virtual desktops have been changed outside this settings application. Saving "
+"now will overwrite the changes."
+msgstr ""
+"Virtuaalityöpöytiä on muutettu tämän asetussovelluksen ulkopuolelta. "
+"Tallentaminen nyt korvaa nämä muutokset."
+
+#: package/contents/ui/main.qml:153
+#, kde-format
+msgid "Row %1"
+msgstr "Rivi %1"
+
+#: package/contents/ui/main.qml:166
+#, kde-format
+msgctxt "@action:button"
+msgid "Add"
+msgstr "Lisää"
+
+#: package/contents/ui/main.qml:169
+#, kde-format
+msgid "New Desktop"
+msgstr "Uusi työpöytä"
+
+#: package/contents/ui/main.qml:184
+#, kde-format
+msgid "1 Row"
+msgid_plural "%1 Rows"
+msgstr[0] "1 rivi"
+msgstr[1] "%1 riviä"
+
+#: package/contents/ui/main.qml:200
+#, kde-format
+msgid "Options:"
+msgstr "Valinnat:"
+
+#: package/contents/ui/main.qml:202
+#, kde-format
+msgid "Navigation wraps around"
+msgstr "Navigointi kiertää ympäri"
+
+#: package/contents/ui/main.qml:220
+#, kde-format
+msgid "Show animation when switching:"
+msgstr "Näytä animointi vaihdettaessa:"
+
+#: package/contents/ui/main.qml:271
+#, kde-format
+msgid "Show on-screen display when switching:"
+msgstr "Näytä kuvaruutunäyttö vaihdettaessa:"
+
+#: package/contents/ui/main.qml:290
+#, kde-format
+msgid "%1 ms"
+msgstr "%1 ms"
+
+#: package/contents/ui/main.qml:314
+#, kde-format
+msgid "Show desktop layout indicators"
+msgstr "Näytä työpöytäasettelun osoittimet"
+
+#: virtualdesktops.cpp:33
+#, kde-format
+msgid "Virtual Desktops"
+msgstr "Virtuaalityöpöydät"
+
+#~ msgid "Rows:"
+#~ msgstr "Rivejä:"
+
+#~ msgid "Configure Virtual Desktops"
+#~ msgstr "Virtuaalityöpöytien asetukset"
+
+#~ msgid "Desktop %1:"
+#~ msgstr "Työpöytä %1:"
+
+#~ msgid "Here you can enter the name for desktop %1"
+#~ msgstr "Tässä voit antaa nimen työpöydälle %1"
+
+#~ msgid "Desktop %1"
+#~ msgstr "Työpöytä %1"
+
+#~ msgid ""
+#~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "
+#~ "virtual desktops you want and how these should be labeled."
+#~ msgstr ""
+#~ "<h1>Monta työpöytää</h1> Tässä osiossa voit valita virtuaalityöpöytien "
+#~ "määrän ja antaa niille nimet."
+
+#~ msgid "KWin"
+#~ msgstr "KWin"
+
+#~ msgid "Switch to Next Desktop"
+#~ msgstr "Vaihda seuraavalle työpöydälle"
+
+#~ msgid "Switch to Previous Desktop"
+#~ msgstr "Vaihda edelliselle työpöydälle"
+
+#~ msgid "Switch One Desktop to the Right"
+#~ msgstr "Vaihda yhden työpöydän verran oikealle"
+
+#~ msgid "Switch One Desktop to the Left"
+#~ msgstr "Vaihda yhden työpöydän verran vasemmalle"
+
+#~ msgid "Switch One Desktop Up"
+#~ msgstr "Vaihda yhden työpöydän verran ylös"
+
+#~ msgid "Switch One Desktop Down"
+#~ msgstr "Vaihda yhden työpöydän verran alas"
+
+#~ msgid "Walk Through Desktops"
+#~ msgstr "Selaa työpöytiä"
+
+#~ msgid "Walk Through Desktops (Reverse)"
+#~ msgstr "Selaa työpöytiä taaksepäin"
+
+#~ msgid "Walk Through Desktop List"
+#~ msgstr "Selaa työpöytäluetteloa"
+
+#~ msgid "Walk Through Desktop List (Reverse)"
+#~ msgstr "Selaa työpöytäluetteloa taaksepäin"
+
+#~ msgid "Desktop Switching"
+#~ msgstr "Työpöydän vaihto"
+
+#~ msgid "Switch to Desktop %1"
+#~ msgstr "Vaihda työpöydälle %1"
+
+#~ msgid "No Animation"
+#~ msgstr "Ei animointia"
+
+#~ msgid "No suitable Shortcut for Desktop %1 found"
+#~ msgstr "Työpöydälle %1 ei löytynyt sopivaa pikanäppäintä"
+
+#~ msgid "Assigned global Shortcut \"%1\" to Desktop %2"
+#~ msgstr "Työpöydänlaajuinen pikanäppäin %1 liitettiin työpöytään %2"
+
+#~ msgid "Shortcut conflict: Could not set Shortcut %1 for Desktop %2"
+#~ msgstr ""
+#~ "Pikanäppäinristiriita: pikanäppäimen %1 asetus työpöydälle %2 epäonnistui"
+
+#~ msgid "KWin development team"
+#~ msgstr "KWin-kehitysryhmä"
+
+#~ msgid "Layout"
+#~ msgstr "Asettelu"
+
+#~ msgid ""
+#~ "Here you can set how many virtual desktops you want on your KDE desktop."
+#~ msgstr ""
+#~ "Tällä liukuvalitsimella voit määrittää, montako virtuaalityöpöytää KDE-"
+#~ "työpöydällä on käytettävissä."
+
+#~ msgid "&Number of desktops:"
+#~ msgstr "Työpöytien &määrä:"
+
+#~ msgid "N&umber of rows:"
+#~ msgstr "&Rivien määrä:"
+
+#~ msgid "Desktop Names"
+#~ msgstr "Työpöytien nimet"
+
+#~ msgid "Switching"
+#~ msgstr "Vaihto"
+
+#~ msgid ""
+#~ "Enable this option if you want keyboard or active desktop border "
+#~ "navigation beyond the edge of a desktop to take you to the opposite edge "
+#~ "of the new desktop."
+#~ msgstr ""
+#~ "Ota käyttöön tämä valitsin, jos haluata näppäimistön tai aktiivin "
+#~ "työpöytärajanavigoinnin työpöydän reunan ylitse vievän sinut uuden "
+#~ "työpöydän vastakkaiselle rajalle."
+
+# Kyse on virtuaalityöpöydän vaihtamisen animoinnista työpöytätehostetta käyttäen. Koska työpöytätehosteen maininta ei ole tässä olennainen, se on jätetty pois suomennoksesta.
+#~ msgid "Desktop Effect Animation"
+#~ msgstr "Animointi"
+
+#~ msgid "Animation:"
+#~ msgstr "Animointi:"
+
+#~ msgid "Desktop Switch On-Screen Display"
+#~ msgstr "Työpöytävaihdon ruutunäyttö"
+
+#~ msgid "Duration:"
+#~ msgstr "Kesto:"
+
+#~ msgid " msec"
+#~ msgstr " ms"
+
+#~ msgid ""
+#~ "Enabling this option will show a small preview of the desktop layout "
+#~ "indicating the selected desktop."
+#~ msgstr ""
+#~ "Tämän asetuksen käyttöönotto näyttää työpöytäasettelusta pienen "
+#~ "esikatselun, joka osoittaa valitun työpöydän."
+
+#~ msgid "Shortcuts"
+#~ msgstr "Pikanäppäimet"
+
+#~ msgid "Show shortcuts for all possible desktops"
+#~ msgstr "Näytä pikanäppäimet kaikille mahdollisille työpöydille"
+
+#~ msgid "Different widgets for each desktop"
+#~ msgstr "Eri sovelmat joka työpöydällä"
+
+#~ msgid "Mouse wheel over desktop background switches desktop"
+#~ msgstr "Hiirirullan pyörittäminen taustakuvan päällä vaihtaa työpöytää"

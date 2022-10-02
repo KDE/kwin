@@ -1,0 +1,134 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Portuguese "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwineffects" lang="&language;">
+<articleinfo>
+
+<title
+>Efeitos do Ecrã</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>José</firstname
+><surname
+>Pires</surname
+><affiliation
+><address
+><email
+>zepires@gmail.com</email
+></address
+></affiliation
+><contrib
+>Tradução</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2016-04-14</date>
+<releaseinfo
+>Plasma 5.6</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>ecrã</keyword>
+<keyword
+>efeitos</keyword>
+</keywordset>
+</articleinfo>
+
+<!--FIXME Compositor Enable compositor on startup necessary to have effects?-->
+
+<para
+>Este módulo é usado para activar e configurar os efeitos do ecrã no Plasma.</para>
+
+<para
+>A componente principal desta página é uma lista com todos os efeitos disponíveis, agrupados por <guilabel
+>Acessibilidade</guilabel
+>, <guilabel
+>Aparência</guilabel
+>, <guilabel
+>Foco</guilabel
+>, <guilabel
+>Ferramentas</guilabel
+>, <guilabel
+>Beleza</guilabel
+> e <guilabel
+>Gestão de Janelas</guilabel
+>.</para>
+<para
+>Use a barra de pesquisa incremental, por cima da janela da lista, para descobrir itens na lista.</para>
+
+<para
+>Normalmente, não existe nenhuma razão para os utilizadores alterarem isso, mas existe um botão de configuração <inlinemediaobject
+><imageobject
+><imagedata fileref="configure-filter.png" format="PNG"/> </imageobject
+></inlinemediaobject
+> para modificar a filtragem da lista para mostrar também esses efeitos. </para>
+
+<para
+>A forma mais simples de instalar novos efeitos é usando o suporte incorporado do KNewStuff no &kwin;. Carregue no botão <guibutton
+>Obter Efeitos Novos</guibutton
+> para abrir uma janela com os efeitos disponíveis na Internet e para instalar ou desinstalar efeitos.</para>
+<note
+><para
+>Por favor, tenha em mente que a alteração dessas predefinições importantes poderá danificar o seu sistema.</para>
+</note>
+
+<para
+>Assinale um efeito na lista para o activar. Veja as informações sobre o Autor e a Licença, carregando para tal no botão de informação <inlinemediaobject
+><imageobject
+><imagedata fileref="dialog-information.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>, no lado direito do item da lista.</para>
+
+<para
+>Alguns efeitos têm opções de configuração; nesse caso, existe um botão de configuração <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure-effects.png" format="PNG"/></imageobject
+></inlinemediaobject
+> à esquerda do botão de informação. Carregue nele para abrir uma janela de configuração.</para>
+<para
+>Para ver uma antevisão em vídeo de uma lista, carregue no botão <inlinemediaobject
+><imageobject
+><imagedata fileref="video.png" format="PNG"/> </imageobject
+></inlinemediaobject
+>.</para>
+
+<para
+>Alguns efeitos são mutuamente exclusivos com outros efeitos. Por exemplo, um utilizador poderá querer activar as <guilabel
+>Animações da Minimização</guilabel
+> ou o efeito <guilabel
+>Lâmpada Mágica</guilabel
+>. Se os activar ao mesmo tempo, poderá ter problemas nas animações. </para>
+
+<para
+>Para os efeitos num grupo mutuamente exclusivo, a &GUI; usa botões de opção exclusiva, para que só um desses efeitos possa ser activado. </para>
+
+<para
+>Todos os efeitos que não são suportados pela infra-estrutura de composição usada de momento ficam escondidos por omissão (&eg; os efeitos do OpenGL quando usa o XRender). </para
+> 
+
+<para
+>Da mesma forma, todos os efeitos internos ou auxiliares ficam escondidos por omissão. Existem efeitos que substituem a funcionalidade do núcleo-base do KWin ou que oferecem interacções com outros elementos na consola do ecrã. </para>
+
+<!--FIXME 
+39 effects + 7 internal (XRender compositor)
+Internal effects
+Appearance (Dashboard, Highlight Windows, KSreen, Screenshot, Window Geometry)
+Candy (Startup feedback)
+Window Management (Cover Switch)
+-->
+
+</article>

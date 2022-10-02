@@ -1,0 +1,137 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Russian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwineffects" lang="&language;">
+<articleinfo>
+
+<title
+>Эффекты</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Олеся</firstname
+><surname
+>Герасименко</surname
+><affiliation
+><address
+><email
+>gammaray@basealt.ru</email
+></address
+></affiliation
+><contrib
+>Перевод на русский язык</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>9 апреля 2021 г.</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>параметры системы</keyword>
+<keyword
+>рабочий стол</keyword>
+<keyword
+>эффекты</keyword>
+</keywordset>
+</articleinfo>
+
+<!--FIXME Compositor Enable compositor on startup necessary to have effects?-->
+
+<para
+>В этом модуле можно включать и настраивать эффекты рабочего стола Plasma.</para>
+
+<para
+>В основной части окна представлены все доступные эффекты. Они объединены в группы <guilabel
+>Специальные возможности</guilabel
+>, <guilabel
+>Внешний вид</guilabel
+>, <guilabel
+>Управление фокусом</guilabel
+>, <guilabel
+>Анимация показа рабочего стола</guilabel
+>, <guilabel
+>Инструменты</guilabel
+>, <guilabel
+>Анимация переключения рабочих столов</guilabel
+>, <guilabel
+>Управление окнами</guilabel
+> и <guilabel
+>Анимация закрытия и открытия окна</guilabel
+>.</para>
+<para
+>Над окном с перечнем эффектов располагается строка поиска эффектов.</para>
+
+<para
+>Обычно пользователям не требуется менять параметры фильтрации списка эффектов. Но это можно сделать с помощью кнопки <inlinemediaobject
+><imageobject
+><imagedata fileref="configure-effects.png" format="PNG"/> </imageobject
+></inlinemediaobject
+>. </para>
+
+<para
+>Новые эффекты проще всего установить с помощью встроенной поддержки KNewStuff в &kwin;. Чтобы открыть диалог со списком доступных эффектов из Интернета и установить или удалить их, нажмите на кнопку <guibutton
+>Получить новые эффекты…</guibutton
+>.</para>
+<note
+><para
+>Изменение значений по умолчанию может повредить систему.</para>
+</note>
+
+<para
+>Чтобы включить эффект, его нужно отметить в списке. Щёлкните по кнопке <inlinemediaobject
+><imageobject
+><imagedata fileref="dialog-information.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> справа от элемента списка, чтобы увидеть сведения об авторе и лицензии.</para>
+
+<para
+>Для некоторых эффектов имеются параметры настройки. Диалог настройки открывается нажатием кнопки <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure-effects.png" format="PNG"/></imageobject
+></inlinemediaobject
+> слева от кнопки информации.</para>
+<para
+>Кнопка <inlinemediaobject
+><imageobject
+><imagedata fileref="video.png" format="PNG"/> </imageobject
+></inlinemediaobject
+> служит для предварительного просмотра эффекта.</para>
+
+<para
+>Некоторые эффекты являются взаимоисключающими. Например, можно включить либо эффект <guilabel
+>Максимизировать</guilabel
+>, либо эффект <guilabel
+>Волшебная лампа</guilabel
+>. Одновременное включение этих эффектов нарушает работу анимации. </para>
+
+<para
+>Для группы взаимоисключающих эффектов графический интерфейс предусматривает переключатели: включить можно только один из таких эффектов. </para>
+
+<para
+>По умолчанию скрыты эффекты, которые не поддерживаются используемым в данный момент сервисом графических эффектов (например, эффекты OpenGL при использовании программной отрисовки). </para
+> 
+
+<para
+>По умолчанию скрыты также все внутренние или вспомогательные эффекты. К ним относятся эффекты, которые заменяют функционал ядра KWin или обеспечивают взаимодействие с другими элементами окружения рабочего стола. </para>
+
+<!--FIXME 
+39 effects + 7 internal (XRender compositor)
+Internal effects
+Appearance (Dashboard, Highlight Windows, KSreen, Screenshot, Window Geometry)
+Window Management (Cover Switch)
+-->
+
+</article>

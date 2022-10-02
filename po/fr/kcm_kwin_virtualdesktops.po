@@ -1,0 +1,287 @@
+# Maxime Corteel <mcorteel@gmail.com>, 2019.
+# Simon Depiets <sdepiets@gmail.com>, 2019.
+# Xavier Besnard <xavier.besnard@neuf.fr>, 2021.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"PO-Revision-Date: 2021-05-28 08:42+0200\n"
+"Last-Translator: Xavier Besnard <xavier.besnard@neuf.fr>\n"
+"Language-Team: French <kde-francophone@kde.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Lokalize 21.04.1\n"
+"X-Environment: kde\n"
+"X-Accelerator-Marker: &\n"
+"X-Text-Markup: kde4\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Geoffray Levasseur, Matthieu Robin, Maxime Corteel"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr ""
+"geoffray.levasseurbrandin@numericable.fr, kde@macolu.org, mcorteel@gmail.com"
+
+#: desktopsmodel.cpp:467
+#, kde-format
+msgid "There was an error connecting to the compositor."
+msgstr "Une erreur s'est produite lors de la connexion au compositeur."
+
+#: desktopsmodel.cpp:666
+#, kde-format
+msgid "There was an error saving the settings to the compositor."
+msgstr ""
+"Une erreur s'est produite lors de l'enregistrement de la configuration dans "
+"le compositeur."
+
+#: desktopsmodel.cpp:669
+#, kde-format
+msgid "There was an error requesting information from the compositor."
+msgstr ""
+"Une erreur s'est produite lors de la demande d'information au compositeur."
+
+#: package/contents/ui/main.qml:17
+#, kde-format
+msgid ""
+"This module lets you configure the navigation, number and layout of virtual "
+"desktops."
+msgstr ""
+"Ce module vous permet de configurer la navigation, le nombre et la "
+"disposition des bureaux virtuels."
+
+#: package/contents/ui/main.qml:91
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Rename"
+msgstr "Renommer"
+
+#: package/contents/ui/main.qml:102
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Confirm new name"
+msgstr "Confirmer le nouveau nom"
+
+#: package/contents/ui/main.qml:110
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove"
+msgstr "Supprimer"
+
+#: package/contents/ui/main.qml:137
+#, kde-format
+msgid ""
+"Virtual desktops have been changed outside this settings application. Saving "
+"now will overwrite the changes."
+msgstr ""
+"La configuration des bureaux virtuels a été modifiée en dehors de cette "
+"application. Enregistrer maintenant écrasera les changements."
+
+#: package/contents/ui/main.qml:153
+#, kde-format
+msgid "Row %1"
+msgstr "Ligne %1"
+
+#: package/contents/ui/main.qml:166
+#, kde-format
+msgctxt "@action:button"
+msgid "Add"
+msgstr "Ajouter"
+
+#: package/contents/ui/main.qml:169
+#, kde-format
+msgid "New Desktop"
+msgstr "Nouveau bureau"
+
+#: package/contents/ui/main.qml:184
+#, kde-format
+msgid "1 Row"
+msgid_plural "%1 Rows"
+msgstr[0] "1 ligne"
+msgstr[1] "%1 lignes"
+
+#: package/contents/ui/main.qml:200
+#, kde-format
+msgid "Options:"
+msgstr "Options :"
+
+#: package/contents/ui/main.qml:202
+#, kde-format
+msgid "Navigation wraps around"
+msgstr "Navigation circulaire entre les bureaux"
+
+#: package/contents/ui/main.qml:220
+#, kde-format
+msgid "Show animation when switching:"
+msgstr "Afficher une animation au changement :"
+
+#: package/contents/ui/main.qml:271
+#, kde-format
+msgid "Show on-screen display when switching:"
+msgstr "Affichage sur l'écran (OSD) indiquant le changement de bureau :"
+
+#: package/contents/ui/main.qml:290
+#, kde-format
+msgid "%1 ms"
+msgstr "%1 ms"
+
+#: package/contents/ui/main.qml:314
+#, kde-format
+msgid "Show desktop layout indicators"
+msgstr "Afficher les indicateurs de disposition des bureaux"
+
+#: virtualdesktops.cpp:33
+#, kde-format
+msgid "Virtual Desktops"
+msgstr "Bureaux virtuels"
+
+#~ msgid "Rows:"
+#~ msgstr "Lignes :"
+
+#~ msgid "Configure Virtual Desktops"
+#~ msgstr "Configurer les bureaux virtuels"
+
+#~ msgid "Desktop %1:"
+#~ msgstr "Bureau %1 :"
+
+#~ msgid "Here you can enter the name for desktop %1"
+#~ msgstr "Vous pouvez saisir ici un nom pour le bureau %1"
+
+#~ msgid "Desktop %1"
+#~ msgstr "Bureau %1"
+
+#~ msgid ""
+#~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "
+#~ "virtual desktops you want and how these should be labeled."
+#~ msgstr ""
+#~ "<h1>Bureaux multiples</h1> Dans ce module, vous pouvez configurer le "
+#~ "nombre de bureaux virtuels à utiliser et la manière dont ils seront "
+#~ "identifiés."
+
+#~ msgid "KWin"
+#~ msgstr "KWin"
+
+#~ msgid "Switch to Next Desktop"
+#~ msgstr "Aller au bureau suivant"
+
+#~ msgid "Switch to Previous Desktop"
+#~ msgstr "Aller au bureau précédent"
+
+#~ msgid "Switch One Desktop to the Right"
+#~ msgstr "Aller au prochain bureau à droite"
+
+#~ msgid "Switch One Desktop to the Left"
+#~ msgstr "Aller au prochain bureau à gauche"
+
+#~ msgid "Switch One Desktop Up"
+#~ msgstr "Aller au prochain bureau en haut"
+
+#~ msgid "Switch One Desktop Down"
+#~ msgstr "Aller au prochain bureau en bas"
+
+#~ msgid "Walk Through Desktops"
+#~ msgstr "Circuler parmi les bureaux"
+
+#~ msgid "Walk Through Desktops (Reverse)"
+#~ msgstr "Circuler parmi les bureaux (en ordre inverse)"
+
+#~ msgid "Walk Through Desktop List"
+#~ msgstr "Circuler dans la liste des bureaux"
+
+#~ msgid "Walk Through Desktop List (Reverse)"
+#~ msgstr "Circuler dans la liste des bureaux (en ordre inverse)"
+
+#~ msgid "Desktop Switching"
+#~ msgstr "Changement de bureau"
+
+#~ msgid "Switch to Desktop %1"
+#~ msgstr "Aller au bureau %1"
+
+#~ msgid "No Animation"
+#~ msgstr "Aucune animation"
+
+#~ msgid "No suitable Shortcut for Desktop %1 found"
+#~ msgstr "Impossible de trouver un raccourci adéquat pour le bureau %1"
+
+#~ msgid "Assigned global Shortcut \"%1\" to Desktop %2"
+#~ msgstr "Raccourci global « %1 » assigné au bureau %2"
+
+#~ msgid "Shortcut conflict: Could not set Shortcut %1 for Desktop %2"
+#~ msgstr ""
+#~ "Conflit de raccourcis : impossible d'assigner le raccourci %1 au bureau %2"
+
+#~ msgid "KWin development team"
+#~ msgstr "L'équipe de développement de KWin"
+
+#~ msgid "Layout"
+#~ msgstr "Disposition"
+
+#~ msgid ""
+#~ "Here you can set how many virtual desktops you want on your KDE desktop."
+#~ msgstr ""
+#~ "Vous pouvez définir ici le nombre de bureaux virtuels que vous désirez "
+#~ "pour votre environnement KDE."
+
+#~ msgid "&Number of desktops:"
+#~ msgstr "&Nombre de bureaux : "
+
+#~ msgid "N&umber of rows:"
+#~ msgstr "N&ombre de lignes : "
+
+#~ msgid "Desktop Names"
+#~ msgstr "Noms des bureaux"
+
+#~ msgid "Switching"
+#~ msgstr "Changement de bureau"
+
+#~ msgid ""
+#~ "Enable this option if you want keyboard or active desktop border "
+#~ "navigation beyond the edge of a desktop to take you to the opposite edge "
+#~ "of the new desktop."
+#~ msgstr ""
+#~ "Activez cette option si vous voulez que la navigation entre les bureaux, "
+#~ "au clavier ou avec les bords d'écran actifs, vous fasse passer du bord "
+#~ "d'un bureau au bord opposé du nouveau bureau."
+
+#~ msgid "Desktop Effect Animation"
+#~ msgstr "Animation du changement de bureau"
+
+#~ msgid "Animation:"
+#~ msgstr "Animation :"
+
+#~ msgid "Desktop Switch On-Screen Display"
+#~ msgstr "Affichage à l'écran du changement de bureau"
+
+#~ msgid "Duration:"
+#~ msgstr "Durée :"
+
+#~ msgid " msec"
+#~ msgstr " ms"
+
+#~ msgid ""
+#~ "Enabling this option will show a small preview of the desktop layout "
+#~ "indicating the selected desktop."
+#~ msgstr ""
+#~ "L'activation de cette option permettra d'afficher un aperçu de la "
+#~ "disposition des bureaux en mettant en évidence le bureau sélectionné."
+
+#~ msgid "Shortcuts"
+#~ msgstr "Raccourcis clavier"
+
+#~ msgid "Show shortcuts for all possible desktops"
+#~ msgstr "Afficher les raccourcis pour tous les bureaux possibles"
+
+#~ msgid "Different widgets for each desktop"
+#~ msgstr "Composants graphiques différents pour chaque bureau"
+
+#~ msgid "Mouse wheel over desktop background switches desktop"
+#~ msgstr ""
+#~ "La molette de la souris au-dessus de l'arrière-plan du bureau change de "
+#~ "bureau"

@@ -1,0 +1,593 @@
+# translation of kwin_clients.po to Nepali
+# Nabin Gautam <nabin@mpp.org.np>, 2006, 2007.
+# Shyam Krishna Bal <shyam@mpp.org.np>, 2006.
+# Mahesh Subedi <submanesh@gmail.com>, 2007.
+# shyam krishna bal <shyamkrishna_bal@yahoo.com>, 2007.
+# Shyam Krishna Bal <shyamkrishna_bal@yahoo.com>, 2007.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2007-11-01 14:13+0545\n"
+"Last-Translator: Shyam Krishna Bal <shyamkrishna_bal@yahoo.com>\n"
+"Language-Team: Nepali <info@mpp.org.np>\n"
+"Language: ne\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n !=1\n"
+"\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr ""
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr ""
+
+#: aurorae/src/aurorae.cpp:727
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "ठूलो"
+
+#: aurorae/src/aurorae.cpp:728
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "ठूलो"
+
+#: aurorae/src/aurorae.cpp:729
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "ठूलो"
+
+#: aurorae/src/aurorae.cpp:730
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "ठूलो"
+
+#: aurorae/src/aurorae.cpp:731
+#, fuzzy, kde-format
+#| msgid "Resize"
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "रिसाइज गर्नुहोस्"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "कन्फिग संवाद"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "शीर्षक पङ्क्तिबद्धता"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "बायाँ"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "केन्द्र"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "दायाँ"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"यदि सञ्झ्याल किनारा शीर्षकपट्टी रङमा रङ्गाइने भए यो विकल्प चिनो लगाउनुहोस् । अन्यथा यो "
+"पृष्ठभूमि रङमा रङ्गाइनेछ ।"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, fuzzy, kde-format
+#| msgid "Colored Window Border"
+msgid "Colored window border"
+msgstr "रङ लगाइएको सञ्झ्याल किनारा"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"यदि तपाईँ माउस सूचक तिनीहरू माथि आसपास फिर्दा बटनहरू फेड इन गर्न र फेरि यो टाढा सर्दा "
+"फेड आउट गर्न चाहनुहुन्छ भने यो विकल्प चिनो लगाउनुहोस् ।"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "बटन एनिमेसन गर्नुहोस्"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "यदि तपाईँ यसको पछाडि छायाँसँग त्रि-आयामिक हेराई हुने शीर्षकपट्टी पाठ चाहनुहुन्छ भने यो "
+#~ "विकल्प चिनो लगाउनुहोस् ।"
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "छायाँ गरिएको पाठ प्रयोग गर्नुहोस्"
+
+#, fuzzy
+#~| msgid "Animate buttons"
+#~ msgid "Animations"
+#~ msgstr "बटन एनिमेसन गर्नुहोस्"
+
+#, fuzzy
+#~| msgid "Actions Settings"
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "कार्य सेटिङ"
+
+#, fuzzy
+#~| msgid "Center"
+#~ msgid "General"
+#~ msgstr "केन्द्र"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "ठूलो"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "ठूलो"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "ठूलो"
+
+#, fuzzy
+#~| msgid "Title &Alignment"
+#~ msgid "Tit&le alignment:"
+#~ msgstr "शीर्षक पङ्क्तिबद्धता"
+
+#, fuzzy
+#~| msgid "Small"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "सानो"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "मेनु बटनमा डबल क्लिक गरेर सञ्झ्यालहरू बन्द गर्नुहोस्"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title"
+#~ msgstr "सञ्झ्याल सानो बनाउनुहोस्"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadows"
+#~ msgstr "छायाँ लगाउनुहोस्"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Window Glow"
+#~ msgstr "सञ्झ्याल सानो बनाउनुहोस्"
+
+#, fuzzy
+#~| msgid "Config Dialog"
+#~ msgid "Dialog"
+#~ msgstr "कन्फिग संवाद"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Use window title"
+#~ msgstr "सञ्झ्याल सानो बनाउनुहोस्"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title:"
+#~ msgstr "सञ्झ्याल सानो बनाउनुहोस्"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Hide window title bar"
+#~ msgstr "सञ्झ्याल सानो बनाउनुहोस्"
+
+#, fuzzy
+#~| msgid "Restore"
+#~ msgid "Remove"
+#~ msgstr "पूर्वावस्थामा ल्याउनुहोस्"
+
+#, fuzzy
+#~| msgid "Oxygen"
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "अक्सीजन"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Inactive Windows"
+#~ msgstr "सञ्झ्याल सानो बनाउनुहोस्"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Windows"
+#~ msgstr "सञ्झ्याल सानो बनाउनुहोस्"
+
+#~ msgid "Oxygen"
+#~ msgstr "अक्सीजन"
+
+#~ msgid "Help"
+#~ msgstr "मद्दत"
+
+#~ msgid "Minimize"
+#~ msgstr "सानो पार्नुहोस्"
+
+#~ msgid "Maximize"
+#~ msgstr "ठूलो पार्नुहोस्"
+
+#~ msgid "Close"
+#~ msgstr "बन्द गर्नुहोस्"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "अरू माथि राख्नुहोस्"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "अरू तल राख्नुहोस्"
+
+#, fuzzy
+#~| msgid "On all desktops"
+#~ msgid "On All Desktops"
+#~ msgstr "सबै डेस्कटपमा"
+
+#~ msgid "Menu"
+#~ msgstr "मेनु"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "सबै डेस्कटपमा होइन"
+
+#~ msgid "On all desktops"
+#~ msgstr "सबै डेस्कटपमा"
+
+#~ msgid "Unshade"
+#~ msgstr "छायाँ हटाउनुहोस्"
+
+#~ msgid "Shade"
+#~ msgstr "छायाँ लगाउनुहोस्"
+
+#~ msgid "Resize"
+#~ msgstr "रिसाइज गर्नुहोस्"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>B II पूर्वावलोकन</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "पूर्वावस्थामा ल्याउनुहोस्"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "शीर्षकपट्टी रङ प्रयोग गरेर सञ्झ्याल फ्रेम कोर्नुहोस्"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "चयन गर्दा, सञ्झ्याल किनारा शीर्षकपट्टी रङ प्रयोग गरेर कोरिन्छन्; अन्यथा, तिनीहरू "
+#~ "सामान्य किनारा रङ प्रयोग गरेर कोरिन्छन् ।"
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "रिसाइज ह्यान्डल कोर्नुहोस्"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "चयन गर्दा, सञ्झ्यालहरूको तल दायाँ कुनामा \"ह्यान्डल प्राप्त गर्नुहोस्\" सँग सजावटहरू "
+#~ "कोरिन्छन्; अन्यथा प्राप्त ह्यान्डल कोरिदैन ।"
+
+#, fuzzy
+#~| msgid ""
+#~| "When selected, active titlebars are drawn with a stipple (dotted) "
+#~| "effect; otherwise, they are drawn without the stipple."
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr ""
+#~ "चयन गर्दा, सक्रिय शीर्षकपट्टीहरू (थोप्ला दिएको) देखाइने वस्तु प्रभावसँग कोरिएका हुन्छन्; "
+#~ "अन्यथा तिनीहरू देखाइएको वस्तु बिना नै कोरिन्छन् ।"
+
+#~ msgid "Actions Settings"
+#~ msgstr "कार्य सेटिङ"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "मेनु बटनमा डबल क्लिक गर्नुहोस्:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "केही नगर्नुहोस्"
+
+#~ msgid "Minimize Window"
+#~ msgstr "सञ्झ्याल सानो बनाउनुहोस्"
+
+#~ msgid "Shade Window"
+#~ msgstr "सञ्झ्याललाई छायाँ लगाउनुहोस्"
+
+#~ msgid "Close Window"
+#~ msgstr "सञ्झ्याल बन्द गर्नुहोस्"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "एउटा कार्य मेनु बटनको डबल क्लिकसँग सम्बन्धित हुन सक्छ । यदि शङ्का लागेमा यसमा 'कुनै "
+#~ "होइन' नै छोड्नुहोस् ।"
+
+#~ msgid "Laptop"
+#~ msgstr "ल्यापटप"
+
+#, fuzzy
+#~| msgid "Draw &gradients"
+#~ msgid "Radial Gradient"
+#~ msgstr "ग्रेडियन्ट कोर्नुहोस्"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Save"
+#~ msgstr "छायाँ लगाउनुहोस्"
+
+#~ msgid "Large"
+#~ msgstr "ठूलो"
+
+#~ msgid "Small"
+#~ msgstr "सानो"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "यदि तपाईँ माइक्रोसफ्ट सञ्झ्यालहरूमा जस्तै, मेनु बटनमा डबल क्लिक गर्दा सञ्झ्यालहरू बन्द "
+#~ "गर्न चाहनुहुन्छ भने यो विकल्प चिनो लगाउनुहोस् ।"
+
+#~ msgid "Plastik"
+#~ msgstr "प्लासटिक"
+
+#, fuzzy
+#~| msgid "On all desktops"
+#~ msgid "All Desktops"
+#~ msgstr "सबै डेस्कटपमा"
+
+#, fuzzy
+#~| msgid "Close"
+#~ msgid "Close Item"
+#~ msgstr "बन्द गर्नुहोस्"
+
+#, fuzzy
+#~| msgid "Left"
+#~ msgid "&Left"
+#~ msgstr "बायाँ"
+
+#, fuzzy
+#~| msgid "Center"
+#~ msgid "&Center"
+#~ msgstr "केन्द्र"
+
+#, fuzzy
+#~| msgid "Right"
+#~ msgid "&Right"
+#~ msgstr "दायाँ"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Do not keep above others"
+#~ msgstr "अरू माथि राख्नुहोस्"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above others"
+#~ msgstr "अरू माथि राख्नुहोस्"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Do not keep below others"
+#~ msgstr "अरू तल राख्नुहोस्"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below others"
+#~ msgstr "अरू तल राख्नुहोस्"
+
+#, fuzzy
+#~| msgid "Maximize"
+#~ msgid "Maximum"
+#~ msgstr "ठूलो पार्नुहोस्"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadow style:"
+#~ msgstr "छायाँ लगाउनुहोस्"
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "KWM विषयवस्तु स्थापना गर्दछ"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "विषयवस्तु कन्फिग फाइलमा मार्ग"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWM विषयवस्तु</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "टाँसिने"
+
+#~ msgid "Unsticky"
+#~ msgstr "नटाँसिने"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>केरामिक पूर्ववलोकन</b></center>"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "शीर्षकपट्टी देखाइने वस्तु प्रभाव कोर्नुहोस्"
+
+#~ msgid ""
+#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
+#~ "otherwise, they are drawn without the stipple."
+#~ msgstr ""
+#~ "चयन गर्दा, सक्रिय शीर्षकपट्टीहरू (थोप्ला दिएको) देखाइने वस्तु प्रभावसँग कोरिएका हुन्छन्; "
+#~ "अन्यथा तिनीहरू देखाइएको वस्तु बिना नै कोरिन्छन् ।"
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "सञ्झ्याल मुनि प्राप्त बार कोर्नुहोस्"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
+#~ "otherwise, no grab bar is drawn."
+#~ msgstr ""
+#~ "चयन गर्दा, सञ्झ्याल मुनि \"बार प्राप्त गर्नुहोस्\" सँग सजावटहरू कोरिएका हुन्छन्; अन्यथा "
+#~ "कुनै प्राप्त बार कोरिदैन ।"
+
+#~ msgid "Draw &gradients"
+#~ msgstr "ग्रेडियन्ट कोर्नुहोस्"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with gradients for high-color "
+#~ "displays; otherwise, no gradients are drawn."
+#~ msgstr ""
+#~ "चयन गर्दा, उच्च-रङ प्रदर्शनका लागि ग्रेडियन्टसँग सजावटहरू कोरिएका हुन्छन्; अन्यथा "
+#~ "ग्रेडियन्ट कोरिदैन ।"
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"
+
+#~ msgid ""
+#~ "When selected, the window decoration borders are drawn using the titlebar "
+#~ "colors; otherwise, they are drawn using normal border colors instead."
+#~ msgstr ""
+#~ "चयन गर्दा, शीर्षकपट्टी रङहरू प्रयोग गरेर सञ्झ्याल सजावट किनाराहरू कोरिएका हुन्छन्; "
+#~ "अन्यथा, यसको सट्टामा सामान्य किनारा रङहरू प्रयोग गरेर तिनीहरू कोरिएका छन् ।"
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "क्वार्ज अतिरिक्त स्लिम"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "अतिरिक्त सानो शीर्षकपट्टी सहित क्वार्ज सञ्झ्याल सजावटहरू"
+
+#~ msgid "Quartz"
+#~ msgstr "क्वार्ज"
+
+#~ msgid "Redmond"
+#~ msgstr "रेडमन्ड"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "सञ्झ्याल रिसाइज ह्यान्डल देखाउनुहोस्"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "चयन गर्दा, तल्लो दायाँ कुनामा रिसाइज ह्यान्डल सहित सबै सञ्झ्यालहरू कोरिएका छन् । खास "
+#~ "गरेर ल्यापटपमा ट्रयाकबलहरू र अन्य माउस प्रतिस्थापनका लागि यसले सञ्झ्याललाई रिसाइज "
+#~ "गर्न सजिलो बनाइदिन्छ ।"
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr "यहाँ तपाईँ रिसाइज ह्यान्डलको साइज परिवर्तन गर्न सक्नुहुन्छ ।"
+
+#~ msgid "Medium"
+#~ msgstr "मध्यम"
+
+#~ msgid "Modern System"
+#~ msgstr "आधुनिक प्रणाली"
+
+#~ msgid "Web"
+#~ msgstr "वेब"
+
+#~ msgid "Keramik"
+#~ msgstr "केरामिक"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "क्याप्सन बबलमा सञ्झ्याल प्रतिमा प्रदर्शन गर्नुहोस्"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "यदि तपाईँ शीर्षकपट्टी पाठको पछिल्लो क्याप्सन बबलमा सञ्झ्याल प्रतिमा प्रदर्शन गर्न "
+#~ "चाहनुहुन्छ भने यो विकल्प चिनो लगाउनुहोस् ।"
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "सक्रिय सञ्झ्यालमा सानो क्याप्सन बबल कोर्नुहोस्"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "निस्क्रिय सञ्झ्यालमा भएजस्तै सक्रिय सञ्झ्यालमा उही साइजको क्याप्स बबल बनाउन चाहनुहुन्छ "
+#~ "भने यो विकल्प चिनो लगाउनुहोस् । यो विकल्प ल्यापटपहरू वा कम रिजोल्युसन प्रदर्शनहरूका "
+#~ "लागि उपयुक्त हुनेछ जहाँ सञ्झ्याल सामग्रीहरूमा उपलब्ध खाली स्थानको मात्रा बढाउन "
+#~ "चाहनुहुन्छ ।"
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "सञ्झ्याल मुनि प्राप्त पट्टी कोर्नुहोस्"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "यदि तपाईँ सञ्झ्याल मुनि प्राप्त बार कोर्न चाहनुहुन्छ भने यो विकल्प चिनो गर्नुहोस् । यदि "
+#~ "यो विकल्प चयन भएन भने यसको ठाउँमा पातलो किनारा मात्र कोरिनेछ ।"
+
+#, fuzzy
+#~| msgid "Installs a KWM theme"
+#~ msgid "Get New Themes..."
+#~ msgstr "KWM विषयवस्तु स्थापना गर्दछ"
+
+#, fuzzy
+#~| msgid "Installs a KWM theme"
+#~ msgid "Install New Theme..."
+#~ msgstr "KWM विषयवस्तु स्थापना गर्दछ"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Glow active window"
+#~ msgstr "सञ्झ्याल सानो बनाउनुहोस्"
+
+#, fuzzy
+#~| msgid "Draw window frames using &titlebar colors"
+#~ msgid "Overwrite default title bar colors:"
+#~ msgstr "शीर्षकपट्टी रङ प्रयोग गरेर सञ्झ्याल फ्रेम कोर्नुहोस्"

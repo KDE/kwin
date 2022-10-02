@@ -1,0 +1,258 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Swedish "INCLUDE">
+]>
+<article id="kwintabbox" lang="&language;">
+<articleinfo>
+<title
+>Aktivitetsbyte</title>
+<authorgroup>
+<author
+>&Martin.Graesslin;&Martin.Graesslin.mail;</author>
+<othercredit role="translator"
+><firstname
+>Stefan</firstname
+><surname
+>Asserhäll</surname
+><affiliation
+><address
+><email
+>stefan.asserhall@bredband.net</email
+></address
+></affiliation
+><contrib
+>Översättare</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2020-12-31</date>
+<releaseinfo
+>&plasma; 5.21</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systeminställningar</keyword>
+<keyword
+>skrivbord</keyword>
+<keyword
+>fönster</keyword>
+<keyword
+>navigering</keyword>
+<keyword
+>byte</keyword>
+<keyword
+>alt-tabulator</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="windows-navigating">
+<title
+>Navigera mellan fönster</title>
+
+<para
+>Aktivitetsbyte låter användaren enkelt byta mellan fönster som för närvarande är öppna genom att använda tangentbordet. Det är ytterst anpassningsbart, och tillåter användaren att styra beteende, visuellt utseende, snabbtangenter och fönsterfiltrering.</para>
+
+<para
+>Aktivitetsbyte aktiveras ofta med tangentkombinationen <keycombo
+>&Alt;<keycap
+>Tabulator</keycap
+></keycombo
+>, men det kan ändras. När det aktiverats, visar det en lista över alla fönster som för närvarande är öppna, valfritt filtrerade och utökade enligt inställningsalternativen. Listan kan exempelvis filtreras för att bara visa fönster som uppfyller vissa kriterier, såsom fönster som för närvarande är synliga. När fönsterlistan väl har visats, kan användaren gå igenom alla listade fönster framåt och bakåt genom att upprepa tangentkombinationen för aktivitetsbyte. När tangenten för aktivitetsbyte släpps aktiveras fönstret som var markerat i listan.</para>
+
+<para
+>Eftersom aktivitetsbyte erbjuder så många inställningsalternativ, kan två distinkta samlingar av inställningsalternativ definieras. Samlingarna kallas <guilabel
+>Huvudmetod</guilabel
+> och <guilabel
+>Alternativ metod</guilabel
+>, och var och en kan ha unika tangentkombinationer tilldelade.</para>
+
+<para
+>Inställningsalternativen för samlingarna av huvudmetod och alternativ metod presenteras i följande fyra grupper:</para>
+
+<sect2 id="visualization">
+<title
+>Visualisering</title>
+<para
+>Den här gruppen inställningsalternativ styr hur fönsterlistan visas på skärmen. Standardvisualiseringen kallas <guilabel
+>Breeze</guilabel
+>. Den listar alla öppna fönster längs skärmens vänstra sida. Andra visualiseringar inkluderar <guilabel
+>Omslagsbyte</guilabel
+> (en tredimensionell karusell), <guilabel
+>Blädderbyte</guilabel
+> (en tredimensionell kortlek), och <guilabel
+>Medium avrundad</guilabel
+> (en ikonlista med samma stil som Microsoft Windows). Många fler visualiseringar kan laddas ner och installeras genom att klicka på knappen <guibutton
+>Hämta nya aktivitetsbytare...</guibutton
+> längst ner till höger i dialogrutan.</para>
+
+<para
+>När en visualisering väl har valts i kombinationslistan, kan knappen till höger om listan klickas för att visa en förhandsgranskning eller anpassa alternativ specifika för visualiseringen.</para>
+
+<para
+>Kryssrutan <guilabel
+>Visa valt fönster</guilabel
+> bestämmer hur tydligt användaren vill se vilket fönster som kommer att aktiveras. Om rutan är markerad, blir alla fönster dämpade utom det som för närvarande är valt i aktivitetsbyte.</para>
+
+<note
+><para
+>Det kan finnas fall då den önskade visualiseringen aktivitetsbyte inte kan visas. En av situationerna kan vara när en process som kallas 'sammansättning' är avstängd eller inaktiverad. Om det någonsin händer, visas fönsterlistan ändå, men med ett mycket enkelt format.</para
+></note>
+</sect2>
+
+<sect2 id="shortcuts">
+<title
+>Genvägar</title>
+<para
+>Sektionen låter dig definiera upp till fyra snabbtangenter för aktivitetsbyte för inställningen <guilabel
+>Huvudmetod</guilabel
+>, och fyra till för inställningen <guilabel
+>Alternativ metod</guilabel
+>. <guilabel
+>Huvudgenvägarna</guilabel
+> är fördefinierade, medan de <guilabel
+>alternativa genvägarna</guilabel
+> måste definieras manuellt.</para>
+<para
+>Under sektionen <guilabel
+>Alla fönster</guilabel
+> går genvägarna <guilabel
+>Framåt</guilabel
+> och <guilabel
+>Omvänd</guilabel
+> igenom listan med öppna fönster framåt och bakåt.</para>
+<para
+>Under sektionen <guilabel
+>Nuvarande program</guilabel
+> kan genvägarna <guilabel
+>Framåt</guilabel
+> och <guilabel
+>Omvänd</guilabel
+> ställas in för att gå igenom fönstren i programmet som för närvarande är aktivt. Om du exempelvis har tre fönster i filbläddraren Dolphin öppna, kan du använda de här genvägarna för att bara gå igenom de tre fönstren i Dolphin.</para>
+<para
+>För att ändra snabbtangenterna, klicka på knappen 'Framåt' eller 'Omvänd' och skriv in önskad genvägskombination. Säkerställ att en väljartangent som Ctrl eller Alt som del av genvägen, annars kanske du inte kan gå igenom fönstren på ett riktigt sätt.</para>
+
+<note
+><para
+>Vilken som helst av snabbtangenterna kan användas för att utföra aktivitetsbyte. För att utföra aktivitetsbyte utan att använda tangentbordet kan skärmkantsåtgärder i systeminställningarnas modul <ulink url="help:/kcontrol/kwinscreenedges/index.html"
+><guilabel
+>Skärmkanter</guilabel
+></ulink
+>.</para
+></note>
+</sect2>
+
+<sect2 id="content">
+<title
+>Innehåll</title>
+<para
+>Alternativen under den här sektionen styr delvis vilka fönster som visas i aktivitetsbyteslistan.</para>
+
+<para
+>Kombinationslistan <guilabel
+>Sorteringsordning</guilabel
+> anger om fönster ska listas i <guilabel
+>Lagerordning</guilabel
+> eller i <guilabel
+>Senast använda</guilabel
+> ordning. <guilabel
+>Lagerordning</guilabel
+> är ordningen som fönstren visas på skärmen, medan ordningen för <guilabel
+>Senast använda</guilabel
+> är ordningen som fönstren har används. Ordningen <guilabel
+>Senast använda</guilabel
+> gör det mycket enkelt att byta mellan de två oftast använda fönstren eftersom de alltid dyker upp på de två översta platserna i listan.</para>
+
+<para
+>Alternativet <guilabel
+>Inkludera ikonen "Visa skrivbord"</guilabel
+> lägger till alternativet Visa skrivbord i fönsterlistan. Det låter användaren enkelt välja skrivbordet som 'fönstret' att visa.</para>
+
+<para
+>Alternativet <guilabel
+>Bara ett fönster per program</guilabel
+> minskar virrvarr genom att bara visa ett fönster för varje öppnat program. Om ett program har flera öppna fönster, visas dess senast aktiverade fönster i listan och de övriga visas inte.</para>
+</sect2>
+
+<sect2 id="filter-windows-by">
+<title
+>Filtrera fönster enligt</title>
+<para
+>Sektionen innehåller alternativen för ytterligare filtrering av listan över fönster i aktivitetsbytet.</para>
+
+<para
+>Alternativet <guilabel
+>Virtuella skrivbord</guilabel
+> filtrerar fönsterlistan enligt vilket virtuellt skrivbord som för närvarande är aktivt. Om du konsekvent placerar specifika fönster på specifika virtuella skrivbord, kan det här filtreringsalternativet göra det enkelt att byta till fönster inom eller mellan de virtuella skrivborden. Välj <guilabel
+>Nuvarande skrivbord</guilabel
+> för att bara visa fönster på det nuvarande virtuella skrivbordet. Välj <guilabel
+>Alla andra skrivbord</guilabel
+> för att bara visa fönstren på de virtuella skrivbord som för närvarande inte är aktiva.</para>
+
+<para
+>Alternativet <guilabel
+>Aktiviteter</guilabel
+> filtrerar fönsterlistan enligt vilken aktivitet som för närvarande är aktiv. Liksom med filtrering enligt virtuellt skrivbord, kan alternativet göra det enklare att byta till program inom eller mellan alla aktiviteter. Välj <guilabel
+>Nuvarande aktivitet</guilabel
+> för att bara visa fönster som ingår i nuvarande aktivitet. Välj <guilabel
+>Alla andra aktiviteter</guilabel
+> för att bara visa fönster som ingår i aktiviteterna som för närvarande inte är aktiva.</para>
+
+<para
+>Alternativet <guilabel
+>Skärmar</guilabel
+> filtrerar fönsterlistan enligt vilken bildskärm som för närvarande är aktiv. Välj <guilabel
+>Nuvarande skärm</guilabel
+> för att bara visa fönster som finns på bildskärmen där muspekaren för närvarande befinner sig. Välj <guilabel
+>Alla andra skärmar</guilabel
+> för att visa fönstren som finns på andra bildskärmar. Alternativet kan vara användbart för användare som snabbt vill byta mellan fönster som är på samma skärm för en dator med flera bildskärmar.</para>
+<note
+><para
+>Den aktiva skärmen är den som muspekaren för närvarande finns på, inte skärmen som fönstret som för närvarande aktivt finns på.</para
+></note>
+
+<para
+>Alternativet <guilabel
+>Minimering</guilabel
+> filtrerar fönsterlistan enligt om de är dolda eller inte. Välj <guilabel
+>Synliga fönster</guilabel
+> för att bara visa fönster som inte har minimerats. Välj <guilabel
+>Dolda fönster</guilabel
+> för att bara visa de minimerade fönstren.</para>
+
+<para
+>Om du avmarkerar ett alternativ i sektionen, utförs ingen filtrering för det alternativet. Om du exempelvis markerar alternativet Skärmar och avmarkerar de övriga tre alternativen, filtreras listan i aktivitetsbyte bara enligt vilka fönster som finns på den nuvarande bildskärmen.</para>
+<para
+>Alla alternativen som beskrivs i ovanstående avsnitt arbetar tillsammans för att tillhandahålla mycket finkornig styrning av aktivitetsbytets beteende och utseende. Du kan exempelvis definiera inställningarna av <guilabel
+>Huvudmetod</guilabel
+> att aktiveras med tangentkombinationen <keycombo
+>&Alt;<keycap
+>Tabulator</keycap
+></keycombo
+>, för att visa öppna fönster i en karusell, för att bara visa ett fönster per program, och för att bara lista fönster som finns på det nuvarande skrivbordet och på den för närvarande aktiva skärmen. Det kan ge mycket snabbt sammanhangsberoende fönster byte om du har både virtuella skrivbord för 'arbete' och 'hemma', och sedan har alla kalkylark för arbete och hemma på samma bildskärm.</para>
+
+<para
+>Tillgängligheten av <guilabel
+>Alternativ metod</guilabel
+> för aktivitetsbyte ger ett andra sätt att enkelt filtrera och bläddra igenom fönsterlistan. Med åtta tangentkombinationer tillgängliga med de två inställningarna av aktivitetsbyte, bör det vara möjligt att enkelt och snabbt navigera igenom ett stort antal fönster.</para>
+</sect2>
+</sect1>
+</article>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+kate: space-indent on; indent-width 2; tab-width 2; indent-mode none;
+-->

@@ -1,0 +1,53 @@
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the kwin package.
+#
+# Giovanni Sora <g.sora@tiscali.it>, 2021.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2021-04-27 00:19+0000\n"
+"PO-Revision-Date: 2021-05-16 23:10+0100\n"
+"Last-Translator: Giovanni Sora <g.sora@tiscali.it>\n"
+"Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
+"Language: ia\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 2.0\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Giovanni Sora"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "g.sora@tiscali.it"
+
+#: kcmvirtualkeyboard.cpp:31
+#, kde-format
+msgid "Virtual Keyboard"
+msgstr "Claviero virtual"
+
+#: kcmvirtualkeyboard.cpp:33
+#, kde-format
+msgid "Choose Virtual Keyboard"
+msgstr "Selige claviero virtual"
+
+#: kcmvirtualkeyboard.cpp:70
+#, kde-format
+msgid "None"
+msgstr "Necun"
+
+#: kcmvirtualkeyboard.cpp:74
+#, kde-format
+msgid "Do not use any virtual keyboard"
+msgstr "Non usa ulle claviero virtual"
+
+#: package/contents/ui/main.qml:16
+#, kde-format
+msgid "This module lets you choose the virtual keyboard to use."
+msgstr "Iste modulo de lassa seliger le claviero virtual de usar."

@@ -1,0 +1,429 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Jean Cayron <jean.cayron@gmail.com>, 2009, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-15 00:48+0000\n"
+"PO-Revision-Date: 2010-10-22 18:28+0200\n"
+"Last-Translator: Jean Cayron <jean.cayron@gmail.com>\n"
+"Language-Team: Walloon <linux@walon.org>\n"
+"Language: wa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.0\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: kwintabboxconfigform.cpp:77
+#, kde-format
+msgid "KWin"
+msgstr ""
+
+#: layoutpreview.cpp:133
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "Show Desktop"
+msgstr "Tos les scribannes"
+
+#: layoutpreview.cpp:163
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgctxt "An example Desktop Name"
+msgid "Desktop 1"
+msgstr "Tos les scribannes"
+
+#: main.cpp:58
+#, kde-format
+msgid "Main"
+msgstr "Mwaisse"
+
+#: main.cpp:59
+#, kde-format
+msgid "Alternative"
+msgstr "Alternatif"
+
+#: main.cpp:61
+#, kde-format
+msgid "Get New Task Switchers..."
+msgstr ""
+
+#: main.cpp:75
+#, kde-format
+msgid ""
+"Focus policy settings limit the functionality of navigating through windows."
+msgstr ""
+"Des tchuzes del politike di metaedje en evidince limitèt l' fonccionålité di "
+"naiviaedje emey les purneas."
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#: main.ui:32
+#, kde-format
+msgid "Content"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
+#: main.ui:41
+#, fuzzy, kde-format
+#| msgid "Include desktop"
+msgid "Include \"Show Desktop\" icon"
+msgstr "Mete sicribanne didins"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
+#: main.ui:55
+#, kde-format
+msgid "Recently used"
+msgstr "Eployîs enawaire"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
+#: main.ui:60
+#, kde-format
+msgid "Stacking order"
+msgstr "Ôre di ramonçlaedje"
+
+#. i18n: ectx: property (text), widget (QCheckBox, oneAppWindow)
+#: main.ui:68
+#, kde-format
+msgid "Only one window per application"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, orderMinimized)
+#: main.ui:78
+#, kde-format
+msgid "Order minimized windows after unminimized windows"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: main.ui:88
+#, kde-format
+msgid "Sort order:"
+msgstr "Ôre po relére :"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: main.ui:114
+#, fuzzy, kde-format
+#| msgid "List windows:"
+msgid "Filter windows by"
+msgstr "Fé l' djivêye des purneas :"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterDesktops)
+#: main.ui:123
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "Virtual desktops"
+msgstr "Tos les scribannes"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentDesktop)
+#: main.ui:167
+#, fuzzy, kde-format
+#| msgid "Current Desktop"
+msgid "Current desktop"
+msgstr "Sicribanne do moumint"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherDesktops)
+#: main.ui:174
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "All other desktops"
+msgstr "Tos les scribannes"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterActivities)
+#: main.ui:184
+#, kde-format
+msgid "Activities"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentActivity)
+#: main.ui:228
+#, kde-format
+msgid "Current activity"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherActivities)
+#: main.ui:235
+#, kde-format
+msgid "All other activities"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterScreens)
+#: main.ui:245
+#, kde-format
+msgid "Screens"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentScreen)
+#: main.ui:289
+#, fuzzy, kde-format
+#| msgid "Current Desktop"
+msgid "Current screen"
+msgstr "Sicribanne do moumint"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherScreens)
+#: main.ui:296
+#, kde-format
+msgid "All other screens"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterMinimization)
+#: main.ui:306
+#, fuzzy, kde-format
+#| msgid "Minimum Size"
+msgid "Minimization"
+msgstr "Grandeu minimom"
+
+#. i18n: ectx: property (text), widget (QRadioButton, visibleWindows)
+#: main.ui:350
+#, fuzzy, kde-format
+#| msgid "List windows:"
+msgid "Visible windows"
+msgstr "Fé l' djivêye des purneas :"
+
+#. i18n: ectx: property (text), widget (QRadioButton, hiddenWindows)
+#: main.ui:357
+#, fuzzy, kde-format
+#| msgid "List windows:"
+msgid "Hidden windows"
+msgstr "Fé l' djivêye des purneas :"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
+#: main.ui:396
+#, kde-format
+msgid "Shortcuts"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: main.ui:405 main.ui:448
+#, kde-format
+msgid "Forward"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: main.ui:428
+#, fuzzy, kde-format
+#| msgid "List windows:"
+msgid "All windows"
+msgstr "Fé l' djivêye des purneas :"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: main.ui:438 main.ui:458
+#, kde-format
+msgid "Reverse"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: main.ui:480
+#, fuzzy, kde-format
+#| msgid "Current Desktop Grouped by Applications"
+msgid "Current application"
+msgstr "Sicribanne do moumint groupé pa programes"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: main.ui:499
+#, fuzzy, kde-format
+#| msgid "Navigation"
+msgid "Visualization"
+msgstr "Naiviaedje"
+
+#. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
+#: main.ui:529
+#, kde-format
+msgid "The effect to replace the list window when desktop effects are active."
+msgstr ""
+"L' efet po rcandjî l' purnea del djivêye cwand les efets d' sicribanne sont "
+"ovrants."
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
+#: main.ui:559
+#, kde-format
+msgid ""
+"The currently selected window will be highlighted by fading out all other "
+"windows. This option requires desktop effects to be active."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
+#: main.ui:562
+#, fuzzy, kde-format
+#| msgid "Show outline of selected window"
+msgid "Show selected window"
+msgstr "Mostrer l' cotoû do purnea di tchoezi"
+
+#, fuzzy
+#~| msgid "Show outline of selected window"
+#~ msgid "Outline selected window"
+#~ msgstr "Mostrer l' cotoû do purnea di tchoezi"
+
+#~ msgid ""
+#~ "These settings are used by the \"Walk Through Windows Alternative\" "
+#~ "actions."
+#~ msgstr ""
+#~ "Ces tchuzes sont-st eployeyes påzès faitindjes « Naivyî emey les purneas "
+#~ "alternatif »."
+
+#~ msgid "Walk Through Windows"
+#~ msgstr "Naivyî emey les purneas"
+
+#~ msgid "Walk Through Windows (Reverse)"
+#~ msgstr "Naivyî emey les purneas (å rvier)"
+
+#~ msgid "Walk Through Windows Alternative"
+#~ msgstr "Naivyî emey les purneas alternatif"
+
+#~ msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgstr "Naivyî emey les purneas alternatif (å rvier)"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative"
+#~ msgid "Walk Through Windows of Current Application"
+#~ msgstr "Naivyî emey les purneas alternatif"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgid "Walk Through Windows of Current Application (Reverse)"
+#~ msgstr "Naivyî emey les purneas alternatif (å rvier)"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative"
+#~ msgid "Walk Through Windows of Current Application Alternative"
+#~ msgstr "Naivyî emey les purneas alternatif"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+#~ msgstr "Naivyî emey les purneas alternatif (å rvier)"
+
+#~ msgid "Configure Layout"
+#~ msgstr "Apontyî l' adjinçmint"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Djan Cayron"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "jean.cayron@gmail.com"
+
+#~ msgid "These settings are used by the \"Walk Through Windows\" actions."
+#~ msgstr ""
+#~ "Ces tchuzes sont-st eployeyes påzès faitindjes « Naivyî emey les "
+#~ "purneas »."
+
+#, fuzzy
+#~| msgid "All Desktops Grouped by Applications"
+#~ msgid "All windows from all applications"
+#~ msgstr "Tos les scribannes groupés pa programes"
+
+#, fuzzy
+#~| msgid "Adds an entry to minimize all windows."
+#~ msgid "Exclude minimized windows"
+#~ msgstr "Radjoute ene intrêye po mete tos les purneas å pus ptit."
+
+#, fuzzy
+#~| msgid "Adds an entry to minimize all windows."
+#~ msgid "Show desktop to minimize all windows"
+#~ msgstr "Radjoute ene intrêye po mete tos les purneas å pus ptit."
+
+#~ msgid "Highlight selected window"
+#~ msgstr "Mete en evidince li purnea di tchoezi"
+
+#~ msgid "Effect:"
+#~ msgstr "Efet :"
+
+#~ msgid "Display list while switching"
+#~ msgstr "Håyner djivêye sol tins do candjaedje"
+
+#, fuzzy
+#~| msgid "Informative"
+#~ msgctxt "Name for a window switcher layout showing icon, name and desktop"
+#~ msgid "Informative"
+#~ msgstr "Infôrmåtif"
+
+#, fuzzy
+#~| msgid "Compact"
+#~ msgctxt "Name for a window switcher layout showing only icon and name"
+#~ msgid "Compact"
+#~ msgstr "Rastrindou"
+
+#, fuzzy
+#~| msgid "Text Only"
+#~ msgctxt "Name for a window switcher layout showing only the name"
+#~ msgid "Text"
+#~ msgstr "Rén kel tecse"
+
+#, fuzzy
+#~| msgid "Large Icons"
+#~ msgctxt "Name for a window switcher layout showing large icons"
+#~ msgid "Large Icons"
+#~ msgstr "Grandès imådjetes"
+
+#, fuzzy
+#~| msgid "Small Icons"
+#~ msgctxt "Name for a window switcher layout showing small icons"
+#~ msgid "Small Icons"
+#~ msgstr "Pititès imådjetes"
+
+#~ msgid "No Effect"
+#~ msgstr "Nol efet"
+
+#~ msgid "Configure Layout..."
+#~ msgstr "Apontyî l' adjinçmint..."
+
+#~ msgid "Item Layout"
+#~ msgstr "Adjinçmint do cayet"
+
+#~ msgid "Item layout:"
+#~ msgstr "Adjinçmint do cayet :"
+
+#~ msgid "Layout:"
+#~ msgstr "Adjinçmint :"
+
+#~ msgid "Vertical"
+#~ msgstr "Astampé"
+
+#~ msgid "Horizontal"
+#~ msgstr "Coutchî"
+
+#~ msgid "Tabular"
+#~ msgstr "Tåvlåve"
+
+#~ msgid "Width:"
+#~ msgstr "Lårdjeur :"
+
+#~ msgid "Minimum width, as a percentage of screen width."
+#~ msgstr "Lårdjeur minimom, en åcintaedje del waitroûle."
+
+#~ msgid " %"
+#~ msgstr " %"
+
+#~ msgid "Height:"
+#~ msgstr "Hôteur :"
+
+#~ msgid "Minimum height, as a percentage of screen height."
+#~ msgstr "Hôteur minimom, en åcintaedje del waitroûle."
+
+#~ msgid "Show Selected Item"
+#~ msgstr "Mostrer li cayet di tchoezi"
+
+#~ msgid "Selected item view:"
+#~ msgstr "Voeyaedje do cayet di tchoezi :"
+
+#~ msgid "Top"
+#~ msgstr "Al copete"
+
+#~ msgid "Bottom"
+#~ msgstr "Al valêye"
+
+#~ msgid "Left"
+#~ msgstr "Hintche"
+
+#~ msgid "Right"
+#~ msgstr "Droete"
+
+#~ msgid "Selected item layout:"
+#~ msgstr "Adjinçmint do cayet di tchoezi :"
+
+#~ msgid "General"
+#~ msgstr "Djenerå"

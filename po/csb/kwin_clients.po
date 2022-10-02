@@ -1,0 +1,820 @@
+# translation of kwin_clients.po to Kashubian
+#
+# Michôł Òstrowsczi <michol@linuxcsb.org>, 2007.
+# Mark Kwidzińsczi <mark@linuxcsb.org>, 2008.
+# Mark Kwidzińśczi <mark@linuxcsb.org>, 2009.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2009-12-15 21:57+0100\n"
+"Last-Translator: Mark Kwidzińśczi <mark@linuxcsb.org>\n"
+"Language-Team: Kaszëbsczi <i18n-csb@linuxcsb.org>\n"
+"Language: csb\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.0\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2)\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, fuzzy, kde-format
+#| msgid "Tiny"
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "Wąsczi"
+
+#: aurorae/src/aurorae.cpp:726
+#, fuzzy, kde-format
+#| msgid "Normal"
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "Zwëczajny"
+
+#: aurorae/src/aurorae.cpp:727
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "Wiôldżi"
+
+#: aurorae/src/aurorae.cpp:728
+#, fuzzy, kde-format
+#| msgid "Very Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "Baro wiôldżi"
+
+#: aurorae/src/aurorae.cpp:729
+#, fuzzy, kde-format
+#| msgid "Huge"
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "Stolemny"
+
+#: aurorae/src/aurorae.cpp:730
+#, fuzzy, kde-format
+#| msgid "Very Huge"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "Jesz barżi stolemny"
+
+#: aurorae/src/aurorae.cpp:731
+#, fuzzy, kde-format
+#| msgid "Oversized"
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "Pònôd miarã"
+
+#: aurorae/src/aurorae.cpp:734
+#, fuzzy, kde-format
+#| msgid "Button size:"
+msgid "Button size:"
+msgstr "Miara knąpë:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "Òkno kònfigùracëji"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "&Wërównianié titla"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "Lewò"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "Wëstrzódk"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "Prawò"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"Jeżlë ta òptacëjô je zaznaczonô, ògreńczenia òknów bãdą céchòwóné farwą "
+"titlowi listwë. W procëmnym razu bãdą miôłe òne farwã spòdlégò."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "Farwne ramë òkna"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"Zaznaczenié ti òptacëji sprawi, że knąpë bãdą widniec, czej wskôzëwôcz mëszë "
+"nalezë sã nad nima ë cemnąc, czedë przesënié sã dze jindzé."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "Animùjë knąpë"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "Zaznaczenié ti òptacëji sprawi, że titlowô listew bãdze wëzdrzëc "
+#~ "trzëmiarowò dzãka ceniowi za nim."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "Brëkùjë &ceniowónegò tekstu"
+
+#, fuzzy
+#~| msgid "Decoration Options"
+#~ msgid "Hide Advanced Configuration Options"
+#~ msgstr "Òptacëje dekòracëji"
+
+#, fuzzy
+#~| msgid "Decoration Options"
+#~ msgid "Show Advanced Configuration Options"
+#~ msgstr "Òptacëje dekòracëji"
+
+#, fuzzy
+#~| msgid "Animate buttons"
+#~ msgid "Animations"
+#~ msgstr "Animùjë knąpë"
+
+#, fuzzy
+#~| msgid "Actions Settings"
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "Nastôwë dzejaniô"
+
+#~ msgid "Remove selected exception?"
+#~ msgstr "Rëmnąc wëbróné wëjimczi?"
+
+#~ msgid "Regular Expression syntax is incorrect"
+#~ msgstr "Lëchô syntaksa regùlarnegò wësłowia"
+
+#~ msgid "Exception Type"
+#~ msgstr "Ôrt wëjimka"
+
+#~ msgid "Regular Expression"
+#~ msgstr "Regùlarny wësłów"
+
+#~ msgid "Window Title"
+#~ msgstr "Titel òkna"
+
+#~ msgid "Window Class Name"
+#~ msgstr "Miono klasë òkna"
+
+#~ msgid "Enable/disable this exception"
+#~ msgstr "Włączë/wëłączë nen wëjimk"
+
+#~ msgid "General"
+#~ msgstr "Òglowò"
+
+#, fuzzy
+#~| msgid "Border size:"
+#~ msgid "Border si&ze:"
+#~ msgstr "Miara ramë:"
+
+#, fuzzy
+#~| msgid "No Border"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "Bez ramë"
+
+#, fuzzy
+#~| msgid "No Side Border"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Borders"
+#~ msgstr "Bez bòczny ramë"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Normal"
+#~ msgstr "Zwëczajny"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "Wiôldżi"
+
+#, fuzzy
+#~| msgid "Very Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "Baro wiôldżi"
+
+#, fuzzy
+#~| msgid "Huge"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "Stolemny"
+
+#, fuzzy
+#~| msgid "Title alignment:"
+#~ msgid "Tit&le alignment:"
+#~ msgstr "Czérënk titla"
+
+#, fuzzy
+#~| msgid "Small"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "Môłi"
+
+#~ msgid "Fine Tuning"
+#~ msgstr "Akùratné dopasowanié"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "Zamëkanié òknów przez dëbeltne klëkniãcé na knąpã menu"
+
+#~ msgid "Outline active window title"
+#~ msgstr "Òbramùjë aktiwny titel òkna"
+
+#~ msgid "Shadows"
+#~ msgstr "Cénie"
+
+#~ msgid "Window Drop-Down Shadow"
+#~ msgstr "Céniowanié òknów"
+
+#~ msgid "Active Window Glow"
+#~ msgstr "Swiecënié dlô aktiwnëch òknów"
+
+#~ msgid "Window-Specific Overrides"
+#~ msgstr "Specyficzné nastôłë òkna"
+
+#, fuzzy
+#~| msgid "Config Dialog"
+#~ msgid "Dialog"
+#~ msgstr "Òkno kònfigùracëji"
+
+#~ msgid "Information about Selected Window"
+#~ msgstr "Wëdowiédzô ò wëbrónym òknie"
+
+#~ msgid "Class: "
+#~ msgstr "Klasa: "
+
+#~ msgid "Title: "
+#~ msgstr "Titel: "
+
+#~ msgid "Window Property Selection"
+#~ msgstr "Wëbiérk swòjiznë òkna"
+
+#~ msgid "Use window class (whole application)"
+#~ msgstr "Brëkùjë klasë òkna (całownô aplikacëjô)"
+
+#~ msgid "Use window title"
+#~ msgstr "Brëkùjë titla òkna"
+
+#~ msgid "Window Identification"
+#~ msgstr "Identifikacëjô òkna"
+
+#~ msgid "Matching window property: "
+#~ msgstr "Pasownô swòjizna òkna. "
+
+#~ msgid "Regular expression to match: "
+#~ msgstr "Pasowny regùlarny wësłów: "
+
+#~ msgid "Detect Window Properties"
+#~ msgstr "Rozpòznôj swòjiznë òkna"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Òptacëje dekòracëji"
+
+#, fuzzy
+#~| msgid "Disabled"
+#~ msgctxt "outline window title"
+#~ msgid "Disabled"
+#~ msgstr "Wëłączoné"
+
+#, fuzzy
+#~| msgid "Enabled"
+#~ msgctxt "outline window title"
+#~ msgid "Enabled"
+#~ msgstr "Włączoné"
+
+#~ msgid "Border size:"
+#~ msgstr "Miara ramë:"
+
+#~ msgid "Outline active window title:"
+#~ msgstr "Òbramùjë aktiwny titel òkna: "
+
+#~ msgid "Hide window title bar"
+#~ msgstr "Zatacë listwã titla òkna"
+
+#, fuzzy
+#~| msgid "Disabled"
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Disabled"
+#~ msgstr "Wëłączoné"
+
+#, fuzzy
+#~| msgid "Enabled"
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Enabled"
+#~ msgstr "Włączoné"
+
+#~ msgid "Move Up"
+#~ msgstr "Na górã"
+
+#~ msgid "Move Down"
+#~ msgstr "Na dół"
+
+#~ msgid "Add"
+#~ msgstr "Dodój"
+
+#~ msgid "Remove"
+#~ msgstr "Rëmôj"
+
+#~ msgid "Edit"
+#~ msgstr "Editëjë"
+
+#, fuzzy
+#~| msgid "Oxygen"
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "Oxygen"
+
+#, fuzzy
+#~| msgid "Enable window grouping"
+#~ msgid "Draw window background"
+#~ msgstr "Właczë grëpòwanié òknów"
+
+#, fuzzy
+#~| msgid "Inactive Window"
+#~ msgid "Inactive Windows"
+#~ msgstr "Nieaktiwné òkno"
+
+#, fuzzy
+#~| msgid "Active Window"
+#~ msgid "Active Windows"
+#~ msgstr "Aktiwné òkno"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+#, fuzzy
+#~| msgid "Window Identification"
+#~ msgid "Window Actions Menu"
+#~ msgstr "Identifikacëjô òkna"
+
+#~ msgid "Help"
+#~ msgstr "Pòmòc"
+
+#~ msgid "Minimize"
+#~ msgstr "Minimalizëjë"
+
+#~ msgid "Maximize"
+#~ msgstr "Maksymalizëjë"
+
+#~ msgid "Close"
+#~ msgstr "Zamkni"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "Trzëmôj wëżi jinëch"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "Trzëmôj niżi jinëch"
+
+#~ msgid "On All Desktops"
+#~ msgstr "Na wszëtczich pùltach"
+
+#~ msgid "Shade Button"
+#~ msgstr "Céniowónô knąpa"
+
+#~ msgid "Menu"
+#~ msgstr "Menu"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "Nié na wszëtczich pùltach"
+
+#~ msgid "On all desktops"
+#~ msgstr "Na wszëtczich pùltach"
+
+#~ msgid "Unshade"
+#~ msgstr "Rozwinie"
+
+#~ msgid "Shade"
+#~ msgstr "Zwinie"
+
+#~ msgid "Resize"
+#~ msgstr "Zmieni miarã"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>Pòzdérk B II</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "Przewrócë"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "Céchùjë ramë brëkùjąc farwów &titlowi listwë"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "Jeżlë ta òptacëjô je zaznaczonô, ramë òknów bãdą céchòwóné "
+#~ "farwamatitlowich listwów. W procëmnym razu bãdą òne miałë sztandardową "
+#~ "farwã ramë."
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "Céchùjë chwët &zmianë miarë"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "Czedë ta òptacëjô je zaznaczonô, òbstrojënczi céchòwóné bãdą z chwëtã "
+#~ "zmianë miarë òkna w prawim, dolnëm rogù. W procëmnym razu chwët nie mdze "
+#~ "céchòwóny."
+
+#~ msgid "Auto-move titlebar"
+#~ msgstr "Przeniesë aùtomatno listew titla"
+
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr ""
+#~ "Jeżlë wëbróné, to listwa titla je aùtomatno przeniosłô na widzawné "
+#~ "pòłożenié: w procëmnym przëtrôfkù je nót jã rãczno przeniesc brëkùjąc "
+#~ "shift+przecygnie."
+
+#~ msgid "Actions Settings"
+#~ msgstr "Nastôwë dzejaniô"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "Dëbeltné klëkniãcé na knąpie menu:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "Nie robi nick"
+
+#~ msgid "Minimize Window"
+#~ msgstr "Minimalizëjë òkno"
+
+#~ msgid "Shade Window"
+#~ msgstr "Zwinie òkno"
+
+#~ msgid "Close Window"
+#~ msgstr "Zamkni òkno"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "Dzejanié przepisóné do dëbeltnégò klëkniãcô na knąpie menu. Jeżlë "
+#~ "trëchlësz, nie zmieniwôj negò nastôwù."
+
+#~ msgid "Laptop"
+#~ msgstr "Laptop"
+
+#, fuzzy
+#~| msgid "Background style: "
+#~ msgid "Bac&kground style: "
+#~ msgstr "Sztél spódka: "
+
+#~ msgid "Solid Color"
+#~ msgstr "Fùl farwa"
+
+#~ msgid "Radial Gradient"
+#~ msgstr "Kòłowi przebieg farwë"
+
+#~ msgid "Background style:"
+#~ msgstr "Sztél spódkù:"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Mark Kwidzińsczi"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "mark@linuxcsb.org"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Save"
+#~ msgstr "Zwinie"
+
+#~ msgid "Large"
+#~ msgstr "Wiôldżi"
+
+#~ msgid "Small"
+#~ msgstr "Môłi"
+
+#~ msgid "Extra size grip display: "
+#~ msgstr "Dodôwny ùchwët miarë: "
+
+#~ msgid "Extra size grip display:"
+#~ msgstr "Wëskrzëni dodôwny ùchwët miarë: "
+
+#~ msgid "Inner Color:"
+#~ msgstr "Bënowô farwa:"
+
+#~ msgid "Outer Color:"
+#~ msgstr "Bùtnowô farwa:"
+
+#~ msgid "Vertical Offset:"
+#~ msgstr "Wertikalné przesëniãcé"
+
+#~ msgid "Size: "
+#~ msgstr "Miara: "
+
+#~ msgid "Always Hide Extra Size Grip"
+#~ msgstr "Tacë wiedno ekstra ùchwëtë miarë"
+
+#~ msgid "Show Extra Size Grip When Needed"
+#~ msgstr "Wëskrzëni, jeżlë nót, ekstra ùchwëtë miarë"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "Zaznaczenié ti òptacëji sprawi, że òkno òstanié zamkniãté, czej dwa razë "
+#~ "klëkniész na knąpie menu, juwerno jakno w Microsoft Windows."
+
+#~ msgid "Plastik"
+#~ msgstr "Plastik"
+
+#~ msgid "All Desktops"
+#~ msgstr "Wszëtczé pùltë"
+
+#~ msgid "Above"
+#~ msgstr "Nad"
+
+#~ msgid "Below"
+#~ msgstr "Pòd"
+
+#~ msgid "Close Item"
+#~ msgstr "Zamkni element"
+
+#~ msgid "Tabstrip"
+#~ msgstr "Tabstrip"
+
+#~ msgid "&Left"
+#~ msgstr "&Lewò"
+
+#~ msgid "&Center"
+#~ msgstr "&Wëstrzódk"
+
+#~ msgid "&Right"
+#~ msgstr "&Prawò"
+
+#~ msgid "Display window icons"
+#~ msgstr "Wëskrzëni ikònë òknów"
+
+#, fuzzy
+#~| msgid "Outer Color:"
+#~ msgid "O&utline Color:"
+#~ msgstr "Bùtnowô farwa:"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Do not keep above others"
+#~ msgstr "Trzëmôj wëżi jinëch"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above others"
+#~ msgstr "Trzëmôj wëżi jinëch"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Do not keep below others"
+#~ msgstr "Trzëmôj niżi jinëch"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below others"
+#~ msgstr "Trzëmôj niżi jinëch"
+
+#, fuzzy
+#~| msgid "Disabled"
+#~ msgid "Variable"
+#~ msgstr "Wëłączoné"
+
+#, fuzzy
+#~| msgid "Maximize"
+#~ msgid "Maximum"
+#~ msgstr "Maksymalizëjë"
+
+#~ msgid "Enable window grouping"
+#~ msgstr "Właczë grëpòwanié òknów"
+
+#~ msgid "TextLabel"
+#~ msgstr "Tekstowépòle"
+
+#, fuzzy
+#~| msgid "Shadows"
+#~ msgid "Shadow style:"
+#~ msgstr "Cénie"
+
+#, fuzzy
+#~| msgid "Enabled"
+#~ msgctxt "draw separator"
+#~ msgid "Enabled"
+#~ msgstr "Włączoné"
+
+#, fuzzy
+#~| msgid "Disabled"
+#~ msgctxt "draw separator"
+#~ msgid "Disabled"
+#~ msgstr "Wëłączoné"
+
+#~ msgid "Draw separator between title bar and window contents: "
+#~ msgstr "Céchùjë rozdzélôcza midzy listwą titla a zamkłoscą òkna: "
+
+#~ msgid "Draw Separator between title bar and active window contents "
+#~ msgstr "Céchùjë rozdzélôcza midzy listwą titla a zamkłoscą òkna"
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "Instalëje témã KWM"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "Stegna do kònfigùracjowégò lopka témë"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWMTheme</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "Przëlepiony"
+
+#~ msgid "Unsticky"
+#~ msgstr "Òdlepiony"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>Pòdzérk Keramika</b></center>"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "Céchùjë titlową listwã &pùnktowim ôrtã"
+
+#~ msgid ""
+#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
+#~ "otherwise, they are drawn without the stipple."
+#~ msgstr ""
+#~ "Czedë na òptacëjô je zaznaczonô, aktiwne titlowé listwë céchòwóné są z "
+#~ "efektã pùnktowaniô. W procëmnym razu céchòwóné są bez tegò efektu."
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "Céchùjë listew &chwëtu niżi òknów"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
+#~ "otherwise, no grab bar is drawn."
+#~ msgstr ""
+#~ "Włączenié ti òptacëji sprawi, że òbstrojenia są céchòwóné z \"listwą "
+#~ "chwëtu\" pòd òknã. W procëmnym razu listew nie je céchòwónô."
+
+#~ msgid "Draw &gradients"
+#~ msgstr "Céchùjë &gradient"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with gradients for high-color "
+#~ "displays; otherwise, no gradients are drawn."
+#~ msgstr ""
+#~ "Czedë wëbróné, òbstrojenia bãdą céchòwóné z gradientama dlô ekranów ò "
+#~ "wielu farwach. W procëmnym razu, gradient nie mdze céchòwóny."
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"
+
+#~ msgid ""
+#~ "When selected, the window decoration borders are drawn using the titlebar "
+#~ "colors; otherwise, they are drawn using normal border colors instead."
+#~ msgstr ""
+#~ "Jeżlë na òptacëjô je wëbrónô, ògreńczenié òbstrojenkù òkna bãdze "
+#~ "céchòwóné farwama titlowi listwë. W procëmnym razu brëkòwóné bãdą zwëkòwé "
+#~ "farwë ògreńczeniô."
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "&Ekstracenczi Quartz"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "Òbstrojënczi òknów Quartz z baro môłą titlową listwą."
+
+#~ msgid "Quartz"
+#~ msgstr "Quartz"
+
+#~ msgid "Redmond"
+#~ msgstr "Redmond"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "&Wëskrzëni ùchwët zmianë miarë"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "Czej ta òptacëjô je zaznaczonô, wszëtczé òkna malowóné są z chwëtã zmianë "
+#~ "miarë òkna w prawim dolnym rogù. To zletcziwô zmianë miarë òkna, "
+#~ "òsoblëwie dlô trackballów ë mëszów brëkòwónëch na laptopach."
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr "Tuwò mòżesz zmienic wielgòsc chwëtu zmianë miarë"
+
+#~ msgid "Medium"
+#~ msgstr "Strzédny"
+
+#~ msgid "Modern System"
+#~ msgstr "Nowòczasnô systema"
+
+#~ msgid "Web"
+#~ msgstr "Séc"
+
+#~ msgid "Keramik"
+#~ msgstr "Keramik"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "Wëskrzëni &ikònë òknów w bąbelkach"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "Włączë nã òptacëjã, jeżlë chcesz, żebë ikòna òkna bëła pòkazëwónô w "
+#~ "bąbelkach titla kòle tekstu titlowi listwë."
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "Céchùjë &môłi bąbelczi na aktiwnym òknie"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "Zaznaczë tã òptacëjã, czej chcesz, żebë bąbelczi miałe taką sómą miarã na "
+#~ "aktiwnym ë nie aktiwnym òknie. Òptacëjô na je ùżëtnô òsoblewie na "
+#~ "laptopach abò przë môłëch rozdzélnotach ekranów, dze wôżny je maksymalny "
+#~ "rum na zamkłosc òkna."
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "Céchùjë &listwë niżi òknów"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "Zaznaczë tã òptacëjã, czej chcesz, żebë listwë bëłë malowóné niżi òkna. "
+#~ "Czedë òptacëjô je włączonô, malowóné bãdą blós cenczé ògreńczenia w jich "
+#~ "môl."
+
+#~ msgid "Aurorae Theme Engine"
+#~ msgstr "Mòtór wëzdrzatkù Aurorae"
+
+#~ msgid "Drag or Type Theme URL"
+#~ msgstr "Przecygni abò wpiszë adresã URL wëzdrzatkù"
+
+#~ msgid "Unable to find the theme archive %1."
+#~ msgstr "Nié mòże nalezc archiwa wëzdrzatkù %1."
+
+#~ msgid ""
+#~ "Unable to download theme archive;\n"
+#~ "please check that address %1 is correct."
+#~ msgstr ""
+#~ "Nié mòże zladowac archiwa wëzdrzatkù;\n"
+#~ "proszã sprôwdzëc pòprôwnotã adresë %1."
+
+#~ msgid "Theme:"
+#~ msgstr "Wëzdrzatk:"
+
+#~ msgid "Get New Themes..."
+#~ msgstr "Dobëjë nowi wëzdrzatk..."
+
+#~ msgid "Install New Theme..."
+#~ msgstr "Instalëjë nowi wëzdrzatk..."
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Glow active window"
+#~ msgstr "Minimalizëjë òkno"
+
+#~ msgid "Ozone"
+#~ msgstr "Ozone"
+
+#, fuzzy
+#~| msgid "Draw window frames using &titlebar colors"
+#~ msgid "Overwrite default title bar colors:"
+#~ msgstr "Céchùjë ramë brëkùjąc farwów &titlowi listwë"

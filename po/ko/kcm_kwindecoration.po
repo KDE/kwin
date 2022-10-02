@@ -1,0 +1,496 @@
+# Translation of kcmkwindecoration to Korean.
+# Copyright (C) 2001, 2007 Free Software Foundation, Inc.
+# KIM KyungHeon <tody@teoal.net>, 2001.
+# Shinjo Park <kde@peremen.name>, 2007, 2008, 2009, 2010, 2012, 2013, 2014, 2015, 2018, 2019, 2020, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwindecoration\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2021-06-17 21:11+0200\n"
+"Last-Translator: Shinjo Park <kde@peremen.name>\n"
+"Language-Team: Korean <kde-kr@kde.org>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Lokalize 20.12.3\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "박신조"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "kde@peremen.name"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr "이 창의 더 많은 동작"
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, kde-format
+msgid "Application menu"
+msgstr "프로그램 메뉴"
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, kde-format
+msgid "On all desktops"
+msgstr "모든 바탕 화면에 두기"
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr "최소화"
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr "최대화"
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr "닫기"
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr "문맥 도움말"
+
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr "말아 올리기"
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr "다른 창 아래에 두기"
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr "다른 창 위에 두기"
+
+#: kcm.cpp:49
+#, kde-format
+msgid "Window Decorations"
+msgstr "창 장식"
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr "Valerio Pilo"
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr "작성자"
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr "테마 기본값(%1)"
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+"이 도구를 사용하여 사용할 수 없는 창 장식 테마를 실수로 선택하거나 이미 선택"
+"된 창 장식 테마를 다시 선택하지 않고 현재 활성 세션의 창 장식 테마를 설정할 "
+"수 있습니다."
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+"KWin에 사용할 창 장식 테마 이름입니다. 전체 경로를 지정하면 해당 디렉터리의 "
+"테마를 찾으며, 테마가 있으면 적용합니다."
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr "시스템에 있는 모든 테마 표시(현재 테마 포함)"
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+"%1은(는) KWin Aurorae 테마 \"%2\"(으)로 해석되었으며, 해당 테마를 현재 테마"
+"로 설정합니다."
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+"파일 경로를 전달하려고 했으나 테마로 해석할 수 없으므로, 설정할 테마가 없기 "
+"때문에 중단합니다"
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr "요청한 \"%1\" 테마는 현재 창 장식 테마로 설정되어 있습니다."
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr "현재 Plasma 세션 커서 테마를 %1(으)로 설정함"
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+"테마 설정을 저장할 수 없습니다. 이유는 알 수 없으나 복구 불가능한 오류일 수"
+"도 있습니다. 다시 시도해 보십시오."
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr "테마 \"%1\"을(를) 찾을 수 없습니다. 다음 중 하나여야 합니다: %2"
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr "시스템에 다음 KWin 창 장식 테마가 설치되어 있습니다:"
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr "제목 표시줄"
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr "여기에 단추를 끌어다 놓으면 삭제됩니다"
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr "여기와 제목 표시줄 사이에서 단추를 드래그하십시오"
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr "이 모듈에서 창 장식을 설정할 수 있습니다."
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr "테마"
+
+#: package/contents/ui/main.qml:57
+#, kde-format
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "제목 표시줄 단추"
+
+#: package/contents/ui/main.qml:93
+#, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "창 테두리 크기:"
+
+#: package/contents/ui/main.qml:112
+#, kde-format
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr "새 장식 가져오기..."
+
+#: package/contents/ui/main.qml:141
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr "메뉴 단추를 두 번 클릭해서 창 닫기"
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr "메뉴 단추를 클릭하고 있으면 메뉴를 표시합니다."
+
+#: package/contents/ui/main.qml:165
+#, kde-format
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "창 단추의 풍선 도움말 보기"
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr "%1 테마 편집"
+
+#: utils.cpp:25
+#, kde-format
+msgid "No Borders"
+msgstr "경계선 없음"
+
+#: utils.cpp:26
+#, kde-format
+msgid "No Side Borders"
+msgstr "옆쪽 경계선 없음"
+
+#: utils.cpp:27
+#, kde-format
+msgid "Tiny"
+msgstr "작게"
+
+#: utils.cpp:28
+#, kde-format
+msgid "Normal"
+msgstr "일반"
+
+#: utils.cpp:29
+#, kde-format
+msgid "Large"
+msgstr "크게"
+
+#: utils.cpp:30
+#, kde-format
+msgid "Very Large"
+msgstr "매우 크게"
+
+#: utils.cpp:31
+#, kde-format
+msgid "Huge"
+msgstr "매우 매우 크게"
+
+#: utils.cpp:32
+#, kde-format
+msgid "Very Huge"
+msgstr "매우 매우 매우 크게"
+
+#: utils.cpp:33
+#, kde-format
+msgid "Oversized"
+msgstr "과다하게 크게"
+
+#~ msgctxt "popup tip"
+#~ msgid ""
+#~ "Close by double clicking: Keep the window's Menu button pressed until it "
+#~ "appears."
+#~ msgstr ""
+#~ "두 번 눌러서 닫기:  메뉴를 열려면 메뉴가 나타날 때까지 단추를 누르십시오."
+
+#~ msgid "Menu"
+#~ msgstr "메뉴"
+
+#~ msgid "Keep below"
+#~ msgstr "아래에 두기"
+
+#~ msgid "Keep above"
+#~ msgstr "위에 두기"
+
+#~ msgid "Download New Window Decorations"
+#~ msgstr "새 창 장식 가져오기..."
+
+#~ msgctxt "checkbox label"
+#~ msgid "Use theme's default window border size"
+#~ msgstr "테마의 기본 창 테두리 크기 사용"
+
+#, fuzzy
+#~| msgid "Search"
+#~ msgid "Search..."
+#~ msgstr "찾기"
+
+#~ msgid "Close windows by double clicking &the menu button"
+#~ msgstr "메뉴 단추를 두 번 눌러서 창 닫기(&T)"
+
+#~ msgid "Border si&ze:"
+#~ msgstr "경계선 크기(&Z):"
+
+#~ msgid "Buttons"
+#~ msgstr "단추"
+
+#~ msgid "Configure %1..."
+#~ msgstr "%1 설정..."
+
+#~ msgid "Drag to re-position buttons"
+#~ msgstr "단추 위치를 변경하려면 드래그하십시오"
+
+#~ msgid "Button size:"
+#~ msgstr "단추 크기:"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "작게"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "보통"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "크게"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "매우 크게"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "매우 매우 크게"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "매우 매우 매우 크게"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "과다하게 크게"
+
+#~ msgid "KDE"
+#~ msgstr "KDE"
+
+#~ msgid "%1 (unavailable)"
+#~ msgstr "%1 (사용 불가능)"
+
+#~ msgid ""
+#~ "To add or remove titlebar buttons, simply <i>drag</i> items between the "
+#~ "available item list and the titlebar preview. Similarly, drag items "
+#~ "within the titlebar preview to re-position them."
+#~ msgstr ""
+#~ "제목 표시줄 단추를 추가하거나 삭제하려면 항목을 목록에서 <i>드래그</i>해"
+#~ "서 제목 표시줄 미리보기에 놓으십시오. 제목 표시줄 미리보기 안에서 항목을 "
+#~ "드래그하면 순서를 바꿀 수 있습니다."
+
+#~ msgid "Resize"
+#~ msgstr "크기 조정"
+
+#~ msgid "Help"
+#~ msgstr "도움말"
+
+#~ msgctxt "Button showing window actions menu"
+#~ msgid "Window Menu"
+#~ msgstr "창 메뉴"
+
+#~ msgid "--- spacer ---"
+#~ msgstr "--- 구분자 ---"
+
+#~ msgid ""
+#~ "Enabling this checkbox will show window button tooltips. If this checkbox "
+#~ "is off, no window button tooltips will be shown."
+#~ msgstr ""
+#~ "이 체크 상자를 선택하면 창 단추의 풍선 도움말을 표시합니다. 선택되어 있지 "
+#~ "않으면, 창 단추의 풍선 도움말은 표시되지 않습니다."
+
+#~ msgid "Please note that this option is not available on all styles yet."
+#~ msgstr "이 옵션은 모든 스타일에서 사용할 수 없습니다."
+
+#~ msgid "Use custom titlebar button &positions"
+#~ msgstr "사용자 정의 제목 표시줄 단추 위치 사용하기(&P)"
+
+#~ msgid "B&order size:"
+#~ msgstr "경계 크기(&O):"
+
+#~ msgid "Use this combobox to change the border size of the decoration."
+#~ msgstr "이 콤보 상자를 사용하여 창 장식의 경계 크기를 변경하십시오."
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Border"
+#~ msgstr "옆쪽 경계선 없음"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "경계선 없음"
+
+#~ msgid "Decoration Options"
+#~ msgstr "장식 설정"
+
+#~ msgid ""
+#~ "Select the window decoration. This is the look and feel of both the "
+#~ "window borders and the window handle."
+#~ msgstr "창 장식을 선택하십시오. 창 테두리와 핸들의 모양을 결정합니다."
+
+#~ msgid "Configure Decoration..."
+#~ msgstr "창 장식 설정..."
+
+#~ msgid "Window Decoration Control Module"
+#~ msgstr "창 장식 제어 모듈"
+
+#~ msgid "(c) 2001 Karol Szwed"
+#~ msgstr "(c) 2001 Karol Szwed"
+
+#~ msgid "Karol Szwed"
+#~ msgstr "Karol Szwed"
+
+#~ msgid ""
+#~ "<h1>Installation error</h1>The resource<h2>kwin/kcm_kwindecoration/main."
+#~ "qml</h2>could not be located in any application data path.<h2>Please "
+#~ "contact your distribution</h2>The application will now abort"
+#~ msgstr ""
+#~ "<h1>설치 오류</h1>자원 <h2>kwin/kcm_kwindecoration/main.qml</h2>을 프로그"
+#~ "램 데이터 경로에서 찾을 수 없습니다.<h2>배포판 관리자에게 연락하십시오.</"
+#~ "h2> 프로그램을 종료합니다"
+
+#~ msgid "Installation Error"
+#~ msgstr "설치 오류"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+#~ msgid ""
+#~ "<h1>Window Manager Decoration</h1><p>This module allows you to choose the "
+#~ "window border decorations, as well as titlebar button positions and "
+#~ "custom decoration options.</p>To choose a theme for your window "
+#~ "decoration click on its name and apply your choice by clicking the \"Apply"
+#~ "\" button below. If you do not want to apply your choice you can click "
+#~ "the \"Reset\" button to discard your changes.<p>You can configure each "
+#~ "theme. There are different options specific for each theme.</p><p>On the "
+#~ "\"Buttons\" tab check the \"Use custom titlebar button positions\" box "
+#~ "and you can change the positions of the buttons to your liking.</p>"
+#~ msgstr ""
+#~ "<h1>창 관리자 장식</h1><p>이 모듈에서 창 경계 장식이나 제목 표시줄 단추 위"
+#~ "치, 사용자 정의 장식 설정을 선택할 수 있습니다.</p>창 장식에 사용할 테마"
+#~ "의 이름을 선택하시고 아래의 \"적용\" 단추를 눌러서 적용시키십시오. 만약 변"
+#~ "경 사항이 마음에 들지 않으시면 \"초기화\" 단추를 누르십시오.<p>각각의 테마"
+#~ "를 \"[...] 설정\" 탭에서 설정하십 수도 있습니다. 각각 테마마다의 다른 옵션"
+#~ "이 있습니다.</p><p>\"일반 옵션(사용 가능하다면)\" 탭에서는 \"사용자 정의 "
+#~ "창 제목 표시줄 단추 위치 사용\" 상자에 체크해서 \"단추\" 탭을 사용할 수 있"
+#~ "습니다. \"단추\" 탭에서는 단추의 위치를 좋아하는 대로 바꿀 수 있습니다.</"
+#~ "p>"
+
+#~ msgid "Active Window"
+#~ msgstr "활성 창"
+
+#~ msgid "Inactive Window"
+#~ msgstr "비활성 창"
+
+#~ msgid "kcmkwindecoration"
+#~ msgstr "kcmkwindecoration"
+
+#~ msgctxt "Caption to decoration preview, %1 author name"
+#~ msgid "by %1"
+#~ msgstr "만든 이: %1"
+
+#~ msgid ""
+#~ "No preview available.\n"
+#~ "Most probably there\n"
+#~ "was a problem loading the plugin."
+#~ msgstr ""
+#~ "미리 보기를 사용할 수 없습니다.\n"
+#~ "대부분의 경우 플러그인을 불러 오는\n"
+#~ "과정에서 오류가 생겼습니다."

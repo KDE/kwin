@@ -1,0 +1,403 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ../cy/messages//kdebase/kwin_clients.po\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2004-09-20 15:44+0200\n"
+"Last-Translator: Thierry Vignaud <tvignaud@mandrakesoft.com>\n"
+"Language-Team: cy <LL@li.org>\n"
+"Language: cy\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr ""
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr ""
+
+#: aurorae/src/aurorae.cpp:727
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "Mawr"
+
+#: aurorae/src/aurorae.cpp:728
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "Mawr"
+
+#: aurorae/src/aurorae.cpp:729
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "Mawr"
+
+#: aurorae/src/aurorae.cpp:730
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "Mawr"
+
+#: aurorae/src/aurorae.cpp:731
+#, fuzzy, kde-format
+#| msgid "Resize"
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "Newid maint"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, fuzzy, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"Brithwch y dewisiad yma os ydych am ddangos eicon y ffenestr yn y swigen "
+"bennawd nesaf at destun y bar teitl."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, fuzzy, kde-format
+msgid "Colored window border"
+msgstr "Cau'r Ffenestr"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr ""
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "Brithwch y dewisiad yma os ydych am i destun y bar teitl gael golwg 3D â "
+#~ "chysgod tu ôl iddo."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "Defnyddio &testun â chysgod"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "Mawr"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "Mawr"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "Mawr"
+
+#, fuzzy
+#~| msgid "Small"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "Bach"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title"
+#~ msgstr "Lleihau'r Ffenestr"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadows"
+#~ msgstr "Rholio"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Window Glow"
+#~ msgstr "Lleihau'r Ffenestr"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Use window title"
+#~ msgstr "Lleihau'r Ffenestr"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title:"
+#~ msgstr "Lleihau'r Ffenestr"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Hide window title bar"
+#~ msgstr "Lleihau'r Ffenestr"
+
+#, fuzzy
+#~ msgid "Remove"
+#~ msgstr "Newid maint"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Inactive Windows"
+#~ msgstr "Lleihau'r Ffenestr"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Windows"
+#~ msgstr "Lleihau'r Ffenestr"
+
+#~ msgid "Minimize"
+#~ msgstr "Lleihau"
+
+#~ msgid "Maximize"
+#~ msgstr "Ehangu"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "Cadw Uwchben y Lleill"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "Cadw Dan y Lleill"
+
+#, fuzzy
+#~| msgid "On all desktops"
+#~ msgid "On All Desktops"
+#~ msgstr "Ar Bob Penbwrdd"
+
+#~ msgid "Menu"
+#~ msgstr "Dewislen"
+
+#~ msgid "On all desktops"
+#~ msgstr "Ar Bob Penbwrdd"
+
+#~ msgid "Unshade"
+#~ msgstr "Dat-gysgodi"
+
+#~ msgid "Shade"
+#~ msgstr "Rholio"
+
+#~ msgid "Resize"
+#~ msgstr "Newid maint"
+
+#, fuzzy
+#~ msgid "Restore"
+#~ msgstr "Newid maint"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "Darlunio fframau ffenestri â lliwia'r bar &teitl"
+
+#~ msgid "Minimize Window"
+#~ msgstr "Lleihau'r Ffenestr"
+
+#~ msgid "Shade Window"
+#~ msgstr "Rholio'r Ffenestr"
+
+#~ msgid "Close Window"
+#~ msgstr "Cau'r Ffenestr"
+
+#~ msgid "Laptop"
+#~ msgstr "Gluniadur"
+
+#, fuzzy
+#~| msgid "Draw &gradients"
+#~ msgid "Radial Gradient"
+#~ msgstr "Darlunio &graddliwiau"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Save"
+#~ msgstr "Rholio"
+
+#~ msgid "Large"
+#~ msgstr "Mawr"
+
+#~ msgid "Small"
+#~ msgstr "Bach"
+
+#~ msgid "Plastik"
+#~ msgstr "Plastik"
+
+#, fuzzy
+#~| msgid "On all desktops"
+#~ msgid "All Desktops"
+#~ msgstr "Ar Bob Penbwrdd"
+
+#, fuzzy
+#~| msgid "Keep above others"
+#~ msgid "Do not keep above others"
+#~ msgstr "Cadw Uwchben y Lleill"
+
+#~ msgid "Keep above others"
+#~ msgstr "Cadw Uwchben y Lleill"
+
+#, fuzzy
+#~| msgid "Keep below others"
+#~ msgid "Do not keep below others"
+#~ msgstr "Cadw Dan y Lleill"
+
+#~ msgid "Keep below others"
+#~ msgstr "Cadw Dan y Lleill"
+
+#, fuzzy
+#~| msgid "Maximize"
+#~ msgid "Maximum"
+#~ msgstr "Ehangu"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadow style:"
+#~ msgstr "Rholio"
+
+#~ msgid "Sticky"
+#~ msgstr "Gludiog"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "Darlunio effaith &dotwaith y bar teitl"
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "Darlunio bar &cydio o dan ffenestri"
+
+#~ msgid "Draw &gradients"
+#~ msgstr "Darlunio &graddliwiau"
+
+#~ msgid "Quartz"
+#~ msgstr "Cwarts"
+
+#~ msgid "Redmond"
+#~ msgstr "Redmond"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "&Dangos dolen newid maint ffenestr"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "Pan yn ddewisiedig, darlunir pob ffenestr â dolen newid maint ar y gornel "
+#~ "isaf ar y dde. Fe wna hyn newid maint ffenestri'n haws, yn arbennig i "
+#~ "beli trac ac amnewidion llygoden eraill ar gliniaduron."
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr "Yma gallwch newid maint y ddolen newid maint."
+
+#~ msgid "Medium"
+#~ msgstr "Canolig"
+
+#~ msgid "Modern System"
+#~ msgstr "Cysawd Cyfoes"
+
+#~ msgid "Web"
+#~ msgstr "Gwe"
+
+#~ msgid "Keramik"
+#~ msgstr "Keramik"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "Dangos &eicon y ffenestr yn y swigen bennawd"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "Brithwch y dewisiad yma os ydych am ddangos eicon y ffenestr yn y swigen "
+#~ "bennawd nesaf at destun y bar teitl."
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "Darlunio &swigod pennawd bach ar ffenestri gweithredol"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "Brithwch y dewisiad yma os ydych am i'r swigen bennawd gael yr un maint "
+#~ "ar ffenestri gweithredol sydd ganddi ar rai anweithredol. Mae'r dewisiad "
+#~ "yma'n ddefnyddiol ar gliniaduron neu ddangosyddion raddfa isel lle yr "
+#~ "hoffech wneud y defnydd gorau o'r gofod are gael ar gyfer cynnwys "
+#~ "ffenestri."
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "Darlunio bariau &cydio o dan ffenestri"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "Brithwch y dewisiad yma os ydych am ddarlunio bar cydio ar waelod "
+#~ "ffenestri. Pan nad yw'r dewisiad yma wedi'i ddewis dim ond ffin tenau y "
+#~ "darlunir yn ei le."
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Glow active window"
+#~ msgstr "Lleihau'r Ffenestr"
+
+#, fuzzy
+#~| msgid "Draw window frames using &titlebar colors"
+#~ msgid "Overwrite default title bar colors:"
+#~ msgstr "Darlunio fframau ffenestri â lliwia'r bar &teitl"
+
+#, fuzzy
+#~| msgid "Sticky"
+#~ msgid "Un-Sticky"
+#~ msgstr "Gludiog"
+
+#~ msgid "Lower"
+#~ msgstr "Gostwng"

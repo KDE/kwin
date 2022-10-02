@@ -1,0 +1,170 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Indonesian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="desktop" lang="&language;">
+<title
+>Desktop Virtual</title>
+<articleinfo>
+
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<author
+>&Jost.Schenck; &Jost.Schenck.mail;</author>
+<othercredit role="translator"
+><firstname
+>Wantoyo</firstname
+><surname
+></surname
+><affiliation
+><address
+><email
+>wantoyek@gmail.com</email
+></address
+></affiliation
+><contrib
+>Terjemahan</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>09-04-2015</date>
+<releaseinfo
+>Plasma 5.3</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systemsetting</keyword>
+<keyword
+>desktop</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="virtual-desktops">
+
+<title
+>Desktop Virtual</title>
+
+<sect2 id="desktop-number">
+<title
+><guilabel
+>Desktop</guilabel
+></title>
+
+<para
+>&kde; menawarkan kamu kemungkinan untuk memiliki beberapa desktop virtual. Dalam tab ini kamu bisa mengkonfigurasi jumlah desktop, nomor pada baris di ikon <guilabel
+>Pager</guilabel
+> begitu juga nama-namanya. Hanya dengan menggunakan kotak input untuk menyesuaikan jumlah desktop. Kamu bisa menamai si desktop dengan memasukkan teks ke dalam bidang teks bagian bawah.</para
+> 
+<!-- not in 5.3
+<para
+>Enable <guilabel
+>Different widgets for each desktop</guilabel
+> 
+to use independent widgets and wallpapers on each individual desktop.
+</para>
+-->
+</sect2>
+
+<sect2 id="desktop-switching">
+<title
+><guilabel
+>Pengalihan</guilabel
+></title>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Navigasi desktop di sekitar kemasan</guilabel
+></term>
+<listitem
+><para
+>Fungsikan opsi ini jika anda ingin keyboard atau navigasi pinggir desktop aktif di luar bingkai desktop untuk membawa kamu ke sisi yang berlawanan dari desktop baru. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Animasi Efek Desktop</guilabel
+></term>
+<listitem
+><para
+>Pilih <guilabel
+>Tanpa Animasi</guilabel
+>, <guilabel
+>Geser</guilabel
+>, <guilabel
+>Animasi Kubus Desktop</guilabel
+> atau <guilabel
+>Desktop Lesap</guilabel
+> dari kotak tarik turun. Jika animasi terpilih memiliki opsi settingan, klik pada ikon alat di bagian kanan pada kotak tarik turun untuk meluncurkan dialog konfigurasi. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>OSD Alih Desktop</guilabel
+></term>
+<listitem
+><para
+>Fungsikan opsi ini jika kamu ingin memiliki sebuah displai pada layar (OSD) untuk peralihan desktopmu. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Tampilkan indikator tataletak desktop</guilabel
+></term>
+<listitem
+><para
+>Memfungsikan opsi ini akan menampilkan pratinjau kecil tataletak desktop yang mengindikasikan desktop yang dipilih. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Pintasan</guilabel
+></term>
+<listitem
+><para
+>Bagian ini mendisplaikan pintasan yang dikonfigurasi untuk peralihan desktop dan memungkinkanmu untuk mengeditnya. </para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>Pengguliran roda mouse melintasi sebuah ruang kosong pada desktop atau pada ikon <guilabel
+>Pager</guilabel
+> di dalam panel akan berubah ke desktop virtual selanjutnya secara numerik, di tujuan yang kamu gulir (antara naik atau turun.</para>
+<para
+>Kamu bisa mengubah perilaku baku ini pada halaman <guilabel
+>Aksi Mouse</guilabel
+> di <guilabel
+>Pengaturan Desktop</guilabel
+> (<keycombo action="simul"
+>&Alt;<keycap
+>D</keycap
+></keycombo
+>, <keycombo action="simul"
+>&Alt;<keycap
+>S</keycap
+></keycombo
+>).</para>
+</sect2>
+</sect1>
+
+</article>

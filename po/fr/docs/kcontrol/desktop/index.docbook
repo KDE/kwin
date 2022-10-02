@@ -1,0 +1,156 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % French "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="desktop" lang="&language;">
+<title
+>Bureaux virtuels</title>
+<articleinfo>
+
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<author
+>&Jost.Schenck; &Jost.Schenck.mail;</author>
+&traducteurYvesDessertine; &traducteurGerardDelafond; &traducteurPierreBuard; 
+</authorgroup>
+
+<date
+>09-04-2015</date>
+<releaseinfo
+>Plasma 5.3</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Configuration du système</keyword>
+<keyword
+>bureau</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="virtual-desktops">
+
+<title
+>Bureaux virtuels</title>
+
+<sect2 id="desktop-number">
+<title
+><guilabel
+>Bureaux</guilabel
+></title>
+
+<para
+>&kde; vous offre la possibilité d'avoir plusieurs bureaux virtuels. Grâce à cet onglet vous pourrez configurer le nombre de bureaux, de lignes dans l'icône <guilabel
+>Gestionnaire de bureaux</guilabel
+> ainsi que le nom de chaque bureau. Utilisez les zones de saisi pour ajuster le nombre de bureaux. Assignez des noms aux bureaux en écrivant dans les champs de texte au-dessous.</para
+> 
+<!-- not in 5.3
+<para
+>Enable <guilabel
+>Different widgets for each desktop</guilabel
+> 
+to use independent widgets and wallpapers on each individual desktop.
+</para>
+-->
+</sect2>
+
+<sect2 id="desktop-switching">
+<title
+><guilabel
+>Changement de bureau</guilabel
+></title>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Navigation circulaire entre les bureaux</guilabel
+></term>
+<listitem
+><para
+>Activez cette option si vous souhaitez que la navigation entre les bureaux, au clavier ou avec les bords d'écran actif, vous fasse passer du bord d'un bureau au bord opposé du nouveau bureau. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Animation du changement de bureau</guilabel
+></term>
+<listitem
+><para
+>Sélectionnez <guilabel
+>Pas d'animation</guilabel
+>, <guilabel
+>Glisser</guilabel
+>, <guilabel
+>Animation du bureau en cube</guilabel
+> ou <guilabel
+>Effectue un fondu du bureau</guilabel
+> dans le menu déroulant. Si l'animation choisie est paramétrable, cliquez sur l'icône « outil » située à droite du menu déroulant pour ouvrir la fenêtre de configuration. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Affichage à l'écran du changement de bureau</guilabel
+></term>
+<listitem
+><para
+>Activez cette option si vous souhaitez afficher des informations à l'écran lors du changement de bureau. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Afficher les indicateurs de disposition des bureaux</guilabel
+></term>
+<listitem
+><para
+>L'activation de cette option permet d'afficher un aperçu de la disposition du bureau sélectionné. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Raccourcis clavier</guilabel
+></term>
+<listitem
+><para
+>Cette section présente les raccourcis configurés pour le changement de bureaux et permet de les modifier. </para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>En actionnant la molette de la souris sur un espace vide du bureau ou sur l'icône <guilabel
+>Gestionnaire de bureaux</guilabel
+> du tableau de bord, vous basculerez sur le bureau virtuel précédent ou suivant, en fonction de la direction dans laquelle vous avez tourné (vers le haut ou vers le bas).</para>
+<para
+>Vous pouvez modifier ce comportement par défaut sur la page <guilabel
+>Actions de souris</guilabel
+> dans la <guilabel
+>Configuration du bureau</guilabel
+> (<keycombo action="simul"
+>&Alt;<keycap
+>D</keycap
+></keycombo
+>, <keycombo action="simul"
+>&Alt;<keycap
+>S</keycap
+></keycombo
+>).</para>
+</sect2>
+</sect1>
+
+</article>

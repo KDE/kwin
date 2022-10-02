@@ -1,0 +1,778 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Danishka Navin <danishka@gmail.com>, 2009.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2009-12-19 14:44+0530\n"
+"Last-Translator: Danishka Navin <danishka@gmail.com>\n"
+"Language-Team: Sinhala <danishka@gmail.com>\n"
+"Language: si\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 0.3\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, fuzzy, kde-format
+#| msgid "Tiny"
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "ඉතා කුඩා"
+
+#: aurorae/src/aurorae.cpp:726
+#, fuzzy, kde-format
+#| msgid "Normal"
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "සාමාන්‍ය"
+
+#: aurorae/src/aurorae.cpp:727
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "විශාල"
+
+#: aurorae/src/aurorae.cpp:728
+#, fuzzy, kde-format
+#| msgid "Very Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "ඉතා විශාල"
+
+#: aurorae/src/aurorae.cpp:729
+#, fuzzy, kde-format
+#| msgid "Huge"
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "අති විශාල"
+
+#: aurorae/src/aurorae.cpp:730
+#, fuzzy, kde-format
+#| msgid "Very Huge"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "අතිශය විශාල"
+
+#: aurorae/src/aurorae.cpp:731
+#, fuzzy, kde-format
+#| msgid "Oversized"
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "අධි ප්‍රමාණය වූ"
+
+#: aurorae/src/aurorae.cpp:734
+#, fuzzy, kde-format
+#| msgid "Button size:"
+msgid "Button size:"
+msgstr "බොත්තමේ ප්‍රමාණය:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "සැකසුම් සංවාදය"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "මාතෘකා එල්ලය (&A)"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "වම"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "මධ්‍යය"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "දකුණ"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"කවුළු දාරය මාතෘකා තීරු වර්ණයෙන්ම ඇඳීමට ඇවැසි නම් මෙය තෝරන්න. එසේ නොවේනම් පසුබිම් වර්ණයෙන්ම "
+"ඇඳේ."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "වර්ණ කල කවුළු දාර"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"මවුසය ඒමතට ආවිට බොත්තම් අව පැහැවීමටත්, ඉවතට ගිය විට නැවත පෙර තත්වයට පත්වීමටත් මෙය තෝරන්න."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "සජීවීකරණය කල බොත්තම්"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "ඔබට මාතෘකා තීරුවට ත්‍රිමාණ පෙනුමක් හා එයට පිටුපසින් සෙවණැල්ලක් ඇඳීමට මෙම අභිප්‍රේතය තෝරන්න."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "සෙවණ කල පෙළ භාවිත කරන්න (&t)"
+
+#, fuzzy
+#~| msgid "Decoration Options"
+#~ msgid "Hide Advanced Configuration Options"
+#~ msgstr "සැරසිලි විකල්ප"
+
+#, fuzzy
+#~| msgid "Decoration Options"
+#~ msgid "Show Advanced Configuration Options"
+#~ msgstr "සැරසිලි විකල්ප"
+
+#, fuzzy
+#~| msgid "Animate buttons"
+#~ msgid "Animations"
+#~ msgstr "සජීවීකරණය කල බොත්තම්"
+
+#, fuzzy
+#~| msgid "Actions Settings"
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "ක්‍රියා සැකසුම්"
+
+#~ msgid "Remove selected exception?"
+#~ msgstr "තෝරාගත් මඟහැරීම ඉවත් කරන්න?"
+
+#~ msgid "Regular Expression syntax is incorrect"
+#~ msgstr "සාමාන්‍ය ප්‍රකාශන යෙදුම නිවැරදි නොවේ"
+
+#~ msgid "Exception Type"
+#~ msgstr "මඟහැරීමේ වර්‍ගය"
+
+#~ msgid "Regular Expression"
+#~ msgstr "සාමාන්‍ය ප්‍රකාශන"
+
+#~ msgid "Window Title"
+#~ msgstr "කවුළු මාතෘකාව"
+
+#~ msgid "Window Class Name"
+#~ msgstr "කවුළු කණ්ඩායම් නාමය"
+
+#~ msgid "Enable/disable this exception"
+#~ msgstr "මෙම මඟහැරීම සක්‍රීය/අක්‍රීය කරන්න"
+
+#~ msgid "General"
+#~ msgstr "සාමාන්‍ය"
+
+#, fuzzy
+#~| msgid "Border size:"
+#~ msgid "Border si&ze:"
+#~ msgstr "දාර ප්‍රමාණය:"
+
+#, fuzzy
+#~| msgid "No Border"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "දාරයක් නොමැත"
+
+#, fuzzy
+#~| msgid "No Side Border"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Borders"
+#~ msgstr "පැති දාරයක් නොමැත"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Normal"
+#~ msgstr "සාමාන්‍ය"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "විශාල"
+
+#, fuzzy
+#~| msgid "Very Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "ඉතා විශාල"
+
+#, fuzzy
+#~| msgid "Huge"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "අති විශාල"
+
+#, fuzzy
+#~| msgid "Title alignment:"
+#~ msgid "Tit&le alignment:"
+#~ msgstr "මාතෘකා එල්ලකිරීම්:"
+
+#, fuzzy
+#~| msgid "Small"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "කුඩා"
+
+#~ msgid "Fine Tuning"
+#~ msgstr "සුමටනය"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "මෙනු බොත්තම දෙවරක් ක්ලික් කර කවුළු වසන්න"
+
+#~ msgid "Outline active window title"
+#~ msgstr "පිටදාර සක්‍රීය කවුළු මාතෘකාව"
+
+#~ msgid "Shadows"
+#~ msgstr "සෙවනැලි"
+
+#~ msgid "Window Drop-Down Shadow"
+#~ msgstr "කවුළු ඇද-හැළෙන සෙවනැල්ල"
+
+#~ msgid "Active Window Glow"
+#~ msgstr "සක්‍රීය කවුළු දිලිසීම"
+
+#~ msgid "Window-Specific Overrides"
+#~ msgstr "කවුළු කේන්ද්‍රීය අතික්‍රමණ"
+
+#, fuzzy
+#~| msgid "Config Dialog"
+#~ msgid "Dialog"
+#~ msgstr "සැකසුම් සංවාදය"
+
+#~ msgid "Information about Selected Window"
+#~ msgstr "තෝරාගත් කවුළුව පිළිබඳ තොරතුරු"
+
+#~ msgid "Class: "
+#~ msgstr "කණ්ඩායම:"
+
+#~ msgid "Title: "
+#~ msgstr "මාතෘකාව:"
+
+#~ msgid "Window Property Selection"
+#~ msgstr "කවුළු වත්කම් තෝරාගැනීම"
+
+#~ msgid "Use window class (whole application)"
+#~ msgstr "කවුළු කණ්ඩායම භාවිත කරන්න (මුළු භාවිත යෙදවුම)"
+
+#~ msgid "Use window title"
+#~ msgstr "කවුළු මාතෘකාව භාවිත කරන්න"
+
+#~ msgid "Window Identification"
+#~ msgstr "කවුළු හඳුනාගැනීම"
+
+#~ msgid "Matching window property: "
+#~ msgstr "ගැලපෙන කවුළු වත්කම්:"
+
+#~ msgid "Regular expression to match: "
+#~ msgstr "ගැලපීම සඳහා සාමාන්‍ය ප්‍රකාශන:"
+
+#~ msgid "Detect Window Properties"
+#~ msgstr "කවුළු වත්කම් හඳුනාගන්න"
+
+#~ msgid "Decoration Options"
+#~ msgstr "සැරසිලි විකල්ප"
+
+#, fuzzy
+#~| msgid "Disabled"
+#~ msgctxt "outline window title"
+#~ msgid "Disabled"
+#~ msgstr "අක්‍රීය කල"
+
+#, fuzzy
+#~| msgid "Enabled"
+#~ msgctxt "outline window title"
+#~ msgid "Enabled"
+#~ msgstr "සක්‍රීය කල"
+
+#~ msgid "Border size:"
+#~ msgstr "දාර ප්‍රමාණය:"
+
+#~ msgid "Outline active window title:"
+#~ msgstr "පිටදාර සක්‍රීය කවුළු මාතෘකාව:"
+
+#, fuzzy
+#~| msgid "Use window title"
+#~ msgid "Hide window title bar"
+#~ msgstr "කවුළු මාතෘකාව භාවිත කරන්න"
+
+#, fuzzy
+#~| msgid "Disabled"
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Disabled"
+#~ msgstr "අක්‍රීය කල"
+
+#, fuzzy
+#~| msgid "Enabled"
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Enabled"
+#~ msgstr "සක්‍රීය කල"
+
+#~ msgid "Move Up"
+#~ msgstr "ඉහළට ගෙනයන්න"
+
+#~ msgid "Move Down"
+#~ msgstr "පහළට ගෙනයන්න"
+
+#~ msgid "Add"
+#~ msgstr "එක් කරන්න"
+
+#~ msgid "Remove"
+#~ msgstr "ඉවත් කරන්න "
+
+#~ msgid "Edit"
+#~ msgstr "සකසන්න"
+
+#, fuzzy
+#~| msgid "Inactive Window"
+#~ msgid "Inactive Windows"
+#~ msgstr "අක්‍රීය කවුළුවක්"
+
+#, fuzzy
+#~| msgid "Active Window"
+#~ msgid "Active Windows"
+#~ msgstr "සක්‍රීය කවුළුවක්"
+
+#~ msgid "Oxygen"
+#~ msgstr "ඔක්සිජන්"
+
+#, fuzzy
+#~| msgid "Window Identification"
+#~ msgid "Window Actions Menu"
+#~ msgstr "කවුළු හඳුනාගැනීම"
+
+#~ msgid "Help"
+#~ msgstr "උදව්"
+
+#~ msgid "Minimize"
+#~ msgstr "හකුලන්න"
+
+#~ msgid "Maximize"
+#~ msgstr "විහිදන්න"
+
+#~ msgid "Close"
+#~ msgstr "වසන්න"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "අනික්වාට ඉහළින් තබන්න"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "අනික්වාට පහතින් තබන්න"
+
+#~ msgid "On All Desktops"
+#~ msgstr "සියළුම වැඩතලයන්හී"
+
+#~ msgid "Shade Button"
+#~ msgstr "බොත්තම සෙවණ කරන්න"
+
+#~ msgid "Menu"
+#~ msgstr "මෙනුව"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "සියළුම වැඩතලයන් මත නොවේ"
+
+#~ msgid "On all desktops"
+#~ msgstr "සියළුම වැඩතලයන් මත"
+
+#~ msgid "Unshade"
+#~ msgstr "සෙවණැ නොකරන්න"
+
+#~ msgid "Shade"
+#~ msgstr "සෙවණ කරන්න"
+
+#~ msgid "Resize"
+#~ msgstr "ප්‍රතිප්‍රමාණය"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>B II පෙරදැක්ම</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "ප්‍රථිපිහිටුවන්න"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "මාතෘකා තීරු වර්‍ණ යොදාගෙන කවුළු රාමු අඳින්න"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "තෝරා ඇතිවිට, මාතෘකා තීරුවේ වර්‍ණයම සැරසිලි දාර සඳහා යොදාගනී එසේ නොවේනම් , ඒවා සාමාන්‍"
+#~ "ය දාර වර්ණ යොදාගනු ඇත."
+
+#~ msgid "Draw &resize handle"
+#~ msgstr " ප්‍රථිප්‍රමාණ අල්ලුව අඳින් (&r)"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "තෝරා ඇතිවිට, සැරසිලි  කවුළුවේ පහළ දකුණු මුල්ලේ \"ඇදීමේ අල්ලුවක්\" සමඟ ඇඳෙනු ඇත එසේ "
+#~ "නොවේනම්, කිසිඳු ඇදීමේ හැඩලයක් නොඇඳේ."
+
+#~ msgid "Actions Settings"
+#~ msgstr "ක්‍රියා සැකසුම්"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "මෙනු බොත්තම මත දෙවරක් ක්ලික් කරන්න:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "කිසිවක් නොකරන්න"
+
+#~ msgid "Minimize Window"
+#~ msgstr "කවුළුච හකුළන්න"
+
+#~ msgid "Shade Window"
+#~ msgstr "කවුළුව සෙවණැලි කරන්න"
+
+#~ msgid "Close Window"
+#~ msgstr "කවුළුව වසන්න"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "මෙම ක්‍රියාව මෙනු බොත්තම මත දෙවරක් ක්ලික් කිරීමට සහයෝගී කල හැක. සැකයක් ඇතිම් එය එසේම "
+#~ "තිබෙන්නට හරින්න."
+
+#~ msgid "Laptop"
+#~ msgstr "ලැප්ටොප්"
+
+#, fuzzy
+#~| msgid "Background style: "
+#~ msgid "Bac&kground style: "
+#~ msgstr "පසුබිම් රටාව:"
+
+#~ msgid "Solid Color"
+#~ msgstr "දෘඩ වර්ණය"
+
+#~ msgid "Radial Gradient"
+#~ msgstr "කේන්ඳ්‍රීය අනුක්‍රමණය"
+
+#~ msgid "Background style:"
+#~ msgstr "පසුබිම් රටාව:"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "ඩනිෂ්ක නවින්"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "danishka@gmail.com"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Save"
+#~ msgstr "සෙවණ කරන්න"
+
+#~ msgid "Large"
+#~ msgstr "විශාල"
+
+#~ msgid "Small"
+#~ msgstr "කුඩා"
+
+#~ msgid "Extra size grip display: "
+#~ msgstr "අධි ප්‍රමාණිත බැඳුම් දර්ශකය:"
+
+#~ msgid "Extra size grip display:"
+#~ msgstr "අධි ප්‍රමාණිත බැඳුම් දර්ශකය:"
+
+#~ msgid "Inner Color:"
+#~ msgstr "ඇතුළත වර්ණය:"
+
+#~ msgid "Outer Color:"
+#~ msgstr "පිටත වර්ණය:"
+
+#~ msgid "Vertical Offset:"
+#~ msgstr "තිරස් බෑවුම"
+
+#~ msgid "Size: "
+#~ msgstr "ප්‍රමාණය:"
+
+#~ msgid "Always Hide Extra Size Grip"
+#~ msgstr "සැමවිටම අධිප්‍රමාණිත බැඳුම් සඟවන්න"
+
+#~ msgid "Show Extra Size Grip When Needed"
+#~ msgstr "ඇවැසි විට අධි ප්‍රමාණිත බැඳුම් පෙන්වන්න"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "Windows හීදී මෙන්ම මෙනු බොත්තම දෙවරක් ක්ලික් කල විට කවුළුව වැසීමට ඇවැසි නම් මේ අභිප්‍රේතය "
+#~ "සලකුණු කරන්න."
+
+#~ msgid "Plastik"
+#~ msgstr "ප්ලාස්ටික්"
+
+#, fuzzy
+#~| msgid "On All Desktops"
+#~ msgid "All Desktops"
+#~ msgstr "සියළුම වැඩතලයන්හී"
+
+#, fuzzy
+#~| msgid "Close"
+#~ msgid "Close Item"
+#~ msgstr "වසන්න"
+
+#, fuzzy
+#~| msgid "Left"
+#~ msgid "&Left"
+#~ msgstr "වම"
+
+#, fuzzy
+#~| msgid "Center"
+#~ msgid "&Center"
+#~ msgstr "මධ්‍යය"
+
+#, fuzzy
+#~| msgid "Right"
+#~ msgid "&Right"
+#~ msgstr "දකුණ"
+
+#, fuzzy
+#~| msgid "Outer Color:"
+#~ msgid "O&utline Color:"
+#~ msgstr "පිටත වර්ණය:"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Do not keep above others"
+#~ msgstr "අනික්වාට ඉහළින් තබන්න"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above others"
+#~ msgstr "අනික්වාට ඉහළින් තබන්න"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Do not keep below others"
+#~ msgstr "අනික්වාට පහතින් තබන්න"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below others"
+#~ msgstr "අනික්වාට පහතින් තබන්න"
+
+#, fuzzy
+#~| msgid "Disabled"
+#~ msgid "Variable"
+#~ msgstr "අක්‍රීය කල"
+
+#, fuzzy
+#~| msgid "Maximize"
+#~ msgid "Maximum"
+#~ msgstr "විහිදන්න"
+
+#~ msgid "TextLabel"
+#~ msgstr "පෙළලේබලය"
+
+#, fuzzy
+#~| msgid "Shadows"
+#~ msgid "Shadow style:"
+#~ msgstr "සෙවනැලි"
+
+#, fuzzy
+#~| msgid "Enabled"
+#~ msgctxt "draw separator"
+#~ msgid "Enabled"
+#~ msgstr "සක්‍රීය කල"
+
+#, fuzzy
+#~| msgid "Disabled"
+#~ msgctxt "draw separator"
+#~ msgid "Disabled"
+#~ msgstr "අක්‍රීය කල"
+
+#~ msgid "Draw separator between title bar and window contents: "
+#~ msgstr "මාතෘකා තීරුව හා කවුළු අන්තර්ගතය අතර වෙන්කිරීමක් අඳින්න:"
+
+#~ msgid "Draw Separator between title bar and active window contents "
+#~ msgstr "මාතෘකා තීරුව හා සක්‍රීය කවුළු අන්ත්ගතය අතර වෙන්කිරීමක් අඳින්න"
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "KWM තේමාවක් ස්ථාපනය කරන්න"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "තේමා සැකසුම් ගොනුවට මාර්ගය"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWMතේමාව</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "ඇලෙන"
+
+#~ msgid "Unsticky"
+#~ msgstr "නොඇලෙන"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>Keramik පෙරදැක්ම</b></center>"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "මාතෘකා තීරු තිත් වැටුනු රටාව අඳින්න (&s)"
+
+#~ msgid ""
+#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
+#~ "otherwise, they are drawn without the stipple."
+#~ msgstr ""
+#~ "තෝරා ඇතිවිට, සක්‍රීය මාතෘකා තීරු තිත් රටාවක් සමඟ ඇඳේ; එසේනොවේනම්, කිසිඳු තිත් රටාවක් නොමැත."
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "කවුළු වලට පහළින් ඇදීමේ තීරුවක් අඳින්න (&r)"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
+#~ "otherwise, no grab bar is drawn."
+#~ msgstr ""
+#~ "තෝරා ඇතිවිට, සැරසිලි  කවුළුවේ පහළ දකුණු මුල්ලේ \"ඇදීමේ දණ්ඩක්\" සමඟ ඇඳෙනු ඇත එසේ "
+#~ "නොවේනම්, කිසිඳු ඇදීමේ දණ්ඩක් නොඇඳේ."
+
+#~ msgid "Draw &gradients"
+#~ msgstr "අනුක්‍රමණ අඳින්න (&g)"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with gradients for high-color "
+#~ "displays; otherwise, no gradients are drawn."
+#~ msgstr ""
+#~ "තෝරා ඇතිවිට, සැරසිලි අධි-වර්‍ණ දර්ශකයන් හට අනුක්‍රමක සහිතව ඇඳේ; එසේ නොවේනම්, අනුක්‍රමණ "
+#~ "කිසිවක් නොඇඳේ."
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"
+
+#~ msgid ""
+#~ "When selected, the window decoration borders are drawn using the titlebar "
+#~ "colors; otherwise, they are drawn using normal border colors instead."
+#~ msgstr ""
+#~ "තෝරා ඇතිවිට, මාතෘකා තීරුවේ වර්‍ණයම සැරසිලි දාර සඳහා යොදාගනී එසේ නොවේනම් , ඒවා සාමාන්‍"
+#~ "ය දාර වර්ණ යොදාගනු ඇත."
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "Quartz ඉතා සිහින් (&e)"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "ඉතා කුඩා මාතෘකා තීරුවක් සහිත Quartz කවුළු සැරසිලි"
+
+#~ msgid "Quartz"
+#~ msgstr "Quartz"
+
+#~ msgid "Redmond"
+#~ msgstr "Redmond"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "කවුළු ප්‍රථිප්‍රමාණ අල්ලුව පෙන්වන්න (&S)"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "තෝරා ඇතිවිට සියලු කවුලු පහත දකුණු මුල්ලේ ප්‍රතිප්‍රමාණ අල්ලුවක් සහිතව ඇඳේ. එය කවුළු ප්‍රතිප්‍රමාණය "
+#~ "කිරීම පහසු කරයි, විශේෂයෙන්ම , ට්‍රැක් බෝල හා ලැප්ටොප් පරිගණක වල ඇති මවුස් ප්‍රතිස්ථාපක."
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr "මෙහිදී ඔබට ප්‍රථිප්‍රමාණ අල්ලුවේ ප්‍රමාණය වෙනස් කල හැක."
+
+#~ msgid "Medium"
+#~ msgstr "මධ්‍යම "
+
+#~ msgid "Modern System"
+#~ msgstr "නව පද්ධති"
+
+#~ msgid "Web"
+#~ msgstr "වෙබ්"
+
+#~ msgid "Keramik"
+#~ msgstr "Keramik"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "මාතෘකා බුබුල තුළ කවුළු අයිකනය පෙන්වන්න (&i)"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "ඔබට කවුළු අයිකනය මාතෘකාපෙළට පසෙකින් මාතෘකා බුබුල පෙනෙන සේ දර්ශනය කිරීමට ඇවැසිනම් මෙම "
+#~ "විකල්පය තෝරන්න."
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "සක්‍රීය කවුළු මත කුඩා මාතෘකා බුබුල් අඳින්න (&s)"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "සක්‍රීය කවුළු මත වන සක්‍රීය මාතෘකා බුබුල් ඒවායේ අක්‍රීය බුබුල් හි ප්‍රමාණයටම තැබීමට මෙම විකල්පය "
+#~ "තෝරන්න. මෙම විකල්පය කවුළු වල අන්තර්ගත ඉඩ වැඩි කිරීමට ඇවැසි ලැප්ටොප් පරිගණක හා අඩු "
+#~ "විභේදනයක් සහිත දර්ශක සඳහා ප්‍රයෝජනවත් වේ."
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "කවුළු වලට පහළින් ඇදීමේ තීරු අඳින්න (&r)"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "කවුළු වලට පහළින් ඇඳීමේ දණ්ඩක් ඇඳීමට ඇවැසි නම් මෙම අභිප්‍රේතය සලකුණු කරන්න. මෙය සලකුණු කර "
+#~ "නොමැතිවිට, එම ස්ථානයේ සිහින් දාරක් ඇඳෙනු ඇත."
+
+#~ msgid "Aurorae Theme Engine"
+#~ msgstr "අවුරෝරා තේමා එන්ජිම"
+
+#~ msgid "Drag or Type Theme URL"
+#~ msgstr "තේමා URL ලිපිනය අදින්න හෝ ලියන්න"
+
+#~ msgid "Unable to find the theme archive %1."
+#~ msgstr "%1 තේමා සංරක්‍ෂකය සොයාගත නොහැකි විය."
+
+#~ msgid ""
+#~ "Unable to download theme archive;\n"
+#~ "please check that address %1 is correct."
+#~ msgstr ""
+#~ "තේමා සංරක්‍ෂකය බාගත නොහැකි විය;\n"
+#~ "කරුණාකර %1 ලිපිනය නිවැරදි දැයි බලන්න."
+
+#~ msgid "Theme:"
+#~ msgstr "තේමාව:"
+
+#~ msgid "Get New Themes..."
+#~ msgstr "නව තේමා ලබාගන්න..."
+
+#~ msgid "Install New Theme..."
+#~ msgstr "නව තේමාවක් ස්ථාපනය කරන්න..."
+
+#~ msgid "Form"
+#~ msgstr "ෆෝරමය"
+
+#~ msgid "Glow active window"
+#~ msgstr "සක්‍රීය කවුළු දිලිසුම"

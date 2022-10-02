@@ -1,0 +1,134 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Indonesian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwineffects" lang="&language;">
+<articleinfo>
+
+<title
+>Efek Desktop</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Wantoyo</firstname
+><surname
+></surname
+><affiliation
+><address
+><email
+>wantoyek@gmail.com</email
+></address
+></affiliation
+><contrib
+>Terjemahan</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>14-04-2016</date>
+<releaseinfo
+>Pasma 5.6</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>desktop</keyword>
+<keyword
+>efek</keyword>
+</keywordset>
+</articleinfo>
+
+<!--FIXME Compositor Enable compositor on startup necessary to have effects?-->
+
+<para
+>Modul ini adalah digunakan untuk memfungsikan dan mengkonfigurasikan efek desktop untuk Plasma.</para>
+
+<para
+>Bagian utama pada halaman ini adalah daftar dari semua efek yang tersedia yang dikelompokkan berdasarkan <guilabel
+>Aksesibilitas</guilabel
+>, <guilabel
+>Penampilan</guilabel
+>, <guilabel
+>Fokus</guilabel
+>, <guilabel
+>Peralatan</guilabel
+>, <guilabel
+>Pemanis</guilabel
+> dan <guilabel
+>Pengelolaan Window</guilabel
+>.</para>
+<para
+>Gunakan bilah pencarian tambahan di atas daftar window untuk menemukan item-item di dalam daftar.</para>
+
+<para
+>Biasanya tidak ada alasan bagi pengguna untuk mengubahnya, tetapi ada sebuah tombol konfigurasi <inlinemediaobject
+><imageobject
+><imagedata fileref="configure-effects.png" format="PNG"/> </imageobject
+></inlinemediaobject
+> untuk memodifikasi pemfilteran pada daftar juga untuk menampilkan efek-efeknya. </para>
+
+<para
+>Cara termudah menginstal efek baru adalah menggunakan dukungan KNewStuff bawaan di &kwin;. Tekan tombol <guibutton
+>Dapatkan Efek Baru</guibutton
+> untuk membuka sebuah dialog dengan daftar efek yang tersedia dari Internet dan untuk menginstal dan menguninstal efek-efek.</para>
+<note
+><para
+>Mohon diingat bahwa mengubah pembakuan yang masuk akal bisa merusak sistemmu.</para>
+</note>
+
+<para
+>Centang sebuah efek di dalam daftar untuk memfungsikannya. Displaikan informasi tentang Penulis dan Lisensi dengan mengeklik tombol info <inlinemediaobject
+><imageobject
+><imagedata fileref="dialog-information.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> di sebelah kanan pada item daftar.</para>
+
+<para
+>Beberapa efek memiliki opsi pengaturan, dalam kasus ini ada sebuah tombol konfigurasikan <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure-effects.png" format="PNG"/></imageobject
+></inlinemediaobject
+> di sebelah kirinya tombol info. Kliklah itu untuk membuka sebuah dialog konfigurasi.</para>
+<para
+>Untuk melihat pratinjau video pada sebuah efek kliklah tombol <inlinemediaobject
+><imageobject
+><imagedata fileref="video.png" format="PNG"/> </imageobject
+></inlinemediaobject
+>.</para>
+
+<para
+>Beberapa efek saling eksklusif ke efek lainnya. Misalnya seseorang hanya ingin mengaktifkan efek <guilabel
+>Minimize Animations</guilabel
+> atau <guilabel
+>Magic Lamp</guilabel
+>. Bila keduanya diaktifkan dalam waktu yang sama menghasilkan animasi yang buruk. </para>
+
+<para
+>Untuk efek dalam sebuah kelompok yang saling eksklusif, &GUI; menggunakan tombol radio dan mengelola satu saja dari efek tersebut yang bisa diaktifkan. </para>
+
+<para
+>Semua efek yang tidak didukung oleh backend compositing yang digunakan saat ini, berdasarkan bakunya adalah disembunyikan (&eg; efek OpenGL ketika menggunakan XRender). </para
+> 
+
+<para
+>Juga semua internal atau penunjang efek yang disembunyikan secara bakunya. Ini adalah efek yang menggantikan fungsionalitas dari KWin Core atau menyediakan interaksi dengan elemen lain dari shell desktop. </para>
+
+<!--FIXME 
+39 effects + 7 internal (XRender compositor)
+Internal effects
+Appearance (Dashboard, Highlight Windows, KSreen, Screenshot, Window Geometry)
+Candy (Startup feedback)
+Window Management (Cover Switch)
+-->
+
+</article>

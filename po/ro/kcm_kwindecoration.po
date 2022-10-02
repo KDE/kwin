@@ -1,0 +1,503 @@
+# Traducerea kcmkwindecoration.po în Română
+# translation of kcmkwindecoration.po to Romanian
+# Copyright (C) 2003, 2004, 2005, 2008 Free Software Foundation, Inc.
+# Claudiu Costin <claudiuc@kde.org>, 2003, 2004, 2005.
+# Sergiu Bivol <sergiu@cip.md>, 2008, 2009, 2010, 2012, 2013, 2020, 2021, 2022.
+# Cristian Oneț <onet.cristian@gmail.com>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwindecoration\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2022-05-05 12:48+0100\n"
+"Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
+"Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Lokalize 21.12.3\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Sergiu Bivol"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "sergiu@cip.md"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr "Acțiuni suplimentare pentru această fereastră"
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, kde-format
+msgid "Application menu"
+msgstr "Meniul aplicației"
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, kde-format
+msgid "On all desktops"
+msgstr "Pe toate birourile"
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr "Minimizează"
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr "Maximizează"
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr "Închide"
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr "Ajutor contextual"
+
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr "Strânge"
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr "Ține sub alte ferestre"
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr "Ține deasupra altor ferestre"
+
+#: kcm.cpp:49
+#, kde-format
+msgid "Window Decorations"
+msgstr "Decorații fereastră"
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr "Valerio Pilo"
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr "Autor"
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr "Implicită a tematicii (%1)"
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr "Arată toate tematicile disponibile în sistem (și care e cea actuală)"
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr ""
+"Tematica cerută „%1” e stabilită deja ca tematică pentru decorațiunile "
+"ferestrelor."
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr ""
+"Tematica pentru cursor %1 a fost aplicată cu succes la sesiunea Plasma "
+"actuală"
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr ""
+"Tematica „%1” nu a putut fi găsită. Tematica trebuie să fie una dintre "
+"următoarele opțiuni: %2"
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr ""
+"Aveți următoarele tematici pentru decorații de fereastră KWin în sistem:"
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr "Bară de titlu"
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr "Lăsați butonul aici pentru a-l elimina"
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr "Trageți butoane între aici și bara de titlu"
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr "Acest modul vă permite să configurați decorațiile ferestrelor."
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr "Tematică"
+
+#: package/contents/ui/main.qml:57
+#, kde-format
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "Butoane pe bara de titlu"
+
+#: package/contents/ui/main.qml:93
+#, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "Dimensiunea conturului ferestrei:"
+
+#: package/contents/ui/main.qml:112
+#, kde-format
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr "Obține decorații de fereastră noi..."
+
+#: package/contents/ui/main.qml:141
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr "Închide ferestrele prin dublu clic pe butonul de meniu"
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr "Apăsați și țineți pe butonul meniului pentru a arăta meniul."
+
+#: package/contents/ui/main.qml:165
+#, kde-format
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "Arată indicii pentru butoanele barei de titlu"
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr "Modifică tematica %1"
+
+#: utils.cpp:25
+#, kde-format
+msgid "No Borders"
+msgstr "Fără contur"
+
+#: utils.cpp:26
+#, kde-format
+msgid "No Side Borders"
+msgstr "Fără contur lateral"
+
+#: utils.cpp:27
+#, kde-format
+msgid "Tiny"
+msgstr "Minuscul"
+
+#: utils.cpp:28
+#, kde-format
+msgid "Normal"
+msgstr "Normal"
+
+#: utils.cpp:29
+#, kde-format
+msgid "Large"
+msgstr "Mare"
+
+#: utils.cpp:30
+#, kde-format
+msgid "Very Large"
+msgstr "Foarte mare"
+
+#: utils.cpp:31
+#, kde-format
+msgid "Huge"
+msgstr "Imens"
+
+#: utils.cpp:32
+#, kde-format
+msgid "Very Huge"
+msgstr "Foarte imens"
+
+#: utils.cpp:33
+#, kde-format
+msgid "Oversized"
+msgstr "Supradimensionat"
+
+#~ msgctxt "popup tip"
+#~ msgid ""
+#~ "Close by double clicking: Keep the window's Menu button pressed until it "
+#~ "appears."
+#~ msgstr ""
+#~ "Închide prin dublu clic: țineți apăsat butonul de meniu al ferestrei până "
+#~ "apare."
+
+#~ msgid "Menu"
+#~ msgstr "Meniu"
+
+#~ msgid "Keep below"
+#~ msgstr "Ține dedesubt"
+
+#~ msgid "Keep above"
+#~ msgstr "Ține deasupra"
+
+#~ msgid "Download New Window Decorations"
+#~ msgstr "Descarcă decorații de fereastră noi"
+
+#~ msgctxt "checkbox label"
+#~ msgid "Use theme's default window border size"
+#~ msgstr "Folosește dimensiunea de contur al ferestrei implicită a tematicii"
+
+#, fuzzy
+#~| msgid "Search"
+#~ msgid "Search..."
+#~ msgstr "Caută"
+
+#, fuzzy
+#~| msgid "Close windows by double clicking the menu button"
+#~ msgid "Close windows by double clicking &the menu button"
+#~ msgstr "Închide ferestrele prin dublu-clic pe butonul de meniu"
+
+#, fuzzy
+#~| msgid "Border size:"
+#~ msgid "Border si&ze:"
+#~ msgstr "Dimensiune margine:"
+
+#, fuzzy
+#~| msgid "Configure Buttons..."
+#~ msgid "Configure %1..."
+#~ msgstr "Configurare butoane..."
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgid "Form"
+#~ msgstr "Normală"
+
+#~ msgid "Button size:"
+#~ msgstr "Dimensiune buton:"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "Minusculă"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "Normală"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "Mare"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "Foarte mare"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "Imensă"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "Extrem de mare"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "Supradimensionată"
+
+#~ msgid "KDE"
+#~ msgstr "KDE"
+
+#~ msgid "%1 (unavailable)"
+#~ msgstr "%1 (indisponibil)"
+
+#~ msgid ""
+#~ "To add or remove titlebar buttons, simply <i>drag</i> items between the "
+#~ "available item list and the titlebar preview. Similarly, drag items "
+#~ "within the titlebar preview to re-position them."
+#~ msgstr ""
+#~ "Pentru a adăuga sau elimina butoane din bara de titlu, pur și simplu "
+#~ "<i>trageți-le</i> din lista de elemente disponibile pe previzualizarea "
+#~ "barei de titlu. În mod similar, trageți elementele de-a lungul "
+#~ "previzualizării barei de titlu pentru a le repoziționa."
+
+#~ msgid "Resize"
+#~ msgstr "Redimensionează"
+
+#~ msgid "Help"
+#~ msgstr "Ajutor"
+
+#~ msgctxt "Button showing window actions menu"
+#~ msgid "Window Menu"
+#~ msgstr "Meniu fereastră"
+
+#~ msgid "--- spacer ---"
+#~ msgstr "--- spațiator ---"
+
+#~ msgid ""
+#~ "Enabling this checkbox will show window button tooltips. If this checkbox "
+#~ "is off, no window button tooltips will be shown."
+#~ msgstr ""
+#~ "Activarea acestei opțiuni va determina afișarea mesajelor de ajutor rapid "
+#~ "pentru butoanele ferestrei."
+
+#~ msgid "Please note that this option is not available on all styles yet."
+#~ msgstr ""
+#~ "Rețineți că această opțiune încă nu este valabilă pentru toate stilurile."
+
+#~ msgid "Use custom titlebar button &positions"
+#~ msgstr "Folosește &poziții personalizate pentru butoanele barei de titlu"
+
+#~ msgid "B&order size:"
+#~ msgstr "Dimensiune &margine:"
+
+#~ msgid "Use this combobox to change the border size of the decoration."
+#~ msgstr ""
+#~ "Folosiți această casetă combinată pentru a modifica mărimea marginii "
+#~ "decorării ferestrei."
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Border"
+#~ msgstr "Fără margine laterală"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "Fără margine"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Opțiuni de decorare"
+
+#~ msgid ""
+#~ "Select the window decoration. This is the look and feel of both the "
+#~ "window borders and the window handle."
+#~ msgstr ""
+#~ "Selectați decorarea ferestrei. Aceasta reprezintă aspectul marginilor și "
+#~ "a colțului ferestrei."
+
+#~ msgid "Configure Decoration..."
+#~ msgstr "Configurare decorații..."
+
+#~ msgid "Window Decoration Control Module"
+#~ msgstr "Modul de control decorare ferestre"
+
+#~ msgid "(c) 2001 Karol Szwed"
+#~ msgstr "(c) 2001 Karol Szwed"
+
+#~ msgid "Karol Szwed"
+#~ msgstr "Karol Szwed"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+#~ msgid ""
+#~ "<h1>Window Manager Decoration</h1><p>This module allows you to choose the "
+#~ "window border decorations, as well as titlebar button positions and "
+#~ "custom decoration options.</p>To choose a theme for your window "
+#~ "decoration click on its name and apply your choice by clicking the \"Apply"
+#~ "\" button below. If you do not want to apply your choice you can click "
+#~ "the \"Reset\" button to discard your changes.<p>You can configure each "
+#~ "theme. There are different options specific for each theme.</p><p>On the "
+#~ "\"Buttons\" tab check the \"Use custom titlebar button positions\" box "
+#~ "and you can change the positions of the buttons to your liking.</p>"
+#~ msgstr ""
+#~ "<h1>Administrator decorare ferestre</h1><p>Acest modul vă permite să "
+#~ "alegeți decorarea marginilor ferestrelor, precum și pozițiile butoanelor "
+#~ "din bara de titlu și opțiuni de decorare personalizate.</p> Pentru a "
+#~ "alege o tematică de fereastră, dați clic pe numele ei și activați-o "
+#~ "apăsând butonul „Aplică” de mai jos. Dacă nu doriți să aplicați setările "
+#~ "făcute, apăsați butonul „Revenire” pentru a elimina modificările."
+#~ "<p>Fiecare tematică poate fi configurată. Opțiunile de configurat sunt "
+#~ "diferite de la o tematică la alta.</p><p>În fila „Butoane” bifați "
+#~ "„Utilizează poziții personalizate pentru butoanele barei de titlu” și "
+#~ "aveți posibilitatea să schimbați poziția butoanelor după gusturile "
+#~ "dumneavoastră.</p>"
+
+#~ msgid "Active Window"
+#~ msgstr "Fereastră activă"
+
+#~ msgid "Inactive Window"
+#~ msgstr "Fereastră inactivă"
+
+#~ msgid "kcmkwindecoration"
+#~ msgstr "Decorare fereastră"
+
+#~ msgctxt "Caption to decoration preview, %1 author name"
+#~ msgid "by %1"
+#~ msgstr "de %1"
+
+#~ msgid ""
+#~ "No preview available.\n"
+#~ "Most probably there\n"
+#~ "was a problem loading the plugin."
+#~ msgstr ""
+#~ "Nu există o previzualizare.\n"
+#~ "Este foarte probabil să fi apărut\n"
+#~ "o problemă la încărcarea modulului."
+
+#~ msgid "&Buttons"
+#~ msgstr "&Butoane"
+
+#~ msgid "Ozone"
+#~ msgstr "Ozon"

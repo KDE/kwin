@@ -1,0 +1,514 @@
+# translation of kcmkwindecoration.po to Polish
+# Version: $Revision: 1630684 $
+# translation of kcmkwindecoration.po to
+# Norbert Popiołek <norbert@kde.com.pl>\n"
+# Michał Rudolf <mrudolf@kdewebdev.org>, 2002.
+# Michal Rudolf <mrudolf@kdewebdev.org>, 2002, 2003, 2004, 2005, 2009.
+# Marta Rybczyńska <kde-i18n@rybczynska.net>, 2008, 2009, 2010.
+# Marta Rybczynska <kde-i18n@rybczynska.net>, 2009.
+# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2021, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwindecoration\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2022-08-06 09:41+0200\n"
+"Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
+"Language-Team: Polish <kde-i18n-doc@kde.org>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+">\n"
+"X-Generator: Lokalize 22.04.1\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Michał Rudolf, Norbert Popiołek, Łukasz Wojniłowicz"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr ""
+"mrudolf@kdewebdev.org, norbert@kde.com.pl, lukasz.wojnilowicz@gmail.com"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr "Więcej działań dla tego okna"
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, kde-format
+msgid "Application menu"
+msgstr "Menu programów"
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, kde-format
+msgid "On all desktops"
+msgstr "Na wszystkich pulpitach"
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr "Zminimalizuj"
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr "Zmaksymalizuj"
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr "Zamknij"
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr "Pomoc podręczna"
+
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr "Zwiń"
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr "Utrzymuj pod innymi oknami"
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr "Utrzymuj nad innymi oknami"
+
+#: kcm.cpp:49
+#, kde-format
+msgid "Window Decorations"
+msgstr "Wygląd okien"
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr "Valerio Pilo"
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr "Autor"
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr "Zgodny z wyglądem (%1)"
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+"To narzędzie umożliwia ustawienie wyglądu okien dla bieżącej sesji bez "
+"zagrożenia przypadkowego ustawienia go na taki, który jest niedostępny lub "
+"taki, który już jest ustawiony."
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+"Nazwa wyglądu okien, których chcesz ustawić dla KWin. Wpisanie pełnej "
+"ścieżki spowoduje wyszukanie tego wyglądu w danym katalogu, a następnie jego "
+"nałożenie, jeśli zostanie on znaleziony."
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr ""
+"Pokaż wszystkie wyglądy dostępne w systemie (i który z nich jest bieżącym)"
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+"Rozwiązano %1 do wyglądu KWin Aurorae \"%2\" i zostanie on ustawiony jako "
+"bieżący wygląd."
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+"Próbowałeś wpisać ścieżkę pliku, lecz nie można z niej określić wyglądu, "
+"więc działanie zostanie przerwane, bo nie ma wyglądu do ustawienia"
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr "Żądany wygląd \"%1\" jest już ustawiony jako wygląd dla okien."
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr "Pomyślnie zastosowano wygląd dla wskaźników %1 w bieżącej sesji Plazmy"
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+"Nie udało się zapisać ustawień wyglądu z nieznanego powodu, lecz jest to "
+"błąd, z którego nie można się wycofać. Spróbuj ponownie."
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr ""
+"Nie można znaleźć wyglądu \"%1\". Wygląd powinien być jednym z następujących "
+"ustawień: %2"
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr "Masz następujące wyglądy dla okien dla KWin w swoim systemie:"
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr "Pasek tytułu"
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr "Upuść tutaj przycisk, aby go usunąć"
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr "Przeciągnij przycisk stąd na pasek tytułu"
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr "Ten moduł umożliwia określenie wyglądu okien."
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr "Wygląd"
+
+#: package/contents/ui/main.qml:57
+#, kde-format
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "Przyciski paska tytułu"
+
+#: package/contents/ui/main.qml:93
+#, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "Rozmiar obramowania okna:"
+
+#: package/contents/ui/main.qml:112
+#, kde-format
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr "Pobierz nowy wygląd dla okien..."
+
+#: package/contents/ui/main.qml:141
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr "Zamknij okno po dwukrotnym naciśnięciu na przycisk menu"
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr "Naciśnij i przytrzymaj przycisk menu, aby pokazać menu."
+
+#: package/contents/ui/main.qml:165
+#, kde-format
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "Pokaż podpowiedź po najechaniu na przycisk paska tytułu"
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr "Edytuj wygląd %1"
+
+#: utils.cpp:25
+#, kde-format
+msgid "No Borders"
+msgstr "Bez obramowań"
+
+#: utils.cpp:26
+#, kde-format
+msgid "No Side Borders"
+msgstr "Bez obramowania z boku"
+
+#: utils.cpp:27
+#, kde-format
+msgid "Tiny"
+msgstr "Małe"
+
+#: utils.cpp:28
+#, kde-format
+msgid "Normal"
+msgstr "Normalne"
+
+#: utils.cpp:29
+#, kde-format
+msgid "Large"
+msgstr "Duże"
+
+#: utils.cpp:30
+#, kde-format
+msgid "Very Large"
+msgstr "Bardzo duże"
+
+#: utils.cpp:31
+#, kde-format
+msgid "Huge"
+msgstr "Wielkie"
+
+#: utils.cpp:32
+#, kde-format
+msgid "Very Huge"
+msgstr "Bardzo wielkie"
+
+#: utils.cpp:33
+#, kde-format
+msgid "Oversized"
+msgstr "Przewymiarowane"
+
+#~ msgctxt "popup tip"
+#~ msgid ""
+#~ "Close by double clicking: Keep the window's Menu button pressed until it "
+#~ "appears."
+#~ msgstr ""
+#~ "Zamykanie po dwukrotnym kliknięciu: Aby otworzyć menu, przytrzymaj "
+#~ "przycisk naciśniętym na menu do chwili jego pokazania się."
+
+#~ msgid "Menu"
+#~ msgstr "Menu"
+
+#~ msgid "Keep below"
+#~ msgstr "Zawsze na spodzie"
+
+#~ msgid "Keep above"
+#~ msgstr "Zawsze na wierzchu"
+
+#~ msgid "Download New Window Decorations"
+#~ msgstr "Pobierz nowy wygląd dla okien"
+
+#~ msgctxt "checkbox label"
+#~ msgid "Use theme's default window border size"
+#~ msgstr "Zastosuj domyślny rozmiar obramowania okna dla wyglądu"
+
+#~ msgid "Search..."
+#~ msgstr "Znajdź..."
+
+#~ msgid "Close windows by double clicking &the menu button"
+#~ msgstr "Zamykaj okna po dwukro&tnym kliknięciu na ich przycisku menu"
+
+#~ msgid "Border si&ze:"
+#~ msgstr "Ro&zmiar obramowania:"
+
+#~ msgid "Buttons"
+#~ msgstr "Przyciski"
+
+#~ msgid "Configure %1..."
+#~ msgstr "Ustawienia %1..."
+
+#~ msgid "Drag to re-position buttons"
+#~ msgstr "Przeciągaj, aby rozmieszczać przyciski"
+
+#~ msgid "Form"
+#~ msgstr "Formularz"
+
+#~ msgid "Button size:"
+#~ msgstr "Rozmiar przycisku:"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "Mały"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "Zwykły"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "Duży"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "Bardzo duży"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "Wielki"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "Bardzo wielki"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "Olbrzymi"
+
+#~ msgid "KDE"
+#~ msgstr "KDE"
+
+#~ msgid "%1 (unavailable)"
+#~ msgstr "%1 (niedostępne)"
+
+#~ msgid ""
+#~ "To add or remove titlebar buttons, simply <i>drag</i> items between the "
+#~ "available item list and the titlebar preview. Similarly, drag items "
+#~ "within the titlebar preview to re-position them."
+#~ msgstr ""
+#~ "Aby dodać lub usunąć przycisk paska tytułowego, po prostu <i>przenoś</i> "
+#~ "przyciski między listą przycisków a podglądem tytułu. Możesz też zmieniać "
+#~ "pozycję przycisków, przenosząc je wewnątrz paska tytułowego."
+
+#~ msgid "Resize"
+#~ msgstr "Zmień rozmiar"
+
+#~ msgid "Help"
+#~ msgstr "Pomoc"
+
+#~ msgctxt "Button showing window actions menu"
+#~ msgid "Window Menu"
+#~ msgstr "Menu okna"
+
+#~ msgid "--- spacer ---"
+#~ msgstr "--- odstęp ---"
+
+#~ msgid ""
+#~ "Enabling this checkbox will show window button tooltips. If this checkbox "
+#~ "is off, no window button tooltips will be shown."
+#~ msgstr "Ta opcja włącza wyświetlanie podpowiedzi do przycisków."
+
+#~ msgid "Please note that this option is not available on all styles yet."
+#~ msgstr "Uwaga: ta opcja nie jest jeszcze dostępna dla wszystkich stylów."
+
+#~ msgid "Use custom titlebar button &positions"
+#~ msgstr "Użyj własnych &pozycji przycisków na pasku tytułowym"
+
+#~ msgid "B&order size:"
+#~ msgstr "&Rozmiar brzegu okna:"
+
+#~ msgid "Use this combobox to change the border size of the decoration."
+#~ msgstr ""
+#~ "Użyj tego pola rozwijanego, aby zmienić rozmiar obramowania wystroju."
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Border"
+#~ msgstr "Brak bocznego obramowania"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "Brak obramowania"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Opcje wystroju"
+
+#~ msgid ""
+#~ "Select the window decoration. This is the look and feel of both the "
+#~ "window borders and the window handle."
+#~ msgstr ""
+#~ "Wybierz wystrój okna. Jest to zarówno wygląd i odczucia względem "
+#~ "obramowań okna jak i jego uchwytu."
+
+#~ msgid "Configure Decoration..."
+#~ msgstr "Ustawienia wystroju..."
+
+#~ msgid "Window Decoration Control Module"
+#~ msgstr "Moduł sterowania wystrojem okna"
+
+#~ msgid "(c) 2001 Karol Szwed"
+#~ msgstr "(c) 2001 Karol Szwed"
+
+#~ msgid "Karol Szwed"
+#~ msgstr "Karol Szwed"
+
+#~ msgid ""
+#~ "<h1>Installation error</h1>The resource<h2>kwin/kcm_kwindecoration/main."
+#~ "qml</h2>could not be located in any application data path.<h2>Please "
+#~ "contact your distribution</h2>The application will now abort"
+#~ msgstr ""
+#~ "<h1>Błąd instalacji</h1>Zasobu<h2>kwin/kcm_kwindecoration/main.qml</"
+#~ "h2>nie można znaleźć w żadnej ze ścieżek danych programu.<h2>Proszę "
+#~ "powiadomić o tym swoją dystrybucję</h2>Program zostanie teraz przerwany"
+
+#~ msgid "Installation Error"
+#~ msgstr "Błąd instalacji"
+
+#~ msgid "Oxygen"
+#~ msgstr "Tlen"
+
+#~ msgid ""
+#~ "<h1>Window Manager Decoration</h1><p>This module allows you to choose the "
+#~ "window border decorations, as well as titlebar button positions and "
+#~ "custom decoration options.</p>To choose a theme for your window "
+#~ "decoration click on its name and apply your choice by clicking the \"Apply"
+#~ "\" button below. If you do not want to apply your choice you can click "
+#~ "the \"Reset\" button to discard your changes.<p>You can configure each "
+#~ "theme. There are different options specific for each theme.</p><p>On the "
+#~ "\"Buttons\" tab check the \"Use custom titlebar button positions\" box "
+#~ "and you can change the positions of the buttons to your liking.</p>"
+#~ msgstr ""
+#~ "<h1>Wystrój programu do zarządzania okami</h1> <p>W tym module można "
+#~ "wybrać obramowanie okna, a także położenie przycisków na pasku tytułowym. "
+#~ "Można również ustawić dodatkowe opcje wybranego wystroju. </p>Żeby wybrać "
+#~ "zestaw dla bieżącego wystroju okna, wystarczy nacisnąć na jego nazwę, "
+#~ "następnie na przycisk \"Zastosuj\". Żeby przywrócić poprzednie "
+#~ "ustawienia, należy użyć przycisku \"Przywróć\". <p>Każdy zestaw można "
+#~ "skonfigurować na karcie \"Ustawienia...\". Dostępne opcje zależą od "
+#~ "wybranego zestawu. </p><p> W \"Opcjach ogólnych\" (jeśli dostępne) można "
+#~ "włączyć kartę \"Przyciski\" przez wybranie opcji \"Użyj własnych pozycji "
+#~ "przycisków na pasku tytułowym\". W karcie \"Przyciski\" można będzie "
+#~ "wtedy dostosować pozycje poszczególnych przycisków. </p>"
+
+#~ msgid "Active Window"
+#~ msgstr "Aktywne okno"
+
+#~ msgid "Inactive Window"
+#~ msgstr "Nieaktywne okno"
+
+#~ msgid "kcmkwindecoration"
+#~ msgstr "kcmkwindecoration"
+
+#~ msgctxt "Caption to decoration preview, %1 author name"
+#~ msgid "by %1"
+#~ msgstr "autor: %1"
+
+#~ msgid ""
+#~ "No preview available.\n"
+#~ "Most probably there\n"
+#~ "was a problem loading the plugin."
+#~ msgstr ""
+#~ "Podgląd niedostępny.\n"
+#~ "Najprawdopodobniej były problemy z wczytaniem wtyczki."
+
+#~ msgid "&Buttons"
+#~ msgstr "&Przyciski"

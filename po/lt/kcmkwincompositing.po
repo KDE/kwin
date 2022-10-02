@@ -1,0 +1,356 @@
+# translation of kcmkwincompositing.po to Lithuanian
+# Donatas Glodenis <dgvirtual@akl.lt>, 2007-2009.
+# Donatas G. <dgvirtual@akl.lt>, 2010.
+# Tomas Straupis <tomasstraupis@gmail.com>, 2010, 2011.
+# Remigijus Jarmalavičius <remigijus@jarmalavicius.lt>, 2011.
+# Liudas Ališauskas <liudas.alisauskas@gmail.com>, 2012.
+# Liudas Alisauskas <liudas@akmc.lt>, 2013.
+# liudas@aksioma.lt <liudas@aksioma.lt>, 2014.
+# Mindaugas Baranauskas <opensuse.lietuviu.kalba@gmail.com>, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwincompositing\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"PO-Revision-Date: 2019-07-26 16:14+0300\n"
+"Last-Translator: Moo\n"
+"Language-Team: lt <kde-i18n-lt@kde.org>\n"
+"Language: lt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
+"%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
+"X-Generator: Poedit 2.0.6\n"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
+#: compositing.ui:31
+#, fuzzy, kde-format
+#| msgid ""
+#| "OpenGL compositing (the default) has crashed KWin in the past.\n"
+#| "This was most likely due to a driver bug.\n"
+#| "If you think that you have meanwhile upgraded to a stable driver,\n"
+#| "you can reset this protection but be aware that this might result in an "
+#| "immediate crash!\n"
+#| "Alternatively, you might want to use the XRender backend instead."
+msgid ""
+"OpenGL compositing (the default) has crashed KWin in the past.\n"
+"This was most likely due to a driver bug.\n"
+"If you think that you have meanwhile upgraded to a stable driver,\n"
+"you can reset this protection but be aware that this might result in an "
+"immediate crash!"
+msgstr ""
+"OpenGL kompozicionavimas (numatytasis) praeityje užlaužė KWin.\n"
+"Greičiausiai, tai įvyko dėl tvarkyklės klaidos.\n"
+"Jei galvojate, kad per tą laiką atsinaujinote į stabilią tvarkyklę,\n"
+"tuomet galite atstatyti šią apsaugą, tačiau turėkite omenyje, kad tai iš "
+"karto gali sąlygoti lūžimą!\n"
+"Priešingu atveju, vietoj to, galite pageidauti naudoti XRender vidinę pusę."
+
+#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
+#: compositing.ui:44
+#, kde-format
+msgid ""
+"Scale method \"Accurate\" is not supported by all hardware and can cause "
+"performance regressions and rendering artifacts."
+msgstr ""
+"Mastelio keitimo metodas \"Tikslus\" nėra palaikomas visos aparatinės "
+"įrangos ir gali sukelti našumo regresijas bei atvaizdavimo artefaktus."
+
+#. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
+#: compositing.ui:67
+#, kde-format
+msgid ""
+"Keeping the window thumbnail always interferes with the minimized state of "
+"windows. This can result in windows not suspending their work when minimized."
+msgstr ""
+"Langų miniatiūrų saugojimas visada trukdo sumažintoms langų būsenoms. Tai "
+"gali sąlygoti, kad langai, juos sumažinus, nepristabdys savo darbo."
+
+#. i18n: ectx: property (text), widget (QLabel, compositingLabel)
+#: compositing.ui:79
+#, kde-format
+msgid "Compositing:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
+#: compositing.ui:86
+#, fuzzy, kde-format
+#| msgid "Enable compositor on startup"
+msgid "Enable on startup"
+msgstr "Įjungti kompozitorių paleidimo metu"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:95
+#, kde-format
+msgid ""
+"Applications can set a hint to block compositing when the window is open.\n"
+" This brings performance improvements for e.g. games.\n"
+" The setting can be overruled by window-specific rules."
+msgstr ""
+"Programos gali nustatyti užuominą blokuoti kompozicionavimą, kai langas yra "
+"atvertas.\n"
+" Tai suteikia našumo patobulinimų, pvz., žaidimams.\n"
+" Ši nuostata gali būti nustelbta tam tikromis langų taisyklėmis."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:98
+#, kde-format
+msgid "Allow applications to block compositing"
+msgstr "Leisti programoms blokuoti kompozicionavimą"
+
+#. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
+#: compositing.ui:105
+#, kde-format
+msgid "Animation speed:"
+msgstr "Animacijos greitis:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: compositing.ui:142
+#, kde-format
+msgid "Very slow"
+msgstr "Labai lėtai"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: compositing.ui:162
+#, kde-format
+msgid "Instant"
+msgstr "Akimirksniu"
+
+#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
+#: compositing.ui:174
+#, kde-format
+msgid "Scale method:"
+msgstr "Mastelio keitimo metodas:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:184
+#, kde-format
+msgid "Smooth"
+msgstr "Glotnus"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:189
+#, kde-format
+msgid "Accurate"
+msgstr "Tikslus"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: compositing.ui:199
+#, kde-format
+msgid "Tearing prevention (\"vsync\"):"
+msgstr "Perskyrimų prevencija („VSync“):"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:207
+#, kde-format
+msgid "Automatic"
+msgstr "Automatiškai"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:212
+#, kde-format
+msgid "Only when cheap"
+msgstr "Tik tuomet, kai lengva"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:217
+#, kde-format
+msgid "Full screen repaints"
+msgstr "Viso ekrano piešimas iš naujo"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:222
+#, kde-format
+msgid "Re-use screen content"
+msgstr "Pakartotinai naudoti ekrano turinį"
+
+#. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
+#: compositing.ui:230
+#, kde-format
+msgid "Keep window thumbnails:"
+msgstr "Saugoti langų miniatiūras:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:238
+#, kde-format
+msgid "Never"
+msgstr "Niekada"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:243
+#, kde-format
+msgid "Only for Shown Windows"
+msgstr "Tik rodomiems langams"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:248
+#, kde-format
+msgid "Always"
+msgstr "Visada"
+
+#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
+#: compositing.ui:256
+#, kde-format
+msgid "Latency:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:264
+#, kde-format
+msgid "Force lowest latency (may cause dropped frames)"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:269
+#, kde-format
+msgid "Prefer lower latency"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:274
+#, kde-format
+msgid "Balance of latency and smoothness"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:279
+#, kde-format
+msgid "Prefer smoother animations"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:284
+#, kde-format
+msgid "Force smoothest animations"
+msgstr ""
+
+#: main.cpp:79
+#, kde-format
+msgid "Re-enable OpenGL detection"
+msgstr "Iš naujo įjungti OpenGL aptikimą"
+
+#: main.cpp:135
+#, kde-format
+msgid ""
+"\"Only when cheap\" only prevents tearing for full screen changes like a "
+"video."
+msgstr ""
+"\"Tik tuomet, kai lengva\" neleidžia perskyrimų tik viso ekrano "
+"pakeitimuose, tokiuose kaip vaizdo įrašai."
+
+#: main.cpp:139
+#, kde-format
+msgid "\"Full screen repaints\" can cause performance problems."
+msgstr "\"Viso ekrano piešimas iš naujo\" gali sukelti našumo problemų."
+
+#: main.cpp:143
+#, kde-format
+msgid ""
+"\"Re-use screen content\" causes severe performance problems on MESA drivers."
+msgstr ""
+"\"Pakartotinai naudoti ekrano turinį\" MESA tvarkyklėse gali sukelti rimtų "
+"našumo problemų."
+
+#~ msgid "Rendering backend:"
+#~ msgstr "Atvaizdavimo vidinė pusė:"
+
+#~ msgid "OpenGL 3.1"
+#~ msgstr "OpenGL 3.1"
+
+#~ msgid "OpenGL 2.0"
+#~ msgstr "OpenGL 2.0"
+
+#~ msgid "Crisp"
+#~ msgstr "Aiškus"
+
+#~ msgid "Smooth (slower)"
+#~ msgstr "Glotnus (lėtesnis)"
+
+#~ msgid "XRender"
+#~ msgstr "XRender"
+
+#~ msgctxt "OpenGL Platform Interface"
+#~ msgid "EGL"
+#~ msgstr "EGL"
+
+#~ msgctxt "OpenGL Platform Interface"
+#~ msgid "GLX"
+#~ msgstr "GLX"
+
+#~ msgid ""
+#~ "Hint: To find out or configure how to activate an effect, look at the "
+#~ "effect's settings."
+#~ msgstr ""
+#~ "Užuomina: norėdami rasti, kaip aktyvuoti efektą arba jį konfigūruoti, "
+#~ "žiūrėkite efekto nuostatas."
+
+#, fuzzy
+#~| msgid "Search"
+#~ msgid "Search..."
+#~ msgstr "Ieškoti"
+
+#~ msgid "Configure filter"
+#~ msgstr "Konfigūruoti filtrą"
+
+#, fuzzy
+#~| msgid "Get New Effects ..."
+#~ msgid "Get New Desktop Effects..."
+#~ msgstr "Gauti naujus efektus..."
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Accessibility"
+#~ msgstr "Pritaikymas neįgaliesiems"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Appearance"
+#~ msgstr "Išvaizda"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Candy"
+#~ msgstr "Saldainiukai"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Focus"
+#~ msgstr "Fokusas"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Tools"
+#~ msgstr "Įrankiai"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Management"
+#~ msgstr "Langų tvarkymas"
+
+#~ msgid "KWin development team"
+#~ msgstr "KWin vystymo komanda"
+
+#~ msgid "Experimental:"
+#~ msgstr "Ekperimentinis:"
+
+#~ msgid "Enable color correction"
+#~ msgstr "Įgalinti spalvų taisymą"
+
+#~ msgid "Expert:"
+#~ msgstr "Ekspertas:"
+
+#~ msgid "Suspend compositor for full screen windows"
+#~ msgstr "Sustabdyti kompozitorių pilno ekrano langams"
+
+#~ msgid "OpenGL interface:"
+#~ msgstr "OpenGL sąsaja:"
+
+#~ msgid "Animation Speed:"
+#~ msgstr "Animacijos greitis:"
+
+#~ msgid "Scale Method:"
+#~ msgstr "Mastelio keitimo būdas:"
+
+#~ msgid "Tearing Prevention (VSync):"
+#~ msgstr "Plyšimo prevencija (VSync):"
+
+#~ msgid "Keep Window Thumbnails:"
+#~ msgstr "Laikyti langų miniatiūras:"
+
+#~ msgid "Always (Breaks Animations)"
+#~ msgstr "Visuomet (sugadina animacijas)"

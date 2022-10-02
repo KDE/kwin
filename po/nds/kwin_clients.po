@@ -1,0 +1,1045 @@
+# Translation of kwin_clients.po to Low Saxon
+# Sönke Dibbern <s_dibbern@web.de>, 2004, 2005, 2006, 2007, 2008, 2009, 2014.
+# Manfred Wiese <m.j.wiese@web.de>, 2009, 2010, 2011.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2014-02-17 11:58+0100\n"
+"Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
+"Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
+"Language: nds\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.4\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Tiny"
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "Lierlütt"
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "Normaal"
+
+#: aurorae/src/aurorae.cpp:727
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "Groot"
+
+#: aurorae/src/aurorae.cpp:728
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "Bannig groot"
+
+#: aurorae/src/aurorae.cpp:729
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "Resig"
+
+#: aurorae/src/aurorae.cpp:730
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Very Huge"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "Bannig resig"
+
+#: aurorae/src/aurorae.cpp:731
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Oversized"
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "Övergroot"
+
+#: aurorae/src/aurorae.cpp:734
+#, fuzzy, kde-format
+#| msgid "B&utton size:"
+msgid "Button size:"
+msgstr "Kn&oopgrött:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "Instellendialoog"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "Titelutri&chten"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "Links"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "Merrn"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "Rechts"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"Aktiveer dit, wenn de Finsterrahmen de sülve Klöör hebben schall as de "
+"Titelbalken; anners warrt he mit de Achtergrundklöör teekt."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "Infarvt Finsterrahmen"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"Aktiveer dit, wenn de Knööp week överblendt warrn schöölt, wenn Du mit de "
+"Muus dor överhengeihst."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "Knööp animeren"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "Aktiveer dit, wenn de Text op den Titelbalken en Schadden hebben schall."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "&Textschadden bruken"
+
+#~ msgid "Button mouseover transition"
+#~ msgstr "Finsterknööp bi't Anrögen mit de Muus sännern"
+
+#~ msgid "Configure window buttons' mouseover highlight animation"
+#~ msgstr ""
+#~ "Animeert Rutheven vun de Finsterknööp bi't Anrögen mit de Muus instellen"
+
+#~ msgid "Title transitions"
+#~ msgstr "Titelövergäng"
+
+#~ msgid "Configure fading transitions when window title is changed"
+#~ msgstr "Överblendt Övergang för ännert Finstertiteln instellen"
+
+#~ msgid "Window active state change transitions"
+#~ msgstr "Ännert Finsterstatus överblennen"
+
+#~ msgid ""
+#~ "Configure fading between window shadow and glow when window's active "
+#~ "state is changed"
+#~ msgstr ""
+#~ "Överblendt Övergang twischen Finsterschadden un Glöhn för ännert "
+#~ "Finsterstatus instellen"
+
+#~ msgid "Window grouping animations"
+#~ msgstr "Finsterkoppeln animeren"
+
+#~ msgid ""
+#~ "Configure window titlebar animations when windows are grouped/ungrouped"
+#~ msgstr ""
+#~ "Animeert Finstertitelbalkens bi't Tohoopkoppeln oder Aflösen vun Finstern "
+#~ "instellen"
+
+#~ msgid "Hide Advanced Configuration Options"
+#~ msgstr "Verwiedert Instelloptschonen versteken"
+
+#~ msgid "Show Advanced Configuration Options"
+#~ msgstr "Verwiedert Instelloptschonen wiesen"
+
+#~ msgid "Animations"
+#~ msgstr "Animeren"
+
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "Fraag - Oxygen-Instellen"
+
+#~ msgid "Remove selected exception?"
+#~ msgstr "Utsöcht Utnahm wegmaken?"
+
+#~ msgid "Warning - Oxygen Settings"
+#~ msgstr "Wohrschoen - Oxygen-Instellen"
+
+#~ msgid "Regular Expression syntax is incorrect"
+#~ msgstr "De Syntax vun den reguleren Utdruck is leeg."
+
+#~ msgid "Exception Type"
+#~ msgstr "Utnahm-Typ"
+
+#~ msgid "Regular Expression"
+#~ msgstr "Reguleer Utdruck"
+
+#~ msgid "Window Title"
+#~ msgstr "Finstertitel"
+
+#~ msgid "Window Class Name"
+#~ msgstr "Finsterklass-Naam"
+
+#~ msgid "Enable/disable this exception"
+#~ msgstr "Disse Utnahm an- oder utmaken"
+
+#~ msgid "General"
+#~ msgstr "Allmeen"
+
+#~ msgid "Border si&ze:"
+#~ msgstr "Rahmen&dickde:"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "Keen Rahmen"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Borders"
+#~ msgstr "Keen Rahmen an de Siet"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Normal"
+#~ msgstr "Normaal"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "Groot"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "Bannig groot"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "Resig"
+
+#~ msgid "Tit&le alignment:"
+#~ msgstr "Tite&lutrichten:"
+
+#~ msgid "Center (Full Width)"
+#~ msgstr "Merrn (Heel Breed)"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "Lütt"
+
+#~ msgid "Enable animations"
+#~ msgstr "Animeren anmaken"
+
+#~ msgid "Fine Tuning"
+#~ msgstr "Fieninstellen"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "Finster bi Dubbelklick op Menüknoop tomaken"
+
+#~ msgid "Never Draw Separator"
+#~ msgstr "Trenner nienich wiesen"
+
+#~ msgid "Draw Separator When Window is Active"
+#~ msgstr "Trenner för aktiev Finster wiesen"
+
+#~ msgid "Always Draw Separator"
+#~ msgstr "Trenner jümmers wiesen"
+
+#~ msgid "Separator disp&lay:"
+#~ msgstr "Trenner &wiesen:"
+
+#~ msgid "Outline active window title"
+#~ msgstr "Ümreet för aktiev Finstertitel"
+
+#~ msgid "Use narrow space between decoration buttons"
+#~ msgstr "Drang Afstänn twischen Knoopdekoratschonen bruken"
+
+#~ msgid "Add handle to resize windows with no border"
+#~ msgstr "Finstern ahn Rahmen en Greep för Gröttännern tofögen"
+
+#~ msgid "Display window borders for maximized windows"
+#~ msgstr "Bi maximeert Finstern Rahmen wiesen"
+
+#~ msgid "Shadows"
+#~ msgstr "Schaddens"
+
+#~ msgid "Window Drop-Down Shadow"
+#~ msgstr "Opdukmenü-Schadden"
+
+#~ msgid "Active Window Glow"
+#~ msgstr "Glöön för aktiev Finster"
+
+#~ msgid "Window-Specific Overrides"
+#~ msgstr "Besünner Instellen för enkelte Finstern"
+
+#~ msgid "Dialog"
+#~ msgstr "Dialoog"
+
+#~ msgid "Information about Selected Window"
+#~ msgstr "Informatschoon över't utsöchte Finster"
+
+#~ msgid "Class: "
+#~ msgstr "Klass: "
+
+#~ msgid "Title: "
+#~ msgstr "Titel: "
+
+#~ msgid "Window Property Selection"
+#~ msgstr "Finsteregenschappen utsöken"
+
+#~ msgid "Use window class (whole application)"
+#~ msgstr "Finsterklass bruken (heel Programm)"
+
+#~ msgid "Use window title"
+#~ msgstr "Finstertitel bruken"
+
+#~ msgid "Window Identification"
+#~ msgstr "Finster-Identiteet"
+
+#~ msgid "Matching window property: "
+#~ msgstr "Passen Finsteregenschap: "
+
+#~ msgid "Regular expression to match: "
+#~ msgstr "Reguleer Utdruck: "
+
+#~ msgid "Detect Window Properties"
+#~ msgstr "Finsteregenschappen opdecken"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Dekoratschoon-Optschonen"
+
+#~ msgctxt "outline window title"
+#~ msgid "Disabled"
+#~ msgstr "Utmaakt"
+
+#~ msgctxt "outline window title"
+#~ msgid "Enabled"
+#~ msgstr "Anmaakt"
+
+#~ msgid "Border size:"
+#~ msgstr "Rahmendickde:"
+
+#~ msgid "Outline active window title:"
+#~ msgstr "Ümreet för aktiev Finstertitel:"
+
+#~ msgid "Separator display:"
+#~ msgstr "Trenner wiesen:"
+
+#~ msgid "Hide window title bar"
+#~ msgstr "Titelbalken versteken"
+
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Disabled"
+#~ msgstr "Utmaakt"
+
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Enabled"
+#~ msgstr "Anmaakt"
+
+#~ msgid "Move Up"
+#~ msgstr "Na baven"
+
+#~ msgid "Move Down"
+#~ msgstr "Na nerrn"
+
+#~ msgid "Add"
+#~ msgstr "Tofögen"
+
+#~ msgid "Remove"
+#~ msgstr "Wegmaken"
+
+#~ msgid "Edit"
+#~ msgstr "Bewerken"
+
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "Bispill för Oxygen-Schaddens"
+
+#~ msgid "Draw window background"
+#~ msgstr "Finsterachtergrund wiesen"
+
+#~ msgid "Inactive Windows"
+#~ msgstr "Nich aktive Finstern"
+
+#~ msgid "Active Windows"
+#~ msgstr "Aktive Finstern"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+#~ msgid "Window Actions Menu"
+#~ msgstr "Finsterakschonen-Menü"
+
+#~ msgid "Application Menu"
+#~ msgstr "Programmmenü"
+
+#~ msgid "Help"
+#~ msgstr "Hülp"
+
+#~ msgid "Minimize"
+#~ msgstr "Minimeren"
+
+#~ msgid "Maximize"
+#~ msgstr "Maximeren"
+
+#~ msgid "Close"
+#~ msgstr "Tomaken"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "Vörn hollen"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "Achtern hollen"
+
+#~ msgid "On All Desktops"
+#~ msgstr "Op all Schriefdischen"
+
+#~ msgid "Shade Button"
+#~ msgstr "Inrull-Knoop"
+
+#~ msgid "Menu"
+#~ msgstr "Menü"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "Nich op all Schriefdischen"
+
+#~ msgid "On all desktops"
+#~ msgstr "Op all Schriefdischen"
+
+#~ msgid "Unshade"
+#~ msgstr "Utrullen"
+
+#~ msgid "Shade"
+#~ msgstr "Inrullen"
+
+#~ msgid "Resize"
+#~ msgstr "Grött ännern"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>Vöransicht för B II</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "Wedderherstellen"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "&Titelbalkenklören för Finsterrahmens bruken"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "Wenn anmaakt, warrt de sülve Klöör för Rahmens as för den Titelbalken "
+#~ "nahmen, anners warrt de normale Rahmenklöör bruukt."
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "&Greep teken"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "Wenn anmaakt, warrt de Dekoratschonen för Finstern mit en Greep för't "
+#~ "Ännern vun de Grött nerrn rechts teekt, anners warrt keen Greep dorstellt."
+
+#~ msgid "Auto-move titlebar"
+#~ msgstr "Titelbalken autom. verschuven"
+
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr ""
+#~ "Wenn anmaakt, warrt Titelbalkens automaatsch na Steden verschaven, woneem "
+#~ "se sichtbor sünd; anners mutt Een se vun Hand mit daalhollen Ümschalttast "
+#~ "anklicken un verschuven."
+
+#~ msgid "Actions Settings"
+#~ msgstr "Akschoneninstellen"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "Dubbelklick op Menüknoop:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "Nix doon"
+
+#~ msgid "Minimize Window"
+#~ msgstr "Finster minimeren"
+
+#~ msgid "Shade Window"
+#~ msgstr "Finster inrullen"
+
+#~ msgid "Close Window"
+#~ msgstr "Finster tomaken"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "Du kannst den Dubbelklick op den Menüknoop en Akschoon toornen. Laat dat "
+#~ "op \"Nix doon\", wenn Du nich seker büst."
+
+#~ msgid "Laptop"
+#~ msgstr "Klappreekner"
+
+#, fuzzy
+#~| msgid "Background style: "
+#~ msgid "Bac&kground style: "
+#~ msgstr "Achtergrundstil: "
+
+#~ msgid "Solid Color"
+#~ msgstr "Enkelklöör"
+
+#~ msgid "Radial Gradient"
+#~ msgstr "Rund &Klöörövergang"
+
+#~ msgid "Follow Style Hint"
+#~ msgstr "Stilvörslag bruken"
+
+#~ msgid "Background style:"
+#~ msgstr "Achtergrundstil:"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Sönke Dibbern, Manfred Wiese"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "s_dibbern@web.de, m.j.wiese@web.de"
+
+#~ msgid "Oxygen decoration shadows demonstration"
+#~ msgstr "Bispill för Dekoratschoon mit Oxygen-Schaddens"
+
+#~ msgid "(c) 2011, Hugo Pereira Da Costa"
+#~ msgstr "© 2011: Hugo Pereira Da Costa"
+
+#~ msgid "Hugo Pereira Da Costa"
+#~ msgstr "Hugo Pereira Da Costa"
+
+#~ msgid "Save"
+#~ msgstr "Sekern"
+
+#~ msgid "Save shadows as pixmaps in provided directory"
+#~ msgstr "Schaddens as Pixelbiller na angeven Orner sekern"
+
+#~ msgid "Large"
+#~ msgstr "Groot"
+
+#~ msgid "Small"
+#~ msgstr "Lütt"
+
+#~ msgid "Extra size grip display: "
+#~ msgstr "Gröttgreep wiesen: "
+
+#~ msgid "Extra size grip display:"
+#~ msgstr "Gröttgreep wiesen:"
+
+#~ msgid "Inner Color:"
+#~ msgstr "Klöör binnen:"
+
+#~ msgid "Outer Color:"
+#~ msgstr "Klöör buten:"
+
+#~ msgid "Vertical Offset:"
+#~ msgstr "Pielrecht Afstand:"
+
+#~ msgid "Size: "
+#~ msgstr "Grött: "
+
+#~ msgid "Always Hide Extra Size Grip"
+#~ msgstr "Gröttgreep jümmers versteken"
+
+#~ msgid "Show Extra Size Grip When Needed"
+#~ msgstr "Gröttgreep wiesen, wenn nödig"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "Aktiveer dit, wenn Finstern tomaakt warrn schöölt, wenn Du dubbelt op den "
+#~ "Menüknoop klickst, liek as in Microsoft Windows."
+
+#~ msgid "Plastik"
+#~ msgstr "Plastik"
+
+#~ msgid "All Desktops"
+#~ msgstr "All Schriefdischen"
+
+#~ msgid "Above"
+#~ msgstr "Vör"
+
+#~ msgid "Below"
+#~ msgstr "Achter"
+
+#~ msgid "Close Item"
+#~ msgstr "Tomaken"
+
+#~ msgid "Tabstrip"
+#~ msgstr "Tabstrip"
+
+#~ msgid "&Left"
+#~ msgstr "&Links"
+
+#~ msgid "&Center"
+#~ msgstr "&Merrn"
+
+#~ msgid "&Right"
+#~ msgstr "&Rechts"
+
+#~ msgid "Display window icons"
+#~ msgstr "Finster-Lüttbiller wiesen"
+
+#~ msgid "O&utline Color:"
+#~ msgstr "Ü&mreetklöör:"
+
+#~ msgid "Do not keep above others"
+#~ msgstr "Nich vörn hollen"
+
+#~ msgid "Keep above others"
+#~ msgstr "Vörn hollen"
+
+#~ msgid "Do not keep below others"
+#~ msgstr "Nich achtern hollen"
+
+#~ msgid "Keep below others"
+#~ msgstr "Achtern hollen"
+
+#~ msgid "Enable title transition animations"
+#~ msgstr "Animeren för Titelännern anmaken"
+
+#~ msgid "Variable"
+#~ msgstr "Variabel"
+
+#~ msgid "Maximum"
+#~ msgstr "Gröttst"
+
+#~ msgid "Enable window grouping"
+#~ msgstr "Finstern tosamenkoppeln "
+
+#~ msgid "Shadow caching:"
+#~ msgstr "Schadden-Twischenspieker:"
+
+#~ msgid "TextLabel"
+#~ msgstr "Textfeld"
+
+#~ msgid "Use Oxygen Shadows"
+#~ msgstr "Oxygen-Schaddens bruken"
+
+#~ msgid "Use Desktop Effects Shadows"
+#~ msgstr "Schriefdischeffekten-Schaddens bruken"
+
+#~ msgid "Do Not Draw Shadows"
+#~ msgstr "Keen Schaddens tofögen"
+
+#~ msgid "Shadow style:"
+#~ msgstr "Schaddenstil:"
+
+#~ msgctxt "draw separator"
+#~ msgid "Enabled"
+#~ msgstr "Anmaakt"
+
+#~ msgctxt "draw separator"
+#~ msgid "Disabled"
+#~ msgstr "Utmaakt"
+
+#~ msgid "Draw separator between title bar and window contents: "
+#~ msgstr "Trennbalken twischen Titelbalken un Finsterinholt wiesen: "
+
+#~ msgid "Draw Separator between title bar and active window contents "
+#~ msgstr ""
+#~ "Trennbalken twischen Titelbalken un den Inholt vun't aktive Finster "
+#~ "wiesen "
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "Installeert en KWM-Muster"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "Padd na en Muster-Instellendatei"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWM-Muster</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "Backig"
+
+#~ msgid "Unsticky"
+#~ msgstr "Nich backig"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>Vöransicht för Keramik</b></center>"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "&Punktmuster op Titelbalken"
+
+#~ msgid ""
+#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
+#~ "otherwise, they are drawn without the stipple."
+#~ msgstr "Wenn anmaakt, warrt en Punktmuster op den Titelbalken wiest."
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "G&riepbalken nerrn de Finstern"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
+#~ "otherwise, no grab bar is drawn."
+#~ msgstr ""
+#~ "Wenn anmaakt, warrt de Dekoratschonen mit en \"Griepbalken\" nerrn de "
+#~ "Finstern teekt."
+
+#~ msgid "Draw &gradients"
+#~ msgstr "&Klöörövergang"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with gradients for high-color "
+#~ "displays; otherwise, no gradients are drawn."
+#~ msgstr "Wenn anmaakt, warrt de Dekoratschonen mit Klöörövergäng teekt."
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"
+
+#~ msgid ""
+#~ "When selected, the window decoration borders are drawn using the titlebar "
+#~ "colors; otherwise, they are drawn using normal border colors instead."
+#~ msgstr ""
+#~ "Wenn anmaakt, warrt de Finsterrahmen mit de sülve Klöör as de Titelbalken "
+#~ "teekt; anners warrt de normalen Klören nahmen."
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "Quartz &extraslank"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "Quartz-Finsterdekoratschoon mit en extraslanken Titelbalken"
+
+#~ msgid "Quartz"
+#~ msgstr "Quartz"
+
+#~ msgid "Redmond"
+#~ msgstr "Redmond"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "Finstergreep &wiesen"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "Wenn anmaakt, warrt all Finstern mit en Greep nerrn rechts för't Ännern "
+#~ "vun de Finstergrött teekt. Dat maakt dat Ännern eenfacher, besünners mit "
+#~ "Treckbäll un anner muusliek Reedschappen op Klappreekners."
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr "Hier kannst Du de Grött vun den Greep ännern."
+
+#~ msgid "Medium"
+#~ msgstr "Middel"
+
+#~ msgid "Modern System"
+#~ msgstr "Modern System"
+
+#~ msgid "Web"
+#~ msgstr "Web"
+
+#~ msgid "Keramik"
+#~ msgstr "Keramik"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "Lütt&bild binnen de Titelbalken-Bucht wiesen"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "Aktiveer dit, wenn dat Finsterlüttbild binnen de Bucht blang den Text op "
+#~ "den Titelbalken wiest warrn schall."
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "Lütte B&uchten bi aktive Finstern"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "Aktiveer dit, wenn de Titelbalken-Buchten vun aktive Finstern jüst so "
+#~ "groot as bi nich aktive Finstern wesen schöölt. Dat is goot för "
+#~ "Klappreekners oder Schirmen mit siete Oplösen, wenn Een den Platz beter "
+#~ "för den Finsterinholt bruken kann."
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "G&riepbalkens nerrn de Finstern"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "Aktiveer dit, wenn nerrn de Finstern en Balken för't Anfaten teekt warrn "
+#~ "schall. Wenn dit nich aktiveert is, warrt nerrn bloots en dünne Rahmen "
+#~ "teekt."
+
+#~ msgid "Aurorae Theme Engine"
+#~ msgstr "Aurorae Musterkarn"
+
+#~ msgid "Drag or Type Theme URL"
+#~ msgstr "Muster-URL ingeven oder hertrecken"
+
+#~ msgid "Unable to find the theme archive %1."
+#~ msgstr "Dat Musterarchiv \"%1\" lett sik nich finnen."
+
+#~ msgid ""
+#~ "Unable to download theme archive;\n"
+#~ "please check that address %1 is correct."
+#~ msgstr ""
+#~ "Dat Musterarchiv lett sik nich daalladen.\n"
+#~ "Prööv bitte, wat de Adress \"%1\" richtig is."
+
+#~ msgid "Theme:"
+#~ msgstr "Muster:"
+
+#~ msgid "Get New Themes..."
+#~ msgstr "Nieg Muster halen..."
+
+#~ msgid "Install New Theme..."
+#~ msgstr "Nieg Muster installeren..."
+
+#~ msgid "Glow active window"
+#~ msgstr "Aktiev Finster glönig maken"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgid "Form"
+#~ msgstr "Normaal"
+
+#~ msgid ""
+#~ "Select here the window property used to identify windows \n"
+#~ "to which the specific decoration options apply."
+#~ msgstr ""
+#~ "Hier de Finsteregenschap fastleggen, mit de Du de Finstern finnen\n"
+#~ "wullt, för de de besünneren Dekoratschoonoptschonen bruukt warrt."
+
+#~ msgid ""
+#~ "Type here the regular expression used to identify windows \n"
+#~ "to which the specific decoration options apply."
+#~ msgstr ""
+#~ "Hier den reguleren Utdruck ingeven, mit den Du\n"
+#~ "de Finstern finnen wullt, för de de Utnahm gellt."
+
+#~ msgid ""
+#~ "If checked, specified frame border is used in place of default value."
+#~ msgstr ""
+#~ "Wenn anmaakt, warrt de angeven Rahmen ansteed den vörinstellten bruukt."
+
+#~ msgid ""
+#~ "If checked, specified blending color is used in title bar in place of "
+#~ "default value."
+#~ msgstr ""
+#~ "Wenn anmaakt, warrt de angeven Klöör för't Överblennen vun den "
+#~ "Titelbalken ansteed de Standardklöör bruukt."
+
+#~ msgid "Draw separator between title bar and active window contents:"
+#~ msgstr ""
+#~ "Trennbalken twischen Titelbalken un den Inholt vun't aktive Finster "
+#~ "wiesen:"
+
+#~ msgid "Additional window decoration configuration options"
+#~ msgstr "Instelloptschonen bito för de Finsterdekoratschoon"
+
+#, fuzzy
+#~| msgid ""
+#~| "The extra size grip is a small triangle shown in the bottom-right corner "
+#~| "of a window \n"
+#~| "which allows to resize the window. This option controls in which case "
+#~| "this size grip \n"
+#~| "is shown."
+#~ msgid ""
+#~ "The extra size grip is a small triangle, shown in the bottom-right corner "
+#~ "of a window,\n"
+#~ "which allows the window to be resized. This option controls in which "
+#~ "cases the size grip \n"
+#~ "is shown."
+#~ msgstr ""
+#~ "De Gröttgreep is en lütt Dre'eck nerrn rechts binnen elkeen Finster, mit "
+#~ "dat sik de \n"
+#~ "Finstergrött topassen. Hier kannst Du fastleggen, wannehr de Greep wiest "
+#~ "warrt."
+
+#, fuzzy
+#~| msgid ""
+#~| "When enabled, an additional frame is shown around the active window as "
+#~| "well as its title"
+#~ msgid ""
+#~ "When enabled, an additional frame is shown around the active window as "
+#~ "well as its title."
+#~ msgstr ""
+#~ "Wenn anmaakt, hett dat aktive Finster un ok sien Titel en Rahmen bito"
+
+#~ msgid ""
+#~ "When enabled, this option makes an horizontal separator appear between "
+#~ "the window title bar and the window contents."
+#~ msgstr ""
+#~ "Wenn anmaakt, gifft dat en kimmrecht Trennbalken twischen den Titelbalken "
+#~ "un den Finsterinholt."
+
+#~ msgid "Configure shadow colors for active and inactive windows"
+#~ msgstr "Schaddenklören för aktive un nich aktive Finstern fastleggen"
+
+#, fuzzy
+#~| msgid ""
+#~| "When this option is enabled, oxygen signature blue glow is used for the "
+#~| "active window shadow."
+#~ msgid ""
+#~ "When this option is enabled, the oxygen signature blue glow is used for "
+#~ "the active window shadow."
+#~ msgstr ""
+#~ "Is dit anmaakt, warrt de Finsterschadden mit Oxygen sien Kennmark-Blaag "
+#~ "infarvt."
+
+#, fuzzy
+#~| msgid "Configure window decoraction option overrides for specific windows"
+#~ msgid "Configure window decoration option overrides for specific windows"
+#~ msgstr "Besünner Dekoratschoon-Optschonen för enkelte Finstern topassen"
+
+#~ msgid "Extra Size grip display:"
+#~ msgstr "Gröttgreep wiesen:"
+
+#~ msgid "Nitrogen"
+#~ msgstr "Stickstoff"
+
+#~ msgid "Oxygen based Window decoration for KDE"
+#~ msgstr "Op Oxygen opbuut Finsterdekoratschoon för KDE"
+
+#~ msgid "Developer"
+#~ msgstr "Schriever"
+
+#~ msgid "Oxygen team"
+#~ msgstr "Oxygen-Koppel"
+
+#~ msgid ""
+#~ "When enabled, this option increases the visibility of the window titlebar "
+#~ "by showing stripes"
+#~ msgstr ""
+#~ "Wenn anmaakt, maakt disse Optschoon den Finster-Titelbalken mit Striepen "
+#~ "beter sichtbor."
+
+#~ msgid "Show stripes next to the title"
+#~ msgstr "Striepen blang Titel wiesen"
+
+#~ msgid ""
+#~ "When enabled, this option increases the visibility of the window titlebar "
+#~ "by adding an horizontal bar between the title bar and the window contents"
+#~ msgstr ""
+#~ "Wenn anmaakt, gifft dat en kimmrecht Balken twischen den Titelbalken un "
+#~ "den Finsterinholt. De Finster-Titelbalken is denn beter sichtbor."
+
+#~ msgid "Draw separator between title bar and window contents"
+#~ msgstr "Trennbalken twischen Titelbalken un Finsterinholt wiesen"
+
+#~ msgid "Definition"
+#~ msgstr "Definitschoon"
+
+#~ msgid "Exception type: "
+#~ msgstr "Utnahm-Typ: "
+
+#~ msgid "&Advanced"
+#~ msgstr "&Verwiedert"
+
+#~ msgid "nitrogen"
+#~ msgstr "Stickstoff"
+
+#~ msgid "Show stripes next to the title:"
+#~ msgstr "Striepen blang Titel wiesen:"
+
+#~ msgid "Blend title bar colors with window content:"
+#~ msgstr "Titelbalken-Klören mit Finsterinholt överblennen:"
+
+#~ msgid "&Basic"
+#~ msgstr "&Eenfach"
+
+#~ msgid "Blend title bar colors with window contents"
+#~ msgstr "Titelbalken-Klören na Finsterinholt mischen"
+
+#~ msgid ""
+#~ "When enabled, window colors are used in place of default title bar colors "
+#~ "to draw the decoration"
+#~ msgstr ""
+#~ "Wenn anmaakt, warrt de Finsterklören ansteed de Standard-"
+#~ "Titelbalkenklören för de Dekoratschoon bruukt."
+
+#~ msgid "Button style:"
+#~ msgstr "Knoopstil:"
+
+#~ msgid "Draw size grip in bottom-right corner of windows:"
+#~ msgstr "Greep nerrn rechts binnen Finstern wiesen:"
+
+#~ msgid "Draw size grip widget in bottom-right corner of windows"
+#~ msgstr "Greep nerrn rechts binnen Finstern wiesen"
+
+#~ msgid "Default"
+#~ msgstr "Standard"
+
+#~ msgid "Layout"
+#~ msgstr "Utsehn"
+
+#~ msgid "Flags"
+#~ msgstr "Marken"
+
+#~ msgid "Exceptions ..."
+#~ msgstr "Utnahmen..."
+
+#~ msgid ""
+#~ "Raise a dialog to store blending type exceptions based on window title."
+#~ msgstr ""
+#~ "En Dialoog opropen, mit den sik Utnahmen för den Överblennentyp "
+#~ "fastleggen laat."
+
+#~ msgid "Ozone"
+#~ msgstr "Ozone"
+
+#~ msgid "Title bar blending:"
+#~ msgstr "Titelbalken överblennen:"
+
+#~ msgid "Show stripes :"
+#~ msgstr "Striepen wiesen"
+
+#~ msgid "Overwrite default title bar colors:"
+#~ msgstr "Standard-Titelbalkenklören övergahn:"
+
+#~ msgid "Yes"
+#~ msgstr "Jo"
+
+#~ msgid "No"
+#~ msgstr "Nee"
+
+#~ msgid ""
+#~ "When enabled, this option makes the window title bar use the same colors "
+#~ "as the window contents, instead of using the system title bar colors."
+#~ msgstr ""
+#~ "Wenn anmaakt, bruukt de Finster-Titelbalken de sülven Klören as de "
+#~ "Finster-Inholt, man nich de Systeem-Titelbalkenklören."
+
+#~ msgid "Use thin borders"
+#~ msgstr "Small Ränners bruken"

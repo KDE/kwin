@@ -1,0 +1,78 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Catalan  "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinscreenedges" lang="&language;">
+<articleinfo>
+
+<title
+>Vores de la pantalla</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+&traductor.Antoni.Bella; 
+</authorgroup>
+
+<date
+>9 d'abril de 2021</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Arranjament del sistema</keyword>
+<keyword
+>escriptori</keyword>
+<keyword
+>efectes</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Les vores actives de la pantalla us permeten activar els efectes acostant el cursor del ratolí a la vora de la pantalla. Aquí podeu configurar quin efecte s'activarà en cada vora i cantonada de la pantalla. </para>
+
+<para
+>Feu clic amb qualsevol botó del ratolí sobre un quadrat i escolliu un efecte al menú contextual. Les vores amb un quadrat blau ja tenen un efecte associat, un quadrat de color gris indica que no hi ha efecte seleccionat per a aquesta vora.</para>
+
+<para
+>El nombre d'elements accessibles en el menú contextual dependrà de la configuració en el mòdul <ulink url="help:/kcontrol/kwineffects/index.html"
+><guilabel
+>Efectes d'escriptori</guilabel
+></ulink
+> a la categoria <guilabel
+>Espai de treball</guilabel
+>. Seleccioneu els vostres efectes favorits des del grup <guilabel
+>Gestió de les finestres</guilabel
+>. Això activarà els elements corresponents al menú contextual.</para>
+
+<para
+>Si esteu cercant l'opció per a activar el canvi d'escriptori empenyent el cursor del ratolí contra la vora de la pantalla, trieu un dels efectes <guilabel
+>Presenta les finestres</guilabel
+> des del menú contextual.</para>
+
+<para
+>Podeu habilitar <guilabel
+>Maximitza: Finestres arrossegades a la vora superior</guilabel
+> o <guilabel
+>Mosaic: Finestres arrossegades a la vora dreta o esquerra</guilabel
+> i establir un percentatge de la pantalla per a activar el mosaic. </para>
+
+<para
+>Utilitzant l'element <guilabel
+>Canvia d'escriptori a la vora:</guilabel
+>, configureu si voleu canviar a un altre escriptori en empènyer el cursor del ratolí a una vora de la pantalla, &pex;, només quan es mouen les finestres. </para>
+<para
+><guilabel
+>Retard de l'activació</guilabel
+>: és l'interval de temps requerit quan s'empeny el cursor del ratolí contra la vora de la pantalla abans d'activar l'acció. </para>
+<para
+><guilabel
+>Retard de la reactivació</guilabel
+>: és l'interval de temps requerit després d'activar l'acció fins que pugui ocórrer la següent activació. </para>
+</article>

@@ -1,0 +1,855 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Russian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<!--copy from r308626 Tue May 4 17:11:51 2004 UTC -->
+
+<article id="windowbehaviour" lang="&language;">
+<articleinfo>
+<title
+>Поведение окон</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<author
+>&Jost.Schenck; &Jost.Schenck.mail;</author>
+<othercredit role="translator"
+><firstname
+>Ольга</firstname
+><surname
+>Миронова</surname
+><affiliation
+><address
+><email
+>omiro@basealt.ru</email
+></address
+></affiliation
+><contrib
+>Перевод на русский язык</contrib
+></othercredit
+><othercredit role="reviewer"
+><firstname
+>Александр</firstname
+><surname
+>Яворский</surname
+><contrib
+>Рецензирование</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>09 апреля 2021 г.</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>параметры системы</keyword>
+<keyword
+>параметры системы</keyword>
+<keyword
+>действия</keyword>
+<keyword
+>расположение окна</keyword>
+<keyword
+>размер окна</keyword>
+</keywordset>
+</articleinfo>
+<sect1 id="window-behavior">
+<title
+>Поведение окон</title>
+
+<para
+>Этот модуль программы &systemsettings; позволяет настроить поведение окон рабочей среды. В верхней части окна расположены следующие вкладки: <guilabel
+>Фокус</guilabel
+>, <guilabel
+>Действия заголовка</guilabel
+>, <guilabel
+>Действия окна</guilabel
+>, <guilabel
+>Перемещение</guilabel
+> и <guilabel
+>Дополнительно</guilabel
+>. Вкладка <guilabel
+>Фокус</guilabel
+> служит для настройки способа переведения фокуса между окнами, &ie; способы активации окон. Вкладки <guilabel
+>Действия заголовка</guilabel
+> и <guilabel
+>Действия окна</guilabel
+> позволяют настраивать варианты действий, выполняемых по щелчку мыши по окну или его заголовку. Параметры перемещения и расположения новых окон настраиваются во вкладке <guilabel
+>Перемещение</guilabel
+>. Вкладка <guilabel
+>Дополнительно</guilabel
+> предназначена для настройки специальных параметров, таких как <quote
+>свёртывание в заголовок</quote
+>. </para>
+
+<note>
+<para
+>Параметры, заданные в данном модуле, применяются только к диспетчеру окон &kwin; — стандартному диспетчеру окон &plasma;. Если используется другой диспетчер, следует изучить его документацию, чтобы узнать, как настроить поведение окон. </para>
+</note>
+
+<sect2 id="action-focus">
+<title
+>Фокус</title>
+
+<para
+>В <quote
+>фокусе</quote
+> находится окно, с которым в данный момент работает пользователь. Такое окно обычно называется <quote
+>активное окно</quote
+>. </para>
+
+<para
+>Окно, расположенное на переднем плане, не обязательно будет в фокусе. Такое окно называется <quote
+>выдвинутым</quote
+>. Выдвижение окон настраивается в том же модуле, но отдельно от фокуса.</para>
+
+<sect3 id="action-focus-focuspolicy">
+<title
+>Настройка активации окон</title>
+
+<para
+>В &kwin; существует шесть режимов смены фокуса: </para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Фокус по щелчку</guilabel
+></term>
+<listitem>
+<para
+>Окно становится активным по щелчку по нему мышью. Такое поведение принято в других операционных системах и, вероятно, является самым привычным для пользователей.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Фокус по щелчку + приоритет мыши</guilabel
+></term>
+<listitem>
+<para
+>Этот режим похож на <guilabel
+>Фокус по щелчку</guilabel
+>. Если система сама должна выбрать активное окно (например, при закрытии активного окна), предпочтение будет отдано окну, находящемуся под указателем мыши. Немного необычный, но используемый вариант режима <guilabel
+>Фокус по щелчку</guilabel
+>. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Фокус следует за мышью</guilabel
+></term>
+<listitem>
+<para
+>Активное перемещение указателя мыши по окну активирует его. Новые окна, такие как строка поиска и запуска &krunner;, вызываемая комбинацией клавиш <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+>, попадают в фокус без специального наведения на них указателя мыши. Например, окна, случайно попадающие под указатель мыши, не будут активироваться. Предотвращение смены фокуса работает как обычно. Данный режим похож на режим<guilabel
+>Фокус по щелчку</guilabel
+>, но сам щелчок не требуется. </para>
+
+<para
+>В других диспетчерах окон этот режим иногда называется <quote
+>Нечёткий фокус</quote
+> (Sloppy focus). </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Фокус следует за мышью + приоритет мыши</guilabel
+></term>
+<listitem>
+<para
+>Этот режим похож на <guilabel
+>Фокус следует за мышью</guilabel
+>. Если система сама должна выбрать активное окно (например, при закрытии активного окна), предпочтение будет отдано окну, находящемуся под указателем мыши. Данный режим следует выбрать для смены фокуса по наведению указателя мыши. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Фокус под мышью</guilabel
+></term>
+<listitem>
+<para
+>Активным становится окно, находящееся под указателем мыши. Если последний указывает не на окно (а, например, на рабочий стол), фокус перемещается на окно, которое находилось под указателем мыши последним. Новые окна, такие как мини командная строка, вызываемая комбинацией клавиш <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+>, не становятся активными автоматически, для переключения фокуса необходимо перевести на них указатель мыши. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Фокус строго под мышью</guilabel
+></term>
+<listitem>
+<para
+>Этот режим схож с режимом <guilabel
+>Фокус под мышью</guilabel
+>, но имеет более узкое применение. Активным становится только то окно, которое находится под указателем мыши. При смещении указателя мыши с окна фокус теряется. Новые окна, такие как строка поиска и запуска &krunner;, вызываемая комбинацией клавиш <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+>, не становятся активными автоматически, для переключения фокуса необходимо перевести на них указатель мыши. </para>
+
+</listitem>
+</varlistentry>
+</variablelist>
+
+<note
+><para
+>Выбор режимов <guilabel
+>Фокус под мышью</guilabel
+> и <guilabel
+>Фокус строго под мышью</guilabel
+> мешает корректной работе таких функций, как <guilabel
+>Предотвращение смены фокуса</guilabel
+> и переход между окнами при помощи комбинации клавиш <keycombo action="simul"
+>&Alt;&Tab;</keycombo
+>.</para>
+</note>
+
+</sect3>
+
+<sect3 id="action-focus-focusstealin">
+<title
+>Уровень предотвращения смены фокуса</title>
+
+<para
+>Данный параметр определяет, каким образом KWin будет предотвращать нежелательную смену фокуса при неожиданной активации новых окон.</para
+> 
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Нет</guilabel
+></term>
+<listitem
+><para
+>Предотвращение смены фокуса отключено. Новые окна всегда становятся активными.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><guilabel
+>Низкий</guilabel
+></term>
+<listitem
+><para
+>Предотвращение смены фокуса включено; если окно не поддерживает соответствующий механизм приоритетов, а KWin не может точно определить, активировать окно или нет, окно активируется. Этот вариант может быть как лучше, так и хуже «среднего» в зависимости от конкретного приложения.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><guilabel
+>Средний</guilabel
+></term>
+<listitem
+><para
+>Предотвращение смены фокуса включено.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Высокий</guilabel
+></term>
+<listitem
+><para
+>Новые окна становятся активными, только если принадлежат активному приложению и отсутствуют другие активные окна. Этот параметр следует использовать, как правило, только в режимах следования фокуса за мышью.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><guilabel
+>Очень высокий</guilabel
+></term>
+<listitem
+><para
+>Пользователь самостоятельно должен активировать окна.</para
+></listitem>
+</varlistentry>
+</variablelist>
+<para
+>Окна, для которых включено предотвращение смены фокуса, помечаются как требующие внимания. Окна, требующие внимания, по умолчанию выделяются в панели задач. Способы уведомления о том, что окно требует внимания, можно изменить в модуле настроек «Уведомления».</para>
+</sect3>
+  
+<sect3 id="action-focus-raisingwindow">
+<title
+>Выдвижение окон</title>
+<para
+>За параметрами режима смены фокуса следуют параметры выдвижения окон. </para>
+
+<para
+>В режиме смены фокуса по щелчку мыши по умолчанию включается параметр <guilabel
+>Щелчок выдвигает активное окно</guilabel
+>, а параметр «Выдвигать при наведении» в этом случае недоступен. </para>
+
+<para
+>В режиме смены фокуса по наведению возможно использование функции автоматического выдвижения. При выборе параметра <guilabel
+>Выдвигать при наведении, с задержкой</guilabel
+> &kwin; выводит окно на передний план, если указатель мыши находится над окном в течение определённого времени. Интервал задержки выдвижения окна задаётся при помощи соответствующего поля. </para>
+
+<tip>
+<para
+>При слишком короткой задержке смена фокуса между окнами будет происходить слишком быстро и может отвлекать внимание. Предпочтительной считается задержка на 100-300 мс. В этом случае скорость отклика достаточно высока, но позволяет перемещать указатель мыши по другим окнам, не выдвигая их на передний план. </para>
+</tip>
+
+<para
+>Если автоматическое выдвижение окон не применяется, важно убедиться, что параметр <guilabel
+>щелчок выдвигает активное окно</guilabel
+> отмечен флажком. При отключении обоих параметров выдвижение окон станет невозможно. </para>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="titlebar-actions">
+<title
+>Действия заголовка</title>
+
+<para
+>Эта вкладка позволяет настроить действия, которые будут выполняться при нажатиях на заголовок окна. </para>
+
+<sect3 id="action-actions-sec1">
+<title
+>Двойной щелчок</title>
+
+<para
+>Раскрывающейся список содержит следующие варианты выбора действий: <guilabel
+>Свернуть</guilabel
+>, несколько видов действия <guilabel
+>Распахнуть</guilabel
+>, <guilabel
+>Задвинуть</guilabel
+>, <guilabel
+>Закрыть</guilabel
+> и <guilabel
+>На всех рабочих столах</guilabel
+>. </para>
+
+<para
+>При выборе варианта <guilabel
+>Распахнуть</guilabel
+> &kwin; разворачивает окно на весь экран по двойному щелчку кнопкой мыши по строке заголовка. Можно также задать разворачивание окон только по горизонтали или по вертикали.</para>
+
+<para
+>Вариант <guilabel
+>Свернуть</guilabel
+> сворачивает окно в заголовок. По двойному щелчку окно разворачивается до своего нормального размера. </para>
+
+<para
+>Аналогично настраивается параметр <guilabel
+>Колесо мыши</guilabel
+>. </para>
+<!--FIXME Raise/Lower Shade/Unshade Maximize/Restore Keep Above/Below Move to Previous/Next Desktop Change Opacity -->
+
+<tip>
+<para
+>Окна могут автоматически разворачиваться при наведении указателя мыши на свёрнутый заголовок. Для этого на вкладке <guilabel
+>Дополнительно</guilabel
+> следует установить флажок <guilabel
+>Разворачивать окно из заголовка</guilabel
+>. </para>
+</tip>
+
+</sect3>
+
+<sect3 id="action-actions-sec2">
+<title
+><guilabel
+>Действия заголовка и границы окна</guilabel
+></title>
+
+<para
+>Этот раздел служит для назначения действий, которые выполняются при нажатии на заголовок или на рамку окна. При этом для активного и неактивного окна могут быть заданы разные действия. </para>
+
+<para
+>Для нажатия каждой из кнопок мыши можно определить действия, выполняемые раздельно для активных и для неактивных окон. Возможны следующие варианты: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Выдвинуть</guilabel
+></term>
+<listitem>
+<para
+>Выдвигает окно на передний план. Окна, перекрывающие выбранное, будут расположены <quote
+>под</quote
+> ним. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Задвинуть</guilabel
+></term>
+<listitem>
+<para
+>Задвигает окно на задний план. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Выдвинуть/задвинуть</guilabel
+></term>
+<listitem>
+<para
+>Выдвигает находящиеся на заднем плане окна и задвигает те окна, которые выдвинуты на передний план. </para>
+</listitem>
+</varlistentry>
+
+<!--FIXME missing:
+Minimize, Shade, Close
+-->
+
+<varlistentry>
+<term
+><guilabel
+>Ничего не делать</guilabel
+></term>
+<listitem>
+<para
+>Так и есть — ничего не произойдёт. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Показать меню действий</guilabel
+></term>
+<listitem>
+<para
+>Открывает вложенное меню, в котором можно выбрать команды управления окнами («Распахнуть», «Свернуть», «Закрыть», и другие). </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect3>
+
+<sect3 id="action-actions-maximize-button">
+<title
+><guilabel
+>Действия кнопки разворачивания</guilabel
+></title>
+<para
+>Этот раздел служит для назначения действий, выполняемых при нажатии на кнопку разворачивания окна различными кнопками мыши. Возможно разворачивание окна только по горизонтали, только по вертикали или сразу в обоих направлениях. </para>
+</sect3>
+
+</sect2>
+
+<sect2 id="window-actions">
+<title
+>Действия окна</title>
+
+<sect3 id="action-actions-sec3">
+<title
+><guilabel
+>Внутри неактивного окна</guilabel
+></title>
+
+<para
+>В этом разделе настраивается поведение неактивного окна при нажатии на него одной из кнопок мыши или при использовании колеса. </para>
+
+<para
+>Возможны следующие варианты: </para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Передать фокус, выдвинуть и обработать щелчок</guilabel
+></term>
+<listitem>
+<para
+>Окно становится активным, выдвигается на передний план, а нажатие кнопки мыши передаётся в приложение внутри этого окна. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Передать фокус и обработать щелчок</guilabel
+></term>
+<listitem>
+<para
+>Окно становится активным, а нажатие кнопки мыши передаётся в приложение внутри этого окна. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Передать фокус</guilabel
+></term>
+<listitem>
+<para
+>Окно становится активным, а нажатие кнопки мыши не передаётся в приложение внутри этого окна. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Передать фокус и выдвинуть</guilabel
+></term>
+<listitem>
+<para
+>Окно становится активным и выдвигается на передний план, а нажатие кнопки мыши не передаётся в приложение внутри этого окна. </para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para
+>Для параметра <guilabel
+>Колесо мыши</guilabel
+> возможны следующие варианты: </para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Прокрутка в окне</guilabel
+></term>
+<listitem>
+<para
+>Прокрутка содержимого внутри окна. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Передать фокус и прокрутить в окне</guilabel
+></term>
+<listitem>
+<para
+>Окно, по которому был сделан щелчок, становится активным, и выполняется прокрутка содержимого внутри окна. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Передать фокус, выдвинуть и прокрутить в окне</guilabel
+></term>
+<listitem>
+<para
+>Окно, по которому был сделан щелчок, становится активным, выдвигается на передний план, и выполняется прокрутка содержимого внутри окна. </para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect3>
+
+<sect3 id="action-actions-sec4">
+<title
+><guilabel
+>Внутри окна, на заголовке и рамке</guilabel
+></title>
+
+<para
+>Этот раздел служит для назначения дополнительных действий, выполняемых при щелчке по окну различными кнопками мыши при нажатой дополнительной клавише клавиатуры (по умолчанию это клавиша &Meta;).</para>
+
+<para
+>Как в и предыдущем разделе, действия раздельно назначаются для <mousebutton
+>левой</mousebutton
+>, <mousebutton
+>средней</mousebutton
+> и <mousebutton
+>правой</mousebutton
+> кнопок, а также для <guilabel
+>колеса мыши</guilabel
+>. </para>
+
+<para
+>Возможны следующие варианты действий:</para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Перемещение</guilabel
+></term>
+<listitem>
+<para
+>Позволяет перетаскивать выбранное окно по рабочему столу. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Задвинуть</guilabel
+></term>
+<listitem>
+<para
+>Задвигает окно на задний план. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Ничего</guilabel
+></term>
+<listitem>
+<para
+>Так и есть — ничего не произойдёт. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Выдвинуть</guilabel
+></term>
+<listitem>
+<para
+>Выдвигает окно на передний план. Окна, перекрывающие выбранное, будут расположены <quote
+>под</quote
+> ним. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Изменить размер</guilabel
+></term>
+<listitem>
+<para
+>Позволяет менять размер выбранного окна. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Выдвинуть/задвинуть</guilabel
+></term>
+<listitem>
+<para
+>Выдвигает находящиеся на заднем плане окна и задвигает те окна, которые выдвинуты на передний план. </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><guilabel
+>Передать фокус</guilabel
+></term>
+<listitem>
+<para
+>Активирует окно. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+<!-- FIXME missing:
+Activate, Raise &amp; Move
+Minimize
+Increase Opacity + Decrease Opacity
+-->
+<!--FIXME
+Mouse Wheel has different choices:
+Raise/Lower, Shade/Unshade, Maximize/Restore, Keep Above/Below, 
+Move to Previous/Next Desktop, Change Opacity
+Nothing
+-->
+
+</sect3>
+
+</sect2>
+
+<sect2 id="action-moving">
+<title
+>Перемещение</title>
+
+<para
+>Вкладка содержит параметры отображения окон на экране во время их перемещения.</para>
+
+<sect3>
+<title
+><guilabel
+>Геометрия окна</guilabel
+></title>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Показывать при перемещении или изменении размера</guilabel
+></term>
+<listitem>
+<para
+>Если этот параметр включён, при перемещении или изменении размеров окна будет показываться его геометрия. Кроме размеров будет также отображаться позиция окна относительно верхнего левого угла экрана.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</sect3>
+
+<sect3>
+<title
+><guilabel
+>Граничные зоны</guilabel
+></title>
+
+<para
+>Остальные параметры, расположенные на данной вкладке, позволяют настроить <guilabel
+>Граничные зоны</guilabel
+>, которые действуют как магниты, расположенные по сторонам рабочего стола. Окна, расположенные рядом с такими зонами, «прилипают» к ним.</para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Зона привязки границ:</guilabel
+></term>
+<listitem>
+
+<para
+>Ширина зоны привязки границ экрана. Окно при перемещении внутри этой зоны «прилипнет» к границе экрана.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Зона привязки окон:</guilabel
+></term>
+<listitem>
+
+<para
+>Ширина зоны привязки окна. Как и в случае с границами экрана, при перемещении одного окна вблизи другого, оба окна будут «притягиваться» друг к другу как магниты.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Зона привязки центра:</guilabel
+></term>
+<listitem>
+
+<para
+>Ширина зоны привязки к центру экрана, другими словами, «сила магнитного поля», которая заставляет окна «прилипать» к центру экрана при их перемещении рядом с ним.</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry>
+<term
+><guilabel
+>Привязывать окна: Только при перекрытии</guilabel
+></term>
+<listitem>
+
+<para
+>Если этот параметр включён, окна будут «прилипать» друг к другу, только если они перекрываются, а не просто находятся в зоне привязки.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect3>
+
+</sect2>
+
+<sect2 id="action-advanced">
+<title
+>Дополнительно</title>
+
+<para
+>Вкладка <guilabel
+>Дополнительно</guilabel
+> позволяет выполнить тонкую настройку поведения окон. </para>
+
+<variablelist>
+<title
+>Разворачивать окно из заголовка</title>
+
+<varlistentry>
+<term
+><guilabel
+>После наведения курсора, с задержкой</guilabel
+></term>
+<listitem>
+<para
+>При включении этого параметра, окно, свёрнутое в заголовок, будет автоматически разворачиваться, если указатель мыши находится над ним некоторое время. Время задержки задаётся в соответствующем поле. </para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Размещение нового окна</guilabel
+></term>
+<listitem
+><para
+>Возможны следующие варианты размещения нового окна на рабочем столе: <guilabel
+>С минимальным перекрытием</guilabel
+> — допускается минимальное перекрытие окон; <guilabel
+>Каскадом</guilabel
+> — окна располагаются каскадом; <guilabel
+>Случайное</guilabel
+> — окна располагаются случайным образом; <guilabel
+>По центру</guilabel
+> — все новые окна располагаются в центре экрана; <guilabel
+>В левом верхнем углу</guilabel
+> — все окна открываются в верхнем левом углу экрана. Установите флажок <guilabel
+>Разрешить сохранять геометрию окон приложениям, поддерживающим эту функцию</guilabel
+> для сохранения данных о положении окон &plasma;.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+<variablelist>
+<title
+>Особые окна</title>
+<varlistentry>
+<term
+><guilabel
+>Скрывать служебные окна неактивных приложений</guilabel
+></term>
+<listitem
+><para
+>При включении этого параметра служебные окна неактивных приложений (например: панели инструментов, отделяемые меню и другие) будут скрыты. Видимыми такие окна станут, как только приложение станет активным. Примечание: для правильной работы этого параметра важно, чтобы в приложении были верно заданы типы создаваемых этим приложением окон.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+</sect1>
+
+</article>

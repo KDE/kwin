@@ -1,0 +1,640 @@
+# translation of kcmkwincompositing.po to Punjabi
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# A S Alam <aalam@users.sf.net>, 2007, 2008, 2010, 2011.
+# Amanpreet Singh Alam <aalam@users.sf.net>, 2009, 2012, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwincompositing\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"PO-Revision-Date: 2013-12-06 09:20-0600\n"
+"Last-Translator: A S Alam <aalam@users.sf.net>\n"
+"Language-Team: Punjabi/Panjabi <punjabi-users@lists.sf.net>\n"
+"Language: pa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.5\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
+#: compositing.ui:31
+#, kde-format
+msgid ""
+"OpenGL compositing (the default) has crashed KWin in the past.\n"
+"This was most likely due to a driver bug.\n"
+"If you think that you have meanwhile upgraded to a stable driver,\n"
+"you can reset this protection but be aware that this might result in an "
+"immediate crash!"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
+#: compositing.ui:44
+#, kde-format
+msgid ""
+"Scale method \"Accurate\" is not supported by all hardware and can cause "
+"performance regressions and rendering artifacts."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
+#: compositing.ui:67
+#, kde-format
+msgid ""
+"Keeping the window thumbnail always interferes with the minimized state of "
+"windows. This can result in windows not suspending their work when minimized."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, compositingLabel)
+#: compositing.ui:79
+#, fuzzy, kde-format
+#| msgid "Compositing type:"
+msgid "Compositing:"
+msgstr "ਕੰਪੋਜੀਸ਼ਨ ਟਾਈਪ:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
+#: compositing.ui:86
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Enable desktop effects at startup"
+msgid "Enable on startup"
+msgstr "ਸ਼ੁਰੂ ਸਮੇਂ ਡੈਸਕਟਾਪ ਪਰਭਾਵ ਚਾਲੂ ਕਰੋ"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:95
+#, kde-format
+msgid ""
+"Applications can set a hint to block compositing when the window is open.\n"
+" This brings performance improvements for e.g. games.\n"
+" The setting can be overruled by window-specific rules."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:98
+#, kde-format
+msgid "Allow applications to block compositing"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
+#: compositing.ui:105
+#, fuzzy, kde-format
+#| msgid "Animation speed:"
+msgid "Animation speed:"
+msgstr "ਐਨੀਮੇਸ਼ਨ ਗਲਤੀ:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: compositing.ui:142
+#, fuzzy, kde-format
+#| msgid "Very Slow"
+msgid "Very slow"
+msgstr "ਬਹੁਤ ਹੀ ਹੌਲੀ"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: compositing.ui:162
+#, kde-format
+msgid "Instant"
+msgstr "ਤੁਰੰਤ"
+
+#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
+#: compositing.ui:174
+#, fuzzy, kde-format
+#| msgid "Scale method:"
+msgid "Scale method:"
+msgstr "ਸਕੇਲ ਢੰਗ:ਸਕੇਲ ;"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:184
+#, kde-format
+msgid "Smooth"
+msgstr "ਮੁਲਾਇਮ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:189
+#, kde-format
+msgid "Accurate"
+msgstr "ਸ਼ੁੱਧ"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: compositing.ui:199
+#, kde-format
+msgid "Tearing prevention (\"vsync\"):"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:207
+#, kde-format
+msgid "Automatic"
+msgstr "ਆਟੋਮੈਟਿਕ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:212
+#, kde-format
+msgid "Only when cheap"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:217
+#, kde-format
+msgid "Full screen repaints"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:222
+#, kde-format
+msgid "Re-use screen content"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
+#: compositing.ui:230
+#, fuzzy, kde-format
+#| msgid "Keep window thumbnails:"
+msgid "Keep window thumbnails:"
+msgstr "ਵਿੰਡੋ ਥੰਮਨੇਲ ਰੱਖੋ:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:238
+#, fuzzy, kde-format
+#| msgctxt ""
+#| "Windows are unmapped as they are requested. This can lead to not having "
+#| "updated thumbnials for windows on other desktops."
+#| msgid "Never"
+msgid "Never"
+msgstr "ਕਦੇ ਨਹੀਂ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:243
+#, fuzzy, kde-format
+#| msgctxt ""
+#| "Windows are not unmapped if the window is somewhere visible on any of the "
+#| "virtual desktops."
+#| msgid "Only for Shown Windows"
+msgid "Only for Shown Windows"
+msgstr "ਦਿੱਸ ਰਹੀਆਂ ਵਿੰਡੋਜ਼ ਲਈ ਹੀ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:248
+#, kde-format
+msgid "Always"
+msgstr "ਹਮੇਸ਼ਾ"
+
+#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
+#: compositing.ui:256
+#, kde-format
+msgid "Latency:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:264
+#, kde-format
+msgid "Force lowest latency (may cause dropped frames)"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:269
+#, kde-format
+msgid "Prefer lower latency"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:274
+#, kde-format
+msgid "Balance of latency and smoothness"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:279
+#, kde-format
+msgid "Prefer smoother animations"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:284
+#, fuzzy, kde-format
+#| msgid "Various animations"
+msgid "Force smoothest animations"
+msgstr "ਕਈ ਐਨੀਮੇਸ਼ਨ"
+
+#: main.cpp:79
+#, kde-format
+msgid "Re-enable OpenGL detection"
+msgstr "ਮੁੜ-ਚਾਲੂ OpenGL ਖੋਜ"
+
+#: main.cpp:135
+#, kde-format
+msgid ""
+"\"Only when cheap\" only prevents tearing for full screen changes like a "
+"video."
+msgstr ""
+
+#: main.cpp:139
+#, kde-format
+msgid "\"Full screen repaints\" can cause performance problems."
+msgstr ""
+
+#: main.cpp:143
+#, kde-format
+msgid ""
+"\"Re-use screen content\" causes severe performance problems on MESA drivers."
+msgstr ""
+
+#~ msgid "OpenGL 3.1"
+#~ msgstr "OpenGL 3.1"
+
+#~ msgid "OpenGL 2.0"
+#~ msgstr "OpenGL 2.0"
+
+#~ msgid "Smooth (slower)"
+#~ msgstr "ਸਮੂਥ (ਹੌਲੀ)"
+
+#~ msgid "XRender"
+#~ msgstr "XRender"
+
+#~ msgid ""
+#~ "Hint: To find out or configure how to activate an effect, look at the "
+#~ "effect's settings."
+#~ msgstr "ਇਸ਼ਾਰਾ: ਇੱਕ ਪਰਭਾਵ ਨੂੰ ਐਕਟੀਵੇਟ ਕਰਨ ਜਾਂ ਸੰਰਚਨਾ ਕਰਨ ਲਈ, ਪਰਭਾਵ ਦੀ ਸੈਟਿੰਗ ਨੂੰ ਵੇਖੋ।"
+
+#, fuzzy
+#~| msgid "Texture filter:"
+#~ msgid "Configure filter"
+#~ msgstr "ਟੈਕਸਟ ਫਿਲਟਰ:"
+
+#, fuzzy
+#~| msgid "Suspend Desktop Effects"
+#~ msgid "Exclude internal Desktop Effects"
+#~ msgstr "ਡੈਸਕਟਾਪ ਪਰਭਾਵ ਸਸਪੈਂਡ"
+
+#, fuzzy
+#~| msgid "Get New Effects ..."
+#~ msgid "Get New Desktop Effects..."
+#~ msgstr "...ਨਵੇਂ ਪਰਭਾਵ ਲਵੋ"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "ਅਮਨਪਰੀਤ ਸਿੰਘ ਆਲਮ"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "aalam@users.sf.net"
+
+#, fuzzy
+#~| msgid "Accessibility"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Accessibility"
+#~ msgstr "ਅਸੈੱਸਬਿਲਟੀ"
+
+#, fuzzy
+#~| msgid "Appearance"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Appearance"
+#~ msgstr "ਦਿੱਖ"
+
+#, fuzzy
+#~| msgid "Candy"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Candy"
+#~ msgstr "ਕੈਂਡੀ"
+
+#, fuzzy
+#~| msgid "Focus"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Focus"
+#~ msgstr "ਫੋਕਸ"
+
+#, fuzzy
+#~| msgid "Tools"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Tools"
+#~ msgstr "ਟੂਲ"
+
+#, fuzzy
+#~| msgid "Window Management"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Management"
+#~ msgstr "ਵਿੰਡੋ ਮੈਨੇਜਮੈਂਟ"
+
+#, fuzzy
+#~| msgid "Enable color correction (experimental)"
+#~ msgid "Enable color correction"
+#~ msgstr "ਰੰਗ ਸੋਧ ਚਾਲੂ (ਤਜਰਬੇ-ਅਧੀਨ)"
+
+#, fuzzy
+#~| msgid "Suspend desktop effects for fullscreen windows"
+#~ msgid "Suspend compositor for full screen windows"
+#~ msgstr "ਪੂਰੀ ਸਕਰੀਨ ਵਿੰਡੋ ਲਈ ਡੈਸਕਟਾਪ ਪਰਭਾਵ ਸਸਪੈਂਡ ਕਰੋ"
+
+#, fuzzy
+#~| msgid "OpenGL mode:"
+#~ msgid "OpenGL interface:"
+#~ msgstr "OpenGL ਮੋਡ:"
+
+#, fuzzy
+#~| msgid "Animation speed:"
+#~ msgid "Animation Speed:"
+#~ msgstr "ਐਨੀਮੇਸ਼ਨ ਗਲਤੀ:"
+
+#, fuzzy
+#~| msgid "Scale method:"
+#~ msgid "Scale Method:"
+#~ msgstr "ਸਕੇਲ ਢੰਗ:ਸਕੇਲ ;"
+
+#, fuzzy
+#~| msgid "Keep window thumbnails:"
+#~ msgid "Keep Window Thumbnails:"
+#~ msgstr "ਵਿੰਡੋ ਥੰਮਨੇਲ ਰੱਖੋ:"
+
+#, fuzzy
+#~| msgctxt ""
+#~| "A window thumbnail requires to have the corresponding window mapped. To "
+#~| "have thumbnails at all time, windows are not unmapped. This can break "
+#~| "window minimization as it is modelled as unmapping of windows."
+#~| msgid "Always (Breaks minimization)"
+#~ msgid "Always (Breaks Animations)"
+#~ msgstr "ਹਮੇਸ਼ਾ (ਘੱਟੋ-ਘੱਟ ਕਰਨ ਨੂੰ ਤੋੜਦਾ ਹੈ)"
+
+#~ msgid "1 second remaining:"
+#~ msgid_plural "%1 seconds remaining:"
+#~ msgstr[0] "1 ਸਕਿੰਟ ਬਾਕੀ:"
+#~ msgstr[1] "%1 ਸਕਿੰਟ ਬਾਕੀ:"
+
+#~ msgid "Confirm Desktop Effects Change"
+#~ msgstr "ਡੈਸਕਟਾਪ ਪਰਭਾਵ ਬਦਲਾਅ ਪੁਸ਼ਟੀ"
+
+#~ msgid "&Accept Configuration"
+#~ msgstr "ਸੰਰਚਨਾ ਮਨਜ਼ੂਰ(&A)"
+
+#~ msgid "&Return to Previous Configuration"
+#~ msgstr "ਪਿਛਲੀ ਸੰਰਚਨਾ ਉੱਤੇ ਜਾਓ(&R)"
+
+#~ msgid ""
+#~ "Desktop effects settings have changed.\n"
+#~ "Do you want to keep the new settings?\n"
+#~ "They will be automatically reverted in 10 seconds."
+#~ msgstr ""
+#~ "ਡੈਸਕਟਾਪ ਪਰਭਾਵ ਸੈਟਿੰਗ ਬਦਲੀ ਗਈ ਹੈ।\n"
+#~ "ਕੀ ਤੁਸੀਂ ਨਵੀਂ ਸੈਟਿੰਗ ਰੱਖਣੀ ਚਾਹੁੰਦੇ ਹੋ?\n"
+#~ "10 ਸਕਿੰਟਾਂ ਬਾਅਦ ਇਹ ਆਟੋਮੈਟਿਕ ਹੀ ਵਾਪਸ ਕੀਤੇ ਜਾਣਗੇ।"
+
+#~ msgctxt ""
+#~ "Action to open a dialog showing detailed information why an effect could "
+#~ "not be loaded"
+#~ msgid "Details"
+#~ msgstr "ਵੇਰਵਾ"
+
+#~ msgctxt "Prevent warning from bein displayed again"
+#~ msgid "Don't show again!"
+#~ msgstr "ਮੁੜ ਨਾ ਵੇਖਾਓ!"
+
+#~ msgid "None"
+#~ msgstr "ਕੋਈ ਨਹੀਂ"
+
+#~ msgid "kcmkwincompositing"
+#~ msgstr "kcmkwincompositing"
+
+#~ msgid "KWin Desktop Effects Configuration Module"
+#~ msgstr "KWin ਡੈਸਕਟਾਪ ਪਰਭਾਵ ਸੰਰਚਨਾ ਮੋਡੀਊਲ"
+
+#~ msgid "(c) 2007 Rivo Laks"
+#~ msgstr "(c) 2007 Rivo Laks"
+
+#~ msgid "Rivo Laks"
+#~ msgstr "ਰੀਵੋ ਲਾਕਸ"
+
+#~ msgid "No effect"
+#~ msgstr "ਪਰਭਾਵ ਨਹੀਂ"
+
+#~ msgid ""
+#~ "Failed to activate desktop effects using the given configuration options. "
+#~ "Settings will be reverted to their previous values.\n"
+#~ "\n"
+#~ "Check your X configuration. You may also consider changing advanced "
+#~ "options, especially changing the compositing type."
+#~ msgstr ""
+#~ "ਦਿੱਤੀ ਸੰਰਚਨਾ ਚੋਣ ਨਾਲ ਡੈਸਕਟਾਪ ਪਰਭਾਵ ਐਕਟੀਵੇਟ ਕਰਨ ਲਈ ਫੇਲ੍ਹ ਹੈ। ਸੈਟਿੰਗ ਨੂੰ ਪਿਛਲੇ ਮੁੱਲਾਂ ਲਈ "
+#~ "ਵਾਪਸ ਕੀਤਾ ਜਾਵੇਗਾ।\n"
+#~ "\n"
+#~ "ਆਪਣੀ X ਸੰਰਚਨਾ ਚੈੱਕ ਕਰੋ। ਤੁਸੀਂ ਤਕਨੀਕੀ ਚੋਣਾਂ ਬਦਲਣਾ ਚਾਹੋਗੇ, ਖਾਸ ਤੌਰ ਉੱਤੇ ਕੰਪੋਜ਼ੀਸ਼ਨ ਕਿਸਮ "
+#~ "ਬਦਲਣਾ।"
+
+#~ msgid "Demos"
+#~ msgstr "ਡੈਮੋ"
+
+#~ msgid "Tests"
+#~ msgstr "ਟੈਸਟ"
+
+#~ msgid ""
+#~ "Desktop effects are not available on this system due to the following "
+#~ "technical issues:"
+#~ msgstr "ਇਸ ਸਿਸਟਮ ਲਈ ਅੱਗੇ ਦਿੱਤੇ ਤਕਨੀਕੀ ਕਾਰਨਾਂ ਕਰਕੇ ਡੈਸਕਟਾਪ ਪਰਭਾਵ ਉਪਲੱਬਧ ਨਹੀਂ ਹਨ:"
+
+#~ msgctxt ""
+#~ "Reason shown when trying to activate desktop effects and KWin (most "
+#~ "likely) crashes"
+#~ msgid "Window Manager seems not to be running"
+#~ msgstr "ਵਿੰਡੋ ਮੈਨੇਜਰ ਚੱਲਦਾ ਨਹੀਂ ਜਾਪਦਾ ਹੈ"
+
+#~ msgid ""
+#~ "Your settings have been saved but as KDE is currently running in failsafe "
+#~ "mode desktop effects cannot be enabled at this time.\n"
+#~ "\n"
+#~ "Please exit failsafe mode to enable desktop effects."
+#~ msgstr ""
+#~ "ਤੁਹਾਡੀ ਸੈਟਿੰਗ ਸੰਭਾਲੀ ਗਈ ਹੈ, ਪਰ ਕੇਡੀਈ ਫੇਲ੍ਹ-ਸੇਫ਼ ਮੋਡ ਵਿੱਚ ਚੱਲ ਰਿਹਾ ਹੈ, ਡੈਸਕਟਾਪ ਪ੍ਰਭਾਵ ਇਸ "
+#~ "ਸਮੇਂ ਚਾਲੂ ਨਹੀਂ ਕੀਤੇ ਜਾ ਸਕਦੇ ਹਨ।\n"
+#~ "\n"
+#~ "ਡੈਸਕਟਾਪ ਪ੍ਰਭਾਵ ਚਾਲੂ ਕਰਨ ਲਈ ਫੇਲ੍ਹ-ਸੇਫ਼ ਮੋਡ ਨੂੰ ਬੰਦ ਕਰੋ ਜੀ।"
+
+#~ msgctxt "Error Message shown when a desktop effect could not be loaded"
+#~ msgid "One desktop effect could not be loaded."
+#~ msgid_plural "%1 desktop effects could not be loaded."
+#~ msgstr[0] "ਡੈਸਕਟਾਪ ਪਰਭਾਵ ਲੋਡ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ।"
+#~ msgstr[1] "%1 ਡੈਸਕਟਾਪ ਪਰਭਾਵ ਲੋਡ ਨਹੀਂ ਕੀਤੇ ਜਾ ਸਕੇ।"
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated due to unknown reason"
+#~ msgid "%1 effect failed to load due to unknown reason."
+#~ msgstr "%1 ਪਰਭਾਵ ਅਣਜਾਣ ਕਾਰਨਾਂ ਕਰਨ ਕਰਕੇ ਲੋਡ ਹੋਣ ਲਈ ਫੇਲ੍ਹ ਹੈ।"
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires hardware "
+#~ "shaders"
+#~ msgid "%1 effect requires hardware support."
+#~ msgstr "%1 ਪਰਭਾਵ ਲਈ ਹਾਰਡਵੇਅਰ ਸਹਿਯੋਗ ਚਾਹੀਦਾ ਹੈ।"
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires OpenGL"
+#~ msgid "%1 effect requires OpenGL."
+#~ msgstr "%1 ਪਰਭਾਵ ਲਈ OpenGL ਚਾਹੀਦਾ ਹੈ।"
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires OpenGL 2"
+#~ msgid "%1 effect requires OpenGL 2."
+#~ msgstr "%1 ਪਰਭਾਵ ਲਈ OpenGL 2 ਚਾਹੀਦਾ ਹੈ।"
+
+#~ msgctxt "Window title"
+#~ msgid "List of effects which could not be loaded"
+#~ msgstr "ਪਰਭਾਵ ਦੀ ਲਿਸਟ, ਜੋ ਕਿ ਲੋਡ ਨਹੀਂ ਕੀਤੇ ਜਾ ਸਕੇ"
+
+#~ msgid ""
+#~ "For technical reasons it is not possible to determine all possible error "
+#~ "causes."
+#~ msgstr "ਤਕਨੀਕੀ ਕਾਰਨਾਂ ਕਰਕੇ, ਸਭ ਸੰਭਾਵਿਤ ਗਲਤੀ ਕਾਰਨਾਂ ਨੂੰ ਜਾਣਨਾ ਸੰਭਵ ਨਹੀਂ ਹੈ।"
+
+#~ msgctxt ""
+#~ "Error Message shown when compositing is not active after tried activation"
+#~ msgid "Desktop effect system is not running."
+#~ msgstr "ਡੈਸਕਟਾਪ ਪਰਭਾਵ ਸਿਸਟਮ ਚੱਲ ਨਹੀਂ ਰਿਹਾ ਹੈ।"
+
+#~ msgid "<h1>Desktop Effects</h1>"
+#~ msgstr "<h1>ਡੈਸਕਟਾਪ ਪਰਭਾਵ</h1>"
+
+#~ msgid "General"
+#~ msgstr "ਆਮ"
+
+#~ msgid "Pressing this button can crash the desktop."
+#~ msgstr "ਇਹ ਬਟਨ ਦਬਾਉਣ ਨਾਲ ਡੈਸਕਟਾਪ ਕਰੈਸ਼ ਹੋ ਸਕਦਾ ਹੈ।"
+
+#~ msgid "I have saved my data."
+#~ msgstr "ਮੈਂ ਆਪਣਾ ਡਾਟਾ ਸੰਭਾਲਿਆ ਹੈ।"
+
+#~ msgid "Activation"
+#~ msgstr "ਐਕਟੀਵੇਸ਼ਨ"
+
+#~ msgid "Desktop effects can be toggled anytime using this shortcut:"
+#~ msgstr "ਡੈਸਕਟਾਪ ਪ੍ਰਭਾਵ ਕਿਸੇ ਵੀ ਸਮੇਂ ਇਹ ਸ਼ਾਰਟਕੱਟ ਦੀ ਵਰਤੋਂ ਨਾਲ ਬਦਲੇ ਜਾ ਸਕਦੇ ਹਨ:"
+
+#~ msgctxt "@title:group a few general options to set up desktop effects"
+#~ msgid "Simple effect setup"
+#~ msgstr "ਸੈਂਪਲ ਪ੍ਰਭਾਵ ਸੈਟਅੱਪ"
+
+#~ msgid "Improved window management"
+#~ msgstr "ਸੁਧਾਰ ਕੀਤਾ ਵਿੰਡੋ ਮੈਨੇਜਮੈਂਟ"
+
+#~ msgid "Effect for desktop switching:"
+#~ msgstr "ਡੈਸਕਟਾਪ ਬਦਲਣ ਲਈ ਪਰਭਾਵ:"
+
+#~ msgid "Very Fast"
+#~ msgstr "ਬਹੁਤ ਤੇਜ਼"
+
+#~ msgid "Fast"
+#~ msgstr "ਤੇਜ਼"
+
+#~ msgid "Normal"
+#~ msgstr "ਸਧਾਰਨ"
+
+#~ msgid "Slow"
+#~ msgstr "ਹੌਲੀ"
+
+#~ msgid "Extremely Slow"
+#~ msgstr "ਬਹੁਤ ਬਹੁਤ ਹੌਲੀ"
+
+#~ msgid ""
+#~ "You can find more effects, as well as effect-specific settings, in the "
+#~ "\"All Effects\" tab above."
+#~ msgstr ""
+#~ "ਤੁਸੀਂ ਹੋਰ ਪਰਭਾਵ, ਨਾਲ ਹੀ ਪਰਭਾਵ ਸਬੰਧਿਤ ਖਾਸ ਸੈਟਿੰਗ ਨੂੰ, \"ਸਭ ਪਰਭਾਵ\" ਟੈਬ 'ਚ ਵੇਖ ਸਕਦੇ ਹੋ।"
+
+#~ msgid "All Effects"
+#~ msgstr "ਸਭ ਪਰਭਾਵ"
+
+#~ msgid "Advanced"
+#~ msgstr "ਤਕਨੀਕੀ"
+
+#~ msgid "OpenGL Options"
+#~ msgstr "OpenGL ਚੋਣਾਂ"
+
+#~ msgid "General Options"
+#~ msgstr "ਸਧਾਰਨ ਚੋਣ"
+
+#~ msgid "OpenGL 1.2"
+#~ msgstr "OpenGL 1.2"
+
+#~ msgid "Qt graphics system:"
+#~ msgstr "Qt ਗਰਾਫਿਕਸ ਸਿਸਟਮ:"
+
+#~ msgid "Native"
+#~ msgstr "ਨੇਟਿਵ"
+
+#~ msgid "Raster"
+#~ msgstr "ਰਾਸਟਰ"
+
+#~ msgid "Use OpenGL 2 Shaders"
+#~ msgstr "OpenGL 2 ਸ਼ੇਡਰ ਵਰਤੋਂ"
+
+#~ msgid "Use VSync"
+#~ msgstr "VSync ਵਰਤੋਂ"
+
+#~ msgid "Effect for window switching:"
+#~ msgstr "ਵਿੰਡੋਜ਼ ਬਦਲਣ ਲਈ ਪਰਭਾਵ:"
+
+#~ msgid "Enable direct rendering"
+#~ msgstr "ਸਿੱਧੀ ਰੈਡਰਿੰਗ ਯੋਗ"
+
+#~ msgid "Disable functionality checks"
+#~ msgstr "ਫੰਕਸ਼ਨ ਚੈੱਕ ਆਯੋਗ ਕਰੋ"
+
+#~ msgid "Desktop effects are temporarily disabled"
+#~ msgstr "ਡੈਸਕਟਾਪ ਪਰਭਾਵ ਆਰਜ਼ੀ ਰੂਪ ਵਿੱਚ ਬੰਦ ਹਨ"
+
+#~ msgid "Resume Desktop Effects"
+#~ msgstr "ਡੈਸਕਟਾਪ ਪਰਭਾਵ ਮੁੜ-ਚਾਲੂ"
+
+#~ msgid "Desktop effects are disabled"
+#~ msgstr "ਡੈਸਕਟਾਪ ਪਰਭਾਵ ਬੰਦ ਹਨ"
+
+#~ msgid "Common Settings"
+#~ msgstr "ਆਮ ਸੈਟਿੰਗ"
+
+#~ msgid "Compositing State"
+#~ msgstr "ਕੰਪੋਜੀਸ਼ਨ ਹਾਲਤ"
+
+#~ msgid "Shadows"
+#~ msgstr "ਸ਼ੈਡੋ"
+
+#~ msgid "Texture From Pixmap"
+#~ msgstr "ਪਿਕਸਮੈਪ ਤੋਂ ਟੈਕਸਟ"
+
+#~ msgid "Shared Memory"
+#~ msgstr "ਸਾਂਝੀ ਮੈਮੋਰੀ"
+
+#~ msgid "Fallback"
+#~ msgstr "ਫਾਲਬੈਕ"
+
+#~ msgid "Nearest (fastest)"
+#~ msgstr "ਸਭ ਤੋਂ ਨੇੜੇ (ਸਭ ਤੋਂ ਤੇਜ਼)"
+
+#~ msgid "Bilinear"
+#~ msgstr "ਬਾਈਲੀਨੀਅਰ"
+
+#~ msgid "Trilinear (best quality)"
+#~ msgstr "ਟਰਾਈਲੀਨੀਅਰ (ਵਧੀਆ ਕੁਆਲਟੀ)"
+
+#~ msgid "Compositing is not supported on your system."
+#~ msgstr "ਤੁਹਾਡੇ ਸਿਸਟਮ ਉੱਤੇ ਕੰਪੋਜ਼ੀਸ਼ਨ ਸਹਿਯੋਗੀ ਨਹੀਂ ਹੈ।"
+
+#~ msgid "Compositing is active"
+#~ msgstr "ਕੰਪੋਜੀਸ਼ਨ ਚਾਲੂ ਹੈ"
+
+#~ msgid "Suspend Compositing"
+#~ msgstr "ਕੰਪੋਜੀਸ਼ਨ ਸਸਪੈਂਡ"
+
+#~ msgid "Resume Compositing"
+#~ msgstr "ਕੰਪੋਜੀਸ਼ਨ ਮੁੜ-ਚਾਲੂ"
+
+#~ msgid "Compositing is disabled"
+#~ msgstr "ਕੰਪੋਜੀਸ਼ਨ ਆਯੋਗ ਹੈ"
+
+#~ msgid "All Desktops"
+#~ msgstr "ਸਭ ਡੈਸਕਟਾਪ"
+
+#~ msgid "Current Desktop"
+#~ msgstr "ਮੌਜੂਦਾ ਡੈਸਕਟਾਪ"
+
+#, fuzzy
+#~| msgid "Bilinear"
+#~ msgid "Cylinder"
+#~ msgstr "ਬਾਈਲੀਨੀਅਰ"
+
+#~ msgid "Screen Edges"
+#~ msgstr "ਸਕਰੀਨ ਕੋਨੇ"

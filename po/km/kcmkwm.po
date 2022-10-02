@@ -1,0 +1,1808 @@
+# translation of kcmkwm.po to Khmer
+# Khoem Sokhem <khoemsokhem@khmeros.info>, 2007, 2008, 2009, 2010, 2012.
+# Auk Piseth <piseth_dv@khmeros.info>, 2007, 2008.
+# Eng Vannak <evannak@khmeros.info>, 2007.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwm\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-09-02 00:47+0000\n"
+"PO-Revision-Date: 2012-06-13 15:40+0700\n"
+"Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
+"Language-Team: Khmer\n"
+"Language: km\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "ខឹម សុខែម, អេង វណ្ណៈ, អោក ពិសិដ្ឋ​​"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "khoemsokhem@khmeros.info,​​evannak@khmeros.info,piseth_dv@khmeros.info"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
+#: actions.ui:17
+#, fuzzy, kde-format
+#| msgid "Inactive Inner Window"
+msgid "Inactive Inner Window Actions"
+msgstr "បង្អួច​ខាង​ក្នុង​អសកម្ម"
+
+#. i18n: ectx: property (text), widget (QLabel, label_1)
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: actions.ui:26 mouse.ui:177
+#, fuzzy, kde-format
+#| msgid "&Titlebar double-click:"
+msgid "&Left click:"
+msgstr "ចុច​ទ្វេ​ដង​លើ​របារ​ចំណង​ជើង ៖"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow1)
+#: actions.ui:39
+#, kde-format
+msgid ""
+"In this row you can customize left click behavior when clicking into an "
+"inactive inner window ('inner' means: not titlebar, not frame)."
+msgstr ""
+"នៅ​ក្នុង​ជួរ​ដេក​នេះ អ្នក​អាច​ប្ដូរ​ឥរិយាបថ​ការ​​ចុច​កណ្ដុរ​ឆ្វេង​តាម​បំណង នៅ​ពេល​ចុច​ក្នុង​​បង្អួច​ខាង​ក្នុង​អសកម្ម​ "
+"('ខាង​ក្នុង' មានន័យ​ថា ៖ មិន​មែន​របារ​ចំណង​ជើង មិន​មែន​ស៊ុម​ឡើយ) ។"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
+#: actions.ui:43 actions.ui:83 actions.ui:123
+#, fuzzy, kde-format
+#| msgid "Activate, Raise & Pass Click"
+msgid "Activate, raise and pass click"
+msgstr "ធ្វើ​ឲ្យ​សកម្ម លើក​ឡើង និង​ចុច​​បញ្ជូន"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
+#: actions.ui:48 actions.ui:88 actions.ui:128
+#, fuzzy, kde-format
+#| msgid "Activate & Pass Click"
+msgid "Activate and pass click"
+msgstr "ធ្វើ​ឲ្យ​សកម្ម និង​ចុច​"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:53 actions.ui:93 actions.ui:133 mouse.ui:293 mouse.ui:408
+#: mouse.ui:523
+#, kde-format
+msgid "Activate"
+msgstr "ធ្វើ​ឲ្យ​សកម្ម"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:58 actions.ui:98 actions.ui:138 mouse.ui:283 mouse.ui:398
+#: mouse.ui:513
+#, fuzzy, kde-format
+#| msgid "Activate & Raise"
+msgid "Activate and raise"
+msgstr "ធ្វើ​ឲ្យ​សកម្ម និង​លើក​ឡើង"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: actions.ui:66 mouse.ui:200
+#, fuzzy, kde-format
+#| msgid "&Titlebar double-click:"
+msgid "&Middle click:"
+msgstr "ចុច​ទ្វេ​ដង​លើ​របារ​ចំណង​ជើង ៖"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow2)
+#: actions.ui:79
+#, kde-format
+msgid ""
+"In this row you can customize middle click behavior when clicking into an "
+"inactive inner window ('inner' means: not titlebar, not frame)."
+msgstr ""
+"នៅ​ក្នុង​ជួរ​ដេក​នេះ អ្នក​អាច​ប្ដូរ​ឥរិយាបថ​ការ​ចុច​កណ្ដាល​តាម​បំណង នៅ​ពេល​ចុច​​ក្នុងបង្អួច​ខាង​ក្នុង​អសកម្ម ('ខាង​"
+"ក្នុង' មានន័យថា ៖ មិន​មែន​របារ​ចំណង​ជើង មិន​មែន​ស៊ុម​ឡើយ) ។"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: actions.ui:106 mouse.ui:213
+#, kde-format
+msgid "&Right click:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow3)
+#: actions.ui:119
+#, kde-format
+msgid ""
+"In this row you can customize right click behavior when clicking into an "
+"inactive inner window ('inner' means: not titlebar, not frame)."
+msgstr ""
+"នៅ​ក្នុង​ជួរ​ដេក​នេះ អ្នក​អាច​ប្ដូរ​ឥរិយាបថ​ការ​ចុច​ខាង​ស្ដាំ​តាម​បំណង នៅ​ពេល​ចុច​ក្នុង​បង្អួច​ខាង​ក្នុង​អសកម្ម​ "
+"('ខាង​ក្នុង' មាន​ន័យ​ថា ៖ មិន​មែន​របារ​ចំណង​ជើង មិន​មែន​ស៊ុម​ឡើយ) ។"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: actions.ui:146 mouse.ui:88
+#, fuzzy, kde-format
+#| msgid "Mouse wheel:"
+msgid "Mouse &wheel:"
+msgstr "កង់​កណ្ដុរ ៖"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindowWheel)
+#: actions.ui:159
+#, kde-format
+msgid ""
+"In this row you can customize behavior when scrolling into an inactive inner "
+"window ('inner' means: not titlebar, not frame)."
+msgstr ""
+"នៅ​ក្នុង​ជួរ​ដេក​នេះ អ្នក​អាច​ប្ដូរ​ឥរិយាបថ​ការ​​ចុច​កណ្ដុរ​ឆ្វេង​តាម​បំណង នៅ​ពេល​ចុច​ក្នុង​​បង្អួច​ខាង​ក្នុង​អសកម្ម​ "
+"('ខាង​ក្នុង' មានន័យ​ថា ៖ មិន​មែន​របារ​ចំណង​ជើង មិន​មែន​ស៊ុម​ឡើយ) ។"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
+#: actions.ui:163
+#, kde-format
+msgid "Scroll"
+msgstr "រមូរ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
+#: actions.ui:168
+#, fuzzy, kde-format
+#| msgid "Activate & Scroll"
+msgid "Activate and scroll"
+msgstr "ធ្វើ​ឲ្យរមូរ​សកម្ម"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
+#: actions.ui:173
+#, fuzzy, kde-format
+#| msgid "Activate, Raise & Scroll"
+msgid "Activate, raise and scroll"
+msgstr "ធ្វើ​ឲ្យ​សកម្ម លើក​ឡើង និងរមូរ"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: actions.ui:184
+#, fuzzy, kde-format
+#| msgid "Inner Window, Titlebar && Frame"
+msgid "Inner Window, Titlebar and Frame Actions"
+msgstr "បង្អួច​ខាង​ក្នុង របារ​ចំណង​ជើង និង​ស៊ុម"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: actions.ui:195
+#, fuzzy, kde-format
+#| msgid "Modifier key:"
+msgid "Mo&difier key:"
+msgstr "គ្រាប់​ចុច​កែប្រែ ៖"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllKey)
+#: actions.ui:205
+#, kde-format
+msgid ""
+"Here you select whether holding the Meta key or Alt key will allow you to "
+"perform the following actions."
+msgstr ""
+"នៅ​ទីនេះ អ្នក​ជ្រើស​ថា​តើ​សង្កត់​​​គ្រាប់​ចុច​មេតា (Meta) ឬ​ជំនួស (Alt) នឹង​អនុញ្ញាត​ឲ្យ​អ្នក​បង្ហាញ​​អំពើ ​ដូច​"
+"ខាង​ក្រោម​នេះ ។"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
+#: actions.ui:209
+#, kde-format
+msgid "Meta"
+msgstr "មេតា"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
+#: actions.ui:214
+#, kde-format
+msgid "Alt"
+msgstr "ជំនួស"
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: actions.ui:236
+#, kde-format
+msgid "  + "
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: actions.ui:248 mouse.ui:601
+#, fuzzy, kde-format
+#| msgid "&Titlebar double-click:"
+msgid "L&eft click:"
+msgstr "ចុច​ទ្វេ​ដង​លើ​របារ​ចំណង​ជើង ៖"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll1)
+#: actions.ui:261
+#, kde-format
+msgid ""
+"In this row you can customize left click behavior when clicking into the "
+"titlebar or the frame."
+msgstr "ក្នុង​ជួរ​ដេក​នេះ អ្នក​អាច​ប្តូរ​ឥរិយាបថ​ការ​​ចុច​កណ្តុរ​​ឆ្វេង​តាម​បំណង ពេល​ចុច​លើ​របារ​ចំណង​ជើង ឬ​ស៊ុម ។"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:265 actions.ui:335 actions.ui:405
+#, kde-format
+msgid "Move"
+msgstr "ផ្លាស់ទី"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:270 actions.ui:340 actions.ui:410
+#, fuzzy, kde-format
+#| msgid "Activate, Raise and Move"
+msgid "Activate, raise and move"
+msgstr "ធ្វើ​ឲ្យ​សកម្ម លើក​ឡើង និង​ផ្លាស់ទី"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:275 actions.ui:345 actions.ui:415 mouse.ui:246 mouse.ui:308
+#: mouse.ui:361 mouse.ui:423 mouse.ui:476 mouse.ui:538
+#, fuzzy, kde-format
+#| msgid "Toggle Raise & Lower"
+msgid "Toggle raise and lower"
+msgstr "បិទ​បើក លើក​ឡើង និង​បន្ទាប​ចុះ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:280 actions.ui:350 actions.ui:420
+#, kde-format
+msgid "Resize"
+msgstr "ប្តូរ​ទំហំ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:285 actions.ui:355 actions.ui:425 mouse.ui:236 mouse.ui:298
+#: mouse.ui:351 mouse.ui:413 mouse.ui:466 mouse.ui:528
+#, kde-format
+msgid "Raise"
+msgstr "លើក​ឡើង"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:290 actions.ui:360 actions.ui:430 mouse.ui:65 mouse.ui:241
+#: mouse.ui:303 mouse.ui:356 mouse.ui:418 mouse.ui:471 mouse.ui:533
+#, kde-format
+msgid "Lower"
+msgstr "ទាប​ជាង"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:295 actions.ui:365 actions.ui:435 mouse.ui:55 mouse.ui:251
+#: mouse.ui:313 mouse.ui:366 mouse.ui:428 mouse.ui:481 mouse.ui:543
+#, kde-format
+msgid "Minimize"
+msgstr "បង្រួម​អប្បបរមា"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:300 actions.ui:370 actions.ui:440
+#, fuzzy, kde-format
+#| msgid "Decrease Opacity"
+msgid "Decrease opacity"
+msgstr "បន្ថយ​ភាប​ស្រអាប់"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:305 actions.ui:375 actions.ui:445
+#, fuzzy, kde-format
+#| msgid "Increase Opacity"
+msgid "Increase opacity"
+msgstr "បង្កើន​ភាព​ស្រអាប់"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 mouse.ui:80
+#: mouse.ui:132 mouse.ui:271 mouse.ui:333 mouse.ui:386 mouse.ui:448
+#: mouse.ui:501 mouse.ui:563
+#, fuzzy, kde-format
+#| msgid "Nothing"
+msgid "Do nothing"
+msgstr "គ្មាន​អ្វី​"
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: actions.ui:318
+#, fuzzy, kde-format
+#| msgid "Middle button:"
+msgid "Middle &click:"
+msgstr "ប៊ូតុង​កណ្តាល ៖"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
+#: actions.ui:331
+#, kde-format
+msgid ""
+"In this row you can customize middle click behavior when clicking into the "
+"titlebar or the frame."
+msgstr "​ក្នុង​ជួរ​ដេក​នេះ អ្នក​អាច​ប្តូរ​ឥរិយាបថ​ចុច​កណ្តុរ​កណ្តាល​តាម​បំណង ​ពេល​ចុច​លើ​របារ​ចំណង​ជើង ឬ​ស៊ុម ។"
+
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+#. i18n: ectx: property (text), widget (QLabel, label_10)
+#: actions.ui:388 mouse.ui:671
+#, kde-format
+msgid "Right clic&k:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:401
+#, kde-format
+msgid ""
+"In this row you can customize right click behavior when clicking into the "
+"titlebar or the frame."
+msgstr "ក្នុង​ជួរ​ដេក​នេះ អ្នក​អាច​ប្តូរ​ឥរិយាបថ​ចុច​កណ្តុរ​​ស្តាំ​តាម​បំណង ​ពេល​ចុច​លើ​របារ​ចំណង​ជើង ឬ​ស៊ុម ។"
+
+#. i18n: ectx: property (text), widget (QLabel, label_10)
+#: actions.ui:458
+#, fuzzy, kde-format
+#| msgid "Mouse wheel:"
+msgid "Mo&use wheel:"
+msgstr "កង់​កណ្ដុរ ៖"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllWheel)
+#: actions.ui:471
+#, kde-format
+msgid ""
+"Here you can customize KDE's behavior when scrolling with the mouse wheel in "
+"a window while pressing the modifier key."
+msgstr ""
+"នៅ​ទីនេះ អ្នក​អាច​ប្ដូរ​ឥរិយាបថ​របស់ KDE តាម​បំណង នៅពេល​រមូរ​ដោយ​ប្រើកង់កណ្ដុរ​នៅ​ក្នុង​បង្អួច​ ខណៈពេល​ចុច​"
+"គ្រាប់ចុច​កែប្រែ ។"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:475 mouse.ui:102
+#, fuzzy, kde-format
+#| msgid "Raise/Lower"
+msgid "Raise/lower"
+msgstr "លើក​ឡើង/បន្ទាប​ចុះ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:480 mouse.ui:107
+#, fuzzy, kde-format
+#| msgid "Shade/Unshade"
+msgid "Shade/unshade"
+msgstr "ដាក់​ស្រមោល/ដោះ​ស្រមោល"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:485 mouse.ui:112
+#, fuzzy, kde-format
+#| msgid "Maximize/Restore"
+msgid "Maximize/restore"
+msgstr "ពង្រីក​អតិបរមា/ស្តារ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:490 mouse.ui:117
+#, fuzzy, kde-format
+#| msgid "Keep Above/Below"
+msgid "Keep above/below"
+msgstr "លើ​គេ/ក្រោម​គេ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:495 mouse.ui:122
+#, fuzzy, kde-format
+#| msgid "Move to Previous/Next Desktop"
+msgid "Move to previous/next desktop"
+msgstr "ផ្លាស់ទី​ទៅ​ផ្ទៃតុ មុន/បន្ទាប់"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:500 mouse.ui:127
+#, fuzzy, kde-format
+#| msgid "Change Opacity"
+msgid "Change opacity"
+msgstr "ផ្លាស់ប្តូរ​ភាព​ស្រអាប់"
+
+#. i18n: ectx: property (text), widget (QLabel, shadeHoverLabel)
+#: advanced.ui:20
+#, fuzzy, kde-format
+#| msgid "Window Tabbing"
+msgid "Window &unshading:"
+msgstr "ការ​ប្ដូរ​បង្អួច"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ShadeHover)
+#: advanced.ui:32
+#, fuzzy, kde-format
+#| msgid ""
+#| "If Shade Hover is enabled, a shaded window will un-shade automatically "
+#| "when the mouse pointer has been over the title bar for some time."
+msgid ""
+"<html><head/><body><p>If this option is enabled, a shaded window will "
+"unshade automatically when the mouse pointer has been over the titlebar for "
+"some time.</p></body></html>"
+msgstr ""
+"បើ​ស្រមោល​សំកាំង ត្រូវ​បាន​អនុញ្ញាត បង្អួច​ដែល​មាន​ស្រមោល នឹង​គ្មាន​​ស្រមោល​ដោយ​ស្វ័យ​ប្រវត្តិ ពេល​ព្រួញ​"
+"កណ្ដុរស្ថិតនៅលើ​របារ​ចំណង​ជើង​ពេលណាមួយ ។"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShadeHover)
+#: advanced.ui:35
+#, kde-format
+msgid "On titlebar hover after:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_ShadeHoverInterval)
+#: advanced.ui:42
+#, kde-format
+msgid ""
+"Sets the time in milliseconds before the window unshades when the mouse "
+"pointer goes over the shaded window."
+msgstr ""
+"កំណត់​ពេលវេលា​ជា​មិល្លីវិនាទី មុន​ពេល​បង្អួចមិន​​ដោះ​​ស្រមោល ពេល​ព្រួញ​កណ្ដុរ​ទៅ​​លើ​បង្អួច​ដែល​មាន​ស្រមោល ។"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AutoRaiseInterval)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ShadeHoverInterval)
+#: advanced.ui:45 focus.ui:85 focus.ui:178
+#, kde-format
+msgid " ms"
+msgstr " ម.វិ."
+
+#. i18n: ectx: property (text), widget (QLabel, windowPlacementLabel)
+#: advanced.ui:66
+#, fuzzy, kde-format
+#| msgid "&Placement:"
+msgid "Window &placement:"
+msgstr "កន្លែង ៖"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_Placement)
+#: advanced.ui:76
+#, kde-format
+msgid ""
+"<html><head/><body><p>The placement policy determines where a new window "
+"will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-bottom: "
+"0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" "
+"margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
+"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+"\">Smart</span> will try to achieve a minimum overlap of windows</li><li "
+"style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
+"italic;\">Maximizing</span> will try to maximize every window to fill the "
+"whole screen. It might be useful to selectively affect placement of some "
+"windows using the window-specific settings.</li><li style=\" margin-top:0px; "
+"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
+"text-indent:0px;\"><span style=\" font-style:italic;\">Cascade</span> will "
+"cascade the windows</li><li style=\" margin-top:0px; margin-bottom:0px; "
+"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+"\"><span style=\" font-style:italic;\">Random</span> will use a random "
+"position</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Centered</span> will place the window "
+"centered</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Zero-cornered</span> will place the window in "
+"the top-left corner</li><li style=\" margin-top:0px; margin-bottom:12px; "
+"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+"\"><span style=\" font-style:italic;\">Under mouse</span> will place the "
+"window under the pointer</li></ul></body></html>"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:80
+#, fuzzy, kde-format
+#| msgid "Snap windows onl&y when overlapping"
+msgid "Minimal Overlapping"
+msgstr "បាន​តែ​បង្អួច​ខ្ទាស់​ពេល​ត្រួតលើគ្នា"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:85
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox behavior on double click"
+#| msgid "Maximize"
+msgid "Maximized"
+msgstr "ពង្រីក​អតិបរមា"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:90
+#, fuzzy, kde-format
+#| msgid "Cascade"
+msgid "Cascaded"
+msgstr "ល្បាក់"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:95
+#, kde-format
+msgid "Random"
+msgstr "ចៃដន្យ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:100
+#, kde-format
+msgid "Centered"
+msgstr "ចំកណ្តាល"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:105
+#, kde-format
+msgid "In Top-Left Corner"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:110
+#, fuzzy, kde-format
+#| msgid "Under Mouse"
+msgid "Under mouse"
+msgstr "ក្រោម​កណ្ដុរ"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
+#: advanced.ui:118
+#, kde-format
+msgid ""
+"When turned on, apps which are able to remember the positions of their "
+"windows are allowed to do so. This will override the window placement mode "
+"defined above."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
+#: advanced.ui:121
+#, kde-format
+msgid ""
+"Allow apps to remember the positions of their own windows, if they support it"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
+#: advanced.ui:128
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "&Special windows:"
+msgstr "បង្អួច"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
+#: advanced.ui:138
+#, kde-format
+msgid ""
+"When turned on, utility windows (tool windows, torn-off menus,...) of "
+"inactive applications will be hidden and will be shown only when the "
+"application becomes active. Note that applications have to mark the windows "
+"with the proper window type for this feature to work."
+msgstr ""
+"ពេល​បាន​បើក បង្អួច​ឧបករណ៍ (បង្អួច​ឧបករណ៍, ម៉ឺនុយ​ដែល​ទុក​ចោល,...) របស់​កម្មវិធី​សកម្ម នឹង​ត្រូវ​បាន​លាក់ "
+"ហើយ នឹង​បង្ហាញ​តែ​ពេល​កម្មវិធីសកម្ម ។ សូម​ចំណាំថា កម្មវិធី​ត្រូវ​សម្គាល់​បង្អួច​ដោយ​ប្រភេទ​បង្អួច​សមរម្យ ដើម្បី​"
+"លក្ខណៈ​ពិសេស​នេះដំណើរការ ។"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
+#: advanced.ui:141
+#, kde-format
+msgid "Hide utility windows for inactive applications"
+msgstr "លាក់​បង្អួច​ឧបករណ៍ សម្រាប់​កម្មវិធី​អសកម្ម"
+
+#. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
+#: advanced.ui:148
+#, kde-format
+msgid "Virtual Desktop behavior:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
+#: advanced.ui:158
+#, kde-format
+msgid "When activating a window on a different Virtual Desktop:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
+#: advanced.ui:165
+#, kde-format
+msgid ""
+"<html><head/><body><p>This setting controls what happens when an open window "
+"located on a Virtual Desktop other than the current one is activated. </"
+"p><p><span style=\" font-style:italic;\">Switch to that Virtual Desktop</"
+"span> will switch to the Virtual Desktop where the window is currently "
+"located. </p><p><span style=\" font-style:italic;\">Bring window to current "
+"Virtual Desktop</span> will cause the window to jump to the active Virtual "
+"Desktop. </p></body></html>"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
+#: advanced.ui:169
+#, kde-format
+msgid "Switch to that Virtual Desktop"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
+#: advanced.ui:174
+#, kde-format
+msgid "Bring window to current Virtual Desktop"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
+#: focus.ui:22
+#, kde-format
+msgid "Window &activation policy:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, windowFocusPolicy)
+#: focus.ui:32
+#, kde-format
+msgid "With this option you can specify how and when windows will be focused."
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:36
+#, fuzzy, kde-format
+#| msgid "Click to Focus"
+msgctxt "sassa asas"
+msgid "Click to focus"
+msgstr "ចុច ដើម្បី​ផ្តោត"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:41
+#, kde-format
+msgid "Click to focus (mouse precedence)"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:46
+#, fuzzy, kde-format
+#| msgid "Focus Follows Mouse"
+msgid "Focus follows mouse"
+msgstr "ផ្តោតតាម​កណ្ដុរ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:51
+#, kde-format
+msgid "Focus follows mouse (mouse precedence)"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:56
+#, fuzzy, kde-format
+#| msgid "Focus Under Mouse"
+msgid "Focus under mouse"
+msgstr "ផ្តោត​ក្រោម​កណ្ដុរ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:61
+#, fuzzy, kde-format
+#| msgid "Focus Strictly Under Mouse"
+msgid "Focus strictly under mouse"
+msgstr "ផ្ដោត​​យ៉ាង​ខ្លាំង​ក្រោម​កណ្ដុរ"
+
+#. i18n: ectx: property (text), widget (QLabel, delayFocusOnLabel)
+#: focus.ui:69
+#, fuzzy, kde-format
+#| msgid "Delay focus by:"
+msgid "&Delay focus by:"
+msgstr "ពន្យារពេល​​ការ​ផ្តោត​ដោយ ៖"
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_DelayFocusInterval)
+#: focus.ui:82
+#, kde-format
+msgid ""
+"This is the delay after which the window the mouse pointer is over will "
+"automatically receive focus."
+msgstr ""
+"នេះ​ គឺ​ជា​ការ​ពន្យារ បន្ទាប់​ពីបង្អួច​ដែល​ព្រួញ​កណ្តុរ​ស្ថិត​លើ ទទួល​ការ​ផ្ដោត​អារម្មណ៍​ដោយ​ស្វ័យ​ប្រវត្តិ ។"
+
+#. i18n: ectx: property (text), widget (QLabel, focusStealingLabel)
+#: focus.ui:101
+#, fuzzy, kde-format
+#| msgid "Focus stealing prevention level:"
+msgid "Focus &stealing prevention:"
+msgstr "ផ្តោត​លើ​កម្រិត​ការ​ពារ​ការលួច ៖"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:114
+#, fuzzy, kde-format
+#| msgid ""
+#| "<p>This option specifies how much KWin will try to prevent unwanted focus "
+#| "stealing caused by unexpected activation of new windows. (Note: This "
+#| "feature does not work with the Focus Under Mouse or Focus Strictly Under "
+#| "Mouse focus policies.)<ul><li><em>None:</em> Prevention is turned off and "
+#| "new windows always become activated.</li><li><em>Low:</em> Prevention is "
+#| "enabled; when some window does not have support for the underlying "
+#| "mechanism and KWin cannot reliably decide whether to activate the window "
+#| "or not, it will be activated. This setting may have both worse and better "
+#| "results than the medium level, depending on the applications.</"
+#| "li><li><em>Medium:</em> Prevention is enabled.</li><li><em>High:</em> New "
+#| "windows get activated only if no window is currently active or if they "
+#| "belong to the currently active application. This setting is probably not "
+#| "really usable when not using mouse focus policy.</li><li><em>Extreme:</"
+#| "em> All windows must be explicitly activated by the user.</li></ul></"
+#| "p><p>Windows that are prevented from stealing focus are marked as "
+#| "demanding attention, which by default means their taskbar entry will be "
+#| "highlighted. This can be changed in the Notifications control module.</p>"
+msgid ""
+"<html><head/><body><p>This option specifies how much KWin will try to "
+"prevent unwanted focus stealing caused by unexpected activation of new "
+"windows. (Note: This feature does not work with the <span style=\" font-"
+"style:italic;\">Focus under mouse</span> or <span style=\" font-style:italic;"
+"\">Focus strictly under mouse</span> focus policies.) </p><ul style=\"margin-"
+"top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-"
+"indent: 1;\"><li style=\" margin-top:12px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">None:</span> Prevention is turned off and new "
+"windows always become activated.</li><li style=\" margin-top:0px; margin-"
+"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">Low:</span> Prevention is "
+"enabled; when some window does not have support for the underlying mechanism "
+"and KWin cannot reliably decide whether to activate the window or not, it "
+"will be activated. This setting may have both worse and better results than "
+"the medium level, depending on the applications.</li><li style=\" margin-"
+"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Medium:</"
+"span> Prevention is enabled.</li><li style=\" margin-top:0px; margin-"
+"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">High:</span> New windows "
+"get activated only if no window is currently active or if they belong to the "
+"currently active application. This setting is probably not really usable "
+"when not using mouse focus policy.</li><li style=\" margin-top:0px; margin-"
+"bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">Extreme:</span> All "
+"windows must be explicitly activated by the user.</li></ul><p>Windows that "
+"are prevented from stealing focus are marked as demanding attention, which "
+"by default means their taskbar entry will be highlighted. This can be "
+"changed in the Notifications control module.</p></body></html>"
+msgstr ""
+"<p>ជម្រើស​នេះ​បញ្ជាក់​អំពី​កម្រិត​ដែល​ KWin ព្យាយាម​ទប់​ស្កាត់​ការ​លួច​ផ្តោត​ដែល​មិនចង់​បាន​ ដែល​ជា​ហេតុ​បណ្តាល​"
+"មកពី​ការ​សកម្ម​របស់​បង្អួច​ថ្មី​ដែល​មិន​រំពឹង​ទុក ។ (ចំណាំ ៖ លក្ខណៈ​ពិសេស​នេះ​មិន​ធ្វើ​ការ​ជាមួយ​នឹង​គោលការណ៍​ ផ្តោត​"
+"ក្រោម​កណ្ដុរ​ ឬ​ផ្តោត​យ៉ាង​ខ្លាំង​ក្រោម​បង្អួច ។)<ul><li><em>គ្មាន ៖</em> ការ​ទប់​ស្កាត់​ត្រូវ​បាន​បិទ ហើយ​"
+"បង្អួច​ថ្មី​នឹង​សកម្ម​ជានិច្ច ។</li><li><em>ទាប់ ៖</em> ការ​ទប់​ស្កាត់​ត្រូវ​បាន​អនុញ្ញាត​ ពេល​បង្អួច​មួយ​ចំនួន​"
+"មិន​មាន​ការ​គាំទ្រ​មេកានិចគូស​បញ្ជក់​ ហើយ​ KWin មិន​អាច​សម្រេច​ដោយ​ជឿជាក់​ ថា​តើ​ត្រូវ​ធ្វើ​ឲ្យ​បង្អួច​សកម្ម ឬ​អត់​"
+"វានឹង​ត្រូវ​បាន​ធ្វើ​ឲ្យ ស កម្ម ។ ការ​កំណត់​នេះ​អាច​មានលទ្ធផល​ទាំងល្អ និង​អាក្រក់​ជាង​កម្រិត​ធម្មតា​អាស្រ័យ​លើ​"
+"កម្មវិធី ។</li><li><em>ធម្មតា ៖</em> ការ​ទប់​ស្កាត់​ត្រូវ​បាន​អនុញ្ញាត​ ។</li><li><em>ខ្ពស់ ៖</"
+"em> បង្អួច​ថ្មី​ត្រូវ​បាន​ធ្វើ​ឲ្យ​សកម្ម​ បាន​តែ​ក្នុង​ករណី​គ្មាន​បង្អួច ​សកម្មបច្ចុប្បន្ន​ ឬ​បើ​ពួក​វា​ជា​របស់​កម្មវិធី​"
+"សកម្ម​បច្ចុប្បន្ន ។ ការ​កំណត់​នេះ​ គឺប្រហែល​ជា​មិនអាច​ប្រើបាន​ នៅ​ពេល​មិន​អាច​ប្រើ​គោលការណ៍​ផ្តោត​កណ្ដុរ​ ។</"
+"li><li><em>ខ្ពស់​ខ្លាំង​ ៖</em> បង្អួច​ទាំងអស់​ត្រូវ​តែ​ធ្វើ​ឲ្យ​សកម្ម​យ៉ាង​ជាក់លាក់​ដោយ​អ្នកប្រើ ។</li></"
+"ul></p><p>បង្អួច​ដែលត្រូវ​ទប់​ស្កាត់​ពី​ការ​ផ្តោត​លួច​ ត្រូវ​បាន​សម្គាល់​​ថា​ប្រុងប្រយ័ត្ន ដែលជា​លំនាំដើម​ មានន័យ​"
+"ថា​ ធាតុ​បញ្ចូល​នៃ​របារភាកិច្ច​របស់​ពួក​គេនឹង​ត្រូវ​បាន​បន្លិច ។ វា​នេះ​អាច​ត្រូវ​បាន​ផ្លាស់ប្ដូរ​ក្នុង​ម៉ូឌុលត្រួត​ពិនិត្យ​"
+"ការជូន​ដំណឹង ។ </p>​"
+
+#. i18n: Focus Stealing Prevention Level
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_WindowSnapZone)
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_CenterSnapZone)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:118 moving.ui:33 moving.ui:65 moving.ui:97
+#, fuzzy, kde-format
+#| msgctxt "Focus Stealing Prevention Level"
+#| msgid "None"
+msgid "None"
+msgstr "គ្មាន"
+
+#. i18n: Focus Stealing Prevention Level
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:123
+#, fuzzy, kde-format
+#| msgctxt "Focus Stealing Prevention Level"
+#| msgid "Low"
+msgid "Low"
+msgstr "ទាប"
+
+#. i18n: Focus Stealing Prevention Level
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:128
+#, fuzzy, kde-format
+#| msgctxt "Focus Stealing Prevention Level"
+#| msgid "Medium"
+msgid "Medium"
+msgstr "មធ្យម"
+
+#. i18n: Focus Stealing Prevention Level
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:133
+#, fuzzy, kde-format
+#| msgctxt "Focus Stealing Prevention Level"
+#| msgid "High"
+msgid "High"
+msgstr "ខ្ពស់"
+
+#. i18n: Focus Stealing Prevention Level
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:138
+#, fuzzy, kde-format
+#| msgctxt "Focus Stealing Prevention Level"
+#| msgid "Extreme"
+msgid "Extreme"
+msgstr "ខ្ពស់​​បំផុត"
+
+#. i18n: ectx: property (text), widget (QLabel, raisingWindowsLabel)
+#: focus.ui:146
+#, fuzzy, kde-format
+#| msgctxt "Window Raising Policy"
+#| msgid "Raise/Lower all floating windows"
+msgid "Raising windows:"
+msgstr "លើក​ឡើង/ដាក់ចុះ​បង្អួច​អណ្ដែត​ទាំង​អស់"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ClickRaise)
+#: focus.ui:153
+#, kde-format
+msgid ""
+"When this option is enabled, the active window will be brought to the front "
+"when you click somewhere into the window contents. To change it for inactive "
+"windows, you need to change the settings in the Actions tab."
+msgstr ""
+"នៅ​ពេល​ជម្រើស​នេះ​​បាន​អនុញ្ញាត បង្អួច​ដែល​សកម្ម​នឹង​​ត្រូវ​បាននាំ​ទៅ​ខាង​មុខ ពេល​អ្នក​ចុច​កន្លែង ​ណាមួយ​ក្នុង​"
+"មាតិកា​បង្អួច ។ ដើម្បី​ផ្លាស់​ប្ដូរ​វា ​សម្រាប់​ធ្វើ​ឲ្យ​បង្អួច​អសកម្ម  អ្នក​ត្រូវ​តែ​ផ្លាស់ប្ដូរ​ការ​កំណត់​ក្នុង​ផ្ទាំង​"
+"អំពើ ។"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ClickRaise)
+#: focus.ui:156
+#, fuzzy, kde-format
+#| msgid "C&lick raises active window"
+msgid "&Click raises active window"
+msgstr "ចុច ដើម្បី​លើក​បង្អួច​សកម្ម​ឡើង"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AutoRaise)
+#: focus.ui:165
+#, kde-format
+msgid ""
+"When this option is enabled, a window in the background will automatically "
+"come to the front when the mouse pointer has been over it for some time."
+msgstr ""
+"នៅ​ពេល​ជម្រើស​នេះ​បាន​​អនុញ្ញាត បង្អួច​ដែល​មានផ្ទៃ​ខាងក្រោយ​នឹង​ត្រូវ​បាន​ប្ដូរ​ទៅ​​ខាងមុខ​ដោយ ​ស្វ័យប្រវត្តិ​ ពេល​"
+"យក​ព្រួញ កណ្ដុរ​ដាក់លើ​វា ។"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AutoRaise)
+#: focus.ui:168
+#, kde-format
+msgid "&Raise on hover, delayed by:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_AutoRaiseInterval)
+#: focus.ui:175
+#, kde-format
+msgid ""
+"This is the delay after which the window that the mouse pointer is over will "
+"automatically come to the front."
+msgstr "នេះ​ ជា​ការ​ពន្យាពេល​ បន្ទាប់​ពី​ដាក់​ព្រួញ​កណ្ដុរ​លើ​បង្អួច​ វា​នឹង​ផ្លាស់ទី​ទៅ​ខាងមុខ​​ដោយ​ស្វ័យប្រវត្តិ ។ "
+
+#. i18n: ectx: property (text), widget (QLabel, multiscreenBehaviorLabel)
+#: focus.ui:196
+#, kde-format
+msgid "Multiscreen behavior:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
+#: focus.ui:203
+#, fuzzy, kde-format
+#| msgid ""
+#| "When this option is enabled, the active Xinerama screen (where new "
+#| "windows appear, for example) is the screen containing the mouse pointer. "
+#| "When disabled, the active Xinerama screen is the  screen containing the "
+#| "focused window. By default this option is disabled for Click to focus and "
+#| "enabled for other focus policies."
+msgid ""
+"When this option is enabled, the active screen (where new windows appear, "
+"for example) is the screen containing the mouse pointer. When disabled, the "
+"active screen is the screen containing the focused window."
+msgstr ""
+"ពេល​បាន​ធីក​ជម្រើស​នេះ អេក្រង់ Xinerama សកម្ម (ឧ. កន្លែង​ដែល​បង្អួចថ្មី​លេចឡើង) ជា​អេក្រង់សម្រាប់ "
+"បង្ហាញ​ព្រួញ​កណ្ដុរ ។ ប៉ុន្តែ​ពេល​មិនធីក​វា​វិញ អេក្រង់ Xinerama សកម្មក្លាយជា​​អេក្រង់​ដែល​មាន​​បង្អួច​ដែលបាន​"
+"បើក​វិញ ។ តាម​លំនាំដើម ជម្រើស​នេះ​មិន​ធីក​ឡើយ ចុច​ដើម្បី​ផ្តោត ហើយ​អនុញ្ញាត​សម្រាប់គោលការណ៍​ផ្តោត​"
+"ផ្សេងទៀត ។"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
+#: focus.ui:206
+#, kde-format
+msgid "Active screen follows &mouse"
+msgstr "អេក្រង់​សកម្ម​តាម​កណ្ដុរ"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
+#: focus.ui:213
+#, fuzzy, kde-format
+#| msgid ""
+#| "When this option is enabled, focus operations are limited only to the "
+#| "active Xinerama screen"
+msgid ""
+"When this option is enabled, focus operations are limited only to the active "
+"screen"
+msgstr ""
+"ពេល​ជម្រើស​នេះ​បាន​អនុញ្ញាត​ ប្រតិបត្តិការ​ផ្តោត​អារម្មណ៍​ដែល​បាន​កំណត់​ បាន​តែ​ធ្វើ​ឲ្យ​អេក្រង់Xinerama "
+"សកម្ម​តែ​ប៉ុណ្ណោះ ។"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
+#: focus.ui:216
+#, fuzzy, kde-format
+#| msgid "S&eparate screen focus"
+msgid "&Separate screen focus"
+msgstr "បំបែក​អេក្រង់​ផ្តោត​អារម្មណ៍"
+
+#. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
+#: focus.ui:229
+#, kde-format
+msgid "Window activation policy description"
+msgstr ""
+
+#: main.cpp:73
+#, kde-format
+msgid "&Focus"
+msgstr "ផ្តោត"
+
+#: main.cpp:79
+#, fuzzy, kde-format
+#| msgid "&Titlebar Actions"
+msgid "Titlebar A&ctions"
+msgstr "អំពើ​របស់​​របារ​ចំណង​ជើង"
+
+#: main.cpp:85
+#, fuzzy, kde-format
+#| msgid "Window Actio&ns"
+msgid "W&indow Actions"
+msgstr "អំពើ​របស់​បង្អួច"
+
+#: main.cpp:91
+#, fuzzy, kde-format
+#| msgid "&Placement:"
+msgid "Mo&vement"
+msgstr "កន្លែង ៖"
+
+#: main.cpp:97
+#, fuzzy, kde-format
+#| msgid "Ad&vanced"
+msgid "Adva&nced"
+msgstr "កម្រិត​ខ្ពស់"
+
+#: main.cpp:101
+#, kde-format
+msgid "Window Behavior Configuration Module"
+msgstr "ម៉ូឌុល​ការ​កំណត់​រចនាសម្ព័ន្ធ​ឥរិយាបថ​របស់​បង្អួច"
+
+#: main.cpp:103
+#, kde-format
+msgid "(c) 1997 - 2002 KWin and KControl Authors"
+msgstr "រក្សា​សិទ្ធិ​ឆ្នាំ ១៩៩៧-២០០២ ដោយ​ក្រុម​អ្នក​និពន្ធ KWin និង​ KControl"
+
+#: main.cpp:105
+#, kde-format
+msgid "Matthias Ettrich"
+msgstr "Matthias Ettrich"
+
+#: main.cpp:106
+#, kde-format
+msgid "Waldo Bastian"
+msgstr "Waldo Bastian"
+
+#: main.cpp:107
+#, kde-format
+msgid "Cristian Tibirna"
+msgstr "Cristian Tibirna"
+
+#: main.cpp:108
+#, kde-format
+msgid "Matthias Kalle Dalheimer"
+msgstr "Matthias Kalle Dalheimer"
+
+#: main.cpp:109
+#, kde-format
+msgid "Daniel Molkentin"
+msgstr "Daniel Molkentin"
+
+#: main.cpp:110
+#, kde-format
+msgid "Wynn Wilkes"
+msgstr "Wynn Wilkes"
+
+#: main.cpp:111
+#, kde-format
+msgid "Pat Dowler"
+msgstr "Pat Dowler"
+
+#: main.cpp:112
+#, kde-format
+msgid "Bernd Wuebben"
+msgstr "Bernd Wuebben"
+
+#: main.cpp:113
+#, kde-format
+msgid "Matthias Hoelzer-Kluepfel"
+msgstr "Matthias Hoelzer-Kluepfel"
+
+#: main.cpp:161
+#, kde-format
+msgid ""
+"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
+"when being moved, resized or clicked on. You can also specify a focus policy "
+"as well as a placement policy for new windows.</p> <p>Please note that this "
+"configuration will not take effect if you do not use KWin as your window "
+"manager. If you do use a different window manager, please refer to its "
+"documentation for how to customize window behavior.</p>"
+msgstr ""
+"<p><h1>ឥរិយាបថ​បង្អួច</h1> នៅ​ទីនេះ អ្នក​អាច​ប្ដូរ​ឥរិយាបថ​បង្អួច នៅ​ពេល​​វា​​ត្រូវ​បាន​ផ្លាស់ទី ប្ដូរ​​ទំហំ ឬ​"
+"ចុច​លើ​វា ។ អ្នក​ក៍​អាច​បញ្ជាក់​អំពី​​គោលការណ៍​ផ្ដោត​ព្រម​ទាំង​គោល​ការណ៍​ទីតាំង​សម្រាប់​បង្អួច​ថ្មី ។</p> <p>សូម​ចំណាំ​"
+"ថា ការ​កំណត់​រចនាសម្ព័ន្ធ​នេះ​នឹង​គ្មាន​ប្រសិទ្ធិ​ភាព ​​អ្នក​មិន​ចង់​ប្រើ KWin ជា​កម្មវិធី​គ្រប់​គ្រង​បង្អួច​របស់​"
+"អ្នក ។ ​បើ​អ្នក​ពិត​ជា​ប្រើ​កម្មវិធី​គ្រប់គ្រង​បង្អួច​ខុស​គ្នា សូម​យោង​ទៅ​ឯកសារ​អំពី​របៀប​​ប្ដូរ​ឥរិយាបថ​បង្អួច ។</p>"
+
+#: main.cpp:202
+#, kde-format
+msgid "&Titlebar Actions"
+msgstr "អំពើ​របស់​​របារ​ចំណង​ជើង"
+
+#: main.cpp:208
+#, kde-format
+msgid "Window Actio&ns"
+msgstr "អំពើ​របស់​បង្អួច"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
+#: mouse.ui:17
+#, fuzzy, kde-format
+#| msgid "&Titlebar Actions"
+msgid "Titlebar Actions"
+msgstr "អំពើ​របស់​​របារ​ចំណង​ជើង"
+
+#. i18n: ectx: property (text), widget (QLabel, label_1)
+#: mouse.ui:26
+#, fuzzy, kde-format
+#| msgid "&Titlebar double-click:"
+msgid "&Double-click:"
+msgstr "ចុច​ទ្វេ​ដង​លើ​របារ​ចំណង​ជើង ៖"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#: mouse.ui:36
+#, kde-format
+msgid "Behavior on <em>double</em> click into the titlebar."
+msgstr "ឥរិយាបថ​អំពី <em>ការ​ចុច​ទ្វេ​ដង</em> លើ​របារ​ចំណង​ជើង ។"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
+#: mouse.ui:40 mouse.ui:615 mouse.ui:650 mouse.ui:685
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox behavior on double click"
+#| msgid "Maximize"
+msgid "Maximize"
+msgstr "ពង្រីក​អតិបរមា"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
+#: mouse.ui:45 mouse.ui:620 mouse.ui:655 mouse.ui:690
+#, kde-format
+msgid "Vertically maximize"
+msgstr ""
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
+#: mouse.ui:50 mouse.ui:625 mouse.ui:660 mouse.ui:695
+#, kde-format
+msgid "Horizontally maximize"
+msgstr ""
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: mouse.ui:60 mouse.ui:256 mouse.ui:318 mouse.ui:371 mouse.ui:433 mouse.ui:486
+#: mouse.ui:548
+#, kde-format
+msgid "Shade"
+msgstr "ស្រមោល"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: mouse.ui:70 mouse.ui:261 mouse.ui:323 mouse.ui:376 mouse.ui:438 mouse.ui:491
+#: mouse.ui:553
+#, kde-format
+msgid "Close"
+msgstr "បិទ"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#: mouse.ui:75
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox behavior on double click"
+#| msgid "On All Desktops"
+msgid "Show on all desktops"
+msgstr "លើ​ផ្ទៃតុ​ទាំងអស់"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: mouse.ui:98
+#, fuzzy, kde-format
+#| msgid "Behavior on <em>double</em> click into the titlebar."
+msgid "Behavior on <em>mouse wheel</em> scroll over the titlebar."
+msgstr "ឥរិយាបថ​អំពី <em>ការ​ចុច​ទ្វេ​ដង</em> លើ​របារ​ចំណង​ជើង ។"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: mouse.ui:143
+#, fuzzy, kde-format
+#| msgid "&Titlebar Actions"
+msgid "Titlebar and Frame Actions"
+msgstr "អំពើ​របស់​​របារ​ចំណង​ជើង"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: mouse.ui:167
+#, kde-format
+msgid "Active"
+msgstr "សកម្ម"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: mouse.ui:190
+#, kde-format
+msgid "Inactive"
+msgstr "អសកម្ម"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#: mouse.ui:232 mouse.ui:347 mouse.ui:462
+#, kde-format
+msgid ""
+"Behavior on <em>left</em> click into the titlebar or frame of an <em>active</"
+"em> window."
+msgstr "ឥរិយាបថ​​ពេល​ចុច​កណ្ដុរ <em>​ឆ្វេង</em> លើ​របារ​ចំណង​ជើង ឬ​ស៊ុម​នៃ​បង្អួច <em>សកម្ម​</em> ។"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: mouse.ui:266 mouse.ui:328 mouse.ui:381 mouse.ui:443 mouse.ui:496
+#: mouse.ui:558
+#, fuzzy, kde-format
+#| msgid "Operations Menu"
+msgid "Show actions menu"
+msgstr "ម៉ឺនុយ​ប្រតិបត្តិការ"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: mouse.ui:279 mouse.ui:394 mouse.ui:509
+#, kde-format
+msgid ""
+"Behavior on <em>left</em> click into the titlebar or frame of an "
+"<em>inactive</em> window."
+msgstr "ឥរិយាបថ​ពេល​ចុច​កណ្ដុរ <em>ឆ្វេង</em> លើ​របារ​ចំណង​ជើង ឬ​ស៊ុម​នៃ​បង្អួច <em>អសកម្ម</em> ​។"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: mouse.ui:288 mouse.ui:403 mouse.ui:518
+#, fuzzy, kde-format
+#| msgid "Activate & Lower"
+msgid "Activate and lower"
+msgstr "ធ្វើ​ឲ្យ​សកម្ម និង​បន្ទាប​ចុះ"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#: mouse.ui:589
+#, fuzzy, kde-format
+#| msgid "Maximize Button"
+msgid "Maximize Button Actions"
+msgstr "ពង្រីក​ប៊ូតុង​​អតិបរមា"
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label_8)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
+#: mouse.ui:598 mouse.ui:611
+#, kde-format
+msgid "Behavior on <em>left</em> click onto the maximize button."
+msgstr "ឥរិយាបថ​ពេល​ចុច​កណ្ដុរ <em>ឆ្វេង</em> លើ​ប៊ូតុង​ពង្រីក​អតិបរមា ។"
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label_9)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
+#: mouse.ui:633 mouse.ui:646
+#, kde-format
+msgid "Behavior on <em>middle</em> click onto the maximize button."
+msgstr "ឥរិយាបថ​ពេល​ចុច​កណ្ដុរ <em>កណ្ដាល</em> លើ​ប៊ូតុង​ពង្រីក​អតិបរមា ។"
+
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+#: mouse.ui:636
+#, fuzzy, kde-format
+#| msgid "Middle button:"
+msgid "Middle c&lick:"
+msgstr "ប៊ូតុង​កណ្តាល ៖"
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label_10)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
+#: mouse.ui:668 mouse.ui:681
+#, kde-format
+msgid "Behavior on <em>right</em> click onto the maximize button."
+msgstr "ឥរិយាបថ​ពេល​ចុច​កណ្ដុរ <em>​ស្ដាំ</em> លើ​ប៊ូតុង​ពង្រីក​អតិបរមា ។"
+
+#. i18n: ectx: property (text), widget (QLabel, borderSnapLabel)
+#: moving.ui:20
+#, fuzzy, kde-format
+#| msgid "&Border snap zone:"
+msgid "Screen &edge snap zone:"
+msgstr "តំបន់ខ្ទាស់​ស៊ុម ៖"
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_BorderSnapZone)
+#: moving.ui:30
+#, fuzzy, kde-format
+#| msgid ""
+#| "Here you can set the snap zone for screen borders, i.e. the 'strength' of "
+#| "the magnetic field which will make windows snap to the border when moved "
+#| "near it."
+msgid ""
+"Here you can set the snap zone for screen edges, i.e. the 'strength' of the "
+"magnetic field which will make windows snap to the border when moved near it."
+msgstr ""
+"នៅទីនេះ អ្នក​អាច​កំណត់​តំបន់ខ្ទាស់​សម្រាប់​ស៊ុម​អេក្រង់ ឧ. 'កម្លាំង' នៃ​វាល​ម៉ាញេទិក ​ដែល​នឹង​ធ្វើ​ឲ្យ​ខ្ទាស់បង្អួច​"
+"ពេល​វា​ត្រូវ​បាន​ផ្លាស់ទី ។"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_BorderSnapZone)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_WindowSnapZone)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_CenterSnapZone)
+#: moving.ui:36 moving.ui:68 moving.ui:100
+#, fuzzy, kde-format
+#| msgid " pixel"
+#| msgid_plural " pixels"
+msgid " px"
+msgstr " ភីកសែល"
+
+#. i18n: ectx: property (text), widget (QLabel, windowSnapLabel)
+#: moving.ui:52
+#, kde-format
+msgid "&Window snap zone:"
+msgstr "តំបន់​ខ្ទាស់​បង្អួច ៖"
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_WindowSnapZone)
+#: moving.ui:62
+#, kde-format
+msgid ""
+"Here you can set the snap zone for windows, i.e. the 'strength' of the "
+"magnetic field which will make windows snap to each other when they are "
+"moved near another window."
+msgstr ""
+"នៅទីនេះ អ្នក​អាច​កំណត់​តំបន់ខ្ទាស់​​បង្អួច ឧ. 'កម្លាំង' នៃ​វាល​ម៉ាញេទិកដែល​នឹង​ធ្វើ​ឲ្យ​ខ្ទាស់បង្អួច​​ទៅ "
+"វិញទៅមក នៅ​ពេល​ដែល​ពួកវា​ត្រូវ​បាន​ផ្លាស់ទី​នៅ​ជិត​បង្អួច​ដទៃ​ទៀត ។"
+
+#. i18n: ectx: property (text), widget (QLabel, centerSnaplabel)
+#: moving.ui:84
+#, kde-format
+msgid "&Center snap zone:"
+msgstr "តំបន់ខ្ទាស់​កណ្ដាល ៖"
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_CenterSnapZone)
+#: moving.ui:94
+#, kde-format
+msgid ""
+"Here you can set the snap zone for the screen center, i.e. the 'strength' of "
+"the magnetic field which will make windows snap to the center of the screen "
+"when moved near it."
+msgstr ""
+"នៅ​ទីនេះ អ្នក​អាច​កំណត់​តំបន់​ខ្ទាស់​សម្រាប់​កណ្ដាល់អេក្រង់ ឧ. 'ប្រវែង' របស់​វាល​ម៉ាញេទិក​ដែល​នឹង​ធ្វើ​ឲ្យ​បង្អួច​"
+"ខ្ទាស់​ទៅ​កណ្ដាល​អេក្រង់ នៅ​ពេល​​បានផ្លាស់ទី​នៅ​ជិត​វា ។"
+
+#. i18n: ectx: property (text), widget (QLabel, OverlapSnapLabel)
+#: moving.ui:113
+#, fuzzy, kde-format
+#| msgctxt "Window Raising Policy"
+#| msgid "Raise/Lower all floating windows"
+msgid "&Snap windows:"
+msgstr "លើក​ឡើង/ដាក់ចុះ​បង្អួច​អណ្ដែត​ទាំង​អស់"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
+#: moving.ui:123
+#, kde-format
+msgid ""
+"Here you can set that windows will be only snapped if you try to overlap "
+"them, i.e. they will not be snapped if the windows comes only near another "
+"window or border."
+msgstr ""
+"នៅទីនេះ អ្នក​អាច​កំណត់​ថាបង្អួច​នឹង​ត្រូវ​បាន​ខ្ទាស់​តែ​ក្នុង​ករណី​ដែល​អ្នក​ព្យាយាម​ដាក់​ពួកវា​ត្រួត​លើ​គ្នាតែប៉ុណ្ណោះ "
+"ឧទាហរណ៍ ៖ ពួកវា​មិន​ត្រូវ​បាន​ខ្ទាស់ បើ​បង្អួច​ខិត​មក​ជិត​បង្អួច​ផ្សេង​ទៀត ឬ​ស៊ុម ។​"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
+#: moving.ui:126
+#, fuzzy, kde-format
+#| msgid "Snap windows onl&y when overlapping"
+msgid "Only when overlapping"
+msgstr "បាន​តែ​បង្អួច​ខ្ទាស់​ពេល​ត្រួតលើគ្នា"
+
+#: windows.cpp:97
+#, kde-format
+msgid ""
+"<em>Click to focus:</em> A window becomes active when you click into it. "
+"This behavior is common on other operating systems and likely what you want."
+msgstr ""
+
+#: windows.cpp:101
+#, kde-format
+msgid ""
+"<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
+"focus</em>. If an active window has to be chosen by the system (eg. because "
+"the currently active one was closed) the window under the mouse is the "
+"preferred candidate. Unusual, but possible variant of <em>Click to focus</"
+"em>."
+msgstr ""
+
+#: windows.cpp:106
+#, kde-format
+msgid ""
+"<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
+"it. Eg. windows randomly appearing under the mouse will not gain the focus. "
+"<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
+"to focus</em> just without having to actually click."
+msgstr ""
+
+#: windows.cpp:110
+#, kde-format
+msgid ""
+"This is mostly the same as <em>Focus follows mouse</em>. If an active window "
+"has to be chosen by the system (eg. because the currently active one was "
+"closed) the window under the mouse is the preferred candidate. Choose this, "
+"if you want a hover controlled focus."
+msgstr ""
+
+#: windows.cpp:115
+#, kde-format
+msgid ""
+"<em>Focus under mouse:</em> The focus always remains on the window under the "
+"mouse.<br/><strong>Warning:</strong> <em>Focus stealing prevention</em> and "
+"the <em>tabbox ('Alt+Tab')</em> contradict the activation policy and will "
+"not work. You very likely want to use <em>Focus follows mouse (mouse "
+"precedence)</em> instead!"
+msgstr ""
+
+#: windows.cpp:119
+#, kde-format
+msgid ""
+"<em>Focus strictly under mouse:</em> The focus is always on the window under "
+"the mouse (in doubt nowhere) very much like the focus behavior in an "
+"unmanaged legacy X11 environment.<br/><strong>Warning:</strong> <em>Focus "
+"stealing prevention</em> and the <em>tabbox ('Alt+Tab')</em> contradict the "
+"activation policy and will not work. You very likely want to use <em>Focus "
+"follows mouse (mouse precedence)</em> instead!"
+msgstr ""
+
+#~ msgid ""
+#~ "Enable this option if you want a window's geometry to be displayed while "
+#~ "it is being moved or resized. The window position relative to the top-"
+#~ "left corner of the screen is displayed together with its size."
+#~ msgstr ""
+#~ "អនុញ្ញាត​ជម្រើស​នេះ ​បើ​អ្នក​ចង់​ឲ្យ​រេខាគណិត​របស់​បង្អួច​ត្រូវ​បង្ហាញ ខណៈ​ពេល​វា​កំពុង​ត្រូវ​បាន​ផ្លាស់ទី ឬ​ប្ដូរ​"
+#~ "ទំហំ ។ ទីតាំង​បង្អួច​ដែល​ទាក់ទងទៅ​​នឹង​ជ្រុង​កំពូលខាង​ឆ្វេង​​នៃ​អេក្រង់ ​ត្រូវ​បាន​បង្ហាញ​ជាមួយ​នឹង​ទំហំ​របស់វា ។"
+
+#, fuzzy
+#~| msgid "Display window &geometry when moving or resizing"
+#~ msgid "Display when moving or resizing"
+#~ msgstr "បង្ហាញ​​រេខាគណិត​របស់​បង្អួច នៅ​ពេល​ផ្លាស់ទី ឬ ប្ដូរ​ទំហំ"
+
+#~ msgid "Maximize (vertical only)"
+#~ msgstr "ពង្រីក​អតិបរមា (តែ​បញ្ឈរ)"
+
+#~ msgid "Maximize (horizontal only)"
+#~ msgstr "ពង្រីក​អតិបរមា (តែ​ផ្តេក)"
+
+#~ msgid "Smart"
+#~ msgstr "ឆ្លាត"
+
+#~ msgid "Maximizing"
+#~ msgstr "កំពុង​ពង្រីក​អតិបរមា"
+
+#, fuzzy
+#~| msgid "Zero-Cornered"
+#~ msgid "Zero-cornered"
+#~ msgstr "ជ្រុង​-សូន្យ"
+
+#, fuzzy
+#~| msgid "Switch to Window Tab to the Left/Right"
+#~ msgid "Switch to window tab to the left/right"
+#~ msgstr "ប្ដូរ​ទៅ​​ផ្ទាំង​បង្អួច​ទៅ​ឆ្វេង/ស្ដាំ"
+
+#, fuzzy
+#~| msgid "Window Tabbing"
+#~ msgid "Window tabbing:"
+#~ msgstr "ការ​ប្ដូរ​បង្អួច"
+
+#~ msgid ""
+#~ "When turned on immediately switch to any new window tabs that were "
+#~ "automatically added to the current group."
+#~ msgstr ""
+#~ "នៅពេល​បើក ប្ដូរ​ទៅ​ផ្ទាំង​បង្អួច​ថ្មី​ភ្លាមៗ ដែល​ត្រូវ​បានបន្ថែម​ដោយ​ស្វ័យ​ប្រវត្តិ​ទៅ​ក្រុមបច្ចុប្បន្ន ។"
+
+#, fuzzy
+#~| msgid "Switch to automatically grouped windows immediately"
+#~ msgid "&Switch to automatically grouped windows immediately"
+#~ msgstr "ប្ដូរ​ទៅ​បង្អួច​ដែលបាន​ដាក់ជា​ក្រុម​ដោយ​ស្វ័យ​ប្រវត្តិ​ភ្លាមៗ"
+
+#~ msgid "When turned on hide all tabs that are not active from the taskbar."
+#~ msgstr "នៅ​ពេល​បានបើក​ លាក់​ផ្ទាំង​ទាំងអស់​ដែល​មិន​សកម្ម​ពី​របារ​ភារកិច្ច ។"
+
+#, fuzzy
+#~| msgid "Hide inactive window tabs from the taskbar"
+#~ msgid "&Hide inactive window tabs from the taskbar"
+#~ msgstr "លាក់​ផ្ទាំង​បង្អួច​អសកម្ម​ពី​របារ​ភារកិច្ច"
+
+#~ msgid ""
+#~ "When turned on attempt to automatically detect when a newly opened window "
+#~ "is related to an existing one and place them in the same window group."
+#~ msgstr ""
+#~ "នៅពេល​បានបើក ប៉ុនប៉ង​​រក​បង្អួច​ដែលបាន​បើក​ថ្មីៗ​ដោយ​ស្វ័យ​ប្រវត្តិ ​ដែល​ត្រូវ​បាន​ទាក់ទង​នឹង​បង្អួច​"
+#~ "ដែលបានបើក​មួយ​ស្រាប់ ហើយ​ដាក់​ពួកវា​នៅ​ក្នុង​ក្រុម​បង្អួច​ដូច​គ្នា ។"
+
+#, fuzzy
+#~| msgid "Start Window Tab Drag"
+#~ msgid "Start window tab drag"
+#~ msgstr "ចាប់ផ្ដើម​អូស​ផ្ទាំង​បង្អួច"
+
+#, fuzzy
+#~| msgid "Right button:"
+#~ msgid "Ri&ght button:"
+#~ msgstr "ប៊ូតុង​​ស្តាំ ៖"
+
+#, fuzzy
+#~| msgid "Wheel"
+#~ msgid "&Wheel"
+#~ msgstr "កង់"
+
+#, fuzzy
+#~| msgid "Left button:"
+#~ msgid "&Left button:"
+#~ msgstr "ប៊ូតុង​ឆ្វេង ៖"
+
+#, fuzzy
+#~| msgid "Right button:"
+#~ msgid "&Right button:"
+#~ msgstr "ប៊ូតុង​​ស្តាំ ៖"
+
+#, fuzzy
+#~| msgid "Middle button:"
+#~ msgid "M&iddle button:"
+#~ msgstr "ប៊ូតុង​កណ្តាល ៖"
+
+#, fuzzy
+#~| msgid "Left button:"
+#~ msgid "Left &button"
+#~ msgstr "ប៊ូតុង​ឆ្វេង ៖"
+
+#~ msgid "Automatically group similar windows"
+#~ msgstr "ដាក់​បង្អួច​ដែល​ដូច​គ្នា​ជា​ក្រុម​ដោយ​ស្វ័យ​ប្រវត្តិ"
+
+#, fuzzy
+#~| msgid ""
+#~| "The placement policy determines where a new window will appear on the "
+#~| "desktop. <ul> <li><em>Smart</em> will try to achieve a minimum overlap "
+#~| "of windows</li> <li><em>Maximizing</em> will try to maximize every "
+#~| "window to fill the whole screen. It might be useful to selectively "
+#~| "affect placement of some windows using the window-specific settings.</"
+#~| "li> <li><em>Cascade</em> will cascade the windows</li> <li><em>Random</"
+#~| "em> will use a random position</li> <li><em>Centered</em> will place the "
+#~| "window centered</li> <li><em>Zero-Cornered</em> will place the window in "
+#~| "the top-left corner</li> <li><em>Under Mouse</em> will place the window "
+#~| "under the pointer</li></ul>"
+#~ msgid ""
+#~ "The placement policy determines where a new window will appear on the "
+#~ "desktop.<br><ul>\n"
+#~ "<li><em>Smart</em> will try to achieve a minimum overlap of windows</li>\n"
+#~ "<li><em>Maximizing</em> will try to maximize every window to fill the "
+#~ "whole screen. It might be useful to selectively affect placement of some "
+#~ "windows using the window-specific settings.</li>\n"
+#~ "<li><em>Cascade</em> will cascade the windows</li>\n"
+#~ "<li><em>Random</em> will use a random position</li>\n"
+#~ "<li><em>Centered</em> will place the window centered</li>\n"
+#~ "<li><em>Zero-Cornered</em> will place the window in the top-left corner</"
+#~ "li>\n"
+#~ "<li><em>Under Mouse</em> will place the window under the pointer</li>\n"
+#~ "</ul>"
+#~ msgstr ""
+#~ "កំណត់​គោលការណ៍​ទីតាំង​ដែល​បង្អួច​ថ្មី​ នឹង​បង្ហាញ​នៅ​លើ​ផ្ទៃតុ ។ <ul> <li><em>ឆ្លាត</em> នឹង​​ព្យាយាម​​"
+#~ "សម្រេច​ការ​តម្រួត​បង្អួច​ជា​អប្បបរមា</li> <li><em>ល្បាក់</em> នឹងដាក់​បង្អួច​ដូច​ជា​ល្បាក់</li> "
+#~ "<li><em>ចៃដន្យ</em> នឹង​ប្រើ​ទីតាំង​ចៃដន្យ​មួយ</li> <li><em>កណ្ដាល</em> នឹង​ដាក់​បង្អួច​"
+#~ "ចំកណ្ដាល​</li> <li><em>ជ្រុង​សូន្យ</em> នឹង​ដាក់​បង្អួច​នៅ​ជ្រុង​ខាង​ឆ្វេង​កំពូល</li></ul>"
+
+#~ msgid "Shading"
+#~ msgstr "កំពុង​ដាក់​ស្រមោល"
+
+#~ msgid "Dela&y:"
+#~ msgstr "ពន្យារ ៖"
+
+#~ msgid "&Enable hover"
+#~ msgstr "អាច​សំកាំង​"
+
+#, fuzzy
+#~| msgid "Windows"
+#~ msgid "Activating windows"
+#~ msgstr "បង្អួច"
+
+#, fuzzy
+#~| msgid "&Policy:"
+#~ msgid "Policy"
+#~ msgstr "គោលការណ៍ ៖"
+
+#~ msgid "&Moving"
+#~ msgstr "ផ្លាស់ទី"
+
+#, fuzzy
+#~| msgid "Titlebar wheel event:"
+#~ msgid "Wheel event:"
+#~ msgstr "ព្រឹត្តិការណ៍​បង្វិល​របារ​ចំណង​ជើង ៖"
+
+#~ msgid "Handle mouse wheel events"
+#~ msgstr "ដោះស្រាយ​ព្រឹត្តិការណ៍​បង្វិល​កណ្តុរ"
+
+#~ msgid ""
+#~ "In this column you can customize mouse clicks into the titlebar or the "
+#~ "frame of an active window."
+#~ msgstr "ក្នុង​ជួរ​ឈរ​នេះ អ្នក​អាច​ប្តូរ​ការ​ចុច​កណ្តុរ​​លើ​របារ​ចំណង​ជើង ឬ​ស៊ុម​​នៃ​បង្អួច​ដែល​សកម្ម​តាម​បំណង ។"
+
+#~ msgid ""
+#~ "In this column you can customize mouse clicks into the titlebar or the "
+#~ "frame of an inactive window."
+#~ msgstr "ក្នុង​ជួរ​ឈរ​នេះ អ្នក​អាច​ប្ដូរ​ការ​ចុច​កណ្ដុរ​​តាម​បំណង​លើ​របារ​ចំណង​ជើង ឬ​ស៊ុម​នៃ​បង្អួច​អសកម្ម​ ។"
+
+#~ msgid "Left button:"
+#~ msgstr "ប៊ូតុង​ឆ្វេង ៖"
+
+#~ msgid "Middle button:"
+#~ msgstr "ប៊ូតុង​កណ្តាល ៖"
+
+#~ msgid ""
+#~ "Behavior on <em>middle</em> click into the titlebar or frame of an "
+#~ "<em>active</em> window."
+#~ msgstr ""
+#~ "ឥរិយាបថ​ពេល​ចុច​កណ្ដុរ​ <em>កណ្ដាល</em> លើ​របារ​ចំណង​ជើង ឬ​​ស៊ុម​នៃ​បង្អួច <em>សកម្ម</em> មួយ ។"
+
+#~ msgid "Right button:"
+#~ msgstr "ប៊ូតុង​​ស្តាំ ៖"
+
+#~ msgid ""
+#~ "Behavior on <em>right</em> click into the titlebar or frame of an "
+#~ "<em>active</em> window."
+#~ msgstr "ឥរិយាបថ​ពេល​ចុច​កណ្ដុរ <em>ស្ដាំ</em> លើ​របារ​ចំណង​ជើង ឬ​ស៊ុម​នៃ​បង្អួច <em>សកម្ម</em> ។"
+
+#, fuzzy
+#~| msgid "Titlebar && Frame"
+#~ msgid "Titlebar & Frame"
+#~ msgstr "របារ​ចំណង​ជើង និង​ស៊ុម"
+
+#, fuzzy
+#~| msgid "&Titlebar Actions"
+#~ msgid "Titlebar"
+#~ msgstr "អំពើ​របស់​​របារ​ចំណង​ជើង"
+
+#, fuzzy
+#~| msgid "&Center snap zone:"
+#~ msgid "no center snap zone"
+#~ msgstr "តំបន់ខ្ទាស់​កណ្ដាល ៖"
+
+#, fuzzy
+#~| msgid "&Window snap zone:"
+#~ msgid "no window snap zone"
+#~ msgstr "តំបន់​ខ្ទាស់​បង្អួច ៖"
+
+#, fuzzy
+#~| msgid "&Border snap zone:"
+#~ msgid "no border snap zone"
+#~ msgstr "តំបន់ខ្ទាស់​ស៊ុម ៖"
+
+#~ msgid "Windows"
+#~ msgstr "បង្អួច"
+
+#~ msgid "Snap Zones"
+#~ msgstr "តំបន់​ខ្ទាស់"
+
+#~ msgid "kcmkwinoptions"
+#~ msgstr "kcmkwinoptions"
+
+#, fuzzy
+#~| msgid ""
+#~| "The focus policy is used to determine the active window, i.e. the window "
+#~| "you can work in. <ul> <li><em>Click to focus:</em> A window becomes "
+#~| "active when you click into it. This is the behavior you might know from "
+#~| "other operating systems.</li> <li><em>Focus follows mouse:</em> Moving "
+#~| "the mouse pointer actively on to a normal window activates it. New "
+#~| "windows will receive the focus, without you having to point the mouse at "
+#~| "them explicitly. Very practical if you are using the mouse a lot.</li> "
+#~| "<li><em>Focus under mouse:</em> The window that happens to be under the "
+#~| "mouse pointer is active. If the mouse points nowhere, the last window "
+#~| "that was under the mouse has focus. New windows will not automatically "
+#~| "receive the focus.</li> <li><em>Focus strictly under mouse:</em> Only "
+#~| "the window under the mouse pointer is active. If the mouse points "
+#~| "nowhere, nothing has focus.</li> </ul>Note that 'Focus under mouse' and "
+#~| "'Focus strictly under mouse' prevent certain features such as the Alt"
+#~| "+Tab walk through windows dialog in the KDE mode from working properly."
+#~ msgid ""
+#~ "The focus policy is used to determine the active window, i.e. the window "
+#~ "you can work in. <ul>\n"
+#~ "<li><em>Click to focus:</em> A window becomes active when you click into "
+#~ "it. This is the behavior you might know from other operating systems.</"
+#~ "li> <li><em>Focus follows mouse:</em> Moving the mouse pointer actively "
+#~ "on to a normal window activates it. New windows will receive the focus, "
+#~ "without you having to point the mouse at them explicitly. Very practical "
+#~ "if you are using the mouse a lot.</li>\n"
+#~ "<li><em>Focus under mouse:</em> The window that happens to be under the "
+#~ "mouse pointer is active. If the mouse points nowhere, the last window "
+#~ "that was under the mouse has focus. New windows will not automatically "
+#~ "receive the focus.</li>\n"
+#~ "<li><em>Focus strictly under mouse:</em> Only the window under the mouse "
+#~ "pointer is active. If the mouse points nowhere, nothing has focus.</li>\n"
+#~ "</ul>\n"
+#~ "Note that 'Focus under mouse' and 'Focus strictly under mouse' prevent "
+#~ "certain features such as the Alt+Tab walk through windows dialog in the "
+#~ "KDE mode from working properly."
+#~ msgstr ""
+#~ "គោលការណ៍​ផ្តោត​ត្រូវ​បាន​ប្រើ​ ដើម្បី​កំណត់​បង្អួច​សកម្ម ឧ.​ បង្អួច​ដែល​អ្នក​អាច​ធ្វើការ​លើ​វា​បាន ។<ul> "
+#~ "<li><em>ចុច ដើម្បី​ផ្តោត ៖</em> បង្អួច​ក្លាយ​ជា​សកម្ម​ នៅ​ពេល​ដែល​អ្នក​ចុច​លើ​វា ។ នេះ​ គឺ​ជា​"
+#~ "ឥរិយាបទ​ដែល​អ្នក​អាច​ដឹង​អំពី​ប្រព័ន្ធ​ប្រតិបត្តិការ​ផ្សេងទៀត ។</li> <li><em>ផ្តោត​តាម​កណ្តុរ ៖</"
+#~ "em> ផ្លាស់ទី​ព្រួញ​កណ្តុរ​យ៉ាង​សកម្ម​នៅ​លើ​បង្អួច​ធម្មតានឹង​ធ្វើ​ឲ្យ​បង្អួច​សកម្ម ។ បង្អួច​ថ្មី​នឹង​ទទួល​ការ​ផ្តោត​"
+#~ "ដោយ​អ្នកមិន​ចាំបាច់​ចង្អុរ​ព្រួញ​នៅ​លើ​បង្អួច​ធម្មតា​លើ​ពួក​វា ។</li> <li><em>ផ្តោត​ក្រោម​កណ្តុរ ៖ </"
+#~ "em> បង្អូច​ដែល​កើត​ឡើង​ក្រោម​កណ្ដុរ​ គឺ​សកម្ម​សិន​បើ​ព្រួល​កណ្ដុរ​មិនទៅ​ណា​ បង្អួច​ចុង​ក្រោយ​ដែល​នៅ​ក្នុង​កណ្ដុរ​ដែល​"
+#~ "នឹង​ត្រូវ​បាន​ផ្តោត​ ។ បង្អួច​ថ្មី​មិន​ទទួល​បាន​ការ​ផ្តោត​ស្វ័យ​ប្រវត្តិទេ ។</li> <li><em>ផ្តោត​យ៉ាង​ខ្លាំង​"
+#~ "ក្រោម​កណ្ដុរ​ ៖</em> បាន​តែ​បង្អួច​ក្រោម​ព្រួញ​កណ្ដុរ​ប៉ុណ្ណោះ​ដេល​សកម្ម បើ​ព្រួញ​កណ្ដុរ​មិនទៅ​ណា​ គ្មាន​អ្វី​"
+#~ "ផ្តោត​ទេ ។</li> </ul> ចំណាំថា 'ផ្តោត​ក្រោម​កណ្ដុរ' និងិ 'ផ្តោត​យ៉ាង​ខ្លាំង​ក្រោម​កណ្ដុរ' ទប់​ស្កាត់​"
+#~ "លក្ខណៈពិសេស​មួយ​ចំនួន​មិន​ឲ្យ​ដំណើរការ​ប្រក្រតី​ដូច​ជា KDE ។ជំនួស+ថេប​ដែលប្រើ​សម្រាប់​ផ្តោត​លើ​បង្អួច​ក្នុង​"
+#~ "របៀប ។"
+
+#~ msgid "&Raise, with the following delay:"
+#~ msgstr "លើក​ឡើង​លើ​ ដោយ​មានការ​ពន្យារ​ដូច​ខាង​ក្រោម ៖"
+
+#~ msgid ""
+#~ "When enabled, this feature activates the border of maximized windows and "
+#~ "allows you to move or resize them, just like for normal windows"
+#~ msgstr ""
+#~ "ពេល​បាន​អនុញ្ញាត លក្ខណៈ​ពិសេស​នេះ​នឹង​ធ្វើ​ឲ្យ​ស៊ុម​របស់​បង្អួច​ដែល​បាន​ពង្រីក​អតិបរមា​សកម្ម ហើយ​​អនុញ្ញាត​ឲ្យ​"
+#~ "អ្នក​ផ្លាស់ទី ឬ​ប្ដូរ​ទំហំ​របស់​ពួកវា ​ដូចជា​​បង្អួច​ធម្មតា ។"
+
+#~ msgid "Display borders on &maximized windows"
+#~ msgstr "បង្ហាញ​ស៊ុន​នៅ​ដែលបានបង្រួម​បង្អួច​អប្បបរមា"
+
+#~ msgctxt "@item:inlistbox behavior on double click"
+#~ msgid "Minimize"
+#~ msgstr "បង្រួម​អប្បបរមា"
+
+#~ msgctxt "@item:inlistbox behavior on double click"
+#~ msgid "Close"
+#~ msgstr "បិទ "
+
+#~ msgid ""
+#~ "Here you can customize mouse click behavior when clicking on the titlebar "
+#~ "or the frame of a window."
+#~ msgstr "នៅ​ទីនេះ អ្នក​អាច​ប្តូរ​ឥរិយាបថ​ការ​ចុច​កណ្តុរ​តាម​បំណង នៅ​ពេល​ចុច​លើ​របារ​ចំណង​ជើង ឬ​ស៊ុម​បង្អួច​ ។"
+
+#~ msgid ""
+#~ "Behavior on <em>right</em> click into the titlebar or frame of an "
+#~ "<em>inactive</em> window."
+#~ msgstr ""
+#~ "ឥរិយាបថ​ពេល​ចុច​កណ្ដុរ​ <em>ស្ដាំ</em> លើ​របារ​ចំណង​ជើង ឬ​ស៊ុម​នៃ​បង្អួច <em>អសកម្ម</em> ។"
+
+#~ msgid ""
+#~ "Behavior on <em>middle</em> click into the titlebar or frame of an "
+#~ "<em>inactive</em> window."
+#~ msgstr ""
+#~ "ឥរិយាបថ​​ពេល​ចុច​កណ្ដុរ​ <em>កណ្ដាល</em> លើ​របារ​ចំណង​ជើង ឬ​ស៊ុម​នៃ​បង្អួច <em>អសកម្ម</em> ។"
+
+#~ msgid ""
+#~ "Here you can customize behavior when clicking on the maximize button."
+#~ msgstr "នៅ​ទីនេះ អ្នក​អាច​ប្តូរ​ឥរិយាបថ​តាម​បំណង នៅ​ពេល​ចុច​លើ​ប៊ូតុង​ពង្រីក​អតិបរមា ។"
+
+#~ msgid ""
+#~ "Here you can customize mouse click behavior when clicking on an inactive "
+#~ "inner window ('inner' means: not titlebar, not frame)."
+#~ msgstr ""
+#~ "នៅ​ទីនេះ អ្នក​អាច​ប្ដូរ​ឥរិយាបថ​ការ​ចុច​កណ្ដុរ​តាម​បំណង នៅ​ពេល​ចុច​លើ​​បង្អួច​ខាង​ក្នុង​អសកម្ម​មួយ ('ខាង​"
+#~ "ក្នុង' មាន​ន័យ​ថា ៖ មិន​មែន​របារ​ចំណង​ជើង មិន​មែន​ស៊ុម​ឡើយ) ។"
+
+#~ msgid ""
+#~ "Here you can customize KDE's behavior when clicking somewhere into a "
+#~ "window while pressing a modifier key."
+#~ msgstr ""
+#~ "នៅទីនេះ អ្នកអាច​ប្ដូរ​ឥរិយាបថ​របស់ KDE នៅ​ពេល​ចុច​កន្លែង​ណាមួយ​ក្នុង​បង្អួច​មួយ ខណៈ​ពេល​ចុច​គ្រាប់​ចុច​"
+#~ "កែប្រែ ។"
+
+#~ msgctxt "no border snap zone"
+#~ msgid "none"
+#~ msgstr "គ្មាន"
+
+#~ msgctxt "no window snap zone"
+#~ msgid "none"
+#~ msgstr "គ្មាន"
+
+#~ msgctxt "no center snap zone"
+#~ msgid "none"
+#~ msgstr "គ្មាន"
+
+#~ msgid "Tiling"
+#~ msgstr "រៀប​ជា​ក្រឡា​ក្បឿង"
+
+#~ msgid "Enable Tiling"
+#~ msgstr "បើក​ការ​រៀប​ជា​ក្រឡា​ក្បឿង"
+
+#~ msgid ""
+#~ "A tiling window manager lays out all the windows in a non-overlapping "
+#~ "manner. This way all windows are always visible."
+#~ msgstr ""
+#~ "កម្មវិធី​គ្រប់គ្រង​បង្អួច​រៀប​ជា​ក្រឡា​ក្បឿង​ដាក់​បង្អួចជា​ប្លង់​នៅ​ក្នុង​លំដាប់​មិន​ត្រួត​លើ​គ្នា ។ វិធី​បង្អួចទាំងអស់​"
+#~ "អាច​មើលឃើញជា​និច្ច ។"
+
+#~ msgid "Default Tiling &Layout"
+#~ msgstr "ប្លង់រៀប​ជា​ក្រឡាក្បឿង​លំនាំដើម"
+
+#~ msgctxt "Spiral tiling layout"
+#~ msgid "Spiral"
+#~ msgstr "គួច"
+
+#~ msgctxt "Two-column horizontal tiling layout"
+#~ msgid "Columns"
+#~ msgstr "ជួរឈរ"
+
+#~ msgctxt "Floating layout, windows aren't tiled at all"
+#~ msgid "Floating"
+#~ msgstr "អណ្ដែត"
+
+#~ msgid "Floating &Windows Raising"
+#~ msgstr "កា​រលើក​បង្អួច​ឡើង​ឲ្យ​អណ្ដែត"
+
+#~ msgctxt "Window Raising Policy"
+#~ msgid "Raise/Lower current window only"
+#~ msgstr "លើកឡើង/ដាក់ចុះ​តែ​បង្អួច​បច្ចុប្បន្ន​ប៉ុណ្ណោះ"
+
+#~ msgctxt "Window Raising Policy"
+#~ msgid "Floating windows are always on top"
+#~ msgstr "បង្អួច​អណ្ដែត​តែងតែ​នៅ​កំពូល​ជា​និច្ច"
+
+#~ msgid ""
+#~ "The window raising policy determines how floating windows are stacked "
+#~ "<ul> <li><em>Raise/Lower all</em> will raise all floating windows when a "
+#~ "floating window is activated.</li> <li><em>Raise/Lower current</em> will "
+#~ "raise only the current window.</li> <li><em>Floating windows on top</em> "
+#~ "will always keep floating windows on top, even when a tiled window is "
+#~ "activated.</ul>"
+#~ msgstr ""
+#~ "គោលនយោបាយ​លើក​បង្អួច​ឡើង​កំណត់​វិធី​ដែលបង្អួច​អណ្ដែត​ត្រូវ​បាន​ដាក់​​ជា​ជង់ <ul> <li><em>លើកឡើង/"
+#~ "ដាក់ចុះ​ទាំង​អស់</em> នឹង​លើក​បង្អួច​អណ្ដែត​ទាំង​អស់​ឡើង នៅពេល​បង្អួច​អណ្ដែត​ត្រូវបាន​ធ្វើ​ឲ្យ​សកម្ម ។</"
+#~ "li> <li><em>លើកឡើង/ដាក់ចុះ​បច្ចុប្បន្ន</em> នឹង​លើក​ឡើង​តែ​បង្អួច​បច្ចុប្បន្ន​តែ​ប៉ុណ្ណោះ ។</li> "
+#~ "<li><em>បង្អួច​អណ្ដែត​នៅ​ផ្នែក​ខាង​លើ</em> នឹង​តែ​តែង​ទុក​បង្អួច​អណ្ដែត​នៅ​ផ្នែក​ខាង​លើ​ជា​និច្ច សូម្បីតែ​"
+#~ "នៅពេល​បង្អួច​ដែល​បាន​រៀប​ជា​ក្រឡា​ក្បឿង​ត្រូ​វបាន​ធ្វើ​ឲ្យ​សកម្ម​ក៏​ដោយ ។</ul>"

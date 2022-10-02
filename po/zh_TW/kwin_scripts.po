@@ -1,0 +1,61 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Jeff Huang <s8321414@gmail.com>, 2016.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_scripts\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2019-05-20 03:25+0200\n"
+"PO-Revision-Date: 2016-11-03 18:34+0800\n"
+"Last-Translator: Jeff Huang <s8321414@gmail.com>\n"
+"Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
+"Language: Traditional Chinese\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 2.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, KWin::VideoWallConfigForm)
+#: videowall/contents/ui/config.ui:14
+#, kde-format
+msgid "Video Wall"
+msgstr "影像牆"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ApplyTo)
+#: videowall/contents/ui/config.ui:20
+#, kde-format
+msgid "Apply to"
+msgstr "回覆給"
+
+#. i18n: ectx: property (text), widget (QLineEdit, kcfg_Whitelist)
+#: videowall/contents/ui/config.ui:32
+#, kde-format
+msgid "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
+msgstr "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
+
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Whitelist)
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Blacklist)
+#: videowall/contents/ui/config.ui:35 videowall/contents/ui/config.ui:66
+#, kde-format
+msgid "Comma separated list of window classes"
+msgstr "視窗類別清單，以逗號區隔"
+
+#. i18n: ectx: property (text), widget (QLabel, applyLabel)
+#: videowall/contents/ui/config.ui:45
+#, kde-format
+msgid "All"
+msgstr "全部"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Ignore)
+#: videowall/contents/ui/config.ui:54
+#, kde-format
+msgid "Ignore"
+msgstr "忽略"
+
+#. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
+#: videowall/contents/ui/config.ui:73
+#, kde-format
+msgid "None"
+msgstr "無"

@@ -1,0 +1,2012 @@
+# Translation of kwin_effects.po into Bosnian.
+# Chusslove Illich <caslav.ilic@gmx.net>, 2007, 2008, 2009, 2010.
+# Dalibor Djuric <dalibor.djuric@mozilla-srbija.org>, 2009, 2010.
+# Dalibor Djuric <daliborddjuric@gmail.com>, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_effects\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-09-28 00:51+0000\n"
+"PO-Revision-Date: 2015-01-02 10:39+0000\n"
+"Last-Translator: Fadil Ademovic <fademovic2@etf.unsa.ba>\n"
+"Language-Team: Bosnian <bs@li.org>\n"
+"Language: bs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Launchpad (build 17341)\n"
+"X-Launchpad-Export-Date: 2015-02-15 06:04+0000\n"
+"X-Accelerator-Marker: &\n"
+"X-Text-Markup: kde4\n"
+"X-Environment: kde\n"
+
+#. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
+#: blur/blur_config.ui:17
+#, fuzzy, kde-format
+#| msgid "&Strength:"
+msgid "Blur strength:"
+msgstr "&Jačina:"
+
+# >> @item:inrange Strength of the effect:
+#. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
+#. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
+#: blur/blur_config.ui:42 blur/blur_config.ui:108
+#, kde-format
+msgid "Light"
+msgstr "Slab"
+
+# >> @item:inrange Strength of the effect:
+#. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
+#. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
+#: blur/blur_config.ui:74 blur/blur_config.ui:137
+#, kde-format
+msgid "Strong"
+msgstr "Jak"
+
+#. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
+#: blur/blur_config.ui:83
+#, fuzzy, kde-format
+#| msgid "&Strength:"
+msgid "Noise strength:"
+msgstr "&Jačina:"
+
+#: colorpicker/colorpicker.cpp:101
+#, kde-format
+msgid ""
+"Select a position for color picking with left click or enter.\n"
+"Escape or right click to cancel."
+msgstr ""
+
+#: desktopgrid/desktopgrid_config.cpp:49 invert/invert_config.cpp:35
+#: magnifier/magnifier_config.cpp:55 mouseclick/mouseclick_config.cpp:48
+#: mousemark/mousemark_config.cpp:50 overview/kcm/overvieweffectkcm.cpp:35
+#: showpaint/showpaint_config.cpp:33
+#: thumbnailaside/thumbnailaside_config.cpp:54
+#: trackmouse/trackmouse_config.cpp:52
+#: windowview/kcm/windowvieweffectkcm.cpp:36 zoom/zoom_config.cpp:58
+#, kde-format
+msgid "KWin"
+msgstr ""
+
+#: desktopgrid/desktopgrid_config.cpp:54 desktopgrid/desktopgrideffect.cpp:35
+#, kde-format
+msgid "Show Desktop Grid"
+msgstr "Prikaži mrežu površi"
+
+#: desktopgrid/desktopgrid_config.cpp:61
+#, kde-format
+msgctxt "Desktop name alignment:"
+msgid "Disabled"
+msgstr "Isključeno"
+
+# >> @item:inlistbox Desktop nami alignment
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: desktopgrid/desktopgrid_config.cpp:62 glide/glide_config.ui:70
+#: glide/glide_config.ui:168
+#, kde-format
+msgid "Top"
+msgstr "Gore"
+
+# >> @item:inlistbox Desktop nami alignment
+#: desktopgrid/desktopgrid_config.cpp:63
+#, kde-format
+msgid "Top-Right"
+msgstr "Gore desno"
+
+# >> @item:inlistbox Desktop nami alignment
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: desktopgrid/desktopgrid_config.cpp:64 glide/glide_config.ui:75
+#: glide/glide_config.ui:173
+#, kde-format
+msgid "Right"
+msgstr "Desno"
+
+# >> @item:inlistbox Desktop nami alignment
+#: desktopgrid/desktopgrid_config.cpp:65
+#, kde-format
+msgid "Bottom-Right"
+msgstr "Dolje desno"
+
+# >> @item:inlistbox Desktop nami alignment
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: desktopgrid/desktopgrid_config.cpp:66 glide/glide_config.ui:80
+#: glide/glide_config.ui:178
+#, kde-format
+msgid "Bottom"
+msgstr "Dolje"
+
+# >> @item:inlistbox Desktop nami alignment
+#: desktopgrid/desktopgrid_config.cpp:67
+#, kde-format
+msgid "Bottom-Left"
+msgstr "Dolje lijevo"
+
+# >> @item:inlistbox Desktop nami alignment
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: desktopgrid/desktopgrid_config.cpp:68 glide/glide_config.ui:85
+#: glide/glide_config.ui:183
+#, kde-format
+msgid "Left"
+msgstr "Lijevo"
+
+# >> @item:inlistbox Desktop nami alignment
+#: desktopgrid/desktopgrid_config.cpp:69
+#, kde-format
+msgid "Top-Left"
+msgstr "Gore lijevo"
+
+# >> @item:inlistbox Desktop nami alignment
+#: desktopgrid/desktopgrid_config.cpp:70
+#, kde-format
+msgid "Center"
+msgstr "Sredina"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: desktopgrid/desktopgrid_config.ui:17 mousemark/mousemark_config.ui:17
+#: thumbnailaside/thumbnailaside_config.ui:17
+#, kde-format
+msgid "Appearance"
+msgstr "Izgled"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
+#: desktopgrid/desktopgrid_config.ui:30
+#, kde-format
+msgid "Pager"
+msgstr "Pejdžer"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
+#: desktopgrid/desktopgrid_config.ui:35
+#, kde-format
+msgid "Automatic"
+msgstr "Automatski"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
+#: desktopgrid/desktopgrid_config.ui:40
+#, kde-format
+msgid "Custom"
+msgstr "Posebno"
+
+#. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
+#: desktopgrid/desktopgrid_config.ui:48
+#, fuzzy, kde-format
+#| msgid "Number of &rows:"
+msgid "N&umber of rows:"
+msgstr "Broj &vrsta:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: desktopgrid/desktopgrid_config.ui:103
+#, kde-format
+msgid "Desktop &name alignment:"
+msgstr "Ravnanje &imena površi:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShowAddRemove)
+#: desktopgrid/desktopgrid_config.ui:116
+#, kde-format
+msgid "Show buttons to alter count of virtual desktops"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: desktopgrid/desktopgrid_config.ui:123
+#, fuzzy, kde-format
+#| msgid "&Layout mode:"
+msgid "&Grid layout mode:"
+msgstr "&Raspored:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: desktopgrid/desktopgrid_config.ui:137 overview/kcm/overvieweffectkcm.ui:30
+#: windowview/kcm/windowvieweffectkcm.ui:30
+#, kde-format
+msgid "Closest"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: desktopgrid/desktopgrid_config.ui:142 overview/kcm/overvieweffectkcm.ui:35
+#: windowview/kcm/windowvieweffectkcm.ui:35
+#, kde-format
+msgid "Natural"
+msgstr "Prirodan"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: desktopgrid/desktopgrid_config.ui:150
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Windows layout:"
+msgstr "Prozori"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: desktopgrid/desktopgrid_config.ui:166
+#, kde-format
+msgid "Activation"
+msgstr "Aktivacija"
+
+#. i18n: ectx: property (text), widget (QLabel, label_Strength)
+#: diminactive/diminactive_config.ui:17
+#, fuzzy, kde-format
+#| msgid "&Strength:"
+msgid "Strength:"
+msgstr "&Jačina:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_Dim)
+#: diminactive/diminactive_config.ui:40
+#, kde-format
+msgid "Dim:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
+#: diminactive/diminactive_config.ui:47
+#, fuzzy, kde-format
+#| msgid "Do not animate panels"
+msgid "Docks and panels"
+msgstr "Ne animiraj panele"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
+#: diminactive/diminactive_config.ui:54
+#, fuzzy, kde-format
+#| msgctxt "@title:group actions when clicking on desktop"
+#| msgid "Desktop"
+msgid "Desktop"
+msgstr "Površ"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
+#: diminactive/diminactive_config.ui:61
+#, fuzzy, kde-format
+#| msgctxt "Comment describing the KWin Effect"
+#| msgid "Darken inactive windows"
+msgid "Keep above windows"
+msgstr "Zatamnjuje neaktivne prozore"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
+#: diminactive/diminactive_config.ui:68
+#, kde-format
+msgid "By window group"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
+#: diminactive/diminactive_config.ui:75
+#, fuzzy, kde-format
+#| msgctxt "Name of a KWin Effect"
+#| msgid "Present Windows"
+msgid "Fullscreen windows"
+msgstr "Predstava prozora"
+
+#. i18n: ectx: property (text), widget (QLabel, label_Duration)
+#: glide/glide_config.ui:19 scale/package/contents/ui/config.ui:17
+#, fuzzy, kde-format
+#| msgid "Ring Duration:"
+msgid "Duration:"
+msgstr "Trajanje prstena:"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
+#: glide/glide_config.ui:32 scale/package/contents/ui/config.ui:30
+#, fuzzy, kde-format
+#| msgctxt "Duration of rotation"
+#| msgid "Default"
+msgid "Default"
+msgstr "Podrazumijevano"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
+#: glide/glide_config.ui:35 scale/package/contents/ui/config.ui:33
+#, kde-format
+msgid " milliseconds"
+msgstr " milisekunda"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
+#: glide/glide_config.ui:50
+#, fuzzy, kde-format
+#| msgctxt "Name of a KWin Effect"
+#| msgid "Minimize Animation"
+msgid "Window Open Animation"
+msgstr "Animacija minimiziranja"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
+#. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
+#: glide/glide_config.ui:56 glide/glide_config.ui:154
+#, fuzzy, kde-format
+#| msgid "Rotation duration:"
+msgid "Rotation edge:"
+msgstr "Trajanje rotacije:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
+#. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
+#: glide/glide_config.ui:93 glide/glide_config.ui:191
+#, fuzzy, kde-format
+#| msgid "Rotation duration:"
+msgid "Rotation angle:"
+msgstr "Trajanje rotacije:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InDistance)
+#. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
+#: glide/glide_config.ui:119 glide/glide_config.ui:198
+#, kde-format
+msgid "Distance:"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
+#: glide/glide_config.ui:148
+#, fuzzy, kde-format
+#| msgctxt "Name of a KWin Effect"
+#| msgid "Mouse Click Animation"
+msgid "Window Close Animation"
+msgstr "Animacija klika mišem"
+
+#: invert/invert.cpp:42 invert/invert_config.cpp:38
+#, kde-format
+msgid "Toggle Invert Effect"
+msgstr "Efekat izvrtanja"
+
+#: invert/invert.cpp:50 invert/invert_config.cpp:44
+#, kde-format
+msgid "Toggle Invert Effect on Window"
+msgstr "Efekat izvrtanja na prozoru"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
+#: login/package/contents/ui/config.ui:17
+#, kde-format
+msgid "Fade to black (fullscreen splash screens only)"
+msgstr "Utihni do crnog (samo puni pozdravni ekrani)"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: magiclamp/magiclamp_config.ui:17
+#, kde-format
+msgid "Animation duration:"
+msgstr "Trajanje animacije:"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_AnimationDuration)
+#: magiclamp/magiclamp_config.ui:36
+#, kde-format
+msgctxt "Duration of rotation"
+msgid "Default"
+msgstr "Podrazumijevano"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
+#: magiclamp/magiclamp_config.ui:39
+#, kde-format
+msgid "milliseconds"
+msgstr "milisekunda"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupSize)
+#: magnifier/magnifier_config.ui:17
+#, kde-format
+msgid "Size"
+msgstr "Veličina"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: magnifier/magnifier_config.ui:23
+#, kde-format
+msgid "&Width:"
+msgstr "&Širina:"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
+#: magnifier/magnifier_config.ui:42 magnifier/magnifier_config.ui:74
+#, kde-format
+msgid " px"
+msgstr " px"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: magnifier/magnifier_config.ui:55
+#, kde-format
+msgid "&Height:"
+msgstr "&Visina:"
+
+#: mouseclick/mouseclick.cpp:34 mouseclick/mouseclick_config.cpp:51
+#, kde-format
+msgid "Toggle Mouse Click Effect"
+msgstr "Aktivira efekat klika miša"
+
+# >> @item:inlistbox Desktop nami alignment
+#: mouseclick/mouseclick.cpp:42
+#, fuzzy, kde-format
+#| msgid "Left"
+msgctxt "Left mouse button"
+msgid "Left"
+msgstr "Lijevo"
+
+#: mouseclick/mouseclick.cpp:43
+#, fuzzy, kde-format
+#| msgid "Middle"
+msgctxt "Middle mouse button"
+msgid "Middle"
+msgstr "Srednje"
+
+# >> @item:inlistbox Desktop nami alignment
+#: mouseclick/mouseclick.cpp:44
+#, fuzzy, kde-format
+#| msgid "Right"
+msgctxt "Right mouse button"
+msgid "Right"
+msgstr "Desno"
+
+#: mouseclick/mouseclick.h:61
+#, kde-format
+msgid "↓"
+msgstr ""
+
+#: mouseclick/mouseclick.h:62
+#, kde-format
+msgid "↑"
+msgstr ""
+
+#. i18n: ectx: attribute (title), widget (QWidget, basic_tab)
+#: mouseclick/mouseclick_config.ui:21
+#, kde-format
+msgid "Basic Settings"
+msgstr "Osnovne postavke"
+
+#. i18n: ectx: property (text), widget (QLabel, button1_label)
+#: mouseclick/mouseclick_config.ui:37
+#, kde-format
+msgid "Left Mouse Button Color:"
+msgstr "Boja lijevog dugmeta:"
+
+#. i18n: ectx: property (text), widget (QLabel, button2_label)
+#: mouseclick/mouseclick_config.ui:50
+#, kde-format
+msgid "Middle Mouse Button Color:"
+msgstr "Boja srednjeg dugmeta:"
+
+#. i18n: ectx: property (text), widget (QLabel, button3_label)
+#: mouseclick/mouseclick_config.ui:70
+#, kde-format
+msgid "Right Mouse Button Color:"
+msgstr "Boja desnog dugmeta:"
+
+#. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
+#: mouseclick/mouseclick_config.ui:91
+#, kde-format
+msgid "Advanced Settings"
+msgstr "Napredne postavke"
+
+# >> @item:inlistbox Desktop nami alignment
+#. i18n: ectx: property (title), widget (QGroupBox, rings)
+#: mouseclick/mouseclick_config.ui:97
+#, kde-format
+msgid "Rings"
+msgstr "Prsteni"
+
+#. i18n: ectx: property (text), widget (QLabel, ring_line_width_label)
+#: mouseclick/mouseclick_config.ui:103
+#, kde-format
+msgid "Line Width:"
+msgstr "Širina linije:"
+
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, kcfg_LineWidth)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
+#: mouseclick/mouseclick_config.ui:119 mouseclick/mouseclick_config.ui:171
+#, fuzzy, kde-format
+#| msgid " pixel"
+#| msgid_plural " pixels"
+msgid " pixel"
+msgstr " piksel"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingLife)
+#: mouseclick/mouseclick_config.ui:132
+#, kde-format
+msgid " msec"
+msgstr " ms"
+
+#. i18n: ectx: property (text), widget (QLabel, ring_duration_label)
+#: mouseclick/mouseclick_config.ui:145
+#, kde-format
+msgid "Ring Duration:"
+msgstr "Trajanje prstena:"
+
+#. i18n: ectx: property (text), widget (QLabel, ring_radius_label)
+#: mouseclick/mouseclick_config.ui:155
+#, kde-format
+msgid "Ring Radius:"
+msgstr "Poluprečnik prstena:"
+
+#. i18n: ectx: property (text), widget (QLabel, ring_count_label)
+#: mouseclick/mouseclick_config.ui:184
+#, kde-format
+msgid "Ring Count:"
+msgstr "Broj prstena:"
+
+# >> @title:group
+#. i18n: ectx: property (title), widget (QGroupBox, font)
+#: mouseclick/mouseclick_config.ui:210
+#, kde-format
+msgid "Text"
+msgstr "Tekst"
+
+#. i18n: ectx: property (text), widget (QLabel, font_label)
+#: mouseclick/mouseclick_config.ui:216
+#, kde-format
+msgid "Font:"
+msgstr "Font:"
+
+# >> Left/right/middle button (does):
+#. i18n: ectx: property (text), widget (QLabel, showtext_label)
+#: mouseclick/mouseclick_config.ui:233
+#, kde-format
+msgid "Show Text:"
+msgstr "Prikaži tekst:"
+
+#: mousemark/mousemark.cpp:36
+#, kde-format
+msgid "Clear All Mouse Marks"
+msgstr "Očisti sve tragove miša"
+
+#: mousemark/mousemark.cpp:43 mousemark/mousemark_config.cpp:59
+#, kde-format
+msgid "Clear Last Mouse Mark"
+msgstr "Očisti posljednji trag miša"
+
+#: mousemark/mousemark_config.cpp:53
+#, kde-format
+msgid "Clear Mouse Marks"
+msgstr "Očisti tragove miša"
+
+#: mousemark/mousemark_config.cpp:100
+#, fuzzy, kde-format
+#| msgid " pixel"
+#| msgid_plural " pixels"
+msgctxt "Suffix"
+msgid " pixel"
+msgid_plural " pixels"
+msgstr[0] " piksel"
+msgstr[1] " piksela"
+msgstr[2] " piksela"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: mousemark/mousemark_config.ui:23
+#, kde-format
+msgid "Wid&th:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: mousemark/mousemark_config.ui:36
+#, kde-format
+msgid "&Color:"
+msgstr "&Boja:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: mousemark/mousemark_config.ui:82
+#, kde-format
+msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+msgstr ""
+"Crtajte mišem tako što držite tastere <shortcut>Shift+Meta</shortcut> i "
+"pomijerate ga."
+
+#: outputlocator/outputlocator.cpp:48
+#, kde-format
+msgctxt "@label"
+msgid "Unknown"
+msgstr ""
+
+#: overview/kcm/overvieweffectkcm.cpp:41 overview/overvieweffect.cpp:31
+#, fuzzy, kde-format
+#| msgid "Toggle Invert Effect"
+msgid "Toggle Overview"
+msgstr "Efekat izvrtanja"
+
+#. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
+#: overview/kcm/overvieweffectkcm.ui:22
+#: windowview/kcm/windowvieweffectkcm.ui:22
+#, kde-format
+msgid "Layout mode:"
+msgstr "Raspored:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
+#: overview/kcm/overvieweffectkcm.ui:53
+#, fuzzy, kde-format
+#| msgid "Background"
+msgid "Blur background:"
+msgstr "Pozadina"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: overview/kcm/overvieweffectkcm.ui:70
+#, fuzzy, kde-format
+#| msgid "Ignore &minimized windows"
+msgid "Ignore minimized windows:"
+msgstr "Ignoriši &minimizovane prozore"
+
+#: overview/qml/DesktopBar.qml:186
+#, kde-format
+msgid "Delete Virtual Desktop"
+msgstr ""
+
+#: overview/qml/DesktopBar.qml:282
+#, fuzzy, kde-format
+#| msgctxt "@title:group actions when clicking on desktop"
+#| msgid "Desktop"
+msgid "Add Virtual Desktop"
+msgstr "Površ"
+
+#: overview/qml/ScreenView.qml:226
+#, fuzzy, kde-format
+#| msgid "Moving windows:"
+msgid "No matching windows"
+msgstr "Premještani prozori:"
+
+#: private/qml/WindowHeapDelegate.qml:152
+#, kde-format
+msgid "Drag Down To Close"
+msgstr ""
+
+#: private/qml/WindowHeapDelegate.qml:462
+#, fuzzy, kde-format
+#| msgid "Scale window"
+msgctxt "@info:tooltip as in: 'close this window'"
+msgid "Close window"
+msgstr "Skaliraj prozor"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InScale)
+#: scale/package/contents/ui/config.ui:46
+#, fuzzy, kde-format
+#| msgctxt "Name of a KWin Effect"
+#| msgid "Minimize Animation"
+msgid "Window open scale:"
+msgstr "Animacija minimiziranja"
+
+#. i18n: ectx: property (text), widget (QLabel, label_OutScale)
+#: scale/package/contents/ui/config.ui:53
+#, fuzzy, kde-format
+#| msgctxt "Name of a KWin Effect"
+#| msgid "Mouse Click Animation"
+msgid "Window close scale:"
+msgstr "Animacija klika mišem"
+
+#: screenshot/screenshotdbusinterface1.cpp:480
+#, fuzzy, kde-format
+#| msgctxt "Name of a KWin Effect"
+#| msgid "Screenshot"
+msgctxt "Notification caption that a screenshot got saved to file"
+msgid "Screenshot"
+msgstr "Snimak ekrana"
+
+#: screenshot/screenshotdbusinterface1.cpp:481
+#, fuzzy, kde-format
+#| msgctxt "Name of a KWin Effect"
+#| msgid "Screenshot"
+msgctxt "Notification with path to screenshot file"
+msgid "Screenshot saved to %1"
+msgstr "Snimak ekrana"
+
+#: screenshot/screenshotdbusinterface1.cpp:797
+#: screenshot/screenshotdbusinterface2.cpp:472
+#, kde-format
+msgid ""
+"Select window to screen shot with left click or enter.\n"
+"Escape or right click to cancel."
+msgstr ""
+
+#: screenshot/screenshotdbusinterface1.cpp:800
+#: screenshot/screenshotdbusinterface2.cpp:490
+#, kde-format
+msgid ""
+"Create screen shot with left click or enter.\n"
+"Escape or right click to cancel."
+msgstr ""
+
+#: showfps/qml/main.qml:110
+#, fuzzy, kde-format
+#| msgid "Ring Duration:"
+msgctxt "@label"
+msgid "Paint Duration"
+msgstr "Trajanje prstena:"
+
+#: showfps/qml/main.qml:162
+#, fuzzy, kde-format
+#| msgid "Ring Count:"
+msgctxt "@label"
+msgid "Paint Amount"
+msgstr "Broj prstena:"
+
+#: showfps/qml/main.qml:175
+#, kde-format
+msgctxt "@label"
+msgid "Current FPS"
+msgstr ""
+
+#: showfps/qml/main.qml:184
+#, fuzzy, kde-format
+#| msgid "Maximum &width:"
+msgctxt "@label"
+msgid "Maximum FPS"
+msgstr "Najveća &širina:"
+
+#: showfps/qml/main.qml:192
+#, fuzzy, kde-format
+#| msgid "This effect is not a benchmark"
+msgctxt "@label"
+msgid "This effect is not a benchmark"
+msgstr "Ovaj efekt ne služi za mjerenje performansi"
+
+#: showpaint/showpaint.cpp:38 showpaint/showpaint_config.cpp:38
+#, fuzzy, kde-format
+#| msgctxt "Name of a KWin Effect"
+#| msgid "Show Paint"
+msgid "Toggle Show Paint"
+msgstr "Prikaži iscrtavanje"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
+#: slide/slide_config.ui:17
+#, fuzzy, kde-format
+#| msgctxt "Comment describing the KWin Effect"
+#| msgid "Magnify the entire desktop"
+msgid "Gap between desktops"
+msgstr "Uveličajte cijelu površ"
+
+#. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
+#: slide/slide_config.ui:23
+#, kde-format
+msgid "Horizontal:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
+#: slide/slide_config.ui:46
+#, kde-format
+msgid "Vertical:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideDocks)
+#: slide/slide_config.ui:72
+#, fuzzy, kde-format
+#| msgctxt "Name of a KWin Effect"
+#| msgid "Slide Back"
+msgid "Slide docks"
+msgstr "Klizanje unazad"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
+#: slide/slide_config.ui:79
+#, kde-format
+msgid "Slide desktop background"
+msgstr ""
+
+#: thumbnailaside/thumbnailaside.cpp:29
+#: thumbnailaside/thumbnailaside_config.cpp:59
+#, kde-format
+msgid "Toggle Thumbnail for Current Window"
+msgstr "Sličica za tekući prozor"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: thumbnailaside/thumbnailaside_config.ui:23
+#, kde-format
+msgid "Maximum &width:"
+msgstr "Najveća &širina:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: thumbnailaside/thumbnailaside_config.ui:36
+#, kde-format
+msgid "&Spacing:"
+msgstr "&Razmak:"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Spacing)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_MaxWidth)
+#: thumbnailaside/thumbnailaside_config.ui:55
+#: thumbnailaside/thumbnailaside_config.ui:106
+#, kde-format
+msgid " pixels"
+msgstr " piksel"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: thumbnailaside/thumbnailaside_config.ui:68
+#, kde-format
+msgid "&Opacity:"
+msgstr "&Neprozirnost:"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Opacity)
+#: thumbnailaside/thumbnailaside_config.ui:87
+#, no-c-format, kde-format
+msgid " %"
+msgstr " %"
+
+#: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
+#, kde-format
+msgid "Track mouse"
+msgstr "Prati miša"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: trackmouse/trackmouse_config.ui:26
+#, kde-format
+msgid "Trigger effect with:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
+#: trackmouse/trackmouse_config.ui:33
+#, kde-format
+msgid "Keyboard shortcut:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
+#: trackmouse/trackmouse_config.ui:43
+#, fuzzy, kde-format
+#| msgid "Modifiers"
+msgid "Modifier keys:"
+msgstr "Modifikatori"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Alt)
+#: trackmouse/trackmouse_config.ui:65
+#, kde-format
+msgid "Alt"
+msgstr "Alt"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Control)
+#: trackmouse/trackmouse_config.ui:72
+#, kde-format
+msgid "Ctrl"
+msgstr "Ctrl"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Shift)
+#: trackmouse/trackmouse_config.ui:79
+#, kde-format
+msgid "Shift"
+msgstr "Shift"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Meta)
+#: trackmouse/trackmouse_config.ui:86
+#, kde-format
+msgid "Meta"
+msgstr "Meta"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
+#: translucency/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Translucency"
+msgstr "Providnost"
+
+#. i18n: ectx: property (title), widget (QGroupBox, m_opacityGroupBox)
+#: translucency/package/contents/ui/config.ui:20
+#, kde-format
+msgid "General Translucency Settings"
+msgstr "Opšte postavke prozirnosti"
+
+#. i18n: ectx: property (text), widget (QLabel, comboboxpopup_label)
+#: translucency/package/contents/ui/config.ui:64
+#, kde-format
+msgid "Combobox popups:"
+msgstr "Iskačući spiskovi:"
+
+# >> @item:inrange
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: translucency/package/contents/ui/config.ui:121
+#: translucency/package/contents/ui/config.ui:431
+#, kde-format
+msgid "Opaque"
+msgstr "Neprozirno"
+
+#. i18n: ectx: property (text), widget (QLabel, dialogs_label)
+#: translucency/package/contents/ui/config.ui:137
+#, kde-format
+msgid "Dialogs:"
+msgstr "Dijalozi:"
+
+# >> @item:inrange
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: translucency/package/contents/ui/config.ui:156
+#: translucency/package/contents/ui/config.ui:418
+#, kde-format
+msgid "Transparent"
+msgstr "Prozirno"
+
+#. i18n: ectx: property (text), widget (QLabel, menus_label)
+#: translucency/package/contents/ui/config.ui:188
+#, kde-format
+msgid "Menus:"
+msgstr "Meniji:"
+
+#. i18n: ectx: property (text), widget (QLabel, moveresize_label)
+#: translucency/package/contents/ui/config.ui:207
+#, kde-format
+msgid "Moving windows:"
+msgstr "Premještani prozori:"
+
+#. i18n: ectx: property (text), widget (QLabel, inactive_label)
+#: translucency/package/contents/ui/config.ui:226
+#, kde-format
+msgid "Inactive windows:"
+msgstr "Neaktivni prozori:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
+#: translucency/package/contents/ui/config.ui:267
+#, kde-format
+msgid "Set menu translucency independently"
+msgstr "Zasebna neprozirnost za menije"
+
+#. i18n: ectx: property (text), widget (QLabel, dropdownmenus_label)
+#: translucency/package/contents/ui/config.ui:285
+#, kde-format
+msgid "Dropdown menus:"
+msgstr "Padajući meniji:"
+
+#. i18n: ectx: property (text), widget (QLabel, popupmenus_label)
+#: translucency/package/contents/ui/config.ui:329
+#, kde-format
+msgid "Popup menus:"
+msgstr "Iskačući meniji:"
+
+#. i18n: ectx: property (text), widget (QLabel, tornoffmenus_label)
+#: translucency/package/contents/ui/config.ui:367
+#, kde-format
+msgid "Torn-off menus:"
+msgstr "Otcjepljeni meniji:"
+
+#: windowview/kcm/windowvieweffectkcm.cpp:42 windowview/windowvieweffect.cpp:45
+#, kde-format
+msgid "Toggle Present Windows (Current desktop)"
+msgstr "Prisutni prozori (tekuća površ)"
+
+#: windowview/kcm/windowvieweffectkcm.cpp:49 windowview/windowvieweffect.cpp:55
+#, kde-format
+msgid "Toggle Present Windows (All desktops)"
+msgstr "Prisutni prozori (sve površi)"
+
+#: windowview/kcm/windowvieweffectkcm.cpp:56 windowview/windowvieweffect.cpp:65
+#, kde-format
+msgid "Toggle Present Windows (Window class)"
+msgstr "Prisutni prozori (klasa prozora)"
+
+#: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:75
+#, fuzzy, kde-format
+#| msgid "Toggle Present Windows (Current desktop)"
+msgid "Toggle Present Windows (Window class on current desktop)"
+msgstr "Prisutni prozori (tekuća površ)"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
+#: windowview/kcm/windowvieweffectkcm.ui:53
+#, kde-format
+msgid "Ignore &minimized windows"
+msgstr "Ignoriši &minimizovane prozore"
+
+#: windowview/qml/main.qml:106
+#, kde-format
+msgid "No Matches"
+msgstr ""
+
+#: windowview/qml/main.qml:106
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "No Windows"
+msgstr "Prozori"
+
+#. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
+#: wobblywindows/wobblywindows_config.ui:20
+#, kde-format
+msgid "Advanced"
+msgstr "Napredno"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: wobblywindows/wobblywindows_config.ui:26
+#, kde-format
+msgid "&Stiffness:"
+msgstr "&Krutost:"
+
+# >> As in "resistance to movement"
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: wobblywindows/wobblywindows_config.ui:68
+#, kde-format
+msgid "Dra&g:"
+msgstr "&Otpor:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: wobblywindows/wobblywindows_config.ui:81
+#, kde-format
+msgid "&Move factor:"
+msgstr "&Faktor pokreta:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_MoveWobble)
+#: wobblywindows/wobblywindows_config.ui:155
+#, kde-format
+msgid "Wo&bble when moving"
+msgstr "Lelujanje pri &pomijeranju"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ResizeWobble)
+#: wobblywindows/wobblywindows_config.ui:162
+#, kde-format
+msgid "Wobble when &resizing"
+msgstr "Lelujanje pri promjeni &veličine"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AdvancedMode)
+#: wobblywindows/wobblywindows_config.ui:182
+#, kde-format
+msgid "Enable &advanced mode"
+msgstr "&Napredni režim"
+
+#. i18n: ectx: property (title), widget (QGroupBox, basicGroup)
+#: wobblywindows/wobblywindows_config.ui:192
+#, kde-format
+msgid "&Wobbliness"
+msgstr "&Lelujavost"
+
+# @item:inrange Wobblyness
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: wobblywindows/wobblywindows_config.ui:201
+#, kde-format
+msgid "Less"
+msgstr "Manje"
+
+# @item:inrange Wobblyness
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: wobblywindows/wobblywindows_config.ui:224
+#, kde-format
+msgid "More"
+msgstr "Više"
+
+#: zoom/zoom.cpp:68
+#, kde-format
+msgid "Move Zoomed Area to Left"
+msgstr "Pomjeri uvećano područje lijevo"
+
+#: zoom/zoom.cpp:76
+#, kde-format
+msgid "Move Zoomed Area to Right"
+msgstr "Pomjeri uvećano područje desno"
+
+#: zoom/zoom.cpp:84
+#, kde-format
+msgid "Move Zoomed Area Upwards"
+msgstr "Pomjeri uvećano područje gore"
+
+#: zoom/zoom.cpp:92
+#, kde-format
+msgid "Move Zoomed Area Downwards"
+msgstr "Pomjeri uvećano područje dolje"
+
+#: zoom/zoom.cpp:101 zoom/zoom_config.cpp:108
+#, kde-format
+msgid "Move Mouse to Focus"
+msgstr "Pomjeri miša u fokus"
+
+#: zoom/zoom.cpp:109 zoom/zoom_config.cpp:115
+#, kde-format
+msgid "Move Mouse to Center"
+msgstr "Pomjeri miša u centar"
+
+#: zoom/zoom_config.cpp:80
+#, kde-format
+msgid "Move Left"
+msgstr "Pomjeri ulijevo"
+
+#: zoom/zoom_config.cpp:87
+#, kde-format
+msgid "Move Right"
+msgstr "Pomjeri udesno"
+
+#: zoom/zoom_config.cpp:94
+#, kde-format
+msgid "Move Up"
+msgstr "Pomjeri nagore"
+
+#: zoom/zoom_config.cpp:101
+#, kde-format
+msgid "Move Down"
+msgstr "Pomjeri nadolje"
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label)
+#. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
+#: zoom/zoom_config.ui:25 zoom/zoom_config.ui:41
+#, kde-format
+msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+msgstr ""
+"Pri uvećanju i umanjenju promijeni zumiranje za navedeni faktor zumiranja."
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: zoom/zoom_config.ui:28
+#, kde-format
+msgid "Zoom Factor:"
+msgstr "Faktor zumiranja:"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
+#: zoom/zoom_config.ui:66
+#, fuzzy, kde-format
+#| msgid ""
+#| "Enable tracking of the focused location. This needs QAccessible to be "
+#| "enabled per application (\"export QT_ACCESSIBILITY=1\")."
+msgid ""
+"Enable tracking of the focused location. This needs QAccessible to be "
+"enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+msgstr ""
+"Omogućite praćenje fokusirane lokacije. Treba da bude omogućen QAccessible "
+"po programu (\"export QT_ACCESSIBILITY=1\")."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
+#: zoom/zoom_config.ui:69
+#, kde-format
+msgid "Enable Focus Tracking"
+msgstr "Omogući praćenje fokusa"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
+#: zoom/zoom_config.ui:76
+#, fuzzy, kde-format
+#| msgid ""
+#| "Enable tracking of the focused location. This needs QAccessible to be "
+#| "enabled per application (\"export QT_ACCESSIBILITY=1\")."
+msgid ""
+"Enable tracking of the text cursor. This needs QAccessible to be enabled per "
+"application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+msgstr ""
+"Omogućite praćenje fokusirane lokacije. Treba da bude omogućen QAccessible "
+"po programu (\"export QT_ACCESSIBILITY=1\")."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
+#: zoom/zoom_config.ui:79
+#, fuzzy, kde-format
+#| msgid "Enable Focus Tracking"
+msgid "Enable Text Cursor Tracking"
+msgstr "Omogući praćenje fokusa"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: zoom/zoom_config.ui:86
+#, kde-format
+msgid "Mouse Pointer:"
+msgstr "Pokazivač miša:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
+#: zoom/zoom_config.ui:99
+#, kde-format
+msgid "Visibility of the mouse-pointer."
+msgstr "Vidljivost pokazivača miša."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: zoom/zoom_config.ui:103
+#, kde-format
+msgid "Scale"
+msgstr "Srazmjerno"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: zoom/zoom_config.ui:108
+#, kde-format
+msgid "Keep"
+msgstr "Zadrži"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: zoom/zoom_config.ui:113
+#, kde-format
+msgid "Hide"
+msgstr "Sakrij"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
+#: zoom/zoom_config.ui:121
+#, kde-format
+msgid "Track moving of the mouse."
+msgstr "Prati kretanje miša."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: zoom/zoom_config.ui:125
+#, kde-format
+msgid "Proportional"
+msgstr "Proporcionalno"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: zoom/zoom_config.ui:130
+#, kde-format
+msgid "Centered"
+msgstr "Centrirano"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: zoom/zoom_config.ui:135
+#, kde-format
+msgid "Push"
+msgstr "Pritisni"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: zoom/zoom_config.ui:140
+#, kde-format
+msgid "Disabled"
+msgstr "Isključeno"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: zoom/zoom_config.ui:148
+#, kde-format
+msgid "Mouse Tracking:"
+msgstr "Praćenje miša:"
+
+#~ msgid "&Radius:"
+#~ msgstr "&Poluprečnik:"
+
+#~ msgid "Text position:"
+#~ msgstr "Položaj teksta:"
+
+# >> @item:inlistbox Text position
+#~ msgid "Inside Graph"
+#~ msgstr "Unutar grafika"
+
+# >> @item:inlistbox Text position
+#~ msgid "Nowhere"
+#~ msgstr "Nigdje"
+
+# >> @item:inlistbox Text position
+#~ msgid "Top Left"
+#~ msgstr "Gore lijevo"
+
+# >> @item:inlistbox Text position
+#~ msgid "Top Right"
+#~ msgstr "Gore desno"
+
+# >> @item:inlistbox Text position
+#~ msgid "Bottom Left"
+#~ msgstr "Dolje lijevo"
+
+# >> @item:inlistbox Text position
+#~ msgid "Bottom Right"
+#~ msgstr "Dolje desno"
+
+#~ msgid "Text font:"
+#~ msgstr "Font:"
+
+#~ msgid "Text color:"
+#~ msgstr "Boja teksta:"
+
+#~ msgid "Text alpha:"
+#~ msgstr "Alfa teksta:"
+
+#, fuzzy
+#~| msgid "Show caps"
+#~ msgid "Show graph:"
+#~ msgstr "Prikaži baze"
+
+# >> Left/right/middle button (does):
+#, fuzzy
+#~| msgid "Show Text:"
+#~ msgid "Show Message:"
+#~ msgstr "Prikaži tekst:"
+
+#~ msgid "Zoom &duration:"
+#~ msgstr "Trajanje &uveličanja:"
+
+#~ msgctxt "Duration of zoom"
+#~ msgid "Default"
+#~ msgstr "Podrazumijevano"
+
+#, fuzzy
+#~| msgid "&Border width:"
+#~ msgid "Border wid&th:"
+#~ msgstr "&Širina ivica:"
+
+# >> Left/right/middle button (does):
+#, fuzzy
+#~| msgid "Show desktop"
+#~ msgid "Switch desktop only"
+#~ msgstr "Prikazuje površ"
+
+#~ msgid "Natural Layout Settings"
+#~ msgstr "Postavke prirodnog rasporeda"
+
+#~ msgid "Fill &gaps"
+#~ msgstr "Popunjavaj &zazore"
+
+# @item:inrange Fill gaps
+#~ msgid "Faster"
+#~ msgstr "Brže"
+
+# @item:inrange Fill gaps
+#~ msgid "Nicer"
+#~ msgstr "Ljepše"
+
+#~ msgid "Left button:"
+#~ msgstr "Lijevo dugme:"
+
+# >> Left/right/middle button (does):
+#~ msgid "No action"
+#~ msgstr "Bez radnje"
+
+# >> Left/right/middle button (does):
+#~ msgid "Activate window"
+#~ msgstr "Aktivira prozor"
+
+# >> Left/right/middle button (does):
+#~ msgid "End effect"
+#~ msgstr "Okončava efekat"
+
+# >> Left/right/middle button (does):
+#~ msgid "Bring window to current desktop"
+#~ msgstr "Dovodi prozor na tekuću površ"
+
+# >> Left/right/middle button (does):
+#~ msgid "Send window to all desktops"
+#~ msgstr "Šalje prozor na sve površi"
+
+# >> Left/right/middle button (does):
+#~ msgid "(Un-)Minimize window"
+#~ msgstr "minimizuje i obnavlja prozor"
+
+#~ msgid "Middle button:"
+#~ msgstr "Srednje dugme:"
+
+#~ msgid "Right button:"
+#~ msgstr "Desno dugme:"
+
+#~ msgctxt "@title:group actions when clicking on desktop"
+#~ msgid "Desktop"
+#~ msgstr "Površ"
+
+# >> Left/right/middle button (does):
+#~ msgid "Show desktop"
+#~ msgstr "Prikazuje površ"
+
+#~ msgid "Display window &titles"
+#~ msgstr "Prikaz &Naslova prozora"
+
+#~ msgid "Display window &icons"
+#~ msgstr "&Ikone prozora"
+
+#~ msgid "Show &panels"
+#~ msgstr "Prikaži &panele"
+
+#~ msgid "Regular Grid"
+#~ msgstr "Pravilna mreža"
+
+#~ msgid "Flexible Grid"
+#~ msgstr "Fleksibilna mreža"
+
+#~ msgid "Provide buttons to close the windows"
+#~ msgstr "Omogući dugmad za zatvaranje prozora"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Samir Ribić,Vedran Ljubovic,Fadil Ademovic"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr ""
+#~ "Samir.ribic@etf.unsa.ba,vljubovic@smartnet.ba,fademovic2@etf.unsa.ba"
+
+#~ msgid "Scale window"
+#~ msgstr "Skaliraj prozor"
+
+#~ msgid "Show outline"
+#~ msgstr "Prikaži obris"
+
+#~ msgid "Toggle window geometry display (effect only)"
+#~ msgstr "Uključi/Isključi geometrijski prikaz (samo efekt)"
+
+#~ msgid "Toggle KWin composited geometry display"
+#~ msgstr "Uključi/Isključi KWin spojeni geometrijski prikaz"
+
+#~ msgid "Display for moving windows"
+#~ msgstr "Prikaži za prozore u pokretu"
+
+#~ msgid "Display for resizing windows"
+#~ msgstr "Prikaži za prozore u raširivanju"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Blur"
+#~ msgstr "Zamućenje"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Blurs the background behind semi-transparent windows"
+#~ msgstr "Zamućuje pozadinu iza poluprovidnih prozora"
+
+#, fuzzy
+#~| msgctxt "High saturation"
+#~| msgid "Colored"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Color Picker"
+#~ msgstr "Obojeno"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Background contrast"
+#~ msgstr "Pozadinski kontrast"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Improve contrast and readability behind semi-transparent windows"
+#~ msgstr "Pospješuje kontrast i čitljivost iza poluprovidnih prozora"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Desktop Grid"
+#~ msgstr "Mreža površi"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Zoom out so all desktops are displayed side-by-side in a grid"
+#~ msgstr "Umanjite tako da se sve površi poredaju jedna do druge u mreži"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Dim Inactive"
+#~ msgstr "Prigušeni neaktivni"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Darken inactive windows"
+#~ msgstr "Zatamnjuje neaktivne prozore"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Fall Apart"
+#~ msgstr "Raspad"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Closed windows fall into pieces"
+#~ msgstr "Zatvoreni prozori se rasparčavaju"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Glide"
+#~ msgstr "Ulijetanje"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Highlight Window"
+#~ msgstr "Isticanje prozora"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Highlight the appropriate window when hovering over taskbar entries"
+#~ msgstr ""
+#~ "Isticanje odgovarajućih prozora pri lebdenju nad stavkama u traci zadataka"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Invert"
+#~ msgstr "Invertuj"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Inverts the color of the desktop and windows"
+#~ msgstr "Izvrće boju površi i prozora"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Kscreen"
+#~ msgstr "KScreen"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Helper Effect for KScreen"
+#~ msgstr "Pomoćni efekat za KScreen"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Looking Glass"
+#~ msgstr "Lupa"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "A screen magnifier that looks like a fisheye lens"
+#~ msgstr "Uveličavač ekrana nalik ribljem oku"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Magic Lamp"
+#~ msgstr "Magična lampa"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Simulate a magic lamp when minimizing windows"
+#~ msgstr "Simulira magičnu lampu pri minimizovanju prozora"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Magnifier"
+#~ msgstr "Uveličavač"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Magnify the section of the screen that is near the mouse cursor"
+#~ msgstr "Uveličajte dio ekrana u blizini pokazivača miša"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Mouse Click Animation"
+#~ msgstr "Animacija klika mišem"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid ""
+#~ "Creates an animation whenever a mouse button is clicked. This is useful "
+#~ "for screenrecordings/presentations"
+#~ msgstr ""
+#~ "Kreira animaciju kada pri svakom kliku miša. Ovo je korisno za snimanje "
+#~ "ekrana / prezentacije"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Mouse Mark"
+#~ msgstr "Otisci miša"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Allows you to draw lines on the desktop"
+#~ msgstr "Omogućava vam crtanje linija na površi"
+
+#, fuzzy
+#~| msgctxt "Comment describing the KWin Effect"
+#~| msgid "Allows you to draw lines on the desktop"
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Allows you to overview virtual desktops and windows"
+#~ msgstr "Omogućava vam crtanje linija na površi"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Present Windows"
+#~ msgstr "Predstava prozora"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Zoom out until all opened windows can be displayed side-by-side"
+#~ msgstr "Umanjite tako da se mogu prikazati svi prozori jedan do drugog"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Resize Window"
+#~ msgstr "Promijeni veličinu prozora"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid ""
+#~ "Resizes windows with a fast texture scale instead of updating contents"
+#~ msgstr ""
+#~ "Promjena veličine prozora brzim teksturnim skaliranjem umjesto "
+#~ "ažuriranjem sadržaja"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Screen Edge"
+#~ msgstr "Ivica ekrana"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Highlights a screen edge when approaching"
+#~ msgstr "Označava ivicu ekrana pri približavanju"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Screenshot"
+#~ msgstr "Snimak ekrana"
+
+#, fuzzy
+#~| msgctxt "Comment describing the KWin Effect"
+#~| msgid "Helper effect for KSnapshot"
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Helper effect for screenshot tools"
+#~ msgstr "Pomoćni efekat za KSnapshot"
+
+# >> @item:inrange
+#, fuzzy
+#~| msgid "Transparent"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Transform"
+#~ msgstr "Prozirno"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Sheet"
+#~ msgstr "Tabela"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid ""
+#~ "Make modal dialogs smoothly fly in and out when they are shown or hidden"
+#~ msgstr ""
+#~ "Modalni dijalozi glatko ulijeću i izlijeću pri pojavljivanju i sakrivanju"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Show FPS"
+#~ msgstr "Prikaži FPS"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Display KWin's performance in the corner of the screen"
+#~ msgstr "Prikazuje performanse K‑vina u uglu ekrana"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Show Paint"
+#~ msgstr "Prikaži iscrtavanje"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Highlight areas of the desktop that have been recently updated"
+#~ msgstr "Ističe dijelove površi koji su nedavno ažurirani"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Slide"
+#~ msgstr "Klizaj"
+
+#, fuzzy
+#~| msgctxt "Comment describing the KWin Effect"
+#~| msgid "Slide windows across the screen when switching virtual desktops"
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Slide desktops when switching virtual desktops"
+#~ msgstr "Pomjera prozore preko ekrana pri smijeni virtuelnih površi"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Slide Back"
+#~ msgstr "Klizanje unazad"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Slide back windows when another window is raised"
+#~ msgstr "Pomjera unazad prozore kada se drugi prozor oslobodi"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Sliding popups"
+#~ msgstr "Klizajući iskakači"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Sliding animation for Plasma popups"
+#~ msgstr "Animirano klizanje za plazma iskakače"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Snap Helper"
+#~ msgstr "Pomoćnik prijanjanja"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Help you locate the center of the screen when moving a window"
+#~ msgstr "Pomaže lociranju centra ekrana pri pomjeranju prozora"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Startup Feedback"
+#~ msgstr "Povratne informacije pri pokretanju"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Helper effect for startup feedback"
+#~ msgstr "Pomoćni efekat za povratne informacije za pokretanje"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Thumbnail Aside"
+#~ msgstr "Sličica postrance"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Display window thumbnails on the edge of the screen"
+#~ msgstr "Sličice prozora pri ivici ekrana"
+
+#, fuzzy
+#~| msgid "Mouse Pointer:"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Touch Points"
+#~ msgstr "Pokazivač miša:"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Track Mouse"
+#~ msgstr "Praćenje miša"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Display a mouse cursor locating effect when activated"
+#~ msgstr "Efekat lociranja pokazivača miša kada se aktivira"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Window Geometry"
+#~ msgstr "Geometrija prozora"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Display window geometries on move/resize"
+#~ msgstr "Prikaži prozorsku geometriju pri pomijeranju ili promjeni veličine"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Wobbly Windows"
+#~ msgstr "Lelujavi prozori"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Deform windows while they are moving"
+#~ msgstr "Prozori se deformišu pri premještanju"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Zoom"
+#~ msgstr "Uvećaj"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Magnify the entire desktop"
+#~ msgstr "Uveličajte cijelu površ"
+
+#~ msgctxt "Special entry in alt+tab list for minimizing all windows"
+#~ msgid "Show Desktop"
+#~ msgstr "Prikaži radnu površinu"
+
+#~ msgid "Zoom"
+#~ msgstr "Uveličanje"
+
+#~ msgid "Define how far away the windows should appear"
+#~ msgstr "Na kojoj daljini će se prozori pojavljivati"
+
+# @item:inrange
+#~ msgid "Near"
+#~ msgstr "Blizu"
+
+# @item:inrange
+#~ msgid "Far"
+#~ msgstr "Daleko"
+
+#~ msgid "Animation"
+#~ msgstr "Animacija"
+
+#~ msgid "Animate switch"
+#~ msgstr "Animiraj prebacivanje"
+
+#~ msgid "Animation on tab box open"
+#~ msgstr "Animacija pri otvaranju jezičaka"
+
+#~ msgid "Animation on tab box close"
+#~ msgstr "Animacija pri zatvaranju jezičaka"
+
+#~ msgid "Reflections"
+#~ msgstr "Odsjaji"
+
+#~ msgid "Rear color"
+#~ msgstr "Boja pozadi"
+
+#~ msgid "Front color"
+#~ msgstr "Boja sprijeda"
+
+#~ msgid "Desktop Cube"
+#~ msgstr "Kocka površi"
+
+#~ msgid "Desktop Cylinder"
+#~ msgstr "Valjak površi"
+
+#~ msgid "Desktop Sphere"
+#~ msgstr "Sfera površi"
+
+#~ msgctxt "@title:tab Basic Settings"
+#~ msgid "Basic"
+#~ msgstr "Osnovno"
+
+#~ msgctxt "@title:tab Advanced Settings"
+#~ msgid "Advanced"
+#~ msgstr "Napredno"
+
+#~ msgid "Tab 1"
+#~ msgstr "Kartica 1"
+
+#~ msgid "Background color:"
+#~ msgstr "Boja pozadine:"
+
+#~ msgid "Wallpaper:"
+#~ msgstr "Tapet:"
+
+#~ msgid "Display desktop name"
+#~ msgstr "Prikaži ime površi"
+
+#~ msgid "Reflection"
+#~ msgstr "Odsjaj"
+
+#~ msgid "Rotation duration:"
+#~ msgstr "Trajanje rotacije:"
+
+#~ msgid "Windows hover above cube"
+#~ msgstr "Prozori lebde nad kockom"
+
+#~ msgid "Opacity"
+#~ msgstr "Neprozirnost"
+
+#~ msgid "Do not change opacity of windows"
+#~ msgstr "Ne mijenjaj neprozirnost prozora"
+
+#~ msgid "Tab 2"
+#~ msgstr "Kartica 2"
+
+# >> "Caps" are the upper and bottom surface of a geometrical body, e.g. a cylinder
+#~ msgid "Caps"
+#~ msgstr "Baze"
+
+#~ msgid "Cap color:"
+#~ msgstr "Boja baze:"
+
+#~ msgid "Display image on caps"
+#~ msgstr "Slika na bazama"
+
+#~ msgid "Define how far away the object should appear"
+#~ msgstr "Na kojoj daljini će se objekat pojaviti"
+
+#~ msgid "Additional Options"
+#~ msgstr "Dodatne opcije"
+
+#~ msgid ""
+#~ "If enabled the effect will be deactivated after rotating the cube with "
+#~ "the mouse,\n"
+#~ "otherwise it will remain active"
+#~ msgstr ""
+#~ "Ako je uključeno, efekat će biti deaktiviran po obrtanju kocke mišem, "
+#~ "inače će ostati aktivan."
+
+#~ msgid "Close after mouse dragging"
+#~ msgstr "Zatvori po prevlačenju mišem"
+
+#~ msgid "Use this effect for walking through the desktops"
+#~ msgstr "Koristi ovaj efekat za šetanje kroz površi"
+
+# skip-rule: pointer
+#~ msgid "Invert cursor keys"
+#~ msgstr "Izvrni kursorske tastere"
+
+#~ msgid "Invert mouse"
+#~ msgstr "Izvrni miš"
+
+#~ msgid "Sphere Cap Deformation"
+#~ msgstr "Deformacija polova sfere"
+
+# @item:inrange Cap Deformation
+#~ msgid "Sphere"
+#~ msgstr "Sfera"
+
+# @item:inrange Cap Deformation
+#~ msgid "Plane"
+#~ msgstr "Ravan"
+
+#~ msgid "Do not animate windows on all desktops"
+#~ msgstr "Ne animiraj prozore na svim površima"
+
+#~ msgid "Do not animate panels"
+#~ msgstr "Ne animiraj panele"
+
+#~ msgid "Use pager layout for animation"
+#~ msgstr "Animacija prema rasporedu pejdžera"
+
+#~ msgid "Start animation when moving windows towards screen edges"
+#~ msgstr "Započni animaciju na pomeranje prozora ka ivicama ekrana"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Cover Switch"
+#~ msgstr "Protočno prebacivanje"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Display a Cover Flow effect for the alt+tab window switcher"
+#~ msgstr "Efekat „proticanja omota“ pri prebacivanju prozora Alt+Tab‑om"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Desktop Cube"
+#~ msgstr "Kocka radne površine"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Display each virtual desktop on a side of a cube"
+#~ msgstr "Preslikava virtuelne površi na stranice kocke"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Desktop Cube Animation"
+#~ msgstr "Animacija kocke površi"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Animate desktop switching with a cube"
+#~ msgstr "Prebacivanje površi animirano kroz kocku"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Flip Switch"
+#~ msgstr "Preklopno prebacivanje"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid ""
+#~ "Flip through windows that are in a stack for the alt+tab window switcher"
+#~ msgstr "Listajte kroz naslagane prozore pri prebacivanju prozora Alt+Tab‑om"
+
+#~ msgid "Toggle Flip Switch (Current desktop)"
+#~ msgstr "Prebacivanje listanjem (tekuća površ)"
+
+#~ msgid "Toggle Flip Switch (All desktops)"
+#~ msgstr "Prebacivanje listanjem (sve površi)"
+
+#~ msgid "Flip animation duration:"
+#~ msgstr "Trajanje animacije listanja:"
+
+#~ msgctxt "Duration of flip animation"
+#~ msgid "Default"
+#~ msgstr "Podrazumijevano"
+
+#~ msgid "Angle:"
+#~ msgstr "Ugao:"
+
+#~ msgid " °"
+#~ msgstr " °"
+
+#~ msgid "Horizontal position of front:"
+#~ msgstr "Vodoravni položaj fronta:"
+
+#~ msgid "Vertical position of front:"
+#~ msgstr "Uspravni položaj fronta:"
+
+#~ msgid ""
+#~ "Filter:\n"
+#~ "%1"
+#~ msgstr ""
+#~ "Filter:\n"
+#~ "%1"
+
+#~ msgid "Use Present Windows effect to layout the windows"
+#~ msgstr "Raspoređivanje prozora kroz efekat prisutnih prozora"
+
+#~ msgid "When the focus changes, move the zoom area to the focused location."
+#~ msgstr ""
+#~ "Kada se promijeni fokus, premjesti područje zumiranja na fokusiranu "
+#~ "lokaciju."
+
+#~ msgid "Follow Focus"
+#~ msgstr "Prati fokus"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Dim Screen for Administrator Mode"
+#~ msgstr "Priguši ekran za administratorski režim"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Darkens the entire screen when requesting root privileges"
+#~ msgstr "Zatamnjuje cio ekran pri traženju root ovlašćenja"
+
+#, fuzzy
+#~| msgid "Scale"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Scale"
+#~ msgstr "Srazmjerno"
+
+#, fuzzy
+#~| msgctxt "Comment describing the KWin Effect"
+#~| msgid ""
+#~| "Make modal dialogs smoothly fly in and out when they are shown or hidden"
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Make windows smoothly scale in and out when they are shown or hidden"
+#~ msgstr ""
+#~ "Modalni dijalozi glatko ulijeću i izlijeću pri pojavljivanju i sakrivanju"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Minimize Animation"
+#~ msgstr "Animacija minimiziranja"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Animate the minimizing of windows"
+#~ msgstr "Animira minimizovanje prozora"
+
+#~ msgid "Trigger on"
+#~ msgstr "Uključi prekidač"
+
+#~ msgid "Shortcut"
+#~ msgstr "Prečica"
+
+#~ msgid "Apply effect to &panels"
+#~ msgstr "Primijeni efekat na &panele"
+
+#~ msgid "Apply effect to the desk&top"
+#~ msgstr "Primijeni efekat na p&ovrš"
+
+#~ msgid "Apply effect to &keep-above windows"
+#~ msgstr "Primijeni efekat na prozore &držane iznad"
+
+#~ msgid "Apply effect to &groups"
+#~ msgstr "Primijeni efekat na &grupe"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Windows Glide Effect as they are open and closed"
+#~ msgstr "Prozori ulijeću pri otvaranju i izlijeću pri zatvaranju"
+
+# Pazi, ima i efekat „slide“.
+#~ msgid "Glide Effect:"
+#~ msgstr "Efekat uletanja:"
+
+# >> @item:inrange Glide Effect:
+#~ msgid "In"
+#~ msgstr "Ulijetanje"
+
+# >> @item:inrange Glide Effect:
+#~ msgid "Out"
+#~ msgstr "Izlijetanje"
+
+#~ msgid "Glide Angle:"
+#~ msgstr "Ugao ulijetanja:"
+
+#~ msgid "-90"
+#~ msgstr "-90"
+
+#~ msgid "90"
+#~ msgstr "90"
+
+#, fuzzy
+#~| msgctxt "Duration of rotation"
+#~| msgid "Default"
+#~ msgctxt "Duration of the slide animation"
+#~ msgid "Default"
+#~ msgstr "Podrazumijevano"
+
+#~ msgid "Strength of the effect:"
+#~ msgstr "Intenzitet efekta:"
+
+#~ msgid "Save intermediate rendering results."
+#~ msgstr "Snimi međurezultate obrade."
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Logout"
+#~ msgstr "Odjava"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Desaturate the desktop when displaying the logout dialog"
+#~ msgstr "Posivljuje površ pri pojavi odjavnog dijaloga"
+
+#~ msgid "Brightness of the background:"
+#~ msgstr "Osvjetljenje pozadine:"
+
+#~ msgctxt "Less brightness"
+#~ msgid "Darker"
+#~ msgstr "Tamnije"
+
+#~ msgctxt "More brightness"
+#~ msgid "Lighter"
+#~ msgstr "Svjetlije"
+
+#~ msgid "Saturation of the background:"
+#~ msgstr "Zasićenje pozadine:"
+
+#~ msgctxt "No saturation"
+#~ msgid "Gray"
+#~ msgstr "Siva"
+
+#~ msgid "Duration of the fade:"
+#~ msgstr "Trajanje nestajanja:"
+
+#~ msgid "ms"
+#~ msgstr "ms"
+
+#~ msgid "The blur effect must be enabled before it can be used."
+#~ msgstr "Efekat zamućenja se mora omogućiti prije upotrebe."
+
+#~ msgid "Apply blur effect to background"
+#~ msgstr "Pirmijeni efekat zamućenja na pozadinu"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Dashboard"
+#~ msgstr "Instrument tabla"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Desaturate the desktop when displaying the Plasma dashboard"
+#~ msgstr "Posivljuje površ pri pojavi instrument-table Plazme"

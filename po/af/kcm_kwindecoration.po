@@ -1,0 +1,502 @@
+# UTF-8 test:äëïöü
+# Copyright (C) 2001 Free Software Foundation, Inc.
+# Juanita Franz <juanita.franz@vr-web.de>, 2005.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwindecoration stable\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2005-06-18 11:28+0200\n"
+"Last-Translator: JUANITA FRANZ <JUANITA.FRANZ@VR-WEB.DE>\n"
+"Language-Team: AFRIKAANS <translate-discuss-af@lists.sourceforge.net>\n"
+"Language: af\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "WEB-Vertaler (http://kde.af.org.za),Juanita Franz"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "frix@expertron.co.za,juanita.franz@vr-web.de"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, kde-format
+msgid "Application menu"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, fuzzy, kde-format
+#| msgid "On All Desktops"
+msgid "On all desktops"
+msgstr "Op alle werkskerms"
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr "Minimeer"
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr "Maksimeer"
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr "Verskadu"
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr ""
+
+#: kcm.cpp:49
+#, fuzzy, kde-format
+#| msgid "&Window Decoration"
+msgid "Window Decorations"
+msgstr "Venster Versiering"
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr ""
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr ""
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr ""
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr ""
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr ""
+
+#: package/contents/ui/main.qml:57
+#, fuzzy, kde-format
+#| msgid "Buttons"
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "Knoppies"
+
+#: package/contents/ui/main.qml:93
+#, fuzzy, kde-format
+#| msgid "B&order size:"
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "Rant grootte:"
+
+#: package/contents/ui/main.qml:112
+#, fuzzy, kde-format
+#| msgid "&Window Decoration"
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr "Venster Versiering"
+
+#: package/contents/ui/main.qml:141
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr ""
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr ""
+
+#: package/contents/ui/main.qml:165
+#, fuzzy, kde-format
+#| msgid "&Show window button tooltips"
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "Vertoon venster knoppie sleutel-leidraad"
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr ""
+
+#: utils.cpp:25
+#, fuzzy, kde-format
+#| msgid "B&order size:"
+msgid "No Borders"
+msgstr "Rant grootte:"
+
+#: utils.cpp:26
+#, fuzzy, kde-format
+#| msgid "B&order size:"
+msgid "No Side Borders"
+msgstr "Rant grootte:"
+
+#: utils.cpp:27
+#, fuzzy, kde-format
+#| msgid "Tiny"
+msgid "Tiny"
+msgstr "Klein"
+
+#: utils.cpp:28
+#, fuzzy, kde-format
+#| msgid "Normal"
+msgid "Normal"
+msgstr "Normaal"
+
+#: utils.cpp:29
+#, fuzzy, kde-format
+#| msgid "Large"
+msgid "Large"
+msgstr "Groot"
+
+#: utils.cpp:30
+#, fuzzy, kde-format
+#| msgid "Very Large"
+msgid "Very Large"
+msgstr "Baie Groot"
+
+#: utils.cpp:31
+#, fuzzy, kde-format
+#| msgid "Huge"
+msgid "Huge"
+msgstr "Groot"
+
+#: utils.cpp:32
+#, fuzzy, kde-format
+#| msgid "Very Huge"
+msgid "Very Huge"
+msgstr "Baie groot"
+
+#: utils.cpp:33
+#, fuzzy, kde-format
+#| msgid "Oversized"
+msgid "Oversized"
+msgstr "Oorgrote"
+
+#~ msgid "Menu"
+#~ msgstr "Kieslys"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below"
+#~ msgstr "Hou Onder ander"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above"
+#~ msgstr "Hou Bo ander"
+
+#, fuzzy
+#~| msgid "&Window Decoration"
+#~ msgid "Download New Window Decorations"
+#~ msgstr "Venster Versiering"
+
+#, fuzzy
+#~| msgid "B&order size:"
+#~ msgid "Border si&ze:"
+#~ msgstr "Rant grootte:"
+
+#, fuzzy
+#~| msgid "&Window Decoration"
+#~ msgid "Configure %1..."
+#~ msgstr "Venster Versiering"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgid "Form"
+#~ msgstr "Normaal"
+
+#, fuzzy
+#~| msgid "Buttons"
+#~ msgid "Button size:"
+#~ msgstr "Knoppies"
+
+#, fuzzy
+#~| msgid "Tiny"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "Klein"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "Normaal"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "Groot"
+
+#, fuzzy
+#~| msgid "Very Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "Baie Groot"
+
+#, fuzzy
+#~| msgid "Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "Groot"
+
+#, fuzzy
+#~| msgid "Very Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "Baie groot"
+
+#, fuzzy
+#~| msgid "Oversized"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "Oorgrote"
+
+#~ msgid "KDE"
+#~ msgstr "KDE"
+
+#~ msgid "%1 (unavailable)"
+#~ msgstr "%1 (onbeskikbaar)"
+
+#~ msgid ""
+#~ "To add or remove titlebar buttons, simply <i>drag</i> items between the "
+#~ "available item list and the titlebar preview. Similarly, drag items "
+#~ "within the titlebar preview to re-position them."
+#~ msgstr ""
+#~ "Om titelbar knoppies by te voeg of te verwyder  , eenvoudig <i>trek</i> "
+#~ "items tussen die beskikbare item lys en die titelbar voorskou. "
+#~ "Soortgelyk, trek items binne-in die titelbar voorskou om dit op 'n nuwe "
+#~ "posisie te plaas."
+
+#~ msgid "Resize"
+#~ msgstr "Hervergroot"
+
+#~ msgid "--- spacer ---"
+#~ msgstr "---plaser---"
+
+#~ msgid ""
+#~ "Enabling this checkbox will show window button tooltips. If this checkbox "
+#~ "is off, no window button tooltips will be shown."
+#~ msgstr ""
+#~ "By aktivering van hierdie keuseblokkie sal venster knoppie sleutel-"
+#~ "leidrade vertoon. As hierdie keuseblokkie is af, sal geen venster knoppie "
+#~ "sleutel-leidrade vertoon word nie."
+
+#, fuzzy
+#~| msgid ""
+#~| "The appropriate settings can be found in the \"Buttons\" Tab; please "
+#~| "note that this option is not available on all styles yet."
+#~ msgid "Please note that this option is not available on all styles yet."
+#~ msgstr ""
+#~ "Die geskikte instellings kan gevind word in die \"Knoppies\" Oortjie. "
+#~ "Asseblief noteer dat hierdie opsie nog nie beskikbaar is op alle style "
+#~ "nie."
+
+#~ msgid "Use custom titlebar button &positions"
+#~ msgstr "Gebruik gewone titelbar knoppie posisies"
+
+#~ msgid "B&order size:"
+#~ msgstr "Rant grootte:"
+
+#~ msgid "Use this combobox to change the border size of the decoration."
+#~ msgstr ""
+#~ "Gebruik hierdie comboboks om die rant grote van die dekorasie te verander."
+
+#~ msgid "Decoration Options"
+#~ msgstr "Dekoratiewe Opsies"
+
+#~ msgid ""
+#~ "Select the window decoration. This is the look and feel of both the "
+#~ "window borders and the window handle."
+#~ msgstr ""
+#~ "Kies die venster versiering. Hierdie is die kyk en voel van beide die "
+#~ "venster rante en die venster handvatsel."
+
+#~ msgid "Window Decoration Control Module"
+#~ msgstr "Venster Versiering Kontrole Module"
+
+#~ msgid "(c) 2001 Karol Szwed"
+#~ msgstr "(c) 2001 Karol Szwed"
+
+#, fuzzy
+#~| msgid "(c) 2001 Karol Szwed"
+#~ msgid "Karol Szwed"
+#~ msgstr "(c) 2001 Karol Szwed"
+
+#, fuzzy
+#~| msgid ""
+#~| "<h1>Window Manager Decoration</h1><p>This module allows you to choose "
+#~| "the window border decorations, as well as titlebar button positions and "
+#~| "custom decoration options.</p>To choose a theme for your window "
+#~| "decoration click on its name and apply your choice by clicking the "
+#~| "\"Apply\" button below. If you do not want to apply your choice you can "
+#~| "click the \"Reset\" button to discard your changes.<p>You can configure "
+#~| "each theme in the \"Configure [...]\" tab. There are different options "
+#~| "specific for each theme.</p><p>In \"General Options (if available)\" you "
+#~| "can activate the \"Buttons\" tab by checking the \"Use custom titlebar "
+#~| "button positions\" box. In the \"Buttons\" tab you can change the "
+#~| "positions of the buttons to your liking.</p>"
+#~ msgid ""
+#~ "<h1>Window Manager Decoration</h1><p>This module allows you to choose the "
+#~ "window border decorations, as well as titlebar button positions and "
+#~ "custom decoration options.</p>To choose a theme for your window "
+#~ "decoration click on its name and apply your choice by clicking the \"Apply"
+#~ "\" button below. If you do not want to apply your choice you can click "
+#~ "the \"Reset\" button to discard your changes.<p>You can configure each "
+#~ "theme. There are different options specific for each theme.</p><p>On the "
+#~ "\"Buttons\" tab check the \"Use custom titlebar button positions\" box "
+#~ "and you can change the positions of the buttons to your liking.</p>"
+#~ msgstr ""
+#~ "<h1>Venster Bestuur Dekorasie</h1><p>Hierdie module laat u toe om die "
+#~ "venster grens dekorasies te kies, sowel as die titelbalk knoppie posisie "
+#~ "en normale dekorasie opsies.</p>Om 'n tema vir u venster dekorasie te "
+#~ "kies, kliek op sy naam en wend u keuse aan deur te kliek van die \"Aanwend"
+#~ "\" knoppie hieronder. As u nie u keuse wil aanwend nie kan u kliek op die "
+#~ "\"Herstel\" knoppie om te verwyder u veranderinge.<p>U kan elke tema "
+#~ "konfigureer in die \"Konfigureer [...]\" oortjie. Daar is verskillende "
+#~ "opsies gespesifiseer in elke tema.</p><p>In \"Algemene Opsies (indien "
+#~ "beskikbaar)\" kan u aktiveer die \"Knoppies\" oortjie by kontroleuring "
+#~ "van die \"Gebruik gewone titelbalk knoppie posisies\" boks. In die "
+#~ "\"Knoppies\" oortjie kan u die posisie van die knoppies verander soos u "
+#~ "wil.</p>"
+
+#~ msgid "Active Window"
+#~ msgstr "Aktiewe Venster"
+
+#~ msgid "Inactive Window"
+#~ msgstr "Onaktiewe Venster"
+
+#~ msgid "kcmkwindecoration"
+#~ msgstr "kcmkwindecoration"
+
+#~ msgid ""
+#~ "No preview available.\n"
+#~ "Most probably there\n"
+#~ "was a problem loading the plugin."
+#~ msgstr ""
+#~ "Geen vooraansig beskikbaar.\n"
+#~ "Heel moontlik was daar\n"
+#~ "'n probleem om die inprop te laai."
+
+#~ msgid "&Buttons"
+#~ msgstr "Knoppies"
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"

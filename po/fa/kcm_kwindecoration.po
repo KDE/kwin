@@ -1,0 +1,497 @@
+# translation of kcmkwindecoration.po to Persian
+# Nazanin Kazemi <kazemi@itland.ir>, 2006, 2007.
+# Tahereh Dadkhahfar <dadkhahfar@itland.ir>, 2006.
+# MaryamSadat Razavi <razavi@itland.ir>, 2006.
+# Nasim Daniarzadeh <daniarzadeh@itland.ir>, 2006, 2007.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwindecoration\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2007-06-24 11:06+0330\n"
+"Last-Translator: Nazanin Kazemi <kazemi@itland.ir>\n"
+"Language-Team: Persian <kde-i18n-fa@kde.org>\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "نازنین کاظمی"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "kazemi@itland.ir"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, kde-format
+msgid "Application menu"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, fuzzy, kde-format
+#| msgid "On All Desktops"
+msgid "On all desktops"
+msgstr "روی همه رومیزیها"
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr "کمینه‌سازی"
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr "بیشینه‌سازی"
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr "بستن"
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr "سایه"
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr ""
+
+#: kcm.cpp:49
+#, fuzzy, kde-format
+#| msgid "&Window Decoration"
+msgid "Window Decorations"
+msgstr "تزئین &پنجره‌"
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr ""
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr ""
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr ""
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr ""
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr ""
+
+#: package/contents/ui/main.qml:57
+#, fuzzy, kde-format
+#| msgid "Buttons"
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "دکمه‌ها"
+
+#: package/contents/ui/main.qml:93
+#, fuzzy, kde-format
+#| msgid "B&order size:"
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "اندازه &لبه:‌"
+
+#: package/contents/ui/main.qml:112
+#, fuzzy, kde-format
+#| msgid "&Window Decoration"
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr "تزئین &پنجره‌"
+
+#: package/contents/ui/main.qml:141
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr ""
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr ""
+
+#: package/contents/ui/main.qml:165
+#, fuzzy, kde-format
+#| msgid "&Show window button tooltips"
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "&نمایش نکته ابزارهای دکمه پنجره‌"
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr ""
+
+#: utils.cpp:25
+#, fuzzy, kde-format
+#| msgid "B&order size:"
+msgid "No Borders"
+msgstr "اندازه &لبه:‌"
+
+#: utils.cpp:26
+#, fuzzy, kde-format
+#| msgid "B&order size:"
+msgid "No Side Borders"
+msgstr "اندازه &لبه:‌"
+
+#: utils.cpp:27
+#, fuzzy, kde-format
+#| msgid "Tiny"
+msgid "Tiny"
+msgstr "ریز"
+
+#: utils.cpp:28
+#, fuzzy, kde-format
+#| msgid "Normal"
+msgid "Normal"
+msgstr "عادی"
+
+#: utils.cpp:29
+#, fuzzy, kde-format
+#| msgid "Large"
+msgid "Large"
+msgstr "بزرگ"
+
+#: utils.cpp:30
+#, fuzzy, kde-format
+#| msgid "Very Large"
+msgid "Very Large"
+msgstr "خیلی بزرگ‌"
+
+#: utils.cpp:31
+#, fuzzy, kde-format
+#| msgid "Huge"
+msgid "Huge"
+msgstr "بسیار بزرگ"
+
+#: utils.cpp:32
+#, fuzzy, kde-format
+#| msgid "Very Huge"
+msgid "Very Huge"
+msgstr "بسیار بسیار بزرگ"
+
+#: utils.cpp:33
+#, fuzzy, kde-format
+#| msgid "Oversized"
+msgid "Oversized"
+msgstr "بیش از اندازه"
+
+#~ msgid "Menu"
+#~ msgstr "گزینگان"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below"
+#~ msgstr "نگه‌ داشتن زیر پنجره‌های دیگر"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above"
+#~ msgstr "نگه ‌داشتن روی پنجره‌های دیگر"
+
+#, fuzzy
+#~| msgid "&Window Decoration"
+#~ msgid "Download New Window Decorations"
+#~ msgstr "تزئین &پنجره‌"
+
+#, fuzzy
+#~| msgid "B&order size:"
+#~ msgid "Border si&ze:"
+#~ msgstr "اندازه &لبه:‌"
+
+#, fuzzy
+#~| msgid "&Window Decoration"
+#~ msgid "Configure %1..."
+#~ msgstr "تزئین &پنجره‌"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgid "Form"
+#~ msgstr "عادی"
+
+#, fuzzy
+#~| msgid "Buttons"
+#~ msgid "Button size:"
+#~ msgstr "دکمه‌ها"
+
+#, fuzzy
+#~| msgid "Tiny"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "ریز"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "عادی"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "بزرگ"
+
+#, fuzzy
+#~| msgid "Very Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "خیلی بزرگ‌"
+
+#, fuzzy
+#~| msgid "Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "بسیار بزرگ"
+
+#, fuzzy
+#~| msgid "Very Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "بسیار بسیار بزرگ"
+
+#, fuzzy
+#~| msgid "Oversized"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "بیش از اندازه"
+
+#~ msgid "KDE"
+#~ msgstr "KDE"
+
+#~ msgid "%1 (unavailable)"
+#~ msgstr "%1 )غیرقابل دسترس("
+
+#~ msgid ""
+#~ "To add or remove titlebar buttons, simply <i>drag</i> items between the "
+#~ "available item list and the titlebar preview. Similarly, drag items "
+#~ "within the titlebar preview to re-position them."
+#~ msgstr ""
+#~ "برای حذف یا افزودن دکمه‌های میله عنوان، فقره‌ها را بین فهرست فقره موجود و "
+#~ "پیش‌نمایش میله ابزار <i>بکشید</i>. همچنین، برای تغییر موقعیت فقره‌ها، آنها "
+#~ "را در پیش‌نمایش میله عنوان بکشید."
+
+#~ msgid "Resize"
+#~ msgstr "تغییر اندازه"
+
+#~ msgid "Help"
+#~ msgstr "کمک"
+
+#~ msgid "--- spacer ---"
+#~ msgstr "--- فاصله‌گذار ---"
+
+#~ msgid ""
+#~ "Enabling this checkbox will show window button tooltips. If this checkbox "
+#~ "is off, no window button tooltips will be shown."
+#~ msgstr ""
+#~ "با فعال‌سازی این جعبه بررسی، نکته ابزارهای دکمه پنجره نمایش داده می‌شوند. "
+#~ "اگر این جعبه بررسی خاموش باشد، نکته ابزارهای دکمه پنجره نمایش داده "
+#~ "نمی‌شوند."
+
+#, fuzzy
+#~| msgid ""
+#~| "The appropriate settings can be found in the \"Buttons\" Tab; please "
+#~| "note that this option is not available on all styles yet."
+#~ msgid "Please note that this option is not available on all styles yet."
+#~ msgstr ""
+#~ "تنظیمات مناسب را می‌توان در تب »دکمه‌ها« یافت؛ لطفاً توجه کنید که این گزینه "
+#~ "هنوز در همه سبکها موجود نیست."
+
+#~ msgid "Use custom titlebar button &positions"
+#~ msgstr "استفاده از &موقعیتهای دکمه میله عنوان سفارشی‌"
+
+#~ msgid "B&order size:"
+#~ msgstr "اندازه &لبه:‌"
+
+#~ msgid "Use this combobox to change the border size of the decoration."
+#~ msgstr "برای تغییر اندازه لبه تزئين، از این جعبه ترکیب استفاده کنید."
+
+#~ msgid "Decoration Options"
+#~ msgstr "گزینه‌های تزئین"
+
+#~ msgid ""
+#~ "Select the window decoration. This is the look and feel of both the "
+#~ "window borders and the window handle."
+#~ msgstr "برگزیدن تزئین پنجره. ظاهر و حس دو لبه پنجره و گرداندن پنجره."
+
+#~ msgid "Window Decoration Control Module"
+#~ msgstr "پیمانه کنترل تزئین پنجره"
+
+#~ msgid "(c) 2001 Karol Szwed"
+#~ msgstr "(ح) ۲۰۰۱ Karol Szwed"
+
+#~ msgid "Karol Szwed"
+#~ msgstr "Karol Szwed"
+
+#, fuzzy
+#~| msgid ""
+#~| "<h1>Window Manager Decoration</h1><p>This module allows you to choose "
+#~| "the window border decorations, as well as titlebar button positions and "
+#~| "custom decoration options.</p>To choose a theme for your window "
+#~| "decoration click on its name and apply your choice by clicking the "
+#~| "\"Apply\" button below. If you do not want to apply your choice you can "
+#~| "click the \"Reset\" button to discard your changes.<p>You can configure "
+#~| "each theme in the \"Configure [...]\" tab. There are different options "
+#~| "specific for each theme.</p><p>In \"General Options (if available)\" you "
+#~| "can activate the \"Buttons\" tab by checking the \"Use custom titlebar "
+#~| "button positions\" box. In the \"Buttons\" tab you can change the "
+#~| "positions of the buttons to your liking.</p>"
+#~ msgid ""
+#~ "<h1>Window Manager Decoration</h1><p>This module allows you to choose the "
+#~ "window border decorations, as well as titlebar button positions and "
+#~ "custom decoration options.</p>To choose a theme for your window "
+#~ "decoration click on its name and apply your choice by clicking the \"Apply"
+#~ "\" button below. If you do not want to apply your choice you can click "
+#~ "the \"Reset\" button to discard your changes.<p>You can configure each "
+#~ "theme. There are different options specific for each theme.</p><p>On the "
+#~ "\"Buttons\" tab check the \"Use custom titlebar button positions\" box "
+#~ "and you can change the positions of the buttons to your liking.</p>"
+#~ msgstr ""
+#~ "<h1>تزئین مدیر پنجره</h1><p>این پیمانه به شما اجازه می‌دهد که تزئینات لبه "
+#~ "پنجره و همچنین موقعیتهای دکمه میله عنوان و گزینه‌های تزئین سفارشی را "
+#~ "انتخاب کنید.</p>جهت انتخاب یک چهره برای تزئین پنجره خود، روی نام آن فشار "
+#~ "داده و برای اعمال انتخاب خود، دکمه »اعمال« ذیل را فشار دهید. اگر "
+#~ "نمی‌خواهید که انتخابتان را اعمال کنید، می‌توانید دکمه »بازنشانی« را فشار "
+#~ "دهید تا تغییرات شما دور ریخته شود.<p>می‌توانید هر چهره را در تب "
+#~ "»پیکربندی ]...[« پیکربندی کنید. برای هر چهره، گزینه‌های متفاوت و مشخصی "
+#~ "وجود دارد.</p><p>در »گزینه‌های عمومی )در صورت وجود( « می‌توانید تب »دکمه‌ها« "
+#~ "را با علامت زدن جعبه »استفاده از موقعیتهای دکمه میله عنوان سفارشی«، فعال "
+#~ "سازید. در تب »دکمه‌ها«، می‌توانید موقعیتهای دکمه‌ها را به سلیقه خود تغییر "
+#~ "دهید.</p>"
+
+#~ msgid "Active Window"
+#~ msgstr "پنجره فعال"
+
+#~ msgid "Inactive Window"
+#~ msgstr "پنجره غیرفعال"
+
+#~ msgid "kcmkwindecoration"
+#~ msgstr "kcmkwindecoration"
+
+#~ msgid ""
+#~ "No preview available.\n"
+#~ "Most probably there\n"
+#~ "was a problem loading the plugin."
+#~ msgstr ""
+#~ "پیش‌نمایش موجود نیست.\n"
+#~ "به احتمال زیاد،\n"
+#~ "در بارگذاری وصله مسئله‌ای وجود داشته است."
+
+#~ msgid "&Buttons"
+#~ msgstr "&دکمه‌ها‌"

@@ -1,0 +1,247 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kcm_kwindesktop\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"PO-Revision-Date: 2009-10-31 14:32+0530\n"
+"Last-Translator: gayankalhara <gkgkalhara@gmail.com>\n"
+"Language-Team: Sinhala <kde-i18n-doc@kde.org>\n"
+"Language: si\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "ඩනිෂ්ක නවින්"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "danishka@gmail.com"
+
+#: desktopsmodel.cpp:467
+#, kde-format
+msgid "There was an error connecting to the compositor."
+msgstr ""
+
+#: desktopsmodel.cpp:666
+#, kde-format
+msgid "There was an error saving the settings to the compositor."
+msgstr ""
+
+#: desktopsmodel.cpp:669
+#, kde-format
+msgid "There was an error requesting information from the compositor."
+msgstr ""
+
+#: package/contents/ui/main.qml:17
+#, kde-format
+msgid ""
+"This module lets you configure the navigation, number and layout of virtual "
+"desktops."
+msgstr ""
+
+#: package/contents/ui/main.qml:91
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Rename"
+msgstr ""
+
+#: package/contents/ui/main.qml:102
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Confirm new name"
+msgstr ""
+
+#: package/contents/ui/main.qml:110
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove"
+msgstr ""
+
+#: package/contents/ui/main.qml:137
+#, kde-format
+msgid ""
+"Virtual desktops have been changed outside this settings application. Saving "
+"now will overwrite the changes."
+msgstr ""
+
+#: package/contents/ui/main.qml:153
+#, kde-format
+msgid "Row %1"
+msgstr ""
+
+#: package/contents/ui/main.qml:166
+#, kde-format
+msgctxt "@action:button"
+msgid "Add"
+msgstr ""
+
+#: package/contents/ui/main.qml:169
+#, fuzzy, kde-format
+#| msgid "Desktops"
+msgid "New Desktop"
+msgstr "වැඩතල"
+
+#: package/contents/ui/main.qml:184
+#, kde-format
+msgid "1 Row"
+msgid_plural "%1 Rows"
+msgstr[0] ""
+msgstr[1] ""
+
+#: package/contents/ui/main.qml:200
+#, kde-format
+msgid "Options:"
+msgstr ""
+
+#: package/contents/ui/main.qml:202
+#, kde-format
+msgid "Navigation wraps around"
+msgstr ""
+
+#: package/contents/ui/main.qml:220
+#, kde-format
+msgid "Show animation when switching:"
+msgstr ""
+
+#: package/contents/ui/main.qml:271
+#, kde-format
+msgid "Show on-screen display when switching:"
+msgstr ""
+
+#: package/contents/ui/main.qml:290
+#, kde-format
+msgid "%1 ms"
+msgstr ""
+
+#: package/contents/ui/main.qml:314
+#, kde-format
+msgid "Show desktop layout indicators"
+msgstr "වැඩතල ආකෘති දර්ශක පෙන්වන්න"
+
+#: virtualdesktops.cpp:33
+#, fuzzy, kde-format
+#| msgid "Desktops"
+msgid "Virtual Desktops"
+msgstr "වැඩතල"
+
+#~ msgid "Desktop %1:"
+#~ msgstr "වැඩතලය %1"
+
+#~ msgid "Here you can enter the name for desktop %1"
+#~ msgstr "මෙහිද් ඔබට %1 වැඩතලය සඳහා නාමයක් ඇතුළත් කල හැක"
+
+#~ msgid "Desktop %1"
+#~ msgstr "වැඩතලය %1"
+
+#~ msgid ""
+#~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "
+#~ "virtual desktops you want and how these should be labeled."
+#~ msgstr ""
+#~ "<h1>බහු වැඩතල</h1>මෙම මොඩියුලයේ, ඔබට ඇවැසි අතත්‍ය වැඩතල ගණන හා ඒවායේ ලේබල විය යිතු "
+#~ "ආකාරය සැකසිය හැක."
+
+#~ msgid "Switch to Next Desktop"
+#~ msgstr "ඊලහ වැඩතලයට මාරුවෙන්න"
+
+#~ msgid "Switch to Previous Desktop"
+#~ msgstr "පෙර වැඩතලයට මාරුවෙන්න"
+
+#~ msgid "Switch One Desktop to the Right"
+#~ msgstr "දකුණට වැඩතල එකක් මාරුවෙන්න"
+
+#~ msgid "Switch One Desktop to the Left"
+#~ msgstr "වමට වැඩතල එකක් මාරුවෙන්න"
+
+#~ msgid "Switch One Desktop Up"
+#~ msgstr "ඉහළට වැඩතල එකක් මාරුවෙන්න"
+
+#~ msgid "Switch One Desktop Down"
+#~ msgstr "පහළට වැඩතල එකක් මාරුවෙන්න"
+
+#~ msgid "Desktop Switching"
+#~ msgstr "වැඩතල මාරුවීම"
+
+#~ msgid "Switch to Desktop %1"
+#~ msgstr "%1 වැඩතලයට මාරුවෙන්න"
+
+#~ msgid "No Animation"
+#~ msgstr "සජීවීකරණ නොමැත"
+
+#~ msgid "No suitable Shortcut for Desktop %1 found"
+#~ msgstr "%1 වැඩතලය සඳහා සුදුසු කෙට මඟක් නොමැත"
+
+#~ msgid "Assigned global Shortcut \"%1\" to Desktop %2"
+#~ msgstr "වැඩතලය %2 සඳහා \"%1\" කෙටිමඟක් සකසන්න"
+
+#~ msgid "Shortcut conflict: Could not set Shortcut %1 for Desktop %2"
+#~ msgstr "කෙට්මං ගැටුමක්: %2  වැඩතලය සඳහා %1 කෙටිමඟ සැකසිය නොහැක"
+
+#~ msgid "Layout"
+#~ msgstr "සැකැස්ම"
+
+#, fuzzy
+#~| msgid ""
+#~| "Here you can set how many virtual desktops you want on your KDE desktop. "
+#~| "Move the slider to change the value."
+#~ msgid ""
+#~ "Here you can set how many virtual desktops you want on your KDE desktop."
+#~ msgstr ""
+#~ "මෙහිදී ඔබට ඔබේ KDE වැඩතලය මත පැවතිය යුතු අතත්‍ය වැඩතල ගණන සැකසිය හැක. ස්ගය වෙනස් "
+#~ "කිරීමට ස්ලයිඩරය වෙනස් කරන්න"
+
+#, fuzzy
+#~| msgid "Number of desktops:"
+#~ msgid "&Number of desktops:"
+#~ msgstr "වැඩතල ගණන:"
+
+#, fuzzy
+#~| msgid "Number of rows:"
+#~ msgid "N&umber of rows:"
+#~ msgstr "පේලි ගණන:"
+
+#~ msgid "Desktop Names"
+#~ msgstr "වැඩතල නාම"
+
+#~ msgid "Switching"
+#~ msgstr "මාරුවීම"
+
+#~ msgid "Desktop Effect Animation"
+#~ msgstr "වැඩතල අලංකරණ සජීවීකරණ"
+
+#~ msgid "Animation:"
+#~ msgstr "සජීවීකරණ:"
+
+#~ msgid "Desktop Switch On-Screen Display"
+#~ msgstr "වැඩතල මාරුව තිරය මත දර්ශනය"
+
+#~ msgid "Duration:"
+#~ msgstr "කාල සීමාව:"
+
+#~ msgid " msec"
+#~ msgstr " msec"
+
+#~ msgid ""
+#~ "Enabling this option will show a small preview of the desktop layout "
+#~ "indicating the selected desktop."
+#~ msgstr "මෙම විකල්පය තෝරාගැනීමෙන් ඔබට තෝරාගත් වැඩතලයේ ආකෘතියේ කුඩා පෙරදැක්මක් දක්වයි"
+
+#~ msgid "Shortcuts"
+#~ msgstr "කෙටිමං"
+
+#~ msgid "Show shortcuts for all possible desktops"
+#~ msgstr "හැකි සියළුම වැඩතල සඳහා කෙටිමං පෙන්වන්න"
+
+#, fuzzy
+#~| msgid "Different activity for each desktop"
+#~ msgid "Different widgets for each desktop"
+#~ msgstr "එක් එක් වැඩතලයේ වෙනස් ක්‍රියාකාරකම්"

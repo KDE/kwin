@@ -1,0 +1,102 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Andrej Vernekar <andrej.vernekar@gmail.com>, 2012.
+# Jure Repinc <jlp@holodeck1.com>, 2012.
+# Andrej Mernik <andrejm@ubuntu.si>, 2013, 2017, 2018.
+# Matjaž Jeran <matjaz.jeran@amis.net>, 2020, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-09-20 00:47+0000\n"
+"PO-Revision-Date: 2022-09-21 07:19+0200\n"
+"Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
+"Language-Team: Slovenian <lugos-slo@lugos.si>\n"
+"Language: sl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
+"%100==4 ? 3 : 0);\n"
+"X-Generator: Lokalize 22.04.1\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Andrej Vernekar,Andrej Mernik,Matjaž Jeran"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "andrej.vernekar@gmail.com,andrejm@ubuntu.si,matjaz.jeran@amis.net"
+
+#: module.cpp:57
+#, kde-format
+msgid "Import KWin Script"
+msgstr "Uvozi skript KWin"
+
+#: module.cpp:58
+#, kde-format
+msgid "*.kwinscript|KWin scripts (*.kwinscript)"
+msgstr "*.kwinscript|Skripti KWin (*.kwinscript)"
+
+#: module.cpp:96
+#, kde-format
+msgctxt "Placeholder is error message returned from the install service"
+msgid ""
+"Cannot import selected script.\n"
+"%1"
+msgstr ""
+"Ni mogoče uvoziti izbranega skripta.\n"
+"%1"
+
+#: module.cpp:108
+#, kde-format
+msgctxt "Placeholder is name of the script that was imported"
+msgid "The script \"%1\" was successfully imported."
+msgstr "Skript \"%1\" je bil uspešno uvožen."
+
+#: module.cpp:148
+#, kde-format
+msgid "Error when uninstalling KWin Script: %1"
+msgstr "Napaka pri odstranjevanju skripta KWin: %1"
+
+#: package/contents/ui/main.qml:47
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Delete..."
+msgstr "Zbriši..."
+
+#: package/contents/ui/main.qml:60
+#, kde-format
+msgid "Install from File..."
+msgstr "Namesti iz datoteke..."
+
+#: package/contents/ui/main.qml:64
+#, kde-format
+msgid "Get New Scripts..."
+msgstr "Dobi nove skripte ..."
+
+#~ msgid "KWin Scripts"
+#~ msgstr "Skripti KWin"
+
+#~ msgid "Configure KWin scripts"
+#~ msgstr "Nastavi skripte KWin"
+
+#~ msgid "Tamás Krutki"
+#~ msgstr "Tamás Krutki"
+
+#~ msgid "KWin script configuration"
+#~ msgstr "Nastavitev skripta KWin"
+
+#~ msgid "Import KWin script..."
+#~ msgstr "Uvozi skript KWin ..."
+
+#~ msgid ""
+#~ "Cannot import selected script: maybe a script already exists with the "
+#~ "same name or there is a permission problem."
+#~ msgstr ""
+#~ "Izbranega skripta ni mogoče uvoziti: morda skript z enakim imenom že "
+#~ "obstaja ali pa obstaja težava glede dovoljenj."

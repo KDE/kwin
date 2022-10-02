@@ -1,0 +1,54 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Catalan  "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinvirtualkeyboard" lang="&language;">
+<articleinfo>
+
+<title
+>Teclat virtual</title>
+<authorgroup>
+<author
+><firstname
+>Yuri</firstname
+> <surname
+>Chornoivan</surname
+> </author>
+&traductor.Antoni.Bella; 
+</authorgroup>
+
+<date
+>27 d'abril de 2021</date>
+<releaseinfo
+>Plasma 5.22</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Arranjament del sistema</keyword>
+<keyword
+>virtual</keyword>
+<keyword
+>teclat</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Aquest mòdul permet escollir el teclat virtual a utilitzar. El teclat virtual s'habilitarà automàticament quan no es detecti cap teclat de maquinari. </para>
+
+<para
+>Seleccioneu un <ulink url="https://ca.wikipedia.org/wiki/Teclat_virtual"
+>teclat virtual</ulink
+> de la llista o trieu <guilabel
+>Cap</guilabel
+> si no en voleu utilitzar cap. </para>
+
+<para
+>És recomanable instal·lar els motors de mètode d'entrada corresponents abans d'utilitzar aquest mòdul. </para>
+
+</article>

@@ -1,0 +1,116 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Stefan Asserhall <stefan.asserhall@bredband.net>, 2012, 2013, 2017, 2018, 2020, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-09-20 00:47+0000\n"
+"PO-Revision-Date: 2022-09-24 16:10+0200\n"
+"Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
+"Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 20.08.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Stefan Asserhäll"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "stefan.asserhall@bredband.net"
+
+#: module.cpp:57
+#, kde-format
+msgid "Import KWin Script"
+msgstr "Importera Kwin-skript"
+
+#: module.cpp:58
+#, kde-format
+msgid "*.kwinscript|KWin scripts (*.kwinscript)"
+msgstr "*.kwinscript|Kwin-skript (*.kwinscript)"
+
+#: module.cpp:96
+#, kde-format
+msgctxt "Placeholder is error message returned from the install service"
+msgid ""
+"Cannot import selected script.\n"
+"%1"
+msgstr ""
+"Kan inte importera valt skript.\n"
+"%1"
+
+#: module.cpp:108
+#, kde-format
+msgctxt "Placeholder is name of the script that was imported"
+msgid "The script \"%1\" was successfully imported."
+msgstr "Skriptet \"%1\" importerades med lyckat resultat."
+
+#: module.cpp:148
+#, kde-format
+msgid "Error when uninstalling KWin Script: %1"
+msgstr "Fel vid avinstallation av Kwin-skript: %1"
+
+#: package/contents/ui/main.qml:47
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Delete..."
+msgstr "Ta bort..."
+
+#: package/contents/ui/main.qml:60
+#, kde-format
+msgid "Install from File..."
+msgstr "Installera från fil..."
+
+#: package/contents/ui/main.qml:64
+#, kde-format
+msgid "Get New Scripts..."
+msgstr "Hämta nya skript..."
+
+#~ msgid "KWin Scripts"
+#~ msgstr "Kwin-skript"
+
+#~ msgid "Configure KWin scripts"
+#~ msgstr "Anpassa Kwin-skript"
+
+#~ msgid "Tamás Krutki"
+#~ msgstr "Tamás Krutki"
+
+#~ msgid "KWin script configuration"
+#~ msgstr "Inställning av Kwin-skript"
+
+#~ msgid "Import KWin script..."
+#~ msgstr "Importera Kwin-skript..."
+
+#~ msgid ""
+#~ "Cannot import selected script: maybe a script already exists with the "
+#~ "same name or there is a permission problem."
+#~ msgstr ""
+#~ "Kan inte importera valt skript. Kanske finns det redan ett skript med "
+#~ "samma namn, eller har ett problem med rättigheter uppstått."
+
+#, fuzzy
+#~| msgid "The selected script was exported successfully!"
+#~ msgid "The selected script was exported successfully."
+#~ msgstr "Det markerade skriptet exporterades med lyckat resultat."
+
+#, fuzzy
+#~| msgid "An error occurred, the selected script could not be exported!"
+#~ msgid "An error occurred, the selected script could not be exported."
+#~ msgstr "Ett fel uppstod. Det markerade skriptet kunde inte exporteras."
+
+#~ msgid "Do you really want to delete the selected script?"
+#~ msgstr "Vill du verkligen ta bort det markerade skriptet?"
+
+#~ msgid "Remove KWin script"
+#~ msgstr "Ta bort Kwin-skript"
+
+#~ msgid "Remove selected KWin script"
+#~ msgstr "Ta bort markerat Kwin-skript"

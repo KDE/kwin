@@ -1,0 +1,1394 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Dutch "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<!--copy from r308626 Tue May 4 17:11:51 2004 UTC -->
+
+<article id="windowbehaviour" lang="&language;">
+<articleinfo>
+<title
+>Venstergedrag</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<author
+>&Jost.Schenck; &Jost.Schenck.mail;</author>
+<author
+><firstname
+>Natalie</firstname
+><surname
+>Clarius</surname
+><email
+>natalie_clarius@yahoo.de</email
+></author>
+&Freek.de.Kruijf; 
+</authorgroup>
+
+<date
+>2022-08-31</date>
+<releaseinfo
+>Plasma 5.26</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>systeeminstellingen</keyword>
+<keyword
+>acties</keyword>
+<keyword
+>venster</keyword>
+<keyword
+>vensterplaatsing</keyword>
+<keyword
+>venstergrootte</keyword>
+<keyword
+>vensterbeheer</keyword>
+<keyword
+>venstergedrag</keyword>
+<keyword
+>focus</keyword>
+<keyword
+>naar voren</keyword>
+<keyword
+>titelbalk</keyword>
+<keyword
+>scherm</keyword>
+<keyword
+>vastklikken</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="window-behavior">
+<title
+>Venstergedrag</title>
+
+<para
+>In het bovengedeelte van deze besturingsmodule ziet u verschillende tabbladen: <guilabel
+>Focus</guilabel
+>, <guilabel
+>Titelbalkacties</guilabel
+>, <guilabel
+>Vensteracties</guilabel
+>, <guilabel
+>Verplaatsing</guilabel
+> en <guilabel
+>Geavanceerd</guilabel
+>. In het paneel <guilabel
+>Focus</guilabel
+> kunt u configureren hoe vensters focus krijgen of verliezen, &ie; actief of inactief worden. Met <guilabel
+>Titelbalbalkacties</guilabel
+> en <guilabel
+>Vensteracties</guilabel
+> kunt u configureren hoe titelbalken en vensters reageren op muiskliks. <guilabel
+>Verplaatsing</guilabel
+> stelt u in staat om te configureren hoe vensters worden verplaatst en zich plaatsen bij het starten. De optie <guilabel
+>Geavanceerd</guilabel
+> dekt sommige gespecialiseerde opties zoals <quote
+>versterverduistering</quote
+>. </para>
+
+<note>
+<para
+>Denk eraan dat de configuratie in deze module geen effect heeft als u de standaard windowmanager, &kwin;, van &plasma; niet gebruikt. Als u een andere windowmanager gebruikt, lees dan de daarbij behorende documentatie om te weten hoe venstergedrag aangepast kan worden. </para>
+</note>
+
+<sect2 id="focus">
+<title
+>Focus</title>
+
+<para
+>De <quote
+>focus</quote
+> van de werkruimte verwijst naar het venster waarin de gebruiker nu aan het werk is. Het venster met focus wordt vaak aangeduid als het <quote
+>actieve venster</quote
+>. </para>
+
+<para
+>Focus betekent niet noodzakelijk het bovenste &mdash; hiernaar wordt verwezen als het <quote
+>verheven</quote
+> en hoewel deze hier ook geconfigureerd wordt, worden een venster met focus en een verheven venster onafhankelijk geconfigureerd. </para>
+
+<sect3 id="focus-focuspolicy">
+<title
+>Beleid voor activeren van venster</title>
+
+<para
+>Er zijn zes methoden die &kwin; kan gebruiken om de huidige focus te bepalen: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Klikken voor focus</guilabel
+></term>
+<listitem>
+<para
+>Een venster wordt actief wanneer u er in klikt. Dit gedrag is algemeen op andere besturingssystemen en wat u wilt.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Klikken voor focus (muis heeft voorrang)</guilabel
+></term>
+<listitem>
+<para
+>Dit is meestal hetzelfde als <guilabel
+>Klik voor focus</guilabel
+>. Als een actief venster door het systeem gekozen moet worden (&eg; omdat het huidige actieve is gesloten) zal het venster onder de muis de voorkeur hebben. Ongebruikelijk, maar een mogelijke variant van <guilabel
+>Klik voor focus</guilabel
+>. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Focus volgt muis</guilabel
+></term>
+<listitem>
+<para
+>Actief bewegen van de muisaanwijzer over een normaal venster activeert het. Nieuwe vensters zoals de mini commandoregel opgeroepen met <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+> ontvangt focus, zonder dat u er met de muis expliciet naar behoeft te wijzen. Vensters die &eg; willekeurig onder de muis verschijnen krijgen geen focus. Voorkomen van het stelen van focus vindt plaats zoals gebruikelijk. Beschouw het als <guilabel
+>Klik voor focus</guilabel
+> alleen zonder echt te klikken. </para>
+<para
+>In andere windowmanagers, staat dit soms bekend als <quote
+>Sloppy focus volgt de muis</quote
+>. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Focus volgt muis (muis heeft voorkeur)</guilabel
+></term>
+<listitem>
+<para
+>Dit is meestal hetzelfde als <guilabel
+>Focus volgt muis</guilabel
+>. Als een actief venster door het systeem gekozen moet worden (&eg; omdat het huidige actieve is gesloten) heeft het venster onder de muis de voorkeur. Kies dit, als u een via er boven zweven bestuurde focus wilt. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Focus onder muis</guilabel
+></term>
+<listitem>
+<para
+>Het venster dat zich onder de muisaanwijzer bevindt wordt actief. Als de muis not boven een venster is (bijvoorbeeld omdat het zich over de achtergrondafbeelding van het bureaublad bevindt) dan heeft het laatste venster dat zich onder de muis bevond focus. Nieuwe vensters zoals de mini commandoregel opgeroepen met <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+> krijgen geen focus, u moet de muis erboven hebben om te kunnen typen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Focus strikt onder muis</guilabel
+></term>
+<listitem>
+<para
+>Evenzo is <guilabel
+>Focus onder muis</guilabel
+>, maar nog stricter met zijn interpretatie. Alleen het venster onder de muisaanwijzer is actief. Als de muisaanwijzer niet boven een venster zich bevindt, dan heeft geen enkel venster focus. Nieuwe vensters zoals de mini commandoregel opgeroepen met <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+> krijgt geen focus, u moet de muis erboven zetten on te kunnen typen. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<note>
+<para
+>Merk op dat <guilabel
+>Focus onder muis</guilabel
+> en <guilabel
+>Focus strikt onder muis</guilabel
+> voorkomt dat bepaalde functies, zoals <guilabel
+>Voorkomen van afpakken van focus</guilabel
+> en de dialoog <keycombo action="simul"
+>&Alt;&Tab;</keycombo
+> wandel-door-vensters, juist werken. </para>
+</note>
+
+</sect3>
+
+<sect3 id="focus-focusdelay">
+<title
+>Focus uitstellen met</title>
+
+<para
+>Dit is de tijdsduur die verstrijkt voordat het venster waar de muisaanwijzer zich in bevindt de focus krijgt. </para>
+
+</sect3>
+
+<sect3 id="focus-focusstealing">
+<title
+>Voorkomen van afpakken van focus</title>
+
+<para
+>Deze optie specificeert in welke mate KWin zal proberen ongewenst stelen van focus door onverwachte activering van nieuwe vensters te voorkomen. </para
+> 
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Geen</guilabel
+></term>
+<listitem
+><para
+>Voorkomen is uitgezet en nieuwe vensters worden altijd geactiveerd.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Laag</guilabel
+></term>
+<listitem
+><para
+>Voorkomen is aangezet; wanneer enig venster geen ondersteuning heeft voor het onderliggende mechanisme en KWin niet betrouwbaar kan bepalen of het venster actief moet worden of niet, dan zal het actief worden. Deze instelling kan slechtere en betere resultaten opleveren dan het middenniveau, afhankelijk van de toepassingen.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Middel</guilabel
+></term>
+<listitem
+><para
+>Voorkomen is ingeschakeld.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Hoog</guilabel
+></term>
+<listitem
+><para
+>Nieuwe vensters worden geactiveerd alleen als er nu geen venster actief is of als deze tot de huidige actieve toepassing behoort. Deze instelling is waarschijnlijk niet echt bruikbaar zonder een focusbeleid voor de muis.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Extreem</guilabel
+></term>
+<listitem
+><para
+>Alle vensters moeten expliciet worden geactiveerd door de gebruiker.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>Vensters waarvan voorkomen wordt dat ze focus stelen zijn gemarkeerd als vragen om attentie, wat standaard betekent dat hun taakbalk-item geaccentueerd is. Dit kan worden gewijzigd in de module Notificatie-aansturing. </para>
+
+</sect3>
+
+<sect3 id="focus-raisingwindow">
+<title
+>Vensters naar voren halen</title>
+
+<para
+>Naast het ontvangen van focus, kunt u ook besturen onder welke condities vensters naar voren komen. </para>
+
+<para
+>U zou moeten nagaan dat minstens een van de opties voor naar voren halen is ingeschakeld, anders zullen vensters helemaal niet naar voren komen. </para>
+
+<para
+><guilabel
+>Klik brengt het actieve venster omhoog</guilabel
+> zal een venster naar boven brengen wanneer er op wordt geklikt. Dit is standaard ingeschakeld met een klik op het beleid voor focus. </para>
+
+<para
+>Door <guilabel
+>Naar voren halen door er boven te zweven, vertraagd met</guilabel
+>, kunt ook een venster naar voren halen als de muisaanwijzer zich een bepaalde tijd boven dat venster bevindt. U kunt de vertraging bepalen met de draaischakelaar. Deze automatische optie voor omhoog halen is alleen beschikbaar met een beleid met zweven naar focus. </para>
+
+<tip>
+<para
+>De vertraging te kort instellen veroorzaakt een snelle wijziging van vensters, wat behoorlijk kan afleiden. De meeste mensen zullen een vertraging van 100-300 ms als prettig ervaren. Dit geeft respons, maar het stelt u in staat om over de hoeken van een venster te gaan opweg naar uw bestemming zonder dat dat venster naar voren komt. </para>
+</tip>
+
+</sect3>
+
+<sect3 id="focus-multiscreen">
+<title
+>Gedrag bij meervoudig scherm</title>
+
+<para
+>Dit bestuurt het gedrag van vensterfocus met meerdere schermen. Merk op dat deze opties alleen verschijnen wanneer meer dan één scherm nu is verbonden. </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Actief scherm volgt de muis</guilabel
+></term>
+<listitem>
+<para
+>Als deze optie is ingeschakeld is het actieve scherm (waarin bijv. nieuwe vensters verschijnen) het scherm waar zich de muisaanwijzer bevindt. Wanneer uitgeschakeld is het actieve scherm het scherm waarin het venster met de focus zich bevindt. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Gescheiden schermfocus</guilabel
+></term>
+<listitem>
+<para
+>Wanneer deze optie is ingeschakeld, zijn acties voor focus beperkt tot slechts het actieve scherm. Wanneer u, bijvoorbeeld, een venster sluit, dan zal het volgende venster dat focus krijgt een venster zijn op het actieve scherm, zelfs als er een recenter gebruikt venster is op een ander scherm. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="titlebar-actions">
+<title
+>Titelbalkacties</title>
+
+<para
+>In dit paneel kunt instellen wat er gebeurt met de vensters wanneer met een muisknop wordt geklikt op hun titelbalken. </para>
+
+<sect3 id="actions-titlebar">
+<title
+><guilabel
+>Titelbalkacties</guilabel
+></title>
+
+<para
+>Deze sectie biedt u het bepalen wat er gebeurt wanneer u dubbelklikt of het muiswiel draait op de titelbalk van een venster. </para>
+
+<para
+>De volgende acties zijn beschikbaar voor <guilabel
+>Dubbelklik</guilabel
+>. </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Maximaliseren</guilabel
+></term>
+<listitem>
+<para
+>Wijzigt de grootte van het venster om de hoogte en breedte van het scherm te vullen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Verticaal maximaliseren</guilabel
+></term>
+<listitem>
+<para
+>Wijzigt de grootte van het venster tot de hoogte van het scherm. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Horizontaal maximaliseren</guilabel
+></term>
+<listitem>
+<para
+>Wijzigt de grootte van het venster tot de breedte van het scherm. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Minimaliseren</guilabel
+></term>
+<listitem>
+<para
+>Verbergt het venster in zijn geminimaliseerde status, waaruit het hersteld kan worden &eg; via het Takenbeheer of Takenschakelaar. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Oprollen</guilabel
+></term>
+<listitem>
+<para
+>Laat het venster zich reduceren tot eenvoudig alleen de titelbalk. Opnieuw dubbelklikken op de titelbalk, herstelt het venster tot zijn normale grootte. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Sluiten</guilabel
+></term>
+<listitem>
+<para
+>Sluit het venster. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Op alle bureaubladen tonen</guilabel
+></term>
+<listitem>
+<para
+>Maakt het venster zichtbaar op alle virtuele bureaubladen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Niets doen</guilabel
+></term>
+<listitem>
+<para
+>Er gebeurt niets bij dubbelklikken. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>Het <guilabel
+>Muiswiel</guilabel
+> kan gebruikt worden om een actie te starten afhankelijk van of het omhoog of omlaag wordt geschoven: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Naar voren/achter</guilabel
+></term>
+<listitem>
+<para
+>Omhoog schuiven zal het venster bovenop andere vensters verplaatsen. </para>
+<para
+>Omlaag schuiven zal het venster onder andere vensters verplaatsen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Op/afrollen</guilabel
+></term>
+<listitem>
+<para
+>Omhoog schuiven zal het venster samenvouwen tot alleen zijn titelbalk. </para>
+<para
+>Omlaag schuiven zal het venster herstellen tot zijn normale grootte. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Maximaliseren/herstellen</guilabel
+></term>
+<listitem>
+<para
+>Omhoog schuiven zal het venster maximaliseren tot het vullen van het gehele scherm. </para>
+<para
+>Omlaag schuiven zal het herstellen tot zijn eerdere grootte. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Voor/achter houden</guilabel
+></term>
+<listitem>
+<para
+>Omhoog schuiven zal het venster bovenop laten blijven en andere vensters bedekken. </para>
+<para
+>Omlaag schuiven zal het venster bedekt laten onder andere vensters. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Naar vorig/volgend bureaublad</guilabel
+></term>
+<listitem>
+<para
+>Omhoog schuiven zal het venster bovenop naar het eerdere virtuele bureaublad verplaatsen. </para>
+<para
+>Omhoog schuiven zal het venster naar het volgende virtuele bureaublad verplaatsen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Dekking wijzigen</guilabel
+></term>
+<listitem>
+<para
+>Omhoog schuiven zal het venster minder transparant maken. </para>
+<para
+>Omlaag schuiven zal het venster meer transparant maken. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Niets doen</guilabel
+></term>
+<listitem>
+<para
+>Er gebeurt niets bij omhoog of omlaag schuiven op de titelbalk van het venster. </para>
+</listitem>
+</varlistentry>
+  
+</variablelist>
+
+<tip>
+<para
+>U kunt vensters zich automatisch laten ontrollen wanneer u de muis eenvoudig op hun opgerolde titelbalk plaatst. Activeer het keuzevakje <link linkend="advanced-unshading"
+><guilabel
+>Venster afrollen</guilabel
+></link
+> in het tabblad <guilabel
+>Geavanceerd</guilabel
+> van deze module. Dit is een heel goede manier om schermruimte te krijgen als u, bijvoorbeeld, met knippen en plakken bezig bent tussen veel vensters. </para>
+</tip>
+
+</sect3>
+
+<sect3 id="actions-titlebar-frame">
+<title
+><guilabel
+>Titelbalk en frame-acties</guilabel
+></title>
+
+<para
+>Deze sectie stelt u in staat om te bepalen wat er gebeurt wanneer u enkelklikt op de titelbalk of rand van een venster. Merk op dat u verschillende acties verbonden aan dezelfde klik kunt hebben afhankelijk van of het venster actief is of niet. </para>
+
+<para
+>Voor elke combinatie van muisknoppen, actief en inactief venster, kunt u de meest van toepassing zijnde keuze maken. De acties zijn als volgt: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Naar voren</guilabel
+></term>
+<listitem>
+<para
+>Brengt het venster geheel naar boven op het de vensterstapel. Alle andere vensters, die deze overlappen, zullen er <quote
+>onder</quote
+> worden verborgen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Naar onderen</guilabel
+></term>
+<listitem>
+<para
+>Dit venster zal naar de onderkant van de vensterstapel worden verplaatst. Dit plaatst het venster uit de weg. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Schakel om tussen naar voren en naar achter</guilabel
+></term>
+<listitem>
+<para
+>Dit brengt vensters omhoog die onderaan zitten en vensters omlaag die zich bovenaan bevinden. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Minimaliseren</guilabel
+></term>
+<listitem>
+<para
+>Verbergt het venster in zijn geminimaliseerde status, waaruit het hersteld kan worden &eg; via het Takenbeheer of Takenschakelaar. </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+
+<term
+><guilabel
+>Oprollen</guilabel
+></term>
+<listitem>
+<para
+>Laat het venster zich reduceren tot eenvoudig alleen de titelbalk. Opnieuw dubbelklikken op de titelbalk, herstelt het venster tot zijn normale grootte. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Sluiten</guilabel
+></term>
+<listitem>
+<para
+>Sluit het venster. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Actiesmenu tonen</guilabel
+></term>
+<listitem>
+<para
+>Brengt een klein submenu op, waarin u kunt kiezen uit venstercommando's (&ie; Naar bureaublad verplaatsen, Naar scherm verplaatsen, Maximaliseren, Minimaliseren, Sluiten, &etc;). </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Niets doen</guilabel
+></term>
+<listitem>
+<para
+>Er gebeurt niets bij klikken. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+<sect3 id="actions-maximize-button">
+<title
+><guilabel
+>Knopacties maximaliseren</guilabel
+></title>
+
+<para
+>Deze sectie stelt u in staat om het gedrag te bepalen van de drie muisknoppen op de knop Maximaliseren. </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Maximaliseren</guilabel
+></term>
+<listitem>
+<para
+>Wijzigt de grootte van het venster tot de hoogte en breedte van het scherm. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Verticaal maximaliseren</guilabel
+></term>
+<listitem>
+<para
+>Wijzigt de grootte van het venster tot de hoogte van het scherm. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Horizontaal maximaliseren</guilabel
+></term>
+<listitem>
+<para
+>Wijzigt de grootte van het venster tot de breedte van het scherm. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="window-actions">
+<title
+>Vensteracties</title>
+
+<sect3 id="actions-inactive-inner-window">
+<title
+><guilabel
+>Inactief binnenvenster</guilabel
+></title>
+
+<para
+>Dit deel van de module stelt u in staat om in te stellen wat er gebeurt wanneer u klikt op een inactief venster met een van de de drie muisknoppen of het muiswiel gebruikt. </para>
+
+<para
+>Uw keuzes zijn als volgt: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Activeren, naar voorgrond en doorgeven-klik</guilabel
+></term>
+<listitem>
+<para
+>Dit maakt het aangeklikte venster actief, brengt het bovenaan het scherm en geeft een muisklik door naar de applicatie in het venster. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Activeren en doorgeven-klik</guilabel
+></term>
+<listitem>
+<para
+>Dit maakt het aangeklikte venster actief en geeft een muisklik door naar de applicatie in het venster. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Activeren</guilabel
+></term>
+<listitem>
+<para
+>Dit maakt het aangeklikte venster eenvoudigweg actief. De muisklik wordt niet doorgegeven naar de applicatie in het venster. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Activeren en naar voorgrond brengen</guilabel
+></term>
+<listitem>
+<para
+>Dit maakt het aangeklikte venster actief en brengt het bovenaan het scherm. De muisklik wordt niet doorgegeven naar de applicatie in het venster. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>Uw keuzes voor <guilabel
+>Muiswiel</guilabel
+> zijn als volgt: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Scrollen</guilabel
+></term>
+<listitem>
+<para
+>Schuif met de inhoud in het venster. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Activeren en schuiven</guilabel
+></term>
+<listitem>
+<para
+>Dit maakt het aangeklikte venster actief en schuift de inhoud. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Activeren, naar voorgrond en schuiven</guilabel
+></term>
+<listitem>
+<para
+>Dit maakt het aangeklikte venster actief, brengt het bovenaan het scherm en schuift de inhoud. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+<sect3 id="actions-inner-window-titlebar-frame">
+<title
+><guilabel
+>Binnen het venster, titelbalk en rand</guilabel
+></title>
+
+<para
+>Deze onderste sectie biedt u het configureren van extra acties wanneer een modifier-toets wordt ingedrukt. </para>
+
+<para
+>Voor een <guilabel
+>Modifier-toets</guilabel
+>, kunt u selecteren tussen <guilabel
+>Meta</guilabel
+> (standaard) of <guilabel
+>Alt</guilabel
+>. </para>
+
+<para
+>Nogmaals, u kunt verschillende acties selecteren voor muisknopkliks <mousebutton
+>Links</mousebutton
+>, <mousebutton
+>Midden</mousebutton
+> en <mousebutton
+>Rechts</mousebutton
+> en het <guilabel
+>Muiswiel</guilabel
+>. </para>
+
+<para
+>Uw keuzes voor de muisknoppen zijn: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Verplaatsen</guilabel
+></term>
+<listitem>
+<para
+>Biedt u het geselecteerde venster over de werkruimte te slepen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Activeren, naar voorgrond en verplaatsen</guilabel
+></term>
+<listitem>
+<para
+>Dit maakt het aangeklikte venster actief, brengt het bovenaan de vensterstapel en sleept het rond in de werkruimte. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Schakel om tussen naar voren en naar achter</guilabel
+></term>
+<listitem>
+<para
+>Dit brengt vensters omhoog die onderaan zitten en vensters omlaag die zich bovenaan bevinden. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Grootte wijzigen</guilabel
+></term>
+<listitem>
+<para
+>Laat u de grootte van het geselecteerde venster wijzigen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Naar voren</guilabel
+></term>
+<listitem>
+<para
+>Brengt het venster geheel naar boven op het de vensterstapel. Alle andere vensters, die deze overlappen, zullen er <quote
+>onder</quote
+> worden verborgen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Naar onderen</guilabel
+></term>
+<listitem>
+<para
+>Dit venster zal naar de onderkant van de vensterstapel worden verplaatst. Dit plaatst het venster uit de weg. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Minimaliseren</guilabel
+></term>
+<listitem>
+<para
+>Verbergt het venster in zijn geminimaliseerde status, waaruit het hersteld kan worden &eg; via het Takenbeheer of Takenschakelaar. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Dekking verlagen</guilabel
+></term>
+<listitem>
+<para
+>Maakt het venster meer transparant. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Dekking verhogen</guilabel
+></term>
+<listitem>
+<para
+>Maakt het venster minder transparant. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Niets doen</guilabel
+></term>
+<listitem>
+<para
+>Er gebeurt niets bij klikken. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>Uw keuzes voor het muiswiel zijn: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Naar voren/achter</guilabel
+></term>
+<listitem>
+<para
+>Omhoog schuiven zal het venster bovenop andere vensters verplaatsen. </para>
+<para
+>Omlaag schuiven zal het venster onder andere vensters verplaatsen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Op/afrollen</guilabel
+></term>
+<listitem>
+<para
+>Omhoog schuiven zal het venster samenvouwen tot alleen zijn titelbalk. </para>
+<para
+>Omlaag schuiven zal het venster herstellen tot zijn normale grootte. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Maximaliseren/herstellen</guilabel
+></term>
+<listitem>
+<para
+>Omhoog schuiven zal het venster maximaliseren tot het vullen van het gehele scherm. </para>
+<para
+>Omlaag schuiven zal het herstellen tot zijn eerdere grootte. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Voor/achter houden</guilabel
+></term>
+<listitem>
+<para
+>Omhoog schuiven zal het venster bovenop laten blijven en andere vensters bedekken. </para>
+<para
+>Omlaag schuiven zal het venster bedekt laten onder andere vensters. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Naar vorig/volgend bureaublad</guilabel
+></term>
+<listitem>
+<para
+>Omhoog schuiven zal het venster bovenop naar het eerdere virtuele bureaublad verplaatsen. </para>
+<para
+>Omhoog schuiven zal het venster naar het volgende virtuele bureaublad verplaatsen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Dekking wijzigen</guilabel
+></term>
+<listitem>
+<para
+>Omhoog schuiven zal het venster minder transparant maken. </para>
+<para
+>Omlaag schuiven zal het venster meer transparant maken. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Niets doen</guilabel
+></term>
+<listitem>
+<para
+>Er gebeurt niets bij omhoog of omlaag schuiven op de titelbalk van het venster. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="movement">
+<title
+>Beweging</title>
+
+<para
+>Deze pagina biedt u het configureren van de <guilabel
+>Magnetische velden</guilabel
+>. Deze werken als een magnetisch veld aan de rand van het scherm en elk venster, waardoor vensters naast elkaar plakken wanneer ze vlak bij elkaar geplaatst worden. </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Magnetische schermrand</guilabel
+></term>
+<listitem>
+<para
+>Hier kunt u de magnetische zone voor schermranden instellen. Een venster binnen de geconfigureerde afstand plaatsen zorgt ervoor dat deze aan de rand van het scherm wordt geplakt. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Magnetische vensterrand</guilabel
+></term>
+<listitem>
+<para
+>Hier kunt u de magnetische zone voor vensters instellen. Op dezelfde manier als met schermranden zal een venster plaatsen binnen de geconfigureerde afstand van een ander venster er voor zorgen dat deze aan elkaar plakken alsof ze magnetisch zijn. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Magnetisch veld in midden van scherm</guilabel
+></term>
+<listitem>
+<para
+>Hier kunt u de magnetische zone voor schermranden instellen. De sterkte van het magnetische veld zodat een venster binnen de geconfigureerde afstand ervoor zorgt dat deze naar het centrum van het bureaublad gaat bij het er naar toe verplaatsen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Vensters tegen elkaar plaatsen: allen bij elkaar overlappen</guilabel
+></term>
+<listitem>
+<para
+>Indien geactiveerd, zullen vensters niet aan elkaar plakken als ze alleen naast elkaar zich bevinden, ze moeten elkaar overlappen, met de geconfigureerde hoeveelheid of minder om aan elkaar te plakken. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<tip>
+<para
+>In de instellingenmodule <guilabel
+>Schermranden</guilabel
+> in de sectie <guilabel
+>Gedrag van werkruimte</guilabel
+> van de systeeminstellingen, kunt u vensters configureren om snel de gehele, halve of kwart van het scherm in te nemen wanneer ze dicht bij de schermrand worden gesleept. </para>
+</tip>
+
+</sect2>
+
+<sect2 id="advanced">
+<title
+>Geavanceerd</title>
+
+<para
+>In het paneel <guilabel
+>Geavanceerd</guilabel
+> kunt u meer geavanceerde fijn-afstemming doen aan het gedrag van vensters. </para>
+
+<sect3 id="advanced-unshading">
+<title
+>Venster afrollen</title>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Na boven titelbalk zweven</guilabel
+></term>
+<listitem>
+<para
+>Als deze optie is geactiveerd zal een opgerold venster zich automatisch ontrollen wanneer de muisaanwijzer zich enige tijd boven de titelbalk bevindt. Gebruik de draaischakelaar om de vertraging van het ontrollen in te stellen. </para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect3>
+
+<sect3 id="advanced-placement">
+<title
+>Vensterplaatsing</title>
+
+<para
+>Het plaatsingsbeleid bepaalt waar een nieuw venster op het scherm zal verschijnen. </para>
+
+<para
+>In een opzet met meerdere monitoren zal het scherm voor een venster waarop te verschijnen altijd het actieve scherm zijn (dat is het scherm dat de muisaanwijzer heeft of het venster met focus; zie <link linkend="focus-multiscreen"
+>Gedrag op meerdere schermen</link
+>), met de uitzondering van vensters die hun vorige positie (zie <link linkend="advanced-remember-positions"
+>onderstaand</link
+>). </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Minimale overlapping</guilabel
+></term>
+<listitem>
+<para
+>Zal alle nieuwe vensters op zo'n manier plaatsen zodat ze zo min mogelijk bestaande vensters overlappen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Gemaximaliseerd</guilabel
+></term>
+<listitem>
+<para
+>Zal proberen alle nieuwe vensters te maximaliseren om het gehele scherm te laten vullen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Trapsgewijs</guilabel
+></term>
+<listitem>
+<para
+>Zal alle nieuwe vensters achter elkaar zetten, waarbij elke nieuwe lager en rechts van het actieve venster wordt geopend, beginnend linksboven op het scherm wanneer geen vensters al geopend zijn. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Willekeurig</guilabel
+></term>
+<listitem>
+<para
+>Zal alle nieuwe vensters op willekeurige locaties plaatsen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Gecentreerd</guilabel
+></term>
+<listitem>
+<para
+>Zal alle nieuwe vensters in het midden van het scherm plaatsen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>In hoek linksboven</guilabel
+></term>
+<listitem>
+<para
+>Zal alle nieuwe vensters met hun linksboven hoek in de linksboven hoek van het scherm plaatsen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Onder de muis</guilabel
+></term>
+<listitem>
+<para
+>Zal alle nieuwe vensters onder de muisaanwijzer plaatsen. </para>
+</listitem>
+</varlistentry>
+  
+</variablelist>
+
+<para id="advanced-remember-positions"
+>Activeer het item <guilabel
+>Laat toepassingen de posities van hun eigen vensters onthouden</guilabel
+> om vensters te openen waar ze eerder waren in plaats van met de bovenstaand gekozen plaatsingsmethode. Merk op dat deze onthouden positie ook de toekenning op het scherm bevat, dus kunnen vensters openen op een scherm anders dan het actieve als dat is waar ze als laatste geplaatst waren. Merk ook op dat deze optie alleen beschikbaar is op X11, niet op Wayland en alleen ondersteund wordt door sommige KDE toepassingen. </para>
+
+<tip>
+<para
+>If you would like some windows to appear on specific positions, screens, or Virtual Desktops, you can set up <guilabel
+>Window Rules</guilabel
+> to configure special window or application settings. You can find this by right-clicking on the titlebar of a window and choosing <guimenu
+>More Actions</guimenu
+>, or in the <guilabel
+>Window Rules</guilabel
+> module in the <guilabel
+>Window Management</guilabel
+> section of system settings. </para>
+</tip>
+
+
+</sect3>
+
+<sect3 id="advanced-special-windows">
+<title
+>Speciale vensters</title>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Hulpvensters van inactieve programma's verbergen</guilabel
+></term>
+<listitem>
+<para
+>Wanneer ingeschakeld zullen hulpvensters (hulpmiddelvensters, afscheurmenu's, ...) van inactieve vensters worden verborgen en alleen getoond zal het programma actief wordt. Merk op dat programma's de vensters moeten markeren met het juiste venstertype om deze functie goed te laten werken. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+<sect3 id="advanced-virtual-desktop-behavior">
+<title
+>Gedrag van virtueel bureaublad</title>
+
+<para
+>Een toepassing aanroepen zal soms een bestaand venster activeren in plaats van een nieuw venster openen. Deze instelling bestuurt wat er zou moeten gebeuren als dat geactiveerde venster zich bevindt in een virtueel bureaublad anders dan de huidige. </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Schakel naar dat andere virtuele bureaublad</guilabel
+></term>
+<listitem>
+<para
+>Zal omschakelen naar het virtuele bureaublad waar het venster nu zich bevindt. </para>
+<para
+>Kies deze optie als u het prettig vindt dat het actieve virtuele bureaublad automatisch vensters volgt naar hun toegekende virtuele bureaublad. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Venster naar huidig virtuele bureaublad brengen</guilabel
+></term>
+<listitem>
+<para
+>Zal het venster laten springen naar het actieve virtuele bureaublad. </para>
+<para
+>Kies deze optie als het prettig vindt dat vensters altijd openen in het huidige virtuele bureaublad en het actieve virtuele bureaublad alleen omschakelt wanneer daar handmatig naar wordt gegaan. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+</sect2>
+
+</sect1>
+
+</article>

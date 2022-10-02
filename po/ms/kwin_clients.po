@@ -1,0 +1,645 @@
+# kwin_clients Bahasa Melayu (Malay) (ms)
+# Sharuzzaman Ahmat Raslan <sharuzzaman@myrealbox.com>, 2004, 2008, 2009.
+# Mahrazi Mohd Kamal <mahrazi@gmail.com>, 2004.
+# Sharuzzaman Ahmat Raslan <sharuzzaman@gmail.com>, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2010-07-20 20:30+0800\n"
+"Last-Translator: Sharuzzaman Ahmat Raslan <sharuzzaman@gmail.com>\n"
+"Language-Team: Malay <kedidiemas@yahoogroups.com>\n"
+"Language: ms\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=1;\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, fuzzy, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "Sangat Kecil"
+
+#: aurorae/src/aurorae.cpp:726
+#, fuzzy, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "Normal"
+
+#: aurorae/src/aurorae.cpp:727
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "Besar"
+
+#: aurorae/src/aurorae.cpp:728
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "Sangat Besar"
+
+#: aurorae/src/aurorae.cpp:729
+#, fuzzy, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "Teramat Besar"
+
+#: aurorae/src/aurorae.cpp:730
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "Sangat Teramat Besar"
+
+#: aurorae/src/aurorae.cpp:731
+#, fuzzy, kde-format
+#| msgid "Resize"
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "Lebihsaiz"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "Dialog Tetapan"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "J&ajaran Tajuk"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, fuzzy, kde-format
+msgid "Left"
+msgstr "Kiri"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, fuzzy, kde-format
+msgid "Center"
+msgstr "Tengah"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, fuzzy, kde-format
+msgid "Right"
+msgstr "Kanan"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"Semak opsyen ini jika sempadan tetingkap patut dicetak dalam warna bar "
+"tajuk. Jika tidak, ia akan dikulis dalam warna latar belakang."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, fuzzy, kde-format
+#| msgid "Colored Window Border"
+msgid "Colored window border"
+msgstr "Sempadan tetingkap berwarna"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"Semak opsyen ini jika anda ingin butang pudar apabila penuding tetingkap "
+"terapung di atasnya dan pudar sekali lagi apabila ia beralih."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "Animasikan butang"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "Tanda pilihan ini jika anda mahu teks bar tajuk untuk mempunyai paparan "
+#~ "3D dengan bayang dibelakangnya."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "Guna &teks berbayang"
+
+#, fuzzy
+#~ msgid "Hide Advanced Configuration Options"
+#~ msgstr "Pilihan Hiasan"
+
+#, fuzzy
+#~ msgid "Show Advanced Configuration Options"
+#~ msgstr "Pilihan Hiasan"
+
+#, fuzzy
+#~| msgid "Animate buttons"
+#~ msgid "Animations"
+#~ msgstr "Animasikan butang"
+
+#, fuzzy
+#~| msgid "Actions Settings"
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "Tetapan Tindakan"
+
+#, fuzzy
+#~ msgid "Regular Expression"
+#~ msgstr "Ungkapan Biasa"
+
+#, fuzzy
+#~ msgid "General"
+#~ msgstr "Umum"
+
+#, fuzzy
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "Besar"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "Sangat Besar"
+
+#, fuzzy
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "Teramat Besar"
+
+#, fuzzy
+#~| msgid "Title &Alignment"
+#~ msgid "Tit&le alignment:"
+#~ msgstr "J&ajaran Tajuk"
+
+#, fuzzy
+#~| msgid "Small"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "Kecil"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "Tutup tetingkap dengan dwi-klik butang menu"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title"
+#~ msgstr "Minimakan Tetingkap"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadows"
+#~ msgstr "Bayang"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Window Glow"
+#~ msgstr "Minimakan Tetingkap"
+
+#, fuzzy
+#~| msgid "Config Dialog"
+#~ msgid "Dialog"
+#~ msgstr "Dialog Tetapan"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Use window title"
+#~ msgstr "Minimakan Tetingkap"
+
+#, fuzzy
+#~ msgid "Decoration Options"
+#~ msgstr "Pilihan Hiasan"
+
+#, fuzzy
+#~ msgctxt "outline window title"
+#~ msgid "Disabled"
+#~ msgstr "Dimatikan"
+
+#, fuzzy
+#~ msgctxt "outline window title"
+#~ msgid "Enabled"
+#~ msgstr "Dihidupkan"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title:"
+#~ msgstr "Minimakan Tetingkap"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Hide window title bar"
+#~ msgstr "Minimakan Tetingkap"
+
+#, fuzzy
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Disabled"
+#~ msgstr "Dimatikan"
+
+#, fuzzy
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Enabled"
+#~ msgstr "Dihidupkan"
+
+#, fuzzy
+#~ msgid "Move Up"
+#~ msgstr "Naik Atas"
+
+#, fuzzy
+#~ msgid "Move Down"
+#~ msgstr "Alih ke Bawah"
+
+#, fuzzy
+#~ msgid "Add"
+#~ msgstr "Tambah"
+
+#, fuzzy
+#~| msgid "Restore"
+#~ msgid "Remove"
+#~ msgstr "Buang"
+
+#, fuzzy
+#~ msgid "Edit"
+#~ msgstr "Sunting"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Inactive Windows"
+#~ msgstr "Minimakan Tetingkap"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Windows"
+#~ msgstr "Minimakan Tetingkap"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+#~ msgid "Help"
+#~ msgstr "Bantuan"
+
+#~ msgid "Minimize"
+#~ msgstr "Minimakan"
+
+#~ msgid "Maximize"
+#~ msgstr "Maksimakan"
+
+#~ msgid "Close"
+#~ msgstr "Tutup"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "Kekalkan Atas Yang Lain"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "Kekalkan Bawah Yang Lain"
+
+#~ msgid "On All Desktops"
+#~ msgstr "Pada Semua Desktop"
+
+#~ msgid "Menu"
+#~ msgstr "Menu"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "Tidak pada semua desktop"
+
+#~ msgid "On all desktops"
+#~ msgstr "Pada semua desktop"
+
+#~ msgid "Unshade"
+#~ msgstr "NyahSuram"
+
+#~ msgid "Shade"
+#~ msgstr "Suram"
+
+#~ msgid "Resize"
+#~ msgstr "Ulangsaiz"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>Pralihat B II</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "Kembalikan"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "Lukis bingkai tetingkap menggunakan warna bar &tajuk"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "Apabila dipilih, sempadan tetingkap dilukis menggunakan warna bar tajuk; "
+#~ "selain itu, ia dilukis menggunakan warna normal sempadan."
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "Lukis &pemegang ulangsaiz"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "Apabila dipilih, hiasan dilukis dengan \"pemegang cekau\" di sudut bawah "
+#~ "kanan tetingkap; selain itu, tiada pemegang cekau dilukis."
+
+#, fuzzy
+#~| msgid ""
+#~| "When selected, active titlebars are drawn with a stipple (dotted) "
+#~| "effect; otherwise, they are drawn without the stipple."
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr ""
+#~ "Apabila dipilih, bar tajuk aktif dilukis dengan kesan bintikan; selain "
+#~ "itu, ia dilukis tanda bintikan."
+
+#~ msgid "Actions Settings"
+#~ msgstr "Tetapan Tindakan"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "Dwi klik pada butang menu:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "Jangan Buat Apa-apa"
+
+#~ msgid "Minimize Window"
+#~ msgstr "Minimakan Tetingkap"
+
+#~ msgid "Shade Window"
+#~ msgstr "Naung Tetingkap"
+
+#~ msgid "Close Window"
+#~ msgstr "Tutup Tetingkap"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "Tindakan boleh dikaitkan dengan dwi klik butang menu. Tinggalkan kepada "
+#~ "tiada jika ragu-ragu."
+
+#~ msgid "Laptop"
+#~ msgstr "Laptop"
+
+#, fuzzy
+#~ msgid "Solid Color"
+#~ msgstr "Warna Padu"
+
+#, fuzzy
+#~| msgid "Draw &gradients"
+#~ msgid "Radial Gradient"
+#~ msgstr "Lukis &gradien"
+
+#, fuzzy
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Sharuzzaman Ahmat Raslan"
+
+#, fuzzy
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "sharuzzaman@myrealbox.com"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Save"
+#~ msgstr "Suram"
+
+#~ msgid "Large"
+#~ msgstr "Besar"
+
+#~ msgid "Small"
+#~ msgstr "Kecil"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "Semak opsyen ini jika anda ingin tetingkap ditutup apabila anda klik dua "
+#~ "kali butang menu, sama seperti Microsoft Windows."
+
+#~ msgid "Plastik"
+#~ msgstr "Plastik"
+
+#~ msgid "All Desktops"
+#~ msgstr "Semua Desktop"
+
+#~ msgid "Below"
+#~ msgstr "Bawah"
+
+#, fuzzy
+#~| msgid "Close"
+#~ msgid "Close Item"
+#~ msgstr "Tutup"
+
+#~ msgid "&Left"
+#~ msgstr "&Kiri"
+
+#, fuzzy
+#~ msgid "&Center"
+#~ msgstr "Tengah"
+
+#, fuzzy
+#~ msgid "&Right"
+#~ msgstr "Ka&nan"
+
+#, fuzzy
+#~ msgid "O&utline Color:"
+#~ msgstr "Warna Padu"
+
+#~ msgid "Do not keep above others"
+#~ msgstr "Jangan letak di atas yang lain"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above others"
+#~ msgstr "Kekal atas lain"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Do not keep below others"
+#~ msgstr "Jangan letak di bawah yang lain"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below others"
+#~ msgstr "Letak di bawah yang lain"
+
+#, fuzzy
+#~ msgid "Variable"
+#~ msgstr "Variabel"
+
+#, fuzzy
+#~| msgid "Maximize"
+#~ msgid "Maximum"
+#~ msgstr "Maksimum"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadow style:"
+#~ msgstr "Suram"
+
+#, fuzzy
+#~ msgctxt "draw separator"
+#~ msgid "Enabled"
+#~ msgstr "Dihidupkan"
+
+#, fuzzy
+#~ msgctxt "draw separator"
+#~ msgid "Disabled"
+#~ msgstr "Dimatikan"
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "Pasang tema KWM"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "Laluan ke fail tetapan tema"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWMTheme</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "Melekat"
+
+#~ msgid "Unsticky"
+#~ msgstr "Tidak melekat"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>Pralihat Keramik</b></center>"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "Luki&s kesan bintikan bar tajuk"
+
+#~ msgid ""
+#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
+#~ "otherwise, they are drawn without the stipple."
+#~ msgstr ""
+#~ "Apabila dipilih, bar tajuk aktif dilukis dengan kesan bintikan; selain "
+#~ "itu, ia dilukis tanda bintikan."
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "Lukis bar cekau dibawah tetingkap"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
+#~ "otherwise, no grab bar is drawn."
+#~ msgstr ""
+#~ "Apabila dipilih, hiasan akan dilukis dengan \"bar cekau\" dibawah "
+#~ "tetingkap; selain itu, tiada bar cekau dilukis."
+
+#~ msgid "Draw &gradients"
+#~ msgstr "Lukis &gradien"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with gradients for high-color "
+#~ "displays; otherwise, no gradients are drawn."
+#~ msgstr ""
+#~ "Apabila dipilih, hiasan akan dilukis dengan gradien untuk paparan warna "
+#~ "tinggi; selain itu, tiada gradien dilukis."
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"
+
+#~ msgid ""
+#~ "When selected, the window decoration borders are drawn using the titlebar "
+#~ "colors; otherwise, they are drawn using normal border colors instead."
+#~ msgstr ""
+#~ "Apabila dipilih, hiasan sempadan tetingkap dilukis menggunakan warna bar "
+#~ "tajuk; jika tidak, ia dilukis menggunakan warna sempadan biasa. "
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "Quartz &extra slim"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "Hiasan tetingkap kuartz dengan bar tajuk ekstra kecil "
+
+#~ msgid "Quartz"
+#~ msgstr "Quartz"
+
+#~ msgid "Redmond"
+#~ msgstr "Redmond"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "Papar pemegang ulangsaiz tetingkap"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "Apabila dipilih, semua tetingkap dilukis dengan saiz semula handle di "
+#~ "sudut kanan bawah. Ini memudahkan pensaizan semula teingkap, terutamanya "
+#~ "untuk trackballs dan gantian tetingkap lain dalam komputer riba."
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr "Di sini anda boleh ubah saiz bagi saiz semula handle."
+
+#~ msgid "Medium"
+#~ msgstr "Sederhana"
+
+#~ msgid "Modern System"
+#~ msgstr "Sistem Moden"
+
+#~ msgid "Web"
+#~ msgstr "Web"
+
+#~ msgid "Keramik"
+#~ msgstr "Keramik"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "Papar &ikon tetingkap dalam gelembung keterangan"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "Tanda pilihan ini jika anda mahu ikon tetingkap dipaparkan dalam "
+#~ "gelembung keterangan bersebelahan kepada teks bar tajuk."
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "Luki&s bebuih caption kecil pada tetingkap aktif"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "Semak opsyen ini jika anda ingin gelembung kapsyen mempunyai saiz sama "
+#~ "dalam tetingkap aktif seperti dalam tetingkap tak aktif. Opsyen ini "
+#~ "berguna bagi komputer riba atau paparan resolusi rendah yang anda ingin "
+#~ "maksimumkan jumlah ruang yang ada untuk kandungan tetingkap."
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "Lukis ba&r cekau dibawah tetingkap"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "Semak opsyen ini jika anda ingin bar cakup dilukis di bawah tetingkap. "
+#~ "Apabila opsyen ini tidak dipilih, hanya sempadan halus akan dilukis di "
+#~ "tempatnya."

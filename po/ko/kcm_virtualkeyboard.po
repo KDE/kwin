@@ -1,0 +1,53 @@
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the kwin package.
+# Shinjo Park <kde@peremen.name>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2021-04-27 00:19+0000\n"
+"PO-Revision-Date: 2021-05-17 00:44+0200\n"
+"Last-Translator: Shinjo Park <kde@peremen.name>\n"
+"Language-Team: Korean <kde-kr@kde.org>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Lokalize 20.12.3\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "박신조"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "kde@peremen.name"
+
+#: kcmvirtualkeyboard.cpp:31
+#, kde-format
+msgid "Virtual Keyboard"
+msgstr "가상 키보드"
+
+#: kcmvirtualkeyboard.cpp:33
+#, kde-format
+msgid "Choose Virtual Keyboard"
+msgstr "가상 키보드 선택"
+
+#: kcmvirtualkeyboard.cpp:70
+#, kde-format
+msgid "None"
+msgstr "없음"
+
+#: kcmvirtualkeyboard.cpp:74
+#, kde-format
+msgid "Do not use any virtual keyboard"
+msgstr "가상 키보드 사용하지 않음"
+
+#: package/contents/ui/main.qml:16
+#, kde-format
+msgid "This module lets you choose the virtual keyboard to use."
+msgstr "이 모듈에서 사용할 가상 키보드를 선택할 수 있습니다."

@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Italian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinvirtualkeyboard" lang="&language;">
+<articleinfo>
+
+<title
+>Tastiera virtuale</title>
+<authorgroup>
+<author
+><firstname
+>Yuri</firstname
+> <surname
+>Chornoivan</surname
+> </author>
+<othercredit role="translator"
+><firstname
+>Paolo</firstname
+><surname
+>Zamponi</surname
+><affiliation
+><address
+><email
+>zapaolo@email.it</email
+></address
+></affiliation
+><contrib
+>Traduzione della documentazione</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>27/04/2021</date>
+<releaseinfo
+>Plasma 5.22</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Impostazioni di sistema</keyword>
+<keyword
+>virtuale</keyword>
+<keyword
+>tastiera</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Questo modulo ti permette di scegliere la tastiera virtuale da usare: essa sarà abilitata automaticamente quando non ne verrà rilevata una hardware. </para>
+
+<para
+>Seleziona una <ulink url="https://it.wikipedia.org/wiki/Tastiera_virtuale"
+>tastiera virtuale</ulink
+> dall'elenco, oppure scegli <guilabel
+>Nessuna</guilabel
+> se non vuoi utilizzarne nessuna. </para>
+
+<para
+>È raccomandabile installare i motori corrispondenti dei metodi di inserimento prima di utilizzare questo modulo. </para>
+
+</article>

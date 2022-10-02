@@ -1,0 +1,182 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Serbian-Latin "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="desktop" lang="&language;">
+<title
+>Virtuelne površi</title>
+<articleinfo>
+
+<authorgroup>
+<author
+><personname
+><firstname
+>Majk</firstname
+> <surname
+>Mekbrajd</surname
+></personname
+> &Mike.McBride.mail;</author>
+<author
+><personname
+><firstname
+>Jost</firstname
+> <surname
+>Šenk</surname
+></personname
+> &Jost.Schenck.mail;</author>
+<othercredit role="translator"
+><firstname
+>Dragan</firstname
+><surname
+>Pantelić</surname
+><affiliation
+><address
+><email
+>falcon-10@gmx.de</email
+></address
+></affiliation
+><contrib
+>prevod</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>9. 4. 2015.</date>
+<releaseinfo
+>Plasma 5.3</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Sistemske postavke</keyword>
+<keyword
+>površ</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="virtual-desktops">
+
+<title
+>Virtuelne površi</title>
+
+<sect2 id="desktop-number">
+<title
+><guilabel
+>Površi</guilabel
+></title>
+
+<para
+>KDE vam omogućava da imate nekoliko virtuelnih površi. Pod ovim jezičkom možete podesiti i broj površi, broj vrsta u ikonici listača, kao i imena površi. Broj površi zadajete u polju za unos. Površima možete dodeliti imena upisivanjem teksta u tekstualna polja ispod.</para
+> 
+<!-- not in 5.3
+<para
+>Enable <guilabel
+>Different widgets for each desktop</guilabel
+> 
+to use independent widgets and wallpapers on each individual desktop.
+</para>
+-->
+</sect2>
+
+<sect2 id="desktop-switching">
+<title
+><guilabel
+>Prebacivanje</guilabel
+></title>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Kretanje kroz površi omotava</guilabel
+></term>
+<listitem
+><para
+>Uključite ovu opciju ako želite da vas tastatura ili kretanje preko ivice površi (pri aktivnim ivicama površi) odvede na suprotnu ivicu naredne površi. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Animirano prebacivanje površi</guilabel
+></term>
+<listitem
+><para
+>Izaberite iz padajućeg spiska jedno od <guilabel
+>bez animacije</guilabel
+>, <guilabel
+>Klizanje</guilabel
+>, <guilabel
+>Animacija kocke površi</guilabel
+> ili <guilabel
+>Utapanje površi</guilabel
+>. Ako izabrana animacija ima svoje postavke, kliknite na ikonicu alatke desno od spiska da pokrenete njen dijalog za podešavanje. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Ekranski prikaz pri prebacivanju površi</guilabel
+></term>
+<listitem
+><para
+>Uključite ovu opciju ako želite ekranski prikaz pri menjanju površi. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Pokazatelji rasporeda površi</guilabel
+></term>
+<listitem
+><para
+>Uključivanjem ove opcije dobija se mali pregled rasporeda površi, koji ukazuje na izabranu površ. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Prečice</guilabel
+></term>
+<listitem
+><para
+>Ova sekcija prikazuje podešene prečice za menjanje površi i omogućava vam da ih uredite. </para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>Okretanje točkića miša preko praznog prostora na površi, ili preko ikonice listača na panelu, menjaće virtuelne površi po brojevnom redosledu, u smeru okretanja (nagore ili nadole).</para>
+<para
+>Ovo podrazumevano ponašanje možete da izmenite na stranici <guilabel
+>Radnje mišem</guilabel
+> pod <guilabel
+>Postavke površi</guilabel
+> (<keycombo action="simul"
+><keycap
+>Alt</keycap
+><keycap
+>D</keycap
+></keycombo
+>, <keycombo action="simul"
+><keycap
+>Alt</keycap
+><keycap
+>S</keycap
+></keycombo
+>).</para>
+</sect2>
+</sect1>
+
+</article>

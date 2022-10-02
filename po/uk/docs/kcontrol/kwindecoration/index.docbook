@@ -1,0 +1,188 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Ukrainian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwindecoration" lang="&language;">
+<articleinfo>
+<authorgroup>
+<author
+>&Rik.Hemsley; &Rik.Hemsley.mail;</author>
+<author
+>&Anne-Marie.Mahfouf; &Anne-Marie.Mahfouf.mail;</author>
+<othercredit role="translator"
+><firstname
+>Юрій</firstname
+><surname
+>Чорноіван</surname
+><affiliation
+><address
+><email
+>yurchor@ukr.net</email
+></address
+></affiliation
+><contrib
+>Переклад українською</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>9 квітня 2021 року</date>
+<releaseinfo
+>Плазма 5.21</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Системні параметри</keyword>
+<keyword
+>kwin</keyword>
+<keyword
+>вікно</keyword>
+<keyword
+>обрамлення</keyword>
+<keyword
+>тема</keyword>
+<keyword
+>стиль</keyword>
+</keywordset>
+</articleinfo>
+<sect1 id="window-deco">
+<title
+>Обрамлення вікон</title>
+
+<para
+>Цей модуль надасть вам змогу обрати стиль кнопок та обрамлення вікон.</para>
+
+<sect2>
+<title
+>Обрамлення вікон</title>
+
+<para>
+<screenshot>
+<screeninfo
+>Модуль налаштування обрамлення вікон</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Модуль налаштування обрамлення вікон</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+
+<para
+>Виберіть стиль обрамлення за допомогою списку попереднього перегляду та поля пошуку у верхній частині вікна або отримайте новий стиль за допомогою кнопки <guibutton
+>Отримати нові обрамлення вікон</guibutton
+>.</para>
+
+<para
+>Типове обрамлення вікон називається «Breeze».</para>
+
+<para
+>Всі стилі виглядають не лише по-різному, але й <quote
+>відчуваються</quote
+> по-різному. У деяких присутні (іноді невидимі) елементи обрамлення для <quote
+>зміни розмірів</quote
+>, вони роблять зміну розмірів вікна простішою, але водночас ускладнюють його пересування. У деяких стилях певні краї вікон взагалі не мають обрамлення.</para>
+
+<para
+>Спробуйте поекспериментувати з різними стилями: знайдіть серед всіх той, який подобається вам найбільше.</para>
+
+<para
+>На панелі попереднього перегляду кожного зі стилів ви побачите кнопку налаштовування <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure.png" format="PNG"/></imageobject
+></inlinemediaobject
+>, призначену для відкриття діалогових вікон налаштовування оформлення.</para>
+
+<para
+>Параметри у цьому діалоговому вікні застосовуються до усіх вікон. Для деяких декорацій вікон (наприклад, <quote
+>Breeze</quote
+>) передбачено вкладку <guilabel
+>Параметри для окремих вікон</guilabel
+>. За допомогою цієї вкладки ви можете змінити розмір рамки вікна та видимість заголовка вікна для окремих вікон.</para>
+
+<para
+>Різні параметри для окремих вікон можна змінити за допомогою модуля «Системних параметрів» <ulink url="help:/kcontrol/windowspecific"
+>Правила вікон</ulink
+>. </para>
+
+<tip>
+<para
+>З міркувань доступності деякі теми обрамлення вікон підтримують дуже широкі елементи обрамлення. Якщо тема підтримує такі елементи, ви зможете тут вибрати <guilabel
+>Розмір рамки вікна</guilabel
+>. Широкі елементи обрамлення легше побачити людям з вадами зору, на них легше навести вказівник людям з обмеженими руховими можливостями, або людям, яким важко користуватися мишею.</para>
+</tip>
+
+</sect2>
+
+<sect2>
+<title
+>Обрамлення</title>
+
+<para
+>За допомогою цього діалогового вікна ви можете змінити обрамлення вікна. Перелік налаштувань залежить від вибраного стилю. </para>
+<para>
+<screenshot>
+<screeninfo
+>Параметри обрамлення Breeze</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="decoration.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Параметри обрамлення Breeze</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+<sect2>
+<title
+>Кнопки на смужці заголовка</title>
+
+<para
+>За допомогою цієї вкладки ви можете змінити розташування кнопок на смужці заголовка. Просто перетягніть кнопки, наприклад, кнопку <guilabel
+>Меню програм</guilabel
+>, на смужку заголовка, вилучіть їх або переупорядкуйте їх перетягуванням, щоб досягти комфортного для вас розташування. </para>
+
+<screenshot>
+<screeninfo
+>Параметри кнопок</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="button.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Параметри кнопок</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+
+<para
+>Позначте пункт <guilabel
+>Закривати вікна у відповідь на подвійне клацання на кнопці меню</guilabel
+>, щоб мати додаткову можливість, окрім кнопки «Закрити», або щоб вилучити кнопку «Закрити» із панелі заголовка. </para>
+
+<para
+>Позначте пункт <guilabel
+>Показувати підказки кнопок заголовків вікон</guilabel
+>, якщо ви хочете бачити типові підказки у відповідь на наведення вказівника миші на кнопки смужки заголовка вікна. </para>
+
+</sect2>
+
+</sect1>
+
+</article>

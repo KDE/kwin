@@ -1,0 +1,91 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Andrej Mernik <andrejm@ubuntu.si>, 2013, 2017.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-03-26 00:45+0000\n"
+"PO-Revision-Date: 2017-04-08 09:41+0100\n"
+"Last-Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
+"Language-Team: Slovenian <lugos-slo@lugos.si>\n"
+"Language: sl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
+"%100==4 ? 3 : 0);\n"
+"X-Generator: Lokalize 2.0\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Andrej Mernik"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "andrejm@ubuntu.si"
+
+#: genericscriptedconfig.cpp:76
+#, kde-format
+msgctxt "Error message"
+msgid "Plugin does not provide configuration file in expected location"
+msgstr "Vstavek ne ponuja nastavitvene datoteke na pričakovanem mestu"
+
+#~ msgctxt "Assertion failed in KWin script with given value"
+#~ msgid "Assertion failed: %1 is not null"
+#~ msgstr "Uveljavljanje je spodletelo: %1 ni null"
+
+#~ msgctxt "Assertion failed in KWin script"
+#~ msgid "Assertion failed: argument is null"
+#~ msgstr "Uveljavljanje je spodletelo: argument je null"
+
+#~ msgctxt "Error in KWin Script"
+#~ msgid ""
+#~ "Invalid number of arguments. At least service, path, interface and method "
+#~ "need to be provided"
+#~ msgstr ""
+#~ "Neveljavno število argumentov. Podati morate vsaj storitev, pot, vmesnik "
+#~ "in metodo"
+
+#~ msgctxt "Error in KWin Script"
+#~ msgid ""
+#~ "Invalid type. Service, path, interface and method need to be string values"
+#~ msgstr "Neveljavna vrsta. Storitev, pot, vmesnik in metoda morajo biti nizi"
+
+#~ msgctxt "syntax error in KWin script"
+#~ msgid "Invalid number of arguments"
+#~ msgstr "Neveljavno število argumentov"
+
+#~ msgctxt ""
+#~ "KWin Scripting function received incorrect value for an expected type"
+#~ msgid "%1 is not a variant type"
+#~ msgstr "%1 ni vrsta različice"
+
+#~ msgctxt ""
+#~ "KWin Scripting function received incorrect value for an expected type"
+#~ msgid "%1 is not of required type"
+#~ msgstr "%1 ni zahtevana vrsta"
+
+#~ msgctxt "KWin Scripting error thrown due to incorrect argument"
+#~ msgid "Second argument to registerScreenEdge needs to be a callback"
+#~ msgstr "Drugi argument za registerScreenEdge mora biti povratni klic"
+
+#~ msgctxt "KWin Scripting error thrown due to incorrect argument"
+#~ msgid "Second argument to registerTouchScreenEdge needs to be a callback"
+#~ msgstr "Drugi argument za registerTouchScreenEdge mora biti povratni klic"
+
+#~ msgctxt "KWin Scripting error thrown due to incorrect argument"
+#~ msgid "Argument for registerUserActionsMenu needs to be a callback"
+#~ msgstr "Argument za registerUserActionsMenu mora biti povratni klic"
+
+#~ msgctxt "Assertion failed in KWin script with given value"
+#~ msgid "Assertion failed: %1"
+#~ msgstr "Uveljavljanje je spodletelo: %1"
+
+#~ msgctxt ""
+#~ "Assertion failed in KWin script with expected value and actual value"
+#~ msgid "Assertion failed: Expected %1, got %2"
+#~ msgstr "Uveljavljanje je spodletelo: pričakovano %1, dobljeno %2"

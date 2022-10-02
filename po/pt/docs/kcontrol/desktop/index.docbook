@@ -1,0 +1,170 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Portuguese "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="desktop" lang="&language;">
+<title
+>Ecrãs Virtuais</title>
+<articleinfo>
+
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<author
+>&Jost.Schenck; &Jost.Schenck.mail;</author>
+<othercredit role="translator"
+><firstname
+>José</firstname
+><surname
+>Pires</surname
+><affiliation
+><address
+><email
+>zepires@gmail.com</email
+></address
+></affiliation
+><contrib
+>Tradução</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2015-04-09</date>
+<releaseinfo
+>Plasma 5.3</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systemsettings</keyword>
+<keyword
+>ecrã</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="virtual-desktops">
+
+<title
+>Ecrãs Virtuais</title>
+
+<sect2 id="desktop-number">
+<title
+><guilabel
+>Ecrãs</guilabel
+></title>
+
+<para
+>O &kde; oferece-lhe a possibilidade de ter diversos ecrãs virtuais. Nesta página, poderá configurar o número de ecrãs, o número de linhas no ícone do <guilabel
+>Paginador</guilabel
+>, assim como os seus nomes. Basta usar a barra deslizante para ajustar o número de ecrãs. Poderá atribuir nomes aos ecrãs, indicando o texto nos campos respectivos em baixo.</para
+> 
+<!-- not in 5.3
+<para
+>Enable <guilabel
+>Different widgets for each desktop</guilabel
+> 
+to use independent widgets and wallpapers on each individual desktop.
+</para>
+-->
+</sect2>
+
+<sect2 id="desktop-switching">
+<title
+><guilabel
+>Mudança</guilabel
+></title>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>A navegação pelos ecrãs dá a volta</guilabel
+></term>
+<listitem
+><para
+>Active esta opção se quiser a navegação pelos extremos activos do ecrã ou pelo teclado, para além do extremo de um ecrã, de modo a levá-lo para o extremo oposto do novo ecrã. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Animação do Efeito do Ecrã</guilabel
+></term>
+<listitem
+><para
+>Seleccione a opção <guilabel
+>Sem Animação</guilabel
+>, <guilabel
+>Deslizar</guilabel
+>, <guilabel
+>Animação do Cubo de Ecrãs</guilabel
+> ou <guilabel
+>Desvanecer o Ecrã</guilabel
+> na lista. Se a animação seleccionada tiver opções de configuração, carregue no ícone de ferramentas à direita da lista, de modo a invocar uma janela de configuração. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Apresentação da Mudança do Ecrã</guilabel
+></term>
+<listitem
+><para
+>Active esta opção se quiser ter uma visualização no ecrã para a mudança de ecrãs. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Mostrar os indicadores de disposição do ecrã</guilabel
+></term>
+<listitem
+><para
+>A activação desta opção irá mostrar uma pequena antevisão da disposição do ecrã, indicando o ecrã seleccionado. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Atalhos</guilabel
+></term>
+<listitem
+><para
+>Esta secção mostra os atalhos configurados para mudar de ecrãs, permitindo a sua edição. </para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>Se deslocar a roda do rato sobre um espaço vazio do ecrã ou sobre o ícone do <guilabel
+>Paginador</guilabel
+> do painel, irá mudar para o próximo ecrã virtual de forma numérica, na direcção para a qual se deslocou (para cima ou para baixo).</para>
+<para
+>Poderá alterar este comportamento predefinido na página de <guilabel
+>Acções do Rato</guilabel
+> na <guilabel
+>Configuração do Ecrã</guilabel
+> (<keycombo action="simul"
+>&Alt;<keycap
+>D</keycap
+></keycombo
+>, <keycombo action="simul"
+>&Alt;<keycap
+>S</keycap
+></keycombo
+>).</para>
+</sect2>
+</sect1>
+
+</article>

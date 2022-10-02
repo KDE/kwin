@@ -1,0 +1,171 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Brazilian-Portuguese "INCLUDE">
+]>
+<article id="kwintabbox" lang="&language;">
+<articleinfo>
+<title
+>Seletor de Tarefas</title>
+<authorgroup>
+<author
+>&Martin.Graesslin;&Martin.Graesslin.mail;</author>
+<othercredit role="translator"
+><firstname
+>Marcus</firstname
+><surname
+>Gama</surname
+><affiliation
+><address
+><email
+>marcus.gama@gmail.com</email
+></address
+></affiliation
+><contrib
+>Tradução</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>24/07/2015</date>
+<releaseinfo
+>&plasma; 5.4</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Configurações do sistema</keyword>
+<keyword
+>área de trabalho</keyword>
+<keyword
+>janela</keyword>
+<keyword
+>navegação</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="windows-navigating">
+<title
+>Navegar pelas Janelas</title>
+
+<para
+>Este módulo oferece a possibilidade de configurar o comportamento da navegação pelas janelas, normalmente conhecido por <keycombo
+>&Alt;&Tab;</keycombo
+>. Existem duas listas independentes que podem ter configurações distintas. Para cada uma destas listas, existe uma página própria (<guilabel
+>Principal</guilabel
+> e <guilabel
+>Alternativo</guilabel
+>) neste módulo. </para>
+
+<note
+><para
+>O primeiro conjunto de efeitos na página <guilabel
+>Principal</guilabel
+> possui atalhos predefinidos. Se você deseja usar o segundo conjunto de efeitos na página <guilabel
+>Alternativo</guilabel
+>, você deve configurar manualmente o atalho para estes efeitos no Editor de Atalhos.</para
+></note>
+
+<note
+><para
+>Para navegar pelas janelas sem usar o <keycombo
+>&Alt;&Tab;</keycombo
+>, você pode definir as ações do contorno da tela no módulo <ulink url="help:/kcontrol/kwinscreenedges/index.html"
+><guilabel
+>Contornos da tela</guilabel
+></ulink
+> das &systemsettings;. </para
+></note>
+
+<para
+>A documentação de opções a seguir se aplica tanto às configurações gerais como às alternativas.</para>
+
+<sect2 id="visualization">
+<title
+>Visualização</title>
+<para
+>Existem diversos efeitos que poderão ser usados, em vez da lista de janelas normal, quando a composição está ativa. Por padrão, é usado o efeito de <guilabel
+>Breeze</guilabel
+>. Esse efeito mostra uma pequena miniatura de cada janela em uma lista à esquerda da tela e a janela selecionada fica realçada. Existem diversos leiautes predefinidos adicionais que oferecem uma exibição informativa ou compacta, com ícones grandes ou pequenos, uma grade ou apenas o título da janela.Esse efeito mostra uma pequena miniatura de cada janela dentro de uma caixa, estando realçada a janela selecionada.</para>
+<para
+>Ao selecionar um desses leiautes, você terá um botão para mostrar uma visualização.</para
+> 
+<para
+>Se você ativar a <guilabel
+>Mostrar a janela selecionada</guilabel
+>, a janela que estiver selecionada ficará realçada, enquanto todas as outras irão desaparecer. Essa opção requer que os efeitos da área de trabalho estejam ativados.</para>
+
+<para
+>O efeito de <guilabel
+>Seleção em capas</guilabel
+> e <guilabel
+>Mudança em pilha</guilabel
+> são efeitos mais bonitos que necessitam do OpenGL. A <guilabel
+>Seleção em capas</guilabel
+> mostra as janelas numa galeria com uma miniatura de tamanho razoável da janela selecionada no centro, enquanto todas as outras vão rodando para a esquerda ou para a direita. A <guilabel
+>Mudança em pilha</guilabel
+> mostra todas as janelas numa pilha em 3D. A janela selecionada está no topo da pilha e, ao navegar pelas janelas, irá mover a pilha de forma a que a janela selecionada fique no topo. </para>
+<para
+>Se o efeito oferecer configurações adicionais, o botão de configuração ficará ativo. Ao clicar neste botão, será apresentada uma janela de configuração. </para>
+<note
+><para
+>Quando a composição não está ativa ou fica suspensa, será apresentada a lista normal de janelas. Não existe qualquer perda de funcionalidade, caso esteja selecionado um efeito sem ter a composição ativa.</para
+></note>
+</sect2>
+
+<sect2 id="shortcuts">
+<title
+>Atalhos</title>
+<para
+>O editor de atalhos oferece a interface de configuração para os atalhos de teclado, de modo a navegar pelas janelas. Cada uma dos dois possíveis conjuntos de efeitos possui dois atalhos: um para a frente e outro para trás. Lembre-se por favor que a lista de janelas só pode ser apresentada se selecionar um atalho com uma tecla modificadora, como o &Alt; ou o &Ctrl;. Esta tecla modificadora deverá estar pressionada enquanto alterna entre janelas. Selecionar um atalho sem uma tecla modificadora, poderá invalidar o comportamento da navegação pelas janelas. </para>
+</sect2>
+
+<sect2 id="content-and-sort-order">
+<title
+>Conteúdo</title>
+<para
+>É possível influenciar os critérios de ordenação, onde você poderá usar a ordenação com base na última utilização das janelas ou na ordem de empilhamento das janelas. </para>
+<para
+>Se você selecionar o <guilabel
+>Incluir o ícone "Mostrar a área de trabalho"</guilabel
+>, uma item para a área de trabalho será adicionada à lista com as janelas dos aplicativos. Então você pode selecioná-la para minimizar todas as janelas.</para>
+<para
+>Se a opção <guilabel
+>Apenas uma janela por aplicativo</guilabel
+> estiver selecionada, então só aparecerá na lista a última instância usada de um aplicativo. A mudança para as outras instâncias será possível apenas através do painel.</para>
+</sect2>
+
+<sect2 id="filter">
+<title
+>Filtrar as janelas</title>
+<para
+>Você poderá configurar quais janelas serão apresentadas na lista iniciada ao pressionar <keycombo
+>&Alt;&Tab;</keycombo
+> (predefinido para as configurações na aba <guilabel
+>Principal</guilabel
+>) ou o atalho definido pelo usuário para as configurações alternativas. </para>
+<para
+>Assim, é possível mostrar apenas as janelas da área de trabalho virtual ativa ou então em todas as outras áreas de trabalho. Além disso, você poderá aplicar regras semelhantes para as janelas nas atividades ou nas telas, no caso de uma configuração com mais de um monitor. </para>
+<para
+>A última opção permite-lhe filtrar sobre o estado de minimização das janelas. </para>
+</sect2>
+
+</sect1>
+</article>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+kate: space-indent on; indent-width 2; tab-width 2; indent-mode none;
+-->
+

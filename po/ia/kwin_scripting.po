@@ -1,0 +1,95 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Giovanni Sora <g.sora@tiscali.it>, 2013, 2020.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-03-26 00:45+0000\n"
+"PO-Revision-Date: 2020-01-02 10:57+0100\n"
+"Last-Translator: Giovanni Sora <g.sora@tiscali.it>\n"
+"Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
+"Language: ia\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 1.5\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Giovanni Sora"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "g.sora@tiscali.it"
+
+#: genericscriptedconfig.cpp:76
+#, kde-format
+msgctxt "Error message"
+msgid "Plugin does not provide configuration file in expected location"
+msgstr "Plugin non forni file de configuration in le location expectate"
+
+#~ msgctxt "Assertion failed in KWin script with given value"
+#~ msgid "Assertion failed: %1 is not null"
+#~ msgstr "Assertion falleva: %1 non es nulle"
+
+#~ msgctxt "Assertion failed in KWin script"
+#~ msgid "Assertion failed: argument is null"
+#~ msgstr "Assertion falleva: argumento es nulle"
+
+#~ msgctxt "Error in KWin Script"
+#~ msgid ""
+#~ "Invalid number of arguments. At least service, path, interface and method "
+#~ "need to be provided"
+#~ msgstr ""
+#~ "Invalide numero de argumentos. On debe provider al minus servicio, "
+#~ "percurso, interfacie e methodo."
+
+#~ msgctxt "Error in KWin Script"
+#~ msgid ""
+#~ "Invalid type. Service, path, interface and method need to be string values"
+#~ msgstr ""
+#~ "Typo invalide. Servicio, percurso, interfacie e methodo debe esser "
+#~ "valores de catena"
+
+#~ msgctxt "syntax error in KWin script"
+#~ msgid "Invalid number of arguments"
+#~ msgstr "Invalide numero de argumentos"
+
+#~ msgctxt ""
+#~ "KWin Scripting function received incorrect value for an expected type"
+#~ msgid "%1 is not a variant type"
+#~ msgstr "%1 non es un typo variante"
+
+#~ msgctxt ""
+#~ "KWin Scripting function received incorrect value for an expected type"
+#~ msgid "%1 is not of required type"
+#~ msgstr "%1 non es del typo requirite"
+
+#~ msgctxt "KWin Scripting error thrown due to incorrect argument"
+#~ msgid "Second argument to registerScreenEdge needs to be a callback"
+#~ msgstr ""
+#~ "Secundo argumento pro registerScreenEdge necessita esser un retro appello"
+
+#~ msgctxt "KWin Scripting error thrown due to incorrect argument"
+#~ msgid "Second argument to registerTouchScreenEdge needs to be a callback"
+#~ msgstr ""
+#~ "Secundo argumento pro registerTouchScreenEdge necessita esser un retro "
+#~ "appello"
+
+#~ msgctxt "KWin Scripting error thrown due to incorrect argument"
+#~ msgid "Argument for registerUserActionsMenu needs to be a callback"
+#~ msgstr "Argumento pro registerUserActionsMenu debe esser un retro appello"
+
+#~ msgctxt "Assertion failed in KWin script with given value"
+#~ msgid "Assertion failed: %1"
+#~ msgstr "Assertion falleva: %1"
+
+#~ msgctxt ""
+#~ "Assertion failed in KWin script with expected value and actual value"
+#~ msgid "Assertion failed: Expected %1, got %2"
+#~ msgstr "Assertion falleva: on expectava %1, obteneva %2"

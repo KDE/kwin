@@ -1,0 +1,123 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Dutch "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwineffects" lang="&language;">
+<articleinfo>
+
+<title
+>Bureaubladeffecten</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+&Freek.de.Kruijf; 
+</authorgroup>
+
+<date
+>2021-04-09</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>bureaublad</keyword>
+<keyword
+>effecten</keyword>
+</keywordset>
+</articleinfo>
+
+<!--FIXME Compositor Enable compositor on startup necessary to have effects?-->
+
+<para
+>Met deze module kunt u de bureaublad-effecten voor Plasma inschakelen en instellen.</para>
+
+<para
+>He hoofdgedeelte van deze pagina is een lijst met alle beschikbare effecten gegroepeerd op <guilabel
+>Toegankelijkheid</guilabel
+>, <guilabel
+>Uiterlijk</guilabel
+>, <guilabel
+>Focus</guilabel
+>, <guilabel
+>Bureaubladanimatie tonen</guilabel
+>, <guilabel
+>Hulpmiddelen</guilabel
+>, <guilabel
+>Animatie van omschakelen van virtuele bureaubladen</guilabel
+>, <guilabel
+>Vensterbeheer</guilabel
+> en <guilabel
+>Animatie van venster openen/sluiten</guilabel
+>.</para>
+<para
+>U kunt de snelzoekbalk boven de animatielijst gebruiken om het gewenste effect snel terug te vinden.</para>
+
+<para
+>Normaal is er geen reden voor gebruikers om dat te wijzigen, maar er is een <inlinemediaobject
+><imageobject
+><imagedata fileref="configure-effects.png" format="PNG"/> </imageobject
+></inlinemediaobject
+> instellingenknop om de filtering van de lijst te wijzigen om ook die effecten te tonen. </para>
+
+<para
+>De gemakkelijkste manier om nieuwe effecten te installeren is door de in &kwin; ingebouwde ondersteuning KNewStuff te gebruiken . Druk op de knop <guibutton
+>Nieuwe bureaubladeffecten ophalen</guibutton
+> om een dialoog te openen met een lijst met beschikbare effecten uit het internet en om effecten te installeren of te de-installeren.</para>
+<note
+><para
+>Bedenk dat het wijzigen van deze gevoelige standaarden uw systeem kan laten breken.</para>
+</note>
+
+<para
+>Activeer een effect in de lijst om het in te schakelen. Toon informatie over auteur en licentie door te klikken op de <inlinemediaobject
+><imageobject
+><imagedata fileref="dialog-information.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> informatieknop rechts van het item in de lijst.</para>
+
+<para
+>Sommige effecten hebben opties voor instellingen, in dat geval is er een <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure-effects.png" format="PNG"/></imageobject
+></inlinemediaobject
+> instellingenknop links van de informatieknop. Klik erop om een instellingendialoog te openen.</para>
+<para
+>Om een video voorbeeld van een effect te zien klik op de knop <inlinemediaobject
+><imageobject
+><imagedata fileref="video.png" format="PNG"/> </imageobject
+></inlinemediaobject
+>.</para>
+
+<para
+>Sommige effecten sluiten elkaar uit. Iemand zou alleen het effect <guilabel
+>Maximaliseer</guilabel
+> of de <guilabel
+>Magische lamp</guilabel
+> willen activeren. Beiden tegelijk geactiveerd zou resulteren in gebroken animaties. </para>
+
+<para
+>Voor effecten in een elkaar uitsluitende groep gebruikt de &GUI; keuzerondjes en zorgt ervoor dat slechts een van deze effecten geactiveerd kan worden. </para>
+
+<para
+>Alle effecen die niet ondersteund worden door de huidige gebruikte compositing backend zijn standaard verborgen (&eg; OpenGL effecten bij gebruik van software renderer). </para
+> 
+
+<para
+>Ook alle interne of helpereffecten zijn standaard verborgen. Dit zijn effecten die functionaliteit uit de Core van KWin vervangen of interactie met andere elementen van de bureaubladshell leveren. </para>
+
+<!--FIXME 
+39 effects + 7 internal (XRender compositor)
+Internal effects
+Appearance (Dashboard, Highlight Windows, KSreen, Screenshot, Window Geometry)
+Window Management (Cover Switch)
+-->
+
+</article>

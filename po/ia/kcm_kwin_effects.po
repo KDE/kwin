@@ -1,0 +1,96 @@
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the kwin package.
+#
+# Giovanni Sora <g.sora@tiscali.it>, 2019, 2021, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-03-26 00:45+0000\n"
+"PO-Revision-Date: 2022-04-28 14:31+0200\n"
+"Last-Translator: giovanni <g.sora@tiscali.it>\n"
+"Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
+"Language: ia\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 22.04.0\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Giovanni Sora"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "g.sora@tiscali.it"
+
+#: kcm.cpp:35
+#, kde-format
+msgid "Desktop Effects"
+msgstr "Effectos de scriptorio"
+
+#: kcm.cpp:39
+#, kde-format
+msgid "Vlad Zahorodnii"
+msgstr "Vlad Zahorodnii"
+
+#: package/contents/ui/Effect.qml:92
+#, kde-format
+msgid ""
+"Author: %1\n"
+"License: %2"
+msgstr ""
+"Autor: %1\n"
+"Licentia: %2"
+
+#: package/contents/ui/Effect.qml:121
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Show/Hide Video"
+msgstr "Monstra/Cela Video"
+
+#: package/contents/ui/Effect.qml:128
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Configure..."
+msgstr "Configura..."
+
+#: package/contents/ui/main.qml:20
+#, kde-format
+msgid "This module lets you configure desktop effects."
+msgstr "Iste modulo te permitte configurar effectos de scriptorio."
+
+#: package/contents/ui/main.qml:27
+#, kde-format
+msgid ""
+"Hint: To find out or configure how to activate an effect, look at the "
+"effect's settings."
+msgstr ""
+"Suggestion: Pro discoperir o configurar como activar un effecto, tu guarda a "
+"le preferentias de effectos."
+
+#: package/contents/ui/main.qml:47
+#, kde-format
+msgid "Configure Filter"
+msgstr "Configura Filtro"
+
+#: package/contents/ui/main.qml:59
+#, kde-format
+msgid "Exclude unsupported effects"
+msgstr "Exclude effectos non supportate"
+
+#: package/contents/ui/main.qml:67
+#, kde-format
+msgid "Exclude internal effects"
+msgstr "Exclude effectos interne"
+
+#: package/contents/ui/main.qml:125
+#, kde-format
+msgid "Get New Desktop Effects..."
+msgstr "Obtene nove effectos de scriptorio..."
+
+#~ msgid "Download New Desktop Effects"
+#~ msgstr "Discarga nove effectos de scriptorio"

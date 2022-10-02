@@ -1,0 +1,424 @@
+# Uyghur translation for kcmkwindecoration.
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+# Sahran <sahran.ug@gmail.com>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwindecoration\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2013-09-08 07:05+0900\n"
+"Last-Translator: Gheyret Kenji <gheyret@gmail.com>\n"
+"Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
+"Language: ug\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "ئابدۇقادىر ئابلىز, غەيرەت كەنجى"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "sahran.ug@gmail.com,  gheyret@gmail.com"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, fuzzy, kde-format
+#| msgctxt "Button showing application menu imported from dbusmenu"
+#| msgid "Application Menu"
+msgid "Application menu"
+msgstr "قوللانچى تىزىملىكى"
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, fuzzy, kde-format
+#| msgid "On All Desktops"
+msgid "On all desktops"
+msgstr "بارلىق ئۈستەلئۈستىلىرىدە"
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr "كىچىكلەت"
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr "چوڭايت"
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr "ياپ"
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr "تۈرۈش"
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr ""
+
+#: kcm.cpp:49
+#, fuzzy, kde-format
+#| msgid "kcmkwindecoration"
+msgid "Window Decorations"
+msgstr "kcmkwindecoration"
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr ""
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr ""
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr ""
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr ""
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr ""
+
+#: package/contents/ui/main.qml:57
+#, fuzzy, kde-format
+#| msgid "Buttons"
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "توپچىلار"
+
+#: package/contents/ui/main.qml:93
+#, fuzzy, kde-format
+#| msgid "Border size:"
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "گىرۋەك چوڭلۇقى:"
+
+#: package/contents/ui/main.qml:112
+#, kde-format
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr ""
+
+#: package/contents/ui/main.qml:141
+#, fuzzy, kde-format
+#| msgid "Close windows by double clicking the menu button"
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr "تىزىملىك توپچا قوش چېكىلسە كۆنەكنى ياپىدۇ"
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr ""
+
+#: package/contents/ui/main.qml:165
+#, fuzzy, kde-format
+#| msgid "Buttons"
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "توپچىلار"
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr ""
+
+#: utils.cpp:25
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "No Border"
+msgid "No Borders"
+msgstr "گىرۋەكسىز"
+
+#: utils.cpp:26
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "No Side Border"
+msgid "No Side Borders"
+msgstr "يان گىرۋىكى يوق"
+
+#: utils.cpp:27
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Tiny"
+msgid "Tiny"
+msgstr "كىچىك"
+
+#: utils.cpp:28
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Normal"
+msgid "Normal"
+msgstr "نورمال"
+
+#: utils.cpp:29
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Large"
+msgid "Large"
+msgstr "چوڭ"
+
+#: utils.cpp:30
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Very Large"
+msgid "Very Large"
+msgstr "بەك چوڭ"
+
+#: utils.cpp:31
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Huge"
+msgid "Huge"
+msgstr "ئىنتايىن چوڭ"
+
+#: utils.cpp:32
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Very Huge"
+msgid "Very Huge"
+msgstr "ئىنتايىن چوڭ"
+
+#: utils.cpp:33
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Oversized"
+msgid "Oversized"
+msgstr "چوڭلۇقى ئېشىپ كەتكەن"
+
+#, fuzzy
+#~| msgid "Close windows by double clicking the menu button"
+#~ msgctxt "popup tip"
+#~ msgid ""
+#~ "Close by double clicking: Keep the window's Menu button pressed until it "
+#~ "appears."
+#~ msgstr "تىزىملىك توپچا قوش چېكىلسە كۆنەكنى ياپىدۇ"
+
+#~ msgid "Menu"
+#~ msgstr "تىزىملىك"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below"
+#~ msgstr "ئەڭ ئاستىدا"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above"
+#~ msgstr "ئەڭ ئۈستىدە"
+
+#, fuzzy
+#~| msgid "Search"
+#~ msgid "Search..."
+#~ msgstr "ئىزدە"
+
+#, fuzzy
+#~| msgid "Close windows by double clicking the menu button"
+#~ msgid "Close windows by double clicking &the menu button"
+#~ msgstr "تىزىملىك توپچا قوش چېكىلسە كۆنەكنى ياپىدۇ"
+
+#, fuzzy
+#~| msgid "Border size:"
+#~ msgid "Border si&ze:"
+#~ msgstr "گىرۋەك چوڭلۇقى:"
+
+#, fuzzy
+#~| msgid "Configure Buttons..."
+#~ msgid "Configure %1..."
+#~ msgstr "توپچا سەپلىمە…"
+
+#~ msgid "Button size:"
+#~ msgstr "توپچا چوڭلۇقى:"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "كىچىك"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "نورمال"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "چوڭ"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "بەك چوڭ"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "ئىنتايىن چوڭ"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "ئىنتايىن چوڭ"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "چوڭلۇقى ئېشىپ كەتكەن"
+
+#~ msgid "KDE"
+#~ msgstr "ك د ئې(KDE)"
+
+#~ msgid "%1 (unavailable)"
+#~ msgstr "%1 (يوق)"
+
+#~ msgid "Resize"
+#~ msgstr "چوڭلۇقىنى ئۆزگەرت"
+
+#~ msgid "Help"
+#~ msgstr "ياردەم"
+
+#~ msgctxt "Button showing window actions menu"
+#~ msgid "Window Menu"
+#~ msgstr "كۆزنەك تىزىملىكى"
+
+#~ msgid "B&order size:"
+#~ msgstr "گىرۋەك چوڭلۇقى(&O):"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Border"
+#~ msgstr "يان گىرۋىكى يوق"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "گىرۋەكسىز"
+
+#~ msgid "Decoration Options"
+#~ msgstr "بېزەش تاللانمىلىرى"
+
+#~ msgid "(c) 2001 Karol Szwed"
+#~ msgstr "(c) 2001 Karol Szwed"
+
+#~ msgid "Karol Szwed"
+#~ msgstr "Karol Szwed"
+
+#~ msgid "Oxygen"
+#~ msgstr "ئوكسېگىن"
+
+#~ msgid "Active Window"
+#~ msgstr "ئاكتىپ كۆزنەك"
+
+#~ msgid "Inactive Window"
+#~ msgstr "پاسسىپ كۆزنەك"
+
+#~ msgctxt "Caption to decoration preview, %1 author name"
+#~ msgid "by %1"
+#~ msgstr "ئاپتور %1"

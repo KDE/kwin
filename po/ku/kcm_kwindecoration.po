@@ -1,0 +1,505 @@
+# translation of kcmkwindecoration.po to Kurdish
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Erdal Ronahi <erdal.ronahi@nospam.gmail.com>, 2007.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwindecoration\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2008-12-28 14:32+0200\n"
+"Last-Translator: Omer Ensari <oensari@gmail.com>\n"
+"Language-Team: Kurdish <ubuntu-l10n-kur@lists.ubuntu.com>\n"
+"Language: ku\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: Kurdish\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Omer Ensari"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "oensari@gmail.com"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, kde-format
+msgid "Application menu"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, fuzzy, kde-format
+#| msgid "On All Desktops"
+msgid "On all desktops"
+msgstr "Di Hemû Sermase yan de"
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr "Biçûktirîn Bike"
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr "Mezintirîn Bike"
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr "Girtin"
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr "Sîdar Bike"
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr ""
+
+#: kcm.cpp:49
+#, fuzzy, kde-format
+#| msgid "&Window Decoration"
+msgid "Window Decorations"
+msgstr "Xemilandina &Paceyê"
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr ""
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr ""
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr ""
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr ""
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr ""
+
+#: package/contents/ui/main.qml:57
+#, fuzzy, kde-format
+#| msgid "Buttons"
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "Bişkojk"
+
+#: package/contents/ui/main.qml:93
+#, fuzzy, kde-format
+#| msgid "B&order size:"
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "Mezinahiya K&êlekan:"
+
+#: package/contents/ui/main.qml:112
+#, fuzzy, kde-format
+#| msgid "&Window Decoration"
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr "Xemilandina &Paceyê"
+
+#: package/contents/ui/main.qml:141
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr ""
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr ""
+
+#: package/contents/ui/main.qml:165
+#, fuzzy, kde-format
+#| msgid "&Show window button tooltips"
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "Qutî ya amûran yê bişkojkên pace yê &nîşan bide"
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr ""
+
+#: utils.cpp:25
+#, fuzzy, kde-format
+#| msgid "B&order size:"
+msgid "No Borders"
+msgstr "Mezinahiya K&êlekan:"
+
+#: utils.cpp:26
+#, fuzzy, kde-format
+#| msgid "B&order size:"
+msgid "No Side Borders"
+msgstr "Mezinahiya K&êlekan:"
+
+#: utils.cpp:27
+#, fuzzy, kde-format
+#| msgid "Tiny"
+msgid "Tiny"
+msgstr "Biçûk"
+
+#: utils.cpp:28
+#, fuzzy, kde-format
+#| msgid "Normal"
+msgid "Normal"
+msgstr "Normal"
+
+#: utils.cpp:29
+#, fuzzy, kde-format
+#| msgid "Large"
+msgid "Large"
+msgstr "Large"
+
+#: utils.cpp:30
+#, fuzzy, kde-format
+#| msgid "Very Large"
+msgid "Very Large"
+msgstr "Pir Mezin"
+
+#: utils.cpp:31
+#, fuzzy, kde-format
+#| msgid "Huge"
+msgid "Huge"
+msgstr "Gelek Mezin"
+
+#: utils.cpp:32
+#, fuzzy, kde-format
+#| msgid "Very Huge"
+msgid "Very Huge"
+msgstr "Pir Gelek Mezin"
+
+#: utils.cpp:33
+#, fuzzy, kde-format
+#| msgid "Oversized"
+msgid "Oversized"
+msgstr "Herî Gelek Mezin"
+
+#~ msgid "Menu"
+#~ msgstr "Pêşek"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below"
+#~ msgstr "Bin yê Din Bigire"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above"
+#~ msgstr "Ser yê Din Bigire"
+
+#, fuzzy
+#~| msgid "&Window Decoration"
+#~ msgid "Download New Window Decorations"
+#~ msgstr "Xemilandina &Paceyê"
+
+#, fuzzy
+#~| msgid "B&order size:"
+#~ msgid "Border si&ze:"
+#~ msgstr "Mezinahiya K&êlekan:"
+
+#, fuzzy
+#~| msgid "&Window Decoration"
+#~ msgid "Configure %1..."
+#~ msgstr "Xemilandina &Paceyê"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgid "Form"
+#~ msgstr "Normal"
+
+#, fuzzy
+#~| msgid "Buttons"
+#~ msgid "Button size:"
+#~ msgstr "Bişkojk"
+
+#, fuzzy
+#~| msgid "Tiny"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "Biçûk"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "Large"
+
+#, fuzzy
+#~| msgid "Very Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "Pir Mezin"
+
+#, fuzzy
+#~| msgid "Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "Gelek Mezin"
+
+#, fuzzy
+#~| msgid "Very Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "Pir Gelek Mezin"
+
+#, fuzzy
+#~| msgid "Oversized"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "Herî Gelek Mezin"
+
+#~ msgid "KDE"
+#~ msgstr "KDE"
+
+#~ msgid "%1 (unavailable)"
+#~ msgstr "%1 (tune ye)"
+
+#~ msgid ""
+#~ "To add or remove titlebar buttons, simply <i>drag</i> items between the "
+#~ "available item list and the titlebar preview. Similarly, drag items "
+#~ "within the titlebar preview to re-position them."
+#~ msgstr ""
+#~ "Ji bo lê zêde kirin an jî jê birina bişkojkên darika sernavê, bi hêsan "
+#~ "hêmanan <i>bikişîne</i> di navbera lîsteya hêmanên heyî û pêşdîtina "
+#~ "darika sernavê de. Wekî vê, hêmanan jê navbera pêşdîtina darika sernavê "
+#~ "de bikişîne û wan bicih bike."
+
+#~ msgid "Resize"
+#~ msgstr "Mezinahiyê Biguherîne"
+
+#~ msgid "Help"
+#~ msgstr "Alîkarî"
+
+#~ msgid "--- spacer ---"
+#~ msgstr "--- cudaker ---"
+
+#~ msgid ""
+#~ "Enabling this checkbox will show window button tooltips. If this checkbox "
+#~ "is off, no window button tooltips will be shown."
+#~ msgstr ""
+#~ "Çalak kirina vê qutî ya nîşanê dê qutî ya amûrên bişkojkên pace yê bê "
+#~ "nîşan dan. Heke ev qutî ya nîşanê girtî be, tu qutî ya amûrên bişkojkên "
+#~ "pace yê nayê nîşan dan."
+
+#, fuzzy
+#~| msgid ""
+#~| "The appropriate settings can be found in the \"Buttons\" Tab; please "
+#~| "note that this option is not available on all styles yet."
+#~ msgid "Please note that this option is not available on all styles yet."
+#~ msgstr ""
+#~ "Mîhengên lêhatî di nav Hilpekîna \"Bişkojk\" de heye; ev bijare hêj ji bo "
+#~ "hemû teşe yan tune ye, di hinekan de tenê heye."
+
+#~ msgid "Use custom titlebar button &positions"
+#~ msgstr "&Bicihbûnên taybet yê bişkojkên darika sernavê bi kar bîne"
+
+#~ msgid "B&order size:"
+#~ msgstr "Mezinahiya K&êlekan:"
+
+#~ msgid "Use this combobox to change the border size of the decoration."
+#~ msgstr ""
+#~ "Vê qutiyê bi kar bîne ji bo guherandina mezinahiya kêlekê xemilandinê."
+
+#~ msgid "Decoration Options"
+#~ msgstr "Bijareyên Xemilandinê"
+
+#~ msgid ""
+#~ "Select the window decoration. This is the look and feel of both the "
+#~ "window borders and the window handle."
+#~ msgstr ""
+#~ "Xemilandina pace yê hilbijêre. Ev dîtina rind hem ji bo kêlekên pace yê û "
+#~ "hem jî ji bo hemû pace yê ye."
+
+#~ msgid "Window Decoration Control Module"
+#~ msgstr "Modûla Kontrola Xemilandina Paceyê"
+
+#~ msgid "(c) 2001 Karol Szwed"
+#~ msgstr "(c) 2001 Karol Szwed"
+
+#~ msgid "Karol Szwed"
+#~ msgstr "Karol Szwed"
+
+#, fuzzy
+#~| msgid ""
+#~| "<h1>Window Manager Decoration</h1><p>This module allows you to choose "
+#~| "the window border decorations, as well as titlebar button positions and "
+#~| "custom decoration options.</p>To choose a theme for your window "
+#~| "decoration click on its name and apply your choice by clicking the "
+#~| "\"Apply\" button below. If you do not want to apply your choice you can "
+#~| "click the \"Reset\" button to discard your changes.<p>You can configure "
+#~| "each theme in the \"Configure [...]\" tab. There are different options "
+#~| "specific for each theme.</p><p>In \"General Options (if available)\" you "
+#~| "can activate the \"Buttons\" tab by checking the \"Use custom titlebar "
+#~| "button positions\" box. In the \"Buttons\" tab you can change the "
+#~| "positions of the buttons to your liking.</p>"
+#~ msgid ""
+#~ "<h1>Window Manager Decoration</h1><p>This module allows you to choose the "
+#~ "window border decorations, as well as titlebar button positions and "
+#~ "custom decoration options.</p>To choose a theme for your window "
+#~ "decoration click on its name and apply your choice by clicking the \"Apply"
+#~ "\" button below. If you do not want to apply your choice you can click "
+#~ "the \"Reset\" button to discard your changes.<p>You can configure each "
+#~ "theme. There are different options specific for each theme.</p><p>On the "
+#~ "\"Buttons\" tab check the \"Use custom titlebar button positions\" box "
+#~ "and you can change the positions of the buttons to your liking.</p>"
+#~ msgstr ""
+#~ "<h1>Xemilandina Rêveberê Paceyê</h1><p>Ev modûl dihêle ku hûn xemilandina "
+#~ "kêlekên pace yê hilbijêrin, wekî vê bicihbûna bişkojka darika amûrê û "
+#~ "bijare yên xemilandinê yên taybet jî.</p>Hilbijartina dirbekê ji bo "
+#~ "xemilandina paceyê ser navê vê bitikînin û hilbijartina xwe bi tikandina "
+#~ "bişkojka jêr \"Bisepîne\" re bisepînin. Heke hûn nexwazin yê hilbijartî "
+#~ "bisepînin, pêl bişkojka \"Pêşdanasîn\" bike.<p>Hûn dikarin her dirbê di "
+#~ "hilpekîna \"Veava bike [...]\" de ava bikin. Ji bo her dirbê bijare yên "
+#~ "taybet hene.</p><p>Di \"Vebijêrkên Giştî (heke hebe)\" de hûn dikarin "
+#~ "hilpekîna \"Bişkojk\" çalak bikin bi kontrol kirina qutiya \"Bicihbûna "
+#~ "bişkojkên taybet yê darika amûran bi kar bîne\" re. Di hilpekîna \"Bişkojk"
+#~ "\" de hûn dikarin bicihbûna bişkojkan biguherînin.</p>"
+
+#~ msgid "Active Window"
+#~ msgstr "Pace ya Çalak"
+
+#~ msgid "Inactive Window"
+#~ msgstr "Pace ya Neçalak"
+
+#~ msgid "kcmkwindecoration"
+#~ msgstr "kcmkwindecoration"
+
+#~ msgid ""
+#~ "No preview available.\n"
+#~ "Most probably there\n"
+#~ "was a problem loading the plugin."
+#~ msgstr ""
+#~ "Tu pêşdîtin tune ye.\n"
+#~ "Di be ku li vir\n"
+#~ "di bar kirina pêvekê de çewtî çê bû."
+
+#~ msgid "&Buttons"
+#~ msgstr "&Bişkojk"
+
+#~ msgid "Ozone"
+#~ msgstr "Ozone"

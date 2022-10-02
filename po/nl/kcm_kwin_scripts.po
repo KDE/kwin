@@ -1,0 +1,115 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Freek de Kruijf <f.de.kruijf@gmail.com>, 2012.
+# Freek de Kruijf <freekdekruijf@kde.nl>, 2012, 2013, 2017, 2018, 2020, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-09-20 00:47+0000\n"
+"PO-Revision-Date: 2022-09-20 10:39+0200\n"
+"Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
+"Language-Team: \n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 22.08.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Freek de Kruijf - t/m 2022"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "freekdekruijf@kde.nl"
+
+#: module.cpp:57
+#, kde-format
+msgid "Import KWin Script"
+msgstr "KWin-script importeren"
+
+#: module.cpp:58
+#, kde-format
+msgid "*.kwinscript|KWin scripts (*.kwinscript)"
+msgstr "*.kwinscript|KWin-scripts (*.kwinscript)"
+
+#: module.cpp:96
+#, kde-format
+msgctxt "Placeholder is error message returned from the install service"
+msgid ""
+"Cannot import selected script.\n"
+"%1"
+msgstr ""
+"Kan geselecteerd script niet importeren.\n"
+"%1"
+
+#: module.cpp:108
+#, kde-format
+msgctxt "Placeholder is name of the script that was imported"
+msgid "The script \"%1\" was successfully imported."
+msgstr "Het script \"%1\" is met succes geïmporteerd."
+
+#: module.cpp:148
+#, kde-format
+msgid "Error when uninstalling KWin Script: %1"
+msgstr "Fout bij installatie ongedaan maken van KWin Script: %1"
+
+#: package/contents/ui/main.qml:47
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Delete..."
+msgstr "Verwijderen..."
+
+#: package/contents/ui/main.qml:60
+#, kde-format
+msgid "Install from File..."
+msgstr "Uit bestand installeren..."
+
+#: package/contents/ui/main.qml:64
+#, kde-format
+msgid "Get New Scripts..."
+msgstr "Nieuwe scripts ophalen..."
+
+#~ msgid "KWin Scripts"
+#~ msgstr "KWin-scripts"
+
+#~ msgid "Configure KWin scripts"
+#~ msgstr "KWin-scripts instellen"
+
+#~ msgid "Tamás Krutki"
+#~ msgstr "Tamás Krutki"
+
+#~ msgid "KWin script configuration"
+#~ msgstr "Instellingen van KWin-script"
+
+#~ msgid "Import KWin script..."
+#~ msgstr "KWin-script importeren..."
+
+#~ msgid ""
+#~ "Cannot import selected script: maybe a script already exists with the "
+#~ "same name or there is a permission problem."
+#~ msgstr ""
+#~ "Kan geselecteerd script niet importeren: misschien bestaat er al een "
+#~ "script met dezelfde naam of er is probleem met de toegangsrechten."
+
+#~ msgid "The selected script was exported successfully."
+#~ msgstr "Het geselecteerde script is met succes geëxporteerd."
+
+#~ msgid "An error occurred, the selected script could not be exported."
+#~ msgstr ""
+#~ "Er is een fout opgetreden, het geselecteerde script kon niet worden "
+#~ "geëxporteerd."
+
+#~ msgid "Do you really want to delete the selected script?"
+#~ msgstr "Wilt u het geselecteerde script verwijderen?"
+
+#~ msgid "Remove KWin script"
+#~ msgstr "KWin-script verwijderen"
+
+#~ msgid "Remove selected KWin script"
+#~ msgstr "Geselecteerd KWin-script verwijderen"

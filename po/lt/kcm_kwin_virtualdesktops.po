@@ -1,0 +1,275 @@
+# translation of kcm_kwindesktop.po to Lithuanian
+# This file is distributed under the same license as the kcm_kwindesktop package.
+# Gintautas Miselis <gintautas@miselis.lt>, 2008.
+# Donatas Glodenis <dgvirtual@akl.lt>, 2009.
+# Tomas Straupis <tomasstraupis@gmail.com>, 2010.
+# Liudas Alisauskas <liudas@akmc.lt>, 2013.
+# liudas@aksioma.lt <liudas@aksioma.lt>, 2014.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcm_kwindesktop\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"PO-Revision-Date: 2021-08-21 19:38+0300\n"
+"Last-Translator: Moo\n"
+"Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
+"Language: lt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
+"%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
+"X-Generator: Poedit 3.0\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Andrius Štikonas, Donatas Glodenis, Moo"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "andrius@stikonas.eu, dgvirtual@akl.lt, <>"
+
+#: desktopsmodel.cpp:467
+#, kde-format
+msgid "There was an error connecting to the compositor."
+msgstr "Jungiantis prie kompozitoriaus, įvyko klaida."
+
+#: desktopsmodel.cpp:666
+#, kde-format
+msgid "There was an error saving the settings to the compositor."
+msgstr "Įrašant nuostatas į kompozitorių, įvyko klaida."
+
+#: desktopsmodel.cpp:669
+#, kde-format
+msgid "There was an error requesting information from the compositor."
+msgstr "Užklausiant informaciją iš kompozitoriaus, įvyko klaida."
+
+#: package/contents/ui/main.qml:17
+#, kde-format
+msgid ""
+"This module lets you configure the navigation, number and layout of virtual "
+"desktops."
+msgstr ""
+"Šis modulis leidžia jums konfigūruoti virtualių darbalaukių naršymą, skaičių "
+"ir išdėstymą."
+
+#: package/contents/ui/main.qml:91
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Rename"
+msgstr "Pervadinti"
+
+#: package/contents/ui/main.qml:102
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Confirm new name"
+msgstr "Patvirtinti naują pavadinimą"
+
+#: package/contents/ui/main.qml:110
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove"
+msgstr "Šalinti"
+
+#: package/contents/ui/main.qml:137
+#, kde-format
+msgid ""
+"Virtual desktops have been changed outside this settings application. Saving "
+"now will overwrite the changes."
+msgstr ""
+"Virtualūs darbalaukiai buvo pakeisti už šios nuostatų programos ribų. "
+"Įrašius dabar, pakeitimai bus nustelbti."
+
+#: package/contents/ui/main.qml:153
+#, kde-format
+msgid "Row %1"
+msgstr "Eilutė %1"
+
+#: package/contents/ui/main.qml:166
+#, kde-format
+msgctxt "@action:button"
+msgid "Add"
+msgstr "Pridėti"
+
+#: package/contents/ui/main.qml:169
+#, kde-format
+msgid "New Desktop"
+msgstr "Naujas darbalaukis"
+
+#: package/contents/ui/main.qml:184
+#, kde-format
+msgid "1 Row"
+msgid_plural "%1 Rows"
+msgstr[0] "1 eilutė"
+msgstr[1] "%1 eilutės"
+msgstr[2] "%1 eilučių"
+msgstr[3] "%1 eilutė"
+
+#: package/contents/ui/main.qml:200
+#, kde-format
+msgid "Options:"
+msgstr "Parinktys:"
+
+#: package/contents/ui/main.qml:202
+#, kde-format
+msgid "Navigation wraps around"
+msgstr "Naršymas sukasi ratu"
+
+#: package/contents/ui/main.qml:220
+#, kde-format
+msgid "Show animation when switching:"
+msgstr "Perjungiant, rodyti animaciją:"
+
+#: package/contents/ui/main.qml:271
+#, kde-format
+msgid "Show on-screen display when switching:"
+msgstr "Perjungiant, rodyti į kurį ekraną perjungiama:"
+
+#: package/contents/ui/main.qml:290
+#, kde-format
+msgid "%1 ms"
+msgstr "%1 ms"
+
+#: package/contents/ui/main.qml:314
+#, kde-format
+msgid "Show desktop layout indicators"
+msgstr "Rodyti darbalaukio išdėstymo indikatorius"
+
+#: virtualdesktops.cpp:33
+#, kde-format
+msgid "Virtual Desktops"
+msgstr "Virtualūs darbalaukiai"
+
+#~ msgid "Rows:"
+#~ msgstr "Eilučių:"
+
+#~ msgid "Configure Virtual Desktops"
+#~ msgstr "Konfigūruoti virtualius darbalaukius"
+
+#~ msgid "Desktop %1:"
+#~ msgstr "Darbalaukis %1:"
+
+#~ msgid "Here you can enter the name for desktop %1"
+#~ msgstr "Čia galite įvesti darbalaukio %1 pavadinimą"
+
+#~ msgid "Desktop %1"
+#~ msgstr "Darbalaukis %1"
+
+#~ msgid ""
+#~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "
+#~ "virtual desktops you want and how these should be labeled."
+#~ msgstr ""
+#~ "<h1>Daugelis darbalaukių</h1>Šiame modulyje galite nustatyti kiek "
+#~ "virtualių darbalaukių pageidaujate turėti ir kaip jie bus pavadinti."
+
+#~ msgid "Switch to Next Desktop"
+#~ msgstr "Pereiti į kitą darbalaukį"
+
+#~ msgid "Switch to Previous Desktop"
+#~ msgstr "Pereiti į ankstesnį darbalaukį"
+
+#~ msgid "Switch One Desktop to the Right"
+#~ msgstr "Pereiti į darbalaukį dešiniau"
+
+#~ msgid "Switch One Desktop to the Left"
+#~ msgstr "Pereiti į darbalaukį kairiau"
+
+#~ msgid "Switch One Desktop Up"
+#~ msgstr "Pereiti į darbalaukį aukščiau"
+
+#~ msgid "Switch One Desktop Down"
+#~ msgstr "Pereiti į darbalaukį žemiau"
+
+#~ msgid "Walk Through Desktops"
+#~ msgstr "Eiti per darbalaukius"
+
+#~ msgid "Walk Through Desktops (Reverse)"
+#~ msgstr "Eiti per darbalaukius (atvirkščiai)"
+
+#~ msgid "Walk Through Desktop List"
+#~ msgstr "Eiti per darbalaukių sąrašą"
+
+#~ msgid "Walk Through Desktop List (Reverse)"
+#~ msgstr "Eiti per darbalaukių sąrašą (atvirkščiai)"
+
+#~ msgid "Desktop Switching"
+#~ msgstr "Darbalaukio keitimas"
+
+#~ msgid "Switch to Desktop %1"
+#~ msgstr "Pereiti į %1 darbalaukį"
+
+#~ msgid "No Animation"
+#~ msgstr "Be animacijos"
+
+#~ msgid "No suitable Shortcut for Desktop %1 found"
+#~ msgstr "Nerastas tinkamas klavišų derinys %1 darbalaukiui"
+
+#~ msgid "Assigned global Shortcut \"%1\" to Desktop %2"
+#~ msgstr "%2 priskirta globali klavišų kombinacija „%1“"
+
+#~ msgid "Shortcut conflict: Could not set Shortcut %1 for Desktop %2"
+#~ msgstr ""
+#~ "Klavišų derinių konfliktas: nepavyko darbalaukiui %2 nustatyti „%1“ "
+#~ "derinio"
+
+#~ msgid "KWin development team"
+#~ msgstr "KWin vystymo komanda"
+
+#~ msgid "Layout"
+#~ msgstr "Išdėstymas"
+
+#~ msgid ""
+#~ "Here you can set how many virtual desktops you want on your KDE desktop."
+#~ msgstr ""
+#~ "Čia galite nustatyti kiek pageidaujate turėti virtualių darbalaukių."
+
+#~ msgid "&Number of desktops:"
+#~ msgstr "&Darbalaukių skaičius:"
+
+#~ msgid "N&umber of rows:"
+#~ msgstr "Eilučių skaičius:"
+
+#~ msgid "Desktop Names"
+#~ msgstr "Darbalaukių pavadinimai"
+
+#~ msgid "Switching"
+#~ msgstr "Perėjimas"
+
+#~ msgid ""
+#~ "Enable this option if you want keyboard or active desktop border "
+#~ "navigation beyond the edge of a desktop to take you to the opposite edge "
+#~ "of the new desktop."
+#~ msgstr ""
+#~ "Įjunkite šią parinktį, jei norite, kad klaviatūra arba aktyvaus "
+#~ "darbalaukio ribų navigacija už krašto nuvestų jus į priešingą naujo "
+#~ "darbalaukio pusę."
+
+#~ msgid "Desktop Effect Animation"
+#~ msgstr "Perėjimų tarp darbalaukių animacija"
+
+#~ msgid "Animation:"
+#~ msgstr "Animacija:"
+
+#~ msgid "Desktop Switch On-Screen Display"
+#~ msgstr "Pranešimo apie darbalaukio pakeitimą rodymas ekrane"
+
+#~ msgid "Duration:"
+#~ msgstr "Trukmė:"
+
+#~ msgid " msec"
+#~ msgstr " milisek."
+
+#~ msgid ""
+#~ "Enabling this option will show a small preview of the desktop layout "
+#~ "indicating the selected desktop."
+#~ msgstr ""
+#~ "Įjungus šią parinktį bus rodoma maža darbalaukių išdėstymo schema "
+#~ "nurodant, į kurį darbalaukį pereita."
+
+#~ msgid "Shortcuts"
+#~ msgstr "Klavišų deriniai:"
+
+#~ msgid "Show shortcuts for all possible desktops"
+#~ msgstr "Rodyti klavišų derinius visiems galimiems darbalaukiams"

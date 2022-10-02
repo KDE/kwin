@@ -1,0 +1,94 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the kwin package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-03-26 00:45+0000\n"
+"PO-Revision-Date: 2022-08-22 06:38+0200\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
+"Language: ka\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.1.1\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Temuri Doghonadze"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "Temuri.doghonadze@gmail.com"
+
+#: kcm.cpp:35
+#, kde-format
+msgid "Desktop Effects"
+msgstr "სამუშაო მაგიდის ეფექტები"
+
+#: kcm.cpp:39
+#, kde-format
+msgid "Vlad Zahorodnii"
+msgstr "Vlad Zahorodnii"
+
+#: package/contents/ui/Effect.qml:92
+#, kde-format
+msgid ""
+"Author: %1\n"
+"License: %2"
+msgstr ""
+"ავტორი: %1\n"
+"ლიცენზა: %2"
+
+#: package/contents/ui/Effect.qml:121
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Show/Hide Video"
+msgstr "ვიდეოს დამალვა/ჩვენება"
+
+#: package/contents/ui/Effect.qml:128
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Configure..."
+msgstr "მორგება..."
+
+#: package/contents/ui/main.qml:20
+#, kde-format
+msgid "This module lets you configure desktop effects."
+msgstr "ეს მოდული საშუალებას გაძლევთ მოირგოთ სამუშაო მაგიდის ეფექტები."
+
+#: package/contents/ui/main.qml:27
+#, kde-format
+msgid ""
+"Hint: To find out or configure how to activate an effect, look at the "
+"effect's settings."
+msgstr ""
+"მინიშნება: იმის გასაგებად, როგორ გამოიყენოთ ესა თუ ის ეფექტი, მის "
+"პარამეტრებში შეიხედეთ."
+
+#: package/contents/ui/main.qml:47
+#, kde-format
+msgid "Configure Filter"
+msgstr "ფილტრის მორგება"
+
+#: package/contents/ui/main.qml:59
+#, kde-format
+msgid "Exclude unsupported effects"
+msgstr "მხარდაუჭერელი ეფექტების სიიდან ამოღება"
+
+#: package/contents/ui/main.qml:67
+#, kde-format
+msgid "Exclude internal effects"
+msgstr "სიიდან შიდა ეფექტების ამოღება"
+
+#: package/contents/ui/main.qml:125
+#, kde-format
+msgid "Get New Desktop Effects..."
+msgstr "სამუშაო მაგიდის ახალი ეფექტების მიღება..."

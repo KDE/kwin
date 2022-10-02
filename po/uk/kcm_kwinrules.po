@@ -1,0 +1,1193 @@
+# Translation of kcm_kwinrules.po to Ukrainian
+# Copyright (C) 2004-2021 This_file_is_part_of_KDE
+# This file is distributed under the license LGPL version 2.1 or
+# version 3 or later versions approved by the membership of KDE e.V.
+#
+# Ivan Petrouchtchak <fr.ivan@ukrainian-orthodox.org>, 2004, 2005, 2006, 2007, 2008.
+# Eugene Onischenko <oneugene@ukr.net>, 2005.
+# Andriy Rysin <rysin@kde.org>, 2006.
+# Yuri Chornoivan <yurchor@ukr.net>, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2017, 2018, 2019, 2020, 2021, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcm_kwinrules\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-19 00:47+0000\n"
+"PO-Revision-Date: 2022-04-18 08:45+0300\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
+"Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 20.12.0\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
+"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Євген Онищенко,Іван Петрущак"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "oneugene@ukr.net,iip@telus.net"
+
+#: kcmrules.cpp:28
+#, kde-format
+msgid "Window Rules"
+msgstr "Правила вікон"
+
+#: kcmrules.cpp:32
+#, kde-format
+msgid "Ismael Asensio"
+msgstr "Ismael Asensio"
+
+#: kcmrules.cpp:33
+#, kde-format
+msgid "Author"
+msgstr "Автор"
+
+#: kcmrules.cpp:37
+#, kde-format
+msgid ""
+"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
+"specifically only for some windows.</p> <p>Please note that this "
+"configuration will not take effect if you do not use KWin as your window "
+"manager. If you do use a different window manager, please refer to its "
+"documentation for how to customize window behavior.</p>"
+msgstr ""
+"<p><h1>Параметри вікон</h1> Тут можна налаштувати параметри, які стосуються "
+"лише певних вікон.</p> <p>Зверніть увагу, що зміни не буде застосовано, якщо "
+"ви не користуєтеся інструментом керування вікнами KWin. Якщо ви користуєтеся "
+"іншим інструментом керування вікнами, зверніться до його документації, щоб "
+"дізнатися більше про зміну поведінки вікон.</p>"
+
+#: kcmrules.cpp:243
+#, kde-format
+msgid "Copy of %1"
+msgstr "Копія %1"
+
+#: kcmrules.cpp:422
+#, kde-format
+msgid "Application settings for %1"
+msgstr "Параметри програми для %1"
+
+#: kcmrules.cpp:442 rulesmodel.cpp:215
+#, kde-format
+msgid "Window settings for %1"
+msgstr "Параметри вікна для %1"
+
+#: main.cpp:31
+#, kde-format
+msgid "KWinRules KCM launcher"
+msgstr "Засіб запуску KCM KWinRules"
+
+#: main.cpp:32
+#, kde-format
+msgid "KWin id of the window for special window settings."
+msgstr "Ідентифікатор KWin вікна для особливих параметрів вікна."
+
+#: main.cpp:33
+#, kde-format
+msgid "Whether the settings should affect all windows of the application."
+msgstr "Чи параметри мають стосуватись всіх вікон програми."
+
+#: main.cpp:40
+#, kde-format
+msgid "This helper utility is not supposed to be called directly."
+msgstr "Цю допоміжну утиліту не можна викликати напряму."
+
+#: main.cpp:44
+#, kde-format
+msgctxt "Window caption for the application wide rules dialog"
+msgid "Edit Application-Specific Settings"
+msgstr "Зміна параметрів вікон окремих програм"
+
+#: main.cpp:45
+#, kde-format
+msgid "Edit Window-Specific Settings"
+msgstr "Зміна параметрів вікон"
+
+#: optionsmodel.cpp:198
+#, kde-format
+msgid "Unimportant"
+msgstr "Неважливо"
+
+#: optionsmodel.cpp:199
+#, kde-format
+msgid "Exact Match"
+msgstr "Повна відповідність"
+
+#: optionsmodel.cpp:200
+#, kde-format
+msgid "Substring Match"
+msgstr "Відповідність підрядка"
+
+#: optionsmodel.cpp:201
+#, kde-format
+msgid "Regular Expression"
+msgstr "Формальний вираз"
+
+#: optionsmodel.cpp:205
+#, kde-format
+msgid "Apply Initially"
+msgstr "Застосовувати спочатку"
+
+#: optionsmodel.cpp:206
+#, kde-format
+msgid ""
+"The window property will be only set to the given value after the window is "
+"created.\n"
+"No further changes will be affected."
+msgstr ""
+"Вказане значення буде застосовано до властивості вікна, лише після створення "
+"вікна.\n"
+"Інші зміни не застосовуватимуться."
+
+#: optionsmodel.cpp:209
+#, kde-format
+msgid "Apply Now"
+msgstr "Застосувати зараз"
+
+#: optionsmodel.cpp:210
+#, kde-format
+msgid ""
+"The window property will be set to the given value immediately and will not "
+"be affected later\n"
+"(this action will be deleted afterwards)."
+msgstr ""
+"Вказане значення властивості вікна буде застосовано негайно і не "
+"змінюватиметься пізніше\n"
+"(цю дію буде пізніше вилучено)."
+
+#: optionsmodel.cpp:213
+#, kde-format
+msgid "Remember"
+msgstr "Запам'ятати"
+
+#: optionsmodel.cpp:214
+#, kde-format
+msgid ""
+"The value of the window property will be remembered and, every time the "
+"window is created, the last remembered value will be applied."
+msgstr ""
+"Значення властивості вікна буде збережено і, під час кожного створення "
+"вікна, буде застосовано останнє збережене значення."
+
+#: optionsmodel.cpp:217
+#, kde-format
+msgid "Do Not Affect"
+msgstr "Не впливати"
+
+#: optionsmodel.cpp:218
+#, kde-format
+msgid ""
+"The window property will not be affected and therefore the default handling "
+"for it will be used.\n"
+"Specifying this will block more generic window settings from taking effect."
+msgstr ""
+"Властивість вікна лишиться незмінною, тому для вікна буде використано типову "
+"обробку.\n"
+"Якщо задано цей варіант, вплив на вікно загальніших параметрів буде "
+"заблоковано."
+
+#: optionsmodel.cpp:221
+#, kde-format
+msgid "Force"
+msgstr "Примусово встановити"
+
+#: optionsmodel.cpp:222
+#, kde-format
+msgid "The window property will be always forced to the given value."
+msgstr ""
+"Для властивості вікна завжди примусово застосовуватиметься вказане значення."
+
+#: optionsmodel.cpp:224
+#, kde-format
+msgid "Force Temporarily"
+msgstr "Встановити тимчасово"
+
+#: optionsmodel.cpp:225
+#, kde-format
+msgid ""
+"The window property will be forced to the given value until it is hidden\n"
+"(this action will be deleted after the window is hidden)."
+msgstr ""
+"Для властивості вікна примусово застосовуватиметься вказане значення, доки "
+"вікно не буде приховано\n"
+"(цю дію буде вилучено після приховування вікна)."
+
+#: package/contents/ui/FileDialogLoader.qml:14
+#, kde-format
+msgid "Select File"
+msgstr "Вибір файла"
+
+#: package/contents/ui/FileDialogLoader.qml:26
+#, kde-format
+msgid "KWin Rules (*.kwinrule)"
+msgstr "правила KWin (*.kwinrule)"
+
+#: package/contents/ui/main.qml:59
+#, kde-format
+msgid "No rules for specific windows are currently set"
+msgstr "Для окремих вікон ще не визначено жодних правил"
+
+#: package/contents/ui/main.qml:60
+#, kde-kuit-format
+msgctxt "@info"
+msgid "Click the <interface>Add New...</interface> button below to add some"
+msgstr ""
+"Натисніть розташовану нижче кнопку <interface>Додати новий…</interface>, щоб "
+"додати записи"
+
+#: package/contents/ui/main.qml:68
+#, kde-format
+msgid "Select the rules to export"
+msgstr "Виберіть правила для експортування"
+
+#: package/contents/ui/main.qml:72
+#, kde-format
+msgid "Unselect All"
+msgstr "Скасувати вибір всіх"
+
+#: package/contents/ui/main.qml:72
+#, kde-format
+msgid "Select All"
+msgstr "Вибрати всі"
+
+#: package/contents/ui/main.qml:86
+#, kde-format
+msgid "Save Rules"
+msgstr "Зберегти правила"
+
+#: package/contents/ui/main.qml:97
+#, kde-format
+msgid "Add New..."
+msgstr "Додати новий…"
+
+#: package/contents/ui/main.qml:108
+#, kde-format
+msgid "Import..."
+msgstr "Імпортувати…"
+
+#: package/contents/ui/main.qml:116
+#, kde-format
+msgid "Cancel Export"
+msgstr "Скасувати експортування"
+
+#: package/contents/ui/main.qml:116
+#, kde-format
+msgid "Export..."
+msgstr "Експортувати…"
+
+#: package/contents/ui/main.qml:206
+#, kde-format
+msgid "Edit"
+msgstr "Змінити"
+
+#: package/contents/ui/main.qml:215
+#, kde-format
+msgid "Duplicate"
+msgstr "Дублювати"
+
+#: package/contents/ui/main.qml:224
+#, kde-format
+msgid "Delete"
+msgstr "Вилучити"
+
+#: package/contents/ui/main.qml:237
+#, kde-format
+msgid "Import Rules"
+msgstr "Правила імпортування"
+
+#: package/contents/ui/main.qml:249
+#, kde-format
+msgid "Export Rules"
+msgstr "Експортування правил"
+
+#: package/contents/ui/OptionsComboBox.qml:35
+#, kde-format
+msgid "None selected"
+msgstr "Жодного з вибраних"
+
+#: package/contents/ui/OptionsComboBox.qml:41
+#, kde-format
+msgid "All selected"
+msgstr "Усі вибрані"
+
+#: package/contents/ui/OptionsComboBox.qml:43
+#, kde-format
+msgid "%1 selected"
+msgid_plural "%1 selected"
+msgstr[0] "%1 вибране"
+msgstr[1] "%1 вибраних"
+msgstr[2] "%1 вибраних"
+msgstr[3] "%1 вибране"
+
+#: package/contents/ui/RulesEditor.qml:63
+#, kde-format
+msgid "No window properties changed"
+msgstr "Властивості вікна не змінено"
+
+#: package/contents/ui/RulesEditor.qml:64
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"Click the <interface>Add Property...</interface> button below to add some "
+"window properties that will be affected by the rule"
+msgstr ""
+"Натисніть розташовану нижче кнопку <interface>Додати властивість…</"
+"interface>, щоб додати властивості вікна, на які впливатиме правило"
+
+#: package/contents/ui/RulesEditor.qml:85
+#, kde-format
+msgid "Close"
+msgstr "Закрити"
+
+#: package/contents/ui/RulesEditor.qml:85
+#, kde-format
+msgid "Add Property..."
+msgstr "Додати властивість…"
+
+#: package/contents/ui/RulesEditor.qml:98
+#, kde-format
+msgid "Detect Window Properties"
+msgstr "Визначити властивості вікна"
+
+#: package/contents/ui/RulesEditor.qml:114
+#: package/contents/ui/RulesEditor.qml:121
+#, kde-format
+msgid "Instantly"
+msgstr "Негайно"
+
+#: package/contents/ui/RulesEditor.qml:115
+#: package/contents/ui/RulesEditor.qml:126
+#, kde-format
+msgid "After %1 second"
+msgid_plural "After %1 seconds"
+msgstr[0] "За %1 секунду"
+msgstr[1] "За %1 секунди"
+msgstr[2] "За %1 секунд"
+msgstr[3] "За секунду"
+
+#: package/contents/ui/RulesEditor.qml:147
+#, kde-format
+msgid "Error"
+msgstr "Помилка"
+
+#: package/contents/ui/RulesEditor.qml:162
+#, kde-format
+msgid "Add property to the rule"
+msgstr "Додати властивість до правила"
+
+#: package/contents/ui/RulesEditor.qml:260
+#: package/contents/ui/ValueEditor.qml:54
+#, kde-format
+msgid "Yes"
+msgstr "Так"
+
+#: package/contents/ui/RulesEditor.qml:260
+#: package/contents/ui/ValueEditor.qml:60
+#, kde-format
+msgid "No"
+msgstr "Ні"
+
+#: package/contents/ui/RulesEditor.qml:262
+#: package/contents/ui/ValueEditor.qml:171
+#: package/contents/ui/ValueEditor.qml:178
+#, kde-format
+msgid "%1 %"
+msgstr "%1 %"
+
+#: package/contents/ui/RulesEditor.qml:264
+#, kde-format
+msgctxt "Coordinates (x, y)"
+msgid "(%1, %2)"
+msgstr "(%1, %2)"
+
+#: package/contents/ui/RulesEditor.qml:266
+#, kde-format
+msgctxt "Size (width, height)"
+msgid "(%1, %2)"
+msgstr "(%1, %2)"
+
+#: package/contents/ui/ValueEditor.qml:206
+#, kde-format
+msgctxt "(x, y) coordinates separator in size/position"
+msgid "x"
+msgstr "⨯"
+
+#: rulesmodel.cpp:218
+#, kde-format
+msgid "Settings for %1"
+msgstr "Параметри для %1"
+
+#: rulesmodel.cpp:221
+#, kde-format
+msgid "New window settings"
+msgstr "Параметри нових вікон"
+
+#: rulesmodel.cpp:237
+#, kde-format
+msgid ""
+"You have specified the window class as unimportant.\n"
+"This means the settings will possibly apply to windows from all "
+"applications. If you really want to create a generic setting, it is "
+"recommended you at least limit the window types to avoid special window "
+"types."
+msgstr ""
+"Ви вказали, що клас вікна не є важливим.\n"
+"Це означає, що, ймовірно, ці параметри буде застосовано до вікон всіх "
+"програм. Якщо ви справді хочете створити загальні параметри, рекомендується, "
+"принаймні, обмежити тип вікон, щоб не зачіпати особливих типів вікон."
+
+#: rulesmodel.cpp:244
+#, kde-format
+msgid ""
+"Some applications set their own geometry after starting, overriding your "
+"initial settings for size and position. To enforce these settings, also "
+"force the property \"%1\" to \"Yes\"."
+msgstr ""
+"Деякі програми встановлюють власну геометрію після запуску і перевизначають "
+"вказані вами початкові параметри для розміру і розташування. Щоб примусово "
+"застосувати ці параметри, слід також примусово встановити для властивості "
+"«%1» значення «Так»."
+
+#: rulesmodel.cpp:359
+#, kde-format
+msgid "Description"
+msgstr "Опис"
+
+#: rulesmodel.cpp:359 rulesmodel.cpp:367 rulesmodel.cpp:375 rulesmodel.cpp:382
+#: rulesmodel.cpp:388 rulesmodel.cpp:396 rulesmodel.cpp:401 rulesmodel.cpp:407
+#, kde-format
+msgid "Window matching"
+msgstr "Відповідність вікон"
+
+#: rulesmodel.cpp:367
+#, kde-format
+msgid "Window class (application)"
+msgstr "Клас вікна (програма)"
+
+#: rulesmodel.cpp:375
+#, kde-format
+msgid "Match whole window class"
+msgstr "Відповідність усьому класу вікон"
+
+#: rulesmodel.cpp:382
+#, kde-format
+msgid "Whole window class"
+msgstr "Увесь клас вікон"
+
+#: rulesmodel.cpp:388
+#, kde-format
+msgid "Window types"
+msgstr "Типи вікон"
+
+#: rulesmodel.cpp:396
+#, kde-format
+msgid "Window role"
+msgstr "Роль вікна"
+
+#: rulesmodel.cpp:401
+#, kde-format
+msgid "Window title"
+msgstr "Заголовок вікна"
+
+#: rulesmodel.cpp:407
+#, kde-format
+msgid "Machine (hostname)"
+msgstr "Комп'ютер (назва вузла)"
+
+#: rulesmodel.cpp:413
+#, kde-format
+msgid "Position"
+msgstr "Позиція"
+
+#: rulesmodel.cpp:413 rulesmodel.cpp:419 rulesmodel.cpp:425 rulesmodel.cpp:430
+#: rulesmodel.cpp:438 rulesmodel.cpp:444 rulesmodel.cpp:463 rulesmodel.cpp:479
+#: rulesmodel.cpp:484 rulesmodel.cpp:489 rulesmodel.cpp:494 rulesmodel.cpp:499
+#: rulesmodel.cpp:506 rulesmodel.cpp:516 rulesmodel.cpp:521 rulesmodel.cpp:526
+#, kde-format
+msgid "Size & Position"
+msgstr "Розмір і розташування"
+
+#: rulesmodel.cpp:419
+#, kde-format
+msgid "Size"
+msgstr "Розмір"
+
+#: rulesmodel.cpp:425
+#, kde-format
+msgid "Maximized horizontally"
+msgstr "Максимізація горизонтально"
+
+#: rulesmodel.cpp:430
+#, kde-format
+msgid "Maximized vertically"
+msgstr "Максимізація вертикально"
+
+#: rulesmodel.cpp:438
+#, kde-format
+msgid "Virtual Desktop"
+msgstr "Віртуальна стільниця"
+
+#: rulesmodel.cpp:444
+#, kde-format
+msgid "Virtual Desktops"
+msgstr "Віртуальні стільниці"
+
+#: rulesmodel.cpp:463
+#, kde-format
+msgid "Activities"
+msgstr "Простори дій"
+
+#: rulesmodel.cpp:479
+#, kde-format
+msgid "Screen"
+msgstr "Екран"
+
+#: rulesmodel.cpp:484
+#, kde-format
+msgid "Fullscreen"
+msgstr "На весь екран"
+
+#: rulesmodel.cpp:489
+#, kde-format
+msgid "Minimized"
+msgstr "Мінімізовано"
+
+#: rulesmodel.cpp:494
+#, kde-format
+msgid "Shaded"
+msgstr "Згорнуто"
+
+#: rulesmodel.cpp:499
+#, kde-format
+msgid "Initial placement"
+msgstr "Початкове розташування"
+
+#: rulesmodel.cpp:506
+#, kde-format
+msgid "Ignore requested geometry"
+msgstr "Ігнорувати запитану позицію"
+
+#: rulesmodel.cpp:508
+#, kde-format
+msgid ""
+"Windows can ask to appear in a certain position.\n"
+"By default this overrides the placement strategy\n"
+"what might be nasty if the client abuses the feature\n"
+"to unconditionally popup in the middle of your screen."
+msgstr ""
+"Можна наказати системі відкривати вікна лише у повній позиції.\n"
+"Типово, значення цього параметра змінює спосіб розташування вікон.\n"
+"Подібне розташування може конфліктувати з налаштуваннями\n"
+"клієнтської частини на розташування вікна посередині екрана."
+
+#: rulesmodel.cpp:516
+#, kde-format
+msgid "Minimum Size"
+msgstr "Мінімальний розмір"
+
+#: rulesmodel.cpp:521
+#, kde-format
+msgid "Maximum Size"
+msgstr "Максимальний розмір"
+
+#: rulesmodel.cpp:526
+#, kde-format
+msgid "Obey geometry restrictions"
+msgstr "Зважати на обмеження розмірів"
+
+#: rulesmodel.cpp:528
+#, kde-format
+msgid ""
+"Eg. terminals or video players can ask to keep a certain aspect ratio\n"
+"or only grow by values larger than one\n"
+"(eg. by the dimensions of one character).\n"
+"This may be pointless and the restriction prevents arbitrary dimensions\n"
+"like your complete screen area."
+msgstr ""
+"Для вікон терміналів або програвачів відео, наприклад, потрібно "
+"підтримувати\n"
+"певне співвідношення розмірів або збільшувати розміри на значення, більші "
+"за\n"
+"один піксель (наприклад, на розмір символу).\n"
+"Подібний метод розташування може не працювати і заважати довільному\n"
+"визначенню розмірів, зокрема розгортанню вікна на весь екран."
+
+#: rulesmodel.cpp:537
+#, kde-format
+msgid "Keep above other windows"
+msgstr "Утримувати над іншими вікнами"
+
+#: rulesmodel.cpp:537 rulesmodel.cpp:542 rulesmodel.cpp:547 rulesmodel.cpp:553
+#: rulesmodel.cpp:559 rulesmodel.cpp:565
+#, kde-format
+msgid "Arrangement & Access"
+msgstr "Впорядкування і доступ"
+
+#: rulesmodel.cpp:542
+#, kde-format
+msgid "Keep below other windows"
+msgstr "Утримувати під іншими вікнами"
+
+#: rulesmodel.cpp:547
+#, kde-format
+msgid "Skip taskbar"
+msgstr "Пропустити панель задач"
+
+#: rulesmodel.cpp:549
+#, kde-format
+msgid "Window shall (not) appear in the taskbar."
+msgstr "Визначає, чи має бути вікно показано на смужці задач."
+
+#: rulesmodel.cpp:553
+#, kde-format
+msgid "Skip pager"
+msgstr "Пропустити пейджер"
+
+#: rulesmodel.cpp:555
+#, kde-format
+msgid "Window shall (not) appear in the manager for virtual desktops"
+msgstr ""
+"Визначає, чи має бути показано вікно у засобі керування віртуальними "
+"стільницями"
+
+#: rulesmodel.cpp:559
+#, kde-format
+msgid "Skip switcher"
+msgstr "Пропустити перемикач"
+
+#: rulesmodel.cpp:561
+#, kde-format
+msgid "Window shall (not) appear in the Alt+Tab list"
+msgstr "Визначає, чи має бути показано вікно у списку Alt+Tab."
+
+#: rulesmodel.cpp:565
+#, kde-format
+msgid "Shortcut"
+msgstr "Скорочення"
+
+#: rulesmodel.cpp:571
+#, kde-format
+msgid "No titlebar and frame"
+msgstr "Без смужки заголовка і рамки"
+
+#: rulesmodel.cpp:571 rulesmodel.cpp:576 rulesmodel.cpp:582 rulesmodel.cpp:587
+#: rulesmodel.cpp:592 rulesmodel.cpp:603 rulesmodel.cpp:614 rulesmodel.cpp:622
+#: rulesmodel.cpp:635 rulesmodel.cpp:640 rulesmodel.cpp:646 rulesmodel.cpp:651
+#, kde-format
+msgid "Appearance & Fixes"
+msgstr "Вигляд і виправлення"
+
+#: rulesmodel.cpp:576
+#, kde-format
+msgid "Titlebar color scheme"
+msgstr "Схема кольорів смужки заголовка"
+
+#: rulesmodel.cpp:582
+#, kde-format
+msgid "Active opacity"
+msgstr "Непрозорість активного"
+
+#: rulesmodel.cpp:587
+#, kde-format
+msgid "Inactive opacity"
+msgstr "Непрозорість неактивного"
+
+#: rulesmodel.cpp:592
+#, kde-format
+msgid "Focus stealing prevention"
+msgstr "Запобігання викраденню фокуса"
+
+#: rulesmodel.cpp:594
+#, kde-format
+msgid ""
+"KWin tries to prevent windows from taking the focus\n"
+"(\"activate\") while you're working in another window,\n"
+"but this may sometimes fail or superact.\n"
+"\"None\" will unconditionally allow this window to get the focus while\n"
+"\"Extreme\" will completely prevent it from taking the focus."
+msgstr ""
+"KWin намагається запобігти перехопленню фокуса\n"
+"(«активації»), доки ви працюєте у іншому вікні,\n"
+"але подібне налаштування може іноді не спрацьовувати або бути шкідливим.\n"
+"«Немає» надає цьому вікну безумовний доступ до отримання фокусу, а\n"
+"«Екстремальний» повністю запобігає отриманню вікном фокуса."
+
+#: rulesmodel.cpp:603
+#, kde-format
+msgid "Focus protection"
+msgstr "Захист фокусування"
+
+#: rulesmodel.cpp:605
+#, kde-format
+msgid ""
+"This controls the focus protection of the currently active window.\n"
+"None will always give the focus away,\n"
+"Extreme will keep it.\n"
+"Otherwise it's interleaved with the stealing prevention\n"
+"assigned to the window that wants the focus."
+msgstr ""
+"Цей пункт керує захистом від фокусування поточного активного вікна.\n"
+"«Немає» завжди скидатиме фокусування,\n"
+"«Екстремальний» зберігатиме його.\n"
+"Інші варіанти призводитимуть до перемежовування із захистом від\n"
+"втрати фокусування, призначеним для вікна, яке хоче отримати фокусування."
+
+#: rulesmodel.cpp:614
+#, kde-format
+msgid "Accept focus"
+msgstr "Допускає фокус"
+
+#: rulesmodel.cpp:616
+#, kde-format
+msgid ""
+"Windows may prevent to get the focus (activate) when being clicked.\n"
+"On the other hand you might wish to prevent a window\n"
+"from getting focused on a mouse click."
+msgstr ""
+"Вікна можуть запобігати фокусуванню («активації») у відповідь на клацання.\n"
+"З іншого боку, ви можете самі запобігти фокусуванню вікна\n"
+"у відповідь на клацання кнопкою миші."
+
+#: rulesmodel.cpp:622
+#, kde-format
+msgid "Ignore global shortcuts"
+msgstr "Ігнорувати загальні скорочення"
+
+#: rulesmodel.cpp:624
+#, kde-format
+msgid ""
+"When used, a window will receive\n"
+"all keyboard inputs while it is active, including Alt+Tab etc.\n"
+"This is especially interesting for emulators or virtual machines.\n"
+"\n"
+"Be warned:\n"
+"you won't be able to Alt+Tab out of the window\n"
+"nor use any other global shortcut (such as Alt+F2 to show KRunner)\n"
+"while it's active!"
+msgstr ""
+"Якщо буде позначено цей пункт, активні вікна отримуватимуть всі\n"
+"сигнали з клавіатури, зокрема Alt+Tab тощо.\n"
+"Такі налаштування будуть корисні для емуляторів або віртуальних машин.\n"
+"\n"
+"Попередження:\n"
+"ви не зможете скористатися Alt+Tab поза вікном,\n"
+"а також будь-яким загальним скороченням (зокрема Alt+F2 для запуску "
+"KRunner),\n"
+"доки цю можливість буде задіяно!"
+
+#: rulesmodel.cpp:635
+#, kde-format
+msgid "Closeable"
+msgstr "Можна закрити"
+
+#: rulesmodel.cpp:640
+#, kde-format
+msgid "Set window type"
+msgstr "Встановити тип вікна"
+
+#: rulesmodel.cpp:646
+#, kde-format
+msgid "Desktop file name"
+msgstr "Назва стільничного файла"
+
+#: rulesmodel.cpp:651
+#, kde-format
+msgid "Block compositing"
+msgstr "Блоковий композитний режим"
+
+#: rulesmodel.cpp:727
+#, kde-format
+msgid "All Window Types"
+msgstr "Усі типи вікон"
+
+#: rulesmodel.cpp:728
+#, kde-format
+msgid "Normal Window"
+msgstr "Звичайне вікно"
+
+#: rulesmodel.cpp:729
+#, kde-format
+msgid "Dialog Window"
+msgstr "Діалогове вікно"
+
+#: rulesmodel.cpp:730
+#, kde-format
+msgid "Utility Window"
+msgstr "Допоміжне вікно"
+
+#: rulesmodel.cpp:731
+#, kde-format
+msgid "Dock (panel)"
+msgstr "Швартування (панель)"
+
+#: rulesmodel.cpp:732
+#, kde-format
+msgid "Toolbar"
+msgstr "Пенал"
+
+#: rulesmodel.cpp:733
+#, kde-format
+msgid "Torn-Off Menu"
+msgstr "Відірване меню"
+
+#: rulesmodel.cpp:734
+#, kde-format
+msgid "Splash Screen"
+msgstr "Вікно вітання"
+
+#: rulesmodel.cpp:735
+#, kde-format
+msgid "Desktop"
+msgstr "Стільниця"
+
+#. i18n("Unmanaged Window")},  deprecated
+#: rulesmodel.cpp:737
+#, kde-format
+msgid "Standalone Menubar"
+msgstr "Незалежна смужка меню"
+
+#: rulesmodel.cpp:738
+#, kde-format
+msgid "On Screen Display"
+msgstr "Екранна панель"
+
+#: rulesmodel.cpp:748
+#, kde-format
+msgid "All Desktops"
+msgstr "Всі стільниці"
+
+#: rulesmodel.cpp:750
+#, kde-format
+msgctxt "@info:tooltip in the virtual desktop list"
+msgid "Make the window available on all desktops"
+msgstr "Зробити так, щоб вікно було доступним на всіх стільницях"
+
+#: rulesmodel.cpp:769
+#, kde-format
+msgid "All Activities"
+msgstr "Всі простори дій"
+
+#: rulesmodel.cpp:771
+#, kde-format
+msgctxt "@info:tooltip in the activity list"
+msgid "Make the window available on all activities"
+msgstr "Зробити так, щоб вікно було доступним в усіх просторах дій"
+
+#: rulesmodel.cpp:792
+#, kde-format
+msgid "Default"
+msgstr "Типовий"
+
+#: rulesmodel.cpp:793
+#, kde-format
+msgid "No Placement"
+msgstr "Немає розташування"
+
+#: rulesmodel.cpp:794
+#, kde-format
+msgid "Minimal Overlapping"
+msgstr "Мінімальне перекриття"
+
+#: rulesmodel.cpp:795
+#, kde-format
+msgid "Maximized"
+msgstr "Максимізовано"
+
+#: rulesmodel.cpp:796
+#, kde-format
+msgid "Cascaded"
+msgstr "Уступами"
+
+#: rulesmodel.cpp:797
+#, kde-format
+msgid "Centered"
+msgstr "У центрі"
+
+#: rulesmodel.cpp:798
+#, kde-format
+msgid "Random"
+msgstr "Випадковий"
+
+#: rulesmodel.cpp:799
+#, kde-format
+msgid "In Top-Left Corner"
+msgstr "У лівому верхньому куті"
+
+#: rulesmodel.cpp:800
+#, kde-format
+msgid "Under Mouse"
+msgstr "Під мишкою"
+
+#: rulesmodel.cpp:801
+#, kde-format
+msgid "On Main Window"
+msgstr "На головному вікні"
+
+#: rulesmodel.cpp:808
+#, kde-format
+msgid "None"
+msgstr "Немає"
+
+#: rulesmodel.cpp:809
+#, kde-format
+msgid "Low"
+msgstr "Низький"
+
+#: rulesmodel.cpp:810
+#, kde-format
+msgid "Normal"
+msgstr "Звичайний"
+
+#: rulesmodel.cpp:811
+#, kde-format
+msgid "High"
+msgstr "Високий"
+
+#: rulesmodel.cpp:812
+#, kde-format
+msgid "Extreme"
+msgstr "Екстремальний"
+
+#: rulesmodel.cpp:855
+#, kde-format
+msgid "Could not detect window properties. The window is not managed by KWin."
+msgstr ""
+"Не вдалося визначити властивості вікна. Керування вікном здійснюється не за "
+"допомогою KWin."
+
+#~ msgid "Keep above"
+#~ msgstr "Завжди згори"
+
+#~ msgid "Keep below"
+#~ msgstr "Утримувати під іншими"
+
+#~ msgid "KWin"
+#~ msgstr "KWin"
+
+#~ msgid "KWin helper utility"
+#~ msgstr "Допоміжна утиліта KWin"
+
+#~ msgid "Activity"
+#~ msgstr "Простір дій"
+
+#~ msgid "Select properties"
+#~ msgstr "Вибір властивостей"
+
+#~ msgid "Override Type"
+#~ msgstr "Тип перезапису"
+
+#~ msgid "Unknown - will be treated as Normal Window"
+#~ msgstr "Невідоме — буде вважатися звичайним вікном"
+
+#~ msgid "Information About Selected Window"
+#~ msgstr "Інформація про вибране вікно"
+
+#~ msgid "Class:"
+#~ msgstr "Клас:"
+
+#~ msgid "Role:"
+#~ msgstr "Роль:"
+
+#~ msgid "Type:"
+#~ msgstr "Тип:"
+
+#~ msgid "Title:"
+#~ msgstr "Заголовок:"
+
+#~ msgid "Machine:"
+#~ msgstr "Вузол:"
+
+#~ msgid "Match by primary class name and"
+#~ msgstr "Відповідність за назвою основного класу і"
+
+#~ msgid "Secondary class name  (resulting in term in brackets)"
+#~ msgstr "Назвою вторинного класу (записом у дужках)"
+
+#~ msgid "Window role (can be used to select windows by function)"
+#~ msgstr ""
+#~ "Призначенням вікна (може бути використано для вибору вікон за "
+#~ "призначенням)"
+
+#~ msgid "Window type (eg. all dialogs, but not the main windows)"
+#~ msgstr "Типом вікна (наприклад, всі діалогові вікна, але не основні вікна)"
+
+#~ msgid ""
+#~ "Window title (very specific, can fail due to content changes or "
+#~ "translation)"
+#~ msgstr ""
+#~ "Заголовком вікна (дуже специфічне, можливі помилки через зміни у вмісті "
+#~ "або переклад)"
+
+#~ msgid ""
+#~ "A single shortcut can be easily assigned or cleared using the two "
+#~ "buttons. Only shortcuts with modifiers can be used.<p>\n"
+#~ "It is possible to have several possible shortcuts, and the first "
+#~ "available shortcut will be used. The shortcuts are specified using "
+#~ "shortcut sets separated by \" - \". One set is specified as <i>base</i>"
+#~ "+(<i>list</i>), where base are modifiers and list is a list of keys.<br>\n"
+#~ "For example \"<b>Shift+Alt+(123) Shift+Ctrl+(ABC)</b>\" will first try "
+#~ "<b>Shift+Alt+1</b>, then others with <b>Shift+Ctrl+C</b> as the last one."
+#~ msgstr ""
+#~ "Можна легко призначити або очистити скорочення за допомогою двох клавіш. "
+#~ "Можна використовувати лише скорочення, що містять клавіші-модифікаторами."
+#~ "<p>\n"
+#~ "Можна створювати декілька скорочень, з яких буде використовуватись перше "
+#~ "наявне. Скорочення вказуються за допомогою розділених рядком « - » "
+#~ "наборів скорочень. Один набір вказується як <i>base</i>+(<i>list</i>), де "
+#~ "base — модифікатори, а list — список клавіш.<br>\n"
+#~ "Наприклад, якщо вказано «<b>Shift+Alt+(123) Shift+Ctrl+(ABC)</b>», то "
+#~ "спочатку буде випробувано <b>Shift+Alt+1</b>, а потім інші і, врешті, "
+#~ "<b>Shift+Ctrl+C</b>."
+
+#~ msgid "&Single Shortcut"
+#~ msgstr "&Просте скорочення"
+
+#~ msgid "C&lear"
+#~ msgstr "О&чистити"
+
+#~ msgid "Window-Specific Settings Configuration Module"
+#~ msgstr "Модуль налаштування параметрів вікон"
+
+#~ msgid "(c) 2004 KWin and KControl Authors"
+#~ msgstr "© Автори KWin і KControl, 2004"
+
+#~ msgid "Lubos Lunak"
+#~ msgstr "Lubos Lunak"
+
+#~ msgid "Remember settings separately for every window"
+#~ msgstr "Пам'ятати параметри окремо для кожного вікна"
+
+#~ msgid "Show internal settings for remembering"
+#~ msgstr "Показати внутрішні параметри для запам'ятовування"
+
+#~ msgid "Internal setting for remembering"
+#~ msgstr "Внутрішні параметри для запам'ятовування"
+
+#~ msgid "&Modify..."
+#~ msgstr "&Змінити..."
+
+#~ msgid "Move &Up"
+#~ msgstr "Пересунути ввер&х"
+
+#~ msgid "Move &Down"
+#~ msgstr "Пересунути вни&з"
+
+#~ msgid ""
+#~ "Enable this checkbox to alter this window property for the specified "
+#~ "window(s)."
+#~ msgstr "Увімкніть, щоб міняти цю властивість для вказаного(них) вікна(он)."
+
+#~ msgid ""
+#~ "Specify how the window property should be affected:<ul><li><em>Do Not "
+#~ "Affect:</em> The window property will not be affected and therefore the "
+#~ "default handling for it will be used. Specifying this will block more "
+#~ "generic window settings from taking effect.</li><li><em>Apply Initially:</"
+#~ "em> The window property will be only set to the given value after the "
+#~ "window is created. No further changes will be affected.</"
+#~ "li><li><em>Remember:</em> The value of the window property will be "
+#~ "remembered and every time the window is created, the last remembered "
+#~ "value will be applied.</li><li><em>Force:</em> The window property will "
+#~ "be always forced to the given value.</li><li><em>Apply Now:</em> The "
+#~ "window property will be set to the given value immediately and will not "
+#~ "be affected later (this action will be deleted afterwards).</"
+#~ "li><li><em>Force temporarily:</em> The window property will be forced to "
+#~ "the given value until it is hidden (this action will be deleted after the "
+#~ "window is hidden).</li></ul>"
+#~ msgstr ""
+#~ "Вкажіть вплив на властивість вікна:<ul><li><em>Не впливати:</em> Не буде "
+#~ "впливати на властивість вікна, і тому буде використано стандартну "
+#~ "поведінку. Вплив більш загальних параметрів вікон буде заблоковано.</"
+#~ "li><li><em>Застосовувати спочатку:</em> Після створення вікна буде "
+#~ "встановлено вказане значення властивості вікна. Подальші зміни "
+#~ "блокуватимуться.</li><li><em>Запам'ятати:</em> Значення властивості вікна "
+#~ "триматиметься в пам'яті, його буде застосовано кожного разу під час "
+#~ "створення вікна.</li><li><em>Примусово встановити:</em> Значення "
+#~ "властивості вікна встановлюватиметься примусово.</li><li><em>Застосувати "
+#~ "зараз:</em> Властивість вікна буде встановлена негайно, її буде "
+#~ "заблоковано (наслідки цієї дії буде згодом вилучено).</"
+#~ "li><li><em>Встановити тимчасово:</em> Значення властивості буде "
+#~ "застосовано до приховування вікна (наслідки дії буде вилучено після "
+#~ "приховування вікна).</li></ul>"
+
+#~ msgid ""
+#~ "Specify how the window property should be affected:<ul><li><em>Do Not "
+#~ "Affect:</em> The window property will not be affected and therefore the "
+#~ "default handling for it will be used. Specifying this will block more "
+#~ "generic window settings from taking effect.</li><li><em>Force:</em> The "
+#~ "window property will be always forced to the given value.</"
+#~ "li><li><em>Force temporarily:</em> The window property will be forced to "
+#~ "the given value until it is hidden (this action will be deleted after the "
+#~ "window is hidden).</li></ul>"
+#~ msgstr ""
+#~ "Вкажіть вплив на властивість вікна:<ul><li><em>Не впливати:</em> Не буде "
+#~ "впливати на властивість вікна, і тому буде використано стандартну "
+#~ "поведінку. Вплив більш загальних параметрів вікон буде цим заблоковано.</"
+#~ "li><li><em>Примусово встановити:</em> Значення буде застосовано примусово."
+#~ "</li><li><em>Встановити тимчасово:</em> Значення властивості буде "
+#~ "застосовано до приховування вікна (наслідки дії буде вилучено після "
+#~ "приховування вікна).</li></ul>"
+
+#~ msgid "Unnamed entry"
+#~ msgstr "Запис без назви"
+
+#~ msgid ""
+#~ "This configuration dialog allows altering settings only for the selected "
+#~ "window or application. Find the setting you want to affect, enable the "
+#~ "setting using the checkbox, select in what way the setting should be "
+#~ "affected and to which value."
+#~ msgstr ""
+#~ "За допомогою цього діалогового вікна налаштування можна змінити "
+#~ "властивості тільки для вибраного вікна чи програми. Знайдіть властивість, "
+#~ "яку потрібно змінити, активуйте її за допомогою прапорця, оберіть "
+#~ "властивість вікна та її бажане значення."
+
+#~ msgid "Consult the documentation for more details."
+#~ msgstr "Зверніться до документації за додатковою інформацією."
+
+#~ msgid "Edit Shortcut"
+#~ msgstr "Редагувати скорочення"
+
+#~ msgid "s delay"
+#~ msgstr "с затримки"
+
+#~ msgid "Unmanaged Window"
+#~ msgstr "Некероване вікно"
+
+#~ msgid "x,y"
+#~ msgstr "x,y"
+
+#~ msgid "0123456789-+,xX:"
+#~ msgstr "0123456789-+,xX:"
+
+#~ msgid "width,height"
+#~ msgstr "ширина,висота"
+
+#~ msgid "&Desktop"
+#~ msgstr "&Стільниця"
+
+#~ msgid "Edit..."
+#~ msgstr "Редагувати..."
+
+#~ msgid "Autog&roup in foreground"
+#~ msgstr "Автоматичне г&рупування на передньому плані"
+
+#~ msgid "Autogroup by I&D"
+#~ msgstr "Автоматично групувати за &ідентифікатором"
+
+#~ msgid "Autogroup with &identical"
+#~ msgstr "Автоматично групувати з &тотожними"
+
+#~ msgid "%"
+#~ msgstr "%"
+
+#~ msgid "org.kde.kwin"
+#~ msgstr "org.kde.kwin"
+
+#~ msgid "Smart"
+#~ msgstr "Кмітливе"

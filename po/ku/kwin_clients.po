@@ -1,0 +1,668 @@
+# translation of kwin_clients.po to Kurdish
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Erdal Ronahi <erdal.ronahi@nospam.gmail.com>, 2007.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2009-01-03 06:08+0200\n"
+"Last-Translator: Omer Ensari <oensari@gmail.com>\n"
+"Language-Team: Kurdish <ubuntu-l10n-kur@lists.ubuntu.com>\n"
+"Language: ku\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: Kurdish\n"
+"X-Poedit-SourceCharset: utf8\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr ""
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr ""
+
+#: aurorae/src/aurorae.cpp:727
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "Mezin"
+
+#: aurorae/src/aurorae.cpp:728
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "Mezin"
+
+#: aurorae/src/aurorae.cpp:729
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "Mezin"
+
+#: aurorae/src/aurorae.cpp:730
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "Mezin"
+
+#: aurorae/src/aurorae.cpp:731
+#, fuzzy, kde-format
+#| msgid "Resize"
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "Mezinahiyê biguherîne"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "Paceya Veavakirinê"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "&Bicihkirina Sernavê"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "Çep"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "Navîn"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "Rast"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"Heke kêleka paceyê di rengê darika sernavê de bê nexşe kirin, vê bijare yê "
+"hilbijêre. Wekî din, ev di rengê rûerdê de bê nexşe kirin."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "Kêlekên pace yê rengîn"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"Heke hûn dixwazin bişkojk ronak be dema mişk bê ser de û dema mişk ser de "
+"dûr bikeve dîsa tarî be, vê bijare yê hilbijêrin."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "Bişkojkan zindî bike"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "Heke hûn dixwazin nivîsa darika sernavê wekî 3D û pişt vê jî sî heyî xuya "
+#~ "bike vê bijare yê hilbijêrin. "
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "&Nivîsara bi sî bi kar bîne"
+
+#, fuzzy
+#~| msgid "Animate buttons"
+#~ msgid "Animations"
+#~ msgstr "Bişkojkan zindî bike"
+
+#, fuzzy
+#~| msgid "Actions Settings"
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "Mîhengên Çalakiyan"
+
+#, fuzzy
+#~| msgid "Center"
+#~ msgid "General"
+#~ msgstr "Navîn"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "Mezin"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "Mezin"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "Mezin"
+
+#, fuzzy
+#~| msgid "Title &Alignment"
+#~ msgid "Tit&le alignment:"
+#~ msgstr "&Bicihkirina Sernavê"
+
+#, fuzzy
+#~| msgid "Small"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "Biçûk"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "Pace yan bi cot-tikandina bişkojka pêşekê re bigire"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title"
+#~ msgstr "Paceyê Biçûktir Bike"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadows"
+#~ msgstr "Sî"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Window Glow"
+#~ msgstr "Paceyê Biçûktir Bike"
+
+#, fuzzy
+#~| msgid "Config Dialog"
+#~ msgid "Dialog"
+#~ msgstr "Paceya Veavakirinê"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Use window title"
+#~ msgstr "Paceyê Biçûktir Bike"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title:"
+#~ msgstr "Paceyê Biçûktir Bike"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Hide window title bar"
+#~ msgstr "Paceyê Biçûktir Bike"
+
+#, fuzzy
+#~| msgid "Restore"
+#~ msgid "Remove"
+#~ msgstr "Şûnde Bîne"
+
+#, fuzzy
+#~| msgid "Oxygen"
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "Oxygen"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Inactive Windows"
+#~ msgstr "Paceyê Biçûktir Bike"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Windows"
+#~ msgstr "Paceyê Biçûktir Bike"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+#~ msgid "Help"
+#~ msgstr "Alîkarî"
+
+#~ msgid "Minimize"
+#~ msgstr "Biçûktir Bike"
+
+#~ msgid "Maximize"
+#~ msgstr "Mezintirîn bike"
+
+#~ msgid "Close"
+#~ msgstr "Bigire"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "Ser yê Din Bigire"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "Bin yê Din Bigire"
+
+#~ msgid "On All Desktops"
+#~ msgstr "Di Hemû Sermase yan de"
+
+#~ msgid "Shade Button"
+#~ msgstr "Bişkojka bi Sî"
+
+#~ msgid "Menu"
+#~ msgstr "Pêşek"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "Ne di hemû sermase yan de"
+
+#~ msgid "On all desktops"
+#~ msgstr "Di Hemû Sermase yan de"
+
+#~ msgid "Unshade"
+#~ msgstr "Bê Sî"
+
+#~ msgid "Shade"
+#~ msgstr "Sî"
+
+#~ msgid "Resize"
+#~ msgstr "Mezinahiyê biguherîne"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>pêşdîtina B II</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "Şûnde Bîne"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "Çarçoveyên pace bi rengên &darika sernavê re nexşe bike"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "Dema bê hilbijartin, kêlekên paceyê bi rengên darika sernavê tên nexşe "
+#~ "kirin; wekî din, bi rengên kêlekê yên asayî tên nexşe kirin."
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "Xebatkarê &guherandina mezinahiyê nexşe bike"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "Dema bê hilbijartin, xemilandin bi \"destik\" re di goşe yê jêr û rastê "
+#~ "de tê nexşe kirin; wekî din, tu destik nayê nexşe kirin."
+
+#, fuzzy
+#~| msgid ""
+#~| "When selected, active titlebars are drawn with a stipple (dotted) "
+#~| "effect; otherwise, they are drawn without the stipple."
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr ""
+#~ "Dema bê hilbijartin, darikên sernavê yên çalak bi efekta xal-danîn tê "
+#~ "nexşe kirin; wekî din, bê xal-danîn tê nexşe kirin."
+
+#~ msgid "Actions Settings"
+#~ msgstr "Mîhengên Çalakiyan"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "Cot-tikandin li ser bişkojka pêşekê:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "Tiştekî neke"
+
+#~ msgid "Minimize Window"
+#~ msgstr "Paceyê Biçûktir Bike"
+
+#~ msgid "Shade Window"
+#~ msgstr "Pace ya bi Sî"
+
+#~ msgid "Close Window"
+#~ msgstr "Paceyê Bigire"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "Çalakiyek tê girêdan bi cot-tikandina bişkojka pêşekê re. Heke tu jê ewle "
+#~ "nebî, vê wekî ne yek jî bihêle."
+
+#~ msgid "Laptop"
+#~ msgstr "Laptop"
+
+#, fuzzy
+#~| msgid "Draw &gradients"
+#~ msgid "Radial Gradient"
+#~ msgstr "&Gradyanan nexşe bike"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Save"
+#~ msgstr "Sî"
+
+#~ msgid "Large"
+#~ msgstr "Mezin"
+
+#~ msgid "Small"
+#~ msgstr "Biçûk"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "Heke hûn dixwazin pace yan bigirin wextê cot-tikandina di ser bişkojka "
+#~ "pêşekê de vê bijare yê hilbijêrin, wekî Pace yên Microsoft e."
+
+#~ msgid "Plastik"
+#~ msgstr "Plastîk"
+
+#, fuzzy
+#~| msgid "On All Desktops"
+#~ msgid "All Desktops"
+#~ msgstr "Di Hemû Sermase yan de"
+
+#, fuzzy
+#~| msgid "Close"
+#~ msgid "Close Item"
+#~ msgstr "Bigire"
+
+#~ msgid "&Left"
+#~ msgstr "&Ji çepê ve"
+
+#, fuzzy
+#~| msgid "Center"
+#~ msgid "&Center"
+#~ msgstr "Navîn"
+
+#~ msgid "&Right"
+#~ msgstr "&Ji Rastê ve"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Do not keep above others"
+#~ msgstr "Ser yê Din Bigire"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above others"
+#~ msgstr "Ser yê Din Bigire"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Do not keep below others"
+#~ msgstr "Bin yê Din Bigire"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below others"
+#~ msgstr "Bin yê Din Bigire"
+
+#, fuzzy
+#~| msgid "Maximize"
+#~ msgid "Maximum"
+#~ msgstr "Mezintirîn bike"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadow style:"
+#~ msgstr "Sî"
+
+#, fuzzy
+#~| msgid "Blend title bar colors with window contents"
+#~ msgid "Draw separator between title bar and window contents: "
+#~ msgstr "Rengên darika sernavê bi naveroka pace yê re tevlihev bike"
+
+#, fuzzy
+#~| msgid "Blend title bar colors with window contents"
+#~ msgid "Draw Separator between title bar and active window contents "
+#~ msgstr "Rengên darika sernavê bi naveroka pace yê re tevlihev bike"
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "Dirbekê KWM saz dike"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "Rê ya pela veavakirina dirbê"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWMTheme</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "Mezeloqî"
+
+#~ msgid "Unsticky"
+#~ msgstr "Bê mezeloqî"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>Pêşdîtina Keramik</b></center>"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "Efekta &xal-danîn yê darika sernavê nexşe bike"
+
+#~ msgid ""
+#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
+#~ "otherwise, they are drawn without the stipple."
+#~ msgstr ""
+#~ "Dema bê hilbijartin, darikên sernavê yên çalak bi efekta xal-danîn tê "
+#~ "nexşe kirin; wekî din, bê xal-danîn tê nexşe kirin."
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "Darika p&êgirtinê di bin pace yan de nexşe bike"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
+#~ "otherwise, no grab bar is drawn."
+#~ msgstr ""
+#~ "Dema bê hilbijartin, xemilandin di bin pace yan de bi \"darika pêgirtinê"
+#~ "\" re tê nexşe kirin; wekî din, tu darikên pêgirtinê nayê nexşe kirin."
+
+#~ msgid "Draw &gradients"
+#~ msgstr "&Gradyanan nexşe bike"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with gradients for high-color "
+#~ "displays; otherwise, no gradients are drawn."
+#~ msgstr ""
+#~ "Dema bê hilbijartin, xemilandin ji bo xuyakirina pir-rengîn bi gradyanan "
+#~ "re tê nexşe kirin; wekî din, tu gradyan nayê nexşe kirin."
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"
+
+#~ msgid ""
+#~ "When selected, the window decoration borders are drawn using the titlebar "
+#~ "colors; otherwise, they are drawn using normal border colors instead."
+#~ msgstr ""
+#~ "Dema bê hilbijartin, kêlekên pace yê xemilandî bi rengên darika sernavê "
+#~ "tên nexşe kirin; wekî din, ew bi rengên kêlekan yê asayî dê bên nexşe "
+#~ "kirin."
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "Quartz &pir zirav"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "Quartz xemilandina pace yan bi darika sernavê yê pir-zirav re"
+
+#~ msgid "Quartz"
+#~ msgstr "Quartz"
+
+#~ msgid "Redmond"
+#~ msgstr "Redmond"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "Xebatkarê guherandina mezinahiya pace &nîşan bide"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "Dema bê hilbijartin, hemû pace bi xebatkarê guherandina pace yan re di "
+#~ "goşe yê jêr û rastê de tên nexşe kirin. Ev guherandina mezinahiya pace "
+#~ "yan hêsantir dike, ji bo laptopan çêtir e."
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr ""
+#~ "Li vir hûn dikarin mezinahiya xebatkarê guherandina mezinahiyê "
+#~ "biguherînin. "
+
+#~ msgid "Medium"
+#~ msgstr "Nîvçe"
+
+#~ msgid "Modern System"
+#~ msgstr "Pergala Nûjen"
+
+#~ msgid "Web"
+#~ msgstr "Tor"
+
+#~ msgid "Keramik"
+#~ msgstr "Keramik"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "&Îkona paceyê di sernavê de nîşan bide"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "Heke hûn dixwazin îkona paceyê di sernavê de ber rexê nivîsa darika "
+#~ "sernavê nîşan bidin vê bijare yê nîşan bikin."
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "Di pace yên çalak de çarçove yên sernavê yên &biçûk nexşe bike"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "Heke hûn dixwazin çarçove ya sernavê di pace yên çalak û neçalak de eynî "
+#~ "mezinahiyê de bin vê bijare yê hilbijêrin. Ev bijare ji bo laptopan û "
+#~ "xuyakirina baş cihê ku hûn dixwazin zêdetir di naveroka paceyê de cihê "
+#~ "vala bibînin bikêrhatî ye."
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "Darika p&êgirtinê di bin pace yan de nexşe bike"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "Heke hûn dixwazin darika pêgirtinê di bin pace yan de nexşe bikin vê "
+#~ "bijare yê hilbijêrin. Dema ev bijare neyê hilbijartin, tenê dê kêlekekê "
+#~ "zirav bê dîtin cihê vê. "
+
+#, fuzzy
+#~| msgid "Installs a KWM theme"
+#~ msgid "Get New Themes..."
+#~ msgstr "Dirbekê KWM saz dike"
+
+#, fuzzy
+#~| msgid "Installs a KWM theme"
+#~ msgid "Install New Theme..."
+#~ msgstr "Dirbekê KWM saz dike"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Glow active window"
+#~ msgstr "Paceyê Biçûktir Bike"
+
+#, fuzzy
+#~| msgid "Blend title bar colors with window contents"
+#~ msgid "Draw separator between title bar and active window contents:"
+#~ msgstr "Rengên darika sernavê bi naveroka pace yê re tevlihev bike"
+
+#, fuzzy
+#~| msgid ""
+#~| "When enabled, this option increases the visibility of the window "
+#~| "titlebar by showing stripes"
+#~ msgid ""
+#~ "When enabled, this option makes an horizontal separator appear between "
+#~ "the window title bar and the window contents."
+#~ msgstr ""
+#~ "Dema bê çalak kirin, bi nîşan dana xêz re xuyakirina darika sernavê tê "
+#~ "zêdekirin"
+
+#~ msgid ""
+#~ "When enabled, this option increases the visibility of the window titlebar "
+#~ "by showing stripes"
+#~ msgstr ""
+#~ "Dema bê çalak kirin, bi nîşan dana xêz re xuyakirina darika sernavê tê "
+#~ "zêdekirin"
+
+#~ msgid "Show stripes next to the title"
+#~ msgstr "Xêzê ber rexê sernavê nîşan bide"
+
+#, fuzzy
+#~| msgid ""
+#~| "When enabled, this option increases the visibility of the window "
+#~| "titlebar by showing stripes"
+#~ msgid ""
+#~ "When enabled, this option increases the visibility of the window titlebar "
+#~ "by adding an horizontal bar between the title bar and the window contents"
+#~ msgstr ""
+#~ "Dema bê çalak kirin, bi nîşan dana xêz re xuyakirina darika sernavê tê "
+#~ "zêdekirin"
+
+#, fuzzy
+#~| msgid "Blend title bar colors with window contents"
+#~ msgid "Draw separator between title bar and window contents"
+#~ msgstr "Rengên darika sernavê bi naveroka pace yê re tevlihev bike"
+
+#, fuzzy
+#~| msgid "Show stripes next to the title"
+#~ msgid "Show stripes next to the title:"
+#~ msgstr "Xêzê ber rexê sernavê nîşan bide"
+
+#, fuzzy
+#~| msgid "Blend title bar colors with window contents"
+#~ msgid "Blend title bar colors with window content:"
+#~ msgstr "Rengên darika sernavê bi naveroka pace yê re tevlihev bike"
+
+#~ msgid "Blend title bar colors with window contents"
+#~ msgstr "Rengên darika sernavê bi naveroka pace yê re tevlihev bike"
+
+#~ msgid "Ozone"
+#~ msgstr "Ozone"
+
+#, fuzzy
+#~| msgid "Draw window frames using &titlebar colors"
+#~ msgid "Overwrite default title bar colors:"
+#~ msgstr "Çarçoveyên pace bi rengên &darika sernavê re nexşe bike"
+
+#~ msgid ""
+#~ "When enabled, this option makes the window title bar use the same colors "
+#~ "as the window contents, instead of using the system title bar colors."
+#~ msgstr ""
+#~ "Dema bê çalak kirin, şûna rengên darika sernavê yê pergalê, darika "
+#~ "sernavê bi naveroka paceyê re eynî rengê bi kar tîne."

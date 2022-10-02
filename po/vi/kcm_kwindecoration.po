@@ -1,0 +1,311 @@
+# Vietnamese translation for kcmkwindecoration.
+# Copyright © 2007 KDE i18n Project for Vietnamese.
+#
+# Nguyễn Hưng Vũ <Vu.Hung@techviet.com>, 2002.
+# Phan Vĩnh Thịnh <teppi82@gmail.com>, 2006.
+# Phu Hung Nguyen <phu.nguyen@kdemail.net>, 2021.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwindecoration\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2021-07-31 12:16+0200\n"
+"Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
+"Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Lokalize 20.12.2\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Nguyễn Hùng Phú,Phan Vĩnh Thịnh"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "phu.nguyen@kdemail.net,teppi82@gmail.com"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr "Các hành động khác cho cửa sổ này"
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, kde-format
+msgid "Application menu"
+msgstr "Trình đơn ứng dụng"
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, kde-format
+msgid "On all desktops"
+msgstr "Ở tất cả các bàn làm việc"
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr "Thu nhỏ"
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr "Phóng to"
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr "Đóng"
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr "Trợ giúp ngữ cảnh"
+
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr "Che"
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr "Giữ dưới các cửa sổ khác"
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr "Giữ trên các cửa sổ khác"
+
+#: kcm.cpp:49
+#, kde-format
+msgid "Window Decorations"
+msgstr "Trang trí cửa sổ"
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr "Valerio Pilo"
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr "Tác giả"
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr "Mặc định của chủ đề (%1)"
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+"Công cụ này cho phép bạn đặt chủ đề trang trí cửa sổ cho phiên đang hoạt "
+"động, mà không bị lỡ đặt nó thành một cái hiện không có hoặc đã được đặt rồi."
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+"Tên của chủ đề trang trí cửa sổ mà bạn muốn đặt cho KWin. Sẽ thử tìm chủ đề "
+"trong một thư mục mà đường dẫn đầy đủ do bạn truyền vào, rồi áp dụng chủ đề "
+"đó nếu suy luận ra được."
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr ""
+"Hiện tất cả các chủ đề đang có trong hệ thống (và cái nào là chủ đề hiện tại)"
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+"Đã phân giải %1 thành chủ đề Aurorae KWin \"%2\", và sẽ thử đặt nó làm chủ "
+"đề hiện tại của ban."
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+"Bạn đã truyền vào một đường dẫn tệp, nhưng nó không phân giải được thành một "
+"chủ đề, và việc này sẽ phải bị huỷ bỏ, vì không có chủ đề nào để đặt"
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr ""
+"Chủ đề được yêu cầu \"%1\" đã được đặt làm chủ đề trang trí cửa sổ rồi."
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr "Áp dụng chủ đề con trỏ %1 cho phiên Plasma hiện tại thành công"
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+"Lưu thiết lập chủ đề thất bại - không rõ lí do, nhưng đây là một lỗi không "
+"thể phục hồi. Có thể chỉ cần thử lại là sẽ thực hiện được."
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr ""
+"Không tìm được chủ đề \"%1\". Chủ đề nên là một trong các lựa chọn sau: %2"
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr "Bạn có các chủ đề trang trí cửa sổ KWin sau trong hệ thống:"
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr "Thanh tiêu đề"
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr "Thả nút vào đây để xoá"
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr "Kéo các nút vào giữa chỗ này và thanh tiêu đề"
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr "Khối này cho phép bạn cấu hình các trang trí cửa sổ."
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr "Chủ đề"
+
+#: package/contents/ui/main.qml:57
+#, kde-format
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "Các nút ở thanh tiêu đề"
+
+#: package/contents/ui/main.qml:93
+#, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "Kích thước viền cửa sổ:"
+
+#: package/contents/ui/main.qml:112
+#, kde-format
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr "Lấy các trang trí cửa sổ mới..."
+
+#: package/contents/ui/main.qml:141
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr "Đóng cửa sổ bằng cách bấm đúp vào nút trình đơn"
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr "Bấm và giữ nút trình đơn để hiện trình đơn."
+
+#: package/contents/ui/main.qml:165
+#, kde-format
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "Hiện chú giải cho các nút ở thanh tiêu đề"
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr "Sửa chủ đề %1"
+
+#: utils.cpp:25
+#, kde-format
+msgid "No Borders"
+msgstr "Không viền"
+
+#: utils.cpp:26
+#, kde-format
+msgid "No Side Borders"
+msgstr "Không viền bên"
+
+#: utils.cpp:27
+#, kde-format
+msgid "Tiny"
+msgstr "Tí hon"
+
+#: utils.cpp:28
+#, kde-format
+msgid "Normal"
+msgstr "Thường"
+
+#: utils.cpp:29
+#, kde-format
+msgid "Large"
+msgstr "Lớn"
+
+#: utils.cpp:30
+#, kde-format
+msgid "Very Large"
+msgstr "Rất lớn"
+
+#: utils.cpp:31
+#, kde-format
+msgid "Huge"
+msgstr "Khổng lồ"
+
+#: utils.cpp:32
+#, kde-format
+msgid "Very Huge"
+msgstr "Rất khổng lồ"
+
+#: utils.cpp:33
+#, kde-format
+msgid "Oversized"
+msgstr "Ngoại cỡ"
+
+#~ msgid "Menu"
+#~ msgstr "Trình đơn"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below"
+#~ msgstr "Giữ nằm dưới các cửa sổ khác"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above"
+#~ msgstr "Giữ nằm trên các cửa sổ khác"
+
+#, fuzzy
+#~| msgid "&Window Decoration"
+#~ msgid "Download New Window Decorations"
+#~ msgstr "Trang trí cửa &sổ"

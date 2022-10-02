@@ -1,0 +1,171 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Indonesian "INCLUDE">
+]>
+<article id="kwintabbox" lang="&language;">
+<articleinfo>
+<title
+>Pengalih Tugas</title>
+<authorgroup>
+<author
+>&Martin.Graesslin;&Martin.Graesslin.mail;</author>
+<othercredit role="translator"
+><firstname
+>Wantoyo</firstname
+><surname
+></surname
+><affiliation
+><address
+><email
+>wantoyek@gmail.com</email
+></address
+></affiliation
+><contrib
+>Terjemahan</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>24-07-2015</date>
+<releaseinfo
+>&plasma; 5.4</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>System Settings</keyword>
+<keyword
+>desktop</keyword>
+<keyword
+>window</keyword>
+<keyword
+>navigasi</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="windows-navigating">
+<title
+>Penavigasian melalui Window</title>
+
+<para
+>Modul ini menawarkan kemungkinan untuk mengkonfigurasi perilaku Navigasi melalui window yang sering direferensi sebagai <keycombo
+>&Alt;&Tab;</keycombo
+>. Ada dua set efek independen yang dapat memiliki pengaturan yang berbeda. Untuk masing-masing set ini ada tab sendiri (<guilabel
+>Utama</guilabel
+> dan <guilabel
+>Alternatif</guilabel
+>) di dalam modul ini. </para>
+
+<note
+><para
+>Set pertama efek-efek pada tab <guilabel
+>Utama</guilabel
+> yang telah ditentukan sebelumnya. Jika kamu ingin menggunakan set kedua efek-efek pada tab <guilabel
+>Alternatif</guilabel
+> yang telah kamu set pintasannya untuk efek-efek tersebut di dalam Pengedit Pintasan secara manual.</para
+></note>
+
+<note
+><para
+>Untuk menavigasi melalui window tanpa <keycombo
+>&Alt;&Tab;</keycombo
+>, kamu bisa menentukan aksi tepian layar di dalam modul &systemsettings; <ulink url="help:/kcontrol/kwinscreenedges/index.html"
+><guilabel
+>Tepian Layar</guilabel
+></ulink
+>. </para
+></note>
+
+<para
+>Dokumentasi berikut dari opsi-opsi yang diterapkan untuk pengaturan umum dan pengaturan alternatif yang sedemikian.</para>
+
+<sect2 id="visualization">
+<title
+>Visualisasi</title>
+<para
+>Ada bermacam efek yang bisa digunakan alih-alih daftar window normal ketika compositing difungsikan. Secara baku, efek <guilabel
+>Breeze</guilabel
+> adalah digunakan. Efek ini menampilkan gambar-mini kecil dari setiap window di dalam daftar di sebelah kiri layar dan window yang dipilih saat ini yang disorot. Ada bermacam tataletak baku tambahan yang menyediakan tampilan yang informatif atau tampilan padu, ikon kecil atau besar, sebuah kisi dan judul window saja. </para>
+<para
+>Memilih salahsatu dari tataletak tersebut kamu akan memiliki sebuah tombol untuk menampilkan pratinjau.</para
+> 
+<para
+>Jika kamu memfungsikan <guilabel
+>Tampilkan window yang dipilih</guilabel
+> window yang dipilih saat ini akan disoroti dengan pelesapan keluar semua window lainnya. Opsi ini memerlukan efek-efek desktop yang diaktifkan.</para>
+
+<para
+>Efek <guilabel
+>Cover Switch</guilabel
+> dan <guilabel
+>Flip Switch</guilabel
+> adalah efek yang paling indah yang memerlukan OpenGL. <guilabel
+>Cover Switch</guilabel
+> mendisplaikan window di galeri dengan gambar-mini besar dari window yang saat ini dipilih di tengah layar selagi semua window yang lain dirotasikan ke kiri dan kanan. <guilabel
+>Flip Switch</guilabel
+> menampilkan semua window pada tumpukan 3D. Window yang dipilih berada di atas tumpukan dan menavigasi melalui window akan memindahkan tumpukan sehingga window yang baru dipilih, berada di atas. </para>
+<para
+>Jika efek menyediakan pengaturan tambahan tombol konfigurasi akan diaktifkan. Dengan mengeklik tombol ini, sebuah dialog konfigurasi akan ditampilkan. </para>
+<note
+><para
+>Ketika compositing tidak aktif atau telah disuspensi, daftar window biasanya ditampilkan. Itu tidak ada fungsionalitas yang luput jika efek telah dipilih dan compositing tidak aktif.</para
+></note>
+</sect2>
+
+<sect2 id="shortcuts">
+<title
+>Pintasan</title>
+<para
+>Pengedit pintasan menyediakan antarmuka konfigurasi untuk pintasan keyboard untuk bernavigasi melalui window. Masing-masing dari dua set efek yang mungkin memiliki dua cara pintasan: satu untuk arah maju dan satu untuk arah mundur. Harap perhatikan bahwa daftar window hanya bisa ditampilkan jika kamu memilih pintasan dengan pemodif keyboard seperti tuts &Alt; atau &Ctrl;. Pemodif ini harus ditahan sambil beralih. Memilih pintasan tanpa tuts pemodif bisa merusak perilaku bernavigasi melalui window. </para>
+</sect2>
+
+<sect2 id="content-and-sort-order">
+<title
+>Konten</title>
+<para
+>Dimungkinkan untuk memengaruhi urutan pengurutan, kamu bisa menggunakan urutan pengurutan berdasarkan pada penggunaan terakhir window atau urutan penumpukan window. </para>
+<para
+>Jika kamu mencentang <guilabel
+>Sertakan ikon  "Tampilkan Desktop"</guilabel
+> sebuah entri untuk desktop akan ditambahkan ke daftar dengan window aplikasi. Kemudian bisa memilih entri ini di dalam daftar untuk meminimalkan semua window.</para>
+<para
+>Jika <guilabel
+>Hanya satu window per aplikasi</guilabel
+> telah dipilih, maka hanya instance terakhir yang digunakan dari sebuah aplikasi yang ada di daftar. Peralihan ke instance-instance lain hanya dimungkinkan via panel.</para>
+</sect2>
+
+<sect2 id="filter">
+<title
+>Window filter</title>
+<para
+>Kamu bisa mengkonfigurasi window mana yang seharusnya ditampilkan di dalam daftar yang dikenali dengan penekanan <keycombo
+>&Alt;&Tab;</keycombo
+> (yang ditentukan sebelumnya untuk pengaturan pada tab <guilabel
+>Utama</guilabel
+>) atau pintasan yang ditentukan pengguna untuk pengaturan alternatif. </para>
+<para
+>Sehingga itu memungkinkan hanya untuk menampilkan window-window dari semua desktop lain. Selain itu kamu bisa menerapkan pengaturan yang mirip untuk window di activities atau di layar untuk pengesetan multimonitor. </para>
+<para
+>Opsi yang terakhir memungkinkanmu untuk memfilter status peminimalan window-window. </para>
+</sect2>
+
+</sect1>
+</article>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+kate: space-indent on; indent-width 2; tab-width 2; indent-mode none;
+-->
+

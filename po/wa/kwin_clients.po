@@ -1,0 +1,688 @@
+# translation of kwin_clients.po to Walon
+# Ratournaedje e walon des messaedjes di KDE.
+#
+# Pablo Saratxaga <pablo@walon.org>, 2007.
+# Jean Cayron <jean.cayron@gmail.com>, 2010, 2011.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2011-01-14 08:45+0100\n"
+"Last-Translator: Jean Cayron <jean.cayron@gmail.com>\n"
+"Language-Team: Walloon <linux@walon.org>\n"
+"Language: wa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.0\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Tiny"
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "Tote pitite"
+
+#: aurorae/src/aurorae.cpp:726
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Button size:"
+#| msgid "Normal"
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "Normå"
+
+#: aurorae/src/aurorae.cpp:727
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "Grand"
+
+#: aurorae/src/aurorae.cpp:728
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Button size:"
+#| msgid "Very Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "Foirt grand"
+
+#: aurorae/src/aurorae.cpp:729
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Button size:"
+#| msgid "Huge"
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "Foû grand"
+
+#: aurorae/src/aurorae.cpp:730
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Very Huge"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "Vormint foû grande"
+
+#: aurorae/src/aurorae.cpp:731
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Oversized"
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "Foû mzeure"
+
+#: aurorae/src/aurorae.cpp:734
+#, fuzzy, kde-format
+#| msgid "Button size:"
+msgid "Button size:"
+msgstr "Grandeu do boton :"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "Li fniesse d' apontiaedje"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "&Aroymint do tite"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "A hintche"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "Å mitan"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "A droete"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "Boirds del finiesse e coleur"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "Botons animés"
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "Eployî tecse a &ombion"
+
+#, fuzzy
+#~| msgid "Enable animations"
+#~ msgid "Title transitions"
+#~ msgstr "Mete èn alaedje les animåcions"
+
+#, fuzzy
+#~| msgid "Decoration Options"
+#~ msgid "Hide Advanced Configuration Options"
+#~ msgstr "Tchuzes do gåyotaedje"
+
+#, fuzzy
+#~| msgid "Decoration Options"
+#~ msgid "Show Advanced Configuration Options"
+#~ msgstr "Tchuzes do gåyotaedje"
+
+#, fuzzy
+#~| msgid "Animate buttons"
+#~ msgid "Animations"
+#~ msgstr "Botons animés"
+
+#, fuzzy
+#~| msgid "Actions Settings"
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "Apontiaedjes des accions"
+
+#~ msgid "Remove selected exception?"
+#~ msgstr "Disfacer l' foû rîle tchoezi ?"
+
+#~ msgid "Regular Expression syntax is incorrect"
+#~ msgstr "Li sintake di l' erîlêye ratourneure est mwaijhe"
+
+#~ msgid "Exception Type"
+#~ msgstr "Sôre di foû rîle"
+
+#~ msgid "Regular Expression"
+#~ msgstr "Erîlêye ratourneure"
+
+#~ msgid "Window Title"
+#~ msgstr "Tite del finiesse"
+
+#~ msgid "Window Class Name"
+#~ msgstr "No del classe di fniesse "
+
+#~ msgid "Enable/disable this exception"
+#~ msgstr "Mete èn alaedje/essocter c' foû rîle la"
+
+#~ msgid "General"
+#~ msgstr "Djenerå"
+
+#, fuzzy
+#~| msgid "Border size:"
+#~ msgid "Border si&ze:"
+#~ msgstr "Grandeu del boirdeure :"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "No Border"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "Pont d' boirdeure"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "No Side Border"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Borders"
+#~ msgstr "Pont d' boirdeure des costés"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Normal"
+#~ msgstr "Normåle"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "Grande"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "Foirt grande"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "Foû grande"
+
+#, fuzzy
+#~| msgid "Title alignment:"
+#~ msgid "Tit&le alignment:"
+#~ msgstr "Aroymint do tite :"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "Pitit"
+
+#~ msgid "Enable animations"
+#~ msgstr "Mete èn alaedje les animåcions"
+
+#~ msgid "Fine Tuning"
+#~ msgstr "Fén apontiaedje"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "Clôre les fniesses avou on dobe-clitche sol boton del dressêye"
+
+#~ msgid "Never Draw Separator"
+#~ msgstr "Èn måy dessiner d' separateu"
+
+#~ msgid "Draw Separator When Window is Active"
+#~ msgstr "Dessiner separateu cwand l' finiesse overe"
+
+#~ msgid "Always Draw Separator"
+#~ msgstr "Tofer dessiner l' separateu"
+
+#, fuzzy
+#~| msgid "Separator display:"
+#~ msgid "Separator disp&lay:"
+#~ msgstr "Håynaedje do separateu :"
+
+#~ msgid "Outline active window title"
+#~ msgstr "Cotoû do tite del finiesse ovrante"
+
+#~ msgid "Use narrow space between decoration buttons"
+#~ msgstr "Si siervi d' on stroet espåce inte les botons do gåyotaedje"
+
+#~ msgid "Shadows"
+#~ msgstr "Ombions"
+
+#~ msgid "Window Drop-Down Shadow"
+#~ msgstr "Ombion del djivêye disrôlante"
+
+#~ msgid "Active Window Glow"
+#~ msgstr "Reyonaedje del finiesse ovrante"
+
+#~ msgid "Window-Specific Overrides"
+#~ msgstr "Sipotchaedjes sipecifikes al finiesse"
+
+#, fuzzy
+#~| msgid "Config Dialog"
+#~ msgid "Dialog"
+#~ msgstr "Li fniesse d' apontiaedje"
+
+#~ msgid "Information about Selected Window"
+#~ msgstr "Informåcion sol finiesse di tchoezeye"
+
+#~ msgid "Class: "
+#~ msgstr "Classe : "
+
+#~ msgid "Title: "
+#~ msgstr "Tite : "
+
+#~ msgid "Window Property Selection"
+#~ msgstr "Tchoes des prôpietés del finiesse"
+
+#~ msgid "Use window class (whole application)"
+#~ msgstr "Eployî classe di fniesse (tot l' programe)"
+
+#~ msgid "Use window title"
+#~ msgstr "Si siervi do tite del finiesse"
+
+#~ msgid "Window Identification"
+#~ msgstr "Idintifiaedje del finiesse"
+
+#~ msgid "Matching window property: "
+#~ msgstr "Prôpieté del finiesse ki corespond : "
+
+#~ msgid "Regular expression to match: "
+#~ msgstr "Erîlêye ratourneure a fé coresponde : "
+
+#~ msgid "Detect Window Properties"
+#~ msgstr "Detecter prôpietés del finiesse"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Tchuzes do gåyotaedje"
+
+#~ msgctxt "outline window title"
+#~ msgid "Disabled"
+#~ msgstr "Essocté"
+
+#~ msgctxt "outline window title"
+#~ msgid "Enabled"
+#~ msgstr "Èn alaedje"
+
+#~ msgid "Border size:"
+#~ msgstr "Grandeu del boirdeure :"
+
+#~ msgid "Outline active window title:"
+#~ msgstr "Cotoû do tite del finiesse ovrante :"
+
+#~ msgid "Separator display:"
+#~ msgstr "Håynaedje do separateu :"
+
+#~ msgid "Hide window title bar"
+#~ msgstr "Catchî l' bår di tite del finiesse"
+
+#, fuzzy
+#~| msgid "Disabled"
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Disabled"
+#~ msgstr "Essocté"
+
+#, fuzzy
+#~| msgctxt "outline window title"
+#~| msgid "Enabled"
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Enabled"
+#~ msgstr "Èn alaedje"
+
+#~ msgid "Move Up"
+#~ msgstr "Monter"
+
+#~ msgid "Move Down"
+#~ msgstr "Dischinde"
+
+#~ msgid "Add"
+#~ msgstr "Radjouter"
+
+#~ msgid "Remove"
+#~ msgstr "Oister"
+
+#~ msgid "Edit"
+#~ msgstr "Candjî"
+
+#, fuzzy
+#~| msgid "Use Oxygen Shadows"
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "Si siervi des ombions da Ocsidjinne"
+
+#, fuzzy
+#~| msgid "Enable window grouping"
+#~ msgid "Draw window background"
+#~ msgstr "Mete èn alaedje li groupaedje des fniesses"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Inactive Windows"
+#~ msgstr "Mete li purnea å pus ptit"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Windows"
+#~ msgstr "Mete li purnea å pus ptit"
+
+#~ msgid "Oxygen"
+#~ msgstr "Ocsidjinne"
+
+#, fuzzy
+#~| msgid "Window Identification"
+#~ msgid "Window Actions Menu"
+#~ msgstr "Idintifiaedje del finiesse"
+
+#~ msgid "Help"
+#~ msgstr "Aidance"
+
+#~ msgid "Minimize"
+#~ msgstr "Å pus ptit"
+
+#~ msgid "Maximize"
+#~ msgstr "Å pus grand"
+
+#~ msgid "Close"
+#~ msgstr "Clôre"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "Mete pa dzeu les ôtes"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "Mete pa dzo les ôtes"
+
+#~ msgid "On All Desktops"
+#~ msgstr "So tos les scribannes"
+
+#~ msgid "Shade Button"
+#~ msgstr "Boton avou ombion"
+
+#~ msgid "Menu"
+#~ msgstr "Dressêye"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "Nén so tos les scribannes"
+
+#~ msgid "On all desktops"
+#~ msgstr "So tos les scribannes"
+
+#~ msgid "Unshade"
+#~ msgstr "Disrôler"
+
+#~ msgid "Shade"
+#~ msgstr "Ombion"
+
+#~ msgid "Resize"
+#~ msgstr "Candjî d' grandeu"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>Prévoeyaedje B II</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "Rapexhî"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr ""
+#~ "Dessiner les boirdeures des fniesses avou les coleurs del båre di &tite"
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "Dessiner pougneye po candjî l' &grandeu"
+
+#~ msgid "Auto-move titlebar"
+#~ msgstr "Bodjî otomaticmint l' båre di tite"
+
+#~ msgid "Actions Settings"
+#~ msgstr "Apontiaedjes des accions"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "Dobe clitchaedje sol boton di menu:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "Èn rén fé"
+
+#~ msgid "Minimize Window"
+#~ msgstr "Mete li fniesse å pus ptit"
+
+#~ msgid "Shade Window"
+#~ msgstr "Erôler l' finiesse"
+
+#~ msgid "Close Window"
+#~ msgstr "Clôre li fniesse"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "Ene accion pout esse associeye å dobe clitchaedje sol boton di menu. "
+#~ "Leyîz l' a nouk si vos avoz des dotances."
+
+#~ msgid "Laptop"
+#~ msgstr "Poirtåve"
+
+#, fuzzy
+#~| msgid "Background style: "
+#~ msgid "Bac&kground style: "
+#~ msgstr "Stîle do fond : "
+
+#~ msgid "Solid Color"
+#~ msgstr "Coleur li minme"
+
+#~ msgid "Radial Gradient"
+#~ msgstr "Digradé d' coleur"
+
+#~ msgid "Background style:"
+#~ msgstr "Stîle do fond :"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Djan Cayron"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "jean.cayron@gmail.com"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Save"
+#~ msgstr "Ombion"
+
+#~ msgid "Large"
+#~ msgstr "Grande"
+
+#~ msgid "Small"
+#~ msgstr "Pitite"
+
+#~ msgid "Extra size grip display: "
+#~ msgstr "Pus grande grandeu do håynaedje del pougnêye : "
+
+#~ msgid "Extra size grip display:"
+#~ msgstr "Pus grande grandeu do håynaedje del pougnêye :"
+
+#~ msgid "Inner Color:"
+#~ msgstr "Divintrinne coleur :"
+
+#~ msgid "Outer Color:"
+#~ msgstr "Difoûtrinne coleur :"
+
+#~ msgid "Vertical Offset:"
+#~ msgstr "Displaeçmint d' astampé :"
+
+#~ msgid "Size: "
+#~ msgstr "Grandeu : "
+
+#~ msgid "Always Hide Extra Size Grip"
+#~ msgstr "Tofer catchî l' pus grande grandeu del pougnêye"
+
+#~ msgid "Show Extra Size Grip When Needed"
+#~ msgstr "Håyner l' pus grande grandeu del pougnêye cwand on nd a mezåjhe"
+
+#~ msgid "Plastik"
+#~ msgstr "Plastik"
+
+#~ msgid "All Desktops"
+#~ msgstr "Tos les scribannes"
+
+#~ msgid "Above"
+#~ msgstr "Pa dzeu"
+
+#~ msgid "Below"
+#~ msgstr "Pa dzo"
+
+#~ msgid "Close Item"
+#~ msgstr "Clôre cayet"
+
+#~ msgid "Tabstrip"
+#~ msgstr "Binde di linwetes"
+
+#~ msgid "&Left"
+#~ msgstr "A &hintche"
+
+#~ msgid "&Center"
+#~ msgstr "Å &mitan"
+
+#~ msgid "&Right"
+#~ msgstr "A &droete"
+
+#~ msgid "Display window icons"
+#~ msgstr "Håyner imådjetes des fniesses"
+
+#, fuzzy
+#~| msgid "Outer Color:"
+#~ msgid "O&utline Color:"
+#~ msgstr "Difoûtrinne coleur :"
+
+#~ msgid "Do not keep above others"
+#~ msgstr "Èn nén mete pa dzeu les ôtes"
+
+#~ msgid "Keep above others"
+#~ msgstr "Mete pa dzeu les ôtes"
+
+#~ msgid "Do not keep below others"
+#~ msgstr "Èn nén mete pa dzo les ôtes"
+
+#~ msgid "Keep below others"
+#~ msgstr "Mete pa dzo les ôtes"
+
+#~ msgid "Enable title transition animations"
+#~ msgstr "Mete èn alaedje les animåcions di passaedje des tites"
+
+#~ msgid "Variable"
+#~ msgstr "Variåve"
+
+#~ msgid "Maximum"
+#~ msgstr "Macsimom"
+
+#~ msgid "Enable window grouping"
+#~ msgstr "Mete èn alaedje li groupaedje des fniesses"
+
+#~ msgid "Shadow caching:"
+#~ msgstr "Muchete des ombions :"
+
+#~ msgid "TextLabel"
+#~ msgstr "Etikete tecse"
+
+#~ msgid "Use Oxygen Shadows"
+#~ msgstr "Si siervi des ombions da Ocsidjinne"
+
+#~ msgid "Use Desktop Effects Shadows"
+#~ msgstr "Si siervi des ombions des efets d' sicribanne"
+
+#~ msgid "Do Not Draw Shadows"
+#~ msgstr "Èn nén dessiner ls ombions"
+
+#~ msgid "Shadow style:"
+#~ msgstr "Stîle di l' ombion :"
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "Astale on tinme po KWM"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "Tchimin viè on fitchî d' apontiaedje di tinme"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWMTheme</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "Aclawé"
+
+#~ msgid "Unsticky"
+#~ msgstr "Disclawé"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>Prévoeyaedje di Kermaik</b></center>"
+
+#~ msgid "Draw &gradients"
+#~ msgstr "Di&gradé d' coleur"
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"
+
+#~ msgid "Quartz"
+#~ msgstr "Quartz"
+
+#~ msgid "Redmond"
+#~ msgstr "Redmond"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "&Håyner l' pougnêye po candjî l' grandeu do purnea"
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr ""
+#~ "Vaici, vos poloz tchoezi li kéne grandeu k' i fåt eployî pol pougnêye a "
+#~ "rcandjî l' grandeu do purnea."
+
+#~ msgid "Medium"
+#~ msgstr "Moyene"
+
+#~ msgid "Modern System"
+#~ msgstr "Sistinme modiene"
+
+#~ msgid "Web"
+#~ msgstr "Waibe"
+
+#~ msgid "Keramik"
+#~ msgstr "Keramik"
+
+#, fuzzy
+#~| msgid "Installs a KWM theme"
+#~ msgid "Get New Themes..."
+#~ msgstr "Astale on tinme po KWM"
+
+#, fuzzy
+#~| msgid "Installs a KWM theme"
+#~ msgid "Install New Theme..."
+#~ msgstr "Astale on tinme po KWM"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Glow active window"
+#~ msgstr "Mete li purnea å pus ptit"
+
+#, fuzzy
+#~| msgid "Oxygen"
+#~ msgid "Oxygen team"
+#~ msgstr "Ocsidjinne"
+
+#, fuzzy
+#~| msgid "Draw window frames using &titlebar colors"
+#~ msgid "Overwrite default title bar colors:"
+#~ msgstr ""
+#~ "Dessiner les boirdeures des purneas avou les coleurs del båre di &tite"

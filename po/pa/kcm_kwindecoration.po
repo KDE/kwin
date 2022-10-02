@@ -1,0 +1,462 @@
+# translation of kcmkwindecoration.po to Punjabi
+# Amanpreet Singh Alam <aalam@redhat.com>, 2004, 2005.
+# Amanpreet Singh Brar <amanpreetalam@yahoo.com>, 2005.
+# A S Alam <aalam@users.sf.net>, 2007, 2010.
+# Amanpreet Singh Alam <aalam@users.sf.net>, 2009, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwindecoration\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2013-01-05 08:28+0530\n"
+"Last-Translator: A S Alam <aalam@users.sf.net>\n"
+"Language-Team: Punjabi/Panjabi <punjabi-users@lists.sf.net>\n"
+"Language: pa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.5\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "ਅਮਨਪਰੀਤ ਸਿੰਘ ਆਲਮ"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "aalam@users.sf.net"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, fuzzy, kde-format
+#| msgctxt "Button showing application menu imported from dbusmenu"
+#| msgid "Application Menu"
+msgid "Application menu"
+msgstr "ਐਪਲੀਕੇਸ਼ਨ ਮੇਨੂ"
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, fuzzy, kde-format
+#| msgid "On All Desktops"
+msgid "On all desktops"
+msgstr "ਸਭ ਡੈਸਕਟਾਪਾਂ ਉੱਤੇ"
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr "ਘੱਟੋ-ਘੱਟ"
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr "ਵੱਧ ਤੋਂ ਵੱਧ"
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr "ਬੰਦ ਕਰੋ"
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr "ਸ਼ੇਡ"
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr ""
+
+#: kcm.cpp:49
+#, fuzzy, kde-format
+#| msgid "Get New Decorations..."
+msgid "Window Decorations"
+msgstr "ਨਵੀਂ ਸਜਾਵਟ ਲਵੋ..."
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr ""
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr ""
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr ""
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr ""
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr ""
+
+#: package/contents/ui/main.qml:57
+#, fuzzy, kde-format
+#| msgid "Buttons"
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "ਬਟਨ"
+
+#: package/contents/ui/main.qml:93
+#, fuzzy, kde-format
+#| msgid "Border size:"
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "ਬਾਰਡਰ ਸਾਈਜ਼:"
+
+#: package/contents/ui/main.qml:112
+#, fuzzy, kde-format
+#| msgid "Get New Decorations..."
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr "ਨਵੀਂ ਸਜਾਵਟ ਲਵੋ..."
+
+#: package/contents/ui/main.qml:141
+#, fuzzy, kde-format
+#| msgid "Close windows by double clicking the menu button"
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr "ਮੇਨੂ ਬਟਨ ਨੂੰ ਦੋ ਵਾਰ ਦਬਾ ਕੇ ਵਿੰਡੋਜ਼ ਬੰਦ ਕਰੋ"
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr ""
+
+#: package/contents/ui/main.qml:165
+#, fuzzy, kde-format
+#| msgid "&Show window button tooltips"
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "ਵਿੰਡੋ ਬਟਨ ਸੰਕੇਤ ਵੇਖੋ(&S)"
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr ""
+
+#: utils.cpp:25
+#, fuzzy, kde-format
+#| msgid "Border size:"
+msgid "No Borders"
+msgstr "ਬਾਰਡਰ ਸਾਈਜ਼:"
+
+#: utils.cpp:26
+#, fuzzy, kde-format
+#| msgid "Border size:"
+msgid "No Side Borders"
+msgstr "ਬਾਰਡਰ ਸਾਈਜ਼:"
+
+#: utils.cpp:27
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Tiny"
+msgid "Tiny"
+msgstr "ਨਿੱਕਾ"
+
+#: utils.cpp:28
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Normal"
+msgid "Normal"
+msgstr "ਸਧਾਰਨ"
+
+#: utils.cpp:29
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Large"
+msgid "Large"
+msgstr "ਵੱਡਾ"
+
+#: utils.cpp:30
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Very Large"
+msgid "Very Large"
+msgstr "ਬਹੁਤ ਵੱਡਾ"
+
+#: utils.cpp:31
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Huge"
+msgid "Huge"
+msgstr "ਵਿਰਾਟ"
+
+#: utils.cpp:32
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Very Huge"
+msgid "Very Huge"
+msgstr "ਬਹੁਤ ਵਿਰਾਟ"
+
+#: utils.cpp:33
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Oversized"
+msgid "Oversized"
+msgstr "ਵੱਧ-ਆਕਾਰ"
+
+#, fuzzy
+#~| msgid "Close windows by double clicking the menu button"
+#~ msgctxt "popup tip"
+#~ msgid ""
+#~ "Close by double clicking: Keep the window's Menu button pressed until it "
+#~ "appears."
+#~ msgstr "ਮੇਨੂ ਬਟਨ ਨੂੰ ਦੋ ਵਾਰ ਦਬਾ ਕੇ ਵਿੰਡੋਜ਼ ਬੰਦ ਕਰੋ"
+
+#~ msgid "Menu"
+#~ msgstr "ਮੇਨੂ"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below"
+#~ msgstr "ਹੋਰਾਂ ਦੇ ਹੇਠਾਂ ਰੱਖੋ"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above"
+#~ msgstr "ਹੋਰਾਂ ਦੇ ਉੱਤੇ ਰੱਖੋ"
+
+#, fuzzy
+#~| msgid "Get New Decorations..."
+#~ msgid "Download New Window Decorations"
+#~ msgstr "ਨਵੀਂ ਸਜਾਵਟ ਲਵੋ..."
+
+#, fuzzy
+#~| msgid "Search"
+#~ msgid "Search..."
+#~ msgstr "ਖੋਜ"
+
+#, fuzzy
+#~| msgid "Close windows by double clicking the menu button"
+#~ msgid "Close windows by double clicking &the menu button"
+#~ msgstr "ਮੇਨੂ ਬਟਨ ਨੂੰ ਦੋ ਵਾਰ ਦਬਾ ਕੇ ਵਿੰਡੋਜ਼ ਬੰਦ ਕਰੋ"
+
+#, fuzzy
+#~| msgid "Border size:"
+#~ msgid "Border si&ze:"
+#~ msgstr "ਬਾਰਡਰ ਸਾਈਜ਼:"
+
+#, fuzzy
+#~| msgid "Configure Buttons..."
+#~ msgid "Configure %1..."
+#~ msgstr "ਬਟਨ ਸੰਰਚਨਾ..."
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgid "Form"
+#~ msgstr "ਸਧਾਰਨ"
+
+#~ msgid "Button size:"
+#~ msgstr "ਬਟਨ ਸਾਈਜ਼:"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "ਨਿੱਕਾ"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "ਸਧਾਰਨ"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "ਵੱਡਾ"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "ਬਹੁਤ ਵੱਡਾ"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "ਵਿਰਾਟ"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "ਬਹੁਤ ਵਿਰਾਟ"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "ਵੱਧ-ਆਕਾਰ"
+
+#~ msgid "KDE"
+#~ msgstr "KDE"
+
+#~ msgid "%1 (unavailable)"
+#~ msgstr "%1 (ਨਾ-ਉਪਲੱਬਧ)"
+
+#~ msgid "Resize"
+#~ msgstr "ਮੁੜ-ਆਕਾਰ"
+
+#~ msgid "Help"
+#~ msgstr "ਮੱਦਦ"
+
+#~ msgctxt "Button showing window actions menu"
+#~ msgid "Window Menu"
+#~ msgstr "ਵਿੰਡੋ ਮੇਨੂ"
+
+#~ msgid "--- spacer ---"
+#~ msgstr "--- ਵੱਖਰੇਵਾਂ ---"
+
+#~ msgid "Please note that this option is not available on all styles yet."
+#~ msgstr "ਯਾਦ ਰੱਖੋ ਕਿ ਇਹ ਚੋਣ ਸਭ ਸਟਾਇਲ ਲਈ ਹਾਲੇ ਉਪਲੱਬਧ ਨਹੀਂ ਹੈ।"
+
+#~ msgid "Use custom titlebar button &positions"
+#~ msgstr "ਕਸਟਮ ਟਾਇਟਲਬਾਰ ਬਟਨ ਸਥਿਤੀ ਵਰਤੋਂ(&p)"
+
+#~ msgid "B&order size:"
+#~ msgstr "ਬਾਰਡਰ ਸਾਈਜ਼(&o):"
+
+#~ msgid "Use this combobox to change the border size of the decoration."
+#~ msgstr "ਸਜਾਵਟੀ ਬਾਰਡਰ ਦਾ ਸਾਈਜ਼ ਬਦਲਣ ਲਈ ਇਹ ਕੰਬੋਬਾਕਸ ਵਰਤੋਂ।"
+
+#~ msgid "Decoration Options"
+#~ msgstr "ਸਜਾਵਟੀ ਚੋਣ"
+
+#~ msgid "Configure Decoration..."
+#~ msgstr "ਸਜਾਵਟ ਸੰਰਚਨਾ..."
+
+#~ msgid "Window Decoration Control Module"
+#~ msgstr "ਵਿੰਡੋ ਸ਼ਿੰਗਾਰ ਕੰਟਰੋਲ ਮੋਡੀਊਲ"
+
+#~ msgid "(c) 2001 Karol Szwed"
+#~ msgstr "(c) 2001 Karol Szwed"
+
+#~ msgid "Karol Szwed"
+#~ msgstr "Karol Szwed"
+
+#~ msgid "Oxygen"
+#~ msgstr "ਆਕਸੀਜਨ"
+
+#~ msgid "Active Window"
+#~ msgstr "ਐਕਟਿਵ ਵਿੰਡੋ"
+
+#~ msgid "Inactive Window"
+#~ msgstr "ਗ਼ੈਰ-ਐਕਟਿਵ ਵਿੰਡੋ"
+
+#~ msgid "kcmkwindecoration"
+#~ msgstr "kcmkwindecoration"
+
+#~ msgctxt "Caption to decoration preview, %1 author name"
+#~ msgid "by %1"
+#~ msgstr "%1 ਵਲੋਂ"
+
+#~ msgid ""
+#~ "No preview available.\n"
+#~ "Most probably there\n"
+#~ "was a problem loading the plugin."
+#~ msgstr ""
+#~ "ਕੋਈ ਝਲਕ ਨਹੀਂ।\n"
+#~ "ਸੰਭਵ ਤੌਰ ਉੱਤੇ ਪਲੱਗਇਨ\n"
+#~ "ਨੂੰ ਲੋਡ ਕਰਨ ਦੌਰਾਨ ਸਮੱਸਿਆ ਹੈ।"
+
+#~ msgid "&Buttons"
+#~ msgstr "ਬਟਨ(&B)"
+
+#~ msgid "Ozone"
+#~ msgstr "ਓਜ਼ੋਨ"

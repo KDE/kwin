@@ -1,0 +1,188 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % German "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwindecoration" lang="&language;">
+<articleinfo>
+<authorgroup>
+<author
+>&Rik.Hemsley; &Rik.Hemsley.mail;</author>
+<author
+>&Anne-Marie.Mahfouf; &Anne-Marie.Mahfouf.mail;</author>
+<othercredit role="translator"
+><firstname
+>Stephan</firstname
+><surname
+>Kulow</surname
+><affiliation
+><address
+><email
+>coolo@kde.org</email
+></address
+></affiliation
+><contrib
+>Deutsche Übersetzung</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-09</date>
+<releaseinfo
+>Plasma 5.21</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systemeinstellungen</keyword>
+<keyword
+>kwin</keyword>
+<keyword
+>Fenster</keyword>
+<keyword
+>Rand</keyword>
+<keyword
+>Design</keyword>
+<keyword
+>Stil</keyword>
+</keywordset>
+</articleinfo>
+<sect1 id="window-deco">
+<title
+>Fensterdekoration</title>
+
+<para
+>Dieses Modul erlaubt Ihnen einen Stil für den Rahmen um die Fenster auszuwählen.</para>
+
+<sect2>
+<title
+>Fensterdekoration</title>
+
+<para>
+<screenshot>
+<screeninfo
+>Einstellungsmodul für die Fensterdekoration</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Einstellungsmodul für die Fensterdekoration</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+
+<para
+>Wählen Sie einen Fensterstil aus der Vorschauliste, die angezeigten Stile können mit der Suchleiste oben im Dialog gefiltert werden oder laden Sie einen neuen Stil mit dem Knopf <guibutton
+>Neue Fensterdekorationen holen</guibutton
+> herunter.</para>
+
+<para
+>Als Standard-Fensterdekoration der Stil <quote
+>Breeze</quote
+> eingestellt.</para>
+
+<para
+>Jede Fensterdekoration hat ein anderes Aussehen und damit verbunden auch eigene Konventionen. Manche haben rundum (manchmal unsichtbare) Ränder zur Größenänderung, die zwar das Ändern der Fenstergröße erleichtern, aber das Verschieben schwieriger machen. Manche besitzen an einigen Kanten gar keine Ränder.</para>
+
+<para
+>Probieren Sie ruhig mit den verschiedenen Stilen herum, bis Sie einen finden, der Ihnen und Ihrem Arbeitsstil am besten entgegenkommt.</para>
+
+<para
+>Auf der Vorschau eines Stils finden Sie einen Einrichtungsknopf <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure.png" format="PNG"/></imageobject
+></inlinemediaobject
+>, um den Einstellungsdialog für die Dekoration zu öffnen.</para>
+
+<para
+>Die Einstellungen in diesem Modul werden auf alle Fenster angewendet. Für einige Fensterdekorationen wie &eg; <quote
+>Breeze</quote
+> gibt es zusätzlich die Karteikarte <guilabel
+>Fensterspezifische Einstellungen</guilabel
+>. Auf dieser Karteikarte können Sie die Rahmenbreite und die Anzeige der Titelleiste für bestimmte Fenster ändern.</para>
+
+<para
+>Zusätzliche Einstellungen für bestimmte Fenster finden Sie im &systemsettings;-Modul <ulink url="help:/kcontrol/windowspecific"
+>Fensterregeln</ulink
+>. </para>
+
+<tip>
+<para
+>Als Zugangshilfe unterstützen einige Fensterdekorationen besonders breite Rahmen. Ist diese Einstellung verfügbar, können Sie hier die <guilabel
+>Rahmenbreite des Fensters</guilabel
+> festlegen. Diese breiten Rahmen sind für sehbehinderte Anwender leichter zu erkennen und können von Menschen mit eingeschränkter Beweglichkeit oder solchen, die Schwierigkeiten bei der Benutzung einer Maus haben, leichter <quote
+>angefasst</quote
+> werden.</para>
+</tip>
+
+</sect2>
+
+<sect2>
+<title
+>Dekorationen</title>
+
+<para
+>In diesem Dialog können Sie die Dekoration für Fenster einstellen. Abhängig vom ausgewählten Stil gibt es unterschiedliche Einstellungsmöglichkeiten. </para>
+<para>
+<screenshot>
+<screeninfo
+>Einstellungen für die Dekoration „Breeze“</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="decoration.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Einstellungen für die Dekoration „Breeze“</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+<sect2>
+<title
+>Titelleistenknöpfe</title>
+
+<para
+>Auf dieser Karteikarte können Sie die Anordnung der Knöpfe in der Titelleiste einstellen. Verschieben Sie die angezeigten Knöpfe wie &eg; das <guilabel
+>Anwendungsmenü</guilabel
+> so lange, bis Ihnen die Anordnung zusagt. </para>
+
+<screenshot>
+<screeninfo
+>Einstellungen für Knöpfe</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="button.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Einstellungen für für Knöpfe</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+
+<para
+>Aktivieren Sie <guilabel
+>Fenster durch Doppelklick auf Menüknopf schließen</guilabel
+>, um eine zusätzlich Möglichkeit zum Schließknopf zu haben oder wenn Sie diesen Knopf aus der Titelleiste entfernt haben. </para>
+
+<para
+>Aktivieren Sie die Einstellung <guilabel
+>Kurzinfos für Knöpfe der Titelleiste anzeigen</guilabel
+>, damit beim Überfahren der Knöpfe in der Titelleiste mit dem Mauszeiger Kurzinfos angezeigt werden. </para>
+
+</sect2>
+
+</sect1>
+
+</article>

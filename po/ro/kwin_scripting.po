@@ -1,0 +1,99 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+# Sergiu Bivol <sergiu@cip.md>, 2013, 2020, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-03-26 00:45+0000\n"
+"PO-Revision-Date: 2020-08-31 01:44+0100\n"
+"Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
+"Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Lokalize 21.12.3\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Arthur Țițeică"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "arthur.titeica@gmail.com"
+
+#: genericscriptedconfig.cpp:76
+#, kde-format
+msgctxt "Error message"
+msgid "Plugin does not provide configuration file in expected location"
+msgstr "Extensia nu furnizează fișierul de configurare în locul așteptat"
+
+#~ msgctxt "Assertion failed in KWin script with given value"
+#~ msgid "Assertion failed: %1 is not null"
+#~ msgstr "Aserțiunea a eșuat: %1 nu este nul"
+
+#~ msgctxt "Assertion failed in KWin script"
+#~ msgid "Assertion failed: argument is null"
+#~ msgstr "Aserțiunea a eșuat: argumentul este nul"
+
+#~ msgctxt "Error in KWin Script"
+#~ msgid ""
+#~ "Invalid number of arguments. At least service, path, interface and method "
+#~ "need to be provided"
+#~ msgstr ""
+#~ "Număr nevalid de argumente. Trebuiesc furnizate cel puțin serviciul, "
+#~ "calea, interfața și metoda"
+
+#~ msgctxt "Error in KWin Script"
+#~ msgid ""
+#~ "Invalid type. Service, path, interface and method need to be string values"
+#~ msgstr ""
+#~ "Tip nevalid. Serviciul, calea, interfața și metoda trebuie să fie valori "
+#~ "șir"
+
+#~ msgctxt "syntax error in KWin script"
+#~ msgid "Invalid number of arguments"
+#~ msgstr "Număr nevalid de argumente"
+
+#~ msgctxt ""
+#~ "KWin Scripting function received incorrect value for an expected type"
+#~ msgid "%1 is not a variant type"
+#~ msgstr "%1 nu este un tip variabil"
+
+#~ msgctxt ""
+#~ "KWin Scripting function received incorrect value for an expected type"
+#~ msgid "%1 is not of required type"
+#~ msgstr "%1 nu este de tipul cerut"
+
+#~ msgctxt "KWin Scripting error thrown due to incorrect argument"
+#~ msgid "Second argument to registerScreenEdge needs to be a callback"
+#~ msgstr ""
+#~ "Al doilea argument pentru registerScreenEdge trebuie să fie un callback"
+
+#, fuzzy
+#~| msgctxt "KWin Scripting error thrown due to incorrect argument"
+#~| msgid "Second argument to registerScreenEdge needs to be a callback"
+#~ msgctxt "KWin Scripting error thrown due to incorrect argument"
+#~ msgid "Second argument to registerTouchScreenEdge needs to be a callback"
+#~ msgstr ""
+#~ "Al doilea argument pentru registerScreenEdge trebuie să fie un callback"
+
+#~ msgctxt "KWin Scripting error thrown due to incorrect argument"
+#~ msgid "Argument for registerUserActionsMenu needs to be a callback"
+#~ msgstr ""
+#~ "Argumentul pentru registerUserActionsMenu trebuie să fie un callback"
+
+#~ msgctxt "Assertion failed in KWin script with given value"
+#~ msgid "Assertion failed: %1"
+#~ msgstr "Aserțiunea a eșuat: %1"
+
+#~ msgctxt ""
+#~ "Assertion failed in KWin script with expected value and actual value"
+#~ msgid "Assertion failed: Expected %1, got %2"
+#~ msgstr "Aserțiunea a eșuat: se aștepta %1, s-a obținut %2"

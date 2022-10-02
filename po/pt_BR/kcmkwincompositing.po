@@ -1,0 +1,300 @@
+# Translation of kcmkwincompositing.po to Brazilian Portuguese
+# Copyright (C) 2007-2019 This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Diniz Bortolotto <diniz.bortolotto@gmail.com>, 2007, 2008.
+# André Marcelo Alvarenga <alvarenga@kde.org>, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2019.
+# Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2009, 2012, 2017, 2018, 2021.
+# Marcus Vinícius de Andrade Gama <marcus.gama@gmail.com>, 2010.
+# Aracele Torres <araceletorres@gmail.com>, 2011, 2017.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwincompositing\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"PO-Revision-Date: 2021-11-18 12:01-0300\n"
+"Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
+"Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Lokalize 20.04.2\n"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
+#: compositing.ui:31
+#, kde-format
+msgid ""
+"OpenGL compositing (the default) has crashed KWin in the past.\n"
+"This was most likely due to a driver bug.\n"
+"If you think that you have meanwhile upgraded to a stable driver,\n"
+"you can reset this protection but be aware that this might result in an "
+"immediate crash!"
+msgstr ""
+"A composição OpenGL (a padrão) fez o KWin falhar no passado.\n"
+"Isso provavelmente ocorreu por um erro no driver.\n"
+"Se você acha que atualizou para um driver mais estável,\n"
+"poderá redefinir esta proteção, mas tome cuidado que isto poderá resultar em "
+"uma falha imediata!"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
+#: compositing.ui:44
+#, kde-format
+msgid ""
+"Scale method \"Accurate\" is not supported by all hardware and can cause "
+"performance regressions and rendering artifacts."
+msgstr ""
+"O método de escala \"Preciso\" não é suportado por todo o hardware e poderá "
+"provocar problemas de desempenho e defeitos na renderização."
+
+#. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
+#: compositing.ui:67
+#, kde-format
+msgid ""
+"Keeping the window thumbnail always interferes with the minimized state of "
+"windows. This can result in windows not suspending their work when minimized."
+msgstr ""
+"Manter a miniatura da janela interfere sempre com o estado minimizado das "
+"janelas. Isso poderá fazer com que as janelas não suspendam o seu trabalho "
+"se estiverem minimizadas."
+
+#. i18n: ectx: property (text), widget (QLabel, compositingLabel)
+#: compositing.ui:79
+#, kde-format
+msgid "Compositing:"
+msgstr "Composição:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
+#: compositing.ui:86
+#, kde-format
+msgid "Enable on startup"
+msgstr "Habilitar na inicialização"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:95
+#, kde-format
+msgid ""
+"Applications can set a hint to block compositing when the window is open.\n"
+" This brings performance improvements for e.g. games.\n"
+" The setting can be overruled by window-specific rules."
+msgstr ""
+"Os aplicativos podem definir uma dica para bloquear a composição quando a "
+"janela estiver aberta. \n"
+"  Isto proporciona melhorias de desempenho, por ex. jogos. \n"
+"  A configuração pode ser anulada por regras específicas da janela."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:98
+#, kde-format
+msgid "Allow applications to block compositing"
+msgstr "Permitir que os aplicativos bloqueiem a composição"
+
+#. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
+#: compositing.ui:105
+#, kde-format
+msgid "Animation speed:"
+msgstr "Velocidade da animação:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: compositing.ui:142
+#, kde-format
+msgid "Very slow"
+msgstr "Muito lenta"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: compositing.ui:162
+#, kde-format
+msgid "Instant"
+msgstr "Instantâneo"
+
+#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
+#: compositing.ui:174
+#, kde-format
+msgid "Scale method:"
+msgstr "Método de escala:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:184
+#, kde-format
+msgid "Smooth"
+msgstr "Suave"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:189
+#, kde-format
+msgid "Accurate"
+msgstr "Preciso"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: compositing.ui:199
+#, kde-format
+msgid "Tearing prevention (\"vsync\"):"
+msgstr "Prevenção de deslizamento (\"vsync\"):"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:207
+#, kde-format
+msgid "Automatic"
+msgstr "Automático"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:212
+#, kde-format
+msgid "Only when cheap"
+msgstr "Apenas quando for econômico"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:217
+#, kde-format
+msgid "Full screen repaints"
+msgstr "Atualizações da tela inteira"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:222
+#, kde-format
+msgid "Re-use screen content"
+msgstr "Reutilizar o conteúdo da tela"
+
+#. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
+#: compositing.ui:230
+#, kde-format
+msgid "Keep window thumbnails:"
+msgstr "Manter as miniaturas da janela:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:238
+#, kde-format
+msgid "Never"
+msgstr "Nunca"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:243
+#, kde-format
+msgid "Only for Shown Windows"
+msgstr "Apenas para as janelas visíveis"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:248
+#, kde-format
+msgid "Always"
+msgstr "Sempre"
+
+#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
+#: compositing.ui:256
+#, kde-format
+msgid "Latency:"
+msgstr "Latência:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:264
+#, kde-format
+msgid "Force lowest latency (may cause dropped frames)"
+msgstr "Forçar a latência mais baixa (pode ocasionar perda de quadros)"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:269
+#, kde-format
+msgid "Prefer lower latency"
+msgstr "Preferir latência mais baixa"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:274
+#, kde-format
+msgid "Balance of latency and smoothness"
+msgstr "Balanço de latência e suavidade"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:279
+#, kde-format
+msgid "Prefer smoother animations"
+msgstr "Preferir animações mais suaves"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:284
+#, kde-format
+msgid "Force smoothest animations"
+msgstr "Forçar animações mais suaves"
+
+#: main.cpp:79
+#, kde-format
+msgid "Re-enable OpenGL detection"
+msgstr "Reabilitar a detecção do OpenGL"
+
+#: main.cpp:135
+#, kde-format
+msgid ""
+"\"Only when cheap\" only prevents tearing for full screen changes like a "
+"video."
+msgstr ""
+"\"Apenas quando for econômico\" somente evita as intermitências nas mudanças "
+"para tela inteira, como em um vídeo."
+
+#: main.cpp:139
+#, kde-format
+msgid "\"Full screen repaints\" can cause performance problems."
+msgstr "\"Atualizações da tela inteira\" pode causar problemas de desempenho."
+
+#: main.cpp:143
+#, kde-format
+msgid ""
+"\"Re-use screen content\" causes severe performance problems on MESA drivers."
+msgstr ""
+"\"Reutilizar o conteúdo da tela\" causa sérios problemas de desempenho nos "
+"drivers MESA."
+
+#~ msgid "Rendering backend:"
+#~ msgstr "Infraestrutura de renderização:"
+
+#~ msgid "OpenGL 3.1"
+#~ msgstr "OpenGL 3.1"
+
+#~ msgid "OpenGL 2.0"
+#~ msgstr "OpenGL 2.0"
+
+#~ msgid "Crisp"
+#~ msgstr "Rígido"
+
+#~ msgid "Smooth (slower)"
+#~ msgstr "Suave (mais lento)"
+
+#~ msgid "XRender"
+#~ msgstr "XRender"
+
+#~ msgctxt "OpenGL Platform Interface"
+#~ msgid "EGL"
+#~ msgstr "EGL"
+
+#~ msgctxt "OpenGL Platform Interface"
+#~ msgid "GLX"
+#~ msgstr "GLX"
+
+#~ msgid ""
+#~ "Author: %1\n"
+#~ "License: %2"
+#~ msgstr ""
+#~ "Autor: %1\n"
+#~ "Licença: %2"
+
+#~ msgid ""
+#~ "Hint: To find out or configure how to activate an effect, look at the "
+#~ "effect's settings."
+#~ msgstr ""
+#~ "Dica: Para localizar ou configurar a ativação de um efeito, verifique as "
+#~ "configurações do efeito."
+
+#~ msgid "Search..."
+#~ msgstr "Procurar..."
+
+#~ msgid "Configure filter"
+#~ msgstr "Configurar o filtro"
+
+#~ msgid "Exclude Desktop Effects not supported by the Compositor"
+#~ msgstr ""
+#~ "Excluir os efeitos da área de trabalho não suportados pelo Compositor"
+
+#~ msgid "Exclude internal Desktop Effects"
+#~ msgstr "Excluir os efeitos internos da área de trabalho"
+
+#~ msgid "Get New Desktop Effects..."
+#~ msgstr "Baixar novos efeitos da área de trabalho..."

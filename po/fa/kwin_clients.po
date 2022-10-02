@@ -1,0 +1,594 @@
+# translation of kwin_clients.po to Persian
+# Nazanin Kazemi <kazemi@itland.ir>, 2006, 2007.
+# Tahereh Dadkhahfar <dadkhahfar@itland.ir>, 2006.
+# MaryamSadat Razavi <razavi@itland.ir>, 2006, 2007.
+# Nasim Daniarzadeh <daniarzadeh@itland.ir>, 2006, 2007.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2007-06-24 11:12+0330\n"
+"Last-Translator: Nazanin Kazemi <kazemi@itland.ir>\n"
+"Language-Team: Persian <kde-i18n-fa@kde.org>\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr ""
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr ""
+
+#: aurorae/src/aurorae.cpp:727
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "بزرگ"
+
+#: aurorae/src/aurorae.cpp:728
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "بزرگ"
+
+#: aurorae/src/aurorae.cpp:729
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "بزرگ"
+
+#: aurorae/src/aurorae.cpp:730
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "بزرگ"
+
+#: aurorae/src/aurorae.cpp:731
+#, fuzzy, kde-format
+#| msgid "Resize"
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "تغییر اندازه"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "پیکربندی محاوره"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "&تراز کردن عنوان‌"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "چپ"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "مرکز"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "راست"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"اگر لبه‌های پنجره باید به رنگ میله عنوان رنگ شوند، این گزینه را علامت بزنید. "
+"در غیر این صورت، به رنگ زمینه رنگ می‌شوند."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, fuzzy, kde-format
+#| msgid "Colored Window Border"
+msgid "Colored window border"
+msgstr "لبه پنجره رنگ‌شده"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"اگر می‌خواهید دکمه‌ها را هنگامی که اشاره‌گر موشی روی آنها قرار می‌گیرد محو کرده "
+"و دوباره با دور شدن اشاره‌گر پدیدار شوند، این گزینه را علامت بزنید."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "پویا‌نمایی دکمه‌ها"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "اگر می‌خواهید متن میله عنوان دارای یک نمای سه بعدی با سایه‌ای پشت آن باشد، "
+#~ "این گزینه را علامت بزنید."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "استفاده از &متن سایه‌دار‌"
+
+#, fuzzy
+#~| msgid "Animate buttons"
+#~ msgid "Animations"
+#~ msgstr "پویا‌نمایی دکمه‌ها"
+
+#, fuzzy
+#~| msgid "Actions Settings"
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "تنظیمات کنشها"
+
+#, fuzzy
+#~| msgid "Center"
+#~ msgid "General"
+#~ msgstr "مرکز"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "بزرگ"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "بزرگ"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "بزرگ"
+
+#, fuzzy
+#~| msgid "Title &Alignment"
+#~ msgid "Tit&le alignment:"
+#~ msgstr "&تراز کردن عنوان‌"
+
+#, fuzzy
+#~| msgid "Small"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "کوچک"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "بستن پنجره‌ها با دو بار فشار دکمه گزینگان"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title"
+#~ msgstr "کمینه‌سازی پنجره"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadows"
+#~ msgstr "سایه‌دار"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Window Glow"
+#~ msgstr "کمینه‌سازی پنجره"
+
+#, fuzzy
+#~| msgid "Config Dialog"
+#~ msgid "Dialog"
+#~ msgstr "پیکربندی محاوره"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Use window title"
+#~ msgstr "کمینه‌سازی پنجره"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title:"
+#~ msgstr "کمینه‌سازی پنجره"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Hide window title bar"
+#~ msgstr "کمینه‌سازی پنجره"
+
+#, fuzzy
+#~| msgid "Restore"
+#~ msgid "Remove"
+#~ msgstr "باز گرداندن"
+
+#, fuzzy
+#~| msgid "Oxygen"
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "اکسیژن"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Inactive Windows"
+#~ msgstr "کمینه‌سازی پنجره"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Windows"
+#~ msgstr "کمینه‌سازی پنجره"
+
+#~ msgid "Oxygen"
+#~ msgstr "اکسیژن"
+
+#~ msgid "Help"
+#~ msgstr "کمک"
+
+#~ msgid "Minimize"
+#~ msgstr "کمینه‌سازی"
+
+#~ msgid "Maximize"
+#~ msgstr "بیشینه‌سازی"
+
+#~ msgid "Close"
+#~ msgstr "بستن"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "نگه داشتن روی پنجره‌های دیگر"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "نگه داشتن زیر پنجره‌های دیگر"
+
+#, fuzzy
+#~| msgid "On all desktops"
+#~ msgid "On All Desktops"
+#~ msgstr "روی همه رومیزیها"
+
+#~ msgid "Menu"
+#~ msgstr "گزینگان"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "نه روی همه رومیزیها"
+
+#~ msgid "On all desktops"
+#~ msgstr "روی همه رومیزیها"
+
+#~ msgid "Unshade"
+#~ msgstr "بدون سایه"
+
+#~ msgid "Shade"
+#~ msgstr "سایه‌دار"
+
+#~ msgid "Resize"
+#~ msgstr "تغییر اندازه"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>پیش‌نمایش B II</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "باز گرداندن"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "؟"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "ترسیم قابکهای پنجره با استفاده از رنگهای &میله عنوان‌"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "وقتی انتخاب شد، لبه‌های پنجره با استفاده از رنگهای میله عنوان ترسیم "
+#~ "می‌شوند؛ در غیر این صورت، با استفاده از رنگهای لبه عادی ترسیم می‌گردند."
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "ترسیم گرداننده &تغییر اندازه‌"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "وقتی انتخاب شد، تزئینات توسط یک »گرداننده چنگ‌اندازی« در پایین گوشه راست "
+#~ "پنجره‌ها ترسیم می‌شوند؛ در غیر این صورت، گرداننده چنگ‌اندازی ترسیم نمی‌شود."
+
+#, fuzzy
+#~| msgid ""
+#~| "When selected, active titlebars are drawn with a stipple (dotted) "
+#~| "effect; otherwise, they are drawn without the stipple."
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr ""
+#~ "وقتی انتخاب شد، میله ابزارهای فعال با یک جلوه لکه‌دار)نقطه‌ای( ترسیم "
+#~ "می‌شوند؛ در غیر این صورت، بدون لکه رسم می‌شوند."
+
+#~ msgid "Actions Settings"
+#~ msgstr "تنظیمات کنشها"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "دو بار فشار روی دکمه گزینگان:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "هیچ کاری انجام نشود"
+
+#~ msgid "Minimize Window"
+#~ msgstr "کمینه‌سازی پنجره"
+
+#~ msgid "Shade Window"
+#~ msgstr "سایه‌دار کردن پنجره"
+
+#~ msgid "Close Window"
+#~ msgstr "بستن پنجره"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "یک کنش می‌تواند به دو بار فشار دکمه گزینگان مربوط شود. اگر شک دارید آن را "
+#~ "رها کنید."
+
+#~ msgid "Laptop"
+#~ msgstr "رایانه کیفی"
+
+#, fuzzy
+#~| msgid "Draw &gradients"
+#~ msgid "Radial Gradient"
+#~ msgstr "ترسیم &گرادیانها‌"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Save"
+#~ msgstr "سایه‌دار"
+
+#~ msgid "Large"
+#~ msgstr "بزرگ"
+
+#~ msgid "Small"
+#~ msgstr "کوچک"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "اگر می‌خواهید پنجره‌ها با دو بار فشار دکمه گزینگان، شبیه میکروسافت ویندوز، "
+#~ "بسته شوند، این گزینه را علامت بزنید."
+
+#~ msgid "Plastik"
+#~ msgstr "پلاستیک"
+
+#, fuzzy
+#~| msgid "On all desktops"
+#~ msgid "All Desktops"
+#~ msgstr "روی همه رومیزیها"
+
+#, fuzzy
+#~| msgid "Close"
+#~ msgid "Close Item"
+#~ msgstr "بستن"
+
+#, fuzzy
+#~| msgid "Left"
+#~ msgid "&Left"
+#~ msgstr "چپ"
+
+#, fuzzy
+#~| msgid "Center"
+#~ msgid "&Center"
+#~ msgstr "مرکز"
+
+#, fuzzy
+#~| msgid "Right"
+#~ msgid "&Right"
+#~ msgstr "راست"
+
+#, fuzzy
+#~ msgid "Do not keep above others"
+#~ msgstr "نگه داشتن روی پنجره‌های دیگر"
+
+#, fuzzy
+#~ msgid "Keep above others"
+#~ msgstr "نگه داشتن روی پنجره‌های دیگر"
+
+#, fuzzy
+#~ msgid "Do not keep below others"
+#~ msgstr "نگه داشتن زیر پنجره‌های دیگر"
+
+#, fuzzy
+#~ msgid "Keep below others"
+#~ msgstr "نگه داشتن زیر پنجره‌های دیگر"
+
+#, fuzzy
+#~| msgid "Maximize"
+#~ msgid "Maximum"
+#~ msgstr "بیشینه‌سازی"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadow style:"
+#~ msgstr "سایه‌دار"
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "چهره KWM را نصب می‌کند"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "مسیر پرونده پیکربندی چهره"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>چهره KWM</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "چسبناک"
+
+#~ msgid "Unsticky"
+#~ msgstr "غیر چسبناک"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>پیش‌نمایش Keramik</b></center>"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "ترسیم جلوه &لکه‌دار میله عنوان‌"
+
+#~ msgid ""
+#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
+#~ "otherwise, they are drawn without the stipple."
+#~ msgstr ""
+#~ "وقتی انتخاب شد، میله ابزارهای فعال با یک جلوه لکه‌دار)نقطه‌ای( ترسیم "
+#~ "می‌شوند؛ در غیر این صورت، بدون لکه رسم می‌شوند."
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "ترسیم میله &چنگ‌اندازی زیر پنجره‌ها‌"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
+#~ "otherwise, no grab bar is drawn."
+#~ msgstr ""
+#~ "وقتی انتخاب شد، تزئینات با یک »میله چنگ‌اندازی«  زیر پنجره‌ها ترسیم می‌شوند؛ "
+#~ "در غیر این صورت، میله چنگ‌اندازی رسم نمی‌شود."
+
+#~ msgid "Draw &gradients"
+#~ msgstr "ترسیم &گرادیانها‌"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with gradients for high-color "
+#~ "displays; otherwise, no gradients are drawn."
+#~ msgstr ""
+#~ "وقتی انتخاب شد، تزئینات با گرادیانهایی برای نمایش رنگهای بالا ترسیم "
+#~ "می‌شوند؛ در غیر این صورت، گرادیانها رسم نمی‌شوند."
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE ۲"
+
+#~ msgid ""
+#~ "When selected, the window decoration borders are drawn using the titlebar "
+#~ "colors; otherwise, they are drawn using normal border colors instead."
+#~ msgstr ""
+#~ "وقتی انتخاب شد، لبه‌های تزئینی پنجره با استفاده از رنگهای میله عنوان ترسیم "
+#~ "می‌شوند؛ در غیر این صورت، در عوض با استفاده از رنگهای لبه عادی رسم می‌شوند."
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "کوارتز &بسیار نازک‌"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "تزئینات پنجره کوارتز با میله عنوان بسیار کوچک."
+
+#~ msgid "Quartz"
+#~ msgstr "کوارتز"
+
+#~ msgid "Redmond"
+#~ msgstr "رِدمُند"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "&نمایش گرداننده تغییر اندازه پنجره‌"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "وقتی انتخاب شد، همه پنجره‌ها با یک دستگیره تغییر اندازه در گوشه راست "
+#~ "پایین‌تر ترسیم می‌شوند. این کار، تغییر اندازه پنجره را آسان‌تر می‌سازد، خصوصاً "
+#~ "برای گویهای کنترلی و دیگر جایگزینهای موشی بر روی رایانه‌های کیفی."
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr "در اینجا می‌توانید اندازه دستگیره تغییر اندازه را تغییر دهید."
+
+#~ msgid "Medium"
+#~ msgstr "متوسط"
+
+#~ msgid "Modern System"
+#~ msgstr "سیستم نوین"
+
+#~ msgid "Web"
+#~ msgstr "وب"
+
+#~ msgid "Keramik"
+#~ msgstr "کرامیک"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "نمایش &شمایل پنجره در حباب عنوان‌"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "اگر می‌خواهید شمایل پنجره در حباب عنوان بعد از متن میله عنوان نمایش داده "
+#~ "شود، این گزینه را علامت بزنید."
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "ترسیم حباب عنوانهای &کوچک روی پنجره‌های فعال‌"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "اگر می‌خواهید حباب عنوان در پنجره‌های فعال یک اندازه باشند، این گزینه را "
+#~ "علامت بزنید. این گزینه برای رایانه‌های کیفی یا صفحه نمایشگر با دقت پایین، "
+#~ "وقتی که می‌خواهید مقدار فضای قابل دسترس محتویات پنجره را بیشینه سازید، "
+#~ "مفید است."
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "ترسیم میله‌های &چنگ‌اندازی زیر پنجره‌ها‌"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "اگر می‌خواهید میله چنگ‌انداز زیر پنجره‌ها ترسیم شود، این گزینه را علامت "
+#~ "بزنید. وقتی این گزینه برگزیده نمی‌شود، تنها یک لبه نازک در جای آن رسم "
+#~ "می‌شود."
+
+#, fuzzy
+#~| msgid "Installs a KWM theme"
+#~ msgid "Get New Themes..."
+#~ msgstr "چهره KWM را نصب می‌کند"
+
+#, fuzzy
+#~| msgid "Installs a KWM theme"
+#~ msgid "Install New Theme..."
+#~ msgstr "چهره KWM را نصب می‌کند"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Glow active window"
+#~ msgstr "کمینه‌سازی پنجره"
+
+#, fuzzy
+#~| msgid "Draw window frames using &titlebar colors"
+#~ msgid "Overwrite default title bar colors:"
+#~ msgstr "ترسیم قابکهای پنجره با استفاده از رنگهای &میله عنوان‌"
+
+#~ msgid "<b><center>Oxygen preview! =)</center></b>"
+#~ msgstr "<b><center>پیش‌نمایش اکسیژن! =)</center></b>"
+
+#~ msgid "Un-Sticky"
+#~ msgstr "غیر چسبناک"

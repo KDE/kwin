@@ -1,0 +1,1000 @@
+# Thomas Reitelbach <tr@erdfunkstelle.de>, 2007, 2008, 2009, 2010.
+# Burkhard Lück <lueck@hube-lueck.de>, 2009, 2011, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2021.
+# Johannes Obermayr <johannesobermayr@gmx.de>, 2009, 2010.
+# Frederik Schwarzer <schwarzer@kde.org>, 2010, 2011, 2012, 2013, 2014, 2016, 2022.
+# Panagiotis Papadopoulos <pano_90@gmx.net>, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwincompositing\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"PO-Revision-Date: 2022-02-22 23:11+0100\n"
+"Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
+"Language-Team: German <kde-i18n-doc@kde.org>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 21.08.0\n"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
+#: compositing.ui:31
+#, kde-format
+msgid ""
+"OpenGL compositing (the default) has crashed KWin in the past.\n"
+"This was most likely due to a driver bug.\n"
+"If you think that you have meanwhile upgraded to a stable driver,\n"
+"you can reset this protection but be aware that this might result in an "
+"immediate crash!"
+msgstr ""
+"OpenGL-Compositing (Voreinstellung) hat KWin in der Vergangenheit zum \n"
+"Absturz gebracht. Ursache war sehr wahrscheinlich ein fehlerhafter Treiber.\n"
+"Wenn Sie glauben, in der Zwischenzeit auf eine stabile Treiberversion \n"
+"aktualisiert zu haben, können Sie die Schutzfunktion zurücksetzen. \n"
+"Seien Sie sich jedoch im Klaren darüber, dass das zu einem sofortigen "
+"Absturz führen kann."
+
+#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
+#: compositing.ui:44
+#, kde-format
+msgid ""
+"Scale method \"Accurate\" is not supported by all hardware and can cause "
+"performance regressions and rendering artifacts."
+msgstr ""
+"Die Skalierungsmethode „Genau“ wird nicht durch jede Hardware unterstützt "
+"und kann zu Leistungseinbußen und Anzeigefehler (Artefakt) beim Rendern "
+"führen."
+
+#. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
+#: compositing.ui:67
+#, kde-format
+msgid ""
+"Keeping the window thumbnail always interferes with the minimized state of "
+"windows. This can result in windows not suspending their work when minimized."
+msgstr ""
+"Immer Fenster-Vorschaubilder vorzuhalten beeinträchtigt den minimierten "
+"Zustand von Fenstern. Dies kann dazu führen, dass minimierte Fenster nicht "
+"aussetzen."
+
+#. i18n: ectx: property (text), widget (QLabel, compositingLabel)
+#: compositing.ui:79
+#, kde-format
+msgid "Compositing:"
+msgstr "Compositing:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
+#: compositing.ui:86
+#, kde-format
+msgid "Enable on startup"
+msgstr "Beim Start aktivieren"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:95
+#, kde-format
+msgid ""
+"Applications can set a hint to block compositing when the window is open.\n"
+" This brings performance improvements for e.g. games.\n"
+" The setting can be overruled by window-specific rules."
+msgstr ""
+"Anwendungen können die Anweisung geben, Compositing beim Öffnen des Fensters "
+"zu blockieren.\n"
+"Die führt zu besserer Leistung zum Beispiel für Spiele.\n"
+"Diese Einstellung kann durch fensterspezifische Regeln überschrieben werden."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:98
+#, kde-format
+msgid "Allow applications to block compositing"
+msgstr "Anwendungen erlauben, Compositing zu blockieren"
+
+#. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
+#: compositing.ui:105
+#, kde-format
+msgid "Animation speed:"
+msgstr "Animationsgeschwindigkeit:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: compositing.ui:142
+#, kde-format
+msgid "Very slow"
+msgstr "Sehr langsam"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: compositing.ui:162
+#, kde-format
+msgid "Instant"
+msgstr "Sofort"
+
+#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
+#: compositing.ui:174
+#, kde-format
+msgid "Scale method:"
+msgstr "Skalierungsmethode:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:184
+#, kde-format
+msgid "Smooth"
+msgstr "Weich"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:189
+#, kde-format
+msgid "Accurate"
+msgstr "Genau"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: compositing.ui:199
+#, kde-format
+msgid "Tearing prevention (\"vsync\"):"
+msgstr "Einzelbild-Zerreißen (Tearing) verhindern (VSync):"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:207
+#, kde-format
+msgid "Automatic"
+msgstr "Automatisch"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:212
+#, kde-format
+msgid "Only when cheap"
+msgstr "Nur wenn Aufwand vertretbar"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:217
+#, kde-format
+msgid "Full screen repaints"
+msgstr "Vollständiges Neuzeichnen"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:222
+#, kde-format
+msgid "Re-use screen content"
+msgstr "Bildschirm-Inhalt wiederverwenden"
+
+#. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
+#: compositing.ui:230
+#, kde-format
+msgid "Keep window thumbnails:"
+msgstr "Fenster-Vorschaubilder vorhalten:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:238
+#, kde-format
+msgid "Never"
+msgstr "Nie"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:243
+#, kde-format
+msgid "Only for Shown Windows"
+msgstr "Nur für sichtbare Fenster"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:248
+#, kde-format
+msgid "Always"
+msgstr "Immer"
+
+#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
+#: compositing.ui:256
+#, kde-format
+msgid "Latency:"
+msgstr "Latenz:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:264
+#, kde-format
+msgid "Force lowest latency (may cause dropped frames)"
+msgstr ""
+"Geringste Latenz erzwingen (sorgt möglicherweise für ausgelassene "
+"Einzelbilder)"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:269
+#, kde-format
+msgid "Prefer lower latency"
+msgstr "Geringere Latenz bevorzugen"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:274
+#, kde-format
+msgid "Balance of latency and smoothness"
+msgstr "Ausgewogenheit zwischen Latenz und flüssigen Animationen"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:279
+#, kde-format
+msgid "Prefer smoother animations"
+msgstr "Flüssige Animationen bevorzugen"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:284
+#, kde-format
+msgid "Force smoothest animations"
+msgstr "Flüssigste Animationen erzwingen"
+
+#: main.cpp:79
+#, kde-format
+msgid "Re-enable OpenGL detection"
+msgstr "OpenGL-Erkennung wieder aktivieren"
+
+#: main.cpp:135
+#, kde-format
+msgid ""
+"\"Only when cheap\" only prevents tearing for full screen changes like a "
+"video."
+msgstr ""
+"„Nur wenn Aufwand vertretbar“ verhindert nur das Zerreißen bei Änderungen im "
+"Vollbildmodus wie zum Beispiel bei einem Video."
+
+#: main.cpp:139
+#, kde-format
+msgid "\"Full screen repaints\" can cause performance problems."
+msgstr "„Vollständiges Neuzeichnen“ kann zu Leistungsproblemen führen."
+
+#: main.cpp:143
+#, kde-format
+msgid ""
+"\"Re-use screen content\" causes severe performance problems on MESA drivers."
+msgstr ""
+"„Bildschirm-Inhalt wiederverwenden“ führt zu erheblichen Leistungsproblemen "
+"bei Mesa-Treibern."
+
+#~ msgid "Rendering backend:"
+#~ msgstr "Ausgabemodul:"
+
+#~ msgid "OpenGL 3.1"
+#~ msgstr "OpenGL 3.1"
+
+#~ msgid "OpenGL 2.0"
+#~ msgstr "OpenGL 2.0"
+
+#~ msgid "Crisp"
+#~ msgstr "Pixelig"
+
+#~ msgid "Smooth (slower)"
+#~ msgstr "Weich (langsamer)"
+
+#~ msgid "XRender"
+#~ msgstr "XRender"
+
+#~ msgctxt "OpenGL Platform Interface"
+#~ msgid "EGL"
+#~ msgstr "EGL"
+
+#~ msgctxt "OpenGL Platform Interface"
+#~ msgid "GLX"
+#~ msgstr "GLX"
+
+#~ msgid ""
+#~ "Author: %1\n"
+#~ "License: %2"
+#~ msgstr ""
+#~ "Autor: %1\n"
+#~ "Lizenz: %2"
+
+#~ msgid ""
+#~ "Hint: To find out or configure how to activate an effect, look at the "
+#~ "effect's settings."
+#~ msgstr ""
+#~ "Tipp: Wie ein Effekt ausgelöst und eingerichtet wird, erfahren Sie in den "
+#~ "Effekt-Einstellungen"
+
+#~ msgid "Search..."
+#~ msgstr "Suchen ..."
+
+#~ msgid "Configure filter"
+#~ msgstr "Filter einrichten"
+
+#~ msgid "Exclude Desktop Effects not supported by the Compositor"
+#~ msgstr ""
+#~ "Arbeitsflächen-Effekte ausschließen, die vom Compositor nicht unterstützt "
+#~ "werden"
+
+#~ msgid "Exclude internal Desktop Effects"
+#~ msgstr "Interne Arbeitsflächeneffekte aussetzen"
+
+#~ msgid "Get New Desktop Effects..."
+#~ msgstr "Neue Arbeitsflächen-Effekte herunterladen ..."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Thomas Reitelbach"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "tr@erdfunkstelle.de"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Accessibility"
+#~ msgstr "Zugangshilfen"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Appearance"
+#~ msgstr "Erscheinungsbild"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Candy"
+#~ msgstr "Optik"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Focus"
+#~ msgstr "Aktivierung"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Show Desktop Animation"
+#~ msgstr "Animation der Arbeitsfläche anzeigen"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Tools"
+#~ msgstr "Extras"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Virtual Desktop Switching Animation"
+#~ msgstr "Animation beim Wechseln der virtuellen Arbeitsfläche"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Management"
+#~ msgstr "Fensterverwaltung"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Open/Close Animation"
+#~ msgstr "Animation beim Öffnen/Schließen von Fenstern"
+
+#~ msgid "KWin development team"
+#~ msgstr "KWin-Entwicklerteam"
+
+#~ msgid "Experimental:"
+#~ msgstr "Experimentell:"
+
+#~ msgid "Enable color correction"
+#~ msgstr "Farbkorrektur aktivieren"
+
+#~ msgid ""
+#~ "Having full screen windows bypass the compositor is not supported on "
+#~ "every hardware."
+#~ msgstr ""
+#~ "Das Umgehen des Compositors bei Vollbildfenstern wird nicht von jeder "
+#~ "Hardware unterstützt."
+
+#~ msgid "Expert:"
+#~ msgstr "Experte:"
+
+#~ msgid "Suspend compositor for full screen windows"
+#~ msgstr "Compositor für Fenster im Vollbildmodus aussetzen"
+
+#~ msgid "OpenGL interface:"
+#~ msgstr "OpenGL-Schnittstelle:"
+
+#~ msgid ""
+#~ "EGL is not supported by all OpenGL drivers. If not supported the "
+#~ "Compositor will be disabled."
+#~ msgstr ""
+#~ "EGL wird nicht durch alle OpenGL-Treiber unterstützt, in diesem Fall wird "
+#~ "der Compositor abgeschaltet."
+
+#~ msgid "Animation Speed:"
+#~ msgstr "Animationsgeschwindigkeit:"
+
+#~ msgid "Scale Method:"
+#~ msgstr "Skalierungsmethode:"
+
+#~ msgid "Tearing Prevention (VSync):"
+#~ msgstr "Einzelbild-Zerreißen (Tearing) verhindern (VSync):"
+
+#~ msgid "Keep Window Thumbnails:"
+#~ msgstr "Fenster-Vorschaubilder vorhalten:"
+
+#~ msgid "Always (Breaks Animations)"
+#~ msgstr "Immer (verhindert Animationen)"
+
+#~ msgid "OpenGL Platform Interface:"
+#~ msgstr "OpenGL-Plattformschnittstelle:"
+
+#~ msgid "Form"
+#~ msgstr "Formular"
+
+#~ msgid "1 second remaining:"
+#~ msgid_plural "%1 seconds remaining:"
+#~ msgstr[0] "1 Sekunde verbleibt:"
+#~ msgstr[1] "%1 Sekunden verbleiben:"
+
+#~ msgid "Confirm Desktop Effects Change"
+#~ msgstr "Änderung der Arbeitsflächeneffekte bestätigen"
+
+#~ msgid "&Accept Configuration"
+#~ msgstr "&Einrichtung beibehalten"
+
+#~ msgid "&Return to Previous Configuration"
+#~ msgstr "Zur &vorherigen Einrichtung zurückkehren"
+
+#~ msgid ""
+#~ "Desktop effects settings have changed.\n"
+#~ "Do you want to keep the new settings?\n"
+#~ "They will be automatically reverted in 10 seconds."
+#~ msgstr ""
+#~ "Arbeitsflächeneffekte wurden geändert.\n"
+#~ "Möchten Sie die neuen Einstellungen beibehalten?\n"
+#~ "Sie werden automatisch nach 10 Sekunden zurückgesetzt."
+
+#~ msgctxt ""
+#~ "Action to open a dialog showing detailed information why an effect could "
+#~ "not be loaded"
+#~ msgid "Details"
+#~ msgstr "Details"
+
+#~ msgctxt "Prevent warning from bein displayed again"
+#~ msgid "Don't show again!"
+#~ msgstr "Nicht wieder anzeigen."
+
+#~ msgid "Use GLSL shaders"
+#~ msgstr "GLSL-Shader verwenden"
+
+#~ msgid "None"
+#~ msgstr "Kein"
+
+#~ msgid "The painting is not synchronized with the screen."
+#~ msgstr "Das Zeichnen ist nicht mit dem Bildschirm abgeglichen."
+
+#~ msgid ""
+#~ "Tries to re-use older buffers and if that is not possible,\n"
+#~ "picks a strategy matching your hardware."
+#~ msgstr ""
+#~ "Versucht alte Puffer wieder zu verwenden. Wenn das nicht möglich ist\n"
+#~ "wird eine Strategie passen zur Hardware ausgesucht."
+
+#~ msgid ""
+#~ "When major regions of the screen are updated,\n"
+#~ "the entire screen will be repainted.\n"
+#~ "Can cause tearing with small updates."
+#~ msgstr ""
+#~ "Wenn größere Bereiche des Bildschirms aktualisiert werden,\n"
+#~ "wird der gesamte Bildschirm neu gezeichnet.\n"
+#~ "Das kann Risse bei kleineren Aktualisierungen verursachen."
+
+#~ msgid ""
+#~ "The complete screen is repainted for every frame.\n"
+#~ "Can be slow with large blurred areas."
+#~ msgstr ""
+#~ "Für jeden Frame wird der gesamte Bildschirminhalt neu gezeichnet.\n"
+#~ "Das kann bei großen unscharfen Bereichen langsam sein."
+
+#~ msgid ""
+#~ "WARNING:\n"
+#~ "This strategy is usually slow with Open Source drivers.\n"
+#~ "Undamaged pixels will be copied from GL_FRONT to GL_BACK"
+#~ msgstr ""
+#~ "ACHTUNG:\n"
+#~ "Diese Strategie ist mit Open-Source-Treibern normalerweise langsam.\n"
+#~ "Intakte Pixel werden von GL_FRONT nach GL_BACK kopiert."
+
+#~ msgid "kcmkwincompositing"
+#~ msgstr "kcmkwincompositing"
+
+#~ msgid "KWin Desktop Effects Configuration Module"
+#~ msgstr "Einrichtungsmodul für KDE-Arbeitsflächeneffekte"
+
+#~ msgid "(c) 2007 Rivo Laks"
+#~ msgstr "© 2007, Rivo Laks"
+
+#~ msgid "Rivo Laks"
+#~ msgstr "Rivo Laks"
+
+#~ msgid "No effect"
+#~ msgstr "Kein Effekt"
+
+#~ msgid ""
+#~ "Failed to activate desktop effects using the given configuration options. "
+#~ "Settings will be reverted to their previous values.\n"
+#~ "\n"
+#~ "Check your X configuration. You may also consider changing advanced "
+#~ "options, especially changing the compositing type."
+#~ msgstr ""
+#~ "Mit den gewählten Einstellung lassen sich die Arbeitsflächeneffekte nicht "
+#~ "aktivieren. Die vorherigen Einstellungen werden wiederhergestellt.\n"
+#~ "\n"
+#~ "Bitte prüfen Sie Ihre X-Einrichtung. Möglicherweise müssen auch die "
+#~ "erweiterten Einstellungen angepasst werden, insbesondere der Composit-Typ."
+
+#~ msgid "Demos"
+#~ msgstr "Vorführungen"
+
+#~ msgid "Tests"
+#~ msgstr "Tests"
+
+#~ msgid ""
+#~ "Desktop effects are not available on this system due to the following "
+#~ "technical issues:"
+#~ msgstr ""
+#~ "Die Arbeitsflächeneffekte sind wegen der nachstehenden technischen "
+#~ "Einschränkungen auf diesem System nicht verfügbar:"
+
+#~ msgctxt ""
+#~ "Reason shown when trying to activate desktop effects and KWin (most "
+#~ "likely) crashes"
+#~ msgid "Window Manager seems not to be running"
+#~ msgstr "Die Fensterverwaltung läuft anscheinend nicht"
+
+#~ msgid ""
+#~ "Your settings have been saved but as KDE is currently running in failsafe "
+#~ "mode desktop effects cannot be enabled at this time.\n"
+#~ "\n"
+#~ "Please exit failsafe mode to enable desktop effects."
+#~ msgstr ""
+#~ "Ihre Einstellungen wurden gespeichert aber die Arbeitsflächeneffekte "
+#~ "können wegen des Betriebs von KDE im sicheren Modus derzeit nicht "
+#~ "aktiviert werden.\n"
+#~ "\n"
+#~ "Bitte verlassen Sie den sicheren Modus um die Arbeitsflächeneffekte zu "
+#~ "aktivieren."
+
+#~ msgctxt "Error Message shown when a desktop effect could not be loaded"
+#~ msgid "One desktop effect could not be loaded."
+#~ msgid_plural "%1 desktop effects could not be loaded."
+#~ msgstr[0] "Ein Arbeitsflächeneffekt lässt sich nicht aktivieren."
+#~ msgstr[1] "%1 Arbeitsflächeneffekte lassen sich nicht aktivieren."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated due to unknown reason"
+#~ msgid "%1 effect failed to load due to unknown reason."
+#~ msgstr "Der Effekt „%1“ kann aus unbekannter Ursache nicht geladen werden."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires hardware "
+#~ "shaders"
+#~ msgid "%1 effect requires hardware support."
+#~ msgstr "Der Effekt „%1“ benötigt Hardware-Unterstützung."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires OpenGL"
+#~ msgid "%1 effect requires OpenGL."
+#~ msgstr "Der Effekt „%1“ benötigt OpenGL."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires OpenGL 2"
+#~ msgid "%1 effect requires OpenGL 2."
+#~ msgstr "Der Effekt „%1“ benötigt OpenGL 2."
+
+#~ msgctxt "Window title"
+#~ msgid "List of effects which could not be loaded"
+#~ msgstr "Liste der Effekte, die nicht geladen werden können"
+
+#~ msgid ""
+#~ "For technical reasons it is not possible to determine all possible error "
+#~ "causes."
+#~ msgstr ""
+#~ "Aus technischen Gründen ist es nicht möglich, alle möglichen "
+#~ "Fehlerursachen zu bestimmen."
+
+#~ msgctxt ""
+#~ "Error Message shown when compositing is not active after tried activation"
+#~ msgid "Desktop effect system is not running."
+#~ msgstr "Das System für Arbeitsflächeneffekte läuft nicht."
+
+#~ msgid "<h1>Desktop Effects</h1>"
+#~ msgstr "<h1>Arbeitsflächeneffekte</h1>"
+
+#~ msgid "General"
+#~ msgstr "Allgemein"
+
+#~ msgid "Pressing this button can crash the desktop."
+#~ msgstr ""
+#~ "Das Drücken dieses Knopfes kann die Arbeitsfläche zum Absturz bringen."
+
+#~ msgid "I have saved my data."
+#~ msgstr "Ich habe meine Daten gespeichert."
+
+#~ msgid "Activation"
+#~ msgstr "Aktivierung"
+
+#~ msgid "Desktop effects can be toggled anytime using this shortcut:"
+#~ msgstr ""
+#~ "Arbeitsflächeneffekte können jederzeit mit diesem Kurzbefehl ein- und "
+#~ "ausgeschaltet werden:"
+
+#~ msgctxt "@title:group a few general options to set up desktop effects"
+#~ msgid "Simple effect setup"
+#~ msgstr "Einfache Effekt-Einrichtung"
+
+#~ msgid "Improved window management"
+#~ msgstr "Verbesserte Fensterverwaltung"
+
+#~ msgid "Effect for desktop switching:"
+#~ msgstr "Effekt für den Arbeitsflächenwechsel:"
+
+#~ msgid "Very Fast"
+#~ msgstr "Sehr schnell"
+
+#~ msgid "Fast"
+#~ msgstr "Schnell"
+
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#~ msgid "Slow"
+#~ msgstr "Langsam"
+
+#~ msgid "Extremely Slow"
+#~ msgstr "Extrem langsam"
+
+#~ msgid ""
+#~ "You can find more effects, as well as effect-specific settings, in the "
+#~ "\"All Effects\" tab above."
+#~ msgstr ""
+#~ "Weitere Effekte sowie deren Einstellungen finden Sie in der Karteikarte "
+#~ "„Alle Effekte“."
+
+#~ msgid "All Effects"
+#~ msgstr "Alle Effekte"
+
+#~ msgid "Advanced"
+#~ msgstr "Erweitert"
+
+#~ msgid "OpenGL Options"
+#~ msgstr "OpenGL-Einstellungen"
+
+#~ msgid ""
+#~ "<p>Activates color correction if possible, using the Kolor-Manager. "
+#~ "Requires OpenGL 2 Shaders to be enabled and Kolor-Manager to be "
+#~ "installed. May fail silently.</p><p><strong>Experimental</strong>.</p>"
+#~ msgstr ""
+#~ "<p>Aktiviert Farbkorrektur durch „Kolor-Manager“, wenn möglich. Dafür "
+#~ "müssen OpenGL 2 Shader aktiviert und „Kolor-Manager“ installiert sein. "
+#~ "Kann ohne Benachrichtigung fehlgeschlagen.</p><p><strong>Experimentell</"
+#~ "strong>.</p>"
+
+#~ msgid "General Options"
+#~ msgstr "Allgemeine Einstellungen"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Crisp:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"fast\")</span> -  Pretty fast "
+#~ "on all GPUs but looks bricky</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Smooth:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"good\") </span>- linear "
+#~ "blending.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Fast enough on newer "
+#~ "nvidia GPUs and maybe others but also can be <span style=\" text-"
+#~ "decoration: underline;\">very</span> slow, you will have to try it.</p></"
+#~ "body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Pixelig:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"fast\")</span> – Ziemlich "
+#~ "schnell auf allen GPUs, sieht jedoch stufig aus.</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Weich:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"good\")</span> – lineares "
+#~ "Mischen.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Schnell genug auf "
+#~ "neueren NVIDIA-GPUs und möglichweise auch auf anderen GPUs, kann jedoch "
+#~ "aber auch <span style=\" text-decoration: underline;\">sehr</span> "
+#~ "langsam sein. Sie werden es selber ausprobieren müssen.</p></body></html>"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Crisp:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_NEAREST</span> -  (very) fast on all GPUs but looks "
+#~ "bricky</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Smooth:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_LINEAR</span> - fast on most GPUs but a little blurry</"
+#~ "p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Accurate:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Lanczos filter, "
+#~ "requires glsl shader support.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Might be slow on weaker "
+#~ "GPUs and even cause various troubles with broken drivers (from "
+#~ "overbrightening to segfaults).</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Fall back to \"Smooth\" "
+#~ "if you have problems.</p></body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Pixelig:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_NEAREST</span> –  (sehr) schnell auf allen GPUs, sieht "
+#~ "jedoch stufig aus</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Weich:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_LINEAR</span> – schnell auf den meisten GPUs, sieht "
+#~ "jedoch etwas unscharf aus</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Genau:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Lanczos-Filter, "
+#~ "erfordert Unterstützung für GLSL-Shader.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Könnte auf schwächeren "
+#~ "GPUs langsam sein und sogar zu verschiedenen Problemen mit defekten "
+#~ "Treibern führen (von zu hoch eingestellter Helligkeit bis hin zu "
+#~ "Abstürzen.)</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Wählen Sie im "
+#~ "Zweifelsfall „Weich“ aus, falls Sie Probleme haben.</p></body></html>"
+
+#~ msgid "OpenGL 1.2"
+#~ msgstr "OpenGL 1.2"
+
+#~ msgid "Qt graphics system:"
+#~ msgstr "Qt-Grafiksystem:"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">It is <span style=\" "
+#~ "font-weight:600;\">strongly recommended</span> to use the <span style=\" "
+#~ "font-weight:600;\">native</span> system when using the <span style=\" "
+#~ "font-weight:600;\">XRender</span> backend.</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">On the other hand, many "
+#~ "decorations perform better with the <span style=\" font-weight:600;"
+#~ "\">raster</span> system on the <span style=\" font-weight:600;\">default "
+#~ "and generally preferred OpenGL</span> backend (though some don't - also "
+#~ "the impact here can be anything between \"slight\" and \"incredible\" "
+#~ "depending on the GPU and driver)</p></body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Es wird <span style=\" "
+#~ "font-weight:600;\">dringend empfohlen</span> das <span style=\" font-"
+#~ "weight:600;\">native</span> System mit dem <span style=\" font-weight:600;"
+#~ "\">XRender</span>-Backend zu verwenden.</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">On the other hand, many "
+#~ "decorations perform better with the <span style=\" font-weight:600;"
+#~ "\">raster</span> system on the <span style=\" font-weight:600;\">default "
+#~ "and generally preferred OpenGL</span> backend (though some don't - also "
+#~ "the impact here can be anything between \"slight\" and \"incredible\" "
+#~ "depending on the GPU and driver)</p></body></html>"
+
+#~ msgid "Native"
+#~ msgstr "Nativ"
+
+#~ msgid "Raster"
+#~ msgstr "Raster"
+
+#~ msgid ""
+#~ "If enabled all rendering will be performed with Shaders written in the "
+#~ "OpenGL Shading Language.\n"
+#~ "On legacy hardware disabling Shaders can improve the performance."
+#~ msgstr ""
+#~ "Wenn aktiviert, wird alles mit Shadern gezeichnet, die in der OpenGL-"
+#~ "Shader-Sprache geschrieben wurden.\n"
+#~ "Auf älterer Hardware kann es zu Verbesserungen in der Leistung führen, "
+#~ "Shader zu deaktivieren."
+
+#~ msgid "Use OpenGL 2 Shaders"
+#~ msgstr "OpenGL-2-Shader verwenden"
+
+#~ msgid "Use VSync"
+#~ msgstr "VSync verwenden"
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires OpenGL"
+#~ msgid "%1 Effect requires OpenGL."
+#~ msgstr "Der Effekt „%1“ benötigt OpenGL."
+
+#~ msgid "Effect for window switching:"
+#~ msgstr "Effekt für den Fensterwechsel:"
+
+#~ msgid "Enable direct rendering"
+#~ msgstr "Direktes Rendern aktivieren"
+
+#~ msgid "Disable functionality checks"
+#~ msgstr "Funktionsprüfungen deaktivieren"
+
+#~ msgid "Desktop effects are active"
+#~ msgstr "Die Arbeitsflächeneffekte sind aktiv."
+
+#~ msgid "Desktop effects are temporarily disabled"
+#~ msgstr "Die Arbeitsflächeneffekte sind vorübergehend deaktiviert."
+
+#~ msgid "Resume Desktop Effects"
+#~ msgstr "Arbeitsflächeneffekte reaktivieren"
+
+#~ msgid "Desktop effects are disabled"
+#~ msgstr "Die Arbeitsflächeneffekte sind deaktiviert."
+
+#~ msgid "Common Settings"
+#~ msgstr "Allgemeine Einstellungen"
+
+#~ msgid "Compositing State"
+#~ msgstr "Composit-Status"
+
+#~ msgid "Shadows"
+#~ msgstr "Schatten"
+
+#~ msgid "Texture From Pixmap"
+#~ msgstr "Textur aus Pixmap"
+
+#~ msgid "Shared Memory"
+#~ msgstr "Gemeinsamer Speicher"
+
+#~ msgid "Fallback"
+#~ msgstr "Alternativlösung"
+
+#~ msgid ""
+#~ "Enabling this option allows compositing to be activated even if some of "
+#~ "the internal checks fail. Doing so may make the whole desktop unusable "
+#~ "and its use is not recommened. Use only if KWin refuses to activate "
+#~ "compositing on a system that should be capable of compositing.\n"
+#~ msgstr ""
+#~ "Durch Aktivieren dieser Einstellung ist es möglich, die "
+#~ "Arbeitsflächeneffekte zu aktivieren, auch wenn die internen Prüfungen "
+#~ "fehlschlagen. Es ist möglich, das KDE dadurch unbrauchbar wird; daher "
+#~ "wird die Aktivierung der Einstellung nicht empfohlen. Verwenden Sie sie "
+#~ "nur, wenn der KDE-Fenstermanager die Aktivierung der "
+#~ "Arbeitsflächeneffekte verweigert, obwohl er dazu in der Lage sein "
+#~ "sollte.\n"
+
+#~ msgid "Nearest (fastest)"
+#~ msgstr "Nachbar (am schnellsten)"
+
+#~ msgid "Bilinear"
+#~ msgstr "Bilinear"
+
+#~ msgid "Trilinear (best quality)"
+#~ msgstr "Trilinear (beste Qualität)"
+
+#~ msgid ""
+#~ "Improves performance of fullscreen applications like games and video "
+#~ "players. This option can cause flickering when another window is opened "
+#~ "above the fullscreen window."
+#~ msgstr ""
+#~ "Verbessert die Leistung von Vollbildanwendungen (z. B. Spiele und "
+#~ "Videowiedergabe). Diese Einstellung kann ein flackerndes Fenster "
+#~ "verursachen, wenn ein anderes Fenster über der Anwendung im Vollbildmodus "
+#~ "geöffnet ist."
+
+#~ msgid "Compositing is not supported on your system."
+#~ msgstr "Compositing wird auf Ihrem System leider nicht unterstützt."
+
+#~ msgid "Compositing is active"
+#~ msgstr "Compositing ist aktiviert"
+
+#~ msgid "Suspend Compositing"
+#~ msgstr "Compositing aussetzen"
+
+#~ msgid "Resume Compositing"
+#~ msgstr "Compositing fortsetzen"
+
+#~ msgid "Compositing is disabled"
+#~ msgstr "Das Compositsystem ist ausgeschaltet"
+
+#~ msgid "All Desktops"
+#~ msgstr "Alle Arbeitsflächen"
+
+#~ msgid "Current Desktop"
+#~ msgstr "Aktuelle Arbeitsfläche"
+
+#~ msgid "Screen Edges"
+#~ msgstr "Bildschirmecken"
+
+#~ msgid ""
+#~ "Active screen edges allow you to activate effects by pushing your mouse "
+#~ "cursor against the edge of the screen. Here you can configure which "
+#~ "effect will get activated on each edge and corner of the screen."
+#~ msgstr ""
+#~ "Aktive Bildschirmecken ermöglichen Ihnen das Auslösen eines Effektes, "
+#~ "indem Sie die Maus in eine Bildschirmecke bewegen. Hier können Sie "
+#~ "einstellen, welche Effekte für welche Bildschirmecke aktiviert werden "
+#~ "sollen."
+
+#~ msgid ""
+#~ "If you are looking for the setting to enable switching of desktops by "
+#~ "pushing your mouse cursor against the edge of the screen you can find it "
+#~ "in the \"Window Behavior\" advanced tab under the name of \"Active "
+#~ "Desktop Borders\"."
+#~ msgstr ""
+#~ "Die Einstellung zum Wechseln der Arbeitsfläche durch Anstoßen der Maus an "
+#~ "den Bildschirmrand finden Sie unter „Fensterverhalten Festlegen“ im "
+#~ "Abschnitt „Erweitert“ unter der Einstellung „Aktive Arbeitsflächenränder“."
+
+#~ msgid "Advanced Compositing Options"
+#~ msgstr "Erweiterte Composit-Einstellungen"
+
+#~ msgid "Misc"
+#~ msgstr "Verschiedenes"
+
+#~ msgid "Keep thumbnails of hidden windows up to date"
+#~ msgstr "Minibilder ausgeblendeter Fenster aktuell halten"

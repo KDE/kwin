@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Ukrainian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwintouchscreen" lang="&language;">
+<articleinfo>
+
+<title
+>Сенсорний екран</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Юрій</firstname
+><surname
+>Чорноіван</surname
+><affiliation
+><address
+><email
+>yurchor@ukr.net</email
+></address
+></affiliation
+><contrib
+>Переклад українською</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>10 квітня 2021 року</date>
+<releaseinfo
+>Плазма 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Системні параметри</keyword>
+<keyword
+>сенсорний</keyword>
+<keyword
+>екран</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Проведення від краю екрана до центру екрана надає вам змогу активувати ефекти. За допомогою цього модуля ви можете налаштувати ефект, який буде задіяно у відповідь на проведення від кожного з країв і кутів екрана. </para>
+
+<para
+>Наведіть вказівник миші на певний квадрат і клацніть будь-якою кнопкою миші, щоб обрати ефект з контекстного меню. Для країв з синім квадратиками ефект вже обрано, сірий квадратик позначає, що для краю не призначено жодного ефекту.</para>
+
+<para
+>Кількість доступних пунктів контекстного меню залежатиме від значень параметрів, вказаних за допомогою модуля <ulink url="help:/kcontrol/kwineffects/index.html"
+> <guilabel
+>Ефекти стільниці</guilabel
+></ulink
+> у категорії <guilabel
+>Робочий простір</guilabel
+>. Позначте ваші улюблені ефекти у групі <guilabel
+>Керування вікнами</guilabel
+>. Таким чином, буде задіяно відповідні пункти контекстного меню.</para>
+</article>

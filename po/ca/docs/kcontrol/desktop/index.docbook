@@ -1,0 +1,128 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Catalan  "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="desktop" lang="&language;">
+<title
+>Escriptoris virtuals</title>
+<articleinfo>
+
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<author
+>&Jost.Schenck; &Jost.Schenck.mail;</author>
+&traductor.Antoni.Bella; 
+</authorgroup>
+
+<date
+>9 d'abril de 2021</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Arranjament del sistema</keyword>
+<keyword
+>virtual</keyword>
+<keyword
+>escriptori</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>El &kde; ofereix la possibilitat de tenir diversos escriptoris virtuals. </para>
+<para
+>Podeu canviar el nom dels escriptoris fent clic al botó <guibutton
+>Reanomena</guibutton
+> (apareix quan es manté el cursor sobre l'element d'escriptori a la llista) i introduint el text a dins del camp de text. </para>
+<para
+>Si voleu eliminar un escriptori, utilitzeu la icona superposada de paperera que hi ha a la dreta de l'element d'escriptori. </para>
+<para
+>Premeu el botó <guibutton
+>Afegeix</guibutton
+> per a afegir un escriptori virtual (el nom predeterminat és <guilabel
+>Escriptori nou</guilabel
+>) a la llista. </para>
+<para
+>Podeu configurar el nombre de files en l'element paginador del plafó. Senzillament utilitzeu el quadre d'entrada de files que hi ha a sota de la llista per a ajustar el nombre d'escriptoris. Els escriptoris es reorganitzaran automàticament per files. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>La navegació dona la volta</guilabel
+></term>
+<listitem
+><para
+>Activeu aquesta opció si voleu que la navegació de teclat o les vores actives de l'escriptori us portin a la vora oposada de l'escriptori nou. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>En canviar, mostra l'animació</guilabel
+></term>
+<listitem
+><para
+>Seleccioneu <guilabel
+>Diapositives</guilabel
+>, <guilabel
+>Animació de cub per a l'escriptori</guilabel
+> o <guilabel
+>Esvaïment de l'escriptori</guilabel
+> des de la llista desplegable o desactiveu les animacions desmarcant l'element. Si l'animació seleccionada disposa d'opcions de configuració, feu clic sobre la icona d'eines a la dreta de la llista desplegable per iniciar un diàleg de configuració. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>En canviar, mostra a la pantalla</guilabel
+></term>
+<listitem
+><para
+>Activeu aquesta opció si voleu tenir una vista prèvia en pantalla quan es canvia d'escriptori. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Mostra els indicadors de disposició de l'escriptori</guilabel
+></term>
+<listitem
+><para
+>Activant aquesta opció es mostrarà una petita vista prèvia de la disposició de l'escriptori, indicant l'escriptori seleccionat. </para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>Desplaçant la roda del ratolí sobre un espai buit a l'escriptori o a la icona <guilabel
+>Paginador</guilabel
+> en el plafó canviareu al següent escriptori virtual numèric, en la direcció en què desplaceu (cap amunt o cap avall).</para>
+<para
+>Podeu canviar el comportament predeterminat a la pàgina <guilabel
+>Accions del ratolí</guilabel
+> a la categoria <guilabel
+>Arranjament de l'escriptori</guilabel
+> (<keycombo action="simul"
+>&Alt;<keycap
+>D</keycap
+></keycombo
+>, <keycombo action="simul"
+>&Alt;<keycap
+>S</keycap
+></keycombo
+>).</para>
+
+</article>

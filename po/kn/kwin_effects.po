@@ -1,0 +1,1782 @@
+# translation of kwin_effects.po to Kannada
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Shankar Prasad <svenkate@redhat.com>, 2009, 2011.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_effects\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-09-28 00:51+0000\n"
+"PO-Revision-Date: 2011-07-11 15:11+0530\n"
+"Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
+"Language-Team: Kannada <en@li.org>\n"
+"Language: kn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.2\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
+#: blur/blur_config.ui:17
+#, fuzzy, kde-format
+#| msgid "&Strength:"
+msgid "Blur strength:"
+msgstr "ಸಾಮರ್ಥ್ಯ(&S):"
+
+#. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
+#. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
+#: blur/blur_config.ui:42 blur/blur_config.ui:108
+#, fuzzy, kde-format
+#| msgid "Right"
+msgid "Light"
+msgstr "ಬಲ"
+
+#. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
+#. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
+#: blur/blur_config.ui:74 blur/blur_config.ui:137
+#, fuzzy, kde-format
+#| msgid "&Strength:"
+msgid "Strong"
+msgstr "ಸಾಮರ್ಥ್ಯ(&S):"
+
+#. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
+#: blur/blur_config.ui:83
+#, fuzzy, kde-format
+#| msgid "&Strength:"
+msgid "Noise strength:"
+msgstr "ಸಾಮರ್ಥ್ಯ(&S):"
+
+#: colorpicker/colorpicker.cpp:101
+#, kde-format
+msgid ""
+"Select a position for color picking with left click or enter.\n"
+"Escape or right click to cancel."
+msgstr ""
+
+#: desktopgrid/desktopgrid_config.cpp:49 invert/invert_config.cpp:35
+#: magnifier/magnifier_config.cpp:55 mouseclick/mouseclick_config.cpp:48
+#: mousemark/mousemark_config.cpp:50 overview/kcm/overvieweffectkcm.cpp:35
+#: showpaint/showpaint_config.cpp:33
+#: thumbnailaside/thumbnailaside_config.cpp:54
+#: trackmouse/trackmouse_config.cpp:52
+#: windowview/kcm/windowvieweffectkcm.cpp:36 zoom/zoom_config.cpp:58
+#, kde-format
+msgid "KWin"
+msgstr ""
+
+#: desktopgrid/desktopgrid_config.cpp:54 desktopgrid/desktopgrideffect.cpp:35
+#, kde-format
+msgid "Show Desktop Grid"
+msgstr "ಗಣಕತೆರೆಯನ್ನು ಚೌಕಗಳನ್ನು ತೋರಿಸು"
+
+#: desktopgrid/desktopgrid_config.cpp:61
+#, kde-format
+msgctxt "Desktop name alignment:"
+msgid "Disabled"
+msgstr "ಅಶಕ್ತಗೊಂಡಿದೆ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: desktopgrid/desktopgrid_config.cpp:62 glide/glide_config.ui:70
+#: glide/glide_config.ui:168
+#, kde-format
+msgid "Top"
+msgstr "ಮೇಲೆ"
+
+#: desktopgrid/desktopgrid_config.cpp:63
+#, kde-format
+msgid "Top-Right"
+msgstr "ಮೇಲಿನ-ಬಲಭಾಗ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: desktopgrid/desktopgrid_config.cpp:64 glide/glide_config.ui:75
+#: glide/glide_config.ui:173
+#, kde-format
+msgid "Right"
+msgstr "ಬಲ"
+
+#: desktopgrid/desktopgrid_config.cpp:65
+#, kde-format
+msgid "Bottom-Right"
+msgstr "ಕೆಳಗಿನ-ಬಲಭಾಗ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: desktopgrid/desktopgrid_config.cpp:66 glide/glide_config.ui:80
+#: glide/glide_config.ui:178
+#, kde-format
+msgid "Bottom"
+msgstr "ಕೆಳಗೆ"
+
+#: desktopgrid/desktopgrid_config.cpp:67
+#, kde-format
+msgid "Bottom-Left"
+msgstr "ಕೆಳಗಿನ-ಎಡಭಾಗ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: desktopgrid/desktopgrid_config.cpp:68 glide/glide_config.ui:85
+#: glide/glide_config.ui:183
+#, kde-format
+msgid "Left"
+msgstr "ಎಡ"
+
+#: desktopgrid/desktopgrid_config.cpp:69
+#, kde-format
+msgid "Top-Left"
+msgstr "ಮೇಲಿನ-ಎಡಭಾಗ"
+
+#: desktopgrid/desktopgrid_config.cpp:70
+#, kde-format
+msgid "Center"
+msgstr "ಮಧ್ಯ"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: desktopgrid/desktopgrid_config.ui:17 mousemark/mousemark_config.ui:17
+#: thumbnailaside/thumbnailaside_config.ui:17
+#, kde-format
+msgid "Appearance"
+msgstr "ಸ್ವರೂಪ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
+#: desktopgrid/desktopgrid_config.ui:30
+#, kde-format
+msgid "Pager"
+msgstr "ಪುಟವೀಕ್ಷಕ (ಪೇಜರ್)"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
+#: desktopgrid/desktopgrid_config.ui:35
+#, kde-format
+msgid "Automatic"
+msgstr "ಸ್ವಯಂಚಾಲಿತ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
+#: desktopgrid/desktopgrid_config.ui:40
+#, kde-format
+msgid "Custom"
+msgstr "ಇಚ್ಛೆಯ"
+
+#. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
+#: desktopgrid/desktopgrid_config.ui:48
+#, fuzzy, kde-format
+#| msgid "Number of &rows:"
+msgid "N&umber of rows:"
+msgstr "ಸಾಲುಗಳ ಸಂಖ್ಯೆ(&r):"
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: desktopgrid/desktopgrid_config.ui:103
+#, kde-format
+msgid "Desktop &name alignment:"
+msgstr "ಗಣಕತೆರೆ ಹೆಸರಿನ ವಾಲಿಕೆ (&n):"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShowAddRemove)
+#: desktopgrid/desktopgrid_config.ui:116
+#, kde-format
+msgid "Show buttons to alter count of virtual desktops"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: desktopgrid/desktopgrid_config.ui:123
+#, fuzzy, kde-format
+#| msgid "&Layout mode:"
+msgid "&Grid layout mode:"
+msgstr "ವಿನ್ಯಾಸದ ಕ್ರಮ(&L):"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: desktopgrid/desktopgrid_config.ui:137 overview/kcm/overvieweffectkcm.ui:30
+#: windowview/kcm/windowvieweffectkcm.ui:30
+#, kde-format
+msgid "Closest"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: desktopgrid/desktopgrid_config.ui:142 overview/kcm/overvieweffectkcm.ui:35
+#: windowview/kcm/windowvieweffectkcm.ui:35
+#, kde-format
+msgid "Natural"
+msgstr "ನೈಸರ್ಗಿಕ"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: desktopgrid/desktopgrid_config.ui:150
+#, kde-format
+msgid "Windows layout:"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: desktopgrid/desktopgrid_config.ui:166
+#, kde-format
+msgid "Activation"
+msgstr "ಸಕ್ರಿಯಗೊಳಿಕೆ"
+
+#. i18n: ectx: property (text), widget (QLabel, label_Strength)
+#: diminactive/diminactive_config.ui:17
+#, fuzzy, kde-format
+#| msgid "&Strength:"
+msgid "Strength:"
+msgstr "ಸಾಮರ್ಥ್ಯ(&S):"
+
+#. i18n: ectx: property (text), widget (QLabel, label_Dim)
+#: diminactive/diminactive_config.ui:40
+#, kde-format
+msgid "Dim:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
+#: diminactive/diminactive_config.ui:47
+#, kde-format
+msgid "Docks and panels"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
+#: diminactive/diminactive_config.ui:54
+#, fuzzy, kde-format
+#| msgid "Desktop Cube"
+msgid "Desktop"
+msgstr "ಗಣಕತೆರೆ ಘನಾಕೃತಿ"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
+#: diminactive/diminactive_config.ui:61
+#, fuzzy, kde-format
+#| msgid "Inactive windows:"
+msgid "Keep above windows"
+msgstr "ನಿಷ್ಕ್ರಿಯ ಕಿಟಕಿಗಳು:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
+#: diminactive/diminactive_config.ui:68
+#, kde-format
+msgid "By window group"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
+#: diminactive/diminactive_config.ui:75
+#, fuzzy, kde-format
+#| msgid "&Decorated windows"
+msgid "Fullscreen windows"
+msgstr "ಅಲಂಕೃತ ಕಿಟಕಿಗಳು(&D)"
+
+#. i18n: ectx: property (text), widget (QLabel, label_Duration)
+#: glide/glide_config.ui:19 scale/package/contents/ui/config.ui:17
+#, fuzzy, kde-format
+#| msgid "Decorations:"
+msgid "Duration:"
+msgstr "ಅಲಂಕಾರಗಳು:"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
+#: glide/glide_config.ui:32 scale/package/contents/ui/config.ui:30
+#, fuzzy, kde-format
+#| msgctxt "Duration of rotation"
+#| msgid "Default"
+msgid "Default"
+msgstr "ಪೂರ್ವನಿಯೋಜಿತ"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
+#: glide/glide_config.ui:35 scale/package/contents/ui/config.ui:33
+#, fuzzy, kde-format
+#| msgid " millisecond"
+#| msgid_plural " milliseconds"
+msgid " milliseconds"
+msgstr " ಮಿಲಿಸೆಕೆಂಡ್"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
+#: glide/glide_config.ui:50
+#, fuzzy, kde-format
+#| msgid "Activation"
+msgid "Window Open Animation"
+msgstr "ಸಕ್ರಿಯಗೊಳಿಕೆ"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
+#. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
+#: glide/glide_config.ui:56 glide/glide_config.ui:154
+#, fuzzy, kde-format
+#| msgid "Rotation duration:"
+msgid "Rotation edge:"
+msgstr "ತಿರುಗಿಸುವ ಕಾಲಾವಧಿ:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
+#. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
+#: glide/glide_config.ui:93 glide/glide_config.ui:191
+#, fuzzy, kde-format
+#| msgid "Rotation duration:"
+msgid "Rotation angle:"
+msgstr "ತಿರುಗಿಸುವ ಕಾಲಾವಧಿ:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InDistance)
+#. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
+#: glide/glide_config.ui:119 glide/glide_config.ui:198
+#, kde-format
+msgid "Distance:"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
+#: glide/glide_config.ui:148
+#, fuzzy, kde-format
+#| msgid "Activation"
+msgid "Window Close Animation"
+msgstr "ಸಕ್ರಿಯಗೊಳಿಕೆ"
+
+#: invert/invert.cpp:42 invert/invert_config.cpp:38
+#, kde-format
+msgid "Toggle Invert Effect"
+msgstr "ವಿಲೋಮ ಪರಿಣಾವನ್ನು ಅಂತರಣಗೊಳಿಸು"
+
+#: invert/invert.cpp:50 invert/invert_config.cpp:44
+#, kde-format
+msgid "Toggle Invert Effect on Window"
+msgstr "ಕಿಟಕಿಯಲ್ಲಿ ವಿಲೋಮ ಪರಿಣಾವನ್ನು ಅಂತರಣಗೊಳಿಸು"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
+#: login/package/contents/ui/config.ui:17
+#, kde-format
+msgid "Fade to black (fullscreen splash screens only)"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: magiclamp/magiclamp_config.ui:17
+#, kde-format
+msgid "Animation duration:"
+msgstr "ಸಜೀವನದ ಕಾಲಾವಧಿ:"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_AnimationDuration)
+#: magiclamp/magiclamp_config.ui:36
+#, kde-format
+msgctxt "Duration of rotation"
+msgid "Default"
+msgstr "ಪೂರ್ವನಿಯೋಜಿತ"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
+#: magiclamp/magiclamp_config.ui:39
+#, fuzzy, kde-format
+#| msgid " millisecond"
+#| msgid_plural " milliseconds"
+msgid "milliseconds"
+msgstr " ಮಿಲಿಸೆಕೆಂಡ್"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupSize)
+#: magnifier/magnifier_config.ui:17
+#, kde-format
+msgid "Size"
+msgstr "ಗಾತ್ರ"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: magnifier/magnifier_config.ui:23
+#, kde-format
+msgid "&Width:"
+msgstr "ಅಗಲ(&W):"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
+#: magnifier/magnifier_config.ui:42 magnifier/magnifier_config.ui:74
+#, kde-format
+msgid " px"
+msgstr " px"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: magnifier/magnifier_config.ui:55
+#, kde-format
+msgid "&Height:"
+msgstr "ಎತ್ತರ(&H):"
+
+#: mouseclick/mouseclick.cpp:34 mouseclick/mouseclick_config.cpp:51
+#, fuzzy, kde-format
+#| msgid "Toggle Invert Effect"
+msgid "Toggle Mouse Click Effect"
+msgstr "ವಿಲೋಮ ಪರಿಣಾವನ್ನು ಅಂತರಣಗೊಳಿಸು"
+
+#: mouseclick/mouseclick.cpp:42
+#, fuzzy, kde-format
+#| msgid "Left"
+msgctxt "Left mouse button"
+msgid "Left"
+msgstr "ಎಡ"
+
+#: mouseclick/mouseclick.cpp:43
+#, kde-format
+msgctxt "Middle mouse button"
+msgid "Middle"
+msgstr ""
+
+#: mouseclick/mouseclick.cpp:44
+#, fuzzy, kde-format
+#| msgid "Right"
+msgctxt "Right mouse button"
+msgid "Right"
+msgstr "ಬಲ"
+
+#: mouseclick/mouseclick.h:61
+#, kde-format
+msgid "↓"
+msgstr ""
+
+#: mouseclick/mouseclick.h:62
+#, kde-format
+msgid "↑"
+msgstr ""
+
+#. i18n: ectx: attribute (title), widget (QWidget, basic_tab)
+#: mouseclick/mouseclick_config.ui:21
+#, kde-format
+msgid "Basic Settings"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, button1_label)
+#: mouseclick/mouseclick_config.ui:37
+#, kde-format
+msgid "Left Mouse Button Color:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, button2_label)
+#: mouseclick/mouseclick_config.ui:50
+#, kde-format
+msgid "Middle Mouse Button Color:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, button3_label)
+#: mouseclick/mouseclick_config.ui:70
+#, kde-format
+msgid "Right Mouse Button Color:"
+msgstr ""
+
+#. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
+#: mouseclick/mouseclick_config.ui:91
+#, fuzzy, kde-format
+#| msgid "Advanced"
+msgid "Advanced Settings"
+msgstr "ಸುಧಾರಿತ"
+
+#. i18n: ectx: property (title), widget (QGroupBox, rings)
+#: mouseclick/mouseclick_config.ui:97
+#, kde-format
+msgid "Rings"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, ring_line_width_label)
+#: mouseclick/mouseclick_config.ui:103
+#, fuzzy, kde-format
+#| msgid "&Width:"
+msgid "Line Width:"
+msgstr "ಅಗಲ(&W):"
+
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, kcfg_LineWidth)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
+#: mouseclick/mouseclick_config.ui:119 mouseclick/mouseclick_config.ui:171
+#, fuzzy, kde-format
+#| msgid " pixel"
+#| msgid_plural " pixels"
+msgid " pixel"
+msgstr " ಪಿಕ್ಸೆಲ್‍"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingLife)
+#: mouseclick/mouseclick_config.ui:132
+#, kde-format
+msgid " msec"
+msgstr " ಮಿಲಿಸೆಕೆಂಡ್"
+
+#. i18n: ectx: property (text), widget (QLabel, ring_duration_label)
+#: mouseclick/mouseclick_config.ui:145
+#, fuzzy, kde-format
+#| msgid "Fading duration:"
+msgid "Ring Duration:"
+msgstr "ಮರೆಯಾಗುವ ಕಾಲಾವಧಿ:"
+
+#. i18n: ectx: property (text), widget (QLabel, ring_radius_label)
+#: mouseclick/mouseclick_config.ui:155
+#, fuzzy, kde-format
+#| msgid "&Radius:"
+msgid "Ring Radius:"
+msgstr "ತ್ರಿಜ್ಯ(&R):"
+
+#. i18n: ectx: property (text), widget (QLabel, ring_count_label)
+#: mouseclick/mouseclick_config.ui:184
+#, kde-format
+msgid "Ring Count:"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, font)
+#: mouseclick/mouseclick_config.ui:210
+#, kde-format
+msgid "Text"
+msgstr "ಪಠ್ಯ"
+
+#. i18n: ectx: property (text), widget (QLabel, font_label)
+#: mouseclick/mouseclick_config.ui:216
+#, kde-format
+msgid "Font:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, showtext_label)
+#: mouseclick/mouseclick_config.ui:233
+#, fuzzy, kde-format
+#| msgid "Show Desktop Grid"
+msgid "Show Text:"
+msgstr "ಗಣಕತೆರೆಯನ್ನು ಚೌಕಗಳನ್ನು ತೋರಿಸು"
+
+#: mousemark/mousemark.cpp:36
+#, kde-format
+msgid "Clear All Mouse Marks"
+msgstr "ಎಲ್ಲಾ ಮೌಸ್‌ ಗುರುತುಗಳನ್ನು ಅಳಿಸು"
+
+#: mousemark/mousemark.cpp:43 mousemark/mousemark_config.cpp:59
+#, kde-format
+msgid "Clear Last Mouse Mark"
+msgstr "ಮೌಸ್‌ನ ಹಿಂದಿನ ಗುರುತನ್ನು ಅಳಿಸಿಹಾಕಿ"
+
+#: mousemark/mousemark_config.cpp:53
+#, kde-format
+msgid "Clear Mouse Marks"
+msgstr "ಮೌಸ್‌ನ ಗುರುತುಗಳನ್ನು ಅಳಿಸಿಹಾಕಿ"
+
+#: mousemark/mousemark_config.cpp:100
+#, fuzzy, kde-format
+#| msgid " pixel"
+#| msgid_plural " pixels"
+msgctxt "Suffix"
+msgid " pixel"
+msgid_plural " pixels"
+msgstr[0] " ಪಿಕ್ಸೆಲ್‍"
+msgstr[1] " ಪಿಕ್ಸೆಲ್ಲುಗಳು"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: mousemark/mousemark_config.ui:23
+#, kde-format
+msgid "Wid&th:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: mousemark/mousemark_config.ui:36
+#, kde-format
+msgid "&Color:"
+msgstr "ಬಣ್ಣ(&C):"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: mousemark/mousemark_config.ui:82
+#, kde-format
+msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+msgstr "ಮೌಸಿನೊಂದಿಗೆ ಎಳೆಯಲು ಶಿಫ್ಟ್‍+ಮೆಟಾ ಕೀಲಿಗಳನ್ನು ಒತ್ತಿಹಿಡಿಯಿರಿ ಹಾಗು ಮೌಸನ್ನು ಜರುಗಿಸಿ."
+
+#: outputlocator/outputlocator.cpp:48
+#, kde-format
+msgctxt "@label"
+msgid "Unknown"
+msgstr ""
+
+#: overview/kcm/overvieweffectkcm.cpp:41 overview/overvieweffect.cpp:31
+#, fuzzy, kde-format
+#| msgid "Toggle Invert Effect"
+msgid "Toggle Overview"
+msgstr "ವಿಲೋಮ ಪರಿಣಾವನ್ನು ಅಂತರಣಗೊಳಿಸು"
+
+#. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
+#: overview/kcm/overvieweffectkcm.ui:22
+#: windowview/kcm/windowvieweffectkcm.ui:22
+#, kde-format
+msgid "Layout mode:"
+msgstr "ವಿನ್ಯಾಸ ಕ್ರಮ:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
+#: overview/kcm/overvieweffectkcm.ui:53
+#, fuzzy, kde-format
+#| msgid "Background"
+msgid "Blur background:"
+msgstr "ಹಿನ್ನೆಲೆ"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: overview/kcm/overvieweffectkcm.ui:70
+#, fuzzy, kde-format
+#| msgid "Ignore &minimized windows"
+msgid "Ignore minimized windows:"
+msgstr "ಕಿರಿದಾಗಿಸಲಾದ ಕಿಟಕಿಗಳನ್ನು ಆಲಕ್ಷಿಸು(&m)"
+
+#: overview/qml/DesktopBar.qml:186
+#, kde-format
+msgid "Delete Virtual Desktop"
+msgstr ""
+
+#: overview/qml/DesktopBar.qml:282
+#, fuzzy, kde-format
+#| msgid "Desktop Cube"
+msgid "Add Virtual Desktop"
+msgstr "ಗಣಕತೆರೆ ಘನಾಕೃತಿ"
+
+#: overview/qml/ScreenView.qml:226
+#, fuzzy, kde-format
+#| msgid "Moving windows:"
+msgid "No matching windows"
+msgstr "ಚಲಿಸುವ ಕಿಟಕಿಗಳು:"
+
+#: private/qml/WindowHeapDelegate.qml:152
+#, kde-format
+msgid "Drag Down To Close"
+msgstr ""
+
+#: private/qml/WindowHeapDelegate.qml:462
+#, fuzzy, kde-format
+#| msgid "All &other windows"
+msgctxt "@info:tooltip as in: 'close this window'"
+msgid "Close window"
+msgstr "ಎಲ್ಲಾ ಇತರೆ ವಿಂಡೋಗಳು(&o)"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InScale)
+#: scale/package/contents/ui/config.ui:46
+#, fuzzy, kde-format
+#| msgid "Activation"
+msgid "Window open scale:"
+msgstr "ಸಕ್ರಿಯಗೊಳಿಕೆ"
+
+#. i18n: ectx: property (text), widget (QLabel, label_OutScale)
+#: scale/package/contents/ui/config.ui:53
+#, fuzzy, kde-format
+#| msgid "Activation"
+msgid "Window close scale:"
+msgstr "ಸಕ್ರಿಯಗೊಳಿಕೆ"
+
+#: screenshot/screenshotdbusinterface1.cpp:480
+#, kde-format
+msgctxt "Notification caption that a screenshot got saved to file"
+msgid "Screenshot"
+msgstr ""
+
+#: screenshot/screenshotdbusinterface1.cpp:481
+#, kde-format
+msgctxt "Notification with path to screenshot file"
+msgid "Screenshot saved to %1"
+msgstr ""
+
+#: screenshot/screenshotdbusinterface1.cpp:797
+#: screenshot/screenshotdbusinterface2.cpp:472
+#, kde-format
+msgid ""
+"Select window to screen shot with left click or enter.\n"
+"Escape or right click to cancel."
+msgstr ""
+
+#: screenshot/screenshotdbusinterface1.cpp:800
+#: screenshot/screenshotdbusinterface2.cpp:490
+#, kde-format
+msgid ""
+"Create screen shot with left click or enter.\n"
+"Escape or right click to cancel."
+msgstr ""
+
+#: showfps/qml/main.qml:110
+#, fuzzy, kde-format
+#| msgid "Fading duration:"
+msgctxt "@label"
+msgid "Paint Duration"
+msgstr "ಮರೆಯಾಗುವ ಕಾಲಾವಧಿ:"
+
+#: showfps/qml/main.qml:162
+#, kde-format
+msgctxt "@label"
+msgid "Paint Amount"
+msgstr ""
+
+#: showfps/qml/main.qml:175
+#, kde-format
+msgctxt "@label"
+msgid "Current FPS"
+msgstr ""
+
+#: showfps/qml/main.qml:184
+#, fuzzy, kde-format
+#| msgid "Maximum &width:"
+msgctxt "@label"
+msgid "Maximum FPS"
+msgstr "ಗರಿಷ್ಟ ಅಗಲ(&w):"
+
+#: showfps/qml/main.qml:192
+#, kde-format
+msgctxt "@label"
+msgid "This effect is not a benchmark"
+msgstr ""
+
+#: showpaint/showpaint.cpp:38 showpaint/showpaint_config.cpp:38
+#, fuzzy, kde-format
+#| msgid "Show caps"
+msgid "Toggle Show Paint"
+msgstr "ಟೊಪ್ಪಿಗಳನ್ನು ತೋರಿಸು"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
+#: slide/slide_config.ui:17
+#, kde-format
+msgid "Gap between desktops"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
+#: slide/slide_config.ui:23
+#, kde-format
+msgid "Horizontal:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
+#: slide/slide_config.ui:46
+#, kde-format
+msgid "Vertical:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideDocks)
+#: slide/slide_config.ui:72
+#, kde-format
+msgid "Slide docks"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
+#: slide/slide_config.ui:79
+#, fuzzy, kde-format
+#| msgid "Wo&bble when moving"
+msgid "Slide desktop background"
+msgstr "ಸ್ಥಳಾಂತರಿಸುವಾಗ ಬದಲಾಯಿಸುವಾಗ ಕುಲುಕಾಡು(&b)"
+
+#: thumbnailaside/thumbnailaside.cpp:29
+#: thumbnailaside/thumbnailaside_config.cpp:59
+#, kde-format
+msgid "Toggle Thumbnail for Current Window"
+msgstr "ಪ್ರಸ್ತುತ ಕಿಟಕಿಯ ಸೂಚ್ಯಚಿತ್ರವನ್ನು ಅಂತರಣಗೊಳಿಸು"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: thumbnailaside/thumbnailaside_config.ui:23
+#, kde-format
+msgid "Maximum &width:"
+msgstr "ಗರಿಷ್ಟ ಅಗಲ(&w):"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: thumbnailaside/thumbnailaside_config.ui:36
+#, kde-format
+msgid "&Spacing:"
+msgstr "ಸ್ಥಳ ನೀಡಿಕೆ(&S):"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Spacing)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_MaxWidth)
+#: thumbnailaside/thumbnailaside_config.ui:55
+#: thumbnailaside/thumbnailaside_config.ui:106
+#, fuzzy, kde-format
+#| msgid " pixel"
+#| msgid_plural " pixels"
+msgid " pixels"
+msgstr " ಪಿಕ್ಸೆಲ್‍"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: thumbnailaside/thumbnailaside_config.ui:68
+#, kde-format
+msgid "&Opacity:"
+msgstr "ಅಪಾರದರ್ಶಕತೆ(&O):"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Opacity)
+#: thumbnailaside/thumbnailaside_config.ui:87
+#, no-c-format, kde-format
+msgid " %"
+msgstr " %"
+
+#: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
+#, kde-format
+msgid "Track mouse"
+msgstr "ಮೌಸ್ ಜಾಡು "
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: trackmouse/trackmouse_config.ui:26
+#, kde-format
+msgid "Trigger effect with:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
+#: trackmouse/trackmouse_config.ui:33
+#, kde-format
+msgid "Keyboard shortcut:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
+#: trackmouse/trackmouse_config.ui:43
+#, kde-format
+msgid "Modifier keys:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Alt)
+#: trackmouse/trackmouse_config.ui:65
+#, kde-format
+msgid "Alt"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Control)
+#: trackmouse/trackmouse_config.ui:72
+#, fuzzy, kde-format
+#| msgid "Center"
+msgid "Ctrl"
+msgstr "ಮಧ್ಯ"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Shift)
+#: trackmouse/trackmouse_config.ui:79
+#, kde-format
+msgid "Shift"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Meta)
+#: trackmouse/trackmouse_config.ui:86
+#, kde-format
+msgid "Meta"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
+#: translucency/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Translucency"
+msgstr "ಅರೆಪಾರದರ್ಶಕತೆ"
+
+#. i18n: ectx: property (title), widget (QGroupBox, m_opacityGroupBox)
+#: translucency/package/contents/ui/config.ui:20
+#, kde-format
+msgid "General Translucency Settings"
+msgstr "ಸಾಮಾನ್ಯ ಅಪಾರದರ್ಶಕತೆಯ ಸಂಯೋಜನೆಗಳು"
+
+#. i18n: ectx: property (text), widget (QLabel, comboboxpopup_label)
+#: translucency/package/contents/ui/config.ui:64
+#, kde-format
+msgid "Combobox popups:"
+msgstr "ಕಾಂಬೋಚೌಕ ಪುಟಿಕೆಗಳು:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: translucency/package/contents/ui/config.ui:121
+#: translucency/package/contents/ui/config.ui:431
+#, kde-format
+msgid "Opaque"
+msgstr "ಅಪಾರದರ್ಶಕ"
+
+#. i18n: ectx: property (text), widget (QLabel, dialogs_label)
+#: translucency/package/contents/ui/config.ui:137
+#, kde-format
+msgid "Dialogs:"
+msgstr "ಸಂವಾದಗಳು:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: translucency/package/contents/ui/config.ui:156
+#: translucency/package/contents/ui/config.ui:418
+#, kde-format
+msgid "Transparent"
+msgstr "ಪಾರದರ್ಶಕ"
+
+#. i18n: ectx: property (text), widget (QLabel, menus_label)
+#: translucency/package/contents/ui/config.ui:188
+#, kde-format
+msgid "Menus:"
+msgstr "ಪರಿವಿಡಿಗಳು:"
+
+#. i18n: ectx: property (text), widget (QLabel, moveresize_label)
+#: translucency/package/contents/ui/config.ui:207
+#, kde-format
+msgid "Moving windows:"
+msgstr "ಚಲಿಸುವ ಕಿಟಕಿಗಳು:"
+
+#. i18n: ectx: property (text), widget (QLabel, inactive_label)
+#: translucency/package/contents/ui/config.ui:226
+#, kde-format
+msgid "Inactive windows:"
+msgstr "ನಿಷ್ಕ್ರಿಯ ಕಿಟಕಿಗಳು:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
+#: translucency/package/contents/ui/config.ui:267
+#, kde-format
+msgid "Set menu translucency independently"
+msgstr "ಪರಿವಿಡಿಯ ಅಪಾರದರ್ಶಕತೆಯನ್ನು ಸ್ವತಂತ್ರವಾಗಿ ಅಣಿಗೊಳಿಸಿ"
+
+#. i18n: ectx: property (text), widget (QLabel, dropdownmenus_label)
+#: translucency/package/contents/ui/config.ui:285
+#, kde-format
+msgid "Dropdown menus:"
+msgstr "ಬೀಳಿಕೆ ಪರಿವಿಡಿಗಳು:"
+
+#. i18n: ectx: property (text), widget (QLabel, popupmenus_label)
+#: translucency/package/contents/ui/config.ui:329
+#, kde-format
+msgid "Popup menus:"
+msgstr "ಪುಟಿಕೆ ಪರಿವಿಡಿಗಳು:"
+
+#. i18n: ectx: property (text), widget (QLabel, tornoffmenus_label)
+#: translucency/package/contents/ui/config.ui:367
+#, kde-format
+msgid "Torn-off menus:"
+msgstr "ತುಂಡಾದ ಪರಿವಿಡಿ:"
+
+#: windowview/kcm/windowvieweffectkcm.cpp:42 windowview/windowvieweffect.cpp:45
+#, kde-format
+msgid "Toggle Present Windows (Current desktop)"
+msgstr "ಪ್ರಸಕ್ತ ಕಿಟಕಿಗಳನ್ನು ಅಂತರಣಗೊಳಿಸು (ಪ್ರಸಕ್ತ ಗಣಕತೆರೆಗಳು)"
+
+#: windowview/kcm/windowvieweffectkcm.cpp:49 windowview/windowvieweffect.cpp:55
+#, kde-format
+msgid "Toggle Present Windows (All desktops)"
+msgstr "ಪ್ರಸಕ್ತ ಕಿಟಕಿಗಳನ್ನು ಅಂತರಣಗೊಳಿಸು (ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳು)"
+
+#: windowview/kcm/windowvieweffectkcm.cpp:56 windowview/windowvieweffect.cpp:65
+#, fuzzy, kde-format
+#| msgid "Toggle Present Windows (All desktops)"
+msgid "Toggle Present Windows (Window class)"
+msgstr "ಪ್ರಸಕ್ತ ಕಿಟಕಿಗಳನ್ನು ಅಂತರಣಗೊಳಿಸು (ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳು)"
+
+#: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:75
+#, fuzzy, kde-format
+#| msgid "Toggle Present Windows (Current desktop)"
+msgid "Toggle Present Windows (Window class on current desktop)"
+msgstr "ಪ್ರಸಕ್ತ ಕಿಟಕಿಗಳನ್ನು ಅಂತರಣಗೊಳಿಸು (ಪ್ರಸಕ್ತ ಗಣಕತೆರೆಗಳು)"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
+#: windowview/kcm/windowvieweffectkcm.ui:53
+#, kde-format
+msgid "Ignore &minimized windows"
+msgstr "ಕಿರಿದಾಗಿಸಲಾದ ಕಿಟಕಿಗಳನ್ನು ಆಲಕ್ಷಿಸು(&m)"
+
+#: windowview/qml/main.qml:106
+#, kde-format
+msgid "No Matches"
+msgstr ""
+
+#: windowview/qml/main.qml:106
+#, fuzzy, kde-format
+#| msgid "&Wobbliness"
+msgid "No Windows"
+msgstr "ಕುಲುಕಾಡುವಿಕೆ(&W)"
+
+#. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
+#: wobblywindows/wobblywindows_config.ui:20
+#, kde-format
+msgid "Advanced"
+msgstr "ಸುಧಾರಿತ"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: wobblywindows/wobblywindows_config.ui:26
+#, kde-format
+msgid "&Stiffness:"
+msgstr "ಪೆಡಸುತನ(&S):"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: wobblywindows/wobblywindows_config.ui:68
+#, kde-format
+msgid "Dra&g:"
+msgstr "ಎಳೆ(&g):"
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: wobblywindows/wobblywindows_config.ui:81
+#, kde-format
+msgid "&Move factor:"
+msgstr "ಸ್ಥಳಾಂತರದ ಅಂಶ(&M):"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_MoveWobble)
+#: wobblywindows/wobblywindows_config.ui:155
+#, kde-format
+msgid "Wo&bble when moving"
+msgstr "ಸ್ಥಳಾಂತರಿಸುವಾಗ ಬದಲಾಯಿಸುವಾಗ ಕುಲುಕಾಡು(&b)"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ResizeWobble)
+#: wobblywindows/wobblywindows_config.ui:162
+#, kde-format
+msgid "Wobble when &resizing"
+msgstr "ಗಾತ್ರವನ್ನು ಬದಲಾಯಿಸುವಾಗ ಕುಲುಕಾಡು(&r)"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AdvancedMode)
+#: wobblywindows/wobblywindows_config.ui:182
+#, kde-format
+msgid "Enable &advanced mode"
+msgstr "ಸುಧಾರಿತ ಕ್ರಮವನ್ನು ಶಕ್ತಗೊಳಿಸು(&a)"
+
+#. i18n: ectx: property (title), widget (QGroupBox, basicGroup)
+#: wobblywindows/wobblywindows_config.ui:192
+#, kde-format
+msgid "&Wobbliness"
+msgstr "ಕುಲುಕಾಡುವಿಕೆ(&W)"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: wobblywindows/wobblywindows_config.ui:201
+#, kde-format
+msgid "Less"
+msgstr "ಕಡಿಮೆ"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: wobblywindows/wobblywindows_config.ui:224
+#, kde-format
+msgid "More"
+msgstr "ಇನ್ನಷ್ಟು"
+
+#: zoom/zoom.cpp:68
+#, kde-format
+msgid "Move Zoomed Area to Left"
+msgstr ""
+
+#: zoom/zoom.cpp:76
+#, kde-format
+msgid "Move Zoomed Area to Right"
+msgstr ""
+
+#: zoom/zoom.cpp:84
+#, kde-format
+msgid "Move Zoomed Area Upwards"
+msgstr ""
+
+#: zoom/zoom.cpp:92
+#, kde-format
+msgid "Move Zoomed Area Downwards"
+msgstr ""
+
+#: zoom/zoom.cpp:101 zoom/zoom_config.cpp:108
+#, kde-format
+msgid "Move Mouse to Focus"
+msgstr ""
+
+#: zoom/zoom.cpp:109 zoom/zoom_config.cpp:115
+#, kde-format
+msgid "Move Mouse to Center"
+msgstr ""
+
+#: zoom/zoom_config.cpp:80
+#, fuzzy, kde-format
+#| msgid "Top Left"
+msgid "Move Left"
+msgstr "ಮೇಲಿನ ಎಡಭಾಗ"
+
+#: zoom/zoom_config.cpp:87
+#, fuzzy, kde-format
+#| msgid "Top Right"
+msgid "Move Right"
+msgstr "ಮೇಲಿನ ಬಲಭಾಗ"
+
+#: zoom/zoom_config.cpp:94
+#, kde-format
+msgid "Move Up"
+msgstr ""
+
+#: zoom/zoom_config.cpp:101
+#, kde-format
+msgid "Move Down"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label)
+#. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
+#: zoom/zoom_config.ui:25 zoom/zoom_config.ui:41
+#, kde-format
+msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: zoom/zoom_config.ui:28
+#, fuzzy, kde-format
+#| msgid "Zoom &duration:"
+msgid "Zoom Factor:"
+msgstr "ಹಿಗ್ಗಿಸುವ ಕಾಲಾವಧಿ(&d):"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
+#: zoom/zoom_config.ui:66
+#, kde-format
+msgid ""
+"Enable tracking of the focused location. This needs QAccessible to be "
+"enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
+#: zoom/zoom_config.ui:69
+#, kde-format
+msgid "Enable Focus Tracking"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
+#: zoom/zoom_config.ui:76
+#, kde-format
+msgid ""
+"Enable tracking of the text cursor. This needs QAccessible to be enabled per "
+"application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
+#: zoom/zoom_config.ui:79
+#, kde-format
+msgid "Enable Text Cursor Tracking"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: zoom/zoom_config.ui:86
+#, kde-format
+msgid "Mouse Pointer:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
+#: zoom/zoom_config.ui:99
+#, kde-format
+msgid "Visibility of the mouse-pointer."
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: zoom/zoom_config.ui:103
+#, kde-format
+msgid "Scale"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: zoom/zoom_config.ui:108
+#, kde-format
+msgid "Keep"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: zoom/zoom_config.ui:113
+#, kde-format
+msgid "Hide"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
+#: zoom/zoom_config.ui:121
+#, kde-format
+msgid "Track moving of the mouse."
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: zoom/zoom_config.ui:125
+#, kde-format
+msgid "Proportional"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: zoom/zoom_config.ui:130
+#, fuzzy, kde-format
+#| msgid "Center"
+msgid "Centered"
+msgstr "ಮಧ್ಯ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: zoom/zoom_config.ui:135
+#, kde-format
+msgid "Push"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: zoom/zoom_config.ui:140
+#, fuzzy, kde-format
+#| msgid "Disabled"
+msgid "Disabled"
+msgstr "ಅಶಕ್ತಗೊಂಡಿದೆ"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: zoom/zoom_config.ui:148
+#, kde-format
+msgid "Mouse Tracking:"
+msgstr ""
+
+#~ msgid "&Radius:"
+#~ msgstr "ತ್ರಿಜ್ಯ(&R):"
+
+#~ msgid "Text position:"
+#~ msgstr "ಪಠ್ಯದ ಸ್ಥಾನ:"
+
+#~ msgid "Inside Graph"
+#~ msgstr "ಗ್ರಾಫಿನ ಒಳಗೆ"
+
+#~ msgid "Nowhere"
+#~ msgstr "ಇಲ್ಲಿಯೂ ಇಲ್ಲ"
+
+#~ msgid "Top Left"
+#~ msgstr "ಮೇಲಿನ ಎಡಭಾಗ"
+
+#~ msgid "Top Right"
+#~ msgstr "ಮೇಲಿನ ಬಲಭಾಗ"
+
+#~ msgid "Bottom Left"
+#~ msgstr "ಕೆಳಗಿನ ಎಡಭಾಗ"
+
+#~ msgid "Bottom Right"
+#~ msgstr "ಕೆಳಗಿನ ಬಲಭಾಗ"
+
+#~ msgid "Text font:"
+#~ msgstr "ಪಠ್ಯದ ಅಕ್ಷರ ಶೈಲಿ:"
+
+#~ msgid "Text color:"
+#~ msgstr "ಪಠ್ಯದ ಬಣ್ಣ:"
+
+#~ msgid "Text alpha:"
+#~ msgstr "ಆಲ್ಫಾ ಪಠ್ಯ:"
+
+#, fuzzy
+#~| msgid "Show caps"
+#~ msgid "Show graph:"
+#~ msgstr "ಟೊಪ್ಪಿಗಳನ್ನು ತೋರಿಸು"
+
+#, fuzzy
+#~| msgid "Show Desktop Grid"
+#~ msgid "Show Message:"
+#~ msgstr "ಗಣಕತೆರೆಯನ್ನು ಚೌಕಗಳನ್ನು ತೋರಿಸು"
+
+#~ msgid "Zoom &duration:"
+#~ msgstr "ಹಿಗ್ಗಿಸುವ ಕಾಲಾವಧಿ(&d):"
+
+#~ msgctxt "Duration of zoom"
+#~ msgid "Default"
+#~ msgstr "ಪೂರ್ವನಿಯೋಜಿತ"
+
+#, fuzzy
+#~| msgid "&Border width:"
+#~ msgid "Border wid&th:"
+#~ msgstr "ಅಂಚಿನ ಅಗಲ(&B):"
+
+#, fuzzy
+#~| msgid "Show Desktop Grid"
+#~ msgid "Switch desktop only"
+#~ msgstr "ಗಣಕತೆರೆಯನ್ನು ಚೌಕಗಳನ್ನು ತೋರಿಸು"
+
+#~ msgid "Natural Layout Settings"
+#~ msgstr "ನೈಸರ್ಗಿಕ ವಿನ್ಯಾಸ ಸಂಯೋಜನೆಗಳು"
+
+#~ msgid "Fill &gaps"
+#~ msgstr "ಖಾಲಿ ಸ್ಥಳಗಳನ್ನು ತುಂಬಿಸು(&g)"
+
+#~ msgid "Faster"
+#~ msgstr "ವೇಗವಾಗಿ"
+
+#~ msgid "Nicer"
+#~ msgstr "ನಾಜೂಕಾಗಿ"
+
+#, fuzzy
+#~| msgid "Inactive windows:"
+#~ msgid "Activate window"
+#~ msgstr "ನಿಷ್ಕ್ರಿಯ ಕಿಟಕಿಗಳು:"
+
+#, fuzzy
+#~| msgid "Toggle Present Windows (Current desktop)"
+#~ msgid "Bring window to current desktop"
+#~ msgstr "ಪ್ರಸಕ್ತ ಕಿಟಕಿಗಳನ್ನು ಅಂತರಣಗೊಳಿಸು (ಪ್ರಸಕ್ತ ಗಣಕತೆರೆಗಳು)"
+
+#, fuzzy
+#~| msgid "Toggle Present Windows (All desktops)"
+#~ msgid "Send window to all desktops"
+#~ msgstr "ಪ್ರಸಕ್ತ ಕಿಟಕಿಗಳನ್ನು ಅಂತರಣಗೊಳಿಸು (ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳು)"
+
+#, fuzzy
+#~| msgid "Ignore &minimized windows"
+#~ msgid "(Un-)Minimize window"
+#~ msgstr "ಕಿರಿದಾಗಿಸಲಾದ ಕಿಟಕಿಗಳನ್ನು ಆಲಕ್ಷಿಸು(&m)"
+
+#, fuzzy
+#~| msgid "Desktop Cube"
+#~ msgctxt "@title:group actions when clicking on desktop"
+#~ msgid "Desktop"
+#~ msgstr "ಗಣಕತೆರೆ ಘನಾಕೃತಿ"
+
+#, fuzzy
+#~| msgid "Show Desktop Grid"
+#~ msgid "Show desktop"
+#~ msgstr "ಗಣಕತೆರೆಯನ್ನು ಚೌಕಗಳನ್ನು ತೋರಿಸು"
+
+#~ msgid "Display window &titles"
+#~ msgstr "ಕಿಟಕಿಯ ಶೀರ್ಷಿಕೆಗಳನ್ನು ತೋರಿಸು(&t)"
+
+#~ msgid "Display window &icons"
+#~ msgstr "ಕಿಟಕಿಯ ಚಿಹ್ನೆಗಳನ್ನು ತೋರಿಸು(&i)"
+
+#, fuzzy
+#~| msgid "Show caps"
+#~ msgid "Show &panels"
+#~ msgstr "ಟೊಪ್ಪಿಗಳನ್ನು ತೋರಿಸು"
+
+#~ msgid "Regular Grid"
+#~ msgstr "ಸಾಮಾನ್ಯ ಚೌಕ"
+
+#~ msgid "Flexible Grid"
+#~ msgstr "ಹೊಂದಿಸಬಹುದಾದ ಚೌಕ"
+
+#, fuzzy
+#~| msgid "All &other windows"
+#~ msgid "Scale window"
+#~ msgstr "ಎಲ್ಲಾ ಇತರೆ ವಿಂಡೋಗಳು(&o)"
+
+#~ msgid "Toggle KWin composited geometry display"
+#~ msgstr " KWin ಜ್ಯಾಮಿತಿ ಪ್ರದರ್ಶನವನ್ನು ಹೊರಳಿಸು"
+
+#, fuzzy
+#~| msgid "Display window &icons"
+#~ msgid "Display for moving windows"
+#~ msgstr "ಕಿಟಕಿಯ ಚಿಹ್ನೆಗಳನ್ನು ತೋರಿಸು(&i)"
+
+#, fuzzy
+#~| msgid "Display window &icons"
+#~ msgid "Display for resizing windows"
+#~ msgstr "ಕಿಟಕಿಯ ಚಿಹ್ನೆಗಳನ್ನು ತೋರಿಸು(&i)"
+
+#, fuzzy
+#~| msgid "&Color:"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Color Picker"
+#~ msgstr "ಬಣ್ಣ(&C):"
+
+#, fuzzy
+#~| msgid "Background color:"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Background contrast"
+#~ msgstr "ಹಿನ್ನೆಲೆ ಬಣ್ಣ:"
+
+#, fuzzy
+#~| msgid "Show Desktop Grid"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Desktop Grid"
+#~ msgstr "ಗಣಕತೆರೆಯನ್ನು ಚೌಕಗಳನ್ನು ತೋರಿಸು"
+
+#, fuzzy
+#~| msgid "Inactive windows:"
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Darken inactive windows"
+#~ msgstr "ನಿಷ್ಕ್ರಿಯ ಕಿಟಕಿಗಳು:"
+
+#, fuzzy
+#~| msgid "Toggle Present Windows (All desktops)"
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Closed windows fall into pieces"
+#~ msgstr "ಪ್ರಸಕ್ತ ಕಿಟಕಿಗಳನ್ನು ಅಂತರಣಗೊಳಿಸು (ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳು)"
+
+#, fuzzy
+#~| msgid "Activation"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Mouse Click Animation"
+#~ msgstr "ಸಕ್ರಿಯಗೊಳಿಕೆ"
+
+#, fuzzy
+#~| msgid "Clear Mouse Marks"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Mouse Mark"
+#~ msgstr "ಮೌಸ್‌ನ ಗುರುತುಗಳನ್ನು ಅಳಿಸಿಹಾಕಿ"
+
+#, fuzzy
+#~| msgid "All &other windows"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Resize Window"
+#~ msgstr "ಎಲ್ಲಾ ಇತರೆ ವಿಂಡೋಗಳು(&o)"
+
+#, fuzzy
+#~| msgid "Transparent"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Transform"
+#~ msgstr "ಪಾರದರ್ಶಕ"
+
+#, fuzzy
+#~| msgid "Show caps"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Show Paint"
+#~ msgstr "ಟೊಪ್ಪಿಗಳನ್ನು ತೋರಿಸು"
+
+#, fuzzy
+#~| msgid "Display the cube when switching desktops"
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Slide desktops when switching virtual desktops"
+#~ msgstr "ಗಣಕತೆರೆಗಳನ್ನು ಬದಲಾಯಿಸುವಾಗ ಘನಾಕೃತಿಯನ್ನು ತೋರಿಸು"
+
+#, fuzzy
+#~| msgid "Thumbnail Bar"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Thumbnail Aside"
+#~ msgstr "ಸೂಚ್ಯಚಿತ್ರ ಪಟ್ಟಿ"
+
+#, fuzzy
+#~| msgid "Track mouse"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Track Mouse"
+#~ msgstr "ಮೌಸ್ ಜಾಡು "
+
+#, fuzzy
+#~| msgid "Display window &icons"
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Display window geometries on move/resize"
+#~ msgstr "ಕಿಟಕಿಯ ಚಿಹ್ನೆಗಳನ್ನು ತೋರಿಸು(&i)"
+
+#, fuzzy
+#~| msgid "Use for window &switching"
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Deform windows while they are moving"
+#~ msgstr "ಕಿಟಕಿಯನ್ನು ಬದಲಾಯಿಸಲು ಬಳಸು(&s)"
+
+#, fuzzy
+#~| msgid "Zoom"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Zoom"
+#~ msgstr "ಹಿಗ್ಗಿಸು"
+
+#, fuzzy
+#~| msgid "Show Desktop Grid"
+#~ msgctxt "Special entry in alt+tab list for minimizing all windows"
+#~ msgid "Show Desktop"
+#~ msgstr "ಗಣಕತೆರೆಯನ್ನು ಚೌಕಗಳನ್ನು ತೋರಿಸು"
+
+#~ msgid "Zoom"
+#~ msgstr "ಹಿಗ್ಗಿಸು"
+
+#~ msgid "Define how far away the windows should appear"
+#~ msgstr "ಕಿಟಕಿಗಳು ಎಷ್ಟು ದೂರದಲ್ಲಿ ಇದ್ದಂತೆ ಗೋಚರಿಸಬೇಕು ಎಂದು ಸೂಚಿಸಿ"
+
+#~ msgid "Near"
+#~ msgstr "ಹತ್ತಿರ"
+
+#~ msgid "Far"
+#~ msgstr "ದೂರ"
+
+#, fuzzy
+#~| msgid "Activation"
+#~ msgid "Animation"
+#~ msgstr "ಸಕ್ರಿಯಗೊಳಿಕೆ"
+
+#~ msgid "Animate switch"
+#~ msgstr "ಬದಲಾವಣೆಯ ಸಜೀವನ"
+
+#~ msgid "Animation on tab box open"
+#~ msgstr "ಟ್ಯಾಬ್‌ ಚೌಕವು ತೆರೆಯಲ್ಪಟ್ಟಾಗಿನ ಸಜೀವನ"
+
+#~ msgid "Animation on tab box close"
+#~ msgstr "ಟ್ಯಾಬ್‌ ಚೌಕವು ಮುಚ್ಚಿದಾಗಿನ ಸಜೀವನ"
+
+#~ msgid "Reflections"
+#~ msgstr "ಪ್ರತಿಫಲನಗಳು"
+
+#, fuzzy
+#~| msgid "Cap color:"
+#~ msgid "Rear color"
+#~ msgstr "ಟೊಪ್ಪಿಯ ಬಣ್ಣ:"
+
+#, fuzzy
+#~| msgid "Background color:"
+#~ msgid "Front color"
+#~ msgstr "ಹಿನ್ನೆಲೆ ಬಣ್ಣ:"
+
+#~ msgid "Desktop Cube"
+#~ msgstr "ಗಣಕತೆರೆ ಘನಾಕೃತಿ"
+
+#~ msgid "Desktop Cylinder"
+#~ msgstr "ಗಣಕತೆರೆ ಸ್ಥಂಭಾಕೃತಿ"
+
+#~ msgid "Desktop Sphere"
+#~ msgstr "ಗಣಕತೆರೆ ಗೋಳ"
+
+#~ msgctxt "@title:tab Basic Settings"
+#~ msgid "Basic"
+#~ msgstr "ಮೂಲಭೂತ"
+
+#~ msgctxt "@title:tab Advanced Settings"
+#~ msgid "Advanced"
+#~ msgstr "ಸುಧಾರಿತ"
+
+#~ msgid "Tab 1"
+#~ msgstr "ಟ್ಯಾಬ್ ೧"
+
+#~ msgid "Background color:"
+#~ msgstr "ಹಿನ್ನೆಲೆ ಬಣ್ಣ:"
+
+#~ msgid "Wallpaper:"
+#~ msgstr "ಗಣಕತೆರೆ ಹಿನ್ನಲೆ ಚಿತ್ರ:"
+
+#~ msgid "Display desktop name"
+#~ msgstr "ಗಣಕತೆರೆಯ ಹೆಸರನ್ನು ತೋರಿಸು"
+
+#~ msgid "Reflection"
+#~ msgstr "ಪ್ರತಿಫಲನ"
+
+#~ msgid "Rotation duration:"
+#~ msgstr "ತಿರುಗಿಸುವ ಕಾಲಾವಧಿ:"
+
+#~ msgid "Opacity"
+#~ msgstr "ಅಪಾರದರ್ಶಕತೆ"
+
+#~ msgid "Tab 2"
+#~ msgstr "ಟ್ಯಾಬ್ ೨"
+
+#~ msgid "Caps"
+#~ msgstr "ಟೊಪ್ಪಿಗಳು"
+
+#~ msgid "Cap color:"
+#~ msgstr "ಟೊಪ್ಪಿಯ ಬಣ್ಣ:"
+
+#~ msgid "Display image on caps"
+#~ msgstr "ಟೊಪ್ಪಿಗಳಲ್ಲಿ ಚಿತ್ರಗಳನ್ನು ತೋರಿಸು"
+
+#~ msgid "Define how far away the object should appear"
+#~ msgstr "ಎಷ್ಟು ದೂರದಲ್ಲಿ ವಸ್ತುವು ಕಾಣಿಸಿಕೊಳ್ಳಬೇಕು ಎಂದು ಸೂಚಿಸಿ"
+
+#~ msgid "Additional Options"
+#~ msgstr "ಹೆಚ್ಚುವರಿ ಆಯ್ಕೆಗಳು"
+
+#~ msgid ""
+#~ "If enabled the effect will be deactivated after rotating the cube with "
+#~ "the mouse,\n"
+#~ "otherwise it will remain active"
+#~ msgstr ""
+#~ "ಶಕ್ತಗೊಳಿಸಿದಲ್ಲಿ, ಮೌಸ್‌ ಅನ್ನು ಬಳಸಿಕೊಂಡು ಗೋಳವನ್ನು ತಿರುಗಿಸಿದಾಗ ಪರಿಣಾಮವು "
+#~ "ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲ್ಪಡುತ್ತದೆ,\n"
+#~ "ಇಲ್ಲದೆ ಹೋದಲ್ಲಿ ಸಕ್ರಿಯವಾಗಿ ಉಳಿಯುತ್ತದೆ"
+
+#~ msgid "Close after mouse dragging"
+#~ msgstr "ಮೌಸ್‌ನಿಂದ ಎಳೆಯಲ್ಪಟ್ಟ ನಂತರ ಮುಚ್ಚು"
+
+#~ msgid "Use this effect for walking through the desktops"
+#~ msgstr "ಗಣಕತೆರೆಗಳ ಮೂಲಕ ಸಾಗಲು ಈ ಪರಿಣಾಮವನ್ನು ಬಳಸು"
+
+#, fuzzy
+#~| msgid "Cap Deformation"
+#~ msgid "Sphere Cap Deformation"
+#~ msgstr "ಟೊಪ್ಪಿಯ ವಿರೂಪಗೊಳಿಕೆ"
+
+#~ msgid "Sphere"
+#~ msgstr "ಗೋಳ"
+
+#~ msgid "Plane"
+#~ msgstr "ಸಮತಲ"
+
+#, fuzzy
+#~| msgid "Toggle Present Windows (All desktops)"
+#~ msgid "Do not animate windows on all desktops"
+#~ msgstr "ಪ್ರಸಕ್ತ ಕಿಟಕಿಗಳನ್ನು ಅಂತರಣಗೊಳಿಸು (ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳು)"
+
+#, fuzzy
+#~| msgid "Desktop Cube"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Desktop Cube"
+#~ msgstr "ಗಣಕತೆರೆ ಘನಾಕೃತಿ"
+
+#, fuzzy
+#~| msgid "Desktop Cube"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Desktop Cube Animation"
+#~ msgstr "ಗಣಕತೆರೆ ಘನಾಕೃತಿ"
+
+#, fuzzy
+#~| msgid "Toggle Present Windows (Current desktop)"
+#~ msgid "Toggle Flip Switch (Current desktop)"
+#~ msgstr "ಪ್ರಸಕ್ತ ಕಿಟಕಿಗಳನ್ನು ಅಂತರಣಗೊಳಿಸು (ಪ್ರಸಕ್ತ ಗಣಕತೆರೆಗಳು)"
+
+#, fuzzy
+#~| msgid "Toggle Present Windows (All desktops)"
+#~ msgid "Toggle Flip Switch (All desktops)"
+#~ msgstr "ಪ್ರಸಕ್ತ ಕಿಟಕಿಗಳನ್ನು ಅಂತರಣಗೊಳಿಸು (ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳು)"
+
+#, fuzzy
+#~| msgid "F&lip animation duration:"
+#~ msgid "Flip animation duration:"
+#~ msgstr "ಪಲ್ಲಟ ಸಜೀವನ ಕಾಲಾವಧಿ(&l):"
+
+#~ msgctxt "Duration of flip animation"
+#~ msgid "Default"
+#~ msgstr "ಪೂರ್ವನಿಯೋಜಿತ"
+
+#~ msgid ""
+#~ "Filter:\n"
+#~ "%1"
+#~ msgstr ""
+#~ "ಶೋಧಕ:\n"
+#~ "%1"
+
+#, fuzzy
+#~| msgid "Activation"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Minimize Animation"
+#~ msgstr "ಸಕ್ರಿಯಗೊಳಿಕೆ"
+
+#, fuzzy
+#~| msgid "Ignore &minimized windows"
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Animate the minimizing of windows"
+#~ msgstr "ಕಿರಿದಾಗಿಸಲಾದ ಕಿಟಕಿಗಳನ್ನು ಆಲಕ್ಷಿಸು(&m)"
+
+#~ msgid "Apply effect to &panels"
+#~ msgstr "ಫಲಕಕ್ಕೆ ಪರಿಣಾಮಗಳನ್ನು ಅನ್ವಯಿಸು(&p)"
+
+#~ msgid "Apply effect to the desk&top"
+#~ msgstr "ಪರಿಣಾಮಗಳನ್ನು ಅನ್ವಯಿಸು(&t)"
+
+#, fuzzy
+#~| msgid "Apply effect to &panels"
+#~ msgid "Apply effect to &keep-above windows"
+#~ msgstr "ಫಲಕಕ್ಕೆ ಪರಿಣಾಮಗಳನ್ನು ಅನ್ವಯಿಸು(&p)"
+
+#~ msgid "Apply effect to &groups"
+#~ msgstr "ಗುಂಪುಗಳಿಗೆ ಪರಿಣಾಮಗಳನ್ನು ಅನ್ವಯಿಸು(&g)"
+
+#, fuzzy
+#~| msgctxt "Duration of rotation"
+#~| msgid "Default"
+#~ msgctxt "Duration of the slide animation"
+#~ msgid "Default"
+#~ msgstr "ಪೂರ್ವನಿಯೋಜಿತ"
+
+#, fuzzy
+#~| msgid "Right"
+#~ msgctxt "More brightness"
+#~ msgid "Lighter"
+#~ msgstr "ಬಲ"
+
+#, fuzzy
+#~| msgid "msec"
+#~ msgid "ms"
+#~ msgstr "ಮಿಲಿಸೆಕೆಂಡು"
+
+#, fuzzy
+#~| msgid "Apply effect to &groups"
+#~ msgid "Apply blur effect to background"
+#~ msgstr "ಗುಂಪುಗಳಿಗೆ ಪರಿಣಾಮಗಳನ್ನು ಅನ್ವಯಿಸು(&g)"
+
+#~ msgid "Decorations:"
+#~ msgstr "ಅಲಂಕಾರಗಳು:"
+
+#~ msgid "Background window &opacity:"
+#~ msgstr "ಹಿನ್ನಲೆ ಕಿಟಕಿಯ ಅಪಾರದರ್ಶಕತೆ (&o):"
+
+#~ msgid "&Elevate selected window"
+#~ msgstr "ಆರಿಸಿದ ಕಿಟಕಿಯನ್ನು ಮೇಲಕ್ಕೆ ಏರಿಸು(&E)"
+
+#~ msgid "&Animate walk through windows"
+#~ msgstr "ಕಿಟಕಿಗಳ ಮೂಲಕ ಸಾಗಿದಾಗ ಸಜೀವನಗೊಳಿಸು(&A)"
+
+#~ msgid "Use additional thumbnail bar"
+#~ msgstr "ಹೆಚ್ಚುವರಿ ಸೂಚ್ಯಚಿತ್ರ ಪಟ್ಟಿಯನ್ನು ಬಳಸು"
+
+#~ msgid ""
+#~ "Only show thumbnail bar if there are at least specified number of windows"
+#~ msgstr ""
+#~ "ಸೂಚಿಸಲಾದಂತಹ ಕನಿಷ್ಟ ಸಂಖ್ಯೆಯ ಕಿಟಕಿಗಳಿದ್ದಲ್ಲಿ ಮಾತ್ರವೆ ಸೂಚ್ಯಚಿತ್ರ ಪಟ್ಟಿಯನ್ನು ತೋರಿಸು"
+
+#~ msgid "Dynamic mode"
+#~ msgstr "ಕ್ರಿಯಾತ್ಮಕ ಕ್ರಮ"
+
+#~ msgid "Number of windows:"
+#~ msgstr "ಕಿಟಕಿಗಳ ಸಂಖ್ಯೆ:"
+
+#~ msgid " row"
+#~ msgid_plural " rows"
+#~ msgstr[0] " ಅಡ್ಡಸಾಲು"
+#~ msgstr[1] " ಅಡ್ಡಸಾಲುಗಳು"
+
+#~ msgctxt "Duration of fading"
+#~ msgid "Default"
+#~ msgstr "ಪೂರ್ವನಿಯೋಜಿತ"
+
+#~ msgid "Toggle Video Recording"
+#~ msgstr "ವೀಡಿಯೊ ಮುದ್ರಣವನ್ನು ಅಂತರಣಗೊಳಿಸು"
+
+#~ msgid "Path to save video:"
+#~ msgstr "ವೀಡಿಯೋವನ್ನು ಉಳಿಸಲು ಮಾರ್ಗ:"
+
+#~ msgid "Snow"
+#~ msgstr "ಹಿಮ"
+
+#~ msgid "Toggle Snow on Desktop"
+#~ msgstr "ಗಣಕತೆರೆಯಲ್ಲಿ ಹಿಮವನ್ನು ಅಂತರಣಗೊಳಿಸು(ಟಾಗಲ್)"
+
+#, fuzzy
+#~| msgid " px/frame"
+#~ msgid " pixel/frame"
+#~ msgid_plural " pixels/frame"
+#~ msgstr[0] " px/ಫ್ರೇಮ್"
+#~ msgstr[1] " px/ಫ್ರೇಮ್"
+
+#~ msgctxt "@action Enables/Disables an effect that makes windows more sharp"
+#~ msgid "Toggle Sharpen Effect"
+#~ msgstr "ತೀಕ್ಷ್ಣಗೊಳಿಕಾ ಪರಿಣಾಮವನ್ನು ಅಂತರಣಗೊಳಿಸು"
+
+#~ msgid "&Number of snowflakes:"
+#~ msgstr "ಹಿಮದ ಚೂರುಗಳ ಸಂಖ್ಯೆ(&a):"
+
+#~ msgid "M&inimum size of snowflake:"
+#~ msgstr "ಹಿಮದ ಚೂರುಗಳ ಕನಿಷ್ಟ ಗಾತ್ರ(&i):"
+
+#~ msgid "M&aximum size of snowflake:"
+#~ msgstr "ಹಿಮದ ಚೂರುಗಳ ಗರಿಷ್ಟ ಗಾತ್ರ(&a):"
+
+#~ msgid "Maximum &vertical speed:"
+#~ msgstr "ಗರಿಷ್ಟ ಲಂಬ ವೇಗ (&v):"
+
+#~ msgid "Maximum &horizontal speed:"
+#~ msgstr "ಗರಿಷ್ಟ ಸಮತಲ ವೇಗ (&h):"
+
+#~ msgid "Snow &behind windows"
+#~ msgstr "ಕಿಟಕಿಗಳ ಹಿಂದೆ ಹಿಮ(&b)"
+
+#~ msgid "&X offset:"
+#~ msgstr "&X ಉತ್ತಾರ(ಆಫ್‌ಸೆಟ್):"
+
+#~ msgid "&Y offset:"
+#~ msgstr "&Y ಉತ್ತಾರ(ಆಫ್‌ಸೆಟ್):"
+
+#~ msgid "%"
+#~ msgstr "%"
+
+#~ msgid "&Fuzziness:"
+#~ msgstr "ಅಸ್ಪಷ್ಟತೆ(&F):"
+
+#~ msgid "&Size:"
+#~ msgstr "ಗಾತ್ರ(&S):"
+
+#, fuzzy
+#~| msgid "&Active windows has stronger shadow"
+#~ msgid "&Active windows have stronger shadows"
+#~ msgstr "ಸಕ್ರಿಯ ಕಿಟಕಿಗಳು ಪ್ರಬಲ ಛಾಯೆಯನ್ನು ಹೊಂದಿರುತ್ತವೆ(&A)"
+
+#, fuzzy
+#~| msgid "Background"
+#~ msgid "Background brightness"
+#~ msgstr "ಹಿನ್ನೆಲೆ"
+
+#, fuzzy
+#~| msgid "Background"
+#~ msgid "Background saturation"
+#~ msgstr "ಹಿನ್ನೆಲೆ"
+
+#~ msgid "Hold Ctrl+Meta keys to see where the mouse cursor is."
+#~ msgstr "ಮೌಸ್‌ನ ತೆರೆಸೂಚಕವು ಎಲ್ಲಿದೆ ಎಂದು ನೋಡಲು Ctrl+ಮೆಟಾ ಕೀಲಿಗಳನ್ನು ಒತ್ತಿ ಹಿಡಿಯಿರಿ."
+
+#~ msgid "Rearrange &duration:"
+#~ msgstr "ಮರುಹೊಂದಿಸುವ ಕಾಲಾವಧಿ (&d):"
+
+#~ msgctxt "Duration of rearrangement"
+#~ msgid "Default"
+#~ msgstr "ಪೂರ್ವನಿಯೋಜಿತ"
+
+#~ msgid "Animate &flip"
+#~ msgstr "ಪಲ್ಲಟವನ್ನು ಸಜೀವನಗೊಳಿಸಿ(&f)"
+
+#~ msgid "Custom..."
+#~ msgstr "ಇಚ್ಛೆಯ..."
+
+#~ msgid "Default Shadow"
+#~ msgstr "ಪೂರ್ವನಿಯೋಜಿತ ಛಾಯೆ"
+
+#~ msgid "Decoration Shadows"
+#~ msgstr "ಅಲಂಕೃತ ಛಾಯೆಗಳು"
+
+#~ msgid "Force default shadows for:"
+#~ msgstr "ಇವುಗಳಿಗೆ ಪೂರ್ವನಿಯೋಜಿತ ಛಾಯೆಗಳನ್ನು ಒತ್ತಾಯಪಡಿಸು:"
+
+#~ msgid "&Undecorated normal windows"
+#~ msgstr "ಅಲಂಕರಿಸದೆ ಇರುವ ಸಾಮಾನ್ಯ ಕಿಟಕಿ(&U)"
+
+#~ msgid ""
+#~ "If enabled span the cube across all screens on a multiscreen setup, "
+#~ "otherwise\n"
+#~ "the cube will only be displayed on a single screen"
+#~ msgstr ""
+#~ "ಶಕ್ತಗೊಳಿಸಿದಲ್ಲಿ, ಬಹುತೆರೆಯ ವ್ಯವಸ್ಥೆಯಲ್ಲಿ ಘನಾಕೃತಿಯನ್ನು ಎಲ್ಲಾ ತೆರೆಗಳಿಗೂ ಹರಡುತ್ತದೆ,\n"
+#~ "ಇಲ್ಲದೆ ಹೋದಲ್ಲಿ, ಘನಾಕೃತಿಯು ಕೇವಲ ಒಂದು ತೆರೆಯಲ್ಲಿ ಮಾತ್ರವೆ ಕಾಣಿಸಿಕೊಳ್ಳುತ್ತದೆ"
+
+#~ msgid "Span cube on all screens in multi screen setup"
+#~ msgstr "ಬಹು ತೆರೆ ಸಿದ್ಧತೆಯಲ್ಲಿ ಘನಾಕೃತಿಯನ್ನು ಎಲ್ಲಾ ತೆರೆಗಳಿಗೂ ವಿಸ್ತರಿಸು"
+
+#~ msgid ""
+#~ "If enabled the effect will be deactivated after rotating the cylinder "
+#~ "with the mouse,\n"
+#~ "otherwise it will remain active."
+#~ msgstr ""
+#~ "ಶಕ್ತಗೊಳಿಸಿದಲ್ಲಿ, ಮೌಸ್‌ ಅನ್ನು ಬಳಸಿಕೊಂಡು ಸಿಲಿಂಡರನ್ನು ತಿರುಗಿಸಿದಾಗ ಪರಿಣಾಮವು "
+#~ "ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲ್ಪಡುತ್ತದೆ,\n"
+#~ "ಇಲ್ಲದೆ ಹೋದಲ್ಲಿ ಸಕ್ರಿಯವಾಗಿ ಉಳಿಯುತ್ತದೆ"
+
+#~ msgid ""
+#~ "If enabled the effect will be deactivated after rotating the sphere with "
+#~ "the mouse,\n"
+#~ "otherwise it will remain active"
+#~ msgstr ""
+#~ "ಶಕ್ತಗೊಳಿಸಿದಲ್ಲಿ, ಮೌಸ್‌ ಅನ್ನು ಬಳಸಿಕೊಂಡು ಘನಾಕೃತಿಯನ್ನು ತಿರುಗಿಸಿದಾಗ ಪರಿಣಾಮವು "
+#~ "ನಿಷ್ಕ್ರಿಯಗೊಳಿಸಲ್ಪಡುತ್ತದೆ,\n"
+#~ "ಇಲ್ಲದೆ ಹೋದಲ್ಲಿ ಸಕ್ರಿಯವಾಗಿ ಉಳಿಯುತ್ತದೆ"
+
+#, fuzzy
+#~| msgid "Display the cube when switching desktops"
+#~ msgid "Fix panels while switching desktops"
+#~ msgstr "ಗಣಕತೆರೆಗಳನ್ನು ಬದಲಾಯಿಸುವಾಗ ಘನಾಕೃತಿಯನ್ನು ತೋರಿಸು"

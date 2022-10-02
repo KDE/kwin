@@ -1,0 +1,107 @@
+# translation of kcm-kwin-scripts.po to Français
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+# Joëlle Cornavin <jcorn@free.fr>, 2012.
+# xavier <ktranslator31@yahoo.fr>, 2013.
+# Sebastien Renard <renard@kde.org>, 2013.
+# Yoann Laissus <yoann.laissus@gmail.com>, 2017, 2018.
+# Vincent Pinon <vpinon@kde.org>, 2017.
+# Simon Depiets <sdepiets@gmail.com>, 2019.
+# Xavier Besnard <xavier.besnard@neuf.fr>, 2020, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kcm-kwin-scripts\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-09-20 00:47+0000\n"
+"PO-Revision-Date: 2022-09-24 09:04+0200\n"
+"Last-Translator: Xavier Besnard <xavier.besnard@neuf.fr>\n"
+"Language-Team: French <kde-francophone@kde.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Lokalize 22.08.1\n"
+"X-Environment: kde\n"
+"X-Accelerator-Marker: &\n"
+"X-Text-Markup: kde4\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Joëlle Cornavin, Sébastien Renard, Simon Depiets"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "jcorn@free.fr, renard@kde.org, sdepiets@gmail.com"
+
+#: module.cpp:57
+#, kde-format
+msgid "Import KWin Script"
+msgstr "Importer un script KWin"
+
+#: module.cpp:58
+#, kde-format
+msgid "*.kwinscript|KWin scripts (*.kwinscript)"
+msgstr "*.kwinscript|scripts KWin (*.kwinscript)"
+
+#: module.cpp:96
+#, kde-format
+msgctxt "Placeholder is error message returned from the install service"
+msgid ""
+"Cannot import selected script.\n"
+"%1"
+msgstr ""
+"Impossible d'importer le script sélectionné.\n"
+"%1"
+
+#: module.cpp:108
+#, kde-format
+msgctxt "Placeholder is name of the script that was imported"
+msgid "The script \"%1\" was successfully imported."
+msgstr "Le script « %1 » a été importé avec succès."
+
+#: module.cpp:148
+#, kde-format
+msgid "Error when uninstalling KWin Script: %1"
+msgstr "Erreur durant la désinstallation du script « KWin » : %1"
+
+#: package/contents/ui/main.qml:47
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Delete..."
+msgstr "Supprimer..."
+
+#: package/contents/ui/main.qml:60
+#, kde-format
+msgid "Install from File..."
+msgstr "Installer à partir d'un fichier..."
+
+#: package/contents/ui/main.qml:64
+#, kde-format
+msgid "Get New Scripts..."
+msgstr "Obtenir de nouveaux scripts..."
+
+#~ msgid "KWin Scripts"
+#~ msgstr "Scripts KWin"
+
+#~ msgid "Configure KWin scripts"
+#~ msgstr "Configurer des scripts KWin"
+
+#~ msgid "Tamás Krutki"
+#~ msgstr "Tamas Krutki"
+
+#~ msgid "KWin script configuration"
+#~ msgstr "Configuration du script KWin"
+
+#~ msgid "Import KWin script..."
+#~ msgstr "Importer un script KWin..."
+
+#~ msgid ""
+#~ "Cannot import selected script: maybe a script already exists with the "
+#~ "same name or there is a permission problem."
+#~ msgstr ""
+#~ "Impossible d'importer le script sélectionné : peut-être existe-t-il déjà "
+#~ "un script du même nom ou y-a-t-il un problème de droits d'accès."

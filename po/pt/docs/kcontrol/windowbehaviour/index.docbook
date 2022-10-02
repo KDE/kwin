@@ -1,0 +1,837 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Portuguese "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<!--copy from r308626 Tue May 4 17:11:51 2004 UTC -->
+
+<article id="windowbehaviour" lang="&language;">
+<articleinfo>
+<title
+>Comportamento da Janela</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<author
+>&Jost.Schenck; &Jost.Schenck.mail;</author>
+<othercredit role="translator"
+><firstname
+>José</firstname
+><surname
+>Pires</surname
+><affiliation
+><address
+><email
+>zepires@gmail.com</email
+></address
+></affiliation
+><contrib
+>Tradução</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2015-07-14</date>
+<releaseinfo
+>Plasma 5.3</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>configuração do sistema</keyword>
+<keyword
+>acções</keyword>
+<keyword
+>colocação da janela</keyword>
+<keyword
+>tamanho da janela</keyword>
+</keywordset>
+</articleinfo>
+<sect1 id="window-behavior">
+<title
+>Comportamento da Janela</title>
+
+<para
+>Na parte superior deste módulo de controlo, poderá ver várias páginas: <guilabel
+>Foco</guilabel
+>, <guilabel
+>Acções da Barra de Título</guilabel
+>, <guilabel
+>Acções das Janelas</guilabel
+>, <guilabel
+>Movimentação</guilabel
+> e <guilabel
+>Avançado</guilabel
+>. No painel <guilabel
+>Foco</guilabel
+>, poderá configurar como as janelas podem passar ou deixar de ficar em primeiro plano, &ie; fiquem activas ou inactivas. Ao usar as páginas de <guilabel
+>Acções da Barra de Título</guilabel
+> e <guilabel
+>Acções da Janela</guilabel
+>, poderá configurar a forma como as barras de título e as janelas reagem ao rato. A <guilabel
+>Movimentação</guilabel
+> permite-lhe configurar a forma como as janelas se movem ou se colocam quando são iniciadas. As opções em <guilabel
+>Avançado</guilabel
+> cobrem algumas definições mais especializadas, que envolvem a mudança de ecrã das janelas e o <quote
+>enrolamento das janelas</quote
+>. </para>
+
+<note>
+<para
+>Lembre-se que esta configuração não fará efeito se não usar o &kwin;, o gestor de janelas nativo do &kde;, como o seu gestor de janelas. Se usar um gestor de janelas diferente, veja na documentação do mesmo como configurar o comportamento das janelas. </para>
+</note>
+
+<sect2 id="action-focus">
+<title
+>Foco</title>
+
+<para
+>O <quote
+>foco</quote
+> do ecrã refere-se à janela que se encontra em primeiro plano e onde o utilizador se encontra a trabalhar. A janela em foco ou primeiro plano é referida como sendo a <quote
+>janela activa</quote
+>. </para>
+
+<para
+>O foco não significa necessariamente que a janela é a que se encontra à frente &mdash; esta normalmente diz-se <quote
+>elevada</quote
+> e, ainda que isto também seja aqui configurado, o foco e a elevação das janelas são configurados de forma independente.</para>
+
+<sect3 id="action-focus-focuspolicy">
+<title
+>Política de Foco</title>
+
+<para
+>Existem seis métodos que o &kde; poderá usar para determinar o foco actual: </para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Carregar para Obter o Foco</guilabel
+></term>
+<listitem>
+<para
+>Uma janela fica activa quando carregar sobre ela. Este comportamento é comum a outros sistemas operativo e será provavelmente o que deseja.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Carregar para Obter o Foco - Precedência do Rato</guilabel
+></term>
+<listitem>
+<para
+>Isto é geralmente igual ao <guilabel
+>Carregar para Obter o Foco</guilabel
+>. Se uma tiver de escolher uma janela activa pelo sistema (&eg;, porque a janela activa de momento foi fechada), a janela sob o rato é a candidata preferida. É uma variante pouco usual, mas possível da <guilabel
+>Carregar para Obter o Foco</guilabel
+>. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>O Foco Segue o Rato</guilabel
+></term>
+<listitem>
+<para
+>A passagem do cursor do rato sobre uma janela normal activa-a. As novas janelas, como a mini-linha de comandos que é invocada com o <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+>, ficarão em primeiro plano, sem que tenha de colocar o rato em cima delas explicitamente. &eg;, as janelas que aparecem aleatoriamente sob o rato não ficarão em primeiro plano. A prevenção de captura do foco toma lugar como de costume. Pense como o <guilabel
+>Carregar para Obter o Foco</guilabel
+>, mas sem ter de carregar de facto. </para>
+
+<para
+>Nos outros gestores de janelas, isto normalmente é conhecido como <quote
+>O foco segue o rato de forma lata</quote
+>. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>O Foco Segue o Rato - Precedência do Rato</guilabel
+></term>
+<listitem>
+<para
+>Isto é geralmente igual ao <guilabel
+>O Foco Segue o Rato</guilabel
+>. Se uma tiver de escolher uma janela activa pelo sistema (&eg;, porque a janela activa de momento foi fechada), a janela sob o rato é a candidata preferida. Escolha esta opção se quiser o foco controlado à passagem do cursor. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Foco Debaixo do Rato</guilabel
+></term>
+<listitem>
+<para
+>A janela que estiver no momento por baixo do cursor do rato fica então activa. Se o rato não estiver sobre uma janela (por exemplo, se estiver no ecrã), a última janela que estava sob o cursor será a que estará em primeiro plano. As janelas novas, como a mini-linha de comandos que é invocada com o <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+>, não ficarão em primeiro plano; você terá de passar o rato por cima delas para escrever. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Foco Estritamente Debaixo do Rato</guilabel
+></term>
+<listitem>
+<para
+>É semelhante à opção <guilabel
+>O Foco Segue o Rato</guilabel
+>, só que a sua interpretação é ainda mais restrita. Só a janela que estiver sob o cursor do rato é que ficará activa. Se o cursor do rato não estiver sobre nenhuma janela, nada ficará em primeiro plano. As janelas novas, como a linha de comandos que é invocada com o <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+>, não irão ficar em primeiro plano, pelo que terá de passar o cursor por cima para escrever. </para>
+
+</listitem>
+</varlistentry>
+</variablelist>
+
+<note
+><para
+>Lembre-se que a opção <guilabel
+>O Foco Segue o Rato</guilabel
+> e a <guilabel
+>Foco Restrito sobre o Rato</guilabel
+> impedem certas funcionalidades, como a janela de circulação pelas várias janelas com o <keycombo action="simul"
+>&Alt;&Tab;</keycombo
+>, de se comportarem correctamente.</para>
+</note>
+
+</sect3>
+
+<sect3 id="action-focus-focusstealin">
+<title
+>Nível de prevenção da captura do foco</title>
+
+<para
+>Esta opção indica como é que o KWin irá tentar evitar que o foco seja roubado devido à activação inesperada de janelas novas.</para
+> 
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Nenhum</guilabel
+></term>
+<listitem
+><para
+>A prevenção é desactivada e as janelas novas ficam sempre activadas.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><guilabel
+>Baixa</guilabel
+></term>
+<listitem
+><para
+>A prevenção é activada; quando alguma janela não tiver suporte para o mecanismo subjacente e o KWin não conseguir decidir de forma fidedigna se deve activar a janela ou não, esta será desactivada. Esta configuração poderá ter tanto resultados melhores ou piores que o nível médio, dependendo das aplicações.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><guilabel
+>Média</guilabel
+></term>
+<listitem
+><para
+>A prevenção está activada.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Alta</guilabel
+></term>
+<listitem
+><para
+>As janelas novas só ficam activadas se não estiver nenhuma activada de momento ou se pertencerem à aplicação activa de momento. Esta configuração não será provavelmente muito útil se não estiver a usar a política de foco com o rato.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><guilabel
+>Extrema</guilabel
+></term>
+<listitem
+><para
+>Todas as janelas terão de ser activadas explicitamente pelo utilizador.</para
+></listitem>
+</varlistentry>
+</variablelist>
+<para
+>As janelas que são proibidas de roubar o foco ficam marcadas como a pedir atenção, o que significa por omissão que o seu item na barra de tarefas ficará realçado. Isto poderá ser alterado no módulo de controlo das Notificações.</para>
+</sect3>
+  
+<sect3 id="action-focus-raisingwindow">
+<title
+>Elevar a janela</title>
+<para
+>Assim que tenha determinado a política de primeiro plano, existem as opções de elevação das janelas. </para>
+
+<para
+>Com a política de carregar para obter o foco, a opção <guilabel
+>Carregar eleva a janela activa</guilabel
+> fica activa e a elevação à passagem fica indisponível. </para>
+
+<para
+>Com uma política de passagem do rato para obter o foco, poderá em alternativa usar a elevação automática. Ao assinalar a opção <guilabel
+>Elevar com o seguinte atraso</guilabel
+>, o &kde; poderá passar uma janela para a frente, desde que o cursor do rato fique sobre essa janela durante um determinado período de tempo. Poderá definir o atraso se usar a combinação da barra deslizante/campo incremental. </para>
+
+<tip>
+<para
+>A definição de um atraso demasiado pequeno fará com que a mudança de janelas funcione de forma demasiado rápida, o que poderá levar à distracção. A maioria das pessoas ficará satisfeita com um atraso de 100-300 ms. Isto é reactivo o suficiente, mas permite-lhe deslizar pelos cantos de uma janela, a caminho do seu destino, sem passar essa janela para a frente. </para>
+</tip>
+
+<para
+>Se não usar a opção para <guilabel
+>Auto-elevar</guilabel
+>, certifique-se que a opção <guilabel
+>O botão eleva a janela activa</guilabel
+> está assinalada. Não será satisfatório se tiver tanto as opções <guilabel
+>Auto-elevar</guilabel
+> e <guilabel
+>O botão eleva a janela activa</guilabel
+> desligadas, por ter o efeito adverso de nenhuma janela poder ficar elevada nesse caso. </para>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="titlebar-actions">
+<title
+>Acções da Barra de Título</title>
+
+<para
+>Neste painel, poderá configurar o que acontece às janelas sempre que carregar com o rato nas suas barras de título. </para>
+
+<sect3 id="action-actions-sec1">
+<title
+>Duplo-click na barra de título</title>
+
+<para
+>Nesta lista, poderá optar por <guilabel
+>Enrolar</guilabel
+>, diversas variantes para <guilabel
+>Maximizar</guilabel
+> ou <guilabel
+>Baixar</guilabel
+>, <guilabel
+>Fechar</guilabel
+> e colocar <guilabel
+>Em Todos os Ecrãs</guilabel
+>. </para>
+
+<para
+>Se seleccionar a opção <guilabel
+>Maximizar</guilabel
+>, fará com que o &kde; maximize a janela, sempre que você fizer duplo-click sobre a barra de título. Poderá ainda optar por maximizar as janelas apenas na vertical ou na horizontal.</para>
+
+<para
+>O <guilabel
+>Enrolar</guilabel
+>, por outro lado, fará com que a janela fique reduzida apenas à barra de título. Se voltar a fazer duplo-click sobre a barra de título, irá repor a janela no seu tamanho normal. </para>
+
+<para
+>Estão disponíveis opções semelhantes para o <guilabel
+>evento da roda</guilabel
+>. </para>
+<!--FIXME Raise/Lower Shade/Unshade Maximize/Restore Keep Above/Below Move to Previous/Next Desktop Change Opacity  Switch to Window Tab to the Left/Reght -->
+
+<tip>
+<para
+>Poderá fazer com que as janelas se desenrolem automaticamente, quando passar o cursor do rato pela sua barra de título enrolada. Basta assinalar a opção <guilabel
+>Activar à passagem</guilabel
+> da página <guilabel
+>Avançado</guilabel
+> deste módulo. Esta é uma forma óptima de reclamar espaço no ecrã, caso esteja a cortar e colar entre várias janelas, por exemplo. </para>
+</tip>
+
+</sect3>
+
+<sect3 id="action-actions-sec2">
+<title
+><guilabel
+>Barra de Título &amp; Moldura</guilabel
+></title>
+
+<para
+>Esta secção permite-lhe determinar o que acontece quando carregar apenas uma vez na barra de título ou no contorno de uma janela. Lembre-se que poderá ter várias acções diferentes associadas ao mesmo botão, dependendo se a janela está activa ou não. </para>
+
+<para
+>Para cada combinação de botões do rato, teclas modificadoras, estado Activo ou Inactivo, poderá seleccionar a opção mais apropriada para si. As acções são as seguintes: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Elevar</guilabel
+></term>
+<listitem>
+<para
+>Irá enviar a janela para o topo da área exposta. Todas as outras janelas que se sobrepunham a esta ficarão escondidas <quote
+>por baixo</quote
+> dela. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Baixar</guilabel
+></term>
+<listitem>
+<para
+>Irá mover esta janela para o fundo da área exposta. Isso irá tirar a janela do caminho. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Alternar entre Elevar &amp; Baixar</guilabel
+></term>
+<listitem>
+<para
+>Esta opção irá elevar as janelas que não estão no topo e baixar as janelas que já estão no topo. </para>
+</listitem>
+</varlistentry>
+
+<!--FIXME missing:
+Minimize, Shade, Close, Start Window Tab Drag
+-->
+
+<varlistentry>
+<term
+><guilabel
+>Nada</guilabel
+></term>
+<listitem>
+<para
+>Tal como diz, não faz nada. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Menu de Operações</guilabel
+></term>
+<listitem>
+<para
+>Irá abrir um pequeno sub-menu, no qual poderá escolher os comandos relacionados com as janelas (&ie; Maximizar, Minimizar, Fechar, &etc;). </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect3>
+
+<sect3 id="action-actions-maximize-button">
+<title
+><guilabel
+>Botão de Maximizar</guilabel
+></title>
+<para
+>Esta secção permite-lhe determinar o comportamento dos três botões do rato no botão para maximizar. Terá a opção entre a maximização na vertical, na horizontal ou em ambas as direcções. </para>
+</sect3>
+
+</sect2>
+
+<sect2 id="window-actions">
+<title
+>Acções da Janela</title>
+
+<sect3 id="action-actions-sec3">
+<title
+><guilabel
+>Janela Interior Inactiva</guilabel
+></title>
+
+<para
+>Esta parte do módulo permite-lhe configurar o que acontece quando carregar numa janela inactiva com qualquer um dos três botões do rato, ou se usar a roda do mesmo. </para>
+
+<para
+>As suas opções são as seguintes: </para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Activar, Elevar &amp; Passar o Evento</guilabel
+></term>
+<listitem>
+<para
+>Isto faz com que a janela carregada fique activa, passando-a para o topo do ecrã e ainda passar o evento do botão do rato para a aplicação contida na janela. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Activar &amp; Passar o Evento</guilabel
+></term>
+<listitem>
+<para
+>Isto faz com que a janela carregada fique activa e ainda passe o evento do botão do rato para a aplicação contida na janela. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Activar</guilabel
+></term>
+<listitem>
+<para
+>Isto simplesmente torna a janela carregada activa. O evento do botão do rato não será passado à aplicação na janela. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Activar &amp; Elevar</guilabel
+></term>
+<listitem>
+<para
+>Isto faz com que a janela carregada fique activa e a passe para o topo do ecrã. O evento do botão do rato não irá passar para a aplicação contida na janela. </para>
+</listitem>
+</varlistentry>
+
+<!--FIXME Wheel Scroll, Activate & Scroll, Activate, Raise & Scroll-->
+
+</variablelist>
+</sect3>
+
+<sect3 id="action-actions-sec4">
+<title
+><guilabel
+>Moldura, Barra de Título &amp; Janela Interior</guilabel
+></title>
+
+<para
+>Esta secção inferior permite-lhe configurar as acções adicionais, quando uma tecla modificadora (como o &Alt;) é carregada em conjunto com um botão do rato numa janela.</para>
+
+<para
+>Mais uma vez, poderá seleccionar acções diferentes para os botões <mousebutton
+>Esquerdo</mousebutton
+>, do <mousebutton
+>Meio</mousebutton
+> e <mousebutton
+>Direito</mousebutton
+> do rato, assim como para a <guilabel
+>Roda do rato</guilabel
+>. </para>
+
+<para
+>As suas opções são:</para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Mover</guilabel
+></term>
+<listitem>
+<para
+>Permite-lhe arrastar a janela seleccionada pelo ecrã. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Baixar</guilabel
+></term>
+<listitem>
+<para
+>Irá mover esta janela para o fundo da área exposta. Isso irá tirar a janela do caminho. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Nada</guilabel
+></term>
+<listitem>
+<para
+>Tal como diz, não faz nada. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Elevar</guilabel
+></term>
+<listitem>
+<para
+>Irá enviar a janela para o topo da área exposta. Todas as outras janelas que se sobrepunham a esta ficarão escondidas <quote
+>por baixo</quote
+> dela. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Dimensionar</guilabel
+></term>
+<listitem>
+<para
+>Permite-lhe alterar o tamanho da janela seleccionada. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Alternar entre Elevar &amp; Baixar</guilabel
+></term>
+<listitem>
+<para
+>Esta opção irá elevar as janelas que não estão no topo e baixar as janelas que já estão no topo. </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><guilabel
+>Activar</guilabel
+></term>
+<listitem>
+<para
+>Torna esta janela activa. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+<!-- FIXME missing:
+Activate, Raise &amp; Move
+Minimize
+Increase Opacity + Decrease Opacity
+-->
+<!--FIXME
+Mouse Wheel has different choices:
+Raise/Lower, Shade/Unshade, Maximize/Restore, Keep Above/Below, 
+Move to Previous/Next Desktop, Change Opacity, Switch to Window Tab to the Left/Right
+Nothing
+-->
+
+</sect3>
+
+</sect2>
+
+<sect2 id="action-moving">
+<title
+>Movimentação</title>
+
+<sect3>
+<title
+><guilabel
+>Janelas</guilabel
+></title>
+<para
+>As opções aqui definem como as janelas aparecem no ecrã quando as move.</para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Mostrar a geometria da janela ao mover ou redimensionar</guilabel
+></term>
+<listitem>
+<para
+>Active esta opção se quiser que a geometria da janela seja mostrada enquanto é movida ou redimensionada. A posição da janela em relação ao canto superior esquerdo do ecrã é mostrada em conjunto com o seu tamanho.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</sect3>
+
+<sect3>
+<title
+><guilabel
+>Zonas de Atracção</guilabel
+></title>
+
+<para
+>O resto desta página permite-lhe configurar as <guilabel
+>Zonas de Atracção</guilabel
+>. Estas funcionam como um campo magnético nos extremos do ecrã e em cada janela, e que farão com que as janelas se colem entre si ao aproximarem-se.</para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Zona de atracção do extremo:</guilabel
+></term>
+<listitem>
+
+<para
+>Aqui pode definir a zona de atracção dos extremos do ecrã. Se mover uma janela dentro da distância configurada, fará com que esta se cole a esse extremo do ecrã.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Zona de atracção da janela:</guilabel
+></term>
+<listitem>
+
+<para
+>Aqui pode definir a zona de atracção dos extremos do ecrã. Como acontece nos contornos do ecrã, faz com que as janelas se 'colem' a um extremo quando movidas para perto dele.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Zona de atracção do centro:</guilabel
+></term>
+<listitem>
+
+<para
+>Aqui pode definir a zona de atracção dos extremos do ecrã, &ie; a <quote
+>potência</quote
+> do campo magnético que fará com as janelas se colem ao centro do ecrã, caso sejam movidas para a proximidade do mesmo.</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry>
+<term
+><guilabel
+>Atrair as janelas só quando sobrepostas</guilabel
+></term>
+<listitem>
+
+<para
+>Se a opção estiver assinalada, as janelas não se irão colar se só estiverem próximas umas das outras; terão de estar sobrepostas para tal, de acordo com o parâmetro de distância configurado.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect3>
+
+</sect2>
+
+<sect2 id="action-advanced">
+<title
+>Avançado</title>
+
+<para
+>No painel <guilabel
+>Avançado</guilabel
+>, poderá efectuar alguns ajustes mais avançados sobre o comportamento da janela. </para>
+
+<variablelist>
+<title
+>Enrolar</title>
+
+<varlistentry>
+<term
+><guilabel
+>Activar à passagem</guilabel
+></term>
+<listitem>
+<para
+>Se o esta opção estiver activa, uma janela enrolada desenrolar-se-á automaticamente quando o cursor do rato se mantiver sobre ela durante algum tempo. </para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<variablelist>
+<title
+>Paginação da Janela</title>
+
+<varlistentry>
+<term
+><guilabel
+>Agrupar automaticamente as janelas semelhantes</guilabel
+></term>
+<listitem
+><para
+>Quando a opção estiver activa, tentará detectar automaticamente quando é que uma janela nova é aberta e está relacionada com outra existente, de modo a colocá-la sob o mesmo grupo de janelas.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Mudar automaticamente para as janelas agrupadas automaticamente</guilabel
+></term>
+<listitem
+><para
+>Quando estiver activa, muda imediatamente para as páginas novas das janelas que foram adicionadas automaticamente ao grupo actual.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Colocação</guilabel
+></term>
+<listitem
+><para
+>A política de posicionamento determina onde uma nova janela será colocada no ecrã. A <guilabel
+>Inteligente</guilabel
+> tentará atingir um mínimo de sobreposição de janelas, a <guilabel
+>Cascata</guilabel
+> irá colocar as janelas em cascata, a <guilabel
+>Aleatória</guilabel
+> irá usar uma posição aleatória e a <guilabel
+>Centrada</guilabel
+> irá centrar a janela; finalmente, a <guilabel
+>No Canto</guilabel
+> irá colocar a janela no canto superior esquerdo do ecrã.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+<variablelist>
+<title
+>Janela Especial</title>
+<varlistentry>
+<term
+><guilabel
+>Esconder as janelas utilitárias para as aplicações inactivas</guilabel
+></term>
+<listitem
+><para
+>Se estiver activo, as janelas utilitárias (janelas de ferramentas, menus separados...) das aplicações inactivas ficarão escondidas e só aparecerão quando a aplicação ficar activa. Lembre-se que as aplicações terão de marcas as janelas com o tipo adequado para esta funcionalidade resultar.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+</sect1>
+
+</article>

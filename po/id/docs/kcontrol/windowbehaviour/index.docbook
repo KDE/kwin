@@ -1,0 +1,811 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Indonesian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<!--copy from r308626 Tue May 4 17:11:51 2004 UTC -->
+
+<article id="windowbehaviour" lang="&language;">
+<articleinfo>
+<title
+>Perilaku Window</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<author
+>&Jost.Schenck; &Jost.Schenck.mail;</author>
+<othercredit role="translator"
+><firstname
+>Wantoyo</firstname
+><surname
+></surname
+><affiliation
+><address
+><email
+>wantoyek@gmail.com</email
+></address
+></affiliation
+><contrib
+>Terjemahan</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>14-07-2015</date>
+<releaseinfo
+>Plasma 5.3</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>system settings</keyword>
+<keyword
+>aksi</keyword>
+<keyword
+>penempatan window</keyword>
+<keyword
+>ukuran window</keyword>
+</keywordset>
+</articleinfo>
+<sect1 id="window-behavior">
+<title
+>Perilaku Window</title>
+
+<para
+>Di dalam bagian teratas pada modul kendali ini kamu bisa melihat bermacam tab: <guilabel
+>Fokus</guilabel
+>, <guilabel
+>Aksi Bilah Judul</guilabel
+>, <guilabel
+>Aksi Window</guilabel
+>, <guilabel
+>Pemindahan</guilabel
+> dan <guilabel
+>Tingkat Lanjut</guilabel
+>. Di dalam panel  <guilabel
+>Fokus</guilabel
+> kamu bisa mengkonfigurasikan bagaimana gain window atau hilang fokus, &ie; menjadi aktif atau tak aktif. Menggunakan <guilabel
+>Aksi Bilah Judul</guilabel
+> dan <guilabel
+>Aksi Window</guilabel
+> kamu bisa mengkonfigurasi bagaimana reaksi window dan bilah judul terhadap klik mouse. <guilabel
+>Pemindahan</guilabel
+> memungkinkan kamu untuk mengkonfigurasi bagaimana memindah dan menempatkan window itu sendiri ketika dimulai. Opsi <guilabel
+>Tingkat lanjut</guilabel
+> menangani beberapa opsi-opsi khusus seperti <quote
+>pembayangan window</quote
+>. </para>
+
+<note>
+<para
+>Mohon catat bahwa konfigurasi dalam modul ini tidak akan berpengaruh jika kamu tidak menggunakan &kwin;, pengelola window bawaan &kde;. Jika kamu menggunakan sebuah pengelola window yang berbeda, silakan merujuk ke dokumentasinya untuk mengetahui bagaimana mengkustomisasi perilaku window. </para>
+</note>
+
+<sect2 id="action-focus">
+<title
+>Fokus</title>
+
+<para
+><quote
+>Fokus</quote
+> pada desktop merujuk ke window mana pengguna saat ini sedang bekerja. Window dengan fokus disebut sebagai <quote
+>window aktif</quote
+>. </para>
+
+<para
+>Fokus tidak harus berarti window yang satu-satunya di depan &mdash; ini adalah disebut sebagai <quote
+>dinaikkan</quote
+>, dan meskipun ini dikonfigurasikan di sini juga, fokus dan penaikan window adalah dikonfigurasi secara independen.</para>
+
+<sect3 id="action-focus-focuspolicy">
+<title
+>Kebijakan Fokus</title>
+
+<para
+>Ada enam metode &kde; yang bisa digunakan untuk menentukan fokus saat ini: </para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Klik Untuk Fokus</guilabel
+></term>
+<listitem>
+<para
+>Sebuah window menjadi aktif ketika kamu mengekliknya. Perilaku ini adalah umum pada sistem operasi lain dan seperti apa yang kamu inginkan.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Klik Untuk Fokus - Mengutamakan Mouse</guilabel
+></term>
+<listitem>
+<para
+>Ini adalah hal yang sama sebagai <guilabel
+>Klik Untuk Fokus</guilabel
+>. Jika sebuah window aktif telah dipilih oleh sistem (&eg; karena yang aktif saat ini satu-satunya yang terdekat) window yang di bawah mouse adalah kandidat yang disukai. Takbiasa, tetapi mungkin varian dari <guilabel
+>Klik Untuk Fokus</guilabel
+>. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Fokus Mengikuti Mouse</guilabel
+></term>
+<listitem>
+<para
+>Memindah penunjuk mouse yang secara aktif melintasi window biasanya mengaktifkannya. Window baru sepertihalnya baris perintah mini yang dipanggil dengan <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+> akan menerima fokus, tanpa kamu harus mengarahkan mouse ke mereka secara gamblang. &eg; window yang secara acak muncul di bawah mouse tidak mendapat fokus. Pencegahan pencurian fokus terjadi seperti biasa. Berpikir sebagai <guilabel
+>Klik Untuk Fokus</guilabel
+> tanpa harus benar-benar mengeklik. </para>
+
+<para
+>Dalam pengelola window lain, ini adalah sesuatu yang dikenal sebagai <quote
+>Fokus ceroboh mengikuti mouse</quote
+>. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Fokus Mengikuti Mouse - Mengutamakan Mouse</guilabel
+></term>
+<listitem>
+<para
+>Ini sama halnya sebagai <guilabel
+>Fokus Mengikuti Mouse</guilabel
+>. Jika sebuah window aktif telah dipilih oleh sistem (&eg; karena yang aktif saat ini salah satu yang terdekat) window di bawah mouse adalah kandidat yang disukai. Pilihlah ini, jika kamu ingin sebuah fokus dikendalikan pelayang. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Fokus di-Bawah Mouse</guilabel
+></term>
+<listitem>
+<para
+>Window yang terjadi di bawah penunjuk mouse menjadi aktif. Jika mouse tidak melintasi window (misalnya, ia berada di desktop) window yang terakhir yang di bawah mouse memiliki fokus. Window baru sepertihalnya baris perintah mini yang dipanggil dengan <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+> tidak akan menerima fokus, kamu harus memindahkan mouse melintasi mereka untuk pengetikan. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Fokus Secara Ketat di-Bawah Mouse</guilabel
+></term>
+<listitem>
+<para
+>Mirip dengan <guilabel
+>Fokus di-Bawah Mouse</guilabel
+>, tetapi bahkan lebih ketat dengan interpretasi. Hanya window di bawah penunjuk mouse yang aktif. Jika penunjuk mouse tidak melintasi window, tidak ada window yang memiliki fokus. Window baru seperti baris perintah mini yang dipanggil dengan <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+> tidak akan menerima fokus, kamu harus memindahkan mouse melintasi mereka untuk pengetikan. </para>
+
+</listitem>
+</varlistentry>
+</variablelist>
+
+<note
+><para
+>Ingat bahwa <guilabel
+>Fokus di-Bawah Mouse</guilabel
+> dan <guilabel
+>Fokus Secara Ketat di-Bawah Mouse</guilabel
+> mencegah fitur tertentu, sepertihalnya <guilabel
+>Pencegahan pencurian fokus</guilabel
+> dan dialog walk-through-windows <keycombo action="simul"
+>&Alt;&Tab;</keycombo
+>, dari pekerjaan secara benar.</para>
+</note>
+
+</sect3>
+
+<sect3 id="action-focus-focusstealin">
+<title
+>Level pencegahan pencurian fokus</title>
+
+<para
+>Opsi ini menentukan seberapa KWin akan mencoba untuk mencegah pencurian fokus yang tak diinginkan yang disebabkan oleh aktivasi yang tak terduga pada window baru.</para
+> 
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Nihil</guilabel
+></term>
+<listitem
+><para
+>Pencegahan dimatikan dan window baru selalu menjadi diaktifkan.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><guilabel
+>Rendah</guilabel
+></term>
+<listitem
+><para
+>Pencegahan difungsikan, ketika beberapa window tidak memiliki dukungan untuk meknisme yang mendasarinya dan KWin tidak dapat memutuskan secara andal apakah mengaktifkan window atau tidak, itu akan diaktifkan. Setelan ini mungkin memiliki keburukan di keduanya dan hasil yang lebih baik dari level sedang, tergantung pada aplikasi.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><guilabel
+>Sedang</guilabel
+></term>
+<listitem
+><para
+>Pencegahan telah difungsikan.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Tinggi</guilabel
+></term>
+<listitem
+><para
+>Window baru, bisa diaktifkan hanya jika tidak ada window yang sedang aktif atau jika itu milik aplikasi yang sedang aktif. Setelan ini mungkin tidak benar-benar dapat digunakan ketika tidak menggunakan kebijakan fokus mouse.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><guilabel
+>Ekstrem</guilabel
+></term>
+<listitem
+><para
+>Semua mestinya diaktifkan dengan gamblang oleh pengguna.</para
+></listitem>
+</varlistentry>
+</variablelist>
+<para
+>Window yang dicegah dari pencurian fokus yang ditandai sebagai menuntut perhatian, yang mana sebagai bakunya berarti entri bilah tugas akan disoroti. Ini bisa diubah di dalam modul kendali Notifikasi.</para>
+</sect3>
+  
+<sect3 id="action-focus-raisingwindow">
+<title
+>Penaikan window</title>
+<para
+>Setelah kamu memiliki kebijakan fokus yang ditentukan, ada opsi-opsi penaikan window. </para>
+
+<para
+>Dengan sebuah klik untuk kebijakan fokus sebagai bakunya <guilabel
+>Klik menaikkan window yang aktif</guilabel
+> difungsikan dan menaikkan saat pelayang tidak tersedia. </para>
+
+<para
+>Dengan sebuah pelayang untuk kebijakan fokus kamu bisa secara alternatif menggunakan auto naik. Dengan menempatkan sebuah tanda di depan <guilabel
+>Naikkan saat melayangi, ditunda hingga</guilabel
+>, &kde; bisa membawamu sebuah window ke depan jika mouse telah melintasi window untuk periode waktu tertentu. Kamu bisa menentukan tundaan untuk opsi ini dengan menggunakan pengendali kotak putar. </para>
+
+<tip>
+<para
+>Mengeset tundaan terlalu singkat akan menyebabkan perubahan window yang cepat, yang bisa cukup mengganggu. Kebanyakan orang akan menyukai penundaan 100-300 md. Ini responsif, tetapi itu akan membiarkanmu menggeser sudut-sudut window ke mana kamu mau tanpa membawa window ke depan. </para>
+</tip>
+
+<para
+>Jika kamu tidak menggunakan auto naik, pastikan opsi <guilabel
+>Klik menaikkan window yang aktif</guilabel
+> memiliki sebuah tanda di depannya. Kamu tidak akan senang dengan kedua auto naik dan <guilabel
+>Klik menaikkan window yang aktif</guilabel
+> dinonfungsikan, berpengaruhnya hal itu maka semua window-window tidak dinaikkan. </para>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="titlebar-actions">
+<title
+>Aksi Bilah Judul</title>
+
+<para
+>Dalam panel ini kamu bisa mengkonfigurasi apa yang terjadi terhadap window ketika tombol mouse diklik pada bilah-judulnya. </para>
+
+<sect3 id="action-actions-sec1">
+<title
+>Klik ganda bilah judul</title>
+
+<para
+>Dalam kotak tarik turun ini kamu bisa memilih antara <guilabel
+>Tiraikan</guilabel
+>, bermacam variasi dari <guilabel
+>Maksimalkan</guilabel
+> atau <guilabel
+>Turunkan</guilabel
+>, <guilabel
+>Tutup</guilabel
+> dan <guilabel
+>Pada Semua Desktop</guilabel
+>. </para>
+
+<para
+>Memilih <guilabel
+>Maksimalkan</guilabel
+> menyebabkan &kde; memaksimalkan window kapan pun kamu klik-ganda pada bilah judul. Kamu bisa lebih lanjut memilih memaksimalkan window secara mendatar saja atau secara menegak saja.</para>
+
+<para
+><guilabel
+>Tirai</guilabel
+>, pada penanganan lain, ukuran window menjadi berkurang hanya cukup dengan bilah judul. Mengeklik-ganda pada bilah judul lagi, mengembalikan window ke ukuran normalnya. </para>
+
+<para
+>Opsi-opsi yang serupa telah tersedia untuk <guilabel
+>Peristiwa roda</guilabel
+>. </para>
+<!--FIXME Raise/Lower Shade/Unshade Maximize/Restore Keep Above/Below Move to Previous/Next Desktop Change Opacity -->
+
+<tip>
+<para
+>Kamu bisa memiliki window secara otomatis takbertirai ketika kamu cukup hanya menempatkan mouse melintasi bilah judul yang bertirai. Hanya mencentang kotak centang <guilabel
+>Fungsikan melayangi</guilabel
+> di tab <guilabel
+>Tingkat lanjut</guilabel
+> pada modul ini. Ini adalah cara yang bagus untuk memperoleh kembali ruang desktop ketika kamu memotong dan menempel antara banyak window, misalnya. </para>
+</tip>
+
+</sect3>
+
+<sect3 id="action-actions-sec2">
+<title
+><guilabel
+>Bilah Judul &amp; Kerangka</guilabel
+></title>
+
+<para
+>Bagian ini memungkinkanmu untuk menentukan apa yang terjadi ketika kamu mengeklik tunggal pada bilah judul atau kerangka pada window. Perlu diketahui bahwa kamu bisa memiliki aksi yang berbeda sehubungan dengan klik yang sama tergantung pada saat apakah window sedang aktif atau tidak. </para>
+
+<para
+>Untuk setiap kombinasi tombol-mouse, Aktif dan Takaktif, kamu bisa memilih banyak pilihan yang sesuai. Aksi-aksinya adalah sebagai berikut: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Naikkan</guilabel
+></term>
+<listitem>
+<para
+>Akan membawa window ke atas pada displai. Semua window lain yang tumpang tindih dengan yang ini, akan disembunyikan di <quote
+>bawah</quote
+>nya. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Turunkan</guilabel
+></term>
+<listitem>
+<para
+>Akan memindah window ini ke bagian bawah pada displai. Ini akan membuat window keluar dari jalur. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Jungkit Naikkan &amp; Turunkan</guilabel
+></term>
+<listitem>
+<para
+>Ini akan menaikkan window yang tidak berada di atas, dan menurunkan window yang sudah ada di atas. </para>
+</listitem>
+</varlistentry>
+
+<!--FIXME missing:
+Minimize, Shade, Close
+-->
+
+<varlistentry>
+<term
+><guilabel
+>Tidak ada apa-apa</guilabel
+></term>
+<listitem>
+<para
+>Biarkan seperti itu. Tidak terjadi apa-apa. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Menu Operasi</guilabel
+></term>
+<listitem>
+<para
+>Akan membawakan sebuah submenu kecil, yang mana kamu bisa memilih window yang behubungan dengan perintah-perintah (&ie; Maksimalkan, Minimalkan, Tutup, &etc;). </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect3>
+
+<sect3 id="action-actions-maximize-button">
+<title
+><guilabel
+>Tombol Maksimalkan</guilabel
+></title>
+<para
+>Bagian ini memungkinkanmu untuk menentukan perilaku ketiga tombol mouse ke dalam tombol maksimalkan. Kamu memiliki pilihan antara menegak saja, mendatar saja atau kedua-duanya. </para>
+</sect3>
+
+</sect2>
+
+<sect2 id="window-actions">
+<title
+>Aksi Window</title>
+
+<sect3 id="action-actions-sec3">
+<title
+><guilabel
+>Window Bagian-Dalam Takaktif</guilabel
+></title>
+
+<para
+>Modul bagian ini, memungkinkanmu untuk mengkonfigurasi apa yang terjadi ketika kamu klik pada sebuah window yang tak aktif, dengan ketiga tombol mouse mana saja atau gunakan roda mouse. </para>
+
+<para
+>Pilihan-pilihanmu adalah sebagai berikut: </para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Aktifkan, Naikkan &amp; Klik Lucut</guilabel
+></term>
+<listitem>
+<para
+>Ini membuat aktifnya window yang diklik, menaikkannya ke atas pada displai, dan melucutkan klik mouse ke aplikasi yang dengan window. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktifkan &amp; Klik Lucut</guilabel
+></term>
+<listitem>
+<para
+>Ini membuat aktifnya window yang diklik dan melucutkan sebuah klik mouse ke aplikasi yang dengan window. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktifkan</guilabel
+></term>
+<listitem>
+<para
+>Ini memudahkan membuat aktifnya window yang diklik. Klik mouse tidaklah dilucutkan kepada aplikasi yang dengan window. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktifkan &amp; Naikkan</guilabel
+></term>
+<listitem>
+<para
+>Ini membuat aktifnya window yang diklik dan menaikkan window ke atas displai. Klik mouse tidaklah dilucutkan kepada aplikasi yang dengan window. </para>
+</listitem>
+</varlistentry>
+
+<!--FIXME Wheel Scroll, Activate & Scroll, Activate, Raise & Scroll-->
+
+</variablelist>
+</sect3>
+
+<sect3 id="action-actions-sec4">
+<title
+><guilabel
+>Window Bagian-Dalam, Bilah Judul &amp; Kerangka</guilabel
+></title>
+
+<para
+>Bagian tombol ini, memungkinkanmu untuk mengkonfigurasi aksi tambahan, ketika tuts pemodif (secara bakunya &Alt;) ditekan, dan sebuah klik mouse telah dibuat pada sebuah window.</para>
+
+<para
+>Satu lagi, kamu bisa memilih aksi yang berbeda untuk klik tombol <mousebutton
+>Kiri</mousebutton
+>, <mousebutton
+>Tengah</mousebutton
+> dan <mousebutton
+>Kanan</mousebutton
+> serta <guilabel
+>Roda mouse</guilabel
+>. </para>
+
+<para
+>Pilihanmu adalah:</para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Pindahkan</guilabel
+></term>
+<listitem>
+<para
+>Memungkinkanmu untuk menyeret window yang dipilih di sekitar desktop. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Turunkan</guilabel
+></term>
+<listitem>
+<para
+>Akan memindah window ini ke bagian bawah pada displai. Ini akan membuat window keluar dari jalur. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Tidak ada apa-apa</guilabel
+></term>
+<listitem>
+<para
+>Biarkan seperti itu. Tidak terjadi apa-apa. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Naikkan</guilabel
+></term>
+<listitem>
+<para
+>Akan membawa window ke atas pada displai. Semua window lain yang tumpang tindih dengan yang ini, akan disembunyikan di <quote
+>bawah</quote
+>nya. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Naikkan</guilabel
+></term>
+<listitem>
+<para
+>Memungkinkanmu untuk mengubah ukuran window yang dipilih. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Jungkit Naikkan &amp; Turunkan</guilabel
+></term>
+<listitem>
+<para
+>Ini akan menaikkan window yang tidak berada di atas, dan menurunkan window yang sudah ada di atas. </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><guilabel
+>Aktifkan</guilabel
+></term>
+<listitem>
+<para
+>Membuat window ini aktif. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+<!-- FIXME missing:
+Activate, Raise &amp; Move
+Minimize
+Increase Opacity + Decrease Opacity
+-->
+<!--FIXME
+Mouse Wheel has different choices:
+Raise/Lower, Shade/Unshade, Maximize/Restore, Keep Above/Below, 
+Move to Previous/Next Desktop, Change Opacity
+Nothing
+-->
+
+</sect3>
+
+</sect2>
+
+<sect2 id="action-moving">
+<title
+>Pemindahan</title>
+
+<sect3>
+<title
+><guilabel
+>Window</guilabel
+></title>
+<para
+>Opsi-opsi di sini menentukan bagaimana window muncul di layar ketika kamu memindahnya.</para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Displaikan geometri window ketika memindah atau mengubah ukuran</guilabel
+></term>
+<listitem>
+<para
+>Fungsikan opsi ini jika kamu ingin geometri window didisplaikan saat dipindahkan atau diubah ukuran. Posisi window relatif ke sudut kiri-atas layar adalah didisplaikan bersamaan dengan ukurannya.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</sect3>
+
+<sect3>
+<title
+><guilabel
+>Zona Jepret</guilabel
+></title>
+
+<para
+>Sisa dari halaman ini memungkinkanmu untuk mengkonfigurasikan <guilabel
+>Zona Jepret</guilabel
+>. Seperti ada medan magnet sepanjang sisi pada desktop dan masing-masing window, yang akan membuat window jepret menempel saling berdampingan ketika dipindahkan mendekatinya.</para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Zona jepret bingkai:</guilabel
+></term>
+<listitem>
+
+<para
+>Di sini kamu bisa mengeset zona jepret terhadap bingkai layar. Memindahkan sebuah window dalam jarak yang dikonfigurasi akan membuatnya menjepret ke tepi desktop.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Zona jepret window:</guilabel
+></term>
+<listitem>
+
+<para
+>Di sini kamu bisa mengeset zona jepret terhadap window. Sebagaimana dengan bingkai layar,memindahkan sebuah window ke dekat window lainnya akan membuat jepret menempel seperti window yang bermagnet.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Zona jepret tengah:</guilabel
+></term>
+<listitem>
+
+<para
+>Di sini kamu bisa mengeset zona jepret terhadap tengah layar, &ie; <quote
+>kekuatan</quote
+> medan magnet yang akan membuat window jepret menempel ke tengah layar ketika dipindahkan mendekati tengah layar tersebut.</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry>
+<term
+><guilabel
+>Jepretkan window hanya ketika menindih</guilabel
+></term>
+<listitem>
+
+<para
+>Jika dicentang, window tidak akan saling jepret menempel jika mereka hanya berdekatan satu sama lain, mereka mestinya menindih, berdasarkan jumlah atau cacah yang dikonfigurasi.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect3>
+
+</sect2>
+
+<sect2 id="action-advanced">
+<title
+>Tingkat lanjut</title>
+
+<para
+>Di dalam panel <guilabel
+>Tingkat lanjut</guilabel
+> kamu bisa melakukan penalaan-halus lebih lanjut terhadap perilaku window. </para>
+
+<variablelist>
+<title
+>Peniraian</title>
+
+<varlistentry>
+<term
+><guilabel
+>Fungsikan pelayangan</guilabel
+></term>
+<listitem>
+<para
+>Jika opsi ini difungsikan, sebuah window bertirai akan secara otomatis takbertirai ketika penunjuk mouse telah melintasi bilah judul pada suatu saat. Gunakan kotak spin untuk mengkonfigurasi tundaan pentakberbertiraian. </para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Penempatan</guilabel
+></term>
+<listitem
+><para
+>Kebijakan penempatan menentukan di mana window baru akan muncul di desktop. <guilabel
+>Minimal Penindihan</guilabel
+> akan mencoba mencapai tindih minimum window, <guilabel
+>Berkaskade</guilabel
+> akan mengkaskade window, dan <guilabel
+>Acak</guilabel
+> akan menggunakan sebuah posisi acak. <guilabel
+>Terpusat</guilabel
+> akan membuka semua window baru di bagian tengah layar, dan <guilabel
+>Di Sudut Kiri Atas</guilabel
+> akan membuka semua window dengan sudut kiri atas mereka di sudut kiri atas layar.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+<variablelist>
+<title
+>Window Khusus</title>
+<varlistentry>
+<term
+><guilabel
+>Sembunyikan window utilitas untuk aplikasi-aplikasi tak aktif</guilabel
+></term>
+<listitem
+><para
+>Ketika dinyalakan, window utilitas (alat window, menu cabik,...) pada aplikasi-aplikasi tak aktif akan disembunyikan dan akan ditampilkan hanya ketika aplikasi menjadi aktif. Perhatikan bahwa aplikasi harus menandai window dengan tipe window yang tepat agar fitur ini berfungsi.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+</sect1>
+
+</article>

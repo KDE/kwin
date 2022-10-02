@@ -1,0 +1,157 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % French "INCLUDE">
+]>
+<article id="kwintabbox" lang="&language;">
+<articleinfo>
+<title
+>Changeur de tâches</title>
+<authorgroup>
+<author
+>&Martin.Graesslin;&Martin.Graesslin.mail;</author>
+&traducteurLudovicGrossard; 
+</authorgroup>
+
+<date
+>04-07-2015</date>
+<releaseinfo
+>&plasma; 5.4</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Configuration du système</keyword>
+<keyword
+>bureau</keyword>
+<keyword
+>fenêtre</keyword>
+<keyword
+>navigation</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="windows-navigating">
+<title
+>Navigation à travers les fenêtres</title>
+
+<para
+>Ce module vous permet de configurer le comportement lors de la navigation entre les fenêtres, souvent effectuée avec <keycombo
+>&Alt;&Tab;</keycombo
+>. Il y a deux ensembles d'effets indépendants qui peuvent avoir des réglages indépendants. Pour chacun de ces ensembles, il y a dans ce module une touche tabulation spécifique (<guilabel
+>Principale</guilabel
+> et <guilabel
+>Alternative</guilabel
+>). </para>
+
+<note
+><para
+>Le premier ensemble d'effets dans l'onglet <guilabel
+>Principal</guilabel
+> dispose de raccourcis prédéfinis. Si vous souhaitez utiliser le second ensemble d'effets de l'onglet <guilabel
+>Alternatif</guilabel
+>, vous devez configurer manuellement les raccourcis pour ces effets dans l'éditeur de raccourcis.</para
+></note>
+
+<note
+><para
+>Pour naviguer enter les fenêtres sans utiliser <keycombo
+>&Alt;&Tab;</keycombo
+>, vous pouvez définir des actions sur le bord de l'écran dans le module <ulink url="help:/kcontrol/kwinscreenedges/index.html"
+><guilabel
+>Bords de l'écran</guilabel
+></ulink
+> de la &configurationDuSysteme;. </para
+></note>
+
+<para
+>La suite de la documentation concernant les options s'applique tant aux réglages généraux qu'aux réglages alternatifs.</para>
+
+<sect2 id="visualization">
+<title
+>Visualisation</title>
+<para
+>Lorsque l'affichage composite est activé, différents effets peuvent être utilisés à la place de la liste classique des fenêtres. Par défaut, l'effet <guilabel
+>Breeze</guilabel
+> est utilisé. Cet effet affiche une petite vignette de chaque fenêtre à l'intérieur d'une liste sur le coté gauche de l'écran et la fenêtre actuellement sélectionnée est mise en surbrillance. Plusieurs dispositions prédéfinies sont disponibles et fournissent une vue informative ou complète, de petites ou de grandes icônes, une grille avec le titre des fenêtres uniquement.</para>
+<para
+>En choisissant une de ces dispositions, un bouton d'aperçu sera disponible.</para
+> 
+<para
+>Si vous activez <guilabel
+>Afficher la fenêtre sélectionnée</guilabel
+>, alors la fenêtre actuellement sélectionnée sera mise en surbrillance, rendant ainsi les autres fenêtres moins lumineuses. Cette option nécessite que les effets de bureau aient été activés.</para>
+
+<para
+>Les effets <guilabel
+>Défilement circulaire</guilabel
+> et <guilabel
+>Empilement en perspective</guilabel
+> sont des effets plus fantaisistes nécessitant « OpenGL ». <guilabel
+>Défilement circulaire</guilabel
+> présentant les fenêtres dans une galerie, avec une grande vignette de la fenêtre sélectionnée au centre de l'écran tandis que les autre fenêtres sont tournées à gauche et à droite. <guilabel
+>Empilement en perspective</guilabel
+> affiche toutes les fenêtres dans une pile 3D. La fenêtre sélectionnée est en haut de la pile, et la navigation dans les fenêtres réarrange la pile de sorte que la fenêtre nouvellement sélectionnée soit en haut de celle-ci. </para>
+<para
+>Si l'effet fournit des réglages supplémentaires, le bouton de configuration sera activé. En cliquant sur ce bouton, une boîte de dialogue de configuration s'affichera. </para>
+<note
+><para
+>Lorsque l'affichage composite n'est pas actif ou est suspendu, la liste des fenêtres normales sera affichée. Il n'y a pas de perte de fonctionnalités si un effet est choisi et que l'affichage composite n'est pas actif.</para
+></note>
+</sect2>
+
+<sect2 id="shortcuts">
+<title
+>Raccourcis clavier</title>
+<para
+>L'éditeur de raccourcis fournit l'interface de configuration pour les raccourcis clavier pour la navigation entre les fenêtres. Chacun des deux ensembles d'effets possibles dispose de deux raccourcis clavier : un pour le changement de fenêtre vers l'avant, et un autre pour le changement dans l'autre sens. Notez que la liste des fenêtres ne peut être affichée que si vous choisissez un raccourcis avec un modificateur de touche tel que les touches &Alt; ou &Ctrl;. Ce modificateur doit être maintenu enfoncé lors du changement de fenêtre. En choisissant un raccourci sans touche de modification, vous pouvez compromettre la navigation à travers les fenêtres. </para>
+</sect2>
+
+<sect2 id="content-and-sort-order">
+<title
+>Contenu</title>
+<para
+>Il est possible d'agir sur l'ordre de tri. Vous pouvez soit utiliser un tri fonctionnant avec les fenêtre utilisées dernièrement, ou l'ordre d'empilement des fenêtres. </para>
+<para
+>Si vous cochez <guilabel
+>Inclure l'icône « Afficher le bureau »</guilabel
+>, une entrée pour le bureau sera ajoutée à la liste avec les fenêtre des applications. Vous pouvez alors choisir cette entrée dans la liste pour minimiser toutes les fenêtres.</para>
+<para
+>Si <guilabel
+>Seulement une fenêtre par application</guilabel
+> est coché, seule la dernière instance utilisée d'une application est contenue dans la liste. Il est alors possible de basculer vers les autres instances via le panneau.</para>
+</sect2>
+
+<sect2 id="filter">
+<title
+>Filtre des fenêtres</title>
+<para
+>Vous pouvez configurer quelles fenêtres seront affichées initialement dans la liste en appuyant sur <keycombo
+>&Alt;&Tab;</keycombo
+> (prédéfini pour les réglages de l'onglet <guilabel
+>Principal</guilabel
+>) ou en utilisant le raccourci défini par l'utilisateur dans les réglages alternatifs. </para>
+<para
+> Il est ainsi possible de n'afficher que les fenêtres du bureau actuel, ou bien les fenêtres de tous les bureaux. De plus, vous pouvez appliquer des règles similaires pour les fenêtres dans des activités ou des écrans pour une configuration à plusieurs moniteurs. </para>
+<para
+>La dernière option vous permet de filtrer sur l'état de réduction des fenêtres. </para>
+</sect2>
+
+</sect1>
+</article>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+kate: space-indent on; indent-width 2; tab-width 2; indent-mode none;
+-->
+

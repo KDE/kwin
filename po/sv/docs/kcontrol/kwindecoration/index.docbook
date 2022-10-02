@@ -1,0 +1,190 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Swedish "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwindecoration" lang="&language;">
+<articleinfo>
+<authorgroup>
+<author
+>&Rik.Hemsley; &Rik.Hemsley.mail;</author>
+<author
+>&Anne-Marie.Mahfouf; &Anne-Marie.Mahfouf.mail;</author>
+<othercredit role="translator"
+> <firstname
+>Stefan</firstname
+> <surname
+>Asserhäll</surname
+> <affiliation
+><address
+><email
+>stefan.asserhall@bredband.net</email
+></address
+></affiliation
+> <contrib
+>Översättare</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-09</date>
+<releaseinfo
+>Plasma 5.21</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systeminställningar</keyword>
+<keyword
+>kwin</keyword>
+<keyword
+>fönster</keyword>
+<keyword
+>kant</keyword>
+<keyword
+>tema</keyword>
+<keyword
+>stil</keyword>
+</keywordset>
+</articleinfo>
+<sect1 id="window-deco">
+<title
+>Fönsterdekorationer</title>
+
+<para
+>Den här modulen låter dig välja en stil för knapparna och kanterna omkring fönstren.</para>
+
+<sect2>
+<title
+>Fönsterdekorationer</title>
+
+<para>
+<screenshot>
+<screeninfo
+>Inställningsmodul för fönsterdekoration</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Inställningsmodul för fönsterdekoration</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+
+<para
+>Välj en stil för fönsterdekoration i förhandsgranskningslistan, med användning av sökfältet längst upp på skärmen, eller ladda ner en ny stil med knappen <guibutton
+>Hämta nya fönsterdekorationer</guibutton
+>.</para>
+
+<para
+>Förvald fönsterdekoration i &kde; kallas <quote
+>Breeze</quote
+>.</para>
+
+<para
+>Varje stil har ett annorlunda utseende, men också en annorlunda <quote
+>känsla</quote
+>. En del har (ibland osynliga) <quote
+>storleksändringskanter</quote
+> runt alla sidor, som gör det lättare att ändra storlek men svårare att flytta. En del har inga kanter längs vissa sidor.</para>
+
+<para
+>Vi uppmuntrar dig att experimentera med de olika stilarna tills du hittar den som bäst passar hur du arbetar.</para>
+
+<para
+>I förhandsgranskningsrutan för varje stil finns en anpassningsknapp <inlinemediaobject
+><imageobject
+><imagedata fileref="configure.png" format="PNG"/></imageobject
+></inlinemediaobject
+> för att visa inställningsdialogrutor för dekorationen.</para>
+
+<para
+>Alternativen i den här inställningsdialogrutan gäller alla fönster. Vissa fönsterdekorationer (t.ex. <quote
+>Breeze</quote
+>) tillhandahåller en flik med <guilabel
+>Fönsterspecifika alternativ</guilabel
+>. Under den fliken kan kantstorleken och synlighet för fönstrens namnlist ändras för specifika fönster.</para>
+
+<para
+>Olika alternativ för specifika fönster finns i modulen <ulink url="help:/kcontrol/windowspecific"
+>Fönsterregler</ulink
+> i systeminställningarna. </para>
+
+<tip>
+<para
+>Av handikappstödsskäl, hanterar vissa fönsterdekorationer extra breda kanter. Om det är tillgängligt, kan du också välja <guilabel
+>Kantbredd för fönster</guilabel
+> här. De större kanterna är lättare att se för användare med nedsatt syn, och lättare att klicka på för användare med begränsad rörlighet eller med svårigheter att använda en mus.</para>
+</tip>
+
+</sect2>
+
+<sect2>
+<title
+>Dekorationer</title>
+
+<para
+>Du kan ändra fönstrets dekoration i den här dialogrutan. De tillgängliga alternativen beror på den valda stilen. </para>
+<para>
+<screenshot>
+<screeninfo
+>Dekorationsalternativ för Breeze</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="decoration.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Dekorationsalternativ för Breeze</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+<sect2>
+<title
+>Namnlistens knappar</title>
+
+<para
+>Den här fliken låter dig anpassa knapparnas plats på namnlisten. Det går att dra knapparna, t.ex. <guilabel
+>Programmeny</guilabel
+>, till namnlisten, ta bort dem, eller dra runt knapparna tills du har den ordning som du tycker är bekväm. </para>
+
+<screenshot>
+<screeninfo
+>Knappalternativ</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="button.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Knappalternativ</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+
+<para
+>Aktivera <guilabel
+>Stäng fönster genom att dubbelklicka på menyknappen</guilabel
+> för att få ytterligare ett alternativ till stängningsknappen, eller om du har tagit bort stängningsknappen från namnlisten. </para>
+
+<para
+>Markera alternativet <guilabel
+>Visa verktygstips för namnlistens knappar</guilabel
+> om du vill se de normala verktygstipsen när du håller muspekaren över namnlistens knappar. </para>
+
+</sect2>
+
+</sect1>
+
+</article>

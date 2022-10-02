@@ -1,0 +1,206 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Italian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwindecoration" lang="&language;">
+<articleinfo>
+<authorgroup>
+<author
+>&Rik.Hemsley; &Rik.Hemsley.mail;</author>
+<author
+>&Anne-Marie.Mahfouf; &Anne-Marie.Mahfouf.mail;</author>
+<othercredit role="translator"
+><firstname
+>Dario</firstname
+><surname
+>Panico</surname
+><contrib
+>Traduzione del documento</contrib
+></othercredit
+><othercredit role="translator"
+><firstname
+>Samuele</firstname
+><surname
+>Kaplun</surname
+><contrib
+>Traduzione del documento</contrib
+></othercredit
+><othercredit role="translator"
+><firstname
+>Federico</firstname
+><surname
+>Zenith</surname
+><affiliation
+><address
+><email
+>federico.zenith@member.fsf.org</email
+></address
+></affiliation
+><contrib
+>Manutenzione della traduzione</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>9/4/2021</date>
+<releaseinfo
+>Plasma 5.21</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Impostazioni di sistema</keyword>
+<keyword
+>kwin</keyword>
+<keyword
+>finestra</keyword>
+<keyword
+>bordo</keyword>
+<keyword
+>tema</keyword>
+<keyword
+>stile</keyword>
+</keywordset>
+</articleinfo>
+<sect1 id="window-deco">
+<title
+>Decorazioni delle finestre</title>
+
+<para
+>Questo modulo ti consente di selezionare uno stile per i pulsanti e i bordi attorno alle finestre.</para>
+
+<sect2>
+<title
+>Decorazioni delle finestre</title>
+
+<para>
+<screenshot>
+<screeninfo
+>Modulo di configurazione delle decorazioni delle finestre</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Modulo di configurazione delle decorazioni delle finestre</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+
+<para
+>Scegli uno stile di decorazione della finestre dall'elenco delle anteprime, usando il campo di ricerca in cima allo schermo, o scarica un nuovo stile con il pulsante <guibutton
+>Scarica nuove decorazioni delle finestre</guibutton
+>.</para>
+
+<para
+>La decorazione delle finestre predefinita si chiama <quote
+>Brezza</quote
+>.</para>
+
+<para
+>Ogni stile ha un aspetto diverso, ma anche una sua <quote
+>sensazione</quote
+>. Alcuni hanno dei bordi (a volte invisibili) <quote
+>ridimensionabili</quote
+> attorno al margine delle finestre, che facilitano il ridimensionamento ma non lo spostamento. Alcuni non hanno bordi su certi lati.</para>
+
+<para
+>Raccomandiamo di sperimentare con diversi stili fino a trovare quello che meglio si adatta a te.</para>
+
+<para
+>Nell'anteprima di ogni stile trovi un pulsante di configurazione <inlinemediaobject
+><imageobject
+><imagedata fileref="configure.png" format="PNG"/></imageobject
+></inlinemediaobject
+> per aprire le finestre di configurazione della decorazione.</para>
+
+<para
+>Le opzioni in questa finestra di configurazione sono applicate a tutte le finestre. Alcune decorazioni di finestre (&eg; <quote
+>Brezza</quote
+>) forniscono una scheda <guilabel
+>Ridefinizioni specifiche per finestra</guilabel
+>. In questa scheda si possono cambiare la dimensione del bordo e la visibilità della barra del titolo per finestre specifiche.</para>
+
+<para
+>Diverse opzioni per finestre specifiche possono essere consultate nel modulo <ulink url="help:/kcontrol/windowspecific"
+>Regole delle finestre</ulink
+> delle &systemsettings;. </para>
+
+<tip>
+<para
+>Per motivi di accessibilità, alcune decorazioni supportano bordi molto spessi. Se sono disponibili, qui puoi sceglierne anche una <guilabel
+>Dimensione del bordo delle finestre</guilabel
+>. Questi bordi ampi sono più semplici da vedere per gli utenti con problemi di vista e più semplici da afferrare per persone con problemi motori o con difficoltà nell'uso del mouse.</para>
+</tip>
+
+</sect2>
+
+<sect2>
+<title
+>Decorazioni</title>
+
+<para
+>Qui puoi cambiare la decorazione della finestra. Le opzioni disponibili dipendono dallo stile selezionato. </para>
+<para>
+<screenshot>
+<screeninfo
+>Opzioni di decorazione di Brezza</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="decoration.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Opzioni di decorazione di Brezza</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+<sect2>
+<title
+>Pulsanti della barra del titolo</title>
+
+<para
+>Questa scheda permette di personalizzare la posizione dei pulsanti sulla barra del titolo. I pulsanti (come &eg; il <guilabel
+>menu dell'applicazione</guilabel
+>) possono essere trascinati nella barra, rimossi o spostati in giro fino a trovare la disposizione più congeniale. </para>
+
+<screenshot>
+<screeninfo
+>Opzioni dei pulsanti</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="button.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Opzioni dei pulsanti</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+
+<para
+>Attiva <guilabel
+>Chiudi la finestra con un doppio clic del pulsante del menu</guilabel
+> per avere un'alternativa al pulsante di chiusura o se lo hai rimosso dalla barra del titolo. </para>
+
+<para
+>Seleziona l'elemento <guilabel
+>Mostra i suggerimenti dei pulsanti della barra del titolo</guilabel
+> se vuoi vedere i suggerimenti predefiniti quando passi con il puntatore del mouse sui pulsanti della barra del titolo. </para>
+
+</sect2>
+
+</sect1>
+
+</article>

@@ -1,0 +1,425 @@
+# translation of kcmkwincompositing.po to Kurdish
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Erdal Ronahi <erdal dot ronahi at gmail dot com>, 2007.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwincompositing\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"PO-Revision-Date: 2009-01-06 05:37+0200\n"
+"Last-Translator: Omer Ensari <oensari@gmail.com>\n"
+"Language-Team: Kurdish <ubuntu-l10n-kur@lists.ubuntu.com>\n"
+"Language: ku\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: KBabel 1.11.4\n"
+"X-Poedit-Language: Kurdish\n"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
+#: compositing.ui:31
+#, kde-format
+msgid ""
+"OpenGL compositing (the default) has crashed KWin in the past.\n"
+"This was most likely due to a driver bug.\n"
+"If you think that you have meanwhile upgraded to a stable driver,\n"
+"you can reset this protection but be aware that this might result in an "
+"immediate crash!"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
+#: compositing.ui:44
+#, kde-format
+msgid ""
+"Scale method \"Accurate\" is not supported by all hardware and can cause "
+"performance regressions and rendering artifacts."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
+#: compositing.ui:67
+#, kde-format
+msgid ""
+"Keeping the window thumbnail always interferes with the minimized state of "
+"windows. This can result in windows not suspending their work when minimized."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, compositingLabel)
+#: compositing.ui:79
+#, fuzzy, kde-format
+#| msgid "kcmkwincompositing"
+msgid "Compositing:"
+msgstr "kcmkwincompositing"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
+#: compositing.ui:86
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Enable desktop effects"
+msgid "Enable on startup"
+msgstr "Efektên sermasê çalak bike"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:95
+#, kde-format
+msgid ""
+"Applications can set a hint to block compositing when the window is open.\n"
+" This brings performance improvements for e.g. games.\n"
+" The setting can be overruled by window-specific rules."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:98
+#, kde-format
+msgid "Allow applications to block compositing"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
+#: compositing.ui:105
+#, fuzzy, kde-format
+#| msgid "Animation speed:"
+msgid "Animation speed:"
+msgstr "Leza anîmasyonê:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: compositing.ui:142
+#, fuzzy, kde-format
+#| msgid "Very Slow"
+msgid "Very slow"
+msgstr "Gelek Hêdî"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: compositing.ui:162
+#, kde-format
+msgid "Instant"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
+#: compositing.ui:174
+#, kde-format
+msgid "Scale method:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:184
+#, kde-format
+msgid "Smooth"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:189
+#, kde-format
+msgid "Accurate"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: compositing.ui:199
+#, kde-format
+msgid "Tearing prevention (\"vsync\"):"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:207
+#, kde-format
+msgid "Automatic"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:212
+#, kde-format
+msgid "Only when cheap"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:217
+#, kde-format
+msgid "Full screen repaints"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:222
+#, kde-format
+msgid "Re-use screen content"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
+#: compositing.ui:230
+#, kde-format
+msgid "Keep window thumbnails:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:238
+#, fuzzy, kde-format
+#| msgid "Never"
+msgid "Never"
+msgstr "Qet"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:243
+#, fuzzy, kde-format
+#| msgid "Only for Shown Windows"
+msgid "Only for Shown Windows"
+msgstr "Tenê ji bo Paceyên tên Nîşandan"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:248
+#, kde-format
+msgid "Always"
+msgstr "Herdem"
+
+#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
+#: compositing.ui:256
+#, kde-format
+msgid "Latency:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:264
+#, kde-format
+msgid "Force lowest latency (may cause dropped frames)"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:269
+#, kde-format
+msgid "Prefer lower latency"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:274
+#, kde-format
+msgid "Balance of latency and smoothness"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:279
+#, kde-format
+msgid "Prefer smoother animations"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:284
+#, kde-format
+msgid "Force smoothest animations"
+msgstr ""
+
+#: main.cpp:79
+#, kde-format
+msgid "Re-enable OpenGL detection"
+msgstr ""
+
+#: main.cpp:135
+#, kde-format
+msgid ""
+"\"Only when cheap\" only prevents tearing for full screen changes like a "
+"video."
+msgstr ""
+
+#: main.cpp:139
+#, kde-format
+msgid "\"Full screen repaints\" can cause performance problems."
+msgstr ""
+
+#: main.cpp:143
+#, kde-format
+msgid ""
+"\"Re-use screen content\" causes severe performance problems on MESA drivers."
+msgstr ""
+
+#, fuzzy
+#~| msgid "OpenGL"
+#~ msgid "OpenGL 3.1"
+#~ msgstr "OpenGL"
+
+#, fuzzy
+#~| msgid "OpenGL"
+#~ msgid "OpenGL 2.0"
+#~ msgstr "OpenGL"
+
+#~ msgid "XRender"
+#~ msgstr "XRender"
+
+#, fuzzy
+#~| msgctxt "@option:check"
+#~| msgid "Enable desktop effects"
+#~ msgid "Exclude internal Desktop Effects"
+#~ msgstr "Efektên sermasê çalak bike"
+
+#, fuzzy
+#~| msgid "No Effect"
+#~ msgid "Get New Desktop Effects..."
+#~ msgstr "Bê Efekt"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Omer Ensari"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "oensari@gmail.com"
+
+#, fuzzy
+#~| msgid "Accessibility"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Accessibility"
+#~ msgstr "Gihîştin"
+
+#, fuzzy
+#~| msgid "Appearance"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Appearance"
+#~ msgstr "Xuyakirin"
+
+#, fuzzy
+#~| msgid "Candy"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Candy"
+#~ msgstr "Candy"
+
+#, fuzzy
+#~| msgid "Focus"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Focus"
+#~ msgstr "Nîvend"
+
+#, fuzzy
+#~| msgid "Tools"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Tools"
+#~ msgstr "Amûr"
+
+#, fuzzy
+#~| msgid "Window Management"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Management"
+#~ msgstr "Rêveberiya Paceyê"
+
+#, fuzzy
+#~| msgctxt "@option:check"
+#~| msgid "Enable desktop effects"
+#~ msgid "Suspend compositor for full screen windows"
+#~ msgstr "Efektên sermasê çalak bike"
+
+#, fuzzy
+#~| msgid "OpenGL mode:"
+#~ msgid "OpenGL interface:"
+#~ msgstr "Moda OpenGL:"
+
+#, fuzzy
+#~| msgid "Animation speed:"
+#~ msgid "Animation Speed:"
+#~ msgstr "Leza anîmasyonê:"
+
+#~ msgid "1 second remaining:"
+#~ msgid_plural "%1 seconds remaining:"
+#~ msgstr[0] "1 çirke ma:"
+#~ msgstr[1] "%1 çirke man:"
+
+#~ msgid "Confirm Desktop Effects Change"
+#~ msgstr "Guherandina Efektên Sermasê Pejirîne"
+
+#~ msgid "&Accept Configuration"
+#~ msgstr "Veavakirinê &Bipejirîne "
+
+#~ msgid "&Return to Previous Configuration"
+#~ msgstr "&Vegere Veavakirina Paş"
+
+#~ msgid "kcmkwincompositing"
+#~ msgstr "kcmkwincompositing"
+
+#~ msgid "KWin Desktop Effects Configuration Module"
+#~ msgstr "KWin Modûla Veavakirina Efektên Sermasê"
+
+#~ msgid "(c) 2007 Rivo Laks"
+#~ msgstr "(c) 2007 Rivo Laks"
+
+#~ msgid "Rivo Laks"
+#~ msgstr "Rivo Laks"
+
+#, fuzzy
+#~| msgid "No Effect"
+#~ msgid "No effect"
+#~ msgstr "Bê Efekt"
+
+#~ msgid "Demos"
+#~ msgstr "Demos"
+
+#~ msgid "Tests"
+#~ msgstr "Ceribandin"
+
+#, fuzzy
+#~| msgid "Confirm Desktop Effects Change"
+#~ msgctxt ""
+#~ "Error Message shown when compositing is not active after tried activation"
+#~ msgid "Desktop effect system is not running."
+#~ msgstr "Guherandina Efektên Sermasê Pejirîne"
+
+#~ msgid "<h1>Desktop Effects</h1>"
+#~ msgstr "<h1>Efektên Sermasê</h1>"
+
+#~ msgid "General"
+#~ msgstr "Giştî"
+
+#~ msgid "Effect for desktop switching:"
+#~ msgstr "Efekt ji bo çûna sermasê:"
+
+#~ msgid "Very Fast"
+#~ msgstr "Gelek Lez"
+
+#~ msgid "Fast"
+#~ msgstr "Lez"
+
+#~ msgid "Normal"
+#~ msgstr "Asayî"
+
+#~ msgid "Slow"
+#~ msgstr "Hêdî"
+
+#~ msgid "Extremely Slow"
+#~ msgstr "Gelek Gelek Hêdî"
+
+#~ msgid "All Effects"
+#~ msgstr "Hemû Efekt"
+
+#~ msgid "Advanced"
+#~ msgstr "Pêşketî"
+
+#~ msgid "OpenGL Options"
+#~ msgstr "Bijareyên OpenGL"
+
+#, fuzzy
+#~| msgid "OpenGL Options"
+#~ msgid "General Options"
+#~ msgstr "Bijareyên OpenGL"
+
+#, fuzzy
+#~| msgid "OpenGL"
+#~ msgid "OpenGL 1.2"
+#~ msgstr "OpenGL"
+
+#~ msgid "Effect for window switching:"
+#~ msgstr "Efekt ji bo çûna pace yê:"
+
+#, fuzzy
+#~| msgctxt "@option:check"
+#~| msgid "Enable desktop effects"
+#~ msgid "Resume Desktop Effects"
+#~ msgstr "Efektên sermasê çalak bike"
+
+#~ msgid "Common Settings"
+#~ msgstr "Mîhengên Giştî"
+
+#~ msgid "Shadows"
+#~ msgstr "Sî"
+
+#~ msgid "Shared Memory"
+#~ msgstr "Bîra Parve Kirî"
+
+#~ msgid "All Desktops"
+#~ msgstr "Hemû Sermase yan"
+
+#~ msgid "Current Desktop"
+#~ msgstr "Sermase ya Heyî "

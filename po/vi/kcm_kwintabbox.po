@@ -1,0 +1,239 @@
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the kwin package.
+#
+# Phu Hung Nguyen <phu.nguyen@kdemail.net>, 2021, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-15 00:48+0000\n"
+"PO-Revision-Date: 2022-06-19 14:38+0200\n"
+"Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
+"Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Lokalize 21.12.2\n"
+
+#: kwintabboxconfigform.cpp:77
+#, kde-format
+msgid "KWin"
+msgstr "KWin"
+
+#: layoutpreview.cpp:133
+#, kde-format
+msgid "Show Desktop"
+msgstr "Hiện bàn làm việc"
+
+#: layoutpreview.cpp:163
+#, kde-format
+msgctxt "An example Desktop Name"
+msgid "Desktop 1"
+msgstr "Bàn làm việc 1"
+
+#: main.cpp:58
+#, kde-format
+msgid "Main"
+msgstr "Chính"
+
+#: main.cpp:59
+#, kde-format
+msgid "Alternative"
+msgstr "Thay thế"
+
+#: main.cpp:61
+#, kde-format
+msgid "Get New Task Switchers..."
+msgstr "Lấy trình chuyển tác vụ mới..."
+
+#: main.cpp:75
+#, kde-format
+msgid ""
+"Focus policy settings limit the functionality of navigating through windows."
+msgstr ""
+"Các thiết lập về chính sách nhắm giới hạn chức năng của việc điều hướng giữa "
+"các cửa sổ."
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#: main.ui:32
+#, kde-format
+msgid "Content"
+msgstr "Nội dung"
+
+#. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
+#: main.ui:41
+#, kde-format
+msgid "Include \"Show Desktop\" icon"
+msgstr "Bao gồm biểu tượng \"Hiện bàn làm việc\""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
+#: main.ui:55
+#, kde-format
+msgid "Recently used"
+msgstr "Dùng gần đây"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
+#: main.ui:60
+#, kde-format
+msgid "Stacking order"
+msgstr "Thứ tự ngăn xếp"
+
+#. i18n: ectx: property (text), widget (QCheckBox, oneAppWindow)
+#: main.ui:68
+#, kde-format
+msgid "Only one window per application"
+msgstr "Chỉ một cửa sổ mỗi ứng dụng"
+
+#. i18n: ectx: property (text), widget (QCheckBox, orderMinimized)
+#: main.ui:78
+#, kde-format
+msgid "Order minimized windows after unminimized windows"
+msgstr "Sắp xếp các cửa sổ thu nhỏ sau các cửa sổ không thu nhỏ"
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: main.ui:88
+#, kde-format
+msgid "Sort order:"
+msgstr "Thứ tự sắp xếp:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: main.ui:114
+#, kde-format
+msgid "Filter windows by"
+msgstr "Lọc cửa sổ theo"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterDesktops)
+#: main.ui:123
+#, kde-format
+msgid "Virtual desktops"
+msgstr "Bàn làm việc ảo"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentDesktop)
+#: main.ui:167
+#, kde-format
+msgid "Current desktop"
+msgstr "Bàn làm việc hiện tại"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherDesktops)
+#: main.ui:174
+#, kde-format
+msgid "All other desktops"
+msgstr "Tất cả các bàn làm việc khác"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterActivities)
+#: main.ui:184
+#, kde-format
+msgid "Activities"
+msgstr "Hoạt động"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentActivity)
+#: main.ui:228
+#, kde-format
+msgid "Current activity"
+msgstr "Hoạt động hiện tại"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherActivities)
+#: main.ui:235
+#, kde-format
+msgid "All other activities"
+msgstr "Tất cả các Hoạt động khác"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterScreens)
+#: main.ui:245
+#, kde-format
+msgid "Screens"
+msgstr "Màn hình"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentScreen)
+#: main.ui:289
+#, kde-format
+msgid "Current screen"
+msgstr "Màn hình hiện tại"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherScreens)
+#: main.ui:296
+#, kde-format
+msgid "All other screens"
+msgstr "Tất cả các màn hình khác"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterMinimization)
+#: main.ui:306
+#, kde-format
+msgid "Minimization"
+msgstr "Thu nhỏ"
+
+#. i18n: ectx: property (text), widget (QRadioButton, visibleWindows)
+#: main.ui:350
+#, kde-format
+msgid "Visible windows"
+msgstr "Các cửa sổ thấy được"
+
+#. i18n: ectx: property (text), widget (QRadioButton, hiddenWindows)
+#: main.ui:357
+#, kde-format
+msgid "Hidden windows"
+msgstr "Các cửa sổ ẩn"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
+#: main.ui:396
+#, kde-format
+msgid "Shortcuts"
+msgstr "Phím tắt"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: main.ui:405 main.ui:448
+#, kde-format
+msgid "Forward"
+msgstr "Tiến"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: main.ui:428
+#, kde-format
+msgid "All windows"
+msgstr "Tất cả các cửa sổ"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: main.ui:438 main.ui:458
+#, kde-format
+msgid "Reverse"
+msgstr "Lùi"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: main.ui:480
+#, kde-format
+msgid "Current application"
+msgstr "Ứng dụng hiện tại"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: main.ui:499
+#, kde-format
+msgid "Visualization"
+msgstr "Hiển thị"
+
+#. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
+#: main.ui:529
+#, kde-format
+msgid "The effect to replace the list window when desktop effects are active."
+msgstr ""
+"Hiệu ứng dùng để thay thế cửa sổ danh sách khi các hiệu ứng bàn làm việc "
+"đang hoạt động."
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
+#: main.ui:559
+#, kde-format
+msgid ""
+"The currently selected window will be highlighted by fading out all other "
+"windows. This option requires desktop effects to be active."
+msgstr ""
+"Cửa sổ đang được chọn sẽ được tô sáng bằng cách làm mờ dần tất cả các cửa sổ "
+"khác. Lựa chọn này yêu cầu các hiệu ứng bàn làm việc phải hoạt động."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
+#: main.ui:562
+#, kde-format
+msgid "Show selected window"
+msgstr "Hiện cửa sổ được chọn"

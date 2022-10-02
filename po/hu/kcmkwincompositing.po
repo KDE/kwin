@@ -1,0 +1,976 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Tamas Szanto <tszanto@interware.hu>, 2007.
+# Kristóf Kiszel <ulysses@kubuntu.org>, 2010, 2011, 2012, 2014, 2019.
+# Balázs Úr <urbalazs@gmail.com>, 2012, 2013, 2014.
+# Kiszel Kristóf <kiszel.kristof@gmail.com>, 2017, 2021.
+# Kristof Kiszel <ulysses@fsf.hu>, 2021.
+msgid ""
+msgstr ""
+"Project-Id-Version: KDE 4.2\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"PO-Revision-Date: 2021-11-19 11:58+0100\n"
+"Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
+"Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 21.08.3\n"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
+#: compositing.ui:31
+#, kde-format
+msgid ""
+"OpenGL compositing (the default) has crashed KWin in the past.\n"
+"This was most likely due to a driver bug.\n"
+"If you think that you have meanwhile upgraded to a stable driver,\n"
+"you can reset this protection but be aware that this might result in an "
+"immediate crash!"
+msgstr ""
+"Az (alapértelmezett) OpenGL a KWin összeomlását okozta régebben.\n"
+"Ezt valószínűleg az illesztőprogram hibája okozta.\n"
+"Ha úgy gondolja, hogy időközben egy stabil illesztőprogramra frissített,\n"
+"eltávolíthatja ezt a védelmet, ez azonban azonnali összeomlást is okozhat!"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
+#: compositing.ui:44
+#, kde-format
+msgid ""
+"Scale method \"Accurate\" is not supported by all hardware and can cause "
+"performance regressions and rendering artifacts."
+msgstr ""
+"A „Pontos” nagyítási módot nem minden hardver támogatja, ezért "
+"teljesítményproblémákat és renderelési hibákat okozhat."
+
+#. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
+#: compositing.ui:67
+#, kde-format
+msgid ""
+"Keeping the window thumbnail always interferes with the minimized state of "
+"windows. This can result in windows not suspending their work when minimized."
+msgstr ""
+"Az ablakok bélyegképének megtartása kölcsönhatásba lép az ablak minimalizált "
+"állapotával. Ez okozhatja azt, hogy az ablak nem függeszti fel a működését "
+"minimalizált állapotban."
+
+#. i18n: ectx: property (text), widget (QLabel, compositingLabel)
+#: compositing.ui:79
+#, kde-format
+msgid "Compositing:"
+msgstr "Kompozitálás:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
+#: compositing.ui:86
+#, kde-format
+msgid "Enable on startup"
+msgstr "Bekapcsolás induláskor"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:95
+#, kde-format
+msgid ""
+"Applications can set a hint to block compositing when the window is open.\n"
+" This brings performance improvements for e.g. games.\n"
+" The setting can be overruled by window-specific rules."
+msgstr ""
+"Az alkalmazások javasolhatják a kompozitálás blokkolását, amikor az ablak "
+"meg van nyitva.\n"
+" Ez javíthatja például a játékok teljesítményét.\n"
+" A beállítás felülírható ablakspecifikus szabályokkal."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:98
+#, kde-format
+msgid "Allow applications to block compositing"
+msgstr "Az alkalmazások blokkolhatják a kompozitálást"
+
+#. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
+#: compositing.ui:105
+#, kde-format
+msgid "Animation speed:"
+msgstr "Animálási sebesség:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: compositing.ui:142
+#, kde-format
+msgid "Very slow"
+msgstr "Nagyon lassú"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: compositing.ui:162
+#, kde-format
+msgid "Instant"
+msgstr "Azonnali"
+
+#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
+#: compositing.ui:174
+#, kde-format
+msgid "Scale method:"
+msgstr "Nagyítási mód:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:184
+#, kde-format
+msgid "Smooth"
+msgstr "Sima"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:189
+#, kde-format
+msgid "Accurate"
+msgstr "Pontos"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: compositing.ui:199
+#, kde-format
+msgid "Tearing prevention (\"vsync\"):"
+msgstr "Szakadás megelőzés (VSync):"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:207
+#, kde-format
+msgid "Automatic"
+msgstr "Automatikus"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:212
+#, kde-format
+msgid "Only when cheap"
+msgstr "Csak ha olcsó"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:217
+#, kde-format
+msgid "Full screen repaints"
+msgstr "Teljes színtér újrarajzolása"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:222
+#, kde-format
+msgid "Re-use screen content"
+msgstr "Képernyőtartalom újrahasználata"
+
+#. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
+#: compositing.ui:230
+#, kde-format
+msgid "Keep window thumbnails:"
+msgstr "Ablakok bélyegképének megtartása:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:238
+#, kde-format
+msgid "Never"
+msgstr "Soha"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:243
+#, kde-format
+msgid "Only for Shown Windows"
+msgstr "Csak a megjelenített ablakokról"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:248
+#, kde-format
+msgid "Always"
+msgstr "Mindig"
+
+#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
+#: compositing.ui:256
+#, kde-format
+msgid "Latency:"
+msgstr "Késleltetés:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:264
+#, kde-format
+msgid "Force lowest latency (may cause dropped frames)"
+msgstr ""
+"Legalacsonyabb késleltetés kényszerítése (képkockák eldobását okozhatja)"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:269
+#, kde-format
+msgid "Prefer lower latency"
+msgstr "Alacsonyabb késleltetés előnyben"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:274
+#, kde-format
+msgid "Balance of latency and smoothness"
+msgstr "Egyensúly a késleltetés és a simaság között"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:279
+#, kde-format
+msgid "Prefer smoother animations"
+msgstr "Simább animációk előnyben"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:284
+#, kde-format
+msgid "Force smoothest animations"
+msgstr "Simább animációk kényszerítése"
+
+#: main.cpp:79
+#, kde-format
+msgid "Re-enable OpenGL detection"
+msgstr "OpenGL felismerés újra bekapcsolása"
+
+#: main.cpp:135
+#, kde-format
+msgid ""
+"\"Only when cheap\" only prevents tearing for full screen changes like a "
+"video."
+msgstr ""
+"A „Csak ha olcsó” csak a teljes képernyős alkalmazásoknál, például "
+"videolejátszásnál akadályozza meg a kép szétesését."
+
+#: main.cpp:139
+#, kde-format
+msgid "\"Full screen repaints\" can cause performance problems."
+msgstr "A „Teljes színtér újrarajzolása” teljesítményproblémákat okozhat."
+
+#: main.cpp:143
+#, kde-format
+msgid ""
+"\"Re-use screen content\" causes severe performance problems on MESA drivers."
+msgstr ""
+"A „Képernyőtartalom újrahasználata” komoly teljesítményproblémákat okozhat "
+"MESA illesztőprogram használata esetén."
+
+#~ msgid "Rendering backend:"
+#~ msgstr "Renderelő modul:"
+
+#~ msgid "OpenGL 3.1"
+#~ msgstr "OpenGL 3.1"
+
+#~ msgid "OpenGL 2.0"
+#~ msgstr "OpenGL 2.0"
+
+#~ msgid "Crisp"
+#~ msgstr "Gyors"
+
+#~ msgid "Smooth (slower)"
+#~ msgstr "Sima (lassabb)"
+
+#~ msgid "XRender"
+#~ msgstr "XRender"
+
+#~ msgctxt "OpenGL Platform Interface"
+#~ msgid "EGL"
+#~ msgstr "EGL"
+
+#~ msgctxt "OpenGL Platform Interface"
+#~ msgid "GLX"
+#~ msgstr "GLX"
+
+#~ msgid ""
+#~ "Author: %1\n"
+#~ "License: %2"
+#~ msgstr ""
+#~ "Szerző: %1\n"
+#~ "Licenc: %2"
+
+#~ msgid ""
+#~ "Hint: To find out or configure how to activate an effect, look at the "
+#~ "effect's settings."
+#~ msgstr ""
+#~ "Tipp: Az effektusok megértéséhez tekintse át azok beállítási lehetőségeit."
+
+#, fuzzy
+#~| msgid "Search"
+#~ msgid "Search..."
+#~ msgstr "Keresés"
+
+#~ msgid "Configure filter"
+#~ msgstr "Szűrőbeállítás"
+
+#~ msgid "Exclude Desktop Effects not supported by the Compositor"
+#~ msgstr "A kompozitor által nem támogatot effektusok kizárása"
+
+#~ msgid "Exclude internal Desktop Effects"
+#~ msgstr "Belső asztali effektusok kizárása"
+
+#, fuzzy
+#~| msgid "Get New Effects ..."
+#~ msgid "Get New Desktop Effects..."
+#~ msgstr "Új effektusok letöltése…"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Kiszel Kristóf,Szántó Tamás"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "ulysses@kubuntu.org,tszanto@interware.hu"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Accessibility"
+#~ msgstr "Akadálymentesítés"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Appearance"
+#~ msgstr "Megjelenés"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Candy"
+#~ msgstr "Grafikai kiegészítők"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Focus"
+#~ msgstr "Fókusz"
+
+#, fuzzy
+#~| msgctxt "Category of Desktop Effects, used as section header"
+#~| msgid "Virtual Desktop Switching Animation"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Show Desktop Animation"
+#~ msgstr "Virtuális asztalok közti váltás animációja"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Tools"
+#~ msgstr "Eszközök"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Virtual Desktop Switching Animation"
+#~ msgstr "Virtuális asztalok közti váltás animációja"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Management"
+#~ msgstr "Ablakkezelés"
+
+#, fuzzy
+#~| msgctxt "Category of Desktop Effects, used as section header"
+#~| msgid "Virtual Desktop Switching Animation"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Open/Close Animation"
+#~ msgstr "Virtuális asztalok közti váltás animációja"
+
+#~ msgid "KWin development team"
+#~ msgstr "A KWin fejlesztői"
+
+#~ msgid "Experimental:"
+#~ msgstr "Kísérleti:"
+
+#~ msgid "Enable color correction"
+#~ msgstr "Színjavítás engedélyezése"
+
+#~ msgid ""
+#~ "Having full screen windows bypass the compositor is not supported on "
+#~ "every hardware."
+#~ msgstr ""
+#~ "A kompozitor felfüggesztését teljes képernyős alkalmazásoknál nem minden "
+#~ "hardver támogatja."
+
+#~ msgid "Expert:"
+#~ msgstr "Szakértői:"
+
+#~ msgid "Suspend compositor for full screen windows"
+#~ msgstr "Kompozitor felfüggesztése teljes képernyős ablakoknál"
+
+#~ msgid "OpenGL interface:"
+#~ msgstr "OpenGL interfész:"
+
+#~ msgid ""
+#~ "EGL is not supported by all OpenGL drivers. If not supported the "
+#~ "Compositor will be disabled."
+#~ msgstr ""
+#~ "Az EGL-t nem támogatja minden OpenGL illesztőprogram. Ha nem támogatott, "
+#~ "a kompozitor kikapcsol."
+
+#~ msgid "Animation Speed:"
+#~ msgstr "Animálási sebesség:"
+
+#~ msgid "Scale Method:"
+#~ msgstr "Nagyítási mód:"
+
+#~ msgid "Tearing Prevention (VSync):"
+#~ msgstr "Szakadás megelőzés (VSync):"
+
+#~ msgid "Keep Window Thumbnails:"
+#~ msgstr "Ablakok bélyegképének megtartása:"
+
+#~ msgid "Always (Breaks Animations)"
+#~ msgstr "Mindig (elrontja az animációkat)"
+
+#~ msgid "OpenGL Platform Interface:"
+#~ msgstr "OpenGL platform interfész:"
+
+#~ msgid "Form"
+#~ msgstr "Űrlap"
+
+#~ msgid "1 second remaining:"
+#~ msgid_plural "%1 seconds remaining:"
+#~ msgstr[0] "1 másodperc van hátra:"
+#~ msgstr[1] "%1 másodperc van hátra:"
+
+#~ msgid "Confirm Desktop Effects Change"
+#~ msgstr "Biztosan meg szeretné változtatni az asztali effektust?"
+
+#~ msgid "&Accept Configuration"
+#~ msgstr "&Igen, változzon meg"
+
+#~ msgid "&Return to Previous Configuration"
+#~ msgstr "&Nem, maradjon az eddigi"
+
+#~ msgid ""
+#~ "Desktop effects settings have changed.\n"
+#~ "Do you want to keep the new settings?\n"
+#~ "They will be automatically reverted in 10 seconds."
+#~ msgstr ""
+#~ "Az asztali beállítások megváltoztak.\n"
+#~ "érvényesíteni szeretné az új beállításokat?\n"
+#~ "Automatikus visszavonás 10 másodperc múlva."
+
+#~ msgctxt ""
+#~ "Action to open a dialog showing detailed information why an effect could "
+#~ "not be loaded"
+#~ msgid "Details"
+#~ msgstr "Részletek"
+
+#~ msgctxt "Prevent warning from bein displayed again"
+#~ msgid "Don't show again!"
+#~ msgstr "Ne jelenjen meg többé!"
+
+#~ msgid "Use GLSL shaders"
+#~ msgstr "GLSL shaderek használata"
+
+#~ msgid "None"
+#~ msgstr "Nincs"
+
+#~ msgid "The painting is not synchronized with the screen."
+#~ msgstr "A rajz nincs szinkronizálva a képernyővel."
+
+#~ msgid ""
+#~ "Tries to re-use older buffers and if that is not possible,\n"
+#~ "picks a strategy matching your hardware."
+#~ msgstr ""
+#~ "Megpróbálja újrahasználni a régi puffereket és ha az nem lehetséges,\n"
+#~ "a hardverhez illeszkedő stratégiát választ."
+
+#~ msgid ""
+#~ "When major regions of the screen are updated,\n"
+#~ "the entire screen will be repainted.\n"
+#~ "Can cause tearing with small updates."
+#~ msgstr ""
+#~ "Amikor a képernyő jelentős területei frissülnek,\n"
+#~ "az egész képernyő újra lesz rajzolva.\n"
+#~ "Szakadásokat okozhat kis frissítéseknél."
+
+#~ msgid ""
+#~ "The complete screen is repainted for every frame.\n"
+#~ "Can be slow with large blurred areas."
+#~ msgstr ""
+#~ "A teljes képernyő újra van rajzolva minden képkockánál.\n"
+#~ "Lassú lehet nagy elmosott területeknél."
+
+#~ msgid ""
+#~ "WARNING:\n"
+#~ "This strategy is usually slow with Open Source drivers.\n"
+#~ "Undamaged pixels will be copied from GL_FRONT to GL_BACK"
+#~ msgstr ""
+#~ "FIGYELEM:\n"
+#~ "Ez a stratégia általában lassú a nyílt forrású meghajtókkal.\n"
+#~ "Az ép pixelek át lesznek másolva a GL_FRONT helyről a GL_BACK helyre"
+
+#~ msgid "kcmkwincompositing"
+#~ msgstr "kcmkwincompositing"
+
+#~ msgid "KWin Desktop Effects Configuration Module"
+#~ msgstr "KWin beállítómodul az asztali effektusokhoz"
+
+#~ msgid "(c) 2007 Rivo Laks"
+#~ msgstr "© Rivo Laks, 2007."
+
+#~ msgid "Rivo Laks"
+#~ msgstr "Rivo Laks"
+
+#~ msgid "No effect"
+#~ msgstr "Nincs effektus"
+
+#~ msgid ""
+#~ "Failed to activate desktop effects using the given configuration options. "
+#~ "Settings will be reverted to their previous values.\n"
+#~ "\n"
+#~ "Check your X configuration. You may also consider changing advanced "
+#~ "options, especially changing the compositing type."
+#~ msgstr ""
+#~ "Nem sikerült engedélyezni az asztali effektusokat a megadott beállítások "
+#~ "mellett. A beállítások nem változnak meg.\n"
+#~ "\n"
+#~ "Ellenőrizze az X beállításait. Szükség lehet néhány beállítás, például a "
+#~ "kompozit típus megváltoztatására."
+
+#~ msgid "Demos"
+#~ msgstr "Demók"
+
+#~ msgid "Tests"
+#~ msgstr "Tesztek"
+
+#~ msgid ""
+#~ "Desktop effects are not available on this system due to the following "
+#~ "technical issues:"
+#~ msgstr ""
+#~ "Az asztali effektusok nem érhetők el ezen a rendszeren az alábbi "
+#~ "technikai problémák miatt:"
+
+#~ msgctxt ""
+#~ "Reason shown when trying to activate desktop effects and KWin (most "
+#~ "likely) crashes"
+#~ msgid "Window Manager seems not to be running"
+#~ msgstr "Úgy tűnik, hogy az ablakkezelő nem fut"
+
+#~ msgid ""
+#~ "Your settings have been saved but as KDE is currently running in failsafe "
+#~ "mode desktop effects cannot be enabled at this time.\n"
+#~ "\n"
+#~ "Please exit failsafe mode to enable desktop effects."
+#~ msgstr ""
+#~ "A beállítások el lettek mentve, de mivel a KDE jelenleg is fut egy vissza "
+#~ "hibabiztos módba, az asztali hatásokat nem lehet engedélyezni jelenleg.\n"
+#~ "\n"
+#~ "Kérem lépjen ki a hibabiztos módból az asztali hatások engedélyezéséhez."
+
+#~ msgctxt "Error Message shown when a desktop effect could not be loaded"
+#~ msgid "One desktop effect could not be loaded."
+#~ msgid_plural "%1 desktop effects could not be loaded."
+#~ msgstr[0] "Nem sikerült betölteni egy asztali effektust."
+#~ msgstr[1] "Nem sikerült betölteni %1 asztali effektust."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated due to unknown reason"
+#~ msgid "%1 effect failed to load due to unknown reason."
+#~ msgstr "A(z) %1 effektust ismeretlen ok miatt nem sikerült betölteni."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires hardware "
+#~ "shaders"
+#~ msgid "%1 effect requires hardware support."
+#~ msgstr "A(z) %1 effektust hardveres támogatást igényel."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires OpenGL"
+#~ msgid "%1 effect requires OpenGL."
+#~ msgstr "A(z) %1 effektust OpenGL-t igényel."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires OpenGL 2"
+#~ msgid "%1 effect requires OpenGL 2."
+#~ msgstr "A(z) %1 effektust OpenGL 2-t igényel."
+
+#~ msgctxt "Window title"
+#~ msgid "List of effects which could not be loaded"
+#~ msgstr "Nem betölthető effektusok listája"
+
+#~ msgid ""
+#~ "For technical reasons it is not possible to determine all possible error "
+#~ "causes."
+#~ msgstr ""
+#~ "Technikai okok miatt nem lehetséges meghatározni az összes hibaforrást."
+
+#~ msgctxt ""
+#~ "Error Message shown when compositing is not active after tried activation"
+#~ msgid "Desktop effect system is not running."
+#~ msgstr "Az asztali effektusrendszer nem fut."
+
+#~ msgid "<h1>Desktop Effects</h1>"
+#~ msgstr "<h1>Asztali effektusok</h1>"
+
+#~ msgid "General"
+#~ msgstr "Általános"
+
+#~ msgid "Pressing this button can crash the desktop."
+#~ msgstr "A gomb megnyomása összeomlaszthatja az asztalt."
+
+#~ msgid "I have saved my data."
+#~ msgstr "Elmentettem az adataimat."
+
+#~ msgid "Activation"
+#~ msgstr "Aktiválás"
+
+#~ msgid "Desktop effects can be toggled anytime using this shortcut:"
+#~ msgstr ""
+#~ "Az asztali effektusok bármikor kapcsolhatők a következő gyorsbillentyűvel:"
+
+#~ msgctxt "@title:group a few general options to set up desktop effects"
+#~ msgid "Simple effect setup"
+#~ msgstr "Egyszerű effektusbeállítás"
+
+#~ msgid "Improved window management"
+#~ msgstr "Javított ablakkezelés"
+
+#~ msgid "Effect for desktop switching:"
+#~ msgstr "Asztalváltási effektus:"
+
+#~ msgid "Very Fast"
+#~ msgstr "Nagyon gyors"
+
+#~ msgid "Fast"
+#~ msgstr "Gyors"
+
+#~ msgid "Normal"
+#~ msgstr "Normál"
+
+#~ msgid "Slow"
+#~ msgstr "Lassú"
+
+#~ msgid "Extremely Slow"
+#~ msgstr "Rendkívül lassú"
+
+#~ msgid ""
+#~ "You can find more effects, as well as effect-specific settings, in the "
+#~ "\"All Effects\" tab above."
+#~ msgstr ""
+#~ "További effektusok és az effektusokkal kapcsolatos beállítások találhatók "
+#~ "fent, a „Minden effektus” lapon."
+
+#~ msgid "All Effects"
+#~ msgstr "Minden effektus"
+
+#~ msgid "Advanced"
+#~ msgstr "Speciális"
+
+#~ msgid "OpenGL Options"
+#~ msgstr "OpenGL beállítások"
+
+#~ msgid ""
+#~ "<p>Activates color correction if possible, using the Kolor-Manager. "
+#~ "Requires OpenGL 2 Shaders to be enabled and Kolor-Manager to be "
+#~ "installed. May fail silently.</p><p><strong>Experimental</strong>.</p>"
+#~ msgstr ""
+#~ "<p> Ha lehetséges, aktiválja a színjavítást a Kolor-Manager "
+#~ "használatával. Szükséges hozzá az OpenGL 2 Shaders engedélyezése és a "
+#~ "Kolor-Manager telepítése. Észrevétlenül meghiúsulhat.</"
+#~ "p><p><strong>Kísérleti</strong>.</p>"
+
+#~ msgid "General Options"
+#~ msgstr "Általános beállítások"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Crisp:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"fast\")</span> -  Pretty fast "
+#~ "on all GPUs but looks bricky</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Smooth:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"good\") </span>- linear "
+#~ "blending.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Fast enough on newer "
+#~ "nvidia GPUs and maybe others but also can be <span style=\" text-"
+#~ "decoration: underline;\">very</span> slow, you will have to try it.</p></"
+#~ "body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Gyors:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"fast\")</span> -  minden GPU-n "
+#~ "gyors, de szögletesen néz ki</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Sima:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"good\") </span>- lineáris "
+#~ "keverés.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Elég gyors az újabb "
+#~ "Nvidia GPU-kon és talán másokon, de <span style=\" text-decoration: "
+#~ "underline;\">nagyon</span> lassú is lehet, Önnek kell kipróbálnia.</p></"
+#~ "body></html>"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Crisp:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_NEAREST</span> -  (very) fast on all GPUs but looks "
+#~ "bricky</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Smooth:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_LINEAR</span> - fast on most GPUs but a little blurry</"
+#~ "p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Accurate:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Lanczos filter, "
+#~ "requires glsl shader support.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Might be slow on weaker "
+#~ "GPUs and even cause various troubles with broken drivers (from "
+#~ "overbrightening to segfaults).</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Fall back to \"Smooth\" "
+#~ "if you have problems.</p></body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Gyors:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_NEAREST</span> -  minden GPU-n (nagyon) gyors, de "
+#~ "szögletesen néz ki</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Sima:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_LINEAR</span> - a legtöbb GPU-n gyors, de egy kicsit "
+#~ "elmosódott</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Pontos:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Lanczos-szűrő, glsl "
+#~ "shader támogatás szükséges hozzá.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Gyengébb GPU-kon lassú "
+#~ "lehet és a hibás eszközmeghajtók különböző problémákat okozhatnak a "
+#~ "túlvilágosítástól kezdve a szegmentációs hibákig.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Váltson vissza „Sima” "
+#~ "nagyítási módra, ha problémái vannak.</p></body></html>"
+
+#~ msgid "OpenGL 1.2"
+#~ msgstr "OpenGL 1.2"
+
+#~ msgid "Qt graphics system:"
+#~ msgstr "Qt grafikai rendszer:"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">It is <span style=\" "
+#~ "font-weight:600;\">strongly recommended</span> to use the <span style=\" "
+#~ "font-weight:600;\">native</span> system when using the <span style=\" "
+#~ "font-weight:600;\">XRender</span> backend.</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">On the other hand, many "
+#~ "decorations perform better with the <span style=\" font-weight:600;"
+#~ "\">raster</span> system on the <span style=\" font-weight:600;\">default "
+#~ "and generally preferred OpenGL</span> backend (though some don't - also "
+#~ "the impact here can be anything between \"slight\" and \"incredible\" "
+#~ "depending on the GPU and driver)</p></body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Erősen ajánlott</span> a <span style=\" font-weight:600;"
+#~ "\">natív</span> rendszer használata az <span style=\" font-weight:600;"
+#~ "\">XRender</span> modul használatakor.</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Másrészt számos "
+#~ "dekoráció jobban működik <span style=\" font-weight:600;\">raszteres</"
+#~ "span> rendszereken az <span style=\" font-weight:600;\">alapértelmezett "
+#~ "és előnyben részesített OpenGL</span> modullal (habár nem mind - a "
+#~ "különbség bármi lehet a „némileg” és a „hihetetlenül” között a GPU-tól és "
+#~ "az eszközmeghajtótól függően)</p></body></html>"
+
+#~ msgid "Native"
+#~ msgstr "Natív"
+
+#~ msgid "Raster"
+#~ msgstr "Raszteres"
+
+#~ msgid ""
+#~ "If enabled all rendering will be performed with Shaders written in the "
+#~ "OpenGL Shading Language.\n"
+#~ "On legacy hardware disabling Shaders can improve the performance."
+#~ msgstr ""
+#~ "Ha engedélyezi, minden renderelés az OpenGL árnyékolónyelven írt "
+#~ "árnyékolókkal lesz végrehajtva.\n"
+#~ "Az árnyékolók kikapcsolása javíthatja a teljesítményt régebbi hardvereken."
+
+#~ msgid "Use OpenGL 2 Shaders"
+#~ msgstr "OpenGL 2 shaderek használata"
+
+#~ msgid "Use VSync"
+#~ msgstr "Függőleges szinkronizálás"
+
+#~ msgid "Effect for window switching:"
+#~ msgstr "Ablakváltási effektus:"
+
+#~ msgid "Enable direct rendering"
+#~ msgstr "Közvetlen renderelés"
+
+#~ msgid "Disable functionality checks"
+#~ msgstr "A működés ellenőrzésének kihagyása"
+
+#, fuzzy
+#~| msgctxt "@option:check"
+#~| msgid "Enable desktop effects"
+#~ msgid "Resume Desktop Effects"
+#~ msgstr "Asztali effektusok engedélyezése"
+
+#~ msgid "Common Settings"
+#~ msgstr "Közös beállítások"
+
+#, fuzzy
+#~| msgid "Compositing type:"
+#~ msgid "Compositing State"
+#~ msgstr "Kompozit mód:"
+
+#~ msgid "Shadows"
+#~ msgstr "Árnyékok"
+
+#~ msgid "Texture From Pixmap"
+#~ msgstr "Textúra készítése képből"
+
+#~ msgid "Shared Memory"
+#~ msgstr "Osztott memória"
+
+#~ msgid "Fallback"
+#~ msgstr "Másodlagos lehetőség"
+
+#~ msgid ""
+#~ "Enabling this option allows compositing to be activated even if some of "
+#~ "the internal checks fail. Doing so may make the whole desktop unusable "
+#~ "and its use is not recommened. Use only if KWin refuses to activate "
+#~ "compositing on a system that should be capable of compositing.\n"
+#~ msgstr ""
+#~ "Ha be van jelölve, a kompozit mód akkor is aktiválódik, ha annak "
+#~ "ellenőrző tesztje nem sikerül. Ilyenkor előfordulhat, hogy az egész "
+#~ "grafikus környezet használhatatlanná válik, bejelölése ezért nem "
+#~ "ajánlott. Csak akkor használja, ha biztosan tudja, hogy a rendszer képes "
+#~ "kompozit módra, de a KWin ezt valamilyen okból nem ismeri fel.\n"
+
+#~ msgid "Nearest (fastest)"
+#~ msgstr "Legközelebbi (leggyorsabb)"
+
+#~ msgid "Bilinear"
+#~ msgstr "Bilineáris"
+
+#~ msgid "Trilinear (best quality)"
+#~ msgstr "Trilineáris (legjobb minőség)"
+
+#~ msgid "Compositing is not supported on your system."
+#~ msgstr "A rendszer nem támogat kompozit üzemmódot."
+
+#, fuzzy
+#~| msgid "Compositing type:"
+#~ msgid "Compositing is active"
+#~ msgstr "Kompozit mód:"
+
+#, fuzzy
+#~| msgid "Compositing type:"
+#~ msgid "Suspend Compositing"
+#~ msgstr "Kompozit mód:"
+
+#, fuzzy
+#~| msgid "Compositing type:"
+#~ msgid "Resume Compositing"
+#~ msgstr "Kompozit mód:"
+
+#, fuzzy
+#~| msgid "Compositing type:"
+#~ msgid "Compositing is disabled"
+#~ msgstr "Kompozit mód:"
+
+#~ msgid "All Desktops"
+#~ msgstr "Minden asztal"
+
+#~ msgid "Current Desktop"
+#~ msgstr "A jelenlegi asztal"
+
+#~ msgid "Screen Edges"
+#~ msgstr "Képernyőszélek"
+
+#~ msgid ""
+#~ "Active screen edges allow you to activate effects by pushing your mouse "
+#~ "cursor against the edge of the screen. Here you can configure which "
+#~ "effect will get activated on each edge and corner of the screen."
+#~ msgstr ""
+#~ "Aktív képernyőszélek használata esetén egyes effektusok aktiválásához "
+#~ "elég, ha az egérmutatót a képernyő széléhez mozgatja. Itt lehet megadni, "
+#~ "mi aktiválódjon az egyes szegélyeknél és sarkokban."
+
+#~ msgid ""
+#~ "If you are looking for the setting to enable switching of desktops by "
+#~ "pushing your mouse cursor against the edge of the screen you can find it "
+#~ "in the \"Window Behavior\" advanced tab under the name of \"Active "
+#~ "Desktop Borders\"."
+#~ msgstr ""
+#~ "Van egy hasonló, de más beállítás a KDE-ben, mely asztalváltást végez a "
+#~ "képernyő szélének elérésekor. Ez az \"Ablakműveletek\" lapon belül "
+#~ "található \"Aktív asztalszélek\" néven."

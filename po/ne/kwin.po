@@ -1,0 +1,3342 @@
+# translation of kwin.po to Nepali
+# Nabin Gautam <nabin@mpp.org.np>, 2006, 2007.
+# Kapil Timilsina <lipak21@gmail.com>, 2006.
+# Shyam Krishna Bal <shyam@mpp.org.np>, 2006.
+# Shiva Prasad Pokharel <pokharelshiva@hotmail.com>, 2006.
+# Mahesh Subedi <submanesh@gmail.com>, 2007.
+# shyam krishna bal <shyamkrishna_bal@yahoo.com>, 2007.
+# Shyam Krishna Bal <shyamkrishna_bal@yahoo.com>, 2007.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-09-23 00:47+0000\n"
+"PO-Revision-Date: 2007-11-01 14:27+0545\n"
+"Last-Translator: Shyam Krishna Bal <shyamkrishna_bal@yahoo.com>\n"
+"Language-Team: Nepali <info@mpp.org.np>\n"
+"Language: ne\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n !=1\n"
+"\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Kapil Timilsina, श्यामकृष्ण बल"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "lipak21@gmail.com, shyamkrishna_bal@yahoo.com"
+
+#: composite.cpp:615
+#, kde-format
+msgid "Desktop effects were restarted due to a graphics reset"
+msgstr ""
+
+#: composite.cpp:820
+#, kde-format
+msgid ""
+"Desktop effects have been suspended by another application.<br/>You can "
+"resume using the '%1' shortcut."
+msgstr ""
+
+#: debug_console.cpp:78
+#, kde-format
+msgid "Timestamp"
+msgstr ""
+
+#: debug_console.cpp:83
+#, kde-format
+msgid "Timestamp (µsec)"
+msgstr ""
+
+#: debug_console.cpp:90
+#, fuzzy, kde-format
+#| msgid "Top-left"
+msgctxt "A mouse button"
+msgid "Left"
+msgstr "माथि-बायाँ"
+
+#: debug_console.cpp:92
+#, fuzzy, kde-format
+#| msgid "Top-right"
+msgctxt "A mouse button"
+msgid "Right"
+msgstr "माथि-दायाँ"
+
+#: debug_console.cpp:94
+#, kde-format
+msgctxt "A mouse button"
+msgid "Middle"
+msgstr ""
+
+#: debug_console.cpp:96
+#, kde-format
+msgctxt "A mouse button"
+msgid "Back"
+msgstr ""
+
+#: debug_console.cpp:98
+#, kde-format
+msgctxt "A mouse button"
+msgid "Forward"
+msgstr ""
+
+#: debug_console.cpp:100
+#, kde-format
+msgctxt "A mouse button"
+msgid "Task"
+msgstr ""
+
+#: debug_console.cpp:102
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 4"
+msgstr ""
+
+#: debug_console.cpp:104
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 5"
+msgstr ""
+
+#: debug_console.cpp:106
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 6"
+msgstr ""
+
+#: debug_console.cpp:108
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 7"
+msgstr ""
+
+#: debug_console.cpp:110
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 8"
+msgstr ""
+
+#: debug_console.cpp:112
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 9"
+msgstr ""
+
+#: debug_console.cpp:114
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 10"
+msgstr ""
+
+#: debug_console.cpp:116
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 11"
+msgstr ""
+
+#: debug_console.cpp:118
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 12"
+msgstr ""
+
+#: debug_console.cpp:120
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 13"
+msgstr ""
+
+#: debug_console.cpp:122
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 14"
+msgstr ""
+
+#: debug_console.cpp:124
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 15"
+msgstr ""
+
+#: debug_console.cpp:126
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 16"
+msgstr ""
+
+#: debug_console.cpp:128
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 17"
+msgstr ""
+
+#: debug_console.cpp:130
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 18"
+msgstr ""
+
+#: debug_console.cpp:132
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 19"
+msgstr ""
+
+#: debug_console.cpp:134
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 20"
+msgstr ""
+
+#: debug_console.cpp:136
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 21"
+msgstr ""
+
+#: debug_console.cpp:138
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 22"
+msgstr ""
+
+#: debug_console.cpp:140
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 23"
+msgstr ""
+
+#: debug_console.cpp:142
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 24"
+msgstr ""
+
+#: debug_console.cpp:151 debug_console.cpp:153
+#, kde-format
+msgid "Input Device"
+msgstr ""
+
+#: debug_console.cpp:151
+#, kde-format
+msgctxt "The input device of the event is not known"
+msgid "Unknown"
+msgstr ""
+
+#: debug_console.cpp:188
+#, kde-format
+msgctxt "A mouse pointer motion event"
+msgid "Pointer Motion"
+msgstr ""
+
+#: debug_console.cpp:195
+#, kde-format
+msgctxt "The relative mouse movement"
+msgid "Delta"
+msgstr ""
+
+#: debug_console.cpp:199
+#, kde-format
+msgctxt "The relative mouse movement"
+msgid "Delta (not accelerated)"
+msgstr ""
+
+#: debug_console.cpp:202
+#, kde-format
+msgctxt "The global mouse pointer position"
+msgid "Global Position"
+msgstr ""
+
+#: debug_console.cpp:206
+#, kde-format
+msgctxt "A mouse pointer button press event"
+msgid "Pointer Button Press"
+msgstr ""
+
+#: debug_console.cpp:209 debug_console.cpp:217
+#, kde-format
+msgctxt "A button in a mouse press/release event"
+msgid "Button"
+msgstr ""
+
+#: debug_console.cpp:210 debug_console.cpp:218
+#, kde-format
+msgctxt "A button in a mouse press/release event"
+msgid "Native Button code"
+msgstr ""
+
+#: debug_console.cpp:211 debug_console.cpp:219
+#, kde-format
+msgctxt "All currently pressed buttons in a mouse press/release event"
+msgid "Pressed Buttons"
+msgstr ""
+
+#: debug_console.cpp:214
+#, kde-format
+msgctxt "A mouse pointer button release event"
+msgid "Pointer Button Release"
+msgstr ""
+
+#: debug_console.cpp:234
+#, kde-format
+msgctxt "A mouse pointer axis (wheel) event"
+msgid "Pointer Axis"
+msgstr ""
+
+#: debug_console.cpp:238
+#, kde-format
+msgctxt "The orientation of a pointer axis event"
+msgid "Orientation"
+msgstr ""
+
+#: debug_console.cpp:239
+#, kde-format
+msgctxt "An orientation of a pointer axis event"
+msgid "Horizontal"
+msgstr ""
+
+#: debug_console.cpp:240
+#, kde-format
+msgctxt "An orientation of a pointer axis event"
+msgid "Vertical"
+msgstr ""
+
+#: debug_console.cpp:241
+#, kde-format
+msgctxt "The angle delta of a pointer axis event"
+msgid "Delta"
+msgstr ""
+
+#: debug_console.cpp:256
+#, kde-format
+msgctxt "A key press event"
+msgid "Key Press"
+msgstr ""
+
+#: debug_console.cpp:259
+#, kde-format
+msgctxt "A key release event"
+msgid "Key Release"
+msgstr ""
+
+#: debug_console.cpp:268
+#, kde-format
+msgctxt "A keyboard modifier"
+msgid "Shift"
+msgstr ""
+
+#: debug_console.cpp:272
+#, kde-format
+msgctxt "A keyboard modifier"
+msgid "Control"
+msgstr ""
+
+#: debug_console.cpp:276
+#, kde-format
+msgctxt "A keyboard modifier"
+msgid "Alt"
+msgstr ""
+
+#: debug_console.cpp:280
+#, kde-format
+msgctxt "A keyboard modifier"
+msgid "Meta"
+msgstr ""
+
+#: debug_console.cpp:284
+#, kde-format
+msgctxt "A keyboard modifier"
+msgid "Keypad"
+msgstr ""
+
+#: debug_console.cpp:288
+#, kde-format
+msgctxt "A keyboard modifier"
+msgid "Group-switch"
+msgstr ""
+
+#: debug_console.cpp:294
+#, kde-format
+msgctxt "Whether the event is an automatic key repeat"
+msgid "Repeat"
+msgstr ""
+
+#: debug_console.cpp:298
+#, kde-format
+msgctxt "The code as read from the input device"
+msgid "Scan code"
+msgstr ""
+
+#: debug_console.cpp:299
+#, kde-format
+msgctxt "Key according to Qt"
+msgid "Qt::Key code"
+msgstr ""
+
+#: debug_console.cpp:301
+#, kde-format
+msgctxt "The translated code to an Xkb symbol"
+msgid "Xkb symbol"
+msgstr ""
+
+#: debug_console.cpp:302
+#, kde-format
+msgctxt "The translated code interpreted as text"
+msgid "Utf8"
+msgstr ""
+
+#: debug_console.cpp:303
+#, kde-format
+msgctxt "The currently active modifiers"
+msgid "Modifiers"
+msgstr ""
+
+#: debug_console.cpp:315
+#, kde-format
+msgctxt "A touch down event"
+msgid "Touch down"
+msgstr ""
+
+#: debug_console.cpp:317 debug_console.cpp:332 debug_console.cpp:347
+#, kde-format
+msgctxt "The id of the touch point in the touch event"
+msgid "Point identifier"
+msgstr ""
+
+#: debug_console.cpp:318 debug_console.cpp:333
+#, kde-format
+msgctxt "The global position of the touch point"
+msgid "Global position"
+msgstr ""
+
+#: debug_console.cpp:330
+#, kde-format
+msgctxt "A touch motion event"
+msgid "Touch Motion"
+msgstr ""
+
+#: debug_console.cpp:345
+#, kde-format
+msgctxt "A touch up event"
+msgid "Touch Up"
+msgstr ""
+
+#: debug_console.cpp:358
+#, kde-format
+msgctxt "A pinch gesture is started"
+msgid "Pinch start"
+msgstr ""
+
+#: debug_console.cpp:360
+#, kde-format
+msgctxt "Number of fingers in this pinch gesture"
+msgid "Finger count"
+msgstr ""
+
+#: debug_console.cpp:371
+#, kde-format
+msgctxt "A pinch gesture is updated"
+msgid "Pinch update"
+msgstr ""
+
+#: debug_console.cpp:373
+#, kde-format
+msgctxt "Current scale in pinch gesture"
+msgid "Scale"
+msgstr ""
+
+#: debug_console.cpp:374
+#, kde-format
+msgctxt "Current angle in pinch gesture"
+msgid "Angle delta"
+msgstr ""
+
+#: debug_console.cpp:375
+#, kde-format
+msgctxt "Current delta in pinch gesture"
+msgid "Delta x"
+msgstr ""
+
+#: debug_console.cpp:376
+#, kde-format
+msgctxt "Current delta in pinch gesture"
+msgid "Delta y"
+msgstr ""
+
+#: debug_console.cpp:387
+#, kde-format
+msgctxt "A pinch gesture ended"
+msgid "Pinch end"
+msgstr ""
+
+#: debug_console.cpp:399
+#, kde-format
+msgctxt "A pinch gesture got cancelled"
+msgid "Pinch cancelled"
+msgstr ""
+
+#: debug_console.cpp:411
+#, kde-format
+msgctxt "A swipe gesture is started"
+msgid "Swipe start"
+msgstr ""
+
+#: debug_console.cpp:413
+#, kde-format
+msgctxt "Number of fingers in this swipe gesture"
+msgid "Finger count"
+msgstr ""
+
+#: debug_console.cpp:424
+#, kde-format
+msgctxt "A swipe gesture is updated"
+msgid "Swipe update"
+msgstr ""
+
+#: debug_console.cpp:426
+#, kde-format
+msgctxt "Current delta in swipe gesture"
+msgid "Delta x"
+msgstr ""
+
+#: debug_console.cpp:427
+#, kde-format
+msgctxt "Current delta in swipe gesture"
+msgid "Delta y"
+msgstr ""
+
+#: debug_console.cpp:438
+#, kde-format
+msgctxt "A swipe gesture ended"
+msgid "Swipe end"
+msgstr ""
+
+#: debug_console.cpp:450
+#, kde-format
+msgctxt "A swipe gesture got cancelled"
+msgid "Swipe cancelled"
+msgstr ""
+
+#: debug_console.cpp:462
+#, fuzzy, kde-format
+#| msgid "Switch to Screen 0"
+msgctxt "A hardware switch (e.g. notebook lid) got toggled"
+msgid "Switch toggled"
+msgstr "पर्दा ० मा स्विच गर्नुहोस्"
+
+#: debug_console.cpp:470
+#, kde-format
+msgctxt "Name of a hardware switch"
+msgid "Notebook lid"
+msgstr ""
+
+#: debug_console.cpp:472
+#, kde-format
+msgctxt "Name of a hardware switch"
+msgid "Tablet mode"
+msgstr ""
+
+#: debug_console.cpp:474
+#, fuzzy, kde-format
+#| msgid "Switch to Screen 0"
+msgctxt "A hardware switch"
+msgid "Switch"
+msgstr "पर्दा ० मा स्विच गर्नुहोस्"
+
+#: debug_console.cpp:478
+#, kde-format
+msgctxt "The hardware switch got turned off"
+msgid "Off"
+msgstr ""
+
+#: debug_console.cpp:481
+#, kde-format
+msgctxt "The hardware switch got turned on"
+msgid "On"
+msgstr ""
+
+#: debug_console.cpp:486
+#, kde-format
+msgctxt "State of a hardware switch (on/off)"
+msgid "State"
+msgstr ""
+
+#: debug_console.cpp:501
+#, kde-format
+msgid "Tablet Tool"
+msgstr ""
+
+#: debug_console.cpp:502
+#, kde-format
+msgid "EventType"
+msgstr ""
+
+#: debug_console.cpp:503 debug_console.cpp:548 debug_console.cpp:562
+#, kde-format
+msgid "Position"
+msgstr ""
+
+#: debug_console.cpp:505
+#, kde-format
+msgid "Tilt"
+msgstr ""
+
+#: debug_console.cpp:507
+#, kde-format
+msgid "Rotation"
+msgstr ""
+
+#: debug_console.cpp:508
+#, kde-format
+msgid "Pressure"
+msgstr ""
+
+#: debug_console.cpp:509
+#, fuzzy, kde-format
+#| msgid "Mouse Emulation"
+msgid "Buttons"
+msgstr "माउस इमुलेशन"
+
+#. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
+#: debug_console.cpp:510 debug_console.ui:356
+#, kde-format
+msgid "Modifiers"
+msgstr ""
+
+#: debug_console.cpp:519
+#, kde-format
+msgid "Tablet Tool Button"
+msgstr ""
+
+#: debug_console.cpp:520 debug_console.cpp:534
+#, fuzzy, kde-format
+#| msgid "Mouse Emulation"
+msgid "Button"
+msgstr "माउस इमुलेशन"
+
+#: debug_console.cpp:521 debug_console.cpp:535
+#, fuzzy, kde-format
+#| msgid "Mouse Emulation"
+msgid "Pressed"
+msgstr "माउस इमुलेशन"
+
+#: debug_console.cpp:522 debug_console.cpp:536 debug_console.cpp:550
+#: debug_console.cpp:564
+#, kde-format
+msgid "Tablet"
+msgstr ""
+
+#: debug_console.cpp:533
+#, kde-format
+msgid "Tablet Pad Button"
+msgstr ""
+
+#: debug_console.cpp:546
+#, kde-format
+msgid "Tablet Pad Strip"
+msgstr ""
+
+#: debug_console.cpp:547 debug_console.cpp:561
+#, kde-format
+msgid "Number"
+msgstr ""
+
+#: debug_console.cpp:549 debug_console.cpp:563
+#, kde-format
+msgid "isFinger"
+msgstr ""
+
+#: debug_console.cpp:560
+#, kde-format
+msgid "Tablet Pad Ring"
+msgstr ""
+
+#: debug_console.cpp:791
+#, fuzzy, kde-format
+#| msgid "Mouse Emulation"
+msgid "No Mouse Buttons"
+msgstr "माउस इमुलेशन"
+
+#: debug_console.cpp:795
+#, kde-format
+msgctxt "Mouse Button"
+msgid "left"
+msgstr ""
+
+#: debug_console.cpp:798
+#, fuzzy, kde-format
+#| msgid "Top-right"
+msgctxt "Mouse Button"
+msgid "right"
+msgstr "माथि-दायाँ"
+
+#: debug_console.cpp:801
+#, kde-format
+msgctxt "Mouse Button"
+msgid "middle"
+msgstr ""
+
+#: debug_console.cpp:804
+#, kde-format
+msgctxt "Mouse Button"
+msgid "back"
+msgstr ""
+
+#: debug_console.cpp:807
+#, kde-format
+msgctxt "Mouse Button"
+msgid "forward"
+msgstr ""
+
+#: debug_console.cpp:810
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 1"
+msgstr ""
+
+#: debug_console.cpp:813
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 2"
+msgstr ""
+
+#: debug_console.cpp:816
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 3"
+msgstr ""
+
+#: debug_console.cpp:819
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 4"
+msgstr ""
+
+#: debug_console.cpp:822
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 5"
+msgstr ""
+
+#: debug_console.cpp:825
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 6"
+msgstr ""
+
+#: debug_console.cpp:828
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 7"
+msgstr ""
+
+#: debug_console.cpp:831
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 8"
+msgstr ""
+
+#: debug_console.cpp:834
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 9"
+msgstr ""
+
+#: debug_console.cpp:837
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 10"
+msgstr ""
+
+#: debug_console.cpp:840
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 11"
+msgstr ""
+
+#: debug_console.cpp:843
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 12"
+msgstr ""
+
+#: debug_console.cpp:846
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 13"
+msgstr ""
+
+#: debug_console.cpp:849
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 14"
+msgstr ""
+
+#: debug_console.cpp:852
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 15"
+msgstr ""
+
+#: debug_console.cpp:855
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 16"
+msgstr ""
+
+#: debug_console.cpp:858
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 17"
+msgstr ""
+
+#: debug_console.cpp:861
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 18"
+msgstr ""
+
+#: debug_console.cpp:864
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 19"
+msgstr ""
+
+#: debug_console.cpp:867
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 20"
+msgstr ""
+
+#: debug_console.cpp:870
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 21"
+msgstr ""
+
+#: debug_console.cpp:873
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 22"
+msgstr ""
+
+#: debug_console.cpp:876
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 23"
+msgstr ""
+
+#: debug_console.cpp:879
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 24"
+msgstr ""
+
+#: debug_console.cpp:882
+#, kde-format
+msgctxt "Mouse Button"
+msgid "task"
+msgstr ""
+
+#: debug_console.cpp:1218
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "X11 Windows"
+msgstr "सञ्झ्याल"
+
+#: debug_console.cpp:1220
+#, kde-format
+msgid "X11 Unmanaged Windows"
+msgstr ""
+
+#: debug_console.cpp:1222
+#, fuzzy, kde-format
+#| msgid "Shade Window"
+msgid "Wayland Windows"
+msgstr "सञ्झ्याल सेड गर्नुहोस्"
+
+#: debug_console.cpp:1224
+#, fuzzy, kde-format
+#| msgid "Raise Window"
+msgid "Internal Windows"
+msgstr "सञ्झ्याल बढाउनुहोस्"
+
+#. i18n: ectx: property (text), widget (QPushButton, quitButton)
+#: debug_console.ui:32
+#, kde-format
+msgid "Quit Debug Console"
+msgstr ""
+
+#. i18n: ectx: attribute (title), widget (QWidget, windows)
+#: debug_console.ui:45
+#, kde-format
+msgid "Windows"
+msgstr "सञ्झ्याल"
+
+#. i18n: ectx: attribute (title), widget (QWidget, surfaces)
+#: debug_console.ui:59
+#, kde-format
+msgid "Surfaces"
+msgstr ""
+
+#. i18n: ectx: attribute (title), widget (QWidget, input)
+#: debug_console.ui:69
+#, kde-format
+msgid "Input Events"
+msgstr ""
+
+#. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
+#: debug_console.ui:86
+#, kde-format
+msgid "Input Devices"
+msgstr ""
+
+#. i18n: ectx: attribute (title), widget (QWidget, tab)
+#: debug_console.ui:96
+#, kde-format
+msgid "OpenGL"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
+#: debug_console.ui:102
+#, kde-format
+msgid "No OpenGL compositor running"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
+#: debug_console.ui:130
+#, kde-format
+msgid "OpenGL (ES) driver information"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:136
+#, kde-format
+msgid "Vendor:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: debug_console.ui:143
+#, kde-format
+msgid "Renderer:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: debug_console.ui:150
+#, kde-format
+msgid "Version:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: debug_console.ui:157
+#, kde-format
+msgid "Shading Language Version:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: debug_console.ui:164
+#, kde-format
+msgid "Driver:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: debug_console.ui:171
+#, kde-format
+msgid "GPU class:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: debug_console.ui:178
+#, kde-format
+msgid "OpenGL Version:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: debug_console.ui:185
+#, kde-format
+msgid "GLSL Version:"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
+#: debug_console.ui:251
+#, kde-format
+msgid "Platform Extensions"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
+#: debug_console.ui:267
+#, kde-format
+msgid "OpenGL (ES) Extensions"
+msgstr ""
+
+#. i18n: ectx: attribute (title), widget (QWidget, keyboard)
+#: debug_console.ui:288
+#, kde-format
+msgid "Keyboard"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
+#: debug_console.ui:315
+#, kde-format
+msgid "Keymap Layouts"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+#: debug_console.ui:337
+#, fuzzy, kde-format
+#| msgid "Configur&e Window Behavior..."
+msgid "Current Layout:"
+msgstr "सञ्झ्याल व्यवहार कन्फिगर गर्नुहोस्..."
+
+#. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
+#: debug_console.ui:372
+#, kde-format
+msgid "Active Modifiers"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
+#: debug_console.ui:388
+#, kde-format
+msgid "LEDs"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
+#: debug_console.ui:404
+#, kde-format
+msgid "Active LEDs"
+msgstr ""
+
+#. i18n: ectx: attribute (title), widget (QWidget, clipboard)
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:425 debug_console.ui:445
+#, kde-format
+msgid "Clipboard"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:491
+#, kde-format
+msgid "Primary Selection"
+msgstr ""
+
+#: helpers/killer/killer.cpp:34
+#, fuzzy, kde-format
+#| msgid "KDE window manager"
+msgid "Window Manager"
+msgstr "केडीई सञ्झ्याल प्रबन्धक"
+
+#: helpers/killer/killer.cpp:38
+#, fuzzy, kde-format
+#| msgid "PID of the application to terminate."
+msgid "PID of the application to terminate"
+msgstr "टर्मिनेट गर्न अनुप्रयोगको पीआईडी ।"
+
+#: helpers/killer/killer.cpp:38
+#, kde-format
+msgid "pid"
+msgstr ""
+
+#: helpers/killer/killer.cpp:40
+#, fuzzy, kde-format
+#| msgid "Hostname on which the application is running."
+msgid "Hostname on which the application is running"
+msgstr "होस्टनाम जसमा अनुप्रयोग चलिरहेको छ ।"
+
+#: helpers/killer/killer.cpp:40
+#, kde-format
+msgid "hostname"
+msgstr ""
+
+#: helpers/killer/killer.cpp:42
+#, fuzzy, kde-format
+#| msgid "Caption of the window to be terminated."
+msgid "Caption of the window to be terminated"
+msgstr "टर्मिनेट गर्नुपर्ने सञ्झ्यालको क्याप्सन ।"
+
+#: helpers/killer/killer.cpp:42
+#, kde-format
+msgid "caption"
+msgstr ""
+
+#: helpers/killer/killer.cpp:44
+#, fuzzy, kde-format
+#| msgid "Name of the application to be terminated."
+msgid "Name of the application to be terminated"
+msgstr "टर्मिनेट गर्नुपर्ने अनुप्रयोगको नाम ।"
+
+#: helpers/killer/killer.cpp:44
+#, kde-format
+msgid "name"
+msgstr ""
+
+#: helpers/killer/killer.cpp:46
+#, fuzzy, kde-format
+#| msgid "ID of resource belonging to the application."
+msgid "ID of resource belonging to the application"
+msgstr "अनुप्रयोगसँग सम्बन्धित संसाधानको आईडी ।"
+
+#: helpers/killer/killer.cpp:46
+#, kde-format
+msgid "id"
+msgstr ""
+
+#: helpers/killer/killer.cpp:48
+#, fuzzy, kde-format
+#| msgid "Time of user action causing killing."
+msgid "Time of user action causing termination"
+msgstr "नष्ट गरिरहेको प्रयोगकर्ता कार्यको समय ।"
+
+#: helpers/killer/killer.cpp:48
+#, kde-format
+msgid "time"
+msgstr ""
+
+#: helpers/killer/killer.cpp:50
+#, kde-format
+msgid "KWin helper utility"
+msgstr "केडीई विन सहयोगी युटिलिटी"
+
+#: helpers/killer/killer.cpp:74
+#, kde-format
+msgid "This helper utility is not supposed to be called directly."
+msgstr "यो सहयोगीलाई प्रत्यक्ष कल गर्न मिल्दैन ।"
+
+#: helpers/killer/killer.cpp:84
+#, kde-format
+msgctxt "@info"
+msgid "<b>Application \"%1\" is not responding</b>"
+msgstr ""
+
+#: helpers/killer/killer.cpp:86
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
+"%3) but the application is not responding.</para>"
+msgstr ""
+
+#: helpers/killer/killer.cpp:88
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
+"%3), running on host \"%4\", but the application is not responding.</para>"
+msgstr ""
+
+#: helpers/killer/killer.cpp:91
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"<para>Do you want to terminate this application?</"
+"para><para><warning>Terminating the application will close all of its child "
+"windows. Any unsaved data will be lost.</warning></para>"
+msgstr ""
+
+#: helpers/killer/killer.cpp:94
+#, kde-format
+msgid "&Terminate Application %1"
+msgstr ""
+
+#: helpers/killer/killer.cpp:95
+#, kde-format
+msgid "Wait Longer"
+msgstr ""
+
+#: input.cpp:3133
+#, kde-format
+msgid "Touchpad"
+msgstr ""
+
+#: keyboard_layout.cpp:46
+#, kde-format
+msgid "Keyboard Layout Switcher"
+msgstr ""
+
+#: killwindow.cpp:33
+#, kde-format
+msgid ""
+"Select window to force close with left click or enter.\n"
+"Escape or right click to cancel."
+msgstr ""
+
+#: main.cpp:166
+#, kde-format
+msgid "KWin"
+msgstr "केडीई विन"
+
+#: main.cpp:168 main.cpp:191
+#, kde-format
+msgid "KDE window manager"
+msgstr "केडीई सञ्झ्याल प्रबन्धक"
+
+#: main.cpp:170
+#, fuzzy, kde-format
+#| msgid "(c) 1999-2005, The KDE Developers"
+msgid "(c) 1999-2019, The KDE Developers"
+msgstr "(प्रतिलिपि अधिकार) १९९९-२००५, केडीई विकासकर्ता"
+
+#: main.cpp:172
+#, kde-format
+msgid "Matthias Ettrich"
+msgstr "माथियस इट्रिच"
+
+#: main.cpp:173
+#, kde-format
+msgid "Cristian Tibirna"
+msgstr "क्रिस्टियन टिबिर्ना"
+
+#: main.cpp:174
+#, kde-format
+msgid "Daniel M. Duley"
+msgstr "डानियल एम.डुले"
+
+#: main.cpp:175
+#, kde-format
+msgid "Luboš Luňák"
+msgstr "लुबोस लुनाक"
+
+#: main.cpp:176
+#, kde-format
+msgid "Martin Flöser"
+msgstr ""
+
+#: main.cpp:177
+#, kde-format
+msgid "David Edmundson"
+msgstr ""
+
+#: main.cpp:178
+#, kde-format
+msgid "Roman Gilg"
+msgstr ""
+
+#: main.cpp:179
+#, kde-format
+msgid "Vlad Zahorodnii"
+msgstr ""
+
+#: main.cpp:188
+#, kde-format
+msgid "Disable configuration options"
+msgstr "कन्फिगरेसन विकल्प अक्षम पार्नुहोस्"
+
+#: main.cpp:189
+#, kde-format
+msgid "Indicate that KWin has recently crashed n times"
+msgstr "भर्खरै केडीई विन एन पटक नष्ट भयो भन्ने इङ्कित गर्नुहोस्"
+
+#: main_wayland.cpp:318
+#, kde-format
+msgid "Start a rootless Xwayland server."
+msgstr ""
+
+#: main_wayland.cpp:320
+#, kde-format
+msgid ""
+"Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
+msgstr ""
+
+#: main_wayland.cpp:323
+#, kde-format
+msgid "The X11 Display to use in windowed mode on platform X11."
+msgstr ""
+
+#: main_wayland.cpp:326
+#, kde-format
+msgid "The Wayland Display to use in windowed mode on platform Wayland."
+msgstr ""
+
+#: main_wayland.cpp:328
+#, kde-format
+msgid "Render to a virtual framebuffer."
+msgstr ""
+
+#: main_wayland.cpp:330
+#, kde-format
+msgid "The width for windowed mode. Default width is 1024."
+msgstr ""
+
+#: main_wayland.cpp:334
+#, kde-format
+msgid "The height for windowed mode. Default height is 768."
+msgstr ""
+
+#: main_wayland.cpp:339
+#, kde-format
+msgid "The scale for windowed mode. Default value is 1."
+msgstr ""
+
+#: main_wayland.cpp:344
+#, kde-format
+msgid ""
+"The number of windows to open as outputs in windowed mode. Default value is 1"
+msgstr ""
+
+#: main_wayland.cpp:349
+#, kde-format
+msgid ""
+"Wayland socket to use for incoming connections. This can be combined with --"
+"socket to name the socket"
+msgstr ""
+
+#: main_wayland.cpp:353
+#, kde-format
+msgid ""
+"XWayland socket to use for Xwayland's incoming connections. This can be set "
+"multiple times"
+msgstr ""
+
+#: main_wayland.cpp:357
+#, kde-format
+msgid "Name of the xwayland display that has been pre-set up"
+msgstr ""
+
+#: main_wayland.cpp:361
+#, kde-format
+msgid "Name of the xauthority file "
+msgstr ""
+
+#: main_wayland.cpp:365
+#, kde-format
+msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
+msgstr ""
+
+#: main_wayland.cpp:367
+#, kde-format
+msgid "Render through drm node."
+msgstr ""
+
+#: main_wayland.cpp:388
+#, kde-format
+msgid "Input method that KWin starts."
+msgstr ""
+
+#: main_wayland.cpp:394
+#, kde-format
+msgid "Starts the session in locked mode."
+msgstr ""
+
+#: main_wayland.cpp:398
+#, kde-format
+msgid "Starts the session without lock screen support."
+msgstr ""
+
+#: main_wayland.cpp:403
+#, kde-format
+msgid "Starts the session without global shortcuts support."
+msgstr ""
+
+#: main_wayland.cpp:408 main_x11.cpp:380
+#, kde-format
+msgid "Disable KActivities integration."
+msgstr ""
+
+#: main_wayland.cpp:413
+#, kde-format
+msgid "Exit after the session application, which is started by KWin, closed."
+msgstr ""
+
+#: main_wayland.cpp:418
+#, kde-format
+msgid "Applications to start once Wayland and Xwayland server are started"
+msgstr ""
+
+#: main_x11.cpp:63
+#, kde-format
+msgid ""
+"KWin is unstable.\n"
+"It seems to have crashed several times in a row.\n"
+"You can select another window manager to run:"
+msgstr ""
+"केडीई विन अस्थिर छ ।\n"
+"यो पङ्क्तिमा धेरै पटक नष्ट भएको देखिन्छ ।\n"
+"तपाईँले चलाउनका लागि अर्को सञ्झ्याल प्रबन्धक चयन गर्न सक्नुहुन्छ:"
+
+#: main_x11.cpp:216
+#, kde-format
+msgid ""
+"kwin: unable to claim manager selection, another wm running? (try using --"
+"replace)\n"
+msgstr ""
+"केडीई विन: प्रबन्धक चयन अनुरोध गर्दा अक्षम, अर्को डब्लु एम चालु छ ? (--'बदल्नुहोस्' प्रयोग "
+"गर्न प्रयास गर्नुहोस्)\n"
+
+#: main_x11.cpp:237
+#, fuzzy, kde-format
+#| msgid ""
+#| "kwin: unable to claim manager selection, another wm running? (try using --"
+#| "replace)\n"
+msgid "kwin: another window manager is running (try using --replace)\n"
+msgstr ""
+"केडीई विन: प्रबन्धक चयन अनुरोध गर्दा अक्षम, अर्को डब्लु एम चालु छ ? (--'बदल्नुहोस्' प्रयोग "
+"गर्न प्रयास गर्नुहोस्)\n"
+
+#: main_x11.cpp:373
+#, kde-format
+msgid "Replace already-running ICCCM2.0-compliant window manager"
+msgstr "चालु ICCCM२.०-कम्प्लेन्ट सञ्झ्याल प्रबन्धक प्रतिस्थापन गर्नुहोस्"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:49
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:51
+#, kde-format
+msgctxt "Note this is a KRunner keyword"
+msgid "activate"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:52
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:54
+#, fuzzy, kde-format
+#| msgid "&Close"
+msgctxt "Note this is a KRunner keyword"
+msgid "close"
+msgstr "बन्द गर्नुहोस्"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:55
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:57
+#, kde-format
+msgctxt "Note this is a KRunner keyword"
+msgid "min"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:58
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:60
+#, fuzzy, kde-format
+#| msgid "Minimize"
+msgctxt "Note this is a KRunner keyword"
+msgid "minimize"
+msgstr "घटाउनुहोस्"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:61
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:63
+#, kde-format
+msgctxt "Note this is a KRunner keyword"
+msgid "max"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:64
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:66
+#, fuzzy, kde-format
+#| msgid "Maximize"
+msgctxt "Note this is a KRunner keyword"
+msgid "maximize"
+msgstr "बढाउनुहोस्"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:67
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:69
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgctxt "Note this is a KRunner keyword"
+msgid "fullscreen"
+msgstr "पूरा पर्दा"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:70
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:72
+#, fuzzy, kde-format
+#| msgid "Unshade"
+msgctxt "Note this is a KRunner keyword"
+msgid "shade"
+msgstr "छायाँ हटाउनुहोस्"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:73
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:75
+#, fuzzy, kde-format
+#| msgid "Keep above others"
+msgctxt "Note this is a KRunner keyword"
+msgid "keep above"
+msgstr "अन्यको माथि राख्नुहोस्"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:76
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:78
+#, fuzzy, kde-format
+#| msgid "Keep below others"
+msgctxt "Note this is a KRunner keyword"
+msgid "keep below"
+msgstr "अन्यको तल राख्नुहोस्"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:83
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgctxt "Note this is a KRunner keyword"
+msgid "window"
+msgstr "सञ्झ्याल"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:93
+#, kde-format
+msgctxt "Note this is a KRunner keyword"
+msgid "name"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:95
+#, kde-format
+msgctxt "Note this is a KRunner keyword"
+msgid "appname"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:97
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:150
+#, fuzzy, kde-format
+#| msgid "&All Desktops"
+msgctxt "Note this is a KRunner keyword"
+msgid "desktop"
+msgstr "सबै डेस्कटप"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:256
+#, fuzzy, kde-format
+#| msgid "Switch to Desktop 1"
+msgid "Switch to desktop %1"
+msgstr "डेस्कटप १ मा स्विच गर्नुहोस्"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:297
+#, kde-format
+msgid "Close running window on %1"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:300
+#, kde-format
+msgid "(Un)minimize running window on %1"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:303
+#, kde-format
+msgid "Maximize/restore running window on %1"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:306
+#, kde-format
+msgid "Toggle fullscreen for running window on %1"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:309
+#, kde-format
+msgid "(Un)shade running window on %1"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:312
+#, kde-format
+msgid "Toggle keep above for running window on %1"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:315
+#, kde-format
+msgid "Toggle keep below running window on %1"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:319
+#, kde-format
+msgid "Activate running window on %1"
+msgstr ""
+
+#: plugins/nightcolor/nightcolormanager.cpp:64
+#, kde-format
+msgctxt "Night Color was disabled"
+msgid "Night Color Off"
+msgstr ""
+
+#: plugins/nightcolor/nightcolormanager.cpp:65
+#, kde-format
+msgctxt "Night Color was enabled"
+msgid "Night Color On"
+msgstr ""
+
+#: plugins/nightcolor/nightcolormanager.cpp:88
+#: plugins/nightcolor/nightcolormanager.cpp:91
+#: plugins/nightcolor/nightcolormanager.cpp:98
+#, kde-format
+msgid "Toggle Night Color"
+msgstr ""
+
+#: plugins/nightcolor/nightcolormanager.cpp:493
+#, kde-format
+msgid "Color Temperature Preview"
+msgstr ""
+
+#. i18n: ectx: label, entry (count), group (General)
+#: rulebooksettingsbase.kcfg:9
+#, kde-format
+msgid "Total rules count (legacy)"
+msgstr ""
+
+#. i18n: ectx: label, entry (ruleGroupList), group (General)
+#: rulebooksettingsbase.kcfg:13
+#, kde-format
+msgid "Ordered list of rules groups"
+msgstr ""
+
+#. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:10
+#, kde-format
+msgid "Rule description"
+msgstr ""
+
+#. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:13
+#, kde-format
+msgid "Rule description (legacy)"
+msgstr ""
+
+#. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:16
+#, kde-format
+msgid "Delete this rule (for use in imports)"
+msgstr ""
+
+#. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:20
+#, kde-format
+msgid "Window class (application)"
+msgstr ""
+
+#. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:23
+#, kde-format
+msgid "Window class string match type"
+msgstr ""
+
+#. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:29
+#, kde-format
+msgid "Match whole window class"
+msgstr ""
+
+#. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:34
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Window role"
+msgstr "सञ्झ्याल"
+
+#. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:37
+#, kde-format
+msgid "Window role string match type"
+msgstr ""
+
+#. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:44
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Window title"
+msgstr "सञ्झ्याल"
+
+#. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:47
+#, kde-format
+msgid "Window title string match type"
+msgstr ""
+
+#. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:54
+#, kde-format
+msgid "Machine (hostname)"
+msgstr ""
+
+#. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:57
+#, kde-format
+msgid "Machine string match type"
+msgstr ""
+
+#. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:64
+#, kde-format
+msgid "Window types that match"
+msgstr ""
+
+#. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:69
+#, kde-format
+msgid "Initial placement"
+msgstr ""
+
+#. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:74
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgid "Initial placement rule type"
+msgstr "पूरा पर्दा"
+
+#. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:79
+#, fuzzy, kde-format
+#| msgid "Window Operations Menu"
+msgid "Window position"
+msgstr "सञ्झ्याल सञ्चालन मेनुहरू"
+
+#. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:83
+#, fuzzy, kde-format
+#| msgid "Window to Screen 0"
+msgid "Window position rule type"
+msgstr "पर्दा ० मा सञ्झ्याल"
+
+#. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:90
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Window size"
+msgstr "सञ्झ्याल"
+
+#. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:93
+#, kde-format
+msgid "Window size rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:100
+#, kde-format
+msgid "Window minimum size"
+msgstr ""
+
+#. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:104
+#, kde-format
+msgid "Window minimum size rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:109
+#, kde-format
+msgid "Window maximum size"
+msgstr ""
+
+#. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:113
+#, kde-format
+msgid "Window maximum size rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:118
+#, kde-format
+msgid "Active opacity"
+msgstr ""
+
+#. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:124
+#, kde-format
+msgid "Active opacity rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:129
+#, kde-format
+msgid "Inactive opacity"
+msgstr ""
+
+#. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:135
+#, kde-format
+msgid "Inactive opacity rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:140
+#, kde-format
+msgid "Ignore requested geometry"
+msgstr ""
+
+#. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:144
+#, kde-format
+msgid "Ignore requested geometry rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:151
+#, fuzzy, kde-format
+#| msgid "Switch to Desktop 2"
+msgid "List of Desktop Ids"
+msgstr "डेस्कटप २ मा स्विच गर्नुहोस्"
+
+#. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:155
+#, fuzzy, kde-format
+#| msgid "Desktop %1"
+msgid "Desktop Ids rule type"
+msgstr "डेस्कटप %1"
+
+#. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:162
+#, kde-format
+msgid "Screen number"
+msgstr ""
+
+#. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:166
+#, kde-format
+msgid "Screen number rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:173
+#, kde-format
+msgid "Activity"
+msgstr ""
+
+#. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:176
+#, kde-format
+msgid "Activity rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:183
+#, fuzzy, kde-format
+#| msgid "Setup Window Shortcut"
+msgid "Set window type to"
+msgstr "सञ्झ्याल सर्टकट सेटअप गर्नुहोस्"
+
+#. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:189
+#, kde-format
+msgid "Set window type rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:194
+#, fuzzy, kde-format
+#| msgid "Maximize Window Vertically"
+msgid "Maximized vertically"
+msgstr "ठाडो तरिकाले सञ्झ्याल बढाउनुहोस्"
+
+#. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:198
+#, fuzzy, kde-format
+#| msgid "Maximize Window Vertically"
+msgid "Maximized vertically rule type"
+msgstr "ठाडो तरिकाले सञ्झ्याल बढाउनुहोस्"
+
+#. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:205
+#, fuzzy, kde-format
+#| msgid "Maximize Window Horizontally"
+msgid "Maximized horizontally"
+msgstr "तेर्सो तरिकाले सञ्झ्याल बढाउनुहोस्"
+
+#. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:209
+#, fuzzy, kde-format
+#| msgid "Maximize Window Horizontally"
+msgid "Maximized horizontally rule type"
+msgstr "तेर्सो तरिकाले सञ्झ्याल बढाउनुहोस्"
+
+#. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:216
+#, fuzzy, kde-format
+#| msgid "Minimize"
+msgid "Minimized"
+msgstr "घटाउनुहोस्"
+
+#. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:220
+#, kde-format
+msgid "Minimized rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:227
+#, fuzzy, kde-format
+#| msgid "Shade"
+msgid "Shaded"
+msgstr "छायाँ लगाउनुहोस्"
+
+#. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:231
+#, kde-format
+msgid "Shaded rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:238
+#, kde-format
+msgid "Skip taskbar"
+msgstr ""
+
+#. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:242
+#, kde-format
+msgid "Skip taskbar rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:249
+#, kde-format
+msgid "Skip pager"
+msgstr ""
+
+#. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:253
+#, kde-format
+msgid "Skip pager rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:260
+#, fuzzy, kde-format
+#| msgid "Switch to Screen 0"
+msgid "Skip switcher"
+msgstr "पर्दा ० मा स्विच गर्नुहोस्"
+
+#. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:264
+#, kde-format
+msgid "Skip switcher rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:271
+#, fuzzy, kde-format
+#| msgid "Keep above others"
+msgid "Keep above"
+msgstr "अन्यको माथि राख्नुहोस्"
+
+#. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:275
+#, fuzzy, kde-format
+#| msgid "Keep above others"
+msgid "Keep above rule type"
+msgstr "अन्यको माथि राख्नुहोस्"
+
+#. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:282
+#, fuzzy, kde-format
+#| msgid "Keep below others"
+msgid "Keep below"
+msgstr "अन्यको तल राख्नुहोस्"
+
+#. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:286
+#, fuzzy, kde-format
+#| msgid "Keep below others"
+msgid "Keep below rule type"
+msgstr "अन्यको तल राख्नुहोस्"
+
+#. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:293
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgid "Fullscreen"
+msgstr "पूरा पर्दा"
+
+#. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:297
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgid "Fullscreen rule type"
+msgstr "पूरा पर्दा"
+
+#. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:304
+#, kde-format
+msgid "No titlebar and frame"
+msgstr ""
+
+#. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:308
+#, kde-format
+msgid "No titlebar rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:315
+#, kde-format
+msgid "Titlebar color and scheme"
+msgstr ""
+
+#. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:318
+#, kde-format
+msgid "Titlebar color rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:323
+#, kde-format
+msgid "Block Compositing"
+msgstr ""
+
+#. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:327
+#, kde-format
+msgid "Block Compositing rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:332
+#, kde-format
+msgid "Focus stealing prevention"
+msgstr ""
+
+#. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:338
+#, kde-format
+msgid "Focus stealing prevention rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:343
+#, kde-format
+msgid "Focus protection"
+msgstr ""
+
+#. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:349
+#, kde-format
+msgid "Focus protection rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:354
+#, kde-format
+msgid "Accept Focus"
+msgstr ""
+
+#. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:358
+#, kde-format
+msgid "Accept Focus rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:363
+#, fuzzy, kde-format
+#| msgid "Close"
+msgid "Closeable"
+msgstr "बन्द गर्नुहोस्"
+
+#. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:367
+#, kde-format
+msgid "Closeable rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:372
+#, kde-format
+msgid "Autogroup with identical"
+msgstr ""
+
+#. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:376
+#, kde-format
+msgid "Autogroup with identical rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:381
+#, kde-format
+msgid "Autogroup in foreground"
+msgstr ""
+
+#. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:385
+#, kde-format
+msgid "Autogroup in foreground rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:390
+#, kde-format
+msgid "Autogroup by ID"
+msgstr ""
+
+#. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:393
+#, kde-format
+msgid "Autogroup by ID rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:398
+#, kde-format
+msgid "Obey geometry restrictions"
+msgstr ""
+
+#. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:402
+#, kde-format
+msgid "Obey geometry restrictions rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:407
+#, kde-format
+msgid "Shortcut"
+msgstr ""
+
+#. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:410
+#, kde-format
+msgid "Shortcut rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:417
+#, fuzzy, kde-format
+#| msgid "Block Global Shortcuts"
+msgid "Ignore global shortcuts"
+msgstr "विश्वव्यापी सर्टकट निषेध गर्नुहोस्"
+
+#. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:421
+#, kde-format
+msgid "Ignore global shortcuts rule type"
+msgstr ""
+
+#. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:426
+#, fuzzy, kde-format
+#| msgid "Desktop %1"
+msgid "Desktop file name"
+msgstr "डेस्कटप %1"
+
+#. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:429
+#, kde-format
+msgid "Desktop file name rule type"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:76
+#, kde-format
+msgctxt "Error message"
+msgid "Plugin does not provide configuration file in expected location"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
+#: shortcutdialog.ui:14
+#, fuzzy, kde-format
+#| msgid "Dialogs:"
+msgid "Dialog"
+msgstr "संवाद:"
+
+#. i18n: ectx: property (text), widget (QToolButton, clearButton)
+#: shortcutdialog.ui:25
+#, kde-format
+msgid "..."
+msgstr ""
+
+#: tabbox/tabbox.cpp:381
+#, fuzzy, kde-format
+#| msgid "Show Desktop Grid"
+msgctxt "Special entry in alt+tab list for minimizing all windows"
+msgid "Show Desktop"
+msgstr "डेस्कटप ग्रिड देखाउनुहोस्"
+
+#: tabbox/tabbox.cpp:521
+msgid "Walk Through Windows"
+msgstr "सञ्झ्याल मार्फत जानुहोस्"
+
+#: tabbox/tabbox.cpp:522
+msgid "Walk Through Windows (Reverse)"
+msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
+
+#: tabbox/tabbox.cpp:523
+#, fuzzy
+#| msgid "Walk Through Windows (Reverse)"
+msgid "Walk Through Windows Alternative"
+msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
+
+#: tabbox/tabbox.cpp:524
+#, fuzzy
+#| msgid "Walk Through Windows (Reverse)"
+msgid "Walk Through Windows Alternative (Reverse)"
+msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
+
+#: tabbox/tabbox.cpp:525
+#, fuzzy
+#| msgid "Walk Through Windows (Reverse)"
+msgid "Walk Through Windows of Current Application"
+msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
+
+#: tabbox/tabbox.cpp:526
+#, fuzzy
+#| msgid "Walk Through Windows (Reverse)"
+msgid "Walk Through Windows of Current Application (Reverse)"
+msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
+
+#: tabbox/tabbox.cpp:527
+#, fuzzy
+#| msgid "Walk Through Windows (Reverse)"
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
+
+#: tabbox/tabbox.cpp:528
+#, fuzzy
+#| msgid "Walk Through Windows (Reverse)"
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
+
+#: tabbox/tabbox.cpp:529
+msgid "Walk Through Desktops"
+msgstr "डेस्कटप मार्फत जानुहोस्"
+
+#: tabbox/tabbox.cpp:530
+msgid "Walk Through Desktops (Reverse)"
+msgstr "डेस्कटप (उल्टो) मार्फत जानुहोस्"
+
+#: tabbox/tabbox.cpp:531
+msgid "Walk Through Desktop List"
+msgstr "डेस्कटप सूची मार्फत जानुहोस्"
+
+#: tabbox/tabbox.cpp:532
+msgid "Walk Through Desktop List (Reverse)"
+msgstr "डेस्कटप सूची (उल्टो) मार्फत जानुहोस्"
+
+#: tabbox/tabboxhandler.cpp:290
+#, kde-format
+msgid ""
+"The Window Switcher installation is broken, resources are missing.\n"
+"Contact your distribution about this."
+msgstr ""
+
+#: useractions.cpp:160
+#, kde-format
+msgid ""
+"You have selected to show a window without its border.\n"
+"Without the border, you will not be able to enable the border again using "
+"the mouse: use the window operations menu instead, activated using the %1 "
+"keyboard shortcut."
+msgstr ""
+"सञ्झ्यालको किनारा नदेखाईकन तपाईँले चयन गर्नुपर्छ ।\n"
+"किनारा बिना, तपाईँले माउस प्रयोग गरेर फेरि किनारा सक्षम पार्न सक्नुहुन्न: यसको सट्टामा "
+"%1 कुञ्जीपाटी प्रयोग गरेर सक्रिय गरिएको, सञ्चालन मेनु प्रयोग गर्नुहोस् ।"
+
+#: useractions.cpp:167
+#, kde-format
+msgid ""
+"You have selected to show a window in fullscreen mode.\n"
+"If the application itself does not have an option to turn the fullscreen "
+"mode off you will not be able to disable it again using the mouse: use the "
+"window operations menu instead, activated using the %1 keyboard shortcut."
+msgstr ""
+"तपाईँले पूरा पर्दा मोडमा सञ्झ्याल देखाउन चयन गर्नुपर्छ ।\n"
+"यदि अनुप्रयोग आफैसँग पूरा पर्दा मोड बन्द गर्न कुनै विकल्प छैन भने तपाईँ माउस प्रयोग गरेर "
+"यसलाई फेरि अक्षम पार्न सक्षम हुनुहुने छैन: यसको सट्टामा %1 कुञ्जीपाटी सर्टकट प्रयोग गरेर "
+"सक्रिय गरिएको, सञ्झ्याल सञ्चालन मेनु प्रयोग गर्नुहोस् ।"
+
+#: useractions.cpp:237
+#, kde-format
+msgid "&Move"
+msgstr "सार्नुहोस्"
+
+#: useractions.cpp:242
+#, fuzzy, kde-format
+#| msgid "Re&size"
+msgid "&Resize"
+msgstr "रिसाइज"
+
+#: useractions.cpp:247
+#, kde-format
+msgid "Keep &Above Others"
+msgstr "अन्यको माथि राख्नुहोस्"
+
+#: useractions.cpp:253
+#, kde-format
+msgid "Keep &Below Others"
+msgstr "अन्यको तल राख्नुहोस्"
+
+#: useractions.cpp:259
+#, kde-format
+msgid "&Fullscreen"
+msgstr "पूरा पर्दा"
+
+#: useractions.cpp:265
+#, fuzzy, kde-format
+#| msgid "Shade"
+msgid "&Shade"
+msgstr "छायाँ लगाउनुहोस्"
+
+#: useractions.cpp:271
+#, kde-format
+msgid "&No Border"
+msgstr "किनारा छैन"
+
+#: useractions.cpp:279
+#, fuzzy, kde-format
+#| msgid "Window &Shortcut..."
+msgid "Set Window Short&cut..."
+msgstr "सञ्झ्याल सर्टकट..."
+
+#: useractions.cpp:285
+#, fuzzy, kde-format
+#| msgid "&Special Window Settings..."
+msgid "Configure Special &Window Settings..."
+msgstr "विशेष सञ्झ्याल सेटिङ..."
+
+#: useractions.cpp:290
+#, fuzzy, kde-format
+#| msgid "&Special Application Settings..."
+msgid "Configure S&pecial Application Settings..."
+msgstr "विशेष अनुप्रयोग सेटिङ..."
+
+#: useractions.cpp:297
+#, fuzzy, kde-format
+#| msgid "KDE window manager"
+msgctxt ""
+"Entry in context menu of window decoration to open the configuration module "
+"of KWin"
+msgid "Configure W&indow Manager..."
+msgstr "केडीई सञ्झ्याल प्रबन्धक"
+
+#: useractions.cpp:324
+#, kde-format
+msgid "Ma&ximize"
+msgstr "बढाउनुहोस्"
+
+#: useractions.cpp:330
+#, kde-format
+msgid "Mi&nimize"
+msgstr "घटाउनुहोस्"
+
+#: useractions.cpp:336
+#, kde-format
+msgid "&More Actions"
+msgstr ""
+
+#: useractions.cpp:339
+#, kde-format
+msgid "&Close"
+msgstr "बन्द गर्नुहोस्"
+
+#: useractions.cpp:409
+#, kde-format
+msgid "&Extensions"
+msgstr ""
+
+#: useractions.cpp:460
+#, fuzzy, kde-format
+#| msgid "&All Desktops"
+msgid "&Desktops"
+msgstr "सबै डेस्कटप"
+
+#: useractions.cpp:474
+#, fuzzy, kde-format
+#| msgid "To &Desktop"
+msgid "Move to &Desktop"
+msgstr "डेस्कटपमा"
+
+#: useractions.cpp:491
+#, fuzzy, kde-format
+#| msgid "To &Desktop"
+msgid "Move to &Screen"
+msgstr "डेस्कटपमा"
+
+#: useractions.cpp:508
+#, kde-format
+msgid "Show in &Activities"
+msgstr ""
+
+#: useractions.cpp:524 useractions.cpp:594
+#, kde-format
+msgid "&All Desktops"
+msgstr "सबै डेस्कटप"
+
+#: useractions.cpp:567
+#, fuzzy, kde-format
+#| msgid "Show Desktop Grid"
+msgctxt "Create a new desktop and move the window there"
+msgid "&New Desktop"
+msgstr "डेस्कटप ग्रिड देखाउनुहोस्"
+
+#: useractions.cpp:638
+#, kde-format
+msgid "Move to %1 %2"
+msgstr ""
+
+#: useractions.cpp:651
+#, fuzzy, kde-format
+#| msgid "Show Desktop Grid"
+msgctxt "Create a new desktop and add the window to that desktop"
+msgid "Add to &New Desktop"
+msgstr "डेस्कटप ग्रिड देखाउनुहोस्"
+
+#: useractions.cpp:663
+#, fuzzy, kde-format
+#| msgid "To &Desktop"
+msgctxt "Create a new desktop and move the window to that desktop"
+msgid "Move to New Desktop"
+msgstr "डेस्कटपमा"
+
+#: useractions.cpp:694
+#, fuzzy, kde-format
+#| msgid "Window to Screen 1"
+msgctxt ""
+"@item:inmenu List of all Screens to send a window to. First argument is a "
+"number, second the output identifier. E.g. Screen 1 (HDMI1)"
+msgid "Screen &%1 (%2)"
+msgstr "पर्दा १ मा सञ्झ्याल"
+
+#: useractions.cpp:720
+#, kde-format
+msgid "&All Activities"
+msgstr ""
+
+#: useractions.cpp:902
+#, kde-format
+msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
+msgid "<b>%1</b> is already in use"
+msgstr ""
+
+#: useractions.cpp:904
+#, kde-format
+msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
+msgid "<b>%1</b> is used by %2 in %3"
+msgstr ""
+
+#: useractions.cpp:987
+#, kde-format
+msgid "Window Operations Menu"
+msgstr "सञ्झ्याल सञ्चालन मेनुहरू"
+
+#: useractions.cpp:989
+#, kde-format
+msgid "Close Window"
+msgstr "सञ्झ्याल बन्द गर्नुहोस्"
+
+#: useractions.cpp:991
+#, kde-format
+msgid "Maximize Window"
+msgstr "सञ्झ्याल बढाउनुहोस्"
+
+#: useractions.cpp:993
+#, kde-format
+msgid "Maximize Window Vertically"
+msgstr "ठाडो तरिकाले सञ्झ्याल बढाउनुहोस्"
+
+#: useractions.cpp:995
+#, kde-format
+msgid "Maximize Window Horizontally"
+msgstr "तेर्सो तरिकाले सञ्झ्याल बढाउनुहोस्"
+
+#: useractions.cpp:997
+#, kde-format
+msgid "Minimize Window"
+msgstr "सञ्झ्याल घटाउनुहोस्"
+
+#: useractions.cpp:999
+#, kde-format
+msgid "Shade Window"
+msgstr "सञ्झ्याल सेड गर्नुहोस्"
+
+#: useractions.cpp:1001
+#, kde-format
+msgid "Move Window"
+msgstr "सञ्झ्याल सार्नुहोस्"
+
+#: useractions.cpp:1003
+#, kde-format
+msgid "Resize Window"
+msgstr "सञ्झ्याल रिसाइज गर्नुहोस्"
+
+#: useractions.cpp:1005
+#, kde-format
+msgid "Raise Window"
+msgstr "सञ्झ्याल बढाउनुहोस्"
+
+#: useractions.cpp:1007
+#, kde-format
+msgid "Lower Window"
+msgstr "सञ्झ्याल घटाउनुहोस्"
+
+#: useractions.cpp:1009
+#, kde-format
+msgid "Toggle Window Raise/Lower"
+msgstr "सञ्झ्याल बढाउने/घटाउने टगल गर्नुहोस्"
+
+#: useractions.cpp:1011
+#, kde-format
+msgid "Make Window Fullscreen"
+msgstr "सञ्झ्याललाई पूरा पर्दा गर्नुहोस्"
+
+#: useractions.cpp:1013
+#, kde-format
+msgid "Hide Window Border"
+msgstr "सञ्झ्याल किनारा लुकाउनुहोस्"
+
+#: useractions.cpp:1015
+#, kde-format
+msgid "Keep Window Above Others"
+msgstr "अन्यको माथि सञ्झ्याल राख्नुहोस्"
+
+#: useractions.cpp:1017
+#, kde-format
+msgid "Keep Window Below Others"
+msgstr "अन्यको तल सञ्झ्याल राख्नुहोस्"
+
+#: useractions.cpp:1019
+#, kde-format
+msgid "Activate Window Demanding Attention"
+msgstr "सञ्झ्याल ध्यानकर्षण सक्रिय पार्नुहोस्"
+
+#: useractions.cpp:1021
+#, kde-format
+msgid "Setup Window Shortcut"
+msgstr "सञ्झ्याल सर्टकट सेटअप गर्नुहोस्"
+
+#: useractions.cpp:1023
+#, fuzzy, kde-format
+#| msgid "Move Window"
+msgid "Move Window to the Center"
+msgstr "सञ्झ्याल सार्नुहोस्"
+
+#: useractions.cpp:1025
+#, fuzzy, kde-format
+#| msgid "Move Window"
+msgid "Move Window Right"
+msgstr "सञ्झ्याल सार्नुहोस्"
+
+#: useractions.cpp:1027
+#, fuzzy, kde-format
+#| msgid "Move Window"
+msgid "Move Window Left"
+msgstr "सञ्झ्याल सार्नुहोस्"
+
+#: useractions.cpp:1029
+#, fuzzy, kde-format
+#| msgid "Move Window"
+msgid "Move Window Up"
+msgstr "सञ्झ्याल सार्नुहोस्"
+
+#: useractions.cpp:1031
+#, fuzzy, kde-format
+#| msgid "Move Window"
+msgid "Move Window Down"
+msgstr "सञ्झ्याल सार्नुहोस्"
+
+#: useractions.cpp:1033
+#, fuzzy, kde-format
+#| msgid "Maximize Window Horizontally"
+msgid "Expand Window Horizontally"
+msgstr "तेर्सो तरिकाले सञ्झ्याल बढाउनुहोस्"
+
+#: useractions.cpp:1035
+#, fuzzy, kde-format
+#| msgid "Maximize Window Vertically"
+msgid "Expand Window Vertically"
+msgstr "ठाडो तरिकाले सञ्झ्याल बढाउनुहोस्"
+
+#: useractions.cpp:1037
+#, fuzzy, kde-format
+#| msgid "Pack Shrink Window Horizontally"
+msgid "Shrink Window Horizontally"
+msgstr "घट्दो सञ्झ्याल तेर्सो तरिकाले प्याक गर्नुहोस्"
+
+#: useractions.cpp:1039
+#, fuzzy, kde-format
+#| msgid "Pack Shrink Window Vertically"
+msgid "Shrink Window Vertically"
+msgstr "घट्दो सञ्झ्याल तेर्सो तरिकाले प्याक गर्नुहोस्"
+
+#: useractions.cpp:1041
+#, fuzzy, kde-format
+#| msgid "Pack Window to the Left"
+msgid "Quick Tile Window to the Left"
+msgstr "बाँयामा सञ्झ्याल प्याक गर्नुहोस्"
+
+#: useractions.cpp:1043
+#, fuzzy, kde-format
+#| msgid "Pack Window to the Right"
+msgid "Quick Tile Window to the Right"
+msgstr "दाँयामा सञ्झ्याल प्याक गर्नुहोस्"
+
+#: useractions.cpp:1045
+#, fuzzy, kde-format
+#| msgid "Pack Window to the Left"
+msgid "Quick Tile Window to the Top"
+msgstr "बाँयामा सञ्झ्याल प्याक गर्नुहोस्"
+
+#: useractions.cpp:1047
+#, fuzzy, kde-format
+#| msgid "Pack Window to the Left"
+msgid "Quick Tile Window to the Bottom"
+msgstr "बाँयामा सञ्झ्याल प्याक गर्नुहोस्"
+
+#: useractions.cpp:1049
+#, fuzzy, kde-format
+#| msgid "Pack Window to the Left"
+msgid "Quick Tile Window to the Top Left"
+msgstr "बाँयामा सञ्झ्याल प्याक गर्नुहोस्"
+
+#: useractions.cpp:1051
+#, fuzzy, kde-format
+#| msgid "Pack Window to the Left"
+msgid "Quick Tile Window to the Bottom Left"
+msgstr "बाँयामा सञ्झ्याल प्याक गर्नुहोस्"
+
+#: useractions.cpp:1053
+#, fuzzy, kde-format
+#| msgid "Pack Window to the Right"
+msgid "Quick Tile Window to the Top Right"
+msgstr "दाँयामा सञ्झ्याल प्याक गर्नुहोस्"
+
+#: useractions.cpp:1055
+#, fuzzy, kde-format
+#| msgid "Pack Window to the Right"
+msgid "Quick Tile Window to the Bottom Right"
+msgstr "दाँयामा सञ्झ्याल प्याक गर्नुहोस्"
+
+#: useractions.cpp:1057
+#, fuzzy, kde-format
+#| msgid "Switch to Screen 0"
+msgid "Switch to Window Above"
+msgstr "पर्दा ० मा स्विच गर्नुहोस्"
+
+#: useractions.cpp:1059
+#, fuzzy, kde-format
+#| msgid "Switch to Previous Desktop"
+msgid "Switch to Window Below"
+msgstr "अघिल्लो डेस्कटपमा स्विच गर्नुहोस्"
+
+#: useractions.cpp:1061
+#, fuzzy, kde-format
+#| msgid "Pack Window to the Right"
+msgid "Switch to Window to the Right"
+msgstr "दाँयामा सञ्झ्याल प्याक गर्नुहोस्"
+
+#: useractions.cpp:1063
+#, fuzzy, kde-format
+#| msgid "Pack Window to the Left"
+msgid "Switch to Window to the Left"
+msgstr "बाँयामा सञ्झ्याल प्याक गर्नुहोस्"
+
+#: useractions.cpp:1065
+#, kde-format
+msgid "Increase Opacity of Active Window by 5 %"
+msgstr ""
+
+#: useractions.cpp:1067
+#, kde-format
+msgid "Decrease Opacity of Active Window by 5 %"
+msgstr ""
+
+#: useractions.cpp:1070
+#, kde-format
+msgid "Keep Window on All Desktops"
+msgstr "सबै डेस्कटपहरूमा सञ्झ्याल राख्नुहोस्"
+
+#: useractions.cpp:1081
+#, fuzzy, kde-format
+#| msgid "Window to Desktop 1"
+msgid "Window to Desktop %1"
+msgstr "सञ्झ्याल देखि डेस्कटप १ सम्म"
+
+#: useractions.cpp:1083
+#, kde-format
+msgid "Window to Next Desktop"
+msgstr "सञ्झ्याल देखि अर्को डेस्कटप सम्म"
+
+#: useractions.cpp:1084
+#, kde-format
+msgid "Window to Previous Desktop"
+msgstr "सञ्झ्याल देखि अघिल्लो डेस्कटप सम्म"
+
+#: useractions.cpp:1085
+#, kde-format
+msgid "Window One Desktop to the Right"
+msgstr "सञ्झ्याल एक डेस्कटप देखि दाँया सम्म"
+
+#: useractions.cpp:1087
+#, kde-format
+msgid "Window One Desktop to the Left"
+msgstr "सञ्झ्याल एक डेस्कटप देखि बाँया सम्म"
+
+#: useractions.cpp:1089
+#, kde-format
+msgid "Window One Desktop Up"
+msgstr "एक डेस्कटप माथि सञ्झ्याल"
+
+#: useractions.cpp:1091
+#, kde-format
+msgid "Window One Desktop Down"
+msgstr "एक डेस्कटप तल सञ्झ्याल"
+
+#: useractions.cpp:1095
+#, fuzzy, kde-format
+#| msgid "Window to Screen 1"
+msgid "Window to Screen %1"
+msgstr "पर्दा १ मा सञ्झ्याल"
+
+#: useractions.cpp:1097
+#, kde-format
+msgid "Window to Next Screen"
+msgstr "पछिल्लो पर्दामा सञ्झ्याल"
+
+#: useractions.cpp:1099
+#, fuzzy, kde-format
+#| msgid "Window to Previous Desktop"
+msgid "Window to Previous Screen"
+msgstr "सञ्झ्याल देखि अघिल्लो डेस्कटप सम्म"
+
+#: useractions.cpp:1101
+#, fuzzy, kde-format
+#| msgid "To &Desktop"
+msgid "Peek at Desktop"
+msgstr "डेस्कटपमा"
+
+#: useractions.cpp:1105
+#, fuzzy, kde-format
+#| msgid "Switch to Screen 1"
+msgid "Switch to Screen %1"
+msgstr "पर्दा १ मा स्विच गर्नुहोस्"
+
+#: useractions.cpp:1108
+#, kde-format
+msgid "Switch to Next Screen"
+msgstr "पछिल्लो पर्दामा स्विच गर्नुहोस्"
+
+#: useractions.cpp:1109
+#, fuzzy, kde-format
+#| msgid "Switch to Previous Desktop"
+msgid "Switch to Previous Screen"
+msgstr "अघिल्लो डेस्कटपमा स्विच गर्नुहोस्"
+
+#: useractions.cpp:1111
+#, kde-format
+msgid "Kill Window"
+msgstr "सञ्झ्याल नष्ट गर्नुहोस्"
+
+#: useractions.cpp:1112
+#, kde-format
+msgid "Suspend Compositing"
+msgstr ""
+
+#: useractions.cpp:1113
+#, kde-format
+msgid "Invert Screen Colors"
+msgstr ""
+
+#: useractions.cpp:1174
+#, kde-format
+msgid "Activate Window (%1)"
+msgstr ""
+
+#: useractions.cpp:1325
+#, kde-format
+msgid ""
+"The window manager is configured to consider the screen with the mouse on it "
+"as active one.\n"
+"Therefore it is not possible to switch to a screen explicitly."
+msgstr ""
+
+#: virtualdesktops.cpp:688 virtualdesktops.cpp:759
+#, kde-format
+msgid "Desktop %1"
+msgstr "डेस्कटप %1"
+
+#: virtualdesktops.cpp:794
+#, kde-format
+msgid "Switch to Next Desktop"
+msgstr "पछिल्लो डेस्कटपमा स्विच गर्नुहोस्"
+
+#: virtualdesktops.cpp:795
+#, kde-format
+msgid "Switch to Previous Desktop"
+msgstr "अघिल्लो डेस्कटपमा स्विच गर्नुहोस्"
+
+#: virtualdesktops.cpp:798
+#, kde-format
+msgid "Switch One Desktop to the Right"
+msgstr "एक डेस्कटप देखि दाँयामा स्विच गर्नुहोस्"
+
+#: virtualdesktops.cpp:800
+#, kde-format
+msgid "Switch One Desktop to the Left"
+msgstr "एक डेस्कटप देखि बाँयामा स्विच गर्नुहोस्"
+
+#: virtualdesktops.cpp:802
+#, kde-format
+msgid "Switch One Desktop Up"
+msgstr "एक डेस्कटप माथि स्विच गर्नुहोस्"
+
+#: virtualdesktops.cpp:804
+#, kde-format
+msgid "Switch One Desktop Down"
+msgstr "एक डेस्कटप तल स्विच गर्नुहोस्"
+
+#: virtualdesktops.cpp:893
+#, fuzzy, kde-format
+#| msgid "Switch to Desktop 1"
+msgid "Switch to Desktop %1"
+msgstr "डेस्कटप १ मा स्विच गर्नुहोस्"
+
+#: window.cpp:3428
+#, kde-format
+msgctxt "Application is not responding, appended to window title"
+msgid "(Not Responding)"
+msgstr ""
+
+#: workspace.cpp:1676
+#, kde-format
+msgctxt "Introductory text shown in the support information."
+msgid ""
+"KWin Support Information:\n"
+"The following information should be used when requesting support on e.g. "
+"https://forum.kde.org.\n"
+"It provides information about the currently running instance, which options "
+"are used,\n"
+"what OpenGL driver and which effects are running.\n"
+"Please post the information provided underneath this introductory text to a "
+"paste bin service\n"
+"like https://paste.kde.org instead of pasting into support threads.\n"
+msgstr ""
+
+#, fuzzy
+#~| msgid "Show Desktop Grid"
+#~ msgid "Show Desktop"
+#~ msgstr "डेस्कटप ग्रिड देखाउनुहोस्"
+
+#, fuzzy
+#~| msgid "Close Window"
+#~ msgid "X11 Client Windows"
+#~ msgstr "सञ्झ्याल बन्द गर्नुहोस्"
+
+#~ msgid "Pack Window to the Right"
+#~ msgstr "दाँयामा सञ्झ्याल प्याक गर्नुहोस्"
+
+#~ msgid "Pack Window to the Left"
+#~ msgstr "बाँयामा सञ्झ्याल प्याक गर्नुहोस्"
+
+#~ msgid "Pack Window Up"
+#~ msgstr "माथि सञ्झ्याल प्याक गर्नुहोस्"
+
+#~ msgid "Pack Window Down"
+#~ msgstr "तल सञ्झ्याल प्याक गर्नुहोस्"
+
+#~ msgid "Pack Grow Window Horizontally"
+#~ msgstr "विस्तार सञ्झ्याल तेर्सो तरिकाले प्याक गर्नुहोस्"
+
+#~ msgid "Pack Grow Window Vertically"
+#~ msgstr "विस्तार सञ्झ्याल ठाडो तरिकाले प्याक गर्नुहोस्"
+
+#, fuzzy
+#~| msgid "Desktop %1"
+#~ msgid "Desktop number"
+#~ msgstr "डेस्कटप %1"
+
+#, fuzzy
+#~| msgid "Configur&e Window Behavior..."
+#~ msgid "Configure virtual keyboards..."
+#~ msgstr "सञ्झ्याल व्यवहार कन्फिगर गर्नुहोस्..."
+
+#, fuzzy
+#~| msgid "Walk Through Windows"
+#~ msgid "Walk Through Window Tabs"
+#~ msgstr "सञ्झ्याल मार्फत जानुहोस्"
+
+#, fuzzy
+#~| msgid "Walk Through Windows (Reverse)"
+#~ msgid "Walk Through Window Tabs (Reverse)"
+#~ msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
+
+#, fuzzy
+#~| msgid "Switch to Screen 0"
+#~ msgid "Switch to Tab"
+#~ msgstr "पर्दा ० मा स्विच गर्नुहोस्"
+
+#, fuzzy
+#~| msgid "&Special Window Settings..."
+#~ msgctxt ""
+#~ "Entry in context menu of window decoration to open the configuration "
+#~ "module of KWin"
+#~ msgid "Window Manager S&ettings..."
+#~ msgstr "विशेष सञ्झ्याल सेटिङ..."
+
+#, fuzzy
+#~| msgid ""
+#~| "kwin: unable to claim manager selection, another wm running? (try using "
+#~| "--replace)\n"
+#~ msgid "kwin_wayland: an X11 window manager is running on the X11 Display.\n"
+#~ msgstr ""
+#~ "केडीई विन: प्रबन्धक चयन अनुरोध गर्दा अक्षम, अर्को डब्लु एम चालु छ ? (--'बदल्नुहोस्' "
+#~ "प्रयोग गर्न प्रयास गर्नुहोस्)\n"
+
+#~ msgid "Maintainer"
+#~ msgstr "मर्मतकर्ता"
+
+#~ msgid "Sh&ade"
+#~ msgstr "छायाँ लगाउनुहोस्"
+
+#~ msgid "KWin: "
+#~ msgstr "केडीई विन: "
+
+#~ msgid "System"
+#~ msgstr "प्रणाली"
+
+#~ msgid "Navigation"
+#~ msgstr "नेभिगेसन"
+
+#~ msgid "Window & Desktop"
+#~ msgstr "सञ्झ्याल र डेस्कटप"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "विविध"
+
+#~ msgid "Desktop Switching"
+#~ msgstr "डेस्कटप स्विचिङ"
+
+#~ msgid ""
+#~ "kwin: it looks like there's already a window manager running. kwin not "
+#~ "started.\n"
+#~ msgstr ""
+#~ "केडीई विन:त्यहाँ पहिले नै सञ्झ्याल प्रबन्धक चालु छ जस्तो देखिन्छ । केडीई विन सुरु भएको छैन "
+#~ "।\n"
+
+#, fuzzy
+#~| msgid ""
+#~| "<p>Window with title \"<b>%2</b>\" is not responding. This window "
+#~| "belongs to application <b>%1</b> (PID=%3, hostname=%4).</p><p>Do you "
+#~| "wish to terminate this application? (All unsaved data in this "
+#~| "application will be lost.)</p>"
+#~ msgid ""
+#~ "<p>The window \"<b>%2</b>\" is not responding. It belongs to the "
+#~ "application <b>%1</b> (Process ID = %3, hostname = %4).</p><p>Do you wish "
+#~ "to terminate the application process <em>including <b>all</b> of its "
+#~ "child windows</em>?<br /><b>Any unsaved data will be lost.</b></p>"
+#~ msgstr ""
+#~ "<qt>शीर्षकसँगको सञ्झ्याल \"<b>%2</b>\" ले प्रतिक्रिया दिइरहेको छैन । यो सञ्झ्याल "
+#~ "अनुप्रयोग <b>%1</b> (PID=%3, hostname=%4) सँग सम्बन्धित छ ।</p><p>तपाईँ यो "
+#~ "अनुप्रयोग हटाउन चाहनुहुन्छ ? (यो अनुप्रयोगमा बचत नभएका डेटा हराउने छ ।)</qt>"
+
+#~ msgid "Window '%1' demands attention."
+#~ msgstr "'%1' सञ्झ्यालले ध्यानकर्षण गर्दछ"
+
+#, fuzzy
+#~| msgid "Close Window"
+#~ msgctxt "Floating layout, windows aren't tiled at all"
+#~ msgid "Floating"
+#~ msgstr "सञ्झ्याल बन्द गर्नुहोस्"
+
+#, fuzzy
+#~| msgid "Close Window"
+#~ msgctxt "When in tiling mode, toggle's the window's floating/tiled state"
+#~ msgid "&Float Window"
+#~ msgstr "सञ्झ्याल बन्द गर्नुहोस्"
+
+#~ msgid "Ad&vanced"
+#~ msgstr "उन्नत"
+
+#~ msgid "*** No Windows ***"
+#~ msgstr "*** सञ्झ्याल छैन ***"
+
+#, fuzzy
+#~| msgid "Left"
+#~ msgid "To the Left"
+#~ msgstr "बायाँ"
+
+#, fuzzy
+#~| msgid "Right"
+#~ msgid "To the Right"
+#~ msgstr "दायाँ"
+
+#~ msgid "&Opacity"
+#~ msgstr "अस्पष्टता"
+
+#, fuzzy
+#~| msgid "Switch to Desktop 1"
+#~ msgid "Switch Focus Left"
+#~ msgstr "डेस्कटप १ मा स्विच गर्नुहोस्"
+
+#, fuzzy
+#~| msgid "Switch One Desktop Up"
+#~ msgid "Switch Focus Up"
+#~ msgstr "एक डेस्कटप माथि स्विच गर्नुहोस्"
+
+#, fuzzy
+#~| msgid "Switch One Desktop Down"
+#~ msgid "Switch Focus Down"
+#~ msgstr "एक डेस्कटप तल स्विच गर्नुहोस्"
+
+#~ msgid ""
+#~ "\n"
+#~ "KWin will now exit..."
+#~ msgstr ""
+#~ "\n"
+#~ "केडीई विन अहिले अन्त्य हुनेछ..."
+
+#~ msgid "Window to Desktop 2"
+#~ msgstr "सञ्झ्याल देखि डेस्कटप २ सम्म"
+
+#~ msgid "Window to Desktop 3"
+#~ msgstr "सञ्झ्याल देखि डेस्कटप ३ सम्म"
+
+#~ msgid "Window to Desktop 4"
+#~ msgstr "सञ्झ्याल देखि डेस्कटप ४ सम्म"
+
+#~ msgid "Window to Desktop 5"
+#~ msgstr "सञ्झ्याल देखि डेस्कटप ५ सम्म"
+
+#~ msgid "Window to Desktop 6"
+#~ msgstr "सञ्झ्याल देखि डेस्कटप ६ सम्म"
+
+#~ msgid "Window to Desktop 7"
+#~ msgstr "सञ्झ्याल देखि डेस्कटप ७ सम्म"
+
+#~ msgid "Window to Desktop 8"
+#~ msgstr "सञ्झ्याल देखि डेस्कटप ८ सम्म"
+
+#~ msgid "Window to Desktop 9"
+#~ msgstr "सञ्झ्याल देखि डेस्कटप ९ सम्म"
+
+#~ msgid "Window to Desktop 10"
+#~ msgstr "सञ्झ्याल देखि डेस्कटप १० सम्म"
+
+#~ msgid "Window to Desktop 11"
+#~ msgstr "सञ्झ्याल देखि डेस्कटप ११ सम्म"
+
+#~ msgid "Window to Desktop 12"
+#~ msgstr "सञ्झ्याल देखि डेस्कटप १२ सम्म"
+
+#~ msgid "Window to Desktop 13"
+#~ msgstr "सञ्झ्याल देखि डेस्कटप १३ सम्म"
+
+#~ msgid "Window to Desktop 14"
+#~ msgstr "सञ्झ्याल देखि डेस्कटप १४ सम्म"
+
+#~ msgid "Window to Desktop 15"
+#~ msgstr "सञ्झ्याल देखि डेस्कटप १५ सम्म"
+
+#~ msgid "Window to Desktop 16"
+#~ msgstr "सञ्झ्याल देखि डेस्कटप १६ सम्म"
+
+#~ msgid "Window to Desktop 17"
+#~ msgstr "सञ्झ्याल देखि डेस्कटप १७ सम्म"
+
+#~ msgid "Window to Desktop 18"
+#~ msgstr "सञ्झ्याल देखि डेस्कटप १८ सम्म"
+
+#~ msgid "Window to Desktop 19"
+#~ msgstr "सञ्झ्याल देखि डेस्कटप १९ सम्म"
+
+#~ msgid "Window to Desktop 20"
+#~ msgstr "सञ्झ्याल देखि डेस्कटप २० सम्म"
+
+#~ msgid "Window to Screen 2"
+#~ msgstr "पर्दा २ मा सञ्झ्याल"
+
+#~ msgid "Window to Screen 3"
+#~ msgstr "पर्दा ३ मा सञ्झ्याल"
+
+#~ msgid "Window to Screen 4"
+#~ msgstr "पर्दा ४ मा सञ्झ्याल"
+
+#~ msgid "Window to Screen 5"
+#~ msgstr "पर्दा ५ मा सञ्झ्याल"
+
+#~ msgid "Window to Screen 6"
+#~ msgstr "पर्दा ६ मा सञ्झ्याल"
+
+#~ msgid "Window to Screen 7"
+#~ msgstr "पर्दा ७ मा सञ्झ्याल"
+
+#~ msgid "Switch to Desktop 3"
+#~ msgstr "डेस्कटप ३ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Desktop 4"
+#~ msgstr "डेस्कटप ४ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Desktop 5"
+#~ msgstr "डेस्कटप ५ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Desktop 6"
+#~ msgstr "डेस्कटप ६ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Desktop 7"
+#~ msgstr "डेस्कटप ७ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Desktop 8"
+#~ msgstr "डेस्कटप ८ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Desktop 9"
+#~ msgstr "डेस्कटप ९ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Desktop 10"
+#~ msgstr "डेस्कटप १० मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Desktop 11"
+#~ msgstr "डेस्कटप ११ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Desktop 12"
+#~ msgstr "डेस्कटप १२ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Desktop 13"
+#~ msgstr "डेस्कटप १३ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Desktop 14"
+#~ msgstr "डेस्कटप १४ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Desktop 15"
+#~ msgstr "डेस्कटप १५ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Desktop 16"
+#~ msgstr "डेस्कटप १६ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Desktop 17"
+#~ msgstr "डेस्कटप १७ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Desktop 18"
+#~ msgstr "डेस्कटप १८ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Desktop 19"
+#~ msgstr "डेस्कटप १९ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Desktop 20"
+#~ msgstr "डेस्कटप २० मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Screen 0"
+#~ msgstr "पर्दा ० मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Screen 2"
+#~ msgstr "पर्दा २ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Screen 3"
+#~ msgstr "पर्दा ३ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Screen 4"
+#~ msgstr "पर्दा ४ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Screen 5"
+#~ msgstr "पर्दा ५ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Screen 6"
+#~ msgstr "पर्दा ६ मा स्विच गर्नुहोस्"
+
+#~ msgid "Switch to Screen 7"
+#~ msgstr "पर्दा ७ मा स्विच गर्नुहोस्"
+
+#, fuzzy
+#~| msgid "<center><b>%1 preview</b></center>"
+#~ msgid "<center><b>%1</b></center>"
+#~ msgstr "<center><b>%1 पूर्वावलोकन</b></center>"
+
+#~ msgid "Menu"
+#~ msgstr "मेनु"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "सबै डेस्कटपमा होइन"
+
+#~ msgid "On all desktops"
+#~ msgstr "सबै डेस्कटपमा"
+
+#~ msgid "Help"
+#~ msgstr "मद्दत"
+
+#~ msgid "Restore"
+#~ msgstr "पूर्वावस्थामा ल्याउनुहोस्"
+
+#~ msgid "Do not keep above others"
+#~ msgstr "अन्यको माथि नराख्नुहोस्"
+
+#~ msgid "Do not keep below others"
+#~ msgstr "अन्यको तल नराख्नुहोस्"
+
+#~ msgid "No window decoration plugin library was found."
+#~ msgstr "कुनै सञ्झ्याल सजावट प्लगइन पुस्तकालय फेला परेन ।"
+
+#~ msgid "The default decoration plugin is corrupt and could not be loaded."
+#~ msgstr "पूर्वनिर्धारित सजावट प्लगइन ध्वस्त छ र लोड गर्न सकिँदैन ।"
+
+#~ msgid "The library %1 is not a KWin plugin."
+#~ msgstr "%1 लाइब्रेरी केडीई विन प्लगइन होइन ।"
+
+#, fuzzy
+#~| msgid "Window Screenshot To Clipboard"
+#~ msgid "Window Screenshot to Clipboard"
+#~ msgstr "क्लिपबोर्डमा सञ्झ्याल स्क्रिनसट"
+
+#, fuzzy
+#~| msgid "Desktop Screenshot To Clipboard"
+#~ msgid "Desktop Screenshot to Clipboard"
+#~ msgstr "क्लिपबोर्डमा डेस्कटप स्क्रिनसट"
+
+#, fuzzy
+#~| msgid "Toggle Video Recording"
+#~ msgid "Toggle Tiling"
+#~ msgstr "भिडियो रेकर्डिङ टगल गर्नुहोस्"
+
+#, fuzzy
+#~| msgid "Decorations:"
+#~ msgid "Decrease Ratio"
+#~ msgstr "सजावट:"
+
+#, fuzzy
+#~| msgid "Left"
+#~ msgid "Move Left"
+#~ msgstr "बायाँ"
+
+#, fuzzy
+#~| msgid "Right"
+#~ msgid "Move Right"
+#~ msgstr "दायाँ"
+
+#, fuzzy
+#~| msgid "&Move"
+#~ msgid "Move Up"
+#~ msgstr "सार्नुहोस्"
+
+#, fuzzy
+#~| msgid "Move Window"
+#~ msgid "Move Down"
+#~ msgstr "सञ्झ्याल सार्नुहोस्"
+
+#, fuzzy
+#~| msgid "Walk Through Windows"
+#~ msgid "Walk Through Grouped Windows"
+#~ msgstr "सञ्झ्याल मार्फत जानुहोस्"
+
+#, fuzzy
+#~| msgid "Walk Through Windows (Reverse)"
+#~ msgid "Walk Through Grouped Windows (Reverse)"
+#~ msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
+
+#, fuzzy
+#~| msgid "Switch to Screen 0"
+#~ msgid "Switch to group window"
+#~ msgstr "पर्दा ० मा स्विच गर्नुहोस्"
+
+#~ msgid "kwin: failure during initialization; aborting"
+#~ msgstr "केडीई विन: थालनी गर्दा असफल; परित्याग गरिदैछ"
+
+#~ msgid "Terminate"
+#~ msgstr "बिच्छेद गर्नुहोस्"
+
+#~ msgid "Keep Running"
+#~ msgstr "निरन्तरता दिनुहोस्"
+
+#, fuzzy
+#~| msgid "Ad&vanced"
+#~ msgctxt "@title:tab Advanced Settings"
+#~ msgid "Advanced"
+#~ msgstr "उन्नत"
+
+#~ msgid "Top"
+#~ msgstr "माथि"
+
+#, fuzzy
+#~| msgid "Bottom-right"
+#~ msgid "Bottom-Right"
+#~ msgstr "तल-दायाँ"
+
+#~ msgid "Bottom"
+#~ msgstr "तल"
+
+#, fuzzy
+#~| msgid "Bottom-left"
+#~ msgid "Bottom-Left"
+#~ msgstr "तल-बायाँ"
+
+#, fuzzy
+#~| msgid "Toggle Invert effect"
+#~ msgid "Toggle Invert Effect"
+#~ msgstr "उल्टो प्रभाव टगल गर्नुहोस्"
+
+#, fuzzy
+#~| msgid "Toggle Invert effect"
+#~ msgid "Toggle Invert Effect on Window"
+#~ msgstr "उल्टो प्रभाव टगल गर्नुहोस्"
+
+#, fuzzy
+#~| msgid "ClearMouseMarks"
+#~ msgid "Clear All Mouse Marks"
+#~ msgstr "माउस चिन्ह खाली हटाउनुहोस्"
+
+#, fuzzy
+#~| msgid "ClearMouseMarks"
+#~ msgid "Clear Last Mouse Mark"
+#~ msgstr "माउस चिन्ह खाली हटाउनुहोस्"
+
+#, fuzzy
+#~| msgid "ClearMouseMarks"
+#~ msgid "Clear Mouse Marks"
+#~ msgstr "माउस चिन्ह खाली हटाउनुहोस्"
+
+#, fuzzy
+#~| msgid "for windows on current desktop: "
+#~ msgid "Toggle Present Windows (Current desktop)"
+#~ msgstr "हालको डेस्कटपमा सञ्झ्यालका लागि: "
+
+#, fuzzy
+#~| msgid "Keep Window on All Desktops"
+#~ msgid "Toggle Present Windows (All desktops)"
+#~ msgstr "सबै डेस्कटपहरूमा सञ्झ्याल राख्नुहोस्"
+
+#~ msgid ""
+#~ "Filter:\n"
+#~ "%1"
+#~ msgstr ""
+#~ "फिल्टर:\n"
+#~ "%1"
+
+#, fuzzy
+#~| msgid "Toggle Sharpen effect"
+#~ msgctxt "@action Enables/Disables an effect that makes windows more sharp"
+#~ msgid "Toggle Sharpen Effect"
+#~ msgstr "धारिलो प्रभाव टगल गर्नुहोस्"
+
+#, fuzzy
+#~| msgid "Toggle Expose effect (incl other desktops)"
+#~ msgid "Toggle Snow on Desktop"
+#~ msgstr "(अन्य डेस्कटप समावेश गरेर) खोलिएको प्रभाव टगल गर्नुहोस्"
+
+#~ msgid "Toggle Thumbnail for Current Window"
+#~ msgstr "हालको सञ्झ्यालका लागि थम्बनेल टगल गर्नुहोस्"
+
+#~ msgid "None"
+#~ msgstr "कुनै पनि होइन"
+
+#~ msgid "X offset:"
+#~ msgstr "एक्स अफसेट:"
+
+#~ msgid "Y offset:"
+#~ msgstr "वाइ अफसेट:"
+
+#~ msgid "Shadow opacity:"
+#~ msgstr "छायाँ अस्पष्टता:"
+
+#, fuzzy
+#~| msgid "Shadow fuzzyness:"
+#~ msgid "Shadow fuzziness:"
+#~ msgstr "छायाँ नष्टता:"
+
+#~ msgid "Shadow size (relative to window):"
+#~ msgstr "(सञ्झ्यालसँग सम्बन्धित) छायाँ साइज:"
+
+#, fuzzy
+#~| msgid "Shadow opacity:"
+#~ msgid "Shadow color:"
+#~ msgstr "छायाँ अस्पष्टता:"
+
+#~ msgid "Active window has stronger shadow"
+#~ msgstr "सक्रिय सञ्झ्यालसँग बलियो छायाँ छ"
+
+#~ msgid "Toggle Expose Effect"
+#~ msgstr "खोल्ने प्रभाव टगल गर्नुहोस्"
+
+#, fuzzy
+#~| msgid "Toggle Expose effect (incl other desktops)"
+#~ msgid "Toggle Expose Effect (incl. other desktops)"
+#~ msgstr "(अन्य डेस्कटप समावेश गरेर) खोलिएको प्रभाव टगल गर्नुहोस्"
+
+#~ msgid "Activate when cursor is at a specific edge or corner of the screen:"
+#~ msgstr "कर्सर पर्दाको विशिष्ट किनारा वा कुनामा हुँदा सक्रिय पार्नुहोस्:"
+
+#~ msgid "for windows on all desktops: "
+#~ msgstr "सबै डेस्कटपमा सञ्झ्यालका लागि:"
+
+#~ msgid "Animate desktop changes"
+#~ msgstr "डेस्कटप परिवर्तनहरू एनिमेट गर्नुहोस्"
+
+#~ msgid "Changes opacity of following elements:"
+#~ msgstr "निम्न तत्वहरूको अस्पष्टता परिवर्तन गर्दछ:"
+
+#~ msgid "Moved/resized windows:"
+#~ msgstr "सारिएको/रिसाइज गरिएको सञ्झ्याल:"
+
+#~ msgid "ClearMouseMarks"
+#~ msgstr "माउस चिन्ह खाली हटाउनुहोस्"

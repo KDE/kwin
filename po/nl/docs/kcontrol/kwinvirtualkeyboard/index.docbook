@@ -1,0 +1,54 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Dutch "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinvirtualkeyboard" lang="&language;">
+<articleinfo>
+
+<title
+>Virtueel toetsenbord</title>
+<authorgroup>
+<author
+><firstname
+>Yuri</firstname
+> <surname
+>Chornoivan</surname
+> </author>
+&Freek.de.Kruijf; 
+</authorgroup>
+
+<date
+>2021-04-27</date>
+<releaseinfo
+>Plasma 5.22</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systeeminstellingen</keyword>
+<keyword
+>virtueel</keyword>
+<keyword
+>toetsenbord</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Deze module laat u het te gebruiken virtuele toetsenbord kiezen. Het virtuele toetsenbord zal automatisch ingeschakeld worden wanneer er geen hardware toetsenbord wordt gedetecteerd. </para>
+
+<para
+>Selecteer een <ulink url="https://en.wikipedia.org/wiki/Virtual_keyboard"
+>virtueel toetsenbord</ulink
+> uit de lijst of kies <guilabel
+>Geen</guilabel
+> als u geen enkel virtueel toetsenbord wilt gebruiken. </para>
+
+<para
+>Het is aan te bevelen om engines voor overeenkomstige invoermethoden te installeren alvorens deze module te gebruiken. </para>
+
+</article>

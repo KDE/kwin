@@ -1,0 +1,94 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Brazilian-Portuguese "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinscreenedges" lang="&language;">
+<articleinfo>
+
+<title
+>Bordas da Tela</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Marcus</firstname
+><surname
+>Gama</surname
+><affiliation
+><address
+><email
+>marcus.gama@gmail.com</email
+></address
+></affiliation
+><contrib
+>Tradução</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>14/07/2015</date>
+<releaseinfo
+>Plasma 5.3</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Configurações do sistema</keyword>
+<keyword
+>ambiente de trabalho</keyword>
+<keyword
+>efeitos</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>As bordas ativas da tela permitem-lhe ativar os efeitos, enviando o cursor do seu mouse para a borda da tela. Aqui você poderá configurar o efeito que será ativado em cada borda ou canto da tela. </para>
+
+<para
+>Clique com qualquer botão do mouse em um quadrado e selecione um efeito no menu de contexto. As bordas com um quadrado azul já possuem um efeito associado, enquanto um quadrado em cinza indica que não foi selecionado nenhum efeito para essa borda.</para>
+
+<para
+>O número de itens acessíveis no menu de contexto depende do módulo <ulink url="help:/kcontrol/kwineffects/index.html"
+> <guilabel
+>Efeitos da Área de Trabalho</guilabel
+></ulink
+>, na categoria <guilabel
+>Espaço de Trabalho</guilabel
+>. Selecione seus efeitos favoritos no grupo <guilabel
+>Gerenciamento de Janelas</guilabel
+>. Isso irá ativar os itens correspondentes no menu de contexto.</para>
+
+<para
+>Se você estiver procurando pela configuração necessária para permitir trocar de área de trabalho movendo o ponteiro do mouse para o lado da tela, escolha um dos efeitos do <guilabel
+>Apresentar janelas</guilabel
+> a partir do menu de contexto.</para>
+
+<para
+>Na seção <guilabel
+>Gerenciamento de Janelas</guilabel
+>, você poderá ativar a opção <guilabel
+>Maximizar as janelas, arrastando-as para a parte superior da tela </guilabel
+> ou <guilabel
+>Colocar as janelas lado a lado, arrastando-as para a extremidade da tela</guilabel
+> e definir uma porcentagem da tela para acionar essa colocação. </para>
+
+<para
+>Na seção <guilabel
+>Outras Configurações</guilabel
+>, configure se deseja mudar para outra área de trabalho ao colocar o ponteiro do mouse em uma das extremidades da tela, &eg;, apenas ao mover as janelas. </para>
+<para
+><guilabel
+>Atraso da ativação</guilabel
+> é a quantidade de tempo necessária para o ponteiro do mouse ser empurrado contra a borda da tela antes da ação ser acionada. </para>
+<para
+>O <guilabel
+>Atraso da ativação</guilabel
+> é o tempo necessário depois de acionar uma ação, antes da próxima ativação do mesmo evento. </para>
+</article>

@@ -1,0 +1,458 @@
+# translation of kcmkwindecoration.po to Tajik
+# Victor Ibragimov <victor.ibragimov@gmail.com>, 2004, 2019.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwindecoration\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2019-09-16 13:55+0500\n"
+"Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
+"Language-Team: English <kde-i18n-doc@kde.org>\n"
+"Language: tg\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 19.04.3\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Victor Ibragimov"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "victor.ibragimov@gmail.com"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, kde-format
+msgid "Application menu"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, kde-format
+msgid "On all desktops"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr ""
+
+#: kcm.cpp:49
+#, kde-format
+msgid "Window Decorations"
+msgstr ""
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr ""
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr "Муаллиф"
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr ""
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr ""
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr ""
+
+#: package/contents/ui/main.qml:57
+#, kde-format
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr ""
+
+#: package/contents/ui/main.qml:93
+#, fuzzy, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "Border size: Tiny"
+
+#: package/contents/ui/main.qml:112
+#, kde-format
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr ""
+
+#: package/contents/ui/main.qml:141
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr ""
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr ""
+
+#: package/contents/ui/main.qml:165
+#, kde-format
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr ""
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr ""
+
+#: utils.cpp:25
+#, kde-format
+msgid "No Borders"
+msgstr ""
+
+#: utils.cpp:26
+#, kde-format
+msgid "No Side Borders"
+msgstr ""
+
+#: utils.cpp:27
+#, kde-format
+msgid "Tiny"
+msgstr ""
+
+#: utils.cpp:28
+#, kde-format
+msgid "Normal"
+msgstr ""
+
+#: utils.cpp:29
+#, kde-format
+msgid "Large"
+msgstr ""
+
+#: utils.cpp:30
+#, kde-format
+msgid "Very Large"
+msgstr ""
+
+#: utils.cpp:31
+#, kde-format
+msgid "Huge"
+msgstr ""
+
+#: utils.cpp:32
+#, kde-format
+msgid "Very Huge"
+msgstr ""
+
+#: utils.cpp:33
+#, kde-format
+msgid "Oversized"
+msgstr ""
+
+#~ msgid "Menu"
+#~ msgstr "Феҳрист"
+
+#, fuzzy
+#~ msgid "Border si&ze:"
+#~ msgstr "Border size: Tiny"
+
+#, fuzzy
+#~| msgid "&Window Decoration"
+#~ msgid "Configure %1..."
+#~ msgstr "Ороиши &Тиреза"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgid "Form"
+#~ msgstr "Оддӣ"
+
+#, fuzzy
+#~| msgid "Buttons"
+#~ msgid "Button size:"
+#~ msgstr "Тугмаҳо"
+
+#, fuzzy
+#~| msgid "Tiny"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "Хурд"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "Оддӣ"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "Калон"
+
+#, fuzzy
+#~| msgid "Very Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "Калонтарин"
+
+#, fuzzy
+#~| msgid "Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "Калонтар"
+
+#, fuzzy
+#~| msgid "Very Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "Калонтарин"
+
+#, fuzzy
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "Бозандозагирӣ"
+
+#~ msgid "KDE"
+#~ msgstr "KDE"
+
+#~ msgid "%1 (unavailable)"
+#~ msgstr "%1 (дастнорас)"
+
+#~ msgid ""
+#~ "To add or remove titlebar buttons, simply <i>drag</i> items between the "
+#~ "available item list and the titlebar preview. Similarly, drag items "
+#~ "within the titlebar preview to re-position them."
+#~ msgstr ""
+#~ "Барои иловакунӣ ё хориҷкунии тугмаи сатри унвон танҳо элементро аз рӯйхат "
+#~ "ба азназаргузаронии пешакии сатри унвон <i>кашола</i> карда оред. Ҳамин "
+#~ "тавр пунктҳоро кашола карда ба мавқеъи аввалаи онҳо оварда метавонед."
+
+#~ msgid "Resize"
+#~ msgstr "Бозандозагирӣ"
+
+#~ msgid "Help"
+#~ msgstr "Ёрӣ"
+
+#~ msgid "--- spacer ---"
+#~ msgstr "--- фосила ---"
+
+#~ msgid ""
+#~ "Enabling this checkbox will show window button tooltips. If this checkbox "
+#~ "is off, no window button tooltips will be shown."
+#~ msgstr ""
+#~ "Ҳангоми фаъол будани ин хосият эъломи тугмаҳо намоиш дода мешаванд, дар "
+#~ "ҳолати баръакс эъломҳо намоиш дода намешаванд."
+
+#, fuzzy
+#~| msgid ""
+#~| "The appropriate settings can be found in the \"Buttons\" Tab; please "
+#~| "note that this option is not available on all styles yet."
+#~ msgid "Please note that this option is not available on all styles yet."
+#~ msgstr ""
+#~ "Гузоришҳои мувофиқ дар Ҷадвали \"Тугмаҳо\" пайдо карда мешаванд; марҳамат "
+#~ "карда дар хотир доред, ки ин хосиятҳо на дар ҳамаи навъҳо дастрасанд."
+
+#~ msgid "Use custom titlebar button &positions"
+#~ msgstr "&Мавқеъҳои худии ҷойгиршавии тугмаҳои панели унвонро истифода баред"
+
+#, fuzzy
+#~ msgid "B&order size:"
+#~ msgstr "Border size: Tiny"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Хосиятҳои Танзимот"
+
+#~ msgid ""
+#~ "Select the window decoration. This is the look and feel of both the "
+#~ "window borders and the window handle."
+#~ msgstr ""
+#~ "Танзимоти тирезаро - намуди зоҳирӣ ва интерфейсро ҳамчун сарҳадҳои "
+#~ "тирезаро, қабул кунед."
+
+#~ msgid "Window Decoration Control Module"
+#~ msgstr "Бахши контроли тартиби тиреза"
+
+#~ msgid "(c) 2001 Karol Szwed"
+#~ msgstr "(c) 2001 Karol Szwed"
+
+#~ msgid "Karol Szwed"
+#~ msgstr "Karol Szwed"
+
+#, fuzzy
+#~ msgid ""
+#~ "<h1>Window Manager Decoration</h1><p>This module allows you to choose the "
+#~ "window border decorations, as well as titlebar button positions and "
+#~ "custom decoration options.</p>To choose a theme for your window "
+#~ "decoration click on its name and apply your choice by clicking the \"Apply"
+#~ "\" button below. If you do not want to apply your choice you can click "
+#~ "the \"Reset\" button to discard your changes.<p>You can configure each "
+#~ "theme. There are different options specific for each theme.</p><p>On the "
+#~ "\"Buttons\" tab check the \"Use custom titlebar button positions\" box "
+#~ "and you can change the positions of the buttons to your liking.</p>"
+#~ msgstr ""
+#~ "<h1>Ороиши Мудири Тиреза</h1><p>Ин модул ба шумо имконияти интихоби "
+#~ "ороишҳои ҳошияи тирезаро медиҳад, инчунин мавқеъи тугмаҳои сатри унвон ва "
+#~ "хосиятҳои ороиши худиро.</p>Барои интихоби мавзӯъ баҳри ороиши тирезаи "
+#~ "шумо ба номи он ангушт занед ва интихоби худро ба воситаи ангуштзании "
+#~ "тугмаи \"Корфармоӣ\" истифода баред. Агар интихоби худро кор фармудан "
+#~ "нахоҳед барои радкунии тағиротҳои худ ба тугмаи \"Бознишондан\" ангушт "
+#~ "занед.<p>Шумо ҳар як мавзӯро дар ҷадвали \"Танзимкунӣ [...]\" ба танзим "
+#~ "дароварда метавонед. Барои ҳар як мавзӯъ хосиятҳои мушаххас мавҷуданд.</"
+#~ "p><p>Дар қисмати \"Хосиятҳои Умумӣ (агар дастрас бошанд)\" шумо ҷадвали "
+#~ "\"Тугмаҳо\"-ро ба воситаи интихоби парчами \"Истифодаи мавқеъи дигари "
+#~ "тугмаҳои панели унвон\" фаъол сохта метавонед. Дар ҷадвали \"Тугмаҳо\" "
+#~ "шумо метавонед мавқеъи тугмаҳоро бо хоҳиши худ иваз карда кунед.</p>"
+
+#, fuzzy
+#~ msgid "Active Window"
+#~ msgstr "Тирезаи фаъол"
+
+#, fuzzy
+#~ msgid "Inactive Window"
+#~ msgstr "Тирезаи нофаъол"
+
+#~ msgid "kcmkwindecoration"
+#~ msgstr "kcmkwindecoration"
+
+#~ msgid ""
+#~ "No preview available.\n"
+#~ "Most probably there\n"
+#~ "was a problem loading the plugin."
+#~ msgstr ""
+#~ "Ягон намуна дастрас нест.\n"
+#~ "Эҳтимолан дар вақти боркунии\n"
+#~ "модул хатогӣ рух дод."
+
+#~ msgid "&Buttons"
+#~ msgstr "&Кнопкаҳо"
+
+#~ msgid "Ozone"
+#~ msgstr "Озон"
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"

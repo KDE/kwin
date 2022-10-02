@@ -1,0 +1,906 @@
+# translation of kwin_clients.po to
+# Danish translation of kwin_clients
+# Erik Kjær Pedersen <erik@binghamton.edu>, 2004, 2005.
+# Martin Schlander <mschlander@opensuse.org>, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2015-07-08 21:34+0200\n"
+"Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
+"Language-Team: Danish <kde-i18n-doc@kde.org>\n"
+"Language: da\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.5\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "Meget lille"
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "Normal"
+
+#: aurorae/src/aurorae.cpp:727
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "Stor"
+
+#: aurorae/src/aurorae.cpp:728
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "Meget stor"
+
+#: aurorae/src/aurorae.cpp:729
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "Enorm"
+
+#: aurorae/src/aurorae.cpp:730
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "Meget enorm"
+
+#: aurorae/src/aurorae.cpp:731
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "Overstørrelse"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr "Knapstørrelse:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "Indstillingsdialog"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "Titel&justering"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "Venstre"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "Centreret"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "Højre"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"Markér dette hvis vindueskanterne skal tegnes med navnelistens farver. "
+"Ellers tegnes de med baggrundsfarven."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "Farvet vindueskant"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"Markér dette hvis du ønsker at knapper skal dukke op når musen svæver over "
+"dem og svinde hen når den flyttes væk."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "Animér knapper"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "Markér dette hvis du ønsker at titellinjen  tekst skal have et 3-"
+#~ "dimensionalt udseende med en skygge bagved."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "Brug &tekst med skygger"
+
+#~ msgid "Button mouseover transition"
+#~ msgstr "Overgang ved museoverkørsel af knap"
+
+#~ msgid "Configure window buttons' mouseover highlight animation"
+#~ msgstr "Indstil vinduesknappernes fremhævningsanimation ved museoverkørsel"
+
+#~ msgid "Title transitions"
+#~ msgstr "Titelovergange"
+
+#~ msgid "Configure fading transitions when window title is changed"
+#~ msgstr "Indstil fade-overgange når vinduestitlen ændres"
+
+#~ msgid "Window active state change transitions"
+#~ msgstr "Overgange ved ændring af vinduers aktivtilstand"
+
+#~ msgid ""
+#~ "Configure fading between window shadow and glow when window's active "
+#~ "state is changed"
+#~ msgstr ""
+#~ "Indstil fading mellem vinduesskygge og -glød når vinduers aktivtilstand "
+#~ "ændres"
+
+#~ msgid "Window grouping animations"
+#~ msgstr "Animationer for gruppering af vinduer"
+
+#~ msgid ""
+#~ "Configure window titlebar animations when windows are grouped/ungrouped"
+#~ msgstr ""
+#~ "Indstil animationer for vinduestitellinjen når vinduer grupperes/"
+#~ "afgrupperes"
+
+#~ msgid "Hide Advanced Configuration Options"
+#~ msgstr "Skjul avancerede indstillingsmuligheder"
+
+#~ msgid "Show Advanced Configuration Options"
+#~ msgstr "Vis avancerede indstillingsmuligheder"
+
+#~ msgid "Animations"
+#~ msgstr "Animationer"
+
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "Spørgsmål - Oxygen-indstillinger"
+
+#~ msgid "Remove selected exception?"
+#~ msgstr "Fjern den markerede undtagelse?"
+
+#~ msgid "Warning - Oxygen Settings"
+#~ msgstr "Advarsel - Oxygen-indstillinger"
+
+#~ msgid "Regular Expression syntax is incorrect"
+#~ msgstr "Syntaks i regulært udtryk er ikke korrekt "
+
+#~ msgid "Exception Type"
+#~ msgstr "Undtagelsestype"
+
+#~ msgid "Regular Expression"
+#~ msgstr "Regulært udtryk"
+
+#~ msgid "Window Title"
+#~ msgstr "Vinduestitel"
+
+#~ msgid "Window Class Name"
+#~ msgstr "Navn på vinduesklasse"
+
+#~ msgid "Enable/disable this exception"
+#~ msgstr "Aktivér/deaktivér denne undtagelse"
+
+#~ msgid "General"
+#~ msgstr "Generelt"
+
+#~ msgid "Border si&ze:"
+#~ msgstr "Kants&tørrelse:"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "Ingen kant"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Borders"
+#~ msgstr "Ingen sidekanter"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "Stor"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "Meget stor"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "Enorm"
+
+#~ msgid "Tit&le alignment:"
+#~ msgstr "Tite&ljustering:"
+
+#~ msgid "Center (Full Width)"
+#~ msgstr "Centrér (fuld bredde)"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "Lille"
+
+#~ msgid "Enable animations"
+#~ msgstr "Aktivér animationer"
+
+#~ msgid "Fine Tuning"
+#~ msgstr "Finjustering"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "Luk vinduer ved at dobbeltklikke på menuknap"
+
+#~ msgid "Never Draw Separator"
+#~ msgstr "Tegn aldrig adskiller"
+
+#~ msgid "Draw Separator When Window is Active"
+#~ msgstr "Tegn adskiller når vinduet er aktivt"
+
+#~ msgid "Always Draw Separator"
+#~ msgstr "Tegn altid adskiller"
+
+#~ msgid "Separator disp&lay:"
+#~ msgstr "Visning af adski&ller:"
+
+#~ msgid "Outline active window title"
+#~ msgstr "Omrids på aktivt vindues titel "
+
+#~ msgid "Use narrow space between decoration buttons"
+#~ msgstr "Brug smal afstand mellem dekorationsknapper"
+
+#~ msgid "Add handle to resize windows with no border"
+#~ msgstr "Tilføj håndtag til at ændre størrelse på vinduer uden kant"
+
+#~ msgid "Display window borders for maximized windows"
+#~ msgstr "Vis vindueskanter for maksimerede vinduer"
+
+#~ msgid "Shadows"
+#~ msgstr "Skygger"
+
+#~ msgid "Window Drop-Down Shadow"
+#~ msgstr "Fald-ned-skygge på vindue"
+
+#~ msgid "Active Window Glow"
+#~ msgstr "Glød på aktivt vindue"
+
+#~ msgid "Window-Specific Overrides"
+#~ msgstr "Vinduesspecifik tilsidesættelse"
+
+#~ msgid "Dialog"
+#~ msgstr "Dialog"
+
+#~ msgid "Information about Selected Window"
+#~ msgstr "Information om valgt vindue"
+
+#~ msgid "Class: "
+#~ msgstr "klasse: "
+
+#~ msgid "Title: "
+#~ msgstr "Titel: "
+
+#~ msgid "Window Property Selection"
+#~ msgstr "Valg af vinduesegenskab"
+
+#~ msgid "Use window class (whole application)"
+#~ msgstr "Brug vinduesklasse (hele programmet)"
+
+#~ msgid "Use window title"
+#~ msgstr "Brug vinduestitel"
+
+#~ msgid "Window Identification"
+#~ msgstr "Vinduesidentifikation"
+
+#~ msgid "Matching window property: "
+#~ msgstr "Matchende vinduesegenskab: "
+
+#~ msgid "Regular expression to match: "
+#~ msgstr "Regulært udtryk der skal matches: "
+
+#~ msgid "Detect Window Properties"
+#~ msgstr "Detektér vinduesegenskaber"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Dekorationsindstillinger"
+
+#~ msgctxt "outline window title"
+#~ msgid "Disabled"
+#~ msgstr "Deaktiveret"
+
+#~ msgctxt "outline window title"
+#~ msgid "Enabled"
+#~ msgstr "Aktiveret"
+
+#~ msgid "Border size:"
+#~ msgstr "Kantstørrelse:"
+
+#~ msgid "Outline active window title:"
+#~ msgstr "Omrids på aktivt vindues titel:"
+
+#~ msgid "Separator display:"
+#~ msgstr "Visning af adskiller:"
+
+#~ msgid "Hide window title bar"
+#~ msgstr "Skjul vinduets titellinje"
+
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Disabled"
+#~ msgstr "Deaktiveret"
+
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Enabled"
+#~ msgstr "Aktiveret"
+
+#~ msgid "Move Up"
+#~ msgstr "Flyt op"
+
+#~ msgid "Move Down"
+#~ msgstr "Flyt ned"
+
+#~ msgid "Add"
+#~ msgstr "Tilføj"
+
+#~ msgid "Remove"
+#~ msgstr "Fjern"
+
+#~ msgid "Edit"
+#~ msgstr "Redigér"
+
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "Demonstration af Oxygen-skygger"
+
+#~ msgid "Draw window background"
+#~ msgstr "Tegn vinduesbaggrund"
+
+#~ msgid "Inactive Windows"
+#~ msgstr "Inaktive vinduer"
+
+#~ msgid "Active Windows"
+#~ msgstr "Aktive vinduer"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+#~ msgid "Window Actions Menu"
+#~ msgstr "Vindueshandlinger-menu"
+
+#~ msgid "Application Menu"
+#~ msgstr "Programmenu"
+
+#~ msgid "Help"
+#~ msgstr "Hjælp"
+
+#~ msgid "Minimize"
+#~ msgstr "Minimér"
+
+#~ msgid "Maximize"
+#~ msgstr "Maksimér"
+
+#~ msgid "Close"
+#~ msgstr "Luk"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "Hold over de andre"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "Hold under de andre"
+
+#~ msgid "On All Desktops"
+#~ msgstr "På alle skriveborde"
+
+#~ msgid "Shade Button"
+#~ msgstr "Skygge-knap"
+
+#~ msgid "Menu"
+#~ msgstr "Menu"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "Ikke på alle skriveborde"
+
+#~ msgid "On all desktops"
+#~ msgstr "På alle skriveborde"
+
+#~ msgid "Unshade"
+#~ msgstr "Skyg ikke"
+
+#~ msgid "Shade"
+#~ msgstr "Skyg"
+
+#~ msgid "Resize"
+#~ msgstr "Ændr størrelse"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>B II forhåndsvisning</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "Gendan"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "Træk vinduesrammer ved brug af &titellinjens farver"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "Når dette er valgt, bliver vindueskanterne tegnet med  titellinjens "
+#~ "farver; ellers tegnes de med normale kantfarver."
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "Tegn håndtag til at ændre s&tørrelse"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "Når dette er valgt, bliver dekorationer tegnet med et \"gribehåndtag\" i "
+#~ "nederste højre hjørne af vinduerne. Ellers tegnes ikke noget gribehåndtag."
+
+#~ msgid "Auto-move titlebar"
+#~ msgstr "Flyt titellinje automatisk"
+
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr ""
+#~ "Når dette er markeret, flyttes titellinjer automatisk til synlige "
+#~ "positioner, ellers flyttes de kun manuelt med Skift+musetræk."
+
+#~ msgid "Actions Settings"
+#~ msgstr "Handlingsindstillinger"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "Dobbeltklik på menuhåndtag:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "Gør intet"
+
+#~ msgid "Minimize Window"
+#~ msgstr "Minimér vindue"
+
+#~ msgid "Shade Window"
+#~ msgstr "Gør vindue til skygge"
+
+#~ msgid "Close Window"
+#~ msgstr "Luk vindue"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "En handling kan tilknyttes et dobbeltklik på menuknappen. Lad det være "
+#~ "ingen hvis du er i tvivl."
+
+#~ msgid "Laptop"
+#~ msgstr "Bærbar"
+
+#, fuzzy
+#~| msgid "Background style: "
+#~ msgid "Bac&kground style: "
+#~ msgstr "Baggrundsstil: "
+
+#~ msgid "Solid Color"
+#~ msgstr "Ensfarvet"
+
+#~ msgid "Radial Gradient"
+#~ msgstr "Radial farveovergang"
+
+#~ msgid "Follow Style Hint"
+#~ msgstr "Følg stiltip"
+
+#~ msgid "Background style:"
+#~ msgstr "Baggrundsstil:"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Martin Schlander"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "mschlander@opensuse.org"
+
+#~ msgid "Oxygen decoration shadows demonstration"
+#~ msgstr "Demonstration af skygger med Oxygen-dekorationen"
+
+#~ msgid "(c) 2011, Hugo Pereira Da Costa"
+#~ msgstr "(c) 2011, Hugo Pereira Da Costa"
+
+#~ msgid "Hugo Pereira Da Costa"
+#~ msgstr "Hugo Pereira Da Costa"
+
+#~ msgid "Save"
+#~ msgstr "Gem"
+
+#~ msgid "Save shadows as pixmaps in provided directory"
+#~ msgstr "Gem skygger som pixmaps i angiven mappe"
+
+#~ msgid "Large"
+#~ msgstr "Stor"
+
+#~ msgid "Small"
+#~ msgstr "Lille"
+
+#~ msgid "Extra size grip display: "
+#~ msgstr "Visning af ekstra størrelsesgreb: "
+
+#~ msgid "Extra size grip display:"
+#~ msgstr "Visning af ekstra størrelsesgreb:"
+
+#~ msgid "Inner Color:"
+#~ msgstr "Indvendig farve:"
+
+#~ msgid "Outer Color:"
+#~ msgstr "Udvendig farve:"
+
+#~ msgid "Vertical Offset:"
+#~ msgstr "Lodret forskydning:"
+
+#~ msgid "Size: "
+#~ msgstr "Størrelse: "
+
+#~ msgid "px"
+#~ msgstr "px"
+
+#~ msgid "Always Hide Extra Size Grip"
+#~ msgstr "Skjul altid ekstra størrelsesgreb"
+
+#~ msgid "Show Extra Size Grip When Needed"
+#~ msgstr "Vis ekstra størrelsesgreb når nødvendigt"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "Markér dette hvis du ønsker at vinduer skal lukkes når du dobbeltklikker "
+#~ "på menuknappen, ligesom ved Microsoft Windows."
+
+#~ msgid "Plastik"
+#~ msgstr "Plastik"
+
+#~ msgid "All Desktops"
+#~ msgstr "Alle skriveborde"
+
+#~ msgid "Above"
+#~ msgstr "Over"
+
+#~ msgid "Below"
+#~ msgstr "Under"
+
+#~ msgid "Close Item"
+#~ msgstr "Luk element"
+
+#~ msgid "Tabstrip"
+#~ msgstr "Fanebladsstribe"
+
+#~ msgid "&Left"
+#~ msgstr "&Venstre"
+
+#~ msgid "&Center"
+#~ msgstr "&Centreret"
+
+#~ msgid "&Right"
+#~ msgstr "&Højre"
+
+#~ msgid "Display window icons"
+#~ msgstr "Vis vinduesikoner"
+
+#~ msgid "O&utline Color:"
+#~ msgstr "Farve på o&mrids:"
+
+#~ msgid "Do not keep above others"
+#~ msgstr "Hold ikke over andre"
+
+#~ msgid "Keep above others"
+#~ msgstr "Hold over andre"
+
+#~ msgid "Do not keep below others"
+#~ msgstr "Hold ikke under andre"
+
+#~ msgid "Keep below others"
+#~ msgstr "Hold under andre"
+
+#~ msgid "Enable title transition animations"
+#~ msgstr "Aktivér animeret titelovergang"
+
+#~ msgid "Variable"
+#~ msgstr "Variabel"
+
+#~ msgid "Maximum"
+#~ msgstr "Maksimum"
+
+#~ msgid "Enable window grouping"
+#~ msgstr "Aktivér gruppering af vinduer"
+
+#~ msgid "Shadow caching:"
+#~ msgstr "Skygge-caching:"
+
+#~ msgid "TextLabel"
+#~ msgstr "TekstEtiket"
+
+#~ msgid "Use Oxygen Shadows"
+#~ msgstr "Brug Oxygen-skygger"
+
+#~ msgid "Use Desktop Effects Shadows"
+#~ msgstr "Brug skrivebordseffekt-skygger"
+
+#~ msgid "Do Not Draw Shadows"
+#~ msgstr "Tegn ikke skygger"
+
+#~ msgid "Shadow style:"
+#~ msgstr "Skyggestil:"
+
+#~ msgctxt "draw separator"
+#~ msgid "Enabled"
+#~ msgstr "Aktiveret"
+
+#~ msgctxt "draw separator"
+#~ msgid "Disabled"
+#~ msgstr "Deaktiveret"
+
+#~ msgid "Draw separator between title bar and window contents: "
+#~ msgstr "Tegn adskillelse mellem titellinje og vinduesindhold: "
+
+#~ msgid "Draw Separator between title bar and active window contents "
+#~ msgstr "Tegn adskillelse mellem titellinje og vinduesindhold "
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "Installerer et KWM-tema"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "Sti til en tema-config-fil"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWMTheme</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "Klæbrig"
+
+#~ msgid "Unsticky"
+#~ msgstr "Ikke klæbrig"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>Keramik forhåndsvisning</b></center>"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "Tegn titellinje med &prikket effekt"
+
+#~ msgid ""
+#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
+#~ "otherwise, they are drawn without the stipple."
+#~ msgstr ""
+#~ "Når dette er valgt tegnes aktive titellinjer med en prikket effekt. "
+#~ "Ellers tegnes de uden prikker."
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "Tegn g&ribehåndtag under vinduer"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
+#~ "otherwise, no grab bar is drawn."
+#~ msgstr ""
+#~ "Når dette er valgt tenges dekorationer med et \"gribehåndtag\" under "
+#~ "vinduer. Ellers tenges ikke  noget gribehåndtag."
+
+#~ msgid "Draw &gradients"
+#~ msgstr "Tegn &overgange"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with gradients for high-color "
+#~ "displays; otherwise, no gradients are drawn."
+#~ msgstr ""
+#~ "Når dette er valgt tegnes dekorationer med overgange på højfarve-skærme. "
+#~ "Ellers tegnes ingen overgange."
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"
+
+#~ msgid ""
+#~ "When selected, the window decoration borders are drawn using the titlebar "
+#~ "colors; otherwise, they are drawn using normal border colors instead."
+#~ msgstr ""
+#~ "Når dette er valgt tegnes vinduesdekorationens kanter med titellinjens "
+#~ "farver. Ellers tegnes de med de normale kanters farver i stedet."
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "Quartz &ekstra tynd"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "Quartz vinduesdekorationer med ekstratynd titellinje."
+
+#~ msgid "Quartz"
+#~ msgstr "Quartz"
+
+#~ msgid "Redmond"
+#~ msgstr "Redmond"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "&Vis vinduets håndtag til ændring af størrelse"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "Når dette er valgt, bliver dekorationer tegnet med et \"gribehåndtag\" i "
+#~ "nederste højre hjørne af vinduerne. Dette gør det nemmere at ændre "
+#~ "størrelse. især for trackbolde og andre museerstatninger på bærbare."
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr "Her kan du ændre størrelse på håndtaget til at ændre størrelse."
+
+#~ msgid "Medium"
+#~ msgstr "Mellem"
+
+#~ msgid "Modern System"
+#~ msgstr "Moderne system"
+
+#~ msgid "Web"
+#~ msgstr "Væv"
+
+#~ msgid "Keramik"
+#~ msgstr "Keramik"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "Vis vindues&ikonet i overskriftsboblen"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "Markér dette hvis du ønsker at vinduesikonet skal vises i "
+#~ "overskriftsboblen ved siden af titellinjens tekst."
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "Tegn &små overskriftsbobler på aktive vinduer"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "Markér dette hvis du ønsker at påskriftboblen skal have samme størrelse "
+#~ "på aktive vinduer som den har på de inaktive. Dette er nyttigt for en "
+#~ "laptop eller skærme med lav opløsning hvor du ønsker at maksimere mængden "
+#~ "af plads tilgængelig for vinduets indhold."
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "Tegn g&ribehåndtag under vinduer"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "Markér dette hvis du ønsker at et gribehåndtag skal tegnes under vinduer. "
+#~ "Når dette ikke er markeret vil der kun blive tegnet en tynd kant i stedet "
+#~ "for."
+
+#~ msgid "Aurorae Theme Engine"
+#~ msgstr "Aurorae temamotor"
+
+#~ msgid "Drag or Type Theme URL"
+#~ msgstr "Træk eller skriv URL til tema"
+
+#~ msgid "Unable to find the theme archive %1."
+#~ msgstr "Kan ikke finde tema-arkivet %1."
+
+#~ msgid ""
+#~ "Unable to download theme archive;\n"
+#~ "please check that address %1 is correct."
+#~ msgstr ""
+#~ "Kan ikke downloade tema-arkivet.\n"
+#~ "Tjek at adressen %1 er korrekt."
+
+#~ msgid "Theme:"
+#~ msgstr "Tema:"
+
+#~ msgid "Get New Themes..."
+#~ msgstr "Hent nye temaer..."
+
+#~ msgid "Install New Theme..."
+#~ msgstr "Installér nyt tema..."
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Glow active window"
+#~ msgstr "Minimér vindue"
+
+#, fuzzy
+#~| msgid "Blend title bar colors with window contents"
+#~ msgid "Draw separator between title bar and active window contents:"
+#~ msgstr "Bland titellinjens farver med vinduets indhold"
+
+#, fuzzy
+#~| msgid ""
+#~| "When enabled, this option increases the visibility of the window "
+#~| "titlebar by showing stripes"
+#~ msgid ""
+#~ "When enabled, this option makes an horizontal separator appear between "
+#~ "the window title bar and the window contents."
+#~ msgstr ""
+#~ "Når aktiveret, forøger denne indstilling synligheden af vinduets "
+#~ "titellinje ved at vise striber"
+
+#, fuzzy
+#~| msgid "Oxygen"
+#~ msgid "Oxygen team"
+#~ msgstr "Oxygen"
+
+#~ msgid ""
+#~ "When enabled, this option increases the visibility of the window titlebar "
+#~ "by showing stripes"
+#~ msgstr ""
+#~ "Når aktiveret, forøger denne indstilling synligheden af vinduets "
+#~ "titellinje ved at vise striber"
+
+#~ msgid "Show stripes next to the title"
+#~ msgstr "Vis striber ved siden af titlen"
+
+#, fuzzy
+#~| msgid ""
+#~| "When enabled, this option increases the visibility of the window "
+#~| "titlebar by showing stripes"
+#~ msgid ""
+#~ "When enabled, this option increases the visibility of the window titlebar "
+#~ "by adding an horizontal bar between the title bar and the window contents"
+#~ msgstr ""
+#~ "Når aktiveret, forøger denne indstilling synligheden af vinduets "
+#~ "titellinje ved at vise striber"
+
+#, fuzzy
+#~| msgid "Blend title bar colors with window contents"
+#~ msgid "Draw separator between title bar and window contents"
+#~ msgstr "Bland titellinjens farver med vinduets indhold"
+
+#, fuzzy
+#~| msgid "Show stripes next to the title"
+#~ msgid "Show stripes next to the title:"
+#~ msgstr "Vis striber ved siden af titlen"
+
+#, fuzzy
+#~| msgid "Blend title bar colors with window contents"
+#~ msgid "Blend title bar colors with window content:"
+#~ msgstr "Bland titellinjens farver med vinduets indhold"
+
+#~ msgid "Blend title bar colors with window contents"
+#~ msgstr "Bland titellinjens farver med vinduets indhold"
+
+#~ msgid "Ozone"
+#~ msgstr "Ozone"
+
+#, fuzzy
+#~| msgid "Draw window frames using &titlebar colors"
+#~ msgid "Overwrite default title bar colors:"
+#~ msgstr "Træk vinduesrammer ved brug af &titellinjens farver"
+
+#~ msgid ""
+#~ "When enabled, this option makes the window title bar use the same colors "
+#~ "as the window contents, instead of using the system title bar colors."
+#~ msgstr ""
+#~ "Når aktiveret, får denne indstilling vinduets titellinje til at bruge "
+#~ "samme farver som vinduets indhold, i stedet for at bruge systemets farver "
+#~ "for titellinjen."

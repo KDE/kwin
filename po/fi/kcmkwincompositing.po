@@ -1,0 +1,969 @@
+# Finnish messages for kcmkwincompositing.
+# Copyright © 2007, 2008, 2009, 2010, 2011 This_file_is_part_of_KDE
+# This file is distributed under the same license as the kde-workspace package.
+# Teemu Rytilahti <teemu.rytilahti@kde-fi.org>, 2007.
+# Mikko Piippo <piippo@cc.helsinki.fi>, 2008.
+# Teemu Rytilahti <teemu.rytilahti@kde-fi.org>, 2008.
+# Teemu Rytilahti <teemu.rytilahti@d5k.net>, 2008.
+# Tommi Nieminen <translator@legisign.org>, 2009, 2011, 2013, 2014, 2016, 2017, 2018, 2019, 2021, 2022.
+# Jorma Karvonen <karvonen.jorma@gmail.com>, 2010.
+# Lasse Liehu <lasse.liehu@gmail.com>, 2010, 2011, 2012, 2013, 2014, 2015, 2016.
+#
+# KDE Finnish translation sprint participants:
+# Author: Artnay
+# Author: Lliehu
+# Author: Niklas Laxström
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwincompositing\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"PO-Revision-Date: 2022-02-05 18:23+0200\n"
+"Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
+"Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-POT-Import-Date: 2012-12-01 22:22:22+0000\n"
+"X-Generator: Lokalize 20.04.2\n"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
+#: compositing.ui:31
+#, kde-format
+msgid ""
+"OpenGL compositing (the default) has crashed KWin in the past.\n"
+"This was most likely due to a driver bug.\n"
+"If you think that you have meanwhile upgraded to a stable driver,\n"
+"you can reset this protection but be aware that this might result in an "
+"immediate crash!"
+msgstr ""
+"OpenGL-koostaminen (oletus) on aikaisemmin kaatanut KWinin.\n"
+"Tämä johtui todennäköisesti ajurivirheestä.\n"
+"Jos arvelet päivittäneesi sittemmin vakaaseen ajuriin,\n"
+"suojauksen voi poistaa käytöstä, mutta tämä voi johtaa välittömään "
+"kaatumiseen!"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
+#: compositing.ui:44
+#, kde-format
+msgid ""
+"Scale method \"Accurate\" is not supported by all hardware and can cause "
+"performance regressions and rendering artifacts."
+msgstr ""
+"Skaalausmenetelmää ”Tarkka” ei tueta kaikilla laitteistoilla, ja se saattaa "
+"aiheuttaa huonoa suorituskykyä sekä renderöintiartifakteja."
+
+#. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
+#: compositing.ui:67
+#, kde-format
+msgid ""
+"Keeping the window thumbnail always interferes with the minimized state of "
+"windows. This can result in windows not suspending their work when minimized."
+msgstr ""
+"Ikkunoiden pienoiskuvien säilyttäminen aina häiritsee ikkunoiden "
+"pienennettyä tilaa. Tästä johtuen jotkin ikkunat eivät keskeytä työtään, kun "
+"ne pienennetään."
+
+#. i18n: ectx: property (text), widget (QLabel, compositingLabel)
+#: compositing.ui:79
+#, kde-format
+msgid "Compositing:"
+msgstr "Koostaminen:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
+#: compositing.ui:86
+#, kde-format
+msgid "Enable on startup"
+msgstr "Ota käyttöön käynnistettäessä"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:95
+#, kde-format
+msgid ""
+"Applications can set a hint to block compositing when the window is open.\n"
+" This brings performance improvements for e.g. games.\n"
+" The setting can be overruled by window-specific rules."
+msgstr ""
+"Sovellukset voivat vihjata estämään koostamisen ikkunan ollessa auki.\n"
+" Tämä parantaa suorituskykyä esim. peleissä.\n"
+" Asetuksen voi kiertää ikkunakohtaisella säännöllä."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:98
+#, kde-format
+msgid "Allow applications to block compositing"
+msgstr "Salli sovellusten estää koostaminen"
+
+#. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
+#: compositing.ui:105
+#, kde-format
+msgid "Animation speed:"
+msgstr "Animointinopeus:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: compositing.ui:142
+#, kde-format
+msgid "Very slow"
+msgstr "Hyvin hidas"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: compositing.ui:162
+#, kde-format
+msgid "Instant"
+msgstr "Välitön"
+
+#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
+#: compositing.ui:174
+#, kde-format
+msgid "Scale method:"
+msgstr "Skaalausmenetelmä:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:184
+#, kde-format
+msgid "Smooth"
+msgstr "Tasainen"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:189
+#, kde-format
+msgid "Accurate"
+msgstr "Tarkka"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: compositing.ui:199
+#, kde-format
+msgid "Tearing prevention (\"vsync\"):"
+msgstr "Pirstoutumisen esto (”vsync”):"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:207
+#, kde-format
+msgid "Automatic"
+msgstr "Automaattinen"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:212
+#, kde-format
+msgid "Only when cheap"
+msgstr "Vain kun edullista"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:217
+#, kde-format
+msgid "Full screen repaints"
+msgstr "Piirrettäessä koko näyttö uudelleen"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:222
+#, kde-format
+msgid "Re-use screen content"
+msgstr "Käytä näytön sisältöä uudelleen"
+
+#. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
+#: compositing.ui:230
+#, kde-format
+msgid "Keep window thumbnails:"
+msgstr "Säilytä ikkunoiden pienoiskuvat:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:238
+#, kde-format
+msgid "Never"
+msgstr "Ei koskaan"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:243
+#, kde-format
+msgid "Only for Shown Windows"
+msgstr "Vain näytetyille ikkunoille"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:248
+#, kde-format
+msgid "Always"
+msgstr "Aina"
+
+#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
+#: compositing.ui:256
+#, kde-format
+msgid "Latency:"
+msgstr "Viive:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:264
+#, kde-format
+msgid "Force lowest latency (may cause dropped frames)"
+msgstr "Pakota vähäisin viive (kuvia voi jäädä pois)"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:269
+#, kde-format
+msgid "Prefer lower latency"
+msgstr "Suosi vähäisempää viivettä"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:274
+#, kde-format
+msgid "Balance of latency and smoothness"
+msgstr "Viipeen ja tasaisuuden tasapaino"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:279
+#, kde-format
+msgid "Prefer smoother animations"
+msgstr "Suosi tasaisempia animaatioita"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:284
+#, kde-format
+msgid "Force smoothest animations"
+msgstr "Pakota tasaisimmat animaatiot"
+
+#: main.cpp:79
+#, kde-format
+msgid "Re-enable OpenGL detection"
+msgstr "Käytä OpenGL-tunnistusta uudestaan"
+
+#: main.cpp:135
+#, kde-format
+msgid ""
+"\"Only when cheap\" only prevents tearing for full screen changes like a "
+"video."
+msgstr ""
+"”Vain kun edullista” estää pirstoutumista, kun koko näytön kuva muuttuu "
+"esimerkiksi videossa."
+
+#: main.cpp:139
+#, kde-format
+msgid "\"Full screen repaints\" can cause performance problems."
+msgstr ""
+"”Piirrettäessä koko näyttö uudelleen” voi aiheuttaa suorituskykyongelmia."
+
+#: main.cpp:143
+#, kde-format
+msgid ""
+"\"Re-use screen content\" causes severe performance problems on MESA drivers."
+msgstr ""
+"”Käytä näytön sisältöä uudelleen” aiheuttaa MESA-ajureilla vakavia "
+"suorituskykyongelmia."
+
+#~ msgid "Rendering backend:"
+#~ msgstr "Renderöinnin toteutus:"
+
+#~ msgid "OpenGL 3.1"
+#~ msgstr "OpenGL 3.1"
+
+#~ msgid "OpenGL 2.0"
+#~ msgstr "OpenGL 2.0"
+
+#~ msgid "Crisp"
+#~ msgstr "Terävä"
+
+#~ msgid "Smooth (slower)"
+#~ msgstr "Tasainen (hitaampi)"
+
+#~ msgid "XRender"
+#~ msgstr "XRender"
+
+#~ msgctxt "OpenGL Platform Interface"
+#~ msgid "EGL"
+#~ msgstr "EGL"
+
+#~ msgctxt "OpenGL Platform Interface"
+#~ msgid "GLX"
+#~ msgstr "GLX"
+
+#~ msgid ""
+#~ "Author: %1\n"
+#~ "License: %2"
+#~ msgstr ""
+#~ "Tekijä: %1\n"
+#~ "Lisenssi: %2"
+
+#~ msgid ""
+#~ "Hint: To find out or configure how to activate an effect, look at the "
+#~ "effect's settings."
+#~ msgstr ""
+#~ "Vihje: tehosteen asetuksista löytyy ohje, kuinka tehoste aktivoidaan."
+
+#~ msgid "Search..."
+#~ msgstr "Etsi…"
+
+#~ msgid "Configure filter"
+#~ msgstr "Muokkaa suodatinta"
+
+#~ msgid "Exclude Desktop Effects not supported by the Compositor"
+#~ msgstr "Ohita työpöytätehosteet, joita koostin ei tue"
+
+#~ msgid "Exclude internal Desktop Effects"
+#~ msgstr "Ohita sisäiset työpöytätehosteet"
+
+#~ msgid "Get New Desktop Effects..."
+#~ msgstr "Hae uusia työpöytätehosteita…"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Teemu Rytilahti, Mikko Piippo, Tommi Nieminen, Jorma Karvonen"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr ""
+#~ "tpr@d5k.net, mikko.piippo@helsinki.fi, translator@legisign.org, karvonen."
+#~ "jorma@gmail.com"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Accessibility"
+#~ msgstr "Käytettävyys"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Appearance"
+#~ msgstr "Ulkoasu"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Candy"
+#~ msgstr "Karkit"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Focus"
+#~ msgstr "Kohdistus"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Show Desktop Animation"
+#~ msgstr "Näytä työpöytäanimointi"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Tools"
+#~ msgstr "Työkalut"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Virtual Desktop Switching Animation"
+#~ msgstr "Virtuaalityöpöydän vaihtamisen animaatio"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Management"
+#~ msgstr "Ikkunanhallinta"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Open/Close Animation"
+#~ msgstr "Ikkunan avaus- ja sulkemisanimointi"
+
+#~ msgid "KWin development team"
+#~ msgstr "KWin-kehitysryhmä"
+
+#~ msgid "Experimental:"
+#~ msgstr "Kokeellinen:"
+
+#~ msgid "Enable color correction"
+#~ msgstr "Käytä värinkorjausta"
+
+#~ msgid ""
+#~ "Having full screen windows bypass the compositor is not supported on "
+#~ "every hardware."
+#~ msgstr ""
+#~ "Koostimen ohittamista koko näyttöjen ikkunoille ei tueta kaikilla "
+#~ "laitteistoilla."
+
+#~ msgid "Expert:"
+#~ msgstr "Asiantuntija:"
+
+#~ msgid "Suspend compositor for full screen windows"
+#~ msgstr "Pysäytä koostin koko näytön ikkunoilta"
+
+#~ msgid "OpenGL interface:"
+#~ msgstr "OpenGL-rajapinta:"
+
+#~ msgid ""
+#~ "EGL is not supported by all OpenGL drivers. If not supported the "
+#~ "Compositor will be disabled."
+#~ msgstr ""
+#~ "Kaikki OpenGL-ajurit eivät tue EGL:ää. Koostin poistetaan käytöstä, jos "
+#~ "sitä ei tueta."
+
+#~ msgid "Animation Speed:"
+#~ msgstr "Animointinopeus:"
+
+#~ msgid "Scale Method:"
+#~ msgstr "Skaalausmenetelmä:"
+
+#~ msgid "Tearing Prevention (VSync):"
+#~ msgstr "Pirstoutumisen esto (VSync):"
+
+#~ msgid "Keep Window Thumbnails:"
+#~ msgstr "Säilytä ikkunoiden pienoiskuvat:"
+
+#~ msgid "Always (Breaks Animations)"
+#~ msgstr "Aina (rikkoo animaatiot)"
+
+#~ msgid "OpenGL Platform Interface:"
+#~ msgstr "OpenGL-alustan rajapinta:"
+
+#~ msgid "Form"
+#~ msgstr "Lomake"
+
+#~ msgid "OpenGL compositing (the default) has crashed KWin in the past.\n"
+#~ msgstr "OpenGL-koostaminen (oletus) on kaatanut KWinin aiemmin.\n"
+
+#~ msgid "1 second remaining:"
+#~ msgid_plural "%1 seconds remaining:"
+#~ msgstr[0] "1 sekunti jäljellä:"
+#~ msgstr[1] "%1 sekuntia jäljellä:"
+
+#~ msgid "Confirm Desktop Effects Change"
+#~ msgstr "Vahvista työpöytätehosteiden muutokset"
+
+#~ msgid "&Accept Configuration"
+#~ msgstr "Hyväksy &asetukset"
+
+#~ msgid "&Return to Previous Configuration"
+#~ msgstr "&Palaa aikaisempiin asetuksiin"
+
+#~ msgid ""
+#~ "Desktop effects settings have changed.\n"
+#~ "Do you want to keep the new settings?\n"
+#~ "They will be automatically reverted in 10 seconds."
+#~ msgstr ""
+#~ "Työpöytätehosteiden asetuksia on muutettu.\n"
+#~ "Haluatko pitää uudet asetukset?\n"
+#~ "Jos et, vanhat asetukset palautetaan käyttöön 10 sekunnin kuluttua."
+
+#~ msgctxt ""
+#~ "Action to open a dialog showing detailed information why an effect could "
+#~ "not be loaded"
+#~ msgid "Details"
+#~ msgstr "Yksityiskohdat"
+
+# Huutomerkki lienee tarpeeton.
+#~ msgctxt "Prevent warning from bein displayed again"
+#~ msgid "Don't show again!"
+#~ msgstr "Älä näytä uudelleen"
+
+#~ msgid "Use GLSL shaders"
+#~ msgstr "Käytä GLSL-varjostimia"
+
+#~ msgid "None"
+#~ msgstr "Ei mitään"
+
+#~ msgid "The painting is not synchronized with the screen."
+#~ msgstr "Piirtoa ei ole synkronoitu näyttöön."
+
+#~ msgid ""
+#~ "Tries to re-use older buffers and if that is not possible,\n"
+#~ "picks a strategy matching your hardware."
+#~ msgstr ""
+#~ "Yrittää käyttää vanhempia puskureita uudelleen, tai jollei mahdollista,\n"
+#~ "valitsee laitteistoosi sopivan menetelmän."
+
+#~ msgid ""
+#~ "When major regions of the screen are updated,\n"
+#~ "the entire screen will be repainted.\n"
+#~ "Can cause tearing with small updates."
+#~ msgstr ""
+#~ "Useampaa näytön aluetta virkistettäessä\n"
+#~ "koko näyttö piirretään uudelleen.\n"
+#~ "Voi aiheuttaa pirstoutumista vähäisissä virkistyksissä."
+
+#~ msgid ""
+#~ "The complete screen is repainted for every frame.\n"
+#~ "Can be slow with large blurred areas."
+#~ msgstr ""
+#~ "Koko näyttö piirretään uudelleen kullekin kehykselle.\n"
+#~ "Voi olla hidas, jos kuvassa on laajoja sumeita alueita."
+
+#~ msgid ""
+#~ "WARNING:\n"
+#~ "This strategy is usually slow with Open Source drivers.\n"
+#~ "Undamaged pixels will be copied from GL_FRONT to GL_BACK"
+#~ msgstr ""
+#~ "VAROITUS:\n"
+#~ "Menetelmä on yleensä hidas avoimen lähdekoodin ajureilla.\n"
+#~ "Vioittumattomat kuvapisteet kopioidaan GL_FRONTista GL_BACKiin"
+
+#~ msgid "kcmkwincompositing"
+#~ msgstr "kcmkwincompositing"
+
+#~ msgid "KWin Desktop Effects Configuration Module"
+#~ msgstr "KWin työpöytätehosteiden asetusosio"
+
+#~ msgid "(c) 2007 Rivo Laks"
+#~ msgstr "© 2007 Rivo Laks"
+
+#~ msgid "Rivo Laks"
+#~ msgstr "Rivo Laks"
+
+#~ msgid "No effect"
+#~ msgstr "Ei tehostetta"
+
+#~ msgid ""
+#~ "Failed to activate desktop effects using the given configuration options. "
+#~ "Settings will be reverted to their previous values.\n"
+#~ "\n"
+#~ "Check your X configuration. You may also consider changing advanced "
+#~ "options, especially changing the compositing type."
+#~ msgstr ""
+#~ "Työpöytätehosteita ei voitu ottaa käyttöön valituilla asetuksilla. "
+#~ "Palautetaan vanhat asetukset.\n"
+#~ "\n"
+#~ "Tarkista X-palvelimen asetukset. Myös lisäasetusten vaihtaminen voi "
+#~ "auttaa, erityisesti koostamistyylin vaihtaminen."
+
+#~ msgid "Demos"
+#~ msgstr "Esittelyt"
+
+#~ msgid "Tests"
+#~ msgstr "Kokeilut"
+
+#~ msgid ""
+#~ "Desktop effects are not available on this system due to the following "
+#~ "technical issues:"
+#~ msgstr ""
+#~ "Työpöytätehosteet eivät ole käytettävissä seuraavien teknisten ongelmien "
+#~ "takia:"
+
+#~ msgctxt ""
+#~ "Reason shown when trying to activate desktop effects and KWin (most "
+#~ "likely) crashes"
+#~ msgid "Window Manager seems not to be running"
+#~ msgstr "Ikkunaointiohjelma ei näytä olevan päällä"
+
+#~ msgid ""
+#~ "Your settings have been saved but as KDE is currently running in failsafe "
+#~ "mode desktop effects cannot be enabled at this time.\n"
+#~ "\n"
+#~ "Please exit failsafe mode to enable desktop effects."
+#~ msgstr ""
+#~ "Asetuksesi on tallennettu, mutta KDE on paraikaa vikasietotilassa, joten "
+#~ "työpöytätehosteita ei voi ottaa käyttöön juuri nyt.\n"
+#~ "\n"
+#~ "Poistu vikasietotilasta ottaaksesi työpöytätehosteet käyttöön."
+
+#~ msgctxt "Error Message shown when a desktop effect could not be loaded"
+#~ msgid "One desktop effect could not be loaded."
+#~ msgid_plural "%1 desktop effects could not be loaded."
+#~ msgstr[0] "Tehosteen lataaminen epäonnistui."
+#~ msgstr[1] "%1 tehosteen lataaminen epäonnistui."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated due to unknown reason"
+#~ msgid "%1 effect failed to load due to unknown reason."
+#~ msgstr "Tehosteen %1 lataaminen epäonnistui tuntemattomasta syystä."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires hardware "
+#~ "shaders"
+#~ msgid "%1 effect requires hardware support."
+#~ msgstr "Tehoste %1 vaatii laitteistotuen."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires OpenGL"
+#~ msgid "%1 effect requires OpenGL."
+#~ msgstr "Tehoste %1 vaatii OpenGL-tuen."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires OpenGL 2"
+#~ msgid "%1 effect requires OpenGL 2."
+#~ msgstr "Tehoste %1 vaatii OpenGL2-tuen."
+
+#~ msgctxt "Window title"
+#~ msgid "List of effects which could not be loaded"
+#~ msgstr "Luettelo tehosteista, joiden lataaminen epäonnistui"
+
+#~ msgid ""
+#~ "For technical reasons it is not possible to determine all possible error "
+#~ "causes."
+#~ msgstr ""
+#~ "Teknisisten syiden takia ei ole mahdollista selvittää kaikkien virheiden "
+#~ "syytä."
+
+#~ msgctxt ""
+#~ "Error Message shown when compositing is not active after tried activation"
+#~ msgid "Desktop effect system is not running."
+#~ msgstr "Työpöytätehostejärjestelmä ei ole käynnissä"
+
+#~ msgid "<h1>Desktop Effects</h1>"
+#~ msgstr "<h1>Työpöytätehosteet</h1>"
+
+#~ msgid "General"
+#~ msgstr "Perusasetukset"
+
+#~ msgid "Pressing this button can crash the desktop."
+#~ msgstr "Tämän painikkeen painaminen voi kaataa työpöydän."
+
+#~ msgid "I have saved my data."
+#~ msgstr "Olen tallentanut tietoni."
+
+#~ msgid "Activation"
+#~ msgstr "Aktivointi"
+
+# Rivinvaihto, koska muuten teksti ei rivity ja pakottaa ikkunan tarpeettoman leveäksi. Testattu, että toimii.
+#~ msgid "Desktop effects can be toggled anytime using this shortcut:"
+#~ msgstr ""
+#~ "Työpöytätehosteet voidaan ottaa käyttöön tai pois käytöstä\n"
+#~ "milloin tahansa tällä pikanäppäimellä:"
+
+#~ msgctxt "@title:group a few general options to set up desktop effects"
+#~ msgid "Simple effect setup"
+#~ msgstr "Tehosteiden pikasäätö"
+
+#~ msgid "Improved window management"
+#~ msgstr "Paranneltu ikkunanhallinta"
+
+#~ msgid "Effect for desktop switching:"
+#~ msgstr "Työpöydän vaihtotehoste:"
+
+#~ msgid "Very Fast"
+#~ msgstr "Hyvin nopea"
+
+#~ msgid "Fast"
+#~ msgstr "Nopea"
+
+#~ msgid "Normal"
+#~ msgstr "Normaali"
+
+#~ msgid "Slow"
+#~ msgstr "Hidas"
+
+#~ msgid "Extremely Slow"
+#~ msgstr "Äärimmäisen hidas"
+
+#~ msgid ""
+#~ "You can find more effects, as well as effect-specific settings, in the "
+#~ "\"All Effects\" tab above."
+#~ msgstr ""
+#~ "Löydät lisää tehosteita samoin kuin tehostekohtaisia asetuksia ”Kaikki "
+#~ "tehosteet” -välilehdeltä."
+
+#~ msgid "All Effects"
+#~ msgstr "Kaikki tehosteet"
+
+#~ msgid "Advanced"
+#~ msgstr "Lisäasetukset"
+
+#~ msgid "OpenGL Options"
+#~ msgstr "OpenGL-asetukset"
+
+#~ msgid ""
+#~ "<p>Activates color correction if possible, using the Kolor-Manager. "
+#~ "Requires OpenGL 2 Shaders to be enabled and Kolor-Manager to be "
+#~ "installed. May fail silently.</p><p><strong>Experimental</strong>.</p>"
+#~ msgstr ""
+#~ "<p>Aktivoi Kolor-Manageria käyttävän värinkorjauksen mikäli mahdollista. "
+#~ "Vaatii, että OpenGL 2 -varjostukset ovat käytössä ja että Kolor-Manager "
+#~ "on asennettu. Voi lakata toimimasta ilmoittamatta.</"
+#~ "p><p><strong>Kokeellinen</strong>.</p>"
+
+#~ msgid "General Options"
+#~ msgstr "Perusasetukset"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Crisp:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"fast\")</span> -  Pretty fast "
+#~ "on all GPUs but looks bricky</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Smooth:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"good\") </span>- linear "
+#~ "blending.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Fast enough on newer "
+#~ "nvidia GPUs and maybe others but also can be <span style=\" text-"
+#~ "decoration: underline;\">very</span> slow, you will have to try it.</p></"
+#~ "body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Crisp:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"fast\")</span> – Nopeahko "
+#~ "kaikilla grafiikkasuorittimilla mutta näyttää kolholta</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Tasainen:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"good\") </span>– lineaarinen "
+#~ "sekoitus.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Riittävän nopea Nvidian "
+#~ "uudemmilla näytönohjaimilla ja ehkä muillakin, mutta voi myös olla<span "
+#~ "style=\" text-decoration: underline;\">hyvin</span> hidas: sinun täytyy "
+#~ "vain kokeilla.</p></body></html>"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Crisp:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_NEAREST</span> -  (very) fast on all GPUs but looks "
+#~ "bricky</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Smooth:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_LINEAR</span> - fast on most GPUs but a little blurry</"
+#~ "p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Accurate:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Lanczos filter, "
+#~ "requires glsl shader support.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Might be slow on weaker "
+#~ "GPUs and even cause various troubles with broken drivers (from "
+#~ "overbrightening to segfaults).</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Fall back to \"Smooth\" "
+#~ "if you have problems.</p></body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Terävä:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_NEAREST</span> – (hyvin) nopea kaikilla suorittimilla "
+#~ "mutta näyttää bricky</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Tasainen:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_LINEAR</span> – nopea useimmilla suorittimilla mutta "
+#~ "epäterävähkö</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Tarkka:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Lanczos-suodatin; "
+#~ "vaatii glsl-varjostintuen.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Voi olla hidas "
+#~ "heikoilla suorittimilla tai jopa aiheuttaa ongelmia, jos näyttöajurissa "
+#~ "on vikaa (ylikirkkaudesta kaatumisiin asti).</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Vaihda ”Tasaiseen”, jos "
+#~ "kohtaat ongelmia.</p></body></html>"
+
+#~ msgid "OpenGL 1.2"
+#~ msgstr "OpenGL 1.2"
+
+#~ msgid "Qt graphics system:"
+#~ msgstr "Qt:n grafiikkajärjestelmä:"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">It is <span style=\" "
+#~ "font-weight:600;\">strongly recommended</span> to use the <span style=\" "
+#~ "font-weight:600;\">native</span> system when using the <span style=\" "
+#~ "font-weight:600;\">XRender</span> backend.</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">On the other hand, many "
+#~ "decorations perform better with the <span style=\" font-weight:600;"
+#~ "\">raster</span> system on the <span style=\" font-weight:600;\">default "
+#~ "and generally preferred OpenGL</span> backend (though some don't - also "
+#~ "the impact here can be anything between \"slight\" and \"incredible\" "
+#~ "depending on the GPU and driver)</p></body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">On <span style=\" font-"
+#~ "weight:600;\">erittäin suositeltavaa</span> käyttää <span style=\" font-"
+#~ "weight:600;\">natiivia</span> järjestelmää, jos käyttää <span style=\" "
+#~ "font-weight:600;\">XRender</span>-koostamistyyppiä.</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Toisaalta monien "
+#~ "ikkunakehysten suorituskyky on parempi, kun käyttää <span style=\" font-"
+#~ "weight:600;\">rasteri</span>-järjestelmää <span style=\" font-weight:600;"
+#~ "\">oletusarvoisen ja suositumman OpenGL</span>-koostamistyypin kanssa. "
+#~ "Joidenkin kehysten suorituskyky ei tosin ole parempi ja ero voi olla "
+#~ "näytönohjaimesta ja ajurista riippuen mitä vain mitättömän ja "
+#~ "suunnattoman välillä.</p></body></html>"
+
+#~ msgid "Native"
+#~ msgstr "Natiivi"
+
+#~ msgid "Raster"
+#~ msgstr "Rasteri"
+
+#~ msgid ""
+#~ "If enabled all rendering will be performed with Shaders written in the "
+#~ "OpenGL Shading Language.\n"
+#~ "On legacy hardware disabling Shaders can improve the performance."
+#~ msgstr ""
+#~ "Kun käytössä, kaikki piirretään varjostuksilla, jotka on kirjoitettu "
+#~ "OpenGL Shading Language -kielellä.\n"
+#~ "Vanhalla laitteistolla varjotuksien käytöstä poistaminen voi parantaa "
+#~ "suorituskykyä."
+
+#~ msgid "Use OpenGL 2 Shaders"
+#~ msgstr "Käytä OpenGL 2 -varjostuksia"
+
+#~ msgid "Use VSync"
+#~ msgstr "Käytä pystytahdistusta"
+
+#~ msgid "Effect for window switching:"
+#~ msgstr "Ikkunan vaihtotehoste:"
+
+#~ msgid "Enable direct rendering"
+#~ msgstr "Käytä suorapiirtoa"
+
+#~ msgid "Disable functionality checks"
+#~ msgstr "Ohita toimivuustarkistukset"
+
+#~ msgid "Desktop effects are temporarily disabled"
+#~ msgstr "Työpöytätehosteet on väliaikaisesti poistettu käytöstä"
+
+#~ msgid "Resume Desktop Effects"
+#~ msgstr "Jatka työpöytätehosteiden käyttöä"
+
+#~ msgid "Desktop effects are disabled"
+#~ msgstr "Työpöytätehosteet ei ole käytössä"
+
+#~ msgid "Common Settings"
+#~ msgstr "Yleisasetukset"
+
+#~ msgid "Shadows"
+#~ msgstr "Varjot"
+
+#~ msgid "Compositing State"
+#~ msgstr "Koostamisen tila"
+
+#~ msgid "OpenGL mode:"
+#~ msgstr "OpenGL-tila:"
+
+#~ msgid "Texture From Pixmap"
+#~ msgstr "Tekstuuri pixmap-tiedostosta"
+
+#~ msgid "Shared Memory"
+#~ msgstr "Jaettu muisti"
+
+#~ msgid "Fallback"
+#~ msgstr "Paluupiste"
+
+#~ msgid ""
+#~ "Enabling this option allows compositing to be activated even if some of "
+#~ "the internal checks fail. Doing so may make the whole desktop unusable "
+#~ "and its use is not recommened. Use only if KWin refuses to activate "
+#~ "compositing on a system that should be capable of compositing.\n"
+#~ msgstr ""
+#~ "Tämän asetuksen valitseminen ottaa koostamisen käyttöön, vaikka sisäinen "
+#~ "tarkistus epäonnistuisi. Koko työpöytä voi päätyä käyttökelvottomaksi, "
+#~ "eikä asetusta siten suositella käytettäväksi. Käytä tätä vain, jos KWin "
+#~ "kieltäytyy ottamasta koostamista käyttöön järjestelmässä, joka varmasti "
+#~ "kykenee siihen.\n"
+
+#~ msgid "Nearest (fastest)"
+#~ msgstr "Lähin (nopein)"
+
+#~ msgid "Bilinear"
+#~ msgstr "Bilineaarinen"
+
+#~ msgid "Trilinear (best quality)"
+#~ msgstr "Trilineaarinen (paras laatu)"
+
+# Lokalisointi.org-sanakirja määrittelee, että verbi compositing on "koostaminen, koosto".
+#~ msgid "Compositing is not supported on your system."
+#~ msgstr "Järjestelmäsi ei tue koostamista."
+
+#~ msgid "Compositing is active"
+#~ msgstr "Koostaminen on käytössä"
+
+#~ msgid "Suspend Compositing"
+#~ msgstr "Keskeytä koostaminen"
+
+#~ msgid "Resume Compositing"
+#~ msgstr "Käynnistä uudelleen koostaminen"
+
+#~ msgid "Compositing is disabled"
+#~ msgstr "Koostaminen on poissa käytöstä"
+
+#~ msgid "All Desktops"
+#~ msgstr "Kaikki työpöydät"
+
+#~ msgid "Cylinder"
+#~ msgstr "Sylinteri"
+
+#~ msgid "Advanced Compositing Options"
+#~ msgstr "Lisäasetukset"
+
+#~ msgid "Misc"
+#~ msgstr "Sekalaiset"
+
+#~ msgid "Keep thumbnails of hidden windows up to date"
+#~ msgstr "Pidä piilotettujen ikkunoiden esikatselukuvat ajan tasalla"

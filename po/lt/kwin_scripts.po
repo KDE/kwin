@@ -1,0 +1,63 @@
+# Lithuanian translations for kwin package.
+# Copyright (C) 2019 This file is copyright:
+# This file is distributed under the same license as the kwin package.
+# Automatically generated, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2019-05-20 03:25+0200\n"
+"PO-Revision-Date: 2019-06-08 19:13+0000\n"
+"Last-Translator: Moo\n"
+"Language-Team: lt\n"
+"Language: lt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
+"%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
+"X-Generator: Poedit 2.0.6\n"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, KWin::VideoWallConfigForm)
+#: videowall/contents/ui/config.ui:14
+#, kde-format
+msgid "Video Wall"
+msgstr "Vaizdo siena"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ApplyTo)
+#: videowall/contents/ui/config.ui:20
+#, kde-format
+msgid "Apply to"
+msgstr "Taikyti"
+
+#. i18n: ectx: property (text), widget (QLineEdit, kcfg_Whitelist)
+#: videowall/contents/ui/config.ui:32
+#, kde-format
+msgid "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
+msgstr "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
+
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Whitelist)
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Blacklist)
+#: videowall/contents/ui/config.ui:35 videowall/contents/ui/config.ui:66
+#, kde-format
+msgid "Comma separated list of window classes"
+msgstr "Kableliais atskirtų, langų klasių sąrašas"
+
+#. i18n: ectx: property (text), widget (QLabel, applyLabel)
+#: videowall/contents/ui/config.ui:45
+#, kde-format
+msgid "All"
+msgstr "Visi"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Ignore)
+#: videowall/contents/ui/config.ui:54
+#, kde-format
+msgid "Ignore"
+msgstr "Nepaisyti"
+
+#. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
+#: videowall/contents/ui/config.ui:73
+#, kde-format
+msgid "None"
+msgstr "Nėra"

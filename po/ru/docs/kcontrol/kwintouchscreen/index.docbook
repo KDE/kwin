@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Russian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwintouchscreen" lang="&language;">
+<articleinfo>
+
+<title
+>Сенсорный экран</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Мария</firstname
+><surname
+>Шикунова</surname
+><affiliation
+><address
+><email
+>translation-team@basealt.ru</email
+></address
+></affiliation
+><contrib
+>Перевод на русский язык</contrib
+></othercredit
+><othercredit role="translator"
+><firstname
+>Олеся</firstname
+><surname
+>Герасименко</surname
+><affiliation
+><address
+><email
+>translation-team@basealt.ru</email
+></address
+></affiliation
+><contrib
+>Редактирование перевода</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>10 апреля 2021 г.</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Параметры системы</keyword>
+<keyword
+>сенсорный</keyword>
+<keyword
+>экран</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Прокрутка от края экрана к его центру позволяет запускать эффекты. Здесь возможно настроить, какой эффект будет запускаться при прокрутке от каждого из краёв экрана. </para>
+
+<para
+>Щёлкните по квадрату любой кнопкой мыши и выберите эффект в контекстном меню. Если квадрат у края экрана — синего цвета, для данного края уже выбран эффект. Если квадрат — серого цвета, эффект для края не выбран.</para>
+
+<para
+>Количество доступных для выбора пунктов в контекстном меню зависит от параметров, выбранных в модуле настройки <ulink url="help:/kcontrol/kwineffects/index.html"
+> <guilabel
+>Эффекты</guilabel
+></ulink
+> в категории <guilabel
+>Рабочая среда</guilabel
+>. Выберите нужные эффекты в группе <guilabel
+>Управление окнами</guilabel
+>; после этого в контекстном меню появятся соответствующие пункты.</para>
+</article>

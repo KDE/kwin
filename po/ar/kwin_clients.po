@@ -1,0 +1,635 @@
+# translation of kwin_clients.po to Arabic
+# translation of kwin_clients.po to
+# محمد سعد  Mohamed SAAD <metehyi@free.fr>, 2006.
+# AbdulAziz AlSharif <a.a-a.s@hotmail.com>, 2007.
+# Youssef Chahibi <chahibi@gmail.com>, 2007.
+# zayed <zayed.alsaidi@gmail.com>, 2008, 2021.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2021-06-29 12:37+0400\n"
+"Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
+"Language-Team: ar\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"X-Generator: Lokalize 21.07.70\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "ضئيل"
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "عاديّ"
+
+#: aurorae/src/aurorae.cpp:727
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "كبير"
+
+#: aurorae/src/aurorae.cpp:728
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "كبير جدًّا"
+
+#: aurorae/src/aurorae.cpp:729
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "ضخم"
+
+#: aurorae/src/aurorae.cpp:730
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "ضخم جدًّا"
+
+#: aurorae/src/aurorae.cpp:731
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "فوق الطّبيعيّ"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr "حجم الزّرّ:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "حوار الضبط"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "م&حاذاة العنوان"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "يسار"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "وسط"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "يمين"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"حدّد هذا الخيار لجعل حد النافذة بنفس لون شريط العنوان. ماعدا ذلك ستكون بنفس "
+"لون الخلفية."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "حد النافذة ملوّن"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"حدّد هذا الخيار لكي تنصع الأزرار عند تمرير مؤشر الفأرة عليها و تتضاءل مرة "
+"ثانية عند الابتعاد عنها"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "أزرار التحريك"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "حدّد هذا الخيار لكي يكون لنص شريط العنوان شكل ثلاثي الإبعاد ومع ظل خلفه."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "استخدم ال&نص المظلل"
+
+#, fuzzy
+#~ msgid "Animations"
+#~ msgstr "أزرار التحريك"
+
+#, fuzzy
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "إعدادات الإجراءات"
+
+#, fuzzy
+#~ msgid "General"
+#~ msgstr "وسط"
+
+#, fuzzy
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "كبير"
+
+#, fuzzy
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "كبير"
+
+#, fuzzy
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "كبير"
+
+#, fuzzy
+#~ msgid "Tit&le alignment:"
+#~ msgstr "م&حاذاة العنوان"
+
+#, fuzzy
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "صغير"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "أغلق النوافذ عن طريق النقر المزدوج على زر القائمة"
+
+#, fuzzy
+#~ msgid "Outline active window title"
+#~ msgstr "ضغّر النافذة"
+
+#, fuzzy
+#~ msgid "Shadows"
+#~ msgstr "ظلّل"
+
+#, fuzzy
+#~ msgid "Active Window Glow"
+#~ msgstr "ضغّر النافذة"
+
+#, fuzzy
+#~ msgid "Dialog"
+#~ msgstr "حوار الضبط"
+
+#, fuzzy
+#~ msgid "Use window title"
+#~ msgstr "ضغّر النافذة"
+
+#, fuzzy
+#~ msgid "Outline active window title:"
+#~ msgstr "ضغّر النافذة"
+
+#, fuzzy
+#~ msgid "Hide window title bar"
+#~ msgstr "ضغّر النافذة"
+
+#, fuzzy
+#~ msgid "Remove"
+#~ msgstr "استعد"
+
+#, fuzzy
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "أكسجين"
+
+#, fuzzy
+#~ msgid "Inactive Windows"
+#~ msgstr "ضغّر النافذة"
+
+#, fuzzy
+#~ msgid "Active Windows"
+#~ msgstr "ضغّر النافذة"
+
+#~ msgid "Oxygen"
+#~ msgstr "أكسجين"
+
+#~ msgid "Help"
+#~ msgstr "مساعدة"
+
+#~ msgid "Minimize"
+#~ msgstr "صغّر"
+
+#~ msgid "Maximize"
+#~ msgstr "كبّر"
+
+#~ msgid "Close"
+#~ msgstr "أغلق"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "ضعهُ فوق الآخرين"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "ضعه تحت الآخرين"
+
+#~ msgid "On All Desktops"
+#~ msgstr "على جميع أسطح المكتب"
+
+#~ msgid "Shade Button"
+#~ msgstr "زر الظل"
+
+#~ msgid "Menu"
+#~ msgstr "القائمة"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "ليس على كلّ أسطح المكتب"
+
+#~ msgid "On all desktops"
+#~ msgstr "على كلّ أسطح المكتب"
+
+#~ msgid "Unshade"
+#~ msgstr "ألغ الظل"
+
+#~ msgid "Shade"
+#~ msgstr "ظلّل"
+
+#~ msgid "Resize"
+#~ msgstr "أعد التحجيم"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>B II معاينة</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "استعد"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "؟"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "ارسم إطارات النافذة مستخدماً ألوان &شريط العنوان"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "عند اختياره ، فإن حدود النافذة سيتم رسمها باستخدام ألوان شريط العنوان ؛ "
+#~ "ماعدا ذلك سوف ترسم باستخدام الألوان عادية للحد."
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "ارسم مقبض إع&ادة التحجيم"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "عند اختياره ، فإن الزخرفات سترسم بواسطة زر \"مقبض قبض\" في الزاوِيَة اليمنى "
+#~ "للنافذة; ماعدا ذلك ، لن يرسم مقبض قبض."
+
+#, fuzzy
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr ""
+#~ "عند اختياره، سترسم أشرطة العناوين النشطة بتأثير نقطي (منقّط); وإلا فسترسم "
+#~ "بدون نقط."
+
+#~ msgid "Actions Settings"
+#~ msgstr "إعدادات الإجراءات"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "انقر مرتين على زر القائمة:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "لا تفعل شيئاً"
+
+#~ msgid "Minimize Window"
+#~ msgstr "ضغّر النافذة"
+
+#~ msgid "Shade Window"
+#~ msgstr "ظلّل النافذة"
+
+#~ msgid "Close Window"
+#~ msgstr "أغلق النافذة"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "الإجراء يمكن ربطه بنقرة مزدوج لزر القائمة. دعه بدون تغيير إذا كنت غير "
+#~ "متأكد."
+
+#~ msgid "Laptop"
+#~ msgstr "حاسوب محمول"
+
+#, fuzzy
+#~ msgid "Radial Gradient"
+#~ msgstr "ارسم ال&تدرّجات"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Save"
+#~ msgstr "ظلّل"
+
+#~ msgid "Large"
+#~ msgstr "كبير"
+
+#~ msgid "Small"
+#~ msgstr "صغير"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "حدّد هذا الخيار إذا كنت تريد إغلاق النوافذ عند النقر المزدوج على زر "
+#~ "القائمة ،مشابه لنوافذ مايكروسوفت."
+
+#~ msgid "Plastik"
+#~ msgstr "بلاستك"
+
+#, fuzzy
+#~| msgid "On All Desktops"
+#~ msgid "All Desktops"
+#~ msgstr "على جميع أسطح المكتب"
+
+#, fuzzy
+#~| msgid "Close"
+#~ msgid "Close Item"
+#~ msgstr "أغلق"
+
+#~ msgid "&Left"
+#~ msgstr "&يسار"
+
+#, fuzzy
+#~| msgid "Center"
+#~ msgid "&Center"
+#~ msgstr "وسط"
+
+#~ msgid "&Right"
+#~ msgstr "&يمين"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Do not keep above others"
+#~ msgstr "ضعهُ فوق الآخرين"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above others"
+#~ msgstr "ضعهُ فوق الآخرين"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Do not keep below others"
+#~ msgstr "ضعه تحت الآخرين"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below others"
+#~ msgstr "ضعه تحت الآخرين"
+
+#, fuzzy
+#~| msgid "Maximize"
+#~ msgid "Maximum"
+#~ msgstr "كبّر"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadow style:"
+#~ msgstr "ظلّل"
+
+#, fuzzy
+#~| msgid "Blend title bar colors with window contents"
+#~ msgid "Draw separator between title bar and window contents: "
+#~ msgstr "اخلط ألوان شريط العنوان بمحتويات النافذة"
+
+#, fuzzy
+#~| msgid "Blend title bar colors with window contents"
+#~ msgid "Draw Separator between title bar and active window contents "
+#~ msgstr "اخلط ألوان شريط العنوان بمحتويات النافذة"
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "يثبت سِمة KWM"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "المسار إلى ملف ضبط السِمة"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWM سِمة</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "مثبت"
+
+#~ msgid "Unsticky"
+#~ msgstr "غير مثبت"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>Keramik معاينة</b></center>"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "ارسم تأثير ال&رسم النقطي في شريط العنوان"
+
+#~ msgid ""
+#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
+#~ "otherwise, they are drawn without the stipple."
+#~ msgstr ""
+#~ "عند اختياره، سترسم أشرطة العناوين النشطة بتأثير نقطي (منقّط); وإلا فسترسم "
+#~ "بدون نقط."
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "ارسم شريط ق&بض أسفل النوافذ"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
+#~ "otherwise, no grab bar is drawn."
+#~ msgstr ""
+#~ "عند اختياره, الزخرفات سترسم بواسطة \"شريط قبض\" أسفل النوافذ; ماعدا ذلك, "
+#~ "لن يرسم شريط قبض."
+
+#~ msgid "Draw &gradients"
+#~ msgstr "ارسم ال&تدرّجات"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with gradients for high-color "
+#~ "displays; otherwise, no gradients are drawn."
+#~ msgstr ""
+#~ "عند اختياره, الزخرفات سترسم بواسطة تدرّجات اللون العالي المعروضة; ماعدا "
+#~ "ذلك, لا تدرّجات سيتم رسمها."
+
+#~ msgid "KDE 2"
+#~ msgstr "كدي 2"
+
+#~ msgid ""
+#~ "When selected, the window decoration borders are drawn using the titlebar "
+#~ "colors; otherwise, they are drawn using normal border colors instead."
+#~ msgstr ""
+#~ "عند تحديده ؛فإن حدود زخرفات النافذة سيتم رسمها باستخدام ألوان شريط "
+#~ "العنوان ؛ ماعدا ذلك ، سيتم رسمها باستخدام ألوان الحد العادية بدلاً من ذلك."
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "كوارْتز إضافي بسيط"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "زخرفات نوافذ كوارْتز مع شريط عنوان صغير إضافي"
+
+#~ msgid "Quartz"
+#~ msgstr "كوارْتز"
+
+#~ msgid "Redmond"
+#~ msgstr "ريموند"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "أ&ظهر مقبض إعادة تحجيم النافذة"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "عند اختياره ، سيرسم في جميع النوافذ مقبض تحجيم في الزاوِيَة اليمنى أسفله. "
+#~ "هذا يجعل تحجيم النافذة سهلاً, خصوصاً لكرات التحكم وبدائل الفأرات الأخرى على "
+#~ "الحواسيب المحمولة."
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr "هنا يمكنك تغيير الحجم لمقبض التحجيم."
+
+#~ msgid "Medium"
+#~ msgstr "وسط"
+
+#~ msgid "Modern System"
+#~ msgstr "نظام معاصر"
+
+#~ msgid "Web"
+#~ msgstr "الويب"
+
+#~ msgid "Keramik"
+#~ msgstr "كراميك"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "اعرض أي&قونة النافذة في فقاعة التعليق"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "حدّد هذا الخيار إذا كنت تريد عرض أيقونة النافذة في فقاعة التعليق في نص "
+#~ "شريط العنوان."
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "ارسم ف&قاعات تعليق صغيرة على النوافذ النشطة"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "حدّد هذا الخيار إذا كنت تريد استعمال نفس الحجم لفقاعة التعليق في كلا "
+#~ "النوافذ، النشطة والخاملة. هذا الخيار مفيد للحواسيب المحمولة أو شاشات ذات "
+#~ "الاستبانة المنخفضة حيث قد تريد استغلال كمية الفراغ المتوفرة لمحتويات "
+#~ "النافذة لأقصى حد."
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "ارسم أشرطة ق&بض أسفل النوافذ"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "حدّد هذا الخيار إذا كنت تريد رسم شريط قبض أسفل النوافذ. إذا لم تحدد هذا "
+#~ "الخيار فسيرسم مكانَه حد رقيق."
+
+#, fuzzy
+#~| msgid "Installs a KWM theme"
+#~ msgid "Get New Themes..."
+#~ msgstr "يثبت سِمة KWM"
+
+#, fuzzy
+#~| msgid "Installs a KWM theme"
+#~ msgid "Install New Theme..."
+#~ msgstr "يثبت سِمة KWM"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Glow active window"
+#~ msgstr "ضغّر النافذة"
+
+#, fuzzy
+#~| msgid "Blend title bar colors with window contents"
+#~ msgid "Draw separator between title bar and active window contents:"
+#~ msgstr "اخلط ألوان شريط العنوان بمحتويات النافذة"
+
+#, fuzzy
+#~| msgid ""
+#~| "When enabled, this option increases the visibility of the window "
+#~| "titlebar by showing stripes"
+#~ msgid ""
+#~ "When enabled, this option makes an horizontal separator appear between "
+#~ "the window title bar and the window contents."
+#~ msgstr ""
+#~ "عندما تمكن هذا الخيار ، فإنه سيزيد قابلية رؤية شريط العنوان النافذة "
+#~ "بواسطة اظهار خطوط عليها."
+
+#~ msgid ""
+#~ "When enabled, this option increases the visibility of the window titlebar "
+#~ "by showing stripes"
+#~ msgstr ""
+#~ "عندما تمكن هذا الخيار ، فإنه سيزيد قابلية رؤية شريط العنوان النافذة "
+#~ "بواسطة اظهار خطوط عليها."
+
+#~ msgid "Show stripes next to the title"
+#~ msgstr "اظهر خطوط بجانب العنوان"
+
+#, fuzzy
+#~| msgid ""
+#~| "When enabled, this option increases the visibility of the window "
+#~| "titlebar by showing stripes"
+#~ msgid ""
+#~ "When enabled, this option increases the visibility of the window titlebar "
+#~ "by adding an horizontal bar between the title bar and the window contents"
+#~ msgstr ""
+#~ "عندما تمكن هذا الخيار ، فإنه سيزيد قابلية رؤية شريط العنوان النافذة "
+#~ "بواسطة اظهار خطوط عليها."
+
+#, fuzzy
+#~| msgid "Blend title bar colors with window contents"
+#~ msgid "Draw separator between title bar and window contents"
+#~ msgstr "اخلط ألوان شريط العنوان بمحتويات النافذة"
+
+#, fuzzy
+#~| msgid "Show stripes next to the title"
+#~ msgid "Show stripes next to the title:"
+#~ msgstr "اظهر خطوط بجانب العنوان"
+
+#, fuzzy
+#~| msgid "Blend title bar colors with window contents"
+#~ msgid "Blend title bar colors with window content:"
+#~ msgstr "اخلط ألوان شريط العنوان بمحتويات النافذة"
+
+#~ msgid "Blend title bar colors with window contents"
+#~ msgstr "اخلط ألوان شريط العنوان بمحتويات النافذة"
+
+#~ msgid "Ozone"
+#~ msgstr "أوزون"
+
+#, fuzzy
+#~| msgid "Draw window frames using &titlebar colors"
+#~ msgid "Overwrite default title bar colors:"
+#~ msgstr "ارسم إطارات النافذة مستخدماً ألوان &شريط العنوان"
+
+#~ msgid ""
+#~ "When enabled, this option makes the window title bar use the same colors "
+#~ "as the window contents, instead of using the system title bar colors."
+#~ msgstr ""
+#~ "عند تمكين هذه الخيار ، فإنه سيجعل شريط عنوان النافذة يستخدم نفس ألوان "
+#~ "محتويات النافذة بدلا عن استخدام أولوان شريط العنوان للنظام."

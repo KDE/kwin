@@ -1,0 +1,2242 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Russian "INCLUDE">
+]>
+<book id="windowspecific" lang="&language;">
+<bookinfo>
+<title
+>Особые параметры окон</title>
+<authorgroup>
+<author
+>&Lauri.Watts; &Lauri.Watts.mail;</author>
+<author>
+<personname
+><firstname
+>Части данного руководства взяты со страницы <ulink url=" https://userbase.kde.org/KWin Rules"
+>Правила KWin</ulink
+> пользовательской базы знаний KDE и обновлены командой по работе с документацией &kde; для обеспечения соответствия Plasma 5.8.</firstname
+> <surname
+></surname
+> </personname>
+      </author>
+<othercredit role="translator"
+><firstname
+>Иван</firstname
+> <surname
+>Кашуков</surname
+> <affiliation
+><address
+><email
+>dolphin210@yandex.ru</email
+></address
+></affiliation
+><contrib
+>Перевод на русский язык</contrib
+></othercredit
+> <othercredit role="translator"
+><firstname
+>Олеся</firstname
+> <surname
+>Герасименко</surname
+> <affiliation
+><address
+><email
+>gammaray@basealt.ru</email
+></address
+></affiliation
+><contrib
+>Перевод на русский язык</contrib
+></othercredit
+> <othercredit role="reviewer"
+><firstname
+>Александр</firstname
+><surname
+>Яворский</surname
+><contrib
+>Рецензирование</contrib
+></othercredit
+> 
+      </authorgroup>
+<legalnotice
+>&FDLNotice;</legalnotice>
+<date
+>23 июня 2016 г.</date>
+      <releaseinfo
+>Plasma 5.8</releaseinfo>
+<abstract>
+<para
+>Этот модуль приложения «Параметры системы» позволяет настроить параметры отдельных окон.</para>
+      </abstract>
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>параметры системы</keyword>
+<keyword
+>параметры окна</keyword>
+<keyword
+>расположение окна</keyword>
+<keyword
+>размер окна</keyword>
+</keywordset>
+</bookinfo>
+<chapter id="window-specific">
+<title
+>Особые параметры конкретных окон: краткое руководство</title>
+
+<para
+>Этот модуль приложения «Параметры системы» позволяет настроить параметры отдельных окон.</para>
+
+<note>
+<para
+>Параметры этого модуля применяются только при работе с &kwin; в качестве диспетчера окон &kde;. Если используется другой диспетчер окон, следует изучить его документацию, чтобы узнать, как настроить поведение окон.</para>
+</note>
+
+<para
+>Многие из параметров, которые доступны для настройки в этом модуле, также можно настроить и глобально в в модуле <guilabel
+>Поведение окон</guilabel
+> приложения &systemsettings;, но некоторые из них ещё более детализированы.</para>
+
+<para
+>Они включают в себя геометрию, размещение, поддержание окна поверх остальных окон или под ними, предотвращение смены фокуса, параметры прозрачности.</para>
+
+<para
+>Существует два способа запуска этого модуля: из заголовка окна приложения, которое требуется настроить, или в программе «Параметры системы». Если модуль открыт в программе «Параметры системы», нажмите кнопку <guibutton
+>Создать...</guibutton
+>, чтобы создать профиль окна, и затем (в появившемся диалоговом окне) кнопку <guibutton
+>Определение свойств окна</guibutton
+>, чтобы частично заполнить поля данных для приложения, которое требуется настроить.</para>
+
+<para
+>Сохранённые профили настройки в любое время возможно <guibutton
+>Изменить...</guibutton
+> или <guibutton
+>Удалить</guibutton
+>, а затем заново упорядочить список. Переупорядочение списка выполняется при помощи кнопок <guibutton
+>Выше</guibutton
+> и <guibutton
+>Ниже</guibutton
+>. Порядок профилей настройки в списке соответствует порядку их применения.</para>
+
+</chapter>
+<!--userbase <timestamp
+>2012-03-09T20:50:14Z</timestamp
+>-->
+
+<!--userbase-content-->
+<chapter id="overview"
+><title
+>Обзор</title
+> 
+<para
+>Диспетчер окон &kwin; позволяет задать правила, которые служат для изменения атрибутов окна приложения. </para>
+<para
+>Например, возможно принудительно запускать приложение на <emphasis
+>Рабочем столе 2</emphasis
+> или настроить принудительное отображение окна приложения поверх всех остальных окон для обхода ошибки в приложении. </para>
+<para
+>Пошаговые <link linkend="examples"
+>примеры</link
+> содержат подробные сведения об использовании <link linkend="kwin-rule-editor"
+>Редактора правил &kwin;</link
+> для настройки групп параметров <link linkend="window-matching"
+>Выбор окон</link
+> и <link linkend="window-attributes"
+>Атрибуты окна</link
+>. </para>
+</chapter>
+<chapter id="examples-and-application-workaround"
+><title
+>Примеры и обход проблем приложений</title
+> 
+<para
+>Чтобы ознакомиться с подробным перечнем возможностей, воспользуйтесь <link linkend="examples"
+>примерами</link
+>, которые могут стать основой для создания собственных правил пользователя. </para>
+<para
+><link linkend="application-workarounds"
+>Обходу проблем приложений</link
+> посвящена отдельная страница. </para>
+</chapter>
+<chapter id="kwin-rule-editor"
+><title
+>Редактор правил KWin</title
+> 
+<sect1 id="invoking-the-kwin-rule-editor"
+><title
+>Вызов редактора правил KWin</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-ordering.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Предусмотрено несколько способов запуска редактора правил KWin. Далее приведены два из них: </para>
+<itemizedlist>
+<listitem
+><para
+>Щёлкните правой кнопкой мыши по заголовку окна, выберите в контекстном меню пункт <menuchoice
+><guimenu
+>Дополнительно</guimenu
+><guimenuitem
+>Настроить диспетчер окон...</guimenuitem
+></menuchoice
+> и в появившемся диалоговом окне <guilabel
+>Настройка</guilabel
+> выберите вкладку <guilabel
+>Особые параметры окон</guilabel
+>; или</para
+></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem
+><para
+><menuchoice
+><guimenu
+>Параметры системы</guimenu
+><guisubmenu
+>Поведение окон</guisubmenu
+><guimenuitem
+>Особые параметры окон</guimenuitem
+></menuchoice
+></para
+></listitem>
+</itemizedlist>
+<para
+>Главное окно позволяет: </para>
+<itemizedlist>
+<listitem
+><para
+>Изменять правила при помощи кнопок <guilabel
+>Создать...</guilabel
+>, <guilabel
+>Изменить...</guilabel
+> и <guilabel
+>Удалить</guilabel
+>;</para
+></listitem>
+<listitem
+><para
+>Делиться правилами с другими пользователями при помощи кнопок <guilabel
+>Импорт…</guilabel
+> и <guilabel
+>Экспорт…</guilabel
+>;</para
+></listitem>
+<listitem
+><para
+>Обеспечивать необходимый порядок <link linkend="rule-evaluation"
+>обработки правил</link
+> при помощи кнопок <guilabel
+>Выше</guilabel
+> и <guilabel
+>Ниже</guilabel
+>.</para
+></listitem>
+</itemizedlist>
+<sect2 id="rule-evaluation"
+><title
+>Обработка правил</title
+> 
+<para
+>При запуске приложений (или изменении правил) диспетчер окон &kwin; обрабатывает правила, двигаясь по списку сверху вниз. На основе всех соответствующих окну правил формируется общий набор атрибутов, который применяется к окну перед его появлением. </para>
+<para
+>Если одним атрибутом окна управляет два или больше правил, будет использован параметр из <emphasis
+>первого</emphasis
+> правила в списке. </para>
+<para
+><tip
+><para
+>Параметры дочерних окон приложения настраиваются путём перемещения более строгих правил наверх. Пример: <link linkend="application-on-all-desktops-and-handle-one-child-window-uniquely"
+>главное окно Kopete и окно разговора Kopete</link
+>.</para
+></tip>
+</para>
+</sect2>
+</sect1>
+<sect1 id="rule-editor"
+><title
+>Окно редактора правил</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Окно редактора содержит четыре вкладки: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Выбор окон</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Геометрия</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Расположение и доступ</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Внешний вид и обход проблем</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Как следует из названия, вкладка <guilabel
+>Выбор окон</guilabel
+> служит для указания критериев, которым должны соответствовать одно или несколько окон. Остальные три вкладки служат для изменения атрибутов окон, соответствующих этим критериям. </para>
+<para
+><tip
+><para
+>Это применимо и к панелям.</para
+></tip>
+</para>
+<sect2 id="window-matching"
+><title
+>Выбор окон</title
+> 
+<para
+>Каждое правило для окон содержит критерии, заданные пользователем на вкладке <link linkend="window-matching"
+>Выбор окон</link
+>. Диспетчер окон &kwin; использует эти критерии для определения применимости правил к приложениям. </para>
+</sect2>
+<sect2 id="window-attributes"
+><title
+>Атрибуты окон</title
+> 
+<para
+>Помимо критериев на вкладке «Выбор окон» каждое окно также содержит набор критериев <link linkend="window-attributes"
+>Атрибуты окна</link
+>. Атрибуты переопределяют соответствующие параметры приложения и применяются до показа окна диспетчером окон &kwin;. </para>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="window-matching0"
+><title
+>Выбор окон</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Вкладка <guilabel
+>Выбор окон</guilabel
+> служит для определения критериев, которые диспетчер окон &kwin; использует при определении применимости правила для конкретного окна. </para>
+<para
+>Доступны следующие критерии (если не определён ни один критерий, то соответствовать правилу будут все окна): </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Класс окна (приложение)</guilabel
+>: соответствие по классу;<itemizedlist
+> <listitem
+><para
+><guilabel
+>Соответствие всему классу окон</guilabel
+>: включает соответствие второго класса;</para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Роль окна</guilabel
+>: ограничивает соответствие функцией окна (например, <emphasis
+>главное окно</emphasis
+>, <emphasis
+>окно разговора</emphasis
+> и так далее);</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Типы окон</guilabel
+>: ограничивает соответствие типом окна. Например: <guilabel
+>Обычное окно</guilabel
+>, <guilabel
+>Окно диалога</guilabel
+> и так далее;</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Заголовок окна</guilabel
+>: ограничивает соответствие заголовком окна;</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Система (имя хоста)</guilabel
+>: ограничивает соответствие именем узла, связанного с окном.</para
+></listitem>
+</itemizedlist>
+<para
+><tip
+><para
+>Для ввода вышеупомянутой информации рекомендуется использовать кнопку <guilabel
+>Определение свойств окна</guilabel
+> (хотя ввод вручную также возможен).</para
+></tip>
+</para>
+<para
+>К значению каждого из полей возможно применить один из следующих операторов: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Не имеет значения</guilabel
+>: поле игнорируется.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Точное совпадение</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Совпадение с подстрокой</guilabel
+></para
+></listitem>
+</itemizedlist>
+<para
+><note
+><para
+>Параметры <guilabel
+>Точное совпадение</guilabel
+> и <guilabel
+>Совпадение с подстрокой</guilabel
+> не учитывают регистр символов. Например, строка <emphasis
+>АБ</emphasis
+> соответствует строкам <emphasis
+>АБ</emphasis
+>, <emphasis
+>аб</emphasis
+>, <emphasis
+>Аб</emphasis
+> и <emphasis
+>аБ</emphasis
+>.</para
+></note>
+</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Регулярное выражение</guilabel
+>: применяются регулярные выражения Qt. Подробные сведения: <ulink url="https://doc.qt.io/qt-5/qregexp.html"
+>сопоставление шаблону при помощи регулярных выражений</ulink
+>.</para
+></listitem>
+</itemizedlist>
+<sect1 id="detect-window-properties"
+><title
+>Определение свойств окна</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-detect-window.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Функция <guilabel
+>Определение свойств окна</guilabel
+> позволяет упростить процесс ввода критериев, по которым определяется соответствие. </para>
+<orderedlist>
+<listitem
+><para
+>Чтобы создать правило для окна определённого приложения, запустите это приложение.</para
+></listitem>
+<listitem
+><para
+>Затем на вкладке <guilabel
+>Выбор окон</guilabel
+> установите необходимую задержку (в секундах) перед выполнением действия <guilabel
+>Определение свойств окна</guilabel
+> (по умолчанию она равно нулю).</para
+></listitem>
+<listitem
+><para
+>Нажмите кнопку <guilabel
+>Определение свойств окна</guilabel
+> и</para
+></listitem>
+<listitem
+><para
+>Когда курсор мыши примет вид перекрестия, поместите его над окном приложения (но не над заголовком) и щёлкните левой кнопкой мыши.</para
+></listitem>
+<listitem
+><para
+>Появится новое окно с информацией о выбранном окне. Выберите необходимые поля:<itemizedlist>
+<listitem
+><para
+><guilabel
+>Второе имя класса</guilabel
+>: в некоторых приложениях предусмотрено второеимя класса. Это значение позволяет ограничить окна теми, у которых оно есть.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Роль окна</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Тип окна</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Заголовок окна</guilabel
+></para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+</orderedlist>
+<para
+>Нажмите кнопку <guilabel
+>OK</guilabel
+>, чтобы заполнить критерии на вкладке <guilabel
+>Выбор окон</guilabel
+>. </para>
+<para
+>В зависимости от совокупности указанных сведений правило применяется ко всем окнам приложения (по <guilabel
+>Классу</guilabel
+>) или к окнам определённого <guilabel
+>Типа</guilabel
+> внутри <guilabel
+>Класса</guilabel
+> (например, к окнам типа <guilabel
+>Панель инструментов</guilabel
+>). </para>
+</sect1>
+</chapter>
+<chapter id="window-attributes1"
+><title
+>Атрибуты окон</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-window-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Атрибуты, которые могут быть заданы для окна, сгруппированы по функциям на трёх вкладках: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Геометрия</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Расположение и доступ</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Внешний вид и обход проблем</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Для каждого атрибута предусмотрен набор параметров, который определяет его состояние. </para>
+<sect1 id="parameters"
+><title
+>Параметры</title>
+<para
+>Каждый атрибут принимает хотя бы один из следующих параметров. Дополнительные аргументы, относящиеся к конкретному атрибуту, перечислены внутри определения соответствующего <link linkend="attributes"
+>атрибута</link
+>. </para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Не применять</emphasis
+></term>
+    <listitem>
+    <para
+>При выборе этого варианта к атрибуту не применяется следующее правило, которое соответствует окну.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Применить изначально</emphasis
+></term>
+    <listitem>
+    <para
+>При выборе этого варианта окно открывается с соответствующим атрибутом, при этом предоставляется возможность изменять атрибут во время работы.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Запомнить</emphasis
+></term>
+    <listitem>
+    <para
+>При выборе этого варианта используется определённое в правиле значение атрибута, и если значение атрибута будет изменено во время работы окна, такое новое значение сохраняется и используется вместо прежнего значения.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Принудительно</emphasis
+></term>
+    <listitem>
+    <para
+>При выборе этого варианта значение атрибута нельзя изменить во время работы окна. </para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Применить сейчас, Временно включить</emphasis
+></term>
+    <listitem>
+    <para
+>При выборе этих вариантов значение атрибута применяется один раз и отключается. Разница между ними состоит в том, что во время работы окна вариант <guilabel
+>Применить сейчас</guilabel
+> разрешает изменение атрибута, а вариант <guilabel
+>Временно включить</guilabel
+> — запрещает его до закрытия всех связанных окон.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>При выборе варианта <guilabel
+>Применить сейчас</guilabel
+> правило, если оно не содержит другие атрибуты, удаляется после обработки, в то время как при выборе варианта <guilabel
+>Временно включить</guilabel
+> правило удаляется после закрытия последнего связанного окна.</para
+></warning>
+</para>
+</sect1>
+<sect1 id="attributes"
+><title
+>Атрибуты</title>
+<para
+><tip
+><para
+>Кнопка <guilabel
+>Определение свойств окна</guilabel
+> служит для автоматического заполнения связанных с конкретными атрибутами значений. Дополнительные сведения: <link linkend="window-matching"
+>Выбор окон</link
+>. Например, значения «высота» и «ширина» атрибута <guilabel
+>Размер</guilabel
+> соответствуют высоте и ширине выбранного окна.</para
+></tip>
+</para>
+<para
+><tip
+><para
+>Аргументы <guilabel
+>Да/Нет</guilabel
+> используются для включения или отключения атрибутов. Простые знания грамматики помогут понять, как будет обрабатываться значение параметра. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Например, если для атрибута <guilabel
+>Пропустить панель задач</guilabel
+> задан аргумент <guilabel
+>Нет</guilabel
+>, то это означает, что панель задач не будет пропущена (то есть окно отобразится в панели задач). <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+></para
+></tip>
+</para>
+<sect2 id="size--position"
+><title
+>Геометрия</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Расположение</emphasis
+></term>
+    <listitem>
+    <para
+>Атрибут позволяет расположить верхний левый угол окна в точке с указанными координатами «х» и «y».</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Начало координат диспетчера окон &kwin; (0,0) соответствует верхнему левому углу рабочего стола.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Размер</emphasis
+></term>
+    <listitem>
+    <para
+>Атрибут определяет ширину и высоту окна.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Распахнуто по горизонтали, Распахнуто по вертикали</emphasis
+></term>
+    <listitem>
+    <para
+>Эти атрибуты используются для включения или отключения максимального или минимального размера окна по горизонтали. </para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Рабочий стол, Комната, Экран</emphasis
+></term>
+    <listitem>
+    <para
+>Эти атрибуты позволяют расположить окно на указанном <emphasis
+>Рабочем столе</emphasis
+>, в <emphasis
+>Комнате</emphasis
+> или на <emphasis
+>Экране</emphasis
+>. Выбор варианта  <guilabel
+>Все рабочие столы</guilabel
+> позволяет расположить окно на всех <emphasis
+>Рабочих столах</emphasis
+>.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Полный экран, Свёрнуто, Свёрнуто в заголовок</emphasis
+></term>
+    <listitem>
+    <para
+>Эти атрибуты окна возможно включать и отключать. Например, возможно открывать окно в состоянии «Свёрнуто» или принудительно распахивать открытое в таком состоянии окно.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Атрибут распахивания эмулируется при помощи использования сразу двух атрибутов: <guilabel
+>Распахнуто по  горизонтали</guilabel
+> и атрибута <guilabel
+>Распахнуто по вертикали</guilabel
+>. Также для этого возможно включить атрибут<guilabel
+>Исходное расположение</guilabel
+> с аргументом <guilabel
+>Распахивание</guilabel
+>.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Исходное расположение</emphasis
+></term>
+    <listitem>
+    <para
+>Атрибут переопределяет глобальную стратегию расположения окон. Вместо неё используется один из следующих вариантов:</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>По умолчанию</guilabel
+>: используется глобальная стратегия расположения окон.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Нет размещения</guilabel
+>: расположение в верхнем левом углу.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>С минимальным перекрытием</guilabel
+>: расположение на месте, не занятом другим окном.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Распахивание</guilabel
+>: распахивает окно при открытии.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Каскадом</guilabel
+>: располагает окна в виде «лестницы из заголовков».</para
+></listitem>
+<listitem
+><para
+><guilabel
+>По центру</guilabel
+>: располагает окна в центре рабочего стола.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Случайно</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>В верхнем левом углу</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Под мышью</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Поверх главного окна</guilabel
+>: ограничивает расположение дочернего окна границами родительского окна.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Игнорировать запрошенную геометрию</emphasis
+></term>
+    <listitem>
+    <para
+>Параметр позволяет принимать или игнорировать запрошенную геометрию окна. При принятии запроса окна стратегия расположения по умолчанию игнорируется  для избежания возможных конфликтов.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Минимальный размер, Максимальный размер</emphasis
+></term>
+    <listitem>
+    <para
+>Параметр определяет допустимый минимальный и максимальный размер окна.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Соблюдать требуемую приложением геометрию</emphasis
+></term>
+    <listitem>
+    <para
+>Параметр позволяет включать и отключать соблюдение запрашиваемого соотношения сторон окна или <emphasis
+>базовое приращение</emphasis
+>. Для понимания этого атрибута необходимы определённые знания. Кратко говоря, окна должны запрашивать у диспетчера окон базовое приращение: минимальное количество пикселов <emphasis
+>высота</emphasis
+> X <emphasis
+>ширина</emphasis
+> на каждый запрос изменения размера. Обычно это 1x1. Для других окон (например, окон эмуляторов терминала или окон редакторов) используются шрифты фиксированного размера, а базовое приращение запрашивается в соответствии с размером одного символа.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="arrangement--access"
+><title
+>Расположение и доступ</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Поддерживать выше, Поддерживать ниже</emphasis
+></term>
+    <listitem>
+    <para
+>Эти параметры позволяют включать и отключать поддержание окна выше или ниже всех остальных.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Группировать с одинаковыми окнами</emphasis
+></term>
+    <listitem>
+    <para
+>Параметр позволяет включать и отключать группировку (<emphasis
+>создание вкладок </emphasis
+>) окон одного приложения.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Группировать на переднем плане</emphasis
+></term>
+    <listitem>
+    <para
+>Параметр позволяет включать и отключать активизацию окна при его добавлении в текущую «Группу».</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Группировать по идентификатору</emphasis
+></term>
+    <listitem>
+    <para
+>Параметр позволяет создать группу при помощи определённого пользователем идентификатора. Один и тот же идентификатор возможно установить для нескольких правил, чтобы объединить на первый взгляд не связанные между собой окна в группу.</para>
+     </listitem>
+  </varlistentry>
+
+  <varlistentry
+><term
+><emphasis role="bold"
+>Не показывать в панели задач</emphasis
+></term>
+    <listitem>
+    <para
+>Параметр позволяет включать и отключать отображение окна в панели задач.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Не показывать в переключателе рабочих столов</emphasis
+></term>
+    <listitem>
+    <para
+>Параметр позволяет включать и отключать отображение окна в переключателе рабочих столов.</para>
+     </listitem>
+  </varlistentry>
+    </variablelist>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Не показывать при переключении окон</emphasis
+></term>
+    <listitem>
+    <para
+>Параметр позволяет включать и отключать отображение окна в списке переключения (вызывается комбинацией клавиш <guilabel
+>ALT+TAB</guilabel
+>).</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Комбинация клавиш</emphasis
+></term>
+    <listitem>
+    <para
+>Параметр позволяет назначить комбинацию клавиш для вызова окна. При нажатии кнопки <guilabel
+>Изменить...</guilabel
+> появляются дополнительные инструкции.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="appearance--fixes"
+><title
+>Внешний вид и обход проблем</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Скрыть заголовок и границы окна</emphasis
+></term>
+    <listitem>
+    <para
+>Параметр позволяет включать и отключать показ заголовка и границ окна.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Цветовая схема заголовка</emphasis
+></term>
+    <listitem>
+    <para
+>Параметр позволяет указать цветовую схему заголовка окна.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Прозрачность активного, Прозрачность неактивного</emphasis
+></term>
+    <listitem>
+    <para
+>Параметр позволяет задать процентное значение прозрачности для активного или неактивного окна.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Установка параметра <guilabel
+>Прозрачность активного или неактивного</guilabel
+> доступна, если в модуле <guilabel
+>Эффекты</guilabel
+> включены соответствующие эффекты рабочего стола.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Предотвращение похищения фокуса</emphasis
+></term>
+    <listitem>
+    <para
+>Параметр позволяет выбрать, что происходит при попытке получения фокуса окном, из ряда вариантов (от <guilabel
+>Отключить</guilabel
+> до <guilabel
+>Не передавать фокус автоматически</guilabel
+>): возможно как удовлетворить запрос и поместить окно поверх всех остальных окон, так и проигнорировать запрос (возможно, оставив окно под другими окнами):</para>
+<itemizedlist>
+<listitem
+><para
+>«Отключить»: всегда предоставлять окну фокус;</para
+></listitem>
+<listitem
+><para
+>«Низкий приоритет»;</para
+></listitem>
+<listitem
+><para
+>«Обычный приоритет»;</para
+></listitem>
+<listitem
+><para
+>«Высокий приоритет»;</para
+></listitem>
+<listitem
+><para
+>«Не передавать фокус автоматически»: отказать в ответ на запрос фокуса окном. Фокус предоставляется только при явном запросе при помощи мыши.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Параметр <guilabel
+>Может принимать фокус</guilabel
+> позволяет сделать окно доступным только для чтения (то есть оно не будет принимать ввод с клавиатуры).</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Может принимать фокус</emphasis
+></term>
+    <listitem>
+    <para
+>Параметр позволяет включать и отключать принятие окном ввода с клавиатуры (делает окно доступным только для чтения).</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Игнорировать глобальные комбинации клавиш</emphasis
+></term>
+    <listitem>
+    <para
+>Параметр позволяет использовать или игнорировать глобальные комбинации клавиш (определённые на вкладке  <menuchoice
+><guimenu
+>Параметры системы</guimenu
+><guisubmenu
+>Комбинации клавиш</guisubmenu
+><guimenuitem
+>Глобальные комбинации клавиш</guimenuitem
+></menuchoice
+> или путём ввода <varname
+>kcmshell5 keys</varname
+> в эмуляторе терминала <guilabel
+>Konsole</guilabel
+>), когда окно активно.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Закрываемое</emphasis
+></term>
+    <listitem>
+    <para
+>Параметр позволяет включать и отключать показ кнопки <guilabel
+>Закрыть</guilabel
+> в заголовке окна.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Конечный пользователь может закрыть окно эмулятора терминала путём завершения сеанса оболочки, но если ввод с клавиатуры отключён при помощи параметра <guilabel
+>Может принимать фокус</guilabel
+>, сделать это будет сложнее.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Тип окна</emphasis
+></term>
+    <listitem>
+    <para
+>Параметр позволяет изменить тип окна, при этом унаследовав свойства этого окна:</para>
+<itemizedlist>
+<listitem
+><para
+>Обычное окно;</para
+></listitem>
+<listitem
+><para
+>Окно диалога;</para
+></listitem>
+<listitem
+><para
+>Служебное окно;</para
+></listitem>
+<listitem
+><para
+>Панель;</para
+></listitem>
+<listitem
+><para
+>Панель инструментов;</para
+></listitem>
+<listitem
+><para
+>Отрывное меню;</para
+></listitem>
+<listitem
+><para
+>Заставка;</para
+></listitem>
+<listitem
+><para
+>Рабочий стол;</para
+></listitem>
+<listitem
+><para
+>Автономное меню;</para
+></listitem>
+<listitem
+><para
+>Экранное уведомление.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>Рекомендуется внимательно подходить к использованию этого параметра, так как возможны нежелательные эффекты. Например, окна с типом <guilabel
+>Заставка</guilabel
+> автоматически закрываются диспетчером окон &kwin; при щелчке мышью.</para
+></warning>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Не применять графические эффекты</emphasis
+></term>
+    <listitem>
+    <para
+>Параметр позволяет включать и отключать графические эффекты на время <emphasis
+>существования</emphasis
+> окна. Если графические эффекты включены и при этом правилом задано отключение графических эффектов, то они будут отключены на время существования <emphasis
+>любого</emphasis
+> окна, которое соответствует правилу. Графические эффекты будут включены снова после закрытия последнего такого окна.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+</sect1>
+</chapter>
+<chapter id="examples"
+><title
+>Примеры</title>
+<para
+><note
+><para
+>В первом примере приводится описание всех этапов создания правил. Чтобы не делать руководство чрезмерно объёмным, в последующих примерах приводятся толькоэтапы, специфичные для соответствующего примера.</para
+></note>
+</para>
+<para
+><note
+><para
+>Атрибут <guilabel
+>Переключатель рабочих столов</guilabel
+> относится к <guilabel
+>Переключателю рабочих столов</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></note>
+</para>
+<sect1 id="pin-a-window-to-a-desktop-and-set-other-attributes"
+><title
+>Закрепление окна на рабочем столе и установка других атрибутов</title>
+<para
+>Задача: закрепить программу чтения лент новостей &akregator; на <emphasis
+>Рабочем столе 2</emphasis
+>. Кроме того, окно запускаемого приложения должно иметь заданный размер и расположение. Для каждого атрибута следует использовать <link linkend="parameters"
+>параметр</link
+> <guilabel
+>Применить изначально</guilabel
+>, чтобы его можно было переопределить во время работы. </para>
+<para
+>Этапы создания правила диспетчера окон &kwin;: </para>
+<orderedlist>
+<listitem
+><para
+>Запустите программу &akregator; на <emphasis
+>Рабочем столе 2</emphasis
+>, определив для неё следующие размер и расположение: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-fav.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Щёлкните по заголовку правой кнопкой мыши и выберите в контекстном меню пункт <menuchoice
+><guimenu
+>Дополнительно</guimenu
+><guimenuitem
+>Настроить диспетчер окон...</guimenuitem
+></menuchoice
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="config-win-behavior.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Выберите в левом столбце вкладку <guilabel
+>Особые параметры окон</guilabel
+> и нажмите кнопку <guilabel
+>Создать...</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Появится окно <guilabel
+>Настройка параметров для указанных окон</guilabel
+> с открытой по умолчанию вкладкой <guilabel
+>Выбор окон</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-init.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Нажмите кнопку <guilabel
+>Определение свойств окна</guilabel
+> с <guilabel
+>0 с задержки</guilabel
+>: курсор сразу примет вид перекрестия. Щёлкните мышью внутри окна программы &akregator; (по любому месту, кроме заголовка). Будет показано окно с критериями окна программы. Задайте соответствие только по главному имени класса, оставив флажки неотмеченными (дополнительные сведения доступны в разделе <link linkend="window-matching"
+>Выбор окон</link
+>): <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akgregator-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Нажмите кнопку <guilabel
+>OK</guilabel
+>, чтобы заполнить поля вкладки <guilabel
+>Выбор окон</guilabel
+> свойствами выбранного окна. Введите поясняющий текст в поле <guilabel
+>Описание</guilabel
+> (он будет показан в окне <guilabel
+>правила KWin</guilabel
+>): <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-ready-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Включите атрибуты окна: <guilabel
+>Расположение</guilabel
+>, <guilabel
+>Размер</guilabel
+> и <guilabel
+>Рабочий стол</guilabel
+>. Исходные значения устанавливаются при помощи кнопки <guilabel
+>Определение свойств окна</guilabel
+>, их возможно переопределить: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Нажмите кнопку <guilabel
+>OK</guilabel
+> (в окне из предыдущего этапа), чтобы вернуться к главному окну <guilabel
+>Правил KWin</guilabel
+>. В списке появилось новое правило и его описание: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main-n-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Нажмите кнопку <guilabel
+>OK</guilabel
+>, чтобы закрыть окно.</para
+></listitem>
+<listitem
+><para
+>Готово.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="application-on-all-desktops-and-handle-one-child-window-uniquely"
+><title
+>Размещение приложения на всех рабочих столах и отдельная настройка дочернего окна</title>
+<para
+>Задача: показывать главное окно программы обмена мгновенными сообщениями &kopete; и её дочерние окна (кроме окон разговоров) на всех рабочих столах, но не в системном лотке и переключателе рабочих столов. Настроить дочерние окна аналогично родительскому, но отображать их в системном лотке. </para>
+<para
+>Для каждого атрибута следует установить <link linkend="parameters"
+>параметр</link
+> <guilabel
+>Принудительно</guilabel
+>, чтобы предотвратить его переопределение. </para>
+<para
+>Чтобы выполнить всё вышеперечисленное, требуется создать два правила: </para>
+<orderedlist>
+<listitem
+><para
+>Правило для окна <guilabel
+>Разговор Kopete</guilabel
+> и</para
+></listitem>
+<listitem
+><para
+>Правило для главного окна &kopete;.</para
+></listitem>
+</orderedlist>
+<para
+>Критерии соответствия правила <guilabel
+>Окно разговора Kopete</guilabel
+> более строгие, чем правила <emphasis
+>Главное окно Kopete</emphasis
+>, так как это окно должно соответствовать конкретной роли: окно разговора. Согласно порядку процесса <link linkend="rule-evaluation"
+>обработки правил</link
+> правило <guilabel
+>Окно разговора Kopete</guilabel
+> должно предшествовать правилу для главного окна &kopete; в <link linkend="kopete-kwin-rule-list"
+>списке правил KWin для программы Kopete</link
+>. </para>
+<sect2 id="kopete-chat-rule"
+><title
+>Правило «Окно разговора Kopete»</title>
+<para
+>Если открыто окно <guilabel
+>Разговор Kopete</guilabel
+>: </para>
+<orderedlist>
+<listitem
+><para
+>Нажмите кнопку <guilabel
+>Определение свойств окна</guilabel
+> и выберите окно <guilabel
+>Разговор Kopete</guilabel
+>. Отметьте флажок <guilabel
+>Роль окна</guilabel
+>, чтобы ограничить применение критериев окнами разговоров (дополнительные сведения доступны в разделе <link linkend="window-matching"
+>Выбор окон</link
+>): <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Нажмите кнопку <guilabel
+>OK</guilabel
+>, чтобы заполнить поля вкладки <guilabel
+>Выбор окон</guilabel
+> свойствами выбранного окна. Введите информативный текст в поле <guilabel
+>Описание</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete-chat.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Включите следующие атрибуты: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Нажмите кнопку «OK», чтобы завершить ввод правила.</para
+></listitem>
+</orderedlist>
+<para
+><note
+><para
+>Для атрибута <guilabel
+>Пропустить панель задач</guilabel
+> установлено значение <guilabel
+>Нет</guilabel
+>, чтобы окно отображалось в панели задач. Толковать это следует таким образом: <emphasis
+>нет,</emphasis
+> <emphasis
+>не</emphasis
+> <emphasis
+>пропускать панель задач</emphasis
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>.</para
+></note>
+</para>
+</sect2>
+<sect2 id="kopete-rule"
+><title
+>Правило «Главное окно Kopete»</title>
+<para
+>Если открыто окно программы &kopete;: </para>
+<orderedlist>
+<listitem
+><para
+>Нажмите кнопку <guilabel
+>Определение свойств окна</guilabel
+> и выберите окно программы &kopete;. Задайте соответствие только по главному имени класса, оставив флажки неотмеченными (дополнительные сведения доступны в разделе <link linkend="window-matching"
+>Выбор окон</link
+>): <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Нажмите кнопку <guilabel
+>OK</guilabel
+>, чтобы заполнить поля вкладки <guilabel
+>Выбор окон</guilabel
+> свойствами выбранного окна. Введите информативный текст в поле <guilabel
+>Описание</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Включите следующие атрибуты: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Нажмите кнопку «OK», чтобы завершить ввод правила.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="kopete-kwin-rule-list"
+><title
+>Список правил KWin для программы Kopete</title>
+<para
+>Как упоминалось ранее, согласно порядку <link linkend="rule-evaluation"
+>обработки правил</link
+> правило <guilabel
+>Окно разговора Kopete</guilabel
+> должно предшествовать правилу для главного окна &kopete;: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-kopete-rules.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+</sect1>
+<sect1 id="suppress-a-window-from-showing-on-pager"
+><title
+>Запрет отображения окна в переключателе рабочих столов</title>
+<para
+>Текущая версия программы всплывающих заметок <guilabel
+>KNotes</guilabel
+> непозволяет запретить отображение заметок впереключателе рабочих столов. Этот недостаток легко исправить путём создания правила. </para>
+<para
+>Если открыто окно <emphasis
+>заметки</emphasis
+>: </para>
+<orderedlist>
+<listitem
+><para
+>Нажмите кнопку <guilabel
+>Определение свойств окна</guilabel
+> и выберите любое окно <emphasis
+>заметки</emphasis
+>. Задайте соответствие только по главному имени класса, оставив флажки неотмеченными (дополнительные сведения доступны в разделе <link linkend="window-matching"
+>Выбор окон</link
+>): <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Нажмите кнопку <guilabel
+>OK</guilabel
+>, чтобы заполнить поля вкладки <guilabel
+>Выбор окон</guilabel
+> свойствами выбранного окна. Введите информативный текст в поле <guilabel
+>Описание</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-knotes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Включите атрибут <guilabel
+>Не показывать в переключателе рабочих столов</guilabel
+> с <link linkend="parameters"
+>параметром</link
+> <guilabel
+>Принудительно</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Нажмите кнопку «OK», чтобы завершить ввод правила.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="force-a-window-to-the-top"
+><title
+>Принудительный показ окна поверх остальных</title>
+<para
+>Чтобы активное окно было показано поверх остальных, определите для атрибута <guilabel
+>Предотвращение похищения фокуса</guilabel
+> этого окна значение <guilabel
+>Отключить</guilabel
+> при выбранном <link linkend="parameters"
+>параметре</link
+> <guilabel
+>Принудительно</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="focus-stealing-pop2top-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect1>
+<sect1 id="multiple-rules-per-application"
+><title
+>Создание нескольких правил для приложения</title>
+<para
+>В клиенте электронной почты <application
+>Thunderbird</application
+> имеется несколько разных дочерних окон. В этом примере решаются следующие задачи: </para>
+<itemizedlist>
+<listitem
+><para
+>Закрепить главное окно программы <application
+>Thunderbird</application
+> на <emphasis
+>Рабочем столе 1</emphasis
+>, задав для него определённый размер и расположение на рабочем столе;</para
+></listitem>
+<listitem
+><para
+>Разрешить окну создания сообщения <application
+>Thunderbird</application
+> располагаться на любом рабочем столе и при активации захватывать фокус и показываться поверх всех окон;</para
+></listitem>
+<listitem
+><para
+>Настроить показ окна напоминания <application
+>Thunderbird</application
+> поверх остальных окон и его появлении не передавать ему фокус, чтобы предотвратить случайное закрытие.</para
+></listitem>
+</itemizedlist>
+<para
+>Для каждого правила задаются достаточно строгие критерии соответствия, поэтому не важен их порядок в списке в главном окне &kwin; (он не повлияет на <link linkend="rule-evaluation"
+>обработку правил</link
+>). </para>
+<sect2 id="thunderbird---main"
+><title
+>Главное окно Thunderbird</title>
+<para
+>Когда <guilabel
+>Главное окно Thunderbird</guilabel
+> уже открыто, установлены его размер и расположение; </para>
+<orderedlist>
+<listitem
+><para
+>Нажмите кнопку <guilabel
+>Определение свойств окна</guilabel
+> и выберите окно <guilabel
+>Главное окно Thunderbird</guilabel
+>. Отметьте флажок <guilabel
+>Роль окна</guilabel
+>, чтобы ограничить применение критериев главным окном (дополнительные сведения доступны в разделе <link linkend="window-matching"
+>Выбор окон</link
+>): <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Нажмите кнопку <guilabel
+>OK</guilabel
+>, чтобы заполнить поля вкладки <guilabel
+>Выбор окон</guilabel
+> свойствами выбранного окна. Введите информативный текст в поле <guilabel
+>Описание</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Включите следующие атрибуты: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Нажмите кнопку «OK», чтобы завершить ввод правила.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---composer"
+><title
+>Окно создания сообщения Thunderbird</title>
+<para
+>Если открыто <guilabel
+>Окно создания сообщения Thunderbird</guilabel
+>: </para>
+<orderedlist>
+<listitem
+><para
+>Нажмите кнопку <guilabel
+>Определение свойств окна</guilabel
+> и выберите <guilabel
+>Окно создания сообщения Thunderbird</guilabel
+>. Отметьте флажки <guilabel
+>Роль окна</guilabel
+> и <guilabel
+>Тип окна</guilabel
+>, чтобы ограничить применение критериев окнами создания сообщений (дополнительные сведения доступны в разделе <link linkend="window-matching"
+>Выбор окон</link
+>): <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Нажмите кнопку <guilabel
+>OK</guilabel
+>, чтобы заполнить поля вкладки <guilabel
+>Выбор окон</guilabel
+> свойствами выбранного окна. Введите информативный текст в поле <guilabel
+>Описание</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-compose.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Включите следующие атрибуты: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Нажмите кнопку «OK», чтобы завершить ввод правила.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---reminder"
+><title
+>Окно напоминания Thunderbird</title>
+<para
+>Если открыто <guilabel
+>Окно напоминания Thunderbird</guilabel
+>: </para>
+<orderedlist>
+<listitem
+><para
+>Нажмите кнопку <guilabel
+>Определение свойств окна</guilabel
+> и выберите <guilabel
+>Окно напоминания Thunderbird</guilabel
+>. Отметьте флажки <guilabel
+>Второе имя класса</guilabel
+> и <guilabel
+>Тип окна</guilabel
+>, чтобы ограничить применение критериев окнами напоминаний (дополнительные сведения доступны в разделе <link linkend="window-matching"
+>Выбор окон</link
+>): <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Нажмите кнопку <guilabel
+>OK</guilabel
+>, чтобы заполнить поля вкладки <guilabel
+>Выбор окон</guilabel
+> свойствами выбранного окна. Введите информативный текст в поле <guilabel
+>Описание</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-reminder.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Включите следующие атрибуты: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Нажмите кнопку «OK», чтобы завершить ввод правила.</para
+></listitem>
+</orderedlist>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="application-workarounds"
+><title
+>Обход проблем приложений</title>
+<para
+>Далее приводятся способы обхода недостатков в программах, связанных с определёнными особенностями их поведения. </para>
+<para
+><tip
+><para
+>Процесс создания правил &kwin; показан на <link linkend="pin-a-window-to-a-desktop-and-set-other-attributes"
+>подробном примере</link
+>, который может служить в качестве основы для нового правила.</para
+></tip>
+</para>
+<sect1 id="full-screen-re-size-error"
+><title
+>Ошибка изменения размеров при переходе в полноэкранный режим</title>
+<para
+>Если окно текстового редактора &Emacs; или <guilabel
+>gVim</guilabel
+> распахнуто (полноэкранный режим), при определённых условиях могут возникнуть проблемы, связанные с изменениемразмеров окна (дополнительные сведения: <ulink url="https://bugs.kde.org/show_bug.cgi?id=252314"
+>Emacs window resizes ...</ulink
+>). Создание правила &kwin; позволяет обойти этот недостаток. </para>
+<para
+>Если открыто окно программы &Emacs;: </para>
+<orderedlist>
+<listitem
+><para
+>Нажмите кнопку <guilabel
+>Определение свойств окна</guilabel
+> и выберите окно программы &Emacs;. Задайте соответствие только по главному имени класса, оставив флажки неотмеченными (дополнительные сведения доступны в разделе <link linkend="window-matching"
+>Выбор окон</link
+>): <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Нажмите кнопку <guilabel
+>OK</guilabel
+>, чтобы заполнить поля вкладки <guilabel
+>Выбор окон</guilabel
+> свойствами выбранного окна. Введите информативный текст в поле <guilabel
+>Описание</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-emacs.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Включите игнорирование запроса на развёртывание окна программы &Emacs; (полноэкранный режим), отметив атрибут <guilabel
+>Соблюдать требуемую приложением геометрию</guilabel
+>, установив для него аргумент отключения (<guilabel
+>Нет</guilabel
+>) и выбрав <link linkend="parameters"
+>параметр</link
+> <guilabel
+>Принудительно</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Нажмите кнопку «OK», чтобы завершить ввод правила.</para
+></listitem>
+</orderedlist>
+</sect1>
+</chapter>
+
+<!--userbase-content-->
+<chapter id="credits">
+<title
+>Авторские права и лицензия</title>
+      <para
+>Авторские права на документацию смотрите в <ulink url="https://userbase.kde.org/index.php?title=KWin Rules&amp;action=history"
+>истории страницы «Правила KWin»</ulink
+> пользовательской базы знаний.</para>
+      <para
+>Перевод на русский язык: Иван Кашуков<email
+>dolphin210@yandex.ru</email
+></para
+> <para
+>Перевод на русский язык: Олеся Герасименко<email
+>gammaray@basealt.ru</email
+></para
+> &underFDL; </chapter>
+&documentation.index;
+</book>

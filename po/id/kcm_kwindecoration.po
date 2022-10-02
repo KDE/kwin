@@ -1,0 +1,503 @@
+# Indonesian translations for kcmkwindecoration package.
+# Copyright (C) 2010 This_file_is_part_of_KDE
+# This file is distributed under the same license as the kcmkwindecoration package.
+# Andhika Padmawan <andhika.padmawan@gmail.com>, 2010-2014.
+# Wantoyo <wantoyek@gmail.com>, 2017, 2018, 2019, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwindecoration\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2022-09-27 18:04+0700\n"
+"Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
+"Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 21.12.3\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Wantoyo"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "wantoyek@gmail.com"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr "Aksi selebihnya untuk jendela ini"
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, kde-format
+msgid "Application menu"
+msgstr "Menu aplikasi"
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, kde-format
+msgid "On all desktops"
+msgstr "Pada semua desktop"
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr "Minimalkan"
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr "Maksimalkan"
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr "Tutup"
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr "Bantuan konteks"
+
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr "Tiraikan"
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr "Tetap di bawah jendela lainnya"
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr "Tetap di atas jendela lainnya"
+
+#: kcm.cpp:49
+#, kde-format
+msgid "Window Decorations"
+msgstr "Dekorasi Jendela"
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr "Valerio Pilo"
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr "Penulis"
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr "Tema default (%1)"
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+"Alat ini memungkinkan kamu untuk mengatur tema dekorasi jendela untuk sesi "
+"yang aktif saat ini, tanpa sengaja mengaturnya ke sesi yang tidak tersedia, "
+"atau yang sudah diatur."
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+"Nama tema dekorasi jendela yang ingin kamu atur untuk KWin. Melewati path "
+"lengkap akan mencoba menemukan tema di direktori itu, dan kemudian "
+"menerapkannya jika seseorang menyimpulkannya."
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr ""
+"Tampilkan semua tema yang tersedia di sistem (dan bahkan tema saat ini)"
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+"Menyelesaikan %1 ke tema KWin Aurorae \"%2\", dan akan mencoba mengaturnya "
+"sebagai temamu saat ini."
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+"Kamu mencoba melewati alur file, tetapi ini tidak bisa diselesaikan ke tema, "
+"dan kami harus membatalkannya, karena tidak memiliki tema untuk diatur"
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr ""
+"Tema \"%1\" yang diminta sudah ditetapkan sebagai tema dekorasi jendela."
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr "Berhasil menerapkan tema kursor %1 ke sesi Plasma kamu saat ini"
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+"Gagal menyimpan pengaturan temamu - alasannya tidak diketahui, tetapi ini "
+"adalah galat yang tidak bisa dipulihkan. Kamu mungkin cukup mencobanya lagi "
+"mudah-mudahan berhasil."
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr ""
+"Tidak bisa menemukan tema \"%1\". Tema seharusnya salahsatu dari opsi "
+"berikut ini: %2"
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr "Kamu memiliki tema dekorasi jendela KWin berikut ini di sistemmu:"
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr "Bilah Judul"
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr "Taruh tombol di sini untuk menghapusnya"
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr "Seret tombol antara di sini dan di bilah judul"
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr "Modul ini membiarkanmu mengkonfigurasi dekorasi jendela."
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr "Tema"
+
+#: package/contents/ui/main.qml:57
+#, kde-format
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "Tombol Bilah Judul"
+
+#: package/contents/ui/main.qml:93
+#, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "Ukuran bingkai jendela:"
+
+#: package/contents/ui/main.qml:112
+#, kde-format
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr "Dapatkan Dekorasi Jendela Baru..."
+
+#: package/contents/ui/main.qml:141
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr "Tutup jendela dengan klik ganda tombol menu"
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr "Klik dan tahan di tombol menu untuk menampilkan menu."
+
+#: package/contents/ui/main.qml:165
+#, kde-format
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "Tampilkan tips-alat tombol bilah judul"
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr "Edit Tema %1"
+
+#: utils.cpp:25
+#, kde-format
+msgid "No Borders"
+msgstr "Tanpa Bingkai"
+
+#: utils.cpp:26
+#, kde-format
+msgid "No Side Borders"
+msgstr "Tanpa Bingkai Sisi"
+
+#: utils.cpp:27
+#, kde-format
+msgid "Tiny"
+msgstr "Mungil"
+
+#: utils.cpp:28
+#, kde-format
+msgid "Normal"
+msgstr "Normal"
+
+#: utils.cpp:29
+#, kde-format
+msgid "Large"
+msgstr "Besar"
+
+#: utils.cpp:30
+#, kde-format
+msgid "Very Large"
+msgstr "Sangat Besar"
+
+#: utils.cpp:31
+#, kde-format
+msgid "Huge"
+msgstr "Bongsor"
+
+#: utils.cpp:32
+#, kde-format
+msgid "Very Huge"
+msgstr "Sangat Bongsor"
+
+#: utils.cpp:33
+#, kde-format
+msgid "Oversized"
+msgstr "Sangat Bongsor Sekali"
+
+#~ msgctxt "popup tip"
+#~ msgid ""
+#~ "Close by double clicking: Keep the window's Menu button pressed until it "
+#~ "appears."
+#~ msgstr ""
+#~ "Tutup dengan mengeklik ganda: Jaga tombol Menu window tertekan sampai ia "
+#~ "muncul."
+
+#~ msgid "Menu"
+#~ msgstr "Menu"
+
+#~ msgid "Keep below"
+#~ msgstr "Tetap di bawah"
+
+#~ msgid "Keep above"
+#~ msgstr "Tetap di atas"
+
+#~ msgid "Download New Window Decorations"
+#~ msgstr "Unduh Dekorasi Window Baru"
+
+#~ msgctxt "checkbox label"
+#~ msgid "Use theme's default window border size"
+#~ msgstr "Gunakan tema baku ukuran bingkai window"
+
+#~ msgid "Search..."
+#~ msgstr "Cari..."
+
+#~ msgid "Close windows by double clicking &the menu button"
+#~ msgstr "Tutup window dengan klik ganda &tombol menu"
+
+#~ msgid "Border si&ze:"
+#~ msgstr "Uk&uran batas:"
+
+#~ msgid "Buttons"
+#~ msgstr "Tombol"
+
+#~ msgid "Configure %1..."
+#~ msgstr "Konfigurasi %1..."
+
+#~ msgid "Button size:"
+#~ msgstr "Ukuran tombol:"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "Kecil"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "Besar"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "Sangat Besar"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "Sangat Besar"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "Sangat Besar"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "Terlalu Besar"
+
+#~ msgid "KDE"
+#~ msgstr "KDE"
+
+#~ msgid "%1 (unavailable)"
+#~ msgstr "%1 (tak tersedia)"
+
+#~ msgid ""
+#~ "To add or remove titlebar buttons, simply <i>drag</i> items between the "
+#~ "available item list and the titlebar preview. Similarly, drag items "
+#~ "within the titlebar preview to re-position them."
+#~ msgstr ""
+#~ "Untuk menambah atau menghapus tombol batang judul, cukup <i>tarik</i> "
+#~ "item di antara senarai item yang tersedia dengan pratilik batang judul. "
+#~ "Sebaliknya, tarik item di dalam pratilik batang judul untuk mengubah "
+#~ "posisinya."
+
+#~ msgid "Resize"
+#~ msgstr "Ubah Ukuran"
+
+#~ msgid "Help"
+#~ msgstr "Bantuan"
+
+#~ msgctxt "Button showing window actions menu"
+#~ msgid "Window Menu"
+#~ msgstr "Menu Jendela"
+
+#~ msgid "--- spacer ---"
+#~ msgstr "--- pemisah ---"
+
+#~ msgid ""
+#~ "Enabling this checkbox will show window button tooltips. If this checkbox "
+#~ "is off, no window button tooltips will be shown."
+#~ msgstr ""
+#~ "Mengaktifkan kotak cek ini akan menampilkan tip alat tombol jendela. Jika "
+#~ "kotak cek ini tidak dicentang, tak ada tip alat tombol jendela yang akan "
+#~ "ditampilkan"
+
+#~ msgid "Please note that this option is not available on all styles yet."
+#~ msgstr "Perlu dicatat bahwa opsi ini belum tersedia untuk semua gaya."
+
+#~ msgid "Use custom titlebar button &positions"
+#~ msgstr "Gunakan &posisi tombol batang alat suai"
+
+#~ msgid "B&order size:"
+#~ msgstr "Uk&uran batas:"
+
+#~ msgid "Use this combobox to change the border size of the decoration."
+#~ msgstr "Gunakan kotak kombo untuk mengubah ukuran batas dekorasi."
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Border"
+#~ msgstr "Tak Ada Batas Sisi"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "Tak Ada Batas"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Opsi Dekorasi"
+
+#~ msgid ""
+#~ "Select the window decoration. This is the look and feel of both the "
+#~ "window borders and the window handle."
+#~ msgstr ""
+#~ "Pilih dekorasi jendela. Ini adalah tampilan dan rasa dari batas jendela "
+#~ "dan penanganan jendela."
+
+#~ msgid "Configure Decoration..."
+#~ msgstr "Atur Dekorasi..."
+
+#~ msgid "Window Decoration Control Module"
+#~ msgstr "Modul Kontrol Dekorasi Jendela"
+
+#~ msgid "(c) 2001 Karol Szwed"
+#~ msgstr "(c) 2001 Karol Szwed"
+
+#~ msgid "Karol Szwed"
+#~ msgstr "Karol Szwed"
+
+#~ msgid ""
+#~ "<h1>Installation error</h1>The resource<h2>kwin/kcm_kwindecoration/main."
+#~ "qml</h2>could not be located in any application data path.<h2>Please "
+#~ "contact your distribution</h2>The application will now abort"
+#~ msgstr ""
+#~ "<h1>Galat instalasi</h1>Sumber daya<h2>kwin/kcm_kwindecoration/main.qml</"
+#~ "h2>tak dapat ditemukan di alamat data aplikasi.<h2>Silakan kontak "
+#~ "distribusi anda</h2>Aplikasi akan dibatalkan sekarang"
+
+#~ msgid "Installation Error"
+#~ msgstr "Galat Instalasi"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oksigen"
+
+#~ msgid ""
+#~ "<h1>Window Manager Decoration</h1><p>This module allows you to choose the "
+#~ "window border decorations, as well as titlebar button positions and "
+#~ "custom decoration options.</p>To choose a theme for your window "
+#~ "decoration click on its name and apply your choice by clicking the \"Apply"
+#~ "\" button below. If you do not want to apply your choice you can click "
+#~ "the \"Reset\" button to discard your changes.<p>You can configure each "
+#~ "theme. There are different options specific for each theme.</p><p>On the "
+#~ "\"Buttons\" tab check the \"Use custom titlebar button positions\" box "
+#~ "and you can change the positions of the buttons to your liking.</p>"
+#~ msgstr ""
+#~ "<h1>Dekorasi Manajer Jendela</h1><p>Modul ini memungkinkan anda untuk "
+#~ "memilih dekorasi batas jendela, dan juga posisi tombol batang judul dan "
+#~ "opsi dekorasi suai.</p>Untuk memilih tema dekorasi jendela anda klik pada "
+#~ "namanya dan terapkan pilihan anda dengan klik tombol \"Terapkan\" di "
+#~ "bawah. Jika anda tidak ingin menerapkan pilihan anda, anda dapat klik "
+#~ "pada tombol \"Atur Ulang\" untuk mengabaikan pengubahan anda.<p>Anda "
+#~ "dapat mengatur tiap tema. Ada beragam opsi spesifik untuk tiap tema.</"
+#~ "p><p>Di tab \"Tombol\" centang kotak \"Gunakan posisi tombol batang judul "
+#~ "suai\" dan anda dapat mengubah posisi tombol sesuai keinginan anda.</p>"
+
+#~ msgid "Active Window"
+#~ msgstr "Jendela Aktif"
+
+#~ msgid "Inactive Window"
+#~ msgstr "Jendela Tidak Aktif"
+
+#~ msgid "kcmkwindecoration"
+#~ msgstr "kcmkwindecoration"
+
+#~ msgctxt "Caption to decoration preview, %1 author name"
+#~ msgid "by %1"
+#~ msgstr "oleh %1"
+
+#~ msgid ""
+#~ "No preview available.\n"
+#~ "Most probably there\n"
+#~ "was a problem loading the plugin."
+#~ msgstr ""
+#~ "Tak ada pratilik tersedia.\n"
+#~ "Kemungkinan besar terjadi\n"
+#~ "galat ketika memuat plugin."

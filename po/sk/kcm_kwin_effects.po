@@ -1,0 +1,99 @@
+# translation of kcm_kwin_effects.po to Slovak
+# Roman Paholík <wizzardsk@gmail.com>, 2019.
+# Matej Mrenica <matejm98mthw@gmail.com>, 2019.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcm_kwin_effects\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-03-26 00:45+0000\n"
+"PO-Revision-Date: 2019-11-05 20:21+0100\n"
+"Last-Translator: Roman Paholik <wizzardsk@gmail.com>\n"
+"Language-Team: Slovak <kde-sk@linux.sk>\n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 2.0\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Roman Paholík"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "wizzardsk@gmail.com"
+
+#: kcm.cpp:35
+#, kde-format
+msgid "Desktop Effects"
+msgstr "Efekty plochy"
+
+#: kcm.cpp:39
+#, kde-format
+msgid "Vlad Zahorodnii"
+msgstr "Vlad Zahorodnii"
+
+#: package/contents/ui/Effect.qml:92
+#, kde-format
+msgid ""
+"Author: %1\n"
+"License: %2"
+msgstr ""
+"Autor: %1\n"
+"Licencia: %2"
+
+#: package/contents/ui/Effect.qml:121
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Show/Hide Video"
+msgstr "Zobraziť/Skryť Video"
+
+#: package/contents/ui/Effect.qml:128
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Configure..."
+msgstr "Nastaviť..."
+
+#: package/contents/ui/main.qml:20
+#, kde-format
+msgid "This module lets you configure desktop effects."
+msgstr "Tento modul vám umožní nastaviť efekty plochy."
+
+#: package/contents/ui/main.qml:27
+#, kde-format
+msgid ""
+"Hint: To find out or configure how to activate an effect, look at the "
+"effect's settings."
+msgstr "Rada: viac informácií o efekte nájdete v jeho nastavení."
+
+#: package/contents/ui/main.qml:47
+#, kde-format
+msgid "Configure Filter"
+msgstr "Nastaviť filter"
+
+#: package/contents/ui/main.qml:59
+#, kde-format
+msgid "Exclude unsupported effects"
+msgstr "Vylúčiť nepodporované efekty"
+
+#: package/contents/ui/main.qml:67
+#, kde-format
+msgid "Exclude internal effects"
+msgstr "Vylúčiť interné efekty"
+
+#: package/contents/ui/main.qml:125
+#, kde-format
+msgid "Get New Desktop Effects..."
+msgstr "Získať nové efekty plochy..."
+
+#~ msgid "Download New Desktop Effects"
+#~ msgstr "Stiahnuť nové efekty plochy"
+
+#~ msgid "Exclude Desktop Effects not supported by the Compositor"
+#~ msgstr "Vylúčiť efekty plochy nepodporované kompozítorom"
+
+#~ msgid "Search..."
+#~ msgstr "Hľadať..."

@@ -1,0 +1,271 @@
+# Translation of kcm_kwindesktop.po to Low Saxon
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+# Sönke Dibbern <s_dibbern@web.de>, 2007, 2008, 2009, 2014.
+# Manfred Wiese <m.j.wiese@web.de>, 2010, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kcm_kwindesktop\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"PO-Revision-Date: 2014-04-30 14:13+0200\n"
+"Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
+"Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
+"Language: nds\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.4\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Sönke Dibbern"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "s_dibbern@web.de"
+
+#: desktopsmodel.cpp:467
+#, kde-format
+msgid "There was an error connecting to the compositor."
+msgstr ""
+
+#: desktopsmodel.cpp:666
+#, kde-format
+msgid "There was an error saving the settings to the compositor."
+msgstr ""
+
+#: desktopsmodel.cpp:669
+#, kde-format
+msgid "There was an error requesting information from the compositor."
+msgstr ""
+
+#: package/contents/ui/main.qml:17
+#, kde-format
+msgid ""
+"This module lets you configure the navigation, number and layout of virtual "
+"desktops."
+msgstr ""
+
+#: package/contents/ui/main.qml:91
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Rename"
+msgstr ""
+
+#: package/contents/ui/main.qml:102
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Confirm new name"
+msgstr ""
+
+#: package/contents/ui/main.qml:110
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove"
+msgstr ""
+
+#: package/contents/ui/main.qml:137
+#, kde-format
+msgid ""
+"Virtual desktops have been changed outside this settings application. Saving "
+"now will overwrite the changes."
+msgstr ""
+
+#: package/contents/ui/main.qml:153
+#, kde-format
+msgid "Row %1"
+msgstr ""
+
+#: package/contents/ui/main.qml:166
+#, kde-format
+msgctxt "@action:button"
+msgid "Add"
+msgstr ""
+
+#: package/contents/ui/main.qml:169
+#, fuzzy, kde-format
+#| msgid "Desktops"
+msgid "New Desktop"
+msgstr "Schriefdischen"
+
+#: package/contents/ui/main.qml:184
+#, kde-format
+msgid "1 Row"
+msgid_plural "%1 Rows"
+msgstr[0] ""
+msgstr[1] ""
+
+#: package/contents/ui/main.qml:200
+#, kde-format
+msgid "Options:"
+msgstr ""
+
+#: package/contents/ui/main.qml:202
+#, fuzzy, kde-format
+#| msgid "Desktop navigation wraps around"
+msgid "Navigation wraps around"
+msgstr "Schriefdischwessel na de Güntsiet"
+
+#: package/contents/ui/main.qml:220
+#, kde-format
+msgid "Show animation when switching:"
+msgstr ""
+
+#: package/contents/ui/main.qml:271
+#, kde-format
+msgid "Show on-screen display when switching:"
+msgstr ""
+
+#: package/contents/ui/main.qml:290
+#, kde-format
+msgid "%1 ms"
+msgstr ""
+
+#: package/contents/ui/main.qml:314
+#, kde-format
+msgid "Show desktop layout indicators"
+msgstr "Schriefdisch-Vöransichten wiesen"
+
+#: virtualdesktops.cpp:33
+#, fuzzy, kde-format
+#| msgid "Desktops"
+msgid "Virtual Desktops"
+msgstr "Schriefdischen"
+
+#~ msgid "Desktop %1:"
+#~ msgstr "Schriefdisch %1:"
+
+#~ msgid "Here you can enter the name for desktop %1"
+#~ msgstr "Hier kannst Du den Naam för Schriefdisch %1 ingeven"
+
+#~ msgid "Desktop %1"
+#~ msgstr "Schriefdisch %1"
+
+#~ msgid ""
+#~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "
+#~ "virtual desktops you want and how these should be labeled."
+#~ msgstr ""
+#~ "<h1>Mehr Schriefdischen</h1> Mit dit Moduul kannst Du fastleggen, wo vele "
+#~ "Schriefdischen Du hebben wullt un wat se nöömt warrt."
+
+#~ msgid "Switch to Next Desktop"
+#~ msgstr "Na nakamen Schriefdisch wesseln"
+
+#~ msgid "Switch to Previous Desktop"
+#~ msgstr "Na verleden Schriefdisch wesseln"
+
+#~ msgid "Switch One Desktop to the Right"
+#~ msgstr "Een Schriefdisch na rechts wesseln"
+
+#~ msgid "Switch One Desktop to the Left"
+#~ msgstr "Een Schriefdisch na links wesseln"
+
+#~ msgid "Switch One Desktop Up"
+#~ msgstr "Een Schriefdisch na baven wesseln"
+
+#~ msgid "Switch One Desktop Down"
+#~ msgstr "Een Schriefdisch na nerrn wesseln"
+
+#~ msgid "Walk Through Desktops"
+#~ msgstr "Dör de Schriefdischen lopen"
+
+#~ msgid "Walk Through Desktops (Reverse)"
+#~ msgstr "Dör de Schriefdischen lopen (torüchwarts)"
+
+#~ msgid "Walk Through Desktop List"
+#~ msgstr "Dör de Schriefdischlist lopen"
+
+#~ msgid "Walk Through Desktop List (Reverse)"
+#~ msgstr "Dör de Schriefdischlist lopen (torüchwarts)"
+
+#~ msgid "Desktop Switching"
+#~ msgstr "Schriefdisch wesseln"
+
+#~ msgid "Switch to Desktop %1"
+#~ msgstr "Na Schriefdisch %1 wesseln"
+
+#~ msgid "No Animation"
+#~ msgstr "Keen Animeren"
+
+#~ msgid "No suitable Shortcut for Desktop %1 found"
+#~ msgstr "Keen passen Kombinatschoon för Schriefdisch %1 funnen."
+
+#~ msgid "Assigned global Shortcut \"%1\" to Desktop %2"
+#~ msgstr "Globaal Tastkombinatschoon \"%1\" na Schriefdisch %2 towiest"
+
+#~ msgid "Shortcut conflict: Could not set Shortcut %1 for Desktop %2"
+#~ msgstr ""
+#~ "Tastkombinatschonen-Konflikt: Kombinatschoon \"%1\" lett sik Schriefdisch "
+#~ "%2 nich towiesen"
+
+#~ msgid "KWin development team"
+#~ msgstr "De Schrieverslüüd vun KWin"
+
+#~ msgid "Layout"
+#~ msgstr "Opdelen"
+
+#~ msgid ""
+#~ "Here you can set how many virtual desktops you want on your KDE desktop."
+#~ msgstr ""
+#~ "Hier kannst Du fastleggen, wo vele (virtuelle) Schriefdischen Du hebben "
+#~ "wullt."
+
+#~ msgid "&Number of desktops:"
+#~ msgstr "&Tall vun Schriefdischen:"
+
+#~ msgid "N&umber of rows:"
+#~ msgstr "&Regentall:"
+
+#~ msgid "Desktop Names"
+#~ msgstr "Schriefdischnaams"
+
+#~ msgid "Switching"
+#~ msgstr "Wesseln"
+
+#~ msgid ""
+#~ "Enable this option if you want keyboard or active desktop border "
+#~ "navigation beyond the edge of a desktop to take you to the opposite edge "
+#~ "of the new desktop."
+#~ msgstr ""
+#~ "Maak dit an, wenn Du bi't Stüern över de Schriefdischkant mit Tastatuur "
+#~ "oder över de Aktive Schriefdischkant bi de Güntsiet vun den niegen "
+#~ "Schriefdisch rutkamen wullt."
+
+#~ msgid "Desktop Effect Animation"
+#~ msgstr "Schriefdischeffekt-Animeren"
+
+#~ msgid "Animation:"
+#~ msgstr "Animeren:"
+
+#~ msgid "Desktop Switch On-Screen Display"
+#~ msgstr "Schriefdischwessel-Dorstellen"
+
+#~ msgid "Duration:"
+#~ msgstr "Duer:"
+
+#~ msgid " msec"
+#~ msgstr " ms"
+
+#~ msgid ""
+#~ "Enabling this option will show a small preview of the desktop layout "
+#~ "indicating the selected desktop."
+#~ msgstr ""
+#~ "Is dit anmaakt, warrt en lütt Vöransicht vun't Utsehn för den utsöchten "
+#~ "Schriefdisch wiest"
+
+#~ msgid "Shortcuts"
+#~ msgstr "Tastkombinatschonen"
+
+#~ msgid "Show shortcuts for all possible desktops"
+#~ msgstr "Tastkombinatschonen för all mööglich Schriefdischen wiesen"
+
+#~ msgid "Different widgets for each desktop"
+#~ msgstr "Anner Bedeenelementen för elk Schriefdisch"
+
+#~ msgid "Mouse wheel over desktop background switches desktop"
+#~ msgstr "Muusrad över Schriefdischachtergrund wesselt Schriefdisch"

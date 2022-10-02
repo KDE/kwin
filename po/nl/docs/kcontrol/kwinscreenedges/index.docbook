@@ -1,0 +1,78 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Dutch "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinscreenedges" lang="&language;">
+<articleinfo>
+
+<title
+>Schermranden</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+&Freek.de.Kruijf; 
+</authorgroup>
+
+<date
+>2021-04-09</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systeeminstellingen</keyword>
+<keyword
+>bureaublad</keyword>
+<keyword
+>effecten</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Actieve schermranden laten u effecten inschakelen door met de muiscursor op de rand van het scherm te drukken. Hier kunt u instellen welk effect wordt geactiveerd op elke hoek en rand van het scherm. </para>
+
+<para
+>Klik met elke muisknop in een vierkant en selecteer een effect in het contextmenu. Randen met een blauw vierkant hebben al een aangeplakt effect, een grijs vierkant geeft aan dat er geen effect is geselecteerd voor deze rand.</para>
+
+<para
+>Het aantal toegankelijke items in het contextmenu hangt af van de instellingen in de module <ulink url="help:/kcontrol/kwineffects/index.html"
+> <guilabel
+>Bureaubladeffecten</guilabel
+></ulink
+> in de categorie <guilabel
+>Werkruimte</guilabel
+>. Selecteer uw favoriete effecten uit de groep <guilabel
+>Vensterbeheer</guilabel
+>. Dit activeert de overeenkomstige items in het contextmenu.</para>
+
+<para
+>Als u op zoek bent naar de instelling om omschakelen van bureaubladen te doen door uw muiscursor tegen de rand van het scherm te drukken kies dan één van de effecten <guilabel
+>Huidige vensters</guilabel
+> in het contextmenu.</para>
+
+<para
+>U kunt <guilabel
+>Maximaliseren: Vensters naar de bovenrand gesleept</guilabel
+> of <guilabel
+>Tegels: Vensters naar de linker of rechter rand gesleept</guilabel
+> inschakelen en een percentage van het scherm instellen om tegels maken te starten. </para>
+
+<para
+>Door het item <guilabel
+>Bureaublad omschakelen aan rand</guilabel
+> te gebruiken, configureert u dat u wilt omschakelen naar een ander bureaublad bij het drukken van de muiscursor tegen de schermrand, &eg; alleen bij het verplaatsen van vensters. </para>
+<para
+><guilabel
+>Vertraging van activering</guilabel
+> is de hoeveelheid tijd vereist voor de muiscursor om tegen de rand van het scherm gedrukt te zijn alvorens de actie wordt genomen </para>
+<para
+><guilabel
+>Vertraging van reactivering</guilabel
+>is de hoeveelheid tijd vereist nadat een actie is genomen totdat de volgende actie kan plaatsvinden. </para>
+</article>

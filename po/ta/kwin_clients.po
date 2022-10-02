@@ -1,0 +1,547 @@
+# Kishore G <kishore96@gmail.com>, 2021.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2021-01-23 18:40+0530\n"
+"Last-Translator: Kishore G <kishore96@gmail.com>\n"
+"Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
+"Language: ta\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 20.12.1\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "மிகச்சிறிய"
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "இயல்பான"
+
+#: aurorae/src/aurorae.cpp:727
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "பெரிய"
+
+#: aurorae/src/aurorae.cpp:728
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "மிகப்பெரிய"
+
+#: aurorae/src/aurorae.cpp:729
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "பிரம்மாண்டமான"
+
+#: aurorae/src/aurorae.cpp:730
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "மிகப்பிரம்மாண்டமான"
+
+#: aurorae/src/aurorae.cpp:731
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "அளவுக்கடந்த"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr "பட்டனின் அளவு:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "அமைப்பு சாளரம்"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "தலைப்பின் &சீரமைப்பு"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "இடது"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "நடுவில்"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "வலது"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"இது தேர்ந்தெடுக்கப்பட்டால், சாளர விளிம்பு தலைப்புபட்டையின் நிறத்தை கொள்ளும். இல்லையெனில், "
+"அது பின்னணி நிறத்தைக் கொள்ளும்."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "நிறமுள்ள சாளர விளிம்பு"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"சுட்டியை மேல் வைக்கும்போது தெளிவாவது போலும் அதை எடுக்கும்போது மங்கிப்போவது போலவும் "
+"பட்டன்கள் தெரிய இதை தேர்ந்தெடுக்கவும்."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, fuzzy, kde-format
+msgid "Animate buttons"
+msgstr "பட்டன்களை இயக்கு"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "ஒரு தலைப்புப்பட்டி உரையில் நிழலுடன் கூடிய முப்பரிமாண காட்சி வேண்டுமென்றால் இதை "
+#~ "தேர்ந்தெடுக்கவேண்டும்."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "நிழலிடப்பட்ட உரையை பயன்படுத்து"
+
+#, fuzzy
+#~| msgid "Animate buttons"
+#~ msgid "Animations"
+#~ msgstr "பட்டன்களை இயக்கு"
+
+#, fuzzy
+#~| msgid "Actions Settings"
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "செயல்கள் அமைப்புகள்"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "பெரிய"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "பெரிய"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "பெரிய"
+
+#, fuzzy
+#~| msgid "Title &Alignment"
+#~ msgid "Tit&le alignment:"
+#~ msgstr "தலைப்பு &ஒழுங்குப்படுத்துதல்"
+
+#, fuzzy
+#~| msgid "Small"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "சிறிய"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "பட்டியல் பட்டனில் இருமுறை க்ளிக் செய்து சாளரங்களை மூடு"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title"
+#~ msgstr "சாளரத்தை சிறிதாக்கு"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadows"
+#~ msgstr "நிழலிடு"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Window Glow"
+#~ msgstr "சாளரத்தை சிறிதாக்கு"
+
+#, fuzzy
+#~| msgid "Config Dialog"
+#~ msgid "Dialog"
+#~ msgstr "வடிவமைப்பு உரையாடல்"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Use window title"
+#~ msgstr "சாளரத்தை சிறிதாக்கு"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title:"
+#~ msgstr "சாளரத்தை சிறிதாக்கு"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Hide window title bar"
+#~ msgstr "சாளரத்தை சிறிதாக்கு"
+
+#, fuzzy
+#~ msgid "Remove"
+#~ msgstr "மறுஅளவாக்கு"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Inactive Windows"
+#~ msgstr "சாளரத்தை சிறிதாக்கு"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Windows"
+#~ msgstr "சாளரத்தை சிறிதாக்கு"
+
+#~ msgid "Minimize"
+#~ msgstr "சிறிதாக்கு"
+
+#~ msgid "Maximize"
+#~ msgstr "பெரிதாக்கு"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "மற்றவைகளை மேலே வை"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "மற்றவைகளை கீழே வை"
+
+#, fuzzy
+#~| msgid "On all desktops"
+#~ msgid "On All Desktops"
+#~ msgstr "எல்லா மேல்மேசைகளிலும்"
+
+#~ msgid "Menu"
+#~ msgstr "பட்டி"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "எல்லா மேல்மேசைகளிலும் இல்லை"
+
+#~ msgid "On all desktops"
+#~ msgstr "எல்லா மேல்மேசைகளிலும்"
+
+#~ msgid "Unshade"
+#~ msgstr "நிழலிடாதே"
+
+#~ msgid "Shade"
+#~ msgstr "நிழலிடு"
+
+#~ msgid "Resize"
+#~ msgstr "மறுஅளவாக்கு"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>B II முன்காட்சி</center></b>"
+
+#, fuzzy
+#~ msgid "Restore"
+#~ msgstr "மறுஅளவாக்கு"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "தலைப்புபட்டி வண்ணங்களை பயன்படுத்தி சாளர விளிம்புகளை வரை"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr "இது தேர்ந்தெடுக்கப்பட்டால், "
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "மறுஅளவு கைப்பிடியை இழு"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "தேர்ந்தெடுக்கப்படும்போது, அலங்காரங்கல் சாளரங்களின் கீழ் வலது மூலையில் உள்ள \"கைப்பிடியை "
+#~ "பற்று\" என்பதன் மூலம் வரையப்படும்."
+
+#, fuzzy
+#~| msgid ""
+#~| "When selected, active titlebars are drawn with a stipple (dotted) "
+#~| "effect; otherwise, they are drawn without the stipple."
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr ""
+#~ "தேர்ந்தெடுக்கப்படும்போது, செயலில் உள்ள பட்டிகள் புள்ளி(புள்ளியிடப்பட்ட) விளைவுடன் "
+#~ "வரையப்படும்; இல்லையென்றால் புள்ளி இல்லாமல் வரையப்படும்."
+
+#~ msgid "Actions Settings"
+#~ msgstr "செயல்கள் அமைப்புகள்"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "பட்டியல் பட்டனில் இருமுறை க்ளிக் செய்யவும்:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "ஒன்றும் செய்யாதே"
+
+#~ msgid "Minimize Window"
+#~ msgstr "சாளரத்தை சிறிதாக்கு"
+
+#~ msgid "Shade Window"
+#~ msgstr "நிழல் சாளரம்"
+
+#~ msgid "Close Window"
+#~ msgstr "சாளரத்தை மூடு"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "பட்டி பட்டனை இருமுறை க்ளிக் செய்வதன் மூலம் ஒரு செயல் ஒருங்கிணைக்கப்படும். சந்தேகமாக "
+#~ "இருந்தால் விட்டுவிடவும்."
+
+#~ msgid "Laptop"
+#~ msgstr "மடிக்கணினி"
+
+#, fuzzy
+#~| msgid "Draw &gradients"
+#~ msgid "Radial Gradient"
+#~ msgstr "சரிவுகளை வரை"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Save"
+#~ msgstr "நிழலிடு"
+
+#~ msgid "Large"
+#~ msgstr "பெரிய"
+
+#~ msgid "Small"
+#~ msgstr "சிறிய"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "மைக்ரோசாஃப்ட் விண்டோசில் உள்ளது போல் பட்டியல் பட்டனில் இருமுறை க்ளிக் செய்யும்போது "
+#~ "சாளரங்கள் மூடுவதற்கு இதத தேர்ந்தெடுக்கவும்."
+
+#~ msgid "Plastik"
+#~ msgstr "Plastik"
+
+#, fuzzy
+#~| msgid "On all desktops"
+#~ msgid "All Desktops"
+#~ msgstr "எல்லா மேல்மேசைகளிலும்"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Do not keep above others"
+#~ msgstr "மற்றவைகளை மேலே வை"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above others"
+#~ msgstr "மற்றவைகளை மேலே வை"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Do not keep below others"
+#~ msgstr "மற்றவைகளை கீழே வை"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below others"
+#~ msgstr "மற்றவைகளை கீழே வை"
+
+#, fuzzy
+#~| msgid "Maximize"
+#~ msgid "Maximum"
+#~ msgstr "பெரிதாக்கு"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadow style:"
+#~ msgstr "நிழலிடு"
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "ஒரு KWM பொருளை நிறுவுகிறது"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "ஒரு பொருள் வடிவமைப்பு கோப்புக்கான பாதை"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWM தலைப்பு</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "ஒட்டக்கூடிய"
+
+#~ msgid "Unsticky"
+#~ msgstr "ஒட்டாத"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>கேராமிக் முன்காட்சி</b></center>"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "தலைப்புப்பட்டி புள்ளிகள் விளைவை வரை"
+
+#~ msgid ""
+#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
+#~ "otherwise, they are drawn without the stipple."
+#~ msgstr ""
+#~ "தேர்ந்தெடுக்கப்படும்போது, செயலில் உள்ள பட்டிகள் புள்ளி(புள்ளியிடப்பட்ட) விளைவுடன் "
+#~ "வரையப்படும்; இல்லையென்றால் புள்ளி இல்லாமல் வரையப்படும்."
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "சாளரங்களின் கீழே இழுப்பட்டியை வரை"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
+#~ "otherwise, no grab bar is drawn."
+#~ msgstr ""
+#~ "தேர்ந்தெடுக்கப்பட்டால், சாளரங்களின் கீழ் \"பற்று பட்டி\" ன் மூலம் அலங்காரங்கள் வரையப்படும். "
+#~ "இல்லையென்றால், பற்று பட்டி வரையப்படாது."
+
+#~ msgid "Draw &gradients"
+#~ msgstr "சரிவுகளை வரை"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with gradients for high-color "
+#~ "displays; otherwise, no gradients are drawn."
+#~ msgstr ""
+#~ "தேர்ந்தெடுக்கப்பட்டால், உயர்தர-வண்ண காட்சிகளுக்கு அலங்காரங்கள் சரிவுகளால் வரையப்படும்; "
+#~ "இல்லையென்றால் சரிவுகள் வரையவேண்டாம்."
+
+#, fuzzy
+#~| msgid "KDE2"
+#~ msgid "KDE 2"
+#~ msgstr "KDE2"
+
+#~ msgid ""
+#~ "When selected, the window decoration borders are drawn using the titlebar "
+#~ "colors; otherwise, they are drawn using normal border colors instead."
+#~ msgstr ""
+#~ "தேர்ந்தெடுக்கப்படும்போது, சாளர அலங்கரிப்பு விளிம்புகள் தலைப்புப் பட்டி வண்ணங்களை "
+#~ "பயன்படுத்தி வரையப்படும்; இல்லையென்றால், சாதாரண விளிம்பு வண்ணங்கள் பயன்படுத்தப்படும்."
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "Quartz &extra slim"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "Quartz window decorations with extra-small title bar."
+
+#~ msgid "Quartz"
+#~ msgstr "குவார்ட்ஸ்"
+
+#~ msgid "Redmond"
+#~ msgstr "Redmond"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "&சாளர மறுஅளவு கைப்பிடியைக் காட்டு"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "தேர்ந்தெடுக்கப்பட்டால், எல்லா சாளரங்களும் மறுஅளவு கைப்பிடியால் கீழ் வலது மூலையில் "
+#~ "இழுக்கப்படும். இது சாளரங்களை அளவு மாற்றுவதை சுலபமாக்குகிறது. மடிக்கணினிகளில் "
+#~ "ட்ராக்பால்ஸ் மற்றும் மற்ற சுட்டி இடம் மாற்றங்களில் முக்கியமாக பயன்படுகிறது."
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr "இங்கே நீங்கள் மறுஅளவாக்கும் கைப்பிடியின் அளவை மாற்றலாம்."
+
+#~ msgid "Medium"
+#~ msgstr "நடுத்தர"
+
+#~ msgid "Modern System"
+#~ msgstr "நவீன அமைப்பு"
+
+#~ msgid "Web"
+#~ msgstr "வலை"
+
+#~ msgid "Keramik"
+#~ msgstr "கேராமிக்"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "தலைப்பு பெட்டியில் சாளர சின்னத்தைக் காட்டு"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "தலைப்புப்பட்டி உரைக்கு பிறகு தலைப்பு பெட்டியில் சாளர சின்னம் தெரியவேண்டுமென்றால் இந்த "
+#~ "விருப்பத் தேர்வை தேர்ந்தெடுக்கவும்."
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "செயலில் உள்ள சாளரங்களில் சிறிய தலைப்பு பெட்டிகளை இழு"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "செயலில் இல்லாத சாளரங்களில் உள்ளது போல செயலில் இருக்கும் சாளரங்களில் தலைப்பு பெட்டி "
+#~ "ஒரே அளவாக இருக்க இந்த விருப்பத் தேர்வை தேர்ந்தெடுக்கவும். இது மடிக்கணினி அல்லது "
+#~ "குறைந்த தெளிவுத்திறன் திரைகளில் சாளர உள்ளடக்கங்களுக்கு இடத்தை அதிகரிக்க பயன்படுகிறது."
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "சாளரங்களின் கீழே இழுப்பட்டிகளை இழு"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "சாளரங்களுக்கு கீழே இழுப்பட்டியை வைக்க இதை தேர்ந்தெடுக்கவும். இது "
+#~ "தேர்ந்தெடுக்கப்படவில்லையென்றால் அந்த இடத்தில் ஒரு மெல்லிய விளிம்பு மட்டுமே இருக்கும்."
+
+#, fuzzy
+#~| msgid "Installs a KWM theme"
+#~ msgid "Get New Themes..."
+#~ msgstr "ஒரு KWM பொருளை நிறுவுகிறது"
+
+#, fuzzy
+#~| msgid "Installs a KWM theme"
+#~ msgid "Install New Theme..."
+#~ msgstr "ஒரு KWM பொருளை நிறுவுகிறது"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Glow active window"
+#~ msgstr "சாளரத்தை சிறிதாக்கு"
+
+#, fuzzy
+#~| msgid "Draw window frames using &titlebar colors"
+#~ msgid "Overwrite default title bar colors:"
+#~ msgstr "தலைப்புபட்டி வண்ணங்களை பயன்படுத்தி சாளர விளிம்புகளை வரை"
+
+#, fuzzy
+#~| msgid "<b><center>B II preview</center></b>"
+#~ msgid "<b><center>Oxygen preview! =)</center></b>"
+#~ msgstr "<b><center>B II முன்காட்சி</center></b>"
+
+#, fuzzy
+#~| msgid "Unsticky"
+#~ msgid "Un-Sticky"
+#~ msgstr "ஒட்டாத"

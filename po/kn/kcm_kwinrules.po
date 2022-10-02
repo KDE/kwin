@@ -1,0 +1,1242 @@
+# translation of kcmkwinrules.po to Kannada
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Shankar Prasad <svenkate@redhat.com>, 2008.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwinrules\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-19 00:47+0000\n"
+"PO-Revision-Date: 2008-07-06 23:45+0530\n"
+"Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
+"Language-Team: Kannada <en@li.org>\n"
+"Language: kn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "ಶಂಕರ್ ಪ್ರಸಾದ್ ಎಂ ವಿ"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "prasad.mvs@gmail.com"
+
+#: kcmrules.cpp:28
+#, fuzzy, kde-format
+#| msgid "Window &role:"
+msgid "Window Rules"
+msgstr "ವಿಂಡೋ ಪಾತ್ರ(&r):"
+
+#: kcmrules.cpp:32
+#, kde-format
+msgid "Ismael Asensio"
+msgstr ""
+
+#: kcmrules.cpp:33
+#, kde-format
+msgid "Author"
+msgstr ""
+
+#: kcmrules.cpp:37
+#, kde-format
+msgid ""
+"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
+"specifically only for some windows.</p> <p>Please note that this "
+"configuration will not take effect if you do not use KWin as your window "
+"manager. If you do use a different window manager, please refer to its "
+"documentation for how to customize window behavior.</p>"
+msgstr ""
+"<p><h1>ವಿಂಡೋ-ನಿಗದಿತ ಸಂಯೋಜನೆಗಳು</h1> ಇಲ್ಲಿ ನೀವು ಕೆಲವು ನಿಗದಿತ ವಿಂಡೋಗಳಿಗಾಗಿ "
+"ವಿಂಡೊ ಸಂಯೋಜನೆಗಳನ್ನು ಸಿದ್ಧಗೊಳಿಸಬಹುದು.</p> <p>ನೀವು KWin ಅನ್ನು ವಿಂಡೋ ಮ್ಯಾನೇಜರ್ ಆಗಿ "
+"ಬಳಸದೆ ಹೋದಲ್ಲಿ ಈ ಸಂರಚನೆಯು ಪರಿಣಾಮಕಾರಿಯಾಗುವುದಿಲ್ಲ ಎನ್ನುವುದನ್ನು ನೆನಪಿಡಿ. ಎಲ್ಲಿಯಾದರೂ "
+"ನೀವು ಬೇರೊಂದು ವಿಂಡೋ ಮ್ಯಾನೇಜರ್ ಅನ್ನು ಬಳಸುತ್ತಿದ್ದ ಪಕ್ಷದಲ್ಲಿ ವಿಂಡೋ ವರ್ತನೆಯನ್ನು ಕಸ್ಟಮೈಸ್ "
+"ಮಾಡಲು ದಯವಿಟ್ಟು ಅದರ ದಸ್ತಾವೇಜನ್ನು ಸಂಪರ್ಕಿಸಿ.</p>"
+
+#: kcmrules.cpp:243
+#, kde-format
+msgid "Copy of %1"
+msgstr ""
+
+#: kcmrules.cpp:422
+#, kde-format
+msgid "Application settings for %1"
+msgstr "%1 ಗಾಗಿನ ಅನ್ವಯ ಹೊಂದಾಣಿಕೆಗಳು"
+
+#: kcmrules.cpp:442 rulesmodel.cpp:215
+#, kde-format
+msgid "Window settings for %1"
+msgstr "%1 ಗಾಗಿನ ವಿಂಡೋ ಹೊಂದಾಣಿಕೆಗಳು"
+
+#: main.cpp:31
+#, kde-format
+msgid "KWinRules KCM launcher"
+msgstr ""
+
+#: main.cpp:32
+#, fuzzy, kde-format
+#| msgid "WId of the window for special window settings."
+msgid "KWin id of the window for special window settings."
+msgstr "ವಿಶೇಷ ವಿಂಡೋ ಸಂಯೋಜನೆಗಳಿಗಾಗಿನ WId ಯ ವಿಂಡೋ."
+
+#: main.cpp:33
+#, kde-format
+msgid "Whether the settings should affect all windows of the application."
+msgstr "ಅನ್ವಯದ ಎಲ್ಲಾ ವಿಂಡೋಗಳಿಗೂ ಈ ಸಂಯೋಜನೆಗಳು ಅನ್ವಯಿಸಲ್ಪಡಬೇಕೆ ಅಥವ ಬೇಡವೆ."
+
+#: main.cpp:40
+#, kde-format
+msgid "This helper utility is not supposed to be called directly."
+msgstr "ಈ ಸಹಾಯಕ ಉಪಯುಕ್ತತೆಯನ್ನು ನೇರವಾಗಿ ಕರೆಯುವಂತಿಲ್ಲ."
+
+#: main.cpp:44
+#, fuzzy, kde-format
+#| msgid "Edit Window-Specific Settings"
+msgctxt "Window caption for the application wide rules dialog"
+msgid "Edit Application-Specific Settings"
+msgstr "ವಿಂಡೋ-ನಿಶ್ಚಿತ ಸಂಯೋಜನೆಗಳನ್ನು ಸಂಪಾದಿಸಿ"
+
+#: main.cpp:45
+#, kde-format
+msgid "Edit Window-Specific Settings"
+msgstr "ವಿಂಡೋ-ನಿಶ್ಚಿತ ಸಂಯೋಜನೆಗಳನ್ನು ಸಂಪಾದಿಸಿ"
+
+#: optionsmodel.cpp:198
+#, kde-format
+msgid "Unimportant"
+msgstr "ಪ್ರಾಮುಖ್ಯತೆ ಇಲ್ಲದ"
+
+#: optionsmodel.cpp:199
+#, kde-format
+msgid "Exact Match"
+msgstr "ಸರಿಯಾಗಿ ಹೊಂದುವ"
+
+#: optionsmodel.cpp:200
+#, kde-format
+msgid "Substring Match"
+msgstr "ಉಪಸಾಲು ಹೊಂದಿಕೆ"
+
+#: optionsmodel.cpp:201
+#, kde-format
+msgid "Regular Expression"
+msgstr "ರೂಢಿಗತ ಎಕ್ಸ್‍ಪ್ರೆಶನ್"
+
+#: optionsmodel.cpp:205
+#, kde-format
+msgid "Apply Initially"
+msgstr "ಆರಂಭದಲ್ಲಿ ಅನ್ವಯಿಸು"
+
+#: optionsmodel.cpp:206
+#, kde-format
+msgid ""
+"The window property will be only set to the given value after the window is "
+"created.\n"
+"No further changes will be affected."
+msgstr ""
+
+#: optionsmodel.cpp:209
+#, kde-format
+msgid "Apply Now"
+msgstr "ಈಗ ಅನ್ವಯಿಸು"
+
+#: optionsmodel.cpp:210
+#, kde-format
+msgid ""
+"The window property will be set to the given value immediately and will not "
+"be affected later\n"
+"(this action will be deleted afterwards)."
+msgstr ""
+
+#: optionsmodel.cpp:213
+#, kde-format
+msgid "Remember"
+msgstr "ನೆನಪಿಟ್ಟುಕೊ"
+
+#: optionsmodel.cpp:214
+#, kde-format
+msgid ""
+"The value of the window property will be remembered and, every time the "
+"window is created, the last remembered value will be applied."
+msgstr ""
+
+#: optionsmodel.cpp:217
+#, kde-format
+msgid "Do Not Affect"
+msgstr "ಪರಿಣಾಮವಾಗಗೊಡಬೇಡ"
+
+#: optionsmodel.cpp:218
+#, kde-format
+msgid ""
+"The window property will not be affected and therefore the default handling "
+"for it will be used.\n"
+"Specifying this will block more generic window settings from taking effect."
+msgstr ""
+
+#: optionsmodel.cpp:221
+#, kde-format
+msgid "Force"
+msgstr "ಒತ್ತಾಯಪೂರ್ವಕ"
+
+#: optionsmodel.cpp:222
+#, kde-format
+msgid "The window property will be always forced to the given value."
+msgstr ""
+
+#: optionsmodel.cpp:224
+#, kde-format
+msgid "Force Temporarily"
+msgstr "ತಾತ್ಕಾಲಿಕವಾಗಿ ಒತ್ತಾಯಪಡಿಸು"
+
+#: optionsmodel.cpp:225
+#, kde-format
+msgid ""
+"The window property will be forced to the given value until it is hidden\n"
+"(this action will be deleted after the window is hidden)."
+msgstr ""
+
+#: package/contents/ui/FileDialogLoader.qml:14
+#, kde-format
+msgid "Select File"
+msgstr ""
+
+#: package/contents/ui/FileDialogLoader.qml:26
+#, kde-format
+msgid "KWin Rules (*.kwinrule)"
+msgstr ""
+
+#: package/contents/ui/main.qml:59
+#, kde-format
+msgid "No rules for specific windows are currently set"
+msgstr ""
+
+#: package/contents/ui/main.qml:60
+#, kde-kuit-format
+msgctxt "@info"
+msgid "Click the <interface>Add New...</interface> button below to add some"
+msgstr ""
+
+#: package/contents/ui/main.qml:68
+#, kde-format
+msgid "Select the rules to export"
+msgstr ""
+
+#: package/contents/ui/main.qml:72
+#, kde-format
+msgid "Unselect All"
+msgstr ""
+
+#: package/contents/ui/main.qml:72
+#, kde-format
+msgid "Select All"
+msgstr ""
+
+#: package/contents/ui/main.qml:86
+#, kde-format
+msgid "Save Rules"
+msgstr ""
+
+#: package/contents/ui/main.qml:97
+#, fuzzy, kde-format
+#| msgid "&New..."
+msgid "Add New..."
+msgstr "ಹೊಸ(&N)..."
+
+#: package/contents/ui/main.qml:108
+#, kde-format
+msgid "Import..."
+msgstr ""
+
+#: package/contents/ui/main.qml:116
+#, kde-format
+msgid "Cancel Export"
+msgstr ""
+
+#: package/contents/ui/main.qml:116
+#, fuzzy, kde-format
+#| msgid "Edit..."
+msgid "Export..."
+msgstr "ಸಂಪಾದಿಸು..."
+
+#: package/contents/ui/main.qml:206
+#, kde-format
+msgid "Edit"
+msgstr "ಸಂಪಾದಿಸು"
+
+#: package/contents/ui/main.qml:215
+#, kde-format
+msgid "Duplicate"
+msgstr ""
+
+#: package/contents/ui/main.qml:224
+#, kde-format
+msgid "Delete"
+msgstr "ಅಳಿಸು"
+
+#: package/contents/ui/main.qml:237
+#, kde-format
+msgid "Import Rules"
+msgstr ""
+
+#: package/contents/ui/main.qml:249
+#, kde-format
+msgid "Export Rules"
+msgstr ""
+
+#: package/contents/ui/OptionsComboBox.qml:35
+#, kde-format
+msgid "None selected"
+msgstr ""
+
+#: package/contents/ui/OptionsComboBox.qml:41
+#, kde-format
+msgid "All selected"
+msgstr ""
+
+#: package/contents/ui/OptionsComboBox.qml:43
+#, kde-format
+msgid "%1 selected"
+msgid_plural "%1 selected"
+msgstr[0] ""
+msgstr[1] ""
+
+#: package/contents/ui/RulesEditor.qml:63
+#, fuzzy, kde-format
+#| msgid "&Detect Window Properties"
+msgid "No window properties changed"
+msgstr "ವಿಂಡೋ ಗುಣಲಕ್ಷಣಗಳನ್ನು ಪತ್ತೆ ಮಾಡು(&D)"
+
+#: package/contents/ui/RulesEditor.qml:64
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"Click the <interface>Add Property...</interface> button below to add some "
+"window properties that will be affected by the rule"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:85
+#, fuzzy, kde-format
+#| msgid "&Closeable"
+msgid "Close"
+msgstr "ಮುಚ್ಚಬಲ್ಲ(&C)"
+
+#: package/contents/ui/RulesEditor.qml:85
+#, fuzzy, kde-format
+#| msgid "&New..."
+msgid "Add Property..."
+msgstr "ಹೊಸ(&N)..."
+
+#: package/contents/ui/RulesEditor.qml:98
+#, fuzzy, kde-format
+#| msgid "&Detect Window Properties"
+msgid "Detect Window Properties"
+msgstr "ವಿಂಡೋ ಗುಣಲಕ್ಷಣಗಳನ್ನು ಪತ್ತೆ ಮಾಡು(&D)"
+
+#: package/contents/ui/RulesEditor.qml:114
+#: package/contents/ui/RulesEditor.qml:121
+#, kde-format
+msgid "Instantly"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:115
+#: package/contents/ui/RulesEditor.qml:126
+#, kde-format
+msgid "After %1 second"
+msgid_plural "After %1 seconds"
+msgstr[0] ""
+msgstr[1] ""
+
+#: package/contents/ui/RulesEditor.qml:147
+#, kde-format
+msgid "Error"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:162
+#, kde-format
+msgid "Add property to the rule"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:260
+#: package/contents/ui/ValueEditor.qml:54
+#, kde-format
+msgid "Yes"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:260
+#: package/contents/ui/ValueEditor.qml:60
+#, fuzzy, kde-format
+#| msgid "None"
+msgid "No"
+msgstr "ಯಾವುದೂ ಇಲ್ಲ"
+
+#: package/contents/ui/RulesEditor.qml:262
+#: package/contents/ui/ValueEditor.qml:171
+#: package/contents/ui/ValueEditor.qml:178
+#, kde-format
+msgid "%1 %"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:264
+#, kde-format
+msgctxt "Coordinates (x, y)"
+msgid "(%1, %2)"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:266
+#, kde-format
+msgctxt "Size (width, height)"
+msgid "(%1, %2)"
+msgstr ""
+
+#: package/contents/ui/ValueEditor.qml:206
+#, kde-format
+msgctxt "(x, y) coordinates separator in size/position"
+msgid "x"
+msgstr ""
+
+#: rulesmodel.cpp:218
+#, kde-format
+msgid "Settings for %1"
+msgstr "%1 ಗಾಗಿ ಹೊಂದಾಣಿಕೆಗಳು"
+
+#: rulesmodel.cpp:221
+#, fuzzy, kde-format
+#| msgid "Window settings for %1"
+msgid "New window settings"
+msgstr "%1 ಗಾಗಿನ ವಿಂಡೋ ಹೊಂದಾಣಿಕೆಗಳು"
+
+#: rulesmodel.cpp:237
+#, kde-format
+msgid ""
+"You have specified the window class as unimportant.\n"
+"This means the settings will possibly apply to windows from all "
+"applications. If you really want to create a generic setting, it is "
+"recommended you at least limit the window types to avoid special window "
+"types."
+msgstr ""
+"ನೀವು ವಿಂಡೊ ವರ್ಗವನ್ನು ಪ್ರಾಮುಖ್ಯ ಇಲ್ಲದ್ದು ಎಂದು ಸೂಚಿಸಿದ್ದೀರಿ.\n"
+"ಇದರರ್ಥ ಸಂಯೋಜನೆಗಳು ಎಲ್ಲಾ ಅನ್ವಯಗಳ ವಿಂಡೋಗಳಿಗೂ ಅನ್ವಯಿಸಲ್ಪಡುವ ಸಾಧ್ಯತೆ ಇದೆ ಎಂದಾಗುತ್ತದೆ. "
+"ನೀವು ನಿಜವಾಗಲೂ ಒಂದು ವಿಶಿಷ್ಟ ಸಂಯೋಜನೆಯನ್ನು ನಿರ್ಮಿಸಲು ಬಳಸಿದ್ದರೆ, ವಿಶೇಷ ವಿಂಡೋ "
+"ಪ್ರಕಾರಗಳನ್ನು ತಪ್ಪಿಸಲು ನೀವು ಕನಿಷ್ಟ ವಿಂಡೋ ಬಗೆಗಳಿಗಾದರೂ ಮಿತಿಗೊಳಿಸಲು ಸೂಚಿಸಲಾಗುತ್ತದೆ."
+
+#: rulesmodel.cpp:244
+#, kde-format
+msgid ""
+"Some applications set their own geometry after starting, overriding your "
+"initial settings for size and position. To enforce these settings, also "
+"force the property \"%1\" to \"Yes\"."
+msgstr ""
+
+#: rulesmodel.cpp:359
+#, fuzzy, kde-format
+#| msgid "De&scription:"
+msgid "Description"
+msgstr "ವಿವರಣೆ(&s):"
+
+#: rulesmodel.cpp:359 rulesmodel.cpp:367 rulesmodel.cpp:375 rulesmodel.cpp:382
+#: rulesmodel.cpp:388 rulesmodel.cpp:396 rulesmodel.cpp:401 rulesmodel.cpp:407
+#, fuzzy, kde-format
+#| msgid "&Window"
+msgid "Window matching"
+msgstr "ವಿಂಡೋ(&W)"
+
+#: rulesmodel.cpp:367
+#, fuzzy, kde-format
+#| msgid "Window &class (application type):"
+msgid "Window class (application)"
+msgstr "ವಿಂಡೋ ವರ್ಗ (ಅನ್ವಯದ ಬಗೆ) (&c):"
+
+#: rulesmodel.cpp:375
+#, fuzzy, kde-format
+#| msgid "Match w&hole window class"
+msgid "Match whole window class"
+msgstr "ಸಂಪೂರ್ಣ ವಿಂಡೋ ವರ್ಗವನ್ನು ಹೊಂದಿಸು (&h)"
+
+#: rulesmodel.cpp:382
+#, fuzzy, kde-format
+#| msgid "Match w&hole window class"
+msgid "Whole window class"
+msgstr "ಸಂಪೂರ್ಣ ವಿಂಡೋ ವರ್ಗವನ್ನು ಹೊಂದಿಸು (&h)"
+
+#: rulesmodel.cpp:388
+#, fuzzy, kde-format
+#| msgid "Window &types:"
+msgid "Window types"
+msgstr "ವಿಂಡೋ ಪ್ರಕಾರಗಳು (&t)"
+
+#: rulesmodel.cpp:396
+#, fuzzy, kde-format
+#| msgid "Window &role:"
+msgid "Window role"
+msgstr "ವಿಂಡೋ ಪಾತ್ರ(&r):"
+
+#: rulesmodel.cpp:401
+#, fuzzy, kde-format
+#| msgid "Window t&itle:"
+msgid "Window title"
+msgstr "ವಿಂಡೋ ಶೀರ್ಷಿಕೆ (&t)"
+
+#: rulesmodel.cpp:407
+#, fuzzy, kde-format
+#| msgid "&Machine (hostname):"
+msgid "Machine (hostname)"
+msgstr "ಗಣಕ (ಅತಿಥೇಯಹೆಸರು) (&M):"
+
+#: rulesmodel.cpp:413
+#, fuzzy, kde-format
+#| msgid "&Position"
+msgid "Position"
+msgstr "ಸ್ಥಾನ(&P)"
+
+#: rulesmodel.cpp:413 rulesmodel.cpp:419 rulesmodel.cpp:425 rulesmodel.cpp:430
+#: rulesmodel.cpp:438 rulesmodel.cpp:444 rulesmodel.cpp:463 rulesmodel.cpp:479
+#: rulesmodel.cpp:484 rulesmodel.cpp:489 rulesmodel.cpp:494 rulesmodel.cpp:499
+#: rulesmodel.cpp:506 rulesmodel.cpp:516 rulesmodel.cpp:521 rulesmodel.cpp:526
+#, fuzzy, kde-format
+#| msgid "&Position"
+msgid "Size & Position"
+msgstr "ಸ್ಥಾನ(&P)"
+
+#: rulesmodel.cpp:419
+#, fuzzy, kde-format
+#| msgid "&Size"
+msgid "Size"
+msgstr "ಗಾತ್ರ(&S)"
+
+#: rulesmodel.cpp:425
+#, fuzzy, kde-format
+#| msgid "Maximized &horizontally"
+msgid "Maximized horizontally"
+msgstr "ಸಮತಲವಾಗಿ ಹಿಗ್ಗಿಸಲಾದ(&h)"
+
+#: rulesmodel.cpp:430
+#, fuzzy, kde-format
+#| msgid "Maximized &vertically"
+msgid "Maximized vertically"
+msgstr "ಲಂಬವಾಗಿ ಹಿಗ್ಗಿಸಲಾದ (&v)"
+
+#: rulesmodel.cpp:438
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "Virtual Desktop"
+msgstr "ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳು"
+
+#: rulesmodel.cpp:444
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "Virtual Desktops"
+msgstr "ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳು"
+
+#: rulesmodel.cpp:463
+#, fuzzy, kde-format
+#| msgid "A&ctive opacity in %"
+msgid "Activities"
+msgstr "% ನಲ್ಲಿ ಸಕ್ರಿಯವಾಗಿರುವ ಅಪಾರದರ್ಶಕತೆ (&c)"
+
+#: rulesmodel.cpp:479
+#, fuzzy, kde-format
+#| msgid "Splash Screen"
+msgid "Screen"
+msgstr "ಎರಚು ತೆರೆ"
+
+#: rulesmodel.cpp:484
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgid "Fullscreen"
+msgstr "ಪೂರ್ಣತೆರೆ(&F)"
+
+#: rulesmodel.cpp:489
+#, fuzzy, kde-format
+#| msgid "M&inimized"
+msgid "Minimized"
+msgstr "ಕುಗ್ಗಿಸಲಾದ(&m)"
+
+#: rulesmodel.cpp:494
+#, fuzzy, kde-format
+#| msgid "Sh&aded"
+msgid "Shaded"
+msgstr "ಮರೆ ಮಾಡಲಾದ(&a)"
+
+#: rulesmodel.cpp:499
+#, fuzzy, kde-format
+#| msgid "P&lacement"
+msgid "Initial placement"
+msgstr "ನಿಯೋಜನೆ(&l)"
+
+#: rulesmodel.cpp:506
+#, fuzzy, kde-format
+#| msgid "Ignore requested &geometry"
+msgid "Ignore requested geometry"
+msgstr "ಮನವಿ ಸಲ್ಲಿಸಲಾದ ಜ್ಯಾಮಿತಿಯನ್ನು ಆಲಕ್ಷಿಸು(&g)"
+
+#: rulesmodel.cpp:508
+#, kde-format
+msgid ""
+"Windows can ask to appear in a certain position.\n"
+"By default this overrides the placement strategy\n"
+"what might be nasty if the client abuses the feature\n"
+"to unconditionally popup in the middle of your screen."
+msgstr ""
+
+#: rulesmodel.cpp:516
+#, fuzzy, kde-format
+#| msgid "M&inimum size"
+msgid "Minimum Size"
+msgstr "ಕನಿಷ್ಟ ಗಾತ್ರ(&i)"
+
+#: rulesmodel.cpp:521
+#, fuzzy, kde-format
+#| msgid "M&aximum size"
+msgid "Maximum Size"
+msgstr "ಗರಿಷ್ಟ ಗಾತ್ರ(&a)"
+
+#: rulesmodel.cpp:526
+#, kde-format
+msgid "Obey geometry restrictions"
+msgstr ""
+
+#: rulesmodel.cpp:528
+#, kde-format
+msgid ""
+"Eg. terminals or video players can ask to keep a certain aspect ratio\n"
+"or only grow by values larger than one\n"
+"(eg. by the dimensions of one character).\n"
+"This may be pointless and the restriction prevents arbitrary dimensions\n"
+"like your complete screen area."
+msgstr ""
+
+#: rulesmodel.cpp:537
+#, kde-format
+msgid "Keep above other windows"
+msgstr ""
+
+#: rulesmodel.cpp:537 rulesmodel.cpp:542 rulesmodel.cpp:547 rulesmodel.cpp:553
+#: rulesmodel.cpp:559 rulesmodel.cpp:565
+#, kde-format
+msgid "Arrangement & Access"
+msgstr ""
+
+#: rulesmodel.cpp:542
+#, kde-format
+msgid "Keep below other windows"
+msgstr ""
+
+#: rulesmodel.cpp:547
+#, fuzzy, kde-format
+#| msgid "Skip &taskbar"
+msgid "Skip taskbar"
+msgstr "ಉಪಕರಣ ಪಟ್ಟಿಯನ್ನು ಅಲಕ್ಷಿಸು(&t)"
+
+#: rulesmodel.cpp:549
+#, kde-format
+msgid "Window shall (not) appear in the taskbar."
+msgstr ""
+
+#: rulesmodel.cpp:553
+#, fuzzy, kde-format
+#| msgid "Skip pa&ger"
+msgid "Skip pager"
+msgstr "ಪೇಜರ್ ಅನ್ನು ಅಲಕ್ಷಿಸು(&g)"
+
+#: rulesmodel.cpp:555
+#, kde-format
+msgid "Window shall (not) appear in the manager for virtual desktops"
+msgstr ""
+
+#: rulesmodel.cpp:559
+#, fuzzy, kde-format
+#| msgid "Skip pa&ger"
+msgid "Skip switcher"
+msgstr "ಪೇಜರ್ ಅನ್ನು ಅಲಕ್ಷಿಸು(&g)"
+
+#: rulesmodel.cpp:561
+#, kde-format
+msgid "Window shall (not) appear in the Alt+Tab list"
+msgstr ""
+
+#: rulesmodel.cpp:565
+#, kde-format
+msgid "Shortcut"
+msgstr "ಶಾರ್ಟ್-ಕಟ್"
+
+#: rulesmodel.cpp:571
+#, kde-format
+msgid "No titlebar and frame"
+msgstr ""
+
+#: rulesmodel.cpp:571 rulesmodel.cpp:576 rulesmodel.cpp:582 rulesmodel.cpp:587
+#: rulesmodel.cpp:592 rulesmodel.cpp:603 rulesmodel.cpp:614 rulesmodel.cpp:622
+#: rulesmodel.cpp:635 rulesmodel.cpp:640 rulesmodel.cpp:646 rulesmodel.cpp:651
+#, kde-format
+msgid "Appearance & Fixes"
+msgstr ""
+
+#: rulesmodel.cpp:576
+#, kde-format
+msgid "Titlebar color scheme"
+msgstr ""
+
+#: rulesmodel.cpp:582
+#, fuzzy, kde-format
+#| msgid "A&ctive opacity in %"
+msgid "Active opacity"
+msgstr "% ನಲ್ಲಿ ಸಕ್ರಿಯವಾಗಿರುವ ಅಪಾರದರ್ಶಕತೆ (&c)"
+
+#: rulesmodel.cpp:587
+#, fuzzy, kde-format
+#| msgid "I&nactive opacity in %"
+msgid "Inactive opacity"
+msgstr "% ನಲ್ಲಿ ನಿಷ್ಕ್ರಿಯವಾಗಿರುವ ಅಪಾರದರ್ಶಕತೆ (&n)"
+
+#: rulesmodel.cpp:592
+#, fuzzy, kde-format
+#| msgid "&Focus stealing prevention"
+msgid "Focus stealing prevention"
+msgstr "ಗಮನ ಸೆಳೆಯುವುದನ್ನು ತಡೆಯುವಿಕೆ(&F)"
+
+#: rulesmodel.cpp:594
+#, kde-format
+msgid ""
+"KWin tries to prevent windows from taking the focus\n"
+"(\"activate\") while you're working in another window,\n"
+"but this may sometimes fail or superact.\n"
+"\"None\" will unconditionally allow this window to get the focus while\n"
+"\"Extreme\" will completely prevent it from taking the focus."
+msgstr ""
+
+#: rulesmodel.cpp:603
+#, fuzzy, kde-format
+#| msgid "&Focus stealing prevention"
+msgid "Focus protection"
+msgstr "ಗಮನ ಸೆಳೆಯುವುದನ್ನು ತಡೆಯುವಿಕೆ(&F)"
+
+#: rulesmodel.cpp:605
+#, kde-format
+msgid ""
+"This controls the focus protection of the currently active window.\n"
+"None will always give the focus away,\n"
+"Extreme will keep it.\n"
+"Otherwise it's interleaved with the stealing prevention\n"
+"assigned to the window that wants the focus."
+msgstr ""
+
+#: rulesmodel.cpp:614
+#, fuzzy, kde-format
+#| msgid "Accept &focus"
+msgid "Accept focus"
+msgstr "ಗಮನವನ್ನು ಅಂಗೀಕರಿಸು (&f)"
+
+#: rulesmodel.cpp:616
+#, kde-format
+msgid ""
+"Windows may prevent to get the focus (activate) when being clicked.\n"
+"On the other hand you might wish to prevent a window\n"
+"from getting focused on a mouse click."
+msgstr ""
+
+#: rulesmodel.cpp:622
+#, fuzzy, kde-format
+#| msgid "Block global shortcuts"
+msgid "Ignore global shortcuts"
+msgstr "ಜಾಗತಿಕ ಶಾರ್ಟ್-ಕಟ್‍ಗಳನ್ನು ತಡೆ"
+
+#: rulesmodel.cpp:624
+#, kde-format
+msgid ""
+"When used, a window will receive\n"
+"all keyboard inputs while it is active, including Alt+Tab etc.\n"
+"This is especially interesting for emulators or virtual machines.\n"
+"\n"
+"Be warned:\n"
+"you won't be able to Alt+Tab out of the window\n"
+"nor use any other global shortcut (such as Alt+F2 to show KRunner)\n"
+"while it's active!"
+msgstr ""
+
+#: rulesmodel.cpp:635
+#, fuzzy, kde-format
+#| msgid "&Closeable"
+msgid "Closeable"
+msgstr "ಮುಚ್ಚಬಲ್ಲ(&C)"
+
+#: rulesmodel.cpp:640
+#, fuzzy, kde-format
+#| msgid "Window &type"
+msgid "Set window type"
+msgstr "ವಿಂಡೋ ಪ್ರಕಾರ(&t)"
+
+#: rulesmodel.cpp:646
+#, kde-format
+msgid "Desktop file name"
+msgstr ""
+
+#: rulesmodel.cpp:651
+#, kde-format
+msgid "Block compositing"
+msgstr ""
+
+#: rulesmodel.cpp:727
+#, fuzzy, kde-format
+#| msgid "Window &types:"
+msgid "All Window Types"
+msgstr "ವಿಂಡೋ ಪ್ರಕಾರಗಳು (&t)"
+
+#: rulesmodel.cpp:728
+#, kde-format
+msgid "Normal Window"
+msgstr "ಸಾಮಾನ್ಯ ವಿಂಡೋ"
+
+#: rulesmodel.cpp:729
+#, kde-format
+msgid "Dialog Window"
+msgstr "ಸಂವಾದ ವಿಂಡೋ"
+
+#: rulesmodel.cpp:730
+#, kde-format
+msgid "Utility Window"
+msgstr "ಸಲಕರಣೆಗಳ ವಿಂಡೋ"
+
+#: rulesmodel.cpp:731
+#, kde-format
+msgid "Dock (panel)"
+msgstr "ಡಾಕ್ (ಫಲಕ)"
+
+#: rulesmodel.cpp:732
+#, kde-format
+msgid "Toolbar"
+msgstr "ಉಪಕರಣಪಟ್ಟಿ"
+
+#: rulesmodel.cpp:733
+#, kde-format
+msgid "Torn-Off Menu"
+msgstr "ಮೆನು ಅನ್ನು ಆಫ್‍ ಮಾಡು"
+
+#: rulesmodel.cpp:734
+#, kde-format
+msgid "Splash Screen"
+msgstr "ಎರಚು ತೆರೆ"
+
+#: rulesmodel.cpp:735
+#, kde-format
+msgid "Desktop"
+msgstr "ಗಣಕತೆರೆ"
+
+#. i18n("Unmanaged Window")},  deprecated
+#: rulesmodel.cpp:737
+#, kde-format
+msgid "Standalone Menubar"
+msgstr "ಸ್ವತಂತ್ರ ಮೆನುಪಟ್ಟಿ"
+
+#: rulesmodel.cpp:738
+#, kde-format
+msgid "On Screen Display"
+msgstr ""
+
+#: rulesmodel.cpp:748
+#, kde-format
+msgid "All Desktops"
+msgstr "ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳು"
+
+#: rulesmodel.cpp:750
+#, kde-format
+msgctxt "@info:tooltip in the virtual desktop list"
+msgid "Make the window available on all desktops"
+msgstr ""
+
+#: rulesmodel.cpp:769
+#, kde-format
+msgid "All Activities"
+msgstr ""
+
+#: rulesmodel.cpp:771
+#, kde-format
+msgctxt "@info:tooltip in the activity list"
+msgid "Make the window available on all activities"
+msgstr ""
+
+#: rulesmodel.cpp:792
+#, kde-format
+msgid "Default"
+msgstr "ಪೂರ್ವನಿಯೋಜಿತ"
+
+#: rulesmodel.cpp:793
+#, kde-format
+msgid "No Placement"
+msgstr "ಯಾವುದೆ ನಿಯೋಜನೆ ಇಲ್ಲ"
+
+#: rulesmodel.cpp:794
+#, kde-format
+msgid "Minimal Overlapping"
+msgstr ""
+
+#: rulesmodel.cpp:795
+#, fuzzy, kde-format
+#| msgid "Maximizing"
+msgid "Maximized"
+msgstr "ಹಿಗ್ಗಿಸುವಿಕೆ"
+
+#: rulesmodel.cpp:796
+#, fuzzy, kde-format
+#| msgid "Cascade"
+msgid "Cascaded"
+msgstr "ಕ್ಯಾಸ್ಕೇಡ್"
+
+#: rulesmodel.cpp:797
+#, kde-format
+msgid "Centered"
+msgstr "ಮಧ್ಯ"
+
+#: rulesmodel.cpp:798
+#, kde-format
+msgid "Random"
+msgstr "ಮನಬಂದಂತೆ"
+
+#: rulesmodel.cpp:799
+#, fuzzy, kde-format
+#| msgid "Top-Left Corner"
+msgid "In Top-Left Corner"
+msgstr "ಮೇಲ್ಭಾಗದ-ಎಡ ಮೂಲೆ"
+
+#: rulesmodel.cpp:800
+#, kde-format
+msgid "Under Mouse"
+msgstr "ಮೌಸ್‍ನ ಅಡಿಯಲ್ಲಿ"
+
+#: rulesmodel.cpp:801
+#, kde-format
+msgid "On Main Window"
+msgstr "ಮುಖ್ಯ ವಿಂಡೋದಲ್ಲಿ"
+
+#: rulesmodel.cpp:808
+#, fuzzy, kde-format
+#| msgid "None"
+msgid "None"
+msgstr "ಯಾವುದೂ ಇಲ್ಲ"
+
+#: rulesmodel.cpp:809
+#, kde-format
+msgid "Low"
+msgstr "ಕನಿಷ್ಟ"
+
+#: rulesmodel.cpp:810
+#, kde-format
+msgid "Normal"
+msgstr "ಸಾಮಾನ್ಯ"
+
+#: rulesmodel.cpp:811
+#, kde-format
+msgid "High"
+msgstr "ಉಚ್ಛ"
+
+#: rulesmodel.cpp:812
+#, kde-format
+msgid "Extreme"
+msgstr "ತೀವ್ರ"
+
+#: rulesmodel.cpp:855
+#, kde-format
+msgid "Could not detect window properties. The window is not managed by KWin."
+msgstr ""
+
+#, fuzzy
+#~| msgid "Keep &above"
+#~ msgid "Keep above"
+#~ msgstr "ಮೇಲೆ ಇರಿಸು(&a)"
+
+#, fuzzy
+#~| msgid "Keep &below"
+#~ msgid "Keep below"
+#~ msgstr "ಕೆಳಗೆ ಇರಿಸು(&b)"
+
+#~ msgid "KWin"
+#~ msgstr "KWin"
+
+#~ msgid "KWin helper utility"
+#~ msgstr "KWin ಸಹಾಯಕ ಸವಲತ್ತು"
+
+#, fuzzy
+#~| msgid "&Detect Window Properties"
+#~ msgid "Select properties"
+#~ msgstr "ವಿಂಡೋ ಗುಣಲಕ್ಷಣಗಳನ್ನು ಪತ್ತೆ ಮಾಡು(&D)"
+
+#~ msgid "Override Type"
+#~ msgstr "ಅತಿಕ್ರಮಿಸುವುಕೆಯ ಬಗೆ"
+
+#~ msgid "Unknown - will be treated as Normal Window"
+#~ msgstr "ಗೊತ್ತಿರದ ಬಗೆ - ಸಾಮಾನ್ಯ ವಿಂಡೋ ಎಂದು ಪರಿಗಣಿಸಲಾಗುತ್ತದೆ"
+
+#~ msgid "Information About Selected Window"
+#~ msgstr "ಆಯ್ಕೆ ಮಾಡಲಾದ ವಿಂಡೋ ಬಗೆಗಿನ ಮಾಹಿತಿ"
+
+#~ msgid "Class:"
+#~ msgstr "ವರ್ಗ:"
+
+#~ msgid "Role:"
+#~ msgstr "ಪಾತ್ರ:"
+
+#~ msgid "Type:"
+#~ msgstr "ಬಗೆ:"
+
+#~ msgid "Title:"
+#~ msgstr "ಶೀರ್ಷಿಕೆ:"
+
+#~ msgid "Machine:"
+#~ msgstr "ಯಂತ್ರ:"
+
+#, fuzzy
+#~| msgid ""
+#~| "A single shortcut can be easily assigned or cleared using the two "
+#~| "buttons. Only shortcuts with modifiers can be used.<p>\n"
+#~| "It is possible to have several possible shortcuts, and the first "
+#~| "available shortcut will be used. The shortcuts are specified using space-"
+#~| "separated shortcut sets. One set is specified as <i>base</i>+(<i>list</"
+#~| "i>), where base are modifiers and list is a list of keys.<br>\n"
+#~| "For example \"<b>Shift+Alt+(123) Shift+Ctrl+(ABC)</b>\" will first try "
+#~| "<b>Shift+Alt+1</b>, then others with <b>Shift+Ctrl+C</b> as the last one."
+#~ msgid ""
+#~ "A single shortcut can be easily assigned or cleared using the two "
+#~ "buttons. Only shortcuts with modifiers can be used.<p>\n"
+#~ "It is possible to have several possible shortcuts, and the first "
+#~ "available shortcut will be used. The shortcuts are specified using "
+#~ "shortcut sets separated by \" - \". One set is specified as <i>base</i>"
+#~ "+(<i>list</i>), where base are modifiers and list is a list of keys.<br>\n"
+#~ "For example \"<b>Shift+Alt+(123) Shift+Ctrl+(ABC)</b>\" will first try "
+#~ "<b>Shift+Alt+1</b>, then others with <b>Shift+Ctrl+C</b> as the last one."
+#~ msgstr ""
+#~ "ಎರಡು ಗುಂಡಿಗಳನ್ನು ಬಳಸಿಕೊಂಡು ಒಂದು ಶಾರ್ಟ್-ಕಟ್ ಅನ್ನು ನಿಯೋಜಿಸಬಹುದು ಅಥವ "
+#~ "ತೆರವುಗೊಳಿಸಬಹುದು. ಕೇವಲ ಶಾರ್ಟ್-ಕಟ್‍ಗಳ ಮಾರ್ಪಡಕಗಳನ್ನು ಮಾತ್ರ ಬಳಸಬಹುದಾಗಿದೆ.<p>\n"
+#~ "ಸಾಧ್ಯವಿರುವ ಹಲವಾರು ಶಾರ್ಟ್-ಕಟ್‍ಗಳನ್ನು ಹೊಂದಬಹುದಾಗಿದ್ದು, ಲಭ್ಯವಿರುವ ಮೊದಲ ಶಾರ್ಟ್-ಕಟ್‍ "
+#~ "ಬಳಸಲ್ಪಡುತ್ತದೆ. ಶಾರ್ಟ್-ಕಟ್‍ಗಳ ನಡುವೆ ಜಾಗಗಳನ್ನು ಹೊಂದಿರುವ ಶಾರ್ಟ್-ಕಟ್ ಗುಂಪಿನಿಂದ "
+#~ "ಸೂಚಿಸಲ್ಪಡುತ್ತದೆ. ಒಂದು ಗುಂಪು <i>base</i>+(<i>list</i>), ಎಂದು ಸೂಚಿಸಲ್ಪಡಲಿದ್ದು "
+#~ "ಇಲ್ಲಿ ಬೇಸ್ ಮಾರ್ಪಡಕಗಳಾಗಿರುತ್ತವೆ ಹಾಗು ಪಟ್ಟಿಯು ಕೀಲಿಗಳ ಒಂದು ಪಟ್ಟಿಯಾಗಿರುತ್ತದೆ.<br>\n"
+#~ "ಉದಾಹರಣೆಗೆ \"<b>Shift+Alt+(123) Shift+Ctrl+(ABC)</b>\" ಯಲ್ಲಿ <b>Shift+Alt"
+#~ "+1</b> ಮೊದಲು ಪ್ರಯತ್ನಿಸಲ್ಪಡುತ್ತದೆ,ನಂತರ ಬೇರೆಯವುಗಳು <b>Shift+Ctrl+C</b> ನೊಂದಿಗೆ "
+#~ "ಕೊನೆಯಲ್ಲಿ ಪ್ರಯತ್ನಿಸಲ್ಪಡುತ್ತದೆ."
+
+#~ msgid "&Single Shortcut"
+#~ msgstr "ಒಂದೆ ಶಾರ್ಟ್-ಕಟ್(&S)"
+
+#~ msgid "C&lear"
+#~ msgstr "ತೆರವುಗೊಳಿಸು (&l)"
+
+#~ msgid "Window-Specific Settings Configuration Module"
+#~ msgstr "ವಿಂಡೋ-ನಿಗದಿತ ಸಂಯೋಜನೆಗಳ ಸಂರಚನಾ ಘಟಕ"
+
+#~ msgid "(c) 2004 KWin and KControl Authors"
+#~ msgstr "(c) 2004 KWin and KControl Authors"
+
+#~ msgid "Lubos Lunak"
+#~ msgstr "Lubos Lunak"
+
+#~ msgid "Remember settings separately for every window"
+#~ msgstr "ಪ್ರತಿ ವಿಂಡೋಗೂ ಸಂಯೋಜನೆಗಳನ್ನು ಪ್ರತ್ಯೇಕವಾಗಿ ನೆನಪಿಟ್ಟುಕೋ"
+
+#~ msgid "Show internal settings for remembering"
+#~ msgstr "ನೆನಪಿಟ್ಟುಕೊಳ್ಳಲು ಆಂತರಿಕ ಸಂಯೋಜನೆಗಳನ್ನು ತೋರಿಸು"
+
+#~ msgid "Internal setting for remembering"
+#~ msgstr "ನೆನಪಿಟ್ಟುಕೊಳ್ಳಲು ಆಂತರಿಕ ಹೊಂದಾಣಿಕೆಗಳು"
+
+#~ msgid "&Modify..."
+#~ msgstr "ಮಾರ್ಪಡಿಸು(&M)..."
+
+#~ msgid "Move &Up"
+#~ msgstr "ಮೇಲಕ್ಕೆ ಜರುಗಿಸು(&U)"
+
+#~ msgid "Move &Down"
+#~ msgstr "ಕೆಳಕ್ಕೆ ಜರುಗಿಸು(&D)"
+
+#~ msgid ""
+#~ "Enable this checkbox to alter this window property for the specified "
+#~ "window(s)."
+#~ msgstr ""
+#~ "ನಿಗದಿತ ವಿಂಡೋ(ಗಳಿ)ಗಾಗಿ ಈ ವಿಂಡೋ ಗುಣಲಕ್ಷಣವನ್ನು ಬದಲಾಯಿಸಲು ಈ ಚೆಕ್‍ಬಾಕ್ಸ್‍ ಅನ್ನು "
+#~ "ಶಕ್ತಗೊಳಿಸಿ."
+
+#, fuzzy
+#~| msgid ""
+#~| "Specify how the window property should be affected:<ul><li><em>Do Not "
+#~| "Affect:</em> The window property will not be affected and therefore the "
+#~| "default handling for it will be used. Specifying this will block more "
+#~| "generic window settings from taking effect.</li><li><em>Apply Initially:"
+#~| "</em> The window property will be only set to the given value after the "
+#~| "window is created. No further changes will be affected.</"
+#~| "li><li><em>Remember:</em> The value of the window property will be "
+#~| "remembered and every time time the window is created, the last "
+#~| "remembered value will be applied.</li><li><em>Force:</em> The window "
+#~| "property will be always forced to the given value.</li><li><em>Apply Now:"
+#~| "</em> The window property will be set to the given value immediately and "
+#~| "will not be affected later (this action will be deleted afterwards).</"
+#~| "li><li><em>Force temporarily:</em> The window property will be forced to "
+#~| "the given value until it is hidden (this action will be deleted after "
+#~| "the window is hidden).</li></ul>"
+#~ msgid ""
+#~ "Specify how the window property should be affected:<ul><li><em>Do Not "
+#~ "Affect:</em> The window property will not be affected and therefore the "
+#~ "default handling for it will be used. Specifying this will block more "
+#~ "generic window settings from taking effect.</li><li><em>Apply Initially:</"
+#~ "em> The window property will be only set to the given value after the "
+#~ "window is created. No further changes will be affected.</"
+#~ "li><li><em>Remember:</em> The value of the window property will be "
+#~ "remembered and every time the window is created, the last remembered "
+#~ "value will be applied.</li><li><em>Force:</em> The window property will "
+#~ "be always forced to the given value.</li><li><em>Apply Now:</em> The "
+#~ "window property will be set to the given value immediately and will not "
+#~ "be affected later (this action will be deleted afterwards).</"
+#~ "li><li><em>Force temporarily:</em> The window property will be forced to "
+#~ "the given value until it is hidden (this action will be deleted after the "
+#~ "window is hidden).</li></ul>"
+#~ msgstr ""
+#~ "ವಿಂಡೋದ ಗುಣಲಕ್ಷಣದ ಮೇಲೆ ಹೇಗೆ ಪರಿಣಾಮ ಬೀರಬೇಕೆಂದು ಸೂಚಿಸಿ:<ul><li><em>ಏನೂ ಪರಿಣಾಮ "
+#~ "ಬೀರಬಾರದು:</em> ವಿಂಡೋ ಗುಣಲಕ್ಷಣದ ಮೇಲೆ ಯಾವುದೆ ಪರಿಣಾಮ ಬೀರುವುದಿಲ್ಲ ಹಾಗು ಅದಕ್ಕಾಗಿ "
+#~ "ಪೂರ್ವನಿಯೋಜಿತ ಹ್ಯಾಂಡ್ಲರ್ ಬಳಸಲ್ಪಡುತ್ತದೆ. ಇದನ್ನು ಸೂಚಿಸುವುದರಿಂದ ಹೆಚ್ಚು ವಿಶಿಷ್ಟ ವಿಂಡೋ "
+#~ "ಸಂಯೋಜನೆಗಳು ಪರಿಣಾಮ ಬೀರದಂತೆ ತಡೆಯಲ್ಪಡುತ್ತದೆ.</li><li><em>ಆರಂಭದಲ್ಲಿ ಅನ್ವಯಿಸು:</"
+#~ "em> ವಿಂಡೋ ಅನ್ನು ನಿರ್ಮಿಸಿದ ನಂತರ ವಿಂಡೋ ಗುಣಲಕ್ಷಣವು ಕೇವಲ ದತ್ತ ಮೌಲ್ಯಕ್ಕೆ ಮಾತ್ರ "
+#~ "ಹೊಂದಿಸಲ್ಪಡುತ್ತದೆ. ನಂತರದ ಯಾವುದೆ ಬದಲಾವಣೆಗಳು ಪರಿಣಾಮಕಾರಿಯಾಗುವುದಿಲ್ಲ. </"
+#~ "li><li><em>ನೆನಪಿಟ್ಟುಕೊ:</em> ವಿಂಡೋ ಗುಣಲಕ್ಷಣದ ಮೌಲ್ಯವು ನೆನಪಿಟ್ಟುಕೊಳ್ಳಲ್ಪಡುತ್ತದೆ "
+#~ "ಹಾಗು ಪ್ರತಿ ಬಾರಿ ವಿಂಡೋ ಅನ್ನು ನಿರ್ಮಿಸಿದಾಗ ಕಡೆಯ ಬಾರಿ ನೆನಪಿಟ್ಟುಕೊಂಡ ಮೌಲ್ಯವು "
+#~ "ಅನ್ವಯಿಸಲ್ಪಡುತ್ತದೆ.</li><li><em>ಒತ್ತಾಯಪೂರ್ವಕ:</em> ವಿಂಡೋಗುಣಲಕ್ಷಣವು ಪ್ರತಿ ಬಾರಿಯೂ "
+#~ "ದತ್ತ ಮೌಲ್ಯವನ್ನು ತೆಗೆದುಕೊಳ್ಳುವಂತೆ ಒತ್ತಾಯಿಸಲಾಗುತ್ತದೆ.</li><li><em>ಈಗಲೆ ಅನ್ವಯಿಸು:</"
+#~ "em> ವಿಂಡೋ ಗುಣಲಕ್ಷಣವು ತಕ್ಷಣ ದತ್ತ ಮೌಲ್ಯಕ್ಕೆ ಹೊಂದಿಸಲ್ಪಡುತ್ತವೆ ಹಾಗು ನಂತರ ಯಾವುದೆ "
+#~ "ಪರಿಣಾಮಬೀರುವುದಿಲ್ಲ (ಈ ಕಾರ್ಯವು ನಂತರ ಅಳಿಸಲ್ಪಡುತ್ತದೆ).</li><li><em>ತಾತ್ಕಾಲಿಕವಾಗಿ "
+#~ "ಒತ್ತಾಯಿಸು:</em> ವಿಂಡೋ ಗುಣಲಕ್ಷಣವು ಅದನ್ನು ಅಡಗಿಸುವವರೆಗೆ ದತ್ತ ಮೌಲ್ಯವನ್ನು "
+#~ "ತೆಗೆದುಕೊಳ್ಳುವಂತೆ ಒತ್ತಾಯಿಸಲ್ಪಡುತ್ತದೆ (ವಿಂಡೊ ಅಡಗಿಸಲ್ಪಟ್ಟ ನಂತರ ಈ ಕಾರ್ಯವು "
+#~ "ಅಳಿಸಲ್ಪಡುತ್ತದೆ).</li></ul>"
+
+#~ msgid ""
+#~ "Specify how the window property should be affected:<ul><li><em>Do Not "
+#~ "Affect:</em> The window property will not be affected and therefore the "
+#~ "default handling for it will be used. Specifying this will block more "
+#~ "generic window settings from taking effect.</li><li><em>Force:</em> The "
+#~ "window property will be always forced to the given value.</"
+#~ "li><li><em>Force temporarily:</em> The window property will be forced to "
+#~ "the given value until it is hidden (this action will be deleted after the "
+#~ "window is hidden).</li></ul>"
+#~ msgstr ""
+#~ "ವಿಂಡೋದ ಗುಣಲಕ್ಷಣದ ಮೇಲೆ ಹೇಗೆ ಪರಿಣಾಮ ಬೀರಬೇಕೆಂದು ಸೂಚಿಸಿ:<ul><li><em>ಏನೂ ಪರಿಣಾಮ "
+#~ "ಬೀರಬಾರದು:</em> ವಿಂಡೋ ಗುಣಲಕ್ಷಣದ ಮೇಲೆ ಯಾವುದೆ ಪರಿಣಾಮ ಬೀರುವುದಿಲ್ಲ ಹಾಗು ಅದಕ್ಕಾಗಿ "
+#~ "ಪೂರ್ವನಿಯೋಜಿತ ಹ್ಯಾಂಡ್ಲರ್ ಬಳಸಲ್ಪಡುತ್ತದೆ. ಇದನ್ನು ಸೂಚಿಸುವುದರಿಂದ ಹೆಚ್ಚು ವಿಶಿಷ್ಟ ವಿಂಡೋ "
+#~ "ಸಂಯೋಜನೆಗಳು ಪರಿಣಾಮ ಬೀರದಂತೆ ತಡೆಯಲ್ಪಡುತ್ತದೆ.</li><li><em>ಒತ್ತಾಯಪೂರ್ವಕ:</em> "
+#~ "ವಿಂಡೋಗುಣಲಕ್ಷಣವು ಪ್ರತಿ ಬಾರಿಯೂ ದತ್ತ ಮೌಲ್ಯವನ್ನು ತೆಗೆದುಕೊಳ್ಳುವಂತೆ ಒತ್ತಾಯಿಸಲಾಗುತ್ತದೆ.</"
+#~ "li><li><em>ತಾತ್ಕಾಲಿಕವಾಗಿ ಒತ್ತಾಯಿಸು:</em> ವಿಂಡೋ ಗುಣಲಕ್ಷಣವು ಅದನ್ನು ಅಡಗಿಸುವವರೆಗೆ "
+#~ "ದತ್ತ ಮೌಲ್ಯವನ್ನು ತೆಗೆದುಕೊಳ್ಳುವಂತೆ ಒತ್ತಾಯಿಸಲ್ಪಡುತ್ತದೆ (ವಿಂಡೊ ಅಡಗಿಸಲ್ಪಟ್ಟ ನಂತರ ಈ "
+#~ "ಕಾರ್ಯವು ಅಳಿಸಲ್ಪಡುತ್ತದೆ).</li></ul>"
+
+#~ msgid "Unnamed entry"
+#~ msgstr "ಹೆಸರಿಸದೆ ಇರುವ ನಮೂದು"
+
+#~ msgid ""
+#~ "This configuration dialog allows altering settings only for the selected "
+#~ "window or application. Find the setting you want to affect, enable the "
+#~ "setting using the checkbox, select in what way the setting should be "
+#~ "affected and to which value."
+#~ msgstr ""
+#~ "ಈ ಸಂರಚನಾ ಸಂವಾದವು ಕೇವಲ ನಿಗದಿತ ವಿಂಡೋ ಅಥವ ಅನ್ವಯದ ಸಂಯೋಜನೆಗಳನ್ನು ಬದಲಾಯಿಸಲು "
+#~ "ಅನುಮತಿಸುತ್ತದೆ. ನೀವು ಪರಿಣಾಮಕಾರಿಯಾಗಲು ಬಯಸುವ ಸಂಯೋಜನೆಯನ್ನು ಪತ್ತೆ ಮಾಡಿ, ಗುರುತು "
+#~ "ಪೆಟ್ಟಿಗೆಯನ್ನು ಬಳಸಿಕೊಂಡು ಅದನ್ನು ಶಕ್ತಗೊಳಿಸಿ, ಯಾವ ಬಗೆಯಲ್ಲಿಹಾಗು ಯಾವ ಮೌಲ್ಯಕ್ಕೆ "
+#~ "ಸಂಯೋಜನೆಗೆ ಪರಿಣಾಮ ಬೀರಬೇಕೆನ್ನುವುದನ್ನು ಆರಿಸಿ."
+
+#~ msgid "Consult the documentation for more details."
+#~ msgstr "ಹೆಚ್ಚಿನ ಮಾಹಿತಿಗಳಿಗಾಗಿ ದಸ್ತಾವೇಜನ್ನು ನೋಡಿ."
+
+#~ msgid "Edit Shortcut"
+#~ msgstr "ಶಾರ್ಟ್-ಕಟ್‍ಗಳನ್ನು ಸಂಪಾದಿಸು"
+
+#, fuzzy
+#~| msgid "On Main Window"
+#~ msgid "Unmanaged Window"
+#~ msgstr "ಮುಖ್ಯ ವಿಂಡೋದಲ್ಲಿ"
+
+#~ msgid "0123456789-+,xX:"
+#~ msgstr "0123456789-+,xX:"
+
+#~ msgid "&Desktop"
+#~ msgstr "ಗಣಕ ತೆರೆ(&D)"
+
+#~ msgid "Smart"
+#~ msgstr "ಸ್ಮಾರ್ಟ್"
+
+#~ msgid "kcmkwinrules"
+#~ msgstr "kcmkwinrules"
+
+#~ msgid "Opaque"
+#~ msgstr "ಅಪಾರದರ್ಶಕ"
+
+#~ msgid "Transparent"
+#~ msgstr "ಪಾರದರ್ಶಕ"
+
+#~ msgid "&Moving/resizing"
+#~ msgstr "ಜರುಗಿಸಲಾಗುತ್ತಿರುವ/ಮರುಗಾತ್ರಿಸಲಾಗುತ್ತಿರುವ (&M)"
+
+#, fuzzy
+#~| msgid "Title:"
+#~ msgid "Tiled"
+#~ msgstr "ಶೀರ್ಷಿಕೆ:"
+
+#~ msgid ""
+#~ "For selecting all windows belonging to a specific application, selecting "
+#~ "only window class should usually work."
+#~ msgstr ""
+#~ "ಒಂದು ನಿಗದಿತ ಅನ್ವಯಕ್ಕೆ ಸಂಬಂಧಿತವಾದ ಎಲ್ಲಾ ವಿಂಡೋಗಳನ್ನು ಆಯ್ಕೆ ಮಾಡಲು, ಸಾಮಾನ್ಯವಾಗಿ "
+#~ "ಕೇವಲ ವಿಂಡೋ ವರ್ಗವನ್ನು ಆಯ್ಕೆ ಮಾಡಿದರೆ ಸಾಕಾಗುತ್ತದೆ."
+
+#~ msgid "Use window &class (whole application)"
+#~ msgstr "ವಿಂಡೋ ವರ್ಗವನ್ನು ಉಪಯೋಗಿಸು (ಸಂಪೂರ್ಣ ಅನ್ವಯಕ್ಕೆ)(&c)"
+
+#~ msgid ""
+#~ "For selecting a specific window in an application, both window class and "
+#~ "window role should be selected. Window class will determine the "
+#~ "application, and window role the specific window in the application; many "
+#~ "applications do not provide useful window roles though."
+#~ msgstr ""
+#~ "ಒಂದು ಅನ್ವಯದಲ್ಲಿ ನಿಗದಿತ ವಿಂಡೋ ಅನ್ನು ಆಯ್ಕೆ ಮಾಡಲು, ವಿಂಡೋ ವರ್ಗ ಹಾಗು ವಿಂಡೋ ಪಾತ್ರ "
+#~ "ಎರಡನ್ನೂ ಆಯ್ಕೆ ಮಾಡಬೇಕು. ವಿಂಡೋ ವರ್ಗವು ಅನ್ವಯವನ್ನು ಹಾಗು ವಿಂಡೋ ಪಾತ್ರವು ಅನ್ವಯದಲ್ಲಿನ "
+#~ "ನಿಶ್ಚಿತ ವಿಂಡೊ ಅನ್ನು ನಿರ್ಧರಿಸುತ್ತದೆ; ಆದರೆ ಹೆಚ್ಚಿನ ಅನ್ವಯಗಳು ವಿಂಡೋ ಪಾತ್ರಗಳನ್ನು "
+#~ "ಒದಗಿಸುವುದಿಲ್ಲ."
+
+#~ msgid "Use window class and window &role (specific window)"
+#~ msgstr "ವಿಂಡೋ ವರ್ಗ ಹಾಗು ವಿಂಡೋ ಪಾತ್ರವನ್ನು ಉಪಯೋಗಿಸು (ನಿಗದಿತ ವಿಂಡೋಗೆ)(&r)"
+
+#~ msgid ""
+#~ "With some (non-KDE) applications whole window class can be sufficient for "
+#~ "selecting a specific window in an application, as they set whole window "
+#~ "class to contain both application and window role."
+#~ msgstr ""
+#~ "ಕೆಲವು (non-KDE) ಅನ್ವಯಗಳೊಂದಿಗೆ ಒಂದು ನಿಗದಿತ ವಿಂಡೋವನ್ನು ಒಂದು ಅನ್ವಯದಲ್ಲಿ ತೆರೆಯಲು "
+#~ "ಸಂಪೂರ್ಣ ವಿಂಡೋ ವರ್ಗವು ಸಾಕಾಗುತ್ತದೆ, ಏಕೆಂದರೆ ಅವುಗಳು ಸಂಪೂರ್ಣವಿಂಡೋ ಅನ್ನು ಅನ್ವಯ ಹಾಗು "
+#~ "ವಿಂಡೋ ಪಾತ್ರವನ್ನು ಹೊಂದಿರುವಂತೆ ಸಿದ್ಧಗೊಳಿಸುತ್ತವೆ."
+
+#~ msgid "Use &whole window class (specific window)"
+#~ msgstr "ಸಂಪೂರ್ಣ ವಿಂಡೋ ವರ್ಗವನ್ನು ಬಳಸು (ನಿಗದಿತ ವಿಂಡೋ)(&w)"
+
+#~ msgid "Match also window &title"
+#~ msgstr "ವಿಂಡೋ ಶೀರ್ಷಿಕೆಯನ್ನೂ ಸಹ ಹೊಂದಿಸು(&t)"
+
+#~ msgid "Extra role:"
+#~ msgstr "ಹೆಚ್ಚುವರಿ ಪಾತ್ರ:"
+
+#~ msgid "Window &Extra"
+#~ msgstr "ವಿಂಡೋ ಹೆಚ್ಚುವರಿ (&E)"
+
+#~ msgid "&Geometry"
+#~ msgstr "ಜ್ಯಾಮಿತಿ(&G)"
+
+#~ msgid "&Preferences"
+#~ msgstr "ಆದ್ಯತೆಗಳು(&P)"
+
+#~ msgid "&No border"
+#~ msgstr "ಅಂಚಿಲ್ಲದ(&N)"
+
+#~ msgid "0123456789"
+#~ msgstr "0123456789"
+
+#~ msgid "W&orkarounds"
+#~ msgstr "ಬದಲೀ ಪರಿಹಾರ(&o)"
+
+#~ msgid "Strictly obey geometry"
+#~ msgstr "ಜ್ಯಾಮಿತಿಯನ್ನು ನಿಖರವಾಗಿ ಪಾಲಿಸು"

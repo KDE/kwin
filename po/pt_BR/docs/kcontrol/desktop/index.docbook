@@ -1,0 +1,170 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Brazilian-Portuguese "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="desktop" lang="&language;">
+<title
+>Áreas de trabalho virtuais</title>
+<articleinfo>
+
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<author
+>&Jost.Schenck; &Jost.Schenck.mail;</author>
+<othercredit role="translator"
+><firstname
+>Lisiane</firstname
+> <surname
+>Sztoltz</surname
+><affiliation
+><address
+> <email
+>lisiane@conectiva.com.br</email
+></address
+></affiliation
+><contrib
+>Tradução</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>09/04/2015</date>
+<releaseinfo
+>Plasma 5.3</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Configurações do sistema</keyword>
+<keyword
+>ambiente de trabalho</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="virtual-desktops">
+
+<title
+>Áreas de trabalho virtuais</title>
+
+<sect2 id="desktop-number">
+<title
+><guilabel
+>Ambientes de trabalho</guilabel
+></title>
+
+<para
+>O &kde; oferece a você a possibilidade de possuir vários ambientes de trabalho virtuais. Nesta aba você pode configurar o número de ambientes, o número de linhas no ícone do <guilabel
+>Pager</guilabel
+>, bem como seus nomes. Basta usar a caixa de entrada para ajustar o número de ambientes de trabalho. Você pode atribuir nomes para os ambientes digitando o texto dentro dos campos de texto logo abaixo.</para
+> 
+<!-- not in 5.3
+<para
+>Enable <guilabel
+>Different widgets for each desktop</guilabel
+> 
+to use independent widgets and wallpapers on each individual desktop.
+</para>
+-->
+</sect2>
+
+<sect2 id="desktop-switching">
+<title
+><guilabel
+>Mudança</guilabel
+></title>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>A navegação entre os ambientes dá a volta</guilabel
+></term>
+<listitem
+><para
+>Ative esta opção se quiser a navegação pelas bordas ativas do ambiente ou pelo teclado, além das bordas de um ambiente, de modo a levá-lo para a borda oposta do novo ambiente. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Animação do efeito da área de trabalho</guilabel
+></term>
+<listitem
+><para
+>Selecione a opção <guilabel
+>Sem Animação</guilabel
+>, <guilabel
+>Deslizar</guilabel
+>, <guilabel
+>Animação do Cubo de Ambientes</guilabel
+> ou <guilabel
+>Desvanecer o Ambiente</guilabel
+> na lista. Se a animação selecionada tiver opções de configuração, clique no ícone de ferramentas à direita da lista, de modo a invocar uma janela de configuração. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Apresentação da Mudança do Ambiente</guilabel
+></term>
+<listitem
+><para
+>Ative esta opção se quiser ter uma visualização da tela para a mudança de ambientes. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Mostrar os indicadores de disposição do ambiente</guilabel
+></term>
+<listitem
+><para
+>A ativação desta opção irá mostrar uma pequena previsão da disposição do ambiente, indicando o ambiente selecionado. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Atalhos</guilabel
+></term>
+<listitem
+><para
+>Esta seção mostra os atalhos configurados para mudar de ambientes, permitindo a sua edição. </para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>Se girar a roda do mouse sobre um espaço vazio da área de trabalho ou sobre o ícone do <guilabel
+>Pager</guilabel
+> no painel, irá mudar para a próxima área de trabalho virtual de forma numérica, na direção para a qual você girou a roda do mouse (para cima ou para baixo).</para>
+<para
+>Você pode alterar este comportamento padrão na página <guilabel
+>Ações do mouse</guilabel
+> na <guilabel
+>Configurações do Desktop</guilabel
+> (<keycombo action="simul"
+>&Alt;<keycap
+>D</keycap
+></keycombo
+>, <keycombo action="simul"
+>&Alt;<keycap
+>S</keycap
+></keycombo
+>).</para>
+</sect2>
+</sect1>
+
+</article>

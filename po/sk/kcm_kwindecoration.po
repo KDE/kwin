@@ -1,0 +1,495 @@
+# translation of kcmkwindecoration.po to Slovak
+# Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>, 2001,2002.
+# Stanislav Visnovsky <visnovsky@kde.org>, 2003, 2004.
+# Richard Fric <Richard.Fric@kdemail.net>, 2006, 2009, 2010.
+# Michal Sulek <misurel@gmail.com>, 2009, 2010.
+# Roman Paholík <wizzardsk@gmail.com>, 2012, 2013, 2014, 2015.
+# Mthw <jari_45@hotmail.com>, 2018, 2019.
+# Matej Mrenica <matejm98mthw@gmail.com>, 2019, 2021.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwindecoration\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2021-09-05 19:15+0200\n"
+"Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
+"Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 21.08.1\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Stanislav Višňovský,Richard Frič,Michal Šulek"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "visnovsky@kde.org,Richard.Fric@kdemail.net,misurel@gmail.com"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr "Viac akcií pre toto okno"
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, kde-format
+msgid "Application menu"
+msgstr "Aplikačná ponuka"
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, kde-format
+msgid "On all desktops"
+msgstr "Na všetkých plochách"
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr "Minimalizovať"
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr "Maximalizovať"
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr "Zavrieť"
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr "Kontextový pomocník"
+
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr "Zabaliť"
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr "Držať pod ostatnými oknami"
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr "Držať nad ostatnými oknami"
+
+#: kcm.cpp:49
+#, kde-format
+msgid "Window Decorations"
+msgstr "Dekorácie okien"
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr "Valerio Pilo"
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr "Autor"
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr "Predvolené z témy (%1)"
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+"Tento nástroj umožňuje nastaviť tému dekorácie okna pre aktuálne aktívnu "
+"reláciu bez toho, aby ste ju omylom nastavili na tému, ktorá buď nie je k "
+"dispozícii, alebo ktorá je už nastavená."
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+"Názov témy dekorácie okna, ktorú chcete pre KWin nastaviť. Úspešné "
+"absolvovanie úplnej cesty sa pokúsi nájsť tému v danom adresári a potom ju "
+"uplatniť, ak je možné ju odvodiť."
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr "Zobraziť všetky témy dostupné v systéme (a ktorá je aktuálna téma)"
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+"Rozpoznané %1 ako KWin Aurorae téma \"%2\" a pokúsime sa ju nastaviť ako "
+"vašu aktuálnu tému."
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+"Pokúsili ste sa odovzdať cestu k súboru, ale túto cestu nebolo možné "
+"rozlíšiť ako tému a toto budeme musieť zrušiť, pretože nemáme žiadnu tému, "
+"ktorú by sme mohli nastaviť"
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr "Požadovaná téma „%1“ je už nastavená ako téma dekorácií okna."
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr "Téma kurzora %1 bola úspešne použitá na vaše aktuálne sedenie Plasmy"
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+"Vaše nastavenie motívu sa nepodarilo uložiť - dôvod nie je známy, jedná sa "
+"však o neodstrániteľnú chybu. Možno zistíte, že jednoduché vyskúšanie znova "
+"bude fungovať."
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr ""
+"Nepodarilo sa nájsť tému „%1“. Téma by mala byť jednou z nasledujúcich "
+"možností: %2"
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr "Vo vašom systéme máte nasledujúce motívy dekorácie okien KWin:"
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr "Záhlavie"
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr "Pustite tu na odstránenie tlačidla"
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr "Presuňte tlačidlá odtiaľto na záhlavie"
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr "Tento modul vám umožnuje nastaviť dekorácie okien."
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr "Téma"
+
+#: package/contents/ui/main.qml:57
+#, kde-format
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "Tlačidlá záhlavia"
+
+#: package/contents/ui/main.qml:93
+#, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "Veľkosť orámovania okna:"
+
+#: package/contents/ui/main.qml:112
+#, kde-format
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr "Získať nové dekorácie okien..."
+
+#: package/contents/ui/main.qml:141
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr "Zavrieť okná dvojklikom na tlačidlo ponuky"
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr "Ponuku zobrazíte kliknutím a podržaním na tlačidla ponuky."
+
+#: package/contents/ui/main.qml:165
+#, kde-format
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "Zobrazovať popisy tlačidiel záhlavia"
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr "Upraviť tému %1"
+
+#: utils.cpp:25
+#, kde-format
+msgid "No Borders"
+msgstr "Žiadne okraje"
+
+#: utils.cpp:26
+#, kde-format
+msgid "No Side Borders"
+msgstr "Bez bočného okraja"
+
+#: utils.cpp:27
+#, kde-format
+msgid "Tiny"
+msgstr "Drobná"
+
+#: utils.cpp:28
+#, kde-format
+msgid "Normal"
+msgstr "Normálna"
+
+#: utils.cpp:29
+#, kde-format
+msgid "Large"
+msgstr "Veľká"
+
+#: utils.cpp:30
+#, kde-format
+msgid "Very Large"
+msgstr "Veľmi veľká"
+
+#: utils.cpp:31
+#, kde-format
+msgid "Huge"
+msgstr "Obrovská"
+
+#: utils.cpp:32
+#, kde-format
+msgid "Very Huge"
+msgstr "Veľmi obrovská"
+
+#: utils.cpp:33
+#, kde-format
+msgid "Oversized"
+msgstr "Nadmerná"
+
+#~ msgctxt "popup tip"
+#~ msgid ""
+#~ "Close by double clicking: Keep the window's Menu button pressed until it "
+#~ "appears."
+#~ msgstr ""
+#~ "Zavrieť dvojklikom: Na otvorenie ponuky nechajte tlačidlo stlačené, kým "
+#~ "sa objaví."
+
+#~ msgid "Menu"
+#~ msgstr "Ponuka"
+
+#~ msgid "Keep below"
+#~ msgstr "Držať pod"
+
+#~ msgid "Keep above"
+#~ msgstr "Držať nad"
+
+#~ msgid "Download New Window Decorations"
+#~ msgstr "Stiahnuť nové dekorácie okien"
+
+#~ msgctxt "checkbox label"
+#~ msgid "Use theme's default window border size"
+#~ msgstr "Používať predvolenú veľkosť rámu z témy"
+
+#~ msgid "Search..."
+#~ msgstr "Hľadať..."
+
+#~ msgid "Close windows by double clicking &the menu button"
+#~ msgstr "Zavrieť okná dvojklikom na tlačidlo menu"
+
+#~ msgid "Border si&ze:"
+#~ msgstr "Veľkosť okraja:"
+
+#~ msgid "Buttons"
+#~ msgstr "Tlačidlá"
+
+#~ msgid "Configure %1..."
+#~ msgstr "Nastaviť %1..."
+
+#~ msgid "Drag to re-position buttons"
+#~ msgstr "Posuňte na preusporiadanie tlačidiel"
+
+#~ msgid "Form"
+#~ msgstr "Formulár"
+
+#~ msgid "Button size:"
+#~ msgstr "Veľkosť tlačidiel:"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "Drobná"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "Normálna"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "Veľká"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "Veľmi veľká"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "Obrovská"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "Veľmi obrovská"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "Nadmerná"
+
+#~ msgid "KDE"
+#~ msgstr "KDE"
+
+#~ msgid "%1 (unavailable)"
+#~ msgstr "%1 (nie je k dispozícii)"
+
+#~ msgid ""
+#~ "To add or remove titlebar buttons, simply <i>drag</i> items between the "
+#~ "available item list and the titlebar preview. Similarly, drag items "
+#~ "within the titlebar preview to re-position them."
+#~ msgstr ""
+#~ "Ak chcete pridať alebo odstrániť tlačidlá titulku, jednoducho ich "
+#~ "<i>pretiahnite myšou</i> medzi zoznamom dostupných tlačidiel a náhľadom "
+#~ "titulku. Podobne môžete ťahaním zmeniť pozíciu tlačidiel v titulku."
+
+#~ msgid "Resize"
+#~ msgstr "Zmeniť veľkosť"
+
+#~ msgid "Help"
+#~ msgstr "Pomocník"
+
+#~ msgctxt "Button showing window actions menu"
+#~ msgid "Window Menu"
+#~ msgstr "Ponuka okna"
+
+#~ msgid "--- spacer ---"
+#~ msgstr "--- medzera ---"
+
+#~ msgid ""
+#~ "Enabling this checkbox will show window button tooltips. If this checkbox "
+#~ "is off, no window button tooltips will be shown."
+#~ msgstr ""
+#~ "Povolením tejto voľby sa budú zobrazovať rady pre tlačidlá okna. Ak je "
+#~ "táto voľba vypnutá, žiadne rady sa nebudú zobrazovať."
+
+#~ msgid "Please note that this option is not available on all styles yet."
+#~ msgstr ""
+#~ "Uvedomte si, že táto voľba zatiaľ nie je dostupná vo všetkých štýloch."
+
+#~ msgid "Use custom titlebar button &positions"
+#~ msgstr "Použiť vlastné &pozície tlačidiel titulku"
+
+#~ msgid "B&order size:"
+#~ msgstr "Veľkosť &okraja:"
+
+#~ msgid "Use this combobox to change the border size of the decoration."
+#~ msgstr ""
+#~ "Použite tento rozbaľovací zoznam, ak chcete zmeniť veľkosť okraja "
+#~ "dekorácie."
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Border"
+#~ msgstr "Bez bočného okraja"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "Bez okraja"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Možnosti dekorácie"
+
+#~ msgid ""
+#~ "Select the window decoration. This is the look and feel of both the "
+#~ "window borders and the window handle."
+#~ msgstr ""
+#~ "Vyberte dekoráciu okna. To znamená vzhľad okrajov a tlačidiel okna. "
+
+#~ msgid "Configure Decoration..."
+#~ msgstr "Nastaviť dekoráciu..."
+
+#~ msgid "Window Decoration Control Module"
+#~ msgstr "Ovládací modul dekorácie okna"
+
+#~ msgid "(c) 2001 Karol Szwed"
+#~ msgstr "(c) 2001 Karol Szwed"
+
+#~ msgid "Karol Szwed"
+#~ msgstr "Karol Szwed"
+
+#~ msgid ""
+#~ "<h1>Installation error</h1>The resource<h2>kwin/kcm_kwindecoration/main."
+#~ "qml</h2>could not be located in any application data path.<h2>Please "
+#~ "contact your distribution</h2>The application will now abort"
+#~ msgstr ""
+#~ "<h1>Chyba inštalácie</h1>Zdroj<h2>kwin/kcm_kwindecoration/main.qml</h2> "
+#~ "sa nedal nájsť v žiadnej ceste aplikačných dát.<h2>Prosím kontaktujte "
+#~ "vašu distribúciu</h2> Aplikácia sa teraz preruší"
+
+#~ msgid "Installation Error"
+#~ msgstr "Chyba inštalácie"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+#~ msgid ""
+#~ "<h1>Window Manager Decoration</h1><p>This module allows you to choose the "
+#~ "window border decorations, as well as titlebar button positions and "
+#~ "custom decoration options.</p>To choose a theme for your window "
+#~ "decoration click on its name and apply your choice by clicking the \"Apply"
+#~ "\" button below. If you do not want to apply your choice you can click "
+#~ "the \"Reset\" button to discard your changes.<p>You can configure each "
+#~ "theme. There are different options specific for each theme.</p><p>On the "
+#~ "\"Buttons\" tab check the \"Use custom titlebar button positions\" box "
+#~ "and you can change the positions of the buttons to your liking.</p>"
+#~ msgstr ""
+#~ "<h1>Dekorácia správcu okien</h1><p>Tento modul umožňuje vybrať si "
+#~ "dekoráciu okrajov okien, ako aj pozíciu tlačidiel na titulku a vlastné "
+#~ "možnosti dekorácie.</p><p>Pre výber témy dekorácie kliknite na jej názov "
+#~ "a stlačením \"Použiť\" ju aktivujte. Ak zmenu použiť nechcete, kliknite "
+#~ "na tlačidlo \"Obnoviť\", čím zahodíte všetky zmeny.</p><p>Na karte "
+#~ "\"Tlačidlá\" môžete zmeniť pozície tlačidiel titulku, ak začiarknete "
+#~ "voľbu \"Použiť vlastné pozície tlačidiel titulku\".</p>"
+
+#~ msgid "Active Window"
+#~ msgstr "Aktívne okno"
+
+#~ msgid "Inactive Window"
+#~ msgstr "Neaktívne okno"
+
+#~ msgid "kcmkwindecoration"
+#~ msgstr "kcmkwindecoration"

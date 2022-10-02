@@ -1,0 +1,432 @@
+# translation of kwin_clients.po to Kannada
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Shankar Prasad <svenkate@redhat.com>, 2009.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2009-01-10 23:24+0530\n"
+"Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
+"Language-Team: Kannada <en@li.org>\n"
+"Language: kn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr ""
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr ""
+
+#: aurorae/src/aurorae.cpp:727
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "ದೊಡ್ಡದು"
+
+#: aurorae/src/aurorae.cpp:728
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "ದೊಡ್ಡದು"
+
+#: aurorae/src/aurorae.cpp:729
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "ದೊಡ್ಡದು"
+
+#: aurorae/src/aurorae.cpp:730
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "ದೊಡ್ಡದು"
+
+#: aurorae/src/aurorae.cpp:731
+#, fuzzy, kde-format
+#| msgid "Resize"
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "ಗಾತ್ರಬದಲಿಸು"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "ಸಂರಚನಾ ಸಂವಾದ"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "ಶೀರ್ಷಿಕೆಯ ವಾಲಿಕೆ(&A)"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "ಎಡ"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "ಮಧ್ಯ"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "ಬಲ"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "ಕಿಟಕಿಯ ಬಣ್ಣಯುಕ್ತ ಅಂಚು"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "ಗುಂಡಿಗಳನ್ನು ಸಜೀವನಗೊಳಿಸು"
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "ಮಬ್ಬುಗೊಳಿಸದೆ ಇರುವ ಪಠ್ಯ(&t)"
+
+#, fuzzy
+#~| msgid "Animate buttons"
+#~ msgid "Animations"
+#~ msgstr "ಗುಂಡಿಗಳನ್ನು ಸಜೀವನಗೊಳಿಸು"
+
+#, fuzzy
+#~| msgid "Actions Settings"
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "ಕ್ರಿಯೆಗಳ ಸಂಯೋಜನೆಗಳು"
+
+#, fuzzy
+#~| msgid "Center"
+#~ msgid "General"
+#~ msgstr "ಮಧ್ಯ"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "ದೊಡ್ಡದು"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "ದೊಡ್ಡದು"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "ದೊಡ್ಡದು"
+
+#, fuzzy
+#~| msgid "Title &Alignment"
+#~ msgid "Tit&le alignment:"
+#~ msgstr "ಶೀರ್ಷಿಕೆಯ ವಾಲಿಕೆ(&A)"
+
+#, fuzzy
+#~| msgid "Small"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "ಚಿಕ್ಕದು"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "ಪರಿವಿಡಿ ಗುಂಡಿಯ ಮೇಲೆ ಎರಡು ಬಾರಿ ಕ್ಲಿಕ್ಕಿಸುವುದರಿಂದ ಕಿಟಿಕಿಗಳನ್ನು ಮುಚ್ಚು"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title"
+#~ msgstr "ಕಿಟಕಿಯನ್ನು ಚಿಕ್ಕದಾಗಿಸು"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadows"
+#~ msgstr "ಮಬ್ಬು"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Window Glow"
+#~ msgstr "ಕಿಟಕಿಯನ್ನು ಚಿಕ್ಕದಾಗಿಸು"
+
+#, fuzzy
+#~| msgid "Config Dialog"
+#~ msgid "Dialog"
+#~ msgstr "ಸಂರಚನಾ ಸಂವಾದ"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Use window title"
+#~ msgstr "ಕಿಟಕಿಯನ್ನು ಚಿಕ್ಕದಾಗಿಸು"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title:"
+#~ msgstr "ಕಿಟಕಿಯನ್ನು ಚಿಕ್ಕದಾಗಿಸು"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Hide window title bar"
+#~ msgstr "ಕಿಟಕಿಯನ್ನು ಚಿಕ್ಕದಾಗಿಸು"
+
+#, fuzzy
+#~| msgid "Restore"
+#~ msgid "Remove"
+#~ msgstr "ಮರುಸ್ಥಾಪಿಸು"
+
+#, fuzzy
+#~| msgid "Oxygen"
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "ಆಕ್ಸಿಜನ್"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Inactive Windows"
+#~ msgstr "ಕಿಟಕಿಯನ್ನು ಚಿಕ್ಕದಾಗಿಸು"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Windows"
+#~ msgstr "ಕಿಟಕಿಯನ್ನು ಚಿಕ್ಕದಾಗಿಸು"
+
+#~ msgid "Oxygen"
+#~ msgstr "ಆಕ್ಸಿಜನ್"
+
+#~ msgid "Help"
+#~ msgstr "ಸಹಾಯ"
+
+#~ msgid "Minimize"
+#~ msgstr "ಚಿಕ್ಕದಾಗಿಸು"
+
+#~ msgid "Maximize"
+#~ msgstr "ದೊಡ್ಡದಾಗಿಸು"
+
+#~ msgid "Close"
+#~ msgstr "ಮುಚ್ಚು"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "ಬೇರೆಯವುಗಳ ಮೇಲಿಡು"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "ಬೇರೆಯವುಗಳ ಕೆಳಗಿಡು"
+
+#~ msgid "On All Desktops"
+#~ msgstr "ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳ ಮೇಲೆ"
+
+#~ msgid "Shade Button"
+#~ msgstr "ಮಬ್ಬುಗೊಳಿಸುವ ಗುಂಡಿ"
+
+#~ msgid "Menu"
+#~ msgstr "ಪರಿವಿಡಿ"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳ ಮೇಲೆ ಬೇಡ."
+
+#~ msgid "On all desktops"
+#~ msgstr "ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳ ಮೇಲೆ"
+
+#~ msgid "Unshade"
+#~ msgstr "ಮಬ್ಬನ್ನು ಅಳಿಸು"
+
+#~ msgid "Shade"
+#~ msgstr "ಮಬ್ಬು"
+
+#~ msgid "Resize"
+#~ msgstr "ಗಾತ್ರಬದಲಿಸು"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>B II ಮುನ್ನೋಟ</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "ಮರುಸ್ಥಾಪಿಸು"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Actions Settings"
+#~ msgstr "ಕ್ರಿಯೆಗಳ ಸಂಯೋಜನೆಗಳು"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "ಪರಿವಿಡಿ ಗುಂಡಿಯ ಮೇಲೆ ಎರಡು ಬಾರಿ ಕ್ಲಿಕ್ಕಿಸಿ:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "ಏನನ್ನೂ ಮಾಡಬೇಡ"
+
+#~ msgid "Minimize Window"
+#~ msgstr "ಕಿಟಕಿಯನ್ನು ಚಿಕ್ಕದಾಗಿಸು"
+
+#~ msgid "Shade Window"
+#~ msgstr "ಕಿಟಕಿಯನ್ನು ಮಬ್ಬಾಗಿಸು"
+
+#~ msgid "Close Window"
+#~ msgstr "ಕಿಟಕಿಯನ್ನು ಮುಚ್ಚು"
+
+#~ msgid "Laptop"
+#~ msgstr "ಲ್ಯಾಪ್‌ಟಾಪ್"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Save"
+#~ msgstr "ಮಬ್ಬು"
+
+#~ msgid "Large"
+#~ msgstr "ದೊಡ್ಡದು"
+
+#~ msgid "Small"
+#~ msgstr "ಚಿಕ್ಕದು"
+
+#~ msgid "Plastik"
+#~ msgstr "ಪ್ಲಾಸ್ಟಿಕ್"
+
+#, fuzzy
+#~| msgid "On All Desktops"
+#~ msgid "All Desktops"
+#~ msgstr "ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳ ಮೇಲೆ"
+
+#, fuzzy
+#~| msgid "Close"
+#~ msgid "Close Item"
+#~ msgstr "ಮುಚ್ಚು"
+
+#~ msgid "&Left"
+#~ msgstr "ಎಡ(&L)"
+
+#, fuzzy
+#~| msgid "Center"
+#~ msgid "&Center"
+#~ msgstr "ಮಧ್ಯ"
+
+#~ msgid "&Right"
+#~ msgstr "ಬಲ(&R)"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Do not keep above others"
+#~ msgstr "ಬೇರೆಯವುಗಳ ಮೇಲಿಡು"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above others"
+#~ msgstr "ಬೇರೆಯವುಗಳ ಮೇಲಿಡು"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Do not keep below others"
+#~ msgstr "ಬೇರೆಯವುಗಳ ಕೆಳಗಿಡು"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below others"
+#~ msgstr "ಬೇರೆಯವುಗಳ ಕೆಳಗಿಡು"
+
+#, fuzzy
+#~| msgid "Maximize"
+#~ msgid "Maximum"
+#~ msgstr "ದೊಡ್ಡದಾಗಿಸು"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadow style:"
+#~ msgstr "ಮಬ್ಬು"
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "ಒಂದು KWM ಪರಿಸರವಿನ್ಯಾಸವನ್ನು ಅನುಸ್ಥಾಪಿಸುತ್ತದೆ"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "ಪರಿಸರವಿನ್ಯಾಸದ ಸಂರಚನಾ ಕಡತದ ಮಾರ್ಗ"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWMTheme</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "ಅಂಟಿದ"
+
+#~ msgid "Unsticky"
+#~ msgstr "ಅಂಟಿಸದೆ ಇರುವ"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>ಕೆರಾಮಿಕ್ ಮುನ್ನೋಟ</b></center>"
+
+#~ msgid "KDE 2"
+#~ msgstr "ಕೆಡಿಇ ೨"
+
+#~ msgid "Quartz"
+#~ msgstr "ಕ್ವಾರ್ಟ್ಜ"
+
+#~ msgid "Redmond"
+#~ msgstr "ರೆಡ್ಮಂಡ್"
+
+#~ msgid "Medium"
+#~ msgstr "ಮಧ್ಯಮ"
+
+#~ msgid "Modern System"
+#~ msgstr "ಆಧುನಿಕ ವ್ಯವಸ್ಥೆ"
+
+#~ msgid "Web"
+#~ msgstr "ಜಾಲ"
+
+#~ msgid "Keramik"
+#~ msgstr "ಕೆರಾಮಿಕ್"
+
+#, fuzzy
+#~| msgid "Installs a KWM theme"
+#~ msgid "Get New Themes..."
+#~ msgstr "ಒಂದು KWM ಪರಿಸರವಿನ್ಯಾಸವನ್ನು ಅನುಸ್ಥಾಪಿಸುತ್ತದೆ"
+
+#, fuzzy
+#~| msgid "Installs a KWM theme"
+#~ msgid "Install New Theme..."
+#~ msgstr "ಒಂದು KWM ಪರಿಸರವಿನ್ಯಾಸವನ್ನು ಅನುಸ್ಥಾಪಿಸುತ್ತದೆ"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Glow active window"
+#~ msgstr "ಕಿಟಕಿಯನ್ನು ಚಿಕ್ಕದಾಗಿಸು"
+
+#~ msgid "Ozone"
+#~ msgstr "ಓಜೋನ್"

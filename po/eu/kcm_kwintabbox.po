@@ -1,0 +1,408 @@
+# Translation for kcm_kwintabbox.po to Euskara/Basque (eu).
+# Copyright (C) 2011, Free Software Foundation.
+# Copyright (C) 2012-2022, This file is copyright:
+# This file is distributed under the same license as the kwin package.
+# KDE euskaratzeko proiektuko arduraduna <xalba@ni.eus>.
+#
+# Translators:
+# Iñigo Salvador Azurmendi <xalba@ni.eus>, 2011, 2014, 2019, 2022.
+# Hizkuntza Politikarako Sailburuordetza <hizpol@ej-gv.es>, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-15 00:48+0000\n"
+"PO-Revision-Date: 2022-08-17 17:55+0200\n"
+"Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
+"Language-Team: Basque <kde-i18n-eu@kde.org>\n"
+"Language: eu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 22.04.3\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: kwintabboxconfigform.cpp:77
+#, kde-format
+msgid "KWin"
+msgstr "KWin"
+
+#: layoutpreview.cpp:133
+#, kde-format
+msgid "Show Desktop"
+msgstr "Erakutsi mahaigaina"
+
+#: layoutpreview.cpp:163
+#, kde-format
+msgctxt "An example Desktop Name"
+msgid "Desktop 1"
+msgstr "1. mahaigaina"
+
+#: main.cpp:58
+#, kde-format
+msgid "Main"
+msgstr "Nagusia"
+
+#: main.cpp:59
+#, kde-format
+msgid "Alternative"
+msgstr "Ordezkoa"
+
+#: main.cpp:61
+#, kde-format
+msgid "Get New Task Switchers..."
+msgstr "Lortu ataza-aldatzaile berriak..."
+
+#: main.cpp:75
+#, kde-format
+msgid ""
+"Focus policy settings limit the functionality of navigating through windows."
+msgstr ""
+"Foku-gidalerroen ezarpenek leiho batetik bestera funtzionaltasuna mugatzen "
+"dute."
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#: main.ui:32
+#, kde-format
+msgid "Content"
+msgstr "Edukia"
+
+#. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
+#: main.ui:41
+#, kde-format
+msgid "Include \"Show Desktop\" icon"
+msgstr "Sartu \"Erakutsi mahaigaina\" ikonoa"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
+#: main.ui:55
+#, kde-format
+msgid "Recently used"
+msgstr "Duela gutxi erabilitakoak"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
+#: main.ui:60
+#, kde-format
+msgid "Stacking order"
+msgstr "Pilatze-ordena"
+
+#. i18n: ectx: property (text), widget (QCheckBox, oneAppWindow)
+#: main.ui:68
+#, kde-format
+msgid "Only one window per application"
+msgstr "Leiho bakarra aplikazio bakoitzeko"
+
+#. i18n: ectx: property (text), widget (QCheckBox, orderMinimized)
+#: main.ui:78
+#, kde-format
+msgid "Order minimized windows after unminimized windows"
+msgstr "Ordenatu ikonotutako leihoak ikonotugabekoen atzetik"
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: main.ui:88
+#, kde-format
+msgid "Sort order:"
+msgstr "Ordena:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: main.ui:114
+#, kde-format
+msgid "Filter windows by"
+msgstr "Iragazi leihoak honen arabera:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterDesktops)
+#: main.ui:123
+#, kde-format
+msgid "Virtual desktops"
+msgstr "Alegiazko mahaigainak"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentDesktop)
+#: main.ui:167
+#, kde-format
+msgid "Current desktop"
+msgstr "Uneko mahaigaina"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherDesktops)
+#: main.ui:174
+#, kde-format
+msgid "All other desktops"
+msgstr "Beste mahaigain guztiak"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterActivities)
+#: main.ui:184
+#, kde-format
+msgid "Activities"
+msgstr "Jarduerak"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentActivity)
+#: main.ui:228
+#, kde-format
+msgid "Current activity"
+msgstr "Uneko jarduera"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherActivities)
+#: main.ui:235
+#, kde-format
+msgid "All other activities"
+msgstr "Beste jarduera guztiak"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterScreens)
+#: main.ui:245
+#, kde-format
+msgid "Screens"
+msgstr "Pantailak"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentScreen)
+#: main.ui:289
+#, kde-format
+msgid "Current screen"
+msgstr "Uneko pantaila"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherScreens)
+#: main.ui:296
+#, kde-format
+msgid "All other screens"
+msgstr "Beste pantaila guztiak"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterMinimization)
+#: main.ui:306
+#, kde-format
+msgid "Minimization"
+msgstr "Minimizatzea"
+
+#. i18n: ectx: property (text), widget (QRadioButton, visibleWindows)
+#: main.ui:350
+#, kde-format
+msgid "Visible windows"
+msgstr "Ageriko leihoak"
+
+#. i18n: ectx: property (text), widget (QRadioButton, hiddenWindows)
+#: main.ui:357
+#, kde-format
+msgid "Hidden windows"
+msgstr "Ezkutuko leihoak"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
+#: main.ui:396
+#, kde-format
+msgid "Shortcuts"
+msgstr "Lasterbideak"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: main.ui:405 main.ui:448
+#, kde-format
+msgid "Forward"
+msgstr "Aurrera"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: main.ui:428
+#, kde-format
+msgid "All windows"
+msgstr "Leiho guztiak"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: main.ui:438 main.ui:458
+#, kde-format
+msgid "Reverse"
+msgstr "Alderantzikatu"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: main.ui:480
+#, kde-format
+msgid "Current application"
+msgstr "Uneko aplikazioa"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: main.ui:499
+#, kde-format
+msgid "Visualization"
+msgstr "Bistaratzea"
+
+#. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
+#: main.ui:529
+#, kde-format
+msgid "The effect to replace the list window when desktop effects are active."
+msgstr ""
+"Mahaigaineko efektuak aktibatuta daudenean leiho-zerrenda ordezkatzeko "
+"efektua."
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
+#: main.ui:559
+#, kde-format
+msgid ""
+"The currently selected window will be highlighted by fading out all other "
+"windows. This option requires desktop effects to be active."
+msgstr ""
+"Une honetan hautatuta dagoen leihoa nabarmendu egingo da gainontzeko leihoak "
+"itzaliz. Aukera hori erabiltzeko, mahaigain-efektuak aktibatuak izan behar "
+"dira."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
+#: main.ui:562
+#, kde-format
+msgid "Show selected window"
+msgstr "Erakutsi hautatutako leihoa"
+
+#, fuzzy
+#~| msgid "Show outline of selected window"
+#~ msgid "Outline selected window"
+#~ msgstr "Erakutsi hautatutako leihoaren zirriborroa "
+
+#~ msgid ""
+#~ "These settings are used by the \"Walk Through Windows Alternative\" "
+#~ "actions."
+#~ msgstr ""
+#~ "Ezarpen hauek \"Ibili leihoetan zehar beste modu batean\" ekintzek "
+#~ "erabiltzen dituzte."
+
+#~ msgid "Walk Through Windows"
+#~ msgstr "Ibili leihoetan zehar"
+
+#~ msgid "Walk Through Windows (Reverse)"
+#~ msgstr "Ibili leihoetan zehar (atzerantz)"
+
+#~ msgid "Walk Through Windows Alternative"
+#~ msgstr "Ibili leihoetan zehar beste modu batean"
+
+#~ msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgstr "Ibili leihoetan zehar beste modu batean (alderantziz)"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative"
+#~ msgid "Walk Through Windows of Current Application"
+#~ msgstr "Ibili leihoetan zehar beste modu batean"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgid "Walk Through Windows of Current Application (Reverse)"
+#~ msgstr "Ibili leihoetan zehar beste modu batean (alderantziz)"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative"
+#~ msgid "Walk Through Windows of Current Application Alternative"
+#~ msgstr "Ibili leihoetan zehar beste modu batean"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+#~ msgstr "Ibili leihoetan zehar beste modu batean (alderantziz)"
+
+#~ msgid "Configure Layout"
+#~ msgstr "Konfiguratu antolamendua"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Iñigo Salvador Azurmendi"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "xalba@euskalnet.net"
+
+#~ msgid "These settings are used by the \"Walk Through Windows\" actions."
+#~ msgstr ""
+#~ "Ezarpen hauek \"Ibili leihoetan zehar\" ekintzek erabiltzen dituzte."
+
+#, fuzzy
+#~| msgid "All Desktops Grouped by Applications"
+#~ msgid "All windows from all applications"
+#~ msgstr "Mahaigain guztiak aplikazioen arabera taldekatuta"
+
+#, fuzzy
+#~| msgid "Adds an entry to minimize all windows."
+#~ msgid "Exclude minimized windows"
+#~ msgstr "Leiho guztiak minimizatzeko sarrera eransten du."
+
+#, fuzzy
+#~| msgid "Adds an entry to minimize all windows."
+#~ msgid "Show desktop to minimize all windows"
+#~ msgstr "Leiho guztiak minimizatzeko sarrera eransten du."
+
+#~ msgid "Highlight selected window"
+#~ msgstr "Nabarmendu hautatutako leihoa"
+
+#~ msgid "Effect:"
+#~ msgstr "Efektua:"
+
+#~ msgid "Display list while switching"
+#~ msgstr "Bistaratu zerrenda aldatzerakoan"
+
+#~ msgctxt "Name for a window switcher layout showing icon, name and desktop"
+#~ msgid "Informative"
+#~ msgstr "Informatzeko"
+
+#~ msgctxt "Name for a window switcher layout showing only icon and name"
+#~ msgid "Compact"
+#~ msgstr "Trinkoa"
+
+#~ msgctxt "Name for a window switcher layout showing only the name"
+#~ msgid "Text"
+#~ msgstr "Testua"
+
+#~ msgctxt "Name for a window switcher layout showing large icons"
+#~ msgid "Large Icons"
+#~ msgstr "Ikono haundiak"
+
+#~ msgctxt "Name for a window switcher layout showing small icons"
+#~ msgid "Small Icons"
+#~ msgstr "Ikono txikiak"
+
+#~ msgid "No Effect"
+#~ msgstr "Efekturik ez"
+
+#~ msgid "Configure Layout..."
+#~ msgstr "Konfiguratu antolamendua..."
+
+#~ msgid "Item Layout"
+#~ msgstr "Elementuaren antolamendua"
+
+#~ msgid "Item layout:"
+#~ msgstr "Elementuaren antolamendua:"
+
+#~ msgid "Layout:"
+#~ msgstr "Antolamendua:"
+
+#~ msgid "Vertical"
+#~ msgstr "Bertikala"
+
+#~ msgid "Horizontal"
+#~ msgstr "Horizontala"
+
+#~ msgid "Tabular"
+#~ msgstr "Taulan"
+
+#~ msgid "Width:"
+#~ msgstr "Zabalera:"
+
+#~ msgid "Minimum width, as a percentage of screen width."
+#~ msgstr "Gutxieneko zabalera, pantaila zabaleraren ehuneko bezala."
+
+#~ msgid " %"
+#~ msgstr " %"
+
+#~ msgid "Height:"
+#~ msgstr "Altuera:"
+
+#~ msgid "Minimum height, as a percentage of screen height."
+#~ msgstr "Gutxieneko altuera, pantaila altueraren ehuneko bezala."
+
+#~ msgid "Show Selected Item"
+#~ msgstr "Erakutsi hautatutako elementua"
+
+#~ msgid "Selected item view:"
+#~ msgstr "Hautatutako elementuaren ikuspegia:"
+
+#~ msgid "Top"
+#~ msgstr "Goian"
+
+#~ msgid "Bottom"
+#~ msgstr "Behean"
+
+#~ msgid "Left"
+#~ msgstr "Ezker"
+
+#~ msgid "Right"
+#~ msgstr "Eskuin"
+
+#~ msgid "Selected item layout:"
+#~ msgstr "Hautatutako elementuaren antolamendua:"

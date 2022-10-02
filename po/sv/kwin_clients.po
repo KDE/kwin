@@ -1,0 +1,1022 @@
+# translation of kwin_clients.po to Swedish
+# Copyright (C) 2004, 2005, 2007, 2008, 2009 Free Software Foundation, Inc.
+#
+# Stefan Asserhäll <stefan.asserhall@bredband.net>, 2004, 2005, 2007, 2008, 2009, 2010.
+# Stefan Asserhall <stefan.asserhall@bredband.net>, 2010, 2011, 2012, 2013, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2015-01-15 19:01+0100\n"
+"Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
+"Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.5\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "Mycket liten"
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "Normal"
+
+#: aurorae/src/aurorae.cpp:727
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "Stor"
+
+#: aurorae/src/aurorae.cpp:728
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "Mycket stor"
+
+#: aurorae/src/aurorae.cpp:729
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "Enorm"
+
+#: aurorae/src/aurorae.cpp:730
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "Större än enorm"
+
+#: aurorae/src/aurorae.cpp:731
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "Förstorad"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr "Knappstorlek:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "Inställningsdialogruta"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "Namnlist&justering"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "Vänster"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "Centrerad"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "Höger"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"Markera det här alternativet om fönsterkanterna ska ritas med namnlistens "
+"färger. Annars ritas de med bakgrundsfärgen."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "Färgad fönsterkant"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"Markera det här alternativet om du vill att knapparna ska tonas inåt när "
+"muspekaren stannar över dem, och tonas utåt igen när den flyttas bort."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "Animering av knappar"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "Markera det här alternativet om du vill att namlistens text ska ha 3D-"
+#~ "utseende med en skugga bakom den."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "Använd skuggad &text"
+
+#~ msgid "Button mouseover transition"
+#~ msgstr "Knappövergång för mus"
+
+#~ msgid "Configure window buttons' mouseover highlight animation"
+#~ msgstr ""
+#~ "Anpassa fönsterknapparnas animerade markering när musen hålls över dem"
+
+#~ msgid "Title transitions"
+#~ msgstr "Rubrikövergångar"
+
+#~ msgid "Configure fading transitions when window title is changed"
+#~ msgstr "Anpassa tonande övergångar när fönsterrubrik ändras"
+
+#~ msgid "Window active state change transitions"
+#~ msgstr "Fönster aktiva tillståndsövergångar"
+
+#~ msgid ""
+#~ "Configure fading between window shadow and glow when window's active "
+#~ "state is changed"
+#~ msgstr ""
+#~ "Anpassa toning mellan fönsterskugga och glöd när fönstrets aktiva "
+#~ "tillstånd ändras"
+
+#~ msgid "Window grouping animations"
+#~ msgstr "Animering för fönstergruppering"
+
+#~ msgid ""
+#~ "Configure window titlebar animations when windows are grouped/ungrouped"
+#~ msgstr ""
+#~ "Anpassa animering av namnlisten i fönster när de grupperas eller delas upp"
+
+#~ msgid "Hide Advanced Configuration Options"
+#~ msgstr "Dölj avancerade inställningsalternativ"
+
+#~ msgid "Show Advanced Configuration Options"
+#~ msgstr "Visa avancerade inställningsalternativ"
+
+#~ msgid "Animations"
+#~ msgstr "Animeringar"
+
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "Fråga - Oxygen-inställningar"
+
+#~ msgid "Remove selected exception?"
+#~ msgstr "Ta bort markerat undantag?"
+
+#~ msgid "Warning - Oxygen Settings"
+#~ msgstr "Varning - Oxygen-inställningar"
+
+#~ msgid "Regular Expression syntax is incorrect"
+#~ msgstr "Syntaxen för det reguljära uttrycket är felaktig"
+
+#~ msgid "Exception Type"
+#~ msgstr "Undantagstyp "
+
+#~ msgid "Regular Expression"
+#~ msgstr "Reguljärt uttryck"
+
+#~ msgid "Window Title"
+#~ msgstr "Fönsternamn"
+
+#~ msgid "Window Class Name"
+#~ msgstr "Fönsterklassens namn"
+
+#~ msgid "Enable/disable this exception"
+#~ msgstr "Aktivera eller inaktivera undantaget"
+
+#~ msgid "General"
+#~ msgstr "Allmänt"
+
+#~ msgid "Border si&ze:"
+#~ msgstr "Kant&bredd:"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "Utan kant"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Borders"
+#~ msgstr "Utan sidokant"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "Stor"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "Mycket stor"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "Enorm"
+
+#~ msgid "Tit&le alignment:"
+#~ msgstr "Namn&listjustering:"
+
+#~ msgid "Center (Full Width)"
+#~ msgstr "Centrera (full bredd)"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "Liten"
+
+#~ msgid "Enable animations"
+#~ msgstr "Aktivera animeringar"
+
+#~ msgid "Fine Tuning"
+#~ msgstr "Finjustering"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "Stäng fönster med dubbelklick på menyknappen"
+
+#~ msgid "Never Draw Separator"
+#~ msgstr "Rita aldrig avskiljare"
+
+#~ msgid "Draw Separator When Window is Active"
+#~ msgstr "Rita avskiljare när fönster är aktivt"
+
+#~ msgid "Always Draw Separator"
+#~ msgstr "Rita alltid avskiljare"
+
+#~ msgid "Separator disp&lay:"
+#~ msgstr "Visa avski&ljare:"
+
+#~ msgid "Outline active window title"
+#~ msgstr "Kontur för aktiva fönstrets namn"
+
+#~ msgid "Use narrow space between decoration buttons"
+#~ msgstr "Använd smalt mellanrum mellan knappdekorationer"
+
+#~ msgid "Add handle to resize windows with no border"
+#~ msgstr "Lägg till grepp för att ändra storlek på fönster utan kant"
+
+#~ msgid "Display window borders for maximized windows"
+#~ msgstr "Visa fönsterkanter på maximerade fönster"
+
+#~ msgid "Shadows"
+#~ msgstr "Skuggor"
+
+#~ msgid "Window Drop-Down Shadow"
+#~ msgstr "Fönsterskugga"
+
+#~ msgid "Active Window Glow"
+#~ msgstr "Glöd för aktivt fönster"
+
+#~ msgid "Window-Specific Overrides"
+#~ msgstr "Fönsterspecifika alternativ"
+
+#~ msgid "Dialog"
+#~ msgstr "Dialogruta"
+
+#~ msgid "Information about Selected Window"
+#~ msgstr "Information om valda fönster"
+
+#~ msgid "Class: "
+#~ msgstr "Klass: "
+
+#~ msgid "Title: "
+#~ msgstr "Namn: "
+
+#~ msgid "Window Property Selection"
+#~ msgstr "Val av fönsteregenskap"
+
+#~ msgid "Use window class (whole application)"
+#~ msgstr "Använd fönsterklass (hela programmet)"
+
+#~ msgid "Use window title"
+#~ msgstr "Använd fönsternamn"
+
+#~ msgid "Window Identification"
+#~ msgstr "Fönsteridentifikation"
+
+#~ msgid "Matching window property: "
+#~ msgstr "Matchande fönsteregenskap: "
+
+#~ msgid "Regular expression to match: "
+#~ msgstr "Reguljärt uttryck att matcha: "
+
+#~ msgid "Detect Window Properties"
+#~ msgstr "Detektera fönsteregenskaper"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Dekorationsalternativ"
+
+#~ msgctxt "outline window title"
+#~ msgid "Disabled"
+#~ msgstr "Inaktiverad"
+
+#~ msgctxt "outline window title"
+#~ msgid "Enabled"
+#~ msgstr "Aktiverad"
+
+#~ msgid "Border size:"
+#~ msgstr "Kantbredd:"
+
+#~ msgid "Outline active window title:"
+#~ msgstr "Kontur för aktiva fönstrets namn:"
+
+#~ msgid "Separator display:"
+#~ msgstr "Visa avskiljare:"
+
+#~ msgid "Hide window title bar"
+#~ msgstr "Dölj namnlist på fönster"
+
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Disabled"
+#~ msgstr "Inaktiverad"
+
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Enabled"
+#~ msgstr "Aktiverad"
+
+#~ msgid "Move Up"
+#~ msgstr "Flytta upp"
+
+#~ msgid "Move Down"
+#~ msgstr "Flytta ner"
+
+#~ msgid "Add"
+#~ msgstr "Lägg till"
+
+#~ msgid "Remove"
+#~ msgstr "Ta bort"
+
+#~ msgid "Edit"
+#~ msgstr "Redigera"
+
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "Oxygen demonstration av skuggor"
+
+#~ msgid "Draw window background"
+#~ msgstr "Rita fönsterbakgrund"
+
+#~ msgid "Inactive Windows"
+#~ msgstr "Inaktiva fönster"
+
+#~ msgid "Active Windows"
+#~ msgstr "Aktiva fönster"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+#~ msgid "Window Actions Menu"
+#~ msgstr "Fönsteråtgärdsmeny"
+
+#~ msgid "Application Menu"
+#~ msgstr "Programmeny"
+
+#~ msgid "Help"
+#~ msgstr "Hjälp"
+
+#~ msgid "Minimize"
+#~ msgstr "Minimera"
+
+#~ msgid "Maximize"
+#~ msgstr "Maximera"
+
+#~ msgid "Close"
+#~ msgstr "Stäng"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "Behåll över andra"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "Behåll under andra"
+
+#~ msgid "On All Desktops"
+#~ msgstr "På alla skrivbord"
+
+#~ msgid "Shade Button"
+#~ msgstr "Upprullningsknapp"
+
+#~ msgid "Menu"
+#~ msgstr "Meny"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "Inte på alla skrivbord"
+
+#~ msgid "On all desktops"
+#~ msgstr "På alla skrivbord"
+
+#~ msgid "Unshade"
+#~ msgstr "Rulla ut"
+
+#~ msgid "Shade"
+#~ msgstr "Rulla upp"
+
+#~ msgid "Resize"
+#~ msgstr "Ändra storlek"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>Förhandsgranskning av B II</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "Återställ"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "&Rita fönsterramar med namnlistens färger"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "Om vald ritas fönsterdekorationens kanter med namnlistens färger. Annars "
+#~ "ritas de med den normala kantfärgen."
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "&Rita grepp för storleksänding"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "Om vald ritas dekorationer med ett \"grepp\" i fönstrens nedre vänstra "
+#~ "hörn. Annars ritas inget grepp."
+
+#~ msgid "Auto-move titlebar"
+#~ msgstr "Flytta namnlist automatiskt"
+
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr ""
+#~ "Om vald, flyttas namnlister automatiskt till synliga platser, annars "
+#~ "flyttas de bara för hand med skift+dra. "
+
+#~ msgid "Actions Settings"
+#~ msgstr "Åtgärdsinställningar"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "Dubbelklick på menyknapp:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "Gör ingenting"
+
+#~ msgid "Minimize Window"
+#~ msgstr "Minimera fönster"
+
+#~ msgid "Shade Window"
+#~ msgstr "Skugga fönster"
+
+#~ msgid "Close Window"
+#~ msgstr "Stäng fönster"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "En åtgärd kan kopplas till ett dubbelklick på menyknappen. Lämna det som "
+#~ "gör ingenting om du är tveksam."
+
+#~ msgid "Laptop"
+#~ msgstr "Bärbar dator"
+
+#~ msgid "Bac&kground style: "
+#~ msgstr "Ba&kgrundsstil: "
+
+#~ msgid "Solid Color"
+#~ msgstr "Hel färg"
+
+#~ msgid "Radial Gradient"
+#~ msgstr "Radiell toning"
+
+#~ msgid "Follow Style Hint"
+#~ msgstr "Följ stiltips"
+
+#~ msgid "Background style:"
+#~ msgstr "Bakgrundsstil:"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Stefan Asserhäll"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "stefan.asserhall@bredband.net"
+
+#~ msgid "Oxygen decoration shadows demonstration"
+#~ msgstr "Oxygen demonstration av dekorativa skuggor"
+
+#~ msgid "(c) 2011, Hugo Pereira Da Costa"
+#~ msgstr "© 2011, Hugo Pereira Da Costa"
+
+#~ msgid "Hugo Pereira Da Costa"
+#~ msgstr "Hugo Pereira Da Costa"
+
+#~ msgid "Save"
+#~ msgstr "Spara"
+
+#~ msgid "Save shadows as pixmaps in provided directory"
+#~ msgstr "Spara skuggor som bildpunktsavbildningar i tillhandahållen katalog"
+
+#~ msgid "Large"
+#~ msgstr "Stor"
+
+#~ msgid "Small"
+#~ msgstr "Liten"
+
+#~ msgid "Extra size grip display: "
+#~ msgstr "Visa extra storleksgrepp: "
+
+#~ msgid "Extra size grip display:"
+#~ msgstr "Visa extra storleksgrepp:"
+
+#~ msgid "Inner Color:"
+#~ msgstr "Inre färg:"
+
+#~ msgid "Outer Color:"
+#~ msgstr "Yttre färg:"
+
+#~ msgid "Vertical Offset:"
+#~ msgstr "Vertikal förskjutning:"
+
+#~ msgid "Size: "
+#~ msgstr "Storlek: "
+
+#~ msgid "px"
+#~ msgstr "bildpunkter"
+
+#~ msgid "Always Hide Extra Size Grip"
+#~ msgstr "Dölj alltid extra storleksgrepp"
+
+#~ msgid "Show Extra Size Grip When Needed"
+#~ msgstr "Visa extra storleksgrepp vid behov"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "Markera det här alternativet om du vill att fönster ska stängas vid "
+#~ "dubbelklick på menyknappen, på ett sätt som liknar Microsoft Windows."
+
+#~ msgid "Plastik"
+#~ msgstr "Plastik"
+
+#~ msgid "All Desktops"
+#~ msgstr "Alla skrivbord"
+
+#~ msgid "Above"
+#~ msgstr "Ovanför"
+
+#~ msgid "Below"
+#~ msgstr "Under"
+
+#~ msgid "Close Item"
+#~ msgstr "Stäng objekt"
+
+#~ msgid "Tabstrip"
+#~ msgstr "Flikrad"
+
+#~ msgid "&Left"
+#~ msgstr "&Vänster"
+
+#~ msgid "&Center"
+#~ msgstr "&Centrera"
+
+#~ msgid "&Right"
+#~ msgstr "&Höger"
+
+#~ msgid "Display window icons"
+#~ msgstr "Visa fönsterikoner"
+
+#~ msgid "O&utline Color:"
+#~ msgstr "Kont&urfärg:"
+
+#~ msgid "Do not keep above others"
+#~ msgstr "Behåll inte över andra"
+
+#~ msgid "Keep above others"
+#~ msgstr "Behåll över andra"
+
+#~ msgid "Do not keep below others"
+#~ msgstr "Behåll inte under andra"
+
+#~ msgid "Keep below others"
+#~ msgstr "Behåll under andra"
+
+#~ msgid "Enable title transition animations"
+#~ msgstr "Aktivera animering av rubrikövergångar"
+
+#~ msgid "Variable"
+#~ msgstr "Variabel"
+
+#~ msgid "Maximum"
+#~ msgstr "Maximum"
+
+#~ msgid "Enable window grouping"
+#~ msgstr "Aktivera fönstergruppering"
+
+#~ msgid "Shadow caching:"
+#~ msgstr "Lagring av skuggor:"
+
+#~ msgid "TextLabel"
+#~ msgstr "Textetikett"
+
+#~ msgid "Use Oxygen Shadows"
+#~ msgstr "Använd skuggor från Oxygen"
+
+#~ msgid "Use Desktop Effects Shadows"
+#~ msgstr "Använd skuggor från skrivbordseffekter"
+
+#~ msgid "Do Not Draw Shadows"
+#~ msgstr "Rita inte skuggor"
+
+#~ msgid "Shadow style:"
+#~ msgstr "Skuggstil:"
+
+#~ msgctxt "draw separator"
+#~ msgid "Enabled"
+#~ msgstr "Aktiverad"
+
+#~ msgctxt "draw separator"
+#~ msgid "Disabled"
+#~ msgstr "Inaktiverad"
+
+#~ msgid "Draw separator between title bar and window contents: "
+#~ msgstr "Rita avskiljare mellan namnlist och fönstrets innehåll: "
+
+#~ msgid "Draw Separator between title bar and active window contents "
+#~ msgstr "Rita avskiljare mellan namnlist och det aktiva fönstrets innehåll "
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "Installera ett KWM-tema"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "Sökväg till temats inställningsfil"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWM-tema</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "Klistrig"
+
+#~ msgid "Unsticky"
+#~ msgstr "Inte klistrig"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>Förhandsgranskning av Keramik</b></center>"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "Rita &namnlist med struktureffekt"
+
+#~ msgid ""
+#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
+#~ "otherwise, they are drawn without the stipple."
+#~ msgstr ""
+#~ "Om vald ritas aktiva namnlister med en struktureffekt (punktmönster). "
+#~ "Annars ritas de utan struktur."
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "Rita en g&riplist under fönster"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
+#~ "otherwise, no grab bar is drawn."
+#~ msgstr ""
+#~ "Om vald ritas dekorationer med en \"griplist\" under fönster. Annars "
+#~ "ritas ingen griplist."
+
+#~ msgid "Draw &gradients"
+#~ msgstr "Rita &gradienter"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with gradients for high-color "
+#~ "displays; otherwise, no gradients are drawn."
+#~ msgstr ""
+#~ "Om vald ritas dekorationer med gradienter på färgrika skärmar, annars "
+#~ "ritas inga gradienter."
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"
+
+#~ msgid ""
+#~ "When selected, the window decoration borders are drawn using the titlebar "
+#~ "colors; otherwise, they are drawn using normal border colors instead."
+#~ msgstr ""
+#~ "Om vald ritas fönsterkantsdekorationer med namnlistens färger. Annars "
+#~ "ritas de med den normala kantfärgen."
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "Quartz &extra tunn"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "Quartz-fönsterdekorationer med extra liten namnlist."
+
+#~ msgid "Quartz"
+#~ msgstr "Quartz"
+
+#~ msgid "Redmond"
+#~ msgstr "Redmond"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "Visa fö&nstergrepp för storleksändring"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "Om vald ritas alla fönster med ett grepp för storleksändring i nedre "
+#~ "högra hörnet. Detta gör det enkalre att ändra storlek på fönster, "
+#~ "särskillt för snurrbollar och andra saker som ersätter musen på bärbara "
+#~ "datorer."
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr "Här kan du ändra storleken på greppet för storleksändring."
+
+#~ msgid "Medium"
+#~ msgstr "Normal"
+
+#~ msgid "Modern System"
+#~ msgstr "Modern System"
+
+#~ msgid "Web"
+#~ msgstr "Webb"
+
+#~ msgid "Keramik"
+#~ msgstr "Keramik"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "Visa fönsterikonen i na&mnlisten"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "Markera det här alternativet om du vill att fönsterikonen ska visas i "
+#~ "namnlisten intill namnlistens text."
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "Rita små &namnlister för aktiva fönster"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "Markera om det här alternativet om du vill att namnlisten ska ha samma "
+#~ "storlek för aktiva fönster som inaktiva. Det här alternativet är "
+#~ "användbart för bärbara datorer eller bildskärmar med låg upplösning, där "
+#~ "du vill maximera tillgängligt utrymme för fönstrets innehåll."
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "Rita en g&riplist under fönster"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "Markera det här alternativet om du vill att en grepprad ska visas under "
+#~ "fönster. När alternativet inte är markerat, visas bara en tunn kant."
+
+#~ msgid "Aurorae Theme Engine"
+#~ msgstr "Aurora temagränssnitt"
+
+#~ msgid "Drag or Type Theme URL"
+#~ msgstr "Dra eller skriv temats webbadress"
+
+#~ msgid "Unable to find the theme archive %1."
+#~ msgstr "Kunde inte hitta tema-arkivet %1."
+
+#~ msgid ""
+#~ "Unable to download theme archive;\n"
+#~ "please check that address %1 is correct."
+#~ msgstr ""
+#~ "Kunde inte ladda ner tema-arkiv.\n"
+#~ "Kontrollera att adressen %1 är riktig."
+
+#~ msgid "Theme:"
+#~ msgstr "Tema:"
+
+#~ msgid "Get New Themes..."
+#~ msgstr "Hämta nya teman..."
+
+#~ msgid "Install New Theme..."
+#~ msgstr "Installera nytt tema..."
+
+#~ msgid "Glow active window"
+#~ msgstr "Låt aktivt fönster glöda"
+
+#~ msgid "Form"
+#~ msgstr "Formulär"
+
+#~ msgid ""
+#~ "Select here the window property used to identify windows \n"
+#~ "to which the specific decoration options apply."
+#~ msgstr ""
+#~ "Välj fönsteregenskap här som används för att identifiera\n"
+#~ "fönster som den specifika dekorationen gäller."
+
+#~ msgid ""
+#~ "Type here the regular expression used to identify windows \n"
+#~ "to which the specific decoration options apply."
+#~ msgstr ""
+#~ "Skriv in det reguljära uttryck här som används för att\n"
+#~ "identifiera fönster som den specifika dekorationen gäller."
+
+#~ msgid ""
+#~ "If checked, specified frame border is used in place of default value."
+#~ msgstr "Om markerat, anger ramkant som används istället för standardvärdet."
+
+#~ msgid ""
+#~ "If checked, specified blending color is used in title bar in place of "
+#~ "default value."
+#~ msgstr ""
+#~ "Om markerat, angiven blandningsfärg som används i namnlister istället för "
+#~ "standardvärdet."
+
+#~ msgid "Draw separator between title bar and active window contents:"
+#~ msgstr "Rita avskiljare mellan namnlist och det aktiva fönstrets innehåll:"
+
+#~ msgid "Additional window decoration configuration options"
+#~ msgstr "Ytterligare inställningsalternativ för fönsterdekorationer"
+
+#~ msgid ""
+#~ "The extra size grip is a small triangle, shown in the bottom-right corner "
+#~ "of a window,\n"
+#~ "which allows the window to be resized. This option controls in which "
+#~ "cases the size grip \n"
+#~ "is shown."
+#~ msgstr ""
+#~ "Det extra storleksgreppet är en liten triangel som visas i nedre högra "
+#~ "hörnet av ett fönster \n"
+#~ "som gör det möjligt att ändra fönstrets storlek. Alternativet styr i "
+#~ "vilka fall storleksgreppet \n"
+#~ "visas."
+
+#~ msgid ""
+#~ "When enabled, an additional frame is shown around the active window as "
+#~ "well as its title."
+#~ msgstr ""
+#~ "När aktiverat, visas en ytterligare ram omkring det aktiva fönstret "
+#~ "liksom omkring dess namn."
+
+#~ msgid ""
+#~ "When enabled, this option makes an horizontal separator appear between "
+#~ "the window title bar and the window contents."
+#~ msgstr ""
+#~ "När aktiverat, låter alternativet en horisontellt åtskiljare visas mellan "
+#~ "fönstrets namnlisten och dess innehåll."
+
+#~ msgid "Configure shadow colors for active and inactive windows"
+#~ msgstr "Anpassa skuggfärger för aktiva och inaktiva fönster"
+
+#~ msgid ""
+#~ "When this option is enabled, the oxygen signature blue glow is used for "
+#~ "the active window shadow."
+#~ msgstr ""
+#~ "När alternativet är aktiverat, används Oxygens kännetecknande blåa glöd "
+#~ "för det aktiva fönstrets skugga."
+
+#~ msgid "Configure window decoration option overrides for specific windows"
+#~ msgstr "Anpassa dekorationsalternativ för specifika fönster"
+
+#~ msgid "Extra Size grip display:"
+#~ msgstr "Visa extra storleksgrepp:"
+
+#~ msgid "Nitrogen"
+#~ msgstr "Kväve"
+
+#~ msgid "Oxygen based Window decoration for KDE"
+#~ msgstr "Fönsterdekoration baserad på Oxygen för KDE"
+
+#~ msgid "Developer"
+#~ msgstr "Utvecklare"
+
+#~ msgid "Oxygen team"
+#~ msgstr "Oxygen-gruppen"
+
+#~ msgid ""
+#~ "When enabled, this option increases the visibility of the window titlebar "
+#~ "by showing stripes"
+#~ msgstr ""
+#~ "När aktiverat, ökar alternativet tydligheten hos fönstrets namnlist genom "
+#~ "att visa streck"
+
+#~ msgid "Show stripes next to the title"
+#~ msgstr "Visa streck intill namnet"
+
+#~ msgid ""
+#~ "When enabled, this option increases the visibility of the window titlebar "
+#~ "by adding an horizontal bar between the title bar and the window contents"
+#~ msgstr ""
+#~ "När aktiverat, ökar alternativet tydligheten hos fönstrets namnlist genom "
+#~ "att lägga till ett horisontellt streck mellan namnlisten och fönstrets "
+#~ "innehåll."
+
+#~ msgid "Draw separator between title bar and window contents"
+#~ msgstr "Rita avskiljare mellan namnlist och fönstrets innehåll"
+
+#~ msgid "Definition"
+#~ msgstr "Definition"
+
+#~ msgid "Exception type: "
+#~ msgstr "Undantagstyp: "
+
+#~| msgid "&Add"
+#~ msgid "&Advanced"
+#~ msgstr "&Avancerat"
+
+#~ msgid "nitrogen"
+#~ msgstr "kväve"
+
+#~ msgid "Show stripes next to the title:"
+#~ msgstr "Visa streck intill namnet:"
+
+#~ msgid "Blend title bar colors with window content:"
+#~ msgstr "Tona namnlistens färger med fönstrets innehåll:"
+
+#~ msgid "&Basic"
+#~ msgstr "&Grundläggande"
+
+#~ msgid "Blend title bar colors with window contents"
+#~ msgstr "Tona namnlistens färger med fönstrets innehåll"
+
+#~ msgid ""
+#~ "When enabled, window colors are used in place of default title bar colors "
+#~ "to draw the decoration"
+#~ msgstr ""
+#~ "När aktiverat, används fönsterfärger istället för namnlistens "
+#~ "standardfärger för att rita dekorationen"
+
+#~ msgid "Button style:"
+#~ msgstr "Knappstil:"
+
+#~ msgid "Draw size grip in bottom-right corner of windows:"
+#~ msgstr "Rita grafiska storleksgrepp i nedre högra hörnet av fönster:"
+
+#~ msgid "Draw size grip widget in bottom-right corner of windows"
+#~ msgstr "Rita grafiska storleksgrepp i nedre högra hörnet av fönster"
+
+#~ msgid "Default"
+#~ msgstr "Standard"
+
+#~ msgid "Layout"
+#~ msgstr "Layout"
+
+#~ msgid "Flags"
+#~ msgstr "Flaggor"
+
+#~ msgid "Exceptions ..."
+#~ msgstr "Undantag..."
+
+#~ msgid ""
+#~ "Raise a dialog to store blending type exceptions based on window title."
+#~ msgstr ""
+#~ "Visa en dialogruta för att lagra undantag för blandningstypen baserat på "
+#~ "fönstertitel."
+
+#~ msgid "Ozone"
+#~ msgstr "Ozon"
+
+#~ msgid "Title bar blending:"
+#~ msgstr "Blandning för namnlist:"
+
+#~ msgid "Show stripes :"
+#~ msgstr "Visa ränder: "
+
+#~ msgid "Overwrite default title bar colors:"
+#~ msgstr "Skriv över namnlistens standardfärger:"
+
+#~ msgid "Yes"
+#~ msgstr "Ja"
+
+#~ msgid "No"
+#~ msgstr "Nej"
+
+#~ msgid ""
+#~ "When enabled, this option makes the window title bar use the same colors "
+#~ "as the window contents, instead of using the system title bar colors."
+#~ msgstr ""
+#~ "När aktiverad, gör alternativet att fönstrets namnlist använder samma "
+#~ "färger som fönsterinnehållet, istället för att använda systemets färger "
+#~ "för namnlisten."

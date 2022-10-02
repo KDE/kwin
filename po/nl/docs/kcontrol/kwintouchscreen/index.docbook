@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Dutch "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwintouchscreen" lang="&language;">
+<articleinfo>
+
+<title
+>Aanraakscherm</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+&Freek.de.Kruijf; 
+</authorgroup>
+
+<date
+>2021-04-10</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systeeminstellingen</keyword>
+<keyword
+>blind</keyword>
+<keyword
+>scherm</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Vegen van de schermrand naar het centrum van het scherm biedt u het activeren van effecten. Hier kunt u configureren welk effect wordt geactiveerd op elke rand van het scherm. </para>
+
+<para
+>Klik met elke muisknop in een vierkant en selecteer een effect in het contextmenu. Randen met een blauw vierkant hebben al een aangeplakt effect, een grijs vierkant geeft aan dat er geen effect is geselecteerd voor deze rand.</para>
+
+<para
+>Het aantal toegankelijke items in het contextmenu hangt af van de instellingen in de module <ulink url="help:/kcontrol/kwineffects/index.html"
+> <guilabel
+>Bureaubladeffecten</guilabel
+></ulink
+> in de categorie <guilabel
+>Werkruimte</guilabel
+>. Selecteer uw favoriete effecten uit de groep <guilabel
+>Vensterbeheer</guilabel
+>. Dit activeert de overeenkomstige items in het contextmenu.</para>
+</article>

@@ -1,0 +1,123 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Catalan  "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwineffects" lang="&language;">
+<articleinfo>
+
+<title
+>Efectes d'escriptori</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+&traductor.Antoni.Bella; 
+</authorgroup>
+
+<date
+>9 d'abril de 2021</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>escriptori</keyword>
+<keyword
+>efectes</keyword>
+</keywordset>
+</articleinfo>
+
+<!--FIXME Compositor Enable compositor on startup necessary to have effects?-->
+
+<para
+>Aquest mòdul s'utilitza per a habilitar i configurar els efectes d'escriptori per al &plasma;.</para>
+
+<para
+>La part principal d'aquesta pàgina és una llista de tots els efectes disponibles agrupats per <guilabel
+>Accessibilitat</guilabel
+>, <guilabel
+>Aparença</guilabel
+>, <guilabel
+>Focus</guilabel
+>, <guilabel
+>Animació per a mostrar l'escriptori</guilabel
+>, <guilabel
+>Eines</guilabel
+> <guilabel
+>Animació per a canviar d'escriptori virtual</guilabel
+>, <guilabel
+>Gestió de les finestres</guilabel
+> i <guilabel
+>Animació en obrir/tancar la finestra</guilabel
+>.</para>
+<para
+>Utilitzeu la barra de cerca incremental per sobre de la finestra de la llista per trobar elements de la llista.</para>
+
+<para
+>Normalment no hi ha cap raó perquè els usuaris ho canviïn, però hi ha un botó de configuració <inlinemediaobject
+><imageobject
+><imagedata fileref="configure-effects.png" format="PNG"/> </imageobject
+></inlinemediaobject
+> per a modificar el filtratge de la llista per a mostrar aquests efectes. </para>
+
+<para
+>La forma més fàcil d'instal·lar efectes nous és emprant la implementació integrada del KNewStuff en el &kwin;. Premeu el botó <guibutton
+>Obtén efectes nous d'escriptori...</guibutton
+> per a obrir un diàleg amb una llista dels efectes disponibles a Internet, i per a instal·lar i desinstal·lar aquests efectes.</para>
+<note
+><para
+>Si us plau, cal tenir en compte que la modificació d'aquests valors predeterminats pot trencar el vostre sistema.</para>
+</note>
+
+<para
+>Marqueu un efecte a la llista per a habilitar-lo. Es mostrarà informació sobre l'autor i la llicència fent clic al botó informatiu <inlinemediaobject
+><imageobject
+><imagedata fileref="dialog-information.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> al costat dret de l'element de la llista.</para>
+
+<para
+>Alguns efectes tenen opcions de configuració, en aquest cas hi ha un botó de configuració <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure-effects.png" format="PNG"/></imageobject
+></inlinemediaobject
+> a l'esquerra del botó informatiu. Feu-hi clic per a obrir un diàleg de configuració.</para>
+<para
+>Per a veure un vídeo de vista prèvia d'un efecte, feu clic al botó <inlinemediaobject
+><imageobject
+><imagedata fileref="video.png" format="PNG"/> </imageobject
+></inlinemediaobject
+>.</para>
+
+<para
+>Alguns dels efectes són mútuament exclusius. Per exemple, un només voldria activar l'efecte <guilabel
+>Maximitza</guilabel
+> o <guilabel
+>Làmpada màgica</guilabel
+>. Tots dos activats alhora resulta en el trencament de les animacions. </para>
+
+<para
+>Per a efectes en un grup mútuament exclusius, la &IGU; utilitza botons d'opció i gestiona que només es pugui activar un d'aquests efectes. </para>
+
+<para
+>Tots els efectes que no estan implementats pel dorsal de composició emprat actualment, de manera predeterminada restaran ocults (&pex;, els efectes OpenGL en utilitzar el renderitzador per programari). </para
+> 
+
+<para
+>De manera predeterminada també restaran ocults tots els efectes interns o auxiliars. Aquests són efectes que substitueixen la funcionalitat des del nucli del KWin o proporcionen interacció amb altres elements de l'intèrpret de l'escriptori. </para>
+
+<!--FIXME 
+39 effects + 7 internal (XRender compositor)
+Internal effects
+Appearance (Dashboard, Highlight Windows, KSreen, Screenshot, Window Geometry)
+Window Management (Cover Switch)
+-->
+
+</article>

@@ -1,0 +1,2218 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % German "INCLUDE">
+]>
+<book id="windowspecific" lang="&language;">
+<bookinfo>
+<title
+>Fensterregeln</title>
+<authorgroup>
+<author
+>&Lauri.Watts; &Lauri.Watts.mail;</author>
+<author>
+<personname
+><firstname
+>Ein Teil dieses Handbuchs wurde aus der Webseite <ulink url=" https://userbase.kde.org/KWin Rules"
+>KWin-Regeln</ulink
+> der &kde;-Userbase erstellt und vom &kde;-Dokumentationsteam zu Plasma 5.8 aktualisiert.</firstname
+> <surname
+></surname
+> </personname>
+      </author>
+<othercredit role="translator"
+><firstname
+>Matthias</firstname
+><surname
+>Kiefer</surname
+><affiliation
+><address
+><email
+>Matthias.Kiefer@gmx.de</email
+></address
+></affiliation
+><contrib
+>Deutsche Übersetzung</contrib
+></othercredit
+> 
+      </authorgroup>
+<legalnotice
+>&FDLNotice;</legalnotice>
+<date
+>2016-06-23</date>
+      <releaseinfo
+>Plasma 5.8</releaseinfo>
+<abstract>
+<para
+>Hier können Sie Fenstereinstellungen vornehmen, die nur für bestimmte Fenster gelten.</para>
+      </abstract>
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Kontrollzentrum</keyword>
+<keyword
+>Fenstereinstellungen</keyword>
+<keyword
+>Fensterpositionierung</keyword>
+<keyword
+>Fenstergröße</keyword>
+</keywordset>
+</bookinfo>
+<chapter id="window-specific">
+<title
+>Fensterspezifische Einstellungen: Kurzanleitung</title>
+
+<para
+>Hier können Sie Fenstereinstellungen vornehmen, die nur für bestimmte Fenster gelten.</para>
+
+<note>
+<para
+>Die Einstellungen in diesem Modul wirken sich nur dann aus, wenn Sie die Fensterverwaltung &kwin; verwenden. Verwenden Sie eine andere Fensterverwaltung, informieren Sie sich in dessen Dokumentation.</para>
+</note>
+
+<para
+>Viele der Einstellungen hier entsprechenden denen, die Sie global im &systemsettings;-Modul <guilabel
+>Fensterverhalten</guilabel
+> einstellen können, sind aber teilweise noch detaillierter.</para>
+
+<para
+>Sie umfassen die Geometrie, die Platzierung, ob ein Fenster immer vorne oder hinten bleiben soll, das Fokusverhalten und Einstellungen zur Durchsichtigkeit.</para>
+
+<para
+>Sie können dieses Modul auf zwei Wegen erreichen: über die Titelleiste der Anwendung, die Sie einrichten möchten, oder über die Systemeinstellungen. Verwenden Sie die Systemeinstellungen, können Sie mit dem Knopf <guibutton
+>Neu ...</guibutton
+> ein Fensterprofil anlegen. Mit dem Knopf <guibutton
+>Fenstereigenschaften ermitteln</guibutton
+> besteht die Möglichkeit, die für die einzurichtende Anwendung benötigten Informationen teilweise automatisch ausfüllen zu lassen.</para>
+
+<para
+>Sie können außerdem zu jeder Zeit die Einstellungen <guibutton
+>Bearbeiten ...</guibutton
+> oder <guibutton
+>Löschen</guibutton
+> und die Liste mit <guibutton
+>Nach oben</guibutton
+> und <guibutton
+>Nach unten</guibutton
+> neu sortieren. Die Reihenfolge in der Liste beeinflusst die Anwendung der Regeln.</para>
+
+</chapter>
+<!--userbase <timestamp
+>2012-03-09T20:50:14Z</timestamp
+>-->
+
+<!--userbase-content-->
+<chapter id="overview"
+><title
+>Übersicht</title
+> 
+<para
+>&kwin; ermöglicht dem Benutzer die Definition von Regeln, die die Attribute eines Programmfensters abwandeln. </para>
+<para
+>Es ist zum Beispiel möglich, ein Programm beim Starten immer auf der <emphasis
+>Virtuellen Arbeitsfläche 2</emphasis
+> erscheinen zu lassen. Auch Fehler in einem Programm können umgangen werden, damit das Fenster immer vor allen anderen angezeigt wird. </para>
+<para
+>Sie finden hier ausführliche <link linkend="examples"
+>Beispiele</link
+> mit genauen Informationen, wie mit dem <link linkend="kwin-rule-editor"
+>&kwin;-Regel-Editor</link
+> <link linkend="window-matching"
+>Fensterübereinstimmung</link
+> und <link linkend="window-attributes"
+>Fensterattribute</link
+> festgelegt werden. </para>
+</chapter>
+<chapter id="examples-and-application-workaround"
+><title
+>Beispiele und Übergangslösungen für Anwendungen</title
+> 
+<para
+>Zur Erläuterung der Möglichkeiten werden ausführliche <link linkend="examples"
+>Beispiele</link
+> gezeigt, die Sie zur Entwicklung Ihrer eigenen Regeln verwenden können. </para>
+<para
+>Ein besonderer Abschnitt erläutert <link linkend="application-workarounds"
+>Übergangslösungen für Anwendungen</link
+>. </para>
+</chapter>
+<chapter id="kwin-rule-editor"
+><title
+>Editor für KWin-Regeln</title
+> 
+<sect1 id="invoking-the-kwin-rule-editor"
+><title
+>Aufruf des Editors für KWin-Regeln</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-ordering.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Es gibt mehrere Möglichkeiten, den Editor für &kwin;-Regeln zu starten, hier werden zwei gezeigt: </para>
+<itemizedlist>
+<listitem
+><para
+>Klicken Sie mit der &RMBn; in die Titelleiste eines Fensters und wählen Sie dann <menuchoice
+><guimenu
+>Weitere Aktionen</guimenu
+><guimenuitem
+>Einstellungen für die Fensterverwaltung ...</guimenuitem
+></menuchoice
+>. Im Dialog <guilabel
+>Einrichten</guilabel
+> wählen Sie die Seite <guilabel
+>Fensterregeln</guilabel
+> oder</para
+></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem
+><para
+><menuchoice
+><guimenu
+>Systemeinstellungen</guimenu
+><guisubmenu
+>Fensterverhalten</guisubmenu
+><guimenuitem
+>Fensterregeln</guimenuitem
+></menuchoice
+></para
+></listitem>
+</itemizedlist>
+<para
+>Im Hauptfenster können Sie: </para>
+<itemizedlist>
+<listitem
+><para
+>Regeln mit <guilabel
+>Neu ...</guilabel
+>, <guilabel
+>Ändern ...</guilabel
+> und <guilabel
+>Entfernen</guilabel
+> bearbeiten</para
+></listitem>
+<listitem
+><para
+>Regel mit anderen gemeinsam nutzen über <guilabel
+>Importieren</guilabel
+> und <guilabel
+>Exportieren</guilabel
+></para
+></listitem>
+<listitem
+><para
+>Die gewünschte <link linkend="rule-evaluation"
+>Auswertung der Regeln</link
+> mit <guilabel
+>Nach oben</guilabel
+> und <guilabel
+>Nach unten</guilabel
+> sicherstellen</para
+></listitem>
+</itemizedlist>
+<sect2 id="rule-evaluation"
+><title
+>Auswertung der Regeln</title
+> 
+<para
+>Wenn ein Programm gestartet wird oder die Regeln geändert wurden, wertet &kwin; die Regeln in der Liste von oben nach unten aus. Für alle auf ein Fenster passenden Regeln wird der gesamte Satz an Attributen auf das Fenster angewendet, ehe es angezeigt wird. </para>
+<para
+>Sollten zwei oder mehr passende Regeln das gleiche Attribut aktivieren, wird die Einstellung der <emphasis
+>ersten</emphasis
+> Regel in der Liste benutzt. </para>
+<para
+><tip
+><para
+>Sie können Unterfenster eines Programms anpassen, indem eine mehr einschränkende Regel weiter oben in der Liste platziert wird, siehe das Beispiel zu <link linkend="application-on-all-desktops-and-handle-one-child-window-uniquely"
+>Kopete und zum Kopete-Chat-Fenster</link
+>.</para
+></tip>
+</para>
+</sect2>
+</sect1>
+<sect1 id="rule-editor"
+><title
+>Regel-Editor</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Der Editor besteht aus vier Karteikarten: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Fensterübereinstimmung</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Größe &amp; Position</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Anordnung &amp; Zugriff</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Erscheinungsbild &amp; Korrekturen</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Auf der Karteikarte <guilabel
+>Fensterübereinstimmung</guilabel
+> werden Kriterien festgelegt, die für ein oder mehrere Fenster zutreffen. Auf den anderen drei Karteikarten werden die Attribute für diese Fenster bestimmt. </para>
+<para
+><tip
+><para
+>Auch die Kontrollleiste ist betroffen.</para
+></tip>
+</para>
+<sect2 id="window-matching"
+><title
+>Fensterübereinstimmung</title
+> 
+<para
+>Jede Fensterregel hat benutzerdefinierte Kriterien für eine <link linkend="window-matching"
+>Fensterübereinstimmung</link
+>. Diese Kriterien werden von &kwin; benutzt, um festzustellen, ob eine Regel auf ein Fenster anzuwenden ist. </para>
+</sect2>
+<sect2 id="window-attributes"
+><title
+>Fenster-Attribute</title
+> 
+<para
+>Neben den Kriterien für die Fensterübereinstimmung, hat jede Fensterregel einen Satz von <link linkend="window-attributes"
+>Fenster-Attributen</link
+>. Diese Attribute überschreiben die zugehörigen Einstellungen des Programms und werden angewendet, ehe das Fenster angezeigt wird. </para>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="window-matching0"
+><title
+>Fensterübereinstimmung</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Auf der Karteikarte <guilabel
+>Fensterübereinstimmung</guilabel
+> bestimmen Sie die Kriterien, mit denen &kwin; beurteilt, ob eine Regel auf ein bestimmtes Fenster zutrifft </para>
+<para
+>Kein Kriterium (trifft auf jedes Fenster zu) oder eins oder mehrere der folgenden Kriterien können festgelegt werden: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Fensterklasse (Programm)</guilabel
+> - passt auf die Klasse des Fensters.<itemizedlist
+> <listitem
+><para
+><guilabel
+>Übereinstimmung mit gesamter Fensterklasse</guilabel
+> - Überprüft die abgeleitete Fensterklasse.</para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Rolle des Fensters</guilabel
+> - begrenzt die Übereinstimmung auf die Funktion des Fensters, &eg; ein <emphasis
+>Hauptfenster</emphasis
+>, ein <emphasis
+>Chat-Fenster</emphasis
+> &etc;.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Fenstertypen</guilabel
+> - Begrenzt die Übereinstimmung auf die Art des Fensters: <guilabel
+>Normales Fenster</guilabel
+>, <guilabel
+>Dialogfenster</guilabel
+> &etc;</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Fenstertitel</guilabel
+> - Beschränkt die Übereinstimmung auf den Fenstertitel.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Maschine (Rechnername</guilabel
+> - Beschränkt die Übereinstimmung auf den Namen des diesem Fenster zugeordneten Rechners.</para
+></listitem>
+</itemizedlist>
+<para
+><tip
+><para
+>Obwohl es möglich ist, diese Kriterien manuell einzugeben, wird empfohlen, den Knopf <guilabel
+>Fenstereigenschaften ermitteln</guilabel
+> zu benutzen.</para
+></tip>
+</para>
+<para
+>Auf jedes Feld können folgende Operatoren auf den Wert des Felds angewendet werden: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Unwichtig</guilabel
+> - Das Feld wird ignoriert.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Exakte Übereinstimmung</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Übereinstimmung bei enthaltener Zeichenfolge</guilabel
+></para
+></listitem>
+</itemizedlist>
+<para
+><note
+><para
+>Sowohl für <guilabel
+>Exakte Übereinstimmung</guilabel
+> wie auch <guilabel
+>Übereinstimmung bei enthaltener Zeichenfolge</guilabel
+> wird die Groß- oder Kleinschreibung nicht beachtet. Zum Beispiel <emphasis
+>AB</emphasis
+> passt auf die Zeichenfolgen <emphasis
+>AB</emphasis
+>, <emphasis
+>ab</emphasis
+>, <emphasis
+>Ab</emphasis
+> und <emphasis
+>aB</emphasis
+>.</para
+></note>
+</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Regulärer Ausdruck</guilabel
+> - Qts reguläre Ausdrücke sind implementiert, siehe <ulink url="https://doc.qt.io/qt-5/qregexp.html"
+>Übereinstimmung mit regulären Ausdrücken</ulink
+>.</para
+></listitem>
+</itemizedlist>
+<sect1 id="detect-window-properties"
+><title
+>Fenstereigenschaften ermitteln</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-detect-window.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Die Funktion <guilabel
+>Fenstereigenschaften ermitteln</guilabel
+> erleichtert die Eingabe von passenden Kriterien. </para>
+<orderedlist>
+<listitem
+><para
+>Starten Sie das Programm, für das Sie eine Regel erstellen möchten.</para
+></listitem>
+<listitem
+><para
+>Stellen Sie dann auf der Karteikarte <guilabel
+>Fensterübereinstimmung</guilabel
+> die Anzahl der Sekunden ein, nach der die Funktion <guilabel
+>Fenstereigenschaften ermitteln</guilabel
+> starten soll. Als Standard sind null Sekunden vorgegeben.</para
+></listitem>
+<listitem
+><para
+>Klicken Sie auf <guilabel
+>Fenstereigenschaften ermitteln</guilabel
+>.</para
+></listitem>
+<listitem
+><para
+>Wenn als Mauszeiger ein Fadenkreuz angezeigt wird, bewegen Sie den Zeiger in das Fenster des Programms, nicht in die Titelleiste und klicken mit der &LMBn;.</para
+></listitem>
+<listitem
+><para
+>Ein neuer Dialog mit Informationen über das ausgewählte Fenster wird angezeigt. Wählen Sie die gewünschten Felder:<itemizedlist>
+<listitem
+><para
+><guilabel
+>sekundärer Klassenname</guilabel
+> - Einige Programme haben einen sekundären Klassennamen. Mit diesem Wert kann die Übereinstimmung bei Fenstern eingeschränkt werden.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Rolle des Fensters</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Fenstertyp</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Fenstertitel</guilabel
+></para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+</orderedlist>
+<para
+>Klicken Sie auf den Knopf <guilabel
+>OK</guilabel
+>, um die Kriterien für die <guilabel
+>Fensterübereinstimmung</guilabel
+> auszufüllen. </para>
+<para
+>Mit einer Kombination dieser Informationen kann eine Regel auf ein gesamtes Programm (mit <guilabel
+>Klasse</guilabel
+>) oder auf einen bestimmtes Fenster-<guilabel
+>Typ</guilabel
+> innerhalb der <guilabel
+>Klasse</guilabel
+>, zum Beispiel auf eine <guilabel
+>Werkzeugleiste</guilabel
+> beschränkt werden. </para>
+</sect1>
+</chapter>
+<chapter id="window-attributes1"
+><title
+>Fenster-Attribute</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-window-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Die Attribute, die eingestellt werden können, sind nach ihrer Funktion auf drei Karteikarten verteilt: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Größe &amp; Position</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Anordnung &amp; Zugriff</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Erscheinungsbild &amp; Korrekturen</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Jedes Attribut hat einen Satz von Parametern, die die Verwendung festlegen. </para>
+<sect1 id="parameters"
+><title
+>Parameter</title>
+<para
+>Jedes Attribut akzeptiert mindestens einen der folgenden Parameter. Zusätzlich gibt es Attribut-spezifischen Argumente in jeder <link linkend="attributes"
+>Attribut</link
+>-Definition. </para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ohne Auswirkung</emphasis
+></term>
+    <listitem>
+    <para
+>Legt fest, dass eine darauf folgende Regel, die für das Fenster zutrifft, den Wert des Attributs nicht beeinflußt.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Bei Initialisierung anwenden</emphasis
+></term>
+    <listitem>
+    <para
+>Startet das Fenster mit diesem Attribut, es kann zur Laufzeit geändert werden.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Merken</emphasis
+></term>
+    <listitem>
+    <para
+>Benutzt die Einstellung des Attributs wie in der Regel angegeben, wird sie aber zur Laufzeit geändert, wird der neue Wert gespeichert und dann verwendet.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Erzwingen</emphasis
+></term>
+    <listitem>
+    <para
+>Die Einstellung kann zur Laufzeit nicht geändert werden.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Jetzt anwenden, Temporär erzwingen</emphasis
+></term>
+    <listitem>
+    <para
+>Wendet/erzwingt die Einstellung einmal an und setzt dann das Attribut zurück. Der Unterschied zwischen diesen beiden Parametern liegt im Verhalten zur Laufzeit. Mit dem Parameter <guilabel
+>Jetzt anwenden</guilabel
+> kann das Attribut geändert werden, <guilabel
+>Temporär erzwingen</guilabel
+> verhindert eine Änderung, bis alle betroffenen Fenster geschlossen sind.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>Verwenden Sie <guilabel
+>Jetzt anwenden</guilabel
+> , dann wird die Regel nach der Auswertung gelöscht, wenn für die Regel keine weiteren Attribute gesetzt sind. Mit <guilabel
+>Temporär erzwingen</guilabel
+> dagegen wird die Regel gelöscht, wenn das letzte betroffenen Fenster geschlossen ist.</para
+></warning>
+</para>
+</sect1>
+<sect1 id="attributes"
+><title
+>Attribute</title>
+<para
+><tip
+><para
+>Mit dem Knopf <guilabel
+>Fenstereigenschaften ermitteln</guilabel
+> werden die attribut-spezifischen Werte ausgefüllt, weitere Informationen siehe <link linkend="window-matching"
+>Fensterübereinstimmung</link
+>. Die Werte für Höhe und Breite des Attributs <guilabel
+>Größe</guilabel
+> wird auf die Werte des entdeckten Fensters gesetzt.</para
+></tip>
+</para>
+<para
+><tip
+><para
+>Die Argumente <guilabel
+>Ja</guilabel
+>/<guilabel
+>Nein</guilabel
+> schalten Attribute ein oder aus. Grammatikkenntnisse erleichtern das Verständnis, wie ein Einstellung verarbeitet wird. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Wenn zum Beispiel das Attribut <guilabel
+>Nicht in Kontrollleiste</guilabel
+> den Wert <guilabel
+>Nein</guilabel
+> hat, wird das Fenster wegen der doppelten Verneinung in der Kontrollleiste angezeigt. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+></para
+></tip>
+</para>
+<sect2 id="size--position"
+><title
+>Größe &amp; Position</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Position</emphasis
+></term>
+    <listitem>
+    <para
+>Setzt die Position der oberen linken Ecke des Fensters auf die angegebenen X- und Y-Koordinaten.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Der Koordinatenursprung (0,0) von &kwin; ist die linke obere Ecke der Arbeitsfläche.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Größe</emphasis
+></term>
+    <listitem>
+    <para
+>Die Breite und Höhe des Fensters.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Waagerecht maximiert, Senkrecht maximiert</emphasis
+></term>
+    <listitem>
+    <para
+>Mit diesen Werten wird das Fensterattribut für Waagerecht maximiert, Senkrecht maximiert oder Vollbild festgelegt.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Arbeitsfläche, Aktivität, Bildschirm</emphasis
+></term>
+    <listitem>
+    <para
+>Platziert das Fenster auf der angegebenen <emphasis
+>(Virtuellen) Arbeitsfläche</emphasis
+>,<emphasis
+>Aktivität</emphasis
+> oder <emphasis
+>Bildschirm</emphasis
+>. Mit <guilabel
+>Alle Arbeitsflächen</guilabel
+> wird das Fenster auf allen <emphasis
+>virtuellen Arbeitsflächen</emphasis
+> platziert.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Vollbild, Minimiert, Eingefahren</emphasis
+></term>
+    <listitem>
+    <para
+>Schaltet die Fensterattribute Vollbild, Minimiert und Eingefahren ein oder aus. Ein Fenster kann zum Beispiel beim Start minimiert sein, oder das minimierte Starten kann verhindert werden.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Das Attribut Maximiert wird emuliert, in dem sowohl <guilabel
+>Waagerecht maximiert</guilabel
+> und <guilabel
+>Senkrecht maximiert</guilabel
+> oder <guilabel
+>Anfangsplatzierung</guilabel
+> mit dem Argument <guilabel
+>Maximiert</guilabel
+> verwendet wird.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Anfangsplatzierung</emphasis
+></term>
+    <listitem>
+    <para
+>Überschreibt die globale Platzierungsstrategie mit einem der folgenden Werte:</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Voreinstellung</guilabel
+> - Benutzt die globale Platzierungsstrategie des Fensters.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Ohne feste Position</guilabel
+> - Linke obere Ecke</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Minimale Überlappung</guilabel
+> - Das Fenster wird an eine freie Stelle auf der Arbeitsfläche platziert.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Maximiert</guilabel
+> - Startet das Fenster im Vollbildmodus.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Gestaffelt</guilabel
+> - Treppenförmige Anordnung der Titelleisten</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Zentriert</guilabel
+> - Mitten auf der Arbeitsfläche.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Zufällig</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Links oben</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Unter Mauszeiger</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Über Hauptfenster</guilabel
+> - Begrenzt die Platzierung des Unterfensters auf die Ausmaße des Hauptfensters.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Angeforderte Geometrie ignorieren</emphasis
+></term>
+    <listitem>
+    <para
+>Legt fest, ob die vom Fenster angeforderte Geometrie ignoriert wird. Um Konflikte mit der Standardstrategie zur Platzierung der Anforderung des Fensters zu vermeiden, wird Platzierungsstrategie ignoriert, wenn die Anforderung des Fensters erfüllt wurde.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Maximalgröße, Minimalgröße</emphasis
+></term>
+    <listitem>
+    <para
+>Die erlaubte minimale und maximale Größe des Fensters.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Größeneinschränkungen beachten</emphasis
+></term>
+    <listitem>
+    <para
+>Diese Einstellung bestimmt, ob für ein Fenster das angeforderte Seitenverhältnis oder die <emphasis
+>Basis-Schrittweite der Fenstervergößerung</emphasis
+> beachtet wird. Um dieses Attribut zu verstehen, ist ein wenig Hintergrundwissen erforderlich. Fenster müssen bei der Fensterverwaltung eine Basis-Schrittweite der Fenstervergößerung anfordern: Die minimale Anzahl von Pixeln für <emphasis
+>Höhe</emphasis
+> x <emphasis
+>Breite</emphasis
+>. Dieser Wert ist normalerweise 1 x 1. Fenster wie zum Beispiel ein Terminalemulator oder ein Texteditor, die Schriften mit fester Breite verwenden, haben eine Basis-Schrittweite von der Größe eines Zeichens.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="arrangement--access"
+><title
+>Anordnung &amp; Zugriff</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Im Vordergrund halten, Im Hintergrund halten</emphasis
+></term>
+    <listitem>
+    <para
+>Schaltet um, ob das Fenster vor oder hinter allen anderen Fenstern bleiben soll.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Autogruppierung für Identische</emphasis
+></term>
+    <listitem>
+    <para
+>Schaltet die Gruppierung von Fenstern als <emphasis
+>Unterfenster</emphasis
+> ein oder aus.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Autogruppierung im Vordergrund</emphasis
+></term>
+    <listitem>
+    <para
+>Legt fest, ob das Fenster aktiviert wird, wenn es zur aktuellen Autogruppe hinzugefügt wird.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Autogruppierung nach Kennung</emphasis
+></term>
+    <listitem>
+    <para
+>Erstellt eine Gruppe über eine benutzerdefinierte Kennung. Mehr als eine Regel kann die gleiche Kennung verwenden, das erlaubt die Gruppierung von scheinbar nicht zusammengehörigen Fenstern.</para>
+     </listitem>
+  </varlistentry>
+
+  <varlistentry
+><term
+><emphasis role="bold"
+>Nicht in Kontrollleiste</emphasis
+></term>
+    <listitem>
+    <para
+>Schaltet die Anzeige des Fensters in der Kontrollleiste ein oder aus.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Nicht in Arbeitsflächen-Umschalter</emphasis
+></term>
+    <listitem>
+    <para
+>Schaltet die Anzeige des Fensters im Arbeitsflächen-Umschaltern ein oder aus.</para>
+     </listitem>
+  </varlistentry>
+    </variablelist>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Nicht in Anwendungsumschalter</emphasis
+></term>
+    <listitem>
+    <para
+>Schaltet die Anzeige des Fensters im Anwendungsumschalter (&Alt;+&Tab;) ein oder aus.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Kurzbefehl</emphasis
+></term>
+    <listitem>
+    <para
+>Weist einen Kurzbefehl einem Fenster zu. Drücken Sie auf <guilabel
+>Bearbeiten ...</guilabel
+>, dann wird ein Dialog mit weiteren Informationen geöffnet.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="appearance--fixes"
+><title
+>Erscheinungsbild &amp; Korrekturen</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ohne Titelleiste und Rahmen</emphasis
+></term>
+    <listitem>
+    <para
+>Schaltet die Anzeige von Titelleiste und Rahmen ein oder aus.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Farbschema der Titelleiste</emphasis
+></term>
+    <listitem>
+    <para
+>Wählen Sie ein Farbschema für die Titelleiste des Fensters.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Deckkraft (aktiv/inaktiv)</emphasis
+></term>
+    <listitem>
+    <para
+>Setzt die Deckkraft eines aktiven/nicht-aktiven Fenster auf den angegebenen Prozentwert.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+><guilabel
+>Deckkraft (aktiv/inaktiv)</guilabel
+> kann nur benutzt werden, wenn <guilabel
+>Arbeitsflächeneffekte</guilabel
+> eingeschaltet sind.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Vorbeugung gegen Übernahme der Aktivierung</emphasis
+></term>
+    <listitem>
+    <para
+>Wenn ein Fenster aktiviert werden soll, kann auf einer Skala von <guilabel
+>Keine</guilabel
+> bis <guilabel
+>Extrem</guilabel
+> eingestellt werden, ob diese Anforderung stattgegeben und das Fenster vor allen anderen platziert wird oder ob die Anforderung ignoriert wird. Letzteres führt möglicherweise dazu, dass das Fenster durch andere Fenster verdeckt wird.</para>
+<itemizedlist>
+<listitem
+><para
+>Keine - Das Fenster wird immer aktiviert.</para
+></listitem>
+<listitem
+><para
+>Niedrig</para
+></listitem>
+<listitem
+><para
+>Normal</para
+></listitem>
+<listitem
+><para
+>Hoch</para
+></listitem>
+<listitem
+><para
+>Extrem - Die Anforderung des Fensters zur Aktivierung wird verweigert. Eine Aktivierung ist ausdrücklich nur mit der Maus möglich.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Benutzen Sie <guilabel
+>Aktivierung zulassen</guilabel
+>, um ein Fenster nur lesbar zumachen. Dann nimmt es keine Tastatureingaben an.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Aktivierung zulassen</emphasis
+></term>
+    <listitem>
+    <para
+>Schaltet ein oder aus, ob ein Fenster Tastatureingaben annimmt. Macht das Fenster nur-lesbar.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Globale Kurzbefehle ignorieren</emphasis
+></term>
+    <listitem>
+    <para
+>Bestimmt, ob globale Kurzbefehle ignoriert werden, wenn das Fenster den Fokus hat. Die globalen Kurzbefehle werden mit <menuchoice
+><guimenu
+>Systemeinstellungen</guimenu
+><guisubmenu
+>Kurzbefehle und Gestensteuerung</guisubmenu
+><guimenuitem
+>Globale Kurzbefehle</guimenuitem
+></menuchoice
+> oder durch Starten von <varname
+>kcmshell5 keys</varname
+> in einer &konsole; geändert.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Schließbar</emphasis
+></term>
+    <listitem>
+    <para
+>Schaltet die Anzeige des Knopfes <guilabel
+>Schließen</guilabel
+> ein oder aus.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Ein Terminalfenster kann immer noch durch den Benutzer geschlossen werden, indem er die Sitzung des Shell beendet. Schalten Sie jedoch <guilabel
+>Aktivierung zulassen</guilabel
+> aus, um Tastatureingaben zu verhindern, dann wird es noch schwerer, das Fenster zu schließen.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Fenstertyp</emphasis
+></term>
+    <listitem>
+    <para
+>Ändert das Fenster zu einem andern Typ und übernimmt die Charakteristiken dieses Fensters.</para>
+<itemizedlist>
+<listitem
+><para
+>Normales Fenster</para
+></listitem>
+<listitem
+><para
+>Dialogfenster</para
+></listitem>
+<listitem
+><para
+>Dienstprogrammfenster</para
+></listitem>
+<listitem
+><para
+>Andocken (Kontrollleiste)</para
+></listitem>
+<listitem
+><para
+>Werkzeugleiste</para
+></listitem>
+<listitem
+><para
+>Abreißmenü</para
+></listitem>
+<listitem
+><para
+>Begrüßungsbildschirm</para
+></listitem>
+<listitem
+><para
+>Arbeitsfläche</para
+></listitem>
+<listitem
+><para
+>Selbständige Menüleiste</para
+></listitem>
+<listitem
+><para
+>OnScreen-Anzeige</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>Benutzen Sie dies mit Vorsicht, da es zu ungewollten Ergebnissen führen kann. Ein <guilabel
+>Begrüßungsbildschirm</guilabel
+> zum Beispiel wird automatisch durch &kwin; geschlossen, wenn Sie darauf klicken,</para
+></warning>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Compositing blockieren</emphasis
+></term>
+    <listitem>
+    <para
+>Schaltet das Blockieren von Compositing ein oder aus, während das Fenster <emphasis
+>existiert</emphasis
+>. Ist Compositing aktiviert und eine Regel legt fest, Compositing abzuschalten, wird das ausgeführt, solange noch <emphasis
+>irgendein</emphasis
+> Fenster existiert.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+</sect1>
+</chapter>
+<chapter id="examples"
+><title
+>Beispiele</title>
+<para
+><note
+><para
+>Im ersten Beispiel werden alle erforderlichen Schritte zur Erstellung einer Regel ausführlich erläutert. In den nachfolgenden Beispielen werden dann immer nur noch die speziellen Schritte für das Beispiel erklärt.</para
+></note>
+</para>
+<para
+><note
+><para
+>Das Attribut <guilabel
+>Arbeitsflächen-Umschalter</guilabel
+> bezieht sich auf die Verwaltung der <guilabel
+>Virtuellen Arbeitsflächen</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></note>
+</para>
+<sect1 id="pin-a-window-to-a-desktop-and-set-other-attributes"
+><title
+>Die Anzeige eines Fensters auf eine Arbeitsfläche beschränken und andere Attribute</title>
+<para
+>Beschränkung der Anzeige von &akregator; auf die <emphasis
+>Virtuelle Arbeitsfläche 2</emphasis
+>. Zusätzlich soll das Programm mit einer bevorzugten Größe und Position angezeigt werden. Verwenden Sie für jedes Attribut den <link linkend="parameters"
+>Parameter</link
+> <guilabel
+>Bei Initialisierung anwenden</guilabel
+>, damit er zur Laufzeit überschrieben werden kann. </para>
+<para
+>Die &kwin;-Regel wird wie folgt erstellt: </para>
+<orderedlist>
+<listitem
+><para
+>Starten Sie &akregator; auf <emphasis
+>Arbeitsfläche 2</emphasis
+> und stellen Sie Größe und Position des Fensters nach Ihren Wünschen ein. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-fav.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicken Sie mit der &RMBn; auf die Titelleiste und wählen Sie <menuchoice
+><guimenu
+>Weitere Aktionen</guimenu
+><guimenuitem
+>Einstellungen für die Fensterverwaltung ...</guimenuitem
+></menuchoice
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="config-win-behavior.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Wählen Sie <guilabel
+>Fensterregeln</guilabel
+> in der linken Spalte und klicken Sie dann auf <guilabel
+>Neu ...</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Der Dialog <guilabel
+>Festlegen von fensterspezifischen Einstellungen</guilabel
+> wird angezeigt, die Karteikarte <guilabel
+>Fensterübereinstimmung</guilabel
+> ist bereits ausgewählt: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-init.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicken Sie auf <guilabel
+>Fenstereigenschaften ermitteln</guilabel
+> mit <guilabel
+>0 Sekunden Verzögerung</guilabel
+>, dann wird als Mauszeiger sofort ein Fadenkreuz angezeigt, Klicken Sie irgendwo in das &akregator;-Fenster, aber nicht in die Titelleiste. Die Kriterien des Fensters werden nun angezeigt. Es wird nur auf Übereinstimmung mit dem primären Klassennamen geprüft, daher lassen Sie die Ankreuzfelder deaktiviert. Zusätzliche Informationen finden Sie im Abschnitt <link linkend="window-matching"
+>Fensterübereinstimmung</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akgregator-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicken Sie im oben gezeigten Fenster auf <guilabel
+>OK</guilabel
+>, damit die Parameter auf der Karteikarte <guilabel
+>Fensterübereinstimmung</guilabel
+> ausgefüllt werden. Geben Sie einen aussagekräftigen Text im Feld <guilabel
+>Beschreibung</guilabel
+> ein, der im Fenster <guilabel
+>Fensterregeln</guilabel
+> angezeigt wird. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-ready-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Aktivieren Sie die Fensterattribute <guilabel
+>Position</guilabel
+>, <guilabel
+>Größe</guilabel
+> und <guilabel
+>Arbeitsfläche</guilabel
+>. Die anfänglichen Werte wurden bereits mit <guilabel
+>Fenstereigenschaften ermitteln</guilabel
+> und können überschrieben werden: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicken Sie im oben gezeigten Fenster auf <guilabel
+>OK</guilabel
+>, damit kommen Sie wieder zum Dialog <guilabel
+>Fensterregeln</guilabel
+> zurück. Die neue Regel wird mit Ihrer Beschreibung aufgeführt: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main-n-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicken Sie <guilabel
+>OK</guilabel
+>, um dieses Fenster zu schließen.</para
+></listitem>
+<listitem
+><para
+>Fertig.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="application-on-all-desktops-and-handle-one-child-window-uniquely"
+><title
+>Ein Programm auf allen Arbeitsflächen, aber ein Unterfenster wird anders behandelt</title>
+<para
+>&kopete; und alle Unterfenster mit Ausnahme von Chat-Fenstern sollen auf allen Arbeitsflächen, aber nicht im Systemabschnitt der Kontrollleiste und dem Arbeitsflächen-Umschalter angezeigt werden. Chat-Unterfenster werden wie das Hauptfenster behandelt, aber im Systemabschnitt der Kontrollleiste erscheinen. </para>
+<para
+>Benutzen Sie für jedes Attribut den <link linkend="parameters"
+>Parameter</link
+> <guilabel
+>Erzwingen</guilabel
+>, damit dieses Attribut nicht überschrieben werden kann. </para>
+<para
+>Für den oben genannten Zweck müssen zwei Regeln erstellt werden: </para>
+<orderedlist>
+<listitem
+><para
+>Eine Regel für <guilabel
+>Kopetes Chatfenster</guilabel
+> und</para
+></listitem>
+<listitem
+><para
+>Eine Regel für &kopete;</para
+></listitem>
+</orderedlist>
+<para
+>Das zutreffende Kriterium der Regel für das Kopete-Chatfenster ist einschränkender als die Regel für <emphasis
+>Kopete</emphasis
+>, da das Kriterium nur mit einer bestimmten Rolle des Fensters übereinstimmt, nämlich dem Chat-Fenster. Wegen der Art der <link linkend="rule-evaluation"
+>Regel-Auswertung</link
+> muss die Regel für das Kopete-Chatfenster vor der Regel für &kopete; in der <link linkend="kopete-kwin-rule-list"
+>KWin-Regelliste für &kopete;</link
+> aufgeführt werden. </para>
+<sect2 id="kopete-chat-rule"
+><title
+>Regel für das Chat-Fenster von Kopete</title>
+<para
+>Angenommen ein <guilabel
+>Kopete-Chatfenster</guilabel
+> ist geöffnet: </para>
+<orderedlist>
+<listitem
+><para
+>Benutzen Sie den Knopf <guilabel
+>Fenstereigenschaften ermitteln</guilabel
+> und wählen Sie das <guilabel
+>Kopete-Chatfenster</guilabel
+>. Wählen Sie das Ankreuzfeld <guilabel
+>Fensterrolle</guilabel
+>, damit das Kriterium nur auf das Chat-Fenster angewendet wird. Zusätzliche Informationen finden Sie im Abschnitt <link linkend="window-matching"
+>Fensterübereinstimmung</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicken Sie im oben gezeigten Fenster auf <guilabel
+>OK</guilabel
+>, damit die Parameter auf der Karteikarte <guilabel
+>Fensterübereinstimmung</guilabel
+> ausgefüllt werden. Geben Sie einen aussagekräftigen Text im Feld <guilabel
+>Beschreibung</guilabel
+> ein. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete-chat.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Aktivieren Sie die folgenden Attribute: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicken Sie auf <guibutton
+>OK</guibutton
+>, um den Eintrag der Regel fertigzustellen.</para
+></listitem>
+</orderedlist>
+<para
+><note
+><para
+>Das Attribut <guilabel
+>Nicht in Kontrollleiste</guilabel
+> ist auf <guilabel
+>Nein</guilabel
+> gesetzt, um das Fenster in der Kontrollleiste anzuzeigen. Dieses bedeutet jetzt: <emphasis
+>Nein</emphasis
+>, das Verhalten <emphasis
+>Nicht in Kontrollleiste</emphasis
+> <emphasis
+>nicht verwenden</emphasis
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>.</para
+></note>
+</para>
+</sect2>
+<sect2 id="kopete-rule"
+><title
+>Regel für Kopete</title>
+<para
+>Angenommen &kopete; ist geöffnet: </para>
+<orderedlist>
+<listitem
+><para
+>Benutzen Sie den Knopf <guilabel
+>Fenstereigenschaften ermitteln</guilabel
+> und wählen Sie das &kopete;-Fenster aus. Es wird nur auf Übereinstimmung mit dem primären Klassennamen geprüft, daher lassen Sie die Ankreuzfelder deaktiviert. Zusätzliche Informationen finden Sie im Abschnitt <link linkend="window-matching"
+>Fensterübereinstimmung</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicken Sie im oben gezeigten Fenster auf <guilabel
+>OK</guilabel
+>, damit die Parameter auf der Karteikarte <guilabel
+>Fensterübereinstimmung</guilabel
+> ausgefüllt werden. Geben Sie einen aussagekräftigen Text im Feld <guilabel
+>Beschreibung</guilabel
+> ein. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Aktivieren Sie die folgenden Attribute: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicken Sie auf <guibutton
+>OK</guibutton
+>, um den Eintrag der Regel fertigzustellen.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="kopete-kwin-rule-list"
+><title
+>KWin-Regelliste für Kopete</title>
+<para
+>Wie bereits erläutert, muss wegen der Reihenfolge der <link linkend="rule-evaluation"
+>Regel-Auswertung</link
+> die Regel des <guilabel
+>Kopete-Chat</guilabel
+>-Fensters vor der &kopete;-Regel stehen. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-kopete-rules.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+</sect1>
+<sect1 id="suppress-a-window-from-showing-on-pager"
+><title
+>Ein Fenster von der Anzeige im Arbeitsflächen-Umschalter ausschließen</title>
+<para
+><guilabel
+>KNotes</guilabel
+>-Fenster können zurzeit nicht von der Anzeige im Arbeitsflächen-Umschalter ausgeschlossen werden, dieser Mangel lässt sich aber mit einer einfachen Regel beheben. </para>
+<para
+>Angenommen ein Fenster von KNotes ist geöffnet: </para>
+<orderedlist>
+<listitem
+><para
+>Benutzen Sie den Knopf <guilabel
+>Fenstereigenschaften ermitteln</guilabel
+> und wählen Sie beliebiges KNotes-Fenster aus. Es wird nur auf Übereinstimmung mit dem primären Klassennamen geprüft, daher lassen Sie die Ankreuzfelder deaktiviert. Zusätzliche Informationen finden Sie im Abschnitt <link linkend="window-matching"
+>Fensterübereinstimmung</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicken Sie im oben gezeigten Fenster auf <guilabel
+>OK</guilabel
+>, damit die Parameter auf der Karteikarte <guilabel
+>Fensterübereinstimmung</guilabel
+> ausgefüllt werden. Geben Sie einen aussagekräftigen Text im Feld <guilabel
+>Beschreibung</guilabel
+> ein. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-knotes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Aktivieren Sie das Attribut <guilabel
+>Nicht in Arbeitsflächen-Umschalter</guilabel
+> mit dem <link linkend="parameters"
+>Parameter</link
+> <guilabel
+>Erzwingen</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicken Sie auf <guibutton
+>OK</guibutton
+>, um den Eintrag der Regel fertigzustellen.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="force-a-window-to-the-top"
+><title
+>Ein Fenster immer im Vordergrund anzeigen</title>
+<para
+>Um ein aktives Fenster im Vordergrund anzuzeigen, setzen Sie das Attribut <guilabel
+>Vorbeugung gegen Übernahme der Aktivierung</guilabel
+> auf <guilabel
+>Kein</guilabel
+>, typischerweise mit dem <link linkend="parameters"
+>Parameter</link
+> <guilabel
+>Erzwingen</guilabel
+>. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="focus-stealing-pop2top-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect1>
+<sect1 id="multiple-rules-per-application"
+><title
+>Mehrere Regeln je Anwendung</title>
+<para
+><application
+>Thunderbird</application
+> hat mehrere verschiedene Unterfenster wie im folgenden Beispiel gezeigt wird: </para>
+<itemizedlist>
+<listitem
+><para
+>Anzeige des Hauptfensters von <application
+>Thunderbird</application
+> auf der <emphasis
+>virtuellen Arbeitsfläche 1</emphasis
+> mit einer bestimmten Größe und an einem bestimmten Platz auf dieser Arbeitsfläche.</para
+></listitem>
+<listitem
+><para
+>Die Anzeige des <application
+>Thunderbird</application
+>-E-Mailfensters auf allen Arbeitsflächen erlauben und diesem Fenster bei der Aktivierung den Fokus geben und vor allen anderen Fenstern anzeigen.</para
+></listitem>
+<listitem
+><para
+>Anzeige des <application
+>Thunderbird</application
+>-Erinnerungsfensters vor allen anderen Fenster, es erhält aber nicht den Fokus, damit es nicht aus Versehen weggeklickt wird.</para
+></listitem>
+</itemizedlist>
+<para
+>Das passende Kriterium jeder Regel ist ausreichend einschränkend, daher wird die <link linkend="rule-evaluation"
+>Regel-Auswertung</link
+> nicht durch die Reihenfolge im &kwin;-Fenster beeinflußt. </para>
+<sect2 id="thunderbird---main"
+><title
+>Thunderbird - Hauptfenster</title>
+<para
+>Angenommen, das <guilabel
+>Thunderbird-Hauptfenster</guilabel
+> ist geöffnet und Größe und Position sind wie gewünscht eingestellt: </para>
+<orderedlist>
+<listitem
+><para
+>Benutzen Sie den Knopf <guilabel
+>Fenstereigenschaften ermitteln</guilabel
+> und wählen Sie das <guilabel
+>Thunderbird-Hauptfenster</guilabel
+> aus. Wählen Sie das Ankreuzfeld <guilabel
+>Fensterrolle</guilabel
+>, damit das Kriterium nur auf das Hauptfenster angewendet wird. Zusätzliche Informationen finden Sie im Abschnitt <link linkend="window-matching"
+>Fensterübereinstimmung</link
+>. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicken Sie im oben gezeigten Fenster auf <guilabel
+>OK</guilabel
+>, damit die Parameter auf der Karteikarte <guilabel
+>Fensterübereinstimmung</guilabel
+> ausgefüllt werden. Geben Sie einen aussagekräftigen Text im Feld <guilabel
+>Beschreibung</guilabel
+> ein. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Aktivieren Sie die folgenden Attribute: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicken Sie auf <guibutton
+>OK</guibutton
+>, um den Eintrag der Regel fertigzustellen.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---composer"
+><title
+>Thunderbird-E-Mail</title>
+<para
+>Angenommen ein <guilabel
+>Thunderbird-E-Mail</guilabel
+>-Fenster ist geöffnet: </para>
+<orderedlist>
+<listitem
+><para
+>Benutzen Sie den Knopf <guilabel
+>Fenstereigenschaften ermitteln</guilabel
+> und wählen Sie das <guilabel
+>Thunderbird-E-Mail</guilabel
+>-Fenster. Wählen Sie die Ankreuzfelder <guilabel
+>Fensterrolle</guilabel
+> <guilabel
+>Fenstertyp</guilabel
+>, damit das Kriterium nur auf das E-Mail-Fenster angewendet wird. Zusätzliche Informationen finden Sie im Abschnitt <link linkend="window-matching"
+>Fensterübereinstimmung</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicken Sie im oben gezeigten Fenster auf <guilabel
+>OK</guilabel
+>, damit die Parameter auf der Karteikarte <guilabel
+>Fensterübereinstimmung</guilabel
+> ausgefüllt werden. Geben Sie einen aussagekräftigen Text im Feld <guilabel
+>Beschreibung</guilabel
+> ein. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-compose.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Aktivieren Sie die folgenden Attribute: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicken Sie auf <guibutton
+>OK</guibutton
+>, um den Eintrag der Regel fertigzustellen.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---reminder"
+><title
+>Thunderbird-Erinnerung</title>
+<para
+>Angenommen ein <guilabel
+>Thunderbird-Erinnerung</guilabel
+>-Fenster ist geöffnet: </para>
+<orderedlist>
+<listitem
+><para
+>Benutzen Sie den Knopf <guilabel
+>Fenstereigenschaften ermitteln</guilabel
+> und wählen Sie das <guilabel
+>Thunderbird-Erinnerung</guilabel
+>-Fenster. Wählen Sie die Ankreuzfelder <guilabel
+>Sekundärer Klassenname</guilabel
+> <guilabel
+>Fenstertyp</guilabel
+>, damit das Kriterium nur auf das Erinnerungs-Fenster angewendet wird. Zusätzliche Informationen finden Sie im Abschnitt <link linkend="window-matching"
+>Fensterübereinstimmung</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicken Sie im oben gezeigten Fenster auf <guilabel
+>OK</guilabel
+>, damit die Parameter auf der Karteikarte <guilabel
+>Fensterübereinstimmung</guilabel
+> ausgefüllt werden. Geben Sie einen aussagekräftigen Text im Feld <guilabel
+>Beschreibung</guilabel
+> ein. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-reminder.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Aktivieren Sie die folgenden Attribute: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicken Sie auf <guibutton
+>OK</guibutton
+>, um den Eintrag der Regel fertigzustellen.</para
+></listitem>
+</orderedlist>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="application-workarounds"
+><title
+>Übergangslösungen für Anwendungen</title>
+<para
+>Im folgenden finden Sie Übergangslösungen für fehlerhafte Anwendungen </para>
+<para
+><tip
+><para
+>Kennen Sie sich mit der Erstellung von &kwin;-Regeln noch nicht aus, benutzen Sie dieses <link linkend="pin-a-window-to-a-desktop-and-set-other-attributes"
+>ausführliche Beispiel</link
+> als Grundlage für Ihre neue Regel.</para
+></tip>
+</para>
+<sect1 id="full-screen-re-size-error"
+><title
+>Fehlerhafte Größenänderung im Vollbildmodus</title>
+<para
+>Bei &Emacs; and <guilabel
+>gVim</guilabel
+> treten unter bestimmten Umständen Größenänderungen des Fensters im Vollbildmodus auf, siehe <ulink url="https://bugs.kde.org/show_bug.cgi?id=252314"
+>Emacs window resizes ...</ulink
+> Ein &kwin;-Regel kann diesen Fehler beheben. </para>
+<para
+>Angenommen ein &Emacs;-Fenster ist geöffnet: </para>
+<orderedlist>
+<listitem
+><para
+>Benutzen Sie den Knopf <guilabel
+>Fenstereigenschaften ermitteln</guilabel
+> und wählen Sie das &Emacs;-Fenster aus. Es wird nur auf Übereinstimmung mit dem primären Klassennamen geprüft, daher lassen Sie die Ankreuzfelder deaktiviert. Zusätzliche Informationen finden Sie im Abschnitt <link linkend="window-matching"
+>Fensterübereinstimmung</link
+>. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicken Sie im oben gezeigten Fenster auf <guilabel
+>OK</guilabel
+>, damit die Parameter auf der Karteikarte <guilabel
+>Fensterübereinstimmung</guilabel
+> ausgefüllt werden. Geben Sie einen aussagekräftigen Text im Feld <guilabel
+>Beschreibung</guilabel
+> ein. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-emacs.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Ignorieren Sie die Anforderung des Programms &Emacs; zur Vollbildanzeige, indem Sie das Attribut <guilabel
+>Größeneinschränkungen beachten</guilabel
+> aktivieren, es mit <guilabel
+>Nein</guilabel
+> abschalten, sodass es ignoriert wird und wählen Sie den Parameter <guilabel
+>Erzwingen</guilabel
+>. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicken Sie auf <guibutton
+>OK</guibutton
+>, um den Eintrag der Regel fertigzustellen.</para
+></listitem>
+</orderedlist>
+</sect1>
+</chapter>
+
+<!--userbase-content-->
+<chapter id="credits">
+<title
+>Danksagungen und Lizenz</title>
+      <para
+>Copyright der Dokumentation siehe <ulink url="https://userbase.kde.org/index.php?title=KWin Rules&amp;action=history"
+>Versionsgeschichte der Seite KWin-Regeln</ulink
+></para>
+      <para
+>Übersetzung Matthias Kiefer <email
+>Matthias.Kiefer@gmx.de</email
+></para
+> &underFDL; </chapter>
+&documentation.index;
+</book>

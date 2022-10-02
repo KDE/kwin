@@ -1,0 +1,99 @@
+# KDE Finnish translation sprint participants:
+# Author: Lliehu
+# Author: Niklas Laxström
+# Lasse Liehu <lasse.liehu@gmail.com>, 2013.
+# Tommi Nieminen <translator@legisign.org>, 2017, 2018, 2020.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcm-kwin-scripts\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-09-20 00:47+0000\n"
+"PO-Revision-Date: 2020-12-17 22:38+0200\n"
+"Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
+"Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-POT-Import-Date: 2012-12-01 22:22:19+0000\n"
+"X-Generator: Lokalize 20.04.2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Niklas Laxström, Tommi Nieminen"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "niklas.laxstrom@gmail.com, translator@legisign.org"
+
+#: module.cpp:57
+#, kde-format
+msgid "Import KWin Script"
+msgstr "Tuo KWin-skripti"
+
+#: module.cpp:58
+#, kde-format
+msgid "*.kwinscript|KWin scripts (*.kwinscript)"
+msgstr "*.kwinscript|KWin-skriptit (*.kwinscript)"
+
+#: module.cpp:96
+#, kde-format
+msgctxt "Placeholder is error message returned from the install service"
+msgid ""
+"Cannot import selected script.\n"
+"%1"
+msgstr ""
+"Valittua skriptiä ei voi tuoda.\n"
+"%1"
+
+#: module.cpp:108
+#, kde-format
+msgctxt "Placeholder is name of the script that was imported"
+msgid "The script \"%1\" was successfully imported."
+msgstr "Skripti ”%1” tuotiin onnistuneesti."
+
+#: module.cpp:148
+#, kde-format
+msgid "Error when uninstalling KWin Script: %1"
+msgstr "Virhe poistettaessa KWin-skriptin asennusta: %1"
+
+#: package/contents/ui/main.qml:47
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Delete..."
+msgstr ""
+
+#: package/contents/ui/main.qml:60
+#, kde-format
+msgid "Install from File..."
+msgstr "Asenna tiedostosta…"
+
+#: package/contents/ui/main.qml:64
+#, kde-format
+msgid "Get New Scripts..."
+msgstr "Hae uusia skriptejä…"
+
+#~ msgid "KWin Scripts"
+#~ msgstr "KWin-skriptit"
+
+#~ msgid "Configure KWin scripts"
+#~ msgstr "KWin-skriptien asetukset"
+
+#~ msgid "Tamás Krutki"
+#~ msgstr "Tamás Krutki"
+
+#~ msgid "KWin script configuration"
+#~ msgstr "KWinin skriptiasetukset"
+
+#~ msgid "Import KWin script..."
+#~ msgstr "Tuo KWin-skripti…"
+
+#~ msgid ""
+#~ "Cannot import selected script: maybe a script already exists with the "
+#~ "same name or there is a permission problem."
+#~ msgstr ""
+#~ "Valitun skriptin tuonti epäonnistui: samanniminen skripti on jo olemassa "
+#~ "tai on käyttöoikeusongelma."

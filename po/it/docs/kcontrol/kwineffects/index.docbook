@@ -1,0 +1,137 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Italian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwineffects" lang="&language;">
+<articleinfo>
+
+<title
+>Effetti del desktop</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Paolo</firstname
+><surname
+>Zamponi</surname
+><affiliation
+><address
+><email
+>zapaolo@email.it</email
+></address
+></affiliation
+><contrib
+>Traduzione</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>09/04/2021</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>scrivania</keyword>
+<keyword
+>effetti</keyword>
+</keywordset>
+</articleinfo>
+
+<!--FIXME Compositor Enable compositor on startup necessary to have effects?-->
+
+<para
+>Questo modulo viene usato per abilitare e configurare gli effetti del desktop di Plasma.</para>
+
+<para
+>La parte principale di questa pagina è una lista di tutti gli effetti disponibili, raggruppati per <guilabel
+>Accessibilità</guilabel
+>, <guilabel
+>Aspetto</guilabel
+>, <guilabel
+>Fuoco</guilabel
+>, <guilabel
+>Mostra l'animazione del desktop</guilabel
+>, <guilabel
+>Strumenti</guilabel
+>, <guilabel
+>Animazione del passaggio tra i desktop virtuali</guilabel
+>, <guilabel
+>Gestione delle finestre</guilabel
+> e <guilabel
+>Animazione Apri/Chiudi finestra</guilabel
+>.</para>
+<para
+>Usa la barra di ricerca incrementale in cima all'elenco delle finestre per trovare gli elementi nell'elenco.</para>
+
+<para
+>Di solito l'utente non ha motivo di cambiarla, ma c'è un <inlinemediaobject
+><imageobject
+><imagedata fileref="configure-effects.png" format="PNG"/> </imageobject
+></inlinemediaobject
+> pulsante di configurazione per modificare il filtraggio della lista per mostrare anche quegli effetti. </para>
+
+<para
+>Il modo più semplice di installare dei nuovi effetti è quello di usare il supporto a KNewStuff incorporato in &kwin;: premi il pulsante <guibutton
+>Ottieni nuovi effetti del desktop</guibutton
+> per aprire una finestra con la lista degli effetti disponibili da Internet, e per installare o disinstallare gli effetti.</para>
+<note
+><para
+>Tieni presente che la modifica di queste sensibili impostazioni predefinite può danneggiare il tuo sistema.</para>
+</note>
+
+<para
+>Seleziona un effetto nella lista per abilitarlo. Visualizza le informazioni sull'autore e sulla licenza facendo clic sul pulsante informativo <inlinemediaobject
+><imageobject
+><imagedata fileref="dialog-information.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> alla destra degli elementi dell'elenco.</para>
+
+<para
+>Alcuni effetti hanno delle opzioni di impostazione, e in questo caso c'è un pulsante di configurazione <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure-effects.png" format="PNG"/></imageobject
+></inlinemediaobject
+> alla sinistra del pulsante delle informazioni: fai clic su di esso per aprire la finestra di configurazione.</para>
+<para
+>Per vedere un'anteprima video di un effetto fai clic sul pulsante <inlinemediaobject
+><imageobject
+><imagedata fileref="video.png" format="PNG"/> </imageobject
+></inlinemediaobject
+>.</para>
+
+<para
+>Alcuni effetti ne escludono altri. Per esempio, puoi attivare l'effetto <guilabel
+>Massimizza</guilabel
+> oppure <guilabel
+>Lampada magica</guilabel
+>; se li attivi entrambi allo stesso tempo, le animazioni saranno danneggiate. </para>
+
+<para
+>La &GUI; utilizza dei pulsanti a scelta singola per gli effetti in un gruppo che sono mutualmente esclusivi, e gestisce quell'unico effetto che può essere attivato. </para>
+
+<para
+>Tutti gli effetti che non sono supportati dal motore di composizione attualmente in uso vengono nascosti in maniera predefinita (&eg; gli effetti OpenGL quando viene usata la resa software). </para
+> 
+
+<para
+>Anche gli effetti interni o di aiuto vengono nascosti in maniera predefinita. Sono quegli effetti che rimpiazzano le funzionalità del core di Kwin, o che forniscono l'interazione con gli elementi della shell desktop. </para>
+
+<!--FIXME 
+39 effects + 7 internal (XRender compositor)
+Internal effects
+Appearance (Dashboard, Highlight Windows, KSreen, Screenshot, Window Geometry)
+Window Management (Cover Switch)
+-->
+
+</article>

@@ -1,0 +1,290 @@
+# Finnish messages for kcmkwinscreenedges.
+# Copyright © 2010 This_file_is_part_of_KDE
+# This file is distributed under the same license as the kdebase package.
+# Tommi Nieminen <translator@legisign.org>, 2009, 2016, 2017, 2018, 2019, 2021, 2022.
+# Jorma Karvonen <karvonen.jorma@gmail.com>, 2010.
+# Lasse Liehu <lliehu@kolumbus.fi>, 2011, 2013, 2014, 2016.
+#
+# KDE Finnish translation sprint participants:
+# Author: Lliehu
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwinscreenedges\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-15 00:48+0000\n"
+"PO-Revision-Date: 2022-07-21 19:01+0300\n"
+"Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
+"Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-POT-Import-Date: 2012-12-01 22:22:23+0000\n"
+"X-Generator: Lokalize 20.12.0\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Tommi Nieminen, Jorma Karvonen, Lasse Liehu"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "translator@legisign.org,karvonen.jorma@gmail.com,lasse.liehu@gmail.com"
+
+#: main.cpp:130 touch.cpp:124
+#, kde-format
+msgid "No Action"
+msgstr "Ei toimintoa"
+
+#: main.cpp:131 touch.cpp:125
+#, kde-format
+msgid "Peek at Desktop"
+msgstr "Kurkista työpöydälle"
+
+#: main.cpp:132 touch.cpp:126
+#, kde-format
+msgid "Lock Screen"
+msgstr "Lukitse näyttö"
+
+#: main.cpp:133 touch.cpp:127
+#, kde-format
+msgid "Show KRunner"
+msgstr "Näytä KRunner"
+
+#: main.cpp:134 touch.cpp:128
+#, kde-format
+msgid "Activity Manager"
+msgstr "Aktiviteettienhallinta"
+
+#: main.cpp:135 touch.cpp:129
+#, kde-format
+msgid "Application Launcher"
+msgstr "Sovelluskäynnistin"
+
+#: main.cpp:139 touch.cpp:133
+#, kde-format
+msgid "Present Windows"
+msgstr "Ikkunoiden esittäminen"
+
+#: main.cpp:140 touch.cpp:134
+#, kde-format
+msgid "%1 - All Desktops"
+msgstr "%1 – Kaikki työpöydät"
+
+#: main.cpp:141 touch.cpp:135
+#, kde-format
+msgid "%1 - Current Desktop"
+msgstr "%1 – Nykyinen työpöytä"
+
+#: main.cpp:142 touch.cpp:136
+#, kde-format
+msgid "%1 - Current Application"
+msgstr "%1 – Nykyinen sovellus"
+
+#: main.cpp:144 touch.cpp:138
+#, kde-format
+msgid "Toggle window switching"
+msgstr "Näytä tai piilota ikkunanvalitsin"
+
+#: main.cpp:145 touch.cpp:139
+#, kde-format
+msgid "Toggle alternative window switching"
+msgstr "Näytä tai piilota vaihtoehtoinen ikkunanvalitsin"
+
+#. i18n: ectx: property (text), widget (QLabel, infoLabel)
+#: main.ui:23
+#, kde-format
+msgid ""
+"You can trigger an action by pushing the mouse cursor against the "
+"corresponding screen edge or corner."
+msgstr ""
+"Voit käynnistää toiminnon työntämällä hiiriosoittimen vastaavaan näytön "
+"reunaan tai kulmaan."
+
+#. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
+#: main.ui:67
+#, kde-format
+msgid "&Maximize:"
+msgstr "S&uurenna:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderMaximize)
+#: main.ui:77
+#, kde-format
+msgid "Windows dragged to top edge"
+msgstr "Yläreunaan vedetyt ikkunat"
+
+#. i18n: ectx: property (text), widget (QLabel, quickTileLabel)
+#: main.ui:84
+#, kde-format
+msgid "&Tile:"
+msgstr "Aseta &rinnakkain:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderTiling)
+#: main.ui:94
+#, kde-format
+msgid "Windows dragged to left or right edge"
+msgstr "Vasempaan tai oikeaan reunaan vedetyt ikkunat"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: main.ui:101
+#, kde-format
+msgid "Behavior:"
+msgstr "Toiminta:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, remainActiveOnFullscreen)
+#: main.ui:108
+#, kde-format
+msgid "Remain active when windows are fullscreen"
+msgstr "Pidä aktiivisena ikkunoiden ollessa koko näytöllä"
+
+#. i18n: ectx: property (text), widget (QLabel, electricBorderCornerRatioLabel)
+#: main.ui:115
+#, kde-format
+msgid "Trigger &quarter tiling in:"
+msgstr "Käynnistä nel&jänneslaatoitus:"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, electricBorderCornerRatioSpin)
+#: main.ui:130
+#, no-c-format, kde-format
+msgid "%"
+msgstr " %"
+
+# Lopullinen jono: ”Outer x% of the screen”, jonka edellä selite ”Trigger quarter tiling in:”
+#. i18n: ectx: property (prefix), widget (QSpinBox, electricBorderCornerRatioSpin)
+#: main.ui:133
+#, kde-format
+msgid "Outer "
+msgstr "Ulompi "
+
+#. i18n: ectx: property (text), widget (QLabel, label_1)
+#: main.ui:149
+#, kde-format
+msgid "of the screen"
+msgstr "lähimmästä kulmasta"
+
+#. i18n: ectx: property (toolTip), widget (QLabel, desktopSwitchLabel)
+#: main.ui:174
+#, kde-format
+msgid ""
+"Change desktop when the mouse cursor is pushed against the edge of the screen"
+msgstr "Vaihda työpöytää viemällä hiiriosoitin näytön reunalle"
+
+#. i18n: ectx: property (text), widget (QLabel, desktopSwitchLabel)
+#: main.ui:177
+#, kde-format
+msgid "&Switch desktop on edge:"
+msgstr "&Vaihda työpöytää näytön reunalla:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
+#: main.ui:188
+#, kde-format
+msgctxt "Switch desktop on edge"
+msgid "Disabled"
+msgstr "Ei käytössä"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
+#: main.ui:193
+#, kde-format
+msgid "Only When Moving Windows"
+msgstr "Vain siirrettäessä ikkunoita"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
+#: main.ui:198
+#, kde-format
+msgid "Always Enabled"
+msgstr "Aina käytössä"
+
+#. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)
+#: main.ui:206
+#, kde-format
+msgid ""
+"Amount of time required for the mouse cursor to be pushed against the edge "
+"of the screen before the action is triggered"
+msgstr ""
+"Aika, jonka verran hiiriosoitinta on työnnettävä näytön reunaan, ennen kuin "
+"toiminto käynnistetään"
+
+#. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
+#: main.ui:209
+#, kde-format
+msgid "Activation &delay:"
+msgstr "Toiminnon &viive:"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ElectricBorderDelay)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ElectricBorderCooldown)
+#: main.ui:219 main.ui:254
+#, kde-format
+msgid " ms"
+msgstr " ms"
+
+#. i18n: ectx: property (toolTip), widget (QLabel, triggerCooldownLabel)
+#: main.ui:238
+#, kde-format
+msgid ""
+"Amount of time required after triggering an action until the next trigger "
+"can occur"
+msgstr ""
+"Aika, jonka kuluttua toiminnon käynnistämisestä voidaan käynnistää toinen "
+"toiminto"
+
+#. i18n: ectx: property (text), widget (QLabel, triggerCooldownLabel)
+#: main.ui:241
+#, kde-format
+msgid "&Reactivation delay:"
+msgstr "&Toistoviive:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_1)
+#: touch.ui:17
+#, kde-format
+msgid ""
+"You can trigger an action by swiping from the screen edge towards the center "
+"of the screen."
+msgstr ""
+"Voit käynnistää toiminnon pyyhkäisemällä näytön laidalta sen keskustaan."
+
+#~ msgid "Show Desktop"
+#~ msgstr "Näytä työpöytä"
+
+#~ msgid "Desktop Grid"
+#~ msgstr "Työpöytäruudukko"
+
+#~ msgid "Toggle Overview"
+#~ msgstr "Näytä tai piilota yleiskuva"
+
+#~ msgid "%1 - Cube"
+#~ msgstr "%1 – Kuutio"
+
+#~ msgid "%1 - Cylinder"
+#~ msgstr "%1 – Sylinteri"
+
+#~ msgid "%1 - Sphere"
+#~ msgstr "%1 – Lieriö"
+
+#~ msgid "Active Screen Corners and Edges"
+#~ msgstr "Aktiiviset näytön kulmat ja reunat"
+
+#~ msgid "Window Management"
+#~ msgstr "Ikkunanhallinta"
+
+#~ msgid "Maximize windows by dragging them to the top edge of the screen"
+#~ msgstr "Suurenna ikkunat vetämällä ne näytön ylälaitaan"
+
+#~ msgid "Quarter tiling triggered in the outer"
+#~ msgstr ""
+#~ "Ikkunat kiinnittyvät näytön neljäsosiksi, kun ne vedetään näytön laitaan "
+#~ "korkeintaan"
+
+#~ msgid "Other Settings"
+#~ msgstr "Muut asetukset"
+
+#~ msgctxt "Open krunner"
+#~ msgid "Run Command"
+#~ msgstr "Suorita komento"
+
+#~ msgid "Show Dashboard"
+#~ msgstr "Näytä kojelauta"
+
+#~ msgid "Prevent Screen Locking"
+#~ msgstr "Estä näytön lukittuminen"

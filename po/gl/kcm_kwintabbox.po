@@ -1,0 +1,390 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Marce Villarino <mvillarino@kde-espana.es>, 2009, 2011.
+# Marce Villarino <mvillarino@kde-espana.es>, 2011, 2012.
+# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2018, 2019.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-15 00:48+0000\n"
+"PO-Revision-Date: 2019-10-19 22:07+0200\n"
+"Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
+"Language-Team: Galician <proxecto@trasno.gal>\n"
+"Language: gl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 19.11.70\n"
+
+#: kwintabboxconfigform.cpp:77
+#, kde-format
+msgid "KWin"
+msgstr "KWin"
+
+#: layoutpreview.cpp:133
+#, fuzzy, kde-format
+#| msgid "Show desktop:"
+msgid "Show Desktop"
+msgstr "Mostrar o escritorio:"
+
+#: layoutpreview.cpp:163
+#, kde-format
+msgctxt "An example Desktop Name"
+msgid "Desktop 1"
+msgstr "Escritorio 1"
+
+#: main.cpp:58
+#, kde-format
+msgid "Main"
+msgstr "Principal"
+
+#: main.cpp:59
+#, kde-format
+msgid "Alternative"
+msgstr "Alternativo"
+
+#: main.cpp:61
+#, kde-format
+msgid "Get New Task Switchers..."
+msgstr "Obter novos selectores de tarefas…"
+
+#: main.cpp:75
+#, kde-format
+msgid ""
+"Focus policy settings limit the functionality of navigating through windows."
+msgstr ""
+"A política de focalización limita a funcionalidade da navegación polas "
+"xanelas."
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#: main.ui:32
+#, kde-format
+msgid "Content"
+msgstr "Contido"
+
+#. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
+#: main.ui:41
+#, kde-format
+msgid "Include \"Show Desktop\" icon"
+msgstr "Incluír a icona de «Mostrar o escritorio»"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
+#: main.ui:55
+#, kde-format
+msgid "Recently used"
+msgstr "Empregados recentemente"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
+#: main.ui:60
+#, kde-format
+msgid "Stacking order"
+msgstr "Orde de amoreamento"
+
+#. i18n: ectx: property (text), widget (QCheckBox, oneAppWindow)
+#: main.ui:68
+#, kde-format
+msgid "Only one window per application"
+msgstr "Só unha xanela de cada aplicación"
+
+#. i18n: ectx: property (text), widget (QCheckBox, orderMinimized)
+#: main.ui:78
+#, kde-format
+msgid "Order minimized windows after unminimized windows"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: main.ui:88
+#, kde-format
+msgid "Sort order:"
+msgstr "Modo de ordenación:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: main.ui:114
+#, kde-format
+msgid "Filter windows by"
+msgstr "Filtrar as xanelas segundo"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterDesktops)
+#: main.ui:123
+#, kde-format
+msgid "Virtual desktops"
+msgstr "Escritorios virtuais"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentDesktop)
+#: main.ui:167
+#, kde-format
+msgid "Current desktop"
+msgstr "Escritorio actual"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherDesktops)
+#: main.ui:174
+#, kde-format
+msgid "All other desktops"
+msgstr "Os demais escritorios"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterActivities)
+#: main.ui:184
+#, kde-format
+msgid "Activities"
+msgstr "Actividades"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentActivity)
+#: main.ui:228
+#, kde-format
+msgid "Current activity"
+msgstr "A actividade actual"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherActivities)
+#: main.ui:235
+#, kde-format
+msgid "All other activities"
+msgstr "As demais actividades"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterScreens)
+#: main.ui:245
+#, kde-format
+msgid "Screens"
+msgstr "Pantallas"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentScreen)
+#: main.ui:289
+#, kde-format
+msgid "Current screen"
+msgstr "A pantallas actual"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherScreens)
+#: main.ui:296
+#, kde-format
+msgid "All other screens"
+msgstr "As demais pantallas"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterMinimization)
+#: main.ui:306
+#, kde-format
+msgid "Minimization"
+msgstr "Minimización"
+
+#. i18n: ectx: property (text), widget (QRadioButton, visibleWindows)
+#: main.ui:350
+#, kde-format
+msgid "Visible windows"
+msgstr "As xanelas visíbeis"
+
+#. i18n: ectx: property (text), widget (QRadioButton, hiddenWindows)
+#: main.ui:357
+#, kde-format
+msgid "Hidden windows"
+msgstr "As xanelas agochadas"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
+#: main.ui:396
+#, kde-format
+msgid "Shortcuts"
+msgstr "Atallos"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: main.ui:405 main.ui:448
+#, kde-format
+msgid "Forward"
+msgstr "Adiante"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: main.ui:428
+#, kde-format
+msgid "All windows"
+msgstr "Todas as xanelas"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: main.ui:438 main.ui:458
+#, kde-format
+msgid "Reverse"
+msgstr "Inverter"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: main.ui:480
+#, kde-format
+msgid "Current application"
+msgstr "A aplicación actual"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: main.ui:499
+#, kde-format
+msgid "Visualization"
+msgstr "Visualización"
+
+#. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
+#: main.ui:529
+#, kde-format
+msgid "The effect to replace the list window when desktop effects are active."
+msgstr ""
+"O efecto co que substituír a xanela coa lista cando están activos os efectos "
+"do escritorio."
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
+#: main.ui:559
+#, kde-format
+msgid ""
+"The currently selected window will be highlighted by fading out all other "
+"windows. This option requires desktop effects to be active."
+msgstr ""
+"wA xanela escollida realzarase escurecendo todas as outras. Esta opción "
+"require ter activos os efectos do escritorio."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
+#: main.ui:562
+#, kde-format
+msgid "Show selected window"
+msgstr "Mostrar a xanela escollida"
+
+#~ msgid "Tabbox layout preview"
+#~ msgstr "Vista previa da disposición das lapelas"
+
+#~ msgid "Outline selected window"
+#~ msgstr "Mostrar o contorno da xanela escollida"
+
+#~ msgid ""
+#~ "These settings are used by the \"Walk Through Windows Alternative\" "
+#~ "actions."
+#~ msgstr ""
+#~ "Estes parámetros úsanse polas accións «Percorrer as xanelas alternativo»."
+
+#~ msgid "Walk Through Windows"
+#~ msgstr "Percorrer as xanelas"
+
+#~ msgid "Walk Through Windows (Reverse)"
+#~ msgstr "Percorrer as xanelas (Inverso)"
+
+#~ msgid "Walk Through Windows Alternative"
+#~ msgstr "Percorrer as xanelas alternativo"
+
+#~ msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgstr "Percorrer as xanelas alternativo (Inverso)"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative"
+#~ msgid "Walk Through Windows of Current Application"
+#~ msgstr "Percorrer as xanelas alternativo"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgid "Walk Through Windows of Current Application (Reverse)"
+#~ msgstr "Percorrer as xanelas alternativo (Inverso)"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative"
+#~ msgid "Walk Through Windows of Current Application Alternative"
+#~ msgstr "Percorrer as xanelas alternativo"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+#~ msgstr "Percorrer as xanelas alternativo (Inverso)"
+
+#~ msgctxt ""
+#~ "ComboBox item for window switcher based on layouts instead of a desktop "
+#~ "effect"
+#~ msgid "Layout based switcher"
+#~ msgstr "Selector baseado na disposición"
+
+#~ msgid "Configure Layout"
+#~ msgstr "Configurar a disposición"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Marce Villarino"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "mvillarino@users.sourceforge.net"
+
+#~ msgid "These settings are used by the \"Walk Through Windows\" actions."
+#~ msgstr "Estes parámetros úsanse polas accións «Percorrer as xanelas»."
+
+#~ msgid "Desktop:"
+#~ msgstr "Escritorio"
+
+#~ msgid "Windows from all desktops"
+#~ msgstr "As xanelas de todos os escritorios"
+
+#~ msgid "Windows from current desktop only"
+#~ msgstr "As xanelas deste escritorio"
+
+#~ msgid "Exclude windows from current desktop"
+#~ msgstr "Excluír as xanelas deste escritorio"
+
+#~ msgid "Windows from all activities"
+#~ msgstr "As xanelas de todas as actividades"
+
+#~ msgid "Exclude windows from current activity"
+#~ msgstr "Excluír as xanelas desta actividade"
+
+#~ msgid "All windows from all applications"
+#~ msgstr "Todas as xanelas de todos os programas"
+
+#~ msgid "All windows of the current application only"
+#~ msgstr "Todas as xanelas do programa actual"
+
+#~ msgid "Ignore status"
+#~ msgstr "Ignorar o estado"
+
+#~ msgid "Exclude minimized windows"
+#~ msgstr "Excluír as xanelas minimizadas"
+
+#~ msgid "Minimized windows only"
+#~ msgstr "Só as xanelas minimizadas"
+
+#~ msgid "Do not show desktop"
+#~ msgstr "Non mostrar o escritorio"
+
+#~ msgid "Show desktop to minimize all windows"
+#~ msgstr "Mostrar o escritorio para minimizar todas as xanelas"
+
+#~ msgid "Ignore"
+#~ msgstr "Ignorar"
+
+#~ msgid "Only windows from current screen"
+#~ msgstr "Só as xanelas da pantalla actual"
+
+#~ msgid "Exclude windows from current screen"
+#~ msgstr "Excluír as xanelas da pantalla actual"
+
+#~ msgid "Highlight selected window"
+#~ msgstr "Realzar a xanela escollida"
+
+#~ msgid "Effect:"
+#~ msgstr "Efecto:"
+
+#~ msgid "Display list while switching"
+#~ msgstr "Mostrar a lista mentres se troca"
+
+#~ msgid "Current Desktop Grouped by Applications"
+#~ msgstr "O escritorio actual agrupado segundo os programas"
+
+#~ msgctxt "Name for a window switcher layout showing live window thumbnails"
+#~ msgid "Thumbnails"
+#~ msgstr "Miniaturas"
+
+#~ msgctxt "Name for a window switcher layout showing icon, name and desktop"
+#~ msgid "Informative"
+#~ msgstr "Informativo"
+
+#~ msgctxt "Name for a window switcher layout showing only icon and name"
+#~ msgid "Compact"
+#~ msgstr "Compacto"
+
+#~ msgctxt "Name for a window switcher layout showing only the name"
+#~ msgid "Text"
+#~ msgstr "Só texto"
+
+#~ msgctxt "Name for a window switcher layout showing large icons"
+#~ msgid "Large Icons"
+#~ msgstr "Iconas grandes"
+
+#~ msgctxt "Name for a window switcher layout showing small icons"
+#~ msgid "Small Icons"
+#~ msgstr "Iconas pequenas"

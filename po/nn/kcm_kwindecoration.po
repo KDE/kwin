@@ -1,0 +1,294 @@
+# Translation of kcm_kwindecoration to Norwegian Nynorsk
+#
+# Gaute Hvoslef Kvalnes <gaute@verdsveven.com>, 1999, 2000, 2001, 2002, 2004, 2005.
+# Karl Ove Hufthammer <karl@huftis.org>, 2004, 2007, 2008, 2010, 2012, 2015, 2016, 2018, 2019, 2020, 2021, 2022.
+# Eirik U. Birkeland <eirbir@gmail.com>, 2008, 2010.
+# Øystein Steffensen-Alværvik <oysteins.omsetting@protonmail.com>, 2018, 2019.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwindecoration\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2022-01-15 18:27+0100\n"
+"Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
+"Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
+"Language: nn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 21.12.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Environment: kde\n"
+"X-Accelerator-Marker: &\n"
+"X-Text-Markup: kde4\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Karl Ove Hufthammer"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "karl@huftis.org"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr "Fleire handlingar for vindauget"
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, kde-format
+msgid "Application menu"
+msgstr "Program­meny"
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, kde-format
+msgid "On all desktops"
+msgstr "På alle skrivebord"
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr "Minimer"
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr "Maksimer"
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr "Lukk"
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr "Emne­hjelp"
+
+# «Fald saman» er rett omsetjing her
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr "Fald saman"
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr "Hald under andre vindauge"
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr "Hald over andre vindauge"
+
+#: kcm.cpp:49
+#, kde-format
+msgid "Window Decorations"
+msgstr "Vindaugspynt"
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr "Valerio Pilo"
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr "Opphavsperson"
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr "Standardstorleik frå temaet (%1)"
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+"Dette verktøyet lèt deg velja tema for vindaugspynt for den gjeldande økta "
+"og hindrar deg i å velja eit tema som ikkje finst eller som alt er valt."
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+"Namnet på temaet for vindaugspynt som du vil bruka i KWin. Viss du oppgjev "
+"ei fullstendig mappe­adresse, så vert det prøvd å finna eit tema i mappa og "
+"ta det i bruk."
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr ""
+"Vis alle temaa som finst på systemet (og marker kva som er gjeldande tema)"
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+"Tolka %1 som KWin Aurorae-temaet «%2». Prøver å velja dette som nytt tema."
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+"Du prøvde å oppgje ei filadresse, men adressa viste ikkje noko tema. Avbryt "
+"sidan ikkje noko tema kunne takast i bruk."
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr "Det valde temaet «%1» er alt i bruk som tema for vindaugspynt."
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr "Peikartemaet %1 er no teke i bruk i gjeldande Plasma-økt."
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+"Klarte ikkje lagra temainnstillingane. Grunnen er ukjend, men dette er ein "
+"kritisk feil. Det kan likevel vera det vil verka dersom du prøver på nytt."
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr "Fann ikkje temaet «%1». Temaet må vera eitt av følgjande: %2"
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr "Du har desse tema for KWin-vindaugspynt tilgjengeleg:"
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr "Tittellinje"
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr "Slepp ein knapp her for å fjerna han"
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr "Dra knappar mellom her og tittellinja"
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr "Med denne modulen kan du setja opp vindaugspynten."
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr "Tema"
+
+#: package/contents/ui/main.qml:57
+#, kde-format
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "Knappar på tittellinja"
+
+#: package/contents/ui/main.qml:93
+#, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "Storleik på vindaugsramme:"
+
+#: package/contents/ui/main.qml:112
+#, kde-format
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr "Hent ny vindaugspynt …"
+
+#: package/contents/ui/main.qml:141
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr "Lukk vindauga ved å dobbeltklikka på menyknappen"
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr "Trykk på og hald inne meny­knappen for å visa menyen."
+
+#: package/contents/ui/main.qml:165
+#, kde-format
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "Vis hjelpebobler til knappar på tittellinja"
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr "Rediger temaet %1"
+
+#: utils.cpp:25
+#, kde-format
+msgid "No Borders"
+msgstr "Inga ramme"
+
+#: utils.cpp:26
+#, kde-format
+msgid "No Side Borders"
+msgstr "Inga ramme på sidene"
+
+#: utils.cpp:27
+#, kde-format
+msgid "Tiny"
+msgstr "Ørliten"
+
+#: utils.cpp:28
+#, kde-format
+msgid "Normal"
+msgstr "Vanleg"
+
+#: utils.cpp:29
+#, kde-format
+msgid "Large"
+msgstr "Stor"
+
+#: utils.cpp:30
+#, kde-format
+msgid "Very Large"
+msgstr "Svært stor"
+
+#: utils.cpp:31
+#, kde-format
+msgid "Huge"
+msgstr "Enorm"
+
+#: utils.cpp:32
+#, kde-format
+msgid "Very Huge"
+msgstr "Kolossal"
+
+#: utils.cpp:33
+#, kde-format
+msgid "Oversized"
+msgstr "Altfor stor"

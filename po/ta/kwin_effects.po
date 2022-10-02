@@ -1,0 +1,1835 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Kishore G <kishore96@gmail.com>, 2021, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: கேபசூ 4.1 தமிழாக்கம்\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-09-28 00:51+0000\n"
+"PO-Revision-Date: 2022-08-18 19:41+0530\n"
+"Last-Translator: Kishore G <kishore96@gmail.com>\n"
+"Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
+"Language: ta\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 22.07.90\n"
+
+#. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
+#: blur/blur_config.ui:17
+#, kde-format
+msgid "Blur strength:"
+msgstr "மங்கலாக்கும் அளவு:"
+
+#. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
+#. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
+#: blur/blur_config.ui:42 blur/blur_config.ui:108
+#, kde-format
+msgid "Light"
+msgstr "குறைவு"
+
+#. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
+#. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
+#: blur/blur_config.ui:74 blur/blur_config.ui:137
+#, kde-format
+msgid "Strong"
+msgstr "அதிகம்"
+
+#. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
+#: blur/blur_config.ui:83
+#, fuzzy, kde-format
+#| msgid "&Strength:"
+msgid "Noise strength:"
+msgstr "&வலிமை:"
+
+#: colorpicker/colorpicker.cpp:101
+#, kde-format
+msgid ""
+"Select a position for color picking with left click or enter.\n"
+"Escape or right click to cancel."
+msgstr ""
+"எந்த இடத்திலுள்ள நிறத்தை எடுக்க வேண்டுமோ, அவ்விடத்தை இடது க்ளிக்கை அல்லது enter விசையை "
+"கொண்டு தேர்ந்தெடுங்கள்.\n"
+"கைவிட Escape வசையையோ வலது க்ளிக்கையோ பயன்படுத்துங்கள்."
+
+#: desktopgrid/desktopgrid_config.cpp:49 invert/invert_config.cpp:35
+#: magnifier/magnifier_config.cpp:55 mouseclick/mouseclick_config.cpp:48
+#: mousemark/mousemark_config.cpp:50 overview/kcm/overvieweffectkcm.cpp:35
+#: showpaint/showpaint_config.cpp:33
+#: thumbnailaside/thumbnailaside_config.cpp:54
+#: trackmouse/trackmouse_config.cpp:52
+#: windowview/kcm/windowvieweffectkcm.cpp:36 zoom/zoom_config.cpp:58
+#, kde-format
+msgid "KWin"
+msgstr "கேவின்"
+
+#: desktopgrid/desktopgrid_config.cpp:54 desktopgrid/desktopgrideffect.cpp:35
+#, kde-format
+msgid "Show Desktop Grid"
+msgstr "பணிமேடை கிரிடை காட்டு"
+
+#: desktopgrid/desktopgrid_config.cpp:61
+#, kde-format
+msgctxt "Desktop name alignment:"
+msgid "Disabled"
+msgstr "முடக்கு"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: desktopgrid/desktopgrid_config.cpp:62 glide/glide_config.ui:70
+#: glide/glide_config.ui:168
+#, kde-format
+msgid "Top"
+msgstr "மேல்"
+
+#: desktopgrid/desktopgrid_config.cpp:63
+#, kde-format
+msgid "Top-Right"
+msgstr "மேல்-வலது"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: desktopgrid/desktopgrid_config.cpp:64 glide/glide_config.ui:75
+#: glide/glide_config.ui:173
+#, kde-format
+msgid "Right"
+msgstr "வலது"
+
+#: desktopgrid/desktopgrid_config.cpp:65
+#, kde-format
+msgid "Bottom-Right"
+msgstr "கீழ்-வலது"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: desktopgrid/desktopgrid_config.cpp:66 glide/glide_config.ui:80
+#: glide/glide_config.ui:178
+#, kde-format
+msgid "Bottom"
+msgstr "கீழ்"
+
+#: desktopgrid/desktopgrid_config.cpp:67
+#, kde-format
+msgid "Bottom-Left"
+msgstr "கீழ்-இடது"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
+#: desktopgrid/desktopgrid_config.cpp:68 glide/glide_config.ui:85
+#: glide/glide_config.ui:183
+#, kde-format
+msgid "Left"
+msgstr "இடது"
+
+#: desktopgrid/desktopgrid_config.cpp:69
+#, kde-format
+msgid "Top-Left"
+msgstr "மேல்-இடது"
+
+#: desktopgrid/desktopgrid_config.cpp:70
+#, kde-format
+msgid "Center"
+msgstr "நடு"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: desktopgrid/desktopgrid_config.ui:17 mousemark/mousemark_config.ui:17
+#: thumbnailaside/thumbnailaside_config.ui:17
+#, kde-format
+msgid "Appearance"
+msgstr "தோற்றம்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
+#: desktopgrid/desktopgrid_config.ui:30
+#, kde-format
+msgid "Pager"
+msgstr "பணிமேடை மாற்றியை பொறுத்து"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
+#: desktopgrid/desktopgrid_config.ui:35
+#, kde-format
+msgid "Automatic"
+msgstr "தானாக"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
+#: desktopgrid/desktopgrid_config.ui:40
+#, kde-format
+msgid "Custom"
+msgstr "விருப்பமானது"
+
+#. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
+#: desktopgrid/desktopgrid_config.ui:48
+#, kde-format
+msgid "N&umber of rows:"
+msgstr "வரிசைகளின் &எண்ணிக்கை:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: desktopgrid/desktopgrid_config.ui:103
+#, kde-format
+msgid "Desktop &name alignment:"
+msgstr "பணிமேடையின் &பெயர் காட்டப்படுவது:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShowAddRemove)
+#: desktopgrid/desktopgrid_config.ui:116
+#, kde-format
+msgid "Show buttons to alter count of virtual desktops"
+msgstr "பணிமேடைகளின் எண்ணிக்கையை மாற்றும் பட்டன்களை காட்டு"
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: desktopgrid/desktopgrid_config.ui:123
+#, kde-format
+msgid "&Grid layout mode:"
+msgstr "&கிரிடை தளவமைக்கும் முறை:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: desktopgrid/desktopgrid_config.ui:137 overview/kcm/overvieweffectkcm.ui:30
+#: windowview/kcm/windowvieweffectkcm.ui:30
+#, kde-format
+msgid "Closest"
+msgstr "பக்கத்து பக்கத்தில்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: desktopgrid/desktopgrid_config.ui:142 overview/kcm/overvieweffectkcm.ui:35
+#: windowview/kcm/windowvieweffectkcm.ui:35
+#, kde-format
+msgid "Natural"
+msgstr "இயல்பானது"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: desktopgrid/desktopgrid_config.ui:150
+#, kde-format
+msgid "Windows layout:"
+msgstr "சாளரங்களின் தளவமைப்பு:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: desktopgrid/desktopgrid_config.ui:166
+#, kde-format
+msgid "Activation"
+msgstr "தூண்டுவது"
+
+#. i18n: ectx: property (text), widget (QLabel, label_Strength)
+#: diminactive/diminactive_config.ui:17
+#, kde-format
+msgid "Strength:"
+msgstr "குறைக்கும் அளவு:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_Dim)
+#: diminactive/diminactive_config.ui:40
+#, kde-format
+msgid "Dim:"
+msgstr "பிரகாசத்தை குறை:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
+#: diminactive/diminactive_config.ui:47
+#, kde-format
+msgid "Docks and panels"
+msgstr "பலகைகள்"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
+#: diminactive/diminactive_config.ui:54
+#, kde-format
+msgid "Desktop"
+msgstr "பணிமேடை"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
+#: diminactive/diminactive_config.ui:61
+#, kde-format
+msgid "Keep above windows"
+msgstr "கட்டாயமாக மேலே வைத்திருக்கும் சாளரங்கள்"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
+#: diminactive/diminactive_config.ui:68
+#, kde-format
+msgid "By window group"
+msgstr "சாளர தொகுப்பை (window group-ஐ) பொறுத்து"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
+#: diminactive/diminactive_config.ui:75
+#, kde-format
+msgid "Fullscreen windows"
+msgstr "முழுத்திரை சாளரங்கள்"
+
+#. i18n: ectx: property (text), widget (QLabel, label_Duration)
+#: glide/glide_config.ui:19 scale/package/contents/ui/config.ui:17
+#, kde-format
+msgid "Duration:"
+msgstr "நீடிக்கும் காலம்:"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
+#: glide/glide_config.ui:32 scale/package/contents/ui/config.ui:30
+#, kde-format
+msgid "Default"
+msgstr "இயல்பிருப்பு"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
+#: glide/glide_config.ui:35 scale/package/contents/ui/config.ui:33
+#, kde-format
+msgid " milliseconds"
+msgstr " மில்லிநொடிகள்"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
+#: glide/glide_config.ui:50
+#, kde-format
+msgid "Window Open Animation"
+msgstr "சாளரங்களை திறக்கும்போது"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
+#. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
+#: glide/glide_config.ui:56 glide/glide_config.ui:154
+#, kde-format
+msgid "Rotation edge:"
+msgstr "சுழற்சி ஓரம்:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
+#. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
+#: glide/glide_config.ui:93 glide/glide_config.ui:191
+#, kde-format
+msgid "Rotation angle:"
+msgstr "சுழற்சி கோண அளவு:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InDistance)
+#. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
+#: glide/glide_config.ui:119 glide/glide_config.ui:198
+#, kde-format
+msgid "Distance:"
+msgstr "தூரம்:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
+#: glide/glide_config.ui:148
+#, kde-format
+msgid "Window Close Animation"
+msgstr "சாளரங்களை மூடும்போது"
+
+#: invert/invert.cpp:42 invert/invert_config.cpp:38
+#, kde-format
+msgid "Toggle Invert Effect"
+msgstr "புரட்டலை நிலைமாற்று"
+
+#: invert/invert.cpp:50 invert/invert_config.cpp:44
+#, kde-format
+msgid "Toggle Invert Effect on Window"
+msgstr "சாளரத்திற்கான புரட்டலை நிலைமாற்று"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
+#: login/package/contents/ui/config.ui:17
+#, kde-format
+msgid "Fade to black (fullscreen splash screens only)"
+msgstr "மங்கச்செய்து கருப்பு திரையை காட்டு (முழுத்திரை துவக்கத் திரைகள் மட்டும்)"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: magiclamp/magiclamp_config.ui:17
+#, kde-format
+msgid "Animation duration:"
+msgstr "அசைவூட்டம் நீடிக்கும் காலம்:"
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_AnimationDuration)
+#: magiclamp/magiclamp_config.ui:36
+#, kde-format
+msgctxt "Duration of rotation"
+msgid "Default"
+msgstr "இயல்பிருப்பு"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
+#: magiclamp/magiclamp_config.ui:39
+#, kde-format
+msgid "milliseconds"
+msgstr "மில்லிநொடிகள்"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupSize)
+#: magnifier/magnifier_config.ui:17
+#, kde-format
+msgid "Size"
+msgstr "அளவு"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: magnifier/magnifier_config.ui:23
+#, kde-format
+msgid "&Width:"
+msgstr "&அகலம்:"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Width)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Height)
+#: magnifier/magnifier_config.ui:42 magnifier/magnifier_config.ui:74
+#, kde-format
+msgid " px"
+msgstr " px"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: magnifier/magnifier_config.ui:55
+#, kde-format
+msgid "&Height:"
+msgstr "&உயரம்"
+
+#: mouseclick/mouseclick.cpp:34 mouseclick/mouseclick_config.cpp:51
+#, kde-format
+msgid "Toggle Mouse Click Effect"
+msgstr "சுட்டி க்ளிக் அசைவூட்டத்தை நிலைமாற்று"
+
+#: mouseclick/mouseclick.cpp:42
+#, kde-format
+msgctxt "Left mouse button"
+msgid "Left"
+msgstr "இடது"
+
+#: mouseclick/mouseclick.cpp:43
+#, kde-format
+msgctxt "Middle mouse button"
+msgid "Middle"
+msgstr "நடு"
+
+#: mouseclick/mouseclick.cpp:44
+#, kde-format
+msgctxt "Right mouse button"
+msgid "Right"
+msgstr "வலது"
+
+#: mouseclick/mouseclick.h:61
+#, kde-format
+msgid "↓"
+msgstr "↓"
+
+#: mouseclick/mouseclick.h:62
+#, kde-format
+msgid "↑"
+msgstr "↑"
+
+#. i18n: ectx: attribute (title), widget (QWidget, basic_tab)
+#: mouseclick/mouseclick_config.ui:21
+#, kde-format
+msgid "Basic Settings"
+msgstr "அடிப்படையான அமைப்புகள்"
+
+#. i18n: ectx: property (text), widget (QLabel, button1_label)
+#: mouseclick/mouseclick_config.ui:37
+#, kde-format
+msgid "Left Mouse Button Color:"
+msgstr "இடது சுட்டி பட்டனுக்கான நிறம்:"
+
+#. i18n: ectx: property (text), widget (QLabel, button2_label)
+#: mouseclick/mouseclick_config.ui:50
+#, kde-format
+msgid "Middle Mouse Button Color:"
+msgstr "நடு சுட்டி பட்டனுக்கான நிறம்:"
+
+#. i18n: ectx: property (text), widget (QLabel, button3_label)
+#: mouseclick/mouseclick_config.ui:70
+#, kde-format
+msgid "Right Mouse Button Color:"
+msgstr "வலது சுட்டி பட்டனுக்கான நிறம்:"
+
+#. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
+#: mouseclick/mouseclick_config.ui:91
+#, kde-format
+msgid "Advanced Settings"
+msgstr "மேம்பட்ட அமைப்புகள்"
+
+#. i18n: ectx: property (title), widget (QGroupBox, rings)
+#: mouseclick/mouseclick_config.ui:97
+#, kde-format
+msgid "Rings"
+msgstr "வளையங்கள்"
+
+#. i18n: ectx: property (text), widget (QLabel, ring_line_width_label)
+#: mouseclick/mouseclick_config.ui:103
+#, kde-format
+msgid "Line Width:"
+msgstr "கோட்டின் அகலம்:"
+
+#. i18n: ectx: property (suffix), widget (QDoubleSpinBox, kcfg_LineWidth)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
+#: mouseclick/mouseclick_config.ui:119 mouseclick/mouseclick_config.ui:171
+#, kde-format
+msgid " pixel"
+msgstr " பிக்செல்"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingLife)
+#: mouseclick/mouseclick_config.ui:132
+#, kde-format
+msgid " msec"
+msgstr " மிநொ"
+
+#. i18n: ectx: property (text), widget (QLabel, ring_duration_label)
+#: mouseclick/mouseclick_config.ui:145
+#, kde-format
+msgid "Ring Duration:"
+msgstr "வளையங்கள் காட்டப்படும் நேரம்:"
+
+#. i18n: ectx: property (text), widget (QLabel, ring_radius_label)
+#: mouseclick/mouseclick_config.ui:155
+#, kde-format
+msgid "Ring Radius:"
+msgstr "வளையங்களின் ஆரம்:"
+
+#. i18n: ectx: property (text), widget (QLabel, ring_count_label)
+#: mouseclick/mouseclick_config.ui:184
+#, kde-format
+msgid "Ring Count:"
+msgstr "வளையங்களின் எண்ணிக்கை:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, font)
+#: mouseclick/mouseclick_config.ui:210
+#, kde-format
+msgid "Text"
+msgstr "உரை"
+
+#. i18n: ectx: property (text), widget (QLabel, font_label)
+#: mouseclick/mouseclick_config.ui:216
+#, kde-format
+msgid "Font:"
+msgstr "எழுத்துரு:"
+
+#. i18n: ectx: property (text), widget (QLabel, showtext_label)
+#: mouseclick/mouseclick_config.ui:233
+#, kde-format
+msgid "Show Text:"
+msgstr "உரையை காட்டு:"
+
+#: mousemark/mousemark.cpp:36
+#, kde-format
+msgid "Clear All Mouse Marks"
+msgstr "சுட்டியின் அனைத்து தடங்களையும் அழி"
+
+#: mousemark/mousemark.cpp:43 mousemark/mousemark_config.cpp:59
+#, kde-format
+msgid "Clear Last Mouse Mark"
+msgstr "சுட்டியின் கடைசி தடத்தை அழி"
+
+#: mousemark/mousemark_config.cpp:53
+#, kde-format
+msgid "Clear Mouse Marks"
+msgstr "சுட்டியின் தடங்களை அழி"
+
+#: mousemark/mousemark_config.cpp:100
+#, kde-format
+msgctxt "Suffix"
+msgid " pixel"
+msgid_plural " pixels"
+msgstr[0] " பிக்செல்"
+msgstr[1] " பிக்செல்கள்"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: mousemark/mousemark_config.ui:23
+#, kde-format
+msgid "Wid&th:"
+msgstr "&அகலம்:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: mousemark/mousemark_config.ui:36
+#, kde-format
+msgid "&Color:"
+msgstr "&நிறம்;"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: mousemark/mousemark_config.ui:82
+#, kde-format
+msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+msgstr "Shift+Meta விசைகளை அழுத்திக்கொண்டே சுட்டியை நகர்த்தி வரையுங்கள்."
+
+#: outputlocator/outputlocator.cpp:48
+#, kde-format
+msgctxt "@label"
+msgid "Unknown"
+msgstr "தெரியாதது"
+
+#: overview/kcm/overvieweffectkcm.cpp:41 overview/overvieweffect.cpp:31
+#, kde-format
+msgid "Toggle Overview"
+msgstr "மேலோட்டத்தை காட்டு/மறை"
+
+#. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
+#: overview/kcm/overvieweffectkcm.ui:22
+#: windowview/kcm/windowvieweffectkcm.ui:22
+#, kde-format
+msgid "Layout mode:"
+msgstr "தளவமைக்கும் முறை:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
+#: overview/kcm/overvieweffectkcm.ui:53
+#, kde-format
+msgid "Blur background:"
+msgstr "பின்புலத்தை மங்கலாக்கு:"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: overview/kcm/overvieweffectkcm.ui:70
+#, kde-format
+msgid "Ignore minimized windows:"
+msgstr "ஒதுக்கப்பட்ட சாளரங்களை பொருட்படுத்தாதே:"
+
+#: overview/qml/DesktopBar.qml:186
+#, kde-format
+msgid "Delete Virtual Desktop"
+msgstr "மெய்நிகர் பணிமேடையை நீக்கு"
+
+#: overview/qml/DesktopBar.qml:282
+#, kde-format
+msgid "Add Virtual Desktop"
+msgstr "மெய்நிகர் பணிமேடையைச் சேர்"
+
+#: overview/qml/ScreenView.qml:226
+#, kde-format
+msgid "No matching windows"
+msgstr "எந்த சாளரமும் பொருந்தவில்லை"
+
+#: private/qml/WindowHeapDelegate.qml:152
+#, kde-format
+msgid "Drag Down To Close"
+msgstr "மூடு கீழே இழுங்கள்"
+
+#: private/qml/WindowHeapDelegate.qml:462
+#, kde-format
+msgctxt "@info:tooltip as in: 'close this window'"
+msgid "Close window"
+msgstr "சாளரத்தை மூடு"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InScale)
+#: scale/package/contents/ui/config.ui:46
+#, kde-format
+msgid "Window open scale:"
+msgstr "சாளர திறப்புக்கான அளவுமாற்றம்:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_OutScale)
+#: scale/package/contents/ui/config.ui:53
+#, kde-format
+msgid "Window close scale:"
+msgstr "சாளரத்தை மூடும்போது அளவுமாற்றம்:"
+
+#: screenshot/screenshotdbusinterface1.cpp:480
+#, kde-format
+msgctxt "Notification caption that a screenshot got saved to file"
+msgid "Screenshot"
+msgstr "திரைப்பிடிப்பு"
+
+#: screenshot/screenshotdbusinterface1.cpp:481
+#, kde-format
+msgctxt "Notification with path to screenshot file"
+msgid "Screenshot saved to %1"
+msgstr "திரைப்பிடிப்பு %1 என்ற இடத்திற்கு சேமிக்கப்பட்டது"
+
+#: screenshot/screenshotdbusinterface1.cpp:797
+#: screenshot/screenshotdbusinterface2.cpp:472
+#, kde-format
+msgid ""
+"Select window to screen shot with left click or enter.\n"
+"Escape or right click to cancel."
+msgstr ""
+"எந்த சாளரத்தை படமெடுக்க வேண்டுமோ, அதை இடது க்ளிக்கை அல்லது enter விசையை கோண்டு "
+"தேர்ந்தெடுங்கள்.\n"
+"கைவிட escape விசையை அல்லது வலது க்ளிக்கை பயன்படுத்துங்கள்."
+
+#: screenshot/screenshotdbusinterface1.cpp:800
+#: screenshot/screenshotdbusinterface2.cpp:490
+#, kde-format
+msgid ""
+"Create screen shot with left click or enter.\n"
+"Escape or right click to cancel."
+msgstr ""
+"படமெடுக்க இடது க்ளிக்கை அல்லது enter விசையை பயன்படுத்துங்கள்.\n"
+"கைவிட escape விசையை அல்லது வலது க்ளிக்கை பயன்படுத்துங்கள்."
+
+#: showfps/qml/main.qml:110
+#, fuzzy, kde-format
+#| msgid "Ring Duration:"
+msgctxt "@label"
+msgid "Paint Duration"
+msgstr "வளையங்கள் காட்டப்படும் நேரம்:"
+
+#: showfps/qml/main.qml:162
+#, fuzzy, kde-format
+#| msgid "Ring Count:"
+msgctxt "@label"
+msgid "Paint Amount"
+msgstr "வளையங்களின் எண்ணிக்கை:"
+
+#: showfps/qml/main.qml:175
+#, kde-format
+msgctxt "@label"
+msgid "Current FPS"
+msgstr "தற்போதைய FPS"
+
+#: showfps/qml/main.qml:184
+#, kde-format
+msgctxt "@label"
+msgid "Maximum FPS"
+msgstr "அதிகபட்ச FPS"
+
+#: showfps/qml/main.qml:192
+#, kde-format
+msgctxt "@label"
+msgid "This effect is not a benchmark"
+msgstr "இந்த அசைவூட்டம் ஒரு நிலைக்குறி (benchmark) அல்ல"
+
+#: showpaint/showpaint.cpp:38 showpaint/showpaint_config.cpp:38
+#, kde-format
+msgid "Toggle Show Paint"
+msgstr "திரைப்புதுப்பிபுகளைக் காட்டுவதை இயக்கு/முடக்கு"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
+#: slide/slide_config.ui:17
+#, kde-format
+msgid "Gap between desktops"
+msgstr "பணிமேடைகளுக்கிடையேயான இடைவெளி"
+
+#. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
+#: slide/slide_config.ui:23
+#, kde-format
+msgid "Horizontal:"
+msgstr "கிடைமட்டமாக:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
+#: slide/slide_config.ui:46
+#, kde-format
+msgid "Vertical:"
+msgstr "நெடுக்காக:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideDocks)
+#: slide/slide_config.ui:72
+#, kde-format
+msgid "Slide docks"
+msgstr "பலகைகளை நழுவச்செய்"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
+#: slide/slide_config.ui:79
+#, kde-format
+msgid "Slide desktop background"
+msgstr "பின்புலப்படத்தை நழுவச்செய்"
+
+#: thumbnailaside/thumbnailaside.cpp:29
+#: thumbnailaside/thumbnailaside_config.cpp:59
+#, kde-format
+msgid "Toggle Thumbnail for Current Window"
+msgstr "தற்போதைய சாளரத்திற்கான சிறுபடத்தை காட்டு/மறை"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: thumbnailaside/thumbnailaside_config.ui:23
+#, kde-format
+msgid "Maximum &width:"
+msgstr "அதிகபட்ச &அகலம்:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: thumbnailaside/thumbnailaside_config.ui:36
+#, kde-format
+msgid "&Spacing:"
+msgstr "&இடைவெளி:"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Spacing)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_MaxWidth)
+#: thumbnailaside/thumbnailaside_config.ui:55
+#: thumbnailaside/thumbnailaside_config.ui:106
+#, kde-format
+msgid " pixels"
+msgstr " பிக்செல்கள்"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: thumbnailaside/thumbnailaside_config.ui:68
+#, kde-format
+msgid "&Opacity:"
+msgstr "&ஒளிபுகாமை:"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Opacity)
+#: thumbnailaside/thumbnailaside_config.ui:87
+#, no-c-format, kde-format
+msgid " %"
+msgstr " %"
+
+#: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
+#, kde-format
+msgid "Track mouse"
+msgstr "சுட்டியை கண்டுபிடி"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: trackmouse/trackmouse_config.ui:26
+#, kde-format
+msgid "Trigger effect with:"
+msgstr "இவ்வாறு அசைவூட்டத்தை தூண்டு:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
+#: trackmouse/trackmouse_config.ui:33
+#, kde-format
+msgid "Keyboard shortcut:"
+msgstr "விசைப்பலகை சுருக்குவழி:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
+#: trackmouse/trackmouse_config.ui:43
+#, kde-format
+msgid "Modifier keys:"
+msgstr "மாற்றிவிசைகள்:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Alt)
+#: trackmouse/trackmouse_config.ui:65
+#, kde-format
+msgid "Alt"
+msgstr "Alt"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Control)
+#: trackmouse/trackmouse_config.ui:72
+#, kde-format
+msgid "Ctrl"
+msgstr "Ctrl"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Shift)
+#: trackmouse/trackmouse_config.ui:79
+#, kde-format
+msgid "Shift"
+msgstr "Shift"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Meta)
+#: trackmouse/trackmouse_config.ui:86
+#, kde-format
+msgid "Meta"
+msgstr "Meta"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
+#: translucency/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Translucency"
+msgstr "ஒளிபுகுமை"
+
+#. i18n: ectx: property (title), widget (QGroupBox, m_opacityGroupBox)
+#: translucency/package/contents/ui/config.ui:20
+#, kde-format
+msgid "General Translucency Settings"
+msgstr "பொதுவான ஒளிபுகுமை அமைப்புகள்"
+
+#. i18n: ectx: property (text), widget (QLabel, comboboxpopup_label)
+#: translucency/package/contents/ui/config.ui:64
+#, kde-format
+msgid "Combobox popups:"
+msgstr "கீழிறங்கு பெட்டிகள்:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: translucency/package/contents/ui/config.ui:121
+#: translucency/package/contents/ui/config.ui:431
+#, kde-format
+msgid "Opaque"
+msgstr "ஒளிபுகாது"
+
+#. i18n: ectx: property (text), widget (QLabel, dialogs_label)
+#: translucency/package/contents/ui/config.ui:137
+#, kde-format
+msgid "Dialogs:"
+msgstr "துணை சாளரங்கள்:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: translucency/package/contents/ui/config.ui:156
+#: translucency/package/contents/ui/config.ui:418
+#, kde-format
+msgid "Transparent"
+msgstr "ஒளிபுகும்"
+
+#. i18n: ectx: property (text), widget (QLabel, menus_label)
+#: translucency/package/contents/ui/config.ui:188
+#, kde-format
+msgid "Menus:"
+msgstr "பட்டிகள்:"
+
+#. i18n: ectx: property (text), widget (QLabel, moveresize_label)
+#: translucency/package/contents/ui/config.ui:207
+#, kde-format
+msgid "Moving windows:"
+msgstr "நகர்த்தப்படும் சாளரங்கள்:"
+
+#. i18n: ectx: property (text), widget (QLabel, inactive_label)
+#: translucency/package/contents/ui/config.ui:226
+#, kde-format
+msgid "Inactive windows:"
+msgstr "செயலிலில்லாதசாளரங்கள்:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
+#: translucency/package/contents/ui/config.ui:267
+#, kde-format
+msgid "Set menu translucency independently"
+msgstr "பட்டிகளுக்கு தனித்தனியாக ஒளிபுகுவதை அமை"
+
+#. i18n: ectx: property (text), widget (QLabel, dropdownmenus_label)
+#: translucency/package/contents/ui/config.ui:285
+#, kde-format
+msgid "Dropdown menus:"
+msgstr "கீழிறங்கு பட்டிகள்"
+
+#. i18n: ectx: property (text), widget (QLabel, popupmenus_label)
+#: translucency/package/contents/ui/config.ui:329
+#, kde-format
+msgid "Popup menus:"
+msgstr "மேல்தோன்றும் பட்டிகள்:"
+
+#. i18n: ectx: property (text), widget (QLabel, tornoffmenus_label)
+#: translucency/package/contents/ui/config.ui:367
+#, kde-format
+msgid "Torn-off menus:"
+msgstr "பிரித்தெடுத்த பட்டிகள்:"
+
+#: windowview/kcm/windowvieweffectkcm.cpp:42 windowview/windowvieweffect.cpp:45
+#, kde-format
+msgid "Toggle Present Windows (Current desktop)"
+msgstr "சாளர முன்வைப்பை காட்டு/மறை (தற்போதைய பணிமேடை)"
+
+#: windowview/kcm/windowvieweffectkcm.cpp:49 windowview/windowvieweffect.cpp:55
+#, kde-format
+msgid "Toggle Present Windows (All desktops)"
+msgstr "சாளர முன்வைப்பை காட்டு/மறை (எல்லா பணிமேடைகளும்)"
+
+#: windowview/kcm/windowvieweffectkcm.cpp:56 windowview/windowvieweffect.cpp:65
+#, kde-format
+msgid "Toggle Present Windows (Window class)"
+msgstr "சாளர முன்வைப்பை காட்டு/மறை (சாளர வகையை பொறுத்து)"
+
+#: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:75
+#, kde-format
+msgid "Toggle Present Windows (Window class on current desktop)"
+msgstr "சாளர முன்வைப்பை காட்டு/மறை (தற்போதைய பணிமேடையில் தற்போதைய சாளரவகை)"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
+#: windowview/kcm/windowvieweffectkcm.ui:53
+#, kde-format
+msgid "Ignore &minimized windows"
+msgstr "&ஒதுக்கப்பட்ட சாளரங்களை பொருட்படுத்தாதே"
+
+#: windowview/qml/main.qml:106
+#, kde-format
+msgid "No Matches"
+msgstr "பொருத்தங்கள் இல்லை"
+
+#: windowview/qml/main.qml:106
+#, kde-format
+msgid "No Windows"
+msgstr "சாளரங்கள் இல்லை"
+
+#. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
+#: wobblywindows/wobblywindows_config.ui:20
+#, kde-format
+msgid "Advanced"
+msgstr "மேம்பட்டவை"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: wobblywindows/wobblywindows_config.ui:26
+#, kde-format
+msgid "&Stiffness:"
+msgstr "&விறைப்பு:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: wobblywindows/wobblywindows_config.ui:68
+#, kde-format
+msgid "Dra&g:"
+msgstr "&உராய்வு:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: wobblywindows/wobblywindows_config.ui:81
+#, kde-format
+msgid "&Move factor:"
+msgstr "&நகர்வதன் விகிதம்:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_MoveWobble)
+#: wobblywindows/wobblywindows_config.ui:155
+#, kde-format
+msgid "Wo&bble when moving"
+msgstr "&நகர்த்தும்போது ஆட்டு"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ResizeWobble)
+#: wobblywindows/wobblywindows_config.ui:162
+#, kde-format
+msgid "Wobble when &resizing"
+msgstr "&அளவுமாற்றும்போது ஆட்டு"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AdvancedMode)
+#: wobblywindows/wobblywindows_config.ui:182
+#, kde-format
+msgid "Enable &advanced mode"
+msgstr "&மேம்பட்ட பயன்முறையை இயக்கு"
+
+#. i18n: ectx: property (title), widget (QGroupBox, basicGroup)
+#: wobblywindows/wobblywindows_config.ui:192
+#, kde-format
+msgid "&Wobbliness"
+msgstr "&தள்ளாடுவது"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: wobblywindows/wobblywindows_config.ui:201
+#, kde-format
+msgid "Less"
+msgstr "குறைவு"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: wobblywindows/wobblywindows_config.ui:224
+#, kde-format
+msgid "More"
+msgstr "அதிகம்"
+
+#: zoom/zoom.cpp:68
+#, kde-format
+msgid "Move Zoomed Area to Left"
+msgstr "உருப்பெருக்கப்பட்ட பரப்பளவை இடதுபுறமாக நகர்த்து"
+
+#: zoom/zoom.cpp:76
+#, kde-format
+msgid "Move Zoomed Area to Right"
+msgstr "உருப்பெருக்கப்பட்ட பரப்பளவை வலதுபுறமாக நகர்த்து"
+
+#: zoom/zoom.cpp:84
+#, kde-format
+msgid "Move Zoomed Area Upwards"
+msgstr "உருப்பெருக்கப்பட்ட பரப்பளவை மேலே நகர்த்து"
+
+#: zoom/zoom.cpp:92
+#, kde-format
+msgid "Move Zoomed Area Downwards"
+msgstr "உருப்பெருக்கப்பட்ட பரப்பளவை கீழே நகர்த்து"
+
+#: zoom/zoom.cpp:101 zoom/zoom_config.cpp:108
+#, kde-format
+msgid "Move Mouse to Focus"
+msgstr "குவியத்திற்கு சுட்டியை நகர்த்து"
+
+#: zoom/zoom.cpp:109 zoom/zoom_config.cpp:115
+#, kde-format
+msgid "Move Mouse to Center"
+msgstr "மையத்திற்கு சுட்டியை நகர்த்து"
+
+#: zoom/zoom_config.cpp:80
+#, kde-format
+msgid "Move Left"
+msgstr "இடதுபுறமாக நகர்"
+
+#: zoom/zoom_config.cpp:87
+#, kde-format
+msgid "Move Right"
+msgstr "வலதுபுறமாக நகர்"
+
+#: zoom/zoom_config.cpp:94
+#, kde-format
+msgid "Move Up"
+msgstr "மேலே நகர்"
+
+#: zoom/zoom_config.cpp:101
+#, kde-format
+msgid "Move Down"
+msgstr "கீழே நகர்"
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label)
+#. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
+#: zoom/zoom_config.ui:25 zoom/zoom_config.ui:41
+#, kde-format
+msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
+msgstr "பெரிதாக்கும்போதோ சிறிதாக்கும்போதோ குறிப்பிட்ட விகித‍த்தையே பயன்படுத்து."
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: zoom/zoom_config.ui:28
+#, kde-format
+msgid "Zoom Factor:"
+msgstr "உருப்பெருக்க விகிதம்:"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
+#: zoom/zoom_config.ui:66
+#, kde-format
+msgid ""
+"Enable tracking of the focused location. This needs QAccessible to be "
+"enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+msgstr ""
+"இத்தேர்வு இயக்கப்பட்டால், குவியத்தையே காட்சிப்பகுதி தொடரும். இதை பயன்படுத்த, ஒவ்வொரு "
+"செயலிக்கும் QAccessible என்பதை இயக்க வேண்டும் (\"export "
+"QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
+#: zoom/zoom_config.ui:69
+#, kde-format
+msgid "Enable Focus Tracking"
+msgstr "குவியத்தை தொடர்"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
+#: zoom/zoom_config.ui:76
+#, kde-format
+msgid ""
+"Enable tracking of the text cursor. This needs QAccessible to be enabled per "
+"application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+msgstr ""
+"இத்தேர்வு இயக்கப்பட்டால், உரைப்பகுதியிலுள்ள இடஞ்சுட்டியை காட்சிப்பகுதி தொடரும். இதை "
+"பயன்படுத்த, ஒவ்வொரு செயலிக்கும் QAccessible என்பதை இயக்க வேண்டும் (\"export "
+"QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
+#: zoom/zoom_config.ui:79
+#, kde-format
+msgid "Enable Text Cursor Tracking"
+msgstr "உரைக்கான இடஞ்சுட்டியை தொடர்"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: zoom/zoom_config.ui:86
+#, kde-format
+msgid "Mouse Pointer:"
+msgstr "சுட்டிக்குறி:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
+#: zoom/zoom_config.ui:99
+#, kde-format
+msgid "Visibility of the mouse-pointer."
+msgstr "சுட்டிக்குறி காட்டப்படுவது."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: zoom/zoom_config.ui:103
+#, kde-format
+msgid "Scale"
+msgstr "அளவை மாற்று"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: zoom/zoom_config.ui:108
+#, kde-format
+msgid "Keep"
+msgstr "வைத்திரு"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
+#: zoom/zoom_config.ui:113
+#, kde-format
+msgid "Hide"
+msgstr "காட்டாதே"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MouseTracking)
+#: zoom/zoom_config.ui:121
+#, kde-format
+msgid "Track moving of the mouse."
+msgstr "சுட்டி நகர்வதை பொறுத்து நகர வேண்டுமா?"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: zoom/zoom_config.ui:125
+#, kde-format
+msgid "Proportional"
+msgstr "விகிதசம‍மாக நகர்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: zoom/zoom_config.ui:130
+#, kde-format
+msgid "Centered"
+msgstr "சுட்டியை நடுப்படுத்து"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: zoom/zoom_config.ui:135
+#, kde-format
+msgid "Push"
+msgstr "சுட்டியை கொண்டு தள்ளு"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
+#: zoom/zoom_config.ui:140
+#, kde-format
+msgid "Disabled"
+msgstr "முடக்கு"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: zoom/zoom_config.ui:148
+#, kde-format
+msgid "Mouse Tracking:"
+msgstr "சுட்டியை பின்தொடர்தல்:"
+
+#~ msgid "Search..."
+#~ msgstr "தேடு..."
+
+#~ msgid "&Radius:"
+#~ msgstr "&ஆரம்:"
+
+#~ msgid "Text position:"
+#~ msgstr "உரையின் இருப்பிடம்:"
+
+#~ msgid "Inside Graph"
+#~ msgstr "வரைபடத்திற்குள்"
+
+#~ msgid "Nowhere"
+#~ msgstr "எங்குமில்லை"
+
+#~ msgid "Top Left"
+#~ msgstr "இடது மேற்புறம்"
+
+#~ msgid "Top Right"
+#~ msgstr "வலது மேற்புறம்"
+
+#~ msgid "Bottom Left"
+#~ msgstr "இடது கீழ்புறம்"
+
+#~ msgid "Bottom Right"
+#~ msgstr "வலது கீழ்புறம்"
+
+#~ msgid "Text font:"
+#~ msgstr "உரைக்கான எழுத்துரு:"
+
+#~ msgid "Text color:"
+#~ msgstr "உரையின் நிறம்:"
+
+#~ msgid "Text alpha:"
+#~ msgstr "உரையின் ஒளிபுகாமை:"
+
+#~ msgid "Show graph:"
+#~ msgstr "வரைபடத்தை காட்டு:"
+
+#~ msgid "Show on active screen"
+#~ msgstr "செயலிலுள்ள திரையில் காட்டு"
+
+#~ msgid "Show Message:"
+#~ msgstr "உரையை காட்டு:"
+
+#~ msgid "Show \"not a benchmark\" message"
+#~ msgstr "\"Not a benchmark\" எனும் தகவலைக் காட்டு"
+
+#~ msgid "Colorize Text:"
+#~ msgstr "உரைக்கு நிறமிடு:"
+
+#~ msgid "Color text by value (green > yellow > red)"
+#~ msgstr "உரைக்கு மதிப்பின் அடிப்படையில் நிறமிடு (பச்சை > மஞ்சள் > சிவப்பு)"
+
+#~ msgid "Zoom &duration:"
+#~ msgstr "&அசைவூட்டம் நீடிக்கும் காலம்:"
+
+#~ msgctxt "Duration of zoom"
+#~ msgid "Default"
+#~ msgstr "இயல்பிருப்பு"
+
+#~ msgid "Border wid&th:"
+#~ msgstr "விளிம்புகளின் &அகலம்:"
+
+#~ msgid "Click behavior:"
+#~ msgstr "க்ளிக் செய்வது:"
+
+#~ msgid ""
+#~ "If the Present Windows effect is enabled, it will be automatically "
+#~ "triggered."
+#~ msgstr "'சாளரங்களை முன்வை' என்பது இயக்கப்படின், அது தானாக தூண்டப்படும்."
+
+#~ msgid "Switch desktop and activate window"
+#~ msgstr "பணிமேடையை மாற்றி சாளரத்தை செயல்படுத்தும்"
+
+#~ msgid "Switch desktop only"
+#~ msgstr "பணிமேடையை மட்டும் மாற்றும்"
+
+#~ msgid "Natural Layout Settings"
+#~ msgstr "இயல்பான தளவமைப்புக்கான அமைப்புகள்"
+
+#~ msgid "Fill &gaps"
+#~ msgstr "இடைவெளிகளை &நிரப்பு"
+
+#~ msgid "Faster"
+#~ msgstr "வேகமாக"
+
+#~ msgid "Nicer"
+#~ msgstr "அழகாக"
+
+#~ msgid "Left button:"
+#~ msgstr "இடது பட்டன்:"
+
+#~ msgid "No action"
+#~ msgstr "எதுவும் செய்யாது"
+
+#~ msgid "Activate window"
+#~ msgstr "சாளரத்தை செயல்படுத்தும்"
+
+#~ msgid "End effect"
+#~ msgstr "முன்வைப்பதை நிறுத்தும்"
+
+#~ msgid "Bring window to current desktop"
+#~ msgstr "தற்போதைய பணிமேடைக்கு சாளரத்தை கொண்டுவரும்"
+
+#~ msgid "Send window to all desktops"
+#~ msgstr "அனைத்து பணிமேடைகளுக்கு சாளரத்தை அனுப்பும்"
+
+#~ msgid "(Un-)Minimize window"
+#~ msgstr "சாளரத்தை ஒதுக்கும்/காட்டும்"
+
+#~ msgid "Middle button:"
+#~ msgstr "நடு பட்டன்:"
+
+#~ msgid "Right button:"
+#~ msgstr "வலது பட்டன்:"
+
+#~ msgctxt "@title:group actions when clicking on desktop"
+#~ msgid "Desktop"
+#~ msgstr "பணிமேடை"
+
+#~ msgid "Show desktop"
+#~ msgstr "பணிமேடையை காட்டும்"
+
+#~ msgid "Display window &titles"
+#~ msgstr "சாளர &தலைப்புகளை காட்டு"
+
+#~ msgid "Display window &icons"
+#~ msgstr "சாளர &சின்னங்களை காட்டு"
+
+#~ msgid "Show &panels"
+#~ msgstr "&பலகைகளை காட்டு"
+
+#~ msgid "Regular Grid"
+#~ msgstr "மாறாத கிரிட்"
+
+#~ msgid "Flexible Grid"
+#~ msgstr "மாறக்கூடிய கிரிட்"
+
+#~ msgid "Provide buttons to close the windows"
+#~ msgstr "சாளரங்களை மூடும் பட்டன்களை காட்டு"
+
+#~ msgid "Scale window"
+#~ msgstr "சாளர அளவுமாற்றம்"
+
+#~ msgid "Show outline"
+#~ msgstr "கோட்டோவியம் காட்டு"
+
+#~ msgid "Display for moving windows"
+#~ msgstr "நகர்த்தப்படும் சாளரங்களுக்கு காட்டு"
+
+#~ msgid "Display for resizing windows"
+#~ msgstr "சாளரங்களின் அளவை மாற்றும்போது காட்டு"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Blur"
+#~ msgstr "மங்கலாக்கு"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Blurs the background behind semi-transparent windows"
+#~ msgstr "ஒளிபுகும் சாளரங்களின் பின்புலத்தை மங்கலாக்கும்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Color Picker"
+#~ msgstr "நிறத் தேர்வி"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Supports picking a color"
+#~ msgstr "திரையிலுள்ள ஓர் நிறத்தை தேர்ந்தெடுக்க உதவும்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Background contrast"
+#~ msgstr "பின்புலம் நிறமாறுபாடு"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Improve contrast and readability behind semi-transparent windows"
+#~ msgstr ""
+#~ "ஒளிபுகும் சாளரங்களுக்கு பின் உள்ளவற்றை படிக்க உதவும் வித‍த்தில் நிறங்களுக்கிடையேயான "
+#~ "மாறுபாட்டை அதிகமாக்கும்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Desktop Grid"
+#~ msgstr "பணிமேடை கிரிட்"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Zoom out so all desktops are displayed side-by-side in a grid"
+#~ msgstr "அனைத்து பணிமேடைகளை வரிசைகளிலும் நெடுவரிசைகளிலும் காட்டும்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Dim Inactive"
+#~ msgstr "செயலிலில்லாதவற்றின் பிரகாசத்தை குறை"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Darken inactive windows"
+#~ msgstr "செயலிலில்லாத சாளரங்களின் பிரகாசத்தை குறைக்கும்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Fall Apart"
+#~ msgstr "நொறுக்கு"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Closed windows fall into pieces"
+#~ msgstr "மூடப்படும் சாளரங்கள் துண்டு துண்டாக நொறுங்கி மறையும்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Highlight Window"
+#~ msgstr "சாளரத்தை முன்னிலைப்படுத்து"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Highlight the appropriate window when hovering over taskbar entries"
+#~ msgstr ""
+#~ "பணிப்பட்டை பதிவுகளின்மீது சுட்டியை வைக்கும்போது உரிய சாளரத்தை முன்னிலைப்படுத்தும்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Invert"
+#~ msgstr "புரட்டு"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Inverts the color of the desktop and windows"
+#~ msgstr "பணிமேடையிலும் சாளரங்களிலும் உள்ள நிறங்களை புரட்டும்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Looking Glass"
+#~ msgstr "பூதக்கண்ணாடி"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "A screen magnifier that looks like a fisheye lens"
+#~ msgstr "பூதக்கண்ணாடியை போல திரையில் உள்ளவற்றை பெரிதாக்கும்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Magic Lamp"
+#~ msgstr "மாய விளக்கு"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Simulate a magic lamp when minimizing windows"
+#~ msgstr "சாளரங்களை ஒதுக்கும்போது, மாய விளக்குக்குள் அவை உறிஞ்சப்படுவதுபோல் அசைவூட்டும்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Magnifier"
+#~ msgstr "உருப்பெருக்கி"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Magnify the section of the screen that is near the mouse cursor"
+#~ msgstr "சுட்டிக்குறிக்கு அருகிலுள்ள திரையின் பகுதியை பெரிதாக்கி காட்டும்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Mouse Click Animation"
+#~ msgstr "சுட்டி க்ளிக் அசைவூட்டம்"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid ""
+#~ "Creates an animation whenever a mouse button is clicked. This is useful "
+#~ "for screenrecordings/presentations"
+#~ msgstr ""
+#~ "சுட்டியின் பட்டன்கள் அழுத்தப்படும்போது ஓர் அசைவூட்டத்தை காட்டும். வில்லைக்காட்சிகளுக்கு/"
+#~ "திரைப்பிடிப்புகளுக்கு இதை பயன்படுத்தலாம்."
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Mouse Mark"
+#~ msgstr "சுட்டியை குறி"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Allows you to draw lines on the desktop"
+#~ msgstr "சுட்டியை கொண்டு திரையில் கோடுகள் வரையுங்கள்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Overview"
+#~ msgstr "மேலோட்டம்"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Allows you to overview virtual desktops and windows"
+#~ msgstr "பணிமேடைகளையும் சாளரங்களையும் ஒருங்கே மேற்பார்வையிட உதவும்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Present Windows"
+#~ msgstr "சாளரங்களை முன்வை"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Zoom out until all opened windows can be displayed side-by-side"
+#~ msgstr "அனைத்து சாளரங்களையும் பக்கத்து பக்கத்தில் சிறிதாக்கி காட்டும்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Resize Window"
+#~ msgstr "சாளரத்தின் அளவை மாற்று"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid ""
+#~ "Resizes windows with a fast texture scale instead of updating contents"
+#~ msgstr ""
+#~ "சாளரங்களின் அளவை மாற்றும்போது, உள்ளடக்கங்களை புதுப்பிக்காமல் அவற்றின் அளவை மட்டும் "
+#~ "மாற்றும்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Screen Edge"
+#~ msgstr "திரையின் ஓரம்"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Highlights a screen edge when approaching"
+#~ msgstr "திரையின் ஓரத்தை நெருங்கும்போது அவ்வோரத்தை முன்னிலைப்படுத்தும்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Screenshot"
+#~ msgstr "திரைப்பிடிப்பு"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Helper effect for screenshot tools"
+#~ msgstr "திரைப்பிடிப்புகளை எடுக்க உதவும் அசைவூட்டம்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Show FPS"
+#~ msgstr "FPS-ஐ காட்டு"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Display KWin's performance in the corner of the screen"
+#~ msgstr "திரையின் ஓர் ஓரத்தில் கேவின்னின் செயல்திறனை காட்டு"
+
+#, fuzzy
+#~| msgid "Show Desktop Grid"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Show Paint"
+#~ msgstr "பணிமேசை தடுப்பினை காட்டுக"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Startup Feedback"
+#~ msgstr "தொடக்க பின்னூட்டம்"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Helper effect for startup feedback"
+#~ msgstr "தொடக்க பின்னூட்டத்தை காட்ட உதவும் அசைவூட்டம்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Thumbnail Aside"
+#~ msgstr "ஓரத்தில் சிறுபடம்"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Display window thumbnails on the edge of the screen"
+#~ msgstr "திரையின் ஓரத்தில் சிறுபடங்களை காட்டும்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Touch Points"
+#~ msgstr "தொடும் இடங்கள்"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Visualize touch points"
+#~ msgstr "தொடப்படும் இடங்களை காட்டும்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Track Mouse"
+#~ msgstr "சுட்டியை கண்டுபிடி"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Display a mouse cursor locating effect when activated"
+#~ msgstr "தூண்டப்படும்போது சுட்டிக்குறியை கண்டுபிடிக்க உதவும்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Window Geometry"
+#~ msgstr "சாளர வடிவம்"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Display window geometries on move/resize"
+#~ msgstr ""
+#~ "சாளரங்களை நகர்த்தும்போதோ அளவுமாற்றும்போதோ அவற்றின் வடிவங்களை கோட்டோவியமாக காட்டும்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Wobbly Windows"
+#~ msgstr "ஆடும் சாளரங்கள்"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Deform windows while they are moving"
+#~ msgstr "சாளரங்களை நகர்த்தும்போது அவற்றை தள்ளாட செய்யும்"
+
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Zoom"
+#~ msgstr "உருப்பெருக்கம்"
+
+#~ msgctxt "Comment describing the KWin Effect"
+#~ msgid "Magnify the entire desktop"
+#~ msgstr "முழு திரையை உருப்பெருக்கி காட்டு"
+
+#, fuzzy
+#~| msgid "Show Desktop Grid"
+#~ msgctxt "Special entry in alt+tab list for minimizing all windows"
+#~ msgid "Show Desktop"
+#~ msgstr "பணிமேசை தடுப்பினை காட்டுக"
+
+#, fuzzy
+#~| msgid "Bottom"
+#~ msgid "Zoom"
+#~ msgstr "கீழே"
+
+#, fuzzy
+#~| msgid "&Animation duration:"
+#~ msgid "Animation"
+#~ msgstr "&அசைவூட்ட காலவளவு:"
+
+#, fuzzy
+#~| msgid "Animate &switch"
+#~ msgid "Animate switch"
+#~ msgstr "அசைவூட்டி &மாற்றுக"
+
+#, fuzzy
+#~| msgid "Animation on tab box &open"
+#~ msgid "Animation on tab box open"
+#~ msgstr "தத்து பெட்டி &திறக்க அசைவூட்டம்"
+
+#, fuzzy
+#~| msgid "Animation on tab box &close"
+#~ msgid "Animation on tab box close"
+#~ msgstr "தத்து பெட்டி &மூட அசைவூட்டம்"
+
+#, fuzzy
+#~| msgid "&Reflections"
+#~ msgid "Reflections"
+#~ msgstr "&பிரதிபலிப்புகள்"
+
+#, fuzzy
+#~| msgid "&Color:"
+#~ msgid "Rear color"
+#~ msgstr "&நிறம்"
+
+#, fuzzy
+#~| msgid "Shadow color:"
+#~ msgid "Front color"
+#~ msgstr "நிழலின் நிறம்:"
+
+#, fuzzy
+#~| msgid "Show Desktop Grid"
+#~ msgid "Desktop Cylinder"
+#~ msgstr "பணிமேசை தடுப்பினை காட்டுக"
+
+#, fuzzy
+#~| msgid "Nowhere"
+#~ msgid "Desktop Sphere"
+#~ msgstr "எங்குமில்லை"
+
+#, fuzzy
+#~| msgid "Animate desktop changes"
+#~ msgid "Display desktop name"
+#~ msgstr "பணிமேசை மாற்றங்களுக்கு அசைவூட்டுக"
+
+#, fuzzy
+#~| msgid "&Reflections"
+#~ msgid "Reflection"
+#~ msgstr "&பிரதிபலிப்புகள்"
+
+#, fuzzy
+#~| msgid "&Animation duration:"
+#~ msgid "Rotation duration:"
+#~ msgstr "&அசைவூட்ட காலவளவு:"
+
+#, fuzzy
+#~| msgid "&Opacity:"
+#~ msgid "Opacity"
+#~ msgstr "&காட்டுமை:"
+
+#, fuzzy
+#~| msgid "Changes opacity of following elements:"
+#~ msgid "Do not change opacity of windows"
+#~ msgstr "கீழகாணும் உறுகப்புகளின் காணப்படும் திறனை மாற்றும்:"
+
+#, fuzzy
+#~| msgid "&Color:"
+#~ msgid "Cap color:"
+#~ msgstr "&நிறம்"
+
+#, fuzzy
+#~| msgid "Decorations:"
+#~ msgid "Sphere Cap Deformation"
+#~ msgstr "அலங்காரங்கள்:"
+
+#, fuzzy
+#~| msgid "Nowhere"
+#~ msgid "Sphere"
+#~ msgstr "எங்குமில்லை"
+
+#, fuzzy
+#~| msgid "for windows on all desktops: "
+#~ msgid "Do not animate windows on all desktops"
+#~ msgstr "அனைத்து பணிமேசைகளிலும் உள்ள சாளரங்களுக்காக:"
+
+#, fuzzy
+#~| msgid "Nowhere"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Desktop Cube"
+#~ msgstr "எங்குமில்லை"
+
+#, fuzzy
+#~| msgid "for windows on current desktop: "
+#~ msgid "Toggle Flip Switch (Current desktop)"
+#~ msgstr "தற்போதைய பணிமேசையின் மீதுள்ள சாளரங்களுக்காக:"
+
+#, fuzzy
+#~| msgid "for windows on all desktops: "
+#~ msgid "Toggle Flip Switch (All desktops)"
+#~ msgstr "அனைத்து பணிமேசைகளிலும் உள்ள சாளரங்களுக்காக:"
+
+#, fuzzy
+#~| msgid "F&lip Animation duration:"
+#~ msgid "Flip animation duration:"
+#~ msgstr "ம&றுதலிப்பு அசைவூட்ட காலவளவு:"
+
+#, fuzzy
+#~| msgid "Decorations:"
+#~ msgctxt "Duration of flip animation"
+#~ msgid "Default"
+#~ msgstr "அலங்காரங்கள்:"
+
+#~ msgid ""
+#~ "Filter:\n"
+#~ "%1"
+#~ msgstr ""
+#~ "வழிகட்டுக:\n"
+#~ "%1"
+
+#, fuzzy
+#~| msgid "&Animation duration:"
+#~ msgctxt "Name of a KWin Effect"
+#~ msgid "Minimize Animation"
+#~ msgstr "&அசைவூட்ட காலவளவு:"
+
+#~ msgid "Apply effect to &panels"
+#~ msgstr "தாக்கத்தை &பலகத்துக்கு பொருத்துக"
+
+#, fuzzy
+#~| msgid "Apply effect to &groups"
+#~ msgid "Apply effect to the desk&top"
+#~ msgstr "&குழுக்களுக்கு தாக்கத்தை பொருத்துக"
+
+#, fuzzy
+#~| msgid "Apply effect to &panels"
+#~ msgid "Apply effect to &keep-above windows"
+#~ msgstr "தாக்கத்தை &பலகத்துக்கு பொருத்துக"
+
+#~ msgid "Apply effect to &groups"
+#~ msgstr "&குழுக்களுக்கு தாக்கத்தை பொருத்துக"
+
+#, fuzzy
+#~| msgid "Decorations:"
+#~ msgctxt "Duration of the slide animation"
+#~ msgid "Default"
+#~ msgstr "அலங்காரங்கள்:"
+
+#, fuzzy
+#~| msgid "Right"
+#~ msgctxt "More brightness"
+#~ msgid "Lighter"
+#~ msgstr "வலது"
+
+#, fuzzy
+#~| msgid " msec"
+#~ msgid "ms"
+#~ msgstr " மிநொ"
+
+#, fuzzy
+#~| msgid "Apply effect to &groups"
+#~ msgid "Apply blur effect to background"
+#~ msgstr "&குழுக்களுக்கு தாக்கத்தை பொருத்துக"
+
+#~ msgid "Decorations:"
+#~ msgstr "அலங்காரங்கள்:"
+
+#, fuzzy
+#~| msgid "Shadow opacity:"
+#~ msgid "Background window &opacity:"
+#~ msgstr "நிழல் காட்டப்படுமை:"
+
+#, fuzzy
+#~| msgid "&Number of snowflakes:"
+#~ msgid "Number of windows:"
+#~ msgstr "ஸ்நோபிளேக்ஸின் &எண்ணிக்கை"
+
+#, fuzzy
+#~| msgid "Decorations:"
+#~ msgctxt "Duration of fading"
+#~ msgid "Default"
+#~ msgstr "அலங்காரங்கள்:"
+
+#~ msgid "Toggle Video Recording"
+#~ msgstr "பதிவொளி பதிதலை மாற்றுக"
+
+#~ msgid "Path to save video:"
+#~ msgstr "பதிவொளியைக் காத்தற்கான பாதை:"
+
+#~ msgid "Snow"
+#~ msgstr "பனி"
+
+#~ msgid "Toggle Snow on Desktop"
+#~ msgstr "பணிமேசையின் பனியை மாற்றுக"
+
+#, fuzzy
+#~| msgid " px"
+#~ msgid " pixel/frame"
+#~ msgid_plural " pixels/frame"
+#~ msgstr[0] " பிக்ஸ்"
+#~ msgstr[1] " பிக்ஸ்"
+
+#, fuzzy
+#~| msgid "Toggle Sharpen Effect"
+#~ msgctxt "@action Enables/Disables an effect that makes windows more sharp"
+#~ msgid "Toggle Sharpen Effect"
+#~ msgstr "கூராக்கிய தாக்கத்தை மாற்றுக"
+
+#~ msgid "&Number of snowflakes:"
+#~ msgstr "ஸ்நோபிளேக்ஸின் &எண்ணிக்கை"
+
+#~ msgid "M&inimum size of snowflake:"
+#~ msgstr "ஸ்நோப்ளேக்ஸின் &குறைந்தபட்ச அளவு:"
+
+#~ msgid "M&aximum size of snowflake:"
+#~ msgstr "ஸ்நோபிளேக்ஸின் &அதிகபட்ச அளவு:"
+
+#, fuzzy
+#~| msgid "Maximal &width:"
+#~ msgid "Maximum &vertical speed:"
+#~ msgstr "அதிகபட்ச &அகலம்:"
+
+#, fuzzy
+#~| msgid "Moved/resized windows:"
+#~ msgid "Snow &behind windows"
+#~ msgstr "சாளரங்கள் அளவு மாற்றப்பட்டன/நகர்த்தப்பட்டன:"
+
+#, fuzzy
+#~| msgid "X offset:"
+#~ msgid "&X offset:"
+#~ msgstr "X ஆப்செட்"
+
+#, fuzzy
+#~| msgid "Y offset:"
+#~ msgid "&Y offset:"
+#~ msgstr "Y ஆப்செட்"
+
+#, fuzzy
+#~| msgid " %"
+#~ msgid "%"
+#~ msgstr " %"
+
+#, fuzzy
+#~| msgid "Shadow fuzzyness:"
+#~ msgid "&Fuzziness:"
+#~ msgstr "நிழற் குறைபாடு:"
+
+#, fuzzy
+#~| msgid "Size"
+#~ msgid "&Size:"
+#~ msgstr "அளவு"
+
+#, fuzzy
+#~| msgid "Active window has stronger shadow"
+#~ msgid "&Active windows have stronger shadows"
+#~ msgstr "தற்போதைய சாளரத்திற்கு திடமான நிழலுள்ளது"
+
+#, fuzzy
+#~| msgid "Shadow color:"
+#~ msgid "Background brightness"
+#~ msgstr "நிழலின் நிறம்:"
+
+#, fuzzy
+#~| msgid "Shadow color:"
+#~ msgid "Background saturation"
+#~ msgstr "நிழலின் நிறம்:"
+
+#~ msgid "Hold Ctrl+Meta keys to see where the mouse cursor is."
+#~ msgstr ""
+#~ "எலியத்தின் இடஞ்சுட்டி இருக்கும் இடத்தை காட்ட Ctrl+Meta விசைகளை அழுத்திக் கொண்டே "
+#~ "இருக்கவும்."
+
+#, fuzzy
+#~| msgid "&Animation duration:"
+#~ msgid "Rearrange &duration:"
+#~ msgstr "&அசைவூட்ட காலவளவு:"
+
+#, fuzzy
+#~| msgid "Decorations:"
+#~ msgctxt "Duration of rearrangement"
+#~ msgid "Default"
+#~ msgstr "அலங்காரங்கள்:"
+
+#~ msgid "Animate &flip"
+#~ msgstr "&மறுதலிப்பை அசைவூட்டுக"
+
+#, fuzzy
+#~| msgid "Decorations:"
+#~ msgid "Default Shadow"
+#~ msgstr "அலங்காரங்கள்:"
+
+#, fuzzy
+#~| msgid "Decorations:"
+#~ msgid "Decoration Shadows"
+#~ msgstr "அலங்காரங்கள்:"
+
+#~ msgid "None"
+#~ msgstr "ஏதுமில்லை"
+
+#~ msgid "Shadow size (relative to window):"
+#~ msgstr "நிழலளவு (சாளரத்திற்கு தக்கபடி):"
+
+#, fuzzy
+#~| msgid "Animate desktop changes"
+#~ msgid "Show cube when desktop changed"
+#~ msgstr "பணிமேசை மாற்றங்களுக்கு அசைவூட்டுக"
+
+#, fuzzy
+#~| msgid "&Opacity:"
+#~ msgid "Cube &opacity:"
+#~ msgstr "&காட்டுமை:"
+
+#~ msgid "Activate when cursor is at a specific edge or corner of the screen:"
+#~ msgstr "இடஞஙசுட்டி திரையின் குறிப்பிட்ட முனையில் இருக்கும்போது செயற்படுத்துக:"
+
+#, fuzzy
+#~| msgid "Toggle Expose Effect (incl other desktops)"
+#~ msgid "Toggle Expose Effect (incl. other desktops)"
+#~ msgstr "வெளிப்படுத்தும் தாக்கத்தை மாற்றுக (ஏனைய பணிமேசைகளையும் சேர்த்து)"

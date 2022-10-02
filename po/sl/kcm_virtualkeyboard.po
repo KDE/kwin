@@ -1,0 +1,54 @@
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the kwin package.
+#
+# Matjaž Jeran <matjaz.jeran@amis.net>, 2021.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2021-04-27 00:19+0000\n"
+"PO-Revision-Date: 2021-04-28 08:26+0200\n"
+"Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
+"Language-Team: Slovenian <lugos-slo@lugos.si>\n"
+"Language: sl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 20.08.1\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
+"%100==4 ? 3 : 0);\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Matjaž Jeran"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "matjaz.jeran@amis.net"
+
+#: kcmvirtualkeyboard.cpp:31
+#, kde-format
+msgid "Virtual Keyboard"
+msgstr "Virtualna tipkovnica"
+
+#: kcmvirtualkeyboard.cpp:33
+#, kde-format
+msgid "Choose Virtual Keyboard"
+msgstr "Izberite virtualno tipkovnico"
+
+#: kcmvirtualkeyboard.cpp:70
+#, kde-format
+msgid "None"
+msgstr "Nobena"
+
+#: kcmvirtualkeyboard.cpp:74
+#, kde-format
+msgid "Do not use any virtual keyboard"
+msgstr "Ne uporabljajte virtualne tipkovnice"
+
+#: package/contents/ui/main.qml:16
+#, kde-format
+msgid "This module lets you choose the virtual keyboard to use."
+msgstr "Ta modul omogoča izbrati virtualno tipkovnico za uporabo."

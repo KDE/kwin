@@ -1,0 +1,416 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Ashok <ashok567@gmail.com>, 2010.
+# Shankar Prasad <svenkate@redhat.com>, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-15 00:48+0000\n"
+"PO-Revision-Date: 2010-01-15 13:41+0530\n"
+"Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
+"Language-Team: Kannada <kde-l10n-kn@kde.org>\n"
+"Language: kn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.0\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: kwintabboxconfigform.cpp:77
+#, kde-format
+msgid "KWin"
+msgstr ""
+
+#: layoutpreview.cpp:133
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "Show Desktop"
+msgstr "ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳು"
+
+#: layoutpreview.cpp:163
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgctxt "An example Desktop Name"
+msgid "Desktop 1"
+msgstr "ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳು"
+
+#: main.cpp:58
+#, kde-format
+msgid "Main"
+msgstr "ಪ್ರಮುಖ"
+
+#: main.cpp:59
+#, kde-format
+msgid "Alternative"
+msgstr "ಪರ್ಯಾಯ"
+
+#: main.cpp:61
+#, kde-format
+msgid "Get New Task Switchers..."
+msgstr ""
+
+#: main.cpp:75
+#, kde-format
+msgid ""
+"Focus policy settings limit the functionality of navigating through windows."
+msgstr ""
+"ಗಮನ ಕೇಂದ್ರೀಕರಿಸುವ ನಿಯಮದ ಸಂಯೋಜನೆಗಳು ಕಿಟಕಿಗಳ ನಡುವೆ ಸಂಚರಿಸುವ ಸೌಕರ್ಯವನ್ನು "
+"ಮಿತಿಗೊಳಿಸುತ್ತದೆ."
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#: main.ui:32
+#, kde-format
+msgid "Content"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
+#: main.ui:41
+#, fuzzy, kde-format
+#| msgid "Current Desktop"
+msgid "Include \"Show Desktop\" icon"
+msgstr "ಪ್ರಸ್ತುತ ಗಣಕತೆರೆ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
+#: main.ui:55
+#, kde-format
+msgid "Recently used"
+msgstr "ಇತ್ತೀಚೆಗೆ ಬಳಸಲ್ಪಟ್ಟ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
+#: main.ui:60
+#, kde-format
+msgid "Stacking order"
+msgstr "ಜೋಡಿಸಲಾದ ಕ್ರಮ"
+
+#. i18n: ectx: property (text), widget (QCheckBox, oneAppWindow)
+#: main.ui:68
+#, kde-format
+msgid "Only one window per application"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, orderMinimized)
+#: main.ui:78
+#, kde-format
+msgid "Order minimized windows after unminimized windows"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: main.ui:88
+#, kde-format
+msgid "Sort order:"
+msgstr "ವಿಂಗಡಿಸುವ ಕ್ರಮ:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: main.ui:114
+#, fuzzy, kde-format
+#| msgid "List windows:"
+msgid "Filter windows by"
+msgstr "ಕಿಟಕಿಗಳ ಪಟ್ಟಿ:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterDesktops)
+#: main.ui:123
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "Virtual desktops"
+msgstr "ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳು"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentDesktop)
+#: main.ui:167
+#, fuzzy, kde-format
+#| msgid "Current Desktop"
+msgid "Current desktop"
+msgstr "ಪ್ರಸ್ತುತ ಗಣಕತೆರೆ"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherDesktops)
+#: main.ui:174
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "All other desktops"
+msgstr "ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳು"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterActivities)
+#: main.ui:184
+#, kde-format
+msgid "Activities"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentActivity)
+#: main.ui:228
+#, kde-format
+msgid "Current activity"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherActivities)
+#: main.ui:235
+#, kde-format
+msgid "All other activities"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterScreens)
+#: main.ui:245
+#, kde-format
+msgid "Screens"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentScreen)
+#: main.ui:289
+#, fuzzy, kde-format
+#| msgid "Current Desktop"
+msgid "Current screen"
+msgstr "ಪ್ರಸ್ತುತ ಗಣಕತೆರೆ"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherScreens)
+#: main.ui:296
+#, kde-format
+msgid "All other screens"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterMinimization)
+#: main.ui:306
+#, fuzzy, kde-format
+#| msgid "Minimum Size"
+msgid "Minimization"
+msgstr "ಕನಿಷ್ಟ ಗಾತ್ರ"
+
+#. i18n: ectx: property (text), widget (QRadioButton, visibleWindows)
+#: main.ui:350
+#, fuzzy, kde-format
+#| msgid "List windows:"
+msgid "Visible windows"
+msgstr "ಕಿಟಕಿಗಳ ಪಟ್ಟಿ:"
+
+#. i18n: ectx: property (text), widget (QRadioButton, hiddenWindows)
+#: main.ui:357
+#, fuzzy, kde-format
+#| msgid "List windows:"
+msgid "Hidden windows"
+msgstr "ಕಿಟಕಿಗಳ ಪಟ್ಟಿ:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
+#: main.ui:396
+#, kde-format
+msgid "Shortcuts"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: main.ui:405 main.ui:448
+#, kde-format
+msgid "Forward"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: main.ui:428
+#, fuzzy, kde-format
+#| msgid "List windows:"
+msgid "All windows"
+msgstr "ಕಿಟಕಿಗಳ ಪಟ್ಟಿ:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: main.ui:438 main.ui:458
+#, kde-format
+msgid "Reverse"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: main.ui:480
+#, fuzzy, kde-format
+#| msgid "Current Desktop Grouped by Applications"
+msgid "Current application"
+msgstr "ಪ್ರಸ್ತುತ ಗಣಕತೆರೆಯನ್ನು ಅನ್ವಯಿಕದಿಂದ ಗುಂಪಾಗೂಡಿಸಲಾಗಿದೆ."
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: main.ui:499
+#, fuzzy, kde-format
+#| msgid "Navigation"
+msgid "Visualization"
+msgstr "ಸಂಚಾರ"
+
+#. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
+#: main.ui:529
+#, kde-format
+msgid "The effect to replace the list window when desktop effects are active."
+msgstr "ಗಣಕತೆರೆ ಪರಿಣಾಮಗಳು ಸಕ್ರಿಯವಾಗಿದ್ದಾಗ ಪಟ್ಟಿ ಕಿಟಕಿಯನ್ನು ಬದಲಾಯಿಸಬೇಕಿರುವ ಪರಿಣಾಮ."
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
+#: main.ui:559
+#, kde-format
+msgid ""
+"The currently selected window will be highlighted by fading out all other "
+"windows. This option requires desktop effects to be active."
+msgstr ""
+"ಪ್ರಸ್ತುತ ಆಯ್ದ ಕಿಟಕಿಯನ್ನು ತೋರಿಸಲು ಇತರ ಕಿಟಕಿಗಳನ್ನು ಮಬ್ಬುಗೊಳಿಸಲಾಗುವುದು. ಈ ಆಯ್ಕೆಯು ಕೆಲಸ "
+"ಮಾಡಲು ಗಣಕತೆರೆ ಪರಿಣಾಮ ಸಕ್ರಿಯವಾಗಿರಬೇಕು."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
+#: main.ui:562
+#, fuzzy, kde-format
+#| msgid "Show outline of selected window"
+msgid "Show selected window"
+msgstr "ಆಯ್ದ ವಿಂಡೋವಿನ ಹೊರನಕಾಶೆಯನ್ನು ತೋರಿಸು"
+
+#, fuzzy
+#~| msgid "Show outline of selected window"
+#~ msgid "Outline selected window"
+#~ msgstr "ಆಯ್ದ ವಿಂಡೋವಿನ ಹೊರನಕಾಶೆಯನ್ನು ತೋರಿಸು"
+
+#~ msgid ""
+#~ "These settings are used by the \"Walk Through Windows Alternative\" "
+#~ "actions."
+#~ msgstr "ಈ ಸಂಯೋಜನೆಗಳನ್ನು \"ವಿಂಡೋಸ್‌ನ ಪರ್ಯಾಯ ಅವಲೋಕನ \"ದಿಂದ ಬಳಸಲ್ಪಡುತ್ತವೆ."
+
+#~ msgid "Walk Through Windows"
+#~ msgstr "ಕಿಟಕಿಗಳ ಅವಲೋಕನ"
+
+#~ msgid "Walk Through Windows (Reverse)"
+#~ msgstr "ಕಿಟಕಿಗಳನ್ನು ಅವಲೋಕಿಸಿ ( ಹಿಮ್ಮುಖ)"
+
+#~ msgid "Walk Through Windows Alternative"
+#~ msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ"
+
+#~ msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ (ಹಿಮ್ಮುಖ)"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative"
+#~ msgid "Walk Through Windows of Current Application"
+#~ msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgid "Walk Through Windows of Current Application (Reverse)"
+#~ msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ (ಹಿಮ್ಮುಖ)"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative"
+#~ msgid "Walk Through Windows of Current Application Alternative"
+#~ msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+#~ msgstr "ವಿಂಡೋಸ್‌ಗೆ ಪರ್ಯಾಯವಾದವುಗಳನ್ನು ಅವಲೋಕಿಸಿ (ಹಿಮ್ಮುಖ)"
+
+#~ msgid "Configure Layout"
+#~ msgstr "ಹೊರವಿನ್ಯಾಸಗಳನ್ನು ಸಂರಚಿಸಿ"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "ಶಂಕರ್ ಪ್ರಸಾದ್ ಎಂ ವಿ, ಅಶೋಕ್ ಕುಮಾರ್ ಎ"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "prasad.mvs@gmail.com; ashok567@gmail.com"
+
+#~ msgid "These settings are used by the \"Walk Through Windows\" actions."
+#~ msgstr "ಈ ಸಂಯೋಜನೆಗಳನ್ನು \"ವಿಂಡೋಸ್‌ನ ಪರ್ಯಾಯ ಅವಲೋಕನ \"ಕ್ರಿಯೆಗಳಿಂದ ಬಳಸಲ್ಪಡುತ್ತವೆ."
+
+#, fuzzy
+#~| msgid "All Desktops Grouped by Applications"
+#~ msgid "All windows from all applications"
+#~ msgstr "ಎಲ್ಲ ಗಣಕತೆರೆಗಳನ್ನು ಅನ್ವಯಿಕದಿಂದ ಗುಂಪಾಗೂಡಿಸಲಾಗಿದೆ"
+
+#~ msgid "Highlight selected window"
+#~ msgstr "ಆರಿಸಿದ ಕಿಟಕಿಯನ್ನು ಎತ್ತಿತೋರಿಸು"
+
+#~ msgid "Effect:"
+#~ msgstr "ಪರಿಣಾಮ:"
+
+#~ msgid "Display list while switching"
+#~ msgstr "ಕಿಟಕಿಗಳ ನಡುವೆ ಬದಲಾಯಿಸುವಾಗ ಪಟ್ಟಿಯನ್ನು ತೋರಿಸು"
+
+#, fuzzy
+#~| msgid "Informative"
+#~ msgctxt "Name for a window switcher layout showing icon, name and desktop"
+#~ msgid "Informative"
+#~ msgstr "ಮಾಹಿತಿಯುಕ್ತ"
+
+#, fuzzy
+#~| msgid "Compact"
+#~ msgctxt "Name for a window switcher layout showing only icon and name"
+#~ msgid "Compact"
+#~ msgstr "ಸಾಂದ್ರ"
+
+#, fuzzy
+#~| msgid "Text Only"
+#~ msgctxt "Name for a window switcher layout showing only the name"
+#~ msgid "Text"
+#~ msgstr "ಪಠ್ಯ ಮಾತ್ರ"
+
+#, fuzzy
+#~| msgid "Large Icons"
+#~ msgctxt "Name for a window switcher layout showing large icons"
+#~ msgid "Large Icons"
+#~ msgstr "ದೊಡ್ಡದಾದ ಚಿಹ್ನೆಗಳು"
+
+#, fuzzy
+#~| msgid "Small Icons"
+#~ msgctxt "Name for a window switcher layout showing small icons"
+#~ msgid "Small Icons"
+#~ msgstr "ಚಿಕ್ಕ ಚಿಹ್ನೆಗಳು"
+
+#~ msgid "No Effect"
+#~ msgstr "ಯಾವುದೆ ಪರಿಣಾಮವಿಲ್ಲ"
+
+#~ msgid "Configure Layout..."
+#~ msgstr "ಹೊರವಿನ್ಯಾಸವನ್ನು ಸಂರಚಿಸು..."
+
+#~ msgid "Item Layout"
+#~ msgstr "ವಸ್ತುವಿನ ಹೊರವಿನ್ಯಾಸ"
+
+#~ msgid "Item layout:"
+#~ msgstr "ವಸ್ತುವಿನ ಹೊರವಿನ್ಯಾಸ:"
+
+#~ msgid "Layout:"
+#~ msgstr "ಹೊರವಿನ್ಯಾಸ:"
+
+#~ msgid "Vertical"
+#~ msgstr "ಲಂಬ"
+
+#~ msgid "Horizontal"
+#~ msgstr "ಅಡ್ಡ"
+
+#~ msgid "Tabular"
+#~ msgstr "ಕೋಷ್ಟಕ"
+
+#~ msgid "Width:"
+#~ msgstr "ಅಗಲ:"
+
+#~ msgid "Minimum width, as a percentage of screen width."
+#~ msgstr "ಕನಿಷ್ಠ ಗಾತ್ರ, ತೆರೆಯ ಅಗಲದ ಶೇಕಡಾ ಭಾಗವಾಗಿ."
+
+#~ msgid " %"
+#~ msgstr " %"
+
+#~ msgid "Height:"
+#~ msgstr "ಎತ್ತರ:"
+
+#~ msgid "Minimum height, as a percentage of screen height."
+#~ msgstr "ಕನಿಷ್ಠ ಎತ್ತರ, ತೆರೆಯ ಎತ್ತರದ ಶೇಕಡಾ ಭಾಗವಾಗಿ."
+
+#~ msgid "Show Selected Item"
+#~ msgstr "ಆಯ್ದ ವಸ್ತುವನ್ನು ತೋರಿಸು"
+
+#~ msgid "Selected item view:"
+#~ msgstr "ಆಯ್ದ ವಸ್ತುವಿನ ನೋಟ:"
+
+#~ msgid "Top"
+#~ msgstr "ಮೇಲೆ"
+
+#~ msgid "Bottom"
+#~ msgstr "ಕೆಳಕ್ಕೆ"
+
+#~ msgid "Left"
+#~ msgstr "ಎಡ"
+
+#~ msgid "Right"
+#~ msgstr "ಬಲ"
+
+#~ msgid "Selected item layout:"
+#~ msgstr "ಆಯ್ದ ವಸ್ತು ಹೊರವಿನ್ಯಾಸ:"
+
+#~ msgid "General"
+#~ msgstr "ಸಾಮಾನ್ಯ"

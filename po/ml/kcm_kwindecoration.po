@@ -1,0 +1,440 @@
+# Malayalam translation of kcmkwindecoration.po.
+# Copyright (C) 2008 This_file_is_part_of_KDE
+# This file is distributed under the same license as the kdebase package.
+# ആഷിക് എസ് | Ashik S<aashiks@gmail.com>, 2008.
+# Ershad K <ershad92@gmail.com>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwindecoration trunk\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2019-12-12 22:21+0000\n"
+"Last-Translator: Vivek KJ Pazhedath <vivekkj2004@gmail.com>\n"
+"Language-Team: Swathanthra|സ്വതന്ത്ര Malayalam|മലയാളം Computing|കമ്പ്യൂട്ടിങ്ങ് <smc-"
+"discuss@googlegroups.com>\n"
+"Language: ml\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "ആഷിക് എസ്, ഇര്‍ഷാദ് കെ"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "shijualexonline@gmail.com,snalledam@dataone.in,vivekkj2004@gmail.com"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, kde-format
+msgid "Application menu"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, fuzzy, kde-format
+msgid "On all desktops"
+msgstr "എല്ലാ പണിയിടങ്ങളിലും"
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr "ചെറുതാക്കുക"
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr "വലുതാക്കുക"
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr "അടയ്ക്കുക"
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr "മറയ്ക്കുക"
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr ""
+
+#: kcm.cpp:49
+#, fuzzy, kde-format
+msgid "Window Decorations"
+msgstr "പുതിയ അലങ്കാരങ്ങള്‍ നേടുക"
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr ""
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr ""
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr ""
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr ""
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr ""
+
+#: package/contents/ui/main.qml:57
+#, fuzzy, kde-format
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "ബട്ടണുകള്‍"
+
+#: package/contents/ui/main.qml:93
+#, fuzzy, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "വക്കിന്റെ വലുപ്പം:"
+
+#: package/contents/ui/main.qml:112
+#, fuzzy, kde-format
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr "പുതിയ അലങ്കാരങ്ങള്‍ നേടുക"
+
+#: package/contents/ui/main.qml:141
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr ""
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr ""
+
+#: package/contents/ui/main.qml:165
+#, fuzzy, kde-format
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "ജാലകത്തിന്റെ ബട്ടണുകളെക്കുറിച്ചുള്ള സൂചനകള്‍ &കാണിയ്ക്കുക"
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr ""
+
+#: utils.cpp:25
+#, fuzzy, kde-format
+msgid "No Borders"
+msgstr "വക്കിന്റെ വലുപ്പം:"
+
+#: utils.cpp:26
+#, fuzzy, kde-format
+msgid "No Side Borders"
+msgstr "വക്കിന്റെ വലുപ്പം:"
+
+#: utils.cpp:27
+#, fuzzy, kde-format
+msgid "Tiny"
+msgstr "ചെറുത്"
+
+#: utils.cpp:28
+#, fuzzy, kde-format
+msgid "Normal"
+msgstr "സാധാരണമായത്"
+
+#: utils.cpp:29
+#, fuzzy, kde-format
+msgid "Large"
+msgstr "വലിയത്"
+
+#: utils.cpp:30
+#, fuzzy, kde-format
+msgid "Very Large"
+msgstr "വളരെ വലുത്"
+
+#: utils.cpp:31
+#, fuzzy, kde-format
+msgid "Huge"
+msgstr "ഭീമമായത്"
+
+#: utils.cpp:32
+#, fuzzy, kde-format
+msgid "Very Huge"
+msgstr "അതിഭീമമായത് "
+
+#: utils.cpp:33
+#, fuzzy, kde-format
+msgid "Oversized"
+msgstr "ബൃഹത്തായ"
+
+#~ msgid "Menu"
+#~ msgstr "മെനു"
+
+#, fuzzy
+#~ msgid "Keep below"
+#~ msgstr "മറ്റുള്ളവയുടെ താഴെ വെക്കുക"
+
+#, fuzzy
+#~ msgid "Keep above"
+#~ msgstr "മറ്റുള്ളവയ്ക്കു മുകളില്‍ വെക്കുക"
+
+#, fuzzy
+#~ msgid "Download New Window Decorations"
+#~ msgstr "പുതിയ അലങ്കാരങ്ങള്‍ നേടുക"
+
+#, fuzzy
+#~ msgid "Search..."
+#~ msgstr "തെരയുക"
+
+#, fuzzy
+#~ msgid "Border si&ze:"
+#~ msgstr "വക്കിന്റെ വലുപ്പം:"
+
+#, fuzzy
+#~ msgid "Configure %1..."
+#~ msgstr "ബട്ടണുകള്‍ ക്രമീകരിക്കുക..."
+
+#~ msgid "Button size:"
+#~ msgstr "ബട്ടണിന്റെ വലുപ്പം"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "ചെറുത്"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "സാധാരണമായത്"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "വലിയത്"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "വളരെ വലുത്"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "ഭീമമായത്"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "അതിഭീമമായത്"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "ബൃഹത്തായ"
+
+#~ msgid "KDE"
+#~ msgstr "കെഡിഇ"
+
+#~ msgid "%1 (unavailable)"
+#~ msgstr "%1 (ലഭ്യമല്ല)"
+
+#~ msgid "Resize"
+#~ msgstr "വലിപ്പം മാറ്റുക"
+
+#~ msgid "Help"
+#~ msgstr "സഹായം"
+
+#~ msgid "--- spacer ---"
+#~ msgstr "--- സ്പേസര്‍ ---"
+
+#~ msgid ""
+#~ "Enabling this checkbox will show window button tooltips. If this checkbox "
+#~ "is off, no window button tooltips will be shown."
+#~ msgstr ""
+#~ "ഈ ചെക്ക്ബോക്സ് പ്രവര്‍ത്തനസജ്ജമാക്കിയാല്‍ ജാലകത്തിന്റെ ബട്ടണുകളെക്കുറിച്ചുള്ള സൂചനകള്‍ കാണിക്കും. "
+#~ "ഇതുപ്രവര്‍ത്തനരഹിതമാക്കിയാല്‍ ജാലകത്തിന്റെ ബട്ടണുകളെക്കുറിച്ചുള്ള സൂചനകള്‍ കാണിക്കുകയില്ല."
+
+#~ msgid "Please note that this option is not available on all styles yet."
+#~ msgstr "ഈ ഐച്ഛികം എല്ലാ രീതികള്‍ക്കും ഇപ്പോള്‍ ലഭ്യമല്ല."
+
+#~ msgid "Use custom titlebar button &positions"
+#~ msgstr "ടൈറ്റില്‍ബാര്‍ ബട്ടണുളുടെ സ്ഥാനങ്ങള്‍ ഇഷ്ടമുള്ള പോലെ ആക്കിത്തീര്‍ക്കുക‍ "
+
+#~ msgid "B&order size:"
+#~ msgstr "&വക്കിന്റെ വലുപ്പം"
+
+#~ msgid "Use this combobox to change the border size of the decoration."
+#~ msgstr "അലങ്കാരത്തിന്റെ വക്കുകളുടെ വലിപ്പം മാറ്റാന്‍ ഈ കോമ്പോബോക്സ് ഉപയോഗിക്കുക "
+
+#~ msgid "Decoration Options"
+#~ msgstr "അലങ്കാരത്തിനുള്ള ഐച്ഛികങ്ങള്‍"
+
+#~ msgid ""
+#~ "Select the window decoration. This is the look and feel of both the "
+#~ "window borders and the window handle."
+#~ msgstr ""
+#~ "ജാലക അലങ്കാരം തെരഞ്ഞെടുക്കുക. ജാലകത്തിന്റെ വക്കുകളുടെയും പിടിയുടെയും രൂപഭാവങ്ങളാണിവ"
+
+#~ msgid "Configure Decoration..."
+#~ msgstr "അലങ്കാരങ്ങള്‍ ക്രമീകരിക്കുക..."
+
+#~ msgid "Window Decoration Control Module"
+#~ msgstr "ജാലക അലങ്കാരങ്ങള്‍ നിയന്ത്രിക്കുന്ന ഘടകം"
+
+#~ msgid "(c) 2001 Karol Szwed"
+#~ msgstr "(c) 2001 കരോള്‍ സ്വെദ്"
+
+#~ msgid "Karol Szwed"
+#~ msgstr "കരോള്‍ സ്വെദ്"
+
+#~ msgid "Oxygen"
+#~ msgstr "ഓക്സിജന്‍"
+
+#, fuzzy
+#~ msgid ""
+#~ "<h1>Window Manager Decoration</h1><p>This module allows you to choose the "
+#~ "window border decorations, as well as titlebar button positions and "
+#~ "custom decoration options.</p>To choose a theme for your window "
+#~ "decoration click on its name and apply your choice by clicking the \"Apply"
+#~ "\" button below. If you do not want to apply your choice you can click "
+#~ "the \"Reset\" button to discard your changes.<p>You can configure each "
+#~ "theme. There are different options specific for each theme.</p><p>On the "
+#~ "\"Buttons\" tab check the \"Use custom titlebar button positions\" box "
+#~ "and you can change the positions of the buttons to your liking.</p>"
+#~ msgstr ""
+#~ "<h1>ജാലകപാലകനുള്ള അലങ്കാരങ്ങള്‍</h1><p>ജാലകത്തിനുള്ള അലങ്കാരങ്ങളും , ടൈറ്റില്‍ബാര്‍ "
+#~ "ബട്ടണുളുടെ സ്ഥാനങ്ങളും ,മറ്റു ഐച്ഛികങ്ങളു‍ തിരഞ്ഞെടുക്കുവാനും ഈ ഘടകം നിങ്ങളെ സഹായിക്കുന്നു.</p> "
+#~ "നിങ്ങളുടെ ജാലക അലങ്കാരത്തിന് ഒരു പ്രമേയം തിരഞ്ഞെടുക്കുന്നതിനായി അതിന്റെ പേരില്‍ ക്ളിക്ക് "
+#~ "ചെയ്തതിനു ശേഷം \"പ്രയോഗിക്കുക\" എന്ന ബട്ടണില്‍ അമര്‍ത്തുക. നിങ്ങള്‍ക്ക് അതു വേണ്ടാ എന്നു "
+#~ "തോന്നുകയാണെങ്കില്‍ \"പുനഃസ്ഥാപിക്കുക\" എന്നബട്ടണില്‍ അമര്‍ത്തുക.<p>\"ക്രമീകരിക്കുക [...]\"എന്ന "
+#~ "റ്റാബില്‍ നിന്ന് ഓരോ പ്രമേയത്തേയും നിങ്ങള്‍ക്ക് ക്രമീകരികാവുന്നതാണ്ഓരോ പ്രമേയത്തിനും "
+#~ "അതിന്റേതായ  വ്യത്യസ്ത ഐച്ഛികങ്ങളുണ്ട്.</p><p>\" പൊതുവായുള്ള ഐച്ഛികങ്ങള്‍( അതുണ്ടെങ്കില്‍)\" -ഇല്‍"
+#~ "\"ടൈറ്റില്‍ബാര്‍ ബട്ടണുളുടെ സ്ഥാനങ്ങള്‍ ഇഷ്ടമുള്ള പോലെ ആക്കിത്തീര്‍ക്കുക‍ \" എന്ന ചെക്ക്ബോക്സ് പ്രവര്‍"
+#~ "ത്തനസജ്ജമാക്കിയാല്‍ \"ബട്ടണുകള്‍\" എന്ന റ്റാബ് പ്രവര്‍ത്തനസജ്ജമാകും . അതില്‍ ടൈറ്റില്‍ബാര്‍ "
+#~ "ബട്ടണുളുടെ സ്ഥാനങ്ങള്‍ ഇഷ്ടമുള്ള പോലെ ആക്കിത്തീര്‍ക്കുവാന്‍സാധിക്കുന്നതാണ്.</p>"
+
+#~ msgid "Active Window"
+#~ msgstr "സജീവജാലകം"
+
+#~ msgid "Inactive Window"
+#~ msgstr "നിര്‍ജ്ജീവജാലകം"
+
+#~ msgid "kcmkwindecoration"
+#~ msgstr "kcmkwindecoration"
+
+#~ msgctxt "Caption to decoration preview, %1 author name"
+#~ msgid "by %1"
+#~ msgstr "%1 തയ്യാറാക്കിയതു്"
+
+#~ msgid ""
+#~ "No preview available.\n"
+#~ "Most probably there\n"
+#~ "was a problem loading the plugin."
+#~ msgstr ""
+#~ "തിരനോട്ടം ലഭ്യമല്ല\n"
+#~ "സംയോജകം ലഭ്യമാക്കുന്നതില്‍ എന്തോ\n"
+#~ "പിശകു പറ്റി എന്നു തോന്നുന്നു."

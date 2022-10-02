@@ -1,0 +1,216 @@
+# translation of kcm_kwindesktop.po to Bengali INDIA
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Runa Bhattacharjee <runab@fedoraproject.org>, 2008.
+# Runa Bhattacharjee <runab@redhat.com>, 2009.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcm_kwindesktop\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"PO-Revision-Date: 2009-12-30 00:49+0530\n"
+"Last-Translator: Runa Bhattacharjee <runab@redhat.com>\n"
+"Language-Team: Bengali INDIA <anubad@lists.ankur.org.in>\n"
+"Language: bn_IN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "রুণা ভট্টাচার্য্য"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "runab@redhat.com"
+
+#: desktopsmodel.cpp:467
+#, kde-format
+msgid "There was an error connecting to the compositor."
+msgstr ""
+
+#: desktopsmodel.cpp:666
+#, kde-format
+msgid "There was an error saving the settings to the compositor."
+msgstr ""
+
+#: desktopsmodel.cpp:669
+#, kde-format
+msgid "There was an error requesting information from the compositor."
+msgstr ""
+
+#: package/contents/ui/main.qml:17
+#, kde-format
+msgid ""
+"This module lets you configure the navigation, number and layout of virtual "
+"desktops."
+msgstr ""
+
+#: package/contents/ui/main.qml:91
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Rename"
+msgstr ""
+
+#: package/contents/ui/main.qml:102
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Confirm new name"
+msgstr ""
+
+#: package/contents/ui/main.qml:110
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove"
+msgstr ""
+
+#: package/contents/ui/main.qml:137
+#, kde-format
+msgid ""
+"Virtual desktops have been changed outside this settings application. Saving "
+"now will overwrite the changes."
+msgstr ""
+
+#: package/contents/ui/main.qml:153
+#, kde-format
+msgid "Row %1"
+msgstr ""
+
+#: package/contents/ui/main.qml:166
+#, kde-format
+msgctxt "@action:button"
+msgid "Add"
+msgstr ""
+
+#: package/contents/ui/main.qml:169
+#, fuzzy, kde-format
+#| msgid "Desktops"
+msgid "New Desktop"
+msgstr "ডেস্কটপ"
+
+#: package/contents/ui/main.qml:184
+#, kde-format
+msgid "1 Row"
+msgid_plural "%1 Rows"
+msgstr[0] ""
+msgstr[1] ""
+
+#: package/contents/ui/main.qml:200
+#, kde-format
+msgid "Options:"
+msgstr ""
+
+#: package/contents/ui/main.qml:202
+#, kde-format
+msgid "Navigation wraps around"
+msgstr ""
+
+#: package/contents/ui/main.qml:220
+#, kde-format
+msgid "Show animation when switching:"
+msgstr ""
+
+#: package/contents/ui/main.qml:271
+#, kde-format
+msgid "Show on-screen display when switching:"
+msgstr ""
+
+#: package/contents/ui/main.qml:290
+#, kde-format
+msgid "%1 ms"
+msgstr ""
+
+#: package/contents/ui/main.qml:314
+#, kde-format
+msgid "Show desktop layout indicators"
+msgstr "ডেস্কটপ বিন্যাসের সংকেত প্রদর্শন করা হবে"
+
+#: virtualdesktops.cpp:33
+#, fuzzy, kde-format
+#| msgid "Desktops"
+msgid "Virtual Desktops"
+msgstr "ডেস্কটপ"
+
+#~ msgid "Desktop %1:"
+#~ msgstr "ডেস্কটপ %1:"
+
+#~ msgid "Here you can enter the name for desktop %1"
+#~ msgstr "ডেস্কটপ %1-র নাম এইখানে লেখা যাবে"
+
+#~ msgid "Desktop %1"
+#~ msgstr "ডেস্কটপ %1"
+
+#~ msgid ""
+#~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "
+#~ "virtual desktops you want and how these should be labeled."
+#~ msgstr ""
+#~ "<h1>একাধিক ডেস্কটপ</h1>এই মডিউলের সাহায্যে, ভার্চুয়াল ডেস্কটপের সংখ্যা ও সেগুলির "
+#~ "নাম কনফিগার করা যাবে।"
+
+#~ msgid "Switch to Desktop %1"
+#~ msgstr "ডেস্কটপ %1-এ পরিবর্তন করুন"
+
+#~ msgid "No Animation"
+#~ msgstr "অ্যানিমেশন বিহীন"
+
+#~ msgid "No suitable Shortcut for Desktop %1 found"
+#~ msgstr "ডেস্কটপ %1-র জন্য কোনো প্রযোজ্য শর্ট-কাট পাওয়া যায়নি"
+
+#~ msgid "Assigned global Shortcut \"%1\" to Desktop %2"
+#~ msgstr "সার্বজনীন শর্ট-কাট \"%1\" নির্ধারিত হয়েছে ডেস্কটপ %2-র জন্য"
+
+#~ msgid "Shortcut conflict: Could not set Shortcut %1 for Desktop %2"
+#~ msgstr "শর্ট-কাটের মধ্যে দ্বন্দ্ব: শর্ট-কাট %1, ডেস্কটপ %2-র জন্য নির্ধারণ করা যায়নি"
+
+#~ msgid "Layout"
+#~ msgstr "বিন্যাস"
+
+#~ msgid ""
+#~ "Here you can set how many virtual desktops you want on your KDE desktop."
+#~ msgstr ""
+#~ "KDE ডেস্কটপের মধ্যে উপলব্ধ ভার্চুয়াল ডেস্কটপ সংখ্যা এইখানে নির্ধারণ করা যাবে। "
+#~ "সংখ্যা পরিবর্তনের জন্য স্লাইডারের স্থান পরিবর্তন করুন।"
+
+#, fuzzy
+#~| msgid "Number of desktops:"
+#~ msgid "&Number of desktops:"
+#~ msgstr "ডেস্কটপের সংখ্যা:"
+
+#, fuzzy
+#~| msgid "Number of rows:"
+#~ msgid "N&umber of rows:"
+#~ msgstr "সারির সংখ্যা:"
+
+#~ msgid "Desktop Names"
+#~ msgstr "ডেস্কটপের নাম"
+
+#~ msgid "Switching"
+#~ msgstr "অদলবদল"
+
+#~ msgid "Desktop Effect Animation"
+#~ msgstr "ডেস্কটপ ইফেক্টের অ্যানিমেশন"
+
+#~ msgid "Animation:"
+#~ msgstr "অ্যানিমেশন:"
+
+#~ msgid "Duration:"
+#~ msgstr "অবকাল:"
+
+#~ msgid " msec"
+#~ msgstr " মিলিসেকেন্ড"
+
+#~ msgid "Shortcuts"
+#~ msgstr "শর্ট-কাট"
+
+#~ msgid "Show shortcuts for all possible desktops"
+#~ msgstr "সকল সম্ভাব্য ডেস্কটপের জন্য শর্ট-কাট প্রদর্শন করা হবে"
+
+#, fuzzy
+#~| msgid "Different activity for each desktop"
+#~ msgid "Different widgets for each desktop"
+#~ msgstr "প্রতিটি ডেস্কটপের জন্য পৃথক কর্ম"

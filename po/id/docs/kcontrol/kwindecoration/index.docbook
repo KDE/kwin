@@ -1,0 +1,183 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Indonesian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwindecoration" lang="&language;">
+<articleinfo>
+<authorgroup>
+<author
+>&Rik.Hemsley; &Rik.Hemsley.mail;</author>
+<author
+>&Anne-Marie.Mahfouf; &Anne-Marie.Mahfouf.mail;</author>
+<othercredit role="translator"
+><firstname
+>Wantoyo</firstname
+><surname
+></surname
+><affiliation
+><address
+><email
+>wantoyek@gmail.com</email
+></address
+></affiliation
+><contrib
+>Terjemahan</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>18-03-2018</date>
+<releaseinfo
+>Plasma 5.12</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systemsettings</keyword>
+<keyword
+>kwin</keyword>
+<keyword
+>window</keyword>
+<keyword
+>bingkai</keyword>
+<keyword
+>tema</keyword>
+<keyword
+>gaya</keyword>
+</keywordset>
+</articleinfo>
+<sect1 id="window-deco">
+<title
+>Dekorasi Window</title>
+
+<para
+>Modul ini memungkinkanmu untuk memilih gaya untuk tombol dan bingkai di sekitar window.</para>
+
+<sect2>
+<title
+>Dekorasi Window</title>
+
+<para>
+<screenshot>
+<screeninfo
+>Modul Konfigurasi Dekorasi Window</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Modul Konfigurasi Dekorasi Window</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+
+<para
+>Memilih sebuah gaya dekorasi window dari daftar pratinjau, menggunakan bidang pencarian di bagian atas layar atau unduh sebuah gaya baru menggunakan tombol <guibutton
+>Dapatkan Dekorasi Window Baru</guibutton
+>.</para>
+
+<para
+>Dekorasi window baku disebut <quote
+>Breeze</quote
+></para>
+
+<para
+>Setiap gaya memiliki sebuah nuansa yang berbeda, tetapi juga memiliki <quote
+>suasana</quote
+> yang berbeda pula. Beberapa memiliki (kadang-kadang takterlihat) <quote
+>ubah ukuran</quote
+> bingkai di sekeliling tepi, yang mana membuat mudahnya mengubah ukuran tetapi pemindahan lebih sulit. Beberapa tidak memiliki bingkai pada tepian tertentu.</para>
+
+<para
+>Kamu didorong untuk bereksperimen dengan gaya yang berbeda sampai kamu menemukan yang terbaik pada pola kerjamu.</para>
+
+<para
+>Dalam pratinjau pada setiap gaya kamu menemukan sebuah tombol konfigurasikan <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure.png" format="PNG"/></imageobject
+></inlinemediaobject
+> untuk membuka dialog konfigurasi dekorasi.</para>
+
+<para
+>Opsi-opsi dalam dialog konfigurasi ini yang diterapkan untuk semua window. Beberapa dekorasi window (&eg; <quote
+>Breeze</quote
+> menyediakan sebuah tab <guilabel
+>Penimpaan Window Spesifik</guilabel
+>. Pada tab ini kamu bisa mengubah ukuran bingkai dan keterlihatan pada bilah judul window untuk window-window yang khas.</para>
+
+<para
+>Opsi-opsi yang berbeda untuk window yang khas dapat kamu temukan di dalam modul &systemsettings; <ulink url="help:/kcontrol/windowspecific"
+>Aturan Window</ulink
+>. </para>
+
+<tip>
+<para
+>"Untuk tujuan aksesibilitas, beberapa dekorasi window mendukung ekstra lebar bingkai. Jika ini tersedia, kamu juga bisa memilih ukuran bingkai di sini. Bingkai besar ini lebih mudah dilihat oleh para pengguna yang penglihatannya berkurang, dan lebih mudah digunakan untuk orang dengan mobilitas terbatas atau kesulitan menggunakan mouse.</para>
+</tip>
+
+</sect2>
+
+<sect2>
+<title
+>Dekorasi</title>
+
+<para
+>Dalam dialog ini kamu bisa mengubah dekorasi si window. Ketersediaan opsi-opsi bergantung pada gaya yang dipilih. </para>
+<para>
+<screenshot>
+<screeninfo
+>Opsi-opsi Dekorasi Breeze</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="decoration.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Opsi-opsi Dekorasi Breeze</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+<sect2>
+<title
+>Tombol</title>
+
+<para
+>Tab ini memungkinkanmu untuk mengkustomisasikan lokasi tombol pada bilah judul. Kamu bisa menyeret tombol &eg; <guilabel
+>Menu aplikasi</guilabel
+> ke dalam bilah judul, menyingkirkan mereka atau seret di sekitar tombol sampai kamu memiliki pengaturan yang membuatmu nyaman. </para>
+
+<screenshot>
+<screeninfo
+>Opsi-opsi Tombol</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="button.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Opsi-opsi Tombol</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+
+<para
+>Fungsikan <guilabel
+>Tutup window dengan mengeklik ganda tombol menu</guilabel
+> untuk memiliki sebuah opsi tambahan terhadap tombol Tutup atau jika kamu telah menyingkirkan tombol Tutup dari bilah judul. </para>
+
+</sect2>
+
+</sect1>
+
+</article>

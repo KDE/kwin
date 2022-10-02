@@ -1,0 +1,483 @@
+# translation of kcmkwindecoration.po to Estonian
+# Copyright (C) 2002,2003 Free Software Foundation, Inc.
+#
+# Hasso Tepper <hasso@estpak.ee>, 2002,2003.
+# Marek Laane <bald@starman.ee>, 2003-2005,2007-2008.
+# Marek Laane <bald@smail.ee>, 2009, 2010, 2012, 2016, 2019.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwindecoration\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2019-11-01 16:00+0200\n"
+"Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
+"Language-Team: Estonian <kde-et@lists.linux.ee>\n"
+"Language: et\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 19.08.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Hasso Tepper, Marek Laane"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "hasso@linux.ee, qiilaq69@gmail.com"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, kde-format
+msgid "Application menu"
+msgstr "Rakendusemenüü"
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, kde-format
+msgid "On all desktops"
+msgstr "Kõigil töölaudadel"
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr "Minimeeri"
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr "Maksimeeri"
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr "Sulge"
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr "Kontekstiabi"
+
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr "Varja"
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr ""
+
+#: kcm.cpp:49
+#, kde-format
+msgid "Window Decorations"
+msgstr "Aknadekoratsioonid"
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr "Valerio Pilo"
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr "Autor"
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr "Tiitliriba"
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr "Nupu eemaldamiseks lohista see siia"
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr "Lohista nuppe siit tiitliribale ja tagasi"
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr "See moodul võimaldab seadistada aknadekoratsioone."
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr "Teema"
+
+#: package/contents/ui/main.qml:57
+#, kde-format
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "Tiitliriba nupud"
+
+#: package/contents/ui/main.qml:93
+#, fuzzy, kde-format
+#| msgid "Border size:"
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "Piirde suurus:"
+
+#: package/contents/ui/main.qml:112
+#, kde-format
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr "Hangi uusi aknadekoratsioone ..."
+
+#: package/contents/ui/main.qml:141
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr "Akende sulgemine topeltklõpsuga menüünupule"
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr ""
+
+#: package/contents/ui/main.qml:165
+#, kde-format
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "Tiitliriba nuppudel vihjete näitamine"
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr "Muuda teemat %1"
+
+#: utils.cpp:25
+#, kde-format
+msgid "No Borders"
+msgstr "Piireteta"
+
+#: utils.cpp:26
+#, kde-format
+msgid "No Side Borders"
+msgstr "Külgpiireteta"
+
+#: utils.cpp:27
+#, kde-format
+msgid "Tiny"
+msgstr "Tilluke"
+
+#: utils.cpp:28
+#, kde-format
+msgid "Normal"
+msgstr "Normaalne"
+
+#: utils.cpp:29
+#, kde-format
+msgid "Large"
+msgstr "Suur"
+
+#: utils.cpp:30
+#, kde-format
+msgid "Very Large"
+msgstr "Väga suur"
+
+#: utils.cpp:31
+#, kde-format
+msgid "Huge"
+msgstr "Hiiglaslik"
+
+#: utils.cpp:32
+#, kde-format
+msgid "Very Huge"
+msgstr "Superhiiglaslik"
+
+#: utils.cpp:33
+#, kde-format
+msgid "Oversized"
+msgstr "Ülemõõduline"
+
+#~ msgctxt "popup tip"
+#~ msgid ""
+#~ "Close by double clicking: Keep the window's Menu button pressed until it "
+#~ "appears."
+#~ msgstr ""
+#~ "Sulgemine topeltklõpsuga:  menüü avamiseks hoia nuppu all, kuni see ilmub."
+
+#~ msgid "Menu"
+#~ msgstr "Menüü"
+
+#~ msgid "Keep below"
+#~ msgstr "Teiste all"
+
+#~ msgid "Keep above"
+#~ msgstr "Teiste peal"
+
+#~ msgid "Download New Window Decorations"
+#~ msgstr "Uute aknadekoratsioonide allalaadimine"
+
+#~ msgctxt "checkbox label"
+#~ msgid "Use theme's default window border size"
+#~ msgstr "Kasutatakse teema aknapiirde vaikesuurust"
+
+#, fuzzy
+#~| msgid "Search"
+#~ msgid "Search..."
+#~ msgstr "Otsing"
+
+#~ msgid "Close windows by double clicking &the menu button"
+#~ msgstr "Akende sulgemine &topeltklõpsuga menüünupule"
+
+#~ msgid "Border si&ze:"
+#~ msgstr "Piirde &suurus:"
+
+#~ msgid "Buttons"
+#~ msgstr "Nupud"
+
+#, fuzzy
+#~| msgid "Configure Buttons..."
+#~ msgid "Configure %1..."
+#~ msgstr "Seadista nuppe..."
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgid "Form"
+#~ msgstr "Normaalne"
+
+#~ msgid "Button size:"
+#~ msgstr "Nupu suurus:"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "Tilluke"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "Normaalne"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "Suur"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "Väga suur"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "Hiiglaslik"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "Superhiiglaslik"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "Ülemõõduline"
+
+#~ msgid "KDE"
+#~ msgstr "KDE"
+
+#~ msgid "%1 (unavailable)"
+#~ msgstr "%1 (pole saadaval)"
+
+#~ msgid ""
+#~ "To add or remove titlebar buttons, simply <i>drag</i> items between the "
+#~ "available item list and the titlebar preview. Similarly, drag items "
+#~ "within the titlebar preview to re-position them."
+#~ msgstr ""
+#~ "Tiitliriba nuppude lisamiseks või eemaldamiseks lihtsalt <i>lohista</i> "
+#~ "neid hiirega saadaolevate elementide nimekirja ja tiitliriba eelvaatluse "
+#~ "vahel. Lohistades samal moel nuppe tiitliribal, saad neid ümber paigutada."
+
+#~ msgid "Resize"
+#~ msgstr "Muuda suurust"
+
+#~ msgid "Help"
+#~ msgstr "Abi"
+
+#~ msgctxt "Button showing window actions menu"
+#~ msgid "Window Menu"
+#~ msgstr "Aknamenüü"
+
+#~ msgid "--- spacer ---"
+#~ msgstr "--- eraldaja ---"
+
+#~ msgid ""
+#~ "Enabling this checkbox will show window button tooltips. If this checkbox "
+#~ "is off, no window button tooltips will be shown."
+#~ msgstr ""
+#~ "Selle valikuga saab lubada akende tiitliriba nuppudel vihjete näitamise."
+
+#~ msgid "Please note that this option is not available on all styles yet."
+#~ msgstr ""
+#~ "Palun arvesta, et mitte kõigis stiilides pole nuppude asetuse muutmine "
+#~ "võimalik."
+
+#~ msgid "Use custom titlebar button &positions"
+#~ msgstr "Kasutatakse kohandatud tiitliriba nu&ppude asetust"
+
+#~ msgid "B&order size:"
+#~ msgstr "&Piirde suurus:"
+
+#~ msgid "Use this combobox to change the border size of the decoration."
+#~ msgstr "Selles liitkastis saab muuta dekoratsiooni piirde suurust."
+
+#~ msgid "Decoration Options"
+#~ msgstr "Dekoratsiooni valikud"
+
+#~ msgid ""
+#~ "Select the window decoration. This is the look and feel of both the "
+#~ "window borders and the window handle."
+#~ msgstr ""
+#~ "Vali akna dekoratsioon. See tähendab nii akna piirete kui tiitliriba "
+#~ "valimist."
+
+#~ msgid "Configure Decoration..."
+#~ msgstr "Seadista dekoratsiooni..."
+
+#~ msgid "Window Decoration Control Module"
+#~ msgstr "Akna dekoratsioonide seadistamise moodul"
+
+#~ msgid "(c) 2001 Karol Szwed"
+#~ msgstr "(c) 2001: Karol Szwed"
+
+#~ msgid "Karol Szwed"
+#~ msgstr "Karol Szwed"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+#~ msgid ""
+#~ "<h1>Window Manager Decoration</h1><p>This module allows you to choose the "
+#~ "window border decorations, as well as titlebar button positions and "
+#~ "custom decoration options.</p>To choose a theme for your window "
+#~ "decoration click on its name and apply your choice by clicking the \"Apply"
+#~ "\" button below. If you do not want to apply your choice you can click "
+#~ "the \"Reset\" button to discard your changes.<p>You can configure each "
+#~ "theme. There are different options specific for each theme.</p><p>On the "
+#~ "\"Buttons\" tab check the \"Use custom titlebar button positions\" box "
+#~ "and you can change the positions of the buttons to your liking.</p>"
+#~ msgstr ""
+#~ "<h1>Aknahalduri dekoratsioon</h1><p>See moodul võimaldab sul valida akna "
+#~ "piirete dekoratsioone, tiitliriba nuppude asendit ning kohandada "
+#~ "aktiivset dekoratsiooni.</p>Teema valimiseks oma akende dekoreerimisel "
+#~ "klõpsa selle nimele, valiku kinnitamiseks klõpsa all nupule \"Rakenda\". "
+#~ "Kui sa siiski ei soovi seda valida, klõpsa nupule \"Vaikeväärtused\", mis "
+#~ "tühistab kõik tehtud muudatused.<p>Iga teemat saab seadistada. Teemade "
+#~ "seadistamisvõimalused võivad vastavalt teemale erineda.</p><p>Kui märkida "
+#~ "kaardil \"Nupud\" ära \"Kasutatakse kohandatud tiitliriba nuppude asetust"
+#~ "\", saab muuta nuppude asetuse just endale meelepäraseks.</p>"
+
+#~ msgid "Active Window"
+#~ msgstr "Aktiivne aken"
+
+#~ msgid "Inactive Window"
+#~ msgstr "Mitteaktiivne aken"
+
+#~ msgid "kcmkwindecoration"
+#~ msgstr "kcmkwindecoration"
+
+#~ msgctxt "Caption to decoration preview, %1 author name"
+#~ msgid "by %1"
+#~ msgstr "(autor: %1)"
+
+#~ msgid ""
+#~ "No preview available.\n"
+#~ "Most probably there\n"
+#~ "was a problem loading the plugin."
+#~ msgstr ""
+#~ "Eelvaatlus puudub.\n"
+#~ "Tõenäoliselt tähendab see,\n"
+#~ "et plugina laadimisel tekkis viga."
+
+#~ msgid "&Buttons"
+#~ msgstr "&Nupud"
+
+#~ msgid "Nitrogen"
+#~ msgstr "Nitrogen"
+
+#~ msgid "Ozone"
+#~ msgstr "Ozone"

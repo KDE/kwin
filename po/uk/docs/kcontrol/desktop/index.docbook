@@ -1,0 +1,142 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Ukrainian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="desktop" lang="&language;">
+<title
+>Віртуальні стільниці</title>
+<articleinfo>
+
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<author
+>&Jost.Schenck; &Jost.Schenck.mail;</author>
+<othercredit role="translator"
+><firstname
+>Юрій</firstname
+><surname
+>Чорноіван</surname
+><affiliation
+><address
+><email
+>yurchor@ukr.net</email
+></address
+></affiliation
+><contrib
+>Переклад українською</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>9 квітня 2021 року</date>
+<releaseinfo
+>Плазма 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Системні параметри</keyword>
+<keyword
+>віртуальні</keyword>
+<keyword
+>стільниця</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>У Плазмі передбачено можливість використання декількох віртуальних стільниць. </para>
+<para
+>Змінити назви стільниць можна після натискання кнопки <guibutton
+>Перейменувати</guibutton
+> (її буде показано у відповідь на наведення вказівника миші на пункт у списку) — просто введіть нову назву у текстове поле. </para>
+<para
+>Якщо ви хочете вилучити стільницю, скористайтеся накладною піктограмою смітника у правій частині пункту відповідної стільниці. </para>
+<para
+>Натисніть кнопку <guibutton
+>Додати</guibutton
+>, щоб додати до списку нову віртуальну стільницю (типовою назвою буде <guilabel
+>Нова стільниця</guilabel
+>). </para>
+<para
+>Передбачено можливість налаштовування кількості рядків у пункті пейджера на панелі. Просто скористайтеся відповідним полем під списком, щоб вказати кількість стільниць у рядку. Пункти стільниць у списку буде розподілено за рядками автоматично. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Циклічна навігація</guilabel
+></term>
+<listitem
+><para
+>Позначте цей пункт, якщо ви хочете, щоб навігація з клавіатури або активні межі стільниці переносили вас за межу поточної стільниці на протилежний край нової стільниці. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Показувати анімацію під час перемикання</guilabel
+></term>
+<listitem
+><para
+>Оберіть зі спадного списку один з пунктів: <guilabel
+>Ковзання</guilabel
+>, <guilabel
+>Анімація куба стільниць</guilabel
+>, <guilabel
+>Затемнювати стільницю</guilabel
+> або вимкніть анімації взагалі, знявши позначку з пункту. Якщо для обраної анімації передбачено параметри налаштування, ви можете натиснути кнопку з піктограмою налаштування, розташовану праворуч від спадного списку, щоб відкрити діалогове вікно налаштування. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Показувати екранну панель під час перемикання</guilabel
+></term>
+<listitem
+><para
+>Позначте цей пункт, якщо бажаєте, щоб система показувала екранну панель для перемикання стільниць. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Показувати компонування стільниці</guilabel
+></term>
+<listitem
+><para
+>Позначення цього пункту призведе до показу мініатюрного компонування, що відповідатиме обраній стільниці. </para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>Прокручування коліщатка над порожнім місцем на стільниці або над віджетом <guilabel
+>Пейджер</guilabel
+> призводитиме до переходу до наступної віртуальної стільниці за порядком нумерації у напрямку, що відповідає напрямку прокручування (вгору або вниз).</para>
+<para
+>Ви можете змінити цю типову поведінку за допомогою сторінки <guilabel
+>Дії для миші</guilabel
+> модуля <guilabel
+>Параметри стільниці</guilabel
+> (<keycombo action="simul"
+>&Alt;<keycap
+>D</keycap
+></keycombo
+>, <keycombo action="simul"
+>&Alt;<keycap
+>S</keycap
+></keycombo
+>).</para>
+
+</article>

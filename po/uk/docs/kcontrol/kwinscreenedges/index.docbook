@@ -1,0 +1,92 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Ukrainian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinscreenedges" lang="&language;">
+<articleinfo>
+
+<title
+>Краї екрана</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Юрій</firstname
+><surname
+>Чорноіван</surname
+><affiliation
+><address
+><email
+>yurchor@ukr.net</email
+></address
+></affiliation
+><contrib
+>Переклад українською</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>9 квітня 2021 року</date>
+<releaseinfo
+>Плазма 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Системні параметри</keyword>
+<keyword
+>стільниця</keyword>
+<keyword
+>ефекти</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>За допомогою активних країв екрана ви зможете вмикати ефекти пересуванням вказівника миші на край екрана. Тут ви можете налаштувати ефект, який буде задіяно після пересування вказівника до кожного з країв і кутів екрана. </para>
+
+<para
+>Наведіть вказівник миші на певний квадрат і клацніть будь-якою кнопкою миші, щоб обрати ефект з контекстного меню. Для країв з синім квадратиками ефект вже обрано, сірий квадратик позначає, що для краю не призначено жодного ефекту.</para>
+
+<para
+>Кількість доступних пунктів контекстного меню залежатиме від значень параметрів, вказаних за допомогою модуля <ulink url="help:/kcontrol/kwineffects/index.html"
+> <guilabel
+>Ефекти стільниці</guilabel
+></ulink
+> у категорії <guilabel
+>Робочий простір</guilabel
+>. Позначте ваші улюблені ефекти у групі <guilabel
+>Керування вікнами</guilabel
+>. Таким чином, буде задіяно відповідні пункти контекстного меню.</para>
+
+<para
+>Якщо вам потрібен пункт, який вмикає перемикання стільниць пересуванням вказівника миші до краю екрана, його можна знайти у контекстному меню ефектів <guilabel
+>Показ вікон</guilabel
+>.</para>
+
+<para
+>Ви можете позначити пункт <guilabel
+>Максимізувати: вікна, які перетягнуто на верхній край</guilabel
+> або <guilabel
+>Мозаїка: вікна, які перетягнуто на лівий або правий край</guilabel
+> і встановити частку екрана для вмикання мозаїчності вікон. </para>
+
+<para
+>За допомогою пункту <guilabel
+>Перемикати стільниці на краю</guilabel
+> можна налаштувати поведінку системи у відповідь на пересування вказівника миші на край екрана, наприклад, перемикання на іншу стільницю під час пересування вікон. </para>
+<para
+><guilabel
+>Затримка дії</guilabel
+>: час, який слід утримувати вказівник миші на краю екрана для вмикання дії. </para>
+<para
+><guilabel
+>Затримка реактивації</guilabel
+>: час, після використання дії до можливого використання наступної дії. </para>
+</article>

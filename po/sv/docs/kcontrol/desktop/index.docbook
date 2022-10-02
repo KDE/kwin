@@ -1,0 +1,142 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Swedish "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="desktop" lang="&language;">
+<title
+>Virtuella skrivbord</title>
+<articleinfo>
+
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<author
+>&Jost.Schenck; &Jost.Schenck.mail;</author>
+<othercredit role="translator"
+> <firstname
+>Stefan</firstname
+> <surname
+>Asserhäll</surname
+> <affiliation
+><address
+><email
+>stefan.asserhall@bredband.net</email
+></address
+></affiliation
+> <contrib
+>Översättare</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-09</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systeminställningar</keyword>
+<keyword
+>virtuellt</keyword>
+<keyword
+>skrivbord</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>&kde; erbjuder möjlighet att ha flera virtuella skrivbord. </para>
+<para
+>Du kan byta namn på skrivborden genom att klicka på knappen <guibutton
+>Byt namn</guibutton
+> (visas när du håller musen över skrivbordsobjektet i listan) och skriva in text i textfältet. </para>
+<para
+>Om du vill ta bort ett skrivbord, använd den överlagrade papperskorgsikonen till höger om skrivbordsobjektet. </para>
+<para
+>Klicka på knappen <guibutton
+>Lägg till</guibutton
+> för att lägga till ett virtuellt skrivbord i listan (förvalt namn är <guilabel
+>Nytt skrivbord</guilabel
+>). </para>
+<para
+>Du kan ställa in antal rader med skrivbordsvisning i panelen. Använd bara inmatningsrutan för rader under listan för att justera antal skrivbord. Skrivborden arrangeras automatiskt om enligt raderna. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Navigering går runt</guilabel
+></term>
+<listitem
+><para
+>Aktivera alternativet om du vill att navigering bortanför kanten av ett skrivbord med tangentbordet eller aktiv skrivbordskant, ska ta dig till motsatt kant på det nya skrivbordet. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Visa animering vid byte</guilabel
+></term>
+<listitem
+><para
+>Välj <guilabel
+>Glid</guilabel
+>, <guilabel
+>Animering med skrivbordskub</guilabel
+> eller <guilabel
+>Tona skrivbord</guilabel
+> i kombinationsrutan, eller stäng av animeringar genom att avmarkera alternativet. Om den valda animeringen har inställningsalternativ, klicka på verktygsikonen till höger om kombinationsrutan för att visa en inställningsdialogruta. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Visa på skärmen vid byte</guilabel
+></term>
+<listitem
+><para
+>Aktivera alternativet om du vill ha en skärmvisning av skrivbordsbyten. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Visa indikering av skrivbordslayout</guilabel
+></term>
+<listitem
+><para
+>Att aktivera alternativet visar en liten förhandsgranskning av skrivbordslayouten som anger valt skrivbord. </para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>När mushjulet rullas över en tom plats på skrivbordet eller på ikonen <guilabel
+>Skrivbordsvisning</guilabel
+> i panelen byts skrivbordet till nästa virtuella skrivbord i nummerordning, i riktningen du rullar (antingen upp eller ner).</para>
+<para
+>Det går att ändra standardbeteendet på sidan <guilabel
+>Musåtgärder</guilabel
+> i <guilabel
+>Skrivbordsinställningar</guilabel
+> (<keycombo action="simul"
+>&Alt;<keycap
+>D</keycap
+></keycombo
+>, <keycombo action="simul"
+>&Alt;<keycap
+>S</keycap
+></keycombo
+>).</para>
+
+</article>

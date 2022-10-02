@@ -1,0 +1,176 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Catalan  "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwindecoration" lang="&language;">
+<articleinfo>
+<authorgroup>
+<author
+>&Rik.Hemsley; &Rik.Hemsley.mail;</author>
+<author
+>&Anne-Marie.Mahfouf; &Anne-Marie.Mahfouf.mail;</author>
+&traductor.Antoni.Bella; 
+</authorgroup>
+
+<date
+>9 d'abril de 2021</date>
+<releaseinfo
+>Plasma 5.21</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Arranjament del sistema</keyword>
+<keyword
+>kwin</keyword>
+<keyword
+>finestra</keyword>
+<keyword
+>vora</keyword>
+<keyword
+>tema</keyword>
+<keyword
+>estil</keyword>
+</keywordset>
+</articleinfo>
+<sect1 id="window-deco">
+<title
+>Decoració de les finestres</title>
+
+<para
+>Aquest mòdul permet seleccionar un estil per als botons i les vores de les finestres.</para>
+
+<sect2>
+<title
+>Decoració de les finestres</title>
+
+<para>
+<screenshot>
+<screeninfo
+>Mòdul de configuració Decoració de les finestres</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Mòdul de configuració Decoració de les finestres</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+
+<para
+>Escolliu un estil de decoració de finestra des de la llista de vista prèvia, utilitzant el camp de cerca a la part superior de la pantalla o baixeu un nou estil utilitzant el botó <guibutton
+>Obtén decoracions noves de finestra...</guibutton
+>.</para>
+
+<para
+>La decoració predeterminada de les finestres s'anomena <quote
+>Brisa</quote
+>.</para>
+
+<para
+>Cada estil té un aspecte diferent i un <quote
+>comportament</quote
+> diferent. Alguns tenen vores de <quote
+>redimensionament</quote
+> (de vegades invisibles) per tot el seu voltant, que en facilita la redimensió però que en dificulta el moviment. Alguns no tenen vores en certs costats.</para>
+
+<para
+>Us encoratgem a què experimenteu amb els diferents estils fins que en trobeu un que s'ajusti al vostre patró de treball.</para>
+
+<para
+>A la vista prèvia de cada estil, trobareu un botó de configuració <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure.png" format="PNG"/></imageobject
+></inlinemediaobject
+> per obrir el diàleg de configuració per a cada decoració.</para>
+
+<para
+>Les opcions en aquest diàleg de configuració s'apliquen a totes les finestres. Algunes decoracions de finestra (&pex;, <quote
+>Brisa</quote
+>) proporcionen una pestanya <guilabel
+>Substitucions específiques de la finestra</guilabel
+>. En aquesta pestanya podreu canviar la mida de la vora i la visibilitat de la barra de títol per a finestres en particular.</para>
+
+<para
+>Trobareu diferents opcions per a finestres en particular al mòdul <ulink url="help:/kcontrol/windowspecific"
+>Regles de les finestres</ulink
+> de l'&systemsettings;. </para>
+
+<tip>
+<para
+>Per motius d'accessibilitat, algunes decoracions accepten vores molt grans. Si estès disponible, aquí també podreu triar una <guilabel
+>Mida de la vora de la finestra:</guilabel
+>. Aquestes vores llargues són fàcils de veure per a usuaris amb visibilitat reduïda, i fàcils de capturar per a gent amb mobilitat reduïda o dificultats en emprar el ratolí.</para>
+</tip>
+
+</sect2>
+
+<sect2>
+<title
+>Decoracions</title>
+
+<para
+>En aquest diàleg podeu canviar la decoració de la finestra. Les opcions disponibles dependran de l'estil seleccionat. </para>
+<para>
+<screenshot>
+<screeninfo
+>Opcions de la decoració Brisa</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="decoration.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Opcions de la decoració Brisa</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+<sect2>
+<title
+>Botons de la barra de títol</title>
+
+<para
+>Aquesta pestanya permet personalitzar la ubicació del botó a la barra de títol. Podeu arrossegar els botons, &pex;, el <guilabel
+>Menú d'aplicacions</guilabel
+> dins la barra de títol, eliminar-los o arrossegar-los al voltant fins que us resultin més confortables d'emprar. </para>
+
+<screenshot>
+<screeninfo
+>Opcions dels botons</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="button.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Opcions dels botons</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+
+<para
+>Habiliteu <guilabel
+>Tanca les finestres amb doble clic al botó menú</guilabel
+> per a tenir una opció addicional al botó «Tanca» o si l'heu eliminat de la barra de títol. </para>
+
+<para
+>Marqueu l'element <guilabel
+>Mostra els consells dels botons a la barra de títol</guilabel
+> si voleu veure els consells d'eina predeterminats quan es desplaça el punter del ratolí per sobre dels botons de la barra de títol. </para>
+
+</sect2>
+
+</sect1>
+
+</article>

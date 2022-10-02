@@ -1,0 +1,174 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Dutch "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwindecoration" lang="&language;">
+<articleinfo>
+<authorgroup>
+<author
+>&Rik.Hemsley; &Rik.Hemsley.mail;</author>
+<author
+>&Anne-Marie.Mahfouf; &Anne-Marie.Mahfouf.mail;</author>
+&Niels.Reedijk;&Sander.Koning; 
+</authorgroup>
+
+<date
+>2021-04-09</date>
+<releaseinfo
+>Plasma 5.21</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systeeminstellingen</keyword>
+<keyword
+>kwin</keyword>
+<keyword
+>venster</keyword>
+<keyword
+>rand</keyword>
+<keyword
+>thema</keyword>
+<keyword
+>stijl</keyword>
+</keywordset>
+</articleinfo>
+<sect1 id="window-deco">
+<title
+>Vensterdecoraties</title>
+
+<para
+>Deze module laat u een stijl voor de knoppen en randen rond de vensters selecteren.</para>
+
+<sect2>
+<title
+>Vensterdecoraties</title>
+
+<para>
+<screenshot>
+<screeninfo
+>Configuratiemodule voor vensterdecoratie</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Configuratiemodule voor vensterdecoratie</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+
+<para
+>Kies een vensterdecoratiestijl uit de voorbeeldlijst met behulp van het zoekveld bovenaan het scherm of download een nieuwe stijl met de knop <guibutton
+>Nieuwe vensterdecoraties ophalen</guibutton
+>.</para>
+
+<para
+>De standaard vensterdecoratie wordt <quote
+>Breeze</quote
+> genoemd.</para>
+
+<para
+>Elke stijl heeft een ander uiterlijk, maar ook een ander <quote
+>gedrag</quote
+>. Sommige hebben (soms onzichtbare) randen waarmee u de grootte kunt veranderen rondom het hele venster, die het makkelijker maken om van grootte te wijzigen, maar die het verplaatsen moeilijker maken. Sommige hebben geen randen op bepaalde kanten.</para>
+
+<para
+>U wort aangespoord om met de verscheidene stijlen te experimenteren totdat u vindt welke het beste bij uw werkpatroon past.</para>
+
+<para
+>In het voorbeeld van elke stijl vindt u een <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure.png" format="PNG"/></imageobject
+></inlinemediaobject
+> configuratieknop om de configuratiedialogen voor de decoratie te openen.</para>
+
+<para
+>De opties in deze instellingendialoog worden toegepast op alle vensters. Sommige vensterdecoraties (&eg; <quote
+>Breeze</quote
+> bieden een tabblad <guilabel
+>Vensterspecifieke wijzigingen</guilabel
+>. Op dit tabblad kunt u de grootte van de rand en de zichtbaarheid van de titelbalk van het venster voor specifieke vensters wijzigen.</para>
+
+<para
+>Verschillende opties voor specifieke vensters vindt u in de module &systemsettings; <ulink url="help:/kcontrol/windowspecific"
+>Vensterregels</ulink
+>. </para>
+
+<tip>
+<para
+>Voor toegankelijkheidsdoeleinden ondersteunen sommige vensterdecoraties extra brede randen. Als dat het geval is, kunt u hier ook een <guilabel
+>Vensterrandbreedte</guilabel
+> kiezen. De bredere randen zijn gemakkelijker te zien voor gebruikers met gezichtsproblemen, en gemakkelijker vast te pakken voor mensen met verminderde mobiliteit of problemen met het gebruiken van een muis.</para>
+</tip>
+
+</sect2>
+
+<sect2>
+<title
+>Decoraties</title>
+
+<para
+>In deze dialoog kunt u de decoraties van de vensters wijzigen. De beschikbare opties hangen af van de geselecteerde stijl. </para>
+<para>
+<screenshot>
+<screeninfo
+>Decoratie-opties van Breeze</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="decoration.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Decoratie-opties van Breeze</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+<sect2>
+<title
+>Titelbalkknoppen</title>
+
+<para
+>Dit tabblad stelt u in staat de locatie van de knop op de titelbalk aan te passen. U kunt knoppen, &eg; het <guilabel
+>Toepassingenmenu</guilabel
+> in de titelbalk slepen, ze verwijderen of verplaatsen totdat u de volgorde heeft die u wilt. </para>
+
+<screenshot>
+<screeninfo
+>Knop Opties</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="button.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Knop Opties</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+
+<para
+>Schakel <guilabel
+>Vensters sluiten door dubbel te klikken op de menu-knop</guilabel
+> om een extra optie te hebben voor de knop Sluiten of als u deze knop uit de titelbalk hebt verwijderd. </para>
+
+<para
+>Het item <guilabel
+>Tekstballonnen van titelbalkknoppen tonen</guilabel
+> activeren als u de standaard tekstballonnen wilt zien wanneer u zweeft boven de titelbalkknoppen met de muisaanwijzer. </para>
+
+</sect2>
+
+</sect1>
+
+</article>

@@ -1,0 +1,278 @@
+# translation of kcm_kwindesktop.po to
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Marta Rybczyńska <kde-i18n@rybczynska.net>, 2007.
+# Maciej Wikło <maciej.wiklo@wp.pl>, 2010.
+# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2011, 2012, 2013, 2014, 2016, 2019, 2021.
+# krzysztof <x-men@mixbox.pl>, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcm_kwindesktop\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"PO-Revision-Date: 2021-06-06 06:50+0200\n"
+"Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
+"Language-Team: Polish <kde-i18n-doc@kde.org>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 20.12.1\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Maciej Wikło, Łukasz Wojniłowicz"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "maciej.wiklo@wp.pl, lukasz.wojnilowicz@gmail.com"
+
+#: desktopsmodel.cpp:467
+#, kde-format
+msgid "There was an error connecting to the compositor."
+msgstr "Wystąpił błąd podczas łączenia z kompozytorem."
+
+#: desktopsmodel.cpp:666
+#, kde-format
+msgid "There was an error saving the settings to the compositor."
+msgstr "Wystąpił błąd podczas zapisywania ustawień kompozytora."
+
+#: desktopsmodel.cpp:669
+#, kde-format
+msgid "There was an error requesting information from the compositor."
+msgstr "Wystąpił błąd podczas żądania informacji od kompozytora."
+
+#: package/contents/ui/main.qml:17
+#, kde-format
+msgid ""
+"This module lets you configure the navigation, number and layout of virtual "
+"desktops."
+msgstr ""
+"Ten moduł umożliwia ustawienia poruszania się, liczby oraz układu "
+"wirtualnych klawiatur."
+
+#: package/contents/ui/main.qml:91
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Rename"
+msgstr "Przemianuj"
+
+#: package/contents/ui/main.qml:102
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Confirm new name"
+msgstr "Potwierdź nową nazwę"
+
+#: package/contents/ui/main.qml:110
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove"
+msgstr "Usuń"
+
+#: package/contents/ui/main.qml:137
+#, kde-format
+msgid ""
+"Virtual desktops have been changed outside this settings application. Saving "
+"now will overwrite the changes."
+msgstr ""
+"Wirtualne pulpity zostały zmienione poza ustawieniami dla tej aplikacji. "
+"Zapisanie teraz spowoduje zastąpienie tych ustawień."
+
+#: package/contents/ui/main.qml:153
+#, kde-format
+msgid "Row %1"
+msgstr "Wiersz %1"
+
+#: package/contents/ui/main.qml:166
+#, kde-format
+msgctxt "@action:button"
+msgid "Add"
+msgstr "Dodaj"
+
+#: package/contents/ui/main.qml:169
+#, kde-format
+msgid "New Desktop"
+msgstr "Nowy pulpit"
+
+#: package/contents/ui/main.qml:184
+#, kde-format
+msgid "1 Row"
+msgid_plural "%1 Rows"
+msgstr[0] "1 Wiersz"
+msgstr[1] "%1 Wiersze"
+msgstr[2] "%1 Wierszy"
+
+#: package/contents/ui/main.qml:200
+#, kde-format
+msgid "Options:"
+msgstr "Opcje:"
+
+#: package/contents/ui/main.qml:202
+#, kde-format
+msgid "Navigation wraps around"
+msgstr "Zapętlij przełączanie pulpitów"
+
+#: package/contents/ui/main.qml:220
+#, kde-format
+msgid "Show animation when switching:"
+msgstr "Animuj przełączanie:"
+
+#: package/contents/ui/main.qml:271
+#, kde-format
+msgid "Show on-screen display when switching:"
+msgstr "Pokaż wyświetlacz na ekranie przy przełączaniu:"
+
+#: package/contents/ui/main.qml:290
+#, kde-format
+msgid "%1 ms"
+msgstr "%1 ms"
+
+#: package/contents/ui/main.qml:314
+#, kde-format
+msgid "Show desktop layout indicators"
+msgstr "Pokaż wskaźniki układu pulpitów"
+
+#: virtualdesktops.cpp:33
+#, kde-format
+msgid "Virtual Desktops"
+msgstr "Pulpity wirtualne"
+
+#~ msgid "Rows:"
+#~ msgstr "Wiersze:"
+
+#~ msgid "Configure Virtual Desktops"
+#~ msgstr "Ustawienia wirtualnych pulpitów"
+
+#~ msgid "Desktop %1:"
+#~ msgstr "Pulpit %1:"
+
+#~ msgid "Here you can enter the name for desktop %1"
+#~ msgstr "Tutaj możesz podać nazwę dla pulpitu %1"
+
+#~ msgid "Desktop %1"
+#~ msgstr "Pulpit %1"
+
+#~ msgid ""
+#~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "
+#~ "virtual desktops you want and how these should be labeled."
+#~ msgstr ""
+#~ "<h1>Wiele pulpitów</h1> W tym module, możesz określić zarówno liczbę "
+#~ "wirtualnych pulpitów, jak i ich etykiety."
+
+#~ msgid "Switch to Next Desktop"
+#~ msgstr "Przełącz na następny pulpit"
+
+#~ msgid "Switch to Previous Desktop"
+#~ msgstr "Przełącz na poprzedni pulpit"
+
+#~ msgid "Switch One Desktop to the Right"
+#~ msgstr "Przełącz jeden pulpit w prawo"
+
+#~ msgid "Switch One Desktop to the Left"
+#~ msgstr "Przełącz jeden pulpit w lewo"
+
+#~ msgid "Switch One Desktop Up"
+#~ msgstr "Przełącz jeden pulpit w górę"
+
+#~ msgid "Switch One Desktop Down"
+#~ msgstr "Przełącz jeden pulpit w dół"
+
+#~ msgid "Walk Through Desktops"
+#~ msgstr "Przełączanie pulpitów"
+
+#~ msgid "Walk Through Desktops (Reverse)"
+#~ msgstr "Przełączanie pulpitów (odwrotne)"
+
+#~ msgid "Walk Through Desktop List"
+#~ msgstr "Przełączanie pulpitów z listy"
+
+#~ msgid "Walk Through Desktop List (Reverse)"
+#~ msgstr "Przełączanie pulpitów z listy (odwrotne)"
+
+#~ msgid "Desktop Switching"
+#~ msgstr "Przełączanie pulpitów"
+
+#~ msgid "Switch to Desktop %1"
+#~ msgstr "Przełącz na pulpit %1"
+
+#~ msgid "No Animation"
+#~ msgstr "Bez animacji"
+
+#~ msgid "No suitable Shortcut for Desktop %1 found"
+#~ msgstr "Nie znaleziono odpowiedniego skrótu klawiaturowego dla pulpitu %1"
+
+#~ msgid "Assigned global Shortcut \"%1\" to Desktop %2"
+#~ msgstr "Przypisano globalny skrót \"%1\" do pulpitu %2"
+
+#~ msgid "Shortcut conflict: Could not set Shortcut %1 for Desktop %2"
+#~ msgstr "Konflikt skrótów: Nie można ustawić skrótu %1 dla pulpitu %2"
+
+#~ msgid "KWin development team"
+#~ msgstr "Zespół programistów KWin"
+
+#~ msgid "Layout"
+#~ msgstr "Układ"
+
+#~ msgid ""
+#~ "Here you can set how many virtual desktops you want on your KDE desktop."
+#~ msgstr ""
+#~ "Tutaj możesz ustawić liczbę wirtualnych pulpitów dla twojego pulpitu KDE."
+
+#~ msgid "&Number of desktops:"
+#~ msgstr "&Liczba pulpitów: "
+
+#~ msgid "N&umber of rows:"
+#~ msgstr "L&iczba wierszy:"
+
+#~ msgid "Desktop Names"
+#~ msgstr "Nazwy pulpitów"
+
+#~ msgid "Switching"
+#~ msgstr "Przełączanie"
+
+#~ msgid ""
+#~ "Enable this option if you want keyboard or active desktop border "
+#~ "navigation beyond the edge of a desktop to take you to the opposite edge "
+#~ "of the new desktop."
+#~ msgstr ""
+#~ "Włącz tę opcję, jeśli chcesz przechodzić na inne pulpity przy użyciu "
+#~ "klawiatury lub aktywnych krawędzi pulpitu."
+
+#~ msgid "Desktop Effect Animation"
+#~ msgstr "Animacja efektu pulpitu"
+
+#~ msgid "Animation:"
+#~ msgstr "Animacja:"
+
+#~ msgid "Desktop Switch On-Screen Display"
+#~ msgstr "Powiadom po przełączeniu pulpitu"
+
+#~ msgid "Duration:"
+#~ msgstr "Czas trwania:"
+
+#~ msgid " msec"
+#~ msgstr " msec"
+
+#~ msgid ""
+#~ "Enabling this option will show a small preview of the desktop layout "
+#~ "indicating the selected desktop."
+#~ msgstr ""
+#~ "Włącz tę opcję, aby wyświetlić niewielki podgląd układu pulpitu, "
+#~ "wskazujący wybrany pulpit."
+
+#~ msgid "Shortcuts"
+#~ msgstr "Skróty klawiszowe"
+
+#~ msgid "Show shortcuts for all possible desktops"
+#~ msgstr "Pokaż skróty dla wszystkich możliwych pulpitów"
+
+#~ msgid "Different widgets for each desktop"
+#~ msgstr "Każdy pulpit ma różne elementy interfejsu"
+
+#~ msgid "Mouse wheel over desktop background switches desktop"
+#~ msgstr "Ruch kółka myszy nad tłem pulpitu zmienia pulpit"

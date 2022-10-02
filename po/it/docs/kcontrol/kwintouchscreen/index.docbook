@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Italian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwintouchscreen" lang="&language;">
+<articleinfo>
+
+<title
+>Schermo a sfioramento</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Paolo</firstname
+><surname
+>Zamponi</surname
+><affiliation
+><address
+><email
+>zapaolo@email.it</email
+></address
+></affiliation
+><contrib
+>Traduzione della documentazione</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>10/04/2021</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Impostazioni di sistema</keyword>
+<keyword
+>tocco</keyword>
+<keyword
+>schermo</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Lo scorrimento dai bordi dello schermo verso il centro permette di attivare gli effetti. Qui puoi configurare quali effetti verranno attivati in ciascun bordo dello schermo. </para>
+
+<para
+>Fai clic con un pulsante del mouse su un quadrato, e seleziona un'azione dal menu contestuale. I bordi con un quadrato blu hanno già un effetto associato, mentre se hanno un quadrato grigio significa che nessun effetto è stato selezionato per quel bordo.</para>
+
+<para
+>Il numero di oggetti accessibili nel menu contestuale dipende dalle impostazioni nel modulo <ulink url="help:/kcontrol/kwineffects/index.html"
+> <guilabel
+>Effetti del desktop</guilabel
+></ulink
+> nella categoria <guilabel
+>Spazio di lavoro</guilabel
+>. Seleziona il tuo effetto preferito nel gruppo <guilabel
+>Gestione delle finestre</guilabel
+>, che attiva gli elementi corrispondenti nel menu contestuale.</para>
+</article>

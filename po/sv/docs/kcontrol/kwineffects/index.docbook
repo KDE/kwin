@@ -1,0 +1,137 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Swedish "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwineffects" lang="&language;">
+<articleinfo>
+
+<title
+>Skrivbordseffekter</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+> <firstname
+>Stefan</firstname
+> <surname
+>Asserhäll</surname
+> <affiliation
+><address
+><email
+>stefan.asserhall@bredband.net</email
+></address
+></affiliation
+> <contrib
+>Översättare</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-09</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Kcontrol</keyword>
+<keyword
+>skrivbord</keyword>
+<keyword
+>effekter</keyword>
+</keywordset>
+</articleinfo>
+
+<!--FIXME Compositor Enable compositor on startup necessary to have effects?-->
+
+<para
+>Modulen används för att aktivera och anpassa skrivbordseffekter för Plasma.</para>
+
+<para
+>Huvuddelen av den här sidan är en lista med alla tillgängliga effekter grupperade enligt <guilabel
+>Handikappstöd</guilabel
+>, <guilabel
+>Utseende</guilabel
+>, <guilabel
+>Fokus</guilabel
+>, <guilabel
+>Visa skrivbordsanimering</guilabel
+>, <guilabel
+>Verktyg</guilabel
+>, <guilabel
+>Animering vid virtuellt skrivbordsbyte</guilabel
+>, <guilabel
+>Fönsterhantering</guilabel
+> och <guilabel
+>Animering av öppna och stäng fönster</guilabel
+>.</para>
+<para
+> Använd den inkrementella sökraden ovanför listfönstret för att hitta objekt i listan.</para>
+
+<para
+>Normalt finns det ingen anledning för användare att ändra det, men det finns en <inlinemediaobject
+><imageobject
+><imagedata fileref="configure-effects.png" format="PNG"/> </imageobject
+></inlinemediaobject
+> inställningsknapp för att ändra filtrering av listan för att också visa dessa effekter. </para>
+
+<para
+>Det enklaste sättet att installera nya effekter är att använda det inbyggda stödet för KNewStuff i &kwin;. Klicka på knappen <guibutton
+>Hämta nya skrivbordseffekter</guibutton
+> för att visa en dialogruta med tillgängliga effekter från Internet, och för att installera eller avinstallera effekter.</para>
+<note
+><para
+>Var medveten om att om dessa rimliga normalvärden ändras, kan det bli problem med systemet.</para>
+</note>
+
+<para
+>Markera en effekt i listan för att aktivera den. Visa information om upphovsman och licens genom att klicka på <inlinemediaobject
+><imageobject
+> <imagedata fileref="dialog-information.png" format="PNG"/></imageobject
+> </inlinemediaobject
+> informationsknappen till höger om objektet i listan.</para>
+
+<para
+>Vissa effekter har inställningsalternativ, om så är fallet finns en <inlinemediaobject
+><imageobject
+><imagedata fileref="configure-effects.png" format="PNG"/></imageobject
+></inlinemediaobject
+> inställningsknapp till vänster om informationsknappen. Klicka på den för att visa en inställningsdialogruta.</para>
+<para
+>För att se en videoförhandsgranskning av en effekt klicka på knappen <inlinemediaobject
+><imageobject
+><imagedata fileref="video.png" format="PNG"/> </imageobject
+></inlinemediaobject
+>.</para>
+
+<para
+>Vissa effekter är ömsesidigt uteslutande med andra effekter. Exempelvis vill man bara aktivera effekten <guilabel
+>Maximera</guilabel
+> eller effekten <guilabel
+>Magisk laterna</guilabel
+>. Om båda aktiveras samtidigt blir animeringarna felaktiga. </para>
+
+<para
+>För effekter i en ömsesidigt uteslutande grupp använder det grafiska användargränssnittet alternativknappar och ser till att bara en av effekterna kan aktiveras. </para>
+
+<para
+>Alla effekter som inte stöds av sammansättningsgränssnittet som för närvarande används är normalt dolda (t.ex. OpenGL effekter när programvaruåtergivning används). </para
+> 
+
+<para
+>Alla interna eller hjälpeffekter är normalt dolda. De är effekter som ersätter funktioner från kärnan i Kwin, eller tillhandahåller interaktion med andra element i skrivbordsskalet. </para>
+
+<!--FIXME 
+39 effects + 7 internal (XRender compositor)
+Internal effects
+Appearance (Dashboard, Highlight Windows, KSreen, Screenshot, Window Geometry)
+Window Management (Cover Switch)
+-->
+
+</article>

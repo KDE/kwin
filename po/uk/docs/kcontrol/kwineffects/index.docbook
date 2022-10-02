@@ -1,0 +1,137 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Ukrainian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwineffects" lang="&language;">
+<articleinfo>
+
+<title
+>Ефекти стільниці</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Юрій</firstname
+><surname
+>Чорноіван</surname
+><affiliation
+><address
+><email
+>yurchor@ukr.net</email
+></address
+></affiliation
+><contrib
+>Переклад українською</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>9 квітня 2021 року</date>
+<releaseinfo
+>Плазма 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>стільниця</keyword>
+<keyword
+>ефекти</keyword>
+</keywordset>
+</articleinfo>
+
+<!--FIXME Compositor Enable compositor on startup necessary to have effects?-->
+
+<para
+>За допомогою цього модуля можна увімкнути і налаштувати стільничні ефекти Плазми.</para>
+
+<para
+>У головній частині цієї сторінки розташовано список всіх можливих ефектів, які впорядковано за групами <guilabel
+>Інструменти</guilabel
+>, <guilabel
+>Анімація відкриття та закриття вікон</guilabel
+>, <guilabel
+>Анімація перемикання віртуальних стільниць</guilabel
+>, <guilabel
+>Вигляд</guilabel
+>, <guilabel
+>Доступність</guilabel
+>, <guilabel
+>Керування вікнами</guilabel
+>, <guilabel
+>Показ анімацій стільниці</guilabel
+> та <guilabel
+>Фокус</guilabel
+>.</para>
+<para
+>Для пошуку ефектів у списку ви можете скористатися полем пошуку, розташованим на вікно списку.</para>
+
+<para
+>Зазвичай, користувачу не варто щось змінювати, але передбачено кнопку налаштовування <inlinemediaobject
+><imageobject
+><imagedata fileref="configure-effects.png" format="PNG"/> </imageobject
+></inlinemediaobject
+> для внесення змін у фільтрування списку. </para>
+
+<para
+>Найпростішим способом встановлення нових ефектів є використання вбудованої підтримки KNewStuff у &kwin;. Натисніть кнопку <guibutton
+>Отримати нові ефекти стільниці</guibutton
+>, щоб відкрити діалогове вікно зі списком доступних за допомогою інтернету ефектів. Далі, просто встановіть або скасуйте встановлення ефектів.</para>
+<note
+><para
+>Будь ласка, майте на увазі, що внесення змін у типовий перелік може призвести до проблем у роботі вашої системи.</para>
+</note>
+
+<para
+>Щоб увімкнути ефект зі списку, просто позначте відповідний пункт. Дані щодо автора і умов ліцензування ефекту можна отримати за допомогою натискання кнопки <inlinemediaobject
+><imageobject
+><imagedata fileref="dialog-information.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>, розташованої праворуч від відповідного пункту у списку.</para>
+
+<para
+>Параметри деяких з ефектів можна налаштувати. Поряд з пунктами таких ефектів, ліворуч від інформаційної кнопки, розташовано кнопку налаштування <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure-effects.png" format="PNG"/></imageobject
+></inlinemediaobject
+>. Натискання цієї кнопки призведе до відкриття діалогового вікна налаштовування.</para>
+<para
+>Щоб переглянути відеофрагмент роботи ефекту, натисніть кнопку <inlinemediaobject
+><imageobject
+><imagedata fileref="video.png" format="PNG"/> </imageobject
+></inlinemediaobject
+>.</para>
+
+<para
+>Деякі з ефектів не можна поєднувати. Наприклад, можна задіяти лише один із пари ефектів, <guilabel
+>Максимізація</guilabel
+> і <guilabel
+>Чарівна лампа</guilabel
+>. Одночасне використання цих ефектів призводить до помилок під час анімації. </para>
+
+<para
+>Для ефектів, які не можна використовувати одночасно, у списку вказано кнопки-перемикачі. Такі кнопки надають змогу увімкнути лише один ефект із групи несумісних. </para>
+
+<para
+>Усі ефекти, підтримки яких не передбачено у поточному модулі для створення композиції зображення, буде приховано (наприклад, буде приховано ефекти OpenGL, якщо для відтворення використовуються програмні засоби обробки). </para
+> 
+
+<para
+>Крім того, типово приховано усі вбудовані або допоміжні ефекти. Такими ефектами вважаються ефекти, які замінюють собою функціональні можливості ядра KWin або містять процедури взаємодії із іншими елементами стільничної оболонки. </para>
+
+<!--FIXME 
+39 effects + 7 internal (XRender compositor)
+Internal effects
+Appearance (Dashboard, Highlight Windows, KSreen, Screenshot, Window Geometry)
+Window Management (Cover Switch)
+-->
+
+</article>

@@ -1,0 +1,244 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Dutch "INCLUDE">
+]>
+<article id="kwintabbox" lang="&language;">
+<articleinfo>
+<title
+>Taakschakelaar</title>
+<authorgroup>
+<author
+>&Martin.Graesslin;&Martin.Graesslin.mail;</author>
+&Freek.de.Kruijf; 
+</authorgroup>
+
+<date
+>2020-12-31</date>
+<releaseinfo
+>&plasma; 5.21</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systeeminstellingen</keyword>
+<keyword
+>bureaublad</keyword>
+<keyword
+>venster</keyword>
+<keyword
+>navigatie</keyword>
+<keyword
+>schakelaar</keyword>
+<keyword
+>alt-tab</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="windows-navigating">
+<title
+>Door vensters wandelen</title>
+
+<para
+>De taakschakelaar biedt de gebruiker het gemakkelijk schakelen tussen nu geopende vensters met het toetsenbord. Het is heel goed te configureren en biedt de gebruiker zijn gedrag, visuele uiterlijk, sneltoetsen en filteren van vensters te besturen.</para>
+
+<para
+>De taakschakelaar wordt vaak aangeroepen met de toetsencombinatie <keycombo
+>&Alt;&Tab;</keycombo
+>, maar dit kan gewijzigd worden. Bij aanroepen toont het een lijst met alle nu geopende vensters, optioneel gefilterd en aangevuld volgens de instellingen in de configuratie. De lijst kan bijvoorbeeld gefilterd worden om alleen vensters te tonen die aan bepaalde criteria voldoen, zoals vensters die nu zichtbaar zijn. Nadat d lijst met vensters is getoond, kan de gebruiker voorwaarts en achterwaarts door alle vensters in de lijst lopen door herhaaldelijk de toetscombinatie van de taakschakelaar in te drukken. Deze weer loslaten activeert het venster dat was selected in the list.</para>
+
+<para
+>Omdat de taakschakelaar zoveel configuratie-opties biedt, kunnen twee aparte verzamelingen van configuratie-instellingen gedefinieerd worden. Deze verzamelingen worden <guilabel
+>Hoofd</guilabel
+> en <guilabel
+>Alternatief</guilabel
+> genoemd en aan elk van hen kan een unieke set toetscombinaties zijn toegekend.</para>
+
+<para
+>De configuratie-opties voor elk van de Hoofd en Alternatieve verzamelingen worden gepresenteerd in vier groeperingen, als volgt:</para>
+
+<sect2 id="visualization">
+<title
+>Visualisatie</title>
+<para
+>Deze groep configuratie-opties bestuurt hoe de lijst met vensters getoond wordt op het scherm. De standaard visualisatie wordt <guilabel
+>Breeze</guilabel
+> genoemd. Het toont alle open vensters links op het scherm. Andere visualisaties bevatten <guilabel
+>Hoesschakelaar</guilabel
+> (een 3D carousel), <guilabel
+>Omschakelaar</guilabel
+> (een 3D stapel van kaarten) ed <guilabel
+>Afgerond medium</guilabel
+> (een &Windows;-stijllijst van pictogrammen van Microsoft). Veel meer visualisaties kunnen gedownload en geïnstalleerd worden door te klikken op de knop <guibutton
+>Nieuwe taakschakelaars ophalen...</guibutton
+> rechts onderaan het dialoogvak.</para>
+
+<para
+>Nadat een visualisatie is geselecteerd uit de afrollijst, kan op de knop rechts op de lijst geklikt worden om een voorbeeld te zien of om visualisatie specifieke opties te configureren.</para>
+
+<para
+>Het keuzevakje <guilabel
+>Geselecteerd venster tonen</guilabel
+> bepaalt hoe helder de gebruiker zal zien welk venster geactiveerd zal worden. Als dit vakje geactiveerd is zullen alle vensters gedimd worden behalve diegene die nu geaccentueerd is in de taakschakelaar.</para>
+
+<note
+><para
+>Er kunnen gevallen zijn waar de gewenste visualisatie met de taakschakelaar niet getoond kan worden. Een van deze situaties kan een proces genaamd 'compositing' af of uitgeschakeld is. Als dit ooit gebeurt zal de lijst met vensers nog steeds getoond worden, maar in een erg eenvoudig formaat.</para
+></note>
+</sect2>
+
+<sect2 id="shortcuts">
+<title
+>Sneltoetsen</title>
+<para
+>Deze sectie biedt u het definiëren van tot vier sneltoetsen voor de taakschakelaar voor de <guilabel
+>Hoofd</guilabel
+> configuratie en nog vier voor de <guilabel
+>Alternatief</guilabel
+> configuratie. De sneltoetsen van <guilabel
+>Hoofd</guilabel
+> zijn voorgedefinieerd, terwijl de sneltoetsen voor <guilabel
+>Alternatief</guilabel
+> handmatig gedefinieerd moeten worden.</para>
+<para
+>In de sectie <guilabel
+>Alle vensters</guilabel
+>, zullen de sneltoetsen <guilabel
+>Voorwaarts</guilabel
+> en <guilabel
+>Achterwaarts</guilabel
+> cyclisch voorwaarts en achterwaarts door de lijst met open vensters gaan.</para>
+<para
+>In de sectie <guilabel
+>Huidige toepassing</guilabel
+> kunnen de sneltoetsen <guilabel
+>Voorwaarts</guilabel
+> en <guilabel
+>Achterwaarts</guilabel
+> gezet worden om cyclisch door het venster van de huidige actieve toepassing te gaan. Als u, bijvoorbeeld, drie bestandsbladervensters van &dolphin; open heeft, dan zou u met deze sneltoetsen cyclisch door de drie vensters van &dolphin; kunnen gaan.</para>
+<para
+>Om een sneltoets te wijzigen, klik op de knop <guibutton
+>Voorwaarts</guibutton
+> of <guibutton
+>Achterwaarts</guibutton
+> en typ de gewenst sneltoetscombinatie. Ga na een modifier-toets te gebruiken zoals &Ctrl; of &Alt; als onderdeel van de sneltoets, anders zou u mogelijk niet in staat zijn op de juiste manier cyclisch door de lijst met vensters te gaan.</para>
+
+<note
+><para
+>Elk van de gedefinieerde sneltoetsen kan gebruikt worden om de taakschakelaar aan te roepen. Om de taakschakelaar aan te roepen zonder het toetsenbord te gebruiken, kunt u schermrandacties definiëren in de module &systemsettings; <ulink url="help:/kcontrol/kwinscreenedges/index.html"
+><guilabel
+>Schermranden</guilabel
+></ulink
+>.</para
+></note>
+</sect2>
+
+<sect2 id="content">
+<title
+>Inhoud</title>
+<para
+>De opties in deze sectie besturen gedeeltelijk welke vensters zullen verschijnen in de lijst van de taakschakelaar.</para>
+
+<para
+>De afrollijst <guilabel
+>Sorteervolgorde</guilabel
+> specificeert of de vensters getoond moeten worden in <guilabel
+>Stapelvolgorde</guilabel
+> of volgorde <guilabel
+>Recent gebruikt</guilabel
+>. <guilabel
+>Stapelvolgorde</guilabel
+> is de volgorde waarin de vensters op het scherm verschijnen, terwijl volgorde <guilabel
+>Recent gebruikt</guilabel
+> de volgorde is waarin de vensters gebruikt zijn. Volgorde <guilabel
+>Recent gebruikt</guilabel
+> maakt het erg gemakkelijk om te schakelen tussen de twee meest frequent gebruikte vensters omdat deze altijd in de bovenste 2 posities in de lijst staan.</para>
+
+<para
+>De optie <guilabel
+>Pictogram "Bureaublad tonen" meenemen</guilabel
+> zal een optie Bureaublad tonen aan de vensterlijst toevoegen. Dit biedt de gebruiker om gemakkelijk het bureaublad als het 'venster' te tonen.</para>
+
+<para
+>De optie <guilabel
+>Slechts één venster per toepassing</guilabel
+> reduceert rommel door alleen één venster voor elke open toepassing te tonen. Als een toepassing meerdere vensters open heeft, dan zal zijn meest recent geactiveerde venster getoond worden in de lijst en de andere zullen niet getoond worden.</para>
+</sect2>
+
+<sect2 id="filter-windows-by">
+<title
+>Vensters filteren op</title>
+<para
+>Deze sectie bevat opties voor additionele filtering van de lijst met vensters van de taakschakelaar.</para>
+
+<para
+>De optie <guilabel
+>Virtuele bureaubladen</guilabel
+> filtert de lijst met vensters volgens het nu actieve virtuele bureaublad. Als u consequent specifieke vensters op specifieke virtuele bureaubladen zet, dan kan deze filteroptie het gemakkelijk maken om naar vensters om te schakelen binnen of over deze virtuele bureaubladen. Selecteer <guilabel
+>Huidig bureaublad</guilabel
+> om alleen vensters te tonen op het huidige virtuele bureaublad. Selecteer <guilabel
+>Alle andere bureaubladen</guilabel
+> om alleen vensters op de virtuele bureaubladen te tonen die nu niet actief zijn.</para>
+
+<para
+>De optie <guilabel
+>Activiteiten</guilabel
+> filtert de lijst met vensters volgens welke activiteit nu actief is. Zoals met filtering op Virtueel bureaublad kan deze optie het gemakkelijker maken om naar toepassingen binnen of over alle activiteiten te schakelen. Selecteer <guilabel
+>Huidige activiteit</guilabel
+> om alleen vensters te tonen die onderdeel van de huidige activiteit zijn. Selecteer <guilabel
+>Alle andere activiteiten</guilabel
+> om alleen vensters te tonen die onderdeel zijn van de activiteiten die nu niet actief zijn.</para>
+
+<para
+>De optie <guilabel
+>Schermen</guilabel
+> filtert de lijst met vensters volgens welk scherm nu actief is. Selecteer <guilabel
+>Huidig scherm</guilabel
+> om alleen vensters te tonen die op het scherm staan waarop de muisaanwijzer nu zicht bevindt. Selecteer <guilabel
+>Alle andere schermen</guilabel
+> om de vensters te tonen die op alle andere schermen zich bevinden. Deze optie kan nuttig zijn voor gebruikers die snel willen schakelen tussen vensters die op dezelfde monitor staan in een opzet met meerdere monitoren.</para>
+<note
+><para
+>Het actieve scherm is diegene waar de muisaanwijzer nu boven is, niet het scherm dat nu het actieve venster is.</para
+></note>
+
+<para
+>De optie <guilabel
+>Minimalisatie</guilabel
+> filtert de lijst met vensters volgens of ze verborgen zijn of niet. Selecteer <guilabel
+>Zichtbare vensters</guilabel
+> om alleen vensters te tonen die niet zijn geminimaliseerd. Selecteer <guilabel
+>Verborgen vensters</guilabel
+> om alleen de geminimaliseerde vensters te tonen.</para>
+
+<para
+>Als u een optie in deze sectie niet activeert zal geen filtering worden toegepast voor die optie. Als u, bijvoorbeeld, de optie Schermen activeert en de andere drie opties wist, dan zal het venster van de taakschakelaar alleen de lijst tonen, die is gefilterd volgens de vensters die nu op het huidige scherm staan.</para>
+<para
+>Al deze opties beschrijven in de bovenstaande secties, werken samen om erg verfijnde controle te bieden aan het gedrag en uiterlijk van de taakschakelaar. U kunt, bijvoorbeeld, de instellingenverzameling <guilabel
+>Hoofd</guilabel
+> definiëren om opgeroepen te worden met de toetscombinatie <keycombo
+>&Alt;&Tab;</keycombo
+> , om de open vensters in een carousel te tonen, om slechts één venster per toepassing te tonen en om alleen een lijst met vensters die zich op het huidige bureaublad bevinden en op het nu actieve scherm. Dit kan een erg snelle context-gevoelige venster omschakelen opleveren als u zowel de virtuele bureaubladen 'werk' en 'thuis' hebt en daarna al uw spreadsheets voor werk en thuis op dezelfde monitor doen.</para>
+
+<para
+>De beschikbaarheid van de taakschakelaarconfiguratie <guilabel
+>Alternatief</guilabel
+> geeft u een tweede manier om gemakkelijk de vensterlijsten te filteren of er in te bladeren. Met acht beschikbare toetsencombinaties in de twee taakschakelaarconfiguraties, zou het mogelijk moeten zijn om gemakkelijk en snel te navigeren door een groot aantal vensters.</para>
+</sect2>
+</sect1>
+</article>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+kate: space-indent on; indent-width 2; tab-width 2; indent-mode none;
+-->

@@ -1,0 +1,2214 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Indonesian "INCLUDE">
+]>
+<book id="windowspecific" lang="&language;">
+<bookinfo>
+<title
+>Peraturan Window</title>
+<authorgroup>
+<author
+>&Lauri.Watts; &Lauri.Watts.mail;</author>
+<author>
+<personname
+><firstname
+>Bagian dokumentasi ini telah dikonversi dari KDE UserBase halaman <ulink url="https://userbase.kde.org/KWin Rules"
+>Peraturan KWin</ulink
+> dan diperbarui oleh tim &kde; Documentation terhadap Plasma 5.8.</firstname
+> <surname
+></surname
+> </personname>
+      </author>
+<othercredit role="translator"
+><firstname
+>Wantoyo</firstname
+><surname
+></surname
+><affiliation
+><address
+><email
+>wantoyek@gmail.com</email
+></address
+></affiliation
+><contrib
+>Terjemahan</contrib
+></othercredit
+> 
+      </authorgroup>
+<legalnotice
+>&FDLNotice;</legalnotice>
+<date
+>23-06-2016</date>
+      <releaseinfo
+>Plasma 5.8</releaseinfo>
+<abstract>
+<para
+>Di sini kamu bisa mengkustomisasikan pengaturan window secara spesifik hanya untuk beberapa window.</para>
+      </abstract>
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>pengaturan window</keyword>
+<keyword
+>penempatan window</keyword>
+<keyword
+>ukuran window</keyword>
+</keywordset>
+</bookinfo>
+<chapter id="window-specific">
+<title
+>Pengaturan Window Spesifik: Mulai Cepat</title>
+
+<para
+>Di sini kamu bisa mengkustomisasikan pengaturan window secara spesifik hanya untuk beberapa window.</para>
+
+<note>
+<para
+>Mohon dicatat bahwa konfigurasi ini tidak akan berpengaruh jika kamu tidak menggunakan &kwin; sebagai pengelola window-mu. Jika kamu menggunakan pengelola window yang berbeda, silakan merujuk ke dokumentasinya untuk bagaimana mengkustomisasikan perilaku window.</para>
+</note>
+
+<para
+>Banyak pengaturan yang bisa kamu konfigurasikan di sini yang mana kamu bisa mengkonfigurasi pada basis global di dalam modul &systemsettings; <guilabel
+>Perilaku Window</guilabel
+>, bagaimanapun beberapa dari mereka bahkan lebih terperinci.</para>
+
+<para
+>Mereka meliputi geometri, penempatan, apakah jendela harus dijaga di atas atau di bawah yang lain, pencegahan mencuri fokus, dan pengaturan translusens.</para>
+
+<para
+>Kamu bisa mengakses modul ini dalam dua cara: dari bilah-judul aplikasi yang ingin kamu konfigurasikan, atau dari &systemsettings;. Jika kamu memulainya dari dalam &systemsettings; kamu bisa menggunakan tombol <guibutton
+>Baru...</guibutton
+> untuk menciptakan sebuah profil window, dan tombol <guibutton
+>Deteksi Properti Window</guibutton
+> pada dialog yang dihasilkan untuk mengisi sebagian informasi yang diperlukan bagi aplikasi yang ingin kamu konfigurasikan.</para>
+
+<para
+>Di lain waktu kamu juga bisa <guibutton
+>Modifikasi...</guibutton
+> atau <guibutton
+>Hapus</guibutton
+> profil pengaturan yang tersimpan, dan mengurutkan-ulang daftar. Pengurutan-ulang daftar menggunakan tombol  <guibutton
+>Pindah Naik</guibutton
+> dan <guibutton
+>Pindah Turun</guibutton
+> memengaruhi pada bagaimana mereka diterapkan.</para>
+
+</chapter>
+<!--userbase <timestamp
+>2012-03-09T20:50:14Z</timestamp
+>-->
+
+<!--userbase-content-->
+<chapter id="overview"
+><title
+>Ikhtisar</title
+> 
+<para
+>&kwin; memungkinkan pengguna-akhir untuk menentukan peraturan untuk mengubah atribut window aplikasi. </para>
+<para
+>Misalnya, ketika sebuah aplikasi dimulai, itu bisa dipaksa untuk selalu jalankan pada <emphasis
+>Virtual Desktop 2</emphasis
+>, atau sebuah kecacatan dalam aplikasi bisa ditangani untuk memaksakan window di atas yang lain. </para>
+<para
+><link linkend="examples"
+>Contoh</link
+> langkah demi langkah telah disediakan bersama dengan informasi terperinci pada penggunaan <link linkend="kwin-rule-editor"
+>Pengedit Peraturan &kwin;</link
+> untuk menentukan <link linkend="window-matching"
+>Kecocokan Window</link
+> dan <link linkend="window-attributes"
+>Atribut Window</link
+>. </para>
+</chapter>
+<chapter id="examples-and-application-workaround"
+><title
+>Penanganan Masalah Aplikasi dan Contoh</title
+> 
+<para
+>Untuk melihat apakah mungkin, <link linkend="examples"
+>contoh</link
+> yang terperinci telah disediakan yang mana juga bisa digunakan untuk memodelkan peraturanmu sendiri. </para>
+<para
+>Sebuah halaman khusus yang telah ditujukan untuk mengalamatkan <link linkend="application-workarounds"
+>Penanganan Masalah Aplikasi</link
+>. </para>
+</chapter>
+<chapter id="kwin-rule-editor"
+><title
+>Pengedit Peraturan KWin</title
+> 
+<sect1 id="invoking-the-kwin-rule-editor"
+><title
+>Memanggil Pengedit Peraturan KWin</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-ordering.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Ada bermacam cara untuk memanggil Pengedit Peraturan &kwin;. Dua cara di bawah ini adalah: </para>
+<itemizedlist>
+<listitem
+><para
+>Klik kanan pada bilah-judul pada window apa pun, pilihlah <menuchoice
+><guimenu
+>Aksi Selebihnya</guimenu
+><guimenuitem
+>Pengaturan Pengelola Window...</guimenuitem
+></menuchoice
+> dan di dalam window <guilabel
+>Konfigurasikan</guilabel
+>, pilih <guilabel
+>Peraturan Window</guilabel
+> atau</para
+></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem
+><para
+><menuchoice
+><guimenu
+>System Settings</guimenu
+><guisubmenu
+>Perilaku Window</guisubmenu
+><guimenuitem
+>Peraturan Window</guimenuitem
+></menuchoice
+></para
+></listitem>
+</itemizedlist>
+<para
+>Window utama telah digunakan untuk: </para>
+<itemizedlist>
+<listitem
+><para
+>Berpengaruhnya peraturan terhadap <guilabel
+>Baru...</guilabel
+>, <guilabel
+>Modifikasi...</guilabel
+> dan <guilabel
+>Hapus</guilabel
+></para
+></listitem>
+<listitem
+><para
+>Berbagi peraturan dengan yang lain via <guilabel
+>Impor</guilabel
+> dan <guilabel
+>Ekspor</guilabel
+></para
+></listitem>
+<listitem
+><para
+>Pastikan <link linkend="rule-evaluation"
+>evaluasi peraturan</link
+> yang diinginkan menggunakan <guilabel
+>Pindah Naik</guilabel
+> dan <guilabel
+>Pindah Turun</guilabel
+></para
+></listitem>
+</itemizedlist>
+<sect2 id="rule-evaluation"
+><title
+>Evaluasi Peraturan</title
+> 
+<para
+>Ketika sebuah aplikasi dimulai (atau peraturan dimodifikasi), &kwin; mengevaluasi peraturan dari atas daftar hingga bawah. Untuk semua peraturan yang cocok dengan window, set atribut kolektif yang diterapkan ke window, maka window akan didisplaikan. </para>
+<para
+>Seharusnya dua atau lebih kecocokan peraturan memfungsikan atribut yang sama, pengaturan di dalam peraturan <emphasis
+>pertama</emphasis
+> di dalam daftar adalah digunakan. </para>
+<para
+><tip
+><para
+>Kamu bisa menentukan anak window untuk aplikasi dengan menempatkan lebih banyak peraturan yang ketat terlebih dahulu - lihatlah <link linkend="application-on-all-desktops-and-handle-one-child-window-uniquely"
+>Kopete dan Kopete Chat Window</link
+> misalnya."</para
+></tip>
+</para>
+</sect2>
+</sect1>
+<sect1 id="rule-editor"
+><title
+>Pengedit Peraturan</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Pengedit telah dikomposisikan dalam empat tab: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Pencocokan window</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Posisi &amp; Ukuran</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Akses &amp; Pengesetan</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Perbaikan &amp; Penampilan</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Seperti namanya, <guilabel
+>Pencocokan window</guilabel
+> adalah digunakan untuk menentukan kriteria untuk mencocokkan satu atau lebih banyak window. Tiga tab yang lain adalah digunakan untuk alternatif atributnya window yang cocok. </para>
+<para
+><tip
+><para
+>Panel-panel juga bisa berpengaruh.</para
+></tip>
+</para>
+<sect2 id="window-matching"
+><title
+>Pencocokan Window</title
+> 
+<para
+>Setiap peraturan window memiliki kriteria <link linkend="window-matching"
+>Pencocokan Window</link
+> yang ditentukan oleh pengguna.&kwin; menggunakan kriteria untuk menentukan apakah si peraturan dapat diterapkan untuk aplikasi. </para>
+</sect2>
+<sect2 id="window-attributes"
+><title
+>Atribut Window</title
+> 
+<para
+>Seiring dengan kriteria Pencocokan Window, setiap peraturan window memiliki sebuah set <link linkend="window-attributes"
+>Atribut Window</link
+>. Atribut-atribut menimpa pengaturan aplikasi-aplikasi yang berhubungan dan yang diterapkan sebelum window didisplaikan oleh &kwin;. </para>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="window-matching0"
+><title
+>Pencocokan Window</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Tab <guilabel
+>Kecocokan Window</guilabel
+> adalah digunakan untuk menspesifikasikan penggunaan kriteria &kwin; untuk mengevaluasi apakah peraturan dapat diterapkan untuk window yang diberikan. </para>
+<para
+>Nol (cocok window apa pun) atau lebih banyak berikut ini yang dapat dispesifikasikan: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Kelas window (aplikasi)</guilabel
+> - mencocokkan kelas.<itemizedlist
+> <listitem
+><para
+><guilabel
+>Mencocokkan seluruh kelas window</guilabel
+> - termasuk kecocokan kelas sekunder.</para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Peran window</guilabel
+> - membatasi kecocokan terhadap fungsi window (&eg; sebuah <emphasis
+>window utama</emphasis
+>,  <emphasis
+>window chat</emphasis
+>, &etc;)</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Tipe window</guilabel
+> - membatasi kecocokan terhadap tipe window: <guilabel
+>Window Normal</guilabel
+>, <guilabel
+>Window Dialog</guilabel
+>, &etc;</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Judul window</guilabel
+> - membatasi kecocokan terhadap judul window.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Mesin (hostname)</guilabel
+> - membatasi kecocokan terhadap nama host yang berhubungan dengan window.</para
+></listitem>
+</itemizedlist>
+<para
+><tip
+><para
+>Selagi itu memungkinkan untuk memasuki secara manual informasi di atas, metode yang disukai adalah menggunakan tombol <guilabel
+>Deteksi Properti Window</guilabel
+>.</para
+></tip>
+</para>
+<para
+>Untuk setiap bidang, operator berikut ini bisa diterapkan melawan nilai bidang: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Takpenting</guilabel
+> - mengabaikan bidang.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Sangat Cocok</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Substring Cocok</guilabel
+></para
+></listitem>
+</itemizedlist>
+<para
+><note
+><para
+>Kedua <guilabel
+>Sangat Cocok</guilabel
+> dan <guilabel
+>Substring Cocok</guilabel
+> mengimplementasikan pencocokan insensitif huruf. Misalnya, <emphasis
+>AB</emphasis
+> mencocokkan string <emphasis
+>AB</emphasis
+>, <emphasis
+>ab</emphasis
+>, <emphasis
+>Ab</emphasis
+> dan <emphasis
+>aB</emphasis
+>.</para
+></note>
+</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Ekspresi Reguler</guilabel
+> - Ekspresi reguler Qt yang diimplementasikan - lihatlah <ulink url="https://doc.qt.io/qt-5/qregexp.html"
+>mencocokkan pola menggunakan ekspresi reguler</ulink
+>.</para
+></listitem>
+</itemizedlist>
+<sect1 id="detect-window-properties"
+><title
+>Deteksi Properti Window</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-detect-window.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Fungsi <guilabel
+>Deteksi Properti Window</guilabel
+> memudahkan proses memasukkan kriteria kecocokan. </para>
+<orderedlist>
+<listitem
+><para
+>Untuk aplikasi yang ingin kamu ciptakan peraturannya, jalankan aplikasi.</para
+></listitem>
+<listitem
+><para
+>Selanjutnya, di dalam tab <guilabel
+>Kecocokan window</guilabel
+>, siapkan jumlah detik tundaan sebelum fungsi <guilabel
+>Deteksi Properti Window</guilabel
+> mulai. Bakunya adalah nol detik.</para
+></listitem>
+<listitem
+><para
+>Klik pada <guilabel
+>Deteksi Properti Window</guilabel
+> dan</para
+></listitem>
+<listitem
+><para
+>Ketika kursor-mouse berubah jadi tanda-tanya, tempatkanlah ke dalam window aplikasi (bukan bilah judul) dan klik-kiri.</para
+></listitem>
+<listitem
+><para
+>Sebuah window baru telah dihadirkan dengan informasi tentang window yang dipilih. Pilihlah bidang yang diinginkan.<itemizedlist>
+<listitem
+><para
+><guilabel
+>Nama kelas sekunder</guilabel
+> - beberapa aplikasi memiliki sebuah nama kelas sekunder. Nilai ini bisa digunakan untuk membatasi window dengan nilai ini.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Peran window</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Tipe window</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Judul window</guilabel
+></para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+</orderedlist>
+<para
+>Klik tombol <guilabel
+>Oke</guilabel
+> untuk mengisi kembali kriteria <guilabel
+>Kecocokan Window</guilabel
+>. </para>
+<para
+>Dengan menggunakan sebuah kombinasi informasinya, sebuah peraturan bisa diterapkan ke seluruh aplikasi (berdasarkan <guilabel
+>Kelas</guilabel
+>) atau terhadap <guilabel
+>Tipe</guilabel
+> window spesifik dengan  <guilabel
+>Kelas</guilabel
+> - katakanlah <guilabel
+>Bilah alat</guilabel
+>. </para>
+</sect1>
+</chapter>
+<chapter id="window-attributes1"
+><title
+>Atribut Window</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-window-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Atribut-atribut yang bisa diset yang dikelompokkan berdasarkan fungsi dalam tiga tab: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Posisi &amp; Ukuran</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Akses &amp; Pengesetan</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Perbaikan &amp; Penampilan</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Setiap atribut memiliki sebuah set parameter yang mematok disposisinya. </para>
+<sect1 id="parameters"
+><title
+>Parameter</title>
+<para
+>Setiap atribut, secara minimal, menerima satu dari parameter-parameter berikut ini. Selain itu, argumen atribut spesifik yang terdaftar dalam setiap definisi <link linkend="attributes"
+>attribut</link
+>. </para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Jangan Pengaruhi</emphasis
+></term>
+    <listitem>
+    <para
+>Pastikan peraturan berikutnya, yang mana mencocokkan window, tidaklah memengaruhi atribut.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Terapkan Secara Awal</emphasis
+></term>
+    <listitem>
+    <para
+>Menjalankan window dengan atribut dan memungkinkannya dapat diubah di saat waktu berjalan.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ingat</emphasis
+></term>
+    <listitem>
+    <para
+>Gunakan pengaturan atribut sebagaimana yang ditentukan dalam peraturan dan jika diubah saat waktu-berjalan, simpan dan gunakan alih-alih nilai yang baru.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Paksa</emphasis
+></term>
+    <listitem>
+    <para
+>Setelan tidak bisa diubah di saat waktu-berjalan.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Terapkan Sekarang, Paksa Sementara</emphasis
+></term>
+    <listitem>
+    <para
+>Terapkan/Paksa pengaturan sekali dan hapus set atribut. Perbedaan antara keduanya adalah di saat waktu-berjalan, <guilabel
+>Terapkan Sekarang</guilabel
+> memungkinkan atribut untuk diubah dan <guilabel
+>Paksa Sementara</guilabel
+> mencegahnya menjadi berubah sampai semua window yang terpengaruh keluar.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>Untuk <guilabel
+>Terapkan Sekarang</guilabel
+>, jika peraturan tidak memiliki set atribut yang lain, peraturan dihapus setelah evaluasi sebagaimana <guilabel
+>Paksa Sementara</guilabel
+>, peraturan dihapus setelah mengakhiri window yang terpengaruh terakhir.</para
+></warning>
+</para>
+</sect1>
+<sect1 id="attributes"
+><title
+>Atribut</title>
+<para
+><tip
+><para
+>Tombol <guilabel
+>Deteksi Properti Window</guilabel
+> mengisi kembali nilai atribut spesifik - untuk informasi selebihnya lihatlah <link linkend="window-matching"
+>Kecocokan Window</link
+>. Misalnya nilai tinggi dan lebar dari  <guilabel
+>Ukuran</guilabel
+> atribut yang diset ke tinggi dan lebar dari window yang terdeteksi.</para
+></tip>
+</para>
+<para
+><tip
+><para
+>Argumen <guilabel
+>Ya/Tidak</guilabel
+> digunakan untuk jungkitan menyalakan atau mematikan atribut. Kelonggaran dengan tata bahasa membantu orang memahami bagaimana pengaturan akan diproses. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Umpamanya, atribut <guilabel
+>Abaikan bilah-tugas</guilabel
+>, ketika diset ke <guilabel
+>Tidak</guilabel
+> berarti jangan melewati bilah-tugas. Dengan kata lain, tampilkan window di bilah-tugas. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+></para
+></tip>
+</para>
+<sect2 id="size--position"
+><title
+>Posisi &amp; Ukuran</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Posisi</emphasis
+></term>
+    <listitem>
+    <para
+>Posisikan sudut kiri atas window pada koordinat x,y yang dispesifikasikan.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>&kwin; yang asli, (0,0), berada di kiri atas desktop.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ukuran</emphasis
+></term>
+    <listitem>
+    <para
+>Lebar dan tingginya window.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Dimaksimalkan secara mendatar, Diminimalkan secara menegak</emphasis
+></term>
+    <listitem>
+    <para
+>Atribut-atribut tersebut yang digunakan untuk menjungkit atribut window maksimum mendatar/minimum mendatar.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Desktop, Aktivitas, Layar</emphasis
+></term>
+    <listitem>
+    <para
+>Tempatkan pada <emphasis
+>Desktop (Virtual)</emphasis
+>, <emphasis
+>Aktivitas</emphasis
+> atau <emphasis
+>Layar</emphasis
+> yang dispesifikasikan. Gunakan <guilabel
+>Semua Desktop</guilabel
+> untuk menempatkan window pada semua <emphasis
+>Desktop Virtual</emphasis
+>.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Layar-penuh, Diminimalkan, Berbayang</emphasis
+></term>
+    <listitem>
+    <para
+>Jungkitan atribut Layar-penuh, Minimalkan dan Pembayangan window. Umpamanya, sebuah window bisa bermulai Diminimalkan atau jika ia bermulai Diminimalkan, ia bisa dipaksa untuk tidak.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Atribut Diminimalkan adalah diemulasikan dengan menggunakan kedua <guilabel
+>Dimaksimalkan secara mendatar</guilabel
+> dan <guilabel
+>Dimaksimalkan secara menegak</guilabel
+> atau <guilabel
+>Penempatan awal</guilabel
+> dengan argumen <guilabel
+>Pemaksimalan</guilabel
+>.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Penempatan awal</emphasis
+></term>
+    <listitem>
+    <para
+>Penimpaan si strategi penempatan window global dengan salah satu dari berikut ini:</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Baku</guilabel
+> - gunakan strategi penempatan window global.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Tanpa Penempatan</guilabel
+> - sudut kiri atas.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Minimal Penindihan</guilabel
+> - tempatkan di mana tidak adanya window lain berada.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Dimaksimalkan</guilabel
+> - mulaikan window dimaksimalkan.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Berkaskade</guilabel
+> - menangga berdasarkan judul.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Dipusatkan</guilabel
+> - memusat pada desktop.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Acak</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Di Sudut Kiri Atas</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Di Bawah Mouse</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Pada Window Utama</guilabel
+> - membatasi penempatan anak window untuk batasan-batasan induk window.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Abaikan geometri yang diminta</emphasis
+></term>
+    <listitem>
+    <para
+>Jungkitan apakah untuk setujui atau abaikan posisi geometri window-window yang diminta. Untuk menghindari bentrok antara strategi penempatan baku dan window yang diminta, strategi penempatan diabaikan ketika permintaan window disetujui.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ukuran minimum, Ukuran maksimum</emphasis
+></term>
+    <listitem>
+    <para
+>Ukuran minimum dan maksimum dimungkinkan bagi window.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Patuhi pembatasan geometri</emphasis
+></term>
+    <listitem>
+    <para
+>Jungkitan apakah untuk mematuhi aspek rasio window yang diminta atau <emphasis
+>kenaikan basis</emphasis
+>. Agar mengerti atribut ini, beberapa latarbelakang diperlukan. Secara singkat, window harus meminta dari Pengelola Window, sebuah kenaikan basis: jumlah minimum pixel <emphasis
+>tinggi</emphasis
+> X <emphasis
+>lebar</emphasis
+> tiap pengukuran-ulang yang diminta. Biasanya, adalah 1x1. Window lain pun begitu, umpamanya emulator terminal atau editor, menggunakan fixed-font dan meminta kenaikan-basisnya menurut ukuran dari satu karakter.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="arrangement--access"
+><title
+>Akses &amp; Peraturan</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Tetap di atas, Tetap di bawah</emphasis
+></term>
+    <listitem>
+    <para
+>Jungkitan apakah untuk menjaga window tetap di atas/di bawah yang lainnya.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Autokelompok dengan identik</emphasis
+></term>
+    <listitem>
+    <para
+>Jungkitan pengelompokan (secara umumnya dikenal sebagai <emphasis
+>tabbing</emphasis
+>) window.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Autokelompok di latardepan</emphasis
+></term>
+    <listitem>
+    <para
+>Jungkitan apakah untuk membuat aktifnya window ketika ia ditambahkan ke Autokelompok saat ini.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Autokelompok berdasarkan ID</emphasis
+></term>
+    <listitem>
+    <para
+>Ciptakan sebuah kelompok via ID yang ditentukan pengguna. Lebih dari satu peraturan bisa berbagi ID yang sama untuk memungkinkan bagi window yang tampaknya tidak terkait dengan yang dikelompokkan.</para>
+     </listitem>
+  </varlistentry>
+
+  <varlistentry
+><term
+><emphasis role="bold"
+>Lewati bilah-tugas</emphasis
+></term>
+    <listitem>
+    <para
+>Jungkitan apakah untuk mendisplaikan window di dalam taskbar.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Lewati pager</emphasis
+></term>
+    <listitem>
+    <para
+>Jungkitan apakah untuk mendisplaikan window di pager.</para>
+     </listitem>
+  </varlistentry>
+    </variablelist>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Lewati pengalih</emphasis
+></term>
+    <listitem>
+    <para
+>Jungkitan untuk mendisplaikan window di dalam daftar <guilabel
+>ALT+TAB</guilabel
+>.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Pintasan</emphasis
+></term>
+    <listitem>
+    <para
+>Penugasan sebuah pintasan terhadap window. Ketika <guilabel
+>Edit...</guilabel
+> diklik, intruksi tambahan disuguhkan.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="appearance--fixes"
+><title
+>Perbaikan &amp; Penampilan</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Tanpa bilah-judul dan kerangka</emphasis
+></term>
+    <listitem>
+    <para
+>Jungkitan apakah untuk mendisplaikan bilah-judul dan kerangka di seputar window.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Skema warna bilah-judul</emphasis
+></term>
+    <listitem>
+    <para
+>Pilih sebuah skema warna untuk bilah-judulnya window.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Opasitas aktif/tak aktif</emphasis
+></term>
+    <listitem>
+    <para
+>Ketika window telah aktif/tak aktif, set opasitasnya ke persentase yang dispesifikasikan.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+><guilabel
+>Opasitas aktif/tak aktif</guilabel
+> hanya bisa berpengaruh ketika <guilabel
+>Efek Desktop</guilabel
+> difungsikan.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Pencegahan pencurian fokus</emphasis
+></term>
+    <listitem>
+    <para
+>Ketika sebuah window mau fokus, kendalikanlah pada penskalaan (dari <guilabel
+>Nihil</guilabel
+> ke <guilabel
+>Ekstrem</guilabel
+>) apakah akan menghormati permintaan dan menempatkan di atas semua window lainnya, atau mengabaikan permintaannya (secara potensial meninggalkan window di belakang window lainnya):</para>
+<itemizedlist>
+<listitem
+><para
+>Nihil - Selalu mengabulkan fokus ke window.</para
+></listitem>
+<listitem
+><para
+>Rendah</para
+></listitem>
+<listitem
+><para
+>Normal</para
+></listitem>
+<listitem
+><para
+>Tinggi</para
+></listitem>
+<listitem
+><para
+>Ekstrem - Permintaan fokus terhadap window adalah ditolak. Fokus hanyalah dikabulkan dengan permintaan secara gamblang via mouse.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Lihat <guilabel
+>Setujui fokus</guilabel
+> untuk membuat window hanya-baca - tidak menyetujui input keyboard apa pun.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Setujui fokus</emphasis
+></term>
+    <listitem>
+    <para
+>Jungkitan apakah window menyetujui input keyboard. Membuat window hanya-baca.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Abaikan pintasan global</emphasis
+></term>
+    <listitem>
+    <para
+>Jungkitan apakah mengabaikan pintasan global  (sebagaimana yang ditentukan berdasarkan <menuchoice
+><guimenu
+>System Settings</guimenu
+><guisubmenu
+>Pintasan dan Gestur</guisubmenu
+><guimenuitem
+>Pintasan Global</guimenuitem
+></menuchoice
+> atau dengan menjalankan <varname
+>kcmshell5 keys</varname
+> di <guilabel
+>konsole</guilabel
+>) selama window aktif.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Dapat ditutup</emphasis
+></term>
+    <listitem>
+    <para
+>Jungkitan apakah mendisplaikan tombol <guilabel
+>Tutup</guilabel
+> pada bilah judul.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Sebuah window terminal mungkin sedang ditutup oleh pengguna terakhir dengan mengakhiri sesi shell namun menggunakan <guilabel
+>Setujui fokus</guilabel
+> untuk menonfungsikan input keyboard yang akan membuatnya lebih sulit untuk menutup window.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Tipe window</emphasis
+></term>
+    <listitem>
+    <para
+>Mengubah window ke tipe lainnya dan mewarisi karateristiknya window tersebut:</para>
+<itemizedlist>
+<listitem
+><para
+>Window Normal</para
+></listitem>
+<listitem
+><para
+>Window Dialog</para
+></listitem>
+<listitem
+><para
+>Window Utilitas</para
+></listitem>
+<listitem
+><para
+>Dok (panel)</para
+></listitem>
+<listitem
+><para
+>Bilah Alat</para
+></listitem>
+<listitem
+><para
+>Menu Cabik</para
+></listitem>
+<listitem
+><para
+>Layar Splash</para
+></listitem>
+<listitem
+><para
+>Desktop</para
+></listitem>
+<listitem
+><para
+>Bilah Menu Tersendiri</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>Gunakan secara hati-hati karena hasil yang takdiinginkan mungkin terjadi. Umpamanya, <guilabel
+>Layar Splash</guilabel
+> ditutup secara otomatis oleh &kwin; ketika diklik.</para
+></warning>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Komposit blok</emphasis
+></term>
+    <listitem>
+    <para
+> Jungkitan apakah untuk menonfungsikan compositing selagi window <emphasis
+>berada</emphasis
+>. Jika compositing telah difungsikan dan peraturan menspesifikasikan untuk menonfungsikan compositing, selagi mencocokkan window <emphasis
+>apa pun</emphasis
+> yang berada, compositing akan dinonfungsikan. Compositing difungsikan-ulang ketika kecocokan window yang terakhir berakhir.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+</sect1>
+</chapter>
+<chapter id="examples"
+><title
+>Contoh</title>
+<para
+><note
+><para
+>Contoh pertama semua perincian langkah-langkah yang diperlukan untuk menciptakan peraturan. Agar ukuran halaman ini dapat-dikelola dan terjaga, contoh berikut hanya daftar langkah-langkah spesifik untuk contoh.</para
+></note>
+</para>
+<para
+><note
+><para
+>Atribut <guilabel
+>Pager</guilabel
+> merujuk ke <guilabel
+>Pengelola Desktop Virtual</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></note>
+</para>
+<sect1 id="pin-a-window-to-a-desktop-and-set-other-attributes"
+><title
+>Pines sebuah Window ke Desktop dan set Atribut lain</title>
+<para
+>Pines &akregator; ke <emphasis
+>Desktop Virtual 2</emphasis
+>. Selain itu, mulaikan aplikasi dengan posisi dan ukuran yang dipreferensi. Untuk masing-masing atribut, gunakanlah <link linkend="parameters"
+>parameter</link
+> <guilabel
+>Terapkan Dahulu</guilabel
+> sehingga itu bisa ditimpa di saat sedang berlangsung. </para>
+<para
+>Peraturan &kwin; adalah diciptakan sebagai berikut: </para>
+<orderedlist>
+<listitem
+><para
+>Mulaikan &akregator; pada <emphasis
+>dua desktop</emphasis
+>, ukuran dan posisinya sesuai: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-fav.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik kanan pada bilah-judul dan pilih <menuchoice
+><guimenu
+>Aksi Selebihnya</guimenu
+><guimenuitem
+>Pengaturan Pengelola Window...</guimenuitem
+></menuchoice
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="config-win-behavior.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Pilih <guilabel
+>Peraturan Window</guilabel
+> di dalam kolom kiri dan pada <guilabel
+>Baru...</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Window <guilabel
+>Edit Pengaturan Window-Spesifik</guilabel
+> telah didisplaikan. <guilabel
+>Kecocokan window</guilabel
+> adalah tab baku: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-init.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik <guilabel
+>Deteksi Properti Window</guilabel
+> dengan <guilabel
+>tundaan 0d</guilabel
+> si kursor secara langsung berubah menjadi tanda-tanya. Klik (di mana pun) di sisi dalam window &akregator; (tetapi bukan bilah judul). Kriteria window disuguhkan. Hanya sesuai dengan nama kelas primer jadi biarkan kotak centang taktercentang -untuk informasi selengkapnya lihatlah <link linkend="window-matching"
+>window matching</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akgregator-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Mengeklik <guilabel
+>Oke</guilabel
+> window sebelumnya mengisi-kembali hasil yang ada di dalam tab <guilabel
+>Kecocokan Window</guilabel
+>. Masukkan sebuah teks yang bermakna di dalam bidang <guilabel
+>Deskripsi</guilabel
+> (yang telah didisplaikan di window <guilabel
+>Peraturan KWin</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-ready-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Fungsikan atribut window: <guilabel
+>Posisi</guilabel
+>, <guilabel
+>Ukuran</guilabel
+> dan <guilabel
+>Desktop</guilabel
+>. Nilai-nilai inisial yang diset berdasarkan <guilabel
+>Deteksi Properti Window</guilabel
+> dan bisa ditimpa: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Mengeklik <guilabel
+>Oke</guilabel
+> di window sebelumnya membalikkan ke <guilabel
+>Peraturan KWin</guilabel
+> utama. Peraturan baru dengan deskripsinya telah terdaftar: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main-n-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik <guilabel
+>Oke</guilabel
+> untuk menutup window.</para
+></listitem>
+<listitem
+><para
+>Selesai.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="application-on-all-desktops-and-handle-one-child-window-uniquely"
+><title
+>Aplikasi pada semua Desktop dan Menangani Salahsatu Anak Window Secara Unik</title>
+<para
+>Kecuali untuk window percakapan, &kopete; displai dan anak-anaknya window pada semua desktop dan melewati systray dan pager. Untuk anak window percakapan, memperlakukan mereka sebagai window induk kecuali menampilkan mereka di systray. </para>
+<para
+>Untuk setiap atribut, gunakan <link linkend="parameters"
+>parameter</link
+> <guilabel
+>Paksa</guilabel
+> sehingga ia tidak bisa ditimpa. </para>
+<para
+>Agar mengimplementasikan hal di atas, dua peraturan perlu diciptakan: </para>
+<orderedlist>
+<listitem
+><para
+>Sebuah peraturan untuk <guilabel
+>Kopete Chat</guilabel
+> dan</para
+></listitem>
+<listitem
+><para
+>Sebuah peraturan untuk &kopete;</para
+></listitem>
+</orderedlist>
+<para
+>Peraturan-peraturan <guilabel
+>Kopete Chat</guilabel
+> yang sesuai kriteria adalah lebih terbatas dari peraturan <emphasis
+>Kopete</emphasis
+> sebagaimana yang diperlukan untuk mencocokkan Peraturan Window spesifik: window chat. Disebabkan oleh pemrosesan <link linkend="rule-evaluation"
+>evaluasi peraturan</link
+>, peraturan <guilabel
+>Kopete Chat</guilabel
+> mestinya mengutamakan peraturan &kopete; di dalam <link linkend="kopete-kwin-rule-list"
+>daftar Peraturan KWin untuk Kopete</link
+>. </para>
+<sect2 id="kopete-chat-rule"
+><title
+>Peraturan Kopete Chat</title>
+<para
+>Mengasumsikan sebuah window <guilabel
+>Kopete Chat</guilabel
+> telah dibuka: </para>
+<orderedlist>
+<listitem
+><para
+>Gunakan <guilabel
+>Deteksi Properti Window</guilabel
+> dan pilihlah window <guilabel
+>Kopete Chat</guilabel
+>. Centang kotak <guilabel
+>Peraturan window</guilabel
+> untuk membatasi kriteria terhadap window chat - untuk informasi selengkapnya lihatlah <link linkend="window-matching"
+>kecocokan window</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Mengeklik <guilabel
+>Oke</guilabel
+> di window sebelumnya mengisi-kembali hasil di dalam tab <guilabel
+>Kecocokan Window</guilabel
+>. Masukkan sebuah teks yang bermakana di dalam kotak <guilabel
+>Deskripsi</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete-chat.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Fungsikan atribut berikut: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik melalui entri lengkapnya peraturan.</para
+></listitem>
+</orderedlist>
+<para
+><note
+><para
+>Atribut <guilabel
+>Lewati bilah-tugas</guilabel
+> telah diset ke <guilabel
+>Tidak</guilabel
+> untuk mendisplaikan window di bilah-tugas yang diterjemahkan secara longgar ke: <emphasis
+>tidak</emphasis
+> <emphasis
+>jangan</emphasis
+> <emphasis
+>lewati bilah-tugas</emphasis
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>.</para
+></note>
+</para>
+</sect2>
+<sect2 id="kopete-rule"
+><title
+>Peraturan Kopete</title>
+<para
+>Mengasumsikan &kopete; telah dibuka: </para>
+<orderedlist>
+<listitem
+><para
+>Gunakan <guilabel
+>Deteksi Properti Window</guilabel
+> dan pilihlah window &kopete;. Hanya cocok berdasarkan nama kelas primer jadi biarkan kotak centang taktercentang - untuk informasi selengkapnya lihatlah <link linkend="window-matching"
+>kecocokan window</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Mengeklik <guilabel
+>Oke</guilabel
+> di window sebelumnya mengisi-kembali hasil di dalam tab <guilabel
+>Kecocokan Window</guilabel
+>. Masukkan sebuah teks yang bermakana di dalam kotak <guilabel
+>Deskripsi</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Fungsikan atribut berikut: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik melalui entri lengkapnya peraturan.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="kopete-kwin-rule-list"
+><title
+>Daftar Peraturan KWin Kopete</title>
+<para
+>Seperti disebutkan, karena pemrosesan <link linkend="rule-evaluation"
+>evaluasi peraturan</link
+>, peraturan <guilabel
+>Kopete Chat</guilabel
+> mesti mengutamakan peraturan &kopete;: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-kopete-rules.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+</sect1>
+<sect1 id="suppress-a-window-from-showing-on-pager"
+><title
+>Penekanan sebuah Window dari yang ditampilkan pada Pager</title>
+<para
+><guilabel
+>KNotes</guilabel
+> saat ini tidak memungkinkan untuk catatannya untuk melewati pager meskipun demikian sebuah peraturan secara mudah menyelesaikan masalah ini. </para>
+<para
+>Mengasumsikan window <emphasis
+>catatan lekat</emphasis
+> telah tersedia: </para>
+<orderedlist>
+<listitem
+><para
+>Gunakan <guilabel
+>Deteksi Properti Window</guilabel
+> dan pilihlah window <emphasis
+>catatan lekat</emphasis
+> apa saja. Hanya cocok berdasarkan nama kelas primer jadi biarkan kotak centang taktercentang - untuk informasi selengkapnya lihatlah <link linkend="window-matching"
+>kecocokan window</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Mengeklik <guilabel
+>Oke</guilabel
+> di window sebelumnya mengisi-kembali hasil di dalam tab <guilabel
+>Kecocokan Window</guilabel
+>. Masukkan sebuah teks yang bermakana di dalam kotak <guilabel
+>Deskripsi</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-knotes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Fungsikan atribut <guilabel
+>Lewati Pager</guilabel
+> dengan <link linkend="parameters"
+>parameter</link
+> <guilabel
+>Paksa</guilabel
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik melalui entri lengkapnya peraturan.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="force-a-window-to-the-top"
+><title
+>Paksa sebuah Window ke Atas</title>
+<para
+>Untuk menyembulkan window aktif ke atas, set atribut <guilabel
+>Cegah pencurian fokus</guilabel
+> ke <guilabel
+>Nihil</guilabel
+>, biasanya, dalam konjungsi dengan <link linkend="parameters"
+>parameter</link
+> <guilabel
+>Paksa</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="focus-stealing-pop2top-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect1>
+<sect1 id="multiple-rules-per-application"
+><title
+>Multi Peraturan tiap Aplikasi</title>
+<para
+><application
+>Thunderbird</application
+> memiliki bermacam anak window yang berbeda. </para>
+<itemizedlist>
+<listitem
+><para
+>Pineskan window utama <application
+>Thunderbird</application
+> pada <emphasis
+>Desktop Virtual 1</emphasis
+> dengan ukuran spesifik dan lokasi pada desktop.</para
+></listitem>
+<listitem
+><para
+>Mungkinkan penyusun window <application
+>Thunderbird</application
+> untuk menduduki pada desktop apa pun dan ketika diaktifkan, paksa fokus dan sembulkan ia ke atasnya semua window.</para
+></listitem>
+<listitem
+><para
+>Sembulkan pengingat <application
+>Thunderbird</application
+> ke atas dan jangan berikan ia fokus sehingga ia tidak sengaja diberhentikan.</para
+></listitem>
+</itemizedlist>
+<para
+>Kriteria kecocokan setiap peraturan cukup ketat sehingga urutan window &kwin; utama tidaklah begitu mempengaruhi <link linkend="rule-evaluation"
+>evaluasi peraturan</link
+>. </para>
+<sect2 id="thunderbird---main"
+><title
+>Thunderbird - Utama</title>
+<para
+>Mengasumsikan window <guilabel
+>Thunderbird Utama</guilabel
+> telah dibuka, diukur dan posisinya sesuai: </para>
+<orderedlist>
+<listitem
+><para
+>Gunakan <guilabel
+>Deteksi Properti Window</guilabel
+> dan pilihlah window <guilabel
+>Thunderbird Utama</guilabel
+>. Centang kotak <guilabel
+>Peraturan window</guilabel
+> untuk membatasi kriteria terhadap window utama - untuk informasi selengkapnya lihatlah <link linkend="window-matching"
+>kecocokan window</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Mengeklik <guilabel
+>Oke</guilabel
+> di window sebelumnya mengisi-kembali hasil di dalam tab <guilabel
+>Kecocokan Window</guilabel
+>. Masukkan sebuah teks yang bermakana di dalam kotak <guilabel
+>Deskripsi</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Fungsikan atribut berikut: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik melalui entri lengkapnya peraturan.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---composer"
+><title
+>Thunderbird - Penyusun</title>
+<para
+>Mengasumsikan sebuah window <guilabel
+>Penyusun Thunderbird</guilabel
+> telah dibuka: </para>
+<orderedlist>
+<listitem
+><para
+>Gunakan <guilabel
+>Deteksi Properti Window</guilabel
+> dan pilihlah window <guilabel
+>Penyusun Thunderbird</guilabel
+>. Centang kotak <guilabel
+>Peraturan window</guilabel
+> dan <guilabel
+>Tipe window</guilabel
+> untuk membatasi kriteria terhadap pengomposisian window - untuk informasi selengkapnya lihatlah <link linkend="window-matching"
+>kecocokan window</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Mengeklik <guilabel
+>Oke</guilabel
+> di window sebelumnya mengisi-kembali hasil di dalam tab <guilabel
+>Kecocokan Window</guilabel
+>. Masukkan sebuah teks yang bermakana di dalam kotak <guilabel
+>Deskripsi</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-compose.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Fungsikan atribut berikut: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik melalui entri lengkapnya peraturan.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---reminder"
+><title
+>Thunderbird - Pengingat</title>
+<para
+>Mengasumsikan sebuah window <guilabel
+>Pengingat Thunderbird</guilabel
+> telah dibuka: </para>
+<orderedlist>
+<listitem
+><para
+>Gunakan <guilabel
+>Deteksi Properti Window</guilabel
+> dan pilihlah window <guilabel
+>Pengingat Thunderbird</guilabel
+>. Centang kotak <guilabel
+>Nama kelas sekunder</guilabel
+>  dan <guilabel
+>Tipe Window</guilabel
+> untuk membatasi kriteria terhadap pengingatan window - untuk informasi selengkapnya lihatlah <link linkend="window-matching"
+>kecocokan window</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Mengeklik <guilabel
+>Oke</guilabel
+> di window sebelumnya mengisi-kembali hasil di dalam tab <guilabel
+>Kecocokan Window</guilabel
+>. Masukkan sebuah teks yang bermakana di dalam kotak <guilabel
+>Deskripsi</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-reminder.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Fungsikan atribut berikut: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik melalui entri lengkapnya peraturan.</para
+></listitem>
+</orderedlist>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="application-workarounds"
+><title
+>Penanganan Aplikasi</title>
+<para
+>Bagian bawah adalah Penanganan untuk perilaku buruk aplikasi. </para>
+<para
+><tip
+><para
+>Jika kamu seorang yang tidak familiar dengan penciptaan Peraturan &kwin;, lihatlah <link linkend="pin-a-window-to-a-desktop-and-set-other-attributes"
+>contoh terperinci</link
+> ini untuk basis peraturan barumu.</para
+></tip>
+</para>
+<sect1 id="full-screen-re-size-error"
+><title
+>Error Pengubahukuran Layar-penuh</title>
+<para
+>&Emacs; dan <guilabel
+>gVim</guilabel
+>, ketika dimaksimalkan (mode layar-penuh) dan dalam kondisi tertentu dapat mengalami masalah ukuran window - lihatlah <ulink url="https://bugs.kde.org/show_bug.cgi?id=252314"
+>Emacs window resizes ...</ulink
+> Sebuah Peraturan &kwin; akan menangani masalah. </para>
+<para
+>Mengasumsikan sebuah window &Emacs; telah terbuka: </para>
+<orderedlist>
+<listitem
+><para
+>Gunakan <guilabel
+>Deteksi Properti Window</guilabel
+> dan pilihlah window &Emacs;. Hanya cocok berdasarkan <guilabel
+>nama kelas primer</guilabel
+> jadi biarkan kotak centang taktercentang - untuk informasi selengkapnya lihatlah <link linkend="window-matching"
+>kecocokan window</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Mengeklik <guilabel
+>Oke</guilabel
+> di dalam window sebelumnya mengisi-kembali hasil di tab <guilabel
+>Kecocokan Window</guilabel
+>. Masukkan sebuah teks yang bermakna di dalam kotak teks <guilabel
+>Deskripsi</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-emacs.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Abaikan permintaan layar-penuh &Emacs; dengan memfungsikan atribut <guilabel
+>Patuhi pembatasan geometri</guilabel
+>, menjungkitnya ke padam (<guilabel
+>Tidak</guilabel
+>) untuk mengabaika dan pemilihan <link linkend="parameters"
+>parameter</link
+> <guilabel
+>Paksa</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik melalui entri lengkapnya peraturan.</para
+></listitem>
+</orderedlist>
+</sect1>
+</chapter>
+
+<!--userbase-content-->
+<chapter id="credits">
+<title
+>Pujian dan Lisensi</title>
+      <para
+>Hakcipta Dokumentasi lihatlah UserBase <ulink url="https://userbase.kde.org/index.php?title=KWin Rules&amp;action=history"
+>histori laman KWin Rules</ulink
+></para>
+      <para
+>Wantoyo<email
+>wantoyek@gmail.com</email
+></para
+> &underFDL; </chapter>
+&documentation.index;
+</book>

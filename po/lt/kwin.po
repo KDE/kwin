@@ -1,0 +1,2971 @@
+# translation of kwin.po to
+# Donatas Glodenis <dgvirtual@akl.lt>, 2004-2009, 2012.
+# Tomas Straupis <tomasstraupis@gmail.com>, 2010, 2011.
+# Remigijus Jarmalavičius <remigijus@jarmalavicius.lt>, 2011.
+# Liudas Ališauskas <liudas.alisauskas@gmail.com>, 2012, 2015.
+# Mindaugas Baranauskas <opensuse.lietuviu.kalba@gmail.com>, 2017.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-09-23 00:47+0000\n"
+"PO-Revision-Date: 2020-03-18 15:37+0200\n"
+"Last-Translator: Moo\n"
+"Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
+"Language: lt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
+"%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
+"X-Generator: Poedit 2.3\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Ričardas Čepas,Donatas Glodenis, Moo"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "rch@richard.eu.org,dgvirtual@akl.lt, <>"
+
+#: composite.cpp:615
+#, kde-format
+msgid "Desktop effects were restarted due to a graphics reset"
+msgstr "Darbalaukio efektai buvo paleisti iš naujo dėl grafikos atstatymo"
+
+#: composite.cpp:820
+#, kde-format
+msgid ""
+"Desktop effects have been suspended by another application.<br/>You can "
+"resume using the '%1' shortcut."
+msgstr ""
+"Darbalaukio efektus pristabdė kita programa.<br/>Galite juos pratęsti "
+"naudodami spartųjį klavišą „%1“."
+
+#: debug_console.cpp:78
+#, kde-format
+msgid "Timestamp"
+msgstr "Laiko žyma"
+
+#: debug_console.cpp:83
+#, kde-format
+msgid "Timestamp (µsec)"
+msgstr "Laiko žyma (µsek.)"
+
+#: debug_console.cpp:90
+#, kde-format
+msgctxt "A mouse button"
+msgid "Left"
+msgstr "Kairysis"
+
+#: debug_console.cpp:92
+#, kde-format
+msgctxt "A mouse button"
+msgid "Right"
+msgstr "Dešinysis"
+
+#: debug_console.cpp:94
+#, kde-format
+msgctxt "A mouse button"
+msgid "Middle"
+msgstr "Vidurinysis"
+
+#: debug_console.cpp:96
+#, kde-format
+msgctxt "A mouse button"
+msgid "Back"
+msgstr "Atgal"
+
+#: debug_console.cpp:98
+#, kde-format
+msgctxt "A mouse button"
+msgid "Forward"
+msgstr "Pirmyn"
+
+#: debug_console.cpp:100
+#, kde-format
+msgctxt "A mouse button"
+msgid "Task"
+msgstr "Užduotis"
+
+#: debug_console.cpp:102
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 4"
+msgstr "Papildomas mygtukas 4"
+
+#: debug_console.cpp:104
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 5"
+msgstr "Papildomas mygtukas 5"
+
+#: debug_console.cpp:106
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 6"
+msgstr "Papildomas mygtukas 6"
+
+#: debug_console.cpp:108
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 7"
+msgstr "Papildomas mygtukas 7"
+
+#: debug_console.cpp:110
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 8"
+msgstr "Papildomas mygtukas 8"
+
+#: debug_console.cpp:112
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 9"
+msgstr "Papildomas mygtukas 9"
+
+#: debug_console.cpp:114
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 10"
+msgstr "Papildomas mygtukas 10"
+
+#: debug_console.cpp:116
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 11"
+msgstr "Papildomas mygtukas 11"
+
+#: debug_console.cpp:118
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 12"
+msgstr "Papildomas mygtukas 12"
+
+#: debug_console.cpp:120
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 13"
+msgstr "Papildomas mygtukas 13"
+
+#: debug_console.cpp:122
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 14"
+msgstr "Papildomas mygtukas 14"
+
+#: debug_console.cpp:124
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 15"
+msgstr "Papildomas mygtukas 15"
+
+#: debug_console.cpp:126
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 16"
+msgstr "Papildomas mygtukas 16"
+
+#: debug_console.cpp:128
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 17"
+msgstr "Papildomas mygtukas 17"
+
+#: debug_console.cpp:130
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 18"
+msgstr "Papildomas mygtukas 18"
+
+#: debug_console.cpp:132
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 19"
+msgstr "Papildomas mygtukas 19"
+
+#: debug_console.cpp:134
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 20"
+msgstr "Papildomas mygtukas 20"
+
+#: debug_console.cpp:136
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 21"
+msgstr "Papildomas mygtukas 21"
+
+#: debug_console.cpp:138
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 22"
+msgstr "Papildomas mygtukas 22"
+
+#: debug_console.cpp:140
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 23"
+msgstr "Papildomas mygtukas 23"
+
+#: debug_console.cpp:142
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 24"
+msgstr "Papildomas mygtukas 24"
+
+#: debug_console.cpp:151 debug_console.cpp:153
+#, kde-format
+msgid "Input Device"
+msgstr "Įvedimo įrenginys"
+
+#: debug_console.cpp:151
+#, kde-format
+msgctxt "The input device of the event is not known"
+msgid "Unknown"
+msgstr "Nežinomas"
+
+#: debug_console.cpp:188
+#, kde-format
+msgctxt "A mouse pointer motion event"
+msgid "Pointer Motion"
+msgstr "Rodyklės judėjimas"
+
+#: debug_console.cpp:195
+#, kde-format
+msgctxt "The relative mouse movement"
+msgid "Delta"
+msgstr "Delta"
+
+#: debug_console.cpp:199
+#, kde-format
+msgctxt "The relative mouse movement"
+msgid "Delta (not accelerated)"
+msgstr "Delta (nespartinama)"
+
+#: debug_console.cpp:202
+#, kde-format
+msgctxt "The global mouse pointer position"
+msgid "Global Position"
+msgstr "Visuotinė pozicija"
+
+#: debug_console.cpp:206
+#, kde-format
+msgctxt "A mouse pointer button press event"
+msgid "Pointer Button Press"
+msgstr "Rodyklės mygtuko paspaudimas"
+
+#: debug_console.cpp:209 debug_console.cpp:217
+#, kde-format
+msgctxt "A button in a mouse press/release event"
+msgid "Button"
+msgstr "Mygtukas"
+
+#: debug_console.cpp:210 debug_console.cpp:218
+#, kde-format
+msgctxt "A button in a mouse press/release event"
+msgid "Native Button code"
+msgstr "Savas mygtuko kodas"
+
+#: debug_console.cpp:211 debug_console.cpp:219
+#, kde-format
+msgctxt "All currently pressed buttons in a mouse press/release event"
+msgid "Pressed Buttons"
+msgstr "Paspausti mygtukai"
+
+#: debug_console.cpp:214
+#, kde-format
+msgctxt "A mouse pointer button release event"
+msgid "Pointer Button Release"
+msgstr "Rodyklės mygtuko atleidimas"
+
+#: debug_console.cpp:234
+#, kde-format
+msgctxt "A mouse pointer axis (wheel) event"
+msgid "Pointer Axis"
+msgstr "Rodyklės ašis"
+
+#: debug_console.cpp:238
+#, kde-format
+msgctxt "The orientation of a pointer axis event"
+msgid "Orientation"
+msgstr "Orientacija"
+
+#: debug_console.cpp:239
+#, kde-format
+msgctxt "An orientation of a pointer axis event"
+msgid "Horizontal"
+msgstr "Horizontali"
+
+#: debug_console.cpp:240
+#, kde-format
+msgctxt "An orientation of a pointer axis event"
+msgid "Vertical"
+msgstr "Vertikali"
+
+#: debug_console.cpp:241
+#, kde-format
+msgctxt "The angle delta of a pointer axis event"
+msgid "Delta"
+msgstr "Delta"
+
+#: debug_console.cpp:256
+#, kde-format
+msgctxt "A key press event"
+msgid "Key Press"
+msgstr "Klavišo paspaudimas"
+
+#: debug_console.cpp:259
+#, kde-format
+msgctxt "A key release event"
+msgid "Key Release"
+msgstr "Klavišo atleidimas"
+
+#: debug_console.cpp:268
+#, kde-format
+msgctxt "A keyboard modifier"
+msgid "Shift"
+msgstr "Lyg2"
+
+#: debug_console.cpp:272
+#, kde-format
+msgctxt "A keyboard modifier"
+msgid "Control"
+msgstr "Vald"
+
+#: debug_console.cpp:276
+#, kde-format
+msgctxt "A keyboard modifier"
+msgid "Alt"
+msgstr "Alt"
+
+#: debug_console.cpp:280
+#, kde-format
+msgctxt "A keyboard modifier"
+msgid "Meta"
+msgstr "Meta"
+
+#: debug_console.cpp:284
+#, kde-format
+msgctxt "A keyboard modifier"
+msgid "Keypad"
+msgstr "Pagalbinė klaviatūra"
+
+#: debug_console.cpp:288
+#, kde-format
+msgctxt "A keyboard modifier"
+msgid "Group-switch"
+msgstr "Grupės perjungiklis"
+
+#: debug_console.cpp:294
+#, kde-format
+msgctxt "Whether the event is an automatic key repeat"
+msgid "Repeat"
+msgstr "Kartojimas"
+
+#: debug_console.cpp:298
+#, kde-format
+msgctxt "The code as read from the input device"
+msgid "Scan code"
+msgstr "Skenavimo kodas"
+
+#: debug_console.cpp:299
+#, kde-format
+msgctxt "Key according to Qt"
+msgid "Qt::Key code"
+msgstr "Qt::Klavišo kodas"
+
+#: debug_console.cpp:301
+#, kde-format
+msgctxt "The translated code to an Xkb symbol"
+msgid "Xkb symbol"
+msgstr "Xkb simbolis"
+
+#: debug_console.cpp:302
+#, kde-format
+msgctxt "The translated code interpreted as text"
+msgid "Utf8"
+msgstr "Utf8"
+
+#: debug_console.cpp:303
+#, kde-format
+msgctxt "The currently active modifiers"
+msgid "Modifiers"
+msgstr "Modifikatoriai"
+
+#: debug_console.cpp:315
+#, kde-format
+msgctxt "A touch down event"
+msgid "Touch down"
+msgstr "Prilietimas žemyn"
+
+#: debug_console.cpp:317 debug_console.cpp:332 debug_console.cpp:347
+#, kde-format
+msgctxt "The id of the touch point in the touch event"
+msgid "Point identifier"
+msgstr "Taško identifikatorius"
+
+#: debug_console.cpp:318 debug_console.cpp:333
+#, kde-format
+msgctxt "The global position of the touch point"
+msgid "Global position"
+msgstr "Visuotinė pozicija"
+
+#: debug_console.cpp:330
+#, kde-format
+msgctxt "A touch motion event"
+msgid "Touch Motion"
+msgstr "Prilietimo judesys"
+
+#: debug_console.cpp:345
+#, kde-format
+msgctxt "A touch up event"
+msgid "Touch Up"
+msgstr "Prilietimas aukštyn"
+
+#: debug_console.cpp:358
+#, kde-format
+msgctxt "A pinch gesture is started"
+msgid "Pinch start"
+msgstr "Žnybtelėjimo pradžia"
+
+#: debug_console.cpp:360
+#, kde-format
+msgctxt "Number of fingers in this pinch gesture"
+msgid "Finger count"
+msgstr "Pirštų skaičius"
+
+#: debug_console.cpp:371
+#, kde-format
+msgctxt "A pinch gesture is updated"
+msgid "Pinch update"
+msgstr "Žnybtelėjimo atnaujinimas"
+
+#: debug_console.cpp:373
+#, kde-format
+msgctxt "Current scale in pinch gesture"
+msgid "Scale"
+msgstr "Mastelis"
+
+#: debug_console.cpp:374
+#, kde-format
+msgctxt "Current angle in pinch gesture"
+msgid "Angle delta"
+msgstr "Kampo delta"
+
+#: debug_console.cpp:375
+#, kde-format
+msgctxt "Current delta in pinch gesture"
+msgid "Delta x"
+msgstr "Delta x"
+
+#: debug_console.cpp:376
+#, kde-format
+msgctxt "Current delta in pinch gesture"
+msgid "Delta y"
+msgstr "Delta y"
+
+#: debug_console.cpp:387
+#, kde-format
+msgctxt "A pinch gesture ended"
+msgid "Pinch end"
+msgstr "Žnybtelėjimo pabaiga"
+
+#: debug_console.cpp:399
+#, kde-format
+msgctxt "A pinch gesture got cancelled"
+msgid "Pinch cancelled"
+msgstr "Žnybtelėjimo atsisakyta"
+
+#: debug_console.cpp:411
+#, kde-format
+msgctxt "A swipe gesture is started"
+msgid "Swipe start"
+msgstr "Perbraukimo pradžia"
+
+#: debug_console.cpp:413
+#, kde-format
+msgctxt "Number of fingers in this swipe gesture"
+msgid "Finger count"
+msgstr "Pirštų skaičius"
+
+#: debug_console.cpp:424
+#, kde-format
+msgctxt "A swipe gesture is updated"
+msgid "Swipe update"
+msgstr "Perbraukimo atnaujinimas"
+
+#: debug_console.cpp:426
+#, kde-format
+msgctxt "Current delta in swipe gesture"
+msgid "Delta x"
+msgstr "Delta x"
+
+#: debug_console.cpp:427
+#, kde-format
+msgctxt "Current delta in swipe gesture"
+msgid "Delta y"
+msgstr "Delta y"
+
+#: debug_console.cpp:438
+#, kde-format
+msgctxt "A swipe gesture ended"
+msgid "Swipe end"
+msgstr "Perbraukimo pabaiga"
+
+#: debug_console.cpp:450
+#, kde-format
+msgctxt "A swipe gesture got cancelled"
+msgid "Swipe cancelled"
+msgstr "Perbraukimo atsisakyta"
+
+#: debug_console.cpp:462
+#, kde-format
+msgctxt "A hardware switch (e.g. notebook lid) got toggled"
+msgid "Switch toggled"
+msgstr "Perjungiklis perjungtas"
+
+#: debug_console.cpp:470
+#, kde-format
+msgctxt "Name of a hardware switch"
+msgid "Notebook lid"
+msgstr "Nešiojamojo kompiuterio dangtis"
+
+#: debug_console.cpp:472
+#, kde-format
+msgctxt "Name of a hardware switch"
+msgid "Tablet mode"
+msgstr "Planšetės veiksena"
+
+#: debug_console.cpp:474
+#, kde-format
+msgctxt "A hardware switch"
+msgid "Switch"
+msgstr "Perjungiklis"
+
+#: debug_console.cpp:478
+#, kde-format
+msgctxt "The hardware switch got turned off"
+msgid "Off"
+msgstr "Išjungta"
+
+#: debug_console.cpp:481
+#, kde-format
+msgctxt "The hardware switch got turned on"
+msgid "On"
+msgstr "Įjungta"
+
+#: debug_console.cpp:486
+#, kde-format
+msgctxt "State of a hardware switch (on/off)"
+msgid "State"
+msgstr "Būsena"
+
+#: debug_console.cpp:501
+#, kde-format
+msgid "Tablet Tool"
+msgstr "Planšetės įrankis"
+
+#: debug_console.cpp:502
+#, kde-format
+msgid "EventType"
+msgstr "Įvykio tipas"
+
+#: debug_console.cpp:503 debug_console.cpp:548 debug_console.cpp:562
+#, kde-format
+msgid "Position"
+msgstr "Pozicija"
+
+#: debug_console.cpp:505
+#, kde-format
+msgid "Tilt"
+msgstr "Palenkimas"
+
+#: debug_console.cpp:507
+#, kde-format
+msgid "Rotation"
+msgstr "Pasukimas"
+
+#: debug_console.cpp:508
+#, kde-format
+msgid "Pressure"
+msgstr "Spaudimas"
+
+#: debug_console.cpp:509
+#, kde-format
+msgid "Buttons"
+msgstr "Mygtukai"
+
+#. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
+#: debug_console.cpp:510 debug_console.ui:356
+#, kde-format
+msgid "Modifiers"
+msgstr "Modifikatoriai"
+
+#: debug_console.cpp:519
+#, kde-format
+msgid "Tablet Tool Button"
+msgstr "Planšetės įrankio mygtukas"
+
+#: debug_console.cpp:520 debug_console.cpp:534
+#, fuzzy, kde-format
+#| msgctxt "A button in a mouse press/release event"
+#| msgid "Button"
+msgid "Button"
+msgstr "Mygtukas"
+
+#: debug_console.cpp:521 debug_console.cpp:535
+#, fuzzy, kde-format
+#| msgid "Pressure"
+msgid "Pressed"
+msgstr "Spaudimas"
+
+#: debug_console.cpp:522 debug_console.cpp:536 debug_console.cpp:550
+#: debug_console.cpp:564
+#, fuzzy, kde-format
+#| msgid "Tablet Tool"
+msgid "Tablet"
+msgstr "Planšetės įrankis"
+
+#: debug_console.cpp:533
+#, kde-format
+msgid "Tablet Pad Button"
+msgstr "Planšetės kilimėlio mygtukas"
+
+#: debug_console.cpp:546
+#, kde-format
+msgid "Tablet Pad Strip"
+msgstr "Planšetės kilimėlio juosta"
+
+#: debug_console.cpp:547 debug_console.cpp:561
+#, kde-format
+msgid "Number"
+msgstr "Skaičius"
+
+#: debug_console.cpp:549 debug_console.cpp:563
+#, kde-format
+msgid "isFinger"
+msgstr "Yra pirštas"
+
+#: debug_console.cpp:560
+#, kde-format
+msgid "Tablet Pad Ring"
+msgstr "Planšetės kilimėlio žiedas"
+
+#: debug_console.cpp:791
+#, kde-format
+msgid "No Mouse Buttons"
+msgstr "Nėra pelės mygtukų"
+
+#: debug_console.cpp:795
+#, kde-format
+msgctxt "Mouse Button"
+msgid "left"
+msgstr "kairysis"
+
+#: debug_console.cpp:798
+#, kde-format
+msgctxt "Mouse Button"
+msgid "right"
+msgstr "dešinysis"
+
+#: debug_console.cpp:801
+#, kde-format
+msgctxt "Mouse Button"
+msgid "middle"
+msgstr "vidurinysis"
+
+#: debug_console.cpp:804
+#, kde-format
+msgctxt "Mouse Button"
+msgid "back"
+msgstr "atgal"
+
+#: debug_console.cpp:807
+#, kde-format
+msgctxt "Mouse Button"
+msgid "forward"
+msgstr "pirmyn"
+
+#: debug_console.cpp:810
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 1"
+msgstr "papildomas 1"
+
+#: debug_console.cpp:813
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 2"
+msgstr "papildomas 2"
+
+#: debug_console.cpp:816
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 3"
+msgstr "papildomas 3"
+
+#: debug_console.cpp:819
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 4"
+msgstr "papildomas 4"
+
+#: debug_console.cpp:822
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 5"
+msgstr "papildomas 5"
+
+#: debug_console.cpp:825
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 6"
+msgstr "papildomas 6"
+
+#: debug_console.cpp:828
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 7"
+msgstr "papildomas 7"
+
+#: debug_console.cpp:831
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 8"
+msgstr "papildomas 8"
+
+#: debug_console.cpp:834
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 9"
+msgstr "papildomas 9"
+
+#: debug_console.cpp:837
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 10"
+msgstr "papildomas 10"
+
+#: debug_console.cpp:840
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 11"
+msgstr "papildomas 11"
+
+#: debug_console.cpp:843
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 12"
+msgstr "papildomas 12"
+
+#: debug_console.cpp:846
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 13"
+msgstr "papildomas 13"
+
+#: debug_console.cpp:849
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 14"
+msgstr "papildomas 14"
+
+#: debug_console.cpp:852
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 15"
+msgstr "papildomas 15"
+
+#: debug_console.cpp:855
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 16"
+msgstr "papildomas 16"
+
+#: debug_console.cpp:858
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 17"
+msgstr "papildomas 17"
+
+#: debug_console.cpp:861
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 18"
+msgstr "papildomas 18"
+
+#: debug_console.cpp:864
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 19"
+msgstr "papildomas 19"
+
+#: debug_console.cpp:867
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 20"
+msgstr "papildomas 20"
+
+#: debug_console.cpp:870
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 21"
+msgstr "papildomas 21"
+
+#: debug_console.cpp:873
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 22"
+msgstr "papildomas 22"
+
+#: debug_console.cpp:876
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 23"
+msgstr "papildomas 23"
+
+#: debug_console.cpp:879
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 24"
+msgstr "papildomas 24"
+
+#: debug_console.cpp:882
+#, kde-format
+msgctxt "Mouse Button"
+msgid "task"
+msgstr "užduotis"
+
+#: debug_console.cpp:1218
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "X11 Windows"
+msgstr "Langai"
+
+#: debug_console.cpp:1220
+#, kde-format
+msgid "X11 Unmanaged Windows"
+msgstr "X11 netvarkomi langai"
+
+#: debug_console.cpp:1222
+#, kde-format
+msgid "Wayland Windows"
+msgstr "Wayland langai"
+
+#: debug_console.cpp:1224
+#, kde-format
+msgid "Internal Windows"
+msgstr "Vidiniai langai"
+
+#. i18n: ectx: property (text), widget (QPushButton, quitButton)
+#: debug_console.ui:32
+#, kde-format
+msgid "Quit Debug Console"
+msgstr "Išeiti iš derinimo pulto"
+
+#. i18n: ectx: attribute (title), widget (QWidget, windows)
+#: debug_console.ui:45
+#, kde-format
+msgid "Windows"
+msgstr "Langai"
+
+#. i18n: ectx: attribute (title), widget (QWidget, surfaces)
+#: debug_console.ui:59
+#, kde-format
+msgid "Surfaces"
+msgstr "Paviršiai"
+
+#. i18n: ectx: attribute (title), widget (QWidget, input)
+#: debug_console.ui:69
+#, kde-format
+msgid "Input Events"
+msgstr "Įvedimo įvykiai"
+
+#. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
+#: debug_console.ui:86
+#, kde-format
+msgid "Input Devices"
+msgstr "Įvedimo įrenginiai"
+
+#. i18n: ectx: attribute (title), widget (QWidget, tab)
+#: debug_console.ui:96
+#, kde-format
+msgid "OpenGL"
+msgstr "OpenGL"
+
+#. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
+#: debug_console.ui:102
+#, kde-format
+msgid "No OpenGL compositor running"
+msgstr "Neveikia joks OpenGL kompozitorius"
+
+#. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
+#: debug_console.ui:130
+#, kde-format
+msgid "OpenGL (ES) driver information"
+msgstr "OpenGL (ES) tvarkyklės informacija"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:136
+#, kde-format
+msgid "Vendor:"
+msgstr "Tiekėjas:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: debug_console.ui:143
+#, kde-format
+msgid "Renderer:"
+msgstr "Vaizdavimas:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: debug_console.ui:150
+#, kde-format
+msgid "Version:"
+msgstr "Versija:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: debug_console.ui:157
+#, kde-format
+msgid "Shading Language Version:"
+msgstr "Šešėliavimo kalbos versija:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: debug_console.ui:164
+#, kde-format
+msgid "Driver:"
+msgstr "Tvarkyklė:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: debug_console.ui:171
+#, kde-format
+msgid "GPU class:"
+msgstr "Vaizdo plokštės klasė:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: debug_console.ui:178
+#, kde-format
+msgid "OpenGL Version:"
+msgstr "OpenGL versija:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: debug_console.ui:185
+#, kde-format
+msgid "GLSL Version:"
+msgstr "GLSL versija:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
+#: debug_console.ui:251
+#, kde-format
+msgid "Platform Extensions"
+msgstr "Platformos plėtiniai"
+
+#. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
+#: debug_console.ui:267
+#, kde-format
+msgid "OpenGL (ES) Extensions"
+msgstr "OpenGL (ES) plėtiniai"
+
+#. i18n: ectx: attribute (title), widget (QWidget, keyboard)
+#: debug_console.ui:288
+#, kde-format
+msgid "Keyboard"
+msgstr "Klaviatūra"
+
+#. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
+#: debug_console.ui:315
+#, kde-format
+msgid "Keymap Layouts"
+msgstr "Klaviatūros klavišų schemos"
+
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+#: debug_console.ui:337
+#, kde-format
+msgid "Current Layout:"
+msgstr "Dabartinis išdėstymas:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
+#: debug_console.ui:372
+#, kde-format
+msgid "Active Modifiers"
+msgstr "Aktyvūs modifikatoriai"
+
+#. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
+#: debug_console.ui:388
+#, kde-format
+msgid "LEDs"
+msgstr "Šviesos diodai"
+
+#. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
+#: debug_console.ui:404
+#, kde-format
+msgid "Active LEDs"
+msgstr "Aktyvūs šviesos diodai"
+
+#. i18n: ectx: attribute (title), widget (QWidget, clipboard)
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:425 debug_console.ui:445
+#, kde-format
+msgid "Clipboard"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: debug_console.ui:491
+#, kde-format
+msgid "Primary Selection"
+msgstr ""
+
+#: helpers/killer/killer.cpp:34
+#, kde-format
+msgid "Window Manager"
+msgstr "Langų tvarkytuvė"
+
+#: helpers/killer/killer.cpp:38
+#, kde-format
+msgid "PID of the application to terminate"
+msgstr "Programos, kurios darbą baigti, PID"
+
+#: helpers/killer/killer.cpp:38
+#, kde-format
+msgid "pid"
+msgstr "pid"
+
+#: helpers/killer/killer.cpp:40
+#, kde-format
+msgid "Hostname on which the application is running"
+msgstr "Mazgas, kuriame veikia paleista programa"
+
+#: helpers/killer/killer.cpp:40
+#, kde-format
+msgid "hostname"
+msgstr "mazgo pavadinimas"
+
+#: helpers/killer/killer.cpp:42
+#, kde-format
+msgid "Caption of the window to be terminated"
+msgstr "Lango, kurio darbą baigti, antraštė"
+
+#: helpers/killer/killer.cpp:42
+#, kde-format
+msgid "caption"
+msgstr "antraštė"
+
+#: helpers/killer/killer.cpp:44
+#, kde-format
+msgid "Name of the application to be terminated"
+msgstr "Programos, kurios darbą baigti, pavadinimas"
+
+#: helpers/killer/killer.cpp:44
+#, kde-format
+msgid "name"
+msgstr "pavadinimas"
+
+#: helpers/killer/killer.cpp:46
+#, kde-format
+msgid "ID of resource belonging to the application"
+msgstr "Programai priklausančio ištekliaus ID"
+
+#: helpers/killer/killer.cpp:46
+#, kde-format
+msgid "id"
+msgstr "id"
+
+#: helpers/killer/killer.cpp:48
+#, kde-format
+msgid "Time of user action causing termination"
+msgstr "Naudotojo veiksmo, sukėlusio programos darbo baigimą, laikas"
+
+#: helpers/killer/killer.cpp:48
+#, kde-format
+msgid "time"
+msgstr "laikas"
+
+#: helpers/killer/killer.cpp:50
+#, kde-format
+msgid "KWin helper utility"
+msgstr "KWin pagelbiklio paslaugų programa"
+
+#: helpers/killer/killer.cpp:74
+#, kde-format
+msgid "This helper utility is not supposed to be called directly."
+msgstr "Šio pagelbiklio paslaugų programos negalima iškviesti tiesiogiai."
+
+#: helpers/killer/killer.cpp:84
+#, kde-format
+msgctxt "@info"
+msgid "<b>Application \"%1\" is not responding</b>"
+msgstr "<b>Programa „\"%1“ neatsako</b>"
+
+#: helpers/killer/killer.cpp:86
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid ""
+#| "<p>You tried to close window \"%1\" from application \"%2\" (Process ID: "
+#| "%3) but the application is not responding.</p>"
+msgctxt "@info"
+msgid ""
+"<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
+"%3) but the application is not responding.</para>"
+msgstr ""
+"<p>Jūs bandėte užverti langą \"%1\" iš programos \"%2\" (Proceso ID: %3), "
+"tačiau programa neatsako.</p>"
+
+#: helpers/killer/killer.cpp:88
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid ""
+#| "<p>You tried to close window \"%1\" from application \"%2\" (Process ID: "
+#| "%3), running on host \"%4\", but the application is not responding.</p>"
+msgctxt "@info"
+msgid ""
+"<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
+"%3), running on host \"%4\", but the application is not responding.</para>"
+msgstr ""
+"<p>Jūs bandėte užverti langą \"%1\" iš programos \"%2\" (Proceso ID: %3), "
+"veikiančios mazge \"%4\", tačiau programa neatsako.</p>"
+
+#: helpers/killer/killer.cpp:91
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid ""
+#| "<p>Do you want to terminate this application?</p><p><warning>Terminating "
+#| "the application will close all of its child windows. Any unsaved data "
+#| "will be lost.</warning></p>"
+msgctxt "@info"
+msgid ""
+"<para>Do you want to terminate this application?</"
+"para><para><warning>Terminating the application will close all of its child "
+"windows. Any unsaved data will be lost.</warning></para>"
+msgstr ""
+"<p>Ar norite baigti šios programos darbą?</p><p><warning>Baigus programos "
+"darbą, bus užverti visi jos antriniai langai. Bet kokie neįrašyti duomenys "
+"bus prarasti.</warning></p>"
+
+#: helpers/killer/killer.cpp:94
+#, kde-format
+msgid "&Terminate Application %1"
+msgstr "&Baigti programos %1 darbą"
+
+#: helpers/killer/killer.cpp:95
+#, kde-format
+msgid "Wait Longer"
+msgstr "Palaukti ilgiau"
+
+#: input.cpp:3133
+#, fuzzy, kde-format
+#| msgctxt "A touch up event"
+#| msgid "Touch Up"
+msgid "Touchpad"
+msgstr "Prilietimas aukštyn"
+
+#: keyboard_layout.cpp:46
+#, fuzzy, kde-format
+#| msgctxt "tooltip title"
+#| msgid "Keyboard Layout"
+msgid "Keyboard Layout Switcher"
+msgstr "Klaviatūros išdėstymas"
+
+#: killwindow.cpp:33
+#, kde-format
+msgid ""
+"Select window to force close with left click or enter.\n"
+"Escape or right click to cancel."
+msgstr ""
+"Pasirinkite langą, kurį priverstinai užverti,\n"
+"naudodami kairiojo mygtuko spustelėjimą ar Įvedimo (Enter) klavišą.\n"
+"Norėdami atsisakyti, paspauskite Grįžties (Escape) klavišą arba\n"
+"spustelėkite dešiniuoju pelės mygtuku."
+
+#: main.cpp:166
+#, kde-format
+msgid "KWin"
+msgstr "KWin"
+
+#: main.cpp:168 main.cpp:191
+#, kde-format
+msgid "KDE window manager"
+msgstr "KDE langų tvarkytuvė"
+
+#: main.cpp:170
+#, kde-format
+msgid "(c) 1999-2019, The KDE Developers"
+msgstr "(c) 1999-2019, KDE programuotojai"
+
+#: main.cpp:172
+#, kde-format
+msgid "Matthias Ettrich"
+msgstr "Matthias Ettrich"
+
+#: main.cpp:173
+#, kde-format
+msgid "Cristian Tibirna"
+msgstr "Cristian Tibirna"
+
+#: main.cpp:174
+#, kde-format
+msgid "Daniel M. Duley"
+msgstr "Daniel M. Duley"
+
+#: main.cpp:175
+#, kde-format
+msgid "Luboš Luňák"
+msgstr "Luboš Luňák"
+
+#: main.cpp:176
+#, kde-format
+msgid "Martin Flöser"
+msgstr "Martin Flöser"
+
+#: main.cpp:177
+#, kde-format
+msgid "David Edmundson"
+msgstr "David Edmundson"
+
+#: main.cpp:178
+#, kde-format
+msgid "Roman Gilg"
+msgstr "Roman Gilg"
+
+#: main.cpp:179
+#, kde-format
+msgid "Vlad Zahorodnii"
+msgstr "Vlad Zahorodnii"
+
+#: main.cpp:188
+#, kde-format
+msgid "Disable configuration options"
+msgstr "Išjungti konfigūracijos parinktis"
+
+#: main.cpp:189
+#, kde-format
+msgid "Indicate that KWin has recently crashed n times"
+msgstr "Rodoma, kad KWin neseniai nulūžo n kartų"
+
+#: main_wayland.cpp:318
+#, kde-format
+msgid "Start a rootless Xwayland server."
+msgstr "Paleisti bešaknį Xwayland serverį."
+
+#: main_wayland.cpp:320
+#, kde-format
+msgid ""
+"Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
+msgstr ""
+"Wayland lizdo, kurio klausytis, pavadinimas. Jei nenustatyta, bus naudojamas "
+"\"wayland-0\"."
+
+#: main_wayland.cpp:323
+#, kde-format
+msgid "The X11 Display to use in windowed mode on platform X11."
+msgstr "X11 ekranas, kurį naudoti lango veiksenoje, X11 platformoje."
+
+#: main_wayland.cpp:326
+#, kde-format
+msgid "The Wayland Display to use in windowed mode on platform Wayland."
+msgstr "Wayland ekranas, kurį naudoti lango veiksenoje, Wayland platformoje."
+
+#: main_wayland.cpp:328
+#, kde-format
+msgid "Render to a virtual framebuffer."
+msgstr "Atvaizduoti į virtualų vaizdų atnaujinimo buferį."
+
+#: main_wayland.cpp:330
+#, kde-format
+msgid "The width for windowed mode. Default width is 1024."
+msgstr "Lango veiksenos plotis. Numatytasis plotis yra 1024."
+
+#: main_wayland.cpp:334
+#, kde-format
+msgid "The height for windowed mode. Default height is 768."
+msgstr "Lango veiksenos aukštis. Numatytasis aukštis yra 768."
+
+#: main_wayland.cpp:339
+#, kde-format
+msgid "The scale for windowed mode. Default value is 1."
+msgstr "Lango veiksenos mastelis. Numatytoji reikšmė yra 1."
+
+#: main_wayland.cpp:344
+#, kde-format
+msgid ""
+"The number of windows to open as outputs in windowed mode. Default value is 1"
+msgstr ""
+"Langų, kuriuos atverti kaip išvestis lango veiksenoje, skaičius. Numatytoji "
+"reiškmė yra 1"
+
+#: main_wayland.cpp:349
+#, kde-format
+msgid ""
+"Wayland socket to use for incoming connections. This can be combined with --"
+"socket to name the socket"
+msgstr ""
+
+#: main_wayland.cpp:353
+#, kde-format
+msgid ""
+"XWayland socket to use for Xwayland's incoming connections. This can be set "
+"multiple times"
+msgstr ""
+
+#: main_wayland.cpp:357
+#, kde-format
+msgid "Name of the xwayland display that has been pre-set up"
+msgstr ""
+
+#: main_wayland.cpp:361
+#, kde-format
+msgid "Name of the xauthority file "
+msgstr ""
+
+#: main_wayland.cpp:365
+#, kde-format
+msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
+msgstr ""
+
+#: main_wayland.cpp:367
+#, kde-format
+msgid "Render through drm node."
+msgstr "Atvaizduoti per drm mazgą."
+
+#: main_wayland.cpp:388
+#, kde-format
+msgid "Input method that KWin starts."
+msgstr "Įvedimo metodas, kurį KWin paleidžia."
+
+#: main_wayland.cpp:394
+#, kde-format
+msgid "Starts the session in locked mode."
+msgstr "Paleidžia seansą užrakintoje veiksenoje."
+
+#: main_wayland.cpp:398
+#, kde-format
+msgid "Starts the session without lock screen support."
+msgstr "Paleidžia seansą be ekrano užrakto palaikymo."
+
+#: main_wayland.cpp:403
+#, kde-format
+msgid "Starts the session without global shortcuts support."
+msgstr "Paleidžia seansą be visuotinių sparčiųjų klavišų palaikymo."
+
+#: main_wayland.cpp:408 main_x11.cpp:380
+#, kde-format
+msgid "Disable KActivities integration."
+msgstr "Išjungti KActivities integraciją."
+
+#: main_wayland.cpp:413
+#, kde-format
+msgid "Exit after the session application, which is started by KWin, closed."
+msgstr "Išeiti po to, kai KWin paleista seanso programa yra užverta."
+
+#: main_wayland.cpp:418
+#, kde-format
+msgid "Applications to start once Wayland and Xwayland server are started"
+msgstr ""
+"Programos, kurias paleisti, kuomet yra paleidžiamas Wayland ir Xwayland "
+"serveris"
+
+#: main_x11.cpp:63
+#, kde-format
+msgid ""
+"KWin is unstable.\n"
+"It seems to have crashed several times in a row.\n"
+"You can select another window manager to run:"
+msgstr ""
+"KWin yra nestabili.\n"
+"Atrodo, kad langų tvarkytuvė kelis kartus iš eilės užstrigo.\n"
+"Galite pasirinkti paleisti kitą langų tvarkytuvę:"
+
+#: main_x11.cpp:216
+#, kde-format
+msgid ""
+"kwin: unable to claim manager selection, another wm running? (try using --"
+"replace)\n"
+msgstr ""
+"kwin: nepavyksta rezervuoti tvarkytuvės pasirinkimo, gal veikia kita langų "
+"tvarkytuvė? (pabandykite naudoti --replace)\n"
+
+#: main_x11.cpp:237
+#, kde-format
+msgid "kwin: another window manager is running (try using --replace)\n"
+msgstr "kwin: veikia kita langų tvarkytuvė (pabandykite naudoti --replace)\n"
+
+#: main_x11.cpp:373
+#, kde-format
+msgid "Replace already-running ICCCM2.0-compliant window manager"
+msgstr "Pakeisti jau veikiančią, su ICCCM2.0 suderinamą, langų tvarkytuvę"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:49
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:51
+#, fuzzy, kde-format
+#| msgid "Activity"
+msgctxt "Note this is a KRunner keyword"
+msgid "activate"
+msgstr "Veikla"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:52
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:54
+#, fuzzy, kde-format
+#| msgid "&Close"
+msgctxt "Note this is a KRunner keyword"
+msgid "close"
+msgstr "&Užverti"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:55
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:57
+#, kde-format
+msgctxt "Note this is a KRunner keyword"
+msgid "min"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:58
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:60
+#, fuzzy, kde-format
+#| msgid "Minimized"
+msgctxt "Note this is a KRunner keyword"
+msgid "minimize"
+msgstr "Suskleistas"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:61
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:63
+#, kde-format
+msgctxt "Note this is a KRunner keyword"
+msgid "max"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:64
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:66
+#, fuzzy, kde-format
+#| msgid "Ma&ximize"
+msgctxt "Note this is a KRunner keyword"
+msgid "maximize"
+msgstr "&Išskleisti"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:67
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:69
+#, fuzzy, kde-format
+#| msgid "Fullscreen"
+msgctxt "Note this is a KRunner keyword"
+msgid "fullscreen"
+msgstr "Visas ekranas"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:70
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:72
+#, fuzzy, kde-format
+#| msgid "Shaded"
+msgctxt "Note this is a KRunner keyword"
+msgid "shade"
+msgstr "Pridengtas"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:73
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:75
+#, fuzzy, kde-format
+#| msgid "Keep above"
+msgctxt "Note this is a KRunner keyword"
+msgid "keep above"
+msgstr "Laikyti aukščiau"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:76
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:78
+#, fuzzy, kde-format
+#| msgid "Keep below"
+msgctxt "Note this is a KRunner keyword"
+msgid "keep below"
+msgstr "Laikyti žemiau"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:83
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgctxt "Note this is a KRunner keyword"
+msgid "window"
+msgstr "Langai"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:93
+#, fuzzy, kde-format
+#| msgid "name"
+msgctxt "Note this is a KRunner keyword"
+msgid "name"
+msgstr "pavadinimas"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:95
+#, fuzzy, kde-format
+#| msgid "name"
+msgctxt "Note this is a KRunner keyword"
+msgid "appname"
+msgstr "pavadinimas"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:97
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:150
+#, fuzzy, kde-format
+#| msgid "&Desktops"
+msgctxt "Note this is a KRunner keyword"
+msgid "desktop"
+msgstr "&Darbalaukiai"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:256
+#, fuzzy, kde-format
+#| msgid "Switch to Desktop %1"
+msgid "Switch to desktop %1"
+msgstr "Perjungti į darbalaukį %1"
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:297
+#, kde-format
+msgid "Close running window on %1"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:300
+#, kde-format
+msgid "(Un)minimize running window on %1"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:303
+#, kde-format
+msgid "Maximize/restore running window on %1"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:306
+#, kde-format
+msgid "Toggle fullscreen for running window on %1"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:309
+#, kde-format
+msgid "(Un)shade running window on %1"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:312
+#, kde-format
+msgid "Toggle keep above for running window on %1"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:315
+#, kde-format
+msgid "Toggle keep below running window on %1"
+msgstr ""
+
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:319
+#, fuzzy, kde-format
+#| msgid "Activate Window (%1)"
+msgid "Activate running window on %1"
+msgstr "Aktyvuoti langą (%1)"
+
+#: plugins/nightcolor/nightcolormanager.cpp:64
+#, kde-format
+msgctxt "Night Color was disabled"
+msgid "Night Color Off"
+msgstr "Naktinė spalva išjungta"
+
+#: plugins/nightcolor/nightcolormanager.cpp:65
+#, kde-format
+msgctxt "Night Color was enabled"
+msgid "Night Color On"
+msgstr "Naktinė spalva įjungta"
+
+#: plugins/nightcolor/nightcolormanager.cpp:88
+#: plugins/nightcolor/nightcolormanager.cpp:91
+#: plugins/nightcolor/nightcolormanager.cpp:98
+#, kde-format
+msgid "Toggle Night Color"
+msgstr "Perjungti naktinę spalvą"
+
+#: plugins/nightcolor/nightcolormanager.cpp:493
+#, kde-format
+msgid "Color Temperature Preview"
+msgstr ""
+
+#. i18n: ectx: label, entry (count), group (General)
+#: rulebooksettingsbase.kcfg:9
+#, fuzzy, kde-format
+#| msgid "Total rules count"
+msgid "Total rules count (legacy)"
+msgstr "Bendras taisyklių skaičius"
+
+#. i18n: ectx: label, entry (ruleGroupList), group (General)
+#: rulebooksettingsbase.kcfg:13
+#, kde-format
+msgid "Ordered list of rules groups"
+msgstr ""
+
+#. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:10
+#, kde-format
+msgid "Rule description"
+msgstr "Taisyklės aprašas"
+
+#. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:13
+#, kde-format
+msgid "Rule description (legacy)"
+msgstr "Taisyklės aprašas (pasenęs)"
+
+#. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:16
+#, kde-format
+msgid "Delete this rule (for use in imports)"
+msgstr "Ištrinti šią taisyklę (naudojimui importavimuose)"
+
+#. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:20
+#, kde-format
+msgid "Window class (application)"
+msgstr "Lango klasė (programa)"
+
+#. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:23
+#, kde-format
+msgid "Window class string match type"
+msgstr "Lango klasės eilutės atitikimo tipas"
+
+#. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:29
+#, kde-format
+msgid "Match whole window class"
+msgstr "Atitikti visą lango klasę"
+
+#. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:34
+#, kde-format
+msgid "Window role"
+msgstr "Lango vaidmuo"
+
+#. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:37
+#, kde-format
+msgid "Window role string match type"
+msgstr "Lango vaidmens eilutės atitikimo tipas"
+
+#. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:44
+#, kde-format
+msgid "Window title"
+msgstr "Lango antraštė"
+
+#. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:47
+#, kde-format
+msgid "Window title string match type"
+msgstr "Lango antraštės eilutės atitikimo tipas"
+
+#. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:54
+#, kde-format
+msgid "Machine (hostname)"
+msgstr "Kompiuteris (mazgo pavadinimas)"
+
+#. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:57
+#, kde-format
+msgid "Machine string match type"
+msgstr "Kompiuterio eilutės atitikimo tipas"
+
+#. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:64
+#, kde-format
+msgid "Window types that match"
+msgstr "Lango tipai, kurie atitinka"
+
+#. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:69
+#, kde-format
+msgid "Initial placement"
+msgstr "Pradinis išdėstymas"
+
+#. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:74
+#, kde-format
+msgid "Initial placement rule type"
+msgstr "Pradinio išdėstymo taisyklės tipas"
+
+#. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:79
+#, kde-format
+msgid "Window position"
+msgstr "Lango pozicija"
+
+#. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:83
+#, kde-format
+msgid "Window position rule type"
+msgstr "Lango pozicijos taisyklės tipas"
+
+#. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:90
+#, kde-format
+msgid "Window size"
+msgstr "Lango dydis"
+
+#. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:93
+#, kde-format
+msgid "Window size rule type"
+msgstr "Lango dydžio taisyklės tipas"
+
+#. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:100
+#, kde-format
+msgid "Window minimum size"
+msgstr "Mažiausias lango dydis"
+
+#. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:104
+#, kde-format
+msgid "Window minimum size rule type"
+msgstr "Mažiausio lango dydžio taisyklės tipas"
+
+#. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:109
+#, kde-format
+msgid "Window maximum size"
+msgstr "Didžiausias lango dydis"
+
+#. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:113
+#, kde-format
+msgid "Window maximum size rule type"
+msgstr "Didžiausio lango dydžio taisyklės tipas"
+
+#. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:118
+#, kde-format
+msgid "Active opacity"
+msgstr "Aktyvaus nepermatomumas"
+
+#. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:124
+#, kde-format
+msgid "Active opacity rule type"
+msgstr "Aktyvaus nepermatomumo taisyklės tipas"
+
+#. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:129
+#, kde-format
+msgid "Inactive opacity"
+msgstr "Pasyvaus nepermatomumas"
+
+#. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:135
+#, kde-format
+msgid "Inactive opacity rule type"
+msgstr "Pasyvaus nepermatomumo taisyklės tipas"
+
+#. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:140
+#, kde-format
+msgid "Ignore requested geometry"
+msgstr "Nepaisyti užklaustos geometrijos"
+
+#. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:144
+#, kde-format
+msgid "Ignore requested geometry rule type"
+msgstr "Užklaustos geometrijos nepaisymo taisyklės tipas"
+
+#. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:151
+#, fuzzy, kde-format
+#| msgid "Switch to Desktop %1"
+msgid "List of Desktop Ids"
+msgstr "Perjungti į darbalaukį %1"
+
+#. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:155
+#, fuzzy, kde-format
+#| msgid "Desktop number rule type"
+msgid "Desktop Ids rule type"
+msgstr "Darbalaukio numerio taisyklės tipas"
+
+#. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:162
+#, kde-format
+msgid "Screen number"
+msgstr "Ekrano numeris"
+
+#. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:166
+#, kde-format
+msgid "Screen number rule type"
+msgstr "Ekrano numerio taisyklės tipas"
+
+#. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:173
+#, kde-format
+msgid "Activity"
+msgstr "Veikla"
+
+#. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:176
+#, kde-format
+msgid "Activity rule type"
+msgstr "Veiklos taisyklės tipas"
+
+#. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:183
+#, kde-format
+msgid "Set window type to"
+msgstr "Nustatyti lango tipą į"
+
+#. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:189
+#, kde-format
+msgid "Set window type rule type"
+msgstr "Lango tipo nustatymo taisyklės tipas"
+
+#. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:194
+#, kde-format
+msgid "Maximized vertically"
+msgstr "Išskleistas vertikaliai"
+
+#. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:198
+#, kde-format
+msgid "Maximized vertically rule type"
+msgstr "Išskleidimo vertikaliai taisyklės tipas"
+
+#. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:205
+#, kde-format
+msgid "Maximized horizontally"
+msgstr "Išskleistas horizontaliai"
+
+#. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:209
+#, kde-format
+msgid "Maximized horizontally rule type"
+msgstr "Išskleidimo horizontaliai taisyklės tipas"
+
+#. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:216
+#, kde-format
+msgid "Minimized"
+msgstr "Suskleistas"
+
+#. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:220
+#, kde-format
+msgid "Minimized rule type"
+msgstr "Suskleidimo taisyklės tipas"
+
+#. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:227
+#, kde-format
+msgid "Shaded"
+msgstr "Pridengtas"
+
+#. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:231
+#, kde-format
+msgid "Shaded rule type"
+msgstr "Pridengimo taisyklės tipas"
+
+#. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:238
+#, kde-format
+msgid "Skip taskbar"
+msgstr "Praleisti užduočių juostą"
+
+#. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:242
+#, kde-format
+msgid "Skip taskbar rule type"
+msgstr "Užduočių juostos praleidimo taisyklės tipas"
+
+#. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:249
+#, kde-format
+msgid "Skip pager"
+msgstr "Praleisti darbalaukių perjungiklį"
+
+#. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:253
+#, kde-format
+msgid "Skip pager rule type"
+msgstr "Praleidimo darbalaukių perjungiklyje taisyklės tipas"
+
+#. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:260
+#, kde-format
+msgid "Skip switcher"
+msgstr "Praleisti perjungiklį"
+
+#. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:264
+#, kde-format
+msgid "Skip switcher rule type"
+msgstr "Perjungiklio praleidimo taisyklės tipas"
+
+#. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:271
+#, kde-format
+msgid "Keep above"
+msgstr "Laikyti aukščiau"
+
+#. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:275
+#, kde-format
+msgid "Keep above rule type"
+msgstr "Laikymo aukščiau taisyklės tipas"
+
+#. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:282
+#, kde-format
+msgid "Keep below"
+msgstr "Laikyti žemiau"
+
+#. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:286
+#, kde-format
+msgid "Keep below rule type"
+msgstr "Laikymo žemiau taisyklės tipas"
+
+#. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:293
+#, kde-format
+msgid "Fullscreen"
+msgstr "Visas ekranas"
+
+#. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:297
+#, kde-format
+msgid "Fullscreen rule type"
+msgstr "Viso ekrano taisyklės tipas"
+
+#. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:304
+#, kde-format
+msgid "No titlebar and frame"
+msgstr "Be antraštės juostos ir rėmelio"
+
+#. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:308
+#, kde-format
+msgid "No titlebar rule type"
+msgstr "Be antraštės juostos taisyklės tipas"
+
+#. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:315
+#, kde-format
+msgid "Titlebar color and scheme"
+msgstr "Antraštės juostos spalva ir rinkinys"
+
+#. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:318
+#, kde-format
+msgid "Titlebar color rule type"
+msgstr "Antraštės juostos spalvos taisyklės tipas"
+
+#. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:323
+#, kde-format
+msgid "Block Compositing"
+msgstr "Blokuoti komponavimą"
+
+#. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:327
+#, kde-format
+msgid "Block Compositing rule type"
+msgstr "Komponavimo blokavimo taisyklės tipas"
+
+#. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:332
+#, kde-format
+msgid "Focus stealing prevention"
+msgstr "Fokusavimo vogimo prevencija"
+
+#. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:338
+#, kde-format
+msgid "Focus stealing prevention rule type"
+msgstr "Fokusavimo vogimo prevencijos taisyklės tipas"
+
+#. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:343
+#, kde-format
+msgid "Focus protection"
+msgstr "Fokusavimo apsauga"
+
+#. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:349
+#, kde-format
+msgid "Focus protection rule type"
+msgstr "Fokusavimo apsaugos taisyklės tipas"
+
+#. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:354
+#, kde-format
+msgid "Accept Focus"
+msgstr "Priimti fokusavimą"
+
+#. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:358
+#, kde-format
+msgid "Accept Focus rule type"
+msgstr "Fokusavimo priėmimo taisyklės tipas"
+
+#. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:363
+#, kde-format
+msgid "Closeable"
+msgstr "Užveriamas"
+
+#. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:367
+#, kde-format
+msgid "Closeable rule type"
+msgstr "Užveriamo taisyklės tipas"
+
+#. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:372
+#, kde-format
+msgid "Autogroup with identical"
+msgstr "Automatiškai grupuoti su identiškais"
+
+#. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:376
+#, kde-format
+msgid "Autogroup with identical rule type"
+msgstr "Automatinio grupavimo su identiškais taisyklės tipas"
+
+#. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:381
+#, kde-format
+msgid "Autogroup in foreground"
+msgstr "Automatiškai grupuoti priekiniame plane"
+
+#. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:385
+#, kde-format
+msgid "Autogroup in foreground rule type"
+msgstr "Automatinio grupavimo priekiniame plane taisyklės tipas"
+
+#. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:390
+#, kde-format
+msgid "Autogroup by ID"
+msgstr "Automatiškai grupuoti pagal ID"
+
+#. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:393
+#, kde-format
+msgid "Autogroup by ID rule type"
+msgstr "Automatinio grupavimo pagal ID taisyklės tipas"
+
+#. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:398
+#, kde-format
+msgid "Obey geometry restrictions"
+msgstr "Paklusti geometrijos apribojimams"
+
+#. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:402
+#, kde-format
+msgid "Obey geometry restrictions rule type"
+msgstr "Paklusimo geometrijos apribojimams taisyklės tipas"
+
+#. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:407
+#, kde-format
+msgid "Shortcut"
+msgstr "Spartusis klavišas"
+
+#. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:410
+#, kde-format
+msgid "Shortcut rule type"
+msgstr "Sparčiojo klavišo taisyklės tipas"
+
+#. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:417
+#, kde-format
+msgid "Ignore global shortcuts"
+msgstr "Nepaisyti visuotinių sparčiųjų klavišų"
+
+#. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:421
+#, kde-format
+msgid "Ignore global shortcuts rule type"
+msgstr "Visuotinių sparčiųjų klavišų nepaisymo taisyklės tipas"
+
+#. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:426
+#, kde-format
+msgid "Desktop file name"
+msgstr "Darbalaukio failo pavadinimas"
+
+#. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:429
+#, kde-format
+msgid "Desktop file name rule type"
+msgstr "Darbalaukio failo pavadinimo taisyklės tipas"
+
+#: scripting/genericscriptedconfig.cpp:76
+#, kde-format
+msgctxt "Error message"
+msgid "Plugin does not provide configuration file in expected location"
+msgstr ""
+"Priedas nepateikia konfigūracijos failo toje vietoje, kurioje buvo tikimasi"
+
+#. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
+#: shortcutdialog.ui:14
+#, kde-format
+msgid "Dialog"
+msgstr "Dialogas"
+
+#. i18n: ectx: property (text), widget (QToolButton, clearButton)
+#: shortcutdialog.ui:25
+#, kde-format
+msgid "..."
+msgstr "..."
+
+#: tabbox/tabbox.cpp:381
+#, kde-format
+msgctxt "Special entry in alt+tab list for minimizing all windows"
+msgid "Show Desktop"
+msgstr "Rodyti darbalaukį"
+
+#: tabbox/tabbox.cpp:521
+msgid "Walk Through Windows"
+msgstr "Pereiti per langus"
+
+#: tabbox/tabbox.cpp:522
+msgid "Walk Through Windows (Reverse)"
+msgstr "Pereiti per langus (atvirkščiai)"
+
+#: tabbox/tabbox.cpp:523
+msgid "Walk Through Windows Alternative"
+msgstr "Pereiti per langus alternatyviai"
+
+#: tabbox/tabbox.cpp:524
+msgid "Walk Through Windows Alternative (Reverse)"
+msgstr "Pereiti per langus alternatyviai (atvirkščiai)"
+
+#: tabbox/tabbox.cpp:525
+msgid "Walk Through Windows of Current Application"
+msgstr "Pereiti per esamos programos langus"
+
+#: tabbox/tabbox.cpp:526
+msgid "Walk Through Windows of Current Application (Reverse)"
+msgstr "Pereiti per esamos programos langus (atvirkščiai)"
+
+#: tabbox/tabbox.cpp:527
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "Pereiti per esamos programos langus alternatyviai"
+
+#: tabbox/tabbox.cpp:528
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "Pereiti per esamos programos langus alternatyviai (atvirkščiai)"
+
+#: tabbox/tabbox.cpp:529
+msgid "Walk Through Desktops"
+msgstr "Pereiti per darbalaukius"
+
+#: tabbox/tabbox.cpp:530
+msgid "Walk Through Desktops (Reverse)"
+msgstr "Pereiti per darbalaukius (atvirkščiai)"
+
+#: tabbox/tabbox.cpp:531
+msgid "Walk Through Desktop List"
+msgstr "Pereiti per darbalaukių sąrašą"
+
+#: tabbox/tabbox.cpp:532
+msgid "Walk Through Desktop List (Reverse)"
+msgstr "Pereiti per darbalaukių sąrašą (atvirkščiai)"
+
+#: tabbox/tabboxhandler.cpp:290
+#, kde-format
+msgid ""
+"The Window Switcher installation is broken, resources are missing.\n"
+"Contact your distribution about this."
+msgstr ""
+"Langų perjungiklio diegimas yra sugadintas, trūksta išteklių.\n"
+"Susisiekite dėl šio reikalo su savo platinimuoju paketu."
+
+#: useractions.cpp:160
+#, kde-format
+msgid ""
+"You have selected to show a window without its border.\n"
+"Without the border, you will not be able to enable the border again using "
+"the mouse: use the window operations menu instead, activated using the %1 "
+"keyboard shortcut."
+msgstr ""
+"Jūs pasirinkote rodyti langą be rėmelio.\n"
+"Be rėmelio, negalėsite vėl įjungti rėmelį, naudodami pelę: vietoje pelės, "
+"naudokite lango operacijų meniu, kurį galite aktyvuoti sparčiaisiais "
+"klavišais %1."
+
+#: useractions.cpp:167
+#, kde-format
+msgid ""
+"You have selected to show a window in fullscreen mode.\n"
+"If the application itself does not have an option to turn the fullscreen "
+"mode off you will not be able to disable it again using the mouse: use the "
+"window operations menu instead, activated using the %1 keyboard shortcut."
+msgstr ""
+"Jūs pasirinkote rodyti langą visame ekrane.\n"
+"Jei pati programa neturi parinkties išjungti viso ekrano veikseną, tuomet "
+"negalėsite išjungti veikseną naudodami pelę. Vietoje to, naudokite lango "
+"operacijų meniu, kurį galite aktyvuoti sparčiaisiais klavišais %1."
+
+#: useractions.cpp:237
+#, kde-format
+msgid "&Move"
+msgstr "Perke&lti"
+
+#: useractions.cpp:242
+#, kde-format
+msgid "&Resize"
+msgstr "Keisti &dydį"
+
+#: useractions.cpp:247
+#, kde-format
+msgid "Keep &Above Others"
+msgstr "Laikyti &virš kitų"
+
+#: useractions.cpp:253
+#, kde-format
+msgid "Keep &Below Others"
+msgstr "Laikyti &po kitais"
+
+#: useractions.cpp:259
+#, kde-format
+msgid "&Fullscreen"
+msgstr "Visas &ekranas"
+
+#: useractions.cpp:265
+#, kde-format
+msgid "&Shade"
+msgstr "Pri&dengti"
+
+#: useractions.cpp:271
+#, kde-format
+msgid "&No Border"
+msgstr "&Nerodyti rėmelio"
+
+#: useractions.cpp:279
+#, kde-format
+msgid "Set Window Short&cut..."
+msgstr "Nustatyti lango &spartųjį klavišą..."
+
+#: useractions.cpp:285
+#, kde-format
+msgid "Configure Special &Window Settings..."
+msgstr "Konfigūruoti specialias lango nu&ostatas..."
+
+#: useractions.cpp:290
+#, kde-format
+msgid "Configure S&pecial Application Settings..."
+msgstr "Konfigūruoti s&pecialias programos nuostatas..."
+
+#: useractions.cpp:297
+#, kde-format
+msgctxt ""
+"Entry in context menu of window decoration to open the configuration module "
+"of KWin"
+msgid "Configure W&indow Manager..."
+msgstr "Konfigūruoti lan&gų tvarkytuvę..."
+
+#: useractions.cpp:324
+#, kde-format
+msgid "Ma&ximize"
+msgstr "&Išskleisti"
+
+#: useractions.cpp:330
+#, kde-format
+msgid "Mi&nimize"
+msgstr "&Suskleisti"
+
+#: useractions.cpp:336
+#, kde-format
+msgid "&More Actions"
+msgstr "&Daugiau veiksmų"
+
+#: useractions.cpp:339
+#, kde-format
+msgid "&Close"
+msgstr "&Užverti"
+
+#: useractions.cpp:409
+#, kde-format
+msgid "&Extensions"
+msgstr "&Plėtiniai"
+
+#: useractions.cpp:460
+#, kde-format
+msgid "&Desktops"
+msgstr "&Darbalaukiai"
+
+#: useractions.cpp:474
+#, kde-format
+msgid "Move to &Desktop"
+msgstr "Perkelti į &darbalaukį"
+
+#: useractions.cpp:491
+#, kde-format
+msgid "Move to &Screen"
+msgstr "Perkelti į &ekraną"
+
+#: useractions.cpp:508
+#, kde-format
+msgid "Show in &Activities"
+msgstr "Rodyti &veiklose"
+
+#: useractions.cpp:524 useractions.cpp:594
+#, kde-format
+msgid "&All Desktops"
+msgstr "&Visi darbalaukiai"
+
+#: useractions.cpp:567
+#, fuzzy, kde-format
+#| msgctxt "Create a new desktop and move there the window"
+#| msgid "&New Desktop"
+msgctxt "Create a new desktop and move the window there"
+msgid "&New Desktop"
+msgstr "&Naujas darbalaukis"
+
+#: useractions.cpp:638
+#, kde-format
+msgid "Move to %1 %2"
+msgstr ""
+
+#: useractions.cpp:651
+#, fuzzy, kde-format
+#| msgctxt "Create a new desktop and move there the window"
+#| msgid "&New Desktop"
+msgctxt "Create a new desktop and add the window to that desktop"
+msgid "Add to &New Desktop"
+msgstr "&Naujas darbalaukis"
+
+#: useractions.cpp:663
+#, fuzzy, kde-format
+#| msgid "Move to &Desktop"
+msgctxt "Create a new desktop and move the window to that desktop"
+msgid "Move to New Desktop"
+msgstr "Perkelti į &darbalaukį"
+
+#: useractions.cpp:694
+#, kde-format
+msgctxt ""
+"@item:inmenu List of all Screens to send a window to. First argument is a "
+"number, second the output identifier. E.g. Screen 1 (HDMI1)"
+msgid "Screen &%1 (%2)"
+msgstr "Ekranas &%1 (%2)"
+
+#: useractions.cpp:720
+#, kde-format
+msgid "&All Activities"
+msgstr "Vi&sos veiklos"
+
+#: useractions.cpp:902
+#, kde-format
+msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
+msgid "<b>%1</b> is already in use"
+msgstr "<b>%1</b> jau yra naudojamas"
+
+#: useractions.cpp:904
+#, kde-format
+msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
+msgid "<b>%1</b> is used by %2 in %3"
+msgstr "Spartieji klavišai <b>%1</b> yra naudojami veiksmui %2, programoje %3"
+
+#: useractions.cpp:987
+#, kde-format
+msgid "Window Operations Menu"
+msgstr "Lango operacijų meniu"
+
+#: useractions.cpp:989
+#, kde-format
+msgid "Close Window"
+msgstr "Užverti langą"
+
+#: useractions.cpp:991
+#, kde-format
+msgid "Maximize Window"
+msgstr "Išskleisti langą"
+
+#: useractions.cpp:993
+#, kde-format
+msgid "Maximize Window Vertically"
+msgstr "Išskleisti langą vertikaliai"
+
+#: useractions.cpp:995
+#, kde-format
+msgid "Maximize Window Horizontally"
+msgstr "Išskleisti langą horizontaliai"
+
+#: useractions.cpp:997
+#, kde-format
+msgid "Minimize Window"
+msgstr "Suskleisti langą"
+
+#: useractions.cpp:999
+#, kde-format
+msgid "Shade Window"
+msgstr "Pridengti langą"
+
+#: useractions.cpp:1001
+#, kde-format
+msgid "Move Window"
+msgstr "Perkelti langą"
+
+#: useractions.cpp:1003
+#, kde-format
+msgid "Resize Window"
+msgstr "Keisti lango dydį"
+
+#: useractions.cpp:1005
+#, kde-format
+msgid "Raise Window"
+msgstr "Iškelti langą į pirmą planą"
+
+#: useractions.cpp:1007
+#, kde-format
+msgid "Lower Window"
+msgstr "Nuleisti langą į antrą planą"
+
+#: useractions.cpp:1009
+#, kde-format
+msgid "Toggle Window Raise/Lower"
+msgstr "Perkelinėti langą į pirmą/antrą planą"
+
+#: useractions.cpp:1011
+#, kde-format
+msgid "Make Window Fullscreen"
+msgstr "Išskleisti langą per visą ekraną"
+
+#: useractions.cpp:1013
+#, kde-format
+msgid "Hide Window Border"
+msgstr "Slėpti lango rėmelį"
+
+#: useractions.cpp:1015
+#, kde-format
+msgid "Keep Window Above Others"
+msgstr "Laikyti langą virš kitų"
+
+#: useractions.cpp:1017
+#, kde-format
+msgid "Keep Window Below Others"
+msgstr "Langą langą po kitais"
+
+#: useractions.cpp:1019
+#, kde-format
+msgid "Activate Window Demanding Attention"
+msgstr "Aktyvuoti langą, reikalaujantį dėmesio"
+
+#: useractions.cpp:1021
+#, kde-format
+msgid "Setup Window Shortcut"
+msgstr "Nustatyti lango sparčiuosius klavišus"
+
+#: useractions.cpp:1023
+#, fuzzy, kde-format
+#| msgid "Pack Window to the Left"
+msgid "Move Window to the Center"
+msgstr "Pakuoti langą į kairę"
+
+#: useractions.cpp:1025
+#, fuzzy, kde-format
+#| msgid "Move Window"
+msgid "Move Window Right"
+msgstr "Perkelti langą"
+
+#: useractions.cpp:1027
+#, fuzzy, kde-format
+#| msgid "Move Window"
+msgid "Move Window Left"
+msgstr "Perkelti langą"
+
+#: useractions.cpp:1029
+#, fuzzy, kde-format
+#| msgid "Move Window"
+msgid "Move Window Up"
+msgstr "Perkelti langą"
+
+#: useractions.cpp:1031
+#, fuzzy, kde-format
+#| msgid "Move Window"
+msgid "Move Window Down"
+msgstr "Perkelti langą"
+
+#: useractions.cpp:1033
+#, fuzzy, kde-format
+#| msgid "Maximize Window Horizontally"
+msgid "Expand Window Horizontally"
+msgstr "Išskleisti langą horizontaliai"
+
+#: useractions.cpp:1035
+#, fuzzy, kde-format
+#| msgid "Maximize Window Vertically"
+msgid "Expand Window Vertically"
+msgstr "Išskleisti langą vertikaliai"
+
+#: useractions.cpp:1037
+#, fuzzy, kde-format
+#| msgid "Pack Shrink Window Horizontally"
+msgid "Shrink Window Horizontally"
+msgstr "Pakuoti langą suskleidžiant horizontaliai"
+
+#: useractions.cpp:1039
+#, fuzzy, kde-format
+#| msgid "Pack Shrink Window Vertically"
+msgid "Shrink Window Vertically"
+msgstr "Pakuoti langą suskleidžiant vertikaliai"
+
+#: useractions.cpp:1041
+#, kde-format
+msgid "Quick Tile Window to the Left"
+msgstr "Greitai iškloti langą kairėje"
+
+#: useractions.cpp:1043
+#, kde-format
+msgid "Quick Tile Window to the Right"
+msgstr "Greitai iškloti langą dešinėje"
+
+#: useractions.cpp:1045
+#, kde-format
+msgid "Quick Tile Window to the Top"
+msgstr "Greitai iškloti langą viršuje"
+
+#: useractions.cpp:1047
+#, kde-format
+msgid "Quick Tile Window to the Bottom"
+msgstr "Greitai iškloti langą apačioje"
+
+#: useractions.cpp:1049
+#, kde-format
+msgid "Quick Tile Window to the Top Left"
+msgstr "Greitai iškloti langą viršuje kairėje"
+
+#: useractions.cpp:1051
+#, kde-format
+msgid "Quick Tile Window to the Bottom Left"
+msgstr "Greitai iškloti langą apačioje kairėje"
+
+#: useractions.cpp:1053
+#, kde-format
+msgid "Quick Tile Window to the Top Right"
+msgstr "Greitai iškloti langą viršuje dešinėje"
+
+#: useractions.cpp:1055
+#, kde-format
+msgid "Quick Tile Window to the Bottom Right"
+msgstr "Greitai iškloti langą apačioje dešinėje"
+
+#: useractions.cpp:1057
+#, kde-format
+msgid "Switch to Window Above"
+msgstr "Perjungti į langą aukščiau"
+
+#: useractions.cpp:1059
+#, kde-format
+msgid "Switch to Window Below"
+msgstr "Perjungti į langą žemiau"
+
+#: useractions.cpp:1061
+#, kde-format
+msgid "Switch to Window to the Right"
+msgstr "Perjungti į langą dešinėje"
+
+#: useractions.cpp:1063
+#, kde-format
+msgid "Switch to Window to the Left"
+msgstr "Perjungti į langą kairėje"
+
+#: useractions.cpp:1065
+#, kde-format
+msgid "Increase Opacity of Active Window by 5 %"
+msgstr "Padidinti aktyvaus lango nepermatomumą 5 %"
+
+#: useractions.cpp:1067
+#, kde-format
+msgid "Decrease Opacity of Active Window by 5 %"
+msgstr "Sumažinti aktyvaus lango nepermatomumą 5 %"
+
+#: useractions.cpp:1070
+#, kde-format
+msgid "Keep Window on All Desktops"
+msgstr "Laikyti langą visuose darbalaukiuose"
+
+#: useractions.cpp:1081
+#, kde-format
+msgid "Window to Desktop %1"
+msgstr "Langą į darbalaukį %1"
+
+#: useractions.cpp:1083
+#, kde-format
+msgid "Window to Next Desktop"
+msgstr "Langą į kitą darbalaukį"
+
+#: useractions.cpp:1084
+#, kde-format
+msgid "Window to Previous Desktop"
+msgstr "Langą į ankstesnį darbalaukį"
+
+#: useractions.cpp:1085
+#, kde-format
+msgid "Window One Desktop to the Right"
+msgstr "Langą vienu darbalaukiu į dešinę"
+
+#: useractions.cpp:1087
+#, kde-format
+msgid "Window One Desktop to the Left"
+msgstr "Langą vienu darbalaukiu į kairę"
+
+#: useractions.cpp:1089
+#, kde-format
+msgid "Window One Desktop Up"
+msgstr "Langą vienu darbalaukiu į viršų"
+
+#: useractions.cpp:1091
+#, kde-format
+msgid "Window One Desktop Down"
+msgstr "Langą vienu darbalaukiu į apačią"
+
+#: useractions.cpp:1095
+#, kde-format
+msgid "Window to Screen %1"
+msgstr "Langą į ekraną %1"
+
+#: useractions.cpp:1097
+#, kde-format
+msgid "Window to Next Screen"
+msgstr "Langą į kitą ekraną"
+
+#: useractions.cpp:1099
+#, kde-format
+msgid "Window to Previous Screen"
+msgstr "Langą į ankstesnį ekraną"
+
+#: useractions.cpp:1101
+#, fuzzy, kde-format
+#| msgid "Move to &Desktop"
+msgid "Peek at Desktop"
+msgstr "Perkelti į &darbalaukį"
+
+#: useractions.cpp:1105
+#, kde-format
+msgid "Switch to Screen %1"
+msgstr "Perjungti į ekraną %1"
+
+#: useractions.cpp:1108
+#, kde-format
+msgid "Switch to Next Screen"
+msgstr "Perjungti į kitą ekraną"
+
+#: useractions.cpp:1109
+#, kde-format
+msgid "Switch to Previous Screen"
+msgstr "Perjungti į ankstesnį ekraną"
+
+#: useractions.cpp:1111
+#, kde-format
+msgid "Kill Window"
+msgstr "Nutraukti lango darbą"
+
+#: useractions.cpp:1112
+#, kde-format
+msgid "Suspend Compositing"
+msgstr "Pristabdyti komponavimą"
+
+#: useractions.cpp:1113
+#, kde-format
+msgid "Invert Screen Colors"
+msgstr "Invertuoti ekrano spalvas"
+
+#: useractions.cpp:1174
+#, kde-format
+msgid "Activate Window (%1)"
+msgstr "Aktyvuoti langą (%1)"
+
+#: useractions.cpp:1325
+#, kde-format
+msgid ""
+"The window manager is configured to consider the screen with the mouse on it "
+"as active one.\n"
+"Therefore it is not possible to switch to a screen explicitly."
+msgstr ""
+"Langų tvarkytuvė yra sukonfigūruota taip, kad laikytų ekraną, kuriame yra "
+"pelė, kaip aktyvų.\n"
+"Štai kodėl aiškiai nurodžius, neįmanoma perjungti į ekraną."
+
+#: virtualdesktops.cpp:688 virtualdesktops.cpp:759
+#, kde-format
+msgid "Desktop %1"
+msgstr "Darbalaukis %1"
+
+#: virtualdesktops.cpp:794
+#, kde-format
+msgid "Switch to Next Desktop"
+msgstr "Perjungti į kitą darbalaukį"
+
+#: virtualdesktops.cpp:795
+#, kde-format
+msgid "Switch to Previous Desktop"
+msgstr "Perjungti į ankstesnį darbalaukį"
+
+#: virtualdesktops.cpp:798
+#, kde-format
+msgid "Switch One Desktop to the Right"
+msgstr "Perjungti vienu darbalaukiu į dešinę"
+
+#: virtualdesktops.cpp:800
+#, kde-format
+msgid "Switch One Desktop to the Left"
+msgstr "Perjungti vienu darbalaukiu į kairę"
+
+#: virtualdesktops.cpp:802
+#, kde-format
+msgid "Switch One Desktop Up"
+msgstr "Perjungti vienu darbalaukiu į viršų"
+
+#: virtualdesktops.cpp:804
+#, kde-format
+msgid "Switch One Desktop Down"
+msgstr "Perjungti vienu darbalaukiu į apačią"
+
+#: virtualdesktops.cpp:893
+#, kde-format
+msgid "Switch to Desktop %1"
+msgstr "Perjungti į darbalaukį %1"
+
+#: window.cpp:3428
+#, kde-format
+msgctxt "Application is not responding, appended to window title"
+msgid "(Not Responding)"
+msgstr "(Neatsako)"
+
+#: workspace.cpp:1676
+#, kde-format
+msgctxt "Introductory text shown in the support information."
+msgid ""
+"KWin Support Information:\n"
+"The following information should be used when requesting support on e.g. "
+"https://forum.kde.org.\n"
+"It provides information about the currently running instance, which options "
+"are used,\n"
+"what OpenGL driver and which effects are running.\n"
+"Please post the information provided underneath this introductory text to a "
+"paste bin service\n"
+"like https://paste.kde.org instead of pasting into support threads.\n"
+msgstr ""
+"KWin palaikymo informacija:\n"
+"Ši informacija turėtų būti pateikiama prašant palaikymo pvz., forume http://"
+"forum.kde.org.\n"
+"Čia pateikiama informacija apie šiuo metu veikiantį egzempliorių, kokios yra "
+"naudojamos parinktys,\n"
+"kokia naudojama OpenGL tvarkyklė ir kokie yra įjungti efektai.\n"
+"Prašome žemiau pateiktą informaciją įterpti į teksto įdėjimo paslaugas, "
+"pvz., \n"
+"http://paste.kde.org, o ne į palaikymo gijas.\n"
+
+#~ msgid "List all available backends and quit."
+#~ msgstr "Išvardyti visas prieinamas vidines puses ir išeiti."
+
+#~ msgid "Show Desktop"
+#~ msgstr "Rodyti darbalaukį"
+
+#~ msgid "X11 Client Windows"
+#~ msgstr "X11 kliento langai"
+
+#~ msgid "unknown"
+#~ msgstr "nežinoma"
+
+#~ msgid "Render to framebuffer."
+#~ msgstr "Atvaizduoti į vaizdų atnaujinimo buferį."
+
+#~ msgid "The framebuffer device to render to."
+#~ msgstr "Vaizdų atnaujinimo buferis, į kurį atvaizduoti."
+
+#, fuzzy
+#~| msgid ""
+#~| "Enable libinput support for input events processing. Note: never use in "
+#~| "a nested session."
+#~ msgid ""
+#~ "Enable libinput support for input events processing. Note: never use in a "
+#~ "nested session.\t(deprecated)"
+#~ msgstr ""
+#~ "Įvedimo įvykių apdorojimui įjungti libinput palaikymą. Pastaba: niekada "
+#~ "nenaudokite įdėtiniame seanse."
+
+#~ msgid "Pack Window to the Right"
+#~ msgstr "Pakuoti langą į dešinę"
+
+#~ msgid "Pack Window to the Left"
+#~ msgstr "Pakuoti langą į kairę"
+
+#~ msgid "Pack Window Up"
+#~ msgstr "Pakuoti langą aukštyn"
+
+#~ msgid "Pack Window Down"
+#~ msgstr "Pakuoti langą žemyn"
+
+#~ msgid "Pack Grow Window Horizontally"
+#~ msgstr "Pakuoti langą išskleidžiant horizontaliai"
+
+#~ msgid "Pack Grow Window Vertically"
+#~ msgstr "Pakuoti langą išskleidžiant vertikaliai"
+
+#~ msgid "Desktop number"
+#~ msgstr "Darbalaukio numeris"
+
+#, fuzzy
+#~| msgid "Configure Layouts..."
+#~ msgid "Configure virtual keyboards..."
+#~ msgstr "Konfigūruoti išdėstymus..."
+
+#~ msgid "Virtual Keyboard"
+#~ msgstr "Virtuali klaviatūra"
+
+#~ msgid "Whether to show the virtual keyboard on demand."
+#~ msgstr "Ar pareikalavus, rodyti virtualią klaviatūrą."
+
+#~ msgid "Virtual Keyboard: enabled"
+#~ msgstr "Virtuali klaviatūra: įjungta"
+
+#~ msgid "Virtual Keyboard: disabled"
+#~ msgstr "Virtuali klaviatūra: išjungta"
+
+#, fuzzy
+#~| msgid "Virtual Keyboard: enabled"
+#~ msgid "No Virtual Keyboard configured"
+#~ msgstr "Virtuali klaviatūra: įjungta"
+
+#~ msgctxt "Assertion failed in KWin script with given value"
+#~ msgid "Assertion failed: %1 is not null"
+#~ msgstr "Sprendinys patyrė nesėkmę: %1 nėra nulinis"
+
+#~ msgctxt "Assertion failed in KWin script"
+#~ msgid "Assertion failed: argument is null"
+#~ msgstr "Sprendinys patyrė nesėkmę: argumentas yra nulinis"
+
+#~ msgctxt "Error in KWin Script"
+#~ msgid ""
+#~ "Invalid number of arguments. At least service, path, interface and method "
+#~ "need to be provided"
+#~ msgstr ""
+#~ "Neteisingas argumentų skaičius. Turi būti pateikti bent tarnyba, kelias, "
+#~ "sąsaja ir metodas"
+
+#~ msgctxt "Error in KWin Script"
+#~ msgid ""
+#~ "Invalid type. Service, path, interface and method need to be string values"
+#~ msgstr ""
+#~ "Neteisingas tipas. Tarnybos, kelio, sąsajos ir metodo reikšmės turi būti "
+#~ "eilutės"
+
+#~ msgctxt "syntax error in KWin script"
+#~ msgid "Invalid number of arguments"
+#~ msgstr "Neteisingas argumentų skaičius"
+
+#~ msgctxt ""
+#~ "KWin Scripting function received incorrect value for an expected type"
+#~ msgid "%1 is not a variant type"
+#~ msgstr "%1 nėra varianto tipas"
+
+#~ msgid "Pressed Buttons"
+#~ msgstr "Paspausti mygtukai"
+
+#~ msgid "Use libhybris hwcomposer"
+#~ msgstr "Naudoti libhybris hwcomposer"
+
+#~ msgid "Allow Rotation"
+#~ msgstr "Leisti pasukimą"
+
+#~ msgid "Automatic screen rotation is enabled"
+#~ msgstr "Automatinis ekrano pasukimas yra įjungtas"
+
+#~ msgid "Undefined"
+#~ msgstr "Neapibrėžta"
+
+#~ msgctxt "Portrait oriented display"
+#~ msgid "Vertical"
+#~ msgstr "Vertikalus"
+
+#~ msgctxt "Landscape oriented display"
+#~ msgid "Horizontal"
+#~ msgstr "Horizontalus"
+
+#~ msgid "Automatic screen rotation is disabled"
+#~ msgstr "Automatinis ekrano pasukimas yra išjungtas"
+
+#~ msgid "Walk Through Window Tabs"
+#~ msgstr "Pereiti per langų korteles"
+
+#~ msgid "Walk Through Window Tabs (Reverse)"
+#~ msgstr "Pereiti per langų korteles (atvirkščiai)"
+
+#~ msgid "Remove Window From Group"
+#~ msgstr "Šalinti langą iš grupės"
+
+#~ msgid "&Untab"
+#~ msgstr "Iši&mti iš kortelių"
+
+#~ msgid "Close Entire &Group"
+#~ msgstr "Užverti &visą grupę"
+
+#~ msgctxt "Switch to tab -> Previous"
+#~ msgid "Previous"
+#~ msgstr "Ankstesnė"
+
+#~ msgctxt "Switch to tab -> Next"
+#~ msgid "Next"
+#~ msgstr "Kita"
+
+#~ msgctxt "There's no window available to be attached as tab to this one"
+#~ msgid "None available"
+#~ msgstr "Nėra prieinamo"
+
+#~ msgid "Switch to Tab"
+#~ msgstr "Perjungti į kortelę"
+
+#~ msgid "&Attach as tab to"
+#~ msgstr "&Pridėti kaip kortelę į"
+
+#~ msgctxt ""
+#~ "Entry in context menu of window decoration to open the configuration "
+#~ "module of KWin"
+#~ msgid "Window Manager S&ettings..."
+#~ msgstr "Langų tvarkytuvės &nuostatos..."
+
+#, fuzzy
+#~| msgid ""
+#~| "kwin: unable to claim manager selection, another wm running? (try using "
+#~| "--replace)\n"
+#~ msgid "kwin_wayland: an X11 window manager is running on the X11 Display.\n"
+#~ msgstr ""
+#~ "kwin: nepavyksta rezervuoti tvarkyklės pasirinkimo, gal veikia kita langų "
+#~ "tvarkyklė? (bandykite su parinktimi --replace)\n"
+
+#~ msgid "Martin Gräßlin"
+#~ msgstr "Martin Gräßlin"
+
+#~ msgid "Maintainer"
+#~ msgstr "Prižiūrėtojas"
+
+#~ msgid ""
+#~ "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+#~ "b><br>This was most likely due to a driver bug.<p>If you think that you "
+#~ "have meanwhile upgraded to a stable driver,<br>you can reset this "
+#~ "protection but <b>be aware that this might result in an immediate crash!</"
+#~ "b></p><p>Alternatively, you might want to use the XRender backend instead."
+#~ "</p>"
+#~ msgstr ""
+#~ "<b>OpenGL komponuoklis (numatytasis) praeityje yra nulaužęs Kwin.</"
+#~ "b><br>Tai greičiausiai įvyko dėl tvarkyklės klaidos.<p>Jei manote, kad "
+#~ "nuo to laiko tvarkyklę atnaujinote į stabilesnę versiją,<br>šią apsaugą "
+#~ "galite panaikinti, tačiau <b>perspėjame, kad tai gali baigtis lūžiu "
+#~ "iškart!</b></p><p>Kaip alternatyva, galite naudoti XRender programinę "
+#~ "sąsają vietoje OpenGL.</p>"
+
+#~ msgid "Required X extensions (XComposite and XDamage) are not available."
+#~ msgstr "Privaloma X praplėtimai  (XComposite and XDamage) nerasti."
+
+#~ msgid "GLX/OpenGL are not available and only OpenGL support is compiled."
+#~ msgstr ""
+#~ "GLX/OpenGL yra nerasti ir tiktai OpenGL palaikymas ir sukompiliuotas."
+
+#~ msgid "GLX/OpenGL and XRender/XFixes are not available."
+#~ msgstr "GLX/OpenGL ir XRender/XFixes nerasti."
+
+#~ msgid "Sh&ade"
+#~ msgstr "&Tik antraštės juosta"

@@ -1,0 +1,446 @@
+# translation of desktop_kdebase.po to Upper Sorbian
+# Prof. Dr. Eduard Werner <e.werner@rz.uni-leipzig.de>, 2003.
+# Eduard Werner <edi.werner@gmx.de>, 2005, 2008.
+# Bianka Šwejdźic <hertn@gmx.de>, 2005, 2007.
+msgid ""
+msgstr ""
+"Project-Id-Version: desktop_kdebase\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2008-11-21 23:12+0100\n"
+"Last-Translator: Eduard Werner <edi.werner@gmx.de>\n"
+"Language-Team: en_US <kde-i18n-doc@lists.kde.org>\n"
+"Language: hsb\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
+"%100==4 ? 2 : 3;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Edward Wornar"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "edi.werner@gmx.de"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, kde-format
+msgid "Application menu"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, fuzzy, kde-format
+#| msgid "On All Desktops"
+msgid "On all desktops"
+msgstr "Na wšěch dźěłowych powjerchach"
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr "Minimalizować"
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr "Maksimalizować"
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr "Začinić"
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr "Wotsćin"
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr ""
+
+#: kcm.cpp:49
+#, fuzzy, kde-format
+#| msgid "&Window Decoration"
+msgid "Window Decorations"
+msgstr "&Woknowa dekoracija"
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr ""
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr ""
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr ""
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr ""
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr ""
+
+#: package/contents/ui/main.qml:57
+#, fuzzy, kde-format
+#| msgid "Buttons"
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "Tłóčatka"
+
+#: package/contents/ui/main.qml:93
+#, fuzzy, kde-format
+#| msgid "B&order size:"
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "Šěrokosć &kromy:"
+
+#: package/contents/ui/main.qml:112
+#, fuzzy, kde-format
+#| msgid "&Window Decoration"
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr "&Woknowa dekoracija"
+
+#: package/contents/ui/main.qml:141
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr ""
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr ""
+
+#: package/contents/ui/main.qml:165
+#, fuzzy, kde-format
+#| msgid "Buttons"
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "Tłóčatka"
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr ""
+
+#: utils.cpp:25
+#, fuzzy, kde-format
+#| msgid "B&order size:"
+msgid "No Borders"
+msgstr "Šěrokosć &kromy:"
+
+#: utils.cpp:26
+#, fuzzy, kde-format
+#| msgid "B&order size:"
+msgid "No Side Borders"
+msgstr "Šěrokosć &kromy:"
+
+#: utils.cpp:27
+#, fuzzy, kde-format
+#| msgid "Tiny"
+msgid "Tiny"
+msgstr "Mólicki"
+
+#: utils.cpp:28
+#, fuzzy, kde-format
+#| msgid "Normal"
+msgid "Normal"
+msgstr "Normalny"
+
+#: utils.cpp:29
+#, fuzzy, kde-format
+#| msgid "Large"
+msgid "Large"
+msgstr "Wulki"
+
+#: utils.cpp:30
+#, fuzzy, kde-format
+#| msgid "Very Large"
+msgid "Very Large"
+msgstr "Jara wulki"
+
+#: utils.cpp:31
+#, fuzzy, kde-format
+#| msgid "Huge"
+msgid "Huge"
+msgstr "Hoberski"
+
+#: utils.cpp:32
+#, fuzzy, kde-format
+#| msgid "Very Huge"
+msgid "Very Huge"
+msgstr "Jara hoberski"
+
+#: utils.cpp:33
+#, fuzzy, kde-format
+#| msgid "Oversized"
+msgid "Oversized"
+msgstr "Přewulki"
+
+#~ msgid "Menu"
+#~ msgstr "Meni"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below"
+#~ msgstr "Pod druhim dźeržeć"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above"
+#~ msgstr "Nad druhimi dźeržeć"
+
+#, fuzzy
+#~| msgid "&Window Decoration"
+#~ msgid "Download New Window Decorations"
+#~ msgstr "&Woknowa dekoracija"
+
+#, fuzzy
+#~| msgid "B&order size:"
+#~ msgid "Border si&ze:"
+#~ msgstr "Šěrokosć &kromy:"
+
+#, fuzzy
+#~| msgid "&Window Decoration"
+#~ msgid "Configure %1..."
+#~ msgstr "&Woknowa dekoracija"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgid "Form"
+#~ msgstr "Normalny"
+
+#, fuzzy
+#~| msgid "Buttons"
+#~ msgid "Button size:"
+#~ msgstr "Tłóčatka"
+
+#, fuzzy
+#~| msgid "Tiny"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "Mólicki"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "Normalny"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "Wulki"
+
+#, fuzzy
+#~| msgid "Very Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "Jara wulki"
+
+#, fuzzy
+#~| msgid "Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "Hoberski"
+
+#, fuzzy
+#~| msgid "Very Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "Jara hoberski"
+
+#, fuzzy
+#~| msgid "Oversized"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "Přewulki"
+
+#~ msgid "KDE"
+#~ msgstr "KDE"
+
+#~ msgid "%1 (unavailable)"
+#~ msgstr "%1 (njesteji k dispoziciji)"
+
+#~ msgid ""
+#~ "To add or remove titlebar buttons, simply <i>drag</i> items between the "
+#~ "available item list and the titlebar preview. Similarly, drag items "
+#~ "within the titlebar preview to re-position them."
+#~ msgstr ""
+#~ "Za dodawanje abo wotstronjenje tłóčatkow w titlowym pasu, prosće "
+#~ "<i>wlečće</i> objekty mjez lisćinu z móžnymi objektami a přehladku "
+#~ "titloweho pasa. Tohorunja móžeće objekty znutřka přehladki titloweho pasa "
+#~ "tam a sem suwać."
+
+#~ msgid "Resize"
+#~ msgstr "Wulkosć změnić"
+
+#~ msgid "Help"
+#~ msgstr "Pomoc"
+
+#~ msgid "--- spacer ---"
+#~ msgstr "-- wotstawk --"
+
+#~ msgid "B&order size:"
+#~ msgstr "Šěrokosć &kromy:"
+
+#~ msgid "Use this combobox to change the border size of the decoration."
+#~ msgstr "Wužiwajće tutón kašćik za změnu šěrokosće kromy woknow."
+
+#~ msgid "Decoration Options"
+#~ msgstr "Opcije za dekoraciju"
+
+#~ msgid ""
+#~ "Select the window decoration. This is the look and feel of both the "
+#~ "window borders and the window handle."
+#~ msgstr ""
+#~ "Wubjerće dekoraciju za wokna. To je napohlad a zadźerženje woknowych "
+#~ "kromow a ručicy."
+
+#~ msgid "Window Decoration Control Module"
+#~ msgstr "Kontrolny modul za woknowu dekoraciju"
+
+#~ msgid "(c) 2001 Karol Szwed"
+#~ msgstr "(c) 2001 Karol Szwed"
+
+#~ msgid "Karol Szwed"
+#~ msgstr "Karol Szwed"
+
+#~ msgid "Active Window"
+#~ msgstr "Aktiwne wokno"
+
+#~ msgid "Inactive Window"
+#~ msgstr "Njeaktiwne wokno"
+
+#~ msgid "kcmkwindecoration"
+#~ msgstr "kcmkwindecoration"
+
+#~ msgid ""
+#~ "No preview available.\n"
+#~ "Most probably there\n"
+#~ "was a problem loading the plugin."
+#~ msgstr ""
+#~ "Žana přehladka móžna.\n"
+#~ "Najskerje problem\n"
+#~ "při začitanju zašćěpki."
+
+#~ msgid "&Buttons"
+#~ msgstr "&Tłóčatka"
+
+#~ msgid "Ozone"
+#~ msgstr "Ozone"

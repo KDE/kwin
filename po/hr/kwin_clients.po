@@ -1,0 +1,832 @@
+# Translation of kwin_clients to Croatian
+#
+# Zarko Pintar <zarko.pintar@gmail.com>, 2009.
+# Marko Dimjasevic <marko@dimjasevic.net>, 2009, 2011.
+# DoDo <DoDoEntertainment@gmail.com>, 2009.
+# Andrej Dundović <adundovi@gmail.com>, 2009.
+# Andrej Dundovic <adundovi@gmail.com>, 2009, 2010.
+# Marko Dimjašević <marko@dimjasevic.net>, 2011.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2011-07-12 17:49+0200\n"
+"Last-Translator: Marko Dimjašević <marko@dimjasevic.net>\n"
+"Language-Team: Croatian <kde-croatia-list@lists.sourceforge.net>\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.2\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Environment: kde\n"
+"X-Accelerator-Marker: &\n"
+"X-Text-Markup: kde4\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Tiny"
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "Sićušan"
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "Normalan"
+
+#: aurorae/src/aurorae.cpp:727
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "Velik"
+
+#: aurorae/src/aurorae.cpp:728
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "Vrlo velik"
+
+#: aurorae/src/aurorae.cpp:729
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "Ogroman"
+
+#: aurorae/src/aurorae.cpp:730
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Very Huge"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "Vrlo ogroman"
+
+#: aurorae/src/aurorae.cpp:731
+#, fuzzy, kde-format
+#| msgctxt "@item:inlistbox Border size:"
+#| msgid "Oversized"
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "Prekomjeran"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr "Veličina gumba:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "Konfiguracijski dijalog"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "Por&avnavanje naslova"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "Lijevo"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "Sredina"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "Desno"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"Označite ovu opciju kako bi rub prozora bio obojan u boju naslovne trake. "
+"Inače će biti obojan u boju pozadine."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "U boji ruba prozora"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"Označite ovu opciju ako želite da se gumbi naglase kada se prijeđe preko "
+"njih mišem i ponovo izblijede kada se miš makne."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "Gumbi animacija"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "Označite ovu opciju ako želite da tekst naslovne trake ima 3D izgled sa "
+#~ "sjenom ispod. "
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "Koristi osjenčani &tekst"
+
+#~ msgid "Menu"
+#~ msgstr "Izbornik"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "Ne na svim radnim površinama"
+
+#~ msgid "On all desktops"
+#~ msgstr "Na svim radnim površinama"
+
+#~ msgid "Help"
+#~ msgstr "Pomoć"
+
+#~ msgid "Minimize"
+#~ msgstr "Spusti"
+
+#~ msgid "Restore"
+#~ msgstr "Vrati"
+
+#~ msgid "Maximize"
+#~ msgstr "Maksimiziraj"
+
+#~ msgid "Close"
+#~ msgstr "Zatvori"
+
+#~ msgid "Do not keep above others"
+#~ msgstr "Ne stavljaj iznad ostalih"
+
+#~ msgid "Keep above others"
+#~ msgstr "Drži iznad ostalih"
+
+#~ msgid "Do not keep below others"
+#~ msgstr "Ne drži ispod ostalih"
+
+#~ msgid "Keep below others"
+#~ msgstr "Drži ispod ostalih"
+
+#~ msgid "Unshade"
+#~ msgstr "Odsjenčaj"
+
+#~ msgid "Shade"
+#~ msgstr "Sjenčaj"
+
+#~ msgid "Resize"
+#~ msgstr "Promjena veličine"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>B II pregled</center></b>"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "Crtaj okvir prozora koristeći boje naslovne trake"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "Kada je označeno, rubovi prozora iscrtavati će se koristeći boje naslovne "
+#~ "trake; inače će se iscrtavati koristeći uobićajene boje ruba."
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "Crtaj oznaku za p&romjenu veličine"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "Kada je označeno, ukrasi će biti iscrtani sa \"oznakom uhvati\" u donjem "
+#~ "desnom kutu prozora; inače se neće iscratvati oznaka hvatanja."
+
+#~ msgid "Auto-move titlebar"
+#~ msgstr "Automatski pomiči naslovnu traku"
+
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr ""
+#~ "Kad je odabrano, naslovne su trake automatski relocirane na vidljive "
+#~ "pozicije; u suprotnom, moguće ih je samo ručno pomicati koristeći shift"
+#~ "+povlačenje."
+
+#~ msgid "Actions Settings"
+#~ msgstr "Postavke radnji"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "Dvostruki klik na gumb izbornika:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "Ništa nemoj raditi"
+
+#~ msgid "Minimize Window"
+#~ msgstr "Spusti prozor"
+
+#~ msgid "Shade Window"
+#~ msgstr "Zasjeni prozor"
+
+#~ msgid "Close Window"
+#~ msgstr "Zatvori prozor"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "Radnja može biti pridružena dvostrukom kliku gumba izbornika. Ostavite na "
+#~ "ništa ako se dvoumite."
+
+#~ msgid "Laptop"
+#~ msgstr "Laptop"
+
+#, fuzzy
+#~| msgid "Enable animations"
+#~ msgid "Title transitions"
+#~ msgstr "Omogući animacije"
+
+#~ msgid "Hide Advanced Configuration Options"
+#~ msgstr "Sakrij napredne opcije podešavanja"
+
+#~ msgid "Show Advanced Configuration Options"
+#~ msgstr "Prikaži napredne opcije podešavanja"
+
+#, fuzzy
+#~| msgid "Animate buttons"
+#~ msgid "Animations"
+#~ msgstr "Gumbi animacija"
+
+#~ msgctxt "outline window title"
+#~ msgid "Enabled"
+#~ msgstr "Omogućeno"
+
+#~ msgctxt "outline window title"
+#~ msgid "Disabled"
+#~ msgstr "Onemogućeno"
+
+#~ msgid "Remove selected exception?"
+#~ msgstr "Ukloniti odabranu iznimku?"
+
+#~ msgid "Regular Expression syntax is incorrect"
+#~ msgstr "Sintaksa regularnog izraza nije ispravna"
+
+#~ msgid "Exception Type"
+#~ msgstr "Tip iznimke"
+
+#~ msgid "Regular Expression"
+#~ msgstr "Regularni izraz"
+
+#~ msgid "Enable/disable this exception"
+#~ msgstr "Omogući/onemogući ovu iznimku"
+
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "Demonstracija sjene u Oxygenu"
+
+#~ msgid "Oxygen decoration shadows demonstration"
+#~ msgstr "Demonstracija dekoracijskih sjena u Oxygenu"
+
+#~ msgid "(c) 2011, Hugo Pereira Da Costa"
+#~ msgstr "© 2011. Hugo Pereira Da Costa"
+
+#~ msgid "Hugo Pereira Da Costa"
+#~ msgstr "Hugo Pereira Da Costa"
+
+#~ msgid "Save"
+#~ msgstr "Spremi"
+
+#~ msgid "Save shadows as pixmaps in provided directory"
+#~ msgstr "Spremi sjene kao mape piksela u danom direktoriju"
+
+#~ msgid "Draw window background"
+#~ msgstr "Crtaj pozadinu prozora"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "Drži iznad ostalih"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "Drži ispod ostalih"
+
+#~ msgid "On All Desktops"
+#~ msgstr "Na svim radnim površinama"
+
+#~ msgid "Shade Button"
+#~ msgstr "Gumb za sjenčanje"
+
+#~ msgid "Center (Full Width)"
+#~ msgstr "Sredina (puna širina)"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "Mali"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "Bez ruba"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Border"
+#~ msgstr "Bez bočnog ruba"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Normal"
+#~ msgstr "Normalan"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "Velik"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "Vrlo velik"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "Ogroman"
+
+#~ msgid "Solid Color"
+#~ msgstr "Čvrsta boja"
+
+#~ msgid "Radial Gradient"
+#~ msgstr "Radijalni gradijent"
+
+#~ msgid "Follow Style Hint"
+#~ msgstr "Slijedi stilni savjet"
+
+#~ msgid "Always Hide Extra Size Grip"
+#~ msgstr "Uvijek sakrij dodatan držač za promjenu veličine"
+
+#~ msgid "Show Extra Size Grip When Needed"
+#~ msgstr "Prikaži dodatan držač za promjenu veličine kad je potrebno"
+
+#~ msgid "Window Title"
+#~ msgstr "Naslov prozora"
+
+#~ msgid "Window Class Name"
+#~ msgstr "Ime klase prozora"
+
+#~ msgid "Plastik"
+#~ msgstr "Plastik"
+
+#~ msgid "All Desktops"
+#~ msgstr "Sve radne površine."
+
+#~ msgid "Above"
+#~ msgstr "Iznad"
+
+#~ msgid "Below"
+#~ msgstr "Ispod"
+
+#~ msgid "Close Item"
+#~ msgstr "Zatvori stavku"
+
+#~ msgid "Tabstrip"
+#~ msgstr "Kartični prikaz"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Žarko Pintar, Marko Dimjašević, Andrej Dundović"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "zarko.pintar@gmail.com, marko@dimjasevic.net, adundovi@gmail.com"
+
+#~ msgid "General"
+#~ msgstr "Opće"
+
+#~ msgid "Border size:"
+#~ msgstr "Veličina ruba:"
+
+#~ msgid "Title alignment:"
+#~ msgstr "Poravnanje naslova:"
+
+#~ msgid "Enable animations"
+#~ msgstr "Omogući animacije"
+
+#~ msgid "Fine Tuning"
+#~ msgstr "Fino usklađivanje"
+
+#~ msgid "Background style: "
+#~ msgstr "Stil pozadine:"
+
+#~ msgid "Outline active window title"
+#~ msgstr "Iscrtaj naslov aktivnog prozora"
+
+#~ msgid "Use narrow space between decoration buttons"
+#~ msgstr "Koristi uski prostor između dekoracijskih gumbiju"
+
+#~ msgid "Extra size grip display: "
+#~ msgstr "Prikaži dodatan držač za promjenu veličine: "
+
+#~ msgid "Never Draw Separator"
+#~ msgstr "Nikad ne crtaj razdjelnik"
+
+#~ msgid "Draw Separator When Window is Active"
+#~ msgstr "Crtaj razdjelnik kada je prozor aktivan"
+
+#~ msgid "Always Draw Separator"
+#~ msgstr "Uvijek crtaj razdjelnik"
+
+#~ msgid "Separator display:"
+#~ msgstr "Prikaz razdjelnika:"
+
+#~ msgid "Shadows"
+#~ msgstr "Sjene"
+
+#~ msgid "Window Drop-Down Shadow"
+#~ msgstr "Sjena koju baca prozor"
+
+#~ msgid "Active Window Glow"
+#~ msgstr "Sjaj aktivnog prozora"
+
+#~ msgid "Window-Specific Overrides"
+#~ msgstr "Premosnice za određeni prozor"
+
+#~ msgid "Information about Selected Window"
+#~ msgstr "Informacije o odabranom prozoru"
+
+#~ msgid "Class: "
+#~ msgstr "Klasa:"
+
+#~ msgid "Title: "
+#~ msgstr "Naslov:"
+
+#~ msgid "Window Property Selection"
+#~ msgstr "Odabiranje svojstava prozora"
+
+#~ msgid "Use window class (whole application)"
+#~ msgstr "Koristi klasu prozora (za cijelu aplikaciju)"
+
+#~ msgid "Use window title"
+#~ msgstr "Koristi naslov prozora"
+
+#~ msgid "Window Identification"
+#~ msgstr "Identifikacija prozora"
+
+#~ msgid "Matching window property: "
+#~ msgstr "Odgovarajuće svojstvo prozora:"
+
+#~ msgid "Regular expression to match: "
+#~ msgstr "Regularni izraz: "
+
+#~ msgid "Detect Window Properties"
+#~ msgstr "Otkrij svojstva prozora"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Dekorativne opcije"
+
+#~ msgid "Extra size grip display:"
+#~ msgstr "Prikaži dodatan držač za promjenu veličine:"
+
+#~ msgid "Outline active window title:"
+#~ msgstr "Iscrtaj naslov aktivnog prozora:"
+
+#~ msgid "Background style:"
+#~ msgstr "Stil pozadine:"
+
+#~ msgid "Hide window title bar"
+#~ msgstr "Sakrij naslovnu traku prozora"
+
+#~ msgid "Move Up"
+#~ msgstr "Premjesti gore"
+
+#~ msgid "Move Down"
+#~ msgstr "Premjesti dolje"
+
+#~ msgid "Add"
+#~ msgstr "Dodaj"
+
+#~ msgid "Remove"
+#~ msgstr "Ukloni"
+
+#~ msgid "Edit"
+#~ msgstr "Uredi"
+
+#~ msgid "Inner Color:"
+#~ msgstr "Unutarnja boja:"
+
+#~ msgid "Outer Color:"
+#~ msgstr "Vanjska boja:"
+
+#~ msgid "Vertical Offset:"
+#~ msgstr "Vertikalni pomak:"
+
+#~ msgid "Size: "
+#~ msgstr "Veličina: "
+
+#~ msgid "Inactive Windows"
+#~ msgstr "Neaktivni prozori"
+
+#~ msgid "Active Windows"
+#~ msgstr "Aktivni prozori"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "Označite ovu opciju ako želite da se prozori zatvore kada dvaput kliknete "
+#~ "na gumb izbornika, slično kao u Microsoft Windows-ima."
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "Zatvori prozore sa duplim klikom gumba izbornika"
+
+#~ msgid "&Left"
+#~ msgstr "&Lijevo"
+
+#~ msgid "&Center"
+#~ msgstr "Sre&dina"
+
+#~ msgid "&Right"
+#~ msgstr "&Desno"
+
+#~ msgid "Display window icons"
+#~ msgstr "Prikaži ikone prozora"
+
+#, fuzzy
+#~| msgid "Outer Color:"
+#~ msgid "O&utline Color:"
+#~ msgstr "Vanjska boja:"
+
+#~ msgid "Enable title transition animations"
+#~ msgstr "Omogući prijelazne animacije naslova"
+
+#~ msgid "Disabled"
+#~ msgstr "Onemogućeno"
+
+#~ msgid "Variable"
+#~ msgstr "Varijabla"
+
+#~ msgid "Maximum"
+#~ msgstr "Maksimum"
+
+#~ msgid "Enable window grouping"
+#~ msgstr "Omogući grupiranje prozora"
+
+#~ msgid "Shadow caching:"
+#~ msgstr "Spremanje sjene u privremenu memoriju:"
+
+#~ msgid "TextLabel"
+#~ msgstr "TekstualniNatpis"
+
+#~ msgid "Use Oxygen Shadows"
+#~ msgstr "Koristi sjene Oxygena"
+
+#~ msgid "Use Desktop Effects Shadows"
+#~ msgstr "Koristi sjene efekata radne površine"
+
+#~ msgid "Do Not Draw Shadows"
+#~ msgstr "Ne crtaj sjene"
+
+#~ msgid "Shadow style:"
+#~ msgstr "Stil sjene:"
+
+#~ msgctxt "draw separator"
+#~ msgid "Enabled"
+#~ msgstr "Omogućeno"
+
+#~ msgctxt "draw separator"
+#~ msgid "Disabled"
+#~ msgstr "Onemogućeno"
+
+#~ msgid "Draw separator between title bar and window contents: "
+#~ msgstr "Crtaj razdjelnik između naslovne trake i sadržaja prozora: "
+
+#~ msgid "Draw Separator between title bar and active window contents "
+#~ msgstr "Crtaj razdjelnik između naslovne trake i sadržaja aktivnog prozora "
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "Instaliraj KWM temu"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "Putanja do konfiguracijske datoteke teme"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWMTheme</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "Ljepljiv"
+
+#~ msgid "Unsticky"
+#~ msgstr "Ne-ljepljiv"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>Keramik pregled</b></center>"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "Crtaj &točkasti efekt naslovne trake"
+
+#~ msgid ""
+#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
+#~ "otherwise, they are drawn without the stipple."
+#~ msgstr ""
+#~ "Kada je označeno, aktivne naslovne trake su iscrtane sa točkastim "
+#~ "efektom; inače se iscrtavaju bez tog efekta."
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "Crtaj &uhvatnu traku ispod prozora"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
+#~ "otherwise, no grab bar is drawn."
+#~ msgstr ""
+#~ "Kada je označeno, ukrasi su iscrtani sa \"uhvatnom trakom\" ispod "
+#~ "prozora; inače se ne iscrtava uhvatna traka."
+
+#~ msgid "Draw &gradients"
+#~ msgstr "Crtaj &nijansiranje"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with gradients for high-color "
+#~ "displays; otherwise, no gradients are drawn."
+#~ msgstr ""
+#~ "Kada je označeno, ukrasi su iscrtani sa nijansiranjem za high-color "
+#~ "ekrane; inače se nijansiranje ne iscrtava."
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"
+
+#~ msgid ""
+#~ "When selected, the window decoration borders are drawn using the titlebar "
+#~ "colors; otherwise, they are drawn using normal border colors instead."
+#~ msgstr ""
+#~ "Kada je označeno, ukrasi rubova prozora su iscrtan koristeći boje "
+#~ "naslovne trake; inače su iscrtani koristeći uobičajene boje ruba."
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "Quartz &ekstra vitko"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "Quartz prozorski ukras sa ekstra malom naslovnom trakom."
+
+#~ msgid "Quartz"
+#~ msgstr "Quartz"
+
+#~ msgid "Redmond"
+#~ msgstr "Redmond"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "&Pokaži držač za promjenu veličine prozora"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "Kada je označeno, svi prozori su iscrtani sa držačem promjene veličine u "
+#~ "donjem desnom kutu. Ovo olakšava promjenu veličine prozora, posebno za "
+#~ "trackball-ove i druge nadomjestke mišu na prijenosnim računalima. "
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr "Ovdje možete promjeniti veličinu oznake za promjenu veličine."
+
+#~ msgid "Small"
+#~ msgstr "Malo"
+
+#~ msgid "Medium"
+#~ msgstr "Srednje"
+
+#~ msgid "Large"
+#~ msgstr "Veliko"
+
+#~ msgid "Modern System"
+#~ msgstr "Modern System"
+
+#~ msgid "Web"
+#~ msgstr "Mreža"
+
+#~ msgid "Keramik"
+#~ msgstr "Keramik"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "Pokaži  prozorsku &ikonu  u naslovnom mjehuriću"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "Označite ovu opciju ako želite prozorsku ikonu vidjeti u naslovnom "
+#~ "mjehuriću odmah do teksta naslovne trake"
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "Crtaj &male naslovne mjehuriće na aktivnim prozorima"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "Označite ovu opciju ako želite da naslovni mjehurić ima istu veličinu na "
+#~ "aktivnim prozorima kao i na neaktivnima. Ova je opcija korisna na "
+#~ "prijenosnim računalima ili na ekranima niske rezolucije gdje želite "
+#~ "maksimalno iskoristiti prostor namjenjen sadržaju prozora."
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "Crtaj &uhvatne trake ispod prozora"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "Kliknite na ovu opciju ako želite da se iscrtava uhvatna traka ispod "
+#~ "prozora. Kada ova opcija nije označena, samo će tanki rub biti iscrtan na "
+#~ "tom mjestu."
+
+#~ msgid "Aurorae Theme Engine"
+#~ msgstr "Aurorae mehanizam tema"
+
+#~ msgid "Drag or Type Theme URL"
+#~ msgstr "Povucite ili upišite URL adresu teme"
+
+#~ msgid "Unable to find the theme archive %1."
+#~ msgstr "Ne mogu pronaći arhivu teme %1"
+
+#~ msgid ""
+#~ "Unable to download theme archive;\n"
+#~ "please check that address %1 is correct."
+#~ msgstr ""
+#~ "Ne mogu preuzeti arhivu teme;\n"
+#~ "molim vas da provjerite da li je adresa %1 u redu."
+
+#~ msgid "Theme:"
+#~ msgstr "Tema:"
+
+#~ msgid "Get New Themes..."
+#~ msgstr "Dohvati nove teme …"
+
+#~ msgid "Install New Theme..."
+#~ msgstr "Instaliraj novu temu …"
+
+#~ msgid "Glow active window"
+#~ msgstr "Sjaj aktivni prozor:"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgid "Form"
+#~ msgstr "Normalno"
+
+#~ msgid ""
+#~ "If checked, specified frame border is used in place of default value."
+#~ msgstr ""
+#~ "Ako je označeno, navedeni rub okvira se koristi umjesto pretpostavljene "
+#~ "vrijednosti."
+
+#~ msgid ""
+#~ "If checked, specified blending color is used in title bar in place of "
+#~ "default value."
+#~ msgstr ""
+#~ "Ako je označeno, navedena miješajuća boja se koristi u naslovnoj traci "
+#~ "umjesto pretpostavljene vrijednosti."
+
+#~ msgid ""
+#~ "When enabled, this option makes an horizontal separator appear between "
+#~ "the window title bar and the window contents."
+#~ msgstr ""
+#~ "Kada je omogućeno, ova opcija prikazuje horizontalni razdjelnik između "
+#~ "naslovne trake prozora i sadržaja prozora."
+
+#~ msgid "Ozone"
+#~ msgstr "Ozone"
+
+#~ msgid ""
+#~ "When enabled, this option makes the window title bar use the same colors "
+#~ "as the window contents, instead of using the system title bar colors."
+#~ msgstr ""
+#~ "Kada je omogućena, naslovna traka prozora koristi iste boje kao i sadržaj "
+#~ "prozora, inače se koriste sistemske boje za naslovnu traku. "
+
+#~ msgid "Blend title bar colors with window contents"
+#~ msgstr "Izmješaj boje naslovne trake sa sadržajem prozora"
+
+#~ msgid ""
+#~ "When enabled, this option increases the visibility of the window titlebar "
+#~ "by showing stripes"
+#~ msgstr ""
+#~ "Kada je omogućena, ova opcija povećava vidljivost naslovne trake prozora "
+#~ "prikazujući pruge "
+
+#~ msgid "Show stripes next to the title"
+#~ msgstr "Pokaži pruge odmah do naslova"

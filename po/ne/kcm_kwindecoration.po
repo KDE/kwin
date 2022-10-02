@@ -1,0 +1,499 @@
+# translation of kcmkwindecoration.po to Nepali
+# Nabin Gautam <nabin@mpp.org.np>, 2006, 2007.
+# Mahesh Subedi <submanesh@gmail.com>, 2007.
+# shyam krishna bal <shyamkrishna_bal@yahoo.com>, 2007.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwindecoration\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2007-08-19 16:35+0545\n"
+"Last-Translator: Nabin Gautam <nabin@mpp.org.np>\n"
+"Language-Team: Nepali <info@mpp.org.np>\n"
+"Language: ne\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n !=1\n"
+"\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Nabin Gautam, श्यामकृष्ण बल"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "nabin@mpp.org.np,shyamkrishna_bal@yahoo.com"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, kde-format
+msgid "Application menu"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, fuzzy, kde-format
+#| msgid "On All Desktops"
+msgid "On all desktops"
+msgstr "सबै डेस्कटपमा"
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr "सानो पार्नुहोस्"
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr "ठूलो पार्नुहोस्"
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr "बन्द गर्नुहोस्"
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr "छायाँ"
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr ""
+
+#: kcm.cpp:49
+#, fuzzy, kde-format
+#| msgid "&Window Decoration"
+msgid "Window Decorations"
+msgstr "सञ्झ्याल सजावट"
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr ""
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr ""
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr ""
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr ""
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr ""
+
+#: package/contents/ui/main.qml:57
+#, fuzzy, kde-format
+#| msgid "Buttons"
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "बटन"
+
+#: package/contents/ui/main.qml:93
+#, fuzzy, kde-format
+#| msgid "B&order size:"
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "किनारा साइज:"
+
+#: package/contents/ui/main.qml:112
+#, fuzzy, kde-format
+#| msgid "&Window Decoration"
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr "सञ्झ्याल सजावट"
+
+#: package/contents/ui/main.qml:141
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr ""
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr ""
+
+#: package/contents/ui/main.qml:165
+#, fuzzy, kde-format
+#| msgid "&Show window button tooltips"
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "सञ्झ्याल बटन उपकरणटिप देखाउनुहोस्"
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr ""
+
+#: utils.cpp:25
+#, fuzzy, kde-format
+#| msgid "B&order size:"
+msgid "No Borders"
+msgstr "किनारा साइज:"
+
+#: utils.cpp:26
+#, fuzzy, kde-format
+#| msgid "B&order size:"
+msgid "No Side Borders"
+msgstr "किनारा साइज:"
+
+#: utils.cpp:27
+#, fuzzy, kde-format
+#| msgid "Tiny"
+msgid "Tiny"
+msgstr "सूक्ष्म"
+
+#: utils.cpp:28
+#, fuzzy, kde-format
+#| msgid "Normal"
+msgid "Normal"
+msgstr "सामान्य"
+
+#: utils.cpp:29
+#, fuzzy, kde-format
+#| msgid "Large"
+msgid "Large"
+msgstr "ठूलो"
+
+#: utils.cpp:30
+#, fuzzy, kde-format
+#| msgid "Very Large"
+msgid "Very Large"
+msgstr "ज्यादै ठूलो"
+
+#: utils.cpp:31
+#, fuzzy, kde-format
+#| msgid "Huge"
+msgid "Huge"
+msgstr "विशाल"
+
+#: utils.cpp:32
+#, fuzzy, kde-format
+#| msgid "Very Huge"
+msgid "Very Huge"
+msgstr "ज्यादै विशाल"
+
+#: utils.cpp:33
+#, fuzzy, kde-format
+#| msgid "Oversized"
+msgid "Oversized"
+msgstr "ओभरसाइज गरिएको"
+
+#~ msgid "Menu"
+#~ msgstr "मेनु"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below"
+#~ msgstr "अन्यको तल राख्नुहोस्"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above"
+#~ msgstr "अन्यको माथि राख्नुहोस्"
+
+#, fuzzy
+#~| msgid "&Window Decoration"
+#~ msgid "Download New Window Decorations"
+#~ msgstr "सञ्झ्याल सजावट"
+
+#, fuzzy
+#~| msgid "B&order size:"
+#~ msgid "Border si&ze:"
+#~ msgstr "किनारा साइज:"
+
+#, fuzzy
+#~| msgid "&Window Decoration"
+#~ msgid "Configure %1..."
+#~ msgstr "सञ्झ्याल सजावट"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgid "Form"
+#~ msgstr "सामान्य"
+
+#, fuzzy
+#~| msgid "Buttons"
+#~ msgid "Button size:"
+#~ msgstr "बटन"
+
+#, fuzzy
+#~| msgid "Tiny"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "सूक्ष्म"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "सामान्य"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "ठूलो"
+
+#, fuzzy
+#~| msgid "Very Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "ज्यादै ठूलो"
+
+#, fuzzy
+#~| msgid "Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "विशाल"
+
+#, fuzzy
+#~| msgid "Very Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "ज्यादै विशाल"
+
+#, fuzzy
+#~| msgid "Oversized"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "ओभरसाइज गरिएको"
+
+#~ msgid "KDE"
+#~ msgstr "केडीई"
+
+#~ msgid "%1 (unavailable)"
+#~ msgstr "%1 (उपलब्ध छैन)"
+
+#~ msgid ""
+#~ "To add or remove titlebar buttons, simply <i>drag</i> items between the "
+#~ "available item list and the titlebar preview. Similarly, drag items "
+#~ "within the titlebar preview to re-position them."
+#~ msgstr ""
+#~ "शीर्षकपट्टी बटन थप्न वा हटाउन, केवल उपलब्ध वस्तु सूची र शीर्षकपट्टी पूर्वावलोकन बीचमा "
+#~ "वस्तु <i>तान्नुहोस्</i> । त्यस्तैगरि, तीनलाई यथास्थितिमा ल्याउन शीर्षकपट्टी "
+#~ "पूर्वावलोकनमा वस्तु तान्नुहोस् ।"
+
+#~ msgid "Resize"
+#~ msgstr "रिसाइज गर्नुहोस्"
+
+#~ msgid "Help"
+#~ msgstr "मद्दत"
+
+#~ msgid "--- spacer ---"
+#~ msgstr "--- स्पेसर ---"
+
+#~ msgid ""
+#~ "Enabling this checkbox will show window button tooltips. If this checkbox "
+#~ "is off, no window button tooltips will be shown."
+#~ msgstr ""
+#~ "यो जाँच बाकस सक्षम पार्दा सञ्झ्याल बटन उपकरणटिप देखाउने छ । यो जाँच बाकस बन्द "
+#~ "गर्दा, सञ्झ्याल उपकरणटिप देखिनेछैन ।"
+
+#, fuzzy
+#~| msgid ""
+#~| "The appropriate settings can be found in the \"Buttons\" Tab; please "
+#~| "note that this option is not available on all styles yet."
+#~ msgid "Please note that this option is not available on all styles yet."
+#~ msgstr ""
+#~ "\"बटन\" ट्याबमा उपयुक्त सेटिङ फेला पार्न सकिन्छ; कृपया सबै शैलीहरूमा यो विकल्प उपलब्ध "
+#~ "हुनेछैन ।"
+
+#~ msgid "Use custom titlebar button &positions"
+#~ msgstr "अनुकूल शीर्षकपट्टी बटन स्थिति प्रयोग गर्नुहोस्"
+
+#~ msgid "B&order size:"
+#~ msgstr "किनारा साइज:"
+
+#~ msgid "Use this combobox to change the border size of the decoration."
+#~ msgstr "सजावटको किनारा साइज परिवर्तन गर्न यो कम्बो बाकस प्रयोग गर्नुहोस् ।"
+
+#~ msgid "Decoration Options"
+#~ msgstr "सजावट विकल्प"
+
+#~ msgid ""
+#~ "Select the window decoration. This is the look and feel of both the "
+#~ "window borders and the window handle."
+#~ msgstr ""
+#~ "सञ्झ्याल सजावट चयन गर्नुहोस् । यो सञ्झ्याल किनारा र सञ्झ्याल ह्यान्डल दुवैको हेर्नु र "
+#~ "अनुभव गर्नुहो ।"
+
+#~ msgid "Window Decoration Control Module"
+#~ msgstr "सञ्झ्याल सजावट नियन्त्रण मोड्युल"
+
+#~ msgid "(c) 2001 Karol Szwed"
+#~ msgstr "(सी) २००१ कारोल स्विइड"
+
+#~ msgid "Karol Szwed"
+#~ msgstr "कारोल स्विइड"
+
+#, fuzzy
+#~| msgid ""
+#~| "<h1>Window Manager Decoration</h1><p>This module allows you to choose "
+#~| "the window border decorations, as well as titlebar button positions and "
+#~| "custom decoration options.</p>To choose a theme for your window "
+#~| "decoration click on its name and apply your choice by clicking the "
+#~| "\"Apply\" button below. If you do not want to apply your choice you can "
+#~| "click the \"Reset\" button to discard your changes.<p>You can configure "
+#~| "each theme in the \"Configure [...]\" tab. There are different options "
+#~| "specific for each theme.</p><p>In \"General Options (if available)\" you "
+#~| "can activate the \"Buttons\" tab by checking the \"Use custom titlebar "
+#~| "button positions\" box. In the \"Buttons\" tab you can change the "
+#~| "positions of the buttons to your liking.</p>"
+#~ msgid ""
+#~ "<h1>Window Manager Decoration</h1><p>This module allows you to choose the "
+#~ "window border decorations, as well as titlebar button positions and "
+#~ "custom decoration options.</p>To choose a theme for your window "
+#~ "decoration click on its name and apply your choice by clicking the \"Apply"
+#~ "\" button below. If you do not want to apply your choice you can click "
+#~ "the \"Reset\" button to discard your changes.<p>You can configure each "
+#~ "theme. There are different options specific for each theme.</p><p>On the "
+#~ "\"Buttons\" tab check the \"Use custom titlebar button positions\" box "
+#~ "and you can change the positions of the buttons to your liking.</p>"
+#~ msgstr ""
+#~ "<h1>सञ्झ्याल प्रबन्धक सजावट</h1><p>यो मोड्युलले तपाईँलाई सञ्झ्याल किनारा सजावट, "
+#~ "साथसाथै शीर्षकपट्टी बटन स्थिति र अनुकूल विकल्प स्थिति रोज्न अनुमति दिन्छ ।</p>तपाईँको "
+#~ "सञ्झ्याल सजावटका लागि विषयवस्तु रोज्न यसको नाममा क्लिक गर्नुहोस् र तलको \"लागू "
+#~ "गर्नुहोस्\" बटन क्लिक गर्नुहोस् । तपाईँ रोजाइ लागू गर्न चाहनुहुन्न भने तपाईँका परिवर्तन "
+#~ "छोड्न \"रिसेट\" बटन क्लिक गर्नुहोस् ।<p>तपाईँले प्रत्येक विषयवस्तु \"Configure [...]\" "
+#~ "ट्याबमा कन्फिगर गर्न सक्नुहुन्छ । त्यहाँ प्रत्यक विषुवस्तुका लागि निर्दिष्ट गरिएका विभिन्न "
+#~ "विकल्प छन् ।</p><p> \"सामान्य विकल्प (उपलब्ध भएमा)\" मा तपाईँले \"अनुकूल शीर्षकपट्टी "
+#~ "बटन स्थिति प्रयोग \" बाकस जाँच गरेर \"बटन\" ट्याब सक्रिय पार्न सक्नुहुन्छ ।\"बटन\" "
+#~ "ट्याबले तपाईँको लिङ्कमा बटनको स्थिति परिवर्तन गर्न सक्नुहुन्छ ।</p>"
+
+#~ msgid "Active Window"
+#~ msgstr "सक्रिय सञ्झ्याल"
+
+#~ msgid "Inactive Window"
+#~ msgstr "निस्क्रिय सञ्झ्याल"
+
+#~ msgid "kcmkwindecoration"
+#~ msgstr "kcmkwindecoration"
+
+#~ msgid ""
+#~ "No preview available.\n"
+#~ "Most probably there\n"
+#~ "was a problem loading the plugin."
+#~ msgstr ""
+#~ "पूर्वावलोकन उपलब्ध छैन ।\n"
+#~ "प्लगइन लोड गर्दा \n"
+#~ "सम्भवत: त्यहाँ समस्या भएको हुनुपर्छ ।"
+
+#~ msgid "&Buttons"
+#~ msgstr "बटन"
+
+#~ msgid "KDE 2"
+#~ msgstr "केडीई २"

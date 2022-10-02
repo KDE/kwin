@@ -1,0 +1,863 @@
+# translation of kwin_clients.po to Dutch
+# Copyright (C) 2004, 2005, 2007, 2008, 2010 Free Software Foundation, Inc.
+#
+# Rinse de Vries <rinsedevries@kde.nl>, 2004, 2005, 2007, 2008.
+# Bram Schoenmakers <bramschoenmakers@kde.nl>, 2004, 2007, 2010.
+# Kristof Bal <kristof.bal@gmail.com>, 2008.
+# Freek de Kruijf <freekdekruijf@kde.nl>, 2010, 2011, 2012, 2013, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2015-01-15 13:23+0100\n"
+"Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
+"Language-Team: Dutch <kde-i18n-nl@kde.org>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.5\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "Heel klein"
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "Normaal"
+
+#: aurorae/src/aurorae.cpp:727
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "Groot"
+
+#: aurorae/src/aurorae.cpp:728
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "Erg groot"
+
+#: aurorae/src/aurorae.cpp:729
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "Enorm"
+
+#: aurorae/src/aurorae.cpp:730
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "Extra enorm"
+
+#: aurorae/src/aurorae.cpp:731
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "Veel te groot"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr "Knopgrootte:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "Instellingen"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "Titeluitlij&ning"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "Links"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "Midden"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "Rechts"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"Selecteer deze optie om de vensterranden in te kleuren met dezelfde kleuren "
+"als de titelbalk. Anders worden de vensterranden met de achtergrondkleur "
+"ingekleurd."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "Gekleurde vensterrand"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"Selecteer deze optie als u wilt dat knoppen bewegen wanneer u er met de "
+"muisaanwijzer overheen gaat."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "Bewegende knoppen"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "Selecteer deze optie als u wilt dat de tekst in de titelbalk wordt "
+#~ "weergegeven met een schaduw erachter."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "&Tekstschaduw gebruiken"
+
+#~ msgid "Button mouseover transition"
+#~ msgstr "Muis-over-overgang van knop"
+
+#~ msgid "Configure window buttons' mouseover highlight animation"
+#~ msgstr "Geanimeerde accentuering van muis-over van knoppen configureren"
+
+#~ msgid "Title transitions"
+#~ msgstr "Titelovergangen"
+
+#~ msgid "Configure fading transitions when window title is changed"
+#~ msgstr "Vervagende overgangen als de venstertitel zich wijzigt configureren"
+
+#~ msgid "Window active state change transitions"
+#~ msgstr "Overgangen van actieve statuswijzigingen van venster"
+
+#~ msgid ""
+#~ "Configure fading between window shadow and glow when window's active "
+#~ "state is changed"
+#~ msgstr ""
+#~ "Vervaging tussen vensterschaduw en verhelderen, wanneer de actieve status "
+#~ "van een venster zich wijzigt, configureren"
+
+#~ msgid "Window grouping animations"
+#~ msgstr "Animaties van venstergroepering"
+
+#~ msgid ""
+#~ "Configure window titlebar animations when windows are grouped/ungrouped"
+#~ msgstr ""
+#~ "Animaties van titelbalk van vensters configureren wanneer vensters worden "
+#~ "gegroepeerd of groepering ongedaan wordt gemaakt"
+
+#~ msgid "Hide Advanced Configuration Options"
+#~ msgstr "Geavanceerde configuratieopties verbergen"
+
+#~ msgid "Show Advanced Configuration Options"
+#~ msgstr "Geavanceerde configuratieopties tonen"
+
+#~ msgid "Animations"
+#~ msgstr "Animaties"
+
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "Vraag - Oxygen-instellingen"
+
+#~ msgid "Remove selected exception?"
+#~ msgstr "Geselecteerde exceptie verwijderen?"
+
+#~ msgid "Warning - Oxygen Settings"
+#~ msgstr "Waarschuwing - Oxygen-instellingen"
+
+#~ msgid "Regular Expression syntax is incorrect"
+#~ msgstr "Syntax van reguliere expressie is onjuist"
+
+#~ msgid "Exception Type"
+#~ msgstr "Type exceptie"
+
+#~ msgid "Regular Expression"
+#~ msgstr "Reguliere expressie"
+
+#~ msgid "Window Title"
+#~ msgstr "Venstertitel"
+
+#~ msgid "Window Class Name"
+#~ msgstr "Naam vensterklasse"
+
+#~ msgid "Enable/disable this exception"
+#~ msgstr "Deze exceptie in-/uitschakelen"
+
+#~ msgid "General"
+#~ msgstr "Algemeen"
+
+#~ msgid "Border si&ze:"
+#~ msgstr "Rand&grootte:"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "Geen rand"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Borders"
+#~ msgstr "Geen zijranden"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Normal"
+#~ msgstr "Normaal"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "Groot"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "Erg groot"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "Enorm"
+
+#~ msgid "Tit&le alignment:"
+#~ msgstr "Tite&luitlijning:"
+
+#~ msgid "Center (Full Width)"
+#~ msgstr "Centreren (volledige breedte)"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "Klein"
+
+#~ msgid "Enable animations"
+#~ msgstr "Animaties activeren"
+
+#~ msgid "Fine Tuning"
+#~ msgstr "Fijnafstemming"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "Vensters sluiten door te dubbelklikken op de menuknop"
+
+#~ msgid "Never Draw Separator"
+#~ msgstr "Geen scheiding weergeven"
+
+#~ msgid "Draw Separator When Window is Active"
+#~ msgstr "Scheiding weergeven als venster actief is"
+
+#~ msgid "Always Draw Separator"
+#~ msgstr "Scheiding altijd weergeven"
+
+#~ msgid "Separator disp&lay:"
+#~ msgstr "Weer&gave van scheiding:"
+
+#~ msgid "Outline active window title"
+#~ msgstr "Omranding van titel van actief venster"
+
+#~ msgid "Use narrow space between decoration buttons"
+#~ msgstr "Een nauwe ruimte tussen decoratieknoppen gebruiken"
+
+#~ msgid "Add handle to resize windows with no border"
+#~ msgstr ""
+#~ "Voeg handvat toe om vensters zonder rand van grootte te laten wijzigen"
+
+#~ msgid "Display window borders for maximized windows"
+#~ msgstr "Vensterranden van gemaximaliseerde vensters tonen"
+
+#~ msgid "Shadows"
+#~ msgstr "Verduistering"
+
+#~ msgid "Window Drop-Down Shadow"
+#~ msgstr "Afrol-schaduw van venster"
+
+#~ msgid "Active Window Glow"
+#~ msgstr "Opgloeien van actieve venster"
+
+#~ msgid "Window-Specific Overrides"
+#~ msgstr "Vensterspecifieke zaken die voorgaan"
+
+#~ msgid "Dialog"
+#~ msgstr "Dialoog"
+
+#~ msgid "Information about Selected Window"
+#~ msgstr "Informatie over geselecteerd venster"
+
+#~ msgid "Class: "
+#~ msgstr "Klasse: "
+
+#~ msgid "Title: "
+#~ msgstr "Titel: "
+
+#~ msgid "Window Property Selection"
+#~ msgstr "Selectie van venstereigenschappen"
+
+#~ msgid "Use window class (whole application)"
+#~ msgstr "Vensterklasse gebruiken (gehele programma)"
+
+#~ msgid "Use window title"
+#~ msgstr "Venstertitel gebruiken"
+
+#~ msgid "Window Identification"
+#~ msgstr "Vensteridentificatie"
+
+#~ msgid "Matching window property: "
+#~ msgstr "Overeenkomende venstereigenschap: "
+
+#~ msgid "Regular expression to match: "
+#~ msgstr "Regulier expressie waarmee overeengekomen moet worden"
+
+#~ msgid "Detect Window Properties"
+#~ msgstr "Venstereigenschappen detecteren"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Decoratieopties"
+
+#~ msgctxt "outline window title"
+#~ msgid "Disabled"
+#~ msgstr "Uitgeschakeld"
+
+#~ msgctxt "outline window title"
+#~ msgid "Enabled"
+#~ msgstr "Ingeschakeld"
+
+#~ msgid "Border size:"
+#~ msgstr "Randgrootte:"
+
+#~ msgid "Outline active window title:"
+#~ msgstr "Omranding van titel van actief venster:"
+
+#~ msgid "Separator display:"
+#~ msgstr "Weergave van scheiding:"
+
+#~ msgid "Hide window title bar"
+#~ msgstr "Titelbalk van venster verbergen"
+
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Disabled"
+#~ msgstr "Uitgeschakeld"
+
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Enabled"
+#~ msgstr "Ingeschakeld"
+
+#~ msgid "Move Up"
+#~ msgstr "Omhoog verplaatsen"
+
+#~ msgid "Move Down"
+#~ msgstr "Omlaag verplaatsen"
+
+#~ msgid "Add"
+#~ msgstr "Toevoegen"
+
+#~ msgid "Remove"
+#~ msgstr "Verwijderen"
+
+#~ msgid "Edit"
+#~ msgstr "Bewerken"
+
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "Oxygen verduistering gebruiken"
+
+#~ msgid "Draw window background"
+#~ msgstr "Vensterachtergrond tekenen"
+
+#~ msgid "Inactive Windows"
+#~ msgstr "Inactieve vensters"
+
+#~ msgid "Active Windows"
+#~ msgstr "Actieve vensters"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+#~ msgid "Window Actions Menu"
+#~ msgstr "Menu met vensteracties"
+
+#~ msgid "Application Menu"
+#~ msgstr "Menu van toepassing"
+
+#~ msgid "Help"
+#~ msgstr "Help"
+
+#~ msgid "Minimize"
+#~ msgstr "Minimaliseren"
+
+#~ msgid "Maximize"
+#~ msgstr "Maximaliseren"
+
+#~ msgid "Close"
+#~ msgstr "Sluiten"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "Altijd op voorgrond"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "Altijd op achtergrond"
+
+#~ msgid "On All Desktops"
+#~ msgstr "Op alle bureaubladen"
+
+#~ msgid "Shade Button"
+#~ msgstr "Knopschaduw"
+
+#~ msgid "Menu"
+#~ msgstr "Menu"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "Niet op alle bureaubladen"
+
+#~ msgid "On all desktops"
+#~ msgstr "Op alle bureaubladen"
+
+#~ msgid "Unshade"
+#~ msgstr "Afrollen"
+
+#~ msgid "Shade"
+#~ msgstr "Oprollen"
+
+#~ msgid "Resize"
+#~ msgstr "Grootte wijzigen"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>B II-voorbeeld</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "Terugzetten"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "Vensterranden inkleuren met &titelbalkleuren"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "Indien geselecteerd worden de vensterranden ingekleurd met dezelfde "
+#~ "kleuren als de titelbalk. Anders behouden de vensterranden hun normale "
+#~ "randkleuren."
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "Handvat voor venste&rgroottewijziging tonen"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "Indien geselecteerd bevat de vensterrand rechtsonder een handvat waarmee "
+#~ "u de grootte van het venster kunt wijzigen. Anders wordt er geen handvat "
+#~ "getoond."
+
+#~ msgid "Auto-move titlebar"
+#~ msgstr "Titelbalk automatisch verplaatsen"
+
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr ""
+#~ "Indien geselecteerd worden de titelbalken automatisch naar zichtbare "
+#~ "posities verplaatst, anders worden ze handmatig verplaatst met shift"
+#~ "+slepen."
+
+#~ msgid "Actions Settings"
+#~ msgstr "Actie-instellingen"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "Dubbelklik op menuknop:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "Niets doen"
+
+#~ msgid "Minimize Window"
+#~ msgstr "Venster minimaliseren"
+
+#~ msgid "Shade Window"
+#~ msgstr "Venster oprollen"
+
+#~ msgid "Close Window"
+#~ msgstr "Venster sluiten"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "U kunt een actie toewijzen aan het dubbelklikken op de menuknop. Laat "
+#~ "deze leeg als u twijfelt."
+
+#~ msgid "Laptop"
+#~ msgstr "Laptop"
+
+#~ msgid "Bac&kground style: "
+#~ msgstr "Ach&tergrondstijl: "
+
+#~ msgid "Solid Color"
+#~ msgstr "Vlakke kleur"
+
+#~ msgid "Radial Gradient"
+#~ msgstr "Radiaal kleurverloop"
+
+#~ msgid "Follow Style Hint"
+#~ msgstr "Stijlaanwijzing volgen"
+
+#~ msgid "Background style:"
+#~ msgstr "Achtergrondstijl:"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Freek de Kruijf"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "freekdekruijf@kde.nl"
+
+#~ msgid "Oxygen decoration shadows demonstration"
+#~ msgstr "Demonstratie van Oxygen decoratie met verduistering"
+
+#~ msgid "(c) 2011, Hugo Pereira Da Costa"
+#~ msgstr "(c) 2011, Hugo Pereira Da Costa"
+
+#~ msgid "Hugo Pereira Da Costa"
+#~ msgstr "Hugo Pereira Da Costa"
+
+#~ msgid "Save"
+#~ msgstr "Opslaan"
+
+#~ msgid "Save shadows as pixmaps in provided directory"
+#~ msgstr "De verduistering als pixmaps opslaan in de gegeven map"
+
+#~ msgid "Large"
+#~ msgstr "Groot"
+
+#~ msgid "Small"
+#~ msgstr "Klein"
+
+#~ msgid "Extra size grip display: "
+#~ msgstr "Extra grootte van greep tonen: "
+
+#~ msgid "Extra size grip display:"
+#~ msgstr "Extra grootte van greep tonen:"
+
+#~ msgid "Inner Color:"
+#~ msgstr "Binnenste kleur:"
+
+#~ msgid "Outer Color:"
+#~ msgstr "Buitenste kleur:"
+
+#~ msgid "Vertical Offset:"
+#~ msgstr "Verticale verschuiving:"
+
+#~ msgid "Size: "
+#~ msgstr "Grootte: "
+
+#~ msgid "px"
+#~ msgstr "px"
+
+#~ msgid "Always Hide Extra Size Grip"
+#~ msgstr "Extra grote greep altijd verbergen"
+
+#~ msgid "Show Extra Size Grip When Needed"
+#~ msgstr "Extra grote greep tonen indien nodig"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "Selecteer deze optie als u vensters wilt kunnen sluiten door te "
+#~ "dubbelklikken op de menuknop, analoog aan Microsoft Windows."
+
+#~ msgid "Plastik"
+#~ msgstr "Plastik"
+
+#~ msgid "All Desktops"
+#~ msgstr "Alle bureaubladen"
+
+#~ msgid "Above"
+#~ msgstr "Boven"
+
+#~ msgid "Below"
+#~ msgstr "Onder"
+
+#~ msgid "Close Item"
+#~ msgstr "Item sluiten"
+
+#~ msgid "Tabstrip"
+#~ msgstr "Strip met tabbladen"
+
+#~ msgid "&Left"
+#~ msgstr "&Links"
+
+#~ msgid "&Center"
+#~ msgstr "Ge&centreerd"
+
+#~ msgid "&Right"
+#~ msgstr "&Rechts"
+
+#~ msgid "Display window icons"
+#~ msgstr "Vensterpictogrammen tonen"
+
+#~ msgid "O&utline Color:"
+#~ msgstr "Kle&ur van omranding:"
+
+#~ msgid "Do not keep above others"
+#~ msgstr "Niet altijd op voorgrond"
+
+#~ msgid "Keep above others"
+#~ msgstr "Altijd op voorgrond"
+
+#~ msgid "Do not keep below others"
+#~ msgstr "Niet altijd op achtergrond"
+
+#~ msgid "Keep below others"
+#~ msgstr "Altijd op achtergrond"
+
+#~ msgid "Enable title transition animations"
+#~ msgstr "Titel overgangsanimaties inschakelen"
+
+#~ msgid "Variable"
+#~ msgstr "Variabel"
+
+#~ msgid "Maximum"
+#~ msgstr "Maximum"
+
+#~ msgid "Enable window grouping"
+#~ msgstr "Venstergroepering inschakelen"
+
+#~ msgid "Shadow caching:"
+#~ msgstr "Caching van verdonkeren:"
+
+#~ msgid "TextLabel"
+#~ msgstr "Tekstlabel"
+
+#~ msgid "Use Oxygen Shadows"
+#~ msgstr "Oxygen verduistering gebruiken"
+
+#~ msgid "Use Desktop Effects Shadows"
+#~ msgstr "Bureaublad-verduisteringseffecten gebruiken"
+
+#~ msgid "Do Not Draw Shadows"
+#~ msgstr "Geen verduistering gebruiken"
+
+#~ msgid "Shadow style:"
+#~ msgstr "Stijl van verduistering"
+
+#~ msgctxt "draw separator"
+#~ msgid "Enabled"
+#~ msgstr "Ingeschakeld"
+
+#~ msgctxt "draw separator"
+#~ msgid "Disabled"
+#~ msgstr "Uitgeschakeld"
+
+#~ msgid "Draw separator between title bar and window contents: "
+#~ msgstr "Scheiding tussen titelbalk en vensterinhoud tekenen"
+
+#~ msgid "Draw Separator between title bar and active window contents "
+#~ msgstr "Scheiding tussen titelbalk en inhoud van actief venster tekenen "
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "Installeert een thema van KWM"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "Locatie van het thema-configuratiebestand"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWMTheme</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "Vastgeplakt"
+
+#~ msgid "Unsticky"
+#~ msgstr "Losgemaakt"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>Keramik-voorbeeld</b></center>"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "&Stippeleffect in titelbalk gebruiken"
+
+#~ msgid ""
+#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
+#~ "otherwise, they are drawn without the stipple."
+#~ msgstr ""
+#~ "Indien geselecteerd hebben de titelbalken van actieve vensters een "
+#~ "stippeleffect."
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "G&rijpbalk onder vensters tekenen"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
+#~ "otherwise, no grab bar is drawn."
+#~ msgstr ""
+#~ "Indien geselecteerd worden de vensterranden getekend met een 'grijpbalk' "
+#~ "onder de vensters."
+
+#~ msgid "Draw &gradients"
+#~ msgstr "Kleurverlopen &gebruiken"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with gradients for high-color "
+#~ "displays; otherwise, no gradients are drawn."
+#~ msgstr ""
+#~ "Indien geselecteerd worden de vensterranden met kleurverlopen getekend. "
+#~ "Dit is alleen geschikt voor beeldschermen met een hoge kleurdiepte."
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"
+
+#~ msgid ""
+#~ "When selected, the window decoration borders are drawn using the titlebar "
+#~ "colors; otherwise, they are drawn using normal border colors instead."
+#~ msgstr ""
+#~ "Indien geselecteerd zullen de vensterranden worden ingekleurd met de "
+#~ "kleuren van de titelbalk. Anders worden ze met de normale kleuren "
+#~ "ingekleurd."
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "Quartz &extra slank"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "Quartz-vensterdecoraties met extra smalle titelbalk."
+
+#~ msgid "Quartz"
+#~ msgstr "Quartz"
+
+#~ msgid "Redmond"
+#~ msgstr "Redmond"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "Handvat voor wijzigen ven&stergrootte tonen"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "Als u dit selecteert, dan hebben alle vensters rechtsonder een handvat "
+#~ "waarmee u de venstergrootte kunt wijzigen. Dit zorgt ervoor dat het "
+#~ "vergroten van vensters makkelijk wordt, zeker als u een trackball of de "
+#~ "muis vervanger op een laptop gebruikt."
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr "Hier kunt u de afmeting van het vergroothandvat instellen."
+
+#~ msgid "Medium"
+#~ msgstr "Middel"
+
+#~ msgid "Modern System"
+#~ msgstr "Modern systeem"
+
+#~ msgid "Web"
+#~ msgstr "Web"
+
+#~ msgid "Keramik"
+#~ msgstr "Keramik"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "Vensterpictogram &in titel-luchtbel tonen"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "Selecteer deze optie als u wilt dat het vensterpictogram in de "
+#~ "titelluchtbel naast de titelbalktekst wordt geplaatst."
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "Kleine titelbalkluchtbellen gebruiken bij actieve ven&sters"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "Selecteer deze optie als u wilt dat de titelbalkluchtbel bij actieve "
+#~ "vensters even groot is als bij inactieve vensters. Deze optie is handig "
+#~ "bij laptops of beeldschermen met een lage resolutie, waarbij u zoveel "
+#~ "mogelijk ruimte wilt benutten voor het weergeven van de vensterinhoud."
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "G&rijpbalken onder vensters tonen"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "Selecteer deze optie als u een brede grijpbalk onder de vensters wilt "
+#~ "hebben. Als deze optie niet is geselecteerd zal er een dunne vensterrand "
+#~ "onderlangs de vensters worden getekend."
+
+#~ msgid "Aurorae Theme Engine"
+#~ msgstr "Aurorae thema-engine"
+
+#~ msgid "Drag or Type Theme URL"
+#~ msgstr "Sleep of type het URL-adres van het thema"
+
+#~ msgid "Unable to find the theme archive %1."
+#~ msgstr "Niet in staat het archief van het thema %1 te vinden."
+
+#~ msgid ""
+#~ "Unable to download theme archive;\n"
+#~ "please check that address %1 is correct."
+#~ msgstr ""
+#~ "Niet in staat om het thema-archief te downloaden;\n"
+#~ "gaarne ccontroleren dat adres %1 correct is."
+
+#~ msgid "Theme:"
+#~ msgstr "Thema:"
+
+#~ msgid "Get New Themes..."
+#~ msgstr "Nieuwe thema's ophalen..."
+
+#~ msgid "Install New Theme..."
+#~ msgstr "Nieuw thema installeren..."
+
+#, fuzzy
+#~| msgid "Close Window"
+#~ msgid "Glow active window"
+#~ msgstr "Venster sluiten"
+
+#, fuzzy
+#~| msgid ""
+#~| "When enabled, this option increases the visibility of the window "
+#~| "titlebar by showing stripes"
+#~ msgid ""
+#~ "When enabled, this option makes an horizontal separator appear between "
+#~ "the window title bar and the window contents."
+#~ msgstr ""
+#~ "Wanneer ingeschakeld zal deze optie de zichtbaarheid van de "
+#~ "venstertitelbalk verhogen door die van strepen te voorzien"
+
+#~ msgid "Ozone"
+#~ msgstr "Ozone"
+
+#~ msgid ""
+#~ "When enabled, this option makes the window title bar use the same colors "
+#~ "as the window contents, instead of using the system title bar colors."
+#~ msgstr ""
+#~ "Wanneer ingeschakeld zal deze optie er voor zorgen dat de "
+#~ "venstertitelbalk dezelfde kleur heeft als de vensterinhoud, ongeacht de "
+#~ "systeemkleurinstelling voor de titelbalk."
+
+#~ msgid "Show stripes next to the title"
+#~ msgstr "Strepen naast venstertitel tonen"

@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % German "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinvirtualkeyboard" lang="&language;">
+<articleinfo>
+
+<title
+>Virtuelle Tastatur</title>
+<authorgroup>
+<author
+><firstname
+>Yuri</firstname
+> <surname
+>Chornoivan</surname
+> </author>
+<othercredit role="translator"
+><firstname
+>Deutsches</firstname
+><surname
+>KDE-Übersetzerteam</surname
+><affiliation
+><address
+><email
+>kde-i18n-de@kde.org</email
+></address
+></affiliation
+><contrib
+>Übersetzung</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-27</date>
+<releaseinfo
+>Plasma 5.22</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systemeinstellungen</keyword>
+<keyword
+>virtuell</keyword>
+<keyword
+>Tastatur</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Mit diesem Modul können Sie die zu verwendende virtuelle Tastatur auswählen. Die virtuelle Tastatur wird automatisch aktiviert, wenn keine Hardware-Tastatur erkannt wird. </para>
+
+<para
+>Wahlen Sie eine <ulink url="https://de.wikipedia.org/wiki/Bildschirmtastatur"
+>virtuelle Tastatur</ulink
+> aus der Liste oder <guilabel
+>Keine</guilabel
+>, wenn Sie diese Funktion nicht benutzen möchten. </para>
+
+<para
+>Es wird empfohlen, zugehörige Module zur Eingabemethode vor der Nutzung dieses Moduls zu installieren. </para>
+
+</article>

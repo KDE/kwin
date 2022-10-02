@@ -1,0 +1,590 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Jean Cayron <jean.cayron@gmail.com>, 2008, 2009, 2010, 2011.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwincompositing\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"PO-Revision-Date: 2011-01-09 11:18+0100\n"
+"Last-Translator: Jean Cayron <jean.cayron@gmail.com>\n"
+"Language-Team: Walloon <linux@walon.org>\n"
+"Language: wa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 1.0\n"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
+#: compositing.ui:31
+#, kde-format
+msgid ""
+"OpenGL compositing (the default) has crashed KWin in the past.\n"
+"This was most likely due to a driver bug.\n"
+"If you think that you have meanwhile upgraded to a stable driver,\n"
+"you can reset this protection but be aware that this might result in an "
+"immediate crash!"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
+#: compositing.ui:44
+#, kde-format
+msgid ""
+"Scale method \"Accurate\" is not supported by all hardware and can cause "
+"performance regressions and rendering artifacts."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
+#: compositing.ui:67
+#, kde-format
+msgid ""
+"Keeping the window thumbnail always interferes with the minimized state of "
+"windows. This can result in windows not suspending their work when minimized."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, compositingLabel)
+#: compositing.ui:79
+#, fuzzy, kde-format
+#| msgid "Compositing type:"
+msgid "Compositing:"
+msgstr "Sôre di compôzite:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
+#: compositing.ui:86
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Enable desktop effects"
+msgid "Enable on startup"
+msgstr "Mete en alaedje efets d' sicribanne"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:95
+#, kde-format
+msgid ""
+"Applications can set a hint to block compositing when the window is open.\n"
+" This brings performance improvements for e.g. games.\n"
+" The setting can be overruled by window-specific rules."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:98
+#, kde-format
+msgid "Allow applications to block compositing"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
+#: compositing.ui:105
+#, fuzzy, kde-format
+#| msgid "Animation speed:"
+msgid "Animation speed:"
+msgstr "Radisté d' animåcion:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: compositing.ui:142
+#, fuzzy, kde-format
+#| msgid "Very Slow"
+msgid "Very slow"
+msgstr "Mo londjin"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: compositing.ui:162
+#, kde-format
+msgid "Instant"
+msgstr "Sol moumint"
+
+#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
+#: compositing.ui:174
+#, kde-format
+msgid "Scale method:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:184
+#, kde-format
+msgid "Smooth"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:189
+#, kde-format
+msgid "Accurate"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: compositing.ui:199
+#, kde-format
+msgid "Tearing prevention (\"vsync\"):"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:207
+#, kde-format
+msgid "Automatic"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:212
+#, kde-format
+msgid "Only when cheap"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:217
+#, kde-format
+msgid "Full screen repaints"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:222
+#, kde-format
+msgid "Re-use screen content"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
+#: compositing.ui:230
+#, fuzzy, kde-format
+#| msgid "Keep window thumbnails:"
+msgid "Keep window thumbnails:"
+msgstr "Wårder prévoeyaedjes des purneas:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:238
+#, fuzzy, kde-format
+#| msgid "Never"
+msgid "Never"
+msgstr "Måy"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:243
+#, fuzzy, kde-format
+#| msgid "Only for Shown Windows"
+msgid "Only for Shown Windows"
+msgstr "Ki po les purneas mostrés"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:248
+#, kde-format
+msgid "Always"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
+#: compositing.ui:256
+#, kde-format
+msgid "Latency:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:264
+#, kde-format
+msgid "Force lowest latency (may cause dropped frames)"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:269
+#, kde-format
+msgid "Prefer lower latency"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:274
+#, kde-format
+msgid "Balance of latency and smoothness"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:279
+#, kde-format
+msgid "Prefer smoother animations"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:284
+#, fuzzy, kde-format
+#| msgid "Various animations"
+msgid "Force smoothest animations"
+msgstr "Sacwantès animåcions"
+
+#: main.cpp:79
+#, kde-format
+msgid "Re-enable OpenGL detection"
+msgstr ""
+
+#: main.cpp:135
+#, kde-format
+msgid ""
+"\"Only when cheap\" only prevents tearing for full screen changes like a "
+"video."
+msgstr ""
+
+#: main.cpp:139
+#, kde-format
+msgid "\"Full screen repaints\" can cause performance problems."
+msgstr ""
+
+#: main.cpp:143
+#, kde-format
+msgid ""
+"\"Re-use screen content\" causes severe performance problems on MESA drivers."
+msgstr ""
+
+#, fuzzy
+#~| msgid "OpenGL"
+#~ msgid "OpenGL 3.1"
+#~ msgstr "OpenGL"
+
+#, fuzzy
+#~| msgid "OpenGL"
+#~ msgid "OpenGL 2.0"
+#~ msgstr "OpenGL"
+
+#, fuzzy
+#~| msgid "Smooth scaling (slower)"
+#~ msgid "Smooth (slower)"
+#~ msgstr "Doûs metaedje al schåle (pus londjin)"
+
+#~ msgid "XRender"
+#~ msgstr "XRender"
+
+#~ msgid ""
+#~ "Hint: To find out or configure how to activate an effect, look at the "
+#~ "effect's settings."
+#~ msgstr ""
+#~ "Consey: po trover ou apontyî l' manîre di mete en alaedje en efet, "
+#~ "riwaitîz ls apontiaedjes des efets."
+
+#, fuzzy
+#~| msgid "Texture filter:"
+#~ msgid "Configure filter"
+#~ msgstr "Passete del tecsteure:"
+
+#, fuzzy
+#~| msgid "Suspend Desktop Effects"
+#~ msgid "Exclude internal Desktop Effects"
+#~ msgstr "Arester ls efets d' sicribanne"
+
+#, fuzzy
+#~| msgid "No Effect"
+#~ msgid "Get New Desktop Effects..."
+#~ msgstr "Nou efet"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Djan Cayron"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "jean.cayron@gmail.com"
+
+#, fuzzy
+#~| msgid "Accessibility"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Accessibility"
+#~ msgstr "Accessibilité"
+
+#, fuzzy
+#~| msgid "Appearance"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Appearance"
+#~ msgstr "Rivnance"
+
+#, fuzzy
+#~| msgid "Candy"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Candy"
+#~ msgstr "Tot djoli"
+
+#, fuzzy
+#~| msgid "Focus"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Focus"
+#~ msgstr "Focusse"
+
+#, fuzzy
+#~| msgid "Tools"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Tools"
+#~ msgstr "Usteyes"
+
+#, fuzzy
+#~| msgid "Window Management"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Management"
+#~ msgstr "Manaedjmint des purneas"
+
+#, fuzzy
+#~| msgid "Suspend desktop effects for fullscreen windows"
+#~ msgid "Suspend compositor for full screen windows"
+#~ msgstr ""
+#~ "Arester ls efets d' sicribanne po les purneas metous so tote li waitroûle"
+
+#, fuzzy
+#~| msgid "OpenGL mode:"
+#~ msgid "OpenGL interface:"
+#~ msgstr "Môde d' OpenGL:"
+
+#, fuzzy
+#~| msgid "Animation speed:"
+#~ msgid "Animation Speed:"
+#~ msgstr "Radisté d' animåcion:"
+
+#, fuzzy
+#~| msgid "Keep window thumbnails:"
+#~ msgid "Keep Window Thumbnails:"
+#~ msgstr "Wårder prévoeyaedjes des purneas:"
+
+#, fuzzy
+#~| msgid "Always (Breaks minimization)"
+#~ msgid "Always (Breaks Animations)"
+#~ msgstr "Todi (skete li metaedje å pus ptit)"
+
+#~ msgid "1 second remaining:"
+#~ msgid_plural "%1 seconds remaining:"
+#~ msgstr[0] "I dmeure 1 segonde:"
+#~ msgstr[1] "I dmeure %1 segondes:"
+
+#~ msgid "Confirm Desktop Effects Change"
+#~ msgstr "Acertiner candjmint des efets d' sicribanne"
+
+#~ msgid "&Accept Configuration"
+#~ msgstr "&Accepter apontiaedje"
+
+#~ msgid "&Return to Previous Configuration"
+#~ msgstr "&Ritourner a l' apontiaedje di dvant"
+
+#~ msgid ""
+#~ "Desktop effects settings have changed.\n"
+#~ "Do you want to keep the new settings?\n"
+#~ "They will be automatically reverted in 10 seconds."
+#~ msgstr ""
+#~ "L' apontiaedje des efes d' sicribanne a candjî.\n"
+#~ "Voloz vs wårder l' novea apontiaedje?\n"
+#~ "I srè rmetou come divant dins 10 segondes."
+
+#~ msgid "kcmkwincompositing"
+#~ msgstr "kcmkwincompositing"
+
+#~ msgid "KWin Desktop Effects Configuration Module"
+#~ msgstr "Module d' apontiaedje des efets compôzites do scribanne di KWin"
+
+#~ msgid "(c) 2007 Rivo Laks"
+#~ msgstr "© 2007 Rivo Laks"
+
+#~ msgid "Rivo Laks"
+#~ msgstr "Rivo Laks"
+
+#, fuzzy
+#~| msgid "No Effect"
+#~ msgid "No effect"
+#~ msgstr "Nou efet"
+
+#~ msgid ""
+#~ "Failed to activate desktop effects using the given configuration options. "
+#~ "Settings will be reverted to their previous values.\n"
+#~ "\n"
+#~ "Check your X configuration. You may also consider changing advanced "
+#~ "options, especially changing the compositing type."
+#~ msgstr ""
+#~ "Li metaedje en alaedje des efets d' sicribanne e s' siervant des tchuzes "
+#~ "d' apontiaedje dinêyes a fwait berwete. Les apontiaedjes seront rmetous "
+#~ "viè leus valixhances di dvant.\n"
+#~ "\n"
+#~ "Verifyîz vost apontiaedje di X. Vos pôrîz ossu tuzer a candjî les "
+#~ "spepieusès tchuzes, sortot candjî l' sôre di môde compôzite."
+
+#~ msgid "Demos"
+#~ msgstr "Mostraedjes"
+
+#~ msgid "Tests"
+#~ msgstr "Sayes"
+
+#~ msgid ""
+#~ "Desktop effects are not available on this system due to the following "
+#~ "technical issues:"
+#~ msgstr ""
+#~ "Les efets d' sicribanne ni sont nén disponibes so cisse sistinme ci a "
+#~ "cåze des rujhes tecnikes shuvantes :"
+
+#~ msgid ""
+#~ "Your settings have been saved but as KDE is currently running in failsafe "
+#~ "mode desktop effects cannot be enabled at this time.\n"
+#~ "\n"
+#~ "Please exit failsafe mode to enable desktop effects."
+#~ msgstr ""
+#~ "Vos apontiaedjes ont stî schapés mins come KDE est enondé pol moumint e "
+#~ "môde sins rujhe, les efets d' sicribanne di n' savèt nén esse metous en "
+#~ "alaedje pol moumint.\n"
+#~ "\n"
+#~ "Moussîz foû do môde sins rujhe s' i vs plait po mete en alaedje les efets "
+#~ "d' sicribanne."
+
+#, fuzzy
+#~| msgid "The following desktop effects could not be activated:"
+#~ msgctxt "Error Message shown when a desktop effect could not be loaded"
+#~ msgid "One desktop effect could not be loaded."
+#~ msgid_plural "%1 desktop effects could not be loaded."
+#~ msgstr[0] ""
+#~ "Dji n' a savou mete èn alaedje les efets d' sicribanne shuvants :"
+#~ msgstr[1] ""
+#~ "Dji n' a savou mete èn alaedje les efets d' sicribanne shuvants :"
+
+#, fuzzy
+#~| msgid "The following desktop effects could not be activated:"
+#~ msgctxt "Window title"
+#~ msgid "List of effects which could not be loaded"
+#~ msgstr "Dji n' a savou mete èn alaedje les efets d' sicribanne shuvants :"
+
+#, fuzzy
+#~| msgid "Desktop effects are active"
+#~ msgctxt ""
+#~ "Error Message shown when compositing is not active after tried activation"
+#~ msgid "Desktop effect system is not running."
+#~ msgstr "Les efets d' sicribanne sont-st ovrants"
+
+#~ msgid "<h1>Desktop Effects</h1>"
+#~ msgstr "<h1>Efets d' sicribanne</h1>"
+
+#~ msgid "General"
+#~ msgstr "Djenerå"
+
+#~ msgid "Improved window management"
+#~ msgstr "Manaedjmint improuvé des purneas"
+
+#~ msgid "Effect for desktop switching:"
+#~ msgstr "Efet pol discandjaedje di scribanne:"
+
+#~ msgid "Very Fast"
+#~ msgstr "Mo rade"
+
+#~ msgid "Fast"
+#~ msgstr "Rade"
+
+#~ msgid "Normal"
+#~ msgstr "Normå"
+
+#~ msgid "Slow"
+#~ msgstr "Londjin"
+
+#~ msgid "Extremely Slow"
+#~ msgstr "Vormint foû londjin"
+
+#~ msgid ""
+#~ "You can find more effects, as well as effect-specific settings, in the "
+#~ "\"All Effects\" tab above."
+#~ msgstr ""
+#~ "Vos ploz trover pus d' efets eyet ossu des tchuzes specifikes a èn efet, "
+#~ "divins l' linwete « Tos ls efets » chal pa dzeu."
+
+#~ msgid "All Effects"
+#~ msgstr "Tos ls efets"
+
+#~ msgid "Advanced"
+#~ msgstr "Sipepieus"
+
+#~ msgid "OpenGL Options"
+#~ msgstr "Tchuzes d' OpenGL"
+
+#, fuzzy
+#~| msgid "XRender Options"
+#~ msgid "General Options"
+#~ msgstr "Tchuzes d' XRender"
+
+#, fuzzy
+#~| msgid "OpenGL"
+#~ msgid "OpenGL 1.2"
+#~ msgstr "OpenGL"
+
+#~ msgid "Use VSync"
+#~ msgstr "Eployî VSync"
+
+#~ msgid "Effect for window switching:"
+#~ msgstr "Efet pol discandjaedje di purnea:"
+
+#~ msgid "Enable direct rendering"
+#~ msgstr "Mete en alaedje rindou direk"
+
+#~ msgid "Disable functionality checks"
+#~ msgstr "Essocter verifiaedjes di fonccionålité"
+
+#~ msgid "Desktop effects are temporarily disabled"
+#~ msgstr "Les efets d' sicribanne sont-st essoctés po kék tins"
+
+#~ msgid "Resume Desktop Effects"
+#~ msgstr "Rimete èn alaedje les efets d' sicribanne"
+
+#~ msgid "Desktop effects are disabled"
+#~ msgstr "Les efets d' sicribanne sont-st essoctés"
+
+#~ msgid "Common Settings"
+#~ msgstr "Comonès tchuzes"
+
+#~ msgid "Compositing State"
+#~ msgstr "Estat compôzite"
+
+#~ msgid "Shadows"
+#~ msgstr "Ombions"
+
+#~ msgid "Texture From Pixmap"
+#~ msgstr "Tecsteure a pårti d' picsmap"
+
+#~ msgid "Shared Memory"
+#~ msgstr "Memwere pårtaedjeye"
+
+#~ msgid "Fallback"
+#~ msgstr "Tcheyåjhe"
+
+#~ msgid ""
+#~ "Enabling this option allows compositing to be activated even if some of "
+#~ "the internal checks fail. Doing so may make the whole desktop unusable "
+#~ "and its use is not recommened. Use only if KWin refuses to activate "
+#~ "compositing on a system that should be capable of compositing.\n"
+#~ msgstr ""
+#~ "Mete en alaedje cisse tchuze permet å môde compôzite d' esse metou en "
+#~ "alaedje minme s' i gn a des dvintrins verifiaedjes ki font berwete. El fé "
+#~ "insi rind tot l' sicribanne nén eployåve eyet si eployaedje est ricmandé. "
+#~ "Ni l' eployî ki si KWin rifuze di mete en alaedje les efets compôzites "
+#~ "sos on sistinme ki dvreut sawè fé do compôzite.\n"
+
+#~ msgid "Nearest (fastest)"
+#~ msgstr "Li pus près (li pus roed)"
+
+#~ msgid "Bilinear"
+#~ msgstr "Bilineyåre"
+
+#~ msgid "Trilinear (best quality)"
+#~ msgstr "Trilineyåre (meyeuse cwålité)"
+
+#~ msgid "Compositing is not supported on your system."
+#~ msgstr "Les efets compôzites ni sont nén sopoirtés so vosse sistinme."
+
+#~ msgid "Compositing is active"
+#~ msgstr "Môde compôzite en alaedje"
+
+#~ msgid "Suspend Compositing"
+#~ msgstr "Djoker môde compôzite"
+
+#~ msgid "Resume Compositing"
+#~ msgstr "Rataker môde compôzite"
+
+#~ msgid "Compositing is disabled"
+#~ msgstr "Li môde compôzite est essocté"
+
+#, fuzzy
+#~| msgid "All Effects"
+#~ msgid "All Desktops"
+#~ msgstr "Tos ls efets"
+
+#, fuzzy
+#~| msgid "Bilinear"
+#~ msgid "Cylinder"
+#~ msgstr "Bilineyåre"
+
+#~ msgid "Advanced Compositing Options"
+#~ msgstr "Sipepieuzès tchuzes compôzites"
+
+#~ msgid "Misc"
+#~ msgstr "Totes sôres"
+
+#~ msgid "Keep thumbnails of hidden windows up to date"
+#~ msgstr "Wårder a djoû les prévoeyaedjes des catchîs purneas"

@@ -1,0 +1,651 @@
+# Translation of kwin_clients.po to Euskara/Basque (eu).
+# Copyright (C) 2004-2018 Free Software Foundation.
+# This file is distributed under the same license as the kde-workspace package.
+# KDE euskaratzeko proiektuaren arduraduna <xalba@euskalnet.net>.
+#
+# Translators:
+# Marcos  <marcos@euskalgnu.org>, 2004, 2006, 2007, 2010.
+# Juan Irigoien <juanirigoien@yahoo.es>, 2004, 2005.
+# Iñigo Salvador Azurmendi <xalba@euskalnet.net>, 2009, 2010, 2011, 2014, 2018.
+# Hizkuntza Politikarako Sailburuordetza <hizpol@ej-gv.es>, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2018-07-15 12:08+0100\n"
+"Last-Translator: Iñigo Salvador Azurmendi <xalba@euskalnet.net>\n"
+"Language-Team: Basque <kde-i18n-doc@kde.org>\n"
+"Language: eu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 2.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "Ñimiñoa"
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "Arrunta"
+
+#: aurorae/src/aurorae.cpp:727
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "Handia"
+
+#: aurorae/src/aurorae.cpp:728
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "Oso handia"
+
+#: aurorae/src/aurorae.cpp:729
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "Itzela"
+
+#: aurorae/src/aurorae.cpp:730
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "Erraldoia"
+
+#: aurorae/src/aurorae.cpp:731
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "Neurriz kanpokoa"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr "Botoiaren neurria:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "Konfigurazio-elkarrizketa"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "Tituluaren &lerrokatzea"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "Ezkerrean"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "Erdian"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "Eskuinean"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"Markatu aukera hau, leihoaren ertza titulu-barraren kolore berean margotu "
+"behar bada. Bestela, atzeko planoaren kolorean margotuko da."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "Leihoaren ertz koloreduna"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"Markatu aukera hau, nahi baduzu botoiak agertzea saguaren erakuslea gainetik "
+"pasatzean eta botoiak desagertzea erakuslea beste leku batera mugitzean."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "Botoi animatuak"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "Markatu aukera hau, titulu-barraren testuak 3D itxura izatea nahi baduzu, "
+#~ "atzean itzal eta guzti."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "Erabili &testu itzalduna"
+
+#~ msgid "Button mouseover transition"
+#~ msgstr "Trantsizioa sagua botoien gainetik pasatzean"
+
+#~ msgid "Configure window buttons' mouseover highlight animation"
+#~ msgstr ""
+#~ "Konfiguratu animazioa nabarmentzeko aukera, sagua leihoko botoien "
+#~ "gainetik pasatzean"
+
+#~ msgid "Title transitions"
+#~ msgstr "Tituluen trantsizioa"
+
+#~ msgid "Configure fading transitions when window title is changed"
+#~ msgstr "Konfiguratu urtze-trantsizioak leihoaren titulua aldatzen denean"
+
+#~ msgid "Window active state change transitions"
+#~ msgstr "Leihoaren egoera aktiboa aldatzeko trantsizioak"
+
+#~ msgid ""
+#~ "Configure fading between window shadow and glow when window's active "
+#~ "state is changed"
+#~ msgstr ""
+#~ "Konfiguratu leihoaren itzalaren eta distiraren arteko urtzea, leihoaren "
+#~ "egoera aktiboa aldatzen denean"
+
+#~ msgid "Window grouping animations"
+#~ msgstr "Leihoak taldekatzeko animazioak"
+
+#~ msgid ""
+#~ "Configure window titlebar animations when windows are grouped/ungrouped"
+#~ msgstr ""
+#~ "Konfiguratu leihoaren titulu-barraren animazioak, leihoak taldekatzen/"
+#~ "banatzen direnean"
+
+#~ msgid "Hide Advanced Configuration Options"
+#~ msgstr "Ezkutatu konfiguratzeko aukera aurreratuak"
+
+#~ msgid "Show Advanced Configuration Options"
+#~ msgstr "Erakutsi konfiguratzeko aukera aurreratuak"
+
+#~ msgid "Animations"
+#~ msgstr "Animazioak"
+
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "Galdea - Oxygenen ezarpenak"
+
+#~ msgid "Remove selected exception?"
+#~ msgstr "Kendu hautatutako salbuespena?"
+
+#~ msgid "Warning - Oxygen Settings"
+#~ msgstr "Abisua - Oxygenen ezarpenak"
+
+#~ msgid "Regular Expression syntax is incorrect"
+#~ msgstr "Adierazpen erregularraren sintaxia okerra da"
+
+#~ msgid "Exception Type"
+#~ msgstr "Salbuespen mota"
+
+#~ msgid "Regular Expression"
+#~ msgstr "Adierazpen erregularra"
+
+#~ msgid "Window Title"
+#~ msgstr "Leihoaren titulua"
+
+#~ msgid "Window Class Name"
+#~ msgstr "Leiho klasearen izena"
+
+#~ msgid "Enable/disable this exception"
+#~ msgstr "Gaitu/desgaitu salbuespen hau"
+
+#~ msgid "General"
+#~ msgstr "Orokorra"
+
+#~ msgid "Border si&ze:"
+#~ msgstr "Ertzen ne&urria:"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "Ertzik &ez"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Borders"
+#~ msgstr "Alboko ertzik ez"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Normal"
+#~ msgstr "Arrunta"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "Handia"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "Oso handia"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "Itzela"
+
+#~ msgid "Tit&le alignment:"
+#~ msgstr "Titu&luaren lerrokatzea:"
+
+#~ msgid "Center (Full Width)"
+#~ msgstr "Erdigunea (zabalera osoa)"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "Txikia"
+
+#~ msgid "Enable animations"
+#~ msgstr "Gaitu animazioak"
+
+#~ msgid "Fine Tuning"
+#~ msgstr "Doikuntza aurreratua"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "Itxi leihoak, menu-botoian klik bikoitza eginez"
+
+#~ msgid "Never Draw Separator"
+#~ msgstr "Ez marraztu sekula bereizlea"
+
+#~ msgid "Draw Separator When Window is Active"
+#~ msgstr "Marraztu bereizlea leihoa aktibo dagoenean"
+
+#~ msgid "Always Draw Separator"
+#~ msgstr "Marraztu beti bereizlea"
+
+#~ msgid "Separator disp&lay:"
+#~ msgstr "Bereizlea bis&taratzea:"
+
+#~ msgid "Outline active window title"
+#~ msgstr "Leiho aktiboaren tituluaren ingerada"
+
+#~ msgid "Use narrow space between decoration buttons"
+#~ msgstr "Erabili tarte estuak apaindura botoien artean"
+
+#~ msgid "Add handle to resize windows with no border"
+#~ msgstr "Gehitu heldulekua ertzik gabeko leihoen neurria aldatzeko"
+
+#~ msgid "Display window borders for maximized windows"
+#~ msgstr "Bistaratu leiho-ertzak maximizatutako leihoetan"
+
+#~ msgid "Shadows"
+#~ msgstr "Itzalak"
+
+#~ msgid "Window Drop-Down Shadow"
+#~ msgstr "Leihoaren goitibeherako itzala"
+
+#~ msgid "Active Window Glow"
+#~ msgstr "Leiho aktiboaren distira"
+
+#~ msgid "Window-Specific Overrides"
+#~ msgstr "Leihoaren zuzenketa espezifikoak"
+
+#~ msgid "Dialog"
+#~ msgstr "Elkarrizketa-koadroa"
+
+#~ msgid "Information about Selected Window"
+#~ msgstr "Hautatutako leihoari buruzko informazioa"
+
+#~ msgid "Class: "
+#~ msgstr "Klasea:"
+
+#~ msgid "Title: "
+#~ msgstr "Titulua:"
+
+#~ msgid "Window Property Selection"
+#~ msgstr "Leihoaren propietate-hautaketa"
+
+#~ msgid "Use window class (whole application)"
+#~ msgstr "Erabili leiho klasea (aplikazio osoa)"
+
+#~ msgid "Use window title"
+#~ msgstr "Erabili leihoaren titulua"
+
+#~ msgid "Window Identification"
+#~ msgstr "Leihoaren identifikazioa"
+
+#~ msgid "Matching window property: "
+#~ msgstr "Leihoaren propietatearekin parekatzea:"
+
+#~ msgid "Regular expression to match: "
+#~ msgstr "Parekatu beharreko adierazpen erregularra: "
+
+#~ msgid "Detect Window Properties"
+#~ msgstr "Detektatu leihoaren propietateak"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Apaindura-aukerak"
+
+#~ msgctxt "outline window title"
+#~ msgid "Disabled"
+#~ msgstr "Desgaituta"
+
+#~ msgctxt "outline window title"
+#~ msgid "Enabled"
+#~ msgstr "Gaituta"
+
+#~ msgid "Border size:"
+#~ msgstr "Ertzaren neurria:"
+
+#~ msgid "Outline active window title:"
+#~ msgstr "Leiho aktiboaren tituluaren ingerada"
+
+#~ msgid "Separator display:"
+#~ msgstr "Bereizlea bistaratzea:"
+
+#~ msgid "Hide window title bar"
+#~ msgstr "Ezkutatu leihoaren titulu-barra"
+
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Disabled"
+#~ msgstr "Desgaituta"
+
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Enabled"
+#~ msgstr "Gaituta"
+
+#~ msgid "Move Up"
+#~ msgstr "Eraman gora"
+
+#~ msgid "Move Down"
+#~ msgstr "Eraman behera"
+
+#~ msgid "Add"
+#~ msgstr "Gehitu"
+
+#~ msgid "Remove"
+#~ msgstr "Kendu"
+
+#~ msgid "Edit"
+#~ msgstr "Editatu"
+
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "Oxygenen itzal-erakustaldia"
+
+#~ msgid "Draw window background"
+#~ msgstr "Marraztu leihoaren atzeko planoa"
+
+#~ msgid "Inactive Windows"
+#~ msgstr "Leiho ez-aktiboak"
+
+#~ msgid "Active Windows"
+#~ msgstr "Leiho aktiboak"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+#~ msgid "Window Actions Menu"
+#~ msgstr "Leiho-ekintzen menua"
+
+#~ msgid "Application Menu"
+#~ msgstr "Aplikazio-menua"
+
+#~ msgid "Help"
+#~ msgstr "Laguntza"
+
+#~ msgid "Minimize"
+#~ msgstr "Ikonotu"
+
+#~ msgid "Maximize"
+#~ msgstr "Maximizatu"
+
+#~ msgid "Close"
+#~ msgstr "Itxi"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "Mantendu besteen gainean"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "Mantendu besteen azpian"
+
+#~ msgid "On All Desktops"
+#~ msgstr "Mahaigain guztietan"
+
+#~ msgid "Shade Button"
+#~ msgstr "Lausotu botoia"
+
+#~ msgid "Menu"
+#~ msgstr "Menua"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "Ez mahaigain guztietan"
+
+#~ msgid "On all desktops"
+#~ msgstr "Mahaigain guztietan"
+
+#~ msgid "Unshade"
+#~ msgstr "Zabaldu"
+
+#~ msgid "Shade"
+#~ msgstr "Bildu"
+
+#~ msgid "Resize"
+#~ msgstr "Neurria aldatu"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>B II aurrebista</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "Berrezarri"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "Marraztu leiho markoak &titulu-barrako koloreak erabiliz"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "Hautatuta dagoenean, leihoen ertzak titulu-barrako koloreak erabiliz "
+#~ "marrazten dira; bestela, ertz arrunten koloreak erabiliz margotzen dira."
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "Marraztu &neurria aldatzeko heldulekua"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "Hautatuta dagoenean, apainketak \"helduleku\" batekin marraztuko dira "
+#~ "leiho azpiko eskuineko izkinan, bestela ez da heldulekurik marraztuko."
+
+#~ msgid "Auto-move titlebar"
+#~ msgstr "Automatikoki mugitu titulu-barra"
+
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr ""
+#~ "Hautatuta dagoenean, titulu-barrak ikus daitezkeen kokapenera mugituko "
+#~ "dira; bestela, soilik eskuz mugituko dira maius+arrastatu erabiliz."
+
+#~ msgid "Actions Settings"
+#~ msgstr "Ekintzen ezarpenak"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "Klik bikoitza menu botoian:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "Ez egin ezer"
+
+#~ msgid "Minimize Window"
+#~ msgstr "Minimizatu leihoa"
+
+#~ msgid "Shade Window"
+#~ msgstr "Bildu leihoa"
+
+#~ msgid "Close Window"
+#~ msgstr "Itxi leihoa"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "Ekintza bat elkartu daiteke menu botoiaren klik bikoitzarekin. Utzi "
+#~ "ezertan zalantzan bazaude."
+
+#~ msgid "Laptop"
+#~ msgstr "Eramangarria"
+
+#, fuzzy
+#~| msgid "Background style: "
+#~ msgid "Bac&kground style: "
+#~ msgstr "Hondoaren estiloa: "
+
+#~ msgid "Solid Color"
+#~ msgstr "Kolore solidoa"
+
+#~ msgid "Radial Gradient"
+#~ msgstr "Gradiente erradiala"
+
+#~ msgid "Follow Style Hint"
+#~ msgstr "Jarraitu estilo Irizpidea"
+
+#~ msgid "Background style:"
+#~ msgstr "Hondoaren estiloa:"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Iñigo Salvador Azurmendi"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "xalba@euskalnet.net"
+
+#~ msgid "Oxygen decoration shadows demonstration"
+#~ msgstr "Oxygen-en apainketa itzalen erakustaldia"
+
+#~ msgid "(c) 2011, Hugo Pereira Da Costa"
+#~ msgstr "(c) 2011, Hugo Pereira Da Costa"
+
+#~ msgid "Hugo Pereira Da Costa"
+#~ msgstr "Hugo Pereira Da Costa"
+
+#~ msgid "Save"
+#~ msgstr "Gorde"
+
+#~ msgid "Save shadows as pixmaps in provided directory"
+#~ msgstr "Gorde itzalak pixel mapa gisa hornitutako direktorioan"
+
+#~ msgid "Extra size grip display: "
+#~ msgstr "Neurria aldatzeko helduleku gehigarriaren bistaratzea:"
+
+#~ msgid "Extra size grip display:"
+#~ msgstr "Neurria aldatzeko helduleku gehigarriaren bistaratzea:"
+
+#~ msgid "Inner Color:"
+#~ msgstr "Barruko kolorea:"
+
+#~ msgid "Outer Color:"
+#~ msgstr "Kanpoko kolorea:"
+
+#~ msgid "Vertical Offset:"
+#~ msgstr "Desplazamendu bertikala:"
+
+#~ msgid "Size: "
+#~ msgstr "Neurria: "
+
+#~ msgid "Always Hide Extra Size Grip"
+#~ msgstr "Ezkutatu beti neurria aldatzeko helduleku gehigarria"
+
+#~ msgid "Show Extra Size Grip When Needed"
+#~ msgstr "Erakutsi neurria aldatzeko helduleku gehigarria beharrezko denean"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "Markatu aukera hau leihoak ixtea nahi baduzu menu botoiari klik bikoitza "
+#~ "egitean diozunean, Microsoft Windows-en antzera."
+
+#~ msgid "Plastik"
+#~ msgstr "Plastik"
+
+#~ msgid "All Desktops"
+#~ msgstr "Mahaigain guztiak"
+
+#~ msgid "Above"
+#~ msgstr "Gainean"
+
+#~ msgid "Below"
+#~ msgstr "Azpian"
+
+#~ msgid "Close Item"
+#~ msgstr "Itxi elementua"
+
+#~ msgid "Tabstrip"
+#~ msgstr "Fitxa banda"
+
+#~ msgid "&Left"
+#~ msgstr "&Ezkerra"
+
+#~ msgid "&Center"
+#~ msgstr "&Erdigunea"
+
+#~ msgid "&Right"
+#~ msgstr "&Eskuina"
+
+#~ msgid "Display window icons"
+#~ msgstr "Bistaratu leihoen ikonoak"
+
+#~ msgid "O&utline Color:"
+#~ msgstr "In&geradaren kolorea:"
+
+#~ msgid "Do not keep above others"
+#~ msgstr "Ez mantendu besteen gainean"
+
+#~ msgid "Keep above others"
+#~ msgstr "Mantendu besteen gainean"
+
+#~ msgid "Do not keep below others"
+#~ msgstr "Mantendu besteen azpian"
+
+#~ msgid "Keep below others"
+#~ msgstr "Mantendu besteen azpian"
+
+#, fuzzy
+#~| msgid "Maximize"
+#~ msgid "Maximum"
+#~ msgstr "Maximizatu"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadow style:"
+#~ msgstr "Zabaldu"
+
+#~ msgctxt "draw separator"
+#~ msgid "Enabled"
+#~ msgstr "Gaituta"
+
+#~ msgctxt "draw separator"
+#~ msgid "Disabled"
+#~ msgstr "Desgaituta"
+
+#, fuzzy
+#~| msgid "Blend title bar colors with window contents"
+#~ msgid "Draw separator between title bar and window contents: "
+#~ msgstr "Nahastu izenburu barraren koloreak leiho edukiekin"
+
+#, fuzzy
+#~| msgid "Blend title bar colors with window contents"
+#~ msgid "Draw Separator between title bar and active window contents "
+#~ msgstr "Nahastu izenburu barraren koloreak leiho edukiekin"

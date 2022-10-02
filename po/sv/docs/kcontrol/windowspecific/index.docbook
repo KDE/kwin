@@ -1,0 +1,2244 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Swedish "INCLUDE">
+]>
+<book id="windowspecific" lang="&language;">
+<bookinfo>
+<title
+>Fönsterregler</title>
+<authorgroup>
+<author
+>&Lauri.Watts; &Lauri.Watts.mail;</author>
+<author>
+<personname
+><firstname
+>Delar av den här dokumentationen är konverterat från KDE:s användarbas <ulink url=" https://userbase.kde.org/KWin Rules"
+>KWin Rules</ulink
+>-sida, och uppdaterad till Plasma 5.8 av &kde;:s dokumentationsgrupp.</firstname
+> <surname
+></surname
+> </personname>
+      </author>
+<othercredit role="translator"
+> <firstname
+>Stefan</firstname
+> <surname
+>Asserhäll</surname
+> <affiliation
+><address
+><email
+>stefan.asserhall@bredband.net</email
+></address
+></affiliation
+> <contrib
+>Översättare</contrib
+></othercredit
+> 
+      </authorgroup>
+<legalnotice
+>&FDLNotice;</legalnotice>
+<date
+>2016-06-23</date>
+      <releaseinfo
+>Plasma 5.8</releaseinfo>
+<abstract>
+<para
+>Här kan du specifikt anpassa fönsterinställningar för vissa fönster.</para>
+      </abstract>
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Kcontrol</keyword>
+<keyword
+>fönsterinställningar</keyword>
+<keyword
+>fönsterplacering</keyword>
+<keyword
+>fönsterstorlek</keyword>
+</keywordset>
+</bookinfo>
+<chapter id="window-specific">
+<title
+>Fönsterspecifika inställningar: Snabbstart</title>
+
+<para
+>Här kan du specifikt anpassa fönsterinställningar för vissa fönster.</para>
+
+<note>
+<para
+>Observera att inställningen inte har någon effekt om du inte använder &kwin; som fönsterhanterare. Om du använder en annan fönsterhanterare, titta i dokumentationen för den om hur fönsterbeteendet kan anpassas.</para>
+</note>
+
+<para
+>Många av inställningarna du kan anpassa här är de du kan ställa in allmänt i systeminställningarnas modul <guilabel
+>Fönsterbeteende</guilabel
+>, men vissa är ännu mer detaljerade.</para>
+
+<para
+>De omfattar geometri, placering, om ett fönster ska behållas ovanför eller under andra, att förhindra att fokus stjäls, och inställning av genomskinlighet.</para>
+
+<para
+>Du kan komma åt modulen på två sätt: Från namnlisten i programmet du vill ställa in, eller från systeminställningarna. Om du startar den inne i systeminställningarna kan du använda <guibutton
+>Ny...</guibutton
+> för att skapa en fönsterprofil, och knappen <guibutton
+>Identifiera fönsteregenskaper</guibutton
+> i dialogrutan som visas för att delvis fylla i nödvändig information om programmet du vill ställa in.</para>
+
+<para
+>Du kan också när som helst <guibutton
+>Ändra...</guibutton
+> eller <guibutton
+>Ta bort</guibutton
+> alla lagrade inställningsprofiler, samt ordna om listan. Att ordna om listan med knapparna <guibutton
+>Flytta upp</guibutton
+> och <guibutton
+>Flytta ner</guibutton
+> påverkar hur de används.</para>
+
+</chapter>
+<!--userbase <timestamp
+>2012-03-09T20:50:14Z</timestamp
+>-->
+
+<!--userbase-content-->
+<chapter id="overview"
+><title
+>Översikt</title
+> 
+<para
+>&kwin; låter slutanvändare definiera regler för att ändra ett programs fönsteregenskaper. </para>
+<para
+>När ett program startas kan det exempelvis tvingas att alltid köra på <emphasis
+>Virtuellt skrivbord 2</emphasis
+>. Eller så kan en defekt i ett program hanteras genom att tvinga fönstret att visas ovanpå andra. </para>
+<para
+>Stegvisa <link linkend="examples"
+>exempel</link
+> tillhandahålls tillsammans med detaljerad information om hur <link linkend="kwin-rule-editor"
+>regeleditorn i &kwin;</link
+> används för att ange <link linkend="window-matching"
+>fönstermatchning</link
+> och <link linkend="window-attributes"
+>fönsteregenskaper</link
+>. </para>
+</chapter>
+<chapter id="examples-and-application-workaround"
+><title
+>Exempel och problemlösningar</title
+> 
+<para
+>För att se vad som är möjligt, tillhandahålls detaljerade <link linkend="examples"
+>exempel</link
+> som också kan användas för att modellera egna regler. </para>
+<para
+>En särskild sida ägnas åt att ta upp <link linkend="application-workarounds"
+>problemlösningar</link
+>. </para>
+</chapter>
+<chapter id="kwin-rule-editor"
+><title
+>Regeleditorn i Kwin</title
+> 
+<sect1 id="invoking-the-kwin-rule-editor"
+><title
+>Starta regeleditorn i Kwin</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-ordering.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Det finns flera sätt att starta regeleditorn i &kwin;. Nedan visas två: </para>
+<itemizedlist>
+<listitem
+><para
+>Högerklicka på namnlisten i vilket fönster som helst, välj <menuchoice
+><guimenu
+>Fler åtgärder</guimenu
+><guimenuitem
+>Inställning av fönsterhantering...</guimenuitem
+></menuchoice
+> och välj <guilabel
+>Fönsterregler</guilabel
+> i fönstret <guilabel
+>Anpassa</guilabel
+> eller</para
+></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem
+><para
+><menuchoice
+><guimenu
+>Systeminställningar</guimenu
+><guisubmenu
+>Fönsterbeteende</guisubmenu
+><guimenuitem
+>Fönsterregler</guimenuitem
+></menuchoice
+></para
+></listitem>
+</itemizedlist>
+<para
+>Huvudfönstret används för att: </para>
+<itemizedlist>
+<listitem
+><para
+>Påverka regler med <guilabel
+>Ny...</guilabel
+>, <guilabel
+>Ändra...</guilabel
+> och <guilabel
+>Ta bort</guilabel
+></para
+></listitem>
+<listitem
+><para
+>Dela regler med andra via <guilabel
+>Importera</guilabel
+> och <guilabel
+>Exportera</guilabel
+></para
+></listitem>
+<listitem
+><para
+>Försäkra dig om önskad <link linkend="rule-evaluation"
+>regelutvärdering</link
+> genom att använda <guilabel
+>Flytta upp</guilabel
+> och <guilabel
+>Flytta ner</guilabel
+></para
+></listitem>
+</itemizedlist>
+<sect2 id="rule-evaluation"
+><title
+>Regelutvärdering</title
+> 
+<para
+>När ett program startas (eller reglerna ändras) utvärderar &kwin; reglerna från listans början till slut. För alla regler som motsvarar ett fönster, tillämpas den samlade uppsättningen egenskaper på fönstret, och därefter visas det. </para>
+<para
+>Skulle två eller flera matchande regler aktivera samma egenskap, används inställningen från den <emphasis
+>första</emphasis
+> regeln i listan. </para>
+<para
+><tip
+><para
+>Du kan skräddarsy programmets underliggande fönster genom att placera de mest restriktiva reglerna först: se exemplet med <link linkend="application-on-all-desktops-and-handle-one-child-window-uniquely"
+>Kopete och Kopetes chattfönster</link
+>.</para
+></tip>
+</para>
+</sect2>
+</sect1>
+<sect1 id="rule-editor"
+><title
+>Regeleditor</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Editorn består av fyra flikar: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Fönstermatchning</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Storlek och position</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Arrangemang och åtkomst</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Utseende och korrigeringar</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Som namnet anger, används <guilabel
+>Fönstermatchning</guilabel
+> för att ange kriterier för att matcha en eller flera fönster. De övriga tre flikarna används för att ändra egenskaperna för fönster som matchar. </para>
+<para
+><tip
+><para
+>Paneler kan också påverkas.</para
+></tip>
+</para>
+<sect2 id="window-matching"
+><title
+>Fönstermatchning</title
+> 
+<para
+>Varje fönsterregel har användarspecificerade kriterier för <link linkend="window-matching"
+>fönstermatchning</link
+>. &kwin; använder kriterierna för att bestämma om regeln ska tillämpas för ett program. </para>
+</sect2>
+<sect2 id="window-attributes"
+><title
+>Fönsteregenskaper</title
+> 
+<para
+>Tillsammans med kriterierna för fönstermatchning har varje fönsterregel en uppsättning <link linkend="window-attributes"
+>fönsteregenskaper</link
+>. Egenskaperna åsidosätter motsvarande programinställningar och tillämpas innan fönstret visas av &kwin;. </para>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="window-matching0"
+><title
+>Fönstermatchning</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Fliken <guilabel
+>Fönstermatchning</guilabel
+> används för att ange de kriterier som &kwin; utvärderar när regeln är tillämplig för ett givet fönster. </para>
+<para
+>Noll (matcha vilket fönster som helst) eller flera av följande kan specificeras: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Fönsterklass (program)</guilabel
+>: matcha klassen.<itemizedlist
+> <listitem
+><para
+><guilabel
+>Matcha hela fönsterklassen</guilabel
+>: inkludera matchning av den sekundära klassen.</para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Fönsterroll</guilabel
+>: begränsa matchningen till fönstrets funktion (t.ex. ett <emphasis
+>huvudfönster</emphasis
+>, ett <emphasis
+>chattfönster</emphasis
+>, etc.)</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Fönstertyper</guilabel
+>: begränsa matchningen till fönstrets typ, <guilabel
+>Normalt fönster</guilabel
+>, <guilabel
+>Dialogruta</guilabel
+>, etc.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Fönsterrubrik</guilabel
+>: begränsa matchningen till fönstrets rubrik.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Dator (värddatornamn)</guilabel
+>: begränsa matchningen till värddatornamnet som hör ihop med fönstret.</para
+></listitem>
+</itemizedlist>
+<para
+><tip
+><para
+>Även om det är möjligt att skriva in informationen ovan för hand, är den rekommenderade metoden att använda knappen <guilabel
+>Identifiera fönsteregenskaper</guilabel
+>.</para
+></tip>
+</para>
+<para
+>Följande operatorer kan användas med fältvärdet i varje fält: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Oviktig</guilabel
+>: ignorera fältet.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Matcha exakt</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Matcha delsträng</guilabel
+></para
+></listitem>
+</itemizedlist>
+<para
+><note
+><para
+>Både <guilabel
+>Matcha exakt</guilabel
+> och <guilabel
+>Matcha delsträng</guilabel
+> implementerar skiftlägesokänslig matchning. Exempelvis matchar <emphasis
+>AB</emphasis
+> strängarna <emphasis
+>AB</emphasis
+>, <emphasis
+>ab</emphasis
+>, <emphasis
+>Ab</emphasis
+>och <emphasis
+>aB</emphasis
+>.</para
+></note>
+</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Reguljärt uttryck</guilabel
+>: Qt:s reguljära uttryck är implementerade. Se <ulink url="https://doc.qt.io/qt-5/qregexp.html"
+>mönstermatchning med användning av reguljära uttryck</ulink
+>.</para
+></listitem>
+</itemizedlist>
+<sect1 id="detect-window-properties"
+><title
+>Identifiera fönsteregenskaper</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-detect-window.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Funktionen <guilabel
+>Identifiera fönsteregenskaper</guilabel
+> förenklar processen att skriva in matchningskriterier. </para>
+<orderedlist>
+<listitem
+><para
+>Starta programmet som du vill skapa en regel för.</para
+></listitem>
+<listitem
+><para
+>Ställ därefter in antal sekunders fördröjning innan funktionen <guilabel
+>Identifiera fönsteregenskaper</guilabel
+> startar under fliken <guilabel
+>Fönstermatchning</guilabel
+>. Förvalt värde är noll sekunder.</para
+></listitem>
+<listitem
+><para
+>Klicka på <guilabel
+>Identifiera fönsteregenskaper</guilabel
+> och</para
+></listitem>
+<listitem
+><para
+>När muspekaren ändras till ett hårkors, placera det i programmets fönster (inte namnlisten) och vänsterklicka.</para
+></listitem>
+<listitem
+><para
+>Ett nytt fönster visas med information om det markerade fönstret. Välj önskade fält:<itemizedlist>
+<listitem
+><para
+><guilabel
+>Sekundärt klassnamn</guilabel
+>: Vissa program har ett sekundärt klassnamn. Detta värde kan användas för att begränsa fönster enligt värdet.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Fönsterroll</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Fönstertyp</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Fönsternamn</guilabel
+></para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+</orderedlist>
+<para
+>Klicka på knappen <guilabel
+>Ok</guilabel
+> för att fylla i kriterierna under <guilabel
+>Fönstermatchning</guilabel
+>. </para>
+<para
+>Genom att använda en kombination av informationen kan en regel gälla ett helt program (enligt <guilabel
+>Klass</guilabel
+>) eller en specifikt <guilabel
+>Typ</guilabel
+> av fönster inom en <guilabel
+>Klass</guilabel
+>, exempelvis ett <guilabel
+>Verktygsfönster</guilabel
+>. </para>
+</sect1>
+</chapter>
+<chapter id="window-attributes1"
+><title
+>Fönsteregenskaper</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-window-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Egenskaperna som kan ställas in är grupperade enligt funktion under tre flikar: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Storlek och position</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Arrangemang och åtkomst</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Utseende och korrigeringar</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Varje egenskap har en uppsättning parametrar som bestämmer dess verkan. </para>
+<sect1 id="parameters"
+><title
+>Parametrar</title>
+<para
+>Varje egenskap accepterar åtminstone en av följande parametrar. Dessutom anges egenskapsspecifika parametrar tillsammans med definitionen av varje <link linkend="attributes"
+>egenskap</link
+>. </para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Påverka inte</emphasis
+></term>
+    <listitem>
+    <para
+>Försäkra att en följande regel som motsvarar fönstret inte påverkar egenskapen.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Tillämpa från början</emphasis
+></term>
+    <listitem>
+    <para
+>Starta fönstret med egenskapen och låt det ändras under körning.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Kom ihåg</emphasis
+></term>
+    <listitem>
+    <para
+>Använd egenskapens inställning som den definieras av regeln, och om den ändras under körning, spara och använd det nya värdet istället.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Tvinga</emphasis
+></term>
+    <listitem>
+    <para
+>Inställningen kan inte ändras under körning.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Tillämpa nu, Tvinga tillfälligt</emphasis
+></term>
+    <listitem>
+    <para
+>Verkställ eller tvinga inställningen en gång och ta bort egenskapen. Skillnaden mellan de två är vid körning. <guilabel
+>Verkställ nu</guilabel
+> låter egenskapen ändras och <guilabel
+>Tvinga tillfälligt</guilabel
+> förhindrar att den ändras till alla påverkade fönster avslutats.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>Om regeln inte har några andra egenskaper angivna, tas den bort efter utvärderingen för <guilabel
+>Verkställ nu</guilabel
+>, medan den tas bort efter det sista påverkade fönstret har avslutats för <guilabel
+>Tvinga tillfälligt</guilabel
+>.</para
+></warning>
+</para>
+</sect1>
+<sect1 id="attributes"
+><title
+>Egenskaper</title>
+<para
+><tip
+><para
+>Knappen <guilabel
+>Identifiera fönsteregenskaper</guilabel
+> fyller i egenskapsspecifika värden. För mer information se <link linkend="window-matching"
+>Fönstermatchning</link
+>. Exempelvis ställs höjd- och breddvärden för egenskapen <guilabel
+>Storlek</guilabel
+> in till det detekterade fönstrets höjd och bredd.</para
+></tip>
+</para>
+<para
+><tip
+><para
+>Argumenten <guilabel
+>Ja/Nej</guilabel
+> används för att sätta på eller stänga av egenskaper. Förlåtande grammatik låter dig förstå hur en inställning behandlas. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> När t.ex. egenskapen <guilabel
+>Hoppa över aktivitetsfält</guilabel
+> är inställd till <guilabel
+>Nej</guilabel
+> innebär det att aktivitetsfältet inte ska hoppas över. Med andra ord, visa fönstret i aktivitetsfältet. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+></para
+></tip>
+</para>
+<sect2 id="size--position"
+><title
+>Storlek och position</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Position</emphasis
+></term>
+    <listitem>
+    <para
+>Placera fönstrets övre vänstra hörn vid de angivna x,y-koordinaterna.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>&kwin;s origo, (0,0), är skrivbordets övre vänstra hörn.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Storlek</emphasis
+></term>
+    <listitem>
+    <para
+>Fönstrets höjd och bredd.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Horisontellt maximerat, Vertikalt maximerat</emphasis
+></term>
+    <listitem>
+    <para
+>Dessa egenskaper används för att ändra fönsteregenskaperna maximera horisontellt, minimera horisontellt.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Skrivbord, Aktivitet, Skärm</emphasis
+></term>
+    <listitem>
+    <para
+>Placera fönstret på angivet <emphasis
+>(Virtuellt) Skrivbord</emphasis
+>, <emphasis
+>Aktivitet</emphasis
+> eller <emphasis
+>Skärm</emphasis
+>. Använd <guilabel
+>Alla skrivbord</guilabel
+> för att placera fönstret på alla <emphasis
+>Virtuella skrivbord</emphasis
+>.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Fullskärm, Minimerat, Upprullat</emphasis
+></term>
+    <listitem>
+    <para
+>Ändra fönsteregenskaperna Fullskärm, Minimera och Rulla upp. Ett fönster kan således startas minimerat, eller, om det startats minimerat, tvingas att inte starta minimerat.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Egenskapen Maximerat emuleras genom att använda både <guilabel
+>Horisontellt maximerat </guilabel
+> och <guilabel
+>Vertikalt maximerat</guilabel
+> eller <guilabel
+>Ursprunglig placering</guilabel
+> med argumentet <guilabel
+>Maximera</guilabel
+>.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ursprunglig placering</emphasis
+></term>
+    <listitem>
+    <para
+>Åsidosätt den globala fönsterplaceringsstrategin med en av följande:</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Förval</guilabel
+> - använd den globala fönsterplaceringsstrategin.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Ingen placering</guilabel
+> - övre vänstra hörnet.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Minimal överlappning</guilabel
+> - placera där inga andra fönster finns.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Maximera</guilabel
+> - starta fönstret maximerat.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Kaskad</guilabel
+> - i en trappform enligt namn.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Centrerad</guilabel
+> - mitt på skrivbordet.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Slumpmässig</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>I övre vänstra hörnet</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Under musen</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>På huvudfönster</guilabel
+> - begränsa placering av underfönster till gränserna av det överordnade fönstret.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ignorera begärd geometri</emphasis
+></term>
+    <listitem>
+    <para
+>Ändra om du vill acceptera eller ignorera fönstrets begärda geometriposition. För att undvika konflikter mellan den förvalda placeringsstrategin och fönstrets begäran ignoreras placeringsstrategin när fönstrets begäran accepteras.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Minimal storlek, Maximal storlek</emphasis
+></term>
+    <listitem>
+    <para
+>Fönstrets minsta och största tillåtna storlek.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Lyd geometribegränsningar</emphasis
+></term>
+    <listitem>
+    <para
+>Ändra om du vill behålla fönstrets begärda proportioner eller <emphasis
+>grundökning</emphasis
+>. För att förstå den här egenskapen krävs en del bakgrundsinformation. I korthet, fönster måste begära en grundökning från fönsterhanteraren: minsta antal bildpunkter i <emphasis
+>höjd</emphasis
+> x <emphasis
+>bredd</emphasis
+> per begäran om storleksändring. I normala fall är det 1 x 1. Andra fönster däremot (t.ex. terminalemulatorer eller editorer), använder teckensnitt med fast bredd, och begär sin grundökning enligt storleken på ett tecken.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="arrangement--access"
+><title
+>Arrangemang och åtkomst</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Behåll över, Behåll under</emphasis
+></term>
+    <listitem>
+    <para
+>Ändra om fönstret ska behållas över eller under alla andra.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Gruppera automatiskt med identiska</emphasis
+></term>
+    <listitem>
+    <para
+>Ändra gruppering (vanligtvis kallat <emphasis
+>flikar</emphasis
+>) av fönster.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Gruppera automatiskt i förgrunden</emphasis
+></term>
+    <listitem>
+    <para
+>Ändra om fönstret ska bli aktivt när det läggs till i nuvarande grupp med <guilabel
+>Gruppera automatiskt</guilabel
+>.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Gruppera automatiskt enligt identifikation</emphasis
+></term>
+    <listitem>
+    <para
+>Skapa en grupp med en användardefinierad identifikation. Mer än en regel kan dela samma identifikation för att möjliggöra gruppering av fönster som egentligen inte har med varandra att göra.</para>
+     </listitem>
+  </varlistentry>
+
+  <varlistentry
+><term
+><emphasis role="bold"
+>Hoppa över aktivitetsfält</emphasis
+></term>
+    <listitem>
+    <para
+>Ändra om fönstret ska visas i aktivitetsfältet.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Hoppa över skrivbordsvisning</emphasis
+></term>
+    <listitem>
+    <para
+>Ändra om fönstret ska ingå i skrivbordsvisning.</para>
+     </listitem>
+  </varlistentry>
+    </variablelist>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Hoppa över programbyte</emphasis
+></term>
+    <listitem>
+    <para
+>Ändra om fönstret ingår i listan som visas med <guilabel
+>Alt+Tabulator</guilabel
+>.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Genväg</emphasis
+></term>
+    <listitem>
+    <para
+>Tilldela en genväg till fönstret. När du klickar på <guilabel
+>Redigera...</guilabel
+> visas ytterligare instruktioner.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="appearance--fixes"
+><title
+>Utseende och korrigeringar</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ingen namnlist och ram</emphasis
+></term>
+    <listitem>
+    <para
+>Ändra om titelraden och ramen runt fönstret ska visas.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Namnlistens färgschema</emphasis
+></term>
+    <listitem>
+    <para
+>Välj ett färgschema för fönstrets namnlist.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Aktiv eller Inaktiv ogenomskinlighet</emphasis
+></term>
+    <listitem>
+    <para
+>När fönstret är aktivt eller inaktivt, sätt dess ogenomskinglighet till angivet procentvärde.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+><guilabel
+>Aktiv eller Inaktiv ogenomskinlighet</guilabel
+> kan bara påverkas när <guilabel
+>Skrivbordseffekter</guilabel
+> är aktiverade.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Förhindra att fokus stjäls</emphasis
+></term>
+    <listitem>
+    <para
+>När ett fönster vill ha fokus, avgör om begäran ska beviljas och det placeras ovanför alla andra fönster, eller om dess begäran ignoreras (vilket kan leda till att fönstret döljs bakom andra fönster), enligt en skala (från <guilabel
+>Ingen</guilabel
+> till <guilabel
+>Extrem</guilabel
+>):</para>
+<itemizedlist>
+<listitem
+><para
+>Ingen - Ge alltid fokus till fönstret.</para
+></listitem>
+<listitem
+><para
+>Låg</para
+></listitem>
+<listitem
+><para
+>Normal</para
+></listitem>
+<listitem
+><para
+>Hög</para
+></listitem>
+<listitem
+><para
+>Extrem - Fönstrets fokusbegäran avslås. Fokus ges bara genom att uttryckligen begära det med musen.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Se <guilabel
+>Acceptera fokus</guilabel
+> för skrivskydda ett fönster, och inte acceptera någon tangentbordsinmatning.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Acceptera fokus</emphasis
+></term>
+    <listitem>
+    <para
+>Ändra om fönstret accepterar tangentbordsinmatning. Gör att fönstret blir skrivskyddat.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ignorera globala genvägar</emphasis
+></term>
+    <listitem>
+    <para
+>Ändra om globala genvägar ska ignoreras (enligt definitionen i <menuchoice
+><guimenu
+>Systeminställningar</guimenu
+><guisubmenu
+>Genvägar och gester</guisubmenu
+><guimenuitem
+>Globala genvägar</guimenuitem
+></menuchoice
+> eller genom att köra <command
+>kcmshell5 keys</command
+> i <guilabel
+>konsole</guilabel
+>) medan fönstret är aktivt.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Stängningsbart</emphasis
+></term>
+    <listitem>
+    <para
+>Ändra om knappen för <guilabel
+>Stäng</guilabel
+> ska visas på namnlisten.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Ett terminalfönster kan fortfarande stängas av användaren genom att avsluta skalsessionen, men om du använder <guilabel
+>Acceptera fokus</guilabel
+> för att inaktivera tangentbordsinmatning blir det svårare att stänga fönstret.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Fönstertyp</emphasis
+></term>
+    <listitem>
+    <para
+>Ändra fönstret till en annan typ, och ärv egenskaperna från det fönstret:</para>
+<itemizedlist>
+<listitem
+><para
+>Normalt fönster</para
+></listitem>
+<listitem
+><para
+>Dialogruta</para
+></listitem>
+<listitem
+><para
+>Verktygsfönster</para
+></listitem>
+<listitem
+><para
+>Dockat (panel)</para
+></listitem>
+<listitem
+><para
+>Verktygsrad</para
+></listitem>
+<listitem
+><para
+>Avriven meny</para
+></listitem>
+<listitem
+><para
+>Startskärm</para
+></listitem>
+<listitem
+><para
+>Skrivbord</para
+></listitem>
+<listitem
+><para
+>Fristående menyrad</para
+></listitem>
+<listitem
+><para
+>Skärmvisning</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>Använd med försiktighet, eftersom det kan leda till oönskade följder. En <guilabel
+>Starskärm</guilabel
+> stängs t.ex. automatiskt av &kwin; när du klickar på den.</para
+></warning>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Blockera skrivbordseffekter</emphasis
+></term>
+    <listitem>
+    <para
+>Ändra om skrivbordseffekter ska inaktiveras medan fönstret <emphasis
+>finns</emphasis
+>. Om skrivbordseffekter har aktiverats, och regeln uttryckligen begär att effekterna stängs av, kommer de avaktiveras så länge <emphasis
+>något</emphasis
+> matchande fönster finns. Skrivbordseffekter aktiveras på nytt när det sista matchande fönstret stängs.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+</sect1>
+</chapter>
+<chapter id="examples"
+><title
+>Exempel</title>
+<para
+><note
+><para
+>Det första exemplet beskriver alla nödvändiga steg för att skapa reglerna i detalj. För att låta sidan behålla hanterbar storlek visar efterföljande exempel bara de steg som är specifika för just det exemplet.</para
+></note>
+</para>
+<para
+><note
+><para
+>Egenskapen <guilabel
+>skrivbordsvisning</guilabel
+> gäller <guilabel
+>Hanteringen av virtuella skrivbord</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></note>
+</para>
+<sect1 id="pin-a-window-to-a-desktop-and-set-other-attributes"
+><title
+>Lås ett fönster till ett skrivbord, och ange andra egenskaper</title>
+<para
+>Lås &akregator; till <emphasis
+>Virtuellt skrivbord 2</emphasis
+>. Starta dessutom programmet med en föredragen storlek och position. Använd <link linkend="parameters"
+>parametern</link
+> <guilabel
+>Tillämpa från början</guilabel
+> för varje egenskap, så att den kan åsidosättas under körning </para>
+<para
+>&kwin;-regeln skapas så här: </para>
+<orderedlist>
+<listitem
+><para
+>Starta &akregator; på <emphasis
+>skrivbord två</emphasis
+>, justera storlek och position efter behov: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-fav.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Högerklicka på namnlisten och välj <menuchoice
+><guimenu
+>Fler åtgärder</guimenu
+><guimenuitem
+>Inställning av fönsterhantering...</guimenuitem
+></menuchoice
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="config-win-behavior.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Välj alternativet <guilabel
+>Fönsterregler</guilabel
+> i den vänstra kolumnen, och klicka på knappen <guilabel
+>Ny...</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Fönstret <guilabel
+>Redigera fönsterspecifika inställningar</guilabel
+> visas. Fliken <guilabel
+>Fönstermatchning</guilabel
+> visas som förval: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-init.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicka på <guilabel
+>Identifiera fönsteregenskaper</guilabel
+> med <guilabel
+>0 s fördröjning</guilabel
+> ändras muspekaren omedelbart till ett hårkors. Klicka (varsomhelst) inuti &akregator;s fönster (men inte på namnlisten). Fönsteregenskaperna visas. Matcha bara enligt <guilabel
+>Primärt klassnamn</guilabel
+>, lämna alltså kryssrutorna omarkerade - för mer information, se <link linkend="window-matching"
+>fönstermatchning</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akgregator-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Om du klickar på <guilabel
+>Ok</guilabel
+> i det föregående fönstret skrivs resultaten in under fliken <guilabel
+>Fönstermatchning</guilabel
+>. Skriv in en begriplig text i fältet <guilabel
+>Beskrivning</guilabel
+> (som visas i fönstret <guilabel
+>Kwin-regel</guilabel
+>): <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-ready-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Aktivera fönsteregenskaperna: <guilabel
+>Position</guilabel
+>, <guilabel
+>Storlek</guilabel
+> och <guilabel
+>Skrivbord</guilabel
+>. Ursprungliga värden angavs av <guilabel
+>Identifiera fönsteregenskaper</guilabel
+> och kan åsidosättas: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Att klicka på <guilabel
+>Ok</guilabel
+> i föregående fönster återgår till <guilabel
+>Kwin-regler</guilabel
+>. Den nya regeln med dess <guilabel
+>Beskrivning</guilabel
+> visas i listan: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main-n-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicka på <guilabel
+>Ok</guilabel
+> för att stänga fönstret.</para
+></listitem>
+<listitem
+><para
+>Klart.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="application-on-all-desktops-and-handle-one-child-window-uniquely"
+><title
+>Program på alla skrivbord och hantera ett delfönster unikt</title>
+<para
+>Förutom konversationsfönster, visa &kopete; och dess delfönster på alla skrivbord och hoppa över systembrickan och skrivbordsväljaren. Behandla delkonversationsfönster som det överordnade fönstret, men visa dem i systembrickan. </para>
+<para
+>Använd <link linkend="parameters"
+>parametern</link
+> <guilabel
+>Tvinga</guilabel
+> för varje egenskap, så att den inte kan åsidosättas. </para>
+<para
+>För att implementera ovanstående måste två regler skapas: </para>
+<orderedlist>
+<listitem
+><para
+>En regel för <emphasis
+>Kopete chatt</emphasis
+> och</para
+></listitem>
+<listitem
+><para
+>En regel för &kopete;</para
+></listitem>
+</orderedlist>
+<para
+>Matchningskriterier för regeln <emphasis
+>Kopete chatt</emphasis
+> är mer restriktiva än för <emphasis
+>Kopete</emphasis
+>, eftersom den måste matcha en specifik <guilabel
+>Fönsterroll</guilabel
+>: chattfönstret. På grund av processen vid <link linkend="rule-evaluation"
+>regelutvärdering</link
+> måste regeln <guilabel
+>Kopete chatt</guilabel
+> komma före <guilabel
+>Kopete</guilabel
+> i <link linkend="kopete-kwin-rule-list"
+>listan med <guilabel
+>Kwin-regler</guilabel
+> för <guilabel
+>Kopete</guilabel
+>.</link
+> </para>
+<sect2 id="kopete-chat-rule"
+><title
+>Regel för Kopete chatt</title>
+<para
+>Förutsatt att ett <guilabel
+>Kopete chattfönster</guilabel
+> är öppet: </para>
+<orderedlist>
+<listitem
+><para
+>Använd <guilabel
+>Identifiera fönsteregenskaper</guilabel
+> och välj fönstret <guilabel
+>Kopete chatt</guilabel
+>. Kryssa för rutan <guilabel
+>Fönsterroll</guilabel
+> för att begränsa kriterierna till chattfönster - för ytterligare information, se <link linkend="window-matching"
+>fönstermatchning</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Att klicka på <guilabel
+>Ok</guilabel
+> i föregående fönster fyller i resultaten under fliken <guilabel
+>Fönstermatchning</guilabel
+>. Skriv en begriplig text i rutan <guilabel
+>Beskrivning</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete-chat.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Aktivera följande egenskaper: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicka dig fram för att slutföra inmatning av regeln.</para
+></listitem>
+</orderedlist>
+<para
+><note
+><para
+>Egenskapen <guilabel
+>Hoppa över aktivitetsfält</guilabel
+> är inställd till <guilabel
+>Nej</guilabel
+> för att visa fönstret i aktivitetsfältet, vilket kan fritt översättas till: <emphasis
+>nej</emphasis
+> hoppa <emphasis
+>inte</emphasis
+> över aktivitetsfältet <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>.</para
+></note>
+</para>
+</sect2>
+<sect2 id="kopete-rule"
+><title
+>Regel för Kopete</title>
+<para
+>Förutsatt att &kopete; är öppet: </para>
+<orderedlist>
+<listitem
+><para
+>Använd <guilabel
+>Identifiera fönsteregenskaper</guilabel
+> och välj fönstret <guilabel
+>Kopete</guilabel
+>. Matcha bara enligt <guilabel
+>Primärt klassnamn</guilabel
+>, lämna alltså kryssrutorna omarkerade - för mer information, se <link linkend="window-matching"
+>fönstermatchning</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Att klicka på <guilabel
+>Ok</guilabel
+> i föregående fönster fyller i resultaten under fliken <guilabel
+>Fönstermatchning</guilabel
+>. Skriv en begriplig text i rutan <guilabel
+>Beskrivning</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Aktivera följande egenskaper: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicka dig fram för att slutföra inmatning av regeln.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="kopete-kwin-rule-list"
+><title
+>Regellista för Kopete i Kwin-regler</title>
+<para
+>Som tidigare nämnts, på grund av processen vid <link linkend="rule-evaluation"
+>regelutvärdering</link
+> måste regeln för <guilabel
+>Kopete chatt</guilabel
+> komma före regeln för <guilabel
+>Kopete</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-kopete-rules.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+</sect1>
+<sect1 id="suppress-a-window-from-showing-on-pager"
+><title
+>Hindra ett fönster från att visas i skrivbordsvisningen</title>
+<para
+><guilabel
+>Anteckningslappar</guilabel
+> tillåter för närvarande inte att dess anteckningar hoppar över visningen, men en regel tar enkelt hand om detta tillkortakommande. </para>
+<para
+>Förutsatt att ett fönster med en <emphasis
+>anteckningslapp</emphasis
+> är tillgängligt: </para>
+<orderedlist>
+<listitem
+><para
+>Använd <guilabel
+>Identifiera fönsteregenskaper</guilabel
+> och välj en <emphasis
+>anteckningslapp</emphasis
+>. Matcha bara enligt <guilabel
+>Primärt klassnamn</guilabel
+>, lämna alltså kryssrutorna omarkerade - för mer information, se <link linkend="window-matching"
+>fönstermatchning</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Att klicka på <guilabel
+>Ok</guilabel
+> i föregående fönster fyller i resultaten under fliken <guilabel
+>Fönstermatchning</guilabel
+>. Skriv en begriplig text i rutan <guilabel
+>Beskrivning</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-knotes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Aktivera egenskapen <guilabel
+>Hoppa över skrivbordsvisning</guilabel
+> med <link linkend="parameters"
+>parametern</link
+> <guilabel
+>Tvinga</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicka dig fram för att slutföra inmatning av regeln.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="force-a-window-to-the-top"
+><title
+>Tvinga ett fönster att visas överst</title>
+<para
+>För att tvinga ett aktivt fönster att visas överst, ställ in egenskapen <guilabel
+>Förhindra att fokus stjäls</guilabel
+> till <guilabel
+>Ingen</guilabel
+>, tillsammans med <link linkend="parameters"
+>parametern</link
+> <guilabel
+>Tvinga</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="focus-stealing-pop2top-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect1>
+<sect1 id="multiple-rules-per-application"
+><title
+>Flera regler per program</title>
+<para
+><guilabel
+>Thunderbird</guilabel
+> har flera olika delfönster. I detta exempel: </para>
+<itemizedlist>
+<listitem
+><para
+>Lås huvudfönstret i <guilabel
+>Thunderbird</guilabel
+> på <emphasis
+>Virtuellt skrivbord 1</emphasis
+> med en specifik storlek och position på skrivbordet.</para
+></listitem>
+<listitem
+><para
+>Tillåt att brevfönstret i <guilabel
+>Thunderbird</guilabel
+> visas på alla skrivbord, och när det aktiveras, ge det fokus och visa det ovanför alla andra fönster.</para
+></listitem>
+<listitem
+><para
+>Visa påminnelser från <guilabel
+>Thunderbird</guilabel
+> överst, och ge dem inte fokus så att de inte stängs av misstag.</para
+></listitem>
+</itemizedlist>
+<para
+>Varje regels matchningskriterium är nog restriktivt så att deras ordning i &kwin;s huvudfönster inte spelar någon roll för <link linkend="rule-evaluation"
+>regelutvärderingen</link
+>. </para>
+<sect2 id="thunderbird---main"
+><title
+>Thunderbird - Huvudfönster</title>
+<para
+>Förutsatt att <guilabel
+>Thunderbirds huvudfönster</guilabel
+> är öppet, och att storlek och position är som du vill ha dem: </para>
+<orderedlist>
+<listitem
+><para
+>Använd <guilabel
+>Identifiera fönsteregenskaper</guilabel
+> och välj <guilabel
+>Thunderbirds huvudfönster</guilabel
+>. Kryssa för rutan <guilabel
+>Fönsterroll</guilabel
+> för att begränsa kriteriet till huvudfönstret - för ytterligare information, se <link linkend="window-matching"
+>fönstermatchning</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Att klicka på <guilabel
+>Ok</guilabel
+> i föregående fönster fyller i resultaten under fliken <guilabel
+>Fönstermatchning</guilabel
+>. Skriv en begriplig text i rutan <guilabel
+>Beskrivning</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Aktivera följande egenskaper: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicka dig fram för att slutföra inmatning av regeln.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---composer"
+><title
+>Thunderbird - Brevfönster</title>
+<para
+>Förutsatt att ett <guilabel
+>Thunderbird brevfönster</guilabel
+> är öppet: </para>
+<orderedlist>
+<listitem
+><para
+>Använd <guilabel
+>Identifiera fönsteregenskaper</guilabel
+> och välj <guilabel
+>Thunderbirds brevfönster</guilabel
+>. Kryssa för rutorna <guilabel
+>Fönsterroll</guilabel
+> och <guilabel
+>Fönstertyp</guilabel
+> för att begränsa kriteriet till brevfönster - för ytterligare information, se <link linkend="window-matching"
+>fönstermatchning</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Att klicka på <guilabel
+>Ok</guilabel
+> i föregående fönster fyller i resultaten under fliken <guilabel
+>Fönstermatchning</guilabel
+>. Skriv en begriplig text i rutan <guilabel
+>Beskrivning</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-compose.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Aktivera följande egenskaper: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicka dig fram för att slutföra inmatning av regeln.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---reminder"
+><title
+>Thunderbird - Påminnelse</title>
+<para
+>Förutsatt att ett fönster med en <guilabel
+>Thunderbird påminnelse</guilabel
+> är öppet: </para>
+<orderedlist>
+<listitem
+><para
+>Använd <guilabel
+>Identifiera fönsteregenskaper</guilabel
+> och välj <guilabel
+>Thunderbirds påminnelsefönster</guilabel
+>. Kryssa för rutorna <guilabel
+>Sekundärt klassnamn</guilabel
+> och <guilabel
+>Fönstertyp</guilabel
+> för att begränsa kriteriet till påminnelsefönster - för ytterligare information, se <link linkend="window-matching"
+>fönstermatchning</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Att klicka på <guilabel
+>Ok</guilabel
+> i föregående fönster fyller i resultaten under fliken <guilabel
+>Fönstermatchning</guilabel
+>. Skriv en begriplig text i rutan <guilabel
+>Beskrivning</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-reminder.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Aktivera följande egenskaper: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicka dig fram för att slutföra inmatning av regeln.</para
+></listitem>
+</orderedlist>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="application-workarounds"
+><title
+>Problemlösningar för program</title>
+<para
+>Nedan visas problemlösningar för program som inte beter sig som de ska. </para>
+<para
+><tip
+><para
+>Om du inte känner dig hemma med hur man skapar regler för &kwin;, se detta <link linkend="pin-a-window-to-a-desktop-and-set-other-attributes"
+>detaljerade exempel</link
+>, för att få något att basera den nya regeln på.</para
+></tip>
+</para>
+<sect1 id="full-screen-re-size-error"
+><title
+>Fel vid storleksändring till fullskärm</title>
+<para
+>&Emacs; och <guilabel
+>gVim</guilabel
+> kan, när de maximeras (fullskärmsläge) och under vissa omständigheter, stöta på problem vid storleksändring av fönstret - se <ulink url="https://bugs.kde.org/show_bug.cgi?id=252314"
+>Emacs window resizes ...</ulink
+> En regel i &kwin; kringgår problemet. </para>
+<para
+>Förutsatt att ett &Emacs;-fönster är öppet: </para>
+<orderedlist>
+<listitem
+><para
+>Använd <guilabel
+>Identifiera fönsteregenskaper</guilabel
+> och välj <emphasis
+>Emacs-fönstret</emphasis
+>. Matcha bara enligt<guilabel
+>Primärt klassnamn</guilabel
+>; lämna alltså kryssrutorna omarkerade - för ytterligare information, se <link linkend="window-matching"
+>fönstermatchning</link
+> <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Att klicka på <guilabel
+>Ok</guilabel
+> i föregående fönster fyller i resultaten under fliken <guilabel
+>Fönstermatchning</guilabel
+>. Skriv en begriplig text i rutan <guilabel
+>Beskrivning</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-emacs.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Ignorera &Emacs; begäran om fullskärm genom att aktivera egenskapen <guilabel
+>Lyd geometribegränsningar</guilabel
+>, ändra den till avstängd (<guilabel
+>Nej</guilabel
+>) för att ignorera den, och ställ in <link linkend="parameters"
+>parametern</link
+> <guilabel
+>Tvinga</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klicka dig fram för att slutföra inmatning av regeln.</para
+></listitem>
+</orderedlist>
+</sect1>
+</chapter>
+
+<!--userbase-content-->
+<chapter id="credits">
+<title
+>Tack till och licens</title>
+      <para
+>För dokumentationens upphovsrätts, se <ulink url="https://userbase.kde.org/index.php?title=KWin Rules&amp;action=history"
+>KWin-regelsidans historik</ulink
+> på användarbasen</para>
+      <para
+>Översättning Stefan Asserhäll <email
+>stefan.asserhall@bredband.net</email
+></para
+><para
+>Översättning Arve Eriksson <email
+>031299870@telia.com</email
+></para
+> &underFDL; </chapter>
+&documentation.index;
+</book>

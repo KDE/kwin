@@ -1,0 +1,98 @@
+# translation of kcm-kwin-scripts.po to Slovak
+# Richard Frič <Richard.Fric@kdemail.net>, 2012.
+# Roman Paholík <wizzardsk@gmail.com>, 2013, 2017.
+# Mthw <jari_45@hotmail.com>, 2018.
+# Matej Mrenica <matejm98mthw@gmail.com>, 2020.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcm-kwin-scripts\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-09-20 00:47+0000\n"
+"PO-Revision-Date: 2020-09-02 20:38+0200\n"
+"Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
+"Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
+"Language: sk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 20.08.0\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Roman Paholík"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "wizzardsk@gmail.com"
+
+#: module.cpp:57
+#, kde-format
+msgid "Import KWin Script"
+msgstr "Importovať KWin skript"
+
+#: module.cpp:58
+#, kde-format
+msgid "*.kwinscript|KWin scripts (*.kwinscript)"
+msgstr "*.kwinscript|KWin skripty (*.kwinscript)"
+
+#: module.cpp:96
+#, kde-format
+msgctxt "Placeholder is error message returned from the install service"
+msgid ""
+"Cannot import selected script.\n"
+"%1"
+msgstr ""
+"Nemôžem importovať vybraný skript.\n"
+"%1"
+
+#: module.cpp:108
+#, kde-format
+msgctxt "Placeholder is name of the script that was imported"
+msgid "The script \"%1\" was successfully imported."
+msgstr "Skript \"%1\" bol úspešne importovaný."
+
+#: module.cpp:148
+#, kde-format
+msgid "Error when uninstalling KWin Script: %1"
+msgstr "Chyba pri odinštalovaní KWin Skriptu: %1"
+
+#: package/contents/ui/main.qml:47
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Delete..."
+msgstr ""
+
+#: package/contents/ui/main.qml:60
+#, kde-format
+msgid "Install from File..."
+msgstr "Nainštalovať zo súboru..."
+
+#: package/contents/ui/main.qml:64
+#, kde-format
+msgid "Get New Scripts..."
+msgstr "Získať nové skripty..."
+
+#~ msgid "KWin Scripts"
+#~ msgstr "KWin skripty"
+
+#~ msgid "Configure KWin scripts"
+#~ msgstr "Nastaviť KWin skripty"
+
+#~ msgid "Tamás Krutki"
+#~ msgstr "Tamás Krutki"
+
+#~ msgid "KWin script configuration"
+#~ msgstr "Nastavenie KWin skriptu"
+
+#~ msgid "Import KWin script..."
+#~ msgstr "Importovať KWin skript..."
+
+#~ msgid ""
+#~ "Cannot import selected script: maybe a script already exists with the "
+#~ "same name or there is a permission problem."
+#~ msgstr ""
+#~ "Nemôžem importovať vybraný skript: možno už existuje s rovnakým názvom "
+#~ "alebo je problém s právami."

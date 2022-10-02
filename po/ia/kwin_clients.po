@@ -1,0 +1,810 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# g.sora <g.sora@tiscali.it>, 2010, 2011, 2012, 2013, 2017.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2017-01-29 22:12+0100\n"
+"Last-Translator: giovanni <g.sora@tiscali.it>\n"
+"Language-Team: Interlingua <kde-i18n-it@kde.org>\n"
+"Language: ia\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 2.0\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "Minuscule"
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "Normal"
+
+#: aurorae/src/aurorae.cpp:727
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "Grande (large)"
+
+#: aurorae/src/aurorae.cpp:728
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "Multo grande"
+
+#: aurorae/src/aurorae.cpp:729
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "Enorme"
+
+#: aurorae/src/aurorae.cpp:730
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "Multo enorme"
+
+#: aurorae/src/aurorae.cpp:731
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "Superdimensionate"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr "Dimension de button:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "Configura dialogo"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "&Alineamento de titulo"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "Sinistra"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "Centro"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "Dextera"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"Marca iste option si le bordo de fenestra debe esser picturate con le color "
+"de barra de titulo. Alteremente il essera picturate con le color de fundo."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "Bordo de fenestra colorate"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"Marca iste option si tu vole que le buttones dissolve quando le punctator "
+"del mus es super illos e dissolve se de nove quando il move via."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "Buttones animate"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "Marca iste option si tu vole que le texto del barra de titulo es "
+#~ "semblante 3D con un umbra retro illo."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "Usa &texto umbrate"
+
+#~ msgid "Button mouseover transition"
+#~ msgstr "Transition de button de mus super (mouseover)"
+
+#~ msgid "Configure window buttons' mouseover highlight animation"
+#~ msgstr ""
+#~ "Configura animation evidentiate de buttones de fenestra de mus super "
+#~ "(mousover)"
+
+#~ msgid "Title transitions"
+#~ msgstr "Transitiones de titulo"
+
+#~ msgid "Configure fading transitions when window title is changed"
+#~ msgstr ""
+#~ "Configura transitiones de pallidir  quando le titulo de fenestra es "
+#~ "modificate"
+
+#~ msgid "Window active state change transitions"
+#~ msgstr "Stato active de fenestra modifica transitiones"
+
+#~ msgid ""
+#~ "Configure fading between window shadow and glow when window's active "
+#~ "state is changed"
+#~ msgstr ""
+#~ "Configura le pallidir inter umbra e brillantia de fenestra quando le "
+#~ "stato de fenestra active es modificate "
+
+#~ msgid "Window grouping animations"
+#~ msgstr "Animationes gruppante de fenestra"
+
+#~ msgid ""
+#~ "Configure window titlebar animations when windows are grouped/ungrouped"
+#~ msgstr ""
+#~ "Configura animationes de barra de titulo quando fenestras ed gruppate/de-"
+#~ "gruppate"
+
+#~ msgid "Hide Advanced Configuration Options"
+#~ msgstr "Cela optiones de configuration avantiate"
+
+#~ msgid "Show Advanced Configuration Options"
+#~ msgstr "Monstra optiones de configuration avantiate"
+
+#~ msgid "Animations"
+#~ msgstr "Animationes"
+
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "Demanda -Preferentias deOxygen"
+
+#~ msgid "Remove selected exception?"
+#~ msgstr "Remove le exception seligite?"
+
+#~ msgid "Warning - Oxygen Settings"
+#~ msgstr "Aviso - preferentias de Oxygen"
+
+#~ msgid "Regular Expression syntax is incorrect"
+#~ msgstr "Syntaxe de expression regular incorrecte"
+
+#~ msgid "Exception Type"
+#~ msgstr "Typo de exception"
+
+#~ msgid "Regular Expression"
+#~ msgstr "Expression Regular"
+
+#~ msgid "Window Title"
+#~ msgstr "Titulo de fenestra"
+
+#~ msgid "Window Class Name"
+#~ msgstr "Nomine de Classe de fenestra"
+
+#~ msgid "Enable/disable this exception"
+#~ msgstr "habilita/Dishabilita iste exception"
+
+#~ msgid "General"
+#~ msgstr "General"
+
+#~ msgid "Border si&ze:"
+#~ msgstr "Di&mension de bordo:"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "Necun Bordo"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Borders"
+#~ msgstr "Necun boordos lateral"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "Grande (Large)"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "Multe Grande"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "Ponderose (Huge)"
+
+#~ msgid "Tit&le alignment:"
+#~ msgstr "Alineamento de Titu&lo:"
+
+#~ msgid "Center (Full Width)"
+#~ msgstr "Centro (Largessa complete)"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "Parve"
+
+#~ msgid "Enable animations"
+#~ msgstr "Habilita animationes"
+
+#~ msgid "Fine Tuning"
+#~ msgstr "Adaptation subtil"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "Claude fenestras per duple pulsar sur le button de menu"
+
+#~ msgid "Never Draw Separator"
+#~ msgstr "Jammais designa separator"
+
+#~ msgid "Draw Separator When Window is Active"
+#~ msgstr "Designa separator quando fenestra es active"
+
+#~ msgid "Always Draw Separator"
+#~ msgstr "Sempre designa separator"
+
+#~ msgid "Separator disp&lay:"
+#~ msgstr "Monstrator de &separator:"
+
+#~ msgid "Outline active window title"
+#~ msgstr "Contorna titulo de fenestra active"
+
+#~ msgid "Use narrow space between decoration buttons"
+#~ msgstr "Usa spatios stricte inter buttones de decoration"
+
+#~ msgid "Add handle to resize windows with no border"
+#~ msgstr "Adde manico [rp redimensionar fenestras con necun bordo"
+
+#~ msgid "Display window borders for maximized windows"
+#~ msgstr "Monstra bordos der fenestra  pro maximizar fenestras"
+
+#~ msgid "Shadows"
+#~ msgstr "Umbras"
+
+#~ msgid "Window Drop-Down Shadow"
+#~ msgstr "Umbra disrolante de fenestra"
+
+#~ msgid "Active Window Glow"
+#~ msgstr "Luminositate de fenestra active"
+
+#~ msgid "Window-Specific Overrides"
+#~ msgstr "Annullationes specific de Window"
+
+#~ msgid "Dialog"
+#~ msgstr "Dialogo"
+
+#~ msgid "Information about Selected Window"
+#~ msgstr "Information re fenestra seligite"
+
+#~ msgid "Class: "
+#~ msgstr "Classe:"
+
+#~ msgid "Title: "
+#~ msgstr "Titulo: "
+
+#~ msgid "Window Property Selection"
+#~ msgstr "Selection de proprietate de fenestra"
+
+#~ msgid "Use window class (whole application)"
+#~ msgstr "Usa classe de fenestra (application integre)"
+
+#~ msgid "Use window title"
+#~ msgstr "Usa titulo de fenestra"
+
+#~ msgid "Window Identification"
+#~ msgstr "Identification de fenestra"
+
+#~ msgid "Matching window property: "
+#~ msgstr "Proprietate de fenestra coincidente: "
+
+#~ msgid "Regular expression to match: "
+#~ msgstr "Expression regular que on debe corresponder:"
+
+#~ msgid "Detect Window Properties"
+#~ msgstr "Releva proprietate de fenestra"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Optiones de decoration"
+
+#~ msgctxt "outline window title"
+#~ msgid "Disabled"
+#~ msgstr "Dishabilitate"
+
+#~ msgctxt "outline window title"
+#~ msgid "Enabled"
+#~ msgstr "Habilitate"
+
+#~ msgid "Border size:"
+#~ msgstr "Dimension de bordo:"
+
+#~ msgid "Outline active window title:"
+#~ msgstr "Contorna titulo de fenestra active:"
+
+#~ msgid "Separator display:"
+#~ msgstr "Monstrator separator:"
+
+#~ msgid "Hide window title bar"
+#~ msgstr "Cela barra de titulo de fenestra"
+
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Disabled"
+#~ msgstr "Dishabilitate"
+
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Enabled"
+#~ msgstr "Habilitate"
+
+#~ msgid "Move Up"
+#~ msgstr "Move in alto"
+
+#~ msgid "Move Down"
+#~ msgstr "Move a basso "
+
+#~ msgid "Add"
+#~ msgstr "Adde"
+
+#~ msgid "Remove"
+#~ msgstr "Remove"
+
+#~ msgid "Edit"
+#~ msgstr "Edita"
+
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "Demo de umbra de Oxygen"
+
+#~ msgid "Draw window background"
+#~ msgstr "Designa fundo de fenestra"
+
+#~ msgid "Inactive Windows"
+#~ msgstr "Fenestras non active"
+
+#~ msgid "Active Windows"
+#~ msgstr "Fenestras active"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+#~ msgid "Window Actions Menu"
+#~ msgstr "Menu de actiones de fenestra"
+
+#~ msgid "Application Menu"
+#~ msgstr "Menu de application"
+
+#~ msgid "Help"
+#~ msgstr "Adjuta"
+
+#~ msgid "Minimize"
+#~ msgstr "Minimisa"
+
+#~ msgid "Maximize"
+#~ msgstr "Maximiza"
+
+#~ msgid "Close"
+#~ msgstr "Claude"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "Mantene super alteres"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "Mantene infra alteres"
+
+#~ msgid "On All Desktops"
+#~ msgstr "Super omne scriptorios"
+
+#~ msgid "Shade Button"
+#~ msgstr "Adumbra Button"
+
+#~ msgid "Menu"
+#~ msgstr "Menu"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "Non super omne scriptorios"
+
+#~ msgid "On all desktops"
+#~ msgstr "Super omne scriptorios"
+
+#~ msgid "Unshade"
+#~ msgstr "De-Umbra"
+
+#~ msgid "Shade"
+#~ msgstr "Adumbra"
+
+#~ msgid "Resize"
+#~ msgstr "Redimensiona"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>B II Vista preliminari</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "Restabili"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "Designa quadros de fenestra usante colores de barra de &titulo"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "Quando il es seligite, le bordo de fenestra es designate usante colores "
+#~ "de barra de titulo; alteremente, illos es designate usante colores normal "
+#~ "de bordo."
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "Designa e &redimensiona manico"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "Quando il es seligite, decorationes es designate con un \"manico\" in le "
+#~ "angulo dextere de basso de le fenestras; alteremente necun manico es "
+#~ "designate."
+
+#~ msgid "Auto-move titlebar"
+#~ msgstr "Auto-move barra de titulo"
+
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr ""
+#~ "Quando il es seligite, barras de titulo es automaticamente ponite a "
+#~ "positiones visibile; alteremente, illos solmente pote esser movite "
+#~ "manualmente per uso de shift+drag (shift+traher)."
+
+#~ msgid "Actions Settings"
+#~ msgstr "Preferentias de Actiones"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "Duple pressa sur button de menu:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "Nihil Face"
+
+#~ msgid "Minimize Window"
+#~ msgstr "Minimiza Fenestra"
+
+#~ msgid "Shade Window"
+#~ msgstr "Adumbra Fenestra"
+
+#~ msgid "Close Window"
+#~ msgstr "Claude Fenestra"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "Un action il pote esser associate a un duple pression de button de menu. "
+#~ "Tu lassa lo a nulle si tu dubita."
+
+#~ msgid "Laptop"
+#~ msgstr "Laptop"
+
+#~ msgid "Bac&kground style: "
+#~ msgstr "Stilo de &fundo: "
+
+#~ msgid "Solid Color"
+#~ msgstr "Color Solid"
+
+#~ msgid "Radial Gradient"
+#~ msgstr "Gradiente Radial"
+
+#~ msgid "Follow Style Hint"
+#~ msgstr "Seque insinuation de stilo"
+
+#~ msgid "Background style:"
+#~ msgstr "Stilo de Fundo:"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Giovanni Sora"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "g.sora@tiscali.it"
+
+#~ msgid "Oxygen decoration shadows demonstration"
+#~ msgstr "Demonstration de umbras de decoration de Oxygen"
+
+#~ msgid "(c) 2011, Hugo Pereira Da Costa"
+#~ msgstr "(c) 2011, Hugo Pereira Da Costa"
+
+#~ msgid "Hugo Pereira Da Costa"
+#~ msgstr "Hugo Pereira Da Costa"
+
+#~ msgid "Save"
+#~ msgstr "Salveguarda"
+
+#~ msgid "Save shadows as pixmaps in provided directory"
+#~ msgstr "Salveguarda umbras como pixmaps in directorio fornite"
+
+#~ msgid "Large"
+#~ msgstr "Grande (Large)"
+
+#~ msgid "Small"
+#~ msgstr "Parve"
+
+#~ msgid "Extra size grip display: "
+#~ msgstr "Prisa  de monstrator extra grande:"
+
+#~ msgid "Extra size grip display:"
+#~ msgstr "Prisa de monstrator extra grande:"
+
+#~ msgid "Inner Color:"
+#~ msgstr "Color Interne:"
+
+#~ msgid "Outer Color:"
+#~ msgstr "Color Externe:"
+
+#~ msgid "Vertical Offset:"
+#~ msgstr "Displaciamento vertical:"
+
+#~ msgid "Size: "
+#~ msgstr "Dimension :"
+
+#~ msgid "px"
+#~ msgstr "px"
+
+#~ msgid "Always Hide Extra Size Grip"
+#~ msgstr "Sempre cela prisa extra grande"
+
+#~ msgid "Show Extra Size Grip When Needed"
+#~ msgstr "Monstra prisa extra grande quando il necessita"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "Marca iste option si tu vole que le fenestras es claudite quando tu duple "
+#~ "pulsa le  button de menu, de modo semblante a Microsoft Windows"
+
+#~ msgid "Plastik"
+#~ msgstr "Plastik"
+
+#~ msgid "All Desktops"
+#~ msgstr "Omne Scriptorios"
+
+#~ msgid "Above"
+#~ msgstr "Supra"
+
+#~ msgid "Below"
+#~ msgstr "Infra"
+
+#~ msgid "Close Item"
+#~ msgstr "Claude Elemento"
+
+#~ msgid "Tabstrip"
+#~ msgstr "Tabstrip"
+
+#~ msgid "&Left"
+#~ msgstr "&Sinistra"
+
+#~ msgid "&Center"
+#~ msgstr "&Centro"
+
+#~ msgid "&Right"
+#~ msgstr "Dexte&ra"
+
+#~ msgid "Display window icons"
+#~ msgstr "Monstra icones de fenestra"
+
+#~ msgid "O&utline Color:"
+#~ msgstr "Color de &contorno:"
+
+#~ msgid "Do not keep above others"
+#~ msgstr "Non mantene lo super alteres"
+
+#~ msgid "Keep above others"
+#~ msgstr "Mantene lo super alteres"
+
+#~ msgid "Do not keep below others"
+#~ msgstr "Non mantene lo sub alteres"
+
+#~ msgid "Keep below others"
+#~ msgstr "Mantene lo sub alteres"
+
+#~ msgid "Enable title transition animations"
+#~ msgstr "Habilita animationes de transition de titulo"
+
+#~ msgid "Variable"
+#~ msgstr "Variabile"
+
+#~ msgid "Maximum"
+#~ msgstr "Maxime"
+
+#~ msgid "Enable window grouping"
+#~ msgstr "Habilita gruppamento de fenestra"
+
+#~ msgid "Shadow caching:"
+#~ msgstr "Immagazinage de cache umbra:"
+
+#~ msgid "TextLabel"
+#~ msgstr "Etiquetta de Texto"
+
+#~ msgid "Use Oxygen Shadows"
+#~ msgstr "Usa umbras de Oxygen"
+
+#~ msgid "Use Desktop Effects Shadows"
+#~ msgstr "Usa umbras de Effectos de Scriptorio"
+
+#~ msgid "Do Not Draw Shadows"
+#~ msgstr "Non designa umbras"
+
+#~ msgid "Shadow style:"
+#~ msgstr "Stilo de umbra:"
+
+#~ msgctxt "draw separator"
+#~ msgid "Enabled"
+#~ msgstr "Habilitate"
+
+#~ msgctxt "draw separator"
+#~ msgid "Disabled"
+#~ msgstr "Dishabilitate"
+
+#~ msgid "Draw separator between title bar and window contents: "
+#~ msgstr "Tirar un separator inter barra de titulo e contentos de fenestra:"
+
+#~ msgid "Draw Separator between title bar and active window contents "
+#~ msgstr ""
+#~ "Designar Separator inter barra de titulo e contentos de fenestra active"
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "Il installa un thema KWM"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "Percurso a un file de config de un thema"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>Thema KWM</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "Collose"
+
+#~ msgid "Unsticky"
+#~ msgstr "Non Collose"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>Vista preliminari de Keramik</b></center>"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "Designar barra de titulo con effecto&s punctate"
+
+#~ msgid ""
+#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
+#~ "otherwise, they are drawn without the stipple."
+#~ msgstr ""
+#~ "Quando il es seligite, barras de titulo active es designate con un "
+#~ "effecto punctate; alteremente illos es designate sin punctos."
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "Designar barra de p&risa sub fenestras"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
+#~ "otherwise, no grab bar is drawn."
+#~ msgstr ""
+#~ "Quando il es seligite, decorationes es designate con un \"barra de prisa"
+#~ "\" sub fenestras; alteremente, necun barra de prisa es designate."
+
+#~ msgid "Draw &gradients"
+#~ msgstr "Designar &gradientes"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with gradients for high-color "
+#~ "displays; otherwise, no gradients are drawn."
+#~ msgstr ""
+#~ "Quando il es seligite, decorationes es designate con gradientes pro "
+#~ "monstratores de alte color, alteremente necun gradiente es designate."
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"
+
+#~ msgid ""
+#~ "When selected, the window decoration borders are drawn using the titlebar "
+#~ "colors; otherwise, they are drawn using normal border colors instead."
+#~ msgstr ""
+#~ "Quando il es seligite, le bordos de decoration de fenestra es designate "
+#~ "usante colores de barra de titulo; alteremente illos es designate usante "
+#~ "colores de bordo normal."
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "Quartz &extra subtil"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "Decorationes de Fenestra Quartz con barra de titulo extra-parve"
+
+#~ msgid "Quartz"
+#~ msgstr "Quartz"
+
+#~ msgid "Redmond"
+#~ msgstr "Redmond"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "Mon&Strar prisa de redimensionar fenestra"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "Quando il es seligite, omne fenestras es designate con un prisa de "
+#~ "redimensionar a le angulo basse de dextere. Isto face le redimensionar de "
+#~ "fenestra plus facile, specialmente pro trackballs e altere "
+#~ "reimplaciamentos de mus pro laptops."
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr ""
+#~ "Hic tu pote cambiar le dimension de le prisa (manico) de redimensionar."
+
+#~ msgid "Medium"
+#~ msgstr "Medium"
+
+#~ msgid "Modern System"
+#~ msgstr "Systema Moderne"
+
+#~ msgid "Web"
+#~ msgstr "Web"
+
+#~ msgid "Keramik"
+#~ msgstr "Keramik"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "Monstrar le &icone de fenestra in le bulla de legenda"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "Marcar iste option si tu vole que le icone de fenestra debe esser "
+#~ "monstrate in le bulla de legenda proxime le texto de barra de titulo."
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "De&signa parve bullas de legenda su le fenestra active"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "Marcar iste option si tu vole que le bulla de legenda debe haber le mesme "
+#~ "dimension su le fenestra active que il ha super alteres inactive. Iste "
+#~ "option es utile pro laptops o schermos de basse resolution ubi tu vole "
+#~ "maximizar le quantitate de spatio disponibile pro le contentos de "
+#~ "fenestra."
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "Ti&ra barras de prisa sub fenestras"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "Marcar iste option si tu vole que un barra de sasir es designate sub le "
+#~ "fenestras. Quando iste option non es seligite solmente un bordo subtil "
+#~ "essera designate ibidem."

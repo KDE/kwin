@@ -1,0 +1,504 @@
+# translation of kcmkwindecoration.po to Kannada
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Umesh Rudrapatna <umeshrs@gmail.com>, 2008.
+# Shankar Prasad <svenkate@redhat.com>, 2008.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwindecoration\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2008-12-25 15:34+0530\n"
+"Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
+"Language-Team: Kannada <en@li.org>\n"
+"Language: kn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "ಉಮೇಶ್ ರುದ್ರಪಟ್ಟಣ, ಶಂಕರ್‌ ಪ್ರಸಾದ್‌ ಎಂ. ವಿ."
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "umeshrs@gmail.com, svenkate@redhat.com"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, kde-format
+msgid "Application menu"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, fuzzy, kde-format
+#| msgid "On All Desktops"
+msgid "On all desktops"
+msgstr "ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳ ಮೇಲೆ"
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr "ಕನಿಷ್ಠೀಕರಿಸು"
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr "ಗರಿಷ್ಠೀಕರಿಸು"
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr "ಮುಚ್ಚು"
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr "ಛಾಯೆ (ಷೇಡ್)"
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr ""
+
+#: kcm.cpp:49
+#, fuzzy, kde-format
+#| msgid "&Window Decoration"
+msgid "Window Decorations"
+msgstr "ವಿಂಡೋ ಅಲಂಕಾರ(&W)"
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr ""
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr ""
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr ""
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr ""
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr ""
+
+#: package/contents/ui/main.qml:57
+#, fuzzy, kde-format
+#| msgid "Buttons"
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "ಗುಂಡಿಗಳು"
+
+#: package/contents/ui/main.qml:93
+#, fuzzy, kde-format
+#| msgid "B&order size:"
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "ಸೀಮೆಯ ಗಾತ್ರ(&o):"
+
+#: package/contents/ui/main.qml:112
+#, fuzzy, kde-format
+#| msgid "&Window Decoration"
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr "ವಿಂಡೋ ಅಲಂಕಾರ(&W)"
+
+#: package/contents/ui/main.qml:141
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr ""
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr ""
+
+#: package/contents/ui/main.qml:165
+#, fuzzy, kde-format
+#| msgid "&Show window button tooltips"
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "ವಿಂಡೋ ಗುಂಡಿಗಳ ಉಪಕರಣಸುಳಿವುಗಳನ್ನು ತೋರಿಸು(&S)"
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr ""
+
+#: utils.cpp:25
+#, fuzzy, kde-format
+#| msgid "B&order size:"
+msgid "No Borders"
+msgstr "ಸೀಮೆಯ ಗಾತ್ರ(&o):"
+
+#: utils.cpp:26
+#, fuzzy, kde-format
+#| msgid "B&order size:"
+msgid "No Side Borders"
+msgstr "ಸೀಮೆಯ ಗಾತ್ರ(&o):"
+
+#: utils.cpp:27
+#, fuzzy, kde-format
+#| msgid "Tiny"
+msgid "Tiny"
+msgstr "ಅತಿ ಸಣ್ಣ"
+
+#: utils.cpp:28
+#, fuzzy, kde-format
+#| msgid "Normal"
+msgid "Normal"
+msgstr "ಸಾಧಾರಣ"
+
+#: utils.cpp:29
+#, fuzzy, kde-format
+#| msgid "Large"
+msgid "Large"
+msgstr "ದೊಡ್ಡದು"
+
+#: utils.cpp:30
+#, fuzzy, kde-format
+#| msgid "Very Large"
+msgid "Very Large"
+msgstr "ಅತಿ ದೊಡ್ಡದು"
+
+#: utils.cpp:31
+#, fuzzy, kde-format
+#| msgid "Huge"
+msgid "Huge"
+msgstr "ಬೃಹತ್ತಾದ"
+
+#: utils.cpp:32
+#, fuzzy, kde-format
+#| msgid "Very Huge"
+msgid "Very Huge"
+msgstr "ಅತಿ ಬೃಹತ್ತಾದ"
+
+#: utils.cpp:33
+#, fuzzy, kde-format
+#| msgid "Oversized"
+msgid "Oversized"
+msgstr "ಅತಿಗಾತ್ರವಾದ"
+
+#~ msgid "Menu"
+#~ msgstr "ಪರಿವಿಡಿ"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below"
+#~ msgstr "ಬೇರೆಯವುಗಳ ಕೆಳಗಿಡು"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above"
+#~ msgstr "ಬೇರೆಯವುಗಳ ಮೇಲಿಡು"
+
+#, fuzzy
+#~| msgid "&Window Decoration"
+#~ msgid "Download New Window Decorations"
+#~ msgstr "ವಿಂಡೋ ಅಲಂಕಾರ(&W)"
+
+#, fuzzy
+#~| msgid "B&order size:"
+#~ msgid "Border si&ze:"
+#~ msgstr "ಸೀಮೆಯ ಗಾತ್ರ(&o):"
+
+#, fuzzy
+#~| msgid "&Window Decoration"
+#~ msgid "Configure %1..."
+#~ msgstr "ವಿಂಡೋ ಅಲಂಕಾರ(&W)"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgid "Form"
+#~ msgstr "ಸಾಧಾರಣ"
+
+#, fuzzy
+#~| msgid "Buttons"
+#~ msgid "Button size:"
+#~ msgstr "ಗುಂಡಿಗಳು"
+
+#, fuzzy
+#~| msgid "Tiny"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "ಅತಿ ಸಣ್ಣ"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "ಸಾಧಾರಣ"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "ದೊಡ್ಡದು"
+
+#, fuzzy
+#~| msgid "Very Large"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "ಅತಿ ದೊಡ್ಡದು"
+
+#, fuzzy
+#~| msgid "Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "ಬೃಹತ್ತಾದ"
+
+#, fuzzy
+#~| msgid "Very Huge"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "ಅತಿ ಬೃಹತ್ತಾದ"
+
+#, fuzzy
+#~| msgid "Oversized"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "ಅತಿಗಾತ್ರವಾದ"
+
+#~ msgid "KDE"
+#~ msgstr "ಕೆಡಿಇ"
+
+#~ msgid "%1 (unavailable)"
+#~ msgstr "%1 (ಲಭ್ಯವಿಲ್ಲ)"
+
+#~ msgid ""
+#~ "To add or remove titlebar buttons, simply <i>drag</i> items between the "
+#~ "available item list and the titlebar preview. Similarly, drag items "
+#~ "within the titlebar preview to re-position them."
+#~ msgstr ""
+#~ "ಶೀರ್ಷಿಕೆಪಟ್ಟಿಯ ಗುಂಡಿಗಳನ್ನು ಸೇರಿಸಲು ಅಥವ ತೆಗೆಯಲು, ಲಭ್ಯವಿರುವ ಅಂಶಗಳ ಪಟ್ಟಿ ಹಾಗು "
+#~ "ಶೀರ್ಷಿಕೆಪಟ್ಟಿಯ ಮುನ್ನೋಟದ ನಡುವೆ ಅಂಶಗಳನ್ನು ಕೇವಲ <i>ಎಳೆ</i>ದರಾಯಿತು. ಅದೆ ರೀತಿ, "
+#~ "ಶೀರ್ಷಿಕೆಪಟ್ಟಿಯ ಮುನ್ನೋಟದಲ್ಲಿಯೆ ಅಂಶಗಳ ಸ್ಥಳಗಳನ್ನು ಬದಲಾಯಿಸಲು ಅವುಗಳನ್ನು ಎಳೆಯಿರಿ."
+
+#~ msgid "Resize"
+#~ msgstr "ಗಾತ್ರಬದಲಿಸು"
+
+#~ msgid "Help"
+#~ msgstr "ಸಹಾಯ"
+
+#~ msgid "--- spacer ---"
+#~ msgstr "--- ವಿಭಾಜಕ ---"
+
+#~ msgid ""
+#~ "Enabling this checkbox will show window button tooltips. If this checkbox "
+#~ "is off, no window button tooltips will be shown."
+#~ msgstr ""
+#~ "ಈ ಗುರುತುಚೌಕವನ್ನು ಶಕ್ತಗೊಳಿಸಿದರೆ ವಿಂಡೋ ಗುಂಡಿಗಳ ಉಪಕರಣಸುಳಿವುಗಳನ್ನು ತೋರಿಸಲಾಗುತ್ತದೆ. "
+#~ "ಈ ಗುರುತುಚೌಕವು ಅಶಕ್ತವಾಗಿದ್ದರೆ ವಿಂಡೋ ಗುಂಡಿಗಳ ಉಪಕರಣಸುಳಿವುಗಳನ್ನು ತೋರಿಸಲಾಗುವುದಿಲ್ಲ."
+
+#, fuzzy
+#~| msgid ""
+#~| "The appropriate settings can be found in the \"Buttons\" Tab; please "
+#~| "note that this option is not available on all styles yet."
+#~ msgid "Please note that this option is not available on all styles yet."
+#~ msgstr ""
+#~ "ಸೂಕ್ತ ಸಂಯೋಜನೆಗಳನ್ನು \"ಗುಂಡಿಗಳು\" ಹಾಳೆಯಲ್ಲಿ ಕಾಣಬಹುದು; ಈ ಆಯ್ಕೆಯು ಸಧ್ಯಕ್ಕೆ ಎಲ್ಲಾ "
+#~ "ಅಲಂಕಾರಗಳಲ್ಲೂ ಲಭ್ಯವಿಲ್ಲ ಎಂಬುದನ್ನು ದಯವಿಟ್ಟು ಗಮನಿಸಿ."
+
+#~ msgid "Use custom titlebar button &positions"
+#~ msgstr "ಗ್ರಾಹಕೀಯ (ಕಸ್ಟಮ್) ಶೀರ್ಷಿಕೆಪಟ್ಟಿಯ ಗುಂಡಿಯ ಸ್ಥಾನಗಳನ್ನು ಬಳಸು(&p)"
+
+#~ msgid "B&order size:"
+#~ msgstr "ಸೀಮೆಯ ಗಾತ್ರ(&o):"
+
+#~ msgid "Use this combobox to change the border size of the decoration."
+#~ msgstr "ಅಲಂಕಾರದ ಸೀಮೆ ಗಾತ್ರವನ್ನು ಬದಲಾಯಿಸಲು ಈ ಸಂಯುಕ್ತ ಚೌಕ (ಕಾಂಬೋಬಾಕ್ಸ್) ಅನ್ನು ಬಳಸಿ."
+
+#~ msgid "Decoration Options"
+#~ msgstr "ಅಲಂಕಾರ ಆಯ್ಕೆಗಳು"
+
+#~ msgid ""
+#~ "Select the window decoration. This is the look and feel of both the "
+#~ "window borders and the window handle."
+#~ msgstr ""
+#~ "ವಿಂಡೋದ ಅಲಂಕಾರವನ್ನು ಆರಿಸಿ. ಇದು ವಿಂಡೋ ಅಂಚುಗಳು ಹಾಗೂ ಹಿಡಿಕೆಗಳ (ಹ್ಯಾಂಡಲ್) ನೋಟ "
+#~ "ಹಾಗು ಮಾಟವನ್ನೊಳಗೊಂಡಿದೆ."
+
+#~ msgid "Window Decoration Control Module"
+#~ msgstr "ವಿಂಡೋ ಅಲಂಕಾರ ನಿಯಂತ್ರಣ ಘಟಕ"
+
+#~ msgid "(c) 2001 Karol Szwed"
+#~ msgstr "(c) 2001 Karol Szwed"
+
+#~ msgid "Karol Szwed"
+#~ msgstr "Karol Szwed"
+
+#, fuzzy
+#~| msgid ""
+#~| "<h1>Window Manager Decoration</h1><p>This module allows you to choose "
+#~| "the window border decorations, as well as titlebar button positions and "
+#~| "custom decoration options.</p>To choose a theme for your window "
+#~| "decoration click on its name and apply your choice by clicking the "
+#~| "\"Apply\" button below. If you do not want to apply your choice you can "
+#~| "click the \"Reset\" button to discard your changes.<p>You can configure "
+#~| "each theme in the \"Configure [...]\" tab. There are different options "
+#~| "specific for each theme.</p><p>In \"General Options (if available)\" you "
+#~| "can activate the \"Buttons\" tab by checking the \"Use custom titlebar "
+#~| "button positions\" box. In the \"Buttons\" tab you can change the "
+#~| "positions of the buttons to your liking.</p>"
+#~ msgid ""
+#~ "<h1>Window Manager Decoration</h1><p>This module allows you to choose the "
+#~ "window border decorations, as well as titlebar button positions and "
+#~ "custom decoration options.</p>To choose a theme for your window "
+#~ "decoration click on its name and apply your choice by clicking the \"Apply"
+#~ "\" button below. If you do not want to apply your choice you can click "
+#~ "the \"Reset\" button to discard your changes.<p>You can configure each "
+#~ "theme. There are different options specific for each theme.</p><p>On the "
+#~ "\"Buttons\" tab check the \"Use custom titlebar button positions\" box "
+#~ "and you can change the positions of the buttons to your liking.</p>"
+#~ msgstr ""
+#~ "<h1>ವಿಂಡೋ ಅಲಂಕಾರ ವ್ಯವಸ್ಥಾಪಕ</h1><p>ಈ ಘಟಕವು ನಿಮಗೆ ವಿಂಡೋ ಅಂಚಿನ ಅಲಂಕಾರವನ್ನು, "
+#~ "ಹಾಗು ಶೀರ್ಷಿಕಾ ಗುಂಡಿಯ ಸ್ಥಾನ ಹಾಗು ಕಸ್ಟಮ್ ಅಲಂಕಾರ ಆಯ್ಕೆಗಳನ್ನು ಆರಿಸಲು ಅನುವು "
+#~ "ಮಾಡಿಕೊಡುತ್ತದೆ.</p>ನಿಮ್ಮ ವಿಂಡೋಗೆ ಅಲಂಕಾರಕ್ಕೆ ಒಂದು ಥೀಮ್‌ ಅನ್ನು ಆಯ್ಕೆ ಮಾಡಲು, ಅದರ "
+#~ "ಹೆಸರಿನ ಮೇಲೆ ಕ್ಲಿಕ್ಕಿಸಿ ನಂತರ ಈ ಕೆಳಗಿನ \"ಅನ್ವಯ\" ಗುಂಡಿಯನ್ನು ಒತ್ತುವ ಮೂಲಕ ನಿಮ್ಮ "
+#~ "ಆಯ್ಕೆಯನ್ನು ಅನ್ವಯಿಸಿ. ನಿಮ್ಮ ಆಯ್ಕೆಯನ್ನು ಅನ್ವಯಿಸಲು ನೀವು ಬಯಸದೆ ಹೋದಲ್ಲಿ, ನೀವು ಮಾಡಿದ "
+#~ "ಬದಲಾವಣೆಗಳನ್ನು ತಿರಸ್ಕರಿಸಲು \"ಪುನರ್ಹೊಂದಿಸು\" ಗುಂಡಿಯನ್ನು ಕ್ಲಿಕ್ಕಿಸಿ. <p>ಪ್ರತಿಯೊಂದು "
+#~ "ಥೀಮ್ ಅನ್ನು \"ಸಂರಚಿಸು [...]\" ಟ್ಯಾಬ್‌ ಅನ್ನು ಬಳಸಿಕೊಂಡು ಸಂರಚಿಸಬಹುದು. ಪ್ರತಿಯೊಂದು "
+#~ "ಥೀಮ್‌ಗೂ ಪ್ರತ್ಯೇಕವಾದ ನಿಶ್ಚಿತ ಆಯ್ಕೆಗಳಿವೆ.</p><p>In \"ಸಾಮಾನ್ಯ ಆಯ್ಕೆಗಳು "
+#~ "(ಲಭ್ಯವಿದ್ದಲ್ಲಿ)\" ನಲ್ಲಿ \"ಕಸ್ಟಮ್‌ ಶೀರ್ಷಿಕೆ ಪಟ್ಟಿ ಗುಂಡಿಯ ಸ್ಥಾನಗಳನ್ನು ಬಳಸು\" "
+#~ "ಪೆಟ್ಟಿಗೆಯನ್ನು ಗುರುತು ಹಾಕುವ ಮೂಲಕ ನೀವು \"ಗುಂಡಿಗಳು\" ಟ್ಯಾಬ್ ಅನ್ನು "
+#~ "ಸಕ್ರಿಯಗೊಳಿಸಬಹುದು. \"ಗುಂಡಿಗಳು\" ಟ್ಯಾಬ್‌ನಲ್ಲಿ ನಿಮ್ಮ ಇಷ್ಟದ ಗುಂಡಿಗಳ ಸ್ಥಾನಗಳನ್ನು ನೀವು "
+#~ "ಬದಲಾಯಿಸಬಹುದು.</p>"
+
+#~ msgid "Active Window"
+#~ msgstr "ಸಕ್ರಿಯ ವಿಂಡೋ"
+
+#~ msgid "Inactive Window"
+#~ msgstr "ನಿಷ್ಕ್ರಿಯ ವಿಂಡೋ"
+
+#~ msgid "kcmkwindecoration"
+#~ msgstr "kcmkwindecoration"
+
+#~ msgid ""
+#~ "No preview available.\n"
+#~ "Most probably there\n"
+#~ "was a problem loading the plugin."
+#~ msgstr ""
+#~ "ಯಾವುದೇ ಮುನ್ನೋಟ ಲಭ್ಯವಿಲ್ಲ.\n"
+#~ "ಬಹುಷಃ ಮಿಳಿತಾನ್ವಯ (ಪ್ಲಗಿನ್) ಅನ್ನು \n"
+#~ " ಲೋಡ್‌ ಮಾಡುವಾಗ ತೊಂದರೆಯುಂಟಾಗಿರಬಹುದು."
+
+#~ msgid "&Buttons"
+#~ msgstr "ಗುಂಡಿಗಳು(&B)"
+
+#~ msgid "Ozone"
+#~ msgstr "ಓಝೋನ್"

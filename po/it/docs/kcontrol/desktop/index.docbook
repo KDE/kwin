@@ -1,0 +1,164 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Italian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="desktop" lang="&language;">
+<title
+>Desktop virtuali</title>
+<articleinfo>
+
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<author
+>&Jost.Schenck; &Jost.Schenck.mail;</author>
+<othercredit role="translator"
+><firstname
+>Paolo</firstname
+><surname
+>Zamponi</surname
+><affiliation
+><address
+><email
+>zapaolo@email.it</email
+></address
+></affiliation
+><contrib
+>Aggiornamento a Plasma 5.20</contrib
+></othercredit
+><othercredit role="translator"
+><firstname
+>Luciano</firstname
+><surname
+>Montanaro</surname
+><contrib
+>Traduzione della documentazione</contrib
+></othercredit
+><othercredit role="translator"
+><firstname
+>Federico</firstname
+><surname
+>Zenith</surname
+><affiliation
+><address
+><email
+>federico.zenith@member.fsf.org</email
+></address
+></affiliation
+><contrib
+>Traduzione della documentazione</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>09/04/2021</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Impostazioni di sistema</keyword>
+<keyword
+>virtuale</keyword>
+<keyword
+>desktop</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>&kde; ti offre la possibilità di avere diversi desktop virtuali. </para>
+<para
+>Puoi modificare i nomi dei desktop facendo clic sul pulsante <guibutton
+>Rinomina</guibutton
+> (che appare quando passi sopra all'elemento nella lista col mouse) ed inserendo il testo nella casella di testo. </para>
+<para
+>Se vuoi rimuovere un desktop, usa l'icona a cestino sovrapposta alla destra degli elementi del desktop. </para>
+<para
+>Premi il pulsante <guibutton
+>Aggiungi</guibutton
+> per aggiungere un desktop virtuale (il nome predefinito è <guilabel
+>Nuovo desktop</guilabel
+>) alla lista. </para>
+<para
+>Puoi configurare il numero delle righe nel cambiadesktop: basta usare la casella di inserimento sotto la lista per regolare il numero dei desktop. Essi verranno riorganizzati automaticamente nelle righe. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Scorrimento ad anello</guilabel
+></term>
+<listitem
+><para
+>Abilita questa opzione se vuoi che la navigazione oltre i bordi dello schermo, sia con la tastiera che con il desktop attivo, porti al lato opposto del desktop successivo. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Mostra animazione al cambio</guilabel
+></term>
+<listitem
+><para
+>Seleziona <guilabel
+>Scivola</guilabel
+>, <guilabel
+>Animazione Cubo dei desktop</guilabel
+> o <guilabel
+>Dissolvenza dei desktop</guilabel
+> dalla casella a cascata o disattiva le animazioni deselezionando l'elemento. Se l'animazione selezionata ha delle opzioni, fai clic sull'icona degli strumenti sulla destra della casella a cascata per avviarne la finestra di configurazione. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Mostra visualizzazione su schermo durante il cambio</guilabel
+></term>
+<listitem
+><para
+>Abilita questa opzione se vuoi avere una visualizzazione su schermo del cambio del desktop. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Mostra indicatori per la disposizione dei desktop</guilabel
+></term>
+<listitem
+><para
+>Abilitare questa opzione mostrerà una piccola anteprima della disposizione del desktop selezionato. </para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>La rotazione della rotellina del mouse su un'area vuota del desktop o sul <guilabel
+>Cambiadesktop</guilabel
+> nel pannello farà passare a un altro desktop virtuale in ordine numerico, a seconda della direzione di rotazione (in su o in giù).</para>
+<para
+>Puoi modificare questo comportamento predefinito sulla pagina <guilabel
+>Azioni del mouse</guilabel
+> nelle <guilabel
+>Impostazioni del desktop</guilabel
+> (<keycombo action="simul"
+>&Alt;<keycap
+>D</keycap
+></keycombo
+>, <keycombo action="simul"
+>&Alt;<keycap
+>S</keycap
+></keycombo
+>).</para>
+
+</article>

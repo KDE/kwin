@@ -1,0 +1,1194 @@
+# translation of kcmkwinrules.po to Lithuanian
+# Aivaras Kirejevas <office@smaltija.lt>, 2004-2005.
+# Donatas Glodenis <dgvirtual@akl.lt>, 2005-2009, 2012.
+# Tomas Straupis <tomasstraupis@gmail.com>, 2010, 2011.
+# Remigijus Jarmalavičius <remigijus@jarmalavicius.lt>, 2011.
+# Liudas Ališauskas <liudas.alisauskas@gmail.com>, 2012.
+# Mindaugas Baranauskas <opensuse.lietuviu.kalba@gmail.com>, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwinrules\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-19 00:47+0000\n"
+"PO-Revision-Date: 2020-04-29 13:55+0300\n"
+"Last-Translator: Moo\n"
+"Language-Team: lt <kde-i18n-lt@kde.org>\n"
+"Language: lt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
+"%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
+"X-Generator: Poedit 2.0.6\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Aivaras Kirejevas, Moo"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "kiras@mail.lt, <>"
+
+#: kcmrules.cpp:28
+#, kde-format
+msgid "Window Rules"
+msgstr "Lango taisyklės"
+
+#: kcmrules.cpp:32
+#, kde-format
+msgid "Ismael Asensio"
+msgstr "Ismael Asensio"
+
+#: kcmrules.cpp:33
+#, kde-format
+msgid "Author"
+msgstr "Autorius"
+
+#: kcmrules.cpp:37
+#, kde-format
+msgid ""
+"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
+"specifically only for some windows.</p> <p>Please note that this "
+"configuration will not take effect if you do not use KWin as your window "
+"manager. If you do use a different window manager, please refer to its "
+"documentation for how to customize window behavior.</p>"
+msgstr ""
+"<p><h1>Specifinės lango nuostatos</h1> Čia galite tinkinti lango nuostatas "
+"konkrečiai kai kuriems langams.</p> <p>Turėkite omenyje, kad ši "
+"konfigūracija neįsigalios, jei nenaudojate KWin langų tvarkytuvės. Jei "
+"naudojate kitokią langų tvarkytuvę, kreipkitės į jos dokumentaciją norėdami "
+"sužinoti kaip tinkinti langų elgseną.</p>"
+
+#: kcmrules.cpp:243
+#, kde-format
+msgid "Copy of %1"
+msgstr ""
+
+#: kcmrules.cpp:422
+#, kde-format
+msgid "Application settings for %1"
+msgstr "Programos nuostatos, skirtos %1"
+
+#: kcmrules.cpp:442 rulesmodel.cpp:215
+#, kde-format
+msgid "Window settings for %1"
+msgstr "Lango nuostatos, skirtos %1"
+
+#: main.cpp:31
+#, kde-format
+msgid "KWinRules KCM launcher"
+msgstr ""
+
+#: main.cpp:32
+#, kde-format
+msgid "KWin id of the window for special window settings."
+msgstr "KWin id, skirtas specialių lango nuostatų langui."
+
+#: main.cpp:33
+#, kde-format
+msgid "Whether the settings should affect all windows of the application."
+msgstr "Ar nuostatos turėtų paveikti visus programos langus, ar ne."
+
+#: main.cpp:40
+#, kde-format
+msgid "This helper utility is not supposed to be called directly."
+msgstr "Ši pagelbiklio paslaugų programa neturėtų būti iškviečiama tiesiogiai."
+
+#: main.cpp:44
+#, kde-format
+msgctxt "Window caption for the application wide rules dialog"
+msgid "Edit Application-Specific Settings"
+msgstr "Taisyti specifines programos nuostatas"
+
+#: main.cpp:45
+#, kde-format
+msgid "Edit Window-Specific Settings"
+msgstr "Taisyti specifines lango nuostatas"
+
+#: optionsmodel.cpp:198
+#, kde-format
+msgid "Unimportant"
+msgstr "Nesvarbu"
+
+#: optionsmodel.cpp:199
+#, kde-format
+msgid "Exact Match"
+msgstr "Tikslus atitikmuo"
+
+#: optionsmodel.cpp:200
+#, kde-format
+msgid "Substring Match"
+msgstr "Poeilučio atitikmuo"
+
+#: optionsmodel.cpp:201
+#, kde-format
+msgid "Regular Expression"
+msgstr "Reguliarusis reiškinys"
+
+#: optionsmodel.cpp:205
+#, kde-format
+msgid "Apply Initially"
+msgstr "Taikyti pradžioje"
+
+#: optionsmodel.cpp:206
+#, kde-format
+msgid ""
+"The window property will be only set to the given value after the window is "
+"created.\n"
+"No further changes will be affected."
+msgstr ""
+"Lango savybė bus nustatyta į nurodytą reikšmę tik po to, kai bus sukurtas "
+"langas.\n"
+"Jokie kiti pakeitimai nebus paveikti."
+
+#: optionsmodel.cpp:209
+#, kde-format
+msgid "Apply Now"
+msgstr "Taikyti dabar"
+
+#: optionsmodel.cpp:210
+#, kde-format
+msgid ""
+"The window property will be set to the given value immediately and will not "
+"be affected later\n"
+"(this action will be deleted afterwards)."
+msgstr ""
+"Lango savybė bus nedelsiant nustatyta į nurodytą reikšmę ir vėliau nebus "
+"paveikiama\n"
+"(po to, šis veiksmas bus ištrintas)."
+
+#: optionsmodel.cpp:213
+#, kde-format
+msgid "Remember"
+msgstr "Įsiminti"
+
+#: optionsmodel.cpp:214
+#, kde-format
+msgid ""
+"The value of the window property will be remembered and, every time the "
+"window is created, the last remembered value will be applied."
+msgstr ""
+"Lango savybės reikšmė bus įsiminta, o kas kartą sukuriant langą, bus taikoma "
+"paskiausia įsiminta reikšmė."
+
+#: optionsmodel.cpp:217
+#, kde-format
+msgid "Do Not Affect"
+msgstr "Nepaveikti"
+
+#: optionsmodel.cpp:218
+#, kde-format
+msgid ""
+"The window property will not be affected and therefore the default handling "
+"for it will be used.\n"
+"Specifying this will block more generic window settings from taking effect."
+msgstr ""
+"Lango savybė nebus paveikta ir todėl, langui bus naudojamas numatytasis "
+"apdorojimas.\n"
+"Tai nurodžius, bus blokuojamos bendresnės lango nuostatos, kad neįsigaliotų."
+
+#: optionsmodel.cpp:221
+#, kde-format
+msgid "Force"
+msgstr "Priverstinai"
+
+#: optionsmodel.cpp:222
+#, kde-format
+msgid "The window property will be always forced to the given value."
+msgstr "Lango savybei bus visada priverstinai naudojama nurodyta reikšmė."
+
+#: optionsmodel.cpp:224
+#, kde-format
+msgid "Force Temporarily"
+msgstr "Laikinai priverstinai"
+
+#: optionsmodel.cpp:225
+#, kde-format
+msgid ""
+"The window property will be forced to the given value until it is hidden\n"
+"(this action will be deleted after the window is hidden)."
+msgstr ""
+"Lango savybei bus priverstinai naudojama nurodyta reikšmė tol, kol langas "
+"nebus paslėptas\n"
+"(paslėpus langą, šis veiksmas bus ištrintas)."
+
+#: package/contents/ui/FileDialogLoader.qml:14
+#, kde-format
+msgid "Select File"
+msgstr ""
+
+#: package/contents/ui/FileDialogLoader.qml:26
+#, kde-format
+msgid "KWin Rules (*.kwinrule)"
+msgstr "KWin taisyklės (*.kwinrule)"
+
+#: package/contents/ui/main.qml:59
+#, kde-format
+msgid "No rules for specific windows are currently set"
+msgstr ""
+
+#: package/contents/ui/main.qml:60
+#, kde-kuit-format
+msgctxt "@info"
+msgid "Click the <interface>Add New...</interface> button below to add some"
+msgstr ""
+
+#: package/contents/ui/main.qml:68
+#, kde-format
+msgid "Select the rules to export"
+msgstr ""
+
+#: package/contents/ui/main.qml:72
+#, kde-format
+msgid "Unselect All"
+msgstr ""
+
+#: package/contents/ui/main.qml:72
+#, kde-format
+msgid "Select All"
+msgstr ""
+
+#: package/contents/ui/main.qml:86
+#, kde-format
+msgid "Save Rules"
+msgstr ""
+
+#: package/contents/ui/main.qml:97
+#, fuzzy, kde-format
+#| msgid "&New..."
+msgid "Add New..."
+msgstr "&Nauja..."
+
+#: package/contents/ui/main.qml:108
+#, fuzzy, kde-format
+#| msgid "&Import"
+msgid "Import..."
+msgstr "&Importuoti"
+
+#: package/contents/ui/main.qml:116
+#, fuzzy, kde-format
+#| msgid "&Export"
+msgid "Cancel Export"
+msgstr "&Eksportuoti"
+
+#: package/contents/ui/main.qml:116
+#, fuzzy, kde-format
+#| msgid "&Export"
+msgid "Export..."
+msgstr "&Eksportuoti"
+
+#: package/contents/ui/main.qml:206
+#, kde-format
+msgid "Edit"
+msgstr "Taisyti"
+
+#: package/contents/ui/main.qml:215
+#, kde-format
+msgid "Duplicate"
+msgstr ""
+
+#: package/contents/ui/main.qml:224
+#, kde-format
+msgid "Delete"
+msgstr "Ištrinti"
+
+#: package/contents/ui/main.qml:237
+#, kde-format
+msgid "Import Rules"
+msgstr "Importuoti taisykles"
+
+#: package/contents/ui/main.qml:249
+#, kde-format
+msgid "Export Rules"
+msgstr "Eksportuoti taisykles"
+
+#: package/contents/ui/OptionsComboBox.qml:35
+#, kde-format
+msgid "None selected"
+msgstr ""
+
+#: package/contents/ui/OptionsComboBox.qml:41
+#, kde-format
+msgid "All selected"
+msgstr ""
+
+#: package/contents/ui/OptionsComboBox.qml:43
+#, kde-format
+msgid "%1 selected"
+msgid_plural "%1 selected"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: package/contents/ui/RulesEditor.qml:63
+#, fuzzy, kde-format
+#| msgid "&Detect Window Properties"
+msgid "No window properties changed"
+msgstr "&Aptikti lango savybes"
+
+#: package/contents/ui/RulesEditor.qml:64
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"Click the <interface>Add Property...</interface> button below to add some "
+"window properties that will be affected by the rule"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:85
+#, fuzzy, kde-format
+#| msgid "Closeable"
+msgid "Close"
+msgstr "Galimas užverti"
+
+#: package/contents/ui/RulesEditor.qml:85
+#, fuzzy, kde-format
+#| msgid "&New..."
+msgid "Add Property..."
+msgstr "&Nauja..."
+
+#: package/contents/ui/RulesEditor.qml:98
+#, fuzzy, kde-format
+#| msgid "&Detect Window Properties"
+msgid "Detect Window Properties"
+msgstr "&Aptikti lango savybes"
+
+#: package/contents/ui/RulesEditor.qml:114
+#: package/contents/ui/RulesEditor.qml:121
+#, kde-format
+msgid "Instantly"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:115
+#: package/contents/ui/RulesEditor.qml:126
+#, kde-format
+msgid "After %1 second"
+msgid_plural "After %1 seconds"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: package/contents/ui/RulesEditor.qml:147
+#, kde-format
+msgid "Error"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:162
+#, kde-format
+msgid "Add property to the rule"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:260
+#: package/contents/ui/ValueEditor.qml:54
+#, kde-format
+msgid "Yes"
+msgstr "Taip"
+
+#: package/contents/ui/RulesEditor.qml:260
+#: package/contents/ui/ValueEditor.qml:60
+#, kde-format
+msgid "No"
+msgstr "Ne"
+
+#: package/contents/ui/RulesEditor.qml:262
+#: package/contents/ui/ValueEditor.qml:171
+#: package/contents/ui/ValueEditor.qml:178
+#, kde-format
+msgid "%1 %"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:264
+#, kde-format
+msgctxt "Coordinates (x, y)"
+msgid "(%1, %2)"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:266
+#, kde-format
+msgctxt "Size (width, height)"
+msgid "(%1, %2)"
+msgstr ""
+
+#: package/contents/ui/ValueEditor.qml:206
+#, kde-format
+msgctxt "(x, y) coordinates separator in size/position"
+msgid "x"
+msgstr ""
+
+#: rulesmodel.cpp:218
+#, kde-format
+msgid "Settings for %1"
+msgstr "%1 nuostatos"
+
+#: rulesmodel.cpp:221
+#, kde-format
+msgid "New window settings"
+msgstr "Naujo lango nuostatos"
+
+#: rulesmodel.cpp:237
+#, kde-format
+msgid ""
+"You have specified the window class as unimportant.\n"
+"This means the settings will possibly apply to windows from all "
+"applications. If you really want to create a generic setting, it is "
+"recommended you at least limit the window types to avoid special window "
+"types."
+msgstr ""
+"Jūs nurodėte lango klasę kaip nesvarbią.\n"
+"Tai reiškia, kad nuostatos galimai bus taikomos langams iš visų programų. "
+"Jei iš tikrųjų, norite sukurti bendrinę nuostatą, tuomet yra rekomenduojama, "
+"jog bent apribotumėte lango tipus, kad išvengtumėte specialių lango tipų."
+
+#: rulesmodel.cpp:244
+#, kde-format
+msgid ""
+"Some applications set their own geometry after starting, overriding your "
+"initial settings for size and position. To enforce these settings, also "
+"force the property \"%1\" to \"Yes\"."
+msgstr ""
+
+#: rulesmodel.cpp:359
+#, kde-format
+msgid "Description"
+msgstr "Aprašas"
+
+#: rulesmodel.cpp:359 rulesmodel.cpp:367 rulesmodel.cpp:375 rulesmodel.cpp:382
+#: rulesmodel.cpp:388 rulesmodel.cpp:396 rulesmodel.cpp:401 rulesmodel.cpp:407
+#, kde-format
+msgid "Window matching"
+msgstr "Langų atitiktis"
+
+#: rulesmodel.cpp:367
+#, kde-format
+msgid "Window class (application)"
+msgstr "Lango klasė (programa)"
+
+#: rulesmodel.cpp:375
+#, kde-format
+msgid "Match whole window class"
+msgstr "Atitikti visą lango klasę"
+
+#: rulesmodel.cpp:382
+#, fuzzy, kde-format
+#| msgid "Match whole window class"
+msgid "Whole window class"
+msgstr "Atitikti visą lango klasę"
+
+#: rulesmodel.cpp:388
+#, kde-format
+msgid "Window types"
+msgstr "Lango tipai"
+
+#: rulesmodel.cpp:396
+#, kde-format
+msgid "Window role"
+msgstr "Lango vaidmuo"
+
+#: rulesmodel.cpp:401
+#, kde-format
+msgid "Window title"
+msgstr "Lango antraštė"
+
+#: rulesmodel.cpp:407
+#, kde-format
+msgid "Machine (hostname)"
+msgstr "Kompiuteris (mazgas)"
+
+#: rulesmodel.cpp:413
+#, kde-format
+msgid "Position"
+msgstr "Vieta"
+
+#: rulesmodel.cpp:413 rulesmodel.cpp:419 rulesmodel.cpp:425 rulesmodel.cpp:430
+#: rulesmodel.cpp:438 rulesmodel.cpp:444 rulesmodel.cpp:463 rulesmodel.cpp:479
+#: rulesmodel.cpp:484 rulesmodel.cpp:489 rulesmodel.cpp:494 rulesmodel.cpp:499
+#: rulesmodel.cpp:506 rulesmodel.cpp:516 rulesmodel.cpp:521 rulesmodel.cpp:526
+#, kde-format
+msgid "Size & Position"
+msgstr "Dydis ir vieta"
+
+#: rulesmodel.cpp:419
+#, kde-format
+msgid "Size"
+msgstr "Dydis"
+
+#: rulesmodel.cpp:425
+#, kde-format
+msgid "Maximized horizontally"
+msgstr "Išskleistas horizontaliai"
+
+#: rulesmodel.cpp:430
+#, kde-format
+msgid "Maximized vertically"
+msgstr "Išskleistas vertikaliai"
+
+#: rulesmodel.cpp:438
+#, kde-format
+msgid "Virtual Desktop"
+msgstr "Virtualus darbalaukis"
+
+#: rulesmodel.cpp:444
+#, fuzzy, kde-format
+#| msgid "Virtual Desktop"
+msgid "Virtual Desktops"
+msgstr "Virtualus darbalaukis"
+
+#: rulesmodel.cpp:463
+#, fuzzy, kde-format
+#| msgid "All Activities"
+msgid "Activities"
+msgstr "Visos veiklos"
+
+#: rulesmodel.cpp:479
+#, kde-format
+msgid "Screen"
+msgstr "Ekranas"
+
+#: rulesmodel.cpp:484
+#, kde-format
+msgid "Fullscreen"
+msgstr "Visas ekranas"
+
+#: rulesmodel.cpp:489
+#, kde-format
+msgid "Minimized"
+msgstr "Suskleistas"
+
+#: rulesmodel.cpp:494
+#, kde-format
+msgid "Shaded"
+msgstr "Pridengtas"
+
+#: rulesmodel.cpp:499
+#, kde-format
+msgid "Initial placement"
+msgstr "Pradinis išdėstymas"
+
+#: rulesmodel.cpp:506
+#, kde-format
+msgid "Ignore requested geometry"
+msgstr "Nepaisyti užklaustos geometrijos"
+
+#: rulesmodel.cpp:508
+#, kde-format
+msgid ""
+"Windows can ask to appear in a certain position.\n"
+"By default this overrides the placement strategy\n"
+"what might be nasty if the client abuses the feature\n"
+"to unconditionally popup in the middle of your screen."
+msgstr ""
+"Langai gali norėti pasirodyti konkrečioje vietoje.\n"
+"Pagal numatymą, tai nustelbia išdėstymo strategiją,\n"
+"kas savo ruožtu gali būti nepadoru, jei kliento programa\n"
+"piktnaudžiauja šia savybe tam, kad besąlygiškai iškiltų ekrano viduryje."
+
+#: rulesmodel.cpp:516
+#, kde-format
+msgid "Minimum Size"
+msgstr "Mažiausias dydis"
+
+#: rulesmodel.cpp:521
+#, kde-format
+msgid "Maximum Size"
+msgstr "Didžiausias dydis"
+
+#: rulesmodel.cpp:526
+#, kde-format
+msgid "Obey geometry restrictions"
+msgstr "Paklusti geometrijos apribojimams"
+
+#: rulesmodel.cpp:528
+#, kde-format
+msgid ""
+"Eg. terminals or video players can ask to keep a certain aspect ratio\n"
+"or only grow by values larger than one\n"
+"(eg. by the dimensions of one character).\n"
+"This may be pointless and the restriction prevents arbitrary dimensions\n"
+"like your complete screen area."
+msgstr ""
+"Pvz., terminalai arba vaizdo leistuvės gali prašyti išlaikyti tam tikras "
+"proporcijas\n"
+"arba keisti dydį pagal tam tikras reikšmes, didesnes už vienetą\n"
+"(pvz., pagal vieno simbolio dydį).\n"
+"Tai gali būti beprasmiška, ir apribojimas neleidžia pasirenkamų išmatavimų, "
+"tokių kaip\n"
+"pavyzdžiui, visa jūsų ekrano sritis."
+
+#: rulesmodel.cpp:537
+#, kde-format
+msgid "Keep above other windows"
+msgstr ""
+
+#: rulesmodel.cpp:537 rulesmodel.cpp:542 rulesmodel.cpp:547 rulesmodel.cpp:553
+#: rulesmodel.cpp:559 rulesmodel.cpp:565
+#, kde-format
+msgid "Arrangement & Access"
+msgstr "Išdėstymas ir prieiga"
+
+#: rulesmodel.cpp:542
+#, kde-format
+msgid "Keep below other windows"
+msgstr ""
+
+#: rulesmodel.cpp:547
+#, kde-format
+msgid "Skip taskbar"
+msgstr "Praleisti užduočių juostą"
+
+#: rulesmodel.cpp:549
+#, kde-format
+msgid "Window shall (not) appear in the taskbar."
+msgstr "Langas (ne)turėtų atsirasti užduočių juostoje."
+
+#: rulesmodel.cpp:553
+#, kde-format
+msgid "Skip pager"
+msgstr "Praleisti darbalaukių perjungiklį"
+
+#: rulesmodel.cpp:555
+#, kde-format
+msgid "Window shall (not) appear in the manager for virtual desktops"
+msgstr "Langas (ne)turėtų atsirasti virtualių darbalaukių tvarkytuvėje"
+
+#: rulesmodel.cpp:559
+#, kde-format
+msgid "Skip switcher"
+msgstr "Praleisti Alt+Tab perjungiklį"
+
+#: rulesmodel.cpp:561
+#, kde-format
+msgid "Window shall (not) appear in the Alt+Tab list"
+msgstr "Langas (ne)turėtų atsirasti Alt+Tab sąraše"
+
+#: rulesmodel.cpp:565
+#, kde-format
+msgid "Shortcut"
+msgstr "Spartusis klavišas"
+
+#: rulesmodel.cpp:571
+#, kde-format
+msgid "No titlebar and frame"
+msgstr "Be antraštės juostos ir rėmelio"
+
+#: rulesmodel.cpp:571 rulesmodel.cpp:576 rulesmodel.cpp:582 rulesmodel.cpp:587
+#: rulesmodel.cpp:592 rulesmodel.cpp:603 rulesmodel.cpp:614 rulesmodel.cpp:622
+#: rulesmodel.cpp:635 rulesmodel.cpp:640 rulesmodel.cpp:646 rulesmodel.cpp:651
+#, kde-format
+msgid "Appearance & Fixes"
+msgstr "Išvaizda ir pataisymai"
+
+#: rulesmodel.cpp:576
+#, kde-format
+msgid "Titlebar color scheme"
+msgstr "Antraštės juostos spalvų rinkinys"
+
+#: rulesmodel.cpp:582
+#, kde-format
+msgid "Active opacity"
+msgstr "Aktyvaus nepermatomumas"
+
+#: rulesmodel.cpp:587
+#, kde-format
+msgid "Inactive opacity"
+msgstr "Pasyvaus nepermatomumas"
+
+#: rulesmodel.cpp:592
+#, kde-format
+msgid "Focus stealing prevention"
+msgstr "Fokusavimo vogimo prevencija"
+
+#: rulesmodel.cpp:594
+#, kde-format
+msgid ""
+"KWin tries to prevent windows from taking the focus\n"
+"(\"activate\") while you're working in another window,\n"
+"but this may sometimes fail or superact.\n"
+"\"None\" will unconditionally allow this window to get the focus while\n"
+"\"Extreme\" will completely prevent it from taking the focus."
+msgstr ""
+"KWin stengiasi neleisti langui įgauti fokusavimą (aktyvuotis) tol,\n"
+"kol dirbate kitame lange, bet kartais tai gali nesuveikti\n"
+"ar veikti neteisingai.\n"
+"„Nėra“ besąlygiškai leis šiam langui gauti fokusavimą, tuo tarpu\n"
+"„Ekstremali“ absoliučiai niekada neleis įgauti fokusavimą."
+
+#: rulesmodel.cpp:603
+#, kde-format
+msgid "Focus protection"
+msgstr "Fokusavimo apsauga"
+
+#: rulesmodel.cpp:605
+#, kde-format
+msgid ""
+"This controls the focus protection of the currently active window.\n"
+"None will always give the focus away,\n"
+"Extreme will keep it.\n"
+"Otherwise it's interleaved with the stealing prevention\n"
+"assigned to the window that wants the focus."
+msgstr ""
+"Tai valdo šiuo metu aktyvaus lango fokusavimo apsaugą.\n"
+"Nėra - visada atiduos fokusavimą.\n"
+"Ekstremali - išlaikys fokusavimą.\n"
+"Priešingu atveju, tai bus derinama su lango, kuris nori\n"
+"gauti fokusavimą, vogimo prevencija."
+
+#: rulesmodel.cpp:614
+#, kde-format
+msgid "Accept focus"
+msgstr "Priimti fokusavimą"
+
+#: rulesmodel.cpp:616
+#, kde-format
+msgid ""
+"Windows may prevent to get the focus (activate) when being clicked.\n"
+"On the other hand you might wish to prevent a window\n"
+"from getting focused on a mouse click."
+msgstr ""
+"Langai gali neleisti fokusavimo (aktyvavimo), kai ant jų spustelėjama.\n"
+"Kita vertus, galite pageidauti neleisti langui gauti fokusą,\n"
+"kai ant jo spustelėjama."
+
+#: rulesmodel.cpp:622
+#, kde-format
+msgid "Ignore global shortcuts"
+msgstr "Nepaisyti visuotinių sparčiųjų klavišų"
+
+#: rulesmodel.cpp:624
+#, kde-format
+msgid ""
+"When used, a window will receive\n"
+"all keyboard inputs while it is active, including Alt+Tab etc.\n"
+"This is especially interesting for emulators or virtual machines.\n"
+"\n"
+"Be warned:\n"
+"you won't be able to Alt+Tab out of the window\n"
+"nor use any other global shortcut (such as Alt+F2 to show KRunner)\n"
+"while it's active!"
+msgstr ""
+"Kai tai naudojama, langas gaus visas klaviatūros įvestis,\n"
+"įskaitant Alt+Tab ir t.t..\n"
+"Tai ypatingai svarbu emuliatoriams ir virtualioms mašinoms.\n"
+"\n"
+"Įspėjimas:\n"
+"kol tai veikia, jūs negalėsite perjungti į kitą langą naudodami Alt+Tab.\n"
+"Taip pat neveiks kiti visuotiniai spartieji klavišai (tokie kaip\n"
+"Alt+F2, skirti rodyti KRunner)!"
+
+#: rulesmodel.cpp:635
+#, kde-format
+msgid "Closeable"
+msgstr "Galimas užverti"
+
+#: rulesmodel.cpp:640
+#, kde-format
+msgid "Set window type"
+msgstr "Nustatyti lango tipą"
+
+#: rulesmodel.cpp:646
+#, kde-format
+msgid "Desktop file name"
+msgstr "Darbalaukio failo pavadinimas"
+
+#: rulesmodel.cpp:651
+#, kde-format
+msgid "Block compositing"
+msgstr "Blokuoti komponavimą"
+
+#: rulesmodel.cpp:727
+#, fuzzy, kde-format
+#| msgid "Window types"
+msgid "All Window Types"
+msgstr "Lango tipai"
+
+#: rulesmodel.cpp:728
+#, kde-format
+msgid "Normal Window"
+msgstr "Įprastas langas"
+
+#: rulesmodel.cpp:729
+#, kde-format
+msgid "Dialog Window"
+msgstr "Dialogo langas"
+
+#: rulesmodel.cpp:730
+#, kde-format
+msgid "Utility Window"
+msgstr "Paslaugų langas"
+
+#: rulesmodel.cpp:731
+#, kde-format
+msgid "Dock (panel)"
+msgstr "Dokas (skydelis)"
+
+#: rulesmodel.cpp:732
+#, kde-format
+msgid "Toolbar"
+msgstr "Įrankių juosta"
+
+#: rulesmodel.cpp:733
+#, kde-format
+msgid "Torn-Off Menu"
+msgstr "Atskiras meniu"
+
+#: rulesmodel.cpp:734
+#, kde-format
+msgid "Splash Screen"
+msgstr "Prisistatymo langas"
+
+#: rulesmodel.cpp:735
+#, kde-format
+msgid "Desktop"
+msgstr "Darbalaukis"
+
+#. i18n("Unmanaged Window")},  deprecated
+#: rulesmodel.cpp:737
+#, kde-format
+msgid "Standalone Menubar"
+msgstr "Atskira meniu juosta"
+
+#: rulesmodel.cpp:738
+#, kde-format
+msgid "On Screen Display"
+msgstr ""
+
+#: rulesmodel.cpp:748
+#, kde-format
+msgid "All Desktops"
+msgstr "Visi darbalaukiai"
+
+#: rulesmodel.cpp:750
+#, kde-format
+msgctxt "@info:tooltip in the virtual desktop list"
+msgid "Make the window available on all desktops"
+msgstr ""
+
+#: rulesmodel.cpp:769
+#, kde-format
+msgid "All Activities"
+msgstr "Visos veiklos"
+
+#: rulesmodel.cpp:771
+#, kde-format
+msgctxt "@info:tooltip in the activity list"
+msgid "Make the window available on all activities"
+msgstr ""
+
+#: rulesmodel.cpp:792
+#, kde-format
+msgid "Default"
+msgstr "Numatytasis"
+
+#: rulesmodel.cpp:793
+#, kde-format
+msgid "No Placement"
+msgstr "Be išdėstymo"
+
+#: rulesmodel.cpp:794
+#, kde-format
+msgid "Minimal Overlapping"
+msgstr "Mažiausias persidengimas"
+
+#: rulesmodel.cpp:795
+#, kde-format
+msgid "Maximized"
+msgstr "Išskleistas"
+
+#: rulesmodel.cpp:796
+#, kde-format
+msgid "Cascaded"
+msgstr "Pakopomis"
+
+#: rulesmodel.cpp:797
+#, kde-format
+msgid "Centered"
+msgstr "Per vidurį"
+
+#: rulesmodel.cpp:798
+#, kde-format
+msgid "Random"
+msgstr "Atsitiktinai"
+
+#: rulesmodel.cpp:799
+#, kde-format
+msgid "In Top-Left Corner"
+msgstr "Viršutiniame kairiajame kampe"
+
+#: rulesmodel.cpp:800
+#, kde-format
+msgid "Under Mouse"
+msgstr "Po pele"
+
+#: rulesmodel.cpp:801
+#, kde-format
+msgid "On Main Window"
+msgstr "Pagrindiniame lange"
+
+#: rulesmodel.cpp:808
+#, kde-format
+msgid "None"
+msgstr "Nėra"
+
+#: rulesmodel.cpp:809
+#, kde-format
+msgid "Low"
+msgstr "Žema"
+
+#: rulesmodel.cpp:810
+#, kde-format
+msgid "Normal"
+msgstr "Įprasta"
+
+#: rulesmodel.cpp:811
+#, kde-format
+msgid "High"
+msgstr "Aukšta"
+
+#: rulesmodel.cpp:812
+#, kde-format
+msgid "Extreme"
+msgstr "Ekstremali"
+
+#: rulesmodel.cpp:855
+#, kde-format
+msgid "Could not detect window properties. The window is not managed by KWin."
+msgstr ""
+
+#~ msgid "Keep above"
+#~ msgstr "Laikyti virš kitų"
+
+#~ msgid "Keep below"
+#~ msgstr "Laikyti po kitais"
+
+#~ msgid "KWin"
+#~ msgstr "KWin"
+
+#~ msgid "KWin helper utility"
+#~ msgstr "KWin pagelbiklio paslaugų programa"
+
+#~ msgid "Activity"
+#~ msgstr "Veikla"
+
+#, fuzzy
+#~| msgid "&Detect Window Properties"
+#~ msgid "Select properties"
+#~ msgstr "&Aptikti lango savybes"
+
+#~ msgid "Override Type"
+#~ msgstr "Nustelbimo tipas"
+
+#~ msgid "Unknown - will be treated as Normal Window"
+#~ msgstr "Nežinoma - bus laikomas įprastu langu"
+
+#~ msgid "Information About Selected Window"
+#~ msgstr "Informacija apie pasirinktą langą"
+
+#~ msgid "Class:"
+#~ msgstr "Klasė:"
+
+#~ msgid "Role:"
+#~ msgstr "Vaidmuo:"
+
+#~ msgid "Type:"
+#~ msgstr "Tipas:"
+
+#~ msgid "Title:"
+#~ msgstr "Antraštė:"
+
+#~ msgid "Machine:"
+#~ msgstr "Kompiuteris:"
+
+#~ msgid "Match by primary class name and"
+#~ msgstr "Atitikti pagal pirminės klasės pavadinimą ir"
+
+#~ msgid "Secondary class name  (resulting in term in brackets)"
+#~ msgstr "Antrinės klasės pavadinimas  (bus rodomas skliaustuose)"
+
+#~ msgid "Window role (can be used to select windows by function)"
+#~ msgstr ""
+#~ "Lango vaidmuo (gali būti naudojamas norint pasirinkti langus pagal "
+#~ "funkcijas)"
+
+#~ msgid "Window type (eg. all dialogs, but not the main windows)"
+#~ msgstr "Lango tipas (pvz., visi dialogai, bet ne pagrindiniai langai)"
+
+#~ msgid ""
+#~ "Window title (very specific, can fail due to content changes or "
+#~ "translation)"
+#~ msgstr ""
+#~ "Lango antraštė (labai konkretu, gali patirti nesėkmę dėl turinio "
+#~ "pasikeitimo ar vertimo)"
+
+#~ msgid ""
+#~ "A single shortcut can be easily assigned or cleared using the two "
+#~ "buttons. Only shortcuts with modifiers can be used.<p>\n"
+#~ "It is possible to have several possible shortcuts, and the first "
+#~ "available shortcut will be used. The shortcuts are specified using "
+#~ "shortcut sets separated by \" - \". One set is specified as <i>base</i>"
+#~ "+(<i>list</i>), where base are modifiers and list is a list of keys.<br>\n"
+#~ "For example \"<b>Shift+Alt+(123) Shift+Ctrl+(ABC)</b>\" will first try "
+#~ "<b>Shift+Alt+1</b>, then others with <b>Shift+Ctrl+C</b> as the last one."
+#~ msgstr ""
+#~ "Pavienis spartusis klavišas gali būti lengvai priskirtas ar panaikintas "
+#~ "naudojant du mygtukus. Gali būti naudojami tik spartieji klavišai su "
+#~ "modifikatoriais.<p>\n"
+#~ "Galima nurodyti ir kelis galimus sparčiuosius klavišus, tuomet bus "
+#~ "naudojamas pirmasis prieinamas spartusis klavišas. Spartieji klavišai yra "
+#~ "nurodomi naudojant sparčiųjų klavišų rinkinius, atskirtus \" - \". Vienas "
+#~ "rinkinys yra nurodomas kaip <i>pagrindas</i>+(<i>sąrašas</i>), kur "
+#~ "pagrindas yra modifikavimo klavišas, o sąrašas – klavišų sąrašas.<br>\n"
+#~ "Pavyzdžiui, „<b>Lyg2+Alt+(123) Lyg2+Vald+(ABC)</b>“ atveju, visų pirma, "
+#~ "bus bandoma kombinacija <b>Lyg2+Alt+1</b>, tuomet kitos, ir galiausiai – "
+#~ "<b>Lyg2+Vald+C</b>."
+
+#~ msgid "&Single Shortcut"
+#~ msgstr "&Pavienis spartusis klavišas"
+
+#~ msgid "C&lear"
+#~ msgstr "Iš&valyti"
+
+#~ msgid "Window-Specific Settings Configuration Module"
+#~ msgstr "Specifinių lango nuostatų konfigūracijos modulis"
+
+#~ msgid "(c) 2004 KWin and KControl Authors"
+#~ msgstr "(c) 2004 KWin ir KControl autoriai"
+
+#~ msgid "Lubos Lunak"
+#~ msgstr "Lubos Lunak"
+
+#~ msgid "Remember settings separately for every window"
+#~ msgstr "Įsiminti nuostatas kiekvienam langui atskirai"
+
+#~ msgid "Show internal settings for remembering"
+#~ msgstr "Rodyti vidines įsiminimo nuostatas"
+
+#~ msgid "Internal setting for remembering"
+#~ msgstr "Vidinės įsiminimo nuostatos"
+
+#~ msgid "&Modify..."
+#~ msgstr "&Keisti..."
+
+#~ msgid "Move &Up"
+#~ msgstr "Pake&lti"
+
+#~ msgid "Move &Down"
+#~ msgstr "Nul&eisti"
+
+#~ msgid ""
+#~ "Enable this checkbox to alter this window property for the specified "
+#~ "window(s)."
+#~ msgstr ""
+#~ "Pažymėkite šį žymimąjį langelį norėdami keisti šią lango savybę nurodytam "
+#~ "langui(-ams)."
+
+#~ msgid ""
+#~ "Specify how the window property should be affected:<ul><li><em>Do Not "
+#~ "Affect:</em> The window property will not be affected and therefore the "
+#~ "default handling for it will be used. Specifying this will block more "
+#~ "generic window settings from taking effect.</li><li><em>Apply Initially:</"
+#~ "em> The window property will be only set to the given value after the "
+#~ "window is created. No further changes will be affected.</"
+#~ "li><li><em>Remember:</em> The value of the window property will be "
+#~ "remembered and every time the window is created, the last remembered "
+#~ "value will be applied.</li><li><em>Force:</em> The window property will "
+#~ "be always forced to the given value.</li><li><em>Apply Now:</em> The "
+#~ "window property will be set to the given value immediately and will not "
+#~ "be affected later (this action will be deleted afterwards).</"
+#~ "li><li><em>Force temporarily:</em> The window property will be forced to "
+#~ "the given value until it is hidden (this action will be deleted after the "
+#~ "window is hidden).</li></ul>"
+#~ msgstr ""
+#~ "Nurodykite kaip turėtų būti paveikta lango savybė:<ul><li><em>Nepaveikti: "
+#~ "</em> Lango savybė nebus paveikta ir todėl, jam bus naudojamas "
+#~ "numatytasis apdorojimas. Nurodžius šią nuostatą, bus užblokuotas labiau "
+#~ "bendresnių lango nuostatų įsigaliojimas.</li><li><em>Taikyti pradžioje:</"
+#~ "em> Lango savybė bus nustatyta į nurodytą reikšmę po lango sukūrimo. "
+#~ "Daugiau nebus paveikti jokie tolimesni pakeitimai.</li><li><em>Įsiminti:</"
+#~ "em> Lango savybės reikšmė bus įsiminta ir kas kartą sukuriant langą, bus "
+#~ "naudojama paskutinė įsiminta reikšmė. </li><li><em>Priverstinai:</em> "
+#~ "Lango savybė visada bus priverstinai keičiama į nurodytą reikšmę.</"
+#~ "li><li><em>Taikyti dabar:</em> Lango savybė bus nedelsiant nustatyta į "
+#~ "nurodytą reikšmę, o vėliau nebus paveikiama (po to šis veiksmas bus "
+#~ "ištrintas).</li><li><em>Laikinai priverstinai:</em> Lango savybė bus "
+#~ "priverstinai keičiama į nurodytą reikšmę tol, kol langas nebus paslėptas "
+#~ "(paslėpus langą, šis veiksmas bus ištrintas).</li></ul>"
+
+#~ msgid ""
+#~ "Specify how the window property should be affected:<ul><li><em>Do Not "
+#~ "Affect:</em> The window property will not be affected and therefore the "
+#~ "default handling for it will be used. Specifying this will block more "
+#~ "generic window settings from taking effect.</li><li><em>Force:</em> The "
+#~ "window property will be always forced to the given value.</"
+#~ "li><li><em>Force temporarily:</em> The window property will be forced to "
+#~ "the given value until it is hidden (this action will be deleted after the "
+#~ "window is hidden).</li></ul>"
+#~ msgstr ""
+#~ "Nurodykite kaip turėtų būti paveikta lango savybė:<ul><li><em>Nepaveikti:"
+#~ "</em> Lango savybė nebus paveikta ir todėl, jam bus naudojamas "
+#~ "numatytasis apdorojimas. Nurodžius šią nuostatą, bus užblokuotas labiau "
+#~ "bendresnių lango nuostatų įsigaliojimas.</li><li><em>Priverstinai:</em> "
+#~ "Lango savybė visada bus priverstinai keičiama į nurodytą reikšmę.</"
+#~ "li><li><em>Laikinai priverstinai:</em> Lango savybė bus priverstinai "
+#~ "keičiama į nurodytą reikšmę tol, kol langas nebus paslėptas (paslėpus "
+#~ "langą, šis veiksmas bus ištrintas).</li></ul>"
+
+#~ msgid "Unnamed entry"
+#~ msgstr "Bevardis įrašas"
+
+#~ msgid ""
+#~ "This configuration dialog allows altering settings only for the selected "
+#~ "window or application. Find the setting you want to affect, enable the "
+#~ "setting using the checkbox, select in what way the setting should be "
+#~ "affected and to which value."
+#~ msgstr ""
+#~ "Šis konfigūracijos dialogas leidžia keisti nuostatas tik pasirinktam "
+#~ "langui ar programai. Suraskite dialoge kokias nuostatas norite paveikti, "
+#~ "pažymėkite jas ir šalia pasirinkite norimas parinktis ar įveskite "
+#~ "reikiamas reikšmes."
+
+#~ msgid "Consult the documentation for more details."
+#~ msgstr "Išsamesnei informacijai, skaitykite dokumentaciją."
+
+#~ msgid "Edit Shortcut"
+#~ msgstr "Taisyti spartųjį klavišą"
+
+#~ msgid "s delay"
+#~ msgstr " sek. delsa"
+
+#~ msgid "Unmanaged Window"
+#~ msgstr "Nevaldomas langas"
+
+#~ msgid "x,y"
+#~ msgstr "x,y"
+
+#~ msgid "0123456789-+,xX:"
+#~ msgstr "0123456789-+,xX:"
+
+#~ msgid "width,height"
+#~ msgstr "plotis,aukštis"
+
+#~ msgid "&Desktop"
+#~ msgstr "&Darbalaukis"
+
+#~ msgid "Edit..."
+#~ msgstr "Taisyti..."
+
+#~ msgid "Autog&roup in foreground"
+#~ msgstr "Automatiškai &grupuoti priekiniame plane"
+
+#~ msgid "Autogroup by I&D"
+#~ msgstr "Automatiškai grupuoti pagal &ID"
+
+#~ msgid "Autogroup with &identical"
+#~ msgstr "Automatiškai grupuoti su &identiškais"
+
+#~ msgid "%"
+#~ msgstr "%"
+
+#~ msgid "org.kde.kwin"
+#~ msgstr "org.kde.kwin"
+
+#~ msgid "Smart"
+#~ msgstr "Mastantis"

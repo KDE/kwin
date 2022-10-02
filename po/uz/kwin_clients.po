@@ -1,0 +1,453 @@
+# translation of kwin_clients.po to
+# Mashrab Kuvatov <kmashrab@uni-bremen.de>, 2004, 2005, 2006.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2006-12-17 12:27+0000\n"
+"Last-Translator: Mashrab Kuvatov <kmashrab@uni-bremen.de>\n"
+"Language-Team: Uzbek <floss-uz-l10n@googlegroups.com>\n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr ""
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr ""
+
+#: aurorae/src/aurorae.cpp:727
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "Katta"
+
+#: aurorae/src/aurorae.cpp:728
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "Katta"
+
+#: aurorae/src/aurorae.cpp:729
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "Katta"
+
+#: aurorae/src/aurorae.cpp:730
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "Katta"
+
+#: aurorae/src/aurorae.cpp:731
+#, fuzzy, kde-format
+#| msgid "Resize"
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "Oʻlchamini oʻzgartirish"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr ""
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "Sarlavhani &tekislash"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"Agar belgilansa, oynaning chegarasi sarlavhaning rangida koʻrinadi. Aks "
+"holda, oynaning chegarasi orqa fonning rangida koʻrinadi."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, fuzzy, kde-format
+msgid "Colored window border"
+msgstr "Oynaning chegarasi rangli"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"Agar belgilansa, sichqoncha tugmalarning ustidan oʻtsa ularga soʻnish "
+"effekti qoʻllaniladi."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "Animatsiyalik tugmalar "
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr "Agar belgilansa, oynaning sarlavhasidagi matn soya bilan koʻrinadi."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "&Soyalik matn"
+
+#, fuzzy
+#~| msgid "Animate buttons"
+#~ msgid "Animations"
+#~ msgstr "Animatsiyalik tugmalar "
+
+#, fuzzy
+#~| msgid "Actions Settings"
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "Amallar moslamasi"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "Katta"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "Katta"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "Katta"
+
+#, fuzzy
+#~| msgid "Title &Alignment"
+#~ msgid "Tit&le alignment:"
+#~ msgstr "Sarlavhani &tekislash"
+
+#, fuzzy
+#~| msgid "Small"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "Kichik"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "Menyu tugmasini ikki marta bosish oynani yopadi"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title"
+#~ msgstr "Oynani yigʻish"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadows"
+#~ msgstr "Soyalash"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Window Glow"
+#~ msgstr "Oynani yigʻish"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Use window title"
+#~ msgstr "Oynani yigʻish"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title:"
+#~ msgstr "Oynani yigʻish"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Hide window title bar"
+#~ msgstr "Oynani yigʻish"
+
+#, fuzzy
+#~ msgid "Remove"
+#~ msgstr "Oʻlchamini oʻzgartirish"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Inactive Windows"
+#~ msgstr "Oynani yigʻish"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Windows"
+#~ msgstr "Oynani yigʻish"
+
+#~ msgid "Minimize"
+#~ msgstr "Yigʻish"
+
+#~ msgid "Maximize"
+#~ msgstr "Yoyish"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "Eng yuqorida"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "Eng pastda"
+
+#, fuzzy
+#~| msgid "On all desktops"
+#~ msgid "On All Desktops"
+#~ msgstr "Hamma ish stollarida"
+
+#~ msgid "Menu"
+#~ msgstr "Menyu"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "Hamma ish stollarida emas"
+
+#~ msgid "On all desktops"
+#~ msgstr "Hamma ish stollarida"
+
+#~ msgid "Unshade"
+#~ msgstr "Soyalashni bekor qilish"
+
+#~ msgid "Shade"
+#~ msgstr "Soyalash"
+
+#~ msgid "Resize"
+#~ msgstr "Oʻlchamini oʻzgartirish"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>Koʻrib chiqish: B II</center></b>"
+
+#, fuzzy
+#~ msgid "Restore"
+#~ msgstr "Oʻlchamini oʻzgartirish"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "&Oynaning chegarasi sarlavha rangida"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "Agar belgilansa, oynaning chegarasi sarlavhaning rangida koʻrinadi. Aks "
+#~ "holda, oynaning chegarasi oddiy rangda koʻrinadi."
+
+#~ msgid "Actions Settings"
+#~ msgstr "Amallar moslamasi"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "Menyu tugmasini ikki marta bosish:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "Hech narsa qilinmasin"
+
+#~ msgid "Minimize Window"
+#~ msgstr "Oynani yigʻish"
+
+#~ msgid "Shade Window"
+#~ msgstr "Oynani soyalash"
+
+#~ msgid "Close Window"
+#~ msgstr "Oynani yopish"
+
+#~ msgid "Laptop"
+#~ msgstr "Laptop"
+
+#, fuzzy
+#~| msgid "Draw &gradients"
+#~ msgid "Radial Gradient"
+#~ msgstr "&Gradientni chizish"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Save"
+#~ msgstr "Soyalash"
+
+#~ msgid "Large"
+#~ msgstr "Katta"
+
+#~ msgid "Small"
+#~ msgstr "Kichik"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "Agar belgilansa, oynaning menyu tugmasini ikki marta bosish oynani yopadi."
+
+#~ msgid "Plastik"
+#~ msgstr "Plastik"
+
+#, fuzzy
+#~| msgid "On all desktops"
+#~ msgid "All Desktops"
+#~ msgstr "Hamma ish stollarida"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Do not keep above others"
+#~ msgstr "Eng yuqorida"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above others"
+#~ msgstr "Eng yuqorida"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Do not keep below others"
+#~ msgstr "Eng pastda"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below others"
+#~ msgstr "Eng pastda"
+
+#, fuzzy
+#~| msgid "Maximize"
+#~ msgid "Maximum"
+#~ msgstr "Yoyish"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadow style:"
+#~ msgstr "Soyalash"
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "KWM mavzusini oʻrnatish"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "Mavzuning moslama fayliga yoʻl"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWMTheme</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "Yopishqoq"
+
+#~ msgid "Unsticky"
+#~ msgstr "Yopishqoq emas"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>Keramika usulini koʻrib chiqish</b></center>"
+
+#~ msgid "Draw &gradients"
+#~ msgstr "&Gradientni chizish"
+
+#, fuzzy
+#~| msgid "KDE2"
+#~ msgid "KDE 2"
+#~ msgstr "KDE2"
+
+#~ msgid "Quartz"
+#~ msgstr "Chaqmoqtosh"
+
+#~ msgid "Redmond"
+#~ msgstr "Redmond"
+
+#~ msgid "Medium"
+#~ msgstr "Oʻrtacha"
+
+#~ msgid "Modern System"
+#~ msgstr "Zamonaviy tizim"
+
+#~ msgid "Web"
+#~ msgstr "Veb"
+
+#~ msgid "Keramik"
+#~ msgstr "Keramika"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "&Pufakchada oynaning nishonchasini koʻrsatish"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "Agar belgilansa, oynaning sarlavhasidagi pufakchada oynaning nishonchasi "
+#~ "koʻrinadi."
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "&Aktiv oynada kichik pufakcha"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "Agar belgilansa, aktiv oynada, aktiv boʻlmagan oyna kabi, pufakcha kichik "
+#~ "oʻlchamda koʻrinadi. Bu ish stolidagi boʻsh joyni tejashda qulay boʻladi."
+
+#, fuzzy
+#~| msgid "Installs a KWM theme"
+#~ msgid "Get New Themes..."
+#~ msgstr "KWM mavzusini oʻrnatish"
+
+#, fuzzy
+#~| msgid "Installs a KWM theme"
+#~ msgid "Install New Theme..."
+#~ msgstr "KWM mavzusini oʻrnatish"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Glow active window"
+#~ msgstr "Oynani yigʻish"
+
+#, fuzzy
+#~| msgid "Draw window frames using &titlebar colors"
+#~ msgid "Overwrite default title bar colors:"
+#~ msgstr "&Oynaning chegarasi sarlavha rangida"
+
+#, fuzzy
+#~| msgid "<b><center>B II preview</center></b>"
+#~ msgid "<b><center>Oxygen preview! =)</center></b>"
+#~ msgstr "<b><center>Koʻrib chiqish: B II</center></b>"
+
+#, fuzzy
+#~| msgid "Unsticky"
+#~ msgid "Un-Sticky"
+#~ msgstr "Yopishqoq emas"

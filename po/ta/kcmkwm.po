@@ -1,0 +1,1941 @@
+# translation of kcmkwm.po to
+# translation of kcmkwm.po to
+# translation of kcmkwm.po to Tamil
+# Copyright (C) 2004 Free Software Foundation, Inc.
+#
+# Vasee Vaseeharan <vasee@ieee.org>, 2004.
+# root <root@localhost.localdomain>, 2004.
+# Kishore G <kishore96@gmail.com>, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwm\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-09-02 00:47+0000\n"
+"PO-Revision-Date: 2022-09-01 21:49+0530\n"
+"Last-Translator: Kishore G <kishore96@gmail.com>\n"
+"Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
+"Language: ta\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 22.08.0\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "jayalakshmibalaji"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "prabu_anand2000@yahoo.com"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
+#: actions.ui:17
+#, kde-format
+msgid "Inactive Inner Window Actions"
+msgstr "செயலிலில்லாத சாளரங்களின் உட்பகுதிக்கான செயல்கள்"
+
+#. i18n: ectx: property (text), widget (QLabel, label_1)
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: actions.ui:26 mouse.ui:177
+#, kde-format
+msgid "&Left click:"
+msgstr "&இடது கிளிக்:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow1)
+#: actions.ui:39
+#, fuzzy, kde-format
+msgid ""
+"In this row you can customize left click behavior when clicking into an "
+"inactive inner window ('inner' means: not titlebar, not frame)."
+msgstr ""
+"இந்த குறுக்குவரிசையில், நீங்கள் இடது களிக் நடைமுறையை, செயல்படாத சாளரம் ('உள்ளமைந்த' "
+"என்றால்: தலைப்பு பட்டை இல்லை, சட்டம் இல்லை)."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
+#: actions.ui:43 actions.ui:83 actions.ui:123
+#, kde-format
+msgid "Activate, raise and pass click"
+msgstr "இயக்கி, முன்கொணர்ந்து, கிளிக்கை அனுப்பும்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
+#: actions.ui:48 actions.ui:88 actions.ui:128
+#, kde-format
+msgid "Activate and pass click"
+msgstr "இயக்கி க்ளிக்கை அனுப்பும்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:53 actions.ui:93 actions.ui:133 mouse.ui:293 mouse.ui:408
+#: mouse.ui:523
+#, kde-format
+msgid "Activate"
+msgstr "இயக்கும்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:58 actions.ui:98 actions.ui:138 mouse.ui:283 mouse.ui:398
+#: mouse.ui:513
+#, kde-format
+msgid "Activate and raise"
+msgstr "இயக்கி முன்கொணரும்"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: actions.ui:66 mouse.ui:200
+#, kde-format
+msgid "&Middle click:"
+msgstr "&நடு கிளிக்:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow2)
+#: actions.ui:79
+#, fuzzy, kde-format
+msgid ""
+"In this row you can customize middle click behavior when clicking into an "
+"inactive inner window ('inner' means: not titlebar, not frame)."
+msgstr ""
+"இந்த குறுக்குவரிசையில், நீங்கள் வலது களிக் நடைமுறையை, செயல்படாத சாளரம் ('உள்ளமைந்த' "
+"என்றால்: தலைப்பு பட்டை இல்லை, சட்டம் இல்லை)."
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: actions.ui:106 mouse.ui:213
+#, kde-format
+msgid "&Right click:"
+msgstr "&வலது கிளிக்:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow3)
+#: actions.ui:119
+#, fuzzy, kde-format
+msgid ""
+"In this row you can customize right click behavior when clicking into an "
+"inactive inner window ('inner' means: not titlebar, not frame)."
+msgstr ""
+"இந்த குறுக்குவரிசையில், நீங்கள் நடு பொத்தான் களிக் நடைமுறையை, செயல்படாத சாளரம் "
+"('உள்ளமைந்த' என்றால்: தலைப்பு பட்டை இல்லை, சட்டம் இல்லை)."
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: actions.ui:146 mouse.ui:88
+#, kde-format
+msgid "Mouse &wheel:"
+msgstr "&சுட்டியின் சக்கரம்:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindowWheel)
+#: actions.ui:159
+#, fuzzy, kde-format
+#| msgid ""
+#| "In this row you can customize left click behavior when clicking into an "
+#| "inactive inner window ('inner' means: not titlebar, not frame)."
+msgid ""
+"In this row you can customize behavior when scrolling into an inactive inner "
+"window ('inner' means: not titlebar, not frame)."
+msgstr ""
+"இந்த குறுக்குவரிசையில், நீங்கள் இடது களிக் நடைமுறையை, செயல்படாத சாளரம் ('உள்ளமைந்த' "
+"என்றால்: தலைப்பு பட்டை இல்லை, சட்டம் இல்லை)."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
+#: actions.ui:163
+#, kde-format
+msgid "Scroll"
+msgstr "உருளும்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
+#: actions.ui:168
+#, kde-format
+msgid "Activate and scroll"
+msgstr "முன்கொணர்ந்து உருளும்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
+#: actions.ui:173
+#, kde-format
+msgid "Activate, raise and scroll"
+msgstr "செயல்படுத்தி முன்கொணர்ந்து உருளும்"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: actions.ui:184
+#, kde-format
+msgid "Inner Window, Titlebar and Frame Actions"
+msgstr "சாளரத்தின் தலைப்புப்பட்டை, விளிம்பு, மற்றும் உட்பகுதிக்கான் செயல்கள்"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: actions.ui:195
+#, kde-format
+msgid "Mo&difier key:"
+msgstr "&மாற்றிவிசை:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllKey)
+#: actions.ui:205
+#, fuzzy, kde-format
+msgid ""
+"Here you select whether holding the Meta key or Alt key will allow you to "
+"perform the following actions."
+msgstr ""
+"இங்கு நீங்கள் மெடா விசை அல்லது ஆல்டு விசை பயன்படுத்தினால் அது உங்களை செயல்திறனை "
+"ஏற்றுக்கொள்ளும்."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
+#: actions.ui:209
+#, kde-format
+msgid "Meta"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
+#: actions.ui:214
+#, kde-format
+msgid "Alt"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: actions.ui:236
+#, kde-format
+msgid "  + "
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: actions.ui:248 mouse.ui:601
+#, kde-format
+msgid "L&eft click:"
+msgstr "இ&டது கிளிக்:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll1)
+#: actions.ui:261
+#, fuzzy, kde-format
+msgid ""
+"In this row you can customize left click behavior when clicking into the "
+"titlebar or the frame."
+msgstr ""
+"தலைப்புப் பட்டையில் அல்லது அட்டவணையில் சொடுக்குகையில் வல சொடுக்கு குணம் இந்த கிடக்கையில் "
+"தனிப்பயனாக்கலாம்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:265 actions.ui:335 actions.ui:405
+#, kde-format
+msgid "Move"
+msgstr "நகர்த்து"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:270 actions.ui:340 actions.ui:410
+#, kde-format
+msgid "Activate, raise and move"
+msgstr "செயல்படுத்தி முன்கொணர்ந்து நகர்த்தும்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:275 actions.ui:345 actions.ui:415 mouse.ui:246 mouse.ui:308
+#: mouse.ui:361 mouse.ui:423 mouse.ui:476 mouse.ui:538
+#, kde-format
+msgid "Toggle raise and lower"
+msgstr "முன்கொணர்வதை நிலைமாற்றும்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:280 actions.ui:350 actions.ui:420
+#, kde-format
+msgid "Resize"
+msgstr "அளவை மாற்றும்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:285 actions.ui:355 actions.ui:425 mouse.ui:236 mouse.ui:298
+#: mouse.ui:351 mouse.ui:413 mouse.ui:466 mouse.ui:528
+#, kde-format
+msgid "Raise"
+msgstr "முன்கொணரும்"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:290 actions.ui:360 actions.ui:430 mouse.ui:65 mouse.ui:241
+#: mouse.ui:303 mouse.ui:356 mouse.ui:418 mouse.ui:471 mouse.ui:533
+#, kde-format
+msgid "Lower"
+msgstr "பின்னனுப்பும்"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:295 actions.ui:365 actions.ui:435 mouse.ui:55 mouse.ui:251
+#: mouse.ui:313 mouse.ui:366 mouse.ui:428 mouse.ui:481 mouse.ui:543
+#, kde-format
+msgid "Minimize"
+msgstr "ஒதுக்கும்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:300 actions.ui:370 actions.ui:440
+#, kde-format
+msgid "Decrease opacity"
+msgstr "ஒளிபுகாமையை குறைக்கும்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:305 actions.ui:375 actions.ui:445
+#, kde-format
+msgid "Increase opacity"
+msgstr "ஒளிபுகாமையை கூட்டும்"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 mouse.ui:80
+#: mouse.ui:132 mouse.ui:271 mouse.ui:333 mouse.ui:386 mouse.ui:448
+#: mouse.ui:501 mouse.ui:563
+#, kde-format
+msgid "Do nothing"
+msgstr "ஒன்றும் செய்யாது"
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: actions.ui:318
+#, kde-format
+msgid "Middle &click:"
+msgstr "நடு &கிளிக்:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
+#: actions.ui:331
+#, fuzzy, kde-format
+msgid ""
+"In this row you can customize middle click behavior when clicking into the "
+"titlebar or the frame."
+msgstr ""
+"இந்த குறுக்குவரிசையில், தலைப்புபட்டை அல்லது சட்டத்தை க்ளிக் செய்யும் போது நடு பொத்தான் "
+"க்ளிக் நடைமுறையை தனிப்பயனாக்கலாம்."
+
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+#. i18n: ectx: property (text), widget (QLabel, label_10)
+#: actions.ui:388 mouse.ui:671
+#, kde-format
+msgid "Right clic&k:"
+msgstr "வ&லது கிளிக்:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:401
+#, fuzzy, kde-format
+msgid ""
+"In this row you can customize right click behavior when clicking into the "
+"titlebar or the frame."
+msgstr ""
+"இந்த குறுக்குவரிசையில், தலைப்புபட்டை அல்லது சட்டத்தை க்ளிக் செய்யும் போது வலது க்ளிக் "
+"நடைமுறையை தனிப்பயனாக்கலாம்."
+
+#. i18n: ectx: property (text), widget (QLabel, label_10)
+#: actions.ui:458
+#, kde-format
+msgid "Mo&use wheel:"
+msgstr "சுட்டியி&ன் சக்கரம்:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllWheel)
+#: actions.ui:471
+#, fuzzy, kde-format
+msgid ""
+"Here you can customize KDE's behavior when scrolling with the mouse wheel in "
+"a window while pressing the modifier key."
+msgstr ""
+"இங்கே நீங்கள், modifier விசையை அழுத்தியபடி,சாளரத்தில் எங்காவது க்ளிக்செய்யும் போது "
+"ஏற்படும் KDE யின் நடைமுறையைத் தனிப்பயனாக்கலாம்."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:475 mouse.ui:102
+#, kde-format
+msgid "Raise/lower"
+msgstr "முன்கொணரும்/பின்னனுப்பும்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:480 mouse.ui:107
+#, kde-format
+msgid "Shade/unshade"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:485 mouse.ui:112
+#, kde-format
+msgid "Maximize/restore"
+msgstr "அதிகபட்ச பெரிதாக்கும்/பழைய அளவை மீளமர்த்தும்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:490 mouse.ui:117
+#, kde-format
+msgid "Keep above/below"
+msgstr "மேலே/கீழே வைத்திருக்கும்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:495 mouse.ui:122
+#, kde-format
+msgid "Move to previous/next desktop"
+msgstr "முந்தைய/அடுத்த பணிமேடைக்கு நகர்த்தும்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:500 mouse.ui:127
+#, kde-format
+msgid "Change opacity"
+msgstr "ஒளிபுகாமையை மாற்றும்"
+
+#. i18n: ectx: property (text), widget (QLabel, shadeHoverLabel)
+#: advanced.ui:20
+#, fuzzy, kde-format
+msgid "Window &unshading:"
+msgstr "சாளர நிழல்நீக்கம்"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ShadeHover)
+#: advanced.ui:32
+#, fuzzy, kde-format
+#| msgid ""
+#| "If Shade Hover is enabled, a shaded window will un-shade automatically "
+#| "when the mouse pointer has been over the title bar for some time."
+msgid ""
+"<html><head/><body><p>If this option is enabled, a shaded window will "
+"unshade automatically when the mouse pointer has been over the titlebar for "
+"some time.</p></body></html>"
+msgstr ""
+"நிழல் ஹொவெர் இல்லை என்றால், நிழல் சாளரம் தானாக நிழைநிறுத்தி விடும் சுட்டி புள்ளி தலைப்பு "
+"பட்டையில் சில நிமிடங்கல் இருக்கும்."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShadeHover)
+#: advanced.ui:35
+#, kde-format
+msgid "On titlebar hover after:"
+msgstr "தலைப்புப்பட்டையில் சுட்டியை இவ்வளவு நேரம் வைத்தப்பின்:"
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_ShadeHoverInterval)
+#: advanced.ui:42
+#, fuzzy, kde-format
+msgid ""
+"Sets the time in milliseconds before the window unshades when the mouse "
+"pointer goes over the shaded window."
+msgstr ""
+"சுட்டி புல்லி நிழல் சாளரத்தொடு பொவதுக்கு முன் சுட்டி புள்ளி நிழல் அமைவதற்க்கு முன் சாளர "
+"அமைப்பை மில்லி செகண்டாக அமைக்கவும்."
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AutoRaiseInterval)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ShadeHoverInterval)
+#: advanced.ui:45 focus.ui:85 focus.ui:178
+#, kde-format
+msgid " ms"
+msgstr " மி.நொ."
+
+#. i18n: ectx: property (text), widget (QLabel, windowPlacementLabel)
+#: advanced.ui:66
+#, kde-format
+msgid "Window &placement:"
+msgstr "சாளர &இருப்பிடம்:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_Placement)
+#: advanced.ui:76
+#, kde-format
+msgid ""
+"<html><head/><body><p>The placement policy determines where a new window "
+"will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-bottom: "
+"0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" "
+"margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
+"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+"\">Smart</span> will try to achieve a minimum overlap of windows</li><li "
+"style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
+"italic;\">Maximizing</span> will try to maximize every window to fill the "
+"whole screen. It might be useful to selectively affect placement of some "
+"windows using the window-specific settings.</li><li style=\" margin-top:0px; "
+"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
+"text-indent:0px;\"><span style=\" font-style:italic;\">Cascade</span> will "
+"cascade the windows</li><li style=\" margin-top:0px; margin-bottom:0px; "
+"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+"\"><span style=\" font-style:italic;\">Random</span> will use a random "
+"position</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Centered</span> will place the window "
+"centered</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Zero-cornered</span> will place the window in "
+"the top-left corner</li><li style=\" margin-top:0px; margin-bottom:12px; "
+"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+"\"><span style=\" font-style:italic;\">Under mouse</span> will place the "
+"window under the pointer</li></ul></body></html>"
+msgstr ""
+"<html><head/><body><p>ஓர் புதிய சாளரம் பணிமேடையில் எங்கு வைக்கப்படும் என்பதை இக்கொள்கை "
+"தீர்மானிக்கும்.</p><ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: "
+"0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" margin-top:12px; "
+"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
+"text-indent:0px;\"><span style=\" font-style:italic;\">தானியங்கி</span> "
+"என்பது, முடிந்த வரையில் ஒரு சாளரத்திற்கு மேல் இன்னொரு சாளரம் இல்லாதவாறு வைக்கும்</"
+"li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
+"italic;\">அதிகபட்ச பெரிதாக்கல்</span> என்பது, அனைத்து சாளரங்களையும் திரையை நிரப்பும் "
+"வகையில் பெரிதாக்கும்.  குறிப்பிட்ட சில சாளரங்களுக்கான அமைப்புகளின் மூலம் அவற்றின் "
+"இயல்பிருப்பு அளவை மாற்றுவதற்கு இது வசதியாக இருக்கும்.</li><li style=\" margin-"
+"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">விரித்து</"
+"span> என்பது, சீட்டுக்கட்டை போல் சாளரங்களை விரித்து வைக்கும்</li><li style=\" margin-"
+"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">சமவாய்ப்பு</"
+"span> என்பது, ஏதாவதொரு இடத்தில் சாளரத்தை வைக்கும்</li><li style=\" margin-top:0px; "
+"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
+"text-indent:0px;\"><span style=\" font-style:italic;\">நடுவில்</span> என்பது, "
+"சாளரத்தை நடுவில் வைக்கும்</li><li style=\" margin-top:0px; margin-bottom:0px; "
+"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+"\"><span style=\" font-style:italic;\">இடது-மேல் மூலையில்</span> என்பது, "
+"சாளரத்தை திரையின் இடது-மேல் மூலையில் வைக்கும்</li><li style=\" margin-top:0px; "
+"margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
+"text-indent:0px;\"><span style=\" font-style:italic;\">சுட்டிக்கடியில்</span> "
+"என்பது, சுட்டிக்குறிக்கு அடியில் சாளரத்தை வைக்கும்</li></ul></body></html>"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:80
+#, kde-format
+msgid "Minimal Overlapping"
+msgstr "ஒன்றன்மேல் ஒன்று இல்லாமல்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:85
+#, kde-format
+msgid "Maximized"
+msgstr "அதிகபட்ச பெரிதாக்கி"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:90
+#, kde-format
+msgid "Cascaded"
+msgstr "விரித்து"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:95
+#, kde-format
+msgid "Random"
+msgstr "சமவாய்ப்பாக"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:100
+#, kde-format
+msgid "Centered"
+msgstr "நடுவில்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:105
+#, kde-format
+msgid "In Top-Left Corner"
+msgstr "இடது-மேல் மூலையில்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:110
+#, kde-format
+msgid "Under mouse"
+msgstr "சுட்டிக்கு கீழே"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
+#: advanced.ui:118
+#, kde-format
+msgid ""
+"When turned on, apps which are able to remember the positions of their "
+"windows are allowed to do so. This will override the window placement mode "
+"defined above."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
+#: advanced.ui:121
+#, kde-format
+msgid ""
+"Allow apps to remember the positions of their own windows, if they support it"
+msgstr "ஆதரவளிக்கும் செயலிகளை, அவற்றின் சாளர இருப்பிடங்களை நினைவில் கொள்ள விடு"
+
+#. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
+#: advanced.ui:128
+#, kde-format
+msgid "&Special windows:"
+msgstr "வே&றுவகையான சாளரங்கள்:"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
+#: advanced.ui:138
+#, kde-format
+msgid ""
+"When turned on, utility windows (tool windows, torn-off menus,...) of "
+"inactive applications will be hidden and will be shown only when the "
+"application becomes active. Note that applications have to mark the windows "
+"with the proper window type for this feature to work."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
+#: advanced.ui:141
+#, kde-format
+msgid "Hide utility windows for inactive applications"
+msgstr "செயலிலில்லாத நிரல்களுக்கான துணை சாளரங்களை மறை"
+
+#. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
+#: advanced.ui:148
+#, kde-format
+msgid "Virtual Desktop behavior:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
+#: advanced.ui:158
+#, kde-format
+msgid "When activating a window on a different Virtual Desktop:"
+msgstr "இன்னொரு பணிமேடையிலுள்ள சாளரத்தை செயல்படுத்தும்போது:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
+#: advanced.ui:165
+#, kde-format
+msgid ""
+"<html><head/><body><p>This setting controls what happens when an open window "
+"located on a Virtual Desktop other than the current one is activated. </"
+"p><p><span style=\" font-style:italic;\">Switch to that Virtual Desktop</"
+"span> will switch to the Virtual Desktop where the window is currently "
+"located. </p><p><span style=\" font-style:italic;\">Bring window to current "
+"Virtual Desktop</span> will cause the window to jump to the active Virtual "
+"Desktop. </p></body></html>"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
+#: advanced.ui:169
+#, kde-format
+msgid "Switch to that Virtual Desktop"
+msgstr "அப்பணிமேடைக்கு தாவு"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
+#: advanced.ui:174
+#, kde-format
+msgid "Bring window to current Virtual Desktop"
+msgstr "சாளரத்தை தற்போதைய பணிமேடைக்கு கொண்டுவா"
+
+#. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
+#: focus.ui:22
+#, kde-format
+msgid "Window &activation policy:"
+msgstr "&சாளரங்களை செயல்படுத்தும் முறை:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, windowFocusPolicy)
+#: focus.ui:32
+#, kde-format
+msgid "With this option you can specify how and when windows will be focused."
+msgstr "சாளரங்கள் குவியத்தைப் பெறும் முறையை இத்தேர்வு நிர்ணயிக்கும்."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:36
+#, kde-format
+msgctxt "sassa asas"
+msgid "Click to focus"
+msgstr "குவியமளிக்க கிளிக் செய்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:41
+#, kde-format
+msgid "Click to focus (mouse precedence)"
+msgstr "குவியமளிக்க கிளிக் செய் (சுட்டிக்கு முன்னிலை)"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:46
+#, kde-format
+msgid "Focus follows mouse"
+msgstr "குவியம் சுட்டியை பின்பற்றும்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:51
+#, kde-format
+msgid "Focus follows mouse (mouse precedence)"
+msgstr "குவியம் சுட்டியை பின்பற்றும் (சுட்டிக்கு முன்னிலை)"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:56
+#, kde-format
+msgid "Focus under mouse"
+msgstr "சுட்டிக்கு கீழ் குவியம்"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:61
+#, kde-format
+msgid "Focus strictly under mouse"
+msgstr "சுட்டிக்கு கீழ் கண்டிப்பாக குவியம்"
+
+#. i18n: ectx: property (text), widget (QLabel, delayFocusOnLabel)
+#: focus.ui:69
+#, kde-format
+msgid "&Delay focus by:"
+msgstr "&குவியமளிப்பதற்கான தாமதம்:"
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_DelayFocusInterval)
+#: focus.ui:82
+#, fuzzy, kde-format
+msgid ""
+"This is the delay after which the window the mouse pointer is over will "
+"automatically receive focus."
+msgstr ""
+"இத் தாமதம், எலி சுட்டி இருக்கும் சாளரம் எவ்வளவு நேரத்திற்கு பின் தன்னியக்கமாக முன்னால் "
+"வரும் என்பது ஆகும்."
+
+#. i18n: ectx: property (text), widget (QLabel, focusStealingLabel)
+#: focus.ui:101
+#, kde-format
+msgid "Focus &stealing prevention:"
+msgstr "குவிய திருட்டை தடுப்பது:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:114
+#, fuzzy, kde-format
+msgid ""
+"<html><head/><body><p>This option specifies how much KWin will try to "
+"prevent unwanted focus stealing caused by unexpected activation of new "
+"windows. (Note: This feature does not work with the <span style=\" font-"
+"style:italic;\">Focus under mouse</span> or <span style=\" font-style:italic;"
+"\">Focus strictly under mouse</span> focus policies.) </p><ul style=\"margin-"
+"top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-"
+"indent: 1;\"><li style=\" margin-top:12px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">None:</span> Prevention is turned off and new "
+"windows always become activated.</li><li style=\" margin-top:0px; margin-"
+"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">Low:</span> Prevention is "
+"enabled; when some window does not have support for the underlying mechanism "
+"and KWin cannot reliably decide whether to activate the window or not, it "
+"will be activated. This setting may have both worse and better results than "
+"the medium level, depending on the applications.</li><li style=\" margin-"
+"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Medium:</"
+"span> Prevention is enabled.</li><li style=\" margin-top:0px; margin-"
+"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">High:</span> New windows "
+"get activated only if no window is currently active or if they belong to the "
+"currently active application. This setting is probably not really usable "
+"when not using mouse focus policy.</li><li style=\" margin-top:0px; margin-"
+"bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">Extreme:</span> All "
+"windows must be explicitly activated by the user.</li></ul><p>Windows that "
+"are prevented from stealing focus are marked as demanding attention, which "
+"by default means their taskbar entry will be highlighted. This can be "
+"changed in the Notifications control module.</p></body></html>"
+msgstr ""
+"Kவின் புதிய சாளரத்தினால் ஏற்ப்படும் தெரியாத பொகஸ் ஸ்டிலிங்கை இந்த தேர்வை குறிக்கிறது."
+"(குறிப்பு:இந்த பியுசர்பொக்கஸ் அல்லது சுட்டி பொக்கஸ் பாலிசிஸ் கீழ்வேளை "
+"செய்யாது.)<ul><li><em>None:</em> நிலையான பழைய பழக்கவழக்கத்தின் சேமிப்பு நீக்கப்பட்டது "
+"மற்றும் புதிய சாளரம் செயலாக்கப்பட்டது.</li><li><em>Low:</em> சேமிக்கப்பட்டது செய்யலில் "
+"இல்லை; சில சாளரம் Kவின்னை துனை செய்யவிலை என்றால் சாளரம் செயல்பட வேண்டுமாஇல்லையா என்பதை "
+"குறிக்கும்.இது செயல்படும். இந்த அமைப்பு மொசமான அல்லது சுமார் வகையான முடிவுகளை தரும்,"
+"பயன்பாட்டை தழுவி.</li><li><em>இயல்பான:</em>சேமிக்கப்பட்டது செய்யலில் இல்லை; தவறான "
+"மைப்பு.</li><li><em>உயரம்</em> புதிய சாளரம் எப்பொதுசெயல்பாட்டி இருக்கும் மென்றால் "
+"தற்ப்பொதையசாளரம் செயல்பாட்டி இல்லாமல் இருந்தால் அல்லது பயன்பாட்டில் இருந்தாலோ. இந்த அமைப்பு "
+"சுட்டிபொக்கஸ் பாலிசியை கொண்டுள்ள அமைப்பாகும்.</li><li><em>கடைசி:</em>எல்லா சாளரமும் "
+"பயனரால் மட்டுமே பயன்படுத்தப்பட வேண்டும்.</li></ul>"
+
+#. i18n: Focus Stealing Prevention Level
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_WindowSnapZone)
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_CenterSnapZone)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:118 moving.ui:33 moving.ui:65 moving.ui:97
+#, kde-format
+msgid "None"
+msgstr "ஏதுமில்லை"
+
+#. i18n: Focus Stealing Prevention Level
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:123
+#, kde-format
+msgid "Low"
+msgstr "குறைவானது"
+
+#. i18n: Focus Stealing Prevention Level
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:128
+#, kde-format
+msgid "Medium"
+msgstr "நடுத்தரமானது"
+
+#. i18n: Focus Stealing Prevention Level
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:133
+#, kde-format
+msgid "High"
+msgstr "உயர்வானது"
+
+#. i18n: Focus Stealing Prevention Level
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:138
+#, kde-format
+msgid "Extreme"
+msgstr "மிக அதிகமானது"
+
+#. i18n: ectx: property (text), widget (QLabel, raisingWindowsLabel)
+#: focus.ui:146
+#, kde-format
+msgid "Raising windows:"
+msgstr "சாளரங்களை முன்கொணர்வது:"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ClickRaise)
+#: focus.ui:153
+#, kde-format
+msgid ""
+"When this option is enabled, the active window will be brought to the front "
+"when you click somewhere into the window contents. To change it for inactive "
+"windows, you need to change the settings in the Actions tab."
+msgstr ""
+"இத்தேர்வு இயக்கப்பட்டிருக்கும்போது, செயலிலுள்ள சாளரத்தில் கிளிக் செய்தல், அதை முன்னே (மற்ற "
+"சாளரங்களுக்கு மேலே) கொண்டு வரும். செயலிலில்லாத சாளரங்களுக்கும் இவ்வாறு அமைக்க, செயல்கள் "
+"கீற்றிலுள்ள அமைப்புகளை மாற்ற வேண்டும்."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ClickRaise)
+#: focus.ui:156
+#, kde-format
+msgid "&Click raises active window"
+msgstr "&செயலிலுள்ள சாளரத்தை கிளிக் செய்தல் அதை முன்கொணரும்"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AutoRaise)
+#: focus.ui:165
+#, kde-format
+msgid ""
+"When this option is enabled, a window in the background will automatically "
+"come to the front when the mouse pointer has been over it for some time."
+msgstr ""
+"இத்தேர்வு இயக்கப்பட்டிருக்கும்போது, இன்னொரு சாளரத்திற்கு பின் மறைந்துள்ள சாளரத்தின் மீது "
+"சுட்டிக்குறியை சிறிது நேரம் வைத்தால், அது மற்ற சாளரங்களுக்கு மேலே கொண்டு வரப்படும்."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AutoRaise)
+#: focus.ui:168
+#, kde-format
+msgid "&Raise on hover, delayed by:"
+msgstr "&இவ்வளவு நேரம் சுட்டியை தக்கவைத்தால் முன்கொணர்:"
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_AutoRaiseInterval)
+#: focus.ui:175
+#, kde-format
+msgid ""
+"This is the delay after which the window that the mouse pointer is over will "
+"automatically come to the front."
+msgstr ""
+"சுட்டிக்குறியை ஓர் சாளரத்தின் மீது இவ்வளவு நேரம் வைத்தால், அது முன்னே (மற்ற சாளரங்களுக்கு "
+"மேலே) கொண்டுவரப்படும்."
+
+#. i18n: ectx: property (text), widget (QLabel, multiscreenBehaviorLabel)
+#: focus.ui:196
+#, kde-format
+msgid "Multiscreen behavior:"
+msgstr "பல்திரை நடத்தை:"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
+#: focus.ui:203
+#, kde-format
+msgid ""
+"When this option is enabled, the active screen (where new windows appear, "
+"for example) is the screen containing the mouse pointer. When disabled, the "
+"active screen is the screen containing the focused window."
+msgstr ""
+"இத்தேர்வு இயக்கப்பட்டிருந்தால், சுட்டிக்குறியை கொண்டுள்ள திரையே செயலிலுள்ள திரையாக "
+"கருதப்படும் (எ.கா. புதிய சாளரங்கள் அதிலேயே தோன்றும்). இத்தேர்வு முடக்கப்பட்டிருந்தால், "
+"செயலிலுள்ள சாளரத்தை கொண்டுள்ள திரையே செயலிலுள்ளதாக கருதப்படும்."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
+#: focus.ui:206
+#, kde-format
+msgid "Active screen follows &mouse"
+msgstr "சு&ட்டியுள்ள திரையை செயலுள்ளதாக்கு"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
+#: focus.ui:213
+#, kde-format
+msgid ""
+"When this option is enabled, focus operations are limited only to the active "
+"screen"
+msgstr "இத்தேர்வு இயக்கப்பட்டிருந்தால், குவியம் எப்போதும் செயலிலுள்ள சாளரத்திலேயே இருக்கும்"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
+#: focus.ui:216
+#, kde-format
+msgid "&Separate screen focus"
+msgstr "&திரையை பொறுத்த குவியம்"
+
+#. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
+#: focus.ui:229
+#, kde-format
+msgid "Window activation policy description"
+msgstr ""
+
+#: main.cpp:73
+#, kde-format
+msgid "&Focus"
+msgstr "&குவியம்"
+
+#: main.cpp:79
+#, kde-format
+msgid "Titlebar A&ctions"
+msgstr "&தலைப்புபட்டைக்கான செயல்கள்"
+
+#: main.cpp:85
+#, kde-format
+msgid "W&indow Actions"
+msgstr "&சாளர செயல்கள்"
+
+#: main.cpp:91
+#, kde-format
+msgid "Mo&vement"
+msgstr "&நகர்த்தல்"
+
+#: main.cpp:97
+#, kde-format
+msgid "Adva&nced"
+msgstr "&மேம்பட்டவை"
+
+#: main.cpp:101
+#, kde-format
+msgid "Window Behavior Configuration Module"
+msgstr "சாளர நடத்தைக் கட்டுப்பாட்டுக் கூறு"
+
+#: main.cpp:103
+#, kde-format
+msgid "(c) 1997 - 2002 KWin and KControl Authors"
+msgstr "(c) 1997 - 2002 KWin and KControl Authors"
+
+#: main.cpp:105
+#, kde-format
+msgid "Matthias Ettrich"
+msgstr "மத்தையாஸ் எட்ரிச்"
+
+#: main.cpp:106
+#, kde-format
+msgid "Waldo Bastian"
+msgstr "வாலடோ பாஸ்டியான்"
+
+#: main.cpp:107
+#, kde-format
+msgid "Cristian Tibirna"
+msgstr "கிரிஸ்டியன் டிபிர்னா"
+
+#: main.cpp:108
+#, kde-format
+msgid "Matthias Kalle Dalheimer"
+msgstr ""
+
+#: main.cpp:109
+#, kde-format
+msgid "Daniel Molkentin"
+msgstr ""
+
+#: main.cpp:110
+#, kde-format
+msgid "Wynn Wilkes"
+msgstr "வைன் வில்கிஸ்"
+
+#: main.cpp:111
+#, kde-format
+msgid "Pat Dowler"
+msgstr "பாட் டவுலர்"
+
+#: main.cpp:112
+#, kde-format
+msgid "Bernd Wuebben"
+msgstr ""
+
+#: main.cpp:113
+#, kde-format
+msgid "Matthias Hoelzer-Kluepfel"
+msgstr ""
+
+#: main.cpp:161
+#, fuzzy, kde-format
+#| msgid ""
+#| "<h1>Window Behavior</h1> Here you can customize the way windows behave "
+#| "when being moved, resized or clicked on. You can also specify a focus "
+#| "policy as well as a placement policy for new windows. <p>Please note that "
+#| "this configuration will not take effect if you do not use KWin as your "
+#| "window manager. If you do use a different window manager, please refer to "
+#| "its documentation for how to customize window behavior."
+msgid ""
+"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
+"when being moved, resized or clicked on. You can also specify a focus policy "
+"as well as a placement policy for new windows.</p> <p>Please note that this "
+"configuration will not take effect if you do not use KWin as your window "
+"manager. If you do use a different window manager, please refer to its "
+"documentation for how to customize window behavior.</p>"
+msgstr ""
+"<h1>சாளரத்தின் நடத்தை</h1>இங்கு உங்கள் சாளரங்களின் நடத்தையை நீங்கள் வடிவமைக்லாம் நகரும் "
+"பொதும் அல்லது அளவை மாற்றி அமைக்கும் பொது அல்லது சொடுக்கும் பொது நிங்களும் ஆவணத்தை "
+"சரிசெய்யலாம்<p> நீங்கள் Kசாளரம் அல்லாமல் வேறு ஏதேனும் சாளரத்தை பயன்படுத்தினால் அந்த "
+"ஆவணத்தின் பழக்கங்களை தெரிந்து அதன் படி நடந்து கொள்ளவும்."
+
+#: main.cpp:202
+#, kde-format
+msgid "&Titlebar Actions"
+msgstr "&தலைப்புபட்டைக்கான செயல்கள்"
+
+#: main.cpp:208
+#, kde-format
+msgid "Window Actio&ns"
+msgstr "&சாளர செயல்கள்"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
+#: mouse.ui:17
+#, kde-format
+msgid "Titlebar Actions"
+msgstr "தலைப்புபட்டைக்கான செயல்கள்"
+
+#. i18n: ectx: property (text), widget (QLabel, label_1)
+#: mouse.ui:26
+#, kde-format
+msgid "&Double-click:"
+msgstr "&இரட்டை கிளிக்:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#: mouse.ui:36
+#, kde-format
+msgid "Behavior on <em>double</em> click into the titlebar."
+msgstr "தலைப்புப்பட்டையில் <em>இரட்டைக்</em> க்ளிக் செய்யும் போது மேற்கொள்ளும் நடவடிக்கை"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
+#: mouse.ui:40 mouse.ui:615 mouse.ui:650 mouse.ui:685
+#, kde-format
+msgid "Maximize"
+msgstr "அதிகபட்ச பெரிதாக்கு"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
+#: mouse.ui:45 mouse.ui:620 mouse.ui:655 mouse.ui:690
+#, kde-format
+msgid "Vertically maximize"
+msgstr "நெடுக்காக அதிகபட்ச பெரிதாக்கு"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
+#: mouse.ui:50 mouse.ui:625 mouse.ui:660 mouse.ui:695
+#, kde-format
+msgid "Horizontally maximize"
+msgstr "கிடைமட்டமாக அதிகபட்ச பெரிதாக்கு"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: mouse.ui:60 mouse.ui:256 mouse.ui:318 mouse.ui:371 mouse.ui:433 mouse.ui:486
+#: mouse.ui:548
+#, kde-format
+msgid "Shade"
+msgstr "நிழலிடு"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: mouse.ui:70 mouse.ui:261 mouse.ui:323 mouse.ui:376 mouse.ui:438 mouse.ui:491
+#: mouse.ui:553
+#, kde-format
+msgid "Close"
+msgstr "மூடு"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#: mouse.ui:75
+#, kde-format
+msgid "Show on all desktops"
+msgstr "அனைத்து பணிமேடைகளிலும் காட்டு"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: mouse.ui:98
+#, fuzzy, kde-format
+#| msgid "Behavior on <em>double</em> click into the titlebar."
+msgid "Behavior on <em>mouse wheel</em> scroll over the titlebar."
+msgstr "தலைப்புப்பட்டையில் <em>இரட்டைக்</em> க்ளிக் செய்யும் போது மேற்கொள்ளும் நடவடிக்கை"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: mouse.ui:143
+#, kde-format
+msgid "Titlebar and Frame Actions"
+msgstr "தலைப்புப்பட்டை மற்றும் விளிம்புக்கான செயல்கள்"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: mouse.ui:167
+#, kde-format
+msgid "Active"
+msgstr "செயலில் உள்ளது"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: mouse.ui:190
+#, kde-format
+msgid "Inactive"
+msgstr "செயலிலில்லாத்து"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#: mouse.ui:232 mouse.ui:347 mouse.ui:462
+#, fuzzy, kde-format
+msgid ""
+"Behavior on <em>left</em> click into the titlebar or frame of an <em>active</"
+"em> window."
+msgstr ""
+"பழக்கத்தில் உள்ள <em>இடது</em> தலைப்புபட்டியை அல்லது சட்டத்தில் சொடுக்கவும்<em>செயல்படும்</"
+"em> சாளரம்."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: mouse.ui:266 mouse.ui:328 mouse.ui:381 mouse.ui:443 mouse.ui:496
+#: mouse.ui:558
+#, kde-format
+msgid "Show actions menu"
+msgstr "செயல்களுக்கான பட்டியை காட்டு"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: mouse.ui:279 mouse.ui:394 mouse.ui:509
+#, fuzzy, kde-format
+msgid ""
+"Behavior on <em>left</em> click into the titlebar or frame of an "
+"<em>inactive</em> window."
+msgstr ""
+"பழக்கத்தில் உள்ள <em>இடது</em> தலைப்புபட்டியை அல்லது சட்டத்தில் சொடுக்கவும்<em>செயல்படாத</"
+"em> சாளரம்."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: mouse.ui:288 mouse.ui:403 mouse.ui:518
+#, kde-format
+msgid "Activate and lower"
+msgstr "செயல்படுத்தி பின்னே அனுப்பு"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#: mouse.ui:589
+#, kde-format
+msgid "Maximize Button Actions"
+msgstr "அதிகபட்ச பெரிதாக்கும் பட்டனுக்கான செயல்கள்"
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label_8)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
+#: mouse.ui:598 mouse.ui:611
+#, fuzzy, kde-format
+msgid "Behavior on <em>left</em> click onto the maximize button."
+msgstr "இடது<em>பெரிதாக்கும் பட்டன் மீது அழுத்தும்போது</em>ஏற்படும் செயல்."
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label_9)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
+#: mouse.ui:633 mouse.ui:646
+#, fuzzy, kde-format
+msgid "Behavior on <em>middle</em> click onto the maximize button."
+msgstr "நடு<em>பெரிதாக்கும் பட்டன் மீது அழுத்தும்போது</em>ஏற்படும் செயல்."
+
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+#: mouse.ui:636
+#, kde-format
+msgid "Middle c&lick:"
+msgstr "&நடு கிளிக்:"
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label_10)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
+#: mouse.ui:668 mouse.ui:681
+#, fuzzy, kde-format
+msgid "Behavior on <em>right</em> click onto the maximize button."
+msgstr "வலது<em>பெரிதாக்கும் பட்டன் மீது அழுத்தும்போது</em>ஏற்படும் செயல்."
+
+#. i18n: ectx: property (text), widget (QLabel, borderSnapLabel)
+#: moving.ui:20
+#, kde-format
+msgid "Screen &edge snap zone:"
+msgstr "&திரையோர பிடிப்புப்பகுதி:"
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_BorderSnapZone)
+#: moving.ui:30
+#, fuzzy, kde-format
+#| msgid ""
+#| "Here you can set the snap zone for screen borders, i.e. the 'strength' of "
+#| "the magnetic field which will make windows snap to the border when moved "
+#| "near it."
+msgid ""
+"Here you can set the snap zone for screen edges, i.e. the 'strength' of the "
+"magnetic field which will make windows snap to the border when moved near it."
+msgstr ""
+"இங்கு நீங்கள் இழு மண்டலத்தின் திரை ஓரத்தில் அமைத்தல் முடியும்,அதாவது காந்தக புலத்தின் "
+"சத்தியை பயன்படுத்தி சாளர இழு ஓரத்தை அதற்க்கு பக்கமாக நகற்றி விடும்."
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_BorderSnapZone)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_WindowSnapZone)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_CenterSnapZone)
+#: moving.ui:36 moving.ui:68 moving.ui:100
+#, kde-format
+msgid " px"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, windowSnapLabel)
+#: moving.ui:52
+#, kde-format
+msgid "&Window snap zone:"
+msgstr "&சாளர பிடிப்புப்பகுதி:"
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_WindowSnapZone)
+#: moving.ui:62
+#, fuzzy, kde-format
+#| msgid ""
+#| "Here you can set the snap zone for windows, i.e. the 'strength' of the "
+#| "magnetic field which will make windows snap to each other when they're "
+#| "moved near another window."
+msgid ""
+"Here you can set the snap zone for windows, i.e. the 'strength' of the "
+"magnetic field which will make windows snap to each other when they are "
+"moved near another window."
+msgstr ""
+"இழு மண்டலத்தின் சாளர அமைப்பை இங்கு நீங்கள் அமைக்கலாம்,அதாவது காந்தக புலத்தின் சக்தி "
+"சாளரத்தை இழுத்து விடும் அது மற்றும் அல்லாமல் வேறு சாளரத்தொடு இனைத்து விடும்."
+
+#. i18n: ectx: property (text), widget (QLabel, centerSnaplabel)
+#: moving.ui:84
+#, kde-format
+msgid "&Center snap zone:"
+msgstr "&நடு பிடிப்புப்பகுதி:"
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_CenterSnapZone)
+#: moving.ui:94
+#, fuzzy, kde-format
+#| msgid ""
+#| "Here you can set the snap zone for screen borders, i.e. the 'strength' of "
+#| "the magnetic field which will make windows snap to the border when moved "
+#| "near it."
+msgid ""
+"Here you can set the snap zone for the screen center, i.e. the 'strength' of "
+"the magnetic field which will make windows snap to the center of the screen "
+"when moved near it."
+msgstr ""
+"இங்கு நீங்கள் இழு மண்டலத்தின் திரை ஓரத்தில் அமைத்தல் முடியும்,அதாவது காந்தக புலத்தின் "
+"சத்தியை பயன்படுத்தி சாளர இழு ஓரத்தை அதற்க்கு பக்கமாக நகற்றி விடும்."
+
+#. i18n: ectx: property (text), widget (QLabel, OverlapSnapLabel)
+#: moving.ui:113
+#, kde-format
+msgid "&Snap windows:"
+msgstr "சாளரங்களை &பிடித்திழு:"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
+#: moving.ui:123
+#, fuzzy, kde-format
+msgid ""
+"Here you can set that windows will be only snapped if you try to overlap "
+"them, i.e. they will not be snapped if the windows comes only near another "
+"window or border."
+msgstr ""
+"இங்கு நீங்கள் சாளரத்தின் அமைப்புகளை இழுத்து அதை மேல்கவி,அதாவது அவற்றால் இழுக்க முடியாது "
+"சாளரத்தின் ஓரமாக தான் வந்து சேரும்."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
+#: moving.ui:126
+#, kde-format
+msgid "Only when overlapping"
+msgstr "ஒன்றன்மேல் இன்னொன்று இருக்கும்போது மட்டும்"
+
+#: windows.cpp:97
+#, kde-format
+msgid ""
+"<em>Click to focus:</em> A window becomes active when you click into it. "
+"This behavior is common on other operating systems and likely what you want."
+msgstr ""
+
+#: windows.cpp:101
+#, kde-format
+msgid ""
+"<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
+"focus</em>. If an active window has to be chosen by the system (eg. because "
+"the currently active one was closed) the window under the mouse is the "
+"preferred candidate. Unusual, but possible variant of <em>Click to focus</"
+"em>."
+msgstr ""
+
+#: windows.cpp:106
+#, kde-format
+msgid ""
+"<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
+"it. Eg. windows randomly appearing under the mouse will not gain the focus. "
+"<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
+"to focus</em> just without having to actually click."
+msgstr ""
+
+#: windows.cpp:110
+#, kde-format
+msgid ""
+"This is mostly the same as <em>Focus follows mouse</em>. If an active window "
+"has to be chosen by the system (eg. because the currently active one was "
+"closed) the window under the mouse is the preferred candidate. Choose this, "
+"if you want a hover controlled focus."
+msgstr ""
+
+#: windows.cpp:115
+#, kde-format
+msgid ""
+"<em>Focus under mouse:</em> The focus always remains on the window under the "
+"mouse.<br/><strong>Warning:</strong> <em>Focus stealing prevention</em> and "
+"the <em>tabbox ('Alt+Tab')</em> contradict the activation policy and will "
+"not work. You very likely want to use <em>Focus follows mouse (mouse "
+"precedence)</em> instead!"
+msgstr ""
+
+#: windows.cpp:119
+#, kde-format
+msgid ""
+"<em>Focus strictly under mouse:</em> The focus is always on the window under "
+"the mouse (in doubt nowhere) very much like the focus behavior in an "
+"unmanaged legacy X11 environment.<br/><strong>Warning:</strong> <em>Focus "
+"stealing prevention</em> and the <em>tabbox ('Alt+Tab')</em> contradict the "
+"activation policy and will not work. You very likely want to use <em>Focus "
+"follows mouse (mouse precedence)</em> instead!"
+msgstr ""
+
+#~ msgid ""
+#~ "Enable this option if you want a window's geometry to be displayed while "
+#~ "it is being moved or resized. The window position relative to the top-"
+#~ "left corner of the screen is displayed together with its size."
+#~ msgstr ""
+#~ "நகருகையில் அல்லது அளவு மாறுகையில் சாளரத்தின் ஜியோமிதியை நீங்கள் காட்ட விரும்பினால் "
+#~ "இந்த தேர்வை செயல்படுத்தவும்.திரையின் மேல்வலமூலைக்கான சாளர இடமும் அதன் அளவும் "
+#~ "காண்பிக்கப்படும். "
+
+#, fuzzy
+#~| msgid "Display window &geometry when moving or resizing"
+#~ msgid "Display when moving or resizing"
+#~ msgstr "நகருகையில் அல்லது அளவு மாற்றுகையில் சாளரத்தை மற்றும் ஜியோமிதியை காட்டு"
+
+#~ msgid "Maximize (vertical only)"
+#~ msgstr "பெருப்பி (நெடுக்காக மட்டும்)"
+
+#~ msgid "Maximize (horizontal only)"
+#~ msgstr "பெருப்பி (குறுக்காக மட்டும்)"
+
+#~ msgid "Smart"
+#~ msgstr "சூட்டிகை"
+
+#, fuzzy
+#~ msgid "Maximizing"
+#~ msgstr "பெருப்பி"
+
+#, fuzzy
+#~| msgid "Zero-Cornered"
+#~ msgid "Zero-cornered"
+#~ msgstr "வெற்று-மூலை"
+
+#, fuzzy
+#~ msgid "Window tabbing:"
+#~ msgstr "செயல்கள்"
+
+#, fuzzy
+#~ msgid "Start window tab drag"
+#~ msgstr "செயல்கள்"
+
+#, fuzzy
+#~| msgid "Right button:"
+#~ msgid "Ri&ght button:"
+#~ msgstr "வலது பொத்தான்:"
+
+#, fuzzy
+#~| msgid "Left button:"
+#~ msgid "&Left button:"
+#~ msgstr "இடது பொத்தான்:"
+
+#, fuzzy
+#~| msgid "Right button:"
+#~ msgid "&Right button:"
+#~ msgstr "வலது பொத்தான்:"
+
+#, fuzzy
+#~| msgid "Middle button:"
+#~ msgid "M&iddle button:"
+#~ msgstr "நடு பொத்தான்:"
+
+#, fuzzy
+#~| msgid "Left button:"
+#~ msgid "Left &button"
+#~ msgstr "இடது பொத்தான்:"
+
+#, fuzzy
+#~ msgid ""
+#~ "The placement policy determines where a new window will appear on the "
+#~ "desktop.<br><ul>\n"
+#~ "<li><em>Smart</em> will try to achieve a minimum overlap of windows</li>\n"
+#~ "<li><em>Maximizing</em> will try to maximize every window to fill the "
+#~ "whole screen. It might be useful to selectively affect placement of some "
+#~ "windows using the window-specific settings.</li>\n"
+#~ "<li><em>Cascade</em> will cascade the windows</li>\n"
+#~ "<li><em>Random</em> will use a random position</li>\n"
+#~ "<li><em>Centered</em> will place the window centered</li>\n"
+#~ "<li><em>Zero-Cornered</em> will place the window in the top-left corner</"
+#~ "li>\n"
+#~ "<li><em>Under Mouse</em> will place the window under the pointer</li>\n"
+#~ "</ul>"
+#~ msgstr ""
+#~ "மேசையில் எங்கே புதிய சாளரம் தோன்றும் என்பதை இந்த இட வைப்பு கொள்கை குறிப்பிடும். "
+#~ "<ul><li><em>சூட்டிகை</em> என்பது சாளரங்களின்  குறைந்தபட்ச உடன்நிகழ் ஏற்படும்படி "
+#~ "செய்யும்</li> <li><em>தொடர்</em> என்பது சாளரங்களை தொடர செய்யும்</li> "
+#~ "<li><em>வரிசை இல்லாத</em> என்பது வரிசையில்லா நிலையை பயன்படுத்தும்.</li> "
+#~ "<li><em>மையப்படுத்தப்பட்டது</em> சாளரத்தை நடுவில் வைக்கும்</li> <li><em>பூஜ்ய "
+#~ "மையப்படுத்துதல்</em> இது சாளரத்தைமேல்-இட்து மூலையில் வைக்கும்</li></ul>"
+
+#~ msgid "Shading"
+#~ msgstr "நிழல்"
+
+#~ msgid "Dela&y:"
+#~ msgstr "தாமதம்:"
+
+#~ msgid "&Enable hover"
+#~ msgstr "மிதப்பதை இயக்கு"
+
+#, fuzzy
+#~| msgid "Active windows:"
+#~ msgid "Activating windows"
+#~ msgstr "செயலில் உள்ள சாளரங்கள்:"
+
+#, fuzzy
+#~| msgid "&Policy:"
+#~ msgid "Policy"
+#~ msgstr "கொள்கை:"
+
+#~ msgid "&Moving"
+#~ msgstr "நகர்வு"
+
+#~ msgid ""
+#~ "In this column you can customize mouse clicks into the titlebar or the "
+#~ "frame of an active window."
+#~ msgstr ""
+#~ "இதில் நீங்கள் எலி க்ளிக்களை தலைப்புபட்டையில் அல்லது செயல்படும் சாளரத்தின் சட்டத்தில் "
+#~ "தனிப்பயனாக்கலாம்."
+
+#~ msgid ""
+#~ "In this column you can customize mouse clicks into the titlebar or the "
+#~ "frame of an inactive window."
+#~ msgstr ""
+#~ "இந்த நெடுவரிசையில், நீங்கள் எலி க்ளிக்களை தலைப்புபட்டையில் அல்லது செயல்படாத சாளரத்தின் "
+#~ "சட்டத்தில் தனிப்பயனாக்கலாம்."
+
+#~ msgid "Left button:"
+#~ msgstr "இடது பொத்தான்:"
+
+#~ msgid "Middle button:"
+#~ msgstr "நடு பொத்தான்:"
+
+#~ msgid ""
+#~ "Behavior on <em>middle</em> click into the titlebar or frame of an "
+#~ "<em>active</em> window."
+#~ msgstr ""
+#~ "பழக்கத்தில் உள்ள <em>நடுநிலை</em> தலைப்புபட்டியை அல்லது சட்டத்தில் "
+#~ "சொடுக்கவும்<em>செயல்படும்</em> சாளரம்."
+
+#~ msgid "Right button:"
+#~ msgstr "வலது பொத்தான்:"
+
+#~ msgid ""
+#~ "Behavior on <em>right</em> click into the titlebar or frame of an "
+#~ "<em>active</em> window."
+#~ msgstr ""
+#~ "பழக்கத்தில் உள்ள <em>வலது</em> தலைப்புபட்டியை அல்லது சட்டத்தில் "
+#~ "சொடுக்கவும்<em>செயல்படும்</em> சாளரம்."
+
+#, fuzzy
+#~| msgid "Titlebar && Frame"
+#~ msgid "Titlebar & Frame"
+#~ msgstr "தலைப்பு பட்டி && சட்டத்தைக் காட்டு"
+
+#, fuzzy
+#~ msgid "Titlebar"
+#~ msgstr "தலைப்புபட்டி மட்டும்"
+
+#, fuzzy
+#~| msgid "&Border snap zone:"
+#~ msgid "no center snap zone"
+#~ msgstr "எல்லைப் பிடிப்பு மண்டலம்:"
+
+#, fuzzy
+#~| msgid "&Window snap zone:"
+#~ msgid "no window snap zone"
+#~ msgstr "சாளரப் பிடிப்பு மண்டலம்:"
+
+#, fuzzy
+#~| msgid "&Border snap zone:"
+#~ msgid "no border snap zone"
+#~ msgstr "எல்லைப் பிடிப்பு மண்டலம்:"
+
+#~ msgid "Windows"
+#~ msgstr "சாளரங்கள்"
+
+#~ msgid "Snap Zones"
+#~ msgstr "ஒட்டும் வலயங்கள்"
+
+#~ msgid "kcmkwinoptions"
+#~ msgstr "kசாளரத்தேர்வுகள்"
+
+#, fuzzy
+#~| msgid ""
+#~| "The focus policy is used to determine the active window, i.e. the window "
+#~| "you can work in. <ul> <li><em>Click to focus:</em> A window becomes "
+#~| "active when you click into it. This is the behavior you might know from "
+#~| "other operating systems.</li> <li><em>Focus follows mouse:</em> Moving "
+#~| "the mouse pointer actively on to a normal window activates it. New "
+#~| "windows will receive the focus, without you having to point the mouse at "
+#~| "them explicitly. Very practical if you are using the mouse a lot.</li> "
+#~| "<li><em>Focus under mouse:</em> The window that happens to be under the "
+#~| "mouse pointer is active. If the mouse points nowhere, the last window "
+#~| "that was under the mouse has focus. New windows will not automatically "
+#~| "receive the focus.</li> <li><em>Focus strictly under mouse:</em> Only "
+#~| "the window under the mouse pointer is active. If the mouse points "
+#~| "nowhere, nothing has focus. </ul>Note that 'Focus under mouse' and "
+#~| "'Focus strictly under mouse' prevent certain features such as the Alt"
+#~| "+Tab walk through windows dialog in the KDE mode from working properly."
+#~ msgid ""
+#~ "The focus policy is used to determine the active window, i.e. the window "
+#~ "you can work in. <ul>\n"
+#~ "<li><em>Click to focus:</em> A window becomes active when you click into "
+#~ "it. This is the behavior you might know from other operating systems.</"
+#~ "li> <li><em>Focus follows mouse:</em> Moving the mouse pointer actively "
+#~ "on to a normal window activates it. New windows will receive the focus, "
+#~ "without you having to point the mouse at them explicitly. Very practical "
+#~ "if you are using the mouse a lot.</li>\n"
+#~ "<li><em>Focus under mouse:</em> The window that happens to be under the "
+#~ "mouse pointer is active. If the mouse points nowhere, the last window "
+#~ "that was under the mouse has focus. New windows will not automatically "
+#~ "receive the focus.</li>\n"
+#~ "<li><em>Focus strictly under mouse:</em> Only the window under the mouse "
+#~ "pointer is active. If the mouse points nowhere, nothing has focus.</li>\n"
+#~ "</ul>\n"
+#~ "Note that 'Focus under mouse' and 'Focus strictly under mouse' prevent "
+#~ "certain features such as the Alt+Tab walk through windows dialog in the "
+#~ "KDE mode from working properly."
+#~ msgstr ""
+#~ "குவிப்பு கொள்கை நடப்பு சாளரத்தை காட்ட பயன்படும், அதாவது, நீங்கள் வேலை செய்யும் சாளரம். "
+#~ "<ul> <li><em>குவிப்பமுக்கு க்ளிக்:</em> இதை க்ளிக் செய்தால் சாளரம் செயல்படும்.இந்த "
+#~ "நடைமுறை மற்ற இயக்க அமைப்பிலிருந்து தெரியும்.</li> <li><em>குவிப்பு எலியை தொடரும்:"
+#~ "</em> எலியை சாதாரன சாளரத்தில் நகர்த்தினால், அது செயல்படும். எலியை அதிகமாக "
+#~ "பயன்படுத்தினால் இது உதவும்.</li> <li><em>எலியின் கீழே குவிப்பு</em> - எலியின் "
+#~ "கீழேயுள்ள சாளரம் செயலடபடும். பொதுவாக: எந்த சாளரத்திலுமே எலியின் கீழே குவிப்பு "
+#~ "இருக்காது. </li> <li><em>கண்டிப்பாக எலியின் கீழ் குவிப்பு</em> - இது எலியின் கீழே "
+#~ "குவிப்பை விட மோசமானது. எலி சுட்டியின் கீழேயுள்ள சாளரம் மட்டும் தான் செயல்படும். எலி "
+#~ "இங்ேயும் காட்டவில்லை இன்றால், எதற்குமே குவிப்பு இருக்காது. </ul> எலியின் கீழே "
+#~ "குவிப்பு மற்றும் கண்டிப்பாக எலியின் கீழ் குவிப்பு இரண்டுமே பயன்படாது. இவைகள், பழைய-"
+#~ "காலத்து கடும்-பிற்போக்காளர் UNIX மக்களுக்கு தான் கொடுக்கபடும்."
+
+#~ msgid ""
+#~ "When enabled, this feature activates the border of maximized windows and "
+#~ "allows you to move or resize them, just like for normal windows"
+#~ msgstr ""
+#~ "செயல் இல்லாத பொழுது,ஓர சாளரம் அமைப்பை செயல்படுத்தும் மற்றும் உங்களை நகற்ற அல்லது "
+#~ "மாற்றுஅளவை வைத்திருப்பதாகும்,பொதுவாக உள்ள சாளரம் பொலாகும்."
+
+#, fuzzy
+#~| msgid "Display content in &resizing windows"
+#~ msgid "Display borders on &maximized windows"
+#~ msgstr "அளவு மாறும் சாளரங்களில் உள்ளடகத்தைக் காட்டு"
+
+#, fuzzy
+#~| msgid "Minimize"
+#~ msgctxt "@item:inlistbox behavior on double click"
+#~ msgid "Minimize"
+#~ msgstr "சிறிதாக்கு"
+
+#~ msgid ""
+#~ "Here you can customize mouse click behavior when clicking on the titlebar "
+#~ "or the frame of a window."
+#~ msgstr ""
+#~ "இதில் நீங்கள் எலி க்ளிக் நடைமுறையை, க்ளிக் செய்யும்போது தலைப்புபட்டையில் அல்லது "
+#~ "சாளரத்தின் சட்டத்தில் தனிப்பயனாக்கலாம்."
+
+#~ msgid ""
+#~ "Behavior on <em>right</em> click into the titlebar or frame of an "
+#~ "<em>inactive</em> window."
+#~ msgstr ""
+#~ "பழக்கத்தில் உள்ள <em>வலது</em> தலைப்புபட்டியை அல்லது சட்டத்தில் "
+#~ "சொடுக்கவும்<em>செயல்படாத</em> சாளரம்."
+
+#~ msgid ""
+#~ "Behavior on <em>middle</em> click into the titlebar or frame of an "
+#~ "<em>inactive</em> window."
+#~ msgstr ""
+#~ "பழக்கத்தில் உள்ள <em>நடுநிலை</em> தலைப்புபட்டியை அல்லது சட்டத்தில் "
+#~ "சொடுக்கவும்<em>செயல்படாத</em> சாளரம்."
+
+#~ msgid ""
+#~ "Here you can customize behavior when clicking on the maximize button."
+#~ msgstr "இங்கே நீங்கள் பெரிதாக்கும் பட்டனை க்ளிக் செய்யும்போது தன்மையை தனிப்பயனாக்கலாம்."
+
+#~ msgid ""
+#~ "Here you can customize mouse click behavior when clicking on an inactive "
+#~ "inner window ('inner' means: not titlebar, not frame)."
+#~ msgstr ""
+#~ "இங்கே நீங்கள் எலி களிக் நடைமுறையை, செயல்படாத சாளரம் ('உள்ளமைந்த' என்றால்: தலைப்பு "
+#~ "பட்டை இல்லை, சட்டமட இல்லை)."
+
+#~ msgid ""
+#~ "Here you can customize KDE's behavior when clicking somewhere into a "
+#~ "window while pressing a modifier key."
+#~ msgstr ""
+#~ "இங்கே நீங்கள், modifier விசையை அழுத்தியபடி,சாளரத்தில் எங்காவது க்ளிக்செய்யும் போது "
+#~ "ஏற்படும் KDE யின் நடைமுறையைத் தனிப்பயனாக்கலாம்."
+
+#, fuzzy
+#~| msgid "none"
+#~ msgctxt "no border snap zone"
+#~ msgid "none"
+#~ msgstr "ஏதுமில்லை"
+
+#, fuzzy
+#~| msgid "none"
+#~ msgctxt "no window snap zone"
+#~ msgid "none"
+#~ msgstr "ஏதுமில்லை"
+
+#, fuzzy
+#~| msgid "none"
+#~ msgctxt "no center snap zone"
+#~ msgid "none"
+#~ msgstr "ஏதுமில்லை"
+
+#, fuzzy
+#~| msgid "Nothing"
+#~ msgctxt "Floating layout, windows aren't tiled at all"
+#~ msgid "Floating"
+#~ msgstr "எதுவுமில்லை"
+
+#~ msgid ""
+#~ "When this option is enabled, there will be a delay after which the window "
+#~ "the mouse pointer is over will become active (receive focus)."
+#~ msgstr ""
+#~ "இத் தாமதம், எலி சுட்டி இருக்கும் சாளரம் எவ்வளவு நேரத்திற்கு பின் தன்னியக்கமாக முன்னால் "
+#~ "வரும் என்பது ஆகும்."
+
+#~ msgid "Di&splay content in moving windows"
+#~ msgstr "நகரும் சாளரங்களில் உள்ளடக்கத்தைக் காட்டு"
+
+#~ msgid ""
+#~ "Enable this option if you want a window's content to be fully shown while "
+#~ "moving it, instead of just showing a window 'skeleton'. The result may "
+#~ "not be satisfying on slow machines without graphic acceleration."
+#~ msgstr ""
+#~ "சாளரத்தை நகர்த்தும் போது, சாளரத்தின் 'மூலஅமைப்பு' மட்டும் காட்டாமல், சாளரங்களின் "
+#~ "தகவல்கள் முழுவதுமாக காட்ட வேண்டுமானால், இந்த விருப்பத்தை இயலுமைபடுத்தவும். மெதுவான "
+#~ "இயந்திரங்களில், வரைவியல் துரிதம் இல்லாமல், முடிவுகள் திருப்தியாக இருக்காது."
+
+#~ msgid "Display content in &resizing windows"
+#~ msgstr "அளவு மாறும் சாளரங்களில் உள்ளடகத்தைக் காட்டு"
+
+#~ msgid ""
+#~ "Enable this option if you want a window's content to be shown while "
+#~ "resizing it, instead of just showing a window 'skeleton'. The result may "
+#~ "not be satisfying on slow machines."
+#~ msgstr ""
+#~ "சாளரத்தின் மறுஅளவாக்கத்தின் போது, சாளரத்தின் 'மூலஅமைப்பு' மட்டும் காட்டாமல், சாளரத்தின் "
+#~ "தகவல்கள் காட்டவேண்டுமானால், இந்த  இந்த விருப்பத்தை இயலுமைபடுத்தவும். மெதுவான "
+#~ "இயந்திரங்களில் முடிவுகள் திருப்தியாக இருக்காது."
+
+#~ msgid "Allow moving and resizing o&f maximized windows"
+#~ msgstr "சாளரங்கள் அளவை மாற்றவும், நகர்த்தவும், உச்சப்படுத்துதலையும் அனுமதி"
+
+#~ msgid "Show window list while switching windows"
+#~ msgstr "சாளரத்தை திறக்கும்போது சாளர பட்டியலை காட்டு"
+
+#~ msgid ""
+#~ "Hold down the Alt key and press the Tab key repeatedly to walk through "
+#~ "the windows on the current desktop (the Alt+Tab combination can be "
+#~ "reconfigured).\n"
+#~ "\n"
+#~ "If this checkbox is checked a popup widget is shown, displaying the icons "
+#~ "of all windows to walk through and the title of the currently selected "
+#~ "one.\n"
+#~ "\n"
+#~ "Otherwise, the focus is passed to a new window each time Tab is pressed, "
+#~ "with no popup widget.  In addition, the previously activated window will "
+#~ "be sent to the back in this mode."
+#~ msgstr ""
+#~ "Alt விசையை பயன்படுத்தி தத்தல் விசையை அழுத்தவும் எப்படிஎன்றால் சாளர மேல்மேசைமும் "
+#~ "நடக்கவும்[Alt+Tab உள்ளமைக்கப்பட்டுள்ளது].\n"
+#~ "\n"
+#~ "இந்த பெட்டி தேர்ந்தெடுக்கப்பட்டால் ஒரு மேல் தோன்றும் சாளரம் தெரியும். தற்போதைய தலைப்பின் "
+#~ "மீது சென்று தேர்ந்தெடுக்கும்.\n"
+#~ "\n"
+#~ "இல்லையென்றால், ஒரு ஒவ்வொரு முறை தத்தல் அழுத்தப்படும்போதும் ஒரு ஒளி புதிய "
+#~ "சாளரத்தின்மீது செல்லும். மேல்தோன்றும் திரை இருக்காது. மேலும், இந்த முறையில் முன்பு "
+#~ "செயலில் இருந்த சாளரம் பின் தள்ளப்படும்."
+
+#~ msgid "&Traverse windows on all desktops"
+#~ msgstr "அனைத்து மேசைகளுக்கும் செல்"
+
+#~ msgid ""
+#~ "Leave this option disabled if you want to limit walking through windows "
+#~ "to the current desktop."
+#~ msgstr ""
+#~ "உங்களுக்கு சாளரம் முலம் நடத்தல் வேண்டும் என்றால் தற்பொதைய மேல்மேசையில் உள்ள தேர்வை "
+#~ "செய்யாமல் விட்டு விடவும்."
+
+#~ msgid "Desktop navi&gation wraps around"
+#~ msgstr "மேசை மேலோட்டம் ஓரு மேசையுடன் முடிவடையும்"
+
+#~ msgid ""
+#~ "Enable this option if you want keyboard or active desktop border "
+#~ "navigation beyond the edge of a desktop to take you to the opposite edge "
+#~ "of the new desktop."
+#~ msgstr ""
+#~ "உங்களுக்கு விசைபலகை அல்லது மேல்மேசையை வழிசெலுத்துதல் மேல்மேல் ஓரத்தில் உள்ள புதிய "
+#~ "மேல்மேசை ஓரத்தில் உள்ளதாகும். "
+
+#~ msgid "Popup desktop name on desktop &switch"
+#~ msgstr "தற்போதைய மேசையின் பெயரை எப்போதும் கான"
+
+#~ msgid ""
+#~ "Enable this option if you wish to see the current desktop name popup "
+#~ "whenever the current desktop is changed."
+#~ msgstr "தற்போதைய மேசையின் பெயரை எப்போதும் கான, இதனை தேர்வுச் செய்"
+
+#~ msgctxt "Focus Stealing Prevention Level"
+#~ msgid "Normal"
+#~ msgstr "இயல்பு"
+
+#~ msgid "Active Desktop Borders"
+#~ msgstr "இயங்கும் மேசை ஓரங்கள்"
+
+#~ msgid ""
+#~ "If this option is enabled, moving the mouse to a screen border will "
+#~ "change your desktop. This is e.g. useful if you want to drag windows from "
+#~ "one desktop to the other."
+#~ msgstr ""
+#~ "இந்த தேர்வு இல்லாமல் இருந்தால்,சுட்டி திரை ஒரத்தில் உள்ள மேல்மேசையை மாற்றவும்.இதற்க்கு "
+#~ "எடுத்துகாட்டு நிங்கள் ஏதாவது ஒரு மேல்மேசையை பயன்படுத்தலாம்."
+
+#~ msgid "D&isabled"
+#~ msgstr "முடமாக்கப்பட்டுள்ளது"
+
+#~ msgid "Only &when moving windows"
+#~ msgstr "சாளரங்களை நகர்த்தும் போது மட்டும்"
+
+#~ msgid "A&lways enabled"
+#~ msgstr "எப்போதும் இயங்கும்"
+
+#~ msgid ""
+#~ "Here you can set a delay for switching desktops using the active borders "
+#~ "feature. Desktops will be switched after the mouse has been pushed "
+#~ "against a screen border for the specified number of milliseconds."
+#~ msgstr ""
+#~ "இங்கு நீங்கள் மேல்மேசை தாமதித்தலை அமைத்தல் முடியும்.மேல்மேசை வெறு இடத்திற்க்கு "
+#~ "திரும்பவும் திரை ஓரம் மூலமாக குறிப்பிட்ட மில்லி செக்கண்டில் செலுத்துவதாகும்."
+
+#~ msgid "Desktop &switch delay:"
+#~ msgstr "மேசை மாற்றத் தாமதம்:"
+
+#~ msgid ""
+#~ "Here you can customize KDE's behavior when middle clicking into a window "
+#~ "while pressing the modifier key."
+#~ msgstr ""
+#~ "மாற்றுவிசையை அழுத்தியபடி, சாளரத்தில் நடுப்பொத்தான் க்ளிக்செய்யும் போது விளையும் KDE "
+#~ "யின் நடைமுறையை இங்கே நீங்கள் தனிப்பயனாக்கலாம்."
+
+#~ msgid ""
+#~ "Here you can customize mouse click behavior when double clicking on the "
+#~ "titlebar of a window."
+#~ msgstr ""
+#~ "இங்கே நீங்கள் சாளரத்தின் தலைப்புபட்டையை இரண்டுக்ளிக் செய்து, எலியின் நடைமுறையை "
+#~ "தனிப்பயனாக்கலாம்."
+
+#~ msgid "Modifier key + left button:"
+#~ msgstr "மாற்று விசை + இடது பொத்தான்"
+
+#~ msgid "Modifier key + right button:"
+#~ msgstr "மாற்று விசை + வலது பொத்தான்"
+
+#~ msgid "Modifier key + middle button:"
+#~ msgstr "மாற்று விசை + நடுப்பொத்தான்"
+
+#~ msgid "Focus"
+#~ msgstr "குவிப்பு"
+
+#~ msgid "Auto &raise"
+#~ msgstr "தன்னியக்க உயர்த்தல்"
+
+#~ msgid "Navigation"
+#~ msgstr "வழியாக்கம்"
+
+#, fuzzy
+#~| msgid "Activate & Raise"
+#~ msgid "Active &mouse screen"
+#~ msgstr "இயக்கி உயர்த்து"
+
+#~ msgid "Anima&te"
+#~ msgstr "அசைவூட்டு"
+
+#~ msgid ""
+#~ "Animate the action of reducing the window to its titlebar (shading) as "
+#~ "well as the expansion of a shaded window"
+#~ msgstr ""
+#~ "தலைப்புபட்டையின் சாளரத்தை பயன்படுத்தி செயலை அசைவுட்டவும்(நிழல்கள்) அது மற்றும் அல்லாத "
+#~ "விரிவு சாளரத்தின் நிழல்கள் "
+
+#~ msgid "Animate minimi&ze and restore"
+#~ msgstr "சிறுப்பித்தலையும் மீள்தலையும் அசைவூட்டு"
+
+#~ msgid "Slow"
+#~ msgstr "மெதுவாக"
+
+#~ msgid "Fast"
+#~ msgstr "விரைவாக"
+
+#~ msgid ""
+#~ "Here you can set the speed of the animation shown when windows are "
+#~ "minimized and restored. "
+#~ msgstr " "
+
+#~ msgid "&Translucency"
+#~ msgstr "&ஒளிக்கசிவு"
+
+#, fuzzy
+#~ msgid ""
+#~ "<qt><b>It seems that alpha channel support is not available.</"
+#~ "b><br><br>Please make sure you have <a href=\"http://www.freedesktop.org/"
+#~ "\">Xorg &ge; 6.8</a>, and have installed the kompmgr that came with kwin."
+#~ "<br>Also, make sure you have the following entries in your XConfig (e.g. /"
+#~ "etc/X11/xorg.conf):<br><br><i>Section \"Extensions\"<br>Option \"Composite"
+#~ "\" \"Enable\"<br>EndSection</i><br><br>And if your GPU provides hardware-"
+#~ "accelerated Xrender support (mainly nVidia cards):<br><br><i>Option     "
+#~ "\"RenderAccel\" \"true\"</i><br>In <i>Section \"Device\"</i></qt>"
+#~ msgstr ""
+#~ "<qt><b>ஆல்பா வழிமுறை ஆதரவு இல்லை போல் தெரிகிறது.</b><br><br>Please make sure "
+#~ "you have <a href=\"http://www.freedesktop.org/\">Xorg &ge; 6.8</a>, and "
+#~ "installed the kompmgr that came with kwin.<br>Also, make sure you have "
+#~ "the following entries in your XConfig (e.g. /etc/X11/xorg.conf):"
+#~ "<br><br><i>Section \"Extensions\"<br>Option \"Composite\" \"Enable"
+#~ "\"<br>EndSection</i><br><br>And if your GPU provides hardware-accelerated "
+#~ "Xrender support (mainly nVidia cards):<br><br><i>Option     \"RenderAccel"
+#~ "\" \"true\"</i><br>In <i>Section \"Device\"</i></qt>"
+
+#, fuzzy
+#~ msgid "Apply translucency only to decoration"
+#~ msgstr "ஒளிக்கசிவை அதன் மேல் பயன்படுத்து"
+
+#~ msgid "Dock windows:"
+#~ msgstr "சேகரிப்பு சாளரங்கள்:"
+
+#~ msgid "Treat 'keep above' windows as active ones"
+#~ msgstr "'மேல் வை' சாளரங்களை செயலில் உள்ளவைகளாக செய்"
+
+#~ msgid "Disable ARGB windows (ignores window alpha maps, fixes gtk1 apps)"
+#~ msgstr ""
+#~ "ARGB சாளரங்களை செயல் நீக்கு (ignores window alpha maps, fixes gtk1 apps)"
+
+#~ msgid "Opacity"
+#~ msgstr "மங்கும்திறன்"
+
+#~ msgid "Use shadows"
+#~ msgstr "நிழலிடலை பயன்படுத்து"
+
+#~ msgid "Active window size:"
+#~ msgstr "செயலில் உள்ள சாளர அளவு:"
+
+#~ msgid "Inactive window size:"
+#~ msgstr "செயல்படாத சாளர அளவு:"
+
+#~ msgid "Dock window size:"
+#~ msgstr "சேகரிப்பு சாளர அளவு:"
+
+#~ msgid "Vertical offset:"
+#~ msgstr "நெடுவரிசை ஆஃப்செட்:"
+
+#~ msgid "Shadow color:"
+#~ msgstr "நிழல் வண்ணம்:"
+
+#~ msgid "Remove shadows on move"
+#~ msgstr "நகரும்போது நிழல்களை நீக்கு"
+
+#~ msgid "Remove shadows on resize"
+#~ msgstr "மறுஅளவிடும்போது நிழல்களை நீக்கு"
+
+#~ msgid "Shadows"
+#~ msgstr "நிழல்கள்"
+
+#~ msgid "Fade-in windows (including popups)"
+#~ msgstr "நிழல் சாளரங்கள் (மேல்தோன்றும் திரைகளையும் சேர்த்து)"
+
+#~ msgid "Fade between opacity changes"
+#~ msgstr "ஒளிக் குறைப்பு மாற்றங்களுக்கிடையேயான மங்கல்"
+
+#~ msgid "Effects"
+#~ msgstr "விளைவுகள்"
+
+#~ msgid "Use translucency/shadows"
+#~ msgstr "ஒளிக்கசிவு/நிழல்களைப் பயன்படுத்து"
+
+#~ msgid ""
+#~ "<qt>Translucency support is new and may cause problems<br> including "
+#~ "crashes (sometimes the translucency engine, seldom even X).</qt>"
+#~ msgstr ""
+#~ "<qt>Translucency support is new and may cause problems<br> including "
+#~ "crashes (sometimes the translucency engine, seldom even X).</qt>"

@@ -1,0 +1,839 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % German "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<!--copy from r308626 Tue May 4 17:11:51 2004 UTC -->
+
+<article id="windowbehaviour" lang="&language;">
+<articleinfo>
+<title
+>Fensterverhalten</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<author
+>&Jost.Schenck; &Jost.Schenck.mail;</author>
+<othercredit role="translator"
+><firstname
+>Matthias</firstname
+><surname
+>Kiefer</surname
+><affiliation
+><address
+><email
+>Matthias.Kiefer@gmx.de</email
+></address
+></affiliation
+><contrib
+>Deutsche Übersetzung</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-09</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Kontrollzentrum</keyword>
+<keyword
+>Systemeinstellungen</keyword>
+<keyword
+>Aktionen</keyword>
+<keyword
+>Fensterpositionierung</keyword>
+<keyword
+>Fenstergröße</keyword>
+</keywordset>
+</articleinfo>
+<sect1 id="window-behavior">
+<title
+>Fensterverhalten</title>
+
+<para
+>Im oberen Bereich dieses Moduls sieht man mehrere Karteikarten: <guilabel
+>Aktivierung</guilabel
+>, <guilabel
+>Titelleiste</guilabel
+>, <guilabel
+>Fenster</guilabel
+>, <guilabel
+>Verschiebung</guilabel
+> und <guilabel
+>Erweitert</guilabel
+>. In der Karteikarte <guilabel
+>Aktivierung</guilabel
+> kann man einstellen, auf welche Weise Fenster aktiviert bzw. deaktiviert werden. Unter <guilabel
+>Titelleiste</guilabel
+> und <guilabel
+>Fenster</guilabel
+> kann man festlegen, wie Titelleisten und Fenster auf Mausklicks reagieren. <guilabel
+>Verschiebung</guilabel
+> erlaubt die Einstellung, wie Fenster verschoben und wo sie positioniert werden können. Die Karteikarte <guilabel
+>Erweitert</guilabel
+> enthält einige spezielle Einstellungen wie <quote
+>Fensterheber</quote
+>. </para>
+
+<note>
+<para
+>Die Einstellungen in diesem Modul wirken sich nur dann aus, wenn Sie &plasma;'s Fensterverwaltung &kwin; verwenden. Verwenden Sie eine andere Fensterverwaltung, müssen Sie dessen Dokumentation konsultieren. </para>
+</note>
+
+<sect2 id="action-focus">
+<title
+>Aktivierung</title>
+
+<para
+>Die <quote
+>Aktivierung</quote
+> bezieht sich auf das Fenster, in dem der Benutzer gerade arbeitet. Man sagt auch, das aktive Fenster hat den <quote
+>Fokus</quote
+>. </para>
+
+<para
+>Aktivierung bedeutet nicht automatisch, dass das Fenster dasjenige im Vordergrund ist. Dies wird als <quote
+>Fenster heben</quote
+> bezeichnet und kann ebenfalls hier eingerichtet werden. Trotzdem werden die Aktivierung und das Heben der Fenster voneinander unabhängig eingestellt.</para>
+
+<sect3 id="action-focus-focuspolicy">
+<title
+>Regelung zur Fensteraktivierung</title>
+
+<para
+>Es gibt sechs Methoden, das gerade aktivierte Fenster in &kwin; festzulegen: </para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Aktivierung nach Klick</guilabel
+></term>
+<listitem>
+<para
+>Ein Fenster wird aktiv, wenn Sie mit der Maus hinein klicken.Dieses Verhalten ist in vielen Betriebssystemen bekannt und wahrscheinlich die gewünschte Einstellung.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktivierung nach Klick – Vorrang für Maus</guilabel
+></term>
+<listitem>
+<para
+>Dies ist fast wie <guilabel
+>Aktivierung nach Klick</guilabel
+>. Wenn eine aktives Fenster durch das System gewählt werden muss, &eg; wenn das zurzeit aktive Fenster geschlossen wurde, dann ist das Fenster unter dem Mauszeiger der bevorzugte Kandidat. Ungewöhnliche aber mögliche Variante von <guilabel
+>Aktivierung nach Klick</guilabel
+>. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktivierung bei Mauskontakt</guilabel
+></term>
+<listitem>
+<para
+>Bewegen Sie den Mauszeiger aktiv über ein normales Fenster, so wird dieses aktiviert. Neue Fenster wie das Fenster Befehl ausführen, die mit <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+> aufgerufen wird, erhalten den Fokus ohne dass Sie den Mauszeiger dorthin bewegen müssen. Fenster, die zufälligerweise unter dem Mauszeiger erscheinen, werden nicht aktiviert. Die Vorbeugung gegen unerwünschte Aktivierung funktioniert normal. Dies ist wie <guilabel
+>Aktivierung nach Klick</guilabel
+> nur ohne tatsächlich klicken zu müssen. </para>
+
+<para
+>Bei anderen Fensterverwaltungen wird dieser Modus manchmal als <quote
+>Aktivierung folgt dem Mauszeiger schlampig</quote
+> bezeichnet. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktivierung bei Mauskontakt – Vorrang für Maus</guilabel
+></term>
+<listitem>
+<para
+>Dies ist fast wie <guilabel
+>Aktivierung bei Mauskontakt</guilabel
+>. Wenn eine aktives Fenster durch das System gewählt werden muss, &eg; wenn das zurzeit aktive Fenster geschlossen wurde,dann ist das Fenster unter dem Mauszeiger der bevorzugte Kandidat. Wählen Sie diese Einstellung für eine durch Mauskontakt gesteuerte Aktivierung. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktivierung unter Mauszeiger</guilabel
+></term>
+<listitem>
+<para
+>Das Fenster, das sich unter dem Mauszeiger befindet, wird aktiv. Befindet sich der Mauszeiger nicht über einem Fenster (wenn er sich zum Beispiel über der Arbeitsfläche befindet) ist das Fenster aktiv, das sich zuletzt unter dem Mauszeiger befunden hat. Neue Fenster wie Befehl ausführen, das über <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+> aufgerufen wird, erhalten den Fokus nicht automatisch. Sie müssen erst den Mauszeiger darüber bewegen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktivierung genau unter Mauszeiger</guilabel
+></term>
+<listitem>
+<para
+>Ähnlich wie <guilabel
+>Aktivierung unter Mauszeiger</guilabel
+>, aber noch strikter in der Interpretation. Nur das Fenster unter dem Mauszeiger ist aktiv. Befindet sich der Mauszeiger nicht über einem Fenster, hat kein Fenster den Fokus. Neu Fenster wie Befehl ausführen, das über <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+> aufgerufen wird, erhalten nicht den Fokus. Sie müssen erst den Mauszeiger darüber bewegen. </para>
+
+</listitem>
+</varlistentry>
+</variablelist>
+
+<note
+><para
+>Beachten Sie, dass bei <guilabel
+>Aktivierung unter Mauszeiger</guilabel
+> und <guilabel
+>Aktivierung genau unter Mauszeiger</guilabel
+> bestimmte Funktionen nicht korrekt funktionieren. Darunter die <guilabel
+>Verhinderung unerwünschter Aktivierung</guilabel
+> und die Auswahl des aktiven Fensters mit <keycombo action="simul"
+>&Alt;&Tab;</keycombo
+>.</para>
+</note>
+
+</sect3>
+
+<sect3 id="action-focus-focusstealin">
+<title
+>Verhindern unerwünschter Aktivierung</title>
+
+<para
+>Diese Einstellung legt fest, wie sehr KWin zu verhindern versucht, dass sich neu öffnende Fenster unerwünscht in den Vordergrund drängen bzw. aktiviert werden.</para
+> 
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Keine</guilabel
+></term>
+<listitem
+><para
+>Es wird keine solche Vorbeugung versucht, alle neuen Fenster werden automatisch aktiviert.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><guilabel
+>Niedrig</guilabel
+></term>
+<listitem
+><para
+>Für den Fall, dass ein Fenster auf den eigentlichen Mechanismus nicht reagiert und KWin nicht entscheiden kann, ob eine Aktivierung gewünscht wird oder nicht, dann wird das Fenster automatisch aktiviert. Diese Einstellung führt teils zu besseren, teils aber auch schlechteren Ergebnissen als die folgende, je nach den verwendeten Programmen.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><guilabel
+>Mittel</guilabel
+></term>
+<listitem
+><para
+>Vorbeugungsmaßnahmen werden aktiviert.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Hoch</guilabel
+></term>
+<listitem
+><para
+>Neue Fenster werden nur dann aktiviert, wenn gerade kein anderes Fenster aktiv ist oder sie zum gerade benutzten Programm gehören. Diese Einstellung ist nur dann sinnvoll, wenn der Fokus der Maus folgt.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><guilabel
+>Extrem</guilabel
+></term>
+<listitem
+><para
+>Sämtliche Fenster müssen manuell vom Benutzer aktiviert werden.</para
+></listitem>
+</varlistentry>
+</variablelist>
+<para
+>Fenster, die aufgrund dieser Regelung nicht nach vorne geholt wurden, erscheinen als Fenster, die Ihre Aufmerksamkeit erfordern. D. h. ihr Eintrag in der Kontrollleiste wird hervorgehoben. Dieses Verhalten kann im Einstellungsmodul für Systemnachrichten geändert werden.</para>
+</sect3>
+  
+<sect3 id="action-focus-raisingwindow">
+<title
+>Fenster nach vorne holen</title>
+<para
+>Wenn Sie den Standard für die Aktivierung festgelegt haben, stehen weitere Optionen zur Verfügung. </para>
+
+<para
+>Mit einer Aktivierung durch Klicken ist als Standard <guilabel
+>Aktives Fenster auf Klick nach vorne holen</guilabel
+> eingeschaltet und das Hervorheben durch Überfahren mit dem Mauszeiger ist nicht verfügbar. </para>
+
+<para
+>Mit der Regelung Aktivieren durch Überfahren können Sie alternativ das automatische Hervorheben verwenden. Ist <guilabel
+>Hervorheben beim Überfahren, verzögert um</guilabel
+> aktiviert, so platziert &kwin; das Fenster automatisch nach vorne, wenn sich der Mauszeiger für eine bestimmte Zeit über dem Fenster befindet. Die Verzögerungszeit können Sie mit dem Drehfeld einstellen. </para>
+
+<tip>
+<para
+>Setzt man die Verzögerungszeit auf einen zu geringen Wert, führt das zu einer schnellen Folge von Fensterwechseln, die sehr störend sein kann. Sinnvoll ist ein Wert von 100-300 ms. Die Fensterverwaltung reagiert schnell genug, dennoch kann man auf dem Weg zum Ziel ein anderes Fenster überqueren, ohne dieses nach vorn zu bringen. </para>
+</tip>
+
+<para
+>Wenn Sie das automatische nach vorne holen nicht benutzen, sollten Sie auf jeden Fall <guilabel
+>Aktives Fenster auf Klick nach vorne holen</guilabel
+> aktivieren. Sind beide Einstellungen abgeschaltet, zeigt der Fensterverwaltung ein nicht sonderlich sinnvolles Verhalten, da die Fenster überhaupt nicht in den Vordergrund geholt werden. </para>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="titlebar-actions">
+<title
+>Titelleiste</title>
+
+<para
+>Auf dieser Karteikarte können Sie festlegen, was mit einem Fenster passiert, wenn mit der Maus auf die Titelleiste geklickt wird. </para>
+
+<sect3 id="action-actions-sec1">
+<title
+>Doppelklick</title>
+
+<para
+>In diesem Auswahlfeld können Sie entweder <guilabel
+>Fensterheber</guilabel
+>, verschiedene Formen von <guilabel
+>Maximieren</guilabel
+> oder <guilabel
+>Nach hinten</guilabel
+>, <guilabel
+>Schließen</guilabel
+> und <guilabel
+>Auf allen Arbeitsflächen</guilabel
+> auswählen. </para>
+
+<para
+>Bei <guilabel
+>Maximieren</guilabel
+> wird &kwin; das Fenster bei einem Doppelklick auf die Titelleiste maximieren. Sie können außerdem auswählen, ob ein Fenster nur horizontal oder nur vertikal maximiert werden soll.</para>
+
+<para
+>Bei <guilabel
+>Fensterheber</guilabel
+> wird das Fenster auf die Titelleiste reduziert. Ein zweiter Doppelklick stellt die vorherige Fenstergröße wieder her. </para>
+
+<para
+>Ähnliche Einstellungen sind für das <guilabel
+>Mausrad</guilabel
+> vorhanden. </para>
+<!--FIXME Raise/Lower Shade/Unshade Maximize/Restore Keep Above/Below Move to Previous/Next Desktop Change Opacity -->
+
+<tip>
+<para
+>Soll ein auf die Titelleiste reduziertes Fenster automatisch wiederhergestellt werden, wenn die Maus darüber platziert wird, müssen Sie auf der Karteikarte <guilabel
+>Erweitert</guilabel
+> das Markierungsfeld <guilabel
+>Fensterheber ausfahren</guilabel
+> auswählen. Damit lässt sich hervorragend Platz auf der Arbeitsfläche sparen, wenn man z.B. zwischen vielen Fenster Inhalte durch Ausschneiden und Kopieren überträgt. </para>
+</tip>
+
+</sect3>
+
+<sect3 id="action-actions-sec2">
+<title
+><guilabel
+>Aktionen für Titelleiste und Rahmen</guilabel
+></title>
+
+<para
+>In diesem Abschnitt kann man festlegen, wie sich ein Fenster bei einfachem Klick auf die Titelleiste oder den Rahmen verhält. Man kann dabei unterschiedliche Aktionen einstellen, je nachdem ob das Fenster aktiv ist oder nicht. </para>
+
+<para
+>Man kann für jede Kombination der Maustasten und Aktiv/Inaktiv die geeignete Aktion einstellen. Die möglichen Aktionen sind: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Nach vorn</guilabel
+></term>
+<listitem>
+<para
+>Bringt das Fenster ganz nach vorn. Alle anderen Fenster, die dieses überlappen, werden <quote
+>dahinter</quote
+> gestellt. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Nach hinten</guilabel
+></term>
+<listitem>
+<para
+>Platziert das Fenster an das Ende des Bildschirms. Damit wird das Fenster aus dem Weg bewegt. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Nach vorn bringen und hinten stellen umschalten</guilabel
+></term>
+<listitem>
+<para
+>Bringt ein Fenster nach vorn, wenn es vorher nicht vorn war, und nach hinten, wenn es vorher vorn war. </para>
+</listitem>
+</varlistentry>
+
+<!--FIXME missing:
+Minimize, Shade, Close
+-->
+
+<varlistentry>
+<term
+><guilabel
+>Nichts unternehmen</guilabel
+></term>
+<listitem>
+<para
+>Offensichtlich passiert hier nichts. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktionenmenü anzeigen</guilabel
+></term>
+<listitem>
+<para
+>Ein Untermenü mit fensterbezogenen Befehlen wird angezeigt (unter anderem Maximieren, Minimieren, Schließen &etc;). </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect3>
+
+<sect3 id="action-actions-maximize-button">
+<title
+><guilabel
+>Aktionen für den Maximieren-Knopf</guilabel
+></title>
+<para
+>In diesem Abschnitt können Sie die Aktion für alle drei Maustasten beim Klick auf den Knopf „Maximieren“ einstellen. Nur vertikal, nur horizontal und beide Richtungen für das „Maximieren“ des Fensters stehen zur Auswahl. </para>
+</sect3>
+
+</sect2>
+
+<sect2 id="window-actions">
+<title
+>Fenster</title>
+
+<sect3 id="action-actions-sec3">
+<title
+><guilabel
+>Inaktives, inneres Fenster</guilabel
+></title>
+
+<para
+>Dieser Abschnitt des Moduls legt fest, was passiert, wenn Sie mit einer der drei Maustasten in ein inaktives Fenster klicken oder das Mausrad verwenden. </para>
+
+<para
+>Es gibt folgende Einstellmöglichkeiten: </para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Aktivieren, nach vorn und mit Klick ansprechen</guilabel
+></term>
+<listitem>
+<para
+>Das angeklickte Fenster wird aktiviert, auf der Arbeitsfläche ganz nach vorne geholt und an die Anwendung im Fenster wird ein Mausklick übertragen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktivieren und mit Klick ansprechen</guilabel
+></term>
+<listitem>
+<para
+>Das angeklickte Fenster wird aktiviert und an die Anwendung im Fenster ein Mausklick übertragen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktivieren</guilabel
+></term>
+<listitem>
+<para
+>Hierdurch wird das angeklickte Fenster lediglich aktiviert. Der Mausklick wird nicht an die Anwendung im Fenster weitergegeben. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktivieren und nach vorne</guilabel
+></term>
+<listitem>
+<para
+>Das angeklickte Fenster wird aktiviert und ganz vorne auf der Arbeitsfläche dargestellt. Der Mausklick wird nicht an die Anwendung im Fenster weitergegeben. </para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para
+>Für das <guilabel
+>Mausrad</guilabel
+> gibt es folgende Einstellmöglichkeiten: </para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Blättern</guilabel
+></term>
+<listitem>
+<para
+>Verschiebt den Inhalt des Fenster nach oben oder unten. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktivieren und blättern</guilabel
+></term>
+<listitem>
+<para
+>Das angeklickte Fenster wird aktiviert und der Inhalt wird nach oben oder unten verschoben. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktivieren, nach vorne und blättern</guilabel
+></term>
+<listitem>
+<para
+>Das angeklickte Fenster wird aktiviert, auf der Arbeitsfläche ganz nach vorne geholt und  und der Inhalt wird nach oben oder unten verschoben. </para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect3>
+
+<sect3 id="action-actions-sec4">
+<title
+><guilabel
+>Inneres Fenster, Titelleiste und Rahmen</guilabel
+></title>
+
+<para
+>Dieser unterste Abschnitt ermöglicht die Einstellung zusätzlicher Aktionen, wenn beim Mausklick eine Sondertaste (&Meta; ist der Standard) gedrückt wird.</para>
+
+<para
+>Sie können auch hier unterschiedliche Aktionen für die &LMB;, &MMB;, &RMB; und das Mausrad festlegen. </para>
+
+<para
+>Die Wahlmöglichkeiten sind:</para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Verschieben</guilabel
+></term>
+<listitem>
+<para
+>Bewegt das Fenster auf der Arbeitsfläche. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Nach hinten</guilabel
+></term>
+<listitem>
+<para
+>Platziert das Fenster an das Ende des Bildschirms. Damit wird das Fenster aus dem Weg bewegt. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Nichts</guilabel
+></term>
+<listitem>
+<para
+>Offensichtlich passiert hier nichts. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Nach vorn</guilabel
+></term>
+<listitem>
+<para
+>Bringt das Fenster ganz nach vorn. Alle anderen Fenster, die dieses überlappen, werden <quote
+>dahinter</quote
+> gestellt. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Größe ändern</guilabel
+></term>
+<listitem>
+<para
+>Ändert die Größe des ausgewählten Fensters. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Nach vorn bringen und hinten stellen umschalten</guilabel
+></term>
+<listitem>
+<para
+>Bringt ein Fenster nach vorn, wenn es vorher nicht vorn war, und nach hinten, wenn es vorher vorn war. </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term
+><guilabel
+>Aktivieren</guilabel
+></term>
+<listitem>
+<para
+>Aktiviert dieses Fenster. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+<!-- FIXME missing:
+Activate, Raise &amp; Move
+Minimize
+Increase Opacity + Decrease Opacity
+-->
+<!--FIXME
+Mouse Wheel has different choices:
+Raise/Lower, Shade/Unshade, Maximize/Restore, Keep Above/Below, 
+Move to Previous/Next Desktop, Change Opacity
+Nothing
+-->
+
+</sect3>
+
+</sect2>
+
+<sect2 id="action-moving">
+<title
+>Verschiebung</title>
+
+<para
+>Diese Einstellungen bestimmen das Erscheinungsbild von Fenster auf dem Bildschirm, wenn sie verschoben werden.</para>
+
+<sect3>
+<title
+><guilabel
+>Fenstergeometrie</guilabel
+></title>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Bei Bewegungen oder Größenänderungen anzeigen</guilabel
+></term>
+<listitem>
+<para
+>Aktivieren Sie diese Einstellung, wenn Sie Angaben zur Geometrie des Fensters eingeblendet haben möchten, während Sie seine Größe oder Position ändern. Es werden dann die relative Position zur linken oberen Ecke des Bildschirms und die Abmessungen angezeigt.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</sect3>
+
+<sect3>
+<title
+><guilabel
+>Einrastzonen</guilabel
+></title>
+
+<para
+>Der Rest dieser Seite erlaubt die Einrichtung der <guilabel
+>Einrastzonen</guilabel
+>. Diese wirken wie ein magnetisches Feld entlang der Ränder von Fenstern und der Arbeitsfläche, die Fenster gleichsam einrasten lassen, wenn sie sich einander nähern.</para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Bildschirmrand-Einrastzone:</guilabel
+></term>
+<listitem>
+
+<para
+>Hier können Sie die Einrastzonen für die Arbeitsflächenränder festlegen. Wird ein Fenster in eine dieser Zonen verschoben, so rastet es an einer Kante der Arbeitsoberfläche ein.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Fenster-Einrastzone:</guilabel
+></term>
+<listitem>
+
+<para
+>Hier können Sie die Einrastzone für Fenster festlegen. Wie beim Arbeitsflächenrand rastet ein Fenster ein, wenn es in die Einrastzone eines Anderen gerät.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Bildschirmmitte-Einrastzone:</guilabel
+></term>
+<listitem>
+
+<para
+>Hier können Sie die Einrastzone für die Bildschirmmitte festlegen, also die „Stärke des magnetischen Feldes“, das Fenster in der Bildschirmmitte andocken lässt, sobald sie in deren Nähe gebracht werden</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry>
+<term
+><guilabel
+>Fenster nur einrasten lassen, wenn sie sich überlappen</guilabel
+></term>
+<listitem>
+
+<para
+>Ist diese Option markiert, rasten Fenster nur dann ein, wenn sie sich überlappen.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect3>
+
+</sect2>
+
+<sect2 id="action-advanced">
+<title
+>Erweitert</title>
+
+<para
+>Auf der Karteikarte <guilabel
+>Erweitert</guilabel
+> kann man einige Feinheiten des Fensterverhaltens beeinflussen. </para>
+
+<variablelist>
+<title
+>Fensterheber ausfahren</title>
+
+<varlistentry>
+<term
+><guilabel
+>Beim Überfahren der Titelleiste nach</guilabel
+></term>
+<listitem>
+<para
+>Ist diese Option markiert, wird ein auf die Titelleiste reduziertes Fenster automatisch wiederhergestellt, wenn sich der Mauszeiger für eine einstellbare Zeit über der Titelleiste befindet. Mit dem Drehfeld kann man die Verzögerungszeit bis zur automatischen Wiederherstellung einstellen. </para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Fensterpositionierung</guilabel
+></term>
+<listitem
+><para
+>Die Platzierung legt fest, wo ein neues Fenster auf dem Bildschirm erscheinen wird. <guilabel
+>Minimale Überlappung</guilabel
+> platziert die Fenster mit einer möglichst geringen Überlappung, <guilabel
+>Gestaffelt</guilabel
+> kaskadiert die Fenster und <guilabel
+>Zufällig</guilabel
+> verwendet eine zufällige Position. <guilabel
+>Zentriert</guilabel
+> öffnet alle neuen Fenster in der Mitte des Bildschirms und <guilabel
+>Links oben</guilabel
+> öffnet alle Fenster mit ihrer linken oberen Ecke in der linken oberen Ecke des Bildschirms. Klicken Sie auf <guilabel
+>Anwendungen erlauben, die Position ihrer eigenen Fenster zu speichern, wenn sie das unterstützen</guilabel
+>, um die Position der &plasma;-Fenster zu behalten.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+<variablelist>
+<title
+>Besondere Fenster</title>
+<varlistentry>
+<term
+><guilabel
+>Werkzeugfenster von inaktiven Programmen ausblenden</guilabel
+></term>
+<listitem
+><para
+>Wenn diese Einstellung aktiviert ist, werden Dienstprogrammfenster (Werkzeugfenster, schwebende Menüs, ...) nur angezeigt, wenn das zugehörige Hauptfenster aktiv ist.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+</sect1>
+
+</article>

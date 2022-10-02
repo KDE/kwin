@@ -1,0 +1,269 @@
+# translation of kcm_kwindesktop.po to Karakh
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Sairan Kikkarin <sairan@computer.org>, 2008, 2010.
+# Sairan Kikkarin <sairan@computer.org>, 2010, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcm_kwindesktop\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"PO-Revision-Date: 2013-09-15 06:47+0600\n"
+"Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
+"Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
+"Language: kk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.2\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Сайран Киккарин"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "sairan@computer.org"
+
+#: desktopsmodel.cpp:467
+#, kde-format
+msgid "There was an error connecting to the compositor."
+msgstr ""
+
+#: desktopsmodel.cpp:666
+#, kde-format
+msgid "There was an error saving the settings to the compositor."
+msgstr ""
+
+#: desktopsmodel.cpp:669
+#, kde-format
+msgid "There was an error requesting information from the compositor."
+msgstr ""
+
+#: package/contents/ui/main.qml:17
+#, kde-format
+msgid ""
+"This module lets you configure the navigation, number and layout of virtual "
+"desktops."
+msgstr ""
+
+#: package/contents/ui/main.qml:91
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Rename"
+msgstr ""
+
+#: package/contents/ui/main.qml:102
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Confirm new name"
+msgstr ""
+
+#: package/contents/ui/main.qml:110
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove"
+msgstr ""
+
+#: package/contents/ui/main.qml:137
+#, kde-format
+msgid ""
+"Virtual desktops have been changed outside this settings application. Saving "
+"now will overwrite the changes."
+msgstr ""
+
+#: package/contents/ui/main.qml:153
+#, kde-format
+msgid "Row %1"
+msgstr ""
+
+#: package/contents/ui/main.qml:166
+#, kde-format
+msgctxt "@action:button"
+msgid "Add"
+msgstr ""
+
+#: package/contents/ui/main.qml:169
+#, fuzzy, kde-format
+#| msgid "Desktops"
+msgid "New Desktop"
+msgstr "Үстелдер"
+
+#: package/contents/ui/main.qml:184
+#, kde-format
+msgid "1 Row"
+msgid_plural "%1 Rows"
+msgstr[0] ""
+
+#: package/contents/ui/main.qml:200
+#, kde-format
+msgid "Options:"
+msgstr ""
+
+#: package/contents/ui/main.qml:202
+#, fuzzy, kde-format
+#| msgid "Desktop navigation wraps around"
+msgid "Navigation wraps around"
+msgstr "Тұйық үстел навигациясы"
+
+#: package/contents/ui/main.qml:220
+#, kde-format
+msgid "Show animation when switching:"
+msgstr ""
+
+#: package/contents/ui/main.qml:271
+#, kde-format
+msgid "Show on-screen display when switching:"
+msgstr ""
+
+#: package/contents/ui/main.qml:290
+#, kde-format
+msgid "%1 ms"
+msgstr ""
+
+#: package/contents/ui/main.qml:314
+#, kde-format
+msgid "Show desktop layout indicators"
+msgstr "Үстелдегінін орналасу индикаторы болсын"
+
+#: virtualdesktops.cpp:33
+#, fuzzy, kde-format
+#| msgid "Desktops"
+msgid "Virtual Desktops"
+msgstr "Үстелдер"
+
+#~ msgid "Desktop %1:"
+#~ msgstr "%1-үстел:"
+
+#~ msgid "Here you can enter the name for desktop %1"
+#~ msgstr "Мұнда %1-үстел қалай аталатынын келтіріңіз"
+
+#~ msgid "Desktop %1"
+#~ msgstr "%1-үстел"
+
+#~ msgid ""
+#~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "
+#~ "virtual desktops you want and how these should be labeled."
+#~ msgstr ""
+#~ "<h1>Бірнеше Үстел</h1>Қанша виртуалды үстел керек және олар қалай "
+#~ "белгіленетінің осы модулінде анықталады."
+
+#~ msgid "Switch to Next Desktop"
+#~ msgstr "Келесі үстелге ауысу"
+
+#~ msgid "Switch to Previous Desktop"
+#~ msgstr "Алдыңғы үстелге ауысу"
+
+#~ msgid "Switch One Desktop to the Right"
+#~ msgstr "Оң жақ үстелге ауысу"
+
+#~ msgid "Switch One Desktop to the Left"
+#~ msgstr "Сол жақ үстелге ауысу"
+
+#~ msgid "Switch One Desktop Up"
+#~ msgstr "Үстңгі жақ үстелге ауысу"
+
+#~ msgid "Switch One Desktop Down"
+#~ msgstr "Астыңғы жақ үстелге ауысу"
+
+#~ msgid "Walk Through Desktops"
+#~ msgstr "Үстелдерді аралау"
+
+#~ msgid "Walk Through Desktops (Reverse)"
+#~ msgstr "Үстелідерді (кері) аралау"
+
+#~ msgid "Walk Through Desktop List"
+#~ msgstr "Үстелдерінің тізімі бойынша аралау"
+
+#~ msgid "Walk Through Desktop List (Reverse)"
+#~ msgstr "Үстелдерінің тізімі бойынша (кері) аралау"
+
+#~ msgid "Desktop Switching"
+#~ msgstr "Басқа үстелге ауысу"
+
+#~ msgid "Switch to Desktop %1"
+#~ msgstr "%1-үстеліне ауысу"
+
+#~ msgid "No Animation"
+#~ msgstr "Анимациясыз"
+
+#~ msgid "No suitable Shortcut for Desktop %1 found"
+#~ msgstr "%1-үстелге лайық тіркесім табылған жоқ"
+
+#~ msgid "Assigned global Shortcut \"%1\" to Desktop %2"
+#~ msgstr "Жалпы жүйелік \"%1\" тіркесімі  %2-үстелге тағайындалды"
+
+#~ msgid "Shortcut conflict: Could not set Shortcut %1 for Desktop %2"
+#~ msgstr "Тіркесім қайшылығы: %1 тіркесімі %2-үстелге тағайындалмады"
+
+#~ msgid "Layout"
+#~ msgstr "Құрамы"
+
+#~ msgid ""
+#~ "Here you can set how many virtual desktops you want on your KDE desktop."
+#~ msgstr ""
+#~ "Мұнда KDE үстеліңізде қанша виртуалды үстел керек ететіңізді анықтай "
+#~ "аласыз."
+
+#, fuzzy
+#~| msgid "Number of desktops:"
+#~ msgid "&Number of desktops:"
+#~ msgstr "Үстелдер саны: "
+
+#, fuzzy
+#~| msgid "Number of rows:"
+#~ msgid "N&umber of rows:"
+#~ msgstr "Бағандар саны: "
+
+#~ msgid "Desktop Names"
+#~ msgstr "Үстел атаулары"
+
+#~ msgid "Switching"
+#~ msgstr "Ауысу"
+
+#~ msgid ""
+#~ "Enable this option if you want keyboard or active desktop border "
+#~ "navigation beyond the edge of a desktop to take you to the opposite edge "
+#~ "of the new desktop."
+#~ msgstr ""
+#~ "Бұл параметрді таңдағанда, пернетақта не незардағы үстелдің шегінің "
+#~ "сыртындағы навигациясы жаңа үстелдің қарсы шетіне шығарады."
+
+#~ msgid "Desktop Effect Animation"
+#~ msgstr "Үстел эффект анимациясы"
+
+#~ msgid "Animation:"
+#~ msgstr "Анимация"
+
+#~ msgid "Desktop Switch On-Screen Display"
+#~ msgstr "Экрандағы үстелара ауысу панелі"
+
+#~ msgid "Duration:"
+#~ msgstr "Ұзақтығы:"
+
+#~ msgid " msec"
+#~ msgstr " мсек"
+
+#~ msgid ""
+#~ "Enabling this option will show a small preview of the desktop layout "
+#~ "indicating the selected desktop."
+#~ msgstr ""
+#~ "Бұл белгіні қойсаңыз, таңдалған үстелдің көрінісін нобайлайтын шағын "
+#~ "сурет көрсетіледі."
+
+#~ msgid "Shortcuts"
+#~ msgstr "Тіркесімдер"
+
+#~ msgid "Show shortcuts for all possible desktops"
+#~ msgstr "Бар және болуға мүмкін үстелдерінің перне тіркесімдері"
+
+#~ msgid "Different widgets for each desktop"
+#~ msgstr "Әрбір үстелдегі виджеттері бөлек"
+
+#~ msgid "Mouse wheel over desktop background switches desktop"
+#~ msgstr "Үстел аясында тышқанның тегіршігі үстелді ауыстырады"

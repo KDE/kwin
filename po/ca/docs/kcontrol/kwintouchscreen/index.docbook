@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Catalan  "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwintouchscreen" lang="&language;">
+<articleinfo>
+
+<title
+>Pantalla tàctil</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+&traductor.Antoni.Bella; 
+</authorgroup>
+
+<date
+>10 d'abril de 2021</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Arranjament del sistema</keyword>
+<keyword
+>tàctil</keyword>
+<keyword
+>pantalla</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Lliscar des de la vora cap al centre de la pantalla permet activar els efectes. Aquí podreu configurar quin efecte s'activarà en cada vora de la pantalla. </para>
+
+<para
+>Feu clic amb qualsevol botó del ratolí sobre un quadrat i escolliu un efecte al menú contextual. Les vores amb un quadrat blau ja tenen un efecte associat, un quadrat de color gris indica que no hi ha efecte seleccionat per a aquesta vora.</para>
+
+<para
+>El nombre d'elements accessibles en el menú contextual dependrà de la configuració en el mòdul <ulink url="help:/kcontrol/kwineffects/index.html"
+><guilabel
+>Efectes d'escriptori</guilabel
+></ulink
+> a la categoria <guilabel
+>Espai de treball</guilabel
+>. Seleccioneu els vostres efectes favorits des del grup <guilabel
+>Gestió de les finestres</guilabel
+>. Això activarà els elements corresponents al menú contextual.</para>
+</article>

@@ -1,0 +1,486 @@
+# translation of kcmkwincompositing.po to Maithili
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Sangeeta Kumari <sangeeta09@gmail.com>, 2009.
+# Rajesh Ranjan <rajesh672@gmail.com>, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwincompositing\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"PO-Revision-Date: 2010-01-29 13:48+0530\n"
+"Last-Translator: Rajesh Ranjan <rajesh672@gmail.com>\n"
+"Language-Team: Maithili <maithili.sf.net>\n"
+"Language: mai\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"\n"
+"\n"
+"\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
+#: compositing.ui:31
+#, kde-format
+msgid ""
+"OpenGL compositing (the default) has crashed KWin in the past.\n"
+"This was most likely due to a driver bug.\n"
+"If you think that you have meanwhile upgraded to a stable driver,\n"
+"you can reset this protection but be aware that this might result in an "
+"immediate crash!"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
+#: compositing.ui:44
+#, kde-format
+msgid ""
+"Scale method \"Accurate\" is not supported by all hardware and can cause "
+"performance regressions and rendering artifacts."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
+#: compositing.ui:67
+#, kde-format
+msgid ""
+"Keeping the window thumbnail always interferes with the minimized state of "
+"windows. This can result in windows not suspending their work when minimized."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, compositingLabel)
+#: compositing.ui:79
+#, fuzzy, kde-format
+#| msgid "Compositing type:"
+msgid "Compositing:"
+msgstr "कम्पोजिशिंग प्रकार:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
+#: compositing.ui:86
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Enable desktop effects"
+msgid "Enable on startup"
+msgstr "डेस्कटाप प्रभाव सक्रिय करू"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:95
+#, kde-format
+msgid ""
+"Applications can set a hint to block compositing when the window is open.\n"
+" This brings performance improvements for e.g. games.\n"
+" The setting can be overruled by window-specific rules."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:98
+#, kde-format
+msgid "Allow applications to block compositing"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
+#: compositing.ui:105
+#, fuzzy, kde-format
+#| msgid "Animation speed:"
+msgid "Animation speed:"
+msgstr "एनीमेशन गति:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: compositing.ui:142
+#, fuzzy, kde-format
+#| msgid "Very Slow"
+msgid "Very slow"
+msgstr "बहुत धीमा"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: compositing.ui:162
+#, kde-format
+msgid "Instant"
+msgstr "तुरँत"
+
+#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
+#: compositing.ui:174
+#, kde-format
+msgid "Scale method:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:184
+#, kde-format
+msgid "Smooth"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:189
+#, kde-format
+msgid "Accurate"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: compositing.ui:199
+#, kde-format
+msgid "Tearing prevention (\"vsync\"):"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:207
+#, kde-format
+msgid "Automatic"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:212
+#, kde-format
+msgid "Only when cheap"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:217
+#, kde-format
+msgid "Full screen repaints"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:222
+#, kde-format
+msgid "Re-use screen content"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
+#: compositing.ui:230
+#, kde-format
+msgid "Keep window thumbnails:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:238
+#, fuzzy, kde-format
+#| msgid "Never"
+msgid "Never"
+msgstr "कहियो नहि"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:243
+#, kde-format
+msgid "Only for Shown Windows"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:248
+#, kde-format
+msgid "Always"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
+#: compositing.ui:256
+#, kde-format
+msgid "Latency:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:264
+#, kde-format
+msgid "Force lowest latency (may cause dropped frames)"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:269
+#, kde-format
+msgid "Prefer lower latency"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:274
+#, kde-format
+msgid "Balance of latency and smoothness"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:279
+#, kde-format
+msgid "Prefer smoother animations"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:284
+#, fuzzy, kde-format
+#| msgid "Various animations"
+msgid "Force smoothest animations"
+msgstr "भिन्न एनीमेशन"
+
+#: main.cpp:79
+#, kde-format
+msgid "Re-enable OpenGL detection"
+msgstr ""
+
+#: main.cpp:135
+#, kde-format
+msgid ""
+"\"Only when cheap\" only prevents tearing for full screen changes like a "
+"video."
+msgstr ""
+
+#: main.cpp:139
+#, kde-format
+msgid "\"Full screen repaints\" can cause performance problems."
+msgstr ""
+
+#: main.cpp:143
+#, kde-format
+msgid ""
+"\"Re-use screen content\" causes severe performance problems on MESA drivers."
+msgstr ""
+
+#, fuzzy
+#~| msgid "OpenGL"
+#~ msgid "OpenGL 3.1"
+#~ msgstr "ओपन-जीएल"
+
+#, fuzzy
+#~| msgid "OpenGL"
+#~ msgid "OpenGL 2.0"
+#~ msgstr "ओपन-जीएल"
+
+#, fuzzy
+#~| msgid "Smooth scaling (slower)"
+#~ msgid "Smooth (slower)"
+#~ msgstr "स्मूथ स्केलिंग (धीमा)"
+
+#~ msgid "XRender"
+#~ msgstr "एक्स रेंडर"
+
+#~ msgid ""
+#~ "Hint: To find out or configure how to activate an effect, look at the "
+#~ "effect's settings."
+#~ msgstr ""
+#~ "युक्ति:प्रभाव ढूंढबाक लेल अथवा प्रभाव कहिना सक्षम करू ई कान्फिगर करबाक लेल प्रभाव केर "
+#~ "बिन्यास मे देखू."
+
+#, fuzzy
+#~| msgid "Texture filter:"
+#~ msgid "Configure filter"
+#~ msgstr "टैक्सचर फिल्टर:"
+
+#, fuzzy
+#~| msgctxt "@option:check"
+#~| msgid "Enable desktop effects"
+#~ msgid "Exclude internal Desktop Effects"
+#~ msgstr "डेस्कटाप प्रभाव सक्रिय करू"
+
+#, fuzzy
+#~| msgid "No Effect"
+#~ msgid "Get New Desktop Effects..."
+#~ msgstr "कोनो प्रभाव नहि"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "संगीता कुमारी"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "sangeeta09@gmail.com"
+
+#, fuzzy
+#~| msgid "Accessibility"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Accessibility"
+#~ msgstr "अभिगम्यता"
+
+#, fuzzy
+#~| msgid "Appearance"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Appearance"
+#~ msgstr "प्रकटन"
+
+#, fuzzy
+#~| msgid "Candy"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Candy"
+#~ msgstr "कैंडी"
+
+#, fuzzy
+#~| msgid "Focus"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Focus"
+#~ msgstr "फोकस"
+
+#, fuzzy
+#~| msgid "Tools"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Tools"
+#~ msgstr "अओजार"
+
+#, fuzzy
+#~| msgid "Window Management"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Management"
+#~ msgstr "विंडो प्रबंधन"
+
+#, fuzzy
+#~| msgctxt "@option:check"
+#~| msgid "Enable desktop effects"
+#~ msgid "Suspend compositor for full screen windows"
+#~ msgstr "डेस्कटाप प्रभाव सक्रिय करू"
+
+#, fuzzy
+#~| msgid "OpenGL mode:"
+#~ msgid "OpenGL interface:"
+#~ msgstr "ओपनजीएल मोड"
+
+#, fuzzy
+#~| msgid "Animation speed:"
+#~ msgid "Animation Speed:"
+#~ msgstr "एनीमेशन गति:"
+
+#, fuzzy
+#~| msgid "Always (Breaks minimization)"
+#~ msgid "Always (Breaks Animations)"
+#~ msgstr "हमेशा (ब्रेक कमीकरण)"
+
+#~ msgid "1 second remaining:"
+#~ msgid_plural "%1 seconds remaining:"
+#~ msgstr[0] "%1 सेकण्ड बाकी:"
+#~ msgstr[1] "%1 सेकण्ड बाकी:"
+
+#~ msgid "Confirm Desktop Effects Change"
+#~ msgstr "डेस्कटाप प्रभाव मे परिवर्तन सभक पुष्टि करू"
+
+#~ msgid "&Accept Configuration"
+#~ msgstr "कान्फिगरेशन स्वीकारू (&A)"
+
+#~ msgid "&Return to Previous Configuration"
+#~ msgstr "पछिला कान्फिगरेशन मे वापिस जाउ (&R)"
+
+#~ msgid ""
+#~ "Desktop effects settings have changed.\n"
+#~ "Do you want to keep the new settings?\n"
+#~ "They will be automatically reverted in 10 seconds."
+#~ msgstr ""
+#~ "डेस्कटाप प्रभाव सेटिंग बदलल गेल.\n"
+#~ "की अहाँ नवीन सेटिंग केँ रखनाइ चाहैत छी?\n"
+#~ "ओकरा १० सेकण्ड मे स्वचालित पहिने जहिना कए देल जएताह."
+
+#~ msgid "kcmkwincompositing"
+#~ msgstr "केसीएम_केविन_कम्पोजिशिंग"
+
+#~ msgid "KWin Desktop Effects Configuration Module"
+#~ msgstr "के_विन डेस्कटाप प्रभाव कान्फिगरेशन मोड्यूल"
+
+#~ msgid "(c) 2007 Rivo Laks"
+#~ msgstr "(c) 2007 रिवो लेक्स"
+
+#~ msgid "Rivo Laks"
+#~ msgstr "रिवो लेक्स"
+
+#, fuzzy
+#~| msgid "No Effect"
+#~ msgid "No effect"
+#~ msgstr "कोनो प्रभाव नहि"
+
+#~ msgid "Demos"
+#~ msgstr "डेमो"
+
+#~ msgid "Tests"
+#~ msgstr "परीक्षण"
+
+#, fuzzy
+#~| msgid "Confirm Desktop Effects Change"
+#~ msgctxt ""
+#~ "Error Message shown when compositing is not active after tried activation"
+#~ msgid "Desktop effect system is not running."
+#~ msgstr "डेस्कटाप प्रभाव मे परिवर्तन सभक पुष्टि करू"
+
+#~ msgid "<h1>Desktop Effects</h1>"
+#~ msgstr "<h1>डेस्कटाप प्रभाव</h1>"
+
+#~ msgid "General"
+#~ msgstr "सामान्य"
+
+#~ msgid "Improved window management"
+#~ msgstr "उन्नत विंडो प्रबंधन"
+
+#~ msgid "Very Fast"
+#~ msgstr "बहुत तेज"
+
+#~ msgid "Fast"
+#~ msgstr "तेज"
+
+#~ msgid "Normal"
+#~ msgstr "सामान्य"
+
+#~ msgid "Slow"
+#~ msgstr "धीमा"
+
+#~ msgid "Extremely Slow"
+#~ msgstr "बहुते धीरे"
+
+#~ msgid "All Effects"
+#~ msgstr "सभटा प्रभाव"
+
+#~ msgid "Advanced"
+#~ msgstr "उन्नत"
+
+#~ msgid "OpenGL Options"
+#~ msgstr "ओपन जीएल विकल्प"
+
+#, fuzzy
+#~| msgid "XRender Options"
+#~ msgid "General Options"
+#~ msgstr "एक्स-रेंडर विकल्प"
+
+#, fuzzy
+#~| msgid "OpenGL"
+#~ msgid "OpenGL 1.2"
+#~ msgstr "ओपन-जीएल"
+
+#~ msgid "Use VSync"
+#~ msgstr "वी-सिंक क' उपयोग करू"
+
+#, fuzzy
+#~| msgctxt "@option:check"
+#~| msgid "Enable desktop effects"
+#~ msgid "Resume Desktop Effects"
+#~ msgstr "डेस्कटाप प्रभाव सक्रिय करू"
+
+#~ msgid "Common Settings"
+#~ msgstr "सामान्य जमावट"
+
+#~ msgid "Compositing State"
+#~ msgstr "कम्पोजिशिंग स्थिति"
+
+#~ msgid "Shadows"
+#~ msgstr "छाया"
+
+#~ msgid "Texture From Pixmap"
+#~ msgstr "पिक्समैप सँ टैक्सचर"
+
+#~ msgid "Shared Memory"
+#~ msgstr "साझा मेमोरी"
+
+#~ msgid "Fallback"
+#~ msgstr "फालबैक "
+
+#~ msgid "Nearest (fastest)"
+#~ msgstr "निकटस्थ (तीव्रतम)"
+
+#~ msgid "Bilinear"
+#~ msgstr "द्विरैखिक"
+
+#~ msgid "Trilinear (best quality)"
+#~ msgstr "ट्राइलिनियर (उच्चतम गुणवत्ता)"
+
+#~ msgid "Compositing is not supported on your system."
+#~ msgstr "कम्पोजिशिंग अहाँक तंत्र मे समर्थित नहि अछि."
+
+#~ msgid "Compositing is active"
+#~ msgstr "कम्पोजिशिंग सक्रिय अछि"
+
+#~ msgid "Suspend Compositing"
+#~ msgstr "स्थगित कम्पोजिशिंग"
+
+#~ msgid "Resume Compositing"
+#~ msgstr "कम्पोजिशिंग फेर आनू"
+
+#~ msgid "Compositing is disabled"
+#~ msgstr "कम्पोजिशिंग निष्क्रिय अछि"

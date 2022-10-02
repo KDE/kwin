@@ -1,0 +1,92 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Indonesian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinscreenedges" lang="&language;">
+<articleinfo>
+
+<title
+>Tepian Layar</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Wantoyo</firstname
+><surname
+></surname
+><affiliation
+><address
+><email
+>wantoyek@gmail.com</email
+></address
+></affiliation
+><contrib
+>Terjemahan</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>14-07-2015</date>
+<releaseinfo
+>Plasma 5.3</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systemsettings</keyword>
+<keyword
+>desktop</keyword>
+<keyword
+>efek</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Tepian layar aktif memungkinkanmu untuk mengaktifkan efek dengan mendorong kursor mousemu ke tepi layar. Di sini kamu bisa mengkonfigurasi efek mana yang akan diaktifkan di setiap tepi dan sudut layar. </para>
+
+<para
+>Klik dengan tombol mouse apa saja ke kotak dan pilih efek di menu konteks. Tepian dengan sebuah kotak biru berarti sudah memiliki efek yang terlampir, kotak yang berwarna abu-abu menunjukkan bahwa tidak ada efek yang dipilih untuk tepian ini.</para>
+
+<para
+>Sejumlah butir yang dapat diakses di dalam konteks menu bergantung pada pengaturan di modul <ulink url="help:/kcontrol/kwineffects/index.html"
+> <guilabel
+>Efek Desktop</guilabel
+></ulink
+> di dalam kategori <guilabel
+>Workspace</guilabel
+>. Pilihlah efek favoritmu pada grup dari <guilabel
+>Pengelolaan Window</guilabel
+>. Ini mengaktifkan butir(-butir) yang sesuai di dalam  menu konteks.</para>
+
+<para
+>Jika kamu sedang mencari pengaturan untuk memfungsikan pengalihan desktop dengan mendorong kursor mouse-mu hingga ke tepi layar, pilihlah salahsatu efek <guilabel
+>Present Windows</guilabel
+> dari menu konteks.</para>
+
+<para
+>Di dalam bagian <guilabel
+>Pengelolaan Window</guilabel
+> kamu bisa memfungsikan <guilabel
+>Maksimalkan window dengan menyeretnya ke sisi window</guilabel
+> dan set persentase layar untuk memicu pengubinan. </para>
+
+<para
+>Di dalam bagian <guilabel
+>Pengaturan Lain</guilabel
+> konfigurasilah jika kamu ingin beralih ke desktop yang lainnya ketika mendorong kursor mouse ke tepi layar, &eg; ketika hanya memindah window. </para>
+<para
+><guilabel
+>Tundaan pengaktifan</guilabel
+> adalah jumlah waktu yang diperlukan untuk kursor mouse ketika didorong ke tepi layar sebelum aksi dipicu. </para>
+<para
+><guilabel
+>Tundaan pengaktifan-ulang</guilabel
+> adalah jumlah waktu yang diperlukan setelah pemicuan aksi sampai pemicu selanjutnya terjadi. </para>
+</article>

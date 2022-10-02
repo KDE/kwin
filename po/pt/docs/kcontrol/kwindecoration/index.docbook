@@ -1,0 +1,183 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Portuguese "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwindecoration" lang="&language;">
+<articleinfo>
+<authorgroup>
+<author
+>&Rik.Hemsley; &Rik.Hemsley.mail;</author>
+<author
+>&Anne-Marie.Mahfouf; &Anne-Marie.Mahfouf.mail;</author>
+<othercredit role="translator"
+><firstname
+>José</firstname
+><surname
+>Pires</surname
+><affiliation
+><address
+><email
+>zepires@gmail.com</email
+></address
+></affiliation
+><contrib
+>Tradução</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2016-04-14</date>
+<releaseinfo
+>Plasma 5.6</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systemsettings</keyword>
+<keyword
+>kwin</keyword>
+<keyword
+>janela</keyword>
+<keyword
+>contorno</keyword>
+<keyword
+>tema</keyword>
+<keyword
+>estilo</keyword>
+</keywordset>
+</articleinfo>
+<sect1 id="window-deco">
+<title
+>Decoração da Janela</title>
+
+<para
+>Este módulo permite-lhe escolher um estilo para os botões e o contorno à volta das janelas.</para>
+
+<sect2>
+<title
+>Decorações das Janelas</title>
+
+<para>
+<screenshot>
+<screeninfo
+>Módulo de Configuração da Decoração das Janelas</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Módulo de Configuração da Decoração das Janelas</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+
+<para
+>Escolha um estilo de decoração da janela na lista de antevisões, usando o campo de pesquisa no topo do ecrã, ou transfira um novo estilo com o botão <guibutton
+>Obter Novas Decorações</guibutton
+>.</para>
+
+<para
+>A decoração de janelas predefinida chama-se <quote
+>Brisa</quote
+>.</para>
+
+<para
+>Cada estilo tem um visual diferente, mas o mesmo também se aplica ao <quote
+>comportamento</quote
+>. Alguns têm (às vezes invisíveis) contornos de <quote
+>redimensionamento</quote
+> a toda a volta, o que torna o redimensionamento mais simples mas a movimentação mais complicada. Alguns não têm contorno de alguns lados.</para>
+
+<para
+>Será encorajado a experimentar os diferentes estilos, até encontrar um que se adeque melhor ao seu padrão de trabalho.</para>
+
+<para
+>Na área de antevisão, à direita de cada estilo, irá encontrar um botão de configuração <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure.png" format="PNG"/></imageobject
+></inlinemediaobject
+> para abrir as janelas de configuração da decoração.</para>
+
+<para
+>As opções nesta janela de configuração são aplicadas a todas as janelas. Algumas decorações de janelas (&eg; <quote
+>Brisa</quote
+> ou <quote
+>Oxygen</quote
+>) oferecem uma página de <guilabel
+>Regras Especiais da Janela</guilabel
+>. Nesta página, poderá alterar o tamanho do contorno e a visibilidade da barra de título da janela para as janelas em particular.</para>
+
+<para
+>As diferentes opções para as janelas em particular poderão ser encontradas no módulo do &systemsettings; <ulink url="help:/kcontrol/windowspecific"
+>Regras das Janelas</ulink
+>. </para>
+
+<tip>
+<para
+>Por razões de acessibilidade, algumas decorações de janelas suportam contornos extremamente grandes. Se isto estiver disponível, você também poderá escolher um tamanho de contorno aqui. Estes contornos são mais fáceis de ver para os utilizadores com visão reduzida e mais fáceis de pegar pelas pessoas com mobilidade limitada ou com dificuldades em usar um rato.</para>
+</tip>
+
+</sect2>
+
+<sect2>
+<title
+>Decorações</title>
+
+<para
+>Nesta janela, poderá alterar a decoração da janela. As opções disponíveis dependem do estilo seleccionado. </para>
+<para>
+<screenshot>
+<screeninfo
+>Opções da Decoração Brisa</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="decoration.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Opções da Decoração Brisa</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+<sect2>
+<title
+>Botões</title>
+
+<para
+>Esta secção, situada debaixo da lista de estilos, permite-lhe personalizar a localização dos botões na barra de título. Poderá arrastar os botões para a barra de título, removê-los ou deslocá-los, até ter a ordem que mais lhe agrada. </para>
+
+<screenshot>
+<screeninfo
+>Opções dos Botões</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="button.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Opções dos Botões</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+
+<para
+>Active a opção <guilabel
+>Fechar as janelas com um duplo-click do botão do menu</guilabel
+> para ter uma alternativa adicional ao botão Fechar ou se tiver retirado o botão Fechar da barra de título. </para>
+
+</sect2>
+
+</sect1>
+
+</article>

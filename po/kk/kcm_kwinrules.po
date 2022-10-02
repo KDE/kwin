@@ -1,0 +1,1292 @@
+# translation of kcmkwinrules.po to Karakh
+#
+# Sairan Kikkarin <sairan@computer.org>, 2005, 2006, 2007, 2008, 2009, 2010.
+# Sairan Kikkarin <sairan@computer.org>, 2010, 2011, 2012, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwinrules\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-19 00:47+0000\n"
+"PO-Revision-Date: 2013-10-04 02:07+0600\n"
+"Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
+"Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
+"Language: kk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.2\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"\n"
+"\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Сайран Киккарин"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "sairan@computer.org"
+
+#: kcmrules.cpp:28
+#, fuzzy, kde-format
+#| msgid "Window &role:"
+msgid "Window Rules"
+msgstr "Терезенің &рөлі:"
+
+#: kcmrules.cpp:32
+#, kde-format
+msgid "Ismael Asensio"
+msgstr ""
+
+#: kcmrules.cpp:33
+#, kde-format
+msgid "Author"
+msgstr ""
+
+#: kcmrules.cpp:37
+#, kde-format
+msgid ""
+"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
+"specifically only for some windows.</p> <p>Please note that this "
+"configuration will not take effect if you do not use KWin as your window "
+"manager. If you do use a different window manager, please refer to its "
+"documentation for how to customize window behavior.</p>"
+msgstr ""
+"<p><h1>Терезенің арнаулы параметрлері</h1> Мұнда тек кейбір терезесіне "
+"арналған параметрлерін баптай аласыз.</p> <p>Бұл баптау, Сіз терезе "
+"менеджері ретінде KWin бағдарламасын қолдансаңыз ғана, күшіне енеді. Егер "
+"басқа терезе менеджерін пайдалансаңыз, оны баптау үшін өзінің құжаттамасын "
+"қараңыз.</p>"
+
+#: kcmrules.cpp:243
+#, kde-format
+msgid "Copy of %1"
+msgstr ""
+
+#: kcmrules.cpp:422
+#, kde-format
+msgid "Application settings for %1"
+msgstr "%1 үшін арналған қолданбаның параметрлері"
+
+#: kcmrules.cpp:442 rulesmodel.cpp:215
+#, kde-format
+msgid "Window settings for %1"
+msgstr "%1 үшін арналған терезенің параметрлері"
+
+#: main.cpp:31
+#, kde-format
+msgid "KWinRules KCM launcher"
+msgstr ""
+
+#: main.cpp:32
+#, fuzzy, kde-format
+#| msgid "WId of the window for special window settings."
+msgid "KWin id of the window for special window settings."
+msgstr "Арнаулы терезе параметрлердің терезе WID идентификаторы."
+
+#: main.cpp:33
+#, kde-format
+msgid "Whether the settings should affect all windows of the application."
+msgstr "Параметрлер қолданбаның барлық терезелеріне қатысты."
+
+#: main.cpp:40
+#, kde-format
+msgid "This helper utility is not supposed to be called directly."
+msgstr "Көмекші утилитасы өзі жеке орындалмайды."
+
+#: main.cpp:44
+#, kde-format
+msgctxt "Window caption for the application wide rules dialog"
+msgid "Edit Application-Specific Settings"
+msgstr "Қолданбаның арнаулы параметрлерін өзгерту"
+
+#: main.cpp:45
+#, kde-format
+msgid "Edit Window-Specific Settings"
+msgstr "Терезенің арнаулы параметрлерін өзгерту"
+
+#: optionsmodel.cpp:198
+#, kde-format
+msgid "Unimportant"
+msgstr "Бәрібір"
+
+#: optionsmodel.cpp:199
+#, kde-format
+msgid "Exact Match"
+msgstr "Нақты сәйкестік"
+
+#: optionsmodel.cpp:200
+#, kde-format
+msgid "Substring Match"
+msgstr "Ішінара сәйкестік"
+
+#: optionsmodel.cpp:201
+#, kde-format
+msgid "Regular Expression"
+msgstr "Үлгі өрнегі"
+
+#: optionsmodel.cpp:205
+#, kde-format
+msgid "Apply Initially"
+msgstr "Бастағанда қолдану"
+
+#: optionsmodel.cpp:206
+#, kde-format
+msgid ""
+"The window property will be only set to the given value after the window is "
+"created.\n"
+"No further changes will be affected."
+msgstr ""
+
+#: optionsmodel.cpp:209
+#, kde-format
+msgid "Apply Now"
+msgstr "Қазір қолдану"
+
+#: optionsmodel.cpp:210
+#, kde-format
+msgid ""
+"The window property will be set to the given value immediately and will not "
+"be affected later\n"
+"(this action will be deleted afterwards)."
+msgstr ""
+
+#: optionsmodel.cpp:213
+#, kde-format
+msgid "Remember"
+msgstr "Жаттау"
+
+#: optionsmodel.cpp:214
+#, kde-format
+msgid ""
+"The value of the window property will be remembered and, every time the "
+"window is created, the last remembered value will be applied."
+msgstr ""
+
+#: optionsmodel.cpp:217
+#, kde-format
+msgid "Do Not Affect"
+msgstr "Тимеу"
+
+#: optionsmodel.cpp:218
+#, kde-format
+msgid ""
+"The window property will not be affected and therefore the default handling "
+"for it will be used.\n"
+"Specifying this will block more generic window settings from taking effect."
+msgstr ""
+
+#: optionsmodel.cpp:221
+#, kde-format
+msgid "Force"
+msgstr "Мәжбүрлеу"
+
+#: optionsmodel.cpp:222
+#, kde-format
+msgid "The window property will be always forced to the given value."
+msgstr ""
+
+#: optionsmodel.cpp:224
+#, kde-format
+msgid "Force Temporarily"
+msgstr "Уақытша мәжбүрлеу"
+
+#: optionsmodel.cpp:225
+#, kde-format
+msgid ""
+"The window property will be forced to the given value until it is hidden\n"
+"(this action will be deleted after the window is hidden)."
+msgstr ""
+
+#: package/contents/ui/FileDialogLoader.qml:14
+#, kde-format
+msgid "Select File"
+msgstr ""
+
+#: package/contents/ui/FileDialogLoader.qml:26
+#, fuzzy, kde-format
+#| msgid "KWin Rule (*.kwinrule)"
+msgid "KWin Rules (*.kwinrule)"
+msgstr "KWin ереже (*.kwinrule)"
+
+#: package/contents/ui/main.qml:59
+#, kde-format
+msgid "No rules for specific windows are currently set"
+msgstr ""
+
+#: package/contents/ui/main.qml:60
+#, kde-kuit-format
+msgctxt "@info"
+msgid "Click the <interface>Add New...</interface> button below to add some"
+msgstr ""
+
+#: package/contents/ui/main.qml:68
+#, kde-format
+msgid "Select the rules to export"
+msgstr ""
+
+#: package/contents/ui/main.qml:72
+#, kde-format
+msgid "Unselect All"
+msgstr ""
+
+#: package/contents/ui/main.qml:72
+#, kde-format
+msgid "Select All"
+msgstr ""
+
+#: package/contents/ui/main.qml:86
+#, kde-format
+msgid "Save Rules"
+msgstr ""
+
+#: package/contents/ui/main.qml:97
+#, fuzzy, kde-format
+#| msgid "&New..."
+msgid "Add New..."
+msgstr "&Жаңа..."
+
+#: package/contents/ui/main.qml:108
+#, fuzzy, kde-format
+#| msgid "&Import"
+msgid "Import..."
+msgstr "&Импорт"
+
+#: package/contents/ui/main.qml:116
+#, fuzzy, kde-format
+#| msgid "&Export"
+msgid "Cancel Export"
+msgstr "&Экспорт"
+
+#: package/contents/ui/main.qml:116
+#, fuzzy, kde-format
+#| msgid "&Export"
+msgid "Export..."
+msgstr "&Экспорт"
+
+#: package/contents/ui/main.qml:206
+#, kde-format
+msgid "Edit"
+msgstr "Өңдеу"
+
+#: package/contents/ui/main.qml:215
+#, kde-format
+msgid "Duplicate"
+msgstr ""
+
+#: package/contents/ui/main.qml:224
+#, kde-format
+msgid "Delete"
+msgstr "Өшіру"
+
+#: package/contents/ui/main.qml:237
+#, kde-format
+msgid "Import Rules"
+msgstr "Ережені импорттау"
+
+#: package/contents/ui/main.qml:249
+#, fuzzy, kde-format
+#| msgid "Export Rule"
+msgid "Export Rules"
+msgstr "Ережені экспорттау"
+
+#: package/contents/ui/OptionsComboBox.qml:35
+#, kde-format
+msgid "None selected"
+msgstr ""
+
+#: package/contents/ui/OptionsComboBox.qml:41
+#, kde-format
+msgid "All selected"
+msgstr ""
+
+#: package/contents/ui/OptionsComboBox.qml:43
+#, kde-format
+msgid "%1 selected"
+msgid_plural "%1 selected"
+msgstr[0] ""
+
+#: package/contents/ui/RulesEditor.qml:63
+#, fuzzy, kde-format
+#| msgid "&Detect Window Properties"
+msgid "No window properties changed"
+msgstr "Терезе қасиеттерін &байқау"
+
+#: package/contents/ui/RulesEditor.qml:64
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"Click the <interface>Add Property...</interface> button below to add some "
+"window properties that will be affected by the rule"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:85
+#, fuzzy, kde-format
+#| msgid "&Closeable"
+msgid "Close"
+msgstr "&Жабылу мүмкіндігі"
+
+#: package/contents/ui/RulesEditor.qml:85
+#, fuzzy, kde-format
+#| msgid "&New..."
+msgid "Add Property..."
+msgstr "&Жаңа..."
+
+#: package/contents/ui/RulesEditor.qml:98
+#, fuzzy, kde-format
+#| msgid "&Detect Window Properties"
+msgid "Detect Window Properties"
+msgstr "Терезе қасиеттерін &байқау"
+
+#: package/contents/ui/RulesEditor.qml:114
+#: package/contents/ui/RulesEditor.qml:121
+#, kde-format
+msgid "Instantly"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:115
+#: package/contents/ui/RulesEditor.qml:126
+#, kde-format
+msgid "After %1 second"
+msgid_plural "After %1 seconds"
+msgstr[0] ""
+
+#: package/contents/ui/RulesEditor.qml:147
+#, kde-format
+msgid "Error"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:162
+#, kde-format
+msgid "Add property to the rule"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:260
+#: package/contents/ui/ValueEditor.qml:54
+#, kde-format
+msgid "Yes"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:260
+#: package/contents/ui/ValueEditor.qml:60
+#, fuzzy, kde-format
+#| msgctxt "no focus stealing prevention"
+#| msgid "None"
+msgid "No"
+msgstr "Жоқ"
+
+#: package/contents/ui/RulesEditor.qml:262
+#: package/contents/ui/ValueEditor.qml:171
+#: package/contents/ui/ValueEditor.qml:178
+#, kde-format
+msgid "%1 %"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:264
+#, kde-format
+msgctxt "Coordinates (x, y)"
+msgid "(%1, %2)"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:266
+#, kde-format
+msgctxt "Size (width, height)"
+msgid "(%1, %2)"
+msgstr ""
+
+#: package/contents/ui/ValueEditor.qml:206
+#, kde-format
+msgctxt "(x, y) coordinates separator in size/position"
+msgid "x"
+msgstr ""
+
+#: rulesmodel.cpp:218
+#, kde-format
+msgid "Settings for %1"
+msgstr "%1 дегеннің параметрлері"
+
+#: rulesmodel.cpp:221
+#, fuzzy, kde-format
+#| msgid "Window settings for %1"
+msgid "New window settings"
+msgstr "%1 үшін арналған терезенің параметрлері"
+
+#: rulesmodel.cpp:237
+#, kde-format
+msgid ""
+"You have specified the window class as unimportant.\n"
+"This means the settings will possibly apply to windows from all "
+"applications. If you really want to create a generic setting, it is "
+"recommended you at least limit the window types to avoid special window "
+"types."
+msgstr ""
+"Терезе класын таңдауы бәрбір деп көрсетіңіз.\n"
+"Бұл баптау барлық қолданбалардың терезелеріне қолданылады деген сөз. Шынында "
+"соншалық жалпы баптауын өткізем десеңіз, арнаулы терезелердің түрлеріне "
+"тимеу үшін, кемінде терезелердің түрлерін шектеп қойғаныңыз жөн."
+
+#: rulesmodel.cpp:244
+#, kde-format
+msgid ""
+"Some applications set their own geometry after starting, overriding your "
+"initial settings for size and position. To enforce these settings, also "
+"force the property \"%1\" to \"Yes\"."
+msgstr ""
+
+#: rulesmodel.cpp:359
+#, fuzzy, kde-format
+#| msgid "De&scription:"
+msgid "Description"
+msgstr "Си&паттамасы:"
+
+#: rulesmodel.cpp:359 rulesmodel.cpp:367 rulesmodel.cpp:375 rulesmodel.cpp:382
+#: rulesmodel.cpp:388 rulesmodel.cpp:396 rulesmodel.cpp:401 rulesmodel.cpp:407
+#, fuzzy, kde-format
+#| msgid "&Window matching"
+msgid "Window matching"
+msgstr "&Терезе сәйкестігі"
+
+#: rulesmodel.cpp:367
+#, fuzzy, kde-format
+#| msgid "Window &class (application):"
+msgid "Window class (application)"
+msgstr "Терезенің &класы (қолданба):"
+
+#: rulesmodel.cpp:375
+#, fuzzy, kde-format
+#| msgid "Match w&hole window class"
+msgid "Match whole window class"
+msgstr "&Түгел терезе класының сәйкестігі"
+
+#: rulesmodel.cpp:382
+#, fuzzy, kde-format
+#| msgid "Match w&hole window class"
+msgid "Whole window class"
+msgstr "&Түгел терезе класының сәйкестігі"
+
+#: rulesmodel.cpp:388
+#, fuzzy, kde-format
+#| msgid "Window &types:"
+msgid "Window types"
+msgstr "Терезенің &түрі:"
+
+#: rulesmodel.cpp:396
+#, fuzzy, kde-format
+#| msgid "Window &role:"
+msgid "Window role"
+msgstr "Терезенің &рөлі:"
+
+#: rulesmodel.cpp:401
+#, fuzzy, kde-format
+#| msgid "Window t&itle:"
+msgid "Window title"
+msgstr "Терезенің а&йдары:"
+
+#: rulesmodel.cpp:407
+#, fuzzy, kde-format
+#| msgid "&Machine (hostname):"
+msgid "Machine (hostname)"
+msgstr "Хосттың атауы:"
+
+#: rulesmodel.cpp:413
+#, fuzzy, kde-format
+#| msgid "&Position"
+msgid "Position"
+msgstr "&Орны"
+
+#: rulesmodel.cpp:413 rulesmodel.cpp:419 rulesmodel.cpp:425 rulesmodel.cpp:430
+#: rulesmodel.cpp:438 rulesmodel.cpp:444 rulesmodel.cpp:463 rulesmodel.cpp:479
+#: rulesmodel.cpp:484 rulesmodel.cpp:489 rulesmodel.cpp:494 rulesmodel.cpp:499
+#: rulesmodel.cpp:506 rulesmodel.cpp:516 rulesmodel.cpp:521 rulesmodel.cpp:526
+#, fuzzy, kde-format
+#| msgid "&Size && Position"
+msgid "Size & Position"
+msgstr "&Өлшемі мен Орны"
+
+#: rulesmodel.cpp:419
+#, fuzzy, kde-format
+#| msgid "&Size"
+msgid "Size"
+msgstr "Өл&шемі"
+
+#: rulesmodel.cpp:425
+#, fuzzy, kde-format
+#| msgid "Maximized &horizontally"
+msgid "Maximized horizontally"
+msgstr "Ті&гінен кең жаю"
+
+#: rulesmodel.cpp:430
+#, fuzzy, kde-format
+#| msgid "Maximized &vertically"
+msgid "Maximized vertically"
+msgstr "&Жатығынан кең жаю"
+
+#: rulesmodel.cpp:438
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "Virtual Desktop"
+msgstr "Барлық үстелдер үшін"
+
+#: rulesmodel.cpp:444
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "Virtual Desktops"
+msgstr "Барлық үстелдер үшін"
+
+#: rulesmodel.cpp:463
+#, fuzzy, kde-format
+#| msgid "All Activities"
+msgid "Activities"
+msgstr "Бүкіл белсенділіктер"
+
+#: rulesmodel.cpp:479
+#, kde-format
+msgid "Screen"
+msgstr "Экран"
+
+#: rulesmodel.cpp:484
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgid "Fullscreen"
+msgstr "Толық &экранды"
+
+#: rulesmodel.cpp:489
+#, fuzzy, kde-format
+#| msgid "M&inimized"
+msgid "Minimized"
+msgstr "Тү&ю"
+
+#: rulesmodel.cpp:494
+#, fuzzy, kde-format
+#| msgid "Sh&aded"
+msgid "Shaded"
+msgstr "Ай&дарға түйіп"
+
+#: rulesmodel.cpp:499
+#, fuzzy, kde-format
+#| msgid "Initial p&lacement"
+msgid "Initial placement"
+msgstr "Бастапқы орна&ласуы"
+
+#: rulesmodel.cpp:506
+#, fuzzy, kde-format
+#| msgid "Ignore requested &geometry"
+msgid "Ignore requested geometry"
+msgstr "Талап етілген &геометриясын сақтамау"
+
+#: rulesmodel.cpp:508
+#, kde-format
+msgid ""
+"Windows can ask to appear in a certain position.\n"
+"By default this overrides the placement strategy\n"
+"what might be nasty if the client abuses the feature\n"
+"to unconditionally popup in the middle of your screen."
+msgstr ""
+"Терезелерді нақты бір орнында шығуын сұраға болады.\n"
+"Әдетте бұл параметр орналасу стратегиясын өзгертеді.\n"
+"Бұл клиенттік жағының баптауларымен қайшы болуға\n"
+"ықтимал."
+
+#: rulesmodel.cpp:516
+#, fuzzy, kde-format
+#| msgid "M&inimum size"
+msgid "Minimum Size"
+msgstr "Өлшемінің төм&енгі шегі"
+
+#: rulesmodel.cpp:521
+#, fuzzy, kde-format
+#| msgid "M&aximum size"
+msgid "Maximum Size"
+msgstr "Өлшемінің ж&оғарғы шегі"
+
+#: rulesmodel.cpp:526
+#, kde-format
+msgid "Obey geometry restrictions"
+msgstr "Геометриялық шектеулеріне бағыну"
+
+#: rulesmodel.cpp:528
+#, kde-format
+msgid ""
+"Eg. terminals or video players can ask to keep a certain aspect ratio\n"
+"or only grow by values larger than one\n"
+"(eg. by the dimensions of one character).\n"
+"This may be pointless and the restriction prevents arbitrary dimensions\n"
+"like your complete screen area."
+msgstr ""
+"Мысалы, терминал не бейне ойнатқыш терезесі нақты бір жақтар\n"
+"ара қатынасын, немесе ерекше олады үлкейту қадамын (мысалы,\n"
+"бір таңба өлшемімен байланысты) талап етеді.\n"
+"Бүкілі бекер болып, толық экранды режіміне аусуға мәжбүр\n"
+"болуыңыз да ықтимал."
+
+#: rulesmodel.cpp:537
+#, kde-format
+msgid "Keep above other windows"
+msgstr ""
+
+#: rulesmodel.cpp:537 rulesmodel.cpp:542 rulesmodel.cpp:547 rulesmodel.cpp:553
+#: rulesmodel.cpp:559 rulesmodel.cpp:565
+#, fuzzy, kde-format
+#| msgid "&Arrangement && Access"
+msgid "Arrangement & Access"
+msgstr "О&рналастыру мен Қатынау"
+
+#: rulesmodel.cpp:542
+#, kde-format
+msgid "Keep below other windows"
+msgstr ""
+
+#: rulesmodel.cpp:547
+#, fuzzy, kde-format
+#| msgid "Skip &taskbar"
+msgid "Skip taskbar"
+msgstr "Тапсырмалар панеліне енбеу"
+
+#: rulesmodel.cpp:549
+#, kde-format
+msgid "Window shall (not) appear in the taskbar."
+msgstr "Терезесі тапсырмалар панелінде көрсетіледі/көрсетілмейді."
+
+#: rulesmodel.cpp:553
+#, fuzzy, kde-format
+#| msgid "Skip pa&ger"
+msgid "Skip pager"
+msgstr "Үстел но&байын елемеу"
+
+#: rulesmodel.cpp:555
+#, kde-format
+msgid "Window shall (not) appear in the manager for virtual desktops"
+msgstr "Терезесі виртуалды үстел менеджерінде көрсетіледі/көрсетілмейді"
+
+#: rulesmodel.cpp:559
+#, fuzzy, kde-format
+#| msgid "Skip &switcher"
+msgid "Skip switcher"
+msgstr "&Ауыстырғышын елемеу"
+
+#: rulesmodel.cpp:561
+#, kde-format
+msgid "Window shall (not) appear in the Alt+Tab list"
+msgstr "Терезесі Alt+Tab тізімінде көрсетіледі/көрсетілмейді"
+
+#: rulesmodel.cpp:565
+#, kde-format
+msgid "Shortcut"
+msgstr "Перне тіркесімі"
+
+#: rulesmodel.cpp:571
+#, fuzzy, kde-format
+#| msgid "&No titlebar and frame"
+msgid "No titlebar and frame"
+msgstr "Айдар&сыз бен қоршаусыз"
+
+#: rulesmodel.cpp:571 rulesmodel.cpp:576 rulesmodel.cpp:582 rulesmodel.cpp:587
+#: rulesmodel.cpp:592 rulesmodel.cpp:603 rulesmodel.cpp:614 rulesmodel.cpp:622
+#: rulesmodel.cpp:635 rulesmodel.cpp:640 rulesmodel.cpp:646 rulesmodel.cpp:651
+#, fuzzy, kde-format
+#| msgid "Appearance && &Fixes"
+msgid "Appearance & Fixes"
+msgstr "Көрінісі мен &Тузетулер"
+
+#: rulesmodel.cpp:576
+#, kde-format
+msgid "Titlebar color scheme"
+msgstr ""
+
+#: rulesmodel.cpp:582
+#, fuzzy, kde-format
+#| msgid "A&ctive opacity"
+msgid "Active opacity"
+msgstr "Назардағы мөл&дірсіз болсын"
+
+#: rulesmodel.cpp:587
+#, fuzzy, kde-format
+#| msgid "I&nactive opacity"
+msgid "Inactive opacity"
+msgstr "Назардан тысы мөлдір&сіз болсын"
+
+#: rulesmodel.cpp:592
+#, fuzzy, kde-format
+#| msgid "&Focus stealing prevention"
+msgid "Focus stealing prevention"
+msgstr "&Назардан айырылуды болдырмау"
+
+#: rulesmodel.cpp:594
+#, kde-format
+msgid ""
+"KWin tries to prevent windows from taking the focus\n"
+"(\"activate\") while you're working in another window,\n"
+"but this may sometimes fail or superact.\n"
+"\"None\" will unconditionally allow this window to get the focus while\n"
+"\"Extreme\" will completely prevent it from taking the focus."
+msgstr ""
+"Басқа терезеде істеп жатқаңызда, KWin басқа терезелерге\n"
+"назарды ауыстырмауға (олардқ белсендітірмей ұстауға)\n"
+"тырысады, бірақ кейбірде оны істей алмайды.\n"
+"\"Жоқ\" деген бұл терезеге назар ауысуын шартсыз қылады,\n"
+"ал \"Өте жоғары\" деген оны терезеге ешқашанда бермейтін\n"
+"қылады."
+
+#: rulesmodel.cpp:603
+#, fuzzy, kde-format
+#| msgid "&Focus stealing prevention"
+msgid "Focus protection"
+msgstr "&Назардан айырылуды болдырмау"
+
+#: rulesmodel.cpp:605
+#, kde-format
+msgid ""
+"This controls the focus protection of the currently active window.\n"
+"None will always give the focus away,\n"
+"Extreme will keep it.\n"
+"Otherwise it's interleaved with the stealing prevention\n"
+"assigned to the window that wants the focus."
+msgstr ""
+
+#: rulesmodel.cpp:614
+#, fuzzy, kde-format
+#| msgid "Accept &focus"
+msgid "Accept focus"
+msgstr "&Назар қабылдансын"
+
+#: rulesmodel.cpp:616
+#, kde-format
+msgid ""
+"Windows may prevent to get the focus (activate) when being clicked.\n"
+"On the other hand you might wish to prevent a window\n"
+"from getting focused on a mouse click."
+msgstr ""
+"Терезелер, оны түрткенде, назарды өзіне ауыстыралады.\n"
+"Немесе, ондайда назарды ауспайтын қыла аласыз."
+
+#: rulesmodel.cpp:622
+#, kde-format
+msgid "Ignore global shortcuts"
+msgstr "Жалпы тіркесімдерді елемеу"
+
+#: rulesmodel.cpp:624
+#, kde-format
+msgid ""
+"When used, a window will receive\n"
+"all keyboard inputs while it is active, including Alt+Tab etc.\n"
+"This is especially interesting for emulators or virtual machines.\n"
+"\n"
+"Be warned:\n"
+"you won't be able to Alt+Tab out of the window\n"
+"nor use any other global shortcut (such as Alt+F2 to show KRunner)\n"
+"while it's active!"
+msgstr ""
+"Белгіленсе, белсенді терезе пернетақтаның бүкіл кірісін\n"
+"қабылдайды, Alt+Tab тіркесімін және басқаларды қоса.\n"
+"Бұл әсіресе эмулятор не виртуалды машиналарға қажетті\n"
+"нәрсе.\n"
+"\n"
+"Байқаңыз:\n"
+"бұл қосылып тұрғанда, тезезеден тыс Alt+Tab не басқа\n"
+"тіркесімді (KRunner-ді жегетін Alt+F2-ді де) қолдана\n"
+"алмайсыз!"
+
+#: rulesmodel.cpp:635
+#, fuzzy, kde-format
+#| msgid "&Closeable"
+msgid "Closeable"
+msgstr "&Жабылу мүмкіндігі"
+
+#: rulesmodel.cpp:640
+#, fuzzy, kde-format
+#| msgid "Window &type"
+msgid "Set window type"
+msgstr "Терезенің &түрі"
+
+#: rulesmodel.cpp:646
+#, kde-format
+msgid "Desktop file name"
+msgstr ""
+
+#: rulesmodel.cpp:651
+#, kde-format
+msgid "Block compositing"
+msgstr "Блок құрылымы"
+
+#: rulesmodel.cpp:727
+#, fuzzy, kde-format
+#| msgid "Window &types:"
+msgid "All Window Types"
+msgstr "Терезенің &түрі:"
+
+#: rulesmodel.cpp:728
+#, kde-format
+msgid "Normal Window"
+msgstr "Кәдімгі терезе"
+
+#: rulesmodel.cpp:729
+#, kde-format
+msgid "Dialog Window"
+msgstr "Диалог терезесі"
+
+#: rulesmodel.cpp:730
+#, kde-format
+msgid "Utility Window"
+msgstr "Қызмет терезесі"
+
+#: rulesmodel.cpp:731
+#, kde-format
+msgid "Dock (panel)"
+msgstr "Сөре (панель)"
+
+#: rulesmodel.cpp:732
+#, kde-format
+msgid "Toolbar"
+msgstr "Құралдар панелі"
+
+#: rulesmodel.cpp:733
+#, kde-format
+msgid "Torn-Off Menu"
+msgstr "Үзбелі мәзір"
+
+#: rulesmodel.cpp:734
+#, kde-format
+msgid "Splash Screen"
+msgstr "Бейнепердесі"
+
+#: rulesmodel.cpp:735
+#, kde-format
+msgid "Desktop"
+msgstr "Үстел"
+
+#. i18n("Unmanaged Window")},  deprecated
+#: rulesmodel.cpp:737
+#, kde-format
+msgid "Standalone Menubar"
+msgstr "Бөлек мәзір"
+
+#: rulesmodel.cpp:738
+#, kde-format
+msgid "On Screen Display"
+msgstr ""
+
+#: rulesmodel.cpp:748
+#, kde-format
+msgid "All Desktops"
+msgstr "Барлық үстелдер үшін"
+
+#: rulesmodel.cpp:750
+#, kde-format
+msgctxt "@info:tooltip in the virtual desktop list"
+msgid "Make the window available on all desktops"
+msgstr ""
+
+#: rulesmodel.cpp:769
+#, kde-format
+msgid "All Activities"
+msgstr "Бүкіл белсенділіктер"
+
+#: rulesmodel.cpp:771
+#, kde-format
+msgctxt "@info:tooltip in the activity list"
+msgid "Make the window available on all activities"
+msgstr ""
+
+#: rulesmodel.cpp:792
+#, kde-format
+msgid "Default"
+msgstr "Әдетті"
+
+#: rulesmodel.cpp:793
+#, kde-format
+msgid "No Placement"
+msgstr "Орналасуы жоқ"
+
+#: rulesmodel.cpp:794
+#, kde-format
+msgid "Minimal Overlapping"
+msgstr ""
+
+#: rulesmodel.cpp:795
+#, fuzzy, kde-format
+#| msgid "Maximizing"
+msgid "Maximized"
+msgstr "Кең жайып"
+
+#: rulesmodel.cpp:796
+#, fuzzy, kde-format
+#| msgid "Cascade"
+msgid "Cascaded"
+msgstr "Тізбектеп"
+
+#: rulesmodel.cpp:797
+#, kde-format
+msgid "Centered"
+msgstr "Ортаға"
+
+#: rulesmodel.cpp:798
+#, kde-format
+msgid "Random"
+msgstr "Кездейсоқ"
+
+#: rulesmodel.cpp:799
+#, fuzzy, kde-format
+#| msgid "Top-Left Corner"
+msgid "In Top-Left Corner"
+msgstr "Сол жақ жоғарыға"
+
+#: rulesmodel.cpp:800
+#, kde-format
+msgid "Under Mouse"
+msgstr "Тышқан меңзегенге"
+
+#: rulesmodel.cpp:801
+#, kde-format
+msgid "On Main Window"
+msgstr "Негізгі терезенің үстінде"
+
+#: rulesmodel.cpp:808
+#, fuzzy, kde-format
+#| msgctxt "no focus stealing prevention"
+#| msgid "None"
+msgid "None"
+msgstr "Жоқ"
+
+#: rulesmodel.cpp:809
+#, kde-format
+msgid "Low"
+msgstr "Төмен"
+
+#: rulesmodel.cpp:810
+#, kde-format
+msgid "Normal"
+msgstr "Қалыпты"
+
+#: rulesmodel.cpp:811
+#, kde-format
+msgid "High"
+msgstr "Жоғары"
+
+#: rulesmodel.cpp:812
+#, kde-format
+msgid "Extreme"
+msgstr "Өте жоғары"
+
+#: rulesmodel.cpp:855
+#, kde-format
+msgid "Could not detect window properties. The window is not managed by KWin."
+msgstr ""
+
+#, fuzzy
+#~| msgid "Keep &above"
+#~ msgid "Keep above"
+#~ msgstr "&Алдында ұстау"
+
+#, fuzzy
+#~| msgid "Keep &below"
+#~ msgid "Keep below"
+#~ msgstr "Артқа т&ығу"
+
+#~ msgid "KWin"
+#~ msgstr "KWin"
+
+#~ msgid "KWin helper utility"
+#~ msgstr "KWin көмекші утилитасы"
+
+#, fuzzy
+#~| msgid "Activit&y"
+#~ msgid "Activity"
+#~ msgstr "Белсенд&ілік"
+
+#, fuzzy
+#~| msgid "&Detect Window Properties"
+#~ msgid "Select properties"
+#~ msgstr "Терезе қасиеттерін &байқау"
+
+#~ msgid "Override Type"
+#~ msgstr "Түрін ауыстрыру"
+
+#~ msgid "Unknown - will be treated as Normal Window"
+#~ msgstr "Беймәлім - кәдімгі терезе деп саналады"
+
+#~ msgid "Information About Selected Window"
+#~ msgstr "Таңдалған терезе туралы мәлімет"
+
+#~ msgid "Class:"
+#~ msgstr "Класы:"
+
+#~ msgid "Role:"
+#~ msgstr "Рөлі:"
+
+#~ msgid "Type:"
+#~ msgstr "Түрі:"
+
+#~ msgid "Title:"
+#~ msgstr "Айдары:"
+
+#~ msgid "Machine:"
+#~ msgstr "Компьютері:"
+
+#~ msgid "Match by primary class name and"
+#~ msgstr "Сәйкестігі: негізгі класын атауы және"
+
+#~ msgid "Secondary class name  (resulting in term in brackets)"
+#~ msgstr "Қосымша клас атауы (жақшада)"
+
+#~ msgid "Window role (can be used to select windows by function)"
+#~ msgstr "Терезенің рөлі (функциясы бойынша таңдау үшін)"
+
+#~ msgid "Window type (eg. all dialogs, but not the main windows)"
+#~ msgstr "Терезенің түрі (негізгі еместер, мысалы, бүкіл диалогтар)"
+
+#~ msgid ""
+#~ "Window title (very specific, can fail due to content changes or "
+#~ "translation)"
+#~ msgstr "Терезенің айдары (байқаңыз, аударылып өзгеретін нәрсе)"
+
+#~ msgid ""
+#~ "A single shortcut can be easily assigned or cleared using the two "
+#~ "buttons. Only shortcuts with modifiers can be used.<p>\n"
+#~ "It is possible to have several possible shortcuts, and the first "
+#~ "available shortcut will be used. The shortcuts are specified using "
+#~ "shortcut sets separated by \" - \". One set is specified as <i>base</i>"
+#~ "+(<i>list</i>), where base are modifiers and list is a list of keys.<br>\n"
+#~ "For example \"<b>Shift+Alt+(123) Shift+Ctrl+(ABC)</b>\" will first try "
+#~ "<b>Shift+Alt+1</b>, then others with <b>Shift+Ctrl+C</b> as the last one."
+#~ msgstr ""
+#~ "Екі пернелі тіркесімді оңай тағайындауға жане жоюға болады. Мұндағы "
+#~ "тіркесімінде міндетті түрде түрлендіргіш пернесі болу керек.<p>\n"
+#~ "Қол жеткізетін біріншісін қолданылатындай қылып, бірнеше тіркесімді "
+#~ "тағайындауға болады. Оларды \" - \" деп бөлшектеп былай көрсету керек: "
+#~ "<i>base</i>+(<i>list</i>). Мұнда, base - түрлендіргіш пернелері, list - "
+#~ "жай пернелер жиыны.<br>\n"
+#~ "Мысалы,\"<b>Shift+Alt+(123) Shift+Ctrl+(ABC)</b>\" деп қойсақ, біріншісі "
+#~ "<b>Shift+Alt+1</b> дегені, соңғысы <b>Shift+Ctrl+C</b> дегені болады."
+
+#~ msgid "&Single Shortcut"
+#~ msgstr "Пернелер &тіркесімі"
+
+#~ msgid "C&lear"
+#~ msgstr "Тазалау"
+
+#~ msgid "Window-Specific Settings Configuration Module"
+#~ msgstr "Терезенің арнаулы параметрлерін баптау модулі"
+
+#~ msgid "(c) 2004 KWin and KControl Authors"
+#~ msgstr "(c) 2004 KWin және KControl авторлары"
+
+#~ msgid "Lubos Lunak"
+#~ msgstr "Lubos Lunak"
+
+#~ msgid "Remember settings separately for every window"
+#~ msgstr "Әрбір терезенің параметрлері бөлек жатталсын"
+
+#~ msgid "Show internal settings for remembering"
+#~ msgstr "Жаттау үшін ішкі параметрлері көрсетілсін"
+
+#~ msgid "Internal setting for remembering"
+#~ msgstr "Жатталатын ішкі параметрлері"
+
+#~ msgid "&Modify..."
+#~ msgstr "Ө&згерту..."
+
+#~ msgid "Move &Up"
+#~ msgstr "Жоғ&арыға"
+
+#~ msgid "Move &Down"
+#~ msgstr "Төм&енге"
+
+#~ msgid ""
+#~ "Enable this checkbox to alter this window property for the specified "
+#~ "window(s)."
+#~ msgstr ""
+#~ "Көрсетілген терезе(лері)нің қасиетін өзгерту үшін осы құсбелгісін қойыңыз."
+
+#~ msgid ""
+#~ "Specify how the window property should be affected:<ul><li><em>Do Not "
+#~ "Affect:</em> The window property will not be affected and therefore the "
+#~ "default handling for it will be used. Specifying this will block more "
+#~ "generic window settings from taking effect.</li><li><em>Apply Initially:</"
+#~ "em> The window property will be only set to the given value after the "
+#~ "window is created. No further changes will be affected.</"
+#~ "li><li><em>Remember:</em> The value of the window property will be "
+#~ "remembered and every time the window is created, the last remembered "
+#~ "value will be applied.</li><li><em>Force:</em> The window property will "
+#~ "be always forced to the given value.</li><li><em>Apply Now:</em> The "
+#~ "window property will be set to the given value immediately and will not "
+#~ "be affected later (this action will be deleted afterwards).</"
+#~ "li><li><em>Force temporarily:</em> The window property will be forced to "
+#~ "the given value until it is hidden (this action will be deleted after the "
+#~ "window is hidden).</li></ul>"
+#~ msgstr ""
+#~ "Терезенің қасиеті қалай өзгертілетінін келтіріңіз:<ul> <li><em>Тимеу:</"
+#~ "em> Терезенің қасиетіне ешбір өзерту жасалмайды, ол әдеттегідей қалады. "
+#~ "Бұл таңдау бұдан жалпы терезенің параметрлері өзгергенінің әсерін "
+#~ "тигізбейді.</li> <li><em>Бастағанда қолдану:</em> Терезе құрылғанда ғана "
+#~ "оның қасиеті көрсетілген күйге келтіріледі. Болашақтағы күйіне әсері жоқ."
+#~ "</li> <li><em>Жаттау:</em> Терезенің қасиетінің күйі жатталады, содан "
+#~ "кейін құрылғанда соңғы жатталған күйде құрылады.</li> <li><em>Мәжбүрлеу:</"
+#~ "em> Терезенің қасиеті әрқашан көрсетілген күйінде ұсталады.</li> "
+#~ "<li><em>Қазір қолдану:</em> Терезенің қасиеті бірден көрсетілген күйге "
+#~ "келтіріледі де бұдан әрі әсер етпейді (кейін бұл әрекет өшіріледі).</li> "
+#~ "<li><em>Уақытша мәжбүрлеу:</em> Терезенің қасиеті көрсетілген күйінде, "
+#~ "терезе жасырылғанша ұсталады. (жасырылғаннан кейін бұл әрекет өшіріледі)."
+#~ "</li></ul>"
+
+#~ msgid ""
+#~ "Specify how the window property should be affected:<ul><li><em>Do Not "
+#~ "Affect:</em> The window property will not be affected and therefore the "
+#~ "default handling for it will be used. Specifying this will block more "
+#~ "generic window settings from taking effect.</li><li><em>Force:</em> The "
+#~ "window property will be always forced to the given value.</"
+#~ "li><li><em>Force temporarily:</em> The window property will be forced to "
+#~ "the given value until it is hidden (this action will be deleted after the "
+#~ "window is hidden).</li></ul>"
+#~ msgstr ""
+#~ "Терезенің қасиеті қалай өзгертілетінін келтіріңіз:<ul> <li><em>Тимеу:</"
+#~ "em> Терезенің қасиетіне ешбір өзерту жасалмайды, ол әдеттегідей қалады. "
+#~ "Бұл таңдау бұдан жалпы терезенің параметрлері өзгергенінің әсерін "
+#~ "тигізбейді.</li> <li><em>Мәжбүрлеу:</em> Терезенің қасиеті әрқашан "
+#~ "көрсетілген күйінде ұсталады.</li> <li><em>Уақытша мәжбүрлеу:</em> "
+#~ "Терезенің қасиеті көрсетілген күйінде, терезе жасырылғанша ұсталады. "
+#~ "(жасырылғаннан кейін бұл әрекет өшіріледі).</li></ul>"
+
+#~ msgid "Unnamed entry"
+#~ msgstr "Аталмаған жазу"
+
+#~ msgid ""
+#~ "This configuration dialog allows altering settings only for the selected "
+#~ "window or application. Find the setting you want to affect, enable the "
+#~ "setting using the checkbox, select in what way the setting should be "
+#~ "affected and to which value."
+#~ msgstr ""
+#~ "Бұл диалог таңдалған терезе не қолданбаның параметрлерін баптауға "
+#~ "мүмкіншілік береді. Керек параметрді тауып, құсбелгісін қойып, баптауын "
+#~ "рұқсат етіңіз де, параметрін қалай және қаншаға өзгерткіңіз келетінін "
+#~ "келтіріңіз."
+
+#~ msgid "Consult the documentation for more details."
+#~ msgstr "Егжей-текжейлерін құжаттамасынан қараңыз."
+
+#~ msgid "Edit Shortcut"
+#~ msgstr "Перне тіркесімін өзгерту"
+
+#~ msgid "s delay"
+#~ msgstr "с кідіру"
+
+#~ msgid "Unmanaged Window"
+#~ msgstr "Бапталмаған терезе"
+
+#~ msgid "x,y"
+#~ msgstr "x,y"
+
+#~ msgid "0123456789-+,xX:"
+#~ msgstr "0123456789-+,xX:"
+
+#~ msgid "width,height"
+#~ msgstr "ені,биіктігі "
+
+#~ msgid "&Desktop"
+#~ msgstr "&Үстел"
+
+#~ msgid "Edit..."
+#~ msgstr "Өңдеу..."
+
+#~ msgid "Autog&roup in foreground"
+#~ msgstr "Әдейі уақыт &бөліп автотоптастырылсын"
+
+#~ msgid "Autogroup by I&D"
+#~ msgstr "I&D бойынша автотоптастырылсын"
+
+#~ msgid "Autogroup with &identical"
+#~ msgstr "&Бірдейлермен автотоптастырылсын"
+
+#~ msgid "%"
+#~ msgstr "%"
+
+#~ msgid "Smart"
+#~ msgstr "Ыңғайлап"
+
+#~ msgid "kcmkwinrules"
+#~ msgstr "kcmkwinrules"
+
+#~ msgid "Opaque"
+#~ msgstr "Мөлдірсіздік"
+
+#~ msgid "Transparent"
+#~ msgstr "Мөлдірлік"
+
+#~ msgid "&Moving/resizing"
+#~ msgstr "&Жылжып/Өлшемі өзгертілсін"
+
+#~ msgid "T&iling"
+#~ msgstr "Қ&атарлау"
+
+#~ msgid "Tiled"
+#~ msgstr "Қатарлап"
+
+#~ msgid "Floating"
+#~ msgstr "Қалқымалы"
+
+#~ msgid "Match Strategy"
+#~ msgstr "Сәйкестік стратегиясы"
+
+#~ msgid ""
+#~ "For selecting all windows belonging to a specific application, selecting "
+#~ "only window class should usually work."
+#~ msgstr ""
+#~ "Нақты бір қолданбаның терезелері үшін әдетте тек терезе класын ғана "
+#~ "таңдауға болады."
+
+#~ msgid "Use window &class (whole application)"
+#~ msgstr "Терезе &класы қолданалсын (қолданба бойы)"
+
+#~ msgid ""
+#~ "For selecting a specific window in an application, both window class and "
+#~ "window role should be selected. Window class will determine the "
+#~ "application, and window role the specific window in the application; many "
+#~ "applications do not provide useful window roles though."
+#~ msgstr ""
+#~ "Қолданбаның нақты бір терезесін таңдау үшін, терезенің класы мен рөлін "
+#~ "таңдау қажет. Терезенің класы қолданбаны, терезенің рөлі - қолданбаның "
+#~ "нақты бір терезесін анықтайды. Алайда, біраз қолданбалар жарамды "
+#~ "терезелер рөлдерін келтірмейді."
+
+#~ msgid "Use window class and window &role (specific window)"
+#~ msgstr "Терезенің класы мен рөлі қолданылсын (нақты бір терезе үшін)"
+
+#~ msgid ""
+#~ "With some (non-KDE) applications whole window class can be sufficient for "
+#~ "selecting a specific window in an application, as they set whole window "
+#~ "class to contain both application and window role."
+#~ msgstr ""
+#~ "Кейбір (KDE-ге кірмейтін) қолданбалар үшін терезенің түгел класы нақты "
+#~ "бір терезесін таңдауға жеткілікті, өйткені терезенің класында қолданба "
+#~ "мен терезенің рөлі анықталынуы мумкін."
+
+#~ msgid "Use &whole window class (specific window)"
+#~ msgstr "Терезенің класы түгелдей қолданылсын (нақты бір терезе үшін)"
+
+#~ msgid "Match also window &title"
+#~ msgstr "Терезенің &айдары да сәйкес болсын"
+
+#~ msgid "Extra role:"
+#~ msgstr "Қосымша рөлі:"
+
+#~ msgid "Window &Extra"
+#~ msgstr "Терезе қосымшалары"
+
+#~ msgid "&Geometry"
+#~ msgstr "&Геометриясы"
+
+#~ msgid "&Preferences"
+#~ msgstr "&Параметрлері"
+
+#~ msgid "&No border"
+#~ msgstr "Жиек&сіз"
+
+#~ msgid "0123456789"
+#~ msgstr "0123456789"
+
+#~ msgid "W&orkarounds"
+#~ msgstr "Қас&иеттері"
+
+#~ msgid "Strictly obey geometry"
+#~ msgstr "Геометриясын қатал сақтау"

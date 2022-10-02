@@ -1,0 +1,588 @@
+# translation of kwin_clients.po to Gujarati
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Sweta Kothari <swkothar@redhat.com>, 2008.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2008-11-23 09:33+0530\n"
+"Last-Translator: Kartik Mistry <kartik.mistry@gmail.com>\n"
+"Language-Team: Gujarati\n"
+"Language: gu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, fuzzy, kde-format
+#| msgid "Tiny"
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "ખૂબ નાનું"
+
+#: aurorae/src/aurorae.cpp:726
+#, fuzzy, kde-format
+#| msgid "Normal"
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "સામાન્ય"
+
+#: aurorae/src/aurorae.cpp:727
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "મોટું"
+
+#: aurorae/src/aurorae.cpp:728
+#, fuzzy, kde-format
+#| msgid "Very Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "ખૂબ મોટું"
+
+#: aurorae/src/aurorae.cpp:729
+#, fuzzy, kde-format
+#| msgid "Huge"
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "વિશાળ"
+
+#: aurorae/src/aurorae.cpp:730
+#, fuzzy, kde-format
+#| msgid "Very Huge"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "ખૂબ જ મોટું"
+
+#: aurorae/src/aurorae.cpp:731
+#, fuzzy, kde-format
+#| msgid "Oversized"
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "વધારે પડતા માપનું"
+
+#: aurorae/src/aurorae.cpp:734
+#, fuzzy, kde-format
+#| msgid "Button size:"
+msgid "Button size:"
+msgstr "બટન માપ:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "રૂપરેખાંકિત સંવાદ"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "લખાણ ગોઠવણી (&A)"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "ડાબું"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "મધ્ય"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "જમણું"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "રંગવાળી વિન્ડો કિનારી"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "એનિમેટ બટન્સ"
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "પડછાયા વાળું લખાણ વાપરો (&t)"
+
+#, fuzzy
+#~| msgid "Animate buttons"
+#~ msgid "Animations"
+#~ msgstr "એનિમેટ બટન્સ"
+
+#, fuzzy
+#~| msgid "Actions Settings"
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "ક્રિયાઓની સુયોજનાઓ"
+
+#~ msgid "Window Title"
+#~ msgstr "વિન્ડો શીર્ષક"
+
+#~ msgid "Window Class Name"
+#~ msgstr "વિન્ડો વર્ગ નામ"
+
+#~ msgid "General"
+#~ msgstr "સામાન્ય"
+
+#, fuzzy
+#~| msgid "Border size:"
+#~ msgid "Border si&ze:"
+#~ msgstr "કિનારી માપ:"
+
+#, fuzzy
+#~| msgid "No Border"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "કિનારી નહી"
+
+#, fuzzy
+#~| msgid "No Side Border"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Borders"
+#~ msgstr "બાજુની કિનારી નહી"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Normal"
+#~ msgstr "સામાન્ય"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "મોટું"
+
+#, fuzzy
+#~| msgid "Very Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "ખૂબ મોટું"
+
+#, fuzzy
+#~| msgid "Huge"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "વિશાળ"
+
+#, fuzzy
+#~| msgid "Title alignment:"
+#~ msgid "Tit&le alignment:"
+#~ msgstr "શીર્ષક ગોઠવણી:"
+
+#, fuzzy
+#~| msgid "Small"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "નાનુ"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "મેનુ બટન પર બે વખત ક્લિક કરીને વિન્ડોસ બંધ કરો"
+
+#~ msgid "Outline active window title"
+#~ msgstr "બાહ્ય સક્રિય વિન્ડો શીર્ષક"
+
+#~ msgid "Shadows"
+#~ msgstr "છાયાઓ"
+
+#~ msgid "Active Window Glow"
+#~ msgstr "સક્રિય વિન્ડો ઉજાસ"
+
+#~ msgid "Window-Specific Overrides"
+#~ msgstr "વિન્ડો-સંબંધિત અગણવું"
+
+#, fuzzy
+#~| msgid "Config Dialog"
+#~ msgid "Dialog"
+#~ msgstr "રૂપરેખાંકિત સંવાદ"
+
+#~ msgid "Information about Selected Window"
+#~ msgstr "પસંદ કરેલ વિન્ડો વિશે માહિતી"
+
+#~ msgid "Class: "
+#~ msgstr "વર્ગ: "
+
+#~ msgid "Title: "
+#~ msgstr "શીર્ષક: "
+
+#~ msgid "Window Property Selection"
+#~ msgstr "વિન્ડો ગુણધર્મ પસંદગી"
+
+#~ msgid "Use window title"
+#~ msgstr "વિન્ડો શીર્ષક વાપરો"
+
+#, fuzzy
+#~| msgid "Disabled"
+#~ msgctxt "outline window title"
+#~ msgid "Disabled"
+#~ msgstr "અસક્રિય"
+
+#, fuzzy
+#~| msgid "Enabled"
+#~ msgctxt "outline window title"
+#~ msgid "Enabled"
+#~ msgstr "સક્રિય"
+
+#~ msgid "Border size:"
+#~ msgstr "કિનારી માપ:"
+
+#~ msgid "Outline active window title:"
+#~ msgstr "બાહ્ય સક્રિય વિન્ડો શીર્ષક:"
+
+#~ msgid "Hide window title bar"
+#~ msgstr "વિન્ડો શીર્ષક પટ્ટી છુપાવો"
+
+#, fuzzy
+#~| msgid "Disabled"
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Disabled"
+#~ msgstr "અસક્રિય"
+
+#, fuzzy
+#~| msgid "Enabled"
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Enabled"
+#~ msgstr "સક્રિય"
+
+#~ msgid "Move Up"
+#~ msgstr "ઉપર ખસેડો"
+
+#~ msgid "Move Down"
+#~ msgstr "નીચે ખસેડો"
+
+#~ msgid "Add"
+#~ msgstr "ઉમેરો"
+
+#~ msgid "Remove"
+#~ msgstr "દૂર કરો"
+
+#~ msgid "Edit"
+#~ msgstr "ફેરફાર"
+
+#, fuzzy
+#~| msgid "Oxygen"
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "ઓક્સિજન"
+
+#, fuzzy
+#~| msgid "Inactive Window"
+#~ msgid "Inactive Windows"
+#~ msgstr "અસક્રિય વિન્ડો"
+
+#, fuzzy
+#~| msgid "Active Window"
+#~ msgid "Active Windows"
+#~ msgstr "સક્રિય વિન્ડો"
+
+#~ msgid "Oxygen"
+#~ msgstr "ઓક્સિજન"
+
+#~ msgid "Help"
+#~ msgstr "મદદ"
+
+#~ msgid "Minimize"
+#~ msgstr "નાનું કરો"
+
+#~ msgid "Maximize"
+#~ msgstr "મોટું કરો"
+
+#~ msgid "Close"
+#~ msgstr "બંધ કરો"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "બીજાઓને ઉપર રાખો"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "બીજાઓને નીચે રાખો"
+
+#~ msgid "On All Desktops"
+#~ msgstr "બધા ડેસ્કટોપો પર"
+
+#~ msgid "Shade Button"
+#~ msgstr "પડછાયો બટન"
+
+#~ msgid "Menu"
+#~ msgstr "મેનુ"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "બધા ડેસ્કટોપ્સ પર નથી"
+
+#~ msgid "On all desktops"
+#~ msgstr "બધા ડેસ્કટોપ્સ પર"
+
+#~ msgid "Unshade"
+#~ msgstr "છાંયો ન કરો"
+
+#~ msgid "Shade"
+#~ msgstr "છાંયો"
+
+#~ msgid "Resize"
+#~ msgstr "માપ બદલો"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>B II પૂર્વદર્શન</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "પુન:સંગ્રહ"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "શીર્ષકપટ્ટીનાં રંગો વાપરીને વિન્ડો ચોકઠાંઓ દોરો (&t)"
+
+#~ msgid "Auto-move titlebar"
+#~ msgstr "શીર્ષકપટ્ટી આપમેળે-ખસેડો"
+
+#~ msgid "Actions Settings"
+#~ msgstr "ક્રિયાઓની સુયોજનાઓ"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "મેનુ બટન પર બે વાર ક્લિક કરો:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "કંઇ ન કરો"
+
+#~ msgid "Minimize Window"
+#~ msgstr "વિન્ડોને નાની કરો"
+
+#~ msgid "Shade Window"
+#~ msgstr "વિન્ડોને છાંયો કરો"
+
+#~ msgid "Close Window"
+#~ msgstr "વિન્ડોને બંધ કરો"
+
+#~ msgid "Laptop"
+#~ msgstr "લેપટોપ"
+
+#, fuzzy
+#~| msgid "Background style: "
+#~ msgid "Bac&kground style: "
+#~ msgstr "પાશ્વભાગ શૈલી: "
+
+#~ msgid "Solid Color"
+#~ msgstr "ઘન રંગ"
+
+#~ msgid "Background style:"
+#~ msgstr "પાશ્વભાગ શૈલી:"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Sweta Kothari, કાર્તિક મિસ્ત્રી"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "swkothar@redhat.com, kartik.mistry@gmail.com"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Save"
+#~ msgstr "છાંયો"
+
+#~ msgid "Large"
+#~ msgstr "મોટું"
+
+#~ msgid "Small"
+#~ msgstr "નાનુ"
+
+#~ msgid "Inner Color:"
+#~ msgstr "આંતરિક રંગ:"
+
+#~ msgid "Outer Color:"
+#~ msgstr "બાહ્ય રંગ:"
+
+#~ msgid "Size: "
+#~ msgstr "માપ: "
+
+#~ msgid "Plastik"
+#~ msgstr "પ્લાસ્ટિક"
+
+#~ msgid "All Desktops"
+#~ msgstr "બધા ડેસ્કટોપ્સ"
+
+#~ msgid "Above"
+#~ msgstr "ઉપર"
+
+#~ msgid "Below"
+#~ msgstr "નીચે"
+
+#~ msgid "Close Item"
+#~ msgstr "વસ્તુ બંધ કરો"
+
+#~ msgid "Tabstrip"
+#~ msgstr "ટેબપટ્ટી"
+
+#~ msgid "&Left"
+#~ msgstr "ડાબે (&L)"
+
+#~ msgid "&Center"
+#~ msgstr "મધ્ય (&C)"
+
+#~ msgid "&Right"
+#~ msgstr "જમણે (&R)"
+
+#, fuzzy
+#~| msgid "Outer Color:"
+#~ msgid "O&utline Color:"
+#~ msgstr "બાહ્ય રંગ:"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Do not keep above others"
+#~ msgstr "બીજાઓને ઉપર રાખો"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above others"
+#~ msgstr "બીજાઓને ઉપર રાખો"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Do not keep below others"
+#~ msgstr "બીજાઓને નીચે રાખો"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below others"
+#~ msgstr "બીજાઓને નીચે રાખો"
+
+#, fuzzy
+#~| msgid "Disabled"
+#~ msgid "Variable"
+#~ msgstr "અસક્રિય"
+
+#, fuzzy
+#~| msgid "Maximize"
+#~ msgid "Maximum"
+#~ msgstr "મોટું કરો"
+
+#~ msgid "TextLabel"
+#~ msgstr "લખાણલેબલ"
+
+#, fuzzy
+#~| msgid "Shadows"
+#~ msgid "Shadow style:"
+#~ msgstr "છાયાઓ"
+
+#, fuzzy
+#~| msgid "Enabled"
+#~ msgctxt "draw separator"
+#~ msgid "Enabled"
+#~ msgstr "સક્રિય"
+
+#, fuzzy
+#~| msgid "Disabled"
+#~ msgctxt "draw separator"
+#~ msgid "Disabled"
+#~ msgstr "અસક્રિય"
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "KWM થીમનું સ્થાપન કરે છે"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "થીમ રૂપરેખાંકન ફાઇલનો પાથ"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWMTheme</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "ચોંટાડેલ"
+
+#~ msgid "Unsticky"
+#~ msgstr "ન ચોંટાડેલ"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>કેરામિક પૂર્વદર્શન</b></center>"
+
+#~ msgid "Draw &gradients"
+#~ msgstr "ગ્રેડિયન્ડ્સ દોરો (&g)"
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "ક્વાર્ટ્ઝ એકદમ પાતળું (&e)"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "ખૂબ નાની શીર્ષક પટ્ટી સાથે ક્વાર્ટ્ઝ વિન્ડો શણગાર."
+
+#~ msgid "Quartz"
+#~ msgstr "ક્વાર્ટઝ"
+
+#~ msgid "Redmond"
+#~ msgstr "રેડમન્ડ"
+
+#~ msgid "Medium"
+#~ msgstr "મધ્યમ"
+
+#~ msgid "Modern System"
+#~ msgstr "મોર્ડન સિસ્ટમ"
+
+#~ msgid "Web"
+#~ msgstr "વેબ"
+
+#~ msgid "Keramik"
+#~ msgstr "કેરામિક"
+
+#~ msgid "Aurorae Theme Engine"
+#~ msgstr "અરોરા થીમ એન્જિન"
+
+#~ msgid "Theme:"
+#~ msgstr "થીમ:"
+
+#~ msgid "Get New Themes..."
+#~ msgstr "KWM થીમ્સ મેળવે છે..."
+
+#~ msgid "Install New Theme..."
+#~ msgstr "નવી થીમ સ્થાપિત કરો..."
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Glow active window"
+#~ msgstr "વિન્ડોને નાની કરો"
+
+#~ msgid "Show stripes next to the title"
+#~ msgstr "શીર્ષક પછી પટ્ટીઓ બતાવો"
+
+#, fuzzy
+#~| msgid "Show stripes next to the title"
+#~ msgid "Show stripes next to the title:"
+#~ msgstr "શીર્ષક પછી પટ્ટીઓ બતાવો"
+
+#~ msgid "Ozone"
+#~ msgstr "ઓઝોન"
+
+#, fuzzy
+#~| msgid "Draw window frames using &titlebar colors"
+#~ msgid "Overwrite default title bar colors:"
+#~ msgstr "શીર્ષકપટ્ટીનાં રંગો વાપરીને વિન્ડો ચોકઠાંઓ દોરો (&t)"

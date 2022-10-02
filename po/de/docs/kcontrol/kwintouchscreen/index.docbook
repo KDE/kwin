@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % German "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwintouchscreen" lang="&language;">
+<articleinfo>
+
+<title
+>Touchscreen</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Deutsches</firstname
+><surname
+>KDE-Übersetzerteam</surname
+><affiliation
+><address
+><email
+>kde-i18n-de@kde.org</email
+></address
+></affiliation
+><contrib
+>Übersetzung</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-10</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systemeinstellungen</keyword>
+<keyword
+>Touch</keyword>
+<keyword
+>Bildschirm</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Wischen Sie vom Rand zur Mitte des Bildschirms, um Effekte zu aktivieren. Hier können Sie einstellen, welche Effekte für jeden Bildschirmrand aktiviert werden sollen. </para>
+
+<para
+>Klicken Sie mit einer Maustaste auf ein Quadrat und wählen Sie aus dem Kontextmenü einen Effekt aus. Ränder mit aktivierten Effekten werden als blaues Quadrat angezeigt, für Ränder mit grauen Quadraten sind keine Effekte ausgewählt.</para>
+
+<para
+>Die Anzahl der verfügbaren Elemente im Kontextmenü hängt von den Einstellungen im Modul <ulink url="help:/kcontrol/kwineffects/index.html"
+><guilabel
+>Arbeitsflächen-Effekte</guilabel
+></ulink
+> in der Kategorie <guilabel
+>Arbeitsbereich</guilabel
+> ab. Wählen Sie dann Ihre bevorzugten Effekte aus der Gruppe <guilabel
+>Fensterverwaltung</guilabel
+>. Damit werden dann auch die zugehörigen Einträge im Kontextmenü dieses Moduls aktiviert.</para>
+</article>

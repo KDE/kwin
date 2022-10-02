@@ -1,0 +1,242 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Catalan  "INCLUDE">
+]>
+<article id="kwintabbox" lang="&language;">
+<articleinfo>
+<title
+>Commutador de tasques</title>
+<authorgroup>
+<author
+>&Martin.Graesslin;&Martin.Graesslin.mail;</author>
+&traductor.Antoni.Bella; 
+</authorgroup>
+
+<date
+>31 de desembre de 2020</date>
+<releaseinfo
+>&plasma; 5.21</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Arranjament del sistema</keyword>
+<keyword
+>escriptori</keyword>
+<keyword
+>finestra</keyword>
+<keyword
+>navegació</keyword>
+<keyword
+>commuta</keyword>
+<keyword
+>alt-tab</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="windows-navigating">
+<title
+>Navegar per les finestres</title>
+
+<para
+>El Commutador de tasques permet a l'usuari canviar amb facilitat entre les finestres actualment obertes emprant el teclat. És altament configurable i permet a l'usuari controlar el seu comportament, aparença visual, dreceres de teclat i filtratge de les finestres.</para>
+
+<para
+>El Commutador de tasques sovint s'invoca amb la combinació de tecles <keycombo
+>&Alt;&Tab;</keycombo
+>, però es pot canviar. Quan s'invoca, mostra una llista de totes les finestres actualment obertes, de manera opcional filtrades i augmentades d'acord amb les opcions de configuració. Per exemple, la llista pot filtrar per a només mostrar les finestres que compleixen amb certs criteris, com les finestres que estan visibles. Una vegada que es mostra la llista de finestres, l'usuari podrà avançar i retrocedir a través de totes les finestres llistades prement repetidament la combinació de tecles del selector de tasques. En deixar anar la combinació de tecles del selector de tasques, s'activarà la finestra que s'ha seleccionat a la llista.</para>
+
+<para
+>A causa que el Commutador de tasques ofereix tantes opcions de configuració, es poden definir dues col·leccions diferents d'opcions de configuració. Aquestes col·leccions s'anomenen <guilabel
+>Principal</guilabel
+> i <guilabel
+>Alternativa</guilabel
+>, i cadascuna pot contenir un conjunt únic de combinacions de tecla assignades.</para>
+
+<para
+>Les opcions de configuració per a cadascuna de les col·leccions es presenten en quatre grups, de la següent manera:</para>
+
+<sect2 id="visualization">
+<title
+>Visualització</title>
+<para
+>Aquest grup d'opcions de configuració controla com es mostrarà la llista de finestres a la pantalla. La visualització predeterminada s'anomena <guilabel
+>Brisa</guilabel
+>. Llista totes les finestres obertes al llarg de la part esquerra de la pantalla. Les altres visualitzacions inclouen <guilabel
+>Canvi de capa</guilabel
+> (un carrusel en 3D), <guilabel
+>Canvi en roda</guilabel
+> (una pila de targetes en 3D) i <guilabel
+>Medium Rounded</guilabel
+> (una llista d'icones a l'estil de Microsoft &Windows;). Es poden descarregar i instal·lar moltes més visualitzacions fent clic al botó <guibutton
+>Obtén commutadors nous de tasques...</guibutton
+> que hi ha a la part inferior dreta del diàleg.</para>
+
+<para
+>Una vegada s'ha seleccionat una visualització des de la llista desplegable, podreu fer clic al botó a la dreta de la llista per a veure una vista prèvia o configurar les opcions específiques de la visualització.</para>
+
+<para
+>La casella de selecció <guilabel
+>Mostra la finestra seleccionada</guilabel
+> determina la claredat amb la qual veurà l'usuari quina finestra s'activarà. Si aquesta opció està marcada, totes les finestres apareixeran atenuades excepte la que està ressaltada al Commutador de tasques.</para>
+
+<note
+><para
+>Hi poden haver casos en què no es pugui mostrar la visualització desitjada del Commutador de tasques. Una d'aquestes situacions pot ser quan un procés anomenat «composició» està apagat o desactivat. Si succeeix això, se seguirà mostrant la llista de finestres, però en un format molt senzill.</para
+></note>
+</sect2>
+
+<sect2 id="shortcuts">
+<title
+>Dreceres</title>
+<para
+>Aquesta secció permet definir fins a quatre dreceres de teclat del Commutador de tasques per a la configuració <guilabel
+>Principal</guilabel
+> i quatre més per a la configuració <guilabel
+>Alternativa</guilabel
+>. Les dreceres a <guilabel
+>Principal</guilabel
+> estan predefinides, mentre que les dreceres a <guilabel
+>Alternativa</guilabel
+> s'han de definir manualment.</para>
+<para
+>A la secció <guilabel
+>Totes les finestres</guilabel
+>, les dreceres <guilabel
+>Endavant</guilabel
+> i <guilabel
+>Inverteix</guilabel
+> faran recórrer cap endavant i cap enrere a través de la llista de finestres obertes.</para>
+<para
+>A la secció <guilabel
+>Aplicació actual</guilabel
+>, les dreceres <guilabel
+>Endavant</guilabel
+> i <guilabel
+>Inverteix</guilabel
+> es poden configurar per a fer recórrer les finestres de l'aplicació actualment activa. Per exemple, si teniu obertes tres finestres del navegador de fitxers &dolphin;, podreu utilitzar aquestes dreceres per a alternar entre les tres finestres del &dolphin;.</para>
+<para
+>Per a canviar una drecera de teclat, feu clic al botó que hi ha al costat d'<guibutton
+>Endavant</guibutton
+> o <guibutton
+>Inverteix</guibutton
+> i escriviu la combinació de drecera desitjada. Assegureu-vos d'emprar una tecla modificadora com a &Ctrl; o &Alt; com a part de la drecera, en cas contrari, és possible que no pugueu recórrer correctament la llista de finestres.</para>
+
+<note
+><para
+>Qualsevol de les dreceres de teclat definides es pot utilitzar per a invocar el Commutador de tasques. Per a invocar-lo sense emprar el teclat, podeu definir accions de vora de la pantalla en el mòdul <ulink url="help:/kcontrol/kwinscreenedges/index.html"
+><guilabel
+>Vores de la pantalla</guilabel
+></ulink
+> a l'&systemsettings;.</para
+></note>
+</sect2>
+
+<sect2 id="content">
+<title
+>Contingut</title>
+<para
+>Les opcions en aquesta secció controlen parcialment quines finestres apareixeran a la llista del Commutador de tasques.</para>
+
+<para
+>La llista desplegable <guilabel
+>Criteri d'ordenació</guilabel
+> especifica si les finestres han d'aparèixer en l'ordre <guilabel
+>Ordre d'apilament</guilabel
+> o <guilabel
+>Usades recentment</guilabel
+>. L'<guilabel
+>Ordre d'apilament</guilabel
+> és l'ordre en què apareixen les finestres a la pantalla, mentre que l'ordre <guilabel
+>Usades recentment</guilabel
+> és l'ordre en què s'han fet servir les finestres. L'ordre <guilabel
+>Usades recentment</guilabel
+> fa que sigui molt fàcil canviar entre les dues finestres emprades amb més freqüència perquè sempre apareixeran en les 2 posicions de dalt de la llista.</para>
+
+<para
+>L'opció <guilabel
+>Inclou la icona «Mostra l'escriptori»</guilabel
+> afegirà una opció Mostra l'escriptori a la llista de finestres. Això permetrà a l'usuari seleccionar amb facilitat l'escriptori així com la «finestra» a mostrar.</para>
+
+<para
+>L'opció <guilabel
+>Només una finestra per aplicació</guilabel
+> redueix el desordre en només mostrar una finestra per a cada aplicació oberta. Si una aplicació té obertes múltiples finestres, la seva finestra activada més recentment es mostrarà a la llista i les altres no es mostraran.</para>
+</sect2>
+
+<sect2 id="filter-windows-by">
+<title
+>Filtra les finestres per</title>
+<para
+>Aquesta secció conté opcions per a filtrar addicionalment la llista de finestres del Commutador de tasques.</para>
+
+<para
+>L'opció <guilabel
+>Escriptoris virtuals</guilabel
+> filtra la llista de finestres segons l'escriptori virtual que estigui actiu. Si teniu constantment finestres específiques en escriptoris virtuals específics, aquesta opció de filtratge pot facilitar el canvi a finestres dins o entre aquests escriptoris virtuals. Seleccioneu <guilabel
+>Escriptori actual</guilabel
+> per a mostrar només les finestres que hi ha en l'escriptori virtual actual. Seleccioneu <guilabel
+>Tots els altres escriptoris</guilabel
+> per a només mostrar les finestres que hi ha en els escriptoris virtuals que no estan actualment actius.</para>
+
+<para
+>L'opció <guilabel
+>Activitats</guilabel
+> filtra la llista de finestres segons l'Activitat que estigui activa. Com també amb el filtratge per l'escriptori virtual, aquesta opció pot facilitar el canvi a aplicacions dins o entre totes les Activitats. Seleccioneu <guilabel
+>Activitat actual</guilabel
+> per a només mostrar les finestres que formen part de l'activitat actual. Seleccioneu <guilabel
+>Totes les altres activitats</guilabel
+> per a només mostrar les finestres que formen part de les Activitats que no estan actualment actives.</para>
+
+<para
+>L'opció <guilabel
+>Pantalles</guilabel
+> filtra la llista de finestres segons la pantalla de visualització que està actualment activa. Seleccioneu <guilabel
+>Pantalla actual</guilabel
+> per a només mostrar les finestres que es troben a la pantalla i que tenen el punter del ratolí a sobre seu. Seleccioneu <guilabel
+>Totes les altres pantalles</guilabel
+> per a mostrar les finestres que es troben en totes les altres pantalles. Aquesta opció pot ser útil per als usuaris que volen canviar ràpidament entre finestres que es troben en el mateix monitor en una configuració de múltiples monitors.</para>
+<note
+><para
+>La pantalla activa és aquella on es troba actualment el punter del ratolí, no la pantalla on es troba la finestra actualment activa.</para
+></note>
+
+<para
+>L'opció <guilabel
+>Minimització</guilabel
+> filtra la llista de finestres segons estiguin ocultes o no. Seleccioneu <guilabel
+>Finestres visibles</guilabel
+> per a només mostrar les finestres que no s'han minimitzat. Seleccioneu <guilabel
+>Finestres ocultes</guilabel
+> per a només mostrar les finestres minimitzades.</para>
+
+<para
+>Si desmarqueu una opció en aquesta secció, llavors no s'aplicarà cap filtratge per a aquesta opció. Per exemple, si marqueu l'opció Pantalles i desmarqueu les altres tres opcions, la llista de finestres del Commutador de tasques només es filtrarà segons les finestres que es troben a la pantalla actual.</para>
+<para
+>Totes les opcions descrites a les seccions anteriors funcionen juntes per a proporcionar un control molt detallat del comportament i aparença del Commutador de tasques. Per exemple, podeu definir la col·lecció d'opcions de configuració <guilabel
+>Principal</guilabel
+> perquè s'invoqui amb la combinació de tecles <keycombo
+>&Alt;&Tab;</keycombo
+>, per a mostrar les finestres obertes en un carrusel, per a només mostrar una finestra per aplicació i per a només llistar les finestres que es troben a l'escriptori actual i a la pantalla actualment activa. Això pot proporcionar un canvi de finestra molt ràpid sensible al context si teniu escriptoris virtuals de «feina» i «casa», i després manteniu tots els vostres fulls de càlcul per al treball i la llar en el mateix monitor.</para>
+
+<para
+>La disponibilitat de la configuració del Commutador de tasques ofereix una segona forma de filtrar i navegar amb facilitat per les llistes de finestres. Amb vuit combinacions de tecla disponibles en les dues configuracions del Commutador de tasques, hauria de ser possible navegar fàcilment i ràpidament a través d'un gran nombre de finestres.</para>
+</sect2>
+</sect1>
+</article>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+kate: space-indent on; indent-width 2; tab-width 2; indent-mode none;
+-->

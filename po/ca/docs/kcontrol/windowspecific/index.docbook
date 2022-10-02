@@ -1,0 +1,2202 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Catalan  "INCLUDE">
+]>
+<book id="windowspecific" lang="&language;">
+<bookinfo>
+<title
+>Regles de les finestres</title>
+<authorgroup>
+<author
+>&Lauri.Watts; &Lauri.Watts.mail;</author>
+<author>
+<personname
+><firstname
+>Part d'aquesta documentació ha estat convertida des de la pàgina <ulink url=" https://userbase.kde.org/KWin Rules"
+>KWin Rules</ulink
+> del KDE UserBase i actualitzada per l'equip de documentació del &kde; al Plasma 5.8.</firstname
+> <surname
+></surname
+> </personname>
+      </author>
+&traductor.Antoni.Bella; 
+      </authorgroup>
+<legalnotice
+>&FDLNotice;</legalnotice>
+<date
+>23 de juny de 2016</date>
+      <releaseinfo
+>Plasma 5.8</releaseinfo>
+<abstract>
+<para
+>Aquí podreu personalitzar les opcions de finestra específicament sols per a algunes finestres.</para>
+      </abstract>
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>arranjament de la finestra</keyword>
+<keyword
+>emplaçament de la finestra</keyword>
+<keyword
+>mida de la finestra</keyword>
+</keywordset>
+</bookinfo>
+<chapter id="window-specific">
+<title
+>Arranjament específic de la finestra: Inici ràpid</title>
+
+<para
+>Aquí podreu personalitzar les opcions de finestra específicament sols per a algunes finestres.</para>
+
+<note>
+<para
+>Si us plau, cal tenir en compte que la configuració d'aquest mòdul no tindrà efecte si no utilitzeu el &kwin;, el gestor de finestres natiu del &kde;. Si utilitzeu un gestor de finestres diferent, si us plau, consulteu la seva documentació per a personalitzar el comportament de les finestres.</para>
+</note>
+
+<para
+>Moltes de les opcions que podeu configurar des d'aquí són aquelles de caràcter global en el mòdul <guilabel
+>Comportament de les finestres</guilabel
+> a &systemsettings;, de tota manera algunes es troben més detallades.</para>
+
+<para
+>Tot plegat compren la geometria, posició, així com si una finestra hauria de restar a sobre o a sota de les altres, prevenció de robatori de focus, i opcions de translucidesa.</para>
+
+<para
+>Podeu accedir a aquest mòdul de dues maneres: des de la barra de títol de l'aplicació que desitgeu configurar o des de &systemsettings;. Si comenceu des de &systemsettings; podeu utilitzar el botó <guibutton
+>Nou...</guibutton
+> per a crear un nou perfil de finestra, i el botó <guibutton
+>Detecta les propietats de la finestra</guibutton
+> per a omplir parcialment al diàleg resultant la informació requerida per l'aplicació que desitgeu configurar.</para>
+
+<para
+>També podeu utilitzar en qualsevol moment els botons <guibutton
+>Modifica...</guibutton
+> o <guibutton
+>Suprimeix</guibutton
+> sobre qualsevol dels perfils d'opcions desats, i tornar a ordenar la llista. El fet de tornar a ordenar la llista utilitzant els botons <guibutton
+>Mou amunt</guibutton
+> i <guibutton
+>Mou avall</guibutton
+> no té cap efecte quant a com seran aplicats.</para>
+
+</chapter>
+<!--userbase <timestamp
+>2012-03-09T20:50:14Z</timestamp
+>-->
+
+<!--userbase-content-->
+<chapter id="overview"
+><title
+>Resum</title
+> 
+<para
+>El &kwin; permet a l'usuari final definir regles per s alterar els atributs de finestra d'una aplicació. </para>
+<para
+>Per exemple, quan s'inicia una aplicació, podeu obligar-la a executar-se sempre a l'<emphasis
+>Escriptori virtual 2</emphasis
+>. O un defecte en una aplicació pot ser l'alternativa per forçar la finestra sobre les altres. </para>
+<para
+>Es proporcionen <link linkend="examples"
+>exemples</link
+> pas a pas juntament amb informació detallada sobre com utilitzar l'<link linkend="kwin-rule-editor"
+>Editor de regles del &kwin;</link
+> per a especificar la <link linkend="window-matching"
+>Coincidència de la finestra</link
+> i els <link linkend="window-attributes"
+>Atributs de la finestra</link
+>. </para>
+</chapter>
+<chapter id="examples-and-application-workaround"
+><title
+>Exemples i solucions d'aplicació</title
+> 
+<para
+>Per a veure què és possible, es proporcionen <link linkend="examples"
+>exemples</link
+> detallats que també es poden utilitzar per a modelar les vostres pròpies regles. </para>
+<para
+>Hi ha una pàgina especial dedicada a abordar les <link linkend="application-workarounds"
+>Solucions d'aplicació</link
+>. </para>
+</chapter>
+<chapter id="kwin-rule-editor"
+><title
+>Editor de regles del KWin</title
+> 
+<sect1 id="invoking-the-kwin-rule-editor"
+><title
+>Invocar l'editor de regles del KWin</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-ordering.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Hi ha diverses maneres d'invocar l'editor de regles del &kwin;. A continuació n'hi ha dues: </para>
+<itemizedlist>
+<listitem
+><para
+>Feu clic dret a la barra de títol de qualsevol finestra, escolliu <menuchoice
+><guimenu
+>Més accions</guimenu
+><guimenuitem
+>Arranjament del gestor de finestres...</guimenuitem
+></menuchoice
+> i a la finestra <guilabel
+>Configura</guilabel
+>, seleccioneu <guilabel
+>Regles de les finestres</guilabel
+> o</para
+></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem
+><para
+><menuchoice
+><guimenu
+>Arranjament del sistema</guimenu
+><guisubmenu
+>Comportament de les finestres</guisubmenu
+><guimenuitem
+>Regles de les finestres</guimenuitem
+></menuchoice
+></para
+></listitem>
+</itemizedlist>
+<para
+>La finestra principal s'utilitza per: </para>
+<itemizedlist>
+<listitem
+><para
+>Afectar les regles amb els botons <guilabel
+>Nou...</guilabel
+>, <guilabel
+>Modifica...</guilabel
+> i <guilabel
+>Suprimeix</guilabel
+>.</para
+></listitem>
+<listitem
+><para
+>Compartir les regles amb els altres amb <guilabel
+>Importa</guilabel
+> i <guilabel
+>Exporta</guilabel
+>.</para
+></listitem>
+<listitem
+><para
+>Garantir l'<link linkend="rule-evaluation"
+>avaluació de la regla</link
+> desitjada utilitzant <guilabel
+>Mou amunt</guilabel
+> i <guilabel
+>Mou avall</guilabel
+>.</para
+></listitem>
+</itemizedlist>
+<sect2 id="rule-evaluation"
+><title
+>Avaluar una regla</title
+> 
+<para
+>Quan s'inicia una aplicació (o es modifiquen les regles), &kwin; avalua les regles a la llista de dalt cap a baix. Per a totes les regles que coincideixin amb una finestra, aplica el conjunt col·lectiu d'atributs a la finestra i després mostra la finestra. </para>
+<para
+>Si dos o més regles de coincidència habiliten el mateix atribut, s'utilitzarà el valor de la <emphasis
+>primera</emphasis
+> regla a la llista. </para>
+<para
+><tip
+><para
+>Podeu ajustar les finestres filles de l'aplicació col·locant primer les regles més restrictives. Vegeu l'exemple <link linkend="application-on-all-desktops-and-handle-one-child-window-uniquely"
+>Finestra de Kopete i xat del Kopete</link
+>.</para
+></tip>
+</para>
+</sect2>
+</sect1>
+<sect1 id="rule-editor"
+><title
+>Editor de regles</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>L'editor es compon de quatre pestanyes: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Coincidència de la finestra</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Mida i posició</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Organització i accés</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Aparença i esmenes</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Com el seu nom indica, <guilabel
+>Coincidència de la finestra</guilabel
+> s'utilitza per a especificar els criteris perquè coincideixin amb una o més finestres. Les altres tres pestanyes s'utilitzen per a modificar els atributs de les finestres coincidents. </para>
+<para
+><tip
+><para
+>Els plafons també es poden veure afectats.</para
+></tip>
+</para>
+<sect2 id="window-matching"
+><title
+>Coincidència de la finestra</title
+> 
+<para
+>Cada regla de finestra té un criteri de <link linkend="window-matching"
+>Coincidència de finestra</link
+> especificat per l'usuari. &kwin; utilitza els criteris per determinar si la regla és aplicable a una aplicació. </para>
+</sect2>
+<sect2 id="window-attributes"
+><title
+>Atributs de la finestra</title
+> 
+<para
+>Juntament amb els criteris de coincidència de la finestra, cada regla de la finestra té un conjunt d'<link linkend="window-attributes"
+>Atributs de la finestra</link
+>. Els atributs substituiran la configuració de l'aplicació corresponent i s'aplicaran abans que &kwin; mostri la finestra. </para>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="window-matching0"
+><title
+>Coincidència de la finestra</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>La pestanya <guilabel
+>Coincidència de la finestra</guilabel
+> s'utilitza per a especificar els criteris utilitzats pel &kwin; per a avaluar si la regla és aplicable a una certa finestra. </para>
+<para
+>Zero (coincideix amb qualsevol finestra) o a més a més podeu especificar el següent: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Classe de finestra (aplicació)</guilabel
+>: coincideix amb la classe.<itemizedlist
+> <listitem
+><para
+><guilabel
+>Coincideix amb classe de finestra completa</guilabel
+>: inclou la coincidència de la classe secundària.</para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Funció de la finestra</guilabel
+>: restringeix la coincidència a la funció de la finestra (&pex;, una <emphasis
+>finestra principal</emphasis
+>, una <emphasis
+>finestra de xat</emphasis
+>, &etc;)</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Tipus de finestra</guilabel
+>: restringeix la coincidència al tipus de finestra: <guilabel
+>Finestra normal</guilabel
+>, <guilabel
+>Finestra de diàleg</guilabel
+>, &etc;</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Títol de la finestra</guilabel
+>: restringeix la coincidència al títol de la finestra.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Màquina (nom de remot)</guilabel
+>: restringeix la coincidència al nom del remot associat amb la finestra.</para
+></listitem>
+</itemizedlist>
+<para
+><tip
+><para
+>Si bé és possible introduir manualment la informació anterior, el mètode preferit és utilitzar el botó <guilabel
+>Detecta les propietats de la finestra</guilabel
+>.</para
+></tip>
+</para>
+<para
+>Per a cada camp, es poden aplicar els següents operadors contra el valor del camp: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Sense importància</guilabel
+>: ignora el camp.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Coincidència exacta</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Coincidència parcial</guilabel
+></para
+></listitem>
+</itemizedlist>
+<para
+><note
+><para
+>Tant la <guilabel
+>Coincidència exacta</guilabel
+> com la <guilabel
+>Coincidència parcial</guilabel
+> implementen la coincidència sense distingir majúscules i minúscules. Per exemple, <emphasis
+>AB</emphasis
+> coincideix amb la cadena <emphasis
+>AB</emphasis
+>, <emphasis
+>ab</emphasis
+>, <emphasis
+>Ab</emphasis
+> i <emphasis
+>aB</emphasis
+>.</para
+></note>
+</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Expressió regular</guilabel
+>: S'apliquen les expressions regulars de &Qt;. Vegeu <ulink url="https://doc.qt.io/qt-5/qregexp.html"
+>pattern matching using regular expressions</ulink
+>.</para
+></listitem>
+</itemizedlist>
+<sect1 id="detect-window-properties"
+><title
+>Detectar les propietats de les finestres</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-detect-window.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>La funció <guilabel
+>Detecta les propietats de la finestra</guilabel
+> simplifica el procés d'introducció dels criteris de coincidència. </para>
+<orderedlist>
+<listitem
+><para
+>Per a l'aplicació que voleu crear una regla, inicieu l'aplicació.</para
+></listitem>
+<listitem
+><para
+>A continuació, a la pestanya <guilabel
+>Coincidència de la finestra</guilabel
+>, establiu el nombre de segons de retard abans que la funció <guilabel
+>Detecta les propietats de la finestra</guilabel
+> comenci. De manera predeterminada, és de zero segons.</para
+></listitem>
+<listitem
+><para
+>Feu clic sobre <guilabel
+>Detecta les propietats de la finestra</guilabel
+> i</para
+></listitem>
+<listitem
+><para
+>Quan el cursor del ratolí es converteixi en una creueta, situeu-lo dins de la finestra de l'aplicació (no a la barra de títol) i feu clic esquerre.</para
+></listitem>
+<listitem
+><para
+>Es presentarà una nova finestra amb la informació sobre la finestra seleccionada. Seleccioneu els camps desitjats:<itemizedlist>
+<listitem
+><para
+><guilabel
+>Nom de classe secundària</guilabel
+>: algunes aplicacions tenen un nom de classe secundària. Aquest valor es pot utilitzar per a restringir finestres per aquest valor.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Funció de la finestra</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Tipus de finestra</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Títol de la finestra</guilabel
+></para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+</orderedlist>
+<para
+>Feu clic al botó <guilabel
+>D'acord</guilabel
+> per a omplir els criteris a <guilabel
+>Coincidència de finestra</guilabel
+>. </para>
+<para
+>Utilitzant una combinació de la informació, es pot aplicar una regla a tota l'aplicació (per <guilabel
+>Classe</guilabel
+>) o a un <guilabel
+>Tipus</guilabel
+> de finestra específic dins de la <guilabel
+>Classe</guilabel
+>. Per exemple, una <guilabel
+>Barra d'eines</guilabel
+>. </para>
+</sect1>
+</chapter>
+<chapter id="window-attributes1"
+><title
+>Atributs de la finestra</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-window-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Els atributs que es poden establir s'agrupen segons la seva funció en tres pestanyes: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Mida i posició</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Organització i accés</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Aparença i esmenes</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Cada atribut té un conjunt de paràmetres que determinen la seva disposició. </para>
+<sect1 id="parameters"
+><title
+>Paràmetres</title>
+<para
+>Cada atribut, mínimament, accepta un dels següents paràmetres. De manera addicional, els arguments específics de l'atribut són llistats amb cada definició de l'<link linkend="attributes"
+>atribut</link
+>. </para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>No afecta</emphasis
+></term>
+    <listitem>
+    <para
+>Assegura que una regla posterior, que coincideixi amb la finestra, no afectarà l'atribut.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Aplica inicialment</emphasis
+></term>
+    <listitem>
+    <para
+>Inicia la finestra amb l'atribut i deixa que sigui canviat en temps d'execució.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Recorda</emphasis
+></term>
+    <listitem>
+    <para
+>Utilitza el valor de l'atribut tal com es defineix a la regla i si es canvia en temps d'execució, desarà i utilitzarà el nou valor al seu lloc.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Força</emphasis
+></term>
+    <listitem>
+    <para
+>El valor no es podrà canviar en temps d'execució.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Aplica ara, Força temporalment</emphasis
+></term>
+    <listitem>
+    <para
+>Aplica/Força l'opció un cop i desfà l'atribut. La diferència entre els dos és en temps d'execució, <guilabel
+>Aplica ara</guilabel
+> permet que l'atribut sigui canviat i <guilabel
+>Força temporalment</guilabel
+> prohibeix que sigui alterat fins que se surti de totes les finestres afectades.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>Per a <guilabel
+>Aplica ara</guilabel
+>, si la regla no té altres atributs establerts, la regla s'eliminarà després de l'avaluació, mentre que <guilabel
+>Força temporalment</guilabel
+>, la regla s'eliminarà després que se surti de l'última finestra afectada.</para
+></warning>
+</para>
+</sect1>
+<sect1 id="attributes"
+><title
+>Atributs</title>
+<para
+><tip
+><para
+>El botó <guilabel
+>Detecta les propietats de la finestra</guilabel
+> omplirà els valors específics dels atributs. Per a més informació, vegeu <link linkend="window-matching"
+>Coincidència de la finestra</link
+>. Per exemple, els valors d'alçada i amplada de l'atribut de <guilabel
+>Mida</guilabel
+> són establerts a l'alçada i amplada detectades a la finestra.</para
+></tip>
+</para>
+<para
+><tip
+><para
+>Els arguments <guilabel
+>Sí/No</guilabel
+> s'utilitzen per activar o desactivar els atributs. Ser indulgents amb la gramàtica, ens ajudarà a comprendre com serà processada una opció. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+></inlinemediaobject
+> Per exemple, quan l'atribut <guilabel
+>Ignora la barra de tasques</guilabel
+> s'estableix a <guilabel
+>No</guilabel
+> es fa que no s'ignori la barra de tasques. En altres paraules, mostra la finestra a la barra de tasques. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+></para
+></tip>
+</para>
+<sect2 id="size--position"
+><title
+>Mida i posició</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Posició</emphasis
+></term>
+    <listitem>
+    <para
+>Posiciona des de la part superior esquerra de la finestra a les coordenades x,y especificades.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>L'origen del &kwin;, (0,0), és la part superior esquerra de l'escriptori.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Mida</emphasis
+></term>
+    <listitem>
+    <para
+>L'amplada i alçada de la finestra.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Maximitzada horitzontalment, Maximitzada verticalment</emphasis
+></term>
+    <listitem>
+    <para
+>Aquests atributs s'utilitzen per a canviar el màxim horitzontal/mínim horitzontal de la finestra.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Escriptori, Activitat, Pantalla</emphasis
+></term>
+    <listitem>
+    <para
+>Situa la finestra sobre l'<emphasis
+>Escriptori (virtual)</emphasis
+>, <emphasis
+>Activitat</emphasis
+> o <emphasis
+>Pantalla</emphasis
+> especificada. Utilitzeu <guilabel
+>Tots els escriptoris</guilabel
+> per a situar la finestra a tots els <emphasis
+>Escriptoris virtuals</emphasis
+>.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Pantalla completa, Minimitzada, Plegada</emphasis
+></term>
+    <listitem>
+    <para
+>Activa o desactiva els atributs de la finestra per a pantalla completa, minimitzar i plegar. Per exemple, una finestra es pot minimitzar a l'inici o iniciar-se minimitzada, es pot o no forçar.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>L'atribut «maximitzada» s'emula mitjançant l'ús de <guilabel
+>Maximitzada horitzontalment</guilabel
+> i <guilabel
+>Maximitzada verticalment</guilabel
+> o <guilabel
+>Emplaçament inicial</guilabel
+> amb l'argument <guilabel
+>Maximitzada</guilabel
+>.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Emplaçament inicial</emphasis
+></term>
+    <listitem>
+    <para
+>Substitueix l'estratègia de l'emplaçament global de la finestra amb un dels següents:</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Omissió</guilabel
+>: utilitza l'estratègia d'emplaçament global de la finestra.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Sense emplaçament</guilabel
+>: a la part superior esquerra.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Superposició mínima</guilabel
+>: al lloc on no hi hagi altres finestres.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Maximitzada</guilabel
+>: inicia la finestra maximitzada.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Cascada</guilabel
+>: les escala pel títol.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Centrada</guilabel
+>: la centra a l'escriptori.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Aleatòria</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>A la cantonada superior esquerra</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Sota el ratolí</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>A la finestra principal</guilabel
+>: restringeix l'emplaçament d'una finestra filla als límits de la finestra pare.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ignora la geometria demanada</emphasis
+></term>
+    <listitem>
+    <para
+>Alterna la possibilitat d'acceptar o ignorar la geometria de posició sol·licitada per la finestra. Per evitar conflictes entre l'estratègia de l'emplaçament predeterminat i la sol·licitud de la finestra, l'estratègia d'emplaçament serà ignorada quan s'accepti la sol·licitud de la finestra.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Mida mínima, Mida màxima</emphasis
+></term>
+    <listitem>
+    <para
+>La mida mínima i màxima permesa per la finestra.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Obeeix les restriccions de geometria</emphasis
+></term>
+    <listitem>
+    <para
+>Alterna la possibilitat de complir amb relació d'aspecte sol·licitada per la finestra o per <emphasis
+>incrementar la base</emphasis
+>. Per entendre aquest atribut, es requereix alguna ambientació. En poques paraules, les finestres han de demanar al gestor de finestres, un increment de la base: el nombre mínim de píxels <emphasis
+>alçada</emphasis
+> X <emphasis
+>amplada</emphasis
+> per demanar el canvia de mida. Típicament, és 1x1. Tot i que, altres finestres, per exemple, els emuladors de terminal o els editors, utilitzen tipus de lletra fixa i demanen l'increment de la seva base en funció de la mida d'un caràcter.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="arrangement--access"
+><title
+>Organització i accés</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Mantén al damunt/per sota</emphasis
+></term>
+    <listitem>
+    <para
+>Alterna si es vol mantenir la finestra al damunt o per sota de totes les altres.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Agrupa automàticament com a idèntiques</emphasis
+></term>
+    <listitem>
+    <para
+>Alterna l'agrupació (coneguda comunament com <emphasis
+>per pestanyes</emphasis
+> -<emphasis
+>tabbing</emphasis
+>-) de les finestres.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Agrupa automàticament en primer pla</emphasis
+></term>
+    <listitem>
+    <para
+>Alterna si fer la finestra activa quan sigui afegida a l'agrupament automàtic actual.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Agrupa automàticament per ID</emphasis
+></term>
+    <listitem>
+    <para
+>Crea un grup a través d'un ID definit per l'usuari. Més d'una regla pot compartir el mateix ID per permetre que s'agrupin finestres aparentment no relacionades.</para>
+     </listitem>
+  </varlistentry>
+
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ignora la barra de tasques</emphasis
+></term>
+    <listitem>
+    <para
+>Alterna si es vol mostrar la finestra a la barra de tasques.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ignora el paginador</emphasis
+></term>
+    <listitem>
+    <para
+>Alterna si es vol mostrar la finestra al paginador.</para>
+     </listitem>
+  </varlistentry>
+    </variablelist>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ignora el commutador</emphasis
+></term>
+    <listitem>
+    <para
+>Alterna si es vol mostrar la finestra a la llista <guilabel
+>ALT+TAB</guilabel
+>.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Drecera</emphasis
+></term>
+    <listitem>
+    <para
+>Assigna una drecera a la finestra. Quan es fa clic a <guilabel
+>Edita...</guilabel
+>, es presenten instruccions addicionals.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="appearance--fixes"
+><title
+>Aparença i esmenes</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Sense barra de títol ni marc</emphasis
+></term>
+    <listitem>
+    <para
+>Alterna si es vol mostrar la barra de títol i el marc al voltant de la finestra.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Esquema de color de la barra de títol</emphasis
+></term>
+    <listitem>
+    <para
+>Escolliu un esquema de color per a la barra de títol de la finestra.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Opacitat activa/inactiva</emphasis
+></term>
+    <listitem>
+    <para
+>Quan la finestra està activa/inactiva, estableix la seva opacitat al percentatge especificat.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+><guilabel
+>Opacitat activa/inactiva</guilabel
+> només es pot veure afectada quan està activat <guilabel
+>Efectes d'escriptori</guilabel
+>.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Prevenció de robatori de focus</emphasis
+></term>
+    <listitem>
+    <para
+>Quan una finestra requereix el focus, controla sobre una escala (des de <guilabel
+>Sense</guilabel
+> a <guilabel
+>Extrema</guilabel
+>) si accepta la sol·licitud i el lloc al damunt de totes les altres finestres, o ignora la seva sol·licitud (potencialment deixa la finestra al darrere de les altres):</para>
+<itemizedlist>
+<listitem
+><para
+>Sense: Sempre concedeix el focus a la finestra.</para
+></listitem>
+<listitem
+><para
+>Baixa</para
+></listitem>
+<listitem
+><para
+>Normal</para
+></listitem>
+<listitem
+><para
+>Alta</para
+></listitem>
+<listitem
+><para
+>Extrema: La sol·licitud de focus de la finestra és denegada. Només es concedirà el focus de forma explícita demanant-ho mitjançant el ratolí.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Vegeu <guilabel
+>Accepta el focus</guilabel
+>, per a crear una finestra de només lectura -no acceptarà cap entrada del teclat-.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Accepta el focus</emphasis
+></term>
+    <listitem>
+    <para
+>Alterna si la finestra admetrà l'entrada del teclat. Fa la finestra de només lectura.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ignora les dreceres globals</emphasis
+></term>
+    <listitem>
+    <para
+>Alterna si es volen ignorar les dreceres globals (com es defineix a <menuchoice
+><guimenu
+>Arranjament del sistema</guimenu
+><guisubmenu
+>Dreceres i gestos</guisubmenu
+><guimenuitem
+>Dreceres globals</guimenuitem
+></menuchoice
+> o executant <varname
+>kcmshell5 keys</varname
+> al <guilabel
+>konsole</guilabel
+>) mentre la finestra està activa.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Es pot tancar</emphasis
+></term>
+    <listitem>
+    <para
+>Alterna si es vol mostrar el botó <guilabel
+>Tanca</guilabel
+> a la barra de títol.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Una finestra de terminal encara pot ser tancada per l'usuari final, però finalitzant la sessió del shell, tot i que utilitzant <guilabel
+>Accepta el focus</guilabel
+> en desactivar l'entrada del teclat es farà que sigui més difícil tancar la finestra.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Tipus de finestra</emphasis
+></term>
+    <listitem>
+    <para
+>Canvia la finestra a un altre tipus i hereta les característiques d'aquesta finestra:</para>
+<itemizedlist>
+<listitem
+><para
+>Finestra normal</para
+></listitem>
+<listitem
+><para
+>Finestra de diàleg</para
+></listitem>
+<listitem
+><para
+>Finestra d'utilitat</para
+></listitem>
+<listitem
+><para
+>Acoblador (plafó)</para
+></listitem>
+<listitem
+><para
+>Barra d'eines</para
+></listitem>
+<listitem
+><para
+>Menú separable</para
+></listitem>
+<listitem
+><para
+>Pantalla de presentació</para
+></listitem>
+<listitem
+><para
+>Escriptori</para
+></listitem>
+<listitem
+><para
+>Barra de menús aïllada</para
+></listitem>
+<listitem
+><para
+>Visualització en pantalla</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>Utilitzar amb compte, ja que es poden introduir resultats no desitjats. Per exemple, una <guilabel
+>Pantalla de presentació</guilabel
+> serà tancada automàticament per &kwin; quan es faci clic.</para
+></warning>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Bloqueja la composició</emphasis
+></term>
+    <listitem>
+    <para
+>Alterna la possibilitat de desactivar la composició mentre la finestra <emphasis
+>existeix</emphasis
+>. Si està activada la composició i la regla especifica desactiva la composició, mentre no existeixi <emphasis
+>cap</emphasis
+> finestra coincident, la composició romandrà desactivada. La composició es tornarà a activar quan se surti de l'última finestra coincident.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+</sect1>
+</chapter>
+<chapter id="examples"
+><title
+>Exemples</title>
+<para
+><note
+><para
+>El primer exemple detalla tots els passos necessaris per a crear les regles. Per tal de mantenir aquesta pàgina en una grandària manejable, els exemples posteriors només llisten els passos específics per a l'exemple.</para
+></note>
+</para>
+<para
+><note
+><para
+>L'atribut <guilabel
+>Paginador</guilabel
+> es refereix al <guilabel
+>Gestor de l'escriptori virtual</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></note>
+</para>
+<sect1 id="pin-a-window-to-a-desktop-and-set-other-attributes"
+><title
+>Situar una finestra a un escriptori i establir uns altres atributs</title>
+<para
+>Situeu &akregator; a l'<emphasis
+>Escriptori virtual 2</emphasis
+>. De manera addicional, inicieu l'aplicació amb una mida i posició preferida. Per a cada atribut, utilitzeu el <link linkend="parameters"
+>paràmetre</link
+> <guilabel
+>Aplica inicialment</guilabel
+> de manera que es pugui substituir en temps d'execució. </para>
+<para
+>La regla del &kwin; es crea de la següent manera: </para>
+<orderedlist>
+<listitem
+><para
+>Inicieu &akregator; sobre l'<emphasis
+>escriptori dos</emphasis
+>, la mida i la posició es poden adaptar: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-fav.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Feu clic dret a la barra de títol i seleccioneu <menuchoice
+><guimenu
+>Més accions</guimenu
+><guimenuitem
+>Arranjament del gestor de finestres...</guimenuitem
+></menuchoice
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="config-win-behavior.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Seleccioneu <guilabel
+>Regles de les finestres</guilabel
+> a la columna esquerra i feu clic a <guilabel
+>Nou...</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Es mostrarà la finestra <guilabel
+>Edita els valors específics de finestra</guilabel
+>. <guilabel
+>Coincidència de la finestra</guilabel
+> és la pestanya predeterminada: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-init.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Feu clic a <guilabel
+>Detecta les propietats de la finestra</guilabel
+> amb <guilabel
+>0 s de retard</guilabel
+> el cursor es convertirà immediatament en una creueta. Feu clic a (qualsevol lloc) dins de la finestra de l'&akregator; (però no la barra de títol). Es presentaran els criteris de finestra. Només coincidiran per nom de la classe principal deixant les caselles de selecció sense marcar -per a obtenir més informació, vegeu <link linkend="window-matching"
+>Coincidència de la finestra</link
+>-: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akgregator-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>En fer clic a <guilabel
+>D'acord</guilabel
+> la finestra anterior serà omplerta amb els resultats a la pestanya <guilabel
+>Coincidència de la finestra</guilabel
+>. Introduïu un text significatiu al camp <guilabel
+>Descripció</guilabel
+> (el qual es mostra a la finestra de <guilabel
+>Regles de les finestres</guilabel
+>): <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-ready-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Activar els atributs de la finestra: <guilabel
+>Posició</guilabel
+>, <guilabel
+>Mida</guilabel
+> i <guilabel
+>Escriptori</guilabel
+>. Els valors inicials són establerts per <guilabel
+>Detecta les propietats de la finestra</guilabel
+> i es poden substituir: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>En fer clic a <guilabel
+>D'acord</guilabel
+> a la finestra anterior tornareu a la finestra <guilabel
+>Regles de les finestres</guilabel
+>. Es llistarà la nova regla amb la seva descripció: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main-n-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Feu clic a <guilabel
+>D'acord</guilabel
+> per a tancar la finestra.</para
+></listitem>
+<listitem
+><para
+>Fet.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="application-on-all-desktops-and-handle-one-child-window-uniquely"
+><title
+>Aplicar en tots els escriptoris i manejar únicament una finestra filla</title>
+<para
+>Excepte per a les finestres de conversa, es mostra el &kopete; i les seves finestres filles en tots els escriptoris, per sobre de la safata del sistema i el paginador. Per a les finestres de conversa filles, es tracten com la finestra pare, desaran la presentació a la safata del sistema. </para>
+<para
+>Per a cada atribut, utilitzeu el <link linkend="parameters"
+>paràmetre</link
+> <guilabel
+>Força</guilabel
+> perquè no es pugui substituir. </para>
+<para
+>Per dur a terme tot l'anterior, s'han de crear dues regles: </para>
+<orderedlist>
+<listitem
+><para
+>Una regla per a <emphasis
+>Xat del Kopete</emphasis
+> i</para
+></listitem>
+<listitem
+><para
+>Una regla per al &kopete;</para
+></listitem>
+</orderedlist>
+<para
+>Els criteris de coincidència de la regla per a <guilabel
+>Xat del Kopete</guilabel
+>, són més restrictius que la regla per a <emphasis
+>Kopete</emphasis
+>, ja que han de coincidir amb una regla específica de la finestra: la finestra de xat. A causa del processament de l'<link linkend="rule-evaluation"
+>avaluació de la regla</link
+>, la regla <guilabel
+>Xat del Kopete</guilabel
+>, ha de precedir la regla del &kopete; a la <link linkend="kopete-kwin-rule-list"
+>llista de regles de les finestres per al Kopete</link
+>. </para>
+<sect2 id="kopete-chat-rule"
+><title
+>Regla del «Xat del Kopete»</title>
+<para
+>Suposant que hi ha oberta una finestra de <guilabel
+>Xat del Kopete</guilabel
+>: </para>
+<orderedlist>
+<listitem
+><para
+>Utilitzeu <guilabel
+>Detecta les propietats de la finestra</guilabel
+> i seleccioneu la finestra <guilabel
+>Xat del Kopete</guilabel
+>. Marqueu la casella <guilabel
+>Funció de la finestra</guilabel
+> per a restringir els criteris a les finestres de xat -per a obtenir més informació, vegeu <link linkend="window-matching"
+>Coincidència de la finestra</link
+>-: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>En fer clic a <guilabel
+>D'acord</guilabel
+> a la finestra anterior s'ompliran els resultats a la pestanya <guilabel
+>Coincidència de la finestra</guilabel
+>. Introduïu un text significatiu a la casella <guilabel
+>Descripció</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete-chat.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Activeu els atributs següents: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Feu clic per a completar la introducció de la regla.</para
+></listitem>
+</orderedlist>
+<para
+><note
+><para
+>L'atribut <guilabel
+>Ignora la barra de tasques</guilabel
+> s'estableix a <guilabel
+>No</guilabel
+> per a mostrar la finestra a la barra de tasques, el qual es tradueix a: <emphasis
+>no</emphasis
+>, <emphasis
+>no</emphasis
+> <emphasis
+>ignoris la barra de tasques</emphasis
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>.</para
+></note>
+</para>
+</sect2>
+<sect2 id="kopete-rule"
+><title
+>Regla del «Kopete»</title>
+<para
+>Suposant que el &kopete; està obert: </para>
+<orderedlist>
+<listitem
+><para
+>Utilitzeu <guilabel
+>Detecta les propietats de la finestra</guilabel
+> i seleccioneu la finestra del &kopete;. Perquè només coincideixi per nom de la classe principal deixeu les caselles de selecció sense marcar -per a obtenir més informació, vegeu <link linkend="window-matching"
+>Coincidència de finestra</link
+>-: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>En fer clic a <guilabel
+>D'acord</guilabel
+> a la finestra anterior s'ompliran els resultats a la pestanya <guilabel
+>Coincidència de la finestra</guilabel
+>. Introduïu un text significatiu a la casella <guilabel
+>Descripció</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Activeu els atributs següents: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Feu clic per a completar la introducció de la regla.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="kopete-kwin-rule-list"
+><title
+>Llista de regles de les finestres del Kopete</title>
+<para
+>Tal com s'ha mencionat, a causa del processament d'<link linkend="rule-evaluation"
+>avaluació de la regla</link
+>, la regla <guilabel
+>Xat del Kopete</guilabel
+> precedirà a la regla del &kopete;: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-kopete-rules.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+</sect1>
+<sect1 id="suppress-a-window-from-showing-on-pager"
+><title
+>Suprimir una finestra mostrada al paginador</title>
+<para
+>El <guilabel
+>KNotes</guilabel
+> actualment no permet a les seves notes passar al paginador, però una regla resol aquesta mancança. </para>
+<para
+>Assumint que hi ha disponible una finestra de <emphasis
+>nota adhesiva</emphasis
+>: </para>
+<orderedlist>
+<listitem
+><para
+>Utilitzeu <guilabel
+>Detecta les propietats de la finestra</guilabel
+> i seleccioneu qualsevol finestra de <emphasis
+>nota adhesiva</emphasis
+>. Coincidir només per nom de la classe principal deixant les caselles de selecció sense marcar -per a obtenir més informació, vegeu <link linkend="window-matching"
+>Coincidència de la finestra</link
+>-: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>En fer clic a <guilabel
+>D'acord</guilabel
+> a la finestra anterior s'ompliran els resultats a la pestanya <guilabel
+>Coincidència de la finestra</guilabel
+>. Introduïu un text significatiu a la casella <guilabel
+>Descripció</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-knotes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Activeu l'atribut <guilabel
+>Ignora el paginador</guilabel
+> amb el <link linkend="parameters"
+>paràmetre</link
+> <guilabel
+>Força</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Feu clic per a completar la introducció de la regla.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="force-a-window-to-the-top"
+><title
+>Forçar una finestra per a anar al damunt</title>
+<para
+>Per a presentar una finestra activa al damunt, establiu el seu atribut <guilabel
+>Prevenció de robatori de focus</guilabel
+> a <guilabel
+>No</guilabel
+>, típicament, en conjunció amb el <link linkend="parameters"
+>paràmetre</link
+> <guilabel
+>Força</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="focus-stealing-pop2top-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect1>
+<sect1 id="multiple-rules-per-application"
+><title
+>Múltiples regles per aplicació</title>
+<para
+><application
+>Thunderbird</application
+> té diverses finestres filles diferents. Vet aquí un exemple: </para>
+<itemizedlist>
+<listitem
+><para
+>Situeu la finestra principal de <application
+>Thunderbird</application
+> a l'<emphasis
+>Escriptori virtual 1</emphasis
+>, amb una mida i posició específica a l'escriptori.</para
+></listitem>
+<listitem
+><para
+>Permeteu que la finestra de l'editor de <application
+>Thunderbird</application
+> romangui a qualsevol escriptori i que s'activi, forçar el focus i dur-la al davant de totes les altres.</para
+></listitem>
+<listitem
+><para
+>Situeu el recordatori de <application
+>Thunderbird</application
+> al davant sense donar-li el focus de manera que no marxeu sense adonar-vos.</para
+></listitem>
+</itemizedlist>
+<para
+>Cada criteri de coincidència de la regla és prou restrictiu perquè el seu ordre dins de la finestra principal del &kwin; no sigui important per a afectar l'<link linkend="rule-evaluation"
+>avaluació de la regla</link
+>. </para>
+<sect2 id="thunderbird---main"
+><title
+>Thunderbird: Principal</title>
+<para
+>Assumint que la finestra <guilabel
+>Thunderbird: Principal</guilabel
+> està oberta, la mida i la posició es poden adaptar: </para>
+<orderedlist>
+<listitem
+><para
+>Utilitzeu <guilabel
+>Detecta les propietats de la finestra</guilabel
+> i seleccioneu la finestra <guilabel
+>Thunderbird: Principal</guilabel
+>. Marqueu la casella <guilabel
+>Funció de la finestra</guilabel
+> per restringir els criteris a la finestra principal -per a obtenir més informació, vegeu <link linkend="window-matching"
+>Coincidència de finestra</link
+>-: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>En fer clic a <guilabel
+>D'acord</guilabel
+> a la finestra anterior s'ompliran els resultats a la pestanya <guilabel
+>Coincidència de la finestra</guilabel
+>. Introduïu un text significatiu a la casella <guilabel
+>Descripció</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Activeu els atributs següents: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Feu clic per a completar la introducció de la regla.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---composer"
+><title
+>Thunderbird: Editor</title>
+<para
+>Suposant que hi ha oberta una finestra de <guilabel
+>Thunderbird: Editor</guilabel
+>: </para>
+<orderedlist>
+<listitem
+><para
+>Utilitzeu <guilabel
+>Detecta les propietats de la finestra</guilabel
+> i seleccioneu la finestra <guilabel
+>Thunderbird: Editor</guilabel
+>. Marqueu la casella <guilabel
+>Funció de la finestra</guilabel
+> per a restringir els criteris a les finestres de l'editor -per a obtenir més informació, vegeu <link linkend="window-matching"
+>Coincidència de la finestra</link
+>-: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>En fer clic a <guilabel
+>D'acord</guilabel
+> a la finestra anterior s'ompliran els resultats a la pestanya <guilabel
+>Coincidència de la finestra</guilabel
+>. Introduïu un text significatiu a la casella <guilabel
+>Descripció</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-compose.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Activeu els atributs següents: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Feu clic per a completar la introducció de la regla.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---reminder"
+><title
+>Thunderbird: Recordatori</title>
+<para
+>Suposant que hi ha oberta una finestra de <guilabel
+>Thunderbird: Recordatori</guilabel
+>: </para>
+<orderedlist>
+<listitem
+><para
+>Utilitzeu <guilabel
+>Detecta les propietats de la finestra</guilabel
+> i seleccioneu la finestra <guilabel
+>Thunderbird: Recordatori</guilabel
+>. Marqueu les caselles <guilabel
+>Nom de classe secundària</guilabel
+> i <guilabel
+>Funció de la finestra</guilabel
+> per a restringir els criteris a les finestres dels recordatoris -per a obtenir més informació, vegeu <link linkend="window-matching"
+>Coincidència de finestra</link
+>-: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>En fer clic a <guilabel
+>D'acord</guilabel
+> a la finestra anterior s'ompliran els resultats a la pestanya <guilabel
+>Coincidència de la finestra</guilabel
+>. Introduïu un text significatiu a la casella <guilabel
+>Descripció</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-reminder.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Activeu els atributs següents: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Feu clic per a completar la introducció de la regla.</para
+></listitem>
+</orderedlist>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="application-workarounds"
+><title
+>Solucions d'aplicació</title>
+<para
+>A continuació es presenten solucions per al mal comportament de les aplicacions. </para>
+<para
+><tip
+><para
+>Si no esteu familiaritzat amb la creació de regles del &kwin;, vegeu aquest <link linkend="pin-a-window-to-a-desktop-and-set-other-attributes"
+>detallat exemple</link
+> sobre el qual basar la nova regla.</para
+></tip>
+</para>
+<sect1 id="full-screen-re-size-error"
+><title
+>Error en canviar la mida a pantalla completa</title>
+<para
+>L'&Emacs; i el <guilabel
+>gVim</guilabel
+>, quan es maximitzen (mode de pantalla completa) i sota certes condicions us podeu trobar amb problemes en la mida de la finestra -vegeu <ulink url="https://bugs.kde.org/show_bug.cgi?id=252314"
+>Emacs window resizes ...</ulink
+>-. Una regla del &kwin; evitarà el problema. </para>
+<para
+>Suposant que hi ha oberta una finestra de l'&Emacs;: </para>
+<orderedlist>
+<listitem
+><para
+>Utilitzeu <guilabel
+>Detecta les propietats de la finestra</guilabel
+> i seleccioneu la finestra de l'&Emacs;. Per només coincidir per <guilabel
+>nom de la classe principal</guilabel
+> deixeu les caselles de selecció sense marcar -per a obtenir més informació, vegeu <link linkend="window-matching"
+>Coincidència de la finestra</link
+>- <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>En fer clic a <guilabel
+>D'acord</guilabel
+> a la finestra anterior s'ompliran els resultats a la pestanya <guilabel
+>Coincidència de la finestra</guilabel
+>. Introduïu un text significatiu al quadre de text <guilabel
+>Descripció</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-emacs.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>L'&Emacs; ignorarà la petició de pantalla completa activant l'atribut <guilabel
+>Obeeix les restriccions de geometria</guilabel
+>, desactivant-lo (amb <guilabel
+>No</guilabel
+>) per a ignorar i seleccionant el <link linkend="parameters"
+>paràmetre</link
+> <guilabel
+>Força</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Feu clic per a completar la introducció de la regla.</para
+></listitem>
+</orderedlist>
+</sect1>
+</chapter>
+
+<!--userbase-content-->
+<chapter id="credits">
+<title
+>Crèdits i llicència</title>
+      <para
+>Copyright de la documentació, vegeu la <ulink url="https://userbase.kde.org/index.php?title=KWin Rules&amp;action=history"
+>pàgina historial «KWin Rules»</ulink
+> d'UserBase.</para>
+      <para
+>Traductor de la documentació: &credits.Antoni.Bella;</para
+> &underFDL; </chapter>
+&documentation.index;
+</book>

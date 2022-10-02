@@ -1,0 +1,496 @@
+# Translation of kcm_kwindecoration.po to Ukrainian
+# Copyright (C) 2002-2021 This_file_is_part_of_KDE
+# This file is distributed under the license LGPL version 2.1 or
+# version 3 or later versions approved by the membership of KDE e.V.
+#
+# Andriy Rysin <rysin@kde.org>, 2002, 2003, 2004.
+# Eugene Onischenko <oneugene@ukr.net>, 2004, 2005.
+# Ivan Petrouchtchak <fr.ivan@ukrainian-orthodox.org>, 2005, 2006, 2007.
+# Yuri Chornoivan <yurchor@ukr.net>, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2018, 2019, 2020, 2021.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcm_kwindecoration\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2021-06-10 07:18+0300\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
+"Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 20.12.0\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
+"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Andriy Rysin"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "rysin@kde.org"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr "Додаткові дії для цього вікна"
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, kde-format
+msgid "Application menu"
+msgstr "Меню програм"
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, kde-format
+msgid "On all desktops"
+msgstr "На всіх стільницях"
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr "Мінімізувати"
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr "Максимізувати"
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr "Закрити"
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr "Контекстна довідка"
+
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr "Згорнути"
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr "Утримувати під іншими вікнами"
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr "Утримувати над іншими вікнами"
+
+#: kcm.cpp:49
+#, kde-format
+msgid "Window Decorations"
+msgstr "Обрамлення вікон"
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr "Valerio Pilo"
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr "Автор"
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr "Типовий для теми (%1)"
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+"За допомогою цього засобу ви зможете визначити тему обрамлення вікон для "
+"поточного активного сеансу без випадкового встановлення теми, яка або є "
+"недоступною, або вже встановленою."
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+"Назва теми обрамлення вікон, яку ви хочете встановити для KWin. Передавання "
+"повного шляху призведе до спроби знайти тему у відповідному каталозі, а "
+"потім застосувати її, якщо вдасться визначити тему."
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr ""
+"Вивести список усіх тем, які доступні у системі (і те, яка з тем є поточною)"
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+"Визначено %1 як тему KWin Aurorae «%2». Спробуємо встановити її як вашу "
+"поточну тему."
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+"Ви спробували передати шлях до файла, але файл не вдалося визначити як тему. "
+"Маємо перервати обробку, оскільки не встановлено жодної теми."
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr "Бажану тему, «%1», вже встановлено як тему обрамлення вікон."
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr "Тему вказівника %1 вже застосовано до вашого поточного сеансу Плазми"
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+"Не вдалося зберегти параметри вашої теми. Причина невідома, але цю помилку "
+"не можна виправити. Можливо, для того, щоб усе знову запрацювало, достатньо "
+"просто спробувати ще раз."
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr "Не вдалося знайти тему «%1». Тему слід вибрати з таких варіантів: %2"
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr "У вашій системі виявлено такі теми обрамлення вікон KWin:"
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr "Смужка заголовка"
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr "Скиньте кнопку сюди, щоб вилучити її"
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr "Перетягніть кнопки між цією областю і смужкою заголовка"
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr "За допомогою цього модуля ви можете налаштувати обрамлення вікон."
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr "Тема"
+
+#: package/contents/ui/main.qml:57
+#, kde-format
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "Кнопки смужки заголовка"
+
+#: package/contents/ui/main.qml:93
+#, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "Розмір рамки вікна:"
+
+#: package/contents/ui/main.qml:112
+#, kde-format
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr "Отримати нові обрамлення вікон…"
+
+#: package/contents/ui/main.qml:141
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr "Закривати вікна у відповідь на подвійне клацання на кнопці меню"
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr "Натисніть і утримуйте кнопку меню, щоб отримати доступ до меню."
+
+#: package/contents/ui/main.qml:165
+#, kde-format
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "Показувати підказки кнопок заголовків вікон"
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr "Редагувати тему %1"
+
+#: utils.cpp:25
+#, kde-format
+msgid "No Borders"
+msgstr "Без обрамлення"
+
+#: utils.cpp:26
+#, kde-format
+msgid "No Side Borders"
+msgstr "Без бічної рамки"
+
+#: utils.cpp:27
+#, kde-format
+msgid "Tiny"
+msgstr "Крихітний"
+
+#: utils.cpp:28
+#, kde-format
+msgid "Normal"
+msgstr "Звичайний"
+
+#: utils.cpp:29
+#, kde-format
+msgid "Large"
+msgstr "Великий"
+
+#: utils.cpp:30
+#, kde-format
+msgid "Very Large"
+msgstr "Дуже великий"
+
+#: utils.cpp:31
+#, kde-format
+msgid "Huge"
+msgstr "Величезний"
+
+#: utils.cpp:32
+#, kde-format
+msgid "Very Huge"
+msgstr "Гігантський"
+
+#: utils.cpp:33
+#, kde-format
+msgid "Oversized"
+msgstr "Найбільший"
+
+#~ msgctxt "popup tip"
+#~ msgid ""
+#~ "Close by double clicking: Keep the window's Menu button pressed until it "
+#~ "appears."
+#~ msgstr ""
+#~ "Закрити можна подвійним клацанням лівою кнопкою миші. Утримуйте кнопку "
+#~ "меню вікна натиснутою, аж доки меню не буде показано."
+
+#~ msgid "Menu"
+#~ msgstr "Меню"
+
+#~ msgid "Keep below"
+#~ msgstr "Тримати знизу"
+
+#~ msgid "Keep above"
+#~ msgstr "Тримати зверху"
+
+#~ msgid "Download New Window Decorations"
+#~ msgstr "Отримати нові обрамлення вікон"
+
+#~ msgctxt "checkbox label"
+#~ msgid "Use theme's default window border size"
+#~ msgstr "Типовий для теми розмір рамки вікна"
+
+#~ msgid "Configure window titlebars and borders"
+#~ msgstr "Налаштовування смужок заголовка та рамок вікон"
+
+#~ msgid "Search..."
+#~ msgstr "Шукати…"
+
+#~ msgid "Close windows by double clicking &the menu button"
+#~ msgstr "Закривати вікна у відповідь на по&двійне клацання на кнопці меню"
+
+#~ msgid "Border si&ze:"
+#~ msgstr "&Ширина рамки:"
+
+#~ msgid "Buttons"
+#~ msgstr "Кнопки"
+
+#~ msgid "Configure %1..."
+#~ msgstr "Налаштувати %1…"
+
+#~ msgid "Drag to re-position buttons"
+#~ msgstr "Перетягніть кнопки, щоб змінити їхнє розташування"
+
+#~ msgid "Form"
+#~ msgstr "Форма"
+
+#~ msgid "Button size:"
+#~ msgstr "Розмір кнопок:"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "Крихітний"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "Звичайний"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "Великий"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "Дуже великий"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "Величезний"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "Гігантський"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "Найбільший"
+
+#~ msgid "KDE"
+#~ msgstr "KDE"
+
+#~ msgid "%1 (unavailable)"
+#~ msgstr "%1 (недоступна)"
+
+#~ msgid ""
+#~ "To add or remove titlebar buttons, simply <i>drag</i> items between the "
+#~ "available item list and the titlebar preview. Similarly, drag items "
+#~ "within the titlebar preview to re-position them."
+#~ msgstr ""
+#~ "Щоб додати кнопки до смужки заголовка, просто <i>перетягніть</i> елемент "
+#~ "між списком кнопок та переглядом смужки. Так само, щоб вилучити кнопку, "
+#~ "перетягніть її назад."
+
+#~ msgid "Resize"
+#~ msgstr "Змінити розмір"
+
+#~ msgid "Help"
+#~ msgstr "Довідка"
+
+#~ msgctxt "Button showing window actions menu"
+#~ msgid "Window Menu"
+#~ msgstr "Меню вікна"
+
+#~ msgid "--- spacer ---"
+#~ msgstr "--- роздільник ---"
+
+#~ msgid ""
+#~ "Enabling this checkbox will show window button tooltips. If this checkbox "
+#~ "is off, no window button tooltips will be shown."
+#~ msgstr ""
+#~ "Позначення цього пункту призведе до показу підказок до кнопок вікна."
+
+#~ msgid "Please note that this option is not available on all styles yet."
+#~ msgstr ""
+#~ "Будь ласка, зауважте, що цей параметр впроваджено ще не у всіх стилях."
+
+#~ msgid "Use custom titlebar button &positions"
+#~ msgstr "Використовувати нетипове &розташування кнопок смужки заголовка"
+
+#~ msgid "B&order size:"
+#~ msgstr "&Розмір границі:"
+
+#~ msgid "Use this combobox to change the border size of the decoration."
+#~ msgstr "Скористайтеся цим списком для зміни розміру границі обрамлення."
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Border"
+#~ msgstr "Без бічної рамки"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "Без обрамлення"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Параметри обрамлення"
+
+#~ msgid ""
+#~ "Select the window decoration. This is the look and feel of both the "
+#~ "window borders and the window handle."
+#~ msgstr ""
+#~ "Виберіть обрамлення вікон. Це вигляд та поведінка обох, границь вікна та "
+#~ "його маніпулятора."
+
+#~ msgid "Configure Decoration..."
+#~ msgstr "Налаштувати обрамлення…"
+
+#~ msgid "Window Decoration Control Module"
+#~ msgstr "Модуль керування обрамленнями вікон"
+
+#~ msgid "(c) 2001 Karol Szwed"
+#~ msgstr "© Karol Szwed, 2001"
+
+#~ msgid "Karol Szwed"
+#~ msgstr "Karol Szwed"
+
+#~ msgid ""
+#~ "<h1>Installation error</h1>The resource<h2>kwin/kcm_kwindecoration/main."
+#~ "qml</h2>could not be located in any application data path.<h2>Please "
+#~ "contact your distribution</h2>The application will now abort"
+#~ msgstr ""
+#~ "<h1>Помилка</h1> Не вдалося знайти ресурс <h2>kwin/kcm_kwindecoration/"
+#~ "main.qml</h2> у жодному з каталогів шляхів до програм. <h2>Будь ласка, "
+#~ "повідомте про це авторам вашого дистрибутива.</h2> Зараз роботу програми "
+#~ "буде завершено"
+
+#~ msgid "Installation Error"
+#~ msgstr "Помилка під час встановлення"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+#~ msgid ""
+#~ "<h1>Window Manager Decoration</h1><p>This module allows you to choose the "
+#~ "window border decorations, as well as titlebar button positions and "
+#~ "custom decoration options.</p>To choose a theme for your window "
+#~ "decoration click on its name and apply your choice by clicking the \"Apply"
+#~ "\" button below. If you do not want to apply your choice you can click "
+#~ "the \"Reset\" button to discard your changes.<p>You can configure each "
+#~ "theme. There are different options specific for each theme.</p><p>On the "
+#~ "\"Buttons\" tab check the \"Use custom titlebar button positions\" box "
+#~ "and you can change the positions of the buttons to your liking.</p>"
+#~ msgstr ""
+#~ "<h1>Обрамлення менеджера вікон</h1><p>За допомогою цього модуля можна "
+#~ "визначити обрамлення вікон, розташування кнопок в заголовку вікон та інші "
+#~ "параметри обрамлення.</p> Щоб вибрати тему обрамлення вікон позначте її "
+#~ "пункт і натисніть кнопку «Застосувати». Якщо ви не бажаєте застосувати "
+#~ "зміни, які зробили, натисніть кнопку «Скинути».<p>Ви можете змінити "
+#~ "налаштування будь-якої з тем. Кожна з них має власні додаткові параметри."
+#~ "</p> <p>На вкладці «Кнопки» можна налаштувати розташування кнопок. "
+#~ "Спочатку позначте пункт «Використовувати нетипове розташування кнопок "
+#~ "заголовка», а потім розставте кнопки на власний смак.</p>"
+
+#~ msgid "Active Window"
+#~ msgstr "Активне вікно"
+
+#~ msgid "Inactive Window"
+#~ msgstr "Неактивне вікно"

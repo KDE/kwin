@@ -1,0 +1,2140 @@
+# translation of kcmkwm.po to Greek
+# translation of kcmkwm.po to
+# Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 Free Software Foundation, Inc.
+#
+# Theodore J. Soldatos <theodore@eexi.gr>, 2000.
+# Dimitris Kamenopoulos <d.kamenopoulos@mail.ntua.gr>, 2001.
+# Stergios Dramis <sdramis@egnatia.ee.auth.gr>, 2002-2004.
+# Spiros Georgaras <sng@hellug.gr>, 2005, 2006, 2007, 2008.
+# Toussis Manolis <manolis@koppermind.homelinux.org>, 2005, 2007, 2008.
+# Spiros Georgaras <sngeorgaras@otenet.gr>, 2008.
+# Petros Vidalis <p_vidalis@hotmail.com>, 2009.
+# Dimitrios Glentadakis <dglent@gmail.com>, 2011, 2012.
+# Antonis Geralis <capoiosct@gmail.com>, 2012, 2013.
+# Stelios <sstavra@gmail.com>, 2012, 2013.
+# Dimitris Kardarakos <dimkard@gmail.com>, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwm\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-09-02 00:47+0000\n"
+"PO-Revision-Date: 2015-02-08 11:48+0200\n"
+"Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
+"Language-Team: Greek <kde-i18n-el@kde.org>\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.5\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Τούσης Μανώλης,Σπύρος Γεωργαράς"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "manolis@koppermind.homelinux.org, sng@hellug.gr"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
+#: actions.ui:17
+#, fuzzy, kde-format
+#| msgid "Inactive Inner Window"
+msgid "Inactive Inner Window Actions"
+msgstr "Ανενεργό εσωτερικό παράθυρο"
+
+#. i18n: ectx: property (text), widget (QLabel, label_1)
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: actions.ui:26 mouse.ui:177
+#, fuzzy, kde-format
+#| msgid "&Double-click:"
+msgid "&Left click:"
+msgstr "Διπ&λό κλικ:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow1)
+#: actions.ui:39
+#, kde-format
+msgid ""
+"In this row you can customize left click behavior when clicking into an "
+"inactive inner window ('inner' means: not titlebar, not frame)."
+msgstr ""
+"Σε αυτή τη γραμμή μπορείτε να προσαρμόσετε τη συμπεριφορά του αριστερού κλικ "
+"σε ένα ανενεργό εσωτερικό παράθυρο ('εσωτερικό' σημαίνει: όχι γραμμή τίτλου "
+"ή πλαίσιο)."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
+#: actions.ui:43 actions.ui:83 actions.ui:123
+#, fuzzy, kde-format
+#| msgid "Activate, Raise & Pass Click"
+msgid "Activate, raise and pass click"
+msgstr "Ενεργοποίηση, ανύψωση & πέρασμα του κλικ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
+#: actions.ui:48 actions.ui:88 actions.ui:128
+#, fuzzy, kde-format
+#| msgid "Activate & Pass Click"
+msgid "Activate and pass click"
+msgstr "Ενεργοποίηση & πέρασμα του κλικ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:53 actions.ui:93 actions.ui:133 mouse.ui:293 mouse.ui:408
+#: mouse.ui:523
+#, kde-format
+msgid "Activate"
+msgstr "Ενεργοποίηση"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:58 actions.ui:98 actions.ui:138 mouse.ui:283 mouse.ui:398
+#: mouse.ui:513
+#, fuzzy, kde-format
+#| msgid "Activate & Raise"
+msgid "Activate and raise"
+msgstr "Ενεργοποίηση & ανύψωση"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: actions.ui:66 mouse.ui:200
+#, fuzzy, kde-format
+#| msgid "&Double-click:"
+msgid "&Middle click:"
+msgstr "Διπ&λό κλικ:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow2)
+#: actions.ui:79
+#, kde-format
+msgid ""
+"In this row you can customize middle click behavior when clicking into an "
+"inactive inner window ('inner' means: not titlebar, not frame)."
+msgstr ""
+"Σε αυτή τη γραμμή μπορείτε να προσαρμόσετε τη συμπεριφορά του μεσαίου κλικ "
+"σε ένα ανενεργό εσωτερικό παράθυρο ('εσωτερικό' σημαίνει: όχι γραμμή τίτλου "
+"ή πλαίσιο)."
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: actions.ui:106 mouse.ui:213
+#, kde-format
+msgid "&Right click:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow3)
+#: actions.ui:119
+#, kde-format
+msgid ""
+"In this row you can customize right click behavior when clicking into an "
+"inactive inner window ('inner' means: not titlebar, not frame)."
+msgstr ""
+"Σε αυτή τη γραμμή μπορείτε να προσαρμόσετε τη συμπεριφορά του δεξιού κλικ σε "
+"ένα ανενεργό εσωτερικό παράθυρο ('εσωτερικό' σημαίνει: όχι γραμμή τίτλου ή "
+"πλαίσιο)."
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: actions.ui:146 mouse.ui:88
+#, fuzzy, kde-format
+#| msgid "M&ouse wheel:"
+msgid "Mouse &wheel:"
+msgstr "&Ρόδα ποντικιού:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindowWheel)
+#: actions.ui:159
+#, kde-format
+msgid ""
+"In this row you can customize behavior when scrolling into an inactive inner "
+"window ('inner' means: not titlebar, not frame)."
+msgstr ""
+"Σε αυτή τη γραμμή μπορείτε να προσαρμόσετε τη συμπεριφορά της κύλησης σε ένα "
+"ανενεργό εσωτερικό παράθυρο ('εσωτερικό' σημαίνει: όχι γραμμή τίτλου ή "
+"πλαίσιο)."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
+#: actions.ui:163
+#, kde-format
+msgid "Scroll"
+msgstr "Κύλιση"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
+#: actions.ui:168
+#, fuzzy, kde-format
+#| msgid "Activate & Scroll"
+msgid "Activate and scroll"
+msgstr "Ενεργοποίηση & κύλιση"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
+#: actions.ui:173
+#, fuzzy, kde-format
+#| msgid "Activate, Raise & Scroll"
+msgid "Activate, raise and scroll"
+msgstr "Ενεργοποίηση, ανύψωση & κύλιση"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: actions.ui:184
+#, fuzzy, kde-format
+#| msgid "Inner Window, Titlebar & Frame"
+msgid "Inner Window, Titlebar and Frame Actions"
+msgstr "Εσωτερικό παράθυρο, γραμμή τίτλου & πλαίσιο"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: actions.ui:195
+#, fuzzy, kde-format
+#| msgid "Modifier &key:"
+msgid "Mo&difier key:"
+msgstr "Πλήκτρο τρο&ποποιητή:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllKey)
+#: actions.ui:205
+#, kde-format
+msgid ""
+"Here you select whether holding the Meta key or Alt key will allow you to "
+"perform the following actions."
+msgstr ""
+"Εδώ μπορείτε να επιλέξετε αν το πάτημα του πλήκτρου Meta ή Alt θα σας "
+"επιτρέπει να κάνετε τις ακόλουθες ενέργειες."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
+#: actions.ui:209
+#, kde-format
+msgid "Meta"
+msgstr "Meta"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
+#: actions.ui:214
+#, kde-format
+msgid "Alt"
+msgstr "Alt"
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: actions.ui:236
+#, fuzzy, kde-format
+#| msgid "   + "
+msgid "  + "
+msgstr "   + "
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: actions.ui:248 mouse.ui:601
+#, fuzzy, kde-format
+#| msgid "&Double-click:"
+msgid "L&eft click:"
+msgstr "Διπ&λό κλικ:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll1)
+#: actions.ui:261
+#, kde-format
+msgid ""
+"In this row you can customize left click behavior when clicking into the "
+"titlebar or the frame."
+msgstr ""
+"Σε αυτή τη γραμμή μπορείτε να προσαρμόσετε τη συμπεριφορά του αριστερού κλικ "
+"στη γραμμή τίτλου ή στο πλαίσιο."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:265 actions.ui:335 actions.ui:405
+#, kde-format
+msgid "Move"
+msgstr "Μετακίνηση"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:270 actions.ui:340 actions.ui:410
+#, fuzzy, kde-format
+#| msgid "Activate, Raise & Move"
+msgid "Activate, raise and move"
+msgstr "Ενεργοποίηση, ανύψωση & μετακίνηση"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:275 actions.ui:345 actions.ui:415 mouse.ui:246 mouse.ui:308
+#: mouse.ui:361 mouse.ui:423 mouse.ui:476 mouse.ui:538
+#, fuzzy, kde-format
+#| msgid "Toggle Raise & Lower"
+msgid "Toggle raise and lower"
+msgstr "Εναλλαγή ανύψωσης & χαμηλώματος"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:280 actions.ui:350 actions.ui:420
+#, kde-format
+msgid "Resize"
+msgstr "Αλλαγή μεγέθους"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:285 actions.ui:355 actions.ui:425 mouse.ui:236 mouse.ui:298
+#: mouse.ui:351 mouse.ui:413 mouse.ui:466 mouse.ui:528
+#, kde-format
+msgid "Raise"
+msgstr "Ανύψωση"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:290 actions.ui:360 actions.ui:430 mouse.ui:65 mouse.ui:241
+#: mouse.ui:303 mouse.ui:356 mouse.ui:418 mouse.ui:471 mouse.ui:533
+#, kde-format
+msgid "Lower"
+msgstr "Χαμήλωμα"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:295 actions.ui:365 actions.ui:435 mouse.ui:55 mouse.ui:251
+#: mouse.ui:313 mouse.ui:366 mouse.ui:428 mouse.ui:481 mouse.ui:543
+#, kde-format
+msgid "Minimize"
+msgstr "Ελαχιστοποίηση"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:300 actions.ui:370 actions.ui:440
+#, fuzzy, kde-format
+#| msgid "Decrease Opacity"
+msgid "Decrease opacity"
+msgstr "Μείωση αδιαφάνειας"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:305 actions.ui:375 actions.ui:445
+#, fuzzy, kde-format
+#| msgid "Increase Opacity"
+msgid "Increase opacity"
+msgstr "Αύξηση αδιαφάνειας"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 mouse.ui:80
+#: mouse.ui:132 mouse.ui:271 mouse.ui:333 mouse.ui:386 mouse.ui:448
+#: mouse.ui:501 mouse.ui:563
+#, fuzzy, kde-format
+#| msgid "Nothing"
+msgid "Do nothing"
+msgstr "Τίποτα"
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: actions.ui:318
+#, fuzzy, kde-format
+#| msgid "Middle b&utton:"
+msgid "Middle &click:"
+msgstr "Με&σαίο κουμπί:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
+#: actions.ui:331
+#, kde-format
+msgid ""
+"In this row you can customize middle click behavior when clicking into the "
+"titlebar or the frame."
+msgstr ""
+"Σε αυτή τη γραμμή μπορείτε να προσαρμόσετε τη συμπεριφορά του μεσαίου κλικ "
+"στη γραμμή τίτλου ή στο πλαίσιο."
+
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+#. i18n: ectx: property (text), widget (QLabel, label_10)
+#: actions.ui:388 mouse.ui:671
+#, kde-format
+msgid "Right clic&k:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:401
+#, kde-format
+msgid ""
+"In this row you can customize right click behavior when clicking into the "
+"titlebar or the frame."
+msgstr ""
+"Σε αυτή τη γραμμή μπορείτε να προσαρμόσετε τη συμπεριφορά του δεξιού κλικ "
+"στη γραμμή τίτλου ή στο πλαίσιο."
+
+#. i18n: ectx: property (text), widget (QLabel, label_10)
+#: actions.ui:458
+#, fuzzy, kde-format
+#| msgid "M&ouse wheel:"
+msgid "Mo&use wheel:"
+msgstr "&Ρόδα ποντικιού:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllWheel)
+#: actions.ui:471
+#, kde-format
+msgid ""
+"Here you can customize KDE's behavior when scrolling with the mouse wheel in "
+"a window while pressing the modifier key."
+msgstr ""
+"Εδώ μπορείτε να προσαρμόσετε τη συμπεριφορά του KDE όταν κάνετε κύλιση με το "
+"ροδάκι του ποντικιού πατώντας συγχρόνως κάποιο ειδικό πλήκτρο."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:475 mouse.ui:102
+#, fuzzy, kde-format
+#| msgid "Raise/Lower"
+msgid "Raise/lower"
+msgstr "Ανύψωση/χαμήλωμα"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:480 mouse.ui:107
+#, fuzzy, kde-format
+#| msgid "Shade/Unshade"
+msgid "Shade/unshade"
+msgstr "Τύλιγμα/Ξετύλιγμα"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:485 mouse.ui:112
+#, fuzzy, kde-format
+#| msgid "Maximize/Restore"
+msgid "Maximize/restore"
+msgstr "Μεγιστοποίηση/Επαναφορά"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:490 mouse.ui:117
+#, fuzzy, kde-format
+#| msgid "Keep Above/Below"
+msgid "Keep above/below"
+msgstr "Διατήρηση πάνω/κάτω"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:495 mouse.ui:122
+#, fuzzy, kde-format
+#| msgid "Move to Previous/Next Desktop"
+msgid "Move to previous/next desktop"
+msgstr "Μετακίνηση στην προηγούμενη/επόμενη επιφάνεια εργασίας"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:500 mouse.ui:127
+#, fuzzy, kde-format
+#| msgid "Change Opacity"
+msgid "Change opacity"
+msgstr "Αλλαγή αδιαφάνειας"
+
+#. i18n: ectx: property (text), widget (QLabel, shadeHoverLabel)
+#: advanced.ui:20
+#, fuzzy, kde-format
+#| msgid "Window Tabbing"
+msgid "Window &unshading:"
+msgstr "Παράθυρα με καρτέλες"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ShadeHover)
+#: advanced.ui:32
+#, fuzzy, kde-format
+#| msgid ""
+#| "If Shade Hover is enabled, a shaded window will un-shade automatically "
+#| "when the mouse pointer has been over the title bar for some time."
+msgid ""
+"<html><head/><body><p>If this option is enabled, a shaded window will "
+"unshade automatically when the mouse pointer has been over the titlebar for "
+"some time.</p></body></html>"
+msgstr ""
+"Αν το «Ενεργοποίηση στο πέρασμα του ποντικιού» είναι επιλεγμένο,ένα "
+"τυλιγμένο παράθυρο θα ξετυλίγεται αυτόματα αν το ποντίκι μείνει πάνω στη "
+"γραμμή τίτλου του για λίγη ώρα."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShadeHover)
+#: advanced.ui:35
+#, kde-format
+msgid "On titlebar hover after:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_ShadeHoverInterval)
+#: advanced.ui:42
+#, kde-format
+msgid ""
+"Sets the time in milliseconds before the window unshades when the mouse "
+"pointer goes over the shaded window."
+msgstr ""
+"Ορίζει το χρόνο, σε χιλιοστά του δευτερολέπτου, πριν το παράθυρο ξετυλιχθεί "
+"όταν ο δείκτης του ποντικιού βρεθεί πάνω στο τυλιγμένο παράθυρο."
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AutoRaiseInterval)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ShadeHoverInterval)
+#: advanced.ui:45 focus.ui:85 focus.ui:178
+#, kde-format
+msgid " ms"
+msgstr " ms"
+
+#. i18n: ectx: property (text), widget (QLabel, windowPlacementLabel)
+#: advanced.ui:66
+#, fuzzy, kde-format
+#| msgid "&Placement:"
+msgid "Window &placement:"
+msgstr "&Τοποθέτηση:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_Placement)
+#: advanced.ui:76
+#, kde-format
+msgid ""
+"<html><head/><body><p>The placement policy determines where a new window "
+"will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-bottom: "
+"0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" "
+"margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
+"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+"\">Smart</span> will try to achieve a minimum overlap of windows</li><li "
+"style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
+"italic;\">Maximizing</span> will try to maximize every window to fill the "
+"whole screen. It might be useful to selectively affect placement of some "
+"windows using the window-specific settings.</li><li style=\" margin-top:0px; "
+"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
+"text-indent:0px;\"><span style=\" font-style:italic;\">Cascade</span> will "
+"cascade the windows</li><li style=\" margin-top:0px; margin-bottom:0px; "
+"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+"\"><span style=\" font-style:italic;\">Random</span> will use a random "
+"position</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Centered</span> will place the window "
+"centered</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Zero-cornered</span> will place the window in "
+"the top-left corner</li><li style=\" margin-top:0px; margin-bottom:12px; "
+"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+"\"><span style=\" font-style:italic;\">Under mouse</span> will place the "
+"window under the pointer</li></ul></body></html>"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:80
+#, fuzzy, kde-format
+#| msgid "Snap windows onl&y when overlapping"
+msgid "Minimal Overlapping"
+msgstr "Αρπαγή των παραθύρων &μόνο κατά την επικάλυψη"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:85
+#, fuzzy, kde-format
+#| msgid "Maximize"
+msgid "Maximized"
+msgstr "Μεγιστοποίηση"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:90
+#, fuzzy, kde-format
+#| msgid "Cascade"
+msgid "Cascaded"
+msgstr "Διαδοχική"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:95
+#, kde-format
+msgid "Random"
+msgstr "Τυχαία"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:100
+#, kde-format
+msgid "Centered"
+msgstr "Κεντραρισμένη"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:105
+#, kde-format
+msgid "In Top-Left Corner"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:110
+#, fuzzy, kde-format
+#| msgid "Under Mouse"
+msgid "Under mouse"
+msgstr "Κάτω από το ποντίκι"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
+#: advanced.ui:118
+#, kde-format
+msgid ""
+"When turned on, apps which are able to remember the positions of their "
+"windows are allowed to do so. This will override the window placement mode "
+"defined above."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
+#: advanced.ui:121
+#, kde-format
+msgid ""
+"Allow apps to remember the positions of their own windows, if they support it"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
+#: advanced.ui:128
+#, fuzzy, kde-format
+#| msgid "Special Windows"
+msgid "&Special windows:"
+msgstr "Ειδικά παράθυρα"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
+#: advanced.ui:138
+#, kde-format
+msgid ""
+"When turned on, utility windows (tool windows, torn-off menus,...) of "
+"inactive applications will be hidden and will be shown only when the "
+"application becomes active. Note that applications have to mark the windows "
+"with the proper window type for this feature to work."
+msgstr ""
+"Όταν ενεργοποιηθεί, τα βοηθητικά παράθυρα (παράθυρα εργαλείων, αναπτυγμένα "
+"μενού,...) των μη ενεργών εφαρμογών δε θα είναι ορατά και θα εμφανιστούν "
+"μόνο όταν ενεργοποιηθούν οι εφαρμογές. Σημειώστε ότι οι εφαρμογές θα πρέπει "
+"να μαρκάρουν τα παράθυρα με τον κατάλληλο τύπο παραθύρου για να λειτουργήσει "
+"αυτό το χαρακτηριστικό."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
+#: advanced.ui:141
+#, kde-format
+msgid "Hide utility windows for inactive applications"
+msgstr "Απόκρυψη βοηθητικών παραθύρων για μη ενεργές εφαρμογές"
+
+#. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
+#: advanced.ui:148
+#, kde-format
+msgid "Virtual Desktop behavior:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
+#: advanced.ui:158
+#, kde-format
+msgid "When activating a window on a different Virtual Desktop:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
+#: advanced.ui:165
+#, kde-format
+msgid ""
+"<html><head/><body><p>This setting controls what happens when an open window "
+"located on a Virtual Desktop other than the current one is activated. </"
+"p><p><span style=\" font-style:italic;\">Switch to that Virtual Desktop</"
+"span> will switch to the Virtual Desktop where the window is currently "
+"located. </p><p><span style=\" font-style:italic;\">Bring window to current "
+"Virtual Desktop</span> will cause the window to jump to the active Virtual "
+"Desktop. </p></body></html>"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
+#: advanced.ui:169
+#, kde-format
+msgid "Switch to that Virtual Desktop"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
+#: advanced.ui:174
+#, kde-format
+msgid "Bring window to current Virtual Desktop"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
+#: focus.ui:22
+#, kde-format
+msgid "Window &activation policy:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, windowFocusPolicy)
+#: focus.ui:32
+#, kde-format
+msgid "With this option you can specify how and when windows will be focused."
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:36
+#, fuzzy, kde-format
+#| msgid "Click to Focus"
+msgctxt "sassa asas"
+msgid "Click to focus"
+msgstr "Κλικ για εστίαση"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:41
+#, kde-format
+msgid "Click to focus (mouse precedence)"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:46
+#, fuzzy, kde-format
+#| msgid "Focus Follows Mouse"
+msgid "Focus follows mouse"
+msgstr "Η εστίαση ακολουθεί το ποντίκι"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:51
+#, kde-format
+msgid "Focus follows mouse (mouse precedence)"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:56
+#, fuzzy, kde-format
+#| msgid "Focus Under Mouse"
+msgid "Focus under mouse"
+msgstr "Εστίαση κάτω από το ποντίκι"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:61
+#, fuzzy, kde-format
+#| msgid "Focus Strictly Under Mouse"
+msgid "Focus strictly under mouse"
+msgstr "Εστίαση αυστηρά κάτω από το ποντίκι"
+
+#. i18n: ectx: property (text), widget (QLabel, delayFocusOnLabel)
+#: focus.ui:69
+#, fuzzy, kde-format
+#| msgid "&Delay focus by"
+msgid "&Delay focus by:"
+msgstr "&Καθυστέρηση εστίασης κατά"
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_DelayFocusInterval)
+#: focus.ui:82
+#, kde-format
+msgid ""
+"This is the delay after which the window the mouse pointer is over will "
+"automatically receive focus."
+msgstr ""
+"Αυτή είναι η καθυστέρηση μετά την οποία το παράθυρο, πάνω από το οποίο "
+"βρίσκεται ο δείκτης του ποντικιού, έρχεται αυτόματα στο προσκήνιο."
+
+#. i18n: ectx: property (text), widget (QLabel, focusStealingLabel)
+#: focus.ui:101
+#, fuzzy, kde-format
+#| msgid "Focus &stealing prevention"
+msgid "Focus &stealing prevention:"
+msgstr "Παρεμπόδιση κλε&ψίματος εστίασης"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:114
+#, fuzzy, kde-format
+#| msgid ""
+#| "<p>This option specifies how much KWin will try to prevent unwanted focus "
+#| "stealing caused by unexpected activation of new windows. (Note: This "
+#| "feature does not work with the Focus Under Mouse or Focus Strictly Under "
+#| "Mouse focus policies.)\n"
+#| "<ul>\n"
+#| "<li><em>None:</em> Prevention is turned off and new windows always become "
+#| "activated.</li>\n"
+#| "<li><em>Low:</em> Prevention is enabled; when some window does not have "
+#| "support for the underlying mechanism and KWin cannot reliably decide "
+#| "whether to activate the window or not, it will be activated. This setting "
+#| "may have both worse and better results than the medium level, depending "
+#| "on the applications.</li>\n"
+#| "<li><em>Medium:</em> Prevention is enabled.</li>\n"
+#| "<li><em>High:</em> New windows get activated only if no window is "
+#| "currently active or if they belong to the currently active application. "
+#| "This setting is probably not really usable when not using mouse focus "
+#| "policy.</li>\n"
+#| "<li><em>Extreme:</em> All windows must be explicitly activated by the "
+#| "user.</li>\n"
+#| "</ul></p>\n"
+#| "<p>Windows that are prevented from stealing focus are marked as demanding "
+#| "attention, which by default means their taskbar entry will be "
+#| "highlighted. This can be changed in the Notifications control module.</p>"
+msgid ""
+"<html><head/><body><p>This option specifies how much KWin will try to "
+"prevent unwanted focus stealing caused by unexpected activation of new "
+"windows. (Note: This feature does not work with the <span style=\" font-"
+"style:italic;\">Focus under mouse</span> or <span style=\" font-style:italic;"
+"\">Focus strictly under mouse</span> focus policies.) </p><ul style=\"margin-"
+"top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-"
+"indent: 1;\"><li style=\" margin-top:12px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">None:</span> Prevention is turned off and new "
+"windows always become activated.</li><li style=\" margin-top:0px; margin-"
+"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">Low:</span> Prevention is "
+"enabled; when some window does not have support for the underlying mechanism "
+"and KWin cannot reliably decide whether to activate the window or not, it "
+"will be activated. This setting may have both worse and better results than "
+"the medium level, depending on the applications.</li><li style=\" margin-"
+"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Medium:</"
+"span> Prevention is enabled.</li><li style=\" margin-top:0px; margin-"
+"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">High:</span> New windows "
+"get activated only if no window is currently active or if they belong to the "
+"currently active application. This setting is probably not really usable "
+"when not using mouse focus policy.</li><li style=\" margin-top:0px; margin-"
+"bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">Extreme:</span> All "
+"windows must be explicitly activated by the user.</li></ul><p>Windows that "
+"are prevented from stealing focus are marked as demanding attention, which "
+"by default means their taskbar entry will be highlighted. This can be "
+"changed in the Notifications control module.</p></body></html>"
+msgstr ""
+"<p>Αυτή η επιλογή καθορίζει πόσο το KWin θα προσπαθεί να εμποδίσει το "
+"ανεπιθύμητο κλέψιμο της εστίασης που προκαλείται από τη μη αναμενόμενη "
+"ενεργοποίηση νέων παραθύρων. (Σημείωση: Αυτό το χαρακτηριστικό δε λειτουργεί "
+"με τις πολιτικές εστίασης, Εστίαση κάτω από το ποντίκι ή Εστίαση αυστηρά "
+"κάτω από το ποντίκι.)\n"
+"<ul>\n"
+"<li><em>Καμία:</em> Η παρεμπόδιση είναι απενεργοποιημένη και τα νέα παράθυρα "
+"ενεργοποιούνται πάντα.</li>\n"
+"<li><em>Χαμηλή:</em> Η παρεμπόδιση είναι ενεργοποιημένη. Όταν κάποιο "
+"παράθυρο δεν έχει υποστήριξη για αυτόν το μηχανισμό και το KWin δεν μπορεί "
+"να αποφασίσει με αξιοπιστία για το αν θα ενεργοποιήσει το παράθυρο ή όχι, "
+"αυτό θα ενεργοποιηθεί. Αυτή η ρύθμιση μπορεί να έχει και καλύτερα και "
+"χειρότερα αποτελέσματα από το κανονικό επίπεδο, ανάλογα με τις εφαρμογές.</"
+"li>\n"
+"<li><em>Κανονική:</em> Η παρεμπόδιση είναι ενεργοποιημένη.</li>\n"
+"<li><em>Υψηλή:</em> Τα νέα παράθυρα ενεργοποιούνται μόνο αν δεν υπάρχει "
+"κάποιο ενεργό παράθυρο ή αν ανήκουν στην τρέχουσα ενεργή εφαρμογή. Αυτή η "
+"ρύθμιση μάλλον δεν είναι πολύ χρήσιμη όταν δε χρησιμοποιείται πολιτική "
+"εστίασης κάτω από το ποντίκι.</li>\n"
+"<li><em>Ακραία:</em> Όλα τα παράθυρα πρέπει να ενεργοποιούνται αποκλειστικά "
+"από το χρήστη.</li>\n"
+"</ul></p>\n"
+"<p>Παράθυρα που δεν τους επιτρέπεται να αποκτήσουν την εστίαση μαρκάρονται "
+"σαν αιτούντα προσοχής, που σημαίνει ότι η γραμμή εργασίας τους θα είναι "
+"τονισμένη εξ ορισμού. Αυτό μπορεί να αλλάξει από το πρόσθετο ελέγχου "
+"Ειδοποιήσεων.</p>"
+
+#. i18n: Focus Stealing Prevention Level
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_WindowSnapZone)
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_CenterSnapZone)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:118 moving.ui:33 moving.ui:65 moving.ui:97
+#, kde-format
+msgid "None"
+msgstr "Καμία"
+
+#. i18n: Focus Stealing Prevention Level
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:123
+#, kde-format
+msgid "Low"
+msgstr "Χαμηλή"
+
+#. i18n: Focus Stealing Prevention Level
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:128
+#, kde-format
+msgid "Medium"
+msgstr "Μεσαία"
+
+#. i18n: Focus Stealing Prevention Level
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:133
+#, kde-format
+msgid "High"
+msgstr "Υψηλή"
+
+#. i18n: Focus Stealing Prevention Level
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:138
+#, kde-format
+msgid "Extreme"
+msgstr "Ακραία"
+
+#. i18n: ectx: property (text), widget (QLabel, raisingWindowsLabel)
+#: focus.ui:146
+#, fuzzy, kde-format
+#| msgid "Raising windows"
+msgid "Raising windows:"
+msgstr "Ανύψωση παραθύρων"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ClickRaise)
+#: focus.ui:153
+#, kde-format
+msgid ""
+"When this option is enabled, the active window will be brought to the front "
+"when you click somewhere into the window contents. To change it for inactive "
+"windows, you need to change the settings in the Actions tab."
+msgstr ""
+"Όταν αυτή η επιλογή είναι ενεργοποιημένη το ενεργό παράθυρο θα έρχεται στο "
+"προσκήνιο όταν κάνετε κλικ κάπου στα περιεχόμενα του παραθύρου. Για να το "
+"αλλάξετε για ανενεργά παράθυρα πρέπει να αλλάξετε τις ρυθμίσεις στην καρτέλα "
+"Ενέργειες."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ClickRaise)
+#: focus.ui:156
+#, fuzzy, kde-format
+#| msgid "C&lick raises active window"
+msgid "&Click raises active window"
+msgstr "&Κλικ για ανύψωση ενεργού παραθύρου"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AutoRaise)
+#: focus.ui:165
+#, kde-format
+msgid ""
+"When this option is enabled, a window in the background will automatically "
+"come to the front when the mouse pointer has been over it for some time."
+msgstr ""
+"Όταν αυτή η επιλογή είναι ενεργοποιημένη ένα παράθυρο που είναι στο "
+"παρασκήνιο θα έρχεται αυτόματα στο προσκήνιο όταν ο δείκτης του ποντικιού "
+"βρεθεί από πάνω του για λίγη ώρα."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AutoRaise)
+#: focus.ui:168
+#, fuzzy, kde-format
+#| msgid "&Raise on hover, delayed by"
+msgid "&Raise on hover, delayed by:"
+msgstr "Α&νύψωση στο πέρασμα του ποντικιού, με καθυστέρηση"
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_AutoRaiseInterval)
+#: focus.ui:175
+#, kde-format
+msgid ""
+"This is the delay after which the window that the mouse pointer is over will "
+"automatically come to the front."
+msgstr ""
+"Αυτή είναι η καθυστέρηση μετά την οποία το παράθυρο, που από πάνω του "
+"βρίσκεται ο δείκτης του ποντικιού, έρχεται αυτόματα στο προσκήνιο."
+
+#. i18n: ectx: property (text), widget (QLabel, multiscreenBehaviorLabel)
+#: focus.ui:196
+#, fuzzy, kde-format
+#| msgid "Multiscreen behaviour"
+msgid "Multiscreen behavior:"
+msgstr "Συμπεριφορά πολλαπλών οθονών"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
+#: focus.ui:203
+#, fuzzy, kde-format
+#| msgid ""
+#| "When this option is enabled, the active Xinerama screen (where new "
+#| "windows appear, for example) is the screen containing the mouse pointer. "
+#| "When disabled, the active Xinerama screen is the screen containing the "
+#| "focused window. By default this option is disabled for Click to focus and "
+#| "enabled for other focus policies."
+msgid ""
+"When this option is enabled, the active screen (where new windows appear, "
+"for example) is the screen containing the mouse pointer. When disabled, the "
+"active screen is the screen containing the focused window."
+msgstr ""
+"Όταν αυτή η επιλογή είναι ενεργοποιημένη, ενεργή οθόνη Xinerama (όπου για "
+"παράδειγμα εμφανίζονται τα νέα παράθυρα) είναι εκείνη στην οποία βρίσκεται "
+"το ποντίκι. Όταν απενεργοποιηθεί, ενεργή οθόνη είναι εκείνη στην οποία "
+"βρίσκεται το παράθυρο που έχει την εστίαση. Αυτή η επιλογή είναι εξ ορισμού "
+"απενεργοποιημένη στην πολιτική εστίασης 'Κλικ για εστίαση' και "
+"ενεργοποιημένη στις υπόλοιπες."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
+#: focus.ui:206
+#, kde-format
+msgid "Active screen follows &mouse"
+msgstr "Η ενεργή οθόνη ακολουθεί το &ποντίκι"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
+#: focus.ui:213
+#, fuzzy, kde-format
+#| msgid ""
+#| "When this option is enabled, focus operations are limited only to the "
+#| "active Xinerama screen"
+msgid ""
+"When this option is enabled, focus operations are limited only to the active "
+"screen"
+msgstr ""
+"Όταν αυτή η επιλογή είναι ενεργοποιημένη, οι λειτουργίες εστίασης θα "
+"περιορίζονται μόνο στην ενεργή οθόνη Xinerama"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
+#: focus.ui:216
+#, fuzzy, kde-format
+#| msgid "S&eparate screen focus"
+msgid "&Separate screen focus"
+msgstr "Δια&χωρισμός εστίασης οθόνης"
+
+#. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
+#: focus.ui:229
+#, kde-format
+msgid "Window activation policy description"
+msgstr ""
+
+#: main.cpp:73
+#, kde-format
+msgid "&Focus"
+msgstr "&Εστίαση"
+
+#: main.cpp:79
+#, fuzzy, kde-format
+#| msgid "&Titlebar Actions"
+msgid "Titlebar A&ctions"
+msgstr "Ενέργειες &γραμμής τίτλου"
+
+#: main.cpp:85
+#, fuzzy, kde-format
+#| msgid "Window Actio&ns"
+msgid "W&indow Actions"
+msgstr "Ενέρ&γειες παραθύρου"
+
+#: main.cpp:91
+#, fuzzy, kde-format
+#| msgid "&Placement:"
+msgid "Mo&vement"
+msgstr "&Τοποθέτηση:"
+
+#: main.cpp:97
+#, fuzzy, kde-format
+#| msgid "Ad&vanced"
+msgid "Adva&nced"
+msgstr "Για προχωρ&ημένους"
+
+#: main.cpp:101
+#, kde-format
+msgid "Window Behavior Configuration Module"
+msgstr "Άρθρωμα διαμόρφωσης της συμπεριφοράς των παραθύρων"
+
+#: main.cpp:103
+#, kde-format
+msgid "(c) 1997 - 2002 KWin and KControl Authors"
+msgstr "(c) 1997 - 2002 Οι συγγραφείς του KWin και KControl"
+
+#: main.cpp:105
+#, kde-format
+msgid "Matthias Ettrich"
+msgstr "Matthias Ettrich"
+
+#: main.cpp:106
+#, kde-format
+msgid "Waldo Bastian"
+msgstr "Waldo Bastian"
+
+#: main.cpp:107
+#, kde-format
+msgid "Cristian Tibirna"
+msgstr "Cristian Tibirna"
+
+#: main.cpp:108
+#, kde-format
+msgid "Matthias Kalle Dalheimer"
+msgstr "Matthias Kalle Dalheimer"
+
+#: main.cpp:109
+#, kde-format
+msgid "Daniel Molkentin"
+msgstr "Daniel Molkentin"
+
+#: main.cpp:110
+#, kde-format
+msgid "Wynn Wilkes"
+msgstr "Wynn Wilkes"
+
+#: main.cpp:111
+#, kde-format
+msgid "Pat Dowler"
+msgstr "Pat Dowler"
+
+#: main.cpp:112
+#, kde-format
+msgid "Bernd Wuebben"
+msgstr "Bernd Wuebben"
+
+#: main.cpp:113
+#, kde-format
+msgid "Matthias Hoelzer-Kluepfel"
+msgstr "Matthias Hoelzer-Kluepfel"
+
+#: main.cpp:161
+#, kde-format
+msgid ""
+"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
+"when being moved, resized or clicked on. You can also specify a focus policy "
+"as well as a placement policy for new windows.</p> <p>Please note that this "
+"configuration will not take effect if you do not use KWin as your window "
+"manager. If you do use a different window manager, please refer to its "
+"documentation for how to customize window behavior.</p>"
+msgstr ""
+"<p><h1>Συμπεριφορά παραθύρων</h1> Εδώ μπορείτε να προσαρμόσετε τον τρόπο "
+"συμπεριφοράς των παραθύρων όταν μετακινούνται, αλλάζει το μέγεθός τους ή "
+"γίνεται κλικ πάνω τους. Μπορείτε επίσης να καθορίσετε μια πολιτική εστίασης "
+"καθώς και μια πολιτική τοποθέτησης για τα νέα παράθυρα. </p><p>Παρακαλώ "
+"σημειώστε ότι αυτή η διαμόρφωση δε θα εφαρμοστεί αν δεν χρησιμοποιείτε τον "
+"KWin ως διαχειριστή παραθύρων. Αν χρησιμοποιείτε άλλο διαχειριστή παραθύρων, "
+"παρακαλώ ανατρέξτε στην τεκμηρίωσή του για το πως θα προσαρμόσετε τη "
+"συμπεριφορά παραθύρων.</p>"
+
+#: main.cpp:202
+#, kde-format
+msgid "&Titlebar Actions"
+msgstr "Ενέργειες &γραμμής τίτλου"
+
+#: main.cpp:208
+#, kde-format
+msgid "Window Actio&ns"
+msgstr "Ενέρ&γειες παραθύρου"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
+#: mouse.ui:17
+#, fuzzy, kde-format
+#| msgid "&Titlebar Actions"
+msgid "Titlebar Actions"
+msgstr "Ενέργειες &γραμμής τίτλου"
+
+#. i18n: ectx: property (text), widget (QLabel, label_1)
+#: mouse.ui:26
+#, kde-format
+msgid "&Double-click:"
+msgstr "Διπ&λό κλικ:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#: mouse.ui:36
+#, kde-format
+msgid "Behavior on <em>double</em> click into the titlebar."
+msgstr "Συμπεριφορά <em>διπλού</em> κλικ πάνω στη γραμμή τίτλου."
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
+#: mouse.ui:40 mouse.ui:615 mouse.ui:650 mouse.ui:685
+#, kde-format
+msgid "Maximize"
+msgstr "Μεγιστοποίηση"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
+#: mouse.ui:45 mouse.ui:620 mouse.ui:655 mouse.ui:690
+#, kde-format
+msgid "Vertically maximize"
+msgstr ""
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
+#: mouse.ui:50 mouse.ui:625 mouse.ui:660 mouse.ui:695
+#, kde-format
+msgid "Horizontally maximize"
+msgstr ""
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: mouse.ui:60 mouse.ui:256 mouse.ui:318 mouse.ui:371 mouse.ui:433 mouse.ui:486
+#: mouse.ui:548
+#, kde-format
+msgid "Shade"
+msgstr "Τύλιγμα"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: mouse.ui:70 mouse.ui:261 mouse.ui:323 mouse.ui:376 mouse.ui:438 mouse.ui:491
+#: mouse.ui:553
+#, kde-format
+msgid "Close"
+msgstr "Κλείσιμο"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#: mouse.ui:75
+#, fuzzy, kde-format
+#| msgid "On All Desktops"
+msgid "Show on all desktops"
+msgstr "Σε όλες τις επιφάνειες εργασίας"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: mouse.ui:98
+#, fuzzy, kde-format
+#| msgid "Behavior on <em>double</em> click into the titlebar."
+msgid "Behavior on <em>mouse wheel</em> scroll over the titlebar."
+msgstr "Συμπεριφορά <em>διπλού</em> κλικ πάνω στη γραμμή τίτλου."
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: mouse.ui:143
+#, fuzzy, kde-format
+#| msgid "&Titlebar Actions"
+msgid "Titlebar and Frame Actions"
+msgstr "Ενέργειες &γραμμής τίτλου"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: mouse.ui:167
+#, kde-format
+msgid "Active"
+msgstr "Ενεργό"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: mouse.ui:190
+#, kde-format
+msgid "Inactive"
+msgstr "Ανενεργό"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#: mouse.ui:232 mouse.ui:347 mouse.ui:462
+#, kde-format
+msgid ""
+"Behavior on <em>left</em> click into the titlebar or frame of an <em>active</"
+"em> window."
+msgstr ""
+"Συμπεριφορά <em>αριστερού</em> κλικ στη γραμμή τίτλου ή στο πλαίσιο ενός "
+"<em>ενεργού</em> παραθύρου."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: mouse.ui:266 mouse.ui:328 mouse.ui:381 mouse.ui:443 mouse.ui:496
+#: mouse.ui:558
+#, fuzzy, kde-format
+#| msgid "Operations Menu"
+msgid "Show actions menu"
+msgstr "Μενού λειτουργιών"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: mouse.ui:279 mouse.ui:394 mouse.ui:509
+#, kde-format
+msgid ""
+"Behavior on <em>left</em> click into the titlebar or frame of an "
+"<em>inactive</em> window."
+msgstr ""
+"Συμπεριφορά <em>αριστερού</em> κλικ στη γραμμή τίτλου ή στο πλαίσιο ενός "
+"<em>ανενεργού</em> παραθύρου."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: mouse.ui:288 mouse.ui:403 mouse.ui:518
+#, fuzzy, kde-format
+#| msgid "Activate & Lower"
+msgid "Activate and lower"
+msgstr "Ενεργοποίηση & χαμήλωμα"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#: mouse.ui:589
+#, fuzzy, kde-format
+#| msgid "Maximize Button"
+msgid "Maximize Button Actions"
+msgstr "Κουμπί μεγιστοποίησης"
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label_8)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
+#: mouse.ui:598 mouse.ui:611
+#, kde-format
+msgid "Behavior on <em>left</em> click onto the maximize button."
+msgstr "Συμπεριφορά <em>αριστερού</em> κλικ πάνω στο κουμπί μεγιστοποίησης."
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label_9)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
+#: mouse.ui:633 mouse.ui:646
+#, kde-format
+msgid "Behavior on <em>middle</em> click onto the maximize button."
+msgstr "Συμπεριφορά <em>μεσαίου</em> κλικ πάνω στο κουμπί μεγιστοποίησης."
+
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+#: mouse.ui:636
+#, fuzzy, kde-format
+#| msgid "Middle b&utton:"
+msgid "Middle c&lick:"
+msgstr "Με&σαίο κουμπί:"
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label_10)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
+#: mouse.ui:668 mouse.ui:681
+#, kde-format
+msgid "Behavior on <em>right</em> click onto the maximize button."
+msgstr "Συμπεριφορά <em>δεξιού</em> κλικ πάνω στο κουμπί μεγιστοποίησης."
+
+#. i18n: ectx: property (text), widget (QLabel, borderSnapLabel)
+#: moving.ui:20
+#, fuzzy, kde-format
+#| msgid "&Border snap zone:"
+msgid "Screen &edge snap zone:"
+msgstr "Ζώνη αρπαγής &ορίων:"
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_BorderSnapZone)
+#: moving.ui:30
+#, fuzzy, kde-format
+#| msgid ""
+#| "Here you can set the snap zone for screen borders, i.e. the 'strength' of "
+#| "the magnetic field which will make windows snap to the border when moved "
+#| "near it."
+msgid ""
+"Here you can set the snap zone for screen edges, i.e. the 'strength' of the "
+"magnetic field which will make windows snap to the border when moved near it."
+msgstr ""
+"Εδώ μπορείτε να ορίσετε τη ζώνη αρπαγής για τα άκρα της οθόνης, τη 'δύναμη' "
+"του πεδίου που θα κάνει τα παράθυρα να κολλήσουν στο άκρο όταν μετακινηθούν "
+"κοντά του."
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_BorderSnapZone)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_WindowSnapZone)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_CenterSnapZone)
+#: moving.ui:36 moving.ui:68 moving.ui:100
+#, fuzzy, kde-format
+#| msgid " pixel"
+msgid " px"
+msgstr " εικονοστοιχείο"
+
+#. i18n: ectx: property (text), widget (QLabel, windowSnapLabel)
+#: moving.ui:52
+#, kde-format
+msgid "&Window snap zone:"
+msgstr "Ζώνη αρπαγής &παραθύρου:"
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_WindowSnapZone)
+#: moving.ui:62
+#, kde-format
+msgid ""
+"Here you can set the snap zone for windows, i.e. the 'strength' of the "
+"magnetic field which will make windows snap to each other when they are "
+"moved near another window."
+msgstr ""
+"Εδώ μπορείτε να ορίσετε τη ζώνη αρπαγής για τα παράθυρα, τη 'δύναμη' του "
+"πεδίου που θα κάνει τα παράθυρα να κολλήσουν μεταξύ τους όταν μετακινηθούν "
+"κοντά σε ένα άλλο παράθυρο."
+
+#. i18n: ectx: property (text), widget (QLabel, centerSnaplabel)
+#: moving.ui:84
+#, kde-format
+msgid "&Center snap zone:"
+msgstr "Ζώνη αρπαγής &κέντρου:"
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_CenterSnapZone)
+#: moving.ui:94
+#, kde-format
+msgid ""
+"Here you can set the snap zone for the screen center, i.e. the 'strength' of "
+"the magnetic field which will make windows snap to the center of the screen "
+"when moved near it."
+msgstr ""
+"Εδώ μπορείτε να ορίσετε τη ζώνη αρπαγής για τα κέντρο της οθόνης, τη "
+"'δύναμη' του πεδίου που θα κάνει τα παράθυρα να κολλήσουν στο άκρο όταν "
+"μετακινηθούν κοντά του."
+
+#. i18n: ectx: property (text), widget (QLabel, OverlapSnapLabel)
+#: moving.ui:113
+#, fuzzy, kde-format
+#| msgid "Raising windows"
+msgid "&Snap windows:"
+msgstr "Ανύψωση παραθύρων"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
+#: moving.ui:123
+#, kde-format
+msgid ""
+"Here you can set that windows will be only snapped if you try to overlap "
+"them, i.e. they will not be snapped if the windows comes only near another "
+"window or border."
+msgstr ""
+"Εδώ μπορείτε να ορίσετε ότι τα παράθυρα θα κολλάνε μόνο αν προσπαθήσετε να "
+"τα επικαλύψετε, δε θα κολλήσουν αν απλά πλησιάσουν σε κάποιο άλλο παράθυρο ή "
+"άκρο."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
+#: moving.ui:126
+#, fuzzy, kde-format
+#| msgid "Snap windows onl&y when overlapping"
+msgid "Only when overlapping"
+msgstr "Αρπαγή των παραθύρων &μόνο κατά την επικάλυψη"
+
+#: windows.cpp:97
+#, fuzzy, kde-format
+#| msgid ""
+#| "<b>Click To Focus</b><br>\n"
+#| "A window becomes active when you click into it.<br><br>\n"
+#| "This behaviour is common on other operating systems and<br>\n"
+#| "likely what you want."
+msgid ""
+"<em>Click to focus:</em> A window becomes active when you click into it. "
+"This behavior is common on other operating systems and likely what you want."
+msgstr ""
+"<b>Κλικ για εστίαση</b><br>\n"
+"Ένα παράθυρο γίνεται ενεργό όταν κάνετε κλικ σε αυτό.<br><br>\n"
+"Αυτή η συμπεριφορά είναι κοινή σε άλλα λειτουργικά συστήματα και<br>\n"
+"πιθανόν αυτή που επιθυμείτε."
+
+#: windows.cpp:101
+#, fuzzy, kde-format
+#| msgid ""
+#| "<b>Click To Focus - Mouse Precedence</b><br>\n"
+#| "This is mostly the same as <i>Click To Focus</i><br><br>\n"
+#| "If an active window has to be chosen by the system<br>\n"
+#| "(eg. because the currently active one was closed) <br>\n"
+#| "the window under the mouse is the preferred candidate.<br><br>\n"
+#| "Unusual, but possible variant of <i>Click To Focus</i>."
+msgid ""
+"<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
+"focus</em>. If an active window has to be chosen by the system (eg. because "
+"the currently active one was closed) the window under the mouse is the "
+"preferred candidate. Unusual, but possible variant of <em>Click to focus</"
+"em>."
+msgstr ""
+"<b>Κλικ για εστίαση - Το ποντίκι έχει προτεραιότητα</b><br>\n"
+"Αυτή η πολιτική είναι σε μεγάλο βαθμό παρόμοια με την <i>Κλικ για εστίαση</"
+"i><br><br>\n"
+"Εάν ένα παράθυρο πρέπει να επιλεχτεί ως ενεργό από το σύστημα<br>\n"
+"(π.χ. επειδή το τρέχον ενεργό έκλεισε) <br>\n"
+"το παράθυρο κάτω από το ποντίκι είναι το προτιμώμενο.<br><br>\n"
+"Ασυνήθιστη, αλλά πιθανή παραλλαγή της <i>Κλικ για εστίαση</i>."
+
+#: windows.cpp:106
+#, fuzzy, kde-format
+#| msgid ""
+#| "<b>Focus Follows Mouse</b><br>\n"
+#| "Moving the mouse onto a window will activate it.<br><br>\n"
+#| "Eg. windows randomly appearing under the mouse will not gain the focus."
+#| "<br>\n"
+#| "Focus stealing prevention takes place as usual.<br><br>\n"
+#| "Think as <i>Click To Focus</i> just without having to actually click."
+msgid ""
+"<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
+"it. Eg. windows randomly appearing under the mouse will not gain the focus. "
+"<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
+"to focus</em> just without having to actually click."
+msgstr ""
+"<b>Η εστίαση ακολουθεί το ποντίκι</b><br>\n"
+"Μετακινώντας το ποντίκι πάνω από ένα παράθυρο θα το ενεργοποιήσει.<br><br>\n"
+"Π.χ. παράθυρα που τυχαία εμφανίζονται κάτω από το ποντίκι δεν θα αποκτήσουν "
+"εστίαση.<br>\n"
+"Η παρεμπόδιση κλεψίματος της εστίασης πραγματοποιείται ως συνήθως.<br><br>\n"
+"Σκεφτείτε τη όπως η πολιτική <i>Κλικ για εστίαση</i> χωρίς όμως να "
+"χρειάζονται πραγματικά κλικ."
+
+#: windows.cpp:110
+#, fuzzy, kde-format
+#| msgid ""
+#| "<b>Focus Follows Mouse - Mouse Precedence</b><br>\n"
+#| "This is mostly the same as <i>Focus Follows Mouse</i><br><br>\n"
+#| "If an active window has to be chosen by the system<br>\n"
+#| "(eg. because the currently active one was closed) <br>\n"
+#| "the window under the mouse is the preferred candidate.<br><br>\n"
+#| "Choose this, if you want a hover controlled focus."
+msgid ""
+"This is mostly the same as <em>Focus follows mouse</em>. If an active window "
+"has to be chosen by the system (eg. because the currently active one was "
+"closed) the window under the mouse is the preferred candidate. Choose this, "
+"if you want a hover controlled focus."
+msgstr ""
+"<b>Η εστίαση ακολουθεί το ποντίκι - Το ποντίκι έχει προτεραιότητα</b><br>\n"
+"Αυτή η πολιτική είναι σε μεγάλο βαθμό παρόμοια με την <i>Η εστίαση ακολουθεί "
+"το ποντίκι</i><br><br>\n"
+"Εάν ένα παράθυρο πρέπει να επιλεχτεί ως ενεργό από το σύστημα<br>\n"
+"(π.χ. επειδή το τρέχον ενεργό έκλεισε) <br>\n"
+"το παράθυρο κάτω από το ποντίκι είναι το προτιμώμενο.<br><br>\n"
+"Επιλέξτε αυτή, εάν θέλετε εστίαση που ελέγχεται με την αιώρηση."
+
+#: windows.cpp:115
+#, fuzzy, kde-format
+#| msgid ""
+#| "<b>Focus Under Mouse</b><br>\n"
+#| "The focus always remains on the window under the mouse.<br><br>\n"
+#| "\n"
+#| "Notice:<br>\n"
+#| "<b>Focus stealing prevention</b> and the <b>tabbox (\"Alt+Tab\")</b><br>\n"
+#| "contradict the policy and <b>will not work</b>.<br><br>\n"
+#| "You very likely want to use<br>\n"
+#| "<i>Focus Follows Mouse - Mouse Precedence</i> instead!"
+msgid ""
+"<em>Focus under mouse:</em> The focus always remains on the window under the "
+"mouse.<br/><strong>Warning:</strong> <em>Focus stealing prevention</em> and "
+"the <em>tabbox ('Alt+Tab')</em> contradict the activation policy and will "
+"not work. You very likely want to use <em>Focus follows mouse (mouse "
+"precedence)</em> instead!"
+msgstr ""
+"<b>Εστίαση κάτω από το ποντίκι</b><br>\n"
+"Η εστίαση παραμένει πάντα στο παράθυρο κάτω από το ποντίκι.<br><br>\n"
+"\n"
+"Σημείωση:<br>\n"
+"<b>Η παρεμπόδιση κλεψίματος της εστίασης</b> και η <b>εναλλαγή παραθύρων "
+"(\"Alt+Tab\")</b><br>\n"
+"έρχονται σε αντίθεση με αυτή την πολιτική και <b>δεν θα λειτουργήσουν</b>."
+"<br><br>\n"
+"Αντί αυτής ίσως να θέλετε να χρησιμοποιήσετε την πολιτική<br>\n"
+"<i>Η εστίαση ακολουθεί το ποντίκι - Το ποντίκι έχει προτεραιότητα</i>!"
+
+#: windows.cpp:119
+#, fuzzy, kde-format
+#| msgid ""
+#| "<b>Focus Strictly Under Mouse</b><br>\n"
+#| "The focus is always on the window under the mouse - in doubt nowhere -"
+#| "<br>\n"
+#| "very much like the focus behaviour in an unmanaged legacy X11 environment."
+#| "<br><br>\n"
+#| "\n"
+#| "Notice:<br>\n"
+#| "<b>Focus stealing prevention</b> and the <b>tabbox (\"Alt+Tab\")</b><br>\n"
+#| "contradict the policy and <b>will not work</b>.<br><br>\n"
+#| "You very likely want to use<br>\n"
+#| "<i>Focus Follows Mouse - Mouse Precedence</i> instead!"
+msgid ""
+"<em>Focus strictly under mouse:</em> The focus is always on the window under "
+"the mouse (in doubt nowhere) very much like the focus behavior in an "
+"unmanaged legacy X11 environment.<br/><strong>Warning:</strong> <em>Focus "
+"stealing prevention</em> and the <em>tabbox ('Alt+Tab')</em> contradict the "
+"activation policy and will not work. You very likely want to use <em>Focus "
+"follows mouse (mouse precedence)</em> instead!"
+msgstr ""
+"<b>Εστίαση αυστηρά κάτω από το ποντίκι</b><br>\n"
+"Η εστίαση είναι πάντα στο παράθυρο κάτω από το ποντίκι - ενώ σε περίπτωση "
+"αμφιβολίας πουθενά -<br>\n"
+"μοιάζει πολύ με την συμπεριφορά της εστίασης σε ένα απαρχαιωμένο μη "
+"διαχειριζόμενο περιβάλλον X11.<br><br>\n"
+"\n"
+"Σημείωση:<br>\n"
+"<b>Η παρεμπόδιση κλεψίματος της εστίασης</b> και η <b>εναλλαγή παραθύρων "
+"(\"Alt+Tab\")</b><br>\n"
+"έρχονται σε αντίθεση με αυτή την πολιτική και <b>δεν θα λειτουργήσουν</b>."
+"<br><br>\n"
+"Αντί αυτής ίσως να θέλετε να χρησιμοποιήσετε την πολιτική<br>\n"
+"<i>Η εστίαση ακολουθεί το ποντίκι - Το ποντίκι έχει προτεραιότητα</i>!"
+
+#~ msgid ""
+#~ "Enable this option if you want a window's geometry to be displayed while "
+#~ "it is being moved or resized. The window position relative to the top-"
+#~ "left corner of the screen is displayed together with its size."
+#~ msgstr ""
+#~ "Ενεργοποιήστε αυτή την επιλογή αν θέλετε η γεωμετρία ενός παραθύρου να "
+#~ "εμφανίζεται καθώς αυτό μετακινείται ή αλλάζει μέγεθος. Εμφανίζεται η θέση "
+#~ "του παραθύρου αναφορικά με την πάνω αριστερή γωνία της οθόνης μαζί με το "
+#~ "μέγεθός του."
+
+#, fuzzy
+#~| msgid "Display window &geometry when moving or resizing"
+#~ msgid "Display when moving or resizing"
+#~ msgstr ""
+#~ "Εμφάνιση &γεωμετρίας παραθύρου κατά τη μετακίνηση ή την αλλαγή μεγέθους"
+
+#~ msgid "Maximize (vertical only)"
+#~ msgstr "Μεγιστοποίηση (μόνο κατακόρυφη)"
+
+#~ msgid "Maximize (horizontal only)"
+#~ msgstr "Μεγιστοποίηση (μόνο οριζόντια)"
+
+#~ msgid "Smart"
+#~ msgstr "Έξυπνη"
+
+#~ msgid "Maximizing"
+#~ msgstr "Μεγιστοποιημένη"
+
+#, fuzzy
+#~| msgid "Zero-Cornered"
+#~ msgid "Zero-cornered"
+#~ msgstr "Γωνία-Εκκίνηση"
+
+#, fuzzy
+#~| msgid "Switch to Window Tab to the Left/Right"
+#~ msgid "Switch to window tab to the left/right"
+#~ msgstr "Εναλλαγή στην αριστερή/δεξιά καρτέλα του παραθύρου"
+
+#, fuzzy
+#~| msgid "Window Tabbing"
+#~ msgid "Window tabbing:"
+#~ msgstr "Παράθυρα με καρτέλες"
+
+#~ msgid ""
+#~ "When turned on immediately switch to any new window tabs that were "
+#~ "automatically added to the current group."
+#~ msgstr ""
+#~ "Όταν είναι ενεργοποιημένο γίνεται άμεση εναλλαγή σε οποιοδήποτε νέο "
+#~ "παράθυρο καρτελών που προστέθηκε αυτόματα στην συγκεκριμένη ομάδα."
+
+#, fuzzy
+#~| msgid "Switch to automatically grouped windows immediately"
+#~ msgid "&Switch to automatically grouped windows immediately"
+#~ msgstr "Άμεση εναλλαγή στα αυτόματα ομαδοποιημένα παράθυρα "
+
+#~ msgid "When turned on hide all tabs that are not active from the taskbar."
+#~ msgstr ""
+#~ "Όταν είναι ενεργοποιημένο αποκρύπτονται από την γραμμή εργασιών όλες οι "
+#~ "καρτέλες που δεν είναι ενεργές."
+
+#, fuzzy
+#~| msgid "Hide inactive window tabs from the taskbar"
+#~ msgid "&Hide inactive window tabs from the taskbar"
+#~ msgstr "Απόκρυψη των ανενεργών καρτελών παραθύρων από την γραμμή εργασιών"
+
+#~ msgid ""
+#~ "When turned on attempt to automatically detect when a newly opened window "
+#~ "is related to an existing one and place them in the same window group."
+#~ msgstr ""
+#~ "Όταν είναι ενεργοποιημένο γίνεται προσπάθεια αυτόματης ανίχνευσης αν ένα "
+#~ "πρόσφατα ανοιγμένο παράθυρο συνδέεται με ένα ανοιχτό παράθυρο και το "
+#~ "τοποθετεί στην ίδια ομάδα παραθύρων."
+
+#, fuzzy
+#~| msgid "Start Window Tab Drag"
+#~ msgid "Start window tab drag"
+#~ msgstr "Έναρξη συρσίματος καρτέλας παραθύρου"
+
+#~ msgid "Ri&ght button:"
+#~ msgstr "Δε&ξί κουμπί:"
+
+#~ msgid "&Wheel"
+#~ msgstr "Ρό&δα"
+
+#~ msgid "&Left button:"
+#~ msgstr "&Αριστερό κουμπί:"
+
+#~ msgid "&Right button:"
+#~ msgstr "Δε&ξί κουμπί:"
+
+#~ msgid "M&iddle button:"
+#~ msgstr "Με&σαίο κουμπί:"
+
+#~ msgid "Left &button"
+#~ msgstr "&Αριστερό κουμπί"
+
+#~ msgid "Automatically group similar windows"
+#~ msgstr "Αυτόματη ομαδοποίηση παρόμοιων παραθύρων"
+
+#~ msgid ""
+#~ "The placement policy determines where a new window will appear on the "
+#~ "desktop.<br><ul>\n"
+#~ "<li><em>Smart</em> will try to achieve a minimum overlap of windows</li>\n"
+#~ "<li><em>Maximizing</em> will try to maximize every window to fill the "
+#~ "whole screen. It might be useful to selectively affect placement of some "
+#~ "windows using the window-specific settings.</li>\n"
+#~ "<li><em>Cascade</em> will cascade the windows</li>\n"
+#~ "<li><em>Random</em> will use a random position</li>\n"
+#~ "<li><em>Centered</em> will place the window centered</li>\n"
+#~ "<li><em>Zero-Cornered</em> will place the window in the top-left corner</"
+#~ "li>\n"
+#~ "<li><em>Under Mouse</em> will place the window under the pointer</li>\n"
+#~ "</ul>"
+#~ msgstr ""
+#~ "Η πολιτική τοποθέτησης καθορίζει που θα εμφανίζεται ένα καινούριο "
+#~ "παράθυρο στην επιφάνεια εργασίας.<br><ul>\n"
+#~ "<li><em>Έξυπνη</em> θα προσπαθήσει να επιτύχει την ελάχιστη επικάλυψη των "
+#~ "παραθύρων</li>\n"
+#~ "<li><em>Μεγιστοποιημένη</em> θα προσπαθήσει να μεγιστοποιήσει όλα τα "
+#~ "παράθυρα ώστε να γεμίσουν ολόκληρη την οθόνη. Ίσως είναι χρήσιμο να "
+#~ "αλλάξετε την τοποθέτηση ορισμένων παραθύρων χρησιμοποιώντας τις ειδικές "
+#~ "ρυθμίσεις του παραθύρου.</li>\n"
+#~ "<li><em>Διαδοχική</em> θα τοποθετήσει τα παράθυρα με διαδοχική επικάλυψη</"
+#~ "li>\n"
+#~ "<li><em>Τυχαία</em> θα χρησιμοποιήσει μια τυχαία θέση</li>\n"
+#~ "<li><em>Κεντραρισμένη</em> θα τοποθετήσει το παράθυρο κεντραρισμένο στην "
+#~ "οθόνη</li>\n"
+#~ "<li><em>Γωνία-Εκκίνηση</em> το παράθυρο θα τοποθετηθεί στη πάνω αριστερή "
+#~ "γωνία</li>\n"
+#~ "<li><em>Κάτω από το ποντίκι</em> το παράθυρο θα τοποθετηθεί κάτω από το "
+#~ "ποντίκι</li>\n"
+#~ "</ul>"
+
+#~ msgid "Shading"
+#~ msgstr "Τύλιγμα"
+
+#~ msgid "Dela&y:"
+#~ msgstr "Κα&θυστέρηση:"
+
+#~ msgid "&Enable hover"
+#~ msgstr "&Ενεργοποίηση στο πέρασμα του ποντικιού"
+
+#~ msgid "Activating windows"
+#~ msgstr "Ενεργοποίηση παραθύρων"
+
+#~ msgid "Policy"
+#~ msgstr "Πολιτική"
+
+#~ msgid "Click"
+#~ msgstr "Κλικ"
+
+#~ msgid "Hover"
+#~ msgstr "Πέρασμα του ποντικιού"
+
+#~ msgid "&Moving"
+#~ msgstr "&Μετακίνηση"
+
+#~ msgid "Wheel event:"
+#~ msgstr "Γεγονός ροδέλας:"
+
+#~ msgid "Handle mouse wheel events"
+#~ msgstr "Διαχείριση γεγονότων ροδέλας ποντικιού"
+
+#~ msgid ""
+#~ "In this column you can customize mouse clicks into the titlebar or the "
+#~ "frame of an active window."
+#~ msgstr ""
+#~ "Σε αυτή τη στήλη μπορείτε να προσαρμόσετε τα κλικ του ποντικιού στη "
+#~ "γραμμή τίτλου ή στο πλαίσιο ενός ενεργού παραθύρου."
+
+#~ msgid ""
+#~ "In this column you can customize mouse clicks into the titlebar or the "
+#~ "frame of an inactive window."
+#~ msgstr ""
+#~ "Σε αυτή τη στήλη μπορείτε να προσαρμόσετε τα κλικ του ποντικιού στη "
+#~ "γραμμή τίτλου ή στο πλαίσιο ενός ανενεργού παραθύρου."
+
+#~ msgid "Left button:"
+#~ msgstr "Αριστερό κουμπί:"
+
+#~ msgid "Middle button:"
+#~ msgstr "Μεσαίο κουμπί:"
+
+#~ msgid ""
+#~ "Behavior on <em>middle</em> click into the titlebar or frame of an "
+#~ "<em>active</em> window."
+#~ msgstr ""
+#~ "Συμπεριφορά <em>μεσαίου</em> κλικ στη γραμμή τίτλου ή στο πλαίσιο ενός "
+#~ "<em>ενεργού</em> παραθύρου."
+
+#~ msgid "Right button:"
+#~ msgstr "Δεξί κουμπί:"
+
+#~ msgid ""
+#~ "Behavior on <em>right</em> click into the titlebar or frame of an "
+#~ "<em>active</em> window."
+#~ msgstr ""
+#~ "Συμπεριφορά <em>δεξιού</em> κλικ στη γραμμή τίτλου ή στο πλαίσιο ενός "
+#~ "<em>ενεργού</em> παραθύρου."
+
+#~ msgid "Titlebar & Frame"
+#~ msgstr "Γραμμή τίτλου & πλαίσιο"
+
+#~ msgid "Titlebar"
+#~ msgstr "Γραμμή τίτλου"
+
+#~ msgid "no center snap zone"
+#~ msgstr "χωρίς ζώνη αρπαγής κέντρου"
+
+#~ msgid "no window snap zone"
+#~ msgstr "χωρίς ζώνη αρπαγής παραθύρου"
+
+#~ msgid "no border snap zone"
+#~ msgstr "χωρίς ζώνη αρπαγής ορίων"
+
+#~ msgid "Windows"
+#~ msgstr "Παράθυρα"
+
+#~ msgid "Snap Zones"
+#~ msgstr "Ζώνες αρπαγής"
+
+#~ msgid "kcmkwinoptions"
+#~ msgstr "kcmkwinoptions"
+
+#, fuzzy
+#~| msgid ""
+#~| "The focus policy is used to determine the active window, i.e. the window "
+#~| "you can work in. <ul> <li><em>Click to focus:</em> A window becomes "
+#~| "active when you click into it. This is the behavior you might know from "
+#~| "other operating systems.</li> <li><em>Focus follows mouse:</em> Moving "
+#~| "the mouse pointer actively on to a normal window activates it. New "
+#~| "windows will receive the focus, without you having to point the mouse at "
+#~| "them explicitly. Very practical if you are using the mouse a lot.</li> "
+#~| "<li><em>Focus under mouse:</em> The window that happens to be under the "
+#~| "mouse pointer is active. If the mouse points nowhere, the last window "
+#~| "that was under the mouse has focus. New windows will not automatically "
+#~| "receive the focus.</li> <li><em>Focus strictly under mouse:</em> Only "
+#~| "the window under the mouse pointer is active. If the mouse points "
+#~| "nowhere, nothing has focus.</li> </ul>Note that 'Focus under mouse' and "
+#~| "'Focus strictly under mouse' prevent certain features such as the Alt"
+#~| "+Tab walk through windows dialog in the KDE mode from working properly."
+#~ msgid ""
+#~ "The focus policy is used to determine the active window, i.e. the window "
+#~ "you can work in. <ul>\n"
+#~ "<li><em>Click to focus:</em> A window becomes active when you click into "
+#~ "it. This is the behavior you might know from other operating systems.</"
+#~ "li> <li><em>Focus follows mouse:</em> Moving the mouse pointer actively "
+#~ "on to a normal window activates it. New windows will receive the focus, "
+#~ "without you having to point the mouse at them explicitly. Very practical "
+#~ "if you are using the mouse a lot.</li>\n"
+#~ "<li><em>Focus under mouse:</em> The window that happens to be under the "
+#~ "mouse pointer is active. If the mouse points nowhere, the last window "
+#~ "that was under the mouse has focus. New windows will not automatically "
+#~ "receive the focus.</li>\n"
+#~ "<li><em>Focus strictly under mouse:</em> Only the window under the mouse "
+#~ "pointer is active. If the mouse points nowhere, nothing has focus.</li>\n"
+#~ "</ul>\n"
+#~ "Note that 'Focus under mouse' and 'Focus strictly under mouse' prevent "
+#~ "certain features such as the Alt+Tab walk through windows dialog in the "
+#~ "KDE mode from working properly."
+#~ msgstr ""
+#~ "Η πολιτική εστίασης χρησιμοποιείται για να καθοριστεί το ενεργό παράθυρο, "
+#~ "π.χ. το παράθυρο στο οποίο μπορείτε να εργαστείτε. <ul> <li><em>Κλικ για "
+#~ "εστίαση:</em> Ένα παράθυρο γίνεται ενεργό όταν κάνετε κλικ πάνω του. Αυτή "
+#~ "είναι μια συμπεριφορά που μπορεί να γνωρίζετε από άλλα λειτουργικά "
+#~ "συστήματα.</li> <li><em>Η εστίαση ακολουθεί το ποντίκι:</em> Μετακινώντας "
+#~ "το δείκτη του ποντικιού πάνω σε ένα κανονικό παράθυρο αυτό "
+#~ "ενεργοποιείται. Τα νέα παράθυρα θα εστιάζονται χωρίς να χρειάζεται να "
+#~ "τοποθετήσετε το ποντίκι πάνω τους. Πολύ πρακτικό αν χρησιμοποιείτε το "
+#~ "ποντίκι συχνά.</li> <li><em>Εστίαση κάτω από το ποντίκι:</em> Το παράθυρο "
+#~ "το οποίο βρίσκεται κάτω από το δείκτη του ποντικιού είναι ενεργό. Αν το "
+#~ "ποντίκι δε δείχνει πουθενά το τελευταίο παράθυρο που ήταν κάτω από το "
+#~ "ποντίκι έχει την εστίαση. Τα νέα παράθυρα δεν εστιάζονται αυτόματα.</li> "
+#~ "<li><em>Εστίαση αυστηρά κάτω από το ποντίκι:</em> Μόνο το παράθυρο κάτω "
+#~ "από το δείκτη του ποντικιού είναι ενεργό. Αν το ποντίκι δε δείχνει "
+#~ "πουθενά τίποτα δεν έχει εστίαση.</li> </ul>Σημειώστε ότι η εστίαση κάτω "
+#~ "από το ποντίκι και η εστίαση αυστηρά κάτω από το ποντίκι εμποδίζουν "
+#~ "ορισμένα χαρακτηριστικά όπως ή πλοήγηση στα ανοιγμένα παράθυρα με το Alt"
+#~ "+Tab στο KDE από το να λειτουργήσουν κανονικά."
+
+#~ msgid "&Raise, with the following delay:"
+#~ msgstr "&Ανύψωση με καθυστέρηση:"
+
+#~ msgid ""
+#~ "When enabled, this feature activates the border of maximized windows and "
+#~ "allows you to move or resize them, just like for normal windows"
+#~ msgstr ""
+#~ "Όταν ενεργοποιηθεί, αυτό το χαρακτηριστικό ενεργοποιεί το περίγραμμα στα "
+#~ "μεγιστοποιημένα παράθυρα, επιτρέποντάς σας να τα μετακινείτε ή να "
+#~ "αλλάζετε το μέγεθος τους, όπως στα κανονικά παράθυρα"
+
+#~ msgid "Display borders on &maximized windows"
+#~ msgstr "Εμφάνιση περιγραμμάτων στα &μεγιστοποιημένα παράθυρα"
+
+#~ msgctxt "@item:inlistbox behavior on double click"
+#~ msgid "Minimize"
+#~ msgstr "Ελαχιστοποίηση"
+
+#~ msgctxt "@item:inlistbox behavior on double click"
+#~ msgid "Close"
+#~ msgstr "Κλείσιμο"
+
+#~ msgid ""
+#~ "Here you can customize mouse click behavior when clicking on the titlebar "
+#~ "or the frame of a window."
+#~ msgstr ""
+#~ "Εδώ μπορείτε να προσαρμόσετε τη συμπεριφορά του κλικ του ποντικιού στη "
+#~ "γραμμή τίτλου ή στο πλαίσιο ενός παραθύρου."
+
+#~ msgid ""
+#~ "Behavior on <em>right</em> click into the titlebar or frame of an "
+#~ "<em>inactive</em> window."
+#~ msgstr ""
+#~ "Συμπεριφορά <em>δεξιού</em> κλικ στη γραμμή τίτλου ή στο πλαίσιο ενός "
+#~ "<em>ανενεργού</em> παραθύρου."
+
+#~ msgid ""
+#~ "Behavior on <em>middle</em> click into the titlebar or frame of an "
+#~ "<em>inactive</em> window."
+#~ msgstr ""
+#~ "Συμπεριφορά <em>μεσαίου</em> κλικ στη γραμμή τίτλου ή στο πλαίσιο ενός "
+#~ "<em>ανενεργού</em> παραθύρου."
+
+#~ msgid ""
+#~ "Here you can customize behavior when clicking on the maximize button."
+#~ msgstr ""
+#~ "Εδώ μπορείτε να προσαρμόσετε τη συμπεριφορά του κλικ πάνω στο κουμπί "
+#~ "μεγιστοποίησης."
+
+#~ msgid ""
+#~ "Here you can customize mouse click behavior when clicking on an inactive "
+#~ "inner window ('inner' means: not titlebar, not frame)."
+#~ msgstr ""
+#~ "Εδώ μπορείτε να προσαρμόσετε τη συμπεριφορά του κλικ του ποντικιού σε ένα "
+#~ "ανενεργό εσωτερικό παράθυρο ('εσωτερικό' σημαίνει: όχι γραμμή τίτλου ή "
+#~ "πλαίσιο)."
+
+#~ msgid ""
+#~ "Here you can customize KDE's behavior when clicking somewhere into a "
+#~ "window while pressing a modifier key."
+#~ msgstr ""
+#~ "Εδώ μπορείτε να προσαρμόσετε τη συμπεριφορά του KDE όταν κάνετε κλικ "
+#~ "κάπου σε ένα παράθυρο πατώντας συγχρόνως κάποιο ειδικό πλήκτρο."
+
+#~ msgctxt "no border snap zone"
+#~ msgid "none"
+#~ msgstr "καμία"
+
+#~ msgctxt "no window snap zone"
+#~ msgid "none"
+#~ msgstr "καμία"
+
+#~ msgctxt "no center snap zone"
+#~ msgid "none"
+#~ msgstr "καμία"
+
+#~ msgid "Tiling"
+#~ msgstr "Παράθεση"
+
+#~ msgid "Enable Tiling"
+#~ msgstr "Ενεργοποίηση παράθεσης"
+
+#~ msgid ""
+#~ "A tiling window manager lays out all the windows in a non-overlapping "
+#~ "manner. This way all windows are always visible."
+#~ msgstr ""
+#~ "Ένας διαχειριστής παράθεσης παραθύρων καθορίζει την διάταξη στα παράθυρα "
+#~ "ώστε να μην επικαλύπτονται. Με αυτό τον τρόπο όλα τα παράθυρα είναι πάντα "
+#~ "ορατά."
+
+#~ msgid "Default Tiling &Layout"
+#~ msgstr "Προκαθορισμένη &διάταξη παράθεσης "
+
+#~ msgctxt "Spiral tiling layout"
+#~ msgid "Spiral"
+#~ msgstr "Σπείρα"
+
+#~ msgctxt "Two-column horizontal tiling layout"
+#~ msgid "Columns"
+#~ msgstr "Στήλες"
+
+#~ msgctxt "Floating layout, windows aren't tiled at all"
+#~ msgid "Floating"
+#~ msgstr "Πλωτή"
+
+#~ msgid "Floating &Windows Raising"
+#~ msgstr "Ανύψωση των πλωτών παρα&θύρων"
+
+#~ msgctxt "Window Raising Policy"
+#~ msgid "Raise/Lower current window only"
+#~ msgstr "Ανύψωση/χαμήλωμα μόνο του τρέχοντος παραθύρου"
+
+#~ msgctxt "Window Raising Policy"
+#~ msgid "Floating windows are always on top"
+#~ msgstr "Τα πλωτά παράθυρα πάντα σε πρώτο πλάνο"
+
+#~ msgid ""
+#~ "The window raising policy determines how floating windows are stacked "
+#~ "<ul> <li><em>Raise/Lower all</em> will raise all floating windows when a "
+#~ "floating window is activated.</li> <li><em>Raise/Lower current</em> will "
+#~ "raise only the current window.</li> <li><em>Floating windows on top</em> "
+#~ "will always keep floating windows on top, even when a tiled window is "
+#~ "activated.</ul>"
+#~ msgstr ""
+#~ "Η πολιτική ανύψωσης παραθύρων καθορίζει το πώς τα πλωτά παράθυρα "
+#~ "στοιβάζονται <ul> <li><em>Ανύψωση/Χαμήλωμα όλων</em> θα υψώσει όλα τα "
+#~ "πλωτά παράθυρα όταν ένα πλωτό παράθυρο ενεργοποιηθεί.</li> "
+#~ "<li><em>Ανύψωση/Χαμήλωμα τρέχοντος</em> θα υψώσει μόνο το τρέχον παράθυρο."
+#~ "</li> <li><em>Πλωτά παράθυρα επάνω</em> θα κρατάει πάνταεπιπλέοντα "
+#~ "παράθυρα επάνω, ακόμα και όταν ενεργοποιείται ένα παράθυρο που βρίσκεται "
+#~ "σε παράθεση.</ul>"
+
+#~ msgid ""
+#~ "When this option is enabled, there will be a delay after which the window "
+#~ "the mouse pointer is over will become active (receive focus)."
+#~ msgstr ""
+#~ "Όταν αυτή η επιλογή είναι ενεργοποιημένη, θα υπάρξει μία καθυστέρηση μετά "
+#~ "την οποία το παράθυρο, πάνω από το οποίο  βρίσκεται ο δείκτης του "
+#~ "ποντικιού θα έρθει στο προσκήνιο (θα λάβει την εστίαση)."
+
+#~ msgid "Di&splay content in moving windows"
+#~ msgstr "&Εμφάνιση περιεχομένου κατά τη μετακίνηση των παραθύρων"
+
+#~ msgid ""
+#~ "Enable this option if you want a window's content to be fully shown while "
+#~ "moving it, instead of just showing a window 'skeleton'. The result may "
+#~ "not be satisfying on slow machines without graphic acceleration."
+#~ msgstr ""
+#~ "Ενεργοποιήστε αυτή την επιλογή αν θέλετε να εμφανίζονται πλήρως τα "
+#~ "περιεχόμενα ενός παραθύρου κατά τη μετακίνησή του, αντί για έναν απλό "
+#~ "'σκελετό' του παραθύρου. Το αποτέλεσμα ίσως να μην είναι ικανοποιητικό σε "
+#~ "αργά μηχανήματα χωρίς επιταχυντή γραφικών."
+
+#~ msgid "Display content in &resizing windows"
+#~ msgstr "Εμφάνιση περιεχομένου κατά την &αλλαγή μεγέθους των παραθύρων"
+
+#~ msgid ""
+#~ "Enable this option if you want a window's content to be shown while "
+#~ "resizing it, instead of just showing a window 'skeleton'. The result may "
+#~ "not be satisfying on slow machines."
+#~ msgstr ""
+#~ "Ενεργοποιήστε αυτή την επιλογή αν θέλετε να εμφανίζονται τα περιεχόμενα "
+#~ "ενός παραθύρου όταν αλλάζετε το μέγεθός του, αντί για έναν απλό 'σκελετό' "
+#~ "του παραθύρου. Το αποτέλεσμα ίσως να μην είναι ικανοποιητικό σε αργά "
+#~ "μηχανήματα."
+
+#~ msgid "Allow moving and resizing o&f maximized windows"
+#~ msgstr ""
+#~ "Να επιτρέπεται η μετακίνηση και η αλλαγή μεγέθους &των μεγιστοποιημένων "
+#~ "παραθύρων"
+
+#~ msgid "Show window list while switching windows"
+#~ msgstr "Εμφάνιση της λίστας παραθύρων κατά την αλλαγή παραθύρων"
+
+#~ msgid ""
+#~ "Hold down the Alt key and press the Tab key repeatedly to walk through "
+#~ "the windows on the current desktop (the Alt+Tab combination can be "
+#~ "reconfigured).\n"
+#~ "\n"
+#~ "If this checkbox is checked a popup widget is shown, displaying the icons "
+#~ "of all windows to walk through and the title of the currently selected "
+#~ "one.\n"
+#~ "\n"
+#~ "Otherwise, the focus is passed to a new window each time Tab is pressed, "
+#~ "with no popup widget.  In addition, the previously activated window will "
+#~ "be sent to the back in this mode."
+#~ msgstr ""
+#~ "Κρατήστε πατημένο το πλήκτρο Alt και πατήστε το πλήκτρο Tab συνεχόμενα "
+#~ "για να μετακινηθείτε μεταξύ των παραθύρων στην τρέχουσα επιφάνεια "
+#~ "εργασίας (ο συνδυασμός Alt+Tab μπορεί να τροποποιηθεί).\n"
+#~ "\n"
+#~ "Αν αυτή η επιλογή είναι ενεργοποιημένη ένα αναδυόμενο γραφικό συστατικό "
+#~ "θα εμφανιστεί, εμφανίζοντας τα εικονίδια όλων των παραθύρων που μπορείτε "
+#~ "να μετακινηθείτε καθώς και τον τίτλο του τρέχοντος επιλεγμένου "
+#~ "παραθύρου.\n"
+#~ "\n"
+#~ "Σε άλλη περίπτωση, η εστίαση περνάει σε ένα νέο παράθυρο κάθε φορά που "
+#~ "πατάτε το Tab. Χωρίς το αναδυόμενο γραφικό συστατικό. Επιπλέον, το "
+#~ "προηγούμενο ενεργοποιημένο παράθυρο θα αποσταλεί στο περιθώριο με αυτή τη "
+#~ "λειτουργία."
+
+#~ msgid "&Traverse windows on all desktops"
+#~ msgstr "&Διάσχιση των παραθύρων σε όλες τις επιφάνειες εργασίας"
+
+#~ msgid ""
+#~ "Leave this option disabled if you want to limit walking through windows "
+#~ "to the current desktop."
+#~ msgstr ""
+#~ "Αφήστε αυτή την επιλογή απενεργοποιημένη αν θέλετε να μπει όριο στη "
+#~ "διάσχιση των παραθύρων στην τρέχουσα επιφάνεια εργασίας."
+
+#~ msgid "Desktop navi&gation wraps around"
+#~ msgstr "Η &πλοήγηση επιφανειών εργασίας γίνεται κυκλικά"
+
+#~ msgid ""
+#~ "Enable this option if you want keyboard or active desktop border "
+#~ "navigation beyond the edge of a desktop to take you to the opposite edge "
+#~ "of the new desktop."
+#~ msgstr ""
+#~ "Ενεργοποιήστε αυτή την επιλογή αν θέλετε η πλοήγηση μέσω του "
+#~ "πληκτρολογίου ή των ενεργών ορίων επιφάνειας εργασίας μετά το άκρο της "
+#~ "επιφάνειας εργασίας να σας πηγαίνει στο αντίθετο άκρο της νέας επιφάνειας "
+#~ "εργασίας."
+
+#~ msgid "Popup desktop name on desktop &switch"
+#~ msgstr ""
+#~ "Προβολή του ονόματος της επιφάνειας εργασίας κατά την &εναλλαγή "
+#~ "επιφάνειας εργασίας"
+
+#~ msgid ""
+#~ "Enable this option if you wish to see the current desktop name popup "
+#~ "whenever the current desktop is changed."
+#~ msgstr ""
+#~ "Ενεργοποιήστε αυτή την επιλογή αν επιθυμείτε να εμφανίζεται το όνομα της "
+#~ "τρέχουσας επιφάνειας εργασίας όποτε αλλάζει η τρέχουσα επιφάνεια εργασίας."
+
+#~ msgctxt "Focus Stealing Prevention Level"
+#~ msgid "Normal"
+#~ msgstr "Κανονικό"
+
+#~ msgid "Active Desktop Borders"
+#~ msgstr "Ενεργά όρια επιφάνειας εργασίας"
+
+#~ msgid ""
+#~ "If this option is enabled, moving the mouse to a screen border will "
+#~ "change your desktop. This is e.g. useful if you want to drag windows from "
+#~ "one desktop to the other."
+#~ msgstr ""
+#~ "Αν αυτή η επιλογή είναι ενεργοποιημένη μετακινώντας το ποντίκι σε ένα "
+#~ "άκρο της οθόνης θα αλλάξει η επιφάνεια εργασίας σας. Αυτό είναι χρήσιμο π."
+#~ "χ. αν θέλετε να μετακινήσετε παράθυρα από τη μία επιφάνεια εργασίας στην "
+#~ "άλλη."
+
+#~ msgid "D&isabled"
+#~ msgstr "&Απενεργοποιημένα"
+
+#~ msgid "Only &when moving windows"
+#~ msgstr "Μόνο &κατά τη μετακίνηση των παραθύρων"
+
+#~ msgid "A&lways enabled"
+#~ msgstr "&Πάντα ενεργοποιημένα"
+
+#~ msgid ""
+#~ "Here you can set a delay for switching desktops using the active borders "
+#~ "feature. Desktops will be switched after the mouse has been pushed "
+#~ "against a screen border for the specified number of milliseconds."
+#~ msgstr ""
+#~ "Εδώ μπορείτε να ορίσετε μια καθυστέρηση για την εναλλαγή επιφανειών "
+#~ "εργασίας χρησιμοποιώντας το χαρακτηριστικό ενεργά όρια. Οι επιφάνειες "
+#~ "εργασίας θα αλλάζουν αφού το ποντίκι βρεθεί σε ένα άκρο της οθόνης για "
+#~ "ένα προκαθορισμένο χρονικό διάστημα."
+
+#~ msgid "Desktop &switch delay:"
+#~ msgstr "Καθυστέρηση &εναλλαγής επιφάνειας εργασίας:"
+
+#~ msgid ""
+#~ "Here you can customize KDE's behavior when middle clicking into a window "
+#~ "while pressing the modifier key."
+#~ msgstr ""
+#~ "Εδώ μπορείτε να προσαρμόσετε τη συμπεριφορά του KDE όταν κάνετε μεσαίο "
+#~ "κλικ σε ένα παράθυρο πατώντας συγχρόνως το ειδικό πλήκτρο."
+
+#~ msgid ""
+#~ "Here you can customize mouse click behavior when double clicking on the "
+#~ "titlebar of a window."
+#~ msgstr ""
+#~ "Εδώ μπορείτε να προσαρμόσετε τη συμπεριφορά του διπλού κλικ στη γραμμή "
+#~ "τίτλου ενός παραθύρου."
+
+#~ msgid "Modifier key + left button:"
+#~ msgstr "Ειδικό πλήκτρο + αριστερό κουμπί:"
+
+#~ msgid "Modifier key + right button:"
+#~ msgstr "Ειδικό πλήκτρο + δεξί κουμπί:"
+
+#~ msgid "Modifier key + middle button:"
+#~ msgstr "Ειδικό πλήκτρο + μεσαίο κουμπί:"
+
+#~ msgid "Focus"
+#~ msgstr "Εστίαση"
+
+#~ msgid "Auto &raise"
+#~ msgstr "Αυτόματη &ανύψωση"
+
+#~ msgid "Navigation"
+#~ msgstr "Πλοήγηση"
+
+#~ msgid "Active &mouse screen"
+#~ msgstr "Το &ποντίκι στην ενεργή οθόνη"

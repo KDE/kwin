@@ -1,0 +1,1014 @@
+# Translation of kcmkwincompositing.po to Low Saxon
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+# Sönke Dibbern <s_dibbern@web.de>, 2007, 2008, 2009, 2014.
+# Manfred Wiese <m.j.wiese@web.de>, 2010, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwincompositing\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"PO-Revision-Date: 2014-08-11 12:15+0200\n"
+"Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
+"Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
+"Language: nds\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.4\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
+#: compositing.ui:31
+#, fuzzy, kde-format
+#| msgid ""
+#| "OpenGL compositing (the default) has crashed KWin in the past.\n"
+#| "This was most likely due to a driver bug.\n"
+#| "If you think that you have meanwhile upgraded to a stable driver,\n"
+#| "you can reset this protection but be aware that this might result in an "
+#| "immediate crash!\n"
+#| "Alternatively, you might want to use the XRender backend instead."
+msgid ""
+"OpenGL compositing (the default) has crashed KWin in the past.\n"
+"This was most likely due to a driver bug.\n"
+"If you think that you have meanwhile upgraded to a stable driver,\n"
+"you can reset this protection but be aware that this might result in an "
+"immediate crash!"
+msgstr ""
+"OpenGL-Tosamensetten hett KWin al maal afstörten laten.\n"
+"Dat liggt tomehrst an Fehlers binnen en Driever.\n"
+"Glöövst Du, Du bruukst nu en stabil Driever, kannst Du disse Schuul\n"
+"nu torüchsetten, man denk dor bitte an: Dat mag direktemang to en nieg "
+"Afstört föhren!\n"
+"Anners kannst Du ok XRender as Hülpprogramm bruken."
+
+#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
+#: compositing.ui:44
+#, kde-format
+msgid ""
+"Scale method \"Accurate\" is not supported by all hardware and can cause "
+"performance regressions and rendering artifacts."
+msgstr ""
+"De Topassmetood „Akkraat“ löppt nich op elkeen Hardware un mag to Leisten- "
+"un Dorstellproblemen föhren."
+
+#. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
+#: compositing.ui:67
+#, kde-format
+msgid ""
+"Keeping the window thumbnail always interferes with the minimized state of "
+"windows. This can result in windows not suspending their work when minimized."
+msgstr ""
+"Wohrst Du de Finstervöransicht jümmers, funkscheneert dat nich goot, wenn de "
+"Finstern minimeert sünd. Finstern sett ehr Arbeit denn villicht nich ut, "
+"wenn Du ehr minimeerst."
+
+#. i18n: ectx: property (text), widget (QLabel, compositingLabel)
+#: compositing.ui:79
+#, fuzzy, kde-format
+#| msgid "Compositing type:"
+msgid "Compositing:"
+msgstr "Tosamensettmetood:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
+#: compositing.ui:86
+#, fuzzy, kde-format
+#| msgid "Enable compositor on startup"
+msgid "Enable on startup"
+msgstr "Tosamensetten bi't Hoochfohren bruken"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:95
+#, kde-format
+msgid ""
+"Applications can set a hint to block compositing when the window is open.\n"
+" This brings performance improvements for e.g. games.\n"
+" The setting can be overruled by window-specific rules."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:98
+#, kde-format
+msgid "Allow applications to block compositing"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
+#: compositing.ui:105
+#, kde-format
+msgid "Animation speed:"
+msgstr "Animeergauigkeit:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: compositing.ui:142
+#, kde-format
+msgid "Very slow"
+msgstr "Bannig langsam"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: compositing.ui:162
+#, kde-format
+msgid "Instant"
+msgstr "Fuurts"
+
+#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
+#: compositing.ui:174
+#, kde-format
+msgid "Scale method:"
+msgstr "Topassmetood:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:184
+#, kde-format
+msgid "Smooth"
+msgstr "Week"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:189
+#, kde-format
+msgid "Accurate"
+msgstr "Akraat"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: compositing.ui:199
+#, kde-format
+msgid "Tearing prevention (\"vsync\"):"
+msgstr "Verhöden vun Uteneenrieten („vsync“):"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:207
+#, kde-format
+msgid "Automatic"
+msgstr "Automaatsch"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:212
+#, kde-format
+msgid "Only when cheap"
+msgstr "Bloots bi siet Opwand"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:217
+#, kde-format
+msgid "Full screen repaints"
+msgstr "Heelschirm-Opfrischen"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:222
+#, kde-format
+msgid "Re-use screen content"
+msgstr "Schirminholt wedderbruken"
+
+#. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
+#: compositing.ui:230
+#, kde-format
+msgid "Keep window thumbnails:"
+msgstr "Finster-Vöransichten wohren:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:238
+#, kde-format
+msgid "Never"
+msgstr "Nienich"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:243
+#, kde-format
+msgid "Only for Shown Windows"
+msgstr "Bloots bi wiest Finstern"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:248
+#, kde-format
+msgid "Always"
+msgstr "Jümmers"
+
+#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
+#: compositing.ui:256
+#, kde-format
+msgid "Latency:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:264
+#, kde-format
+msgid "Force lowest latency (may cause dropped frames)"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:269
+#, kde-format
+msgid "Prefer lower latency"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:274
+#, kde-format
+msgid "Balance of latency and smoothness"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:279
+#, kde-format
+msgid "Prefer smoother animations"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:284
+#, fuzzy, kde-format
+#| msgid "Various animations"
+msgid "Force smoothest animations"
+msgstr "Verscheden Animeren"
+
+#: main.cpp:79
+#, kde-format
+msgid "Re-enable OpenGL detection"
+msgstr "\"OpenGL-Opdecken\" wedder anmaken"
+
+#: main.cpp:135
+#, kde-format
+msgid ""
+"\"Only when cheap\" only prevents tearing for full screen changes like a "
+"video."
+msgstr ""
+"„Bloots bi siet Opwand“ verhöödt dat Uteneenrieten bloots bi Heelbild-"
+"Övergäng, as binnen Videos."
+
+#: main.cpp:139
+#, kde-format
+msgid "\"Full screen repaints\" can cause performance problems."
+msgstr "„Heelschirm-Opfrischen“ kann to Leistenproblemen föhren."
+
+#: main.cpp:143
+#, fuzzy, kde-format
+#| msgid ""
+#| "\"Re-use screen content\" causes performance severe problems on MESA "
+#| "drivers."
+msgid ""
+"\"Re-use screen content\" causes severe performance problems on MESA drivers."
+msgstr ""
+"„Schirminholt wedderbruken“ föhrt mit MESA-Drievers to eernsthaftig "
+"Leistenproblemen."
+
+#~ msgid "Rendering backend:"
+#~ msgstr "Dorstell-Hülpprogramm:"
+
+#~ msgid "OpenGL 3.1"
+#~ msgstr "OpenGL 3.1"
+
+#~ msgid "OpenGL 2.0"
+#~ msgstr "OpenGL 2.0"
+
+#~ msgid "Crisp"
+#~ msgstr "Krosch"
+
+#~ msgid "Smooth (slower)"
+#~ msgstr "Week (langsamer)"
+
+#~ msgid "XRender"
+#~ msgstr "XRender"
+
+#~ msgctxt "OpenGL Platform Interface"
+#~ msgid "EGL"
+#~ msgstr "EGL"
+
+#~ msgctxt "OpenGL Platform Interface"
+#~ msgid "GLX"
+#~ msgstr "GLX"
+
+#~ msgid ""
+#~ "Author: %1\n"
+#~ "License: %2"
+#~ msgstr ""
+#~ "Autor: %1\n"
+#~ "Verlööfnis: %2"
+
+#~ msgid ""
+#~ "Hint: To find out or configure how to activate an effect, look at the "
+#~ "effect's settings."
+#~ msgstr ""
+#~ "Henwies: Wenn Du rutkriegen wullt, wodennig Du en Effekt anmaken kannst "
+#~ "oder wenn Du em instellen wullt, bekiek Di em sien Optschonen."
+
+#, fuzzy
+#~| msgid "Search"
+#~ msgid "Search..."
+#~ msgstr "Söken"
+
+#~ msgid "Configure filter"
+#~ msgstr "Filter instellen"
+
+#~ msgid "Exclude Desktop Effects not supported by the Compositor"
+#~ msgstr "Vun Tosamensetten nich ünnerstütt Effekten utsluten"
+
+#~ msgid "Exclude internal Desktop Effects"
+#~ msgstr "Intern Schriefdischeffekten utsluten"
+
+#, fuzzy
+#~| msgid "Get New Effects ..."
+#~ msgid "Get New Desktop Effects..."
+#~ msgstr "Nieg Effekten halen ..."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Sönke Dibbern, Manfred Wiese"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "s_dibbern@web.de, m.j.wiese@web.de"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Accessibility"
+#~ msgstr "Toganghülp"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Appearance"
+#~ msgstr "Utsehn"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Candy"
+#~ msgstr "Slickerkraam bavento"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Focus"
+#~ msgstr "Fokus"
+
+#, fuzzy
+#~| msgctxt "Category of Desktop Effects, used as section header"
+#~| msgid "Virtual Desktop Switching Animation"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Show Desktop Animation"
+#~ msgstr "Animeert Schriefdischwesseln"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Tools"
+#~ msgstr "Warktüüch"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Virtual Desktop Switching Animation"
+#~ msgstr "Animeert Schriefdischwesseln"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Management"
+#~ msgstr "Finsterpleeg"
+
+#, fuzzy
+#~| msgctxt "Category of Desktop Effects, used as section header"
+#~| msgid "Virtual Desktop Switching Animation"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Open/Close Animation"
+#~ msgstr "Animeert Schriefdischwesseln"
+
+#~ msgid "KWin development team"
+#~ msgstr "KWin-Schrieverslüüd"
+
+#~ msgid "Experimental:"
+#~ msgstr "Testwies:"
+
+#~ msgid "Enable color correction"
+#~ msgstr "Köörpleeg anmaken"
+
+#~ msgid ""
+#~ "Having full screen windows bypass the compositor is not supported on "
+#~ "every hardware."
+#~ msgstr ""
+#~ "Nich elkeen Hardware ünnerstütt dat Ümgahn vun de Tosamensetten vun "
+#~ "Heelschirmfinstern."
+
+#~ msgid "Expert:"
+#~ msgstr "Expert:"
+
+#~ msgid "Suspend compositor for full screen windows"
+#~ msgstr "Tosamensetten för Heelschirmfinstern utmaken"
+
+#~ msgid "OpenGL interface:"
+#~ msgstr "OpenGL-Koppelsteed:"
+
+#~ msgid ""
+#~ "EGL is not supported by all OpenGL drivers. If not supported the "
+#~ "Compositor will be disabled."
+#~ msgstr ""
+#~ "EGL warrt nich vun all OpenGL-Drievers ünnerstütt. De Tosamensetten warrt "
+#~ "utmaakt, wenn dat nich ünnerstütt warrt."
+
+#~ msgid "Animation Speed:"
+#~ msgstr "Animeergauheit:"
+
+#~ msgid "Scale Method:"
+#~ msgstr "Topassmetood:"
+
+#~ msgid "Tearing Prevention (VSync):"
+#~ msgstr "Verhöden vun Uteneenrieten (VSync):"
+
+#~ msgid "Keep Window Thumbnails:"
+#~ msgstr "Finster-Vöransichten wohren:"
+
+#~ msgid "Always (Breaks Animations)"
+#~ msgstr "Jümmers (Problem mit de Animeren)"
+
+#~ msgid "OpenGL Platform Interface:"
+#~ msgstr "OpenGL-Systeem-Koppelsteed:"
+
+#~ msgid "Form"
+#~ msgstr "Form"
+
+#~ msgid "OpenGL compositing (the default) has crashed KWin in the past.\n"
+#~ msgstr ""
+#~ "OpenGL-Tosamensetten (de Standard) hett vördem KWin afstörten laten.\n"
+
+#~ msgid "1 second remaining:"
+#~ msgid_plural "%1 seconds remaining:"
+#~ msgstr[0] "1 Sekunn na:"
+#~ msgstr[1] "%1 Sekunnen na:"
+
+#~ msgid "Confirm Desktop Effects Change"
+#~ msgstr "Schriefdischeffekt-Ännern beglöven"
+
+#~ msgid "&Accept Configuration"
+#~ msgstr "Instellen ö&vernehmen"
+
+#~ msgid "&Return to Previous Configuration"
+#~ msgstr "Verleden Instellen &wedderherstellen"
+
+#~ msgid ""
+#~ "Desktop effects settings have changed.\n"
+#~ "Do you want to keep the new settings?\n"
+#~ "They will be automatically reverted in 10 seconds."
+#~ msgstr ""
+#~ "Du hest de Schriefdischeffekt-Instellen ännert.\n"
+#~ "Wullt Du de niegen Instellen wohren?\n"
+#~ "Se warrt in 10 Sekunnen automaatsch torüchdreiht."
+
+#~ msgctxt ""
+#~ "Action to open a dialog showing detailed information why an effect could "
+#~ "not be loaded"
+#~ msgid "Details"
+#~ msgstr "Enkelheiten"
+
+#~ msgctxt "Prevent warning from bein displayed again"
+#~ msgid "Don't show again!"
+#~ msgstr "Nienich wedder wiesen"
+
+#~ msgid "Use GLSL shaders"
+#~ msgstr "GLSL-Schaddeerers anmaken"
+
+#~ msgid "None"
+#~ msgstr "Keen"
+
+#~ msgid "The painting is not synchronized with the screen."
+#~ msgstr "Dat Bild is nich mit den Schirm synkroniseert."
+
+#~ msgid ""
+#~ "Tries to re-use older buffers and if that is not possible,\n"
+#~ "picks a strategy matching your hardware."
+#~ msgstr ""
+#~ "Versöcht, wat dat ole Puffers wedderbruken kann. Is dat\n"
+#~ "nich mööglich, warrt en Metood utsöcht, de op Dien Reekner passt."
+
+#~ msgid ""
+#~ "When major regions of the screen are updated,\n"
+#~ "the entire screen will be repainted.\n"
+#~ "Can cause tearing with small updates."
+#~ msgstr ""
+#~ "Wenn grötter Rebeden op den Schirm opfrischt warrt,\n"
+#~ "warrt de hele Schirm nieg wiest. Kann bi lütte Opfrischen dat Bild wat "
+#~ "uteneenriten („Tearing“)."
+
+#~ msgid ""
+#~ "The complete screen is repainted for every frame.\n"
+#~ "Can be slow with large blurred areas."
+#~ msgstr ""
+#~ "För elkeen Bild warrt de hele Schirm nieg opstellt.\n"
+#~ "Mag bi grötter verwischt Rebeden langsam wesen."
+
+#~ msgid ""
+#~ "WARNING:\n"
+#~ "This strategy is usually slow with Open Source drivers.\n"
+#~ "Undamaged pixels will be copied from GL_FRONT to GL_BACK"
+#~ msgstr ""
+#~ "WOHRSCHO:\n"
+#~ "Disse Metood is mit Apen-Born-Drievers faken langsam.\n"
+#~ "Nich ännert Bildpünkt warrt vun GL_FRONT na GL_BACK kopeert."
+
+#~ msgid "kcmkwincompositing"
+#~ msgstr "kcmkwincompositing"
+
+#~ msgid "KWin Desktop Effects Configuration Module"
+#~ msgstr "Instellenmoduul för de KWin-Schriefdischeffekten"
+
+#~ msgid "(c) 2007 Rivo Laks"
+#~ msgstr "© 2007 Rivo Laks"
+
+#~ msgid "Rivo Laks"
+#~ msgstr "Rivo Laks"
+
+#~ msgid "No effect"
+#~ msgstr "Keen Effekt"
+
+#~ msgid ""
+#~ "Failed to activate desktop effects using the given configuration options. "
+#~ "Settings will be reverted to their previous values.\n"
+#~ "\n"
+#~ "Check your X configuration. You may also consider changing advanced "
+#~ "options, especially changing the compositing type."
+#~ msgstr ""
+#~ "Mit de angeven Instellen laat sik de Schriefdischeffekten nich anmaken. "
+#~ "De Instellen warrt op ehr verleden Weerten torüchsett.\n"
+#~ "\n"
+#~ "Prööv bitte Dien X-Instellen. Villicht schullst Du ok wat an de "
+#~ "verwiederten Instellen maken, sünnerlich den Tosamensett-Typ."
+
+#~ msgid "Demos"
+#~ msgstr "Bispillen"
+
+#~ msgid "Tests"
+#~ msgstr "Tests"
+
+#~ msgid ""
+#~ "Desktop effects are not available on this system due to the following "
+#~ "technical issues:"
+#~ msgstr ""
+#~ "Schriefdischeffekten laat sik op dissen Reekner ut disse technisch "
+#~ "Grünnen nich bruken:"
+
+#~ msgctxt ""
+#~ "Reason shown when trying to activate desktop effects and KWin (most "
+#~ "likely) crashes"
+#~ msgid "Window Manager seems not to be running"
+#~ msgstr "As't lett löppt de Finsterpleger nich"
+
+#~ msgid ""
+#~ "Your settings have been saved but as KDE is currently running in failsafe "
+#~ "mode desktop effects cannot be enabled at this time.\n"
+#~ "\n"
+#~ "Please exit failsafe mode to enable desktop effects."
+#~ msgstr ""
+#~ "Dien Ännern wöörn sekert, man KDE löppt opstunns in den Fehlerseker-"
+#~ "Bedrief, dorüm laat sik de Schriefdischeffekten opstunns nich anmaken.\n"
+#~ "\n"
+#~ "Maak den Fehlerseker-Bedrief ut, wenn Du de Schriefdischeffekten anmaken "
+#~ "wullt."
+
+#~ msgctxt "Error Message shown when a desktop effect could not be loaded"
+#~ msgid "One desktop effect could not be loaded."
+#~ msgid_plural "%1 desktop effects could not be loaded."
+#~ msgstr[0] "Een Schriefdisch-Effekt lett sik nich laden."
+#~ msgstr[1] "%1 Schriefdisch-Effekten laat sik nich laden."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated due to unknown reason"
+#~ msgid "%1 effect failed to load due to unknown reason."
+#~ msgstr "Effekt %1 is ut en nich begäng Grund fehlslaan."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires hardware "
+#~ "shaders"
+#~ msgid "%1 effect requires hardware support."
+#~ msgstr "Effekt %1 bruukt Ünnerstütten vun de Hardware."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires OpenGL"
+#~ msgid "%1 effect requires OpenGL."
+#~ msgstr "Effekt %1 bruukt OpenGL."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires OpenGL 2"
+#~ msgid "%1 effect requires OpenGL 2."
+#~ msgstr "Effekt %1 bruukt OpenGL 2."
+
+#~ msgctxt "Window title"
+#~ msgid "List of effects which could not be loaded"
+#~ msgstr "Effekten, de sik nich laden laat"
+
+#~ msgid ""
+#~ "For technical reasons it is not possible to determine all possible error "
+#~ "causes."
+#~ msgstr "All mööglich Grünn för den Fehler laat sik nich faststellen."
+
+#~ msgctxt ""
+#~ "Error Message shown when compositing is not active after tried activation"
+#~ msgid "Desktop effect system is not running."
+#~ msgstr "Schriefdischeffekten-Systeem löppt nich."
+
+#~ msgid "<h1>Desktop Effects</h1>"
+#~ msgstr "<h1>Schriefdischeffekten</h1>"
+
+#~ msgid "General"
+#~ msgstr "Allmeen"
+
+#~ msgid "Pressing this button can crash the desktop."
+#~ msgstr "Drückst Du dissen Knoop, kann de Schriefdisch afstörten"
+
+#~ msgid "I have saved my data."
+#~ msgstr "Ik heff mien Daten sekert."
+
+#~ msgid "Activation"
+#~ msgstr "Anmaken"
+
+#~ msgid "Desktop effects can be toggled anytime using this shortcut:"
+#~ msgstr ""
+#~ "De Schriefdischeffekten laat sik jümmers mit disse Tastkombinatschoon an- "
+#~ "oder utmaken."
+
+#~ msgctxt "@title:group a few general options to set up desktop effects"
+#~ msgid "Simple effect setup"
+#~ msgstr "Eenfach Effekt-Instellen"
+
+#~ msgid "Improved window management"
+#~ msgstr "Verbetert Finsterpleeg"
+
+#~ msgid "Effect for desktop switching:"
+#~ msgstr "Effekt bi't Wesseln vun den Schriefdisch:"
+
+#~ msgid "Very Fast"
+#~ msgstr "Bannig gau"
+
+#~ msgid "Fast"
+#~ msgstr "Gau"
+
+#~ msgid "Normal"
+#~ msgstr "Normaal"
+
+#~ msgid "Slow"
+#~ msgstr "Langsam"
+
+#~ msgid "Extremely Slow"
+#~ msgstr "Redig langsam"
+
+#~ msgid ""
+#~ "You can find more effects, as well as effect-specific settings, in the "
+#~ "\"All Effects\" tab above."
+#~ msgstr ""
+#~ "Op de Paneelsiet \"All Effekten\" baven gifft dat mehr Effekten un ok "
+#~ "Instellen dor för."
+
+#~ msgid "All Effects"
+#~ msgstr "All Effekten"
+
+#~ msgid "Advanced"
+#~ msgstr "Verwiedert"
+
+#~ msgid "OpenGL Options"
+#~ msgstr "OpenGL-Optschonen"
+
+#~ msgid ""
+#~ "<p>Activates color correction if possible, using the Kolor-Manager. "
+#~ "Requires OpenGL 2 Shaders to be enabled and Kolor-Manager to be "
+#~ "installed. May fail silently.</p><p><strong>Experimental</strong>.</p>"
+#~ msgstr ""
+#~ "<p>Maakt, wenn mööglich, de Klöörrichten över den Klörenpleger Kolor-"
+#~ "Manager an. OpenGL 2-Schaddeerers mööt anmaakt un Kolor-Manager mutt "
+#~ "anstalleert wesen. Mag ahn Fehlermellen fehlslaan.</p><p><strong>Warrt "
+#~ "noch utprobeert</strong>.</p>"
+
+#~ msgid "General Options"
+#~ msgstr "Allgemeen Optschonen"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Crisp:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"fast\")</span> -  Pretty fast "
+#~ "on all GPUs but looks bricky</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Smooth:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"good\") </span>- linear "
+#~ "blending.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Fast enough on newer "
+#~ "nvidia GPUs and maybe others but also can be <span style=\" text-"
+#~ "decoration: underline;\">very</span> slow, you will have to try it.</p></"
+#~ "body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Krosch:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter (\"gau\")</span> -  Moj gau mit "
+#~ "all GPUs, man grisselig.</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Week:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter (\"goot\") </span>- lineaar "
+#~ "Överblennen.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Löppt mit nieger NVidia-"
+#~ "GPUs gau noog. Mit anner GPUs villicht ok, kann man ok <span style=\" "
+#~ "text-decoration: underline;\">bannig</span> langsam wesen. Probeer dat "
+#~ "op't best eenfach ut.</p></body></html>"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Crisp:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_NEAREST</span> -  (very) fast on all GPUs but looks "
+#~ "bricky</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Smooth:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_LINEAR</span> - fast on most GPUs but a little blurry</"
+#~ "p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Accurate:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Lanczos filter, "
+#~ "requires glsl shader support.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Might be slow on weaker "
+#~ "GPUs and even cause various troubles with broken drivers (from "
+#~ "overbrightening to segfaults).</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Fall back to \"Smooth\" "
+#~ "if you have problems.</p></body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Krosch:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_NEAREST</span> -  (bannig) gau mit all GPUs, man lett "
+#~ "grisselig.</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Week:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_LINEAR</span> - gau op de mehrsten GPUs, man en beten "
+#~ "verwischt.</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Akkraat:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Lanczos-Filter, bruukt "
+#~ "GLSL-Schaddeerer-Ünnerstütten.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Villicht op swache GPUs "
+#~ "wat langsamer un kann mit schaadhaftig Drievers ok to Problemen föhren. "
+#~ "(Vun Överstrahlen bet hen to Spiekertogriepfehlers)</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Wessel na \"Week\" "
+#~ "torüch, wenn dat Problemen gifft.</p></body></html>"
+
+#~ msgid "OpenGL 1.2"
+#~ msgstr "OpenGL 1.2"
+
+#~ msgid "Qt graphics system:"
+#~ msgstr "Qt-Grafiksysteem:"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">It is <span style=\" "
+#~ "font-weight:600;\">strongly recommended</span> to use the <span style=\" "
+#~ "font-weight:600;\">native</span> system when using the <span style=\" "
+#~ "font-weight:600;\">XRender</span> backend.</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">On the other hand, many "
+#~ "decorations perform better with the <span style=\" font-weight:600;"
+#~ "\">raster</span> system on the <span style=\" font-weight:600;\">default "
+#~ "and generally preferred OpenGL</span> backend (though some don't - also "
+#~ "the impact here can be anything between \"slight\" and \"incredible\" "
+#~ "depending on the GPU and driver)</p></body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Dat is <span style=\" "
+#~ "font-weight:600;\">redig anraadt</span>, dat Du as Systeem <span style=\" "
+#~ "font-weight:600;\">natiev</span> bruukst, wenn Du <span style=\" font-"
+#~ "weight:600;\">XRender</span> as Hülpprogramm bruken wullt.</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Op de anner Siet, vele "
+#~ "Dekoratschonen loopt beter mit <span style=\" font-weight:600;\">Raster</"
+#~ "span> as Systeem tosamen mit <span style=\" font-weight:600;\">dat "
+#~ "standardwies bruukte un allmeen vörtrocken OpenGL</span>-Hülpprogramm "
+#~ "(man en poor ok nich - ok hier köönt de Utwarken vun \"siet\" bethen to "
+#~ "\"grulig\" wesen, wat vun GPU un Driever afhangt).</p></body></html>"
+
+#~ msgid "Native"
+#~ msgstr "Natiev"
+
+#~ msgid "Raster"
+#~ msgstr "Raster"
+
+#~ msgid ""
+#~ "If enabled all rendering will be performed with Shaders written in the "
+#~ "OpenGL Shading Language.\n"
+#~ "On legacy hardware disabling Shaders can improve the performance."
+#~ msgstr ""
+#~ "Wenn anmaakt, warrt all Dorstellen mit OpenGL-Schaddeerers utföhrt.\n"
+#~ "Warrt Schaddens bi Bruuk vun ole Koorten utmaakt, lett sik de Leisten "
+#~ "verbetern."
+
+#~ msgid "Use OpenGL 2 Shaders"
+#~ msgstr "\"OpenGL 2\"-Schaddeerers anmaken"
+
+#~ msgid "Use VSync"
+#~ msgstr "VSync bruken"
+
+#~ msgid "Effect for window switching:"
+#~ msgstr "Effekt bi't Wesseln vun Finstern:"
+
+#~ msgid "Enable direct rendering"
+#~ msgstr "Direktdorstellen anmaken"
+
+#~ msgid "Disable functionality checks"
+#~ msgstr "Funkschoonpröven utmaken"
+
+#~ msgid "Desktop effects are temporarily disabled"
+#~ msgstr "Schriefdischeffekten sünd tietwies utmaakt"
+
+#~ msgid "Resume Desktop Effects"
+#~ msgstr "Schriefdischeffekten wieder anmaken"
+
+#~ msgid "Desktop effects are disabled"
+#~ msgstr "Schriefdischeffekten sünd utmaakt"
+
+#~ msgid "Common Settings"
+#~ msgstr "Gemeen Instellen"
+
+#~ msgid "Compositing State"
+#~ msgstr "Tosamensetten-Status"
+
+#~ msgid "Shadows"
+#~ msgstr "Schaddens"
+
+#~ msgid "OpenGL mode:"
+#~ msgstr "OpenGL-Bedriefoort:"
+
+#~ msgid "Texture From Pixmap"
+#~ msgstr "Textuur ut Pixelbild"
+
+#~ msgid "Shared Memory"
+#~ msgstr "Deelt Spieker"
+
+#~ msgid "Fallback"
+#~ msgstr "Opbacken"
+
+#~ msgid ""
+#~ "Enabling this option allows compositing to be activated even if some of "
+#~ "the internal checks fail. Doing so may make the whole desktop unusable "
+#~ "and its use is not recommened. Use only if KWin refuses to activate "
+#~ "compositing on a system that should be capable of compositing.\n"
+#~ msgstr ""
+#~ "Is dit anmaakt, lett sik dat Tosamenseten liekers anmaken, ok wenn en "
+#~ "intern Pröven fehlslaan sünd. Deist Du dat, mag de hele Schriefdisch nich "
+#~ "mehr to bruken wesen, vun den Bruuk vun disse Optschoon warrt afraadt. "
+#~ "Bruuk ehr bloots, wenn KWin dat Tosamensetten op Systemen nich bruken "
+#~ "will, de dat könen schullen.\n"
+
+#~ msgid "Nearest (fastest)"
+#~ msgstr "Neegst (gauest)"
+
+#~ msgid "Bilinear"
+#~ msgstr "Bilineaar"
+
+#~ msgid "Trilinear (best quality)"
+#~ msgstr "Trilineaar (hööchste Gööd)"
+
+#~ msgid ""
+#~ "Improves performance of fullscreen applications like games and video "
+#~ "players. This option can cause flickering when another window is opened "
+#~ "above the fullscreen window."
+#~ msgstr ""
+#~ "Leistenverbetern för Heelschirmprogrammen as a.B. Spelen oder "
+#~ "Videoafspelers. Disse Optschoon kann to Flimmern föhren, wenn över dat "
+#~ "Heelschirmfinster en anner Finster opmaakt warrt."
+
+#~ msgid "Compositing is not supported on your system."
+#~ msgstr "Dien Systeem ünnerstütt dat Tosamensetten nich."
+
+#~ msgid "Compositing is active"
+#~ msgstr "Tosamensetten löppt"
+
+#~ msgid "Suspend Compositing"
+#~ msgstr "Tosamensetten utsetten"
+
+#~ msgid "Resume Compositing"
+#~ msgstr "Tosamensetten wiedermaken"
+
+#~ msgid "Compositing is disabled"
+#~ msgstr "Tosamensetten is utmaakt"
+
+#~ msgid "All Desktops"
+#~ msgstr "All Schriefdischen"
+
+#~ msgid "Current Desktop"
+#~ msgstr "Aktuell Schriefdisch"
+
+#~ msgid "Cube"
+#~ msgstr "Wörpel"
+
+#~ msgid "Cylinder"
+#~ msgstr "Zylinner"
+
+#~ msgid "Sphere"
+#~ msgstr "Kugel"
+
+#~ msgid "Screen Edges"
+#~ msgstr "Schirmkanten"
+
+#~ msgid ""
+#~ "Active screen edges allow you to activate effects by pushing your mouse "
+#~ "cursor against the edge of the screen. Here you can configure which "
+#~ "effect will get activated on each edge and corner of the screen."
+#~ msgstr ""
+#~ "Mit aktiev Schirmkanten kannst Du Effekten utlösen, wenn Du mit den "
+#~ "Muuswieser en Schirmkant anröögst. Hier kannst Du de Effekten för de "
+#~ "enkelten Schirmkanten un -huken anmaken."
+
+#~ msgid ""
+#~ "If you are looking for the setting to enable switching of desktops by "
+#~ "pushing your mouse cursor against the edge of the screen you can find it "
+#~ "in the \"Window Behavior\" advanced tab under the name of \"Active "
+#~ "Desktop Borders\"."
+#~ msgstr ""
+#~ "Söchst Du na de Instellen, mit de sik dat Wesseln vun Schriefdischen över "
+#~ "de Schirmkant anmaken lett, denn findt sik de op dat Moduul "
+#~ "\"Finsterbedregen\" sien \"Verwiedert\"-Paneelsiet mit den Naam \"Aktiev "
+#~ "Schriefdischkanten\"."
+
+#~ msgid "Advanced Compositing Options"
+#~ msgstr "Verwiedert Tosamensett-Instellen"
+
+#~ msgid "Misc"
+#~ msgstr "Anner"
+
+#~ msgid "Keep thumbnails of hidden windows up to date"
+#~ msgstr "Vöransichten vun nich versteken Finstern opfrischen"

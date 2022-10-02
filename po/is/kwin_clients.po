@@ -1,0 +1,744 @@
+# translation of kwin_clients.po to Icelandic
+# Íslensk þýðing kwin_clients
+# Copyright (C) 2004, 2005, 2008, 2009, 2010 Free Software Foundation, Inc.
+#
+# Richard Allen <ra@ra.is>, 2004.
+# Arnar Leosson <leosson@frisurf.no>, 2005.
+# Sveinn í Felli <sveinki@nett.is>, 2009, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2010-05-31 10:30+0000\n"
+"Last-Translator: Sveinn í Felli <sveinki@nett.is>\n"
+"Language-Team: Icelandic <kde-isl@molar.is>\n"
+"Language: is\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: Plural-Forms: nplurals=2; plural=n != 1;\n"
+"\n"
+"\n"
+"\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, fuzzy, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "Örsmátt"
+
+#: aurorae/src/aurorae.cpp:726
+#, fuzzy, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "Venjulegt"
+
+#: aurorae/src/aurorae.cpp:727
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "Stórt"
+
+#: aurorae/src/aurorae.cpp:728
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "Stórt"
+
+#: aurorae/src/aurorae.cpp:729
+#, fuzzy, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "Stór"
+
+#: aurorae/src/aurorae.cpp:730
+#, fuzzy, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "Hrikalega stórt"
+
+#: aurorae/src/aurorae.cpp:731
+#, fuzzy, kde-format
+#| msgid "Resize"
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "Breyta stærð"
+
+#: aurorae/src/aurorae.cpp:734
+#, fuzzy, kde-format
+#| msgid "Button size:"
+msgid "Button size:"
+msgstr "Stærð hnappa:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "Stillingagluggi"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "Titill og st&aðsetning"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "Vinstri"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "Miðja"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "Hægri"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"Þegar valið, eru gluggarammar teiknaðir með sömu litum og titilrönd; Annars "
+"eru þeir teknaðir með venjulegum rammalitum."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "Litaðir gluggarammar"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"Hakaðu við hér ef þú vilt að hnappar dofni inn þegar músarbendillinn er yfir "
+"þeim og dofni aftur út þegar bendillinn er tekinn burt."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "Hreyfa hnappa"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "Hakaðu við hér ef þú vilt að textinn í titilröndinni hafi 3D útlit með "
+#~ "skugga bak."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "Nota skyggðan &texta"
+
+#, fuzzy
+#~ msgid "Title transitions"
+#~ msgstr "Virkja hreyfimyndir"
+
+#, fuzzy
+#~ msgid "Hide Advanced Configuration Options"
+#~ msgstr "Skreyting"
+
+#, fuzzy
+#~ msgid "Show Advanced Configuration Options"
+#~ msgstr "Skreyting"
+
+#, fuzzy
+#~| msgid "Animate buttons"
+#~ msgid "Animations"
+#~ msgstr "Hreyfa hnappa"
+
+#, fuzzy
+#~| msgid "Actions Settings"
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "Aðgerðastillingar"
+
+#, fuzzy
+#~ msgid "Regular Expression"
+#~ msgstr "Regluleg segð"
+
+#, fuzzy
+#~ msgid "Window Title"
+#~ msgstr "Gluggatitill"
+
+#~ msgid "Window Class Name"
+#~ msgstr "Heiti gluggaflokks"
+
+#, fuzzy
+#~ msgid "General"
+#~ msgstr "&Almennt"
+
+#, fuzzy
+#~ msgid "Border si&ze:"
+#~ msgstr "Rammabreidd:"
+
+#, fuzzy
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Normal"
+#~ msgstr "Venjulegt"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "Stórt"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "Stórt"
+
+#, fuzzy
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "Stór"
+
+#, fuzzy
+#~| msgid "Title &Alignment"
+#~ msgid "Tit&le alignment:"
+#~ msgstr "Titill og st&aðsetning"
+
+#, fuzzy
+#~| msgid "Small"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "Lítið"
+
+#, fuzzy
+#~ msgid "Enable animations"
+#~ msgstr "Virkja hreyfimyndir"
+
+#, fuzzy
+#~ msgid "Fine Tuning"
+#~ msgstr "&Fínstilling"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "Loka gluggum með því að tvísmella á valmyndir"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title"
+#~ msgstr "Lágmarka glugga"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadows"
+#~ msgstr "Skyggja"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Window Glow"
+#~ msgstr "Lágmarka glugga"
+
+#, fuzzy
+#~| msgid "Config Dialog"
+#~ msgid "Dialog"
+#~ msgstr "Stillingagluggi"
+
+#~ msgid "Information about Selected Window"
+#~ msgstr "Upplýsingar um valinn glugga"
+
+#~ msgid "Class: "
+#~ msgstr "Flokkur: "
+
+#~ msgid "Title: "
+#~ msgstr "Titill: "
+
+#~ msgid "Use window class (whole application)"
+#~ msgstr "Nota gluggaflokk (allt forritið)"
+
+#~ msgid "Use window title"
+#~ msgstr "Nota gluggatitil"
+
+#~ msgid "Window Identification"
+#~ msgstr "Auðkenning glugga"
+
+#, fuzzy
+#~ msgid "Detect Window Properties"
+#~ msgstr "&Skynja eiginleika glugga"
+
+#, fuzzy
+#~ msgid "Decoration Options"
+#~ msgstr "Skreyting"
+
+#, fuzzy
+#~ msgctxt "outline window title"
+#~ msgid "Disabled"
+#~ msgstr "Óvirkt"
+
+#, fuzzy
+#~ msgctxt "outline window title"
+#~ msgid "Enabled"
+#~ msgstr "Virkt"
+
+#, fuzzy
+#~ msgid "Border size:"
+#~ msgstr "Rammabreidd:"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Outline active window title:"
+#~ msgstr "Lágmarka glugga"
+
+#, fuzzy
+#~| msgid "Use window title"
+#~ msgid "Hide window title bar"
+#~ msgstr "Nota gluggatitil"
+
+#, fuzzy
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Disabled"
+#~ msgstr "Óvirkt"
+
+#, fuzzy
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Enabled"
+#~ msgstr "Virkt"
+
+#, fuzzy
+#~ msgid "Move Up"
+#~ msgstr "Færa &upp"
+
+#, fuzzy
+#~ msgid "Move Down"
+#~ msgstr "Færa &niður"
+
+#, fuzzy
+#~ msgid "Add"
+#~ msgstr "Bæt&a við"
+
+#, fuzzy
+#~ msgid "Remove"
+#~ msgstr "&Fjarlægja"
+
+#, fuzzy
+#~ msgid "Edit"
+#~ msgstr "Br&eyta"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Inactive Windows"
+#~ msgstr "Lágmarka glugga"
+
+#, fuzzy
+#~| msgid "Minimize Window"
+#~ msgid "Active Windows"
+#~ msgstr "Lágmarka glugga"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+#, fuzzy
+#~| msgid "Window Identification"
+#~ msgid "Window Actions Menu"
+#~ msgstr "Auðkenning glugga"
+
+#~ msgid "Help"
+#~ msgstr "Hjálp"
+
+#~ msgid "Minimize"
+#~ msgstr "Lágmarka"
+
+#~ msgid "Maximize"
+#~ msgstr "Hámarka"
+
+#~ msgid "Close"
+#~ msgstr "Loka"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "Halda ofan á öðrum"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "Halda undir öðrum"
+
+#~ msgid "On All Desktops"
+#~ msgstr "Á öllum skjáborðum"
+
+#~ msgid "Shade Button"
+#~ msgstr "Skyggingarhnappur"
+
+#~ msgid "Menu"
+#~ msgstr "Valmynd"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "Ekki á öll skjáborð"
+
+#~ msgid "On all desktops"
+#~ msgstr "Á öll skjáborð"
+
+#~ msgid "Unshade"
+#~ msgstr "Afskyggja"
+
+#~ msgid "Shade"
+#~ msgstr "Skyggja"
+
+#~ msgid "Resize"
+#~ msgstr "Breyta stærð"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>B II forsýn</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "Afturkalla"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "Teikna gluggaramma með sömu litum og &titilrönd"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "Þegar valið, eru gluggarammar teiknaðir með sömu litum og titilrönd; "
+#~ "Annars eru þeir teknaðir með venjulegum rammalitum."
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "Teikna &handföng til stærðarbreytingar"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "Þegar valið, eru skreytingar teiknaðar með \"handföngum\" í hægra horninu "
+#~ "að neðan."
+
+#, fuzzy
+#~| msgid ""
+#~| "When selected, active titlebars are drawn with a stipple (dotted) "
+#~| "effect; otherwise, they are drawn without the stipple."
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr "Þegar valið, eru titilrendur teiknaðar með skyggingu (punktar)."
+
+#~ msgid "Actions Settings"
+#~ msgstr "Aðgerðastillingar"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "Tvísmella á valmyndahnappinn:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "Gera ekkert"
+
+#~ msgid "Minimize Window"
+#~ msgstr "Lágmarka glugga"
+
+#~ msgid "Shade Window"
+#~ msgstr "Skyggja glugga"
+
+#~ msgid "Close Window"
+#~ msgstr "Loka glugga"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "Hægt er að tengja aðgerð við tvísmellingu af valmyndahnappinum. Láttu "
+#~ "þetta vera tómt ef þú ert ekki viss."
+
+#~ msgid "Laptop"
+#~ msgstr "Fartölva"
+
+#, fuzzy
+#~ msgid "Bac&kground style: "
+#~ msgstr "Bakgrunnsstíll:"
+
+#, fuzzy
+#~ msgid "Solid Color"
+#~ msgstr "Heillitur"
+
+#, fuzzy
+#~| msgid "Draw &gradients"
+#~ msgid "Radial Gradient"
+#~ msgstr "Nota &blöndun"
+
+#, fuzzy
+#~ msgid "Background style:"
+#~ msgstr "Bakgrunnsstíll:"
+
+#, fuzzy
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Sveinn í Felli"
+
+#, fuzzy
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "sveinki@nett.is"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Save"
+#~ msgstr "Skyggja"
+
+#~ msgid "Large"
+#~ msgstr "Stórt"
+
+#~ msgid "Small"
+#~ msgstr "Lítið"
+
+#~ msgid "Inner Color:"
+#~ msgstr "Innri litur:"
+
+#~ msgid "Outer Color:"
+#~ msgstr "Ytri litur:"
+
+#~ msgid "Vertical Offset:"
+#~ msgstr "Lóðrétt hliðrun:"
+
+#, fuzzy
+#~ msgid "Size: "
+#~ msgstr "Stærð:"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "Hakaðu við hér ef þú vilt að gluggar lokist þegar tvísmellt er á "
+#~ "valmyndina, svipað og í Microsoft Windows."
+
+#~ msgid "Plastik"
+#~ msgstr "Plastik"
+
+#, fuzzy
+#~| msgid "On All Desktops"
+#~ msgid "All Desktops"
+#~ msgstr "Á öllum skjáborðum"
+
+#, fuzzy
+#~ msgid "Above"
+#~ msgstr "Ofar"
+
+#, fuzzy
+#~ msgid "Below"
+#~ msgstr "Undir"
+
+#, fuzzy
+#~| msgid "Close"
+#~ msgid "Close Item"
+#~ msgstr "Loka"
+
+#, fuzzy
+#~ msgid "Tabstrip"
+#~ msgstr "Tabstrip"
+
+#, fuzzy
+#~| msgid "Left"
+#~ msgid "&Left"
+#~ msgstr "Vinstri"
+
+#, fuzzy
+#~| msgid "Center"
+#~ msgid "&Center"
+#~ msgstr "Miðja"
+
+#, fuzzy
+#~| msgid "Right"
+#~ msgid "&Right"
+#~ msgstr "Hægri"
+
+#, fuzzy
+#~| msgid "Outer Color:"
+#~ msgid "O&utline Color:"
+#~ msgstr "Ytri litur:"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Do not keep above others"
+#~ msgstr "Halda ofan á öðrum"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above others"
+#~ msgstr "Halda ofan á öðrum"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Do not keep below others"
+#~ msgstr "Halda undir öðrum"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below others"
+#~ msgstr "Halda undir öðrum"
+
+#, fuzzy
+#~ msgid "Variable"
+#~ msgstr "Óvirkt"
+
+#, fuzzy
+#~| msgid "Maximize"
+#~ msgid "Maximum"
+#~ msgstr "Hámarka"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Shadow style:"
+#~ msgstr "Skyggja"
+
+#, fuzzy
+#~ msgctxt "draw separator"
+#~ msgid "Enabled"
+#~ msgstr "Virkt"
+
+#, fuzzy
+#~ msgctxt "draw separator"
+#~ msgid "Disabled"
+#~ msgstr "Óvirkt"
+
+#, fuzzy
+#~| msgid "Blend title bar colors with window contents"
+#~ msgid "Draw separator between title bar and window contents: "
+#~ msgstr "Blanda titilrandarlitum saman við innihald glugga"
+
+#, fuzzy
+#~| msgid "Blend title bar colors with window contents"
+#~ msgid "Draw Separator between title bar and active window contents "
+#~ msgstr "Blanda titilrandarlitum saman við innihald glugga"
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "Setur inn KWM þema"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "Slóð að stillingarskrá þema"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWMÞema</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "Límdur"
+
+#~ msgid "Unsticky"
+#~ msgstr "Ólímdur"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>Keramik forsýn</b></center>"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "Hafa &skyggingu í titilrönd"
+
+#~ msgid ""
+#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
+#~ "otherwise, they are drawn without the stipple."
+#~ msgstr "Þegar valið, eru titilrendur teiknaðar með skyggingu (punktar)."
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "Teikna &handtaksslá neðst á gluggum"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
+#~ "otherwise, no grab bar is drawn."
+#~ msgstr ""
+#~ "Þegar valið, eru skreytingar teiknaðar með \"handföngum\" neðst í gluggum."
+
+#~ msgid "Draw &gradients"
+#~ msgstr "Nota &blöndun"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with gradients for high-color "
+#~ "displays; otherwise, no gradients are drawn."
+#~ msgstr ""
+#~ "Þegar valið, eru skreytingar teiknaðar með blöndun fyrir há-upplausnar "
+#~ "skjái."
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"
+
+#~ msgid ""
+#~ "When selected, the window decoration borders are drawn using the titlebar "
+#~ "colors; otherwise, they are drawn using normal border colors instead."
+#~ msgstr ""
+#~ "Þegar valið eru gluggaramma skreytingarnar teiknaðar með sömu litum og "
+#~ "titilröndin. Annars eru þær teiknaðir með venjulegum litum."
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "&Mjög þunnt Quartz"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "Quartz gluggaskreytingar með mjög þunnri titilslá."
+
+#~ msgid "Quartz"
+#~ msgstr "Quartz"
+
+#~ msgid "Redmond"
+#~ msgstr "Redmond"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "&Sýna stærðarhandföng"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "Þegar valið, eru allir gluggar teiknaðir með stærðarhandföng í neðra "
+#~ "hægra horninu. Þetta gerir auðveldara að breyta stærð glugga, sérstaklega "
+#~ "fyrir innbyggðar mýs á ferðatölvum."
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr "Hér getur þú breytt stærð á handfanginu."
+
+#~ msgid "Medium"
+#~ msgstr "Miðlungs"
+
+#~ msgid "Modern System"
+#~ msgstr "Nútímalegt kerfi"
+
+#~ msgid "Web"
+#~ msgstr "Vefur"
+
+#~ msgid "Keramik"
+#~ msgstr "Keramik"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "Sýna &táknmynd glugga í blöðru á titilrönd"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "Hakaðu við hér, ef þú vilt að táknmynd glugga sé sýnd í blöðrunni við "
+#~ "hliðina á texta í titilrönd."
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "Teikna &litlar texta blöðrur á virkum gluggum"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "Hakaðu við hér ef þú vilt að texta blaðran hafi sömu stærð á virkum sem "
+#~ "óvirkum gluggum. Þetta getur verið gagnlegt á ferðatölvum og skjám með "
+#~ "lága upplausn, þar sem þú vilt fá sem allra mest pláss fyrir innihald "
+#~ "glugganna."
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "Teikna &handtaksslá neðst á gluggum"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "Hakaðu við hér, ef þú vilt hafa handtaksslá neðst á gluggum. Þegar þessi "
+#~ "valkostur er ekki valinn er einungis þunnur rammi teiknaður í staðinn."

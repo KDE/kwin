@@ -1,0 +1,430 @@
+# translation of kcm_kwintabbox.po to Icelandic
+# Copyright (C) 2009 This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Sveinn í Felli <sveinki@nett.is>, 2009, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcm_kwintabbox\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-15 00:48+0000\n"
+"PO-Revision-Date: 2010-04-04 14:36+0000\n"
+"Last-Translator: Sveinn í Felli <sveinki@nett.is>\n"
+"Language-Team: Icelandic <kde-isl@molar.is>\n"
+"Language: is\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: Plural-Forms: nplurals=2; plural=n != 1;\n"
+"\n"
+"\n"
+
+#: kwintabboxconfigform.cpp:77
+#, kde-format
+msgid "KWin"
+msgstr ""
+
+#: layoutpreview.cpp:133
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "Show Desktop"
+msgstr "Öll skjáborð"
+
+#: layoutpreview.cpp:163
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgctxt "An example Desktop Name"
+msgid "Desktop 1"
+msgstr "Öll skjáborð"
+
+#: main.cpp:58
+#, kde-format
+msgid "Main"
+msgstr "Aðal"
+
+#: main.cpp:59
+#, kde-format
+msgid "Alternative"
+msgstr "Varaleið"
+
+#: main.cpp:61
+#, kde-format
+msgid "Get New Task Switchers..."
+msgstr ""
+
+#: main.cpp:75
+#, kde-format
+msgid ""
+"Focus policy settings limit the functionality of navigating through windows."
+msgstr ""
+"Stillingar stefnu á virknifókus takmarka möguleika við flakk á milli glugga."
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#: main.ui:32
+#, kde-format
+msgid "Content"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
+#: main.ui:41
+#, fuzzy, kde-format
+#| msgid "Include desktop"
+msgid "Include \"Show Desktop\" icon"
+msgstr "Innifela skjáborð"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
+#: main.ui:55
+#, kde-format
+msgid "Recently used"
+msgstr "Nýlega notað"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
+#: main.ui:60
+#, kde-format
+msgid "Stacking order"
+msgstr "Stöflun:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, oneAppWindow)
+#: main.ui:68
+#, kde-format
+msgid "Only one window per application"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, orderMinimized)
+#: main.ui:78
+#, kde-format
+msgid "Order minimized windows after unminimized windows"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: main.ui:88
+#, kde-format
+msgid "Sort order:"
+msgstr "Röðun:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: main.ui:114
+#, fuzzy, kde-format
+#| msgid "List windows:"
+msgid "Filter windows by"
+msgstr "Telja upp glugga:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterDesktops)
+#: main.ui:123
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "Virtual desktops"
+msgstr "Öll skjáborð"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentDesktop)
+#: main.ui:167
+#, fuzzy, kde-format
+#| msgid "Current Desktop"
+msgid "Current desktop"
+msgstr "Núverandi skjáborð"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherDesktops)
+#: main.ui:174
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "All other desktops"
+msgstr "Öll skjáborð"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterActivities)
+#: main.ui:184
+#, kde-format
+msgid "Activities"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentActivity)
+#: main.ui:228
+#, kde-format
+msgid "Current activity"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherActivities)
+#: main.ui:235
+#, kde-format
+msgid "All other activities"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterScreens)
+#: main.ui:245
+#, kde-format
+msgid "Screens"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentScreen)
+#: main.ui:289
+#, fuzzy, kde-format
+#| msgid "Current Desktop"
+msgid "Current screen"
+msgstr "Núverandi skjáborð"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherScreens)
+#: main.ui:296
+#, kde-format
+msgid "All other screens"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterMinimization)
+#: main.ui:306
+#, fuzzy, kde-format
+#| msgid "Minimum Size"
+msgid "Minimization"
+msgstr "Lágmarksstærð"
+
+#. i18n: ectx: property (text), widget (QRadioButton, visibleWindows)
+#: main.ui:350
+#, fuzzy, kde-format
+#| msgid "List windows:"
+msgid "Visible windows"
+msgstr "Telja upp glugga:"
+
+#. i18n: ectx: property (text), widget (QRadioButton, hiddenWindows)
+#: main.ui:357
+#, fuzzy, kde-format
+#| msgid "List windows:"
+msgid "Hidden windows"
+msgstr "Telja upp glugga:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
+#: main.ui:396
+#, kde-format
+msgid "Shortcuts"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: main.ui:405 main.ui:448
+#, kde-format
+msgid "Forward"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: main.ui:428
+#, fuzzy, kde-format
+#| msgid "List windows:"
+msgid "All windows"
+msgstr "Telja upp glugga:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: main.ui:438 main.ui:458
+#, kde-format
+msgid "Reverse"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: main.ui:480
+#, fuzzy, kde-format
+#| msgid "Current Desktop Grouped by Applications"
+msgid "Current application"
+msgstr "Þetta skjáborð hópað eftir forritum"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: main.ui:499
+#, fuzzy, kde-format
+#| msgid "Navigation"
+msgid "Visualization"
+msgstr "Leiðarstýring"
+
+#. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
+#: main.ui:529
+#, kde-format
+msgid "The effect to replace the list window when desktop effects are active."
+msgstr ""
+"Brellan sem skiptir út listaglugganum þegar skjáborðsbrellur eru virkar."
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
+#: main.ui:559
+#, kde-format
+msgid ""
+"The currently selected window will be highlighted by fading out all other "
+"windows. This option requires desktop effects to be active."
+msgstr ""
+"Glugginn sem er valinn verður ljómaður með því að deyfa alla aðra glugga. "
+"Þetta krefst þess að skjáborðsbrellur séu virkar."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
+#: main.ui:562
+#, fuzzy, kde-format
+#| msgid "Show outline of selected window"
+msgid "Show selected window"
+msgstr "Sýna útlínur valinna glugga"
+
+#, fuzzy
+#~| msgid "Show outline of selected window"
+#~ msgid "Outline selected window"
+#~ msgstr "Sýna útlínur valinna glugga"
+
+#~ msgid ""
+#~ "These settings are used by the \"Walk Through Windows Alternative\" "
+#~ "actions."
+#~ msgstr ""
+#~ "Þessar stillingar eru notaðar í \"Flakka milli glugga (varaleið)\" "
+#~ "aðgerðum."
+
+#~ msgid "Walk Through Windows"
+#~ msgstr "Flakka milli glugga"
+
+#~ msgid "Walk Through Windows (Reverse)"
+#~ msgstr "Flakka milli glugga (afturábak)"
+
+#~ msgid "Walk Through Windows Alternative"
+#~ msgstr "Flakka milli glugga (varaleið)"
+
+#~ msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgstr "Flakka milli glugga (varaleið afturábak)"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative"
+#~ msgid "Walk Through Windows of Current Application"
+#~ msgstr "Flakka milli glugga (varaleið)"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgid "Walk Through Windows of Current Application (Reverse)"
+#~ msgstr "Flakka milli glugga (varaleið afturábak)"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative"
+#~ msgid "Walk Through Windows of Current Application Alternative"
+#~ msgstr "Flakka milli glugga (varaleið)"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+#~ msgstr "Flakka milli glugga (varaleið afturábak)"
+
+#~ msgid "Configure Layout"
+#~ msgstr "Stilla framsetningu"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Sveinn í Felli"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "sveinki@nett.is"
+
+#~ msgid "These settings are used by the \"Walk Through Windows\" actions."
+#~ msgstr "Þessar stillingar eru notaðar í \"Flakka milli glugga\" aðgerðum."
+
+#, fuzzy
+#~| msgid "All Desktops Grouped by Applications"
+#~ msgid "All windows from all applications"
+#~ msgstr "Öll skjáborð hópuð eftir forritum"
+
+#, fuzzy
+#~| msgid "Adds an entry to minimize all windows."
+#~ msgid "Exclude minimized windows"
+#~ msgstr "Bætir við færslu til að minnka alla glugga."
+
+#, fuzzy
+#~| msgid "Adds an entry to minimize all windows."
+#~ msgid "Show desktop to minimize all windows"
+#~ msgstr "Bætir við færslu til að minnka alla glugga."
+
+#~ msgid "Highlight selected window"
+#~ msgstr "Ljóma valinn glugga"
+
+#~ msgid "Effect:"
+#~ msgstr "Brella:"
+
+#~ msgid "Display list while switching"
+#~ msgstr "Birta lista á meðan skipt er um glugga"
+
+#, fuzzy
+#~| msgid "Informative"
+#~ msgctxt "Name for a window switcher layout showing icon, name and desktop"
+#~ msgid "Informative"
+#~ msgstr "Upplýsandi"
+
+#, fuzzy
+#~| msgid "Compact"
+#~ msgctxt "Name for a window switcher layout showing only icon and name"
+#~ msgid "Compact"
+#~ msgstr "Þjappað"
+
+#, fuzzy
+#~| msgid "Text Only"
+#~ msgctxt "Name for a window switcher layout showing only the name"
+#~ msgid "Text"
+#~ msgstr "Einungis texti"
+
+#, fuzzy
+#~| msgid "Large Icons"
+#~ msgctxt "Name for a window switcher layout showing large icons"
+#~ msgid "Large Icons"
+#~ msgstr "Stórar táknmyndir"
+
+#, fuzzy
+#~| msgid "Small Icons"
+#~ msgctxt "Name for a window switcher layout showing small icons"
+#~ msgid "Small Icons"
+#~ msgstr "Litlar táknmyndir"
+
+#~ msgid "No Effect"
+#~ msgstr "Engin brella"
+
+#~ msgid "Configure Layout..."
+#~ msgstr "Stilla framsetningu..."
+
+#~ msgid "Item Layout"
+#~ msgstr "Framsetning hlutar"
+
+#~ msgid "Item layout:"
+#~ msgstr "Framsetning hlutar:"
+
+#~ msgid "Layout:"
+#~ msgstr "Framsetning"
+
+#~ msgid "Vertical"
+#~ msgstr "Lóðrétt"
+
+#~ msgid "Horizontal"
+#~ msgstr "Lárétt"
+
+#~ msgid "Tabular"
+#~ msgstr "Tafla"
+
+#~ msgid "Width:"
+#~ msgstr "Breidd:"
+
+#~ msgid "Minimum width, as a percentage of screen width."
+#~ msgstr "Lágmarksbreidd, sem prósentuhlutfall af skjábreidd."
+
+#~ msgid " %"
+#~ msgstr " %"
+
+#~ msgid "Height:"
+#~ msgstr "Hæð:"
+
+#~ msgid "Minimum height, as a percentage of screen height."
+#~ msgstr "Lágmarkshæð, sem prósentuhlutfall af skjáhæð."
+
+#~ msgid "Show Selected Item"
+#~ msgstr "Sýna valinn hlut"
+
+#~ msgid "Selected item view:"
+#~ msgstr "Sýn á valinn hlut:"
+
+#~ msgid "Top"
+#~ msgstr "Efst"
+
+#~ msgid "Bottom"
+#~ msgstr "Neðst"
+
+#~ msgid "Left"
+#~ msgstr "Vinstri"
+
+#~ msgid "Right"
+#~ msgstr "Hægri"
+
+#~ msgid "Selected item layout:"
+#~ msgstr "Framsetning valins hlutar:"
+
+#~ msgid "General"
+#~ msgstr "Almennt"

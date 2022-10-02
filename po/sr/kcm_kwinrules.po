@@ -1,0 +1,925 @@
+# Translation of kcmkwinrules.po into Serbian.
+# Toplica Tanaskovic <toptan@kde.org.yu>, 2004, 2005.
+# Chusslove Illich <caslav.ilic@gmx.net>, 2005, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2017.
+# Dalibor Djuric <daliborddjuric@gmail.com>, 2009, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwinrules\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2020-06-13 02:17+0200\n"
+"PO-Revision-Date: 2017-10-30 23:08+0100\n"
+"Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
+"Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
+"Language: sr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
+"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Accelerator-Marker: &\n"
+"X-Text-Markup: kde4\n"
+"X-Environment: kde\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Топлица Танасковић,Часлав Илић"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "toptan@kde.org.yu,caslav.ilic@gmx.net"
+
+#: kcmrules.cpp:42
+#, fuzzy, kde-format
+#| msgid "Window ro&le:"
+msgid "Window Rules"
+msgstr "&Улога прозора:"
+
+#: kcmrules.cpp:46
+#, kde-format
+msgid "Ismael Asensio"
+msgstr ""
+
+#: kcmrules.cpp:47
+#, kde-format
+msgid "Author"
+msgstr ""
+
+#: kcmrules.cpp:51
+#, kde-format
+msgid ""
+"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
+"specifically only for some windows.</p> <p>Please note that this "
+"configuration will not take effect if you do not use KWin as your window "
+"manager. If you do use a different window manager, please refer to its "
+"documentation for how to customize window behavior.</p>"
+msgstr ""
+"<h1>Посебне поставке за прозор</h1><p>Овде можете прилагодити поставке "
+"прозора специјално за неке одређене прозоре.</p><p>Ова постава је на снази "
+"само ако користите К‑вин као менаџер прозора. Ако користите други менаџер, "
+"погледајте његову документацију за подешавање понашања прозора.</p>"
+
+# >> %1 is window class (not translated)
+#: main.cpp:103
+#, kde-format
+msgid "Application settings for %1"
+msgstr "Програмске поставке за „%1“"
+
+# >> %1 is window class (not translated)
+#: main.cpp:123 rulesmodel.cpp:227
+#, kde-format
+msgid "Window settings for %1"
+msgstr "Прозорске поставке за „%1“"
+
+#: main.cpp:175
+#, kde-format
+msgctxt "Window caption for the application wide rules dialog"
+msgid "Edit Application-Specific Settings"
+msgstr "Уређивање посебних поставки за програм"
+
+#: main.cpp:206
+#, kde-format
+msgid "KWin"
+msgstr "К‑вин"
+
+#: main.cpp:213
+#, kde-format
+msgid "KWin helper utility"
+msgstr "Помоћна алатка за К‑вин"
+
+#: main.cpp:214
+#, fuzzy, kde-format
+#| msgid "WId of the window for special window settings."
+msgid "KWin id of the window for special window settings."
+msgstr "ИД прозора за посебне поставке по прозору."
+
+#: main.cpp:215
+#, kde-format
+msgid "Whether the settings should affect all windows of the application."
+msgstr "Да ли поставке утичу на све прозоре истог програма."
+
+#: main.cpp:224
+#, kde-format
+msgid "This helper utility is not supposed to be called directly."
+msgstr "Ова помоћна алатка не би требало да се позива директно."
+
+#: optionsmodel.cpp:159
+#, kde-format
+msgid "Unimportant"
+msgstr "неважно"
+
+#: optionsmodel.cpp:160
+#, kde-format
+msgid "Exact Match"
+msgstr "тачно поклапање"
+
+#: optionsmodel.cpp:161
+#, kde-format
+msgid "Substring Match"
+msgstr "поклапање подниске"
+
+#: optionsmodel.cpp:162
+#, kde-format
+msgid "Regular Expression"
+msgstr "регуларни израз"
+
+#: optionsmodel.cpp:167
+#, kde-format
+msgid "Do Not Affect"
+msgstr "без утицаја"
+
+#: optionsmodel.cpp:168
+#, kde-format
+msgid ""
+"The window property will not be affected and therefore the default handling "
+"for it will be used.\n"
+"Specifying this will block more generic window settings from taking effect."
+msgstr ""
+
+#: optionsmodel.cpp:171
+#, kde-format
+msgid "Apply Initially"
+msgstr "примени на почетку"
+
+#: optionsmodel.cpp:172
+#, kde-format
+msgid ""
+"The window property will be only set to the given value after the window is "
+"created.\n"
+"No further changes will be affected."
+msgstr ""
+
+#: optionsmodel.cpp:175
+#, kde-format
+msgid "Remember"
+msgstr "запамти"
+
+#: optionsmodel.cpp:176
+#, kde-format
+msgid ""
+"The value of the window property will be remembered and, every time the "
+"window is created, the last remembered value will be applied."
+msgstr ""
+
+#: optionsmodel.cpp:179
+#, kde-format
+msgid "Force"
+msgstr "наметни"
+
+#: optionsmodel.cpp:180
+#, kde-format
+msgid "The window property will be always forced to the given value."
+msgstr ""
+
+#: optionsmodel.cpp:182
+#, kde-format
+msgid "Apply Now"
+msgstr "примени сада"
+
+#: optionsmodel.cpp:183
+#, kde-format
+msgid ""
+"The window property will be set to the given value immediately and will not "
+"be affected later\n"
+"(this action will be deleted afterwards)."
+msgstr ""
+
+#: optionsmodel.cpp:186
+#, kde-format
+msgid "Force Temporarily"
+msgstr "наметни привремено"
+
+#: optionsmodel.cpp:187
+#, kde-format
+msgid ""
+"The window property will be forced to the given value until it is hidden\n"
+"(this action will be deleted after the window is hidden)."
+msgstr ""
+
+#: package/contents/ui/FileDialogLoader.qml:28
+#, kde-format
+msgid "Select File"
+msgstr ""
+
+#: package/contents/ui/FileDialogLoader.qml:40
+#, kde-format
+msgid "KWin Rules (*.kwinrule)"
+msgstr "К‑винова правила (*.kwinrule)"
+
+#: package/contents/ui/OptionsComboBox.qml:46
+#, kde-format
+msgid "None selected"
+msgstr ""
+
+#: package/contents/ui/OptionsComboBox.qml:51
+#, kde-format
+msgid "All selected"
+msgstr ""
+
+#: package/contents/ui/OptionsComboBox.qml:53
+#, kde-format
+msgid "%1 selected"
+msgid_plural "%1 selected"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: package/contents/ui/RulesEditor.qml:62
+#: package/contents/ui/RulesEditor.qml:81
+#, kde-format
+msgid "Add Properties..."
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:81
+#, fuzzy, kde-format
+#| msgid "&Closeable"
+msgid "Close"
+msgstr "&Затворљив"
+
+#: package/contents/ui/RulesEditor.qml:94
+#, fuzzy, kde-format
+#| msgid "&Detect Window Properties"
+msgid "Detect Window Properties"
+msgstr "&Откриј својства прозора"
+
+#: package/contents/ui/RulesEditor.qml:107
+#, kde-format
+msgid "Instantly"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:108
+#, kde-format
+msgid "After %1 second"
+msgid_plural "After %1 seconds"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: package/contents/ui/RulesEditor.qml:127
+#, fuzzy, kde-format
+#| msgid "&Detect Window Properties"
+msgid "Select properties"
+msgstr "&Откриј својства прозора"
+
+#: package/contents/ui/RulesEditor.qml:219
+#: package/contents/ui/ValueEditor.qml:67
+#, kde-format
+msgid "Yes"
+msgstr "да"
+
+#: package/contents/ui/RulesEditor.qml:219
+#: package/contents/ui/ValueEditor.qml:73
+#, kde-format
+msgid "No"
+msgstr "не"
+
+#: package/contents/ui/RulesEditor.qml:221
+#: package/contents/ui/ValueEditor.qml:140
+#: package/contents/ui/ValueEditor.qml:147
+#, kde-format
+msgid "%1 %"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:223
+#, kde-format
+msgctxt "Coordinates (x, y)"
+msgid "(%1, %2)"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:225
+#, kde-format
+msgctxt "Size (width, height)"
+msgid "(%1, %2)"
+msgstr ""
+
+#: package/contents/ui/RulesList.qml:73
+#, kde-format
+msgid "No rules for specific windows are currently set"
+msgstr ""
+
+#: package/contents/ui/RulesList.qml:81
+#, kde-format
+msgid "Select the rules to export"
+msgstr ""
+
+#: package/contents/ui/RulesList.qml:85
+#, kde-format
+msgid "Unselect All"
+msgstr ""
+
+#: package/contents/ui/RulesList.qml:85
+#, kde-format
+msgid "Select All"
+msgstr ""
+
+#: package/contents/ui/RulesList.qml:99
+#, kde-format
+msgid "Save Rules"
+msgstr ""
+
+# >> @action:button New rule
+#: package/contents/ui/RulesList.qml:110
+#, fuzzy, kde-format
+#| msgid "&New..."
+msgid "Add New..."
+msgstr "&Ново..."
+
+#: package/contents/ui/RulesList.qml:121
+#, fuzzy, kde-format
+#| msgid "&Import"
+msgid "Import..."
+msgstr "&Увези"
+
+#: package/contents/ui/RulesList.qml:129
+#, fuzzy, kde-format
+#| msgid "&Export"
+msgid "Cancel Export"
+msgstr "&Извези"
+
+#: package/contents/ui/RulesList.qml:129
+#, fuzzy, kde-format
+#| msgid "&Export"
+msgid "Export..."
+msgstr "&Извези"
+
+#: package/contents/ui/RulesList.qml:210
+#, kde-format
+msgid "Edit"
+msgstr "Уреди"
+
+#: package/contents/ui/RulesList.qml:219
+#, kde-format
+msgid "Delete"
+msgstr "&Обриши"
+
+# >> @title:window
+#: package/contents/ui/RulesList.qml:232
+#, kde-format
+msgid "Import Rules"
+msgstr "Увоз правила"
+
+# >> @title:window
+#: package/contents/ui/RulesList.qml:244
+#, kde-format
+msgid "Export Rules"
+msgstr "Извоз правила"
+
+#: package/contents/ui/ValueEditor.qml:174
+#, kde-format
+msgctxt "(x, y) coordinates separator in size/position"
+msgid "x"
+msgstr ""
+
+#: rulesdialog.cpp:40
+#, kde-format
+msgid "Edit Window-Specific Settings"
+msgstr "Уреди посебне поставке за прозор"
+
+#: rulesmodel.cpp:230
+#, kde-format
+msgid "Settings for %1"
+msgstr "Поставке класе %1"
+
+# >> %1 is window class (not translated)
+#: rulesmodel.cpp:233
+#, fuzzy, kde-format
+#| msgid "Window settings for %1"
+msgid "New window settings"
+msgstr "Прозорске поставке за „%1“"
+
+#: rulesmodel.cpp:247
+#, kde-format
+msgid ""
+"You have specified the window class as unimportant.\n"
+"This means the settings will possibly apply to windows from all "
+"applications. If you really want to create a generic setting, it is "
+"recommended you at least limit the window types to avoid special window "
+"types."
+msgstr ""
+"Задали сте класу прозора као неважну.\n"
+"Ово значи да се поставке могу применити на прозоре свих програма. Ако "
+"стварно желите да направите опште поставке, препоручљиво је да барем "
+"ограничите типове прозора како бисте избегли посебне типове."
+
+#: rulesmodel.cpp:377
+#, fuzzy, kde-format
+#| msgid "&Description:"
+msgid "Description"
+msgstr "&Опис:"
+
+#: rulesmodel.cpp:377 rulesmodel.cpp:385 rulesmodel.cpp:393 rulesmodel.cpp:400
+#: rulesmodel.cpp:406 rulesmodel.cpp:414 rulesmodel.cpp:419 rulesmodel.cpp:425
+#, fuzzy, kde-format
+#| msgid "&Window matching"
+msgid "Window matching"
+msgstr "&Поклапање прозора"
+
+#: rulesmodel.cpp:385
+#, fuzzy, kde-format
+#| msgid "Window &class (application):"
+msgid "Window class (application)"
+msgstr "&Класа прозора (програм):"
+
+#: rulesmodel.cpp:393
+#, fuzzy, kde-format
+#| msgid "Match w&hole window class"
+msgid "Match whole window class"
+msgstr "Поклопи &целу класу прозора"
+
+#: rulesmodel.cpp:400
+#, fuzzy, kde-format
+#| msgid "Match w&hole window class"
+msgid "Whole window class"
+msgstr "Поклопи &целу класу прозора"
+
+#: rulesmodel.cpp:406
+#, fuzzy, kde-format
+#| msgid "Window &types:"
+msgid "Window types"
+msgstr "&Типови прозора:"
+
+#: rulesmodel.cpp:414
+#, fuzzy, kde-format
+#| msgid "Window ro&le:"
+msgid "Window role"
+msgstr "&Улога прозора:"
+
+#: rulesmodel.cpp:419
+#, fuzzy, kde-format
+#| msgid "Window t&itle:"
+msgid "Window title"
+msgstr "&Наслов прозора:"
+
+#: rulesmodel.cpp:425
+#, fuzzy, kde-format
+#| msgid "&Machine (hostname):"
+msgid "Machine (hostname)"
+msgstr "&Машина (име домаћина):"
+
+#: rulesmodel.cpp:431
+#, fuzzy, kde-format
+#| msgid "&Position"
+msgid "Position"
+msgstr "&Положај"
+
+#: rulesmodel.cpp:431 rulesmodel.cpp:436 rulesmodel.cpp:441 rulesmodel.cpp:446
+#: rulesmodel.cpp:451 rulesmodel.cpp:464 rulesmodel.cpp:478 rulesmodel.cpp:483
+#: rulesmodel.cpp:488 rulesmodel.cpp:493 rulesmodel.cpp:498 rulesmodel.cpp:504
+#: rulesmodel.cpp:513 rulesmodel.cpp:518 rulesmodel.cpp:523
+#, fuzzy, kde-format
+#| msgid "&Size && Position"
+msgid "Size & Position"
+msgstr "&Величина и положај"
+
+#: rulesmodel.cpp:436
+#, fuzzy, kde-format
+#| msgid "&Size"
+msgid "Size"
+msgstr "Ве&личина"
+
+#: rulesmodel.cpp:441
+#, fuzzy, kde-format
+#| msgid "Maximized &horizontally"
+msgid "Maximized horizontally"
+msgstr "&Водоравно максимизован"
+
+#: rulesmodel.cpp:446
+#, fuzzy, kde-format
+#| msgid "Maximized &vertically"
+msgid "Maximized vertically"
+msgstr "&Усправно максимизован"
+
+#: rulesmodel.cpp:451
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "Virtual Desktop"
+msgstr "Све површи"
+
+#: rulesmodel.cpp:464
+#, fuzzy, kde-format
+#| msgid "Activit&y"
+msgid "Activity"
+msgstr "&Активност"
+
+#: rulesmodel.cpp:478
+#, kde-format
+msgid "Screen"
+msgstr "Екран"
+
+#: rulesmodel.cpp:483
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgid "Fullscreen"
+msgstr "Преко &целог екрана"
+
+#: rulesmodel.cpp:488
+#, fuzzy, kde-format
+#| msgid "M&inimized"
+msgid "Minimized"
+msgstr "М&инимизован"
+
+#: rulesmodel.cpp:493
+#, fuzzy, kde-format
+#| msgid "Sh&aded"
+msgid "Shaded"
+msgstr "&Намотан"
+
+#: rulesmodel.cpp:498
+#, fuzzy, kde-format
+#| msgid "Initial p&lacement"
+msgid "Initial placement"
+msgstr "&Постављање на почетку"
+
+#: rulesmodel.cpp:504
+#, fuzzy, kde-format
+#| msgid "Ignore requested &geometry"
+msgid "Ignore requested geometry"
+msgstr "Игнориши тражену &геометрију"
+
+#: rulesmodel.cpp:506
+#, kde-format
+msgid ""
+"Windows can ask to appear in a certain position.\n"
+"By default this overrides the placement strategy\n"
+"what might be nasty if the client abuses the feature\n"
+"to unconditionally popup in the middle of your screen."
+msgstr ""
+"<p>Прозори могу затражити да се појаве на одређеном месту. Подразумевано ово "
+"потискује стратегију постављања, што може бити незгодно када клијент "
+"злоупотребљава ту могућност да би безусловно искакао посред екрана.</p>"
+
+#: rulesmodel.cpp:513
+#, fuzzy, kde-format
+#| msgid "M&inimum size"
+msgid "Minimum Size"
+msgstr "М&инимална величина"
+
+#: rulesmodel.cpp:518
+#, fuzzy, kde-format
+#| msgid "M&aximum size"
+msgid "Maximum Size"
+msgstr "М&аксимална величина"
+
+#: rulesmodel.cpp:523
+#, kde-format
+msgid "Obey geometry restrictions"
+msgstr "Поштуј ограничења геометрије"
+
+#: rulesmodel.cpp:525
+#, kde-format
+msgid ""
+"Eg. terminals or video players can ask to keep a certain aspect ratio\n"
+"or only grow by values larger than one\n"
+"(eg. by the dimensions of one character).\n"
+"This may be pointless and the restriction prevents arbitrary dimensions\n"
+"like your complete screen area."
+msgstr ""
+"<p>Неки програми, као што су терминали или видео плејери, могу тражити да "
+"задрже одређену пропорцију или да се увећавају у тачно одређеним корацима "
+"(нпр. за величину једног знака). Ова ограничења некада могу бити преоштра, "
+"спречавајући вас да изаберете произвољне димензије попут подручја целог "
+"екрана.</p>"
+
+#: rulesmodel.cpp:534
+#, fuzzy, kde-format
+#| msgid "Keep &above"
+msgid "Keep above"
+msgstr "Држи из&над"
+
+#: rulesmodel.cpp:534 rulesmodel.cpp:539 rulesmodel.cpp:544 rulesmodel.cpp:550
+#: rulesmodel.cpp:556 rulesmodel.cpp:562
+#, fuzzy, kde-format
+#| msgid "&Arrangement && Access"
+msgid "Arrangement & Access"
+msgstr "&Распоред и приступ"
+
+#: rulesmodel.cpp:539
+#, fuzzy, kde-format
+#| msgid "Keep &below"
+msgid "Keep below"
+msgstr "Држи ис&под"
+
+#: rulesmodel.cpp:544
+#, fuzzy, kde-format
+#| msgid "Skip &taskbar"
+msgid "Skip taskbar"
+msgstr "Прескочи &траку задатака"
+
+#: rulesmodel.cpp:546
+#, kde-format
+msgid "Window shall (not) appear in the taskbar."
+msgstr "Да ли ће се прозор јављати у траци задатака."
+
+#: rulesmodel.cpp:550
+#, fuzzy, kde-format
+#| msgid "Skip pa&ger"
+msgid "Skip pager"
+msgstr "Прескочи &листач"
+
+#: rulesmodel.cpp:552
+#, kde-format
+msgid "Window shall (not) appear in the manager for virtual desktops"
+msgstr "Да ли ће се прозор јављати у менаџеру виртуелних површи."
+
+#: rulesmodel.cpp:556
+#, fuzzy, kde-format
+#| msgid "Skip &switcher"
+msgid "Skip switcher"
+msgstr "Прескочи &мењач"
+
+#: rulesmodel.cpp:558
+#, kde-format
+msgid "Window shall (not) appear in the Alt+Tab list"
+msgstr "Да ли ће се прозор јављати у списку на Alt+Tab."
+
+#: rulesmodel.cpp:562
+#, kde-format
+msgid "Shortcut"
+msgstr "Пречица"
+
+#: rulesmodel.cpp:568
+#, fuzzy, kde-format
+#| msgid "&No titlebar and frame"
+msgid "No titlebar and frame"
+msgstr "&Без траке наслова и оквира"
+
+#: rulesmodel.cpp:568 rulesmodel.cpp:573 rulesmodel.cpp:579 rulesmodel.cpp:584
+#: rulesmodel.cpp:589 rulesmodel.cpp:600 rulesmodel.cpp:611 rulesmodel.cpp:619
+#: rulesmodel.cpp:632 rulesmodel.cpp:637 rulesmodel.cpp:643 rulesmodel.cpp:648
+#, fuzzy, kde-format
+#| msgid "Appearance && &Fixes"
+msgid "Appearance & Fixes"
+msgstr "&Изглед и поправке"
+
+#: rulesmodel.cpp:573
+#, fuzzy, kde-format
+#| msgid "Titlebar color &scheme"
+msgid "Titlebar color scheme"
+msgstr "Шема &боја насловне траке"
+
+#: rulesmodel.cpp:579
+#, fuzzy, kde-format
+#| msgid "A&ctive opacity"
+msgid "Active opacity"
+msgstr "&Непрозирност активног"
+
+#: rulesmodel.cpp:584
+#, fuzzy, kde-format
+#| msgid "I&nactive opacity"
+msgid "Inactive opacity"
+msgstr "Непрозирност &неактивног"
+
+#: rulesmodel.cpp:589
+#, fuzzy, kde-format
+#| msgid "&Focus stealing prevention"
+msgid "Focus stealing prevention"
+msgstr "Спречавање крађе &фокуса"
+
+#: rulesmodel.cpp:591
+#, kde-format
+msgid ""
+"KWin tries to prevent windows from taking the focus\n"
+"(\"activate\") while you're working in another window,\n"
+"but this may sometimes fail or superact.\n"
+"\"None\" will unconditionally allow this window to get the focus while\n"
+"\"Extreme\" will completely prevent it from taking the focus."
+msgstr ""
+"<p>К‑вин се труди да спречи прозоре да одузимају фокус („активирају се“) док "
+"радите у другом прозор, али то некада може не успети или претерати. Избор "
+"<i>никакво</i> ће овом прозору дозволити да безусловно узима фокус, док ће "
+"га <i>екстремно</i> потпуно спречити да то чини.</p>"
+
+#: rulesmodel.cpp:600
+#, kde-format
+msgid "Focus protection"
+msgstr "Заштита фокуса"
+
+#: rulesmodel.cpp:602
+#, kde-format
+msgid ""
+"This controls the focus protection of the currently active window.\n"
+"None will always give the focus away,\n"
+"Extreme will keep it.\n"
+"Otherwise it's interleaved with the stealing prevention\n"
+"assigned to the window that wants the focus."
+msgstr ""
+"Ово одређује заштиту фокуса тренутно активног прозора.\n"
+"Вредност „никакво“ ће увек предати фокус,\n"
+"а „екстремно“ ће га задржати.\n"
+"Иначе се разматра у спрези са заштитом од крађе\n"
+"додељеној прозору који захтева фокус."
+
+#: rulesmodel.cpp:611
+#, fuzzy, kde-format
+#| msgid "Accept &focus"
+msgid "Accept focus"
+msgstr "Прихвати &фокус"
+
+#: rulesmodel.cpp:613
+#, kde-format
+msgid ""
+"Windows may prevent to get the focus (activate) when being clicked.\n"
+"On the other hand you might wish to prevent a window\n"
+"from getting focused on a mouse click."
+msgstr ""
+"<p>Прозор могу спречити добијање фокуса (активацију) када се кликне на њих. "
+"С друге стране, можда ви желите да спречите неки прозор да добије фокус на "
+"клик мишем.</p>"
+
+#: rulesmodel.cpp:619
+#, kde-format
+msgid "Ignore global shortcuts"
+msgstr "Игнориши глобалне пречице"
+
+#: rulesmodel.cpp:621
+#, kde-format
+msgid ""
+"When used, a window will receive\n"
+"all keyboard inputs while it is active, including Alt+Tab etc.\n"
+"This is especially interesting for emulators or virtual machines.\n"
+"\n"
+"Be warned:\n"
+"you won't be able to Alt+Tab out of the window\n"
+"nor use any other global shortcut (such as Alt+F2 to show KRunner)\n"
+"while it's active!"
+msgstr ""
+"<p>Ако се ово попуни, прозор ће добијати све уносе са тастатуре док је "
+"активан, укључујући и Alt+Tab и сл. Ово је посебно од користи за емулаторе "
+"или виртуелне машине.</p><p><b>Пажња</b>: Док је ово активно нећете моћи да "
+"искочите из прозора Alt+Tab‑ом, нити да употребите било коју другу глобалну "
+"пречицу (нпр. Alt+F2 за дозивање К‑извођача).</p>"
+
+#: rulesmodel.cpp:632
+#, fuzzy, kde-format
+#| msgid "&Closeable"
+msgid "Closeable"
+msgstr "&Затворљив"
+
+#: rulesmodel.cpp:637
+#, fuzzy, kde-format
+#| msgid "Window &type"
+msgid "Set window type"
+msgstr "&Тип прозора"
+
+#: rulesmodel.cpp:643
+#, kde-format
+msgid "Desktop file name"
+msgstr ""
+
+#: rulesmodel.cpp:648
+#, kde-format
+msgid "Block compositing"
+msgstr "Блокирај слагање"
+
+#: rulesmodel.cpp:723
+#, kde-format
+msgid "Normal Window"
+msgstr "нормалан прозор"
+
+#: rulesmodel.cpp:724
+#, kde-format
+msgid "Dialog Window"
+msgstr "дијалог-прозор"
+
+#: rulesmodel.cpp:725
+#, kde-format
+msgid "Utility Window"
+msgstr "приручни прозор"
+
+#: rulesmodel.cpp:726
+#, kde-format
+msgid "Dock (panel)"
+msgstr "сидриште (панел)"
+
+#: rulesmodel.cpp:727
+#, kde-format
+msgid "Toolbar"
+msgstr "трака алатки"
+
+#: rulesmodel.cpp:728
+#, kde-format
+msgid "Torn-Off Menu"
+msgstr "отцепљен мени"
+
+#: rulesmodel.cpp:729
+#, kde-format
+msgid "Splash Screen"
+msgstr "уводни екран"
+
+#: rulesmodel.cpp:730
+#, kde-format
+msgid "Desktop"
+msgstr "површ"
+
+#. i18n("Unmanaged Window")   },  deprecated
+#: rulesmodel.cpp:732
+#, kde-format
+msgid "Standalone Menubar"
+msgstr "самостална трака менија"
+
+#: rulesmodel.cpp:747
+#, kde-format
+msgid "All Desktops"
+msgstr "Све површи"
+
+#: rulesmodel.cpp:760
+#, kde-format
+msgid "All Activities"
+msgstr "Све активности"
+
+# >> @item:inlistbox Placement->Force
+#: rulesmodel.cpp:781
+#, kde-format
+msgid "Default"
+msgstr "подразумевано"
+
+# >> @item:inlistbox Placement->Force
+#: rulesmodel.cpp:782
+#, kde-format
+msgid "No Placement"
+msgstr "без постављања"
+
+#: rulesmodel.cpp:783
+#, kde-format
+msgid "Minimal Overlapping"
+msgstr ""
+
+# >> @item:inlistbox Placement->Force
+#: rulesmodel.cpp:784
+#, fuzzy, kde-format
+#| msgid "Maximizing"
+msgid "Maximized"
+msgstr "максимизовано"
+
+# >> @item:inlistbox Placement->Force
+#: rulesmodel.cpp:785
+#, fuzzy, kde-format
+#| msgid "Cascade"
+msgid "Cascaded"
+msgstr "наслагано"
+
+# >> @item:inlistbox Placement->Force
+#: rulesmodel.cpp:786
+#, kde-format
+msgid "Centered"
+msgstr "центрирано"
+
+# >> @item:inlistbox Placement->Force
+#: rulesmodel.cpp:787
+#, kde-format
+msgid "Random"
+msgstr "насумично"
+
+# >> @item:inlistbox Placement->Force
+#: rulesmodel.cpp:788
+#, fuzzy, kde-format
+#| msgid "Top-Left Corner"
+msgid "In Top-Left Corner"
+msgstr "горњи леви угао"
+
+# >> @item:inlistbox Placement->Force
+#: rulesmodel.cpp:789
+#, kde-format
+msgid "Under Mouse"
+msgstr "испод миша"
+
+# >> @item:inlistbox Placement->Force
+#: rulesmodel.cpp:790
+#, kde-format
+msgid "On Main Window"
+msgstr "на главном прозору"
+
+# >> @item:inlistbox +
+#: rulesmodel.cpp:798
+#, fuzzy, kde-format
+#| msgctxt "no focus stealing prevention"
+#| msgid "None"
+msgid "None"
+msgstr "никакво"
+
+# >> @item:inlistbox Focus stealing prevention->Force
+#: rulesmodel.cpp:799
+#, kde-format
+msgid "Low"
+msgstr "ниско"
+
+# >> @item:inlistbox Focus stealing prevention->Force
+#: rulesmodel.cpp:800
+#, kde-format
+msgid "Normal"
+msgstr "нормално"
+
+# >> @item:inlistbox Focus stealing prevention->Force
+#: rulesmodel.cpp:801
+#, kde-format
+msgid "High"
+msgstr "високо"
+
+# >> @item:inlistbox Focus stealing prevention->Force
+#: rulesmodel.cpp:802
+#, kde-format
+msgid "Extreme"
+msgstr "екстремно"

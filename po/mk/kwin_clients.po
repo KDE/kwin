@@ -1,0 +1,760 @@
+# Copyright (C) 2006, 2007, 2008, 2010 Free Software Foundation, Inc.
+# Bozidar Proevski <bobibobi@freemail.com.mk>, 2004, 2005, 2008, 2010.
+# translation of kwin_clients.po to Macedonian
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2010-01-30 18:20+0100\n"
+"Last-Translator: Bozidar Proevski <bobibobi@freemail.com.mk>\n"
+"Language-Team: Macedonian <mkde-l10n@lists.sourceforge.net>\n"
+"Language: mk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: Plural-Forms: nplurals=3; plural=n%10==1 ? 0 : n%10==2 ? 1 : "
+"2;\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, fuzzy, kde-format
+#| msgid "Tiny"
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "Ситно"
+
+#: aurorae/src/aurorae.cpp:726
+#, fuzzy, kde-format
+#| msgid "Normal"
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "Нормално"
+
+#: aurorae/src/aurorae.cpp:727
+#, fuzzy, kde-format
+#| msgid "Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "Голема"
+
+#: aurorae/src/aurorae.cpp:728
+#, fuzzy, kde-format
+#| msgid "Very Large"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "Многу големо"
+
+#: aurorae/src/aurorae.cpp:729
+#, fuzzy, kde-format
+#| msgid "Huge"
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "Огромно"
+
+#: aurorae/src/aurorae.cpp:730
+#, fuzzy, kde-format
+#| msgid "Very Huge"
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "Многу огромно"
+
+#: aurorae/src/aurorae.cpp:731
+#, fuzzy, kde-format
+#| msgid "Resize"
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "Смени големина"
+
+#: aurorae/src/aurorae.cpp:734
+#, fuzzy, kde-format
+#| msgid "Button size:"
+msgid "Button size:"
+msgstr "Големина на копче:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "Дијалог за конфигурација"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "Порамнување на н&аслов"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "Лево"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "Средина"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "Десно"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"Изберете ја оваа опција ако рабовите на прозореците треба да се цртаат со "
+"боите на насловната лента. Инаку се цртаат користејќи ја бојата за подлога."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "Обоен раб на прозорец"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"Изберете ја оваа опција ако сакате копчињата да се појавуваат кога "
+"покажувачот на глушецот ќе лебди над нив и пак да исчезнуваат кога "
+"покажувачот ќе се тргне."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "Анимирај копчиња"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "Обележете ја оваа опција ако сакате текстот на насловот да има 3D изглед "
+#~ "со сенка зад него."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "Користи осенчен &текст"
+
+#, fuzzy
+#~| msgid "Decoration Options"
+#~ msgid "Hide Advanced Configuration Options"
+#~ msgstr "Опции за декорирање"
+
+#, fuzzy
+#~| msgid "Decoration Options"
+#~ msgid "Show Advanced Configuration Options"
+#~ msgstr "Опции за декорирање"
+
+#, fuzzy
+#~| msgid "Animate buttons"
+#~ msgid "Animations"
+#~ msgstr "Анимирај копчиња"
+
+#, fuzzy
+#~| msgid "Actions Settings"
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "Поставувања за дејства"
+
+#~ msgid "Remove selected exception?"
+#~ msgstr "Отстранување на избраниот исклучок?"
+
+#~ msgid "Regular Expression syntax is incorrect"
+#~ msgstr "Синтаксата на регуларниот израз не е исправна"
+
+#~ msgid "Exception Type"
+#~ msgstr "Тип на исклучок"
+
+#~ msgid "Regular Expression"
+#~ msgstr "Регуларен израз"
+
+#~ msgid "Window Title"
+#~ msgstr "Наслов на прозорец"
+
+#~ msgid "Window Class Name"
+#~ msgstr "Име на класа на прозорец"
+
+#~ msgid "Enable/disable this exception"
+#~ msgstr "Овозможи/оневозможи го исклучокот"
+
+#~ msgid "General"
+#~ msgstr "Општо"
+
+#, fuzzy
+#~| msgid "Border size:"
+#~ msgid "Border si&ze:"
+#~ msgstr "Големина на работ:"
+
+#, fuzzy
+#~| msgid "No Border"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "Без раб"
+
+#, fuzzy
+#~| msgid "No Side Border"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Borders"
+#~ msgstr "Без страничен раб"
+
+#, fuzzy
+#~| msgid "Normal"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Normal"
+#~ msgstr "Нормално"
+
+#, fuzzy
+#~| msgid "Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "Голема"
+
+#, fuzzy
+#~| msgid "Very Large"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "Многу големо"
+
+#, fuzzy
+#~| msgid "Huge"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "Огромно"
+
+#, fuzzy
+#~| msgid "Title alignment:"
+#~ msgid "Tit&le alignment:"
+#~ msgstr "Порамнување на насловот:"
+
+#, fuzzy
+#~| msgid "Small"
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "Мала"
+
+#~ msgid "Fine Tuning"
+#~ msgstr "Фино нагодување"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "Затворај ги прозорците со двојно кликање на копчето за мени"
+
+#~ msgid "Shadows"
+#~ msgstr "Сенки"
+
+#~ msgid "Active Window Glow"
+#~ msgstr "Светкање на активниот прозорец"
+
+#, fuzzy
+#~| msgid "Config Dialog"
+#~ msgid "Dialog"
+#~ msgstr "Дијалог за конфигурација"
+
+#~ msgid "Information about Selected Window"
+#~ msgstr "Информација за избраниот прозорец"
+
+#~ msgid "Class: "
+#~ msgstr "Класа: "
+
+#~ msgid "Title: "
+#~ msgstr "Наслов: "
+
+#~ msgid "Window Property Selection"
+#~ msgstr "Избор на својство на прозорец"
+
+#~ msgid "Use window class (whole application)"
+#~ msgstr "Користи класа на прозорец (цела апликација)"
+
+#~ msgid "Use window title"
+#~ msgstr "Користи наслов на прозорецот"
+
+#~ msgid "Window Identification"
+#~ msgstr "Идентификација на прозорецот"
+
+#~ msgid "Matching window property: "
+#~ msgstr "Својство на прозорецот што се совпаѓа: "
+
+#~ msgid "Regular expression to match: "
+#~ msgstr "Регуларен израз што се совпаѓа: "
+
+#~ msgid "Detect Window Properties"
+#~ msgstr "Детектирање на својствата на прозорецот"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Опции за декорирање"
+
+#~ msgctxt "outline window title"
+#~ msgid "Disabled"
+#~ msgstr "Оневозможено"
+
+#~ msgctxt "outline window title"
+#~ msgid "Enabled"
+#~ msgstr "Овозможено"
+
+#~ msgid "Border size:"
+#~ msgstr "Големина на работ:"
+
+#~ msgid "Hide window title bar"
+#~ msgstr "Сокриј насловна лента на прозорецот"
+
+#, fuzzy
+#~| msgctxt "outline window title"
+#~| msgid "Disabled"
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Disabled"
+#~ msgstr "Оневозможено"
+
+#, fuzzy
+#~| msgctxt "outline window title"
+#~| msgid "Enabled"
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Enabled"
+#~ msgstr "Овозможено"
+
+#~ msgid "Move Up"
+#~ msgstr "Премести нагоре"
+
+#~ msgid "Move Down"
+#~ msgstr "Премести надолу"
+
+#~ msgid "Add"
+#~ msgstr "Додај"
+
+#~ msgid "Remove"
+#~ msgstr "Отстрани"
+
+#~ msgid "Edit"
+#~ msgstr "Уреди"
+
+#, fuzzy
+#~| msgid "Enable window grouping"
+#~ msgid "Draw window background"
+#~ msgstr "Овозможи групирање на прозорци"
+
+#, fuzzy
+#~| msgid "Inactive Window"
+#~ msgid "Inactive Windows"
+#~ msgstr "Неактивен прозорец"
+
+#, fuzzy
+#~| msgid "Active Window"
+#~ msgid "Active Windows"
+#~ msgstr "Активен прозорец"
+
+#~ msgid "Oxygen"
+#~ msgstr "Оксиген"
+
+#, fuzzy
+#~| msgid "Window Identification"
+#~ msgid "Window Actions Menu"
+#~ msgstr "Идентификација на прозорецот"
+
+#~ msgid "Help"
+#~ msgstr "Помош"
+
+#~ msgid "Minimize"
+#~ msgstr "Спушти"
+
+#~ msgid "Maximize"
+#~ msgstr "Рашири"
+
+#~ msgid "Close"
+#~ msgstr "Затвори"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "Задржи над другите"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "Задржи под другите"
+
+#~ msgid "On All Desktops"
+#~ msgstr "На сите површини"
+
+#~ msgid "Shade Button"
+#~ msgstr "Копче за сенчење"
+
+#~ msgid "Menu"
+#~ msgstr "Мени"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "Не на сите површини"
+
+#~ msgid "On all desktops"
+#~ msgstr "На сите површини"
+
+#~ msgid "Unshade"
+#~ msgstr "Отсенчи"
+
+#~ msgid "Shade"
+#~ msgstr "Засенчи"
+
+#~ msgid "Resize"
+#~ msgstr "Смени големина"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>Преглед на B II</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "Обнови"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "Нацртај ги рамките на прозорците со боите на насловна&та линија"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "Кога е избрано, границите на прозорецот се цртаат со боите на насловната "
+#~ "лента; инаку се цртаат користејќи нормални бои за граница."
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "Нацртај &рачка за менување големина"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "Кога е избрано, декорациите се цртаат со „рачка“ во долниот десен агол на "
+#~ "прозорците; инаку нема нацртана рачка."
+
+#~ msgid "Auto-move titlebar"
+#~ msgstr "Автоматски премести насловна линија"
+
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr ""
+#~ "Кога е избрано, насловните линии автоматски се преместуваат на видливи "
+#~ "позиции, инаку се преместуваат само рачно со shift+влечење."
+
+#~ msgid "Actions Settings"
+#~ msgstr "Поставувања за дејства"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "Двоен клик на копчето за мени:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "Не прави ништо"
+
+#~ msgid "Minimize Window"
+#~ msgstr "Спушти го прозорецот"
+
+#~ msgid "Shade Window"
+#~ msgstr "Засенчи го прозорецот"
+
+#~ msgid "Close Window"
+#~ msgstr "Затвори го прозорецот"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "Може да се придружи дејство на двојниот клик на копчето за мени. Ако се "
+#~ "двоумите, оставете го на ништо."
+
+#~ msgid "Laptop"
+#~ msgstr "Лаптоп"
+
+#, fuzzy
+#~| msgid "Background style: "
+#~ msgid "Bac&kground style: "
+#~ msgstr "Стил на подлога: "
+
+#~ msgid "Radial Gradient"
+#~ msgstr "Радијален градиент"
+
+#~ msgid "Background style:"
+#~ msgstr "Стил на подлога:"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Божидар Проевски"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "bobibobi@freemail.com.mk"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Save"
+#~ msgstr "Засенчи"
+
+#~ msgid "Large"
+#~ msgstr "Голема"
+
+#~ msgid "Small"
+#~ msgstr "Мала"
+
+#~ msgid "Inner Color:"
+#~ msgstr "Внатрешна боја:"
+
+#~ msgid "Outer Color:"
+#~ msgstr "Надворешна боја:"
+
+#~ msgid "Vertical Offset:"
+#~ msgstr "Вертикално растојание:"
+
+#~ msgid "Size: "
+#~ msgstr "Големина: "
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "Изберете ја оваа опција ако сакате прозорците да се затвораат кога ќе "
+#~ "кликнете двапати на копчето за мени, слично како во Microsoft Windows."
+
+#~ msgid "Plastik"
+#~ msgstr "Пластик"
+
+#~ msgid "All Desktops"
+#~ msgstr "Сите површини"
+
+#~ msgid "Above"
+#~ msgstr "Над"
+
+#~ msgid "Below"
+#~ msgstr "Под"
+
+#~ msgid "Close Item"
+#~ msgstr "Затвори елемент"
+
+#~ msgid "&Left"
+#~ msgstr "&Лево"
+
+#~ msgid "&Center"
+#~ msgstr "&Средина"
+
+#~ msgid "&Right"
+#~ msgstr "&Десно"
+
+#~ msgid "Display window icons"
+#~ msgstr "Прикажи икони од прозорецот"
+
+#, fuzzy
+#~| msgid "Outer Color:"
+#~ msgid "O&utline Color:"
+#~ msgstr "Надворешна боја:"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Do not keep above others"
+#~ msgstr "Задржи над другите"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above others"
+#~ msgstr "Задржи над другите"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Do not keep below others"
+#~ msgstr "Задржи под другите"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below others"
+#~ msgstr "Задржи под другите"
+
+#, fuzzy
+#~| msgctxt "outline window title"
+#~| msgid "Disabled"
+#~ msgid "Variable"
+#~ msgstr "Оневозможено"
+
+#, fuzzy
+#~| msgid "Maximize"
+#~ msgid "Maximum"
+#~ msgstr "Рашири"
+
+#~ msgid "Enable window grouping"
+#~ msgstr "Овозможи групирање на прозорци"
+
+#~ msgid "TextLabel"
+#~ msgstr "Текстуален натпис"
+
+#, fuzzy
+#~| msgid "Shadows"
+#~ msgid "Shadow style:"
+#~ msgstr "Сенки"
+
+#~ msgctxt "draw separator"
+#~ msgid "Enabled"
+#~ msgstr "Овозможено"
+
+#~ msgctxt "draw separator"
+#~ msgid "Disabled"
+#~ msgstr "Оневозможено"
+
+#~ msgid "Draw separator between title bar and window contents: "
+#~ msgstr ""
+#~ "Нацртај разделувач меѓу насловната лента и содржината на прозорецот: "
+
+#~ msgid "Draw Separator between title bar and active window contents "
+#~ msgstr ""
+#~ "Нацртај разделувач меѓу насловната лента и содржината на активниот "
+#~ "прозорец "
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "Инсталира тема KWM"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "Патека до конфиг. датотека за тема"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWMTheme</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "Лепливо"
+
+#~ msgid "Unsticky"
+#~ msgstr "Нелепливо"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>Преглед на Керамик</b></center>"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "Нацртај точкест ефект на на&словната линија"
+
+#~ msgid ""
+#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
+#~ "otherwise, they are drawn without the stipple."
+#~ msgstr ""
+#~ "Кога е избрано, активните насловни линии се цртаат со точкест ефект; "
+#~ "инаку се цртаат без точките."
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "Нацртај &лента за фаќање под прозорците"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
+#~ "otherwise, no grab bar is drawn."
+#~ msgstr ""
+#~ "Кога е избрано, декорациите се цртаат со „лента за фаќање“ под "
+#~ "прозорците; Инаку, не се црта лента за фаќање."
+
+#~ msgid "Draw &gradients"
+#~ msgstr "Цртај &градиенти"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with gradients for high-color "
+#~ "displays; otherwise, no gradients are drawn."
+#~ msgstr ""
+#~ "Кога е избрано, декорациите се цртаат со градиенти за високобојни екрани; "
+#~ "инаку не се цртаат градиенти."
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"
+
+#~ msgid ""
+#~ "When selected, the window decoration borders are drawn using the titlebar "
+#~ "colors; otherwise, they are drawn using normal border colors instead."
+#~ msgstr ""
+#~ "Кога е избрано, границите на декорациите на прозорците се нацртани со "
+#~ "боите на насловната лента; инаку тие се цртаат со нормалните бои за "
+#~ "граница."
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "Кварц &екстра-тенко"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "Декорации на прозорците за Кварц со екстра-тенка насловна лента."
+
+#~ msgid "Quartz"
+#~ msgstr "Кварц"
+
+#~ msgid "Redmond"
+#~ msgstr "Редмонд"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "&Покажи рачка за менување големина"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "Кога е избрано, сите прозорци се цртаат со рачка за менување на "
+#~ "големината во долниот десен агол. Ова го олеснува менувањето на "
+#~ "големината, особено за топките и останатите замени за покажувачките уреди "
+#~ "на лаптопите."
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr "Тука може да ја смените големината на рачката за менување големина."
+
+#~ msgid "Medium"
+#~ msgstr "Средна"
+
+#~ msgid "Modern System"
+#~ msgstr "Модерен систем"
+
+#~ msgid "Web"
+#~ msgstr "Веб"
+
+#~ msgid "Keramik"
+#~ msgstr "Керамик"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "Прикажи ја &иконата на прозорецот во насловното балонче"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "Изберете на оваа опција ако сакате иконата на прозорецот да биде "
+#~ "прикажана до текстот на насловот во насловното балонче."
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "Нацртај &мали насловни балончиња на активните прозорци"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "Изберете ја оваа опција ако сакате насловното балонче да има иста "
+#~ "големина на активните  прозорци како што е на неактивните. Оваа опција е "
+#~ "корисна на лаптопи или на екрани со ниска резолуција каде што сакате "
+#~ "максимално да го искористите просторот за содржината на прозорците."
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "Нацртај &ленти за фаќање под прозорците"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "Изберете ја оваа опција ако сакате да биде нацртана лента за фаќање под "
+#~ "прозорците. Кога оваа опција не е избрана ќе биде нацртан само тенок раб."
+
+#~ msgid "Unable to find the theme archive %1."
+#~ msgstr "Не можам да ја најдам архивата со тема %1."
+
+#~ msgid ""
+#~ "Unable to download theme archive;\n"
+#~ "please check that address %1 is correct."
+#~ msgstr ""
+#~ "Не можам да ја симнам архивата со тема.\n"
+#~ "Молам проверете дали е точна адресата %1."
+
+#~ msgid "Theme:"
+#~ msgstr "Тема:"
+
+#~ msgid "Get New Themes..."
+#~ msgstr "Земи нови теми..."
+
+#~ msgid "Install New Theme..."
+#~ msgstr "Инсталирј нова тема..."

@@ -1,0 +1,171 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Portuguese "INCLUDE">
+]>
+<article id="kwintabbox" lang="&language;">
+<articleinfo>
+<title
+>Selector de Tarefas</title>
+<authorgroup>
+<author
+>&Martin.Graesslin;&Martin.Graesslin.mail;</author>
+<othercredit role="translator"
+><firstname
+>José</firstname
+><surname
+>Pires</surname
+><affiliation
+><address
+><email
+>zepires@gmail.com</email
+></address
+></affiliation
+><contrib
+>Tradução</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2015-07-24</date>
+<releaseinfo
+>&plasma; 5.4</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Configuração do Sistema</keyword>
+<keyword
+>ecrã</keyword>
+<keyword
+>janela</keyword>
+<keyword
+>navegação</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="windows-navigating">
+<title
+>Navegar pelas Janelas</title>
+
+<para
+>Este módulo oferece a possibilidade de configurar o comportamento da Navegação entre Janelas, normalmente conhecida por <keycombo
+>&Alt;&Tab;</keycombo
+>. Existem duas listas independentes, as quais poderão ter diferentes configurações. Para cada uma destas listas, existe uma página própria (<guilabel
+>Principal</guilabel
+> e <guilabel
+>Alternativa</guilabel
+>) neste módulo. </para>
+
+<note
+><para
+>O primeiro conjunto de efeitos na página <guilabel
+>Prinicipal</guilabel
+> tem alguns atalhos predefinidos. Se quiser usar o segundo conjunto de efeitos na página <guilabel
+>Alternativo</guilabel
+>, terá de definir manualmente um atalho para esses efeitos no Editor de Atalhos.</para
+></note>
+
+<note
+><para
+>Para a navegação pelas janelas sem o <keycombo
+>&Alt;&Tab;</keycombo
+>, poderá definir as acções do extremo do ecrã no módulo do &systemsettings; <ulink url="help:/kcontrol/kwinscreenedges/index.html"
+><guilabel
+>Extremos do Ecrã</guilabel
+></ulink
+>. </para
+></note>
+
+<para
+>A seguinte documentação das opções aplica-se à configuração geral e também às opções alternativas.</para>
+
+<sect2 id="visualization">
+<title
+>Visualização</title>
+<para
+>Existem diversos efeitos que poderão ser usados, em vez da lista de janelas normal, quando a composição está activa. Por omissão, é usado o <guilabel
+>Brisa</guilabel
+>. Este efeito mostra uma pequena miniatura de cada janela dentro de uma caixa, estando realçada a janela seleccionada de momento. Existem diversos formatos predefinidos adicionais que oferecem uma visão informativa, compacta, com ícones grandes ou pequenos, uma grelha ou apenas o título da janela.</para>
+<para
+>Ao seleccionar uma destas disposições, irá ter um botão para mostrar uma antevisão.</para
+> 
+<para
+>Se activar a opção <guilabel
+>Mostrar a janela seleccionada</guilabel
+>, a janela seleccionada de momento ficará realçada, desvanecendo todas as outras janelas. Esta opção precisa que os efeitos do ecrã estejam activos.</para>
+
+<para
+>O efeito de <guilabel
+>Mudança de Capas</guilabel
+> e <guilabel
+>Inversão</guilabel
+> são efeitos mais bonitos que necessitam do OpenGL. A <guilabel
+>Mudança de Capas</guilabel
+> mostra as janelas numa galeria com uma miniatura de tamanho razoável da janela seleccionada no centro, enquanto todas as outras vão rodando para a esquerda ou para a direita. A mudança por <guilabel
+>Inversão</guilabel
+> mostra todas as janelas numa pilha em 3D. A janela seleccionada está no topo da pilha e, ao navegar pelas janelas, irá mover a pilha de forma a que a janela seleccionada fique no topo. </para>
+<para
+>Se o efeito oferecer configurações adicionais, o botão de configuração ficará activo. Ao carregar neste botão, será apresentada uma janela de configuração. </para>
+<note
+><para
+>Quando a composição não está activa ou fica suspensa, será apresentada a lista normal de janelas. Não existe qualquer perda de funcionalidade, caso esteja seleccionado um efeito sem ter a composição activa.</para
+></note>
+</sect2>
+
+<sect2 id="shortcuts">
+<title
+>Atalhos</title>
+<para
+>O editor de atalhos oferece a interface de configuração para os atalhos de teclado, de modo a navegar pelas janelas. Cada uma das duas listas possíveis tem dois atalhos: um para a frente e outro para trás. Lembre-se por favor que a lista só pode ser apresentada se seleccionar um atalho com uma tecla modificadora, como o &Alt; ou o &Ctrl;. Esta tecla modificadora deverá estar pressionada enquanto muda. Se seleccionar um atalho sem uma tecla modificadora, poderá invalidar o comportamento da navegação pelas janelas. </para>
+</sect2>
+
+<sect2 id="content-and-sort-order">
+<title
+>Conteúdo</title>
+<para
+>É possível influenciar o critério de ordenação, sendo que poderá usar uma ordenação com base na última utilização das janelas ou na ordem de empilhamento das janelas. </para>
+<para
+>Se assinalar a opção <guilabel
+>Incluir o ícone "Mostrar o ecrã"</guilabel
+>, será adicionado um item à lista com as janelas da aplicação. Aí poderá seleccionar este item na lista para minimizar todas as janelas.</para>
+<para
+>Se a opção <guilabel
+>Apenas uma janela por aplicação</guilabel
+> estiver seleccionada, então só existirá na lista a última instância usada de uma dada aplicação. A mudança para outras instâncias é possível apenas pelo painel, nesse caso.</para>
+</sect2>
+
+<sect2 id="filter">
+<title
+>Filtrar as janelas</title>
+<para
+>Poderá configurar as janelas que serão apresentadas na lista iniciada, carregando para tal em <keycombo
+>&Alt;&Tab;</keycombo
+> (como definido na configuração da página <guilabel
+>Principal</guilabel
+>) ou através do atalho de teclado personalizado pelo utilizador na configuração alternativa. </para>
+<para
+>Como tal, é possível mostrar apenas as janelas no ecrã virtual actual ou as janelas de todos os outros ecrãs. Para além disso, poderá aplicar regras semelhantes para as janelas em determinadas actividades ou ecrãs, dependendo da configuração. </para>
+<para
+>A última opção permite-lhe filtrar com base no estado de minimização das janelas. </para>
+</sect2>
+
+</sect1>
+</article>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+kate: space-indent on; indent-width 2; tab-width 2; indent-mode none;
+-->
+

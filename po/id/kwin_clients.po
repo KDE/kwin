@@ -1,0 +1,800 @@
+# Indonesian translations for kwin_clients package.
+# Copyright (C) 2010 This_file_is_part_of_KDE
+# This file is distributed under the same license as the kwin_clients package.
+# Andhika Padmawan <andhika.padmawan@gmail.com>, 2010.
+# Wantoyo <wantoyek@gmail.com>, 2017, 2018, 2019, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2022-09-27 18:12+0700\n"
+"Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
+"Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 21.12.3\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "Mungil"
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "Normal"
+
+# Sengaja diterjemahkan Agak Besar karena tampil satu level dengan tingkat ukuran
+#: aurorae/src/aurorae.cpp:727
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "Agak Besar"
+
+# Sengaja diterjemahkan Besar karena tampil satu level dengan tingkat ukuran
+#: aurorae/src/aurorae.cpp:728
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "Besar"
+
+# Sengaja diterjemahkan Besar Banget karena tampil satu level dengan tingkat ukuran
+#: aurorae/src/aurorae.cpp:729
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "Besar Banget"
+
+#: aurorae/src/aurorae.cpp:730
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "Sangat Besar"
+
+# Meski sebenarnya adalah Kebesaran tapi sengaja diterjemahkan Sangat Besar Sekali karena tampil satu level dengan tingkat ukuran
+#: aurorae/src/aurorae.cpp:731
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "Sangat Besar Sekali"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr "Ukuran tombol:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "Dialog Konfigurasi"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "Kesejajaran &Judul"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "Kiri"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "Tengah"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "Kanan"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"Centang opsi ini jika batas jendela harus digambar dengan warna bilah judul. "
+"Sebaliknya batas jendela akan digambar dengan warna latar belakang."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "Batas jendela berwarna"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"Centang opsi ini jika anda ingin agar tombol melesap-muncul ketika penunjuk "
+"mouse melayang di atas tombol dan melesap-hilang lagi ketika penunjuk mouse "
+"pindah."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "Animasi tombol"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "Centang opsi ini jika anda ingin teks bilah judul untuk mempunyai "
+#~ "tampilan 3D dengan bayangan di belakangnya."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "Gunakan &teks berbayang"
+
+#, fuzzy
+#~| msgid "Enable animations"
+#~ msgid "Title transitions"
+#~ msgstr "Aktifkan animasi"
+
+#, fuzzy
+#~| msgid "Decoration Options"
+#~ msgid "Hide Advanced Configuration Options"
+#~ msgstr "Opsi Dekorasi"
+
+#, fuzzy
+#~| msgid "Decoration Options"
+#~ msgid "Show Advanced Configuration Options"
+#~ msgstr "Opsi Dekorasi"
+
+#, fuzzy
+#~| msgid "Animate buttons"
+#~ msgid "Animations"
+#~ msgstr "Animasi tombol"
+
+#, fuzzy
+#~| msgid "Actions Settings"
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "Pengaturan Aksi"
+
+#~ msgid "Remove selected exception?"
+#~ msgstr "Hapus pengecualian terpilih?"
+
+#~ msgid "Regular Expression syntax is incorrect"
+#~ msgstr "Sintaks ekspresi reguler salah"
+
+#~ msgid "Exception Type"
+#~ msgstr "Tipe Pengecualian"
+
+#~ msgid "Regular Expression"
+#~ msgstr "Ekspresi Reguler"
+
+#~ msgid "Window Title"
+#~ msgstr "Judul Jendela"
+
+#~ msgid "Window Class Name"
+#~ msgstr "Nama Kelas Jendela"
+
+#~ msgid "Enable/disable this exception"
+#~ msgstr "Aktifkan/nonaktifkan pengecualian ini"
+
+#~ msgid "General"
+#~ msgstr "Umum"
+
+#, fuzzy
+#~| msgid "Border size:"
+#~ msgid "Border si&ze:"
+#~ msgstr "Ukuran batas:"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "No Border"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "Tanpa Batas"
+
+#, fuzzy
+#~| msgctxt "@item:inlistbox Border size:"
+#~| msgid "No Side Border"
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Borders"
+#~ msgstr "Tak Ada Batas Sisi"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "Besar"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "Sangat Besar"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "Sangat Besar"
+
+#, fuzzy
+#~| msgid "Title alignment:"
+#~ msgid "Tit&le alignment:"
+#~ msgstr "Perataan judul:"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "Kecil"
+
+#~ msgid "Enable animations"
+#~ msgstr "Aktifkan animasi"
+
+#~ msgid "Fine Tuning"
+#~ msgstr "Perhalus"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "Tutup jendela dengan klik ganda tombol menu"
+
+#~ msgid "Outline active window title"
+#~ msgstr "Kerangka judul jendela aktif"
+
+#~ msgid "Use narrow space between decoration buttons"
+#~ msgstr "Gunakan spasi sempit antara tombol dekorasi"
+
+#~ msgid "Shadows"
+#~ msgstr "Bayangan"
+
+#~ msgid "Window Drop-Down Shadow"
+#~ msgstr "Bayangan Taruh Bawah Jendela"
+
+#~ msgid "Active Window Glow"
+#~ msgstr "Sinar Jendela Aktif"
+
+#~ msgid "Window-Specific Overrides"
+#~ msgstr "Timpa Jendela Spesifik"
+
+#, fuzzy
+#~| msgid "Config Dialog"
+#~ msgid "Dialog"
+#~ msgstr "Dialog Konfigurasi"
+
+#~ msgid "Information about Selected Window"
+#~ msgstr "Informasi Tentang Jendela Terpilih"
+
+#~ msgid "Class: "
+#~ msgstr "Kelas: "
+
+#~ msgid "Title: "
+#~ msgstr "Judul: "
+
+#~ msgid "Window Property Selection"
+#~ msgstr "Pemilihan Properti Jendela"
+
+#~ msgid "Use window class (whole application)"
+#~ msgstr "Gunakan kelas jendela (seluruh aplikasi)"
+
+#~ msgid "Use window title"
+#~ msgstr "Gunakan judul jendela"
+
+#~ msgid "Window Identification"
+#~ msgstr "Identifikasi Jendela"
+
+#~ msgid "Matching window property: "
+#~ msgstr "Cocokkan properti jendela: "
+
+#~ msgid "Regular expression to match: "
+#~ msgstr "Ekspresi reguler untuk dicocokkan: "
+
+#~ msgid "Detect Window Properties"
+#~ msgstr "Deteksi Properti Jendela"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Opsi Dekorasi"
+
+#~ msgctxt "outline window title"
+#~ msgid "Disabled"
+#~ msgstr "Dinonaktifkan"
+
+#~ msgctxt "outline window title"
+#~ msgid "Enabled"
+#~ msgstr "Diaktifkan"
+
+#~ msgid "Border size:"
+#~ msgstr "Ukuran batas:"
+
+#~ msgid "Outline active window title:"
+#~ msgstr "Kerangka judul jendela aktif:"
+
+#~ msgid "Hide window title bar"
+#~ msgstr "Sembunyikan batang judul jendela"
+
+#, fuzzy
+#~| msgid "Disabled"
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Disabled"
+#~ msgstr "Dinonaktifkan"
+
+#, fuzzy
+#~| msgctxt "outline window title"
+#~| msgid "Enabled"
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Enabled"
+#~ msgstr "Diaktifkan"
+
+#~ msgid "Move Up"
+#~ msgstr "Pindah ke Atas"
+
+#~ msgid "Move Down"
+#~ msgstr "Pindah ke Bawah"
+
+#~ msgid "Add"
+#~ msgstr "Tambah"
+
+#~ msgid "Remove"
+#~ msgstr "Hapus"
+
+#~ msgid "Edit"
+#~ msgstr "Sunting"
+
+#, fuzzy
+#~| msgid "Use Oxygen Shadows"
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "Gunakan Bayangan Oksigen"
+
+#, fuzzy
+#~| msgid "Enable window grouping"
+#~ msgid "Draw window background"
+#~ msgstr "Aktifkan pengelompokkan jendela"
+
+#, fuzzy
+#~| msgid "Inactive Window"
+#~ msgid "Inactive Windows"
+#~ msgstr "Jendela Tidak Aktif"
+
+#, fuzzy
+#~| msgid "Active Window"
+#~ msgid "Active Windows"
+#~ msgstr "Jendela Aktif"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oksigen"
+
+#, fuzzy
+#~| msgid "Window Identification"
+#~ msgid "Window Actions Menu"
+#~ msgstr "Identifikasi Jendela"
+
+#~ msgid "Help"
+#~ msgstr "Bantuan"
+
+#~ msgid "Minimize"
+#~ msgstr "Minimalkan"
+
+#~ msgid "Maximize"
+#~ msgstr "Maksimalkan"
+
+#~ msgid "Close"
+#~ msgstr "Tutup"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "Jaga Di Atas Lainnya"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "Jaga Di Bawah Lainnya"
+
+#~ msgid "On All Desktops"
+#~ msgstr "Di Semua Desktop"
+
+#~ msgid "Shade Button"
+#~ msgstr "Tombol Bayang"
+
+#~ msgid "Menu"
+#~ msgstr "Menu"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "Tidak di semua desktop"
+
+#~ msgid "On all desktops"
+#~ msgstr "Di semua desktop"
+
+#~ msgid "Unshade"
+#~ msgstr "Tidak Bayang"
+
+#~ msgid "Shade"
+#~ msgstr "Bayang"
+
+#~ msgid "Resize"
+#~ msgstr "Ubah Ukuran"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>Pratilik B II</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "Kembalikan"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "Gambar bingkai jendela menggunakan warna ba&tang judul"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "Jika dipilih, bingkai jendela digambar menggunakan warna batang judul; "
+#~ "sebaliknya, bingkai jendela digambar menggunakan warna batas normal."
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "Gamba&r penanganan ubah ukuran"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "Jika dipilih, dekorasi digambar dengan \"tangkap penanganan\" di pojok "
+#~ "kanan bawah jendela; sebaliknya, tidak ada tangkap penanganan yang "
+#~ "digambar"
+
+#~ msgid "Auto-move titlebar"
+#~ msgstr "Batang judul bergerak otomatis"
+
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr ""
+#~ "Jika dipilih, batang judul secara otomatis direlokasi ke posisi yang "
+#~ "terlihat; sebaliknya, batang judul hanya dipindahkan secara manual "
+#~ "menggunakan shift+tarik."
+
+#~ msgid "Actions Settings"
+#~ msgstr "Pengaturan Aksi"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "Klik ganda di tombol menu:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "Jangan Lakukan Apapun"
+
+#~ msgid "Minimize Window"
+#~ msgstr "Minimalkan Jendela"
+
+#~ msgid "Shade Window"
+#~ msgstr "Bayang Jendela"
+
+#~ msgid "Close Window"
+#~ msgstr "Tutup Jendela"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "Sebuah aksi dapat diasosiasikan ke klik ganda dari tombol menu. Biarkan "
+#~ "kosong jika ragu."
+
+#~ msgid "Laptop"
+#~ msgstr "Laptop"
+
+#, fuzzy
+#~| msgid "Background style: "
+#~ msgid "Bac&kground style: "
+#~ msgstr "Gaya latar belakang: "
+
+#~ msgid "Solid Color"
+#~ msgstr "Warna Solid"
+
+#~ msgid "Radial Gradient"
+#~ msgstr "Gradasi Radial"
+
+#~ msgid "Background style:"
+#~ msgstr "Gaya latar belakang:"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Andhika Padmawan"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "andhika.padmawan@gmail.com"
+
+#, fuzzy
+#~| msgid "Shade"
+#~ msgid "Save"
+#~ msgstr "Bayang"
+
+#~ msgid "Large"
+#~ msgstr "Besar"
+
+#~ msgid "Small"
+#~ msgstr "Kecil"
+
+#~ msgid "Extra size grip display: "
+#~ msgstr "Tampilan grip ukuran ekstra: "
+
+#~ msgid "Extra size grip display:"
+#~ msgstr "Tampilan grip ukuran ekstra:"
+
+#~ msgid "Inner Color:"
+#~ msgstr "Warna Dalam:"
+
+#~ msgid "Outer Color:"
+#~ msgstr "Warna Luar:"
+
+#~ msgid "Vertical Offset:"
+#~ msgstr "Ofset Vertikal:"
+
+#~ msgid "Size: "
+#~ msgstr "Ukuran: "
+
+#~ msgid "Always Hide Extra Size Grip"
+#~ msgstr "Selalu Sembunyikan Grip Ukuran Ekstra"
+
+#~ msgid "Show Extra Size Grip When Needed"
+#~ msgstr "Tampilkan Grip Ukuran Ekstra Jika Diperlukan"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "Centang opsi ini jika anda ingin agar jendela ditutup ketika anda klik "
+#~ "ganda tombol menu, mirip dengan Microsoft Windows."
+
+#~ msgid "Plastik"
+#~ msgstr "Plastik"
+
+#~ msgid "All Desktops"
+#~ msgstr "Semua Desktop"
+
+#~ msgid "Above"
+#~ msgstr "Atas"
+
+#~ msgid "Below"
+#~ msgstr "Bawah"
+
+#~ msgid "Close Item"
+#~ msgstr "Tutup Item"
+
+#~ msgid "Tabstrip"
+#~ msgstr "Tabstrip"
+
+#~ msgid "&Left"
+#~ msgstr "&Kiri"
+
+#~ msgid "&Center"
+#~ msgstr "&Tengah"
+
+#~ msgid "&Right"
+#~ msgstr "K&anan"
+
+#~ msgid "Display window icons"
+#~ msgstr "Tampilkan ikon jendela"
+
+#, fuzzy
+#~| msgid "Outer Color:"
+#~ msgid "O&utline Color:"
+#~ msgstr "Warna Luar:"
+
+#~ msgid "Do not keep above others"
+#~ msgstr "Jangan di atas lainnya"
+
+#~ msgid "Keep above others"
+#~ msgstr "Jaga di atas lainnya"
+
+#~ msgid "Do not keep below others"
+#~ msgstr "Jangan di bawah lainnya"
+
+#~ msgid "Keep below others"
+#~ msgstr "Jaga di bawah lainnya"
+
+#~ msgid "Enable title transition animations"
+#~ msgstr "Aktifkan animasi transisi judul"
+
+#~ msgid "Variable"
+#~ msgstr "Variabel"
+
+#~ msgid "Maximum"
+#~ msgstr "Maksimum"
+
+#~ msgid "Enable window grouping"
+#~ msgstr "Aktifkan pengelompokkan jendela"
+
+#~ msgid "Shadow caching:"
+#~ msgstr "Penyimpanan bayangan:"
+
+#~ msgid "TextLabel"
+#~ msgstr "LabelTeks"
+
+#~ msgid "Use Oxygen Shadows"
+#~ msgstr "Gunakan Bayangan Oksigen"
+
+#~ msgid "Use Desktop Effects Shadows"
+#~ msgstr "Gunakan Bayangan Efek Desktop"
+
+#~ msgid "Do Not Draw Shadows"
+#~ msgstr "Jangan Gambar Bayangan"
+
+#~ msgid "Shadow style:"
+#~ msgstr "Gaya bayangan:"
+
+#~ msgctxt "draw separator"
+#~ msgid "Enabled"
+#~ msgstr "Diaktifkan"
+
+#~ msgctxt "draw separator"
+#~ msgid "Disabled"
+#~ msgstr "Dinonaktifkan"
+
+#~ msgid "Draw separator between title bar and window contents: "
+#~ msgstr "Gambar pemisah di antara batang judul dan isi jendela: "
+
+#~ msgid "Draw Separator between title bar and active window contents "
+#~ msgstr "Gambar Pemisah di antara batang judul dan isi jendela aktif "
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "Instal tema KWM"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "Alamat ke berkas konfigurasi tema"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWMTheme</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "Lekat"
+
+#~ msgid "Unsticky"
+#~ msgstr "Tidak Lekat"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>Pratilik Keramik</b></center>"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "Gambar efe&k titik-titik batang judul"
+
+#~ msgid ""
+#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
+#~ "otherwise, they are drawn without the stipple."
+#~ msgstr ""
+#~ "Jika dipilih, batang judul aktif digambar dengan efek titik-titik; "
+#~ "sebaliknya, batang judul digambar tanpa titik-titik."
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "Gamba&r batang tangkap di bawah jendela"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
+#~ "otherwise, no grab bar is drawn."
+#~ msgstr ""
+#~ "Jika dipilih, dekorasi digambar dengan \"batang tangkap\" di bawah "
+#~ "jendela; sebaliknya, tak ada batang tangkap yang digambar."
+
+#~ msgid "Draw &gradients"
+#~ msgstr "Gambar &gradasi"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with gradients for high-color "
+#~ "displays; otherwise, no gradients are drawn."
+#~ msgstr ""
+#~ "Jika dipilih, dekorasi digambar dengan gradasi untuk tampilan warna "
+#~ "tinggi; sebaliknya, tak ada gradasi digambar."
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"
+
+#~ msgid ""
+#~ "When selected, the window decoration borders are drawn using the titlebar "
+#~ "colors; otherwise, they are drawn using normal border colors instead."
+#~ msgstr ""
+#~ "Jika dipilih, batas dekorasi jendela digambar menggunakan warna batang "
+#~ "judul; sebaliknya, dekorasi jendela digambar menggunakan warna batas yang "
+#~ "normal."
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "Quartz &ekstra langsing"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "Dekorasi jendela Quartz dengan batang judul ekstra kecil."
+
+#~ msgid "Quartz"
+#~ msgstr "Quartz"
+
+#~ msgid "Redmond"
+#~ msgstr "Redmond"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "&Tampilkan penanganan ubah ukuran jendela"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "Jika dipilih, semua jendela digambar dengan penanganan ubah ukuran di "
+#~ "pojok kanan bawah. Hal ini menjadikan mengubah ukuran jendela lebih "
+#~ "mudah, terutama untuk trackball dan pengganti tetikus lainnya di laptop. "
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr "Di sini anda dapat mengubah ukuran penanganan ubah ukuran."
+
+#~ msgid "Medium"
+#~ msgstr "Medium"
+
+#~ msgid "Modern System"
+#~ msgstr "Sistem Modern"
+
+#~ msgid "Web"
+#~ msgstr "Web"
+
+#~ msgid "Keramik"
+#~ msgstr "Keramik"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "Tampilkan &ikon jendela di gelembung inset"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "Centang opsi ini jika anda ingin ikon jendela untuk ditampilkan di "
+#~ "gelembung inset di samping teks batang judul."
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "Gambar gelembung in&set kecil di jendela aktif"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "Centang opsi ini jika anda ingin gelembung inset untuk memiliki ukuran "
+#~ "yang sama di jendela aktif seperti yang tidak aktif. Opsi ini berguna "
+#~ "untuk laptop atau tampilan resolusi rendah di mana anda ingin "
+#~ "memaksimalkan jumlah ruang yang tersedia untuk isi jendela."
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "Gamba&r batang tangkap di bawah jendela"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "Centang opsi ini jika anda ingin batang tangkap agar digambar di bawah "
+#~ "jendela. Jika opsi ini tidak dipilih hanya batas tipis yang akan digambar "
+#~ "di tempat tersebut."
+
+#~ msgid "Aurorae Theme Engine"
+#~ msgstr "Mesin Tema Aurorae"
+
+#~ msgid "Drag or Type Theme URL"
+#~ msgstr "Tarik atau Ketik URL Tema"
+
+#~ msgid "Unable to find the theme archive %1."
+#~ msgstr "Tak dapat menemukan arsip tema %1."
+
+#~ msgid ""
+#~ "Unable to download theme archive;\n"
+#~ "please check that address %1 is correct."
+#~ msgstr ""
+#~ "Tak dapat mengunduh arsip tema;\n"
+#~ "silakan cek apakah alamat %1 benar."
+
+#~ msgid "Theme:"
+#~ msgstr "Tema:"
+
+#~ msgid "Get New Themes..."
+#~ msgstr "Dapatkan Tema Baru..."
+
+#~ msgid "Install New Theme..."
+#~ msgstr "Instal Tema Baru..."

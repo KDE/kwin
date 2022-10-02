@@ -1,0 +1,278 @@
+# translation of kcm_kwindesktop.po to Greek
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Spiros Georgaras <sng@hellug.gr>, 2007.
+# Dimitrios Glentadakis <dglent@gmail.com>, 2011.
+# Stelios <sstavra@gmail.com>, 2013.
+# Dimitris Kardarakos <dimkard@gmail.com>, 2014.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcm_kwindesktop\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"PO-Revision-Date: 2014-10-11 13:07+0300\n"
+"Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
+"Language-Team: Greek <kde-i18n-el@kde.org>\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.5\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Δημήτριος Γλενταδάκης"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "dglent@gmail.com"
+
+#: desktopsmodel.cpp:467
+#, kde-format
+msgid "There was an error connecting to the compositor."
+msgstr ""
+
+#: desktopsmodel.cpp:666
+#, kde-format
+msgid "There was an error saving the settings to the compositor."
+msgstr ""
+
+#: desktopsmodel.cpp:669
+#, kde-format
+msgid "There was an error requesting information from the compositor."
+msgstr ""
+
+#: package/contents/ui/main.qml:17
+#, kde-format
+msgid ""
+"This module lets you configure the navigation, number and layout of virtual "
+"desktops."
+msgstr ""
+
+#: package/contents/ui/main.qml:91
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Rename"
+msgstr ""
+
+#: package/contents/ui/main.qml:102
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Confirm new name"
+msgstr ""
+
+#: package/contents/ui/main.qml:110
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove"
+msgstr ""
+
+#: package/contents/ui/main.qml:137
+#, kde-format
+msgid ""
+"Virtual desktops have been changed outside this settings application. Saving "
+"now will overwrite the changes."
+msgstr ""
+
+#: package/contents/ui/main.qml:153
+#, kde-format
+msgid "Row %1"
+msgstr ""
+
+#: package/contents/ui/main.qml:166
+#, kde-format
+msgctxt "@action:button"
+msgid "Add"
+msgstr ""
+
+#: package/contents/ui/main.qml:169
+#, fuzzy, kde-format
+#| msgid "Desktops"
+msgid "New Desktop"
+msgstr "Επιφάνειες εργασίας"
+
+#: package/contents/ui/main.qml:184
+#, kde-format
+msgid "1 Row"
+msgid_plural "%1 Rows"
+msgstr[0] ""
+msgstr[1] ""
+
+#: package/contents/ui/main.qml:200
+#, kde-format
+msgid "Options:"
+msgstr ""
+
+#: package/contents/ui/main.qml:202
+#, fuzzy, kde-format
+#| msgid "Desktop navigation wraps around"
+msgid "Navigation wraps around"
+msgstr "Η πλοήγηση επιφανειών εργασίας γίνεται κυκλικά"
+
+#: package/contents/ui/main.qml:220
+#, kde-format
+msgid "Show animation when switching:"
+msgstr ""
+
+#: package/contents/ui/main.qml:271
+#, kde-format
+msgid "Show on-screen display when switching:"
+msgstr ""
+
+#: package/contents/ui/main.qml:290
+#, kde-format
+msgid "%1 ms"
+msgstr ""
+
+#: package/contents/ui/main.qml:314
+#, kde-format
+msgid "Show desktop layout indicators"
+msgstr "Εμφάνιση της ένδειξης της διάταξης της επιφάνειας εργασίας"
+
+#: virtualdesktops.cpp:33
+#, fuzzy, kde-format
+#| msgid "Desktops"
+msgid "Virtual Desktops"
+msgstr "Επιφάνειες εργασίας"
+
+#~ msgid "Desktop %1:"
+#~ msgstr "Επιφάνεια εργασίας %1:"
+
+#~ msgid "Here you can enter the name for desktop %1"
+#~ msgstr "Εδώ μπορείτε να εισάγετε το όνομα της επιφάνειας εργασίας %1"
+
+#~ msgid "Desktop %1"
+#~ msgstr "Επιφάνεια εργασίας %1"
+
+#~ msgid ""
+#~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "
+#~ "virtual desktops you want and how these should be labeled."
+#~ msgstr ""
+#~ "<h1>Πολλαπλές επιφάνειες εργασίας</h1>Σε αυτό το άρθρωμα μπορείτε να "
+#~ "ρυθμίσετε πόσες εικονικές επιφάνειες εργασίας θέλετε και πώς θα πρέπει να "
+#~ "ονομάζονται αυτές."
+
+#~ msgid "Switch to Next Desktop"
+#~ msgstr "Μετάβαση στην επόμενη Επιφάνεια εργασίας"
+
+#~ msgid "Switch to Previous Desktop"
+#~ msgstr "Μετάβαση στην προηγούμενη Επιφάνεια εργασίας"
+
+#~ msgid "Switch One Desktop to the Right"
+#~ msgstr "Μετάβαση στην επόμενη επιφάνεια εργασίας δεξιά"
+
+#~ msgid "Switch One Desktop to the Left"
+#~ msgstr "Μετάβαση στην επόμενη επιφάνεια εργασίας αριστερά"
+
+#~ msgid "Switch One Desktop Up"
+#~ msgstr "Μετάβαση στην επόμενη επιφάνεια εργασίας πάνω"
+
+#~ msgid "Switch One Desktop Down"
+#~ msgstr "Μετάβαση στην επόμενη επιφάνεια εργασίας κάτω"
+
+#~ msgid "Walk Through Desktops"
+#~ msgstr "Διάσχιση επιφανειών εργασίας"
+
+#~ msgid "Walk Through Desktops (Reverse)"
+#~ msgstr "Διάσχιση επιφανειών εργασίας (αντίστροφα)"
+
+#~ msgid "Walk Through Desktop List"
+#~ msgstr "Διάσχιση λίστας με τις επιφάνειες εργασίας"
+
+#~ msgid "Walk Through Desktop List (Reverse)"
+#~ msgstr "Διάσχιση λίστας με τις επιφάνειες εργασίας (αντίστροφα)"
+
+#~ msgid "Desktop Switching"
+#~ msgstr "Εναλλαγή επιφάνειας εργασίας"
+
+#~ msgid "Switch to Desktop %1"
+#~ msgstr "Εναλλαγή στην Επιφάνεια εργασίας %1"
+
+#~ msgid "No Animation"
+#~ msgstr "Χωρίς εφέ"
+
+#~ msgid "No suitable Shortcut for Desktop %1 found"
+#~ msgstr "Δε βρέθηκε κατάλληλη συντόμευση για την επιφάνεια εργασίας %1"
+
+#~ msgid "Assigned global Shortcut \"%1\" to Desktop %2"
+#~ msgstr "Ορισμός καθολικής συντόμευσης «%1» για την επιφάνεια εργασίας %2"
+
+#~ msgid "Shortcut conflict: Could not set Shortcut %1 for Desktop %2"
+#~ msgstr ""
+#~ "Σύγκρουση συντόμευσης: Δεν ήταν εφικτό να οριστεί η συντόμευση %1 για την "
+#~ "επιφάνεια εργασίας %2"
+
+#~ msgid "KWin development team"
+#~ msgstr "Η ομάδα ανάπτυξης του KWin"
+
+#~ msgid "Layout"
+#~ msgstr "Διάταξη"
+
+#~ msgid ""
+#~ "Here you can set how many virtual desktops you want on your KDE desktop."
+#~ msgstr ""
+#~ "Εδώ μπορείτε να καθορίσετε πόσες εικονικές επιφάνειες εργασίας θέλετε στο "
+#~ "KDE."
+
+#~ msgid "&Number of desktops:"
+#~ msgstr "Αρι&θμός επιφανειών εργασίας:"
+
+#~ msgid "N&umber of rows:"
+#~ msgstr "Αριθμός &γραμμών:"
+
+#~ msgid "Desktop Names"
+#~ msgstr "Ονόματα επιφανειών εργασίας"
+
+#~ msgid "Switching"
+#~ msgstr "Εναλλαγή"
+
+#~ msgid ""
+#~ "Enable this option if you want keyboard or active desktop border "
+#~ "navigation beyond the edge of a desktop to take you to the opposite edge "
+#~ "of the new desktop."
+#~ msgstr ""
+#~ "Ενεργοποιήστε αυτή την επιλογή αν θέλετε η πλοήγηση μέσω του "
+#~ "πληκτρολογίου ή των ενεργών ορίων επιφάνειας εργασίας μετά το άκρο της "
+#~ "επιφάνειας εργασίας, να σας πηγαίνει στο αντίθετο άκρο της νέας "
+#~ "επιφάνειας εργασίας."
+
+#~ msgid "Desktop Effect Animation"
+#~ msgstr "Εφέ κίνησης επιφάνειας εργασίας"
+
+#~ msgid "Animation:"
+#~ msgstr "Εφέ κίνησης:"
+
+#~ msgid "Desktop Switch On-Screen Display"
+#~ msgstr "Εμφάνιση ένδειξης εναλλαγής επιφάνειας εργασίας στην οθόνη"
+
+#~ msgid "Duration:"
+#~ msgstr "Διάρκεια:"
+
+#~ msgid " msec"
+#~ msgstr " msec"
+
+#~ msgid ""
+#~ "Enabling this option will show a small preview of the desktop layout "
+#~ "indicating the selected desktop."
+#~ msgstr ""
+#~ "Ενεργοποιώντας αυτή την επιλογή θα εμφανιστεί μια μικρή προεπισκόπηση της "
+#~ "διάταξης της επιφάνειας εργασίας υποδεικνύοντας την επιλεγμένη επιφάνεια "
+#~ "εργασίας."
+
+#~ msgid "Shortcuts"
+#~ msgstr "Συντομεύσεις"
+
+#~ msgid "Show shortcuts for all possible desktops"
+#~ msgstr "Εμφάνιση συντομεύσεων για όλες τις πιθανές επιφάνειες εργασίας"
+
+#~ msgid "Different widgets for each desktop"
+#~ msgstr "Διαφορετικά συστατικά για κάθε επιφάνεια εργασίας"
+
+#~ msgid "Mouse wheel over desktop background switches desktop"
+#~ msgstr ""
+#~ "Η ρόδα ποντικιού πάνω από την επιφάνεια εργασίας αλλάζει επιφάνεια "
+#~ "εργασίας"

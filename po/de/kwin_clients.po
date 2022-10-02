@@ -1,0 +1,921 @@
+# Thomas Diehl <thd@kde.org>, 2004.
+# Stephan Johach <hunsum@gmx.de>, 2005, 2006.
+# Thomas Reitelbach <tr@erdfunkstelle.de>, 2005, 2006, 2007, 2008, 2009, 2010.
+# Burkhard Lück <lueck@hube-lueck.de>, 2009, 2010, 2011, 2012, 2013, 2015.
+# Johannes Obermayr <johannesobermayr@gmx.de>, 2009, 2010.
+# Frederik Schwarzer <schwarzer@kde.org>, 2010, 2011, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2015-01-15 12:14+0100\n"
+"Last-Translator: Burkhard Lück <lueck@hube-lueck.de>\n"
+"Language-Team: German <kde-i18n-de@kde.org>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "Sehr klein"
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "Normal"
+
+#: aurorae/src/aurorae.cpp:727
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "Groß"
+
+#: aurorae/src/aurorae.cpp:728
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "Sehr groß"
+
+#: aurorae/src/aurorae.cpp:729
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "Riesig"
+
+#: aurorae/src/aurorae.cpp:730
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "Noch riesiger"
+
+#: aurorae/src/aurorae.cpp:731
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "Übergroß"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr "Knopfgröße:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "Einstellungsdialog"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "Titel&ausrichtung"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "Links"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "Mittig"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "Rechts"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"Wenn diese Einstellung aktiviert ist, wird die Fensterumrandung in der Farbe "
+"der Titelleiste dargestellt. Ansonsten wird die Hintergrundfarbe des "
+"Fensters verwendet."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "Farbige Fensterumrandung"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"Markieren Sie diese Einstellung, wenn Sie möchten, dass Knöpfe eingeblendet "
+"werden, sobald der Mauszeiger darüber schwebt und wieder verschwinden, wenn "
+"die Maus weiter bewegt wird."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "Knöpfe animieren"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "Wenn diese Einstellung aktiviert ist, wirft der Text in der Titelleiste "
+#~ "einen Schatten. "
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "Schattierten &Text verwenden"
+
+#~ msgid "Button mouseover transition"
+#~ msgstr "Übergang beim Überfahren mit dem Mauszeiger"
+
+#~ msgid "Configure window buttons' mouseover highlight animation"
+#~ msgstr "Animation der Fensterknöpfe beim Überfahren mit der Maus einrichten"
+
+#~ msgid "Title transitions"
+#~ msgstr "Titel-Übergänge"
+
+#~ msgid "Configure fading transitions when window title is changed"
+#~ msgstr "Übergänge beim Wechsel von Fenstertiteln einrichten"
+
+#~ msgid "Window active state change transitions"
+#~ msgstr "Übergang beim Wechsel des Aktivitätsstatus von Fenstern"
+
+#~ msgid ""
+#~ "Configure fading between window shadow and glow when window's active "
+#~ "state is changed"
+#~ msgstr ""
+#~ "Übergang zwischen Schatten und Glühen beim Wechsel des Aktivitätsstatus "
+#~ "von Fenstern einrichten"
+
+#~ msgid "Window grouping animations"
+#~ msgstr "Animationen bei Fenstergruppierung"
+
+#~ msgid ""
+#~ "Configure window titlebar animations when windows are grouped/ungrouped"
+#~ msgstr ""
+#~ "Titelleistenanimationen von Fenstern beim Gruppieren und Lösen aus der "
+#~ "Gruppierung einrichten"
+
+#~ msgid "Hide Advanced Configuration Options"
+#~ msgstr "Erweiterte Einstellungen ausblenden"
+
+#~ msgid "Show Advanced Configuration Options"
+#~ msgstr "Erweiterte Einstellungen anzeigen"
+
+#~ msgid "Animations"
+#~ msgstr "Animationen"
+
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "Frage - Oxygen-Einstellungen"
+
+#~ msgid "Remove selected exception?"
+#~ msgstr "Ausgewählte Auswahl entfernen?"
+
+#~ msgid "Warning - Oxygen Settings"
+#~ msgstr "Warnung - Oxygen-Einstellungen"
+
+#~ msgid "Regular Expression syntax is incorrect"
+#~ msgstr "Die Syntax des regulären Ausdrucks ist korrekt."
+
+#~ msgid "Exception Type"
+#~ msgstr "Ausnahme-Typ"
+
+#~ msgid "Regular Expression"
+#~ msgstr "Regulärer Ausdruck"
+
+#~ msgid "Window Title"
+#~ msgstr "Fenstertitel"
+
+#~ msgid "Window Class Name"
+#~ msgstr "Name der Fensterklasse"
+
+#~ msgid "Enable/disable this exception"
+#~ msgstr "Diese Ausnahme aktivieren/deaktivieren"
+
+#~ msgid "General"
+#~ msgstr "Allgemein"
+
+#~ msgid "Border si&ze:"
+#~ msgstr "Umrandungsgrö&ße:"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "Keine Umrandung"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Borders"
+#~ msgstr "Keine seitliche Umrandung"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "Groß"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "Sehr groß"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "Riesig"
+
+#~ msgid "Tit&le alignment:"
+#~ msgstr "Tite&lausrichtung:"
+
+#~ msgid "Center (Full Width)"
+#~ msgstr "Zentriert (volle Breite)"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "Klein"
+
+#~ msgid "Enable animations"
+#~ msgstr "Animationen aktivieren"
+
+#~ msgid "Fine Tuning"
+#~ msgstr "Feineinstellungen"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "Fenster durch Doppelklick auf Menüknopf schließen"
+
+#~ msgid "Never Draw Separator"
+#~ msgstr "Trenner nie anzeigen"
+
+#~ msgid "Draw Separator When Window is Active"
+#~ msgstr "Trenner anzeigen, wenn das Fenster aktiv ist"
+
+#~ msgid "Always Draw Separator"
+#~ msgstr "Trenner immer anzeigen"
+
+#~ msgid "Separator disp&lay:"
+#~ msgstr "Anzeige &der Trenner:"
+
+#~ msgid "Outline active window title"
+#~ msgstr "Aktiven Fenstertitel umranden"
+
+#~ msgid "Use narrow space between decoration buttons"
+#~ msgstr "Schmalen Abstand zwischen den Knöpfen einfügen"
+
+#~ msgid "Add handle to resize windows with no border"
+#~ msgstr "Griff zur Größenänderung von Fenstern ohne Rahmen hinzufügen"
+
+#~ msgid "Display window borders for maximized windows"
+#~ msgstr "Fensterränder bei maximierten Fenstern anzeigen"
+
+#~ msgid "Shadows"
+#~ msgstr "Schatten"
+
+#~ msgid "Window Drop-Down Shadow"
+#~ msgstr "Schattenwurf für Fenster"
+
+#~ msgid "Active Window Glow"
+#~ msgstr "Glühen für aktives Fenster"
+
+#~ msgid "Window-Specific Overrides"
+#~ msgstr "Fensterspezifische Einstellungen"
+
+#~ msgid "Dialog"
+#~ msgstr "Dialog"
+
+#~ msgid "Information about Selected Window"
+#~ msgstr "Informationen zum ausgewählten Fenster"
+
+#~ msgid "Class: "
+#~ msgstr "Klasse: "
+
+#~ msgid "Title: "
+#~ msgstr "Titel: "
+
+#~ msgid "Window Property Selection"
+#~ msgstr "Auswahl der Fenster-Eigenschaft"
+
+#~ msgid "Use window class (whole application)"
+#~ msgstr "Fensterklasse verwenden (gesamte Anwendung)"
+
+#~ msgid "Use window title"
+#~ msgstr "Fenstertitel verwenden"
+
+#~ msgid "Window Identification"
+#~ msgstr "Fensterkennung"
+
+#~ msgid "Matching window property: "
+#~ msgstr "Passende Fenster-Eigenschaft: "
+
+#~ msgid "Regular expression to match: "
+#~ msgstr "Passender regulärer Ausdruck: "
+
+#~ msgid "Detect Window Properties"
+#~ msgstr "Fenster-Eigenschaften ermitteln"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Dekorations-Einstellungen"
+
+#~ msgctxt "outline window title"
+#~ msgid "Disabled"
+#~ msgstr "Deaktiviert"
+
+#~ msgctxt "outline window title"
+#~ msgid "Enabled"
+#~ msgstr "Aktiviert"
+
+#~ msgid "Border size:"
+#~ msgstr "Umrandungsgröße:"
+
+#~ msgid "Outline active window title:"
+#~ msgstr "Aktiven Fenstertitel umranden:"
+
+#~ msgid "Separator display:"
+#~ msgstr "Anzeige der Trenner:"
+
+#~ msgid "Hide window title bar"
+#~ msgstr "Titelleiste ausblenden"
+
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Disabled"
+#~ msgstr "Deaktiviert"
+
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Enabled"
+#~ msgstr "Aktiviert"
+
+#~ msgid "Move Up"
+#~ msgstr "Nach oben"
+
+#~ msgid "Move Down"
+#~ msgstr "Nach unten"
+
+#~ msgid "Add"
+#~ msgstr "Hinzufügen"
+
+#~ msgid "Remove"
+#~ msgstr "Entfernen"
+
+#~ msgid "Edit"
+#~ msgstr "Bearbeiten"
+
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "Oxygen-Schatten-Demo"
+
+#~ msgid "Draw window background"
+#~ msgstr "Fensterhintergrund zeichnen"
+
+#~ msgid "Inactive Windows"
+#~ msgstr "Inaktive Fenster"
+
+#~ msgid "Active Windows"
+#~ msgstr "Aktive Fenster"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+#~ msgid "Window Actions Menu"
+#~ msgstr "Fenster-Aktionsmenü"
+
+#~ msgid "Application Menu"
+#~ msgstr "Anwendungsmenü"
+
+#~ msgid "Help"
+#~ msgstr "Hilfe"
+
+#~ msgid "Minimize"
+#~ msgstr "Minimieren"
+
+#~ msgid "Maximize"
+#~ msgstr "Maximieren"
+
+#~ msgid "Close"
+#~ msgstr "Schließen"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "Immer im Vordergrund"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "Immer im Hintergrund"
+
+#~ msgid "On All Desktops"
+#~ msgstr "Auf allen Arbeitsflächen"
+
+#~ msgid "Shade Button"
+#~ msgstr "Einrollen-Knopf"
+
+#~ msgid "Menu"
+#~ msgstr "Menü"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "Nicht auf allen Arbeitsflächen"
+
+#~ msgid "On all desktops"
+#~ msgstr "Auf allen Arbeitsflächen"
+
+#~ msgid "Unshade"
+#~ msgstr "Einrollen rückgängig"
+
+#~ msgid "Shade"
+#~ msgstr "Einrollen"
+
+#~ msgid "Resize"
+#~ msgstr "Größe ändern"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>Vorschau für B II</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "Wiederherstellen"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "Fensterrahmen mit der &Titelzeilenfarbe malen"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "Wenn diese Einstellung aktiv ist, werden die Fensterrahmen in der Farbe "
+#~ "der Titelzeile dargestellt, anderenfalls werden die normalen Farben für "
+#~ "Rahmen verwendet."
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "&Anfasser zur Größenänderung anzeigen"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "Wenn diese Einstellung aktiv ist, werden die Fensterdekorationen mit "
+#~ "einem „Anfasser“ in der unteren rechten Ecke des Fensters versehen. "
+#~ "Anderenfalls wird dieser ausgeblendet."
+
+#~ msgid "Auto-move titlebar"
+#~ msgstr "Fensterleiste automatisch verschieben"
+
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr ""
+#~ "Wenn diese Einstellung aktiv ist, wird die Titelleiste automatisch an "
+#~ "eine sichtbare Position verschoben; anderenfalls muss sie von Hand "
+#~ "mittels Umschalt+Ziehen verschoben werden."
+
+#~ msgid "Actions Settings"
+#~ msgstr "Einstellungen für Aktionen"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "Doppelklick auf Menüknopf:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "Nichts unternehmen"
+
+#~ msgid "Minimize Window"
+#~ msgstr "Fenster minimieren"
+
+#~ msgid "Shade Window"
+#~ msgstr "Einrollen betätigen"
+
+#~ msgid "Close Window"
+#~ msgstr "Fenster schließen"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "Dem Doppelklick auf den Menüknopf kann eine Aktion zugewiesen werden. "
+#~ "Belassen Sie die Einstellung „Nichts tun“, wenn Sie unsicher sind."
+
+#~ msgid "Laptop"
+#~ msgstr "Laptop"
+
+#~ msgid "Bac&kground style: "
+#~ msgstr "Hin&tergrundstil: "
+
+#~ msgid "Solid Color"
+#~ msgstr "Einfarbig"
+
+#~ msgid "Radial Gradient"
+#~ msgstr "Radialer Farbverlauf"
+
+#~ msgid "Follow Style Hint"
+#~ msgstr "Stil-Hinweis beachten"
+
+#~ msgid "Background style:"
+#~ msgstr "Hintergrundstil:"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Thomas Reitelbach"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "tr@erdfunkstelle.de"
+
+#~ msgid "Oxygen decoration shadows demonstration"
+#~ msgstr "Demonstration der Oxygen-Dekorationsschatten"
+
+#~ msgid "(c) 2011, Hugo Pereira Da Costa"
+#~ msgstr "© 2011, Hugo Pereira Da Costa"
+
+#~ msgid "Hugo Pereira Da Costa"
+#~ msgstr "Hugo Pereira Da Costa"
+
+#~ msgid "Save"
+#~ msgstr "Speichern"
+
+#~ msgid "Save shadows as pixmaps in provided directory"
+#~ msgstr "Schatten als Pixmaps im angegebenen Ordner speichern"
+
+#~ msgid "Large"
+#~ msgstr "Groß"
+
+#~ msgid "Small"
+#~ msgstr "Klein"
+
+#~ msgid "Extra size grip display: "
+#~ msgstr "Zusätzlicher Größenänderungs-Anfasser: "
+
+#~ msgid "Extra size grip display:"
+#~ msgstr "Zusätzlicher Größenänderungs-Anfasser:"
+
+#~ msgid "Inner Color:"
+#~ msgstr "Füllfarbe:"
+
+#~ msgid "Outer Color:"
+#~ msgstr "Äußere Farbe:"
+
+#~ msgid "Vertical Offset:"
+#~ msgstr "Vertikaler Versatz:"
+
+#~ msgid "Size: "
+#~ msgstr "Größe: "
+
+#~ msgid "px"
+#~ msgstr " px"
+
+#~ msgid "Always Hide Extra Size Grip"
+#~ msgstr "Zusätzlichen Größenänderungs-Anfasser immer ausblenden"
+
+#~ msgid "Show Extra Size Grip When Needed"
+#~ msgstr "Zusätzlichen Größenänderungs-Anfasser bei Bedarf anzeigen"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "Markieren Sie diese Einstellung, wenn Sie Fenster wie unter Microsoft "
+#~ "Windows über einen Doppelklick auf den Menüknopf schließen möchten."
+
+#~ msgid "Plastik"
+#~ msgstr "Plastik"
+
+#~ msgid "All Desktops"
+#~ msgstr "Alle Arbeitsflächen"
+
+#~ msgid "Above"
+#~ msgstr "Über"
+
+#~ msgid "Below"
+#~ msgstr "Unter"
+
+#~ msgid "Close Item"
+#~ msgstr "Element schließen"
+
+#~ msgid "Tabstrip"
+#~ msgstr "Tabstrip"
+
+#~ msgid "&Left"
+#~ msgstr "&Links"
+
+#~ msgid "&Center"
+#~ msgstr "&Zentrieren"
+
+#~ msgid "&Right"
+#~ msgstr "&Rechts"
+
+#~ msgid "Display window icons"
+#~ msgstr "Fenstersymbole anzeigen"
+
+#, fuzzy
+#~| msgid "Outer Color:"
+#~ msgid "O&utline Color:"
+#~ msgstr "Äußere Farbe:"
+
+#~ msgid "Do not keep above others"
+#~ msgstr "Nicht im Vordergrund halten"
+
+#~ msgid "Keep above others"
+#~ msgstr "Immer im Vordergrund"
+
+#~ msgid "Do not keep below others"
+#~ msgstr "Nicht im Hintergrund halten"
+
+#~ msgid "Keep below others"
+#~ msgstr "Immer im Hintergrund"
+
+#~ msgid "Enable title transition animations"
+#~ msgstr "Animation bei Titeländerungen aktivieren"
+
+#~ msgid "Variable"
+#~ msgstr "Variabel"
+
+#~ msgid "Maximum"
+#~ msgstr "Maximum"
+
+#~ msgid "Enable window grouping"
+#~ msgstr "Fenstergruppierung aktivieren"
+
+#~ msgid "Shadow caching:"
+#~ msgstr "Schatten-Zwischenspeicher:"
+
+#~ msgid "TextLabel"
+#~ msgstr "Textfeld"
+
+#~ msgid "Use Oxygen Shadows"
+#~ msgstr "Oxygen-Schatten verwenden"
+
+#~ msgid "Use Desktop Effects Shadows"
+#~ msgstr "Desktop-Effekt-Schatten verwenden"
+
+#~ msgid "Do Not Draw Shadows"
+#~ msgstr "Keine Schatten zeichnen"
+
+#~ msgid "Shadow style:"
+#~ msgstr "Schatten-Stil:"
+
+#~ msgctxt "draw separator"
+#~ msgid "Enabled"
+#~ msgstr "Aktiviert"
+
+#~ msgctxt "draw separator"
+#~ msgid "Disabled"
+#~ msgstr "Deaktiviert"
+
+#~ msgid "Draw separator between title bar and window contents: "
+#~ msgstr "Trenner zwischen Titelleiste und Fensterinhalt einfügen: "
+
+#~ msgid "Draw Separator between title bar and active window contents "
+#~ msgstr ""
+#~ "Trenner zwischen Titelleiste und Inhalt des aktiven Fensters einfügen "
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "Installiert ein KWM-Design"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "Pfad zu einer Design-Einstellungsdatei"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>KWM-Design</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "Angeheftet"
+
+#~ msgid "Unsticky"
+#~ msgstr "Anzeige auf allen Arbeitsflächen aufheben"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>Vorschau für Keramik</b></center>"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "&Punkte-Effekt in der Titelleiste"
+
+#~ msgid ""
+#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
+#~ "otherwise, they are drawn without the stipple."
+#~ msgstr ""
+#~ "Wenn diese Einstellung aktiv ist, wird die Titelzeile mit einem Punkte-"
+#~ "Effekt angezeigt, anderenfalls werden keine Punkte angezeigt."
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "&Anfasserleisten unterhalb von Fenstern"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
+#~ "otherwise, no grab bar is drawn."
+#~ msgstr ""
+#~ "Wenn diese Einstellung aktiv ist, werden die Dekorationen mit einer "
+#~ "„Anfasserleiste“ unterhalb der Fenster versehen. Anderenfalls wird keine "
+#~ "Leiste angezeigt."
+
+#~ msgid "Draw &gradients"
+#~ msgstr "&Farbverlauf"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with gradients for high-color "
+#~ "displays; otherwise, no gradients are drawn."
+#~ msgstr ""
+#~ "Wenn diese Einstellung aktiv ist, werden Dekorationen mit einem "
+#~ "Farbverlauf versehen. Anderenfalls wird kein Farbverlauf angezeigt."
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"
+
+#~ msgid ""
+#~ "When selected, the window decoration borders are drawn using the titlebar "
+#~ "colors; otherwise, they are drawn using normal border colors instead."
+#~ msgstr ""
+#~ "Ist diese Einstellung markiert, werden die Fensterrahmen in der Farbe der "
+#~ "Titelzeile gemalt, anderenfalls werden die normalen Farben für Rahmen "
+#~ "verwendet."
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "Quartz &extraschlank"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "Eine Quartz-Fensterdekoration mit besonders kleiner Titelleiste"
+
+#~ msgid "Quartz"
+#~ msgstr "Quartz"
+
+#~ msgid "Redmond"
+#~ msgstr "Redmond"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "&Anfasser zur Größenänderung malen"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "Ist diese Einstellung markiert, werden die Fensterdekorationen mit einem "
+#~ "„Anfasser“ in der unteren rechten Ecke des Fensters versehen. Hierdurch "
+#~ "werden Größenänderungen einfacher, insbesondere bei Verwendung von "
+#~ "Trackballs und anderen Mausersätzen bei Laptops."
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr "Hier können Sie die Größe des Anfassers ändern."
+
+#~ msgid "Medium"
+#~ msgstr "Mittel"
+
+#~ msgid "Modern System"
+#~ msgstr "Modern System"
+
+#~ msgid "Web"
+#~ msgstr "Web"
+
+#~ msgid "Keramik"
+#~ msgstr "Keramik"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "Fenstersymbol in der &Ausbuchtung anzeigen"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "Wenn diese Einstellung aktiv ist, wird das Fenstersymbol in der "
+#~ "Ausbuchtung neben dem Fenstertitel angezeigt."
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "&Kleine Ausbuchtungen bei aktiven Fenstern"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "Markieren Sie diese Einstellung, wenn Sie möchten, dass die Ausbuchtung "
+#~ "bei aktiven Fenstern genauso groß ist wie bei inaktiven. Das ist bei "
+#~ "Laptops und Bildschirmen mit niedrigen Auflösung von Vorteil, da hier der "
+#~ "zur Verfügung stehende Platz optimal für den Fensterinhalt ausgenutzt "
+#~ "werden soll."
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "&Anfasserleisten unterhalb von Fenstern"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "Wenn diese Einstellung aktiv ist, werden die Dekorationen mit einer "
+#~ "„Anfasserleiste“ unterhalb der Fenster gemalt. Anderenfalls wird "
+#~ "stattdessen nur ein schmaler Rahmen gemalt."
+
+#~ msgid "Aurorae Theme Engine"
+#~ msgstr "Aurorae"
+
+#~ msgid "Drag or Type Theme URL"
+#~ msgstr "Geben Sie eine Design-Adresse ein oder ziehen Sie sie herein"
+
+#~ msgid "Unable to find the theme archive %1."
+#~ msgstr "Das Design-Archiv namens „%1“ kann nicht gefunden werden."
+
+#~ msgid ""
+#~ "Unable to download theme archive;\n"
+#~ "please check that address %1 is correct."
+#~ msgstr ""
+#~ "Das Design-Archiv kann nicht heruntergeladen werden;\n"
+#~ "bitte stellen Sie sicher, dass die Adresse %1 richtig ist."
+
+#~ msgid "Theme:"
+#~ msgstr "Design:"
+
+#~ msgid "Get New Themes..."
+#~ msgstr "Neue Designs holen ..."
+
+#~ msgid "Install New Theme..."
+#~ msgstr "Neues Design installieren ..."
+
+#~ msgid "Glow active window"
+#~ msgstr "Aktives Fenster glühen lassen"
+
+#, fuzzy
+#~| msgid "Blend title bar colors with window contents"
+#~ msgid "Draw separator between title bar and active window contents:"
+#~ msgstr "Farbe der Titelleiste mit Fensterinhalt angleichen"
+
+#, fuzzy
+#~| msgid ""
+#~| "When enabled, this option increases the visibility of the window "
+#~| "titlebar by showing stripes"
+#~ msgid ""
+#~ "When enabled, this option makes an horizontal separator appear between "
+#~ "the window title bar and the window contents."
+#~ msgstr ""
+#~ "Wenn diese Einstellung aktiviert ist, wird die Sichtbarkeit der "
+#~ "Fenstertitelleiste durch Zierstreifen verbessert."
+
+#, fuzzy
+#~| msgid "Oxygen"
+#~ msgid "Oxygen team"
+#~ msgstr "Oxygen"
+
+#~ msgid ""
+#~ "When enabled, this option increases the visibility of the window titlebar "
+#~ "by showing stripes"
+#~ msgstr ""
+#~ "Wenn diese Einstellung aktiviert ist, wird die Sichtbarkeit der "
+#~ "Fenstertitelleiste durch Zierstreifen verbessert."
+
+#~ msgid "Show stripes next to the title"
+#~ msgstr "Zierstreifen neben dem Fenstertitel anzeigen"
+
+#, fuzzy
+#~| msgid ""
+#~| "When enabled, this option increases the visibility of the window "
+#~| "titlebar by showing stripes"
+#~ msgid ""
+#~ "When enabled, this option increases the visibility of the window titlebar "
+#~ "by adding an horizontal bar between the title bar and the window contents"
+#~ msgstr ""
+#~ "Wenn diese Einstellung aktiviert ist, wird die Sichtbarkeit der "
+#~ "Fenstertitelleiste durch Zierstreifen verbessert."
+
+#, fuzzy
+#~| msgid "Blend title bar colors with window contents"
+#~ msgid "Draw separator between title bar and window contents"
+#~ msgstr "Farbe der Titelleiste mit Fensterinhalt angleichen"
+
+#, fuzzy
+#~| msgid "Show stripes next to the title"
+#~ msgid "Show stripes next to the title:"
+#~ msgstr "Zierstreifen neben dem Fenstertitel anzeigen"
+
+#, fuzzy
+#~| msgid "Blend title bar colors with window contents"
+#~ msgid "Blend title bar colors with window content:"
+#~ msgstr "Farbe der Titelleiste mit Fensterinhalt angleichen"
+
+#~ msgid "Blend title bar colors with window contents"
+#~ msgstr "Farbe der Titelleiste mit Fensterinhalt angleichen"
+
+#~ msgid "Ozone"
+#~ msgstr "Ozon"
+
+#, fuzzy
+#~| msgid "Draw window frames using &titlebar colors"
+#~ msgid "Overwrite default title bar colors:"
+#~ msgstr "Fensterrahmen mit der &Titelzeilenfarbe malen"
+
+#~ msgid ""
+#~ "When enabled, this option makes the window title bar use the same colors "
+#~ "as the window contents, instead of using the system title bar colors."
+#~ msgstr ""
+#~ "Wenn diese Einstellung aktiviert ist, wird die Titelleiste von Fenstern "
+#~ "die gleiche Farbe wie der Fensterinhalt verwenden, anstatt der "
+#~ "vorgegebenen Systemfarbe für Titelleisten."
+
+#~ msgid "<b><center>Oxygen preview! =)</center></b>"
+#~ msgstr "<b><center>Oxygen-Vorschau</center></b>"
+
+#~ msgid "Un-Sticky"
+#~ msgstr "Anzeige auf allen Arbeitsflächen aufheben"

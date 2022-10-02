@@ -1,0 +1,299 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Toussis Manolis <manolis@koppermind.homelinux.org>, 2009.
+# Petros Vidalis <p_vidalis@hotmail.com>, 2009, 2010.
+# Dimitrios Glentadakis <dglent@gmail.com>, 2011.
+# Antonis Geralis <capoiosct@gmail.com>, 2012, 2013.
+# Dimitris Kardarakos <dimkard@gmail.com>, 2014, 2016, 2017.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwinscreenedges\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-15 00:48+0000\n"
+"PO-Revision-Date: 2017-04-11 17:03+0200\n"
+"Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
+"Language-Team: Greek <kde-i18n-el@kde.org>\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 2.0\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Antonis Geralis"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "capoiosct@gmail.com"
+
+#: main.cpp:130 touch.cpp:124
+#, kde-format
+msgid "No Action"
+msgstr "Καμία ενέργεια"
+
+#: main.cpp:131 touch.cpp:125
+#, kde-format
+msgid "Peek at Desktop"
+msgstr ""
+
+#: main.cpp:132 touch.cpp:126
+#, kde-format
+msgid "Lock Screen"
+msgstr "Κλείδωμα οθόνης"
+
+#: main.cpp:133 touch.cpp:127
+#, kde-format
+msgid "Show KRunner"
+msgstr ""
+
+#: main.cpp:134 touch.cpp:128
+#, kde-format
+msgid "Activity Manager"
+msgstr "Διαχειριστής δραστηριοτήτων"
+
+#: main.cpp:135 touch.cpp:129
+#, kde-format
+msgid "Application Launcher"
+msgstr "Εκτελεστής εφαρμογών"
+
+#: main.cpp:139 touch.cpp:133
+#, kde-format
+msgid "Present Windows"
+msgstr ""
+
+#: main.cpp:140 touch.cpp:134
+#, kde-format
+msgid "%1 - All Desktops"
+msgstr "%1 - Όλες οι επιφάνειες εργασίας"
+
+#: main.cpp:141 touch.cpp:135
+#, kde-format
+msgid "%1 - Current Desktop"
+msgstr "%1 - Τρέχουσα επιφάνεια εργασίας"
+
+#: main.cpp:142 touch.cpp:136
+#, kde-format
+msgid "%1 - Current Application"
+msgstr "%1 - Τρέχουσα εφαρμογή"
+
+#: main.cpp:144 touch.cpp:138
+#, kde-format
+msgid "Toggle window switching"
+msgstr "Εναλλαγή παραθύρων"
+
+#: main.cpp:145 touch.cpp:139
+#, kde-format
+msgid "Toggle alternative window switching"
+msgstr "Εναλλακτική εναλλαγή παραθύρων"
+
+#. i18n: ectx: property (text), widget (QLabel, infoLabel)
+#: main.ui:23
+#, fuzzy, kde-format
+#| msgid ""
+#| "To trigger an action push your mouse cursor against the edge of the "
+#| "screen in the action's direction."
+msgid ""
+"You can trigger an action by pushing the mouse cursor against the "
+"corresponding screen edge or corner."
+msgstr ""
+"Για την ενεργοποίηση μιας ενέργειας πιέστε το δρομέα του ποντικιού σας στο "
+"άκρο της οθόνης στην κατάλληλη κατεύθυνση."
+
+#. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
+#: main.ui:67
+#, kde-format
+msgid "&Maximize:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderMaximize)
+#: main.ui:77
+#, kde-format
+msgid "Windows dragged to top edge"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, quickTileLabel)
+#: main.ui:84
+#, kde-format
+msgid "&Tile:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderTiling)
+#: main.ui:94
+#, fuzzy, kde-format
+#| msgid "Tile windows by dragging them to the side of the screen"
+msgid "Windows dragged to left or right edge"
+msgstr "Παράθεση παραθύρων με σύρσιμο τους στα πλευρικά άκρα της οθόνης"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: main.ui:101
+#, kde-format
+msgid "Behavior:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, remainActiveOnFullscreen)
+#: main.ui:108
+#, kde-format
+msgid "Remain active when windows are fullscreen"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, electricBorderCornerRatioLabel)
+#: main.ui:115
+#, kde-format
+msgid "Trigger &quarter tiling in:"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, electricBorderCornerRatioSpin)
+#: main.ui:130
+#, no-c-format, kde-format
+msgid "%"
+msgstr "%"
+
+#. i18n: ectx: property (prefix), widget (QSpinBox, electricBorderCornerRatioSpin)
+#: main.ui:133
+#, kde-format
+msgid "Outer "
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_1)
+#: main.ui:149
+#, kde-format
+msgid "of the screen"
+msgstr "της οθόνης"
+
+#. i18n: ectx: property (toolTip), widget (QLabel, desktopSwitchLabel)
+#: main.ui:174
+#, kde-format
+msgid ""
+"Change desktop when the mouse cursor is pushed against the edge of the screen"
+msgstr ""
+"Αλλαγή επιφάνειας εργασίας όταν ο δρομέας από το ποντίκι πιέζει το άκρο της "
+"οθόνης"
+
+#. i18n: ectx: property (text), widget (QLabel, desktopSwitchLabel)
+#: main.ui:177
+#, kde-format
+msgid "&Switch desktop on edge:"
+msgstr "&Εναλλαγή επιφάνειας στο άκρο:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
+#: main.ui:188
+#, kde-format
+msgctxt "Switch desktop on edge"
+msgid "Disabled"
+msgstr "Ανενεργή"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
+#: main.ui:193
+#, kde-format
+msgid "Only When Moving Windows"
+msgstr "Μόνο κατά τη μετακίνηση των παραθύρων"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
+#: main.ui:198
+#, kde-format
+msgid "Always Enabled"
+msgstr "Πάντα ενεργοποιημένο"
+
+#. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)
+#: main.ui:206
+#, kde-format
+msgid ""
+"Amount of time required for the mouse cursor to be pushed against the edge "
+"of the screen before the action is triggered"
+msgstr ""
+"Διάρκεια χρόνου πίεσης που χρειάζεται ο δρομέας του ποντικιού σας στο άκρο "
+"της οθόνης πριν η ενέργεια ενεργοποιηθεί"
+
+#. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
+#: main.ui:209
+#, kde-format
+msgid "Activation &delay:"
+msgstr "&Καθυστέρηση ενεργοποίησης:"
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ElectricBorderDelay)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ElectricBorderCooldown)
+#: main.ui:219 main.ui:254
+#, kde-format
+msgid " ms"
+msgstr " ms"
+
+#. i18n: ectx: property (toolTip), widget (QLabel, triggerCooldownLabel)
+#: main.ui:238
+#, kde-format
+msgid ""
+"Amount of time required after triggering an action until the next trigger "
+"can occur"
+msgstr ""
+"Διάρκεια χρόνου μετά από την ενεργοποίηση μιας ενέργειας προτού μια άλλη "
+"μπορεί να ενεργοποιηθεί"
+
+#. i18n: ectx: property (text), widget (QLabel, triggerCooldownLabel)
+#: main.ui:241
+#, kde-format
+msgid "&Reactivation delay:"
+msgstr "&Καθυστέρηση επανενεργοποίησης:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_1)
+#: touch.ui:17
+#, fuzzy, kde-format
+#| msgid ""
+#| "To trigger an action swipe from the screen edge towards the center of the "
+#| "screen."
+msgid ""
+"You can trigger an action by swiping from the screen edge towards the center "
+"of the screen."
+msgstr ""
+"Για την ενεργοποίηση μιας ενέργειας σύρετε με συνεχή επαφή από το άκρο προς "
+"το κέντρο της οθόνης."
+
+#~ msgid "Show Desktop"
+#~ msgstr "Εμφάνιση επιφάνειας εργασίας"
+
+#~ msgid "%1 - Cube"
+#~ msgstr "%1 - Κύβος"
+
+#~ msgid "%1 - Cylinder"
+#~ msgstr "%1 - Κύλινδρος"
+
+#~ msgid "%1 - Sphere"
+#~ msgstr "%1 - Σφαίρα"
+
+#, fuzzy
+#~| msgid "Active Screen Edge Actions"
+#~ msgid "Active Screen Corners and Edges"
+#~ msgstr "Ενέργειες άκρων οθόνης"
+
+#~ msgid "Window Management"
+#~ msgstr "Διαχείριση παραθύρων"
+
+#, fuzzy
+#~| msgid "Maximize windows by dragging them to the top of the screen"
+#~ msgid "Maximize windows by dragging them to the top edge of the screen"
+#~ msgstr "Μεγιστοποίηση παραθύρων με σύρσιμο τους στο άνω άκρο της οθόνης"
+
+#~ msgid "Quarter tiling triggered in the outer"
+#~ msgstr "Η παράθεση ανά τέταρτο ενεργοποιείται στο εξωτερικό"
+
+#~ msgid "Other Settings"
+#~ msgstr "Άλλες ρυθμίσεις"
+
+#~ msgctxt "Open krunner"
+#~ msgid "Run Command"
+#~ msgstr "Εκτέλεση εντολής"
+
+#~ msgid "Show Dashboard"
+#~ msgstr "Εμφάνιση πίνακα συστατικών"
+
+#~ msgid "Prevent Screen Locking"
+#~ msgstr "Αποτροπή κλειδώματος οθόνης"
+
+#~ msgid "Trigger &cooldown:"
+#~ msgstr "Ενεργοποίηση &ηρεμίας:"
+
+#~ msgid "Action Groups"
+#~ msgstr "Ομάδες ενεργειών"

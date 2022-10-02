@@ -1,0 +1,64 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+# Yoann Laissus <yoann.laissus@gmail.com>, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2019-05-20 03:25+0200\n"
+"PO-Revision-Date: 2015-11-22 18:16+0100\n"
+"Last-Translator: Yoann Laissus <yoann.laissus@gmail.com>\n"
+"Language-Team: French <kde-francophone@kde.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Lokalize 2.0\n"
+"X-Environment: kde\n"
+"X-Accelerator-Marker: &\n"
+"X-Text-Markup: kde4\n"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, KWin::VideoWallConfigForm)
+#: videowall/contents/ui/config.ui:14
+#, kde-format
+msgid "Video Wall"
+msgstr "Mur de vidéos"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ApplyTo)
+#: videowall/contents/ui/config.ui:20
+#, kde-format
+msgid "Apply to"
+msgstr "Appliquer à"
+
+#. i18n: ectx: property (text), widget (QLineEdit, kcfg_Whitelist)
+#: videowall/contents/ui/config.ui:32
+#, kde-format
+msgid "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
+msgstr "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
+
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Whitelist)
+#. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Blacklist)
+#: videowall/contents/ui/config.ui:35 videowall/contents/ui/config.ui:66
+#, kde-format
+msgid "Comma separated list of window classes"
+msgstr "Une liste de classe de fenêtres séparée par des virgules"
+
+#. i18n: ectx: property (text), widget (QLabel, applyLabel)
+#: videowall/contents/ui/config.ui:45
+#, kde-format
+msgid "All"
+msgstr "Tout"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Ignore)
+#: videowall/contents/ui/config.ui:54
+#, kde-format
+msgid "Ignore"
+msgstr "Ignorer"
+
+#. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
+#: videowall/contents/ui/config.ui:73
+#, kde-format
+msgid "None"
+msgstr "Aucun"

@@ -1,0 +1,357 @@
+# translation of kcmkwindecoration.po to Xhosa
+# K Desktop Environment - kcmkwindecoration
+# Copyright (C) 2001 translate.org.za
+# Antoinette Dekeni <antoinette@transalate.org.za>, 2001.
+# Lwandle Mgidlana <lwandle@translate.org.za>, 2002
+# Thelma Lungcuzo <thelma@translate.org.za>, 2002
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwindecoration\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2002-11-08 14:55+0200\n"
+"Last-Translator: Thelma Lungcuzo <thelma@translate.org.za>\n"
+"Language-Team: Xhosa <xhosa@translate.org.za>\n"
+"Language: xh\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.0beta2\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Lwandle Mgidlana"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "lwandle@translate.org.za"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, kde-format
+msgid "Application menu"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, kde-format
+msgid "On all desktops"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr "Nciphisa"
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr "Yandisa"
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr ""
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr ""
+
+#: kcm.cpp:49
+#, fuzzy, kde-format
+msgid "Window Decorations"
+msgstr "Uhombiso lwe Window"
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr ""
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr ""
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr ""
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr ""
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr ""
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr ""
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr ""
+
+#: package/contents/ui/main.qml:57
+#, fuzzy, kde-format
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "&Amaqhosha"
+
+#: package/contents/ui/main.qml:93
+#, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr ""
+
+#: package/contents/ui/main.qml:112
+#, fuzzy, kde-format
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr "Uhombiso lwe Window"
+
+#: package/contents/ui/main.qml:141
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr ""
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr ""
+
+#: package/contents/ui/main.qml:165
+#, fuzzy, kde-format
+#| msgid "&Show window button tooltips"
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "&Bonisa izixhobo zootshuphe ze window"
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr ""
+
+#: utils.cpp:25
+#, kde-format
+msgid "No Borders"
+msgstr ""
+
+#: utils.cpp:26
+#, kde-format
+msgid "No Side Borders"
+msgstr ""
+
+#: utils.cpp:27
+#, kde-format
+msgid "Tiny"
+msgstr ""
+
+#: utils.cpp:28
+#, kde-format
+msgid "Normal"
+msgstr ""
+
+#: utils.cpp:29
+#, kde-format
+msgid "Large"
+msgstr ""
+
+#: utils.cpp:30
+#, kde-format
+msgid "Very Large"
+msgstr ""
+
+#: utils.cpp:31
+#, kde-format
+msgid "Huge"
+msgstr ""
+
+#: utils.cpp:32
+#, kde-format
+msgid "Very Huge"
+msgstr ""
+
+#: utils.cpp:33
+#, kde-format
+msgid "Oversized"
+msgstr ""
+
+#~ msgid "Menu"
+#~ msgstr "Menu"
+
+#, fuzzy
+#~ msgid "Download New Window Decorations"
+#~ msgstr "Uhombiso lwe Window"
+
+#, fuzzy
+#~ msgid "Configure %1..."
+#~ msgstr "Uhombiso lwe Window"
+
+#, fuzzy
+#~ msgid "Button size:"
+#~ msgstr "&Amaqhosha"
+
+#~ msgid "KDE"
+#~ msgstr "KDE"
+
+#~ msgid ""
+#~ "To add or remove titlebar buttons, simply <i>drag</i> items between the "
+#~ "available item list and the titlebar preview. Similarly, drag items "
+#~ "within the titlebar preview to re-position them."
+#~ msgstr ""
+#~ "Ukudibanisa okanye ukususa amaqhosha ebar yewonga, ngokulula <i>rhuqa</i> "
+#~ "imiba phakathi koluhlu lomba elikhoyo kunye nebar yewonga yemboniso. "
+#~ "Ngokufanayo, rhuqa imiba ngaphakathi kwe bar yewonga lemboniso ukuzibeka "
+#~ "endaweni-kwakhona."
+
+#~ msgid ""
+#~ "Enabling this checkbox will show window button tooltips. If this checkbox "
+#~ "is off, no window button tooltips will be shown."
+#~ msgstr ""
+#~ "Ukwenza le bhokisi yokukhangela kuzakubonisa izixhobo zootshuphe zeqhosha "
+#~ "le window. Ukuba le bhokisi yokukhangela icimile, akukho zincam zesixhobo "
+#~ "zeqhosha le window ezizakuboniswa."
+
+#, fuzzy
+#~ msgid "Please note that this option is not available on all styles yet."
+#~ msgstr ""
+#~ "Izicwangciso ezizio zinokufumaneka ku \"Maqhosha \" Isithuba. Nceda "
+#~ "qaphela ukuba olu khetho alukho kuzo zonke iintlobo!"
+
+#~ msgid "Use custom titlebar button &positions"
+#~ msgstr "&Sebenzisa iindawo zeqhosha lebar yewonga lesiko"
+
+#, fuzzy
+#~ msgid "Decoration Options"
+#~ msgstr "Uhombiso lwe Window"
+
+#~ msgid ""
+#~ "Select the window decoration. This is the look and feel of both the "
+#~ "window borders and the window handle."
+#~ msgstr ""
+#~ "Khetha uhombiso lwe window. Olu lujongo nokuva kwazo zombini imida ye "
+#~ "window kunye nomqheba we window."
+
+#~ msgid "Window Decoration Control Module"
+#~ msgstr "Window Yohombiso Lolawulo Lwesichatshulwa"
+
+#~ msgid "(c) 2001 Karol Szwed"
+#~ msgstr "(c) 2001 Karol Szwed"
+
+#, fuzzy
+#~| msgid "(c) 2001 Karol Szwed"
+#~ msgid "Karol Szwed"
+#~ msgstr "(c) 2001 Karol Szwed"
+
+#~ msgid "kcmkwindecoration"
+#~ msgstr "kcmkwindecoration"
+
+#~ msgid "&Buttons"
+#~ msgstr "&Amaqhosha"
+
+#~ msgid "KDE 2"
+#~ msgstr "KDE 2"

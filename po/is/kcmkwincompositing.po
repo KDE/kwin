@@ -1,0 +1,554 @@
+# translation of kcmkwincompositing.po to Icelandic
+# íslenskun kcmkwincompositing
+# Copyright (C) 2007, 2009 This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Sveinn í Felli <sveinki@nett.is>, 2008, 2009, 2010, 2016.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwincompositing\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"PO-Revision-Date: 2016-04-08 22:57+0000\n"
+"Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
+"Language-Team: Icelandic <translation-team-is@lists.sourceforge.net>\n"
+"Language: is\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: Plural-Forms: nplurals=2; plural=n != 1;\n"
+"\n"
+"\n"
+"X-Generator: Lokalize 1.5\n"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
+#: compositing.ui:31
+#, kde-format
+msgid ""
+"OpenGL compositing (the default) has crashed KWin in the past.\n"
+"This was most likely due to a driver bug.\n"
+"If you think that you have meanwhile upgraded to a stable driver,\n"
+"you can reset this protection but be aware that this might result in an "
+"immediate crash!"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
+#: compositing.ui:44
+#, kde-format
+msgid ""
+"Scale method \"Accurate\" is not supported by all hardware and can cause "
+"performance regressions and rendering artifacts."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
+#: compositing.ui:67
+#, kde-format
+msgid ""
+"Keeping the window thumbnail always interferes with the minimized state of "
+"windows. This can result in windows not suspending their work when minimized."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, compositingLabel)
+#: compositing.ui:79
+#, fuzzy, kde-format
+#| msgid "Compositing type:"
+msgid "Compositing:"
+msgstr "Tegund skjásamsetningar:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
+#: compositing.ui:86
+#, fuzzy, kde-format
+#| msgctxt "@option:check"
+#| msgid "Enable desktop effects"
+msgid "Enable on startup"
+msgstr "Virkja viðmótsbrellur fyrir skjáborð"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:95
+#, kde-format
+msgid ""
+"Applications can set a hint to block compositing when the window is open.\n"
+" This brings performance improvements for e.g. games.\n"
+" The setting can be overruled by window-specific rules."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:98
+#, kde-format
+msgid "Allow applications to block compositing"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
+#: compositing.ui:105
+#, fuzzy, kde-format
+#| msgid "Animation speed:"
+msgid "Animation speed:"
+msgstr "Hraði hreyfimyndar:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: compositing.ui:142
+#, fuzzy, kde-format
+#| msgid "Very Slow"
+msgid "Very slow"
+msgstr "Mjög hægt"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: compositing.ui:162
+#, kde-format
+msgid "Instant"
+msgstr "Samstundis"
+
+#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
+#: compositing.ui:174
+#, kde-format
+msgid "Scale method:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:184
+#, kde-format
+msgid "Smooth"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:189
+#, kde-format
+msgid "Accurate"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: compositing.ui:199
+#, kde-format
+msgid "Tearing prevention (\"vsync\"):"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:207
+#, kde-format
+msgid "Automatic"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:212
+#, kde-format
+msgid "Only when cheap"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:217
+#, kde-format
+msgid "Full screen repaints"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:222
+#, kde-format
+msgid "Re-use screen content"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
+#: compositing.ui:230
+#, fuzzy, kde-format
+#| msgid "Keep window thumbnails:"
+msgid "Keep window thumbnails:"
+msgstr "Halda smámyndum glugga:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:238
+#, fuzzy, kde-format
+#| msgid "Never"
+msgid "Never"
+msgstr "Aldrei"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:243
+#, fuzzy, kde-format
+#| msgid "Only for Shown Windows"
+msgid "Only for Shown Windows"
+msgstr "Aðeins fyrir glugga sem hafa verið sýndir"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:248
+#, kde-format
+msgid "Always"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
+#: compositing.ui:256
+#, kde-format
+msgid "Latency:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:264
+#, kde-format
+msgid "Force lowest latency (may cause dropped frames)"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:269
+#, kde-format
+msgid "Prefer lower latency"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:274
+#, kde-format
+msgid "Balance of latency and smoothness"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:279
+#, kde-format
+msgid "Prefer smoother animations"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:284
+#, fuzzy, kde-format
+#| msgid "Various animations"
+msgid "Force smoothest animations"
+msgstr "Ýmsar hreyfingar"
+
+#: main.cpp:79
+#, kde-format
+msgid "Re-enable OpenGL detection"
+msgstr ""
+
+#: main.cpp:135
+#, kde-format
+msgid ""
+"\"Only when cheap\" only prevents tearing for full screen changes like a "
+"video."
+msgstr ""
+
+#: main.cpp:139
+#, kde-format
+msgid "\"Full screen repaints\" can cause performance problems."
+msgstr ""
+
+#: main.cpp:143
+#, kde-format
+msgid ""
+"\"Re-use screen content\" causes severe performance problems on MESA drivers."
+msgstr ""
+
+#, fuzzy
+#~| msgid "OpenGL"
+#~ msgid "OpenGL 3.1"
+#~ msgstr "OpenGL"
+
+#, fuzzy
+#~| msgid "OpenGL"
+#~ msgid "OpenGL 2.0"
+#~ msgstr "OpenGL"
+
+#, fuzzy
+#~| msgid "Smooth scaling (slower)"
+#~ msgid "Smooth (slower)"
+#~ msgstr "Mýkt kvörðun (hægara)"
+
+#~ msgid "XRender"
+#~ msgstr "XRender"
+
+#~ msgid ""
+#~ "Hint: To find out or configure how to activate an effect, look at the "
+#~ "effect's settings."
+#~ msgstr ""
+#~ "Ábending: til að finna út eða stilla hvernig hægt sé að ræsa ákveðnar "
+#~ "viðmótsbrellur, skoðaðu nánari stillingar þeirra."
+
+#, fuzzy
+#~| msgid "Texture filter:"
+#~ msgid "Configure filter"
+#~ msgstr "Áferðasía:"
+
+#, fuzzy
+#~| msgid "Suspend Desktop Effects"
+#~ msgid "Exclude internal Desktop Effects"
+#~ msgstr "Setja viðmótsbrellur fyrir skjáborð í bið"
+
+#, fuzzy
+#~| msgid "No Effect"
+#~ msgid "Get New Desktop Effects..."
+#~ msgstr "Engin brella"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Sveinn í Felli"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "sv1@fellsnet.is"
+
+#, fuzzy
+#~| msgid "Accessibility"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Accessibility"
+#~ msgstr "Aðgengi"
+
+#, fuzzy
+#~| msgid "Appearance"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Appearance"
+#~ msgstr "Útlit"
+
+#, fuzzy
+#~| msgid "Candy"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Candy"
+#~ msgstr "Nammi"
+
+#, fuzzy
+#~| msgid "Focus"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Focus"
+#~ msgstr "Virkni"
+
+#, fuzzy
+#~| msgid "Tools"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Tools"
+#~ msgstr "Áhöld"
+
+#, fuzzy
+#~| msgid "Window Management"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Management"
+#~ msgstr "Gluggastjórnun"
+
+#, fuzzy
+#~| msgid "Suspend Desktop Effects"
+#~ msgid "Suspend compositor for full screen windows"
+#~ msgstr "Setja viðmótsbrellur fyrir skjáborð í bið"
+
+#, fuzzy
+#~| msgid "OpenGL mode:"
+#~ msgid "OpenGL interface:"
+#~ msgstr "OpenGL hamur:"
+
+#, fuzzy
+#~| msgid "Animation speed:"
+#~ msgid "Animation Speed:"
+#~ msgstr "Hraði hreyfimyndar:"
+
+#, fuzzy
+#~| msgid "Keep window thumbnails:"
+#~ msgid "Keep Window Thumbnails:"
+#~ msgstr "Halda smámyndum glugga:"
+
+#, fuzzy
+#~| msgid "Always (Breaks minimization)"
+#~ msgid "Always (Breaks Animations)"
+#~ msgstr "Alltaf (skemmir minnkun)"
+
+#~ msgid "1 second remaining:"
+#~ msgid_plural "%1 seconds remaining:"
+#~ msgstr[0] "1 sekúnda eftir:"
+#~ msgstr[1] "%1 sekúndur eftir:"
+
+#~ msgid "Confirm Desktop Effects Change"
+#~ msgstr "Staðfesta breytingar á skjáborðsbrellum"
+
+#~ msgid "&Accept Configuration"
+#~ msgstr "S&amþykkja stillingar"
+
+#~ msgid "&Return to Previous Configuration"
+#~ msgstr "Fa&ra til baka í fyrri stillingar"
+
+#~ msgid ""
+#~ "Desktop effects settings have changed.\n"
+#~ "Do you want to keep the new settings?\n"
+#~ "They will be automatically reverted in 10 seconds."
+#~ msgstr ""
+#~ "Stillingar fyrir skjáborðsbrellur hafa breyst.\n"
+#~ "Viltu halda þessum nýju stillingum?\n"
+#~ "Þeim verður sjálfkrafa breytt í fyrra horf eftir 10 sekúndur."
+
+#~ msgid "kcmkwincompositing"
+#~ msgstr "kcmkwincompositing"
+
+#~ msgid "KWin Desktop Effects Configuration Module"
+#~ msgstr "KWin stillingaeining fyrir skjáborðsbrellur"
+
+#~ msgid "(c) 2007 Rivo Laks"
+#~ msgstr "(c) 2007 Rivo Laks"
+
+#~ msgid "Rivo Laks"
+#~ msgstr "Rivo Laks"
+
+#, fuzzy
+#~| msgid "No Effect"
+#~ msgid "No effect"
+#~ msgstr "Engin brella"
+
+#~ msgid ""
+#~ "Failed to activate desktop effects using the given configuration options. "
+#~ "Settings will be reverted to their previous values.\n"
+#~ "\n"
+#~ "Check your X configuration. You may also consider changing advanced "
+#~ "options, especially changing the compositing type."
+#~ msgstr ""
+#~ "Tókst ekki að virkja skjáborðsbrellur samkvæmt uppgefnum stillingum. "
+#~ "Stillingarnar verða endursettar á fyrri gildi.\n"
+#~ "\n"
+#~ "Athugaðu uppsetningu X miðlarans. Þú gætir líka þurft að íhuga aðrar "
+#~ "þróaðri stillingar, eins og að skipta um tegund skjásamsetningar."
+
+#~ msgid "Demos"
+#~ msgstr "Dæmi"
+
+#~ msgid "Tests"
+#~ msgstr "Prófanir"
+
+#~ msgid ""
+#~ "Desktop effects are not available on this system due to the following "
+#~ "technical issues:"
+#~ msgstr ""
+#~ "Viðmótsbrellur fyrir skjáborð eru ekki mögulegar á þessu kerfi vegna "
+#~ "eftirfarandi tæknilegra takmarkana:"
+
+#~ msgid ""
+#~ "Your settings have been saved but as KDE is currently running in failsafe "
+#~ "mode desktop effects cannot be enabled at this time.\n"
+#~ "\n"
+#~ "Please exit failsafe mode to enable desktop effects."
+#~ msgstr ""
+#~ "Stillingarnar þínar hafa verið vistaðar, en þar sem KDE er núna í "
+#~ "vernduðum ham (failsafe mode) er ekki hægt að virkja skjáborðsbrellur.\n"
+#~ "\n"
+#~ "Farðu úr verndaða hamnum til að að virkja skjáborðsbrellurnar."
+
+#, fuzzy
+#~| msgid "The following desktop effects could not be activated:"
+#~ msgctxt "Error Message shown when a desktop effect could not be loaded"
+#~ msgid "One desktop effect could not be loaded."
+#~ msgid_plural "%1 desktop effects could not be loaded."
+#~ msgstr[0] "Eftirfarandi skjáborðsbrellur var ekki hægt að virkja:"
+#~ msgstr[1] "Eftirfarandi skjáborðsbrellur var ekki hægt að virkja:"
+
+#, fuzzy
+#~| msgid "The following desktop effects could not be activated:"
+#~ msgctxt "Window title"
+#~ msgid "List of effects which could not be loaded"
+#~ msgstr "Eftirfarandi skjáborðsbrellur var ekki hægt að virkja:"
+
+#, fuzzy
+#~| msgid "Desktop effects are active"
+#~ msgctxt ""
+#~ "Error Message shown when compositing is not active after tried activation"
+#~ msgid "Desktop effect system is not running."
+#~ msgstr "Viðmótsbrellur fyrir skjáborð eru virkar"
+
+#~ msgid "<h1>Desktop Effects</h1>"
+#~ msgstr "<h1>Skjáborðsbrellur</h1>"
+
+#~ msgid "General"
+#~ msgstr "Almennt"
+
+#~ msgid "Improved window management"
+#~ msgstr "Bætt gluggastjórnun"
+
+#~ msgid "Effect for desktop switching:"
+#~ msgstr "Brellur við skiptingu á milli skjáborða:"
+
+#~ msgid "Very Fast"
+#~ msgstr "Mjög hratt"
+
+#~ msgid "Fast"
+#~ msgstr "Hratt"
+
+#~ msgid "Normal"
+#~ msgstr "Venjulegt"
+
+#~ msgid "Slow"
+#~ msgstr "Hægt"
+
+#~ msgid "Extremely Slow"
+#~ msgstr "Sérstaklega hægt"
+
+#~ msgid ""
+#~ "You can find more effects, as well as effect-specific settings, in the "
+#~ "\"All Effects\" tab above."
+#~ msgstr ""
+#~ "Þú getur fundið fleiri skjábrellur asamt stillingum fyrir þær undir "
+#~ "flipanum \"Allar viðmótsbrellur\" hér að ofan."
+
+#~ msgid "All Effects"
+#~ msgstr "Allar viðmótsbrellur"
+
+#~ msgid "Advanced"
+#~ msgstr "Nánari stillingar"
+
+#~ msgid "OpenGL Options"
+#~ msgstr "OpenGL valmöguleikar"
+
+#, fuzzy
+#~| msgid "XRender Options"
+#~ msgid "General Options"
+#~ msgstr "XRender valmöguleikar"
+
+#, fuzzy
+#~| msgid "OpenGL"
+#~ msgid "OpenGL 1.2"
+#~ msgstr "OpenGL"
+
+#~ msgid "Use VSync"
+#~ msgstr "Nota VSync"
+
+#~ msgid "Effect for window switching:"
+#~ msgstr "Brellur við skiptingu á milli glugga:"
+
+#~ msgid "Enable direct rendering"
+#~ msgstr "Virkja beina myndgerð"
+
+#~ msgid "Disable functionality checks"
+#~ msgstr "Aftengja prófanir á virkni"
+
+#~ msgid "Desktop effects are temporarily disabled"
+#~ msgstr "Viðmótsbrellur fyrir skjáborð eru tímabundið óvirkar"
+
+#~ msgid "Resume Desktop Effects"
+#~ msgstr "Halda áfram með viðmótsbrellur fyrir skjáborð"
+
+#~ msgid "Desktop effects are disabled"
+#~ msgstr "Viðmótsbrellur fyrir skjáborð eru óvirkar"
+
+#~ msgid "Common Settings"
+#~ msgstr "Algengar stillingar"
+
+#~ msgid "Compositing State"
+#~ msgstr "Staða skjásamsetningar"
+
+#~ msgid "Shadows"
+#~ msgstr "Skuggar"
+
+#~ msgid "Texture From Pixmap"
+#~ msgstr "Gera áferð frá Pixmap"
+
+#~ msgid "Shared Memory"
+#~ msgstr "Samnýtt minni"
+
+#~ msgid "Fallback"
+#~ msgstr "Varaleið"
+
+#~ msgid ""
+#~ "Enabling this option allows compositing to be activated even if some of "
+#~ "the internal checks fail. Doing so may make the whole desktop unusable "
+#~ "and its use is not recommened. Use only if KWin refuses to activate "
+#~ "compositing on a system that should be capable of compositing.\n"
+#~ msgstr ""
+#~ "Ef þetta er virkjað, er skjásamsetning leyfð jafnvel þó að einhverjar "
+#~ "innri prófanir takist ekki. Að gera þetta gæti gert allt "
+#~ "skjáborðsumhverfið ónothæft og er alls ekki mælt með notkun þessa "
+#~ "möguleika. Notið þetta eingöngu ef KWin neitar að virkja skjásamsetningu "
+#~ "á kerfi sem vitað er að eigi að ráða við slíkt.\n"
+
+#~ msgid "Nearest (fastest)"
+#~ msgstr "Nálægasta (hraðast)"
+
+#~ msgid "Bilinear"
+#~ msgstr "Tvílínuleg"
+
+#~ msgid "Trilinear (best quality)"
+#~ msgstr "Þrílínuleg (bestu gæði)"

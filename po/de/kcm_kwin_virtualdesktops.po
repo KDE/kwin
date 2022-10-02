@@ -1,0 +1,281 @@
+# Thomas Reitelbach <tr@erdfunkstelle.de>, 2007, 2009.
+# Frederik Schwarzer <schwarzer@kde.org>, 2010, 2012.
+# Burkhard Lück <lueck@hube-lueck.de>, 2013, 2014, 2018, 2019, 2021.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcm_kwindesktop\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"PO-Revision-Date: 2021-06-01 15:07+0200\n"
+"Last-Translator: Burkhard Lück <lueck@hube-lueck.de>\n"
+"Language-Team: German <kde-i18n-de@kde.org>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Thomas Reitelbach"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "tr@erdfunkstelle.de"
+
+#: desktopsmodel.cpp:467
+#, kde-format
+msgid "There was an error connecting to the compositor."
+msgstr "Beim Verbinden zum Compositor ist ein Fehler aufgetreten."
+
+#: desktopsmodel.cpp:666
+#, kde-format
+msgid "There was an error saving the settings to the compositor."
+msgstr ""
+"Beim Speichern der Einstellungen zum Compositor ist ein Fehler aufgetreten."
+
+#: desktopsmodel.cpp:669
+#, kde-format
+msgid "There was an error requesting information from the compositor."
+msgstr ""
+"Bei der Abfrage von Informationen vom Compositor ist ein Fehler aufgetreten."
+
+#: package/contents/ui/main.qml:17
+#, kde-format
+msgid ""
+"This module lets you configure the navigation, number and layout of virtual "
+"desktops."
+msgstr ""
+"In diesem Modul können Sie Navigation, Anzahl und Layout virtueller "
+"Arbeitsflächen einrichten."
+
+#: package/contents/ui/main.qml:91
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Rename"
+msgstr "Umbenennen"
+
+#: package/contents/ui/main.qml:102
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Confirm new name"
+msgstr "Neuen Namen bestätigen"
+
+#: package/contents/ui/main.qml:110
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove"
+msgstr "Entfernen"
+
+#: package/contents/ui/main.qml:137
+#, kde-format
+msgid ""
+"Virtual desktops have been changed outside this settings application. Saving "
+"now will overwrite the changes."
+msgstr ""
+"Die Einstellungen für virtuelle Arbeitsflächen wurden von einer anderen "
+"Anwendung geändert. Speichern Sie die hier vorgenommenen Einstellungen, "
+"werden die Änderungen überschrieben."
+
+#: package/contents/ui/main.qml:153
+#, kde-format
+msgid "Row %1"
+msgstr "Zeile %1"
+
+#: package/contents/ui/main.qml:166
+#, kde-format
+msgctxt "@action:button"
+msgid "Add"
+msgstr "Hinzufügen"
+
+#: package/contents/ui/main.qml:169
+#, kde-format
+msgid "New Desktop"
+msgstr "Neue Arbeitsfläche"
+
+#: package/contents/ui/main.qml:184
+#, kde-format
+msgid "1 Row"
+msgid_plural "%1 Rows"
+msgstr[0] "1 Zeile"
+msgstr[1] "%1 Zeilen"
+
+#: package/contents/ui/main.qml:200
+#, kde-format
+msgid "Options:"
+msgstr "Einstellungen:"
+
+#: package/contents/ui/main.qml:202
+#, kde-format
+msgid "Navigation wraps around"
+msgstr "Automatisch zur Gegenseite navigieren"
+
+#: package/contents/ui/main.qml:220
+#, kde-format
+msgid "Show animation when switching:"
+msgstr "Animation beim Wechseln anzeigen:"
+
+#: package/contents/ui/main.qml:271
+#, kde-format
+msgid "Show on-screen display when switching:"
+msgstr "On-Screen-Display beim Wechseln anzeigen:"
+
+#: package/contents/ui/main.qml:290
+#, kde-format
+msgid "%1 ms"
+msgstr "%1 ms"
+
+#: package/contents/ui/main.qml:314
+#, kde-format
+msgid "Show desktop layout indicators"
+msgstr "Arbeitsflächenvorschau anzeigen"
+
+#: virtualdesktops.cpp:33
+#, kde-format
+msgid "Virtual Desktops"
+msgstr "Virtuelle Arbeitsflächen"
+
+#~ msgid "Rows:"
+#~ msgstr "Zeilen:"
+
+#~ msgid "Configure Virtual Desktops"
+#~ msgstr "Virtuelle Arbeitsflächen einrichten"
+
+#~ msgid "Desktop %1:"
+#~ msgstr "Arbeitsfläche %1:"
+
+#~ msgid "Here you can enter the name for desktop %1"
+#~ msgstr "Hier können Sie den Namen für Arbeitsfläche %1 angeben"
+
+#~ msgid "Desktop %1"
+#~ msgstr "Arbeitsfläche %1"
+
+#~ msgid ""
+#~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "
+#~ "virtual desktops you want and how these should be labeled."
+#~ msgstr ""
+#~ "<h1>Mehrere Arbeitsflächen</h1> In diesem Modul können Sie festlegen, wie "
+#~ "viele virtuelle Arbeitsflächen Sie haben möchten und wie sie benannt sein "
+#~ "sollen."
+
+#~ msgid "KWin"
+#~ msgstr "KWin"
+
+#~ msgid "Switch to Next Desktop"
+#~ msgstr "Zur nächsten Arbeitsfläche umschalten"
+
+#~ msgid "Switch to Previous Desktop"
+#~ msgstr "Zur vorherigen Arbeitsfläche umschalten"
+
+#~ msgid "Switch One Desktop to the Right"
+#~ msgstr "Eine Arbeitsfläche nach rechts"
+
+#~ msgid "Switch One Desktop to the Left"
+#~ msgstr "Eine Arbeitsfläche nach links"
+
+#~ msgid "Switch One Desktop Up"
+#~ msgstr "Eine Arbeitsfläche nach oben"
+
+#~ msgid "Switch One Desktop Down"
+#~ msgstr "Eine Arbeitsfläche nach unten"
+
+#~ msgid "Walk Through Desktops"
+#~ msgstr "Zwischen Arbeitsflächen umschalten"
+
+#~ msgid "Walk Through Desktops (Reverse)"
+#~ msgstr "Zwischen Arbeitsflächen umschalten (Gegenrichtung)"
+
+#~ msgid "Walk Through Desktop List"
+#~ msgstr "Nächster Eintrag in Arbeitsflächenliste"
+
+#~ msgid "Walk Through Desktop List (Reverse)"
+#~ msgstr "Nächster Eintrag in Arbeitsflächenliste (Gegenrichtung)"
+
+#~ msgid "Desktop Switching"
+#~ msgstr "Umschalten der Arbeitsfläche"
+
+#~ msgid "Switch to Desktop %1"
+#~ msgstr "Auf Arbeitsfläche %1 umschalten"
+
+#~ msgid "No Animation"
+#~ msgstr "Keine Animation"
+
+#~ msgid "No suitable Shortcut for Desktop %1 found"
+#~ msgstr "Kein passender Kurzbefehl für Arbeitsfläche %1 gefunden."
+
+#~ msgid "Assigned global Shortcut \"%1\" to Desktop %2"
+#~ msgstr "Der globale Kurzbefehl „%1“ wurde der Arbeitsfläche %2 zugewiesen."
+
+#~ msgid "Shortcut conflict: Could not set Shortcut %1 for Desktop %2"
+#~ msgstr ""
+#~ "Kurzbefehlkonflikt: Der Kurzbefehl %1 kann nicht für die Arbeitsfläche %2 "
+#~ "verwendet werden."
+
+#~ msgid "KWin development team"
+#~ msgstr "KWin-Entwicklerteam"
+
+#~ msgid "Layout"
+#~ msgstr "Layout"
+
+#~ msgid ""
+#~ "Here you can set how many virtual desktops you want on your KDE desktop."
+#~ msgstr ""
+#~ "Hier können Sie festlegen, wie viele virtuelle Arbeitsflächen KDE zur "
+#~ "Verfügung stellen soll."
+
+#~ msgid "&Number of desktops:"
+#~ msgstr "&Anzahl der Arbeitsflächen:"
+
+#~ msgid "N&umber of rows:"
+#~ msgstr "&Zeilenanzahl:"
+
+#~ msgid "Desktop Names"
+#~ msgstr "Arbeitsflächennamen"
+
+#~ msgid "Switching"
+#~ msgstr "Wechsel"
+
+#~ msgid ""
+#~ "Enable this option if you want keyboard or active desktop border "
+#~ "navigation beyond the edge of a desktop to take you to the opposite edge "
+#~ "of the new desktop."
+#~ msgstr ""
+#~ "Aktivieren Sie diese Einstellung, wenn Sie möchten, dass die Navigation "
+#~ "über eine Arbeitsfläche hinaus Sie automatisch zum entgegengesetzten Rand "
+#~ "der neuen Arbeitsfläche bringt."
+
+#~ msgid "Desktop Effect Animation"
+#~ msgstr "Animation von Arbeitsflächen-Effekten"
+
+#~ msgid "Animation:"
+#~ msgstr "Animation:"
+
+#~ msgid "Desktop Switch On-Screen Display"
+#~ msgstr "On-Screen-Anzeige für Arbeitsflächenwechsel"
+
+#~ msgid "Duration:"
+#~ msgstr "Dauer:"
+
+#~ msgid " msec"
+#~ msgstr " msek."
+
+#~ msgid ""
+#~ "Enabling this option will show a small preview of the desktop layout "
+#~ "indicating the selected desktop."
+#~ msgstr ""
+#~ "Wenn Sie diese Einstellung aktivieren, erhalten Sie eine kleine Vorschau, "
+#~ "die das Layout der gewählten Arbeitsfläche anzeigt."
+
+#~ msgid "Shortcuts"
+#~ msgstr "Kurzbefehle"
+
+#~ msgid "Show shortcuts for all possible desktops"
+#~ msgstr "Kurzbefehle für alle möglichen Arbeitsflächen anzeigen"
+
+#~ msgid "Different widgets for each desktop"
+#~ msgstr "Unterschiedliche Miniprogramme für jede Arbeitsfläche"
+
+#~ msgid "Mouse wheel over desktop background switches desktop"
+#~ msgstr "Mausrad über fensterfreiem Bereich wechselt die Arbeitsfläche"

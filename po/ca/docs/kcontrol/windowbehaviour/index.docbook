@@ -1,0 +1,1396 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Catalan  "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<!--copy from r308626 Tue May 4 17:11:51 2004 UTC -->
+
+<article id="windowbehaviour" lang="&language;">
+<articleinfo>
+<title
+>Comportament de les finestres</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<author
+>&Jost.Schenck; &Jost.Schenck.mail;</author>
+<author
+><firstname
+>Natalie</firstname
+><surname
+>Clarius</surname
+><email
+>natalie_clarius@yahoo.de</email
+></author>
+&traductor.Antoni.Bella; 
+</authorgroup>
+
+<date
+>31 d'agost de 2022</date>
+<releaseinfo
+>Plasma 5.26</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>Arranjament del sistema</keyword>
+<keyword
+>accions</keyword>
+<keyword
+>finestra</keyword>
+<keyword
+>emplaçament de la finestra</keyword>
+<keyword
+>mida de la finestra</keyword>
+<keyword
+>gestió de les finestres</keyword>
+<keyword
+>comportament de les finestres</keyword>
+<keyword
+>focus</keyword>
+<keyword
+>eleva</keyword>
+<keyword
+>barra de títol</keyword>
+<keyword
+>pantalla</keyword>
+<keyword
+>ajusta</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="window-behavior">
+<title
+>Comportament de les finestres</title>
+
+<para
+>A la part superior d'aquest mòdul de control podeu veure diverses pestanyes: <guilabel
+>Focus</guilabel
+>, <guilabel
+>Accions de la barra de títol</guilabel
+>, <guilabel
+>Accions de la finestra</guilabel
+>, <guilabel
+>Moviment</guilabel
+> i <guilabel
+>Avançat</guilabel
+>. A la pestanya <guilabel
+>Focus</guilabel
+> podeu configurar la manera en què les finestres guanyen o perden el focus, &ead;, restar activa o inactives. Utilitzant <guilabel
+>Accions de la barra de títol</guilabel
+> i <guilabel
+>Accions de la finestra</guilabel
+> podreu configurar la manera en què les barres de títol i les finestres reaccionaran als clics del ratolí. <guilabel
+>Moviment</guilabel
+> us permet configurar com es mouen i es col·loquen les finestres una vegada obertes. Les opcions a <guilabel
+>Avançat</guilabel
+> cobreixen algunes opcions especialitzades com <quote
+>ombreig de la finestra</quote
+>. </para>
+
+<note>
+<para
+>Si us plau, cal tenir en compte que la configuració d'aquest mòdul no tindrà efecte si no feu servir el &kwin;, el gestor de finestres natiu del &plasma;. Si utilitzeu un gestor de finestres diferent, podeu consultar la seva documentació sobre com personalitzar el comportament de la finestra. </para>
+</note>
+
+<sect2 id="focus">
+<title
+>Focus</title>
+
+<para
+>El <quote
+>focus</quote
+> de l'espai de treball es refereix a la finestra amb què l'usuari està treballant actualment. A la finestra amb el focus sovint ens hi referim com a la <quote
+>finestra activa</quote
+>. </para>
+
+<para
+>El focus no significa necessàriament que la finestra és la que es troba al davant -ens hi referirem com a <quote
+>elevar</quote
+>-, i encara que aquesta també es configura aquí, el focus i elevar les finestres es configuren de forma independent. </para>
+
+<sect3 id="focus-focuspolicy">
+<title
+>Política d'activació de les finestres</title>
+
+<para
+>Hi ha sis mètodes que pot utilitzar el &kwin; per a determinar el focus actual: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Clic al focus</guilabel
+></term>
+<listitem>
+<para
+>Una finestra esdevé activa quan hi feu clic. Aquest comportament és comú en altres sistemes operatius i segurament és el que voldreu.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Clic al focus (prioritat al ratolí)</guilabel
+></term>
+<listitem>
+<para
+>En general, és similar a <guilabel
+>Clic al focus</guilabel
+>. Si el sistema ha de seleccionar una finestra activa (&pex;, perquè l'actualment activa s'ha tancat) la candidata preferida serà la finestra que hi ha sota el ratolí. No és habitual, però és una possible variació de <guilabel
+>Clic al focus</guilabel
+>. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>El focus segueix el ratolí</guilabel
+></term>
+<listitem>
+<para
+>En moure el punter del ratolí sobre una finestra normal, aquesta serà activada. Les noves finestres com la mini línia d'ordres invocada amb <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+> rebrà el focus, sense haver-hi d'apuntar el ratolí de manera explícita. &pex; les finestres que apareguin a l'atzar sota el ratolí no activaran el focus. La prevenció de robatori de focus funcionarà com és habitual. Penseu en <guilabel
+>Clic al focus</guilabel
+> però sense que calgui fer clic. </para>
+<para
+>En els altres gestors de finestres, això és conegut de vegades com a <quote
+>focus descuidat segueix al ratolí</quote
+>. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>El focus segueix el ratolí (prioritat al ratolí)</guilabel
+></term>
+<listitem>
+<para
+>En general, és similar a <guilabel
+>El focus segueix el ratolí</guilabel
+>. Si el sistema ha de seleccionar una finestra activa (&pex;, perquè l'actualment activa s'ha tancat) la candidata preferida serà la finestra que hi ha sota el ratolí. Seleccioneu aquesta si voleu un focus controlat en passar-hi per sobre. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Focus sota el ratolí</guilabel
+></term>
+<listitem>
+<para
+>La finestra que resta sota el punter del ratolí es converteix en activa. Si el ratolí no està sobre una finestra (per exemple, està sobre el fons de pantalla de l'escriptori) l'última finestra que es trobava sota el ratolí tindrà el focus. Les finestres noves, com la mini línia d'ordres invocada amb <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+>, no rebran el focus, per a escriure-hi haureu de moure el ratolí sobre seu. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Focus estrictament sota el ratolí</guilabel
+></term>
+<listitem>
+<para
+>Similar a <guilabel
+>Focus sota el ratolí</guilabel
+>, però amb una interpretació encara més estricta. Només la finestra sota el punter del ratolí restarà activa. Si el punter del ratolí no està sobre una finestra, cap finestra tindrà el focus. Les noves finestres com la mini línia d'ordres invocada amb <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+> no rebrà el focus, per a escriure-hi haureu de moure el ratolí sobre seu. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<note>
+<para
+>Cal tenir en compte que <guilabel
+>Focus sota el ratolí</guilabel
+> i <guilabel
+>Focus estrictament sota el ratolí</guilabel
+> impedeixen que funcionin correctament certes característiques com <guilabel
+>Prevenció de robatori de focus</guilabel
+> i el diàleg <keycombo action="simul"
+>&Alt;&Tab;</keycombo
+> per a canviar entre les finestres. </para>
+</note>
+
+</sect3>
+
+<sect3 id="focus-focusdelay">
+<title
+>Retard del focus en</title>
+
+<para
+>Aquest és el retard després del qual rebrà automàticament el focus la finestra damunt de la qual hi ha l'apuntador del ratolí. </para>
+
+</sect3>
+
+<sect3 id="focus-focusstealing">
+<title
+>Prevenció de robatori de focus</title>
+
+<para
+>Aquesta opció especifica com mirarà KWin d'evitar robaments de focus no desitjats a causa de l'activació inesperada de finestres noves. </para
+> 
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Cap</guilabel
+></term>
+<listitem
+><para
+>La prevenció és apagada i les noves finestres sempre seran activades.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Baix</guilabel
+></term>
+<listitem
+><para
+>La prevenció és permesa, i quan alguna finestra no suporta el mecanisme de destacar i KWin no pot decidir si és fiable activar o no la finestra, aquesta serà activada. Aquesta configuració pot tenir dos resultats, pitjor i millor que el nivell mitjà, depenent de les aplicacions.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Mitjà</guilabel
+></term>
+<listitem
+><para
+>La prevenció és permesa.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Alt</guilabel
+></term>
+<listitem
+><para
+>Les noves finestres seran activades només si no hi ha cap finestra activa o si pertanyen a l'aplicació activa. Aquesta configuració probablement no és molt útil quan no s'utilitza el ratolí com a política del focus.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Extrem</guilabel
+></term>
+<listitem
+><para
+>Totes les finestres hauran de ser expressament activades per l'usuari.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>A les finestres que se'ls hi impedeix robar el focus es marquen com que demanen atenció, el qual de manera predeterminada significa que la seva entrada a la barra de tasques apareixerà ressaltada. Això es pot canviar en el mòdul de control de notificacions. </para>
+
+</sect3>
+
+<sect3 id="focus-raisingwindow">
+<title
+>Eleva les finestres</title>
+
+<para
+>A més de rebre el focus, també podeu controlar sota quines condicions s'eleven les finestres, &ead;, es posen al davant. </para>
+
+<para
+>Hauríeu d'assegurar-vos que almenys una de les opcions d'elevació està activada, en cas contrari les finestres no s'elevaran en absolut. </para>
+
+<para
+><guilabel
+>Eleva la finestra activa amb un clic</guilabel
+> portarà una finestra al davant quan s'hi faci clic. De manera predeterminada, això està activat amb la política de focus amb un clic. </para>
+
+<para
+>En activar <guilabel
+>Eleva en passar per sobre, amb retard de</guilabel
+> podeu portar una finestra al capdavant si el ratolí està sobre aquesta finestra durant un període determinat de temps. Podeu determinar el retard d'aquesta opció utilitzant el control del botó de selecció de valors. Aquesta opció d'elevació d'automàtica només està disponible amb una política de focus en passar-hi per sobre. </para>
+
+<tip>
+<para
+>Una configuració de la demora massa curta provocarà un ràpid canvi de finestres, el qual pot resultar en una distracció. La major part de la gent els agrada un retard de 100 a 300 ms. Aquesta és la resposta, però us permetrà lliscar sobre les cantonades d'una finestra en el vostre camí cap a la destinació sense portar la finestra al capdavant. </para>
+</tip>
+
+</sect3>
+
+<sect3 id="focus-multiscreen">
+<title
+>Comportament multipantalla</title>
+
+<para
+>Això controla el comportament del focus de la finestra amb múltiples pantalles. Tingueu en compte que aquestes opcions només apareixen quan hi ha connectada més d'una pantalla. </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>La finestra activa segueix el ratolí</guilabel
+></term>
+<listitem>
+<para
+>Quan aquesta opció està activada, la pantalla activa (p. ex. a on apareixen les noves finestres) és la pantalla amb el cursor del ratolí. Quan està desactivada, la pantalla activa és la pantalla amb la finestra enfocada. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Separa el focus de cada pantalla</guilabel
+></term>
+<listitem>
+<para
+>Quan aquesta opció està activada, les operacions de focus es limiten només a la pantalla activa. Per exemple, quan tanqueu una finestra, la finestra següent a rebre el focus serà una finestra en la pantalla activa, fins i tot si hi ha una finestra utilitzada més recentment en una pantalla diferent. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="titlebar-actions">
+<title
+>Accions de la barra de títol</title>
+
+<para
+>En aquest plafó podeu configurar el que succeeix amb les finestres quan es fa clic a un botó del ratolí en les seves barres de títol. </para>
+
+<sect3 id="actions-titlebar">
+<title
+><guilabel
+>Accions de la barra de títol</guilabel
+></title>
+
+<para
+>Aquesta secció permet determinar què passa quan feu doble clic o desplaceu la roda del ratolí sobre la barra de títol d'una finestra. </para>
+
+<para
+>Hi ha disponibles les accions següents per al <guilabel
+>Doble clic</guilabel
+>: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Maximitza</guilabel
+></term>
+<listitem>
+<para
+>Redimensiona la finestra per a omplir l'alçada i l'amplada de la pantalla. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Maximitza verticalment</guilabel
+></term>
+<listitem>
+<para
+>Redimensiona la finestra a l'alçada de la pantalla. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Maximitza horitzontalment</guilabel
+></term>
+<listitem>
+<para
+>Redimensiona la finestra a l'amplada de la pantalla. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Minimitza</guilabel
+></term>
+<listitem>
+<para
+>Oculta la finestra al seu estat minimitzat, des del qual es pot restaurar, &pex;, mitjançant el gestor de tasques o el commutador de tasques. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Plega</guilabel
+></term>
+<listitem>
+<para
+>Fa que la finestra es redueixi simplement a la barra de títol. En tornar a fer doble clic a la barra de títol, la finestra es restaura a la seva mida normal. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Tanca</guilabel
+></term>
+<listitem>
+<para
+>Tanca la finestra. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Mostra a tots els escriptoris</guilabel
+></term>
+<listitem>
+<para
+>Fa que la finestra sigui visible en tots els escriptoris virtuals. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>No facis res</guilabel
+></term>
+<listitem>
+<para
+>No passa res fent doble clic. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>La roda del ratolí <guilabel
+></guilabel
+> es pot utilitzar per activar una acció depenent de si es desplaça cap amunt o cap avall: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Eleva/abaixa</guilabel
+></term>
+<listitem>
+<para
+>El desplaçament cap amunt mourà la finestra a sobre de les altres finestres. </para>
+<para
+>El desplaçament cap avall mourà la finestra a sota de les altres finestres. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Plega/desplega</guilabel
+></term>
+<listitem>
+<para
+>El desplaçament cap amunt reduirà la finestra a només la barra de títol. </para>
+<para
+>El desplaçament cap avall restaurarà la finestra a la seva mida normal. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Maximitza/restaura</guilabel
+></term>
+<listitem>
+<para
+>El desplaçament cap amunt maximitzarà la finestra per a omplir tota la pantalla. </para>
+<para
+>El desplaçament cap avall la restaurarà a la seva mida anterior. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Mantén a sobre/a sota</guilabel
+></term>
+<listitem>
+<para
+>El desplaçament cap amunt farà que la finestra romangui a la part superior, cobrint altres finestres. </para>
+<para
+>El desplaçament cap avall farà que la finestra estigui coberta per sota de les altres finestres. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Mou a l'escriptori anterior/següent</guilabel
+></term>
+<listitem>
+<para
+>El desplaçament cap amunt mourà la finestra a l'escriptori virtual anterior. </para>
+<para
+>El desplaçament cap avall mourà la finestra a l'escriptori virtual següent. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Canvia l'opacitat</guilabel
+></term>
+<listitem>
+<para
+>El desplaçament cap amunt farà que la finestra sigui menys transparent. </para>
+<para
+>El desplaçament cap avall farà la finestra més transparent. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>No facis res</guilabel
+></term>
+<listitem>
+<para
+>No passa res en desplaçar amunt o avall en la barra de títol de la finestra. </para>
+</listitem>
+</varlistentry>
+  
+</variablelist>
+
+<tip>
+<para
+>Podeu desplegar les finestres automàticament simplement posant el ratolí sobre la barra de títol quan està plegada. Només cal marcar la casella de selecció <link linkend="advanced-unshading"
+><guilabel
+>Desplegat de la finestra</guilabel
+></link
+> en la pestanya <guilabel
+>Avançat</guilabel
+> d'aquest mòdul. Per exemple, aquesta és una gran manera de recuperar espai a la pantalla quan esteu retalleu i enganxeu entre un munt de finestres. </para>
+</tip>
+
+</sect3>
+
+<sect3 id="actions-titlebar-frame">
+<title
+><guilabel
+>Accions de la barra de títol i el marc</guilabel
+></title>
+
+<para
+>Aquesta secció us permet determinar què passa quan es realitza un sol clic a la barra de títol o al marc d'una finestra. Cal tenir en compte que podeu tenir diferents accions associades, feu clic en funció de si la finestra està o no activa. </para>
+
+<para
+>Per a cada combinació dels botons del ratolí, Actiu i Inactiu, podeu seleccionar l'opció més apropiada. Les accions són les següents: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Eleva</guilabel
+></term>
+<listitem>
+<para
+>Portarà la finestra a la part superior de la pila de finestres. Totes les altres finestres que se sobreposen amb aquesta, restaran ocultades <quote
+>sota</quote
+> seu. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Abaixa</guilabel
+></term>
+<listitem>
+<para
+>Mourà aquesta finestra a la part inferior de la pila de finestres. Això traurà la finestra del mig. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Canvia entre elevar i abaixar</guilabel
+></term>
+<listitem>
+<para
+>Això elevarà les finestres que no estiguin al davant, i abaixarà les finestres que hi estan. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Minimitza</guilabel
+></term>
+<listitem>
+<para
+>Oculta la finestra al seu estat minimitzat, des del qual es pot restaurar, &pex;, mitjançant el gestor de tasques o el commutador de tasques. </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+
+<term
+><guilabel
+>Plega</guilabel
+></term>
+<listitem>
+<para
+>Fa que la finestra es redueixi simplement a la barra de títol. En tornar a fer doble clic a la barra de títol, la finestra es restaura a la seva mida normal. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Tanca</guilabel
+></term>
+<listitem>
+<para
+>Tanca la finestra. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Mostra el menú de les accions</guilabel
+></term>
+<listitem>
+<para
+>Obrirà un petit submenú, on podeu triar ordres relacionades amb la finestra (&ead;, Mou a l'escriptori, Mou a la pantalla, Maximitza, Minimitza, Tanca, &etc;). </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>No facis res</guilabel
+></term>
+<listitem>
+<para
+>No passa res en fer-hi clic. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+<sect3 id="actions-maximize-button">
+<title
+><guilabel
+>Accions del botó maximitza</guilabel
+></title>
+
+<para
+>Aquesta secció us permet determinar el comportament dels tres botons del ratolí amb el botó de maximitzar. </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Maximitza</guilabel
+></term>
+<listitem>
+<para
+>Redimensiona la finestra a l'alçada i l'amplada de la pantalla. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Maximitza verticalment</guilabel
+></term>
+<listitem>
+<para
+>Redimensiona la finestra a l'alçada de la pantalla. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Maximitza horitzontalment</guilabel
+></term>
+<listitem>
+<para
+>Redimensiona la finestra a l'amplada de la pantalla. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="window-actions">
+<title
+>Accions de la finestra</title>
+
+<sect3 id="actions-inactive-inner-window">
+<title
+><guilabel
+>Finestra interior inactiva</guilabel
+></title>
+
+<para
+>Aquesta part del mòdul, permet configurar el que passa quan feu clic en una finestra inactiva, amb qualsevol dels tres botons del ratolí o utilitzant la roda del ratolí. </para>
+
+<para
+>Les vostres opcions són les següents: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Activa, eleva i passa el clic</guilabel
+></term>
+<listitem>
+<para
+>Això fa que la finestra on feu clic sigui activada, elevada al davant de la pantalla, i li passa a un clic de ratolí per a l'aplicació. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Activa i passa el clic</guilabel
+></term>
+<listitem>
+<para
+>Això fa que la finestra on feu clic sigui activada i li passa a un clic de ratolí per a l'aplicació. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Activa</guilabel
+></term>
+<listitem>
+<para
+>Això simplement fa clic a la finestra activa. El clic del ratolí no es transmet a la finestra de l'aplicació. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Activa i eleva</guilabel
+></term>
+<listitem>
+<para
+>Això fa que la finestra on feu clic sigui activada i elevada a la part superior de la pantalla. El clic del ratolí no es transmet a la finestra de l'aplicació. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>Les vostres opcions per a <guilabel
+>Roda del ratolí:</guilabel
+> són les següents: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Desplaça</guilabel
+></term>
+<listitem>
+<para
+>Senzillament desplaça el contingut que hi ha dins de la finestra. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Activa i desplaça</guilabel
+></term>
+<listitem>
+<para
+>Activa la finestra on feu clic i desplaça el contingut. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Activa, eleva i desplaça</guilabel
+></term>
+<listitem>
+<para
+>Activa la finestra on feu clic, eleva la finestra a la part superior de la pantalla i desplaça el contingut. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+<sect3 id="actions-inner-window-titlebar-frame">
+<title
+><guilabel
+>Finestra interior, barra de títol i marc</guilabel
+></title>
+
+<para
+>Aquesta secció de la part inferior permet configurar accions addicionals en fer clic en una finestra quan es premi una tecla modificadora. </para>
+
+<para
+>Com a <guilabel
+>Tecla modificadora</guilabel
+>, podeu seleccionar entre <guilabel
+>Meta</guilabel
+> (predeterminada) o <guilabel
+>Alt</guilabel
+>. </para>
+
+<para
+>Un cop més, podeu seleccionar accions per als botons <mousebutton
+>Esquerre</mousebutton
+>, <mousebutton
+>Mig</mousebutton
+> i <mousebutton
+>Dret</mousebutton
+> així com la <guilabel
+>roda</guilabel
+> del ratolí. </para>
+
+<para
+>Les opcions dels botons del ratolí són: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Mou</guilabel
+></term>
+<listitem>
+<para
+>Permet arrossegar la finestra seleccionada per l'espai de treball. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Activa, eleva i mou</guilabel
+></term>
+<listitem>
+<para
+>Això fa que s'activi la finestra on feu clic, l'eleva a la part superior de la pila de finestres, i l'arrossega per l'espai de treball. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Canvia entre elevar i abaixar</guilabel
+></term>
+<listitem>
+<para
+>Això elevarà les finestres que no estiguin al davant, i abaixarà les finestres que hi estan. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Redimensiona</guilabel
+></term>
+<listitem>
+<para
+>Us permet canviar la mida de la finestra seleccionada. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Eleva</guilabel
+></term>
+<listitem>
+<para
+>Portarà la finestra a la part superior de la pila de finestres. Totes les altres finestres que se sobreposen amb aquesta, restaran ocultades <quote
+>sota</quote
+> seu. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Abaixa</guilabel
+></term>
+<listitem>
+<para
+>Mourà aquesta finestra a la part inferior de la pila de finestres. Això traurà la finestra del mig. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Minimitza</guilabel
+></term>
+<listitem>
+<para
+>Oculta la finestra al seu estat minimitzat, des del qual es pot restaurar, &pex;, mitjançant el gestor de tasques o el commutador de tasques. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Disminueix l'opacitat</guilabel
+></term>
+<listitem>
+<para
+>Fa la finestra més transparent. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Augmenta l'opacitat</guilabel
+></term>
+<listitem>
+<para
+>Fa la finestra menys transparent. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>No facis res</guilabel
+></term>
+<listitem>
+<para
+>No passa res en fer-hi clic. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>Les opcions per a la roda del ratolí són: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Eleva/abaixa</guilabel
+></term>
+<listitem>
+<para
+>El desplaçament cap amunt mourà la finestra a sobre de les altres finestres. </para>
+<para
+>El desplaçament cap avall mourà la finestra a sota de les altres finestres. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Plega/desplega</guilabel
+></term>
+<listitem>
+<para
+>El desplaçament cap amunt reduirà la finestra a només la barra de títol. </para>
+<para
+>El desplaçament cap avall restaurarà la finestra a la seva mida normal. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Maximitza/restaura</guilabel
+></term>
+<listitem>
+<para
+>El desplaçament cap amunt maximitzarà la finestra per a omplir tota la pantalla. </para>
+<para
+>El desplaçament cap avall la restaurarà a la seva mida anterior. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Mantén a sobre/a sota</guilabel
+></term>
+<listitem>
+<para
+>El desplaçament cap amunt farà que la finestra romangui a la part superior, cobrint altres finestres. </para>
+<para
+>El desplaçament cap avall farà que la finestra estigui coberta per sota de les altres finestres. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Mou a l'escriptori anterior/següent</guilabel
+></term>
+<listitem>
+<para
+>El desplaçament cap amunt mourà la finestra a l'escriptori virtual anterior. </para>
+<para
+>El desplaçament cap avall mourà la finestra a l'escriptori virtual següent. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Canvia l'opacitat</guilabel
+></term>
+<listitem>
+<para
+>El desplaçament cap amunt farà que la finestra sigui menys transparent. </para>
+<para
+>El desplaçament cap avall farà la finestra més transparent. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>No facis res</guilabel
+></term>
+<listitem>
+<para
+>No passa res en desplaçar amunt o avall en la barra de títol de la finestra. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="movement">
+<title
+>Moviment</title>
+
+<para
+>Aquesta pàgina permet configurar les <guilabel
+>Zones d'atracció</guilabel
+>. És similar a un camp magnètic al llarg del costat de la pantalla i de cada finestra, el qual farà que les finestres es puguin ajustar quan us moveu a prop. </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Zona d'atracció de la vora de la pantalla</guilabel
+></term>
+<listitem>
+<para
+>Aquí podeu establir la zona d'atracció per a les vores de la pantalla. El fet de moure una finestra dintre de la distància configurada farà que encaixi a la vora de la pantalla. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Zona d'atracció de la finestra</guilabel
+></term>
+<listitem>
+<para
+>Aquí podeu establir la zona d'atracció per a les finestres. Igual que amb les vores de la pantalla, el fet de moure una finestra prop d'una altra farà que encaixi a la vora, com si les finestres estiguessin magnetitzades. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Zona d'atracció del centre</guilabel
+></term>
+<listitem>
+<para
+>Aquí podeu establir la zona d'atracció per al centre de la pantalla, &ead;, la <quote
+>força</quote
+> del camp magnètic farà que les finestres s'apropin al centre de la pantalla quan us moveu prop. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Enganxa les finestres només en encavallar-se</guilabel
+></term>
+<listitem>
+<para
+>Si està marcada, les finestres no s'enganxaran si són només prop unes de les altres, hauran de restar sobreposades, per la quantitat configurada o menys. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<tip>
+<para
+>En el mòdul de configuració <guilabel
+>Vores de la pantalla</guilabel
+>, a la secció <guilabel
+>Comportament de l'espai de treball</guilabel
+> de l'arranjament del sistema, podeu configurar les finestres perquè encaixin ràpidament en mosaic a tota, la meitat o un quart de la pantalla quan s'arrosseguin prop de les vores de la pantalla. </para>
+</tip>
+
+</sect2>
+
+<sect2 id="advanced">
+<title
+>Avançat</title>
+
+<para
+>Al plafó <guilabel
+>Avançat</guilabel
+> podeu fer una posada a punt més avançada per al comportament de la finestra. </para>
+
+<sect3 id="advanced-unshading">
+<title
+>Desplegat de la finestra</title>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Després de passar per sobre de la barra de títol</guilabel
+></term>
+<listitem>
+<para
+>Si aquesta opció està habilitada, una finestra amb ombra apareixerà sense ombra automàticament quan el punter del ratolí hagi restat sobre la barra de títol per algun temps. Utilitzeu el botó de selecció de valors per a configurar el retard per a treure les ombres. </para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect3>
+
+<sect3 id="advanced-placement">
+<title
+>Emplaçament de la finestra</title>
+
+<para
+>La política de col·locació determina on apareixerà una finestra nova en la pantalla. </para>
+
+<para
+>En una configuració multimonitor, la pantalla on apareixeran les finestres és sempre la pantalla activa (és a dir, la pantalla que té el punter del ratolí o la finestra enfocada; vegeu <link linkend="focus-multiscreen"
+>Comportament multipantalla</link
+>), amb l'excepció de les finestres que recorden la seva posició anterior (vegeu <link linkend="advanced-remember-positions"
+>a sota</link
+>). </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Superposició mínima</guilabel
+></term>
+<listitem>
+<para
+>Col·locarà totes les finestres noves de manera que se superposin amb les finestres existents el menys possible. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Maximitzada</guilabel
+></term>
+<listitem>
+<para
+>Intentarà maximitzar totes les finestres noves per a omplir tota la pantalla. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>En cascada</guilabel
+></term>
+<listitem>
+<para
+>Totes les finestres noves en cascada, obrint-se cadascuna cap avall i cap a la dreta de la finestra activa, començant des de la cantonada superior esquerra de la pantalla quan no hi hagi finestres obertes. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aleatòria</guilabel
+></term>
+<listitem>
+<para
+>Col·locarà totes les finestres noves en posicions aleatòries. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Centrada</guilabel
+></term>
+<listitem>
+<para
+>Col·locarà totes les finestres noves en el centre de la pantalla. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>A la cantonada superior esquerra</guilabel
+></term>
+<listitem>
+<para
+>Col·locarà totes les finestres noves amb la seva cantonada superior esquerra a la cantonada superior esquerra de la pantalla. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Sota el ratolí</guilabel
+></term>
+<listitem>
+<para
+>Col·locarà totes les finestres noves centrades sota el punter del ratolí. </para>
+</listitem>
+</varlistentry>
+  
+</variablelist>
+
+<para id="advanced-remember-positions"
+>Activeu l'element <guilabel
+>Permet que les aplicacions recordin la posició de les seves pròpies finestres</guilabel
+> per a obrir finestres on eren abans en lloc del mètode de posicionament escollit anteriorment. Tingueu en compte que aquesta posició recordada inclou l'assignació de la pantalla, de manera que les finestres poden obrir-se en una pantalla diferent de l'activa si és on es trobaven l'última vegada. Tingueu en compte també que aquesta opció només està disponible a l'X11, no al Wayland, i només està admesa en algunes aplicacions KDE. </para>
+
+<tip>
+<para
+>Si voleu que algunes finestres apareguin en posicions específiques, pantalles o escriptoris virtuals, podeu configurar <guilabel
+>Regles de les finestres</guilabel
+> per establir una configuració especial de les finestres o aplicacions. Podeu trobar-ho fent clic dret sobre la barra de títol d'una finestra i seleccionant <guimenu
+>Més accions</guimenu
+>, o en el mòdul <guilabel
+>Regles de les finestres</guilabel
+> a la secció <guilabel
+>Gestió de les finestres</guilabel
+> de l'arranjament del sistema. </para>
+</tip>
+
+
+</sect3>
+
+<sect3 id="advanced-special-windows">
+<title
+>Finestres especials</title>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Oculta les finestres d'utilitat per a les aplicacions inactives</guilabel
+></term>
+<listitem>
+<para
+>Quan està activat, les finestres d'utilitat (finestres d'eines, menús escapçats,...) de les aplicacions inactives s'ocultaran i només es mostraran quan l'aplicació esdevingui activa. Cal tenir present que les aplicacions han de marcar les finestres amb el tipus de finestra correcte perquè funcioni aquesta característica. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+<sect3 id="advanced-virtual-desktop-behavior">
+<title
+>Comportament dels escriptoris virtuals</title>
+
+<para
+>A vegades, cridar una aplicació activarà una finestra existent en lloc d'obrir una finestra nova. Aquest paràmetre controla què hauria de passar si aquesta finestra activada es troba en un escriptori virtual diferent de l'actual. </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Canvia a aquell escriptori virtual</guilabel
+></term>
+<listitem>
+<para
+>Canviarà a l'escriptori virtual on es troba actualment la finestra. </para>
+<para
+>Seleccioneu aquesta opció si voleu que l'escriptori virtual actiu segueixi automàticament les finestres al seu escriptori virtual assignat. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Trasllada la finestra a l'escriptori virtual actual</guilabel
+></term>
+<listitem>
+<para
+>Farà que la finestra es traslladi a l'escriptori virtual actiu. </para>
+<para
+>Trieu aquesta opció si voleu que les finestres sempre s'obrin a l'escriptori virtual actual, i l'escriptori virtual actiu només canviarà quan s'hi navegui manualment. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+</sect2>
+
+</sect1>
+
+</article>

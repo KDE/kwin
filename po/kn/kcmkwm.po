@@ -1,0 +1,1906 @@
+# translation of kcmkwm.po to Kannada
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Shankar Prasad <svenkate@redhat.com>, 2008.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwm\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-09-02 00:47+0000\n"
+"PO-Revision-Date: 2008-12-25 15:33+0530\n"
+"Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
+"Language-Team: Kannada <en@li.org>\n"
+"Language: kn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "ಶಂಕರ್ ಪ್ರಸಾದ್ ಎಂ ವಿ"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "prasad.mvs@gmail.com"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
+#: actions.ui:17
+#, fuzzy, kde-format
+#| msgid "Inactive Inner Window"
+msgid "Inactive Inner Window Actions"
+msgstr "ನಿಷ್ಕ್ರಿಯ ಒಳಗಿನ ವಿಂಡೋ"
+
+#. i18n: ectx: property (text), widget (QLabel, label_1)
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: actions.ui:26 mouse.ui:177
+#, fuzzy, kde-format
+#| msgid "&Titlebar double-click:"
+msgid "&Left click:"
+msgstr "ಉಪಕರಣಪಟ್ಟಿಯ ಎರಡುಬಾರಿಯ ಕ್ಲಿಕ್(&T):"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow1)
+#: actions.ui:39
+#, kde-format
+msgid ""
+"In this row you can customize left click behavior when clicking into an "
+"inactive inner window ('inner' means: not titlebar, not frame)."
+msgstr ""
+"ಈ ಸಾಲಿನಲ್ಲಿ ನೀವು ಒಂದು ನಿಷ್ಕ್ರಿಯ ಒಳಗಿನ ವಿಂಡೋ ಮೇಲಿನ ಮೌಸ್‍ನ ಎಡ ಕ್ಲಿಕ್ ವರ್ತನೆಯನ್ನು ಕಸ್ಟಮೈಸ್ "
+"ಮಾಡಬಹುದು (ಒಳಗಿನ ಎಂದರೆ: ಉಪಕರಣ ಪಟ್ಟಿಯಲ್ಲದ, ಚೌಕಟ್ಟಲ್ಲದ)."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
+#: actions.ui:43 actions.ui:83 actions.ui:123
+#, fuzzy, kde-format
+#| msgid "Activate, Raise & Pass Click"
+msgid "Activate, raise and pass click"
+msgstr "ಸಕ್ರಿಯಗೊಳಿಸು, ಏರಿಸು ಹಾಗು ಕ್ಲಿಕ್‌ ಅನ್ನು ಪಾಸ್‌ ಮಾಡು"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
+#: actions.ui:48 actions.ui:88 actions.ui:128
+#, fuzzy, kde-format
+#| msgid "Activate & Pass Click"
+msgid "Activate and pass click"
+msgstr "ಸಕ್ರಿಯಗೊಳಿಸು ಹಾಗು ಕ್ಲಿಕ್‌ ಅನ್ನು ಪಾಸ್‌ ಮಾಡು"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:53 actions.ui:93 actions.ui:133 mouse.ui:293 mouse.ui:408
+#: mouse.ui:523
+#, kde-format
+msgid "Activate"
+msgstr "ಸಕ್ರಿಯಗೊಳಿಸು"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:58 actions.ui:98 actions.ui:138 mouse.ui:283 mouse.ui:398
+#: mouse.ui:513
+#, fuzzy, kde-format
+#| msgid "Activate & Raise"
+msgid "Activate and raise"
+msgstr "ಸಕ್ರಿಯಗೊಳಿಸು ಹಾಗು ಏರಿಸು"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: actions.ui:66 mouse.ui:200
+#, fuzzy, kde-format
+#| msgid "&Titlebar double-click:"
+msgid "&Middle click:"
+msgstr "ಉಪಕರಣಪಟ್ಟಿಯ ಎರಡುಬಾರಿಯ ಕ್ಲಿಕ್(&T):"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow2)
+#: actions.ui:79
+#, kde-format
+msgid ""
+"In this row you can customize middle click behavior when clicking into an "
+"inactive inner window ('inner' means: not titlebar, not frame)."
+msgstr ""
+"ಈ ಸಾಲಿನಲ್ಲಿ ನೀವು ಒಂದು ನಿಷ್ಕ್ರಿಯ ಒಳಗಿನ ವಿಂಡೋ ಮೇಲಿನ ಮೌಸ್‍ನ ನಡುವಿನ ಕ್ಲಿಕ್ ವರ್ತನೆಯನ್ನು "
+"ಕಸ್ಟಮೈಸ್ ಮಾಡಬಹುದು (ಒಳಗಿನ ಎಂದರೆ: ಉಪಕರಣ ಪಟ್ಟಿಯಲ್ಲದ, ಚೌಕಟ್ಟಲ್ಲದ)."
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#: actions.ui:106 mouse.ui:213
+#, kde-format
+msgid "&Right click:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow3)
+#: actions.ui:119
+#, kde-format
+msgid ""
+"In this row you can customize right click behavior when clicking into an "
+"inactive inner window ('inner' means: not titlebar, not frame)."
+msgstr ""
+"ಈ ಸಾಲಿನಲ್ಲಿ ನೀವು ಒಂದು ನಿಷ್ಕ್ರಿಯ ಒಳಗಿನ ವಿಂಡೋ ಮೇಲಿನ ಮೌಸ್‍ನ ಬಲ ಕ್ಲಿಕ್ ವರ್ತನೆಯನ್ನು ಕಸ್ಟಮೈಸ್ "
+"ಮಾಡಬಹುದು (ಒಳಗಿನ ಎಂದರೆ: ಉಪಕರಣ ಪಟ್ಟಿಯಲ್ಲದ, ಚೌಕಟ್ಟಲ್ಲದ)."
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: actions.ui:146 mouse.ui:88
+#, fuzzy, kde-format
+#| msgid "Mouse wheel:"
+msgid "Mouse &wheel:"
+msgstr "ಮೌಸ್‌ನ ಚಕ್ರ:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindowWheel)
+#: actions.ui:159
+#, fuzzy, kde-format
+#| msgid ""
+#| "In this row you can customize left click behavior when clicking into an "
+#| "inactive inner window ('inner' means: not titlebar, not frame)."
+msgid ""
+"In this row you can customize behavior when scrolling into an inactive inner "
+"window ('inner' means: not titlebar, not frame)."
+msgstr ""
+"ಈ ಸಾಲಿನಲ್ಲಿ ನೀವು ಒಂದು ನಿಷ್ಕ್ರಿಯ ಒಳಗಿನ ವಿಂಡೋ ಮೇಲಿನ ಮೌಸ್‍ನ ಎಡ ಕ್ಲಿಕ್ ವರ್ತನೆಯನ್ನು ಕಸ್ಟಮೈಸ್ "
+"ಮಾಡಬಹುದು (ಒಳಗಿನ ಎಂದರೆ: ಉಪಕರಣ ಪಟ್ಟಿಯಲ್ಲದ, ಚೌಕಟ್ಟಲ್ಲದ)."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
+#: actions.ui:163
+#, kde-format
+msgid "Scroll"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
+#: actions.ui:168
+#, fuzzy, kde-format
+#| msgid "Activate & Lower"
+msgid "Activate and scroll"
+msgstr "ಸಕ್ರಿಯಗೊಳಿಸು ಹಾಗು ಇಳಿಸು"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
+#: actions.ui:173
+#, fuzzy, kde-format
+#| msgid "Activate, Raise and Move"
+msgid "Activate, raise and scroll"
+msgstr "ಸಕ್ರಿಯಗೊಳಿಸು, ಏರಿಸು ಹಾಗು ಜರುಗಿಸು"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: actions.ui:184
+#, fuzzy, kde-format
+#| msgid "Inner Window, Titlebar && Frame"
+msgid "Inner Window, Titlebar and Frame Actions"
+msgstr "ಒಳಗಿನ ವಿಂಡೋ, ಉಪಕರಣ ಪಟ್ಟಿ ಹಾಗು ಚೌಕಟ್ಟು"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: actions.ui:195
+#, fuzzy, kde-format
+#| msgid "Modifier key:"
+msgid "Mo&difier key:"
+msgstr "ಮಾರ್ಪಡಿಸುವ ಕೀಲಿ:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllKey)
+#: actions.ui:205
+#, kde-format
+msgid ""
+"Here you select whether holding the Meta key or Alt key will allow you to "
+"perform the following actions."
+msgstr ""
+"ಇಲ್ಲಿ ನೀವು ಮೆಟಾ ಕೀಲಿಯನ್ನು ಅಥವಾ ಆಲ್ಟ್ ಕೀಲಿಯನ್ನು ಒತ್ತಿ ಹಿಡಿದಾಗ ಈ ಕೆಳಗಿನ ಕಾರ್ಯಗಳನ್ನು "
+"ನಿಮಗೆ ಮಾಡಲು ಅನುಮತಿಸುತ್ತದೆಯೆ ಎಂದು ಇಲ್ಲಿ ಆರಿಸಬಹುದು."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
+#: actions.ui:209
+#, kde-format
+msgid "Meta"
+msgstr "ಮೆಟಾ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
+#: actions.ui:214
+#, kde-format
+msgid "Alt"
+msgstr "ಆಲ್ಟ್"
+
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: actions.ui:236
+#, kde-format
+msgid "  + "
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_7)
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: actions.ui:248 mouse.ui:601
+#, fuzzy, kde-format
+#| msgid "&Titlebar double-click:"
+msgid "L&eft click:"
+msgstr "ಉಪಕರಣಪಟ್ಟಿಯ ಎರಡುಬಾರಿಯ ಕ್ಲಿಕ್(&T):"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll1)
+#: actions.ui:261
+#, kde-format
+msgid ""
+"In this row you can customize left click behavior when clicking into the "
+"titlebar or the frame."
+msgstr ""
+"ನೀವು ಉಪಕರಣಪಟ್ಟಿಯ ಮೇಲೆ ಅಥವ ಚೌಕಟ್ಟಿನ ಮೇಲೆ ಕ್ಲಿಕ್ ಮಾಡಿದಾಗ ಎಡ ಬದಿಯ ಕ್ಲಿಕ್ ಹೇಗೆ "
+"ವರ್ತಿಸಬೇಕೆಂದು ಈ ಅಡ್ಡಸಾಲಿನಲ್ಲಿ ನೀವು ಕಸ್ಟಮೈಸ್ ಮಾಡಬಹುದು."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:265 actions.ui:335 actions.ui:405
+#, kde-format
+msgid "Move"
+msgstr "ಜರುಗಿಸು"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:270 actions.ui:340 actions.ui:410
+#, fuzzy, kde-format
+#| msgid "Activate, Raise and Move"
+msgid "Activate, raise and move"
+msgstr "ಸಕ್ರಿಯಗೊಳಿಸು, ಏರಿಸು ಹಾಗು ಜರುಗಿಸು"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:275 actions.ui:345 actions.ui:415 mouse.ui:246 mouse.ui:308
+#: mouse.ui:361 mouse.ui:423 mouse.ui:476 mouse.ui:538
+#, fuzzy, kde-format
+#| msgid "Toggle Raise & Lower"
+msgid "Toggle raise and lower"
+msgstr "ಹೊರಳು ಏರಿಸುವಿಕೆ ಹಾಗು ಇಳಿಸು"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:280 actions.ui:350 actions.ui:420
+#, kde-format
+msgid "Resize"
+msgstr "ಮರುಗಾತ್ರಿಸು"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:285 actions.ui:355 actions.ui:425 mouse.ui:236 mouse.ui:298
+#: mouse.ui:351 mouse.ui:413 mouse.ui:466 mouse.ui:528
+#, kde-format
+msgid "Raise"
+msgstr "ಏರಿಸು"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:290 actions.ui:360 actions.ui:430 mouse.ui:65 mouse.ui:241
+#: mouse.ui:303 mouse.ui:356 mouse.ui:418 mouse.ui:471 mouse.ui:533
+#, kde-format
+msgid "Lower"
+msgstr "ಇಳಿಸು"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:295 actions.ui:365 actions.ui:435 mouse.ui:55 mouse.ui:251
+#: mouse.ui:313 mouse.ui:366 mouse.ui:428 mouse.ui:481 mouse.ui:543
+#, kde-format
+msgid "Minimize"
+msgstr "ಕುಗ್ಗಿಸು"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:300 actions.ui:370 actions.ui:440
+#, fuzzy, kde-format
+#| msgid "Change Opacity"
+msgid "Decrease opacity"
+msgstr "ಅಪಾರದರ್ಶಕತೆಯನ್ನು ಬದಲಾಯಿಸು"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:305 actions.ui:375 actions.ui:445
+#, fuzzy, kde-format
+#| msgid "Change Opacity"
+msgid "Increase opacity"
+msgstr "ಅಪಾರದರ್ಶಕತೆಯನ್ನು ಬದಲಾಯಿಸು"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 mouse.ui:80
+#: mouse.ui:132 mouse.ui:271 mouse.ui:333 mouse.ui:386 mouse.ui:448
+#: mouse.ui:501 mouse.ui:563
+#, fuzzy, kde-format
+#| msgid "Nothing"
+msgid "Do nothing"
+msgstr "ಯಾವುದೂ ಇಲ್ಲ"
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: actions.ui:318
+#, fuzzy, kde-format
+#| msgid "Middle button:"
+msgid "Middle &click:"
+msgstr "ಮಧ್ಯದ ಗುಂಡಿ:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
+#: actions.ui:331
+#, kde-format
+msgid ""
+"In this row you can customize middle click behavior when clicking into the "
+"titlebar or the frame."
+msgstr ""
+"ನೀವು ಉಪಕರಣಪಟ್ಟಿಯ ಮೇಲೆ ಅಥವ ಚೌಕಟ್ಟಿನ ಮೇಲೆ ಕ್ಲಿಕ್ ಮಾಡಿದಾಗ ಮಧ್ಯದ ಕ್ಲಿಕ್ ಹೇಗೆ "
+"ವರ್ತಿಸಬೇಕೆಂದು ಈ ಅಡ್ಡಸಾಲಿನಲ್ಲಿ ನೀವು ಕಸ್ಟಮೈಸ್ ಮಾಡಬಹುದು."
+
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+#. i18n: ectx: property (text), widget (QLabel, label_10)
+#: actions.ui:388 mouse.ui:671
+#, kde-format
+msgid "Right clic&k:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll3)
+#: actions.ui:401
+#, kde-format
+msgid ""
+"In this row you can customize right click behavior when clicking into the "
+"titlebar or the frame."
+msgstr ""
+"ನೀವು ಉಪಕರಣಪಟ್ಟಿಯ ಮೇಲೆ ಅಥವ ಚೌಕಟ್ಟಿನ ಮೇಲೆ ಕ್ಲಿಕ್ ಮಾಡಿದಾಗ ಬಲ ಬದಿಯ ಕ್ಲಿಕ್ ಹೇಗೆ "
+"ವರ್ತಿಸಬೇಕೆಂದು ಈ ಅಡ್ಡಸಾಲಿನಲ್ಲಿ ನೀವು ಕಸ್ಟಮೈಸ್ ಮಾಡಬಹುದು."
+
+#. i18n: ectx: property (text), widget (QLabel, label_10)
+#: actions.ui:458
+#, fuzzy, kde-format
+#| msgid "Mouse wheel:"
+msgid "Mo&use wheel:"
+msgstr "ಮೌಸ್‌ನ ಚಕ್ರ:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllWheel)
+#: actions.ui:471
+#, kde-format
+msgid ""
+"Here you can customize KDE's behavior when scrolling with the mouse wheel in "
+"a window while pressing the modifier key."
+msgstr ""
+"ಇಲ್ಲಿ ನೀವು ಮಾರ್ಪಡಕ ಕೀಲಿಯನ್ನು ಒತ್ತಿ ಹಿಡಿದು ಒಂದು ವಿಂಡೋದ ಒಳಗೆ ಮೌಸ್‌ನ ಚಕ್ರವನ್ನು ತಿರುಗಿಸುವ "
+"ಮೂಲಕ KDEಯ ವರ್ತನೆಯನ್ನು ನಿಮಗೆ ಬೇಕಾದ ಬಗೆಯಲ್ಲಿ ಸಜ್ಜುಗೊಳಿಸಬಹುದು."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:475 mouse.ui:102
+#, fuzzy, kde-format
+#| msgid "Raise/Lower"
+msgid "Raise/lower"
+msgstr "ಏರಿಸು/ಇಳಿಸು"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:480 mouse.ui:107
+#, fuzzy, kde-format
+#| msgid "Shade/Unshade"
+msgid "Shade/unshade"
+msgstr "ಮರೆಮಾಚು/ಮರೆಮಾಚದಿರು"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:485 mouse.ui:112
+#, fuzzy, kde-format
+#| msgid "Maximize/Restore"
+msgid "Maximize/restore"
+msgstr "ಹಿಗ್ಗಿಸು/ಮರುಸ್ಥಾಪಿಸು"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:490 mouse.ui:117
+#, fuzzy, kde-format
+#| msgid "Keep Above/Below"
+msgid "Keep above/below"
+msgstr "ಮೇಲೆ/ಕೆಳಗೆ ಇರಿಸು"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:495 mouse.ui:122
+#, fuzzy, kde-format
+#| msgid "Move to Previous/Next Desktop"
+msgid "Move to previous/next desktop"
+msgstr "ಹಿಂದಿನ/ಮುಂದಿನ ಗಣಕತೆರೆಗೆ ತೆರಳು"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: actions.ui:500 mouse.ui:127
+#, fuzzy, kde-format
+#| msgid "Change Opacity"
+msgid "Change opacity"
+msgstr "ಅಪಾರದರ್ಶಕತೆಯನ್ನು ಬದಲಾಯಿಸು"
+
+#. i18n: ectx: property (text), widget (QLabel, shadeHoverLabel)
+#: advanced.ui:20
+#, fuzzy, kde-format
+#| msgctxt "@title:group"
+#| msgid "Window Switching"
+msgid "Window &unshading:"
+msgstr "ವಿಂಡೋ ಬದಲಾವಣೆ"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ShadeHover)
+#: advanced.ui:32
+#, fuzzy, kde-format
+#| msgid ""
+#| "If Shade Hover is enabled, a shaded window will un-shade automatically "
+#| "when the mouse pointer has been over the title bar for some time."
+msgid ""
+"<html><head/><body><p>If this option is enabled, a shaded window will "
+"unshade automatically when the mouse pointer has been over the titlebar for "
+"some time.</p></body></html>"
+msgstr ""
+"ಛಾಯಾ ಸುಳಿದಾಡಿಸುವಿಕೆಯು ಶಕ್ತಗೊಂಡಿದಲ್ಲಿ, ಒಂದು ಮಬ್ಬಾದ ವಿಂಡೋದ ಶೀರ್ಷಿಕಾ ಪಟ್ಟಿಯ ಮೇಲೆ ಮೌಸ್‌ "
+"ಸೂಚಕವನ್ನು ಕೊಂಡೊಯ್ದಾಗ ಅದು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಸುಪ್ರಕಾಶಗೊಳ್ಳುತ್ತದೆ."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShadeHover)
+#: advanced.ui:35
+#, kde-format
+msgid "On titlebar hover after:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_ShadeHoverInterval)
+#: advanced.ui:42
+#, kde-format
+msgid ""
+"Sets the time in milliseconds before the window unshades when the mouse "
+"pointer goes over the shaded window."
+msgstr ""
+"ಮೌಸ್‌ನ ಸೂಚಕವು ಮಬ್ಬಾದ ವಿಂಡೋ ಮೇಲೆ ತೆರಳಿದಾಗ ಆ ವಿಂಡೋ ಬೆಳಕಿಗೆ ಬರಲು ಹಿಡಿಯುವ ಸಮಯನ್ನು "
+"(ಮಿಲಿಸೆಕೆಂಡುಗಳಲ್ಲಿ) ಹೊಂದಿಸುತ್ತದೆ."
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AutoRaiseInterval)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ShadeHoverInterval)
+#: advanced.ui:45 focus.ui:85 focus.ui:178
+#, kde-format
+msgid " ms"
+msgstr " ms"
+
+#. i18n: ectx: property (text), widget (QLabel, windowPlacementLabel)
+#: advanced.ui:66
+#, fuzzy, kde-format
+#| msgid "&Placement:"
+msgid "Window &placement:"
+msgstr "ನಿಯೋಜನೆ(&P):"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_Placement)
+#: advanced.ui:76
+#, kde-format
+msgid ""
+"<html><head/><body><p>The placement policy determines where a new window "
+"will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-bottom: "
+"0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" "
+"margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
+"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+"\">Smart</span> will try to achieve a minimum overlap of windows</li><li "
+"style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
+"italic;\">Maximizing</span> will try to maximize every window to fill the "
+"whole screen. It might be useful to selectively affect placement of some "
+"windows using the window-specific settings.</li><li style=\" margin-top:0px; "
+"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
+"text-indent:0px;\"><span style=\" font-style:italic;\">Cascade</span> will "
+"cascade the windows</li><li style=\" margin-top:0px; margin-bottom:0px; "
+"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+"\"><span style=\" font-style:italic;\">Random</span> will use a random "
+"position</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Centered</span> will place the window "
+"centered</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Zero-cornered</span> will place the window in "
+"the top-left corner</li><li style=\" margin-top:0px; margin-bottom:12px; "
+"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+"\"><span style=\" font-style:italic;\">Under mouse</span> will place the "
+"window under the pointer</li></ul></body></html>"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:80
+#, fuzzy, kde-format
+#| msgid "Snap windows onl&y when overlapping"
+msgid "Minimal Overlapping"
+msgstr "ವಿಂಡೋಗಳು ಒಂದರ ಮೇಲೆ ಇನ್ನೊಂದು ಹೇರಿದಾಗ ಮಾತ್ರ ಸೆಳೆಯಲ್ಪಡುವಂತೆ ಮಾಡು(&y)"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:85
+#, fuzzy, kde-format
+#| msgid "Maximize"
+msgid "Maximized"
+msgstr "ಹಿಗ್ಗಿಸು"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:90
+#, fuzzy, kde-format
+#| msgid "Cascade"
+msgid "Cascaded"
+msgstr "ಕ್ಯಾಸ್ಕೇಡ್"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:95
+#, kde-format
+msgid "Random"
+msgstr "ಮನಬಂದಂತೆ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:100
+#, kde-format
+msgid "Centered"
+msgstr "ಮಧ್ಯ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:105
+#, kde-format
+msgid "In Top-Left Corner"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
+#: advanced.ui:110
+#, fuzzy, kde-format
+#| msgid "Focus Under Mouse"
+msgid "Under mouse"
+msgstr "ಮೌಸ್‌ನ ಅಡಿಯಲ್ಲಿನ ಗಮನ"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
+#: advanced.ui:118
+#, kde-format
+msgid ""
+"When turned on, apps which are able to remember the positions of their "
+"windows are allowed to do so. This will override the window placement mode "
+"defined above."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
+#: advanced.ui:121
+#, kde-format
+msgid ""
+"Allow apps to remember the positions of their own windows, if they support it"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
+#: advanced.ui:128
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "&Special windows:"
+msgstr "ವಿಂಡೋಗಳು"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
+#: advanced.ui:138
+#, kde-format
+msgid ""
+"When turned on, utility windows (tool windows, torn-off menus,...) of "
+"inactive applications will be hidden and will be shown only when the "
+"application becomes active. Note that applications have to mark the windows "
+"with the proper window type for this feature to work."
+msgstr ""
+"ಇದನ್ನು ಆನ್ ಮಾಡಿದಾಗ, ನಿಷ್ಕ್ರಿಯ ಅನ್ವಯಗಳ ಸವಲತ್ತು ವಿಂಡೋಗಳು (ಉಪಕರಣ ವಿಂಡೋಗಳು, ಆಫ್-ಮಾಡುವು "
+"ಪರಿವಿಡಿ,...) ಅಡಗಿಸಲ್ಪಡುತ್ತವೆ ಹಾಗು ಅವು ಕೇವಲ ಅನ್ವಯವು ಸಕ್ರಿಯಗೊಂಡಾಗ ಮಾತ್ರ "
+"ಕಾಣಿಸಲ್ಪಡುತ್ತವೆ. ಈ ಸೌಲಭ್ಯವು ಕೆಲಸ ಮಾಡಲು ಅನ್ವಯಗಳು ವಿಂಡೋಗಳನ್ನು ಸಮರ್ಪಕವಾದ ವಿಂಡೋ ಬಗೆಯಿಂದ "
+"ಗುರುತಿಸಬೇಕು ಎಂಬುದನ್ನು ನೆನಪಿಡಿ."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
+#: advanced.ui:141
+#, kde-format
+msgid "Hide utility windows for inactive applications"
+msgstr "ನಿಷ್ಕ್ರಿಯ ಅನ್ವಯಗಳ ಸವಲತ್ತು ವಿಂಡೋಗಳನ್ನು ಅಡಗಿಸು"
+
+#. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
+#: advanced.ui:148
+#, kde-format
+msgid "Virtual Desktop behavior:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
+#: advanced.ui:158
+#, kde-format
+msgid "When activating a window on a different Virtual Desktop:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
+#: advanced.ui:165
+#, kde-format
+msgid ""
+"<html><head/><body><p>This setting controls what happens when an open window "
+"located on a Virtual Desktop other than the current one is activated. </"
+"p><p><span style=\" font-style:italic;\">Switch to that Virtual Desktop</"
+"span> will switch to the Virtual Desktop where the window is currently "
+"located. </p><p><span style=\" font-style:italic;\">Bring window to current "
+"Virtual Desktop</span> will cause the window to jump to the active Virtual "
+"Desktop. </p></body></html>"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
+#: advanced.ui:169
+#, kde-format
+msgid "Switch to that Virtual Desktop"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
+#: advanced.ui:174
+#, kde-format
+msgid "Bring window to current Virtual Desktop"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
+#: focus.ui:22
+#, kde-format
+msgid "Window &activation policy:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, windowFocusPolicy)
+#: focus.ui:32
+#, kde-format
+msgid "With this option you can specify how and when windows will be focused."
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:36
+#, fuzzy, kde-format
+#| msgid "Click to Focus"
+msgctxt "sassa asas"
+msgid "Click to focus"
+msgstr "ಗಮನವಿರಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:41
+#, kde-format
+msgid "Click to focus (mouse precedence)"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:46
+#, fuzzy, kde-format
+#| msgid "Focus Follows Mouse"
+msgid "Focus follows mouse"
+msgstr "ಮೌಸ್‌ ಅನ್ನು ಹಿಂಬಾಲಿಸುವ ಗಮನ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:51
+#, kde-format
+msgid "Focus follows mouse (mouse precedence)"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:56
+#, fuzzy, kde-format
+#| msgid "Focus Under Mouse"
+msgid "Focus under mouse"
+msgstr "ಮೌಸ್‌ನ ಅಡಿಯಲ್ಲಿನ ಗಮನ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
+#: focus.ui:61
+#, fuzzy, kde-format
+#| msgid "Focus Strictly Under Mouse"
+msgid "Focus strictly under mouse"
+msgstr "ಖಡಾಖಂಡಿತವಾಗಿರುವ ಮೌಸ್‌ನ ಅಡಿಯಲ್ಲಿರುವುದರತ್ತ ಗಮನ"
+
+#. i18n: ectx: property (text), widget (QLabel, delayFocusOnLabel)
+#: focus.ui:69
+#, fuzzy, kde-format
+#| msgid "Delay focus by:"
+msgid "&Delay focus by:"
+msgstr "ಗಮನವನ್ನು ಇಷ್ಟು ವಿಳಂಬಿಸು:"
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_DelayFocusInterval)
+#: focus.ui:82
+#, kde-format
+msgid ""
+"This is the delay after which the window the mouse pointer is over will "
+"automatically receive focus."
+msgstr ""
+"ಇದು ಯಾವ ವಿಂಡೊ ಮೇಲೆ ಮೌಸ್‌ ಸೂಚಕವು ಇದೆಯೋ ಅದು ತನ್ನಿಂದ ತಾನೆ ಗಮನಕ್ಕೆ ಬರಲು ತಗಲುವ "
+"ಕಾಲವಿಳಂಬ."
+
+#. i18n: ectx: property (text), widget (QLabel, focusStealingLabel)
+#: focus.ui:101
+#, fuzzy, kde-format
+#| msgid "Focus stealing prevention level:"
+msgid "Focus &stealing prevention:"
+msgstr "ಗಮನ ಸೆಳೆಯುವುದನ್ನು ನಿರ್ಬಂಧಿಸುವ ಮಟ್ಟ:"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:114
+#, fuzzy, kde-format
+#| msgid ""
+#| "<p>This option specifies how much KWin will try to prevent unwanted focus "
+#| "stealing caused by unexpected activation of new windows. (Note: This "
+#| "feature does not work with the Focus Under Mouse or Focus Strictly Under "
+#| "Mouse focus policies.)<ul><li><em>None:</em> Prevention is turned off and "
+#| "new windows always become activated.</li><li><em>Low:</em> Prevention is "
+#| "enabled; when some window does not have support for the underlying "
+#| "mechanism and KWin cannot reliably decide whether to activate the window "
+#| "or not, it will be activated. This setting may have both worse and better "
+#| "results than normal level, depending on the applications.</"
+#| "li><li><em>Normal:</em> Prevention is enabled.</li><li><em>High:</em> New "
+#| "windows get activated only if no window is currently active or if they "
+#| "belong to the currently active application. This setting is probably not "
+#| "really usable when not using mouse focus policy.</li><li><em>Extreme:</"
+#| "em> All windows must be explicitly activated by the user.</li></ul></"
+#| "p><p>Windows that are prevented from stealing focus are marked as "
+#| "demanding attention, which by default means their taskbar entry will be "
+#| "highlighted. This can be changed in the Notifications control module.</p>"
+msgid ""
+"<html><head/><body><p>This option specifies how much KWin will try to "
+"prevent unwanted focus stealing caused by unexpected activation of new "
+"windows. (Note: This feature does not work with the <span style=\" font-"
+"style:italic;\">Focus under mouse</span> or <span style=\" font-style:italic;"
+"\">Focus strictly under mouse</span> focus policies.) </p><ul style=\"margin-"
+"top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-"
+"indent: 1;\"><li style=\" margin-top:12px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">None:</span> Prevention is turned off and new "
+"windows always become activated.</li><li style=\" margin-top:0px; margin-"
+"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">Low:</span> Prevention is "
+"enabled; when some window does not have support for the underlying mechanism "
+"and KWin cannot reliably decide whether to activate the window or not, it "
+"will be activated. This setting may have both worse and better results than "
+"the medium level, depending on the applications.</li><li style=\" margin-"
+"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Medium:</"
+"span> Prevention is enabled.</li><li style=\" margin-top:0px; margin-"
+"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">High:</span> New windows "
+"get activated only if no window is currently active or if they belong to the "
+"currently active application. This setting is probably not really usable "
+"when not using mouse focus policy.</li><li style=\" margin-top:0px; margin-"
+"bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">Extreme:</span> All "
+"windows must be explicitly activated by the user.</li></ul><p>Windows that "
+"are prevented from stealing focus are marked as demanding attention, which "
+"by default means their taskbar entry will be highlighted. This can be "
+"changed in the Notifications control module.</p></body></html>"
+msgstr ""
+"<p>ಹೊಸ ವಿಂಡೊ ಅನಿರೀಕ್ಷಿತವಾಗಿ ಸಕ್ರಿಯಗೊಳ್ಳುವುದರಿಂದ ಅದರತ್ತ ಹೋಗುವ ಗಮನವನ್ನು KWin ಎಷ್ಟರ "
+"ಮಟ್ಟಿಗೆ ತಡೆಯುತ್ತದೆ ಎಂಬುದನ್ನು ಈ ಆಯ್ಕೆಯು ಸೂಚಿಸುತ್ತದೆ. (ಸೂಚನೆ: ಈ ಸವಲತ್ತು ಮೌಸ್‍ನ "
+"ಅಡಿಯಲ್ಲಿರುವುದರತ್ತ ಗಮನ ಅಥವ ಖಡಾಖಂಡಿತವಾಗಿರುವ ಮೌಸ್‌ನ ಅಡಿಯಲ್ಲಿರುವುದರತ್ತ ಗಮನ ನೀತಿಗಳೊಂದಿಗೆ "
+"ಕೆಲಸ ಮಾಡುವುದಿಲ್ಲ).)<ul><li><em>ಯಾವುದೂ ಇಲ್ಲ:</em> ನಿರ್ಬಂಧವು ತೆಗೆಯಲ್ಪಡುತ್ತದೆ ಹಾಗು "
+"ಹೊಸ ವಿಂಡೋಗಳು ಎಲ್ಲಾ ಸಮಯದಲ್ಲೂ ಸಕ್ರಿಯವಾಗಿರುತ್ತದೆ.</li><li><em>Low:</em> ನಿರ್ಬಂಧವು "
+"ಶಕ್ತವಾಗಿರುತ್ತದೆ; ಕೆಲವು ವಿಂಡೋಗಳು ಅಡಿಯಲ್ಲಿ ಚಾಲಿತದಲ್ಲಿರುವ ವ್ಯವಸ್ಥೆಯನ್ನು ಬೆಂಬಲಿಸುವುದಿಲ್ಲ "
+"ಹಾಗು KWin ವಿಂಡೊ ಸಕ್ರಿಯಗೊಳಿಸಬೇಕೆ ಅಥವ ಬೇಡವೆ ಎಂಬುದನ್ನು ನಂಬಿಕಾರ್ಹವಾಗಿ ನಿರ್ಧರಿಸಲು "
+"ಸಾಧ್ಯವಾಗುವುದಿಲ್ಲ ಹಾಗು ಅದು ಸಕ್ರಿಯಗೊಳಿಸಲ್ಪಡಿಸುತ್ತದೆ. ಅನ್ವಯಕ್ಕೆ ಅನುಗುಣವಾಗಿ ಈ "
+"ಸಂಯೋಜನೆಯಿಂದ ಸಾಮಾನ್ಯ ಮಟ್ಟಕ್ಕಿಂತ ಒಳ್ಳೆಯ ಹಾಗು ಕೆಟ್ಟ ಪರಿಣಾಮಗಳೆರಡೂ ಇವೆ.</"
+"li><li><em>ಸಾಮಾನ್ಯ:</em> ನಿರ್ಬಂಧವು ಶಕ್ತವಾಗಿರುತ್ತದೆ. </li><li><em>High:</em> ಹೊಸ "
+"ವಿಂಡೋಗಳು ಕೇವಲ ಪ್ರಸಕ್ತ ಯಾವುದೆ ವಿಂಡೋ ಸಕ್ರಿಯವಾಗಿರದೆ ಇದ್ದಲ್ಲಿ ಅಥವಾ ಅವು ಪ್ರಸಕ್ತ ಅನ್ವಯಕ್ಕೆ "
+"ಸಂಬಂಧಿಸಿದ್ದಾಗಿದ್ದರೆ ಮಾತ್ರವೆ ಅವು ಸಕ್ರಿಯಗೊಳ್ಳುತ್ತವೆ. ಈ ಸಂಯೋಜನೆಯನ್ನು ಮೌಸ್ ಗಮನ ನೀತಿಯನ್ನು "
+"ಬಳಸದೆ ಇರುವ ಸಮಯದಲ್ಲಿ ಬಳಸಲು ಬಹುಷಃ ಸಾಧ್ಯವಾಗುವುದಿಲ್ಲ.</li><li><em>ತೀವ್ರ:</em> ಎಲ್ಲಾ "
+"ವಿಂಡೊಗಳು ಬಳಕೆದಾರರಿಂದ ಸ್ಪಷ್ಟವಾಗಿ ಸಕ್ರಿಯಗೊಳಿಸಲ್ಪಡಬೇಕು.</li></ul></p><p>ಗಮನ "
+"ಸೆಳೆಯುವುದನ್ನು ಪ್ರತಿಬಂಧಿಸಿರುವ ವಿಂಡೋಗಳು ಲಕ್ಷ್ಯಕ್ಕಾಗಿ ಬೇಡಿಕೆ ಎಂದು ಗುರುತು "
+"ಹಾಕಲ್ಪಡುತ್ತದೆ, ಅಂದರೆ ಇದರ ಕಾರ್ಯಪಟ್ಟಿ ನಮೂದು ಸುಪ್ರಕಾಶಿತಗೊಂಡಿರುತ್ತದೆ. ಇದನ್ನು ಸೂಚನಾ "
+"ನಿಯಂತ್ರಣ ಘಟಕದಲ್ಲಿ ಬದಲಾಯಿಸಬಹುದಾಗಿದೆ.</p>"
+
+#. i18n: Focus Stealing Prevention Level
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_WindowSnapZone)
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_CenterSnapZone)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:118 moving.ui:33 moving.ui:65 moving.ui:97
+#, fuzzy, kde-format
+#| msgctxt "Focus Stealing Prevention Level"
+#| msgid "None"
+msgid "None"
+msgstr "ಯಾವುದೂ ಇಲ್ಲ"
+
+#. i18n: Focus Stealing Prevention Level
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:123
+#, fuzzy, kde-format
+#| msgctxt "Focus Stealing Prevention Level"
+#| msgid "Low"
+msgid "Low"
+msgstr "ಕೆಳಮಟ್ಟದ"
+
+#. i18n: Focus Stealing Prevention Level
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:128
+#, kde-format
+msgid "Medium"
+msgstr ""
+
+#. i18n: Focus Stealing Prevention Level
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:133
+#, fuzzy, kde-format
+#| msgctxt "Focus Stealing Prevention Level"
+#| msgid "High"
+msgid "High"
+msgstr "ಉಚ್ಛ"
+
+#. i18n: Focus Stealing Prevention Level
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
+#: focus.ui:138
+#, fuzzy, kde-format
+#| msgctxt "Focus Stealing Prevention Level"
+#| msgid "Extreme"
+msgid "Extreme"
+msgstr "ತೀವ್ರ"
+
+#. i18n: ectx: property (text), widget (QLabel, raisingWindowsLabel)
+#: focus.ui:146
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Raising windows:"
+msgstr "ವಿಂಡೋಗಳು"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ClickRaise)
+#: focus.ui:153
+#, kde-format
+msgid ""
+"When this option is enabled, the active window will be brought to the front "
+"when you click somewhere into the window contents. To change it for inactive "
+"windows, you need to change the settings in the Actions tab."
+msgstr ""
+"ಈ ಆಯ್ಕೆಯನ್ನು ಶಕ್ತಗೊಳಿಸಿದಾಗ, ಸಕ್ರಿಯ ವಿಂಡೊದ ಒಳಗೆ ಎಲ್ಲಿಯಾದರೂ ಕ್ಕಿಕ್ ಮಾಡಿದಲ್ಲಿ ಅದು "
+"ಎದುರಿಗೆ ತರಲ್ಪಡುತ್ತದೆ. ಇದನ್ನು ನಿಷ್ಕ್ರಿಯ ವಿಂಡೋಗಳಿಗೆ ಶಕ್ತಗೊಳಿಸಲು, ಕಾರ್ಯಗಳ ಹಾಳೆಯಲ್ಲಿ "
+"ಸಂಯೋಜನೆಗಳ್ನು ಬದಲಾಯಿಸಬೇಕಾಗುತ್ತದೆ."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ClickRaise)
+#: focus.ui:156
+#, fuzzy, kde-format
+#| msgid "C&lick raises active window"
+msgid "&Click raises active window"
+msgstr "ಕ್ಲಿಕ್ ಸಕ್ರಿಯ ವಿಂಡೋ ಅನ್ನು ಮೇಲಕ್ಕೆ ತರುತ್ತದೆ(&l)"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AutoRaise)
+#: focus.ui:165
+#, kde-format
+msgid ""
+"When this option is enabled, a window in the background will automatically "
+"come to the front when the mouse pointer has been over it for some time."
+msgstr ""
+"ಈ ಆಯ್ಕೆಯು ಶಕ್ತಗೊಂಡಾಗ, ಹಿನ್ನಲೆಯಲ್ಲಿನ ಒಂದು ವಿಂಡೋದ ಮೇಲೆ ಮೌಸ್‌ನ ಸೂಚಕವನ್ನು ಒಂದಿಷ್ಟು ಕಾಲ "
+"ಇರಿಸಿದಾಗ ಅದು ತನ್ನಿಂದ ತಾನೆ ಎದುರಿಗೆ ಬರುತ್ತದೆ."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AutoRaise)
+#: focus.ui:168
+#, kde-format
+msgid "&Raise on hover, delayed by:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_AutoRaiseInterval)
+#: focus.ui:175
+#, kde-format
+msgid ""
+"This is the delay after which the window that the mouse pointer is over will "
+"automatically come to the front."
+msgstr ""
+"ಯಾವ ವಿಂಡೊ ಮೇಲೆ ಮೌಸ್‌ ಸೂಚಕವು ಇದೆಯೋ ಅದು ಈ ಕಾಲ ವಿಳಂಬದ ನಂತರ ತನ್ನಿಂದ ತಾನೆ ಮೇಲಕ್ಕೆ "
+"ಬರುತ್ತದೆ."
+
+#. i18n: ectx: property (text), widget (QLabel, multiscreenBehaviorLabel)
+#: focus.ui:196
+#, kde-format
+msgid "Multiscreen behavior:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
+#: focus.ui:203
+#, fuzzy, kde-format
+#| msgid ""
+#| "When this option is enabled, the active Xinerama screen (where new "
+#| "windows appear, for example) is the screen containing the mouse pointer. "
+#| "When disabled, the active Xinerama screen is the  screen containing the "
+#| "focused window. By default this option is disabled for Click to focus and "
+#| "enabled for other focus policies."
+msgid ""
+"When this option is enabled, the active screen (where new windows appear, "
+"for example) is the screen containing the mouse pointer. When disabled, the "
+"active screen is the screen containing the focused window."
+msgstr ""
+"ಈ ಆಯ್ಕೆಯನ್ನು ಶಕ್ತಗೊಳಿಸಿದಾಗ, ಸಕ್ರಿಯ ಕ್ಷೈನರ್ಮಾ(Xinerma) ತೆರೆಯು (ಉದಾ, ಎಲ್ಲಿ ಹೊಸ "
+"ವಿಂಡೋಗಳು ಕಾಣಿಸಿಕೊಳ್ಳುತ್ತವೆಯೋ ಅಲ್ಲಿ) ಮೌಸ್‌ ಸೂಚಕವನ್ನು ಹೊಂದಿರುವ ತೆರಯಾಗಿರುತ್ತದೆ. "
+"ಅಶಕ್ತಗೊಂಡಾಗ, ಸಕ್ರಿಯ ಕ್ಷೈನರ್ಮಾ ತೆರೆಯು ಗಮನ ಇರಿಸಲ್ಪಟ್ಟ ವಿಂಡೋವನ್ನು ಹೊಂದಿರುವ ವಿಂಡೋ "
+"ಆಗಿರುತ್ತದೆ. ಪೂರ್ವನಿಯೋಜಿತವಾಗಿ ಈ ಆಯ್ಕೆಯು 'ಗಮನಿಸಲು ಕ್ಕಿಕ್ ಮಾಡು'ವುದಕ್ಕೆ "
+"ಅಶಕ್ತಗೊಂಡಿರುತ್ತದೆ ಹಾಗು ಇತರೆ ಗಮನ ನೀತಿಗಳಿಗೆ ಶಕ್ತಗೊಂಡಿರುತ್ತದೆ."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
+#: focus.ui:206
+#, kde-format
+msgid "Active screen follows &mouse"
+msgstr "ಸಕ್ರಿಯ ತೆರೆಯು ಮೌಸ್‌ ಅನ್ನು ಅನುಸರಿಸುತ್ತದೆ(&m)"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
+#: focus.ui:213
+#, fuzzy, kde-format
+#| msgid ""
+#| "When this option is enabled, focus operations are limited only to the "
+#| "active Xinerama screen"
+msgid ""
+"When this option is enabled, focus operations are limited only to the active "
+"screen"
+msgstr ""
+"ಈ ಆಯ್ಕೆಯನ್ನು ಶಕ್ತಗೊಳಿಸಿದಾಗ, ಗಮನ ಕಾರ್ಯಗಳು ಕೇವಲ ಸಕ್ರಿಯ ಕ್ಷೈನರ್ಮಾ(Xinerma) ತೆರೆಗಳಿಗೆ "
+"ಮಾತ್ರ ಸೀಮಿತವಾಗಿರುತ್ತದೆ"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
+#: focus.ui:216
+#, fuzzy, kde-format
+#| msgid "S&eparate screen focus"
+msgid "&Separate screen focus"
+msgstr "ಪ್ರತ್ಯೇಕ ತೆರೆ ಗಮನ(&e)"
+
+#. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
+#: focus.ui:229
+#, kde-format
+msgid "Window activation policy description"
+msgstr ""
+
+#: main.cpp:73
+#, kde-format
+msgid "&Focus"
+msgstr "ಗಮನ(&F)"
+
+#: main.cpp:79
+#, fuzzy, kde-format
+#| msgid "&Titlebar Actions"
+msgid "Titlebar A&ctions"
+msgstr "ಉಪಕರಣಪಟ್ಟಿ ಕಾರ್ಯಗಳು (&T)"
+
+#: main.cpp:85
+#, fuzzy, kde-format
+#| msgid "Window Actio&ns"
+msgid "W&indow Actions"
+msgstr "ವಿಂಡೋ ಕಾರ್ಯಗಳು (&n)"
+
+#: main.cpp:91
+#, fuzzy, kde-format
+#| msgid "&Placement:"
+msgid "Mo&vement"
+msgstr "ನಿಯೋಜನೆ(&P):"
+
+#: main.cpp:97
+#, fuzzy, kde-format
+#| msgid "Ad&vanced"
+msgid "Adva&nced"
+msgstr "ಸುಧಾರಿತ(&v)"
+
+#: main.cpp:101
+#, kde-format
+msgid "Window Behavior Configuration Module"
+msgstr "ವಿಂಡೋ ವರ್ತನೆ ಸಂರಚನೆ ಘಟಕ"
+
+#: main.cpp:103
+#, kde-format
+msgid "(c) 1997 - 2002 KWin and KControl Authors"
+msgstr "(c) 1997 - 2002 KWin ಹಾಗು KControl ಲೇಖಕರು"
+
+#: main.cpp:105
+#, kde-format
+msgid "Matthias Ettrich"
+msgstr "Matthias Ettrich"
+
+#: main.cpp:106
+#, kde-format
+msgid "Waldo Bastian"
+msgstr "Waldo Bastian"
+
+#: main.cpp:107
+#, kde-format
+msgid "Cristian Tibirna"
+msgstr "Cristian Tibirna"
+
+#: main.cpp:108
+#, kde-format
+msgid "Matthias Kalle Dalheimer"
+msgstr "Matthias Kalle Dalheimer"
+
+#: main.cpp:109
+#, kde-format
+msgid "Daniel Molkentin"
+msgstr "Daniel Molkentin"
+
+#: main.cpp:110
+#, kde-format
+msgid "Wynn Wilkes"
+msgstr "Wynn Wilkes"
+
+#: main.cpp:111
+#, kde-format
+msgid "Pat Dowler"
+msgstr "Pat Dowler"
+
+#: main.cpp:112
+#, kde-format
+msgid "Bernd Wuebben"
+msgstr "Bernd Wuebben"
+
+#: main.cpp:113
+#, kde-format
+msgid "Matthias Hoelzer-Kluepfel"
+msgstr "Matthias Hoelzer-Kluepfel"
+
+#: main.cpp:161
+#, kde-format
+msgid ""
+"<p><h1>Window Behavior</h1> Here you can customize the way windows behave "
+"when being moved, resized or clicked on. You can also specify a focus policy "
+"as well as a placement policy for new windows.</p> <p>Please note that this "
+"configuration will not take effect if you do not use KWin as your window "
+"manager. If you do use a different window manager, please refer to its "
+"documentation for how to customize window behavior.</p>"
+msgstr ""
+"<p><h1>ವಿಂಡೋ ವರ್ತನೆ</h1> ವಿಂಡೋಗಳನ್ನು ಜರುಗಿಸಿದಾಗ, ಮರುಗಾತ್ರಿಸಿದಾಗ ಅಥವ ಕ್ಲಿಕ್ "
+"ಮಾಡಿದಾಗ ಅವು ಹೇಗೆ ವರ್ತಿಸಬೇಕೆಂದು ಇಲ್ಲಿ ನೀವು ಕಸ್ಟಮೈಸ್ ಮಾಡಬಹುದು. ಇದಲ್ಲದೆ ಹೊಸ "
+"ವಿಂಡೋಗಳಿಗಾಗಿ ನೀವು ಗಮನ ನೀತಿ ಹಾಗು ಸ್ಥಾಪನಾ ನೀತಿಯನ್ನೂ ಸಹ ಸೂಚಿಸಬಹುದು.</p> <p>ನೀವು "
+"KWin ಅನ್ನು ನಿಮ್ಮ ವಿಂಡೋ ಮ್ಯಾನೇಜರ್ ಆಗಿ ಬಳಸದೆ ಹೋದಲ್ಲಿ ಈ ಸಂರಚನೆಯು "
+"ಪರಿಣಾಮಕಾರಿಯಾಗುವುದಿಲ್ಲ ಎನ್ನುವುದನ್ನು ದಯವಿಟ್ಟು ನೆನಪಿಡಿ. ಎಲ್ಲಿಯಾದರು ನೀವು ಬೇರೊಂದು "
+"ವಿಂಡೋ ಮ್ಯಾನೇಜರ್ ಅನ್ನು ಬಳಸುತ್ತಿದ್ದಲ್ಲಿ, ಅದರಲ್ಲಿ ವಿಂಡೋ ವರ್ತನೆಯನ್ನು ಹೇಗೆ ಕಸ್ಟಮೈಸ್ ಮಾಡುವುದು "
+"ಎನ್ನುವುದನ್ನು ತಿಳಿಯಲು ಅದರ ದಸ್ತಾವೇಜನ್ನು ನೋಡಿ.</p>"
+
+#: main.cpp:202
+#, kde-format
+msgid "&Titlebar Actions"
+msgstr "ಉಪಕರಣಪಟ್ಟಿ ಕಾರ್ಯಗಳು (&T)"
+
+#: main.cpp:208
+#, kde-format
+msgid "Window Actio&ns"
+msgstr "ವಿಂಡೋ ಕಾರ್ಯಗಳು (&n)"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
+#: mouse.ui:17
+#, fuzzy, kde-format
+#| msgid "&Titlebar Actions"
+msgid "Titlebar Actions"
+msgstr "ಉಪಕರಣಪಟ್ಟಿ ಕಾರ್ಯಗಳು (&T)"
+
+#. i18n: ectx: property (text), widget (QLabel, label_1)
+#: mouse.ui:26
+#, fuzzy, kde-format
+#| msgid "&Titlebar double-click:"
+msgid "&Double-click:"
+msgstr "ಉಪಕರಣಪಟ್ಟಿಯ ಎರಡುಬಾರಿಯ ಕ್ಲಿಕ್(&T):"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#: mouse.ui:36
+#, kde-format
+msgid "Behavior on <em>double</em> click into the titlebar."
+msgstr "ಉಪಕರಣ ಪಟ್ಟಿಯ ಮೇಲೆ <em>ಎರಡು ಬಾರಿ</em> ಕ್ಲಿಕ್ಕಿಸಿದಾಗಿನ ವರ್ತನೆ."
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
+#: mouse.ui:40 mouse.ui:615 mouse.ui:650 mouse.ui:685
+#, fuzzy, kde-format
+#| msgid "Maximize"
+msgid "Maximize"
+msgstr "ಹಿಗ್ಗಿಸು"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
+#: mouse.ui:45 mouse.ui:620 mouse.ui:655 mouse.ui:690
+#, kde-format
+msgid "Vertically maximize"
+msgstr ""
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
+#: mouse.ui:50 mouse.ui:625 mouse.ui:660 mouse.ui:695
+#, kde-format
+msgid "Horizontally maximize"
+msgstr ""
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: mouse.ui:60 mouse.ui:256 mouse.ui:318 mouse.ui:371 mouse.ui:433 mouse.ui:486
+#: mouse.ui:548
+#, kde-format
+msgid "Shade"
+msgstr "ಮರೆಮಾಚು"
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: mouse.ui:70 mouse.ui:261 mouse.ui:323 mouse.ui:376 mouse.ui:438 mouse.ui:491
+#: mouse.ui:553
+#, kde-format
+msgid "Close"
+msgstr ""
+
+#. i18n: @item:inlistbox behavior on double click
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
+#: mouse.ui:75
+#, fuzzy, kde-format
+#| msgid "On All Desktops"
+msgid "Show on all desktops"
+msgstr "ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳ ಮೇಲೆ"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandTitlebarWheel)
+#: mouse.ui:98
+#, fuzzy, kde-format
+#| msgid "Behavior on <em>double</em> click into the titlebar."
+msgid "Behavior on <em>mouse wheel</em> scroll over the titlebar."
+msgstr "ಉಪಕರಣ ಪಟ್ಟಿಯ ಮೇಲೆ <em>ಎರಡು ಬಾರಿ</em> ಕ್ಲಿಕ್ಕಿಸಿದಾಗಿನ ವರ್ತನೆ."
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: mouse.ui:143
+#, fuzzy, kde-format
+#| msgid "&Titlebar Actions"
+msgid "Titlebar and Frame Actions"
+msgstr "ಉಪಕರಣಪಟ್ಟಿ ಕಾರ್ಯಗಳು (&T)"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: mouse.ui:167
+#, kde-format
+msgid "Active"
+msgstr "ಸಕ್ರಿಯ"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#: mouse.ui:190
+#, kde-format
+msgid "Inactive"
+msgstr "ನಿಷ್ಕ್ರಿಯ"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#: mouse.ui:232 mouse.ui:347 mouse.ui:462
+#, kde-format
+msgid ""
+"Behavior on <em>left</em> click into the titlebar or frame of an <em>active</"
+"em> window."
+msgstr ""
+"ಒಂದು <em>ಸಕ್ರಿಯ</em> ವಿಂಡೋದ ಉಪಕರಣ ಪಟ್ಟಿ ಅಥವ ಚೌಕಟ್ಟಿನ ಮೇಲೆ ತೆರೆಸೂಚಕವನ್ನು <em>ಎಡ</"
+"em> ಕ್ಲಿಕ್ ಮಾಡಿದಾಗಿನ ವರ್ತನೆ."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: mouse.ui:266 mouse.ui:328 mouse.ui:381 mouse.ui:443 mouse.ui:496
+#: mouse.ui:558
+#, fuzzy, kde-format
+#| msgid "Operations Menu"
+msgid "Show actions menu"
+msgstr "ಕಾರ್ಯಾಚರಣೆಯ ಮೆನು"
+
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: mouse.ui:279 mouse.ui:394 mouse.ui:509
+#, kde-format
+msgid ""
+"Behavior on <em>left</em> click into the titlebar or frame of an "
+"<em>inactive</em> window."
+msgstr ""
+"ಒಂದು <em>ಸಕ್ರಿಯವಾಗಿರದ</em> ವಿಂಡೋದ ಉಪಕರಣ ಪಟ್ಟಿ ಅಥವ ಚೌಕಟ್ಟಿನ ಮೇಲೆ ತೆರೆಸೂಚಕವನ್ನು "
+"ಇರಿಸಿ <em>ಎಡ</em> ಕ್ಲಿಕ್ ಮಾಡಿದಾಗಿನ ವರ್ತನೆ."
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
+#: mouse.ui:288 mouse.ui:403 mouse.ui:518
+#, fuzzy, kde-format
+#| msgid "Activate & Lower"
+msgid "Activate and lower"
+msgstr "ಸಕ್ರಿಯಗೊಳಿಸು ಹಾಗು ಇಳಿಸು"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#: mouse.ui:589
+#, fuzzy, kde-format
+#| msgid "Maximize Button"
+msgid "Maximize Button Actions"
+msgstr "ಹಿಗ್ಗಿಸುವ ಗುಂಡಿ"
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label_8)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
+#: mouse.ui:598 mouse.ui:611
+#, kde-format
+msgid "Behavior on <em>left</em> click onto the maximize button."
+msgstr ""
+"ಹಿಗ್ಗಿಸುವ ಗುಂಡಿಯ ಮೇಲೆ ತೆರೆಸೂಚಕವನ್ನು ಇರಿಸಿ <em>ಎಡ</em> ಕ್ಲಿಕ್ ಮಾಡಿದಾಗಿನ ವರ್ತನೆ."
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label_9)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
+#: mouse.ui:633 mouse.ui:646
+#, kde-format
+msgid "Behavior on <em>middle</em> click onto the maximize button."
+msgstr ""
+"ಹಿಗ್ಗಿಸುವ ಗುಂಡಿಯ ಮೇಲೆ ತೆರೆಸೂಚಕವನ್ನು ಇರಿಸಿ <em>ನಡುವಿನ</em> ಕ್ಲಿಕ್ ಮಾಡಿದಾಗಿನ ವರ್ತನೆ."
+
+#. i18n: ectx: property (text), widget (QLabel, label_9)
+#: mouse.ui:636
+#, fuzzy, kde-format
+#| msgid "Middle button:"
+msgid "Middle c&lick:"
+msgstr "ಮಧ್ಯದ ಗುಂಡಿ:"
+
+#. i18n: ectx: property (whatsThis), widget (QLabel, label_10)
+#. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
+#: mouse.ui:668 mouse.ui:681
+#, kde-format
+msgid "Behavior on <em>right</em> click onto the maximize button."
+msgstr ""
+"ಹಿಗ್ಗಿಸುವ ಗುಂಡಿಯ ಮೇಲೆ ತೆರೆಸೂಚಕವನ್ನು ಇರಿಸಿ <em>ಬಲ</em> ಕ್ಲಿಕ್ ಮಾಡಿದಾಗಿನ ವರ್ತನೆ."
+
+#. i18n: ectx: property (text), widget (QLabel, borderSnapLabel)
+#: moving.ui:20
+#, fuzzy, kde-format
+#| msgid "&Border snap zone:"
+msgid "Screen &edge snap zone:"
+msgstr "ಅಂಚು ಸೆಳೆಯುವ ವಲಯ(&B):"
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_BorderSnapZone)
+#: moving.ui:30
+#, fuzzy, kde-format
+#| msgid ""
+#| "Here you can set the snap zone for screen borders, i.e. the 'strength' of "
+#| "the magnetic field which will make windows snap to the border when moved "
+#| "near it."
+msgid ""
+"Here you can set the snap zone for screen edges, i.e. the 'strength' of the "
+"magnetic field which will make windows snap to the border when moved near it."
+msgstr ""
+"ಇಲ್ಲಿ ನೀವು ತೆರೆ ಅಂಚುಗಳಿಗೆ ಸೆಳೆಯುವ ವಲಯಗಳನ್ನು ನಿಯೋಜಿಸಬಹುದು, ಅಂದರೆ, ಆಯಂಸ್ಕಾಂತೀಯ "
+"ಕ್ಷೇತ್ರದ 'ಶಕ್ತಿ'ಯಿಂದಾಗಿ ವಿಂಡೋಗಳನ್ನು ಅಂಚಿನ ಸಮೀಪ ಕೊಂಡೊಯ್ದಾಗ ಅವುಗಳು ತಟ್ಟನೆ "
+"ಸೆಳೆಯಲ್ಪಡುತ್ತವೆ."
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_BorderSnapZone)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_WindowSnapZone)
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_CenterSnapZone)
+#: moving.ui:36 moving.ui:68 moving.ui:100
+#, fuzzy, kde-format
+#| msgid " pixel"
+#| msgid_plural " pixels"
+msgid " px"
+msgstr " ಪಿಕ್ಸೆಲ್‍"
+
+#. i18n: ectx: property (text), widget (QLabel, windowSnapLabel)
+#: moving.ui:52
+#, kde-format
+msgid "&Window snap zone:"
+msgstr "ವಿಂಡೋ ಸೆಳೆಯುವ ವಲಯ(&W):"
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_WindowSnapZone)
+#: moving.ui:62
+#, kde-format
+msgid ""
+"Here you can set the snap zone for windows, i.e. the 'strength' of the "
+"magnetic field which will make windows snap to each other when they are "
+"moved near another window."
+msgstr ""
+"ಇಲ್ಲಿ ನೀವು ವಿಂಡೋಗಳಿಗಾಗಿ ಸೆಳೆಯುವ ವಲಯವನ್ನು ಸಜ್ಜುಗೊಳಿಸಬಹುದು, ಅಂದರೆ ವಿಂಡೋಗಳನ್ನು "
+"ಇನ್ನೊಂದು ವಿಂಡೋ ಒಂದರ ಸಮೀಪ ಒಯ್ದಾಗ ಅವುಗಳು ಸೆಳೆಯಲ್ಪಡುವಂತಹ ಗುರುತ್ವ 'ಶಕ್ತಿ'."
+
+#. i18n: ectx: property (text), widget (QLabel, centerSnaplabel)
+#: moving.ui:84
+#, kde-format
+msgid "&Center snap zone:"
+msgstr "ಮಧ್ಯಕ್ಕೆ ಸೆಳೆಯುವ ವಲಯ(&B):"
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_CenterSnapZone)
+#: moving.ui:94
+#, kde-format
+msgid ""
+"Here you can set the snap zone for the screen center, i.e. the 'strength' of "
+"the magnetic field which will make windows snap to the center of the screen "
+"when moved near it."
+msgstr ""
+"ಇಲ್ಲಿ ನೀವು ತೆರೆ ಅಂಚುಗಳಿಗೆ ಸೆಳೆಯುವ ವಲಯಗಳನ್ನು ನಿಯೋಜಿಸಬಹುದು, ಅಂದರೆ, ಆಯಂಸ್ಕಾಂತೀಯ "
+"ಕ್ಷೇತ್ರದ 'ಶಕ್ತಿ'ಯಿಂದಾಗಿ ವಿಂಡೋಗಳನ್ನು ತೆರೆಯ ಮಧ್ಯಕ್ಕೆ ಕೊಂಡೊಯ್ದಾಗ ಅವುಗಳು ತಟ್ಟನೆ "
+"ಸೆಳೆಯಲ್ಪಡುತ್ತವೆ."
+
+#. i18n: ectx: property (text), widget (QLabel, OverlapSnapLabel)
+#: moving.ui:113
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "&Snap windows:"
+msgstr "ವಿಂಡೋಗಳು"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
+#: moving.ui:123
+#, kde-format
+msgid ""
+"Here you can set that windows will be only snapped if you try to overlap "
+"them, i.e. they will not be snapped if the windows comes only near another "
+"window or border."
+msgstr ""
+"ಒಂದರ ಮೇಲೆ ಇನ್ನೊಂದು ವಿಂಡೋಗಳನ್ನು ಹೇರಲು ಹೋದಾಗ ಮಾತ್ರ ಸೆಳೆಯಲ್ಪಡುವಂತೆ ಇಲ್ಲಿ ನೀವು "
+"ಹೊಂದಿಸಬಹುದು, ಅಂದರೆ, ವಿಂಡೋಗಳು ಒಂದರ ಸಮೀಪ ಇನ್ನೊಂದು ಅಥವ ಅಂಚಿನ ಬಳಿ ಬಂದಾಗ "
+"ಸೆಳೆಯಲ್ಪಡುವುದಿಲ್ಲ."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
+#: moving.ui:126
+#, fuzzy, kde-format
+#| msgid "Snap windows onl&y when overlapping"
+msgid "Only when overlapping"
+msgstr "ವಿಂಡೋಗಳು ಒಂದರ ಮೇಲೆ ಇನ್ನೊಂದು ಹೇರಿದಾಗ ಮಾತ್ರ ಸೆಳೆಯಲ್ಪಡುವಂತೆ ಮಾಡು(&y)"
+
+#: windows.cpp:97
+#, kde-format
+msgid ""
+"<em>Click to focus:</em> A window becomes active when you click into it. "
+"This behavior is common on other operating systems and likely what you want."
+msgstr ""
+
+#: windows.cpp:101
+#, kde-format
+msgid ""
+"<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
+"focus</em>. If an active window has to be chosen by the system (eg. because "
+"the currently active one was closed) the window under the mouse is the "
+"preferred candidate. Unusual, but possible variant of <em>Click to focus</"
+"em>."
+msgstr ""
+
+#: windows.cpp:106
+#, kde-format
+msgid ""
+"<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
+"it. Eg. windows randomly appearing under the mouse will not gain the focus. "
+"<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
+"to focus</em> just without having to actually click."
+msgstr ""
+
+#: windows.cpp:110
+#, kde-format
+msgid ""
+"This is mostly the same as <em>Focus follows mouse</em>. If an active window "
+"has to be chosen by the system (eg. because the currently active one was "
+"closed) the window under the mouse is the preferred candidate. Choose this, "
+"if you want a hover controlled focus."
+msgstr ""
+
+#: windows.cpp:115
+#, kde-format
+msgid ""
+"<em>Focus under mouse:</em> The focus always remains on the window under the "
+"mouse.<br/><strong>Warning:</strong> <em>Focus stealing prevention</em> and "
+"the <em>tabbox ('Alt+Tab')</em> contradict the activation policy and will "
+"not work. You very likely want to use <em>Focus follows mouse (mouse "
+"precedence)</em> instead!"
+msgstr ""
+
+#: windows.cpp:119
+#, kde-format
+msgid ""
+"<em>Focus strictly under mouse:</em> The focus is always on the window under "
+"the mouse (in doubt nowhere) very much like the focus behavior in an "
+"unmanaged legacy X11 environment.<br/><strong>Warning:</strong> <em>Focus "
+"stealing prevention</em> and the <em>tabbox ('Alt+Tab')</em> contradict the "
+"activation policy and will not work. You very likely want to use <em>Focus "
+"follows mouse (mouse precedence)</em> instead!"
+msgstr ""
+
+#~ msgid ""
+#~ "Enable this option if you want a window's geometry to be displayed while "
+#~ "it is being moved or resized. The window position relative to the top-"
+#~ "left corner of the screen is displayed together with its size."
+#~ msgstr ""
+#~ "ಒಂದು ವಿಂಡೋವನ್ನು ಸ್ಥಳಾಂತರಿಸಿದಾಗ ಅಥವಾ ಮರುಗಾತ್ರಿಸಿದಾಗ ಅದರ ಜ್ಯಾಮಿತಿಯನ್ನು "
+#~ "ತೋರಿಸಬೇಕೆಂದು ನೀವು ಬಯಸಿದಲ್ಲಿ ಈ ಆಯ್ಕೆಯನ್ನು ಆರಿಸಿ. ತೆರೆಯ ಮೇಲ್ಭಾಗದ-ಎಡ ಮೂಲೆಗೆ "
+#~ "ತುಲನಾತ್ಮಕವಾಗಿ ವಿಂಡೋ ಸ್ಥಾನದ ಜೊತೆಗೆ ಅದರ ಗಾತ್ರವು ತೋರಿಸಲ್ಪಡುತ್ತದೆ."
+
+#, fuzzy
+#~| msgid "Display window &geometry when moving or resizing"
+#~ msgid "Display when moving or resizing"
+#~ msgstr ""
+#~ "ಒಂದು ವಿಂಡೋವನ್ನು ಸ್ಥಳಾಂತರಿಸುವಾಗ ಅಥವಾ ಮರುಗಾತ್ರಿಸುವಾಗ ಅದರ ಜ್ಯಾಮಿತಿಯನ್ನು ತೋರಿಸು(&g)"
+
+#~ msgid "Maximize (vertical only)"
+#~ msgstr "ಹಿಗ್ಗಿಸು (ಲಂಬವಾಗಿ ಮಾತ್ರ)"
+
+#~ msgid "Maximize (horizontal only)"
+#~ msgstr "ಹಿಗ್ಗಿಸು (ಅಡ್ಡವಾಗಿ ಮಾತ್ರ)"
+
+#~ msgid "Smart"
+#~ msgstr "ಸ್ಮಾರ್ಟ್"
+
+#~ msgid "Maximizing"
+#~ msgstr "ಹಿಗ್ಗಿಸುವಿಕೆ"
+
+#, fuzzy
+#~| msgid "Zero-Cornered"
+#~ msgid "Zero-cornered"
+#~ msgstr "ಶೂನ್ಯ-ಮೂಲೆಯುಳ್ಳ"
+
+#, fuzzy
+#~| msgctxt "@title:group"
+#~| msgid "Window Switching"
+#~ msgid "Window tabbing:"
+#~ msgstr "ವಿಂಡೋ ಬದಲಾವಣೆ"
+
+#, fuzzy
+#~| msgctxt "@title:group"
+#~| msgid "Window Switching"
+#~ msgid "Start window tab drag"
+#~ msgstr "ವಿಂಡೋ ಬದಲಾವಣೆ"
+
+#, fuzzy
+#~| msgid "Right button:"
+#~ msgid "Ri&ght button:"
+#~ msgstr "ಬಲ ಬದಿಯ ಗುಂಡಿ:"
+
+#, fuzzy
+#~| msgid "Left button:"
+#~ msgid "&Left button:"
+#~ msgstr "ಎಡ ಬದಿಯ ಗುಂಡಿ:"
+
+#, fuzzy
+#~| msgid "Right button:"
+#~ msgid "&Right button:"
+#~ msgstr "ಬಲ ಬದಿಯ ಗುಂಡಿ:"
+
+#, fuzzy
+#~| msgid "Middle button:"
+#~ msgid "M&iddle button:"
+#~ msgstr "ಮಧ್ಯದ ಗುಂಡಿ:"
+
+#, fuzzy
+#~| msgid "Left button:"
+#~ msgid "Left &button"
+#~ msgstr "ಎಡ ಬದಿಯ ಗುಂಡಿ:"
+
+#, fuzzy
+#~| msgid ""
+#~| "The placement policy determines where a new window will appear on the "
+#~| "desktop. <ul> <li><em>Smart</em> will try to achieve a minimum overlap "
+#~| "of windows</li> <li><em>Maximizing</em> will try to maximize every "
+#~| "window to fill the whole screen. It might be useful to selectively "
+#~| "affect placement of some windows using the window-specific settings.</"
+#~| "li> <li><em>Cascade</em> will cascade the windows</li> <li><em>Random</"
+#~| "em> will use a random position</li> <li><em>Centered</em> will place the "
+#~| "window centered</li> <li><em>Zero-Cornered</em> will place the window in "
+#~| "the top-left corner</li></ul>"
+#~ msgid ""
+#~ "The placement policy determines where a new window will appear on the "
+#~ "desktop.<br><ul>\n"
+#~ "<li><em>Smart</em> will try to achieve a minimum overlap of windows</li>\n"
+#~ "<li><em>Maximizing</em> will try to maximize every window to fill the "
+#~ "whole screen. It might be useful to selectively affect placement of some "
+#~ "windows using the window-specific settings.</li>\n"
+#~ "<li><em>Cascade</em> will cascade the windows</li>\n"
+#~ "<li><em>Random</em> will use a random position</li>\n"
+#~ "<li><em>Centered</em> will place the window centered</li>\n"
+#~ "<li><em>Zero-Cornered</em> will place the window in the top-left corner</"
+#~ "li>\n"
+#~ "<li><em>Under Mouse</em> will place the window under the pointer</li>\n"
+#~ "</ul>"
+#~ msgstr ""
+#~ "ಗಣಕ ತೆರೆಯ ಮೇಲೆ ಒಂದು ಹೊಸ ವಿಂಡೋ ಎಲ್ಲಿ ಕಾಣಿಸಲ್ಪಡುತ್ತದೆ ಎಂದು ನಿಯೋಜನಾ ನಿಯಮಗಳು "
+#~ "ನಿರ್ಧರಿಸುತ್ತವೆ. <ul> <li><em>ಚಾಣಾಕ್ಷ</em>ವು ವಿಂಡೋಗಳ ಕಡಿಮೆ ಹೇರಿಕೆಯನ್ನು "
+#~ "ಸಾಧಿಸುತ್ತದೆ</li> <li><em>ಗರಿಷ್ಟ</em>ವು ಪ್ರತಿಯೊಂದು ವಿಂಡೋವನ್ನೂ ಸಂಪೂರ್ಣ ತೆರೆಯನ್ನು "
+#~ "ಆಕ್ರಮಿಸುವಂತೆ ಹಿಗ್ಗಿಸಲು ಪ್ರಯತ್ನಿಸುತ್ತದೆ. ಕೆಲವೊಂದು ವಿಂಡೊ-ನಿಶ್ಚಿತ ಸಂಯೋಜನೆಗಳನ್ನು "
+#~ "ಬಳಸುವ ಕೆಲವೊಂದು ವಿಂಡೊಗಳ ನಿಯೋಜನೆಯ ಮೇಲೆ ಆಯ್ಕ್ಯಾತ್ಮಕವಾಗಿ ಪರಿಣಾಮ ಬೀರಲು ಇದು "
+#~ "ಸಹಕಾರಿಯಾಗುತ್ತದೆ.</li> <li><em>ಕ್ಯಾಸ್ಕೇಡ್‌</em>, ವಿಂಡೋಗಳನ್ನು ಕ್ಯಾಸ್ಕೇಡ್ ಮಾಡುತ್ತದೆ</"
+#~ "li> <li><em>ಯಾದೃಚ್ಛಿಕ</em>ವು ಮನಬಂದ ಸ್ಥಾನವನ್ನು ಆರಿಸುತ್ತದೆ</li> "
+#~ "<li><em>ಕೇಂದ್ರೀಕೃತ</em>ವು ವಿಂಡೊ ಅನ್ನು ನಡುವೆ ಇರಿಸುತ್ತದೆ</li> <li><em>ಶೂನ್ಯ-"
+#~ "ಮೂಲೆಯುಳ್ಳ</em>ದ್ದು ವಿಂಡೊ ಅನ್ನು ಮೇಲ್ಭಾಗದ-ಎಡ ಮೂಲೆಯಲ್ಲಿ ಇರಿಸುತ್ತದೆ</li></ul>"
+
+#~ msgid "Shading"
+#~ msgstr "ಛಾಯೆ"
+
+#~ msgid "Dela&y:"
+#~ msgstr "ವಿಳಂಬ(&y):"
+
+#~ msgid "&Enable hover"
+#~ msgstr "ಸುಳಿದಾಡಿಸುವುದನ್ನು ಶಕ್ತಗೊಳಿಸು(&E)"
+
+#, fuzzy
+#~| msgid "&Policy:"
+#~ msgid "Policy"
+#~ msgstr "ಪಾಲಿಸಿ(&P):"
+
+#~ msgid "&Moving"
+#~ msgstr "ಜರುಗಿಸುವುದು(&M)"
+
+#, fuzzy
+#~| msgid "Titlebar wheel event:"
+#~ msgid "Wheel event:"
+#~ msgstr "ಉಪಕರಣಪಟ್ಟಿ ತಿರುಗಣೆ ಸನ್ನಿವೇಶ:"
+
+#~ msgid "Handle mouse wheel events"
+#~ msgstr "ಮೌಸ್ ತಿರುಗಣೆ ಸನ್ನಿವೇಶಗಳನ್ನು ನಿಭಾಯಿಸು"
+
+#~ msgid ""
+#~ "In this column you can customize mouse clicks into the titlebar or the "
+#~ "frame of an active window."
+#~ msgstr ""
+#~ "ನೀವು ಉಪಕರಣಪಟ್ಟಿಯ ಮೇಲೆ ಅಥವ ಚೌಕಟ್ಟಿನ ಮೇಲೆ ಕ್ಲಿಕ್ ಮಾಡಿದಾಗ ಮೌಸ್ ಕ್ಲಿಕ್ ಹೇಗೆ "
+#~ "ವರ್ತಿಸಬೇಕೆಂದು ಈ ಕಾಲಂನಲ್ಲಿ ನೀವು ಕಸ್ಟಮೈಸ್ ಮಾಡಬಹುದು."
+
+#~ msgid ""
+#~ "In this column you can customize mouse clicks into the titlebar or the "
+#~ "frame of an inactive window."
+#~ msgstr ""
+#~ "ಸಕ್ರಿಯವಲ್ಲದ ವಿಂಡೋದ ಉಪಕರಣ ಪಟ್ಟಿ ಅಥವ ಚೌಕಟ್ಟಿನ ಮೇಲಿನ ಮೌಸ್ ಕ್ಲಿಕ್ ಅನ್ನು ಈ ಕಾಲಂನಲ್ಲಿ ನೀವು "
+#~ "ಕಸ್ಟಮೈಸ್ ಮಾಡಬಹುದು."
+
+#~ msgid "Left button:"
+#~ msgstr "ಎಡ ಬದಿಯ ಗುಂಡಿ:"
+
+#~ msgid "Middle button:"
+#~ msgstr "ಮಧ್ಯದ ಗುಂಡಿ:"
+
+#~ msgid ""
+#~ "Behavior on <em>middle</em> click into the titlebar or frame of an "
+#~ "<em>active</em> window."
+#~ msgstr ""
+#~ "ಒಂದು <em>ಸಕ್ರಿಯ</em> ವಿಂಡೋದ ಉಪಕರಣ ಪಟ್ಟಿ ಅಥವ ಚೌಕಟ್ಟಿನ ಮೇಲೆ ತೆರೆಸೂಚಕವನ್ನು ಇರಿಸಿ "
+#~ "<em>ನಡುವೆ</em> ಕ್ಲಿಕ್ ಮಾಡಿದಾಗಿನ ವರ್ತನೆ."
+
+#~ msgid "Right button:"
+#~ msgstr "ಬಲ ಬದಿಯ ಗುಂಡಿ:"
+
+#~ msgid ""
+#~ "Behavior on <em>right</em> click into the titlebar or frame of an "
+#~ "<em>active</em> window."
+#~ msgstr ""
+#~ "ಒಂದು <em>ಸಕ್ರಿಯ</em> ವಿಂಡೋದ ಉಪಕರಣ ಪಟ್ಟಿ ಅಥವ ಚೌಕಟ್ಟಿನ ಮೇಲೆ ತೆರೆಸೂಚಕವನ್ನು "
+#~ "<em>ಬಲ</em> ಕ್ಲಿಕ್ ಮಾಡಿದಾಗಿನ ವರ್ತನೆ."
+
+#, fuzzy
+#~| msgid "Titlebar && Frame"
+#~ msgid "Titlebar & Frame"
+#~ msgstr "ಉಪಕರಣಪಟ್ಟಿ && ಚೌಕಟ್ಟು"
+
+#, fuzzy
+#~| msgid "&Titlebar Actions"
+#~ msgid "Titlebar"
+#~ msgstr "ಉಪಕರಣಪಟ್ಟಿ ಕಾರ್ಯಗಳು (&T)"
+
+#, fuzzy
+#~| msgid "&Center snap zone:"
+#~ msgid "no center snap zone"
+#~ msgstr "ಮಧ್ಯಕ್ಕೆ ಸೆಳೆಯುವ ವಲಯ(&B):"
+
+#, fuzzy
+#~| msgid "&Window snap zone:"
+#~ msgid "no window snap zone"
+#~ msgstr "ವಿಂಡೋ ಸೆಳೆಯುವ ವಲಯ(&W):"
+
+#, fuzzy
+#~| msgid "&Border snap zone:"
+#~ msgid "no border snap zone"
+#~ msgstr "ಅಂಚು ಸೆಳೆಯುವ ವಲಯ(&B):"
+
+#~ msgid "Windows"
+#~ msgstr "ವಿಂಡೋಗಳು"
+
+#~ msgid "Snap Zones"
+#~ msgstr "ಸೆಳೆಯುವ ವಲಯಗಳು"
+
+#~ msgid "kcmkwinoptions"
+#~ msgstr "kcmkwinoptions"
+
+#, fuzzy
+#~| msgid ""
+#~| "The focus policy is used to determine the active window, i.e. the window "
+#~| "you can work in. <ul> <li><em>Click to focus:</em> A window becomes "
+#~| "active when you click into it. This is the behavior you might know from "
+#~| "other operating systems.</li> <li><em>Focus follows mouse:</em> Moving "
+#~| "the mouse pointer actively on to a normal window activates it. New "
+#~| "windows will receive the focus, without you having to point the mouse at "
+#~| "them explicitly. Very practical if you are using the mouse a lot.</li> "
+#~| "<li><em>Focus under mouse:</em> The window that happens to be under the "
+#~| "mouse pointer is active. If the mouse points nowhere, the last window "
+#~| "that was under the mouse has focus. New windows will not automatically "
+#~| "receive the focus.</li> <li><em>Focus strictly under mouse:</em> Only "
+#~| "the window under the mouse pointer is active. If the mouse points "
+#~| "nowhere, nothing has focus.</li> </ul>Note that 'Focus under mouse' and "
+#~| "'Focus strictly under mouse' prevent certain features such as the Alt"
+#~| "+Tab walk through windows dialog in the KDE mode from working properly."
+#~ msgid ""
+#~ "The focus policy is used to determine the active window, i.e. the window "
+#~ "you can work in. <ul>\n"
+#~ "<li><em>Click to focus:</em> A window becomes active when you click into "
+#~ "it. This is the behavior you might know from other operating systems.</"
+#~ "li> <li><em>Focus follows mouse:</em> Moving the mouse pointer actively "
+#~ "on to a normal window activates it. New windows will receive the focus, "
+#~ "without you having to point the mouse at them explicitly. Very practical "
+#~ "if you are using the mouse a lot.</li>\n"
+#~ "<li><em>Focus under mouse:</em> The window that happens to be under the "
+#~ "mouse pointer is active. If the mouse points nowhere, the last window "
+#~ "that was under the mouse has focus. New windows will not automatically "
+#~ "receive the focus.</li>\n"
+#~ "<li><em>Focus strictly under mouse:</em> Only the window under the mouse "
+#~ "pointer is active. If the mouse points nowhere, nothing has focus.</li>\n"
+#~ "</ul>\n"
+#~ "Note that 'Focus under mouse' and 'Focus strictly under mouse' prevent "
+#~ "certain features such as the Alt+Tab walk through windows dialog in the "
+#~ "KDE mode from working properly."
+#~ msgstr ""
+#~ "ಗಮನ ನೀತಿಯು ಸಕ್ರಿಯ ವಿಂಡೋವನ್ನು ಪತ್ತೆ ಮಾಡಲು ಬಳಸಲ್ಪಡುತ್ತದೆ, ಅಂದರೆ, ನೀವು ಕೆಲಸ "
+#~ "ಮಾಡಬಹುದಾದ ವಿಂಡೋ. <ul> <li><em>ಗಮನವಿರಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ:</em> ಒಂದು ವಿಂಡೋದ ಮೇಲೆ "
+#~ "ನೀವು ಕ್ಲಿಕ್ಕಿಸಿದಾಗ ಅದು ಸಕ್ರಿಯಗೊಳ್ಳುತ್ತದೆ. ಈ ವರ್ತನೆಯನ್ನು ನೀವು ಬೇರೆ ಕಾರ್ಯ "
+#~ "ವ್ಯವಸ್ಥೆಯಲ್ಲಿಯೂ ಇದನ್ನು ಕಾಣಬಹುದಾಗಿದೆ.</li> <li><em>ಮೌಸ್‌ ಅನ್ನು ಅನುಸರಿಸುವ ಗಮನ:</em> "
+#~ "ಮೌಸ್‌ನ ಸೂಚಕವನ್ನು ಒಂದು ಸಾಮಾನ್ಯ ವಿಂಡೋದ ಮೇಲೆ ಸಕ್ರಿಯವಾಗಿ ಆಡಿಸುವುದರಿಂದ ವಿಂಡೋ "
+#~ "ಸಕ್ರಿಯಗೊಳಿಸಲ್ಪಡುತ್ತದೆ. ಹೊಸ ವಿಂಡೋಗಳತ್ತ ನೀವು ಮೌಸ್‌ ಅನ್ನು ವಿಶೇಷವಾಗಿ ಸೂಚಿಸದೆ ಇದ್ದರೂ ಸಹ "
+#~ "ಅವುಗಳು ಗಮನವನ್ನು ಪಡೆಯುತ್ತವೆ. ನಿಜ ಹೇಳಬೇಕೆಂದರೆ ನೀವು ಮೌಸ್‌ ಅನ್ನು ಹೆಚ್ಚಾಗಿ "
+#~ "ಬಳಸುತ್ತಿದ್ದಲ್ಲಿ ಇದು ಸಾಮಾನ್ಯವಾಗಿರುತ್ತದೆ.</li> <li><em>ಮೌಸ್‌ನ ಅಡಿಯಲ್ಲಿ ಗಮನ:</em> ಮೌಸ್‌ನ "
+#~ "ಸೂಚಕದ ಅಡಿಯಲ್ಲಿರುವ ವಿಂಡೋ ಸಕ್ರಿಯವಾಗಿರುತ್ತದೆ. ಮೌಸ್‌ನ ಸೂಚಕವು ಎಲ್ಲಿಗೂ ಸೂಚಿಸಲ್ಪಡದೆ "
+#~ "ಹೋಗಿದ್ದಲ್ಲಿ, ಈ ಮೊದಲು ಮೌಸ್‌ ಸೂಚಕದ ಅಡಿಯಲ್ಲಿದ್ದ ವಿಂಡೋ ಗಮನಿಸಲ್ಲಡುತ್ತದೆ. ಹೊಸ ವಿಂಡೋಗಳು "
+#~ "ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಗಮನಿಸಲ್ಪಡುವುದಿಲ್ಲ.</li> <li><em>ಖಡಾಖಂಡಿತವಾಗಿರುವ ಮೌಸ್‌ನ "
+#~ "ಅಡಿಯಲ್ಲಿರುವುದರತ್ತ ಗಮನ:</em> ಕೇವಲ ಮೌಸ್‌ನ ಸೂಚಕದ ಅಡಿಯಲ್ಲಿರುವದು ಮಾತ್ರ ಸಕ್ರಿಯವಾಗುತ್ತದೆ. "
+#~ "ಮೌಸ್‌ನ ಸೂಚಕವು ಎಲ್ಲಿಗೂ ಸೂಚಿಸಲ್ಪಡದೆ ಹೋಗಿದ್ದಲ್ಲಿ, ಯಾವದರತ್ತವೂ ಗಮನ ಹೋಗುವುದಿಲ್ಲ.</li> </"
+#~ "ul>ಮೌಸ್‍ನ ಅಡಿಯಲ್ಲಿರುವುದರತ್ತ ಗಮನ ಅಥವ ಖಡಾಖಂಡಿತವಾಗಿರುವ ಮೌಸ್‌ನ ಅಡಿಯಲ್ಲಿರುವುದರತ್ತ ಗಮನವು "
+#~ "ಕೆಲವೊಂದು ಸವಲತ್ತುಗಳನ್ನು ನಿರ್ಬಂಧಿಸುತ್ತದೆ. ಉದಾ ಕೆಡಿಇ ಕ್ರಮದಲ್ಲಿ ವಿಂಡೋಗಳ ಸಂವಾದದ ಮೂಲಕ "
+#~ "Alt+Tab ಬಳಸಿ ಹಾದು ಹೋಗುವುದು ಕೆಲಸ ಮಾಡುವುದಿಲ್ಲ."
+
+#~ msgid "&Raise, with the following delay:"
+#~ msgstr "ಈ ಕೆಳಗಿನ ವಿಳಂಬದೊಂದಿಗೆ ಮೇಲಕ್ಕೆ ತರು(&R):"
+
+#~ msgid ""
+#~ "When enabled, this feature activates the border of maximized windows and "
+#~ "allows you to move or resize them, just like for normal windows"
+#~ msgstr ""
+#~ "ಇದನ್ನು ಶಕ್ತಗೊಳಿಸಿದಾಗ, ಈ ಸವಲತ್ತು ಹಿಗ್ಗಿಸಲಾದ ವಿಂಡೋವಿನ ಅಂಚನ್ನು ಸಕ್ರಿಯಗೊಳಿಸುತ್ತದೆ "
+#~ "ಹಾಗು ನಿಮಗೆ ಇದನ್ನು ಸಾಮಾನ್ಯ ವಿಂಡೋಗಳಂತೆ ಮರುಗಾತ್ರಿಸಲು ಅನುವು ಮಾಡಿಕೊಡುತ್ತದೆ"
+
+#, fuzzy
+#~| msgid "Display content in &resizing windows"
+#~ msgid "Display borders on &maximized windows"
+#~ msgstr "ವಿಂಡೋ ಅನ್ನು ಮರು ಗಾತ್ರಿಸುವಾಗ ಅದು ಏನನ್ನು ಹೊಂದಿದೆ ಎಂಬುದನ್ನು ತೋರಿಸು(&r)"
+
+#, fuzzy
+#~| msgid "Minimize"
+#~ msgctxt "@item:inlistbox behavior on double click"
+#~ msgid "Minimize"
+#~ msgstr "ಕುಗ್ಗಿಸು"
+
+#~ msgid ""
+#~ "Here you can customize mouse click behavior when clicking on the titlebar "
+#~ "or the frame of a window."
+#~ msgstr ""
+#~ "ವಿಂಡೋದ ಉಪಕರಣಪಟ್ಟಿಯ ಮೇಲೆ ಅಥವ ಚೌಕಟ್ಟಿನ ಮೇಲೆ ಎರಡು ಬಾರಿ ಕ್ಲಿಕ್ಕಿಸಿದಾಗ ಮೌಸ್ ಕ್ಲಿಕ್ ಹೇಗೆ "
+#~ "ವರ್ತಿಸಬೇಕೆಂದು ಇಲ್ಲಿನೀವು ಕಸ್ಟಮೈಸ್ ಮಾಡಬಹುದು."
+
+#~ msgid ""
+#~ "Behavior on <em>right</em> click into the titlebar or frame of an "
+#~ "<em>inactive</em> window."
+#~ msgstr ""
+#~ "ಒಂದು <em>ಸಕ್ರಿಯವಾಗಿರದ</em> ವಿಂಡೋದ ಉಪಕರಣ ಪಟ್ಟಿ ಅಥವ ಚೌಕಟ್ಟಿನ ಮೇಲೆ ತೆರೆಸೂಚಕವನ್ನು "
+#~ "ಇರಿಸಿ <em>ಬಲ</em> ಕ್ಲಿಕ್ ಮಾಡಿದಾಗಿನ ವರ್ತನೆ."
+
+#~ msgid ""
+#~ "Behavior on <em>middle</em> click into the titlebar or frame of an "
+#~ "<em>inactive</em> window."
+#~ msgstr ""
+#~ "ಒಂದು <em>ಸಕ್ರಿಯವಾಗಿರದ</em> ವಿಂಡೋದ ಉಪಕರಣ ಪಟ್ಟಿ ಅಥವ ಚೌಕಟ್ಟಿನ ಮೇಲೆ ತೆರೆಸೂಚಕವನ್ನು "
+#~ "ಇರಿಸಿ <em>ನಡುವೆ</em> ಕ್ಲಿಕ್ ಮಾಡಿದಾಗಿನ ವರ್ತನೆ."
+
+#~ msgid ""
+#~ "Here you can customize behavior when clicking on the maximize button."
+#~ msgstr ""
+#~ "ಹಿಗ್ಗಿಸುವ ಗುಂಡಿಯ ಮೇಲೆ ಕ್ಲಿಕ್ಕಿಸಿದಾಗ ಅದು ಹೇಗೆ ವರ್ತಿಸಬೇಕು ಎನ್ನುವುದನ್ನು ಇಲ್ಲಿ "
+#~ "ಕ್ಲಿಕ್ಕಿಸಬಹುದು."
+
+#~ msgid ""
+#~ "Here you can customize mouse click behavior when clicking on an inactive "
+#~ "inner window ('inner' means: not titlebar, not frame)."
+#~ msgstr ""
+#~ "ಇಲ್ಲಿ ನೀವು ಒಂದು ನಿಷ್ಕ್ರಿಯ ಒಳಗಿನ ವಿಂಡೋ ಮೇಲಿನ ಮೌಸ್ ಕ್ಲಿಕ್ ವರ್ತನೆಯನ್ನು ಕಸ್ಟಮೈಸ್ "
+#~ "ಮಾಡಬಹುದು (ಒಳಗಿನ ಎಂದರೆ: ಉಪಕರಣ ಪಟ್ಟಿಯಲ್ಲದ, ಚೌಕಟ್ಟಲ್ಲದ)."
+
+#~ msgid ""
+#~ "Here you can customize KDE's behavior when clicking somewhere into a "
+#~ "window while pressing a modifier key."
+#~ msgstr ""
+#~ "ಇಲ್ಲಿ ನೀವು ಮಾರ್ಪಡಕ ಕೀಲಿಯನ್ನು ಒತ್ತಿ ಹಿಡಿದು ಒಂದು ವಿಂಡೋದ ಒಳಗೆ ಎಲ್ಲಿಯಾದರೂ "
+#~ "ಕ್ಲಿಕ್ಕಿಸುವ ಮೂಲಕ KDEಯ ವರ್ತನೆಯನ್ನು ನಿಮಗೆ ಬೇಕಾದ ಬಗೆಯಲ್ಲಿ ಸಜ್ಜುಗೊಳಿಸಬಹುದು."
+
+#, fuzzy
+#~| msgid "none"
+#~ msgctxt "no border snap zone"
+#~ msgid "none"
+#~ msgstr "ಯಾವುದೂ ಇಲ್ಲ"
+
+#, fuzzy
+#~| msgid "none"
+#~ msgctxt "no window snap zone"
+#~ msgid "none"
+#~ msgstr "ಯಾವುದೂ ಇಲ್ಲ"
+
+#, fuzzy
+#~| msgid "none"
+#~ msgctxt "no center snap zone"
+#~ msgid "none"
+#~ msgstr "ಯಾವುದೂ ಇಲ್ಲ"
+
+#, fuzzy
+#~| msgid "Nothing"
+#~ msgctxt "Floating layout, windows aren't tiled at all"
+#~ msgid "Floating"
+#~ msgstr "ಯಾವುದೂ ಇಲ್ಲ"
+
+#~ msgid ""
+#~ "When this option is enabled, there will be a delay after which the window "
+#~ "the mouse pointer is over will become active (receive focus)."
+#~ msgstr ""
+#~ "ಈ ಆಯ್ಕೆಯನ್ನು ಶಕ್ತಗೊಳಿಸಿದಲ್ಲಿ, ಮೌಸ್‌ ಸೂಚಕವು ಯಾವ ವಿಂಡೋ ಮೇಲೆ ಇರಿಸಲ್ಪಟ್ಟಿದೆಯೊ ಅದು "
+#~ "ಸಕ್ರಿಯಗೊಳ್ಳಲು(ಗಮನಕ್ಕೆ ಬರಲು) ಕಾಲ ವಿಳಂಬವಾಗುತ್ತದೆ."
+
+#~ msgid "Di&splay content in moving windows"
+#~ msgstr "ಚಲಿಸುವ ವಿಂಡೋಗಳ ವಿಷಯಗಳನ್ನು ತೋರಿಸು(&s)"
+
+#~ msgid ""
+#~ "Enable this option if you want a window's content to be fully shown while "
+#~ "moving it, instead of just showing a window 'skeleton'. The result may "
+#~ "not be satisfying on slow machines without graphic acceleration."
+#~ msgstr ""
+#~ "ಒಂದು ವಿಂಡೋ ಅನ್ನು ಮರು ಗಾತ್ರಿಸುವಾಗ ಕೇವಲ ಅದರ ಹಂದರವನ್ನು ತೋರಿಸುವ ಬದಲಿಗೆ ಅದು "
+#~ "ಹೊಂದಿರುವುದನ್ನು ತೋರಿಸಬೇಕೆಂದು ನೀವು ಬಯಸಿದರೆ ಇದನ್ನು ಶಕ್ತಗೊಳಿಸಿ. ನಿಧಾನಗತಿಯ "
+#~ "ಗಣಕಗಳಲ್ಲಿ ಚಿತ್ರಾತ್ಮಕ ವರ್ಧಕವಿಲ್ಲದೆ ಇದರ ಫಲಿತಾಂಶ ಉತ್ತಮವಾಗಿರುವುದಿಲ್ಲ."
+
+#~ msgid "Display content in &resizing windows"
+#~ msgstr "ವಿಂಡೋ ಅನ್ನು ಮರು ಗಾತ್ರಿಸುವಾಗ ಅದು ಏನನ್ನು ಹೊಂದಿದೆ ಎಂಬುದನ್ನು ತೋರಿಸು(&r)"
+
+#~ msgid ""
+#~ "Enable this option if you want a window's content to be shown while "
+#~ "resizing it, instead of just showing a window 'skeleton'. The result may "
+#~ "not be satisfying on slow machines."
+#~ msgstr ""
+#~ "ಒಂದು ವಿಂಡೋ ಅನ್ನು ಮರು ಗಾತ್ರಿಸುವಾಗ ಕೇವಲ ಅದರ ಹಂದರವನ್ನು ತೋರಿಸುವ ಬದಲಿಗೆ ಅದು "
+#~ "ಹೊಂದಿರುವುದನ್ನು ತೋರಿಸಬೇಕೆಂದು ನೀವು ಬಯಸಿದರೆ ಇದನ್ನು ಶಕ್ತಗೊಳಿಸಿ. ನಿಧಾನಗತಿಯ "
+#~ "ಗಣಕಗಳಲ್ಲಿ ಇದರ ಫಲಿತಾಂಶ ಉತ್ತಮವಾಗಿರುವುದಿಲ್ಲ."
+
+#~ msgid "Allow moving and resizing o&f maximized windows"
+#~ msgstr ""
+#~ "ಹಿಗ್ಗಿಸಲಾದ ಹಾಗು ವಿಂಡೋಗಳನ್ನು ಸ್ಥಳಾಂತರಿಸುವುದನ್ನು ಹಾಗು ಮರುಗಾತ್ರಿಸುವುದನ್ನು "
+#~ "ಅನುಮತಿಸು(&f)"
+
+#~ msgid "Show window list while switching windows"
+#~ msgstr "ವಿಂಡೋಗಳ ನಡುವೆ ಬದಲಾಯಿಸುವಾಗ ವಿಂಡೋಗಳ ಪಟ್ಟಿಯನ್ನು ತೋರಿಸು"
+
+#~ msgid ""
+#~ "Hold down the Alt key and press the Tab key repeatedly to walk through "
+#~ "the windows on the current desktop (the Alt+Tab combination can be "
+#~ "reconfigured).\n"
+#~ "\n"
+#~ "If this checkbox is checked a popup widget is shown, displaying the icons "
+#~ "of all windows to walk through and the title of the currently selected "
+#~ "one.\n"
+#~ "\n"
+#~ "Otherwise, the focus is passed to a new window each time Tab is pressed, "
+#~ "with no popup widget.  In addition, the previously activated window will "
+#~ "be sent to the back in this mode."
+#~ msgstr ""
+#~ "ಈಗಿರುವ ಗಣಕತೆರೆಯ ಮೇಲಿನ ವಿಂಡೋಗಳ ಮೂಲಕ ಹಾದುಹೋಗಲು ಆಲ್ಟ್ ಕೀಲಿಯನ್ನು ಒತ್ತಿ ಹಿಡಿದು "
+#~ "ಟ್ಯಾಬ್ ಕೀಲಿಯನ್ನು ಒತ್ತುತ್ತಾ ಹೋಗಿ (ಆಲ್ಟ್+ಟ್ಯಾಬ್ ಜೋಡಿಯನ್ನು ಮರುಸಂರಚಿಸಬಹುದಾಗಿದೆ).\n"
+#~ "\n"
+#~ "ಈ ಗುರುತುಪೆಟ್ಟಿಗೆಯಲ್ಲಿ ಗುರುತು ಹಾಕಿದರೆ ಒಂದು ಪುಟಿಕೆ ವಿಜೆಟ್‌ ಕಾಣಿಸಿಕೊಂಡು, ಹಾದು "
+#~ "ಹೋಗಬೇಕಿರುವ ಎಲ್ಲಾ ವಿಂಡೊಗಳ ಚಿಹ್ನೆಗಳನ್ನು ಹಾಗು ಈಗಿನ ವಿಂಡೋದ ತುಣುಕನ್ನೂ "
+#~ "ತೋರಿಸಲಾಗುತ್ತದೆ.\n"
+#~ "\n"
+#~ "ಇಲ್ಲದಿದ್ದರೆ, ಟ್ಯಾಬ್‌ ಅನ್ನು ಒತ್ತಿದ ಪ್ರತಿ ಬಾರಿಯೂ ಪುಟಿಕೆ ವಿಜೆಟ್‌ ಕಾಣಿಸದೆ ಗಮನವು ಒಂದು "
+#~ "ಹೊಸ ವಿಂಡೋದತ್ತ ಹೋಗುತ್ತದೆ.  ಇದರ ಜೊತೆಗೆ, ಈ ಕ್ರಮದಲ್ಲಿ ಈ ಹಿಂದೆ ಸಕ್ರಿಯಗೊಂಡಿದ್ದ ವಿಂಡೋ "
+#~ "ಹಿಂದೆ ಕಳಿಸಲ್ಪಡುತ್ತದೆ."
+
+#~ msgid "&Traverse windows on all desktops"
+#~ msgstr "ಎಲ್ಲಾ ಗಣಕತೆರೆಗಳಲ್ಲಿರುವ ವಿಂಡೋಗಳ ಮೂಲಕ ಹಾದುಹೋಗು(&T)"
+
+#~ msgid ""
+#~ "Leave this option disabled if you want to limit walking through windows "
+#~ "to the current desktop."
+#~ msgstr ""
+#~ "ನೀವು ಕೇವಲ ಈಗಿನ ಗಣಕತೆರೆಯಲ್ಲಿನ ವಿಂಡೋಗಳ ಮೂಲಕ ಮಾತ್ರ ಹಾದು ಹೋಗಲು ಬಯಸಿದಲ್ಲಿ ಈ "
+#~ "ಆಯ್ಕೆಯನ್ನು ಅಶಕ್ತಗೊಳಿಸಿ."
+
+#~ msgid "Desktop navi&gation wraps around"
+#~ msgstr "ಗಣಕತೆರೆ ನ್ಯಾವಿಗೇಶನ್‌ ಆವರಿಕೆಗಳು(&g)"
+
+#~ msgid ""
+#~ "Enable this option if you want keyboard or active desktop border "
+#~ "navigation beyond the edge of a desktop to take you to the opposite edge "
+#~ "of the new desktop."
+#~ msgstr ""
+#~ "ಗಣಕತೆರೆಯ ಮೂಲೆಯನ್ನು ದಾಟಿ ಹೊಸ ಗಣಕತೆರೆಯ ಎದುರಿನ ಮೂಲೆಗೆ ಕೀಲಿ ಮಣೆ ಅಥವ ಸಕ್ರಿಯ "
+#~ "ಗಣಕತೆರೆಯ ಅಂಚಿನ ನ್ಯಾವಿಗೇಶನ್‌ ತಲುಪುವುದನ್ನು ನೀವು ಬಯಸಿದಲ್ಲಿ ಈ ಆಯ್ಕೆಯನ್ನು ಶಕ್ತಗೊಳಿಸಿ."
+
+#~ msgid "Popup desktop name on desktop &switch"
+#~ msgstr "ಗಣಕತೆರೆಯನ್ನು ಬದಲಾಯಿಸುವಾಗ ಗಣಕತೆರೆಯ ಹೆಸರನ್ನು ತೋರಿಸು(&s)"
+
+#~ msgid ""
+#~ "Enable this option if you wish to see the current desktop name popup "
+#~ "whenever the current desktop is changed."
+#~ msgstr ""
+#~ "ಈಗಿನ ಗಣಕತೆರೆಯನ್ನು ಬದಲಾಯಿಸಿದಾಗ ಈಗಿನ ಗಣಕತೆರೆಯ ಹೆಸರು ಪುಟಿಯಲು ನೀವು "
+#~ "ಬಯಸಿದಲ್ಲಿಇದನ್ನು ಶಕ್ತಗೊಳಿಸಿ."
+
+#~ msgctxt "Focus Stealing Prevention Level"
+#~ msgid "Normal"
+#~ msgstr "ಸಾಮಾನ್ಯ"
+
+#~ msgid "Active Desktop Borders"
+#~ msgstr "ಸಕ್ರಿಯ ಗಣಕತೆರೆಯ ಅಂಚುಗಳು"
+
+#~ msgid ""
+#~ "If this option is enabled, moving the mouse to a screen border will "
+#~ "change your desktop. This is e.g. useful if you want to drag windows from "
+#~ "one desktop to the other."
+#~ msgstr ""
+#~ "ಇದು ಶಕ್ತಗೊಂಡಿದ್ದಲ್ಲಿ, ತೆರೆಯ ಅಂಚಿಗೆ ಮೌಸ್‌ ಅನ್ನು ಕೊಂಡೊಯ್ದಾಗ ಅದು ನಿಮ್ಮ ಗಣಕತೆರೆಯನ್ನು "
+#~ "ಬದಲಾಯಿಸುತ್ತದೆ. ಅಂದರೆ ಇದು ನೀವು ವಿಂಡೋಗಳನ್ನು ಒಂದು ಗಣಕತೆರೆಯಿಂದ ಇನ್ನೊಂದಕ್ಕೆ "
+#~ "ಎಳೆದೊಯ್ಯುವಾಗ ಸಹಕಾರಿಯಾಗುತ್ತದೆ."
+
+#~ msgid "D&isabled"
+#~ msgstr "ಅಶಕ್ತಗೊಳಿಸಲಾದ(&i)"
+
+#~ msgid "Only &when moving windows"
+#~ msgstr "ಕೇವಲ ವಿಂಡೋವನ್ನು ಜರುಗಿಸುವಾಗ ಮಾತ್ರ(&w)"
+
+#~ msgid "A&lways enabled"
+#~ msgstr "ಯಾವಾಗಲೂ ಶಕ್ತವಾಗಿರಿಸು(&)"
+
+#~ msgid ""
+#~ "Here you can set a delay for switching desktops using the active borders "
+#~ "feature. Desktops will be switched after the mouse has been pushed "
+#~ "against a screen border for the specified number of milliseconds."
+#~ msgstr ""
+#~ "ಇಲ್ಲಿ ನೀವು ಸಕ್ರಿಯ ಅಂಚುಗಳನ್ನು ಬಳಸಿಕೊಂಡು ಗಣಕತೆರೆಗಳನ್ನು ಬದಲಾಯಿಸುವಲ್ಲಿ ಒಂದು ಕಾಲ "
+#~ "ವಿಳಂಬವನ್ನು ಸಜ್ಜುಗೊಳಿಸಬಹುದು. ಮೌಸ್‌ ಅನ್ನು ಒಂದು ತೆರೆಯ ಅಂಚಿಗೆ ನಿಗದಿತ ಮಿಲಿ ಸೆಕೆಂಡುಗಳ "
+#~ "ಕಾಲ ತಳ್ಳಿ ಹಿಡಿದ ನಂತರ ಗಣಕತೆರೆಯು ಬದಲಾಯಿಸಲ್ಪಡುತ್ತದೆ."
+
+#~ msgid "Desktop &switch delay:"
+#~ msgstr "ಗಣಕತೆರೆ ಬದಲಾವಣಾ ವಿಳಂಬ (&s):"

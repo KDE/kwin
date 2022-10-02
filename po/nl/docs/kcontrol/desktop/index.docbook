@@ -1,0 +1,142 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Dutch "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="desktop" lang="&language;">
+<title
+>Virtuele bureaubladen</title>
+<articleinfo>
+
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<author
+>&Jost.Schenck; &Jost.Schenck.mail;</author>
+&Niels.Reedijk;&Sander.Koning;<othercredit role="translator"
+><firstname
+>Freek</firstname
+><surname
+>de Kruijf</surname
+><affiliation
+><address
+><email
+>freekdekruijf@kde.nl</email
+></address
+></affiliation
+><contrib
+></contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-09</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systeeminstellingen</keyword>
+<keyword
+>virtueel</keyword>
+<keyword
+>bureaublad</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>&kde; biedt u de mogelijkheid om verschillende virtuele bureaubladen te hebben. </para>
+<para
+>U kunt de namen van de bureaubladen wijzigen door te klikken op de knop <guibutton
+>Hernoemen</guibutton
+> (verschijnt wanneer u zweeft boven het bureaubladitem in de lijst) en tekst invoert in het tekstveld. </para>
+<para
+>Als u een bureaublad wilt verwijderen, gebruik het prullenbakpictogram rechts van het bureaubladitem. </para>
+<para
+>Druk op de knop <guibutton
+>Toevoegen</guibutton
+> om een virtueel bureaublad toe te voegen (standaard naam is <guilabel
+>Nieuw bureaublad</guilabel
+>) aan de lijst. </para>
+<para
+>U kunt het aantal rijen in het pager-item op het paneel configureren. Gebruik gewoon het rij-invoervak onder de lijst om het aantal bureaubladen aan te passen. De bureaubladen zullen opnieuw automatisch gearrangeerd worden volgens de rijen. </para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Doorlopende navigatie</guilabel
+></term>
+<listitem
+><para
+>Als u deze optie selecteert, dan kunt u, door met de muisaanwijzer voorbij een schermrand te bewegen, naar het bureaublad gaan dat aan die zijde grenst. Wanneer u het laatste bureaublad bereikt hebt komt u weer op het eerste bureaublad. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Animatie tonen bij omschakelen</guilabel
+></term>
+<listitem
+><para
+>Selecteer <guilabel
+>Schuiven</guilabel
+>, <guilabel
+>Bureaubladkubusanimatie</guilabel
+> of <guilabel
+>Bureaublad in en uitfaden</guilabel
+> uit het afrolmenu of schakel animatie uit door het item te deactiveren. Als de geselecteerde animatie instellingsopties heeft, klik dan op het hulpmiddelpictogram aan de rechterkant van het afrolmenu om een configuratiedialoog te verkrijgen. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>On-screen-display tonen bij omschakelen</guilabel
+></term>
+<listitem
+><para
+>Deze optie inschakelen maakt dat het omschakelen van bureaublad op het scherm is te zien. </para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Indicatoren voor bureaubladindeling tonen</guilabel
+></term>
+<listitem
+><para
+>Inschakelen van deze optie toont een klein voorbeeld van het bureaublad die het geselecteerde bureaublad laat zien. </para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>Draaien aan het muiswiel boven een lege plek op het bureaublad of op het pictogram <guilabel
+>Pager</guilabel
+> in het paneel schakelt naar het numeriek volgende virtuele bureaublad, in de richting waarin u draait (ofwel omhoog of omlaag).</para>
+<para
+>U kunt dit standaard gedrag op de pagina <guilabel
+>Muisacties</guilabel
+> in <guilabel
+>Bureaubladinstellingen</guilabel
+> (<keycombo action="simul"
+>&Alt;<keycap
+>D</keycap
+></keycombo
+>, <keycombo action="simul"
+>&Alt;<keycap
+>S</keycap
+></keycombo
+>) wijzigen.</para>
+
+</article>

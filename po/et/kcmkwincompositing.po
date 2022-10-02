@@ -1,0 +1,1007 @@
+# translation of kcmkwincompositing.po to Estonian
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Marek Laane <bald@smail.ee>, 2007-2009.
+# Marek Laane <bald@smail.ee>, 2009, 2010, 2011, 2012, 2013, 2014, 2016.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwincompositing\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"PO-Revision-Date: 2016-12-09 00:21+0200\n"
+"Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
+"Language-Team: Estonian <kde-et@linux.ee>\n"
+"Language: et\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 2.0\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
+#: compositing.ui:31
+#, fuzzy, kde-format
+#| msgid ""
+#| "OpenGL compositing (the default) has crashed KWin in the past.\n"
+#| "This was most likely due to a driver bug.\n"
+#| "If you think that you have meanwhile upgraded to a stable driver,\n"
+#| "you can reset this protection but be aware that this might result in an "
+#| "immediate crash!\n"
+#| "Alternatively, you might want to use the XRender backend instead."
+msgid ""
+"OpenGL compositing (the default) has crashed KWin in the past.\n"
+"This was most likely due to a driver bug.\n"
+"If you think that you have meanwhile upgraded to a stable driver,\n"
+"you can reset this protection but be aware that this might result in an "
+"immediate crash!"
+msgstr ""
+"OpenGL komposiit (vaikimisi) on varem tekitanud KWini krahhe.\n"
+"Tõenäoliselt on tegemist draiveri veaga.\n"
+"Kui arvad, et oled vahepeal paigaldanud stabiilse draiveri,\n"
+"võid selle kaitse maha võtta, aga arvesta, et see võib kaasa tuua kohese "
+"krahhi!\n"
+"Teine võimalus on kasutada selle asemel XRenderi taustaprogrammi."
+
+#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
+#: compositing.ui:44
+#, kde-format
+msgid ""
+"Scale method \"Accurate\" is not supported by all hardware and can cause "
+"performance regressions and rendering artifacts."
+msgstr ""
+"Kõik riistvara ei toeta skaleerimisviisi \"täpne\" ning see võib põhjustada "
+"jõudlusprobleeme ja renderdamisvigu."
+
+#. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
+#: compositing.ui:67
+#, kde-format
+msgid ""
+"Keeping the window thumbnail always interferes with the minimized state of "
+"windows. This can result in windows not suspending their work when minimized."
+msgstr ""
+"Akna pisipildi alati säilitamine läheb vastuollu akende minimeeritud "
+"olekuga. See võib tähendada, et aken ei peata tööd, kui see minimeeritakse."
+
+#. i18n: ectx: property (text), widget (QLabel, compositingLabel)
+#: compositing.ui:79
+#, fuzzy, kde-format
+#| msgid "Compositing type:"
+msgid "Compositing:"
+msgstr "Komposiidi tüüp:"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
+#: compositing.ui:86
+#, fuzzy, kde-format
+#| msgid "Enable compositor on startup"
+msgid "Enable on startup"
+msgstr "Komposiitori lubamine käivitamisel"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:95
+#, kde-format
+msgid ""
+"Applications can set a hint to block compositing when the window is open.\n"
+" This brings performance improvements for e.g. games.\n"
+" The setting can be overruled by window-specific rules."
+msgstr ""
+"Rakendused võivad anda teada, et komposiit tuleb akna avamisel blokeerida.\n"
+"See parandab teatavatel juhtudel, näiteks mängudes, tublisti jõudlust.\n"
+"Seda määratlust võib tühistada aknaspetsiifilise määratlusega."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
+#: compositing.ui:98
+#, kde-format
+msgid "Allow applications to block compositing"
+msgstr "Rakendused võivad komposiiti blokeerida"
+
+#. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
+#: compositing.ui:105
+#, kde-format
+msgid "Animation speed:"
+msgstr "Animatsiooni kiirus:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: compositing.ui:142
+#, kde-format
+msgid "Very slow"
+msgstr "Väga aeglane"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: compositing.ui:162
+#, kde-format
+msgid "Instant"
+msgstr "Otsekohene"
+
+#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
+#: compositing.ui:174
+#, kde-format
+msgid "Scale method:"
+msgstr "Skaleerimisviis:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:184
+#, kde-format
+msgid "Smooth"
+msgstr "Sujuv"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
+#: compositing.ui:189
+#, kde-format
+msgid "Accurate"
+msgstr "Täpne"
+
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: compositing.ui:199
+#, kde-format
+msgid "Tearing prevention (\"vsync\"):"
+msgstr "Rebestuse vältimine (\"vsync\"):"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:207
+#, kde-format
+msgid "Automatic"
+msgstr "Automaatne"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:212
+#, kde-format
+msgid "Only when cheap"
+msgstr "Ainult vähese koormuse korral"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:217
+#, kde-format
+msgid "Full screen repaints"
+msgstr "Täisekraani ülejoonistamine"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
+#: compositing.ui:222
+#, kde-format
+msgid "Re-use screen content"
+msgstr "Ekraanisisu taaskasutamine"
+
+#. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
+#: compositing.ui:230
+#, kde-format
+msgid "Keep window thumbnails:"
+msgstr "Akende pisipiltide säilitamine:"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:238
+#, kde-format
+msgid "Never"
+msgstr "Mitte kunagi"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:243
+#, kde-format
+msgid "Only for Shown Windows"
+msgstr "Ainult kuvatavate akende puhul"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:248
+#, kde-format
+msgid "Always"
+msgstr "Alati"
+
+#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
+#: compositing.ui:256
+#, kde-format
+msgid "Latency:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:264
+#, kde-format
+msgid "Force lowest latency (may cause dropped frames)"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:269
+#, kde-format
+msgid "Prefer lower latency"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:274
+#, kde-format
+msgid "Balance of latency and smoothness"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:279
+#, kde-format
+msgid "Prefer smoother animations"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:284
+#, fuzzy, kde-format
+#| msgid "Various animations"
+msgid "Force smoothest animations"
+msgstr "Mitmesugused animatsioonid"
+
+#: main.cpp:79
+#, kde-format
+msgid "Re-enable OpenGL detection"
+msgstr "Lülita OpenGL-i tuvastamine taas sisse"
+
+#: main.cpp:135
+#, kde-format
+msgid ""
+"\"Only when cheap\" only prevents tearing for full screen changes like a "
+"video."
+msgstr ""
+"\"Ainult vähese koormuse korral\" takistab ainult rebestusi täisekraani "
+"muutumise puhul, näiteks video esitamisel."
+
+#: main.cpp:139
+#, kde-format
+msgid "\"Full screen repaints\" can cause performance problems."
+msgstr "\"Täisekraani ülejoonistamine\" võib tekitada jõudlusprobleeme."
+
+#: main.cpp:143
+#, kde-format
+msgid ""
+"\"Re-use screen content\" causes severe performance problems on MESA drivers."
+msgstr ""
+"\"Ekraanisisu taaskasutamine\" tekitab MESA draiverite korral tõsiseid "
+"jõudlusprobleeme."
+
+#~ msgid "Rendering backend:"
+#~ msgstr "Renderdamise taustaprogramm:"
+
+#~ msgid "OpenGL 3.1"
+#~ msgstr "OpenGL 3.1"
+
+#~ msgid "OpenGL 2.0"
+#~ msgstr "OpenGL 2.0"
+
+#~ msgid "Crisp"
+#~ msgstr "Terav"
+
+#~ msgid "Smooth (slower)"
+#~ msgstr "Sujuv (aeglasem)"
+
+#~ msgid "XRender"
+#~ msgstr "XRender"
+
+#~ msgctxt "OpenGL Platform Interface"
+#~ msgid "EGL"
+#~ msgstr "EGL"
+
+#~ msgctxt "OpenGL Platform Interface"
+#~ msgid "GLX"
+#~ msgstr "GLX"
+
+#~ msgid ""
+#~ "Author: %1\n"
+#~ "License: %2"
+#~ msgstr ""
+#~ "Autor: %1\n"
+#~ "Litsents: %2"
+
+#~ msgid ""
+#~ "Hint: To find out or configure how to activate an effect, look at the "
+#~ "effect's settings."
+#~ msgstr ""
+#~ "Vihje: mõistmaks, kuidas efekti aktiveerida, uuri efekti seadistusi."
+
+#, fuzzy
+#~| msgid "Search"
+#~ msgid "Search..."
+#~ msgstr "Otsing"
+
+#~ msgid "Configure filter"
+#~ msgstr "Filtri seadistamine"
+
+#~ msgid "Exclude Desktop Effects not supported by the Compositor"
+#~ msgstr "Komposiitori toetuseta töölauaefektid jäetakse välja"
+
+#~ msgid "Exclude internal Desktop Effects"
+#~ msgstr "Sissemised töölauaefektid jäetakse välja"
+
+#, fuzzy
+#~| msgid "Get New Effects ..."
+#~ msgid "Get New Desktop Effects..."
+#~ msgstr "Hangi uusi efekte..."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Marek Laane"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "qiilaq69@gmail.com"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Accessibility"
+#~ msgstr "Hõlbustus"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Appearance"
+#~ msgstr "Välimus"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Candy"
+#~ msgstr "Silmailu"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Focus"
+#~ msgstr "Fookus"
+
+#, fuzzy
+#~| msgctxt "Category of Desktop Effects, used as section header"
+#~| msgid "Virtual Desktop Switching Animation"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Show Desktop Animation"
+#~ msgstr "Virtuaalsete töölaudade vahetamise animatsioon"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Tools"
+#~ msgstr "Tööriistad"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Virtual Desktop Switching Animation"
+#~ msgstr "Virtuaalsete töölaudade vahetamise animatsioon"
+
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Management"
+#~ msgstr "Aknahaldus"
+
+#, fuzzy
+#~| msgctxt "Category of Desktop Effects, used as section header"
+#~| msgid "Virtual Desktop Switching Animation"
+#~ msgctxt "Category of Desktop Effects, used as section header"
+#~ msgid "Window Open/Close Animation"
+#~ msgstr "Virtuaalsete töölaudade vahetamise animatsioon"
+
+#~ msgid "KWin development team"
+#~ msgstr "KWini arendusmeeskond"
+
+#~ msgid "Experimental:"
+#~ msgstr "Eksperimentaalne:"
+
+#~ msgid "Enable color correction"
+#~ msgstr "Värviparanduse lubamine"
+
+#~ msgid ""
+#~ "Having full screen windows bypass the compositor is not supported on "
+#~ "every hardware."
+#~ msgstr ""
+#~ "Kõik riistvara ei toeta täisekraanakende väljajätmist komposiitori mõju "
+#~ "alt."
+
+#~ msgid "Expert:"
+#~ msgstr "Ekspert:"
+
+#~ msgid "Suspend compositor for full screen windows"
+#~ msgstr "Komposiitori peatamine täisekraanakende puhul"
+
+#~ msgid "OpenGL interface:"
+#~ msgstr "OpenGL liides:"
+
+#~ msgid ""
+#~ "EGL is not supported by all OpenGL drivers. If not supported the "
+#~ "Compositor will be disabled."
+#~ msgstr ""
+#~ "Kõik OpenGL draiverid EGL-i ei toeta. Kui see pole toetatud, komposiitor "
+#~ "keelatakse."
+
+#, fuzzy
+#~| msgid "Animation speed:"
+#~ msgid "Animation Speed:"
+#~ msgstr "Animatsiooni kiirus:"
+
+#, fuzzy
+#~| msgid "Scale method:"
+#~ msgid "Scale Method:"
+#~ msgstr "Skaleerimisviis:"
+
+#, fuzzy
+#~| msgid "Keep window thumbnails:"
+#~ msgid "Keep Window Thumbnails:"
+#~ msgstr "Akende pisipiltide säilitamine:"
+
+#, fuzzy
+#~| msgctxt ""
+#~| "A window thumbnail requires to have the corresponding window mapped. To "
+#~| "have thumbnails at all time, windows are not unmapped. This can break "
+#~| "window minimization as it is modelled as unmapping of windows."
+#~| msgid "Always (Breaks minimization)"
+#~ msgid "Always (Breaks Animations)"
+#~ msgstr "Alati (takistab minimeerimist)"
+
+#~ msgid "1 second remaining:"
+#~ msgid_plural "%1 seconds remaining:"
+#~ msgstr[0] "1 sekund jäänud:"
+#~ msgstr[1] "%1 sekundit jäänud:"
+
+#~ msgid "Confirm Desktop Effects Change"
+#~ msgstr "Töölauaefektide muutmise kinnitus"
+
+#~ msgid "&Accept Configuration"
+#~ msgstr "&Nõus uuega"
+
+#~ msgid "&Return to Previous Configuration"
+#~ msgstr "&Kehtima jääb vana"
+
+#~ msgid ""
+#~ "Desktop effects settings have changed.\n"
+#~ "Do you want to keep the new settings?\n"
+#~ "They will be automatically reverted in 10 seconds."
+#~ msgstr ""
+#~ "Töölauaefektide seadistusi on muudetud.\n"
+#~ "Kas soovid kehtestada uued seadistused?\n"
+#~ "Need tühistakse automaatselt 10 sekundi pärast."
+
+#~ msgctxt ""
+#~ "Action to open a dialog showing detailed information why an effect could "
+#~ "not be loaded"
+#~ msgid "Details"
+#~ msgstr "Üksikasjad"
+
+#~ msgid "Use GLSL shaders"
+#~ msgstr "GLSL shaderite kasutamine"
+
+#~ msgid "kcmkwincompositing"
+#~ msgstr "kcmkwincompositing"
+
+#~ msgid "KWin Desktop Effects Configuration Module"
+#~ msgstr "KWin'i töölauaefektide seadistamise moodul"
+
+#~ msgid "(c) 2007 Rivo Laks"
+#~ msgstr "(c) 2007: Rivo Laks"
+
+#~ msgid "Rivo Laks"
+#~ msgstr "Rivo Laks"
+
+#~ msgid "No effect"
+#~ msgstr "Efektid puuduvad"
+
+#~ msgid ""
+#~ "Failed to activate desktop effects using the given configuration options. "
+#~ "Settings will be reverted to their previous values.\n"
+#~ "\n"
+#~ "Check your X configuration. You may also consider changing advanced "
+#~ "options, especially changing the compositing type."
+#~ msgstr ""
+#~ "Töölauaefektide aktiveerimine antud seadistustega nurjus. Seadistustele "
+#~ "antakse nende varasem väärtus.\n"
+#~ "\n"
+#~ "Kontrolli X'i seadistust. Samuti võiks kaaluda täpsemate valikute, eriti "
+#~ "just komposiidi tüübi muutmist."
+
+#~ msgid "Demos"
+#~ msgstr "Demod"
+
+#~ msgid "Tests"
+#~ msgstr "Testid"
+
+#~ msgid ""
+#~ "Desktop effects are not available on this system due to the following "
+#~ "technical issues:"
+#~ msgstr ""
+#~ "Töölauaefektid ei ole selles süsteemis saadaval järgmiste tehniliste "
+#~ "probleemide tõttu:"
+
+#~ msgctxt ""
+#~ "Reason shown when trying to activate desktop effects and KWin (most "
+#~ "likely) crashes"
+#~ msgid "Window Manager seems not to be running"
+#~ msgstr "Paistab, et aknahaldur ei tööta"
+
+#~ msgid ""
+#~ "Your settings have been saved but as KDE is currently running in failsafe "
+#~ "mode desktop effects cannot be enabled at this time.\n"
+#~ "\n"
+#~ "Please exit failsafe mode to enable desktop effects."
+#~ msgstr ""
+#~ "Sinu seadistused salvestati, aga et KDE töötab praegu turberežiimis, ei "
+#~ "ole võimalik töölauaefekte sisse lülitada.\n"
+#~ "\n"
+#~ "Töölauaefektide sisselülitamiseks välju turberežiimist."
+
+#~ msgctxt "Error Message shown when a desktop effect could not be loaded"
+#~ msgid "One desktop effect could not be loaded."
+#~ msgid_plural "%1 desktop effects could not be loaded."
+#~ msgstr[0] "Üht töölauaefekti ei saa laadida."
+#~ msgstr[1] "%1 töölauaefekti ei saa laadida."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated due to unknown reason"
+#~ msgid "%1 effect failed to load due to unknown reason."
+#~ msgstr "Efekti %1 laadimine nurjus teadmata põhjusel."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires hardware "
+#~ "shaders"
+#~ msgid "%1 effect requires hardware support."
+#~ msgstr "Efekt %1 nõuab riistvaralist toetust."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires OpenGL"
+#~ msgid "%1 effect requires OpenGL."
+#~ msgstr "Efekt %1 nõuab OpenGL-i."
+
+#~ msgctxt ""
+#~ "Effect with given name could not be activated as it requires OpenGL 2"
+#~ msgid "%1 effect requires OpenGL 2."
+#~ msgstr "Efekt %1 nõuab OpenGL 2."
+
+#~ msgctxt "Window title"
+#~ msgid "List of effects which could not be loaded"
+#~ msgstr "Efektid, mida ei saa laadida"
+
+#~ msgid ""
+#~ "For technical reasons it is not possible to determine all possible error "
+#~ "causes."
+#~ msgstr ""
+#~ "Tehnilistel põhjustel ei ole võimalik kindlaks määrata vea kõiki "
+#~ "võimalikke põhjusi."
+
+#~ msgctxt ""
+#~ "Error Message shown when compositing is not active after tried activation"
+#~ msgid "Desktop effect system is not running."
+#~ msgstr "Töölauaefektide süsteem ei tööta"
+
+#~ msgid "<h1>Desktop Effects</h1>"
+#~ msgstr "<h1>Töölauaefektid</h1>"
+
+#~ msgid "General"
+#~ msgstr "Üldine"
+
+#~ msgid "Pressing this button can crash the desktop."
+#~ msgstr "Selle nupu vajutamine võib tuua kaasa töölaua krahhi."
+
+#~ msgid "I have saved my data."
+#~ msgstr "Olen salvestanud oma andmed."
+
+#~ msgid "Activation"
+#~ msgstr "Aktiveerimine"
+
+#~ msgid "Desktop effects can be toggled anytime using this shortcut:"
+#~ msgstr "Tööalauaefekte saab igal ajal lülitada kiirklahviga:"
+
+#~ msgctxt "@title:group a few general options to set up desktop effects"
+#~ msgid "Simple effect setup"
+#~ msgstr "Lihtne efektide seadistus"
+
+#~ msgid "Improved window management"
+#~ msgstr "Täiustatud akende haldus"
+
+#~ msgid "Effect for desktop switching:"
+#~ msgstr "Töölaua lülitamise efekt:"
+
+#~ msgid "Very Fast"
+#~ msgstr "Väga kiire"
+
+#~ msgid "Fast"
+#~ msgstr "Kiire"
+
+#~ msgid "Normal"
+#~ msgstr "Tavaline"
+
+#~ msgid "Slow"
+#~ msgstr "Aeglane"
+
+#~ msgid "Extremely Slow"
+#~ msgstr "Äärmiselt aeglane"
+
+#~ msgid ""
+#~ "You can find more effects, as well as effect-specific settings, in the "
+#~ "\"All Effects\" tab above."
+#~ msgstr ""
+#~ "Rohkem efekte ning konkreetsete efektide seadistused leiab kõigi efektide "
+#~ "kaardil"
+
+#~ msgid "All Effects"
+#~ msgstr "Kõik efektid"
+
+#~ msgid "Advanced"
+#~ msgstr "Muud"
+
+#~ msgid "OpenGL Options"
+#~ msgstr "OpenGL valikud"
+
+#~ msgid ""
+#~ "<p>Activates color correction if possible, using the Kolor-Manager. "
+#~ "Requires OpenGL 2 Shaders to be enabled and Kolor-Manager to be "
+#~ "installed. May fail silently.</p><p><strong>Experimental</strong>.</p>"
+#~ msgstr ""
+#~ "<p>Võimaluse korral värviparanduse aktiveerimine, kasutades Kolor-"
+#~ "Manageri. Selleks peavad olema lubatud OpenGL 2 shader'id ja paigaldatud "
+#~ "Kolor-Manager. Võib vaikselt nurjuda.</p><p><strong>Eksperimentaalne</"
+#~ "strong>.</p>"
+
+#~ msgid "General Options"
+#~ msgstr "Üldised valikud"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Crisp:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"fast\")</span> -  Pretty fast "
+#~ "on all GPUs but looks bricky</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Smooth:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"good\") </span>- linear "
+#~ "blending.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Fast enough on newer "
+#~ "nvidia GPUs and maybe others but also can be <span style=\" text-"
+#~ "decoration: underline;\">very</span> slow, you will have to try it.</p></"
+#~ "body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Terav:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"fast\")</span> -  päris kiire "
+#~ "kõigi GPU-dega, aga näeb välja veidi kandiline</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Sujuv:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">XRenderSetPictureFilter(\"good\") </span>- lineaarne "
+#~ "sulandamine.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Üpris kiire uuemate "
+#~ "nvidia GPU-dega ja võib-olla ka teiste puhul, aga võib olla ka <span "
+#~ "style=\" text-decoration: underline;\">väga</span> aeglane, nii et seda "
+#~ "tasub ise järele proovida.</p></body></html>"
+
+#, fuzzy
+#~| msgid ""
+#~| "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/"
+#~| "TR/REC-html40/strict.dtd\">\n"
+#~| "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~| "css\">\n"
+#~| "p, li { white-space: pre-wrap; }\n"
+#~| "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~| "weight:400; font-style:normal;\">\n"
+#~| "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~| "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~| "weight:600;\">Crisp:</span></p>\n"
+#~| "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~| "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~| "style:italic;\">GL_NEAREST</span> -  (very) fast on all GPUs but looks "
+#~| "bricky</p>\n"
+#~| "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~| "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~| "\"></p>\n"
+#~| "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~| "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~| "weight:600;\">Smooth:</span></p>\n"
+#~| "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~| "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~| "style:italic;\">GL_LINEAR</span> - fast on most GPUs but a little "
+#~| "blurry</p>\n"
+#~| "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~| "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~| "\"></p>\n"
+#~| "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~| "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~| "weight:600;\">Accurate:</span></p>\n"
+#~| "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~| "right:0px; -qt-block-indent:0; text-indent:0px;\">Lanczos filter, "
+#~| "requires shader support (glsl or arb).</p>\n"
+#~| "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~| "right:0px; -qt-block-indent:0; text-indent:0px;\">Might be slow on "
+#~| "weaker GPUs and even cause various troubles with broken drivers (from "
+#~| "overbrightening to segfaults.)</p>\n"
+#~| "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~| "right:0px; -qt-block-indent:0; text-indent:0px;\">Fall back to \"Smooth"
+#~| "\" if you have problems.</p></body></html>"
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Crisp:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_NEAREST</span> -  (very) fast on all GPUs but looks "
+#~ "bricky</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Smooth:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_LINEAR</span> - fast on most GPUs but a little blurry</"
+#~ "p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Accurate:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Lanczos filter, "
+#~ "requires glsl shader support.</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Might be slow on weaker "
+#~ "GPUs and even cause various troubles with broken drivers (from "
+#~ "overbrightening to segfaults).</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Fall back to \"Smooth\" "
+#~ "if you have problems.</p></body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Terav:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_NEAREST</span> -  (väga) kiire kõigi GPU-dega, aga "
+#~ "näeb välja veidi kandiline</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Sujuv:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "style:italic;\">GL_LINEAR</span> - väga kiire enamiku GPU-dega, aga veidi "
+#~ "hägune</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#~ "weight:600;\">Täpne:</span></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Lanczosi filter, nõuab "
+#~ "shaderi toetust (glsl või arb).</p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Võib olla aeglane "
+#~ "nõrgema GPU-ga ja isegi põhjustada mitmesuguseid probleeme katkiste "
+#~ "draiverite korral (alates liigsest heledusest kuni kokkujooksmisteni)</"
+#~ "p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Probleemide korral "
+#~ "tasuks kasutada valikut \"Sujuv\"</p></body></html>"
+
+#~ msgid "OpenGL 1.2"
+#~ msgstr "OpenGL 1.2"
+
+#~ msgid "Qt graphics system:"
+#~ msgstr "Qt graafikasüsteem:"
+
+#~ msgid ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">It is <span style=\" "
+#~ "font-weight:600;\">strongly recommended</span> to use the <span style=\" "
+#~ "font-weight:600;\">native</span> system when using the <span style=\" "
+#~ "font-weight:600;\">XRender</span> backend.</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">On the other hand, many "
+#~ "decorations perform better with the <span style=\" font-weight:600;"
+#~ "\">raster</span> system on the <span style=\" font-weight:600;\">default "
+#~ "and generally preferred OpenGL</span> backend (though some don't - also "
+#~ "the impact here can be anything between \"slight\" and \"incredible\" "
+#~ "depending on the GPU and driver)</p></body></html>"
+#~ msgstr ""
+#~ "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/"
+#~ "REC-html40/strict.dtd\">\n"
+#~ "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/"
+#~ "css\">\n"
+#~ "p, li { white-space: pre-wrap; }\n"
+#~ "</style></head><body style=\" font-family:'Segoe'; font-size:8pt; font-"
+#~ "weight:400; font-style:normal;\">\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">On <span style=\" font-"
+#~ "weight:600;\">äärmiselt soovitatav</span> kasutada <span style=\" font-"
+#~ "weight:600;\">natiivset</span> süsteemi, kui kasutusel on <span style=\" "
+#~ "font-weight:600;\">XRenderi</span> taustaprogramm.</p>\n"
+#~ "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; "
+#~ "margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+#~ "\"></p>\n"
+#~ "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#~ "right:0px; -qt-block-indent:0; text-indent:0px;\">Teisalt tulevad paljud "
+#~ "dekoratsioonid paremini toime <span style=\" font-weight:600;\">raster</"
+#~ "span>süsteemis <span style=\" font-weight:600;\">vaikimisi ja üldiselt "
+#~ "eelistatud OpenGL</span> taustaprogrammiga (siiski mitte kõik ning mõju "
+#~ "võib ulatuda sõltuvalt GPU-st ja draiverist kergest uskumatuni)</p></"
+#~ "body></html>"
+
+#~ msgid "Native"
+#~ msgstr "Natiivne"
+
+#~ msgid "Raster"
+#~ msgstr "Raster"
+
+#~ msgid ""
+#~ "If enabled all rendering will be performed with Shaders written in the "
+#~ "OpenGL Shading Language.\n"
+#~ "On legacy hardware disabling Shaders can improve the performance."
+#~ msgstr ""
+#~ "Märkimise korral sooritatakse kogu renderdamine OpenGL varjustuskeeles "
+#~ "(Shading Language) kirjutatud shader'itega.\n"
+#~ "Vanemal riistvaral võib shader'ite väljalülitamine parandada jõudlust."
+
+#~ msgid "Use OpenGL 2 Shaders"
+#~ msgstr "OpenGL 2 shaderite kasutamine"
+
+#~ msgid "Use VSync"
+#~ msgstr "VSynci kasutamine"
+
+#~ msgid "Effect for window switching:"
+#~ msgstr "Akna lülitamise efekt:"
+
+#~ msgid "Enable direct rendering"
+#~ msgstr "Otsese renderdamise lubamine"
+
+#~ msgid "Disable functionality checks"
+#~ msgstr "Funktsionaalsuskontrolli keelamine"
+
+#~ msgid "Desktop effects are temporarily disabled"
+#~ msgstr "Töölauaefektid on ajutiselt keelatud"
+
+#~ msgid "Resume Desktop Effects"
+#~ msgstr "Taasta töölauaefektid"
+
+#~ msgid "Desktop effects are disabled"
+#~ msgstr "Töölauaefektid on keelatud"
+
+#~ msgid "Common Settings"
+#~ msgstr "Üldised seadistused"
+
+#~ msgid "Compositing State"
+#~ msgstr "Komposiidi olek"
+
+#~ msgid "Shadows"
+#~ msgstr "Varjud"
+
+#~ msgid "Texture From Pixmap"
+#~ msgstr "Tekstuur pikselrastrist"
+
+#~ msgid "Shared Memory"
+#~ msgstr "Jagatud mälu"
+
+#~ msgid "Fallback"
+#~ msgstr "Varuvariant"
+
+#~ msgid ""
+#~ "Enabling this option allows compositing to be activated even if some of "
+#~ "the internal checks fail. Doing so may make the whole desktop unusable "
+#~ "and its use is not recommened. Use only if KWin refuses to activate "
+#~ "compositing on a system that should be capable of compositing.\n"
+#~ msgstr ""
+#~ "Selle sisselülitamisel saab komposiidi aktiveerida ka siis, kui mõned "
+#~ "sisemised kontrollid nurjuvad. See võib muuta kogu töölaua "
+#~ "kasutuskõlbmatuks ega ole seepärast soovitatav. Kasuta seda ainult siis, "
+#~ "kui KWin keeldub aktiveerimast komposiiti süsteemis, mis on selleks "
+#~ "tegelikult võimeline.\n"
+
+#~ msgid "Nearest (fastest)"
+#~ msgstr "Lähim (kiireim)"
+
+#~ msgid "Bilinear"
+#~ msgstr "Bilineaarne"
+
+#~ msgid "Trilinear (best quality)"
+#~ msgstr "Trilineaarne (parim kvaliteet)"
+
+#~ msgid ""
+#~ "Improves performance of fullscreen applications like games and video "
+#~ "players. This option can cause flickering when another window is opened "
+#~ "above the fullscreen window."
+#~ msgstr ""
+#~ "Parandab täisekraanrakenduste, näiteks mängude ja videomängijate "
+#~ "jõudlust. See valik võib põhjustada vilkumist, kui täisekraanakna peal "
+#~ "avatakse mõni muu aken."
+
+#~ msgid "Compositing is not supported on your system."
+#~ msgstr "Sinu süsteemis ei ole komposiitvõimalused toetatud."
+
+#~ msgid "Compositing is active"
+#~ msgstr "Komposiit on aktiivne"
+
+#~ msgid "Suspend Compositing"
+#~ msgstr "Komposiidi peatamine"
+
+#~ msgid "Resume Compositing"
+#~ msgstr "Komposiidi taastamine"
+
+#~ msgid "Compositing is disabled"
+#~ msgstr "Komposiit on välja lülitatud"
+
+#~ msgid "All Desktops"
+#~ msgstr "Kõik töölauad"
+
+#~ msgid "Current Desktop"
+#~ msgstr "Aktiivne töölaud"
+
+#~ msgid "Cube"
+#~ msgstr "Kuubik"
+
+#~ msgid "Cylinder"
+#~ msgstr "Silinder"
+
+#~ msgid "Sphere"
+#~ msgstr "Sfäär"
+
+#~ msgid "Screen Edges"
+#~ msgstr "Ekraani servad"
+
+#~ msgid ""
+#~ "Active screen edges allow you to activate effects by pushing your mouse "
+#~ "cursor against the edge of the screen. Here you can configure which "
+#~ "effect will get activated on each edge and corner of the screen."
+#~ msgstr ""
+#~ "Aktiivsed ekraani servad võimaldavad efektid aktiveerida, viies "
+#~ "hiirekursori vastu ekraaniserva. Siin saab määrata, milline efekt "
+#~ "aktiveeritakse konkreetse ekraaniserva ja -nurga korral."
+
+#~ msgid ""
+#~ "If you are looking for the setting to enable switching of desktops by "
+#~ "pushing your mouse cursor against the edge of the screen you can find it "
+#~ "in the \"Window Behavior\" advanced tab under the name of \"Active "
+#~ "Desktop Borders\"."
+#~ msgstr ""
+#~ "Kui soovid võimaldada töölaua vahetamist hiirekursori viimisega "
+#~ "ekraaniservale, siis selle võimaluse leiab \"akende käitumise\" muude "
+#~ "valikute kaardil nimetuse all \"aktiivsed töölaua piirded\"."
+
+#~ msgid "Advanced Compositing Options"
+#~ msgstr "Muud komposiitvalikud"
+
+#~ msgid "Misc"
+#~ msgstr "Muud"
+
+#~ msgid "Keep thumbnails of hidden windows up to date"
+#~ msgstr "Uuendatakse ka peidetud akende pisipilte"

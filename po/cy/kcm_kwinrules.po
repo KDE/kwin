@@ -1,0 +1,1134 @@
+# translation of kcmkwinrules.po to Cymraeg
+# Copyright (C) 2004 Free Software Foundation, Inc.
+# KD at KGyfieithu <kyfieithu@dotmon.com>, 2004.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwinrules\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-19 00:47+0000\n"
+"PO-Revision-Date: 2004-07-03 17:42+0100\n"
+"Last-Translator: KD at KGyfieithu <kyfieithu@dotmon.com>\n"
+"Language-Team: Cymraeg <cy@li.org>\n"
+"Language: cy\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.2\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "KD"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "kyfieithu@dotmon.com"
+
+#: kcmrules.cpp:28
+#, fuzzy, kde-format
+#| msgid "Window &role:"
+msgid "Window Rules"
+msgstr "&Rôl y ffenestr:"
+
+#: kcmrules.cpp:32
+#, kde-format
+msgid "Ismael Asensio"
+msgstr ""
+
+#: kcmrules.cpp:33
+#, kde-format
+msgid "Author"
+msgstr ""
+
+#: kcmrules.cpp:37
+#, fuzzy, kde-format
+#| msgid ""
+#| "<h1>Window-specific Settings</h1> Here you can customize window settings "
+#| "specifically only for some windows. <p>Please note that this "
+#| "configuration will not take effect if you do not use KWin as your window "
+#| "manager. If you do use a different window manager, please refer to its "
+#| "documentation for how to customize window behavior."
+msgid ""
+"<p><h1>Window-specific Settings</h1> Here you can customize window settings "
+"specifically only for some windows.</p> <p>Please note that this "
+"configuration will not take effect if you do not use KWin as your window "
+"manager. If you do use a different window manager, please refer to its "
+"documentation for how to customize window behavior.</p>"
+msgstr ""
+"<h1>Gosodiadau sy'n Benodol i'r Ffenestr</h1> Yma, gallwch addasu gosodiadau "
+"ffenestr yn benodol ar gyfer rhai ffenestri yn unig.<p>Noder: ni fydd y "
+"ffurfweddu yma yn dod i rym os na ddefnyddiwch KWin fel eich rheolydd "
+"ffenestri.  Os defnyddiwch rheolydd ffenestr arall, cyfeiriwch at ei "
+"ddogfennaeth i ddarganfod sut i addasu ymddygiad ffenestri."
+
+#: kcmrules.cpp:243
+#, kde-format
+msgid "Copy of %1"
+msgstr ""
+
+#: kcmrules.cpp:422
+#, kde-format
+msgid "Application settings for %1"
+msgstr ""
+
+#: kcmrules.cpp:442 rulesmodel.cpp:215
+#, kde-format
+msgid "Window settings for %1"
+msgstr ""
+
+#: main.cpp:31
+#, kde-format
+msgid "KWinRules KCM launcher"
+msgstr ""
+
+#: main.cpp:32
+#, kde-format
+msgid "KWin id of the window for special window settings."
+msgstr ""
+
+#: main.cpp:33
+#, kde-format
+msgid "Whether the settings should affect all windows of the application."
+msgstr ""
+
+#: main.cpp:40
+#, kde-format
+msgid "This helper utility is not supposed to be called directly."
+msgstr ""
+
+#: main.cpp:44
+#, fuzzy, kde-format
+msgctxt "Window caption for the application wide rules dialog"
+msgid "Edit Application-Specific Settings"
+msgstr "Modiwl Ffurfweddu Gosodiadau sy'n Benodol i'r Ffenestr"
+
+#: main.cpp:45
+#, fuzzy, kde-format
+msgid "Edit Window-Specific Settings"
+msgstr "Modiwl Ffurfweddu Gosodiadau sy'n Benodol i'r Ffenestr"
+
+#: optionsmodel.cpp:198
+#, kde-format
+msgid "Unimportant"
+msgstr "Dim o bwys"
+
+#: optionsmodel.cpp:199
+#, kde-format
+msgid "Exact Match"
+msgstr "Cydweddiad Union"
+
+#: optionsmodel.cpp:200
+#, kde-format
+msgid "Substring Match"
+msgstr "Cydweddiad Is-linyn"
+
+#: optionsmodel.cpp:201
+#, kde-format
+msgid "Regular Expression"
+msgstr "Mynegiad Rheolaidd"
+
+#: optionsmodel.cpp:205
+#, kde-format
+msgid "Apply Initially"
+msgstr "Gweithredu yn Gychwynnol"
+
+#: optionsmodel.cpp:206
+#, kde-format
+msgid ""
+"The window property will be only set to the given value after the window is "
+"created.\n"
+"No further changes will be affected."
+msgstr ""
+
+#: optionsmodel.cpp:209
+#, kde-format
+msgid "Apply Now"
+msgstr ""
+
+#: optionsmodel.cpp:210
+#, kde-format
+msgid ""
+"The window property will be set to the given value immediately and will not "
+"be affected later\n"
+"(this action will be deleted afterwards)."
+msgstr ""
+
+#: optionsmodel.cpp:213
+#, kde-format
+msgid "Remember"
+msgstr "Cofio"
+
+#: optionsmodel.cpp:214
+#, kde-format
+msgid ""
+"The value of the window property will be remembered and, every time the "
+"window is created, the last remembered value will be applied."
+msgstr ""
+
+#: optionsmodel.cpp:217
+#, kde-format
+msgid "Do Not Affect"
+msgstr "Dim Effaith"
+
+#: optionsmodel.cpp:218
+#, kde-format
+msgid ""
+"The window property will not be affected and therefore the default handling "
+"for it will be used.\n"
+"Specifying this will block more generic window settings from taking effect."
+msgstr ""
+
+#: optionsmodel.cpp:221
+#, kde-format
+msgid "Force"
+msgstr "Gorfodi"
+
+#: optionsmodel.cpp:222
+#, kde-format
+msgid "The window property will be always forced to the given value."
+msgstr ""
+
+#: optionsmodel.cpp:224
+#, kde-format
+msgid "Force Temporarily"
+msgstr ""
+
+#: optionsmodel.cpp:225
+#, kde-format
+msgid ""
+"The window property will be forced to the given value until it is hidden\n"
+"(this action will be deleted after the window is hidden)."
+msgstr ""
+
+#: package/contents/ui/FileDialogLoader.qml:14
+#, kde-format
+msgid "Select File"
+msgstr ""
+
+#: package/contents/ui/FileDialogLoader.qml:26
+#, kde-format
+msgid "KWin Rules (*.kwinrule)"
+msgstr ""
+
+#: package/contents/ui/main.qml:59
+#, kde-format
+msgid "No rules for specific windows are currently set"
+msgstr ""
+
+#: package/contents/ui/main.qml:60
+#, kde-kuit-format
+msgctxt "@info"
+msgid "Click the <interface>Add New...</interface> button below to add some"
+msgstr ""
+
+#: package/contents/ui/main.qml:68
+#, kde-format
+msgid "Select the rules to export"
+msgstr ""
+
+#: package/contents/ui/main.qml:72
+#, kde-format
+msgid "Unselect All"
+msgstr ""
+
+#: package/contents/ui/main.qml:72
+#, kde-format
+msgid "Select All"
+msgstr ""
+
+#: package/contents/ui/main.qml:86
+#, kde-format
+msgid "Save Rules"
+msgstr ""
+
+#: package/contents/ui/main.qml:97
+#, fuzzy, kde-format
+#| msgid "&New..."
+msgid "Add New..."
+msgstr "&Newydd..."
+
+#: package/contents/ui/main.qml:108
+#, kde-format
+msgid "Import..."
+msgstr ""
+
+#: package/contents/ui/main.qml:116
+#, kde-format
+msgid "Cancel Export"
+msgstr ""
+
+#: package/contents/ui/main.qml:116
+#, fuzzy, kde-format
+#| msgid "Edit..."
+msgid "Export..."
+msgstr "Golygu..."
+
+#: package/contents/ui/main.qml:206
+#, fuzzy, kde-format
+msgid "Edit"
+msgstr "Golygu..."
+
+#: package/contents/ui/main.qml:215
+#, kde-format
+msgid "Duplicate"
+msgstr ""
+
+#: package/contents/ui/main.qml:224
+#, fuzzy, kde-format
+msgid "Delete"
+msgstr "&Darganfod"
+
+#: package/contents/ui/main.qml:237
+#, kde-format
+msgid "Import Rules"
+msgstr ""
+
+#: package/contents/ui/main.qml:249
+#, kde-format
+msgid "Export Rules"
+msgstr ""
+
+#: package/contents/ui/OptionsComboBox.qml:35
+#, kde-format
+msgid "None selected"
+msgstr ""
+
+#: package/contents/ui/OptionsComboBox.qml:41
+#, kde-format
+msgid "All selected"
+msgstr ""
+
+#: package/contents/ui/OptionsComboBox.qml:43
+#, kde-format
+msgid "%1 selected"
+msgid_plural "%1 selected"
+msgstr[0] ""
+msgstr[1] ""
+
+#: package/contents/ui/RulesEditor.qml:63
+#, fuzzy, kde-format
+#| msgid "Detect Window Properties"
+msgid "No window properties changed"
+msgstr "Darganfod Priodweddau Ffenestr"
+
+#: package/contents/ui/RulesEditor.qml:64
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"Click the <interface>Add Property...</interface> button below to add some "
+"window properties that will be affected by the rule"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:85
+#, fuzzy, kde-format
+msgid "Close"
+msgstr "Gellir ei gau"
+
+#: package/contents/ui/RulesEditor.qml:85
+#, fuzzy, kde-format
+#| msgid "&New..."
+msgid "Add Property..."
+msgstr "&Newydd..."
+
+#: package/contents/ui/RulesEditor.qml:98
+#, fuzzy, kde-format
+#| msgid "Detect Window Properties"
+msgid "Detect Window Properties"
+msgstr "Darganfod Priodweddau Ffenestr"
+
+#: package/contents/ui/RulesEditor.qml:114
+#: package/contents/ui/RulesEditor.qml:121
+#, kde-format
+msgid "Instantly"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:115
+#: package/contents/ui/RulesEditor.qml:126
+#, kde-format
+msgid "After %1 second"
+msgid_plural "After %1 seconds"
+msgstr[0] ""
+msgstr[1] ""
+
+#: package/contents/ui/RulesEditor.qml:147
+#, kde-format
+msgid "Error"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:162
+#, kde-format
+msgid "Add property to the rule"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:260
+#: package/contents/ui/ValueEditor.qml:54
+#, kde-format
+msgid "Yes"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:260
+#: package/contents/ui/ValueEditor.qml:60
+#, fuzzy, kde-format
+#| msgid "None"
+msgid "No"
+msgstr "Dim"
+
+#: package/contents/ui/RulesEditor.qml:262
+#: package/contents/ui/ValueEditor.qml:171
+#: package/contents/ui/ValueEditor.qml:178
+#, kde-format
+msgid "%1 %"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:264
+#, kde-format
+msgctxt "Coordinates (x, y)"
+msgid "(%1, %2)"
+msgstr ""
+
+#: package/contents/ui/RulesEditor.qml:266
+#, kde-format
+msgctxt "Size (width, height)"
+msgid "(%1, %2)"
+msgstr ""
+
+#: package/contents/ui/ValueEditor.qml:206
+#, kde-format
+msgctxt "(x, y) coordinates separator in size/position"
+msgid "x"
+msgstr ""
+
+#: rulesmodel.cpp:218
+#, kde-format
+msgid "Settings for %1"
+msgstr ""
+
+#: rulesmodel.cpp:221
+#, kde-format
+msgid "New window settings"
+msgstr ""
+
+#: rulesmodel.cpp:237
+#, kde-format
+msgid ""
+"You have specified the window class as unimportant.\n"
+"This means the settings will possibly apply to windows from all "
+"applications. If you really want to create a generic setting, it is "
+"recommended you at least limit the window types to avoid special window "
+"types."
+msgstr ""
+"Rydych wedi penodi y dosbarth ffenestr fel heb bwys.\n"
+"Golyga hyn fel gellir y gosodiadau gael eu gweithredu i ffenestri o bob "
+"cymhwysiad.  Os hoffech greu gosodiad generig o ddifrif, argymhellir o leiaf "
+"gyfyngu'r mathau ffenestr er mwyn osgoi mathau ffenestr arbennig."
+
+#: rulesmodel.cpp:244
+#, kde-format
+msgid ""
+"Some applications set their own geometry after starting, overriding your "
+"initial settings for size and position. To enforce these settings, also "
+"force the property \"%1\" to \"Yes\"."
+msgstr ""
+
+#: rulesmodel.cpp:359
+#, fuzzy, kde-format
+#| msgid "De&scription:"
+msgid "Description"
+msgstr "Di&sgrifiad:"
+
+#: rulesmodel.cpp:359 rulesmodel.cpp:367 rulesmodel.cpp:375 rulesmodel.cpp:382
+#: rulesmodel.cpp:388 rulesmodel.cpp:396 rulesmodel.cpp:401 rulesmodel.cpp:407
+#, fuzzy, kde-format
+#| msgid "&Window"
+msgid "Window matching"
+msgstr "&Ffenestr"
+
+#: rulesmodel.cpp:367
+#, fuzzy, kde-format
+msgid "Window class (application)"
+msgstr "Dosbarth ffenestr (math cymhwysiad):"
+
+#: rulesmodel.cpp:375
+#, fuzzy, kde-format
+msgid "Match whole window class"
+msgstr "Cydweddu holl ddosbarth ffenestr"
+
+#: rulesmodel.cpp:382
+#, fuzzy, kde-format
+msgid "Whole window class"
+msgstr "Cydweddu holl ddosbarth ffenestr"
+
+#: rulesmodel.cpp:388
+#, fuzzy, kde-format
+msgid "Window types"
+msgstr "Mathau ffenestr:"
+
+#: rulesmodel.cpp:396
+#, fuzzy, kde-format
+#| msgid "Window &role:"
+msgid "Window role"
+msgstr "&Rôl y ffenestr:"
+
+#: rulesmodel.cpp:401
+#, fuzzy, kde-format
+#| msgid "Window t&itle:"
+msgid "Window title"
+msgstr "Te&itl Ffenestr:"
+
+#: rulesmodel.cpp:407
+#, fuzzy, kde-format
+msgid "Machine (hostname)"
+msgstr "Peiriant (enw gwesteiwr):"
+
+#: rulesmodel.cpp:413
+#, fuzzy, kde-format
+#| msgid "&Position"
+msgid "Position"
+msgstr "&Lleoliad"
+
+#: rulesmodel.cpp:413 rulesmodel.cpp:419 rulesmodel.cpp:425 rulesmodel.cpp:430
+#: rulesmodel.cpp:438 rulesmodel.cpp:444 rulesmodel.cpp:463 rulesmodel.cpp:479
+#: rulesmodel.cpp:484 rulesmodel.cpp:489 rulesmodel.cpp:494 rulesmodel.cpp:499
+#: rulesmodel.cpp:506 rulesmodel.cpp:516 rulesmodel.cpp:521 rulesmodel.cpp:526
+#, fuzzy, kde-format
+#| msgid "&Position"
+msgid "Size & Position"
+msgstr "&Lleoliad"
+
+#: rulesmodel.cpp:419
+#, fuzzy, kde-format
+#| msgid "&Size"
+msgid "Size"
+msgstr "&Maint"
+
+#: rulesmodel.cpp:425
+#, fuzzy, kde-format
+msgid "Maximized horizontally"
+msgstr "Wedi'i Ehangu yn Llorweddol"
+
+#: rulesmodel.cpp:430
+#, fuzzy, kde-format
+msgid "Maximized vertically"
+msgstr "Wedi'i Ehangu yn Fertigol"
+
+#: rulesmodel.cpp:438
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "Virtual Desktop"
+msgstr "Pob penbwrdd"
+
+#: rulesmodel.cpp:444
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "Virtual Desktops"
+msgstr "Pob penbwrdd"
+
+#: rulesmodel.cpp:463
+#, kde-format
+msgid "Activities"
+msgstr ""
+
+#: rulesmodel.cpp:479
+#, fuzzy, kde-format
+#| msgid "Splash Screen"
+msgid "Screen"
+msgstr "Sgrin Croeso"
+
+#: rulesmodel.cpp:484
+#, fuzzy, kde-format
+#| msgid "&Fullscreen"
+msgid "Fullscreen"
+msgstr "S&grîn Llawn"
+
+#: rulesmodel.cpp:489
+#, fuzzy, kde-format
+msgid "Minimized"
+msgstr "Wedi'i Leihau"
+
+#: rulesmodel.cpp:494
+#, fuzzy, kde-format
+msgid "Shaded"
+msgstr "Wedi'i Rolio"
+
+#: rulesmodel.cpp:499
+#, fuzzy, kde-format
+msgid "Initial placement"
+msgstr "Lleoliad"
+
+#: rulesmodel.cpp:506
+#, fuzzy, kde-format
+msgid "Ignore requested geometry"
+msgstr "Anwybyddu'r lleoliad a ofynnir amdano"
+
+#: rulesmodel.cpp:508
+#, kde-format
+msgid ""
+"Windows can ask to appear in a certain position.\n"
+"By default this overrides the placement strategy\n"
+"what might be nasty if the client abuses the feature\n"
+"to unconditionally popup in the middle of your screen."
+msgstr ""
+
+#: rulesmodel.cpp:516
+#, fuzzy, kde-format
+msgid "Minimum Size"
+msgstr "Maint lleiaf"
+
+#: rulesmodel.cpp:521
+#, fuzzy, kde-format
+msgid "Maximum Size"
+msgstr "Maint mwyaf"
+
+#: rulesmodel.cpp:526
+#, kde-format
+msgid "Obey geometry restrictions"
+msgstr ""
+
+#: rulesmodel.cpp:528
+#, kde-format
+msgid ""
+"Eg. terminals or video players can ask to keep a certain aspect ratio\n"
+"or only grow by values larger than one\n"
+"(eg. by the dimensions of one character).\n"
+"This may be pointless and the restriction prevents arbitrary dimensions\n"
+"like your complete screen area."
+msgstr ""
+
+#: rulesmodel.cpp:537
+#, kde-format
+msgid "Keep above other windows"
+msgstr ""
+
+#: rulesmodel.cpp:537 rulesmodel.cpp:542 rulesmodel.cpp:547 rulesmodel.cpp:553
+#: rulesmodel.cpp:559 rulesmodel.cpp:565
+#, kde-format
+msgid "Arrangement & Access"
+msgstr ""
+
+#: rulesmodel.cpp:542
+#, kde-format
+msgid "Keep below other windows"
+msgstr ""
+
+#: rulesmodel.cpp:547
+#, fuzzy, kde-format
+msgid "Skip taskbar"
+msgstr "Hepgor bar tasgiau"
+
+#: rulesmodel.cpp:549
+#, kde-format
+msgid "Window shall (not) appear in the taskbar."
+msgstr ""
+
+#: rulesmodel.cpp:553
+#, fuzzy, kde-format
+msgid "Skip pager"
+msgstr "Hepgor tudalennydd"
+
+#: rulesmodel.cpp:555
+#, kde-format
+msgid "Window shall (not) appear in the manager for virtual desktops"
+msgstr ""
+
+#: rulesmodel.cpp:559
+#, fuzzy, kde-format
+msgid "Skip switcher"
+msgstr "Hepgor tudalennydd"
+
+#: rulesmodel.cpp:561
+#, kde-format
+msgid "Window shall (not) appear in the Alt+Tab list"
+msgstr ""
+
+#: rulesmodel.cpp:565
+#, kde-format
+msgid "Shortcut"
+msgstr "Byrlwybr"
+
+#: rulesmodel.cpp:571
+#, kde-format
+msgid "No titlebar and frame"
+msgstr ""
+
+#: rulesmodel.cpp:571 rulesmodel.cpp:576 rulesmodel.cpp:582 rulesmodel.cpp:587
+#: rulesmodel.cpp:592 rulesmodel.cpp:603 rulesmodel.cpp:614 rulesmodel.cpp:622
+#: rulesmodel.cpp:635 rulesmodel.cpp:640 rulesmodel.cpp:646 rulesmodel.cpp:651
+#, kde-format
+msgid "Appearance & Fixes"
+msgstr ""
+
+#: rulesmodel.cpp:576
+#, kde-format
+msgid "Titlebar color scheme"
+msgstr ""
+
+#: rulesmodel.cpp:582
+#, kde-format
+msgid "Active opacity"
+msgstr ""
+
+#: rulesmodel.cpp:587
+#, kde-format
+msgid "Inactive opacity"
+msgstr ""
+
+#: rulesmodel.cpp:592
+#, fuzzy, kde-format
+msgid "Focus stealing prevention"
+msgstr "Atal dwyn canolbwynt"
+
+#: rulesmodel.cpp:594
+#, kde-format
+msgid ""
+"KWin tries to prevent windows from taking the focus\n"
+"(\"activate\") while you're working in another window,\n"
+"but this may sometimes fail or superact.\n"
+"\"None\" will unconditionally allow this window to get the focus while\n"
+"\"Extreme\" will completely prevent it from taking the focus."
+msgstr ""
+
+#: rulesmodel.cpp:603
+#, fuzzy, kde-format
+msgid "Focus protection"
+msgstr "Atal dwyn canolbwynt"
+
+#: rulesmodel.cpp:605
+#, kde-format
+msgid ""
+"This controls the focus protection of the currently active window.\n"
+"None will always give the focus away,\n"
+"Extreme will keep it.\n"
+"Otherwise it's interleaved with the stealing prevention\n"
+"assigned to the window that wants the focus."
+msgstr ""
+
+#: rulesmodel.cpp:614
+#, fuzzy, kde-format
+msgid "Accept focus"
+msgstr "Derbyn canolbwyntio"
+
+#: rulesmodel.cpp:616
+#, kde-format
+msgid ""
+"Windows may prevent to get the focus (activate) when being clicked.\n"
+"On the other hand you might wish to prevent a window\n"
+"from getting focused on a mouse click."
+msgstr ""
+
+#: rulesmodel.cpp:622
+#, kde-format
+msgid "Ignore global shortcuts"
+msgstr ""
+
+#: rulesmodel.cpp:624
+#, kde-format
+msgid ""
+"When used, a window will receive\n"
+"all keyboard inputs while it is active, including Alt+Tab etc.\n"
+"This is especially interesting for emulators or virtual machines.\n"
+"\n"
+"Be warned:\n"
+"you won't be able to Alt+Tab out of the window\n"
+"nor use any other global shortcut (such as Alt+F2 to show KRunner)\n"
+"while it's active!"
+msgstr ""
+
+#: rulesmodel.cpp:635
+#, fuzzy, kde-format
+msgid "Closeable"
+msgstr "Gellir ei gau"
+
+#: rulesmodel.cpp:640
+#, fuzzy, kde-format
+msgid "Set window type"
+msgstr "Math ffenestr"
+
+#: rulesmodel.cpp:646
+#, kde-format
+msgid "Desktop file name"
+msgstr ""
+
+#: rulesmodel.cpp:651
+#, kde-format
+msgid "Block compositing"
+msgstr ""
+
+#: rulesmodel.cpp:727
+#, fuzzy, kde-format
+msgid "All Window Types"
+msgstr "Mathau ffenestr:"
+
+#: rulesmodel.cpp:728
+#, kde-format
+msgid "Normal Window"
+msgstr "Ffenestr Arferol"
+
+#: rulesmodel.cpp:729
+#, kde-format
+msgid "Dialog Window"
+msgstr "Ffenestr Ymgom"
+
+#: rulesmodel.cpp:730
+#, kde-format
+msgid "Utility Window"
+msgstr "Ffenestr Ddefnyddioldeb"
+
+#: rulesmodel.cpp:731
+#, kde-format
+msgid "Dock (panel)"
+msgstr "Docydd (panel)"
+
+#: rulesmodel.cpp:732
+#, kde-format
+msgid "Toolbar"
+msgstr "Bar Offer"
+
+#: rulesmodel.cpp:733
+#, fuzzy, kde-format
+msgid "Torn-Off Menu"
+msgstr "Dewislen wedi'i Rhwygo"
+
+#: rulesmodel.cpp:734
+#, kde-format
+msgid "Splash Screen"
+msgstr "Sgrin Croeso"
+
+#: rulesmodel.cpp:735
+#, kde-format
+msgid "Desktop"
+msgstr "Penbwrdd"
+
+#. i18n("Unmanaged Window")},  deprecated
+#: rulesmodel.cpp:737
+#, kde-format
+msgid "Standalone Menubar"
+msgstr "Bar Dewislen Unigol"
+
+#: rulesmodel.cpp:738
+#, kde-format
+msgid "On Screen Display"
+msgstr ""
+
+#: rulesmodel.cpp:748
+#, kde-format
+msgid "All Desktops"
+msgstr "Pob penbwrdd"
+
+#: rulesmodel.cpp:750
+#, kde-format
+msgctxt "@info:tooltip in the virtual desktop list"
+msgid "Make the window available on all desktops"
+msgstr ""
+
+#: rulesmodel.cpp:769
+#, kde-format
+msgid "All Activities"
+msgstr ""
+
+#: rulesmodel.cpp:771
+#, kde-format
+msgctxt "@info:tooltip in the activity list"
+msgid "Make the window available on all activities"
+msgstr ""
+
+#: rulesmodel.cpp:792
+#, kde-format
+msgid "Default"
+msgstr ""
+
+#: rulesmodel.cpp:793
+#, kde-format
+msgid "No Placement"
+msgstr "Dim Lleoli"
+
+#: rulesmodel.cpp:794
+#, kde-format
+msgid "Minimal Overlapping"
+msgstr ""
+
+#: rulesmodel.cpp:795
+#, fuzzy, kde-format
+msgid "Maximized"
+msgstr "Maint mwyaf"
+
+#: rulesmodel.cpp:796
+#, fuzzy, kde-format
+#| msgid "Cascade"
+msgid "Cascaded"
+msgstr "Rhaeadr"
+
+#: rulesmodel.cpp:797
+#, kde-format
+msgid "Centered"
+msgstr "Canolig"
+
+#: rulesmodel.cpp:798
+#, kde-format
+msgid "Random"
+msgstr "Hap"
+
+#: rulesmodel.cpp:799
+#, fuzzy, kde-format
+#| msgid "Top-Left Corner"
+msgid "In Top-Left Corner"
+msgstr "Cornel Pen-chwith"
+
+#: rulesmodel.cpp:800
+#, kde-format
+msgid "Under Mouse"
+msgstr "Dan Lygoden"
+
+#: rulesmodel.cpp:801
+#, kde-format
+msgid "On Main Window"
+msgstr "Ar Brif Ffenestr"
+
+#: rulesmodel.cpp:808
+#, fuzzy, kde-format
+#| msgid "None"
+msgid "None"
+msgstr "Dim"
+
+#: rulesmodel.cpp:809
+#, kde-format
+msgid "Low"
+msgstr "Isel"
+
+#: rulesmodel.cpp:810
+#, kde-format
+msgid "Normal"
+msgstr "Arferol"
+
+#: rulesmodel.cpp:811
+#, kde-format
+msgid "High"
+msgstr "Uchel"
+
+#: rulesmodel.cpp:812
+#, kde-format
+msgid "Extreme"
+msgstr "Eithaf"
+
+#: rulesmodel.cpp:855
+#, kde-format
+msgid "Could not detect window properties. The window is not managed by KWin."
+msgstr ""
+
+#, fuzzy
+#~ msgid "Keep above"
+#~ msgstr "Cadw uwchben"
+
+#, fuzzy
+#~ msgid "Keep below"
+#~ msgstr "Cadw dan"
+
+#~ msgid "KWin"
+#~ msgstr "KWin"
+
+#~ msgid "KWin helper utility"
+#~ msgstr "Defnyddioldeb gymorth KWin"
+
+#, fuzzy
+#~| msgid "Detect Window Properties"
+#~ msgid "Select properties"
+#~ msgstr "Darganfod Priodweddau Ffenestr"
+
+#~ msgid "Override Type"
+#~ msgstr "Math Diystyru"
+
+#~ msgid "Unknown - will be treated as Normal Window"
+#~ msgstr "Anhysbys - trinir fel Ffenestr Arferol"
+
+#~ msgid "Information About Selected Window"
+#~ msgstr "Gwybodaeth Ynglyn â'r Ffenestr Benodol"
+
+#~ msgid "Class:"
+#~ msgstr "Dosbarth:"
+
+#~ msgid "Role:"
+#~ msgstr "Swyddogaeth:"
+
+#~ msgid "Type:"
+#~ msgstr "Math:"
+
+#~ msgid "Title:"
+#~ msgstr "Teitl:"
+
+#~ msgid "Machine:"
+#~ msgstr "Peiriant:"
+
+#~ msgid "C&lear"
+#~ msgstr "&Gwaredu"
+
+#~ msgid "Window-Specific Settings Configuration Module"
+#~ msgstr "Modiwl Ffurfweddu Gosodiadau sy'n Benodol i'r Ffenestr"
+
+#~ msgid "(c) 2004 KWin and KControl Authors"
+#~ msgstr "(c) 2004 Awduron KWin a KControl"
+
+#~ msgid "&Modify..."
+#~ msgstr "&Addasu..."
+
+#~ msgid "Move &Up"
+#~ msgstr "Symud i &Fyny"
+
+#~ msgid "Move &Down"
+#~ msgstr "Symud i &Lawr"
+
+#~ msgid ""
+#~ "Enable this checkbox to alter this window property for the specified "
+#~ "window(s)."
+#~ msgstr ""
+#~ "Galluogi'r blwch britho yma i addasu'r briodwedd ffenestr yma ar gyfer y "
+#~ "ffenestr benodol (s)."
+
+#, fuzzy
+#~ msgid ""
+#~ "Specify how the window property should be affected:<ul><li><em>Do Not "
+#~ "Affect:</em> The window property will not be affected and therefore the "
+#~ "default handling for it will be used. Specifying this will block more "
+#~ "generic window settings from taking effect.</li><li><em>Apply Initially:</"
+#~ "em> The window property will be only set to the given value after the "
+#~ "window is created. No further changes will be affected.</"
+#~ "li><li><em>Remember:</em> The value of the window property will be "
+#~ "remembered and every time the window is created, the last remembered "
+#~ "value will be applied.</li><li><em>Force:</em> The window property will "
+#~ "be always forced to the given value.</li><li><em>Apply Now:</em> The "
+#~ "window property will be set to the given value immediately and will not "
+#~ "be affected later (this action will be deleted afterwards).</"
+#~ "li><li><em>Force temporarily:</em> The window property will be forced to "
+#~ "the given value until it is hidden (this action will be deleted after the "
+#~ "window is hidden).</li></ul>"
+#~ msgstr ""
+#~ "Penodi sut dylai'r briodwedd ffenestr gael ei heffeithio: <ul> "
+#~ "<li><em>Dim Effaith:</em> Ni cheir y briodwedd ffenestr ei heffeithio, ac "
+#~ "felly defnyddir y triniaeth rhagosodol ar ei chyfer.  Bydd penodi hyn yn "
+#~ "atal gosodiadau ffenestr mwy generig rhag ddod i rym.</li> "
+#~ "<li><em>Gweithredu yn Gychwynnol:</em> Gosodir y briodwedd ffenestr i'r "
+#~ "gwerth penodol ar ôl i'r ffenestr gael ei chreu yn unig.  Ni fydd effaith "
+#~ "ar unrhyw newidiad bellach.</li> <li><em>Cofio:</em> Cofir gwerth y "
+#~ "briodwedd ffenestr, a gweithredir y gwerth diwethaf pob tro y creuir y "
+#~ "ffenestr.</li> <li><em>Gorfodi:</em> Gorfodir y briodwedd ffenestr i'r "
+#~ "gwerth penodol o hyd.</li> </ul>"
+
+#, fuzzy
+#~ msgid ""
+#~ "Specify how the window property should be affected:<ul><li><em>Do Not "
+#~ "Affect:</em> The window property will not be affected and therefore the "
+#~ "default handling for it will be used. Specifying this will block more "
+#~ "generic window settings from taking effect.</li><li><em>Force:</em> The "
+#~ "window property will be always forced to the given value.</"
+#~ "li><li><em>Force temporarily:</em> The window property will be forced to "
+#~ "the given value until it is hidden (this action will be deleted after the "
+#~ "window is hidden).</li></ul>"
+#~ msgstr ""
+#~ "Penodi sut dylai'r briodwedd ffenestr gael ei heffeithio: <ul> "
+#~ "<li><em>Dim Effaith:</em> Ni cheir y briodwedd ffenestr ei heffeithio, ac "
+#~ "felly defnyddir y triniaeth rhagosodol ar ei chyfer.  Bydd penodi hyn yn "
+#~ "atal gosodiadau ffenestr mwy generig rhag ddod i rym.</li> "
+#~ "<li><em>Gorfodi:</em> Gorfodir y briodwedd ffenestr i'r gwerth penodol o "
+#~ "hyd.</li> </ul>"
+
+#, fuzzy
+#~| msgid "On Main Window"
+#~ msgid "Unmanaged Window"
+#~ msgstr "Ar Brif Ffenestr"
+
+#~ msgid "0123456789-+,xX:"
+#~ msgstr "0123456789-+,xX:"
+
+#~ msgid "&Desktop"
+#~ msgstr "&Penbwrdd"
+
+#~ msgid "Smart"
+#~ msgstr "Deallus"
+
+#~ msgid "kcmkwinrules"
+#~ msgstr "kcmkwinrules"
+
+#~ msgid "Opaque"
+#~ msgstr "Afloyw"
+
+#~ msgid "Transparent"
+#~ msgstr "Tryloyw"
+
+#, fuzzy
+#~ msgid "&Moving/resizing"
+#~ msgstr "Symud/newid maint"
+
+#, fuzzy
+#~| msgid "Title:"
+#~ msgid "Tiled"
+#~ msgstr "Teitl:"
+
+#~ msgid ""
+#~ "For selecting all windows belonging to a specific application, selecting "
+#~ "only window class should usually work."
+#~ msgstr ""
+#~ "I ddewis pob ffenestr sy'n biau i gymhwysiad penodol, dylai ddewis "
+#~ "dosbarth ffenestr yn unig weithio fel rheol."
+
+#~ msgid "Use window &class (whole application)"
+#~ msgstr "Defnyddio &dosbarth ffenestr (holl gymhwysiad)"
+
+#, fuzzy
+#~ msgid ""
+#~ "For selecting a specific window in an application, both window class and "
+#~ "window role should be selected. Window class will determine the "
+#~ "application, and window role the specific window in the application; many "
+#~ "applications do not provide useful window roles though."
+#~ msgstr ""
+#~ "I ddewis ffenestr benodol mewn cymhwysiad, dylai ddewis dosbarth ffenestr "
+#~ "a swyddogaeth ffenestr.  Bydd dosbarth ffenestr yn pennu'r cymhwysiad, a "
+#~ "bydd swyddogaeth ffenestr yn pennu'r ffenestr benodol yn y cymhwysiad.  "
+#~ "Ond cofier: mae llawer o gymhwysiadau yn peidio â darparu swyddogaethau "
+#~ "ffenestr defnyddiol."
+
+#~ msgid "Use window class and window &role (specific window)"
+#~ msgstr ""
+#~ "Defnyddio dosbarth ffenestr a s&wyddogaeth ffenestr (ffenestr benodol)"
+
+#~ msgid ""
+#~ "With some (non-KDE) applications whole window class can be sufficient for "
+#~ "selecting a specific window in an application, as they set whole window "
+#~ "class to contain both application and window role."
+#~ msgstr ""
+#~ "Efo rhai cymhwysiadau (di-KDE) gall holl ddosbarth ffenestr fod yn "
+#~ "ddigonol i ddewis ffenestr benodol mewn cymhwysiad, gan eu bod nhw yn "
+#~ "gosod holl ddosbarth ffenestr i gynnwys swyddogaeth gymhwysiad a ffenestr."
+
+#~ msgid "Use &whole window class (specific window)"
+#~ msgstr "Defnyddio &holl ddosbarth ffenestr (ffenestr benodol)"
+
+#, fuzzy
+#~ msgid "Match also window &title"
+#~ msgstr "Cydweddu holl ddosbarth ffenestr"
+
+#~ msgid "Extra role:"
+#~ msgstr "Swyddogaeth ychwanegol:"
+
+#, fuzzy
+#~ msgid "Window &Extra"
+#~ msgstr "Ffenestr Ychwanegol"
+
+#~ msgid "&Geometry"
+#~ msgstr "&Geometreg"
+
+#~ msgid "&Preferences"
+#~ msgstr "&Hoffterau"
+
+#~ msgid "&No border"
+#~ msgstr "D&im ymyl"
+
+#~ msgid "0123456789"
+#~ msgstr "0123456789"
+
+#, fuzzy
+#~ msgid "W&orkarounds"
+#~ msgstr "Ffyrdd osgoi"
+
+#~ msgid "&Detect"
+#~ msgstr "&Darganfod"

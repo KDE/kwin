@@ -1,0 +1,2198 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Dutch "INCLUDE">
+]>
+<book id="windowspecific" lang="&language;">
+<bookinfo>
+<title
+>Vensterregels</title>
+<authorgroup>
+<author
+>&Lauri.Watts; &Lauri.Watts.mail;</author>
+<author>
+<personname
+><firstname
+>Delen van deze documentatie zijn geconverteerd uit de pagina in de KDE UserBase <ulink url=" https://userbase.kde.org/KWin Rules"
+>KWin-regels</ulink
+> en bijgewerkt door het documentatieteam van &kde; naar Plasma 5.8.</firstname
+> <surname
+></surname
+> </personname>
+      </author>
+&Niels.Reedijk;&Natalie.Koning;&Freek.de.Kruijf; 
+      </authorgroup>
+<legalnotice
+>&FDLNotice;</legalnotice>
+<date
+>2016-06-23</date>
+      <releaseinfo
+>Plasma 5.8</releaseinfo>
+<abstract>
+<para
+>Hier kunt u instellingen maken die specifiek voor een bepaald venster zijn.</para>
+      </abstract>
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>vensterinstellingen</keyword>
+<keyword
+>vensterplaatsing</keyword>
+<keyword
+>venstergrootte</keyword>
+</keywordset>
+</bookinfo>
+<chapter id="window-specific">
+<title
+>Vensterspecifieke instellingen: snel beginnen</title>
+
+<para
+>Hier kunt u instellingen maken die specifiek voor een bepaald venster zijn.</para>
+
+<note>
+<para
+>Denk eraan dat wijzigingen in de configuratie in deze module geen effect hebben als u &kwin;, de standaard windowmanager van &kde; niet gebruikt. Als u een andere windowmanager gebruikt, lees dan de daarbij behorende documentatie om te weten hoe venstergedrag veranderd kan worden.</para>
+</note>
+
+<para
+>Veel van de instellingen die u hier kunt wijzigen zijn hetzelfde als die globaal gewijzigd kunnen worden in de module <guilabel
+>Venstergedrag</guilabel
+> in de &systemsettings;-module, sommige zijn echter veel gedetailleerder.</para>
+
+<para
+>Het gaat om instellingen als geometrie, plaatsing, of een venster boven of onder andere vensters moet blijven, preventie van focusdiefstal en doorschijnendheid.</para>
+
+<para
+>U kunt deze module op twee manieren starten: vanaf de titelbalk van de toepassing die u wilt instellen of in &systemsettings;. Als u de module in &systemsettings; opstart, kunt u op de knop <guibutton
+>Nieuw...</guibutton
+> klikken om een vensterprofiel te creëren, en in het dialoogvenster dat dan verschijnt op de knop <guibutton
+>Venstereigenschappen detecteren</guibutton
+> om de vereiste informatie voor die applicatie deels te laten invullen.</para>
+
+<para
+>U kunt, wanneer u maar wilt, een opgeslagen profiel <guibutton
+>Wijzigen...</guibutton
+> of <guibutton
+>Verwijderen</guibutton
+> en de volgorde in de lijst veranderen met de knoppen <guibutton
+>Omhoog</guibutton
+> en <guibutton
+>Omlaag</guibutton
+>. Het veranderen van de volgorde heeft invloed op hoe ze toegepast worden.</para>
+
+</chapter>
+<!--userbase <timestamp
+>2012-03-09T20:50:14Z</timestamp
+>-->
+
+<!--userbase-content-->
+<chapter id="overview"
+><title
+>Overzicht</title
+> 
+<para
+>&kwin; stelt de eindgebruiker in staat om regels te definiëren om de attributen van het venster van een toepassing te wijzigen. </para>
+<para
+>Wanneer een toepassing wordt gestart kan deze bijvoorbeeld geforceerd worden om altijd op <emphasis
+>Virtueel bureaublad 2</emphasis
+> te draaien. Of om een fout in een toepassing kan heen gewerkt worden door het venster boven anderen te forceren. </para>
+<para
+>Stap-voor-stap <link linkend="examples"
+>voorbeelden</link
+> zijn beschikbaar samen met gedetailleerde informatie over het gebruik van <link linkend="kwin-rule-editor"
+>Bewerker van &kwin;regels</link
+> om <link linkend="window-matching"
+>Vensters overeen laten komen</link
+> te specificeren en <link linkend="window-attributes"
+>Vensterattributen</link
+>. </para>
+</chapter>
+<chapter id="examples-and-application-workaround"
+><title
+>Voorbeelden en hoe een toepassing om problemen heen kan werken</title
+> 
+<para
+>Er zijn gedetailleerde <link linkend="examples"
+>voorbeelden</link
+> meegeleverd die ook gebruikt kunnen worden als model voor uw eigen regels, om te zien wat er mogelijk is, . </para>
+<para
+>Er is een speciale pagina gewijd aan het aangeven van <link linkend="application-workarounds"
+>Om problemen bij toepassingen heen werken</link
+>. </para>
+</chapter>
+<chapter id="kwin-rule-editor"
+><title
+>Bewerker van KWin-regels</title
+> 
+<sect1 id="invoking-the-kwin-rule-editor"
+><title
+>Opstarten van de bewerker van KWin-regels</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-ordering.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Er zijn verschillende manieren om de bewerker van &kwin;-regels op te starten: </para>
+<itemizedlist>
+<listitem
+><para
+>Klik rechts op de titelbalk van een venster, kies <menuchoice
+><guimenu
+>Meer acties</guimenu
+><guimenuitem
+>Instellingen voor vensterbeheer...</guimenuitem
+></menuchoice
+> en in het venster <guilabel
+>Instellen</guilabel
+>, selecteer <guilabel
+>Vensterregels</guilabel
+> of</para
+></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem
+><para
+><menuchoice
+><guimenu
+>Systeeminstellingen</guimenu
+><guisubmenu
+>Venstergedrag</guisubmenu
+><guimenuitem
+>Vensterregels</guimenuitem
+></menuchoice
+></para
+></listitem>
+</itemizedlist>
+<para
+>Het hoofdvenster wordt gebruikt om: </para>
+<itemizedlist>
+<listitem
+><para
+>Regels met <guilabel
+>Nieuw...</guilabel
+>, <guilabel
+>Wijzigen...</guilabel
+> en <guilabel
+>Verwijderen</guilabel
+> te behandelen</para
+></listitem>
+<listitem
+><para
+>Regels delen met anderen via <guilabel
+>Importeren</guilabel
+> en <guilabel
+>Exporteren</guilabel
+></para
+></listitem>
+<listitem
+><para
+>Verzeker gewenste <link linkend="rule-evaluation"
+>evaluatie van regels</link
+> met <guilabel
+>Omhoog</guilabel
+> en <guilabel
+>Omlaag</guilabel
+></para
+></listitem>
+</itemizedlist>
+<sect2 id="rule-evaluation"
+><title
+>Evaluatie van regels</title
+> 
+<para
+>Wanneer een toepassing start (of de regels zijn gewijzigd), evalueert &kwin; de regels vanaf de top van de lijst naar onder. Voor alle regels die overeenkomen met een venster worden de gezamenlijke set attributen op het venster toegepast, daarna wordt het venster getoond. </para>
+<para
+>Als er twee of meer overeenkomende regels hetzelfde attribuut inschakelen, dan wordt de instelling in de <emphasis
+>eerste</emphasis
+> regel in de lijst gebruikt. </para>
+<para
+><tip
+><para
+>U kunt kindvensters voor de toepassing aanpassen door de meer beperkende regels als eerste te plaatsen - zie het voorbeeld <link linkend="application-on-all-desktops-and-handle-one-child-window-uniquely"
+>Venster van Kopete en Kopete-chat</link
+>.</para
+></tip>
+</para>
+</sect2>
+</sect1>
+<sect1 id="rule-editor"
+><title
+>Regeleditor</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>De bewerker bestaat uit vier tabbladen: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Venster overeen laten komen</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Grootte &amp; positie</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Plaatsing &amp; toegang</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Uiterlijk &amp; reparaties</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Zoals de naam aangeeft wordt <guilabel
+>Venster overeen laten komen</guilabel
+> gebruikt om criteria te specificeren om een of meer vensters overeen te laten komen. De andere drie tabbladen worden gebruikt om de attributen van de overeenkomende vensters te veranderen. </para>
+<para
+><tip
+><para
+>Panelen kunnen ook worden beïnvloed.</para
+></tip>
+</para>
+<sect2 id="window-matching"
+><title
+>Venster overeen laten komen</title
+> 
+<para
+>Elke vensterregel heeft gebruikergespecificeerde criteria voor <link linkend="window-matching"
+>Vensters overeen laten komen</link
+>. &kwin; gebruikt de criteria om te bepalen of de regel van toepassing is voor een toepassing. </para>
+</sect2>
+<sect2 id="window-attributes"
+><title
+>Attributen van vensters</title
+> 
+<para
+>Samen met criteria voor Venstersovereen laten komen, heeft elke vensterregel een set <link linkend="window-attributes"
+>Attributen van vensters</link
+>. De attributen overschrijven de overeenkomstige instellingen van de toepassing en worden toegepast voordat het venster wordt weergegeven door &kwin;. </para>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="window-matching0"
+><title
+>Venster overeen laten komen</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Het tabblad <guilabel
+>Vensters overeen laten komen</guilabel
+> wordt gebruikt om de criteria te specificeren die &kwin; gebruikt bij de evaluatie of de regel voor een gegeven venster van toepassing is. </para>
+<para
+>Nul (komt overeen met elk venster) of meer van de volgende kunnen worden gespecificeerd: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Vensterklasse (toepassing)</guilabel
+> - overeenkomen met de klasse.<itemizedlist
+> <listitem
+><para
+><guilabel
+>Gehele vensterklasse overeen laten komen</guilabel
+> - inclusief het overeen laten komen van de secundaire klasse.</para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Vensterrol</guilabel
+> - beperkt de overeenkomst tot de functie van het venster (&eg; een <emphasis
+>hoofdvenster</emphasis
+>, een <emphasis
+>chat-venster</emphasis
+>, &etc;)</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Venstertypen</guilabel
+> - beperkt de overeenkomst tot het type venster: <guilabel
+>Normaal venster</guilabel
+>, <guilabel
+>Dialoogvenster</guilabel
+>, &etc;</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Venstertitel</guilabel
+> - beperk de overeenkomst tot de titel van het venster.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Machine (hostnaam)</guilabel
+> - beperk de overeenkomst tot de hostnaam geassocieerd met het venster.</para
+></listitem>
+</itemizedlist>
+<para
+><tip
+><para
+>Terwijl het mogelijk is handmatig de bovenstaande informatie in te voeren, is de methode met voorkeur om de knop <guilabel
+>Venstereigenschappen detecteren</guilabel
+>.</para
+></tip>
+</para>
+<para
+>Voor elk veld kunnen de volgende operators worden toegepast op de veldwaarde: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Onbelangrijk</guilabel
+> - het veld negeren.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Exacte overeenkomst</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Deels overeenkomen</guilabel
+></para
+></listitem>
+</itemizedlist>
+<para
+><note
+><para
+>Beide <guilabel
+>Exacte overeenkomst</guilabel
+> an <guilabel
+>Deels overeenkomen</guilabel
+> implementeren overeenkomen zonder onderscheid tussen hoofd- en kleine letters. <emphasis
+>AB</emphasis
+> bijvoorbeeld komt overeen met de tekenreeks <emphasis
+>AB</emphasis
+>, <emphasis
+>ab</emphasis
+>, <emphasis
+>Ab</emphasis
+> en <emphasis
+>aB</emphasis
+>.</para
+></note>
+</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Reguliere expressie</guilabel
+> - de reguliere expressies van Qt zijn geïmplementeerd - zie <ulink url="https://doc.qt.io/qt-5/qregexp.html"
+>patroonovereenkomst met reguliere expressies</ulink
+>.</para
+></listitem>
+</itemizedlist>
+<sect1 id="detect-window-properties"
+><title
+>Venstereigenschappen detecteren</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-detect-window.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>De functie <guilabel
+>Venstereigenschappen detecteren</guilabel
+> maakt het proces van invoeren van de overeenkomstcriteria eenvoudiger. </para>
+<orderedlist>
+<listitem
+><para
+>Voor de toepassing waarvoor u een regel wilt aanmaken, start u de toepassing.</para
+></listitem>
+<listitem
+><para
+>Stel vervolgens in het tabblad <guilabel
+>Vensters overeen laten komen</guilabel
+> het aantal seconden vertraging in alvorens de functie <guilabel
+>Venstereigenschappen detecteren</guilabel
+> start. De standaard is nul seconden.</para
+></listitem>
+<listitem
+><para
+>Klik op <guilabel
+>Venstereigenschappen detecteren</guilabel
+> en</para
+></listitem>
+<listitem
+><para
+>Wanneer de muiscursor verandert in een kruisje, plaats het in het toepassingsvenster (niet de titelbalk) en klik links.</para
+></listitem>
+<listitem
+><para
+>U krijgt een nieuw venster met informatie over het geselecteerde venster. Selecteer de gewenste velden:<itemizedlist>
+<listitem
+><para
+><guilabel
+>Secundaire klassenaam</guilabel
+> - sommige toepassingen hebben een secundaire klassenaam. Deze waarde kan gebruikt worden om vensters door deze waarde te beperken.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Vensterrol</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Venstertype</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Venstertitel</guilabel
+></para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+</orderedlist>
+<para
+>Klik op de knop <guilabel
+>OK</guilabel
+> om opnieuw de criteria <guilabel
+>Venster overeen laten komen</guilabel
+>. </para>
+<para
+>Door een combinatie van informatie kan een regel van toepassing zijn op een gehele toepassing (door <guilabel
+>Klasse</guilabel
+>) of tot een specifiek <guilabel
+>Type</guilabel
+> venster in de <guilabel
+>Klasse</guilabel
+> - zeg een <guilabel
+>Werkbalk</guilabel
+>. </para>
+</sect1>
+</chapter>
+<chapter id="window-attributes1"
+><title
+>Attributen van vensters</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-window-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>De attributen die ingesteld kunnen worden zijn gegroepeerd per functie in drie tabbladen: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Grootte &amp; positie</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Plaatsing &amp; toegang</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Uiterlijk &amp; reparaties</guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Elk attribuut heeft een set parameters die zijn dispositie bepalen. </para>
+<sect1 id="parameters"
+><title
+>Parameters</title>
+<para
+>Elk attribuut accepteert minimaal een van de volgende parameters. Bovendien staan attribuut-specifieke argumenten in een lijst in elke <link linkend="attributes"
+>attribuut</link
+>definitie. </para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Niet aanpassen</emphasis
+></term>
+    <listitem>
+    <para
+>Verzekert dat een volgende regel, die overeenkomt met het venster, het attribuut niet beïnvloedt.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Initieel toepassen</emphasis
+></term>
+    <listitem>
+    <para
+>Start het venster met het attribuut en sta het toe om bij uitvoering te wijzigen.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Onthouden</emphasis
+></term>
+    <listitem>
+    <para
+>Gebruik de instelling van het attribuut zoals gedefinieerd in de regel en indien bij uitvoering gewijzigd, sla de nieuwe waarde in plaats daarvan op en gebruik deze.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Bekrachtigd</emphasis
+></term>
+    <listitem>
+    <para
+>De instelling kan tijdens uitvoeren niet gewijzigd worden.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Nu toepassen, tijdelijk afdwingen</emphasis
+></term>
+    <listitem>
+    <para
+>De instelling één keer toepassen/afdwingen en de instelling van het attribuut verwijderen. Het verschil tussen de twee is bij uitvoering, <guilabel
+>Nu toepassen</guilabel
+> staat toe het attribuut te wijzigen en <guilabel
+>Tijdelijk afdwingen</guilabel
+> verbiedt het veranderen totdat alle betrokken vensters zijn gesloten.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>Voor <guilabel
+>Nu toepassen</guilabel
+>, als de regel geen andere attributen instelt, wordt de regel na evaluatie verwijderd terwijl bij <guilabel
+>Tijdelijk afdwingen</guilabel
+>, de regel wordt verwijderd nadat het laatst betrokken venster sluit.</para
+></warning>
+</para>
+</sect1>
+<sect1 id="attributes"
+><title
+>Attributen</title>
+<para
+><tip
+><para
+>De knop <guilabel
+>Venstereigenschappen detecteren</guilabel
+> vult specifieke waarden van attributen in - voor meer informatie zie <link linkend="window-matching"
+>Window Matching</link
+>. De waarden van hoogte en breedte van het attribuut <guilabel
+>Grootte</guilabel
+> wordt ingesteld op de hoogte en breedte van het gedetecteerde venster.</para
+></tip>
+</para>
+<para
+><tip
+><para
+>De argumenten <guilabel
+>Yes/No</guilabel
+> worden gebruikt om attributen aan of uit te zetten. Zachtheid met grammatica helpt om te verstaan hoe een instelling zal worden verwerkt. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Het attribuut <guilabel
+>Taakbalk overslaan</guilabel
+>, indien ingesteld op <guilabel
+>No</guilabel
+> betekent sla de taakbalk niet over. Met andere woorden, toon het venster in de taakbalk. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+></para
+></tip>
+</para>
+<sect2 id="size--position"
+><title
+>Grootte &amp; positie</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Positie</emphasis
+></term>
+    <listitem>
+    <para
+>Positie van de linker bovenhoek van het venster op de gespecificeerde x,y-coördinaat.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Het beginpunt van &kwin;, (0,0), is linksboven op het bureaublad.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Grootte</emphasis
+></term>
+    <listitem>
+    <para
+>De breedte en hoogte van het venster.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Horizontaal gemaximaliseerd, verticaal gemaximaliseerd</emphasis
+></term>
+    <listitem>
+    <para
+>Deze attributen worden gebruikt om het vensterattribuut horizontaal maximum/horizontaal minimum om te schakelen.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Bureaublad, Activiteit, Scherm</emphasis
+></term>
+    <listitem>
+    <para
+>Plaats het venster op het gespecificeerde <emphasis
+>(virtuele) bureaublad</emphasis
+>, <emphasis
+>Activiteit</emphasis
+> of <emphasis
+>Scherm</emphasis
+>. Gebruik <guilabel
+>Alle bureaubladen</guilabel
+> om het venster op alle <emphasis
+>Virtuele bureaubladen</emphasis
+> te plaatsen.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Volledig scherm, Geminimaliseerd, Opgerold</emphasis
+></term>
+    <listitem>
+    <para
+>Schakel het vensterattribuut Volledig scherm, Minimaliseren en Oprollen om. Een venster kan bijvoorbeeld geminimaliseerd worden of als het geminimaliseerd is gestart, kan het gedwongen worden tot niet.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Het attribuut Gemaximaliseerd wordt geëmuleerd door zowel <guilabel
+>Horizontaal gemaximaliseerd</guilabel
+> als <guilabel
+>Verticaal gemaximaliseerd</guilabel
+> of <guilabel
+>Initiële plaatsing</guilabel
+> met het argument <guilabel
+>Gemaximaliseerd</guilabel
+>.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Initiële plaatsing</emphasis
+></term>
+    <listitem>
+    <para
+>Ga over de globale vensterplaatsingsstrategie heen met een van de volgende:</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Standaard</guilabel
+> - gebruik de globale vensterplaatsingsstrategie.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Geen plaatsing</guilabel
+> - linksboven hoek.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Minimale overlapping</guilabel
+> - plaats waar geen ander venster bestaat.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Gemaximaliseerd</guilabel
+> - start het venster gemaximaliseerd.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Schuin achter elkaar</guilabel
+> - trapvormig-op-titel.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Gecentreerd</guilabel
+> - centrum van het bureaublad.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Willekeurig</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>In hoek linksboven</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Onder de muis</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Op het hoofdvenster</guilabel
+> - beperk plaatsing van het dochtervenster tot de randen van het oudervenster.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Aangevraagde geometrie negeren</emphasis
+></term>
+    <listitem>
+    <para
+>Wissel tussen acceptatie of negeren van de door het venster gevraagde positie. Om conflicten tussen de standaard plaatsingsstrategie en de vraag van het venster te vermeiden, de plaatsingsstrategie wordt genegeerd wanneer de vraag van het venster wordt geaccepteerd.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Minimum grootte, maximum grootte</emphasis
+></term>
+    <listitem>
+    <para
+>De minimum en maximum grootte toegestaan voor het venster.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Beperkingen van afmetingen naleven</emphasis
+></term>
+    <listitem>
+    <para
+>Wissel om de door het venster gevraagde beeldverhouding vast te houden of het <emphasis
+>basisincrement</emphasis
+>. Om dit attribuut te begrijpen is enige achtergrond vereist. In het kort, vensters moeten van de Windowbeheerder een basisincrement vragen: het minimum aantal <emphasis
+>hoogte</emphasis
+> x <emphasis
+>breedte</emphasis
+> pixels per verzoek om wijziging grootte. Dit is typisch 1x1. Andere vensters echter, bijvoorbeeld terminalemulators of editors, gebruiken vaste lettertypen en vragen hun basisincrement volgens de grootte van één teken.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="arrangement--access"
+><title
+>Plaatsing &amp; toegang</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Boven/onder houden</emphasis
+></term>
+    <listitem>
+    <para
+>Wissel tussen het venster boven/onder alle anderen.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Automatisch groeperen met identieken</emphasis
+></term>
+    <listitem>
+    <para
+>Wissel de groepering (ook bekend als <emphasis
+>tabbladen</emphasis
+>) van vensters.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Automatisch groeperen op de voorgrond</emphasis
+></term>
+    <listitem>
+    <para
+>Wissel om het venster actief te maken wanneer het is toegevoegd aan de huidige Autogroep.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Automatisch groeperen per ID</emphasis
+></term>
+    <listitem>
+    <para
+>Maak een groep via een gebruikergedefinieerde ID. Meer dan één regel kan dezelfde ID delen om toe te staan dat ogenschijnlijk niet gerelateerde vensters worden gegroepeerd.</para>
+     </listitem>
+  </varlistentry>
+
+  <varlistentry
+><term
+><emphasis role="bold"
+>Niet in taakbalk</emphasis
+></term>
+    <listitem>
+    <para
+>Wissel om het venster in de taakblak te tonen of niet.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Niet in pager</emphasis
+></term>
+    <listitem>
+    <para
+>Wissel of het venster in de systeembalk getoond wordt of niet.</para>
+     </listitem>
+  </varlistentry>
+    </variablelist>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Niet in omschakelaar</emphasis
+></term>
+    <listitem>
+    <para
+>Wissel of het venster in de lijst van<guilabel
+>ALT+TAB</guilabel
+> getoond wordt of niet.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Sneltoets</emphasis
+></term>
+    <listitem>
+    <para
+>Wijs en sneltoets naar het venster toe. Wanneer op <guilabel
+>Bewerken...</guilabel
+> wordt geklikt, worden extra instructies gepresenteerd.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="appearance--fixes"
+><title
+>Uiterlijk &amp; reparaties</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Geen titelbalk en rand</emphasis
+></term>
+    <listitem>
+    <para
+>Wissel of de titelbalk en frame rond het venster wordt getoond of niet.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Kleurenschema van titelbalk</emphasis
+></term>
+    <listitem>
+    <para
+>Een kleurenschema voor de titelbalk van het venster selecteren.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Actieve/inactieve ondoorzichtigheid</emphasis
+></term>
+    <listitem>
+    <para
+>Wanneer het venster actief/inactief is, stel zijn ondoorzichtigheid in op het gespecificeerde percentage.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+><guilabel
+>Actieve/Inactieve ondoorzichtigheid</guilabel
+> kan alleen beïnvloed worden wanneer <guilabel
+>Bureabladeffecten</guilabel
+> zijn ingeschakeld.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Voorkomen van afpakken van focus</emphasis
+></term>
+    <listitem>
+    <para
+>Wanneer een venster focus wil, bestuur dan op een schaal (van <guilabel
+>Geen</guilabel
+> tot <guilabel
+>Extreem</guilabel
+>) of het verzoek wordt toegekend en plaats het boven alle andere vensters of negeer het verzoek (met de mogelijkheid dat het venster achter andere vensters blijft verborgen):</para>
+<itemizedlist>
+<listitem
+><para
+>Geen - geef focus aan het venster.</para
+></listitem>
+<listitem
+><para
+>Laag</para
+></listitem>
+<listitem
+><para
+>Normaal</para
+></listitem>
+<listitem
+><para
+>Hoog</para
+></listitem>
+<listitem
+><para
+>Extreem - Het verzoek om focus van het venster wordt niet toegekend. Focus wordt alleen toegekend als de muis dat expliciet vraagt.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Zie <guilabel
+>Focus accepteren</guilabel
+> om een venster alleen-lezen te maken - accepteer geen invoer van het toetsenbord.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Focus accepteren</emphasis
+></term>
+    <listitem>
+    <para
+>Wissel of het venster invoer van het toetsenbord accepteert of niet.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Globale snelkoppelingen negeren</emphasis
+></term>
+    <listitem>
+    <para
+>Wissel of globale sneltoetsen worden genegeerd (zoals gedefinieerd door <menuchoice
+><guimenu
+>Systeeminstellingen</guimenu
+><guisubmenu
+>Sneltoetsen en gebaren</guisubmenu
+><guimenuitem
+>Globale sneltoetsen</guimenuitem
+></menuchoice
+> of door <varname
+>kcmshell5 keys</varname
+> in de <guilabel
+>konsole</guilabel
+>) uit te voeren terwijl het venster actief.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Af te sluiten</emphasis
+></term>
+    <listitem>
+    <para
+>Wissel om de knop <guilabel
+>Sluiten</guilabel
+> op de titelbalk te tonen of niet.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Een terminalvenster kan door de eindgebruiker nog steeds worden gesloten door de shell-sessie te sluiten, echter <guilabel
+>Focus accepteren</guilabel
+> gebruiken om toetsenbordinvoer uit te schakelen zal het moeilijker maken om het venster te sluiten.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Venstertype</emphasis
+></term>
+    <listitem>
+    <para
+>Wijzig het venster naar een ander type en neem de karakteristieken van dat venster over:</para>
+<itemizedlist>
+<listitem
+><para
+>Normaal venster</para
+></listitem>
+<listitem
+><para
+>Dialoogvenster</para
+></listitem>
+<listitem
+><para
+>Hulpmiddelenvenster</para
+></listitem>
+<listitem
+><para
+>Dock (paneel)</para
+></listitem>
+<listitem
+><para
+>Werkbalk</para
+></listitem>
+<listitem
+><para
+>Afgescheurd menu</para
+></listitem>
+<listitem
+><para
+>Opstartscherm</para
+></listitem>
+<listitem
+><para
+>Bureaublad</para
+></listitem>
+<listitem
+><para
+>Losstaande menubalk</para
+></listitem>
+<listitem
+><para
+>On Screen Display</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>Met voorzichtigheid gebruiken omdat ongewenste resultaten geïntroduceerd kunnen worden. Een <guilabel
+>Splash-scherm</guilabel
+> wordt door &kwin; automatisch gesloten wanneer er op geklikt wordt.</para
+></warning>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Compositing blokkeren</emphasis
+></term>
+    <listitem>
+    <para
+>Wissel om compositing uit te schakelen terwijl het venster <emphasis
+>bestaat</emphasis
+>. Als compositing is ingeschakeld en de regel specificeert om compositing uit te schakelen, terwijl <emphasis
+>elk</emphasis
+> overeenkomstig venster bestaat, dan zal compositing worden uitgeschakeld. Compositing wordt opnieuw ingeschakeld wanneer het laatste overeenkomstige venster eindigt.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+</sect1>
+</chapter>
+<chapter id="examples"
+><title
+>Voorbeelden</title>
+<para
+><note
+><para
+>Het eerste voorbeeld detailleert alle noodzakelijke stappen om de regels aan te maken. Om deze pagina een hanteerbare grootte te houden, geven volgende voorbeelden alleen de stappen specifiek voor het voorbeeld.</para
+></note>
+</para>
+<para
+><note
+><para
+>Het attribuut <guilabel
+>Pager</guilabel
+> refereert naar de <guilabel
+>Virtuele bureaubladbeheerder</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></note>
+</para>
+<sect1 id="pin-a-window-to-a-desktop-and-set-other-attributes"
+><title
+>Pint een venster op een bureaublad en stelt andere attributen in</title>
+<para
+>Pint &akregator; op <emphasis
+>Virtueel bureaublad 2</emphasis
+>. Start de toepassing met een voorkeurgrootte en positie. Gebruik voor elk attribuut de <link linkend="parameters"
+>parameter</link
+> <guilabel
+>Initieel toepassen</guilabel
+> zodat er overheen gegaan kan worden wanneer het actief is. </para>
+<para
+>De &kwin;-regel wordt als volgt gemaakt: </para>
+<orderedlist>
+<listitem
+><para
+>Start &akregator; op <emphasis
+>bureaublad 2</emphasis
+>, stel de gewenste grootte en positie in: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-fav.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik rechts op de titelbalk en selecteer <menuchoice
+><guimenu
+>Meer acties</guimenu
+><guimenuitem
+>Instellingen voor vensterbeheer...</guimenuitem
+></menuchoice
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="config-win-behavior.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Selecteer <guilabel
+>Vensterregels</guilabel
+> in de linker kolom en klik op <guilabel
+>Nieuw...</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Het venster <guilabel
+>Vensterspecifieke instellingen bewerken</guilabel
+> wordt getoond. <guilabel
+>Venster overeen laten komen</guilabel
+> is het standaard tabblad: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-init.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik op <guilabel
+>Venstereigenschappen detecteren</guilabel
+> met <guilabel
+>0s vetraging</guilabel
+> dan zal de cursor onmiddellijk veranderen in een kruisdraad. Klik ergens in het venster van &akregator; (maar niet de titelbalk). De venstercriteria worden getoond. Laat alleen primaire klassenamen overeenkomen en laat dus de keuzevakjes inactief - voor extra informatie zie <link linkend="window-matching"
+>Venster overeen laten komen</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akgregator-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klikken op <guilabel
+>OK</guilabel
+> doet het vorige venster vullen met de resultaten in het tabblad <guilabel
+>Venster overeen laten komen</guilabel
+>. Voer een betekenisvolle tekst in in het veld <guilabel
+>Beschrijving</guilabel
+> (wat getoond wordt in het venster <guilabel
+>KWin-regel</guilabel
+>): <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-ready-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Schakel de vensterattributen: <guilabel
+>Positie</guilabel
+>, <guilabel
+>Grootte</guilabel
+> en <guilabel
+>Bureaublad</guilabel
+>. De initiële waarde worden ingesteld door <guilabel
+>Venstereigenschappen</guilabel
+> waar overheen gegaan kan worden: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Op <guilabel
+>OK</guilabel
+> klikken in het vorige venster geeft de controle terug aan het hoofdvenster van <guilabel
+>KWin-regels</guilabel
+>. De nieuwe regel met zijn beschrijving wordt getoond: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main-n-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik op <guilabel
+>OK</guilabel
+> om het venster te sluiten.</para
+></listitem>
+<listitem
+><para
+>Gereed.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="application-on-all-desktops-and-handle-one-child-window-uniquely"
+><title
+>Toepassing op alle bureaubladen en behandel één dochtervenster uniek</title>
+<para
+>Toon &kopete; en zijn dochtervensters op alle bureaubladen, behalve de gespreksvensters, en sla het systeemvak en pager over. Behandel gespreksvensters als het hoofdvenster maar toon ze in het systeemvak. </para>
+<para
+>Voor elk attribuut, gebruik de <link linkend="parameters"
+>parameter</link
+> <guilabel
+>Afdwingen</guilabel
+> zodat er niet overheen gegaan kan worden. </para>
+<para
+>Om het bovenstaande te implementeren moeten twee regels aangemaakt worden: </para>
+<orderedlist>
+<listitem
+><para
+>Een regel voor <guilabel
+>Kopete Chat</guilabel
+> en</para
+></listitem>
+<listitem
+><para
+>Een regel voor &kopete;</para
+></listitem>
+</orderedlist>
+<para
+>De criteria voor overeenkomst met regels van <guilabel
+>Kopete-chat</guilabel
+> is meer restrictief dan de regel van <emphasis
+>Kopete</emphasis
+> omdat het moet overeenkomen met een specifieke vensterregel: het chat-Venster. Vanwege verwerking van <link linkend="rule-evaluation"
+>evaluatie van regels</link
+> moet de regel <guilabel
+>Kopete-chat</guilabel
+> vooraf gaan aan de &kopete;-regel in de <link linkend="kopete-kwin-rule-list"
+>Lijst met KWin-regels voor Kopete</link
+>. </para>
+<sect2 id="kopete-chat-rule"
+><title
+>Kopete gespreksregel</title>
+<para
+>Veronderstel dat er een venster voor <guilabel
+>Kopete-chat</guilabel
+> open is: </para>
+<orderedlist>
+<listitem
+><para
+>Gebruik <guilabel
+>Venstereigenschappen detecteren</guilabel
+> en selecteer het venster <guilabel
+>Kopete-chat</guilabel
+>. Activeer de vakjes <guilabel
+>Vensterrol</guilabel
+> om de criteria voor het maken van chat-vensters te beperken - voor extra informatie zie <link linkend="window-matching"
+>Venster overeen laten komen</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klikken op <guilabel
+>OK</guilabel
+> doet het vorige venster vullen met de resultaten in het tabblad <guilabel
+>Venster overeen laten komen</guilabel
+>. Voer een betekenisvolle tekst in in het vak <guilabel
+>Beschrijving</guilabel
+>. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete-chat.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Schakel de volgende attributen in: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik door om het invoeren van de regel te voltooien.</para
+></listitem>
+</orderedlist>
+<para
+><note
+><para
+>Het attribuut <guilabel
+>Taakbalk overslaan</guilabel
+> wordt ingesteld op <guilabel
+>Nee</guilabel
+> om het venster in de taakbalk te tonen wat losjes zich vertaalt in: <emphasis
+>nee</emphasis
+> <emphasis
+>niet doen</emphasis
+> <emphasis
+>taakbalk overslaan</emphasis
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>.</para
+></note>
+</para>
+</sect2>
+<sect2 id="kopete-rule"
+><title
+>Kopete-regel</title>
+<para
+>Veronderstel dat &kopete; open is: </para>
+<orderedlist>
+<listitem
+><para
+>Gebruik <guilabel
+>Venstereigenschappen detecteren</guilabel
+> en selecteer het venster van &kopete;. Laat alleen primaire klassenamen overeenkomen en laat dus de keuzevakjes inactief - voor extra informatie zie <link linkend="window-matching"
+>Venster overeen laten komen</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klikken op <guilabel
+>OK</guilabel
+> doet het vorige venster vullen met de resultaten in het tabblad <guilabel
+>Venster overeen laten komen</guilabel
+>. Voer een betekenisvolle tekst in in het vak <guilabel
+>Beschrijving</guilabel
+>. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Schakel de volgende attributen in: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik door om het invoeren van de regel te voltooien.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="kopete-kwin-rule-list"
+><title
+>Lijst met KWin-regels van Kopete</title>
+<para
+>Zoals gemeld, moet vanwege verwerking van <link linkend="rule-evaluation"
+>evaluatie van regels</link
+> de <guilabel
+>Kopete-chat</guilabel
+>-regel vooraf gaan aan de &kopete;-regel: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-kopete-rules.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+</sect1>
+<sect1 id="suppress-a-window-from-showing-on-pager"
+><title
+>Onderdruk een venster van tonen op de pager</title>
+<para
+><guilabel
+>KNotes</guilabel
+> staat nu niet toe dat zijn notities niet in de pager verschijnen, deze tekortkoming wordt gemakkelijk opgelost met een regel. </para>
+<para
+>Aannemend dat er een <emphasis
+>plaknotitie</emphasis
+>-venster beschikbaar is: </para>
+<orderedlist>
+<listitem
+><para
+>Gebruik <guilabel
+>Venstereigenschappen detecteren</guilabel
+> en selecteer een venster voor <emphasis
+>plaknotities</emphasis
+>. Laat alleen primaire klassenamen overeenkomen en laat dus de keuzevakjes inactief - voor extra informatie zie <link linkend="window-matching"
+>Venster overeen laten komen</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klikken op <guilabel
+>OK</guilabel
+> doet het vorige venster vullen met de resultaten in het tabblad <guilabel
+>Venster overeen laten komen</guilabel
+>. Voer een betekenisvolle tekst in in het vak <guilabel
+>Beschrijving</guilabel
+>. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-knotes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Schakel het attribuut <guilabel
+>Pager overslaan</guilabel
+> in met de <link linkend="parameters"
+>parameter</link
+> <guilabel
+>Afdwingen</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik door om het invoeren van de regel te voltooien.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="force-a-window-to-the-top"
+><title
+>Dwing een venster naar de top</title>
+<para
+>Om een actief venster naar de top te brengen, stel zijn attribuut <guilabel
+>Voorkom het stelen van focus</guilabel
+> in op <guilabel
+>geen</guilabel
+>, typisch samengaand met de <link linkend="parameters"
+>parameter</link
+> <guilabel
+>Afdwingen</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="focus-stealing-pop2top-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect1>
+<sect1 id="multiple-rules-per-application"
+><title
+>Meerdere regels per toepassing</title>
+<para
+><application
+>Thunderbird</application
+> heeft verscheidene van elkaar verschillende dochtervensters. Bijvoorbeeld: </para>
+<itemizedlist>
+<listitem
+><para
+>Pin het hoofdvenster van <application
+>Thunderbird</application
+> vast op het <emphasis
+>Virtuele bureaublad 1</emphasis
+> met een specifieke grootte en locatie op het bureaublad.</para
+></listitem>
+<listitem
+><para
+>Sta toe dat het compositievenster van <application
+>Thunderbird</application
+> zich bevindt op elk bureaublad en, indien actief, dwing focus af en breng het naar the top van alle vensters.</para
+></listitem>
+<listitem
+><para
+>Breng de herinnering van <application
+>Thunderbird</application
+> naar de top en geef het geen focus zodat het niet per ongeluk wordt verwijderd.</para
+></listitem>
+</itemizedlist>
+<para
+>Elk criterium voor overeenkomen met regels is voldoende restrictief en dus is hun volgorde in het hoofdvenster van &kwin; niet belangrijk om de <link linkend="rule-evaluation"
+>evaluatie van regels</link
+> te beïnvloeden. </para>
+<sect2 id="thunderbird---main"
+><title
+>Thunderbird - hoofdvenster</title>
+<para
+>Veronderstel dat het venster <guilabel
+>Thunderbird hoofdvenster</guilabel
+> open is, de juiste afmetingen heeft en gepositioneerd om te passen: </para>
+<orderedlist>
+<listitem
+><para
+>Gebruik <guilabel
+>Venstereigenschappen detecteren</guilabel
+> en selecteer het venster <guilabel
+>Thunderbird hoofdvenster</guilabel
+>. Activeer de vakjes <guilabel
+>Vensterrol</guilabel
+> om de criteria voor het maken van het hoofdvenster te beperken - voor extra informatie zie <link linkend="window-matching"
+>Venster overeen laten komen</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klikken op <guilabel
+>OK</guilabel
+> doet het vorige venster vullen met de resultaten in het tabblad <guilabel
+>Venster overeen laten komen</guilabel
+>. Voer een betekenisvolle tekst in in het vak <guilabel
+>Beschrijving</guilabel
+>. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Schakel de volgende attributen in: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik door om het invoeren van de regel te voltooien.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---composer"
+><title
+>Thunderbird - maken van een e-mail met Thunderbird</title>
+<para
+>Veronderstel dat er een venster voor het <guilabel
+>Maken van een  e-mail met Thunderbird</guilabel
+> open is: </para>
+<orderedlist>
+<listitem
+><para
+>Gebruik <guilabel
+>Venstereigenschappen detecteren</guilabel
+> en selecteer het venster <guilabel
+>Maken van een  e-mail met Thunderbird</guilabel
+>. Activeer de vakjes <guilabel
+>Vensterrol</guilabel
+> en <guilabel
+>Venstertype</guilabel
+> om de criteria voor het maken vensters te beperken - voor extra informatie zie <link linkend="window-matching"
+>Venster overeen laten komen</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klikken op <guilabel
+>OK</guilabel
+> doet het vorige venster vullen met de resultaten in het tabblad <guilabel
+>Venster overeen laten komen</guilabel
+>. Voer een betekenisvolle tekst in in het vak <guilabel
+>Beschrijving</guilabel
+>. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-compose.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Schakel de volgende attributen in: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik door om het invoeren van de regel te voltooien.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---reminder"
+><title
+>Thunderbird - herinnering</title>
+<para
+>Veronderstel dat een <guilabel
+>Thunderbird herinneringsvenster</guilabel
+> open is: </para>
+<orderedlist>
+<listitem
+><para
+>Gebruik <guilabel
+>Venstereigenschappen detecteren</guilabel
+> en selecteer het <guilabel
+>Thunderbird herinneringsvenster</guilabel
+>. Activeer de vakjes <guilabel
+>Secundaire klassenaam</guilabel
+> en <guilabel
+>Venstertype</guilabel
+> om de criteria voor het maken vensters te beperken - voor extra informatie zie <link linkend="window-matching"
+>Venster overeen laten komen</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klikken op <guilabel
+>OK</guilabel
+> doet het vorige venster vullen met de resultaten in het tabblad <guilabel
+>Venster overeen laten komen</guilabel
+>. Voer een betekenisvolle tekst in in het vak <guilabel
+>Beschrijving</guilabel
+>. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-reminder.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Schakel de volgende attributen in: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik door om het invoeren van de regel te voltooien.</para
+></listitem>
+</orderedlist>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="application-workarounds"
+><title
+>Om problemen bij toepassingen heen werken</title>
+<para
+>Hieronder zijn voorbeelden om om zich niet goed gedragende toepassingen heen te werken. </para>
+<para
+><tip
+><para
+>Als u niet bekend bent met het maken van regels voor &kwin;, kijk dan naar dit <link linkend="pin-a-window-to-a-desktop-and-set-other-attributes"
+>gedetailleerde voorbeeld</link
+> om uw nieuwe regel op te baseren.</para
+></tip>
+</para>
+<sect1 id="full-screen-re-size-error"
+><title
+>Fout bij volledig scherm herstellen</title>
+<para
+>&Emacs; en <guilabel
+>gVim</guilabel
+> kunnen, indien gemaximaliseerd (modus volledig scherm) en onder bepaalde condities, problemen ondervinden met wijziging van grootte - zie <ulink url="https://bugs.kde.org/show_bug.cgi?id=252314"
+>Emacs window resizes ...</ulink
+> Een &kwin;-regel werkt om dit probleem heen. </para>
+<para
+>Veronderstel dat er een venster voor &Emacs; open is: </para>
+<orderedlist>
+<listitem
+><para
+>Gebruik <guilabel
+>Venstereigenschappen detecteren</guilabel
+> en selecteer het venster van &Emacs;. Laat alleen primaire klassenamen overeenkomen en laat dus de keuzevakjes inactief - voor extra informatie zie <link linkend="window-matching"
+>Venster overeen laten komen</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klikken op <guilabel
+>OK</guilabel
+> doet het vorige venster vullen met de resultaten in het tabblad <guilabel
+>Venster overeen laten komen</guilabel
+>. Voer een betekenisvolle tekst in in het tekstvak <guilabel
+>Beschrijving</guilabel
+>. <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-emacs.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Negeer het verzoek van &Emacs; voor een volledig scherm door het attribuut <guilabel
+>Gehoor geven aan beperkingen van de geometrie</guilabel
+>, door het om te schakelen naar uit (<guilabel
+>Nee</guilabel
+>) door selectie van de <link linkend="parameters"
+>parameter</link
+> <guilabel
+>Afdwingen</guilabel
+> te negeren: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik door om het invoeren van de regel te voltooien.</para
+></listitem>
+</orderedlist>
+</sect1>
+</chapter>
+
+<!--userbase-content-->
+<chapter id="credits">
+<title
+>Dankbetuigingen en licentie</title>
+      <para
+>Documentatie copyright zie de UserBase <ulink url="https://userbase.kde.org/index.php?title=KWin Rules&amp;action=history"
+>KWin-regels paginageschiedenis</ulink
+></para>
+      &meld.fouten;&vertaling.niels;&vertaling.natalie;&vertaling.freek; &underFDL; </chapter>
+&documentation.index;
+</book>

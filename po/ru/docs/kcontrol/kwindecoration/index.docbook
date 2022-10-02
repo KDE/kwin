@@ -1,0 +1,204 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Russian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwindecoration" lang="&language;">
+<articleinfo>
+<authorgroup>
+<author
+>&Rik.Hemsley; &Rik.Hemsley.mail;</author>
+<author
+>&Anne-Marie.Mahfouf; &Anne-Marie.Mahfouf.mail;</author>
+<othercredit role="translator"
+><firstname
+>Екатерина</firstname
+><surname
+>Пыжова</surname
+> <affiliation
+><address
+><email
+>haleth@yandex.ru</email
+></address
+></affiliation
+> <contrib
+>Перевод на русский</contrib
+></othercredit
+> <othercredit role="translator"
+><firstname
+>Ольга</firstname
+><surname
+>Миронова</surname
+><affiliation
+><address
+><email
+>omiro@basealt.ru</email
+></address
+></affiliation
+><contrib
+>Перевод на русский язык</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>9 апреля 2021 г.</date>
+<releaseinfo
+>Plasma 5.21</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Параметры системы</keyword>
+<keyword
+>kwin</keyword>
+<keyword
+>окно</keyword>
+<keyword
+>граница</keyword>
+<keyword
+>тема</keyword>
+<keyword
+>стиль</keyword>
+</keywordset>
+</articleinfo>
+<sect1 id="window-deco">
+<title
+>Оформление окон</title>
+
+<para
+>Этот модуль позволяет настраивать стиль оформления кнопок и границ окон.</para>
+
+<sect2>
+<title
+>Оформление окон</title>
+
+<para>
+<screenshot>
+<screeninfo
+>Модуль настройки внешнего вида заголовков окон</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Модуль настройки внешнего вида заголовков окон</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+
+<para
+>Стиль оформления окон можно выбрать в окне предварительного просмотра, а также воспользовавшись строкой поиска, расположенной в верхней части окна. Кроме того, можно загрузить новый стиль, нажав кнопку <guibutton
+>Загрузить оформления окон…</guibutton
+>.</para>
+
+<para
+>По умолчанию выбран стиль <quote
+>Breeze</quote
+>.</para>
+
+<para
+>Каждый стиль оформления имеет свой собственный вид и <quote
+>функции</quote
+>. У некоторых стилей по краю окна расположены (иногда невидимые) <quote
+>полосы для изменения размера</quote
+> окна. Они упрощают процесс изменения размера окна, но усложняют перетаскивание. У некоторых стилей такие полосы есть только вдоль некоторых сторон окна.</para>
+
+<para
+>Рекомендуется поэкспериментировать с использованием разных стилей, чтобы выбрать наиболее подходящий.</para>
+
+<para
+>В области предварительного просмотра у каждого образца оформления имеется <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure.png" format="PNG"/></imageobject
+></inlinemediaobject
+> кнопка, при нажатии которой открывается диалог настройки этого стиля оформления.</para>
+
+<para
+>Параметры, настраиваемые в этом диалоге, применяются ко всем окнам. Для некоторых стилей оформления (например, <quote
+>Breeze</quote
+>) активна вкладка <guilabel
+>Переназначений для отдельных окон</guilabel
+>. В этой вкладке можно изменить размер границ и видимость заголовков отдельных окон.</para>
+
+<para
+>Настроить параметры отдельных окон можно в модуле <ulink url="help:/kcontrol/windowspecific"
+>Особые параметры окон</ulink
+> программы «Параметры системы». </para>
+
+<tip>
+<para
+>Некоторые стили оформления поддерживают специальные возможности, например, сверхширокие границы окна. Если такая функция поддерживается, то в этом модуле будет можно выбрать <guilabel
+>Размер границ окна</guilabel
+>. Более широкие границы окна облегчают работу на компьютере для людей с проблемами зрения, упрощают перетаскивание окон людям с ограниченной подвижностью или тем, у кого возникают проблемы с использованием мыши.</para>
+</tip>
+
+</sect2>
+
+<sect2>
+<title
+>Настройка оформления</title>
+
+<para
+>В этом диалоге можно настроить параметры оформления окна. Для каждого стиля оформления доступны свои параметры. </para>
+<para>
+<screenshot>
+<screeninfo
+>Параметры стиля оформления «Breeze»</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="decoration.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Параметры стиля оформления «Breeze»</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+<sect2>
+<title
+>Кнопки в заголовках</title>
+
+<para
+>В этой вкладке настраивается местоположение кнопок в заголовке окна. Кнопки (например, <guilabel
+>Меню приложения</guilabel
+>) можно перетаскивать, менять местами и удалять с заголовка. </para>
+
+<screenshot>
+<screeninfo
+>Настройка кнопок</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="button.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Настройка кнопок</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+
+<para
+>Параметр <guilabel
+>Закрывать окна двойным щелчком по кнопке меню</guilabel
+> может быть использован в качестве альтернативы кнопке «Закрыть», или если кнопка «Закрыть» была удалена из заголовка окна. </para>
+
+<para
+>Установите флажок <guilabel
+>Показывать подсказки кнопок окон</guilabel
+> для отображения подсказок при наведении указателя мыши на кнопки в заголовках окон. </para>
+
+</sect2>
+
+</sect1>
+
+</article>

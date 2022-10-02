@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Russian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinvirtualkeyboard" lang="&language;">
+<articleinfo>
+
+<title
+>Виртуальная клавиатура</title>
+<authorgroup>
+<author
+><firstname
+>Yuri</firstname
+> <surname
+>Chornoivan</surname
+> </author>
+<othercredit role="translator"
+><firstname
+>Олеся</firstname
+><surname
+>Герасименко</surname
+><affiliation
+><address
+><email
+>translation-team@basealt.ru</email
+></address
+></affiliation
+><contrib
+>Перевод на русский язык</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2021-04-27</date>
+<releaseinfo
+>Plasma 5.22</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Параметры системы</keyword>
+<keyword
+>виртуальная</keyword>
+<keyword
+>клавиатура</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Этот модуль позволяет выбрать виртуальную клавиатуру, которую следует использовать. Виртуальная клавиатура будет автоматически включена в том случае, если не будет обнаружена аппаратная клавиатура. </para>
+
+<para
+>Выберите <ulink url="https://en.wikipedia.org/wiki/Virtual_keyboard"
+>виртуальную клавиатуру</ulink
+> из списка или выберите вариант <guilabel
+>Нет</guilabel
+>, если виртуальная клавиатура не требуется. </para>
+
+<para
+>Перед использованием этого модуля рекомендуется установить соответствующие движки методов ввода. </para>
+
+</article>

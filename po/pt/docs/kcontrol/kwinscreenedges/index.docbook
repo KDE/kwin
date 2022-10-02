@@ -1,0 +1,94 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Portuguese "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinscreenedges" lang="&language;">
+<articleinfo>
+
+<title
+>Extremos do Ecrã</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>José</firstname
+><surname
+>Pires</surname
+><affiliation
+><address
+><email
+>zepires@gmail.com</email
+></address
+></affiliation
+><contrib
+>Tradução</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2015-07-14</date>
+<releaseinfo
+>Plasma 5.3</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systemsettings</keyword>
+<keyword
+>ecrã</keyword>
+<keyword
+>efeitos</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Os extremos activos do ecrã permitem-lhe activar os efeitos, enviando o cursor do seu rato para o extremo do ecrã. Aqui poderá configurar o efeito que será activado em cada extremo ou canto do ecrã. </para>
+
+<para
+>Carregue com qualquer botão do rato num quadrado e seleccione um efeito no menu de contexto. Os extremos com um quadrado azul já têm um efeito associado, enquanto um quadrado cinzento indica que não foi seleccionado nenhum efeito para esse extremo.</para>
+
+<para
+>O número de itens acessíveis no menu de contexto depende do módulo <ulink url="help:/kcontrol/kwineffects/index.html"
+> <guilabel
+>Efeitos do Ecrã</guilabel
+></ulink
+>, na categoria <guilabel
+>Área de Trabalho</guilabel
+>. Seleccione os seus efeitos favoritos no grupo <guilabel
+>Gestão de Janelas</guilabel
+>. Isto irá activar os itens correspondentes no menu de contexto.</para>
+
+<para
+>Se está à procura da opção que activa a mudança de ecrãs, deslocando para tal o cursor do rato para o extremo do ecrã, escolha um dos efeitos para <guilabel
+>Apresentar as Janelas</guilabel
+> no menu de contexto.</para>
+
+<para
+>Na secção <guilabel
+>Gestão de Janelas</guilabel
+>, poderá activar a opção <guilabel
+>Maximizar as janelas ao arrastá-las para o topo do ecrã</guilabel
+> ou <guilabel
+>Colocar as janelas lado-a-lado ao arrastá-las para o lado da janela</guilabel
+> e definir uma percentagem do ecrã para despoletar essa colocação. </para>
+
+<para
+>Na secção <guilabel
+>Outras Definições</guilabel
+>, configure se deseja mudar para outro ecrã ao chegar o cursor do rato a um dos extremos do ecrã, &eg; apenas ao mover as janelas. </para>
+<para
+>O <guilabel
+>Atraso da activação</guilabel
+> é a quantidade de tempo necessária para o cursor do rato ser colocado no extremo do ecrã, antes de despoletar a acção. </para>
+<para
+>O <guilabel
+>Atraso de reactivação</guilabel
+> é a quantidade de tempo necessária depois de despoletar uma acção, antes da próxima reactivação do mesmo evento. </para>
+</article>

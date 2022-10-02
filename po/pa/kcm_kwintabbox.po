@@ -1,0 +1,446 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# A S Alam <aalam@users.sf.net>, 2009, 2010, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-15 00:48+0000\n"
+"PO-Revision-Date: 2012-06-24 17:40+0530\n"
+"Last-Translator: A S Alam <aalam@users.sf.net>\n"
+"Language-Team: Punjabi/Panjabi <punjabi-users@lists.sf.net>\n"
+"Language: pa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.4\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: kwintabboxconfigform.cpp:77
+#, kde-format
+msgid "KWin"
+msgstr ""
+
+#: layoutpreview.cpp:133
+#, fuzzy, kde-format
+#| msgid "Show desktop:"
+msgid "Show Desktop"
+msgstr "ਡੈਸਕਟਾਪ ਵੇਖਾਓ:"
+
+#: layoutpreview.cpp:163
+#, kde-format
+msgctxt "An example Desktop Name"
+msgid "Desktop 1"
+msgstr "ਡੈਸਕਟਾਪ 1"
+
+#: main.cpp:58
+#, kde-format
+msgid "Main"
+msgstr "ਮੁੱਖ"
+
+#: main.cpp:59
+#, kde-format
+msgid "Alternative"
+msgstr "ਬਦਲਵਾਂ"
+
+#: main.cpp:61
+#, fuzzy, kde-format
+#| msgid "Get New Window Switcher Layout"
+msgid "Get New Task Switchers..."
+msgstr "ਨਵਾਂ ਵਿੰਡੋ ਸਵਿੱਚਰ ਲੇਆਉਟ ਲਵੋ"
+
+#: main.cpp:75
+#, kde-format
+msgid ""
+"Focus policy settings limit the functionality of navigating through windows."
+msgstr ""
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
+#: main.ui:32
+#, kde-format
+msgid "Content"
+msgstr "ਸਮੱਗਰੀ"
+
+#. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
+#: main.ui:41
+#, kde-format
+msgid "Include \"Show Desktop\" icon"
+msgstr "\"ਡੈਸਕਟਾਪ ਵੇਖੋ\" ਆਈਕਾਨ ਸਮੇਤ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
+#: main.ui:55
+#, kde-format
+msgid "Recently used"
+msgstr "ਤਾਜ਼ਾ ਵਰਤੇ"
+
+#. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
+#: main.ui:60
+#, kde-format
+msgid "Stacking order"
+msgstr "ਸਟੇਕਿੰਗ ਕ੍ਰਮ"
+
+#. i18n: ectx: property (text), widget (QCheckBox, oneAppWindow)
+#: main.ui:68
+#, kde-format
+msgid "Only one window per application"
+msgstr "ਹਰੇਕ ਐਪਲੀਕੇਸ਼ਨ ਲਈ ਇੱਕ ਹੀ ਵਿੰਡੋਜ਼"
+
+#. i18n: ectx: property (text), widget (QCheckBox, orderMinimized)
+#: main.ui:78
+#, kde-format
+msgid "Order minimized windows after unminimized windows"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, label_8)
+#: main.ui:88
+#, kde-format
+msgid "Sort order:"
+msgstr "ਲੜੀਬੱਧ ਕ੍ਰਮ:"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: main.ui:114
+#, kde-format
+msgid "Filter windows by"
+msgstr "ਵਿੰਡੋਜ਼ ਫਿਲਟਰ ਕਰੋ"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterDesktops)
+#: main.ui:123
+#, kde-format
+msgid "Virtual desktops"
+msgstr "ਵਰਚੁਅਲ ਡੈਸਕਟਾਪ"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentDesktop)
+#: main.ui:167
+#, kde-format
+msgid "Current desktop"
+msgstr "ਮੌਜੂਦਾ ਡੈਸਕਟਾਪ"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherDesktops)
+#: main.ui:174
+#, kde-format
+msgid "All other desktops"
+msgstr "ਹੋਰ ਸਭ ਡੈਸਕਟਾਪ"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterActivities)
+#: main.ui:184
+#, kde-format
+msgid "Activities"
+msgstr "ਸਰਗਰਮੀਆਂ"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentActivity)
+#: main.ui:228
+#, kde-format
+msgid "Current activity"
+msgstr "ਮੌਜੂਦਾ ਸਰਗਰਮੀ"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherActivities)
+#: main.ui:235
+#, kde-format
+msgid "All other activities"
+msgstr "ਸਭ ਹੋਰ ਸਰਗਰਮੀਆਂ"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterScreens)
+#: main.ui:245
+#, kde-format
+msgid "Screens"
+msgstr "ਸਕਰੀਨਾਂ"
+
+#. i18n: ectx: property (text), widget (QRadioButton, currentScreen)
+#: main.ui:289
+#, kde-format
+msgid "Current screen"
+msgstr "ਮੌਜੂਦਾ ਸਕਰੀਨ"
+
+#. i18n: ectx: property (text), widget (QRadioButton, otherScreens)
+#: main.ui:296
+#, kde-format
+msgid "All other screens"
+msgstr "ਸਭ ਹੋਰ ਸਕਰੀਨਾਂ"
+
+#. i18n: ectx: property (text), widget (QCheckBox, filterMinimization)
+#: main.ui:306
+#, kde-format
+msgid "Minimization"
+msgstr "ਘੱਟੋ-ਘੱਟ"
+
+#. i18n: ectx: property (text), widget (QRadioButton, visibleWindows)
+#: main.ui:350
+#, kde-format
+msgid "Visible windows"
+msgstr "ਦਿੱਖ ਵਿੰਡੋਜ਼"
+
+#. i18n: ectx: property (text), widget (QRadioButton, hiddenWindows)
+#: main.ui:357
+#, kde-format
+msgid "Hidden windows"
+msgstr "ਲੁਕਵੀਆਂ ਵਿੰਡੋਜ਼"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
+#: main.ui:396
+#, kde-format
+msgid "Shortcuts"
+msgstr "ਸ਼ਾਰਟਕੱਟ"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#. i18n: ectx: property (text), widget (QLabel, label_5)
+#: main.ui:405 main.ui:448
+#, kde-format
+msgid "Forward"
+msgstr "ਅੱਗੇ"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: main.ui:428
+#, kde-format
+msgid "All windows"
+msgstr "ਸਭ ਵਿੰਡੋਜ਼"
+
+#. i18n: ectx: property (text), widget (QLabel, label_4)
+#. i18n: ectx: property (text), widget (QLabel, label_6)
+#: main.ui:438 main.ui:458
+#, kde-format
+msgid "Reverse"
+msgstr "ਉਲਟ"
+
+#. i18n: ectx: property (text), widget (QLabel, label_2)
+#: main.ui:480
+#, kde-format
+msgid "Current application"
+msgstr "ਮੌਜੂਦਾ ਐਪਲੀਕੇਸ਼ਨ"
+
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: main.ui:499
+#, kde-format
+msgid "Visualization"
+msgstr "ਦਿੱਖ"
+
+#. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
+#: main.ui:529
+#, kde-format
+msgid "The effect to replace the list window when desktop effects are active."
+msgstr "ਜਦੋਂ ਡੈਸਕਟਾਪ ਪ੍ਰਭਾਵ ਸਰਗਰਮ ਹੋਵੇ ਤਾਂ ਲਿਸਟ ਵਿੰਡੋ ਨੂੰ ਬਦਲਣ ਵਾਲਾ ਪ੍ਰਭਾਵ।"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
+#: main.ui:559
+#, kde-format
+msgid ""
+"The currently selected window will be highlighted by fading out all other "
+"windows. This option requires desktop effects to be active."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
+#: main.ui:562
+#, kde-format
+msgid "Show selected window"
+msgstr "ਚੁਣੀ ਵਿੰਡੋ ਵੇਖਾਓ"
+
+#~ msgid "Tabbox layout preview"
+#~ msgstr "ਟੈਬ-ਬਾਕਸ ਲੇਆਉਟ ਝਲਕ"
+
+#~ msgid "Outline selected window"
+#~ msgstr "ਆਉਟਲਾਈਨ ਚੁਣੀ ਵਿੰਡੋ"
+
+#~ msgid ""
+#~ "These settings are used by the \"Walk Through Windows Alternative\" "
+#~ "actions."
+#~ msgstr "ਇਹ ਸੈਟਿੰਗ ਨੂੰ \"ਵਿੰਡੋਜ਼ ਬਦਲ ਰਾਹੀਂ ਜਾਉ\" ਕਾਰਵਾਈ ਰਾਹੀਂ ਵਰਤਿਆ ਜਾਂਦਾ ਹੈ।"
+
+#~ msgid "Walk Through Windows"
+#~ msgstr "ਵਿੰਡੋਜ਼ ਨੂੰ ਵੇਖੋ"
+
+#~ msgid "Walk Through Windows (Reverse)"
+#~ msgstr "ਵਿੰਡੋ ਵਿੱਚ ਜਾਓ (ਉਲਟ)"
+
+#~ msgid "Walk Through Windows Alternative"
+#~ msgstr "ਵਿੰਡੋ ਵਿੱਚ ਬਦਲੇ ਢੰਗ ਨਾਲ ਜਾਓ"
+
+#~ msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgstr "ਵਿੰਡੋ ਵਿੱਚ ਬਦਲੇ ਢੰਗ ਨਾਲ ਜਾਓ (ਉਲਟ)"
+
+#~| msgid "Walk Through Windows Alternative"
+#~ msgid "Walk Through Windows of Current Application"
+#~ msgstr "ਮੌਜੂਦਾ ਐਪਲੀਕੇਸ਼ਨ ਦੀਆਂ ਵਿੰਡੋਜ਼ ਵਿੱਚ ਵੇਖੋ"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgid "Walk Through Windows of Current Application (Reverse)"
+#~ msgstr "ਵਿੰਡੋ ਵਿੱਚ ਬਦਲੇ ਢੰਗ ਨਾਲ ਜਾਓ (ਉਲਟ)"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative"
+#~ msgid "Walk Through Windows of Current Application Alternative"
+#~ msgstr "ਵਿੰਡੋ ਵਿੱਚ ਬਦਲੇ ਢੰਗ ਨਾਲ ਜਾਓ"
+
+#, fuzzy
+#~| msgid "Walk Through Windows Alternative (Reverse)"
+#~ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+#~ msgstr "ਵਿੰਡੋ ਵਿੱਚ ਬਦਲੇ ਢੰਗ ਨਾਲ ਜਾਓ (ਉਲਟ)"
+
+#~ msgctxt ""
+#~ "ComboBox item for window switcher based on layouts instead of a desktop "
+#~ "effect"
+#~ msgid "Layout based switcher"
+#~ msgstr "ਲੇਆਉਟ ਅਧਾਰਿਤ ਸਵਿੱਚਰ"
+
+#~ msgid "Configure Layout"
+#~ msgstr "ਲੇਆਉਟ ਸੰਰਚਨਾ"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "ਅ. ਸ. ਆਲਮ"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "aalam@users.sf.net"
+
+#~ msgid "These settings are used by the \"Walk Through Windows\" actions."
+#~ msgstr "ਇਹ ਸੈਟਿੰਗ ਨੂੰ \"ਵਿੰਡੋਜ਼ ਰਾਹੀਂ ਜਾਉ\" ਕਾਰਵਾਈ ਰਾਹੀਂ ਵਰਤਿਆ ਜਾਂਦਾ ਹੈ।"
+
+#, fuzzy
+#~| msgctxt "An example Desktop Name"
+#~| msgid "Desktop 1"
+#~ msgid "Desktop:"
+#~ msgstr "ਡੈਸਕਟਾਪ 1"
+
+#~ msgid "Windows from all desktops"
+#~ msgstr "ਸਭ ਡੈਸਕਟਾਪ ਤੋਂ ਵਿੰਡੋਜ਼"
+
+#~ msgid "Windows from current desktop only"
+#~ msgstr "ਕੇਵਲ ਮੌਜੂਦਾ ਡੈਸਕਟਾਪ ਤੋਂ ਵਿੰਡੋਜ਼"
+
+#~ msgid "Exclude windows from current desktop"
+#~ msgstr "ਮੌਜੂਦਾ ਡੈਸਕਟਾਪ ਤੋਂ ਬਿਨਾਂ ਵਿੰਡੋਜ਼"
+
+#~ msgid "Windows from all activities"
+#~ msgstr "ਸਭ ਸਰਗਰਮੀਆਂ ਤੋਂ ਵਿੰਡੋਜ਼"
+
+#~ msgid "Exclude windows from current activity"
+#~ msgstr "ਮੌਜੂਦਾ ਸਰਗਰਮੀ ਨੂੰ ਛੱਡ ਕੇ ਵਿੰਡੋਜ਼"
+
+#~| msgid "All Desktops Grouped by Applications"
+#~ msgid "All windows from all applications"
+#~ msgstr "ਸਭ ਐਪਲੀਕੇਸ਼ਨ ਤੋਂ ਸਭ ਵਿੰਡੋਜ਼"
+
+#~ msgid "All windows of the current application only"
+#~ msgstr "ਕੇਵਲ ਮੌਜੂਦਾ ਐਪਲੀਕੇਸ਼ਨ ਤੋਂ ਹੀ ਸਭ ਵਿੰਡੋਜ਼"
+
+#~ msgid "Ignore status"
+#~ msgstr "ਹਾਲਤ ਅਣਡਿੱਠਾ"
+
+#, fuzzy
+#~| msgid "Adds an entry to minimize all windows."
+#~ msgid "Exclude minimized windows"
+#~ msgstr "ਸਭ ਵਿੰਡੋਜ਼ ਨੂੰ ਘੱਟੋ-ਘੱਟ ਕਰਨ ਇੱਕ ਐਂਟਰੀ ਸ਼ਾਮਿਲ ਕਰੋ।"
+
+#~ msgid "Minimized windows only"
+#~ msgstr "ਕੇਵਲ ਘੱਟੋ-ਘੱਟ ਕੀਤੀਆਂ ਵਿੰਡੋਜ਼"
+
+#~ msgid "Do not show desktop"
+#~ msgstr "ਡੈਸਕਟਾਪ ਨਾ ਵੇਖਾਓ"
+
+#, fuzzy
+#~| msgid "Adds an entry to minimize all windows."
+#~ msgid "Show desktop to minimize all windows"
+#~ msgstr "ਸਭ ਵਿੰਡੋਜ਼ ਨੂੰ ਘੱਟੋ-ਘੱਟ ਕਰਨ ਇੱਕ ਐਂਟਰੀ ਸ਼ਾਮਿਲ ਕਰੋ।"
+
+#~ msgid "Ignore"
+#~ msgstr "ਅਣਡਿੱਠਾ"
+
+#~ msgid "Only windows from current screen"
+#~ msgstr "ਕੇਵਲ ਮੌਜੂਦਾ ਸਕਰੀਨ ਤੋਂ ਹੀ ਵਿੰਡੋਜ਼"
+
+#~ msgid "Exclude windows from current screen"
+#~ msgstr "ਮੌਜੂਦਾ ਸਕਰੀਨ ਦੀਆਂ ਵਿੰਡੋਜ਼ ਨੂੰ ਛੱਡ ਕੇ"
+
+#~ msgid "Highlight selected window"
+#~ msgstr "ਚੁਣੀ ਵਿੰਡੋ ਹਾਈਲਾਈਟ ਕਰੋ"
+
+#~ msgid "Effect:"
+#~ msgstr "ਪਰਭਾਵ:"
+
+#~ msgid "Display list while switching"
+#~ msgstr "ਬਦਲਣ ਦੇ ਦੌਰਾਨ ਲਿਸਟ ਵੇਖਾਓ"
+
+#~ msgid "Current Desktop Grouped by Applications"
+#~ msgstr "ਮੌਜੂਦਾ ਡੈਸਕਟਾਪ ਐਪਲੀਕੇਸ਼ਨ ਮੁਤਾਬਕ ਗਰੁੱਪ"
+
+#~ msgctxt "Name for a window switcher layout showing live window thumbnails"
+#~ msgid "Thumbnails"
+#~ msgstr "ਥੰਮਨੇਲ"
+
+#~ msgctxt "Name for a window switcher layout showing icon, name and desktop"
+#~ msgid "Informative"
+#~ msgstr "ਜਾਣਕਾਰੀ"
+
+#~ msgctxt "Name for a window switcher layout showing only icon and name"
+#~ msgid "Compact"
+#~ msgstr "ਸੰਖੇਪ"
+
+#~ msgctxt "Name for a window switcher layout showing only the name"
+#~ msgid "Text"
+#~ msgstr "ਟੈਕਸਟ"
+
+#~ msgctxt "Name for a window switcher layout showing large icons"
+#~ msgid "Large Icons"
+#~ msgstr "ਵੱਡੇ ਆਈਕਾਨ"
+
+#~ msgctxt "Name for a window switcher layout showing small icons"
+#~ msgid "Small Icons"
+#~ msgstr "ਛੋਟੇ ਆਈਕਾਨ"
+
+#~ msgid "No Effect"
+#~ msgstr "ਕੋਈ ਪਰਭਾਵ ਨਹੀਂ"
+
+#~ msgid "Configure Layout..."
+#~ msgstr "ਲੇਆਉਟ ਸੰਰਚਨਾ..."
+
+#~ msgid "Item Layout"
+#~ msgstr "ਆਈਟਮ ਲੇਆਉਟ"
+
+#~ msgid "Item layout:"
+#~ msgstr "ਆਈਟਮ ਲੇਆਉਟ:"
+
+#~ msgid "Layout:"
+#~ msgstr "ਲੇਆਉਟ:"
+
+#~ msgid "Vertical"
+#~ msgstr "ਵਰਟੀਕਲ"
+
+#~ msgid "Horizontal"
+#~ msgstr "ਹਰੀਜੱਟਲ"
+
+#~ msgid "Tabular"
+#~ msgstr "ਸਾਰਣੀਰੂਪ"
+
+#~ msgid "Width:"
+#~ msgstr "ਚੌੜਾਈ:"
+
+#~ msgid " %"
+#~ msgstr " %"
+
+#~ msgid "Height:"
+#~ msgstr "ਉਚਾਈ:"
+
+#~ msgid "Show Selected Item"
+#~ msgstr "ਚੁਣੀਆਂ ਆਈਟਮਾਂ ਵੇਖੋ"
+
+#~ msgid "Selected item view:"
+#~ msgstr "ਚੁਣੀ ਆਈਟਮ ਝਲਕ:"
+
+#~ msgid "Top"
+#~ msgstr "ਉੱਤੇ"
+
+#~ msgid "Bottom"
+#~ msgstr "ਹੇਠਾਂ"
+
+#~ msgid "Left"
+#~ msgstr "ਖੱਬੇ"
+
+#~ msgid "Right"
+#~ msgstr "ਸੱਜੇ"
+
+#~ msgid "Selected item layout:"
+#~ msgstr "ਚੁਣਿਆ ਆਈਟਮ ਲੇਆਉਟ:"
+
+#~ msgid "General"
+#~ msgstr "ਆਮ"

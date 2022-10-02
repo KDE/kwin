@@ -1,0 +1,545 @@
+# Finnish messages for kcmkwindecoration.
+# Copyright © 2010, 2011, 2012 This_file_is_part_of_KDE
+# This file is distributed under the same license as the kde-workspace package.
+# Teemu Rytilahti <teemu.rytilahti@kde-fi.org>, 2003, 2008.
+# Tapio Kautto <eleknader@phnet.fi>, 2004.
+# Ilpo Kantonen <ilpo@iki.fi>, 2005.
+# Jorma Karvonen <karvonen.jorma@gmail.com>, 2010.
+# Lasse Liehu <lasse.liehu@gmail.com>, 2010, 2011, 2012, 2013, 2014, 2015.
+# Tommi Nieminen <translator@legisign.org>, 2012, 2018, 2019, 2020, 2021.
+#
+# KDE Finnish translation sprint participants:
+# Author: Lliehu
+msgid ""
+msgstr ""
+"Project-Id-Version: kcmkwindecoration\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"PO-Revision-Date: 2021-06-11 12:33+0300\n"
+"Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
+"Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-POT-Import-Date: 2012-12-01 22:22:23+0000\n"
+"X-Generator: Lokalize 20.04.2\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr ""
+"Tommi Nieminen,Tapio Kautto,Teemu Rytilahti,Ilpo Kantonen,Jorma Karvonen"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr ""
+"translator@legisign.org,eleknader@phnet.fi,teemu.rytilahti@kde-fi.org,"
+"ilpo@iki.fi,karvonen.jorma@gmail.com"
+
+#: declarative-plugin/buttonsmodel.cpp:53
+#, kde-format
+msgid "More actions for this window"
+msgstr "Lisätoimintoja tälle ikkunalle"
+
+#: declarative-plugin/buttonsmodel.cpp:55
+#, kde-format
+msgid "Application menu"
+msgstr "Sovelluksen valikko"
+
+#: declarative-plugin/buttonsmodel.cpp:57
+#, kde-format
+msgid "On all desktops"
+msgstr "Kaikilla työpöydillä"
+
+#: declarative-plugin/buttonsmodel.cpp:59
+#, kde-format
+msgid "Minimize"
+msgstr "Pienennä"
+
+#: declarative-plugin/buttonsmodel.cpp:61
+#, kde-format
+msgid "Maximize"
+msgstr "Suurenna"
+
+#: declarative-plugin/buttonsmodel.cpp:63
+#, kde-format
+msgid "Close"
+msgstr "Sulje"
+
+#: declarative-plugin/buttonsmodel.cpp:65
+#, kde-format
+msgid "Context help"
+msgstr "Kontekstiohje"
+
+#: declarative-plugin/buttonsmodel.cpp:67
+#, kde-format
+msgid "Shade"
+msgstr "Rullaa"
+
+#: declarative-plugin/buttonsmodel.cpp:69
+#, kde-format
+msgid "Keep below other windows"
+msgstr "Pidä muiden ikkunoiden alla"
+
+#: declarative-plugin/buttonsmodel.cpp:71
+#, kde-format
+msgid "Keep above other windows"
+msgstr "Pidä muiden ikkunoiden yllä"
+
+#: kcm.cpp:49
+#, kde-format
+msgid "Window Decorations"
+msgstr "Ikkunakehykset"
+
+#: kcm.cpp:53
+#, kde-format
+msgid "Valerio Pilo"
+msgstr "Valerio Pilo"
+
+#: kcm.cpp:54
+#, kde-format
+msgid "Author"
+msgstr "Tekijä"
+
+#: kcm.cpp:183
+#, kde-format
+msgctxt "%1 is the name of a border size"
+msgid "Theme's default (%1)"
+msgstr "Teeman oletus (%1)"
+
+#: kwin-applywindowdecoration.cpp:32
+#, kde-format
+msgid ""
+"This tool allows you to set the window decoration theme for the currently "
+"active session, without accidentally setting it to one that is either not "
+"available, or which is already set."
+msgstr ""
+"Tällä työkalulla voi asettaa ikkunakoristeteeman aktiiviseen istuntoon niin, "
+"ettei vahingossa aseta sitä sellaiseksi, joka ei ole käytettävissä tai on jo "
+"käytössä."
+
+#: kwin-applywindowdecoration.cpp:33
+#, kde-format
+msgid ""
+"The name of the window decoration theme you wish to set for KWin. Passing a "
+"full path will attempt to find a theme in that directory, and then apply "
+"that if one can be deduced."
+msgstr ""
+"Ikkunakoristeteeman nimi, jota haluat KWinin käyttävän. Välitettäessä "
+"kansion sijainti teema yritetään löytää siitä ja ottaa se käyttöön, jos "
+"mahdollista."
+
+#: kwin-applywindowdecoration.cpp:34
+#, kde-format
+msgid ""
+"Show all the themes available on the system (and which is the current theme)"
+msgstr ""
+"Näytä kaikki järjestelmään asennetut teemat (ja mikä niistä on käytössä)"
+
+#: kwin-applywindowdecoration.cpp:65
+#, kde-format
+msgid ""
+"Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
+"as your current theme."
+msgstr ""
+"Tulkittiin %1 KWinin Aurorae-teemaksi ”%2” ja yritetään asettaa se "
+"nykyiseksi teemaksi."
+
+#: kwin-applywindowdecoration.cpp:71
+#, kde-format
+msgid ""
+"You attempted to pass a file path, but this could not be resolved to a "
+"theme, and we will have to abort, due to having no theme to set"
+msgstr ""
+"Yritettiin välittää tiedoston sijainti, mutta sitä ei voitu tulkita "
+"teemaksi, joten keskeytetään, koska asetettavaa teemaa ei ole"
+
+#: kwin-applywindowdecoration.cpp:77
+#, kde-format
+msgid ""
+"The requested theme \"%1\" is already set as the window decoration theme."
+msgstr "Pyydetty teema ”%1” on jo asetettu ikkunakoristeteemaksi."
+
+#: kwin-applywindowdecoration.cpp:99
+#, kde-format
+msgid "Successfully applied the cursor theme %1 to your current Plasma session"
+msgstr "Kohdistinteeman %1 käyttöönotto nykyiseen Plasma-istuntoon onnistui"
+
+#: kwin-applywindowdecoration.cpp:103
+#, kde-format
+msgid ""
+"Failed to save your theme settings - the reason is unknown, but this is an "
+"unrecoverable error. You may find that simply trying again will work."
+msgstr ""
+"Asetuksia ei voitu tallentaa; syy on tuntematon, mutta tästä virheestä ei "
+"voi palautua. Uudelleen yrittäminen saattaa auttaa."
+
+#: kwin-applywindowdecoration.cpp:107
+#, kde-format
+msgid ""
+"Could not find theme \"%1\". The theme should be one of the following "
+"options: %2"
+msgstr "Teemaa ”%1” ei löytynyt. Teeman tulisi olla yksi seuraavista: %2"
+
+#: kwin-applywindowdecoration.cpp:112
+#, kde-format
+msgid "You have the following KWin window decoration themes on your system:"
+msgstr "Järjestelmään on asennettu seuraavat KWin-ikkunakoristeteemat:"
+
+#: package/contents/ui/Buttons.qml:85
+#, kde-format
+msgid "Titlebar"
+msgstr "Otsikkopalkki"
+
+#: package/contents/ui/Buttons.qml:245
+#, kde-format
+msgid "Drop button here to remove it"
+msgstr "Poista painike pudottamalla se tähän"
+
+#: package/contents/ui/Buttons.qml:261
+#, kde-format
+msgid "Drag buttons between here and the titlebar"
+msgstr "Vedä painikkeita tämän alueen ja otsikkopalkin välillä"
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr "Tässä voit asettaa ikkunakehykset."
+
+#: package/contents/ui/main.qml:53
+#, kde-format
+msgctxt "tab label"
+msgid "Theme"
+msgstr "Teema"
+
+#: package/contents/ui/main.qml:57
+#, kde-format
+msgctxt "tab label"
+msgid "Titlebar Buttons"
+msgstr "Otsikkopalkin painikkeet"
+
+#: package/contents/ui/main.qml:93
+#, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "Ikkunareunuksen koko:"
+
+#: package/contents/ui/main.qml:112
+#, kde-format
+msgctxt "button text"
+msgid "Get New Window Decorations..."
+msgstr "Hae uusia ikkunakehyksiä…"
+
+#: package/contents/ui/main.qml:141
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr "Sulje ikkunat kaksoisnapsauttamalla valikkopainiketta"
+
+#: package/contents/ui/main.qml:158
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr "Näytä valikko napsauttamalla ja pitämällä pohjassa valikkopainiketta"
+
+#: package/contents/ui/main.qml:165
+#, kde-format
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "Näytä otsikkopalkkipainikkeiden työkaluvihjeet"
+
+#: package/contents/ui/Themes.qml:92
+#, kde-format
+msgid "Edit %1 Theme"
+msgstr "Muokkaa teemaa %1"
+
+#: utils.cpp:25
+#, kde-format
+msgid "No Borders"
+msgstr "Ei reunuksia"
+
+#: utils.cpp:26
+#, kde-format
+msgid "No Side Borders"
+msgstr "Ei sivureunuksia"
+
+#: utils.cpp:27
+#, kde-format
+msgid "Tiny"
+msgstr "Pieni"
+
+#: utils.cpp:28
+#, kde-format
+msgid "Normal"
+msgstr "Tavallinen"
+
+#: utils.cpp:29
+#, kde-format
+msgid "Large"
+msgstr "Suuri"
+
+#: utils.cpp:30
+#, kde-format
+msgid "Very Large"
+msgstr "Hyvin suuri"
+
+#: utils.cpp:31
+#, kde-format
+msgid "Huge"
+msgstr "Valtava"
+
+#: utils.cpp:32
+#, kde-format
+msgid "Very Huge"
+msgstr "Aivan valtava"
+
+#: utils.cpp:33
+#, kde-format
+msgid "Oversized"
+msgstr "Ylisuuri"
+
+#~ msgctxt "popup tip"
+#~ msgid ""
+#~ "Close by double clicking: Keep the window's Menu button pressed until it "
+#~ "appears."
+#~ msgstr ""
+#~ "Sulje kaksoisnapsauttamalla: Pidä ikkunan valikkopainike pohjassa, kunnes "
+#~ "valikko ilmestyy."
+
+#~ msgid "Menu"
+#~ msgstr "Valikko"
+
+#~ msgid "Keep below"
+#~ msgstr "Pidä alinna"
+
+#~ msgid "Keep above"
+#~ msgstr "Pidä ylinnä"
+
+#~ msgid "Download New Window Decorations"
+#~ msgstr "Lataa uusia ikkunakehyksiä"
+
+# Alkuperäinenkin selite on niin pitkä, että se tahtoo valua yli
+#~ msgctxt "checkbox label"
+#~ msgid "Use theme's default window border size"
+#~ msgstr "Käytä ikkunareunukseen teeman oletuskokoa"
+
+#~ msgid "Search..."
+#~ msgstr "Etsi…"
+
+#~ msgid "Close windows by double clicking &the menu button"
+#~ msgstr "Sulje ikkunat kaksoisnapsauttamalla &valikkopainiketta"
+
+#~ msgid "Border si&ze:"
+#~ msgstr "Reunuksen koko:"
+
+#~ msgid "Buttons"
+#~ msgstr "Painikkeet"
+
+#~ msgid "Configure %1..."
+#~ msgstr "Asetukset – %1…"
+
+#~ msgid "Drag to re-position buttons"
+#~ msgstr "Vaihda painikkeiden paikkoja vetämällä niitä"
+
+#~ msgid "Form"
+#~ msgstr "Lomake"
+
+#~ msgid "Button size:"
+#~ msgstr "Painikkeen koko:"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Tiny"
+#~ msgstr "Pieni"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Normal"
+#~ msgstr "Tavallinen"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Large"
+#~ msgstr "Suuri"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Large"
+#~ msgstr "Hyvin suuri"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Huge"
+#~ msgstr "Valtava"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Very Huge"
+#~ msgstr "Aivan valtava"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Oversized"
+#~ msgstr "Ylisuuri"
+
+#~ msgid "KDE"
+#~ msgstr "KDE"
+
+#~ msgid "%1 (unavailable)"
+#~ msgstr "%1 (saavuttamaton)"
+
+#~ msgid ""
+#~ "To add or remove titlebar buttons, simply <i>drag</i> items between the "
+#~ "available item list and the titlebar preview. Similarly, drag items "
+#~ "within the titlebar preview to re-position them."
+#~ msgstr ""
+#~ "Jos haluat lisätä otsikkopalkin painikkeita, <i>vedä</i> niitä saatavilla "
+#~ "olevien luettelosta otsikkopalkin esikatselukuvaan. Näin voit myös "
+#~ "muuttaa esikatselukuvan painikkeiden järjestystä."
+
+#~ msgid "Resize"
+#~ msgstr "Muuta kokoa"
+
+#~ msgid "Help"
+#~ msgstr "Ohje"
+
+#~ msgctxt "Button showing window actions menu"
+#~ msgid "Window Menu"
+#~ msgstr "Ikkunan valikko"
+
+# Vanha käännös ”väliviiva”, mutta kyse on painikkeiden väliin tulevasta tyhjästä tilasta
+#~ msgid "--- spacer ---"
+#~ msgstr "--- erotin ---"
+
+#~ msgid ""
+#~ "Enabling this checkbox will show window button tooltips. If this checkbox "
+#~ "is off, no window button tooltips will be shown."
+#~ msgstr ""
+#~ "Tämän ruudun valitsemalla näytetään ikkunapainikkeille työkaluvihjeet. "
+#~ "Muussa tapauksessa vihjeitä ei näytetä."
+
+#~ msgid "Please note that this option is not available on all styles yet."
+#~ msgstr "Ota huomioon, etteivät kaikki tyylit vielä tue tätä valintaa."
+
+#~ msgid "Use custom titlebar button &positions"
+#~ msgstr "Vaihda otsikkopalkin painikkeiden &paikkoja"
+
+#~ msgid "B&order size:"
+#~ msgstr "Reunan k&oko:"
+
+#~ msgid "Use this combobox to change the border size of the decoration."
+#~ msgstr "Käytä tätä yhdistelmäruutua muuttaaksesi reunuksen kokoa."
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Border"
+#~ msgstr "Ei sivureunusta"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "Ei reunusta"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Kehyksen asetukset"
+
+#~ msgid ""
+#~ "Select the window decoration. This is the look and feel of both the "
+#~ "window borders and the window handle."
+#~ msgstr ""
+#~ "Valitse ikkunoiden kehyksen teema. Kehyksen teemaan kuuluvat ikkunoiden "
+#~ "reunat sekä ikkunan kahva."
+
+#~ msgid "Configure Decoration..."
+#~ msgstr "Kehyksen asetukset…"
+
+# pmap: =/elat=Ikkunoiden kehysten asetuksista/
+#~ msgid "Window Decoration Control Module"
+#~ msgstr "Ikkunoiden kehysten asetukset"
+
+#~ msgid "(c) 2001 Karol Szwed"
+#~ msgstr "© 2001 Karol Szwed"
+
+#~ msgid "Karol Szwed"
+#~ msgstr "Karol Szwed"
+
+#~ msgid ""
+#~ "<h1>Installation error</h1>The resource<h2>kwin/kcm_kwindecoration/main."
+#~ "qml</h2>could not be located in any application data path.<h2>Please "
+#~ "contact your distribution</h2>The application will now abort"
+#~ msgstr ""
+#~ "<h1>Asennusvirhe</h1>Resurssia<h2>kwin/kcm_kwindecoration/main.qml</h2>ei "
+#~ "löytynyt mistään sovelluksen datapolusta.<h2>Ilmoita tästä jakelullesi</"
+#~ "h2>Sovellus sulkeutuu nyt"
+
+#~ msgid "Installation Error"
+#~ msgstr "Asennusvirhe"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+# *TARKISTA* Tämä ei ole todellakaan ajan tasalla nykyisen käyttöliittymän kanssa. Painikkeet-välilehteä ei ole olemassa jne.
+#~ msgid ""
+#~ "<h1>Window Manager Decoration</h1><p>This module allows you to choose the "
+#~ "window border decorations, as well as titlebar button positions and "
+#~ "custom decoration options.</p>To choose a theme for your window "
+#~ "decoration click on its name and apply your choice by clicking the \"Apply"
+#~ "\" button below. If you do not want to apply your choice you can click "
+#~ "the \"Reset\" button to discard your changes.<p>You can configure each "
+#~ "theme. There are different options specific for each theme.</p><p>On the "
+#~ "\"Buttons\" tab check the \"Use custom titlebar button positions\" box "
+#~ "and you can change the positions of the buttons to your liking.</p>"
+#~ msgstr ""
+#~ "<h1>Ikkunoiden kehykset</h1><p>Tästä voit valita haluamasi ikkunoiden "
+#~ "kehykset sekä otsikkopalkin painikkeiden sijainnit ja muita asetuksia.</"
+#~ "p>Voit valita ikkunoiden kehyksen teeman napsauttamalla teeman nimeä, ja "
+#~ "ottaa sen käyttöön napsauttamalla ”Käytä”-painiketta ikkunan alareunassa. "
+#~ "Jos et halua ottaa valintaasi käyttöön, voit napsauttaa ”Alusta”-"
+#~ "painiketta peruaksesi muutokset.<p>Voit muokata jokaista teemaa. "
+#~ "Jokaisella teemalla on omat valitsimet.</p><p>Valitse välilehdellä "
+#~ "”Painikkeet” valinta ”Vaihda otsikkopalkin painikkeiden paikkoja” ja voit "
+#~ "vaihtaa painikkeiden sijaintia haluamaksesi.</p>"
+
+#~ msgid "Active Window"
+#~ msgstr "Aktiivinen ikkuna"
+
+#~ msgid "Inactive Window"
+#~ msgstr "Passiivinen ikkuna"
+
+#~ msgid "kcmkwindecoration"
+#~ msgstr "kcmkwindecoration"
+
+#~ msgctxt "Caption to decoration preview, %1 author name"
+#~ msgid "by %1"
+#~ msgstr "Tekijä: %1"
+
+#~ msgid ""
+#~ "No preview available.\n"
+#~ "Most probably there\n"
+#~ "was a problem loading the plugin."
+#~ msgstr ""
+#~ "Ei esikastelua saatavilla.\n"
+#~ "Luultavasti liitännäisen lataamisessa\n"
+#~ "tapahtui virhe."
+
+#~ msgid "&Buttons"
+#~ msgstr "&Painikkeet"
+
+#~ msgid "Ozone"
+#~ msgstr "Otsoni"
+
+#~ msgid ""
+#~ "<h1>Window Manager Decoration</h1><p>This module allows you to choose the "
+#~ "window border decorations, as well as titlebar button positions and "
+#~ "custom decoration options.</p><p>To choose a theme for your window "
+#~ "decoration click on its name and apply your choice by clicking the \"Apply"
+#~ "\" button below. If you do not want to apply your choice you can click "
+#~ "the \"Reset\" button to discard your changes.</p><p>You can configure "
+#~ "each theme. There are different options specific for each theme.</p><p>On "
+#~ "the \"Buttons\" tab check the \"Use custom titlebar button positions\" "
+#~ "box and you can change the positions of the buttons to your liking.</p>"
+#~ msgstr ""
+#~ "<h1>Ikkunoiden kehykset</h1><p>Tässä moduulissa voit valita haluamasi "
+#~ "ikkunoiden kehykset sekä otsikkopalkin painikkeiden sijainnit ja muita "
+#~ "asetuksia.</p><p>Voit valita ikkunoiden kehyksen teeman napsauttamalla "
+#~ "teeman nimeä, ja ottaa sen käyttöön napsauttamalla ”Käytä”-painiketta "
+#~ "ikkunan alareunassa. Jos et halua ottaa valintaasi käyttöön, voit "
+#~ "napsauttaa ”Alusta”-painiketta peruuttaksesi muutokset.</p><p>Voit "
+#~ "muokata jokaista teemaa. Jokaisella teemalla on omat valitsemet.</"
+#~ "p><p>Valitse välilehdellä ”Painikkeet” valinta ”Käytä muokattuja "
+#~ "otsikkopalkkipainikesijainteja” ja voit vaihtaa painikkeiden sijaintia "
+#~ "haluamaksesi.</p>"

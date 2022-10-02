@@ -1,0 +1,258 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % German "INCLUDE">
+]>
+<article id="kwintabbox" lang="&language;">
+<articleinfo>
+<title
+>Anwendungsumschalter</title>
+<authorgroup>
+<author
+>&Martin.Graesslin;&Martin.Graesslin.mail;</author>
+<othercredit role="translator"
+><firstname
+>Burkhard</firstname
+><surname
+>Lück</surname
+><affiliation
+><address
+><email
+>lueck@hube-lueck.de</email
+></address
+></affiliation
+><contrib
+>Übersetzung</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>2020-12-31</date>
+<releaseinfo
+>&plasma; 5.21</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Systemeinstellungen</keyword>
+<keyword
+>Desktop</keyword>
+<keyword
+>Fenster</keyword>
+<keyword
+>Navigation</keyword>
+<keyword
+>Wechseln</keyword>
+<keyword
+>Alt-Tab</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="windows-navigating">
+<title
+>Wechseln zwischen Fenstern</title>
+
+<para
+>Mit dem Anwendungsumschalter kann der Benutzer einfach zwischen den aktuell geöffneten Fenstern über die Tastatur zu wechseln. Er ist in hohem Maße konfigurierbar und erlaubt dem Benutzer Verhalten, das visuelle Erscheinungsbild, die Tastenkombinationen und die Fensterfilterung zu steuern.</para>
+
+<para
+>Der Anwendungsumschalter wird normalerweise mit der Tastenkombination <keycombo
+>&Alt;&Tab;</keycombo
+> aufgerufen, aber dies kann geändert werden. Beim Aufruf des Anwendungsumschalters wird eine Liste mit allen aktuell geöffneten Fenstern angezeigt, optional gefiltert und nach weiteren Kriterien entsprechend den Einstellungen ergänzt. Zum Beispiel kann die Liste gefiltert werden, um nur Fenster anzuzeigen, die bestimmte Kriterien erfüllen, z. B. Fenster, die gerade sichtbar sind. Sobald die Fensterliste angezeigt wird, kann der Benutzer vorwärts und vorwärts und rückwärts durch alle aufgelisteten Fenster blättern, indem er wiederholt die Tastenkombination für den Anwendungsumschalter drückt. Durch Loslassen der Tastenkombinationwird das Fenster aktiviert, das in der Liste ausgewählt wurde.</para>
+
+<para
+>Weil es für den Anwendungsumschalter so viele Einstellungsmöglichkeiten gibt, können zwei getrennte Einstellungsgruppen definiert werden. Diese Einstellungsgruppen werden als <guilabel
+>Allgemein</guilabel
+> und <guilabel
+>Alternativ</guilabel
+> bezeichnet. Jeder Einstellungsgruppe kann eine eigene Gruppe von Tastenkombinationen zugewiesen werden.</para>
+
+<para
+>Die Einstellungsoptionen auf den Karteikarten der Allgemein und Alternativsind in vier Abschnitte unterteilt:</para>
+
+<sect2 id="visualization">
+<title
+>Darstellung</title>
+<para
+>In diesem Abschnitt können Sie festlegen, wie die Liste der Fenster auf dem Bildschirm angezeigt wird. Als Standard wird <guilabel
+>Breeze</guilabel
+> verwendet. Damit werden alle geöffneten Fenster auf der linken Seite des Bildschirms angezeigt. Andere Darstellungen sind <guilabel
+>3D-Fenstergalerie</guilabel
+> (ein 3D-Karussell) und <guilabel
+>3D-Fensterstapel</guilabel
+> (ein 3D-Stapel von Karten). Viele weitere Darstellungen können heruntergeladen und installiert werden, indem Sie auf  <guibutton
+>Neue Aufgabenumschalter herunterladen ...</guibutton
+> unten rechts im Dialogfeld klicken.</para>
+
+<para
+>Wenn Sie eine Darstellung im Auswahlfeld gewählt haben, können Sie durch Klicken auf den Knopf rechts neben dem Auswahlfeld eine Vorschau anzeigen lassen oder weiter Einstellungen zur Darstellung vornehmen.</para>
+
+<para
+>Im Ankreuzfeld <guilabel
+>Ausgewähltes Fenster anzeigen</guilabel
+> wird festgelegt wie das aktivierte Fenster dargestellt wird. Ist diese Einstellung aktiviert werden alle Fenster bis auf das aktuell im Anwendungsumschalter hervorgehobene Fenster abgeblendet.</para>
+
+<note
+><para
+>Manchmal kann die gewünschte Darstellung für den Anwendungsumschalter nicht angezeigt werde, z. B. wenn „Compositing“ausgeschaltet oder deaktiviert ist. In diesem Fall wird die Fensterliste trotzdem angezeigt, allerdings in einem sehr einfachen Format.</para
+></note>
+</sect2>
+
+<sect2 id="shortcuts">
+<title
+>Kurzbefehle</title>
+<para
+>In diesem Abschnitt können Sie bis zu vier Kurzbefehle für das Wechseln von Fenster auf der Karteikarte <guilabel
+>Allgemein</guilabel
+> und vier weitere auf der Karteikarte <guilabel
+>Alternativ</guilabel
+> festlegen. Auf der Karteikarte <guilabel
+>Allgemein</guilabel
+> sind sie Kurzbefehle vordefiniert, auf der Karteikarte <guilabel
+>Alternativ</guilabel
+> müssen die Kurzbefehle manuell eingegeben werden.</para>
+<para
+>Im Abschnitt <guilabel
+>Alle Fenster</guilabel
+> können Sie die Kurzbefehle für das Wechseln <guilabel
+>Vorwärts</guilabel
+> und <guilabel
+>Rückwärts</guilabel
+> in der Liste der geöffneten Fenster einstellen.</para>
+<para
+>Im Abschnitt <guilabel
+>Aktuelle Anwendung</guilabel
+> können die Kurzbefehle für das Wechseln <guilabel
+>Vorwärts</guilabel
+> und <guilabel
+>Rückwärts</guilabel
+> in der Liste der aktuell aktiven Anwendung gewählt werden. Haben Sie zum Beispiel drei Fenster mit der Dateiverwaltung &dolphin; geöffnet, dann können Sie mit diesen Kurzbefehlen nur zwischen den drei &dolphin;-Fenstern wechseln.</para>
+<para
+>Um einen Kurzbefehl zu ändern, klicken Sie auf <guilabel
+>Vorwärts</guilabel
+> oder <guilabel
+>Rückwärts</guilabel
+> und geben die gewünschte Tastenkombination ein. Benutzen Sie eine Sondertaste wie &Ctrl; oder &Alt; als Teil des Kurzbefehls, sonst können Sie möglicherweise nicht richtig zwischen den Fenstern in der Liste wechseln.</para>
+
+<note
+><para
+>Mit allen definierten Kurzbefehlen können Sie den Anwendungsumschalter aufrufen.Zum Wechseln zwischen Fenstern ohne die Tastatur können Sie Aktionen für Bildschirmränder im Modul <ulink url="help:/kcontrol/kwinscreenedges/index.html"
+>Bildschirmränder</ulink
+> in den &systemsettings; festlegen.</para
+></note>
+</sect2>
+
+<sect2 id="content">
+<title
+>Inhalt</title>
+<para
+>Die Einstellungen in diesem Abschnitt legen teilweise fest, welche Fenster in der der Liste im Anwendungsumschalter angezeigt werden.</para>
+
+<para
+>Mit dem Auswahlfeld <guilabel
+>Sortierreihenfolge</guilabel
+> legen Sie fest, ob Fenster nach der <guilabel
+>Stapel-Reihenfolge</guilabel
+> oder nach <guilabel
+>Kürzlich verwendete</guilabel
+> in der Fensterliste sortiert werden. <guilabel
+>Stapel-Reihenfolge</guilabel
+> ist die Reihenfolge, in der die Fenster auf dem Bildschirm auf dem Bildschirm erscheinen, während mit <guilabel
+>Kürzlich verwendete</guilabel
+> die Fenster in der Reihenfolge der Nutzung sortiert sind. Mit <guilabel
+>Kürzlich verwendete</guilabel
+> können Sie einfach und schnell zwischen zwei am meisten benutzten Fenstern wechseln, da sie immer auf den zwei ersten Positionen in der Liste angezeigt werde.</para>
+
+<para
+>Wenn <guilabel
+>Symbol „Arbeitsfläche anzeigen“ einfügen</guilabel
+> aktiviert ist, wird ein Eintrag für die Arbeitsfläche zur Liste mit den Anwendungen hinzugefügt. Dann können Sie diesen Eintrag auswählen, um die Fenster aller Anwendungen zu minimieren und schnell zur Arbeitsfläche wechseln.</para>
+
+<para
+>Die Einstellung <guilabel
+>Nur ein Fenster pro Anwendung</guilabel
+> reduziert Unübersichtlichkeit, indem nur ein Fenster für jede geöffnete Anwendung angezeigt wird. Wenn eine Anwendung mehrere Fenster geöffnet hat, wird das zuletzt aktivierte Fenster in der in der Liste angezeigt und die anderen werden ausgeblendet.</para>
+</sect2>
+
+<sect2 id="filter-windows-by">
+<title
+>Fenster filtern nach</title>
+<para
+>Dieser Abschnitt enthält Einstellungen zur zusätzlichen Filterung der Fensterliste im Anwendungsumschalter.</para>
+
+<para
+>Die Einstellung <guilabel
+>Virtuellen Arbeitsflächen</guilabel
+> filtert die Liste der Fenster nach den Arbeitsflächen. Wenn Sie regelmäßig bestimmte Fenster auf bestimmte virtuelle Arbeitsflächen legen, dann kann diese Filterung den Wechsel zu Fenstern innerhalb oder zwischen diesen virtuellen Arbeitsflächen erleichtern. Desktops. Wählen Sie <guilabel
+>Aktuelle Arbeitsfläche</guilabel
+>, um nur die Fenster auf der aktuellen virtuellen Arbeitsfläche anzuzeigen. Wählen Sie <guilabel
+>Alle anderen Arbeitsflächen</guilabel
+>, um nur die Fenster auf den nicht aktiven virtuellen Arbeitsflächen anzuzeigen.</para>
+
+<para
+>Die Einstellung <guilabel
+>Aktivitäten</guilabel
+> filtert die Liste der Fenster nach den Aktivitäten. Wie bei der Filterung nach <guilabel
+>Virtuellen Arbeitsflächen</guilabel
+> kann diese Einstellung das Wechseln zu Anwendungen innerhalb oder über alle Aktivitäten hinweg erleichtern. Wählen Sie <guilabel
+>Aktuelle Aktivität</guilabel
+>, um nur Fenster anzuzeigen, die Teil der aktuellen Aktivität sind. Wählen Sie . <guilabel
+>Alle anderen Aktivitäten</guilabel
+>, um nur die Fenster anzuzeigen, die zu den gerade nicht aktiven Aktivitäten gehören.</para>
+
+<para
+>Die Einstellung <guilabel
+>Bildschirme</guilabel
+> filtert die Liste der Fenster nach den aktiven Bildschirm. Wählen Sie <guilabel
+>Aktueller Bildschirm</guilabel
+>, um nur die Fenster anzuzeigen, die sich auf dem die sich auf dem Bildschirm mit dem Mauszeiger befinden. Wählen Sie <guilabel
+>Alle andere Bildschirme</guilabel
+>, um die Fenster auf allen anderen Bildschirmen anzuzeigen. Diese Einstellung kann für Benutzer nützlich sein, die schnell zwischen Fenstern auf demselben Bildschirm bei Verwendung mehrere Bildschirme wechseln möchten.</para>
+<note
+><para
+>Aktiv ist der Bildschirm, der aktuell den Mauszeiger enthält, nicht der Bildschirm mit dem aktuell aktiven Fenster.</para
+></note>
+
+<para
+>Mit der Einstellung <guilabel
+>Minimierung</guilabel
+> wird die Fensterliste nach dem Anzeigestatus gefiltert, d. h. ob sie sichtbar oder ausgeblendet sind. Mit <guilabel
+>Sichtbare Fenster</guilabel
+> werden nur Fenster angezeigt, die nicht minimiert wurden. Um nur diese minimierten Fenster anzuzeigen, wählen Sie <guilabel
+>Ausgeblendete Fenster</guilabel
+>.</para>
+
+<para
+>Wenn Sie eine Einstellung abwählen, wird diese nicht beim Filtern verwendet. Wenn Sie zum Beispiel nur die Einstellung <guilabel
+>Bildschirm</guilabel
+> auswählen und alle anderen drei Einstellungen abgewählt sind, werden in der Fensterliste nur Fenster auf dem aktuell aktivierten Bildschirm angezeigt.</para>
+<para
+>Alle in den obigen Abschnitten beschriebenen Einstellungen funktionieren zusammen und lassen Sie  das Verhalten und das Erscheinungsbild des Anwendungsumschalters sehr genau steuern. Sie können zum Beispiel die für die Einstellungen auf der Karteikarte <guilabel
+>Allgemein</guilabel
+> mit der Tastenkombination <keycombo
+>&Alt;&Tab;</keycombo
+> aufgerufen, um die die geöffneten Fenster in einem Karussell, nur ein Fenster pro Anwendung und nur Fenster auf der aktuellen Arbeitsfläche  und auf dem aktuell aktiven Bildschirm anzuzeigen. Dies kann ein sehr schnellen kontextsensitives Umschalten von Fenstern ermöglichen, wenn Sie virtuelle Arbeitsflächen für die Arbeit und Zuhause haben und dann alle Ihre Tabellenkalkulationen für Arbeit und Zuhause auf dem gleichen Bildschirm halten.</para>
+
+<para
+>Mit den Einstellungen auf der Karteikarte <guilabel
+>Alternativ</guilabel
+> gibt es noch eine weitere Möglichkeit, die Fensterliste einfach zu filtern und durchzublättern. Mit den acht Tastatur-Kurzbefehlen der beiden Karteikarten sollte es möglich sein, einfach und schnell durch eine große Anzahl von Fenstern zu navigieren.</para>
+</sect2>
+</sect1>
+</article>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+kate: space-indent on; indent-width 2; tab-width 2; indent-mode none;
+-->

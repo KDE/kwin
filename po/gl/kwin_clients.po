@@ -1,0 +1,631 @@
+# translation of kwin_clients.po to galician
+#
+# Xabier Villar <xabier.villar@gmail.com>, 2006.
+# Xabi G. Feal <xabigf@gmx.net>, 2006.
+# mvillarino <mvillarino@users.sourceforge.net>, 2007, 2008, 2009.
+# marce villarino <mvillarino@users.sourceforge.net>, 2009.
+# Marce Villarino <mvillarino@kde-espana.es>, 2009, 2011.
+# Marce Villarino <mvillarino@kde-espana.es>, 2012, 2013, 2014.
+# Adrián Chaves Fernández <adriyetichaves@gmail.com>, 2015.
+# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2017.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin_clients\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2017-08-12 15:17+0100\n"
+"Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
+"Language-Team: Galician <kde-i18n-doc@kde.org>\n"
+"Language: gl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr "Pequerrecha"
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr "Normal"
+
+#: aurorae/src/aurorae.cpp:727
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "Grande"
+
+#: aurorae/src/aurorae.cpp:728
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "Moi grande"
+
+#: aurorae/src/aurorae.cpp:729
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "Enorme"
+
+#: aurorae/src/aurorae.cpp:730
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "Descomunal"
+
+#: aurorae/src/aurorae.cpp:731
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "Sobredimensionada"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr "Tamaño dos botóns:"
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "Diálogo de configuración"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "&Aliñamento do título"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "Á esquerda"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "Centrado"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "Á dereita"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"Marque esta opción se desexa que a moldura da xanela se pinte da cor da "
+"Barra de título. En caso contrario pintarase na cor do fondo."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "Moldura de xanela coloreada"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"Marque esta opción se quere que os botóns resalten cando o rato pase por "
+"riba e se volvan normais cando o rato se aparte."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "Animar os botóns"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "Marque esta opción se quere que o texto da barra de título teña un "
+#~ "aspecto 3D cunha sombra detrás."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "Usar &texto sombreado"
+
+#~ msgid "Button mouseover transition"
+#~ msgstr "Transición do botón ao pasar o rato por riba"
+
+#~ msgid "Configure window buttons' mouseover highlight animation"
+#~ msgstr "Configura a animación dos botóns da xanela ao pasar o rato por riba"
+
+#~ msgid "Title transitions"
+#~ msgstr "Transicións do título"
+
+#~ msgid "Configure fading transitions when window title is changed"
+#~ msgstr ""
+#~ "Configura as transicións que resaltan as modificacións do título da xanela"
+
+#~ msgid "Window active state change transitions"
+#~ msgstr "Transicións de cambio do estado activo da xanela"
+
+#~ msgid ""
+#~ "Configure fading between window shadow and glow when window's active "
+#~ "state is changed"
+#~ msgstr ""
+#~ "Configura o resalte entre sombreado e brillante cando a xanela troca o "
+#~ "estado de actividade"
+
+#~ msgid "Window grouping animations"
+#~ msgstr "Animacións do agrupamento das xanelas"
+
+#~ msgid ""
+#~ "Configure window titlebar animations when windows are grouped/ungrouped"
+#~ msgstr ""
+#~ "Configura as animacións da barra de título da xanela cando se agrupan ou "
+#~ "desagrupan as xanelas"
+
+#~ msgid "Hide Advanced Configuration Options"
+#~ msgstr "Agochar as opcións de configuración avanzada"
+
+#~ msgid "Show Advanced Configuration Options"
+#~ msgstr "Mostrar as opcións de configuración avanzadas"
+
+#~ msgid "Animations"
+#~ msgstr "Animacións"
+
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "Pregunta - Configuración de Oxygen"
+
+#~ msgid "Remove selected exception?"
+#~ msgstr "Desexa eliminar a excepción escollida?"
+
+#~ msgid "Warning - Oxygen Settings"
+#~ msgstr "Aviso - Configuración de Oxygen"
+
+#~ msgid "Regular Expression syntax is incorrect"
+#~ msgstr "A sintaxe da expresión regular non é correcta"
+
+#~ msgid "Exception Type"
+#~ msgstr "Tipo da excepción"
+
+#~ msgid "Regular Expression"
+#~ msgstr "Expresión regular"
+
+#~ msgid "Window Title"
+#~ msgstr "Título da xanela"
+
+#~ msgid "Window Class Name"
+#~ msgstr "Nome da clase da xanela"
+
+#~ msgid "Enable/disable this exception"
+#~ msgstr "Conmutar esta excepción"
+
+#~ msgid "General"
+#~ msgstr "Xeral"
+
+#~ msgid "Border si&ze:"
+#~ msgstr "Tamaño da &moldura:"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Border"
+#~ msgstr "Sen moldura"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "No Side Borders"
+#~ msgstr "Sen moldura lateral"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "Grande"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "Moi grande"
+
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "Enorme"
+
+#~ msgid "Tit&le alignment:"
+#~ msgstr "&Aliñamento do título:"
+
+#~ msgid "Center (Full Width)"
+#~ msgstr "Centrado (toda a largura)"
+
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "Pequeno"
+
+#~ msgid "Enable animations"
+#~ msgstr "Activar as animacións"
+
+#~ msgid "Fine Tuning"
+#~ msgstr "Axuste fino"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "Pechar as xanelas cun duplo-clic no botón de menú"
+
+#~ msgid "Never Draw Separator"
+#~ msgstr "Non debuxar nunca o separador"
+
+#~ msgid "Draw Separator When Window is Active"
+#~ msgstr "Debuxar o separador cando a xanela está activa"
+
+#~ msgid "Always Draw Separator"
+#~ msgstr "Debuxar sempre o separador"
+
+#~ msgid "Separator disp&lay:"
+#~ msgstr "Mostrar o &separador:"
+
+#~ msgid "Outline active window title"
+#~ msgstr "Esbozar o título da xanela activa"
+
+#~ msgid "Use narrow space between decoration buttons"
+#~ msgstr "Utilizar un espazo estreito entre os botóns da decoración"
+
+#~ msgid "Add handle to resize windows with no border"
+#~ msgstr "Engadir unha asa para mudar o tamaño das xanelas sen moldura"
+
+#~ msgid "Display window borders for maximized windows"
+#~ msgstr "Mostrar as molduras das xanelas maximizadas"
+
+#~ msgid "Shadows"
+#~ msgstr "Sombras"
+
+#~ msgid "Window Drop-Down Shadow"
+#~ msgstr "Sombra dos despregábeis das xanelas"
+
+#~ msgid "Active Window Glow"
+#~ msgstr "Brillo da xanela activa"
+
+#~ msgid "Window-Specific Overrides"
+#~ msgstr "Substitucións específicas da xanela"
+
+#~ msgid "Dialog"
+#~ msgstr "Diálogo"
+
+#~ msgid "Information about Selected Window"
+#~ msgstr "Información acerca da xanela escollida"
+
+#~ msgid "Class: "
+#~ msgstr "Clase: "
+
+#~ msgid "Title: "
+#~ msgstr "Título: "
+
+#~ msgid "Window Property Selection"
+#~ msgstr "Selección da propiedade da xanela"
+
+#~ msgid "Use window class (whole application)"
+#~ msgstr "Usar a clase de xanela (para todo o programa)"
+
+#~ msgid "Use window title"
+#~ msgstr "Usar o título da xanela"
+
+#~ msgid "Window Identification"
+#~ msgstr "Identificación da xanela"
+
+#~ msgid "Matching window property: "
+#~ msgstr "Propiedade da xanela a casar: "
+
+#~ msgid "Regular expression to match: "
+#~ msgstr "Expresión regular a procurar: "
+
+#~ msgid "Detect Window Properties"
+#~ msgstr "Detectar as propiedades da xanela"
+
+#~ msgid "Decoration Options"
+#~ msgstr "Opcións da decoración"
+
+#~ msgctxt "outline window title"
+#~ msgid "Disabled"
+#~ msgstr "Desactivado"
+
+#~ msgctxt "outline window title"
+#~ msgid "Enabled"
+#~ msgstr "Activado"
+
+#~ msgid "Border size:"
+#~ msgstr "Tamaño da moldura:"
+
+#~ msgid "Outline active window title:"
+#~ msgstr "Esbozar o título da xanela activa:"
+
+#~ msgid "Separator display:"
+#~ msgstr "Mostrar o separador:"
+
+#~ msgid "Hide window title bar"
+#~ msgstr "Agochar a barra de título da xanela"
+
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Disabled"
+#~ msgstr "Desactivada"
+
+#~ msgctxt "Add handle to resize windows with no border"
+#~ msgid "Enabled"
+#~ msgstr "Activada"
+
+#~ msgid "Move Up"
+#~ msgstr "Subir"
+
+#~ msgid "Move Down"
+#~ msgstr "Baixar"
+
+#~ msgid "Add"
+#~ msgstr "Engadir"
+
+#~ msgid "Remove"
+#~ msgstr "Eliminar"
+
+#~ msgid "Edit"
+#~ msgstr "Editar"
+
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "Demostración da sombra de Oxygen"
+
+#~ msgid "Draw window background"
+#~ msgstr "Debuxar o fondo da xanela"
+
+#~ msgid "Inactive Windows"
+#~ msgstr "Xanelas inactivas"
+
+#~ msgid "Active Windows"
+#~ msgstr "Xanelas activas"
+
+#~ msgid "Oxygen"
+#~ msgstr "Oxygen"
+
+#~ msgid "Window Actions Menu"
+#~ msgstr "Menú de accións da xanela"
+
+#~ msgid "Application Menu"
+#~ msgstr "Menú do programa"
+
+#~ msgid "Help"
+#~ msgstr "Axuda"
+
+#~ msgid "Minimize"
+#~ msgstr "Minimizar"
+
+#~ msgid "Maximize"
+#~ msgstr "Maximizar"
+
+#~ msgid "Close"
+#~ msgstr "Pechar"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "Manter sobre as outras"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "Manter baixo as outras"
+
+#~ msgid "On All Desktops"
+#~ msgstr "En todos os escritorios"
+
+#~ msgid "Shade Button"
+#~ msgstr "Pór sombra ao botón"
+
+#~ msgid "Menu"
+#~ msgstr "Menú"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "Non en todos os escritorios"
+
+#~ msgid "On all desktops"
+#~ msgstr "En todos os escritorios"
+
+#~ msgid "Unshade"
+#~ msgstr "Desenrolar"
+
+#~ msgid "Shade"
+#~ msgstr "Enrolar"
+
+#~ msgid "Resize"
+#~ msgstr "Mudar o tamaño"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>Vista previa de B II</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "Restaurar"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "Debuxar o &marco da xanela coas cores da barra do título"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "Se o escolle, as molduras das xanelas debuxaranse coas cores da barra de "
+#~ "título. En caso contrario, usaranse as cores normais de moldura."
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "Debuxar a &asa de mudar o tamaño"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "Se o escolle, a decoración terá unha «asa» na esquina inferior dereita "
+#~ "das xanelas. En caso contrario non se debuxará ningunha asa."
+
+#~ msgid "Auto-move titlebar"
+#~ msgstr "Mover automaticamente a barra de título"
+
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr ""
+#~ "Se o escolle, as barras de título activas moveranse soas para lugares "
+#~ "visíbeis. En caso contrario, só se moerán manualmente con Maiúsc"
+#~ "+arrastrar."
+
+#~ msgid "Actions Settings"
+#~ msgstr "Configuración das accións"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "Duplo-clic no botón do menú:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "Non facer nada"
+
+#~ msgid "Minimize Window"
+#~ msgstr "Minimizar a xanela"
+
+#~ msgid "Shade Window"
+#~ msgstr "Enrolar a xanela"
+
+#~ msgid "Close Window"
+#~ msgstr "Pechar a xanela"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "Unha acción pode ser asociada a un duplo-clic no botón do menú. Déixeo en "
+#~ "nada se ten dúbidas."
+
+#~ msgid "Laptop"
+#~ msgstr "Portátil"
+
+#~ msgid "Bac&kground style: "
+#~ msgstr "Estilo do &fondo: "
+
+#~ msgid "Solid Color"
+#~ msgstr "Cor sólida"
+
+#~ msgid "Radial Gradient"
+#~ msgstr "Gradiente radial"
+
+#~ msgid "Follow Style Hint"
+#~ msgstr "Seguir a suxestión do estilo"
+
+#~ msgid "Background style:"
+#~ msgstr "Estilo do fondo:"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Xabi García, Marce Villarino"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "xabigf@gmx.net, mvillarino@users.sourceforge.net"
+
+#~ msgid "Oxygen decoration shadows demonstration"
+#~ msgstr "Demostración das sombras na decoración Oxygen"
+
+#~ msgid "(c) 2011, Hugo Pereira Da Costa"
+#~ msgstr "(c) 2011, Hugo Pereira Da Costa"
+
+#~ msgid "Hugo Pereira Da Costa"
+#~ msgstr "Hugo Pereira Da Costa"
+
+#~ msgid "Save"
+#~ msgstr "Gardar"
+
+#~ msgid "Save shadows as pixmaps in provided directory"
+#~ msgstr "Garda as sombras como mapas de píxeles no directorio que se indique"
+
+#~ msgid "Extra size grip display: "
+#~ msgstr "Mostrar a asa adicional de tamaño: "
+
+#~ msgid "Extra size grip display:"
+#~ msgstr "Mostrar a asa de mudanza de tamaño:"
+
+#~ msgid "Inner Color:"
+#~ msgstr "Cor interna:"
+
+#~ msgid "Outer Color:"
+#~ msgstr "Cor externa:"
+
+#~ msgid "Vertical Offset:"
+#~ msgstr "Desprazamento vertical:"
+
+#~ msgid "Size: "
+#~ msgstr "Tamaño: "
+
+#~ msgid "px"
+#~ msgstr "px"
+
+#~ msgid "Always Hide Extra Size Grip"
+#~ msgstr "Acochar sempre a asa de mudanza do tamaño"
+
+#~ msgid "Show Extra Size Grip When Needed"
+#~ msgstr "Mostrar a asa de mudanza do tamaño cando se precise"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "Sinale esta opción se desexa que a xanela se peche cun duplo-clic no "
+#~ "botón menú, a semellanza de Microsoft Windows."
+
+#~ msgid "Plastik"
+#~ msgstr "Plastik"
+
+#, fuzzy
+#~| msgid "On All Desktops"
+#~ msgid "All Desktops"
+#~ msgstr "En todos os escritorios"
+
+#, fuzzy
+#~| msgid "Close"
+#~ msgid "Close Item"
+#~ msgstr "Pechar"
+
+#, fuzzy
+#~| msgid "Left"
+#~ msgid "&Left"
+#~ msgstr "Á esquerda"
+
+#, fuzzy
+#~| msgid "Center"
+#~ msgid "&Center"
+#~ msgstr "Centrado"
+
+#, fuzzy
+#~| msgid "Right"
+#~ msgid "&Right"
+#~ msgstr "Á dereita"
+
+#, fuzzy
+#~| msgid "Outer Color:"
+#~ msgid "O&utline Color:"
+#~ msgstr "Cor externa:"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Do not keep above others"
+#~ msgstr "Manter sobre as outras"
+
+#, fuzzy
+#~| msgid "Keep Above Others"
+#~ msgid "Keep above others"
+#~ msgstr "Manter sobre as outras"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Do not keep below others"
+#~ msgstr "Manter baixo as outras"
+
+#, fuzzy
+#~| msgid "Keep Below Others"
+#~ msgid "Keep below others"
+#~ msgstr "Manter baixo as outras"

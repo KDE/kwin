@@ -1,0 +1,260 @@
+# translation of kcm_kwindesktop.po to Kannada
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Ashok <ashok567@gmail.com>, 2010.
+# Shankar Prasad <svenkate@redhat.com>, 2008, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: kcm_kwindesktop\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"PO-Revision-Date: 2010-01-20 23:39+0530\n"
+"Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
+"Language-Team: kn-IN <>\n"
+"Language: kn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.0\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "ಅಶೋಕ್ ಕುಮಾರ್ ಎ"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "ashok567@gmail.com"
+
+#: desktopsmodel.cpp:467
+#, kde-format
+msgid "There was an error connecting to the compositor."
+msgstr ""
+
+#: desktopsmodel.cpp:666
+#, kde-format
+msgid "There was an error saving the settings to the compositor."
+msgstr ""
+
+#: desktopsmodel.cpp:669
+#, kde-format
+msgid "There was an error requesting information from the compositor."
+msgstr ""
+
+#: package/contents/ui/main.qml:17
+#, kde-format
+msgid ""
+"This module lets you configure the navigation, number and layout of virtual "
+"desktops."
+msgstr ""
+
+#: package/contents/ui/main.qml:91
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Rename"
+msgstr ""
+
+#: package/contents/ui/main.qml:102
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Confirm new name"
+msgstr ""
+
+#: package/contents/ui/main.qml:110
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove"
+msgstr ""
+
+#: package/contents/ui/main.qml:137
+#, kde-format
+msgid ""
+"Virtual desktops have been changed outside this settings application. Saving "
+"now will overwrite the changes."
+msgstr ""
+
+#: package/contents/ui/main.qml:153
+#, kde-format
+msgid "Row %1"
+msgstr ""
+
+#: package/contents/ui/main.qml:166
+#, kde-format
+msgctxt "@action:button"
+msgid "Add"
+msgstr ""
+
+#: package/contents/ui/main.qml:169
+#, fuzzy, kde-format
+#| msgid "Desktops"
+msgid "New Desktop"
+msgstr "ಗಣಕತೆರೆಗಳು"
+
+#: package/contents/ui/main.qml:184
+#, kde-format
+msgid "1 Row"
+msgid_plural "%1 Rows"
+msgstr[0] ""
+msgstr[1] ""
+
+#: package/contents/ui/main.qml:200
+#, kde-format
+msgid "Options:"
+msgstr ""
+
+#: package/contents/ui/main.qml:202
+#, fuzzy, kde-format
+#| msgid "Desktop navigation wraps around"
+msgid "Navigation wraps around"
+msgstr "ಗಣಕತೆರೆ ಸಂಚರಿಸುವಿಕೆಯು ಆವರಿಸುತ್ತದೆ"
+
+#: package/contents/ui/main.qml:220
+#, kde-format
+msgid "Show animation when switching:"
+msgstr ""
+
+#: package/contents/ui/main.qml:271
+#, kde-format
+msgid "Show on-screen display when switching:"
+msgstr ""
+
+#: package/contents/ui/main.qml:290
+#, kde-format
+msgid "%1 ms"
+msgstr ""
+
+#: package/contents/ui/main.qml:314
+#, kde-format
+msgid "Show desktop layout indicators"
+msgstr "ಗಣಕತೆರೆ ಹೊರವಿನ್ಯಾಸ ಸೂಚಕಗಳನ್ನು ತೋರಿಸು"
+
+#: virtualdesktops.cpp:33
+#, fuzzy, kde-format
+#| msgid "Desktops"
+msgid "Virtual Desktops"
+msgstr "ಗಣಕತೆರೆಗಳು"
+
+#~ msgid "Desktop %1:"
+#~ msgstr "ಗಣಕತೆರೆ %1:"
+
+#~ msgid "Here you can enter the name for desktop %1"
+#~ msgstr "ಇಲ್ಲಿ ನೀವು ಗಣಕತೆರೆ %1 ಗಾಗಿ ಹೆಸರನ್ನು ಸೂಚಿಸಬಹುದು"
+
+#~ msgid "Desktop %1"
+#~ msgstr "ಗಣಕತೆರೆ  %1"
+
+#~ msgid ""
+#~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "
+#~ "virtual desktops you want and how these should be labeled."
+#~ msgstr ""
+#~ "<h1>ಬಹು ಗಣಕತೆರೆಗಳು</h1>ನಿಮಗೆ ಎಷ್ಟು ವಾಸ್ತವಪ್ರಾಯ ಗಣಕತೆರೆಗಳ ಅಗತ್ಯವಿದೆ ಹಾಗು "
+#~ "ಅವುಗಳು ಹೇಗೆ ಕಾಣಿಸಿಕೊಳ್ಳಬೇಕು ಎಂದು ಈ ಘಟಕದಲ್ಲಿ ಸಂರಚಿಸಬಹುದು."
+
+#~ msgid "Switch to Next Desktop"
+#~ msgstr "ಮುಂದಿನ ಗಣಕತೆರೆಗೆ ಬದಲಾಯಿಸು"
+
+#~ msgid "Switch to Previous Desktop"
+#~ msgstr "ಹಿಂದಿನ ಗಣಕತೆರೆಗೆ ಬದಲಾಯಿಸು"
+
+#~ msgid "Switch One Desktop to the Right"
+#~ msgstr "ಬಲಗಡೆಯ ಒಂದು ಗಣಕತೆರೆ ಬದಲಾಯಿಸು."
+
+#~ msgid "Switch One Desktop to the Left"
+#~ msgstr "ಎಡಗಡೆಯ ಒಂದು ಗಣಕತೆರೆ ಬದಲಾಯಿಸು."
+
+#~ msgid "Switch One Desktop Up"
+#~ msgstr "ಮೇಲಿನ ಒಂದು ಗಣಕತೆರೆ ಬದಲಾಯಿಸು."
+
+#~ msgid "Switch One Desktop Down"
+#~ msgstr "ಕೆಳಗಿನ ಒಂದು ಗಣಕತೆರೆ ಬದಲಾಯಿಸು."
+
+#~ msgid "Desktop Switching"
+#~ msgstr "ಗಣಕತೆರೆ ಬದಲಾಯಿಸುವಿಕೆ"
+
+#~ msgid "Switch to Desktop %1"
+#~ msgstr "ಗಣಕತೆರೆ %1 ಕ್ಕೆ  ಬದಲಿಸು"
+
+#~ msgid "No Animation"
+#~ msgstr "ಸಜೀವನವನ್ನು(ಅನಿಮೇಶನ್‌) ಶಕ್ತಗೊಳಿಸು"
+
+#~ msgid "No suitable Shortcut for Desktop %1 found"
+#~ msgstr "ಗಣಕತೆರೆ %1ಕ್ಕೆ  ಸೂಕ್ತವಾದ ಸಮೀಪಮಾರ್ಗಗಳು ಕಂಡುಬಂದಿಲ್ಲ"
+
+#~ msgid "Assigned global Shortcut \"%1\" to Desktop %2"
+#~ msgstr "ಗಣಕತೆರೆ %2ಕ್ಕೆ \"%1\" ಎಂಬ ಜಾಗತಿಕ ಸಮೀಪಮಾರ್ಗ ನಿಯೋಜಿಸಲಾಗಿದೆ"
+
+#~ msgid "Shortcut conflict: Could not set Shortcut %1 for Desktop %2"
+#~ msgstr "ಸಮೀಪಮಾರ್ಗ ಅಸಂಜಸತೆ: ಸಮೀಪಮಾರ್ಗ %1 ಅನ್ನು ಗಣಕತೆರೆ %2ಗೆ  ಸೂಚಿಸಲಾಗಲಿಲ್ಲ"
+
+#~ msgid "Layout"
+#~ msgstr "ಹೊರವಿನ್ಯಾಸ"
+
+#~ msgid ""
+#~ "Here you can set how many virtual desktops you want on your KDE desktop."
+#~ msgstr ""
+#~ "ನಿಮ್ಮ KDE ಗಣಕತೆರೆಯ ಮೇಲೆ ಎಷ್ಟು ವಾಸ್ತವಪ್ರಾಯ ಗಣಕತೆರೆಗಳ ಅಗತ್ಯವಿದೆ ಎಂದು ಇಲ್ಲಿ "
+#~ "ಸೂಚಿಸಬಹುದು."
+
+#, fuzzy
+#~| msgid "Number of desktops:"
+#~ msgid "&Number of desktops:"
+#~ msgstr "ಗಣಕತೆರೆಗಳ ಸಂಖ್ಯೆ:"
+
+#, fuzzy
+#~| msgid "Number of rows:"
+#~ msgid "N&umber of rows:"
+#~ msgstr "ಅಡ್ಡಸಾಲಿನ ಸಂಖ್ಯೆ: "
+
+#~ msgid "Desktop Names"
+#~ msgstr "ಗಣಕತೆರೆಯ ಹೆಸರುಗಳು"
+
+#~ msgid "Switching"
+#~ msgstr "ಬದಲಾಯಿಸುವಿಕೆ"
+
+#~ msgid ""
+#~ "Enable this option if you want keyboard or active desktop border "
+#~ "navigation beyond the edge of a desktop to take you to the opposite edge "
+#~ "of the new desktop."
+#~ msgstr ""
+#~ "ಕೀಲಿಮಣೆಯ ಅಥವ ಸಕ್ರಿಯ ಗಣಕತೆರೆ ಅಂಚು ಸಂಚರಿಸುವಿಕೆಯು ಗಣಕತೆರೆಯ ಅಂಚಿನ ಆಚೆಗೆ ಹೋಗಿ "
+#~ "ಹೊಸ ಗಣಕತೆರೆಯ ವಿರುದ್ಧ ಬದಿಗೆ ನಿಮ್ಮನ್ನೊಯ್ಯ ಬಯಸುವಿರಾದರೆ, ಈ  ಆಯ್ಕೆಯನ್ನು ಶಕ್ತಗೊಳಿಸಿ."
+
+#~ msgid "Desktop Effect Animation"
+#~ msgstr "ಗಣಕತೆರೆ  ಪರಿಣಾಮದ ಸಜೀವನ"
+
+#~ msgid "Animation:"
+#~ msgstr "ಸಜೀವನ(ಅನಿಮೇಶನ್‌):"
+
+#~ msgid "Desktop Switch On-Screen Display"
+#~ msgstr "ಗಣಕತೆರೆಯನ್ನು ಬದಲಿಸುವಿಕೆಯನ್ನು ತೆರೆಯ ಮೇಲೆ ಪ್ರದರ್ಶಿಸು"
+
+#~ msgid "Duration:"
+#~ msgstr "ಕಾಲಾವಧಿ:"
+
+#~ msgid " msec"
+#~ msgstr "ಮಿಲಿಸೆಕೆಂಡ್"
+
+#~ msgid ""
+#~ "Enabling this option will show a small preview of the desktop layout "
+#~ "indicating the selected desktop."
+#~ msgstr ""
+#~ "ಈ ಆಯ್ಕೆಯನ್ನು ಶಕ್ತಗೊಳಿಸಿದರೆ, ಆರಿಸಿದ ಗಣಕತೆರೆಯನ್ನು ಸೂಚಿಸುವ ಕಿರು ಮುನ್ನೋಟವು  "
+#~ "ಪ್ರದರ್ಶಿತವಾಗುತ್ತದೆ."
+
+#~ msgid "Shortcuts"
+#~ msgstr "ಸಮೀಪಮಾರ್ಗಗಳು (ಶಾರ್ಟ್ ಕಟ್)"
+
+#~ msgid "Show shortcuts for all possible desktops"
+#~ msgstr "ಎಲ್ಲಾ ಸಾಧ್ಯವಾದ ಗಣಕತೆರೆಗಳಿಗೆ ಸಮೀಪಮಾರ್ಗಗಳನ್ನು ತೋರಿಸು"
+
+#, fuzzy
+#~| msgid "Different activity for each desktop"
+#~ msgid "Different widgets for each desktop"
+#~ msgstr "ಪ್ರತಿ ಗಣಕತೆರೆಗೂ ಪ್ರತ್ಯೇಕ ಚಟುವಟಿಕೆಗಳು"
+
+#~ msgid "Mouse wheel over desktop background switches desktop"
+#~ msgstr ""
+#~ "ಗಣಕತೆರೆ ಹಿನ್ನಲೆಯ ಮೇಲೆ ಮೌಸ್‌ನ ಚಕ್ರವನ್ನು ಇರಿಸುವುದರಿಂದ ಗಣಕತೆರೆಗಳ ನಡುವೆ ಬದಲಾಯಿಸುತ್ತದೆ"

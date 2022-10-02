@@ -1,0 +1,78 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % French "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinscreenedges" lang="&language;">
+<articleinfo>
+
+<title
+>Bords de l'écran</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+&traducteurPierreBuard;&traducteurXavierBesnard; 
+</authorgroup>
+
+<date
+>09-04-2021</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Configuration du système</keyword>
+<keyword
+>bureau</keyword>
+<keyword
+>effets</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Les bords d'écran actifs permettent de déclencher des effets en poussant le pointeur de la souris contre un des bords. Vous pourrez configurer ici l'effet à activer sur chaque bord et coin de l'écran. </para>
+
+<para
+>Cliquez avec n'importe quel bouton de la souris sur un carré et sélectionnez un effet dans le menu contextuel. Les bords ayant un carré bleu sont déjà associés à un effet. Un carré gris indique qu'aucun effet n'est sélectionné pour ce bord.</para>
+
+<para
+>Le nombre d'éléments accessibles dans le menu contextuel dépend de la configuration du module <ulink url="help:/kcontrol/kwineffects/index.html"
+><guilabel
+>Effets de bureau</guilabel
+></ulink
+> de la catégorie <guilabel
+>Espace de travail</guilabel
+>. Sélectionnez vos effets de bureau favoris à partir du groupe <guilabel
+>Gestionnaire de fenêtres</guilabel
+>. Ceci activera les éléments correspondants dans le menu contextuel.</para>
+
+<para
+>Si vous cherchez à configurer le changement de bureau par pression du pointeur de la souris contre les bords de l'écran, choisissez un des effets de <guilabel
+>Présentation des fenêtres</guilabel
+> à partir du menu contextuel.</para>
+
+<para
+>Vous pouvez activer <guilabel
+>Maximiser : fenêtres glissées vers le bord supérieur</guilabel
+> ou <guilabel
+>Empiler : fenêtres glissées vers le bord droit ou gauche</guilabel
+> et définir le pourcentage de l'écran pour le déclenchement de l'empilage. </para>
+
+<para
+>Vous pouvez configurer l'élément de <guilabel
+>basculement sur un bord d'écran</guilabel
+>, configurer si vous voulez basculer vers un autre bureau lors d'un déplacement du pointeur de souris sur un bord de l'écran, &pex;, uniquement lors du déplacement des fenêtres. </para>
+<para
+><guilabel
+>Délai d'activation</guilabel
+> est la durée nécessaire pour que le pointeur de la souris arrive sur un bord de l'écran avant de déclencher une action. </para>
+<para
+><guilabel
+>Délai de réactivation</guilabel
+> est une temporisation nécessaire après le déclenchement d'une action avant de déclencher la suivante. </para>
+</article>

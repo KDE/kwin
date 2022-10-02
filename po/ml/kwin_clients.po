@@ -1,0 +1,606 @@
+# Malayalam translation of kwin_clients.po.
+# Copyright (C) 2008 This_file_is_part_of_KDE
+# This file is distributed under the same license as the kdebase package.
+# മണിലാല്‍ കെ.എം|Manilal K M <libregeek@gmail.com>, 2008.
+# Hari|ഹരി  Vishnu | വിഷ്ണു <harivishnu@gmail.com>, 2008.
+# Praveen Arimbrathodiyil <pravi.a@gmail.com>, 2008.
+msgid ""
+msgstr ""
+"Project-Id-Version: KDE Malayalam\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-08-07 00:48+0000\n"
+"PO-Revision-Date: 2008-12-06 20:35-0800\n"
+"Last-Translator: Praveen Arimbrathodiyil <pravi.a@gmail.com>\n"
+"Language-Team: SMC <smc.org.in>\n"
+"Language: ml\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: aurorae/src/aurorae.cpp:725
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Tiny"
+msgstr ""
+
+#: aurorae/src/aurorae.cpp:726
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Normal"
+msgstr ""
+
+#: aurorae/src/aurorae.cpp:727
+#, fuzzy, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Large"
+msgstr "വലുത്"
+
+#: aurorae/src/aurorae.cpp:728
+#, fuzzy, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "വലുത്"
+
+#: aurorae/src/aurorae.cpp:729
+#, fuzzy, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Huge"
+msgstr "വലുത്"
+
+#: aurorae/src/aurorae.cpp:730
+#, fuzzy, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Huge"
+msgstr "വലുത്"
+
+#: aurorae/src/aurorae.cpp:731
+#, fuzzy, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Oversized"
+msgstr "വലിപ്പം മാറ്റുക"
+
+#: aurorae/src/aurorae.cpp:734
+#, kde-format
+msgid "Button size:"
+msgstr ""
+
+#. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:14
+#, kde-format
+msgid "Config Dialog"
+msgstr "സജ്ജീകരണത്തിനുള്ള സംവാദം"
+
+#. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:23
+#, kde-format
+msgid "Title &Alignment"
+msgstr "&തലക്കെട്ട് ക്രമീകരണം"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:29
+#, kde-format
+msgid "Left"
+msgstr "ഇടത്"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:36
+#, kde-format
+msgid "Center"
+msgstr "മദ്ധ്യം"
+
+#. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:43
+#, kde-format
+msgid "Right"
+msgstr "വലത്ത്"
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:53
+#, kde-format
+msgid ""
+"Check this option if the window border should be painted in the titlebar "
+"color. Otherwise it will be painted in the background color."
+msgstr ""
+"ഈ ഐച്ഛികം തെരഞ്ഞെടുത്താല്‍, ജാലകവരമ്പിനു തലക്കെട്ടു് കാണിയ്ക്കുന്ന പട്ടയുടെ നിറം കൊടുക്കും. "
+"അല്ലെങ്കില്‍ പശ്ചാത്തല നിറമായിരിക്കും ഉപയോഗിക്കുക"
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:56
+#, kde-format
+msgid "Colored window border"
+msgstr "നിറമുള്ള ജാലക വരമ്പ് "
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:66
+#, kde-format
+msgid ""
+"Check this option if you want the buttons to fade in when the mouse pointer "
+"hovers over them and fade out again when it moves away."
+msgstr ""
+"ഈ ഐച്ഛികം തെരഞ്ഞെടുത്താല്‍, മൌസ് കഴ്സര്‍ കൊണ്ടു വരുമ്പോള്‍ ബട്ടണുകള്‍ മങ്ങുകയും കഴ്സര്‍ മാറ്റുമ്പോള്‍ "
+"ബട്ടണുകള്‍ തെളിയുകയും ചെയ്യും."
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
+#: aurorae/themes/plastik/package/contents/ui/config.ui:69
+#, kde-format
+msgid "Animate buttons"
+msgstr "ബട്ടണുകള്‍ ചലിപ്പിക്കുക"
+
+#~ msgid ""
+#~ "Check this option if you want the titlebar text to have a 3D look with a "
+#~ "shadow behind it."
+#~ msgstr ""
+#~ "തലക്കെട്ടു് കാണിയ്ക്കുന്ന പട്ടയിലെ പദാവലിയ്ക്കു് ത്രിമാന സ്വഭാവവും അടിയില്‍ നിഴലും വേണമെങ്കില്‍ "
+#~ "ഈ ഐച്ഛികം തെരഞ്ഞെടുക്കുക."
+
+#~ msgid "Use shadowed &text"
+#~ msgstr "നിഴലുള്ള &പദാവലി ഉപയോഗിക്കുക"
+
+#, fuzzy
+#~ msgid "Animations"
+#~ msgstr "ബട്ടണുകള്‍ ചലിപ്പിക്കുക"
+
+#, fuzzy
+#~ msgid "Question - Oxygen Settings"
+#~ msgstr "പ്രവൃത്തികളുടെ സജ്ജീകരണം"
+
+#, fuzzy
+#~ msgid "General"
+#~ msgstr "മദ്ധ്യം"
+
+#, fuzzy
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Large"
+#~ msgstr "വലുത്"
+
+#, fuzzy
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Very Large"
+#~ msgstr "വലുത്"
+
+#, fuzzy
+#~ msgctxt "@item:inlistbox Border size:"
+#~ msgid "Huge"
+#~ msgstr "വലുത്"
+
+#, fuzzy
+#~ msgid "Tit&le alignment:"
+#~ msgstr "&തലക്കെട്ട് ക്രമീകരണം"
+
+#, fuzzy
+#~ msgctxt "@item:inlistbox Button size:"
+#~ msgid "Small"
+#~ msgstr "ചെറുത്"
+
+#~ msgid "Close windows by double clicking the menu button"
+#~ msgstr "മെനു ബട്ടണില്‍ ഇരട്ട ക്ലിക്ക് ചെയ്ത് ജാലകം അടയ്ക്കുക"
+
+#, fuzzy
+#~ msgid "Outline active window title"
+#~ msgstr "ജാലകം ചെറുതാക്കുക"
+
+#, fuzzy
+#~ msgid "Shadows"
+#~ msgstr "ചുരുക്കുക"
+
+#, fuzzy
+#~ msgid "Active Window Glow"
+#~ msgstr "ജാലകം ചെറുതാക്കുക"
+
+#, fuzzy
+#~ msgid "Dialog"
+#~ msgstr "സജ്ജീകരണത്തിനുള്ള സംവാദം"
+
+#, fuzzy
+#~ msgid "Use window title"
+#~ msgstr "ജാലകം ചെറുതാക്കുക"
+
+#, fuzzy
+#~ msgid "Outline active window title:"
+#~ msgstr "ജാലകം ചെറുതാക്കുക"
+
+#, fuzzy
+#~ msgid "Hide window title bar"
+#~ msgstr "ജാലകം ചെറുതാക്കുക"
+
+#, fuzzy
+#~ msgid "Remove"
+#~ msgstr "വീണ്ടടുക്കുക"
+
+#, fuzzy
+#~ msgid "Oxygen Shadow Demo"
+#~ msgstr "ഓക്സിജന്‍"
+
+#, fuzzy
+#~ msgid "Inactive Windows"
+#~ msgstr "ജാലകം ചെറുതാക്കുക"
+
+#, fuzzy
+#~ msgid "Active Windows"
+#~ msgstr "ജാലകം ചെറുതാക്കുക"
+
+#~ msgid "Oxygen"
+#~ msgstr "ഓക്സിജന്‍"
+
+#~ msgid "Help"
+#~ msgstr "സഹായം"
+
+#~ msgid "Minimize"
+#~ msgstr "ചെറുതാക്കുക"
+
+#~ msgid "Maximize"
+#~ msgstr "വലുതാക്കുക"
+
+#~ msgid "Close"
+#~ msgstr "അടയ്ക്കുക"
+
+#~ msgid "Keep Above Others"
+#~ msgstr "മറ്റുള്ളവയുടെ മേലെ"
+
+#~ msgid "Keep Below Others"
+#~ msgstr "മറ്റുള്ളവയുടെ കീഴെ"
+
+#~ msgid "On All Desktops"
+#~ msgstr "എല്ലാ പണിയിടത്തിലും"
+
+#~ msgid "Shade Button"
+#~ msgstr "ചുരുക്കുവാനുള്ള ബട്ടന്‍"
+
+#~ msgid "Menu"
+#~ msgstr "മെനു"
+
+#~ msgid "Not on all desktops"
+#~ msgstr "എല്ലാ പണിയിടത്തും വേണ്ട"
+
+#~ msgid "On all desktops"
+#~ msgstr "എല്ലാ പണിയിടത്തിലും"
+
+#~ msgid "Unshade"
+#~ msgstr "നിവര്‍ത്തുക"
+
+#~ msgid "Shade"
+#~ msgstr "ചുരുക്കുക"
+
+#~ msgid "Resize"
+#~ msgstr "വലിപ്പം മാറ്റുക"
+
+#~ msgid "<b><center>B II preview</center></b>"
+#~ msgstr "<b><center>ബി II തിരനോട്ടം</center></b>"
+
+#~ msgid "Restore"
+#~ msgstr "വീണ്ടടുക്കുക"
+
+#~ msgctxt "Help button label, one character"
+#~ msgid "?"
+#~ msgstr "?"
+
+#~ msgid "Draw window frames using &titlebar colors"
+#~ msgstr "ജാലക ചട്ടക്കൂടിനെ &തലക്കെട്ടു് കാണിയ്ക്കുന്ന പട്ടയുടെ നിറങ്ങള്‍ കൊണ്ടു വരയ്ക്കുക"
+
+#~ msgid ""
+#~ "When selected, the window borders are drawn using the titlebar colors; "
+#~ "otherwise, they are drawn using normal border colors."
+#~ msgstr ""
+#~ "ഇതു തെരഞ്ഞെടുത്താല്‍ ജാലകത്തിന്റെ അതിരുകള്‍ തലക്കെട്ടു് കാണിയ്ക്കുന്ന പട്ടയുടെ നിറമാക്കും; "
+#~ "അല്ലെങ്കില്‍ സാധാരണ നിറങ്ങള്‍ കൊണ്ട് നിറയ്ക്കും"
+
+#~ msgid "Draw &resize handle"
+#~ msgstr "&വലിപ്പം മാറ്റാനുള്ള സൂത്രം വരയ്ക്കുക"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
+#~ "right corner of the windows; otherwise, no grab handle is drawn."
+#~ msgstr ""
+#~ "ഇതു്‌ തിരഞ്ഞെടുത്താല്‍, അലങ്കാരങ്ങള്‍ ഒരു \"വലിക്കാനുള്ള പിടി \" ഉപയോഗിച്ച് വരയ്ക്കാം "
+#~ "ജാലകങ്ങളുടെ താഴത്തെ വലതു വശത്തായ്; അല്ലെങ്കില്‍, വലിക്കാനുള്ള പിടി വരയ്ക്കുന്നതല്ല."
+
+#, fuzzy
+#~ msgid ""
+#~ "When selected, titlebars are automatically relocated to visible "
+#~ "positions; otherwise, they are only moved manually using shift+drag."
+#~ msgstr ""
+#~ "ഇതു തെരഞ്ഞെടുത്താല്‍, സജീവമായ തലക്കെട്ടു് കാണിയ്ക്കുന്ന പട്ടകള്‍ക്ക് സ്റ്റിപിള്‍ (കുത്തുകളിട്ട) "
+#~ "പ്രഭാവം കൊടുക്കും; അല്ലെങ്കില്‍ സ്റ്റിപിള്‍ ഇല്ലാതെ തലക്കെട്ടു് കാണിയ്ക്കുന്ന പട്ട വരയ്ക്കും."
+
+#~ msgid "Actions Settings"
+#~ msgstr "പ്രവൃത്തികളുടെ സജ്ജീകരണം"
+
+#~ msgid "Double click on menu button:"
+#~ msgstr "മെനു ബട്ടണില്‍ ഇരട്ട ക്ലിക്ക് ചെയ്യുക:"
+
+#~ msgid "Do Nothing"
+#~ msgstr "ഒന്നും ചെയ്യണ്ട"
+
+#~ msgid "Minimize Window"
+#~ msgstr "ജാലകം ചെറുതാക്കുക"
+
+#~ msgid "Shade Window"
+#~ msgstr "ജാലകം ചുരുക്കുക"
+
+#~ msgid "Close Window"
+#~ msgstr "ജാലകം അടയ്ക്കുക"
+
+#~ msgid ""
+#~ "An action can be associated to a double click of the menu button. Leave "
+#~ "it to none if in doubt."
+#~ msgstr ""
+#~ "ഒരു പ്രവൃത്തി മെനു ബട്ടണിന്റെ ഇരട്ട ക്ലിക്കുമായി ബന്ധപ്പെടുത്താവുന്നതാണു്. സംശയമുണ്ടെങ്കില്‍ none "
+#~ "എന്നു കൊടുക്കുക"
+
+#~ msgid "Laptop"
+#~ msgstr "ലാപ്‌ടോപ്പ്"
+
+#, fuzzy
+#~ msgid "Radial Gradient"
+#~ msgstr "&ഗ്രേഡിയന്റുകള്‍ വരക്കുക"
+
+#, fuzzy
+#~ msgid "Save"
+#~ msgstr "ചുരുക്കുക"
+
+#~ msgid "Large"
+#~ msgstr "വലുത്"
+
+#~ msgid "Small"
+#~ msgstr "ചെറുത്"
+
+#~ msgid ""
+#~ "Check this option if you want windows to be closed when you double click "
+#~ "the menu button, similar to Microsoft Windows."
+#~ msgstr ""
+#~ "മൈക്രോസോഫ്റ്റ് വിന്‍ഡോസിലേതു പോലെ മെനു ബട്ടണില്‍ ഇരട്ട ക്ലിക്ക് ചെയ്തു ജാലകം അടയ്ക്കണമെങ്കില്‍ "
+#~ "ഈ ഐച്ഛികം തെരഞ്ഞെടുക്കുക."
+
+#~ msgid "Plastik"
+#~ msgstr "പ്ലാസ്റ്റിക്"
+
+#, fuzzy
+#~ msgid "All Desktops"
+#~ msgstr "എല്ലാ പണിയിടത്തിലും"
+
+#, fuzzy
+#~ msgid "Close Item"
+#~ msgstr "അടയ്ക്കുക"
+
+#~ msgid "&Left"
+#~ msgstr "&ഇടത്"
+
+#, fuzzy
+#~ msgid "&Center"
+#~ msgstr "മദ്ധ്യം"
+
+#~ msgid "&Right"
+#~ msgstr "&വലത്ത്"
+
+#, fuzzy
+#~ msgid "Do not keep above others"
+#~ msgstr "മറ്റുള്ളവയുടെ മേലെ"
+
+#~ msgid "Keep above others"
+#~ msgstr "മറ്റുള്ളവയുടെ മേലെ"
+
+#, fuzzy
+#~ msgid "Do not keep below others"
+#~ msgstr "മറ്റുള്ളവയുടെ കീഴെ"
+
+#~ msgid "Keep below others"
+#~ msgstr "മറ്റുള്ളവയുടെ കീഴെ"
+
+#, fuzzy
+#~ msgid "Maximum"
+#~ msgstr "വലുതാക്കുക"
+
+#, fuzzy
+#~ msgid "Shadow style:"
+#~ msgstr "ചുരുക്കുക"
+
+#, fuzzy
+#~ msgid "Draw separator between title bar and window contents: "
+#~ msgstr "തലക്കെട്ടു് കാണിയ്ക്കുന്ന പട്ടയുടെ നിറങ്ങള്‍ ജാലകത്തിന്റെ ഉള്ളടക്കവുമായി കലര്‍ത്തുക"
+
+#, fuzzy
+#~ msgid "Draw Separator between title bar and active window contents "
+#~ msgstr "തലക്കെട്ടു് കാണിയ്ക്കുന്ന പട്ടയുടെ നിറങ്ങള്‍ ജാലകത്തിന്റെ ഉള്ളടക്കവുമായി കലര്‍ത്തുക"
+
+#~ msgid "Installs a KWM theme"
+#~ msgstr "കെഡബ്ലിയുഎം പ്രമേയം ഇന്‍സ്റ്റോള്‍ ചെയ്യുക"
+
+#~ msgid "Path to a theme config file"
+#~ msgstr "പ്രമോയത്തിന്റെ ക്രമീകരണ ഫയലിലേക്കുള്ള വഴി"
+
+#~ msgid "<center><b>KWMTheme</b></center>"
+#~ msgstr "<center><b>കെഡബ്ലിയുഎംതീം</b></center>"
+
+#~ msgid "Sticky"
+#~ msgstr "ഒട്ടിക്കിടക്കുന്ന"
+
+#~ msgid "Unsticky"
+#~ msgstr "ഒട്ടിക്കിടക്കാതാക്കുക"
+
+#~ msgid "<center><b>Keramik preview</b></center>"
+#~ msgstr "<center><b>കെറാമിക് തിരനോട്ടം</b></center>"
+
+#~ msgid "Draw titlebar &stipple effect"
+#~ msgstr "തലക്കെട്ടു് കാണിയ്ക്കുന്ന പട്ടയില്‍ &കുത്തുകൊണ്ടുചിത്രമെഴുതുന്ന പ്രതീതി വരുത്തുക"
+
+#~ msgid ""
+#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
+#~ "otherwise, they are drawn without the stipple."
+#~ msgstr ""
+#~ "ഇതു തെരഞ്ഞെടുത്താല്‍, സജീവമായ തലക്കെട്ടു് കാണിയ്ക്കുന്ന പട്ടകള്‍ക്ക് സ്റ്റിപിള്‍ (കുത്തുകളിട്ട) "
+#~ "പ്രഭാവം കൊടുക്കും; അല്ലെങ്കില്‍ സ്റ്റിപിള്‍ ഇല്ലാതെ തലക്കെട്ടു് കാണിയ്ക്കുന്ന പട്ട വരയ്ക്കും."
+
+#~ msgid "Draw g&rab bar below windows"
+#~ msgstr "&വലിക്കാനുള്ള പട്ട ജാലകങ്ങള്‍ക്ക് താഴെ വരയ്ക്കുക."
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
+#~ "otherwise, no grab bar is drawn."
+#~ msgstr ""
+#~ "ഇതു്‌ തിരഞ്ഞെടുത്താല്‍, അലങ്കാരങ്ങള്‍ ജാലകങ്ങളുടെ താഴെ ഒരു \"വലിക്കാനുള്ള പട്ട\" ഉപയോഗിച്ച് "
+#~ "വരയ്ക്കപ്പെടും; അല്ലെങ്കില്‍, വലിക്കാനുള്ള കട്ട വരയ്ക്കുന്നതല്ല."
+
+#~ msgid "Draw &gradients"
+#~ msgstr "&ഗ്രേഡിയന്റുകള്‍ വരക്കുക"
+
+#~ msgid ""
+#~ "When selected, decorations are drawn with gradients for high-color "
+#~ "displays; otherwise, no gradients are drawn."
+#~ msgstr ""
+#~ "ഇതു്‌ തിരഞ്ഞെടുക്കുംബോള്‍, അലങ്കാരങ്ങള്‍ കൂടുതല്‍ നിറമുള്ള ദൃശ്യങ്ങള്‍ക്കായ് ഗ്രേഡിയെന്റ് ഉപയോഗിച്ച് "
+#~ "വരയ്ക്കപ്പെടും; അല്ലെങ്കില്‍ ഗ്രേഡിയെന്റ് ഒന്നും വരയ്ക്കുന്നതല്ല."
+
+#~ msgid "KDE 2"
+#~ msgstr "കെഡിഇ 2"
+
+#~ msgid ""
+#~ "When selected, the window decoration borders are drawn using the titlebar "
+#~ "colors; otherwise, they are drawn using normal border colors instead."
+#~ msgstr ""
+#~ "ഇതു തെരഞ്ഞെടുത്താല്‍ ജാലകത്തിന്റെ അതിരുകള്‍ തലക്കെട്ടു് കാണിയ്ക്കുന്ന പട്ടയുടെ നിറമാക്കും; "
+#~ "അല്ലെങ്കില്‍ സാധാരണ നിറങ്ങള്‍ കൊണ്ട് നിറയ്ക്കും."
+
+#~ msgid "Quartz &extra slim"
+#~ msgstr "ക്വാര്‍ട്ട്സ് &അധികം മെലിഞ്ഞത്"
+
+#~ msgid "Quartz window decorations with extra-small title bar."
+#~ msgstr "തീരെ ചെറിയ തലക്കെട്ടു് കാണിയ്ക്കുന്ന പട്ടയോടുകൂടിയ ക്വാര്‍ട്ട്സ് ജാലക അലങ്കാരങ്ങള്‍."
+
+#~ msgid "Quartz"
+#~ msgstr "ക്വാര്‍ട്ട്സ്"
+
+#~ msgid "Redmond"
+#~ msgstr "റെഡ്മണ്ട്"
+
+#~ msgid "&Show window resize handle"
+#~ msgstr "&ജാലകത്തിന്റെ വലിപ്പം മാറ്റാനുള്ള പിടി കാണിക്കുക"
+
+#~ msgid ""
+#~ "When selected, all windows are drawn with a resize handle at the lower "
+#~ "right corner. This makes window resizing easier, especially for "
+#~ "trackballs and other mouse replacements on laptops."
+#~ msgstr ""
+#~ "ഇതു്‌ തിരഞ്ഞെടുക്കുമ്പോള്‍ എല്ലാ ജാലകങ്ങളും ഒരു വലിപ്പം-മാറ്റാനുള്ള പിടിയോടു് കൂടി താഴെ വലത് "
+#~ "കോണിലായ് വരയ്ക്കപ്പെടും. ഇത് വലിപ്പം മാറ്റുന്ന പ്രക്രിയ എളുപ്പം ആക്കുന്നു, പ്രത്യേകിച്ചും "
+#~ "ട്രാക്ബാള്‍സിലും ലാപ്ടോപ്പുകളിലെ മറ്റു റീപ്ലേസ്മെന്റ്റുകളിലും."
+
+#~ msgid "Here you can change the size of the resize handle."
+#~ msgstr "ഇവിടെ നിങ്ങള്‍ക്ക് വലിപ്പം-മാറ്റാനുള്ള പിടിയുടെ വലിപ്പം മാറ്റാം."
+
+#~ msgid "Medium"
+#~ msgstr "ഇടത്തരം"
+
+#~ msgid "Modern System"
+#~ msgstr "ആധുനിക സിസ്റ്റം"
+
+#~ msgid "Web"
+#~ msgstr "വെബ്"
+
+#~ msgid "Keramik"
+#~ msgstr "കെറാമിക്"
+
+#~ msgid "Display the window &icon in the caption bubble"
+#~ msgstr "ജാലകത്തിന്റെ &ചിഹ്നം അടിക്കുറിപ്പ് കളത്തില്‍ കാണിക്കുക"
+
+#~ msgid ""
+#~ "Check this option if you want the window icon to be displayed in the "
+#~ "caption bubble next to the titlebar text."
+#~ msgstr ""
+#~ "ജാലകത്തിന്റെ ചിഹ്നം തലക്കെട്ടിന്റെ അടുത്ത് അടിക്കുറിപ്പ് കളത്തില്‍ കാണിക്കണമെങ്കില്‍ ഈ ഐച്ഛികം "
+#~ "തെരഞ്ഞെടുക്കുക."
+
+#~ msgid "Draw &small caption bubbles on active windows"
+#~ msgstr "സജീവമായ ജാലകങ്ങളില്‍ &ചെറിയ അടിക്കുറിപ്പ് കളങ്ങള്‍ വരയ്ക്കുക"
+
+#~ msgid ""
+#~ "Check this option if you want the caption bubble to have the same size on "
+#~ "active windows that it has on inactive ones. This option is useful for "
+#~ "laptops or low resolution displays where you want maximize the amount of "
+#~ "space available to the window contents."
+#~ msgstr ""
+#~ "സജീവമായ ജാലകങ്ങളിലും നിര്‍ജ്ജീവമായ ജാലകങ്ങളിലും ചെറിയ അടിക്കുറിപ്പ് കളങ്ങള്‍ക്ക് ഒരേ "
+#~ "വലിപ്പം വേണമെങ്കില്‍ ഈ ഐച്ഛികം തെരഞ്ഞെടുക്കുക. ജാലക ഉള്ളടക്കത്തിനു് കൂടുതല്‍ സ്ഥലം വേണ്ടിവരുന്ന "
+#~ "ലാപ്‌ടോപ്പിലും റെസൊല്യൂഷന്‍ കുറഞ്ഞ ഡിസ്‌പ്ലേകളിലും ഈ ഐച്ഛികം ഉപയോഗപ്രദമായിരിക്കും."
+
+#~ msgid "Draw g&rab bars below windows"
+#~ msgstr "&വലിക്കാനുള്ള പട്ട ജാലകങ്ങള്‍ക്കു്‌ താഴെ വരയ്ക്കുക"
+
+#~ msgid ""
+#~ "Check this option if you want a grab bar to be drawn below windows. When "
+#~ "this option is not selected only a thin border will be drawn in its place."
+#~ msgstr ""
+#~ "നിങ്ങള്‍ക്കൊരു വലിക്കാനുള്ള കട്ട ജാലകങ്ങള്‍ക്കു്‌ താഴെയായ് വരയ്ക്കണമെങ്കില്‍ ഈ ഐച്ഛികം "
+#~ "തിരഞ്ഞെടുക്കുക. ഈ ഐച്ഛികം തിരഞ്ഞെടുത്തിട്ടില്ലെങ്കില്‍ അതിനു പകരം ഒരു നേരിയ സീമ മാത്രം "
+#~ "വരയ്ക്കപ്പെടും. "
+
+#, fuzzy
+#~ msgid "Get New Themes..."
+#~ msgstr "കെഡബ്ലിയുഎം പ്രമേയം ഇന്‍സ്റ്റോള്‍ ചെയ്യുക"
+
+#, fuzzy
+#~ msgid "Install New Theme..."
+#~ msgstr "കെഡബ്ലിയുഎം പ്രമേയം ഇന്‍സ്റ്റോള്‍ ചെയ്യുക"
+
+#, fuzzy
+#~ msgid "Glow active window"
+#~ msgstr "ജാലകം ചെറുതാക്കുക"
+
+#, fuzzy
+#~ msgid "Draw separator between title bar and active window contents:"
+#~ msgstr "തലക്കെട്ടു് കാണിയ്ക്കുന്ന പട്ടയുടെ നിറങ്ങള്‍ ജാലകത്തിന്റെ ഉള്ളടക്കവുമായി കലര്‍ത്തുക"
+
+#, fuzzy
+#~ msgid ""
+#~ "When enabled, this option makes an horizontal separator appear between "
+#~ "the window title bar and the window contents."
+#~ msgstr ""
+#~ "ഇതു പ്രാവര്‍ത്തികമാക്കിയാല്‍, ഈ ഐച്ഛികം ജാലകത്തിന്റെ തലക്കെട്ട്പട്ടയില്‍ വരകള്‍ കാണിച്ച് "
+#~ "ദൃശ്യപരത കൂട്ടും"
+
+#~ msgid ""
+#~ "When enabled, this option increases the visibility of the window titlebar "
+#~ "by showing stripes"
+#~ msgstr ""
+#~ "ഇതു പ്രാവര്‍ത്തികമാക്കിയാല്‍, ഈ ഐച്ഛികം ജാലകത്തിന്റെ തലക്കെട്ട്പട്ടയില്‍ വരകള്‍ കാണിച്ച് "
+#~ "ദൃശ്യപരത കൂട്ടും"
+
+#~ msgid "Show stripes next to the title"
+#~ msgstr "തലക്കെട്ട് കഴിഞ്ഞിട്ട് വരകള്‍ കാണിക്കുക"
+
+#, fuzzy
+#~ msgid ""
+#~ "When enabled, this option increases the visibility of the window titlebar "
+#~ "by adding an horizontal bar between the title bar and the window contents"
+#~ msgstr ""
+#~ "ഇതു പ്രാവര്‍ത്തികമാക്കിയാല്‍, ഈ ഐച്ഛികം ജാലകത്തിന്റെ തലക്കെട്ട്പട്ടയില്‍ വരകള്‍ കാണിച്ച് "
+#~ "ദൃശ്യപരത കൂട്ടും"
+
+#, fuzzy
+#~ msgid "Draw separator between title bar and window contents"
+#~ msgstr "തലക്കെട്ടു് കാണിയ്ക്കുന്ന പട്ടയുടെ നിറങ്ങള്‍ ജാലകത്തിന്റെ ഉള്ളടക്കവുമായി കലര്‍ത്തുക"
+
+#, fuzzy
+#~ msgid "Show stripes next to the title:"
+#~ msgstr "തലക്കെട്ട് കഴിഞ്ഞിട്ട് വരകള്‍ കാണിക്കുക"
+
+#, fuzzy
+#~ msgid "Blend title bar colors with window content:"
+#~ msgstr "തലക്കെട്ടു് കാണിയ്ക്കുന്ന പട്ടയുടെ നിറങ്ങള്‍ ജാലകത്തിന്റെ ഉള്ളടക്കവുമായി കലര്‍ത്തുക"
+
+#~ msgid "Blend title bar colors with window contents"
+#~ msgstr "തലക്കെട്ടു് കാണിയ്ക്കുന്ന പട്ടയുടെ നിറങ്ങള്‍ ജാലകത്തിന്റെ ഉള്ളടക്കവുമായി കലര്‍ത്തുക"
+
+#~ msgid "Ozone"
+#~ msgstr "ഓസോണ്‍"
+
+#, fuzzy
+#~ msgid "Overwrite default title bar colors:"
+#~ msgstr "ജാലക ചട്ടക്കൂടിനെ &തലക്കെട്ടു് കാണിയ്ക്കുന്ന പട്ടയുടെ നിറങ്ങള്‍ കൊണ്ടു വരയ്ക്കുക"
+
+#~ msgid ""
+#~ "When enabled, this option makes the window title bar use the same colors "
+#~ "as the window contents, instead of using the system title bar colors."
+#~ msgstr ""
+#~ "ഇതു പ്രാവര്‍ത്തികമാക്കിയാല്‍, ഈ ഐച്ഛികം ജാലകതലക്കെട്ടു് കാണിയ്ക്കുന്ന പട്ടയില്‍ സിസ്റ്റം നിറങ്ങള്‍ "
+#~ "ഉപയോഗിക്കുന്നതിനു പകരം ജാലക ഉള്ളടക്കത്തിന്റെ നിറം ഉപയോഗിക്കുന്നതാണു്."
