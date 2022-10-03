@@ -59,7 +59,7 @@ void EglGbmLayerSurface::destroyResources()
 
 std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation, const QMap<uint32_t, QVector<uint64_t>> &formats, BufferTarget target)
 {
-    if (!checkGbmSurface(bufferSize, formats, target == BufferTarget::Linear)) {
+    if (!checkGbmSurface(bufferSize, formats, target == BufferTarget::Linear || target == BufferTarget::Dumb)) {
         return std::nullopt;
     }
     if (!m_gbmSurface->makeContextCurrent()) {
