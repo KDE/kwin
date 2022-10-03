@@ -1581,6 +1581,7 @@ void Workspace::cancelDelayFocus()
 {
     delete delayFocusTimer;
     delayFocusTimer = nullptr;
+    m_delayFocusWindow = nullptr;
 }
 
 bool Workspace::checkStartupNotification(xcb_window_t w, KStartupInfoId &id, KStartupInfoData &data)
