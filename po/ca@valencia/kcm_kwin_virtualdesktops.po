@@ -124,7 +124,7 @@ msgstr "En canviar, mostra l'animació:"
 #: package/contents/ui/main.qml:271
 #, kde-format
 msgid "Show on-screen display when switching:"
-msgstr "En canviar, mostra a la pantalla:"
+msgstr "En canviar, mostra en la pantalla:"
 
 #: package/contents/ui/main.qml:290
 #, kde-format
