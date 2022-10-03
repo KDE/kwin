@@ -27,6 +27,9 @@ class MaximizeEffect {
     }
 
     onWindowMaximizedStateAboutToChange(window) {
+        if (!window.visible) {
+            return;
+        }
         if (window.maximizeAnimation1) {
             cancel(window.maximizeAnimation1);
             delete window.maximizeAnimation1;
@@ -50,7 +53,7 @@ class MaximizeEffect {
     }
 
     onWindowMaximizedStateChanged(window) {
-        if (!window.oldGeometry) {
+        if (!window.visible || !window.oldGeometry) {
             return;
         }
         window.setData(Effect.WindowForceBlurRole, true);
