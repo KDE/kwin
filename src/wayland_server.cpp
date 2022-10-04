@@ -67,6 +67,7 @@
 #include "wayland/xdgoutput_v1_interface.h"
 #include "wayland/xdgshell_interface.h"
 #include "wayland/xwaylandkeyboardgrab_v1_interface.h"
+#include "wayland/xwaylandshell_v1_interface.h"
 #include "workspace.h"
 #include "x11window.h"
 #include "xdgactivationv1.h"
@@ -146,6 +147,10 @@ public:
     };
 
     const QSet<QByteArray> inputmethodInterfaces = {"zwp_input_panel_v1", "zwp_input_method_v1"};
+    const QSet<QByteArray> xwaylandInterfaces = {
+        QByteArrayLiteral("zwp_xwayland_keyboard_grab_manager_v1"),
+        QByteArrayLiteral("xwayland_shell_v1"),
+    };
 
     QSet<QString> m_reported;
 
@@ -159,7 +164,7 @@ public:
             return false;
         }
 
-        if (client != waylandServer()->xWaylandConnection() && interfaceName == "zwp_xwayland_keyboard_grab_manager_v1") {
+        if (client != waylandServer()->xWaylandConnection() && xwaylandInterfaces.contains(interfaceName)) {
             return false;
         }
 
@@ -359,6 +364,25 @@ bool WaylandServer::init(InitializationFlags flags)
         }
 
         // The surface will be bound later when a WL_SURFACE_ID message is received.
+    });
+
+    m_xwaylandShell = new KWaylandServer::XwaylandShellV1Interface(m_display, m_display);
+    connect(m_xwaylandShell, &KWaylandServer::XwaylandShellV1Interface::surfaceAssociated, this, [](KWaylandServer::XwaylandSurfaceV1Interface *surface) {
+        X11Window *window = workspace()->findClient([&surface](const X11Window *window) {
+            return window->surfaceSerial() == surface->serial();
+        });
+        if (window) {
+            window->setSurface(surface->surface());
+            return;
+        }
+
+        Unmanaged *unmanaged = workspace()->findUnmanaged([&surface](const Unmanaged *window) {
+            return window->surfaceSerial() == surface->serial();
+        });
+        if (unmanaged) {
+            unmanaged->setSurface(surface->surface());
+            return;
+        }
     });
 
     m_tabletManagerV2 = new TabletManagerV2Interface(m_display, m_display);

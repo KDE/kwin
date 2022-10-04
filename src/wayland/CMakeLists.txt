@@ -188,7 +188,6 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/tearing-control/tearing-control-v1.xml
     BASENAME tearing-control-v1
 )
-
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/xwayland-keyboard-grab/xwayland-keyboard-grab-unstable-v1.xml
     BASENAME xwayland-keyboard-grab-unstable-v1
@@ -196,6 +195,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/content-type/content-type-v1.xml
     BASENAME content-type-v1
+)
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/xwayland-shell/xwayland-shell-v1.xml
+    BASENAME xwayland-shell-v1
 )
 
 target_sources(kwin PRIVATE
@@ -272,6 +275,7 @@ target_sources(kwin PRIVATE
     xdgoutput_v1_interface.cpp
     xdgshell_interface.cpp
     xwaylandkeyboardgrab_v1_interface.cpp
+    xwaylandshell_v1_interface.cpp
 )
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")

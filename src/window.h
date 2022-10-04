@@ -770,6 +770,7 @@ public:
     bool skipsCloseAnimation() const;
     void setSkipCloseAnimation(bool set);
 
+    quint64 surfaceSerial() const;
     quint32 pendingSurfaceId() const;
     KWaylandServer::SurfaceInterface *surface() const;
     void setSurface(KWaylandServer::SurfaceInterface *surface);
@@ -1930,6 +1931,7 @@ private:
     mutable bool m_shapeRegionIsValid = false;
     bool m_skipCloseAnimation;
     quint32 m_pendingSurfaceId = 0;
+    quint64 m_surfaceSerial = 0;
     QPointer<KWaylandServer::SurfaceInterface> m_surface;
     // when adding new data members, check also copyToDeleted()
     qreal m_opacity = 1.0;
@@ -2295,6 +2297,11 @@ inline QString Window::resourceClass() const
 inline const ClientMachine *Window::clientMachine() const
 {
     return m_clientMachine;
+}
+
+inline quint64 Window::surfaceSerial() const
+{
+    return m_surfaceSerial;
 }
 
 inline quint32 Window::pendingSurfaceId() const

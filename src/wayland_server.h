@@ -52,6 +52,7 @@ class XWaylandKeyboardGrabManagerV1Interface;
 class ContentTypeManagerV1Interface;
 class DrmLeaseManagerV1;
 class TearingControlManagerV1Interface;
+class XwaylandShellV1Interface;
 }
 
 namespace KWin
@@ -127,6 +128,10 @@ public:
     KWaylandServer::KeyboardShortcutsInhibitManagerV1Interface *keyboardShortcutsInhibitManager() const
     {
         return m_keyboardShortcutsInhibitManager;
+    }
+    KWaylandServer::XwaylandShellV1Interface *xwaylandShell() const
+    {
+        return m_xwaylandShell;
     }
 
     bool isKeyboardShortcutsInhibited() const;
@@ -292,6 +297,7 @@ private:
     KWaylandServer::XWaylandKeyboardGrabManagerV1Interface *m_xWaylandKeyboardGrabManager = nullptr;
     KWaylandServer::ContentTypeManagerV1Interface *m_contentTypeManager = nullptr;
     KWaylandServer::TearingControlManagerV1Interface *m_tearingControlInterface = nullptr;
+    KWaylandServer::XwaylandShellV1Interface *m_xwaylandShell = nullptr;
     QList<Window *> m_windows;
     InitializationFlags m_initFlags;
     QHash<Output *, KWaylandServer::OutputInterface *> m_waylandOutputs;

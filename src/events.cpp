@@ -31,6 +31,7 @@
 #include "useractions.h"
 #include "utils/xcbutils.h"
 #include "wayland/surface_interface.h"
+#include "wayland/xwaylandshell_v1_interface.h"
 #include "wayland_server.h"
 
 #include <KDecoration2/Decoration>
@@ -1333,7 +1334,14 @@ void Window::propertyNotifyEvent(xcb_property_notify_event_t *e)
 
 void Window::clientMessageEvent(xcb_client_message_event_t *e)
 {
-    if (e->type == atoms->wl_surface_id) {
+    if (e->type == atoms->wl_surface_serial) {
+        m_surfaceSerial = (uint64_t(e->data.data32[1]) << 32) | e->data.data32[0];
+        if (auto w = waylandServer()) {
+            if (KWaylandServer::XwaylandSurfaceV1Interface *xwaylandSurface = w->xwaylandShell()->findSurface(m_surfaceSerial)) {
+                setSurface(xwaylandSurface->surface());
+            }
+        }
+    } else if (e->type == atoms->wl_surface_id) {
         m_pendingSurfaceId = e->data.data32[0];
         if (auto w = waylandServer()) {
             if (auto s = KWaylandServer::SurfaceInterface::get(m_pendingSurfaceId, w->xWaylandConnection())) {
