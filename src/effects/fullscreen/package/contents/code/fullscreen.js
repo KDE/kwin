@@ -25,7 +25,7 @@ class FullScreenEffect {
     }
 
     onWindowFullScreenChanged(window) {
-        if (!window.oldGeometry) {
+        if (!window.visible || !window.oldGeometry) {
             return;
         }
         window.setData(Effect.WindowForceBlurRole, true);
