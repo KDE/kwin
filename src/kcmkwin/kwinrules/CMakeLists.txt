@@ -20,6 +20,7 @@ kconfig_add_kcfg_files(kwinrules_SRCS ../../rulesettings.kcfgc)
 kconfig_add_kcfg_files(kwinrules_SRCS ../../rulebooksettingsbase.kcfgc)
 
 add_library(KWinRulesObjects STATIC ${kwinrules_SRCS})
+set_property(TARGET KWinRulesObjects PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 set(kwin_kcm_rules_XCB_LIBS
     XCB::CURSOR
