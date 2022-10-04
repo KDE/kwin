@@ -37,6 +37,8 @@ private Q_SLOTS:
     void testWindowSticksToOutputAfterOutputsAreSwappedRightToLeft();
 
     void testWindowRestoredAfterEnablingOutput();
+    void testMaximizedWindowRestoredAfterEnablingOutput();
+    void testFullScreenWindowRestoredAfterEnablingOutput();
 
     void testWindowNotRestoredAfterMovingWindowAndEnablingOutput();
 };
@@ -310,6 +312,140 @@ void OutputChangesTest::testWindowNotRestoredAfterMovingWindowAndEnablingOutput(
     // The window is still on the left monitor because user manually moved it.
     QCOMPARE(window->output(), outputs[0]);
     QCOMPARE(window->frameGeometry(), QRectF(58, 100, 100, 50));
+}
+
+void OutputChangesTest::testMaximizedWindowRestoredAfterEnablingOutput()
+{
+    // This test verifies that a maximized window will be moved to its original
+    // output when it's re-enabled.
+
+    const auto outputs = kwinApp()->platform()->outputs();
+
+    // Create a window.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+
+    // kwin will send a configure event with the actived state.
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    // Move the window to the right monitor and make it maximized.
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    window->move(QPointF(1280 + 50, 100));
+    window->maximize(MaximizeFull);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(1280, 1024));
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), QSize(1280, 1024), Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->moveResizeGeometry(), QRectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->output(), outputs[1]);
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+    QCOMPARE(window->geometryRestore(), QRectF(1280 + 50, 100, 100, 50));
+
+    // Disable the right output.
+    OutputConfiguration config1;
+    {
+        auto changeSet = config1.changeSet(outputs[1]);
+        changeSet->enabled = false;
+    }
+    workspace()->applyOutputConfiguration(config1);
+
+    // The window will be moved to the left monitor, the geometry restore will be updated too.
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
+    QCOMPARE(window->moveResizeGeometry(), QRectF(0, 0, 1280, 1024));
+    QCOMPARE(window->output(), outputs[0]);
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+    QCOMPARE(window->geometryRestore(), QRectF(50, 100, 100, 50));
+
+    // Enable the right monitor.
+    OutputConfiguration config2;
+    {
+        auto changeSet = config2.changeSet(outputs[1]);
+        changeSet->enabled = true;
+    }
+    workspace()->applyOutputConfiguration(config2);
+
+    // The window will be moved back to the right monitor, the geometry restore will be updated too.
+    QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->moveResizeGeometry(), QRectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->output(), outputs[1]);
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+    QCOMPARE(window->geometryRestore(), QRectF(1280 + 50, 100, 100, 50));
+}
+
+void OutputChangesTest::testFullScreenWindowRestoredAfterEnablingOutput()
+{
+    // This test verifies that a fullscreen window will be moved to its original
+    // output when it's re-enabled.
+
+    const auto outputs = kwinApp()->platform()->outputs();
+
+    // Create a window.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+
+    // kwin will send a configure event with the actived state.
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    // Move the window to the right monitor and make it fullscreen.
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    window->move(QPointF(1280 + 50, 100));
+    window->setFullScreen(true);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(1280, 1024));
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), QSize(1280, 1024), Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->moveResizeGeometry(), QRectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->output(), outputs[1]);
+    QCOMPARE(window->isFullScreen(), true);
+    QCOMPARE(window->isRequestedFullScreen(), true);
+    QCOMPARE(window->fullscreenGeometryRestore(), QRectF(1280 + 50, 100, 100, 50));
+
+    // Disable the right output.
+    OutputConfiguration config1;
+    {
+        auto changeSet = config1.changeSet(outputs[1]);
+        changeSet->enabled = false;
+    }
+    workspace()->applyOutputConfiguration(config1);
+
+    // The window will be moved to the left monitor, the geometry restore will be updated too.
+    QCOMPARE(window->frameGeometry(), QRectF(0, 0, 1280, 1024));
+    QCOMPARE(window->moveResizeGeometry(), QRectF(0, 0, 1280, 1024));
+    QCOMPARE(window->output(), outputs[0]);
+    QCOMPARE(window->isFullScreen(), true);
+    QCOMPARE(window->isRequestedFullScreen(), true);
+    QCOMPARE(window->fullscreenGeometryRestore(), QRectF(50, 100, 100, 50));
+
+    // Enable the right monitor.
+    OutputConfiguration config2;
+    {
+        auto changeSet = config2.changeSet(outputs[1]);
+        changeSet->enabled = true;
+    }
+    workspace()->applyOutputConfiguration(config2);
+
+    // The window will be moved back to the right monitor, the geometry restore will be updated too.
+    QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->moveResizeGeometry(), QRectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->output(), outputs[1]);
+    QCOMPARE(window->isFullScreen(), true);
+    QCOMPARE(window->isRequestedFullScreen(), true);
+    QCOMPARE(window->fullscreenGeometryRestore(), QRectF(1280 + 50, 100, 100, 50));
 }
 
 } // namespace KWin
