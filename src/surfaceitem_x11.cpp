@@ -54,7 +54,6 @@ bool SurfaceItemX11::fetchDamage()
     if (!m_isDamaged) {
         return false;
     }
-    m_isDamaged = false;
 
     if (m_damageHandle == XCB_NONE) {
         return true;
@@ -105,6 +104,7 @@ void SurfaceItemX11::waitForDamage()
     free(reply);
 
     addDamage(region);
+    m_isDamaged = false;
 }
 
 void SurfaceItemX11::destroyDamage()
