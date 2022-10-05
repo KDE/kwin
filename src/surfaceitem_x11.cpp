@@ -110,6 +110,7 @@ void SurfaceItemX11::waitForDamage()
 void SurfaceItemX11::destroyDamage()
 {
     if (m_damageHandle != XCB_NONE) {
+        m_isDamaged = false;
         xcb_damage_destroy(kwinApp()->x11Connection(), m_damageHandle);
         m_damageHandle = XCB_NONE;
     }
