@@ -2,20 +2,20 @@
 # Richard Frič <Richard.Fric@kdemail.net>, 2012.
 # Roman Paholík <wizzardsk@gmail.com>, 2013, 2017.
 # Mthw <jari_45@hotmail.com>, 2018.
-# Matej Mrenica <matejm98mthw@gmail.com>, 2020.
+# Matej Mrenica <matejm98mthw@gmail.com>, 2020, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm-kwin-scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-09-20 00:47+0000\n"
-"PO-Revision-Date: 2020-09-02 20:38+0200\n"
+"PO-Revision-Date: 2022-10-04 17:50+0200\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 20.08.0\n"
+"X-Generator: Lokalize 22.08.1\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #, kde-format
@@ -63,7 +63,7 @@ msgstr "Chyba pri odinštalovaní KWin Skriptu: %1"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete..."
-msgstr ""
+msgstr "Vymazať..."
 
 #: package/contents/ui/main.qml:60
 #, kde-format
