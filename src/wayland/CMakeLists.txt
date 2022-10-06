@@ -314,6 +314,12 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     BASENAME xdg-toplevel-icon-v1
 )
 
+ecm_add_wayland_server_protocol_kde(WaylandProtocols_xml
+    PRIVATE_CODE
+    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/primary-selection/primary-selection-unstable-v1.xml
+    BASENAME primary-selection-unstable-v1
+)
+
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
     abstract_drop_handler.cpp
@@ -396,6 +402,7 @@ target_sources(kwin PRIVATE
     xdgdialog_v1.cpp
     xdgforeign_v2.cpp
     xdgoutput_v1.cpp
+    xdgsession_v1_interface.cpp
     xdgshell.cpp
     xdgsystembell_v1.cpp
     xdgtopleveldrag_v1.cpp
