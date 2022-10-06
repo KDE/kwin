@@ -14,7 +14,6 @@
 #include "keyboard_input.h"
 #include "main.h"
 #include "scene.h"
-#include "unmanaged.h"
 #include "utils/filedescriptor.h"
 #include "utils/subsurfacemonitor.h"
 #include "wayland/abstract_data_source.h"
@@ -931,10 +930,10 @@ DebugConsoleModel::DebugConsoleModel(QObject *parent)
     for (auto u : unmangeds) {
         m_unmanageds.append(u);
     }
-    connect(workspace(), &Workspace::unmanagedAdded, this, [this](Unmanaged *u) {
+    connect(workspace(), &Workspace::unmanagedAdded, this, [this](X11Window *u) {
         add(s_x11UnmanagedId - 1, m_unmanageds, u);
     });
-    connect(workspace(), &Workspace::unmanagedRemoved, this, [this](Unmanaged *u) {
+    connect(workspace(), &Workspace::unmanagedRemoved, this, [this](X11Window *u) {
         remove(s_x11UnmanagedId - 1, m_unmanageds, u);
     });
     for (InternalWindow *window : workspace()->internalWindows()) {
@@ -1235,7 +1234,7 @@ QVariant DebugConsoleModel::data(const QModelIndex &index, int role) const
             return propertyData(w, index, role);
         } else if (X11Window *w = x11Window(index)) {
             return propertyData(w, index, role);
-        } else if (Unmanaged *u = unmanaged(index)) {
+        } else if (X11Window *u = unmanaged(index)) {
             return propertyData(u, index, role);
         }
     } else {
@@ -1298,7 +1297,7 @@ X11Window *DebugConsoleModel::x11Window(const QModelIndex &index) const
     return windowForIndex(index, m_x11Windows, s_x11WindowId);
 }
 
-Unmanaged *DebugConsoleModel::unmanaged(const QModelIndex &index) const
+X11Window *DebugConsoleModel::unmanaged(const QModelIndex &index) const
 {
     return windowForIndex(index, m_unmanageds, s_x11UnmanagedId);
 }

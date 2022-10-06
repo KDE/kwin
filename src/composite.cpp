@@ -31,7 +31,6 @@
 #include "scenes/qpainter/scene_qpainter.h"
 #include "shadow.h"
 #include "surfaceitem_x11.h"
-#include "unmanaged.h"
 #include "useractions.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"
@@ -383,7 +382,7 @@ void Compositor::startupWithWorkspace()
     for (X11Window *window : Workspace::self()->clientList()) {
         window->setupCompositing();
     }
-    for (Unmanaged *window : Workspace::self()->unmanagedList()) {
+    for (X11Window *window : Workspace::self()->unmanagedList()) {
         window->setupCompositing();
     }
     for (InternalWindow *window : workspace()->internalWindows()) {
@@ -499,7 +498,7 @@ void Compositor::stop()
         for (X11Window *window : Workspace::self()->clientList()) {
             window->finishCompositing();
         }
-        for (Unmanaged *window : Workspace::self()->unmanagedList()) {
+        for (X11Window *window : Workspace::self()->unmanagedList()) {
             window->finishCompositing();
         }
         for (InternalWindow *window : workspace()->internalWindows()) {

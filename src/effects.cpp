@@ -27,7 +27,6 @@
 #include "internalwindow.h"
 #include "osd.h"
 #include "pointer_input.h"
-#include "unmanaged.h"
 #include "x11window.h"
 #if KWIN_BUILD_TABBOX
 #include "tabbox.h"
@@ -171,9 +170,12 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
             connect(window, &Window::windowShown, this, &EffectsHandlerImpl::slotWindowShown);
         }
     });
-    connect(ws, &Workspace::unmanagedAdded, this, [this](Unmanaged *u) {
-        // it's never initially ready but has synthetic 50ms delay
-        connect(u, &Window::windowShown, this, &EffectsHandlerImpl::slotUnmanagedShown);
+    connect(ws, &Workspace::unmanagedAdded, this, [this](X11Window *window) {
+        if (window->readyForPainting()) {
+            slotWindowShown(window);
+        } else {
+            connect(window, &Window::windowShown, this, &EffectsHandlerImpl::slotWindowShown);
+        }
     });
     connect(ws, &Workspace::internalWindowAdded, this, [this](InternalWindow *window) {
         setupWindowConnections(window);
@@ -248,8 +250,12 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
             connect(window, &Window::windowShown, this, &EffectsHandlerImpl::slotWindowShown);
         }
     }
-    for (Unmanaged *u : ws->unmanagedList()) {
-        setupUnmanagedConnections(u);
+    for (X11Window *u : ws->unmanagedList()) {
+        if (u->readyForPainting()) {
+            setupWindowConnections(u);
+        } else {
+            connect(u, &Window::windowShown, this, &EffectsHandlerImpl::slotWindowShown);
+        }
     }
     for (InternalWindow *window : ws->internalWindows()) {
         setupWindowConnections(window);
@@ -353,23 +359,6 @@ void EffectsHandlerImpl::setupWindowConnections(Window *window)
     });
     connect(window, &Window::decorationChanged, this, [this, window]() {
         Q_EMIT windowDecorationChanged(window->effectWindow());
-    });
-}
-
-void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged *u)
-{
-    connect(u, &Unmanaged::windowClosed, this, &EffectsHandlerImpl::slotWindowClosed);
-    connect(u, &Unmanaged::opacityChanged, this, &EffectsHandlerImpl::slotOpacityChanged);
-    connect(u, &Unmanaged::geometryShapeChanged, this, &EffectsHandlerImpl::slotGeometryShapeChanged);
-    connect(u, &Unmanaged::frameGeometryChanged, this, &EffectsHandlerImpl::slotFrameGeometryChanged);
-    connect(u, &Unmanaged::damaged, this, &EffectsHandlerImpl::slotWindowDamaged);
-    connect(u, &Unmanaged::visibleGeometryChanged, this, [this, u]() {
-        Q_EMIT windowExpandedGeometryChanged(u->effectWindow());
-    });
-    connect(u, &Unmanaged::frameGeometryAboutToChange, this, [this](Window *window) {
-        if (EffectWindowImpl *w = window->effectWindow()) {
-            Q_EMIT windowFrameGeometryAboutToChange(w);
-        }
     });
 }
 
@@ -520,18 +509,9 @@ void EffectsHandlerImpl::slotOpacityChanged(Window *window, qreal oldOpacity)
 
 void EffectsHandlerImpl::slotWindowShown(Window *window)
 {
-    Q_ASSERT(window->isClient());
     disconnect(window, &Window::windowShown, this, &EffectsHandlerImpl::slotWindowShown);
     setupWindowConnections(window);
     Q_EMIT windowAdded(window->effectWindow());
-}
-
-void EffectsHandlerImpl::slotUnmanagedShown(Window *window)
-{ // regardless, unmanaged windows are -yet?- not synced anyway
-    Q_ASSERT(qobject_cast<Unmanaged *>(window));
-    Unmanaged *u = static_cast<Unmanaged *>(window);
-    setupUnmanagedConnections(u);
-    Q_EMIT windowAdded(u->effectWindow());
 }
 
 void EffectsHandlerImpl::slotWindowClosed(Window *original, Deleted *d)
@@ -1114,7 +1094,7 @@ EffectWindow *EffectsHandlerImpl::findWindow(WId id) const
     if (X11Window *w = Workspace::self()->findClient(Predicate::WindowMatch, id)) {
         return w->effectWindow();
     }
-    if (Unmanaged *w = Workspace::self()->findUnmanaged(id)) {
+    if (X11Window *w = Workspace::self()->findUnmanaged(id)) {
         return w->effectWindow();
     }
     return nullptr;
@@ -1956,7 +1936,7 @@ EffectWindowImpl::EffectWindowImpl(Window *window)
     managed = window->isClient();
 
     m_waylandWindow = qobject_cast<KWin::WaylandWindow *>(window) != nullptr;
-    m_x11Window = qobject_cast<KWin::X11Window *>(window) != nullptr || qobject_cast<KWin::Unmanaged *>(window) != nullptr;
+    m_x11Window = qobject_cast<KWin::X11Window *>(window) != nullptr;
 }
 
 EffectWindowImpl::~EffectWindowImpl()

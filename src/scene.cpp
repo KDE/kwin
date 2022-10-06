@@ -63,7 +63,6 @@
 #include "shadow.h"
 #include "shadowitem.h"
 #include "surfaceitem.h"
-#include "unmanaged.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "waylandwindow.h"

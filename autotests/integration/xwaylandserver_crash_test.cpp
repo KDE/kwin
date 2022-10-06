@@ -11,7 +11,6 @@
 #include "core/outputbackend.h"
 #include "main.h"
 #include "scene.h"
-#include "unmanaged.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
@@ -44,7 +43,6 @@ private Q_SLOTS:
 
 void XwaylandServerCrashTest::initTestCase()
 {
-    qRegisterMetaType<Unmanaged *>();
     qRegisterMetaType<X11Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     kwinApp()->outputBackend()->setInitialWindowSize(QSize(1280, 1024));
@@ -108,7 +106,7 @@ void XwaylandServerCrashTest::testCrash()
 
     QSignalSpy unmanagedAddedSpy(workspace(), &Workspace::unmanagedAdded);
     QVERIFY(unmanagedAddedSpy.wait());
-    QPointer<Unmanaged> unmanaged = unmanagedAddedSpy.last().first().value<Unmanaged *>();
+    QPointer<X11Window> unmanaged = unmanagedAddedSpy.last().first().value<X11Window *>();
     QVERIFY(unmanaged);
 
     // Let's pretend that the Xwayland process has crashed.

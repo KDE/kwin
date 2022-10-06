@@ -143,6 +143,10 @@ public:
     bool windowEvent(xcb_generic_event_t *e);
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
 
+    bool track(xcb_window_t w);
+    void release(ReleaseReason releaseReason = ReleaseReason::Release);
+    bool hasScheduledRelease() const;
+
     bool manage(xcb_window_t w, bool isMapped);
     void releaseWindow(bool on_shutdown = false);
     void destroyWindow() override;
@@ -274,6 +278,8 @@ public:
     // sets whether the client should be faked as being on all activities (and be shown during session save)
     void setSessionActivityOverride(bool needed);
     bool isClient() const override;
+    bool isOutline() const override;
+    bool isUnmanaged() const override;
 
     void cancelFocusOutTimer();
 
@@ -324,6 +330,7 @@ private:
     void unmapNotifyEvent(xcb_unmap_notify_event_t *e);
     void destroyNotifyEvent(xcb_destroy_notify_event_t *e);
     void configureRequestEvent(xcb_configure_request_event_t *e);
+    void configureNotifyEvent(xcb_configure_notify_event_t *e);
     void propertyNotifyEvent(xcb_property_notify_event_t *e) override;
     void clientMessageEvent(xcb_client_message_event_t *e) override;
     void enterNotifyEvent(xcb_enter_notify_event_t *e);
@@ -458,6 +465,11 @@ private:
     void createDecoration(const QRectF &oldgeom);
     void destroyDecoration();
 
+    QWindow *findInternalWindow() const;
+    void checkOutput();
+    void associate();
+    void initialize();
+
     Xcb::Window m_client;
     Xcb::Window m_wrapper;
     Xcb::Window m_frame;
@@ -524,6 +536,10 @@ private:
     bool activitiesDefined; // whether the x property was actually set
 
     bool sessionActivityOverride;
+
+    bool m_overrideRedirect = false;
+    bool m_outline = false;
+    bool m_scheduledRelease = false;
 
     Xcb::Window m_decoInputExtent;
     QPointF input_offset;

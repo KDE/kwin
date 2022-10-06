@@ -23,7 +23,6 @@
 #include "main.h"
 #include "placement.h"
 #include "pluginmanager.h"
-#include "unmanaged.h"
 #include "virtualdesktops.h"
 #include "window.h"
 #include "workspace.h"

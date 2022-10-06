@@ -10,7 +10,6 @@
 */
 #include "x11_standalone_windowselector.h"
 #include "cursor.h"
-#include "unmanaged.h"
 #include "utils/xcbutils.h"
 #include "workspace.h"
 #include "x11window.h"

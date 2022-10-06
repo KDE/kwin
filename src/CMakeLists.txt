@@ -143,7 +143,6 @@ target_sources(kwin PRIVATE
     tablet_input.cpp
     tabletmodemanager.cpp
     touch_input.cpp
-    unmanaged.cpp
     useractions.cpp
     virtualdesktops.cpp
     virtualdesktopsdbustypes.cpp

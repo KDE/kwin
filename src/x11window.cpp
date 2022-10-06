@@ -30,6 +30,7 @@
 #include "shadow.h"
 #include "surfaceitem_x11.h"
 #include "virtualdesktops.h"
+#include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "windowitem.h"
 #include "workspace.h"
@@ -47,6 +48,7 @@
 #include <QFileInfo>
 #include <QMouseEvent>
 #include <QProcess>
+#include <QWidget>
 // xcb
 #include <xcb/xcb_icccm.h>
 // system
@@ -142,6 +144,26 @@ const NET::WindowTypes SUPPORTED_MANAGED_WINDOW_TYPES_MASK = NET::NormalMask
     | NET::OnScreenDisplayMask
     | NET::CriticalNotificationMask
     | NET::AppletPopupMask;
+
+// window types that are supported as unmanaged (mainly for compositing)
+const NET::WindowTypes SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK = NET::NormalMask
+    | NET::DesktopMask
+    | NET::DockMask
+    | NET::ToolbarMask
+    | NET::MenuMask
+    | NET::DialogMask
+    /*| NET::OverrideMask*/
+    | NET::TopMenuMask
+    | NET::UtilityMask
+    | NET::SplashMask
+    | NET::DropdownMenuMask
+    | NET::PopupMenuMask
+    | NET::TooltipMask
+    | NET::NotificationMask
+    | NET::ComboBoxMask
+    | NET::DNDIconMask
+    | NET::OnScreenDisplayMask
+    | NET::CriticalNotificationMask;
 
 X11DecorationRenderer::X11DecorationRenderer(Decoration::DecoratedClientImpl *client)
     : DecorationRenderer(client)
@@ -310,9 +332,6 @@ X11Window::~X11Window()
         xcb_sync_destroy_alarm(kwinApp()->x11Connection(), m_syncRequest.alarm);
     }
     Q_ASSERT(!isInteractiveMoveResize());
-    Q_ASSERT(m_client == XCB_WINDOW_NONE);
-    Q_ASSERT(m_wrapper == XCB_WINDOW_NONE);
-    Q_ASSERT(m_frame == XCB_WINDOW_NONE);
     Q_ASSERT(!check_active_modal);
 }
 
@@ -1322,6 +1341,9 @@ bool X11Window::userNoBorder() const
 
 bool X11Window::isFullScreenable() const
 {
+    if (isUnmanaged()) {
+        return false;
+    }
     if (!rules()->checkFullScreen(true)) {
         return false;
     }
@@ -1646,7 +1668,7 @@ void X11Window::doSetShade(ShadeMode previousShadeMode)
 
 void X11Window::updateVisibility()
 {
-    if (isZombie()) {
+    if (isUnmanaged() || isZombie()) {
         return;
     }
     if (hidden) {
@@ -1890,10 +1912,14 @@ void X11Window::closeWindow()
  */
 void X11Window::killWindow()
 {
-    qCDebug(KWIN_CORE) << "X11Window::killWindow():" << caption();
-    killProcess(false);
-    m_client.kill(); // Always kill this client at the server
-    destroyWindow();
+    qCDebug(KWIN_CORE) << "X11Window::killWindow():" << window();
+    if (isUnmanaged()) {
+        xcb_kill_client(kwinApp()->x11Connection(), window());
+    } else {
+        killProcess(false);
+        m_client.kill(); // Always kill this client at the server
+        destroyWindow();
+    }
 }
 
 /**
@@ -2586,11 +2612,23 @@ QString X11Window::preferredColorScheme() const
 
 bool X11Window::isClient() const
 {
-    return true;
+    return !m_overrideRedirect;
+}
+
+bool X11Window::isUnmanaged() const
+{
+    return m_overrideRedirect;
 }
 
 NET::WindowType X11Window::windowType(bool direct, int supportedTypes) const
 {
+    if (m_overrideRedirect) {
+        if (supportedTypes == 0) {
+            supportedTypes = SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK;
+        }
+        return info->windowType(NET::WindowTypes(supportedTypes));
+    }
+
     // TODO: does it make sense to cache the returned window type for SUPPORTED_MANAGED_WINDOW_TYPES_MASK?
     if (supportedTypes == 0) {
         supportedTypes = SUPPORTED_MANAGED_WINDOW_TYPES_MASK;
@@ -4105,6 +4143,9 @@ void X11Window::GTKShowWindowMenu(qreal x_root, qreal y_root)
 
 bool X11Window::isMovable() const
 {
+    if (isUnmanaged()) {
+        return false;
+    }
     if (!hasNETSupport() && !m_motif.move()) {
         return false;
     }
@@ -4122,6 +4163,9 @@ bool X11Window::isMovable() const
 
 bool X11Window::isMovableAcrossScreens() const
 {
+    if (isUnmanaged()) {
+        return false;
+    }
     if (!hasNETSupport() && !m_motif.move()) {
         return false;
     }
@@ -4136,6 +4180,9 @@ bool X11Window::isMovableAcrossScreens() const
 
 bool X11Window::isResizable() const
 {
+    if (isUnmanaged()) {
+        return false;
+    }
     if (!hasNETSupport() && !m_motif.resize()) {
         return false;
     }
@@ -4160,6 +4207,9 @@ bool X11Window::isResizable() const
 
 bool X11Window::isMaximizable() const
 {
+    if (isUnmanaged()) {
+        return false;
+    }
     if (!isResizable() || isToolbar()) { // SELI isToolbar() ?
         return false;
     }
@@ -4187,6 +4237,11 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
     // setGeometry( geometry()) - geometry() will return the shaded frame geometry.
     // Such code is wrong and should be changed to handle the case when the window is shaded,
     // for example using X11Window::clientSize()
+
+    if (isUnmanaged()) {
+        qCWarning(KWIN_CORE) << "Cannot move or resize unmanaged window" << this;
+        return;
+    }
 
     QRectF frameGeometry = rect;
 
@@ -4290,6 +4345,11 @@ void X11Window::updateServerGeometry()
 static bool changeMaximizeRecursion = false;
 void X11Window::maximize(MaximizeMode mode)
 {
+    if (m_overrideRedirect) {
+        qCWarning(KWIN_CORE) << "Cannot change maximized state of unmanaged window" << this;
+        return;
+    }
+
     if (changeMaximizeRecursion) {
         return;
     }
@@ -4562,6 +4622,9 @@ void X11Window::maximize(MaximizeMode mode)
 
 bool X11Window::userCanSetFullScreen() const
 {
+    if (isUnmanaged()) {
+        return false;
+    }
     if (!isFullScreenable()) {
         return false;
     }
@@ -4570,6 +4633,11 @@ bool X11Window::userCanSetFullScreen() const
 
 void X11Window::setFullScreen(bool set, bool user)
 {
+    if (m_overrideRedirect) {
+        qCWarning(KWIN_CORE) << "Cannot change fullscreen state of unmanaged window" << this;
+        return;
+    }
+
     set = rules()->checkFullScreen(set);
 
     const bool wasFullscreen = isFullScreen();
@@ -4892,6 +4960,141 @@ void X11Window::updateWindowPixmap()
     if (auto item = surfaceItem()) {
         item->updatePixmap();
     }
+}
+
+void X11Window::associate()
+{
+    if (surface()->isMapped()) {
+        initialize();
+    } else {
+        // Queued connection because we want to mark the window ready for painting after
+        // the associated surface item has processed the new surface state.
+        connect(surface(), &KWaylandServer::SurfaceInterface::mapped, this, &X11Window::initialize, Qt::QueuedConnection);
+    }
+}
+
+void X11Window::initialize()
+{
+    setReadyForPainting();
+}
+
+bool X11Window::track(xcb_window_t w)
+{
+    XServerGrabber xserverGrabber;
+    Xcb::WindowAttributes attr(w);
+    Xcb::WindowGeometry geo(w);
+    if (attr.isNull() || attr->map_state != XCB_MAP_STATE_VIEWABLE) {
+        return false;
+    }
+    if (attr->_class == XCB_WINDOW_CLASS_INPUT_ONLY) {
+        return false;
+    }
+    if (geo.isNull()) {
+        return false;
+    }
+
+    m_overrideRedirect = true;
+
+    setWindowHandles(w);
+    m_frame.reset(w, false);
+    m_wrapper.reset(w, false);
+    m_client.reset(w, false);
+
+    Xcb::selectInput(w, attr->your_event_mask | XCB_EVENT_MASK_STRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE);
+    m_bufferGeometry = geo.rect();
+    m_frameGeometry = geo.rect();
+    m_clientGeometry = geo.rect();
+    checkOutput();
+    m_visual = attr->visual;
+    bit_depth = geo->depth;
+    info = new NETWinInfo(kwinApp()->x11Connection(), w, kwinApp()->x11RootWindow(),
+                          NET::WMWindowType | NET::WMPid,
+                          NET::WM2Opacity | NET::WM2WindowRole | NET::WM2WindowClass | NET::WM2OpaqueRegion);
+    setOpacity(info->opacityF());
+    getResourceClass();
+    getWmClientLeader();
+    getWmClientMachine();
+    if (Xcb::Extensions::self()->isShapeAvailable()) {
+        xcb_shape_select_input(kwinApp()->x11Connection(), w, true);
+    }
+    detectShape(w);
+    getWmOpaqueRegion();
+    getSkipCloseAnimation();
+    setupCompositing();
+    if (QWindow *internalWindow = findInternalWindow()) {
+        m_outline = internalWindow->property("__kwin_outline").toBool();
+    }
+    if (effects) {
+        static_cast<EffectsHandlerImpl *>(effects)->checkInputWindowStacking();
+    }
+
+    switch (kwinApp()->operationMode()) {
+    case Application::OperationModeXwayland:
+        // The wayland surface is associated with the override-redirect window asynchronously.
+        if (surface()) {
+            associate();
+        } else {
+            connect(this, &Window::surfaceChanged, this, &X11Window::associate);
+        }
+        break;
+    case Application::OperationModeX11:
+        // We have no way knowing whether the override-redirect window can be painted. Mark it
+        // as ready for painting after synthetic 50ms delay.
+        QTimer::singleShot(50, this, &X11Window::initialize);
+        break;
+    case Application::OperationModeWaylandOnly:
+        Q_UNREACHABLE();
+    }
+
+    return true;
+}
+
+void X11Window::release(ReleaseReason releaseReason)
+{
+    Deleted *del = nullptr;
+    if (releaseReason != ReleaseReason::KWinShutsDown) {
+        del = Deleted::create(this);
+    }
+    Q_EMIT windowClosed(this, del);
+    finishCompositing(releaseReason);
+    if (!QWidget::find(window()) && releaseReason != ReleaseReason::Destroyed) { // don't affect our own windows
+        if (Xcb::Extensions::self()->isShapeAvailable()) {
+            xcb_shape_select_input(kwinApp()->x11Connection(), window(), false);
+        }
+        Xcb::selectInput(window(), XCB_EVENT_MASK_NO_EVENT);
+    }
+    workspace()->removeUnmanaged(this);
+    if (releaseReason != ReleaseReason::KWinShutsDown) {
+        disownDataPassedToDeleted();
+        del->unrefWindow();
+    }
+    deleteClient(this);
+}
+
+bool X11Window::hasScheduledRelease() const
+{
+    return m_scheduledRelease;
+}
+
+bool X11Window::isOutline() const
+{
+    return m_outline;
+}
+
+QWindow *X11Window::findInternalWindow() const
+{
+    const QWindowList windows = kwinApp()->topLevelWindows();
+    for (QWindow *w : windows) {
+        if (w->winId() == window()) {
+            return w;
+        }
+    }
+    return nullptr;
+}
+
+void X11Window::checkOutput()
+{
+    setOutput(workspace()->outputAt(frameGeometry().center()));
 }
 
 } // namespace

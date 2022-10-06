@@ -20,7 +20,6 @@
 #include "layershellv1integration.h"
 #include "main.h"
 #include "scene.h"
-#include "unmanaged.h"
 #include "utils/serviceutils.h"
 #include "virtualdesktops.h"
 #include "wayland/appmenu_interface.h"
@@ -349,7 +348,7 @@ bool WaylandServer::init(InitializationFlags flags)
             return;
         }
 
-        Unmanaged *unmanaged = ws->findUnmanaged([surface](const Unmanaged *unmanaged) {
+        X11Window *unmanaged = ws->findUnmanaged([surface](const X11Window *unmanaged) {
             return unmanaged->pendingSurfaceId() == surface->id();
         });
         if (unmanaged) {

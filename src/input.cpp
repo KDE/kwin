@@ -39,7 +39,6 @@
 #include "internalwindow.h"
 #include "popup_input_filter.h"
 #include "screenedge.h"
-#include "unmanaged.h"
 #include "virtualdesktops.h"
 #include "wayland/display.h"
 #include "wayland/inputmethod_v1_interface.h"
@@ -3120,8 +3119,8 @@ Window *InputRedirection::findToplevel(const QPointF &pos)
         if (effects && static_cast<EffectsHandlerImpl *>(effects)->isMouseInterception()) {
             return nullptr;
         }
-        const QList<Unmanaged *> &unmanaged = Workspace::self()->unmanagedList();
-        for (Unmanaged *u : unmanaged) {
+        const QList<X11Window *> &unmanaged = Workspace::self()->unmanagedList();
+        for (X11Window *u : unmanaged) {
             if (u->hitTest(pos)) {
                 return u;
             }

@@ -30,7 +30,6 @@
 #include "keyboard_input.h"
 #include "pointer_input.h"
 #include "screenedge.h"
-#include "unmanaged.h"
 #include "utils/xcbutils.h"
 #include "virtualdesktops.h"
 #include "workspace.h"

@@ -11,7 +11,6 @@
 #include "killwindow.h"
 #include "main.h"
 #include "osd.h"
-#include "unmanaged.h"
 #include "window.h"
 
 #include <KLocalizedString>
@@ -34,13 +33,8 @@ void KillWindow::start()
     kwinApp()->startInteractiveWindowSelection(
         [](KWin::Window *t) {
             OSD::hide();
-            if (!t) {
-                return;
-            }
-            if (Window *c = static_cast<Window *>(t->isClient() ? t : nullptr)) {
-                c->killWindow();
-            } else if (Unmanaged *u = qobject_cast<Unmanaged *>(t)) {
-                xcb_kill_client(kwinApp()->x11Connection(), u->window());
+            if (t) {
+                t->killWindow();
             }
         },
         QByteArrayLiteral("pirate"));
