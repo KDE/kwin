@@ -28,6 +28,7 @@
 #include "wayland/server_decoration_palette_interface.h"
 #include "wayland/surface_interface.h"
 #include "wayland/xdgdecoration_v1_interface.h"
+#include "wayland/xdgsession_v1_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -731,6 +732,11 @@ bool XdgToplevelWindow::isPlaceable() const
     if (m_plasmaShellSurface) {
         return !m_plasmaShellSurface->isPositionSet() && !m_plasmaShellSurface->wantsOpenUnderCursor();
     }
+    // TODO: Not really accurate, we need "isPlaced" or something
+    const XdgToplevelSessionV1Interface *state = m_shellSurface->session();
+    if (state) {
+        return !state->read(QStringLiteral("position")).isValid();
+    }
     return true;
 }
 
@@ -847,6 +853,22 @@ void XdgToplevelWindow::showOnScreenEdge()
 void XdgToplevelWindow::closeWindow()
 {
     if (isCloseable()) {
+        // TODO: Decide when it's actually safe to save window props.
+        savePosition();
+        saveSize();
+        saveKeepAbove();
+        saveKeepBelow();
+        saveSkipSwitcher();
+        saveSkipPager();
+        saveSkipTaskbar();
+        saveMinimizeMode();
+        saveNoBorder();
+        saveMaximizeMode();
+        saveFullScreenMode();
+        saveDesktops();
+        saveShortcut();
+        saveActivities();
+
         sendPing(PingReason::CloseWindow);
         m_shellSurface->sendClose();
     }
@@ -1343,21 +1365,273 @@ void XdgToplevelWindow::sendPing(PingReason reason)
     m_pings.insert(serial, reason);
 }
 
+QPointF XdgToplevelWindow::initialPosition() const
+{
+    const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        if (const QVariant position = session->read(QStringLiteral("position")); position.isValid()) {
+            return position.toPointF();
+        }
+    }
+    return invalidPoint;
+}
+
+void XdgToplevelWindow::savePosition()
+{
+    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        session->write(QStringLiteral("position"), pos());
+    }
+}
+
+QSizeF XdgToplevelWindow::initialSize() const
+{
+    const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        if (const QVariant size = session->read(QStringLiteral("size")); size.isValid()) {
+            return size.toSizeF();
+        }
+    }
+    return QSizeF();
+}
+
+void XdgToplevelWindow::saveSize()
+{
+    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        session->write(QStringLiteral("size"), size());
+    }
+}
+
+bool XdgToplevelWindow::initialKeepAbove() const
+{
+    const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        return session->read(QStringLiteral("keepAbove")).toBool();
+    }
+    return false;
+}
+
+void XdgToplevelWindow::saveKeepAbove()
+{
+    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        session->write(QStringLiteral("keepAbove"), keepAbove());
+    }
+}
+
+bool XdgToplevelWindow::initialKeepBelow() const
+{
+    const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        return session->read(QStringLiteral("keepBelow")).toBool();
+    }
+    return false;
+}
+
+void XdgToplevelWindow::saveKeepBelow()
+{
+    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        session->write(QStringLiteral("keepBelow"), keepBelow());
+    }
+}
+
+bool XdgToplevelWindow::initialSkipSwitcher() const
+{
+    const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        return session->read(QStringLiteral("skipSwitcher")).toBool();
+    }
+    return skipSwitcher();
+}
+
+void XdgToplevelWindow::saveSkipSwitcher()
+{
+    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        session->write(QStringLiteral("skipSwitcher"), skipSwitcher());
+    }
+}
+
+bool XdgToplevelWindow::initialSkipPager() const
+{
+    const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        return session->read(QStringLiteral("skipPager")).toBool();
+    }
+    return skipPager();
+}
+
+void XdgToplevelWindow::saveSkipPager()
+{
+    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        session->write(QStringLiteral("skipPager"), skipPager());
+    }
+}
+
+bool XdgToplevelWindow::initialSkipTaskbar() const
+{
+    const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        return session->read(QStringLiteral("skipTaskbar")).toBool();
+    }
+    return skipTaskbar();
+}
+
+void XdgToplevelWindow::saveSkipTaskbar()
+{
+    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        session->write(QStringLiteral("skipTaskbar"), skipTaskbar());
+    }
+}
+
 MaximizeMode XdgToplevelWindow::initialMaximizeMode() const
 {
-    MaximizeMode maximizeMode = MaximizeRestore;
-    if (m_initialStates & XdgToplevelInterface::State::MaximizedHorizontal) {
-        maximizeMode = MaximizeMode(maximizeMode | MaximizeHorizontal);
+    // We prefer set_maximized() requests over maximized state stored in the session.
+    if (m_initialStates & XdgToplevelInterface::State::Maximized) {
+        MaximizeMode maximizeMode = MaximizeRestore;
+        if (m_initialStates & XdgToplevelInterface::State::MaximizedHorizontal) {
+            maximizeMode = MaximizeMode(maximizeMode | MaximizeHorizontal);
+        }
+        if (m_initialStates & XdgToplevelInterface::State::MaximizedVertical) {
+            maximizeMode = MaximizeMode(maximizeMode | MaximizeVertical);
+        }
+        return maximizeMode;
     }
-    if (m_initialStates & XdgToplevelInterface::State::MaximizedVertical) {
-        maximizeMode = MaximizeMode(maximizeMode | MaximizeVertical);
+    const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        return MaximizeMode(session->read(QStringLiteral("maximizeMode")).toUInt());
     }
-    return maximizeMode;
+    return MaximizeRestore;
+}
+
+void XdgToplevelWindow::saveMaximizeMode()
+{
+    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        session->write(QStringLiteral("maximizeMode"), uint(maximizeMode()));
+    }
 }
 
 bool XdgToplevelWindow::initialFullScreenMode() const
 {
-    return m_initialStates & XdgToplevelInterface::State::FullScreen;
+    // We prefer set_fullscreen() requests over fullscreen state stored in the session.
+    if (m_initialStates & XdgToplevelInterface::State::FullScreen) {
+        return m_initialStates & XdgToplevelInterface::State::FullScreen;
+    }
+    const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        return session->read(QStringLiteral("fullscreenMode")).toBool();
+    }
+    return false;
+}
+
+void XdgToplevelWindow::saveFullScreenMode()
+{
+    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        session->write(QStringLiteral("fullscreenMode"), isFullScreen());
+    }
+}
+
+bool XdgToplevelWindow::initialMinimizeMode() const
+{
+    const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        return session->read(QStringLiteral("minimizeMode")).toBool();
+    }
+    return false;
+}
+
+void XdgToplevelWindow::saveMinimizeMode()
+{
+    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        session->write(QStringLiteral("minimizeMode"), isMinimized());
+    }
+}
+
+QVector<VirtualDesktop *> XdgToplevelWindow::initialDesktops() const
+{
+    const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        if (const QVariant desktopIdsValue = session->read(QStringLiteral("desktops")); desktopIdsValue.isValid()) {
+            const QStringList desktopIds = desktopIdsValue.toStringList();
+            QVector<VirtualDesktop *> desktops;
+            desktops.reserve(desktopIds.size());
+            for (const QString &desktopId : desktopIds) {
+                if (VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForId(desktopId)) {
+                    desktops.append(desktop);
+                }
+            }
+            return desktops;
+        }
+    }
+    return desktops();
+}
+
+void XdgToplevelWindow::saveDesktops()
+{
+    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        session->write(QStringLiteral("desktops"), desktopIds());
+    }
+}
+
+QStringList XdgToplevelWindow::initialActivities() const
+{
+    const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        if (const QVariant activities = session->read(QStringLiteral("activities")); activities.isValid()) {
+            return activities.toStringList();
+        }
+    }
+    return activities();
+}
+
+void XdgToplevelWindow::saveActivities()
+{
+    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        session->write(QStringLiteral("activities"), activities());
+    }
+}
+
+bool XdgToplevelWindow::initialNoBorder() const
+{
+    const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        return session->read(QStringLiteral("noBorder")).toBool();
+    }
+    return false;
+}
+
+void XdgToplevelWindow::saveNoBorder()
+{
+    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        session->write(QStringLiteral("noBorder"), noBorder());
+    }
+}
+
+QString XdgToplevelWindow::initialShortcut() const
+{
+    const XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        return session->read(QStringLiteral("shortcut")).toString();
+    }
+    return QString();
+}
+
+void XdgToplevelWindow::saveShortcut()
+{
+    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session) {
+        session->write(QStringLiteral("shortcut"), shortcut());
+    }
 }
 
 void XdgToplevelWindow::initialize()
@@ -1366,30 +1640,28 @@ void XdgToplevelWindow::initialize()
     setupWindowRules(false);
 
     // Move or resize the window only if enforced by a window rule.
-    const QPointF forcedPosition = rules()->checkPosition(invalidPoint, true);
+    const QPointF forcedPosition = rules()->checkPosition(initialPosition(), true);
     if (forcedPosition != invalidPoint) {
         move(forcedPosition);
     }
-    const QSizeF forcedSize = rules()->checkSize(QSize(), true);
+    const QSizeF forcedSize = rules()->checkSize(initialSize(), true);
     if (forcedSize.isValid()) {
         resize(forcedSize);
     }
 
     maximize(rules()->checkMaximize(initialMaximizeMode(), true));
     setFullScreen(rules()->checkFullScreen(initialFullScreenMode(), true), false);
-    setOnActivities(rules()->checkActivity(activities(), true));
-    setDesktops(rules()->checkDesktops(desktops(), true));
+    setOnActivities(rules()->checkActivity(initialActivities(), true));
+    setDesktops(rules()->checkDesktops(initialDesktops(), true));
     setDesktopFileName(rules()->checkDesktopFile(desktopFileName(), true).toUtf8());
-    if (rules()->checkMinimize(isMinimized(), true)) {
-        minimize(true); // No animation.
-    }
-    setSkipTaskbar(rules()->checkSkipTaskbar(skipTaskbar(), true));
-    setSkipPager(rules()->checkSkipPager(skipPager(), true));
-    setSkipSwitcher(rules()->checkSkipSwitcher(skipSwitcher(), true));
-    setKeepAbove(rules()->checkKeepAbove(keepAbove(), true));
-    setKeepBelow(rules()->checkKeepBelow(keepBelow(), true));
-    setShortcut(rules()->checkShortcut(shortcut().toString(), true));
-    setNoBorder(rules()->checkNoBorder(noBorder(), true));
+    setMinimized(rules()->checkMinimize(initialMinimizeMode(), true));
+    setSkipTaskbar(rules()->checkSkipTaskbar(initialSkipTaskbar(), true));
+    setSkipPager(rules()->checkSkipPager(initialSkipPager(), true));
+    setSkipSwitcher(rules()->checkSkipSwitcher(initialSkipSwitcher(), true));
+    setKeepAbove(rules()->checkKeepAbove(initialKeepAbove(), true));
+    setKeepBelow(rules()->checkKeepBelow(initialKeepBelow(), true));
+    setShortcut(rules()->checkShortcut(initialShortcut(), true));
+    setNoBorder(rules()->checkNoBorder(initialNoBorder(), true));
 
     // Don't place the client if its position is set by a rule.
     if (rules()->checkPosition(invalidPoint, true) != invalidPoint) {
@@ -1411,6 +1683,11 @@ void XdgToplevelWindow::initialize()
     if (needsPlacement) {
         const QRectF area = workspace()->clientArea(PlacementArea, this, workspace()->activeOutput());
         workspace()->placement()->place(this, area);
+    }
+
+    XdgToplevelSessionV1Interface *session = m_shellSurface->session();
+    if (session && !session->isEmpty()) {
+        session->sendRestored();
     }
 
     configureDecoration();

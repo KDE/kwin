@@ -60,6 +60,7 @@
 #include "wayland/xdgdecoration_v1_interface.h"
 #include "wayland/xdgforeign_v2_interface.h"
 #include "wayland/xdgoutput_v1_interface.h"
+#include "wayland/xdgsession_v1_interface.h"
 #include "wayland/xdgshell_interface.h"
 #include "wayland/xwaylandkeyboardgrab_v1_interface.h"
 #include "waylandoutput.h"
@@ -356,6 +357,9 @@ bool WaylandServer::init(InitializationFlags flags)
 
     m_tabletManagerV2 = new TabletManagerV2Interface(m_display, m_display);
     m_keyboardShortcutsInhibitManager = new KeyboardShortcutsInhibitManagerV1Interface(m_display, m_display);
+
+    auto storage = new XdgSessionConfigStorageV1(KSharedConfig::openConfig(QStringLiteral("kwinsessionrc")), this);
+    new XdgSessionManagerV1Interface(m_display, storage, m_display);
 
     auto inputPanelV1Integration = new InputPanelV1Integration(this);
     connect(inputPanelV1Integration, &InputPanelV1Integration::windowCreated,

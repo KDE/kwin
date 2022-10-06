@@ -61,3 +61,19 @@ if (TARGET Qt6::Gui)
     add_executable(xdgactivationtest-qt6 xdgactivationtest-qt6.cpp)
     target_link_libraries(xdgactivationtest-qt6 Qt6::Widgets)
 endif()
+
+add_executable(xdgsessiontest xdgsessiontest.cpp)
+ecm_add_qtwayland_client_protocol(xdgsessiontest
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xdg-session-management-v1.xml
+    BASENAME xdg-session-management-v1
+)
+ecm_add_qtwayland_client_protocol(xdgsessiontest
+    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml
+    BASENAME xdg-decoration-unstable-v1
+)
+target_link_libraries(xdgsessiontest
+    Qt5::Core
+    Qt5::Gui
+    KF5::WaylandClient
+    Wayland::Client
+)

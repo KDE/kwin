@@ -28,6 +28,7 @@ class XdgPositionerData;
 class XdgToplevelInterface;
 class XdgPopupInterface;
 class XdgSurfaceInterface;
+class XdgToplevelSessionV1Interface;
 
 /**
  * The XdgShellInterface class represents an extension for destrop-style user interfaces.
@@ -279,6 +280,11 @@ public:
      * Returns the maximum window geometry size of the toplevel surface.
      */
     QSize maximumSize() const;
+
+    /**
+     * Returns the xdg-toplevel-session associated with this surface, or @c null.
+     */
+    XdgToplevelSessionV1Interface *session() const;
 
     /**
      * Sends a configure event to the client. \a size specifies the new window geometry size. A size

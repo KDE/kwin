@@ -537,6 +537,11 @@ QSize XdgToplevelInterface::maximumSize() const
     return d->current.maximumSize.isEmpty() ? QSize(INT_MAX, INT_MAX) : d->current.maximumSize;
 }
 
+XdgToplevelSessionV1Interface *XdgToplevelInterface::session() const
+{
+    return d->session;
+}
+
 quint32 XdgToplevelInterface::sendConfigure(const QSize &size, const States &states)
 {
     // Note that the states listed in the configure event must be an array of uint32_t.

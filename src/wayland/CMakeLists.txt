@@ -179,10 +179,13 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-lockscreen-overlay-v1.xml
     BASENAME kde-lockscreen-overlay-v1
 )
-
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/unstable/xwayland-keyboard-grab/xwayland-keyboard-grab-unstable-v1.xml
     BASENAME xwayland-keyboard-grab-unstable-v1
+)
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xdg-session-management-v1.xml
+    BASENAME xdg-session-management-v1
 )
 
 target_sources(kwin PRIVATE
@@ -254,6 +257,7 @@ target_sources(kwin PRIVATE
     xdgdecoration_v1_interface.cpp
     xdgforeign_v2_interface.cpp
     xdgoutput_v1_interface.cpp
+    xdgsession_v1_interface.cpp
     xdgshell_interface.cpp
     xwaylandkeyboardgrab_v1_interface.cpp
 )
