@@ -135,7 +135,7 @@ Item {
             imagePath: "widgets/viewitem"
             prefix: "hover"
             z: -1
-            visible: !thumb.windowHeap.dragActive && (hoverHandler.hovered || thumb.selected) && Window.window.activeFocusItem && windowHeap.effectiveOrganized
+            visible: !thumb.windowHeap.dragActive && (hoverHandler.hovered || (thumb.selected && Window.window.activeFocusItem)) && windowHeap.effectiveOrganized
         }
 
         MouseArea {
