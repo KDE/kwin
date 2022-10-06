@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1634487 $
+# Version: $Revision: 1635336 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-09-23 00:47+0000\n"
+"POT-Creation-Date: 2022-10-06 00:47+0000\n"
 "PO-Revision-Date: 2022-09-23 09:24+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -2702,7 +2702,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Nie odpowiada)"
 
-#: workspace.cpp:1676
+#: workspace.cpp:1677
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
