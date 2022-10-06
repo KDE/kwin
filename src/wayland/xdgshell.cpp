@@ -632,6 +632,11 @@ QIcon XdgToplevelInterface::customIcon() const
     return d->customIcon;
 }
 
+XdgToplevelSessionV1Interface *XdgToplevelInterface::session() const
+{
+    return d->session;
+}
+
 quint32 XdgToplevelInterface::sendConfigure(const QSize &size, const States &states)
 {
     // Note that the states listed in the configure event must be an array of uint32_t.
@@ -729,6 +734,11 @@ XdgToplevelInterface *XdgToplevelInterface::get(::wl_resource *resource)
         return toplevelPrivate->q;
     }
     return nullptr;
+}
+
+wl_resource *XdgToplevelInterface::resource() const
+{
+    return d->resource()->handle;
 }
 
 XdgPopupInterfacePrivate *XdgPopupInterfacePrivate::get(XdgPopupInterface *popup)

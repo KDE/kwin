@@ -150,6 +150,8 @@ public:
     QPointer<XdgToplevelInterface> parentXdgToplevel;
     QPointer<XdgToplevelDecorationV1Interface> decoration;
     XdgSurfaceInterface *xdgSurface;
+    XdgToplevelSessionV1Interface *session = nullptr;
+
     QString windowTitle;
     QString windowClass;
     QSize minimumSize = QSize(0, 0);

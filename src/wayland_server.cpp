@@ -80,9 +80,11 @@
 #include "wayland/xdgdialog_v1.h"
 #include "wayland/xdgforeign_v2.h"
 #include "wayland/xdgoutput_v1.h"
+#include "wayland/xdgsession_v1.h"
 #include "wayland/xdgshell.h"
 #include "wayland/xdgtopleveldrag_v1.h"
 #include "wayland/xdgtoplevelicon_v1.h"
+
 #include "workspace.h"
 #include "xdgactivationv1.h"
 #include "xdgshellintegration.h"
@@ -373,6 +375,9 @@ bool WaylandServer::init()
 
     m_tabletManagerV2 = new TabletManagerV2Interface(m_display, m_display);
     m_keyboardShortcutsInhibitManager = new KeyboardShortcutsInhibitManagerV1Interface(m_display, m_display);
+
+    auto storage = new XdgSessionConfigStorageV1(KSharedConfig::openConfig(QStringLiteral("kwinsessionrc")), this);
+    new XdgSessionManagerV1Interface(m_display, storage, m_display);
 
     m_xdgDecorationManagerV1 = new XdgDecorationManagerV1Interface(m_display, m_display);
     connect(m_xdgDecorationManagerV1, &XdgDecorationManagerV1Interface::decorationCreated, this, [this](XdgToplevelDecorationV1Interface *decoration) {

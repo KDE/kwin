@@ -31,6 +31,7 @@ class XdgPositionerData;
 class XdgToplevelInterface;
 class XdgPopupInterface;
 class XdgSurfaceInterface;
+class XdgToplevelSessionV1Interface;
 
 enum class Gravity;
 
@@ -296,6 +297,11 @@ public:
     QIcon customIcon() const;
 
     /**
+     * Returns the xdg-toplevel-session associated with this surface, or @c null.
+     */
+    XdgToplevelSessionV1Interface *session() const;
+
+    /**
      * Sends a configure event to the client. \a size specifies the new window geometry size. A size
      * of zero means the client should decide its own window dimensions.
      */
@@ -321,6 +327,8 @@ public:
      * Returns the XdgToplevelInterface for the specified wayland resource object \a resource.
      */
     static XdgToplevelInterface *get(::wl_resource *resource);
+
+    wl_resource *resource() const;
 
 Q_SIGNALS:
     /**
