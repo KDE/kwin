@@ -542,8 +542,6 @@ private:
 
 } // namespace
 
-QDebug operator<<(QDebug dbg, const KWin::FPx2 &fpx2);
-
 Q_DECLARE_METATYPE(KWin::FPx2)
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::AnimationEffect::TerminationFlags)
 
