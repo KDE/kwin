@@ -2036,7 +2036,6 @@ EffectScreen *EffectWindowImpl::screen() const
     }
 
 WINDOW_HELPER(double, opacity, opacity)
-WINDOW_HELPER(bool, hasAlpha, hasAlpha)
 WINDOW_HELPER(qreal, x, x)
 WINDOW_HELPER(qreal, y, y)
 WINDOW_HELPER(qreal, width, width)

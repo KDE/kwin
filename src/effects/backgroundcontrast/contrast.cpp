@@ -362,10 +362,6 @@ bool ContrastEffect::shouldContrast(const EffectWindow *w, int mask, const Windo
         return false;
     }
 
-    if (!w->hasAlpha()) {
-        return false;
-    }
-
     return true;
 }
 

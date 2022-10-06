@@ -2050,7 +2050,6 @@ class EffectWindowVisibleRef;
 class KWINEFFECTS_EXPORT EffectWindow : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool alpha READ hasAlpha CONSTANT)
     Q_PROPERTY(QRectF geometry READ geometry)
     Q_PROPERTY(QRectF expandedGeometry READ expandedGeometry)
     Q_PROPERTY(qreal height READ height)
@@ -2362,7 +2361,6 @@ public:
 
     virtual bool isMinimized() const = 0;
     virtual double opacity() const = 0;
-    virtual bool hasAlpha() const = 0;
 
     bool isOnCurrentActivity() const;
     Q_SCRIPTABLE bool isOnActivity(const QString &id) const;
