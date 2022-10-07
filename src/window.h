@@ -1563,8 +1563,6 @@ Q_SIGNALS:
 protected:
     void setWindowHandles(xcb_window_t client);
     void detectShape(xcb_window_t id);
-    virtual void propertyNotifyEvent(xcb_property_notify_event_t *e);
-    virtual void clientMessageEvent(xcb_client_message_event_t *e);
     Xcb::Property fetchWmClientLeader() const;
     void readWmClientLeader(Xcb::Property &p);
     void getWmClientLeader();
@@ -1907,6 +1905,7 @@ protected:
     void cleanTabBox();
 
     QStringList m_activityList;
+    quint32 m_pendingSurfaceId = 0;
 
 private Q_SLOTS:
     void shadeHover();
@@ -1928,7 +1927,6 @@ private:
     mutable QVector<QRectF> m_shapeRegion;
     mutable bool m_shapeRegionIsValid = false;
     bool m_skipCloseAnimation;
-    quint32 m_pendingSurfaceId = 0;
     QPointer<KWaylandServer::SurfaceInterface> m_surface;
     // when adding new data members, check also copyToDeleted()
     qreal m_opacity = 1.0;
