@@ -1472,18 +1472,3 @@ msgstr ""
 "ス ('Alt+Tab') </span>はアクティブ化ポリシーに反するため機能しません。代わり"
 "に<span style=\" font-style:italic;\">マウスに従ってフォーカス (マウス優先)</"
 "span>を使用するべきでしょう。</p></body></html>"
-
-#~ msgid "Window &geometry:"
-#~ msgstr "ウィンドウのジオメトリ(&G):"
-
-#~ msgid ""
-#~ "Enable this option if you want a window's geometry to be displayed while "
-#~ "it is being moved or resized. The window position relative to the top-"
-#~ "left corner of the screen is displayed together with its size."
-#~ msgstr ""
-#~ "このオプションを有効にすると、ウィンドウの移動中やサイズ変更中にウィンドウ"
-#~ "のジオメトリが表示されるようになります。ウィンドウの寸法と画面左上角を基準"
-#~ "とした位置のデータが表示されます。"
-
-#~ msgid "Display when moving or resizing"
-#~ msgstr "移動およびリサイズ中に表示"

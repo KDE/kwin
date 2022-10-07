@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-06 00:47+0000\n"
+"POT-Creation-Date: 2022-10-07 00:47+0000\n"
 "PO-Revision-Date: 2021-11-23 11:35+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -2398,8 +2398,9 @@ msgid "Make Window Fullscreen"
 msgstr "Ablak teljes képernyőre váltása"
 
 #: useractions.cpp:1013
-#, kde-format
-msgid "Hide Window Border"
+#, fuzzy, kde-format
+#| msgid "Hide Window Border"
+msgid "Toggle Window Border"
 msgstr "Az ablakkeret elrejtése"
 
 #: useractions.cpp:1015

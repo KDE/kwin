@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-06 00:47+0000\n"
+"POT-Creation-Date: 2022-10-07 00:47+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -2427,8 +2427,9 @@ msgid "Make Window Fullscreen"
 msgstr "ធ្វើ​ឲ្យ​បង្អួច​ពេញ​អេក្រង់"
 
 #: useractions.cpp:1013
-#, kde-format
-msgid "Hide Window Border"
+#, fuzzy, kde-format
+#| msgid "Hide Window Border"
+msgid "Toggle Window Border"
 msgstr "លាក់​ស៊ុម​បង្អួច"
 
 #: useractions.cpp:1015

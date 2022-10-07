@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-06 00:47+0000\n"
+"POT-Creation-Date: 2022-10-07 00:47+0000\n"
 "PO-Revision-Date: 2021-10-03 17:31-0700\n"
 "Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -2465,8 +2465,9 @@ msgid "Make Window Fullscreen"
 msgstr "ウィンドウをフルスクリーンに"
 
 #: useractions.cpp:1013
-#, kde-format
-msgid "Hide Window Border"
+#, fuzzy, kde-format
+#| msgid "Hide Window Border"
+msgid "Toggle Window Border"
 msgstr "ウィンドウの枠を隠す"
 
 #: useractions.cpp:1015
@@ -2496,28 +2497,24 @@ msgid "Move Window to the Center"
 msgstr "ウィンドウを左へ寄せる"
 
 #: useractions.cpp:1025
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Right"
-msgstr "ウィンドウを移動"
+msgstr "ウィンドウを右に移動"
 
 #: useractions.cpp:1027
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Left"
-msgstr "ウィンドウを移動"
+msgstr "ウィンドウを左に移動"
 
 #: useractions.cpp:1029
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Up"
-msgstr "ウィンドウを移動"
+msgstr "ウィンドウを上に移動"
 
 #: useractions.cpp:1031
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Down"
-msgstr "ウィンドウを移動"
+msgstr "ウィンドウを下に移動"
 
 #: useractions.cpp:1033
 #, fuzzy, kde-format
@@ -2787,29 +2784,3 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
-
-#~ msgid "Show Desktop"
-#~ msgstr "デスクトップを表示"
-
-#, fuzzy
-#~| msgid "Close Window"
-#~ msgid "X11 Client Windows"
-#~ msgstr "ウィンドウを閉じる"
-
-#~ msgid "Pack Window to the Right"
-#~ msgstr "ウィンドウを右へ寄せる"
-
-#~ msgid "Pack Window to the Left"
-#~ msgstr "ウィンドウを左へ寄せる"
-
-#~ msgid "Pack Window Up"
-#~ msgstr "ウィンドウを上へ寄せる"
-
-#~ msgid "Pack Window Down"
-#~ msgstr "ウィンドウを下へ寄せる"
-
-#~ msgid "Pack Grow Window Horizontally"
-#~ msgstr "ウィンドウを右へ伸ばす"
-
-#~ msgid "Pack Grow Window Vertically"
-#~ msgstr "ウィンドウを下へ伸ばす"

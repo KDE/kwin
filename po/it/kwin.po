@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-06 00:47+0000\n"
+"POT-Creation-Date: 2022-10-07 00:47+0000\n"
 "PO-Revision-Date: 2022-09-13 14:27+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -2412,8 +2412,9 @@ msgid "Make Window Fullscreen"
 msgstr "Finestra a tutto schermo"
 
 #: useractions.cpp:1013
-#, kde-format
-msgid "Hide Window Border"
+#, fuzzy, kde-format
+#| msgid "Hide Window Border"
+msgid "Toggle Window Border"
 msgstr "Nascondi bordi della finestra"
 
 #: useractions.cpp:1015

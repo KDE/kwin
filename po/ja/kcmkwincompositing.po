@@ -225,21 +225,3 @@ msgstr ""
 msgid ""
 "\"Re-use screen content\" causes severe performance problems on MESA drivers."
 msgstr ""
-
-#~ msgid "Rendering backend:"
-#~ msgstr "レンダリングバックエンド:"
-
-#~ msgid "OpenGL 3.1"
-#~ msgstr "OpenGL 3.1"
-
-#~ msgid "OpenGL 2.0"
-#~ msgstr "OpenGL 2.0"
-
-#~ msgid "Crisp"
-#~ msgstr "鮮明"
-
-#~ msgid "Smooth (slower)"
-#~ msgstr "スムーズ (低速)"
-
-#~ msgid "XRender"
-#~ msgstr "XRender"

@@ -240,15 +240,3 @@ msgid ""
 msgstr ""
 "<p align=\"left\">アクションを起動するには、アクションを割り当てたスクリーン"
 "エッジにマウスカーソルを当てます。</p>"
-
-#~ msgid "Show Desktop"
-#~ msgstr "デスクトップを表示"
-
-#~ msgid "%1 - Cube"
-#~ msgstr "%1 - キューブ"
-
-#~ msgid "%1 - Cylinder"
-#~ msgstr "%1 - シリンダー"
-
-#~ msgid "%1 - Sphere"
-#~ msgstr "%1 - 球形"
