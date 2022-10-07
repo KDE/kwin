@@ -24,6 +24,14 @@ SurfaceItemX11::SurfaceItemX11(Window *window, Item *parent)
     xcb_damage_create(kwinApp()->x11Connection(), m_damageHandle, window->frameId(),
                       XCB_DAMAGE_REPORT_LEVEL_NON_EMPTY);
 
+    // With unmanaged windows there is a race condition between the client painting the window
+    // and us setting up damage tracking.  If the client wins we won't get a damage event even
+    // though the window has been painted.  To avoid this we mark the whole window as damaged
+    // immediately after creating the damage object.
+    if (window->isUnmanaged()) {
+        m_isDamaged = true;
+    }
+
     setSize(window->bufferGeometry().size());
 }
 
