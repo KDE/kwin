@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-09-28 00:51+0000\n"
+"POT-Creation-Date: 2022-10-08 00:49+0000\n"
 "PO-Revision-Date: 2022-08-22 08:46+0200\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -676,14 +676,8 @@ msgstr "Ngang:"
 msgid "Vertical:"
 msgstr "Dọc:"
 
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideDocks)
-#: slide/slide_config.ui:72
-#, kde-format
-msgid "Slide docks"
-msgstr "Trượt các giá"
-
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
-#: slide/slide_config.ui:79
+#: slide/slide_config.ui:72
 #, kde-format
 msgid "Slide desktop background"
 msgstr "Trượt nền bàn làm việc"
@@ -1112,6 +1106,9 @@ msgstr "Tắt"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Theo dõi chuột"
+
+#~ msgid "Slide docks"
+#~ msgstr "Trượt các giá"
 
 #~ msgid "Search..."
 #~ msgstr "Tìm kiếm..."

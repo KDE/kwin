@@ -2379,10 +2379,9 @@ msgid "Make Window Fullscreen"
 msgstr "Okno na celou obrazovku"
 
 #: useractions.cpp:1013
-#, fuzzy, kde-format
-#| msgid "Hide Window Border"
+#, kde-format
 msgid "Toggle Window Border"
-msgstr "Skrýt okraje okna"
+msgstr ""
 
 #: useractions.cpp:1015
 #, kde-format

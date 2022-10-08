@@ -16,14 +16,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-07 00:47+0000\n"
-"PO-Revision-Date: 2022-09-13 05:29+0200\n"
+"PO-Revision-Date: 2022-10-07 05:30+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.08.0\n"
+"X-Generator: Lokalize 22.08.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, kde-format
@@ -2409,10 +2409,9 @@ msgid "Make Window Fullscreen"
 msgstr "Erakutsi leihoa pantaila osoan"
 
 #: useractions.cpp:1013
-#, fuzzy, kde-format
-#| msgid "Hide Window Border"
+#, kde-format
 msgid "Toggle Window Border"
-msgstr "Ezkutatu leihoaren ertza"
+msgstr "Txandakatu leihoaren ertza"
 
 #: useractions.cpp:1015
 #, kde-format

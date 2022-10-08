@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-09-28 00:51+0000\n"
+"POT-Creation-Date: 2022-10-08 00:49+0000\n"
 "PO-Revision-Date: 2020-06-05 22:39+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -694,14 +694,8 @@ msgstr "Rõhtsuunas:"
 msgid "Vertical:"
 msgstr "Püstsuunas:"
 
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideDocks)
-#: slide/slide_config.ui:72
-#, kde-format
-msgid "Slide docks"
-msgstr "Dokkide liuglemine"
-
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
-#: slide/slide_config.ui:79
+#: slide/slide_config.ui:72
 #, kde-format
 msgid "Slide desktop background"
 msgstr "Töölaua taustapildi liuglemine"
@@ -1132,6 +1126,9 @@ msgstr "Välja lülitatud"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Hiire jälgimine:"
+
+#~ msgid "Slide docks"
+#~ msgstr "Dokkide liuglemine"
 
 #~ msgid "&Radius:"
 #~ msgstr "&Raadius:"

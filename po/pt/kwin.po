@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-07 00:47+0000\n"
-"PO-Revision-Date: 2022-09-13 11:22+0100\n"
+"PO-Revision-Date: 2022-10-07 09:14+0100\n"
 "Last-Translator: Pedro Morais <morais@kde.org>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
 "Language: pt\n"
@@ -2411,10 +2411,9 @@ msgid "Make Window Fullscreen"
 msgstr "Janela a Ocupar Todo o Ecrã"
 
 #: useractions.cpp:1013
-#, fuzzy, kde-format
-#| msgid "Hide Window Border"
+#, kde-format
 msgid "Toggle Window Border"
-msgstr "Esconder o Contorno da Janela"
+msgstr "Comutar o Contorno da Janela"
 
 #: useractions.cpp:1015
 #, kde-format

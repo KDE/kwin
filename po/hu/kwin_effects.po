@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-09-28 00:51+0000\n"
+"POT-Creation-Date: 2022-10-08 00:49+0000\n"
 "PO-Revision-Date: 2021-11-19 13:44+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -692,14 +692,8 @@ msgstr "Vízszintesen:"
 msgid "Vertical:"
 msgstr "Függőlegesen:"
 
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideDocks)
-#: slide/slide_config.ui:72
-#, kde-format
-msgid "Slide docks"
-msgstr "Dokkok csúsztatása"
-
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
-#: slide/slide_config.ui:79
+#: slide/slide_config.ui:72
 #, kde-format
 msgid "Slide desktop background"
 msgstr "Asztalháttér csúsztatása"
@@ -1132,6 +1126,9 @@ msgstr "Letiltva"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Egérkövetés:"
+
+#~ msgid "Slide docks"
+#~ msgstr "Dokkok csúsztatása"
 
 #~ msgid "&Radius:"
 #~ msgstr "S&ugár:"

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-09-28 00:51+0000\n"
+"POT-Creation-Date: 2022-10-08 00:49+0000\n"
 "PO-Revision-Date: 2022-06-24 02:29+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
@@ -689,14 +689,8 @@ msgstr "水平："
 msgid "Vertical:"
 msgstr "垂直："
 
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideDocks)
-#: slide/slide_config.ui:72
-#, kde-format
-msgid "Slide docks"
-msgstr "滑動 dock"
-
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
-#: slide/slide_config.ui:79
+#: slide/slide_config.ui:72
 #, kde-format
 msgid "Slide desktop background"
 msgstr "滑動桌面背景"
@@ -1125,6 +1119,9 @@ msgstr "已關閉"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "滑鼠追蹤："
+
+#~ msgid "Slide docks"
+#~ msgstr "滑動 dock"
 
 #~ msgid "Search..."
 #~ msgstr "搜尋…"

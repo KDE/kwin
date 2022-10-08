@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: கேபசூ 4.1 தமிழாக்கம்\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-09-28 00:51+0000\n"
+"POT-Creation-Date: 2022-10-08 00:49+0000\n"
 "PO-Revision-Date: 2022-08-18 19:41+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -682,14 +682,8 @@ msgstr "கிடைமட்டமாக:"
 msgid "Vertical:"
 msgstr "நெடுக்காக:"
 
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideDocks)
-#: slide/slide_config.ui:72
-#, kde-format
-msgid "Slide docks"
-msgstr "பலகைகளை நழுவச்செய்"
-
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
-#: slide/slide_config.ui:79
+#: slide/slide_config.ui:72
 #, kde-format
 msgid "Slide desktop background"
 msgstr "பின்புலப்படத்தை நழுவச்செய்"
@@ -1119,6 +1113,9 @@ msgstr "முடக்கு"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "சுட்டியை பின்தொடர்தல்:"
+
+#~ msgid "Slide docks"
+#~ msgstr "பலகைகளை நழுவச்செய்"
 
 #~ msgid "Search..."
 #~ msgstr "தேடு..."

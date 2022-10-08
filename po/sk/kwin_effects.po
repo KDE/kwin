@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-09-28 00:51+0000\n"
+"POT-Creation-Date: 2022-10-08 00:49+0000\n"
 "PO-Revision-Date: 2022-05-16 18:28+0200\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -688,14 +688,8 @@ msgstr "Horizontálne:"
 msgid "Vertical:"
 msgstr "Vertikálne:"
 
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideDocks)
-#: slide/slide_config.ui:72
-#, kde-format
-msgid "Slide docks"
-msgstr "Zasunúť doky"
-
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
-#: slide/slide_config.ui:79
+#: slide/slide_config.ui:72
 #, kde-format
 msgid "Slide desktop background"
 msgstr "Posúvať pozadie plochy"
@@ -1127,6 +1121,9 @@ msgstr "Zakázané"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Sledovanie myši:"
+
+#~ msgid "Slide docks"
+#~ msgstr "Zasunúť doky"
 
 #~ msgid "Search..."
 #~ msgstr "Hľadať..."
