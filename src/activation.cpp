@@ -287,11 +287,12 @@ void Workspace::activateWindow(Window *window, bool force)
         return;
     }
     raiseWindow(window);
+    VirtualDesktop *desktop = nullptr;
     if (!window->isOnCurrentDesktop()) {
         ++block_focus;
         switch (options->activationDesktopPolicy()) {
         case Options::ActivationDesktopPolicy::SwitchToOtherDesktop:
-            VirtualDesktopManager::self()->setCurrent(window->desktops().constLast());
+            desktop = window->desktops().constLast();
             break;
         case Options::ActivationDesktopPolicy::BringToCurrentDesktop:
             window->enterDesktop(VirtualDesktopManager::self()->currentDesktop());
@@ -299,15 +300,27 @@ void Workspace::activateWindow(Window *window, bool force)
         }
         --block_focus;
     }
+
+    ++block_focus;
 #if KWIN_BUILD_ACTIVITIES
-    if (!window->isOnCurrentActivity()) {
-        ++block_focus;
+    if (m_activities) {
+        QString activity = m_activities->current();
+        if (!window->isOnCurrentActivity()) {
+            // first isn't necessarily best, but it's easiest
+            activity = window->activities().constFirst();
+        }
         // DBUS!
-        // first isn't necessarily best, but it's easiest
-        m_activities->setCurrent(window->activities().constFirst());
-        --block_focus;
+        m_activities->setCurrent(activity, desktop);
+    } else if (desktop) {
+        VirtualDesktopManager::self()->setCurrent(desktop);
+    }
+#else
+    if (desktop) {
+        VirtualDesktopManager::self()->setCurrent(desktop);
     }
 #endif
+    --block_focus;
+
     if (window->isMinimized()) {
         window->unminimize();
     }

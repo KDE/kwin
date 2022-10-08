@@ -1758,6 +1758,11 @@ Q_SIGNALS:
     void propertyNotify(KWin::EffectWindow *w, long atom);
 
     /**
+     * Emitted after the global activity changes
+     * but before currentActivityChanged()
+     */
+    void currentActivityAboutToChange();
+    /**
      * This signal is emitted when the global
      * activity is changed
      * @param id id of the new current activity

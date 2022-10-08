@@ -24,6 +24,7 @@ class Controller;
 namespace KWin
 {
 class Window;
+class VirtualDesktop;
 
 class KWIN_EXPORT Activities : public QObject
 {
@@ -34,7 +35,13 @@ public:
 
     bool stop(const QString &id);
     bool start(const QString &id);
-    void setCurrent(const QString &activity);
+    /**
+     * Set the current activity and virtual desktop.
+     * @param activity If same as current activity or nullUuid or empty, doesn't change activity.
+     * @param desktop If null, doesn't change desktop.
+     *
+     */
+    void setCurrent(const QString &activity, VirtualDesktop *desktop = nullptr);
     /**
      * Adds/removes window \a window to/from \a activity.
      *
@@ -52,6 +59,11 @@ public:
     KActivities::Controller::ServiceStatus serviceStatus() const;
 
 Q_SIGNALS:
+    /**
+     * Emitted after the global activity state changes,
+     * but before currentChanged().
+     */
+    void currentAboutToChange();
     /**
      * This signal is emitted when the global
      * activity is changed
@@ -80,6 +92,9 @@ private:
     QString m_previous;
     QString m_current;
     KActivities::Controller *m_controller;
+
+    //  Activity, Desktop ID
+    QHash<QString, QString> m_activeDesktop;
 };
 
 inline QStringList Activities::all() const

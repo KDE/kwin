@@ -8,6 +8,7 @@
 */
 #include "activities.h"
 // KWin
+#include "virtualdesktops.h"
 #include "window.h"
 #include "workspace.h"
 // KDE
@@ -50,9 +51,14 @@ void Activities::slotServiceStatusChanged()
     }
 }
 
-void Activities::setCurrent(const QString &activity)
+void Activities::setCurrent(const QString &activity, VirtualDesktop *desktop)
 {
-    m_controller->setCurrentActivity(activity);
+    if (activity == m_current) {
+        desktop ? VirtualDesktopManager::self()->setCurrent(desktop) : 0;
+    } else {
+        desktop ? m_activeDesktop[activity] = desktop->id() : 0;
+        m_controller->setCurrentActivity(activity);
+    }
 }
 
 void Activities::slotCurrentChanged(const QString &newActivity)
@@ -62,6 +68,16 @@ void Activities::slotCurrentChanged(const QString &newActivity)
     }
     m_previous = m_current;
     m_current = newActivity;
+
+    Q_EMIT currentAboutToChange();
+
+    // Remember the current desktop for the previous activity
+    m_activeDesktop[m_previous] = VirtualDesktopManager::self()->currentDesktop()->id();
+    auto remembered = VirtualDesktopManager::self()->desktopForId(m_activeDesktop[m_current]);
+    if (remembered) {
+        VirtualDesktopManager::self()->setCurrent(remembered);
+    }
+
     Q_EMIT currentChanged(newActivity);
 }
 

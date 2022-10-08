@@ -136,6 +136,12 @@ private:
 
     EffectWindowList m_elevatedWindows;
     QHash<EffectWindow *, WindowData> m_windowData;
+
+    /**
+     * Is the current activity being switched?
+     * If true, don't animate the desktop change.
+     */
+    bool m_switchingActivity = false;
 };
 
 inline int SlideEffect::horizontalGap() const

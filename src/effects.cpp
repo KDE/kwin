@@ -201,6 +201,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     if (Activities *activities = Workspace::self()->activities()) {
         connect(activities, &Activities::added, this, &EffectsHandler::activityAdded);
         connect(activities, &Activities::removed, this, &EffectsHandler::activityRemoved);
+        connect(activities, &Activities::currentAboutToChange, this, &EffectsHandler::currentActivityAboutToChange);
         connect(activities, &Activities::currentChanged, this, &EffectsHandler::currentActivityChanged);
     }
 #endif

@@ -41,6 +41,12 @@ SlideEffect::SlideEffect()
             this, &SlideEffect::finishedSwitching);
     connect(effects, &EffectsHandler::screenRemoved,
             this, &SlideEffect::finishedSwitching);
+    connect(effects, &EffectsHandler::currentActivityAboutToChange, this, [this]() {
+        m_switchingActivity = true;
+    });
+    connect(effects, &EffectsHandler::currentActivityChanged, this, [this]() {
+        m_switchingActivity = false;
+    });
 
     m_currentPosition = effects->desktopGridCoords(effects->currentDesktop());
 }
@@ -404,7 +410,7 @@ void SlideEffect::finishedSwitching()
 
 void SlideEffect::desktopChanged(int old, int current, EffectWindow *with)
 {
-    if (effects->hasActiveFullScreenEffect() && effects->activeFullScreenEffect() != this) {
+    if ((effects->hasActiveFullScreenEffect() && effects->activeFullScreenEffect() != this) || m_switchingActivity) {
         m_currentPosition = effects->desktopGridCoords(effects->currentDesktop());
         return;
     }
