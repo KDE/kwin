@@ -1514,7 +1514,7 @@ bool ScreenEdges::handleDndNotify(xcb_window_t window, const QPoint &point)
             continue;
         }
         if (edge->isReserved() && edge->window() == window) {
-            updateXTime();
+            kwinApp()->updateXTime();
             edge->check(point, QDateTime::fromMSecsSinceEpoch(xTime(), Qt::UTC), true);
             return true;
         }

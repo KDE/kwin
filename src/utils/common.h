@@ -115,7 +115,6 @@ enum class QuickTileFlag {
 };
 Q_DECLARE_FLAGS(QuickTileMode, QuickTileFlag)
 
-void KWIN_EXPORT updateXTime();
 void KWIN_EXPORT grabXServer();
 void KWIN_EXPORT ungrabXServer();
 bool KWIN_EXPORT grabXKeyboard(xcb_window_t w = XCB_WINDOW_NONE);

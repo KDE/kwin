@@ -24,11 +24,6 @@
 #ifndef KCMRULES
 #include <QApplication>
 #include <QDebug>
-
-#include "main.h"
-
-#include <cstdio>
-
 #endif
 
 Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core", QtWarningMsg)
@@ -69,11 +64,6 @@ StrutRect &StrutRect::operator=(const StrutRect &other)
         m_area = other.area();
     }
     return *this;
-}
-
-void updateXTime()
-{
-    kwinApp()->updateXTime();
 }
 
 static int server_grab_count = 0;

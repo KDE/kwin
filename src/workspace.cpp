@@ -325,7 +325,7 @@ void Workspace::initializeX11()
     if (Xcb::Extensions::self()->isSyncAvailable()) {
         m_syncAlarmFilter.reset(new SyncAlarmX11Filter);
     }
-    updateXTime(); // Needed for proper initialization of user_time in Client ctor
+    kwinApp()->updateXTime(); // Needed for proper initialization of user_time in Client ctor
 
     const uint32_t nullFocusValues[] = {true};
     m_nullFocus.reset(new Xcb::Window(QRect(-1, -1, 1, 1), XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, nullFocusValues));

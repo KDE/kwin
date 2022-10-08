@@ -179,7 +179,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         const auto *event = reinterpret_cast<xcb_create_notify_event_t *>(e);
         if (event->parent == kwinApp()->x11RootWindow() && !QWidget::find(event->window) && !event->override_redirect) {
             // see comments for allowWindowActivation()
-            updateXTime();
+            kwinApp()->updateXTime();
             const xcb_timestamp_t t = xTime();
             xcb_change_property(kwinApp()->x11Connection(), XCB_PROP_MODE_REPLACE, event->window, atoms->kde_net_wm_user_creation_time, XCB_ATOM_CARDINAL, 32, 1, &t);
         }
@@ -195,7 +195,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         return true;
     }
     case XCB_MAP_REQUEST: {
-        updateXTime();
+        kwinApp()->updateXTime();
 
         const auto *event = reinterpret_cast<xcb_map_request_event_t *>(e);
         if (X11Window *window = findClient(Predicate::WindowMatch, event->window)) {
@@ -281,7 +281,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         if (event->event == kwinApp()->x11RootWindow()
             && (event->detail == XCB_NOTIFY_DETAIL_NONE || event->detail == XCB_NOTIFY_DETAIL_POINTER_ROOT || event->detail == XCB_NOTIFY_DETAIL_INFERIOR)) {
             Xcb::CurrentInput currentInput;
-            updateXTime(); // focusToNull() uses xTime(), which is old now (FocusIn has no timestamp)
+            kwinApp()->updateXTime(); // focusToNull() uses xTime(), which is old now (FocusIn has no timestamp)
             // it seems we can "loose" focus reversions when the closing window hold a grab
             // => catch the typical pattern (though we don't want the focus on the root anyway) #348935
             const bool lostFocusPointerToRoot = currentInput->focus == kwinApp()->x11RootWindow() && event->detail == XCB_NOTIFY_DETAIL_INFERIOR;
@@ -1251,7 +1251,7 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
         // To not run into these errors we try to wait for the destroy notify. For this we
         // generate a round trip to the X server and wait a very short time span before
         // handling the release.
-        updateXTime();
+        kwinApp()->updateXTime();
         // using 1 msec to not just move it at the end of the event loop but add an very short
         // timespan to cover cases like unmap() followed by destroy(). The only other way to
         // ensure that the window is not destroyed when we do the release handling is to grab

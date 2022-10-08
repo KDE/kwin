@@ -2038,7 +2038,7 @@ bool X11Window::takeFocus()
         demandAttention(false); // window cannot take input, at least withdraw urgency
     }
     if (info->supportsProtocol(NET::TakeFocusProtocol)) {
-        updateXTime();
+        kwinApp()->updateXTime();
         sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus);
     }
     workspace()->setShouldGetFocus(this);
@@ -2378,7 +2378,7 @@ void X11Window::sendSyncRequest()
         m_syncRequest.value.hi++;
     }
     if (m_syncRequest.lastTimestamp >= xTime()) {
-        updateXTime();
+        kwinApp()->updateXTime();
     }
 
     // Send the message to client
@@ -4656,7 +4656,7 @@ bool X11Window::doStartInteractiveMoveResize()
         m_moveResizeGrabWindow.create(Xcb::toXNative(r), XCB_WINDOW_CLASS_INPUT_ONLY, 0, nullptr, kwinApp()->x11RootWindow());
         m_moveResizeGrabWindow.map();
         m_moveResizeGrabWindow.raise();
-        updateXTime();
+        kwinApp()->updateXTime();
         const xcb_grab_pointer_cookie_t cookie = xcb_grab_pointer_unchecked(kwinApp()->x11Connection(), false, m_moveResizeGrabWindow,
                                                                             XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW,
                                                                             XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, m_moveResizeGrabWindow, Cursors::self()->mouse()->x11Cursor(cursor()), xTime());

@@ -602,7 +602,7 @@ bool Workspace::restoreFocus()
     // a timestamp *sigh*, kwin's timestamp would be older than the timestamp
     // that was used by whoever caused the focus change, and therefore
     // the attempt to restore the focus would fail due to old timestamp
-    updateXTime();
+    kwinApp()->updateXTime();
     if (should_get_focus.count() > 0) {
         return requestFocus(should_get_focus.last());
     } else if (m_lastActiveWindow) {
@@ -636,7 +636,7 @@ void X11Window::updateUserTime(xcb_timestamp_t time)
 {
     // copied in Group::updateUserTime
     if (time == XCB_TIME_CURRENT_TIME) {
-        updateXTime();
+        kwinApp()->updateXTime();
         time = xTime();
     }
     if (time != -1U
@@ -930,7 +930,7 @@ void Group::updateUserTime(xcb_timestamp_t time)
 {
     // copy of X11Window::updateUserTime
     if (time == XCB_CURRENT_TIME) {
-        updateXTime();
+        kwinApp()->updateXTime();
         time = xTime();
     }
     if (time != -1U

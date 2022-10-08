@@ -1534,7 +1534,7 @@ bool TabBox::establishTabBoxGrab()
         m_forcedGlobalMouseGrab = true;
         return true;
     }
-    updateXTime();
+    kwinApp()->updateXTime();
     if (!grabXKeyboard()) {
         return false;
     }
@@ -1558,7 +1558,7 @@ void TabBox::removeTabBoxGrab()
         m_forcedGlobalMouseGrab = false;
         return;
     }
-    updateXTime();
+    kwinApp()->updateXTime();
     ungrabXKeyboard();
     Q_ASSERT(m_forcedGlobalMouseGrab);
     m_forcedGlobalMouseGrab = false;
