@@ -311,7 +311,7 @@ public:
     {
         return m_syncRequest;
     }
-    virtual bool wantsSyncCounter() const;
+    bool wantsSyncCounter() const;
     void handleSync();
     void handleSyncTimeout();
 

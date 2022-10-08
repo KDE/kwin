@@ -162,7 +162,6 @@ target_sources(kwin PRIVATE
     xdgshellintegration.cpp
     xdgshellwindow.cpp
     xkb.cpp
-    xwaylandwindow.cpp
 )
 
 target_link_libraries(kwin
