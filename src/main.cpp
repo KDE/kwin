@@ -44,6 +44,14 @@
 #include <QTranslator>
 #include <qplatformdefs.h>
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <private/qtx11extras_p.h>
+#else
+#include <QX11Info>
+#endif
+
+#include <cerrno>
+
 #if __has_include(<malloc.h>)
 #include <malloc.h>
 #endif
@@ -455,6 +463,35 @@ bool Application::dispatchEvent(xcb_generic_event_t *event)
     }
 
     return false;
+}
+
+static quint32 monotonicTime()
+{
+    timespec ts;
+
+    const int result = clock_gettime(CLOCK_MONOTONIC, &ts);
+    if (result) {
+        qCWarning(KWIN_CORE, "Failed to query monotonic time: %s", strerror(errno));
+    }
+
+    return ts.tv_sec * 1000 + ts.tv_nsec / 1000000L;
+}
+
+void Application::updateXTime()
+{
+    switch (operationMode()) {
+    case Application::OperationModeX11:
+        setX11Time(QX11Info::getTimestamp(), TimestampUpdate::Always);
+        break;
+
+    case Application::OperationModeXwayland:
+        setX11Time(monotonicTime(), TimestampUpdate::Always);
+        break;
+
+    default:
+        // Do not update the current X11 time stamp if it's the Wayland only session.
+        break;
+    }
 }
 
 void Application::updateX11Time(xcb_generic_event_t *event)

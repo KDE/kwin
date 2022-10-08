@@ -249,11 +249,6 @@ public:
     virtual std::unique_ptr<OverlayWindow> createOverlayWindow();
 
     /**
-     * Queries the current X11 time stamp of the X server.
-     */
-    void updateXTime();
-
-    /**
      * Creates the OutlineVisual for the given @p outline.
      * Default implementation creates an OutlineVisual suited for composited usage.
      */

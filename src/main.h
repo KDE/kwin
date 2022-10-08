@@ -144,6 +144,10 @@ public:
             m_x11Time = timestamp;
         }
     }
+    /**
+     * Queries the current X11 time stamp of the X server.
+     */
+    void updateXTime();
     void updateX11Time(xcb_generic_event_t *event);
 
     static void setCrashCount(int count);

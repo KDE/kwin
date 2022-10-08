@@ -15,6 +15,7 @@
 */
 
 #include "utils/common.h"
+#include "utils/c_ptr.h"
 
 #include <QPainter>
 #include <QWidget>
@@ -24,9 +25,7 @@
 #include <QApplication>
 #include <QDebug>
 
-#include "atoms.h"
-#include "core/platform.h"
-#include "workspace.h"
+#include "main.h"
 
 #include <cstdio>
 
@@ -74,7 +73,7 @@ StrutRect &StrutRect::operator=(const StrutRect &other)
 
 void updateXTime()
 {
-    kwinApp()->platform()->updateXTime();
+    kwinApp()->updateXTime();
 }
 
 static int server_grab_count = 0;

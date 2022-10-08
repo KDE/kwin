@@ -9,8 +9,6 @@
 
 #include "platform.h"
 
-#include <config-kwin.h>
-
 #include "composite.h"
 #include "cursor.h"
 #include "dmabuftexture.h"
@@ -25,16 +23,6 @@
 #include "qpainterbackend.h"
 #include "scene.h"
 #include "screenedge.h"
-
-#include <KCoreAddons>
-
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-#include <private/qtx11extras_p.h>
-#else
-#include <QX11Info>
-#endif
-
-#include <cerrno>
 
 namespace KWin
 {
@@ -229,35 +217,6 @@ void Platform::setupActionForGlobalAccel(QAction *action)
 std::unique_ptr<OverlayWindow> Platform::createOverlayWindow()
 {
     return nullptr;
-}
-
-static quint32 monotonicTime()
-{
-    timespec ts;
-
-    const int result = clock_gettime(CLOCK_MONOTONIC, &ts);
-    if (result) {
-        qCWarning(KWIN_CORE, "Failed to query monotonic time: %s", strerror(errno));
-    }
-
-    return ts.tv_sec * 1000 + ts.tv_nsec / 1000000L;
-}
-
-void Platform::updateXTime()
-{
-    switch (kwinApp()->operationMode()) {
-    case Application::OperationModeX11:
-        kwinApp()->setX11Time(QX11Info::getTimestamp(), Application::TimestampUpdate::Always);
-        break;
-
-    case Application::OperationModeXwayland:
-        kwinApp()->setX11Time(monotonicTime(), Application::TimestampUpdate::Always);
-        break;
-
-    default:
-        // Do not update the current X11 time stamp if it's the Wayland only session.
-        break;
-    }
 }
 
 std::unique_ptr<OutlineVisual> Platform::createOutline(Outline *outline)
