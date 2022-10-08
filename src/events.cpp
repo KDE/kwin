@@ -654,9 +654,9 @@ void X11Window::destroyNotifyEvent(xcb_destroy_notify_event_t *e)
 void X11Window::clientMessageEvent(xcb_client_message_event_t *e)
 {
     if (e->type == atoms->wl_surface_id) {
-        m_pendingSurfaceId = e->data.data32[0];
+        m_xwaylandSurfaceId = e->data.data32[0];
         if (auto w = waylandServer()) {
-            if (auto s = KWaylandServer::SurfaceInterface::get(m_pendingSurfaceId, w->xWaylandConnection())) {
+            if (auto s = KWaylandServer::SurfaceInterface::get(m_xwaylandSurfaceId, w->xWaylandConnection())) {
                 setSurface(s);
             }
         }

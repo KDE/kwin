@@ -318,6 +318,8 @@ public:
     bool allowWindowActivation(xcb_timestamp_t time = -1U, bool focus_in = false,
                                bool ignore_desktop = false);
 
+    quint32 xwaylandSurfaceId() const;
+
     static void cleanupX11();
 
 public Q_SLOTS:
@@ -508,6 +510,8 @@ private:
     uint app_noborder : 1; ///< App requested no border via window type, shape extension, etc.
     uint ignore_focus_stealing : 1; ///< Don't apply focus stealing prevention to this client
     bool blocks_compositing;
+
+    quint32 m_xwaylandSurfaceId = 0;
 
     enum FullScreenMode {
         FullScreenNone,

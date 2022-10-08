@@ -4986,6 +4986,11 @@ void X11Window::updateWindowPixmap()
     }
 }
 
+quint32 X11Window::xwaylandSurfaceId() const
+{
+    return m_xwaylandSurfaceId;
+}
+
 void X11Window::associate()
 {
     if (surface()->isMapped()) {
@@ -4995,6 +5000,8 @@ void X11Window::associate()
         // the associated surface item has processed the new surface state.
         connect(surface(), &KWaylandServer::SurfaceInterface::mapped, this, &X11Window::initialize, Qt::QueuedConnection);
     }
+
+    m_xwaylandSurfaceId = 0;
 }
 
 void X11Window::initialize()

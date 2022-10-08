@@ -778,7 +778,6 @@ public:
     bool skipsCloseAnimation() const;
     void setSkipCloseAnimation(bool set);
 
-    quint32 pendingSurfaceId() const;
     KWaylandServer::SurfaceInterface *surface() const;
     void setSurface(KWaylandServer::SurfaceInterface *surface);
 
@@ -1905,7 +1904,6 @@ protected:
     void cleanTabBox();
 
     QStringList m_activityList;
-    quint32 m_pendingSurfaceId = 0;
 
 private Q_SLOTS:
     void shadeHover();
@@ -2291,11 +2289,6 @@ inline QString Window::resourceClass() const
 inline const ClientMachine *Window::clientMachine() const
 {
     return m_clientMachine;
-}
-
-inline quint32 Window::pendingSurfaceId() const
-{
-    return m_pendingSurfaceId;
 }
 
 inline const std::shared_ptr<QOpenGLFramebufferObject> &Window::internalFramebufferObject() const

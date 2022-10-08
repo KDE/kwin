@@ -617,7 +617,6 @@ void Window::setSurface(KWaylandServer::SurfaceInterface *surface)
         return;
     }
     m_surface = surface;
-    m_pendingSurfaceId = 0;
     Q_EMIT surfaceChanged();
 }
 
