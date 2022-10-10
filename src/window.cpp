@@ -11,7 +11,6 @@
 
 #include "core/output.h"
 #include "tiles/tilemanager.h"
-
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -1660,7 +1659,7 @@ bool Window::startInteractiveMoveResize()
         }
     }
 
-    if (m_tile && !m_tile->supportsResizeGravity(interactiveMoveResizeGravity())) {
+    if (tile() && !tile()->supportsResizeGravity(interactiveMoveResizeGravity())) {
         setQuickTileMode(QuickTileFlag::None);
     }
 
@@ -1933,7 +1932,7 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
         calculateMoveResizeGeom();
 
         // adjust new size to snap to other windows/borders, but not tiled windows
-        if (!m_tile) {
+        if (!tile()) {
             nextMoveResizeGeom = workspace()->adjustWindowSize(this, nextMoveResizeGeom, gravity);
         }
 
@@ -2048,8 +2047,8 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
         calculateMoveResizeGeom();
 
         if (currentMoveResizeGeom.size() != nextMoveResizeGeom.size()) {
-            if (m_tile) {
-                m_tile->setGeometryFromWindow(nextMoveResizeGeom);
+            if (tile()) {
+                tile()->setGeometryFromWindow(nextMoveResizeGeom);
             }
         }
     } else if (isInteractiveMove()) {
@@ -2995,8 +2994,8 @@ void Window::endInteractiveMoveResize()
         setInteractiveMoveResizeGravity(mouseGravity());
     }
     updateCursor();
-    if (m_tile) {
-        moveResize(m_tile->windowGeometry());
+    if (tile()) {
+        moveResize(tile()->windowGeometry());
     }
 }
 
@@ -3942,50 +3941,70 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
 
 void Window::setTile(Tile *tile)
 {
-    if (m_tile == tile) {
+    setTileFor(tile, VirtualDesktopManager::self()->currentDesktop(), workspace()->activities()->current());
+}
+
+Tile *Window::tile() const
+{
+    return m_tiles.value(TileManager::instance(output(), VirtualDesktopManager::self()->currentDesktop(), workspace()->activities()->current()));
+}
+
+// TODO: desktop and activity not needed
+void Window::setTileFor(Tile *tile, VirtualDesktop *desktop, const QString &activity)
+{
+    auto *manager = TileManager::instance(output(), desktop, activity);
+    auto *oldTile = tileFor(desktop, activity);
+    if (oldTile == tile) {
         if (tile) {
             moveResize(tile->windowGeometry());
         }
         return;
     }
 
-    if (m_tile) {
-        disconnect(m_tile, nullptr, this, nullptr);
+    if (oldTile) {
+        disconnect(oldTile, nullptr, this, nullptr);
     }
 
-    m_tile = tile;
+    m_tiles[manager] = tile;
 
     if (!tile) {
-        Q_EMIT tileChanged(tile);
+        if (desktop == VirtualDesktopManager::self()->currentDesktop() && activity == workspace()->activities()->current()) {
+            Q_EMIT tileChanged(tile);
+        }
         return;
     }
 
     moveResize(tile->windowGeometry());
 
-    connect(tile, &Tile::windowGeometryChanged, this, [this]() {
+    connect(tile, &Tile::windowGeometryChanged, this, [this, tile]() {
         if (!isInteractiveMoveResize()) {
-            moveResize(m_tile->windowGeometry());
+            moveResize(tile->windowGeometry());
         }
     });
 
-    connect(tile, &Tile::destroyed, this, [this]() {
-        Tile *tile = TileManager::instance(output(), VirtualDesktopManager::self()->currentDesktop(), workspace()->activities()->current())->bestTileForPosition(moveResizeGeometry().center());
-        setTile(tile);
+    connect(manager, &Tile::destroyed, this, [this, manager]() {
+        m_tiles.remove(manager);
+    });
+    connect(tile, &Tile::destroyed, this, [this, tile]() {
+        Tile *newTile = tile->manager()->bestTileForPosition(moveResizeGeometry().center());
+        setTileFor(newTile, tile->manager()->desktop(), tile->manager()->activity());
     });
 
-    connect(tile, &Tile::isLayoutChanged, this, [this](bool isLayout) {
+    connect(tile, &Tile::isLayoutChanged, this, [this, tile](bool isLayout) {
         if (isLayout) {
-            Tile *tile = TileManager::instance(output(), VirtualDesktopManager::self()->currentDesktop(), workspace()->activities()->current())->bestTileForPosition(moveResizeGeometry().center());
-            setTile(tile);
+            Tile *newTile = tile->manager()->bestTileForPosition(moveResizeGeometry().center());
+            setTileFor(newTile, tile->manager()->desktop(), tile->manager()->activity());
         }
     });
 
-    Q_EMIT tileChanged(tile);
+    if (desktop == VirtualDesktopManager::self()->currentDesktop() && activity == workspace()->activities()->current()) {
+        Q_EMIT tileChanged(tile);
+    }
 }
 
-Tile *Window::tile() const
+Tile *Window::tileFor(VirtualDesktop *desktop, const QString &activity)
 {
-    return m_tile;
+    return m_tiles.value(TileManager::instance(output(), desktop, activity));
 }
 
 void Window::doSetQuickTileMode()

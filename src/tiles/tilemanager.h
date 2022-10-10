@@ -32,15 +32,15 @@ class Output;
 class Tile;
 class TileManager;
 
-struct ManagerIndex
+struct TilingIndex
 {
     VirtualDesktop *desktop;
     QString activity;
 };
 
-bool operator==(const ManagerIndex &m1, const ManagerIndex &other);
+bool operator==(const TilingIndex &m1, const TilingIndex &other);
 
-uint qHash(const ManagerIndex &key, uint seed = 0);
+uint qHash(const TilingIndex &key, uint seed = 0);
 
 /**
  * Custom tiling zones management per output.
@@ -60,6 +60,8 @@ public:
     static TileManager *instance(Output *output, VirtualDesktop *desktop, const QString &activity); // TODO, VD and Activity too?
 
     Output *output() const;
+    VirtualDesktop *desktop() const;
+    QString activity() const;
 
     KWin::Tile *bestTileForPosition(const QPointF &pos);
     Q_INVOKABLE KWin::Tile *bestTileForPosition(qreal x, qreal y); // For scripting
@@ -99,7 +101,7 @@ private:
     QTimer *m_saveTimer = nullptr;
     std::unique_ptr<CustomTile> m_rootTile = nullptr;
     std::unique_ptr<QuickRootTile> m_quickRootTile = nullptr;
-    static QHash<Output *, QHash<ManagerIndex, TileManager *>> s_managers;
+    static QHash<Output *, QHash<TilingIndex, TileManager *>> s_managers;
     friend class CustomTile;
 };
 

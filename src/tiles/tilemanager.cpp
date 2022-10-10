@@ -24,14 +24,14 @@
 namespace KWin
 {
 
-QHash<Output *, QHash<ManagerIndex, TileManager *>> TileManager::s_managers = QHash<Output *, QHash<ManagerIndex, TileManager *>>();
+QHash<Output *, QHash<TilingIndex, TileManager *>> TileManager::s_managers = QHash<Output *, QHash<TilingIndex, TileManager *>>();
 
-uint qHash(const ManagerIndex &key, uint seed)
+uint qHash(const TilingIndex &key, uint seed)
 {
     return qHash(key.desktop->id() + key.activity, seed);
 }
 
-bool operator==(const ManagerIndex &m1, const ManagerIndex &other)
+bool operator==(const TilingIndex &m1, const TilingIndex &other)
 {
     return m1.desktop == other.desktop && m1.activity == other.activity;
 }
@@ -91,7 +91,7 @@ TileManager::~TileManager()
 
 TileManager *TileManager::instance(Output *output, VirtualDesktop *desktop, const QString &activity)
 {
-    const auto managerIdx = ManagerIndex{desktop, activity};
+    const auto managerIdx = TilingIndex{desktop, activity};
     auto managersIt = s_managers.constFind(output);
     if (managersIt != s_managers.constEnd()) {
         auto managerIt = (*managersIt).constFind(managerIdx);
@@ -112,6 +112,16 @@ TileManager *TileManager::instance(Output *output, VirtualDesktop *desktop, cons
 Output *TileManager::output() const
 {
     return m_output;
+}
+
+VirtualDesktop *TileManager::desktop() const
+{
+    return m_desktop;
+}
+
+QString TileManager::activity() const
+{
+    return m_activity;
 }
 
 QHash<int, QByteArray> TileManager::roleNames() const

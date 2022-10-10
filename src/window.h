@@ -51,6 +51,7 @@ class ClientMachine;
 class Deleted;
 class EffectWindowImpl;
 class Tile;
+class TileManager;
 class Shadow;
 class SurfaceItem;
 class VirtualDesktop;
@@ -595,7 +596,7 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(bool hidden READ isHiddenInternal NOTIFY hiddenChanged)
 
     /**
-     * The Tile this window is associated to, if any
+     * The Tile this window is associated to within the current virtual desktop and activity, if any
      */
     Q_PROPERTY(KWin::Tile *tile READ tile WRITE setTile NOTIFY tileChanged)
 
@@ -1150,7 +1151,11 @@ public:
     virtual Layer layer() const;
     void updateLayer();
 
+    /**
+     * The current tile in the current desktop and activity
+     */
     Tile *tile() const;
+    Tile *tileFor(VirtualDesktop *desktop, const QString &activity);
 
     void move(const QPointF &point);
     void resize(const QSizeF &size);
@@ -1439,7 +1444,14 @@ public:
 
     uint32_t interactiveMoveResizeCount() const;
 
+    /**
+     * Sets the tile for this window for the current desktop and activity
+     */
     void setTile(Tile *tile);
+    /**
+     * Sets the tile for this window, in the context of the given desktop and activity
+     */
+    void setTileFor(Tile *tile, VirtualDesktop *desktop, const QString &activity);
 
 public Q_SLOTS:
     virtual void closeWindow() = 0;
@@ -1989,7 +2001,8 @@ private:
     QList<Window *> m_transients;
     bool m_modal = false;
     Layer m_layer = UnknownLayer;
-    Tile *m_tile = nullptr;
+    // TODO: index by TileManager?
+    QHash<TileManager *, Tile *> m_tiles;
 
     // electric border/quick tiling
     QuickTileMode m_electricMode = QuickTileFlag::None;
