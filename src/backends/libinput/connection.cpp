@@ -582,15 +582,37 @@ void Connection::applyScreenToDevice(Device *device)
         }
         if (!deviceOutput) {
             // still not found
-            if (internalOutput) {
-                // we have an internal id, so let's use that
-                deviceOutput = internalOutput;
+
+            // go through the screens, discard all where the size doesn't match
+            // and take the first one that stays
+            // this helps for the case where the correct monitor doesn't report a size
+            auto it = std::find_if(outputs.cbegin(), outputs.cend(), [testScreenMatches](Output *output) {
+                // if the output doesn't report a size consider it a possible candidate
+                if (output->physicalSize().isEmpty()) {
+                    return true;
+                }
+
+                // if the size doesn't match discard it
+                if (!testScreenMatches(output)) {
+                    return false;
+                }
+
+                return true;
+            });
+
+            if (it != outputs.cend()) {
+                deviceOutput = *it;
             } else {
-                for (Output *output : outputs) {
-                    // just take first screen, we have no clue
-                    if (output->isEnabled()) {
-                        deviceOutput = output;
-                        break;
+                if (internalOutput) {
+                    // we have an internal id, so let's use that
+                    deviceOutput = internalOutput;
+                } else {
+                    for (Output *output : outputs) {
+                        // just take first screen, we have no clue
+                        if (output->isEnabled()) {
+                            deviceOutput = output;
+                            break;
+                        }
                     }
                 }
             }
