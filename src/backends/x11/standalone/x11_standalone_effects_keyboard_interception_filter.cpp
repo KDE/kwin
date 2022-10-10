@@ -10,7 +10,11 @@
 
 #include <QDebug>
 #include <QKeyEvent>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QtXkbCommonSupport/private/qxkbcommon_p.h>
+#else
+#include <QtGui/private/qxkbcommon_p.h>
+#endif
 
 namespace KWin
 {
