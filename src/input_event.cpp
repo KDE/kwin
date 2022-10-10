@@ -54,6 +54,16 @@ SwitchEvent::SwitchEvent(State state, quint32 timestamp, quint64 timestampMicros
 {
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+TabletEvent::TabletEvent(Type t, const QPointingDevice *dev, const QPointF &pos, const QPointF &globalPos,
+                         qreal pressure, float xTilt, float yTilt,
+                         float tangentialPressure, qreal rotation, float z,
+                         Qt::KeyboardModifiers keyState, Qt::MouseButton button, Qt::MouseButtons buttons, const TabletToolId &tabletId)
+    : QTabletEvent(t, dev, pos, globalPos, pressure, xTilt, yTilt, tangentialPressure, rotation, z, keyState, button, buttons)
+    , m_id(tabletId)
+{
+}
+#else
 TabletEvent::TabletEvent(Type t, const QPointF &pos, const QPointF &globalPos,
                          int device, int pointerType, qreal pressure, int xTilt, int yTilt,
                          qreal tangentialPressure, qreal rotation, int z,
@@ -63,5 +73,6 @@ TabletEvent::TabletEvent(Type t, const QPointF &pos, const QPointF &globalPos,
     , m_id(tabletId)
 {
 }
+#endif
 
 }

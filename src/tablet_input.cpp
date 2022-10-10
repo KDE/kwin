@@ -72,12 +72,24 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEvent
     update();
 
     const auto button = m_tipDown ? Qt::LeftButton : Qt::NoButton;
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    // TODO: Not correct, but it should work fine. In long term, we need to stop using QTabletEvent.
+    const QPointingDevice *dev = QPointingDevice::primaryPointingDevice();
+    TabletEvent ev(t, dev, pos, pos, pressure,
+                   xTilt, yTilt,
+                   0, // tangentialPressure
+                   rotation,
+                   0, // z
+                   Qt::NoModifier, button, button, tabletToolId);
+#else
     TabletEvent ev(t, pos, pos, QTabletEvent::Stylus, QTabletEvent::Pen, pressure,
                    xTilt, yTilt,
                    0, // tangentialPressure
                    rotation,
                    0, // z
                    Qt::NoModifier, tabletToolId.m_uniqueId, button, button, tabletToolId);
+#endif
 
     ev.setTimestamp(time);
     input()->processSpies(std::bind(&InputEventSpy::tabletToolEvent, std::placeholders::_1, &ev));
