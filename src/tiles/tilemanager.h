@@ -14,6 +14,7 @@
 #include "quicktile.h"
 #include "tile.h"
 #include "utils/common.h"
+#include "virtualdesktops.h"
 #include <kwin_export.h>
 
 #include <QAbstractItemModel>
@@ -31,6 +32,16 @@ class Output;
 class Tile;
 class TileManager;
 
+struct ManagerIndex
+{
+    VirtualDesktop *desktop;
+    QString activity;
+};
+
+bool operator==(const ManagerIndex &m1, const ManagerIndex &other);
+
+uint qHash(const ManagerIndex &key, uint seed = 0);
+
 /**
  * Custom tiling zones management per output.
  */
@@ -43,10 +54,10 @@ public:
     enum Roles {
         TileRole = Qt::UserRole + 1
     };
-    explicit TileManager(Output *parent = nullptr);
+
     ~TileManager() override;
 
-    static TileManager *instance(Output *output); // TODO, VD and Activity too?
+    static TileManager *instance(Output *output, VirtualDesktop *desktop, const QString &activity); // TODO, VD and Activity too?
 
     Output *output() const;
 
@@ -69,6 +80,8 @@ Q_SIGNALS:
     void tileRemoved(KWin::Tile *tile);
 
 private:
+    explicit TileManager(VirtualDesktop *desktop, const QString &activity, Output *parent = nullptr);
+
     CustomTile *addTile(const QRectF &relativeGeometry, CustomTile::LayoutDirection layoutDirection, int position, CustomTile *parentTile);
     void removeTile(CustomTile *tile);
 
@@ -80,10 +93,13 @@ private:
     Q_DISABLE_COPY(TileManager)
 
     Output *m_output = nullptr;
+    VirtualDesktop *m_desktop;
+    const QString m_activity;
+
     QTimer *m_saveTimer = nullptr;
     std::unique_ptr<CustomTile> m_rootTile = nullptr;
     std::unique_ptr<QuickRootTile> m_quickRootTile = nullptr;
-    static QHash<Output *, TileManager *> s_managers;
+    static QHash<Output *, QHash<ManagerIndex, TileManager *>> s_managers;
     friend class CustomTile;
 };
 

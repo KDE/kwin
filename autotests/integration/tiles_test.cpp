@@ -8,10 +8,12 @@
 */
 #include "kwin_wayland_test.h"
 
+#include "activities.h"
 #include "core/output.h"
 #include "core/platform.h"
 #include "cursor.h"
 #include "tiles/tilemanager.h"
+#include "virtualdesktops.h"
 #include "wayland/seat_interface.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
@@ -55,6 +57,7 @@ void TilesTest::initTestCase()
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
 
+    kwinApp()->setUseKActivities(true);
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
     const auto outputs = workspace()->outputs();
@@ -75,7 +78,8 @@ void TilesTest::init()
     workspace()->setActiveOutput(QPoint(640, 512));
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
     m_output = workspace()->activeOutput();
-    m_tileManager = TileManager::instance(m_output);
+
+    m_tileManager = TileManager::instance(m_output, VirtualDesktopManager::self()->currentDesktop(), workspace()->activities()->current());
     m_rootTile = m_tileManager->rootTile();
     QAbstractItemModelTester(m_tileManager, QAbstractItemModelTester::FailureReportingMode::QtTest);
 }

@@ -10,7 +10,6 @@
 #include "tilemanager.h"
 #include "core/output.h"
 #include "quicktile.h"
-#include "virtualdesktops.h"
 #include "workspace.h"
 
 #include <KConfigGroup>
@@ -25,7 +24,17 @@
 namespace KWin
 {
 
-QHash<Output *, TileManager *> TileManager::s_managers = QHash<Output *, TileManager *>();
+QHash<Output *, QHash<ManagerIndex, TileManager *>> TileManager::s_managers = QHash<Output *, QHash<ManagerIndex, TileManager *>>();
+
+uint qHash(const ManagerIndex &key, uint seed)
+{
+    return qHash(key.desktop->id() + key.activity, seed);
+}
+
+bool operator==(const ManagerIndex &m1, const ManagerIndex &other)
+{
+    return m1.desktop == other.desktop && m1.activity == other.activity;
+}
 
 QDebug operator<<(QDebug debug, const TileManager *tileManager)
 {
@@ -55,9 +64,11 @@ QDebug operator<<(QDebug debug, const TileManager *tileManager)
     return debug;
 }
 
-TileManager::TileManager(Output *parent)
+TileManager::TileManager(VirtualDesktop *desktop, const QString &activity, Output *parent)
     : QAbstractItemModel(parent)
     , m_output(parent)
+    , m_desktop(desktop)
+    , m_activity(activity)
 {
     m_saveTimer = new QTimer(this);
     m_saveTimer->setSingleShot(true);
@@ -78,14 +89,19 @@ TileManager::~TileManager()
 {
 }
 
-TileManager *TileManager::instance(Output *output)
+TileManager *TileManager::instance(Output *output, VirtualDesktop *desktop, const QString &activity)
 {
-    if (s_managers.contains(output)) {
-        return s_managers[output];
+    const auto managerIdx = ManagerIndex{desktop, activity};
+    auto managersIt = s_managers.constFind(output);
+    if (managersIt != s_managers.constEnd()) {
+        auto managerIt = (*managersIt).constFind(managerIdx);
+        if (managerIt != (*managersIt).constEnd()) {
+            return (*managerIt);
+        }
     }
 
-    auto *tm = new TileManager(output);
-    s_managers[output] = tm;
+    auto *tm = new TileManager(desktop, activity, output);
+    s_managers[output][managerIdx] = tm;
     connect(output, &Output::destroyed, output, [output]() {
         qWarning() << "output destroyed";
         s_managers.remove(output);
@@ -356,6 +372,7 @@ void TileManager::readSettings()
     KConfigGroup cg = kwinApp()->config()->group(QStringLiteral("Tiling"));
     qreal padding = cg.readEntry("padding", 4);
     cg = KConfigGroup(&cg, m_output->uuid().toString(QUuid::WithoutBraces));
+    cg = KConfigGroup(&cg, m_desktop->id() + QChar(':') + m_activity);
 
     QJsonParseError error;
     QJsonDocument doc = QJsonDocument::fromJson(cg.readEntry("tiles", QByteArray()), &error);
@@ -437,6 +454,7 @@ void TileManager::saveSettings()
     KConfigGroup cg = kwinApp()->config()->group(QStringLiteral("Tiling"));
     cg.writeEntry("padding", m_rootTile->padding());
     cg = KConfigGroup(&cg, m_output->uuid().toString(QUuid::WithoutBraces));
+    cg = KConfigGroup(&cg, m_desktop->id() + QChar(':') + m_activity);
     cg.writeEntry("tiles", doc.toJson(QJsonDocument::Compact));
     cg.sync(); // FIXME: less frequent?
 }

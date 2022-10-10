@@ -454,20 +454,20 @@ void WorkspaceWrapper::sendClientToScreen(Window *client, int screen)
     }
 }
 
-KWin::TileManager *WorkspaceWrapper::tilingForScreen(const QString &screenName) const
+KWin::TileManager *WorkspaceWrapper::tilingForScreen(const QString &screenName, VirtualDesktop *desktop, const QString &activity) const
 {
     Output *output = kwinApp()->platform()->findOutput(screenName);
     if (output) {
-        return TileManager::instance(output);
+        return TileManager::instance(output, desktop, activity);
     }
     return nullptr;
 }
 
-KWin::TileManager *WorkspaceWrapper::tilingForScreen(int screen) const
+KWin::TileManager *WorkspaceWrapper::tilingForScreen(int screen, VirtualDesktop *desktop, const QString &activity) const
 {
     Output *output = workspace()->outputs().value(screen);
     if (output) {
-        return TileManager::instance(output);
+        return TileManager::instance(output, desktop, activity);
     }
     return nullptr;
 }

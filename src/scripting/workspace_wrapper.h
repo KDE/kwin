@@ -238,8 +238,8 @@ public:
 
     Q_INVOKABLE int screenAt(const QPointF &pos) const;
 
-    Q_INVOKABLE KWin::TileManager *tilingForScreen(const QString &screenName) const;
-    Q_INVOKABLE KWin::TileManager *tilingForScreen(int screen) const;
+    Q_INVOKABLE KWin::TileManager *tilingForScreen(const QString &screenName, KWin::VirtualDesktop *desktop, const QString &activity) const;
+    Q_INVOKABLE KWin::TileManager *tilingForScreen(int screen, KWin::VirtualDesktop *desktop, const QString &activity) const;
 
     /**
      * Returns the geometry a Client can use with the specified option.
