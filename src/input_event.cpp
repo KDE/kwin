@@ -46,12 +46,12 @@ KeyEvent::KeyEvent(QEvent::Type type, Qt::Key key, Qt::KeyboardModifiers modifie
 }
 
 SwitchEvent::SwitchEvent(State state, quint32 timestamp, quint64 timestampMicroseconds, InputDevice *device)
-    : QInputEvent(QEvent::User)
+    : QEvent(QEvent::User)
     , m_state(state)
     , m_timestampMicroseconds(timestampMicroseconds)
+    , m_timestamp(timestamp)
     , m_device(device)
 {
-    setTimestamp(timestamp);
 }
 
 TabletEvent::TabletEvent(Type t, const QPointF &pos, const QPointF &globalPos,

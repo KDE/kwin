@@ -153,7 +153,7 @@ private:
     Qt::KeyboardModifiers m_modifiersRelevantForShortcuts = Qt::KeyboardModifiers();
 };
 
-class SwitchEvent : public QInputEvent
+class SwitchEvent : public QEvent
 {
 public:
     enum class State {
@@ -165,6 +165,11 @@ public:
     State state() const
     {
         return m_state;
+    }
+
+    quint64 timestamp() const
+    {
+        return m_timestamp;
     }
 
     quint64 timestampMicroseconds() const
@@ -180,6 +185,7 @@ public:
 private:
     State m_state;
     quint64 m_timestampMicroseconds;
+    quint64 m_timestamp;
     InputDevice *m_device;
 };
 
