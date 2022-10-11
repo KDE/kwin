@@ -246,6 +246,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
     if (validTarget) {
         d.setXTranslation(-geometry.x());
         d.setYTranslation(-geometry.y());
+        d.setRenderTargetScale(devicePixelRatio);
 
         // render window into offscreen texture
         int mask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT;

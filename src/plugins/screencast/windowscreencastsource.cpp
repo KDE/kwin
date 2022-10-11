@@ -50,15 +50,14 @@ void WindowScreenCastSource::render(QImage *image)
 
 void WindowScreenCastSource::render(GLFramebuffer *target)
 {
-    auto targetScale = Compositor::self()->scene()->renderTargetScale();
-
-    const QRectF geometry = scaledRect(m_window->clientGeometry(), targetScale);
+    const QRectF geometry = m_window->clientGeometry();
     QMatrix4x4 projectionMatrix;
     projectionMatrix.ortho(geometry.x(), geometry.x() + geometry.width(),
                            geometry.y(), geometry.y() + geometry.height(), -1, 1);
 
     WindowPaintData data;
     data.setProjectionMatrix(projectionMatrix);
+    data.setRenderTargetScale(1.0);
 
     GLFramebuffer::pushFramebuffer(target);
     glClearColor(0.0, 0.0, 0.0, 0.0);

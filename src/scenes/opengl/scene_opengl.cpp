@@ -429,7 +429,7 @@ void SceneOpenGL::render(Item *item, int mask, const QRegion &region, const Wind
     RenderContext renderContext{
         .clip = region,
         .hardwareClipping = region != infiniteRegion() && ((mask & Scene::PAINT_WINDOW_TRANSFORMED) || (mask & Scene::PAINT_SCREEN_TRANSFORMED)),
-        .renderTargetScale = renderTargetScale(),
+        .renderTargetScale = data.renderTargetScale().value_or(renderTargetScale()),
     };
 
     renderContext.transformStack.push(QMatrix4x4());

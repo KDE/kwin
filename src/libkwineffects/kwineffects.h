@@ -39,6 +39,7 @@
 
 #include <climits>
 #include <functional>
+#include <optional>
 
 class KConfigGroup;
 class QFont;
@@ -3299,6 +3300,15 @@ public:
      * @since 5.6
      */
     QMatrix4x4 screenProjectionMatrix() const;
+
+    /**
+     * An override for the scale the window should be rendered at.
+     *
+     * When set, this value will be used instead of the window's output scale
+     * when rendering.
+     */
+    std::optional<qreal> renderTargetScale() const;
+    void setRenderTargetScale(qreal scale);
 
     /**
      * Shader to be used for rendering, if any.

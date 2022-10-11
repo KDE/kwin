@@ -233,6 +233,7 @@ public:
     qreal crossFadeProgress;
     QMatrix4x4 pMatrix;
     QMatrix4x4 screenProjectionMatrix;
+    std::optional<qreal> renderTargetScale = std::nullopt;
 };
 
 WindowPaintData::WindowPaintData()
@@ -409,6 +410,16 @@ WindowPaintData &WindowPaintData::operator+=(const QVector3D &translation)
 QMatrix4x4 WindowPaintData::screenProjectionMatrix() const
 {
     return d->screenProjectionMatrix;
+}
+
+std::optional<qreal> WindowPaintData::renderTargetScale() const
+{
+    return d->renderTargetScale;
+}
+
+void WindowPaintData::setRenderTargetScale(qreal scale)
+{
+    d->renderTargetScale = scale;
 }
 
 class ScreenPaintData::Private
