@@ -85,15 +85,14 @@ private:
 
     QPointer<KWaylandServer::ScreencastStreamV1Interface> m_triggered = nullptr;
     QThread *m_thread;
-    KWaylandServer::Display *m_display = nullptr;
+    std::unique_ptr<KWaylandServer::Display> m_display;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-wayland-server-screencast-test-0");
 
 void TestScreencastV1Interface::initTestCase()
 {
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -118,7 +117,7 @@ void TestScreencastV1Interface::initTestCase()
     KWayland::Client::Registry registry;
 
     QSignalSpy screencastSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
-    m_screencastInterface = new KWaylandServer::ScreencastV1Interface(m_display, this);
+    m_screencastInterface = new KWaylandServer::ScreencastV1Interface(m_display.get(), this);
     connect(m_screencastInterface,
             &KWaylandServer::ScreencastV1Interface::windowScreencastRequested,
             this,
@@ -161,8 +160,7 @@ TestScreencastV1Interface::~TestScreencastV1Interface()
     }
     m_connection->deleteLater();
     m_connection = nullptr;
-
-    delete m_display;
+    m_display.reset();
 }
 
 void TestScreencastV1Interface::testCreate()

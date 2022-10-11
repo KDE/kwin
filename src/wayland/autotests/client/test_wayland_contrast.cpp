@@ -36,7 +36,7 @@ private Q_SLOTS:
     void testSurfaceDestroy();
 
 private:
-    KWaylandServer::Display *m_display;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     KWaylandServer::CompositorInterface *m_compositorInterface;
     KWaylandServer::ContrastManagerInterface *m_contrastManagerInterface;
     KWayland::Client::ConnectionThread *m_connection;
@@ -50,7 +50,6 @@ static const QString s_socketName = QStringLiteral("kwayland-test-wayland-contra
 
 TestContrast::TestContrast(QObject *parent)
     : QObject(parent)
-    , m_display(nullptr)
     , m_compositorInterface(nullptr)
     , m_connection(nullptr)
     , m_compositor(nullptr)
@@ -62,8 +61,7 @@ TestContrast::TestContrast(QObject *parent)
 void TestContrast::init()
 {
     using namespace KWaylandServer;
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -97,11 +95,11 @@ void TestContrast::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_compositorInterface = new CompositorInterface(m_display, m_display);
+    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_contrastManagerInterface = new ContrastManagerInterface(m_display, m_display);
+    m_contrastManagerInterface = new ContrastManagerInterface(m_display.get(), m_display.get());
 
     QVERIFY(contrastSpy.wait());
     m_contrastManager = registry.createContrastManager(contrastSpy.first().first().value<quint32>(), contrastSpy.first().last().value<quint32>(), this);
@@ -127,9 +125,9 @@ void TestContrast::cleanup()
         delete m_thread;
         m_thread = nullptr;
     }
-    CLEANUP(m_display)
 #undef CLEANUP
 
+    m_display.reset();
     // these are the children of the display
     m_compositorInterface = nullptr;
     m_contrastManagerInterface = nullptr;

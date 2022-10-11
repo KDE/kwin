@@ -29,7 +29,7 @@ private Q_SLOTS:
     void testChanges();
 
 private:
-    KWaylandServer::Display *m_display;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     std::unique_ptr<FakeOutput> m_outputHandle;
     KWaylandServer::OutputInterface *m_serverOutput;
     KWaylandServer::XdgOutputManagerV1Interface *m_serverXdgOutputManager;
@@ -53,8 +53,7 @@ TestXdgOutput::TestXdgOutput(QObject *parent)
 void TestXdgOutput::init()
 {
     using namespace KWaylandServer;
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -62,10 +61,10 @@ void TestXdgOutput::init()
     m_outputHandle = std::make_unique<FakeOutput>();
     m_outputHandle->setMode(QSize(1920, 1080), 60000);
 
-    m_serverOutput = new OutputInterface(m_display, m_outputHandle.get(), this);
+    m_serverOutput = new OutputInterface(m_display.get(), m_outputHandle.get(), this);
     m_serverOutput->setMode(QSize(1920, 1080));
 
-    m_serverXdgOutputManager = new XdgOutputManagerV1Interface(m_display, this);
+    m_serverXdgOutputManager = new XdgOutputManagerV1Interface(m_display.get(), this);
     m_serverXdgOutput = m_serverXdgOutputManager->createXdgOutput(m_serverOutput, this);
     m_serverXdgOutput->setLogicalSize(QSize(1280, 720)); // a 1.5 scale factor
     m_serverXdgOutput->setLogicalPosition(QPoint(11, 12)); // not a sensible value for one monitor, but works for this test
@@ -111,8 +110,7 @@ void TestXdgOutput::cleanup()
     m_serverOutput = nullptr;
     m_outputHandle.reset();
 
-    delete m_display;
-    m_display = nullptr;
+    m_display.reset();
 }
 
 void TestXdgOutput::testChanges()

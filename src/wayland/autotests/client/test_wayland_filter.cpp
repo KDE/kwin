@@ -37,7 +37,7 @@ private Q_SLOTS:
     void testFilter();
 
 private:
-    TestDisplay *m_display;
+    std::unique_ptr<TestDisplay> m_display;
     KWaylandServer::CompositorInterface *m_compositorInterface;
     KWaylandServer::BlurManagerInterface *m_blurManagerInterface;
 };
@@ -49,13 +49,13 @@ static const QString s_socketName = QStringLiteral("kwayland-test-wayland-blur-0
 class TestDisplay : public KWaylandServer::FilteredDisplay
 {
 public:
-    TestDisplay(QObject *parent);
+    TestDisplay();
     bool allowInterface(KWaylandServer::ClientConnection *client, const QByteArray &interfaceName) override;
     QList<wl_client *> m_allowedClients;
 };
 
-TestDisplay::TestDisplay(QObject *parent)
-    : KWaylandServer::FilteredDisplay(parent)
+TestDisplay::TestDisplay()
+    : KWaylandServer::FilteredDisplay()
 {
 }
 
@@ -77,14 +77,13 @@ TestFilter::TestFilter(QObject *parent)
 void TestFilter::init()
 {
     using namespace KWaylandServer;
-    delete m_display;
-    m_display = new TestDisplay(this);
+    m_display = std::make_unique<TestDisplay>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
 
-    m_compositorInterface = new CompositorInterface(m_display, m_display);
-    m_blurManagerInterface = new BlurManagerInterface(m_display, m_display);
+    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
+    m_blurManagerInterface = new BlurManagerInterface(m_display.get(), m_display.get());
 }
 
 void TestFilter::cleanup()

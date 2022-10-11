@@ -34,7 +34,7 @@ private Q_SLOTS:
     void testClearOnEnter();
 
 private:
-    KWaylandServer::Display *m_display = nullptr;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     CompositorInterface *m_compositorInterface = nullptr;
     SeatInterface *m_seatInterface = nullptr;
     DataDeviceManagerInterface *m_ddmInterface = nullptr;
@@ -61,16 +61,15 @@ static const QString s_socketName = QStringLiteral("kwayland-test-selection-0");
 
 void SelectionTest::init()
 {
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
     m_display->createShm();
-    m_compositorInterface = new CompositorInterface(m_display, m_display);
-    m_seatInterface = new SeatInterface(m_display, m_display);
+    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
+    m_seatInterface = new SeatInterface(m_display.get(), m_display.get());
     m_seatInterface->setHasKeyboard(true);
-    m_ddmInterface = new DataDeviceManagerInterface(m_display, m_display);
+    m_ddmInterface = new DataDeviceManagerInterface(m_display.get(), m_display.get());
 
     // setup connection
     setupConnection(&m_client1);
@@ -154,12 +153,7 @@ void SelectionTest::cleanup()
 {
     cleanupConnection(&m_client1);
     cleanupConnection(&m_client2);
-#define CLEANUP(variable) \
-    delete variable;      \
-    variable = nullptr;
-
-    CLEANUP(m_display)
-#undef CLEANUP
+    m_display.reset();
     // these are the children of the display
     m_ddmInterface = nullptr;
     m_seatInterface = nullptr;

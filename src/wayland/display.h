@@ -49,7 +49,7 @@ class KWIN_EXPORT Display : public QObject
     Q_OBJECT
     Q_PROPERTY(bool running READ isRunning NOTIFY runningChanged)
 public:
-    explicit Display(QObject *parent = nullptr);
+    explicit Display();
     virtual ~Display();
 
     /**

@@ -63,7 +63,7 @@ private:
     XdgShellInterface *m_xdgShellInterface = nullptr;
     Compositor *m_compositor = nullptr;
     XdgShell *m_xdgShell = nullptr;
-    KWaylandServer::Display *m_display = nullptr;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     CompositorInterface *m_compositorInterface = nullptr;
     std::unique_ptr<FakeOutput> m_output1Handle;
     OutputInterface *m_output1Interface = nullptr;
@@ -90,26 +90,25 @@ private:
 
 void XdgShellTest::init()
 {
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
     m_display->createShm();
     m_output1Handle = std::make_unique<FakeOutput>();
     m_output1Handle->setMode(QSize(1024, 768), 60000);
-    m_output1Interface = new OutputInterface(m_display, m_output1Handle.get(), m_display);
+    m_output1Interface = new OutputInterface(m_display.get(), m_output1Handle.get(), m_display.get());
     m_output1Interface->setMode(QSize(1024, 768));
     m_output2Handle = std::make_unique<FakeOutput>();
     m_output2Handle->setMode(QSize(1024, 768), 60000);
-    m_output2Interface = new OutputInterface(m_display, m_output2Handle.get(), m_display);
+    m_output2Interface = new OutputInterface(m_display.get(), m_output2Handle.get(), m_display.get());
     m_output2Interface->setMode(QSize(1024, 768));
-    m_seatInterface = new SeatInterface(m_display, m_display);
+    m_seatInterface = new SeatInterface(m_display.get(), m_display.get());
     m_seatInterface->setHasKeyboard(true);
     m_seatInterface->setHasPointer(true);
     m_seatInterface->setHasTouch(true);
-    m_compositorInterface = new CompositorInterface(m_display, m_display);
-    m_xdgShellInterface = new XdgShellInterface(m_display, m_display);
+    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
+    m_xdgShellInterface = new XdgShellInterface(m_display.get(), m_display.get());
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -188,10 +187,9 @@ void XdgShellTest::cleanup()
         delete m_thread;
         m_thread = nullptr;
     }
-
-    CLEANUP(m_display)
 #undef CLEANUP
 
+    m_display.reset();
     // these are the children of the display
     m_compositorInterface = nullptr;
     m_xdgShellInterface = nullptr;

@@ -35,9 +35,8 @@ void DisplayPrivate::registerSocketName(const QString &socketName)
     Q_EMIT q->socketNamesChanged();
 }
 
-Display::Display(QObject *parent)
-    : QObject(parent)
-    , d(new DisplayPrivate(this))
+Display::Display()
+    : d(new DisplayPrivate(this))
 {
     d->display = wl_display_create();
     d->loop = wl_display_get_event_loop(d->display);

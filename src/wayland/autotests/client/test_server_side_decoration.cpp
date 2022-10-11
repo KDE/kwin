@@ -35,7 +35,7 @@ private Q_SLOTS:
     void testSurfaceDestroy();
 
 private:
-    KWaylandServer::Display *m_display = nullptr;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     KWaylandServer::CompositorInterface *m_compositorInterface = nullptr;
     KWaylandServer::ServerSideDecorationManagerInterface *m_serverSideDecorationManagerInterface = nullptr;
     KWayland::Client::ConnectionThread *m_connection = nullptr;
@@ -57,8 +57,7 @@ void TestServerSideDecoration::init()
 {
     using namespace KWaylandServer;
     using namespace KWayland::Client;
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -91,11 +90,11 @@ void TestServerSideDecoration::init()
     QVERIFY(m_registry->isValid());
     m_registry->setup();
 
-    m_compositorInterface = new CompositorInterface(m_display, m_display);
+    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
     QVERIFY(compositorSpy.wait());
     m_compositor = m_registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_serverSideDecorationManagerInterface = new ServerSideDecorationManagerInterface(m_display, m_display);
+    m_serverSideDecorationManagerInterface = new ServerSideDecorationManagerInterface(m_display.get(), m_display.get());
 
     QVERIFY(serverSideDecoManagerSpy.wait());
     m_serverSideDecorationManager = m_registry->createServerSideDecorationManager(serverSideDecoManagerSpy.first().first().value<quint32>(),
@@ -130,8 +129,7 @@ void TestServerSideDecoration::cleanup()
     delete m_connection;
     m_connection = nullptr;
 
-    delete m_display;
-    m_display = nullptr;
+    m_display.reset();
 }
 
 void TestServerSideDecoration::testCreate_data()

@@ -43,7 +43,7 @@ private Q_SLOTS:
     void testRemoveRequested();
 
 private:
-    KWaylandServer::Display *m_display;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     KWaylandServer::CompositorInterface *m_compositorInterface;
     KWaylandServer::PlasmaVirtualDesktopManagementInterface *m_plasmaVirtualDesktopManagementInterface;
     KWaylandServer::PlasmaWindowManagementInterface *m_windowManagementInterface;
@@ -75,8 +75,7 @@ TestVirtualDesktop::TestVirtualDesktop(QObject *parent)
 void TestVirtualDesktop::init()
 {
     using namespace KWaylandServer;
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -112,18 +111,18 @@ void TestVirtualDesktop::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_compositorInterface = new CompositorInterface(m_display, m_display);
+    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_plasmaVirtualDesktopManagementInterface = new PlasmaVirtualDesktopManagementInterface(m_display, m_display);
+    m_plasmaVirtualDesktopManagementInterface = new PlasmaVirtualDesktopManagementInterface(m_display.get(), m_display.get());
 
     QVERIFY(plasmaVirtualDesktopManagementSpy.wait());
     m_plasmaVirtualDesktopManagement = registry.createPlasmaVirtualDesktopManagement(plasmaVirtualDesktopManagementSpy.first().first().value<quint32>(),
                                                                                      plasmaVirtualDesktopManagementSpy.first().last().value<quint32>(),
                                                                                      this);
 
-    m_windowManagementInterface = new PlasmaWindowManagementInterface(m_display, m_display);
+    m_windowManagementInterface = new PlasmaWindowManagementInterface(m_display.get(), m_display.get());
     m_windowManagementInterface->setPlasmaVirtualDesktopManagementInterface(m_plasmaVirtualDesktopManagementInterface);
 
     QVERIFY(windowManagementSpy.wait());
@@ -163,8 +162,8 @@ void TestVirtualDesktop::cleanup()
     CLEANUP(m_compositorInterface)
     CLEANUP(m_plasmaVirtualDesktopManagementInterface)
     CLEANUP(m_windowManagementInterface)
-    CLEANUP(m_display)
 #undef CLEANUP
+    m_display.reset();
 }
 
 void TestVirtualDesktop::testCreate()

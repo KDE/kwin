@@ -53,7 +53,7 @@ private Q_SLOTS:
 private:
     SurfaceInterface *waitForSurface();
     TextInput *createTextInput();
-    KWaylandServer::Display *m_display = nullptr;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     SeatInterface *m_seatInterface = nullptr;
     CompositorInterface *m_compositorInterface = nullptr;
     TextInputManagerV2Interface *m_textInputManagerV2Interface = nullptr;
@@ -70,17 +70,16 @@ static const QString s_socketName = QStringLiteral("kwayland-test-text-input-0")
 
 void TextInputTest::init()
 {
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
     m_display->createShm();
-    m_seatInterface = new SeatInterface(m_display, m_display);
+    m_seatInterface = new SeatInterface(m_display.get(), m_display.get());
     m_seatInterface->setHasKeyboard(true);
     m_seatInterface->setHasTouch(true);
-    m_compositorInterface = new CompositorInterface(m_display, m_display);
-    m_textInputManagerV2Interface = new TextInputManagerV2Interface(m_display, m_display);
+    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
+    m_textInputManagerV2Interface = new TextInputManagerV2Interface(m_display.get(), m_display.get());
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -144,10 +143,9 @@ void TextInputTest::cleanup()
         delete m_thread;
         m_thread = nullptr;
     }
-
-    CLEANUP(m_display)
 #undef CLEANUP
 
+    m_display.reset();
     // these are the children of the display
     m_textInputManagerV2Interface = nullptr;
     m_compositorInterface = nullptr;

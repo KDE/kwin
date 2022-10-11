@@ -35,7 +35,7 @@ private Q_SLOTS:
     void testCreateAndSet();
 
 private:
-    KWaylandServer::Display *m_display;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     KWaylandServer::CompositorInterface *m_compositorInterface;
     KWaylandServer::AppMenuManagerInterface *m_appmenuManagerInterface;
     KWayland::Client::ConnectionThread *m_connection;
@@ -62,8 +62,7 @@ void TestAppmenu::init()
 {
     using namespace KWaylandServer;
     qRegisterMetaType<AppMenuInterface::InterfaceAddress>();
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -97,11 +96,11 @@ void TestAppmenu::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_compositorInterface = new CompositorInterface(m_display, m_display);
+    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_appmenuManagerInterface = new AppMenuManagerInterface(m_display, m_display);
+    m_appmenuManagerInterface = new AppMenuManagerInterface(m_display.get(), m_display.get());
 
     QVERIFY(appmenuSpy.wait());
     m_appmenuManager = registry.createAppMenuManager(appmenuSpy.first().first().value<quint32>(), appmenuSpy.first().last().value<quint32>(), this);
@@ -129,7 +128,6 @@ void TestAppmenu::cleanup()
     }
     CLEANUP(m_compositorInterface)
     CLEANUP(m_appmenuManagerInterface)
-    CLEANUP(m_display)
 #undef CLEANUP
 }
 

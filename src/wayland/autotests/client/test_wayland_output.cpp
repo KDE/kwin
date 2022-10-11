@@ -39,7 +39,7 @@ private Q_SLOTS:
     void testTransform();
 
 private:
-    KWaylandServer::Display *m_display;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     std::unique_ptr<FakeOutput> m_outputHandle;
     std::unique_ptr<KWaylandServer::OutputInterface> m_outputInterface;
     KWayland::Client::ConnectionThread *m_connection;
@@ -51,7 +51,6 @@ static const QString s_socketName = QStringLiteral("kwin-test-wayland-output-0")
 
 TestWaylandOutput::TestWaylandOutput(QObject *parent)
     : QObject(parent)
-    , m_display(nullptr)
     , m_connection(nullptr)
     , m_thread(nullptr)
 {
@@ -60,8 +59,7 @@ TestWaylandOutput::TestWaylandOutput(QObject *parent)
 void TestWaylandOutput::init()
 {
     using namespace KWaylandServer;
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -69,7 +67,7 @@ void TestWaylandOutput::init()
     m_outputHandle = std::make_unique<FakeOutput>();
     m_outputHandle->setMode(QSize(1024, 768), 60000);
 
-    m_outputInterface = std::make_unique<OutputInterface>(m_display, m_outputHandle.get());
+    m_outputInterface = std::make_unique<OutputInterface>(m_display.get(), m_outputHandle.get());
     m_outputInterface->setMode(QSize(1024, 768), 60000);
 
     // setup connection
@@ -105,8 +103,7 @@ void TestWaylandOutput::cleanup()
     delete m_connection;
     m_connection = nullptr;
 
-    delete m_display;
-    m_display = nullptr;
+    m_display.reset();
 
     m_outputInterface.reset();
     m_outputHandle.reset();

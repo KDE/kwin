@@ -33,7 +33,7 @@ private Q_SLOTS:
     void testSurfaceDestroy();
 
 private:
-    KWaylandServer::Display *m_display;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     KWaylandServer::CompositorInterface *m_compositorInterface;
     KWaylandServer::SlideManagerInterface *m_slideManagerInterface;
     KWayland::Client::ConnectionThread *m_connection;
@@ -59,8 +59,7 @@ TestSlide::TestSlide(QObject *parent)
 void TestSlide::init()
 {
     using namespace KWaylandServer;
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -94,11 +93,11 @@ void TestSlide::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_compositorInterface = new CompositorInterface(m_display, m_display);
+    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_slideManagerInterface = new SlideManagerInterface(m_display, m_display);
+    m_slideManagerInterface = new SlideManagerInterface(m_display.get(), m_display.get());
 
     QVERIFY(slideSpy.wait());
     m_slideManager = registry.createSlideManager(slideSpy.first().first().value<quint32>(), slideSpy.first().last().value<quint32>(), this);
@@ -124,8 +123,8 @@ void TestSlide::cleanup()
         delete m_thread;
         m_thread = nullptr;
     }
-    CLEANUP(m_display)
 #undef CLEANUP
+    m_display.reset();
     // these are the children of the display
     m_compositorInterface = nullptr;
     m_slideManagerInterface = nullptr;

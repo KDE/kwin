@@ -108,7 +108,7 @@ private:
     KWayland::Client::Compositor *m_clientCompositor;
 
     QThread *m_thread;
-    KWaylandServer::Display m_display;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     CompositorInterface *m_serverCompositor;
     LayerShellV1 *m_clientLayerShell = nullptr;
     LayerShellV1Interface *m_serverLayerShell = nullptr;
@@ -120,13 +120,14 @@ static const QString s_socketName = QStringLiteral("kwin-wayland-server-layer-sh
 
 void TestLayerShellV1Interface::initTestCase()
 {
-    m_display.addSocketName(s_socketName);
-    m_display.start();
-    QVERIFY(m_display.isRunning());
+    m_display = std::make_unique<KWaylandServer::Display>();
+    m_display->addSocketName(s_socketName);
+    m_display->start();
+    QVERIFY(m_display->isRunning());
 
-    m_serverLayerShell = new LayerShellV1Interface(&m_display, this);
-    m_serverXdgShell = new XdgShellInterface(&m_display, this);
-    m_serverCompositor = new CompositorInterface(&m_display, this);
+    m_serverLayerShell = new LayerShellV1Interface(m_display.get(), this);
+    m_serverXdgShell = new XdgShellInterface(m_display.get(), this);
+    m_serverCompositor = new CompositorInterface(m_display.get(), this);
 
     m_connection = new KWayland::Client::ConnectionThread;
     QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
@@ -191,6 +192,8 @@ TestLayerShellV1Interface::~TestLayerShellV1Interface()
     }
     m_connection->deleteLater();
     m_connection = nullptr;
+
+    m_display.reset();
 }
 
 void TestLayerShellV1Interface::testDesiredSize()

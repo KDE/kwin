@@ -51,7 +51,7 @@ private Q_SLOTS:
     void testDestroyParentSurface();
 
 private:
-    KWaylandServer::Display *m_display;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     KWaylandServer::CompositorInterface *m_compositorInterface;
     KWaylandServer::SubCompositorInterface *m_subcompositorInterface;
     KWayland::Client::ConnectionThread *m_connection;
@@ -66,7 +66,6 @@ static const QString s_socketName = QStringLiteral("kwayland-test-wayland-subsur
 
 TestSubSurface::TestSubSurface(QObject *parent)
     : QObject(parent)
-    , m_display(nullptr)
     , m_compositorInterface(nullptr)
     , m_subcompositorInterface(nullptr)
     , m_connection(nullptr)
@@ -81,8 +80,7 @@ TestSubSurface::TestSubSurface(QObject *parent)
 void TestSubSurface::init()
 {
     using namespace KWaylandServer;
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -115,8 +113,8 @@ void TestSubSurface::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_compositorInterface = new CompositorInterface(m_display, m_display);
-    m_subcompositorInterface = new SubCompositorInterface(m_display, m_display);
+    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
+    m_subcompositorInterface = new SubCompositorInterface(m_display.get(), m_display.get());
     QVERIFY(m_subcompositorInterface);
 
     QVERIFY(subCompositorSpy.wait());
@@ -160,8 +158,7 @@ void TestSubSurface::cleanup()
     delete m_connection;
     m_connection = nullptr;
 
-    delete m_display;
-    m_display = nullptr;
+    m_display.reset();
 }
 
 void TestSubSurface::testCreate()

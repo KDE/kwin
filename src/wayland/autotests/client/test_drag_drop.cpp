@@ -43,7 +43,7 @@ private:
     KWayland::Client::Surface *createSurface();
     KWaylandServer::SurfaceInterface *getServerSurface();
 
-    KWaylandServer::Display *m_display = nullptr;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     KWaylandServer::CompositorInterface *m_compositorInterface = nullptr;
     KWaylandServer::DataDeviceManagerInterface *m_dataDeviceManagerInterface = nullptr;
     KWaylandServer::SeatInterface *m_seatInterface = nullptr;
@@ -67,8 +67,7 @@ void TestDragAndDrop::init()
 {
     using namespace KWaylandServer;
     using namespace KWayland::Client;
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -78,11 +77,11 @@ void TestDragAndDrop::init()
     QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_compositorInterface = new CompositorInterface(m_display, m_display);
-    m_seatInterface = new SeatInterface(m_display, m_display);
+    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
+    m_seatInterface = new SeatInterface(m_display.get(), m_display.get());
     m_seatInterface->setHasPointer(true);
     m_seatInterface->setHasTouch(true);
-    m_dataDeviceManagerInterface = new DataDeviceManagerInterface(m_display, m_display);
+    m_dataDeviceManagerInterface = new DataDeviceManagerInterface(m_display.get(), m_display.get());
     m_display->createShm();
 
     m_thread = new QThread(this);
@@ -158,8 +157,7 @@ void TestDragAndDrop::cleanup()
     delete m_connection;
     m_connection = nullptr;
 
-    delete m_display;
-    m_display = nullptr;
+    m_display.reset();
 }
 
 KWayland::Client::Surface *TestDragAndDrop::createSurface()

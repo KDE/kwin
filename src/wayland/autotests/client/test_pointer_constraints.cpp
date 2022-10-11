@@ -44,7 +44,7 @@ private Q_SLOTS:
     void testAlreadyConstrained();
 
 private:
-    KWaylandServer::Display *m_display = nullptr;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     CompositorInterface *m_compositorInterface = nullptr;
     SeatInterface *m_seatInterface = nullptr;
     PointerConstraintsV1Interface *m_pointerConstraintsInterface = nullptr;
@@ -61,16 +61,15 @@ static const QString s_socketName = QStringLiteral("kwayland-test-pointer_constr
 
 void TestPointerConstraints::init()
 {
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
     m_display->createShm();
-    m_seatInterface = new SeatInterface(m_display, m_display);
+    m_seatInterface = new SeatInterface(m_display.get(), m_display.get());
     m_seatInterface->setHasPointer(true);
-    m_compositorInterface = new CompositorInterface(m_display, m_display);
-    m_pointerConstraintsInterface = new PointerConstraintsV1Interface(m_display, m_display);
+    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
+    m_pointerConstraintsInterface = new PointerConstraintsV1Interface(m_display.get(), m_display.get());
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -138,10 +137,9 @@ void TestPointerConstraints::cleanup()
         delete m_thread;
         m_thread = nullptr;
     }
-
-    CLEANUP(m_display)
 #undef CLEANUP
 
+    m_display.reset();
     // these are the children of the display
     m_compositorInterface = nullptr;
     m_seatInterface = nullptr;

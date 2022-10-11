@@ -32,7 +32,7 @@ private Q_SLOTS:
     void testDecoration();
 
 private:
-    KWaylandServer::Display *m_display = nullptr;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     KWaylandServer::CompositorInterface *m_compositorInterface = nullptr;
     KWaylandServer::XdgShellInterface *m_xdgShellInterface = nullptr;
     KWaylandServer::XdgDecorationManagerV1Interface *m_xdgDecorationManagerInterface = nullptr;
@@ -62,8 +62,7 @@ void TestXdgDecoration::init()
     qRegisterMetaType<XdgDecoration::Mode>();
     qRegisterMetaType<XdgToplevelDecorationV1Interface::Mode>();
 
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -97,15 +96,15 @@ void TestXdgDecoration::init()
     QVERIFY(m_registry->isValid());
     m_registry->setup();
 
-    m_compositorInterface = new CompositorInterface(m_display, m_display);
+    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
     QVERIFY(compositorSpy.wait());
     m_compositor = m_registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_xdgShellInterface = new XdgShellInterface(m_display, m_display);
+    m_xdgShellInterface = new XdgShellInterface(m_display.get(), m_display.get());
     QVERIFY(xdgShellSpy.wait());
     m_xdgShell = m_registry->createXdgShell(xdgShellSpy.first().first().value<quint32>(), xdgShellSpy.first().last().value<quint32>(), this);
 
-    m_xdgDecorationManagerInterface = new XdgDecorationManagerV1Interface(m_display, m_display);
+    m_xdgDecorationManagerInterface = new XdgDecorationManagerV1Interface(m_display.get(), m_display.get());
 
     QVERIFY(xdgDecorationManagerSpy.wait());
     m_xdgDecorationManager = m_registry->createXdgDecorationManager(xdgDecorationManagerSpy.first().first().value<quint32>(),
@@ -144,8 +143,7 @@ void TestXdgDecoration::cleanup()
     delete m_connection;
     m_connection = nullptr;
 
-    delete m_display;
-    m_display = nullptr;
+    m_display.reset();
 }
 
 void TestXdgDecoration::testDecoration_data()

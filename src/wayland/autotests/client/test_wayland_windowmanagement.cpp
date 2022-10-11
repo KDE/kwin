@@ -60,7 +60,7 @@ private Q_SLOTS:
     void cleanup();
 
 private:
-    KWaylandServer::Display *m_display;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     KWaylandServer::CompositorInterface *m_compositorInterface;
     KWaylandServer::PlasmaWindowManagementInterface *m_windowManagementInterface;
     KWaylandServer::PlasmaWindowInterface *m_windowInterface;
@@ -80,7 +80,6 @@ static const QString s_socketName = QStringLiteral("kwayland-test-wayland-window
 
 TestWindowManagement::TestWindowManagement(QObject *parent)
     : QObject(parent)
-    , m_display(nullptr)
     , m_compositorInterface(nullptr)
     , m_connection(nullptr)
     , m_compositor(nullptr)
@@ -93,8 +92,7 @@ void TestWindowManagement::init()
 {
     using namespace KWaylandServer;
     qRegisterMetaType<KWaylandServer::PlasmaWindowManagementInterface::ShowingDesktopState>("ShowingDesktopState");
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -128,11 +126,11 @@ void TestWindowManagement::init()
     QVERIFY(m_registry->isValid());
     m_registry->setup();
 
-    m_compositorInterface = new CompositorInterface(m_display, m_display);
+    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
     QVERIFY(compositorSpy.wait());
     m_compositor = m_registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_windowManagementInterface = new PlasmaWindowManagementInterface(m_display, m_display);
+    m_windowManagementInterface = new PlasmaWindowManagementInterface(m_display.get(), m_display.get());
 
     QVERIFY(windowManagementSpy.wait());
     m_windowManagement = m_registry->createPlasmaWindowManagement(windowManagementSpy.first().first().value<quint32>(),
@@ -218,8 +216,7 @@ void TestWindowManagement::cleanup()
 
     QVERIFY(m_surfaceInterface.isNull());
 
-    delete m_display;
-    m_display = nullptr;
+    m_display.reset();
 
     // these are the children of the display
     m_windowManagementInterface = nullptr;

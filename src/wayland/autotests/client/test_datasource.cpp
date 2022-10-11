@@ -36,7 +36,7 @@ private Q_SLOTS:
     void testServerGet();
 
 private:
-    KWaylandServer::Display *m_display = nullptr;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     KWaylandServer::DataDeviceManagerInterface *m_dataDeviceManagerInterface = nullptr;
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::DataDeviceManager *m_dataDeviceManager = nullptr;
@@ -49,8 +49,7 @@ static const QString s_socketName = QStringLiteral("kwayland-test-wayland-dataso
 void TestDataSource::init()
 {
     using namespace KWaylandServer;
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -81,7 +80,7 @@ void TestDataSource::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_dataDeviceManagerInterface = new DataDeviceManagerInterface(m_display, m_display);
+    m_dataDeviceManagerInterface = new DataDeviceManagerInterface(m_display.get(), m_display.get());
 
     QVERIFY(dataDeviceManagerSpy.wait());
     m_dataDeviceManager =
@@ -107,8 +106,7 @@ void TestDataSource::cleanup()
     delete m_connection;
     m_connection = nullptr;
 
-    delete m_display;
-    m_display = nullptr;
+    m_display.reset();
 }
 
 void TestDataSource::testOffer()

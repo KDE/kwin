@@ -49,7 +49,7 @@ private Q_SLOTS:
     void testReplaceSource();
 
 private:
-    KWaylandServer::Display *m_display = nullptr;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     KWaylandServer::DataDeviceManagerInterface *m_dataDeviceManagerInterface = nullptr;
     KWaylandServer::CompositorInterface *m_compositorInterface = nullptr;
     KWaylandServer::SeatInterface *m_seatInterface = nullptr;
@@ -67,8 +67,7 @@ void TestDataDevice::init()
 {
     qRegisterMetaType<KWaylandServer::DataSourceInterface *>();
     using namespace KWaylandServer;
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
@@ -101,13 +100,13 @@ void TestDataDevice::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_dataDeviceManagerInterface = new DataDeviceManagerInterface(m_display, m_display);
+    m_dataDeviceManagerInterface = new DataDeviceManagerInterface(m_display.get(), m_display.get());
 
     QVERIFY(dataDeviceManagerSpy.wait());
     m_dataDeviceManager =
         registry.createDataDeviceManager(dataDeviceManagerSpy.first().first().value<quint32>(), dataDeviceManagerSpy.first().last().value<quint32>(), this);
 
-    m_seatInterface = new SeatInterface(m_display, m_display);
+    m_seatInterface = new SeatInterface(m_display.get(), m_display.get());
     m_seatInterface->setHasPointer(true);
 
     QVERIFY(seatSpy.wait());
@@ -116,7 +115,7 @@ void TestDataDevice::init()
     QSignalSpy pointerChangedSpy(m_seat, &KWayland::Client::Seat::hasPointerChanged);
     QVERIFY(pointerChangedSpy.wait());
 
-    m_compositorInterface = new CompositorInterface(m_display, m_display);
+    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
     QVERIFY(m_compositor->isValid());
@@ -149,8 +148,7 @@ void TestDataDevice::cleanup()
     delete m_connection;
     m_connection = nullptr;
 
-    delete m_display;
-    m_display = nullptr;
+    m_display.reset();
 }
 
 void TestDataDevice::testCreate()

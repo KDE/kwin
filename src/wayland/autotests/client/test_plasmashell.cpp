@@ -40,7 +40,7 @@ private Q_SLOTS:
     void testWhileDestroying();
 
 private:
-    KWaylandServer::Display *m_display = nullptr;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     CompositorInterface *m_compositorInterface = nullptr;
     PlasmaShellInterface *m_plasmaShellInterface = nullptr;
 
@@ -56,16 +56,15 @@ static const QString s_socketName = QStringLiteral("kwayland-test-wayland-plasma
 
 void TestPlasmaShell::init()
 {
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
 
-    m_compositorInterface = new CompositorInterface(m_display, m_display);
+    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
     m_display->createShm();
 
-    m_plasmaShellInterface = new PlasmaShellInterface(m_display, m_display);
+    m_plasmaShellInterface = new PlasmaShellInterface(m_display.get(), m_display.get());
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -127,8 +126,7 @@ void TestPlasmaShell::cleanup()
     delete m_connection;
     m_connection = nullptr;
 
-    delete m_display;
-    m_display = nullptr;
+    m_display.reset();
 }
 
 void TestPlasmaShell::testRole_data()

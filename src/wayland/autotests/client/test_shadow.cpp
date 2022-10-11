@@ -34,7 +34,7 @@ private Q_SLOTS:
     void testSurfaceDestroy();
 
 private:
-    KWaylandServer::Display *m_display = nullptr;
+    std::unique_ptr<KWaylandServer::Display> m_display;
 
     ConnectionThread *m_connection = nullptr;
     CompositorInterface *m_compositorInterface = nullptr;
@@ -50,14 +50,13 @@ static const QString s_socketName = QStringLiteral("kwayland-test-shadow-0");
 
 void ShadowTest::init()
 {
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
     m_display->createShm();
-    m_compositorInterface = new CompositorInterface(m_display, m_display);
-    m_shadowInterface = new ShadowManagerInterface(m_display, m_display);
+    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
+    m_shadowInterface = new ShadowManagerInterface(m_display.get(), m_display.get());
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -113,10 +112,9 @@ void ShadowTest::cleanup()
         delete m_thread;
         m_thread = nullptr;
     }
-
-    CLEANUP(m_display)
 #undef CLEANUP
 
+    m_display.reset();
     // these are the children of the display
     m_compositorInterface = nullptr;
     m_shadowInterface = nullptr;

@@ -42,7 +42,7 @@ private Q_SLOTS:
     void testKeyboardKeyLinux();
 
 private:
-    KWaylandServer::Display *m_display = nullptr;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     FakeInputInterface *m_fakeInputInterface = nullptr;
     FakeInputDevice *m_device = nullptr;
     ConnectionThread *m_connection = nullptr;
@@ -55,13 +55,12 @@ static const QString s_socketName = QStringLiteral("kwayland-test-fake-input-0")
 
 void FakeInputTest::init()
 {
-    delete m_display;
-    m_display = new KWaylandServer::Display(this);
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
     m_display->createShm();
-    m_fakeInputInterface = new FakeInputInterface(m_display);
+    m_fakeInputInterface = new FakeInputInterface(m_display.get());
     QSignalSpy deviceCreatedSpy(m_fakeInputInterface, &FakeInputInterface::deviceCreated);
 
     // setup connection
@@ -115,10 +114,9 @@ void FakeInputTest::cleanup()
         delete m_thread;
         m_thread = nullptr;
     }
-
-    CLEANUP(m_display)
 #undef CLEANUP
 
+    m_display.reset();
     // these are the children of the display
     m_fakeInputInterface = nullptr;
 }

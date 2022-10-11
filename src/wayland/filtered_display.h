@@ -21,7 +21,7 @@ class KWIN_EXPORT FilteredDisplay : public Display
 {
     Q_OBJECT
 public:
-    FilteredDisplay(QObject *parent);
+    FilteredDisplay();
     ~FilteredDisplay() override;
 
     /**
