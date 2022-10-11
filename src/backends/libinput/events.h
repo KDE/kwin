@@ -87,8 +87,8 @@ public:
     uint32_t time() const;
     quint64 timeMicroseconds() const;
     QVector<InputRedirection::PointerAxis> axis() const;
-    qreal axisValue(InputRedirection::PointerAxis a) const;
-    qint32 discreteAxisValue(InputRedirection::PointerAxis axis) const;
+    qreal scrollValue(InputRedirection::PointerAxis a) const;
+    qint32 scrollValueV120(InputRedirection::PointerAxis axis) const;
     InputRedirection::PointerAxisSource axisSource() const;
 
     operator libinput_event_pointer *()

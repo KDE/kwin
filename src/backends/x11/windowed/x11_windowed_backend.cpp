@@ -511,7 +511,7 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
         if (!pressed) {
             return;
         }
-        const int delta = (event->detail == XCB_BUTTON_INDEX_4 || event->detail == 6) ? -1 : 1;
+        const int delta = (event->detail == XCB_BUTTON_INDEX_4 || event->detail == 6) ? -120 : 120;
         static const qreal s_defaultAxisStepDistance = 10.0;
         InputRedirection::PointerAxis axis;
         if (event->detail > 5) {

@@ -208,10 +208,33 @@ void PointerInterface::sendButton(quint32 button, PointerButtonState state, quin
     }
 }
 
-void PointerInterface::sendAxis(Qt::Orientation orientation, qreal delta, qint32 discreteDelta, PointerAxisSource source)
+static bool shouldResetAccumulator(int accumulator, int delta)
+{
+    // Reset the accumulator if the delta has opposite sign.
+    return accumulator && (accumulator < 0 != delta < 0);
+}
+
+void PointerInterface::sendAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source)
 {
     if (!d->focusedSurface) {
         return;
+    }
+
+    qint32 deltaDiscrete;
+    if (orientation == Qt::Horizontal) {
+        if (shouldResetAccumulator(d->accumulatorV120.x(), deltaV120)) {
+            d->accumulatorV120.setX(0);
+        }
+        d->accumulatorV120.rx() += deltaV120;
+        deltaDiscrete = d->accumulatorV120.x() / 120;
+        d->accumulatorV120.rx() -= deltaDiscrete * 120;
+    } else {
+        if (shouldResetAccumulator(d->accumulatorV120.y(), deltaV120)) {
+            d->accumulatorV120.setY(0);
+        }
+        d->accumulatorV120.ry() += deltaV120;
+        deltaDiscrete = d->accumulatorV120.y() / 120;
+        d->accumulatorV120.ry() -= deltaDiscrete * 120;
     }
 
     const auto pointerResources = d->pointersForClient(d->focusedSurface->client());
@@ -244,8 +267,14 @@ void PointerInterface::sendAxis(Qt::Orientation orientation, qreal delta, qint32
         }
 
         if (delta != 0.0) {
-            if (discreteDelta && version >= WL_POINTER_AXIS_DISCRETE_SINCE_VERSION) {
-                d->send_axis_discrete(resource->handle, wlOrientation, discreteDelta);
+            if (version >= WL_POINTER_AXIS_VALUE120_SINCE_VERSION) {
+                if (deltaV120) {
+                    d->send_axis_value120(resource->handle, wlOrientation, deltaV120);
+                }
+            } else if (version >= WL_POINTER_AXIS_DISCRETE_SINCE_VERSION) {
+                if (deltaDiscrete) {
+                    d->send_axis_discrete(resource->handle, wlOrientation, deltaDiscrete);
+                }
             }
             d->send_axis(resource->handle, d->seat->timestamp(), wlOrientation, wl_fixed_from_double(delta));
         } else if (version >= WL_POINTER_AXIS_STOP_SINCE_VERSION) {

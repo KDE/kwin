@@ -128,10 +128,10 @@ struct libinput_event_pointer : libinput_event
     quint32 button = 0;
     bool verticalAxis = false;
     bool horizontalAxis = false;
-    qreal horizontalAxisValue = 0.0;
-    qreal verticalAxisValue = 0.0;
-    qreal horizontalDiscreteAxisValue = 0.0;
-    qreal verticalDiscreteAxisValue = 0.0;
+    qreal horizontalScrollValue = 0.0;
+    qreal verticalScrollValue = 0.0;
+    qreal horizontalScrollValueV120 = 0.0;
+    qreal verticalScrollValueV120 = 0.0;
     libinput_pointer_axis_source axisSource = {};
     QSizeF delta;
     QPointF absolutePos;

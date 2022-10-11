@@ -204,7 +204,7 @@ if (Wayland_Egl_FOUND)
     set(HAVE_WAYLAND_EGL TRUE)
 endif()
 
-find_package(Wayland 1.20 REQUIRED COMPONENTS
+find_package(Wayland 1.21 REQUIRED COMPONENTS
     Server
 )
 

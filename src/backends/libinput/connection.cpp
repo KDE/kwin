@@ -263,6 +263,33 @@ static TabletPadId createTabletPadId(LibInput::Device *device)
     };
 }
 
+void Connection::handleDiscreteAxis(PointerEvent *pointerEvent)
+{
+    const auto axes = pointerEvent->axis();
+    for (const InputRedirection::PointerAxis &axis : axes) {
+        Q_EMIT pointerEvent->device()->pointerAxisChanged(axis,
+                                                          pointerEvent->scrollValue(axis),
+                                                          pointerEvent->scrollValueV120(axis),
+                                                          pointerEvent->axisSource(),
+                                                          pointerEvent->time(),
+                                                          pointerEvent->device());
+    }
+}
+
+void Connection::handleContinuousAxis(PointerEvent *pointerEvent)
+{
+    const auto axes = pointerEvent->axis();
+
+    for (const InputRedirection::PointerAxis &axis : axes) {
+        Q_EMIT pointerEvent->device()->pointerAxisChanged(axis,
+                                                          pointerEvent->scrollValue(axis),
+                                                          0,
+                                                          pointerEvent->axisSource(),
+                                                          pointerEvent->time(),
+                                                          pointerEvent->device());
+    }
+}
+
 void Connection::processEvents()
 {
     QMutexLocker locker(&m_mutex);
@@ -300,13 +327,16 @@ void Connection::processEvents()
             Q_EMIT ke->device()->keyChanged(ke->key(), ke->state(), ke->time(), ke->device());
             break;
         }
-        case LIBINPUT_EVENT_POINTER_AXIS: {
-            PointerEvent *pe = static_cast<PointerEvent *>(event.get());
-            const auto axes = pe->axis();
-            for (const InputRedirection::PointerAxis &axis : axes) {
-                Q_EMIT pe->device()->pointerAxisChanged(axis, pe->axisValue(axis), pe->discreteAxisValue(axis),
-                                                        pe->axisSource(), pe->time(), pe->device());
-            }
+        case LIBINPUT_EVENT_POINTER_SCROLL_WHEEL: {
+            handleDiscreteAxis(static_cast<PointerEvent *>(event.get()));
+            break;
+        }
+        case LIBINPUT_EVENT_POINTER_SCROLL_FINGER: {
+            handleContinuousAxis(static_cast<PointerEvent *>(event.get()));
+            break;
+        }
+        case LIBINPUT_EVENT_POINTER_SCROLL_CONTINUOUS: {
+            handleContinuousAxis(static_cast<PointerEvent *>(event.get()));
             break;
         }
         case LIBINPUT_EVENT_POINTER_BUTTON: {

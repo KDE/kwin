@@ -27,7 +27,9 @@ std::unique_ptr<Event> Event::create(libinput_event *event)
     switch (t) {
     case LIBINPUT_EVENT_KEYBOARD_KEY:
         return std::make_unique<KeyEvent>(event);
-    case LIBINPUT_EVENT_POINTER_AXIS:
+    case LIBINPUT_EVENT_POINTER_SCROLL_WHEEL:
+    case LIBINPUT_EVENT_POINTER_SCROLL_FINGER:
+    case LIBINPUT_EVENT_POINTER_SCROLL_CONTINUOUS:
     case LIBINPUT_EVENT_POINTER_BUTTON:
     case LIBINPUT_EVENT_POINTER_MOTION:
     case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE:
@@ -191,7 +193,6 @@ InputRedirection::PointerButtonState PointerEvent::buttonState() const
 
 QVector<InputRedirection::PointerAxis> PointerEvent::axis() const
 {
-    Q_ASSERT(type() == LIBINPUT_EVENT_POINTER_AXIS);
     QVector<InputRedirection::PointerAxis> a;
     if (libinput_event_pointer_has_axis(m_pointerEvent, LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL)) {
         a << InputRedirection::PointerAxisHorizontal;
@@ -202,28 +203,26 @@ QVector<InputRedirection::PointerAxis> PointerEvent::axis() const
     return a;
 }
 
-qreal PointerEvent::axisValue(InputRedirection::PointerAxis axis) const
+qreal PointerEvent::scrollValue(InputRedirection::PointerAxis axis) const
 {
-    Q_ASSERT(type() == LIBINPUT_EVENT_POINTER_AXIS);
     const libinput_pointer_axis a = axis == InputRedirection::PointerAxisHorizontal
         ? LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL
         : LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL;
-    return libinput_event_pointer_get_axis_value(m_pointerEvent, a) * device()->scrollFactor();
+    return libinput_event_pointer_get_scroll_value(m_pointerEvent, a) * device()->scrollFactor();
 }
 
-qint32 PointerEvent::discreteAxisValue(InputRedirection::PointerAxis axis) const
+qint32 PointerEvent::scrollValueV120(InputRedirection::PointerAxis axis) const
 {
-    Q_ASSERT(type() == LIBINPUT_EVENT_POINTER_AXIS);
     const libinput_pointer_axis a = (axis == InputRedirection::PointerAxisHorizontal)
         ? LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL
         : LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL;
-    return libinput_event_pointer_get_axis_value_discrete(m_pointerEvent, a) * device()->scrollFactor();
+    return libinput_event_pointer_get_scroll_value_v120(m_pointerEvent, a) * device()->scrollFactor();
 }
 
 InputRedirection::PointerAxisSource PointerEvent::axisSource() const
 {
     Q_ASSERT(type() == LIBINPUT_EVENT_POINTER_AXIS);
-    switch (libinput_event_pointer_get_axis_source(m_pointerEvent)) {
+    switch (m_pointerEvent->axisSource) {
     case LIBINPUT_POINTER_AXIS_SOURCE_WHEEL:
         return InputRedirection::PointerAxisSourceWheel;
     case LIBINPUT_POINTER_AXIS_SOURCE_FINGER:

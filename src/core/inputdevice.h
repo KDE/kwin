@@ -49,7 +49,7 @@ Q_SIGNALS:
     void pointerButtonChanged(quint32 button, InputRedirection::PointerButtonState state, quint32 time, InputDevice *device);
     void pointerMotionAbsolute(const QPointF &position, quint32 time, InputDevice *device);
     void pointerMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint32 time, quint64 timeMicroseconds, InputDevice *device);
-    void pointerAxisChanged(InputRedirection::PointerAxis axis, qreal delta, qint32 discreteDelta,
+    void pointerAxisChanged(InputRedirection::PointerAxis axis, qreal delta, qint32 deltaV120,
                             InputRedirection::PointerAxisSource source, quint32 time, InputDevice *device);
     void touchFrame(InputDevice *device);
     void touchCanceled(InputDevice *device);

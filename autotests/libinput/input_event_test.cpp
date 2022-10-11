@@ -111,11 +111,11 @@ void InputEventsTest::testInitWheelEvent_data()
 {
     QTest::addColumn<Qt::Orientation>("orientation");
     QTest::addColumn<qreal>("delta");
-    QTest::addColumn<qint32>("discreteDelta");
+    QTest::addColumn<qint32>("deltaV120");
     QTest::addColumn<QPoint>("expectedAngleDelta");
 
-    QTest::newRow("horiz") << Qt::Horizontal << 3.3 << 1 << QPoint(3, 0);
-    QTest::newRow("vert") << Qt::Vertical << 2.4 << 2 << QPoint(0, 2);
+    QTest::newRow("horiz") << Qt::Horizontal << 3.3 << 1 << QPoint(3 * 120, 0);
+    QTest::newRow("vert") << Qt::Vertical << 2.4 << 2 << QPoint(0, 2 * 120);
 }
 
 void InputEventsTest::testInitWheelEvent()
@@ -129,8 +129,8 @@ void InputEventsTest::testInitWheelEvent()
     // setup event
     QFETCH(Qt::Orientation, orientation);
     QFETCH(qreal, delta);
-    QFETCH(qint32, discreteDelta);
-    WheelEvent event(QPointF(100, 200), delta, discreteDelta, orientation, Qt::LeftButton | Qt::RightButton,
+    QFETCH(qint32, deltaV120);
+    WheelEvent event(QPointF(100, 200), delta, deltaV120, orientation, Qt::LeftButton | Qt::RightButton,
                      Qt::ShiftModifier | Qt::ControlModifier, InputRedirection::PointerAxisSourceWheel, 300, &d);
     // compare QWheelEvent contract
     QCOMPARE(event.type(), QEvent::Wheel);
@@ -142,7 +142,7 @@ void InputEventsTest::testInitWheelEvent()
     QTEST(event.angleDelta(), "expectedAngleDelta");
     QTEST(event.orientation(), "orientation");
     QTEST(event.delta(), "delta");
-    QTEST(event.discreteDelta(), "discreteDelta");
+    QTEST(event.deltaV120(), "deltaV120");
     QCOMPARE(event.axisSource(), InputRedirection::PointerAxisSourceWheel);
     // and our custom argument
     QCOMPARE(event.device(), &d);

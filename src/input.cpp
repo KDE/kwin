@@ -392,7 +392,7 @@ public:
             const WheelEvent *wheelEvent = static_cast<WheelEvent *>(event);
             seat->setTimestamp(wheelEvent->timestamp());
             seat->notifyPointerAxis(wheelEvent->orientation(), wheelEvent->delta(),
-                                    wheelEvent->discreteDelta(),
+                                    wheelEvent->deltaV120(),
                                     kwinAxisSourceToKWaylandAxisSource(wheelEvent->axisSource()));
             seat->notifyPointerFrame();
         }
@@ -1866,7 +1866,7 @@ public:
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp());
         auto _event = static_cast<WheelEvent *>(event);
-        seat->notifyPointerAxis(_event->orientation(), _event->delta(), _event->discreteDelta(),
+        seat->notifyPointerAxis(_event->orientation(), _event->delta(), _event->deltaV120(),
                                 kwinAxisSourceToKWaylandAxisSource(_event->axisSource()));
         seat->notifyPointerFrame();
         return true;

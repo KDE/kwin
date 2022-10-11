@@ -37,6 +37,7 @@ class Event;
 class Device;
 class Context;
 class ConnectionAdaptor;
+class PointerEvent;
 
 class KWIN_EXPORT Connection : public QObject
 {
@@ -72,6 +73,8 @@ private Q_SLOTS:
 private:
     Connection(std::unique_ptr<Context> &&input);
     void handleEvent();
+    void handleDiscreteAxis(PointerEvent *event);
+    void handleContinuousAxis(PointerEvent *event);
     void applyDeviceConfig(Device *device);
     void applyScreenToDevice(Device *device);
     std::unique_ptr<QSocketNotifier> m_notifier;
