@@ -216,7 +216,7 @@ target_sources(kwin PRIVATE
     display.cpp
     dpms_interface.cpp
     drmclientbuffer.cpp
-    drmleasedevice_v1_interface.cpp
+    drmlease_v1_interface.cpp
     fakeinput_interface.cpp
     filtered_display.cpp
     idle_interface.cpp

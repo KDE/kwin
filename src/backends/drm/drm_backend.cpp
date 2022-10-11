@@ -300,6 +300,7 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
     m_active = true;
     connect(gpu, &DrmGpu::outputAdded, this, &DrmBackend::addOutput);
     connect(gpu, &DrmGpu::outputRemoved, this, &DrmBackend::removeOutput);
+    Q_EMIT gpuAdded(gpu);
     return gpu;
 }
 
@@ -333,7 +334,9 @@ void DrmBackend::updateOutputs()
         DrmGpu *gpu = it->get();
         if (gpu->isRemoved() || (gpu != primaryGpu() && gpu->drmOutputs().isEmpty())) {
             qCDebug(KWIN_DRM) << "Removing GPU" << (*it)->devNode();
+            const std::unique_ptr<DrmGpu> keepAlive = std::move(*it);
             it = m_gpus.erase(it);
+            Q_EMIT gpuRemoved(keepAlive.get());
         } else {
             it++;
         }
@@ -525,5 +528,10 @@ void DrmBackend::releaseBuffers()
     for (const auto &gpu : qAsConst(m_gpus)) {
         gpu->releaseBuffers();
     }
+}
+
+const std::vector<std::unique_ptr<DrmGpu>> &DrmBackend::gpus() const
+{
+    return m_gpus;
 }
 }

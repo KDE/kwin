@@ -25,7 +25,6 @@
 #include "drm_layer.h"
 #include "drm_logging.h"
 #include "kwinglutils.h"
-#include "wayland/drmleasedevice_v1_interface.h"
 // Qt
 #include <QCryptographicHash>
 #include <QMatrix4x4>
@@ -40,7 +39,7 @@
 namespace KWin
 {
 
-DrmOutput::DrmOutput(DrmPipeline *pipeline, KWaylandServer::DrmLeaseDeviceV1Interface *leaseDevice)
+DrmOutput::DrmOutput(DrmPipeline *pipeline)
     : DrmAbstractOutput(pipeline->connector()->gpu())
     , m_pipeline(pipeline)
     , m_connector(pipeline->connector())
@@ -95,13 +94,7 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline, KWaylandServer::DrmLeaseDeviceV1Inte
         setDrmDpmsMode(DpmsMode::Off);
     });
 
-    if (conn->isNonDesktop()) {
-        m_offer = std::make_unique<KWaylandServer::DrmLeaseConnectorV1Interface>(
-            leaseDevice,
-            conn->id(),
-            conn->modelName(),
-            QStringLiteral("%1 %2").arg(conn->edid()->manufacturerString(), conn->modelName()));
-    } else {
+    if (!conn->isNonDesktop()) {
         connect(Cursors::self(), &Cursors::currentCursorChanged, this, &DrmOutput::updateCursor);
         connect(Cursors::self(), &Cursors::hiddenChanged, this, &DrmOutput::updateCursor);
         connect(Cursors::self(), &Cursors::positionChanged, this, &DrmOutput::moveCursor);
@@ -115,7 +108,6 @@ DrmOutput::~DrmOutput()
 
 bool DrmOutput::addLeaseObjects(QVector<uint32_t> &objectList)
 {
-    Q_ASSERT(m_offer);
     if (!m_pipeline->crtc()) {
         qCWarning(KWIN_DRM) << "Can't lease connector: No suitable crtc available";
         return false;
@@ -129,20 +121,18 @@ bool DrmOutput::addLeaseObjects(QVector<uint32_t> &objectList)
     return true;
 }
 
-void DrmOutput::leased(KWaylandServer::DrmLeaseV1Interface *lease)
+void DrmOutput::leased(DrmLease *lease)
 {
-    Q_ASSERT(m_offer);
     m_lease = lease;
 }
 
 void DrmOutput::leaseEnded()
 {
-    Q_ASSERT(m_offer);
     qCDebug(KWIN_DRM) << "ended lease for connector" << m_pipeline->connector()->id();
     m_lease = nullptr;
 }
 
-KWaylandServer::DrmLeaseV1Interface *DrmOutput::lease() const
+DrmLease *DrmOutput::lease() const
 {
     return m_lease;
 }

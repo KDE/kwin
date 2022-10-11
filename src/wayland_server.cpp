@@ -10,6 +10,7 @@
 
 #include <config-kwin.h>
 
+#include "backends/drm/drm_backend.h"
 #include "composite.h"
 #include "core/output.h"
 #include "core/platform.h"
@@ -31,6 +32,7 @@
 #include "wayland/datasource_interface.h"
 #include "wayland/display.h"
 #include "wayland/dpms_interface.h"
+#include "wayland/drmlease_v1_interface.h"
 #include "wayland/filtered_display.h"
 #include "wayland/idle_interface.h"
 #include "wayland/idleinhibit_v1_interface.h"
@@ -563,6 +565,11 @@ void WaylandServer::initWorkspace()
     if (hasScreenLockerIntegration()) {
         initScreenLocker();
     }
+
+    if (auto backend = qobject_cast<DrmBackend *>(kwinApp()->platform())) {
+        m_leaseManager = new KWaylandServer::DrmLeaseManagerV1(backend, m_display, m_display);
+    }
+
     Q_EMIT initialized();
 }
 

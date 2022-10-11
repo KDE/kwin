@@ -9,6 +9,7 @@
 #pragma once
 
 #include "drm_pipeline.h"
+#include "utils/filedescriptor.h"
 
 #include <QPointer>
 #include <QSize>
@@ -20,12 +21,6 @@
 #include <sys/types.h>
 
 struct gbm_device;
-
-namespace KWaylandServer
-{
-class DrmLeaseDeviceV1Interface;
-class DrmLeaseV1Interface;
-}
 
 namespace KWin
 {
@@ -40,6 +35,26 @@ class EglGbmBackend;
 class DrmAbstractOutput;
 class DrmRenderBackend;
 class DrmVirtualOutput;
+
+class DrmLease : public QObject
+{
+    Q_OBJECT
+public:
+    DrmLease(DrmGpu *gpu, FileDescriptor &&fd, uint32_t lesseeId, const QVector<DrmOutput *> &outputs);
+    ~DrmLease();
+
+    FileDescriptor &fd();
+    uint32_t lesseeId() const;
+
+Q_SIGNALS:
+    void revokeRequested();
+
+private:
+    DrmGpu *const m_gpu;
+    FileDescriptor m_fd;
+    const uint32_t m_lesseeId;
+    const QVector<DrmOutput *> m_outputs;
+};
 
 class DrmGpu : public QObject
 {
@@ -87,6 +102,9 @@ public:
     void releaseBuffers();
     void recreateSurfaces();
 
+    FileDescriptor createNonMasterFd() const;
+    std::unique_ptr<DrmLease> leaseOutputs(const QVector<DrmOutput *> &outputs);
+
 Q_SIGNALS:
     void outputAdded(DrmAbstractOutput *output);
     void outputRemoved(DrmAbstractOutput *output);
@@ -101,9 +119,6 @@ private:
     DrmPipeline::Error checkCrtcAssignment(QVector<DrmConnector *> connectors, const QVector<DrmCrtc *> &crtcs);
     DrmPipeline::Error testPipelines();
     QVector<DrmObject *> unusedObjects() const;
-
-    void handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseRequest);
-    void handleLeaseRevoked(KWaylandServer::DrmLeaseV1Interface *lease);
 
     static void pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, unsigned int usec, unsigned int crtc_id, void *user_data);
 
@@ -128,7 +143,6 @@ private:
 
     QVector<DrmOutput *> m_drmOutputs;
     QVector<DrmVirtualOutput *> m_virtualOutputs;
-    std::unique_ptr<KWaylandServer::DrmLeaseDeviceV1Interface> m_leaseDevice;
 
     std::unique_ptr<QSocketNotifier> m_socketNotifier;
     QSize m_cursorSize;

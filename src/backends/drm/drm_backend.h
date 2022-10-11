@@ -75,12 +75,16 @@ public:
     void releaseBuffers();
     void updateOutputs();
 
+    const std::vector<std::unique_ptr<DrmGpu>> &gpus() const;
+
 public Q_SLOTS:
     void turnOutputsOn();
     void sceneInitialized() override;
 
 Q_SIGNALS:
     void activeChanged();
+    void gpuAdded(DrmGpu *gpu);
+    void gpuRemoved(DrmGpu *gpu);
 
 protected:
     bool applyOutputChanges(const OutputConfiguration &config) override;

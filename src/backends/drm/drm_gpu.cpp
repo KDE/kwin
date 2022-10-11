@@ -24,8 +24,6 @@
 #include "drm_plane.h"
 #include "drm_virtual_output.h"
 #include "gbm_dmabuf.h"
-#include "wayland/drmleasedevice_v1_interface.h"
-#include "wayland_server.h"
 // system
 #include <algorithm>
 #include <errno.h>
@@ -85,30 +83,6 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
     connect(m_socketNotifier.get(), &QSocketNotifier::activated, this, &DrmGpu::dispatchEvents);
 
     initDrmResources();
-
-    m_leaseDevice = std::make_unique<KWaylandServer::DrmLeaseDeviceV1Interface>(waylandServer()->display(), [this] {
-        char *path = drmGetDeviceNameFromFd2(m_fd);
-        FileDescriptor fd{open(path, O_RDWR | O_CLOEXEC)};
-        if (!fd.isValid()) {
-            qCWarning(KWIN_DRM) << "Could not open DRM fd for leasing!" << strerror(errno);
-        } else {
-            if (drmIsMaster(fd.get())) {
-                if (drmDropMaster(fd.get()) != 0) {
-                    qCWarning(KWIN_DRM) << "Could not create a non-master DRM fd for leasing!" << strerror(errno);
-                    return FileDescriptor{};
-                }
-            }
-        }
-        return fd;
-    });
-    connect(m_leaseDevice.get(), &KWaylandServer::DrmLeaseDeviceV1Interface::leaseRequested, this, &DrmGpu::handleLeaseRequest);
-    connect(m_leaseDevice.get(), &KWaylandServer::DrmLeaseDeviceV1Interface::leaseRevoked, this, &DrmGpu::handleLeaseRevoked);
-    connect(m_platform, &DrmBackend::activeChanged, m_leaseDevice.get(), [this]() {
-        if (!m_platform->isActive()) {
-            // when we gain drm master we want to update outputs first and only then notify the lease device
-            m_leaseDevice->setDrmMaster(false);
-        }
-    });
 }
 
 DrmGpu::~DrmGpu()
@@ -120,12 +94,28 @@ DrmGpu::~DrmGpu()
     m_crtcs.clear();
     m_connectors.clear();
     m_planes.clear();
-    m_leaseDevice.reset();
     m_socketNotifier.reset();
     if (m_gbmDevice) {
         gbm_device_destroy(m_gbmDevice);
     }
     m_platform->session()->closeRestricted(m_fd);
+}
+
+FileDescriptor DrmGpu::createNonMasterFd() const
+{
+    char *path = drmGetDeviceNameFromFd2(m_fd);
+    FileDescriptor fd{open(path, O_RDWR | O_CLOEXEC)};
+    if (!fd.isValid()) {
+        qCWarning(KWIN_DRM) << "Could not open DRM fd for leasing!" << strerror(errno);
+    } else {
+        if (drmIsMaster(fd.get())) {
+            if (drmDropMaster(fd.get()) != 0) {
+                qCWarning(KWIN_DRM) << "Could not create a non-master DRM fd for leasing!" << strerror(errno);
+                return FileDescriptor{};
+            }
+        }
+    }
+    return fd;
 }
 
 clockid_t DrmGpu::presentationClock() const
@@ -227,7 +217,7 @@ bool DrmGpu::updateOutputs()
                 }
             }
             if (!leaseActive) {
-                output->lease()->revoke();
+                Q_EMIT output->lease()->revokeRequested();
             }
         }
     }
@@ -266,7 +256,7 @@ bool DrmGpu::updateOutputs()
             qCDebug(KWIN_DRM, "New %soutput on GPU %s: %s", conn->isNonDesktop() ? "non-desktop " : "", qPrintable(m_devNode), qPrintable(conn->modelName()));
             const auto pipeline = conn->pipeline();
             m_pipelines << pipeline;
-            auto output = new DrmOutput(pipeline, m_leaseDevice.get());
+            auto output = new DrmOutput(pipeline);
             m_drmOutputs << output;
             addedOutputs << output;
             Q_EMIT outputAdded(output);
@@ -324,10 +314,6 @@ bool DrmGpu::updateOutputs()
             output->pipeline()->applyPendingChanges();
         }
     }
-    m_leaseDevice->setDrmMaster(true);
-    // after (potential) lease offer changes, a done event needs to be sent
-    // to signal clients to handle the changes
-    m_leaseDevice->done();
     return true;
 }
 
@@ -604,22 +590,12 @@ void DrmGpu::removeVirtualOutput(DrmVirtualOutput *output)
     }
 }
 
-void DrmGpu::handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseRequest)
+std::unique_ptr<DrmLease> DrmGpu::leaseOutputs(const QVector<DrmOutput *> &outputs)
 {
     QVector<uint32_t> objects;
-    QVector<DrmOutput *> outputs;
-
-    const auto connectors = leaseRequest->connectors();
-    for (KWaylandServer::DrmLeaseConnectorV1Interface *connector : connectors) {
-        if (DrmOutput *output = findOutput(connector->id())) {
-            if (output->lease()) {
-                continue; // already leased
-            }
-            if (!output->addLeaseObjects(objects)) {
-                leaseRequest->deny();
-                return;
-            }
-            outputs << output;
+    for (DrmOutput *output : outputs) {
+        if (output->lease() || !output->addLeaseObjects(objects)) {
+            return nullptr;
         }
     }
 
@@ -631,29 +607,14 @@ void DrmGpu::handleLeaseRequest(KWaylandServer::DrmLeaseV1Interface *leaseReques
         for (const auto &res : qAsConst(objects)) {
             qCWarning(KWIN_DRM) << res;
         }
-        leaseRequest->deny();
+        return nullptr;
     } else {
         qCDebug(KWIN_DRM, "Created lease for %d resources:", objects.count());
         for (const auto &res : qAsConst(objects)) {
             qCDebug(KWIN_DRM) << res;
         }
-        leaseRequest->grant(std::move(fd), lesseeId);
-        for (const auto &output : qAsConst(outputs)) {
-            output->leased(leaseRequest);
-        }
+        return std::make_unique<DrmLease>(this, std::move(fd), lesseeId, outputs);
     }
-}
-
-void DrmGpu::handleLeaseRevoked(KWaylandServer::DrmLeaseV1Interface *lease)
-{
-    const auto connectors = lease->connectors();
-    for (KWaylandServer::DrmLeaseConnectorV1Interface *connector : connectors) {
-        if (DrmOutput *output = findOutput(connector->id())) {
-            output->leaseEnded();
-        }
-    }
-    qCDebug(KWIN_DRM, "Revoking lease with leaseID %d", lease->lesseeId());
-    drmModeRevokeLease(m_fd, lease->lesseeId());
 }
 
 QVector<DrmVirtualOutput *> DrmGpu::virtualOutputs() const
@@ -817,4 +778,33 @@ void DrmGpu::recreateSurfaces()
     }
 }
 
+DrmLease::DrmLease(DrmGpu *gpu, FileDescriptor &&fd, uint32_t lesseeId, const QVector<DrmOutput *> &outputs)
+    : m_gpu(gpu)
+    , m_fd(std::move(fd))
+    , m_lesseeId(lesseeId)
+    , m_outputs(outputs)
+{
+    for (const auto output : m_outputs) {
+        output->leased(this);
+    }
+}
+
+DrmLease::~DrmLease()
+{
+    qCDebug(KWIN_DRM, "Revoking lease with leaseID %d", m_lesseeId);
+    drmModeRevokeLease(m_gpu->fd(), m_lesseeId);
+    for (const auto &output : m_outputs) {
+        output->leaseEnded();
+    }
+}
+
+FileDescriptor &DrmLease::fd()
+{
+    return m_fd;
+}
+
+uint32_t DrmLease::lesseeId() const
+{
+    return m_lesseeId;
+}
 }

@@ -50,6 +50,7 @@ class KeyboardShortcutsInhibitManagerV1Interface;
 class XdgDecorationManagerV1Interface;
 class XWaylandKeyboardGrabManagerV1Interface;
 class ContentTypeManagerV1Interface;
+class DrmLeaseManagerV1;
 }
 
 namespace KWin
@@ -293,6 +294,7 @@ private:
     InitializationFlags m_initFlags;
     QHash<Output *, KWaylandServer::OutputInterface *> m_waylandOutputs;
     QHash<Output *, KWaylandServer::OutputDeviceV2Interface *> m_waylandOutputDevices;
+    KWaylandServer::DrmLeaseManagerV1 *m_leaseManager = nullptr;
     KWIN_SINGLETON(WaylandServer)
 };
 
