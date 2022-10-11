@@ -717,7 +717,7 @@ bool XdgToplevelWindow::isMaximizable() const
 
 bool XdgToplevelWindow::isMinimizable() const
 {
-    if (isSpecialWindow() && !isTransient()) {
+    if ((isSpecialWindow() && !isTransient()) || isAppletPopup()) {
         return false;
     }
     if (!rules()->checkMinimize(true)) {
