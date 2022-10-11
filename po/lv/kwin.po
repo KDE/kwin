@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-07 00:47+0000\n"
+"POT-Creation-Date: 2022-10-11 00:48+0000\n"
 "PO-Revision-Date: 2009-12-05 20:43+0200\n"
 "Last-Translator: Viesturs Zarins <viesturs.zarins@mii.lu.lv>\n"
 "Language-Team: Latvian <locale@laka.lv>\n"
@@ -1332,7 +1332,7 @@ msgstr ""
 msgid "Starts the session without global shortcuts support."
 msgstr ""
 
-#: main_wayland.cpp:408 main_x11.cpp:380
+#: main_wayland.cpp:408 main_x11.cpp:372
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr ""
@@ -1377,7 +1377,7 @@ msgstr ""
 "kwin: neizdevās iegūt logu pārvaldnieka statusu. Vai darbojas cits logu "
 "pārvaldnieks (mēģiniet darbināt ar --replace)\n"
 
-#: main_x11.cpp:373
+#: main_x11.cpp:365
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Aizvietot jau darbojošos ICCCM2.0 savietojamu logu pārvaldnieku"

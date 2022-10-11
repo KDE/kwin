@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-07 00:47+0000\n"
+"POT-Creation-Date: 2022-10-11 00:48+0000\n"
 "PO-Revision-Date: 2022-10-07 10:51+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -1344,7 +1344,7 @@ msgstr "Start de sessie zonder ondersteuning voor schermvergrendeling."
 msgid "Starts the session without global shortcuts support."
 msgstr "Start de sessie zonder ondersteuning voor globale sneltoetsen."
 
-#: main_wayland.cpp:408 main_x11.cpp:380
+#: main_wayland.cpp:408 main_x11.cpp:372
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Integratie met KActivities uitschakelen."
@@ -1387,7 +1387,7 @@ msgstr ""
 "kwin: er draait reeds een andere windowmanager (probeer --replace te "
 "gebruiken)\n"
 
-#: main_x11.cpp:373
+#: main_x11.cpp:365
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Reeds gestarte ICCCM2.0 compliant windowmanager vervangen"
