@@ -407,12 +407,12 @@ void TestWaylandSeat::testPointer()
 
     // test axis
     m_seatInterface->setTimestamp(2);
-    m_seatInterface->notifyPointerAxis(Qt::Horizontal, 10, 1, PointerAxisSource::Wheel);
+    m_seatInterface->notifyPointerAxis(Qt::Horizontal, 10, 120, PointerAxisSource::Wheel);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(axisSpy.wait());
     QCOMPARE(frameSpy.count(), 6);
     m_seatInterface->setTimestamp(3);
-    m_seatInterface->notifyPointerAxis(Qt::Vertical, 20, 2, PointerAxisSource::Wheel);
+    m_seatInterface->notifyPointerAxis(Qt::Vertical, 20, 240, PointerAxisSource::Wheel);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(axisSpy.wait());
     QCOMPARE(frameSpy.count(), 7);
@@ -1196,7 +1196,7 @@ void TestWaylandSeat::testPointerAxis()
 
     quint32 timestamp = 1;
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerAxis(Qt::Vertical, 10, 1, PointerAxisSource::Wheel);
+    m_seatInterface->notifyPointerAxis(Qt::Vertical, 10, 120, PointerAxisSource::Wheel);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(frameSpy.wait());
     QCOMPARE(frameSpy.count(), 2);
@@ -1242,7 +1242,7 @@ void TestWaylandSeat::testPointerAxis()
 
     // if the device is unknown, no axis_source event should be sent
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerAxis(Qt::Horizontal, 42, 1, PointerAxisSource::Unknown);
+    m_seatInterface->notifyPointerAxis(Qt::Horizontal, 42, 120, PointerAxisSource::Unknown);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(frameSpy.wait());
     QCOMPARE(frameSpy.count(), 5);

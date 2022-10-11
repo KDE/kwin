@@ -300,12 +300,42 @@ void Connection::processEvents()
             Q_EMIT ke->device()->keyChanged(ke->key(), ke->state(), ke->time(), ke->device());
             break;
         }
-        case LIBINPUT_EVENT_POINTER_AXIS: {
-            PointerEvent *pe = static_cast<PointerEvent *>(event.get());
-            const auto axes = pe->axis();
+        case LIBINPUT_EVENT_POINTER_SCROLL_WHEEL: {
+            const PointerEvent *pointerEvent = static_cast<PointerEvent *>(event.get());
+            const auto axes = pointerEvent->axis();
             for (const InputRedirection::PointerAxis &axis : axes) {
-                Q_EMIT pe->device()->pointerAxisChanged(axis, pe->axisValue(axis), pe->discreteAxisValue(axis),
-                                                        pe->axisSource(), pe->time(), pe->device());
+                Q_EMIT pointerEvent->device()->pointerAxisChanged(axis,
+                                                                  pointerEvent->scrollValue(axis),
+                                                                  pointerEvent->scrollValueV120(axis),
+                                                                  InputRedirection::PointerAxisSourceWheel,
+                                                                  pointerEvent->time(),
+                                                                  pointerEvent->device());
+            }
+            break;
+        }
+        case LIBINPUT_EVENT_POINTER_SCROLL_FINGER: {
+            const PointerEvent *pointerEvent = static_cast<PointerEvent *>(event.get());
+            const auto axes = pointerEvent->axis();
+            for (const InputRedirection::PointerAxis &axis : axes) {
+                Q_EMIT pointerEvent->device()->pointerAxisChanged(axis,
+                                                                  pointerEvent->scrollValue(axis),
+                                                                  0,
+                                                                  InputRedirection::PointerAxisSourceFinger,
+                                                                  pointerEvent->time(),
+                                                                  pointerEvent->device());
+            }
+            break;
+        }
+        case LIBINPUT_EVENT_POINTER_SCROLL_CONTINUOUS: {
+            const PointerEvent *pointerEvent = static_cast<PointerEvent *>(event.get());
+            const auto axes = pointerEvent->axis();
+            for (const InputRedirection::PointerAxis &axis : axes) {
+                Q_EMIT pointerEvent->device()->pointerAxisChanged(axis,
+                                                                  pointerEvent->scrollValue(axis),
+                                                                  0,
+                                                                  InputRedirection::PointerAxisSourceContinuous,
+                                                                  pointerEvent->time(),
+                                                                  pointerEvent->device());
             }
             break;
         }

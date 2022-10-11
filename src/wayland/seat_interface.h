@@ -374,10 +374,10 @@ public:
      *
      * @param orientation The scroll axis.
      * @param delta The length of a vector along the specified axis @p orientation.
-     * @param discreteDelta The number of discrete steps, e.g. mouse wheel clicks.
+     * @param deltaV120 The high-resolution scrolling axis value.
      * @param source Describes how the axis event was physically generated.
      */
-    void notifyPointerAxis(Qt::Orientation orientation, qreal delta, qint32 discreteDelta, PointerAxisSource source);
+    void notifyPointerAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source);
     /**
      * @returns true if there is a pressed button with the given @p serial
      */

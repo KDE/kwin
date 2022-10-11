@@ -414,7 +414,9 @@ struct libinput_event_pointer *libinput_event_get_pointer_event(struct libinput_
     case LIBINPUT_EVENT_POINTER_MOTION:
     case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE:
     case LIBINPUT_EVENT_POINTER_BUTTON:
-    case LIBINPUT_EVENT_POINTER_AXIS:
+    case LIBINPUT_EVENT_POINTER_SCROLL_WHEEL:
+    case LIBINPUT_EVENT_POINTER_SCROLL_FINGER:
+    case LIBINPUT_EVENT_POINTER_SCROLL_CONTINUOUS:
         return reinterpret_cast<libinput_event_pointer *>(event);
     default:
         return nullptr;
@@ -595,27 +597,22 @@ int libinput_event_pointer_has_axis(struct libinput_event_pointer *event, enum l
     }
 }
 
-double libinput_event_pointer_get_axis_value(struct libinput_event_pointer *event, enum libinput_pointer_axis axis)
+double libinput_event_pointer_get_scroll_value(struct libinput_event_pointer *event, enum libinput_pointer_axis axis)
 {
     if (axis == LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL) {
-        return event->verticalAxisValue;
+        return event->verticalScrollValue;
     } else {
-        return event->horizontalAxisValue;
+        return event->horizontalScrollValue;
     }
 }
 
-double libinput_event_pointer_get_axis_value_discrete(struct libinput_event_pointer *event, enum libinput_pointer_axis axis)
+double libinput_event_pointer_get_scroll_value_v120(struct libinput_event_pointer *event, enum libinput_pointer_axis axis)
 {
     if (axis == LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL) {
-        return event->verticalDiscreteAxisValue;
+        return event->verticalScrollValueV120;
     } else {
-        return event->horizontalDiscreteAxisValue;
+        return event->horizontalScrollValueV120;
     }
-}
-
-enum libinput_pointer_axis_source libinput_event_pointer_get_axis_source(struct libinput_event_pointer *event)
-{
-    return event->axisSource;
 }
 
 uint32_t libinput_event_touch_get_time(struct libinput_event_touch *event)
