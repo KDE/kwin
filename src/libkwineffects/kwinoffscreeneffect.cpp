@@ -280,16 +280,21 @@ void CrossFadeEffect::drawWindow(EffectWindow *window, int mask, const QRegion &
 {
     Q_UNUSED(mask)
 
+    CrossFadeWindowData *offscreenData = d->windows.value(window);
+
     // paint the new window (if applicable) underneath
-    Effect::drawWindow(window, mask, region, data);
+    if (data.crossFadeProgress() > 0 || !offscreenData) {
+        Effect::drawWindow(window, mask, region, data);
+    }
+
+    if (!offscreenData) {
+        return;
+    }
 
     // paint old snapshot on top
     WindowPaintData previousWindowData = data;
     previousWindowData.setOpacity((1.0 - data.crossFadeProgress()) * data.opacity());
-    CrossFadeWindowData *offscreenData = d->windows[window];
-    if (!offscreenData) {
-        return;
-    }
+
     const QRectF expandedGeometry = window->expandedGeometry();
     const QRectF frameGeometry = window->frameGeometry();
 
