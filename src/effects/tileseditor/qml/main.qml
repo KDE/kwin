@@ -130,7 +130,7 @@ FocusScope {
 
     TileDelegate {
         tile: KWinComponents.Workspace.tilingForScreen(root.targetScreen.name).rootTile
-        visible: tilesRepeater.count === 0
+        visible: tilesRepeater.count === 0 || tile.layoutDirection === KWinComponents.Tile.Floating
     }
     Item {
         anchors.fill: parent
