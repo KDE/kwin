@@ -299,7 +299,7 @@ private:
     QList<Window *> m_windows;
     InitializationFlags m_initFlags;
     QHash<Output *, KWaylandServer::OutputInterface *> m_waylandOutputs;
-    QHash<Output *, KWaylandServer::OutputDeviceV2Interface *> m_waylandOutputDevices;
+    std::map<Output *, std::unique_ptr<KWaylandServer::OutputDeviceV2Interface>> m_waylandOutputDevices;
     KWaylandServer::DrmLeaseManagerV1 *m_leaseManager = nullptr;
     KWaylandServer::OutputOrderV1Interface *m_outputOrder = nullptr;
     KWIN_SINGLETON(WaylandServer)

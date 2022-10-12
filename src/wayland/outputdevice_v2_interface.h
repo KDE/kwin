@@ -46,8 +46,6 @@ public:
     explicit OutputDeviceV2Interface(Display *display, KWin::Output *handle, QObject *parent = nullptr);
     ~OutputDeviceV2Interface() override;
 
-    void remove();
-
     KWin::Output *handle() const;
 
     static OutputDeviceV2Interface *get(wl_resource *native);
@@ -74,7 +72,7 @@ private:
     void updateRgbRange();
     void updateGeometry();
 
-    std::unique_ptr<OutputDeviceV2InterfacePrivate> d;
+    OutputDeviceV2InterfacePrivate *const d;
 };
 
 /**

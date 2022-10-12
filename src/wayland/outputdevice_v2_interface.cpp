@@ -65,7 +65,6 @@ class OutputDeviceV2InterfacePrivate : public QtWaylandServer::kde_output_device
 {
 public:
     OutputDeviceV2InterfacePrivate(OutputDeviceV2Interface *q, Display *display, KWin::Output *handle);
-    ~OutputDeviceV2InterfacePrivate() override;
 
     void sendGeometry(Resource *resource);
     wl_resource *sendNewMode(Resource *resource, OutputDeviceModeV2Interface *mode);
@@ -96,7 +95,7 @@ public:
     QString m_name;
     subpixel m_subPixel = subpixel_unknown;
     transform m_transform = transform_normal;
-    QList<OutputDeviceModeV2Interface *> m_modes;
+    std::vector<std::unique_ptr<OutputDeviceModeV2Interface>> m_modes;
     OutputDeviceModeV2Interface *m_currentMode = nullptr;
     QByteArray m_edid;
     bool m_enabled = true;
@@ -152,14 +151,6 @@ OutputDeviceV2InterfacePrivate::OutputDeviceV2InterfacePrivate(OutputDeviceV2Int
     displayPrivate->outputdevicesV2.append(q);
 }
 
-OutputDeviceV2InterfacePrivate::~OutputDeviceV2InterfacePrivate()
-{
-    if (m_display) {
-        DisplayPrivate *displayPrivate = DisplayPrivate::get(m_display);
-        displayPrivate->outputdevicesV2.removeOne(q);
-    }
-}
-
 OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, KWin::Output *handle, QObject *parent)
     : QObject(parent)
     , d(new OutputDeviceV2InterfacePrivate(this, display, handle))
@@ -207,21 +198,12 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, KWin::Output 
 
 OutputDeviceV2Interface::~OutputDeviceV2Interface()
 {
-    d->globalRemove();
-}
-
-void OutputDeviceV2Interface::remove()
-{
-    if (d->isGlobalRemoved()) {
-        return;
-    }
-
     if (d->m_display) {
         DisplayPrivate *displayPrivate = DisplayPrivate::get(d->m_display);
         displayPrivate->outputdevicesV2.removeOne(this);
     }
-
     d->globalRemove();
+    d->q = nullptr;
 }
 
 KWin::Output *OutputDeviceV2Interface::handle() const
@@ -231,7 +213,7 @@ KWin::Output *OutputDeviceV2Interface::handle() const
 
 void OutputDeviceV2InterfacePrivate::kde_output_device_v2_destroy_global()
 {
-    delete q;
+    delete this;
 }
 
 void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource *resource)
@@ -242,8 +224,8 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendName(resource);
     sendSerialNumber(resource);
 
-    for (OutputDeviceModeV2Interface *mode : std::as_const(m_modes)) {
-        sendNewMode(resource, mode);
+    for (const auto &mode : m_modes) {
+        sendNewMode(resource, mode.get());
     }
     sendCurrentMode(resource);
     sendUuid(resource);
@@ -433,7 +415,7 @@ void OutputDeviceV2Interface::updateScale()
 
 void OutputDeviceV2Interface::updateModes()
 {
-    const auto oldModes = d->m_modes;
+    std::vector<std::unique_ptr<OutputDeviceModeV2Interface>> oldModes = std::move(d->m_modes);
     d->m_modes.clear();
     d->m_currentMode = nullptr;
 
@@ -441,8 +423,8 @@ void OutputDeviceV2Interface::updateModes()
     const auto nativeModes = d->m_handle->modes();
 
     for (const std::shared_ptr<OutputMode> &mode : nativeModes) {
-        OutputDeviceModeV2Interface *deviceMode = new OutputDeviceModeV2Interface(mode, this);
-        d->m_modes.append(deviceMode);
+        d->m_modes.push_back(std::make_unique<OutputDeviceModeV2Interface>(mode));
+        OutputDeviceModeV2Interface *deviceMode = d->m_modes.back().get();
 
         if (d->m_handle->currentMode() == mode) {
             d->m_currentMode = deviceMode;
@@ -457,7 +439,7 @@ void OutputDeviceV2Interface::updateModes()
         d->sendCurrentMode(resource);
     }
 
-    qDeleteAll(oldModes.crbegin(), oldModes.crend());
+    oldModes.clear();
 
     for (auto resource : clientResources) {
         d->sendDone(resource);
@@ -466,10 +448,10 @@ void OutputDeviceV2Interface::updateModes()
 
 void OutputDeviceV2Interface::updateCurrentMode()
 {
-    for (OutputDeviceModeV2Interface *mode : std::as_const(d->m_modes)) {
+    for (const auto &mode : d->m_modes) {
         if (mode->handle().lock() == d->m_handle->currentMode()) {
-            if (d->m_currentMode != mode) {
-                d->m_currentMode = mode;
+            if (d->m_currentMode != mode.get()) {
+                d->m_currentMode = mode.get();
                 const auto clientResources = d->resourceMap();
                 for (auto resource : clientResources) {
                     d->sendCurrentMode(resource);
