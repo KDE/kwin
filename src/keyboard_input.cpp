@@ -156,6 +156,9 @@ void KeyboardInputRedirection::init()
 
 void KeyboardInputRedirection::reconfigure()
 {
+    if (!m_inited) {
+        return;
+    }
     if (waylandServer()->seat()->keyboard()) {
         const auto config = InputConfig::self()->inputConfig()->group(QStringLiteral("Keyboard"));
         const int delay = config.readEntry("RepeatDelay", 660);
