@@ -119,8 +119,7 @@ private:
                                    quint32 hsl,
                                    quint32 hih,
                                    quint32 hil,
-                                   const QVector<Capability> &capability,
-                                   QObject *parent);
+                                   const QVector<Capability> &capability);
     std::unique_ptr<TabletToolV2InterfacePrivate> d;
 };
 
