@@ -441,7 +441,7 @@ void SceneOpenGL::render(Item *item, int mask, const QRegion &region, const Wind
 
     ShaderTraits shaderTraits = ShaderTrait::MapTexture;
 
-    if (data.brightness() != 1.0 || data.crossFadeProgress() != 1.0) {
+    if (data.brightness() != 1.0) {
         shaderTraits |= ShaderTrait::Modulate;
     }
     if (data.saturation() != 1.0) {
