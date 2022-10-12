@@ -27,7 +27,7 @@ class KWIN_EXPORT PlasmaVirtualDesktopManagementInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit PlasmaVirtualDesktopManagementInterface(Display *display, QObject *parent = nullptr);
+    explicit PlasmaVirtualDesktopManagementInterface(Display *display);
     ~PlasmaVirtualDesktopManagementInterface() override;
 
     /**

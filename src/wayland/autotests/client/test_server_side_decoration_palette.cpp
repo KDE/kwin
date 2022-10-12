@@ -34,8 +34,8 @@ private Q_SLOTS:
 
 private:
     std::unique_ptr<KWaylandServer::Display> m_display;
-    KWaylandServer::CompositorInterface *m_compositorInterface;
-    KWaylandServer::ServerSideDecorationPaletteManagerInterface *m_paletteManagerInterface;
+    std::unique_ptr<KWaylandServer::CompositorInterface> m_compositorInterface;
+    std::unique_ptr<KWaylandServer::ServerSideDecorationPaletteManagerInterface> m_paletteManagerInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::ServerSideDecorationPaletteManager *m_paletteManager;
@@ -48,8 +48,6 @@ static const QString s_socketName = QStringLiteral("kwayland-test-wayland-decopa
 TestServerSideDecorationPalette::TestServerSideDecorationPalette(QObject *parent)
     : QObject(parent)
     , m_display(nullptr)
-    , m_compositorInterface(nullptr)
-    , m_connection(nullptr)
     , m_compositor(nullptr)
     , m_queue(nullptr)
     , m_thread(nullptr)
@@ -93,11 +91,11 @@ void TestServerSideDecorationPalette::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
+    m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_paletteManagerInterface = new ServerSideDecorationPaletteManagerInterface(m_display.get(), m_display.get());
+    m_paletteManagerInterface = std::make_unique<ServerSideDecorationPaletteManagerInterface>(m_display.get());
 
     QVERIFY(registrySpy.wait());
     m_paletteManager =
@@ -124,21 +122,21 @@ void TestServerSideDecorationPalette::cleanup()
         delete m_thread;
         m_thread = nullptr;
     }
-    CLEANUP(m_compositorInterface)
-    CLEANUP(m_paletteManagerInterface)
+    m_compositorInterface.reset();
 #undef CLEANUP
+    m_paletteManagerInterface.reset();
     m_display.reset();
 }
 
 void TestServerSideDecorationPalette::testCreateAndSet()
 {
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreated(m_compositorInterface.get(), &KWaylandServer::CompositorInterface::surfaceCreated);
 
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
     auto serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
-    QSignalSpy paletteCreatedSpy(m_paletteManagerInterface, &KWaylandServer::ServerSideDecorationPaletteManagerInterface::paletteCreated);
+    QSignalSpy paletteCreatedSpy(m_paletteManagerInterface.get(), &KWaylandServer::ServerSideDecorationPaletteManagerInterface::paletteCreated);
 
     QVERIFY(!m_paletteManagerInterface->paletteForSurface(serverSurface));
 

@@ -44,9 +44,9 @@ private Q_SLOTS:
 
 private:
     std::unique_ptr<KWaylandServer::Display> m_display;
-    KWaylandServer::CompositorInterface *m_compositorInterface;
-    KWaylandServer::PlasmaVirtualDesktopManagementInterface *m_plasmaVirtualDesktopManagementInterface;
-    KWaylandServer::PlasmaWindowManagementInterface *m_windowManagementInterface;
+    std::unique_ptr<KWaylandServer::CompositorInterface> m_compositorInterface;
+    std::unique_ptr<KWaylandServer::PlasmaVirtualDesktopManagementInterface> m_plasmaVirtualDesktopManagementInterface;
+    std::unique_ptr<KWaylandServer::PlasmaWindowManagementInterface> m_windowManagementInterface;
     KWaylandServer::PlasmaWindowInterface *m_windowInterface;
 
     KWayland::Client::ConnectionThread *m_connection;
@@ -64,8 +64,6 @@ static const QString s_socketName = QStringLiteral("kwayland-test-wayland-virtua
 TestVirtualDesktop::TestVirtualDesktop(QObject *parent)
     : QObject(parent)
     , m_display(nullptr)
-    , m_compositorInterface(nullptr)
-    , m_connection(nullptr)
     , m_compositor(nullptr)
     , m_queue(nullptr)
     , m_thread(nullptr)
@@ -111,19 +109,19 @@ void TestVirtualDesktop::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
+    m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_plasmaVirtualDesktopManagementInterface = new PlasmaVirtualDesktopManagementInterface(m_display.get(), m_display.get());
+    m_plasmaVirtualDesktopManagementInterface = std::make_unique<PlasmaVirtualDesktopManagementInterface>(m_display.get());
 
     QVERIFY(plasmaVirtualDesktopManagementSpy.wait());
     m_plasmaVirtualDesktopManagement = registry.createPlasmaVirtualDesktopManagement(plasmaVirtualDesktopManagementSpy.first().first().value<quint32>(),
                                                                                      plasmaVirtualDesktopManagementSpy.first().last().value<quint32>(),
                                                                                      this);
 
-    m_windowManagementInterface = new PlasmaWindowManagementInterface(m_display.get(), m_display.get());
-    m_windowManagementInterface->setPlasmaVirtualDesktopManagementInterface(m_plasmaVirtualDesktopManagementInterface);
+    m_windowManagementInterface = std::make_unique<PlasmaWindowManagementInterface>(m_display.get());
+    m_windowManagementInterface->setPlasmaVirtualDesktopManagementInterface(m_plasmaVirtualDesktopManagementInterface.get());
 
     QVERIFY(windowManagementSpy.wait());
     m_windowManagement =
@@ -159,10 +157,10 @@ void TestVirtualDesktop::cleanup()
         delete m_thread;
         m_thread = nullptr;
     }
-    CLEANUP(m_compositorInterface)
-    CLEANUP(m_plasmaVirtualDesktopManagementInterface)
-    CLEANUP(m_windowManagementInterface)
+    m_compositorInterface.reset();
 #undef CLEANUP
+    m_plasmaVirtualDesktopManagementInterface.reset();
+    m_windowManagementInterface.reset();
     m_display.reset();
 }
 
@@ -468,7 +466,7 @@ void TestVirtualDesktop::testCreateRequested()
     // rebuild some desktops
     testCreate();
 
-    QSignalSpy desktopCreateRequestedSpy(m_plasmaVirtualDesktopManagementInterface,
+    QSignalSpy desktopCreateRequestedSpy(m_plasmaVirtualDesktopManagementInterface.get(),
                                          &KWaylandServer::PlasmaVirtualDesktopManagementInterface::desktopCreateRequested);
     QSignalSpy desktopCreatedSpy(m_plasmaVirtualDesktopManagement, &PlasmaVirtualDesktopManagement::desktopCreated);
 
@@ -506,7 +504,7 @@ void TestVirtualDesktop::testRemoveRequested()
     // rebuild some desktops
     testCreate();
 
-    QSignalSpy desktopRemoveRequestedSpy(m_plasmaVirtualDesktopManagementInterface,
+    QSignalSpy desktopRemoveRequestedSpy(m_plasmaVirtualDesktopManagementInterface.get(),
                                          &KWaylandServer::PlasmaVirtualDesktopManagementInterface::desktopRemoveRequested);
 
     // request a remove, just check the request arrived, ignore the request.

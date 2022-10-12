@@ -43,7 +43,7 @@ class KWIN_EXPORT InputMethodV1Interface : public QObject
 {
     Q_OBJECT
 public:
-    InputMethodV1Interface(Display *d, QObject *parent);
+    InputMethodV1Interface(Display *d);
     ~InputMethodV1Interface() override;
 
     /**
@@ -110,7 +110,7 @@ class KWIN_EXPORT InputPanelV1Interface : public QObject
 {
     Q_OBJECT
 public:
-    InputPanelV1Interface(Display *display, QObject *parent);
+    InputPanelV1Interface(Display *display);
     ~InputPanelV1Interface() override;
 
 Q_SIGNALS:

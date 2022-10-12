@@ -28,7 +28,7 @@ class KWIN_EXPORT ServerSideDecorationManagerInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit ServerSideDecorationManagerInterface(Display *display, QObject *parent = nullptr);
+    explicit ServerSideDecorationManagerInterface(Display *display);
     ~ServerSideDecorationManagerInterface() override;
 
     /**

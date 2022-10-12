@@ -45,9 +45,9 @@ private Q_SLOTS:
 
 private:
     std::unique_ptr<KWaylandServer::Display> m_display;
-    CompositorInterface *m_compositorInterface = nullptr;
-    SeatInterface *m_seatInterface = nullptr;
-    PointerConstraintsV1Interface *m_pointerConstraintsInterface = nullptr;
+    std::unique_ptr<CompositorInterface> m_compositorInterface;
+    std::unique_ptr<SeatInterface> m_seatInterface;
+    std::unique_ptr<PointerConstraintsV1Interface> m_pointerConstraintsInterface;
     ConnectionThread *m_connection = nullptr;
     QThread *m_thread = nullptr;
     EventQueue *m_queue = nullptr;
@@ -66,10 +66,10 @@ void TestPointerConstraints::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
     m_display->createShm();
-    m_seatInterface = new SeatInterface(m_display.get(), m_display.get());
+    m_seatInterface = std::make_unique<SeatInterface>(m_display.get());
     m_seatInterface->setHasPointer(true);
-    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
-    m_pointerConstraintsInterface = new PointerConstraintsV1Interface(m_display.get(), m_display.get());
+    m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
+    m_pointerConstraintsInterface = std::make_unique<PointerConstraintsV1Interface>(m_display.get());
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -140,10 +140,6 @@ void TestPointerConstraints::cleanup()
 #undef CLEANUP
 
     m_display.reset();
-    // these are the children of the display
-    m_compositorInterface = nullptr;
-    m_seatInterface = nullptr;
-    m_pointerConstraintsInterface = nullptr;
 }
 
 void TestPointerConstraints::testLockPointer_data()
@@ -161,7 +157,7 @@ void TestPointerConstraints::testLockPointer()
 {
     // this test verifies the basic interaction for lock pointer
     // first create a surface
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
     std::unique_ptr<Surface> surface(m_compositor->createSurface());
     QVERIFY(surface->isValid());
     QVERIFY(surfaceCreatedSpy.wait());
@@ -270,7 +266,7 @@ void TestPointerConstraints::testConfinePointer()
 {
     // this test verifies the basic interaction for confined pointer
     // first create a surface
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
     std::unique_ptr<Surface> surface(m_compositor->createSurface());
     QVERIFY(surface->isValid());
     QVERIFY(surfaceCreatedSpy.wait());

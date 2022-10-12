@@ -21,7 +21,7 @@ class KWIN_EXPORT PrimaryOutputV1Interface : public QObject
     Q_OBJECT
 
 public:
-    explicit PrimaryOutputV1Interface(Display *display, QObject *parent = nullptr);
+    explicit PrimaryOutputV1Interface(Display *display);
     ~PrimaryOutputV1Interface() override;
 
     /**

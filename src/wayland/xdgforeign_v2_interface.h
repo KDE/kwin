@@ -28,7 +28,7 @@ class KWIN_EXPORT XdgForeignV2Interface : public QObject
 {
     Q_OBJECT
 public:
-    XdgForeignV2Interface(Display *display, QObject *parent = nullptr);
+    XdgForeignV2Interface(Display *display);
     ~XdgForeignV2Interface() override;
 
     /**

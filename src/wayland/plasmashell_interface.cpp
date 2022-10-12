@@ -63,9 +63,8 @@ private:
     void org_kde_plasma_surface_open_under_cursor(Resource *resource) override;
 };
 
-PlasmaShellInterface::PlasmaShellInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new PlasmaShellInterfacePrivate(this, display))
+PlasmaShellInterface::PlasmaShellInterface(Display *display)
+    : d(new PlasmaShellInterfacePrivate(this, display))
 {
 }
 

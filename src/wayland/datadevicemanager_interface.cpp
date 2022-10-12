@@ -65,9 +65,8 @@ void DataDeviceManagerInterfacePrivate::data_device_manager_get_data_device(Reso
     Q_EMIT q->dataDeviceCreated(dataDevice);
 }
 
-DataDeviceManagerInterface::DataDeviceManagerInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new DataDeviceManagerInterfacePrivate(this, display))
+DataDeviceManagerInterface::DataDeviceManagerInterface(Display *display)
+    : d(new DataDeviceManagerInterfacePrivate(this, display))
 {
 }
 

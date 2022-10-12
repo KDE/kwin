@@ -132,9 +132,8 @@ void LayerShellV1InterfacePrivate::zwlr_layer_shell_v1_destroy(Resource *resourc
     wl_resource_destroy(resource->handle);
 }
 
-LayerShellV1Interface::LayerShellV1Interface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new LayerShellV1InterfacePrivate(this, display))
+LayerShellV1Interface::LayerShellV1Interface(Display *display)
+    : d(new LayerShellV1InterfacePrivate(this, display))
 {
 }
 

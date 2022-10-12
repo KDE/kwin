@@ -51,8 +51,7 @@ static const QString windowDesktopFileName(Window *window)
     return ret;
 }
 
-XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface *activation, QObject *parent)
-    : QObject(parent)
+XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface *activation)
 {
     Workspace *ws = Workspace::self();
     connect(ws, &Workspace::windowActivated, this, [this](Window *window) {

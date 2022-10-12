@@ -33,9 +33,9 @@ private Q_SLOTS:
 
 private:
     std::unique_ptr<KWaylandServer::Display> m_display;
-    KWaylandServer::CompositorInterface *m_compositorInterface = nullptr;
-    KWaylandServer::XdgShellInterface *m_xdgShellInterface = nullptr;
-    KWaylandServer::XdgDecorationManagerV1Interface *m_xdgDecorationManagerInterface = nullptr;
+    std::unique_ptr<KWaylandServer::CompositorInterface> m_compositorInterface;
+    std::unique_ptr<KWaylandServer::XdgShellInterface> m_xdgShellInterface;
+    std::unique_ptr<KWaylandServer::XdgDecorationManagerV1Interface> m_xdgDecorationManagerInterface;
 
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
@@ -96,15 +96,15 @@ void TestXdgDecoration::init()
     QVERIFY(m_registry->isValid());
     m_registry->setup();
 
-    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
+    m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
     QVERIFY(compositorSpy.wait());
     m_compositor = m_registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_xdgShellInterface = new XdgShellInterface(m_display.get(), m_display.get());
+    m_xdgShellInterface = std::make_unique<XdgShellInterface>(m_display.get());
     QVERIFY(xdgShellSpy.wait());
     m_xdgShell = m_registry->createXdgShell(xdgShellSpy.first().first().value<quint32>(), xdgShellSpy.first().last().value<quint32>(), this);
 
-    m_xdgDecorationManagerInterface = new XdgDecorationManagerV1Interface(m_display.get(), m_display.get());
+    m_xdgDecorationManagerInterface = std::make_unique<XdgDecorationManagerV1Interface>(m_display.get());
 
     QVERIFY(xdgDecorationManagerSpy.wait());
     m_xdgDecorationManager = m_registry->createXdgDecorationManager(xdgDecorationManagerSpy.first().first().value<quint32>(),
@@ -176,9 +176,9 @@ void TestXdgDecoration::testDecoration()
     QFETCH(KWayland::Client::XdgDecoration::Mode, setMode);
     QFETCH(KWaylandServer::XdgToplevelDecorationV1Interface::Mode, setModeExp);
 
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    QSignalSpy shellSurfaceCreatedSpy(m_xdgShellInterface, &XdgShellInterface::toplevelCreated);
-    QSignalSpy decorationCreatedSpy(m_xdgDecorationManagerInterface, &XdgDecorationManagerV1Interface::decorationCreated);
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
+    QSignalSpy shellSurfaceCreatedSpy(m_xdgShellInterface.get(), &XdgShellInterface::toplevelCreated);
+    QSignalSpy decorationCreatedSpy(m_xdgDecorationManagerInterface.get(), &XdgDecorationManagerV1Interface::decorationCreated);
 
     // create shell surface and deco object
     std::unique_ptr<Surface> surface(m_compositor->createSurface());

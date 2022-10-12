@@ -21,7 +21,7 @@ class IdleInhibition : public QObject
 {
     Q_OBJECT
 public:
-    explicit IdleInhibition(QObject *parent = nullptr);
+    explicit IdleInhibition();
     ~IdleInhibition() override;
 
     void registerClient(Window *client);

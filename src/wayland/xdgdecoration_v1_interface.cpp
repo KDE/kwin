@@ -48,9 +48,8 @@ void XdgDecorationManagerV1InterfacePrivate::zxdg_decoration_manager_v1_get_topl
     Q_EMIT q->decorationCreated(decoration);
 }
 
-XdgDecorationManagerV1Interface::XdgDecorationManagerV1Interface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new XdgDecorationManagerV1InterfacePrivate(this))
+XdgDecorationManagerV1Interface::XdgDecorationManagerV1Interface(Display *display)
+    : d(new XdgDecorationManagerV1InterfacePrivate(this))
 {
     d->init(*display, 1);
 }

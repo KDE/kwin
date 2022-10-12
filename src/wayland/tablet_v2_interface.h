@@ -45,7 +45,7 @@ class KWIN_EXPORT TabletManagerV2Interface : public QObject
 {
     Q_OBJECT
 public:
-    explicit TabletManagerV2Interface(Display *d, QObject *parent);
+    explicit TabletManagerV2Interface(Display *d);
     virtual ~TabletManagerV2Interface();
 
     TabletSeatV2Interface *seat(SeatInterface *seat) const;

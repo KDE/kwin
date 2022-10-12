@@ -113,11 +113,11 @@ private:
     KWayland::Client::Compositor *m_clientCompositor;
     KWayland::Client::Seat *m_clientSeat = nullptr;
 
-    SeatInterface *m_seat;
+    std::unique_ptr<SeatInterface> m_seat;
     QThread *m_thread;
     KWaylandServer::Display m_display;
     TextInputV3 *m_clientTextInputV3;
-    CompositorInterface *m_serverCompositor;
+    std::unique_ptr<CompositorInterface> m_serverCompositor;
     TextInputV3Interface *m_serverTextInputV3;
     TextInputManagerV3 *m_clientTextInputManagerV3;
 
@@ -132,10 +132,10 @@ void TestTextInputV3Interface::initTestCase()
     m_display.start();
     QVERIFY(m_display.isRunning());
 
-    m_seat = new SeatInterface(&m_display, this);
+    m_seat = std::make_unique<SeatInterface>(&m_display);
     m_seat->setHasKeyboard(true);
 
-    m_serverCompositor = new CompositorInterface(&m_display, this);
+    m_serverCompositor = std::make_unique<CompositorInterface>(&m_display);
     new TextInputManagerV3Interface(&m_display);
 
     m_connection = new KWayland::Client::ConnectionThread;
@@ -212,7 +212,7 @@ TestTextInputV3Interface::~TestTextInputV3Interface()
 void TestTextInputV3Interface::testEnableDisable()
 {
     // create a surface
-    QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor.get(), &CompositorInterface::surfaceCreated);
     std::unique_ptr<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
     QVERIFY(serverSurfaceCreatedSpy.wait());
     SurfaceInterface *serverSurface = serverSurfaceCreatedSpy.first().first().value<SurfaceInterface *>();
@@ -221,7 +221,7 @@ void TestTextInputV3Interface::testEnableDisable()
     m_serverTextInputV3 = m_seat->textInputV3();
     QVERIFY(m_serverTextInputV3);
 
-    QSignalSpy focusedSurfaceChangedSpy(m_seat, &SeatInterface::focusedTextInputSurfaceChanged);
+    QSignalSpy focusedSurfaceChangedSpy(m_seat.get(), &SeatInterface::focusedTextInputSurfaceChanged);
     QSignalSpy textInputEnabledSpy(m_serverTextInputV3, &TextInputV3Interface::enabledChanged);
     QSignalSpy cursorRectangleChangedSpy(m_serverTextInputV3, &TextInputV3Interface::cursorRectangleChanged);
 
@@ -277,7 +277,7 @@ void TestTextInputV3Interface::testEnableDisable()
 void TestTextInputV3Interface::testEvents()
 {
     // create a surface
-    QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor.get(), &CompositorInterface::surfaceCreated);
     std::unique_ptr<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
     QVERIFY(serverSurfaceCreatedSpy.wait());
     SurfaceInterface *serverSurface = serverSurfaceCreatedSpy.first().first().value<SurfaceInterface *>();
@@ -286,7 +286,7 @@ void TestTextInputV3Interface::testEvents()
     m_serverTextInputV3 = m_seat->textInputV3();
     QVERIFY(m_serverTextInputV3);
 
-    QSignalSpy focusedSurfaceChangedSpy(m_seat, &SeatInterface::focusedTextInputSurfaceChanged);
+    QSignalSpy focusedSurfaceChangedSpy(m_seat.get(), &SeatInterface::focusedTextInputSurfaceChanged);
     QSignalSpy textInputEnabledSpy(m_serverTextInputV3, &TextInputV3Interface::enabledChanged);
     QSignalSpy doneSpy(m_clientTextInputV3, &TextInputV3::done);
 
@@ -362,7 +362,7 @@ void TestTextInputV3Interface::testContentPurpose_data()
 void TestTextInputV3Interface::testContentPurpose()
 {
     // create a surface
-    QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor.get(), &CompositorInterface::surfaceCreated);
     std::unique_ptr<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
     QVERIFY(serverSurfaceCreatedSpy.wait());
     SurfaceInterface *serverSurface = serverSurfaceCreatedSpy.first().first().value<SurfaceInterface *>();
@@ -371,7 +371,7 @@ void TestTextInputV3Interface::testContentPurpose()
     m_serverTextInputV3 = m_seat->textInputV3();
     QVERIFY(m_serverTextInputV3);
 
-    QSignalSpy focusedSurfaceChangedSpy(m_seat, &SeatInterface::focusedTextInputSurfaceChanged);
+    QSignalSpy focusedSurfaceChangedSpy(m_seat.get(), &SeatInterface::focusedTextInputSurfaceChanged);
     QSignalSpy textInputEnabledSpy(m_serverTextInputV3, &TextInputV3Interface::enabledChanged);
 
     // Enter the textinput
@@ -452,7 +452,7 @@ void TestTextInputV3Interface::testContentHints_data()
 void TestTextInputV3Interface::testContentHints()
 {
     // create a surface
-    QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor.get(), &CompositorInterface::surfaceCreated);
     std::unique_ptr<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
     QVERIFY(serverSurfaceCreatedSpy.wait());
     SurfaceInterface *serverSurface = serverSurfaceCreatedSpy.first().first().value<SurfaceInterface *>();
@@ -461,7 +461,7 @@ void TestTextInputV3Interface::testContentHints()
     m_serverTextInputV3 = m_seat->textInputV3();
     QVERIFY(m_serverTextInputV3);
 
-    QSignalSpy focusedSurfaceChangedSpy(m_seat, &SeatInterface::focusedTextInputSurfaceChanged);
+    QSignalSpy focusedSurfaceChangedSpy(m_seat.get(), &SeatInterface::focusedTextInputSurfaceChanged);
     QSignalSpy textInputEnabledSpy(m_serverTextInputV3, &TextInputV3Interface::enabledChanged);
 
     // Enter the textinput
@@ -530,13 +530,13 @@ void TestTextInputV3Interface::testMultipleTextinputs()
     QVERIFY(ti2);
 
     // create a surface
-    QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor.get(), &CompositorInterface::surfaceCreated);
     std::unique_ptr<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
     QVERIFY(serverSurfaceCreatedSpy.wait());
     SurfaceInterface *serverSurface = serverSurfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
 
-    QSignalSpy focusedSurfaceChangedSpy(m_seat, &SeatInterface::focusedTextInputSurfaceChanged);
+    QSignalSpy focusedSurfaceChangedSpy(m_seat.get(), &SeatInterface::focusedTextInputSurfaceChanged);
     // Make sure that entering surface does not trigger the text input
     m_seat->setFocusedTextInputSurface(serverSurface);
     QCOMPARE(focusedSurfaceChangedSpy.count(), 1);

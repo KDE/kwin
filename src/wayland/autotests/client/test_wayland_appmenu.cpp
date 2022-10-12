@@ -36,8 +36,8 @@ private Q_SLOTS:
 
 private:
     std::unique_ptr<KWaylandServer::Display> m_display;
-    KWaylandServer::CompositorInterface *m_compositorInterface;
-    KWaylandServer::AppMenuManagerInterface *m_appmenuManagerInterface;
+    std::unique_ptr<KWaylandServer::CompositorInterface> m_compositorInterface;
+    std::unique_ptr<KWaylandServer::AppMenuManagerInterface> m_appmenuManagerInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::AppMenuManager *m_appmenuManager;
@@ -50,8 +50,6 @@ static const QString s_socketName = QStringLiteral("kwayland-test-wayland-appmen
 TestAppmenu::TestAppmenu(QObject *parent)
     : QObject(parent)
     , m_display(nullptr)
-    , m_compositorInterface(nullptr)
-    , m_connection(nullptr)
     , m_compositor(nullptr)
     , m_queue(nullptr)
     , m_thread(nullptr)
@@ -96,11 +94,11 @@ void TestAppmenu::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
+    m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_appmenuManagerInterface = new AppMenuManagerInterface(m_display.get(), m_display.get());
+    m_appmenuManagerInterface = std::make_unique<AppMenuManagerInterface>(m_display.get());
 
     QVERIFY(appmenuSpy.wait());
     m_appmenuManager = registry.createAppMenuManager(appmenuSpy.first().first().value<quint32>(), appmenuSpy.first().last().value<quint32>(), this);
@@ -126,20 +124,19 @@ void TestAppmenu::cleanup()
         delete m_thread;
         m_thread = nullptr;
     }
-    CLEANUP(m_compositorInterface)
-    CLEANUP(m_appmenuManagerInterface)
+    m_compositorInterface.reset();
 #undef CLEANUP
 }
 
 void TestAppmenu::testCreateAndSet()
 {
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreated(m_compositorInterface.get(), &KWaylandServer::CompositorInterface::surfaceCreated);
 
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
     auto serverSurface = serverSurfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
-    QSignalSpy appMenuCreated(m_appmenuManagerInterface, &KWaylandServer::AppMenuManagerInterface::appMenuCreated);
+    QSignalSpy appMenuCreated(m_appmenuManagerInterface.get(), &KWaylandServer::AppMenuManagerInterface::appMenuCreated);
 
     QVERIFY(!m_appmenuManagerInterface->appMenuForSurface(serverSurface));
 

@@ -115,9 +115,8 @@ void PlasmaVirtualDesktopManagementInterfacePrivate::org_kde_plasma_virtual_desk
     send_done(resource->handle);
 }
 
-PlasmaVirtualDesktopManagementInterface::PlasmaVirtualDesktopManagementInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new PlasmaVirtualDesktopManagementInterfacePrivate(this, display))
+PlasmaVirtualDesktopManagementInterface::PlasmaVirtualDesktopManagementInterface(Display *display)
+    : d(new PlasmaVirtualDesktopManagementInterfacePrivate(this, display))
 {
 }
 

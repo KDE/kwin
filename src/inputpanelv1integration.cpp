@@ -10,21 +10,17 @@
 #include "wayland/inputmethod_v1_interface.h"
 #include "wayland_server.h"
 
-using namespace KWaylandServer;
-
 namespace KWin
 {
 
-InputPanelV1Integration::InputPanelV1Integration(QObject *parent)
-    : WaylandShellIntegration(parent)
+InputPanelV1Integration::InputPanelV1Integration()
+    : m_shell(std::make_unique<KWaylandServer::InputPanelV1Interface>(waylandServer()->display()))
 {
-    InputPanelV1Interface *shell = new InputPanelV1Interface(waylandServer()->display(), this);
-
-    connect(shell, &InputPanelV1Interface::inputPanelSurfaceAdded,
+    connect(m_shell.get(), &KWaylandServer::InputPanelV1Interface::inputPanelSurfaceAdded,
             this, &InputPanelV1Integration::createWindow);
 }
 
-void InputPanelV1Integration::createWindow(InputPanelSurfaceV1Interface *shellSurface)
+void InputPanelV1Integration::createWindow(KWaylandServer::InputPanelSurfaceV1Interface *shellSurface)
 {
     Q_EMIT windowCreated(new InputPanelV1Window(shellSurface));
 }

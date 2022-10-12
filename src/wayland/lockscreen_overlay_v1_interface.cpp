@@ -45,9 +45,8 @@ private:
 
 LockscreenOverlayV1Interface::~LockscreenOverlayV1Interface() = default;
 
-LockscreenOverlayV1Interface::LockscreenOverlayV1Interface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new LockscreenOverlayV1InterfacePrivate(display, this))
+LockscreenOverlayV1Interface::LockscreenOverlayV1Interface(Display *display)
+    : d(new LockscreenOverlayV1InterfacePrivate(display, this))
 {
 }
 

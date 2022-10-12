@@ -41,9 +41,8 @@ void IdleInhibitManagerV1InterfacePrivate::zwp_idle_inhibit_manager_v1_create_in
     surfacePrivate->installIdleInhibitor(inhibitor);
 }
 
-IdleInhibitManagerV1Interface::IdleInhibitManagerV1Interface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new IdleInhibitManagerV1InterfacePrivate(this, display))
+IdleInhibitManagerV1Interface::IdleInhibitManagerV1Interface(Display *display)
+    : d(new IdleInhibitManagerV1InterfacePrivate(this, display))
 {
 }
 

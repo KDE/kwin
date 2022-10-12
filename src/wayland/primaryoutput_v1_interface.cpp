@@ -39,9 +39,8 @@ public:
     QString m_outputName;
 };
 
-PrimaryOutputV1Interface::PrimaryOutputV1Interface(KWaylandServer::Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new PrimaryOutputV1InterfacePrivate(display))
+PrimaryOutputV1Interface::PrimaryOutputV1Interface(KWaylandServer::Display *display)
+    : d(new PrimaryOutputV1InterfacePrivate(display))
 {
 }
 

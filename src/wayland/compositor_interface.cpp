@@ -55,9 +55,8 @@ void CompositorInterfacePrivate::compositor_create_region(Resource *resource, ui
     new RegionInterface(regionResource);
 }
 
-CompositorInterface::CompositorInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new CompositorInterfacePrivate(this, display))
+CompositorInterface::CompositorInterface(Display *display)
+    : d(new CompositorInterfacePrivate(this, display))
 {
 }
 

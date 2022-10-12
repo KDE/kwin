@@ -46,7 +46,7 @@ public:
     /**
      * Constructs an XdgShellInterface object with the given wayland display \a display.
      */
-    XdgShellInterface(Display *display, QObject *parent = nullptr);
+    XdgShellInterface(Display *display);
     /**
      * Destructs the XdgShellInterface object.
      */

@@ -39,7 +39,7 @@ class KWIN_EXPORT IdleInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit IdleInterface(Display *display, QObject *parent = nullptr);
+    explicit IdleInterface(Display *display);
     ~IdleInterface() override;
 
 private:

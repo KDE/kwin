@@ -67,9 +67,8 @@ void XWaylandKeyboardGrabManagerV1InterfacePrivate::zwp_xwayland_keyboard_grab_m
     m_grabs.insert({SurfaceInterface::get(surface), SeatInterface::get(seat)}, grab);
 }
 
-XWaylandKeyboardGrabManagerV1Interface::XWaylandKeyboardGrabManagerV1Interface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(std::make_unique<XWaylandKeyboardGrabManagerV1InterfacePrivate>(display, this))
+XWaylandKeyboardGrabManagerV1Interface::XWaylandKeyboardGrabManagerV1Interface(Display *display)
+    : d(std::make_unique<XWaylandKeyboardGrabManagerV1InterfacePrivate>(display, this))
 {
 }
 

@@ -33,9 +33,9 @@ private Q_SLOTS:
 
 private:
     std::unique_ptr<KWaylandServer::Display> m_display;
-    KWaylandServer::CompositorInterface *m_compositorInterface;
-    KWaylandServer::PlasmaWindowManagementInterface *m_windowManagementInterface;
-    KWaylandServer::PlasmaWindowInterface *m_windowInterface;
+    std::unique_ptr<KWaylandServer::CompositorInterface> m_compositorInterface;
+    std::unique_ptr<KWaylandServer::PlasmaWindowManagementInterface> m_windowManagementInterface;
+    std::unique_ptr<KWaylandServer::PlasmaWindowInterface> m_windowInterface;
 
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
@@ -51,7 +51,6 @@ static const QString s_socketName = QStringLiteral("kwayland-test-wayland-activi
 TestActivities::TestActivities(QObject *parent)
     : QObject(parent)
     , m_display(nullptr)
-    , m_compositorInterface(nullptr)
     , m_connection(nullptr)
     , m_compositor(nullptr)
     , m_queue(nullptr)
@@ -96,18 +95,18 @@ void TestActivities::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
+    m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_windowManagementInterface = new PlasmaWindowManagementInterface(m_display.get(), m_display.get());
+    m_windowManagementInterface = std::make_unique<PlasmaWindowManagementInterface>(m_display.get());
 
     QVERIFY(windowManagementSpy.wait());
     m_windowManagement =
         registry.createPlasmaWindowManagement(windowManagementSpy.first().first().value<quint32>(), windowManagementSpy.first().last().value<quint32>(), this);
 
     QSignalSpy windowSpy(m_windowManagement, &PlasmaWindowManagement::windowCreated);
-    m_windowInterface = m_windowManagementInterface->createWindow(this, QUuid::createUuid());
+    m_windowInterface.reset(m_windowManagementInterface->createWindow(this, QUuid::createUuid()));
     m_windowInterface->setPid(1337);
 
     QVERIFY(windowSpy.wait());
@@ -122,7 +121,7 @@ void TestActivities::cleanup()
         variable = nullptr; \
     }
     CLEANUP(m_compositor)
-    CLEANUP(m_windowInterface)
+    m_windowInterface.reset();
     CLEANUP(m_windowManagement)
     CLEANUP(m_queue)
     if (m_connection) {
@@ -135,15 +134,15 @@ void TestActivities::cleanup()
         delete m_thread;
         m_thread = nullptr;
     }
-    CLEANUP(m_compositorInterface)
-    CLEANUP(m_windowManagementInterface)
+    m_compositorInterface.reset();
 #undef CLEANUP
+    m_windowManagementInterface.reset();
     m_display.reset();
 }
 
 void TestActivities::testEnterLeaveActivity()
 {
-    QSignalSpy enterRequestedSpy(m_windowInterface, &KWaylandServer::PlasmaWindowInterface::enterPlasmaActivityRequested);
+    QSignalSpy enterRequestedSpy(m_windowInterface.get(), &KWaylandServer::PlasmaWindowInterface::enterPlasmaActivityRequested);
     m_window->requestEnterActivity(QStringLiteral("0-1"));
     enterRequestedSpy.wait();
 
@@ -171,7 +170,7 @@ void TestActivities::testEnterLeaveActivity()
     QCOMPARE(m_window->plasmaActivities()[1], QStringLiteral("0-3"));
 
     // remove an activity
-    QSignalSpy leaveRequestedSpy(m_windowInterface, &KWaylandServer::PlasmaWindowInterface::leavePlasmaActivityRequested);
+    QSignalSpy leaveRequestedSpy(m_windowInterface.get(), &KWaylandServer::PlasmaWindowInterface::leavePlasmaActivityRequested);
     m_window->requestLeaveActivity(QStringLiteral("0-1"));
     leaveRequestedSpy.wait();
 

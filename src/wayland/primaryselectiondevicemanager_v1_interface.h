@@ -26,7 +26,7 @@ class KWIN_EXPORT PrimarySelectionDeviceManagerV1Interface : public QObject
     Q_OBJECT
 
 public:
-    explicit PrimarySelectionDeviceManagerV1Interface(Display *display, QObject *parent = nullptr);
+    explicit PrimarySelectionDeviceManagerV1Interface(Display *display);
     ~PrimarySelectionDeviceManagerV1Interface();
 
 Q_SIGNALS:

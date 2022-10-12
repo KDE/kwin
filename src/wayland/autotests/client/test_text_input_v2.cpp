@@ -54,9 +54,9 @@ private:
     SurfaceInterface *waitForSurface();
     TextInput *createTextInput();
     std::unique_ptr<KWaylandServer::Display> m_display;
-    SeatInterface *m_seatInterface = nullptr;
-    CompositorInterface *m_compositorInterface = nullptr;
-    TextInputManagerV2Interface *m_textInputManagerV2Interface = nullptr;
+    std::unique_ptr<SeatInterface> m_seatInterface;
+    std::unique_ptr<CompositorInterface> m_compositorInterface;
+    std::unique_ptr<TextInputManagerV2Interface> m_textInputManagerV2Interface;
     ConnectionThread *m_connection = nullptr;
     QThread *m_thread = nullptr;
     EventQueue *m_queue = nullptr;
@@ -75,11 +75,11 @@ void TextInputTest::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
     m_display->createShm();
-    m_seatInterface = new SeatInterface(m_display.get(), m_display.get());
+    m_seatInterface = std::make_unique<SeatInterface>(m_display.get());
     m_seatInterface->setHasKeyboard(true);
     m_seatInterface->setHasTouch(true);
-    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
-    m_textInputManagerV2Interface = new TextInputManagerV2Interface(m_display.get(), m_display.get());
+    m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
+    m_textInputManagerV2Interface = std::make_unique<TextInputManagerV2Interface>(m_display.get());
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -146,15 +146,11 @@ void TextInputTest::cleanup()
 #undef CLEANUP
 
     m_display.reset();
-    // these are the children of the display
-    m_textInputManagerV2Interface = nullptr;
-    m_compositorInterface = nullptr;
-    m_seatInterface = nullptr;
 }
 
 SurfaceInterface *TextInputTest::waitForSurface()
 {
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
     if (!surfaceCreatedSpy.isValid()) {
         return nullptr;
     }
@@ -189,7 +185,7 @@ void TextInputTest::testEnterLeave()
     QVERIFY(textInput != nullptr);
     QSignalSpy enteredSpy(textInput.get(), &TextInput::entered);
     QSignalSpy leftSpy(textInput.get(), &TextInput::left);
-    QSignalSpy textInputChangedSpy(m_seatInterface, &SeatInterface::focusedTextInputSurfaceChanged);
+    QSignalSpy textInputChangedSpy(m_seatInterface.get(), &SeatInterface::focusedTextInputSurfaceChanged);
 
     // now let's try to enter it
     QVERIFY(!m_seatInterface->focusedTextInputSurface());
@@ -265,7 +261,7 @@ void TextInputTest::testFocusedBeforeCreateTextInput()
     std::unique_ptr<Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     // now let's try to enter it
-    QSignalSpy textInputChangedSpy(m_seatInterface, &SeatInterface::focusedTextInputSurfaceChanged);
+    QSignalSpy textInputChangedSpy(m_seatInterface.get(), &SeatInterface::focusedTextInputSurfaceChanged);
     QVERIFY(!m_seatInterface->focusedTextInputSurface());
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     QCOMPARE(m_seatInterface->focusedTextInputSurface(), serverSurface);

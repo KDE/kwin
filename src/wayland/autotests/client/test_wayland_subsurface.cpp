@@ -52,8 +52,8 @@ private Q_SLOTS:
 
 private:
     std::unique_ptr<KWaylandServer::Display> m_display;
-    KWaylandServer::CompositorInterface *m_compositorInterface;
-    KWaylandServer::SubCompositorInterface *m_subcompositorInterface;
+    std::unique_ptr<KWaylandServer::CompositorInterface> m_compositorInterface;
+    std::unique_ptr<KWaylandServer::SubCompositorInterface> m_subcompositorInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::ShmPool *m_shm;
@@ -66,8 +66,6 @@ static const QString s_socketName = QStringLiteral("kwayland-test-wayland-subsur
 
 TestSubSurface::TestSubSurface(QObject *parent)
     : QObject(parent)
-    , m_compositorInterface(nullptr)
-    , m_subcompositorInterface(nullptr)
     , m_connection(nullptr)
     , m_compositor(nullptr)
     , m_shm(nullptr)
@@ -113,8 +111,8 @@ void TestSubSurface::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
-    m_subcompositorInterface = new SubCompositorInterface(m_display.get(), m_display.get());
+    m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
+    m_subcompositorInterface = std::make_unique<SubCompositorInterface>(m_display.get());
     QVERIFY(m_subcompositorInterface);
 
     QVERIFY(subCompositorSpy.wait());
@@ -165,7 +163,7 @@ void TestSubSurface::testCreate()
 {
     using namespace KWayland::Client;
     using namespace KWaylandServer;
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &KWaylandServer::CompositorInterface::surfaceCreated);
 
     // create two Surfaces
     std::unique_ptr<Surface> surface(m_compositor->createSurface());
@@ -179,7 +177,7 @@ void TestSubSurface::testCreate()
     SurfaceInterface *serverParentSurface = surfaceCreatedSpy.first().first().value<KWaylandServer::SurfaceInterface *>();
     QVERIFY(serverParentSurface);
 
-    QSignalSpy subSurfaceCreatedSpy(m_subcompositorInterface, &KWaylandServer::SubCompositorInterface::subSurfaceCreated);
+    QSignalSpy subSurfaceCreatedSpy(m_subcompositorInterface.get(), &KWaylandServer::SubCompositorInterface::subSurfaceCreated);
 
     // create subSurface for surface of parent
     std::unique_ptr<SubSurface> subSurface(m_subCompositor->createSubSurface(QPointer<Surface>(surface.get()), QPointer<Surface>(parent.get())));
@@ -233,7 +231,7 @@ void TestSubSurface::testMode()
     std::unique_ptr<Surface> surface(m_compositor->createSurface());
     std::unique_ptr<Surface> parent(m_compositor->createSurface());
 
-    QSignalSpy subSurfaceCreatedSpy(m_subcompositorInterface, &KWaylandServer::SubCompositorInterface::subSurfaceCreated);
+    QSignalSpy subSurfaceCreatedSpy(m_subcompositorInterface.get(), &KWaylandServer::SubCompositorInterface::subSurfaceCreated);
 
     // create the SubSurface for surface of parent
     std::unique_ptr<SubSurface> subSurface(m_subCompositor->createSubSurface(QPointer<Surface>(surface.get()), QPointer<Surface>(parent.get())));
@@ -287,7 +285,7 @@ void TestSubSurface::testPosition()
     std::unique_ptr<Surface> surface(m_compositor->createSurface());
     std::unique_ptr<Surface> parent(m_compositor->createSurface());
 
-    QSignalSpy subSurfaceCreatedSpy(m_subcompositorInterface, &KWaylandServer::SubCompositorInterface::subSurfaceCreated);
+    QSignalSpy subSurfaceCreatedSpy(m_subcompositorInterface.get(), &KWaylandServer::SubCompositorInterface::subSurfaceCreated);
 
     // create the SubSurface for surface of parent
     std::unique_ptr<SubSurface> subSurface(m_subCompositor->createSubSurface(QPointer<Surface>(surface.get()), QPointer<Surface>(parent.get())));
@@ -339,7 +337,7 @@ void TestSubSurface::testPlaceAbove()
     std::unique_ptr<Surface> surface3(m_compositor->createSurface());
     std::unique_ptr<Surface> parent(m_compositor->createSurface());
 
-    QSignalSpy subSurfaceCreatedSpy(m_subcompositorInterface, &KWaylandServer::SubCompositorInterface::subSurfaceCreated);
+    QSignalSpy subSurfaceCreatedSpy(m_subcompositorInterface.get(), &KWaylandServer::SubCompositorInterface::subSurfaceCreated);
 
     // create the SubSurfaces for surface of parent
     std::unique_ptr<SubSurface> subSurface1(m_subCompositor->createSubSurface(QPointer<Surface>(surface1.get()), QPointer<Surface>(parent.get())));
@@ -441,7 +439,7 @@ void TestSubSurface::testPlaceBelow()
     std::unique_ptr<Surface> surface3(m_compositor->createSurface());
     std::unique_ptr<Surface> parent(m_compositor->createSurface());
 
-    QSignalSpy subSurfaceCreatedSpy(m_subcompositorInterface, &KWaylandServer::SubCompositorInterface::subSurfaceCreated);
+    QSignalSpy subSurfaceCreatedSpy(m_subcompositorInterface.get(), &KWaylandServer::SubCompositorInterface::subSurfaceCreated);
 
     // create the SubSurfaces for surface of parent
     std::unique_ptr<SubSurface> subSurface1(m_subCompositor->createSubSurface(QPointer<Surface>(surface1.get()), QPointer<Surface>(parent.get())));
@@ -543,7 +541,7 @@ void TestSubSurface::testSyncMode()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
 
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
 
     std::unique_ptr<Surface> surface(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
@@ -595,7 +593,7 @@ void TestSubSurface::testDeSyncMode()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
 
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
 
     std::unique_ptr<Surface> surface(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
@@ -642,7 +640,7 @@ void TestSubSurface::testMainSurfaceFromTree()
     // this test verifies that in a tree of surfaces every surface has the same main surface
     using namespace KWayland::Client;
     using namespace KWaylandServer;
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
 
     std::unique_ptr<Surface> parentSurface(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
@@ -694,7 +692,7 @@ void TestSubSurface::testRemoveSurface()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
 
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
 
     std::unique_ptr<Surface> parentSurface(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
@@ -726,7 +724,7 @@ void TestSubSurface::testMappingOfSurfaceTree()
     // this test verifies mapping and unmapping of a sub-surface tree
     using namespace KWayland::Client;
     using namespace KWaylandServer;
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
 
     std::unique_ptr<Surface> parentSurface(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
@@ -845,7 +843,7 @@ void TestSubSurface::testSurfaceAt()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
     // first create a parent surface and map it
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreated(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
     std::unique_ptr<Surface> parent(m_compositor->createSurface());
     QImage image(QSize(100, 100), QImage::Format_ARGB32_Premultiplied);
     image.fill(Qt::red);
@@ -968,7 +966,7 @@ void TestSubSurface::testDestroyAttachedBuffer()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
     // create surface
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreated(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
     std::unique_ptr<Surface> parent(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
     std::unique_ptr<Surface> child(m_compositor->createSurface());
@@ -1000,7 +998,7 @@ void TestSubSurface::testDestroyParentSurface()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
     // create surface
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreated(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
     std::unique_ptr<Surface> parent(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
     SurfaceInterface *serverParentSurface = serverSurfaceCreated.last().first().value<KWaylandServer::SurfaceInterface *>();

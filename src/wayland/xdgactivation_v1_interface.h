@@ -30,7 +30,7 @@ class KWIN_EXPORT XdgActivationV1Interface : public QObject
     Q_OBJECT
     Q_DISABLE_COPY(XdgActivationV1Interface)
 public:
-    explicit XdgActivationV1Interface(Display *display, QObject *parent = nullptr);
+    explicit XdgActivationV1Interface(Display *display);
     ~XdgActivationV1Interface() override;
 
     using CreatorFunction = std::function<QString(ClientConnection *client, SurfaceInterface *surface, uint serial, SeatInterface *seat, const QString &appId)>;

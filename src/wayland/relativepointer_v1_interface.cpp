@@ -41,9 +41,8 @@ void RelativePointerManagerV1InterfacePrivate::zwp_relative_pointer_manager_v1_g
     relativePointer->add(resource->client(), id, resource->version());
 }
 
-RelativePointerManagerV1Interface::RelativePointerManagerV1Interface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new RelativePointerManagerV1InterfacePrivate(display))
+RelativePointerManagerV1Interface::RelativePointerManagerV1Interface(Display *display)
+    : d(new RelativePointerManagerV1InterfacePrivate(display))
 {
 }
 

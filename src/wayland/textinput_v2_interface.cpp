@@ -140,9 +140,8 @@ void TextInputManagerV2InterfacePrivate::zwp_text_input_manager_v2_get_text_inpu
     }
 }
 
-TextInputManagerV2Interface::TextInputManagerV2Interface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new TextInputManagerV2InterfacePrivate(this, display))
+TextInputManagerV2Interface::TextInputManagerV2Interface(Display *display)
+    : d(new TextInputManagerV2InterfacePrivate(this, display))
 {
 }
 

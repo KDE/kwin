@@ -31,7 +31,7 @@ class KWIN_EXPORT ServerSideDecorationPaletteManagerInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit ServerSideDecorationPaletteManagerInterface(Display *display, QObject *parent = nullptr);
+    explicit ServerSideDecorationPaletteManagerInterface(Display *display);
     ~ServerSideDecorationPaletteManagerInterface() override;
     /**
      * Returns any existing palette for a given surface

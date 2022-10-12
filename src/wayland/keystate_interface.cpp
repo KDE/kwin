@@ -39,9 +39,8 @@ public:
     }
 };
 
-KeyStateInterface::KeyStateInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new KeyStateInterfacePrivate(display))
+KeyStateInterface::KeyStateInterface(Display *display)
+    : d(new KeyStateInterfacePrivate(display))
 {
     connect(input()->keyboard(), &KeyboardInputRedirection::ledsChanged, this, [this]() {
         const auto resources = d->resourceMap();

@@ -29,7 +29,7 @@ class KWIN_EXPORT RelativePointerManagerV1Interface : public QObject
     Q_OBJECT
 
 public:
-    explicit RelativePointerManagerV1Interface(Display *display, QObject *parent = nullptr);
+    explicit RelativePointerManagerV1Interface(Display *display);
     ~RelativePointerManagerV1Interface() override;
 
 private:

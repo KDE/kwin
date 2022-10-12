@@ -64,9 +64,8 @@ void PointerGesturesV1InterfacePrivate::zwp_pointer_gestures_v1_release(Resource
     wl_resource_destroy(resource->handle);
 }
 
-PointerGesturesV1Interface::PointerGesturesV1Interface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new PointerGesturesV1InterfacePrivate(display))
+PointerGesturesV1Interface::PointerGesturesV1Interface(Display *display)
+    : d(new PointerGesturesV1InterfacePrivate(display))
 {
 }
 

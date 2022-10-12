@@ -44,8 +44,8 @@ private:
     void doExport();
 
     std::unique_ptr<KWaylandServer::Display> m_display;
-    QPointer<KWaylandServer::CompositorInterface> m_compositorInterface;
-    KWaylandServer::XdgForeignV2Interface *m_foreignInterface;
+    std::unique_ptr<KWaylandServer::CompositorInterface> m_compositorInterface;
+    std::unique_ptr<KWaylandServer::XdgForeignV2Interface> m_foreignInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::EventQueue *m_queue;
@@ -68,8 +68,6 @@ static const QString s_socketName = QStringLiteral("kwayland-test-xdg-foreign-0"
 
 TestForeign::TestForeign(QObject *parent)
     : QObject(parent)
-    , m_compositorInterface(nullptr)
-    , m_connection(nullptr)
     , m_compositor(nullptr)
     , m_queue(nullptr)
     , m_exporter(nullptr)
@@ -118,11 +116,11 @@ void TestForeign::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
+    m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_foreignInterface = new XdgForeignV2Interface(m_display.get(), m_display.get());
+    m_foreignInterface = std::make_unique<XdgForeignV2Interface>(m_display.get());
 
     QVERIFY(exporterSpy.wait());
     // Both importer and exporter should have been triggered by now
@@ -158,13 +156,11 @@ void TestForeign::cleanup()
 #undef CLEANUP
 
     m_display.reset();
-    // these are the children of the display
-    m_foreignInterface = nullptr;
 }
 
 void TestForeign::doExport()
 {
-    QSignalSpy serverSurfaceCreated(m_compositorInterface.data(), &KWaylandServer::CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreated(m_compositorInterface.get(), &KWaylandServer::CompositorInterface::surfaceCreated);
 
     m_exportedSurface = m_compositor->createSurface();
     QVERIFY(serverSurfaceCreated.wait());
@@ -178,13 +174,13 @@ void TestForeign::doExport()
     QVERIFY(doneSpy.wait());
     QVERIFY(!m_exported->handle().isEmpty());
 
-    QSignalSpy transientSpy(m_foreignInterface, &KWaylandServer::XdgForeignV2Interface::transientChanged);
+    QSignalSpy transientSpy(m_foreignInterface.get(), &KWaylandServer::XdgForeignV2Interface::transientChanged);
 
     // Import the just exported window
     m_imported = m_importer->importTopLevel(m_exported->handle());
     QVERIFY(m_imported->isValid());
 
-    QSignalSpy childSurfaceInterfaceCreated(m_compositorInterface.data(), &KWaylandServer::CompositorInterface::surfaceCreated);
+    QSignalSpy childSurfaceInterfaceCreated(m_compositorInterface.get(), &KWaylandServer::CompositorInterface::surfaceCreated);
     m_childSurface = m_compositor->createSurface();
     QVERIFY(childSurfaceInterfaceCreated.wait());
     m_childSurfaceInterface = childSurfaceInterfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
@@ -209,7 +205,7 @@ void TestForeign::testDeleteImported()
 {
     doExport();
 
-    QSignalSpy transientSpy(m_foreignInterface, &KWaylandServer::XdgForeignV2Interface::transientChanged);
+    QSignalSpy transientSpy(m_foreignInterface.get(), &KWaylandServer::XdgForeignV2Interface::transientChanged);
 
     m_imported->deleteLater();
     m_imported = nullptr;
@@ -225,7 +221,7 @@ void TestForeign::testDeleteChildSurface()
 {
     doExport();
 
-    QSignalSpy transientSpy(m_foreignInterface, &KWaylandServer::XdgForeignV2Interface::transientChanged);
+    QSignalSpy transientSpy(m_foreignInterface.get(), &KWaylandServer::XdgForeignV2Interface::transientChanged);
 
     m_childSurface->deleteLater();
 
@@ -239,7 +235,7 @@ void TestForeign::testDeleteParentSurface()
 {
     doExport();
 
-    QSignalSpy transientSpy(m_foreignInterface, &KWaylandServer::XdgForeignV2Interface::transientChanged);
+    QSignalSpy transientSpy(m_foreignInterface.get(), &KWaylandServer::XdgForeignV2Interface::transientChanged);
     m_exportedSurface->deleteLater();
     QVERIFY(transientSpy.wait());
 
@@ -252,7 +248,7 @@ void TestForeign::testDeleteExported()
 {
     doExport();
 
-    QSignalSpy transientSpy(m_foreignInterface, &KWaylandServer::XdgForeignV2Interface::transientChanged);
+    QSignalSpy transientSpy(m_foreignInterface.get(), &KWaylandServer::XdgForeignV2Interface::transientChanged);
     QSignalSpy destroyedSpy(m_imported.data(), &KWayland::Client::XdgImported::importedDestroyed);
 
     m_exported->deleteLater();
@@ -279,14 +275,14 @@ void TestForeign::testExportTwoTimes()
     QVERIFY(doneSpy.wait());
     QVERIFY(!exported2->handle().isEmpty());
 
-    QSignalSpy transientSpy(m_foreignInterface, &KWaylandServer::XdgForeignV2Interface::transientChanged);
+    QSignalSpy transientSpy(m_foreignInterface.get(), &KWaylandServer::XdgForeignV2Interface::transientChanged);
 
     // Import the just exported window
     KWayland::Client::XdgImported *imported2 = m_importer->importTopLevel(exported2->handle());
     QVERIFY(imported2->isValid());
 
     // create a second child surface
-    QSignalSpy serverSurfaceCreated(m_compositorInterface.data(), &KWaylandServer::CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreated(m_compositorInterface.get(), &KWaylandServer::CompositorInterface::surfaceCreated);
 
     KWayland::Client::Surface *childSurface2 = m_compositor->createSurface();
     QVERIFY(serverSurfaceCreated.wait());
@@ -310,14 +306,14 @@ void TestForeign::testImportTwoTimes()
 {
     doExport();
 
-    QSignalSpy transientSpy(m_foreignInterface, &KWaylandServer::XdgForeignV2Interface::transientChanged);
+    QSignalSpy transientSpy(m_foreignInterface.get(), &KWaylandServer::XdgForeignV2Interface::transientChanged);
 
     // Import another time the exported window
     KWayland::Client::XdgImported *imported2 = m_importer->importTopLevel(m_exported->handle());
     QVERIFY(imported2->isValid());
 
     // create a second child surface
-    QSignalSpy serverSurfaceCreated(m_compositorInterface.data(), &KWaylandServer::CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreated(m_compositorInterface.get(), &KWaylandServer::CompositorInterface::surfaceCreated);
 
     KWayland::Client::Surface *childSurface2 = m_compositor->createSurface();
     QVERIFY(serverSurfaceCreated.wait());

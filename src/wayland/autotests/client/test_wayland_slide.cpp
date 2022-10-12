@@ -34,7 +34,7 @@ private Q_SLOTS:
 
 private:
     std::unique_ptr<KWaylandServer::Display> m_display;
-    KWaylandServer::CompositorInterface *m_compositorInterface;
+    std::unique_ptr<KWaylandServer::CompositorInterface> m_compositorInterface;
     KWaylandServer::SlideManagerInterface *m_slideManagerInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
@@ -48,7 +48,6 @@ static const QString s_socketName = QStringLiteral("kwayland-test-wayland-slide-
 TestSlide::TestSlide(QObject *parent)
     : QObject(parent)
     , m_display(nullptr)
-    , m_compositorInterface(nullptr)
     , m_connection(nullptr)
     , m_compositor(nullptr)
     , m_queue(nullptr)
@@ -93,7 +92,7 @@ void TestSlide::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
+    m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
@@ -126,13 +125,12 @@ void TestSlide::cleanup()
 #undef CLEANUP
     m_display.reset();
     // these are the children of the display
-    m_compositorInterface = nullptr;
     m_slideManagerInterface = nullptr;
 }
 
 void TestSlide::testCreate()
 {
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreated(m_compositorInterface.get(), &KWaylandServer::CompositorInterface::surfaceCreated);
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
@@ -158,7 +156,7 @@ void TestSlide::testCreate()
 void TestSlide::testSurfaceDestroy()
 {
     using namespace KWaylandServer;
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreated(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 

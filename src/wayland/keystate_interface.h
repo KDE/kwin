@@ -24,7 +24,7 @@ class KWIN_EXPORT KeyStateInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit KeyStateInterface(Display *display, QObject *parent = nullptr);
+    explicit KeyStateInterface(Display *display);
     ~KeyStateInterface() override;
 
 private:

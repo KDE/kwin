@@ -35,9 +35,9 @@ private Q_SLOTS:
 
 private:
     std::unique_ptr<KWaylandServer::Display> m_display;
-    CompositorInterface *m_compositorInterface = nullptr;
-    SeatInterface *m_seatInterface = nullptr;
-    DataDeviceManagerInterface *m_ddmInterface = nullptr;
+    std::unique_ptr<CompositorInterface> m_compositorInterface;
+    std::unique_ptr<SeatInterface> m_seatInterface;
+    std::unique_ptr<DataDeviceManagerInterface> m_ddmInterface;
 
     struct Connection
     {
@@ -66,10 +66,10 @@ void SelectionTest::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
     m_display->createShm();
-    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
-    m_seatInterface = new SeatInterface(m_display.get(), m_display.get());
+    m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
+    m_seatInterface = std::make_unique<SeatInterface>(m_display.get());
     m_seatInterface->setHasKeyboard(true);
-    m_ddmInterface = new DataDeviceManagerInterface(m_display.get(), m_display.get());
+    m_ddmInterface = std::make_unique<DataDeviceManagerInterface>(m_display.get());
 
     // setup connection
     setupConnection(&m_client1);
@@ -154,10 +154,6 @@ void SelectionTest::cleanup()
     cleanupConnection(&m_client1);
     cleanupConnection(&m_client2);
     m_display.reset();
-    // these are the children of the display
-    m_ddmInterface = nullptr;
-    m_seatInterface = nullptr;
-    m_compositorInterface = nullptr;
 }
 
 void SelectionTest::cleanupConnection(Connection *c)
@@ -193,7 +189,7 @@ void SelectionTest::testClearOnEnter()
     QSignalSpy keyboardEnteredClient1Spy(m_client1.keyboard, &Keyboard::entered);
 
     // now create a Surface
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
     std::unique_ptr<Surface> s1(m_client1.compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
     auto serverSurface1 = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();

@@ -99,9 +99,8 @@ void AppMenuInterfacePrivate::org_kde_kwin_appmenu_release(QtWaylandServer::org_
     wl_resource_destroy(resource->handle);
 }
 
-AppMenuManagerInterface::AppMenuManagerInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new AppMenuManagerInterfacePrivate(this, display))
+AppMenuManagerInterface::AppMenuManagerInterface(Display *display)
+    : d(new AppMenuManagerInterfacePrivate(this, display))
 {
 }
 

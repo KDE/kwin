@@ -29,7 +29,7 @@ class KWIN_EXPORT ViewporterInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit ViewporterInterface(Display *display, QObject *parent = nullptr);
+    explicit ViewporterInterface(Display *display);
     ~ViewporterInterface() override;
 
 private:

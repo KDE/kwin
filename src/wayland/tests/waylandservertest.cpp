@@ -75,14 +75,14 @@ int main(int argc, char **argv)
     KWaylandServer::Display display;
     display.start();
     display.createShm();
-    new CompositorInterface(&display, &display);
-    new XdgShellInterface(&display, &display);
+    auto compositorInterface = std::make_unique<CompositorInterface>(&display);
+    auto xdgShellInterface = std::make_unique<XdgShellInterface>(&display);
 
     auto outputHandle = std::make_unique<FakeOutput>();
     outputHandle->setMode(QSize(1024, 768), 60000);
     outputHandle->setPhysicalSize(QSize(10, 10));
 
-    OutputInterface *outputInterface = new OutputInterface(&display, outputHandle.get(), &display);
+    auto outputInterface = std::make_unique<OutputInterface>(&display, outputHandle.get());
     outputInterface->setPhysicalSize(QSize(10, 10));
     outputInterface->setMode(QSize(1024, 768));
 
@@ -107,7 +107,7 @@ int main(int argc, char **argv)
 
     QGuiApplication app(argc, argv);
 
-    SeatInterface *seat = new SeatInterface(&display);
+    auto seat = std::make_unique<SeatInterface>(&display);
     seat->setName(QStringLiteral("testSeat0"));
 
     return app.exec();

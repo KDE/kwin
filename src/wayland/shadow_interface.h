@@ -25,7 +25,7 @@ class KWIN_EXPORT ShadowManagerInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit ShadowManagerInterface(Display *display, QObject *parent = nullptr);
+    explicit ShadowManagerInterface(Display *display);
     ~ShadowManagerInterface() override;
 
     Display *display() const;

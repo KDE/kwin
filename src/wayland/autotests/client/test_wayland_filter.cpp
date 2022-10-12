@@ -38,7 +38,7 @@ private Q_SLOTS:
 
 private:
     std::unique_ptr<TestDisplay> m_display;
-    KWaylandServer::CompositorInterface *m_compositorInterface;
+    std::unique_ptr<KWaylandServer::CompositorInterface> m_compositorInterface;
     KWaylandServer::BlurManagerInterface *m_blurManagerInterface;
 };
 
@@ -70,7 +70,6 @@ bool TestDisplay::allowInterface(KWaylandServer::ClientConnection *client, const
 TestFilter::TestFilter(QObject *parent)
     : QObject(parent)
     , m_display(nullptr)
-    , m_compositorInterface(nullptr)
 {
 }
 
@@ -82,7 +81,7 @@ void TestFilter::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
 
-    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
+    m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
     m_blurManagerInterface = new BlurManagerInterface(m_display.get(), m_display.get());
 }
 

@@ -12,6 +12,7 @@ namespace KWaylandServer
 {
 class XdgToplevelInterface;
 class XdgPopupInterface;
+class XdgShellInterface;
 }
 
 namespace KWin
@@ -22,12 +23,14 @@ class XdgShellIntegration : public WaylandShellIntegration
     Q_OBJECT
 
 public:
-    explicit XdgShellIntegration(QObject *parent = nullptr);
+    explicit XdgShellIntegration();
 
 private:
     void registerXdgToplevel(KWaylandServer::XdgToplevelInterface *toplevel);
     void registerXdgPopup(KWaylandServer::XdgPopupInterface *popup);
     void createXdgToplevelWindow(KWaylandServer::XdgToplevelInterface *surface);
+
+    std::unique_ptr<KWaylandServer::XdgShellInterface> m_shell;
 };
 
 } // namespace KWin

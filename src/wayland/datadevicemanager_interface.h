@@ -28,7 +28,7 @@ class KWIN_EXPORT DataDeviceManagerInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit DataDeviceManagerInterface(Display *display, QObject *parent = nullptr);
+    explicit DataDeviceManagerInterface(Display *display);
     ~DataDeviceManagerInterface() override;
 
     /**

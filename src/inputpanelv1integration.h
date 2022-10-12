@@ -11,6 +11,7 @@
 namespace KWaylandServer
 {
 class InputPanelSurfaceV1Interface;
+class InputPanelV1Interface;
 }
 
 namespace KWin
@@ -21,9 +22,12 @@ class InputPanelV1Integration : public WaylandShellIntegration
     Q_OBJECT
 
 public:
-    explicit InputPanelV1Integration(QObject *parent = nullptr);
+    explicit InputPanelV1Integration();
 
     void createWindow(KWaylandServer::InputPanelSurfaceV1Interface *shellSurface);
+
+private:
+    std::unique_ptr<KWaylandServer::InputPanelV1Interface> m_shell;
 };
 
 } // namespace KWin

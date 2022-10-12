@@ -60,9 +60,8 @@ ServerSideDecorationPaletteManagerInterfacePrivate::ServerSideDecorationPaletteM
 {
 }
 
-ServerSideDecorationPaletteManagerInterface::ServerSideDecorationPaletteManagerInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new ServerSideDecorationPaletteManagerInterfacePrivate(this, display))
+ServerSideDecorationPaletteManagerInterface::ServerSideDecorationPaletteManagerInterface(Display *display)
+    : d(new ServerSideDecorationPaletteManagerInterfacePrivate(this, display))
 {
 }
 

@@ -378,9 +378,8 @@ public:
     InputPanelV1Interface *const q;
 };
 
-InputPanelV1Interface::InputPanelV1Interface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new InputPanelV1InterfacePrivate(this, display))
+InputPanelV1Interface::InputPanelV1Interface(Display *display)
+    : d(new InputPanelV1InterfacePrivate(this, display))
 {
 }
 
@@ -416,9 +415,8 @@ public:
     Display *const m_display;
 };
 
-InputMethodV1Interface::InputMethodV1Interface(Display *d, QObject *parent)
-    : QObject(parent)
-    , d(new InputMethodV1InterfacePrivate(d, this))
+InputMethodV1Interface::InputMethodV1Interface(Display *d)
+    : d(new InputMethodV1InterfacePrivate(d, this))
 {
 }
 

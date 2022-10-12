@@ -37,8 +37,8 @@ private:
     std::unique_ptr<KWaylandServer::Display> m_display;
 
     ConnectionThread *m_connection = nullptr;
-    CompositorInterface *m_compositorInterface = nullptr;
-    ShadowManagerInterface *m_shadowInterface = nullptr;
+    std::unique_ptr<CompositorInterface> m_compositorInterface;
+    std::unique_ptr<ShadowManagerInterface> m_shadowInterface;
     QThread *m_thread = nullptr;
     EventQueue *m_queue = nullptr;
     ShmPool *m_shm = nullptr;
@@ -55,8 +55,8 @@ void ShadowTest::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
     m_display->createShm();
-    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
-    m_shadowInterface = new ShadowManagerInterface(m_display.get(), m_display.get());
+    m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
+    m_shadowInterface = std::make_unique<ShadowManagerInterface>(m_display.get());
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -115,15 +115,12 @@ void ShadowTest::cleanup()
 #undef CLEANUP
 
     m_display.reset();
-    // these are the children of the display
-    m_compositorInterface = nullptr;
-    m_shadowInterface = nullptr;
 }
 
 void ShadowTest::testCreateShadow()
 {
     // this test verifies the basic shadow behavior, create for surface, commit it, etc.
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
     std::unique_ptr<Surface> surface(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
     auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
@@ -178,7 +175,7 @@ void ShadowTest::testShadowElements()
 {
     // this test verifies that all shadow elements are correctly passed to the server
     // first create surface
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
     std::unique_ptr<Surface> surface(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
     auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
@@ -233,7 +230,7 @@ void ShadowTest::testSurfaceDestroy()
 {
     using namespace KWayland::Client;
     using namespace KWaylandServer;
-    QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreated(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
 
     std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());

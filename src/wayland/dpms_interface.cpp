@@ -63,9 +63,8 @@ void DpmsManagerInterfacePrivate::org_kde_kwin_dpms_manager_get(Resource *resour
     new DpmsInterface(o, dpms_resource);
 }
 
-DpmsManagerInterface::DpmsManagerInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new DpmsManagerInterfacePrivate(display))
+DpmsManagerInterface::DpmsManagerInterface(Display *display)
+    : d(new DpmsManagerInterfacePrivate(display))
 {
 }
 

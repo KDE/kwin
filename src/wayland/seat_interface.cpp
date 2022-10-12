@@ -103,9 +103,8 @@ void SeatInterfacePrivate::seat_release(Resource *resource)
     wl_resource_destroy(resource->handle);
 }
 
-SeatInterface::SeatInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new SeatInterfacePrivate(this, display))
+SeatInterface::SeatInterface(Display *display)
+    : d(new SeatInterfacePrivate(this, display))
 {
     DisplayPrivate *displayPrivate = DisplayPrivate::get(d->display);
     displayPrivate->seats.append(this);

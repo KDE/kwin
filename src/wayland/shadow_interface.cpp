@@ -72,9 +72,8 @@ void ShadowManagerInterfacePrivate::org_kde_kwin_shadow_manager_unset(Resource *
     surfacePrivate->setShadow(QPointer<ShadowInterface>());
 }
 
-ShadowManagerInterface::ShadowManagerInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new ShadowManagerInterfacePrivate(this, display))
+ShadowManagerInterface::ShadowManagerInterface(Display *display)
+    : d(new ShadowManagerInterfacePrivate(this, display))
 {
 }
 

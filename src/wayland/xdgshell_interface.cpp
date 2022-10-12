@@ -98,9 +98,8 @@ void XdgShellInterfacePrivate::xdg_wm_base_pong(Resource *resource, uint32_t ser
     Q_EMIT q->pongReceived(serial);
 }
 
-XdgShellInterface::XdgShellInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new XdgShellInterfacePrivate(this))
+XdgShellInterface::XdgShellInterface(Display *display)
+    : d(new XdgShellInterfacePrivate(this))
 {
     d->display = display;
     d->init(*display, s_version);

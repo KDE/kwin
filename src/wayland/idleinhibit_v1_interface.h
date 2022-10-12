@@ -26,7 +26,7 @@ class KWIN_EXPORT IdleInhibitManagerV1Interface : public QObject
     Q_OBJECT
 
 public:
-    explicit IdleInhibitManagerV1Interface(Display *display, QObject *parent = nullptr);
+    explicit IdleInhibitManagerV1Interface(Display *display);
     ~IdleInhibitManagerV1Interface() override;
 
 private:

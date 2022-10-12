@@ -74,9 +74,8 @@ void OutputManagementV2InterfacePrivate::kde_output_management_v2_create_configu
     new OutputConfigurationV2Interface(config_resource);
 }
 
-OutputManagementV2Interface::OutputManagementV2Interface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new OutputManagementV2InterfacePrivate(display))
+OutputManagementV2Interface::OutputManagementV2Interface(Display *display)
+    : d(new OutputManagementV2InterfacePrivate(display))
 {
 }
 

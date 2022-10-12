@@ -15,19 +15,16 @@
 
 #include <QTimer>
 
-using namespace KWaylandServer;
-
 namespace KWin
 {
 
 static const Qt::Edges AnchorHorizontal = Qt::LeftEdge | Qt::RightEdge;
 static const Qt::Edges AnchorVertical = Qt::TopEdge | Qt::BottomEdge;
 
-LayerShellV1Integration::LayerShellV1Integration(QObject *parent)
-    : WaylandShellIntegration(parent)
+LayerShellV1Integration::LayerShellV1Integration()
+    : m_shell(std::make_unique<KWaylandServer::LayerShellV1Interface>(waylandServer()->display()))
 {
-    LayerShellV1Interface *shell = new LayerShellV1Interface(waylandServer()->display(), this);
-    connect(shell, &KWaylandServer::LayerShellV1Interface::surfaceCreated,
+    connect(m_shell.get(), &KWaylandServer::LayerShellV1Interface::surfaceCreated,
             this, &LayerShellV1Integration::createWindow);
 
     m_rearrangeTimer = new QTimer(this);
@@ -35,7 +32,9 @@ LayerShellV1Integration::LayerShellV1Integration(QObject *parent)
     connect(m_rearrangeTimer, &QTimer::timeout, this, &LayerShellV1Integration::rearrange);
 }
 
-void LayerShellV1Integration::createWindow(LayerSurfaceV1Interface *shellSurface)
+LayerShellV1Integration::~LayerShellV1Integration() = default;
+
+void LayerShellV1Integration::createWindow(KWaylandServer::LayerSurfaceV1Interface *shellSurface)
 {
     Output *output = shellSurface->output() ? shellSurface->output()->handle() : workspace()->activeOutput();
     if (!output) {
@@ -47,13 +46,13 @@ void LayerShellV1Integration::createWindow(LayerSurfaceV1Interface *shellSurface
     Q_EMIT windowCreated(new LayerShellV1Window(shellSurface, output, this));
 }
 
-void LayerShellV1Integration::recreateWindow(LayerSurfaceV1Interface *shellSurface)
+void LayerShellV1Integration::recreateWindow(KWaylandServer::LayerSurfaceV1Interface *shellSurface)
 {
     destroyWindow(shellSurface);
     createWindow(shellSurface);
 }
 
-void LayerShellV1Integration::destroyWindow(LayerSurfaceV1Interface *shellSurface)
+void LayerShellV1Integration::destroyWindow(KWaylandServer::LayerSurfaceV1Interface *shellSurface)
 {
     const QList<Window *> windows = waylandServer()->windows();
     for (Window *window : windows) {
@@ -65,7 +64,7 @@ void LayerShellV1Integration::destroyWindow(LayerSurfaceV1Interface *shellSurfac
     }
 }
 
-static void adjustWorkArea(const LayerSurfaceV1Interface *shellSurface, QRect *workArea)
+static void adjustWorkArea(const KWaylandServer::LayerSurfaceV1Interface *shellSurface, QRect *workArea)
 {
     switch (shellSurface->exclusiveEdge()) {
     case Qt::LeftEdge:
@@ -84,10 +83,10 @@ static void adjustWorkArea(const LayerSurfaceV1Interface *shellSurface, QRect *w
 }
 
 static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *workArea,
-                           LayerSurfaceV1Interface::Layer layer, bool exclusive)
+                           KWaylandServer::LayerSurfaceV1Interface::Layer layer, bool exclusive)
 {
     for (LayerShellV1Window *window : windows) {
-        LayerSurfaceV1Interface *shellSurface = window->shellSurface();
+        KWaylandServer::LayerSurfaceV1Interface *shellSurface = window->shellSurface();
 
         if (shellSurface->layer() != layer) {
             continue;
@@ -184,15 +183,15 @@ static void rearrangeOutput(Output *output)
     if (!windows.isEmpty()) {
         QRect workArea = output->geometry();
 
-        rearrangeLayer(windows, &workArea, LayerSurfaceV1Interface::OverlayLayer, true);
-        rearrangeLayer(windows, &workArea, LayerSurfaceV1Interface::TopLayer, true);
-        rearrangeLayer(windows, &workArea, LayerSurfaceV1Interface::BottomLayer, true);
-        rearrangeLayer(windows, &workArea, LayerSurfaceV1Interface::BackgroundLayer, true);
+        rearrangeLayer(windows, &workArea, KWaylandServer::LayerSurfaceV1Interface::OverlayLayer, true);
+        rearrangeLayer(windows, &workArea, KWaylandServer::LayerSurfaceV1Interface::TopLayer, true);
+        rearrangeLayer(windows, &workArea, KWaylandServer::LayerSurfaceV1Interface::BottomLayer, true);
+        rearrangeLayer(windows, &workArea, KWaylandServer::LayerSurfaceV1Interface::BackgroundLayer, true);
 
-        rearrangeLayer(windows, &workArea, LayerSurfaceV1Interface::OverlayLayer, false);
-        rearrangeLayer(windows, &workArea, LayerSurfaceV1Interface::TopLayer, false);
-        rearrangeLayer(windows, &workArea, LayerSurfaceV1Interface::BottomLayer, false);
-        rearrangeLayer(windows, &workArea, LayerSurfaceV1Interface::BackgroundLayer, false);
+        rearrangeLayer(windows, &workArea, KWaylandServer::LayerSurfaceV1Interface::OverlayLayer, false);
+        rearrangeLayer(windows, &workArea, KWaylandServer::LayerSurfaceV1Interface::TopLayer, false);
+        rearrangeLayer(windows, &workArea, KWaylandServer::LayerSurfaceV1Interface::BottomLayer, false);
+        rearrangeLayer(windows, &workArea, KWaylandServer::LayerSurfaceV1Interface::BackgroundLayer, false);
     }
 }
 

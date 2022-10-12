@@ -32,7 +32,7 @@ class KWIN_EXPORT AppMenuManagerInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit AppMenuManagerInterface(Display *display, QObject *parent = nullptr);
+    explicit AppMenuManagerInterface(Display *display);
     ~AppMenuManagerInterface() override;
     /**
      * Returns any existing appMenu for a given surface

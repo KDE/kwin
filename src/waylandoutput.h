@@ -21,7 +21,7 @@ class WaylandOutput : public QObject
     Q_OBJECT
 
 public:
-    explicit WaylandOutput(Output *output, QObject *parent = nullptr);
+    explicit WaylandOutput(Output *output);
 
 private Q_SLOTS:
     void update();

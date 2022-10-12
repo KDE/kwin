@@ -175,13 +175,13 @@ private:
     InputPanel *m_inputPanel;
     QThread *m_thread;
     KWaylandServer::Display m_display;
-    SeatInterface *m_seat;
-    CompositorInterface *m_serverCompositor;
+    std::unique_ptr<SeatInterface> m_seat;
+    std::unique_ptr<CompositorInterface> m_serverCompositor;
     std::unique_ptr<FakeOutput> m_outputHandle;
     std::unique_ptr<OutputInterface> m_outputInterface;
 
-    KWaylandServer::InputMethodV1Interface *m_inputMethodIface;
-    KWaylandServer::InputPanelV1Interface *m_inputPanelIface;
+    std::unique_ptr<KWaylandServer::InputMethodV1Interface> m_inputMethodIface;
+    std::unique_ptr<KWaylandServer::InputPanelV1Interface> m_inputPanelIface;
 
     QVector<SurfaceInterface *> m_surfaces;
 };
@@ -194,15 +194,15 @@ void TestInputMethodInterface::initTestCase()
     m_display.start();
     QVERIFY(m_display.isRunning());
 
-    m_seat = new SeatInterface(&m_display, this);
-    m_serverCompositor = new CompositorInterface(&m_display, this);
-    m_inputMethodIface = new InputMethodV1Interface(&m_display, this);
-    m_inputPanelIface = new InputPanelV1Interface(&m_display, this);
+    m_seat = std::make_unique<SeatInterface>(&m_display);
+    m_serverCompositor = std::make_unique<CompositorInterface>(&m_display);
+    m_inputMethodIface = std::make_unique<InputMethodV1Interface>(&m_display);
+    m_inputPanelIface = std::make_unique<InputPanelV1Interface>(&m_display);
 
     m_outputHandle = std::make_unique<FakeOutput>();
     m_outputInterface = std::make_unique<OutputInterface>(&m_display, m_outputHandle.get());
 
-    connect(m_serverCompositor, &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
+    connect(m_serverCompositor.get(), &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
         m_surfaces += surface;
     });
 
@@ -253,7 +253,7 @@ void TestInputMethodInterface::initTestCase()
 
     QVERIFY(interfacesSpy.count() || interfacesSpy.wait());
 
-    QSignalSpy surfaceSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
+    QSignalSpy surfaceSpy(m_serverCompositor.get(), &CompositorInterface::surfaceCreated);
     for (int i = 0; i < 3; ++i) {
         m_clientCompositor->createSurface(this);
     }
@@ -277,17 +277,17 @@ TestInputMethodInterface::~TestInputMethodInterface()
     }
     delete m_inputPanel;
     delete m_inputMethod;
-    delete m_inputMethodIface;
-    delete m_inputPanelIface;
+    m_inputMethodIface.reset();
+    m_inputPanelIface.reset();
     m_connection->deleteLater();
     m_connection = nullptr;
 }
 
 void TestInputMethodInterface::testAdd()
 {
-    QSignalSpy panelSpy(m_inputPanelIface, &InputPanelV1Interface::inputPanelSurfaceAdded);
+    QSignalSpy panelSpy(m_inputPanelIface.get(), &InputPanelV1Interface::inputPanelSurfaceAdded);
     QPointer<InputPanelSurfaceV1Interface> panelSurfaceIface;
-    connect(m_inputPanelIface, &InputPanelV1Interface::inputPanelSurfaceAdded, this, [&panelSurfaceIface](InputPanelSurfaceV1Interface *surface) {
+    connect(m_inputPanelIface.get(), &InputPanelV1Interface::inputPanelSurfaceAdded, this, [&panelSurfaceIface](InputPanelSurfaceV1Interface *surface) {
         panelSurfaceIface = surface;
     });
 

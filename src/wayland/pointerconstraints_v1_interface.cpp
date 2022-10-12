@@ -113,9 +113,8 @@ void PointerConstraintsV1InterfacePrivate::zwp_pointer_constraints_v1_destroy(Re
     wl_resource_destroy(resource->handle);
 }
 
-PointerConstraintsV1Interface::PointerConstraintsV1Interface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new PointerConstraintsV1InterfacePrivate(display))
+PointerConstraintsV1Interface::PointerConstraintsV1Interface(Display *display)
+    : d(new PointerConstraintsV1InterfacePrivate(display))
 {
 }
 

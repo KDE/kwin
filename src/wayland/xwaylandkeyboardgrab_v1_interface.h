@@ -27,7 +27,7 @@ class KWIN_EXPORT XWaylandKeyboardGrabManagerV1Interface : public QObject
 {
     Q_OBJECT
 public:
-    explicit XWaylandKeyboardGrabManagerV1Interface(Display *display, QObject *parent = nullptr);
+    explicit XWaylandKeyboardGrabManagerV1Interface(Display *display);
     ~XWaylandKeyboardGrabManagerV1Interface() override;
     bool hasGrab(SurfaceInterface *surface, SeatInterface *seat) const;
 

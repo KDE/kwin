@@ -34,7 +34,7 @@ class KWIN_EXPORT OutputManagementV2Interface : public QObject
     Q_OBJECT
 
 public:
-    explicit OutputManagementV2Interface(Display *display, QObject *parent = nullptr);
+    explicit OutputManagementV2Interface(Display *display);
     ~OutputManagementV2Interface() override;
 
 private:

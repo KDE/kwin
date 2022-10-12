@@ -244,9 +244,8 @@ void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_ge
     (*it)->d->add(resource->client(), id, resource->version());
 }
 
-PlasmaWindowManagementInterface::PlasmaWindowManagementInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new PlasmaWindowManagementInterfacePrivate(this, display))
+PlasmaWindowManagementInterface::PlasmaWindowManagementInterface(Display *display)
+    : d(new PlasmaWindowManagementInterfacePrivate(this, display))
 {
 }
 
@@ -1060,9 +1059,8 @@ void PlasmaWindowActivationFeedbackInterfacePrivate::org_kde_plasma_activation_f
     wl_resource_destroy(resource->handle);
 }
 
-PlasmaWindowActivationFeedbackInterface::PlasmaWindowActivationFeedbackInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new PlasmaWindowActivationFeedbackInterfacePrivate(display))
+PlasmaWindowActivationFeedbackInterface::PlasmaWindowActivationFeedbackInterface(Display *display)
+    : d(new PlasmaWindowActivationFeedbackInterfacePrivate(display))
 {
 }
 

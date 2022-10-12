@@ -53,7 +53,7 @@ class KWIN_EXPORT DpmsManagerInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit DpmsManagerInterface(Display *display, QObject *parent = nullptr);
+    explicit DpmsManagerInterface(Display *display);
     ~DpmsManagerInterface() override;
 
 private:

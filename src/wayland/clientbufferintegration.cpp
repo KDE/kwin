@@ -11,8 +11,7 @@
 namespace KWaylandServer
 {
 ClientBufferIntegration::ClientBufferIntegration(Display *display)
-    : QObject(display)
-    , m_display(display)
+    : m_display(display)
 {
     DisplayPrivate *displayPrivate = DisplayPrivate::get(display);
     displayPrivate->bufferIntegrations.append(this);

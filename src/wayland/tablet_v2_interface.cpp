@@ -835,9 +835,8 @@ public:
     QHash<SeatInterface *, TabletSeatV2Interface *> m_seats;
 };
 
-TabletManagerV2Interface::TabletManagerV2Interface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new TabletManagerV2InterfacePrivate(display, this))
+TabletManagerV2Interface::TabletManagerV2Interface(Display *display)
+    : d(new TabletManagerV2InterfacePrivate(display, this))
 {
 }
 

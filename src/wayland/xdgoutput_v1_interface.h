@@ -35,7 +35,7 @@ class KWIN_EXPORT XdgOutputManagerV1Interface : public QObject
     Q_OBJECT
 
 public:
-    explicit XdgOutputManagerV1Interface(Display *display, QObject *parent = nullptr);
+    explicit XdgOutputManagerV1Interface(Display *display);
     ~XdgOutputManagerV1Interface() override;
     /**
      * Creates an XdgOutputInterface object for an existing Output

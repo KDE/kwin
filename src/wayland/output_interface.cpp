@@ -175,9 +175,8 @@ void OutputInterfacePrivate::output_bind_resource(Resource *resource)
     Q_EMIT q->bound(display->getConnection(resource->client()), resource->handle);
 }
 
-OutputInterface::OutputInterface(Display *display, KWin::Output *handle, QObject *parent)
-    : QObject(parent)
-    , d(new OutputInterfacePrivate(display, this, handle))
+OutputInterface::OutputInterface(Display *display, KWin::Output *handle)
+    : d(new OutputInterfacePrivate(display, this, handle))
 {
     DisplayPrivate *displayPrivate = DisplayPrivate::get(display);
     displayPrivate->outputs.append(this);

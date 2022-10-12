@@ -43,7 +43,7 @@ class KWIN_EXPORT PlasmaWindowActivationFeedbackInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit PlasmaWindowActivationFeedbackInterface(Display *display, QObject *parent = nullptr);
+    explicit PlasmaWindowActivationFeedbackInterface(Display *display);
     ~PlasmaWindowActivationFeedbackInterface() override;
 
     /**
@@ -63,7 +63,7 @@ class KWIN_EXPORT PlasmaWindowManagementInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit PlasmaWindowManagementInterface(Display *display, QObject *parent = nullptr);
+    explicit PlasmaWindowManagementInterface(Display *display);
     ~PlasmaWindowManagementInterface() override;
     enum class ShowingDesktopState {
         Disabled,

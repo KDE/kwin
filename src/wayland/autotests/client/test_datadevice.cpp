@@ -50,9 +50,9 @@ private Q_SLOTS:
 
 private:
     std::unique_ptr<KWaylandServer::Display> m_display;
-    KWaylandServer::DataDeviceManagerInterface *m_dataDeviceManagerInterface = nullptr;
-    KWaylandServer::CompositorInterface *m_compositorInterface = nullptr;
-    KWaylandServer::SeatInterface *m_seatInterface = nullptr;
+    std::unique_ptr<KWaylandServer::DataDeviceManagerInterface> m_dataDeviceManagerInterface;
+    std::unique_ptr<KWaylandServer::CompositorInterface> m_compositorInterface;
+    std::unique_ptr<KWaylandServer::SeatInterface> m_seatInterface;
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::DataDeviceManager *m_dataDeviceManager = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
@@ -100,13 +100,13 @@ void TestDataDevice::init()
     QVERIFY(registry.isValid());
     registry.setup();
 
-    m_dataDeviceManagerInterface = new DataDeviceManagerInterface(m_display.get(), m_display.get());
+    m_dataDeviceManagerInterface = std::make_unique<DataDeviceManagerInterface>(m_display.get());
 
     QVERIFY(dataDeviceManagerSpy.wait());
     m_dataDeviceManager =
         registry.createDataDeviceManager(dataDeviceManagerSpy.first().first().value<quint32>(), dataDeviceManagerSpy.first().last().value<quint32>(), this);
 
-    m_seatInterface = new SeatInterface(m_display.get(), m_display.get());
+    m_seatInterface = std::make_unique<SeatInterface>(m_display.get());
     m_seatInterface->setHasPointer(true);
 
     QVERIFY(seatSpy.wait());
@@ -115,7 +115,7 @@ void TestDataDevice::init()
     QSignalSpy pointerChangedSpy(m_seat, &KWayland::Client::Seat::hasPointerChanged);
     QVERIFY(pointerChangedSpy.wait());
 
-    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
+    m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
     QVERIFY(m_compositor->isValid());
@@ -156,7 +156,7 @@ void TestDataDevice::testCreate()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
 
-    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface, &KWaylandServer::DataDeviceManagerInterface::dataDeviceCreated);
+    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface.get(), &KWaylandServer::DataDeviceManagerInterface::dataDeviceCreated);
 
     std::unique_ptr<DataDevice> dataDevice(m_dataDeviceManager->getDataDevice(m_seat));
     QVERIFY(dataDevice->isValid());
@@ -165,7 +165,7 @@ void TestDataDevice::testCreate()
     QCOMPARE(dataDeviceCreatedSpy.count(), 1);
     auto deviceInterface = dataDeviceCreatedSpy.first().first().value<DataDeviceInterface *>();
     QVERIFY(deviceInterface);
-    QCOMPARE(deviceInterface->seat(), m_seatInterface);
+    QCOMPARE(deviceInterface->seat(), m_seatInterface.get());
     QVERIFY(!deviceInterface->selection());
 
     // this will probably fail, we need to make a selection client side
@@ -198,7 +198,7 @@ void TestDataDevice::testDrag()
     using namespace KWaylandServer;
     std::unique_ptr<Pointer> pointer(m_seat->createPointer());
 
-    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface, &KWaylandServer::DataDeviceManagerInterface::dataDeviceCreated);
+    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface.get(), &KWaylandServer::DataDeviceManagerInterface::dataDeviceCreated);
 
     std::unique_ptr<DataDevice> dataDevice(m_dataDeviceManager->getDataDevice(m_seat));
     QVERIFY(dataDevice->isValid());
@@ -208,7 +208,7 @@ void TestDataDevice::testDrag()
     auto deviceInterface = dataDeviceCreatedSpy.first().first().value<DataDeviceInterface *>();
     QVERIFY(deviceInterface);
 
-    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWaylandServer::DataDeviceManagerInterface::dataSourceCreated);
+    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface.get(), &KWaylandServer::DataDeviceManagerInterface::dataSourceCreated);
 
     std::unique_ptr<DataSource> dataSource(m_dataDeviceManager->createDataSource());
     QVERIFY(dataSource->isValid());
@@ -218,7 +218,7 @@ void TestDataDevice::testDrag()
     auto sourceInterface = dataSourceCreatedSpy.first().first().value<DataSourceInterface *>();
     QVERIFY(sourceInterface);
 
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &KWaylandServer::CompositorInterface::surfaceCreated);
 
     std::unique_ptr<Surface> surface(m_compositor->createSurface());
     QVERIFY(surface->isValid());
@@ -279,7 +279,7 @@ void TestDataDevice::testDragInternally()
     using namespace KWaylandServer;
     std::unique_ptr<Pointer> pointer(m_seat->createPointer());
 
-    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface, &KWaylandServer::DataDeviceManagerInterface::dataDeviceCreated);
+    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface.get(), &KWaylandServer::DataDeviceManagerInterface::dataDeviceCreated);
 
     std::unique_ptr<DataDevice> dataDevice(m_dataDeviceManager->getDataDevice(m_seat));
     QVERIFY(dataDevice->isValid());
@@ -289,7 +289,7 @@ void TestDataDevice::testDragInternally()
     auto deviceInterface = dataDeviceCreatedSpy.first().first().value<DataDeviceInterface *>();
     QVERIFY(deviceInterface);
 
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &KWaylandServer::CompositorInterface::surfaceCreated);
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &KWaylandServer::CompositorInterface::surfaceCreated);
 
     std::unique_ptr<Surface> surface(m_compositor->createSurface());
     QVERIFY(surface->isValid());
@@ -350,7 +350,7 @@ void TestDataDevice::testSetSelection()
     using namespace KWaylandServer;
     std::unique_ptr<Pointer> pointer(m_seat->createPointer());
 
-    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface, &KWaylandServer::DataDeviceManagerInterface::dataDeviceCreated);
+    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface.get(), &KWaylandServer::DataDeviceManagerInterface::dataDeviceCreated);
 
     std::unique_ptr<DataDevice> dataDevice(m_dataDeviceManager->getDataDevice(m_seat));
     QVERIFY(dataDevice->isValid());
@@ -360,7 +360,7 @@ void TestDataDevice::testSetSelection()
     auto deviceInterface = dataDeviceCreatedSpy.first().first().value<DataDeviceInterface *>();
     QVERIFY(deviceInterface);
 
-    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWaylandServer::DataDeviceManagerInterface::dataSourceCreated);
+    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface.get(), &KWaylandServer::DataDeviceManagerInterface::dataSourceCreated);
 
     std::unique_ptr<DataSource> dataSource(m_dataDeviceManager->createDataSource());
     QVERIFY(dataSource->isValid());
@@ -429,7 +429,7 @@ void TestDataDevice::testSendSelectionOnSeat()
     m_seatInterface->setHasKeyboard(true);
     QVERIFY(keyboardChangedSpy.wait());
     // now create DataDevice, Keyboard and a Surface
-    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface, &DataDeviceManagerInterface::dataDeviceCreated);
+    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface.get(), &DataDeviceManagerInterface::dataDeviceCreated);
     std::unique_ptr<DataDevice> dataDevice(m_dataDeviceManager->getDataDevice(m_seat));
     QVERIFY(dataDevice->isValid());
     QVERIFY(dataDeviceCreatedSpy.wait());
@@ -437,7 +437,7 @@ void TestDataDevice::testSendSelectionOnSeat()
     QVERIFY(serverDataDevice);
     std::unique_ptr<Keyboard> keyboard(m_seat->createKeyboard());
     QVERIFY(keyboard->isValid());
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
     std::unique_ptr<Surface> surface(m_compositor->createSurface());
     QVERIFY(surface->isValid());
     QVERIFY(surfaceCreatedSpy.wait());
@@ -481,7 +481,7 @@ void TestDataDevice::testReplaceSource()
     m_seatInterface->setHasKeyboard(true);
     QVERIFY(keyboardChangedSpy.wait());
     // now create DataDevice, Keyboard and a Surface
-    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface, &DataDeviceManagerInterface::dataDeviceCreated);
+    QSignalSpy dataDeviceCreatedSpy(m_dataDeviceManagerInterface.get(), &DataDeviceManagerInterface::dataDeviceCreated);
     std::unique_ptr<DataDevice> dataDevice(m_dataDeviceManager->getDataDevice(m_seat));
     QVERIFY(dataDevice->isValid());
     QVERIFY(dataDeviceCreatedSpy.wait());
@@ -489,7 +489,7 @@ void TestDataDevice::testReplaceSource()
     QVERIFY(serverDataDevice);
     std::unique_ptr<Keyboard> keyboard(m_seat->createKeyboard());
     QVERIFY(keyboard->isValid());
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
     std::unique_ptr<Surface> surface(m_compositor->createSurface());
     QVERIFY(surface->isValid());
     QVERIFY(surfaceCreatedSpy.wait());

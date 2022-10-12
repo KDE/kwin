@@ -48,7 +48,7 @@ public:
         int refreshRate = 60000;
     };
 
-    explicit OutputInterface(Display *display, KWin::Output *handle, QObject *parent = nullptr);
+    explicit OutputInterface(Display *display, KWin::Output *handle);
     ~OutputInterface() override;
 
     bool isRemoved() const;

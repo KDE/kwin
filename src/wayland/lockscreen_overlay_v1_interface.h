@@ -27,7 +27,7 @@ class KWIN_EXPORT LockscreenOverlayV1Interface : public QObject
     Q_OBJECT
     Q_DISABLE_COPY(LockscreenOverlayV1Interface)
 public:
-    explicit LockscreenOverlayV1Interface(Display *display, QObject *parent = nullptr);
+    explicit LockscreenOverlayV1Interface(Display *display);
     ~LockscreenOverlayV1Interface() override;
 
 Q_SIGNALS:

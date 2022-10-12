@@ -31,8 +31,8 @@ private Q_SLOTS:
 private:
     std::unique_ptr<KWaylandServer::Display> m_display;
     std::unique_ptr<FakeOutput> m_outputHandle;
-    KWaylandServer::OutputInterface *m_serverOutput;
-    KWaylandServer::XdgOutputManagerV1Interface *m_serverXdgOutputManager;
+    std::unique_ptr<KWaylandServer::OutputInterface> m_serverOutput;
+    std::unique_ptr<KWaylandServer::XdgOutputManagerV1Interface> m_serverXdgOutputManager;
     KWaylandServer::XdgOutputV1Interface *m_serverXdgOutput;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::EventQueue *m_queue;
@@ -43,8 +43,6 @@ static const QString s_socketName = QStringLiteral("kwin-test-xdg-output-0");
 
 TestXdgOutput::TestXdgOutput(QObject *parent)
     : QObject(parent)
-    , m_display(nullptr)
-    , m_serverOutput(nullptr)
     , m_connection(nullptr)
     , m_thread(nullptr)
 {
@@ -61,11 +59,11 @@ void TestXdgOutput::init()
     m_outputHandle = std::make_unique<FakeOutput>();
     m_outputHandle->setMode(QSize(1920, 1080), 60000);
 
-    m_serverOutput = new OutputInterface(m_display.get(), m_outputHandle.get(), this);
+    m_serverOutput = std::make_unique<OutputInterface>(m_display.get(), m_outputHandle.get());
     m_serverOutput->setMode(QSize(1920, 1080));
 
-    m_serverXdgOutputManager = new XdgOutputManagerV1Interface(m_display.get(), this);
-    m_serverXdgOutput = m_serverXdgOutputManager->createXdgOutput(m_serverOutput, this);
+    m_serverXdgOutputManager = std::make_unique<XdgOutputManagerV1Interface>(m_display.get());
+    m_serverXdgOutput = m_serverXdgOutputManager->createXdgOutput(m_serverOutput.get(), this);
     m_serverXdgOutput->setLogicalSize(QSize(1280, 720)); // a 1.5 scale factor
     m_serverXdgOutput->setLogicalPosition(QPoint(11, 12)); // not a sensible value for one monitor, but works for this test
     m_serverXdgOutput->setName("testName");
@@ -106,8 +104,7 @@ void TestXdgOutput::cleanup()
     delete m_connection;
     m_connection = nullptr;
 
-    delete m_serverOutput;
-    m_serverOutput = nullptr;
+    m_serverOutput.reset();
     m_outputHandle.reset();
 
     m_display.reset();

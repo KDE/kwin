@@ -123,9 +123,8 @@ void XdgActivationV1InterfacePrivate::xdg_activation_v1_destroy(Resource *resour
     wl_resource_destroy(resource->handle);
 }
 
-XdgActivationV1Interface::XdgActivationV1Interface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new XdgActivationV1InterfacePrivate(display, this))
+XdgActivationV1Interface::XdgActivationV1Interface(Display *display)
+    : d(new XdgActivationV1InterfacePrivate(display, this))
 {
 }
 

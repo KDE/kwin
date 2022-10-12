@@ -28,7 +28,7 @@ class KWIN_EXPORT PointerGesturesV1Interface : public QObject
     Q_OBJECT
 
 public:
-    explicit PointerGesturesV1Interface(Display *display, QObject *parent = nullptr);
+    explicit PointerGesturesV1Interface(Display *display);
     ~PointerGesturesV1Interface() override;
 
 private:

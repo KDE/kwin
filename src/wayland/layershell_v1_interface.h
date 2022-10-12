@@ -31,7 +31,7 @@ class KWIN_EXPORT LayerShellV1Interface : public QObject
     Q_OBJECT
 
 public:
-    explicit LayerShellV1Interface(Display *display, QObject *parent = nullptr);
+    explicit LayerShellV1Interface(Display *display);
     ~LayerShellV1Interface() override;
 
     /**

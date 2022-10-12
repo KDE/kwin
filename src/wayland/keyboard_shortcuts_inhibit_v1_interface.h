@@ -55,7 +55,7 @@ class KWIN_EXPORT KeyboardShortcutsInhibitManagerV1Interface : public QObject
     Q_OBJECT
 
 public:
-    explicit KeyboardShortcutsInhibitManagerV1Interface(Display *d, QObject *parent = nullptr);
+    explicit KeyboardShortcutsInhibitManagerV1Interface(Display *d);
     ~KeyboardShortcutsInhibitManagerV1Interface() override;
 
     /**

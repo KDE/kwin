@@ -86,9 +86,8 @@ void ServerSideDecorationManagerInterfacePrivate::org_kde_kwin_server_decoration
     send_default_mode(resource->handle, modeWayland(defaultMode));
 }
 
-ServerSideDecorationManagerInterface::ServerSideDecorationManagerInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new ServerSideDecorationManagerInterfacePrivate(this, display))
+ServerSideDecorationManagerInterface::ServerSideDecorationManagerInterface(Display *display)
+    : d(new ServerSideDecorationManagerInterfacePrivate(this, display))
 {
 }
 

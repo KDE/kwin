@@ -44,9 +44,9 @@ private:
     KWaylandServer::SurfaceInterface *getServerSurface();
 
     std::unique_ptr<KWaylandServer::Display> m_display;
-    KWaylandServer::CompositorInterface *m_compositorInterface = nullptr;
-    KWaylandServer::DataDeviceManagerInterface *m_dataDeviceManagerInterface = nullptr;
-    KWaylandServer::SeatInterface *m_seatInterface = nullptr;
+    std::unique_ptr<KWaylandServer::CompositorInterface> m_compositorInterface;
+    std::unique_ptr<KWaylandServer::DataDeviceManagerInterface> m_dataDeviceManagerInterface;
+    std::unique_ptr<KWaylandServer::SeatInterface> m_seatInterface;
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
     KWayland::Client::EventQueue *m_queue = nullptr;
@@ -77,11 +77,11 @@ void TestDragAndDrop::init()
     QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
-    m_seatInterface = new SeatInterface(m_display.get(), m_display.get());
+    m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
+    m_seatInterface = std::make_unique<SeatInterface>(m_display.get());
     m_seatInterface->setHasPointer(true);
     m_seatInterface->setHasTouch(true);
-    m_dataDeviceManagerInterface = new DataDeviceManagerInterface(m_display.get(), m_display.get());
+    m_dataDeviceManagerInterface = std::make_unique<DataDeviceManagerInterface>(m_display.get());
     m_display->createShm();
 
     m_thread = new QThread(this);
@@ -176,7 +176,7 @@ KWayland::Client::Surface *TestDragAndDrop::createSurface()
 KWaylandServer::SurfaceInterface *TestDragAndDrop::getServerSurface()
 {
     using namespace KWaylandServer;
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
     if (!surfaceCreatedSpy.isValid()) {
         return nullptr;
     }
@@ -214,14 +214,14 @@ void TestDragAndDrop::testPointerDragAndDrop()
     QSignalSpy sourceDropSpy(m_dataSource, &DataSource::dragAndDropPerformed);
 
     // now we can start the drag and drop
-    QSignalSpy dragStartedSpy(m_seatInterface, &SeatInterface::dragStarted);
+    QSignalSpy dragStartedSpy(m_seatInterface.get(), &SeatInterface::dragStarted);
     m_dataSource->setDragAndDropActions(DataDeviceManager::DnDAction::Copy | DataDeviceManager::DnDAction::Move);
     m_dataDevice->startDrag(buttonPressSpy.first().first().value<quint32>(), m_dataSource, s.get());
     QVERIFY(dragStartedSpy.wait());
     QCOMPARE(m_seatInterface->dragSurface(), serverSurface);
     QCOMPARE(m_seatInterface->dragSurfaceTransformation(), QMatrix4x4());
     QVERIFY(!m_seatInterface->dragIcon());
-    QCOMPARE(SeatInterfacePrivate::get(m_seatInterface)->drag.dragImplicitGrabSerial, buttonPressSpy.first().first().value<quint32>());
+    QCOMPARE(SeatInterfacePrivate::get(m_seatInterface.get())->drag.dragImplicitGrabSerial, buttonPressSpy.first().first().value<quint32>());
     QVERIFY(dragEnteredSpy.wait());
     QCOMPARE(dragEnteredSpy.count(), 1);
     QCOMPARE(dragEnteredSpy.first().first().value<quint32>(), m_display->serial());
@@ -252,7 +252,7 @@ void TestDragAndDrop::testPointerDragAndDrop()
     QCOMPARE(dragMotionSpy.first().last().toUInt(), 3u);
 
     // simulate drop
-    QSignalSpy serverDragEndedSpy(m_seatInterface, &SeatInterface::dragEnded);
+    QSignalSpy serverDragEndedSpy(m_seatInterface.get(), &SeatInterface::dragEnded);
     QSignalSpy droppedSpy(m_dataDevice, &DataDevice::dropped);
     m_seatInterface->setTimestamp(4);
     m_seatInterface->notifyPointerButton(1, PointerButtonState::Released);
@@ -305,14 +305,14 @@ void TestDragAndDrop::testTouchDragAndDrop()
     QSignalSpy sourceDropSpy(m_dataSource, &DataSource::dragAndDropPerformed);
 
     // now we can start the drag and drop
-    QSignalSpy dragStartedSpy(m_seatInterface, &SeatInterface::dragStarted);
+    QSignalSpy dragStartedSpy(m_seatInterface.get(), &SeatInterface::dragStarted);
     m_dataSource->setDragAndDropActions(DataDeviceManager::DnDAction::Copy | DataDeviceManager::DnDAction::Move);
     m_dataDevice->startDrag(tp->downSerial(), m_dataSource, s.get());
     QVERIFY(dragStartedSpy.wait());
     QCOMPARE(m_seatInterface->dragSurface(), serverSurface);
     QCOMPARE(m_seatInterface->dragSurfaceTransformation(), QMatrix4x4());
     QVERIFY(!m_seatInterface->dragIcon());
-    QCOMPARE(SeatInterfacePrivate::get(m_seatInterface)->drag.dragImplicitGrabSerial, tp->downSerial());
+    QCOMPARE(SeatInterfacePrivate::get(m_seatInterface.get())->drag.dragImplicitGrabSerial, tp->downSerial());
     QVERIFY(dragEnteredSpy.wait());
     QCOMPARE(dragEnteredSpy.count(), 1);
     QCOMPARE(dragEnteredSpy.first().first().value<quint32>(), m_display->serial());
@@ -342,7 +342,7 @@ void TestDragAndDrop::testTouchDragAndDrop()
     QCOMPARE(dragMotionSpy.first().last().toUInt(), 3u);
 
     // simulate drop
-    QSignalSpy serverDragEndedSpy(m_seatInterface, &SeatInterface::dragEnded);
+    QSignalSpy serverDragEndedSpy(m_seatInterface.get(), &SeatInterface::dragEnded);
     QSignalSpy droppedSpy(m_dataDevice, &DataDevice::dropped);
     m_seatInterface->setTimestamp(4);
     m_seatInterface->notifyTouchUp(touchId);
@@ -389,14 +389,14 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
     QSignalSpy dragLeftSpy(m_dataDevice, &DataDevice::dragLeft);
 
     // now we can start the drag and drop
-    QSignalSpy dragStartedSpy(m_seatInterface, &SeatInterface::dragStarted);
+    QSignalSpy dragStartedSpy(m_seatInterface.get(), &SeatInterface::dragStarted);
     m_dataSource->setDragAndDropActions(DataDeviceManager::DnDAction::Copy | DataDeviceManager::DnDAction::Move);
     m_dataDevice->startDrag(buttonPressSpy.first().first().value<quint32>(), m_dataSource, s.get());
     QVERIFY(dragStartedSpy.wait());
     QCOMPARE(m_seatInterface->dragSurface(), serverSurface);
     QCOMPARE(m_seatInterface->dragSurfaceTransformation(), QMatrix4x4());
     QVERIFY(!m_seatInterface->dragIcon());
-    QCOMPARE(SeatInterfacePrivate::get(m_seatInterface)->drag.dragImplicitGrabSerial, buttonPressSpy.first().first().value<quint32>());
+    QCOMPARE(SeatInterfacePrivate::get(m_seatInterface.get())->drag.dragImplicitGrabSerial, buttonPressSpy.first().first().value<quint32>());
     QVERIFY(dragEnteredSpy.wait());
     QCOMPARE(dragEnteredSpy.count(), 1);
     QCOMPARE(dragEnteredSpy.first().first().value<quint32>(), m_display->serial());
@@ -429,7 +429,7 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
     // now delete the DataSource
     delete m_dataSource;
     m_dataSource = nullptr;
-    QSignalSpy serverDragEndedSpy(m_seatInterface, &SeatInterface::dragEnded);
+    QSignalSpy serverDragEndedSpy(m_seatInterface.get(), &SeatInterface::dragEnded);
     QVERIFY(dragLeftSpy.isEmpty());
     QVERIFY(dragLeftSpy.wait());
     QTRY_COMPARE(dragLeftSpy.count(), 1);

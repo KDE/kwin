@@ -59,9 +59,8 @@ protected:
     void zxdg_output_v1_destroy(Resource *resource) override;
 };
 
-XdgOutputManagerV1Interface::XdgOutputManagerV1Interface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new XdgOutputManagerV1InterfacePrivate(this, display))
+XdgOutputManagerV1Interface::XdgOutputManagerV1Interface(Display *display)
+    : d(new XdgOutputManagerV1InterfacePrivate(this, display))
 {
 }
 

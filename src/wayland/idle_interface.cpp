@@ -36,9 +36,8 @@ void IdleInterfacePrivate::org_kde_kwin_idle_get_idle_timeout(Resource *resource
     new IdleTimeoutInterface(std::chrono::milliseconds(timeout), idleTimoutResource);
 }
 
-IdleInterface::IdleInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new IdleInterfacePrivate(display))
+IdleInterface::IdleInterface(Display *display)
+    : d(new IdleInterfacePrivate(display))
 {
 }
 

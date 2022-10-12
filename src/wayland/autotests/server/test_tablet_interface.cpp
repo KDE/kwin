@@ -157,11 +157,11 @@ private:
 
     QThread *m_thread;
     KWaylandServer::Display m_display;
-    SeatInterface *m_seat;
-    CompositorInterface *m_serverCompositor;
+    std::unique_ptr<SeatInterface> m_seat;
+    std::unique_ptr<CompositorInterface> m_serverCompositor;
 
     TabletSeat *m_tabletSeatClient = nullptr;
-    TabletManagerV2Interface *m_tabletManager;
+    std::unique_ptr<TabletManagerV2Interface> m_tabletManager;
     QVector<KWayland::Client::Surface *> m_surfacesClient;
 
     TabletV2Interface *m_tablet;
@@ -179,11 +179,11 @@ void TestTabletInterface::initTestCase()
     m_display.start();
     QVERIFY(m_display.isRunning());
 
-    m_seat = new SeatInterface(&m_display, this);
-    m_serverCompositor = new CompositorInterface(&m_display, this);
-    m_tabletManager = new TabletManagerV2Interface(&m_display, this);
+    m_seat = std::make_unique<SeatInterface>(&m_display);
+    m_serverCompositor = std::make_unique<CompositorInterface>(&m_display);
+    m_tabletManager = std::make_unique<TabletManagerV2Interface>(&m_display);
 
-    connect(m_serverCompositor, &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
+    connect(m_serverCompositor.get(), &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
         m_surfaces += surface;
     });
 
@@ -227,7 +227,7 @@ void TestTabletInterface::initTestCase()
     m_clientCompositor = registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
     QVERIFY(m_clientCompositor->isValid());
 
-    QSignalSpy surfaceSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
+    QSignalSpy surfaceSpy(m_serverCompositor.get(), &CompositorInterface::surfaceCreated);
     for (int i = 0; i < 3; ++i) {
         m_surfacesClient += m_clientCompositor->createSurface(this);
     }
@@ -255,7 +255,7 @@ TestTabletInterface::~TestTabletInterface()
 
 void TestTabletInterface::testAdd()
 {
-    TabletSeatV2Interface *seatInterface = m_tabletManager->seat(m_seat);
+    TabletSeatV2Interface *seatInterface = m_tabletManager->seat(m_seat.get());
     QVERIFY(seatInterface);
 
     QSignalSpy tabletSpy(m_tabletSeatClient, &TabletSeat::tabletAdded);
@@ -283,7 +283,7 @@ void TestTabletInterface::testAdd()
 
 void TestTabletInterface::testAddPad()
 {
-    TabletSeatV2Interface *seatInterface = m_tabletManager->seat(m_seat);
+    TabletSeatV2Interface *seatInterface = m_tabletManager->seat(m_seat.get());
     QVERIFY(seatInterface);
 
     QSignalSpy tabletPadSpy(m_tabletSeatClient, &TabletSeat::padAdded);

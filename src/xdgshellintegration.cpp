@@ -11,8 +11,6 @@
 #include "workspace.h"
 #include "xdgshellwindow.h"
 
-using namespace KWaylandServer;
-
 namespace KWin
 {
 
@@ -28,24 +26,22 @@ namespace KWin
  * surface role of the underlying xdg_surface object.
  */
 
-XdgShellIntegration::XdgShellIntegration(QObject *parent)
-    : WaylandShellIntegration(parent)
+XdgShellIntegration::XdgShellIntegration()
+    : m_shell(std::make_unique<KWaylandServer::XdgShellInterface>(waylandServer()->display()))
 {
-    XdgShellInterface *shell = new XdgShellInterface(waylandServer()->display(), this);
-
-    connect(shell, &XdgShellInterface::toplevelCreated,
+    connect(m_shell.get(), &KWaylandServer::XdgShellInterface::toplevelCreated,
             this, &XdgShellIntegration::registerXdgToplevel);
-    connect(shell, &XdgShellInterface::popupCreated,
+    connect(m_shell.get(), &KWaylandServer::XdgShellInterface::popupCreated,
             this, &XdgShellIntegration::registerXdgPopup);
 }
 
-void XdgShellIntegration::registerXdgToplevel(XdgToplevelInterface *toplevel)
+void XdgShellIntegration::registerXdgToplevel(KWaylandServer::XdgToplevelInterface *toplevel)
 {
     // Note that the window is going to be destroyed and immediately re-created when the
     // underlying surface is unmapped. XdgToplevelWindow is re-created right away since
     // we don't want too loose any window requests that are allowed to be sent prior to
     // the first initial commit, e.g. set_maximized or set_fullscreen.
-    connect(toplevel, &XdgToplevelInterface::resetOccurred,
+    connect(toplevel, &KWaylandServer::XdgToplevelInterface::resetOccurred,
             this, [this, toplevel] {
                 createXdgToplevelWindow(toplevel);
             });
@@ -53,7 +49,7 @@ void XdgShellIntegration::registerXdgToplevel(XdgToplevelInterface *toplevel)
     createXdgToplevelWindow(toplevel);
 }
 
-void XdgShellIntegration::createXdgToplevelWindow(XdgToplevelInterface *toplevel)
+void XdgShellIntegration::createXdgToplevelWindow(KWaylandServer::XdgToplevelInterface *toplevel)
 {
     if (!workspace()) {
         qCWarning(KWIN_CORE, "An xdg-toplevel surface has been created while the compositor "
@@ -64,7 +60,7 @@ void XdgShellIntegration::createXdgToplevelWindow(XdgToplevelInterface *toplevel
     Q_EMIT windowCreated(new XdgToplevelWindow(toplevel));
 }
 
-void XdgShellIntegration::registerXdgPopup(XdgPopupInterface *popup)
+void XdgShellIntegration::registerXdgPopup(KWaylandServer::XdgPopupInterface *popup)
 {
     if (!workspace()) {
         qCWarning(KWIN_CORE, "An xdg-popup surface has been created while the compositor is "

@@ -153,7 +153,7 @@ class KWIN_EXPORT SeatInterface : public QObject
      */
     Q_PROPERTY(quint32 timestamp READ timestamp WRITE setTimestamp NOTIFY timestampChanged)
 public:
-    explicit SeatInterface(Display *display, QObject *parent = nullptr);
+    explicit SeatInterface(Display *display);
     virtual ~SeatInterface();
 
     Display *display() const;

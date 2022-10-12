@@ -133,9 +133,8 @@ void ViewportInterface::wp_viewport_set_destination(Resource *resource, int32_t 
     surfacePrivate->pending.viewport.destinationSizeIsSet = true;
 }
 
-ViewporterInterface::ViewporterInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new ViewporterInterfacePrivate)
+ViewporterInterface::ViewporterInterface(Display *display)
+    : d(new ViewporterInterfacePrivate)
 {
     d->init(*display, s_version);
 }

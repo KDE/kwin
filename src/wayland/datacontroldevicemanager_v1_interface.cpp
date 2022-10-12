@@ -67,9 +67,8 @@ void DataControlDeviceManagerV1InterfacePrivate::zwlr_data_control_manager_v1_de
     wl_resource_destroy(resource->handle);
 }
 
-DataControlDeviceManagerV1Interface::DataControlDeviceManagerV1Interface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new DataControlDeviceManagerV1InterfacePrivate(this, display))
+DataControlDeviceManagerV1Interface::DataControlDeviceManagerV1Interface(Display *display)
+    : d(new DataControlDeviceManagerV1InterfacePrivate(this, display))
 {
 }
 

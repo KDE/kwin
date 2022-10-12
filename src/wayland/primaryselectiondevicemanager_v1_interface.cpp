@@ -67,9 +67,8 @@ void PrimarySelectionDeviceManagerV1InterfacePrivate::zwp_primary_selection_devi
     wl_resource_destroy(resource->handle);
 }
 
-PrimarySelectionDeviceManagerV1Interface::PrimarySelectionDeviceManagerV1Interface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new PrimarySelectionDeviceManagerV1InterfacePrivate(this, display))
+PrimarySelectionDeviceManagerV1Interface::PrimarySelectionDeviceManagerV1Interface(Display *display)
+    : d(new PrimarySelectionDeviceManagerV1InterfacePrivate(this, display))
 {
 }
 

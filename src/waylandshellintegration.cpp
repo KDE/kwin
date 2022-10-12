@@ -9,9 +9,6 @@
 namespace KWin
 {
 
-WaylandShellIntegration::WaylandShellIntegration(QObject *parent)
-    : QObject(parent)
-{
-}
+WaylandShellIntegration::WaylandShellIntegration() = default;
 
 } // namespace KWin

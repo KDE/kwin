@@ -36,7 +36,7 @@ class KWIN_EXPORT PointerConstraintsV1Interface : public QObject
     Q_OBJECT
 
 public:
-    explicit PointerConstraintsV1Interface(Display *display, QObject *parent = nullptr);
+    explicit PointerConstraintsV1Interface(Display *display);
     ~PointerConstraintsV1Interface() override;
 
 private:

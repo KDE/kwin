@@ -34,7 +34,7 @@ class KWIN_EXPORT SubCompositorInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit SubCompositorInterface(Display *display, QObject *parent = nullptr);
+    explicit SubCompositorInterface(Display *display);
     ~SubCompositorInterface() override;
 
 Q_SIGNALS:

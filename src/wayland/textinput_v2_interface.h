@@ -33,7 +33,7 @@ class KWIN_EXPORT TextInputManagerV2Interface : public QObject
 {
     Q_OBJECT
 public:
-    explicit TextInputManagerV2Interface(Display *display, QObject *parent = nullptr);
+    explicit TextInputManagerV2Interface(Display *display);
     ~TextInputManagerV2Interface() override;
 
 private:

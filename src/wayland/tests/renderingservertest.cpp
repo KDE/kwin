@@ -241,7 +241,7 @@ int main(int argc, char **argv)
     KWaylandServer::Display display;
     display.start();
     new DataDeviceManagerInterface(&display);
-    new CompositorInterface(&display, &display);
+    auto compositorInterface = std::make_unique<CompositorInterface>(&display);
     XdgShellInterface *shell = new XdgShellInterface(&display);
     display.createShm();
 
@@ -251,7 +251,7 @@ int main(int argc, char **argv)
     outputHandle->setPhysicalSize(QSize(269, 202));
     outputHandle->setMode(windowSize, 60000);
 
-    OutputInterface *outputInterface = new OutputInterface(&display, outputHandle.get(), &display);
+    auto outputInterface = std::make_unique<OutputInterface>(&display, outputHandle.get());
     outputInterface->setPhysicalSize(QSize(269, 202));
     outputInterface->setMode(windowSize);
 

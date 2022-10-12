@@ -50,7 +50,7 @@ private:
 
     QThread *m_thread;
     KWaylandServer::Display m_display;
-    CompositorInterface *m_serverCompositor;
+    std::unique_ptr<CompositorInterface> m_serverCompositor;
     Viewporter *m_viewporter;
 };
 
@@ -65,7 +65,7 @@ void TestViewporterInterface::initTestCase()
     m_display.createShm();
     new ViewporterInterface(&m_display);
 
-    m_serverCompositor = new CompositorInterface(&m_display, this);
+    m_serverCompositor = std::make_unique<CompositorInterface>(&m_display);
 
     m_connection = new KWayland::Client::ConnectionThread;
     QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
@@ -134,7 +134,7 @@ TestViewporterInterface::~TestViewporterInterface()
 void TestViewporterInterface::testCropScale()
 {
     // Create a test surface.
-    QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor, &CompositorInterface::surfaceCreated);
+    QSignalSpy serverSurfaceCreatedSpy(m_serverCompositor.get(), &CompositorInterface::surfaceCreated);
     std::unique_ptr<KWayland::Client::Surface> clientSurface(m_clientCompositor->createSurface(this));
     QVERIFY(serverSurfaceCreatedSpy.wait());
     SurfaceInterface *serverSurface = serverSurfaceCreatedSpy.first().first().value<SurfaceInterface *>();

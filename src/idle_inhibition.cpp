@@ -22,8 +22,7 @@ using KWaylandServer::SurfaceInterface;
 namespace KWin
 {
 
-IdleInhibition::IdleInhibition(QObject *parent)
-    : QObject(parent)
+IdleInhibition::IdleInhibition()
 {
     // Workspace is created after the wayland server is initialized.
     connect(kwinApp(), &Application::workspaceCreated, this, &IdleInhibition::slotWorkspaceCreated);

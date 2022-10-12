@@ -16,7 +16,7 @@ class WaylandShellIntegration : public QObject
     Q_OBJECT
 
 public:
-    explicit WaylandShellIntegration(QObject *parent = nullptr);
+    explicit WaylandShellIntegration();
 
 Q_SIGNALS:
     void windowCreated(Window *window);

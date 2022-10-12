@@ -22,9 +22,8 @@ XdgForeignV2InterfacePrivate::XdgForeignV2InterfacePrivate(Display *display, Xdg
 {
 }
 
-XdgForeignV2Interface::XdgForeignV2Interface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new XdgForeignV2InterfacePrivate(display, this))
+XdgForeignV2Interface::XdgForeignV2Interface(Display *display)
+    : d(new XdgForeignV2InterfacePrivate(display, this))
 {
 }
 

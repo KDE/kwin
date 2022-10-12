@@ -41,8 +41,8 @@ private Q_SLOTS:
 
 private:
     std::unique_ptr<KWaylandServer::Display> m_display;
-    CompositorInterface *m_compositorInterface = nullptr;
-    PlasmaShellInterface *m_plasmaShellInterface = nullptr;
+    std::unique_ptr<CompositorInterface> m_compositorInterface;
+    std::unique_ptr<PlasmaShellInterface> m_plasmaShellInterface;
 
     ConnectionThread *m_connection = nullptr;
     Compositor *m_compositor = nullptr;
@@ -61,10 +61,10 @@ void TestPlasmaShell::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
 
-    m_compositorInterface = new CompositorInterface(m_display.get(), m_display.get());
+    m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
     m_display->createShm();
 
-    m_plasmaShellInterface = new PlasmaShellInterface(m_display.get(), m_display.get());
+    m_plasmaShellInterface = std::make_unique<PlasmaShellInterface>(m_display.get());
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -148,8 +148,8 @@ void TestPlasmaShell::testRole()
     // this test verifies that setting the role on a plasma shell surface works
 
     // first create signal spies
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
+    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface.get(), &PlasmaShellInterface::surfaceCreated);
 
     // create the surface
     std::unique_ptr<Surface> s(m_compositor->createSurface());
@@ -201,7 +201,7 @@ void TestPlasmaShell::testRole()
 void TestPlasmaShell::testPosition()
 {
     // this test verifies that updating the position of a PlasmaShellSurface is properly passed to the server
-    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
+    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface.get(), &PlasmaShellInterface::surfaceCreated);
 
     std::unique_ptr<Surface> s(m_compositor->createSurface());
     std::unique_ptr<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
@@ -238,7 +238,7 @@ void TestPlasmaShell::testPosition()
 void TestPlasmaShell::testSkipTaskbar()
 {
     // this test verifies that sip taskbar is properly passed to server
-    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
+    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface.get(), &PlasmaShellInterface::surfaceCreated);
 
     std::unique_ptr<Surface> s(m_compositor->createSurface());
     std::unique_ptr<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
@@ -271,7 +271,7 @@ void TestPlasmaShell::testSkipTaskbar()
 void TestPlasmaShell::testSkipSwitcher()
 {
     // this test verifies that Skip Switcher is properly passed to server
-    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
+    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface.get(), &PlasmaShellInterface::surfaceCreated);
 
     std::unique_ptr<Surface> s(m_compositor->createSurface());
     std::unique_ptr<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
@@ -314,7 +314,7 @@ void TestPlasmaShell::testPanelBehavior_data()
 void TestPlasmaShell::testPanelBehavior()
 {
     // this test verifies that the panel behavior is properly passed to the server
-    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
+    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface.get(), &PlasmaShellInterface::surfaceCreated);
 
     std::unique_ptr<Surface> s(m_compositor->createSurface());
     std::unique_ptr<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
@@ -348,7 +348,7 @@ void TestPlasmaShell::testPanelBehavior()
 void TestPlasmaShell::testAutoHidePanel()
 {
     // this test verifies that auto-hiding panels work correctly
-    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
+    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface.get(), &PlasmaShellInterface::surfaceCreated);
 
     std::unique_ptr<Surface> s(m_compositor->createSurface());
     std::unique_ptr<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
@@ -396,7 +396,7 @@ void TestPlasmaShell::testAutoHidePanel()
 void TestPlasmaShell::testPanelTakesFocus()
 {
     // this test verifies that whether a panel wants to take focus is passed through correctly
-    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
+    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface.get(), &PlasmaShellInterface::surfaceCreated);
 
     std::unique_ptr<Surface> s(m_compositor->createSurface());
     std::unique_ptr<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
@@ -425,7 +425,7 @@ void TestPlasmaShell::testPanelTakesFocus()
 void TestPlasmaShell::testDisconnect()
 {
     // this test verifies that a disconnect cleans up
-    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
+    QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface.get(), &PlasmaShellInterface::surfaceCreated);
     // create the surface
     std::unique_ptr<Surface> s(m_compositor->createSurface());
     std::unique_ptr<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
@@ -459,14 +459,14 @@ void TestPlasmaShell::testWhileDestroying()
     // this test tries to hit a condition that a Surface gets created with an ID which was already
     // used for a previous Surface. For each Surface we try to create a PlasmaShellSurface.
     // Even if there was a Surface in the past with the same ID, it should create the PlasmaShellSurface
-    QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
     std::unique_ptr<Surface> s(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
     auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
 
     // create ShellSurface
-    QSignalSpy shellSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
+    QSignalSpy shellSurfaceCreatedSpy(m_plasmaShellInterface.get(), &PlasmaShellInterface::surfaceCreated);
     std::unique_ptr<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
     QVERIFY(shellSurfaceCreatedSpy.wait());
 

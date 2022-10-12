@@ -158,10 +158,10 @@ private:
 
     QThread *m_thread;
     KWaylandServer::Display *m_display;
-    SeatInterface *m_seat;
-    CompositorInterface *m_serverCompositor;
+    std::unique_ptr<SeatInterface> m_seat;
+    std::unique_ptr<CompositorInterface> m_serverCompositor;
 
-    DataControlDeviceManagerV1Interface *m_dataControlDeviceManagerInterface;
+    std::unique_ptr<DataControlDeviceManagerV1Interface> m_dataControlDeviceManagerInterface;
 
     DataControlDeviceManager *m_dataControlDeviceManager;
 
@@ -177,9 +177,9 @@ void DataControlInterfaceTest::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
 
-    m_seat = new SeatInterface(m_display, this);
-    m_serverCompositor = new CompositorInterface(m_display, this);
-    m_dataControlDeviceManagerInterface = new DataControlDeviceManagerV1Interface(m_display, this);
+    m_seat = std::make_unique<SeatInterface>(m_display);
+    m_serverCompositor = std::make_unique<CompositorInterface>(m_display);
+    m_dataControlDeviceManagerInterface = std::make_unique<DataControlDeviceManagerV1Interface>(m_display);
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -247,9 +247,8 @@ void DataControlInterfaceTest::cleanup()
     CLEANUP(m_display)
 #undef CLEANUP
 
-    // these are the children of the display
-    m_seat = nullptr;
-    m_serverCompositor = nullptr;
+    m_seat.reset();
+    m_serverCompositor.reset();
 }
 
 void DataControlInterfaceTest::testCopyToControl()
@@ -334,7 +333,7 @@ void DataControlInterfaceTest::testCopyFromControl()
 {
     // we create a data device and set a selection
     // then confirm the server sees the new selection
-    QSignalSpy serverSelectionChangedSpy(m_seat, &SeatInterface::selectionChanged);
+    QSignalSpy serverSelectionChangedSpy(m_seat.get(), &SeatInterface::selectionChanged);
 
     std::unique_ptr<DataControlDevice> dataControlDevice(new DataControlDevice);
     dataControlDevice->init(m_dataControlDeviceManager->get_data_device(*m_clientSeat));
@@ -355,7 +354,7 @@ void DataControlInterfaceTest::testCopyFromControlPrimarySelection()
 {
     // we create a data device and set a selection
     // then confirm the server sees the new selection
-    QSignalSpy serverSelectionChangedSpy(m_seat, &SeatInterface::primarySelectionChanged);
+    QSignalSpy serverSelectionChangedSpy(m_seat.get(), &SeatInterface::primarySelectionChanged);
 
     std::unique_ptr<DataControlDevice> dataControlDevice(new DataControlDevice);
     dataControlDevice->init(m_dataControlDeviceManager->get_data_device(*m_clientSeat));
@@ -382,7 +381,7 @@ void DataControlInterfaceTest::testKlipperCase()
 
     QSignalSpy newOfferSpy(dataControlDevice.get(), &DataControlDevice::dataControlOffer);
     QSignalSpy selectionSpy(dataControlDevice.get(), &DataControlDevice::selection);
-    QSignalSpy serverSelectionChangedSpy(m_seat, &SeatInterface::selectionChanged);
+    QSignalSpy serverSelectionChangedSpy(m_seat.get(), &SeatInterface::selectionChanged);
 
     // Client A has a data source
     std::unique_ptr<TestDataSource> testSelection(new TestDataSource);

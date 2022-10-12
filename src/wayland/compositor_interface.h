@@ -27,7 +27,7 @@ class KWIN_EXPORT CompositorInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit CompositorInterface(Display *display, QObject *parent = nullptr);
+    explicit CompositorInterface(Display *display);
     ~CompositorInterface() override;
 
     /**

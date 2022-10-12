@@ -65,9 +65,8 @@ void SubCompositorInterfacePrivate::subcompositor_get_subsurface(Resource *resou
     Q_EMIT q->subSurfaceCreated(new SubSurfaceInterface(surface, parent, subsurfaceResource));
 }
 
-SubCompositorInterface::SubCompositorInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new SubCompositorInterfacePrivate(display, this))
+SubCompositorInterface::SubCompositorInterface(Display *display)
+    : d(new SubCompositorInterfacePrivate(display, this))
 
 {
 }

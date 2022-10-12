@@ -35,7 +35,7 @@ public:
     /**
      * Constructs a decoration manager with the given \a display and \a parent.
      */
-    XdgDecorationManagerV1Interface(Display *display, QObject *parent = nullptr);
+    XdgDecorationManagerV1Interface(Display *display);
     /**
      * Destructs the XdgDecorationManagerV1Interface object.
      */
