@@ -251,7 +251,7 @@ WindowPaintData::WindowPaintData(const QMatrix4x4 &screenProjectionMatrix)
     setSaturation(1.0);
     setBrightness(1.0);
     setScreen(0);
-    setCrossFadeProgress(1.0);
+    setCrossFadeProgress(0.0);
 }
 
 WindowPaintData::WindowPaintData(const WindowPaintData &other)
