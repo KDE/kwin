@@ -31,6 +31,7 @@ Activities::Activities(QObject *parent)
     connect(m_controller, &KActivities::Controller::activityRemoved, this, &Activities::removed);
     connect(m_controller, &KActivities::Controller::activityAdded,   this, &Activities::added);
     connect(m_controller, &KActivities::Controller::currentActivityChanged, this, &Activities::slotCurrentChanged);
+    connect(m_controller, &KActivities::Controller::serviceStatusChanged, this, &Activities::slotServiceStatusChanged);
 }
 
 Activities::~Activities()
@@ -41,6 +42,20 @@ Activities::~Activities()
 KActivities::Consumer::ServiceStatus Activities::serviceStatus() const
 {
     return m_controller->serviceStatus();
+}
+
+void Activities::slotServiceStatusChanged()
+{
+    if (m_controller->serviceStatus() != KActivities::Consumer::Running) {
+        return;
+    }
+    const auto windows = Workspace::self()->allClientList();
+    for (auto *const window : windows) {
+        if (window->isDesktop()) {
+            continue;
+        }
+        window->checkActivities();
+    }
 }
 
 void Activities::setCurrent(const QString &activity)

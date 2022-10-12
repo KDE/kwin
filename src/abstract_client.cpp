@@ -2836,6 +2836,9 @@ void AbstractClient::setOnActivities(const QStringList &newActivitiesList)
     if (!Activities::self()) {
         return;
     }
+    if (Activities::self()->serviceStatus() != KActivities::Consumer::Running) {
+        return;
+    }
     const auto allActivities = Activities::self()->all();
     const auto activityList = [&] {
         auto result = rules()->checkActivity(newActivitiesList);
