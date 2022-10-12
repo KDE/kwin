@@ -264,12 +264,10 @@ CustomTile *TileManager::parseTilingJSon(const QJsonValue &val, const QRectF &av
 
         } else if (parentTile->layoutDirection() == CustomTile::LayoutDirection::Floating) {
             QRectF rect(0, 0, 1, 1);
-            if (parentTile != m_rootTile.get()) {
-                rect = QRectF(obj.value(QStringLiteral("x")).toDouble(),
-                              obj.value(QStringLiteral("y")).toDouble(),
-                              obj.value(QStringLiteral("width")).toDouble(),
-                              obj.value(QStringLiteral("height")).toDouble());
-            }
+            rect = QRectF(obj.value(QStringLiteral("x")).toDouble(),
+                          obj.value(QStringLiteral("y")).toDouble(),
+                          obj.value(QStringLiteral("width")).toDouble(),
+                          obj.value(QStringLiteral("height")).toDouble());
 
             if (!rect.isEmpty()) {
                 createdTile = addTile(rect, parentTile->layoutDirection(), -1, parentTile);
