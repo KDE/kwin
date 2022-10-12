@@ -319,7 +319,7 @@ private:
     std::unique_ptr<KWaylandServer::KeyStateInterface> m_keyStateInterface;
     std::unique_ptr<KWaylandServer::LockscreenOverlayV1Interface> m_lockscreenOverlayInterface;
     std::map<Output *, std::unique_ptr<WaylandOutput>> m_waylandOutputs;
-    QHash<Output *, KWaylandServer::OutputDeviceV2Interface *> m_waylandOutputDevices;
+    std::map<Output *, std::unique_ptr<KWaylandServer::OutputDeviceV2Interface>> m_waylandOutputDevices;
     QSet<KWaylandServer::LinuxDmaBufV1ClientBuffer *> m_linuxDmabufBuffers;
     QPointer<KWaylandServer::ClientConnection> m_xwaylandConnection;
     QPointer<KWaylandServer::ClientConnection> m_inputMethodServerConnection;

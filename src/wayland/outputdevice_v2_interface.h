@@ -43,10 +43,8 @@ class KWIN_EXPORT OutputDeviceV2Interface : public QObject
     Q_OBJECT
 
 public:
-    explicit OutputDeviceV2Interface(Display *display, KWin::Output *handle, QObject *parent = nullptr);
+    explicit OutputDeviceV2Interface(Display *display, KWin::Output *handle);
     ~OutputDeviceV2Interface() override;
-
-    void remove();
 
     KWin::Output *handle() const;
 
@@ -74,7 +72,7 @@ private:
     void updateRgbRange();
     void updateGeometry();
 
-    std::unique_ptr<OutputDeviceV2InterfacePrivate> d;
+    OutputDeviceV2InterfacePrivate *const d;
 };
 
 /**
