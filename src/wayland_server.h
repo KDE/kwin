@@ -9,6 +9,7 @@
 #ifndef KWIN_WAYLAND_SERVER_H
 #define KWIN_WAYLAND_SERVER_H
 
+#include <config-kwin.h>
 #include <kwinglobals.h>
 
 #include <QObject>
@@ -269,6 +270,7 @@ private:
     void handleOutputEnabled(Output *output);
     void handleOutputDisabled(Output *output);
 
+#if KWIN_BUILD_SCREENLOCKER
     class LockScreenPresentationWatcher : public QObject
     {
     public:
@@ -277,6 +279,8 @@ private:
     private:
         QSet<Output *> m_signaledOutputs;
     };
+    std::unique_ptr<LockScreenPresentationWatcher> m_lockscreenWatcher;
+#endif
 
     std::unique_ptr<KWaylandServer::Display> m_display;
     std::unique_ptr<KWaylandServer::CompositorInterface> m_compositor;

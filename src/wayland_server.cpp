@@ -8,8 +8,6 @@
 */
 #include "wayland_server.h"
 
-#include <config-kwin.h>
-
 #include "composite.h"
 #include "core/output.h"
 #include "core/platform.h"
@@ -570,7 +568,7 @@ void WaylandServer::initScreenLocker()
         }
         ScreenLocker::KSldApp::self()->setWaylandFd(clientFd);
 
-        new LockScreenPresentationWatcher(this);
+        m_lockscreenWatcher = std::make_unique<LockScreenPresentationWatcher>(this);
 
         const QVector<SeatInterface *> seatIfaces = m_display->seats();
         for (auto *seat : seatIfaces) {
@@ -766,24 +764,24 @@ QString WaylandServer::socketName() const
 #if KWIN_BUILD_SCREENLOCKER
 WaylandServer::LockScreenPresentationWatcher::LockScreenPresentationWatcher(WaylandServer *server)
 {
-    connect(server, &WaylandServer::windowAdded, this, [this](Window *window) {
+    connect(server, &WaylandServer::windowAdded, this, [this, server](Window *window) {
         if (window->isLockScreen()) {
             // only signal lockScreenShown once all outputs have been presented at least once
-            connect(window->output()->renderLoop(), &RenderLoop::framePresented, this, [this, windowGuard = QPointer(window)]() {
+            connect(window->output()->renderLoop(), &RenderLoop::framePresented, this, [this, server, windowGuard = QPointer(window)]() {
                 // window might be destroyed before a frame is presented, so it's wrapped in QPointer
                 if (windowGuard) {
                     m_signaledOutputs << windowGuard->output();
                     if (m_signaledOutputs.size() == workspace()->outputs().size()) {
                         ScreenLocker::KSldApp::self()->lockScreenShown();
-                        delete this;
+                        server->m_lockscreenWatcher.reset();
                     }
                 }
             });
         }
     });
-    QTimer::singleShot(1000, this, [this]() {
+    QTimer::singleShot(1000, this, [server]() {
         ScreenLocker::KSldApp::self()->lockScreenShown();
-        delete this;
+        server->m_lockscreenWatcher.reset();
     });
 }
 #endif
