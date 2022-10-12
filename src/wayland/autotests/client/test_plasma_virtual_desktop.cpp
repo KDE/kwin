@@ -47,7 +47,7 @@ private:
     std::unique_ptr<KWaylandServer::CompositorInterface> m_compositorInterface;
     std::unique_ptr<KWaylandServer::PlasmaVirtualDesktopManagementInterface> m_plasmaVirtualDesktopManagementInterface;
     std::unique_ptr<KWaylandServer::PlasmaWindowManagementInterface> m_windowManagementInterface;
-    KWaylandServer::PlasmaWindowInterface *m_windowInterface;
+    std::unique_ptr<KWaylandServer::PlasmaWindowInterface> m_windowInterface;
 
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
@@ -128,7 +128,7 @@ void TestVirtualDesktop::init()
         registry.createPlasmaWindowManagement(windowManagementSpy.first().first().value<quint32>(), windowManagementSpy.first().last().value<quint32>(), this);
 
     QSignalSpy windowSpy(m_windowManagement, &PlasmaWindowManagement::windowCreated);
-    m_windowInterface = m_windowManagementInterface->createWindow(this, QUuid::createUuid());
+    m_windowInterface = m_windowManagementInterface->createWindow(QUuid::createUuid());
     m_windowInterface->setPid(1337);
 
     QVERIFY(windowSpy.wait());
@@ -144,7 +144,7 @@ void TestVirtualDesktop::cleanup()
     }
     CLEANUP(m_compositor)
     CLEANUP(m_plasmaVirtualDesktopManagement)
-    CLEANUP(m_windowInterface)
+    m_windowInterface.reset();
     CLEANUP(m_windowManagement)
     CLEANUP(m_queue)
     if (m_connection) {
@@ -370,7 +370,7 @@ void TestVirtualDesktop::testEnterLeaveDesktop()
 {
     testCreate();
 
-    QSignalSpy enterRequestedSpy(m_windowInterface, &KWaylandServer::PlasmaWindowInterface::enterPlasmaVirtualDesktopRequested);
+    QSignalSpy enterRequestedSpy(m_windowInterface.get(), &KWaylandServer::PlasmaWindowInterface::enterPlasmaVirtualDesktopRequested);
     m_window->requestEnterVirtualDesktop(QStringLiteral("0-1"));
     enterRequestedSpy.wait();
 
@@ -402,7 +402,7 @@ void TestVirtualDesktop::testEnterLeaveDesktop()
     QCOMPARE(m_window->plasmaVirtualDesktops().length(), 2);
 
     // remove a desktop
-    QSignalSpy leaveRequestedSpy(m_windowInterface, &KWaylandServer::PlasmaWindowInterface::leavePlasmaVirtualDesktopRequested);
+    QSignalSpy leaveRequestedSpy(m_windowInterface.get(), &KWaylandServer::PlasmaWindowInterface::leavePlasmaVirtualDesktopRequested);
     m_window->requestLeaveVirtualDesktop(QStringLiteral("0-1"));
     leaveRequestedSpy.wait();
 

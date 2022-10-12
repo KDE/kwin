@@ -2166,144 +2166,144 @@ void Window::setupWindowManagementInterface()
         return;
     }
     using namespace KWaylandServer;
-    auto w = waylandServer()->windowManagement()->createWindow(this, internalId());
-    w->setTitle(caption());
-    w->setActive(isActive());
-    w->setFullscreen(isFullScreen());
-    w->setKeepAbove(keepAbove());
-    w->setKeepBelow(keepBelow());
-    w->setMaximized(maximizeMode() == KWin::MaximizeFull);
-    w->setMinimized(isMinimized());
-    w->setDemandsAttention(isDemandingAttention());
-    w->setCloseable(isCloseable());
-    w->setMaximizeable(isMaximizable());
-    w->setMinimizeable(isMinimizable());
-    w->setFullscreenable(isFullScreenable());
-    w->setApplicationMenuPaths(applicationMenuServiceName(), applicationMenuObjectPath());
-    w->setIcon(icon());
-    auto updateAppId = [this, w] {
-        w->setResourceName(resourceName());
-        w->setAppId(QString::fromUtf8(m_desktopFileName.isEmpty() ? resourceClass() : m_desktopFileName));
+    m_windowManagementInterface = waylandServer()->windowManagement()->createWindow(internalId());
+    m_windowManagementInterface->setTitle(caption());
+    m_windowManagementInterface->setActive(isActive());
+    m_windowManagementInterface->setFullscreen(isFullScreen());
+    m_windowManagementInterface->setKeepAbove(keepAbove());
+    m_windowManagementInterface->setKeepBelow(keepBelow());
+    m_windowManagementInterface->setMaximized(maximizeMode() == KWin::MaximizeFull);
+    m_windowManagementInterface->setMinimized(isMinimized());
+    m_windowManagementInterface->setDemandsAttention(isDemandingAttention());
+    m_windowManagementInterface->setCloseable(isCloseable());
+    m_windowManagementInterface->setMaximizeable(isMaximizable());
+    m_windowManagementInterface->setMinimizeable(isMinimizable());
+    m_windowManagementInterface->setFullscreenable(isFullScreenable());
+    m_windowManagementInterface->setApplicationMenuPaths(applicationMenuServiceName(), applicationMenuObjectPath());
+    m_windowManagementInterface->setIcon(icon());
+    auto updateAppId = [this] {
+        m_windowManagementInterface->setResourceName(resourceName());
+        m_windowManagementInterface->setAppId(QString::fromUtf8(m_desktopFileName.isEmpty() ? resourceClass() : m_desktopFileName));
     };
     updateAppId();
-    w->setSkipTaskbar(skipTaskbar());
-    w->setSkipSwitcher(skipSwitcher());
-    w->setPid(pid());
-    w->setShadeable(isShadeable());
-    w->setShaded(isShade());
-    w->setResizable(isResizable());
-    w->setMovable(isMovable());
-    w->setVirtualDesktopChangeable(true); // FIXME Matches X11Window::actionSupported(), but both should be implemented.
-    w->setParentWindow(transientFor() ? transientFor()->windowManagementInterface() : nullptr);
-    w->setGeometry(frameGeometry().toRect());
-    connect(this, &Window::skipTaskbarChanged, w, [w, this]() {
-        w->setSkipTaskbar(skipTaskbar());
+    m_windowManagementInterface->setSkipTaskbar(skipTaskbar());
+    m_windowManagementInterface->setSkipSwitcher(skipSwitcher());
+    m_windowManagementInterface->setPid(pid());
+    m_windowManagementInterface->setShadeable(isShadeable());
+    m_windowManagementInterface->setShaded(isShade());
+    m_windowManagementInterface->setResizable(isResizable());
+    m_windowManagementInterface->setMovable(isMovable());
+    m_windowManagementInterface->setVirtualDesktopChangeable(true); // FIXME Matches X11Window::actionSupported(), but both should be implemented.
+    m_windowManagementInterface->setParentWindow(transientFor() ? transientFor()->windowManagementInterface() : nullptr);
+    m_windowManagementInterface->setGeometry(frameGeometry().toRect());
+    connect(this, &Window::skipTaskbarChanged, m_windowManagementInterface.get(), [this]() {
+        m_windowManagementInterface->setSkipTaskbar(skipTaskbar());
     });
-    connect(this, &Window::skipSwitcherChanged, w, [w, this]() {
-        w->setSkipSwitcher(skipSwitcher());
+    connect(this, &Window::skipSwitcherChanged, m_windowManagementInterface.get(), [this]() {
+        m_windowManagementInterface->setSkipSwitcher(skipSwitcher());
     });
-    connect(this, &Window::captionChanged, w, [w, this] {
-        w->setTitle(caption());
+    connect(this, &Window::captionChanged, m_windowManagementInterface.get(), [this] {
+        m_windowManagementInterface->setTitle(caption());
     });
 
-    connect(this, &Window::activeChanged, w, [w, this] {
-        w->setActive(isActive());
+    connect(this, &Window::activeChanged, m_windowManagementInterface.get(), [this] {
+        m_windowManagementInterface->setActive(isActive());
     });
-    connect(this, &Window::fullScreenChanged, w, [w, this] {
-        w->setFullscreen(isFullScreen());
+    connect(this, &Window::fullScreenChanged, m_windowManagementInterface.get(), [this] {
+        m_windowManagementInterface->setFullscreen(isFullScreen());
     });
-    connect(this, &Window::keepAboveChanged, w, &PlasmaWindowInterface::setKeepAbove);
-    connect(this, &Window::keepBelowChanged, w, &PlasmaWindowInterface::setKeepBelow);
-    connect(this, &Window::minimizedChanged, w, [w, this] {
-        w->setMinimized(isMinimized());
+    connect(this, &Window::keepAboveChanged, m_windowManagementInterface.get(), &PlasmaWindowInterface::setKeepAbove);
+    connect(this, &Window::keepBelowChanged, m_windowManagementInterface.get(), &PlasmaWindowInterface::setKeepBelow);
+    connect(this, &Window::minimizedChanged, m_windowManagementInterface.get(), [this] {
+        m_windowManagementInterface->setMinimized(isMinimized());
     });
-    connect(this, static_cast<void (Window::*)(Window *, MaximizeMode)>(&Window::clientMaximizedStateChanged), w, [w](KWin::Window *c, MaximizeMode mode) {
+    connect(this, static_cast<void (Window::*)(Window *, MaximizeMode)>(&Window::clientMaximizedStateChanged), m_windowManagementInterface.get(), [this](KWin::Window *c, MaximizeMode mode) {
         Q_UNUSED(c);
-        w->setMaximized(mode == KWin::MaximizeFull);
+        m_windowManagementInterface->setMaximized(mode == KWin::MaximizeFull);
     });
-    connect(this, &Window::demandsAttentionChanged, w, [w, this] {
-        w->setDemandsAttention(isDemandingAttention());
+    connect(this, &Window::demandsAttentionChanged, m_windowManagementInterface.get(), [this] {
+        m_windowManagementInterface->setDemandsAttention(isDemandingAttention());
     });
-    connect(this, &Window::iconChanged, w, [w, this]() {
-        w->setIcon(icon());
+    connect(this, &Window::iconChanged, m_windowManagementInterface.get(), [this]() {
+        m_windowManagementInterface->setIcon(icon());
     });
-    connect(this, &Window::windowClassChanged, w, updateAppId);
-    connect(this, &Window::desktopFileNameChanged, w, updateAppId);
-    connect(this, &Window::shadeChanged, w, [w, this] {
-        w->setShaded(isShade());
+    connect(this, &Window::windowClassChanged, m_windowManagementInterface.get(), updateAppId);
+    connect(this, &Window::desktopFileNameChanged, m_windowManagementInterface.get(), updateAppId);
+    connect(this, &Window::shadeChanged, m_windowManagementInterface.get(), [this] {
+        m_windowManagementInterface->setShaded(isShade());
     });
-    connect(this, &Window::transientChanged, w, [w, this]() {
-        w->setParentWindow(transientFor() ? transientFor()->windowManagementInterface() : nullptr);
+    connect(this, &Window::transientChanged, m_windowManagementInterface.get(), [this]() {
+        m_windowManagementInterface->setParentWindow(transientFor() ? transientFor()->windowManagementInterface() : nullptr);
     });
-    connect(this, &Window::frameGeometryChanged, w, [w, this]() {
-        w->setGeometry(frameGeometry().toRect());
+    connect(this, &Window::frameGeometryChanged, m_windowManagementInterface.get(), [this]() {
+        m_windowManagementInterface->setGeometry(frameGeometry().toRect());
     });
-    connect(this, &Window::applicationMenuChanged, w, [w, this]() {
-        w->setApplicationMenuPaths(applicationMenuServiceName(), applicationMenuObjectPath());
+    connect(this, &Window::applicationMenuChanged, m_windowManagementInterface.get(), [this]() {
+        m_windowManagementInterface->setApplicationMenuPaths(applicationMenuServiceName(), applicationMenuObjectPath());
     });
-    connect(w, &PlasmaWindowInterface::closeRequested, this, [this] {
+    connect(m_windowManagementInterface.get(), &PlasmaWindowInterface::closeRequested, this, [this] {
         closeWindow();
     });
-    connect(w, &PlasmaWindowInterface::moveRequested, this, [this]() {
+    connect(m_windowManagementInterface.get(), &PlasmaWindowInterface::moveRequested, this, [this]() {
         Cursors::self()->mouse()->setPos(frameGeometry().center());
         performMouseCommand(Options::MouseMove, Cursors::self()->mouse()->pos());
     });
-    connect(w, &PlasmaWindowInterface::resizeRequested, this, [this]() {
+    connect(m_windowManagementInterface.get(), &PlasmaWindowInterface::resizeRequested, this, [this]() {
         Cursors::self()->mouse()->setPos(frameGeometry().bottomRight());
         performMouseCommand(Options::MouseResize, Cursors::self()->mouse()->pos());
     });
-    connect(w, &PlasmaWindowInterface::fullscreenRequested, this, [this](bool set) {
+    connect(m_windowManagementInterface.get(), &PlasmaWindowInterface::fullscreenRequested, this, [this](bool set) {
         setFullScreen(set, false);
     });
-    connect(w, &PlasmaWindowInterface::minimizedRequested, this, [this](bool set) {
+    connect(m_windowManagementInterface.get(), &PlasmaWindowInterface::minimizedRequested, this, [this](bool set) {
         if (set) {
             minimize();
         } else {
             unminimize();
         }
     });
-    connect(w, &PlasmaWindowInterface::maximizedRequested, this, [this](bool set) {
+    connect(m_windowManagementInterface.get(), &PlasmaWindowInterface::maximizedRequested, this, [this](bool set) {
         maximize(set ? MaximizeFull : MaximizeRestore);
     });
-    connect(w, &PlasmaWindowInterface::keepAboveRequested, this, [this](bool set) {
+    connect(m_windowManagementInterface.get(), &PlasmaWindowInterface::keepAboveRequested, this, [this](bool set) {
         setKeepAbove(set);
     });
-    connect(w, &PlasmaWindowInterface::keepBelowRequested, this, [this](bool set) {
+    connect(m_windowManagementInterface.get(), &PlasmaWindowInterface::keepBelowRequested, this, [this](bool set) {
         setKeepBelow(set);
     });
-    connect(w, &PlasmaWindowInterface::demandsAttentionRequested, this, [this](bool set) {
+    connect(m_windowManagementInterface.get(), &PlasmaWindowInterface::demandsAttentionRequested, this, [this](bool set) {
         demandAttention(set);
     });
-    connect(w, &PlasmaWindowInterface::activeRequested, this, [this](bool set) {
+    connect(m_windowManagementInterface.get(), &PlasmaWindowInterface::activeRequested, this, [this](bool set) {
         if (set) {
             workspace()->activateWindow(this, true);
         }
     });
-    connect(w, &PlasmaWindowInterface::shadedRequested, this, [this](bool set) {
+    connect(m_windowManagementInterface.get(), &PlasmaWindowInterface::shadedRequested, this, [this](bool set) {
         setShade(set);
     });
 
     for (const auto vd : qAsConst(m_desktops)) {
-        w->addPlasmaVirtualDesktop(vd->id());
+        m_windowManagementInterface->addPlasmaVirtualDesktop(vd->id());
     }
     // We need to set `OnAllDesktops` after the actual VD list has been added.
     // Otherwise it will unconditionally add the current desktop to the interface
     // which may not be the case, for example, when using rules
-    w->setOnAllDesktops(isOnAllDesktops());
+    m_windowManagementInterface->setOnAllDesktops(isOnAllDesktops());
 
     // Plasma Virtual desktop management
     // show/hide when the window enters/exits from desktop
-    connect(w, &PlasmaWindowInterface::enterPlasmaVirtualDesktopRequested, this, [this](const QString &desktopId) {
+    connect(m_windowManagementInterface.get(), &PlasmaWindowInterface::enterPlasmaVirtualDesktopRequested, this, [this](const QString &desktopId) {
         VirtualDesktop *vd = VirtualDesktopManager::self()->desktopForId(desktopId);
         if (vd) {
             enterDesktop(vd);
         }
     });
-    connect(w, &PlasmaWindowInterface::enterNewPlasmaVirtualDesktopRequested, this, [this]() {
+    connect(m_windowManagementInterface.get(), &PlasmaWindowInterface::enterNewPlasmaVirtualDesktopRequested, this, [this]() {
         VirtualDesktopManager::self()->setCount(VirtualDesktopManager::self()->count() + 1);
         enterDesktop(VirtualDesktopManager::self()->desktops().last());
     });
-    connect(w, &PlasmaWindowInterface::leavePlasmaVirtualDesktopRequested, this, [this](const QString &desktopId) {
+    connect(m_windowManagementInterface.get(), &PlasmaWindowInterface::leavePlasmaVirtualDesktopRequested, this, [this](const QString &desktopId) {
         VirtualDesktop *vd = VirtualDesktopManager::self()->desktopForId(desktopId);
         if (vd) {
             leaveDesktop(vd);
@@ -2311,38 +2311,36 @@ void Window::setupWindowManagementInterface()
     });
 
     for (const auto &activity : qAsConst(m_activityList)) {
-        w->addPlasmaActivity(activity);
+        m_windowManagementInterface->addPlasmaActivity(activity);
     }
 
-    connect(this, &Window::activitiesChanged, w, [w, this] {
+    connect(this, &Window::activitiesChanged, m_windowManagementInterface.get(), [this] {
         const auto newActivities = QSet<QString>(m_activityList.begin(), m_activityList.end());
-        const auto oldActivitiesList = w->plasmaActivities();
+        const auto oldActivitiesList = m_windowManagementInterface->plasmaActivities();
         const auto oldActivities = QSet<QString>(oldActivitiesList.begin(), oldActivitiesList.end());
 
         const auto activitiesToAdd = newActivities - oldActivities;
         for (const auto &activity : activitiesToAdd) {
-            w->addPlasmaActivity(activity);
+            m_windowManagementInterface->addPlasmaActivity(activity);
         }
 
         const auto activitiesToRemove = oldActivities - newActivities;
         for (const auto &activity : activitiesToRemove) {
-            w->removePlasmaActivity(activity);
+            m_windowManagementInterface->removePlasmaActivity(activity);
         }
     });
 
     // Plasma Activities management
     // show/hide when the window enters/exits activity
-    connect(w, &PlasmaWindowInterface::enterPlasmaActivityRequested, this, [this](const QString &activityId) {
+    connect(m_windowManagementInterface.get(), &PlasmaWindowInterface::enterPlasmaActivityRequested, this, [this](const QString &activityId) {
         setOnActivity(activityId, true);
     });
-    connect(w, &PlasmaWindowInterface::leavePlasmaActivityRequested, this, [this](const QString &activityId) {
+    connect(m_windowManagementInterface.get(), &PlasmaWindowInterface::leavePlasmaActivityRequested, this, [this](const QString &activityId) {
         setOnActivity(activityId, false);
     });
-    connect(w, &PlasmaWindowInterface::sendToOutput, this, [this](KWaylandServer::OutputInterface *output) {
+    connect(m_windowManagementInterface.get(), &PlasmaWindowInterface::sendToOutput, this, [this](KWaylandServer::OutputInterface *output) {
         sendToOutput(output->handle());
     });
-
-    m_windowManagementInterface = w;
 }
 
 Options::MouseCommand Window::getMouseCommand(Qt::MouseButton button, bool *handled) const

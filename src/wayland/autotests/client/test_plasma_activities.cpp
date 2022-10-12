@@ -106,7 +106,7 @@ void TestActivities::init()
         registry.createPlasmaWindowManagement(windowManagementSpy.first().first().value<quint32>(), windowManagementSpy.first().last().value<quint32>(), this);
 
     QSignalSpy windowSpy(m_windowManagement, &PlasmaWindowManagement::windowCreated);
-    m_windowInterface.reset(m_windowManagementInterface->createWindow(this, QUuid::createUuid()));
+    m_windowInterface = m_windowManagementInterface->createWindow(QUuid::createUuid());
     m_windowInterface->setPid(1337);
 
     QVERIFY(windowSpy.wait());

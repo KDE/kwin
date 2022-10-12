@@ -1409,7 +1409,7 @@ public:
      */
     KWaylandServer::PlasmaWindowInterface *windowManagementInterface() const
     {
-        return m_windowManagementInterface;
+        return m_windowManagementInterface.get();
     }
 
     QRectF fullscreenGeometryRestore() const;
@@ -1967,7 +1967,7 @@ private:
     static QHash<QString, std::weak_ptr<Decoration::DecorationPalette>> s_palettes;
     static std::shared_ptr<Decoration::DecorationPalette> s_defaultPalette;
 
-    KWaylandServer::PlasmaWindowInterface *m_windowManagementInterface = nullptr;
+    std::unique_ptr<KWaylandServer::PlasmaWindowInterface> m_windowManagementInterface;
 
     Window *m_transientFor = nullptr;
     QList<Window *> m_transients;

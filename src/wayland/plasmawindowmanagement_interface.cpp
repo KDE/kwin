@@ -44,6 +44,8 @@ public:
     QVector<QString> stackingOrderUuids;
     PlasmaWindowManagementInterface *q;
 
+    static PlasmaWindowManagementInterfacePrivate *get(PlasmaWindowManagementInterface *wmi);
+
 protected:
     void org_kde_plasma_window_management_bind_resource(Resource *resource) override;
     void org_kde_plasma_window_management_show_desktop(Resource *resource, uint32_t state) override;
@@ -223,7 +225,7 @@ void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_ge
         }
     }
     // create a temp window just for the resource, bind then immediately delete it, sending an unmap event
-    PlasmaWindowInterface window(q, q);
+    PlasmaWindowInterface window(q);
     window.d->add(resource->client(), id, resource->version());
 }
 
@@ -237,11 +239,16 @@ void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_ge
     if (it == windows.constEnd()) {
         qCWarning(KWIN_CORE) << "Could not find window with uuid" << internal_window_uuid;
         // create a temp window just for the resource, bind then immediately delete it, sending an unmap event
-        PlasmaWindowInterface window(q, q);
+        PlasmaWindowInterface window(q);
         window.d->add(resource->client(), id, resource->version());
         return;
     }
     (*it)->d->add(resource->client(), id, resource->version());
+}
+
+PlasmaWindowManagementInterfacePrivate *PlasmaWindowManagementInterfacePrivate::get(PlasmaWindowManagementInterface *wmi)
+{
+    return wmi->d.get();
 }
 
 PlasmaWindowManagementInterface::PlasmaWindowManagementInterface(Display *display)
@@ -260,9 +267,9 @@ void PlasmaWindowManagementInterface::setShowingDesktopState(PlasmaWindowManagem
     d->sendShowingDesktopState();
 }
 
-PlasmaWindowInterface *PlasmaWindowManagementInterface::createWindow(QObject *parent, const QUuid &uuid)
+std::unique_ptr<PlasmaWindowInterface> PlasmaWindowManagementInterface::createWindow(const QUuid &uuid)
 {
-    PlasmaWindowInterface *window = new PlasmaWindowInterface(this, parent);
+    std::unique_ptr<PlasmaWindowInterface> window(new PlasmaWindowInterface(this));
 
     window->d->uuid = uuid.toString();
     window->d->windowId = ++d->windowIdCounter; // NOTE the window id is deprecated
@@ -275,10 +282,6 @@ PlasmaWindowInterface *PlasmaWindowManagementInterface::createWindow(QObject *pa
             d->send_window(resource->handle, window->d->windowId);
         }
     }
-    d->windows << window;
-    connect(window, &QObject::destroyed, this, [this, window] {
-        d->windows.removeAll(window);
-    });
     return window;
 }
 
@@ -748,13 +751,16 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_unset_minimized_geometr
     Q_EMIT q->minimizedGeometriesChanged();
 }
 
-PlasmaWindowInterface::PlasmaWindowInterface(PlasmaWindowManagementInterface *wm, QObject *parent)
-    : QObject(parent)
-    , d(new PlasmaWindowInterfacePrivate(wm, this))
+PlasmaWindowInterface::PlasmaWindowInterface(PlasmaWindowManagementInterface *wm)
+    : d(new PlasmaWindowInterfacePrivate(wm, this))
 {
+    PlasmaWindowManagementInterfacePrivate::get(d->wm)->windows << this;
 }
 
-PlasmaWindowInterface::~PlasmaWindowInterface() = default;
+PlasmaWindowInterface::~PlasmaWindowInterface()
+{
+    PlasmaWindowManagementInterfacePrivate::get(d->wm)->windows.removeAll(this);
+}
 
 void PlasmaWindowInterface::setAppId(const QString &appId)
 {

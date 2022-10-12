@@ -136,7 +136,7 @@ void TestWindowManagement::init()
                                                                   this);
 
     QSignalSpy windowSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::windowCreated);
-    m_windowInterface.reset(m_windowManagementInterface->createWindow(this, QUuid::createUuid()));
+    m_windowInterface = m_windowManagementInterface->createWindow(QUuid::createUuid());
     m_windowInterface->setPid(1337);
 
     QVERIFY(windowSpy.wait());
@@ -289,8 +289,8 @@ void TestWindowManagement::testCreateAfterUnmap()
 
     // create and unmap in one go
     // client will first handle the create, the unmap will be sent once the server side is bound
-    auto serverWindow = m_windowManagementInterface->createWindow(m_windowManagementInterface.get(), QUuid::createUuid());
-    delete serverWindow;
+    auto serverWindow = m_windowManagementInterface->createWindow(QUuid::createUuid());
+    serverWindow.reset();
     QCOMPARE(m_windowManagementInterface->children().count(), 0);
 
     windowAddedSpy.wait();
@@ -469,7 +469,7 @@ void TestWindowManagement::testParentWindow()
 
     // now let's create a second window
     QSignalSpy windowAddedSpy(m_windowManagement, &PlasmaWindowManagement::windowCreated);
-    std::unique_ptr<KWaylandServer::PlasmaWindowInterface> serverTransient(m_windowManagementInterface->createWindow(this, QUuid::createUuid()));
+    std::unique_ptr<KWaylandServer::PlasmaWindowInterface> serverTransient = m_windowManagementInterface->createWindow(QUuid::createUuid());
     serverTransient->setParentWindow(m_windowInterface.get());
     QVERIFY(windowAddedSpy.wait());
     auto transient = windowAddedSpy.first().first().value<PlasmaWindow *>();
@@ -560,7 +560,7 @@ void TestWindowManagement::testPid()
     QVERIFY(m_window->pid() == 1337);
 
     // test server not setting a PID for whatever reason
-    std::unique_ptr<KWaylandServer::PlasmaWindowInterface> newWindowInterface(m_windowManagementInterface->createWindow(this, QUuid::createUuid()));
+    std::unique_ptr<KWaylandServer::PlasmaWindowInterface> newWindowInterface = m_windowManagementInterface->createWindow(QUuid::createUuid());
     QSignalSpy windowSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::windowCreated);
     QVERIFY(windowSpy.wait());
     std::unique_ptr<PlasmaWindow> newWindow(windowSpy.first().first().value<KWayland::Client::PlasmaWindow *>());

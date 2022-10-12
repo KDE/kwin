@@ -71,7 +71,7 @@ public:
     };
     void setShowingDesktopState(ShowingDesktopState state);
 
-    PlasmaWindowInterface *createWindow(QObject *parent, const QUuid &uuid);
+    std::unique_ptr<PlasmaWindowInterface> createWindow(const QUuid &uuid);
     QList<PlasmaWindowInterface *> windows() const;
 
     /**
@@ -97,6 +97,7 @@ Q_SIGNALS:
     void requestChangeShowingDesktop(ShowingDesktopState requestedState);
 
 private:
+    friend class PlasmaWindowManagementInterfacePrivate;
     std::unique_ptr<PlasmaWindowManagementInterfacePrivate> d;
 };
 
@@ -294,7 +295,7 @@ private:
     friend class PlasmaWindowManagementInterface;
     friend class PlasmaWindowInterfacePrivate;
     friend class PlasmaWindowManagementInterfacePrivate;
-    explicit PlasmaWindowInterface(PlasmaWindowManagementInterface *wm, QObject *parent);
+    explicit PlasmaWindowInterface(PlasmaWindowManagementInterface *wm);
 
     std::unique_ptr<PlasmaWindowInterfacePrivate> d;
 };
