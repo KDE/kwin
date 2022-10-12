@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-11 00:48+0000\n"
+"POT-Creation-Date: 2022-10-12 00:48+0000\n"
 "PO-Revision-Date: 2008-07-08 18:58+0530\n"
 "Last-Translator: \n"
 "Language-Team: SMC <smc.org.in>\n"
@@ -1139,67 +1139,67 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: main.cpp:166
+#: main.cpp:174
 #, kde-format
 msgid "KWin"
 msgstr "ക്വിന്‍"
 
-#: main.cpp:168 main.cpp:191
+#: main.cpp:176 main.cpp:199
 #, kde-format
 msgid "KDE window manager"
 msgstr "കെഡിഇ ജാലക കാര്യസ്ഥന്‍"
 
-#: main.cpp:170
+#: main.cpp:178
 #, fuzzy, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2005, കെഡിഇ ഡവലപ്പര്‍മാര്‍"
 
-#: main.cpp:172
+#: main.cpp:180
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "മത്തിയാസ് എട്രിക്"
 
-#: main.cpp:173
+#: main.cpp:181
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "ക്രിസ്റ്റ്യന്‍ റ്റിബിര്‍നാ"
 
-#: main.cpp:174
+#: main.cpp:182
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "ഡാനിയേല്‍ എം ഡ്യൂലേ"
 
-#: main.cpp:175
+#: main.cpp:183
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "ലുബോസ് ലുനാക്"
 
-#: main.cpp:176
+#: main.cpp:184
 #, kde-format
 msgid "Martin Flöser"
 msgstr ""
 
-#: main.cpp:177
+#: main.cpp:185
 #, kde-format
 msgid "David Edmundson"
 msgstr ""
 
-#: main.cpp:178
+#: main.cpp:186
 #, kde-format
 msgid "Roman Gilg"
 msgstr ""
 
-#: main.cpp:179
+#: main.cpp:187
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr ""
 
-#: main.cpp:188
+#: main.cpp:196
 #, kde-format
 msgid "Disable configuration options"
 msgstr "ക്രമീകരിക്കുവാനുള്ള ഉപാധികള്‍ പ്രവര്‍ത്തന രഹിതമാക്കുക"
 
-#: main.cpp:189
+#: main.cpp:197
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "ക്വിനില്‍ ഏറ്റവും ഒടുവിലായി n തവണ തകര്‍ച്ച സംഭവിച്ചു എന്നു സൂചിപ്പിക്കുന്നു"
@@ -2665,7 +2665,7 @@ msgstr "ഒരു പണിയിടം താഴോട്ടു് മാറു
 msgid "Switch to Desktop %1"
 msgstr "പണിയിടം 1-ലേക്കു് മാറുക"
 
-#: window.cpp:3428
+#: window.cpp:3427
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

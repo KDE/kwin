@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-11 00:48+0000\n"
+"POT-Creation-Date: 2022-10-12 00:48+0000\n"
 "PO-Revision-Date: 2022-10-01 15:09+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -1187,67 +1187,67 @@ msgstr ""
 "мыши или наведите на него курсор и нажмите Enter. Для отмены\n"
 "нажмите Esc или правую кнопку мыши."
 
-#: main.cpp:166
+#: main.cpp:174
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:168 main.cpp:191
+#: main.cpp:176 main.cpp:199
 #, kde-format
 msgid "KDE window manager"
 msgstr "Диспетчер окон KDE"
 
-#: main.cpp:170
+#: main.cpp:178
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "© Разработчики KDE, 1999–2019"
 
-#: main.cpp:172
+#: main.cpp:180
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:173
+#: main.cpp:181
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:174
+#: main.cpp:182
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:175
+#: main.cpp:183
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:176
+#: main.cpp:184
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:177
+#: main.cpp:185
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:178
+#: main.cpp:186
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:179
+#: main.cpp:187
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Влад Загородний"
 
-#: main.cpp:188
+#: main.cpp:196
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Отключить параметры конфигурации"
 
-#: main.cpp:189
+#: main.cpp:197
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Показывает, что сбои KWin происходили n раз"
@@ -2715,7 +2715,7 @@ msgstr "Переключиться на один рабочий стол вни�
 msgid "Switch to Desktop %1"
 msgstr "Переключиться на рабочий стол %1"
 
-#: window.cpp:3428
+#: window.cpp:3427
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
