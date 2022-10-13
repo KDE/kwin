@@ -39,7 +39,7 @@ private Q_SLOTS:
 private:
     std::unique_ptr<TestDisplay> m_display;
     std::unique_ptr<KWaylandServer::CompositorInterface> m_compositorInterface;
-    KWaylandServer::BlurManagerInterface *m_blurManagerInterface;
+    std::unique_ptr<KWaylandServer::BlurManagerInterface> m_blurManagerInterface;
 };
 
 static const QString s_socketName = QStringLiteral("kwayland-test-wayland-blur-0");
@@ -82,7 +82,7 @@ void TestFilter::init()
     QVERIFY(m_display->isRunning());
 
     m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
-    m_blurManagerInterface = new BlurManagerInterface(m_display.get(), m_display.get());
+    m_blurManagerInterface = std::make_unique<BlurManagerInterface>(m_display.get());
 }
 
 void TestFilter::cleanup()

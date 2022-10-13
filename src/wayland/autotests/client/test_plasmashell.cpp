@@ -44,12 +44,12 @@ private:
     std::unique_ptr<CompositorInterface> m_compositorInterface;
     std::unique_ptr<PlasmaShellInterface> m_plasmaShellInterface;
 
-    ConnectionThread *m_connection = nullptr;
-    Compositor *m_compositor = nullptr;
-    EventQueue *m_queue = nullptr;
-    QThread *m_thread = nullptr;
-    Registry *m_registry = nullptr;
-    PlasmaShell *m_plasmaShell = nullptr;
+    std::unique_ptr<ConnectionThread> m_connection;
+    std::unique_ptr<Compositor> m_compositor;
+    std::unique_ptr<EventQueue> m_queue;
+    std::unique_ptr<QThread> m_thread;
+    std::unique_ptr<Registry> m_registry;
+    std::unique_ptr<PlasmaShell> m_plasmaShell;
 };
 
 static const QString s_socketName = QStringLiteral("kwayland-test-wayland-plasma-shell-0");
@@ -67,36 +67,35 @@ void TestPlasmaShell::init()
     m_plasmaShellInterface = std::make_unique<PlasmaShellInterface>(m_display.get());
 
     // setup connection
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new EventQueue(this);
+    m_queue = std::make_unique<EventQueue>();
     QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
+    m_queue->setup(m_connection.get());
     QVERIFY(m_queue->isValid());
 
-    m_registry = new Registry();
-    QSignalSpy interfacesAnnouncedSpy(m_registry, &Registry::interfaceAnnounced);
+    m_registry = std::make_unique<Registry>();
+    QSignalSpy interfacesAnnouncedSpy(m_registry.get(), &Registry::interfaceAnnounced);
 
     QVERIFY(!m_registry->eventQueue());
-    m_registry->setEventQueue(m_queue);
-    QCOMPARE(m_registry->eventQueue(), m_queue);
-    m_registry->create(m_connection);
+    m_registry->setEventQueue(m_queue.get());
+    QCOMPARE(m_registry->eventQueue(), m_queue.get());
+    m_registry->create(m_connection.get());
     QVERIFY(m_registry->isValid());
     m_registry->setup();
 
     QVERIFY(interfacesAnnouncedSpy.wait());
-#define CREATE(variable, factory, iface)                                                                                                                      \
-    variable =                                                                                                                                                \
-        m_registry->create##factory(m_registry->interface(Registry::Interface::iface).name, m_registry->interface(Registry::Interface::iface).version, this); \
+#define CREATE(variable, factory, iface)                                                                                                                            \
+    variable.reset(m_registry->create##factory(m_registry->interface(Registry::Interface::iface).name, m_registry->interface(Registry::Interface::iface).version)); \
     QVERIFY(variable);
 
     CREATE(m_compositor, Compositor, Compositor)
@@ -107,25 +106,16 @@ void TestPlasmaShell::init()
 
 void TestPlasmaShell::cleanup()
 {
-#define DELETE(name)    \
-    if (name) {         \
-        delete name;    \
-        name = nullptr; \
-    }
-    DELETE(m_plasmaShell)
-    DELETE(m_compositor)
-    DELETE(m_queue)
-    DELETE(m_registry)
-#undef DELETE
+    m_plasmaShell.reset();
+    m_compositor.reset();
+    m_queue.reset();
+    m_registry.reset();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
-    delete m_connection;
-    m_connection = nullptr;
-
+    m_connection.reset();
     m_display.reset();
 }
 
@@ -388,7 +378,7 @@ void TestPlasmaShell::testAutoHidePanel()
     // change panel type
     ps->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AlwaysVisible);
     // requesting auto hide should raise error
-    QSignalSpy errorSpy(m_connection, &ConnectionThread::errorOccurred);
+    QSignalSpy errorSpy(m_connection.get(), &ConnectionThread::errorOccurred);
     ps->requestHideAutoHidingPanel();
     QVERIFY(errorSpy.wait());
 }
@@ -438,10 +428,7 @@ void TestPlasmaShell::testDisconnect()
 
     // disconnect
     QSignalSpy surfaceDestroyedSpy(sps, &QObject::destroyed);
-    if (m_connection) {
-        m_connection->deleteLater();
-        m_connection = nullptr;
-    }
+    m_connection.release()->deleteLater();
     QCOMPARE(surfaceDestroyedSpy.count(), 0);
     QVERIFY(surfaceDestroyedSpy.wait());
     QCOMPARE(surfaceDestroyedSpy.count(), 1);
@@ -471,7 +458,7 @@ void TestPlasmaShell::testWhileDestroying()
     QVERIFY(shellSurfaceCreatedSpy.wait());
 
     // now try to create more surfaces
-    QSignalSpy clientErrorSpy(m_connection, &ConnectionThread::errorOccurred);
+    QSignalSpy clientErrorSpy(m_connection.get(), &ConnectionThread::errorOccurred);
     for (int i = 0; i < 100; i++) {
         s.reset();
         s.reset(m_compositor->createSurface());

@@ -61,22 +61,18 @@ private:
     std::unique_ptr<KWaylandServer::Display> m_display;
     std::unique_ptr<KWaylandServer::CompositorInterface> m_compositorInterface;
     std::unique_ptr<KWaylandServer::IdleInhibitManagerV1Interface> m_idleInhibitInterface;
-    KWayland::Client::ConnectionThread *m_connection;
-    KWayland::Client::Compositor *m_compositor;
-    KWayland::Client::ShmPool *m_shm;
-    KWayland::Client::EventQueue *m_queue;
-    KWayland::Client::IdleInhibitManager *m_idleInhibitManager;
-    QThread *m_thread;
+    std::unique_ptr<KWayland::Client::ConnectionThread> m_connection;
+    std::unique_ptr<KWayland::Client::Compositor> m_compositor;
+    std::unique_ptr<KWayland::Client::ShmPool> m_shm;
+    std::unique_ptr<KWayland::Client::EventQueue> m_queue;
+    std::unique_ptr<KWayland::Client::IdleInhibitManager> m_idleInhibitManager;
+    std::unique_ptr<QThread> m_thread;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-test-wayland-surface-0");
 
 TestWaylandSurface::TestWaylandSurface(QObject *parent)
     : QObject(parent)
-    , m_display(nullptr)
-    , m_connection(nullptr)
-    , m_compositor(nullptr)
-    , m_thread(nullptr)
 {
 }
 
@@ -96,12 +92,12 @@ void TestWaylandSurface::init()
     QVERIFY(m_idleInhibitInterface);
 
     // setup connection
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     /*connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, m_connection,
@@ -115,13 +111,13 @@ void TestWaylandSurface::init()
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new KWayland::Client::EventQueue(this);
+    m_queue = std::make_unique<KWayland::Client::EventQueue>();
     QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
+    m_queue->setup(m_connection.get());
     QVERIFY(m_queue->isValid());
 
     KWayland::Client::Registry registry;
-    registry.setEventQueue(m_queue);
+    registry.setEventQueue(m_queue.get());
     QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
     QSignalSpy shmSpy(&registry, &KWayland::Client::Registry::shmAnnounced);
     QSignalSpy allAnnounced(&registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -132,43 +128,28 @@ void TestWaylandSurface::init()
     QVERIFY(!compositorSpy.isEmpty());
     QVERIFY(!shmSpy.isEmpty());
 
-    m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
+    m_compositor.reset(registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>()));
     QVERIFY(m_compositor->isValid());
-    m_shm = registry.createShmPool(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>(), this);
+    m_shm.reset(registry.createShmPool(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>()));
     QVERIFY(m_shm->isValid());
 
-    m_idleInhibitManager = registry.createIdleInhibitManager(registry.interface(Registry::Interface::IdleInhibitManagerUnstableV1).name,
-                                                             registry.interface(Registry::Interface::IdleInhibitManagerUnstableV1).version,
-                                                             this);
+    m_idleInhibitManager.reset(registry.createIdleInhibitManager(registry.interface(Registry::Interface::IdleInhibitManagerUnstableV1).name,
+                                                                 registry.interface(Registry::Interface::IdleInhibitManagerUnstableV1).version));
     QVERIFY(m_idleInhibitManager->isValid());
 }
 
 void TestWaylandSurface::cleanup()
 {
-    if (m_compositor) {
-        delete m_compositor;
-        m_compositor = nullptr;
-    }
-    if (m_idleInhibitManager) {
-        delete m_idleInhibitManager;
-        m_idleInhibitManager = nullptr;
-    }
-    if (m_shm) {
-        delete m_shm;
-        m_shm = nullptr;
-    }
-    if (m_queue) {
-        delete m_queue;
-        m_queue = nullptr;
-    }
+    m_compositor.reset();
+    m_idleInhibitManager.reset();
+    m_shm.reset();
+    m_queue.reset();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
-    delete m_connection;
-    m_connection = nullptr;
+    m_connection.reset();
 
     m_display.reset();
 }
@@ -495,7 +476,7 @@ void TestWaylandSurface::testMultipleSurfaces()
     using namespace KWayland::Client;
     using namespace KWaylandServer;
     Registry registry;
-    registry.setEventQueue(m_queue);
+    registry.setEventQueue(m_queue.get());
     QSignalSpy shmSpy(&registry, &KWayland::Client::Registry::shmAnnounced);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
@@ -873,8 +854,7 @@ void TestWaylandSurface::testDestroyAttachedBuffer()
     m_connection->flush();
 
     // Let's try to destroy it
-    delete m_shm;
-    m_shm = nullptr;
+    m_shm.reset();
     QTRY_VERIFY(serverSurface->buffer()->isDestroyed());
 }
 
@@ -928,10 +908,7 @@ void TestWaylandSurface::testDisconnect()
     // destroy client
     QSignalSpy clientDisconnectedSpy(serverSurface->client(), &ClientConnection::disconnected);
     QSignalSpy surfaceDestroyedSpy(serverSurface, &QObject::destroyed);
-    if (m_connection) {
-        m_connection->deleteLater();
-        m_connection = nullptr;
-    }
+    m_connection.release()->deleteLater();
     QVERIFY(clientDisconnectedSpy.wait());
     QCOMPARE(clientDisconnectedSpy.count(), 1);
     if (surfaceDestroyedSpy.isEmpty()) {
@@ -967,9 +944,9 @@ void TestWaylandSurface::testOutput()
 
     // create another registry to get notified about added outputs
     Registry registry;
-    registry.setEventQueue(m_queue);
+    registry.setEventQueue(m_queue.get());
     QSignalSpy allAnnounced(&registry, &Registry::interfacesAnnounced);
-    registry.create(m_connection);
+    registry.create(m_connection.get());
     QVERIFY(registry.isValid());
     registry.setup();
     QVERIFY(allAnnounced.wait());

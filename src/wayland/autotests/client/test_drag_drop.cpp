@@ -47,18 +47,18 @@ private:
     std::unique_ptr<KWaylandServer::CompositorInterface> m_compositorInterface;
     std::unique_ptr<KWaylandServer::DataDeviceManagerInterface> m_dataDeviceManagerInterface;
     std::unique_ptr<KWaylandServer::SeatInterface> m_seatInterface;
-    KWayland::Client::ConnectionThread *m_connection = nullptr;
-    KWayland::Client::Compositor *m_compositor = nullptr;
-    KWayland::Client::EventQueue *m_queue = nullptr;
-    KWayland::Client::DataDevice *m_dataDevice = nullptr;
-    KWayland::Client::DataSource *m_dataSource = nullptr;
-    QThread *m_thread = nullptr;
-    KWayland::Client::Registry *m_registry = nullptr;
-    KWayland::Client::Seat *m_seat = nullptr;
-    KWayland::Client::Pointer *m_pointer = nullptr;
-    KWayland::Client::Touch *m_touch = nullptr;
-    KWayland::Client::DataDeviceManager *m_ddm = nullptr;
-    KWayland::Client::ShmPool *m_shm = nullptr;
+    std::unique_ptr<KWayland::Client::ConnectionThread> m_connection;
+    std::unique_ptr<KWayland::Client::Compositor> m_compositor;
+    std::unique_ptr<KWayland::Client::EventQueue> m_queue;
+    std::unique_ptr<KWayland::Client::DataDevice> m_dataDevice;
+    std::unique_ptr<KWayland::Client::DataSource> m_dataSource;
+    std::unique_ptr<QThread> m_thread;
+    std::unique_ptr<KWayland::Client::Registry> m_registry;
+    std::unique_ptr<KWayland::Client::Seat> m_seat;
+    std::unique_ptr<KWayland::Client::Pointer> m_pointer;
+    std::unique_ptr<KWayland::Client::Touch> m_touch;
+    std::unique_ptr<KWayland::Client::DataDeviceManager> m_ddm;
+    std::unique_ptr<KWayland::Client::ShmPool> m_shm;
 };
 
 static const QString s_socketName = QStringLiteral("kwayland-test-wayland-drag-n-drop-0");
@@ -73,8 +73,8 @@ void TestDragAndDrop::init()
     QVERIFY(m_display->isRunning());
 
     // setup connection
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
@@ -84,32 +84,31 @@ void TestDragAndDrop::init()
     m_dataDeviceManagerInterface = std::make_unique<DataDeviceManagerInterface>(m_display.get());
     m_display->createShm();
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new EventQueue(this);
+    m_queue = std::make_unique<EventQueue>();
     QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
+    m_queue->setup(m_connection.get());
     QVERIFY(m_queue->isValid());
 
-    m_registry = new Registry();
-    QSignalSpy interfacesAnnouncedSpy(m_registry, &Registry::interfaceAnnounced);
+    m_registry = std::make_unique<Registry>();
+    QSignalSpy interfacesAnnouncedSpy(m_registry.get(), &Registry::interfaceAnnounced);
 
     QVERIFY(!m_registry->eventQueue());
-    m_registry->setEventQueue(m_queue);
-    QCOMPARE(m_registry->eventQueue(), m_queue);
-    m_registry->create(m_connection);
+    m_registry->setEventQueue(m_queue.get());
+    QCOMPARE(m_registry->eventQueue(), m_queue.get());
+    m_registry->create(m_connection.get());
     QVERIFY(m_registry->isValid());
     m_registry->setup();
 
     QVERIFY(interfacesAnnouncedSpy.wait());
-#define CREATE(variable, factory, iface)                                                                                                                      \
-    variable =                                                                                                                                                \
-        m_registry->create##factory(m_registry->interface(Registry::Interface::iface).name, m_registry->interface(Registry::Interface::iface).version, this); \
+#define CREATE(variable, factory, iface)                                                                                                                            \
+    variable.reset(m_registry->create##factory(m_registry->interface(Registry::Interface::iface).name, m_registry->interface(Registry::Interface::iface).version)); \
     QVERIFY(variable);
 
     CREATE(m_compositor, Compositor, Compositor)
@@ -119,43 +118,35 @@ void TestDragAndDrop::init()
 
 #undef CREATE
 
-    QSignalSpy pointerSpy(m_seat, &Seat::hasPointerChanged);
+    QSignalSpy pointerSpy(m_seat.get(), &Seat::hasPointerChanged);
     QVERIFY(pointerSpy.wait());
-    m_pointer = m_seat->createPointer(m_seat);
+    m_pointer.reset(m_seat->createPointer());
     QVERIFY(m_pointer->isValid());
-    m_touch = m_seat->createTouch(m_seat);
+    m_touch.reset(m_seat->createTouch());
     QVERIFY(m_touch->isValid());
-    m_dataDevice = m_ddm->getDataDevice(m_seat, this);
+    m_dataDevice.reset(m_ddm->getDataDevice(m_seat.get()));
     QVERIFY(m_dataDevice->isValid());
-    m_dataSource = m_ddm->createDataSource(this);
+    m_dataSource.reset(m_ddm->createDataSource());
     QVERIFY(m_dataSource->isValid());
     m_dataSource->offer(QStringLiteral("text/plain"));
 }
 
 void TestDragAndDrop::cleanup()
 {
-#define DELETE(name)    \
-    if (name) {         \
-        delete name;    \
-        name = nullptr; \
-    }
-    DELETE(m_dataSource)
-    DELETE(m_dataDevice)
-    DELETE(m_shm)
-    DELETE(m_compositor)
-    DELETE(m_ddm)
-    DELETE(m_seat)
-    DELETE(m_queue)
-    DELETE(m_registry)
-#undef DELETE
+    m_dataSource.reset();
+    m_dataDevice.reset();
+    m_shm.reset();
+    m_compositor.reset();
+    m_ddm.reset();
+    m_seat.reset();
+    m_queue.reset();
+    m_registry.reset();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
-    delete m_connection;
-    m_connection = nullptr;
+    m_connection.reset();
 
     m_display.reset();
 }
@@ -196,10 +187,10 @@ void TestDragAndDrop::testPointerDragAndDrop()
     auto serverSurface = getServerSurface();
     QVERIFY(serverSurface);
 
-    QSignalSpy dataSourceSelectedActionChangedSpy(m_dataSource, &DataSource::selectedDragAndDropActionChanged);
+    QSignalSpy dataSourceSelectedActionChangedSpy(m_dataSource.get(), &DataSource::selectedDragAndDropActionChanged);
 
     // now we need to pass pointer focus to the Surface and simulate a button press
-    QSignalSpy buttonPressSpy(m_pointer, &Pointer::buttonStateChanged);
+    QSignalSpy buttonPressSpy(m_pointer.get(), &Pointer::buttonStateChanged);
     m_seatInterface->setTimestamp(2);
     m_seatInterface->notifyPointerEnter(serverSurface, QPointF(0, 0));
     m_seatInterface->notifyPointerButton(1, PointerButtonState::Pressed);
@@ -208,15 +199,15 @@ void TestDragAndDrop::testPointerDragAndDrop()
     QCOMPARE(buttonPressSpy.first().at(1).value<quint32>(), quint32(2));
 
     // add some signal spies for client side
-    QSignalSpy dragEnteredSpy(m_dataDevice, &DataDevice::dragEntered);
-    QSignalSpy dragMotionSpy(m_dataDevice, &DataDevice::dragMotion);
-    QSignalSpy pointerMotionSpy(m_pointer, &Pointer::motion);
-    QSignalSpy sourceDropSpy(m_dataSource, &DataSource::dragAndDropPerformed);
+    QSignalSpy dragEnteredSpy(m_dataDevice.get(), &DataDevice::dragEntered);
+    QSignalSpy dragMotionSpy(m_dataDevice.get(), &DataDevice::dragMotion);
+    QSignalSpy pointerMotionSpy(m_pointer.get(), &Pointer::motion);
+    QSignalSpy sourceDropSpy(m_dataSource.get(), &DataSource::dragAndDropPerformed);
 
     // now we can start the drag and drop
     QSignalSpy dragStartedSpy(m_seatInterface.get(), &SeatInterface::dragStarted);
     m_dataSource->setDragAndDropActions(DataDeviceManager::DnDAction::Copy | DataDeviceManager::DnDAction::Move);
-    m_dataDevice->startDrag(buttonPressSpy.first().first().value<quint32>(), m_dataSource, s.get());
+    m_dataDevice->startDrag(buttonPressSpy.first().first().value<quint32>(), m_dataSource.get(), s.get());
     QVERIFY(dragStartedSpy.wait());
     QCOMPARE(m_seatInterface->dragSurface(), serverSurface);
     QCOMPARE(m_seatInterface->dragSurfaceTransformation(), QMatrix4x4());
@@ -253,7 +244,7 @@ void TestDragAndDrop::testPointerDragAndDrop()
 
     // simulate drop
     QSignalSpy serverDragEndedSpy(m_seatInterface.get(), &SeatInterface::dragEnded);
-    QSignalSpy droppedSpy(m_dataDevice, &DataDevice::dropped);
+    QSignalSpy droppedSpy(m_dataDevice.get(), &DataDevice::dropped);
     m_seatInterface->setTimestamp(4);
     m_seatInterface->notifyPointerButton(1, PointerButtonState::Released);
     m_seatInterface->notifyPointerFrame();
@@ -262,7 +253,7 @@ void TestDragAndDrop::testPointerDragAndDrop()
     QCOMPARE(sourceDropSpy.count(), 1);
     QCOMPARE(serverDragEndedSpy.count(), 1);
 
-    QSignalSpy finishedSpy(m_dataSource, &DataSource::dragAndDropFinished);
+    QSignalSpy finishedSpy(m_dataSource.get(), &DataSource::dragAndDropFinished);
     offer->dragAndDropFinished();
     QVERIFY(finishedSpy.wait());
     delete offer;
@@ -283,11 +274,11 @@ void TestDragAndDrop::testTouchDragAndDrop()
     auto serverSurface = getServerSurface();
     QVERIFY(serverSurface);
 
-    QSignalSpy dataSourceSelectedActionChangedSpy(m_dataSource, &DataSource::selectedDragAndDropActionChanged);
+    QSignalSpy dataSourceSelectedActionChangedSpy(m_dataSource.get(), &DataSource::selectedDragAndDropActionChanged);
 
     // now we need to pass touch focus to the Surface and simulate a touch down
-    QSignalSpy sequenceStartedSpy(m_touch, &Touch::sequenceStarted);
-    QSignalSpy pointAddedSpy(m_touch, &Touch::pointAdded);
+    QSignalSpy sequenceStartedSpy(m_touch.get(), &Touch::sequenceStarted);
+    QSignalSpy pointAddedSpy(m_touch.get(), &Touch::pointAdded);
     m_seatInterface->setFocusedTouchSurface(serverSurface);
     m_seatInterface->setTimestamp(2);
     const qint32 touchId = 0;
@@ -299,15 +290,15 @@ void TestDragAndDrop::testTouchDragAndDrop()
     QCOMPARE(tp->time(), quint32(2));
 
     // add some signal spies for client side
-    QSignalSpy dragEnteredSpy(m_dataDevice, &DataDevice::dragEntered);
-    QSignalSpy dragMotionSpy(m_dataDevice, &DataDevice::dragMotion);
-    QSignalSpy touchMotionSpy(m_touch, &Touch::pointMoved);
-    QSignalSpy sourceDropSpy(m_dataSource, &DataSource::dragAndDropPerformed);
+    QSignalSpy dragEnteredSpy(m_dataDevice.get(), &DataDevice::dragEntered);
+    QSignalSpy dragMotionSpy(m_dataDevice.get(), &DataDevice::dragMotion);
+    QSignalSpy touchMotionSpy(m_touch.get(), &Touch::pointMoved);
+    QSignalSpy sourceDropSpy(m_dataSource.get(), &DataSource::dragAndDropPerformed);
 
     // now we can start the drag and drop
     QSignalSpy dragStartedSpy(m_seatInterface.get(), &SeatInterface::dragStarted);
     m_dataSource->setDragAndDropActions(DataDeviceManager::DnDAction::Copy | DataDeviceManager::DnDAction::Move);
-    m_dataDevice->startDrag(tp->downSerial(), m_dataSource, s.get());
+    m_dataDevice->startDrag(tp->downSerial(), m_dataSource.get(), s.get());
     QVERIFY(dragStartedSpy.wait());
     QCOMPARE(m_seatInterface->dragSurface(), serverSurface);
     QCOMPARE(m_seatInterface->dragSurfaceTransformation(), QMatrix4x4());
@@ -343,7 +334,7 @@ void TestDragAndDrop::testTouchDragAndDrop()
 
     // simulate drop
     QSignalSpy serverDragEndedSpy(m_seatInterface.get(), &SeatInterface::dragEnded);
-    QSignalSpy droppedSpy(m_dataDevice, &DataDevice::dropped);
+    QSignalSpy droppedSpy(m_dataDevice.get(), &DataDevice::dropped);
     m_seatInterface->setTimestamp(4);
     m_seatInterface->notifyTouchUp(touchId);
     QVERIFY(sourceDropSpy.isEmpty());
@@ -351,7 +342,7 @@ void TestDragAndDrop::testTouchDragAndDrop()
     QCOMPARE(sourceDropSpy.count(), 1);
     QCOMPARE(serverDragEndedSpy.count(), 1);
 
-    QSignalSpy finishedSpy(m_dataSource, &DataSource::dragAndDropFinished);
+    QSignalSpy finishedSpy(m_dataSource.get(), &DataSource::dragAndDropFinished);
     offer->dragAndDropFinished();
     QVERIFY(finishedSpy.wait());
     delete offer;
@@ -371,10 +362,10 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
     auto serverSurface = getServerSurface();
     QVERIFY(serverSurface);
 
-    QSignalSpy dataSourceSelectedActionChangedSpy(m_dataSource, &DataSource::selectedDragAndDropActionChanged);
+    QSignalSpy dataSourceSelectedActionChangedSpy(m_dataSource.get(), &DataSource::selectedDragAndDropActionChanged);
 
     // now we need to pass pointer focus to the Surface and simulate a button press
-    QSignalSpy buttonPressSpy(m_pointer, &Pointer::buttonStateChanged);
+    QSignalSpy buttonPressSpy(m_pointer.get(), &Pointer::buttonStateChanged);
     m_seatInterface->setTimestamp(2);
     m_seatInterface->notifyPointerEnter(serverSurface, QPointF(0, 0));
     m_seatInterface->notifyPointerButton(1, PointerButtonState::Pressed);
@@ -383,15 +374,15 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
     QCOMPARE(buttonPressSpy.first().at(1).value<quint32>(), quint32(2));
 
     // add some signal spies for client side
-    QSignalSpy dragEnteredSpy(m_dataDevice, &DataDevice::dragEntered);
-    QSignalSpy dragMotionSpy(m_dataDevice, &DataDevice::dragMotion);
-    QSignalSpy pointerMotionSpy(m_pointer, &Pointer::motion);
-    QSignalSpy dragLeftSpy(m_dataDevice, &DataDevice::dragLeft);
+    QSignalSpy dragEnteredSpy(m_dataDevice.get(), &DataDevice::dragEntered);
+    QSignalSpy dragMotionSpy(m_dataDevice.get(), &DataDevice::dragMotion);
+    QSignalSpy pointerMotionSpy(m_pointer.get(), &Pointer::motion);
+    QSignalSpy dragLeftSpy(m_dataDevice.get(), &DataDevice::dragLeft);
 
     // now we can start the drag and drop
     QSignalSpy dragStartedSpy(m_seatInterface.get(), &SeatInterface::dragStarted);
     m_dataSource->setDragAndDropActions(DataDeviceManager::DnDAction::Copy | DataDeviceManager::DnDAction::Move);
-    m_dataDevice->startDrag(buttonPressSpy.first().first().value<quint32>(), m_dataSource, s.get());
+    m_dataDevice->startDrag(buttonPressSpy.first().first().value<quint32>(), m_dataSource.get(), s.get());
     QVERIFY(dragStartedSpy.wait());
     QCOMPARE(m_seatInterface->dragSurface(), serverSurface);
     QCOMPARE(m_seatInterface->dragSurfaceTransformation(), QMatrix4x4());
@@ -427,8 +418,7 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
     QCOMPARE(dragMotionSpy.first().last().toUInt(), 3u);
 
     // now delete the DataSource
-    delete m_dataSource;
-    m_dataSource = nullptr;
+    m_dataSource.reset();
     QSignalSpy serverDragEndedSpy(m_seatInterface.get(), &SeatInterface::dragEnded);
     QVERIFY(dragLeftSpy.isEmpty());
     QVERIFY(dragLeftSpy.wait());
@@ -436,7 +426,7 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
     QTRY_COMPARE(serverDragEndedSpy.count(), 1);
 
     // simulate drop
-    QSignalSpy droppedSpy(m_dataDevice, &DataDevice::dropped);
+    QSignalSpy droppedSpy(m_dataDevice.get(), &DataDevice::dropped);
     m_seatInterface->setTimestamp(4);
     m_seatInterface->notifyPointerButton(1, PointerButtonState::Released);
     m_seatInterface->notifyPointerFrame();
@@ -461,12 +451,12 @@ void TestDragAndDrop::testPointerEventsIgnored()
     m_seatInterface->notifyPointerEnter(serverSurface, QPointF(0, 0));
 
     // create signal spies for all the pointer events
-    QSignalSpy pointerEnteredSpy(m_pointer, &Pointer::entered);
-    QSignalSpy pointerLeftSpy(m_pointer, &Pointer::left);
-    QSignalSpy pointerMotionSpy(m_pointer, &Pointer::motion);
-    QSignalSpy axisSpy(m_pointer, &Pointer::axisChanged);
-    QSignalSpy buttonSpy(m_pointer, &Pointer::buttonStateChanged);
-    QSignalSpy dragEnteredSpy(m_dataDevice, &DataDevice::dragEntered);
+    QSignalSpy pointerEnteredSpy(m_pointer.get(), &Pointer::entered);
+    QSignalSpy pointerLeftSpy(m_pointer.get(), &Pointer::left);
+    QSignalSpy pointerMotionSpy(m_pointer.get(), &Pointer::motion);
+    QSignalSpy axisSpy(m_pointer.get(), &Pointer::axisChanged);
+    QSignalSpy buttonSpy(m_pointer.get(), &Pointer::buttonStateChanged);
+    QSignalSpy dragEnteredSpy(m_dataDevice.get(), &DataDevice::dragEntered);
 
     // first simulate a few things
     quint32 timestamp = 1;
@@ -489,7 +479,7 @@ void TestDragAndDrop::testPointerEventsIgnored()
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonSpy.wait());
     QCOMPARE(buttonSpy.count(), 1);
-    m_dataDevice->startDrag(buttonSpy.first().first().value<quint32>(), m_dataSource, s.get());
+    m_dataDevice->startDrag(buttonSpy.first().first().value<quint32>(), m_dataSource.get(), s.get());
     QVERIFY(dragEnteredSpy.wait());
 
     // now simulate all the possible pointer interactions
@@ -516,7 +506,7 @@ void TestDragAndDrop::testPointerEventsIgnored()
     m_seatInterface->notifyPointerFrame();
 
     // last but not least, simulate the drop
-    QSignalSpy cancelledSpy(m_dataSource, &DataSource::cancelled);
+    QSignalSpy cancelledSpy(m_dataSource.get(), &DataSource::cancelled);
     m_seatInterface->setTimestamp(timestamp++);
     m_seatInterface->notifyPointerButton(1, PointerButtonState::Released);
     m_seatInterface->notifyPointerFrame();

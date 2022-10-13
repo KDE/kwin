@@ -43,12 +43,12 @@ private Q_SLOTS:
 
 private:
     std::unique_ptr<KWaylandServer::Display> m_display;
-    FakeInputInterface *m_fakeInputInterface = nullptr;
+    std::unique_ptr<FakeInputInterface> m_fakeInputInterface;
     FakeInputDevice *m_device = nullptr;
-    ConnectionThread *m_connection = nullptr;
-    QThread *m_thread = nullptr;
-    EventQueue *m_queue = nullptr;
-    FakeInput *m_fakeInput = nullptr;
+    std::unique_ptr<ConnectionThread> m_connection;
+    std::unique_ptr<QThread> m_thread;
+    std::unique_ptr<EventQueue> m_queue;
+    std::unique_ptr<FakeInput> m_fakeInput;
 };
 
 static const QString s_socketName = QStringLiteral("kwayland-test-fake-input-0");
@@ -60,34 +60,33 @@ void FakeInputTest::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
     m_display->createShm();
-    m_fakeInputInterface = new FakeInputInterface(m_display.get());
-    QSignalSpy deviceCreatedSpy(m_fakeInputInterface, &FakeInputInterface::deviceCreated);
+    m_fakeInputInterface = std::make_unique<FakeInputInterface>(m_display.get());
+    QSignalSpy deviceCreatedSpy(m_fakeInputInterface.get(), &FakeInputInterface::deviceCreated);
 
     // setup connection
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new EventQueue(this);
-    m_queue->setup(m_connection);
+    m_queue = std::make_unique<EventQueue>();
+    m_queue->setup(m_connection.get());
 
     Registry registry;
     QSignalSpy interfacesAnnouncedSpy(&registry, &Registry::interfacesAnnounced);
-    registry.setEventQueue(m_queue);
-    registry.create(m_connection);
+    registry.setEventQueue(m_queue.get());
+    registry.create(m_connection.get());
     QVERIFY(registry.isValid());
     registry.setup();
     QVERIFY(interfacesAnnouncedSpy.wait());
 
-    m_fakeInput =
-        registry.createFakeInput(registry.interface(Registry::Interface::FakeInput).name, registry.interface(Registry::Interface::FakeInput).version, this);
+    m_fakeInput.reset(registry.createFakeInput(registry.interface(Registry::Interface::FakeInput).name, registry.interface(Registry::Interface::FakeInput).version));
     QVERIFY(m_fakeInput->isValid());
 
     QVERIFY(deviceCreatedSpy.wait());
@@ -97,24 +96,14 @@ void FakeInputTest::init()
 
 void FakeInputTest::cleanup()
 {
-#define CLEANUP(variable)   \
-    if (variable) {         \
-        delete variable;    \
-        variable = nullptr; \
-    }
-    CLEANUP(m_fakeInput)
-    CLEANUP(m_queue)
-    if (m_connection) {
-        m_connection->deleteLater();
-        m_connection = nullptr;
-    }
+    m_fakeInput.reset();
+    m_queue.reset();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
-#undef CLEANUP
+    m_connection.reset();
 
     m_display.reset();
 }

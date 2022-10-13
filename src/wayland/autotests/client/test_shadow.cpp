@@ -36,14 +36,14 @@ private Q_SLOTS:
 private:
     std::unique_ptr<KWaylandServer::Display> m_display;
 
-    ConnectionThread *m_connection = nullptr;
+    std::unique_ptr<ConnectionThread> m_connection;
     std::unique_ptr<CompositorInterface> m_compositorInterface;
     std::unique_ptr<ShadowManagerInterface> m_shadowInterface;
-    QThread *m_thread = nullptr;
-    EventQueue *m_queue = nullptr;
-    ShmPool *m_shm = nullptr;
-    Compositor *m_compositor = nullptr;
-    ShadowManager *m_shadow = nullptr;
+    std::unique_ptr<QThread> m_thread;
+    std::unique_ptr<EventQueue> m_queue;
+    std::unique_ptr<ShmPool> m_shm;
+    std::unique_ptr<Compositor> m_compositor;
+    std::unique_ptr<ShadowManager> m_shadow;
 };
 
 static const QString s_socketName = QStringLiteral("kwayland-test-shadow-0");
@@ -59,60 +59,48 @@ void ShadowTest::init()
     m_shadowInterface = std::make_unique<ShadowManagerInterface>(m_display.get());
 
     // setup connection
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new EventQueue(this);
-    m_queue->setup(m_connection);
+    m_queue = std::make_unique<EventQueue>();
+    m_queue->setup(m_connection.get());
 
     Registry registry;
     QSignalSpy interfacesAnnouncedSpy(&registry, &Registry::interfacesAnnounced);
-    registry.setEventQueue(m_queue);
-    registry.create(m_connection);
+    registry.setEventQueue(m_queue.get());
+    registry.create(m_connection.get());
     QVERIFY(registry.isValid());
     registry.setup();
     QVERIFY(interfacesAnnouncedSpy.wait());
 
-    m_shm = registry.createShmPool(registry.interface(Registry::Interface::Shm).name, registry.interface(Registry::Interface::Shm).version, this);
+    m_shm.reset(registry.createShmPool(registry.interface(Registry::Interface::Shm).name, registry.interface(Registry::Interface::Shm).version));
     QVERIFY(m_shm->isValid());
-    m_compositor =
-        registry.createCompositor(registry.interface(Registry::Interface::Compositor).name, registry.interface(Registry::Interface::Compositor).version, this);
+    m_compositor.reset(registry.createCompositor(registry.interface(Registry::Interface::Compositor).name, registry.interface(Registry::Interface::Compositor).version));
     QVERIFY(m_compositor->isValid());
-    m_shadow =
-        registry.createShadowManager(registry.interface(Registry::Interface::Shadow).name, registry.interface(Registry::Interface::Shadow).version, this);
+    m_shadow.reset(registry.createShadowManager(registry.interface(Registry::Interface::Shadow).name, registry.interface(Registry::Interface::Shadow).version));
     QVERIFY(m_shadow->isValid());
 }
 
 void ShadowTest::cleanup()
 {
-#define CLEANUP(variable)   \
-    if (variable) {         \
-        delete variable;    \
-        variable = nullptr; \
-    }
-    CLEANUP(m_shm)
-    CLEANUP(m_compositor)
-    CLEANUP(m_shadow)
-    CLEANUP(m_queue)
-    if (m_connection) {
-        m_connection->deleteLater();
-        m_connection = nullptr;
-    }
+    m_shm.reset();
+    m_compositor.reset();
+    m_shadow.reset();
+    m_queue.reset();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
-#undef CLEANUP
+    m_connection.reset();
 
     m_display.reset();
 }

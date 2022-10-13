@@ -38,21 +38,18 @@ private Q_SLOTS:
 private:
     std::unique_ptr<KWaylandServer::Display> m_display;
     std::unique_ptr<KWaylandServer::CompositorInterface> m_compositorInterface;
-    KWaylandServer::ContrastManagerInterface *m_contrastManagerInterface;
-    KWayland::Client::ConnectionThread *m_connection;
-    KWayland::Client::Compositor *m_compositor;
-    KWayland::Client::ContrastManager *m_contrastManager;
-    KWayland::Client::EventQueue *m_queue;
-    QThread *m_thread;
+    std::unique_ptr<KWaylandServer::ContrastManagerInterface> m_contrastManagerInterface;
+    std::unique_ptr<KWayland::Client::ConnectionThread> m_connection;
+    std::unique_ptr<KWayland::Client::Compositor> m_compositor;
+    std::unique_ptr<KWayland::Client::ContrastManager> m_contrastManager;
+    std::unique_ptr<KWayland::Client::EventQueue> m_queue;
+    std::unique_ptr<QThread> m_thread;
 };
 
 static const QString s_socketName = QStringLiteral("kwayland-test-wayland-contrast-0");
 
 TestContrast::TestContrast(QObject *parent)
     : QObject(parent)
-    , m_compositor(nullptr)
-    , m_queue(nullptr)
-    , m_thread(nullptr)
 {
 }
 
@@ -65,20 +62,20 @@ void TestContrast::init()
     QVERIFY(m_display->isRunning());
 
     // setup connection
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new KWayland::Client::EventQueue(this);
+    m_queue = std::make_unique<KWayland::Client::EventQueue>();
     QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
+    m_queue->setup(m_connection.get());
     QVERIFY(m_queue->isValid());
 
     Registry registry;
@@ -87,47 +84,35 @@ void TestContrast::init()
     QSignalSpy contrastSpy(&registry, &Registry::contrastAnnounced);
 
     QVERIFY(!registry.eventQueue());
-    registry.setEventQueue(m_queue);
-    QCOMPARE(registry.eventQueue(), m_queue);
+    registry.setEventQueue(m_queue.get());
+    QCOMPARE(registry.eventQueue(), m_queue.get());
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
 
     m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
     QVERIFY(compositorSpy.wait());
-    m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
+    m_compositor.reset(registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>()));
 
-    m_contrastManagerInterface = new ContrastManagerInterface(m_display.get(), m_display.get());
+    m_contrastManagerInterface = std::make_unique<ContrastManagerInterface>(m_display.get());
 
     QVERIFY(contrastSpy.wait());
-    m_contrastManager = registry.createContrastManager(contrastSpy.first().first().value<quint32>(), contrastSpy.first().last().value<quint32>(), this);
+    m_contrastManager.reset(registry.createContrastManager(contrastSpy.first().first().value<quint32>(), contrastSpy.first().last().value<quint32>()));
 }
 
 void TestContrast::cleanup()
 {
-#define CLEANUP(variable)   \
-    if (variable) {         \
-        delete variable;    \
-        variable = nullptr; \
-    }
-    CLEANUP(m_compositor)
-    CLEANUP(m_contrastManager)
-    CLEANUP(m_queue)
-    if (m_connection) {
-        m_connection->deleteLater();
-        m_connection = nullptr;
-    }
+    m_compositor.reset();
+    m_contrastManager.reset();
+    m_queue.reset();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
-#undef CLEANUP
+    m_connection.reset();
 
     m_display.reset();
-    // these are the children of the display
-    m_contrastManagerInterface = nullptr;
 }
 
 void TestContrast::testCreate()

@@ -61,8 +61,8 @@ private Q_SLOTS:
 
 private:
     std::unique_ptr<XdgShellInterface> m_xdgShellInterface;
-    Compositor *m_compositor = nullptr;
-    XdgShell *m_xdgShell = nullptr;
+    std::unique_ptr<Compositor> m_compositor;
+    std::unique_ptr<XdgShell> m_xdgShell;
     std::unique_ptr<KWaylandServer::Display> m_display;
     std::unique_ptr<CompositorInterface> m_compositorInterface;
     std::unique_ptr<FakeOutput> m_output1Handle;
@@ -70,13 +70,13 @@ private:
     std::unique_ptr<FakeOutput> m_output2Handle;
     std::unique_ptr<OutputInterface> m_output2Interface;
     std::unique_ptr<SeatInterface> m_seatInterface;
-    ConnectionThread *m_connection = nullptr;
-    QThread *m_thread = nullptr;
-    EventQueue *m_queue = nullptr;
-    ShmPool *m_shmPool = nullptr;
-    Output *m_output1 = nullptr;
-    Output *m_output2 = nullptr;
-    Seat *m_seat = nullptr;
+    std::unique_ptr<ConnectionThread> m_connection;
+    std::unique_ptr<QThread> m_thread;
+    std::unique_ptr<EventQueue> m_queue;
+    std::unique_ptr<ShmPool> m_shmPool;
+    std::unique_ptr<Output> m_output1;
+    std::unique_ptr<Output> m_output2;
+    std::unique_ptr<Seat> m_seat;
 };
 
 #define SURFACE                                                                                      \
@@ -111,19 +111,19 @@ void XdgShellTest::init()
     m_xdgShellInterface = std::make_unique<XdgShellInterface>(m_display.get());
 
     // setup connection
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new EventQueue(this);
-    m_queue->setup(m_connection);
+    m_queue = std::make_unique<EventQueue>();
+    m_queue->setup(m_connection.get());
 
     Registry registry;
     QSignalSpy interfacesAnnouncedSpy(&registry, &Registry::interfacesAnnounced);
@@ -131,63 +131,51 @@ void XdgShellTest::init()
     QSignalSpy outputAnnouncedSpy(&registry, &Registry::outputAnnounced);
 
     QSignalSpy xdgShellAnnouncedSpy(&registry, &Registry::xdgShellStableAnnounced);
-    registry.setEventQueue(m_queue);
-    registry.create(m_connection);
+    registry.setEventQueue(m_queue.get());
+    registry.create(m_connection.get());
     QVERIFY(registry.isValid());
     registry.setup();
     QVERIFY(interfacesAnnouncedSpy.wait());
 
     QCOMPARE(outputAnnouncedSpy.count(), 2);
-    m_output1 = registry.createOutput(outputAnnouncedSpy.first().at(0).value<quint32>(), outputAnnouncedSpy.first().at(1).value<quint32>(), this);
-    m_output2 = registry.createOutput(outputAnnouncedSpy.last().at(0).value<quint32>(), outputAnnouncedSpy.last().at(1).value<quint32>(), this);
+    m_output1.reset(registry.createOutput(outputAnnouncedSpy.first().at(0).value<quint32>(), outputAnnouncedSpy.first().at(1).value<quint32>()));
+    m_output2.reset(registry.createOutput(outputAnnouncedSpy.last().at(0).value<quint32>(), outputAnnouncedSpy.last().at(1).value<quint32>()));
 
-    m_shmPool = registry.createShmPool(registry.interface(Registry::Interface::Shm).name, registry.interface(Registry::Interface::Shm).version, this);
+    m_shmPool.reset(registry.createShmPool(registry.interface(Registry::Interface::Shm).name, registry.interface(Registry::Interface::Shm).version));
     QVERIFY(m_shmPool);
     QVERIFY(m_shmPool->isValid());
 
-    m_compositor =
-        registry.createCompositor(registry.interface(Registry::Interface::Compositor).name, registry.interface(Registry::Interface::Compositor).version, this);
+    m_compositor.reset(registry.createCompositor(registry.interface(Registry::Interface::Compositor).name, registry.interface(Registry::Interface::Compositor).version));
     QVERIFY(m_compositor);
     QVERIFY(m_compositor->isValid());
 
-    m_seat = registry.createSeat(registry.interface(Registry::Interface::Seat).name, registry.interface(Registry::Interface::Seat).version, this);
+    m_seat.reset(registry.createSeat(registry.interface(Registry::Interface::Seat).name, registry.interface(Registry::Interface::Seat).version));
     QVERIFY(m_seat);
     QVERIFY(m_seat->isValid());
 
     QCOMPARE(xdgShellAnnouncedSpy.count(), 1);
 
-    m_xdgShell = registry.createXdgShell(registry.interface(Registry::Interface::XdgShellStable).name,
-                                         registry.interface(Registry::Interface::XdgShellStable).version,
-                                         this);
+    m_xdgShell.reset(registry.createXdgShell(registry.interface(Registry::Interface::XdgShellStable).name,
+                                             registry.interface(Registry::Interface::XdgShellStable).version));
     QVERIFY(m_xdgShell);
     QVERIFY(m_xdgShell->isValid());
 }
 
 void XdgShellTest::cleanup()
 {
-#define CLEANUP(variable)   \
-    if (variable) {         \
-        delete variable;    \
-        variable = nullptr; \
-    }
-    CLEANUP(m_xdgShell)
-    CLEANUP(m_compositor)
-    CLEANUP(m_shmPool)
-    CLEANUP(m_output1)
-    CLEANUP(m_output2)
-    CLEANUP(m_seat)
-    CLEANUP(m_queue)
-    if (m_connection) {
-        m_connection->deleteLater();
-        m_connection = nullptr;
-    }
+    m_xdgShell.reset();
+    m_compositor.reset();
+    m_shmPool.reset();
+    m_output1.reset();
+    m_output2.reset();
+    m_seat.reset();
+    m_queue.reset();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
-#undef CLEANUP
+    m_connection.reset();
 
     m_display.reset();
 }
@@ -310,13 +298,13 @@ void XdgShellTest::testFullscreen()
     QCOMPARE(unfullscreenRequestedSpy.count(), 1);
 
     // with outputs
-    xdgSurface->setFullscreen(true, m_output1);
+    xdgSurface->setFullscreen(true, m_output1.get());
     QVERIFY(fullscreenRequestedSpy.wait());
     QCOMPARE(fullscreenRequestedSpy.count(), 2);
     QCOMPARE(fullscreenRequestedSpy.last().at(0).value<OutputInterface *>(), m_output1Interface.get());
 
     // now other output
-    xdgSurface->setFullscreen(true, m_output2);
+    xdgSurface->setFullscreen(true, m_output2.get());
     QVERIFY(fullscreenRequestedSpy.wait());
     QCOMPARE(fullscreenRequestedSpy.count(), 3);
     QCOMPARE(fullscreenRequestedSpy.last().at(0).value<OutputInterface *>(), m_output2Interface.get());
@@ -334,7 +322,7 @@ void XdgShellTest::testShowWindowMenu()
     QSignalSpy windowMenuSpy(serverXdgToplevel, &XdgToplevelInterface::windowMenuRequested);
 
     // TODO: the serial needs to be a proper one
-    xdgSurface->requestShowWindowMenu(m_seat, 20, QPoint(30, 40));
+    xdgSurface->requestShowWindowMenu(m_seat.get(), 20, QPoint(30, 40));
     QVERIFY(windowMenuSpy.wait());
     QCOMPARE(windowMenuSpy.count(), 1);
     QCOMPARE(windowMenuSpy.first().at(0).value<SeatInterface *>(), m_seatInterface.get());
@@ -354,7 +342,7 @@ void XdgShellTest::testMove()
     QSignalSpy moveSpy(serverXdgToplevel, &XdgToplevelInterface::moveRequested);
 
     // TODO: the serial needs to be a proper one
-    xdgSurface->requestMove(m_seat, 50);
+    xdgSurface->requestMove(m_seat.get(), 50);
     QVERIFY(moveSpy.wait());
     QCOMPARE(moveSpy.count(), 1);
     QCOMPARE(moveSpy.first().at(0).value<SeatInterface *>(), m_seatInterface.get());
@@ -390,7 +378,7 @@ void XdgShellTest::testResize()
 
     // TODO: the serial needs to be a proper one
     QFETCH(Qt::Edges, edges);
-    xdgSurface->requestResize(m_seat, 60, edges);
+    xdgSurface->requestResize(m_seat.get(), 60, edges);
     QVERIFY(resizeSpy.wait());
     QCOMPARE(resizeSpy.count(), 1);
     QCOMPARE(resizeSpy.first().at(0).value<SeatInterface *>(), m_seatInterface.get());
@@ -442,7 +430,7 @@ void XdgShellTest::testPing()
 
     // test of a ping failure
     // disconnecting the connection thread to the queue will break the connection and pings will do a timeout
-    disconnect(m_connection, &ConnectionThread::eventsRead, m_queue, &EventQueue::dispatch);
+    disconnect(m_connection.get(), &ConnectionThread::eventsRead, m_queue.get(), &EventQueue::dispatch);
     m_xdgShellInterface->ping(serverXdgToplevel->xdgSurface());
     QSignalSpy pingDelayedSpy(m_xdgShellInterface.get(), &XdgShellInterface::pingDelayed);
     QVERIFY(pingDelayedSpy.wait());

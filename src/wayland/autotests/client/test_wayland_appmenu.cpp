@@ -38,21 +38,17 @@ private:
     std::unique_ptr<KWaylandServer::Display> m_display;
     std::unique_ptr<KWaylandServer::CompositorInterface> m_compositorInterface;
     std::unique_ptr<KWaylandServer::AppMenuManagerInterface> m_appmenuManagerInterface;
-    KWayland::Client::ConnectionThread *m_connection;
-    KWayland::Client::Compositor *m_compositor;
-    KWayland::Client::AppMenuManager *m_appmenuManager;
-    KWayland::Client::EventQueue *m_queue;
-    QThread *m_thread;
+    std::unique_ptr<KWayland::Client::ConnectionThread> m_connection;
+    std::unique_ptr<KWayland::Client::Compositor> m_compositor;
+    std::unique_ptr<KWayland::Client::AppMenuManager> m_appmenuManager;
+    std::unique_ptr<KWayland::Client::EventQueue> m_queue;
+    std::unique_ptr<QThread> m_thread;
 };
 
 static const QString s_socketName = QStringLiteral("kwayland-test-wayland-appmenu-0");
 
 TestAppmenu::TestAppmenu(QObject *parent)
     : QObject(parent)
-    , m_display(nullptr)
-    , m_compositor(nullptr)
-    , m_queue(nullptr)
-    , m_thread(nullptr)
 {
 }
 
@@ -66,20 +62,20 @@ void TestAppmenu::init()
     QVERIFY(m_display->isRunning());
 
     // setup connection
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new KWayland::Client::EventQueue(this);
+    m_queue = std::make_unique<KWayland::Client::EventQueue>();
     QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
+    m_queue->setup(m_connection.get());
     QVERIFY(m_queue->isValid());
 
     Registry registry;
@@ -88,44 +84,34 @@ void TestAppmenu::init()
     QSignalSpy appmenuSpy(&registry, &Registry::appMenuAnnounced);
 
     QVERIFY(!registry.eventQueue());
-    registry.setEventQueue(m_queue);
-    QCOMPARE(registry.eventQueue(), m_queue);
+    registry.setEventQueue(m_queue.get());
+    QCOMPARE(registry.eventQueue(), m_queue.get());
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
 
     m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
     QVERIFY(compositorSpy.wait());
-    m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
+    m_compositor.reset(registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>()));
 
     m_appmenuManagerInterface = std::make_unique<AppMenuManagerInterface>(m_display.get());
 
     QVERIFY(appmenuSpy.wait());
-    m_appmenuManager = registry.createAppMenuManager(appmenuSpy.first().first().value<quint32>(), appmenuSpy.first().last().value<quint32>(), this);
+    m_appmenuManager.reset(registry.createAppMenuManager(appmenuSpy.first().first().value<quint32>(), appmenuSpy.first().last().value<quint32>()));
 }
 
 void TestAppmenu::cleanup()
 {
-#define CLEANUP(variable)   \
-    if (variable) {         \
-        delete variable;    \
-        variable = nullptr; \
-    }
-    CLEANUP(m_compositor)
-    CLEANUP(m_appmenuManager)
-    CLEANUP(m_queue)
-    if (m_connection) {
-        m_connection->deleteLater();
-        m_connection = nullptr;
-    }
+    m_compositor.reset();
+    m_appmenuManager.reset();
+    m_queue.reset();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
+    m_connection.reset();
     m_compositorInterface.reset();
-#undef CLEANUP
 }
 
 void TestAppmenu::testCreateAndSet()

@@ -35,22 +35,18 @@ private Q_SLOTS:
 private:
     std::unique_ptr<KWaylandServer::Display> m_display;
     std::unique_ptr<KWaylandServer::CompositorInterface> m_compositorInterface;
-    KWaylandServer::BlurManagerInterface *m_blurManagerInterface;
-    KWayland::Client::ConnectionThread *m_connection;
-    KWayland::Client::Compositor *m_compositor;
-    KWayland::Client::BlurManager *m_blurManager;
-    KWayland::Client::EventQueue *m_queue;
-    QThread *m_thread;
+    std::unique_ptr<KWaylandServer::BlurManagerInterface> m_blurManagerInterface;
+    std::unique_ptr<KWayland::Client::ConnectionThread> m_connection;
+    std::unique_ptr<KWayland::Client::Compositor> m_compositor;
+    std::unique_ptr<KWayland::Client::BlurManager> m_blurManager;
+    std::unique_ptr<KWayland::Client::EventQueue> m_queue;
+    std::unique_ptr<QThread> m_thread;
 };
 
 static const QString s_socketName = QStringLiteral("kwayland-test-wayland-blur-0");
 
 TestBlur::TestBlur(QObject *parent)
     : QObject(parent)
-    , m_connection(nullptr)
-    , m_compositor(nullptr)
-    , m_queue(nullptr)
-    , m_thread(nullptr)
 {
 }
 
@@ -63,20 +59,20 @@ void TestBlur::init()
     QVERIFY(m_display->isRunning());
 
     // setup connection
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new KWayland::Client::EventQueue(this);
+    m_queue = std::make_unique<KWayland::Client::EventQueue>();
     QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
+    m_queue->setup(m_connection.get());
     QVERIFY(m_queue->isValid());
 
     Registry registry;
@@ -85,46 +81,34 @@ void TestBlur::init()
     QSignalSpy blurSpy(&registry, &Registry::blurAnnounced);
 
     QVERIFY(!registry.eventQueue());
-    registry.setEventQueue(m_queue);
-    QCOMPARE(registry.eventQueue(), m_queue);
+    registry.setEventQueue(m_queue.get());
+    QCOMPARE(registry.eventQueue(), m_queue.get());
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
 
     m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
     QVERIFY(compositorSpy.wait());
-    m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
+    m_compositor.reset(registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>()));
 
-    m_blurManagerInterface = new BlurManagerInterface(m_display.get(), m_display.get());
+    m_blurManagerInterface = std::make_unique<BlurManagerInterface>(m_display.get());
     QVERIFY(blurSpy.wait());
-    m_blurManager = registry.createBlurManager(blurSpy.first().first().value<quint32>(), blurSpy.first().last().value<quint32>(), this);
+    m_blurManager.reset(registry.createBlurManager(blurSpy.first().first().value<quint32>(), blurSpy.first().last().value<quint32>()));
 }
 
 void TestBlur::cleanup()
 {
-#define CLEANUP(variable)   \
-    if (variable) {         \
-        delete variable;    \
-        variable = nullptr; \
-    }
-    CLEANUP(m_compositor)
-    CLEANUP(m_blurManager)
-    CLEANUP(m_queue)
-    if (m_connection) {
-        m_connection->deleteLater();
-        m_connection = nullptr;
-    }
+    m_compositor.reset();
+    m_blurManager.reset();
+    m_queue.reset();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
-#undef CLEANUP
+    m_connection.reset();
 
     m_display.reset();
-    // these are the children of the display
-    m_blurManagerInterface = nullptr;
 }
 
 void TestBlur::testCreate()

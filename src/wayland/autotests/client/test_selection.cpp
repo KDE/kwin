@@ -41,17 +41,17 @@ private:
 
     struct Connection
     {
-        ConnectionThread *connection = nullptr;
-        QThread *thread = nullptr;
-        EventQueue *queue = nullptr;
-        Compositor *compositor = nullptr;
-        Seat *seat = nullptr;
-        DataDeviceManager *ddm = nullptr;
-        Keyboard *keyboard = nullptr;
-        DataDevice *dataDevice = nullptr;
+        std::unique_ptr<ConnectionThread> connection;
+        std::unique_ptr<QThread> thread;
+        std::unique_ptr<EventQueue> queue;
+        std::unique_ptr<Compositor> compositor;
+        std::unique_ptr<Seat> seat;
+        std::unique_ptr<DataDeviceManager> ddm;
+        std::unique_ptr<Keyboard> keyboard;
+        std::unique_ptr<DataDevice> dataDevice;
     };
-    bool setupConnection(Connection *c);
-    void cleanupConnection(Connection *c);
+    bool setupConnection(Connection &c);
+    void cleanupConnection(Connection &c);
 
     Connection m_client1;
     Connection m_client2;
@@ -72,38 +72,38 @@ void SelectionTest::init()
     m_ddmInterface = std::make_unique<DataDeviceManagerInterface>(m_display.get());
 
     // setup connection
-    setupConnection(&m_client1);
-    setupConnection(&m_client2);
+    setupConnection(m_client1);
+    setupConnection(m_client2);
 }
 
-bool SelectionTest::setupConnection(Connection *c)
+bool SelectionTest::setupConnection(Connection &c)
 {
-    c->connection = new ConnectionThread;
-    QSignalSpy connectedSpy(c->connection, &ConnectionThread::connected);
+    c.connection = std::make_unique<ConnectionThread>();
+    QSignalSpy connectedSpy(c.connection.get(), &ConnectionThread::connected);
     if (!connectedSpy.isValid()) {
         return false;
     }
-    c->connection->setSocketName(s_socketName);
+    c.connection->setSocketName(s_socketName);
 
-    c->thread = new QThread(this);
-    c->connection->moveToThread(c->thread);
-    c->thread->start();
+    c.thread = std::make_unique<QThread>();
+    c.connection->moveToThread(c.thread.get());
+    c.thread->start();
 
-    c->connection->initConnection();
+    c.connection->initConnection();
     if (!connectedSpy.wait(500)) {
         return false;
     }
 
-    c->queue = new EventQueue(this);
-    c->queue->setup(c->connection);
+    c.queue = std::make_unique<EventQueue>();
+    c.queue->setup(c.connection.get());
 
     Registry registry;
     QSignalSpy interfacesAnnouncedSpy(&registry, &Registry::interfacesAnnounced);
     if (!interfacesAnnouncedSpy.isValid()) {
         return false;
     }
-    registry.setEventQueue(c->queue);
-    registry.create(c->connection);
+    registry.setEventQueue(c.queue.get());
+    registry.create(c.connection.get());
     if (!registry.isValid()) {
         return false;
     }
@@ -112,37 +112,35 @@ bool SelectionTest::setupConnection(Connection *c)
         return false;
     }
 
-    c->compositor =
-        registry.createCompositor(registry.interface(Registry::Interface::Compositor).name, registry.interface(Registry::Interface::Compositor).version, this);
-    if (!c->compositor->isValid()) {
+    c.compositor.reset(registry.createCompositor(registry.interface(Registry::Interface::Compositor).name, registry.interface(Registry::Interface::Compositor).version));
+    if (!c.compositor->isValid()) {
         return false;
     }
-    c->ddm = registry.createDataDeviceManager(registry.interface(Registry::Interface::DataDeviceManager).name,
-                                              registry.interface(Registry::Interface::DataDeviceManager).version,
-                                              this);
-    if (!c->ddm->isValid()) {
+    c.ddm.reset(registry.createDataDeviceManager(registry.interface(Registry::Interface::DataDeviceManager).name,
+                                                 registry.interface(Registry::Interface::DataDeviceManager).version));
+    if (!c.ddm->isValid()) {
         return false;
     }
-    c->seat = registry.createSeat(registry.interface(Registry::Interface::Seat).name, registry.interface(Registry::Interface::Seat).version, this);
-    if (!c->seat->isValid()) {
+    c.seat.reset(registry.createSeat(registry.interface(Registry::Interface::Seat).name, registry.interface(Registry::Interface::Seat).version));
+    if (!c.seat->isValid()) {
         return false;
     }
-    QSignalSpy keyboardSpy(c->seat, &Seat::hasKeyboardChanged);
+    QSignalSpy keyboardSpy(c.seat.get(), &Seat::hasKeyboardChanged);
     if (!keyboardSpy.isValid()) {
         return false;
     }
     if (!keyboardSpy.wait(500)) {
         return false;
     }
-    if (!c->seat->hasKeyboard()) {
+    if (!c.seat->hasKeyboard()) {
         return false;
     }
-    c->keyboard = c->seat->createKeyboard(c->seat);
-    if (!c->keyboard->isValid()) {
+    c.keyboard.reset(c.seat->createKeyboard());
+    if (!c.keyboard->isValid()) {
         return false;
     }
-    c->dataDevice = c->ddm->getDataDevice(c->seat, this);
-    if (!c->dataDevice->isValid()) {
+    c.dataDevice.reset(c.ddm->getDataDevice(c.seat.get()));
+    if (!c.dataDevice->isValid()) {
         return false;
     }
 
@@ -151,42 +149,32 @@ bool SelectionTest::setupConnection(Connection *c)
 
 void SelectionTest::cleanup()
 {
-    cleanupConnection(&m_client1);
-    cleanupConnection(&m_client2);
+    cleanupConnection(m_client1);
+    cleanupConnection(m_client2);
     m_display.reset();
 }
 
-void SelectionTest::cleanupConnection(Connection *c)
+void SelectionTest::cleanupConnection(Connection &c)
 {
-    delete c->dataDevice;
-    c->dataDevice = nullptr;
-    delete c->keyboard;
-    c->keyboard = nullptr;
-    delete c->ddm;
-    c->ddm = nullptr;
-    delete c->seat;
-    c->seat = nullptr;
-    delete c->compositor;
-    c->compositor = nullptr;
-    delete c->queue;
-    c->queue = nullptr;
-    if (c->connection) {
-        c->connection->deleteLater();
-        c->connection = nullptr;
+    c.dataDevice.reset();
+    c.keyboard.reset();
+    c.ddm.reset();
+    c.seat.reset();
+    c.compositor.reset();
+    c.queue.reset();
+    if (c.thread) {
+        c.thread->quit();
+        c.thread->wait();
+        c.thread.reset();
     }
-    if (c->thread) {
-        c->thread->quit();
-        c->thread->wait();
-        delete c->thread;
-        c->thread = nullptr;
-    }
+    c.connection.reset();
 }
 
 void SelectionTest::testClearOnEnter()
 {
     // this test verifies that the selection is cleared prior to keyboard enter if there is no current selection
-    QSignalSpy selectionClearedClient1Spy(m_client1.dataDevice, &DataDevice::selectionCleared);
-    QSignalSpy keyboardEnteredClient1Spy(m_client1.keyboard, &Keyboard::entered);
+    QSignalSpy selectionClearedClient1Spy(m_client1.dataDevice.get(), &DataDevice::selectionCleared);
+    QSignalSpy keyboardEnteredClient1Spy(m_client1.keyboard.get(), &Keyboard::entered);
 
     // now create a Surface
     QSignalSpy surfaceCreatedSpy(m_compositorInterface.get(), &CompositorInterface::surfaceCreated);
@@ -206,9 +194,9 @@ void SelectionTest::testClearOnEnter()
     m_client1.dataDevice->setSelection(keyboardEnteredClient1Spy.first().first().value<quint32>(), dataSource.get());
 
     // now let's bring in client 2
-    QSignalSpy selectionOfferedClient2Spy(m_client2.dataDevice, &DataDevice::selectionOffered);
-    QSignalSpy selectionClearedClient2Spy(m_client2.dataDevice, &DataDevice::selectionCleared);
-    QSignalSpy keyboardEnteredClient2Spy(m_client2.keyboard, &Keyboard::entered);
+    QSignalSpy selectionOfferedClient2Spy(m_client2.dataDevice.get(), &DataDevice::selectionOffered);
+    QSignalSpy selectionClearedClient2Spy(m_client2.dataDevice.get(), &DataDevice::selectionCleared);
+    QSignalSpy keyboardEnteredClient2Spy(m_client2.keyboard.get(), &Keyboard::entered);
     std::unique_ptr<Surface> s2(m_client2.compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
     auto serverSurface2 = surfaceCreatedSpy.last().first().value<SurfaceInterface *>();

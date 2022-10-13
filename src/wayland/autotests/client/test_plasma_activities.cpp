@@ -37,24 +37,19 @@ private:
     std::unique_ptr<KWaylandServer::PlasmaWindowManagementInterface> m_windowManagementInterface;
     std::unique_ptr<KWaylandServer::PlasmaWindowInterface> m_windowInterface;
 
-    KWayland::Client::ConnectionThread *m_connection;
-    KWayland::Client::Compositor *m_compositor;
-    KWayland::Client::EventQueue *m_queue;
-    KWayland::Client::PlasmaWindowManagement *m_windowManagement;
-    KWayland::Client::PlasmaWindow *m_window;
+    std::unique_ptr<KWayland::Client::ConnectionThread> m_connection;
+    std::unique_ptr<KWayland::Client::Compositor> m_compositor;
+    std::unique_ptr<KWayland::Client::EventQueue> m_queue;
+    std::unique_ptr<KWayland::Client::PlasmaWindowManagement> m_windowManagement;
+    std::unique_ptr<KWayland::Client::PlasmaWindow> m_window;
 
-    QThread *m_thread;
+    std::unique_ptr<QThread> m_thread;
 };
 
 static const QString s_socketName = QStringLiteral("kwayland-test-wayland-activities-0");
 
 TestActivities::TestActivities(QObject *parent)
     : QObject(parent)
-    , m_display(nullptr)
-    , m_connection(nullptr)
-    , m_compositor(nullptr)
-    , m_queue(nullptr)
-    , m_thread(nullptr)
 {
 }
 
@@ -67,20 +62,20 @@ void TestActivities::init()
     QVERIFY(m_display->isRunning());
 
     // setup connection
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new KWayland::Client::EventQueue(this);
+    m_queue = std::make_unique<KWayland::Client::EventQueue>();
     QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
+    m_queue->setup(m_connection.get());
     QVERIFY(m_queue->isValid());
 
     Registry registry;
@@ -89,53 +84,43 @@ void TestActivities::init()
     QSignalSpy windowManagementSpy(&registry, &Registry::plasmaWindowManagementAnnounced);
 
     QVERIFY(!registry.eventQueue());
-    registry.setEventQueue(m_queue);
-    QCOMPARE(registry.eventQueue(), m_queue);
+    registry.setEventQueue(m_queue.get());
+    QCOMPARE(registry.eventQueue(), m_queue.get());
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
 
     m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
     QVERIFY(compositorSpy.wait());
-    m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
+    m_compositor.reset(registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>()));
 
     m_windowManagementInterface = std::make_unique<PlasmaWindowManagementInterface>(m_display.get());
 
     QVERIFY(windowManagementSpy.wait());
-    m_windowManagement =
-        registry.createPlasmaWindowManagement(windowManagementSpy.first().first().value<quint32>(), windowManagementSpy.first().last().value<quint32>(), this);
+    m_windowManagement.reset(registry.createPlasmaWindowManagement(windowManagementSpy.first().first().value<quint32>(), windowManagementSpy.first().last().value<quint32>()));
 
-    QSignalSpy windowSpy(m_windowManagement, &PlasmaWindowManagement::windowCreated);
+    QSignalSpy windowSpy(m_windowManagement.get(), &PlasmaWindowManagement::windowCreated);
     m_windowInterface = m_windowManagementInterface->createWindow(QUuid::createUuid());
     m_windowInterface->setPid(1337);
 
     QVERIFY(windowSpy.wait());
-    m_window = windowSpy.first().first().value<PlasmaWindow *>();
+    m_window.reset(windowSpy.first().first().value<PlasmaWindow *>());
 }
 
 void TestActivities::cleanup()
 {
-#define CLEANUP(variable)   \
-    if (variable) {         \
-        delete variable;    \
-        variable = nullptr; \
-    }
-    CLEANUP(m_compositor)
+    m_window.reset();
+    m_compositor.reset();
     m_windowInterface.reset();
-    CLEANUP(m_windowManagement)
-    CLEANUP(m_queue)
-    if (m_connection) {
-        m_connection->deleteLater();
-        m_connection = nullptr;
-    }
+    m_windowManagement.reset();
+    m_queue.reset();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
+    m_connection.reset();
     m_compositorInterface.reset();
-#undef CLEANUP
     m_windowManagementInterface.reset();
     m_display.reset();
 }
@@ -148,7 +133,7 @@ void TestActivities::testEnterLeaveActivity()
 
     QCOMPARE(enterRequestedSpy.takeFirst().at(0).toString(), QStringLiteral("0-1"));
 
-    QSignalSpy activityEnteredSpy(m_window, &KWayland::Client::PlasmaWindow::plasmaActivityEntered);
+    QSignalSpy activityEnteredSpy(m_window.get(), &KWayland::Client::PlasmaWindow::plasmaActivityEntered);
 
     // agree to the request
     m_windowInterface->addPlasmaActivity(QStringLiteral("0-1"));
@@ -176,7 +161,7 @@ void TestActivities::testEnterLeaveActivity()
 
     QCOMPARE(leaveRequestedSpy.takeFirst().at(0).toString(), QStringLiteral("0-1"));
 
-    QSignalSpy activityLeftSpy(m_window, &KWayland::Client::PlasmaWindow::plasmaActivityLeft);
+    QSignalSpy activityLeftSpy(m_window.get(), &KWayland::Client::PlasmaWindow::plasmaActivityLeft);
 
     // agree to the request
     m_windowInterface->removePlasmaActivity(QStringLiteral("0-1"));

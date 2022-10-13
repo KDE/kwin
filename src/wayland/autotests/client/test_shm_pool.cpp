@@ -36,21 +36,16 @@ private Q_SLOTS:
 
 private:
     std::unique_ptr<KWaylandServer::Display> m_display;
-    KWayland::Client::ConnectionThread *m_connection;
-    KWayland::Client::Compositor *m_compositor;
-    KWayland::Client::ShmPool *m_shmPool;
-    QThread *m_thread;
+    std::unique_ptr<KWayland::Client::ConnectionThread> m_connection;
+    std::unique_ptr<KWayland::Client::Compositor> m_compositor;
+    std::unique_ptr<KWayland::Client::ShmPool> m_shmPool;
+    std::unique_ptr<QThread> m_thread;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-test-wayland-surface-0");
 
 TestShmPool::TestShmPool(QObject *parent)
     : QObject(parent)
-    , m_display(nullptr)
-    , m_connection(nullptr)
-    , m_compositor(nullptr)
-    , m_shmPool(nullptr)
-    , m_thread(nullptr)
 {
 }
 
@@ -63,12 +58,12 @@ void TestShmPool::init()
     QVERIFY(m_display->isRunning());
 
     // setup connection
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     m_connection->initConnection();
@@ -84,27 +79,19 @@ void TestShmPool::init()
     m_display->createShm();
 
     QVERIFY(shmSpy.wait());
-    m_shmPool = registry.createShmPool(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>(), this);
+    m_shmPool.reset(registry.createShmPool(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>()));
 }
 
 void TestShmPool::cleanup()
 {
-    if (m_compositor) {
-        delete m_compositor;
-        m_compositor = nullptr;
-    }
-    if (m_shmPool) {
-        delete m_shmPool;
-        m_shmPool = nullptr;
-    }
+    m_compositor.reset();
+    m_shmPool.reset();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
-    delete m_connection;
-    m_connection = nullptr;
+    m_connection.reset();
 
     m_display.reset();
 }

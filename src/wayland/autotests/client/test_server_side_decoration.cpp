@@ -38,12 +38,12 @@ private:
     std::unique_ptr<KWaylandServer::Display> m_display;
     std::unique_ptr<KWaylandServer::CompositorInterface> m_compositorInterface;
     std::unique_ptr<KWaylandServer::ServerSideDecorationManagerInterface> m_serverSideDecorationManagerInterface;
-    KWayland::Client::ConnectionThread *m_connection = nullptr;
-    KWayland::Client::Compositor *m_compositor = nullptr;
-    KWayland::Client::EventQueue *m_queue = nullptr;
-    KWayland::Client::ServerSideDecorationManager *m_serverSideDecorationManager = nullptr;
-    QThread *m_thread = nullptr;
-    KWayland::Client::Registry *m_registry = nullptr;
+    std::unique_ptr<KWayland::Client::ConnectionThread> m_connection;
+    std::unique_ptr<KWayland::Client::Compositor> m_compositor;
+    std::unique_ptr<KWayland::Client::EventQueue> m_queue;
+    std::unique_ptr<KWayland::Client::ServerSideDecorationManager> m_serverSideDecorationManager;
+    std::unique_ptr<QThread> m_thread;
+    std::unique_ptr<KWayland::Client::Registry> m_registry;
 };
 
 static const QString s_socketName = QStringLiteral("kwayland-test-wayland-server-side-decoration-0");
@@ -63,71 +63,56 @@ void TestServerSideDecoration::init()
     QVERIFY(m_display->isRunning());
 
     // setup connection
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new EventQueue(this);
+    m_queue = std::make_unique<EventQueue>();
     QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
+    m_queue->setup(m_connection.get());
     QVERIFY(m_queue->isValid());
 
-    m_registry = new Registry();
-    QSignalSpy compositorSpy(m_registry, &Registry::compositorAnnounced);
-    QSignalSpy serverSideDecoManagerSpy(m_registry, &Registry::serverSideDecorationManagerAnnounced);
+    m_registry = std::make_unique<Registry>();
+    QSignalSpy compositorSpy(m_registry.get(), &Registry::compositorAnnounced);
+    QSignalSpy serverSideDecoManagerSpy(m_registry.get(), &Registry::serverSideDecorationManagerAnnounced);
 
     QVERIFY(!m_registry->eventQueue());
-    m_registry->setEventQueue(m_queue);
-    QCOMPARE(m_registry->eventQueue(), m_queue);
-    m_registry->create(m_connection);
+    m_registry->setEventQueue(m_queue.get());
+    QCOMPARE(m_registry->eventQueue(), m_queue.get());
+    m_registry->create(m_connection.get());
     QVERIFY(m_registry->isValid());
     m_registry->setup();
 
     m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
     QVERIFY(compositorSpy.wait());
-    m_compositor = m_registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
+    m_compositor.reset(m_registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>()));
 
     m_serverSideDecorationManagerInterface = std::make_unique<ServerSideDecorationManagerInterface>(m_display.get());
 
     QVERIFY(serverSideDecoManagerSpy.wait());
-    m_serverSideDecorationManager = m_registry->createServerSideDecorationManager(serverSideDecoManagerSpy.first().first().value<quint32>(),
-                                                                                  serverSideDecoManagerSpy.first().last().value<quint32>(),
-                                                                                  this);
+    m_serverSideDecorationManager.reset(m_registry->createServerSideDecorationManager(serverSideDecoManagerSpy.first().first().value<quint32>(),
+                                                                                      serverSideDecoManagerSpy.first().last().value<quint32>()));
 }
 
 void TestServerSideDecoration::cleanup()
 {
-    if (m_compositor) {
-        delete m_compositor;
-        m_compositor = nullptr;
-    }
-    if (m_serverSideDecorationManager) {
-        delete m_serverSideDecorationManager;
-        m_serverSideDecorationManager = nullptr;
-    }
-    if (m_queue) {
-        delete m_queue;
-        m_queue = nullptr;
-    }
-    if (m_registry) {
-        delete m_registry;
-        m_registry = nullptr;
-    }
+    m_compositor.reset();
+    m_serverSideDecorationManager.reset();
+    m_queue.reset();
+    m_registry.reset();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
-    delete m_connection;
-    m_connection = nullptr;
+    m_connection.reset();
 
     m_display.reset();
 }

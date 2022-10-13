@@ -33,18 +33,16 @@ private:
     std::unique_ptr<FakeOutput> m_outputHandle;
     std::unique_ptr<KWaylandServer::OutputInterface> m_serverOutput;
     std::unique_ptr<KWaylandServer::XdgOutputManagerV1Interface> m_serverXdgOutputManager;
-    KWaylandServer::XdgOutputV1Interface *m_serverXdgOutput;
-    KWayland::Client::ConnectionThread *m_connection;
-    KWayland::Client::EventQueue *m_queue;
-    QThread *m_thread;
+    std::unique_ptr<KWaylandServer::XdgOutputV1Interface> m_serverXdgOutput;
+    std::unique_ptr<KWayland::Client::ConnectionThread> m_connection;
+    std::unique_ptr<KWayland::Client::EventQueue> m_queue;
+    std::unique_ptr<QThread> m_thread;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-test-xdg-output-0");
 
 TestXdgOutput::TestXdgOutput(QObject *parent)
     : QObject(parent)
-    , m_connection(nullptr)
-    , m_thread(nullptr)
 {
 }
 
@@ -63,7 +61,7 @@ void TestXdgOutput::init()
     m_serverOutput->setMode(QSize(1920, 1080));
 
     m_serverXdgOutputManager = std::make_unique<XdgOutputManagerV1Interface>(m_display.get());
-    m_serverXdgOutput = m_serverXdgOutputManager->createXdgOutput(m_serverOutput.get(), this);
+    m_serverXdgOutput.reset(m_serverXdgOutputManager->createXdgOutput(m_serverOutput.get(), nullptr));
     m_serverXdgOutput->setLogicalSize(QSize(1280, 720)); // a 1.5 scale factor
     m_serverXdgOutput->setLogicalPosition(QPoint(11, 12)); // not a sensible value for one monitor, but works for this test
     m_serverXdgOutput->setName("testName");
@@ -72,37 +70,32 @@ void TestXdgOutput::init()
     m_serverXdgOutput->done();
 
     // setup connection
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new KWayland::Client::EventQueue(this);
+    m_queue = std::make_unique<KWayland::Client::EventQueue>();
     QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
+    m_queue->setup(m_connection.get());
     QVERIFY(m_queue->isValid());
 }
 
 void TestXdgOutput::cleanup()
 {
-    if (m_queue) {
-        delete m_queue;
-        m_queue = nullptr;
-    }
+    m_queue.reset();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
-    delete m_connection;
-    m_connection = nullptr;
+    m_connection.reset();
 
     m_serverOutput.reset();
     m_outputHandle.reset();
@@ -119,7 +112,7 @@ void TestXdgOutput::testChanges()
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputAnnounced);
     QSignalSpy xdgOutputAnnounced(&registry, &KWayland::Client::Registry::xdgOutputAnnounced);
 
-    registry.setEventQueue(m_queue);
+    registry.setEventQueue(m_queue.get());
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();

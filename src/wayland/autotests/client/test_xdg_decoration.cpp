@@ -37,14 +37,14 @@ private:
     std::unique_ptr<KWaylandServer::XdgShellInterface> m_xdgShellInterface;
     std::unique_ptr<KWaylandServer::XdgDecorationManagerV1Interface> m_xdgDecorationManagerInterface;
 
-    KWayland::Client::ConnectionThread *m_connection = nullptr;
-    KWayland::Client::Compositor *m_compositor = nullptr;
-    KWayland::Client::EventQueue *m_queue = nullptr;
-    KWayland::Client::XdgShell *m_xdgShell = nullptr;
-    KWayland::Client::XdgDecorationManager *m_xdgDecorationManager = nullptr;
+    std::unique_ptr<KWayland::Client::ConnectionThread> m_connection;
+    std::unique_ptr<KWayland::Client::Compositor> m_compositor;
+    std::unique_ptr<KWayland::Client::EventQueue> m_queue;
+    std::unique_ptr<KWayland::Client::XdgShell> m_xdgShell;
+    std::unique_ptr<KWayland::Client::XdgDecorationManager> m_xdgDecorationManager;
+    std::unique_ptr<KWayland::Client::Registry> m_registry;
 
-    QThread *m_thread = nullptr;
-    KWayland::Client::Registry *m_registry = nullptr;
+    std::unique_ptr<QThread> m_thread;
 };
 
 static const QString s_socketName = QStringLiteral("kwayland-test-wayland-server-side-decoration-0");
@@ -68,80 +68,62 @@ void TestXdgDecoration::init()
     QVERIFY(m_display->isRunning());
 
     // setup connection
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new EventQueue(this);
+    m_queue = std::make_unique<EventQueue>();
     QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
+    m_queue->setup(m_connection.get());
     QVERIFY(m_queue->isValid());
 
-    m_registry = new Registry();
-    QSignalSpy compositorSpy(m_registry, &Registry::compositorAnnounced);
-    QSignalSpy xdgShellSpy(m_registry, &Registry::xdgShellStableAnnounced);
-    QSignalSpy xdgDecorationManagerSpy(m_registry, &Registry::xdgDecorationAnnounced);
+    m_registry = std::make_unique<Registry>();
+    QSignalSpy compositorSpy(m_registry.get(), &Registry::compositorAnnounced);
+    QSignalSpy xdgShellSpy(m_registry.get(), &Registry::xdgShellStableAnnounced);
+    QSignalSpy xdgDecorationManagerSpy(m_registry.get(), &Registry::xdgDecorationAnnounced);
 
     QVERIFY(!m_registry->eventQueue());
-    m_registry->setEventQueue(m_queue);
-    QCOMPARE(m_registry->eventQueue(), m_queue);
-    m_registry->create(m_connection);
+    m_registry->setEventQueue(m_queue.get());
+    QCOMPARE(m_registry->eventQueue(), m_queue.get());
+    m_registry->create(m_connection.get());
     QVERIFY(m_registry->isValid());
     m_registry->setup();
 
     m_compositorInterface = std::make_unique<CompositorInterface>(m_display.get());
     QVERIFY(compositorSpy.wait());
-    m_compositor = m_registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
+    m_compositor.reset(m_registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>()));
 
     m_xdgShellInterface = std::make_unique<XdgShellInterface>(m_display.get());
     QVERIFY(xdgShellSpy.wait());
-    m_xdgShell = m_registry->createXdgShell(xdgShellSpy.first().first().value<quint32>(), xdgShellSpy.first().last().value<quint32>(), this);
+    m_xdgShell.reset(m_registry->createXdgShell(xdgShellSpy.first().first().value<quint32>(), xdgShellSpy.first().last().value<quint32>()));
 
     m_xdgDecorationManagerInterface = std::make_unique<XdgDecorationManagerV1Interface>(m_display.get());
 
     QVERIFY(xdgDecorationManagerSpy.wait());
-    m_xdgDecorationManager = m_registry->createXdgDecorationManager(xdgDecorationManagerSpy.first().first().value<quint32>(),
-                                                                    xdgDecorationManagerSpy.first().last().value<quint32>(),
-                                                                    this);
+    m_xdgDecorationManager.reset(m_registry->createXdgDecorationManager(xdgDecorationManagerSpy.first().first().value<quint32>(),
+                                                                        xdgDecorationManagerSpy.first().last().value<quint32>()));
 }
 
 void TestXdgDecoration::cleanup()
 {
-    if (m_compositor) {
-        delete m_compositor;
-        m_compositor = nullptr;
-    }
-    if (m_xdgShell) {
-        delete m_xdgShell;
-        m_xdgShell = nullptr;
-    }
-    if (m_xdgDecorationManager) {
-        delete m_xdgDecorationManager;
-        m_xdgDecorationManager = nullptr;
-    }
-    if (m_queue) {
-        delete m_queue;
-        m_queue = nullptr;
-    }
-    if (m_registry) {
-        delete m_registry;
-        m_registry = nullptr;
-    }
+    m_compositor.reset();
+    m_xdgShell.reset();
+    m_xdgDecorationManager.reset();
+    m_queue.reset();
+    m_registry.reset();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
-    delete m_connection;
-    m_connection = nullptr;
+    m_connection.reset();
 
     m_display.reset();
 }
