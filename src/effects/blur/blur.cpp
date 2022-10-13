@@ -604,7 +604,7 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region, Wi
 {
     if (shouldBlur(w, mask, data)) {
         const QRect screen = effects->renderTargetRect();
-        QRegion shape = region & blurRegion(w).translated(w->pos().toPoint()) & screen;
+        QRegion shape = blurRegion(w).translated(w->pos().toPoint());
 
         // let's do the evil parts - someone wants to blur behind a transformed window
         const bool translated = data.xTranslation() || data.yTranslation();
@@ -619,17 +619,17 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region, Wi
                 r.setHeight(r.height() * data.yScale());
                 scaledShape |= r;
             }
-            shape = scaledShape & region;
+            shape = scaledShape;
 
             // Only translated, not scaled
         } else if (translated) {
             shape = shape.translated(data.xTranslation(), data.yTranslation());
-            shape = shape & region;
         }
 
         EffectWindow *modal = w->transientFor();
         const bool transientForIsDock = (modal ? modal->isDock() : false);
 
+        shape &= region;
         if (!shape.isEmpty()) {
             doBlur(shape, screen, data.opacity(), data.screenProjectionMatrix(), w->isDock() || transientForIsDock, w->frameGeometry().toRect());
         }
