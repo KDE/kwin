@@ -130,6 +130,16 @@ public:
     bool isRunning() const;
 
     /**
+     * Returns the current color scheme.
+     */
+    QString currentScheme() const;
+
+    /**
+     * Returns the target color scheme.
+     */
+    QString targetScheme() const;
+
+    /**
      * Returns the current screen color temperature.
      */
     int currentTemperature() const;
@@ -173,9 +183,9 @@ public:
     static NightColorManager *self();
 
     /**
-     * Previews a given temperature for a short time (15s).
+     * Previews a given scheme and temperature for a short time (15s).
      */
-    void preview(uint previewTemp);
+    void preview(QString previewScheme, uint previewTemp);
 
     /**
      * Stops an ongoing preview.
@@ -185,7 +195,7 @@ public:
 
 public Q_SLOTS:
     void resetSlowUpdateStartTimer();
-    void quickAdjust(int targetTemp);
+    void quickAdjust(QString targetScheme, int targetTemp);
 
 Q_SIGNALS:
     /**
@@ -202,6 +212,16 @@ Q_SIGNALS:
      * Emitted whenever the night color manager starts or stops running.
      */
     void runningChanged();
+
+    /**
+     * Emitted whenever the current color scheme has changed.
+     */
+    void currentSchemeChanged();
+
+    /**
+     * Emitted whenever the target color scheme has changed.
+     */
+    void targetSchemeChanged();
 
     /**
      * Emitted whenever the current screen color temperature has changed.
@@ -231,29 +251,33 @@ Q_SIGNALS:
 private:
     void readConfig();
     void hardReset();
-    void slowUpdate(int targetTemp);
+    void slowUpdate(QString targetScheme, int targetTemp);
     void resetAllTimers();
+    QString currentTargetScheme() const;
     int currentTargetTemp() const;
     void cancelAllTimers();
     /**
-     * Quick shift on manual change to current target Temperature
+     * Quick shift on manual change to current target scheme and Temperature
      */
-    void resetQuickAdjustTimer(int targetTemp);
+    void resetQuickAdjustTimer(QString targetScheme, int targetTemp);
     /**
      * Slow shift to daytime target Temperature
      */
     void resetSlowUpdateTimer();
 
+    void updateTargetScheme();
     void updateTargetTemperature();
     void updateTransitionTimings(bool force);
     DateTimes getSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning) const;
     bool checkAutomaticSunTimings() const;
     bool daylight() const;
 
+    void applyColorScheme(QString scheme);
     void commitGammaRamps(int temperature);
 
     void setEnabled(bool enabled);
     void setRunning(bool running);
+    void setCurrentScheme(QString scheme);
     void setCurrentTemperature(int temperature);
     void setMode(NightColorMode mode);
 
@@ -295,6 +319,10 @@ private:
     std::unique_ptr<QTimer> m_quickAdjustTimer;
     std::unique_ptr<QTimer> m_previewTimer;
 
+    QString m_currentScheme = QStringLiteral("BreezeLight");
+    QString m_targetScheme = QStringLiteral("BreezeLight");
+    QString m_dayTargetScheme = QStringLiteral("BreezeLight");
+    QString m_nightTargetScheme = QStringLiteral("BreezeDark");
     int m_currentTemp = DEFAULT_DAY_TEMPERATURE;
     int m_targetTemperature = DEFAULT_DAY_TEMPERATURE;
     int m_dayTargetTemp = DEFAULT_DAY_TEMPERATURE;

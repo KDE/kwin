@@ -36,12 +36,13 @@
     </method>
 
     <!--
-        Previews a given temperature for a short time (15s).
+        Previews a given scheme and temperature for a short time (15s).
 
         If there is an existing preview running, replaces it.
         Preview can be ended before 15s too, by calling stopPreview.
     -->
     <method name="preview">
+        <arg name="scheme" type="s" direction="in"></arg>
         <arg name="temperature" type="u" direction="in"/>
     </method>
 
