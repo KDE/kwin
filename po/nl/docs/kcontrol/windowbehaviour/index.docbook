@@ -1313,15 +1313,15 @@
 
 <tip>
 <para
->If you would like some windows to appear on specific positions, screens, or Virtual Desktops, you can set up <guilabel
->Window Rules</guilabel
-> to configure special window or application settings. You can find this by right-clicking on the titlebar of a window and choosing <guimenu
->More Actions</guimenu
->, or in the <guilabel
->Window Rules</guilabel
-> module in the <guilabel
->Window Management</guilabel
-> section of system settings. </para>
+>Als u wilt dat sommige vensters verschijnen op specifieke posities, schermen of virtuele bureaubladen, dan kunt u <guilabel
+>Vensterregels</guilabel
+> instellen om speciale venster- of toepassingeninstellingen te configureren. U kunt deze vinden door rechts te klikken op de titelbalk van een venster en <guimenu
+>Meer acties</guimenu
+> te kiezen of in de module <guilabel
+>Vensterregels</guilabel
+> in de sectie <guilabel
+>Vensterbeheer</guilabel
+> van systeeminstellingen. </para>
 </tip>
 
 
