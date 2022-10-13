@@ -41,8 +41,8 @@ public:
     QuickRootTile(TileManager *tiling, Tile *parentItem = nullptr);
     ~QuickRootTile();
 
-    QuickTile *tileForMode(QuickTileMode mode) const;
-    QuickTile *tileForBorder(ElectricBorder border) const;
+    Tile *tileForMode(QuickTileMode mode);
+    Tile *tileForBorder(ElectricBorder border);
 
     qreal horizontalSplit() const;
     void setHorizontalSplit(qreal split);

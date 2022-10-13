@@ -161,6 +161,16 @@ void Tile::setPadding(qreal padding)
     Q_EMIT windowGeometryChanged();
 }
 
+QuickTileMode Tile::quickTileMode() const
+{
+    return m_quickTileMode;
+}
+
+void Tile::setQuickTileMode(QuickTileMode mode)
+{
+    m_quickTileMode = mode;
+}
+
 void Tile::resizeByPixels(qreal delta, Qt::Edge edge)
 {
     if (!m_parentTile) {

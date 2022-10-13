@@ -17,6 +17,7 @@ QuickRootTile::QuickRootTile(TileManager *tiling, Tile *parentItem)
 {
     setPadding(0.0);
     setRelativeGeometry(QRectF(0, 0, 1, 1));
+    setQuickTileMode(QuickTileFlag::Maximize);
 
     m_leftVerticalTile = std::unique_ptr<QuickTile>(new QuickTile(tiling, ElectricBorder::ElectricLeft, this));
     m_rightVerticalTile = std::unique_ptr<QuickTile>(new QuickTile(tiling, ElectricBorder::ElectricRight, this));
@@ -34,7 +35,7 @@ QuickRootTile::~QuickRootTile()
 {
 }
 
-QuickTile *QuickRootTile::tileForMode(QuickTileMode mode) const
+Tile *QuickRootTile::tileForMode(QuickTileMode mode)
 {
     switch (mode) {
     case QuickTileMode(QuickTileFlag::Left):
@@ -53,12 +54,16 @@ QuickTile *QuickRootTile::tileForMode(QuickTileMode mode) const
         return m_bottomLeftTile.get();
     case QuickTileMode(QuickTileFlag::Right | QuickTileFlag::Bottom):
         return m_bottomRightTile.get();
+    case QuickTileMode(QuickTileFlag::Maximize):
+    case QuickTileMode(QuickTileFlag::Horizontal):
+    case QuickTileMode(QuickTileFlag::Vertical):
+        return this;
     default:
         return nullptr;
     }
 }
 
-QuickTile *QuickRootTile::tileForBorder(ElectricBorder border) const
+Tile *QuickRootTile::tileForBorder(ElectricBorder border)
 {
     switch (border) {
     case ElectricTop:
@@ -156,30 +161,39 @@ QuickTile::QuickTile(TileManager *tiling, ElectricBorder border, QuickRootTile *
     setPadding(0);
     switch (border) {
     case ElectricTop:
+        setQuickTileMode(QuickTileFlag::Top);
         setRelativeGeometry(QRectF(0, 0, 1, 0.5));
         break;
     case ElectricTopRight:
+        setQuickTileMode(QuickTileFlag::Top | QuickTileFlag::Right);
         setRelativeGeometry(QRectF(0.5, 0, 0.5, 0.5));
         break;
     case ElectricRight:
+        setQuickTileMode(QuickTileFlag::Right);
         setRelativeGeometry(QRectF(0.5, 0, 0.5, 1));
         break;
     case ElectricBottomRight:
+        setQuickTileMode(QuickTileFlag::Bottom | QuickTileFlag::Right);
         setRelativeGeometry(QRectF(0.5, 0.5, 0.5, 0.5));
         break;
     case ElectricBottom:
+        setQuickTileMode(QuickTileFlag::Bottom);
         setRelativeGeometry(QRectF(0, 0.5, 1, 0.5));
         break;
     case ElectricBottomLeft:
+        setQuickTileMode(QuickTileFlag::Bottom | QuickTileFlag::Left);
         setRelativeGeometry(QRectF(0, 0.5, 0.5, 0.5));
         break;
     case ElectricLeft:
+        setQuickTileMode(QuickTileFlag::Left);
         setRelativeGeometry(QRectF(0, 0, 0.5, 1));
         break;
     case ElectricTopLeft:
+        setQuickTileMode(QuickTileFlag::Top | QuickTileFlag::Left);
         setRelativeGeometry(QRectF(0, 0, 0.5, 0.5));
         break;
     case ElectricNone:
+        setQuickTileMode(QuickTileFlag::None);
     default:
         break;
     }

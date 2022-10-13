@@ -31,6 +31,7 @@ QDebug operator<<(QDebug debug, const CustomTile *tile)
 CustomTile::CustomTile(TileManager *tiling, CustomTile *parentItem)
     : Tile(tiling, parentItem)
 {
+    setQuickTileMode(QuickTileFlag::Custom);
     m_geometryLock = true;
     connect(this, &CustomTile::layoutModified, parentItem, &CustomTile::layoutModified);
 }

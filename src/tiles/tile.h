@@ -12,6 +12,7 @@
 
 #include <kwin_export.h>
 #include <kwinglobals.h>
+#include <utils/common.h>
 
 #include <QObject>
 #include <QRectF>
@@ -70,6 +71,8 @@ public:
     qreal padding() const;
     void setPadding(qreal padding);
 
+    QuickTileMode quickTileMode() const;
+
     /**
      * All tiles directly children of this tile
      */
@@ -119,6 +122,7 @@ protected:
     explicit Tile(TileManager *tiling, Tile *parentItem = nullptr);
     void insertChild(int position, Tile *item);
     void removeChild(Tile *child);
+    void setQuickTileMode(QuickTileMode mode);
 
 private:
     QVector<Tile *> m_children;
@@ -127,6 +131,7 @@ private:
     TileManager *m_tiling;
     QRectF m_relativeGeometry;
     static QSizeF s_minimumSize;
+    QuickTileMode m_quickTileMode = QuickTileFlag::None;
     qreal m_padding = 4.0;
     bool m_canBeRemoved = true;
 };

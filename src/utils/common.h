@@ -103,6 +103,7 @@ inline MaximizeMode operator^(MaximizeMode m1, MaximizeMode m2)
     return MaximizeMode(int(m1) ^ int(m2));
 }
 
+// TODO: could this be in Tile itself?
 enum class QuickTileFlag {
     None = 0,
     Left = 1 << 0,
