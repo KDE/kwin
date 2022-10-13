@@ -43,92 +43,87 @@ private Q_SLOTS:
     void testCropScale();
 
 private:
-    KWayland::Client::ConnectionThread *m_connection;
-    KWayland::Client::EventQueue *m_queue;
-    KWayland::Client::Compositor *m_clientCompositor;
-    KWayland::Client::ShmPool *m_shm;
+    std::unique_ptr<KWayland::Client::Registry> m_registry;
+    std::unique_ptr<KWayland::Client::ConnectionThread> m_connection;
+    std::unique_ptr<KWayland::Client::EventQueue> m_queue;
+    std::unique_ptr<KWayland::Client::Compositor> m_clientCompositor;
+    std::unique_ptr<KWayland::Client::ShmPool> m_shm;
 
-    QThread *m_thread;
-    KWaylandServer::Display m_display;
+    std::unique_ptr<QThread> m_thread;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     std::unique_ptr<CompositorInterface> m_serverCompositor;
-    Viewporter *m_viewporter;
+    std::unique_ptr<KWaylandServer::ViewporterInterface> m_serverViewPorter;
+    std::unique_ptr<Viewporter> m_viewporter;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-wayland-server-viewporter-test-0");
 
 void TestViewporterInterface::initTestCase()
 {
-    m_display.addSocketName(s_socketName);
-    m_display.start();
-    QVERIFY(m_display.isRunning());
+    m_display = std::make_unique<KWaylandServer::Display>();
+    m_display->addSocketName(s_socketName);
+    m_display->start();
+    QVERIFY(m_display->isRunning());
 
-    m_display.createShm();
-    new ViewporterInterface(&m_display);
+    m_display->createShm();
+    m_serverViewPorter = std::make_unique<ViewporterInterface>(m_display.get());
 
-    m_serverCompositor = std::make_unique<CompositorInterface>(&m_display);
+    m_serverCompositor = std::make_unique<CompositorInterface>(m_display.get());
 
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
     QVERIFY(!m_connection->connections().isEmpty());
 
-    m_queue = new KWayland::Client::EventQueue(this);
+    m_queue = std::make_unique<KWayland::Client::EventQueue>();
     QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
+    m_queue->setup(m_connection.get());
     QVERIFY(m_queue->isValid());
 
-    auto registry = new KWayland::Client::Registry(this);
-    connect(registry, &KWayland::Client::Registry::interfaceAnnounced, this, [this, registry](const QByteArray &interface, quint32 id, quint32 version) {
+    m_registry = std::make_unique<KWayland::Client::Registry>();
+    connect(m_registry.get(), &KWayland::Client::Registry::interfaceAnnounced, this, [this](const QByteArray &interface, quint32 id, quint32 version) {
         if (interface == QByteArrayLiteral("wp_viewporter")) {
-            m_viewporter = new Viewporter();
-            m_viewporter->init(*registry, id, version);
+            m_viewporter = std::make_unique<Viewporter>();
+            m_viewporter->init(*m_registry.get(), id, version);
         }
     });
-    QSignalSpy allAnnouncedSpy(registry, &KWayland::Client::Registry::interfaceAnnounced);
-    QSignalSpy compositorSpy(registry, &KWayland::Client::Registry::compositorAnnounced);
-    QSignalSpy shmSpy(registry, &KWayland::Client::Registry::shmAnnounced);
-    registry->setEventQueue(m_queue);
-    registry->create(m_connection->display());
-    QVERIFY(registry->isValid());
-    registry->setup();
+    QSignalSpy allAnnouncedSpy(m_registry.get(), &KWayland::Client::Registry::interfaceAnnounced);
+    QSignalSpy compositorSpy(m_registry.get(), &KWayland::Client::Registry::compositorAnnounced);
+    QSignalSpy shmSpy(m_registry.get(), &KWayland::Client::Registry::shmAnnounced);
+    m_registry->setEventQueue(m_queue.get());
+    m_registry->create(m_connection->display());
+    QVERIFY(m_registry->isValid());
+    m_registry->setup();
     QVERIFY(allAnnouncedSpy.wait());
 
-    m_clientCompositor = registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
+    m_clientCompositor.reset(m_registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>()));
     QVERIFY(m_clientCompositor->isValid());
 
-    m_shm = registry->createShmPool(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>(), this);
+    m_shm.reset(m_registry->createShmPool(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>()));
     QVERIFY(m_shm->isValid());
 }
 
 TestViewporterInterface::~TestViewporterInterface()
 {
-    if (m_viewporter) {
-        delete m_viewporter;
-        m_viewporter = nullptr;
-    }
-    if (m_shm) {
-        delete m_shm;
-        m_shm = nullptr;
-    }
-    if (m_queue) {
-        delete m_queue;
-        m_queue = nullptr;
-    }
+    m_viewporter.reset();
+    m_shm.reset();
+    m_queue.reset();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
-    m_connection->deleteLater();
-    m_connection = nullptr;
+    m_clientCompositor.reset();
+    m_registry.reset();
+    m_connection.reset();
+    m_display.reset();
 }
 
 void TestViewporterInterface::testCropScale()

@@ -108,18 +108,20 @@ private Q_SLOTS:
     void testMultipleTextinputs();
 
 private:
-    KWayland::Client::ConnectionThread *m_connection;
-    KWayland::Client::EventQueue *m_queue;
-    KWayland::Client::Compositor *m_clientCompositor;
-    KWayland::Client::Seat *m_clientSeat = nullptr;
+    std::unique_ptr<KWayland::Client::ConnectionThread> m_connection;
+    std::unique_ptr<KWayland::Client::EventQueue> m_queue;
+    std::unique_ptr<KWayland::Client::Compositor> m_clientCompositor;
+    std::unique_ptr<KWayland::Client::Seat> m_clientSeat;
+    std::unique_ptr<KWayland::Client::Registry> m_registry;
 
     std::unique_ptr<SeatInterface> m_seat;
-    QThread *m_thread;
-    KWaylandServer::Display m_display;
-    TextInputV3 *m_clientTextInputV3;
+    std::unique_ptr<QThread> m_thread;
+    std::unique_ptr<KWaylandServer::Display> m_display;
+    std::unique_ptr<TextInputV3> m_clientTextInputV3;
     std::unique_ptr<CompositorInterface> m_serverCompositor;
-    TextInputV3Interface *m_serverTextInputV3;
-    TextInputManagerV3 *m_clientTextInputManagerV3;
+    TextInputV3Interface *m_serverTextInputV3 = nullptr;
+    std::unique_ptr<TextInputManagerV3> m_clientTextInputManagerV3;
+    std::unique_ptr<TextInputManagerV3Interface> m_textInputManagerInterface;
 
     quint32 m_totalCommits = 0;
 };
@@ -128,84 +130,78 @@ static const QString s_socketName = QStringLiteral("kwin-wayland-server-text-inp
 
 void TestTextInputV3Interface::initTestCase()
 {
-    m_display.addSocketName(s_socketName);
-    m_display.start();
-    QVERIFY(m_display.isRunning());
+    m_display = std::make_unique<KWaylandServer::Display>();
+    m_display->addSocketName(s_socketName);
+    m_display->start();
+    QVERIFY(m_display->isRunning());
 
-    m_seat = std::make_unique<SeatInterface>(&m_display);
+    m_seat = std::make_unique<SeatInterface>(m_display.get());
     m_seat->setHasKeyboard(true);
 
-    m_serverCompositor = std::make_unique<CompositorInterface>(&m_display);
-    new TextInputManagerV3Interface(&m_display);
+    m_serverCompositor = std::make_unique<CompositorInterface>(m_display.get());
+    m_textInputManagerInterface = std::make_unique<TextInputManagerV3Interface>(m_display.get());
 
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
     QVERIFY(!m_connection->connections().isEmpty());
 
-    m_queue = new KWayland::Client::EventQueue(this);
+    m_queue = std::make_unique<KWayland::Client::EventQueue>();
     QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
+    m_queue->setup(m_connection.get());
     QVERIFY(m_queue->isValid());
 
-    auto registry = new KWayland::Client::Registry(this);
-    connect(registry, &KWayland::Client::Registry::interfaceAnnounced, this, [this, registry](const QByteArray &interface, quint32 id, quint32 version) {
+    m_registry = std::make_unique<KWayland::Client::Registry>();
+    connect(m_registry.get(), &KWayland::Client::Registry::interfaceAnnounced, this, [this](const QByteArray &interface, quint32 id, quint32 version) {
         if (interface == QByteArrayLiteral("zwp_text_input_manager_v3")) {
-            m_clientTextInputManagerV3 = new TextInputManagerV3();
-            m_clientTextInputManagerV3->init(*registry, id, version);
+            m_clientTextInputManagerV3 = std::make_unique<TextInputManagerV3>();
+            m_clientTextInputManagerV3->init(*m_registry.get(), id, version);
         }
     });
 
-    connect(registry, &KWayland::Client::Registry::seatAnnounced, this, [this, registry](quint32 name, quint32 version) {
-        m_clientSeat = registry->createSeat(name, version);
+    connect(m_registry.get(), &KWayland::Client::Registry::seatAnnounced, this, [this](quint32 name, quint32 version) {
+        m_clientSeat.reset(m_registry->createSeat(name, version));
     });
 
-    QSignalSpy allAnnouncedSpy(registry, &KWayland::Client::Registry::interfaceAnnounced);
-    QSignalSpy compositorSpy(registry, &KWayland::Client::Registry::compositorAnnounced);
-    QSignalSpy shmSpy(registry, &KWayland::Client::Registry::shmAnnounced);
-    registry->setEventQueue(m_queue);
-    registry->create(m_connection->display());
-    QVERIFY(registry->isValid());
-    registry->setup();
+    QSignalSpy allAnnouncedSpy(m_registry.get(), &KWayland::Client::Registry::interfaceAnnounced);
+    QSignalSpy compositorSpy(m_registry.get(), &KWayland::Client::Registry::compositorAnnounced);
+    QSignalSpy shmSpy(m_registry.get(), &KWayland::Client::Registry::shmAnnounced);
+    m_registry->setEventQueue(m_queue.get());
+    m_registry->create(m_connection->display());
+    QVERIFY(m_registry->isValid());
+    m_registry->setup();
     QVERIFY(allAnnouncedSpy.wait());
 
-    m_clientCompositor = registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
+    m_clientCompositor.reset(m_registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>()));
     QVERIFY(m_clientCompositor->isValid());
     // create a text input v3
-    m_clientTextInputV3 = new TextInputV3();
+    m_clientTextInputV3 = std::make_unique<TextInputV3>();
     m_clientTextInputV3->init(m_clientTextInputManagerV3->get_text_input(*m_clientSeat));
     QVERIFY(m_clientTextInputV3);
 }
 
 TestTextInputV3Interface::~TestTextInputV3Interface()
 {
-    if (m_clientTextInputV3) {
-        delete m_clientTextInputV3;
-        m_clientTextInputV3 = nullptr;
-    }
-    if (m_clientTextInputManagerV3) {
-        delete m_clientTextInputManagerV3;
-        m_clientTextInputManagerV3 = nullptr;
-    }
-    if (m_queue) {
-        delete m_queue;
-        m_queue = nullptr;
-    }
+    m_clientTextInputV3.reset();
+    m_clientTextInputManagerV3.reset();
+    m_queue.reset();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
-    m_connection->deleteLater();
-    m_connection = nullptr;
+    m_clientCompositor.reset();
+    m_clientSeat.reset();
+    m_registry.reset();
+    m_connection.reset();
+    m_display.reset();
 }
 
 // Ensures that enable disable events don't fire without commit
@@ -225,8 +221,8 @@ void TestTextInputV3Interface::testEnableDisable()
     QSignalSpy textInputEnabledSpy(m_serverTextInputV3, &TextInputV3Interface::enabledChanged);
     QSignalSpy cursorRectangleChangedSpy(m_serverTextInputV3, &TextInputV3Interface::cursorRectangleChanged);
 
-    QSignalSpy surfaceEnterSpy(m_clientTextInputV3, &TextInputV3::surface_enter);
-    QSignalSpy surfaceLeaveSpy(m_clientTextInputV3, &TextInputV3::surface_leave);
+    QSignalSpy surfaceEnterSpy(m_clientTextInputV3.get(), &TextInputV3::surface_enter);
+    QSignalSpy surfaceLeaveSpy(m_clientTextInputV3.get(), &TextInputV3::surface_leave);
 
     // Enter the textinput
 
@@ -288,7 +284,7 @@ void TestTextInputV3Interface::testEvents()
 
     QSignalSpy focusedSurfaceChangedSpy(m_seat.get(), &SeatInterface::focusedTextInputSurfaceChanged);
     QSignalSpy textInputEnabledSpy(m_serverTextInputV3, &TextInputV3Interface::enabledChanged);
-    QSignalSpy doneSpy(m_clientTextInputV3, &TextInputV3::done);
+    QSignalSpy doneSpy(m_clientTextInputV3.get(), &TextInputV3::done);
 
     // Enter the textinput
     QCOMPARE(focusedSurfaceChangedSpy.count(), 0);
@@ -307,9 +303,9 @@ void TestTextInputV3Interface::testEvents()
     QVERIFY(doneSpy.wait());
     QCOMPARE(doneSpy.count(), 1);
 
-    QSignalSpy preEditSpy(m_clientTextInputV3, &TextInputV3::preedit_string);
-    QSignalSpy commitStringSpy(m_clientTextInputV3, &TextInputV3::commit_string);
-    QSignalSpy deleteSurroundingSpy(m_clientTextInputV3, &TextInputV3::delete_surrounding_text);
+    QSignalSpy preEditSpy(m_clientTextInputV3.get(), &TextInputV3::preedit_string);
+    QSignalSpy commitStringSpy(m_clientTextInputV3.get(), &TextInputV3::commit_string);
+    QSignalSpy deleteSurroundingSpy(m_clientTextInputV3.get(), &TextInputV3::delete_surrounding_text);
 
     m_serverTextInputV3->sendPreEditString("Hello KDE community!", 1, 2);
     m_serverTextInputV3->deleteSurroundingText(6, 10);
@@ -521,11 +517,11 @@ void TestTextInputV3Interface::testContentHints()
 void TestTextInputV3Interface::testMultipleTextinputs()
 {
     // create two more text inputs
-    TextInputV3 *ti1 = new TextInputV3();
+    std::unique_ptr<TextInputV3> ti1 = std::make_unique<TextInputV3>();
     ti1->init(m_clientTextInputManagerV3->get_text_input(*m_clientSeat));
     QVERIFY(ti1);
 
-    TextInputV3 *ti2 = new TextInputV3();
+    std::unique_ptr<TextInputV3> ti2 = std::make_unique<TextInputV3>();
     ti2->init(m_clientTextInputManagerV3->get_text_input(*m_clientSeat));
     QVERIFY(ti2);
 
@@ -545,7 +541,7 @@ void TestTextInputV3Interface::testMultipleTextinputs()
     QVERIFY(m_serverTextInputV3);
     QVERIFY(!m_serverTextInputV3->isEnabled());
 
-    QSignalSpy doneSpy1(ti1, &TextInputV3::done);
+    QSignalSpy doneSpy1(ti1.get(), &TextInputV3::done);
     QSignalSpy committedSpy(m_serverTextInputV3, &TextInputV3Interface::stateCommitted);
     // Enable ti1
     ti1->enable();
@@ -573,7 +569,7 @@ void TestTextInputV3Interface::testMultipleTextinputs()
     QVERIFY(doneSpy1.wait());
 
     // at this point total commit count to ti1 is 3
-    QSignalSpy doneSpy2(ti2, &TextInputV3::done);
+    QSignalSpy doneSpy2(ti2.get(), &TextInputV3::done);
 
     m_serverTextInputV3->commitString("Hello");
     m_serverTextInputV3->done();
@@ -624,14 +620,8 @@ void TestTextInputV3Interface::testMultipleTextinputs()
     QCOMPARE(doneSpy1.last().at(0).value<quint32>(), 5);
 
     // cleanup
-    if (ti1) {
-        delete ti1;
-        ti1 = nullptr;
-    }
-    if (ti2) {
-        delete ti2;
-        ti2 = nullptr;
-    }
+    ti1.reset();
+    ti2.reset();
 }
 
 QTEST_GUILESS_MAIN(TestTextInputV3Interface)

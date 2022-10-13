@@ -151,19 +151,19 @@ private Q_SLOTS:
     void testPrimarySelectionDisabled();
 
 private:
-    KWayland::Client::ConnectionThread *m_connection;
-    KWayland::Client::EventQueue *m_queue;
-    KWayland::Client::Compositor *m_clientCompositor;
-    KWayland::Client::Seat *m_clientSeat = nullptr;
+    std::unique_ptr<KWayland::Client::ConnectionThread> m_connection;
+    std::unique_ptr<KWayland::Client::EventQueue> m_queue;
+    std::unique_ptr<KWayland::Client::Compositor> m_clientCompositor;
+    std::unique_ptr<KWayland::Client::Seat> m_clientSeat;
 
-    QThread *m_thread;
-    KWaylandServer::Display *m_display;
+    std::unique_ptr<QThread> m_thread;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     std::unique_ptr<SeatInterface> m_seat;
     std::unique_ptr<CompositorInterface> m_serverCompositor;
 
     std::unique_ptr<DataControlDeviceManagerV1Interface> m_dataControlDeviceManagerInterface;
 
-    DataControlDeviceManager *m_dataControlDeviceManager;
+    std::unique_ptr<DataControlDeviceManager> m_dataControlDeviceManager;
 
     QVector<SurfaceInterface *> m_surfaces;
 };
@@ -172,44 +172,44 @@ static const QString s_socketName = QStringLiteral("kwin-wayland-datacontrol-tes
 
 void DataControlInterfaceTest::init()
 {
-    m_display = new KWaylandServer::Display();
+    m_display = std::make_unique<KWaylandServer::Display>();
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
 
-    m_seat = std::make_unique<SeatInterface>(m_display);
-    m_serverCompositor = std::make_unique<CompositorInterface>(m_display);
-    m_dataControlDeviceManagerInterface = std::make_unique<DataControlDeviceManagerV1Interface>(m_display);
+    m_seat = std::make_unique<SeatInterface>(m_display.get());
+    m_serverCompositor = std::make_unique<CompositorInterface>(m_display.get());
+    m_dataControlDeviceManagerInterface = std::make_unique<DataControlDeviceManagerV1Interface>(m_display.get());
 
     // setup connection
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
     QVERIFY(!m_connection->connections().isEmpty());
 
-    m_queue = new KWayland::Client::EventQueue(this);
+    m_queue = std::make_unique<KWayland::Client::EventQueue>();
     QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
+    m_queue->setup(m_connection.get());
     QVERIFY(m_queue->isValid());
 
     KWayland::Client::Registry registry;
     connect(&registry, &KWayland::Client::Registry::interfaceAnnounced, this, [this, &registry](const QByteArray &interface, quint32 name, quint32 version) {
         if (interface == "zwlr_data_control_manager_v1") {
-            m_dataControlDeviceManager = new DataControlDeviceManager;
+            m_dataControlDeviceManager = std::make_unique<DataControlDeviceManager>();
             m_dataControlDeviceManager->init(registry.registry(), name, version);
         }
     });
     connect(&registry, &KWayland::Client::Registry::seatAnnounced, this, [this, &registry](quint32 name, quint32 version) {
-        m_clientSeat = registry.createSeat(name, version);
+        m_clientSeat.reset(registry.createSeat(name, version));
     });
-    registry.setEventQueue(m_queue);
+    registry.setEventQueue(m_queue.get());
     QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
@@ -217,7 +217,7 @@ void DataControlInterfaceTest::init()
     wl_display_flush(m_connection->display());
 
     QVERIFY(compositorSpy.wait());
-    m_clientCompositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
+    m_clientCompositor.reset(registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>()));
     QVERIFY(m_clientCompositor->isValid());
 
     QVERIFY(m_dataControlDeviceManager);
@@ -225,28 +225,17 @@ void DataControlInterfaceTest::init()
 
 void DataControlInterfaceTest::cleanup()
 {
-#define CLEANUP(variable)   \
-    if (variable) {         \
-        delete variable;    \
-        variable = nullptr; \
-    }
-    CLEANUP(m_dataControlDeviceManager)
-    CLEANUP(m_clientSeat)
-    CLEANUP(m_clientCompositor)
-    CLEANUP(m_queue)
-    if (m_connection) {
-        m_connection->deleteLater();
-        m_connection = nullptr;
-    }
+    m_dataControlDeviceManager.reset();
+    m_clientSeat.reset();
+    m_clientCompositor.reset();
+    m_queue.reset();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
-    CLEANUP(m_display)
-#undef CLEANUP
-
+    m_connection.reset();
+    m_display.reset();
     m_seat.reset();
     m_serverCompositor.reset();
 }

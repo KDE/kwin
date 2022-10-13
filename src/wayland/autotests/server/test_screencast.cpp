@@ -50,11 +50,6 @@ class ScreencastV1 : public QObject, public QtWayland::zkde_screencast_unstable_
     Q_OBJECT
 
 public:
-    ScreencastV1(QObject *parent)
-        : QObject(parent)
-    {
-    }
-
     ScreencastStreamV1 *createWindowStream(const QString &uuid)
     {
         return new ScreencastStreamV1(stream_window(uuid, 2), this);
@@ -77,14 +72,14 @@ private Q_SLOTS:
     void testCreate();
 
 private:
-    KWayland::Client::ConnectionThread *m_connection;
-    KWayland::Client::EventQueue *m_queue = nullptr;
-    ScreencastV1 *m_screencast = nullptr;
+    std::unique_ptr<KWayland::Client::ConnectionThread> m_connection;
+    std::unique_ptr<KWayland::Client::EventQueue> m_queue;
+    std::unique_ptr<ScreencastV1> m_screencast;
 
-    KWaylandServer::ScreencastV1Interface *m_screencastInterface = nullptr;
+    std::unique_ptr<KWaylandServer::ScreencastV1Interface> m_screencastInterface;
 
     QPointer<KWaylandServer::ScreencastStreamV1Interface> m_triggered = nullptr;
-    QThread *m_thread;
+    std::unique_ptr<QThread> m_thread;
     std::unique_ptr<KWaylandServer::Display> m_display;
 };
 
@@ -98,27 +93,27 @@ void TestScreencastV1Interface::initTestCase()
     QVERIFY(m_display->isRunning());
 
     // setup connection
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new KWayland::Client::EventQueue(this);
+    m_queue = std::make_unique<KWayland::Client::EventQueue>();
     QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
+    m_queue->setup(m_connection.get());
     QVERIFY(m_queue->isValid());
 
     KWayland::Client::Registry registry;
 
     QSignalSpy screencastSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
-    m_screencastInterface = new KWaylandServer::ScreencastV1Interface(m_display.get(), this);
-    connect(m_screencastInterface,
+    m_screencastInterface = std::make_unique<KWaylandServer::ScreencastV1Interface>(m_display.get());
+    connect(m_screencastInterface.get(),
             &KWaylandServer::ScreencastV1Interface::windowScreencastRequested,
             this,
             [this](KWaylandServer::ScreencastStreamV1Interface *stream, const QString &winid) {
@@ -133,10 +128,10 @@ void TestScreencastV1Interface::initTestCase()
             [this, &registry](const QByteArray &interfaceName, quint32 name, quint32 version) {
                 if (interfaceName != "zkde_screencast_unstable_v1")
                     return;
-                m_screencast = new ScreencastV1(this);
+                m_screencast = std::make_unique<ScreencastV1>();
                 m_screencast->init(&*registry, name, version);
             });
-    registry.setEventQueue(m_queue);
+    registry.setEventQueue(m_queue.get());
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
@@ -149,17 +144,14 @@ void TestScreencastV1Interface::initTestCase()
 
 TestScreencastV1Interface::~TestScreencastV1Interface()
 {
-    delete m_queue;
-    m_queue = nullptr;
+    m_queue.reset();
 
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
-    m_connection->deleteLater();
-    m_connection = nullptr;
+    m_connection.reset();
     m_display.reset();
 }
 

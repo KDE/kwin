@@ -73,13 +73,14 @@ private Q_SLOTS:
     void testKeyboardShortcuts();
 
 private:
-    KWayland::Client::ConnectionThread *m_connection;
-    KWayland::Client::EventQueue *m_queue;
-    KWayland::Client::Compositor *m_clientCompositor;
-    KWayland::Client::Seat *m_clientSeat = nullptr;
+    std::unique_ptr<KWayland::Client::ConnectionThread> m_connection;
+    std::unique_ptr<KWayland::Client::EventQueue> m_queue;
+    std::unique_ptr<KWayland::Client::Compositor> m_clientCompositor;
+    std::unique_ptr<KWayland::Client::Seat> m_clientSeat;
+    std::unique_ptr<KWayland::Client::Registry> m_registry;
 
-    QThread *m_thread;
-    KWaylandServer::Display m_display;
+    std::unique_ptr<QThread> m_thread;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     std::unique_ptr<SeatInterface> m_seat;
     std::unique_ptr<CompositorInterface> m_serverCompositor;
 
@@ -93,54 +94,55 @@ static const QString s_socketName = QStringLiteral("kwin-wayland-server-keyboard
 
 void TestKeyboardShortcutsInhibitorInterface::initTestCase()
 {
-    m_display.addSocketName(s_socketName);
-    m_display.start();
-    QVERIFY(m_display.isRunning());
+    m_display = std::make_unique<KWaylandServer::Display>();
+    m_display->addSocketName(s_socketName);
+    m_display->start();
+    QVERIFY(m_display->isRunning());
 
-    m_seat = std::make_unique<SeatInterface>(&m_display);
-    m_serverCompositor = std::make_unique<CompositorInterface>(&m_display);
-    m_manager = std::make_unique<KeyboardShortcutsInhibitManagerV1Interface>(&m_display);
+    m_seat = std::make_unique<SeatInterface>(m_display.get());
+    m_serverCompositor = std::make_unique<CompositorInterface>(m_display.get());
+    m_manager = std::make_unique<KeyboardShortcutsInhibitManagerV1Interface>(m_display.get());
 
     connect(m_serverCompositor.get(), &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
         m_surfaces += surface;
     });
 
     // setup connection
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
     QVERIFY(!m_connection->connections().isEmpty());
 
-    m_queue = new KWayland::Client::EventQueue(this);
+    m_queue = std::make_unique<KWayland::Client::EventQueue>();
     QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
+    m_queue->setup(m_connection.get());
     QVERIFY(m_queue->isValid());
 
-    auto registry = new KWayland::Client::Registry(this);
-    connect(registry, &KWayland::Client::Registry::interfaceAnnounced, this, [this, registry](const QByteArray &interface, quint32 id, quint32 version) {
+    m_registry = std::make_unique<KWayland::Client::Registry>();
+    connect(m_registry.get(), &KWayland::Client::Registry::interfaceAnnounced, this, [this](const QByteArray &interface, quint32 id, quint32 version) {
         if (interface == "zwp_keyboard_shortcuts_inhibit_manager_v1") {
-            m_inhibitManagerClient = new KeyboardShortcutsInhibitManager(registry->registry(), id, version);
+            m_inhibitManagerClient = new KeyboardShortcutsInhibitManager(m_registry->registry(), id, version);
         }
     });
-    connect(registry, &KWayland::Client::Registry::seatAnnounced, this, [this, registry](quint32 name, quint32 version) {
-        m_clientSeat = registry->createSeat(name, version);
+    connect(m_registry.get(), &KWayland::Client::Registry::seatAnnounced, this, [this](quint32 name, quint32 version) {
+        m_clientSeat.reset(m_registry->createSeat(name, version));
     });
-    registry->setEventQueue(m_queue);
-    QSignalSpy compositorSpy(registry, &KWayland::Client::Registry::compositorAnnounced);
-    registry->create(m_connection->display());
-    QVERIFY(registry->isValid());
-    registry->setup();
+    m_registry->setEventQueue(m_queue.get());
+    QSignalSpy compositorSpy(m_registry.get(), &KWayland::Client::Registry::compositorAnnounced);
+    m_registry->create(m_connection->display());
+    QVERIFY(m_registry->isValid());
+    m_registry->setup();
     wl_display_flush(m_connection->display());
 
     QVERIFY(compositorSpy.wait());
-    m_clientCompositor = registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
+    m_clientCompositor.reset(m_registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>()));
     QVERIFY(m_clientCompositor->isValid());
 
     QSignalSpy surfaceSpy(m_serverCompositor.get(), &CompositorInterface::surfaceCreated);
@@ -155,18 +157,16 @@ void TestKeyboardShortcutsInhibitorInterface::initTestCase()
 
 TestKeyboardShortcutsInhibitorInterface::~TestKeyboardShortcutsInhibitorInterface()
 {
-    if (m_queue) {
-        delete m_queue;
-        m_queue = nullptr;
-    }
+    m_queue.reset();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
-    m_connection->deleteLater();
-    m_connection = nullptr;
+    m_clientCompositor.reset();
+    m_registry.reset();
+    m_connection.reset();
+    m_display.reset();
 }
 
 void TestKeyboardShortcutsInhibitorInterface::testKeyboardShortcuts()
@@ -201,7 +201,7 @@ void TestKeyboardShortcutsInhibitorInterface::testKeyboardShortcuts()
     QVERIFY(inhibitorCreatedSpy.wait() || inhibitorCreatedSpy.count() == 3);
 
     // Test creating with same surface / seat (expect error)
-    QSignalSpy errorOccured(m_connection, &KWayland::Client::ConnectionThread::errorOccurred);
+    QSignalSpy errorOccured(m_connection.get(), &KWayland::Client::ConnectionThread::errorOccurred);
     m_inhibitManagerClient->inhibit_shortcuts(m_clientSurfaces[0], m_clientSeat->operator wl_seat *());
     QVERIFY(errorOccured.wait() || errorOccured.count() == 1);
 }

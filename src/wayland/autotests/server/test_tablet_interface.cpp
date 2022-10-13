@@ -150,23 +150,24 @@ private Q_SLOTS:
     void testInteractSurfaceChange();
 
 private:
-    KWayland::Client::ConnectionThread *m_connection;
-    KWayland::Client::EventQueue *m_queue;
-    KWayland::Client::Compositor *m_clientCompositor;
-    KWayland::Client::Seat *m_clientSeat = nullptr;
+    std::unique_ptr<KWayland::Client::Registry> m_registry;
+    std::unique_ptr<KWayland::Client::ConnectionThread> m_connection;
+    std::unique_ptr<KWayland::Client::EventQueue> m_queue;
+    std::unique_ptr<KWayland::Client::Compositor> m_clientCompositor;
+    std::unique_ptr<KWayland::Client::Seat> m_clientSeat;
 
-    QThread *m_thread;
-    KWaylandServer::Display m_display;
+    std::unique_ptr<QThread> m_thread;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     std::unique_ptr<SeatInterface> m_seat;
     std::unique_ptr<CompositorInterface> m_serverCompositor;
 
-    TabletSeat *m_tabletSeatClient = nullptr;
+    std::unique_ptr<TabletSeat> m_tabletSeatClient;
     std::unique_ptr<TabletManagerV2Interface> m_tabletManager;
-    QVector<KWayland::Client::Surface *> m_surfacesClient;
+    std::vector<std::unique_ptr<KWayland::Client::Surface>> m_surfacesClient;
 
-    TabletV2Interface *m_tablet;
+    TabletV2Interface *m_tablet = nullptr;
     TabletPadV2Interface *m_tabletPad = nullptr;
-    TabletToolV2Interface *m_tool;
+    TabletToolV2Interface *m_tool = nullptr;
 
     QVector<SurfaceInterface *> m_surfaces;
 };
@@ -175,61 +176,62 @@ static const QString s_socketName = QStringLiteral("kwin-wayland-server-tablet-t
 
 void TestTabletInterface::initTestCase()
 {
-    m_display.addSocketName(s_socketName);
-    m_display.start();
-    QVERIFY(m_display.isRunning());
+    m_display = std::make_unique<KWaylandServer::Display>();
+    m_display->addSocketName(s_socketName);
+    m_display->start();
+    QVERIFY(m_display->isRunning());
 
-    m_seat = std::make_unique<SeatInterface>(&m_display);
-    m_serverCompositor = std::make_unique<CompositorInterface>(&m_display);
-    m_tabletManager = std::make_unique<TabletManagerV2Interface>(&m_display);
+    m_seat = std::make_unique<SeatInterface>(m_display.get());
+    m_serverCompositor = std::make_unique<CompositorInterface>(m_display.get());
+    m_tabletManager = std::make_unique<TabletManagerV2Interface>(m_display.get());
 
     connect(m_serverCompositor.get(), &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
         m_surfaces += surface;
     });
 
     // setup connection
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
     QVERIFY(!m_connection->connections().isEmpty());
 
-    m_queue = new KWayland::Client::EventQueue(this);
+    m_queue = std::make_unique<KWayland::Client::EventQueue>();
     QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
+    m_queue->setup(m_connection.get());
     QVERIFY(m_queue->isValid());
 
-    auto registry = new KWayland::Client::Registry(this);
-    connect(registry, &KWayland::Client::Registry::interfaceAnnounced, this, [this, registry](const QByteArray &interface, quint32 name, quint32 version) {
+    m_registry = std::make_unique<KWayland::Client::Registry>();
+    connect(m_registry.get(), &KWayland::Client::Registry::interfaceAnnounced, this, [this](const QByteArray &interface, quint32 name, quint32 version) {
         if (interface == "zwp_tablet_manager_v2") {
-            auto tabletClient = new QtWayland::zwp_tablet_manager_v2(registry->registry(), name, version);
+            auto tabletClient = new QtWayland::zwp_tablet_manager_v2(m_registry->registry(), name, version);
             auto _seat = tabletClient->get_tablet_seat(*m_clientSeat);
-            m_tabletSeatClient = new TabletSeat(_seat);
+            m_tabletSeatClient = std::make_unique<TabletSeat>(_seat);
         }
     });
-    connect(registry, &KWayland::Client::Registry::seatAnnounced, this, [this, registry](quint32 name, quint32 version) {
-        m_clientSeat = registry->createSeat(name, version);
+    connect(m_registry.get(), &KWayland::Client::Registry::seatAnnounced, this, [this](quint32 name, quint32 version) {
+        m_clientSeat.reset(m_registry->createSeat(name, version));
     });
-    registry->setEventQueue(m_queue);
-    QSignalSpy compositorSpy(registry, &KWayland::Client::Registry::compositorAnnounced);
-    registry->create(m_connection->display());
-    QVERIFY(registry->isValid());
-    registry->setup();
+    m_registry->setEventQueue(m_queue.get());
+    QSignalSpy compositorSpy(m_registry.get(), &KWayland::Client::Registry::compositorAnnounced);
+    m_registry->create(m_connection->display());
+    QVERIFY(m_registry->isValid());
+    m_registry->setup();
     wl_display_flush(m_connection->display());
 
     QVERIFY(compositorSpy.wait());
-    m_clientCompositor = registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
+    m_clientCompositor.reset(m_registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>()));
     QVERIFY(m_clientCompositor->isValid());
 
     QSignalSpy surfaceSpy(m_serverCompositor.get(), &CompositorInterface::surfaceCreated);
     for (int i = 0; i < 3; ++i) {
-        m_surfacesClient += m_clientCompositor->createSurface(this);
+        m_surfacesClient.push_back(std::unique_ptr<KWayland::Client::Surface>(m_clientCompositor->createSurface()));
     }
     QVERIFY(surfaceSpy.count() < 3 && surfaceSpy.wait(200));
     QVERIFY(m_surfaces.count() == 3);
@@ -238,19 +240,19 @@ void TestTabletInterface::initTestCase()
 
 TestTabletInterface::~TestTabletInterface()
 {
-    if (m_queue) {
-        delete m_queue;
-        m_queue = nullptr;
-    }
+    m_queue.reset();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
-    delete m_tabletSeatClient;
-    m_connection->deleteLater();
-    m_connection = nullptr;
+    m_surfacesClient.clear();
+    m_clientCompositor.reset();
+    m_clientSeat.reset();
+    m_tabletSeatClient.reset();
+    m_registry.reset();
+    m_connection.reset();
+    m_display.reset();
 }
 
 void TestTabletInterface::testAdd()
@@ -258,13 +260,13 @@ void TestTabletInterface::testAdd()
     TabletSeatV2Interface *seatInterface = m_tabletManager->seat(m_seat.get());
     QVERIFY(seatInterface);
 
-    QSignalSpy tabletSpy(m_tabletSeatClient, &TabletSeat::tabletAdded);
+    QSignalSpy tabletSpy(m_tabletSeatClient.get(), &TabletSeat::tabletAdded);
     m_tablet = seatInterface->addTablet(1, 2, QStringLiteral("event33"), QStringLiteral("my tablet"), {QStringLiteral("/test/event33")});
     QVERIFY(m_tablet);
     QVERIFY(tabletSpy.wait() || tabletSpy.count() == 1);
     QCOMPARE(m_tabletSeatClient->m_tablets.count(), 1);
 
-    QSignalSpy toolSpy(m_tabletSeatClient, &TabletSeat::toolAdded);
+    QSignalSpy toolSpy(m_tabletSeatClient.get(), &TabletSeat::toolAdded);
     m_tool = seatInterface->addTool(KWaylandServer::TabletToolV2Interface::Pen, 0, 0, {TabletToolV2Interface::Tilt, TabletToolV2Interface::Pressure});
     QVERIFY(m_tool);
     QVERIFY(toolSpy.wait() || toolSpy.count() == 1);
@@ -286,9 +288,8 @@ void TestTabletInterface::testAddPad()
     TabletSeatV2Interface *seatInterface = m_tabletManager->seat(m_seat.get());
     QVERIFY(seatInterface);
 
-    QSignalSpy tabletPadSpy(m_tabletSeatClient, &TabletSeat::padAdded);
-    m_tabletPad =
-        seatInterface->addTabletPad(QStringLiteral("my tablet pad"), QStringLiteral("tabletpad"), {QStringLiteral("/test/event33")}, 1, 1, 1, 1, 0, m_tablet);
+    QSignalSpy tabletPadSpy(m_tabletSeatClient.get(), &TabletSeat::padAdded);
+    m_tabletPad = seatInterface->addTabletPad(QStringLiteral("my tablet pad"), QStringLiteral("tabletpad"), {QStringLiteral("/test/event33")}, 1, 1, 1, 1, 0, m_tablet);
     QVERIFY(m_tabletPad);
     QVERIFY(tabletPadSpy.wait() || tabletPadSpy.count() == 1);
     QCOMPARE(m_tabletSeatClient->m_pads.count(), 1);

@@ -165,16 +165,18 @@ private Q_SLOTS:
     void testKeyboardGrab();
 
 private:
-    KWayland::Client::ConnectionThread *m_connection;
-    KWayland::Client::EventQueue *m_queue;
-    KWayland::Client::Compositor *m_clientCompositor;
-    KWayland::Client::Seat *m_clientSeat = nullptr;
-    KWayland::Client::Output *m_output = nullptr;
+    std::unique_ptr<KWayland::Client::ConnectionThread> m_connection;
+    std::unique_ptr<KWayland::Client::EventQueue> m_queue;
+    std::unique_ptr<KWayland::Client::Compositor> m_clientCompositor;
+    std::unique_ptr<KWayland::Client::Seat> m_clientSeat;
+    std::unique_ptr<KWayland::Client::Output> m_output;
+    std::unique_ptr<KWayland::Client::Registry> m_registry;
+    std::vector<std::unique_ptr<KWayland::Client::Surface>> m_clientSurfaces;
 
-    InputMethodV1 *m_inputMethod;
-    InputPanel *m_inputPanel;
-    QThread *m_thread;
-    KWaylandServer::Display m_display;
+    std::unique_ptr<InputMethodV1> m_inputMethod;
+    std::unique_ptr<InputPanel> m_inputPanel;
+    std::unique_ptr<QThread> m_thread;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     std::unique_ptr<SeatInterface> m_seat;
     std::unique_ptr<CompositorInterface> m_serverCompositor;
     std::unique_ptr<FakeOutput> m_outputHandle;
@@ -190,97 +192,99 @@ static const QString s_socketName = QStringLiteral("kwin-wayland-server-inputmet
 
 void TestInputMethodInterface::initTestCase()
 {
-    m_display.addSocketName(s_socketName);
-    m_display.start();
-    QVERIFY(m_display.isRunning());
+    m_display = std::make_unique<KWaylandServer::Display>();
+    m_display->addSocketName(s_socketName);
+    m_display->start();
+    QVERIFY(m_display->isRunning());
 
-    m_seat = std::make_unique<SeatInterface>(&m_display);
-    m_serverCompositor = std::make_unique<CompositorInterface>(&m_display);
-    m_inputMethodIface = std::make_unique<InputMethodV1Interface>(&m_display);
-    m_inputPanelIface = std::make_unique<InputPanelV1Interface>(&m_display);
+    m_seat = std::make_unique<SeatInterface>(m_display.get());
+    m_serverCompositor = std::make_unique<CompositorInterface>(m_display.get());
+    m_inputMethodIface = std::make_unique<InputMethodV1Interface>(m_display.get());
+    m_inputPanelIface = std::make_unique<InputPanelV1Interface>(m_display.get());
 
     m_outputHandle = std::make_unique<FakeOutput>();
-    m_outputInterface = std::make_unique<OutputInterface>(&m_display, m_outputHandle.get());
+    m_outputInterface = std::make_unique<OutputInterface>(m_display.get(), m_outputHandle.get());
 
     connect(m_serverCompositor.get(), &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
         m_surfaces += surface;
     });
 
     // setup connection
-    m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
+    m_connection = std::make_unique<KWayland::Client::ConnectionThread>();
+    QSignalSpy connectedSpy(m_connection.get(), &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
-    m_thread = new QThread(this);
-    m_connection->moveToThread(m_thread);
+    m_thread = std::make_unique<QThread>();
+    m_connection->moveToThread(m_thread.get());
     m_thread->start();
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
     QVERIFY(!m_connection->connections().isEmpty());
 
-    m_queue = new KWayland::Client::EventQueue(this);
+    m_queue = std::make_unique<KWayland::Client::EventQueue>();
     QVERIFY(!m_queue->isValid());
-    m_queue->setup(m_connection);
+    m_queue->setup(m_connection.get());
     QVERIFY(m_queue->isValid());
 
-    auto registry = new KWayland::Client::Registry(this);
-    QSignalSpy interfacesSpy(registry, &KWayland::Client::Registry::interfacesAnnounced);
-    connect(registry, &KWayland::Client::Registry::outputAnnounced, this, [this, registry](quint32 name, quint32 version) {
-        m_output = new KWayland::Client::Output(this);
-        m_output->setup(registry->bindOutput(name, version));
+    m_registry = std::make_unique<KWayland::Client::Registry>();
+    QSignalSpy interfacesSpy(m_registry.get(), &KWayland::Client::Registry::interfacesAnnounced);
+    connect(m_registry.get(), &KWayland::Client::Registry::outputAnnounced, this, [this](quint32 name, quint32 version) {
+        m_output = std::make_unique<KWayland::Client::Output>();
+        m_output->setup(m_registry->bindOutput(name, version));
     });
-    connect(registry, &KWayland::Client::Registry::interfaceAnnounced, this, [this, registry](const QByteArray &interface, quint32 name, quint32 version) {
+    connect(m_registry.get(), &KWayland::Client::Registry::interfaceAnnounced, this, [this](const QByteArray &interface, quint32 name, quint32 version) {
         if (interface == "zwp_input_panel_v1") {
-            m_inputPanel = new InputPanel(registry->registry(), name, version);
+            m_inputPanel = std::make_unique<InputPanel>(m_registry->registry(), name, version);
         } else if (interface == "zwp_input_method_v1") {
-            m_inputMethod = new InputMethodV1(registry->registry(), name, version);
+            m_inputMethod = std::make_unique<InputMethodV1>(m_registry->registry(), name, version);
         }
     });
-    connect(registry, &KWayland::Client::Registry::seatAnnounced, this, [this, registry](quint32 name, quint32 version) {
-        m_clientSeat = registry->createSeat(name, version);
+    connect(m_registry.get(), &KWayland::Client::Registry::seatAnnounced, this, [this](quint32 name, quint32 version) {
+        m_clientSeat.reset(m_registry->createSeat(name, version));
     });
-    registry->setEventQueue(m_queue);
-    QSignalSpy compositorSpy(registry, &KWayland::Client::Registry::compositorAnnounced);
-    registry->create(m_connection->display());
-    QVERIFY(registry->isValid());
-    registry->setup();
+    m_registry->setEventQueue(m_queue.get());
+    QSignalSpy compositorSpy(m_registry.get(), &KWayland::Client::Registry::compositorAnnounced);
+    m_registry->create(m_connection->display());
+    QVERIFY(m_registry->isValid());
+    m_registry->setup();
     wl_display_flush(m_connection->display());
 
     QVERIFY(compositorSpy.wait());
-    m_clientCompositor = registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
+    m_clientCompositor.reset(m_registry->createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>()));
     QVERIFY(m_clientCompositor->isValid());
 
     QVERIFY(interfacesSpy.count() || interfacesSpy.wait());
 
     QSignalSpy surfaceSpy(m_serverCompositor.get(), &CompositorInterface::surfaceCreated);
     for (int i = 0; i < 3; ++i) {
-        m_clientCompositor->createSurface(this);
+        m_clientSurfaces.push_back(std::unique_ptr<KWayland::Client::Surface>(m_clientCompositor->createSurface()));
     }
     QVERIFY(surfaceSpy.count() < 3 && surfaceSpy.wait(200));
-    QVERIFY(m_surfaces.count() == 3);
+    QVERIFY(m_surfaces.size() == 3);
     QVERIFY(m_inputPanel);
     QVERIFY(m_output);
 }
 
 TestInputMethodInterface::~TestInputMethodInterface()
 {
-    if (m_queue) {
-        delete m_queue;
-        m_queue = nullptr;
-    }
+    m_queue.reset();
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
-        delete m_thread;
-        m_thread = nullptr;
+        m_thread.reset();
     }
-    delete m_inputPanel;
-    delete m_inputMethod;
+    m_clientSurfaces.clear();
+    m_output.reset();
+    m_inputPanel.reset();
+    m_inputMethod.reset();
     m_inputMethodIface.reset();
     m_inputPanelIface.reset();
-    m_connection->deleteLater();
-    m_connection = nullptr;
+    m_clientSeat.reset();
+    m_clientCompositor.reset();
+    m_registry.reset();
+    m_connection.reset();
+    m_display.reset();
 }
 
 void TestInputMethodInterface::testAdd()
@@ -291,8 +295,8 @@ void TestInputMethodInterface::testAdd()
         panelSurfaceIface = surface;
     });
 
-    auto surface = m_clientCompositor->createSurface(this);
-    auto panelSurface = m_inputPanel->panelForSurface(surface);
+    auto surface = std::unique_ptr<KWayland::Client::Surface>(m_clientCompositor->createSurface());
+    auto panelSurface = m_inputPanel->panelForSurface(surface.get());
 
     QVERIFY(panelSpy.wait() || panelSurfaceIface);
     Q_ASSERT(panelSurfaceIface);
@@ -306,8 +310,8 @@ void TestInputMethodInterface::testAdd()
 void TestInputMethodInterface::testActivate()
 {
     QVERIFY(m_inputMethodIface);
-    QSignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
-    QSignalSpy inputMethodDeactivateSpy(m_inputMethod, &InputMethodV1::deactivated);
+    QSignalSpy inputMethodActivateSpy(m_inputMethod.get(), &InputMethodV1::activated);
+    QSignalSpy inputMethodDeactivateSpy(m_inputMethod.get(), &InputMethodV1::deactivated);
 
     // before sending activate the context should be null
     QVERIFY(!m_inputMethodIface->context());
@@ -328,8 +332,8 @@ void TestInputMethodInterface::testActivate()
 void TestInputMethodInterface::testContext()
 {
     QVERIFY(m_inputMethodIface);
-    QSignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
-    QSignalSpy inputMethodDeactivateSpy(m_inputMethod, &InputMethodV1::deactivated);
+    QSignalSpy inputMethodActivateSpy(m_inputMethod.get(), &InputMethodV1::activated);
+    QSignalSpy inputMethodDeactivateSpy(m_inputMethod.get(), &InputMethodV1::deactivated);
 
     // before sending activate the context should be null
     QVERIFY(!m_inputMethodIface->context());
@@ -440,8 +444,8 @@ void TestInputMethodInterface::testContext()
 void TestInputMethodInterface::testGrabkeyboard()
 {
     QVERIFY(m_inputMethodIface);
-    QSignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
-    QSignalSpy inputMethodDeactivateSpy(m_inputMethod, &InputMethodV1::deactivated);
+    QSignalSpy inputMethodActivateSpy(m_inputMethod.get(), &InputMethodV1::activated);
+    QSignalSpy inputMethodDeactivateSpy(m_inputMethod.get(), &InputMethodV1::deactivated);
 
     // before sending activate the context should be null
     QVERIFY(!m_inputMethodIface->context());
@@ -506,8 +510,8 @@ void TestInputMethodInterface::testContentHints_data()
 void TestInputMethodInterface::testContentHints()
 {
     QVERIFY(m_inputMethodIface);
-    QSignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
-    QSignalSpy inputMethodDeactivateSpy(m_inputMethod, &InputMethodV1::deactivated);
+    QSignalSpy inputMethodActivateSpy(m_inputMethod.get(), &InputMethodV1::activated);
+    QSignalSpy inputMethodDeactivateSpy(m_inputMethod.get(), &InputMethodV1::deactivated);
 
     // before sending activate the context should be null
     QVERIFY(!m_inputMethodIface->context());
@@ -564,8 +568,8 @@ void TestInputMethodInterface::testContentPurpose_data()
 void TestInputMethodInterface::testContentPurpose()
 {
     QVERIFY(m_inputMethodIface);
-    QSignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
-    QSignalSpy inputMethodDeactivateSpy(m_inputMethod, &InputMethodV1::deactivated);
+    QSignalSpy inputMethodActivateSpy(m_inputMethod.get(), &InputMethodV1::activated);
+    QSignalSpy inputMethodDeactivateSpy(m_inputMethod.get(), &InputMethodV1::deactivated);
 
     // before sending activate the context should be null
     QVERIFY(!m_inputMethodIface->context());
@@ -601,7 +605,7 @@ void TestInputMethodInterface::testContentPurpose()
 void TestInputMethodInterface::testKeyboardGrab()
 {
     QVERIFY(m_inputMethodIface);
-    QSignalSpy inputMethodActivateSpy(m_inputMethod, &InputMethodV1::activated);
+    QSignalSpy inputMethodActivateSpy(m_inputMethod.get(), &InputMethodV1::activated);
 
     m_inputMethodIface->sendActivate();
     QVERIFY(inputMethodActivateSpy.wait());
@@ -609,12 +613,12 @@ void TestInputMethodInterface::testKeyboardGrab()
     QSignalSpy keyboardGrabSpy(m_inputMethodIface->context(), &InputMethodContextV1Interface::keyboardGrabRequested);
     InputMethodV1Context *imContext = m_inputMethod->context();
     QVERIFY(imContext);
-    KWayland::Client::Keyboard *keyboard = new KWayland::Client::Keyboard(this);
+    const auto keyboard = std::make_unique<KWayland::Client::Keyboard>();
     keyboard->setup(imContext->grab_keyboard());
     QVERIFY(keyboard->isValid());
     QVERIFY(keyboardGrabSpy.count() || keyboardGrabSpy.wait());
 
-    QSignalSpy keyboardSpy(keyboard, &KWayland::Client::Keyboard::keyChanged);
+    QSignalSpy keyboardSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
     m_inputMethodIface->context()->keyboardGrab()->sendKey(0, 0, KEY_F1, KeyboardKeyState::Pressed);
     m_inputMethodIface->context()->keyboardGrab()->sendKey(0, 0, KEY_F1, KeyboardKeyState::Released);
     keyboardSpy.wait();
