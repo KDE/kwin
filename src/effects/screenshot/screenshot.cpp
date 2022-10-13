@@ -378,6 +378,10 @@ QImage ScreenShotEffect::blitScreenshot(const QRect &geometry, qreal devicePixel
 
 void ScreenShotEffect::grabPointerImage(QImage &snapshot, int xOffset, int yOffset) const
 {
+    if (effects->isCursorHidden()) {
+        return;
+    }
+
     const PlatformCursorImage cursor = effects->cursorImage();
     if (cursor.image().isNull()) {
         return;
