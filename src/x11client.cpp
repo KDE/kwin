@@ -2407,7 +2407,6 @@ Xcb::StringProperty X11Client::fetchActivities() const
 void X11Client::readActivities(Xcb::StringProperty &property)
 {
 #ifdef KWIN_BUILD_ACTIVITIES
-    QStringList newActivitiesList;
     QString prop = QString::fromUtf8(property);
     activitiesDefined = !prop.isEmpty();
 
@@ -2428,31 +2427,11 @@ void X11Client::readActivities(Xcb::StringProperty &property)
         return;
     }
 
-    newActivitiesList = prop.split(u',');
+    const QStringList newActivitiesList = prop.split(u',');
 
     if (newActivitiesList == m_activityList)
         return; //expected change, it's ok.
 
-    //otherwise, somebody else changed it. we need to validate before reacting.
-    //if the activities are not synced, and there are existing clients with
-    //activities specified, somebody has restarted kwin. we can not validate
-    //activities in this case. we need to trust the old values.
-    if (Activities::self() && Activities::self()->serviceStatus() != KActivities::Consumer::Unknown) {
-        QStringList allActivities = Activities::self()->all();
-        if (allActivities.isEmpty()) {
-            qCDebug(KWIN_CORE) << "no activities!?!?";
-            //don't touch anything, there's probably something bad going on and we don't wanna make it worse
-            return;
-        }
-
-
-        for (int i = 0; i < newActivitiesList.size(); ++i) {
-            if (! allActivities.contains(newActivitiesList.at(i))) {
-                qCDebug(KWIN_CORE) << "invalid:" << newActivitiesList.at(i);
-                newActivitiesList.removeAt(i--);
-            }
-        }
-    }
     setOnActivities(newActivitiesList);
 #else
     Q_UNUSED(property)
