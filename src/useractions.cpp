@@ -1092,7 +1092,7 @@ void Workspace::initShortcuts()
                  Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Down, &Workspace::slotWindowToDesktopDown);
 
     for (int i = 0; i < 8; ++i) {
-        initShortcut("Window to Screen %1", i18n("Window to Screen %1", i), 0, &Workspace::slotWindowToScreen);
+        initShortcut(QStringLiteral("Window to Screen %1").arg(i), i18n("Window to Screen %1", i), 0, &Workspace::slotWindowToScreen, i);
     }
     initShortcut("Window to Next Screen", i18n("Window to Next Screen"),
                  Qt::META | Qt::SHIFT | Qt::Key_Right, &Workspace::slotWindowToNextScreen);
@@ -1102,7 +1102,7 @@ void Workspace::initShortcuts()
                  Qt::META | Qt::Key_D, &Workspace::slotToggleShowDesktop);
 
     for (int i = 0; i < 8; ++i) {
-        initShortcut("Window to Screen %1", i18n("Switch to Screen %1", i), 0, &Workspace::slotSwitchToScreen);
+        initShortcut(QStringLiteral("Window to Screen %1").arg(i), i18n("Switch to Screen %1", i), 0, &Workspace::slotSwitchToScreen, i);
     }
 
     initShortcut("Switch to Next Screen", i18n("Switch to Next Screen"), 0, &Workspace::slotSwitchToNextScreen);
