@@ -950,21 +950,18 @@ void Workspace::closeActivePopup()
 }
 
 template<typename Slot>
-void Workspace::initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, Slot slot, const QVariant &data)
+void Workspace::initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, Slot slot)
 {
-    initShortcut(actionName, description, shortcut, this, slot, data);
+    initShortcut(actionName, description, shortcut, this, slot);
 }
 
 template<typename T, typename Slot>
-void Workspace::initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, T *receiver, Slot slot, const QVariant &data)
+void Workspace::initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, T *receiver, Slot slot)
 {
     QAction *a = new QAction(this);
     a->setProperty("componentName", QStringLiteral(KWIN_NAME));
     a->setObjectName(actionName);
     a->setText(description);
-    if (data.isValid()) {
-        a->setData(data);
-    }
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << shortcut);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << shortcut);
     input()->registerShortcut(shortcut, a, receiver, slot);
@@ -1092,7 +1089,12 @@ void Workspace::initShortcuts()
                  Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Down, &Workspace::slotWindowToDesktopDown);
 
     for (int i = 0; i < 8; ++i) {
-        initShortcut(QStringLiteral("Window to Screen %1").arg(i), i18n("Window to Screen %1", i), 0, &Workspace::slotWindowToScreen, i);
+        initShortcut(QStringLiteral("Window to Screen %1").arg(i), i18n("Window to Screen %1", i), 0, [this, i]() {
+            Output *output = outputs().value(i);
+            if (output) {
+                slotWindowToScreen(output);
+            }
+        });
     }
     initShortcut("Window to Next Screen", i18n("Window to Next Screen"),
                  Qt::META | Qt::SHIFT | Qt::Key_Right, &Workspace::slotWindowToNextScreen);
@@ -1102,7 +1104,12 @@ void Workspace::initShortcuts()
                  Qt::META | Qt::Key_D, &Workspace::slotToggleShowDesktop);
 
     for (int i = 0; i < 8; ++i) {
-        initShortcut(QStringLiteral("Window to Screen %1").arg(i), i18n("Switch to Screen %1", i), 0, &Workspace::slotSwitchToScreen, i);
+        initShortcut(QStringLiteral("Window to Screen %1").arg(i), i18n("Switch to Screen %1", i), 0, [this, i]() {
+            Output *output = outputs().value(i);
+            if (output) {
+                slotSwitchToScreen(output);
+            }
+        });
     }
 
     initShortcut("Switch to Next Screen", i18n("Switch to Next Screen"), 0, &Workspace::slotSwitchToNextScreen);
@@ -1293,20 +1300,6 @@ void Workspace::slotActivateAttentionWindow()
     }
 }
 
-static uint senderValue(QObject *sender)
-{
-    QAction *act = qobject_cast<QAction *>(sender);
-    bool ok = false;
-    uint i = -1;
-    if (act) {
-        i = act->data().toUInt(&ok);
-    }
-    if (ok) {
-        return i;
-    }
-    return -1;
-}
-
 #define USABLE_ACTIVE_WINDOW (m_activeWindow && !(m_activeWindow->isDesktop() || m_activeWindow->isDock()))
 
 void Workspace::slotWindowToDesktop(VirtualDesktop *desktop)
@@ -1343,13 +1336,9 @@ Output *Workspace::previousOutput(Output *reference) const
     return m_outputs[(index + m_outputs.count() - 1) % m_outputs.count()];
 }
 
-void Workspace::slotSwitchToScreen()
+void Workspace::slotSwitchToScreen(Output *output)
 {
-    if (screenSwitchImpossible()) {
-        return;
-    }
-    Output *output = outputs().value(senderValue(sender()));
-    if (output) {
+    if (!screenSwitchImpossible()) {
         switchToOutput(output);
     }
 }
@@ -1370,13 +1359,10 @@ void Workspace::slotSwitchToPrevScreen()
     switchToOutput(previousOutput(activeOutput()));
 }
 
-void Workspace::slotWindowToScreen()
+void Workspace::slotWindowToScreen(Output *output)
 {
     if (USABLE_ACTIVE_WINDOW) {
-        Output *output = outputs().value(senderValue(sender()));
-        if (output) {
-            sendWindowToOutput(m_activeWindow, output);
-        }
+        sendWindowToOutput(m_activeWindow, output);
     }
 }
 

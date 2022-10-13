@@ -478,8 +478,8 @@ public Q_SLOTS:
     void slotWindowToDesktop(VirtualDesktop *desktop);
 
     // void slotWindowToListPosition( int );
-    void slotSwitchToScreen();
-    void slotWindowToScreen();
+    void slotSwitchToScreen(Output *output);
+    void slotWindowToScreen(Output *output);
     void slotSwitchToNextScreen();
     void slotWindowToNextScreen();
     void slotSwitchToPrevScreen();
@@ -603,10 +603,9 @@ private:
     void cleanupX11();
     void initShortcuts();
     template<typename Slot>
-    void initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut,
-                      Slot slot, const QVariant &data = QVariant());
+    void initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, Slot slot);
     template<typename T, typename Slot>
-    void initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, T *receiver, Slot slot, const QVariant &data = QVariant());
+    void initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, T *receiver, Slot slot);
     void setupWindowShortcut(Window *window);
     bool switchWindow(Window *window, Direction direction, QPoint curPos, VirtualDesktop *desktop);
 
