@@ -68,10 +68,10 @@ public Q_SLOTS:
      */
     void uninhibit(uint cookie);
     /**
-     * @brief Previews a given temperature for a short time (15s).
+     * @brief Previews a given scheme and temperature for a short time (15s).
      * @since 5.25
      */
-    void preview(uint temperature);
+    void preview(QString scheme, uint temperature);
     /**
      * @brief Stops an ongoing preview.
      * @since 5.25

@@ -17,6 +17,12 @@
             </choices>
             <default>NightColorMode::Automatic</default>
         </entry>
+        <entry name="DayScheme" type="String">
+            <default>BreezeLight</default>
+        </entry>
+        <entry name="NightScheme" type="String">
+            <default>BreezeDark</default>
+        </entry>
         <entry name="DayTemperature" type="Int">
             <default>6500</default>
         </entry>
