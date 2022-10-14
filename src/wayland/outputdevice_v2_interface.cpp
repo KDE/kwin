@@ -164,6 +164,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, KWin::Output 
     : QObject(parent)
     , d(new OutputDeviceV2InterfacePrivate(this, display, handle))
 {
+    updateEnabled();
     updateManufacturer();
     updateEdid();
     updateUuid();
