@@ -76,7 +76,7 @@ DpmsInterface::DpmsInterface(OutputInterface *output, wl_resource *resource)
     , QtWaylandServer::org_kde_kwin_dpms(resource)
     , m_output(output)
 {
-    if (!m_output) {
+    if (!m_output || m_output->isRemoved()) {
         return;
     }
 
@@ -108,7 +108,7 @@ void DpmsInterface::org_kde_kwin_dpms_destroy_resource(Resource *resource)
 void DpmsInterface::org_kde_kwin_dpms_set(Resource *resource, uint32_t mode)
 {
     Q_UNUSED(resource)
-    if (!m_output) {
+    if (!m_output || m_output->isRemoved()) {
         return;
     }
 
