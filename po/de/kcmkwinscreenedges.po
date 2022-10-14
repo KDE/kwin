@@ -2,20 +2,21 @@
 # Thomas Reitelbach <tr@erdfunkstelle.de>, 2009.
 # Johannes Obermayr <johannesobermayr@gmx.de>, 2009, 2010.
 # Frederik Schwarzer <schwarzer@kde.org>, 2012, 2016, 2020, 2022.
+# Frank Steinmetzger <dev-kde@felsenfleischer.de>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-07-15 00:48+0000\n"
-"PO-Revision-Date: 2022-07-02 12:34+0200\n"
-"Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
+"PO-Revision-Date: 2022-10-07 13:24+0200\n"
+"Last-Translator: Frank Steinmetzger <dev-kde@felsenfleischer.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.04.1\n"
+"X-Generator: Lokalize 22.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -80,12 +81,12 @@ msgstr "%1 - Aktuelle Anwendung"
 #: main.cpp:144 touch.cpp:138
 #, kde-format
 msgid "Toggle window switching"
-msgstr "Fensterwechsel umschalten"
+msgstr "Fensterwechsel"
 
 #: main.cpp:145 touch.cpp:139
 #, kde-format
 msgid "Toggle alternative window switching"
-msgstr "Alternativen Fensterwechsel umschalten"
+msgstr "Alternativer Fensterwechsel"
 
 #. i18n: ectx: property (text), widget (QLabel, infoLabel)
 #: main.ui:23
@@ -95,7 +96,7 @@ msgid ""
 "corresponding screen edge or corner."
 msgstr ""
 "Um eine Aktion auszulösen, stoßen Sie mit dem Mauszeiger an den zugehörigen "
-"Bildschirmrand oder die Bildschirmecke"
+"Bildschirmrand oder die Bildschirmecke."
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
 #: main.ui:67
@@ -137,7 +138,7 @@ msgstr "Aktiviert bleiben, wenn Fenser im Vollbildmodus angezeigt werden"
 #: main.ui:115
 #, kde-format
 msgid "Trigger &quarter tiling in:"
-msgstr "&Kachelung der Fenster auf 1/4 der Bildschirmgröße ausgelöst in den "
+msgstr "&Kachelung auf ¼ der Größe ab:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, electricBorderCornerRatioSpin)
 #: main.ui:130
@@ -149,13 +150,13 @@ msgstr " %"
 #: main.ui:133
 #, kde-format
 msgid "Outer "
-msgstr "äußeren"
+msgstr "äußerer "
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: main.ui:149
 #, kde-format
 msgid "of the screen"
-msgstr "der Höhe des Bildschirms"
+msgstr "Höhe des Bildschirms"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, desktopSwitchLabel)
 #: main.ui:174
@@ -168,7 +169,7 @@ msgstr "Arbeitsfläche wechseln, wenn die Maus an einen Bildschirmrand anstößt
 #: main.ui:177
 #, kde-format
 msgid "&Switch desktop on edge:"
-msgstr "&Rand für Arbeitsflächenwechsel:"
+msgstr "&Arbeitsflächenwechsel am Rand:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:188
@@ -181,7 +182,7 @@ msgstr "Deaktiviert"
 #: main.ui:193
 #, kde-format
 msgid "Only When Moving Windows"
-msgstr "Nur beim Verschieben von Fenstern aktiviert"
+msgstr "Nur beim Verschieben von Fenstern"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:198
@@ -197,7 +198,7 @@ msgid ""
 "of the screen before the action is triggered"
 msgstr ""
 "Benötigte Zeit zum Anstoßen an einen Arbeitsflächenrand, bevor die Aktion "
-"ausgelöst wird."
+"ausgelöst wird"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
 #: main.ui:209
@@ -220,7 +221,7 @@ msgid ""
 "can occur"
 msgstr ""
 "Erforderliches Zeitfenster nach einer Aktion, bevor die nächste ausgelöst "
-"werden kann."
+"werden kann"
 
 #. i18n: ectx: property (text), widget (QLabel, triggerCooldownLabel)
 #: main.ui:241

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-12 00:48+0000\n"
+"POT-Creation-Date: 2022-10-14 00:48+0000\n"
 "PO-Revision-Date: 2010-12-17 20:20+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -2387,325 +2387,325 @@ msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> ถูกใช้งานโดย %2 ใน %3"
 
-#: useractions.cpp:987
+#: useractions.cpp:984
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "เมนูปฎิบัติการของหน้าต่าง"
 
-#: useractions.cpp:989
+#: useractions.cpp:986
 #, kde-format
 msgid "Close Window"
 msgstr "ปิดหน้าต่าง"
 
-#: useractions.cpp:991
+#: useractions.cpp:988
 #, kde-format
 msgid "Maximize Window"
 msgstr "ขยายหน้าต่างใหญ่สุด"
 
-#: useractions.cpp:993
+#: useractions.cpp:990
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "ขยายหน้าต่างใหญ่สุดทางแนวตั้ง"
 
-#: useractions.cpp:995
+#: useractions.cpp:992
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "ขยายหน้าต่างใหญ่สุดทางแนวนอน"
 
-#: useractions.cpp:997
+#: useractions.cpp:994
 #, kde-format
 msgid "Minimize Window"
 msgstr "ย่อหน้าต่างเล็กสุด"
 
-#: useractions.cpp:999
+#: useractions.cpp:996
 #, kde-format
 msgid "Shade Window"
 msgstr "พับเก็บหน้าต่าง"
 
-#: useractions.cpp:1001
+#: useractions.cpp:998
 #, kde-format
 msgid "Move Window"
 msgstr "ย้ายหน้าต่าง"
 
-#: useractions.cpp:1003
+#: useractions.cpp:1000
 #, kde-format
 msgid "Resize Window"
 msgstr "ปรับขนาดหน้าต่าง"
 
-#: useractions.cpp:1005
+#: useractions.cpp:1002
 #, kde-format
 msgid "Raise Window"
 msgstr "ส่งหน้าต่างให้อยู่เหนือหน้าต่างอื่นหนึ่งชั้น"
 
-#: useractions.cpp:1007
+#: useractions.cpp:1004
 #, kde-format
 msgid "Lower Window"
 msgstr "ส่งหน้าต่างให้อยู่ใต้หน้าต่างอื่นหนึ่งชั้น"
 
-#: useractions.cpp:1009
+#: useractions.cpp:1006
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "สลับหน้าต่างไปอยู่เหนือ/ใต้หน้าต่างอื่น"
 
-#: useractions.cpp:1011
+#: useractions.cpp:1008
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "ปรับหน้าต่างให้เต็มจอ"
 
-#: useractions.cpp:1013
+#: useractions.cpp:1010
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Border"
 msgstr "ซ่อนกรอบของหน้าต่าง"
 
-#: useractions.cpp:1015
+#: useractions.cpp:1012
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "ให้หน้าต่างอยู่ด้านบนหน้าต่างอื่น"
 
-#: useractions.cpp:1017
+#: useractions.cpp:1014
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "ให้หน้าต่างอยู่ด้านล่างหน้าต่างอื่น"
 
-#: useractions.cpp:1019
+#: useractions.cpp:1016
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "เรียกใช้หน้าต่างที่เรียกร้องความสนใจมา"
 
-#: useractions.cpp:1021
+#: useractions.cpp:1018
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "ตั้งค่าปุ่มพิมพ์ลัดของหน้าต่าง"
 
-#: useractions.cpp:1023
+#: useractions.cpp:1020
 #, fuzzy, kde-format
 #| msgid "Move Window to Group"
 msgid "Move Window to the Center"
 msgstr "ย้ายหน้าต่างไปยังกลุ่ม"
 
-#: useractions.cpp:1025
+#: useractions.cpp:1022
 #, kde-format
 msgid "Move Window Right"
 msgstr "ย้ายหน้าต่างไปด้านขวา"
 
-#: useractions.cpp:1027
+#: useractions.cpp:1024
 #, kde-format
 msgid "Move Window Left"
 msgstr "ย้ายหน้าต่างไปด้านซ้าย"
 
-#: useractions.cpp:1029
+#: useractions.cpp:1026
 #, kde-format
 msgid "Move Window Up"
 msgstr "ย้ายหน้าต่างขึ้น"
 
-#: useractions.cpp:1031
+#: useractions.cpp:1028
 #, kde-format
 msgid "Move Window Down"
 msgstr "ย้ายหน้าต่างลง"
 
-#: useractions.cpp:1033
+#: useractions.cpp:1030
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "ขยายหน้าต่างใหญ่สุดทางแนวนอน"
 
-#: useractions.cpp:1035
+#: useractions.cpp:1032
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Expand Window Vertically"
 msgstr "ขยายหน้าต่างใหญ่สุดทางแนวตั้ง"
 
-#: useractions.cpp:1037
+#: useractions.cpp:1034
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Horizontally"
 msgid "Shrink Window Horizontally"
 msgstr "ปรับขนาดหน้าต่างให้เล็กพอเหมาะทางแนวนอน"
 
-#: useractions.cpp:1039
+#: useractions.cpp:1036
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Vertically"
 msgid "Shrink Window Vertically"
 msgstr "ปรับขนาดหน้าต่างให้เล็กพอเหมาะทางแนวตั้ง"
 
-#: useractions.cpp:1041
+#: useractions.cpp:1038
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "ปูหน้าต่างด่วนจากทางซ้าย"
 
-#: useractions.cpp:1043
+#: useractions.cpp:1040
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "ปูหน้าต่างด่วนจากทางขวา"
 
-#: useractions.cpp:1045
+#: useractions.cpp:1042
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Quick Tile Window to the Top"
 msgstr "ปูหน้าต่างด่วนจากทางซ้าย"
 
-#: useractions.cpp:1047
+#: useractions.cpp:1044
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Quick Tile Window to the Bottom"
 msgstr "ปูหน้าต่างด่วนจากทางซ้าย"
 
-#: useractions.cpp:1049
+#: useractions.cpp:1046
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Quick Tile Window to the Top Left"
 msgstr "ปูหน้าต่างด่วนจากทางซ้าย"
 
-#: useractions.cpp:1051
+#: useractions.cpp:1048
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "ปูหน้าต่างด่วนจากทางซ้าย"
 
-#: useractions.cpp:1053
+#: useractions.cpp:1050
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Quick Tile Window to the Top Right"
 msgstr "ปูหน้าต่างด่วนจากทางขวา"
 
-#: useractions.cpp:1055
+#: useractions.cpp:1052
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "ปูหน้าต่างด่วนจากทางขวา"
 
-#: useractions.cpp:1057
+#: useractions.cpp:1054
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "สลับไปยังหน้าต่างที่อยู่ด้านบน"
 
-#: useractions.cpp:1059
+#: useractions.cpp:1056
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "สลับไปยังหน้าต่างที่อยู่ด้านล่าง"
 
-#: useractions.cpp:1061
+#: useractions.cpp:1058
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "สลับไปยังหน้าต่างที่อยู่ด้านขวา"
 
-#: useractions.cpp:1063
+#: useractions.cpp:1060
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "สลับไปยังหน้าต่างที่อยู่ด้านซ้าย"
 
-#: useractions.cpp:1065
+#: useractions.cpp:1062
 #, kde-format
 msgid "Increase Opacity of Active Window by 5 %"
 msgstr ""
 
-#: useractions.cpp:1067
+#: useractions.cpp:1064
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5 %"
 msgstr ""
 
-#: useractions.cpp:1070
+#: useractions.cpp:1067
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "ให้หน้าต่างอยู่บนพื้นที่ทำงานทั้งหมด"
 
-#: useractions.cpp:1081
+#: useractions.cpp:1078
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
 msgid "Window to Desktop %1"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงาน 1"
 
-#: useractions.cpp:1083
+#: useractions.cpp:1080
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานถัดไป"
 
-#: useractions.cpp:1084
+#: useractions.cpp:1081
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานก่อนหน้า"
 
-#: useractions.cpp:1085
+#: useractions.cpp:1082
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานด้านขวาหนึ่งระดับ"
 
-#: useractions.cpp:1087
+#: useractions.cpp:1084
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานด้านซ้ายหนึ่งระดับ"
 
-#: useractions.cpp:1089
+#: useractions.cpp:1086
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานด้านบนหนึ่งระดับ"
 
-#: useractions.cpp:1091
+#: useractions.cpp:1088
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานด้านล่างหนึ่งระดับ"
 
-#: useractions.cpp:1095
+#: useractions.cpp:1092
 #, fuzzy, kde-format
 #| msgid "Window to Screen 1"
 msgid "Window to Screen %1"
 msgstr "ปรับหน้าต่างไปยังจอภาพ 1"
 
-#: useractions.cpp:1097
+#: useractions.cpp:1099
 #, kde-format
 msgid "Window to Next Screen"
 msgstr "ปรับหน้าต่างไปยังจอภาพถัดไป"
 
-#: useractions.cpp:1099
+#: useractions.cpp:1101
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
 msgid "Window to Previous Screen"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานก่อนหน้า"
 
-#: useractions.cpp:1101
+#: useractions.cpp:1103
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Peek at Desktop"
 msgstr "ไปยังพื้&นที่ทำงาน"
 
-#: useractions.cpp:1105
+#: useractions.cpp:1107
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Switch to Screen %1"
 msgstr "สลับไปยังจอภาพ 1"
 
-#: useractions.cpp:1108
+#: useractions.cpp:1115
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "สลับไปยังจอภาพถัดไป"
 
-#: useractions.cpp:1109
+#: useractions.cpp:1116
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Previous Screen"
 msgstr "สลับไปยังพื้นที่ทำงานก่อนหน้า"
 
-#: useractions.cpp:1111
+#: useractions.cpp:1118
 #, kde-format
 msgid "Kill Window"
 msgstr "บังคับปิดหน้าต่าง"
 
-#: useractions.cpp:1112
+#: useractions.cpp:1119
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "ยกเลิกการใช้ Composite ชั่วคราว"
 
-#: useractions.cpp:1113
+#: useractions.cpp:1120
 #, kde-format
 msgid "Invert Screen Colors"
 msgstr ""
 
-#: useractions.cpp:1174
+#: useractions.cpp:1181
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "เรียกใช้งานหน้าต่าง (%1)"
 
-#: useractions.cpp:1325
+#: useractions.cpp:1318
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
