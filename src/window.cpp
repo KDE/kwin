@@ -3821,6 +3821,7 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
 
     GeometryUpdatesBlocker blocker(this);
 
+    const auto oldMode = quickTileMode();
     setTile(nullptr);
 
     if (mode == QuickTileMode(QuickTileFlag::Maximize)) {
@@ -3868,7 +3869,7 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
 
         // If trying to tile to the side that the window is already tiled to move the window to the next
         // screen if it exists, otherwise toggle the mode (set QuickTileFlag::None)
-        if (quickTileMode() == mode) {
+        if (oldMode == mode) {
             const QList<Output *> outputs = workspace()->outputs();
             const Output *currentOutput = moveResizeOutput();
             const Output *nextOutput = currentOutput;
@@ -3911,12 +3912,11 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
                     mode = (~mode & QuickTileFlag::Horizontal) | (mode & QuickTileFlag::Vertical);
                 }
             }
-        } else if (quickTileMode() == QuickTileMode(QuickTileFlag::None)) {
+        } else if (oldMode == QuickTileMode(QuickTileFlag::None)) {
             // Not coming out of an existing tile, not shifting monitors, we're setting a brand new tile.
             // Store geometry first, so we can go out of this tile later.
             setGeometryRestore(quickTileGeometryRestore());
         }
-
     }
 
     if (mode == QuickTileMode(QuickTileFlag::None)) {
