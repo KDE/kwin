@@ -70,7 +70,7 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const QVariantList &argume
     connect(this, &KCMKWinDecoration::borderSizeChanged, this, &KCMKWinDecoration::borderIndexChanged);
     connect(this, &KCMKWinDecoration::themeChanged, this, &KCMKWinDecoration::borderIndexChanged);
 
-    connect(this, &KCMKWinDecoration::themeChanged, this, [=]() {
+    connect(this, &KCMKWinDecoration::themeChanged, this, [this]() {
         if (m_data->settings()->borderSizeAuto()) {
             setBorderSize(recommendedBorderSize());
         }

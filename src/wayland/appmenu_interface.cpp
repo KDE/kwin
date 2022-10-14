@@ -42,7 +42,7 @@ void AppMenuManagerInterfacePrivate::org_kde_kwin_appmenu_manager_create(Resourc
     auto appmenu = new AppMenuInterface(s, appmenu_resource);
 
     appmenus.append(appmenu);
-    QObject::connect(appmenu, &QObject::destroyed, q, [=]() {
+    QObject::connect(appmenu, &QObject::destroyed, q, [=, this]() {
         appmenus.removeOne(appmenu);
     });
     Q_EMIT q->appMenuCreated(appmenu);

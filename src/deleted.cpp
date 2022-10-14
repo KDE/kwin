@@ -108,7 +108,7 @@ void Deleted::copyToDeleted(Window *window)
     m_caption = window->caption();
 
     for (auto vd : qAsConst(m_desktops)) {
-        connect(vd, &QObject::destroyed, this, [=] {
+        connect(vd, &QObject::destroyed, this, [=, this] {
             m_desktops.removeOne(vd);
         });
     }

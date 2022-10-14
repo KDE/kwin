@@ -456,7 +456,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
     const QDBusMessage replyMessage = message();
 
     if (kind == 0) {
-        effects->startInteractiveWindowSelection([=](EffectWindow *window) {
+        effects->startInteractiveWindowSelection([=, this](EffectWindow *window) {
             effects->hideOnScreenMessage(EffectsHandler::OnScreenMessageHideFlag::SkipsCloseAnimation);
 
             if (!window) {
@@ -473,7 +473,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
                                           "Escape or right click to cancel."),
                                      QStringLiteral("spectacle"));
     } else {
-        effects->startInteractivePositionSelection([=](const QPoint &point) {
+        effects->startInteractivePositionSelection([=, this](const QPoint &point) {
             effects->hideOnScreenMessage(EffectsHandler::OnScreenMessageHideFlag::SkipsCloseAnimation);
 
             if (point == QPoint(-1, -1)) {
