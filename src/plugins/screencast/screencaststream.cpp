@@ -361,7 +361,7 @@ bool ScreenCastStream::createStream()
             if (auto scene = Compositor::self()->scene()) {
                 scene->makeOpenGLContextCurrent();
             }
-            recordFrame(QRegion{m_cursor.lastRect} | cursorGeometry(Cursors::self()->currentCursor()));
+            recordFrame({});
         });
     } else if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Metadata) {
         connect(Cursors::self(), &Cursors::positionChanged, this, &ScreenCastStream::recordCursor);
@@ -381,8 +381,9 @@ void ScreenCastStream::stop()
     delete this;
 }
 
-void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
+void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
 {
+    QRegion damagedRegion = _damagedRegion;
     Q_ASSERT(!m_stopped);
 
     if (m_pendingBuffer) {
@@ -486,10 +487,12 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
             m_cursor.texture->render(cursorRect);
             glDisable(GL_BLEND);
             m_cursor.texture->unbind();
-            m_cursor.lastRect = cursorRect;
 
             ShaderManager::instance()->popShader();
             GLFramebuffer::popFramebuffer();
+
+            damagedRegion += QRegion{m_cursor.lastRect} | cursorRect;
+            m_cursor.lastRect = cursorRect;
         }
     }
 
@@ -498,7 +501,7 @@ void ScreenCastStream::recordFrame(const QRegion &damagedRegion)
                        (spa_meta_cursor *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Cursor, sizeof(spa_meta_cursor)));
     }
 
-    addDamage(spa_buffer, damagedRegion | QRect({0, 0}, size));
+    addDamage(spa_buffer, damagedRegion);
     addHeader(spa_buffer);
     tryEnqueue(buffer);
 }
