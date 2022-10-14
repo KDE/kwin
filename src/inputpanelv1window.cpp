@@ -34,7 +34,7 @@ InputPanelV1Window::InputPanelV1Window(InputPanelSurfaceV1Interface *panelSurfac
 
     connect(surface(), &SurfaceInterface::aboutToBeDestroyed, this, &InputPanelV1Window::destroyWindow);
     connect(surface(), &SurfaceInterface::sizeChanged, this, &InputPanelV1Window::reposition);
-    connect(surface(), &SurfaceInterface::mapped, this, &InputPanelV1Window::updateDepth);
+    connect(surface(), &SurfaceInterface::mapped, this, &InputPanelV1Window::handleMapped);
 
     connect(panelSurface, &InputPanelSurfaceV1Interface::topLevel, this, &InputPanelV1Window::showTopLevel);
     connect(panelSurface, &InputPanelSurfaceV1Interface::overlayPanel, this, &InputPanelV1Window::showOverlayPanel);
@@ -46,44 +46,28 @@ InputPanelV1Window::InputPanelV1Window(InputPanelSurfaceV1Interface *panelSurfac
 void InputPanelV1Window::showOverlayPanel()
 {
     setOutput(nullptr);
-    m_mode = Overlay;
-    if (m_shouldBeShown && surface()->isMapped()) {
-        setReadyForPainting();
-        reposition();
-        showClient();
-    }
+    m_mode = Mode::Overlay;
+    maybeShow();
 }
 
 void InputPanelV1Window::showTopLevel(OutputInterface *output, InputPanelSurfaceV1Interface::Position position)
 {
     Q_UNUSED(position);
-    m_mode = Toplevel;
+    m_mode = Mode::Toplevel;
     setOutput(output);
-    if (m_allowed && m_shouldBeShown && surface()->isMapped()) {
-        setReadyForPainting();
-        reposition();
-        showClient();
-    }
+    maybeShow();
 }
 
 void InputPanelV1Window::allow()
 {
     m_allowed = true;
-    if (m_shouldBeShown && !isZombie() && surface()->isMapped()) {
-        setReadyForPainting();
-        reposition();
-        showClient();
-    }
+    maybeShow();
 }
 
 void InputPanelV1Window::show()
 {
     m_shouldBeShown = true;
-    if (m_allowed && !isZombie() && surface()->isMapped()) {
-        setReadyForPainting();
-        reposition();
-        showClient();
-    }
+    maybeShow();
 }
 
 void InputPanelV1Window::hide()
@@ -101,7 +85,10 @@ void KWin::InputPanelV1Window::reposition()
     }
 
     switch (m_mode) {
-    case Toplevel: {
+    case Mode::None: {
+        // should never happen
+    }; break;
+    case Mode::Toplevel: {
         QSizeF panelSize = surface()->size();
         if (!panelSize.isValid() || panelSize.isEmpty()) {
             return;
@@ -126,7 +113,7 @@ void KWin::InputPanelV1Window::reposition()
         geo.translate((availableArea.width() - panelSize.width()) / 2, availableArea.height() - outputArea.height());
         moveResize(geo);
     } break;
-    case Overlay: {
+    case Mode::Overlay: {
         auto textInputSurface = waylandServer()->seat()->focusedTextInputSurface();
         auto textWindow = waylandServer()->findWindow(textInputSurface);
         QRect cursorRectangle;
@@ -206,6 +193,22 @@ void InputPanelV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode m
 {
     Q_UNUSED(mode)
     updateGeometry(rect);
+}
+
+void InputPanelV1Window::handleMapped()
+{
+    updateDepth();
+    maybeShow();
+}
+
+void InputPanelV1Window::maybeShow()
+{
+    const bool shouldShow = m_mode == Mode::Overlay || (m_mode == Mode::Toplevel && m_allowed && m_shouldBeShown);
+    if (shouldShow && !isZombie() && surface()->isMapped()) {
+        setReadyForPainting();
+        reposition();
+        showClient();
+    }
 }
 
 } // namespace KWin
