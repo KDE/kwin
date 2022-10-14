@@ -1869,7 +1869,7 @@ bool EffectsHandlerImpl::isInputPanelOverlay() const
 
     auto panel = kwinApp()->inputMethod()->panel();
     if (panel) {
-        return panel->mode() == InputPanelV1Window::Overlay;
+        return panel->mode() == InputPanelV1Window::Mode::Overlay;
     }
     return true;
 }
