@@ -128,6 +128,7 @@ FocusScope {
 
         anchors.fill: parent
         anchors.margins: heap.padding
+        fillGaps: true
         spacing: PlasmaCore.Units.smallSpacing * 5
 
         Repeater {
