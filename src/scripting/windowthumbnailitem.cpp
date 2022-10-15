@@ -67,9 +67,11 @@ void ThumbnailTextureProvider::setTexture(const std::shared_ptr<GLTexture> &nati
                                                                        nativeTexture->size(),
                                                                        QQuickWindow::TextureHasAlphaChannel));
 #endif
-        m_texture->setFiltering(QSGTexture::Linear);
-        m_texture->setHorizontalWrapMode(QSGTexture::ClampToEdge);
-        m_texture->setVerticalWrapMode(QSGTexture::ClampToEdge);
+        if (m_texture) {
+            m_texture->setFiltering(QSGTexture::Linear);
+            m_texture->setHorizontalWrapMode(QSGTexture::ClampToEdge);
+            m_texture->setVerticalWrapMode(QSGTexture::ClampToEdge);
+        }
     }
 
     // The textureChanged signal must be emitted also if only texture data changes.
