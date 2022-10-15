@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-09-23 00:47+0000\n"
+"POT-Creation-Date: 2022-10-14 00:48+0000\n"
 "PO-Revision-Date: 2007-12-20 11:35+0100\n"
 "Last-Translator: Børre Gaup <boerre@skolelinux.no>\n"
 "Language-Team: Northern Sami <l10n-no@lister.huftis.org>\n"
@@ -1143,67 +1143,67 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: main.cpp:166
+#: main.cpp:174
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:168 main.cpp:191
+#: main.cpp:176 main.cpp:199
 #, kde-format
 msgid "KDE window manager"
 msgstr "KDE lásegieđahalli"
 
-#: main.cpp:170
+#: main.cpp:178
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr ""
 
-#: main.cpp:172
+#: main.cpp:180
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:173
+#: main.cpp:181
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:174
+#: main.cpp:182
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:175
+#: main.cpp:183
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:176
+#: main.cpp:184
 #, kde-format
 msgid "Martin Flöser"
 msgstr ""
 
-#: main.cpp:177
+#: main.cpp:185
 #, kde-format
 msgid "David Edmundson"
 msgstr ""
 
-#: main.cpp:178
+#: main.cpp:186
 #, kde-format
 msgid "Roman Gilg"
 msgstr ""
 
-#: main.cpp:179
+#: main.cpp:187
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr ""
 
-#: main.cpp:188
+#: main.cpp:196
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Ale geavat heivehusmolssaeavttuid"
 
-#: main.cpp:189
+#: main.cpp:197
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Muittut ahte KWin dál easka lea riekčanan máŋgii"
@@ -1309,7 +1309,7 @@ msgstr ""
 msgid "Starts the session without global shortcuts support."
 msgstr ""
 
-#: main_wayland.cpp:408 main_x11.cpp:380
+#: main_wayland.cpp:408 main_x11.cpp:372
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr ""
@@ -1349,7 +1349,7 @@ msgstr ""
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 
-#: main_x11.cpp:373
+#: main_x11.cpp:365
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Buhtte ICCCM2.0-heivvolaš lásegieđahalli mii juo lea jođus"
@@ -2301,307 +2301,307 @@ msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr ""
 
-#: useractions.cpp:987
+#: useractions.cpp:984
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "Lásiid doaimmafállu"
 
-#: useractions.cpp:989
+#: useractions.cpp:986
 #, kde-format
 msgid "Close Window"
 msgstr "Gidde láse"
 
-#: useractions.cpp:991
+#: useractions.cpp:988
 #, kde-format
 msgid "Maximize Window"
 msgstr "Maksimere láse"
 
-#: useractions.cpp:993
+#: useractions.cpp:990
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Maksimere láse ceaggut"
 
-#: useractions.cpp:995
+#: useractions.cpp:992
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Maksimere láse láskut"
 
-#: useractions.cpp:997
+#: useractions.cpp:994
 #, kde-format
 msgid "Minimize Window"
 msgstr "Minimere láse"
 
-#: useractions.cpp:999
+#: useractions.cpp:996
 #, kde-format
 msgid "Shade Window"
 msgstr "Máhcu láse oktii"
 
-#: useractions.cpp:1001
+#: useractions.cpp:998
 #, kde-format
 msgid "Move Window"
 msgstr "Sirdde láse"
 
-#: useractions.cpp:1003
+#: useractions.cpp:1000
 #, kde-format
 msgid "Resize Window"
 msgstr "Rievdat láse sturrodaga"
 
-#: useractions.cpp:1005
+#: useractions.cpp:1002
 #, kde-format
 msgid "Raise Window"
 msgstr "Lokte láse"
 
-#: useractions.cpp:1007
+#: useractions.cpp:1004
 #, kde-format
 msgid "Lower Window"
 msgstr "Vuolit láse"
 
-#: useractions.cpp:1009
+#: useractions.cpp:1006
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Lokte dahje vuolit láse"
 
-#: useractions.cpp:1011
+#: useractions.cpp:1008
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Deavdde olleš šearpma"
 
-#: useractions.cpp:1013
+#: useractions.cpp:1010
 #, kde-format
-msgid "Hide Window Border"
-msgstr "Čiega láserámma"
+msgid "Toggle Window Border"
+msgstr ""
 
-#: useractions.cpp:1015
+#: useractions.cpp:1012
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Doalat láse earáid bajábeallái"
 
-#: useractions.cpp:1017
+#: useractions.cpp:1014
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Čájet láse earáid duohkken"
 
-#: useractions.cpp:1019
+#: useractions.cpp:1016
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr ""
 
-#: useractions.cpp:1021
+#: useractions.cpp:1018
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Heivet láselávkestagaid"
 
-#: useractions.cpp:1023
+#: useractions.cpp:1020
 #, kde-format
 msgid "Move Window to the Center"
 msgstr ""
 
-#: useractions.cpp:1025
+#: useractions.cpp:1022
 #, kde-format
 msgid "Move Window Right"
 msgstr ""
 
-#: useractions.cpp:1027
+#: useractions.cpp:1024
 #, kde-format
 msgid "Move Window Left"
 msgstr ""
 
-#: useractions.cpp:1029
+#: useractions.cpp:1026
 #, kde-format
 msgid "Move Window Up"
 msgstr ""
 
-#: useractions.cpp:1031
+#: useractions.cpp:1028
 #, kde-format
 msgid "Move Window Down"
 msgstr ""
 
-#: useractions.cpp:1033
+#: useractions.cpp:1030
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr ""
 
-#: useractions.cpp:1035
+#: useractions.cpp:1032
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr ""
 
-#: useractions.cpp:1037
+#: useractions.cpp:1034
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr ""
 
-#: useractions.cpp:1039
+#: useractions.cpp:1036
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr ""
 
-#: useractions.cpp:1041
+#: useractions.cpp:1038
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr ""
 
-#: useractions.cpp:1043
+#: useractions.cpp:1040
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr ""
 
-#: useractions.cpp:1045
+#: useractions.cpp:1042
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr ""
 
-#: useractions.cpp:1047
+#: useractions.cpp:1044
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr ""
 
-#: useractions.cpp:1049
+#: useractions.cpp:1046
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr ""
 
-#: useractions.cpp:1051
+#: useractions.cpp:1048
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr ""
 
-#: useractions.cpp:1053
+#: useractions.cpp:1050
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr ""
 
-#: useractions.cpp:1055
+#: useractions.cpp:1052
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr ""
 
-#: useractions.cpp:1057
+#: useractions.cpp:1054
 #, kde-format
 msgid "Switch to Window Above"
 msgstr ""
 
-#: useractions.cpp:1059
+#: useractions.cpp:1056
 #, kde-format
 msgid "Switch to Window Below"
 msgstr ""
 
-#: useractions.cpp:1061
+#: useractions.cpp:1058
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr ""
 
-#: useractions.cpp:1063
+#: useractions.cpp:1060
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr ""
 
-#: useractions.cpp:1065
+#: useractions.cpp:1062
 #, kde-format
 msgid "Increase Opacity of Active Window by 5 %"
 msgstr ""
 
-#: useractions.cpp:1067
+#: useractions.cpp:1064
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5 %"
 msgstr ""
 
-#: useractions.cpp:1070
+#: useractions.cpp:1067
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Čájet láse buot čállinbevddiin"
 
-#: useractions.cpp:1081
+#: useractions.cpp:1078
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr ""
 
-#: useractions.cpp:1083
+#: useractions.cpp:1080
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Láse čuovvovaš čállinbeavdái"
 
-#: useractions.cpp:1084
+#: useractions.cpp:1081
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Láse ovddit čállinbeavdái"
 
-#: useractions.cpp:1085
+#: useractions.cpp:1082
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Sádde láse ovtta čállinbeavddi olgešguvlui"
 
-#: useractions.cpp:1087
+#: useractions.cpp:1084
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Sádde láse ovtta čállinbeavddi gurutguvlui"
 
-#: useractions.cpp:1089
+#: useractions.cpp:1086
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Sádde láse ovtta čállinbeavddi bajásguvlui"
 
-#: useractions.cpp:1091
+#: useractions.cpp:1088
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Sádde láse ovtta čállinbeavddi vulosguvlui"
 
-#: useractions.cpp:1095
+#: useractions.cpp:1092
 #, kde-format
 msgid "Window to Screen %1"
 msgstr ""
 
-#: useractions.cpp:1097
+#: useractions.cpp:1099
 #, kde-format
 msgid "Window to Next Screen"
 msgstr "Láse boahtte šerbmii"
 
-#: useractions.cpp:1099
+#: useractions.cpp:1101
 #, kde-format
 msgid "Window to Previous Screen"
 msgstr ""
 
-#: useractions.cpp:1101
+#: useractions.cpp:1103
 #, kde-format
 msgid "Peek at Desktop"
 msgstr ""
 
-#: useractions.cpp:1105
+#: useractions.cpp:1107
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr ""
 
-#: useractions.cpp:1108
+#: useractions.cpp:1115
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Molsso boahtte šerbmii"
 
-#: useractions.cpp:1109
+#: useractions.cpp:1116
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr ""
 
-#: useractions.cpp:1111
+#: useractions.cpp:1118
 #, kde-format
 msgid "Kill Window"
 msgstr "Gotte láse"
 
-#: useractions.cpp:1112
+#: useractions.cpp:1119
 #, kde-format
 msgid "Suspend Compositing"
 msgstr ""
 
-#: useractions.cpp:1113
+#: useractions.cpp:1120
 #, kde-format
 msgid "Invert Screen Colors"
 msgstr ""
 
-#: useractions.cpp:1174
+#: useractions.cpp:1181
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr ""
 
-#: useractions.cpp:1325
+#: useractions.cpp:1318
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
@@ -2649,13 +2649,13 @@ msgstr "Lonut vuolil čállinbeavdái"
 msgid "Switch to Desktop %1"
 msgstr ""
 
-#: window.cpp:3428
+#: window.cpp:3427
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1676
+#: workspace.cpp:1677
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
