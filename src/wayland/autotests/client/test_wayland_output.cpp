@@ -278,14 +278,6 @@ void TestWaylandOutput::testSubPixel()
     }
 
     QTEST(output.subPixel(), "expected");
-
-    // change back to unknown
-    outputChanged.clear();
-    outputHandle->setSubPixel(KWin::Output::SubPixel::Unknown);
-    if (outputChanged.isEmpty()) {
-        QVERIFY(outputChanged.wait());
-    }
-    QCOMPARE(output.subPixel(), Output::SubPixel::Unknown);
 }
 
 void TestWaylandOutput::testTransform_data()
