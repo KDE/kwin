@@ -33,7 +33,7 @@ private Q_SLOTS:
 private:
     KWaylandServer::Display *m_display;
     KWaylandServer::CompositorInterface *m_compositorInterface;
-    KWaylandServer::BlurManagerInterface *m_blurManagerInterface;
+    std::unique_ptr<KWaylandServer::BlurManagerInterface> m_blurManagerInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::BlurManager *m_blurManager;
@@ -96,7 +96,7 @@ void TestBlur::init()
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_blurManagerInterface = new BlurManagerInterface(m_display, m_display);
+    m_blurManagerInterface = std::make_unique<BlurManagerInterface>(m_display);
     QVERIFY(blurSpy.wait());
     m_blurManager = registry.createBlurManager(blurSpy.first().first().value<quint32>(), blurSpy.first().last().value<quint32>(), this);
 }
@@ -126,7 +126,7 @@ void TestBlur::cleanup()
 
     // these are the children of the display
     m_compositorInterface = nullptr;
-    m_blurManagerInterface = nullptr;
+    m_blurManagerInterface.reset();
 }
 
 void TestBlur::testCreate()

@@ -32,13 +32,11 @@ class KWIN_EXPORT BlurManagerInterface : public QObject
 {
     Q_OBJECT
 public:
-    explicit BlurManagerInterface(Display *display, QObject *parent = nullptr);
+    explicit BlurManagerInterface(Display *display);
     ~BlurManagerInterface() override;
 
-    void remove();
-
 private:
-    std::unique_ptr<BlurManagerInterfacePrivate> d;
+    BlurManagerInterfacePrivate *d;
 };
 
 /**

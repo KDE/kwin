@@ -124,8 +124,8 @@ private:
     QMap<EffectWindow *, QMetaObject::Connection> windowBlurChangedConnections;
     QMap<const EffectWindow *, QRegion> blurRegions;
 
-    static KWaylandServer::BlurManagerInterface *s_blurManager;
-    static QTimer *s_blurManagerRemoveTimer;
+    static std::unique_ptr<KWaylandServer::BlurManagerInterface> s_blurManager;
+    static std::unique_ptr<QTimer> s_blurManagerRemoveTimer;
 };
 
 inline bool BlurEffect::provides(Effect::Feature feature)

@@ -19,9 +19,7 @@ static const quint32 s_version = 1;
 class BlurManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_blur_manager
 {
 public:
-    BlurManagerInterfacePrivate(BlurManagerInterface *q, Display *d);
-
-    BlurManagerInterface *q;
+    BlurManagerInterfacePrivate(Display *d);
 
 protected:
     void org_kde_kwin_blur_manager_destroy_global() override;
@@ -29,15 +27,14 @@ protected:
     void org_kde_kwin_blur_manager_unset(Resource *resource, wl_resource *surface) override;
 };
 
-BlurManagerInterfacePrivate::BlurManagerInterfacePrivate(BlurManagerInterface *_q, Display *d)
+BlurManagerInterfacePrivate::BlurManagerInterfacePrivate(Display *d)
     : QtWaylandServer::org_kde_kwin_blur_manager(*d, s_version)
-    , q(_q)
 {
 }
 
 void BlurManagerInterfacePrivate::org_kde_kwin_blur_manager_destroy_global()
 {
-    delete q;
+    delete this;
 }
 
 void BlurManagerInterfacePrivate::org_kde_kwin_blur_manager_unset(Resource *resource, wl_resource *surface)
@@ -67,17 +64,12 @@ void BlurManagerInterfacePrivate::org_kde_kwin_blur_manager_create(Resource *res
     surfacePrivate->setBlur(blur);
 }
 
-BlurManagerInterface::BlurManagerInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new BlurManagerInterfacePrivate(this, display))
+BlurManagerInterface::BlurManagerInterface(Display *display)
+    : d(new BlurManagerInterfacePrivate(display))
 {
 }
 
 BlurManagerInterface::~BlurManagerInterface()
-{
-}
-
-void BlurManagerInterface::remove()
 {
     d->globalRemove();
 }
