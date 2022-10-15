@@ -66,7 +66,6 @@ Q_SIGNALS:
     void eventsRead();
 
 private Q_SLOTS:
-    void doSetup();
     void slotKGlobalSettingsNotifyChange(int type, int arg);
 
 private:
@@ -74,6 +73,7 @@ private:
     void handleEvent();
     void applyDeviceConfig(Device *device);
     void applyScreenToDevice(Device *device);
+    void doSetup();
     std::unique_ptr<QSocketNotifier> m_notifier;
     QRecursiveMutex m_mutex;
     std::deque<std::unique_ptr<Event>> m_eventQueue;

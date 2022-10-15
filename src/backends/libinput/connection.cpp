@@ -114,7 +114,7 @@ Connection::~Connection() = default;
 
 void Connection::setup()
 {
-    QMetaObject::invokeMethod(this, "doSetup", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(this, &Connection::doSetup, Qt::QueuedConnection);
 }
 
 void Connection::doSetup()

@@ -270,7 +270,7 @@ void Workspace::init()
     }
 
     // broadcast that Workspace is ready, but first process all events.
-    QMetaObject::invokeMethod(this, "workspaceInitialized", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(this, &Workspace::workspaceInitialized, Qt::QueuedConnection);
 
     // TODO: ungrabXServer()
 

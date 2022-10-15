@@ -86,7 +86,7 @@ QAction *GlobalShortcut::action() const
 
 void GlobalShortcut::invoke() const
 {
-    QMetaObject::invokeMethod(m_action, "trigger", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(m_action, &QAction::trigger, Qt::QueuedConnection);
 }
 
 const Shortcut &GlobalShortcut::shortcut() const

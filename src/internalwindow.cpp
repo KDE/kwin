@@ -120,11 +120,7 @@ bool InternalWindow::eventFilter(QObject *watched, QEvent *event)
             // Some dialog e.g. Plasma::Dialog may update shadow in the middle of rendering.
             // The opengl context changed by updateShadow may break the QML Window rendering
             // and cause crash.
-            QMetaObject::invokeMethod(
-                this, [this]() {
-                    updateShadow();
-                },
-                Qt::QueuedConnection);
+            QMetaObject::invokeMethod(this, &InternalWindow::updateShadow, Qt::QueuedConnection);
         }
         if (pe->propertyName() == "kwin_windowType") {
             m_windowType = m_handle->property("kwin_windowType").value<NET::WindowType>();

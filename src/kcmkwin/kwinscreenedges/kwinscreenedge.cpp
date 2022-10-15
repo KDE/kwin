@@ -18,7 +18,7 @@ namespace KWin
 KWinScreenEdge::KWinScreenEdge(QWidget *parent)
     : QWidget(parent)
 {
-    QMetaObject::invokeMethod(this, "createConnection", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(this, &KWinScreenEdge::createConnection, Qt::QueuedConnection);
 }
 
 KWinScreenEdge::~KWinScreenEdge()
