@@ -7,6 +7,7 @@
 #pragma once
 
 #include "plugin.h"
+#include <variant>
 
 #include "core/inputdevice.h"
 #include "input.h"
@@ -65,8 +66,9 @@ private:
     void insert(TriggerType type, const Trigger &trigger, const QStringList &action);
     bool send(TriggerType type, const Trigger &trigger, bool pressed, uint timestamp);
     bool sendKeySequence(const QKeySequence &sequence, bool pressed, uint time);
+    bool sendMouseButton(quint32 button, bool pressed, uint time);
 
     InputDevice m_inputDevice;
-    QHash<Trigger, QKeySequence> m_actions[LastType];
+    QHash<Trigger, std::variant<QKeySequence, quint32>> m_actions[LastType];
     KConfigWatcher::Ptr m_configWatcher;
 };
