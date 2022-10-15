@@ -40,8 +40,6 @@ private Q_SLOTS:
 
 private:
     KWaylandServer::Display *m_display;
-    std::unique_ptr<FakeOutput> m_outputHandle;
-    std::unique_ptr<KWaylandServer::OutputInterface> m_outputInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
@@ -65,12 +63,6 @@ void TestWaylandOutput::init()
     m_display->addSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
-
-    m_outputHandle = std::make_unique<FakeOutput>();
-    m_outputHandle->setMode(QSize(1024, 768), 60000);
-
-    m_outputInterface = std::make_unique<OutputInterface>(m_display, m_outputHandle.get());
-    m_outputInterface->setMode(QSize(1024, 768), 60000);
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -107,35 +99,16 @@ void TestWaylandOutput::cleanup()
 
     delete m_display;
     m_display = nullptr;
-
-    m_outputInterface.reset();
-    m_outputHandle.reset();
 }
 
 void TestWaylandOutput::testRegistry()
 {
-    QSignalSpy globalPositionChangedSpy(m_outputInterface.get(), &KWaylandServer::OutputInterface::globalPositionChanged);
-    QCOMPARE(m_outputInterface->globalPosition(), QPoint(0, 0));
-    m_outputHandle->moveTo(QPoint(100, 50));
-    m_outputInterface->setGlobalPosition(QPoint(100, 50));
-    QCOMPARE(m_outputInterface->globalPosition(), QPoint(100, 50));
-    QCOMPARE(globalPositionChangedSpy.count(), 1);
-    // changing again should not trigger signal
-    m_outputHandle->moveTo(QPoint(100, 50));
-    m_outputInterface->setGlobalPosition(QPoint(100, 50));
-    QCOMPARE(globalPositionChangedSpy.count(), 1);
+    auto outputHandle = std::make_unique<FakeOutput>();
+    outputHandle->setMode(QSize(1024, 768), 60000);
+    outputHandle->moveTo(QPoint(100, 50));
+    outputHandle->setPhysicalSize(QSize(200, 100));
 
-    QSignalSpy physicalSizeChangedSpy(m_outputInterface.get(), &KWaylandServer::OutputInterface::physicalSizeChanged);
-    QCOMPARE(m_outputInterface->physicalSize(), QSize());
-    m_outputHandle->setPhysicalSize(QSize(200, 100));
-    m_outputInterface->setPhysicalSize(QSize(200, 100));
-    QCOMPARE(m_outputInterface->physicalSize(), QSize(200, 100));
-    QCOMPARE(physicalSizeChangedSpy.count(), 1);
-    // changing again should not trigger signal
-    m_outputHandle->setPhysicalSize(QSize(200, 100));
-    m_outputInterface->setPhysicalSize(QSize(200, 100));
-    QCOMPARE(physicalSizeChangedSpy.count(), 1);
-    m_outputInterface->done();
+    auto outputInterface = std::make_unique<KWaylandServer::OutputInterface>(m_display, outputHandle.get());
 
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputAnnounced);
@@ -168,8 +141,8 @@ void TestWaylandOutput::testRegistry()
 
     QCOMPARE(output.geometry(), QRect(100, 50, 1024, 768));
     QCOMPARE(output.globalPosition(), QPoint(100, 50));
-    QCOMPARE(output.manufacturer(), QStringLiteral("org.kde.kwin"));
-    QCOMPARE(output.model(), QStringLiteral("none"));
+    QCOMPARE(output.manufacturer(), QString());
+    QCOMPARE(output.model(), QString());
     QCOMPARE(output.physicalSize(), QSize(200, 100));
     QCOMPARE(output.pixelSize(), QSize(1024, 768));
     QCOMPARE(output.refreshRate(), 60000);
@@ -182,6 +155,11 @@ void TestWaylandOutput::testRegistry()
 
 void TestWaylandOutput::testModeChange()
 {
+    auto outputHandle = std::make_unique<FakeOutput>();
+    outputHandle->setMode(QSize(1024, 768), 60000);
+
+    auto outputInterface = std::make_unique<KWaylandServer::OutputInterface>(m_display, outputHandle.get());
+
     using namespace KWayland::Client;
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputAnnounced);
@@ -207,10 +185,7 @@ void TestWaylandOutput::testModeChange()
     QCOMPARE(output.refreshRate(), 60000);
 
     // change once more
-    m_outputHandle->setMode(QSize(1280, 1024), 90000);
-    m_outputInterface->setMode(QSize(1280, 1024), 90000);
-    QCOMPARE(m_outputInterface->refreshRate(), 90000);
-    m_outputInterface->done();
+    outputHandle->setMode(QSize(1280, 1024), 90000);
     QVERIFY(outputChanged.wait());
     QCOMPARE(modeAddedSpy.count(), 2);
     QCOMPARE(modeAddedSpy.at(1).first().value<Output::Mode>().size, QSize(1280, 1024));
@@ -223,6 +198,11 @@ void TestWaylandOutput::testModeChange()
 
 void TestWaylandOutput::testScaleChange()
 {
+    auto outputHandle = std::make_unique<FakeOutput>();
+    outputHandle->setMode(QSize(1024, 768), 60000);
+
+    auto outputInterface = std::make_unique<KWaylandServer::OutputInterface>(m_display, outputHandle.get());
+
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputAnnounced);
     registry.create(m_connection->display());
@@ -240,26 +220,16 @@ void TestWaylandOutput::testScaleChange()
 
     // change the scale
     outputChanged.clear();
-    QCOMPARE(m_outputInterface->scale(), 1);
-    QSignalSpy serverScaleChanged(m_outputInterface.get(), &KWaylandServer::OutputInterface::scaleChanged);
-    m_outputHandle->setScale(2);
-    m_outputInterface->setScale(2);
-    QCOMPARE(m_outputInterface->scale(), 2);
-    m_outputInterface->done();
-    QCOMPARE(serverScaleChanged.count(), 1);
+    outputHandle->setScale(2);
     QVERIFY(outputChanged.wait());
     QCOMPARE(output.scale(), 2);
     // changing to same value should not trigger
-    m_outputHandle->setScale(2);
-    m_outputInterface->setScale(2);
-    QCOMPARE(serverScaleChanged.count(), 1);
+    outputHandle->setScale(2);
     QVERIFY(!outputChanged.wait(100));
 
     // change once more
     outputChanged.clear();
-    m_outputHandle->setScale(4);
-    m_outputInterface->setScale(4);
-    m_outputInterface->done();
+    outputHandle->setScale(4);
     QVERIFY(outputChanged.wait());
     QCOMPARE(output.scale(), 4);
 }
@@ -280,19 +250,16 @@ void TestWaylandOutput::testSubPixel_data()
 
 void TestWaylandOutput::testSubPixel()
 {
+    QFETCH(KWin::Output::SubPixel, actual);
+
+    auto outputHandle = std::make_unique<FakeOutput>();
+    outputHandle->setMode(QSize(1024, 768), 60000);
+    outputHandle->setSubPixel(actual);
+
+    auto outputInterface = std::make_unique<KWaylandServer::OutputInterface>(m_display, outputHandle.get());
+
     using namespace KWayland::Client;
     using namespace KWaylandServer;
-    QFETCH(KWin::Output::SubPixel, actual);
-    QCOMPARE(m_outputInterface->subPixel(), KWin::Output::SubPixel::Unknown);
-    QSignalSpy serverSubPixelChangedSpy(m_outputInterface.get(), &KWaylandServer::OutputInterface::subPixelChanged);
-    m_outputHandle->setSubPixel(actual);
-    m_outputInterface->setSubPixel(actual);
-    QCOMPARE(m_outputInterface->subPixel(), actual);
-    QCOMPARE(serverSubPixelChangedSpy.count(), 1);
-    // changing to same value should not trigger the signal
-    m_outputHandle->setSubPixel(actual);
-    m_outputInterface->setSubPixel(actual);
-    QCOMPARE(serverSubPixelChangedSpy.count(), 1);
 
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputAnnounced);
@@ -314,11 +281,7 @@ void TestWaylandOutput::testSubPixel()
 
     // change back to unknown
     outputChanged.clear();
-    m_outputHandle->setSubPixel(KWin::Output::SubPixel::Unknown);
-    m_outputInterface->setSubPixel(KWin::Output::SubPixel::Unknown);
-    QCOMPARE(m_outputInterface->subPixel(), KWin::Output::SubPixel::Unknown);
-    m_outputInterface->done();
-    QCOMPARE(serverSubPixelChangedSpy.count(), 2);
+    outputHandle->setSubPixel(KWin::Output::SubPixel::Unknown);
     if (outputChanged.isEmpty()) {
         QVERIFY(outputChanged.wait());
     }
@@ -343,19 +306,16 @@ void TestWaylandOutput::testTransform_data()
 
 void TestWaylandOutput::testTransform()
 {
+    QFETCH(KWin::Output::Transform, actual);
+
+    auto outputHandle = std::make_unique<FakeOutput>();
+    outputHandle->setMode(QSize(1024, 768), 60000);
+    outputHandle->setTransform(actual);
+
+    auto outputInterface = std::make_unique<KWaylandServer::OutputInterface>(m_display, outputHandle.get());
+
     using namespace KWayland::Client;
     using namespace KWaylandServer;
-    QFETCH(KWin::Output::Transform, actual);
-    QCOMPARE(m_outputInterface->transform(), KWin::Output::Transform::Normal);
-    QSignalSpy serverTransformChangedSpy(m_outputInterface.get(), &KWaylandServer::OutputInterface::transformChanged);
-    m_outputHandle->setTransform(actual);
-    m_outputInterface->setTransform(actual);
-    QCOMPARE(m_outputInterface->transform(), actual);
-    QCOMPARE(serverTransformChangedSpy.count(), 1);
-    // changing to same should not trigger signal
-    m_outputHandle->setTransform(actual);
-    m_outputInterface->setTransform(actual);
-    QCOMPARE(serverTransformChangedSpy.count(), 1);
 
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputAnnounced);
@@ -376,11 +336,7 @@ void TestWaylandOutput::testTransform()
 
     // change back to normal
     outputChanged.clear();
-    m_outputHandle->setTransform(KWin::Output::Transform::Normal);
-    m_outputInterface->setTransform(KWin::Output::Transform::Normal);
-    QCOMPARE(m_outputInterface->transform(), KWin::Output::Transform::Normal);
-    m_outputInterface->done();
-    QCOMPARE(serverTransformChangedSpy.count(), 2);
+    outputHandle->setTransform(KWin::Output::Transform::Normal);
     if (outputChanged.isEmpty()) {
         QVERIFY(outputChanged.wait());
     }

@@ -11,8 +11,6 @@
 #include "wayland/utils.h"
 #include "wayland/xdgoutput_v1_interface.h"
 
-#include <QTimer>
-
 namespace KWin
 {
 
@@ -25,11 +23,9 @@ public:
 
 private Q_SLOTS:
     void update();
-    void scheduleUpdate();
 
 private:
     Output *m_platformOutput;
-    QTimer m_updateTimer;
     KWaylandServer::ScopedGlobalPointer<KWaylandServer::OutputInterface> m_waylandOutput;
     KWaylandServer::XdgOutputV1Interface *m_xdgOutputV1;
 };

@@ -82,9 +82,7 @@ int main(int argc, char **argv)
     outputHandle->setMode(QSize(1024, 768), 60000);
     outputHandle->setPhysicalSize(QSize(10, 10));
 
-    OutputInterface *outputInterface = new OutputInterface(&display, outputHandle.get(), &display);
-    outputInterface->setPhysicalSize(QSize(10, 10));
-    outputInterface->setMode(QSize(1024, 768));
+    auto outputInterface = std::make_unique<OutputInterface>(&display, outputHandle.get());
 
     // starts XWayland by forking and opening a pipe
     const int pipe = startXServer();

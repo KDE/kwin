@@ -251,9 +251,7 @@ int main(int argc, char **argv)
     outputHandle->setPhysicalSize(QSize(269, 202));
     outputHandle->setMode(windowSize, 60000);
 
-    OutputInterface *outputInterface = new OutputInterface(&display, outputHandle.get(), &display);
-    outputInterface->setPhysicalSize(QSize(269, 202));
-    outputInterface->setMode(windowSize);
+    auto outputInterface = std::make_unique<OutputInterface>(&display, outputHandle.get());
 
     SeatInterface *seat = new SeatInterface(&display);
     seat->setHasKeyboard(true);

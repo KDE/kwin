@@ -14,6 +14,7 @@
 #include "qwayland-server-wayland.h"
 
 #include <QPointer>
+#include <QTimer>
 #include <QVector>
 
 namespace KWaylandServer
@@ -30,21 +31,21 @@ public:
     void sendMode(Resource *resource);
     void sendDone(Resource *resource);
 
-    void broadcastGeometry();
-
     OutputInterface *q;
     QPointer<Display> display;
     QPointer<KWin::Output> handle;
     QSize physicalSize;
     QPoint globalPosition;
-    QString manufacturer = QStringLiteral("org.kde.kwin");
-    QString model = QStringLiteral("none");
+    QString manufacturer;
+    QString model;
     int scale = 1;
     KWin::Output::SubPixel subPixel = KWin::Output::SubPixel::Unknown;
     KWin::Output::Transform transform = KWin::Output::Transform::Normal;
-    OutputInterface::Mode mode;
+    QSize modeSize;
+    int refreshRate = 0;
     QString name;
     QString description;
+    QTimer doneTimer;
 
 private:
     void output_destroy_global() override;
@@ -62,7 +63,7 @@ OutputInterfacePrivate::OutputInterfacePrivate(Display *display, OutputInterface
 
 void OutputInterfacePrivate::sendMode(Resource *resource)
 {
-    send_mode(resource->handle, mode_current, mode.size.width(), mode.size.height(), mode.refreshRate);
+    send_mode(resource->handle, mode_current, modeSize.width(), modeSize.height(), refreshRate);
 }
 
 void OutputInterfacePrivate::sendScale(Resource *resource)
@@ -136,14 +137,6 @@ void OutputInterfacePrivate::sendDone(Resource *resource)
     }
 }
 
-void OutputInterfacePrivate::broadcastGeometry()
-{
-    const auto outputResources = resourceMap();
-    for (Resource *resource : outputResources) {
-        sendGeometry(resource);
-    }
-}
-
 void OutputInterfacePrivate::output_destroy_global()
 {
     delete q;
@@ -181,11 +174,88 @@ OutputInterface::OutputInterface(Display *display, KWin::Output *handle, QObject
 {
     DisplayPrivate *displayPrivate = DisplayPrivate::get(display);
     displayPrivate->outputs.append(this);
+
+    // Delay the done event to batch property updates.
+    d->doneTimer.setSingleShot(true);
+    d->doneTimer.setInterval(0);
+    connect(&d->doneTimer, &QTimer::timeout, this, [this]() {
+        const auto resources = d->resourceMap();
+        for (const auto &resource : resources) {
+            d->sendDone(resource);
+        }
+    });
+
+    d->name = handle->name();
+    d->description = handle->description();
+    d->transform = handle->transform();
+    d->manufacturer = handle->manufacturer();
+    d->model = handle->model();
+    d->physicalSize = handle->physicalSize();
+    d->globalPosition = handle->geometry().topLeft();
+    d->scale = std::ceil(handle->scale());
+    d->modeSize = handle->modeSize();
+    d->refreshRate = handle->refreshRate();
+    d->subPixel = handle->subPixel();
+
+    connect(handle, &KWin::Output::geometryChanged, this, [this]() {
+        const QPoint position = d->handle->geometry().topLeft();
+        if (d->globalPosition != position) {
+            d->globalPosition = position;
+            const auto resources = d->resourceMap();
+            for (const auto &resource : resources) {
+                d->sendGeometry(resource);
+            }
+            scheduleDone();
+        }
+    });
+
+    connect(handle, &KWin::Output::scaleChanged, this, [this]() {
+        const int scale = std::ceil(d->handle->scale());
+        if (d->scale != scale) {
+            d->scale = scale;
+            const auto resources = d->resourceMap();
+            for (const auto &resource : resources) {
+                d->sendScale(resource);
+            }
+            scheduleDone();
+        }
+    });
+
+    connect(handle, &KWin::Output::transformChanged, this, [this]() {
+        const KWin::Output::Transform transform = d->handle->transform();
+        if (d->transform != transform) {
+            d->transform = transform;
+            const auto resources = d->resourceMap();
+            for (const auto &resource : resources) {
+                d->sendGeometry(resource);
+            }
+            scheduleDone();
+        }
+    });
+
+    connect(handle, &KWin::Output::currentModeChanged, this, [this]() {
+        const QSize size = d->handle->modeSize();
+        const int refreshRate = d->handle->refreshRate();
+        if (d->modeSize != size || d->refreshRate != refreshRate) {
+            d->modeSize = size;
+            d->refreshRate = refreshRate;
+            const auto resources = d->resourceMap();
+            for (const auto &resource : resources) {
+                d->sendMode(resource);
+            }
+            scheduleDone();
+        }
+    });
 }
 
 OutputInterface::~OutputInterface()
 {
     remove();
+}
+
+Display *OutputInterface::display() const
+{
+    return d->display;
 }
 
 KWin::Output *OutputInterface::handle() const
@@ -213,163 +283,6 @@ void OutputInterface::remove()
     d->globalRemove();
 }
 
-QSize OutputInterface::pixelSize() const
-{
-    return d->mode.size;
-}
-
-int OutputInterface::refreshRate() const
-{
-    return d->mode.refreshRate;
-}
-
-OutputInterface::Mode OutputInterface::mode() const
-{
-    return d->mode;
-}
-
-void OutputInterface::setMode(const Mode &mode)
-{
-    if (d->mode.size == mode.size && d->mode.refreshRate == mode.refreshRate) {
-        return;
-    }
-
-    d->mode = mode;
-
-    const auto outputResources = d->resourceMap();
-    for (OutputInterfacePrivate::Resource *resource : outputResources) {
-        d->sendMode(resource);
-    }
-
-    Q_EMIT modeChanged();
-    Q_EMIT refreshRateChanged(mode.refreshRate);
-    Q_EMIT pixelSizeChanged(mode.size);
-}
-
-void OutputInterface::setMode(const QSize &size, int refreshRate)
-{
-    setMode({size, refreshRate});
-}
-
-void OutputInterface::setName(const QString &name)
-{
-    d->name = name;
-}
-
-void OutputInterface::setDescription(const QString &description)
-{
-    d->description = description;
-}
-
-QSize OutputInterface::physicalSize() const
-{
-    return d->physicalSize;
-}
-
-void OutputInterface::setPhysicalSize(const QSize &physicalSize)
-{
-    if (d->physicalSize == physicalSize) {
-        return;
-    }
-    d->physicalSize = physicalSize;
-    d->broadcastGeometry();
-    Q_EMIT physicalSizeChanged(d->physicalSize);
-}
-
-QPoint OutputInterface::globalPosition() const
-{
-    return d->globalPosition;
-}
-
-void OutputInterface::setGlobalPosition(const QPoint &globalPos)
-{
-    if (d->globalPosition == globalPos) {
-        return;
-    }
-    d->globalPosition = globalPos;
-    Q_EMIT globalPositionChanged(d->globalPosition);
-}
-
-QString OutputInterface::manufacturer() const
-{
-    return d->manufacturer;
-}
-
-void OutputInterface::setManufacturer(const QString &manufacturer)
-{
-    if (d->manufacturer == manufacturer) {
-        return;
-    }
-    d->manufacturer = manufacturer;
-    d->broadcastGeometry();
-    Q_EMIT manufacturerChanged(d->manufacturer);
-}
-
-QString OutputInterface::model() const
-{
-    return d->model;
-}
-
-void OutputInterface::setModel(const QString &model)
-{
-    if (d->model == model) {
-        return;
-    }
-    d->model = model;
-    d->broadcastGeometry();
-    Q_EMIT modelChanged(d->model);
-}
-
-int OutputInterface::scale() const
-{
-    return d->scale;
-}
-
-void OutputInterface::setScale(int scale)
-{
-    if (d->scale == scale) {
-        return;
-    }
-    d->scale = scale;
-
-    const auto outputResources = d->resourceMap();
-    for (OutputInterfacePrivate::Resource *resource : outputResources) {
-        d->sendScale(resource);
-    }
-
-    Q_EMIT scaleChanged(d->scale);
-}
-
-KWin::Output::SubPixel OutputInterface::subPixel() const
-{
-    return d->subPixel;
-}
-
-void OutputInterface::setSubPixel(KWin::Output::SubPixel subPixel)
-{
-    if (d->subPixel == subPixel) {
-        return;
-    }
-    d->subPixel = subPixel;
-    d->broadcastGeometry();
-    Q_EMIT subPixelChanged(d->subPixel);
-}
-
-KWin::Output::Transform OutputInterface::transform() const
-{
-    return d->transform;
-}
-
-void OutputInterface::setTransform(KWin::Output::Transform transform)
-{
-    if (d->transform == transform) {
-        return;
-    }
-    d->transform = transform;
-    d->broadcastGeometry();
-    Q_EMIT transformChanged(d->transform);
-}
-
 QVector<wl_resource *> OutputInterface::clientResources(ClientConnection *client) const
 {
     const auto outputResources = d->resourceMap().values(client->client());
@@ -383,12 +296,9 @@ QVector<wl_resource *> OutputInterface::clientResources(ClientConnection *client
     return ret;
 }
 
-void OutputInterface::done()
+void OutputInterface::scheduleDone()
 {
-    const auto outputResources = d->resourceMap();
-    for (OutputInterfacePrivate::Resource *resource : outputResources) {
-        d->sendDone(resource);
-    }
+    d->doneTimer.start();
 }
 
 void OutputInterface::done(wl_client *client)
@@ -402,11 +312,6 @@ OutputInterface *OutputInterface::get(wl_resource *native)
         return outputPrivate->q;
     }
     return nullptr;
-}
-
-Display *OutputInterface::display() const
-{
-    return d->display;
 }
 
 } // namespace KWaylandServer

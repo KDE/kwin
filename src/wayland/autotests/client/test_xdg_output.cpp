@@ -63,7 +63,6 @@ void TestXdgOutput::init()
     m_outputHandle->setMode(QSize(1920, 1080), 60000);
 
     m_serverOutput = new OutputInterface(m_display, m_outputHandle.get(), this);
-    m_serverOutput->setMode(QSize(1920, 1080));
 
     m_serverXdgOutputManager = new XdgOutputManagerV1Interface(m_display, this);
     m_serverXdgOutput = m_serverXdgOutputManager->createXdgOutput(m_serverOutput, this);
@@ -159,7 +158,7 @@ void TestXdgOutput::testChanges()
     // names cannot dynamically change according to the spec
 
     m_serverXdgOutput->done();
-    m_serverOutput->done();
+    m_serverOutput->scheduleDone();
 
     QVERIFY(xdgOutputChanged.wait());
     QCOMPARE(xdgOutputChanged.count(), 1);
