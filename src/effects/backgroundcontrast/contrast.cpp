@@ -26,8 +26,8 @@ namespace KWin
 
 static const QByteArray s_contrastAtomName = QByteArrayLiteral("_KDE_NET_WM_BACKGROUND_CONTRAST_REGION");
 
-KWaylandServer::ContrastManagerInterface *ContrastEffect::s_contrastManager = nullptr;
-QTimer *ContrastEffect::s_contrastManagerRemoveTimer = nullptr;
+std::unique_ptr<KWaylandServer::ContrastManagerInterface> ContrastEffect::s_contrastManager;
+std::unique_ptr<QTimer> ContrastEffect::s_contrastManagerRemoveTimer;
 
 ContrastEffect::ContrastEffect()
 {
@@ -42,16 +42,15 @@ ContrastEffect::ContrastEffect()
         }
         if (effects->waylandDisplay()) {
             if (!s_contrastManagerRemoveTimer) {
-                s_contrastManagerRemoveTimer = new QTimer(QCoreApplication::instance());
+                s_contrastManagerRemoveTimer = std::make_unique<QTimer>();
                 s_contrastManagerRemoveTimer->setSingleShot(true);
                 s_contrastManagerRemoveTimer->callOnTimeout([]() {
-                    s_contrastManager->remove();
-                    s_contrastManager = nullptr;
+                    s_contrastManager.reset();
                 });
             }
             s_contrastManagerRemoveTimer->stop();
             if (!s_contrastManager) {
-                s_contrastManager = new KWaylandServer::ContrastManagerInterface(effects->waylandDisplay(), s_contrastManagerRemoveTimer);
+                s_contrastManager = std::make_unique<KWaylandServer::ContrastManagerInterface>(effects->waylandDisplay());
             }
         }
     }

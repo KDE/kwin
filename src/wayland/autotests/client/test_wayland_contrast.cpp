@@ -36,7 +36,7 @@ private Q_SLOTS:
 private:
     KWaylandServer::Display *m_display;
     KWaylandServer::CompositorInterface *m_compositorInterface;
-    KWaylandServer::ContrastManagerInterface *m_contrastManagerInterface;
+    std::unique_ptr<KWaylandServer::ContrastManagerInterface> m_contrastManagerInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::ContrastManager *m_contrastManager;
@@ -99,7 +99,7 @@ void TestContrast::init()
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_contrastManagerInterface = new ContrastManagerInterface(m_display, m_display);
+    m_contrastManagerInterface = std::make_unique<ContrastManagerInterface>(m_display);
 
     QVERIFY(contrastSpy.wait());
     m_contrastManager = registry.createContrastManager(contrastSpy.first().first().value<quint32>(), contrastSpy.first().last().value<quint32>(), this);
@@ -130,7 +130,7 @@ void TestContrast::cleanup()
 
     // these are the children of the display
     m_compositorInterface = nullptr;
-    m_contrastManagerInterface = nullptr;
+    m_contrastManagerInterface.reset();
 }
 
 void TestContrast::testCreate()

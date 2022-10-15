@@ -35,13 +35,11 @@ class KWIN_EXPORT ContrastManagerInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit ContrastManagerInterface(Display *display, QObject *parent = nullptr);
+    explicit ContrastManagerInterface(Display *display);
     ~ContrastManagerInterface() override;
 
-    void remove();
-
 private:
-    std::unique_ptr<ContrastManagerInterfacePrivate> d;
+    ContrastManagerInterfacePrivate *d;
 };
 
 /**

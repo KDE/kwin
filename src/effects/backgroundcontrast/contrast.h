@@ -73,8 +73,8 @@ private:
         QRegion contrastRegion;
     };
     QHash<const EffectWindow *, Data> m_windowData;
-    static KWaylandServer::ContrastManagerInterface *s_contrastManager;
-    static QTimer *s_contrastManagerRemoveTimer;
+    static std::unique_ptr<KWaylandServer::ContrastManagerInterface> s_contrastManager;
+    static std::unique_ptr<QTimer> s_contrastManagerRemoveTimer;
 };
 
 inline bool ContrastEffect::provides(Effect::Feature feature)
