@@ -53,6 +53,7 @@ public:
     enum TriggerType {
         Pointer,
         TabletPad,
+        TabletTool,
         LastType
     };
     Q_ENUM(TriggerType);
@@ -60,6 +61,7 @@ public:
     explicit ButtonRebindsFilter();
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override;
     bool tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId, uint time) override;
+    bool tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &tabletToolId, uint time) override;
 
 private:
     void loadConfig(const KConfigGroup &group);

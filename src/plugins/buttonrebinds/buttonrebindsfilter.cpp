@@ -7,6 +7,7 @@
 #include "buttonrebindsfilter.h"
 #include "buttonrebinds_debug.h"
 
+#include "cursor.h"
 #include "input_event.h"
 #include "keyboard_input.h"
 #include "xkb.h"
@@ -151,6 +152,22 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
         }
     }
 
+    const auto tabletToolsGroup = group.group("TabletTool");
+    const auto tabletTools = tabletToolsGroup.groupList();
+    for (const auto &tabletToolName : tabletTools) {
+        const auto toolGroup = tabletToolsGroup.group(tabletToolName);
+        const auto tabletToolButtons = toolGroup.keyList();
+        for (const auto &buttonName : tabletToolButtons) {
+            const auto entry = toolGroup.readEntry(buttonName, QStringList());
+            bool ok;
+            const uint button = buttonName.toUInt(&ok);
+            if (ok) {
+                foundActions = true;
+                insert(TabletTool, {tabletToolName, button}, entry);
+            }
+        }
+    }
+
     if (foundActions) {
         KWin::input()->prependInputEventFilter(this);
     }
@@ -168,6 +185,12 @@ bool ButtonRebindsFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
 bool ButtonRebindsFilter::tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId, uint time)
 {
     return send(TabletPad, {tabletPadId.name, button}, pressed, time);
+}
+
+bool ButtonRebindsFilter::tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &tabletToolId, uint time)
+{
+    Q_UNUSED(tabletToolId);
+    return send(TabletTool, {{}, button}, pressed, time);
 }
 
 void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const QStringList &entry)
