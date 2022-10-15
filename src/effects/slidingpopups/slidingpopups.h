@@ -66,8 +66,8 @@ private:
     void setupSlideData(EffectWindow *w);
     void setupInputPanelSlide();
 
-    static KWaylandServer::SlideManagerInterface *s_slideManager;
-    static QTimer *s_slideManagerRemoveTimer;
+    static std::unique_ptr<KWaylandServer::SlideManagerInterface> s_slideManager;
+    static std::unique_ptr<QTimer> s_slideManagerRemoveTimer;
     long m_atom = 0;
 
     int m_slideLength;

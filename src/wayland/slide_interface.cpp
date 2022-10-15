@@ -16,9 +16,7 @@ static const quint32 s_version = 1;
 class SlideManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_slide_manager
 {
 public:
-    SlideManagerInterfacePrivate(SlideManagerInterface *_q, Display *display);
-
-    SlideManagerInterface *q;
+    SlideManagerInterfacePrivate(Display *display);
 
 protected:
     void org_kde_kwin_slide_manager_destroy_global() override;
@@ -28,7 +26,7 @@ protected:
 
 void SlideManagerInterfacePrivate::org_kde_kwin_slide_manager_destroy_global()
 {
-    delete q;
+    delete this;
 }
 
 void SlideManagerInterfacePrivate::org_kde_kwin_slide_manager_create(Resource *resource, uint32_t id, wl_resource *surface)
@@ -61,23 +59,17 @@ void SlideManagerInterfacePrivate::org_kde_kwin_slide_manager_unset(Resource *re
     surfacePrivate->setSlide(QPointer<SlideInterface>());
 }
 
-SlideManagerInterfacePrivate::SlideManagerInterfacePrivate(SlideManagerInterface *_q, Display *display)
+SlideManagerInterfacePrivate::SlideManagerInterfacePrivate(Display *display)
     : QtWaylandServer::org_kde_kwin_slide_manager(*display, s_version)
-    , q(_q)
 {
 }
 
-SlideManagerInterface::SlideManagerInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new SlideManagerInterfacePrivate(this, display))
+SlideManagerInterface::SlideManagerInterface(Display *display)
+    : d(new SlideManagerInterfacePrivate(display))
 {
 }
 
 SlideManagerInterface::~SlideManagerInterface()
-{
-}
-
-void SlideManagerInterface::remove()
 {
     d->globalRemove();
 }

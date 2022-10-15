@@ -33,7 +33,7 @@ private Q_SLOTS:
 private:
     KWaylandServer::Display *m_display;
     KWaylandServer::CompositorInterface *m_compositorInterface;
-    KWaylandServer::SlideManagerInterface *m_slideManagerInterface;
+    std::unique_ptr<KWaylandServer::SlideManagerInterface> m_slideManagerInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::SlideManager *m_slideManager;
@@ -96,7 +96,7 @@ void TestSlide::init()
     QVERIFY(compositorSpy.wait());
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
 
-    m_slideManagerInterface = new SlideManagerInterface(m_display, m_display);
+    m_slideManagerInterface = std::make_unique<SlideManagerInterface>(m_display);
 
     QVERIFY(slideSpy.wait());
     m_slideManager = registry.createSlideManager(slideSpy.first().first().value<quint32>(), slideSpy.first().last().value<quint32>(), this);
@@ -126,7 +126,7 @@ void TestSlide::cleanup()
 #undef CLEANUP
     // these are the children of the display
     m_compositorInterface = nullptr;
-    m_slideManagerInterface = nullptr;
+    m_slideManagerInterface.reset();
 }
 
 void TestSlide::testCreate()

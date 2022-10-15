@@ -27,8 +27,8 @@ Q_DECLARE_METATYPE(KWindowEffects::SlideFromLocation)
 namespace KWin
 {
 
-KWaylandServer::SlideManagerInterface *SlidingPopupsEffect::s_slideManager = nullptr;
-QTimer *SlidingPopupsEffect::s_slideManagerRemoveTimer = nullptr;
+std::unique_ptr<KWaylandServer::SlideManagerInterface> SlidingPopupsEffect::s_slideManager;
+std::unique_ptr<QTimer> SlidingPopupsEffect::s_slideManagerRemoveTimer;
 
 SlidingPopupsEffect::SlidingPopupsEffect()
 {
@@ -37,16 +37,15 @@ SlidingPopupsEffect::SlidingPopupsEffect()
     KWaylandServer::Display *display = effects->waylandDisplay();
     if (display) {
         if (!s_slideManagerRemoveTimer) {
-            s_slideManagerRemoveTimer = new QTimer(QCoreApplication::instance());
+            s_slideManagerRemoveTimer = std::make_unique<QTimer>();
             s_slideManagerRemoveTimer->setSingleShot(true);
             s_slideManagerRemoveTimer->callOnTimeout([]() {
-                s_slideManager->remove();
-                s_slideManager = nullptr;
+                s_slideManager.reset();
             });
         }
         s_slideManagerRemoveTimer->stop();
         if (!s_slideManager) {
-            s_slideManager = new KWaylandServer::SlideManagerInterface(display, s_slideManagerRemoveTimer);
+            s_slideManager = std::make_unique<KWaylandServer::SlideManagerInterface>(display);
         }
     }
 

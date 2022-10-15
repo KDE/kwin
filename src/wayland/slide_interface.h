@@ -23,13 +23,11 @@ class KWIN_EXPORT SlideManagerInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit SlideManagerInterface(Display *display, QObject *parent = nullptr);
+    explicit SlideManagerInterface(Display *display);
     ~SlideManagerInterface() override;
 
-    void remove();
-
 private:
-    std::unique_ptr<SlideManagerInterfacePrivate> d;
+    SlideManagerInterfacePrivate *d;
 };
 
 class KWIN_EXPORT SlideInterface : public QObject
