@@ -117,6 +117,7 @@ private:
 
     bool touchEventTriggered() const;
     void resetPendingPreedit();
+    void refreshActive();
 
     struct
     {

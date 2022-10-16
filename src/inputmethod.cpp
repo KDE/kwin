@@ -162,6 +162,23 @@ bool InputMethod::shouldShowOnActive() const
         || input()->tablet() == input()->lastInputHandler();
 }
 
+void InputMethod::refreshActive()
+{
+    auto seat = waylandServer()->seat();
+    auto t2 = seat->textInputV2();
+    auto t3 = seat->textInputV3();
+
+    bool active = false;
+    if (auto focusedSurface = seat->focusedTextInputSurface()) {
+        auto client = focusedSurface->client();
+        if ((t2->clientSupportsTextInput(client) && t2->isEnabled()) || (t3->clientSupportsTextInput(client) && t3->isEnabled())) {
+            active = true;
+        }
+    }
+
+    setActive(active);
+}
+
 void InputMethod::setActive(bool active)
 {
     const bool wasActive = waylandServer()->inputMethod()->context();
@@ -246,9 +263,6 @@ void InputMethod::handleFocusedSurfaceChanged()
     SurfaceInterface *focusedSurface = seat->focusedTextInputSurface();
 
     setTrackedWindow(waylandServer()->findWindow(focusedSurface));
-    if (!focusedSurface) {
-        setActive(false);
-    }
 
     const auto client = focusedSurface ? focusedSurface->client() : nullptr;
     bool ret = seat->textInputV2()->clientSupportsTextInput(client)
@@ -330,8 +344,7 @@ void InputMethod::textInputInterfaceV2EnabledChanged()
         return;
     }
 
-    auto t = waylandServer()->seat()->textInputV2();
-    setActive(t->isEnabled());
+    refreshActive();
 }
 
 void InputMethod::textInputInterfaceV3EnabledChanged()
@@ -341,7 +354,7 @@ void InputMethod::textInputInterfaceV3EnabledChanged()
     }
 
     auto t3 = waylandServer()->seat()->textInputV3();
-    setActive(t3->isEnabled());
+    refreshActive();
     if (!t3->isEnabled()) {
         // reset value of preedit when textinput is disabled
         resetPendingPreedit();
@@ -366,7 +379,6 @@ void InputMethod::stateCommitted(uint32_t serial)
     if (auto inputContext = waylandServer()->inputMethod()->context()) {
         inputContext->sendCommitState(serial);
     }
-    setActive(textInputV3->isEnabled());
 }
 
 void InputMethod::setEnabled(bool enabled)

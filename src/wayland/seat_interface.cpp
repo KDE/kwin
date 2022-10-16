@@ -1242,7 +1242,6 @@ void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
         d->textInputV3->d->sendLeave(d->focusedTextInputSurface);
     }
     d->focusedTextInputSurface = surface;
-    Q_EMIT focusedTextInputSurfaceChanged();
 
     if (surface) {
         d->focusedSurfaceDestroyConnection = connect(surface, &SurfaceInterface::aboutToBeDestroyed, this, [this] {
@@ -1251,6 +1250,8 @@ void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
         d->textInputV2->d->sendEnter(surface, serial);
         d->textInputV3->d->sendEnter(surface);
     }
+
+    Q_EMIT focusedTextInputSurfaceChanged();
 }
 
 SurfaceInterface *SeatInterface::focusedTextInputSurface() const
