@@ -133,10 +133,7 @@ bool DrmConnector::init()
 
 bool DrmConnector::isConnected() const
 {
-    if (!m_conn) {
-        return false;
-    }
-    return m_conn->connection == DRM_MODE_CONNECTED;
+    return !m_driverModes.empty() && m_conn && m_conn->connection == DRM_MODE_CONNECTED;
 }
 
 static QHash<int, QByteArray> s_connectorNames = {
@@ -293,7 +290,7 @@ bool DrmConnector::updateProperties()
         if (!m_edid.isValid()) {
             qCWarning(KWIN_DRM) << "Couldn't parse EDID for connector" << this;
         }
-    } else if (isConnected()) {
+    } else if (m_conn->connection == DRM_MODE_CONNECTED) {
         qCDebug(KWIN_DRM) << "Could not find edid for connector" << this;
     }
 
@@ -309,31 +306,27 @@ bool DrmConnector::updateProperties()
     for (int i = 0; equal && i < m_conn->count_modes; i++) {
         equal &= checkIfEqual(m_driverModes[i]->nativeMode(), &m_conn->modes[i]);
     }
-    if (!equal && (m_driverModes.empty() || m_conn->count_modes > 0)) {
+    if (!equal && m_conn->count_modes > 0) {
         // reload modes
         m_driverModes.clear();
         for (int i = 0; i < m_conn->count_modes; i++) {
             m_driverModes.append(std::make_shared<DrmConnectorMode>(this, m_conn->modes[i]));
         }
-        if (m_driverModes.isEmpty()) {
-            return false;
-        } else {
-            m_modes.clear();
-            m_modes.append(m_driverModes);
-            m_modes.append(generateCommonModes());
-            if (m_pipeline->mode()) {
-                if (const auto mode = findMode(*m_pipeline->mode()->nativeMode())) {
-                    m_pipeline->setMode(mode);
-                } else {
-                    m_pipeline->setMode(m_modes.constFirst());
-                }
+        m_modes.clear();
+        m_modes.append(m_driverModes);
+        m_modes.append(generateCommonModes());
+        if (m_pipeline->mode()) {
+            if (const auto mode = findMode(*m_pipeline->mode()->nativeMode())) {
+                m_pipeline->setMode(mode);
             } else {
                 m_pipeline->setMode(m_modes.constFirst());
             }
-            m_pipeline->applyPendingChanges();
-            if (m_pipeline->output()) {
-                m_pipeline->output()->updateModes();
-            }
+        } else {
+            m_pipeline->setMode(m_modes.constFirst());
+        }
+        m_pipeline->applyPendingChanges();
+        if (m_pipeline->output()) {
+            m_pipeline->output()->updateModes();
         }
     }
 
