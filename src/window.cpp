@@ -1892,7 +1892,7 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
                 nextMoveResizeGeom = QRectF(QPointF(topleft.x(), orig.y()), QPointF(orig.right(), bottomright.y()));
                 break;
             case Gravity::TopRight:
-                nextMoveResizeGeom = QRect(QPoint(orig.x(), topleft.y()), QPoint(bottomright.x(), orig.bottom()));
+                nextMoveResizeGeom = QRectF(QPointF(orig.x(), topleft.y()), QPointF(bottomright.x(), orig.bottom()));
                 break;
             case Gravity::Top:
                 nextMoveResizeGeom = QRectF(QPointF(orig.left(), topleft.y()), orig.bottomRight());
