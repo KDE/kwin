@@ -8,6 +8,7 @@
 #pragma once
 
 #include "pointerconstraints_v1_interface.h"
+#include <QPointer>
 
 #include "qwayland-server-pointer-constraints-unstable-v1.h"
 
@@ -39,11 +40,12 @@ class LockedPointerV1InterfacePrivate : public QtWaylandServer::zwp_locked_point
 public:
     static LockedPointerV1InterfacePrivate *get(LockedPointerV1Interface *pointer);
 
-    LockedPointerV1InterfacePrivate(LockedPointerV1Interface *q, LockedPointerV1Interface::LifeTime lifeTime, const QRegion &region, ::wl_resource *resource);
+    LockedPointerV1InterfacePrivate(LockedPointerV1Interface *q, SurfaceInterface *surface, LockedPointerV1Interface::LifeTime lifeTime, const QRegion &region, ::wl_resource *resource);
 
     void commit();
 
     LockedPointerV1Interface *q;
+    QPointer<SurfaceInterface> surface;
     LockedPointerV1Interface::LifeTime lifeTime;
     QRegion region;
     QRegion pendingRegion;
@@ -65,7 +67,7 @@ class ConfinedPointerV1InterfacePrivate : public QtWaylandServer::zwp_confined_p
 public:
     static ConfinedPointerV1InterfacePrivate *get(ConfinedPointerV1Interface *pointer);
 
-    ConfinedPointerV1InterfacePrivate(ConfinedPointerV1Interface *q,
+    ConfinedPointerV1InterfacePrivate(ConfinedPointerV1Interface *q, SurfaceInterface *surface,
                                       ConfinedPointerV1Interface::LifeTime lifeTime,
                                       const QRegion &region,
                                       ::wl_resource *resource);
@@ -73,6 +75,7 @@ public:
     void commit();
 
     ConfinedPointerV1Interface *q;
+    QPointer<SurfaceInterface> surface;
     ConfinedPointerV1Interface::LifeTime lifeTime;
     QRegion region;
     QRegion pendingRegion;
