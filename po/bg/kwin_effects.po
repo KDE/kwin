@@ -1113,9 +1113,3 @@ msgstr "Изключено"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Следене на мишката:"
-
-#~ msgid "Slide docks"
-#~ msgstr "Плъзгащи докове"
-
-#~ msgid "Search..."
-#~ msgstr "Търсене..."

@@ -1242,13 +1242,15 @@ msgstr ""
 #: main_wayland.cpp:323
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
-msgstr "La pantalla X11 a utilitzar en mode de finestra en la plataforma X11."
+msgstr ""
+"La pantalla X11 que s'utilitzarà en mode de finestra en la plataforma X11."
 
 #: main_wayland.cpp:326
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
-"La pantalla Wayland a utilitzar en mode de finestra en la plataforma Wayland."
+"La pantalla Wayland que s'utilitzarà en mode de finestra en la plataforma "
+"Wayland."
 
 #: main_wayland.cpp:328
 #, kde-format
@@ -1275,8 +1277,8 @@ msgstr "L'escala per al mode de finestra. El valor predeterminat és 1."
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
-"El nombre de finestres a obrir com a eixida en el mode de finestra. El valor "
-"predeterminat és 1"
+"El nombre de finestres que s'obriran com a eixida en el mode de finestra. El "
+"valor predeterminat és 1"
 
 #: main_wayland.cpp:349
 #, kde-format
@@ -1293,8 +1295,8 @@ msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
-"Sòcol XWayland a utilitzar per a les connexions entrants de XWayland. Açò es "
-"pot definir diverses vegades"
+"Sòcol XWayland que s'utilitzarà per a les connexions entrants de XWayland. "
+"Açò es pot definir diverses vegades"
 
 #: main_wayland.cpp:357
 #, kde-format
@@ -1353,8 +1355,8 @@ msgstr ""
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
-"Les aplicacions a iniciar una vegada s'han iniciat Wayland i el servidor "
-"XWayland"
+"Les aplicacions que s'han d'iniciar una vegada s'ha iniciat Wayland i el "
+"servidor XWayland"
 
 #: main_x11.cpp:63
 #, kde-format
@@ -1365,7 +1367,7 @@ msgid ""
 msgstr ""
 "KWin no està estabilitzat.\n"
 "Pareix que ha fallat diverses vegades seguides.\n"
-"Podeu seleccionar un altre gestor de finestres a executar:"
+"Podeu seleccionar un altre gestor de finestres que s'haja d'executar:"
 
 #: main_x11.cpp:216
 #, kde-format

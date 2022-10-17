@@ -244,7 +244,7 @@ msgstr ""
 #: package/contents/ui/main.qml:68
 #, kde-format
 msgid "Select the rules to export"
-msgstr "Seleccioneu les regles que s'exportaran"
+msgstr "Seleccioneu les regles que s'han d'exportar"
 
 #: package/contents/ui/main.qml:72
 #, kde-format
