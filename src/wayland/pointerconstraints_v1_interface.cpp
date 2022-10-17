@@ -16,6 +16,15 @@ namespace KWaylandServer
 {
 static const int s_version = 1;
 
+static QRegion mapScaleOverride(const QRegion &region, qreal scaleOverride)
+{
+    QRegion out;
+    for (const QRect &rect : region) {
+        out += QRect(rect.topLeft() / scaleOverride, rect.size() / scaleOverride);
+    }
+    return out;
+}
+
 PointerConstraintsV1InterfacePrivate::PointerConstraintsV1InterfacePrivate(Display *display)
     : QtWaylandServer::zwp_pointer_constraints_v1(*display, s_version)
 {
@@ -138,13 +147,14 @@ LockedPointerV1InterfacePrivate::LockedPointerV1InterfacePrivate(LockedPointerV1
 
 void LockedPointerV1InterfacePrivate::commit()
 {
+    qreal scaleOverride = surface->scaleOverride();
     if (hasPendingRegion) {
-        region = pendingRegion;
+        region = mapScaleOverride(pendingRegion, scaleOverride);
         hasPendingRegion = false;
         Q_EMIT q->regionChanged();
     }
     if (hasPendingHint) {
-        hint = pendingHint;
+        hint = pendingHint / scaleOverride;
         hasPendingHint = false;
         Q_EMIT q->cursorPositionHintChanged();
     }
@@ -243,8 +253,9 @@ ConfinedPointerV1InterfacePrivate::ConfinedPointerV1InterfacePrivate(ConfinedPoi
 
 void ConfinedPointerV1InterfacePrivate::commit()
 {
+    qreal scaleOverride = surface->scaleOverride();
     if (hasPendingRegion) {
-        region = pendingRegion;
+        region = mapScaleOverride(pendingRegion, scaleOverride);
         hasPendingRegion = false;
         Q_EMIT q->regionChanged();
     }
