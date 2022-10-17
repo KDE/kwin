@@ -1390,7 +1390,8 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
 Output *Workspace::outputAt(const QPointF &pos) const
 {
     Output *bestOutput = nullptr;
-    int minDistance = INT_MAX;
+    qreal minDistance;
+
     for (Output *output : std::as_const(m_outputs)) {
         const QRect &geo = output->geometry();
         if (geo.contains(pos.toPoint())) {
@@ -1400,7 +1401,7 @@ Output *Workspace::outputAt(const QPointF &pos) const
         distance = std::min(distance, QPointF(geo.topRight() - pos).manhattanLength());
         distance = std::min(distance, QPointF(geo.bottomRight() - pos).manhattanLength());
         distance = std::min(distance, QPointF(geo.bottomLeft() - pos).manhattanLength());
-        if (distance < minDistance) {
+        if (!bestOutput || distance < minDistance) {
             minDistance = distance;
             bestOutput = output;
         }
