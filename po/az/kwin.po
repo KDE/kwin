@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-14 00:48+0000\n"
-"PO-Revision-Date: 2022-07-19 10:53+0400\n"
+"POT-Creation-Date: 2022-10-18 00:46+0000\n"
+"PO-Revision-Date: 2022-10-17 23:50+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
 "Language: az\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.04.3\n"
+"X-Generator: Lokalize 22.08.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1542,7 +1542,7 @@ msgstr "Gecə Rəngini aktivləşdirmək/söndürmək"
 #: plugins/nightcolor/nightcolormanager.cpp:493
 #, kde-format
 msgid "Color Temperature Preview"
-msgstr ""
+msgstr "Rəng temperaturuna nəzər salın"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -2394,10 +2394,9 @@ msgid "Make Window Fullscreen"
 msgstr "Pəncərəni Tam Ekran Açmaq"
 
 #: useractions.cpp:1010
-#, fuzzy, kde-format
-#| msgid "Hide Window Border"
+#, kde-format
 msgid "Toggle Window Border"
-msgstr "Pəncərə Çərçivəsini Gizlətmək"
+msgstr "Pəncərə çərçivəsini aktiv edin və ya söndürün"
 
 #: useractions.cpp:1012
 #, kde-format
@@ -2686,7 +2685,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Cavab Yoxdur)"
 
-#: workspace.cpp:1677
+#: workspace.cpp:1678
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

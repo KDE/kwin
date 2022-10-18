@@ -1,26 +1,26 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# Xəyyam Qocayev <xxmn77@gmail.com>, 2020.
+# Xəyyam Qocayev <xxmn77@gmail.com>, 2020, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-09-20 00:47+0000\n"
-"PO-Revision-Date: 2020-09-03 00:05+0400\n"
-"Last-Translator: Kheyyam Gojayev <xxmn77@gmail.com>\n"
+"PO-Revision-Date: 2022-10-18 00:04+0400\n"
+"Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
 "Language: az\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 20.08.0\n"
+"X-Generator: Lokalize 22.08.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Xəyyam"
+msgstr "Xəyyam Qocayev"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
@@ -62,7 +62,7 @@ msgstr "Bu KWin Script'in silinməsi zamanı xəta: %1"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete..."
-msgstr ""
+msgstr "Silin..."
 
 #: package/contents/ui/main.qml:60
 #, kde-format
