@@ -16,6 +16,9 @@
 
 #include "krunner1adaptor.h"
 #include <KLocalizedString>
+#include <qchar.h>
+#include <qstringliteral.h>
+#include <xcb/xproto.h>
 
 namespace KWin
 {
@@ -43,6 +46,8 @@ RemoteActions WindowsRunner::Actions()
 RemoteMatches WindowsRunner::Match(const QString &searchTerm)
 {
     RemoteMatches matches;
+
+    const VirtualDesktopManager *vds = VirtualDesktopManager::self();
 
     auto term = searchTerm;
     WindowsRunnerAction action = ActivateAction;
@@ -79,15 +84,14 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
     } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "pin"), Qt::CaseInsensitive)) {
         action = PinAction;
         term = term.left(term.lastIndexOf(i18nc("Note this is a KRunner keyword", "pin")) - 1);
-    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "close all"), Qt::CaseInsensitive)) {
-        matches << workspaceMatch(CloseAllAction);
-    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "move all"), Qt::CaseInsensitive)) {
-        matches << workspaceMatch(MoveAllAction);
+    } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "desktop"), Qt::CaseInsensitive)) {
+        action = MoveAction;
+        term = term.left(term.lastIndexOf(i18nc("Note this is a KRunner keyword", "desktop")) - 1);
     }
 
     // keyword match: when term starts with "window" we list all windows
     // the list can be restricted to windows matching a given name, class, role or desktop
-    if (term.startsWith(i18nc("Note this is a KRunner keyword", "window"), Qt::CaseInsensitive)) {
+    if (term.startsWith(i18nc("Note this is a KRunner keyword", "window"), Qt::CaseInsensitive) && !term.startsWith(i18nc("Note this is a KRunner keyword", "windows"), Qt::CaseInsensitive)) {
         const QStringList keywords = term.split(QLatin1Char(' '));
         QString windowName;
         QString windowAppName;
@@ -103,7 +107,7 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
                 windowAppName = keyword.split(QStringLiteral("="))[1];
             } else if (keyword.startsWith(i18nc("Note this is a KRunner keyword", "desktop") + QStringLiteral("="), Qt::CaseInsensitive)) {
                 desktopId = keyword.split(QStringLiteral("="))[1];
-                for (const auto desktop : VirtualDesktopManager::self()->desktops()) {
+                for (const auto desktop : vds->desktops()) {
                     if (desktop->name().contains(desktopId.toString(), Qt::CaseInsensitive) || desktop->x11DesktopNumber() == desktopId.toUInt()) {
                         targetDesktop = desktop;
                     }
@@ -145,7 +149,16 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
             }
             // blacklisted everything else: we have a match
             if (actionSupported(window, action)) {
-                matches << windowsMatch(window, action);
+                if (action != MoveAction) {
+                    matches << windowsMatch(window, action);
+                } else {
+                    for (auto *desktop : vds->desktops()) {
+                        if (!window->isOnDesktop(desktop)) {
+                            matches << workspaceMatch(window, desktop, MoveAction);
+                        }
+                    }
+                    matches << workspaceMatch(window, nullptr, MoveAction);
+                }
             }
         }
 
@@ -161,7 +174,7 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
         const QStringList parts = term.split(QLatin1Char(' '));
         if (parts.size() == 1) {
             // only keyword - list all desktops
-            for (auto desktop : VirtualDesktopManager::self()->desktops()) {
+            for (auto desktop : vds->desktops()) {
                 matches << desktopMatch(desktop);
                 desktopAdded = true;
             }
@@ -184,10 +197,11 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
         }
     }
 
-    for (auto *desktop : VirtualDesktopManager::self()->desktops()) {
+    for (auto *desktop : vds->desktops()) {
         if (desktop->name().contains(term, Qt::CaseInsensitive)) {
-            if (!desktopAdded && desktop != VirtualDesktopManager::self()->currentDesktop()) {
+            if (!desktopAdded && desktop != vds->currentDesktop()) {
                 matches << desktopMatch(desktop, ActivateDesktopAction, 0.8);
+                matches << desktopMatch(desktop, MoveAllAction, 0.5, Plasma::QueryMatch::PossibleMatch);
             }
             // search for windows on desktop and list them with less relevance
             for (const Window *window : Workspace::self()->allClientList()) {
@@ -201,25 +215,37 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
         }
     }
 
+    // add move all and close all actions
+    if (term.startsWith(i18nc("Note this is a KRunner keyword", "windows"))) {
+        if (term.endsWith(i18nc("Note this is a KRunner keyword", "desktop"), Qt::CaseInsensitive)) {
+            for (auto *desktop : vds->desktops()) {
+                if (desktop != vds->currentDesktop()) {
+                    matches << workspaceMatch(nullptr, desktop, MoveAllAction);
+                }
+            }
+            matches << workspaceMatch(nullptr, nullptr, MoveAllAction);
+        } else if (term.endsWith(i18nc("Note this is a KRunner keyword", "close"), Qt::CaseInsensitive)) {
+            matches << workspaceMatch(nullptr, nullptr, CloseAllAction);
+        }
+    }
+
     return matches;
 }
 
 void WindowsRunner::Run(const QString &id, const QString &actionId)
 {
+    Q_UNUSED(actionId)
+    VirtualDesktopManager *vds = VirtualDesktopManager::self();
+
     // Split id to get actionId and realId. We don't use actionId because our actions list is not constant
     const QStringList parts = id.split(QLatin1Char('_'));
     auto action = WindowsRunnerAction(parts[0].toInt());
-    auto objectId = parts[1];
-
-    if (action == ActivateDesktopAction) {
-        QByteArray desktopId = objectId.toLocal8Bit();
-        auto desktop = VirtualDesktopManager::self()->desktopForId(desktopId);
-        VirtualDesktopManager::self()->setCurrent(desktop);
+    const auto window = workspace()->findToplevel(QUuid::fromString(parts[1]));
+    if (!parts[1].isEmpty() && (!window || !window->isClient())) {
         return;
     }
-
-    const auto window = workspace()->findToplevel(QUuid::fromString(objectId));
-    if (!window || !window->isClient()) {
+    const auto desktop = vds->desktopForId(parts[2]);
+    if (!parts[2].isEmpty() && !desktop) {
         return;
     }
 
@@ -251,43 +277,60 @@ void WindowsRunner::Run(const QString &id, const QString &actionId)
     case PinAction:
         window->setOnAllDesktops(!window->isOnAllDesktops());
         break;
-    case CloseAllAction: {
-        for (Window *w : Workspace::self()->allClientList()) {
-            if (w->isOnCurrentDesktop() && w->isCloseable()) {
+    case ActivateDesktopAction:
+        vds->setCurrent(desktop);
+        break;
+    case MoveAction: {
+        const auto targetDesktop = desktop ? desktop : vds->createVirtualDesktop(vds->count());
+        window->setDesktops({targetDesktop});
+        break;
+    }
+    case MoveAllAction: {
+        const auto targetDesktop = desktop ? desktop : vds->createVirtualDesktop(vds->count());
+        for (Window *w : workspace()->allClientList()) {
+            if (w->isOnCurrentDesktop() && actionSupported(w, MoveAction)) {
+                window->setDesktops({targetDesktop});
+            }
+        }
+    }
+    case CloseAllAction:
+        for (Window *w : workspace()->allClientList()) {
+            if (w->isOnCurrentDesktop() && actionSupported(w, CloseAction)) {
                 w->closeWindow();
             }
         }
         break;
     }
-    case MoveAllAction: {
-        VirtualDesktopManager *vds = VirtualDesktopManager::self();
-        VirtualDesktop *newDesktop = vds->createVirtualDesktop(vds->count());
-        if (newDesktop) {
-            for (Window *w : Workspace::self()->allClientList()) {
-                if (w->isOnCurrentDesktop() && !w->isSpecialWindow()) {
-                    workspace()->sendWindowToDesktop(w, newDesktop->x11DesktopNumber(), true);
-                }
-            }
-        }
-        break;
-    }
-    case ActivateDesktopAction:
-        Q_UNREACHABLE();
-    }
 }
 
-RemoteMatch WindowsRunner::desktopMatch(const VirtualDesktop *desktop, const WindowsRunnerAction action, qreal relevance) const
+RemoteMatch WindowsRunner::desktopMatch(const VirtualDesktop *desktop, const WindowsRunnerAction action, qreal relevance, Plasma::QueryMatch::Type type) const
 {
     RemoteMatch match;
-    match.id = QString::number(action) + QLatin1Char('_') + desktop->id();
+    match.id = QString::number(action) + QLatin1Char('_') + QLatin1Char('_') + (desktop ? desktop->id() : "");
     match.type = Plasma::QueryMatch::ExactMatch;
     match.iconName = QStringLiteral("user-desktop");
-    match.text = desktop->name();
     match.relevance = relevance;
+    match.type = type;
 
     QVariantMap properties;
 
-    properties[QStringLiteral("subtext")] = i18n("Switch to desktop %1", desktop->name());
+    switch (action) {
+    case ActivateDesktopAction:
+        match.text = desktop->name();
+        properties[QStringLiteral("subtext")] = i18n("Switch to desktop %1", desktop->name());
+        break;
+    case MoveAllAction:
+        if (desktop) {
+            match.text = i18n("Move all to %1", desktop->name());
+            properties[QStringLiteral("subtext")] = i18n("Move all windows on current desktop to desktop %1", desktop->name());
+        } else {
+            match.text = i18n("Move all to new desktop");
+            properties[QStringLiteral("subtext")] = i18n("Move all windows on current desktop to new desktop");
+        }
+        break;
+    default:
+        break;
+    }
     match.properties = properties;
     return match;
 }
@@ -295,7 +338,7 @@ RemoteMatch WindowsRunner::desktopMatch(const VirtualDesktop *desktop, const Win
 RemoteMatch WindowsRunner::windowsMatch(const Window *window, const WindowsRunnerAction action, qreal relevance, Plasma::QueryMatch::Type type) const
 {
     RemoteMatch match;
-    match.id = QString::number((int)action) + QLatin1Char('_') + window->internalId().toString();
+    match.id = QString::number((int)action) + QLatin1Char('_') + window->internalId().toString() + QLatin1Char('_');
     match.text = window->caption();
     match.iconName = window->icon().name();
     match.relevance = relevance;
@@ -305,7 +348,8 @@ RemoteMatch WindowsRunner::windowsMatch(const Window *window, const WindowsRunne
     const QVector<VirtualDesktop *> desktops = window->desktops();
     bool allDesktops = window->isOnAllDesktops();
 
-    const VirtualDesktop *targetDesktop = VirtualDesktopManager::self()->currentDesktop();
+    const auto vds = VirtualDesktopManager::self();
+    const VirtualDesktop *targetDesktop = vds->currentDesktop();
     // Show on current desktop unless window is only attached to other desktop, in this case don't return the match
     if (!allDesktops && !window->isOnCurrentDesktop() && !desktops.isEmpty()) {
         targetDesktop = desktops.first();
@@ -360,24 +404,38 @@ RemoteMatch WindowsRunner::windowsMatch(const Window *window, const WindowsRunne
     return match;
 }
 
-RemoteMatch WindowsRunner::workspaceMatch(const WindowsRunnerAction action, qreal relevance, Plasma::QueryMatch::Type type) const
+RemoteMatch WindowsRunner::workspaceMatch(const Window *window, const VirtualDesktop *desktop, const WindowsRunnerAction action, const qreal relevance, Plasma::QueryMatch::Type type) const
 {
     RemoteMatch match;
     match.type = type;
-    match.id = QString::number((int)action) + QLatin1Char('_') + workspace()->activeWindow()->internalId().toString();
+    match.id = QString::number((int)action) + QLatin1Char('_') + (window ? window->internalId().toString() : "") + QLatin1Char('_') + (desktop ? desktop->id() : "");
     match.relevance = relevance;
-    match.iconName = QStringLiteral("preferences-system-windows-move");
     QVariantMap properties;
 
+    const VirtualDesktopManager *vds = VirtualDesktopManager::self();
+    const QString currentDesktopName = window && window->isOnCurrentDesktop() && !window->isOnAllDesktops() && !window->desktops().isEmpty() ? window->desktops().first()->name() : vds->currentDesktop()->name();
+    const QString windowName = window ? window->caption() : i18n("All windows");
+    const QString desktopName = desktop ? desktop->name() : i18n("new desktop");
+
     switch (action) {
-    case CloseAllAction:
-        match.text = "Close all windows";
-        properties[QStringLiteral("subtext")] = i18n("Close all windows on current desktop");
+    case MoveAction: {
+        match.text = windowName + i18nc("to", "move window to desktop") + desktopName;
+        properties[QStringLiteral("subtext")] = i18n("Move running window on %1 to %2", currentDesktopName, desktopName);
+        match.iconName = window->icon().name();
         break;
-    case MoveAllAction:
-        match.text = "Move all windows";
-        properties[QStringLiteral("subtext")] = i18n("Move all windows on current desktop to new desktop");
+    }
+    case MoveAllAction: {
+        match.text = windowName + i18nc("to", "move window to desktop") + desktopName;
+        properties[QStringLiteral("subtext")] = i18n("Move all running windows on %1 to %2", currentDesktopName, desktopName);
+        match.iconName = QStringLiteral("preferences-system-windows-actions");
         break;
+    }
+    case CloseAllAction: {
+        match.text = windowName;
+        properties[QStringLiteral("subtext")] = i18n("Close all running windows on %1", currentDesktopName);
+        match.iconName = QStringLiteral("preferences-system-windows-actions");
+        break;
+    }
     default:
         break;
     }
@@ -400,6 +458,7 @@ bool WindowsRunner::actionSupported(const Window *window, const WindowsRunnerAct
     case FullscreenAction:
         return window->isFullScreenable();
     case PinAction:
+    case MoveAction:
         return !window->isSpecialWindow();
     case KeepAboveAction:
     case KeepBelowAction:
