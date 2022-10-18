@@ -3825,17 +3825,23 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
     setTile(nullptr);
 
     if (mode == QuickTileMode(QuickTileFlag::Maximize)) {
+        // Toggle
         if (requestedMaximizeMode() == MaximizeFull) {
             setTile(nullptr);
             setMaximize(false, false);
+            doSetQuickTileMode();
+            Q_EMIT quickTileModeChanged();
         } else {
             QRectF effectiveGeometryRestore = quickTileGeometryRestore();
             setTile(TileManager::instance(output())->quickTile(QuickTileMode(MaximizeFull)));
             setMaximize(true, true);
             setGeometryRestore(effectiveGeometryRestore);
+            doSetQuickTileMode();
         }
-        doSetQuickTileMode();
-        Q_EMIT quickTileModeChanged();
+        // doSetQuickTileMode();
+        if (oldMode != mode) {
+            //  Q_EMIT quickTileModeChanged();
+        }
         return;
     }
 
@@ -3858,6 +3864,8 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
             setMaximize(false, false);
         }
 
+        Tile *tile = TileManager::instance(output())->quickTile(mode);
+        setTile(tile);
         doSetQuickTileMode();
         Q_EMIT quickTileModeChanged();
 
@@ -3936,6 +3944,7 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
     }
 
     doSetQuickTileMode();
+
     Q_EMIT quickTileModeChanged();
 }
 
@@ -3944,7 +3953,15 @@ QuickTileMode Window::quickTileMode() const
     if (m_tile) {
         return m_tile->quickTileMode();
     } else {
-        return QuickTileFlag::None;
+        switch (maximizeMode()) {
+        case MaximizeVertical:
+            return QuickTileFlag::Vertical;
+        case MaximizeHorizontal:
+            return QuickTileFlag::Horizontal;
+        // MaximizeFull already managed by a m_tile
+        default:
+            return QuickTileFlag::None;
+        }
     }
 }
 
