@@ -620,8 +620,8 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region, Wi
             for (QRect r : shape) {
                 r.moveTo(pt.x() + (r.x() - pt.x()) * data.xScale() + data.xTranslation(),
                          pt.y() + (r.y() - pt.y()) * data.yScale() + data.yTranslation());
-                r.setWidth(r.width() * data.xScale());
-                r.setHeight(r.height() * data.yScale());
+                r.setWidth(std::ceil(r.width() * data.xScale()));
+                r.setHeight(std::ceil(r.height() * data.yScale()));
                 scaledShape |= r;
             }
             shape = scaledShape;
