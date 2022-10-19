@@ -1104,7 +1104,7 @@ void Workspace::initShortcuts()
                  Qt::META | Qt::Key_D, &Workspace::slotToggleShowDesktop);
 
     for (int i = 0; i < 8; ++i) {
-        initShortcut(QStringLiteral("Window to Screen %1").arg(i), i18n("Switch to Screen %1", i), 0, [this, i]() {
+        initShortcut(QStringLiteral("Switch to Screen %1").arg(i), i18n("Switch to Screen %1", i), 0, [this, i]() {
             Output *output = outputs().value(i);
             if (output) {
                 slotSwitchToScreen(output);
