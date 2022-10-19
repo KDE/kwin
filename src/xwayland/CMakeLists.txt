@@ -16,4 +16,5 @@ add_library(KWinXwaylandServerModule OBJECT
     xwldrophandler.cpp
     xwaylandlauncher.cpp
 )
+set_property(TARGET KWinXwaylandServerModule PROPERTY POSITION_INDEPENDENT_CODE ON)
 target_link_libraries(KWinXwaylandServerModule PUBLIC kwin KWinXwaylandCommon)

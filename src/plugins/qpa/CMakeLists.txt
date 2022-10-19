@@ -1,4 +1,5 @@
 add_library(KWinQpaPlugin OBJECT)
+set_property(TARGET KWinQpaPlugin PROPERTY POSITION_INDEPENDENT_CODE ON)
 target_sources(KWinQpaPlugin PRIVATE
     backingstore.cpp
     eglhelpers.cpp
