@@ -16,7 +16,6 @@
 #include "options.h"
 #include "pointer_input.h"
 #include "screenedge.h"
-#include "screens.h"
 #include "utils/xcursortheme.h"
 #include "virtualdesktops.h"
 #include "wayland/clientconnection.h"
@@ -56,7 +55,7 @@ static PlatformCursorImage loadReferenceThemeCursor(const QByteArray &name)
 {
     const Cursor *pointerCursor = Cursors::self()->mouse();
 
-    const KXcursorTheme theme(pointerCursor->themeName(), pointerCursor->themeSize(), workspace()->screens()->maxScale());
+    const KXcursorTheme theme(pointerCursor->themeName(), pointerCursor->themeSize(), kwinApp()->devicePixelRatio());
     if (theme.isEmpty()) {
         return PlatformCursorImage();
     }

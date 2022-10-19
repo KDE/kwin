@@ -7,7 +7,6 @@
 */
 
 #include "waylandwindow.h"
-#include "screens.h"
 #include "wayland/clientbuffer.h"
 #include "wayland/clientconnection.h"
 #include "wayland/display.h"
@@ -46,7 +45,7 @@ WaylandWindow::WaylandWindow(SurfaceInterface *surface)
             this, &WaylandWindow::updateClientOutputs);
     connect(this, &WaylandWindow::desktopFileNameChanged,
             this, &WaylandWindow::updateIcon);
-    connect(workspace()->screens(), &Screens::changed, this, &WaylandWindow::updateClientOutputs);
+    connect(workspace(), &Workspace::outputsChanged, this, &WaylandWindow::updateClientOutputs);
     connect(surface->client(), &ClientConnection::aboutToBeDestroyed,
             this, &WaylandWindow::destroyWindow);
 

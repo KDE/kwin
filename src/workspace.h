@@ -71,7 +71,6 @@ enum class Predicate;
 class Outline;
 class RuleBook;
 class ScreenEdges;
-class Screens;
 #if KWIN_BUILD_ACTIVITIES
 class Activities;
 #endif
@@ -456,7 +455,6 @@ public:
     Placement *placement() const;
     RuleBook *rulebook() const;
     ScreenEdges *screenEdges() const;
-    Screens *screens() const;
 #if KWIN_BUILD_TABBOX
     TabBox::TabBox *tabbox() const;
 #endif
@@ -749,7 +747,6 @@ private:
     std::unique_ptr<Placement> m_placement;
     std::unique_ptr<RuleBook> m_rulebook;
     std::unique_ptr<ScreenEdges> m_screenEdges;
-    std::unique_ptr<Screens> m_screens;
 #if KWIN_BUILD_TABBOX
     std::unique_ptr<TabBox::TabBox> m_tabbox;
 #endif

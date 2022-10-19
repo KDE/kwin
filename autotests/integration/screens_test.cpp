@@ -11,7 +11,6 @@
 #include "core/output.h"
 #include "core/platform.h"
 #include "cursor.h"
-#include "screens.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -127,8 +126,6 @@ void ScreensTest::testCurrentWithFollowsMouse_data()
 
 void ScreensTest::testCurrentWithFollowsMouse()
 {
-    QSignalSpy changedSpy(workspace()->screens(), &Screens::changed);
-
     // Enable "active screen follows mouse"
     auto group = kwinApp()->config()->group("Windows");
     group.writeEntry("ActiveMouseScreen", true);
@@ -136,9 +133,8 @@ void ScreensTest::testCurrentWithFollowsMouse()
     workspace()->slotReconfigure();
 
     QFETCH(QVector<QRect>, geometries);
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::QueuedConnection,
+    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection,
                               Q_ARG(int, geometries.count()), Q_ARG(QVector<QRect>, geometries));
-    QVERIFY(changedSpy.wait());
 
     QFETCH(QPoint, cursorPos);
     KWin::Cursors::self()->mouse()->setPos(cursorPos);
@@ -163,12 +159,9 @@ void ScreensTest::testCurrentPoint_data()
 
 void ScreensTest::testCurrentPoint()
 {
-    QSignalSpy changedSpy(workspace()->screens(), &KWin::Screens::changed);
-
     QFETCH(QVector<QRect>, geometries);
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::QueuedConnection,
+    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection,
                               Q_ARG(int, geometries.count()), Q_ARG(QVector<QRect>, geometries));
-    QVERIFY(changedSpy.wait());
 
     // Disable "active screen follows mouse"
     auto group = kwinApp()->config()->group("Windows");

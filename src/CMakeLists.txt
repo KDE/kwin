@@ -120,7 +120,6 @@ target_sources(kwin PRIVATE
     rules.cpp
     scene.cpp
     screenedge.cpp
-    screens.cpp
     scripting/dbuscall.cpp
     scripting/desktopbackgrounditem.cpp
     scripting/screenedgeitem.cpp
