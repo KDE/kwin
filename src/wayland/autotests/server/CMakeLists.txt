@@ -132,9 +132,14 @@ if (QT_MAJOR_VERSION EQUAL "5")
         BASENAME text-input-unstable-v1
     )
 else()
-    qt6_generate_wayland_protocol_client_sources(testInputMethodInterface FILES
-        ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
-        ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v1.xml
+    qt6_generate_wayland_protocol_client_sources(testInputMethodInterface
+        NO_INCLUDE_CORE_ONLY
+        FILES
+            ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
+    )
+    qt6_generate_wayland_protocol_client_sources(testInputMethodInterface
+        FILES
+            ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v1.xml
     )
 endif()
 target_sources(testInputMethodInterface PRIVATE test_inputmethod_interface.cpp ../../tests/fakeoutput.cpp ${INPUTMETHOD_SRCS})

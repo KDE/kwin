@@ -42,6 +42,9 @@ if (QT_MAJOR_VERSION EQUAL "5")
     find_package(Qt5XkbCommonSupport REQUIRED)
 else()
     find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS WaylandClient ShaderTools)
+    if (Qt6WaylandClient_VERSION VERSION_LESS "6.4.1") # TODO Plasma 6: Drop once minimum Qt version is 6.4.1+
+        include(Qt6WaylandClientMacrosKde)
+    endif()
 endif()
 
 find_package(Qt${QT_MAJOR_VERSION}Test ${QT_MIN_VERSION} CONFIG QUIET)
