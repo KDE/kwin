@@ -326,7 +326,7 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
     const QList<Item *> sortedChildItems = item->sortedChildItems();
 
     QMatrix4x4 matrix;
-    const auto logicalPosition = QVector2D(item->position().x(), item->position().y());
+    const auto logicalPosition = QVector3D(item->position().x(), item->position().y(), 0.0);
     const auto scale = context->renderTargetScale;
     matrix.translate(logicalPosition * scale);
     matrix *= item->transform();
