@@ -69,3 +69,24 @@ void FakeOutput::setPhysicalSize(QSize size)
         .physicalSize = size,
     });
 }
+
+void FakeOutput::setName(const QString &name)
+{
+    Information info = m_information;
+    info.name = name;
+    setInformation(info);
+}
+
+void FakeOutput::setManufacturer(const QString &manufacturer)
+{
+    Information info = m_information;
+    info.manufacturer = manufacturer;
+    setInformation(info);
+}
+
+void FakeOutput::setModel(const QString &model)
+{
+    Information info = m_information;
+    info.model = model;
+    setInformation(info);
+}

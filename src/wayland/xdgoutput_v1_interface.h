@@ -61,58 +61,9 @@ class KWIN_EXPORT XdgOutputV1Interface : public QObject
 public:
     ~XdgOutputV1Interface() override;
 
-    /**
-     * Sets the size of this output in logical co-ordinates.
-     * Users should call done() after setting all values
-     */
-    void setLogicalSize(const QSize &size);
-
-    /**
-     * Returns the last set logical size on this output
-     */
-    QSize logicalSize() const;
-
-    /**
-     * Sets the topleft position of this output in logical co-ordinates.
-     * Users should call done() after setting all values
-     * @see OutputInterface::setPosition
-     */
-    void setLogicalPosition(const QPoint &pos);
-
-    /**
-     * Returns the last set logical position on this output
-     */
-    QPoint logicalPosition() const;
-
-    /**
-     * @brief Sets a short name of the output
-     * This should be consistent across reboots for the same monitor
-     * It should be set once before the first done call
-     */
-    void setName(const QString &name);
-    /**
-     * The last set name
-     */
-    void name() const;
-
-    /**
-     * @brief Sets a longer description of the output
-     * This should be consistent across reboots for the same monitor
-     * It should be set once before the first done call
-     */
-    void setDescription(const QString &description);
-    /**
-     * The last set description
-     */
-    void description() const;
-
-    /**
-     * Submit changes to all clients
-     */
-    void done();
-
 private:
-    void sendRefresh();
+    void resend();
+    void update();
 
     explicit XdgOutputV1Interface(OutputInterface *output, QObject *parent);
     friend class XdgOutputV1InterfacePrivate;

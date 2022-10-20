@@ -10,9 +10,13 @@
 
 #include "qwayland-server-xdg-output-unstable-v1.h"
 
+#include "core/output.h"
+
 #include <QDebug>
 #include <QHash>
 #include <QPointer>
+
+using namespace KWin;
 
 namespace KWaylandServer
 {
@@ -44,14 +48,11 @@ public:
     QSize size;
     QString name;
     QString description;
-    bool dirty = false;
-    bool doneOnce = false;
     QPointer<OutputInterface> output;
     XdgOutputV1Interface *const q;
 
-    void sendLogicalPosition(Resource *resource, const QPoint &position);
-    void sendLogicalSize(Resource *resource, const QSize &size);
-
+    void sendLogicalPosition(Resource *resource);
+    void sendLogicalSize(Resource *resource);
     void sendDone(Resource *resource);
 
 protected:
@@ -116,76 +117,50 @@ XdgOutputV1Interface::XdgOutputV1Interface(OutputInterface *output, QObject *par
     : QObject(parent)
     , d(new XdgOutputV1InterfacePrivate(this, output))
 {
+    const Output *handle = output->handle();
+
+    d->name = handle->name();
+    d->description = handle->description();
+    d->pos = handle->geometry().topLeft();
+    d->size = handle->geometry().size();
+
+    connect(handle, &Output::geometryChanged, this, &XdgOutputV1Interface::update);
 }
 
 XdgOutputV1Interface::~XdgOutputV1Interface()
 {
 }
 
-void XdgOutputV1Interface::setLogicalSize(const QSize &size)
+void XdgOutputV1Interface::update()
 {
-    if (size == d->size) {
+    if (!d->output || d->output->isRemoved()) {
         return;
     }
-    d->size = size;
-    d->dirty = true;
 
-    const auto outputResources = d->resourceMap();
-    for (auto resource : outputResources) {
-        d->sendLogicalSize(resource, size);
+    const QRect geometry = d->output->handle()->geometry();
+    const auto resources = d->resourceMap();
+
+    if (d->pos != geometry.topLeft()) {
+        d->pos = geometry.topLeft();
+        for (auto resource : resources) {
+            d->sendLogicalPosition(resource);
+        }
     }
-}
 
-QSize XdgOutputV1Interface::logicalSize() const
-{
-    return d->size;
-}
-
-void XdgOutputV1Interface::setLogicalPosition(const QPoint &pos)
-{
-    if (pos == d->pos) {
-        return;
+    if (d->size != geometry.size()) {
+        d->size = geometry.size();
+        for (auto resource : resources) {
+            d->sendLogicalSize(resource);
+        }
     }
-    d->pos = pos;
-    d->dirty = true;
 
-    const auto outputResources = d->resourceMap();
-    for (auto resource : outputResources) {
-        d->sendLogicalPosition(resource, pos);
-    }
-}
-
-QPoint XdgOutputV1Interface::logicalPosition() const
-{
-    return d->pos;
-}
-
-void XdgOutputV1Interface::setName(const QString &name)
-{
-    d->name = name;
-    // this can only be set once before the client connects
-}
-
-void XdgOutputV1Interface::setDescription(const QString &description)
-{
-    d->description = description;
-    // this can only be set once before the client connects
-}
-
-void XdgOutputV1Interface::done()
-{
-    d->doneOnce = true;
-    if (!d->dirty) {
-        return;
-    }
-    d->dirty = false;
-
-    const auto outputResources = d->resourceMap();
-    for (auto resource : outputResources) {
+    for (auto resource : resources) {
         if (wl_resource_get_version(resource->handle) < 3) {
             d->send_done(resource->handle);
         }
     }
+
+    d->output->scheduleDone();
 }
 
 void XdgOutputV1InterfacePrivate::zxdg_output_v1_destroy(Resource *resource)
@@ -199,8 +174,8 @@ void XdgOutputV1InterfacePrivate::zxdg_output_v1_bind_resource(Resource *resourc
         return;
     }
 
-    sendLogicalPosition(resource, pos);
-    sendLogicalSize(resource, size);
+    sendLogicalPosition(resource);
+    sendLogicalSize(resource);
     if (resource->version() >= ZXDG_OUTPUT_V1_NAME_SINCE_VERSION) {
         send_name(resource->handle, name);
     }
@@ -211,25 +186,19 @@ void XdgOutputV1InterfacePrivate::zxdg_output_v1_bind_resource(Resource *resourc
     sendDone(resource);
 
     ClientConnection *connection = output->display()->getConnection(resource->client());
-    QObject::connect(connection, &ClientConnection::scaleOverrideChanged, q, &XdgOutputV1Interface::sendRefresh, Qt::UniqueConnection);
+    QObject::connect(connection, &ClientConnection::scaleOverrideChanged, q, &XdgOutputV1Interface::resend, Qt::UniqueConnection);
 }
 
-void XdgOutputV1InterfacePrivate::sendLogicalSize(Resource *resource, const QSize &size)
+void XdgOutputV1InterfacePrivate::sendLogicalSize(Resource *resource)
 {
-    if (!output || output->isRemoved()) {
-        return;
-    }
     ClientConnection *connection = output->display()->getConnection(resource->client());
     qreal scaleOverride = connection->scaleOverride();
 
     send_logical_size(resource->handle, size.width() * scaleOverride, size.height() * scaleOverride);
 }
 
-void XdgOutputV1InterfacePrivate::sendLogicalPosition(Resource *resource, const QPoint &pos)
+void XdgOutputV1InterfacePrivate::sendLogicalPosition(Resource *resource)
 {
-    if (!output || output->isRemoved()) {
-        return;
-    }
     ClientConnection *connection = output->display()->getConnection(resource->client());
     qreal scaleOverride = connection->scaleOverride();
 
@@ -238,10 +207,6 @@ void XdgOutputV1InterfacePrivate::sendLogicalPosition(Resource *resource, const 
 
 void XdgOutputV1InterfacePrivate::sendDone(Resource *resource)
 {
-    if (!doneOnce || !output || output->isRemoved()) {
-        return;
-    }
-
     if (wl_resource_get_version(resource->handle) >= 3) {
         output->done(resource->client());
     } else {
@@ -249,16 +214,19 @@ void XdgOutputV1InterfacePrivate::sendDone(Resource *resource)
     }
 }
 
-void XdgOutputV1Interface::sendRefresh()
+void XdgOutputV1Interface::resend()
 {
-    auto changedConnection = qobject_cast<ClientConnection *>(sender());
+    if (!d->output || d->output->isRemoved()) {
+        return;
+    }
 
+    auto changedConnection = qobject_cast<ClientConnection *>(sender());
     const auto outputResources = d->resourceMap();
     for (auto resource : outputResources) {
         ClientConnection *connection = d->output->display()->getConnection(resource->client());
         if (connection == changedConnection) {
-            d->sendLogicalPosition(resource, d->pos);
-            d->sendLogicalSize(resource, d->size);
+            d->sendLogicalPosition(resource);
+            d->sendLogicalSize(resource);
             d->sendDone(resource);
         }
     }

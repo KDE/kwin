@@ -21,9 +21,6 @@ class WaylandOutput : public QObject
 public:
     explicit WaylandOutput(Output *output, QObject *parent = nullptr);
 
-private Q_SLOTS:
-    void update();
-
 private:
     Output *m_platformOutput;
     KWaylandServer::ScopedGlobalPointer<KWaylandServer::OutputInterface> m_waylandOutput;

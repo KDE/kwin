@@ -18,6 +18,9 @@ public:
     FakeOutput();
 
     KWin::RenderLoop *renderLoop() const override;
+    void setName(const QString &name);
+    void setManufacturer(const QString &manufacturer);
+    void setModel(const QString &model);
     void setMode(QSize size, uint32_t refreshRate);
     void setSubPixel(SubPixel subPixel);
     void setDpmsSupported(bool supported);

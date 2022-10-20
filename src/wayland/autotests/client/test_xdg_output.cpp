@@ -61,17 +61,16 @@ void TestXdgOutput::init()
 
     m_outputHandle = std::make_unique<FakeOutput>();
     m_outputHandle->setMode(QSize(1920, 1080), 60000);
+    m_outputHandle->moveTo(QPoint(11, 12)); // not a sensible value for one monitor, but works for this test
+    m_outputHandle->setScale(1.5);
+    m_outputHandle->setName("testName");
+    m_outputHandle->setManufacturer("foo");
+    m_outputHandle->setModel("bar");
 
     m_serverOutput = new OutputInterface(m_display, m_outputHandle.get(), this);
 
     m_serverXdgOutputManager = new XdgOutputManagerV1Interface(m_display, this);
     m_serverXdgOutput = m_serverXdgOutputManager->createXdgOutput(m_serverOutput, this);
-    m_serverXdgOutput->setLogicalSize(QSize(1280, 720)); // a 1.5 scale factor
-    m_serverXdgOutput->setLogicalPosition(QPoint(11, 12)); // not a sensible value for one monitor, but works for this test
-    m_serverXdgOutput->setName("testName");
-    m_serverXdgOutput->setDescription("testDescription");
-
-    m_serverXdgOutput->done();
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -150,20 +149,23 @@ void TestXdgOutput::testChanges()
     QCOMPARE(xdgOutput->logicalPosition(), QPoint(11, 12));
     QCOMPARE(xdgOutput->logicalSize(), QSize(1280, 720));
     QCOMPARE(xdgOutput->name(), "testName");
-    QCOMPARE(xdgOutput->description(), "testDescription");
+    QCOMPARE(xdgOutput->description(), "foo bar");
 
-    // dynamic updates
-    m_serverXdgOutput->setLogicalPosition(QPoint(1000, 2000));
-    m_serverXdgOutput->setLogicalSize(QSize(100, 200));
-    // names cannot dynamically change according to the spec
-
-    m_serverXdgOutput->done();
-    m_serverOutput->scheduleDone();
-
+    // change the logical position
+    m_outputHandle->moveTo(QPoint(1000, 2000));
     QVERIFY(xdgOutputChanged.wait());
     QCOMPARE(xdgOutputChanged.count(), 1);
     QCOMPARE(xdgOutput->logicalPosition(), QPoint(1000, 2000));
-    QCOMPARE(xdgOutput->logicalSize(), QSize(100, 200));
+    QEXPECT_FAIL("", "KWayland::Client::XdgOutput incorrectly handles partial updates", Continue);
+    QCOMPARE(xdgOutput->logicalSize(), QSize(1280, 720));
+
+    // change the logical size
+    m_outputHandle->setScale(2);
+    QVERIFY(xdgOutputChanged.wait());
+    QCOMPARE(xdgOutputChanged.count(), 2);
+    QEXPECT_FAIL("", "KWayland::Client::XdgOutput incorrectly handles partial updates", Continue);
+    QCOMPARE(xdgOutput->logicalPosition(), QPoint(1000, 2000));
+    QCOMPARE(xdgOutput->logicalSize(), QSize(960, 540));
 }
 
 QTEST_GUILESS_MAIN(TestXdgOutput)
