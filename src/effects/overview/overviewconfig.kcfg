@@ -23,13 +23,19 @@
 
         <entry name="BorderActivate" type="IntList" />
         <entry name="TouchBorderActivate" type="IntList" />
-        <group name="Touchpad-Gestures">
-            <entry name="GestureType" type="String"/>
-            <entry name="Fingers" type="Int"/>
-        </group>
-        <group name="Touchscreen-Gestures">
-            <entry name="GestureType" type="String"/>
-            <entry name="Fingers" type="Int"/>
-        </group>
+
+        <entry name="TouchpadGestureType" type="String">
+            <default>PinchContracting</default>
+        </entry>
+        <entry name="TouchpadFingerCount" type="Int">
+            <default>4</default>
+        </entry>
+
+        <entry name="TouchscreenGestureType" type="String">
+            <default>SwipeUp</default>
+        </entry>
+        <entry name="TouchscreenFingerCount" type="Int">
+            <default>3</default>
+        </entry>
     </group>
 </kcfg>

@@ -51,24 +51,6 @@ OverviewEffect::OverviewEffect()
         }
     });
 
-    auto progressCallback = [this](qreal progress) {
-        if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
-            switch (m_status) {
-            case Status::Inactive:
-            case Status::Activating:
-                partialActivate(progress);
-                break;
-            case Status::Active:
-            case Status::Deactivating:
-                partialDeactivate(progress);
-                break;
-            }
-        }
-    };
-
-    effects->registerRealtimeTouchpadPinchShortcut(PinchDirection::Contracting, 4, m_realtimeToggleAction, progressCallback);
-    effects->registerTouchscreenSwipeShortcut(SwipeDirection::Up, 3, m_realtimeToggleAction, progressCallback);
-
     connect(effects, &EffectsHandler::screenAboutToLock, this, &OverviewEffect::realDeactivate);
 
     initConfig<OverviewConfig>();
@@ -95,6 +77,7 @@ void OverviewEffect::reconfigure(ReconfigureFlags)
     setLayout(OverviewConfig::layoutMode());
     setAnimationDuration(animationTime(300));
     setBlurBackground(OverviewConfig::blurBackground());
+    effects->cleanupGestureShortcut(m_realtimeToggleAction);
 
     for (const ElectricBorder &border : qAsConst(m_borderActivate)) {
         effects->unreserveElectricBorder(border, this);
@@ -128,6 +111,38 @@ void OverviewEffect::reconfigure(ReconfigureFlags)
                 partialActivate(std::min(1.0, qAbs(deltaProgress.width()) / maxDelta));
             }
         });
+    }
+
+    auto progressCallback = [this](qreal progress) {
+        if (!effects->hasActiveFullScreenEffect() || effects->activeFullScreenEffect() == this) {
+            switch (m_status) {
+            case Status::Inactive:
+            case Status::Activating:
+                partialActivate(progress);
+                break;
+            case Status::Active:
+            case Status::Deactivating:
+                partialDeactivate(progress);
+                break;
+            }
+        }
+    };
+
+    auto type = OverviewConfig::touchpadGestureType();
+    if (type == QStringLiteral("PinchContracting")) {
+        effects->registerRealtimeTouchpadPinchShortcut(PinchDirection::Contracting, OverviewConfig::touchpadFingerCount(), m_realtimeToggleAction, progressCallback);
+    } else if (type == QStringLiteral("PinchExpanding")) {
+        effects->registerRealtimeTouchpadPinchShortcut(PinchDirection::Expanding, OverviewConfig::touchpadFingerCount(), m_realtimeToggleAction, progressCallback);
+    }
+    type = OverviewConfig::touchpadGestureType();
+    if (type == QStringLiteral("SwipeDown")) {
+        effects->registerTouchscreenSwipeShortcut(SwipeDirection::Down, OverviewConfig::touchscreenFingerCount(), m_realtimeToggleAction, progressCallback);
+    } else if (type == QStringLiteral("SwipeLeft")) {
+        effects->registerTouchscreenSwipeShortcut(SwipeDirection::Left, OverviewConfig::touchscreenFingerCount(), m_realtimeToggleAction, progressCallback);
+    } else if (type == QStringLiteral("SwipeUp")) {
+        effects->registerTouchscreenSwipeShortcut(SwipeDirection::Up, OverviewConfig::touchscreenFingerCount(), m_realtimeToggleAction, progressCallback);
+    } else if (type == QStringLiteral("SwipeRight")) {
+        effects->registerTouchscreenSwipeShortcut(SwipeDirection::Right, OverviewConfig::touchscreenFingerCount(), m_realtimeToggleAction, progressCallback);
     }
 }
 
