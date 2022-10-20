@@ -42,8 +42,9 @@ public:
 
 private:
     enum WindowsRunnerAction {
-        // Windows related actions
+        // Windows and desktop related actions
         ActivateAction,
+        // Windows related actions
         CloseAction,
         MinimizeAction,
         MaximizeAction,
@@ -52,17 +53,21 @@ private:
         KeepAboveAction,
         KeepBelowAction,
         PinAction,
-        // Desktop related actions
-        ActivateDesktopAction,
-        // Workspace related actions
         MoveAction,
-        MoveAllAction,
-        CloseAllAction,
+        // Desktop related actions
+        AddDesktopAction,
+        RemoveDesktopAction
     };
 
-    RemoteMatch desktopMatch(const VirtualDesktop *desktop, const WindowsRunnerAction action = ActivateDesktopAction, qreal relevance = 1.0, Plasma::QueryMatch::Type type = Plasma::QueryMatch::ExactMatch) const;
-    RemoteMatch windowsMatch(const Window *window, const WindowsRunnerAction action = ActivateAction, qreal relevance = 1.0, Plasma::QueryMatch::Type type = Plasma::QueryMatch::ExactMatch) const;
-    RemoteMatch workspaceMatch(const Window *window, const VirtualDesktop *desktop, const WindowsRunnerAction action, qreal relevance = 1.0, Plasma::QueryMatch::Type = Plasma::QueryMatch::ExactMatch) const;
+    enum MatchCategory {
+        DesktopMatch,
+        WindowMatch,
+        WindowsDesktopMatch
+    };
+
+    RemoteMatch desktopMatch(const VirtualDesktop *desktop, const WindowsRunnerAction action = ActivateAction, qreal relevance = 1.0, Plasma::QueryMatch::Type type = Plasma::QueryMatch::ExactMatch) const;
+    RemoteMatch windowMatch(const Window *window, const WindowsRunnerAction action = ActivateAction, const VirtualDesktop *destination = nullptr, qreal relevance = 1.0, Plasma::QueryMatch::Type type = Plasma::QueryMatch::ExactMatch) const;
+    RemoteMatch windowsDesktopMatch(const VirtualDesktop *desktop, const WindowsRunnerAction action, const VirtualDesktop *destination = nullptr, qreal relevance = 1.0, Plasma::QueryMatch::Type type = Plasma::QueryMatch::ExactMatch) const;
     bool actionSupported(const Window *window, const WindowsRunnerAction action) const;
 };
 }
