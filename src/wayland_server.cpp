@@ -64,7 +64,6 @@
 #include "wayland/xdgoutput_v1_interface.h"
 #include "wayland/xdgshell_interface.h"
 #include "wayland/xwaylandkeyboardgrab_v1_interface.h"
-#include "waylandoutput.h"
 #include "workspace.h"
 #include "x11window.h"
 #include "xdgactivationv1.h"
@@ -297,14 +296,17 @@ void WaylandServer::handleOutputRemoved(Output *output)
 void WaylandServer::handleOutputEnabled(Output *output)
 {
     if (!output->isPlaceholder() && !output->isNonDesktop()) {
-        m_waylandOutputs.insert(output, new WaylandOutput(output));
+        auto waylandOutput = new KWaylandServer::OutputInterface(waylandServer()->display(), output);
+        m_xdgOutputManagerV1->createXdgOutput(waylandOutput, waylandOutput);
+
+        m_waylandOutputs.insert(output, waylandOutput);
     }
 }
 
 void WaylandServer::handleOutputDisabled(Output *output)
 {
-    if (!output->isPlaceholder() && !output->isNonDesktop()) {
-        delete m_waylandOutputs.take(output);
+    if (auto waylandOutput = m_waylandOutputs.take(output)) {
+        waylandOutput->remove();
     }
 }
 

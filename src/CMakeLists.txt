@@ -150,7 +150,6 @@ target_sources(kwin PRIVATE
     virtualkeyboard_dbus.cpp
     was_user_interaction_x11_filter.cpp
     wayland_server.cpp
-    waylandoutput.cpp
     waylandshellintegration.cpp
     waylandwindow.cpp
     window.cpp

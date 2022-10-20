@@ -61,7 +61,6 @@ class XdgActivationV1Integration;
 class XdgPopupWindow;
 class XdgSurfaceWindow;
 class XdgToplevelWindow;
-class WaylandOutput;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -292,7 +291,7 @@ private:
     KWaylandServer::ContentTypeManagerV1Interface *m_contentTypeManager = nullptr;
     QList<Window *> m_windows;
     InitializationFlags m_initFlags;
-    QHash<Output *, WaylandOutput *> m_waylandOutputs;
+    QHash<Output *, KWaylandServer::OutputInterface *> m_waylandOutputs;
     QHash<Output *, KWaylandServer::OutputDeviceV2Interface *> m_waylandOutputDevices;
     KWIN_SINGLETON(WaylandServer)
 };
