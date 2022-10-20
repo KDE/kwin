@@ -6,10 +6,8 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_DRM_LOGGING_H
-#define KWIN_DRM_LOGGING_H
+#pragma once
 #include <QDebug>
 #include <QLoggingCategory>
 
 Q_DECLARE_LOGGING_CATEGORY(KWIN_DRM)
-#endif

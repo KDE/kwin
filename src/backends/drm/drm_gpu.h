@@ -6,9 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
-#ifndef DRM_GPU_H
-#define DRM_GPU_H
+#pragma once
 
 #include "drm_pipeline.h"
 
@@ -137,5 +135,3 @@ private:
 };
 
 }
-
-#endif // DRM_GPU_H

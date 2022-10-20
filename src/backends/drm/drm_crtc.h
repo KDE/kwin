@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_drm_crtc_H
-#define KWIN_drm_crtc_H
+#pragma once
 
 #include "drm_object.h"
 
@@ -64,5 +63,3 @@ private:
 };
 
 }
-
-#endif

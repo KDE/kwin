@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_DRM_OUTPUT_H
-#define KWIN_DRM_OUTPUT_H
+#pragma once
 
 #include "drm_abstract_output.h"
 #include "drm_object.h"
@@ -92,5 +91,3 @@ private:
 }
 
 Q_DECLARE_METATYPE(KWin::DrmOutput *)
-
-#endif

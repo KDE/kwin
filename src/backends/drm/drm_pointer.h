@@ -7,8 +7,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_DRM_POINTER_H
-#define KWIN_DRM_POINTER_H
+#pragma once
 
 #include <memory>
 #include <xf86drm.h>
@@ -149,5 +148,3 @@ struct DrmDeleter<drmModeLesseeListRes>
 template<typename T>
 using DrmUniquePtr = std::unique_ptr<T, DrmDeleter<T>>;
 }
-
-#endif

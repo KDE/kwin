@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_DRM_BACKEND_H
-#define KWIN_DRM_BACKEND_H
+#pragma once
 #include "core/platform.h"
 
 #include "dpmsinputeventfilter.h"
@@ -113,5 +112,3 @@ private:
 };
 
 }
-
-#endif
