@@ -127,6 +127,10 @@ void SurfaceItem::preprocess()
 
 WindowQuadList SurfaceItem::buildQuads() const
 {
+    if (!pixmap()) {
+        return {};
+    }
+
     const QRegion region = shape();
     const auto size = pixmap()->size();
 
