@@ -364,6 +364,8 @@ public:
     void setShowingDesktop(bool showing, bool animated = true);
     bool showingDesktop() const;
 
+    void toggleMinimizeAll();
+
     void removeX11Window(X11Window *); // Only called from X11Window::destroyWindow() or X11Window::releaseWindow()
     void setActiveWindow(Window *window);
     Group *findGroup(xcb_window_t leader) const;
@@ -689,6 +691,7 @@ private:
     QList<Window *> attention_chain;
 
     bool showing_desktop;
+    QList<Window *> desktopMinimizedWindows;
 
     QList<Group *> groups;
 
