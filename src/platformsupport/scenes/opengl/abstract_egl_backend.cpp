@@ -469,4 +469,12 @@ std::shared_ptr<GLTexture> AbstractEglBackend::importDmaBufAsTexture(const DmaBu
     }
 }
 
+QHash<uint32_t, QVector<uint64_t>> AbstractEglBackend::supportedFormats() const
+{
+    if (m_dmaBuf) {
+        return m_dmaBuf->supportedFormats();
+    } else {
+        return RenderBackend::supportedFormats();
+    }
+}
 }
