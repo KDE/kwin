@@ -319,26 +319,26 @@ void EglDmabuf::setSupportedFormatsAndModifiers()
 
     filterFormatsWithMultiplePlanes(formats);
 
-    QHash<uint32_t, QVector<uint64_t>> supportedFormats;
-    for (auto format : qAsConst(formats)) {
+    m_supportedFormats.clear();
+    for (auto format : std::as_const(formats)) {
         if (eglQueryDmaBufModifiersEXT != nullptr) {
             EGLint count = 0;
             const EGLBoolean success = eglQueryDmaBufModifiersEXT(eglDisplay, format, 0, nullptr, nullptr, &count);
             if (success && count > 0) {
                 QVector<uint64_t> modifiers(count);
                 if (eglQueryDmaBufModifiersEXT(eglDisplay, format, count, modifiers.data(), nullptr, &count)) {
-                    supportedFormats.insert(format, modifiers);
+                    m_supportedFormats.insert(format, modifiers);
                     continue;
                 }
             }
         }
-        supportedFormats.insert(format, {DRM_FORMAT_MOD_INVALID});
+        m_supportedFormats.insert(format, {DRM_FORMAT_MOD_INVALID});
     }
-    qCDebug(KWIN_OPENGL) << "EGL driver advertises" << supportedFormats.count() << "supported dmabuf formats" << (eglQueryDmaBufModifiersEXT != nullptr ? "with" : "without") << "modifiers";
+    qCDebug(KWIN_OPENGL) << "EGL driver advertises" << m_supportedFormats.count() << "supported dmabuf formats" << (eglQueryDmaBufModifiersEXT != nullptr ? "with" : "without") << "modifiers";
 
-    auto filterFormats = [&supportedFormats](int bpc) {
+    auto filterFormats = [this](int bpc) {
         QHash<uint32_t, QVector<uint64_t>> set;
-        for (auto it = supportedFormats.constBegin(); it != supportedFormats.constEnd(); it++) {
+        for (auto it = m_supportedFormats.constBegin(); it != m_supportedFormats.constEnd(); it++) {
             if (bpcForFormat(it.key()) == bpc) {
                 set.insert(it.key(), it.value());
             }
@@ -365,4 +365,13 @@ void EglDmabuf::setSupportedFormatsAndModifiers()
     LinuxDmaBufV1RendererInterface::setSupportedFormatsAndModifiers(m_tranches);
 }
 
+QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> EglDmabuf::tranches() const
+{
+    return m_tranches;
+}
+
+QHash<uint32_t, QVector<uint64_t>> EglDmabuf::supportedFormats() const
+{
+    return m_supportedFormats;
+}
 }

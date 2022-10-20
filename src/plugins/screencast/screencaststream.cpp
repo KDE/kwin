@@ -9,6 +9,7 @@
 #include "screencaststream.h"
 #include "composite.h"
 #include "core/platform.h"
+#include "core/renderbackend.h"
 #include "cursor.h"
 #include "dmabuftexture.h"
 #include "eglnativefence.h"
@@ -315,23 +316,6 @@ uint ScreenCastStream::nodeId()
     return pwNodeId;
 }
 
-static QVector<uint64_t> querySupportedModifiers(EGLDisplay eglDisplay, quint32 format)
-{
-    QVector<uint64_t> modifiers;
-    if (eglQueryDmaBufModifiersEXT != nullptr) {
-        EGLint count = 0;
-        const EGLBoolean success = eglQueryDmaBufModifiersEXT(eglDisplay, format, 0, nullptr, nullptr, &count);
-        if (success && count > 0) {
-            modifiers.resize(count);
-            eglQueryDmaBufModifiersEXT(eglDisplay, format, count, modifiers.data(), nullptr, &count);
-        }
-    }
-    if (!modifiers.contains(DRM_FORMAT_MOD_INVALID)) {
-        modifiers.append(DRM_FORMAT_MOD_INVALID);
-    }
-    return modifiers;
-}
-
 bool ScreenCastStream::createStream()
 {
     const QByteArray objname = "kwin-screencast-" + objectName().toUtf8();
@@ -341,7 +325,7 @@ bool ScreenCastStream::createStream()
     const auto format = m_source->hasAlphaChannel() ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
     const int drmFormat = spaVideoFormatToDrmFormat(format);
     m_hasDmaBuf = kwinApp()->platform()->testCreateDmaBuf(m_resolution, drmFormat, {DRM_FORMAT_MOD_INVALID}).has_value();
-    m_modifiers = querySupportedModifiers(kwinApp()->platform()->sceneEglDisplay(), drmFormat);
+    m_modifiers = Compositor::self()->backend()->supportedFormats().value(drmFormat);
 
     char buffer[2048];
     QVector<const spa_pod *> params = buildFormats(false, buffer);

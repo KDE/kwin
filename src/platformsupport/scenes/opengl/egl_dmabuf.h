@@ -54,7 +54,7 @@ private:
     ImportType m_importType;
 };
 
-class EglDmabuf : public LinuxDmaBufV1RendererInterface
+class KWIN_EXPORT EglDmabuf : public LinuxDmaBufV1RendererInterface
 {
 public:
     static EglDmabuf *factory(AbstractEglBackend *backend);
@@ -64,10 +64,8 @@ public:
 
     KWaylandServer::LinuxDmaBufV1ClientBuffer *importBuffer(DmaBufAttributes &&attrs, quint32 flags) override;
 
-    QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> tranches() const
-    {
-        return m_tranches;
-    }
+    QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> tranches() const;
+    QHash<uint32_t, QVector<uint64_t>> supportedFormats() const;
 
 private:
     KWaylandServer::LinuxDmaBufV1ClientBuffer *yuvImport(DmaBufAttributes &&attrs, quint32 flags);
@@ -76,6 +74,7 @@ private:
 
     AbstractEglBackend *m_backend;
     QVector<KWaylandServer::LinuxDmaBufV1Feedback::Tranche> m_tranches;
+    QHash<uint32_t, QVector<uint64_t>> m_supportedFormats;
 
     friend class EglDmabufBuffer;
 };

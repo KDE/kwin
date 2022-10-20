@@ -6,6 +6,8 @@
 
 #include "renderbackend.h"
 
+#include <drm_fourcc.h>
+
 namespace KWin
 {
 
@@ -22,6 +24,11 @@ OverlayWindow *RenderBackend::overlayWindow() const
 bool RenderBackend::checkGraphicsReset()
 {
     return false;
+}
+
+QHash<uint32_t, QVector<uint64_t>> RenderBackend::supportedFormats() const
+{
+    return QHash<uint32_t, QVector<uint64_t>>{{DRM_FORMAT_XRGB8888, QVector<uint64_t>{DRM_FORMAT_MOD_LINEAR}}};
 }
 
 } // namespace KWin
