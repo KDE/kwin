@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-18 00:46+0000\n"
+"POT-Creation-Date: 2022-10-20 00:51+0000\n"
 "PO-Revision-Date: 2020-10-08 14:55+0200\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -1155,7 +1155,7 @@ msgstr "Lõpe&ta rakenduse %1 töö"
 msgid "Wait Longer"
 msgstr "Oota kauem"
 
-#: input.cpp:3133
+#: input.cpp:3132
 #, fuzzy, kde-format
 #| msgctxt "A touch up event"
 #| msgid "Touch Up"
@@ -2725,7 +2725,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(ei reageeri)"
 
-#: workspace.cpp:1678
+#: workspace.cpp:1674
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

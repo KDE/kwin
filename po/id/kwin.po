@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-18 00:46+0000\n"
+"POT-Creation-Date: 2022-10-20 00:51+0000\n"
 "PO-Revision-Date: 2022-09-27 18:25+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -1136,7 +1136,7 @@ msgstr "&Akhiri Aplikasi %1"
 msgid "Wait Longer"
 msgstr "Tunggu Lebih Lama"
 
-#: input.cpp:3133
+#: input.cpp:3132
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
@@ -2690,7 +2690,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Tidak Merespons)"
 
-#: workspace.cpp:1678
+#: workspace.cpp:1674
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

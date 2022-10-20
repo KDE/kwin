@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-18 00:46+0000\n"
+"POT-Creation-Date: 2022-10-20 00:51+0000\n"
 "PO-Revision-Date: 2022-10-07 18:16+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1142,7 +1142,7 @@ msgstr "&Finalitza l'aplicació %1"
 msgid "Wait Longer"
 msgstr "Espera més llarga"
 
-#: input.cpp:3133
+#: input.cpp:3132
 #, kde-format
 msgid "Touchpad"
 msgstr "Ratolí tàctil"
@@ -1286,8 +1286,8 @@ msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
 "socket to name the socket"
 msgstr ""
-"Sòcol Wayland a utilitzar per a les connexions entrants. Açò es pot combinar "
-"amb «--sòcol» per a anomenar el sòcol"
+"Sòcol Wayland que s'utilitzarà per a les connexions entrants. Açò es pot "
+"combinar amb «--sòcol» per a anomenar el sòcol"
 
 #: main_wayland.cpp:353
 #, kde-format
@@ -2701,7 +2701,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(No respon)"
 
-#: workspace.cpp:1678
+#: workspace.cpp:1674
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
