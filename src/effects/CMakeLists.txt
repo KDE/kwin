@@ -44,7 +44,7 @@ function(install_scripted_effect name)
     kpackage_install_package(${name}/package kwin4_effect_${name} effects kwin)
 
     # necessary so tests are found without installing
-    file(COPY ${name}/package/contents ${name}/package/metadata.desktop DESTINATION ${CMAKE_BINARY_DIR}/bin/kwin/effects/kwin4_effect_${name})
+    file(COPY ${name}/package/contents ${name}/package/metadata.json DESTINATION ${CMAKE_BINARY_DIR}/bin/kwin/effects/kwin4_effect_${name})
 endfunction()
 install_scripted_effect(dialogparent)
 install_scripted_effect(dimscreen)
