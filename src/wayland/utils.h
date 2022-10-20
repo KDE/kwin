@@ -11,26 +11,12 @@
 #include <QRegion>
 
 #include <limits>
-#include <memory>
 #include <type_traits>
 
 struct wl_resource;
 
 namespace KWaylandServer
 {
-template<typename T>
-struct SafeGlobalDeleter
-{
-    void operator()(T *global)
-    {
-        if (global) {
-            global->remove();
-        }
-    }
-};
-
-template<typename T>
-using ScopedGlobalPointer = std::unique_ptr<T, SafeGlobalDeleter<T>>;
 
 /**
  * Returns an infinite region.
