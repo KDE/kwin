@@ -195,6 +195,18 @@ void GlobalShortcutsManager::registerTouchscreenSwipe(QAction *action, std::func
     addIfNotExists(GlobalShortcut(RealtimeFeedbackSwipeShortcut{DeviceType::Touchscreen, direction, progressCallback, fingerCount}, action), DeviceType::Touchscreen);
 }
 
+void GlobalShortcutsManager::cleanupGestureShortcut(QAction *action)
+{
+    auto it = m_shortcuts.begin();
+    while (it != m_shortcuts.end()) {
+        if (it->action() == action) {
+            it = m_shortcuts.erase(it);
+        } else {
+            ++it;
+        }
+    }
+}
+
 void GlobalShortcutsManager::forceRegisterTouchscreenSwipe(QAction *action, std::function<void(qreal)> progressCallback, SwipeDirection direction, uint fingerCount)
 {
     GlobalShortcut shortcut{RealtimeFeedbackSwipeShortcut{DeviceType::Touchscreen, direction, progressCallback, fingerCount}, action};

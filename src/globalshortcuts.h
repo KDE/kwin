@@ -75,6 +75,7 @@ public:
 
     void registerTouchscreenSwipe(QAction *action, std::function<void(qreal)> progressCallback, SwipeDirection direction, uint fingerCount);
     void forceRegisterTouchscreenSwipe(QAction *action, std::function<void(qreal)> progressCallback, SwipeDirection direction, uint fingerCount);
+    void cleanupGestureShortcut(QAction *action);
 
     /**
      * @brief Processes a key event to decide whether a shortcut needs to be triggered.

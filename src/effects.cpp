@@ -841,6 +841,11 @@ void EffectsHandlerImpl::registerTouchscreenSwipeShortcut(SwipeDirection directi
     input()->registerTouchscreenSwipeShortcut(direction, fingerCount, action, progressCallback);
 }
 
+void EffectsHandlerImpl::cleanupGestureShortcut(QAction *action)
+{
+    input()->cleanupGestureShortcut(action);
+}
+
 void *EffectsHandlerImpl::getProxy(QString name)
 {
     for (QVector<EffectPair>::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {

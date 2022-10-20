@@ -23,5 +23,13 @@
 
         <entry name="BorderActivate" type="IntList" />
         <entry name="TouchBorderActivate" type="IntList" />
+        <group name="Touchpad-Gestures">
+            <entry name="GestureType" type="String"/>
+            <entry name="Fingers" type="Int"/>
+        </group>
+        <group name="Touchscreen-Gestures">
+            <entry name="GestureType" type="String"/>
+            <entry name="Fingers" type="Int"/>
+        </group>
     </group>
 </kcfg>
