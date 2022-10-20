@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "drm_object_plane.h"
+#include "drm_plane.h"
 
 #include "config-kwin.h"
 

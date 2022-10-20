@@ -7,10 +7,10 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "drm_object_connector.h"
+#include "drm_connector.h"
+#include "drm_crtc.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
-#include "drm_object_crtc.h"
 #include "drm_output.h"
 #include "drm_pipeline.h"
 #include "drm_pointer.h"

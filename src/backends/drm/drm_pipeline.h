@@ -19,8 +19,8 @@
 #include "core/colorlut.h"
 #include "core/output.h"
 #include "core/renderloop_p.h"
-#include "drm_object_plane.h"
-#include "drm_object_connector.h"
+#include "drm_connector.h"
+#include "drm_plane.h"
 
 namespace KWin
 {

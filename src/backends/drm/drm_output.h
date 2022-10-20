@@ -11,7 +11,7 @@
 
 #include "drm_abstract_output.h"
 #include "drm_object.h"
-#include "drm_object_plane.h"
+#include "drm_plane.h"
 
 #include <QObject>
 #include <QPoint>

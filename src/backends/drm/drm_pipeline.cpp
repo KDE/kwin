@@ -16,14 +16,14 @@
 #include "drm_backend.h"
 #include "drm_buffer.h"
 #include "drm_buffer_gbm.h"
+#include "drm_connector.h"
+#include "drm_crtc.h"
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
 #include "drm_layer.h"
 #include "drm_logging.h"
-#include "drm_object_connector.h"
-#include "drm_object_crtc.h"
-#include "drm_object_plane.h"
 #include "drm_output.h"
+#include "drm_plane.h"
 
 #include <drm_fourcc.h>
 #include <gbm.h>

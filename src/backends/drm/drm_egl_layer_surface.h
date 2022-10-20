@@ -14,7 +14,7 @@
 #include <optional>
 
 #include "core/outputlayer.h"
-#include "drm_object_plane.h"
+#include "drm_plane.h"
 
 namespace KWaylandServer
 {

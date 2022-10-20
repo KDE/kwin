@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "drm_object_crtc.h"
+#include "drm_crtc.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
 #include "drm_gpu.h"
