@@ -683,18 +683,15 @@ void ThemeProvider::findAllSvgThemes()
     }
 }
 
-static const QString s_configUiPath = QStringLiteral("kwin/decorations/%1/contents/ui/config.ui");
-static const QString s_configXmlPath = QStringLiteral("kwin/decorations/%1/contents/config/main.xml");
-
 bool ThemeProvider::hasConfiguration(const QString &theme)
 {
     if (theme.startsWith(QLatin1String("__aurorae__svg__"))) {
         return true;
     }
     const QString ui = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                              s_configUiPath.arg(theme));
+                                              QStringLiteral("kwin/decorations/%1/contents/ui/config.ui").arg(theme));
     const QString xml = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                               s_configXmlPath.arg(theme));
+                                               QStringLiteral("kwin/decorations/%1/contents/config/main.xml").arg(theme));
     return !(ui.isEmpty() || xml.isEmpty());
 }
 
@@ -749,21 +746,39 @@ void ConfigurationModule::initSvg()
 
 void ConfigurationModule::initQml()
 {
-    const QString ui = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                              s_configUiPath.arg(m_theme));
-    const QString xml = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                               s_configXmlPath.arg(m_theme));
-    if (ui.isEmpty() || xml.isEmpty()) {
+    const QString packageRoot = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                                       QLatin1String("kwin/decorations/") + m_theme,
+                                                       QStandardPaths::LocateDirectory);
+    if (packageRoot.isEmpty()) {
         return;
     }
+
+    KPluginMetaData metaData(packageRoot + QLatin1String("/metadata.json"));
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    if (!metaData.isValid()) {
+        metaData = KPluginMetaData::fromDesktopFile(packageRoot + QLatin1String("/metadata.desktop"));
+        if (metaData.isValid()) {
+            qWarning("metadata.desktop format is obsolete. Please convert %s to JSON metadata", qPrintable(metaData.fileName()));
+        }
+    }
+#endif
+    if (!metaData.isValid()) {
+        return;
+    }
+
+    const QString xml = packageRoot + QLatin1String("/contents/config/main.xml");
+    const QString ui = packageRoot + QLatin1String("/contents/ui/config.ui");
+    if (!QFileInfo::exists(xml) || !QFileInfo::exists(ui)) {
+        return;
+    }
+
     KLocalizedTranslator *translator = new KLocalizedTranslator(this);
     QCoreApplication::instance()->installTranslator(translator);
-    const KDesktopFile metaData(QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                       QStringLiteral("kwin/decorations/%1/metadata.desktop").arg(m_theme)));
-    const QString translationDomain = metaData.desktopGroup().readEntry("X-KWin-Config-TranslationDomain", QString());
+    const QString translationDomain = metaData.value("X-KWin-Config-TranslationDomain");
     if (!translationDomain.isEmpty()) {
         translator->setTranslationDomain(translationDomain);
     }
+
     // load the KConfigSkeleton
     QFile configFile(xml);
     KSharedConfigPtr auroraeConfig = KSharedConfig::openConfig("auroraerc");
