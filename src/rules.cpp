@@ -124,7 +124,7 @@ void Rules::readFromSettings(const RuleSettings *settings)
     wmclasscomplete = settings->wmclasscomplete();
     READ_MATCH_STRING(windowrole, .toLower());
     READ_MATCH_STRING(title, );
-    READ_MATCH_STRING(clientmachine, .toLower().toLatin1());
+    READ_MATCH_STRING(clientmachine, .toLower());
     types = NET::WindowTypeMask(settings->types());
     READ_FORCE_RULE(placement, );
     READ_SET_RULE(position);
@@ -387,7 +387,7 @@ bool Rules::matchTitle(const QString &match_title) const
     return true;
 }
 
-bool Rules::matchClientMachine(const QByteArray &match_machine, bool local) const
+bool Rules::matchClientMachine(const QString &match_machine, bool local) const
 {
     if (clientmachinematch != UnimportantMatch) {
         // if it's localhost, check also "localhost" before checking hostname
@@ -396,7 +396,7 @@ bool Rules::matchClientMachine(const QByteArray &match_machine, bool local) cons
             return true;
         }
         if (clientmachinematch == RegExpMatch
-            && !QRegularExpression(QString::fromUtf8(clientmachine)).match(QString::fromUtf8(match_machine)).hasMatch()) {
+            && !QRegularExpression(clientmachine).match(match_machine).hasMatch()) {
             return false;
         }
         if (clientmachinematch == ExactMatch

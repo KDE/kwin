@@ -195,7 +195,7 @@ private:
     bool matchWMClass(const QString &match_class, const QString &match_name) const;
     bool matchRole(const QString &match_role) const;
     bool matchTitle(const QString &match_title) const;
-    bool matchClientMachine(const QByteArray &match_machine, bool local) const;
+    bool matchClientMachine(const QString &match_machine, bool local) const;
 #ifdef KCMRULES
 private:
 #endif
@@ -217,7 +217,7 @@ private:
     StringMatch windowrolematch;
     QString title;
     StringMatch titlematch;
-    QByteArray clientmachine;
+    QString clientmachine;
     StringMatch clientmachinematch;
     NET::WindowTypes types; // types for matching
     PlacementPolicy placement;

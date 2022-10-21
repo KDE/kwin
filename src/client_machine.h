@@ -25,7 +25,7 @@ class GetAddrInfo : public QObject
 {
     Q_OBJECT
 public:
-    explicit GetAddrInfo(const QByteArray &hostName, QObject *parent = nullptr);
+    explicit GetAddrInfo(const QString &hostName, QObject *parent = nullptr);
     ~GetAddrInfo() override;
 
     void resolve();
@@ -43,7 +43,7 @@ private:
     bool m_resolving;
     bool m_resolved;
     bool m_ownResolved;
-    QByteArray m_hostName;
+    QString m_hostName;
     std::unique_ptr<addrinfo> m_addressHints;
     addrinfo *m_address;
     addrinfo *m_ownAddress;
@@ -59,9 +59,9 @@ public:
     ~ClientMachine() override;
 
     void resolve(xcb_window_t window, xcb_window_t clientLeader);
-    const QByteArray &hostName() const;
+    const QString &hostName() const;
     bool isLocal() const;
-    static QByteArray localhost();
+    static QString localhost();
     bool isResolving() const;
 
 Q_SIGNALS:
@@ -73,7 +73,7 @@ private Q_SLOTS:
 
 private:
     void checkForLocalhost();
-    QByteArray m_hostName;
+    QString m_hostName;
     bool m_localhost;
     bool m_resolved;
     bool m_resolving;
@@ -84,14 +84,14 @@ inline bool ClientMachine::isLocal() const
     return m_localhost;
 }
 
-inline const QByteArray &ClientMachine::hostName() const
+inline const QString &ClientMachine::hostName() const
 {
     return m_hostName;
 }
 
-inline QByteArray ClientMachine::localhost()
+inline QString ClientMachine::localhost()
 {
-    return "localhost";
+    return QStringLiteral("localhost");
 }
 
 inline bool ClientMachine::isResolving() const

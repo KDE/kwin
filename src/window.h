@@ -720,8 +720,8 @@ public:
     QByteArray sessionId() const;
     QString resourceName() const;
     QString resourceClass() const;
-    QByteArray wmCommand();
-    QByteArray wmClientMachine(bool use_localhost) const;
+    QString wmCommand();
+    QString wmClientMachine(bool use_localhost) const;
     const ClientMachine *clientMachine() const;
     virtual bool isLocalhost() const;
     xcb_window_t wmClientLeader() const;

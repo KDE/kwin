@@ -24,7 +24,7 @@
 namespace KWin
 {
 
-static QByteArray getHostName()
+static QString getHostName()
 {
 #ifdef HOST_NAME_MAX
     char hostnamebuf[HOST_NAME_MAX];
@@ -33,12 +33,12 @@ static QByteArray getHostName()
 #endif
     if (gethostname(hostnamebuf, sizeof hostnamebuf) >= 0) {
         hostnamebuf[sizeof(hostnamebuf) - 1] = 0;
-        return QByteArray(hostnamebuf);
+        return QString::fromLocal8Bit(hostnamebuf);
     }
-    return QByteArray();
+    return QString();
 }
 
-GetAddrInfo::GetAddrInfo(const QByteArray &hostName, QObject *parent)
+GetAddrInfo::GetAddrInfo(const QString &hostName, QObject *parent)
     : QObject(parent)
     , m_resolving(false)
     , m_resolved(false)
@@ -87,11 +87,13 @@ void GetAddrInfo::resolve()
     m_addressHints->ai_socktype = SOCK_STREAM;
     m_addressHints->ai_flags |= AI_CANONNAME;
 
-    m_watcher->setFuture(QtConcurrent::run(getaddrinfo, m_hostName.constData(), nullptr, m_addressHints.get(), &m_address));
+    m_watcher->setFuture(QtConcurrent::run([this]() {
+        return getaddrinfo(m_hostName.toLocal8Bit().constData(), nullptr, m_addressHints.get(), &m_address);
+    }));
     m_ownAddressWatcher->setFuture(QtConcurrent::run([this] {
         // needs to be performed in a lambda as getHostName() returns a temporary value which would
         // get destroyed in the main thread before the getaddrinfo thread is able to read it
-        return getaddrinfo(getHostName().constData(), nullptr, m_addressHints.get(), &m_ownAddress);
+        return getaddrinfo(getHostName().toLocal8Bit().constData(), nullptr, m_addressHints.get(), &m_ownAddress);
     }));
 }
 
@@ -169,7 +171,7 @@ void ClientMachine::resolve(xcb_window_t window, xcb_window_t clientLeader)
     if (m_resolved) {
         return;
     }
-    QByteArray name = NETWinInfo(connection(), window, rootWindow(), NET::Properties(), NET::WM2ClientMachine).clientMachine();
+    QString name = NETWinInfo(connection(), window, rootWindow(), NET::Properties(), NET::WM2ClientMachine).clientMachine();
     if (name.isEmpty() && clientLeader && clientLeader != window) {
         name = NETWinInfo(connection(), clientLeader, rootWindow(), NET::Properties(), NET::WM2ClientMachine).clientMachine();
     }
@@ -190,18 +192,17 @@ void ClientMachine::checkForLocalhost()
         // nothing to do
         return;
     }
-    QByteArray host = getHostName();
+    QString host = getHostName();
 
     if (!host.isEmpty()) {
         host = host.toLower();
-        const QByteArray lowerHostName(m_hostName.toLower());
+        const QString lowerHostName(m_hostName.toLower());
         if (host == lowerHostName) {
             setLocal();
             return;
         }
-        if (char *dot = strchr(host.data(), '.')) {
-            *dot = '\0';
-            if (host == lowerHostName) {
+        if (int index = host.indexOf('.'); index != -1) {
+            if (QStringView(host).left(index) == lowerHostName) {
                 setLocal();
                 return;
             }

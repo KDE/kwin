@@ -253,7 +253,7 @@ QByteArray Window::sessionId() const
  * Returns command property for this window,
  * taken either from its window or from the leader window.
  */
-QByteArray Window::wmCommand()
+QString Window::wmCommand()
 {
     QByteArray result = Xcb::StringProperty(window(), XCB_ATOM_WM_COMMAND);
     if (result.isEmpty() && m_wmClientLeader && m_wmClientLeader != window()) {
@@ -272,11 +272,11 @@ void Window::getWmClientMachine()
  * Returns client machine for this window,
  * taken either from its window or from the leader window.
  */
-QByteArray Window::wmClientMachine(bool use_localhost) const
+QString Window::wmClientMachine(bool use_localhost) const
 {
     if (!m_clientMachine) {
         // this should never happen
-        return QByteArray();
+        return QString();
     }
     if (use_localhost && m_clientMachine->isLocal()) {
         // special name for the local machine (localhost)

@@ -97,7 +97,7 @@ void SessionManager::storeSession(const QString &sessionName, SMSavePhase phase)
             continue;
         }
         QByteArray sessionId = c->sessionId();
-        QByteArray wmCommand = c->wmCommand();
+        QString wmCommand = c->wmCommand();
         if (sessionId.isEmpty()) {
             // remember also applications that are not XSMP capable
             // and use the obsolete WM_COMMAND / WM_SAVE_YOURSELF
@@ -137,7 +137,7 @@ void SessionManager::storeClient(KConfigGroup &cg, int num, X11Window *c)
     QString n = QString::number(num);
     cg.writeEntry(QLatin1String("sessionId") + n, c->sessionId().constData());
     cg.writeEntry(QLatin1String("windowRole") + n, c->windowRole());
-    cg.writeEntry(QLatin1String("wmCommand") + n, c->wmCommand().constData());
+    cg.writeEntry(QLatin1String("wmCommand") + n, c->wmCommand());
     cg.writeEntry(QLatin1String("resourceName") + n, c->resourceName());
     cg.writeEntry(QLatin1String("resourceClass") + n, c->resourceClass());
     cg.writeEntry(QLatin1String("geometry") + n, QRectF(c->calculateGravitation(true), c->clientSize()).toRect()); // FRAME
@@ -181,7 +181,7 @@ void SessionManager::storeSubSession(const QString &name, QSet<QByteArray> sessi
             continue;
         }
         QByteArray sessionId = c->sessionId();
-        QByteArray wmCommand = c->wmCommand();
+        QString wmCommand = c->wmCommand();
         if (sessionId.isEmpty()) {
             // remember also applications that are not XSMP capable
             // and use the obsolete WM_COMMAND / WM_SAVE_YOURSELF
@@ -285,7 +285,7 @@ SessionInfo *SessionManager::takeSessionInfo(X11Window *c)
     SessionInfo *realInfo = nullptr;
     QByteArray sessionId = c->sessionId();
     QString windowRole = c->windowRole();
-    QByteArray wmCommand = c->wmCommand();
+    QString wmCommand = c->wmCommand();
     QString resourceName = c->resourceName();
     QString resourceClass = c->resourceClass();
 

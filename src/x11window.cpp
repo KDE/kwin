@@ -1930,13 +1930,13 @@ void X11Window::killProcess(bool ask, xcb_timestamp_t timestamp)
     if (!ask) {
         if (!clientMachine()->isLocal()) {
             QStringList lst;
-            lst << QString::fromUtf8(clientMachine()->hostName()) << QStringLiteral("kill") << QString::number(pid);
+            lst << clientMachine()->hostName() << QStringLiteral("kill") << QString::number(pid);
             QProcess::startDetached(QStringLiteral("xon"), lst);
         } else {
             ::kill(pid, SIGTERM);
         }
     } else {
-        QString hostname = clientMachine()->isLocal() ? QStringLiteral("localhost") : QString::fromUtf8(clientMachine()->hostName());
+        QString hostname = clientMachine()->isLocal() ? QStringLiteral("localhost") : clientMachine()->hostName();
         // execute helper from build dir or the system installed one
         const QFileInfo buildDirBinary{QDir{QCoreApplication::applicationDirPath()}, QStringLiteral("kwin_killer_helper")};
         QProcess::startDetached(buildDirBinary.exists() ? buildDirBinary.absoluteFilePath() : QStringLiteral(KWIN_KILLER_BIN),
@@ -2158,7 +2158,7 @@ void X11Window::setCaption(const QString &_s, bool force)
     QString machine_suffix;
     if (!options->condensedTitle()) { // machine doesn't qualify for "clean"
         if (clientMachine()->hostName() != ClientMachine::localhost() && !clientMachine()->isLocal()) {
-            machine_suffix = QLatin1String(" <@") + QString::fromUtf8(clientMachine()->hostName()) + QLatin1Char('>') + LRM;
+            machine_suffix = QLatin1String(" <@") + clientMachine()->hostName() + QLatin1Char('>') + LRM;
         }
     }
     QString shortcut_suffix = shortcutCaptionSuffix();

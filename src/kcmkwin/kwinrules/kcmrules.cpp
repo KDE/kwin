@@ -329,7 +329,7 @@ QModelIndex KCMKWinRules::findRuleWithProperties(const QVariantMap &info, bool w
     const QString role = info.value("role").toString().toLower();
     const NET::WindowType type = static_cast<NET::WindowType>(info.value("type").toInt());
     const QString title = info.value("caption").toString();
-    const QByteArray machine = info.value("clientMachine").toByteArray();
+    const QString machine = info.value("clientMachine").toString();
     const bool isLocalHost = info.value("localhost").toBool();
 
     int bestMatchRow = -1;
@@ -414,7 +414,7 @@ void KCMKWinRules::fillSettingsFromProperties(RuleSettings *settings, const QVar
     const QString role = info.value("role").toString().toLower();
     const NET::WindowType type = static_cast<NET::WindowType>(info.value("type").toInt());
     const QString title = info.value("caption").toString();
-    const QByteArray machine = info.value("clientMachine").toByteArray();
+    const QString machine = info.value("clientMachine").toString();
 
     settings->setDefaults();
 

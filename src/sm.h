@@ -80,8 +80,8 @@ struct SessionInfo
 {
     QByteArray sessionId;
     QString windowRole;
-    QByteArray wmCommand;
-    QByteArray wmClientMachine;
+    QString wmCommand;
+    QString wmClientMachine;
     QString resourceName;
     QString resourceClass;
 
