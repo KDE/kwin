@@ -18,6 +18,7 @@
 #include <QMatrix4x4>
 #include <QTimer>
 #include <QWindow>
+#include <cmath> // for ceil()
 
 namespace KWin
 {
@@ -381,8 +382,8 @@ void ContrastEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region
             for (QRect r : shape) {
                 r.moveTo(pt.x() + (r.x() - pt.x()) * data.xScale() + data.xTranslation(),
                          pt.y() + (r.y() - pt.y()) * data.yScale() + data.yTranslation());
-                r.setWidth(r.width() * data.xScale());
-                r.setHeight(r.height() * data.yScale());
+                r.setWidth(std::ceil(r.width() * data.xScale()));
+                r.setHeight(std::ceil(r.height() * data.yScale()));
                 scaledShape |= r;
             }
             shape = scaledShape & region;
