@@ -117,7 +117,6 @@ void ScreensTest::testCurrentWithFollowsMouse_data()
     QTest::addColumn<QPoint>("cursorPos");
     QTest::addColumn<int>("expectedId");
 
-    QTest::newRow("empty") << QVector<QRect>{{QRect()}} << QPoint(100, 100) << 0;
     QTest::newRow("cloned") << QVector<QRect>{{QRect{0, 0, 200, 100}, QRect{0, 0, 200, 100}}} << QPoint(50, 50) << 0;
     QTest::newRow("adjacent-0") << QVector<QRect>{{QRect{0, 0, 200, 100}, QRect{200, 100, 400, 300}}} << QPoint(199, 99) << 0;
     QTest::newRow("adjacent-1") << QVector<QRect>{{QRect{0, 0, 200, 100}, QRect{200, 100, 400, 300}}} << QPoint(200, 100) << 1;
@@ -150,7 +149,6 @@ void ScreensTest::testCurrentPoint_data()
     QTest::addColumn<QPoint>("cursorPos");
     QTest::addColumn<int>("expectedId");
 
-    QTest::newRow("empty") << QVector<QRect>{{QRect()}} << QPoint(100, 100) << 0;
     QTest::newRow("cloned") << QVector<QRect>{{QRect{0, 0, 200, 100}, QRect{0, 0, 200, 100}}} << QPoint(50, 50) << 0;
     QTest::newRow("adjacent-0") << QVector<QRect>{{QRect{0, 0, 200, 100}, QRect{200, 100, 400, 300}}} << QPoint(199, 99) << 0;
     QTest::newRow("adjacent-1") << QVector<QRect>{{QRect{0, 0, 200, 100}, QRect{200, 100, 400, 300}}} << QPoint(200, 100) << 1;
