@@ -53,7 +53,7 @@ void InputPanelV1Window::showOverlayPanel()
 void InputPanelV1Window::showTopLevel(OutputInterface *output, InputPanelSurfaceV1Interface::Position position)
 {
     Q_UNUSED(position);
-    m_mode = Mode::Toplevel;
+    m_mode = Mode::VirtualKeyboard;
     setOutput(output);
     maybeShow();
 }
@@ -66,14 +66,14 @@ void InputPanelV1Window::allow()
 
 void InputPanelV1Window::show()
 {
-    m_shouldBeShown = true;
+    m_virtualKeyboardShouldBeShown = true;
     maybeShow();
 }
 
 void InputPanelV1Window::hide()
 {
-    m_shouldBeShown = false;
-    if (readyForPainting()) {
+    m_virtualKeyboardShouldBeShown = false;
+    if (readyForPainting() && m_mode != Mode::Overlay) {
         hideClient();
     }
 }
@@ -88,7 +88,7 @@ void KWin::InputPanelV1Window::reposition()
     case Mode::None: {
         // should never happen
     }; break;
-    case Mode::Toplevel: {
+    case Mode::VirtualKeyboard: {
         QSizeF panelSize = surface()->size();
         if (!panelSize.isValid() || panelSize.isEmpty()) {
             return;
@@ -203,7 +203,7 @@ void InputPanelV1Window::handleMapped()
 
 void InputPanelV1Window::maybeShow()
 {
-    const bool shouldShow = m_mode == Mode::Overlay || (m_mode == Mode::Toplevel && m_allowed && m_shouldBeShown);
+    const bool shouldShow = m_mode == Mode::Overlay || (m_mode == Mode::VirtualKeyboard && m_allowed && m_virtualKeyboardShouldBeShown);
     if (shouldShow && !isZombie() && surface()->isMapped()) {
         setReadyForPainting();
         reposition();

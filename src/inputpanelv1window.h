@@ -25,7 +25,7 @@ public:
 
     enum class Mode {
         None,
-        Toplevel,
+        VirtualKeyboard,
         Overlay,
     };
     Q_ENUM(Mode)
@@ -95,7 +95,7 @@ private:
     QPointer<Output> m_output;
     Mode m_mode = Mode::None;
     bool m_allowed = false;
-    bool m_shouldBeShown = false;
+    bool m_virtualKeyboardShouldBeShown = false;
     const QPointer<KWaylandServer::InputPanelSurfaceV1Interface> m_panelSurface;
 };
 
