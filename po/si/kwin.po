@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-20 00:51+0000\n"
+"POT-Creation-Date: 2022-10-21 00:48+0000\n"
 "PO-Revision-Date: 2009-12-23 10:11+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <danishka@gmail.com>\n"
@@ -32,7 +32,7 @@ msgstr "danishka@gmail.com"
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 
-#: composite.cpp:820
+#: composite.cpp:821
 #, fuzzy, kde-format
 #| msgid ""
 #| "Compositing has been suspended by another application.<br/>You can resume "
@@ -2321,38 +2321,44 @@ msgstr "වැඩතලයට (&D)"
 msgid "Show in &Activities"
 msgstr ""
 
-#: useractions.cpp:524 useractions.cpp:594
+#: useractions.cpp:525
+#, fuzzy, kde-format
+#| msgid "To &Desktop"
+msgid "Move &To Current Desktop"
+msgstr "වැඩතලයට (&D)"
+
+#: useractions.cpp:535 useractions.cpp:602
 #, kde-format
 msgid "&All Desktops"
 msgstr "සියලු වැඩතලවල (&A)"
 
-#: useractions.cpp:567
+#: useractions.cpp:575
 #, fuzzy, kde-format
 #| msgid "Show Desktop"
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "වැඩතලය පෙන්වන්න"
 
-#: useractions.cpp:638
+#: useractions.cpp:646
 #, kde-format
 msgid "Move to %1 %2"
 msgstr ""
 
-#: useractions.cpp:651
+#: useractions.cpp:659
 #, fuzzy, kde-format
 #| msgid "Show Desktop"
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "වැඩතලය පෙන්වන්න"
 
-#: useractions.cpp:663
+#: useractions.cpp:671
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "වැඩතලයට (&D)"
 
-#: useractions.cpp:694
+#: useractions.cpp:702
 #, fuzzy, kde-format
 #| msgid "Window to Screen 1"
 msgctxt ""
@@ -2361,346 +2367,346 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "කවුළුව 1 වන තිරයට"
 
-#: useractions.cpp:720
+#: useractions.cpp:728
 #, kde-format
 msgid "&All Activities"
 msgstr ""
 
-#: useractions.cpp:902
+#: useractions.cpp:910
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr ""
 
-#: useractions.cpp:904
+#: useractions.cpp:912
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr ""
 
-#: useractions.cpp:984
+#: useractions.cpp:992
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "කවුළු මෙහෙයුම් මෙනුව"
 
-#: useractions.cpp:986
+#: useractions.cpp:994
 #, kde-format
 msgid "Close Window"
 msgstr "කවුළුව වසන්න"
 
-#: useractions.cpp:988
+#: useractions.cpp:996
 #, kde-format
 msgid "Maximize Window"
 msgstr "කවුළුව විශාල කරන්න"
 
-#: useractions.cpp:990
+#: useractions.cpp:998
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "කවුළුව සිරස්ව විශාල කරන්න"
 
-#: useractions.cpp:992
+#: useractions.cpp:1000
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "කවුළුව තිරස්ව විශාල කරන්න"
 
-#: useractions.cpp:994
+#: useractions.cpp:1002
 #, kde-format
 msgid "Minimize Window"
 msgstr "කවුළුව කුඩා කරන්න"
 
-#: useractions.cpp:996
+#: useractions.cpp:1004
 #, kde-format
 msgid "Shade Window"
 msgstr "කවුළුවේ පැහැය වෙනස් කරන්න"
 
-#: useractions.cpp:998
+#: useractions.cpp:1006
 #, kde-format
 msgid "Move Window"
 msgstr "කවුළුව ගෙනයන්න"
 
-#: useractions.cpp:1000
+#: useractions.cpp:1008
 #, kde-format
 msgid "Resize Window"
 msgstr "කවුළුවෙ ප්‍රමාණය යළි සකසන්න"
 
-#: useractions.cpp:1002
+#: useractions.cpp:1010
 #, kde-format
 msgid "Raise Window"
 msgstr "කවුළුව විහිදන්න"
 
-#: useractions.cpp:1004
+#: useractions.cpp:1012
 #, kde-format
 msgid "Lower Window"
 msgstr "කවුළුව හකුළන්න"
 
-#: useractions.cpp:1006
+#: useractions.cpp:1014
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "කවුළුව විහිදුම්/හැකිළුම් අතර මාරුවන්න"
 
-#: useractions.cpp:1008
+#: useractions.cpp:1016
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "කවුළුම මුළුතිරයක් බවට පත්කරන්න"
 
-#: useractions.cpp:1010
+#: useractions.cpp:1018
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Border"
 msgstr "කවුළු රාමුව සඟවන්න"
 
-#: useractions.cpp:1012
+#: useractions.cpp:1020
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "අනික්වාට ඉහලින් කවුළුව තබන්න"
 
-#: useractions.cpp:1014
+#: useractions.cpp:1022
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "අනික්වාට පහතින් කවුළුව තබන්න"
 
-#: useractions.cpp:1016
+#: useractions.cpp:1024
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "අවදානය ඉල්ලන කවුළුව සක්‍රීය කරන්න"
 
-#: useractions.cpp:1018
+#: useractions.cpp:1026
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "ස්ථාපන කවුළු කෙටිමඟ"
 
-#: useractions.cpp:1020
+#: useractions.cpp:1028
 #, fuzzy, kde-format
 #| msgid "Move window to group"
 msgid "Move Window to the Center"
 msgstr "කවුළුව කණ්ඩායම වෙත ගෙනයන්න"
 
-#: useractions.cpp:1022
+#: useractions.cpp:1030
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Right"
 msgstr "කවුළුව ගෙනයන්න"
 
-#: useractions.cpp:1024
+#: useractions.cpp:1032
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Left"
 msgstr "කවුළුව ගෙනයන්න"
 
-#: useractions.cpp:1026
+#: useractions.cpp:1034
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Up"
 msgstr "කවුළුව ගෙනයන්න"
 
-#: useractions.cpp:1028
+#: useractions.cpp:1036
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Down"
 msgstr "කවුළුව ගෙනයන්න"
 
-#: useractions.cpp:1030
+#: useractions.cpp:1038
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "කවුළුව තිරස්ව විශාල කරන්න"
 
-#: useractions.cpp:1032
+#: useractions.cpp:1040
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Expand Window Vertically"
 msgstr "කවුළුව සිරස්ව විශාල කරන්න"
 
-#: useractions.cpp:1034
+#: useractions.cpp:1042
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Horizontally"
 msgid "Shrink Window Horizontally"
 msgstr "කවුළුව කට්ටලයක් ලෙස තිරස්ව හකුළන්න"
 
-#: useractions.cpp:1036
+#: useractions.cpp:1044
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Vertically"
 msgid "Shrink Window Vertically"
 msgstr "කවුළුව කට්ටලයක් ලෙස සිරස්ව හකුළන්න"
 
-#: useractions.cpp:1038
+#: useractions.cpp:1046
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "වමට කවුළුවක් ක්‍ෂනිකව ඵලක කරන්න"
 
-#: useractions.cpp:1040
+#: useractions.cpp:1048
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "දකුණට කවුළුවක් ක්‍ෂනිකව ඵලක කරන්න"
 
-#: useractions.cpp:1042
+#: useractions.cpp:1050
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Quick Tile Window to the Top"
 msgstr "වමට කවුළුවක් ක්‍ෂනිකව ඵලක කරන්න"
 
-#: useractions.cpp:1044
+#: useractions.cpp:1052
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Quick Tile Window to the Bottom"
 msgstr "වමට කවුළුවක් ක්‍ෂනිකව ඵලක කරන්න"
 
-#: useractions.cpp:1046
+#: useractions.cpp:1054
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Quick Tile Window to the Top Left"
 msgstr "වමට කවුළුවක් ක්‍ෂනිකව ඵලක කරන්න"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1056
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Left"
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "වමට කවුළුවක් ක්‍ෂනිකව ඵලක කරන්න"
 
-#: useractions.cpp:1050
+#: useractions.cpp:1058
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Quick Tile Window to the Top Right"
 msgstr "දකුණට කවුළුවක් ක්‍ෂනිකව ඵලක කරන්න"
 
-#: useractions.cpp:1052
+#: useractions.cpp:1060
 #, fuzzy, kde-format
 #| msgid "Quick Tile Window to the Right"
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "දකුණට කවුළුවක් ක්‍ෂනිකව ඵලක කරන්න"
 
-#: useractions.cpp:1054
+#: useractions.cpp:1062
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "පහත කවුළුවට මාරුවෙන්න"
 
-#: useractions.cpp:1056
+#: useractions.cpp:1064
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "පහත කවුළුවට මාරුවන්න"
 
-#: useractions.cpp:1058
+#: useractions.cpp:1066
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "කවුළුවක් දකුණට මාරුවෙන්න"
 
-#: useractions.cpp:1060
+#: useractions.cpp:1068
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "කවුළුවක් වමට මාරුවෙන්න"
 
-#: useractions.cpp:1062
+#: useractions.cpp:1070
 #, kde-format
 msgid "Increase Opacity of Active Window by 5 %"
 msgstr ""
 
-#: useractions.cpp:1064
+#: useractions.cpp:1072
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5 %"
 msgstr ""
 
-#: useractions.cpp:1067
+#: useractions.cpp:1075
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "කවුළුව සෑම වැඩතලයක තබා ගන්න"
 
-#: useractions.cpp:1078
+#: useractions.cpp:1086
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
 msgid "Window to Desktop %1"
 msgstr "කවුළුව 1 වන වැඩතලයට"
 
-#: useractions.cpp:1080
+#: useractions.cpp:1088
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "කවුළුව මීළඟ වැඩතලයට"
 
-#: useractions.cpp:1081
+#: useractions.cpp:1089
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "කවුළුව මීට පෙර වැඩතලයට"
 
-#: useractions.cpp:1082
+#: useractions.cpp:1090
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "කවුළුව එක් වැඩතලයක් දකුණට"
 
-#: useractions.cpp:1084
+#: useractions.cpp:1092
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "කවුළුව එක් වැඩතලයක් වමට"
 
-#: useractions.cpp:1086
+#: useractions.cpp:1094
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "කවුළුව එක් වැඩතලයක් ඉහළට"
 
-#: useractions.cpp:1088
+#: useractions.cpp:1096
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "කවුළුව එක් වැඩතලයක් පහළට"
 
-#: useractions.cpp:1092
+#: useractions.cpp:1100
 #, fuzzy, kde-format
 #| msgid "Window to Screen 1"
 msgid "Window to Screen %1"
 msgstr "කවුළුව 1 වන තිරයට"
 
-#: useractions.cpp:1099
+#: useractions.cpp:1107
 #, kde-format
 msgid "Window to Next Screen"
 msgstr "කවුළුව මීළඟ තිරයට"
 
-#: useractions.cpp:1101
+#: useractions.cpp:1109
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
 msgid "Window to Previous Screen"
 msgstr "කවුළුව මීට පෙර වැඩතලයට"
 
-#: useractions.cpp:1103
+#: useractions.cpp:1111
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Peek at Desktop"
 msgstr "වැඩතලයට (&D)"
 
-#: useractions.cpp:1107
+#: useractions.cpp:1115
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Switch to Screen %1"
 msgstr "1 වන තිරයට මාරුවන්න"
 
-#: useractions.cpp:1115
+#: useractions.cpp:1123
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "මීළඟ තිරයට මාරුවන්න"
 
-#: useractions.cpp:1116
+#: useractions.cpp:1124
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Previous Screen"
 msgstr "මීට පෙර වැඩතලයට මාරුවන්න"
 
-#: useractions.cpp:1118
+#: useractions.cpp:1126
 #, kde-format
 msgid "Kill Window"
 msgstr "කවුළුව වසන්න"
 
-#: useractions.cpp:1119
+#: useractions.cpp:1127
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "බැඳීම නවතන්න"
 
-#: useractions.cpp:1120
+#: useractions.cpp:1128
 #, kde-format
 msgid "Invert Screen Colors"
 msgstr ""
 
-#: useractions.cpp:1181
+#: useractions.cpp:1189
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "සක්‍රීය කවුළුව (%1)"
 
-#: useractions.cpp:1318
+#: useractions.cpp:1326
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
