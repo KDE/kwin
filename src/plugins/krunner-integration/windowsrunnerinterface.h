@@ -15,6 +15,7 @@
 #include "dbusutils_p.h"
 #include "plugin.h"
 
+#include <KRunner/AbstractRunner>
 #include <KRunner/QueryMatch>
 
 #include <QDBusArgument>
@@ -55,19 +56,28 @@ private:
         PinAction,
         MoveAction,
         // Desktop related actions
-        AddDesktopAction,
-        RemoveDesktopAction
+        AddAction,
+        RemoveAction,
+        RenameAction
     };
 
     enum MatchCategory {
-        DesktopMatch,
         WindowMatch,
+        DesktopMatch,
         WindowsDesktopMatch
     };
 
-    RemoteMatch desktopMatch(const VirtualDesktop *desktop, const WindowsRunnerAction action = ActivateAction, qreal relevance = 1.0, Plasma::QueryMatch::Type type = Plasma::QueryMatch::ExactMatch) const;
+    enum TermMatch {
+        Start,
+        End,
+        Mid
+    };
+
     RemoteMatch windowMatch(const Window *window, const WindowsRunnerAction action = ActivateAction, const VirtualDesktop *destination = nullptr, qreal relevance = 1.0, Plasma::QueryMatch::Type type = Plasma::QueryMatch::ExactMatch) const;
+    RemoteMatch desktopMatch(const VirtualDesktop *desktop, const WindowsRunnerAction action = ActivateAction, const QString *destination = nullptr, qreal relevance = 1.0, Plasma::QueryMatch::Type type = Plasma::QueryMatch::ExactMatch) const;
     RemoteMatch windowsDesktopMatch(const VirtualDesktop *desktop, const WindowsRunnerAction action, const VirtualDesktop *destination = nullptr, qreal relevance = 1.0, Plasma::QueryMatch::Type type = Plasma::QueryMatch::ExactMatch) const;
+
     bool actionSupported(const Window *window, const WindowsRunnerAction action) const;
+    bool actionSupported(const VirtualDesktop *desktop, const WindowsRunnerAction action) const;
 };
 }
