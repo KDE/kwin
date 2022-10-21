@@ -677,7 +677,7 @@ void TestXdgShellWindow::testDesktopFileName()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QCOMPARE(window->desktopFileName(), QByteArrayLiteral("org.kde.foo"));
-    QCOMPARE(window->resourceClass(), QByteArrayLiteral("org.kde.foo"));
+    QCOMPARE(window->resourceClass(), QStringLiteral("org.kde.foo"));
     QVERIFY(window->resourceName().startsWith("testXdgShellWindow"));
     // the desktop file does not exist, so icon should be generic Wayland
     QCOMPARE(window->icon().name(), QStringLiteral("wayland"));
@@ -687,7 +687,7 @@ void TestXdgShellWindow::testDesktopFileName()
     shellSurface->set_app_id(QStringLiteral("org.kde.bar"));
     QVERIFY(desktopFileNameChangedSpy.wait());
     QCOMPARE(window->desktopFileName(), QByteArrayLiteral("org.kde.bar"));
-    QCOMPARE(window->resourceClass(), QByteArrayLiteral("org.kde.bar"));
+    QCOMPARE(window->resourceClass(), QStringLiteral("org.kde.bar"));
     QVERIFY(window->resourceName().startsWith("testXdgShellWindow"));
     // icon should still be wayland
     QCOMPARE(window->icon().name(), QStringLiteral("wayland"));

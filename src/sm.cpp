@@ -136,10 +136,10 @@ void SessionManager::storeClient(KConfigGroup &cg, int num, X11Window *c)
     c->setSessionActivityOverride(false); // make sure we get the real values
     QString n = QString::number(num);
     cg.writeEntry(QLatin1String("sessionId") + n, c->sessionId().constData());
-    cg.writeEntry(QLatin1String("windowRole") + n, c->windowRole().constData());
+    cg.writeEntry(QLatin1String("windowRole") + n, c->windowRole());
     cg.writeEntry(QLatin1String("wmCommand") + n, c->wmCommand().constData());
-    cg.writeEntry(QLatin1String("resourceName") + n, c->resourceName().constData());
-    cg.writeEntry(QLatin1String("resourceClass") + n, c->resourceClass().constData());
+    cg.writeEntry(QLatin1String("resourceName") + n, c->resourceName());
+    cg.writeEntry(QLatin1String("resourceClass") + n, c->resourceClass());
     cg.writeEntry(QLatin1String("geometry") + n, QRectF(c->calculateGravitation(true), c->clientSize()).toRect()); // FRAME
     cg.writeEntry(QLatin1String("restore") + n, c->geometryRestore());
     cg.writeEntry(QLatin1String("fsrestore") + n, c->fullscreenGeometryRestore());
@@ -228,10 +228,10 @@ void SessionManager::addSessionInfo(KConfigGroup &cg)
         SessionInfo *info = new SessionInfo;
         session.append(info);
         info->sessionId = cg.readEntry(QLatin1String("sessionId") + n, QString()).toLatin1();
-        info->windowRole = cg.readEntry(QLatin1String("windowRole") + n, QString()).toLatin1();
+        info->windowRole = cg.readEntry(QLatin1String("windowRole") + n, QString());
         info->wmCommand = cg.readEntry(QLatin1String("wmCommand") + n, QString()).toLatin1();
-        info->resourceName = cg.readEntry(QLatin1String("resourceName") + n, QString()).toLatin1();
-        info->resourceClass = cg.readEntry(QLatin1String("resourceClass") + n, QString()).toLower().toLatin1();
+        info->resourceName = cg.readEntry(QLatin1String("resourceName") + n, QString());
+        info->resourceClass = cg.readEntry(QLatin1String("resourceClass") + n, QString()).toLower();
         info->geometry = cg.readEntry(QLatin1String("geometry") + n, QRect());
         info->restore = cg.readEntry(QLatin1String("restore") + n, QRect());
         info->fsrestore = cg.readEntry(QLatin1String("fsrestore") + n, QRect());
@@ -284,10 +284,10 @@ SessionInfo *SessionManager::takeSessionInfo(X11Window *c)
 {
     SessionInfo *realInfo = nullptr;
     QByteArray sessionId = c->sessionId();
-    QByteArray windowRole = c->windowRole();
+    QString windowRole = c->windowRole();
     QByteArray wmCommand = c->wmCommand();
-    QByteArray resourceName = c->resourceName();
-    QByteArray resourceClass = c->resourceClass();
+    QString resourceName = c->resourceName();
+    QString resourceClass = c->resourceClass();
 
     // First search ``session''
     if (!sessionId.isEmpty()) {

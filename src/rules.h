@@ -192,8 +192,8 @@ public:
 private:
 #endif
     bool matchType(NET::WindowType match_type) const;
-    bool matchWMClass(const QByteArray &match_class, const QByteArray &match_name) const;
-    bool matchRole(const QByteArray &match_role) const;
+    bool matchWMClass(const QString &match_class, const QString &match_name) const;
+    bool matchRole(const QString &match_role) const;
     bool matchTitle(const QString &match_title) const;
     bool matchClientMachine(const QByteArray &match_machine, bool local) const;
 #ifdef KCMRULES
@@ -210,10 +210,10 @@ private:
 #endif
     int temporary_state; // e.g. for kstart
     QString description;
-    QByteArray wmclass;
+    QString wmclass;
     StringMatch wmclassmatch;
     bool wmclasscomplete;
-    QByteArray windowrole;
+    QString windowrole;
     StringMatch windowrolematch;
     QString title;
     StringMatch titlematch;

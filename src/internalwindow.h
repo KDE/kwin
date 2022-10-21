@@ -32,7 +32,7 @@ public:
     void killWindow() override;
     bool isClient() const override;
     bool isPopupWindow() const override;
-    QByteArray windowRole() const override;
+    QString windowRole() const override;
     void closeWindow() override;
     bool isCloseable() const override;
     bool isMovable() const override;

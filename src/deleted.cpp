@@ -185,7 +185,7 @@ xcb_window_t Deleted::frameId() const
     return m_frame;
 }
 
-QByteArray Deleted::windowRole() const
+QString Deleted::windowRole() const
 {
     return m_windowRole;
 }

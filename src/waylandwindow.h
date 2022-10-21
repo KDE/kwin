@@ -27,7 +27,7 @@ public:
     Window *findModal(bool allow_itself = false) override;
     QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &size) override;
     void killWindow() override;
-    QByteArray windowRole() const override;
+    QString windowRole() const override;
     bool isShown() const override;
     bool isHiddenInternal() const override;
     void hideClient() override;

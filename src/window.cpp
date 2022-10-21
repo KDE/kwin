@@ -302,10 +302,10 @@ void Window::getResourceClass()
     if (!info) {
         return;
     }
-    setResourceClass(QByteArray(info->windowClassName()).toLower(), QByteArray(info->windowClassClass()).toLower());
+    setResourceClass(QString::fromLocal8Bit(info->windowClassName()).toLower(), QString::fromLocal8Bit(info->windowClassClass()).toLower());
 }
 
-void Window::setResourceClass(const QByteArray &name, const QByteArray &className)
+void Window::setResourceClass(const QString &name, const QString &className)
 {
     resource_name = name;
     resource_class = className;
@@ -634,12 +634,12 @@ void Window::setStackingOrder(int order)
     }
 }
 
-QByteArray Window::windowRole() const
+QString Window::windowRole() const
 {
     if (!info) {
         return {};
     }
-    return QByteArray(info->windowRole());
+    return QString::fromLocal8Bit(info->windowRole());
 }
 
 void Window::setDepth(int depth)
@@ -2183,7 +2183,7 @@ void Window::setupWindowManagementInterface()
     w->setIcon(icon());
     auto updateAppId = [this, w] {
         w->setResourceName(resourceName());
-        w->setAppId(QString::fromUtf8(m_desktopFileName.isEmpty() ? resourceClass() : m_desktopFileName));
+        w->setAppId(m_desktopFileName.isEmpty() ? resourceClass() : m_desktopFileName);
     };
     updateAppId();
     w->setSkipTaskbar(skipTaskbar());

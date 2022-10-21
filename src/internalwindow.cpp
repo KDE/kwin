@@ -178,9 +178,9 @@ bool InternalWindow::isPopupWindow() const
     return m_internalWindowFlags.testFlag(Qt::Popup);
 }
 
-QByteArray InternalWindow::windowRole() const
+QString InternalWindow::windowRole() const
 {
-    return QByteArray();
+    return QString();
 }
 
 void InternalWindow::closeWindow()

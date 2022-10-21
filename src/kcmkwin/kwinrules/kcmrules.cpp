@@ -324,9 +324,9 @@ void KCMKWinRules::importFromFile(const QUrl &path)
 // Code adapted from original `findRule()` method in `kwin_rules_dialog::main.cpp`
 QModelIndex KCMKWinRules::findRuleWithProperties(const QVariantMap &info, bool wholeApp) const
 {
-    const QByteArray wmclass_class = info.value("resourceClass").toByteArray().toLower();
-    const QByteArray wmclass_name = info.value("resourceName").toByteArray().toLower();
-    const QByteArray role = info.value("role").toByteArray().toLower();
+    const QString wmclass_class = info.value("resourceClass").toString().toLower();
+    const QString wmclass_name = info.value("resourceName").toString().toLower();
+    const QString role = info.value("role").toString().toLower();
     const NET::WindowType type = static_cast<NET::WindowType>(info.value("type").toInt());
     const QString title = info.value("caption").toString();
     const QByteArray machine = info.value("clientMachine").toByteArray();
@@ -409,9 +409,9 @@ QModelIndex KCMKWinRules::findRuleWithProperties(const QVariantMap &info, bool w
 // Code adapted from original `findRule()` method in `kwin_rules_dialog::main.cpp`
 void KCMKWinRules::fillSettingsFromProperties(RuleSettings *settings, const QVariantMap &info, bool wholeApp) const
 {
-    const QByteArray wmclass_class = info.value("resourceClass").toByteArray().toLower();
-    const QByteArray wmclass_name = info.value("resourceName").toByteArray().toLower();
-    const QByteArray role = info.value("role").toByteArray().toLower();
+    const QString wmclass_class = info.value("resourceClass").toString().toLower();
+    const QString wmclass_name = info.value("resourceName").toString().toLower();
+    const QString role = info.value("role").toString().toLower();
     const NET::WindowType type = static_cast<NET::WindowType>(info.value("type").toInt());
     const QString title = info.value("caption").toString();
     const QByteArray machine = info.value("clientMachine").toByteArray();
@@ -419,7 +419,7 @@ void KCMKWinRules::fillSettingsFromProperties(RuleSettings *settings, const QVar
     settings->setDefaults();
 
     if (wholeApp) {
-        settings->setDescription(i18n("Application settings for %1", QString::fromLatin1(wmclass_class)));
+        settings->setDescription(i18n("Application settings for %1", wmclass_class));
         // TODO maybe exclude some types? If yes, then also exclude them when searching.
         settings->setTypes(NET::AllTypesMask);
         settings->setTitlematch(Rules::UnimportantMatch);
@@ -439,7 +439,7 @@ void KCMKWinRules::fillSettingsFromProperties(RuleSettings *settings, const QVar
         return;
     }
 
-    settings->setDescription(i18n("Window settings for %1", QString::fromLatin1(wmclass_class)));
+    settings->setDescription(i18n("Window settings for %1", wmclass_class));
     if (type == NET::Unknown) {
         settings->setTypes(NET::NormalMask);
     } else {

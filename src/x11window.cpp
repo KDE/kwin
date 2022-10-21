@@ -1942,7 +1942,7 @@ void X11Window::killProcess(bool ask, xcb_timestamp_t timestamp)
         QProcess::startDetached(buildDirBinary.exists() ? buildDirBinary.absoluteFilePath() : QStringLiteral(KWIN_KILLER_BIN),
                                 QStringList() << QStringLiteral("--pid") << QString::number(unsigned(pid)) << QStringLiteral("--hostname") << hostname
                                               << QStringLiteral("--windowname") << captionNormal()
-                                              << QStringLiteral("--applicationname") << QString::fromUtf8(resourceClass())
+                                              << QStringLiteral("--applicationname") << resourceClass()
                                               << QStringLiteral("--wid") << QString::number(window())
                                               << QStringLiteral("--timestamp") << QString::number(timestamp),
                                 QString(), &m_killHelperPID);

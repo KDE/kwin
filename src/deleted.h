@@ -58,7 +58,7 @@ public:
     {
         return m_wasClient;
     }
-    QByteArray windowRole() const override;
+    QString windowRole() const override;
 
     bool isFullScreen() const override
     {
@@ -159,7 +159,7 @@ private:
     QList<Window *> m_mainWindows;
     bool m_wasClient;
     NET::WindowType m_type = NET::Unknown;
-    QByteArray m_windowRole;
+    QString m_windowRole;
     bool m_fullscreen;
     bool m_keepAbove;
     bool m_keepBelow;

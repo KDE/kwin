@@ -120,9 +120,9 @@ void Rules::readFromSettings(const RuleSettings *settings)
     if (description.isEmpty()) {
         description = settings->descriptionLegacy();
     }
-    READ_MATCH_STRING(wmclass, .toLower().toLatin1());
+    READ_MATCH_STRING(wmclass, .toLower());
     wmclasscomplete = settings->wmclasscomplete();
-    READ_MATCH_STRING(windowrole, .toLower().toLatin1());
+    READ_MATCH_STRING(windowrole, .toLower());
     READ_MATCH_STRING(title, );
     READ_MATCH_STRING(clientmachine, .toLower().toLatin1());
     types = NET::WindowTypeMask(settings->types());
@@ -335,14 +335,14 @@ bool Rules::matchType(NET::WindowType match_type) const
     return true;
 }
 
-bool Rules::matchWMClass(const QByteArray &match_class, const QByteArray &match_name) const
+bool Rules::matchWMClass(const QString &match_class, const QString &match_name) const
 {
     if (wmclassmatch != UnimportantMatch) {
         // TODO optimize?
-        QByteArray cwmclass = wmclasscomplete
+        QString cwmclass = wmclasscomplete
             ? match_name + ' ' + match_class
             : match_class;
-        if (wmclassmatch == RegExpMatch && !QRegularExpression(QString::fromUtf8(wmclass)).match(QString::fromUtf8(cwmclass)).hasMatch()) {
+        if (wmclassmatch == RegExpMatch && !QRegularExpression(wmclass).match(cwmclass).hasMatch()) {
             return false;
         }
         if (wmclassmatch == ExactMatch && wmclass != cwmclass) {
@@ -355,10 +355,10 @@ bool Rules::matchWMClass(const QByteArray &match_class, const QByteArray &match_
     return true;
 }
 
-bool Rules::matchRole(const QByteArray &match_role) const
+bool Rules::matchRole(const QString &match_role) const
 {
     if (windowrolematch != UnimportantMatch) {
-        if (windowrolematch == RegExpMatch && !QRegularExpression(QString::fromUtf8(windowrole)).match(QString::fromUtf8(match_role)).hasMatch()) {
+        if (windowrolematch == RegExpMatch && !QRegularExpression(windowrole).match(match_role).hasMatch()) {
             return false;
         }
         if (windowrolematch == ExactMatch && windowrole != match_role) {

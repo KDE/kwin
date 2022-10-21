@@ -126,9 +126,9 @@ void WaylandWindow::killWindow()
     QTimer::singleShot(5000, c, &ClientConnection::destroy);
 }
 
-QByteArray WaylandWindow::windowRole() const
+QString WaylandWindow::windowRole() const
 {
-    return QByteArray();
+    return QString();
 }
 
 bool WaylandWindow::belongsToSameApplication(const Window *other, SameApplicationChecks checks) const

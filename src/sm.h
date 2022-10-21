@@ -79,11 +79,11 @@ private:
 struct SessionInfo
 {
     QByteArray sessionId;
-    QByteArray windowRole;
+    QString windowRole;
     QByteArray wmCommand;
     QByteArray wmClientMachine;
-    QByteArray resourceName;
-    QByteArray resourceClass;
+    QString resourceName;
+    QString resourceClass;
 
     QRect geometry;
     QRect restore;

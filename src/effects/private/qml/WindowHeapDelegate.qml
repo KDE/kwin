@@ -30,8 +30,7 @@ Item {
             if (!KWinComponents.Workspace.activeClient) {
                 return true;
             } else {
-                // client.resourceName is not an actual String as comes from a QByteArray so === would fail
-                return String(KWinComponents.Workspace.activeClient.resourceName) !== String(client.resourceName);
+                return KWinComponents.Workspace.activeClient.resourceName !== client.resourceName;
             }
         } else {
             return windowHeap.showOnly.length !== 0

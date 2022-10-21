@@ -137,9 +137,9 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(QRectF rect READ rect)
     Q_PROPERTY(QPointF clientPos READ clientPos)
     Q_PROPERTY(QSizeF clientSize READ clientSize)
-    Q_PROPERTY(QByteArray resourceName READ resourceName NOTIFY windowClassChanged)
-    Q_PROPERTY(QByteArray resourceClass READ resourceClass NOTIFY windowClassChanged)
-    Q_PROPERTY(QByteArray windowRole READ windowRole NOTIFY windowRoleChanged)
+    Q_PROPERTY(QString resourceName READ resourceName NOTIFY windowClassChanged)
+    Q_PROPERTY(QString resourceClass READ resourceClass NOTIFY windowClassChanged)
+    Q_PROPERTY(QString windowRole READ windowRole NOTIFY windowRoleChanged)
 
     /**
      * Returns whether the window is a desktop background window (the one with wallpaper).
@@ -716,10 +716,10 @@ public:
 
     void setLockScreenOverlay(bool allowed);
 
-    virtual QByteArray windowRole() const;
+    virtual QString windowRole() const;
     QByteArray sessionId() const;
-    QByteArray resourceName() const;
-    QByteArray resourceClass() const;
+    QString resourceName() const;
+    QString resourceClass() const;
     QByteArray wmCommand();
     QByteArray wmClientMachine(bool use_localhost) const;
     const ClientMachine *clientMachine() const;
@@ -1581,7 +1581,7 @@ protected:
     void deleteItem();
 
     void getResourceClass();
-    void setResourceClass(const QByteArray &name, const QByteArray &className = QByteArray());
+    void setResourceClass(const QString &name, const QString &className = QString());
     Xcb::Property fetchSkipCloseAnimation() const;
     void readSkipCloseAnimation(Xcb::Property &prop);
     void getSkipCloseAnimation();
@@ -1920,8 +1920,8 @@ private:
     EffectWindowImpl *m_effectWindow;
     WindowItem *m_windowItem = nullptr;
     Shadow *m_shadow = nullptr;
-    QByteArray resource_name;
-    QByteArray resource_class;
+    QString resource_name;
+    QString resource_class;
     ClientMachine *m_clientMachine;
     xcb_window_t m_wmClientLeader;
     QRegion opaque_region;
@@ -2280,12 +2280,12 @@ inline bool Window::isOnActivity(const QString &activity) const
     return activities().isEmpty() || activities().contains(activity);
 }
 
-inline QByteArray Window::resourceName() const
+inline QString Window::resourceName() const
 {
     return resource_name; // it is always lowercase
 }
 
-inline QByteArray Window::resourceClass() const
+inline QString Window::resourceClass() const
 {
     return resource_class; // it is always lowercase
 }

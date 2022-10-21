@@ -290,16 +290,13 @@ bool ClientFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
         if (client->caption().contains(m_filter, Qt::CaseInsensitive)) {
             return true;
         }
-        const QString windowRole(QString::fromUtf8(client->windowRole()));
-        if (windowRole.contains(m_filter, Qt::CaseInsensitive)) {
+        if (client->windowRole().contains(m_filter, Qt::CaseInsensitive)) {
             return true;
         }
-        const QString resourceName(QString::fromUtf8(client->resourceName()));
-        if (resourceName.contains(m_filter, Qt::CaseInsensitive)) {
+        if (client->resourceName().contains(m_filter, Qt::CaseInsensitive)) {
             return true;
         }
-        const QString resourceClass(QString::fromUtf8(client->resourceClass()));
-        if (resourceClass.contains(m_filter, Qt::CaseInsensitive)) {
+        if (client->resourceClass().contains(m_filter, Qt::CaseInsensitive)) {
             return true;
         }
         return false;

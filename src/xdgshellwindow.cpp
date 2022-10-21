@@ -1101,12 +1101,12 @@ void XdgToplevelWindow::handleWindowTitleChanged()
 
 void XdgToplevelWindow::handleWindowClassChanged()
 {
-    const QByteArray applicationId = m_shellSurface->windowClass().toUtf8();
+    const QString applicationId = m_shellSurface->windowClass();
     setResourceClass(resourceName(), applicationId);
     if (shellSurface()->isConfigured()) {
         evaluateWindowRules();
     }
-    setDesktopFileName(applicationId);
+    setDesktopFileName(applicationId.toUtf8());
 }
 
 void XdgToplevelWindow::handleWindowMenuRequested(SeatInterface *seat, const QPoint &surfacePos,
