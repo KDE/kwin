@@ -330,7 +330,7 @@ void PointerInputTest::testWarpingBetweenWindows()
     Test::pointerMotion(window1->frameGeometry().center(), timestamp++);
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
-    QCOMPARE(enteredSpy.last().at(1), QPoint(50, 25));
+    QCOMPARE(enteredSpy.last().at(1).toPointF(), QPointF(50, 25));
     QCOMPARE(leftSpy.count(), 0);
     QCOMPARE(motionSpy.count(), 0);
     QCOMPARE(pointer->enteredSurface(), surface1.get());
