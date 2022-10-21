@@ -84,8 +84,9 @@ void WindowQuadListTest::testMakeGrid()
 {
     QFETCH(KWin::WindowQuadList, orig);
     QFETCH(int, quadSize);
+    QFETCH(int, expectedCount);
     KWin::WindowQuadList actual = orig.makeGrid(quadSize);
-    QTEST(actual.count(), "expectedCount");
+    QCOMPARE(actual.count(), expectedCount);
 
     QFETCH(KWin::WindowQuadList, expected);
     for (auto it = actual.constBegin(); it != actual.constEnd(); ++it) {
@@ -172,8 +173,9 @@ void WindowQuadListTest::testMakeRegularGrid()
     QFETCH(KWin::WindowQuadList, orig);
     QFETCH(int, xSubdivisions);
     QFETCH(int, ySubdivisions);
+    QFETCH(int, expectedCount);
     KWin::WindowQuadList actual = orig.makeRegularGrid(xSubdivisions, ySubdivisions);
-    QTEST(actual.count(), "expectedCount");
+    QCOMPARE(actual.count(), expectedCount);
 
     QFETCH(KWin::WindowQuadList, expected);
     for (auto it = actual.constBegin(); it != actual.constEnd(); ++it) {
