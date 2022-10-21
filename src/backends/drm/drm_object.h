@@ -12,6 +12,8 @@
 #include <QMap>
 #include <QVector>
 
+#include <vector>
+
 // drm
 #include <xf86drmMode.h>
 

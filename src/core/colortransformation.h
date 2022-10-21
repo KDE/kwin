@@ -8,10 +8,10 @@
 */
 #pragma once
 
-#include <QVector>
 #include <memory>
 #include <stdint.h>
 #include <tuple>
+#include <vector>
 
 #include "kwin_export.h"
 

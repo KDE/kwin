@@ -27,6 +27,7 @@
 #include <QFile>
 #include <QQmlEngine>
 #include <QStandardPaths>
+#include <QVector>
 
 #include <optional>
 
