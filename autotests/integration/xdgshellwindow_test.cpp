@@ -1446,9 +1446,9 @@ void TestXdgShellWindow::testPointerInputTransform()
 
     // Move the pointer to (10, 5) relative to the upper left frame corner, which is located
     // at (0, 0) in the surface-local coordinates.
-    Test::pointerMotion(window->pos() + QPoint(10, 5), timestamp++);
+    Test::pointerMotion(window->pos() + QPointF(10, 5), timestamp++);
     QVERIFY(pointerMotionSpy.wait());
-    QCOMPARE(pointerMotionSpy.last().first(), QPoint(10, 5));
+    QCOMPARE(pointerMotionSpy.last().first().toPointF(), QPointF(10, 5));
 
     // Let's pretend that the window has changed the extents of the client-side drop-shadow
     // but the frame geometry didn't change.
@@ -1463,9 +1463,9 @@ void TestXdgShellWindow::testPointerInputTransform()
 
     // Move the pointer to (20, 50) relative to the upper left frame corner, which is located
     // at (10, 20) in the surface-local coordinates.
-    Test::pointerMotion(window->pos() + QPoint(20, 50), timestamp++);
+    Test::pointerMotion(window->pos() + QPointF(20, 50), timestamp++);
     QVERIFY(pointerMotionSpy.wait());
-    QCOMPARE(pointerMotionSpy.last().first(), QPoint(10, 20) + QPoint(20, 50));
+    QCOMPARE(pointerMotionSpy.last().first().toPointF(), QPointF(10, 20) + QPointF(20, 50));
 
     // Destroy the xdg-toplevel surface.
     shellSurface.reset();
