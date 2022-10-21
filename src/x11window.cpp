@@ -2103,7 +2103,7 @@ static inline QString readNameProperty(xcb_window_t w, xcb_atom_t atom)
         if (reply.encoding == atoms->utf8_string) {
             retVal = QString::fromUtf8(QByteArray(reply.name, reply.name_len));
         } else if (reply.encoding == XCB_ATOM_STRING) {
-            retVal = QString::fromLocal8Bit(QByteArray(reply.name, reply.name_len));
+            retVal = QString::fromLatin1(QByteArray(reply.name, reply.name_len));
         }
         xcb_icccm_get_text_property_reply_wipe(&reply);
         return retVal.simplified();

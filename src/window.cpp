@@ -302,7 +302,7 @@ void Window::getResourceClass()
     if (!info) {
         return;
     }
-    setResourceClass(QString::fromLocal8Bit(info->windowClassName()).toLower(), QString::fromLocal8Bit(info->windowClassClass()).toLower());
+    setResourceClass(QString::fromLatin1(info->windowClassName()).toLower(), QString::fromLatin1(info->windowClassClass()).toLower());
 }
 
 void Window::setResourceClass(const QString &name, const QString &className)
@@ -639,7 +639,7 @@ QString Window::windowRole() const
     if (!info) {
         return {};
     }
-    return QString::fromLocal8Bit(info->windowRole());
+    return QString::fromLatin1(info->windowRole());
 }
 
 void Window::setDepth(int depth)
