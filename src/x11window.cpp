@@ -461,11 +461,11 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
 
     setModal((info->state() & NET::Modal) != 0); // Needs to be valid before handling groups
     readTransientProperty(transientCookie);
-    QByteArray desktopFileName{info->desktopFileName()};
+    QString desktopFileName = QString::fromUtf8(info->desktopFileName());
     if (desktopFileName.isEmpty()) {
-        desktopFileName = info->gtkApplicationId();
+        desktopFileName = QString::fromUtf8(info->gtkApplicationId());
     }
-    setDesktopFileName(rules()->checkDesktopFile(desktopFileName, true).toUtf8());
+    setDesktopFileName(rules()->checkDesktopFile(desktopFileName, true));
     getIcons();
     connect(this, &X11Window::desktopFileNameChanged, this, &X11Window::getIcons);
 

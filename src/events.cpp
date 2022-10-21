@@ -373,7 +373,7 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
             getWmOpaqueRegion();
         }
         if (dirtyProperties2 & NET::WM2DesktopFileName) {
-            setDesktopFileName(QByteArray(info->desktopFileName()));
+            setDesktopFileName(QString::fromUtf8(info->desktopFileName()));
         }
         if (dirtyProperties2 & NET::WM2GTKFrameExtents) {
             setClientFrameExtents(info->gtkFrameExtents());

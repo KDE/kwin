@@ -1106,7 +1106,7 @@ void XdgToplevelWindow::handleWindowClassChanged()
     if (shellSurface()->isConfigured()) {
         evaluateWindowRules();
     }
-    setDesktopFileName(applicationId.toUtf8());
+    setDesktopFileName(applicationId);
 }
 
 void XdgToplevelWindow::handleWindowMenuRequested(SeatInterface *seat, const QPoint &surfacePos,
@@ -1379,7 +1379,7 @@ void XdgToplevelWindow::initialize()
     setFullScreen(rules()->checkFullScreen(initialFullScreenMode(), true), false);
     setOnActivities(rules()->checkActivity(activities(), true));
     setDesktops(rules()->checkDesktops(desktops(), true));
-    setDesktopFileName(rules()->checkDesktopFile(desktopFileName(), true).toUtf8());
+    setDesktopFileName(rules()->checkDesktopFile(desktopFileName(), true));
     if (rules()->checkMinimize(isMinimized(), true)) {
         minimize(true); // No animation.
     }

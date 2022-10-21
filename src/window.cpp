@@ -3283,13 +3283,13 @@ bool Window::dockWantsInput() const
     return false;
 }
 
-void Window::setDesktopFileName(QByteArray name)
+void Window::setDesktopFileName(const QString &name)
 {
-    name = rules()->checkDesktopFile(name).toUtf8();
-    if (name == m_desktopFileName) {
+    const QString effectiveName = rules()->checkDesktopFile(name);
+    if (effectiveName == m_desktopFileName) {
         return;
     }
-    m_desktopFileName = name;
+    m_desktopFileName = effectiveName;
     updateWindowRules(Rules::DesktopFile);
     Q_EMIT desktopFileNameChanged();
 }
@@ -3307,7 +3307,7 @@ QString Window::iconFromDesktopFile(const QString &desktopFileName)
 
 QString Window::iconFromDesktopFile() const
 {
-    return iconFromDesktopFile(QFile::decodeName(m_desktopFileName));
+    return iconFromDesktopFile(m_desktopFileName);
 }
 
 QString Window::findDesktopFile(const QString &desktopFileName)
@@ -4457,7 +4457,7 @@ void Window::applyWindowRules()
     } else {
         setOpacity(rules()->checkOpacityInactive(qRound(opacity() * 100.0)) / 100.0);
     }
-    setDesktopFileName(rules()->checkDesktopFile(desktopFileName()).toUtf8());
+    setDesktopFileName(rules()->checkDesktopFile(desktopFileName()));
 }
 
 void Window::setLastUsageSerial(quint32 serial)

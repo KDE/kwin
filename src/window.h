@@ -558,7 +558,7 @@ class KWIN_EXPORT Window : public QObject
      * The application's desktop file name can also be the full path to the desktop file
      * (e.g. "/opt/kde/share/org.kde.foo.desktop") in case it's not in a standard location.
      */
-    Q_PROPERTY(QByteArray desktopFileName READ desktopFileName NOTIFY desktopFileNameChanged)
+    Q_PROPERTY(QString desktopFileName READ desktopFileName NOTIFY desktopFileNameChanged)
 
     /**
      * Whether an application menu is available for this Window
@@ -1324,7 +1324,7 @@ public:
      */
     virtual void showOnScreenEdge();
 
-    QByteArray desktopFileName() const
+    QString desktopFileName() const
     {
         return m_desktopFileName;
     }
@@ -1870,7 +1870,7 @@ protected:
     void invalidateDecorationDoubleClickTimer();
     void updateDecorationInputShape();
 
-    void setDesktopFileName(QByteArray name);
+    void setDesktopFileName(const QString &name);
     QString iconFromDesktopFile() const;
 
     void updateApplicationMenuServiceName(const QString &serviceName);
@@ -2014,7 +2014,7 @@ private:
         QElapsedTimer doubleClickTimer;
         QRegion inputRegion;
     } m_decoration;
-    QByteArray m_desktopFileName;
+    QString m_desktopFileName;
 
     bool m_applicationMenuActive = false;
     QString m_applicationMenuServiceName;

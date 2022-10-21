@@ -138,7 +138,7 @@ protected:
 private:
     void windowActivated(Window *window);
     QHash<Window *, quint32> m_layouts;
-    QHash<QByteArray, quint32> m_layoutsRestored;
+    QHash<QString, quint32> m_layoutsRestored;
 };
 
 }
