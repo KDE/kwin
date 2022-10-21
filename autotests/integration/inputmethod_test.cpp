@@ -129,19 +129,18 @@ void InputMethodTest::testOpenClose()
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     std::unique_ptr<TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
-
     QVERIFY(textInput != nullptr);
-    textInput->enable(surface.get());
-    QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     // Show the keyboard
     touchNow();
-    QSignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
-    QVERIFY(paneladded.wait());
+    textInput->enable(surface.get());
     textInput->showInputPanel();
+    QSignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
     QVERIFY(windowAddedSpy.wait());
+    QCOMPARE(paneladded.count(), 1);
 
     Window *keyboardClient = windowAddedSpy.last().first().value<Window *>();
     QVERIFY(keyboardClient);
@@ -163,6 +162,14 @@ void InputMethodTest::testOpenClose()
     QVERIFY(frameGeometryChangedSpy.wait());
 
     QCOMPARE(window->frameGeometry().height(), 1024);
+
+    // show the keyboard again
+    touchNow();
+    textInput->enable(surface.get());
+    textInput->showInputPanel();
+
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QVERIFY(keyboardClient->isShown());
 
     // Destroy the test window.
     shellSurface.reset();
