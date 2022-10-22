@@ -3,16 +3,37 @@
         "Authors": [
             {
                 "Email": "l.lunak@kde.org, kde@privat.broulik.de, mgraesslin@kde.org, mart@kde.org",
-                "Name": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martin"
+                "Name": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martin",
+                "Name[ca]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martin",
+                "Name[es]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martin",
+                "Name[eu]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martin",
+                "Name[nl]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martin",
+                "Name[tr]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martin",
+                "Name[uk]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martin",
+                "Name[x-test]": "xxLubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martinxx"
             }
         ],
         "Category": "Appearance",
         "Description": "Smoothly fade to the logout screen",
+        "Description[ca]": "Transició suau a la pantalla de sortida",
+        "Description[es]": "Desvanecimiento suave para mostrar la pantalla de cierre de sesión",
+        "Description[nl]": "Langzaam naar het afmeldscherm vervagen",
+        "Description[tr]": "Oturumdan çıkarken pürüzsüzce çık",
+        "Description[uk]": "Плавний перехід до вікна виходу з системи",
+        "Description[x-test]": "xxSmoothly fade to the logout screenxx",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-logout",
         "Id": "kwin4_effect_logout",
         "License": "GPL",
         "Name": "Logout",
+        "Name[ca]": "Sortida",
+        "Name[es]": "Cierre de sesión",
+        "Name[eu]": "Saio-ixtea",
+        "Name[nl]": "Afmelden",
+        "Name[pt]": "Encerrar",
+        "Name[tr]": "Çıkış",
+        "Name[uk]": "Вихід",
+        "Name[x-test]": "xxLogoutxx",
         "ServiceTypes": [
             "KWin/Effect"
         ],

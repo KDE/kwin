@@ -3,14 +3,35 @@
         "Authors": [
             {
                 "Email": "thomas.luebking@gmail.com",
-                "Name": "Thomas Lübking"
+                "Name": "Thomas Lübking",
+                "Name[ca]": "Thomas Lübking",
+                "Name[es]": "Thomas Lübking",
+                "Name[eu]": "Thomas Lübking",
+                "Name[nl]": "Thomas Lübking",
+                "Name[tr]": "Thomas Lübking",
+                "Name[uk]": "Thomas Lübking",
+                "Name[x-test]": "xxThomas Lübkingxx"
             }
         ],
         "Description": "Adds a shortcut to minimize and restore all windows",
+        "Description[ca]": "Afegeix una drecera per a minimitzar i restaurar totes les finestres",
+        "Description[es]": "Añade un acceso rápido de teclado para minimizar y restaurar todas las ventanas",
+        "Description[nl]": "Voegt een sneltoets toe om alle vensters te minimaliseren en te herstellen",
+        "Description[tr]": "Tüm pencereleri simge durumuna küçültmek veya ekranı kaplamaları için bir kısayol ekler",
+        "Description[uk]": "Додає скорочення мінімізації усіх вікон або скасування такої мінімізації для усіх вікон",
+        "Description[x-test]": "xxAdds a shortcut to minimize and restore all windowsxx",
         "Icon": "preferences-system-windows-script-test",
         "Id": "minimizeall",
         "License": "GPL",
         "Name": "MinimizeAll",
+        "Name[ca]": "MinimitzaTot",
+        "Name[es]": "Minimizar todo",
+        "Name[eu]": "Minimizatu denak",
+        "Name[nl]": "Alles-minimaliseren",
+        "Name[pt]": "Maximizar Tudo",
+        "Name[tr]": "Tümünü Simge Durumuna Küçült",
+        "Name[uk]": "Мінімізувати усі",
+        "Name[x-test]": "xxMinimizeAllxx",
         "ServiceTypes": [
             "KWin/Script"
         ],

@@ -3,16 +3,36 @@
         "Authors": [
             {
                 "Email": "thomas.luebking@gmail.com",
-                "Name": "Thomas Lübking"
+                "Name": "Thomas Lübking",
+                "Name[ca]": "Thomas Lübking",
+                "Name[es]": "Thomas Lübking",
+                "Name[eu]": "Thomas Lübking",
+                "Name[nl]": "Thomas Lübking",
+                "Name[tr]": "Thomas Lübking",
+                "Name[uk]": "Thomas Lübking",
+                "Name[x-test]": "xxThomas Lübkingxx"
             }
         ],
         "Category": "Show Desktop Animation",
         "Description": "Move windows into screen corners",
+        "Description[ca]": "Mou les finestres cap a les cantonades de la pantalla",
+        "Description[es]": "Mover las ventanas a las esquinas de la pantalla",
+        "Description[nl]": "Verplaats vensters in de hoeken van het scherm",
+        "Description[tr]": "Pencereleri ekran kenarlarına taşı",
+        "Description[uk]": "Пересування вікон до кутів екрана",
+        "Description[x-test]": "xxMove windows into screen cornersxx",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-windowaperture",
         "Id": "kwin4_effect_windowaperture",
         "License": "GPL",
         "Name": "Window Aperture",
+        "Name[ca]": "Obertura de la finestra",
+        "Name[es]": "Apertura de ventanas",
+        "Name[eu]": "Leihoaren irekiera",
+        "Name[nl]": "Vensteropening",
+        "Name[tr]": "Pencere Açıklığı",
+        "Name[uk]": "Апертура вікна",
+        "Name[x-test]": "xxWindow Aperturexx",
         "ServiceTypes": [
             "KWin/Effect"
         ],

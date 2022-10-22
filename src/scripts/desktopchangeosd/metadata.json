@@ -3,14 +3,35 @@
         "Authors": [
             {
                 "Email": "mgraesslin@kde.org",
-                "Name": "Martin Gräßlin"
+                "Name": "Martin Gräßlin",
+                "Name[ca]": "Martin Gräßlin",
+                "Name[es]": "Martin Gräßlin",
+                "Name[eu]": "Martin Gräßlin",
+                "Name[nl]": "Martin Gräßlin",
+                "Name[pt]": "Martin Gräßlin",
+                "Name[tr]": "Martin Gräßlin",
+                "Name[uk]": "Martin Gräßlin",
+                "Name[x-test]": "xxMartin Gräßlinxx"
             }
         ],
         "Description": "An on screen display indicating the desktop change",
+        "Description[ca]": "Un missatge a la pantalla indicant el canvi d'escriptori",
+        "Description[es]": "Un visor sobre la pantalla para indicar el cambio de escritorio",
+        "Description[nl]": "Een on screen display (OSD) die de wijziging van het bureaublad aangeeft",
+        "Description[tr]": "Masaüstü değişikliğini belirten bir ekran üzeri görünümü",
+        "Description[uk]": "Екранна панель спостереження за зміною стільниць",
+        "Description[x-test]": "xxAn on screen display indicating the desktop changexx",
         "Icon": "preferences-system-windows-script-test",
         "Id": "desktopchangeosd",
         "License": "GPL",
         "Name": "Desktop Change OSD",
+        "Name[ca]": "OSD al canvi d'escriptori",
+        "Name[es]": "OSD de cambio de escritorio",
+        "Name[nl]": "OSD voor bureaubladwijziging",
+        "Name[pt]": "OSD de Mudança do Ecrã",
+        "Name[tr]": "OSD Masaüstü Değişimi",
+        "Name[uk]": "Панель зміни стільниць",
+        "Name[x-test]": "xxDesktop Change OSDxx",
         "ServiceTypes": [
             "KWin/Script"
         ],

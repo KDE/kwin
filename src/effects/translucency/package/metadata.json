@@ -3,15 +3,36 @@
         "Authors": [
             {
                 "Email": "l.lunak@kde.org, mgraesslin@kde.org",
-                "Name": "Luboš Luňák, Martin Gräßlin"
+                "Name": "Luboš Luňák, Martin Gräßlin",
+                "Name[ca]": "Luboš Luňák, Martin Gräßlin",
+                "Name[es]": "Luboš Luňák, Martin Gräßlin",
+                "Name[eu]": "Luboš Luňák, Martin Gräßlin",
+                "Name[nl]": "Luboš Luňák, Martin Gräßlin",
+                "Name[tr]": "Luboš Luňák, Martin Gräßlin",
+                "Name[uk]": "Luboš Luňák, Martin Gräßlin",
+                "Name[x-test]": "xxLuboš Luňák, Martin Gräßlinxx"
             }
         ],
         "Category": "Appearance",
         "Description": "Make windows translucent under different conditions",
+        "Description[ca]": "Torna translúcides les finestres en diverses condicions",
+        "Description[es]": "Hacer que las ventanas sean transparentes bajo distintas condiciones",
+        "Description[nl]": "Maakt vensters doorschijnend onder andere condities",
+        "Description[tr]": "Değişik koşullar altında pencereleri yarısaydam yap",
+        "Description[uk]": "Додавання прозорості до вікон за різних умов",
+        "Description[x-test]": "xxMake windows translucent under different conditionsxx",
         "Icon": "preferences-system-windows-effect-translucency",
         "Id": "kwin4_effect_translucency",
         "License": "GPL",
         "Name": "Translucency",
+        "Name[ca]": "Translucidesa",
+        "Name[es]": "Transparencia",
+        "Name[eu]": "Zeharrargitsua",
+        "Name[nl]": "Transparantie",
+        "Name[pt]": "Translucidez",
+        "Name[tr]": "Yarısaydamlık",
+        "Name[uk]": "Прозорість",
+        "Name[x-test]": "xxTranslucencyxx",
         "ServiceTypes": [
             "KWin/Effect",
             "KCModule"

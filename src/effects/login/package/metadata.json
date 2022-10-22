@@ -3,16 +3,37 @@
         "Authors": [
             {
                 "Email": "l.lunak@kde.org, kde@privat.broulik.de, mgraesslin@kde.org",
-                "Name": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin"
+                "Name": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
+                "Name[ca]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
+                "Name[es]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
+                "Name[eu]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
+                "Name[nl]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
+                "Name[tr]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
+                "Name[uk]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
+                "Name[x-test]": "xxLubos Lunak, Kai Uwe Broulik, Martin Gräßlinxx"
             }
         ],
         "Category": "Appearance",
         "Description": "Smoothly fade to the desktop when logging in",
+        "Description[ca]": "Transició suau a l'escriptori en connectar-se",
+        "Description[es]": "Desvanecimiento suave para mostrar el escritorio al iniciar sesión",
+        "Description[nl]": "Laat het opstartscherm vervagen naar het opkomende bureaublad tijdens het aanmelden",
+        "Description[tr]": "Giriş yaparken masaüstüne pürüzsüzce geçiş yap",
+        "Description[uk]": "Плавна поява стільниці під час входу",
+        "Description[x-test]": "xxSmoothly fade to the desktop when logging inxx",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-login",
         "Id": "kwin4_effect_login",
         "License": "GPL",
         "Name": "Login",
+        "Name[ca]": "Inici de sessió",
+        "Name[es]": "Inicio de sesión",
+        "Name[eu]": "Saio-hastea",
+        "Name[nl]": "Aanmelden",
+        "Name[pt]": "Arranque",
+        "Name[tr]": "Giriş",
+        "Name[uk]": "Вхід",
+        "Name[x-test]": "xxLoginxx",
         "ServiceTypes": [
             "KWin/Effect",
             "KCModule"

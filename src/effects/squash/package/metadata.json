@@ -3,16 +3,36 @@
         "Authors": [
             {
                 "Email": "rivolaks@hot.ee, vlad.zahorodnii@kde.org",
-                "Name": "Rivo Laks, Vlad Zahorodnii"
+                "Name": "Rivo Laks, Vlad Zahorodnii",
+                "Name[ca]": "Rivo Laks, Vlad Zahorodnii",
+                "Name[es]": "Rivo Laks, Vlad Zahorodnii",
+                "Name[eu]": "Rivo Laks, Vlad Zahorodnii",
+                "Name[nl]": "Rivo Laks, Vlad Zahorodnii",
+                "Name[tr]": "Rivo Laks, Vlad Zahorodnii",
+                "Name[uk]": "Rivo Laks, Влад Завгородній",
+                "Name[x-test]": "xxRivo Laks, Vlad Zahorodniixx"
             }
         ],
         "Category": "Appearance",
         "Description": "Squash windows when they are minimized",
+        "Description[ca]": "Amuntega les finestres quan estan minimitzades",
+        "Description[es]": "Aplastar las ventanas cuando se minimizan",
+        "Description[nl]": "Krimp vensters wanneer ze geminimaliseerd zijn",
+        "Description[tr]": "Pencereler simge durumuna küçültüldüğünde onları tıkıştır",
+        "Description[uk]": "Складує вікна, якщо їх мінімізовано",
+        "Description[x-test]": "xxSquash windows when they are minimizedxx",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-squash",
         "Id": "kwin4_effect_squash",
         "License": "GPL",
         "Name": "Squash",
+        "Name[ca]": "Amuntega",
+        "Name[es]": "Aplastar",
+        "Name[nl]": "Krimpen",
+        "Name[pt]": "Esmagar",
+        "Name[tr]": "Tıkıştır",
+        "Name[uk]": "Складування",
+        "Name[x-test]": "xxSquashxx",
         "ServiceTypes": [
             "KWin/Effect"
         ],

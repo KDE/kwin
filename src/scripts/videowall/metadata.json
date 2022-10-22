@@ -3,14 +3,37 @@
         "Authors": [
             {
                 "Email": "mgraesslin@kde.org",
-                "Name": "Martin Gräßlin"
+                "Name": "Martin Gräßlin",
+                "Name[ca]": "Martin Gräßlin",
+                "Name[es]": "Martin Gräßlin",
+                "Name[eu]": "Martin Gräßlin",
+                "Name[nl]": "Martin Gräßlin",
+                "Name[pt]": "Martin Gräßlin",
+                "Name[tr]": "Martin Gräßlin",
+                "Name[uk]": "Martin Gräßlin",
+                "Name[x-test]": "xxMartin Gräßlinxx"
             }
         ],
         "Description": "Spans fullscreen video player over all attached screens to create a Video Wall",
+        "Description[ca]": "Expandeix el reproductor de vídeo a pantalla completa per a totes les pantalles adjuntades per a crear un mur de vídeo",
+        "Description[es]": "Amplía el reproductor de video en pantalla completa a todas las pantallas conectadas para crear un muro de vídeo",
+        "Description[eu]": "Bideo-horma bat sortzeko, leiho-osoko bideo jotzailea atxikitako pantaila guzietara hedatzen du",
+        "Description[nl]": "Verdeelt de videospeler in modus volledig scherm over alle aangesloten schermen om een Videomuur te creëren",
+        "Description[tr]": "Tam ekran video oynatıcılarını tüm bağlı ekranlara genişleterek bir tür Video Duvarı oluşturur",
+        "Description[uk]": "Розподіл зображення відеопрогравача у повноекранному режимі на всі екрани з метою створення відеостіни",
+        "Description[x-test]": "xxSpans fullscreen video player over all attached screens to create a Video Wallxx",
         "Icon": "preferences-system-windows-script-test",
         "Id": "videowall",
         "License": "GPL",
         "Name": "Video Wall",
+        "Name[ca]": "Mur de vídeo",
+        "Name[es]": "Video wall",
+        "Name[eu]": "Bideo-horma",
+        "Name[nl]": "Videomuur",
+        "Name[pt]": "Painel de Vídeo",
+        "Name[tr]": "Video Duvarı",
+        "Name[uk]": "Відеостіна",
+        "Name[x-test]": "xxVideo Wallxx",
         "ServiceTypes": [
             "KWin/Script",
             "KCModule"

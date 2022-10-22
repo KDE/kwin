@@ -3,16 +3,38 @@
         "Authors": [
             {
                 "Email": "mgraesslin@kde.org, vlad.zahorodnii@kde.org",
-                "Name": "Martin Flöser, Vlad Zahorodnii"
+                "Name": "Martin Flöser, Vlad Zahorodnii",
+                "Name[ca]": "Martin Flöser, Vlad Zahorodnii",
+                "Name[es]": "Martin Flöser, Vlad Zahorodnii",
+                "Name[eu]": "Martin Flöser, Vlad Zahorodnii",
+                "Name[nl]": "Martin Flöser, Vlad Zahorodnii",
+                "Name[tr]": "Martin Flöser, Vlad Zahorodnii",
+                "Name[uk]": "Martin Flöser, Влад Завгородній",
+                "Name[x-test]": "xxMartin Flöser, Vlad Zahorodniixx"
             }
         ],
         "Category": "Focus",
         "Description": "Darkens the entire screen when requesting root privileges",
+        "Description[ca]": "Enfosqueix tota la pantalla en demanar privilegis d'administrador",
+        "Description[es]": "Oscurece toda la pantalla cuando se solicitan privilegios de «root»",
+        "Description[eu]": "Ilundu pantaila osoa «root»aren pribilegioak eskatzean",
+        "Description[nl]": "Maakt het volledige scherm donker wanneer er om root-privileges wordt verzocht",
+        "Description[tr]": "Kök ayrıcalıkları isterken tüm ekranın karartır",
+        "Description[uk]": "Притлумлює кольори усього екрана, коли працюємо з доступом root",
+        "Description[x-test]": "xxDarkens the entire screen when requesting root privilegesxx",
         "EnabledByDefault": false,
         "Icon": "preferences-system-windows-effect-dimscreen",
         "Id": "kwin4_effect_dimscreen",
         "License": "GPL",
         "Name": "Dim Screen for Administrator Mode",
+        "Name[ca]": "Enfosqueix la pantalla per al mode administrador",
+        "Name[es]": "Oscurecer la pantalla en el modo administrador",
+        "Name[eu]": "Ahuldu pantaila administratzaile modurako",
+        "Name[nl]": "Scherm dimmen voor administratormodus",
+        "Name[pt]": "Escurecer o Ecrã para o Modo de Administrador",
+        "Name[tr]": "Yönetici Kipi için Ekranı Karart",
+        "Name[uk]": "Притлумлення кольорів у режимі адміністратора",
+        "Name[x-test]": "xxDim Screen for Administrator Modexx",
         "ServiceTypes": [
             "KWin/Effect"
         ],

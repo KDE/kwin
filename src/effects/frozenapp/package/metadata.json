@@ -3,16 +3,38 @@
         "Authors": [
             {
                 "Email": "kde@privat.broulik.de",
-                "Name": "Kai Uwe Broulik"
+                "Name": "Kai Uwe Broulik",
+                "Name[ca]": "Kai Uwe Broulik",
+                "Name[es]": "Kai Uwe Broulik",
+                "Name[eu]": "Kai Uwe Broulik",
+                "Name[nl]": "Kai Uwe Broulik",
+                "Name[pt]": "Kai Uwe Broulik",
+                "Name[tr]": "Kai Uwe Broulik",
+                "Name[uk]": "Kai Uwe Broulik",
+                "Name[x-test]": "xxKai Uwe Broulikxx"
             }
         ],
         "Category": "Appearance",
         "Description": "Desaturate windows of unresponsive (frozen) applications",
+        "Description[ca]": "Dessatura les finestres de les aplicacions que no responen (congelades)",
+        "Description[es]": "Desaturar ventanas de las aplicaciones que no responden (congeladas)",
+        "Description[nl]": "Verzadiging van vensters van niet responsieve (bevroren) toepassingen verminderen",
+        "Description[tr]": "Yanıt vermeyen (donmuş) uygulamaların pencerelerini soldur",
+        "Description[uk]": "Зменшення насиченості кольорів вікон програм, які не відповідають на запити (повисли)",
+        "Description[x-test]": "xxDesaturate windows of unresponsive (frozen) applicationsxx",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-frozenapp",
         "Id": "kwin4_effect_frozenapp",
         "License": "GPL",
         "Name": "Desaturate Unresponsive Applications",
+        "Name[ca]": "Dessatura les aplicacions que no responen",
+        "Name[es]": "Desaturar las aplicaciones que no responden",
+        "Name[eu]": "Desasetu erantzuten ez duten aplikazioak",
+        "Name[nl]": "Verzadiging van niet responsieve toepassingen verminderen",
+        "Name[pt]": "Reduzir a Saturação das Aplicações Bloqueadas",
+        "Name[tr]": "Yanıt Vermeyen Uygulamaları Solgunlaştır",
+        "Name[uk]": "Зненасичення вікон, які не відповідають на запити",
+        "Name[x-test]": "xxDesaturate Unresponsive Applicationsxx",
         "ServiceTypes": [
             "KWin/Effect",
             "KCModule"

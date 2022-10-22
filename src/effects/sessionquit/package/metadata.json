@@ -3,16 +3,37 @@
         "Authors": [
             {
                 "Email": "davidedmundson@kde.org",
-                "Name": "David Edmundson"
+                "Name": "David Edmundson",
+                "Name[ca]": "David Edmundson",
+                "Name[es]": "David Edmundson",
+                "Name[eu]": "David Edmundson",
+                "Name[nl]": "David Edmundson",
+                "Name[pt]": "David Edmundson",
+                "Name[tr]": "David Edmundson",
+                "Name[uk]": "David Edmundson",
+                "Name[x-test]": "xxDavid Edmundsonxx"
             }
         ],
         "Category": "Appearance",
         "Description": "Keep the desktop background alive during logout until the end",
+        "Description[ca]": "Manté viu el fons de l'escriptori durant la sortida de la sessió fins al final",
+        "Description[es]": "Mantener vivo el fondo del escritorio hasta el final durante el cierre de sesión",
+        "Description[nl]": "De achtergrond van het bureaublad tot het einde levend houden gedurende afmelden",
+        "Description[tr]": "Çıkış sırasında en son aşamaya dek masaüstü arka planını göster",
+        "Description[uk]": "Не вимикати тло стільниці до кінця процедури виходу із облікового запису",
+        "Description[x-test]": "xxKeep the desktop background alive during logout until the endxx",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-logout",
         "Id": "kwin4_effect_sessionquit",
         "License": "GPL",
         "Name": "Session Quit",
+        "Name[ca]": "Sortida de la sessió",
+        "Name[es]": "Salir de la sesión",
+        "Name[nl]": "Afsluiten van sessie",
+        "Name[pt]": "Sair da Sessão",
+        "Name[tr]": "Oturum Çıkışı",
+        "Name[uk]": "Вихід з сеансу",
+        "Name[x-test]": "xxSession Quitxx",
         "ServiceTypes": [
             "KWin/Effect"
         ],

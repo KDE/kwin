@@ -3,16 +3,38 @@
         "Authors": [
             {
                 "Email": "philip.falkner@gmail.com, mgraesslin@kde.org",
-                "Name": "Philip Falkner, Martin Gräßlin"
+                "Name": "Philip Falkner, Martin Gräßlin",
+                "Name[ca]": "Philip Falkner, Martin Gräßlin",
+                "Name[es]": "Philip Falkner, Martin Gräßlin",
+                "Name[eu]": "Philip Falkner, Martin Gräßlin",
+                "Name[nl]": "Philip Falkner, Martin Gräßlin",
+                "Name[tr]": "Philip Falkner, Martin Gräßlin",
+                "Name[uk]": "Philip Falkner, Martin Gräßlin",
+                "Name[x-test]": "xxPhilip Falkner, Martin Gräßlinxx"
             }
         ],
         "Category": "Window Open/Close Animation",
         "Description": "Make windows smoothly fade in and out when they are shown or hidden",
+        "Description[ca]": "Fa que les finestres s'encenguin o s'apaguin de manera gradual quan es mostren o s'oculten",
+        "Description[es]": "Hacer que las ventanas se desvanezcan y reaparezcan suavemente al mostrarlas y al ocultarlas",
+        "Description[eu]": "Leihoak leunki koloregabetu/koloretu haiek erakustean edo ezkutatzean",
+        "Description[nl]": "Laat vensters vloeiend opkomen/vervagen als ze worden weergegeven of verborgen",
+        "Description[tr]": "Pencereler gösterilirken veya gizlenirken pürüzsüzce geçiş yapmalarını sağlar",
+        "Description[uk]": "Плавна поява або зникнення вікон",
+        "Description[x-test]": "xxMake windows smoothly fade in and out when they are shown or hiddenxx",
         "EnabledByDefault": false,
         "Icon": "preferences-system-windows-effect-fade",
         "Id": "kwin4_effect_fade",
         "License": "GPL",
         "Name": "Fade",
+        "Name[ca]": "Esvaïment",
+        "Name[es]": "Desvanecer",
+        "Name[eu]": "Koloregabetu",
+        "Name[nl]": "Vervagen",
+        "Name[pt]": "Desvanecer",
+        "Name[tr]": "Soldur",
+        "Name[uk]": "Згасання",
+        "Name[x-test]": "xxFadexx",
         "ServiceTypes": [
             "KWin/Effect"
         ],

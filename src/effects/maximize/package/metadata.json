@@ -3,16 +3,38 @@
         "Authors": [
             {
                 "Email": "mgraesslin@kde.org",
-                "Name": "Martin Gräßlin"
+                "Name": "Martin Gräßlin",
+                "Name[ca]": "Martin Gräßlin",
+                "Name[es]": "Martin Gräßlin",
+                "Name[eu]": "Martin Gräßlin",
+                "Name[nl]": "Martin Gräßlin",
+                "Name[pt]": "Martin Gräßlin",
+                "Name[tr]": "Martin Gräßlin",
+                "Name[uk]": "Martin Gräßlin",
+                "Name[x-test]": "xxMartin Gräßlinxx"
             }
         ],
         "Category": "Appearance",
         "Description": "Animation for a window going to maximize/restore from maximize",
+        "Description[ca]": "Animació per a una finestra que es maximitza/restaura des de maximització",
+        "Description[es]": "Animación para la ventana que se maximiza o restaura desde el estado de maximizada",
+        "Description[nl]": "Animatie voor een venster dat gaat naar maximaliseren/herstellen vanuit maximaliseren",
+        "Description[tr]": "Ekranı kaplayan veya geri dönen bir pencere için canlandırma",
+        "Description[uk]": "Анімація для вікон під час максимізації/відновлення з максимізації",
+        "Description[x-test]": "xxAnimation for a window going to maximize/restore from maximizexx",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-maximize",
         "Id": "kwin4_effect_maximize",
         "License": "GPL",
         "Name": "Maximize",
+        "Name[ca]": "Maximitza",
+        "Name[es]": "Maximizar",
+        "Name[eu]": "Maximizatzea",
+        "Name[nl]": "Maximaliseren",
+        "Name[pt]": "Maximizar",
+        "Name[tr]": "Ekranı Kapla",
+        "Name[uk]": "Максимізація",
+        "Name[x-test]": "xxMaximizexx",
         "ServiceTypes": [
             "KWin/Effect"
         ],

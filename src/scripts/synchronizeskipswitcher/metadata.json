@@ -3,14 +3,35 @@
         "Authors": [
             {
                 "Email": "mgraesslin@kde.org",
-                "Name": "Martin Gräßlin"
+                "Name": "Martin Gräßlin",
+                "Name[ca]": "Martin Gräßlin",
+                "Name[es]": "Martin Gräßlin",
+                "Name[eu]": "Martin Gräßlin",
+                "Name[nl]": "Martin Gräßlin",
+                "Name[pt]": "Martin Gräßlin",
+                "Name[tr]": "Martin Gräßlin",
+                "Name[uk]": "Martin Gräßlin",
+                "Name[x-test]": "xxMartin Gräßlinxx"
             }
         ],
         "Description": "Hides all windows marked as Skip Taskbar to be also excluded from window switchers (e.g. Alt+Tab)",
+        "Description[ca]": "Oculta totes les finestres marcades com a «Ignora la barra de tasques» que també s'excloguin del commutador de finestres (p. ex. Alt+Tab)",
+        "Description[es]": "Oculta todas las ventanas marcadas como «Omitir barra de tareas» para que también se excluyan de los selectores de ventanas (por ejemplo, Alt+Tab)",
+        "Description[nl]": "Verbergt alle vensters gemarkeerd als Taakbalkoverslaan om ook te worden uitgesloten van vensterschakelaars (bijv. Alt+Tab)",
+        "Description[tr]": "Görev Çubuğunu Atla olarak imlenen tüm pencerelerin, değiştiricilerden de (örn. Alt+Tab) saklanmasını sağlar",
+        "Description[uk]": "Приховує всі вікна, позначені як такі, що не показуються на панелі задач, так, щоб їх не було показано у списках перемикання вікон (наприклад Alt+Tab)",
+        "Description[x-test]": "xxHides all windows marked as Skip Taskbar to be also excluded from window switchers (e.g. Alt+Tab)xx",
         "Icon": "preferences-system-windows-script-synchronizeskipswitcher",
         "Id": "synchronizeskipswitcher",
         "License": "GPL",
         "Name": "Synchronize Skip Switcher with Taskbar",
+        "Name[ca]": "Sincronitza «Ignora el commutador» amb la barra de tasques",
+        "Name[es]": "Sincronizar «Omitir selector» con la barra de tareas",
+        "Name[nl]": "Overslaanschakelaar met taakbalk synchroniseren",
+        "Name[pt]": "Sincronizar a Mudança com a Barra de Tarefas",
+        "Name[tr]": "Değiştiricide Gösterilmeyenleri Çubukta da Gösterme",
+        "Name[uk]": "Синхронізувати виключення вікон у перемикачі з панеллю задач",
+        "Name[x-test]": "xxSynchronize Skip Switcher with Taskbarxx",
         "ServiceTypes": [
             "KWin/Script"
         ],

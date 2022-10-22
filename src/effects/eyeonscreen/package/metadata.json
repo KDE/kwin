@@ -3,16 +3,36 @@
         "Authors": [
             {
                 "Email": "thomas.luebking@gmail.com",
-                "Name": "Thomas Lübking"
+                "Name": "Thomas Lübking",
+                "Name[ca]": "Thomas Lübking",
+                "Name[es]": "Thomas Lübking",
+                "Name[eu]": "Thomas Lübking",
+                "Name[nl]": "Thomas Lübking",
+                "Name[tr]": "Thomas Lübking",
+                "Name[uk]": "Thomas Lübking",
+                "Name[x-test]": "xxThomas Lübkingxx"
             }
         ],
         "Category": "Show Desktop Animation",
         "Description": "Suck windows into the desktop",
+        "Description[ca]": "Enganxa les finestres a l'escriptori",
+        "Description[es]": "Aspirar las ventanas en el escritorio",
+        "Description[nl]": "Zuig vensters in het bureaublad",
+        "Description[tr]": "Pencereleri masaüstüne çek",
+        "Description[uk]": "Засмоктування вікон до стільниці",
+        "Description[x-test]": "xxSuck windows into the desktopxx",
         "EnabledByDefault": false,
         "Icon": "preferences-system-windows-effect-eyeonscreen",
         "Id": "kwin4_effect_eyeonscreen",
         "License": "GPL",
         "Name": "Eye on Screen",
+        "Name[ca]": "Ull a la pantalla",
+        "Name[es]": "Ojo en la pantalla",
+        "Name[eu]": "Begia pantailan",
+        "Name[nl]": "Oog op scherm",
+        "Name[tr]": "Göz Ekranda",
+        "Name[uk]": "Око на екрані",
+        "Name[x-test]": "xxEye on Screenxx",
         "ServiceTypes": [
             "KWin/Effect"
         ],

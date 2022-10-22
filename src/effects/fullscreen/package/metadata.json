@@ -3,16 +3,37 @@
         "Authors": [
             {
                 "Email": "mgraesslin@kde.org",
-                "Name": "Martin Gräßlin"
+                "Name": "Martin Gräßlin",
+                "Name[ca]": "Martin Gräßlin",
+                "Name[es]": "Martin Gräßlin",
+                "Name[eu]": "Martin Gräßlin",
+                "Name[nl]": "Martin Gräßlin",
+                "Name[pt]": "Martin Gräßlin",
+                "Name[tr]": "Martin Gräßlin",
+                "Name[uk]": "Martin Gräßlin",
+                "Name[x-test]": "xxMartin Gräßlinxx"
             }
         ],
         "Category": "Appearance",
         "Description": "Animation for a window going to and leaving full screen mode",
+        "Description[ca]": "Animació per a una finestra que entra o abandona el mode de pantalla completa",
+        "Description[es]": "Animación para la ventana que entra o sale del modo de pantalla completa",
+        "Description[nl]": "Animatie voor een venster dat gaat naar volledig scherm en deze verlaat",
+        "Description[tr]": "Tam ekran kipine giren ve çıkan pencere için canlandırma",
+        "Description[uk]": "Анімація для вікон під час входу до повноекранного режиму і виходу з нього",
+        "Description[x-test]": "xxAnimation for a window going to and leaving full screen modexx",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-fullscreen",
         "Id": "kwin4_effect_fullscreen",
         "License": "GPL",
         "Name": "Full Screen",
+        "Name[ca]": "Pantalla completa",
+        "Name[es]": "Pantalla completa",
+        "Name[eu]": "Pantaila betea",
+        "Name[nl]": "Volledig scherm",
+        "Name[tr]": "Tam Ekran",
+        "Name[uk]": "Повноекранний режим",
+        "Name[x-test]": "xxFull Screenxx",
         "ServiceTypes": [
             "KWin/Effect"
         ],
