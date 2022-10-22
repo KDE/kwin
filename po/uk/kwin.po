@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-21 00:48+0000\n"
-"PO-Revision-Date: 2022-10-07 07:25+0300\n"
+"PO-Revision-Date: 2022-10-21 09:37+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -2287,11 +2287,9 @@ msgid "Show in &Activities"
 msgstr "Показати у п&росторах дій"
 
 #: useractions.cpp:525
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move the window to that desktop"
-#| msgid "Move to New Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "Пересунути на нову стільницю"
+msgstr "Пересунути &на поточну стільницю"
 
 #: useractions.cpp:535 useractions.cpp:602
 #, kde-format

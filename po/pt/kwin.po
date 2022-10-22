@@ -2293,11 +2293,9 @@ msgid "Show in &Activities"
 msgstr "Mostrar nas &Actividades"
 
 #: useractions.cpp:525
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move the window to that desktop"
-#| msgid "Move to New Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "Mover Para um Novo Ecrã"
+msgstr "Mover para o Ecrã Ac&tual"
 
 #: useractions.cpp:535 useractions.cpp:602
 #, kde-format

@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-21 00:48+0000\n"
-"PO-Revision-Date: 2022-10-07 08:35+0300\n"
+"PO-Revision-Date: 2022-10-21 11:02+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -2280,11 +2280,9 @@ msgid "Show in &Activities"
 msgstr "&Etkinliklerde Göster"
 
 #: useractions.cpp:525
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move the window to that desktop"
-#| msgid "Move to New Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "&Yeni Masaüstüne Taşı"
+msgstr "&Geçerli Masaüstüne Taşı"
 
 #: useractions.cpp:535 useractions.cpp:602
 #, kde-format

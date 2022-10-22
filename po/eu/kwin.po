@@ -1,6 +1,6 @@
 # Translation for kwin.po to Euskara/Basque (eu).
-# Copyright (C) 2002-2018, The Free Software Foundation.
-# Copyright (C) 2019-2022, This file is copyright:
+# Copyright (C) 2002-2018 The Free Software Foundation.
+# Copyright (C) 2019-2022 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 # KDE euskaratzeko proiektuko arduraduna <xalba@ni.eus>.
 #
@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-21 00:48+0000\n"
-"PO-Revision-Date: 2022-10-07 05:30+0200\n"
+"PO-Revision-Date: 2022-10-21 20:29+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -30,15 +30,15 @@ msgstr ""
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
-"Iñaki Ibarrola Atxa,Marcos Goyeneche,Juan Irigoien,Ion Gaztañaga,Iñigo "
-"Salvador Azurmendi,Hizkuntza Politikarako Sailburuordetza"
+"Iñigo Salvador Azurmendi,Iñaki Ibarrola Atxa,Marcos Goyeneche,Juan Irigoien,"
+"Ion Gaztañaga,Hizkuntza Politikarako Sailburuordetza"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
-"etxaurre@teleline.es,marcos@euskalgnu.org,juanirigoien@yahoo.es,"
-"igaztanaga@gmail.com,xalba@ni.eus,hizpol@ej-gv.es"
+"xalba@ni.eus,etxaurre@teleline.es,marcos@euskalgnu.org,juanirigoien@yahoo.es,"
+"igaztanaga@gmail.com,hizpol@ej-gv.es"
 
 #: composite.cpp:615
 #, kde-format
@@ -2291,11 +2291,9 @@ msgid "Show in &Activities"
 msgstr "Erakutsi Jar&dueretan"
 
 #: useractions.cpp:525
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move the window to that desktop"
-#| msgid "Move to New Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "Eraman mahaigain berrira"
+msgstr "Eraman une&ko mahaigainera"
 
 #: useractions.cpp:535 useractions.cpp:602
 #, kde-format
