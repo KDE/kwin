@@ -174,12 +174,12 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     Cursors::self()->mouse()->setPos(window->frameGeometry().center());
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window->surface());
     QVERIFY(enteredSpy.wait());
-    QCOMPARE(enteredSpy.last().first(), window->frameGeometry().center() - window->clientPos());
+    QCOMPARE(enteredSpy.last().first().toPoint(), (window->frameGeometry().center() - window->clientPos()).toPoint());
 
     // move out of window
-    Cursors::self()->mouse()->setPos(window->frameGeometry().bottomRight() + QPoint(10, 10));
+    Cursors::self()->mouse()->setPos(window->frameGeometry().bottomRight() + QPointF(10, 10));
     QVERIFY(leftSpy.wait());
-    QCOMPARE(leftSpy.last().first(), window->frameGeometry().center() - window->clientPos());
+    QCOMPARE(leftSpy.last().first().toPoint(), (window->frameGeometry().center() - window->clientPos()).toPoint());
 
     // destroy window again
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
@@ -246,8 +246,8 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     QVERIFY(window);
     QVERIFY(!window->isDecorated());
     QVERIFY(window->isClientSideDecorated());
-    QCOMPARE(window->bufferGeometry(), QRect(0, 0, 120, 225));
-    QCOMPARE(window->frameGeometry(), QRect(10, 5, 100, 200));
+    QCOMPARE(window->bufferGeometry(), QRectF(0, 0, 120, 225));
+    QCOMPARE(window->frameGeometry(), QRectF(10, 5, 100, 200));
 
     QMetaObject::invokeMethod(window, "setReadyForPainting");
     QVERIFY(window->readyForPainting());
@@ -259,13 +259,13 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     Cursors::self()->mouse()->setPos(window->frameGeometry().center());
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window->surface());
     QVERIFY(enteredSpy.wait());
-    QCOMPARE(enteredSpy.last().first(), QPointF(60, 105));
+    QCOMPARE(enteredSpy.last().first().toPoint(), QPoint(60, 105));
 
     // Move out of the window, should trigger a leave.
     QVERIFY(leftSpy.isEmpty());
     Cursors::self()->mouse()->setPos(window->frameGeometry().bottomRight() + QPoint(100, 100));
     QVERIFY(leftSpy.wait());
-    QCOMPARE(leftSpy.last().first(), QPointF(60, 105));
+    QCOMPARE(leftSpy.last().first().toPoint(), QPoint(60, 105));
 
     // Destroy the window.
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
