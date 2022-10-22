@@ -884,8 +884,10 @@ void TestWaylandSeat::testPointerSwipeGesture()
         spy = &endSpy;
     }
     QVERIFY(spy->wait());
-    QTEST(endSpy.count(), "expectedEndCount");
-    QTEST(cancelledSpy.count(), "expectedCancelCount");
+    QFETCH(int, expectedEndCount);
+    QCOMPARE(endSpy.count(), expectedEndCount);
+    QFETCH(int, expectedCancelCount);
+    QCOMPARE(cancelledSpy.count(), expectedCancelCount);
     QCOMPARE(spy->count(), 1);
     QCOMPARE(spy->first().at(0).value<quint32>(), m_display->serial());
     QCOMPARE(spy->first().at(1).value<quint32>(), 4u);
@@ -1007,8 +1009,10 @@ void TestWaylandSeat::testPointerPinchGesture()
         spy = &endSpy;
     }
     QVERIFY(spy->wait());
-    QTEST(endSpy.count(), "expectedEndCount");
-    QTEST(cancelledSpy.count(), "expectedCancelCount");
+    QFETCH(int, expectedEndCount);
+    QCOMPARE(endSpy.count(), expectedEndCount);
+    QFETCH(int, expectedCancelCount);
+    QCOMPARE(cancelledSpy.count(), expectedCancelCount);
     QCOMPARE(spy->count(), 1);
     QCOMPARE(spy->first().at(0).value<quint32>(), m_display->serial());
     QCOMPARE(spy->first().at(1).value<quint32>(), 4u);
@@ -1134,8 +1138,10 @@ void TestWaylandSeat::testPointerHoldGesture()
         spy = &endSpy;
     }
     QVERIFY(spy->wait());
-    QTEST(endSpy.count(), "expectedEndCount");
-    QTEST(cancelledSpy.count(), "expectedCancelCount");
+    QFETCH(int, expectedEndCount);
+    QCOMPARE(endSpy.count(), expectedEndCount);
+    QFETCH(int, expectedCancelCount);
+    QCOMPARE(cancelledSpy.count(), expectedCancelCount);
     QCOMPARE(spy->count(), 1);
     QCOMPARE(spy->first().at(0).value<quint32>(), m_display->serial());
     QCOMPARE(spy->first().at(1).value<quint32>(), 2);
