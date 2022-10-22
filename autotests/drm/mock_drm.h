@@ -15,6 +15,7 @@
 #include <QRect>
 #include <QVector>
 #include <memory>
+#include <vector>
 
 class MockGpu;
 class MockFb;

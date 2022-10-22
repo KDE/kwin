@@ -94,7 +94,7 @@ EglDmabufBuffer::EglDmabufBuffer(EGLImage image,
                                  DmaBufAttributes &&attrs,
                                  quint32 flags,
                                  EglDmabuf *interfaceImpl)
-    : EglDmabufBuffer(QVector{image}, std::move(attrs), flags, interfaceImpl)
+    : EglDmabufBuffer(QVector<EGLImage>{image}, std::move(attrs), flags, interfaceImpl)
 {
     m_importType = ImportType::Direct;
 }

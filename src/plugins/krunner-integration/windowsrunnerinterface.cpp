@@ -283,7 +283,7 @@ RemoteMatch WindowsRunner::windowsMatch(const Window *window, const WindowsRunne
         RemoteImage remoteImage{
             convertedImage.width(),
             convertedImage.height(),
-            convertedImage.bytesPerLine(),
+            static_cast<int>(convertedImage.bytesPerLine()),
             true, // hasAlpha
             8, // bitsPerSample
             4, // channels

@@ -320,9 +320,7 @@ QList<int> ScriptedEffect::touchEdgesForAction(const QString &action) const
 {
     QList<int> ret;
     if (m_exclusiveCategory == QStringLiteral("show-desktop") && action == QStringLiteral("show-desktop")) {
-        const QVector borders({ElectricTop, ElectricRight, ElectricBottom, ElectricLeft});
-
-        for (const auto b : borders) {
+        for (const auto b : {ElectricTop, ElectricRight, ElectricBottom, ElectricLeft}) {
             if (workspace()->screenEdges()->actionForTouchBorder(b) == ElectricActionShowDesktop) {
                 ret.append(b);
             }
