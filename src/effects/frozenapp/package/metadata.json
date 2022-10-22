@@ -60,15 +60,12 @@
         "Name[tr]": "Yanıt Vermeyen Uygulamaları Solgunlaştır",
         "Name[uk]": "Зненасичення вікон, які не відповідають на запити",
         "Name[x-test]": "xxDesaturate Unresponsive Applicationsxx",
-        "ServiceTypes": [
-            "KWin/Effect",
-            "KCModule"
-        ],
         "Version": "1.0"
     },
     "X-KDE-Ordering": "60",
     "X-KDE-PluginKeyword": "kwin4_effect_frozenapp",
     "X-KWin-Config-TranslationDomain": "kwin_effects",
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js"
+    "X-Plasma-MainScript": "code/main.js",
+    "KPackageStructure": "KWin/Effect"
 }

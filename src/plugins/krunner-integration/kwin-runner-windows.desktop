@@ -75,7 +75,6 @@ Comment[vi]=Liệt kê các cửa sổ và bàn làm việc và chuyển giữa 
 Comment[x-test]=xxList windows and desktops and switch themxx
 Comment[zh_CN]=列出所有窗口和桌面，并可供切换
 Comment[zh_TW]=列出視窗與桌面並切換至它們
-X-KDE-ServiceTypes=Plasma/Runner
 Type=Service
 Icon=preferences-system-windows
 X-KDE-PluginInfo-Author=Martin Gräßlin

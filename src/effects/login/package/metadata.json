@@ -60,15 +60,12 @@
         "Name[tr]": "Giriş",
         "Name[uk]": "Вхід",
         "Name[x-test]": "xxLoginxx",
-        "ServiceTypes": [
-            "KWin/Effect",
-            "KCModule"
-        ],
         "Version": "0.2.0"
     },
     "X-KDE-Ordering": "40",
     "X-KDE-PluginKeyword": "kwin4_effect_login",
     "X-KWin-Config-TranslationDomain": "kwin_effects",
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js"
+    "X-Plasma-MainScript": "code/main.js",
+    "KPackageStructure": "KWin/Effect"
 }

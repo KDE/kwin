@@ -59,15 +59,12 @@
         "Name[tr]": "Yarısaydamlık",
         "Name[uk]": "Прозорість",
         "Name[x-test]": "xxTranslucencyxx",
-        "ServiceTypes": [
-            "KWin/Effect",
-            "KCModule"
-        ],
         "Version": "0.1.0"
     },
     "X-KDE-Ordering": "50",
     "X-KDE-PluginKeyword": "kwin4_effect_translucency",
     "X-KWin-Config-TranslationDomain": "kwin_effects",
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js"
+    "X-Plasma-MainScript": "code/main.js",
+    "KPackageStructure": "KWin/Effect"
 }

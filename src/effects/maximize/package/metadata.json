@@ -60,9 +60,6 @@
         "Name[tr]": "Ekranı Kapla",
         "Name[uk]": "Максимізація",
         "Name[x-test]": "xxMaximizexx",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ],
         "Version": "1",
         "Website": ""
     },
@@ -70,5 +67,6 @@
     "X-KDE-ParentApp": "",
     "X-KWin-Video-Url": "https://files.kde.org/plasma/kwin/effect-videos/maximize.ogv",
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/maximize.js"
+    "X-Plasma-MainScript": "code/maximize.js",
+    "KPackageStructure": "KWin/Effect"
 }

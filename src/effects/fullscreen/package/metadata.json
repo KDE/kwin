@@ -60,14 +60,12 @@
         "Name[tr]": "Tam Ekran",
         "Name[uk]": "Повноекранний режим",
         "Name[x-test]": "xxFull Screenxx",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ],
         "Version": "1",
         "Website": ""
     },
     "X-KDE-Ordering": "60",
     "X-KDE-ParentApp": "",
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/fullscreen.js"
+    "X-Plasma-MainScript": "code/fullscreen.js",
+    "KPackageStructure": "KWin/Effect"
 }

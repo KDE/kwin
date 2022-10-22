@@ -57,11 +57,9 @@
         "Name[tr]": "Değiştiricide Gösterilmeyenleri Çubukta da Gösterme",
         "Name[uk]": "Синхронізувати виключення вікон у перемикачі з панеллю задач",
         "Name[x-test]": "xxSynchronize Skip Switcher with Taskbarxx",
-        "ServiceTypes": [
-            "KWin/Script"
-        ],
         "Version": "1.0"
     },
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js"
+    "X-Plasma-MainScript": "code/main.js",
+    "KPackageStructure": "KWin/Script"
 }

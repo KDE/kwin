@@ -58,12 +58,10 @@
         "Name[tr]": "OSD Masaüstü Değişimi",
         "Name[uk]": "Панель зміни стільниць",
         "Name[x-test]": "xxDesktop Change OSDxx",
-        "ServiceTypes": [
-            "KWin/Script"
-        ],
         "Version": "1.0"
     },
     "X-KWin-Exclude-Listing": "true",
     "X-Plasma-API": "declarativescript",
-    "X-Plasma-MainScript": "ui/main.qml"
+    "X-Plasma-MainScript": "ui/main.qml",
+    "KPackageStructure": "KWin/Script"
 }

@@ -60,13 +60,11 @@
         "Name[tr]": "Soldur",
         "Name[uk]": "Згасання",
         "Name[x-test]": "xxFadexx",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ],
         "Version": "0.2.0"
     },
     "X-KDE-Ordering": "60",
     "X-KWin-Exclusive-Category": "toplevel-open-close-animation",
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js"
+    "X-Plasma-MainScript": "code/main.js",
+    "KPackageStructure": "KWin/Effect"
 }

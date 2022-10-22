@@ -81,10 +81,6 @@
         "Name[tr]": "Ölçeklendir",
         "Name[uk]": "Масштабування",
         "Name[x-test]": "xxScalexx",
-        "ServiceTypes": [
-            "KWin/Effect",
-            "KCModule"
-        ],
         "Version": "1"
     },
     "X-KDE-Ordering": "60",
@@ -92,5 +88,6 @@
     "X-KWin-Config-TranslationDomain": "kwin_effects",
     "X-KWin-Exclusive-Category": "toplevel-open-close-animation",
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js"
+    "X-Plasma-MainScript": "code/main.js",
+    "KPackageStructure": "KWin/Effect"
 }

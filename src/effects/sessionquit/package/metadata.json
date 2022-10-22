@@ -60,13 +60,11 @@
         "Name[tr]": "Oturum Çıkışı",
         "Name[uk]": "Вихід з сеансу",
         "Name[x-test]": "xxSession Quitxx",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ],
         "Version": "0.2.0"
     },
     "X-KDE-Ordering": "40",
     "X-KWin-Internal": "true",
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js"
+    "X-Plasma-MainScript": "code/main.js",
+    "KPackageStructure": "KWin/Effect"
 }

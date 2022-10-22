@@ -60,13 +60,11 @@
         "Name[tr]": "Göz Ekranda",
         "Name[uk]": "Око на екрані",
         "Name[x-test]": "xxEye on Screenxx",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ],
         "Version": "0.1.0"
     },
     "X-KDE-Ordering": "50",
     "X-KWin-Exclusive-Category": "show-desktop",
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js"
+    "X-Plasma-MainScript": "code/main.js",
+    "KPackageStructure": "KWin/Effect"
 }

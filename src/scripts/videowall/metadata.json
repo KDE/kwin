@@ -58,14 +58,11 @@
         "Name[tr]": "Video Duvarı",
         "Name[uk]": "Відеостіна",
         "Name[x-test]": "xxVideo Wallxx",
-        "ServiceTypes": [
-            "KWin/Script",
-            "KCModule"
-        ],
         "Version": "1.0"
     },
     "X-KDE-ConfigModule": "kwin/effects/configs/kcm_kwin4_genericscripted",
     "X-KDE-PluginKeyword": "videowall",
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js"
+    "X-Plasma-MainScript": "code/main.js",
+    "KPackageStructure": "KWin/Script"
 }

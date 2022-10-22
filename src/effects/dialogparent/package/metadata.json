@@ -60,12 +60,10 @@
         "Name[tr]": "Üst İletişim Kutusu",
         "Name[uk]": "Батьківське вікно",
         "Name[x-test]": "xxDialog Parentxx",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ],
         "Version": "0.1.0"
     },
     "X-KDE-Ordering": "70",
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js"
+    "X-Plasma-MainScript": "code/main.js",
+    "KPackageStructure": "KWin/Effect"
 }

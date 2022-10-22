@@ -61,13 +61,11 @@
         "Name[tr]": "Pencere Açıklığı",
         "Name[uk]": "Апертура вікна",
         "Name[x-test]": "xxWindow Aperturexx",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ],
         "Version": "0.1.0"
     },
     "X-KDE-Ordering": "50",
     "X-KWin-Exclusive-Category": "show-desktop",
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js"
+    "X-Plasma-MainScript": "code/main.js",
+    "KPackageStructure": "KWin/Effect"
 }

@@ -81,12 +81,10 @@
         "Name[tr]": "Solan Açılır Pencereler",
         "Name[uk]": "Інтерактивні контекстні панелі",
         "Name[x-test]": "xxFading Popupsxx",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ],
         "Version": "1.0"
     },
     "X-KDE-Ordering": "60",
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js"
+    "X-Plasma-MainScript": "code/main.js",
+    "KPackageStructure": "KWin/Effect"
 }

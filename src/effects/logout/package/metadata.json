@@ -60,12 +60,10 @@
         "Name[tr]": "Çıkış",
         "Name[uk]": "Вихід",
         "Name[x-test]": "xxLogoutxx",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ],
         "Version": "0.2.0"
     },
     "X-KDE-Ordering": "40",
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js"
+    "X-Plasma-MainScript": "code/main.js",
+    "KPackageStructure": "KWin/Effect"
 }

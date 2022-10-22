@@ -60,9 +60,6 @@
         "Name[tr]": "Yönetici Kipi için Ekranı Karart",
         "Name[uk]": "Притлумлення кольорів у режимі адміністратора",
         "Name[x-test]": "xxDim Screen for Administrator Modexx",
-        "ServiceTypes": [
-            "KWin/Effect"
-        ],
         "Version": "1",
         "Website": ""
     },
@@ -70,5 +67,6 @@
     "X-KDE-ParentApp": "",
     "X-KWin-Video-Url": "https://files.kde.org/plasma/kwin/effect-videos/dim_administration.mp4",
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js"
+    "X-Plasma-MainScript": "code/main.js",
+    "KPackageStructure": "KWin/Effect"
 }

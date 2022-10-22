@@ -54,11 +54,9 @@
         "Name[tr]": "Plastik",
         "Name[uk]": "Пластик",
         "Name[x-test]": "xxPlastikxx",
-        "ServiceTypes": [
-            "KWin/Decoration"
-        ],
         "Version": "1.0"
     },
     "X-KWin-Config-TranslationDomain": "kwin_clients",
-    "X-Plasma-MainScript": "ui/main.qml"
+    "X-Plasma-MainScript": "ui/main.qml",
+    "KPackageStructure": "KWin/Decoration"
 }
