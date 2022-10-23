@@ -1,3 +1,4 @@
+include(ECMMarkAsTest)
 set(mockDRM_SRCS
     mock_drm.cpp
     ../../src/backends/drm/drm_abstract_output.cpp

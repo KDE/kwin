@@ -1,9 +1,9 @@
 add_subdirectory(tools)
 
-if (BUILD_TESTING)
-    add_subdirectory(autotests)
-    add_subdirectory(tests)
-endif()
+# if (BUILD_TESTING)
+#     add_subdirectory(autotests)
+#     add_subdirectory(tests)
+# endif()
 
 # CMake has a known bug where target_source() doesn't work as expected with files generated
 # in a directory other than the one where the target is defined. It should be fixed in 3.20.
