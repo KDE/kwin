@@ -111,11 +111,14 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
     }
     for (const auto &pipeline : pipelines) {
         if (pipeline->activePending()) {
+            qDebug() << "(DrmPipeline::commitPipelinesAtomic) before checkTestBuffer";
             if (!pipeline->m_pending.layer->checkTestBuffer()) {
+                qDebug() << "(DrmPipeline::commitPipelinesAtomic) fail checkTestBuffer";
                 qCWarning(KWIN_DRM) << "Checking test buffer failed for" << mode;
                 failed();
                 return Error::TestBufferFailed;
             }
+            qDebug() << "(DrmPipeline::commitPipelinesAtomic) after checkTestBuffer";
             pipeline->prepareAtomicPresentation();
             if (mode == CommitMode::TestAllowModeset || mode == CommitMode::CommitModeset) {
                 pipeline->prepareAtomicModeset();
