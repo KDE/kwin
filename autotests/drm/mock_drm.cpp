@@ -279,10 +279,12 @@ MockDumbBuffer::MockDumbBuffer(MockGpu *gpu, uint32_t width, uint32_t height, ui
     , data(malloc(size))
     , gpu(gpu)
 {
+    qDebug() << "-------> handle:" << handle << "size:" << size << "ptr:" << data;
 }
 
 MockDumbBuffer::~MockDumbBuffer()
 {
+    qDebug() << "---> destroy" << handle;
     free(data);
 }
 

@@ -46,6 +46,7 @@ bool DrmDumbBuffer::map(QImage::Format format)
     }
 #ifdef KWIN_UNIT_TEST
     m_memory = reinterpret_cast<void *>(mapArgs.offset);
+    qDebug() << ":::" << m_memory;
 #else
     void *address = mmap(nullptr, m_bufferSize, PROT_WRITE, MAP_SHARED, m_gpu->fd(), mapArgs.offset);
     if (address == MAP_FAILED) {
@@ -54,6 +55,7 @@ bool DrmDumbBuffer::map(QImage::Format format)
     m_memory = address;
 #endif
     m_image = std::make_unique<QImage>((uchar *)m_memory, m_size.width(), m_size.height(), m_strides[0], format);
+    qDebug() << ":::" << m_image.get() << m_handles[0] << m_image->sizeInBytes();
     return !m_image->isNull();
 }
 
