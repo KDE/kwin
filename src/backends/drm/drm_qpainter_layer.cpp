@@ -58,17 +58,26 @@ bool DrmQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &da
 
 bool DrmQPainterLayer::checkTestBuffer()
 {
+    qDebug() << "(DrmQPainterLayer::checkTestBuffer) a";
     if (!doesSwapchainFit()) {
+        qDebug() << "(DrmQPainterLayer::checkTestBuffer) - b";
         m_swapchain = std::make_shared<DumbSwapchain>(m_pipeline->gpu(), m_pipeline->bufferSize(), DRM_FORMAT_XRGB8888);
+        qDebug() << "(DrmQPainterLayer::checkTestBuffer) - c";
         if (!m_swapchain->isEmpty()) {
+            qDebug() << "(DrmQPainterLayer::checkTestBuffer) -- d";
             m_currentFramebuffer = DrmFramebuffer::createFramebuffer(m_swapchain->currentBuffer());
+            qDebug() << "(DrmQPainterLayer::checkTestBuffer) -- e";
             if (!m_currentFramebuffer) {
                 qCWarning(KWIN_DRM, "Failed to create dumb framebuffer: %s", strerror(errno));
             }
         } else {
+            qDebug() << "before reset";
             m_currentFramebuffer.reset();
+            qDebug() << "after reset";
         }
+        qDebug() << "(DrmQPainterLayer::checkTestBuffer) - d";
     }
+    qDebug() << "(DrmQPainterLayer::checkTestBuffer) b";
     return m_currentFramebuffer != nullptr;
 }
 
