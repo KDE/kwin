@@ -21,11 +21,16 @@ DumbSwapchain::DumbSwapchain(DrmGpu *gpu, const QSize &size, uint32_t drmFormat)
     , m_format(drmFormat)
 {
     for (int i = 0; i < 2; i++) {
+        qDebug() << "(DumbSwapchain) a";
         auto buffer = DrmDumbBuffer::createDumbBuffer(gpu, size, drmFormat);
+        qDebug() << "(DumbSwapchain) b";
         if (!buffer->map(QImage::Format::Format_ARGB32)) {
+            qDebug() << "buffer->map() failed";
             break;
         }
+        qDebug() << "(DumbSwapchain) c";
         buffer->image()->fill(Qt::black);
+        qDebug() << "(DumbSwapchain) d";
         m_slots.append(Slot{
             .buffer = buffer,
             .age = 0,
