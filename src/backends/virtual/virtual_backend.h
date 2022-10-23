@@ -50,8 +50,6 @@ public:
         return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
     }
 
-    Q_INVOKABLE QImage captureOutput(Output *output) const;
-
 Q_SIGNALS:
     void virtualOutputsSet(bool countChanged);
 

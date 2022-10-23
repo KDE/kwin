@@ -8,7 +8,6 @@
 */
 #include "virtual_backend.h"
 
-#include "composite.h"
 #include "virtual_egl_backend.h"
 #include "virtual_output.h"
 #include "virtual_qpainter_backend.h"
@@ -104,16 +103,6 @@ void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVe
     }
 
     Q_EMIT outputsQueried();
-}
-
-QImage VirtualBackend::captureOutput(Output *output) const
-{
-    if (auto backend = qobject_cast<VirtualQPainterBackend *>(Compositor::self()->backend())) {
-        if (auto layer = backend->primaryLayer(output)) {
-            return *layer->image();
-        }
-    }
-    return QImage();
 }
 
 } // namespace KWin
