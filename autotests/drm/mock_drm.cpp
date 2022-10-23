@@ -275,15 +275,9 @@ MockFb::~MockFb()
 MockDumbBuffer::MockDumbBuffer(MockGpu *gpu, uint32_t width, uint32_t height, uint32_t bpp)
     : handle(gpu->idCounter++)
     , pitch(width * ceil(bpp / 8.0))
-    , size(height * pitch)
-    , data(malloc(size))
+    , data(height * pitch)
     , gpu(gpu)
 {
-}
-
-MockDumbBuffer::~MockDumbBuffer()
-{
-    free(data);
 }
 
 // drm functions
@@ -352,7 +346,7 @@ int drmIoctl(int fd, unsigned long request, void *arg)
         auto dumb = std::make_shared<MockDumbBuffer>(gpu, args->width, args->height, args->bpp);
         args->handle = dumb->handle;
         args->pitch = dumb->pitch;
-        args->size = dumb->size;
+        args->size = dumb->data.size();
         gpu->dumbBuffers << dumb;
         return 0;
     } else if (request == DRM_IOCTL_MODE_DESTROY_DUMB) {
@@ -372,7 +366,7 @@ int drmIoctl(int fd, unsigned long request, void *arg)
             qWarning("buffer %u not found!", args->handle);
             return -(errno = EINVAL);
         } else {
-            args->offset = reinterpret_cast<uintptr_t>((*it)->data);
+            args->offset = reinterpret_cast<uintptr_t>((*it)->data.data());
             return 0;
         }
     }

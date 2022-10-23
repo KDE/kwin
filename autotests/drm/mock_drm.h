@@ -137,12 +137,10 @@ public:
 class MockDumbBuffer {
 public:
     MockDumbBuffer(MockGpu *gpu, uint32_t width, uint32_t height, uint32_t bpp);
-    ~MockDumbBuffer();
 
     uint32_t handle;
     uint32_t pitch;
-    uint64_t size;
-    void *data;
+    std::vector<std::byte> data;
     MockGpu *gpu;
 };
 
