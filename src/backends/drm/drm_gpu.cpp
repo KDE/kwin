@@ -197,12 +197,15 @@ void DrmGpu::initDrmResources()
 
 bool DrmGpu::updateOutputs()
 {
+    qDebug() << "(DrmGpu::updateOutputs) a";
     waitIdle();
+    qDebug() << "(DrmGpu::updateOutputs) b";
     DrmUniquePtr<drmModeRes> resources(drmModeGetResources(m_fd));
     if (!resources) {
         qCWarning(KWIN_DRM) << "drmModeGetResources failed";
         return false;
     }
+    qDebug() << "(DrmGpu::updateOutputs) c";
 
     // In principle these things are supposed to be detected through the wayland protocol.
     // In practice SteamVR doesn't always behave correctly
@@ -221,6 +224,8 @@ bool DrmGpu::updateOutputs()
             }
         }
     }
+
+    qDebug() << "(DrmGpu::updateOutputs) d";
 
     // check for added and removed connectors
     QVector<DrmConnector *> existing;
@@ -243,6 +248,7 @@ bool DrmGpu::updateOutputs()
             existing.push_back(it->get());
         }
     }
+    qDebug() << "(DrmGpu::updateOutputs) e";
     for (auto it = m_connectors.begin(); it != m_connectors.end();) {
         DrmConnector *conn = it->get();
         const auto output = findOutput(conn->id());
@@ -271,17 +277,22 @@ bool DrmGpu::updateOutputs()
             it = m_connectors.erase(it);
         }
     }
+    qDebug() << "(DrmGpu::updateOutputs) f";
 
     // update crtc properties
     for (const auto &crtc : qAsConst(m_crtcs)) {
         crtc->updateProperties();
     }
+    qDebug() << "(DrmGpu::updateOutputs) g";
     // update plane properties
     for (const auto &plane : qAsConst(m_planes)) {
         plane->updateProperties();
     }
+    qDebug() << "(DrmGpu::updateOutputs) h";
     DrmPipeline::Error err = testPendingConfiguration();
+    qDebug() << "(DrmGpu::updateOutputs) i";
     if (err == DrmPipeline::Error::None) {
+        qDebug() << "(DrmGpu::updateOutputs) - i";
         for (const auto &pipeline : qAsConst(m_pipelines)) {
             pipeline->applyPendingChanges();
             if (pipeline->output() && !pipeline->crtc()) {
@@ -289,7 +300,9 @@ bool DrmGpu::updateOutputs()
                 pipeline->output()->updateEnabled(false);
             }
         }
+        qDebug() << "(DrmGpu::updateOutputs) - j";
     } else if (err == DrmPipeline::Error::NoPermission) {
+        qDebug() << "(DrmGpu::updateOutputs) -- i";
         for (const auto &pipeline : qAsConst(m_pipelines)) {
             pipeline->revertPendingChanges();
         }
@@ -302,8 +315,10 @@ bool DrmGpu::updateOutputs()
             m_allObjects.removeOne(it->get());
             m_connectors.erase(it);
         }
+        qDebug() << "(DrmGpu::updateOutputs) -- j";
         QTimer::singleShot(50, m_platform, &DrmBackend::updateOutputs);
     } else {
+        qDebug() << "(DrmGpu::updateOutputs) --- i";
         qCWarning(KWIN_DRM, "Failed to find a working setup for new outputs!");
         for (const auto &pipeline : qAsConst(m_pipelines)) {
             pipeline->revertPendingChanges();
@@ -313,6 +328,7 @@ bool DrmGpu::updateOutputs()
             output->pipeline()->setEnable(false);
             output->pipeline()->applyPendingChanges();
         }
+        qDebug() << "(DrmGpu::updateOutputs) --- j";
     }
     return true;
 }
