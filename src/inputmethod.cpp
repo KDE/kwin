@@ -251,6 +251,7 @@ void InputMethod::setTrackedWindow(Window *trackedWindow)
         disconnect(m_trackedWindow, &Window::frameGeometryChanged, this, &InputMethod::updateInputPanelState);
     }
     m_trackedWindow = trackedWindow;
+    m_shouldShowPanel = false;
     if (m_trackedWindow) {
         connect(m_trackedWindow, &Window::frameGeometryChanged, this, &InputMethod::updateInputPanelState, Qt::QueuedConnection);
     }
