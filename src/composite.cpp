@@ -254,19 +254,25 @@ bool Compositor::setupStart()
 
     Q_EMIT aboutToToggleCompositing();
 
-    auto supportedCompositors = kwinApp()->platform()->supportedCompositors();
-    const auto userConfigIt = std::find(supportedCompositors.begin(), supportedCompositors.end(),
-                                        options->compositingMode());
+    const QVector<CompositingType> availableCompositors = kwinApp()->platform()->supportedCompositors();
+    QVector<CompositingType> candidateCompositors;
 
-    if (userConfigIt != supportedCompositors.end()) {
-        supportedCompositors.erase(userConfigIt);
-        supportedCompositors.prepend(options->compositingMode());
+    // If compositing has been restarted, try to use the last used compositing type.
+    if (m_selectedCompositor != NoCompositing) {
+        candidateCompositors.append(m_selectedCompositor);
     } else {
-        qCWarning(KWIN_CORE)
-            << "Configured compositor not supported by Platform. Falling back to defaults";
+        candidateCompositors = availableCompositors;
+
+        const auto userConfigIt = std::find(candidateCompositors.begin(), candidateCompositors.end(), options->compositingMode());
+        if (userConfigIt != candidateCompositors.end()) {
+            candidateCompositors.erase(userConfigIt);
+            candidateCompositors.prepend(options->compositingMode());
+        } else {
+            qCWarning(KWIN_CORE) << "Configured compositor not supported by Platform. Falling back to defaults";
+        }
     }
 
-    for (auto type : qAsConst(supportedCompositors)) {
+    for (auto type : qAsConst(candidateCompositors)) {
         bool stop = false;
         switch (type) {
         case OpenGLCompositing:
@@ -299,7 +305,7 @@ bool Compositor::setupStart()
             m_selectionOwner->setOwning(false);
             m_selectionOwner->release();
         }
-        if (!supportedCompositors.contains(NoCompositing)) {
+        if (!availableCompositors.contains(NoCompositing)) {
             qCCritical(KWIN_CORE) << "The used windowing system requires compositing";
             qCCritical(KWIN_CORE) << "We are going to quit KWin now as it is broken";
             qApp->quit();
@@ -307,7 +313,7 @@ bool Compositor::setupStart()
         return false;
     }
 
-    kwinApp()->platform()->setSelectedCompositor(m_backend->compositingType());
+    m_selectedCompositor = m_backend->compositingType();
 
     if (!Workspace::self() && m_backend && m_backend->compositingType() == QPainterCompositing) {
         // Force Software QtQuick on first startup with QPainter.

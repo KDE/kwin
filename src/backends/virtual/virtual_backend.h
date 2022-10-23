@@ -47,9 +47,6 @@ public:
 
     QVector<CompositingType> supportedCompositors() const override
     {
-        if (selectedCompositor() != NoCompositing) {
-            return {selectedCompositor()};
-        }
         return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
     }
 

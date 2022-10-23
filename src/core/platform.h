@@ -293,25 +293,6 @@ public:
      */
     virtual QString supportInformation() const;
 
-    /**
-     * The compositor plugin which got selected from @ref supportedCompositors.
-     * Prior to selecting a compositor this returns @c NoCompositing.
-     *
-     * This method allows the platforms to limit the offerings in @ref supportedCompositors
-     * in case they do not support runtime compositor switching
-     */
-    CompositingType selectedCompositor() const
-    {
-        return m_selectedCompositor;
-    }
-    /**
-     * Used by Compositor to set the used compositor.
-     */
-    void setSelectedCompositor(CompositingType type)
-    {
-        m_selectedCompositor = type;
-    }
-
     virtual Output *createVirtualOutput(const QString &name, const QSize &size, qreal scale);
     virtual void removeVirtualOutput(Output *output);
 
@@ -366,7 +347,6 @@ private:
     EGLDisplay m_eglDisplay;
     EGLContext m_globalShareContext = EGL_NO_CONTEXT;
     bool m_supportsGammaControl = false;
-    CompositingType m_selectedCompositor = NoCompositing;
 };
 
 } // namespace KWin

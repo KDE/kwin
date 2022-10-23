@@ -372,9 +372,6 @@ void DrmBackend::sceneInitialized()
 
 QVector<CompositingType> DrmBackend::supportedCompositors() const
 {
-    if (selectedCompositor() != NoCompositing) {
-        return {selectedCompositor()};
-    }
     return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
 }
 

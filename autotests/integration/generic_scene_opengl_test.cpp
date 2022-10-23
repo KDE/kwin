@@ -64,7 +64,6 @@ void GenericSceneOpenGLTest::initTestCase()
     QVERIFY(Compositor::self());
 
     QCOMPARE(Compositor::self()->backend()->compositingType(), KWin::OpenGLCompositing);
-    QCOMPARE(kwinApp()->platform()->selectedCompositor(), KWin::OpenGLCompositing);
 }
 
 void GenericSceneOpenGLTest::testRestart()
@@ -77,7 +76,6 @@ void GenericSceneOpenGLTest::testRestart()
     }
     QCOMPARE(sceneCreatedSpy.count(), 1);
     QCOMPARE(Compositor::self()->backend()->compositingType(), KWin::OpenGLCompositing);
-    QCOMPARE(kwinApp()->platform()->selectedCompositor(), KWin::OpenGLCompositing);
 
     // trigger a repaint
     KWin::Compositor::self()->scene()->addRepaintFull();

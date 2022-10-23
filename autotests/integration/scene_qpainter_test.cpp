@@ -105,7 +105,6 @@ void SceneQPainterTest::testStartFrame()
     Compositor::self()->scene()->addRepaintFull();
     auto scene = Compositor::self()->scene();
     QVERIFY(scene);
-    QCOMPARE(kwinApp()->platform()->selectedCompositor(), QPainterCompositing);
     QSignalSpy frameRenderedSpy(scene, &Scene::frameRendered);
     QVERIFY(frameRenderedSpy.wait());
     // now let's render a reference image for comparison
