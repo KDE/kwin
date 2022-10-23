@@ -78,6 +78,7 @@ void DrmTest::testAmsDetection()
 void DrmTest::testOutputDetection()
 {
     const auto mockGpu = std::make_unique<MockGpu>(1, 5);
+    qDebug() << "a";
 
     const auto one = std::make_shared<MockConnector>(mockGpu.get());
     const auto two = std::make_shared<MockConnector>(mockGpu.get());
@@ -85,12 +86,15 @@ void DrmTest::testOutputDetection()
     mockGpu->connectors.push_back(one);
     mockGpu->connectors.push_back(two);
     mockGpu->connectors.push_back(vr);
+    qDebug() << "b";
+
 
     const auto session = Session::create(Session::Type::Noop);
     const auto backend = std::make_unique<DrmBackend>(session.get());
     const auto renderBackend = backend->createQPainterBackend();
     auto gpu = std::make_unique<DrmGpu>(backend.get(), "test", 1, 0);
     QVERIFY(gpu->updateOutputs());
+    qDebug() << "c";
 
     // 3 outputs should be detected, one of them non-desktop
     const auto outputs = gpu->drmOutputs();
@@ -100,30 +104,37 @@ void DrmTest::testOutputDetection()
     });
     QVERIFY(vrOutput != outputs.end());
     QVERIFY(static_cast<DrmOutput *>(*vrOutput)->connector()->id() == vr->id);
+    qDebug() << "d";
 
     // test hotunplugging
     mockGpu->connectors.removeOne(one);
     QVERIFY(gpu->updateOutputs());
     QCOMPARE(gpu->drmOutputs().size(), 2);
+    qDebug() << "e";
 
     // test hotplugging
     mockGpu->connectors.push_back(one);
     QVERIFY(gpu->updateOutputs());
     QCOMPARE(gpu->drmOutputs().size(), 3);
+    qDebug() << "f";
 
     // connector state changing to disconnected should count as a hotunplug
     one->connection = DRM_MODE_DISCONNECTED;
     QVERIFY(gpu->updateOutputs());
     QCOMPARE(gpu->drmOutputs().size(), 2);
+    qDebug() << "g";
 
     // don't crash if all connectors are disconnected
     two->connection = DRM_MODE_DISCONNECTED;
     vr->connection = DRM_MODE_DISCONNECTED;
     QVERIFY(gpu->updateOutputs());
     QVERIFY(gpu->drmOutputs().empty());
+    qDebug() << "h";
 
     gpu.reset();
+    qDebug() << "i";
     verifyCleanup(mockGpu.get());
+    qDebug() << "j";
 }
 
 void DrmTest::testZeroModesHandling()
