@@ -349,7 +349,9 @@ void DrmGpu::removeOutputs()
 
 DrmPipeline::Error DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connectors, const QVector<DrmCrtc *> &crtcs)
 {
+    qDebug() << "(DrmGpu::checkCrtcAssignment) a";
     if (connectors.isEmpty() || crtcs.isEmpty()) {
+        qDebug() << "(DrmGpu::checkCrtcAssignment) - b";
         if (m_pipelines.isEmpty()) {
             // nothing to do
             return DrmPipeline::Error::None;
@@ -359,15 +361,20 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connector
             qCWarning(KWIN_DRM) << "disabling connector" << conn->modelName() << "without a crtc";
             conn->pipeline()->setCrtc(nullptr);
         }
+        qDebug() << "(DrmGpu::checkCrtcAssignment) - c";
         return testPipelines();
     }
+    qDebug() << "(DrmGpu::checkCrtcAssignment) b";
     auto connector = connectors.takeFirst();
     auto pipeline = connector->pipeline();
+    qDebug() << "(DrmGpu::checkCrtcAssignment) c";
     if (!pipeline->enabled() || !connector->isConnected()) {
+        qDebug() << "(DrmGpu::checkCrtcAssignment) - d";
         // disabled pipelines don't need CRTCs
         pipeline->setCrtc(nullptr);
         return checkCrtcAssignment(connectors, crtcs);
     }
+    qDebug() << "(DrmGpu::checkCrtcAssignment) d";
     DrmCrtc *currentCrtc = nullptr;
     if (m_atomicModeSetting) {
         // try the crtc that this connector is already connected to first
@@ -388,6 +395,7 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connector
             } while (pipeline->pruneModifier());
         }
     }
+    qDebug() << "(DrmGpu::checkCrtcAssignment) e";
     for (const auto &crtc : qAsConst(crtcs)) {
         if (connector->isCrtcSupported(crtc) && crtc != currentCrtc) {
             auto crtcsLeft = crtcs;
@@ -406,6 +414,7 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connector
 
 DrmPipeline::Error DrmGpu::testPendingConfiguration()
 {
+    qDebug() << "(DrmGpu::testPendingConfiguration) a";
     QVector<DrmConnector *> connectors;
     QVector<DrmCrtc *> crtcs;
     // only change resources that aren't currently leased away
@@ -417,6 +426,7 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
             connectors.push_back(conn.get());
         }
     }
+    qDebug() << "(DrmGpu::testPendingConfiguration) b";
     for (const auto &crtc : m_crtcs) {
         bool isLeased = std::any_of(m_drmOutputs.cbegin(), m_drmOutputs.cend(), [&crtc](const auto output) {
             return output->lease() && output->pipeline()->crtc() == crtc.get();
@@ -425,16 +435,20 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
             crtcs.push_back(crtc.get());
         }
     }
+    qDebug() << "(DrmGpu::testPendingConfiguration) c";
     if (m_atomicModeSetting) {
         // sort outputs by being already connected (to any CRTC) so that already working outputs get preferred
         std::sort(connectors.begin(), connectors.end(), [](auto c1, auto c2) {
             return c1->getProp(DrmConnector::PropertyIndex::CrtcId)->current() > c2->getProp(DrmConnector::PropertyIndex::CrtcId)->current();
         });
     }
+    qDebug() << "(DrmGpu::testPendingConfiguration) d";
     DrmPipeline::Error err = checkCrtcAssignment(connectors, crtcs);
+    qDebug() << "(DrmGpu::testPendingConfiguration) e";
     if (err == DrmPipeline::Error::None || err == DrmPipeline::Error::NoPermission || err == DrmPipeline::Error::FramePending) {
         return err;
     } else {
+        qDebug() << "(DrmGpu::testPendingConfiguration) f";
         // try again without hw rotation
         bool hwRotationUsed = false;
         for (const auto &pipeline : qAsConst(m_pipelines)) {
@@ -444,27 +458,35 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
         if (hwRotationUsed) {
             err = checkCrtcAssignment(connectors, crtcs);
         }
+        qDebug() << "(DrmGpu::testPendingConfiguration) g";
         return err;
     }
 }
 
 DrmPipeline::Error DrmGpu::testPipelines()
 {
+    qDebug() << "(DrmGpu::testPipelines) a";
     QVector<DrmPipeline *> inactivePipelines;
     std::copy_if(m_pipelines.constBegin(), m_pipelines.constEnd(), std::back_inserter(inactivePipelines), [](const auto pipeline) {
         return pipeline->enabled() && !pipeline->active();
     });
+    qDebug() << "(DrmGpu::testPipelines) b";
     DrmPipeline::Error test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::TestAllowModeset, unusedObjects());
+    qDebug() << "(DrmGpu::testPipelines) c";
     if (!inactivePipelines.isEmpty() && test == DrmPipeline::Error::None) {
+        qDebug() << "(DrmGpu::testPipelines) d";
         // ensure that pipelines that are set as enabled but currently inactive
         // still work when they need to be set active again
         for (const auto pipeline : qAsConst(inactivePipelines)) {
             pipeline->setActive(true);
         }
+        qDebug() << "(DrmGpu::testPipelines) e";
         test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::TestAllowModeset, unusedObjects());
+        qDebug() << "(DrmGpu::testPipelines) f";
         for (const auto pipeline : qAsConst(inactivePipelines)) {
             pipeline->setActive(false);
         }
+        qDebug() << "(DrmGpu::testPipelines) g";
     }
     return test;
 }
