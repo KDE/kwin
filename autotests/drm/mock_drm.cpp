@@ -279,6 +279,7 @@ MockDumbBuffer::MockDumbBuffer(MockGpu *gpu, uint32_t width, uint32_t height, ui
     , data(malloc(size))
     , gpu(gpu)
 {
+    Q_ASSERT_X(data, "MockDumbBuffer::MockDumbBuffer", "malloc() failed");
 }
 
 MockDumbBuffer::~MockDumbBuffer()
