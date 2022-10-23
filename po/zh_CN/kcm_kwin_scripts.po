@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-09-20 00:47+0000\n"
-"PO-Revision-Date: 2022-10-19 13:23\n"
+"PO-Revision-Date: 2022-10-22 05:29\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -62,14 +62,14 @@ msgstr "卸载 KWin 脚本时出错： %1"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete..."
-msgstr ""
+msgstr "删除..."
 
 #: package/contents/ui/main.qml:60
 #, kde-format
 msgid "Install from File..."
-msgstr ""
+msgstr "从文件安装..."
 
 #: package/contents/ui/main.qml:64
 #, kde-format
 msgid "Get New Scripts..."
-msgstr ""
+msgstr "获取新脚本..."

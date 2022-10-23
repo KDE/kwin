@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1636470 2022-10-21 01:41:27Z scripty $
+# $Id: kwin.po 1636533 2022-10-22 05:56:35Z matjazjeran $
 # $Source$
 #
 # Roman Maurer <roman.maurer@hermes.si>, 2000.
@@ -10,34 +10,38 @@
 # Andrej Vernekar <andrej.vernekar@moj.net>, 2007, 2012.
 # Andrej Mernik <andrejm@ubuntu.si>, 2013, 2014, 2015, 2016, 2017, 2018.
 # Matjaž Jeran <matjaz.jeran@amis.net>, 2020, 2021, 2022.
+# Martin Srebotnjak <miles@filmsi.net>, 2022.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-21 00:48+0000\n"
-"PO-Revision-Date: 2022-10-08 09:03+0200\n"
-"Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
+"PO-Revision-Date: 2022-10-22 04:12+0200\n"
+"Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
-"X-Generator: Lokalize 22.04.1\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
+"Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
+"X-Generator: Poedit 3.1.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Roman Maurer,Gregor Rakar,Jure Repinc,Andrej Mernik,Matjaž Jeran"
+msgstr ""
+"Roman Maurer,Gregor Rakar,Jure Repinc,Andrej Mernik,Matjaž Jeran,Martin "
+"Srebotnjak"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
 "roman.maurer@amis.net,gregor.rakar@kiss.si,jlp@holodeck1.com,andrejm@ubuntu."
-"si,matjaz.jeran@amis.net"
+"si,matjaz.jeran@amis.net,miles@filmsi.net"
 
 #: composite.cpp:615
 #, kde-format
@@ -2284,11 +2288,9 @@ msgid "Show in &Activities"
 msgstr "Prikaži sejavnosti"
 
 #: useractions.cpp:525
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move the window to that desktop"
-#| msgid "Move to New Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "Premakni na novo namizje"
+msgstr "Premakni na &trenutno namizje"
 
 #: useractions.cpp:535 useractions.cpp:602
 #, kde-format
@@ -2720,301 +2722,3 @@ msgstr ""
 "možnostih, gonilniku za grafično kartico in dejavnih namiznih učinkih. \n"
 "Podatke pod tem uvodnim besedilom objavite na storitev paste bin service\n"
 " kothttps://paste.kde.org namesto neposredno v teme na forumu.\n"
-
-#~ msgid "List all available backends and quit."
-#~ msgstr "Izpiši vsa razpoložljiva zaledja in končaj."
-
-#~ msgid "Show Desktop"
-#~ msgstr "Pokaži namizje"
-
-#~ msgid "X11 Client Windows"
-#~ msgstr "Okna odjemalca X11"
-
-#~ msgid "unknown"
-#~ msgstr "neznano"
-
-#~ msgid "Render to framebuffer."
-#~ msgstr "Izriši v medpomnilnik sličic."
-
-#~ msgid "The framebuffer device to render to."
-#~ msgstr "Naprava z medpomnilnikom sličic za izris."
-
-#~ msgid ""
-#~ "Enable libinput support for input events processing. Note: never use in a "
-#~ "nested session.\t(deprecated)"
-#~ msgstr ""
-#~ "Omogoči podporo libinput za obdelovanje vnosnih dogodkov. Opomba: nikoli "
-#~ "ne uporabite v gnezdeni seji.\t(zastarelo)"
-
-#~ msgid "Pack Window to the Right"
-#~ msgstr "Spravi okno na desno"
-
-#~ msgid "Pack Window to the Left"
-#~ msgstr "Spravi okno na levo"
-
-#~ msgid "Pack Window Up"
-#~ msgstr "Spravi okno navzgor"
-
-#~ msgid "Pack Window Down"
-#~ msgstr "Spravi okno navzdol"
-
-#~ msgid "Pack Grow Window Horizontally"
-#~ msgstr "Spravi rastoče okno vodoravno"
-
-#~ msgid "Pack Grow Window Vertically"
-#~ msgstr "Spravi rastoče okno navpično"
-
-#~ msgid "Desktop number"
-#~ msgstr "Številka namizja"
-
-#~ msgid "Configure virtual keyboards..."
-#~ msgstr "Nastavi navidezne tipkovnice..."
-
-#~ msgid "Virtual Keyboard"
-#~ msgstr "Navidezna tipkovnica"
-
-#~ msgid "Whether to show the virtual keyboard on demand."
-#~ msgstr "Ali naj na zahtevo pokaže navidezno tipkovnico."
-
-#~ msgid "Virtual Keyboard: enabled"
-#~ msgstr "Navidezna tipkovnica: omogočena"
-
-#~ msgid "Virtual Keyboard: disabled"
-#~ msgstr "Navidezna tipkovnica: onemogočena"
-
-#~ msgid "No Virtual Keyboard configured"
-#~ msgstr "Ni sestavljene nobene navidezne tipkovnice"
-
-#~ msgctxt "Assertion failed in KWin script with given value"
-#~ msgid "Assertion failed: %1 is not null"
-#~ msgstr "Uveljavljanje je spodletelo: %1 ni null"
-
-#~ msgctxt "Assertion failed in KWin script"
-#~ msgid "Assertion failed: argument is null"
-#~ msgstr "Uveljavljanje je spodletelo: argument je null"
-
-#~ msgctxt "Error in KWin Script"
-#~ msgid ""
-#~ "Invalid number of arguments. At least service, path, interface and method "
-#~ "need to be provided"
-#~ msgstr ""
-#~ "Neveljavno število argumentov. Podati morate vsaj storitev, pot, vmesnik "
-#~ "in metodo"
-
-#~ msgctxt "Error in KWin Script"
-#~ msgid ""
-#~ "Invalid type. Service, path, interface and method need to be string values"
-#~ msgstr "Neveljavna vrsta. Storitev, pot, vmesnik in metoda morajo biti nizi"
-
-#~ msgctxt "syntax error in KWin script"
-#~ msgid "Invalid number of arguments"
-#~ msgstr "Neveljavno število argumentov"
-
-#~ msgctxt ""
-#~ "KWin Scripting function received incorrect value for an expected type"
-#~ msgid "%1 is not a variant type"
-#~ msgstr "%1 ni vrsta različice"
-
-#~ msgid "Pressed Buttons"
-#~ msgstr "Pritisnjeni gumbi"
-
-#~ msgid "Use libhybris hwcomposer"
-#~ msgstr "Uporabi strojni upravljalnik skladnje libhybris"
-
-#~ msgid "Allow Rotation"
-#~ msgstr "Dovoli vrtenje"
-
-#~ msgid "Automatic screen rotation is enabled"
-#~ msgstr "Samodejno vrtenje zaslona omogočeno"
-
-#~ msgid "Undefined"
-#~ msgstr "Nedoločeno"
-
-#~ msgctxt "Portrait oriented display"
-#~ msgid "Vertical"
-#~ msgstr "Navpično"
-
-#~ msgctxt "Landscape oriented display"
-#~ msgid "Horizontal"
-#~ msgstr "Vodoravno"
-
-#~ msgid "Automatic screen rotation is disabled"
-#~ msgstr "Samodejno vrtenje zaslona onemogočeno"
-
-#~ msgid "Walk Through Window Tabs"
-#~ msgstr "Sprehod med zavihki z okni"
-
-#~ msgid "Walk Through Window Tabs (Reverse)"
-#~ msgstr "Sprehod med zavihki z okni (obratno)"
-
-#~ msgid "Remove Window From Group"
-#~ msgstr "Odstrani okno iz skupine"
-
-#~ msgid "&Untab"
-#~ msgstr "Odcepi &zavihek"
-
-#~ msgid "Close Entire &Group"
-#~ msgstr "Zapri &celotno skupino"
-
-#~ msgctxt "Switch to tab -> Previous"
-#~ msgid "Previous"
-#~ msgstr "Predhodni"
-
-#~ msgctxt "Switch to tab -> Next"
-#~ msgid "Next"
-#~ msgstr "Naslednji"
-
-#~ msgctxt "There's no window available to be attached as tab to this one"
-#~ msgid "None available"
-#~ msgstr "Nobeno ni na voljo"
-
-#~ msgid "Switch to Tab"
-#~ msgstr "Preklopi na zavihek"
-
-#~ msgid "&Attach as tab to"
-#~ msgstr "Kot z&avihek pripni k"
-
-#~ msgctxt ""
-#~ "Entry in context menu of window decoration to open the configuration "
-#~ "module of KWin"
-#~ msgid "Window Manager S&ettings..."
-#~ msgstr "Nastavitve upravljalni&ka oken ..."
-
-#~ msgid "Automatic Screen Rotation"
-#~ msgstr "Samodejno vrtenje zaslona"
-
-#~ msgid "kwin_wayland: an X11 window manager is running on the X11 Display.\n"
-#~ msgstr "kwin_wayland: upravljalnik oken X11 že teče na prikazu X11.\n"
-
-#~ msgid "Martin Gräßlin"
-#~ msgstr "Martin Gräßlin"
-
-#~ msgid "Maintainer"
-#~ msgstr "Vzdrževalec"
-
-#~ msgid ""
-#~ "<h1>OpenGL desktop effects not possible</h1>Your system cannot perform "
-#~ "OpenGL Desktop Effects at the current resolution<br><br>You can try to "
-#~ "select the XRender backend, but it might be very slow for this resolution "
-#~ "as well.<br>Alternatively, lower the combined resolution of all screens "
-#~ "to %1x%2 "
-#~ msgstr ""
-#~ "<h1>Namizni učinki OpenGL niso mogoči</h1>Vaš sistem ne more izvajati "
-#~ "namiznih učinkov OpenGL na trenutni ločljivosti.<br><br>Poskusite lahko "
-#~ "izbrati zaledje XRender, ampak bo najbrž tudi to zelo počasno za to "
-#~ "ločljivost.<br>Lahko pa znižate skupno ločljivost vseh zaslonov na "
-#~ "screens to %1x%2 "
-
-#~ msgid ""
-#~ "The demanded resolution exceeds the GL_MAX_VIEWPORT_DIMS limitation of "
-#~ "your GPU and is therefore not compatible with the OpenGL compositor."
-#~ "<br>XRender does not know such limitation, but the performance will "
-#~ "usually be impacted by the hardware limitations that restrict the OpenGL "
-#~ "viewport size."
-#~ msgstr ""
-#~ "Zahtevana ločljivost presega omejitev GL_MAX_VIEWPORT_DIMS vaše grafične "
-#~ "kartice in zato ni združljiva z upravljalnikom skladnje 3D OpenGL."
-#~ "<br>XRender takšne omejitve ne pozna, ampak bodo omejitve strojne opreme, "
-#~ "ki omejujejo velikost vidnega polja OpenGL, vplivale na hitrost delovanja."
-
-#~ msgid ""
-#~ "<h1>OpenGL desktop effects might be unusable</h1>OpenGL Desktop Effects "
-#~ "at the current resolution are supported but might be exceptionally slow."
-#~ "<br>Also large windows will turn entirely black.<br><br>Consider to "
-#~ "suspend compositing, switch to the XRender backend or lower the "
-#~ "resolution to %1x%1."
-#~ msgstr ""
-#~ "<h1>Namizni učinki OpenGL bodo morda neuporabni</h1>Namizni učinki OpenGL "
-#~ "so podprti na trenutni ločljivosti, ampak bodo morda izjemno počasni."
-#~ "<br>Velika okna bodo v celoti postala črna.<br><br>Razmislite o "
-#~ "prestavitvi skladnje 3D v pripravljenost, preklopu na zaledje XRender ali "
-#~ "znižanju ločljivosti na %1x%1."
-
-#~ msgid ""
-#~ "The demanded resolution exceeds the GL_MAX_TEXTURE_SIZE limitation of "
-#~ "your GPU, thus windows of that size cannot be assigned to textures and "
-#~ "will be entirely black.<br>Also this limit will often be a performance "
-#~ "level barrier despite below GL_MAX_VIEWPORT_DIMS, because the driver "
-#~ "might fall back to software rendering in this case."
-#~ msgstr ""
-#~ "Zahtevana ločljivost presega omejitev GL_MAX_TEXTURE_SIZE vaše grafične "
-#~ "kartice, zato oknom te velikosti ni mogoče dodeliti tekstur in bodo "
-#~ "popolnoma črna.<br>Ta omejitev bo tudi pogosto zmogljivostna ovira, kljub "
-#~ "temu, da je pod GL_MAX_VIEWPORT_DIMS, saj lahko gonilnik preklopi v način "
-#~ "programskega izrisovanja."
-
-#~ msgid "Use a nested compositor in windowed mode."
-#~ msgstr "V okenskem načinu uporabi ugnezden upravljalnik skladnje."
-
-#~ msgctxt "notification about mouse pointer confined"
-#~ msgid ""
-#~ "Pointer motion confined to the current window.\n"
-#~ "To release pointer hold Escape for 3 seconds."
-#~ msgstr ""
-#~ "Premikanje miškine kazalke je bilo omejeno na trenutno okno.\n"
-#~ "Da jo sprostite, držite Escape za 3 sekunde."
-
-#~ msgctxt "notification about mouse pointer locked"
-#~ msgid ""
-#~ "Pointer locked to current position.\n"
-#~ "To end pointer lock hold Escape for 3 seconds."
-#~ msgstr ""
-#~ "Miškina kazalka je bila zaklenjena na trenutni položaj.\n"
-#~ "Da jo sprostite, držite Escape za 3 sekunde."
-
-#~ msgid ""
-#~ "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#~ "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#~ "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#~ "protection but <b>be aware that this might result in an immediate crash!</"
-#~ "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#~ "</p>"
-#~ msgstr ""
-#~ "<b>Skladnja 3D OpenGL (privzeta) je v preteklosti povzročila sesutje KWin-"
-#~ "a.</b><br>Vzrok je najverjetneje hrošč v gonilniku za grafično kartico."
-#~ "<p>Če ste med tem nadgradili gonilnik in menite, da je stabilen,<br>lahko "
-#~ "ponastavite to zaščito. Zavedajte se, da <b>to lahko povzroči takojšnje "
-#~ "sesutje!</b></p><p>Druga možnost je uporaba zaledja XRender.</p>"
-
-#~ msgid "Required X extensions (XComposite and XDamage) are not available."
-#~ msgstr "Zahtevani razširitvi za X (XComposite in XDamage) nista na voljo."
-
-#~ msgid "GLX/OpenGL are not available and only OpenGL support is compiled."
-#~ msgstr "GLX/OpenGL ni na voljo, prevedena je le podpora za OpenGL."
-
-#~ msgid "GLX/OpenGL and XRender/XFixes are not available."
-#~ msgstr "Niti GLX/OpenGL, niti XRender/XFixes nista na voljo."
-
-#~ msgid "Sh&ade"
-#~ msgstr "Zvi&j"
-
-#~ msgid ""
-#~ "kwin_wayland: could not connect to Wayland Server, ensure WAYLAND_DISPLAY "
-#~ "is set.\n"
-#~ msgstr ""
-#~ "kwin_wayland: ni se bilo mogoče povezati s strežnikom Wayland. "
-#~ "Prepričajte se, da je nastavljen WAYLAND_DISPLAY.\n"
-
-#~ msgid ""
-#~ "The X11 Display to connect to. If not set next free number will be picked."
-#~ msgstr ""
-#~ "Prikaz X11, s katerim se želite povezati. Če ni nastavljeno, bo izbrana "
-#~ "naslednja neuporabljena številka."
-
-#~ msgid "KWin: "
-#~ msgstr "KWin: "
-
-#~ msgid "System"
-#~ msgstr "Sistem"
-
-#~ msgid "Navigation"
-#~ msgstr "Krmarjenje"
-
-#~ msgid "Window & Desktop"
-#~ msgstr "Okno in namizje"
-
-#~ msgid "Miscellaneous"
-#~ msgstr "Razno"
-
-#~ msgid "Desktop Switching"
-#~ msgstr "Preklop med namizji"

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-09-02 00:47+0000\n"
-"PO-Revision-Date: 2022-08-22 06:34+0200\n"
+"PO-Revision-Date: 2022-10-22 07:11+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -362,7 +362,7 @@ msgstr ""
 #: actions.ui:458
 #, kde-format
 msgid "Mo&use wheel:"
-msgstr ""
+msgstr "&თაგუნას ბორბალი:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllWheel)
 #: actions.ui:471
@@ -377,28 +377,28 @@ msgstr ""
 #: actions.ui:475 mouse.ui:102
 #, kde-format
 msgid "Raise/lower"
-msgstr ""
+msgstr "აწევა/დაწევა"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
 #: actions.ui:480 mouse.ui:107
 #, kde-format
 msgid "Shade/unshade"
-msgstr ""
+msgstr "დაჩრდილვა/განჩრდილვა"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
 #: actions.ui:485 mouse.ui:112
 #, kde-format
 msgid "Maximize/restore"
-msgstr ""
+msgstr "გადიდება/ჩაკეცვა"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
 #: actions.ui:490 mouse.ui:117
 #, kde-format
 msgid "Keep above/below"
-msgstr ""
+msgstr "ზემოდან დატოვება/ფანჯრის ქვემოთ ჩატანა"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
@@ -412,7 +412,7 @@ msgstr ""
 #: actions.ui:500 mouse.ui:127
 #, kde-format
 msgid "Change opacity"
-msgstr ""
+msgstr "გაუმჭვირვალობის შეცვლა"
 
 #. i18n: ectx: property (text), widget (QLabel, shadeHoverLabel)
 #: advanced.ui:20
@@ -551,7 +551,7 @@ msgstr ""
 #: advanced.ui:128
 #, kde-format
 msgid "&Special windows:"
-msgstr ""
+msgstr "&სპეციალური ფუნქციები:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
 #: advanced.ui:138
@@ -796,7 +796,7 @@ msgstr ""
 #: focus.ui:196
 #, kde-format
 msgid "Multiscreen behavior:"
-msgstr ""
+msgstr "ქცევა ერთზე მეტი ეკრანის ქონისას:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
 #: focus.ui:203
@@ -836,7 +836,7 @@ msgstr ""
 #: main.cpp:73
 #, kde-format
 msgid "&Focus"
-msgstr ""
+msgstr "&ფოკუსი"
 
 #: main.cpp:79
 #, kde-format
@@ -851,12 +851,12 @@ msgstr ""
 #: main.cpp:91
 #, kde-format
 msgid "Mo&vement"
-msgstr ""
+msgstr "&გადაადგილება"
 
 #: main.cpp:97
 #, kde-format
 msgid "Adva&nced"
-msgstr ""
+msgstr "&დამატებით"
 
 #: main.cpp:101
 #, kde-format
@@ -932,7 +932,7 @@ msgstr ""
 #: main.cpp:208
 #, kde-format
 msgid "Window Actio&ns"
-msgstr ""
+msgstr "ფანჯრის &ქმედებები"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: mouse.ui:17
@@ -944,7 +944,7 @@ msgstr ""
 #: mouse.ui:26
 #, kde-format
 msgid "&Double-click:"
-msgstr ""
+msgstr "&ორმაგი წკაპი:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
 #: mouse.ui:36
@@ -1015,7 +1015,7 @@ msgstr "დახურვა"
 #: mouse.ui:75
 #, kde-format
 msgid "Show on all desktops"
-msgstr ""
+msgstr "ყველა სამუშაო მაგიდაზე ჩვენება"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandTitlebarWheel)
 #: mouse.ui:98
@@ -1079,7 +1079,7 @@ msgstr ""
 #: mouse.ui:288 mouse.ui:403 mouse.ui:518
 #, kde-format
 msgid "Activate and lower"
-msgstr ""
+msgstr "აქტივაცია და დაწევა"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: mouse.ui:589
@@ -1105,7 +1105,7 @@ msgstr ""
 #: mouse.ui:636
 #, kde-format
 msgid "Middle c&lick:"
-msgstr ""
+msgstr "შუა &წკაპი:"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_10)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
