@@ -22,6 +22,8 @@
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/touch.h>
 
+#include <QAction>
+
 namespace KWin
 {
 

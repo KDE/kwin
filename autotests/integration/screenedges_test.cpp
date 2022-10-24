@@ -22,6 +22,8 @@
 #include <KConfigGroup>
 #include <KWayland/Client/surface.h>
 
+#include <QAction>
+
 Q_DECLARE_METATYPE(KWin::ElectricBorder)
 
 namespace KWin

@@ -19,6 +19,7 @@
 #include <KConfigGroup>
 #include <KGlobalAccel>
 
+#include <QAction>
 #include <QDBusConnection>
 
 #include <linux/input.h>

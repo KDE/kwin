@@ -23,8 +23,10 @@
 #include <KWayland/Client/surface.h>
 
 #include <KGlobalAccel>
-#include <linux/input.h>
 
+#include <QAction>
+
+#include <linux/input.h>
 #include <netwm.h>
 #include <xcb/xcb_icccm.h>
 

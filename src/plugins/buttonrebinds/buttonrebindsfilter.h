@@ -11,6 +11,8 @@
 #include "core/inputdevice.h"
 #include "input.h"
 
+#include <QKeySequence>
+
 class InputDevice : public KWin::InputDevice
 {
     QString sysName() const override;

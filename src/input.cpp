@@ -61,6 +61,7 @@
 #include <KScreenLocker/KsldApp>
 #endif
 // Qt
+#include <QAction>
 #include <QDBusConnection>
 #include <QDBusMessage>
 #include <QDBusPendingCall>

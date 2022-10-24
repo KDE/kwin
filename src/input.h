@@ -12,7 +12,6 @@
 #define KWIN_INPUT_H
 #include <config-kwin.h>
 
-#include <QAction>
 #include <QObject>
 #include <QPoint>
 #include <QPointer>
@@ -25,6 +24,7 @@
 #include <functional>
 
 class KGlobalAccelInterface;
+class QAction;
 class QKeySequence;
 class QMouseEvent;
 class QKeyEvent;

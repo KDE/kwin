@@ -36,6 +36,8 @@
 
 #include <KGlobalAccel>
 
+#include <QAction>
+
 #include <linux/input.h>
 
 Q_DECLARE_METATYPE(Qt::Orientation)
