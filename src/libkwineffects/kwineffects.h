@@ -190,6 +190,17 @@ enum EffectFrameStyle {
 };
 
 /**
+ * Convert a QPointF to a QPoint by flooring instead of rounding.
+ *
+ * By default, QPointF::toPoint() rounds which can cause problems in certain
+ * cases.
+ */
+KWINEFFECTS_EXPORT inline QPoint flooredPoint(const QPointF &point)
+{
+    return QPoint(std::floor(point.x()), std::floor(point.y()));
+}
+
+/**
  * @short Base class for all KWin effects
  *
  * This is the base class for all effects. By reimplementing virtual methods
