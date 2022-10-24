@@ -653,6 +653,19 @@ void Options::setRenderTimeEstimator(RenderTimeEstimator estimator)
     Q_EMIT renderTimeEstimatorChanged();
 }
 
+bool Options::allowTearing() const
+{
+    return m_allowTearing;
+}
+
+void Options::setAllowTearing(bool allow)
+{
+    if (allow != m_allowTearing) {
+        m_allowTearing = allow;
+        Q_EMIT allowTearingChanged();
+    }
+}
+
 void Options::setGlPlatformInterface(OpenGLPlatformInterface interface)
 {
     // check environment variable
@@ -793,6 +806,7 @@ void Options::syncFromKcfgc()
     setMoveMinimizedWindowsToEndOfTabBoxFocusChain(m_settings->moveMinimizedWindowsToEndOfTabBoxFocusChain());
     setLatencyPolicy(m_settings->latencyPolicy());
     setRenderTimeEstimator(m_settings->renderTimeEstimator());
+    setAllowTearing(m_settings->allowTearing());
 }
 
 bool Options::loadCompositingConfig(bool force)

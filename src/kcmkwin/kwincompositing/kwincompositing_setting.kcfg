@@ -45,6 +45,10 @@
            <default>LatencyMedium</default>
        </entry>
 
+       <entry name="AllowTearing" type="Bool">
+           <default>true</default>
+       </entry>
+
     </group>
 
 </kcfg>

@@ -214,6 +214,7 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(bool windowsBlockCompositing READ windowsBlockCompositing WRITE setWindowsBlockCompositing NOTIFY windowsBlockCompositingChanged)
     Q_PROPERTY(LatencyPolicy latencyPolicy READ latencyPolicy WRITE setLatencyPolicy NOTIFY latencyPolicyChanged)
     Q_PROPERTY(RenderTimeEstimator renderTimeEstimator READ renderTimeEstimator WRITE setRenderTimeEstimator NOTIFY renderTimeEstimatorChanged)
+    Q_PROPERTY(bool allowTearing READ allowTearing WRITE setAllowTearing NOTIFY allowTearingChanged)
 public:
     explicit Options(QObject *parent = nullptr);
     ~Options() override;
@@ -704,6 +705,7 @@ public:
     QStringList modifierOnlyDBusShortcut(Qt::KeyboardModifier mod) const;
     LatencyPolicy latencyPolicy() const;
     RenderTimeEstimator renderTimeEstimator() const;
+    bool allowTearing() const;
 
     // setters
     void setFocusPolicy(FocusPolicy focusPolicy);
@@ -763,6 +765,7 @@ public:
     void setMoveMinimizedWindowsToEndOfTabBoxFocusChain(bool set);
     void setLatencyPolicy(LatencyPolicy policy);
     void setRenderTimeEstimator(RenderTimeEstimator estimator);
+    void setAllowTearing(bool allow);
 
     // default values
     static WindowOperation defaultOperationTitlebarDblClick()
@@ -969,6 +972,7 @@ Q_SIGNALS:
     void latencyPolicyChanged();
     void configChanged();
     void renderTimeEstimatorChanged();
+    void allowTearingChanged();
 
 private:
     void setElectricBorders(int borders);
@@ -1041,6 +1045,8 @@ private:
     float electric_border_corner_ratio;
     bool borderless_maximized_windows;
     bool condensed_title;
+
+    bool m_allowTearing = true;
 
     QHash<Qt::KeyboardModifier, QStringList> m_modifierOnlyShortcuts;
 

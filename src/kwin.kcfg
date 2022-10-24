@@ -278,6 +278,9 @@
             </choices>
             <default>RenderTimeEstimatorMaximum</default>
         </entry>
+        <entry name="AllowTearing" type="Bool">
+            <default>true</default>
+        </entry>
     </group>
     <group name="TabBox">
         <entry name="ShowDelay" type="Bool">

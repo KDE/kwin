@@ -207,6 +207,16 @@ you can reset this protection but be aware that this might result in an immediat
      </item>
     </widget>
    </item>
+   <item row="15" column="1">
+    <widget class="QCheckBox" name="kcfg_AllowTearing">
+     <property name="toolTip">
+      <string>Allows applications to cause screen tearing in fullscreen.</string>
+     </property>
+     <property name="text">
+      <string>Allow tearing in fullscreen</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
