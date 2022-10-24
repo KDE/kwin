@@ -54,8 +54,7 @@ static bool screenContainsPos(const QPointF &pos)
 {
     const auto outputs = workspace()->outputs();
     for (const Output *output : outputs) {
-        if (output->geometry().contains(QPoint(std::floor(pos.x()),
-                                               std::floor(pos.y())))) {
+        if (output->geometry().contains(flooredPoint(pos))) {
             return true;
         }
     }
@@ -735,23 +734,19 @@ QPointF PointerInputRedirection::applyPointerConfinement(const QPointF &pos) con
         return pos;
     }
 
-    auto floorPoint = [](const QPointF &point) {
-        return QPoint(std::floor(point.x()), std::floor(point.y()));
-    };
-
     const QRegion confinementRegion = getConstraintRegion(focus(), cf);
-    if (confinementRegion.contains(floorPoint(pos))) {
+    if (confinementRegion.contains(flooredPoint(pos))) {
         return pos;
     }
     QPointF p = pos;
     // allow either x or y to pass
     p = QPointF(m_pos.x(), pos.y());
 
-    if (confinementRegion.contains(floorPoint(p))) {
+    if (confinementRegion.contains(flooredPoint(p))) {
         return p;
     }
     p = QPointF(pos.x(), m_pos.y());
-    if (confinementRegion.contains(floorPoint(p))) {
+    if (confinementRegion.contains(flooredPoint(p))) {
         return p;
     }
 
