@@ -891,13 +891,6 @@ public:
     virtual void stopMouseInterception(Effect *effect) = 0;
 
     /**
-     * @brief Registers a global shortcut with the provided @p action.
-     *
-     * @param shortcut The global shortcut which should trigger the action
-     * @param action The action which gets triggered when the shortcut matches
-     */
-    virtual void registerGlobalShortcut(const QKeySequence &shortcut, QAction *action) = 0;
-    /**
      * @brief Registers a global pointer shortcut with the provided @p action.
      *
      * @param modifiers The keyboard modifiers which need to be holded

@@ -44,7 +44,6 @@
 
 #include <KConfigGroup>
 #include <KCrash>
-#include <KGlobalAccel>
 #include <KLocalizedString>
 
 #include <QOpenGLContext>
@@ -366,23 +365,6 @@ void X11StandalonePlatform::startInteractivePositionSelection(std::function<void
         m_windowSelector = std::make_unique<WindowSelector>();
     }
     m_windowSelector->start(callback);
-}
-
-void X11StandalonePlatform::setupActionForGlobalAccel(QAction *action)
-{
-    connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutActiveChanged, kwinApp(), [action](QAction *triggeredAction, bool active) {
-        Q_UNUSED(active)
-
-        if (triggeredAction != action)
-            return;
-
-        QVariant timestamp = action->property("org.kde.kglobalaccel.activationTimestamp");
-        bool ok = false;
-        const quint32 t = timestamp.toULongLong(&ok);
-        if (ok) {
-            kwinApp()->setX11Time(t);
-        }
-    });
 }
 
 std::unique_ptr<OverlayWindow> X11StandalonePlatform::createOverlayWindow()

@@ -209,11 +209,6 @@ void Platform::startInteractivePositionSelection(std::function<void(const QPoint
     input()->startInteractivePositionSelection(callback);
 }
 
-void Platform::setupActionForGlobalAccel(QAction *action)
-{
-    Q_UNUSED(action)
-}
-
 std::unique_ptr<OverlayWindow> Platform::createOverlayWindow()
 {
     return nullptr;

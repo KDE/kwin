@@ -972,7 +972,7 @@ void Workspace::initShortcut(const QString &actionName, const QString &descripti
     a->setText(description);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << shortcut);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << shortcut);
-    input()->registerShortcut(shortcut, a, receiver, slot);
+    connect(a, &QAction::triggered, receiver, slot);
 }
 
 /**
@@ -1183,7 +1183,6 @@ void Workspace::windowShortcutUpdated(Window *window)
     if (!window->shortcut().isEmpty()) {
         if (action == nullptr) { // new shortcut
             action = new QAction(this);
-            kwinApp()->platform()->setupActionForGlobalAccel(action);
             action->setProperty("componentName", QStringLiteral(KWIN_NAME));
             action->setObjectName(key);
             action->setText(i18n("Activate Window (%1)", window->caption()));

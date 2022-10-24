@@ -50,8 +50,6 @@ public:
 
     PlatformCursorImage cursorImage() const override;
 
-    void setupActionForGlobalAccel(QAction *action) override;
-
     std::unique_ptr<OverlayWindow> createOverlayWindow() override;
     std::unique_ptr<OutlineVisual> createOutline(Outline *outline) override;
 

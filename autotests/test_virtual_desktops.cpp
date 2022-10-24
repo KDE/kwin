@@ -19,12 +19,6 @@ namespace KWin
 
 InputRedirection *InputRedirection::s_self = nullptr;
 
-void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action)
-{
-    Q_UNUSED(shortcut)
-    Q_UNUSED(action)
-}
-
 void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action)
 {
     Q_UNUSED(modifiers)

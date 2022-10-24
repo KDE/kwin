@@ -513,7 +513,7 @@ void TabBox::key(const KLazyLocalizedString &actionName, Slot slot, const QKeySe
     a->setObjectName(QString::fromUtf8(actionName.untranslatedText()));
     a->setText(actionName.toString());
     KGlobalAccel::self()->setGlobalShortcut(a, QList<QKeySequence>() << shortcut);
-    input()->registerShortcut(shortcut, a, this, slot);
+    connect(a, &QAction::triggered, this, slot);
     auto cuts = KGlobalAccel::self()->shortcut(a);
     globalShortcutChanged(a, cuts.isEmpty() ? QKeySequence() : cuts.first());
 }

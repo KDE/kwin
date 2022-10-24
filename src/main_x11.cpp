@@ -22,10 +22,12 @@
 
 #include <KConfigGroup>
 #include <KCrash>
+#include <KGlobalAccel>
 #include <KLocalizedString>
 #include <KSelectionOwner>
 #include <KSignalHandler>
 
+#include <QAction>
 #include <QComboBox>
 #include <QCommandLineParser>
 #include <QDialog>
@@ -239,6 +241,17 @@ void ApplicationX11::performStartup()
                 ::exit(1);
             }
         }
+
+        // Update the timestamp if a global shortcut is pressed or released. Needed
+        // to ensure that kwin can grab the keyboard.
+        connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutActiveChanged, this, [this](QAction *triggeredAction) {
+            QVariant timestamp = triggeredAction->property("org.kde.kglobalaccel.activationTimestamp");
+            bool ok = false;
+            const quint32 t = timestamp.toULongLong(&ok);
+            if (ok) {
+                kwinApp()->setX11Time(t);
+            }
+        });
 
         createInput();
         createWorkspace();

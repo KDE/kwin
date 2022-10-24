@@ -97,7 +97,7 @@ NightColorManager::NightColorManager()
     toggleAction->setObjectName(QStringLiteral("Toggle Night Color"));
     toggleAction->setText(i18n("Toggle Night Color"));
     KGlobalAccel::setGlobalShortcut(toggleAction, QList<QKeySequence>());
-    input()->registerShortcut(QKeySequence(), toggleAction, this, &NightColorManager::toggle);
+    connect(toggleAction, &QAction::triggered, this, &NightColorManager::toggle);
 
     connect(kwinApp()->colorManager(), &ColorManager::deviceAdded, this, &NightColorManager::hardReset);
 

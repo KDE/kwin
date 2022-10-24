@@ -36,7 +36,6 @@ DesktopGridEffect::DesktopGridEffect()
     KGlobalAccel::self()->setDefaultShortcut(m_toggleAction, QList<QKeySequence>() << (Qt::META | Qt::Key_F8));
     KGlobalAccel::self()->setShortcut(m_toggleAction, QList<QKeySequence>() << (Qt::META | Qt::Key_F8));
     m_toggleShortcut = KGlobalAccel::self()->shortcut(m_toggleAction);
-    effects->registerGlobalShortcut(Qt::META | Qt::Key_F8, m_toggleAction);
     connect(m_toggleAction, &QAction::triggered, this, [this]() {
         if (isRunning()) {
             deactivate(animationDuration());

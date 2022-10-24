@@ -655,7 +655,6 @@ void ScriptedEffect::registerShortcut(const QString &objectName, const QString &
     action->setText(text);
     const QKeySequence shortcut = QKeySequence(keySequence);
     KGlobalAccel::self()->setShortcut(action, QList<QKeySequence>() << shortcut);
-    input()->registerShortcut(shortcut, action);
     connect(action, &QAction::triggered, this, [this, action, callback]() {
         QJSValue actionObject = m_engine->newQObject(action);
         QQmlEngine::setObjectOwnership(action, QQmlEngine::CppOwnership);

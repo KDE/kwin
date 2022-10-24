@@ -801,11 +801,6 @@ bool EffectsHandlerImpl::tabletPadRingEvent(int number, int position, bool isFin
     return false;
 }
 
-void EffectsHandlerImpl::registerGlobalShortcut(const QKeySequence &shortcut, QAction *action)
-{
-    input()->registerShortcut(shortcut, action);
-}
-
 void EffectsHandlerImpl::registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action)
 {
     input()->registerPointerShortcut(modifiers, pointerButtons, action);

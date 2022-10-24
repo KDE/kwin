@@ -3146,11 +3146,6 @@ void InputRedirection::setupTouchpadShortcuts()
     KGlobalAccel::self()->setShortcut(touchpadOnAction, QList<QKeySequence>{Qt::Key_TouchpadOn});
     KGlobalAccel::self()->setDefaultShortcut(touchpadOffAction, QList<QKeySequence>{Qt::Key_TouchpadOff});
     KGlobalAccel::self()->setShortcut(touchpadOffAction, QList<QKeySequence>{Qt::Key_TouchpadOff});
-#ifndef KWIN_BUILD_TESTING
-    registerShortcut(Qt::Key_TouchpadToggle, touchpadToggleAction);
-    registerShortcut(Qt::Key_TouchpadOn, touchpadOnAction);
-    registerShortcut(Qt::Key_TouchpadOff, touchpadOffAction);
-#endif
     connect(touchpadToggleAction, &QAction::triggered, this, &InputRedirection::toggleTouchpads);
     connect(touchpadOnAction, &QAction::triggered, this, &InputRedirection::enableTouchpads);
     connect(touchpadOffAction, &QAction::triggered, this, &InputRedirection::disableTouchpads);
@@ -3290,12 +3285,6 @@ Qt::KeyboardModifiers InputRedirection::keyboardModifiers() const
 Qt::KeyboardModifiers InputRedirection::modifiersRelevantForGlobalShortcuts() const
 {
     return m_keyboard->modifiersRelevantForGlobalShortcuts();
-}
-
-void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action)
-{
-    Q_UNUSED(shortcut)
-    kwinApp()->platform()->setupActionForGlobalAccel(action);
 }
 
 void InputRedirection::registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action)

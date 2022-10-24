@@ -123,17 +123,6 @@ public:
     Qt::KeyboardModifiers keyboardModifiers() const;
     Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const;
 
-    void registerShortcut(const QKeySequence &shortcut, QAction *action);
-    /**
-     * @overload
-     *
-     * Like registerShortcut, but also connects QAction::triggered to the @p slot on @p receiver.
-     * It's recommended to use this method as it ensures that the X11 timestamp is updated prior
-     * to the @p slot being invoked. If not using this overload it's required to ensure that
-     * registerShortcut is called before connecting to QAction's triggered signal.
-     */
-    template<typename T, typename Slot>
-    void registerShortcut(const QKeySequence &shortcut, QAction *action, T *receiver, Slot slot);
     void registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action);
     void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action);
     void registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action);
@@ -540,13 +529,6 @@ inline InputRedirection *input()
 inline QList<InputDevice *> InputRedirection::devices() const
 {
     return m_inputDevices;
-}
-
-template<typename T, typename Slot>
-inline void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action, T *receiver, Slot slot)
-{
-    registerShortcut(shortcut, action);
-    connect(action, &QAction::triggered, receiver, slot);
 }
 
 } // namespace KWin

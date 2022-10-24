@@ -909,7 +909,7 @@ QAction *VirtualDesktopManager::addAction(const QString &name, const KLocalizedS
     a->setText(label.subs(value).toString());
     a->setData(value);
     KGlobalAccel::setGlobalShortcut(a, key);
-    input()->registerShortcut(key, a, this, slot);
+    connect(a, &QAction::triggered, this, slot);
     return a;
 }
 
@@ -920,7 +920,7 @@ QAction *VirtualDesktopManager::addAction(const QString &name, const QString &la
     a->setObjectName(name);
     a->setText(label);
     KGlobalAccel::setGlobalShortcut(a, QKeySequence());
-    input()->registerShortcut(QKeySequence(), a, this, slot);
+    connect(a, &QAction::triggered, this, slot);
     return a;
 }
 
