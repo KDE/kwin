@@ -674,7 +674,7 @@ QMatrix4x4 Window::inputTransformation() const
 bool Window::hitTest(const QPointF &point) const
 {
     if (isDecorated()) {
-        if (m_decoration.inputRegion.contains(mapToFrame(point).toPoint())) {
+        if (m_decoration.inputRegion.contains(flooredPoint(mapToFrame(point)))) {
             return true;
         }
     }
