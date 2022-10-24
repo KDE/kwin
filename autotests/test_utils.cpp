@@ -57,10 +57,10 @@ void TestUtils::testSealedRamFile()
     QCOMPARE(written, -1);
 
     // Cannot use MAP_SHARED on sealed file descriptor.
-    void *data = mmap(nullptr, file.size(), PROT_READ, MAP_SHARED, file.fd(), 0);
+    void *data = mmap(nullptr, file.size(), PROT_WRITE, MAP_SHARED, file.fd(), 0);
     QCOMPARE(data, MAP_FAILED);
 
-    data = mmap(nullptr, file.size(), PROT_READ, MAP_PRIVATE, file.fd(), 0);
+    data = mmap(nullptr, file.size(), PROT_WRITE, MAP_PRIVATE, file.fd(), 0);
     QVERIFY(data != MAP_FAILED);
 #else
     QSKIP("Sealing requires memfd suport.");
