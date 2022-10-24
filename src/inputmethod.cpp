@@ -130,6 +130,7 @@ void InputMethod::init()
         connect(textInputV3, &TextInputV3Interface::contentTypeChanged, this, &InputMethod::contentTypeChanged);
         connect(textInputV3, &TextInputV3Interface::stateCommitted, this, &InputMethod::stateCommitted);
         connect(textInputV3, &TextInputV3Interface::enabledChanged, this, &InputMethod::textInputInterfaceV3EnabledChanged);
+        connect(textInputV3, &TextInputV3Interface::enableRequested, this, &InputMethod::textInputInterfaceV3EnableRequested);
 
         connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this]() {
             m_hasPendingModifiers = true;
@@ -851,4 +852,9 @@ void InputMethod::forceActivate()
     show();
 }
 
+void InputMethod::textInputInterfaceV3EnableRequested()
+{
+    refreshActive();
+    show();
+}
 }

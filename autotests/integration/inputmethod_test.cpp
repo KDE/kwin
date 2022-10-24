@@ -188,14 +188,36 @@ void InputMethodTest::testEnableDisableV3()
 
     auto textInputV3 = std::make_unique<Test::TextInputV3>();
     textInputV3->init(Test::waylandTextInputManagerV3()->get_text_input(*(Test::waylandSeat())));
+
+    // Show the keyboard
+    touchNow();
     textInputV3->enable();
 
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     QSignalSpy inputMethodActiveSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
     // just enabling the text-input should not show it but rather on commit
     QVERIFY(!kwinApp()->inputMethod()->isActive());
     textInputV3->commit();
     QVERIFY(inputMethodActiveSpy.count() || inputMethodActiveSpy.wait());
     QVERIFY(kwinApp()->inputMethod()->isActive());
+
+    QVERIFY(windowAddedSpy.wait());
+    Window *keyboardClient = windowAddedSpy.last().first().value<Window *>();
+    QVERIFY(keyboardClient);
+    QVERIFY(keyboardClient->isInputMethod());
+    QVERIFY(keyboardClient->isShown());
+
+    // Text input v3 doesn't have hideInputPanel, just simiulate the hide from dbus call
+    kwinApp()->inputMethod()->hide();
+    QVERIFY(!keyboardClient->isShown());
+
+    QSignalSpy windowShownSpy(keyboardClient, &Window::windowShown);
+    // Force enable the text input object. This is what's done by Gtk.
+    textInputV3->enable();
+    textInputV3->commit();
+
+    windowShownSpy.wait();
+    QVERIFY(keyboardClient->isShown());
 
     // disable text input and ensure that it is not hiding input panel without commit
     inputMethodActiveSpy.clear();

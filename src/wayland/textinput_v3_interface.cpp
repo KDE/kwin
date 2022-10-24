@@ -355,6 +355,7 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_commit(Resource *resource)
     serialHash[resource]++;
 
     auto &resourceEnabled = enabled[resource];
+    const auto oldResourceEnabled = resourceEnabled;
     if (resourceEnabled != pending.enabled) {
         resourceEnabled = pending.enabled;
     }
@@ -398,6 +399,10 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_commit(Resource *resource)
         send_preedit_string(resource->handle, preeditText, preeditCursorBegin, preeditCursorEnd);
     }
     send_done(resource->handle, serialHash[resource]);
+
+    if (resourceEnabled && oldResourceEnabled) {
+        Q_EMIT q->enableRequested();
+    }
 }
 
 void TextInputV3InterfacePrivate::defaultPending()

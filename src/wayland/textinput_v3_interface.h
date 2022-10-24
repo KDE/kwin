@@ -188,6 +188,13 @@ Q_SIGNALS:
      */
     void stateCommitted(quint32 serial);
 
+    /**
+     * Emitted whenever this TextInputV3Interface is already enabled, but received another enable from client.
+     * @see isEnabled
+     * @see surface
+     */
+    void enableRequested();
+
 private:
     friend class TextInputManagerV3InterfacePrivate;
     friend class SeatInterface;

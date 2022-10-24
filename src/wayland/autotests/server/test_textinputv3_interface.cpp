@@ -224,6 +224,7 @@ void TestTextInputV3Interface::testEnableDisable()
     QSignalSpy focusedSurfaceChangedSpy(m_seat, &SeatInterface::focusedTextInputSurfaceChanged);
     QSignalSpy textInputEnabledSpy(m_serverTextInputV3, &TextInputV3Interface::enabledChanged);
     QSignalSpy cursorRectangleChangedSpy(m_serverTextInputV3, &TextInputV3Interface::cursorRectangleChanged);
+    QSignalSpy enableRequestedSpy(m_serverTextInputV3, &TextInputV3Interface::enableRequested);
 
     QSignalSpy surfaceEnterSpy(m_clientTextInputV3, &TextInputV3::surface_enter);
     QSignalSpy surfaceLeaveSpy(m_clientTextInputV3, &TextInputV3::surface_leave);
@@ -251,12 +252,27 @@ void TestTextInputV3Interface::testEnableDisable()
     QVERIFY(textInputEnabledSpy.wait());
     m_totalCommits++;
 
+    QCOMPARE(enableRequestedSpy.count(), 0);
     QCOMPARE(textInputEnabledSpy.count(), 1);
     QCOMPARE(cursorRectangleChangedSpy.count(), 1);
     QCOMPARE(m_serverTextInputV3->cursorRectangle(), QRect(0, 0, 20, 20));
     QCOMPARE(m_serverTextInputV3->surroundingText(), QString("KDE Plasma Desktop"));
     QCOMPARE(m_serverTextInputV3->surroundingTextCursorPosition(), 0);
     QCOMPARE(m_serverTextInputV3->surroundingTextSelectionAnchor(), 3);
+
+    // Do another enable when it's already enabled.
+    m_clientTextInputV3->enable();
+    m_clientTextInputV3->set_cursor_rectangle(0, 0, 20, 20);
+    m_clientTextInputV3->set_surrounding_text("KDE Plasma Desktop", 0, 3);
+    m_clientTextInputV3->commit();
+    QVERIFY(enableRequestedSpy.wait());
+    QCOMPARE(textInputEnabledSpy.count(), 1);
+    QCOMPARE(cursorRectangleChangedSpy.count(), 1);
+    QCOMPARE(m_serverTextInputV3->cursorRectangle(), QRect(0, 0, 20, 20));
+    QCOMPARE(m_serverTextInputV3->surroundingText(), QString("KDE Plasma Desktop"));
+    QCOMPARE(m_serverTextInputV3->surroundingTextCursorPosition(), 0);
+    QCOMPARE(m_serverTextInputV3->surroundingTextSelectionAnchor(), 3);
+    m_totalCommits++;
 
     // disabling we should not get the event
     m_clientTextInputV3->disable();

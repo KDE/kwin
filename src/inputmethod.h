@@ -92,6 +92,7 @@ private Q_SLOTS:
     void textInputInterfaceV3EnabledChanged();
     void stateCommitted(uint32_t serial);
     void textInputInterfaceV2StateUpdated(quint32 serial, KWaylandServer::TextInputV2Interface::UpdateReason reason);
+    void textInputInterfaceV3EnableRequested();
 
     // inputcontext slots
     void setPreeditString(uint32_t serial, const QString &text, const QString &commit);
