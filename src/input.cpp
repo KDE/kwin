@@ -1441,12 +1441,12 @@ public:
         if (!decoration) {
             return false;
         }
-        const QPointF p = event->globalPos() - decoration->window()->pos();
+        const QPointF p = event->screenPos() - decoration->window()->pos();
         switch (event->type()) {
         case QEvent::MouseMove: {
             QHoverEvent e(QEvent::HoverMove, p, p);
             QCoreApplication::instance()->sendEvent(decoration->decoration(), &e);
-            decoration->window()->processDecorationMove(p, event->globalPos());
+            decoration->window()->processDecorationMove(p, event->screenPos());
             return true;
         }
         case QEvent::MouseButtonPress:
@@ -1455,7 +1455,7 @@ public:
             if (actionResult.first) {
                 return actionResult.second;
             }
-            QMouseEvent e(event->type(), p, event->globalPos(), event->button(), event->buttons(), event->modifiers());
+            QMouseEvent e(event->type(), p, event->screenPos(), event->button(), event->buttons(), event->modifiers());
             e.setTimestamp(event->timestamp());
             e.setAccepted(false);
             QCoreApplication::sendEvent(decoration->decoration(), &e);
@@ -1600,13 +1600,13 @@ public:
         if (!decoration) {
             return false;
         }
-        const QPointF p = event->globalPos() - decoration->window()->pos();
+        const QPointF p = event->globalPosF() - decoration->window()->pos();
         switch (event->type()) {
         case QEvent::TabletMove:
         case QEvent::TabletEnterProximity: {
             QHoverEvent e(QEvent::HoverMove, p, p);
             QCoreApplication::instance()->sendEvent(decoration->decoration(), &e);
-            decoration->window()->processDecorationMove(p, event->globalPos());
+            decoration->window()->processDecorationMove(p, event->globalPosF());
             break;
         }
         case QEvent::TabletPress:
@@ -1614,7 +1614,7 @@ public:
             const bool isPressed = event->type() == QEvent::TabletPress;
             QMouseEvent e(isPressed ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
                           p,
-                          event->globalPos(),
+                          event->globalPosF(),
                           Qt::LeftButton,
                           isPressed ? Qt::LeftButton : Qt::MouseButtons(),
                           input()->keyboardModifiers());
