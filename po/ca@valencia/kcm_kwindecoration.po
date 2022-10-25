@@ -149,7 +149,8 @@ msgid ""
 "theme, and we will have to abort, due to having no theme to set"
 msgstr ""
 "S'ha intentat indicar un camí de fitxer, però no s'ha pogut resoldre com a "
-"tema, per tant cal interrompre-ho, ja que no hi ha cap tema a establir"
+"tema, per tant cal interrompre-ho, ja que no hi ha cap tema que s'haja "
+"d'establir"
 
 #: kwin-applywindowdecoration.cpp:77
 #, kde-format

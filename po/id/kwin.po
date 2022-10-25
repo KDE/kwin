@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-21 00:48+0000\n"
+"POT-Creation-Date: 2022-10-25 00:48+0000\n"
 "PO-Revision-Date: 2022-09-27 18:25+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -30,12 +30,12 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "andhika.padmawan@gmail.com,wantoyek@gmail.com"
 
-#: composite.cpp:615
+#: composite.cpp:621
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Efek desktop telah dijalankan ulang karena reset grafis"
 
-#: composite.cpp:821
+#: composite.cpp:827
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "

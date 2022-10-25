@@ -618,7 +618,7 @@ msgid ""
 "Select window to screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Seleccioneu la finestra a capturar amb el clic esquerre o la tecla de "
+"Seleccioneu la finestra que es capturarà amb el clic esquerre o la tecla de "
 "retorn.\n"
 "La tecla d'escapada o clic dret per a cancel·lar."
 
@@ -1115,6 +1115,3 @@ msgstr "Desactivat"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Seguiment del ratolí:"
-
-#~ msgid "Slide docks"
-#~ msgstr "Llisca els acobladors"

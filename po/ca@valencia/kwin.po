@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-21 00:48+0000\n"
-"PO-Revision-Date: 2022-10-07 18:16+0200\n"
+"POT-Creation-Date: 2022-10-25 00:48+0000\n"
+"PO-Revision-Date: 2022-10-21 13:38+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -34,14 +34,14 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "alviboi@gmail.com,sps@sastia.com"
 
-#: composite.cpp:615
+#: composite.cpp:621
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Els efectes de l'escriptori es reiniciaran a causa d'una reinicialització "
 "gràfica"
 
-#: composite.cpp:821
+#: composite.cpp:827
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -1026,7 +1026,7 @@ msgstr "Gestor de finestres"
 #: helpers/killer/killer.cpp:38
 #, kde-format
 msgid "PID of the application to terminate"
-msgstr "El PID de l'aplicació a finalitzar"
+msgstr "El PID de l'aplicació que s'ha de finalitzar"
 
 #: helpers/killer/killer.cpp:38
 #, kde-format
@@ -1237,7 +1237,8 @@ msgstr "Iniciar un servidor XWayland sense finestra arrel."
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
-"Nom del sòcol Wayland a escoltar. Si no està definit, s'utilitza «wayland-0»."
+"Nom del sòcol Wayland que s'escoltarà. Si no està definit, s'utilitza "
+"«wayland-0»."
 
 #: main_wayland.cpp:323
 #, kde-format
@@ -2292,11 +2293,9 @@ msgid "Show in &Activities"
 msgstr "Mostra en les &activitats"
 
 #: useractions.cpp:525
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move the window to that desktop"
-#| msgid "Move to New Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "Mou a un escriptori nou"
+msgstr "Mou a l'escriptori ac&tual"
 
 #: useractions.cpp:535 useractions.cpp:602
 #, kde-format
