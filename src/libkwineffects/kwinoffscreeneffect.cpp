@@ -113,7 +113,7 @@ void OffscreenData::maybeRender(EffectWindow *window)
         data.setProjectionMatrix(projectionMatrix);
 
         const int mask = Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_WINDOW_TRANSLUCENT;
-        effects->renderWindow(window, mask, infiniteRegion(), data);
+        effects->drawWindow(window, mask, infiniteRegion(), data);
 
         GLFramebuffer::popFramebuffer();
         m_isDirty = false;
