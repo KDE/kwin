@@ -141,12 +141,12 @@ public:
     void touchUp(qint32 id, quint32 time) override;
 
     void pinchGestureBegin(int fingerCount, quint32 time) override;
-    void pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override;
+    void pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time) override;
     void pinchGestureEnd(quint32 time) override;
     void pinchGestureCancelled(quint32 time) override;
 
     void swipeGestureBegin(int fingerCount, quint32 time) override;
-    void swipeGestureUpdate(const QSizeF &delta, quint32 time) override;
+    void swipeGestureUpdate(const QPointF &delta, quint32 time) override;
     void swipeGestureEnd(quint32 time) override;
     void swipeGestureCancelled(quint32 time) override;
 

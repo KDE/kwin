@@ -88,7 +88,7 @@ public:
     /**
      * @internal
      */
-    void processMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, InputDevice *device);
+    void processMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, InputDevice *device);
     /**
      * @internal
      */
@@ -104,7 +104,7 @@ public:
     /**
      * @internal
      */
-    void processSwipeGestureUpdate(const QSizeF &delta, quint32 time, KWin::InputDevice *device = nullptr);
+    void processSwipeGestureUpdate(const QPointF &delta, quint32 time, KWin::InputDevice *device = nullptr);
     /**
      * @internal
      */
@@ -120,7 +120,7 @@ public:
     /**
      * @internal
      */
-    void processPinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time, KWin::InputDevice *device = nullptr);
+    void processPinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time, KWin::InputDevice *device = nullptr);
     /**
      * @internal
      */
@@ -143,7 +143,7 @@ public:
     void processHoldGestureCancelled(quint32 time, KWin::InputDevice *device = nullptr);
 
 private:
-    void processMotionInternal(const QPointF &pos, const QSizeF &delta, const QSizeF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, InputDevice *device);
+    void processMotionInternal(const QPointF &pos, const QPointF &delta, const QPointF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, InputDevice *device);
     void cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now) override;
 
     void focusUpdate(Window *focusOld, Window *focusNow) override;

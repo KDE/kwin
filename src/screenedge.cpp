@@ -75,7 +75,7 @@ QAction *TouchCallback::touchUpAction() const
     return m_touchUpAction;
 }
 
-void TouchCallback::progressCallback(ElectricBorder border, const QSizeF &deltaProgress, Output *output) const
+void TouchCallback::progressCallback(ElectricBorder border, const QPointF &deltaProgress, Output *output) const
 {
     if (m_progressCallback) {
         m_progressCallback(border, deltaProgress, output);
@@ -129,7 +129,7 @@ Edge::Edge(ScreenEdges *parent)
             Q_EMIT approaching(border(), m_lastApproachingFactor / 256.0f, m_approachGeometry);
         }
     });
-    connect(m_gesture, &SwipeGesture::deltaProgress, this, [this](const QSizeF &progressDelta) {
+    connect(m_gesture, &SwipeGesture::deltaProgress, this, [this](const QPointF &progressDelta) {
         if (!m_touchCallbacks.isEmpty()) {
             m_touchCallbacks.constFirst().progressCallback(border(), progressDelta, m_output);
         }
@@ -572,7 +572,7 @@ void Edge::setGeometry(const QRect &geometry)
     if (isScreenEdge()) {
         const Output *output = workspace()->outputAt(m_geometry.center());
         m_gesture->setStartGeometry(m_geometry);
-        m_gesture->setMinimumDelta(QSizeF(MINIMUM_DELTA, MINIMUM_DELTA) / output->scale());
+        m_gesture->setMinimumDelta(QPointF(MINIMUM_DELTA, MINIMUM_DELTA) / output->scale());
     }
 }
 

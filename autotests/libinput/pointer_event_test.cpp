@@ -189,7 +189,7 @@ void TestLibinputPointerEvent::testMotion()
     libinput_event_pointer *pointerEvent = new libinput_event_pointer;
     pointerEvent->device = m_nativeDevice;
     pointerEvent->type = LIBINPUT_EVENT_POINTER_MOTION;
-    pointerEvent->delta = QSizeF(2.1, 4.5);
+    pointerEvent->delta = QPointF(2.1, 4.5);
     pointerEvent->time = 500u;
 
     std::unique_ptr<Event> event(Event::create(pointerEvent));
@@ -197,7 +197,7 @@ void TestLibinputPointerEvent::testMotion()
     QVERIFY(pe);
     QCOMPARE(pe->type(), LIBINPUT_EVENT_POINTER_MOTION);
     QCOMPARE(pe->time(), 500u);
-    QCOMPARE(pe->delta(), QSizeF(2.1, 4.5));
+    QCOMPARE(pe->delta(), QPointF(2.1, 4.5));
 }
 
 void TestLibinputPointerEvent::testAbsoluteMotion()

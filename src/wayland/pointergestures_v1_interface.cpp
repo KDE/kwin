@@ -112,7 +112,7 @@ void PointerSwipeGestureV1Interface::sendBegin(quint32 serial, quint32 fingerCou
     }
 }
 
-void PointerSwipeGestureV1Interface::sendUpdate(const QSizeF &delta)
+void PointerSwipeGestureV1Interface::sendUpdate(const QPointF &delta)
 {
     if (!focusedClient) {
         return;
@@ -122,7 +122,7 @@ void PointerSwipeGestureV1Interface::sendUpdate(const QSizeF &delta)
 
     const QList<Resource *> swipeResources = resourceMap().values(focusedClient->client());
     for (Resource *swipeResource : swipeResources) {
-        send_update(swipeResource->handle, seat->timestamp(), wl_fixed_from_double(delta.width()), wl_fixed_from_double(delta.height()));
+        send_update(swipeResource->handle, seat->timestamp(), wl_fixed_from_double(delta.x()), wl_fixed_from_double(delta.y()));
     }
 }
 
@@ -198,7 +198,7 @@ void PointerPinchGestureV1Interface::sendBegin(quint32 serial, quint32 fingerCou
     }
 }
 
-void PointerPinchGestureV1Interface::sendUpdate(const QSizeF &delta, qreal scale, qreal rotation)
+void PointerPinchGestureV1Interface::sendUpdate(const QPointF &delta, qreal scale, qreal rotation)
 {
     if (!focusedClient) {
         return;
@@ -210,8 +210,8 @@ void PointerPinchGestureV1Interface::sendUpdate(const QSizeF &delta, qreal scale
     for (Resource *pinchResource : pinchResources) {
         send_update(pinchResource->handle,
                     seat->timestamp(),
-                    wl_fixed_from_double(delta.width()),
-                    wl_fixed_from_double(delta.height()),
+                    wl_fixed_from_double(delta.x()),
+                    wl_fixed_from_double(delta.y()),
                     wl_fixed_from_double(scale),
                     wl_fixed_from_double(rotation));
     }

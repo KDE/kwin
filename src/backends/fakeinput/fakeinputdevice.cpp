@@ -21,7 +21,7 @@ FakeInputDevice::FakeInputDevice(KWaylandServer::FakeInputDevice *device, QObjec
         // TODO: make secure
         device->setAuthentication(true);
     });
-    connect(device, &KWaylandServer::FakeInputDevice::pointerMotionRequested, this, [this](const QSizeF &delta) {
+    connect(device, &KWaylandServer::FakeInputDevice::pointerMotionRequested, this, [this](const QPointF &delta) {
         // TODO: Fix time
         Q_EMIT pointerMotion(delta, delta, 0, 0, this);
     });

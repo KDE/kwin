@@ -13,7 +13,6 @@
 #include <QtGlobal>
 
 class QPointF;
-class QSizeF;
 class QTabletEvent;
 
 namespace KWin
@@ -65,12 +64,12 @@ public:
     virtual void touchUp(qint32 id, quint32 time);
 
     virtual void pinchGestureBegin(int fingerCount, quint32 time);
-    virtual void pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time);
+    virtual void pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time);
     virtual void pinchGestureEnd(quint32 time);
     virtual void pinchGestureCancelled(quint32 time);
 
     virtual void swipeGestureBegin(int fingerCount, quint32 time);
-    virtual void swipeGestureUpdate(const QSizeF &delta, quint32 time);
+    virtual void swipeGestureUpdate(const QPointF &delta, quint32 time);
     virtual void swipeGestureEnd(quint32 time);
     virtual void swipeGestureCancelled(quint32 time);
 

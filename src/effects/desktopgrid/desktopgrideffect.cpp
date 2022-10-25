@@ -120,7 +120,7 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
     const QList<int> touchActivateBorders = DesktopGridConfig::touchBorderActivate();
     for (const int &border : touchActivateBorders) {
         m_touchBorderActivate.append(ElectricBorder(border));
-        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeToggleAction, [this](ElectricBorder border, const QSizeF &deltaProgress, const EffectScreen *screen) {
+        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeToggleAction, [this](ElectricBorder border, const QPointF &deltaProgress, const EffectScreen *screen) {
             Q_UNUSED(screen)
 
             if (m_status == Status::Active) {
@@ -130,10 +130,10 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
             const int columns = gridColumns();
             if (border == ElectricTop || border == ElectricBottom) {
                 const int maxDelta = (screen->geometry().height() / rows) * (rows - (effects->currentDesktop() % rows));
-                partialActivate(std::min(1.0, qAbs(deltaProgress.height()) / maxDelta));
+                partialActivate(std::min(1.0, qAbs(deltaProgress.y()) / maxDelta));
             } else {
                 const int maxDelta = (screen->geometry().width() / columns) * (columns - (effects->currentDesktop() % columns));
-                partialActivate(std::min(1.0, qAbs(deltaProgress.width()) / maxDelta));
+                partialActivate(std::min(1.0, qAbs(deltaProgress.x()) / maxDelta));
             }
         });
     }

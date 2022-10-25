@@ -224,7 +224,7 @@ void WindowViewEffect::reconfigure(ReconfigureFlags)
         effects->reserveElectricBorder(ElectricBorder(i), this);
     }
 
-    auto touchCallback = [this](ElectricBorder border, const QSizeF &deltaProgress, const EffectScreen *screen) {
+    auto touchCallback = [this](ElectricBorder border, const QPointF &deltaProgress, const EffectScreen *screen) {
         Q_UNUSED(screen)
         if (m_status == Status::Active) {
             return;
@@ -240,9 +240,9 @@ void WindowViewEffect::reconfigure(ReconfigureFlags)
         }
         const int maxDelta = 500; // Arbitrary logical pixels value seems to behave better than scaledScreenSize
         if (border == ElectricTop || border == ElectricBottom) {
-            partialActivate(std::min(1.0, qAbs(deltaProgress.height()) / maxDelta));
+            partialActivate(std::min(1.0, qAbs(deltaProgress.y()) / maxDelta));
         } else {
-            partialActivate(std::min(1.0, qAbs(deltaProgress.width()) / maxDelta));
+            partialActivate(std::min(1.0, qAbs(deltaProgress.x()) / maxDelta));
         }
     };
 

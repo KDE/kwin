@@ -38,7 +38,7 @@ public:
     static PointerSwipeGestureV1Interface *get(PointerInterface *pointer);
 
     void sendBegin(quint32 serial, quint32 fingerCount);
-    void sendUpdate(const QSizeF &delta);
+    void sendUpdate(const QPointF &delta);
     void sendEnd(quint32 serial);
     void sendCancel(quint32 serial);
 
@@ -58,7 +58,7 @@ public:
     static PointerPinchGestureV1Interface *get(PointerInterface *pointer);
 
     void sendBegin(quint32 serial, quint32 fingerCount);
-    void sendUpdate(const QSizeF &delta, qreal scale, qreal rotation);
+    void sendUpdate(const QPointF &delta, qreal scale, qreal rotation);
     void sendEnd(quint32 serial);
     void sendCancel(quint32 serial);
 
@@ -78,7 +78,6 @@ public:
     static PointerHoldGestureV1Interface *get(PointerInterface *pointer);
 
     void sendBegin(quint32 serial, quint32 fingerCount);
-    void sendUpdate(const QSizeF &delta, qreal scale, qreal rotation);
     void sendEnd(quint32 serial);
     void sendCancel(quint32 serial);
 

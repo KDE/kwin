@@ -764,7 +764,7 @@ quint32 SeatInterface::pointerButtonSerial(quint32 button) const
     return it.value();
 }
 
-void SeatInterface::relativePointerMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 microseconds)
+void SeatInterface::relativePointerMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, quint64 microseconds)
 {
     if (!d->pointer) {
         return;
@@ -788,7 +788,7 @@ void SeatInterface::startPointerSwipeGesture(quint32 fingerCount)
     }
 }
 
-void SeatInterface::updatePointerSwipeGesture(const QSizeF &delta)
+void SeatInterface::updatePointerSwipeGesture(const QPointF &delta)
 {
     if (!d->pointer) {
         return;
@@ -836,7 +836,7 @@ void SeatInterface::startPointerPinchGesture(quint32 fingerCount)
     }
 }
 
-void SeatInterface::updatePointerPinchGesture(const QSizeF &delta, qreal scale, qreal rotation)
+void SeatInterface::updatePointerPinchGesture(const QPointF &delta, qreal scale, qreal rotation)
 {
     if (!d->pointer) {
         return;

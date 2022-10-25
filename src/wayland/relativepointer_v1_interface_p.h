@@ -9,6 +9,8 @@
 
 #include "qwayland-server-relative-pointer-unstable-v1.h"
 
+#include <QPointF>
+
 namespace KWaylandServer
 {
 class ClientConnection;
@@ -31,7 +33,7 @@ public:
     explicit RelativePointerV1Interface(PointerInterface *pointer);
 
     static RelativePointerV1Interface *get(PointerInterface *pointer);
-    void sendRelativeMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 microseconds);
+    void sendRelativeMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, quint64 microseconds);
 
 protected:
     void zwp_relative_pointer_v1_destroy(Resource *resource) override;

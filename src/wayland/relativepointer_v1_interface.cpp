@@ -70,7 +70,7 @@ void RelativePointerV1Interface::zwp_relative_pointer_v1_destroy(Resource *resou
     wl_resource_destroy(resource->handle);
 }
 
-void RelativePointerV1Interface::sendRelativeMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 microseconds)
+void RelativePointerV1Interface::sendRelativeMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, quint64 microseconds)
 {
     if (!pointer->focusedSurface()) {
         return;
@@ -85,10 +85,10 @@ void RelativePointerV1Interface::sendRelativeMotion(const QSizeF &delta, const Q
             send_relative_motion(pointerResource->handle,
                                  microseconds >> 32,
                                  microseconds & 0xffffffff,
-                                 wl_fixed_from_double(delta.width() * scaleOverride),
-                                 wl_fixed_from_double(delta.height() * scaleOverride),
-                                 wl_fixed_from_double(deltaNonAccelerated.width() * scaleOverride),
-                                 wl_fixed_from_double(deltaNonAccelerated.height() * scaleOverride));
+                                 wl_fixed_from_double(delta.x() * scaleOverride),
+                                 wl_fixed_from_double(delta.y() * scaleOverride),
+                                 wl_fixed_from_double(deltaNonAccelerated.x() * scaleOverride),
+                                 wl_fixed_from_double(deltaNonAccelerated.y() * scaleOverride));
         }
     }
 }

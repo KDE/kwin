@@ -161,7 +161,7 @@ bool InputEventFilter::pinchGestureBegin(int fingerCount, quint32 time)
     return false;
 }
 
-bool InputEventFilter::pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time)
+bool InputEventFilter::pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time)
 {
     Q_UNUSED(scale)
     Q_UNUSED(angleDelta)
@@ -189,7 +189,7 @@ bool InputEventFilter::swipeGestureBegin(int fingerCount, quint32 time)
     return false;
 }
 
-bool InputEventFilter::swipeGestureUpdate(const QSizeF &delta, quint32 time)
+bool InputEventFilter::swipeGestureUpdate(const QPointF &delta, quint32 time)
 {
     Q_UNUSED(delta)
     Q_UNUSED(time)
@@ -481,7 +481,7 @@ public:
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
-    bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override
+    bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time) override
     {
         Q_UNUSED(scale)
         Q_UNUSED(angleDelta)
@@ -510,7 +510,7 @@ public:
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
-    bool swipeGestureUpdate(const QSizeF &delta, quint32 time) override
+    bool swipeGestureUpdate(const QPointF &delta, quint32 time) override
     {
         Q_UNUSED(delta)
         Q_UNUSED(time)
@@ -1017,7 +1017,7 @@ public:
             return false;
         }
     }
-    bool swipeGestureUpdate(const QSizeF &delta, quint32 time) override
+    bool swipeGestureUpdate(const QPointF &delta, quint32 time) override
     {
         Q_UNUSED(time)
         if (m_touchpadGestureFingerCount >= 3) {
@@ -1058,7 +1058,7 @@ public:
             return false;
         }
     }
-    bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override
+    bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time) override
     {
         Q_UNUSED(time);
         if (m_touchpadGestureFingerCount >= 3) {
@@ -1145,7 +1145,7 @@ public:
 
             auto &point = m_touchPoints[id];
             const QPointF dist = pos - point;
-            const QSizeF delta = QSizeF(xfactor * dist.x(), yfactor * dist.y());
+            const QPointF delta = QPointF(xfactor * dist.x(), yfactor * dist.y());
             input()->shortcuts()->processSwipeUpdate(DeviceType::Touchscreen, 5 * delta / m_touchPoints.size());
             point = pos;
             return true;
@@ -1720,7 +1720,7 @@ public:
     {
         Q_UNUSED(time)
         if (m_touchInProgress && m_id == id) {
-            workspace()->screenEdges()->gestureRecognizer()->updateSwipeGesture(QSizeF(pos.x() - m_lastPos.x(), pos.y() - m_lastPos.y()));
+            workspace()->screenEdges()->gestureRecognizer()->updateSwipeGesture(pos - m_lastPos);
             m_lastPos = pos;
             return true;
         }
@@ -1842,7 +1842,7 @@ public:
         case QEvent::MouseMove: {
             seat->notifyPointerMotion(event->globalPos());
             MouseEvent *e = static_cast<MouseEvent *>(event);
-            if (e->delta() != QSizeF()) {
+            if (!e->delta().isNull()) {
                 seat->relativePointerMotion(e->delta(), e->deltaUnaccelerated(), e->timestampMicroseconds());
             }
             seat->notifyPointerFrame();
@@ -1921,7 +1921,7 @@ public:
         seat->startPointerPinchGesture(fingerCount);
         return true;
     }
-    bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override
+    bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time) override
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
@@ -1950,7 +1950,7 @@ public:
         seat->startPointerSwipeGesture(fingerCount);
         return true;
     }
-    bool swipeGestureUpdate(const QSizeF &delta, quint32 time) override
+    bool swipeGestureUpdate(const QPointF &delta, quint32 time) override
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
@@ -2781,7 +2781,7 @@ public:
         Q_UNUSED(time)
         notifyActivity();
     }
-    void pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time) override
+    void pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time) override
     {
         Q_UNUSED(scale)
         Q_UNUSED(angleDelta)
@@ -2806,7 +2806,7 @@ public:
         Q_UNUSED(time)
         notifyActivity();
     }
-    void swipeGestureUpdate(const QSizeF &delta, quint32 time) override
+    void swipeGestureUpdate(const QPointF &delta, quint32 time) override
     {
         Q_UNUSED(delta)
         Q_UNUSED(time)

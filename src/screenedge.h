@@ -43,12 +43,12 @@ class SwipeGesture;
 class TouchCallback
 {
 public:
-    using CallbackFunction = std::function<void(ElectricBorder border, const QSizeF &, Output *output)>;
+    using CallbackFunction = std::function<void(ElectricBorder border, const QPointF &, Output *output)>;
     explicit TouchCallback(QAction *touchUpAction, TouchCallback::CallbackFunction progressCallback);
     ~TouchCallback();
 
     QAction *touchUpAction() const;
-    void progressCallback(ElectricBorder border, const QSizeF &deltaProgress, Output *output) const;
+    void progressCallback(ElectricBorder border, const QPointF &deltaProgress, Output *output) const;
     bool hasProgressCallback() const;
 
 private:

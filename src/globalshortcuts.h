@@ -104,12 +104,12 @@ public:
     bool processAxis(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis);
 
     void processSwipeStart(DeviceType device, uint fingerCount);
-    void processSwipeUpdate(DeviceType device, const QSizeF &delta);
+    void processSwipeUpdate(DeviceType device, const QPointF &delta);
     void processSwipeCancel(DeviceType device);
     void processSwipeEnd(DeviceType device);
 
     void processPinchStart(uint fingerCount);
-    void processPinchUpdate(qreal scale, qreal angleDelta, const QSizeF &delta);
+    void processPinchUpdate(qreal scale, qreal angleDelta, const QPointF &delta);
     void processPinchCancel();
     void processPinchEnd();
 

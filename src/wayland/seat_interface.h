@@ -416,7 +416,7 @@ public:
      * @param microseconds timestamp with microseconds granularity
      * @see setPointerPos
      */
-    void relativePointerMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 microseconds);
+    void relativePointerMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, quint64 microseconds);
 
     /**
      * Starts a multi-finger swipe gesture for the currently focused pointer surface.
@@ -449,7 +449,7 @@ public:
      * @see endPointerSwipeGesture
      * @see cancelPointerSwipeGesture
      */
-    void updatePointerSwipeGesture(const QSizeF &delta);
+    void updatePointerSwipeGesture(const QPointF &delta);
 
     /**
      * The multi-finger swipe gesture ended. This may happen when one or more fingers are lifted.
@@ -502,7 +502,7 @@ public:
      * @see endPointerPinchGesture
      * @see cancelPointerPinchGesture
      */
-    void updatePointerPinchGesture(const QSizeF &delta, qreal scale, qreal rotation);
+    void updatePointerPinchGesture(const QPointF &delta, qreal scale, qreal rotation);
 
     /**
      *

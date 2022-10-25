@@ -115,7 +115,7 @@ void TestLibinputGestureEvent::testStart()
     QCOMPARE(ge->fingerCount(), gestureEvent->fingerCount);
     QVERIFY(!ge->isCancelled());
     QCOMPARE(ge->time(), gestureEvent->time);
-    QCOMPARE(ge->delta(), QSizeF(0, 0));
+    QCOMPARE(ge->delta(), QPointF(0, 0));
     if (ge->type() == LIBINPUT_EVENT_GESTURE_PINCH_BEGIN) {
         auto pe = dynamic_cast<PinchGestureEvent *>(event.get());
         QCOMPARE(pe->scale(), 1.0);
@@ -130,7 +130,7 @@ void TestLibinputGestureEvent::testSwipeUpdate()
     gestureEvent->type = LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE;
     gestureEvent->fingerCount = 2;
     gestureEvent->time = 200u;
-    gestureEvent->delta = QSizeF(2, 3);
+    gestureEvent->delta = QPointF(2, 3);
 
     std::unique_ptr<Event> event(Event::create(gestureEvent));
     auto se = dynamic_cast<SwipeGestureEvent *>(event.get());
@@ -138,7 +138,7 @@ void TestLibinputGestureEvent::testSwipeUpdate()
     QCOMPARE(se->fingerCount(), gestureEvent->fingerCount);
     QVERIFY(!se->isCancelled());
     QCOMPARE(se->time(), gestureEvent->time);
-    QCOMPARE(se->delta(), QSizeF(2, 3));
+    QCOMPARE(se->delta(), QPointF(2, 3));
 }
 
 void TestLibinputGestureEvent::testPinchUpdate()
@@ -148,7 +148,7 @@ void TestLibinputGestureEvent::testPinchUpdate()
     gestureEvent->type = LIBINPUT_EVENT_GESTURE_PINCH_UPDATE;
     gestureEvent->fingerCount = 4;
     gestureEvent->time = 600u;
-    gestureEvent->delta = QSizeF(5, 4);
+    gestureEvent->delta = QPointF(5, 4);
     gestureEvent->scale = 2;
     gestureEvent->angleDelta = -30;
 
@@ -158,7 +158,7 @@ void TestLibinputGestureEvent::testPinchUpdate()
     QCOMPARE(pe->fingerCount(), gestureEvent->fingerCount);
     QVERIFY(!pe->isCancelled());
     QCOMPARE(pe->time(), gestureEvent->time);
-    QCOMPARE(pe->delta(), QSizeF(5, 4));
+    QCOMPARE(pe->delta(), QPointF(5, 4));
     QCOMPARE(pe->scale(), gestureEvent->scale);
     QCOMPARE(pe->angleDelta(), gestureEvent->angleDelta);
 }
@@ -192,7 +192,7 @@ void TestLibinputGestureEvent::testEnd()
     QCOMPARE(ge->fingerCount(), gestureEvent->fingerCount);
     QCOMPARE(ge->isCancelled(), cancelled);
     QCOMPARE(ge->time(), gestureEvent->time);
-    QCOMPARE(ge->delta(), QSizeF(0, 0));
+    QCOMPARE(ge->delta(), QPointF(0, 0));
     if (ge->type() == LIBINPUT_EVENT_GESTURE_PINCH_END) {
         auto pe = dynamic_cast<PinchGestureEvent *>(event.get());
         QCOMPARE(pe->scale(), gestureEvent->scale);

@@ -116,16 +116,16 @@ void OverviewEffect::reconfigure(ReconfigureFlags)
     const QList<int> touchActivateBorders = OverviewConfig::touchBorderActivate();
     for (const int &border : touchActivateBorders) {
         m_touchBorderActivate.append(ElectricBorder(border));
-        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeToggleAction, [this](ElectricBorder border, const QSizeF &deltaProgress, const EffectScreen *screen) {
+        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeToggleAction, [this](ElectricBorder border, const QPointF &deltaProgress, const EffectScreen *screen) {
             Q_UNUSED(screen)
             if (m_status == Status::Active) {
                 return;
             }
             const int maxDelta = 500; // Arbitrary logical pixels value seems to behave better than scaledScreenSize
             if (border == ElectricTop || border == ElectricBottom) {
-                partialActivate(std::min(1.0, qAbs(deltaProgress.height()) / maxDelta));
+                partialActivate(std::min(1.0, qAbs(deltaProgress.y()) / maxDelta));
             } else {
-                partialActivate(std::min(1.0, qAbs(deltaProgress.width()) / maxDelta));
+                partialActivate(std::min(1.0, qAbs(deltaProgress.x()) / maxDelta));
             }
         });
     }

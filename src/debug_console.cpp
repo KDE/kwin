@@ -191,13 +191,13 @@ void DebugConsoleFilter::pointerEvent(MouseEvent *event)
         if (event->timestampMicroseconds() != 0) {
             text.append(timestampRowUsec(event->timestampMicroseconds()));
         }
-        if (event->delta() != QSizeF()) {
+        if (!event->delta().isNull()) {
             text.append(tableRow(i18nc("The relative mouse movement", "Delta"),
-                                 QStringLiteral("%1/%2").arg(event->delta().width()).arg(event->delta().height())));
+                                 QStringLiteral("%1/%2").arg(event->delta().x()).arg(event->delta().y())));
         }
-        if (event->deltaUnaccelerated() != QSizeF()) {
+        if (!event->deltaUnaccelerated().isNull()) {
             text.append(tableRow(i18nc("The relative mouse movement", "Delta (not accelerated)"),
-                                 QStringLiteral("%1/%2").arg(event->deltaUnaccelerated().width()).arg(event->deltaUnaccelerated().height())));
+                                 QStringLiteral("%1/%2").arg(event->deltaUnaccelerated().x()).arg(event->deltaUnaccelerated().y())));
         }
         text.append(tableRow(i18nc("The global mouse pointer position", "Global Position"), QStringLiteral("%1/%2").arg(event->pos().x()).arg(event->pos().y())));
         break;
@@ -364,7 +364,7 @@ void DebugConsoleFilter::pinchGestureBegin(int fingerCount, quint32 time)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time)
+void DebugConsoleFilter::pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -372,8 +372,8 @@ void DebugConsoleFilter::pinchGestureUpdate(qreal scale, qreal angleDelta, const
     text.append(timestampRow(time));
     text.append(tableRow(i18nc("Current scale in pinch gesture", "Scale"), scale));
     text.append(tableRow(i18nc("Current angle in pinch gesture", "Angle delta"), angleDelta));
-    text.append(tableRow(i18nc("Current delta in pinch gesture", "Delta x"), delta.width()));
-    text.append(tableRow(i18nc("Current delta in pinch gesture", "Delta y"), delta.height()));
+    text.append(tableRow(i18nc("Current delta in pinch gesture", "Delta x"), delta.x()));
+    text.append(tableRow(i18nc("Current delta in pinch gesture", "Delta y"), delta.y()));
     text.append(s_tableEnd);
 
     m_textEdit->insertHtml(text);
@@ -417,14 +417,14 @@ void DebugConsoleFilter::swipeGestureBegin(int fingerCount, quint32 time)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::swipeGestureUpdate(const QSizeF &delta, quint32 time)
+void DebugConsoleFilter::swipeGestureUpdate(const QPointF &delta, quint32 time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
     text.append(tableHeaderRow(i18nc("A swipe gesture is updated", "Swipe update")));
     text.append(timestampRow(time));
-    text.append(tableRow(i18nc("Current delta in swipe gesture", "Delta x"), delta.width()));
-    text.append(tableRow(i18nc("Current delta in swipe gesture", "Delta y"), delta.height()));
+    text.append(tableRow(i18nc("Current delta in swipe gesture", "Delta x"), delta.x()));
+    text.append(tableRow(i18nc("Current delta in swipe gesture", "Delta y"), delta.y()));
     text.append(s_tableEnd);
 
     m_textEdit->insertHtml(text);

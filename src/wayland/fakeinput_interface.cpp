@@ -7,7 +7,6 @@
 #include "display.h"
 
 #include <QPointF>
-#include <QSizeF>
 #include <memory>
 #include <vector>
 
@@ -98,7 +97,7 @@ void FakeInputInterfacePrivate::org_kde_kwin_fake_input_pointer_motion(Resource 
     if (!d || !d->isAuthenticated()) {
         return;
     }
-    Q_EMIT d->pointerMotionRequested(QSizeF(wl_fixed_to_double(delta_x), wl_fixed_to_double(delta_y)));
+    Q_EMIT d->pointerMotionRequested(QPointF(wl_fixed_to_double(delta_x), wl_fixed_to_double(delta_y)));
 }
 
 void FakeInputInterfacePrivate::org_kde_kwin_fake_input_button(Resource *resource, uint32_t button, uint32_t state)

@@ -148,16 +148,16 @@ QPointF PointerEvent::absolutePos(const QSize &size) const
                    libinput_event_pointer_get_absolute_y_transformed(m_pointerEvent, size.height()));
 }
 
-QSizeF PointerEvent::delta() const
+QPointF PointerEvent::delta() const
 {
     Q_ASSERT(type() == LIBINPUT_EVENT_POINTER_MOTION);
-    return QSizeF(libinput_event_pointer_get_dx(m_pointerEvent), libinput_event_pointer_get_dy(m_pointerEvent));
+    return QPointF(libinput_event_pointer_get_dx(m_pointerEvent), libinput_event_pointer_get_dy(m_pointerEvent));
 }
 
-QSizeF PointerEvent::deltaUnaccelerated() const
+QPointF PointerEvent::deltaUnaccelerated() const
 {
     Q_ASSERT(type() == LIBINPUT_EVENT_POINTER_MOTION);
-    return QSizeF(libinput_event_pointer_get_dx_unaccelerated(m_pointerEvent), libinput_event_pointer_get_dy_unaccelerated(m_pointerEvent));
+    return QPointF(libinput_event_pointer_get_dx_unaccelerated(m_pointerEvent), libinput_event_pointer_get_dy_unaccelerated(m_pointerEvent));
 }
 
 uint32_t PointerEvent::time() const
@@ -289,10 +289,10 @@ int GestureEvent::fingerCount() const
     return libinput_event_gesture_get_finger_count(m_gestureEvent);
 }
 
-QSizeF GestureEvent::delta() const
+QPointF GestureEvent::delta() const
 {
-    return QSizeF(libinput_event_gesture_get_dx(m_gestureEvent),
-                  libinput_event_gesture_get_dy(m_gestureEvent));
+    return QPointF(libinput_event_gesture_get_dx(m_gestureEvent),
+                   libinput_event_gesture_get_dy(m_gestureEvent));
 }
 
 bool GestureEvent::isCancelled() const
