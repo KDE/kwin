@@ -153,13 +153,13 @@ void FakeInputTest::testMotion()
     m_fakeInput->requestPointerMove(QSizeF(1, 2));
     QVERIFY(motionSpy.wait());
     QCOMPARE(motionSpy.count(), 1);
-    QCOMPARE(motionSpy.last().first().toSizeF(), QSizeF(1, 2));
+    QCOMPARE(motionSpy.last().first().toPointF(), QPointF(1, 2));
 
     // just for the fun: once more
     m_fakeInput->requestPointerMove(QSizeF(0, 0));
     QVERIFY(motionSpy.wait());
     QCOMPARE(motionSpy.count(), 2);
-    QCOMPARE(motionSpy.last().first().toSizeF(), QSizeF(0, 0));
+    QCOMPARE(motionSpy.last().first().toPointF(), QPointF(0, 0));
 }
 
 void FakeInputTest::testMotionAbsolute()

@@ -48,7 +48,7 @@ Q_SIGNALS:
     void keyChanged(quint32 key, InputRedirection::KeyboardKeyState, quint32 time, InputDevice *device);
     void pointerButtonChanged(quint32 button, InputRedirection::PointerButtonState state, quint32 time, InputDevice *device);
     void pointerMotionAbsolute(const QPointF &position, quint32 time, InputDevice *device);
-    void pointerMotion(const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint32 time, quint64 timeMicroseconds, InputDevice *device);
+    void pointerMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, quint32 time, quint64 timeMicroseconds, InputDevice *device);
     void pointerAxisChanged(InputRedirection::PointerAxis axis, qreal delta, qint32 deltaV120,
                             InputRedirection::PointerAxisSource source, quint32 time, InputDevice *device);
     void touchFrame(InputDevice *device);
@@ -57,11 +57,11 @@ Q_SIGNALS:
     void touchUp(qint32 id, quint32 time, InputDevice *device);
     void touchMotion(qint32 id, const QPointF &absolutePos, quint32 time, InputDevice *device);
     void swipeGestureBegin(int fingerCount, quint32 time, InputDevice *device);
-    void swipeGestureUpdate(const QSizeF &delta, quint32 time, InputDevice *device);
+    void swipeGestureUpdate(const QPointF &delta, quint32 time, InputDevice *device);
     void swipeGestureEnd(quint32 time, InputDevice *device);
     void swipeGestureCancelled(quint32 time, InputDevice *device);
     void pinchGestureBegin(int fingerCount, quint32 time, InputDevice *device);
-    void pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time, InputDevice *device);
+    void pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time, InputDevice *device);
     void pinchGestureEnd(quint32 time, InputDevice *device);
     void pinchGestureCancelled(quint32 time, InputDevice *device);
     void holdGestureBegin(int fingerCount, quint32 time, InputDevice *device);

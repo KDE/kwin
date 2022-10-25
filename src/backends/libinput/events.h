@@ -80,8 +80,8 @@ public:
 
     QPointF absolutePos() const;
     QPointF absolutePos(const QSize &size) const;
-    QSizeF delta() const;
-    QSizeF deltaUnaccelerated() const;
+    QPointF delta() const;
+    QPointF deltaUnaccelerated() const;
     uint32_t button() const;
     InputRedirection::PointerButtonState buttonState() const;
     uint32_t time() const;
@@ -135,7 +135,7 @@ public:
     quint32 time() const;
     int fingerCount() const;
 
-    QSizeF delta() const;
+    QPointF delta() const;
 
     bool isCancelled() const;
 

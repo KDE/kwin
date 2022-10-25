@@ -416,12 +416,12 @@ public:
     virtual bool touchFrame();
 
     virtual bool pinchGestureBegin(int fingerCount, quint32 time);
-    virtual bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time);
+    virtual bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time);
     virtual bool pinchGestureEnd(quint32 time);
     virtual bool pinchGestureCancelled(quint32 time);
 
     virtual bool swipeGestureBegin(int fingerCount, quint32 time);
-    virtual bool swipeGestureUpdate(const QSizeF &delta, quint32 time);
+    virtual bool swipeGestureUpdate(const QPointF &delta, quint32 time);
     virtual bool swipeGestureEnd(quint32 time);
     virtual bool swipeGestureCancelled(quint32 time);
 

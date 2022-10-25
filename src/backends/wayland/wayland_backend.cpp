@@ -57,6 +57,8 @@
 #include <cmath>
 #include <drm_fourcc.h>
 
+#define QSIZE_TO_QPOINT(size) QPointF(size.width(), size.height())
+
 namespace KWin
 {
 namespace Wayland
@@ -272,7 +274,7 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
             Q_EMIT pinchGestureBegin(m_pinchGesture->fingerCount(), time, this);
         });
         connect(m_pinchGesture.get(), &PointerPinchGesture::updated, this, [this](const QSizeF &delta, qreal scale, qreal rotation, quint32 time) {
-            Q_EMIT pinchGestureUpdate(scale, rotation, delta, time, this);
+            Q_EMIT pinchGestureUpdate(scale, rotation, QSIZE_TO_QPOINT(delta), time, this);
         });
         connect(m_pinchGesture.get(), &PointerPinchGesture::ended, this, [this](quint32 serial, quint32 time) {
             Q_UNUSED(serial)
@@ -289,7 +291,7 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
             Q_EMIT swipeGestureBegin(m_swipeGesture->fingerCount(), time, this);
         });
         connect(m_swipeGesture.get(), &PointerSwipeGesture::updated, this, [this](const QSizeF &delta, quint32 time) {
-            Q_EMIT swipeGestureUpdate(delta, time, this);
+            Q_EMIT swipeGestureUpdate(QSIZE_TO_QPOINT(delta), time, this);
         });
         connect(m_swipeGesture.get(), &PointerSwipeGesture::ended, this, [this](quint32 serial, quint32 time) {
             Q_UNUSED(serial)
@@ -307,7 +309,7 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::RelativePointer *relati
     , m_relativePointer(relativePointer)
 {
     connect(relativePointer, &RelativePointer::relativeMotion, this, [this](const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 timestamp) {
-        Q_EMIT pointerMotion(delta, deltaNonAccelerated, timestamp, timestamp * 1000, this);
+        Q_EMIT pointerMotion(QSIZE_TO_QPOINT(delta), QSIZE_TO_QPOINT(deltaNonAccelerated), timestamp, timestamp * 1000, this);
     });
 }
 

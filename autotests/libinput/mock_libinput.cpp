@@ -473,7 +473,7 @@ int libinput_event_gesture_get_finger_count(struct libinput_event_gesture *event
 double libinput_event_gesture_get_dx(struct libinput_event_gesture *event)
 {
     if (event->type == LIBINPUT_EVENT_GESTURE_PINCH_UPDATE || event->type == LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE) {
-        return event->delta.width();
+        return event->delta.x();
     }
     return 0.0;
 }
@@ -481,7 +481,7 @@ double libinput_event_gesture_get_dx(struct libinput_event_gesture *event)
 double libinput_event_gesture_get_dy(struct libinput_event_gesture *event)
 {
     if (event->type == LIBINPUT_EVENT_GESTURE_PINCH_UPDATE || event->type == LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE) {
-        return event->delta.height();
+        return event->delta.y();
     }
     return 0.0;
 }
@@ -550,22 +550,22 @@ double libinput_event_pointer_get_absolute_y_transformed(struct libinput_event_p
 
 double libinput_event_pointer_get_dx(struct libinput_event_pointer *event)
 {
-    return event->delta.width();
+    return event->delta.x();
 }
 
 double libinput_event_pointer_get_dy(struct libinput_event_pointer *event)
 {
-    return event->delta.height();
+    return event->delta.y();
 }
 
 double libinput_event_pointer_get_dx_unaccelerated(struct libinput_event_pointer *event)
 {
-    return event->delta.width();
+    return event->delta.x();
 }
 
 double libinput_event_pointer_get_dy_unaccelerated(struct libinput_event_pointer *event)
 {
-    return event->delta.height();
+    return event->delta.y();
 }
 
 uint32_t libinput_event_pointer_get_time(struct libinput_event_pointer *event)

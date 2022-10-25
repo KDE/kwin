@@ -733,13 +733,13 @@ bool ScriptedEffect::registerRealtimeScreenEdge(int edge, const QJSValue &callba
                 }
             }
         });
-        effects->registerRealtimeTouchBorder(static_cast<KWin::ElectricBorder>(edge), triggerAction, [this](ElectricBorder border, const QSizeF &deltaProgress, EffectScreen *screen) {
+        effects->registerRealtimeTouchBorder(static_cast<KWin::ElectricBorder>(edge), triggerAction, [this](ElectricBorder border, const QPointF &deltaProgress, EffectScreen *screen) {
             auto it = realtimeScreenEdgeCallbacks().constFind(border);
             if (it != realtimeScreenEdgeCallbacks().constEnd()) {
                 for (const QJSValue &callback : it.value()) {
                     QJSValue delta = m_engine->newObject();
-                    delta.setProperty("width", deltaProgress.width());
-                    delta.setProperty("height", deltaProgress.height());
+                    delta.setProperty("width", deltaProgress.x());
+                    delta.setProperty("height", deltaProgress.y());
 
                     QJSValue(callback).call({border, QJSValue(delta), m_engine->newQObject(screen)});
                 }

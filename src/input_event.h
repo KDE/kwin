@@ -23,15 +23,15 @@ class MouseEvent : public QMouseEvent
 public:
     explicit MouseEvent(QEvent::Type type, const QPointF &pos, Qt::MouseButton button, Qt::MouseButtons buttons,
                         Qt::KeyboardModifiers modifiers, quint32 timestamp,
-                        const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 timestampMicroseconds,
+                        const QPointF &delta, const QPointF &deltaNonAccelerated, quint64 timestampMicroseconds,
                         InputDevice *device);
 
-    QSizeF delta() const
+    QPointF delta() const
     {
         return m_delta;
     }
 
-    QSizeF deltaUnaccelerated() const
+    QPointF deltaUnaccelerated() const
     {
         return m_deltaUnccelerated;
     }
@@ -67,8 +67,8 @@ public:
     }
 
 private:
-    QSizeF m_delta;
-    QSizeF m_deltaUnccelerated;
+    QPointF m_delta;
+    QPointF m_deltaUnccelerated;
     quint64 m_timestampMicroseconds;
     InputDevice *m_device;
     Qt::KeyboardModifiers m_modifiersRelevantForShortcuts = Qt::KeyboardModifiers();

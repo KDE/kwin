@@ -132,7 +132,7 @@ struct libinput_event_pointer : libinput_event
     qreal verticalScrollValue = 0.0;
     qreal horizontalScrollValueV120 = 0.0;
     qreal verticalScrollValueV120 = 0.0;
-    QSizeF delta;
+    QPointF delta;
     QPointF absolutePos;
 };
 
@@ -146,7 +146,7 @@ struct libinput_event_gesture : libinput_event
 {
     int fingerCount = 0;
     bool cancelled = false;
-    QSizeF delta = QSizeF(0, 0);
+    QPointF delta = QPointF(0, 0);
     qreal scale = 0.0;
     qreal angleDelta = 0.0;
 };

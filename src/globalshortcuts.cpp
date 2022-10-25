@@ -48,7 +48,7 @@ GlobalShortcut::GlobalShortcut(Shortcut &&sc, QAction *action)
     } else if (auto rtSwipeGesture = std::get_if<RealtimeFeedbackSwipeShortcut>(&sc)) {
         m_swipeGesture.reset(new SwipeGesture());
         m_swipeGesture->setDirection(swipeDirs[rtSwipeGesture->direction]);
-        m_swipeGesture->setMinimumDelta(QSizeF(200, 200));
+        m_swipeGesture->setMinimumDelta(QPointF(200, 200));
         m_swipeGesture->setMaximumFingerCount(rtSwipeGesture->fingerCount);
         m_swipeGesture->setMinimumFingerCount(rtSwipeGesture->fingerCount);
         QObject::connect(m_swipeGesture.get(), &SwipeGesture::triggered, m_action, &QAction::trigger, Qt::QueuedConnection);
@@ -290,7 +290,7 @@ void GlobalShortcutsManager::processSwipeStart(DeviceType device, uint fingerCou
     }
 }
 
-void GlobalShortcutsManager::processSwipeUpdate(DeviceType device, const QSizeF &delta)
+void GlobalShortcutsManager::processSwipeUpdate(DeviceType device, const QPointF &delta)
 {
     if (device == DeviceType::Touchpad) {
         m_touchpadGestureRecognizer->updateSwipeGesture(delta);
@@ -323,7 +323,7 @@ void GlobalShortcutsManager::processPinchStart(uint fingerCount)
     m_touchpadGestureRecognizer->startPinchGesture(fingerCount);
 }
 
-void GlobalShortcutsManager::processPinchUpdate(qreal scale, qreal angleDelta, const QSizeF &delta)
+void GlobalShortcutsManager::processPinchUpdate(qreal scale, qreal angleDelta, const QPointF &delta)
 {
     m_touchpadGestureRecognizer->updatePinchGesture(scale, angleDelta, delta);
 }

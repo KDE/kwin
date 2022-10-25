@@ -14,7 +14,6 @@
 #include <QMap>
 #include <QObject>
 #include <QPointF>
-#include <QSizeF>
 #include <QVector>
 
 namespace KWin
@@ -91,12 +90,12 @@ public:
     bool maximumYIsRelevant() const;
     void setStartGeometry(const QRect &geometry);
 
-    QSizeF minimumDelta() const;
-    void setMinimumDelta(const QSizeF &delta);
+    QPointF minimumDelta() const;
+    void setMinimumDelta(const QPointF &delta);
     bool isMinimumDeltaRelevant() const;
 
-    qreal deltaToProgress(const QSizeF &delta) const;
-    bool minimumDeltaReached(const QSizeF &delta) const;
+    qreal deltaToProgress(const QPointF &delta) const;
+    bool minimumDeltaReached(const QPointF &delta) const;
 
 Q_SIGNALS:
     /**
@@ -108,7 +107,7 @@ Q_SIGNALS:
     /**
      * The progress in actual pixel distance traveled by the fingers
      */
-    void deltaProgress(const QSizeF &delta);
+    void deltaProgress(const QPointF &delta);
 
 private:
     bool m_minimumFingerCountRelevant = false;
@@ -125,7 +124,7 @@ private:
     bool m_maximumYRelevant = false;
     int m_maximumY = 0;
     bool m_minimumDeltaRelevant = false;
-    QSizeF m_minimumDelta;
+    QPointF m_minimumDelta;
 };
 
 class PinchGesture : public Gesture
@@ -195,12 +194,12 @@ public:
     int startSwipeGesture(uint fingerCount);
     int startSwipeGesture(const QPointF &startPos);
 
-    void updateSwipeGesture(const QSizeF &delta);
+    void updateSwipeGesture(const QPointF &delta);
     void cancelSwipeGesture();
     void endSwipeGesture();
 
     int startPinchGesture(uint fingerCount);
-    void updatePinchGesture(qreal scale, qreal angleDelta, const QSizeF &posDelta);
+    void updatePinchGesture(qreal scale, qreal angleDelta, const QPointF &posDelta);
     void cancelPinchGesture();
     void endPinchGesture();
 
@@ -222,7 +221,7 @@ private:
     QVector<PinchGesture *> m_activePinchGestures;
     QMap<Gesture *, QMetaObject::Connection> m_destroyConnections;
 
-    QSizeF m_currentDelta = QSizeF(0, 0);
+    QPointF m_currentDelta = QPointF(0, 0);
     qreal m_currentScale = 1; // For Pinch Gesture recognition
     uint m_currentFingerCount = 0;
     Axis m_currentSwipeAxis = Axis::None;

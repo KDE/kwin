@@ -122,7 +122,7 @@ public:
             const QPointF touchPosition = QPointF(fixed1616ToReal(e->event_x), fixed1616ToReal(e->event_y));
             if (e->detail == m_trackingTouchId) {
                 const auto last = m_lastTouchPositions.value(e->detail);
-                workspace()->screenEdges()->gestureRecognizer()->updateSwipeGesture(QSizeF(touchPosition.x() - last.x(), touchPosition.y() - last.y()));
+                workspace()->screenEdges()->gestureRecognizer()->updateSwipeGesture(touchPosition - last);
             }
             m_lastTouchPositions.insert(e->detail, touchPosition);
             break;

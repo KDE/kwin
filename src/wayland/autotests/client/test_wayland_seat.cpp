@@ -396,7 +396,7 @@ void TestWaylandSeat::testPointer()
     QCOMPARE(motionSpy.first().last().value<quint32>(), quint32(1));
 
     // test relative motion
-    m_seatInterface->relativePointerMotion(QSizeF(1, 2), QSizeF(3, 4), quint64(-1));
+    m_seatInterface->relativePointerMotion(QPointF(1, 2), QPointF(3, 4), quint64(-1));
     m_seatInterface->notifyPointerFrame();
     QVERIFY(relativeMotionSpy.wait());
     QCOMPARE(relativeMotionSpy.count(), 1);
@@ -485,7 +485,7 @@ void TestWaylandSeat::testPointer()
     QVERIFY(!cp.enteredSurface());
 
     // now a relative motion should not be sent to the relative pointer
-    m_seatInterface->relativePointerMotion(QSizeF(1, 2), QSizeF(3, 4), quint64(-1));
+    m_seatInterface->relativePointerMotion(QPointF(1, 2), QPointF(3, 4), quint64(-1));
     QVERIFY(!relativeMotionSpy.wait(500));
 
     // enter it again
@@ -496,7 +496,7 @@ void TestWaylandSeat::testPointer()
     QCOMPARE(cp.enteredSurface(), s);
 
     // send another relative motion event
-    m_seatInterface->relativePointerMotion(QSizeF(4, 5), QSizeF(6, 7), quint64(1));
+    m_seatInterface->relativePointerMotion(QPointF(4, 5), QPointF(6, 7), quint64(1));
     QVERIFY(relativeMotionSpy.wait());
     QCOMPARE(relativeMotionSpy.count(), 2);
     QCOMPARE(relativeMotionSpy.last().at(0).toSizeF(), QSizeF(4, 5));
@@ -861,10 +861,10 @@ void TestWaylandSeat::testPointerSwipeGesture()
 
     // send in some updates
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->updatePointerSwipeGesture(QSizeF(2, 3));
+    m_seatInterface->updatePointerSwipeGesture(QPointF(2, 3));
     QVERIFY(updateSpy.wait());
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->updatePointerSwipeGesture(QSizeF(4, 5));
+    m_seatInterface->updatePointerSwipeGesture(QPointF(4, 5));
     QVERIFY(updateSpy.wait());
     QCOMPARE(updateSpy.count(), 2);
     QCOMPARE(updateSpy.at(0).at(0).toSizeF(), QSizeF(2, 3));
@@ -903,7 +903,7 @@ void TestWaylandSeat::testPointerSwipeGesture()
     // unsetting the focused pointer surface should not change anything
     m_seatInterface->notifyPointerLeave();
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->updatePointerSwipeGesture(QSizeF(6, 7));
+    m_seatInterface->updatePointerSwipeGesture(QPointF(6, 7));
     QVERIFY(updateSpy.wait());
     // and end
     m_seatInterface->setTimestamp(timestamp++);
@@ -982,10 +982,10 @@ void TestWaylandSeat::testPointerPinchGesture()
 
     // send in some updates
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->updatePointerPinchGesture(QSizeF(2, 3), 2, 45);
+    m_seatInterface->updatePointerPinchGesture(QPointF(2, 3), 2, 45);
     QVERIFY(updateSpy.wait());
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->updatePointerPinchGesture(QSizeF(4, 5), 1, 90);
+    m_seatInterface->updatePointerPinchGesture(QPointF(4, 5), 1, 90);
     QVERIFY(updateSpy.wait());
     QCOMPARE(updateSpy.count(), 2);
     QCOMPARE(updateSpy.at(0).at(0).toSizeF(), QSizeF(2, 3));
@@ -1028,7 +1028,7 @@ void TestWaylandSeat::testPointerPinchGesture()
     // unsetting the focused pointer surface should not change anything
     m_seatInterface->notifyPointerLeave();
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->updatePointerPinchGesture(QSizeF(6, 7), 2, -45);
+    m_seatInterface->updatePointerPinchGesture(QPointF(6, 7), 2, -45);
     QVERIFY(updateSpy.wait());
     // and end
     m_seatInterface->setTimestamp(timestamp++);

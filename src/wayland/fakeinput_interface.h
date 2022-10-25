@@ -9,7 +9,6 @@
 
 #include <QObject>
 #include <QPointF>
-#include <QSizeF>
 #include <memory>
 
 struct wl_resource;
@@ -100,7 +99,7 @@ Q_SIGNALS:
     /**
      * Request a pointer motion by @p delta.
      */
-    void pointerMotionRequested(const QSizeF &delta);
+    void pointerMotionRequested(const QPointF &delta);
     /**
      * Request an absolute pointer motion to @p pos.
      */

@@ -10,7 +10,6 @@
 #include "input.h"
 
 #include <QPointF>
-#include <QSizeF>
 
 namespace KWin
 {
@@ -65,7 +64,7 @@ void InputEventSpy::pinchGestureBegin(int fingerCount, quint32 time)
     Q_UNUSED(time)
 }
 
-void InputEventSpy::pinchGestureUpdate(qreal scale, qreal angleDelta, const QSizeF &delta, quint32 time)
+void InputEventSpy::pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time)
 {
     Q_UNUSED(scale)
     Q_UNUSED(angleDelta)
@@ -89,7 +88,7 @@ void InputEventSpy::swipeGestureBegin(int fingerCount, quint32 time)
     Q_UNUSED(time)
 }
 
-void InputEventSpy::swipeGestureUpdate(const QSizeF &delta, quint32 time)
+void InputEventSpy::swipeGestureUpdate(const QPointF &delta, quint32 time)
 {
     Q_UNUSED(delta)
     Q_UNUSED(time)
