@@ -12,6 +12,7 @@
 #ifndef KWIN_OPTIONS_H
 #define KWIN_OPTIONS_H
 
+#include "globalshortcuts.h"
 #include "main.h"
 
 #include <KConfigWatcher>
@@ -701,6 +702,8 @@ public:
     {
         return m_MoveMinimizedWindowsToEndOfTabBoxFocusChain;
     }
+
+    QString swipeGestureActionFor(DeviceType device, int fingerCount);
 
     QStringList modifierOnlyDBusShortcut(Qt::KeyboardModifier mod) const;
     LatencyPolicy latencyPolicy() const;

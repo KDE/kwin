@@ -76,6 +76,7 @@ public:
     void registerTouchscreenSwipe(QAction *action, std::function<void(qreal)> progressCallback, SwipeDirection direction, uint fingerCount);
     void forceRegisterTouchscreenSwipe(QAction *action, std::function<void(qreal)> progressCallback, SwipeDirection direction, uint fingerCount);
     void cleanupGestureShortcut(QAction *action);
+    void registerGestureAction(QAction *action, const QString &name);
 
     /**
      * @brief Processes a key event to decide whether a shortcut needs to be triggered.
@@ -124,6 +125,7 @@ private:
     bool addIfNotExists(GlobalShortcut sc, DeviceType device = DeviceType::Touchpad);
 
     QVector<GlobalShortcut> m_shortcuts;
+    QHash<QString, QAction *> m_gestureActions;
 
     std::unique_ptr<KGlobalAccelD> m_kglobalAccel;
     KGlobalAccelInterface *m_kglobalAccelInterface = nullptr;

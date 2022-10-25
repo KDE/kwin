@@ -927,6 +927,8 @@ public:
      */
     virtual void cleanupGestureShortcut(QAction *action) = 0;
 
+    virtual void registerGestureAction(QAction *action, const QString &name) = 0;
+
     /**
      * Retrieve the proxy class for an effect if it has one. Will return NULL if
      * the effect isn't loaded or doesn't have a proxy class.

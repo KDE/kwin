@@ -207,6 +207,11 @@ void GlobalShortcutsManager::cleanupGestureShortcut(QAction *action)
     }
 }
 
+void GlobalShortcutsManager::registerGestureAction(QAction *action, const QString &name)
+{
+    m_gestureActions[name] = action;
+}
+
 void GlobalShortcutsManager::forceRegisterTouchscreenSwipe(QAction *action, std::function<void(qreal)> progressCallback, SwipeDirection direction, uint fingerCount)
 {
     GlobalShortcut shortcut{RealtimeFeedbackSwipeShortcut{DeviceType::Touchscreen, direction, progressCallback, fingerCount}, action};

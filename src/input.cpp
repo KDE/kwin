@@ -3328,6 +3328,11 @@ void InputRedirection::cleanupGestureShortcut(QAction *action)
     m_shortcuts->cleanupGestureShortcut(action);
 }
 
+void InputRedirection::registerGestureAction(QAction *action, const QString &name)
+{
+    m_shortcuts->registerGestureAction(action, name);
+}
+
 void InputRedirection::registerRealtimeTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
 {
     m_shortcuts->registerRealtimeTouchpadPinch(onUp, progressCallback, direction, fingerCount);

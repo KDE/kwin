@@ -1043,6 +1043,21 @@ bool Options::condensedTitle() const
     return condensed_title;
 }
 
+QString Options::swipeGestureActionFor(DeviceType device, int fingerCount)
+{
+    KConfigGroup cg(m_settings->config(), "Gestures");
+    if (device == DeviceType::Touchscreen) {
+        cg = KConfigGroup(&cg, "Touchscreen");
+    } else if (device == DeviceType::Touchpad) {
+        cg = KConfigGroup(&cg, "Touchpad");
+    } else {
+        return QString();
+    }
+
+    cg = KConfigGroup(&cg, "Swipe");
+    return cg.readEntry(QString::number(fingerCount), QString());
+}
+
 Options::MouseCommand Options::wheelToMouseCommand(MouseWheelCommand com, int delta) const
 {
     switch (com) {
