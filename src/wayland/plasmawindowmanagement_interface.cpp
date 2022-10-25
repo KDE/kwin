@@ -22,7 +22,7 @@
 
 namespace KWaylandServer
 {
-static const quint32 s_version = 14;
+static const quint32 s_version = 16;
 static const quint32 s_activationVersion = 1;
 
 class PlasmaWindowManagementInterfacePrivate : public QtWaylandServer::org_kde_plasma_window_management
