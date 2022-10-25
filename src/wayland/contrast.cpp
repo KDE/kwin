@@ -52,7 +52,7 @@ void ContrastManagerInterfacePrivate::org_kde_kwin_contrast_manager_create(Resou
         wl_client_post_no_memory(resource->client());
         return;
     }
-    auto contrast = new ContrastInterface(contrast_resource);
+    auto contrast = new ContrastInterface(contrast_resource, s);
     SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
     surfacePrivate->setContrast(contrast);
 }
@@ -86,10 +86,10 @@ void ContrastManagerInterface::remove()
 class ContrastInterfacePrivate : public QtWaylandServer::org_kde_kwin_contrast
 {
 public:
-    ContrastInterfacePrivate(ContrastInterface *_q, wl_resource *resource);
+    ContrastInterfacePrivate(ContrastInterface *_q, wl_resource *resource, SurfaceInterface *surface);
 
-    QRegion pendingRegion;
-    QRegion currentRegion;
+    RegionF pendingRegion;
+    RegionF currentRegion;
     qreal pendingContrast;
     qreal currentContrast;
     qreal pendingIntensity;
@@ -99,6 +99,7 @@ public:
     QColor currentFrost;
     QColor pendingFrost;
     ContrastInterface *q;
+    QPointer<SurfaceInterface> surface;
 
 protected:
     void org_kde_kwin_contrast_commit(Resource *resource) override;
@@ -124,8 +125,8 @@ void ContrastInterfacePrivate::org_kde_kwin_contrast_commit(Resource *resource)
 void ContrastInterfacePrivate::org_kde_kwin_contrast_set_region(Resource *resource, wl_resource *region)
 {
     RegionInterface *r = RegionInterface::get(region);
-    if (r) {
-        pendingRegion = r->region();
+    if (r && surface) {
+        pendingRegion = r->region(surface->clientToCompositorScale());
     } else {
         pendingRegion = QRegion();
     }
@@ -166,21 +167,22 @@ void ContrastInterfacePrivate::org_kde_kwin_contrast_destroy_resource(Resource *
     delete q;
 }
 
-ContrastInterfacePrivate::ContrastInterfacePrivate(ContrastInterface *_q, wl_resource *resource)
+ContrastInterfacePrivate::ContrastInterfacePrivate(ContrastInterface *_q, wl_resource *resource, SurfaceInterface *surface)
     : QtWaylandServer::org_kde_kwin_contrast(resource)
     , q(_q)
+    , surface(surface)
 {
 }
 
-ContrastInterface::ContrastInterface(wl_resource *resource)
+ContrastInterface::ContrastInterface(wl_resource *resource, SurfaceInterface *surface)
     : QObject()
-    , d(new ContrastInterfacePrivate(this, resource))
+    , d(new ContrastInterfacePrivate(this, resource, surface))
 {
 }
 
 ContrastInterface::~ContrastInterface() = default;
 
-QRegion ContrastInterface::region() const
+RegionF ContrastInterface::region() const
 {
     return d->currentRegion;
 }

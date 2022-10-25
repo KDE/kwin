@@ -7,6 +7,7 @@
 #pragma once
 
 #include "kwin_export.h"
+#include "utils/regionf.h"
 
 #include <memory>
 #include <optional>
@@ -21,6 +22,7 @@ namespace KWin
 class Display;
 class ContrastManagerInterfacePrivate;
 class ContrastInterfacePrivate;
+class SurfaceInterface;
 
 /**
  * @brief Represents the Global for org_kde_kwin_contrast_manager interface.
@@ -62,14 +64,14 @@ class KWIN_EXPORT ContrastInterface : public QObject
 public:
     ~ContrastInterface() override;
 
-    QRegion region() const;
+    RegionF region() const;
     qreal contrast() const;
     qreal intensity() const;
     qreal saturation() const;
     QColor frost() const;
 
 private:
-    explicit ContrastInterface(wl_resource *resource);
+    explicit ContrastInterface(wl_resource *resource, SurfaceInterface *surface);
     friend class ContrastManagerInterfacePrivate;
 
     std::unique_ptr<ContrastInterfacePrivate> d;
