@@ -337,10 +337,6 @@ int main(int argc, char *argv[])
 
     signal(SIGPIPE, SIG_IGN);
 
-    // Disable the glib event loop integration, since it seems to be responsible
-    // for several bug reports about high CPU usage (bug #239963)
-    setenv("QT_NO_GLIB", "1", true);
-
     // enforce xcb plugin, unfortunately command line switch has precedence
     setenv("QT_QPA_PLATFORM", "xcb", true);
 
