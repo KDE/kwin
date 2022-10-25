@@ -50,6 +50,10 @@ public:
     {
         return {};
     };
+    virtual DataDeviceManagerInterface::DnDAction selectedDndAction() const
+    {
+        return DataDeviceManagerInterface::DnDAction::None;
+    }
     /**
      * The user performed the drop action during a drag and drop operation.
      */

@@ -204,13 +204,19 @@ void DataDeviceInterface::sendClearSelection()
 void DataDeviceInterface::drop()
 {
     d->send_drop();
-    if (d->drag.posConnection) {
-        disconnect(d->drag.posConnection);
-        d->drag.posConnection = QMetaObject::Connection();
-    }
+    d->drag.surface = nullptr; // prevent sending wl_data_device.leave event
+
+    disconnect(d->drag.posConnection);
+    d->drag.posConnection = QMetaObject::Connection();
     disconnect(d->drag.destroyConnection);
     d->drag.destroyConnection = QMetaObject::Connection();
-    d->drag.surface = nullptr;
+
+    if (d->seat->dragSource()->selectedDndAction() != DataDeviceManagerInterface::DnDAction::Ask) {
+        disconnect(d->drag.sourceActionConnection);
+        d->drag.sourceActionConnection = QMetaObject::Connection();
+        disconnect(d->drag.targetActionConnection);
+        d->drag.targetActionConnection = QMetaObject::Connection();
+    }
 }
 
 static DataDeviceManagerInterface::DnDAction chooseDndAction(AbstractDataSource *source, DataOfferInterface *offer)
@@ -234,6 +240,10 @@ static DataDeviceManagerInterface::DnDAction chooseDndAction(AbstractDataSource 
 
 void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 serial)
 {
+    if (d->drag.surface == surface) {
+        return;
+    }
+
     if (d->drag.surface) {
         if (d->drag.surface->resource()) {
             d->send_leave();

@@ -48,6 +48,11 @@ void XwlDataSource::setSupportedDndActions(KWaylandServer::DataDeviceManagerInte
     Q_EMIT supportedDragAndDropActionsChanged();
 }
 
+KWaylandServer::DataDeviceManagerInterface::DnDAction XwlDataSource::selectedDndAction() const
+{
+    return m_dndAction;
+}
+
 void XwlDataSource::dndAction(KWaylandServer::DataDeviceManagerInterface::DnDAction action)
 {
     m_dndAction = action;

@@ -182,7 +182,7 @@ void XToWlDrag::setDragAndDropAction(DnDAction action)
 
 DnDAction XToWlDrag::selectedDragAndDropAction()
 {
-    return m_selectionSource.selectedDragAndDropAction();
+    return m_selectionSource.selectedDndAction();
 }
 
 void XToWlDrag::setOffers(const Mimes &offers)

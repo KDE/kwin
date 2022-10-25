@@ -25,6 +25,7 @@ public:
     DataSourceInterface *q;
     QStringList mimeTypes;
     DataDeviceManagerInterface::DnDActions supportedDnDActions = DataDeviceManagerInterface::DnDAction::None;
+    DataDeviceManagerInterface::DnDAction selectedDndAction = DataDeviceManagerInterface::DnDAction::None;
     bool isAccepted = false;
 
 protected:
@@ -138,6 +139,11 @@ DataDeviceManagerInterface::DnDActions DataSourceInterface::supportedDragAndDrop
     return d->supportedDnDActions;
 }
 
+DataDeviceManagerInterface::DnDAction DataSourceInterface::selectedDndAction() const
+{
+    return d->selectedDndAction;
+}
+
 void DataSourceInterface::dropPerformed()
 {
     if (d->resource()->version() < WL_DATA_SOURCE_DND_DROP_PERFORMED_SINCE_VERSION) {
@@ -156,6 +162,8 @@ void DataSourceInterface::dndFinished()
 
 void DataSourceInterface::dndAction(DataDeviceManagerInterface::DnDAction action)
 {
+    d->selectedDndAction = action;
+
     if (d->resource()->version() < WL_DATA_SOURCE_ACTION_SINCE_VERSION) {
         return;
     }
