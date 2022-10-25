@@ -9,7 +9,6 @@ import QtQuick.Layouts 1.15
 import QtQuick.Controls 2.15 as QQC2
 
 import org.kde.kcm 1.6 as KCM
-import org.kde.kconfig 1.0
 import org.kde.kirigami 2.20 as Kirigami
 import org.kde.newstuff 1.85 as NewStuff
 
@@ -103,23 +102,22 @@ Kirigami.Page {
                             }
                         }
 
-                        Item {
-                            Layout.fillWidth: true
-                        }
-
-                        NewStuff.Button {
-                            id: newstuffButton
-                            text: i18nc("button text", "Get New Window Decorations...")
-                            icon.name: "get-hot-new-stuff"
-                            visible: KAuthorized.authorize("ghns")
-                            configFile: "window-decorations.knsrc"
-                            onEntryEvent: (entry, event) => {
-                                if (event === NewStuff.Engine.StatusChangedEvent) {
-                                    kcm.reloadKWinSettings();
-                                } else if (event === NewStuff.Engine.EntryAdoptedEvent) {
-                                    kcm.load();
+                        Kirigami.ActionToolBar {
+                            flat: false
+                            alignment: Qt.AlignRight
+                            actions: [
+                                NewStuff.Action {
+                                    text: i18nc("button text", "Get New Window Decorations...")
+                                    configFile: "window-decorations.knsrc"
+                                    onEntryEvent: (entry, event) => {
+                                        if (event === NewStuff.Engine.StatusChangedEvent) {
+                                            kcm.reloadKWinSettings();
+                                        } else if (event === NewStuff.Engine.EntryAdoptedEvent) {
+                                            kcm.load();
+                                        }
+                                    }
                                 }
-                            }
+                            ]
                         }
                     }
                 }
