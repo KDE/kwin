@@ -251,10 +251,10 @@ void DrmOutput::setDpmsMode(DpmsMode mode)
         }
     } else {
         m_gpu->platform()->checkOutputsAreOn();
-        m_turnOffTimer.stop();
-        if (mode != dpmsMode() && setDrmDpmsMode(mode)) {
+        if (m_turnOffTimer.isActive() || (mode != dpmsMode() && setDrmDpmsMode(mode))) {
             Q_EMIT wakeUp();
         }
+        m_turnOffTimer.stop();
     }
 }
 

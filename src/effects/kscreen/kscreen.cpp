@@ -102,7 +102,9 @@ void KscreenEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millis
             state.m_timeLine.advance(presentTime);
             if (state.m_timeLine.done()) {
                 switchState(state);
-                m_waylandStates.remove(data.screen);
+                if (state.m_state == StateNormal) {
+                    m_waylandStates.remove(data.screen);
+                }
             }
         }
     }
