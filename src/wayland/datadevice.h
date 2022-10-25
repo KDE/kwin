@@ -47,7 +47,7 @@ public:
     /**
      * Returns the position of the icon relative to the cursor's hotspot.
      */
-    QPoint position() const;
+    QPointF position() const;
 
     /**
      * Returns the underlying icon surface. This function always returns a valid surface.

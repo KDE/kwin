@@ -9,6 +9,7 @@
 #include "core/colorspace.h"
 #include "core/output.h"
 #include "core/renderbackend.h"
+#include "utils/regionf.h"
 
 #include <QObject>
 #include <QRegion>
@@ -82,15 +83,6 @@ private:
 class KWIN_EXPORT SurfaceInterface : public QObject
 {
     Q_OBJECT
-    /**
-     * The opaque region for a translucent buffer.
-     */
-    Q_PROPERTY(QRegion opaque READ opaque NOTIFY opaqueChanged)
-    /**
-     * The current input region.
-     */
-    Q_PROPERTY(QRegion input READ input NOTIFY inputChanged)
-    Q_PROPERTY(QSizeF size READ size NOTIFY sizeChanged)
 public:
     explicit SurfaceInterface(CompositorInterface *compositor, wl_resource *resource);
     ~SurfaceInterface() override;
@@ -141,8 +133,8 @@ public:
     std::shared_ptr<PresentationFeedback> presentationFeedback(Output *output);
     bool hasPresentationFeedback() const;
 
-    QRegion opaque() const;
-    QRegion input() const;
+    RegionF opaque() const;
+    RegionF input() const;
     QRegion bufferDamage() const;
     QRectF bufferSourceBox() const;
     /**
@@ -157,7 +149,7 @@ public:
      * @returns the current GraphicsBuffer, might be @c nullptr.
      */
     GraphicsBuffer *buffer() const;
-    QPoint offset() const;
+    QPointF offset() const;
     /**
      * Returns the current size of the surface, in surface coordinates.
      *
@@ -414,8 +406,8 @@ Q_SIGNALS:
      * @see damage
      */
     void damaged(const QRegion &);
-    void opaqueChanged(const QRegion &);
-    void inputChanged(const QRegion &);
+    void opaqueChanged(const RegionF &);
+    void inputChanged(const RegionF &);
     /**
      * This signal is emitted when the buffer transform has changed.
      */

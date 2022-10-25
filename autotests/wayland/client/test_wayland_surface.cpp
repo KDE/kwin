@@ -532,7 +532,7 @@ void TestWaylandSurface::testOpaque()
     s->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(opaqueRegionChangedSpy.wait());
     QCOMPARE(opaqueRegionChangedSpy.count(), 1);
-    QCOMPARE(opaqueRegionChangedSpy.last().first().value<QRegion>(), QRegion(0, 10, 20, 30));
+    QCOMPARE(opaqueRegionChangedSpy.last().first().value<RegionF>(), QRegion(0, 10, 20, 30));
     QCOMPARE(serverSurface->opaque(), QRegion(0, 10, 20, 30));
 
     // committing without setting a new region shouldn't change
@@ -547,7 +547,7 @@ void TestWaylandSurface::testOpaque()
     s->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(opaqueRegionChangedSpy.wait());
     QCOMPARE(opaqueRegionChangedSpy.count(), 2);
-    QCOMPARE(opaqueRegionChangedSpy.last().first().value<QRegion>(), QRegion(10, 20, 10, 20));
+    QCOMPARE(opaqueRegionChangedSpy.last().first().value<RegionF>(), QRegion(10, 20, 10, 20));
     QCOMPARE(serverSurface->opaque(), QRegion(10, 20, 10, 20));
 
     // and let's go back to an empty region
@@ -555,7 +555,7 @@ void TestWaylandSurface::testOpaque()
     s->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(opaqueRegionChangedSpy.wait());
     QCOMPARE(opaqueRegionChangedSpy.count(), 3);
-    QCOMPARE(opaqueRegionChangedSpy.last().first().value<QRegion>(), QRegion());
+    QCOMPARE(opaqueRegionChangedSpy.last().first().value<RegionF>(), QRegion());
     QCOMPARE(serverSurface->opaque(), QRegion());
 }
 

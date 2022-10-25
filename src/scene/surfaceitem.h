@@ -9,6 +9,7 @@
 #include "core/graphicsbuffer.h"
 #include "core/output.h"
 #include "scene/item.h"
+#include "utils/regionf.h"
 
 #include <deque>
 
@@ -48,11 +49,11 @@ public:
 
     std::shared_ptr<SyncReleasePoint> bufferReleasePoint() const;
 
-    QRegion mapFromBuffer(const QRegion &region) const;
+    RegionF mapFromBuffer(const RegionF &region) const;
 
-    void addDamage(const QRegion &region);
+    void addBufferDamage(const QRegion &region);
     void resetDamage();
-    QRegion damage() const;
+    QRegion bufferDamage() const;
 
     void destroyTexture();
 

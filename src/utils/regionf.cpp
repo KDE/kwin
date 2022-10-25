@@ -35,6 +35,11 @@ RegionF::RegionF(const RegionF &region)
 {
 }
 
+RegionF::RegionF(double x, double y, double w, double h)
+    : RegionF(QRectF(x, y, w, h))
+{
+}
+
 void RegionF::add(const QRectF &rect)
 {
     m_rects.push_back(rect);

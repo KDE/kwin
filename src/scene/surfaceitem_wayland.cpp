@@ -37,7 +37,7 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
     connect(surface, &SurfaceInterface::committed,
             this, &SurfaceItemWayland::handleSurfaceCommitted);
     connect(surface, &SurfaceInterface::damaged,
-            this, &SurfaceItemWayland::addDamage);
+            this, &SurfaceItemWayland::addBufferDamage);
     connect(surface, &SurfaceInterface::childSubSurfaceRemoved,
             this, &SurfaceItemWayland::handleChildSubSurfaceRemoved);
     connect(surface, &SurfaceInterface::colorDescriptionChanged,
@@ -84,7 +84,7 @@ QList<QRectF> SurfaceItemWayland::shape() const
 QRegion SurfaceItemWayland::opaque() const
 {
     if (m_surface) {
-        return m_surface->opaque();
+        return m_surface->opaque().toAlignedRegion();
     }
     return QRegion();
 }

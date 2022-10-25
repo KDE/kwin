@@ -83,7 +83,7 @@ public:
      * @see regionChanged
      * @see SurfaceInterface::input
      */
-    KWin::RegionF region() const;
+    RegionF region() const;
 
     /**
      * Indicates where the mouse cursor should be positioned after it has been unlocked again.
@@ -152,7 +152,7 @@ Q_SIGNALS:
     void lockedChanged();
 
 private:
-    LockedPointerV1Interface(SurfaceInterface *surface, LifeTime lifeTime, const KWin::RegionF &region, ::wl_resource *resource);
+    LockedPointerV1Interface(SurfaceInterface *surface, LifeTime lifeTime, const RegionF &region, ::wl_resource *resource);
     std::unique_ptr<LockedPointerV1InterfacePrivate> d;
     friend class LockedPointerV1InterfacePrivate;
     friend class PointerConstraintsV1InterfacePrivate;
@@ -199,7 +199,7 @@ public:
      * @see regionChanged
      * @see SurfaceInterface::input
      */
-    KWin::RegionF region() const;
+    RegionF region() const;
 
     /**
      * Whether the Compositor set this pointer confinement to be active.
@@ -237,7 +237,7 @@ Q_SIGNALS:
     void confinedChanged();
 
 private:
-    ConfinedPointerV1Interface(SurfaceInterface *surface, LifeTime lifeTime, const KWin::RegionF &region, ::wl_resource *resource);
+    ConfinedPointerV1Interface(SurfaceInterface *surface, LifeTime lifeTime, const RegionF &region, ::wl_resource *resource);
     std::unique_ptr<ConfinedPointerV1InterfacePrivate> d;
     friend class ConfinedPointerV1InterfacePrivate;
     friend class PointerConstraintsV1InterfacePrivate;

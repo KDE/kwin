@@ -17,6 +17,7 @@
 #include "scene/borderradius.h"
 #include "utils/common.h"
 #include "utils/gravity.h"
+#include "utils/regionf.h"
 
 #include <functional>
 #include <memory>

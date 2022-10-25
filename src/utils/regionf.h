@@ -25,6 +25,7 @@ public:
     RegionF(const QRectF &rect);
     RegionF(const QRegion &region);
     RegionF(const RegionF &region);
+    RegionF(double x, double y, double w, double h);
 
     void add(const QRectF &rect);
     RegionF translated(const QPointF &point) const;

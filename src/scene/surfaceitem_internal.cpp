@@ -40,7 +40,7 @@ void SurfaceItemInternal::handlePresented(const InternalWindowFrame &frame)
     setBufferSourceBox(QRectF(QPointF(0, 0), frame.buffer->size()));
     setBufferTransform(frame.bufferTransform);
 
-    addDamage(frame.bufferDamage);
+    addBufferDamage(frame.bufferDamage);
 }
 
 } // namespace KWin

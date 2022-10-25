@@ -36,15 +36,6 @@
 namespace KWin
 {
 
-static QRegion map_helper(const QMatrix4x4 &matrix, const QRegion &region)
-{
-    QRegion result;
-    for (const QRect &rect : region) {
-        result += matrix.mapRect(QRectF(rect)).toAlignedRect();
-    }
-    return result;
-}
-
 SurfaceRole::SurfaceRole(const QByteArray &name)
     : m_name(name)
 {
@@ -291,7 +282,7 @@ void SurfaceInterfacePrivate::surface_attach(Resource *resource, struct ::wl_res
             return;
         }
     } else {
-        pending->offset = QPoint(x, y);
+        pending->offset = QPoint(x, y) / clientToCompositorScale;
     }
 
     pending->committed |= SurfaceState::Field::Buffer;
@@ -304,7 +295,7 @@ void SurfaceInterfacePrivate::surface_attach(Resource *resource, struct ::wl_res
 
 void SurfaceInterfacePrivate::surface_damage(Resource *, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    pending->damage += QRect(x, y, width, height);
+    pending->damage |= QRectF(x / clientToCompositorScale, y / clientToCompositorScale, width / clientToCompositorScale, height / clientToCompositorScale);
 }
 
 void SurfaceInterfacePrivate::surface_frame(Resource *resource, uint32_t callback)
@@ -328,14 +319,14 @@ void SurfaceInterfacePrivate::surface_frame(Resource *resource, uint32_t callbac
 void SurfaceInterfacePrivate::surface_set_opaque_region(Resource *resource, struct ::wl_resource *region)
 {
     RegionInterface *r = RegionInterface::get(region);
-    pending->opaque = r ? r->region() : QRegion();
+    pending->opaque = r ? r->region(clientToCompositorScale) : QRegion();
     pending->committed |= SurfaceState::Field::Opaque;
 }
 
 void SurfaceInterfacePrivate::surface_set_input_region(Resource *resource, struct ::wl_resource *region)
 {
     RegionInterface *r = RegionInterface::get(region);
-    pending->input = r ? r->region() : infiniteRegion();
+    pending->input = r ? r->region(clientToCompositorScale) : infiniteRegion();
     pending->committed |= SurfaceState::Field::Input;
 }
 
@@ -456,7 +447,7 @@ void SurfaceInterfacePrivate::surface_set_buffer_scale(Resource *resource, int32
         wl_resource_post_error(resource->handle, error_invalid_scale, "buffer scale must be at least one (%d specified)", scale);
         return;
     }
-    pending->bufferScale = scale;
+    pending->integerBufferScale = scale;
     pending->committed |= SurfaceState::Field::BufferScale;
 }
 
@@ -467,7 +458,7 @@ void SurfaceInterfacePrivate::surface_damage_buffer(Resource *resource, int32_t 
 
 void SurfaceInterfacePrivate::surface_offset(Resource *resource, int32_t x, int32_t y)
 {
-    pending->offset = QPoint(x, y);
+    pending->offset = QPointF(x, y) / clientToCompositorScale;
 }
 
 SurfaceInterface::SurfaceInterface(CompositorInterface *compositor, wl_resource *resource)
@@ -588,10 +579,10 @@ QRectF SurfaceInterfacePrivate::computeBufferSourceBox() const
     }
 
     const QSizeF bounds = current->bufferTransform.map(current->buffer->size());
-    const QRectF box(current->viewport.sourceGeometry.x() * current->bufferScale,
-                     current->viewport.sourceGeometry.y() * current->bufferScale,
-                     current->viewport.sourceGeometry.width() * current->bufferScale,
-                     current->viewport.sourceGeometry.height() * current->bufferScale);
+    const QRectF box(current->viewport.sourceGeometry.x() * current->integerBufferScale,
+                     current->viewport.sourceGeometry.y() * current->integerBufferScale,
+                     current->viewport.sourceGeometry.width() * current->integerBufferScale,
+                     current->viewport.sourceGeometry.height() * current->integerBufferScale);
 
     return current->bufferTransform.map(box, bounds);
 }
@@ -634,7 +625,8 @@ void SurfaceState::mergeInto(SurfaceState *target)
     target->slide = slide;
     target->input = input;
     target->opaque = opaque;
-    target->bufferScale = bufferScale;
+    target->integerBufferScale = integerBufferScale;
+    target->fractionalBufferScale = fractionalBufferScale;
     target->bufferTransform = bufferTransform;
     target->contentType = contentType;
     target->presentationHint = presentationHint;
@@ -685,7 +677,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
 
     const QSizeF oldSurfaceSize = surfaceSize;
     const QRectF oldBufferSourceBox = bufferSourceBox;
-    const QRegion oldInputRegion = inputRegion;
+    const RegionF oldInputRegion = inputRegion;
 
     next->mergeInto(current.get());
     bufferRef = current->buffer;
@@ -706,12 +698,11 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         } else if (current->viewport.sourceGeometry.isValid()) {
             surfaceSize = current->viewport.sourceGeometry.size();
         } else {
-            surfaceSize = current->bufferTransform.map(current->buffer->size() / current->bufferScale);
+            surfaceSize = current->bufferTransform.map(current->buffer->size() / current->integerBufferScale / current->fractionalBufferScale);
         }
 
-        const QRect surfaceRect = QRectF(QPointF(0, 0), surfaceSize).toAlignedRect();
+        const QRectF surfaceRect = QRectF(QPointF(0, 0), surfaceSize);
         const QRect bufferRect = QRect(QPoint(0, 0), current->buffer->size());
-
         inputRegion = current->input & surfaceRect;
 
         if (!current->buffer->hasAlphaChannel()) {
@@ -720,18 +711,13 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
             opaqueRegion = current->opaque & surfaceRect;
         }
 
-        bufferDamage = current->bufferDamage
-                           .united(mapToBuffer(current->damage.intersected(surfaceRect)))
-                           .intersected(bufferRect);
+        bufferDamage = ((RegionF(current->bufferDamage) | mapToBuffer(current->damage & surfaceRect)) & bufferRect).toAlignedRegion();
         current->damage = QRegion();
         current->bufferDamage = QRegion();
 
         if (scaleOverride != 1.0) {
-            QMatrix4x4 scaleOverrideMatrix;
-            scaleOverrideMatrix.scale(1.0 / scaleOverride, 1.0 / scaleOverride);
-
-            opaqueRegion = map_helper(scaleOverrideMatrix, opaqueRegion);
-            inputRegion = map_helper(scaleOverrideMatrix, inputRegion);
+            opaqueRegion = opaqueRegion / scaleOverride;
+            inputRegion = inputRegion / scaleOverride;
             surfaceSize = surfaceSize / scaleOverride;
         }
     } else {
@@ -860,19 +846,19 @@ bool SurfaceInterfacePrivate::inputContains(const QPointF &position) const
     return contains(position) && inputRegion.contains(QPoint(std::floor(position.x()), std::floor(position.y())));
 }
 
-QRegion SurfaceInterfacePrivate::mapToBuffer(const QRegion &region) const
+RegionF SurfaceInterfacePrivate::mapToBuffer(const RegionF &region) const
 {
     if (region.isEmpty()) {
-        return QRegion();
+        return RegionF();
     }
 
     const QRectF sourceBox = current->bufferTransform.inverted().map(bufferSourceBox, current->buffer->size());
     const qreal xScale = sourceBox.width() / surfaceSize.width();
     const qreal yScale = sourceBox.height() / surfaceSize.height();
 
-    QRegion result;
+    RegionF result;
     for (QRectF rect : region) {
-        result += current->bufferTransform.map(QRectF(rect.x() * xScale, rect.y() * yScale, rect.width() * xScale, rect.height() * yScale), sourceBox.size()).translated(bufferSourceBox.topLeft()).toAlignedRect();
+        result += current->bufferTransform.map(QRectF(rect.x() * xScale, rect.y() * yScale, rect.width() * xScale, rect.height() * yScale), sourceBox.size()).translated(bufferSourceBox.topLeft());
     }
     return result;
 }
@@ -882,12 +868,12 @@ QRegion SurfaceInterface::bufferDamage() const
     return d->bufferDamage;
 }
 
-QRegion SurfaceInterface::opaque() const
+RegionF SurfaceInterface::opaque() const
 {
     return d->opaqueRegion;
 }
 
-QRegion SurfaceInterface::input() const
+RegionF SurfaceInterface::input() const
 {
     return d->inputRegion;
 }
@@ -907,7 +893,7 @@ GraphicsBuffer *SurfaceInterface::buffer() const
     return d->bufferRef.buffer();
 }
 
-QPoint SurfaceInterface::offset() const
+QPointF SurfaceInterface::offset() const
 {
     return d->current->offset / d->scaleOverride;
 }

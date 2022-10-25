@@ -25,7 +25,7 @@ public:
     explicit DragAndDropIconPrivate(SurfaceInterface *surface);
 
     QPointer<SurfaceInterface> surface;
-    QPoint position;
+    QPointF position;
 };
 
 DragAndDropIconPrivate::DragAndDropIconPrivate(SurfaceInterface *surface)
@@ -56,7 +56,7 @@ void DragAndDropIcon::commit()
     Q_EMIT changed();
 }
 
-QPoint DragAndDropIcon::position() const
+QPointF DragAndDropIcon::position() const
 {
     return d->position;
 }

@@ -8,6 +8,7 @@
 
 #include "core/graphicsbuffer.h"
 #include "surface.h"
+#include "utils/regionf.h"
 // Qt
 #include <QHash>
 #include <QList>
@@ -67,14 +68,15 @@ struct SurfaceState
     void mergeInto(SurfaceState *target);
 
     Fields committed;
-    QRegion damage = QRegion();
+    RegionF damage;
     QRegion bufferDamage = QRegion();
-    QRegion opaque = QRegion();
-    QRegion input = infiniteRegion();
-    qint32 bufferScale = 1;
+    RegionF opaque;
+    RegionF input = infiniteRegion();
+    qint32 integerBufferScale = 1;
+    qreal fractionalBufferScale = 1;
     OutputTransform bufferTransform = OutputTransform::Normal;
     wl_list frameCallbacks;
-    QPoint offset = QPoint();
+    QPointF offset = QPointF();
     QPointer<GraphicsBuffer> buffer;
     QPointer<ShadowInterface> shadow;
     QPointer<BlurInterface> blur;
@@ -112,7 +114,9 @@ struct SurfaceState
     struct
     {
         QRectF sourceGeometry = QRectF();
-        QSize destinationSize = QSize();
+        QSizeF destinationSize = QSizeF();
+        bool sourceGeometryIsSet = false;
+        bool destinationSizeIsSet = false;
     } viewport;
 
     std::unordered_map<RawSurfaceExtension *, std::unique_ptr<RawSurfaceAttachedState>> extensions;
@@ -153,7 +157,7 @@ public:
      */
     bool contains(const QPointF &position) const;
     bool inputContains(const QPointF &position) const;
-    QRegion mapToBuffer(const QRegion &region) const;
+    RegionF mapToBuffer(const RegionF &region) const;
 
     CompositorInterface *compositor;
     SurfaceInterface *q;
@@ -163,8 +167,8 @@ public:
     QRectF bufferSourceBox;
     QSizeF surfaceSize = QSizeF(0, 0);
 
-    QRegion inputRegion;
-    QRegion opaqueRegion;
+    RegionF inputRegion;
+    RegionF opaqueRegion;
     GraphicsBufferRef bufferRef;
     QRegion bufferDamage;
     bool mapped = false;
