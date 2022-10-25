@@ -96,7 +96,6 @@ public:
      * @param serial The serial to be used for enter/leave
      */
     void updateDragTarget(SurfaceInterface *surface, quint32 serial) override;
-    void updateProxy(SurfaceInterface *remote);
 
     wl_client *client();
 

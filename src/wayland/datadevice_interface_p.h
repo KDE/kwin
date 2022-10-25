@@ -33,7 +33,6 @@ public:
     SeatInterface *seat;
     DataDeviceInterface *q;
     QPointer<DataSourceInterface> selection;
-    QPointer<SurfaceInterface> proxyRemoteSurface;
 
     struct Drag
     {

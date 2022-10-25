@@ -319,12 +319,6 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
     }
 }
 
-void DataDeviceInterface::updateProxy(SurfaceInterface *remote)
-{
-    // TODO: connect destroy signal?
-    d->proxyRemoteSurface = remote;
-}
-
 wl_client *DataDeviceInterface::client()
 {
     return d->resource()->client();
