@@ -1574,6 +1574,10 @@ void EffectsHandlerImpl::effectsChanged()
               std::back_inserter(loaded_effects));
 
     m_activeEffects.reserve(loaded_effects.count());
+
+    m_currentPaintScreenIterator = m_activeEffects.constBegin();
+    m_currentPaintWindowIterator = m_activeEffects.constBegin();
+    m_currentDrawWindowIterator = m_activeEffects.constBegin();
 }
 
 QStringList EffectsHandlerImpl::activeEffects() const
