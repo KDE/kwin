@@ -90,6 +90,8 @@ NightColorManager::NightColorManager()
 
     connect(kwinApp()->session(), &Session::activeChanged, this, [this](bool active) {
         if (active) {
+            qDebug() << "colorscheme:"
+                     << "hardReset init activeChanged";
             hardReset();
         } else {
             cancelAllTimers();
@@ -116,12 +118,18 @@ NightColorManager::NightColorManager()
         }
 
         if (comingFromSuspend) {
+            qDebug() << "colorscheme:"
+                     << "hardReset init clockSkewed comingFromSuspend";
             hardReset();
         } else {
+            qDebug() << "colorscheme:"
+                     << "resetAllTimers init clockSkewed !comingFromSuspend";
             resetAllTimers();
         }
     });
 
+    qDebug() << "colorscheme:"
+             << "hardReset init";
     hardReset();
 }
 
@@ -139,9 +147,13 @@ void NightColorManager::hardReset()
 
     if (isEnabled() && !isInhibited()) {
         setRunning(true);
+        qDebug() << "colorscheme:"
+                 << "applyColorScheme hardReset";
         applyColorScheme(currentTargetScheme());
         commitGammaRamps(currentTargetTemp());
     }
+    qDebug() << "colorscheme:"
+             << "resetAllTimers hardReset";
     resetAllTimers();
 }
 
@@ -149,6 +161,8 @@ void NightColorManager::reconfigure()
 {
     cancelAllTimers();
     readConfig();
+    qDebug() << "colorscheme:"
+             << "resetAllTimers reconfigure";
     resetAllTimers();
 }
 
@@ -168,6 +182,8 @@ void NightColorManager::inhibit()
     m_inhibitReferenceCount++;
 
     if (m_inhibitReferenceCount == 1) {
+        qDebug() << "colorscheme:"
+                 << "resetAllTimers inhibit";
         resetAllTimers();
         Q_EMIT inhibitedChanged();
     }
@@ -178,6 +194,8 @@ void NightColorManager::uninhibit()
     m_inhibitReferenceCount--;
 
     if (!m_inhibitReferenceCount) {
+        qDebug() << "colorscheme:"
+                 << "resetAllTimers uninhibit";
         resetAllTimers();
         Q_EMIT inhibitedChanged();
     }
@@ -312,6 +330,8 @@ void NightColorManager::resetAllTimers()
         updateTransitionTimings(false);
         updateTargetScheme();
         updateTargetTemperature();
+        qDebug() << "colorscheme:"
+                 << "resetQuickAdjustTimer resetAllTimers";
         resetQuickAdjustTimer(currentTargetScheme(), currentTargetTemp());
 }
 
@@ -331,6 +351,8 @@ void NightColorManager::resetQuickAdjustTimer(QString targetScheme, int targetTe
         m_quickAdjustTimer = std::make_unique<QTimer>();
         m_quickAdjustTimer->setSingleShot(false);
         connect(m_quickAdjustTimer.get(), &QTimer::timeout, this, [this, targetScheme, targetTemp]() {
+            qDebug() << "colorscheme:"
+                     << "quickAdjust resetQuickAdjustTimer";
             quickAdjust(targetScheme, targetTemp);
         });
 
@@ -340,6 +362,8 @@ void NightColorManager::resetQuickAdjustTimer(QString targetScheme, int targetTe
         }
         m_quickAdjustTimer->start(interval);
     } else {
+        qDebug() << "colorscheme:"
+                 << "resetSlowUpdateStartTimer resetQuickAdjustTimer";
         resetSlowUpdateStartTimer();
     }
 }
@@ -360,9 +384,13 @@ void NightColorManager::quickAdjust(QString targetScheme, int targetTemp)
     commitGammaRamps(nextTemp);
 
     if (nextTemp == targetTemp) {
+        qDebug() << "colorscheme:"
+                 << "applyColorScheme quickAdjust";
         applyColorScheme(targetScheme);
         // stop timer, we reached the target temp
         m_quickAdjustTimer.reset();
+        qDebug() << "colorscheme:"
+                 << "resetSlowUpdateStartTimer quickAdjust";
         resetSlowUpdateStartTimer();
     }
 }
@@ -399,6 +427,8 @@ void NightColorManager::resetSlowUpdateStartTimer()
     m_slowUpdateStartTimer->start(diff);
 
     // start the current slow update
+    qDebug() << "colorscheme:"
+             << "resetSlowUpdateTimer resetSlowUpdateStartTimer";
     resetSlowUpdateTimer();
 }
 
@@ -413,6 +443,8 @@ void NightColorManager::resetSlowUpdateTimer()
 
     // We've reached the target color temperature or the transition time is zero.
     if (m_prev.first == m_prev.second || m_currentTemp == targetTemp) {
+        qDebug() << "colorscheme:"
+                 << "applyColorScheme resetSlowUpdateTimer";
         applyColorScheme(targetScheme);
         commitGammaRamps(targetTemp);
         return;
@@ -424,10 +456,14 @@ void NightColorManager::resetSlowUpdateTimer()
         m_slowUpdateTimer->setSingleShot(false);
         if (isDay) {
             connect(m_slowUpdateTimer.get(), &QTimer::timeout, this, [this]() {
+                qDebug() << "colorscheme:"
+                         << "slowUpdate resetSlowUpdateTimer day";
                 slowUpdate(m_dayTargetScheme, m_dayTargetTemp);
             });
         } else {
             connect(m_slowUpdateTimer.get(), &QTimer::timeout, this, [this]() {
+                qDebug() << "colorscheme:"
+                         << "slowUpdate resetSlowUpdateTimer night";
                 slowUpdate(m_nightTargetScheme, m_nightTargetTemp);
             });
         }
@@ -455,6 +491,8 @@ void NightColorManager::slowUpdate(QString targetScheme, int targetTemp)
     }
     commitGammaRamps(nextTemp);
     if (nextTemp == targetTemp) {
+        qDebug() << "colorscheme:"
+                 << "applyColorScheme slowUpdate";
         applyColorScheme(targetScheme);
         // stop timer, we reached the target temp
         m_slowUpdateTimer.reset();
@@ -463,6 +501,8 @@ void NightColorManager::slowUpdate(QString targetScheme, int targetTemp)
 
 void NightColorManager::preview(QString previewScheme, uint previewTemp)
 {
+    qDebug() << "colorscheme:"
+             << "resetQuickAdjustTimer preview";
     resetQuickAdjustTimer(previewScheme, (int)previewTemp);
     if (m_previewTimer) {
         m_previewTimer.reset();
@@ -489,6 +529,8 @@ void NightColorManager::stopPreview()
         updateTransitionTimings(false);
         updateTargetScheme();
         updateTargetTemperature();
+        qDebug() << "colorscheme:"
+                 << "resetQuickAdjustTimer stopPreview";
         resetQuickAdjustTimer(currentTargetScheme(), currentTargetTemp());
     }
 }
@@ -693,13 +735,31 @@ int NightColorManager::currentTargetTemp() const
 
 void NightColorManager::applyColorScheme(QString scheme)
 {
-    auto message = QDBusMessage::createMethodCall(
+    qDebug() << "nightcolor:";
+    // qDebug() << "nightcolor:" << "try apply scheme" << scheme;
+    // auto message = QDBusMessage::createMethodCall(
+    //     QStringLiteral("org.kde.plasmashell.colorScheme"),
+    //     QStringLiteral("/ColorScheme"),
+    //     QStringLiteral("org.kde.plasmashell.colorScheme"),
+    //     QStringLiteral("colorScheme"));
+    // QDBusReply<QString> reply = QDBusConnection::sessionBus().asyncCall(message);
+    // qDebug() << "nightcolor:" << "current scheme" << reply.value();
+    // // apply the new scheme only if we know it is different from the current one
+    // if (!reply.isValid() || reply.value().isEmpty() || reply.value() == scheme) {
+    //     qDebug() << "nightcolor:" << "not valid or already set";
+    //     return;
+    // }
+    qDebug() << "nightcolor:"
+             << "apply scheme";
+    return;
+
+    auto msg = QDBusMessage::createMethodCall(
         QStringLiteral("org.kde.plasmashell.colorScheme"),
         QStringLiteral("/ColorScheme"),
         QStringLiteral("org.kde.plasmashell.colorScheme"),
         QStringLiteral("setColorScheme"));
-    message.setArguments({scheme});
-    QDBusConnection::sessionBus().asyncCall(message);
+    msg.setArguments({scheme});
+    QDBusConnection::sessionBus().asyncCall(msg);
 }
 
 void NightColorManager::commitGammaRamps(int temperature)
@@ -733,6 +793,8 @@ void NightColorManager::autoLocationUpdate(double latitude, double longitude)
     s->setLongitudeAuto(longitude);
     s->save();
 
+    qDebug() << "colorscheme:"
+             << "resetAllTimers autoLocationUpdate";
     resetAllTimers();
 }
 
