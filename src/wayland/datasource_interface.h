@@ -36,7 +36,7 @@ public:
      * @returns The Drag and Drop actions supported by this DataSourceInterface.
      */
     DataDeviceManagerInterface::DnDActions supportedDragAndDropActions() const override;
-
+    DataDeviceManagerInterface::DnDAction selectedDndAction() const override;
     void dropPerformed() override;
     void dndFinished() override;
     void dndAction(DataDeviceManagerInterface::DnDAction action) override;

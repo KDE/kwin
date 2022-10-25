@@ -35,12 +35,8 @@ public:
     KWaylandServer::DataDeviceManagerInterface::DnDActions supportedDragAndDropActions() const override;
     void setSupportedDndActions(KWaylandServer::DataDeviceManagerInterface::DnDActions dndActions);
 
+    KWaylandServer::DataDeviceManagerInterface::DnDAction selectedDndAction() const override;
     void dndAction(KWaylandServer::DataDeviceManagerInterface::DnDAction action) override;
-
-    KWaylandServer::DataDeviceManagerInterface::DnDAction selectedDragAndDropAction()
-    {
-        return m_dndAction;
-    }
 
     void dropPerformed() override
     {
