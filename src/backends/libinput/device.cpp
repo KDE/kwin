@@ -633,9 +633,6 @@ void Device::setOutputName(const QString &name)
     }
 
     setOutput(nullptr);
-    if (name.isEmpty()) {
-        return;
-    }
     auto outputs = kwinApp()->platform()->outputs();
     for (int i = 0; i < outputs.count(); ++i) {
         if (!outputs[i]->isEnabled()) {
