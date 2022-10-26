@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"POT-Creation-Date: 2022-10-26 00:47+0000\n"
 "PO-Revision-Date: 2021-10-11 17:47+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -206,48 +206,48 @@ msgstr "Deixeu anar el botó ací per a eliminar-lo"
 msgid "Drag buttons between here and the titlebar"
 msgstr "Arrossegueu els botons entre ací i la barra de títol"
 
-#: package/contents/ui/main.qml:19
+#: package/contents/ui/main.qml:18
 #, kde-format
 msgid "This module lets you configure the window decorations."
 msgstr "Este mòdul permet configurar les decoracions de les finestres."
 
-#: package/contents/ui/main.qml:53
+#: package/contents/ui/main.qml:52
 #, kde-format
 msgctxt "tab label"
 msgid "Theme"
 msgstr "Tema"
 
-#: package/contents/ui/main.qml:57
+#: package/contents/ui/main.qml:56
 #, kde-format
 msgctxt "tab label"
 msgid "Titlebar Buttons"
 msgstr "Botons de la barra de títol"
 
-#: package/contents/ui/main.qml:93
+#: package/contents/ui/main.qml:92
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Mida de la vora de la finestra:"
 
-#: package/contents/ui/main.qml:112
+#: package/contents/ui/main.qml:110
 #, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations..."
 msgstr "Obtín decoracions noves de finestra..."
 
-#: package/contents/ui/main.qml:141
+#: package/contents/ui/main.qml:139
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
 msgstr "Tanca les finestres amb doble clic en el botó del menú"
 
-#: package/contents/ui/main.qml:158
+#: package/contents/ui/main.qml:156
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
 msgstr "Feu clic i manteniu premut el botó del menú per a mostrar el menú."
 
-#: package/contents/ui/main.qml:165
+#: package/contents/ui/main.qml:163
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"

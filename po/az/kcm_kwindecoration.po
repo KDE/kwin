@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"POT-Creation-Date: 2022-10-26 00:47+0000\n"
 "PO-Revision-Date: 2021-06-10 11:34+0400\n"
 "Last-Translator: Kheyyam Gojayev <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -195,48 +195,48 @@ msgstr "Silmək üçün düyməni buraya köçürün"
 msgid "Drag buttons between here and the titlebar"
 msgstr "Düymələri bu sahə və başlıq paneli arasına daşıyın"
 
-#: package/contents/ui/main.qml:19
+#: package/contents/ui/main.qml:18
 #, kde-format
 msgid "This module lets you configure the window decorations."
 msgstr "Bu modul pəncərə dekorasiyasını ayarlamağa imkan verir"
 
-#: package/contents/ui/main.qml:53
+#: package/contents/ui/main.qml:52
 #, kde-format
 msgctxt "tab label"
 msgid "Theme"
 msgstr "Mövzu"
 
-#: package/contents/ui/main.qml:57
+#: package/contents/ui/main.qml:56
 #, kde-format
 msgctxt "tab label"
 msgid "Titlebar Buttons"
 msgstr "Başlıq paneli düymələri"
 
-#: package/contents/ui/main.qml:93
+#: package/contents/ui/main.qml:92
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Pəncərə çərçivəsinin ölçüsü:"
 
-#: package/contents/ui/main.qml:112
+#: package/contents/ui/main.qml:110
 #, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations..."
 msgstr "Yeni Pəncərə Dekorasiyaları Almaq..."
 
-#: package/contents/ui/main.qml:141
+#: package/contents/ui/main.qml:139
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
 msgstr "Menyu düyməsinə iki dəfə vuraraq pəncərəni bağlamaq"
 
-#: package/contents/ui/main.qml:158
+#: package/contents/ui/main.qml:156
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
 msgstr "Menyunu göstərmək üçün menyu düyməsini basıb saxlayın."
 
-#: package/contents/ui/main.qml:165
+#: package/contents/ui/main.qml:163
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
