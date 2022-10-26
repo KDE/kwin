@@ -11,6 +11,7 @@
 #include "workspace.h"
 
 #include <QQmlEngine>
+#include <QThread>
 
 namespace KWin
 {
@@ -37,6 +38,14 @@ void show(const QString &message, const QString &iconName, int timeout)
         // FIXME: only supported on Wayland
         return;
     }
+
+    if (QThread::currentThread() != qGuiApp->thread()) {
+        QTimer::singleShot(0, QCoreApplication::instance(), [message, iconName, timeout] {
+            show(message, iconName, timeout);
+        });
+        return;
+    }
+
     auto notification = osd();
     notification->setIconName(iconName);
     notification->setMessage(message);
