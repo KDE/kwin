@@ -1617,7 +1617,7 @@ bool Window::startInteractiveMoveResize()
     invalidateDecorationDoubleClickTimer();
 
     setInteractiveMoveResize(true);
-    workspace()->setMoveResizeWindow(this);
+    workspace()->setInteractiveMoveResizeWindow(this);
 
     if (requestedMaximizeMode() != MaximizeRestore) {
         switch (interactiveMoveResizeGravity()) {
@@ -2783,7 +2783,7 @@ void Window::updateCursor()
 
 void Window::leaveInteractiveMoveResize()
 {
-    workspace()->setMoveResizeWindow(nullptr);
+    workspace()->setInteractiveMoveResizeWindow(nullptr);
     setInteractiveMoveResize(false);
     if (workspace()->screenEdges()->isDesktopSwitchingMovingClients()) {
         workspace()->screenEdges()->reserveDesktopSwitching(false, Qt::Vertical | Qt::Horizontal);

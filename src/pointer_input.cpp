@@ -546,7 +546,7 @@ void PointerInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
             return;
         }
         // TODO: can we check on the window instead?
-        if (workspace()->moveResizeWindow()) {
+        if (workspace()->interactiveMoveResizeWindow()) {
             // don't update while moving
             return;
         }
@@ -1018,7 +1018,7 @@ void CursorImage::updateDecorationCursor()
 void CursorImage::updateMoveResize()
 {
     m_moveResizeCursor = {};
-    if (Window *window = workspace()->moveResizeWindow()) {
+    if (Window *window = workspace()->interactiveMoveResizeWindow()) {
         loadThemeCursor(window->cursor(), &m_moveResizeCursor);
         if (m_currentSource == CursorSource::MoveResize) {
             Q_EMIT changed();
@@ -1307,7 +1307,7 @@ void CursorImage::reevaluteSource()
         setSource(CursorSource::EffectsOverride);
         return;
     }
-    if (workspace() && workspace()->moveResizeWindow()) {
+    if (workspace() && workspace()->interactiveMoveResizeWindow()) {
         setSource(CursorSource::MoveResize);
         return;
     }

@@ -660,7 +660,7 @@ public:
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
     {
         Q_UNUSED(nativeButton)
-        Window *window = workspace()->moveResizeWindow();
+        Window *window = workspace()->interactiveMoveResizeWindow();
         if (!window) {
             return false;
         }
@@ -682,11 +682,11 @@ public:
     {
         Q_UNUSED(event)
         // filter out while moving a window
-        return workspace()->moveResizeWindow() != nullptr;
+        return workspace()->interactiveMoveResizeWindow() != nullptr;
     }
     bool keyEvent(QKeyEvent *event) override
     {
-        Window *window = workspace()->moveResizeWindow();
+        Window *window = workspace()->interactiveMoveResizeWindow();
         if (!window) {
             return false;
         }
@@ -705,7 +705,7 @@ public:
         Q_UNUSED(id)
         Q_UNUSED(pos)
         Q_UNUSED(time)
-        Window *window = workspace()->moveResizeWindow();
+        Window *window = workspace()->interactiveMoveResizeWindow();
         if (!window) {
             return false;
         }
@@ -715,7 +715,7 @@ public:
     bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override
     {
         Q_UNUSED(time)
-        Window *window = workspace()->moveResizeWindow();
+        Window *window = workspace()->interactiveMoveResizeWindow();
         if (!window) {
             return false;
         }
@@ -732,7 +732,7 @@ public:
     bool touchUp(qint32 id, quint32 time) override
     {
         Q_UNUSED(time)
-        Window *window = workspace()->moveResizeWindow();
+        Window *window = workspace()->interactiveMoveResizeWindow();
         if (!window) {
             return false;
         }
@@ -748,7 +748,7 @@ public:
 
     bool tabletToolEvent(TabletEvent *event) override
     {
-        Window *window = workspace()->moveResizeWindow();
+        Window *window = workspace()->interactiveMoveResizeWindow();
         if (!window) {
             return false;
         }

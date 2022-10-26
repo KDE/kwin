@@ -225,7 +225,7 @@ bool Edge::activatesForPointer() const
         return true;
     }
     if (m_edges->isDesktopSwitchingMovingClients()) {
-        auto c = Workspace::self()->moveResizeWindow();
+        auto c = Workspace::self()->interactiveMoveResizeWindow();
         if (c && !c->isInteractiveResize()) {
             return true;
         }
@@ -341,7 +341,7 @@ bool Edge::canActivate(const QPoint &cursorPos, const QDateTime &triggerTime)
 
 void Edge::handle(const QPoint &cursorPos)
 {
-    Window *movingClient = Workspace::self()->moveResizeWindow();
+    Window *movingClient = Workspace::self()->interactiveMoveResizeWindow();
     if ((edges()->isDesktopSwitchingMovingClients() && movingClient && !movingClient->isInteractiveResize()) || (edges()->isDesktopSwitching() && isScreenEdge())) {
         // always switch desktops in case:
         // moving a Client and option for switch on client move is enabled
@@ -477,7 +477,7 @@ void Edge::switchDesktop(const QPoint &cursorPos)
             pos.setY(OFFSET);
         }
     }
-    if (Window *c = Workspace::self()->moveResizeWindow()) {
+    if (Window *c = Workspace::self()->interactiveMoveResizeWindow()) {
         const QVector<VirtualDesktop *> desktops{desktop};
         if (c->rules()->checkDesktops(desktops) != desktops) {
             // user attempts to move a client to another desktop where it is ruleforced to not be

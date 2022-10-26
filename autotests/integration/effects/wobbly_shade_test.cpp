@@ -139,10 +139,10 @@ void WobblyWindowsShadeTest::testShadeMove()
     QSignalSpy windowStartUserMovedResizedSpy(e, &EffectsHandler::windowStartUserMovedResized);
 
     // begin move
-    QVERIFY(workspace()->moveResizeWindow() == nullptr);
+    QVERIFY(workspace()->interactiveMoveResizeWindow() == nullptr);
     QCOMPARE(window->isInteractiveMove(), false);
     workspace()->slotWindowMove();
-    QCOMPARE(workspace()->moveResizeWindow(), window);
+    QCOMPARE(workspace()->interactiveMoveResizeWindow(), window);
     QCOMPARE(window->isInteractiveMove(), true);
     QCOMPARE(windowStartUserMovedResizedSpy.count(), 1);
 

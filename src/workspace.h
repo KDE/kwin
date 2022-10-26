@@ -217,7 +217,7 @@ public:
     /**
      * Indicates that the given @a window is being moved or resized by the user.
      */
-    void setMoveResizeWindow(Window *window);
+    void setInteractiveMoveResizeWindow(Window *window);
 
     QRectF adjustClientArea(Window *window, const QRectF &area) const;
     QPointF adjustWindowPosition(Window *window, QPointF pos, bool unrestricted, double snapAdjust = 1.0);
@@ -411,9 +411,9 @@ public:
      *
      * If none of windows is being moved or resized, @c null will be returned.
      */
-    Window *moveResizeWindow()
+    Window *interactiveMoveResizeWindow()
     {
-        return m_moveResizeWindow;
+        return m_interactiveMoveResizeWindow;
     }
 
     void quickTileWindow(QuickTileMode mode);
@@ -668,7 +668,7 @@ private:
 
     Window *m_activeWindow;
     Window *m_lastActiveWindow;
-    Window *m_moveResizeWindow;
+    Window *m_interactiveMoveResizeWindow;
 
     // Delay(ed) window focus timer and window
     QTimer *delayFocusTimer;

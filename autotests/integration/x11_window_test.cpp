@@ -132,10 +132,10 @@ void X11WindowTest::testMinimumSize()
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
 
     // Begin resize.
-    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
+    QCOMPARE(workspace()->interactiveMoveResizeWindow(), nullptr);
     QVERIFY(!window->isInteractiveResize());
     workspace()->slotWindowResize();
-    QCOMPARE(workspace()->moveResizeWindow(), window);
+    QCOMPARE(workspace()->interactiveMoveResizeWindow(), window);
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
     QVERIFY(window->isInteractiveResize());
 
@@ -188,7 +188,7 @@ void X11WindowTest::testMinimumSize()
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 0);
     window->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
-    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
+    QCOMPARE(workspace()->interactiveMoveResizeWindow(), nullptr);
     QVERIFY(!window->isInteractiveResize());
 
     // Destroy the window.
@@ -238,10 +238,10 @@ void X11WindowTest::testMaximumSize()
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
 
     // Begin resize.
-    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
+    QCOMPARE(workspace()->interactiveMoveResizeWindow(), nullptr);
     QVERIFY(!window->isInteractiveResize());
     workspace()->slotWindowResize();
-    QCOMPARE(workspace()->moveResizeWindow(), window);
+    QCOMPARE(workspace()->interactiveMoveResizeWindow(), window);
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
     QVERIFY(window->isInteractiveResize());
 
@@ -293,7 +293,7 @@ void X11WindowTest::testMaximumSize()
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 0);
     window->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
-    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
+    QCOMPARE(workspace()->interactiveMoveResizeWindow(), nullptr);
     QVERIFY(!window->isInteractiveResize());
 
     // Destroy the window.
@@ -344,10 +344,10 @@ void X11WindowTest::testResizeIncrements()
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
 
     // Begin resize.
-    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
+    QCOMPARE(workspace()->interactiveMoveResizeWindow(), nullptr);
     QVERIFY(!window->isInteractiveResize());
     workspace()->slotWindowResize();
-    QCOMPARE(workspace()->moveResizeWindow(), window);
+    QCOMPARE(workspace()->interactiveMoveResizeWindow(), window);
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
     QVERIFY(window->isInteractiveResize());
 
@@ -378,7 +378,7 @@ void X11WindowTest::testResizeIncrements()
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 0);
     window->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
-    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
+    QCOMPARE(workspace()->interactiveMoveResizeWindow(), nullptr);
     QVERIFY(!window->isInteractiveResize());
 
     // Destroy the window.
@@ -428,10 +428,10 @@ void X11WindowTest::testResizeIncrementsNoBaseSize()
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
 
     // Begin resize.
-    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
+    QCOMPARE(workspace()->interactiveMoveResizeWindow(), nullptr);
     QVERIFY(!window->isInteractiveResize());
     workspace()->slotWindowResize();
-    QCOMPARE(workspace()->moveResizeWindow(), window);
+    QCOMPARE(workspace()->interactiveMoveResizeWindow(), window);
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
     QVERIFY(window->isInteractiveResize());
 
@@ -462,7 +462,7 @@ void X11WindowTest::testResizeIncrementsNoBaseSize()
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 0);
     window->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
-    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
+    QCOMPARE(workspace()->interactiveMoveResizeWindow(), nullptr);
     QVERIFY(!window->isInteractiveResize());
 
     // Destroy the window.

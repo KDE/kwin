@@ -683,8 +683,8 @@ void EffectsHandlerImpl::doStartMouseInterception(Qt::CursorShape shape)
     // an effect that fill the screen gets triggered that way, we end up in a
     // weird state where the move will restart after the effect closes. So to
     // avoid that, abort move/resize if a full screen effect starts.
-    if (workspace()->moveResizeWindow()) {
-        workspace()->moveResizeWindow()->endInteractiveMoveResize();
+    if (workspace()->interactiveMoveResizeWindow()) {
+        workspace()->interactiveMoveResizeWindow()->endInteractiveMoveResize();
     }
 }
 

@@ -343,7 +343,7 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
     QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
 
     workspace()->performWindowOperation(window, Options::UnrestrictedMoveOp);
-    QCOMPARE(window, workspace()->moveResizeWindow());
+    QCOMPARE(window, workspace()->interactiveMoveResizeWindow());
     QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(50, 25));
 
     QFETCH(QPoint, targetPos);
@@ -369,7 +369,7 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
     Test::keyboardKeyPressed(KEY_ENTER, timestamp++);
     Test::keyboardKeyReleased(KEY_ENTER, timestamp++);
     QCOMPARE(Cursors::self()->mouse()->pos(), targetPos);
-    QVERIFY(!workspace()->moveResizeWindow());
+    QVERIFY(!workspace()->interactiveMoveResizeWindow());
 
     QCOMPARE(quickTileChangedSpy.count(), 1);
     QTEST(window->quickTileMode(), "expectedMode");
@@ -414,7 +414,7 @@ void QuickTilingTest::testQuickTilingPointerMove()
     // tiled if the user drags it to a screen edge or a corner
     QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
     workspace()->performWindowOperation(window, Options::UnrestrictedMoveOp);
-    QCOMPARE(window, workspace()->moveResizeWindow());
+    QCOMPARE(window, workspace()->interactiveMoveResizeWindow());
     QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(50, 25));
 
     QFETCH(QPoint, pointerPos);
@@ -433,7 +433,7 @@ void QuickTilingTest::testQuickTilingPointerMove()
     // verify that geometry restore is correct after user untiles the window, but changes
     // their mind and tiles the window again while still holding left button
     workspace()->performWindowOperation(window, Options::UnrestrictedMoveOp);
-    QCOMPARE(window, workspace()->moveResizeWindow());
+    QCOMPARE(window, workspace()->interactiveMoveResizeWindow());
 
     Test::pointerButtonPressed(BTN_LEFT, timestamp++); // untile the window
     Test::pointerMotion(QPoint(1280, 1024) / 2, timestamp++);
@@ -509,12 +509,12 @@ void QuickTilingTest::testQuickTilingTouchMove()
     QSignalSpy clientStartUserMovedResizedSpy(window, &Window::clientStartUserMovedResized);
     Test::touchDown(0, QPointF(window->frameGeometry().center().x(), window->frameGeometry().y() + decoration->borderTop() / 2), timestamp++);
     QVERIFY(clientStartUserMovedResizedSpy.wait());
-    QCOMPARE(window, workspace()->moveResizeWindow());
+    QCOMPARE(window, workspace()->interactiveMoveResizeWindow());
 
     QFETCH(QPoint, targetPos);
     Test::touchMotion(0, targetPos, timestamp++);
     Test::touchUp(0, timestamp++);
-    QVERIFY(!workspace()->moveResizeWindow());
+    QVERIFY(!workspace()->interactiveMoveResizeWindow());
 
     // When there are no borders, there is no change to them when quick-tiling.
     // TODO: we should test both cases with fixed fake decoration for autotests.

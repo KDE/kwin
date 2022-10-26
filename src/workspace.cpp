@@ -116,7 +116,7 @@ Workspace::Workspace()
     , m_initialDesktop(1)
     , m_activeWindow(nullptr)
     , m_lastActiveWindow(nullptr)
-    , m_moveResizeWindow(nullptr)
+    , m_interactiveMoveResizeWindow(nullptr)
     , m_delayFocusWindow(nullptr)
     , force_restacking(false)
     , showing_desktop(false)
@@ -1187,13 +1187,13 @@ void Workspace::slotCurrentDesktopChanged(uint oldDesktop, uint newDesktop)
     --block_focus;
 
     activateWindowOnNewDesktop(VirtualDesktopManager::self()->desktopForX11Id(newDesktop));
-    Q_EMIT currentDesktopChanged(oldDesktop, m_moveResizeWindow);
+    Q_EMIT currentDesktopChanged(oldDesktop, m_interactiveMoveResizeWindow);
 }
 
 void Workspace::slotCurrentDesktopChanging(uint currentDesktop, QPointF offset)
 {
     closeActivePopup();
-    Q_EMIT currentDesktopChanging(currentDesktop, offset, m_moveResizeWindow);
+    Q_EMIT currentDesktopChanging(currentDesktop, offset, m_interactiveMoveResizeWindow);
 }
 
 void Workspace::slotCurrentDesktopChangingCancelled()
@@ -1208,7 +1208,7 @@ void Workspace::updateWindowVisibilityOnDesktopChange(VirtualDesktop *newDesktop
         if (!c) {
             continue;
         }
-        if (!c->isOnDesktop(newDesktop) && c != m_moveResizeWindow && c->isOnCurrentActivity()) {
+        if (!c->isOnDesktop(newDesktop) && c != m_interactiveMoveResizeWindow && c->isOnCurrentActivity()) {
             (c)->updateVisibility();
         }
     }
@@ -1217,8 +1217,8 @@ void Workspace::updateWindowVisibilityOnDesktopChange(VirtualDesktop *newDesktop
         rootInfo()->setCurrentDesktop(VirtualDesktopManager::self()->current());
     }
 
-    if (m_moveResizeWindow && !m_moveResizeWindow->isOnDesktop(newDesktop)) {
-        m_moveResizeWindow->setDesktops({newDesktop});
+    if (m_interactiveMoveResizeWindow && !m_interactiveMoveResizeWindow->isOnDesktop(newDesktop)) {
+        m_interactiveMoveResizeWindow->setDesktops({newDesktop});
     }
 
     for (int i = stacking_order.size() - 1; i >= 0; --i) {
@@ -1265,7 +1265,7 @@ void Workspace::activateWindowOnNewDesktop(VirtualDesktop *desktop)
 
 Window *Workspace::findWindowToActivateOnDesktop(VirtualDesktop *desktop)
 {
-    if (m_moveResizeWindow != nullptr && m_activeWindow == m_moveResizeWindow && m_focusChain->contains(m_activeWindow, desktop) && m_activeWindow->isShown() && m_activeWindow->isOnCurrentDesktop()) {
+    if (m_interactiveMoveResizeWindow != nullptr && m_activeWindow == m_interactiveMoveResizeWindow && m_focusChain->contains(m_activeWindow, desktop) && m_activeWindow->isShown() && m_activeWindow->isOnCurrentDesktop()) {
         // A requestFocus call will fail, as the window is already active
         return m_activeWindow;
     }
@@ -1321,7 +1321,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
         if (!window) {
             continue;
         }
-        if (!window->isOnActivity(new_activity) && window != m_moveResizeWindow && window->isOnCurrentDesktop()) {
+        if (!window->isOnActivity(new_activity) && window != m_interactiveMoveResizeWindow && window->isOnCurrentDesktop()) {
             window->updateVisibility();
         }
     }
@@ -3055,12 +3055,12 @@ QRectF Workspace::adjustWindowSize(Window *window, QRectF moveResizeGeom, Gravit
 /**
  * Marks the window as being moved or resized by the user.
  */
-void Workspace::setMoveResizeWindow(Window *window)
+void Workspace::setInteractiveMoveResizeWindow(Window *window)
 {
-    Q_ASSERT(!window || !m_moveResizeWindow); // Catch attempts to move a second
+    Q_ASSERT(!window || !m_interactiveMoveResizeWindow); // Catch attempts to move a second
     // window while still moving the first one.
-    m_moveResizeWindow = window;
-    if (m_moveResizeWindow) {
+    m_interactiveMoveResizeWindow = window;
+    if (m_interactiveMoveResizeWindow) {
         ++block_focus;
     } else {
         --block_focus;

@@ -1539,9 +1539,9 @@ void windowToDesktop(Window *window)
     const auto desktop = functor(nullptr, true);
     if (window && !window->isDesktop()
         && !window->isDock()) {
-        ws->setMoveResizeWindow(window);
+        ws->setInteractiveMoveResizeWindow(window);
         vds->setCurrent(desktop);
-        ws->setMoveResizeWindow(nullptr);
+        ws->setInteractiveMoveResizeWindow(nullptr);
     }
 }
 
@@ -1586,9 +1586,9 @@ void activeWindowToDesktop()
     if (newCurrent == current) {
         return;
     }
-    ws->setMoveResizeWindow(ws->activeWindow());
+    ws->setInteractiveMoveResizeWindow(ws->activeWindow());
     vds->setCurrent(newCurrent);
-    ws->setMoveResizeWindow(nullptr);
+    ws->setInteractiveMoveResizeWindow(nullptr);
 }
 
 void Workspace::slotWindowToDesktopRight()

@@ -971,7 +971,7 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     const QRectF origGeo = window2->frameGeometry();
     Cursors::self()->mouse()->setPos(origGeo.center());
     workspace()->performWindowOperation(window2, Options::MoveOp);
-    QTRY_COMPARE(workspace()->moveResizeWindow(), window2);
+    QTRY_COMPARE(workspace()->interactiveMoveResizeWindow(), window2);
     QVERIFY(window2->isInteractiveMove());
     // move to next screen - step is 8 pixel, so 800 pixel
     for (int i = 0; i < 100; i++) {
@@ -980,7 +980,7 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     }
     window2->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(window2->isInteractiveMove(), false);
-    QVERIFY(workspace()->moveResizeWindow() == nullptr);
+    QVERIFY(workspace()->interactiveMoveResizeWindow() == nullptr);
     QCOMPARE(window2->frameGeometry(), QRectF(origGeo.translated(-800, 0)));
 }
 
