@@ -3065,6 +3065,7 @@ void Workspace::setInteractiveMoveResizeWindow(Window *window)
     } else {
         --block_focus;
     }
+    Q_EMIT interactiveMoveResizeWindowChanged();
 }
 
 // When kwin crashes, windows will not be gravitated back to their original position

@@ -35,6 +35,7 @@ class WorkspaceWrapper : public QObject
     Q_PROPERTY(int currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY currentDesktopChanged)
     Q_PROPERTY(KWin::VirtualDesktop *currentVirtualDesktop READ currentVirtualDesktop WRITE setCurrentVirtualDesktop NOTIFY currentVirtualDesktopChanged)
     Q_PROPERTY(KWin::Window *activeClient READ activeClient WRITE setActiveClient NOTIFY clientActivated)
+    Q_PROPERTY(KWin::Window *interactiveMoveResizeWindow READ interactiveMoveResizeWindow NOTIFY interactiveMoveResizeWindowChanged)
     // TODO: write and notify?
     Q_PROPERTY(QSize desktopGridSize READ desktopGridSize NOTIFY desktopLayoutChanged)
     Q_PROPERTY(int desktopGridWidth READ desktopGridWidth NOTIFY desktopLayoutChanged)
@@ -167,6 +168,7 @@ Q_SIGNALS:
      * @since 5.23
      */
     void currentVirtualDesktopChanged();
+    void interactiveMoveResizeWindowChanged();
 
 public:
     //------------------------------------------------------------------
@@ -231,6 +233,7 @@ public:
     QStringList activityList() const;
     QSize virtualScreenSize() const;
     QRect virtualScreenGeometry() const;
+    Window *interactiveMoveResizeWindow() const;
 
     VirtualDesktop *currentVirtualDesktop() const;
     void setCurrentVirtualDesktop(VirtualDesktop *desktop);

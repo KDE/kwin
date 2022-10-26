@@ -41,6 +41,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
     connect(vds, &VirtualDesktopManager::layoutChanged, this, &WorkspaceWrapper::desktopLayoutChanged);
     connect(vds, &VirtualDesktopManager::currentChanged, this, &WorkspaceWrapper::currentVirtualDesktopChanged);
     connect(ws, &Workspace::windowDemandsAttentionChanged, this, &WorkspaceWrapper::clientDemandsAttentionChanged);
+    connect(ws, &Workspace::interactiveMoveResizeWindowChanged, this, &WorkspaceWrapper::interactiveMoveResizeWindowChanged);
 #if KWIN_BUILD_ACTIVITIES
     if (KWin::Activities *activities = ws->activities()) {
         connect(activities, &Activities::currentChanged, this, &WorkspaceWrapper::currentActivityChanged);
@@ -450,6 +451,11 @@ void WorkspaceWrapper::sendClientToScreen(Window *client, int screen)
     if (output) {
         workspace()->sendWindowToOutput(client, output);
     }
+}
+
+Window *WorkspaceWrapper::interactiveMoveResizeWindow() const
+{
+    return workspace()->interactiveMoveResizeWindow();
 }
 
 QtScriptWorkspaceWrapper::QtScriptWorkspaceWrapper(QObject *parent)

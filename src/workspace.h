@@ -578,6 +578,7 @@ Q_SIGNALS:
     void outputAdded(KWin::Output *);
     void outputRemoved(KWin::Output *);
     void outputsChanged();
+    void interactiveMoveResizeWindowChanged();
     /**
      * This signal is emitted when the stacking order changed, i.e. a window is risen
      * or lowered
