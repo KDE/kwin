@@ -11,6 +11,7 @@
 // KConfigSkeleton
 #include "blurconfig.h"
 
+#include "utils/xcbutils.h"
 #include "wayland/blur_interface.h"
 #include "wayland/display.h"
 #include "wayland/surface_interface.h"
@@ -294,7 +295,7 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
                 int y = cardinals[i++];
                 int w = cardinals[i++];
                 int h = cardinals[i++];
-                region += QRect(x, y, w, h);
+                region += Xcb::fromXNative(QRect(x, y, w, h)).toRect();
             }
         }
         valid = !value.isNull();
