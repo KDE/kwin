@@ -15,6 +15,7 @@
                 "Name[nl]": "Martin Gräßlin",
                 "Name[pt]": "Martin Gräßlin",
                 "Name[sl]": "Martin Gräßlin",
+                "Name[ta]": "மார்ட்டின் கிராஸ்லின்",
                 "Name[tr]": "Martin Gräßlin",
                 "Name[uk]": "Martin Gräßlin",
                 "Name[x-test]": "xxMartin Gräßlinxx"
@@ -32,6 +33,7 @@
         "Description[nl]": "Animatie voor een venster dat gaat naar maximaliseren/herstellen vanuit maximaliseren",
         "Description[pt]": "Animação para uma janela ao maximizar-se/repor-se da maximização",
         "Description[sl]": "Animacija za okno, ki bo povečano/obnovljeno iz povečanja",
+        "Description[ta]": "சாளரத்தை அதிகபட்ச பெரிதாக்கும்போதும் பழைய அளவை மீளமர்த்தும்போதும் பயன்படுத்த வேண்டிய அசைவூட்டம்",
         "Description[tr]": "Ekranı kaplayan veya geri dönen bir pencere için canlandırma",
         "Description[uk]": "Анімація для вікон під час максимізації/відновлення з максимізації",
         "Description[x-test]": "xxAnimation for a window going to maximize/restore from maximizexx",
@@ -51,6 +53,7 @@
         "Name[nl]": "Maximaliseren",
         "Name[pt]": "Maximizar",
         "Name[sl]": "Razpni",
+        "Name[ta]": "அதிகபட்ச பெரிதாக்குவது",
         "Name[tr]": "Ekranı Kapla",
         "Name[uk]": "Максимізація",
         "Name[x-test]": "xxMaximizexx",

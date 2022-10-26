@@ -15,6 +15,7 @@
                 "Name[nl]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
                 "Name[pt]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
                 "Name[sl]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
+                "Name[ta]": "லூபோசு லுனாக்கு, காய் ஊவே புரோலிக்கு, மார்ட்டின் கிராஸ்லின்",
                 "Name[tr]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
                 "Name[uk]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
                 "Name[x-test]": "xxLubos Lunak, Kai Uwe Broulik, Martin Gräßlinxx"
@@ -32,6 +33,7 @@
         "Description[nl]": "Laat het opstartscherm vervagen naar het opkomende bureaublad tijdens het aanmelden",
         "Description[pt]": "Desvanecer suavemente para o ecrã após a autenticação",
         "Description[sl]": "Ob prijavi gladko prelije na namizje",
+        "Description[ta]": "அமர்வில் நுழையும்போது பணிமேடையின் ஒளிபுகாமையை படிப்படியாக உயர்த்தி அதைக் காட்டும்",
         "Description[tr]": "Giriş yaparken masaüstüne pürüzsüzce geçiş yap",
         "Description[uk]": "Плавна поява стільниці під час входу",
         "Description[x-test]": "xxSmoothly fade to the desktop when logging inxx",
@@ -51,6 +53,7 @@
         "Name[nl]": "Aanmelden",
         "Name[pt]": "Arranque",
         "Name[sl]": "Prijava",
+        "Name[ta]": "நுழைவு",
         "Name[tr]": "Giriş",
         "Name[uk]": "Вхід",
         "Name[x-test]": "xxLoginxx",

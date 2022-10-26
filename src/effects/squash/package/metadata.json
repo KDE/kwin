@@ -15,6 +15,7 @@
                 "Name[nl]": "Rivo Laks, Vlad Zahorodnii",
                 "Name[pt]": "Rivo Laks, Vlad Zahorodnii",
                 "Name[sl]": "Rivo Laks, Vlad Zahorodnii",
+                "Name[ta]": "ரிவோ லாக்சு, விலாட் ஜாஹொரிடுனி",
                 "Name[tr]": "Rivo Laks, Vlad Zahorodnii",
                 "Name[uk]": "Rivo Laks, Влад Завгородній",
                 "Name[x-test]": "xxRivo Laks, Vlad Zahorodniixx"
@@ -32,6 +33,7 @@
         "Description[nl]": "Krimp vensters wanneer ze geminimaliseerd zijn",
         "Description[pt]": "Deformar as janelas quando são minimizadas",
         "Description[sl]": "Skrči okna, ko so pomanjšana",
+        "Description[ta]": "சாளரங்களை ஒதுக்கும்போது அவற்றை நசுக்குவது போல் அசைவூட்டும்",
         "Description[tr]": "Pencereler simge durumuna küçültüldüğünde onları tıkıştır",
         "Description[uk]": "Складує вікна, якщо їх мінімізовано",
         "Description[x-test]": "xxSquash windows when they are minimizedxx",
@@ -50,6 +52,7 @@
         "Name[nl]": "Krimpen",
         "Name[pt]": "Esmagar",
         "Name[sl]": "Strni",
+        "Name[ta]": "நசுக்கு",
         "Name[tr]": "Tıkıştır",
         "Name[uk]": "Складування",
         "Name[x-test]": "xxSquashxx",

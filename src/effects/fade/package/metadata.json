@@ -15,6 +15,7 @@
                 "Name[nl]": "Philip Falkner, Martin Gräßlin",
                 "Name[pt]": "Philip Falkner, Martin Gräßlin",
                 "Name[sl]": "Philip Falkner, Martin Gräßlin",
+                "Name[ta]": "ஃபிலிப்பு ஃபால்குனர், மார்ட்டின் கிராஸ்லின்",
                 "Name[tr]": "Philip Falkner, Martin Gräßlin",
                 "Name[uk]": "Philip Falkner, Martin Gräßlin",
                 "Name[x-test]": "xxPhilip Falkner, Martin Gräßlinxx"
@@ -32,6 +33,7 @@
         "Description[nl]": "Laat vensters vloeiend opkomen/vervagen als ze worden weergegeven of verborgen",
         "Description[pt]": "Faz com que as janelas apareçam e desapareçam suavemente quando são apresentadas ou escondidas",
         "Description[sl]": "Modalna okna naj se gladko odtemnijo oz. zatemnijo, kadar se prikažejo ali skrijejo",
+        "Description[ta]": "சாளரங்களை காட்டும்போது அவற்றிற்கு படிப்படியாக ஒளிகூட்டி, மறைக்கும்போது அவற்றை மங்கசெய்து மறைக்கும்",
         "Description[tr]": "Pencereler gösterilirken veya gizlenirken pürüzsüzce geçiş yapmalarını sağlar",
         "Description[uk]": "Плавна поява або зникнення вікон",
         "Description[x-test]": "xxMake windows smoothly fade in and out when they are shown or hiddenxx",
@@ -51,6 +53,7 @@
         "Name[nl]": "Vervagen",
         "Name[pt]": "Desvanecer",
         "Name[sl]": "Preliv",
+        "Name[ta]": "மங்கசெய்",
         "Name[tr]": "Soldur",
         "Name[uk]": "Згасання",
         "Name[x-test]": "xxFadexx",

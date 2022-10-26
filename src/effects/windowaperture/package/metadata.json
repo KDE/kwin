@@ -15,6 +15,7 @@
                 "Name[nl]": "Thomas Lübking",
                 "Name[pt]": "Thomas Lübking",
                 "Name[sl]": "Thomas Lübking",
+                "Name[ta]": "தாமஸ் லுபுகிங்",
                 "Name[tr]": "Thomas Lübking",
                 "Name[uk]": "Thomas Lübking",
                 "Name[x-test]": "xxThomas Lübkingxx"
@@ -33,6 +34,7 @@
         "Description[nl]": "Verplaats vensters in de hoeken van het scherm",
         "Description[pt]": "Mover as janelas para os cantos do ecrã",
         "Description[sl]": "Premaknite okna v kote zaslona",
+        "Description[ta]": "சாளரங்களை திரையின் மூலைகளுக்க நகர்த்தும்",
         "Description[tr]": "Pencereleri ekran kenarlarına taşı",
         "Description[uk]": "Пересування вікон до кутів екрана",
         "Description[x-test]": "xxMove windows into screen cornersxx",
@@ -52,6 +54,7 @@
         "Name[nl]": "Vensteropening",
         "Name[pt]": "Abertura da Janela",
         "Name[sl]": "Zaslonka oken",
+        "Name[ta]": "ஓரத்தில் சாளரங்கள்",
         "Name[tr]": "Pencere Açıklığı",
         "Name[uk]": "Апертура вікна",
         "Name[x-test]": "xxWindow Aperturexx",

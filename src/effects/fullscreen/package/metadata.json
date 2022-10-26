@@ -15,6 +15,7 @@
                 "Name[nl]": "Martin Gräßlin",
                 "Name[pt]": "Martin Gräßlin",
                 "Name[sl]": "Martin Gräßlin",
+                "Name[ta]": "மார்ட்டின் கிராஸ்லின்",
                 "Name[tr]": "Martin Gräßlin",
                 "Name[uk]": "Martin Gräßlin",
                 "Name[x-test]": "xxMartin Gräßlinxx"
@@ -32,6 +33,7 @@
         "Description[nl]": "Animatie voor een venster dat gaat naar volledig scherm en deze verlaat",
         "Description[pt]": "Animação numa janela ao entrar ou sair do modo de ecrã completo",
         "Description[sl]": "Animacija za okno, ki vstopa v ali izstopa iz celozaslonskega načina",
+        "Description[ta]": "சாளரம் முழுத்திரை முறையில் நுழைவதற்கும் அம்முறையிலிருந்து வெளியேறுவதற்குமான அசைவூட்டம்",
         "Description[tr]": "Tam ekran kipine giren ve çıkan pencere için canlandırma",
         "Description[uk]": "Анімація для вікон під час входу до повноекранного режиму і виходу з нього",
         "Description[x-test]": "xxAnimation for a window going to and leaving full screen modexx",
@@ -51,6 +53,7 @@
         "Name[nl]": "Volledig scherm",
         "Name[pt]": "Ecrã Completo",
         "Name[sl]": "Celozaslonski način",
+        "Name[ta]": "முழுத்திரை",
         "Name[tr]": "Tam Ekran",
         "Name[uk]": "Повноекранний режим",
         "Name[x-test]": "xxFull Screenxx",

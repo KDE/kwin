@@ -15,6 +15,7 @@
                 "Name[nl]": "Thomas Lübking",
                 "Name[pt]": "Thomas Lübking",
                 "Name[sl]": "Thomas Lübking",
+                "Name[ta]": "தாமஸ் லுபுகிங்",
                 "Name[tr]": "Thomas Lübking",
                 "Name[uk]": "Thomas Lübking",
                 "Name[x-test]": "xxThomas Lübkingxx"
@@ -32,6 +33,7 @@
         "Description[nl]": "Zuig vensters in het bureaublad",
         "Description[pt]": "Aspirar as janelas para o ecrã",
         "Description[sl]": "Posesajte okna na namizje",
+        "Description[ta]": "பணிமேடைக்குள் சாளரங்கள் உறிஞ்சப்படுவதுபோல் அசைவூட்டும்",
         "Description[tr]": "Pencereleri masaüstüne çek",
         "Description[uk]": "Засмоктування вікон до стільниці",
         "Description[x-test]": "xxSuck windows into the desktopxx",
@@ -51,6 +53,7 @@
         "Name[nl]": "Oog op scherm",
         "Name[pt]": "Olho no Ecrã",
         "Name[sl]": "Oko na zaslonu",
+        "Name[ta]": "திரையில் கண்",
         "Name[tr]": "Göz Ekranda",
         "Name[uk]": "Око на екрані",
         "Name[x-test]": "xxEye on Screenxx",

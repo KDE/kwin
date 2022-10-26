@@ -15,6 +15,7 @@
                 "Name[nl]": "Martin Gräßlin",
                 "Name[pt]": "Martin Gräßlin",
                 "Name[sl]": "Martin Gräßlin",
+                "Name[ta]": "மார்ட்டின் கிராஸ்லின்",
                 "Name[tr]": "Martin Gräßlin",
                 "Name[uk]": "Martin Gräßlin",
                 "Name[x-test]": "xxMartin Gräßlinxx"
@@ -31,6 +32,7 @@
         "Description[nl]": "Een on screen display (OSD) die de wijziging van het bureaublad aangeeft",
         "Description[pt]": "Uma visualização no ecrã que indica a mudança de ecrã",
         "Description[sl]": "Prikaz na zasloni, ki nakazuje spremembo namizja",
+        "Description[ta]": "பணிமேடையை மாற்றும்போது காட்டப்படுவது",
         "Description[tr]": "Masaüstü değişikliğini belirten bir ekran üzeri görünümü",
         "Description[uk]": "Екранна панель спостереження за зміною стільниць",
         "Description[x-test]": "xxAn on screen display indicating the desktop changexx",
@@ -49,6 +51,7 @@
         "Name[nl]": "OSD voor bureaubladwijziging",
         "Name[pt]": "OSD de Mudança do Ecrã",
         "Name[sl]": "Sprememba namizja OSD",
+        "Name[ta]": "பணிமேடை மாற்ற காட்டி",
         "Name[tr]": "OSD Masaüstü Değişimi",
         "Name[uk]": "Панель зміни стільниць",
         "Name[x-test]": "xxDesktop Change OSDxx",

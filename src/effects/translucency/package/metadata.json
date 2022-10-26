@@ -15,6 +15,7 @@
                 "Name[nl]": "Luboš Luňák, Martin Gräßlin",
                 "Name[pt]": "Luboš Luňák, Martin Gräßlin",
                 "Name[sl]": "Luboš Luňák, Martin Gräßlin",
+                "Name[ta]": "லூபொசு லுனாக்கு, மார்ட்டின் கிராஸ்லின்",
                 "Name[tr]": "Luboš Luňák, Martin Gräßlin",
                 "Name[uk]": "Luboš Luňák, Martin Gräßlin",
                 "Name[x-test]": "xxLuboš Luňák, Martin Gräßlinxx"
@@ -32,6 +33,7 @@
         "Description[nl]": "Maakt vensters doorschijnend onder andere condities",
         "Description[pt]": "Tornar as janelas translúcidas em diferentes condições",
         "Description[sl]": "Naredite okna prosojna pod različnimi pogoji",
+        "Description[ta]": "சில சூழ்நிலைகளில் சாளரங்களின் ஒளிபுகுமையை கூட்டும்",
         "Description[tr]": "Değişik koşullar altında pencereleri yarısaydam yap",
         "Description[uk]": "Додавання прозорості до вікон за різних умов",
         "Description[x-test]": "xxMake windows translucent under different conditionsxx",
@@ -50,6 +52,7 @@
         "Name[nl]": "Transparantie",
         "Name[pt]": "Translucidez",
         "Name[sl]": "Prosojnost",
+        "Name[ta]": "ஒளிபுகுமை",
         "Name[tr]": "Yarısaydamlık",
         "Name[uk]": "Прозорість",
         "Name[x-test]": "xxTranslucencyxx",

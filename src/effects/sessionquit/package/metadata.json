@@ -15,6 +15,7 @@
                 "Name[nl]": "David Edmundson",
                 "Name[pt]": "David Edmundson",
                 "Name[sl]": "David Edmundson",
+                "Name[ta]": "டேவிட் எட்மண்டுஸன்",
                 "Name[tr]": "David Edmundson",
                 "Name[uk]": "David Edmundson",
                 "Name[x-test]": "xxDavid Edmundsonxx"
@@ -32,6 +33,7 @@
         "Description[nl]": "De achtergrond van het bureaublad tot het einde levend houden gedurende afmelden",
         "Description[pt]": "Manter activo o fundo do ecrã durante o encerramento até ao fim",
         "Description[sl]": "Ohranite ozadje namizja dejavno med odjavo vse do konca",
+        "Description[ta]": "வெளியேறும்போது கடைசிவரை பணிமேடையின் பின்புல படத்தை வைத்திருக்கும்",
         "Description[tr]": "Çıkış sırasında en son aşamaya dek masaüstü arka planını göster",
         "Description[uk]": "Не вимикати тло стільниці до кінця процедури виходу із облікового запису",
         "Description[x-test]": "xxKeep the desktop background alive during logout until the endxx",
@@ -51,6 +53,7 @@
         "Name[nl]": "Afsluiten van sessie",
         "Name[pt]": "Sair da Sessão",
         "Name[sl]": "Zaključek seje",
+        "Name[ta]": "அமர்வு வெளியேற்றம்",
         "Name[tr]": "Oturum Çıkışı",
         "Name[uk]": "Вихід з сеансу",
         "Name[x-test]": "xxSession Quitxx",

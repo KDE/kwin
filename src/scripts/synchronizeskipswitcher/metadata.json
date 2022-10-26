@@ -15,6 +15,7 @@
                 "Name[nl]": "Martin Gräßlin",
                 "Name[pt]": "Martin Gräßlin",
                 "Name[sl]": "Martin Gräßlin",
+                "Name[ta]": "மார்ட்டின் கிராஸ்லின்",
                 "Name[tr]": "Martin Gräßlin",
                 "Name[uk]": "Martin Gräßlin",
                 "Name[x-test]": "xxMartin Gräßlinxx"
@@ -31,6 +32,7 @@
         "Description[nl]": "Verbergt alle vensters gemarkeerd als Taakbalkoverslaan om ook te worden uitgesloten van vensterschakelaars (bijv. Alt+Tab)",
         "Description[pt]": "Esconde todas as janelas marcadas como Ignorar a Barra de Tarefas para estarem também excluídas dos selectores de janelas (p.ex., Alt+Tab)",
         "Description[sl]": "Skrije vsa okna, označena kot Preskoči opravilno vrstico, da bi bila izključena tudi iz preklopnikov oken (npr. izmenjalka+tabulatorka)",
+        "Description[ta]": "பணிப்பட்டையில் காட்டப்படாதவாறு அமைக்கப்பட்டுள்ள சாளரங்களை, சாளரங்களுக்கிடையே தாவும்போதும் (எ.கா. Alt+Tab மூலமாக) தவிர்க்கும்",
         "Description[tr]": "Görev Çubuğunu Atla olarak imlenen tüm pencerelerin, değiştiricilerden de (örn. Alt+Tab) saklanmasını sağlar",
         "Description[uk]": "Приховує всі вікна, позначені як такі, що не показуються на панелі задач, так, щоб їх не було показано у списках перемикання вікон (наприклад Alt+Tab)",
         "Description[x-test]": "xxHides all windows marked as Skip Taskbar to be also excluded from window switchers (e.g. Alt+Tab)xx",
@@ -48,6 +50,7 @@
         "Name[nl]": "Overslaanschakelaar met taakbalk synchroniseren",
         "Name[pt]": "Sincronizar a Mudança com a Barra de Tarefas",
         "Name[sl]": "Uskladi preklopnik preskoka z opravilno vrstico",
+        "Name[ta]": "மாற்றியையும் பணிப்பட்டையையும் ஒத்திசைய செய்",
         "Name[tr]": "Değiştiricide Gösterilmeyenleri Çubukta da Gösterme",
         "Name[uk]": "Синхронізувати виключення вікон у перемикачі з панеллю задач",
         "Name[x-test]": "xxSynchronize Skip Switcher with Taskbarxx",

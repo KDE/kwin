@@ -15,6 +15,7 @@
                 "Name[nl]": "Lucas Murray, Martin Gräßlin",
                 "Name[pt]": "Lucas Murray, Martin Gräßlin",
                 "Name[sl]": "Lucas Murray, Martin Gräßlin",
+                "Name[ta]": "லூக்கஸ் முரே, மார்ட்டின் கிராஸ்லின்",
                 "Name[tr]": "Lucas Murray, Martin Gräßlin",
                 "Name[uk]": "Lucas Murray, Martin Gräßlin",
                 "Name[x-test]": "xxLucas Murray, Martin Gräßlinxx"
@@ -32,6 +33,7 @@
         "Description[nl]": "Laat virtuele bureaubladen vervagen en opkomen bij het wisselen",
         "Description[pt]": "Desvanecer os ecrãs virtuais ao mudar entre eles",
         "Description[sl]": "Prelijte med navideznimi namizji, ko preklopite med njimi",
+        "Description[ta]": "பணிமேடைகளுக்கிடைய தாவும்போது அவற்றை மங்கசெய்து மாற்றும்",
         "Description[tr]": "Sanal masaüstleri arasında pürüzsüzce geçiş yap",
         "Description[uk]": "Затемнення перед час перемикання між віртуальними стільницями",
         "Description[x-test]": "xxFade between virtual desktops when switching between themxx",
@@ -51,6 +53,7 @@
         "Name[nl]": "Bureaublad op laten komen",
         "Name[pt]": "Desvanecer o Ecrã",
         "Name[sl]": "Prelij v namizje",
+        "Name[ta]": "பணிமேடையை மங்க செய்",
         "Name[tr]": "Masaüstünü Soldur",
         "Name[uk]": "Затемнення стільниці",
         "Name[x-test]": "xxFade Desktopxx",

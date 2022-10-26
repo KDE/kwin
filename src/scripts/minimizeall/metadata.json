@@ -15,6 +15,7 @@
                 "Name[nl]": "Thomas Lübking",
                 "Name[pt]": "Thomas Lübking",
                 "Name[sl]": "Thomas Lübking",
+                "Name[ta]": "தாமஸ் லுபுகிங்",
                 "Name[tr]": "Thomas Lübking",
                 "Name[uk]": "Thomas Lübking",
                 "Name[x-test]": "xxThomas Lübkingxx"
@@ -31,6 +32,7 @@
         "Description[nl]": "Voegt een sneltoets toe om alle vensters te minimaliseren en te herstellen",
         "Description[pt]": "Adicionar um atalho para minimizar e repor todas as janelas",
         "Description[sl]": "Doda bližnjico za pomanjšanje in obnovitev vseh oken",
+        "Description[ta]": "அனைத்து சாளரங்களை ஒதுக்கவும் மீட்டமைக்கவும் உதவும் சுருக்குவழியை சேர்க்கும்",
         "Description[tr]": "Tüm pencereleri simge durumuna küçültmek veya ekranı kaplamaları için bir kısayol ekler",
         "Description[uk]": "Додає скорочення мінімізації усіх вікон або скасування такої мінімізації для усіх вікон",
         "Description[x-test]": "xxAdds a shortcut to minimize and restore all windowsxx",
@@ -49,6 +51,7 @@
         "Name[nl]": "Alles-minimaliseren",
         "Name[pt]": "Maximizar Tudo",
         "Name[sl]": "Pomanjšaj vse",
+        "Name[ta]": "அனைத்தையும் ஒதுக்கு",
         "Name[tr]": "Tümünü Simge Durumuna Küçült",
         "Name[uk]": "Мінімізувати усі",
         "Name[x-test]": "xxMinimizeAllxx",

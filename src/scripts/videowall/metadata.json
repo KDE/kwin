@@ -15,6 +15,7 @@
                 "Name[nl]": "Martin Gräßlin",
                 "Name[pt]": "Martin Gräßlin",
                 "Name[sl]": "Martin Gräßlin",
+                "Name[ta]": "மார்ட்டின் கிராஸ்லின்",
                 "Name[tr]": "Martin Gräßlin",
                 "Name[uk]": "Martin Gräßlin",
                 "Name[x-test]": "xxMartin Gräßlinxx"
@@ -31,6 +32,7 @@
         "Description[nl]": "Verdeelt de videospeler in modus volledig scherm over alle aangesloten schermen om een Videomuur te creëren",
         "Description[pt]": "Expande o leitor de vídeo de ecrã completo para todos os ecrãs ligados, de forma a formar um mural de vídeo",
         "Description[sl]": "Raztegne celozaslonski video predvajalnik na vseh pripete zaslone, da ustvarite video steno",
+        "Description[ta]": "முழுத்திரை நிகழ்படத்தை பல திரைகளில் பரப்பி ஒரே திரையை போல் காட்டும்",
         "Description[tr]": "Tam ekran video oynatıcılarını tüm bağlı ekranlara genişleterek bir tür Video Duvarı oluşturur",
         "Description[uk]": "Розподіл зображення відеопрогравача у повноекранному режимі на всі екрани з метою створення відеостіни",
         "Description[x-test]": "xxSpans fullscreen video player over all attached screens to create a Video Wallxx",
@@ -49,6 +51,7 @@
         "Name[nl]": "Videomuur",
         "Name[pt]": "Painel de Vídeo",
         "Name[sl]": "Video stena",
+        "Name[ta]": "நிகழ்பட சுவர்",
         "Name[tr]": "Video Duvarı",
         "Name[uk]": "Відеостіна",
         "Name[x-test]": "xxVideo Wallxx",
