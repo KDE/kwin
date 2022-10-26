@@ -192,11 +192,12 @@ private:
 class TabletToolId
 {
 public:
-    const InputRedirection::TabletToolType m_toolType;
-    const QVector<InputRedirection::Capability> m_capabilities;
-    const quint64 m_serialId;
-    const quint64 m_uniqueId;
-    void *const m_deviceGroupData;
+    InputRedirection::TabletToolType m_toolType;
+    QVector<InputRedirection::Capability> m_capabilities;
+    quint64 m_serialId;
+    quint64 m_uniqueId;
+    void *m_deviceGroupData;
+    QString m_name;
 };
 
 class TabletPadId

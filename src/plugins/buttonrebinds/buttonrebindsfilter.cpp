@@ -163,7 +163,7 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
             const uint button = buttonName.toUInt(&ok);
             if (ok) {
                 foundActions = true;
-                insert(TabletTool, {tabletToolName, button}, entry);
+                insert(TabletToolButtonType, {tabletToolName, button}, entry);
             }
         }
     }
@@ -189,8 +189,8 @@ bool ButtonRebindsFilter::tabletPadButtonEvent(uint button, bool pressed, const 
 
 bool ButtonRebindsFilter::tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &tabletToolId, uint time)
 {
-    Q_UNUSED(tabletToolId);
-    return send(TabletTool, {{}, button}, pressed, time);
+    m_tabletTool = tabletToolId;
+    return send(TabletToolButtonType, {tabletToolId.m_name, button}, pressed, time);
 }
 
 void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const QStringList &entry)
@@ -206,9 +206,17 @@ void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const
         }
     } else if (entry.first() == QLatin1String("MouseButton")) {
         bool ok;
-        const auto mb = quint32(entry.last().toInt(&ok));
+        const MouseButton mb{entry.last().toUInt(&ok)};
         if (ok) {
             m_actions[type].insert(trigger, mb);
+        } else {
+            qCWarning(KWIN_BUTTONREBINDS) << "Could not convert" << entry << "into a mouse button";
+        }
+    } else if (entry.first() == QLatin1String("TabletToolButton")) {
+        bool ok;
+        const TabletToolButton tb{entry.last().toUInt(&ok)};
+        if (ok) {
+            m_actions[type].insert(trigger, tb);
         } else {
             qCWarning(KWIN_BUTTONREBINDS) << "Could not convert" << entry << "into a mouse button";
         }
@@ -225,8 +233,10 @@ bool ButtonRebindsFilter::send(TriggerType type, const Trigger &trigger, bool pr
     const auto &action = typeActions[trigger];
     if (const QKeySequence *seq = std::get_if<QKeySequence>(&action))
         return sendKeySequence(*seq, pressed, timestamp);
-    else if (const auto mb = std::get_if<quint32>(&action))
-        return sendMouseButton(*mb, pressed, timestamp);
+    else if (const auto mb = std::get_if<MouseButton>(&action))
+        return sendMouseButton(mb->button, pressed, timestamp);
+    else if (const auto tb = std::get_if<TabletToolButton>(&action))
+        return sendTabletToolButton(tb->button, pressed, timestamp);
     return false;
 }
 
@@ -274,5 +284,14 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
 bool ButtonRebindsFilter::sendMouseButton(quint32 button, bool pressed, uint time)
 {
     Q_EMIT m_inputDevice.pointerButtonChanged(button, KWin::InputRedirection::PointerButtonState(pressed), time, &m_inputDevice);
+    return true;
+}
+
+bool ButtonRebindsFilter::sendTabletToolButton(quint32 button, bool pressed, uint time)
+{
+    if (!m_tabletTool) {
+        return false;
+    }
+    Q_EMIT m_inputDevice.tabletToolButtonEvent(button, pressed, *m_tabletTool, time);
     return true;
 }

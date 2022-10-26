@@ -197,7 +197,7 @@ QPointF devicePointToGlobalPosition(const QPointF &devicePos, const Output *outp
 }
 #endif
 
-KWin::TabletToolId createTabletId(libinput_tablet_tool *tool, void *userData)
+KWin::TabletToolId createTabletId(libinput_tablet_tool *tool, Device *dev)
 {
     auto serial = libinput_tablet_tool_get_serial(tool);
     auto toolId = libinput_tablet_tool_get_tool_id(tool);
@@ -248,7 +248,7 @@ KWin::TabletToolId createTabletId(libinput_tablet_tool *tool, void *userData)
     if (libinput_tablet_tool_has_wheel(tool)) {
         capabilities << InputRedirection::Wheel;
     }
-    return {toolType, capabilities, serial, toolId, userData};
+    return {toolType, capabilities, serial, toolId, dev->groupUserData(), dev->name()};
 }
 
 static TabletPadId createTabletPadId(LibInput::Device *device)
@@ -505,7 +505,7 @@ void Connection::processEvents()
                 Q_EMIT event->device()->tabletToolEvent(tabletEventType,
                                                         globalPos, tte->pressure(),
                                                         tte->xTilt(), tte->yTilt(), tte->rotation(),
-                                                        tte->isTipDown(), tte->isNearby(), createTabletId(tte->tool(), event->device()->groupUserData()), tte->time());
+                                                        tte->isTipDown(), tte->isNearby(), createTabletId(tte->tool(), event->device()), tte->time());
             }
             break;
         }
@@ -513,7 +513,7 @@ void Connection::processEvents()
             auto *tabletEvent = static_cast<TabletToolButtonEvent *>(event.get());
             Q_EMIT event->device()->tabletToolButtonEvent(tabletEvent->buttonId(),
                                                           tabletEvent->isButtonPressed(),
-                                                          createTabletId(tabletEvent->tool(), event->device()->groupUserData()), tabletEvent->time());
+                                                          createTabletId(tabletEvent->tool(), event->device()), tabletEvent->time());
             break;
         }
         case LIBINPUT_EVENT_TABLET_PAD_BUTTON: {
