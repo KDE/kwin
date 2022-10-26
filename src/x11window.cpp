@@ -4519,11 +4519,10 @@ void X11Window::changeMaximize(bool horizontal, bool vertical, bool adjust)
                 }
             }
             r.moveTopLeft(rules()->checkPosition(r.topLeft()));
-            // The above code tries to center align the window followed by setting top and bottom
-            // it's possible that we're in between two pixels
-            r.setX(Xcb::nativeFloor(r.x()));
-            r.setY(Xcb::nativeFloor(r.y()));
         }
+        // The above code tries to center align the window followed by setting top and bottom
+        // it's possible that we're in between two pixels
+        r = Xcb::nativeFloor(r);
 
         moveResize(r);
         if (options->electricBorderMaximize() && r.top() == clientArea.top()) {
