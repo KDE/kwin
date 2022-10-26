@@ -38,6 +38,7 @@
 #include <netwm.h>
 
 #include <climits>
+#include <cmath>
 #include <functional>
 
 class KConfigGroup;
