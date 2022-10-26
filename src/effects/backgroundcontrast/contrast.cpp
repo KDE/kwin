@@ -10,6 +10,7 @@
 #include "contrastshader.h"
 // KConfigSkeleton
 
+#include "utils/xcbutils.h"
 #include "wayland/contrast_interface.h"
 #include "wayland/display.h"
 #include "wayland/surface_interface.h"
@@ -111,7 +112,7 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
                 int y = cardinals[i++];
                 int w = cardinals[i++];
                 int h = cardinals[i++];
-                region += QRect(x, y, w, h);
+                region += Xcb::fromXNative(QRect(x, y, w, h)).toRect();
             }
 
             for (unsigned int j = 0; j < 16; ++j) {
