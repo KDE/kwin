@@ -1,0 +1,22 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "vlad.zahorodnii@kde.org",
+                "Name": "Vlad Zahorodnii"
+            }
+        ],
+        "Description": "Help you locate the center of the screen when moving a window",
+        "EnabledByDefault": "false",
+        "Icon": "preferences-system-windows-script-test",
+        "Id": "snaphelper",
+        "License": "GPL",
+        "Name": "Snap Helper",
+        "ServiceTypes": [
+            "KWin/Script"
+        ],
+        "Version": "1.0"
+    },
+    "X-Plasma-API": "declarativescript",
+    "X-Plasma-MainScript": "ui/main.qml"
+}
