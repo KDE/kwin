@@ -4497,23 +4497,23 @@ void X11Window::changeMaximize(bool horizontal, bool vertical, bool adjust)
                     if (closeHeight) {
                         bool tryBottom = titlePos == Qt::BottomEdge;
                         if ((overHeight && titlePos == Qt::TopEdge) || screenArea.top() == clientArea.top()) {
-                            r.moveTop(clientArea.top());
+                            r.setTop(clientArea.top());
                         } else {
                             tryBottom = true;
                         }
                         if (tryBottom && (overHeight || screenArea.bottom() == clientArea.bottom())) {
-                            r.moveBottom(clientArea.bottom());
+                            r.setBottom(clientArea.bottom());
                         }
                     }
                     if (closeWidth) {
                         bool tryLeft = titlePos == Qt::LeftEdge;
                         if ((overWidth && titlePos == Qt::RightEdge) || screenArea.right() == clientArea.right()) {
-                            r.moveRight(clientArea.right());
+                            r.setRight(clientArea.right());
                         } else {
                             tryLeft = true;
                         }
                         if (tryLeft && (overWidth || screenArea.left() == clientArea.left())) {
-                            r.moveLeft(clientArea.left());
+                            r.setLeft(clientArea.left());
                         }
                     }
                 }
