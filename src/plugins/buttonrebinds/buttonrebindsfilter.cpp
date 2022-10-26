@@ -20,6 +20,28 @@
 
 #include <optional>
 
+// Tells us that we are already in a binding event
+class RebindScope
+{
+    static uint s_scopes;
+
+public:
+    RebindScope()
+    {
+        s_scopes++;
+    }
+    ~RebindScope()
+    {
+        Q_ASSERT(s_scopes > 0);
+        s_scopes--;
+    }
+    static bool isRebinding()
+    {
+        return s_scopes > 0;
+    }
+};
+uint RebindScope::s_scopes = 0;
+
 quint32 qHash(const Trigger &t)
 {
     return qHash(t.device) * (t.button + 1);
@@ -178,17 +200,26 @@ bool ButtonRebindsFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
     if (event->type() != QEvent::MouseButtonPress && event->type() != QEvent::MouseButtonRelease) {
         return false;
     }
+    if (RebindScope::isRebinding()) {
+        return false;
+    }
 
     return send(Pointer, {{}, event->button()}, event->type() == QEvent::MouseButtonPress, event->timestamp());
 }
 
 bool ButtonRebindsFilter::tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId, uint time)
 {
+    if (RebindScope::isRebinding()) {
+        return false;
+    }
     return send(TabletPad, {tabletPadId.name, button}, pressed, time);
 }
 
 bool ButtonRebindsFilter::tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &tabletToolId, uint time)
 {
+    if (RebindScope::isRebinding()) {
+        return false;
+    }
     m_tabletTool = tabletToolId;
     return send(TabletToolButtonType, {tabletToolId.m_name, button}, pressed, time);
 }
@@ -259,6 +290,7 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
         return false;
     }
 
+    RebindScope scope;
     auto sendKey = [this, pressed, time](xkb_keycode_t key) {
         auto state = pressed ? KWin::InputRedirection::KeyboardKeyPressed : KWin::InputRedirection::KeyboardKeyReleased;
         Q_EMIT m_inputDevice.keyChanged(key, state, time, &m_inputDevice);
@@ -283,6 +315,7 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
 
 bool ButtonRebindsFilter::sendMouseButton(quint32 button, bool pressed, uint time)
 {
+    RebindScope scope;
     Q_EMIT m_inputDevice.pointerButtonChanged(button, KWin::InputRedirection::PointerButtonState(pressed), time, &m_inputDevice);
     return true;
 }
@@ -292,6 +325,7 @@ bool ButtonRebindsFilter::sendTabletToolButton(quint32 button, bool pressed, uin
     if (!m_tabletTool) {
         return false;
     }
+    RebindScope scope;
     Q_EMIT m_inputDevice.tabletToolButtonEvent(button, pressed, *m_tabletTool, time);
     return true;
 }
