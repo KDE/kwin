@@ -71,6 +71,7 @@
 
 #include <xkbcommon/xkbcommon.h>
 
+#include "osd.h"
 #include <cmath>
 
 namespace KWin
@@ -2060,6 +2061,13 @@ public:
         }
         connect(input(), &InputRedirection::deviceAdded, this, &TabletInputFilter::integrateDevice);
         connect(input(), &InputRedirection::deviceRemoved, this, &TabletInputFilter::removeDevice);
+
+        auto tabletNextOutput = new QAction(this);
+        tabletNextOutput->setProperty("componentName", QStringLiteral(KWIN_NAME));
+        tabletNextOutput->setText(i18n("Move the tablet to the next output"));
+        tabletNextOutput->setObjectName(QStringLiteral("Move Tablet to Next Output"));
+        KGlobalAccel::setGlobalShortcut(tabletNextOutput, QList<QKeySequence>());
+        connect(tabletNextOutput, &QAction::triggered, this, &TabletInputFilter::trackNextOutput);
     }
 
     static KWaylandServer::TabletSeatV2Interface *findTabletSeat()
@@ -2103,6 +2111,39 @@ public:
             auto firstGroup = libinput_device_tablet_pad_get_mode_group(device->device(), 0);
             tabletSeat->addTabletPad(device->sysName(), device->name(), {QString::fromUtf8(devnode)}, buttonsCount, ringsCount, stripsCount, modes, libinput_tablet_pad_mode_group_get_mode(firstGroup), tablet);
         }
+    }
+
+    static void trackNextOutput()
+    {
+        const auto outputs = workspace()->outputs();
+        if (outputs.isEmpty()) {
+            return;
+        }
+
+        int tabletToolCount = 0;
+        InputDevice *changedDevice = nullptr;
+        const auto devices = input()->devices();
+        for (const auto device : devices) {
+            if (!device->isTabletTool()) {
+                continue;
+            }
+
+            tabletToolCount++;
+            if (device->outputName().isEmpty()) {
+                device->setOutputName(outputs.constFirst()->name());
+                changedDevice = device;
+                continue;
+            }
+
+            auto it = std::find_if(outputs.begin(), outputs.end(), [device](const auto &output) {
+                return output->name() == device->outputName();
+            });
+            ++it;
+            auto nextOutput = it == outputs.end() ? outputs.first() : *it;
+            device->setOutputName(nextOutput->name());
+            changedDevice = device;
+        }
+        OSD::show(i18np("Tablet moved to %2", "Tablets switched outputs", tabletToolCount, changedDevice->outputName()), QStringLiteral("input-tablet"), 5000);
     }
 
     void removeDevice(InputDevice *inputDevice)

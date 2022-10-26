@@ -44,6 +44,15 @@ public:
     virtual bool isTabletModeSwitch() const = 0;
     virtual bool isLidSwitch() const = 0;
 
+    virtual QString outputName() const
+    {
+        return {};
+    }
+    virtual void setOutputName(const QString &outputName)
+    {
+        Q_UNUSED(outputName)
+    }
+
 Q_SIGNALS:
     void keyChanged(quint32 key, InputRedirection::KeyboardKeyState, quint32 time, InputDevice *device);
     void pointerButtonChanged(quint32 button, InputRedirection::PointerButtonState state, quint32 time, InputDevice *device);

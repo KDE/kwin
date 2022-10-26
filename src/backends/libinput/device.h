@@ -191,7 +191,7 @@ public:
     {
         return m_sysName;
     }
-    QString outputName() const
+    QString outputName() const override
     {
         return m_outputName;
     }
@@ -586,7 +586,7 @@ public:
     /**
      * Used to deserialize monitor data from KConfig when initializing a device
      */
-    void setOutputName(const QString &uuid);
+    void setOutputName(const QString &uuid) override;
     QString defaultOutputName() const
     {
         return {};
