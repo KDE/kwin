@@ -382,47 +382,6 @@ std::unique_ptr<OutlineVisual> X11StandalonePlatform::createOutline(Outline *out
     return ret;
 }
 
-void X11StandalonePlatform::invertScreen()
-{
-    using namespace Xcb::RandR;
-    bool succeeded = false;
-
-    if (Xcb::Extensions::self()->isRandrAvailable()) {
-        const auto active_client = workspace()->activeWindow();
-        ScreenResources res((active_client && active_client->window() != XCB_WINDOW_NONE) ? active_client->window() : rootWindow());
-
-        if (!res.isNull()) {
-            for (auto crtc : std::span(res.crtcs(), res->num_crtcs)) {
-                CrtcGamma gamma(crtc);
-                if (gamma.isNull()) {
-                    continue;
-                }
-                if (gamma->size) {
-                    qCDebug(KWIN_X11STANDALONE) << "inverting screen using xcb_randr_set_crtc_gamma";
-                    const int half = gamma->size / 2 + 1;
-
-                    uint16_t *red = gamma.red();
-                    uint16_t *green = gamma.green();
-                    uint16_t *blue = gamma.blue();
-                    for (int i = 0; i < half; ++i) {
-                        auto invert = [&gamma, i](uint16_t *ramp) {
-                            qSwap(ramp[i], ramp[gamma->size - 1 - i]);
-                        };
-                        invert(red);
-                        invert(green);
-                        invert(blue);
-                    }
-                    xcb_randr_set_crtc_gamma(connection(), crtc, gamma->size, red, green, blue);
-                    succeeded = true;
-                }
-            }
-        }
-    }
-    if (!succeeded) {
-        Platform::invertScreen();
-    }
-}
-
 void X11StandalonePlatform::createEffectsHandler(Compositor *compositor, Scene *scene)
 {
     new EffectsHandlerImplX11(compositor, scene);

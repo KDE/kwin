@@ -52,9 +52,6 @@ public:
 
     std::unique_ptr<OverlayWindow> createOverlayWindow() override;
     std::unique_ptr<OutlineVisual> createOutline(Outline *outline) override;
-
-    void invertScreen() override;
-
     void createEffectsHandler(Compositor *compositor, Scene *scene) override;
     QVector<CompositingType> supportedCompositors() const override;
 

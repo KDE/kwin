@@ -222,16 +222,6 @@ std::unique_ptr<OutlineVisual> Platform::createOutline(Outline *outline)
     return nullptr;
 }
 
-void Platform::invertScreen()
-{
-    if (effects) {
-        if (Effect *inverter = static_cast<EffectsHandlerImpl *>(effects)->provides(Effect::ScreenInversion)) {
-            qCDebug(KWIN_CORE) << "inverting screen using Effect plugin";
-            QMetaObject::invokeMethod(inverter, "toggleScreenInversion", Qt::DirectConnection);
-        }
-    }
-}
-
 void Platform::createEffectsHandler(Compositor *compositor, Scene *scene)
 {
     new EffectsHandlerImpl(compositor, scene);

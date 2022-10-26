@@ -26,7 +26,6 @@
 
 #include "composite.h"
 #include "core/output.h"
-#include "core/platform.h"
 #include "cursor.h"
 #include "effects.h"
 #include "input.h"
@@ -1125,7 +1124,6 @@ void Workspace::initShortcuts()
 
     initShortcut("Kill Window", i18n("Kill Window"), Qt::META | Qt::CTRL | Qt::Key_Escape, &Workspace::slotKillWindow);
     initShortcut("Suspend Compositing", i18n("Suspend Compositing"), Qt::SHIFT | Qt::ALT | Qt::Key_F12, Compositor::self(), &Compositor::toggleCompositing);
-    initShortcut("Invert Screen Colors", i18n("Invert Screen Colors"), 0, kwinApp()->platform(), &Platform::invertScreen);
 
 #if KWIN_BUILD_TABBOX
     m_tabbox->initShortcuts();

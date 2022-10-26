@@ -237,12 +237,6 @@ public:
     virtual std::unique_ptr<OutlineVisual> createOutline(Outline *outline);
 
     /**
-     * Platform specific way to invert the screen.
-     * Default implementation invokes the invert effect
-     */
-    virtual void invertScreen();
-
-    /**
      * Default implementation creates an EffectsHandlerImp;
      */
     virtual void createEffectsHandler(Compositor *compositor, Scene *scene);

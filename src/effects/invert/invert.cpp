@@ -51,6 +51,13 @@ InvertEffect::InvertEffect()
     KGlobalAccel::self()->setShortcut(b, QList<QKeySequence>() << (Qt::CTRL | Qt::META | Qt::Key_U));
     connect(b, &QAction::triggered, this, &InvertEffect::toggleWindow);
 
+    QAction *c = new QAction(this);
+    c->setObjectName(QStringLiteral("Invert Screen Colors"));
+    c->setText(i18n("Invert Screen Colors"));
+    KGlobalAccel::self()->setDefaultShortcut(c, QList<QKeySequence>());
+    KGlobalAccel::self()->setShortcut(c, QList<QKeySequence>());
+    connect(c, &QAction::triggered, this, &InvertEffect::toggleScreenInversion);
+
     connect(effects, &EffectsHandler::windowClosed, this, &InvertEffect::slotWindowClosed);
 }
 
