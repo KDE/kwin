@@ -225,10 +225,13 @@ bool EglGbmLayerSurface::createGbmSurface(const QSize &size, const QMap<uint32_t
             return lhs.alphaSize > rhs.alphaSize;
         } else if (m_eglBackend->prefer10bpc() && ((lhs.bpp == 30) != (rhs.bpp == 30))) {
             // prefer 10bpc / 30bpp formats
-            return lhs.bpp == 30 ? true : false;
+            return lhs.bpp == 30;
+        } else if ((lhs.bpp == 24) != (rhs.bpp == 24)) {
+            // prefer 8bpc / 24bpp formats over something we don't ask for
+            return lhs.bpp == 24;
         } else {
-            // fallback
-            return lhs.drmFormat < rhs.drmFormat;
+            // fallback: prefer higher bpp
+            return lhs.bpp > rhs.bpp;
         }
     });
     for (const auto &format : qAsConst(sortedFormats)) {
