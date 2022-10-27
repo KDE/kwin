@@ -12,20 +12,11 @@
 #include <QObject>
 #include <memory>
 
-/*
- * In terms of protocol XdgOutputInterface are a resource
- * but for the sake of sanity, we should treat XdgOutputs as globals like Output is
- * Hence this doesn't match most of kwayland API paradigms.
- */
-
 namespace KWaylandServer
 {
 class Display;
 class OutputInterface;
-class XdgOutputV1Interface;
-
 class XdgOutputManagerV1InterfacePrivate;
-class XdgOutputV1InterfacePrivate;
 
 /**
  * Global manager for XdgOutputs
@@ -37,40 +28,11 @@ class KWIN_EXPORT XdgOutputManagerV1Interface : public QObject
 public:
     explicit XdgOutputManagerV1Interface(Display *display, QObject *parent = nullptr);
     ~XdgOutputManagerV1Interface() override;
-    /**
-     * Creates an XdgOutputInterface object for an existing Output
-     * which exposes XDG specific properties of outputs
-     *
-     * @arg output the wl_output interface this XDG output is for
-     * @parent the parent of the newly created object
-     */
-    XdgOutputV1Interface *createXdgOutput(OutputInterface *output, QObject *parent);
+
+    void offer(OutputInterface *output);
 
 private:
     std::unique_ptr<XdgOutputManagerV1InterfacePrivate> d;
-};
-
-/**
- * Extension to Output
- * Users should set all relevant values on creation and on future changes.
- * done() should be explicitly called after change batches including initial setting.
- */
-class KWIN_EXPORT XdgOutputV1Interface : public QObject
-{
-    Q_OBJECT
-public:
-    ~XdgOutputV1Interface() override;
-
-private:
-    void resend();
-    void update();
-
-    explicit XdgOutputV1Interface(OutputInterface *output, QObject *parent);
-    friend class XdgOutputV1InterfacePrivate;
-    friend class XdgOutputManagerV1Interface;
-    friend class XdgOutputManagerV1InterfacePrivate;
-
-    std::unique_ptr<XdgOutputV1InterfacePrivate> d;
 };
 
 }

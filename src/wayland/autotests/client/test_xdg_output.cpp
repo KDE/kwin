@@ -33,7 +33,6 @@ private:
     std::unique_ptr<FakeOutput> m_outputHandle;
     KWaylandServer::OutputInterface *m_serverOutput;
     KWaylandServer::XdgOutputManagerV1Interface *m_serverXdgOutputManager;
-    KWaylandServer::XdgOutputV1Interface *m_serverXdgOutput;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
@@ -70,7 +69,7 @@ void TestXdgOutput::init()
     m_serverOutput = new OutputInterface(m_display, m_outputHandle.get(), this);
 
     m_serverXdgOutputManager = new XdgOutputManagerV1Interface(m_display, this);
-    m_serverXdgOutput = m_serverXdgOutputManager->createXdgOutput(m_serverOutput, this);
+    m_serverXdgOutputManager->offer(m_serverOutput);
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;

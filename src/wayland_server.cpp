@@ -299,7 +299,7 @@ void WaylandServer::handleOutputEnabled(Output *output)
 {
     if (!output->isPlaceholder() && !output->isNonDesktop()) {
         auto waylandOutput = new KWaylandServer::OutputInterface(waylandServer()->display(), output);
-        m_xdgOutputManagerV1->createXdgOutput(waylandOutput, waylandOutput);
+        m_xdgOutputManagerV1->offer(waylandOutput);
 
         m_waylandOutputs.insert(output, waylandOutput);
     }
