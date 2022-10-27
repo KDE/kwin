@@ -32,14 +32,15 @@ class GLTexture;
 class GbmBuffer : public DrmGpuBuffer
 {
 public:
-    GbmBuffer(DrmGpu *gpu, gbm_bo *bo);
+    GbmBuffer(DrmGpu *gpu, gbm_bo *bo, uint32_t flags);
     GbmBuffer(DrmGpu *gpu, gbm_bo *bo, const std::shared_ptr<GbmSurface> &surface);
-    GbmBuffer(DrmGpu *gpu, gbm_bo *bo, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer);
+    GbmBuffer(DrmGpu *gpu, gbm_bo *bo, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer, uint32_t flags);
     ~GbmBuffer() override;
 
     gbm_bo *bo() const;
     void *mappedData() const;
     KWaylandServer::ClientBuffer *clientBuffer() const;
+    uint32_t flags() const;
 
     bool map(uint32_t flags);
 
@@ -52,6 +53,7 @@ private:
     gbm_bo *const m_bo;
     const std::shared_ptr<GbmSurface> m_surface;
     KWaylandServer::ClientBuffer *const m_clientBuffer = nullptr;
+    const uint32_t m_flags;
     void *m_data = nullptr;
     void *m_mapping = nullptr;
 };

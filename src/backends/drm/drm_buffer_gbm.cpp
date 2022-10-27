@@ -72,19 +72,22 @@ GbmBuffer::GbmBuffer(DrmGpu *gpu, gbm_bo *bo, const std::shared_ptr<GbmSurface> 
     : DrmGpuBuffer(gpu, QSize(gbm_bo_get_width(bo), gbm_bo_get_height(bo)), gbm_bo_get_format(bo), gbm_bo_get_modifier(bo), getHandles(bo), getStrides(bo), getOffsets(bo), gbm_bo_get_plane_count(bo))
     , m_bo(bo)
     , m_surface(surface)
+    , m_flags(surface->flags())
 {
 }
 
-GbmBuffer::GbmBuffer(DrmGpu *gpu, gbm_bo *bo)
+GbmBuffer::GbmBuffer(DrmGpu *gpu, gbm_bo *bo, uint32_t flags)
     : DrmGpuBuffer(gpu, QSize(gbm_bo_get_width(bo), gbm_bo_get_height(bo)), gbm_bo_get_format(bo), gbm_bo_get_modifier(bo), getHandles(bo), getStrides(bo), getOffsets(bo), gbm_bo_get_plane_count(bo))
     , m_bo(bo)
+    , m_flags(flags)
 {
 }
 
-GbmBuffer::GbmBuffer(DrmGpu *gpu, gbm_bo *bo, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer)
+GbmBuffer::GbmBuffer(DrmGpu *gpu, gbm_bo *bo, KWaylandServer::LinuxDmaBufV1ClientBuffer *clientBuffer, uint32_t flags)
     : DrmGpuBuffer(gpu, QSize(gbm_bo_get_width(bo), gbm_bo_get_height(bo)), gbm_bo_get_format(bo), gbm_bo_get_modifier(bo), getHandles(bo), getStrides(bo), getOffsets(bo), gbm_bo_get_plane_count(bo))
     , m_bo(bo)
     , m_clientBuffer(clientBuffer)
+    , m_flags(flags)
 {
     m_clientBuffer->ref();
 }
@@ -117,6 +120,11 @@ void *GbmBuffer::mappedData() const
 KWaylandServer::ClientBuffer *GbmBuffer::clientBuffer() const
 {
     return m_clientBuffer;
+}
+
+uint32_t GbmBuffer::flags() const
+{
+    return m_flags;
 }
 
 bool GbmBuffer::map(uint32_t flags)
@@ -175,7 +183,7 @@ std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, KWaylandServer::
         bo = gbm_bo_import(gpu->gbmDevice(), GBM_BO_IMPORT_FD, &data, GBM_BO_USE_SCANOUT);
     }
     if (bo) {
-        return std::make_shared<GbmBuffer>(gpu, bo, clientBuffer);
+        return std::make_shared<GbmBuffer>(gpu, bo, clientBuffer, GBM_BO_USE_SCANOUT);
     } else {
         return nullptr;
     }
@@ -206,7 +214,7 @@ std::shared_ptr<GbmBuffer> GbmBuffer::importBuffer(DrmGpu *gpu, GbmBuffer *buffe
     }
     gbm_bo *bo = gbm_bo_import(gpu->gbmDevice(), GBM_BO_IMPORT_FD_MODIFIER, &data, flags);
     if (bo) {
-        return std::make_shared<GbmBuffer>(gpu, bo);
+        return std::make_shared<GbmBuffer>(gpu, bo, flags);
     } else {
         return nullptr;
     }
