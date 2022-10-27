@@ -48,10 +48,9 @@ protected:
 class XdgOutputManagerV1InterfacePrivate : public QtWaylandServer::zxdg_output_manager_v1
 {
 public:
-    XdgOutputManagerV1InterfacePrivate(XdgOutputManagerV1Interface *q, Display *display);
-    QHash<OutputInterface *, XdgOutputV1Interface *> outputs;
+    explicit XdgOutputManagerV1InterfacePrivate(Display *display);
 
-    XdgOutputManagerV1Interface *q;
+    QHash<OutputInterface *, XdgOutputV1Interface *> outputs;
 
 protected:
     void zxdg_output_manager_v1_destroy(Resource *resource) override;
@@ -60,7 +59,7 @@ protected:
 
 XdgOutputManagerV1Interface::XdgOutputManagerV1Interface(Display *display, QObject *parent)
     : QObject(parent)
-    , d(new XdgOutputManagerV1InterfacePrivate(this, display))
+    , d(new XdgOutputManagerV1InterfacePrivate(display))
 {
 }
 
@@ -79,9 +78,8 @@ void XdgOutputManagerV1Interface::offer(OutputInterface *output)
     });
 }
 
-XdgOutputManagerV1InterfacePrivate::XdgOutputManagerV1InterfacePrivate(XdgOutputManagerV1Interface *qptr, Display *d)
+XdgOutputManagerV1InterfacePrivate::XdgOutputManagerV1InterfacePrivate(Display *d)
     : QtWaylandServer::zxdg_output_manager_v1(*d, s_version)
-    , q(qptr)
 {
 }
 
