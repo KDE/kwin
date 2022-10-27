@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-23 00:45+0000\n"
+"POT-Creation-Date: 2022-10-27 00:48+0000\n"
 "PO-Revision-Date: 2022-08-30 13:50+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -312,10 +312,16 @@ msgstr "Ikkunan sulkemisanimointi"
 msgid "Toggle Invert Effect"
 msgstr "Vaihda Käännä värit -tehosteen tilaa"
 
-#: invert/invert.cpp:50 invert/invert_config.cpp:44
+#: invert/invert.cpp:49 invert/invert_config.cpp:44
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "Vaihda Käännä värit -tehosteen tilaa ikkunalle"
+
+#: invert/invert.cpp:56
+#, fuzzy, kde-format
+#| msgid "Invert cursor keys"
+msgid "Invert Screen Colors"
+msgstr "Käännä nuolinäppäinten suunta"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: login/package/contents/ui/config.ui:17
@@ -372,19 +378,19 @@ msgstr "&Korkeus:"
 msgid "Toggle Mouse Click Effect"
 msgstr "Ota hiiren tehoste käyttöön tai poista se käytöstä"
 
-#: mouseclick/mouseclick.cpp:42
+#: mouseclick/mouseclick.cpp:41
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Vasen"
 
-#: mouseclick/mouseclick.cpp:43
+#: mouseclick/mouseclick.cpp:42
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Keskipainike"
 
-#: mouseclick/mouseclick.cpp:44
+#: mouseclick/mouseclick.cpp:43
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
@@ -496,7 +502,7 @@ msgstr "Näytä teksti:"
 msgid "Clear All Mouse Marks"
 msgstr "Pyyhi kaikki hiirijäljet"
 
-#: mousemark/mousemark.cpp:43 mousemark/mousemark_config.cpp:59
+#: mousemark/mousemark.cpp:42 mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Pyyhi viimeisin hiirijälki"
@@ -869,17 +875,17 @@ msgstr "Irrotetut valikot:"
 msgid "Toggle Present Windows (Current desktop)"
 msgstr "Ikkunoiden esittäminen näkyviin/piiloon (nykyinen työpöytä)"
 
-#: windowview/kcm/windowvieweffectkcm.cpp:49 windowview/windowvieweffect.cpp:55
+#: windowview/kcm/windowvieweffectkcm.cpp:49 windowview/windowvieweffect.cpp:54
 #, kde-format
 msgid "Toggle Present Windows (All desktops)"
 msgstr "Ikkunoiden esittäminen näkyviin/piiloon (kaikki työpöydät)"
 
-#: windowview/kcm/windowvieweffectkcm.cpp:56 windowview/windowvieweffect.cpp:65
+#: windowview/kcm/windowvieweffectkcm.cpp:56 windowview/windowvieweffect.cpp:63
 #, kde-format
 msgid "Toggle Present Windows (Window class)"
 msgstr "Ikkunoiden esittäminen näkyviin/piiloon (ikkunaluokka)"
 
-#: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:75
+#: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:72
 #, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
 msgstr "Näytä tai piilota ikkunat (ikkunaluokka nykyisellä työpöydällä)"
@@ -960,32 +966,32 @@ msgstr "Vähemmän"
 msgid "More"
 msgstr "Enemmän"
 
-#: zoom/zoom.cpp:68
+#: zoom/zoom.cpp:65
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Siirrä lähennettyä aluetta vasemmalle"
 
-#: zoom/zoom.cpp:76
+#: zoom/zoom.cpp:72
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Siirrä lähennettyä aluetta oikealle"
 
-#: zoom/zoom.cpp:84
+#: zoom/zoom.cpp:79
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Siirrä lähennettyä aluetta ylös"
 
-#: zoom/zoom.cpp:92
+#: zoom/zoom.cpp:86
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Siirrä lähennettyä aluetta alas"
 
-#: zoom/zoom.cpp:101 zoom/zoom_config.cpp:108
+#: zoom/zoom.cpp:94 zoom/zoom_config.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Siirrä hiiri kohdistukseen"
 
-#: zoom/zoom.cpp:109 zoom/zoom_config.cpp:115
+#: zoom/zoom.cpp:101 zoom/zoom_config.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Siirrä hiiri keskelle"
@@ -1705,9 +1711,6 @@ msgstr "Hiiren jäljitys:"
 
 #~ msgid "Use this effect for walking through the desktops"
 #~ msgstr "Käytä tätä tehostetta työpöytien selaamiseen"
-
-#~ msgid "Invert cursor keys"
-#~ msgstr "Käännä nuolinäppäinten suunta"
 
 #~ msgid "Invert mouse"
 #~ msgstr "Käännä hiiren suunta"

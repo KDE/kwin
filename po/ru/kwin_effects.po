@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-23 00:45+0000\n"
+"POT-Creation-Date: 2022-10-27 00:48+0000\n"
 "PO-Revision-Date: 2022-10-17 10:16+0300\n"
 "Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
@@ -324,10 +324,16 @@ msgstr "Анимация закрытия окна"
 msgid "Toggle Invert Effect"
 msgstr "Включить или выключить режим инверсии"
 
-#: invert/invert.cpp:50 invert/invert_config.cpp:44
+#: invert/invert.cpp:49 invert/invert_config.cpp:44
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "Включить или выключить режим инверсии окна"
+
+#: invert/invert.cpp:56
+#, fuzzy, kde-format
+#| msgid "Invert cursor keys"
+msgid "Invert Screen Colors"
+msgstr "Инвертировать нажатия клавиш"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: login/package/contents/ui/config.ui:17
@@ -384,19 +390,19 @@ msgstr "&Высота:"
 msgid "Toggle Mouse Click Effect"
 msgstr "Включить или выключить анимацию щелчка мыши"
 
-#: mouseclick/mouseclick.cpp:42
+#: mouseclick/mouseclick.cpp:41
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Левая"
 
-#: mouseclick/mouseclick.cpp:43
+#: mouseclick/mouseclick.cpp:42
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Средняя"
 
-#: mouseclick/mouseclick.cpp:44
+#: mouseclick/mouseclick.cpp:43
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
@@ -508,7 +514,7 @@ msgstr "Показывать подпись кнопок:"
 msgid "Clear All Mouse Marks"
 msgstr "Очистить все метки мыши"
 
-#: mousemark/mousemark.cpp:43 mousemark/mousemark_config.cpp:59
+#: mousemark/mousemark.cpp:42 mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Очистить последнюю метку мыши"
@@ -880,17 +886,17 @@ msgstr "Отделяемые меню:"
 msgid "Toggle Present Windows (Current desktop)"
 msgstr "Показать все окна с текущего рабочего стола"
 
-#: windowview/kcm/windowvieweffectkcm.cpp:49 windowview/windowvieweffect.cpp:55
+#: windowview/kcm/windowvieweffectkcm.cpp:49 windowview/windowvieweffect.cpp:54
 #, kde-format
 msgid "Toggle Present Windows (All desktops)"
 msgstr "Показать все окна со всех рабочих столов"
 
-#: windowview/kcm/windowvieweffectkcm.cpp:56 windowview/windowvieweffect.cpp:65
+#: windowview/kcm/windowvieweffectkcm.cpp:56 windowview/windowvieweffect.cpp:63
 #, kde-format
 msgid "Toggle Present Windows (Window class)"
 msgstr "Показать окна одного класса"
 
-#: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:75
+#: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:72
 #, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
 msgstr "Показать все окна одного класса с текущего рабочего стола"
@@ -971,32 +977,32 @@ msgstr "Меньше"
 msgid "More"
 msgstr "Больше"
 
-#: zoom/zoom.cpp:68
+#: zoom/zoom.cpp:65
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Переместить увеличенную область влево"
 
-#: zoom/zoom.cpp:76
+#: zoom/zoom.cpp:72
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Переместить увеличенную область вправо"
 
-#: zoom/zoom.cpp:84
+#: zoom/zoom.cpp:79
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Переместить увеличенную область вверх"
 
-#: zoom/zoom.cpp:92
+#: zoom/zoom.cpp:86
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Переместить увеличенную область вниз"
 
-#: zoom/zoom.cpp:101 zoom/zoom_config.cpp:108
+#: zoom/zoom.cpp:94 zoom/zoom_config.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Переместить мышь в фокус ввода"
 
-#: zoom/zoom.cpp:109 zoom/zoom_config.cpp:115
+#: zoom/zoom.cpp:101 zoom/zoom_config.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Переместить мышь в центр"
@@ -1693,9 +1699,6 @@ msgstr "Отслеживание курсора мыши:"
 
 #~ msgid "Use this effect for walking through the desktops"
 #~ msgstr "Использовать эффект при смене рабочего стола"
-
-#~ msgid "Invert cursor keys"
-#~ msgstr "Инвертировать нажатия клавиш"
 
 #~ msgid "Invert mouse"
 #~ msgstr "Инвертировать направление движения мыши"

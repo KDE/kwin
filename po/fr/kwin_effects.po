@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-23 00:45+0000\n"
+"POT-Creation-Date: 2022-10-27 00:48+0000\n"
 "PO-Revision-Date: 2022-08-18 22:22+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@neuf.fr>\n"
 "Language-Team: French <kde-francophone@kde.org>\n"
@@ -317,10 +317,16 @@ msgstr "Animation à la fermeture d'une fenêtre"
 msgid "Toggle Invert Effect"
 msgstr "Activer / désactiver l'effet d'inversion"
 
-#: invert/invert.cpp:50 invert/invert_config.cpp:44
+#: invert/invert.cpp:49 invert/invert_config.cpp:44
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "Activer / désactiver l'effet d'inversion sur une fenêtre"
+
+#: invert/invert.cpp:56
+#, fuzzy, kde-format
+#| msgid "Invert cursor keys"
+msgid "Invert Screen Colors"
+msgstr "Inverser les touches de curseur"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: login/package/contents/ui/config.ui:17
@@ -378,19 +384,19 @@ msgstr "&Hauteur :"
 msgid "Toggle Mouse Click Effect"
 msgstr "Activer/désactiver l'effet de clic de la souris"
 
-#: mouseclick/mouseclick.cpp:42
+#: mouseclick/mouseclick.cpp:41
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Gauche"
 
-#: mouseclick/mouseclick.cpp:43
+#: mouseclick/mouseclick.cpp:42
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Milieu"
 
-#: mouseclick/mouseclick.cpp:44
+#: mouseclick/mouseclick.cpp:43
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
@@ -502,7 +508,7 @@ msgstr "Afficher le texte :"
 msgid "Clear All Mouse Marks"
 msgstr "Effacer toutes les traces de souris"
 
-#: mousemark/mousemark.cpp:43 mousemark/mousemark_config.cpp:59
+#: mousemark/mousemark.cpp:42 mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "Effacer la dernière trace de souris"
@@ -871,17 +877,17 @@ msgstr "Menus d'extinction :"
 msgid "Toggle Present Windows (Current desktop)"
 msgstr "Activer / désactiver la présentation des fenêtres (bureau courant)"
 
-#: windowview/kcm/windowvieweffectkcm.cpp:49 windowview/windowvieweffect.cpp:55
+#: windowview/kcm/windowvieweffectkcm.cpp:49 windowview/windowvieweffect.cpp:54
 #, kde-format
 msgid "Toggle Present Windows (All desktops)"
 msgstr "Activer / désactiver la présentation des fenêtres (tous les bureaux)"
 
-#: windowview/kcm/windowvieweffectkcm.cpp:56 windowview/windowvieweffect.cpp:65
+#: windowview/kcm/windowvieweffectkcm.cpp:56 windowview/windowvieweffect.cpp:63
 #, kde-format
 msgid "Toggle Present Windows (Window class)"
 msgstr "Activer / désactiver la présentation des fenêtres (Classe de fenêtre)"
 
-#: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:75
+#: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:72
 #, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
 msgstr ""
@@ -964,32 +970,32 @@ msgstr "Moins"
 msgid "More"
 msgstr "Plus"
 
-#: zoom/zoom.cpp:68
+#: zoom/zoom.cpp:65
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Déplacer la zone de zoom vers la gauche"
 
-#: zoom/zoom.cpp:76
+#: zoom/zoom.cpp:72
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Déplacer la zone de zoom vers la droite"
 
-#: zoom/zoom.cpp:84
+#: zoom/zoom.cpp:79
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Déplacer la zone de zoom vers le haut"
 
-#: zoom/zoom.cpp:92
+#: zoom/zoom.cpp:86
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Déplacer la zone de zoom vers le bas"
 
-#: zoom/zoom.cpp:101 zoom/zoom_config.cpp:108
+#: zoom/zoom.cpp:94 zoom/zoom_config.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Déplacer la souris pour donner le focus"
 
-#: zoom/zoom.cpp:109 zoom/zoom_config.cpp:115
+#: zoom/zoom.cpp:101 zoom/zoom_config.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Déplacer la souris au centre"
@@ -1728,9 +1734,6 @@ msgstr "Suivi de la souris :"
 
 #~ msgid "Use this effect for walking through the desktops"
 #~ msgstr "Utiliser cet effet pour naviguer à travers les bureaux"
-
-#~ msgid "Invert cursor keys"
-#~ msgstr "Inverser les touches de curseur"
 
 #~ msgid "Invert mouse"
 #~ msgstr "Inverser la souris"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: கேபசூ 4.1 தமிழாக்கம்\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-23 00:45+0000\n"
+"POT-Creation-Date: 2022-10-27 00:48+0000\n"
 "PO-Revision-Date: 2022-08-18 19:41+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -306,10 +306,15 @@ msgstr "சாளரங்களை மூடும்போது"
 msgid "Toggle Invert Effect"
 msgstr "புரட்டலை நிலைமாற்று"
 
-#: invert/invert.cpp:50 invert/invert_config.cpp:44
+#: invert/invert.cpp:49 invert/invert_config.cpp:44
 #, kde-format
 msgid "Toggle Invert Effect on Window"
 msgstr "சாளரத்திற்கான புரட்டலை நிலைமாற்று"
+
+#: invert/invert.cpp:56
+#, kde-format
+msgid "Invert Screen Colors"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: login/package/contents/ui/config.ui:17
@@ -366,19 +371,19 @@ msgstr "&உயரம்"
 msgid "Toggle Mouse Click Effect"
 msgstr "சுட்டி க்ளிக் அசைவூட்டத்தை நிலைமாற்று"
 
-#: mouseclick/mouseclick.cpp:42
+#: mouseclick/mouseclick.cpp:41
 #, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "இடது"
 
-#: mouseclick/mouseclick.cpp:43
+#: mouseclick/mouseclick.cpp:42
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "நடு"
 
-#: mouseclick/mouseclick.cpp:44
+#: mouseclick/mouseclick.cpp:43
 #, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
@@ -490,7 +495,7 @@ msgstr "உரையை காட்டு:"
 msgid "Clear All Mouse Marks"
 msgstr "சுட்டியின் அனைத்து தடங்களையும் அழி"
 
-#: mousemark/mousemark.cpp:43 mousemark/mousemark_config.cpp:59
+#: mousemark/mousemark.cpp:42 mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "சுட்டியின் கடைசி தடத்தை அழி"
@@ -860,17 +865,17 @@ msgstr "பிரித்தெடுத்த பட்டிகள்:"
 msgid "Toggle Present Windows (Current desktop)"
 msgstr "சாளர முன்வைப்பை காட்டு/மறை (தற்போதைய பணிமேடை)"
 
-#: windowview/kcm/windowvieweffectkcm.cpp:49 windowview/windowvieweffect.cpp:55
+#: windowview/kcm/windowvieweffectkcm.cpp:49 windowview/windowvieweffect.cpp:54
 #, kde-format
 msgid "Toggle Present Windows (All desktops)"
 msgstr "சாளர முன்வைப்பை காட்டு/மறை (எல்லா பணிமேடைகளும்)"
 
-#: windowview/kcm/windowvieweffectkcm.cpp:56 windowview/windowvieweffect.cpp:65
+#: windowview/kcm/windowvieweffectkcm.cpp:56 windowview/windowvieweffect.cpp:63
 #, kde-format
 msgid "Toggle Present Windows (Window class)"
 msgstr "சாளர முன்வைப்பை காட்டு/மறை (சாளர வகையை பொறுத்து)"
 
-#: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:75
+#: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:72
 #, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
 msgstr "சாளர முன்வைப்பை காட்டு/மறை (தற்போதைய பணிமேடையில் தற்போதைய சாளரவகை)"
@@ -951,32 +956,32 @@ msgstr "குறைவு"
 msgid "More"
 msgstr "அதிகம்"
 
-#: zoom/zoom.cpp:68
+#: zoom/zoom.cpp:65
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "உருப்பெருக்கப்பட்ட பரப்பளவை இடதுபுறமாக நகர்த்து"
 
-#: zoom/zoom.cpp:76
+#: zoom/zoom.cpp:72
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "உருப்பெருக்கப்பட்ட பரப்பளவை வலதுபுறமாக நகர்த்து"
 
-#: zoom/zoom.cpp:84
+#: zoom/zoom.cpp:79
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "உருப்பெருக்கப்பட்ட பரப்பளவை மேலே நகர்த்து"
 
-#: zoom/zoom.cpp:92
+#: zoom/zoom.cpp:86
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "உருப்பெருக்கப்பட்ட பரப்பளவை கீழே நகர்த்து"
 
-#: zoom/zoom.cpp:101 zoom/zoom_config.cpp:108
+#: zoom/zoom.cpp:94 zoom/zoom_config.cpp:108
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "குவியத்திற்கு சுட்டியை நகர்த்து"
 
-#: zoom/zoom.cpp:109 zoom/zoom_config.cpp:115
+#: zoom/zoom.cpp:101 zoom/zoom_config.cpp:115
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "மையத்திற்கு சுட்டியை நகர்த்து"
