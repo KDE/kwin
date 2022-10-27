@@ -34,9 +34,10 @@ namespace KWin
 
 static const QVector<uint64_t> linearModifier = {DRM_FORMAT_MOD_LINEAR};
 
-EglGbmLayerSurface::EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend)
+EglGbmLayerSurface::EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target)
     : m_gpu(gpu)
     , m_eglBackend(eglBackend)
+    , m_bufferTarget(target)
 {
 }
 
@@ -57,9 +58,9 @@ void EglGbmLayerSurface::destroyResources()
     m_oldGbmSurface.reset();
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation, const QMap<uint32_t, QVector<uint64_t>> &formats, BufferTarget target)
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation, const QMap<uint32_t, QVector<uint64_t>> &formats)
 {
-    if (!checkGbmSurface(bufferSize, formats, target == BufferTarget::Linear || target == BufferTarget::Dumb)) {
+    if (!checkGbmSurface(bufferSize, formats, m_bufferTarget == BufferTarget::Linear || m_bufferTarget == BufferTarget::Dumb)) {
         return std::nullopt;
     }
     if (!m_gbmSurface->makeContextCurrent()) {
@@ -120,7 +121,7 @@ void EglGbmLayerSurface::aboutToStartPainting(DrmOutput *output, const QRegion &
     }
 }
 
-std::optional<std::tuple<std::shared_ptr<DrmFramebuffer>, QRegion>> EglGbmLayerSurface::endRendering(DrmPlane::Transformations renderOrientation, const QRegion &damagedRegion, BufferTarget target)
+std::optional<std::tuple<std::shared_ptr<DrmFramebuffer>, QRegion>> EglGbmLayerSurface::endRendering(DrmPlane::Transformations renderOrientation, const QRegion &damagedRegion)
 {
     if (m_shadowBuffer) {
         GLFramebuffer::popFramebuffer();
@@ -128,7 +129,7 @@ std::optional<std::tuple<std::shared_ptr<DrmFramebuffer>, QRegion>> EglGbmLayerS
         m_shadowBuffer->render(renderOrientation);
     }
     GLFramebuffer::popFramebuffer();
-    if (m_gpu == m_eglBackend->gpu() && target != BufferTarget::Dumb) {
+    if (m_gpu == m_eglBackend->gpu() && m_bufferTarget != BufferTarget::Dumb) {
         if (const auto buffer = m_gbmSurface->swapBuffers(damagedRegion)) {
             m_currentBuffer = buffer;
             auto ret = DrmFramebuffer::createFramebuffer(buffer);
@@ -140,7 +141,7 @@ std::optional<std::tuple<std::shared_ptr<DrmFramebuffer>, QRegion>> EglGbmLayerS
     } else {
         if (const auto gbmBuffer = m_gbmSurface->swapBuffers(damagedRegion)) {
             m_currentBuffer = gbmBuffer;
-            const auto buffer = target == BufferTarget::Dumb ? importWithCpu() : importBuffer();
+            const auto buffer = m_bufferTarget == BufferTarget::Dumb ? importWithCpu() : importBuffer();
             if (buffer) {
                 return std::tuple(buffer, damagedRegion);
             }
@@ -362,9 +363,9 @@ std::shared_ptr<GLTexture> EglGbmLayerSurface::texture() const
     return m_eglBackend->importBufferObjectAsTexture(m_currentBuffer->bo());
 }
 
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize &bufferSize, const QMap<uint32_t, QVector<uint64_t>> &formats, BufferTarget target)
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize &bufferSize, const QMap<uint32_t, QVector<uint64_t>> &formats)
 {
-    if (!checkGbmSurface(bufferSize, formats, target == BufferTarget::Linear) || !m_gbmSurface->makeContextCurrent()) {
+    if (!checkGbmSurface(bufferSize, formats, m_bufferTarget == BufferTarget::Linear || m_bufferTarget == BufferTarget::Dumb) || !m_gbmSurface->makeContextCurrent()) {
         return nullptr;
     }
     glClear(GL_COLOR_BUFFER_BIT);
@@ -372,7 +373,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize
     if (m_currentBuffer) {
         if (m_gpu != m_eglBackend->gpu()) {
             auto oldImportMode = m_importMode;
-            auto buffer = target == BufferTarget::Dumb ? importWithCpu() : importBuffer();
+            auto buffer = m_bufferTarget == BufferTarget::Dumb ? importWithCpu() : importBuffer();
             if (buffer) {
                 return buffer;
             } else if (m_importMode != oldImportMode) {

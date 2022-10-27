@@ -38,23 +38,23 @@ class EglGbmLayerSurface : public QObject
 {
     Q_OBJECT
 public:
-    EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend);
-    ~EglGbmLayerSurface();
-
     enum class BufferTarget {
         Normal,
         Linear,
         Dumb
     };
-    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation, const QMap<uint32_t, QVector<uint64_t>> &formats, BufferTarget target = BufferTarget::Normal);
+    EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal);
+    ~EglGbmLayerSurface();
+
+    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation, const QMap<uint32_t, QVector<uint64_t>> &formats);
     void aboutToStartPainting(DrmOutput *output, const QRegion &damagedRegion);
-    std::optional<std::tuple<std::shared_ptr<DrmFramebuffer>, QRegion>> endRendering(DrmPlane::Transformations renderOrientation, const QRegion &damagedRegion, BufferTarget target = BufferTarget::Normal);
+    std::optional<std::tuple<std::shared_ptr<DrmFramebuffer>, QRegion>> endRendering(DrmPlane::Transformations renderOrientation, const QRegion &damagedRegion);
 
     bool doesSurfaceFit(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
     std::shared_ptr<GLTexture> texture() const;
     void destroyResources();
     EglGbmBackend *eglBackend() const;
-    std::shared_ptr<DrmFramebuffer> renderTestBuffer(const QSize &bufferSize, const QMap<uint32_t, QVector<uint64_t>> &formats, BufferTarget target = BufferTarget::Normal);
+    std::shared_ptr<DrmFramebuffer> renderTestBuffer(const QSize &bufferSize, const QMap<uint32_t, QVector<uint64_t>> &formats);
 
 private:
     bool checkGbmSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats, bool forceLinear);
@@ -88,6 +88,7 @@ private:
 
     DrmGpu *const m_gpu;
     EglGbmBackend *const m_eglBackend;
+    const BufferTarget m_bufferTarget;
 };
 
 }
