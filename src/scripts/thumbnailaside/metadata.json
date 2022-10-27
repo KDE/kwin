@@ -1,0 +1,22 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "vlad.zahorodnii@kde.org",
+                "Name": "Vlad Zahorodnii"
+            }
+        ],
+        "Description": "Display window thumbnails on the edge of the screen",
+        "EnabledByDefault": "false",
+        "Icon": "preferences-system-windows-script-test",
+        "Id": "thumbnailaside",
+        "License": "GPL",
+        "Name": "Thumbnail Aside",
+        "ServiceTypes": [
+            "KWin/Script"
+        ],
+        "Version": "1.0"
+    },
+    "X-Plasma-API": "declarativescript",
+    "X-Plasma-MainScript": "ui/main.qml"
+}
