@@ -38,8 +38,6 @@ public:
     void releaseBuffers() override;
 
 private:
-    std::shared_ptr<DrmFramebuffer> m_currentBuffer;
-
     EglGbmLayerSurface m_surface;
 };
 

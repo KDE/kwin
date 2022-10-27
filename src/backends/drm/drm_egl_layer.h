@@ -42,7 +42,6 @@ public:
 
 private:
     std::shared_ptr<DrmFramebuffer> m_scanoutBuffer;
-    std::shared_ptr<DrmFramebuffer> m_currentBuffer;
     QRegion m_currentDamage;
 
     EglGbmLayerSurface m_surface;

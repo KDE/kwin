@@ -35,14 +35,7 @@ void EglGbmCursorLayer::aboutToStartPainting(const QRegion &damagedRegion)
 bool EglGbmCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     Q_UNUSED(renderedRegion)
-    const auto ret = m_surface.endRendering(m_pipeline->renderOrientation(), damagedRegion);
-    if (ret.has_value()) {
-        QRegion throwaway;
-        std::tie(m_currentBuffer, throwaway) = ret.value();
-        return m_currentBuffer != nullptr;
-    } else {
-        return false;
-    }
+    return m_surface.endRendering(m_pipeline->renderOrientation(), damagedRegion);
 }
 
 QRegion EglGbmCursorLayer::currentDamage() const
@@ -52,7 +45,7 @@ QRegion EglGbmCursorLayer::currentDamage() const
 
 std::shared_ptr<DrmFramebuffer> EglGbmCursorLayer::currentBuffer() const
 {
-    return m_currentBuffer;
+    return m_surface.currentBuffer();
 }
 
 bool EglGbmCursorLayer::checkTestBuffer()
