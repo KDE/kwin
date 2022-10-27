@@ -655,17 +655,34 @@ void Workspace::updateOutputConfiguration()
             if (outputInfo["primary"].toBool()) {
                 primaryOutput = output;
             }
-            props->enabled = outputInfo["enabled"].toBool(true);
-            const QJsonObject pos = outputInfo["pos"].toObject();
-            props->pos = QPoint(pos["x"].toInt(), pos["y"].toInt());
+
+            if (const QJsonValue enabled = outputInfo["enabled"]; !enabled.isUndefined()) {
+                props->enabled = enabled.toBool(true);
+            }
+
+            if (const QJsonObject pos = outputInfo["pos"].toObject(); !pos.isEmpty()) {
+                props->pos = QPoint(pos["x"].toInt(), pos["y"].toInt());
+            }
+
             if (const QJsonValue scale = outputInfo["scale"]; !scale.isUndefined()) {
                 props->scale = scale.toDouble(1.);
             }
-            props->transform = KWinKScreenIntegration::toDrmTransform(outputInfo["rotation"].toInt());
 
-            props->overscan = static_cast<uint32_t>(outputInfo["overscan"].toInt(props->overscan));
-            props->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(outputInfo["vrrpolicy"].toInt(static_cast<uint32_t>(props->vrrPolicy)));
-            props->rgbRange = static_cast<Output::RgbRange>(outputInfo["rgbrange"].toInt(static_cast<uint32_t>(props->rgbRange)));
+            if (const QJsonValue rotation = outputInfo["rotation"]; !rotation.isUndefined()) {
+                props->transform = KWinKScreenIntegration::toDrmTransform(rotation.toInt());
+            }
+
+            if (const QJsonValue overscan = outputInfo["overscan"]; !overscan.isUndefined()) {
+                props->overscan = static_cast<uint32_t>(overscan.toInt());
+            }
+
+            if (const QJsonValue vrrPolicy = outputInfo["vrrpolicy"]; !vrrPolicy.isUndefined()) {
+                props->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(vrrPolicy.toInt());
+            }
+
+            if (const QJsonValue rgbRange = outputInfo["rgbrange"]; !rgbRange.isUndefined()) {
+                props->rgbRange = static_cast<Output::RgbRange>(rgbRange.toInt());
+            }
 
             if (const QJsonObject modeInfo = outputInfo["mode"].toObject(); !modeInfo.isEmpty()) {
                 if (auto mode = KWinKScreenIntegration::parseMode(output, modeInfo)) {

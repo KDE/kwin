@@ -230,14 +230,26 @@ void Output::applyChanges(const OutputConfiguration &config)
     Q_EMIT aboutToChange();
 
     State next = m_state;
-    next.enabled = props->enabled;
-    next.transform = props->transform;
-    next.position = props->pos;
-    next.scale = props->scale;
-    next.rgbRange = props->rgbRange;
+    if (props->enabled.has_value()) {
+        next.enabled = props->enabled.value();
+    }
+    if (props->transform.has_value()) {
+        next.transform = props->transform.value();
+    }
+    if (props->pos.has_value()) {
+        next.position = props->pos.value();
+    }
+    if (props->scale.has_value()) {
+        next.scale = props->scale.value();
+    }
+    if (props->rgbRange.has_value()) {
+        next.rgbRange = props->rgbRange.value();
+    }
 
     setState(next);
-    setVrrPolicy(props->vrrPolicy);
+    if (props->vrrPolicy.has_value()) {
+        setVrrPolicy(props->vrrPolicy.value());
+    }
 
     Q_EMIT changed();
 }

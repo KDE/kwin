@@ -15,20 +15,22 @@
 #include <QPoint>
 #include <QSize>
 
+#include <optional>
+
 namespace KWin
 {
 
 class KWIN_EXPORT OutputChangeSet
 {
 public:
-    std::shared_ptr<OutputMode> mode;
-    bool enabled;
-    QPoint pos;
-    float scale;
-    Output::Transform transform;
-    uint32_t overscan;
-    Output::RgbRange rgbRange;
-    RenderLoop::VrrPolicy vrrPolicy;
+    std::optional<std::shared_ptr<OutputMode>> mode;
+    std::optional<bool> enabled;
+    std::optional<QPoint> pos;
+    std::optional<float> scale;
+    std::optional<Output::Transform> transform;
+    std::optional<uint32_t> overscan;
+    std::optional<Output::RgbRange> rgbRange;
+    std::optional<RenderLoop::VrrPolicy> vrrPolicy;
 };
 
 class KWIN_EXPORT OutputConfiguration

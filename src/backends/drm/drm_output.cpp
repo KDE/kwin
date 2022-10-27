@@ -393,14 +393,24 @@ bool DrmOutput::queueChanges(const OutputConfiguration &config)
     static int envOnlySoftwareRotations = qEnvironmentVariableIntValue("KWIN_DRM_SW_ROTATIONS_ONLY", &valid) == 1 || !valid;
 
     const auto props = config.constChangeSet(this);
-    m_pipeline->setMode(std::static_pointer_cast<DrmConnectorMode>(props->mode));
-    m_pipeline->setOverscan(props->overscan);
-    m_pipeline->setRgbRange(props->rgbRange);
-    m_pipeline->setRenderOrientation(outputToPlaneTransform(props->transform));
+    if (props->mode.has_value()) {
+        m_pipeline->setMode(std::static_pointer_cast<DrmConnectorMode>(props->mode.value()));
+    }
+    if (props->overscan.has_value()) {
+        m_pipeline->setOverscan(props->overscan.value());
+    }
+    if (props->rgbRange.has_value()) {
+        m_pipeline->setRgbRange(props->rgbRange.value());
+    }
+    if (props->transform.has_value()) {
+        m_pipeline->setRenderOrientation(outputToPlaneTransform(props->transform.value()));
+    }
     if (!envOnlySoftwareRotations && m_gpu->atomicModeSetting()) {
         m_pipeline->setBufferOrientation(m_pipeline->renderOrientation());
     }
-    m_pipeline->setEnable(props->enabled);
+    if (props->enabled.has_value()) {
+        m_pipeline->setEnable(props->enabled.value());
+    }
     return true;
 }
 
@@ -415,16 +425,24 @@ void DrmOutput::applyQueuedChanges(const OutputConfiguration &config)
     auto props = config.constChangeSet(this);
 
     State next = m_state;
-    next.enabled = props->enabled && m_pipeline->crtc();
-    next.position = props->pos;
-    next.scale = props->scale;
-    next.transform = props->transform;
+    next.enabled = props->enabled.value_or(m_state.enabled) && m_pipeline->crtc();
     next.currentMode = m_pipeline->mode();
     next.overscan = m_pipeline->overscan();
     next.rgbRange = m_pipeline->rgbRange();
+    if (props->pos.has_value()) {
+        next.position = props->pos.value();
+    }
+    if (props->scale.has_value()) {
+        next.scale = props->scale.value();
+    }
+    if (props->transform.has_value()) {
+        next.transform = props->transform.value();
+    }
 
     setState(next);
-    setVrrPolicy(props->vrrPolicy);
+    if (props->vrrPolicy.has_value()) {
+        setVrrPolicy(props->vrrPolicy.value());
+    }
 
     if (!isEnabled() && m_pipeline->needsModeset()) {
         m_gpu->maybeModeset();

@@ -21,16 +21,7 @@ std::shared_ptr<OutputChangeSet> OutputConfiguration::changeSet(Output *output)
 std::shared_ptr<OutputChangeSet> OutputConfiguration::constChangeSet(Output *output) const
 {
     if (!m_properties.contains(output)) {
-        auto props = std::make_shared<OutputChangeSet>();
-        props->enabled = output->isEnabled();
-        props->pos = output->geometry().topLeft();
-        props->scale = output->scale();
-        props->mode = output->currentMode();
-        props->transform = output->transform();
-        props->overscan = output->overscan();
-        props->rgbRange = output->rgbRange();
-        props->vrrPolicy = output->vrrPolicy();
-        return props;
+        return std::make_shared<OutputChangeSet>();
     }
     return m_properties[output];
 }
