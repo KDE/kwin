@@ -80,11 +80,8 @@ void Atoms::retrieveHelpers()
         return;
     }
     // just retrieve the atoms once, all others are retrieved when being accessed
-    // Q_UNUSED is used in the hope that the compiler doesn't optimize the operations away
-    xcb_atom_t atom = m_dtSmWindowInfo;
-    Q_UNUSED(atom)
-    atom = m_motifSupport;
-    Q_UNUSED(atom)
+    m_dtSmWindowInfo.getReply();
+    m_motifSupport.getReply();
     m_helpersRetrieved = true;
 }
 

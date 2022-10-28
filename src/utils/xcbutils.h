@@ -512,7 +512,6 @@ public:
         return m_name;
     }
 
-private:
     void getReply()
     {
         if (m_retrieved || !m_cookie.sequence) {
@@ -524,6 +523,8 @@ private:
         }
         m_retrieved = true;
     }
+
+private:
     xcb_connection_t *m_connection;
     bool m_retrieved;
     xcb_intern_atom_cookie_t m_cookie;
