@@ -409,7 +409,6 @@ bool WlVisit::handlePosition(xcb_client_message_event_t *event)
         sendStatus();
         return true;
     }
-    const uint32_t pos = data->data32[2];
 
     const xcb_timestamp_t timestamp = data->data32[3];
     m_drag->x11Source()->setTimestamp(timestamp);
