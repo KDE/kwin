@@ -46,7 +46,6 @@ void PlacementTracker::add(Window *window)
     connect(window, &Window::clientFinishUserMovedResized, this, &PlacementTracker::saveInteractionCounter);
     WindowData data = dataForWindow(window);
     m_data[m_currentKey][window] = data;
-    m_lastRestoreData[window] = data;
     m_savedWindows.push_back(window);
 }
 
@@ -61,7 +60,6 @@ void PlacementTracker::remove(Window *window)
         for (auto &dataMap : m_data) {
             dataMap.remove(window);
         }
-        m_lastRestoreData.remove(window);
         m_savedWindows.removeOne(window);
     }
 }
@@ -77,26 +75,35 @@ void PlacementTracker::restore(const QString &key)
 
     inhibit();
     for (const auto window : std::as_const(m_savedWindows)) {
-        bool restore = true;
-        if (auto lastRestoreData = m_lastRestoreData.constFind(window); lastRestoreData != m_lastRestoreData.constEnd()) {
+        const auto it = dataMap.find(window);
+        if (it != dataMap.end()) {
+            const WindowData &newData = it.value();
+
             // don't touch windows where the user intentionally changed their state
-            restore = window->interactiveMoveResizeCount() == lastRestoreData->interactiveMoveResizeCount
-                && window->requestedMaximizeMode() == lastRestoreData->maximize
-                && window->quickTileMode() == lastRestoreData->quickTile
-                && window->isFullScreen() == lastRestoreData->fullscreen;
+            bool restore = window->interactiveMoveResizeCount() == newData.interactiveMoveResizeCount
+                && window->requestedMaximizeMode() == newData.maximize
+                && window->quickTileMode() == newData.quickTile
+                && window->isFullScreen() == newData.fullscreen;
+            if (!restore) {
+                // the logic above can have false negatives if PlacementTracker changed the window state
+                // to prevent that, also restore if the window still has the same state from that
+                if (const auto it = m_lastRestoreData.find(window); it != m_lastRestoreData.end()) {
+                    restore = window->interactiveMoveResizeCount() == it->interactiveMoveResizeCount
+                        && window->requestedMaximizeMode() == it->maximize
+                        && window->quickTileMode() == it->quickTile
+                        && window->isFullScreen() == it->fullscreen
+                        && window->moveResizeOutput()->uuid() == it->outputUuid;
+                }
+            }
             if (!restore) {
                 // restore anyways if the output the window was on got removed
                 if (const auto oldData = oldDataMap.find(window); oldData != oldDataMap.end()) {
-                    restore |= std::none_of(outputs.begin(), outputs.end(), [&oldData](const auto output) {
+                    restore = std::none_of(outputs.begin(), outputs.end(), [&oldData](const auto output) {
                         return output->uuid() == oldData->outputUuid;
                     });
                 }
             }
-        }
-        if (restore) {
-            const auto it = dataMap.find(window);
-            if (it != dataMap.end()) {
-                const WindowData &newData = it.value();
+            if (restore) {
                 window->setFullScreen(false);
                 window->setQuickTileMode(QuickTileFlag::None, true);
                 window->setMaximize(false, false);
@@ -120,10 +127,8 @@ void PlacementTracker::restore(const QString &key)
                 } else {
                     window->moveResize(newData.geometry);
                 }
+                m_lastRestoreData[window] = dataForWindow(window);
             }
-            // if the window got restored or would've been restored if data was available,
-            // make sure the current state counts as being not touched by the user
-            m_lastRestoreData[window] = dataForWindow(window);
         }
         // ensure data in current map is always up to date
         dataMap[window] = dataForWindow(window);
