@@ -98,8 +98,6 @@ XdgSurfaceWindow::~XdgSurfaceWindow()
 
 NET::WindowType XdgSurfaceWindow::windowType(bool direct, int supported_types) const
 {
-    Q_UNUSED(direct)
-    Q_UNUSED(supported_types)
     return m_windowType;
 }
 
@@ -1112,8 +1110,6 @@ void XdgToplevelWindow::handleWindowClassChanged()
 void XdgToplevelWindow::handleWindowMenuRequested(SeatInterface *seat, const QPoint &surfacePos,
                                                   quint32 serial)
 {
-    Q_UNUSED(seat)
-    Q_UNUSED(serial)
     performMouseCommand(Options::MouseOperationsMenu, pos() + surfacePos);
 }
 
@@ -2006,8 +2002,6 @@ XdgSurfaceConfigure *XdgPopupWindow::sendRoleConfigure() const
 
 void XdgPopupWindow::handleGrabRequested(SeatInterface *seat, quint32 serial)
 {
-    Q_UNUSED(seat)
-    Q_UNUSED(serial)
     m_haveExplicitGrab = true;
 }
 

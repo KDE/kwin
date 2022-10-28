@@ -36,7 +36,6 @@ public:
 
     virtual void accept(const QString &mimeType)
     {
-        Q_UNUSED(mimeType);
     };
     virtual void requestData(const QString &mimeType, qint32 fd) = 0;
     virtual void cancel() = 0;
@@ -68,7 +67,6 @@ public:
      */
     virtual void dndAction(DataDeviceManagerInterface::DnDAction action)
     {
-        Q_UNUSED(action);
     };
 
     /**

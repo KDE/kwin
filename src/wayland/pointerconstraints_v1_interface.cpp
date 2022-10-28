@@ -162,7 +162,6 @@ void LockedPointerV1InterfacePrivate::commit()
 
 void LockedPointerV1InterfacePrivate::zwp_locked_pointer_v1_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->aboutToBeDestroyed();
     delete q;
 }
@@ -174,14 +173,12 @@ void LockedPointerV1InterfacePrivate::zwp_locked_pointer_v1_destroy(Resource *re
 
 void LockedPointerV1InterfacePrivate::zwp_locked_pointer_v1_set_cursor_position_hint(Resource *resource, wl_fixed_t surface_x, wl_fixed_t surface_y)
 {
-    Q_UNUSED(resource)
     pendingHint = QPointF(wl_fixed_to_double(surface_x), wl_fixed_to_double(surface_y));
     hasPendingHint = true;
 }
 
 void LockedPointerV1InterfacePrivate::zwp_locked_pointer_v1_set_region(Resource *resource, ::wl_resource *region_resource)
 {
-    Q_UNUSED(resource)
     pendingRegion = regionFromResource(region_resource);
     hasPendingRegion = true;
 }
@@ -263,7 +260,6 @@ void ConfinedPointerV1InterfacePrivate::commit()
 
 void ConfinedPointerV1InterfacePrivate::zwp_confined_pointer_v1_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete q;
 }
 
@@ -274,7 +270,6 @@ void ConfinedPointerV1InterfacePrivate::zwp_confined_pointer_v1_destroy(Resource
 
 void ConfinedPointerV1InterfacePrivate::zwp_confined_pointer_v1_set_region(Resource *resource, ::wl_resource *region_resource)
 {
-    Q_UNUSED(resource)
     pendingRegion = regionFromResource(region_resource);
     hasPendingRegion = true;
 }

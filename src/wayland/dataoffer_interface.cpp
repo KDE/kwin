@@ -51,8 +51,6 @@ DataOfferInterfacePrivate::DataOfferInterfacePrivate(AbstractDataSource *_source
 
 void DataOfferInterfacePrivate::data_offer_accept(Resource *resource, uint32_t serial, const QString &mime_type)
 {
-    Q_UNUSED(resource)
-    Q_UNUSED(serial)
     if (!source) {
         return;
     }
@@ -61,7 +59,6 @@ void DataOfferInterfacePrivate::data_offer_accept(Resource *resource, uint32_t s
 
 void DataOfferInterfacePrivate::data_offer_receive(Resource *resource, const QString &mime_type, int32_t fd)
 {
-    Q_UNUSED(resource)
     if (!source) {
         close(fd);
         return;
@@ -76,7 +73,6 @@ void DataOfferInterfacePrivate::data_offer_destroy(QtWaylandServer::wl_data_offe
 
 void DataOfferInterfacePrivate::data_offer_finish(Resource *resource)
 {
-    Q_UNUSED(resource)
     if (!source) {
         return;
     }
@@ -154,7 +150,6 @@ void DataOfferInterface::sendSourceActions()
 
 void DataOfferInterfacePrivate::data_offer_destroy_resource(QtWaylandServer::wl_data_offer::Resource *resource)
 {
-    Q_UNUSED(resource)
     delete q;
 }
 

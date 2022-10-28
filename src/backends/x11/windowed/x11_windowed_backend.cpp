@@ -79,7 +79,6 @@ bool X11WindowedInputDevice::isEnabled() const
 
 void X11WindowedInputDevice::setEnabled(bool enabled)
 {
-    Q_UNUSED(enabled)
 }
 
 LEDs X11WindowedInputDevice::leds() const
@@ -89,7 +88,6 @@ LEDs X11WindowedInputDevice::leds() const
 
 void X11WindowedInputDevice::setLeds(LEDs leds)
 {
-    Q_UNUSED(leds)
 }
 
 bool X11WindowedInputDevice::isKeyboard() const

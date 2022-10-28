@@ -42,7 +42,6 @@ void WindowThumbnailItem::setWId(qulonglong wId)
 
 void WindowThumbnailItem::setClipTo(QQuickItem *clip)
 {
-    Q_UNUSED(clip)
     qWarning() << "ThumbnailItem.clipTo is removed and it has no replacements";
 }
 
@@ -83,7 +82,6 @@ void WindowThumbnailItem::findImage()
 
 QSGNode *WindowThumbnailItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *updatePaintNodeData)
 {
-    Q_UNUSED(updatePaintNodeData)
     auto *node = static_cast<QSGImageNode *>(oldNode);
     if (!node) {
         node = window()->createImageNode();
@@ -120,13 +118,11 @@ QSize WindowThumbnailItem::sourceSize() const
 
 void WindowThumbnailItem::setBrightness(qreal brightness)
 {
-    Q_UNUSED(brightness)
     qWarning() << "ThumbnailItem.brightness is removed. Use a shader effect to change brightness";
 }
 
 void WindowThumbnailItem::setSaturation(qreal saturation)
 {
-    Q_UNUSED(saturation)
     qWarning() << "ThumbnailItem.saturation is removed. Use a shader effect to change saturation";
 }
 

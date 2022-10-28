@@ -123,7 +123,6 @@ void TestScreencastV1Interface::initTestCase()
             &KWaylandServer::ScreencastV1Interface::windowScreencastRequested,
             this,
             [this](KWaylandServer::ScreencastStreamV1Interface *stream, const QString &winid) {
-                Q_UNUSED(winid);
                 stream->sendCreated(123);
                 m_triggered = stream;
             });

@@ -156,14 +156,12 @@ LayerSurfaceV1InterfacePrivate::LayerSurfaceV1InterfacePrivate(LayerSurfaceV1Int
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->aboutToBeDestroyed();
     delete q;
 }
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_size(Resource *resource, uint32_t width, uint32_t height)
 {
-    Q_UNUSED(resource)
     pending.desiredSize = QSize(width, height);
 }
 
@@ -206,7 +204,6 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_margin(Resource *
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_keyboard_interactivity(Resource *resource, uint32_t keyboard_interactivity)
 {
-    Q_UNUSED(resource)
     pending.acceptsFocus = keyboard_interactivity;
 }
 

@@ -95,7 +95,6 @@ void XWaylandKeyboardGrabV1InterfacePrivate::zwp_xwayland_keyboard_grab_v1_destr
 
 void XWaylandKeyboardGrabV1InterfacePrivate::zwp_xwayland_keyboard_grab_v1_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete q;
 }
 

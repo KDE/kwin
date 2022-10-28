@@ -647,8 +647,6 @@ void Device::setOutputName(const QString &name)
     m_outputName = name;
     writeEntry(ConfigKey::OutputName, name);
     Q_EMIT outputNameChanged();
-#else
-    Q_UNUSED(name)
 #endif
 }
 

@@ -247,9 +247,6 @@ void XBackend::init(QQuickView *view)
 
 void XBackend::lockRequest(bool persistent, QRect region)
 {
-    Q_UNUSED(persistent);
-    Q_UNUSED(region);
-
     auto winId = view()->winId();
 
     /* Cursor needs to be hidden such that Xwayland emulates warps. */
@@ -287,9 +284,6 @@ void XBackend::unlockRequest()
 
 void XBackend::confineRequest(bool persistent, QRect region)
 {
-    Q_UNUSED(persistent);
-    Q_UNUSED(region);
-
     int error;
     if (!tryConfine(error)) {
         qDebug() << "Confine (grab) failed with XCB error:" << error;

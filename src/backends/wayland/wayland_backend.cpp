@@ -226,7 +226,6 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
     , m_pointer(pointer)
 {
     connect(pointer, &Pointer::entered, this, [this](quint32 serial, const QPointF &relativeToSurface) {
-        Q_UNUSED(relativeToSurface)
         m_enteredSerial = serial;
     });
     connect(pointer, &Pointer::motion, this, [this](const QPointF &relativeToSurface, quint32 time) {
@@ -236,7 +235,6 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
         Q_EMIT pointerMotionAbsolute(absolutePos, time, this);
     });
     connect(pointer, &Pointer::buttonStateChanged, this, [this](quint32 serial, quint32 time, quint32 button, Pointer::ButtonState nativeState) {
-        Q_UNUSED(serial)
         InputRedirection::PointerButtonState state;
         switch (nativeState) {
         case Pointer::ButtonState::Pressed:
@@ -270,35 +268,29 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
     if (pointerGestures) {
         m_pinchGesture.reset(pointerGestures->createPinchGesture(m_pointer.get(), this));
         connect(m_pinchGesture.get(), &PointerPinchGesture::started, this, [this](quint32 serial, quint32 time) {
-            Q_UNUSED(serial);
             Q_EMIT pinchGestureBegin(m_pinchGesture->fingerCount(), time, this);
         });
         connect(m_pinchGesture.get(), &PointerPinchGesture::updated, this, [this](const QSizeF &delta, qreal scale, qreal rotation, quint32 time) {
             Q_EMIT pinchGestureUpdate(scale, rotation, QSIZE_TO_QPOINT(delta), time, this);
         });
         connect(m_pinchGesture.get(), &PointerPinchGesture::ended, this, [this](quint32 serial, quint32 time) {
-            Q_UNUSED(serial)
             Q_EMIT pinchGestureEnd(time, this);
         });
         connect(m_pinchGesture.get(), &PointerPinchGesture::cancelled, this, [this](quint32 serial, quint32 time) {
-            Q_UNUSED(serial)
             Q_EMIT pinchGestureCancelled(time, this);
         });
 
         m_swipeGesture.reset(pointerGestures->createSwipeGesture(m_pointer.get(), this));
         connect(m_swipeGesture.get(), &PointerSwipeGesture::started, this, [this](quint32 serial, quint32 time) {
-            Q_UNUSED(serial)
             Q_EMIT swipeGestureBegin(m_swipeGesture->fingerCount(), time, this);
         });
         connect(m_swipeGesture.get(), &PointerSwipeGesture::updated, this, [this](const QSizeF &delta, quint32 time) {
             Q_EMIT swipeGestureUpdate(QSIZE_TO_QPOINT(delta), time, this);
         });
         connect(m_swipeGesture.get(), &PointerSwipeGesture::ended, this, [this](quint32 serial, quint32 time) {
-            Q_UNUSED(serial)
             Q_EMIT swipeGestureEnd(time, this);
         });
         connect(m_swipeGesture.get(), &PointerSwipeGesture::cancelled, this, [this](quint32 serial, quint32 time) {
-            Q_UNUSED(serial)
             Q_EMIT swipeGestureCancelled(time, this);
         });
     }
@@ -358,7 +350,6 @@ bool WaylandInputDevice::isEnabled() const
 
 void WaylandInputDevice::setEnabled(bool enabled)
 {
-    Q_UNUSED(enabled)
 }
 
 LEDs WaylandInputDevice::leds() const
@@ -368,7 +359,6 @@ LEDs WaylandInputDevice::leds() const
 
 void WaylandInputDevice::setLeds(LEDs leds)
 {
-    Q_UNUSED(leds)
 }
 
 bool WaylandInputDevice::isKeyboard() const
@@ -676,7 +666,6 @@ bool WaylandBackend::initialize()
         m_waylandCursor->installImage();
     });
     connect(Cursors::self(), &Cursors::positionChanged, this, [this](Cursor *cursor, const QPoint &position) {
-        Q_UNUSED(cursor)
         if (m_waylandCursor) {
             m_waylandCursor->move(position);
         }

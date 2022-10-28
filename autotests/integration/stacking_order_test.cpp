@@ -244,7 +244,6 @@ void StackingOrderTest::testDeletedTransient()
 
     // Close the top-most transient.
     connect(transient2, &Window::windowClosed, this, [](Window *original, Deleted *deleted) {
-        Q_UNUSED(original)
         deleted->refWindow();
     });
 
@@ -659,7 +658,6 @@ void StackingOrderTest::testDeletedGroupTransient()
 
     // Unmap the transient.
     connect(transient, &X11Window::windowClosed, this, [](Window *original, Deleted *deleted) {
-        Q_UNUSED(original)
         deleted->refWindow();
     });
 

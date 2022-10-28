@@ -25,7 +25,6 @@ namespace LibInput
 
 static void libinputLogHandler(libinput *libinput, libinput_log_priority priority, const char *format, va_list args)
 {
-    Q_UNUSED(libinput)
     char buf[1024];
     if (std::vsnprintf(buf, 1023, format, args) <= 0) {
         return;

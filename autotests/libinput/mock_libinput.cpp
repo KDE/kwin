@@ -656,21 +656,15 @@ struct libinput *libinput_udev_create_context(const struct libinput_interface *i
     if (!udev) {
         return nullptr;
     }
-    Q_UNUSED(interface)
-    Q_UNUSED(user_data)
     return new libinput;
 }
 
 void libinput_log_set_priority(struct libinput *libinput, enum libinput_log_priority priority)
 {
-    Q_UNUSED(libinput)
-    Q_UNUSED(priority)
 }
 
 void libinput_log_set_handler(struct libinput *libinput, libinput_log_handler log_handler)
 {
-    Q_UNUSED(libinput)
-    Q_UNUSED(log_handler)
 }
 
 struct libinput *libinput_unref(struct libinput *libinput)
@@ -693,30 +687,25 @@ int libinput_udev_assign_seat(struct libinput *libinput, const char *seat_id)
 
 int libinput_get_fd(struct libinput *libinput)
 {
-    Q_UNUSED(libinput)
     return -1;
 }
 
 int libinput_dispatch(struct libinput *libinput)
 {
-    Q_UNUSED(libinput)
     return 0;
 }
 
 struct libinput_event *libinput_get_event(struct libinput *libinput)
 {
-    Q_UNUSED(libinput)
     return nullptr;
 }
 
 void libinput_suspend(struct libinput *libinput)
 {
-    Q_UNUSED(libinput)
 }
 
 int libinput_resume(struct libinput *libinput)
 {
-    Q_UNUSED(libinput)
     return 0;
 }
 
@@ -936,22 +925,18 @@ int libinput_device_tablet_pad_get_num_buttons(struct libinput_device *device)
 struct libinput_device_group *
 libinput_device_get_device_group(struct libinput_device *device)
 {
-    Q_UNUSED(device);
     return nullptr;
 }
 
 void *
 libinput_device_group_get_user_data(struct libinput_device_group *group)
 {
-    Q_UNUSED(group);
     return nullptr;
 }
 
 void libinput_device_led_update(struct libinput_device *device,
                                 enum libinput_led leds)
 {
-    Q_UNUSED(device)
-    Q_UNUSED(leds)
 }
 
 void libinput_device_set_user_data(struct libinput_device *device, void *user_data)
@@ -969,9 +954,6 @@ double
 libinput_event_tablet_tool_get_x_transformed(struct libinput_event_tablet_tool *event,
                                              uint32_t width)
 {
-    Q_UNUSED(event)
-    Q_UNUSED(width)
-
     // it's unused at the moment, it doesn't really matter what we return
     return 0;
 }
@@ -980,7 +962,5 @@ double
 libinput_event_tablet_tool_get_y_transformed(struct libinput_event_tablet_tool *event,
                                              uint32_t height)
 {
-    Q_UNUSED(event)
-    Q_UNUSED(height)
     return 4;
 }

@@ -610,19 +610,16 @@ QVector<QByteArray> Scene::openGLPlatformInterfaceExtensions() const
 
 std::unique_ptr<SurfaceTexture> Scene::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
-    Q_UNUSED(pixmap)
     return nullptr;
 }
 
 std::unique_ptr<SurfaceTexture> Scene::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
 {
-    Q_UNUSED(pixmap)
     return nullptr;
 }
 
 std::unique_ptr<SurfaceTexture> Scene::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
-    Q_UNUSED(pixmap)
     return nullptr;
 }
 

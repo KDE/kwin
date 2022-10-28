@@ -52,7 +52,6 @@ void ShadowItem::handleTextureChanged()
 
 void ShadowItem::handleWindowClosed(Window *original, Deleted *deleted)
 {
-    Q_UNUSED(original)
     m_window = deleted;
 }
 

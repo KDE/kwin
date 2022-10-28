@@ -295,7 +295,6 @@ void SurfaceInterfacePrivate::surface_frame(Resource *resource, uint32_t callbac
 
 void SurfaceInterfacePrivate::surface_set_opaque_region(Resource *resource, struct ::wl_resource *region)
 {
-    Q_UNUSED(resource)
     RegionInterface *r = RegionInterface::get(region);
     pending.opaque = r ? r->region() : QRegion();
     pending.opaqueIsSet = true;
@@ -303,7 +302,6 @@ void SurfaceInterfacePrivate::surface_set_opaque_region(Resource *resource, stru
 
 void SurfaceInterfacePrivate::surface_set_input_region(Resource *resource, struct ::wl_resource *region)
 {
-    Q_UNUSED(resource)
     RegionInterface *r = RegionInterface::get(region);
     pending.input = r ? r->region() : infiniteRegion();
     pending.inputIsSet = true;
@@ -311,7 +309,6 @@ void SurfaceInterfacePrivate::surface_set_input_region(Resource *resource, struc
 
 void SurfaceInterfacePrivate::surface_commit(Resource *resource)
 {
-    Q_UNUSED(resource)
     if (subSurface) {
         commitSubSurface();
     } else {
@@ -341,13 +338,11 @@ void SurfaceInterfacePrivate::surface_set_buffer_scale(Resource *resource, int32
 
 void SurfaceInterfacePrivate::surface_damage_buffer(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    Q_UNUSED(resource)
     pending.bufferDamage |= QRect(x, y, width, height);
 }
 
 void SurfaceInterfacePrivate::surface_offset(Resource *resource, int32_t x, int32_t y)
 {
-    Q_UNUSED(resource)
     pending.offset = QPoint(x, y);
 }
 

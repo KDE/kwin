@@ -62,7 +62,6 @@ void ShadowManagerInterfacePrivate::org_kde_kwin_shadow_manager_create(Resource 
 
 void ShadowManagerInterfacePrivate::org_kde_kwin_shadow_manager_unset(Resource *resource, wl_resource *surface)
 {
-    Q_UNUSED(resource)
     SurfaceInterface *s = SurfaceInterface::get(surface);
     if (!s) {
         wl_resource_post_error(resource->handle, 0, "Invalid  surface");
@@ -145,7 +144,6 @@ protected:
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_commit(Resource *resource)
 {
-    Q_UNUSED(resource)
 #define BUFFER(__FLAG__, __PART__)                        \
     if (pending.flags & State::Flags::__FLAG__##Buffer) { \
         if (current.__PART__) {                           \
@@ -214,82 +212,69 @@ void ShadowInterfacePrivate::org_kde_kwin_shadow_destroy(Resource *resource)
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete q;
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_attach_left(Resource *resource, wl_resource *buffer)
 {
-    Q_UNUSED(resource)
     attach(State::LeftBuffer, buffer);
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_attach_top_left(Resource *resource, wl_resource *buffer)
 {
-    Q_UNUSED(resource)
     attach(State::TopLeftBuffer, buffer);
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_attach_top(Resource *resource, wl_resource *buffer)
 {
-    Q_UNUSED(resource)
     attach(State::TopBuffer, buffer);
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_attach_top_right(Resource *resource, wl_resource *buffer)
 {
-    Q_UNUSED(resource)
     attach(State::TopRightBuffer, buffer);
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_attach_right(Resource *resource, wl_resource *buffer)
 {
-    Q_UNUSED(resource)
     attach(State::RightBuffer, buffer);
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_attach_bottom_right(Resource *resource, wl_resource *buffer)
 {
-    Q_UNUSED(resource)
     attach(State::BottomRightBuffer, buffer);
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_attach_bottom(Resource *resource, wl_resource *buffer)
 {
-    Q_UNUSED(resource)
     attach(State::BottomBuffer, buffer);
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_attach_bottom_left(Resource *resource, wl_resource *buffer)
 {
-    Q_UNUSED(resource)
     attach(State::BottomLeftBuffer, buffer);
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_set_left_offset(Resource *resource, wl_fixed_t offset)
 {
-    Q_UNUSED(resource)
     pending.flags = State::Flags(pending.flags | State::Offset);
     pending.offset.setLeft(wl_fixed_to_double(offset));
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_set_top_offset(Resource *resource, wl_fixed_t offset)
 {
-    Q_UNUSED(resource)
     pending.flags = State::Flags(pending.flags | State::Offset);
     pending.offset.setTop(wl_fixed_to_double(offset));
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_set_right_offset(Resource *resource, wl_fixed_t offset)
 {
-    Q_UNUSED(resource)
     pending.flags = State::Flags(pending.flags | State::Offset);
     pending.offset.setRight(wl_fixed_to_double(offset));
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_set_bottom_offset(Resource *resource, wl_fixed_t offset)
 {
-    Q_UNUSED(resource)
     pending.flags = State::Flags(pending.flags | State::Offset);
     pending.offset.setBottom(wl_fixed_to_double(offset));
 }

@@ -45,8 +45,6 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterOutput::beginFrame()
 
 bool X11WindowedQPainterOutput::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    Q_UNUSED(renderedRegion)
-    Q_UNUSED(damagedRegion)
     return true;
 }
 

@@ -602,71 +602,46 @@ xcb_window_t Effect::x11RootWindow() const
 
 bool Effect::touchDown(qint32 id, const QPointF &pos, quint32 time)
 {
-    Q_UNUSED(id)
-    Q_UNUSED(pos)
-    Q_UNUSED(time)
     return false;
 }
 
 bool Effect::touchMotion(qint32 id, const QPointF &pos, quint32 time)
 {
-    Q_UNUSED(id)
-    Q_UNUSED(pos)
-    Q_UNUSED(time)
     return false;
 }
 
 bool Effect::touchUp(qint32 id, quint32 time)
 {
-    Q_UNUSED(id)
-    Q_UNUSED(time)
     return false;
 }
 
 bool Effect::perform(Feature feature, const QVariantList &arguments)
 {
-    Q_UNUSED(feature)
-    Q_UNUSED(arguments)
     return false;
 }
 
 bool Effect::tabletToolEvent(QTabletEvent *event)
 {
-    Q_UNUSED(event)
     return false;
 }
 
 bool Effect::tabletToolButtonEvent(uint button, bool pressed, quint64 tabletToolId)
 {
-    Q_UNUSED(button)
-    Q_UNUSED(pressed)
-    Q_UNUSED(tabletToolId)
     return false;
 }
 
 bool Effect::tabletPadButtonEvent(uint button, bool pressed, void *tabletPadId)
 {
-    Q_UNUSED(button)
-    Q_UNUSED(pressed)
-    Q_UNUSED(tabletPadId)
     return false;
 }
 
 bool Effect::tabletPadStripEvent(int number, int position, bool isFinger, void *tabletPadId)
 {
-    Q_UNUSED(number)
-    Q_UNUSED(position)
-    Q_UNUSED(isFinger)
-    Q_UNUSED(tabletPadId)
     return false;
 }
 
 bool Effect::tabletPadRingEvent(int number, int position, bool isFinger, void *tabletPadId)
 {
-    Q_UNUSED(number)
-    Q_UNUSED(position)
-    Q_UNUSED(isFinger)
-    Q_UNUSED(tabletPadId)
     return false;
 }
 
@@ -1474,7 +1449,6 @@ QRectF WindowMotionManager::targetGeometry(EffectWindow *w) const
 
 EffectWindow *WindowMotionManager::windowAtPoint(QPoint point, bool useStackingOrder) const
 {
-    Q_UNUSED(useStackingOrder);
     // TODO: Stacking order uses EffectsHandler::stackingOrder() then filters by m_managedWindows
     QHash<EffectWindow *, WindowMotion>::ConstIterator it = m_managedWindows.constBegin();
     while (it != m_managedWindows.constEnd()) {

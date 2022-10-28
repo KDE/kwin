@@ -255,9 +255,6 @@ void Monitor::Corner::mousePressEvent(QGraphicsSceneMouseEvent *e)
 
 void Monitor::Corner::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    Q_UNUSED(option)
-    Q_UNUSED(widget)
-
     if (m_hover) {
         button->setElementPrefix("normal");
 
@@ -290,14 +287,12 @@ void Monitor::Corner::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 
 void Monitor::Corner::hoverEnterEvent(QGraphicsSceneHoverEvent *e)
 {
-    Q_UNUSED(e);
     m_hover = true;
     update();
 }
 
 void Monitor::Corner::hoverLeaveEvent(QGraphicsSceneHoverEvent *e)
 {
-    Q_UNUSED(e);
     m_hover = false;
     update();
 }

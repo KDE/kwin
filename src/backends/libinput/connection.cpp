@@ -631,8 +631,6 @@ void Connection::applyScreenToDevice(Device *device)
 
     // TODO: this is currently non-functional even on DRM. Needs orientation() override there.
     device->setOrientation(Qt::PrimaryOrientation);
-#else
-    Q_UNUSED(device)
 #endif
 }
 

@@ -74,15 +74,12 @@ XToWlDrag::XToWlDrag(X11Source *source, Dnd *dnd)
         checkForFinished();
     });
     connect(source, &X11Source::transferReady, this, [this](xcb_atom_t target, qint32 fd) {
-        Q_UNUSED(target);
-        Q_UNUSED(fd);
         m_dataRequests << QPair<xcb_timestamp_t, bool>(m_source->timestamp(), false);
     });
     connect(&m_selectionSource, &XwlDataSource::dropped, this, [this] {
         m_performed = true;
         if (m_visit) {
             connect(m_visit, &WlVisit::finish, this, [this](WlVisit *visit) {
-                Q_UNUSED(visit);
                 checkForFinished();
             });
 
@@ -123,8 +120,6 @@ XToWlDrag::~XToWlDrag()
 
 DragEventReply XToWlDrag::moveFilter(Window *target, const QPoint &pos)
 {
-    Q_UNUSED(pos);
-
     auto *seat = waylandServer()->seat();
 
     if (m_visit && m_visit->target() == target) {
@@ -415,7 +410,6 @@ bool WlVisit::handlePosition(xcb_client_message_event_t *event)
         return true;
     }
     const uint32_t pos = data->data32[2];
-    Q_UNUSED(pos);
 
     const xcb_timestamp_t timestamp = data->data32[3];
     m_drag->x11Source()->setTimestamp(timestamp);

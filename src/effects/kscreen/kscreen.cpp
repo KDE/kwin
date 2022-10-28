@@ -85,8 +85,6 @@ void KscreenEffect::addScreen(EffectScreen *screen)
 
 void KscreenEffect::reconfigure(ReconfigureFlags flags)
 {
-    Q_UNUSED(flags)
-
     KscreenConfig::self()->read();
     m_xcbState.m_timeLine.setDuration(
         std::chrono::milliseconds(animationTime<KscreenConfig>(250)));

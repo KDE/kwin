@@ -75,8 +75,6 @@ GlideEffect::~GlideEffect() = default;
 
 void GlideEffect::reconfigure(ReconfigureFlags flags)
 {
-    Q_UNUSED(flags)
-
     GlideConfig::self()->read();
     m_duration = std::chrono::milliseconds(animationTime<GlideConfig>(160));
 

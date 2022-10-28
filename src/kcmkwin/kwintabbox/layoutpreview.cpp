@@ -182,7 +182,6 @@ QString ExampleClientModel::longestCaption() const
 
 int ExampleClientModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
     return m_thumbnails.size();
 }
 

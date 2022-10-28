@@ -299,8 +299,6 @@ void QuickSceneEffect::activateView(QuickSceneView *view)
 // Screen views are repainted just before kwin performs its compositing cycle to avoid stalling for vblank
 void QuickSceneEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    Q_UNUSED(presentTime)
-
     if (effects->waylandDisplay()) {
         QuickSceneView *screenView = d->views.value(data.screen);
         if (screenView && screenView->isDirty()) {
@@ -319,9 +317,6 @@ void QuickSceneEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
 
 void QuickSceneEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
-    Q_UNUSED(mask)
-    Q_UNUSED(region)
-
     if (effects->waylandDisplay()) {
         QuickSceneView *screenView = d->views.value(data.screen());
         if (screenView) {
@@ -341,7 +336,6 @@ bool QuickSceneEffect::isActive() const
 
 QVariantMap QuickSceneEffect::initialProperties(EffectScreen *screen)
 {
-    Q_UNUSED(screen)
     return QVariantMap();
 }
 

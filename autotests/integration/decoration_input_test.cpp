@@ -691,7 +691,6 @@ public:
 
     bool eventFilter(QObject *watched, QEvent *event) override
     {
-        Q_UNUSED(watched)
         if (event->type() == QEvent::HoverMove) {
             Q_EMIT hoverMove();
         } else if (event->type() == QEvent::HoverLeave) {

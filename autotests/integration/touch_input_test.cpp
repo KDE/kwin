@@ -363,7 +363,6 @@ void TouchInputTest::testGestureDetection()
 {
     bool callbackTriggered = false;
     const auto callback = [&callbackTriggered](float progress) {
-        Q_UNUSED(progress);
         callbackTriggered = true;
         qWarning() << "progress callback!" << progress;
     };

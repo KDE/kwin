@@ -55,7 +55,6 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglOutput::beginFrame()
 
 bool X11WindowedEglOutput::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    Q_UNUSED(renderedRegion)
     m_lastDamage = damagedRegion;
     GLFramebuffer::popFramebuffer();
     return true;

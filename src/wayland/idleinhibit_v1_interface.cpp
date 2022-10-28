@@ -64,7 +64,6 @@ void IdleInhibitorV1Interface::zwp_idle_inhibitor_v1_destroy(Resource *resource)
 
 void IdleInhibitorV1Interface::zwp_idle_inhibitor_v1_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete this;
 }
 

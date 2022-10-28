@@ -88,7 +88,6 @@ StartupFeedbackEffect::StartupFeedbackEffect()
         Q_EMIT effects->startupAdded(id.id(), icon);
     });
     connect(m_startupInfo, &KStartupInfo::gotRemoveStartup, this, [](const KStartupInfoId &id, const KStartupInfoData &data) {
-        Q_UNUSED(data);
         Q_EMIT effects->startupRemoved(id.id());
     });
     connect(m_startupInfo, &KStartupInfo::gotStartupChange, this, [](const KStartupInfoId &id, const KStartupInfoData &data) {
@@ -132,7 +131,6 @@ bool StartupFeedbackEffect::supported()
 
 void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
 {
-    Q_UNUSED(flags)
     KConfigGroup c = m_configWatcher->config()->group("FeedbackStyle");
     const bool busyCursor = c.readEntry("BusyCursor", true);
 
@@ -247,12 +245,6 @@ void StartupFeedbackEffect::postPaintScreen()
 void StartupFeedbackEffect::slotMouseChanged(const QPoint &pos, const QPoint &oldpos, Qt::MouseButtons buttons,
                                              Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers)
 {
-    Q_UNUSED(pos)
-    Q_UNUSED(oldpos)
-    Q_UNUSED(buttons)
-    Q_UNUSED(oldbuttons)
-    Q_UNUSED(modifiers)
-    Q_UNUSED(oldmodifiers)
     if (m_active) {
         m_dirtyRect |= m_currentGeometry;
         m_currentGeometry = feedbackRect();

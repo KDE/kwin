@@ -123,8 +123,6 @@ void WorkspaceWrapper::setCurrentActivity(QString activity)
     if (Workspace::self()->activities()) {
         Workspace::self()->activities()->setCurrent(activity);
     }
-#else
-    Q_UNUSED(activity)
 #endif
 }
 
@@ -480,7 +478,6 @@ int DeclarativeScriptWorkspaceWrapper::countClientList(QQmlListProperty<KWin::Wi
 qsizetype DeclarativeScriptWorkspaceWrapper::countClientList(QQmlListProperty<KWin::Window> *clients)
 #endif
 {
-    Q_UNUSED(clients)
     return workspace()->allClientList().size();
 }
 
@@ -490,7 +487,6 @@ KWin::Window *DeclarativeScriptWorkspaceWrapper::atClientList(QQmlListProperty<K
 KWin::Window *DeclarativeScriptWorkspaceWrapper::atClientList(QQmlListProperty<KWin::Window> *clients, qsizetype index)
 #endif
 {
-    Q_UNUSED(clients)
     return workspace()->allClientList().at(index);
 }
 

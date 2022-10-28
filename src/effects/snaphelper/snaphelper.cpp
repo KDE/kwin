@@ -75,8 +75,6 @@ SnapHelperEffect::~SnapHelperEffect()
 
 void SnapHelperEffect::reconfigure(ReconfigureFlags flags)
 {
-    Q_UNUSED(flags)
-
     m_animation.timeLine.setDuration(
         std::chrono::milliseconds(static_cast<int>(animationTime(250))));
 }

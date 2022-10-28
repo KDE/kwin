@@ -40,12 +40,10 @@ KWin::LEDs InputDevice::leds() const
 
 void InputDevice::setLeds(KWin::LEDs leds)
 {
-    Q_UNUSED(leds)
 }
 
 void InputDevice::setEnabled(bool enabled)
 {
-    Q_UNUSED(enabled)
 }
 
 bool InputDevice::isEnabled() const
@@ -159,8 +157,6 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
 
 bool ButtonRebindsFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
 {
-    Q_UNUSED(nativeButton);
-
     if (event->type() != QEvent::MouseButtonPress && event->type() != QEvent::MouseButtonRelease) {
         return false;
     }

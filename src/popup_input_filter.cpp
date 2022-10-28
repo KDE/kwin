@@ -43,7 +43,6 @@ void PopupInputFilter::handleWindowRemoved(Window *window)
 }
 bool PopupInputFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
 {
-    Q_UNUSED(nativeButton)
     if (m_popupWindows.isEmpty()) {
         return false;
     }
@@ -91,8 +90,6 @@ bool PopupInputFilter::keyEvent(QKeyEvent *event)
 
 bool PopupInputFilter::touchDown(qint32 id, const QPointF &pos, quint32 time)
 {
-    Q_UNUSED(id)
-    Q_UNUSED(time)
     if (m_popupWindows.isEmpty()) {
         return false;
     }

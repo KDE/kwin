@@ -135,7 +135,6 @@ QVector<ServerSideDecorationInterfacePrivate *> ServerSideDecorationInterfacePri
 
 void ServerSideDecorationInterfacePrivate::org_kde_kwin_server_decoration_request_mode(Resource *resource, uint32_t mode)
 {
-    Q_UNUSED(resource)
     ServerSideDecorationManagerInterface::Mode m = ServerSideDecorationManagerInterface::Mode::None;
     switch (mode) {
     case ServerSideDecorationManagerInterfacePrivate::mode_None:
@@ -163,7 +162,6 @@ void ServerSideDecorationInterfacePrivate::org_kde_kwin_server_decoration_releas
 
 void ServerSideDecorationInterfacePrivate::org_kde_kwin_server_decoration_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete q;
 }
 

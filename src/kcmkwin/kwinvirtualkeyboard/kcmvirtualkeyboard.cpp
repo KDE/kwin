@@ -23,8 +23,6 @@ KcmVirtualKeyboard::KcmVirtualKeyboard(QObject *parent, const QVariantList &args
     , m_data(new VirtualKeyboardData(this))
     , m_model(new VirtualKeyboardsModel(this))
 {
-    Q_UNUSED(args)
-
     qmlRegisterAnonymousType<VirtualKeyboardSettings>("org.kde.kwin.virtualkeyboardsettings", 1);
 
     setAboutData(new KAboutData(QStringLiteral("kcm_virtualkeyboard"),

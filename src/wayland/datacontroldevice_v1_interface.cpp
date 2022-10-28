@@ -107,7 +107,6 @@ DataControlOfferV1Interface *DataControlDeviceV1InterfacePrivate::createDataOffe
 
 void DataControlDeviceV1InterfacePrivate::zwlr_data_control_device_v1_destroy_resource(QtWaylandServer::zwlr_data_control_device_v1::Resource *resource)
 {
-    Q_UNUSED(resource)
     delete q;
 }
 

@@ -77,10 +77,6 @@ void OffscreenEffect::unredirect(EffectWindow *window)
 
 void OffscreenEffect::apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads)
 {
-    Q_UNUSED(window)
-    Q_UNUSED(mask)
-    Q_UNUSED(data)
-    Q_UNUSED(quads)
 }
 
 void OffscreenData::maybeRender(EffectWindow *window)
@@ -279,8 +275,6 @@ CrossFadeEffect::~CrossFadeEffect()
 
 void CrossFadeEffect::drawWindow(EffectWindow *window, int mask, const QRegion &region, WindowPaintData &data)
 {
-    Q_UNUSED(mask)
-
     CrossFadeWindowData *offscreenData = d->windows.value(window);
 
     // paint the new window (if applicable) underneath

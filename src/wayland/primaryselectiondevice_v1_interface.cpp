@@ -47,8 +47,6 @@ PrimarySelectionDeviceV1InterfacePrivate::PrimarySelectionDeviceV1InterfacePriva
 
 void PrimarySelectionDeviceV1InterfacePrivate::zwp_primary_selection_device_v1_set_selection(Resource *resource, wl_resource *source, uint32_t serial)
 {
-    Q_UNUSED(resource)
-    Q_UNUSED(serial)
     PrimarySelectionSourceV1Interface *dataSource = nullptr;
 
     if (source) {
@@ -95,7 +93,6 @@ PrimarySelectionOfferV1Interface *PrimarySelectionDeviceV1InterfacePrivate::crea
 void PrimarySelectionDeviceV1InterfacePrivate::zwp_primary_selection_device_v1_destroy_resource(
     QtWaylandServer::zwp_primary_selection_device_v1::Resource *resource)
 {
-    Q_UNUSED(resource)
     delete q;
 }
 

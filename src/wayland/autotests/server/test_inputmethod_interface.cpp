@@ -133,7 +133,6 @@ protected:
     };
     void zwp_input_method_v1_deactivate(struct ::zwp_input_method_context_v1 *context) override
     {
-        Q_UNUSED(context)
         delete m_context;
         m_context = nullptr;
         Q_EMIT deactivated();

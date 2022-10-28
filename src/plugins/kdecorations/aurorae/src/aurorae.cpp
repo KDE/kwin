@@ -409,7 +409,6 @@ void Decoration::updateBorders()
 
 void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
 {
-    Q_UNUSED(repaintRegion)
     if (!m_view) {
         return;
     }

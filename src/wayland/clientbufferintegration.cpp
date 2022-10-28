@@ -33,7 +33,6 @@ Display *ClientBufferIntegration::display() const
 
 ClientBuffer *ClientBufferIntegration::createBuffer(wl_resource *resource)
 {
-    Q_UNUSED(resource)
     return nullptr;
 }
 

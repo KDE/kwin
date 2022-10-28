@@ -33,8 +33,6 @@ void PlatformCursor::setPos(const QPoint &pos)
 
 void PlatformCursor::changeCursor(QCursor *windowCursor, QWindow *window)
 {
-    Q_UNUSED(windowCursor)
-    Q_UNUSED(window)
     // TODO: implement
 }
 

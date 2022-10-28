@@ -21,7 +21,6 @@ XFixesCursorEventFilter::XFixesCursorEventFilter(X11Cursor *cursor)
 
 bool XFixesCursorEventFilter::event(xcb_generic_event_t *event)
 {
-    Q_UNUSED(event);
     m_cursor->notifyCursorChanged();
     return false;
 }

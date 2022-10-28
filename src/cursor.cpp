@@ -160,7 +160,6 @@ void Cursor::updateTheme(const QString &name, int size)
 void Cursor::slotKGlobalSettingsNotifyChange(int type, int arg)
 {
     // #endif
-    Q_UNUSED(arg)
     if (type == 5 /*CursorChanged*/) {
         InputConfig::self()->inputConfig()->reparseConfiguration();
         loadThemeFromKConfig();

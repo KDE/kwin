@@ -24,12 +24,10 @@ namespace KWin
 
 void InputRedirection::installInputEventSpy(InputEventSpy *spy)
 {
-    Q_UNUSED(spy);
 }
 
 void InputRedirection::uninstallInputEventSpy(InputEventSpy *spy)
 {
-    Q_UNUSED(spy);
 }
 
 InputRedirection *InputRedirection::s_self = nullptr;

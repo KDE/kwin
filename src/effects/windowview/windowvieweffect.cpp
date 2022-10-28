@@ -221,7 +221,6 @@ void WindowViewEffect::reconfigure(ReconfigureFlags)
     }
 
     auto touchCallback = [this](ElectricBorder border, const QPointF &deltaProgress, const EffectScreen *screen) {
-        Q_UNUSED(screen)
         if (m_status == Status::Active) {
             return;
         }

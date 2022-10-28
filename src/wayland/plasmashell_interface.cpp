@@ -127,20 +127,16 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_destroy(Resource
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete q;
 }
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_output(Resource *resource, struct ::wl_resource *output)
 {
-    Q_UNUSED(resource)
-    Q_UNUSED(output)
     // TODO: implement
 }
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_position(Resource *resource, int32_t x, int32_t y)
 {
-    Q_UNUSED(resource);
     QPoint globalPos(x, y);
     if (m_globalPos == globalPos && m_positionSet) {
         return;
@@ -161,8 +157,6 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_open_under_curso
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_role(Resource *resource, uint32_t role)
 {
-    Q_UNUSED(resource)
-
     PlasmaShellSurfaceInterface::Role r = PlasmaShellSurfaceInterface::Role::Normal;
     switch (role) {
     case role_desktop:
@@ -200,8 +194,6 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_role(Resourc
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_panel_behavior(Resource *resource, uint32_t flag)
 {
-    Q_UNUSED(resource)
-
     PlasmaShellSurfaceInterface::PanelBehavior newBehavior = PlasmaShellSurfaceInterface::PanelBehavior::AlwaysVisible;
     switch (flag) {
     case panel_behavior_auto_hide:
@@ -226,16 +218,12 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_panel_behavi
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_skip_taskbar(Resource *resource, uint32_t skip)
 {
-    Q_UNUSED(resource)
-
     m_skipTaskbar = (bool)skip;
     Q_EMIT q->skipTaskbarChanged();
 }
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_skip_switcher(Resource *resource, uint32_t skip)
 {
-    Q_UNUSED(resource)
-
     m_skipSwitcher = (bool)skip;
     Q_EMIT q->skipSwitcherChanged();
 }
@@ -262,8 +250,6 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_panel_auto_hide_
 
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_panel_takes_focus(Resource *resource, uint32_t takesFocus)
 {
-    Q_UNUSED(resource)
-
     if (m_panelTakesFocus == takesFocus) {
         return;
     }

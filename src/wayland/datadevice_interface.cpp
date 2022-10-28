@@ -112,8 +112,6 @@ void DataDeviceInterfacePrivate::data_device_start_drag(Resource *resource,
 
 void DataDeviceInterfacePrivate::data_device_set_selection(Resource *resource, wl_resource *source, uint32_t serial)
 {
-    Q_UNUSED(resource)
-    Q_UNUSED(serial)
     DataSourceInterface *dataSource = DataSourceInterface::get(source);
 
     if (dataSource && dataSource->supportedDragAndDropActions() && wl_resource_get_version(dataSource->resource()) >= WL_DATA_SOURCE_ACTION_SINCE_VERSION) {
@@ -162,7 +160,6 @@ DataOfferInterface *DataDeviceInterfacePrivate::createDataOffer(AbstractDataSour
 
 void DataDeviceInterfacePrivate::data_device_destroy_resource(QtWaylandServer::wl_data_device::Resource *resource)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->aboutToBeDestroyed();
     delete q;
 }
@@ -294,7 +291,6 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
         }
 
         d->drag.posConnection = connect(d->seat, &SeatInterface::touchMoved, this, [this](qint32 id, quint32 serial, const QPointF &globalPosition) {
-            Q_UNUSED(id);
             if (serial != d->drag.serial) {
                 // different touch down has been moved
                 return;

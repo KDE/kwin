@@ -341,11 +341,9 @@ void EffectsHandlerImpl::setupWindowConnections(Window *window)
         Q_EMIT windowHidden(window->effectWindow());
     });
     connect(window, &Window::keepAboveChanged, this, [this, window](bool above) {
-        Q_UNUSED(above)
         Q_EMIT windowKeepAboveChanged(window->effectWindow());
     });
     connect(window, &Window::keepBelowChanged, this, [this, window](bool below) {
-        Q_UNUSED(below)
         Q_EMIT windowKeepBelowChanged(window->effectWindow());
     });
     connect(window, &Window::fullScreenChanged, this, [this, window]() {
@@ -755,7 +753,6 @@ bool EffectsHandlerImpl::tabletToolEvent(TabletEvent *event)
 
 bool EffectsHandlerImpl::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, uint time)
 {
-    Q_UNUSED(time)
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
         if (it->second->tabletToolButtonEvent(button, pressed, tabletToolId.m_uniqueId)) {
@@ -767,7 +764,6 @@ bool EffectsHandlerImpl::tabletToolButtonEvent(uint button, bool pressed, const 
 
 bool EffectsHandlerImpl::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, uint time)
 {
-    Q_UNUSED(time)
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
         if (it->second->tabletPadButtonEvent(button, pressed, tabletPadId.data)) {
@@ -779,7 +775,6 @@ bool EffectsHandlerImpl::tabletPadButtonEvent(uint button, bool pressed, const T
 
 bool EffectsHandlerImpl::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time)
 {
-    Q_UNUSED(time)
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
         if (it->second->tabletPadStripEvent(number, position, isFinger, tabletPadId.data)) {
@@ -791,7 +786,6 @@ bool EffectsHandlerImpl::tabletPadStripEvent(int number, int position, bool isFi
 
 bool EffectsHandlerImpl::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time)
 {
-    Q_UNUSED(time)
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
         if (it->second->tabletPadRingEvent(number, position, isFinger, tabletPadId.data)) {
@@ -1180,8 +1174,6 @@ void EffectsHandlerImpl::setTabBoxWindow(EffectWindow *w)
     if (window->isClient()) {
         workspace()->tabbox()->setCurrentClient(window);
     }
-#else
-    Q_UNUSED(w)
 #endif
 }
 
@@ -1189,8 +1181,6 @@ void EffectsHandlerImpl::setTabBoxDesktop(int desktop)
 {
 #if KWIN_BUILD_TABBOX
     workspace()->tabbox()->setCurrentDesktop(desktop);
-#else
-    Q_UNUSED(desktop)
 #endif
 }
 
@@ -2588,7 +2578,6 @@ const QRect &EffectFrameImpl::geometry() const
 
 void EffectFrameImpl::setGeometry(const QRect &geometry, bool force)
 {
-    Q_UNUSED(force)
     m_view->setGeometry(geometry);
 }
 
@@ -2623,8 +2612,6 @@ void EffectFrameImpl::setPosition(const QPoint &point)
 
 void EffectFrameImpl::render(const QRegion &region, double opacity, double frameOpacity)
 {
-    Q_UNUSED(region);
-
     if (!m_view->rootItem()) {
         return;
     }

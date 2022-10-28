@@ -60,7 +60,6 @@ ClientConnectionPrivate::~ClientConnectionPrivate()
 
 void ClientConnectionPrivate::destroyListenerCallback(wl_listener *listener, void *data)
 {
-    Q_UNUSED(listener)
     wl_client *client = reinterpret_cast<wl_client *>(data);
     auto it = std::find_if(s_allClients.constBegin(), s_allClients.constEnd(), [client](ClientConnectionPrivate *c) {
         return c->client == client;

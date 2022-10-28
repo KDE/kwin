@@ -275,7 +275,6 @@ MockInputMethod::~MockInputMethod()
 
 void MockInputMethod::zwp_input_method_v1_activate(struct ::zwp_input_method_context_v1 *context)
 {
-    Q_UNUSED(context)
     if (!m_inputSurface) {
         m_inputSurface = Test::createSurface();
         m_inputMethodSurface = Test::createInputPanelSurfaceV1(m_inputSurface.get(), s_waylandConnection.outputs.first());
@@ -1306,7 +1305,6 @@ bool VirtualInputDevice::isEnabled() const
 
 void VirtualInputDevice::setEnabled(bool enabled)
 {
-    Q_UNUSED(enabled)
 }
 
 LEDs VirtualInputDevice::leds() const
@@ -1316,7 +1314,6 @@ LEDs VirtualInputDevice::leds() const
 
 void VirtualInputDevice::setLeds(LEDs leds)
 {
-    Q_UNUSED(leds)
 }
 
 bool VirtualInputDevice::isKeyboard() const

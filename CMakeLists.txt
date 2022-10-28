@@ -14,6 +14,7 @@ find_package(ECM ${KF5_MIN_VERSION} REQUIRED NO_MODULE)
 include(FeatureSummary)
 include(WriteBasicConfigVersionFile)
 include(GenerateExportHeader)
+include(CheckCXXCompilerFlag)
 
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
@@ -440,6 +441,11 @@ include_directories(BEFORE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/platformsupport
     ${CMAKE_CURRENT_SOURCE_DIR}/src/colors
 )
+
+check_cxx_compiler_flag(-Wno-unused-parameter COMPILER_UNUSED_PARAMETER_SUPPORTED)
+if (COMPILER_UNUSED_PARAMETER_SUPPORTED)
+    add_compile_options(-Wno-unused-parameter)
+endif()
 
 if (KF5DocTools_FOUND)
     add_subdirectory(doc)

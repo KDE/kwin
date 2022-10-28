@@ -114,7 +114,6 @@ protected:
 
 void ContrastInterfacePrivate::org_kde_kwin_contrast_commit(Resource *resource)
 {
-    Q_UNUSED(resource)
     currentRegion = pendingRegion;
     currentContrast = pendingContrast;
     currentIntensity = pendingIntensity;
@@ -124,7 +123,6 @@ void ContrastInterfacePrivate::org_kde_kwin_contrast_commit(Resource *resource)
 
 void ContrastInterfacePrivate::org_kde_kwin_contrast_set_region(Resource *resource, wl_resource *region)
 {
-    Q_UNUSED(resource)
     RegionInterface *r = RegionInterface::get(region);
     if (r) {
         pendingRegion = r->region();
@@ -135,33 +133,26 @@ void ContrastInterfacePrivate::org_kde_kwin_contrast_set_region(Resource *resour
 
 void ContrastInterfacePrivate::org_kde_kwin_contrast_set_contrast(Resource *resource, wl_fixed_t contrast)
 {
-    Q_UNUSED(resource)
     pendingContrast = wl_fixed_to_double(contrast);
 }
 
 void ContrastInterfacePrivate::org_kde_kwin_contrast_set_intensity(Resource *resource, wl_fixed_t intensity)
 {
-    Q_UNUSED(resource)
     pendingIntensity = wl_fixed_to_double(intensity);
 }
 
 void ContrastInterfacePrivate::org_kde_kwin_contrast_set_saturation(Resource *resource, wl_fixed_t saturation)
 {
-    Q_UNUSED(resource)
     pendingSaturation = wl_fixed_to_double(saturation);
 }
 
 void ContrastInterfacePrivate::org_kde_kwin_contrast_set_frost(Resource *resource, int r, int g, int b, int a)
 {
-    Q_UNUSED(resource)
-
     pendingFrost = QColor(r, g, b, a);
 }
 
 void ContrastInterfacePrivate::org_kde_kwin_contrast_unset_frost(Resource *resource)
 {
-    Q_UNUSED(resource)
-
     pendingFrost = {};
 }
 
@@ -172,7 +163,6 @@ void ContrastInterfacePrivate::org_kde_kwin_contrast_release(Resource *resource)
 
 void ContrastInterfacePrivate::org_kde_kwin_contrast_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete q;
 }
 

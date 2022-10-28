@@ -63,13 +63,11 @@ void IdleTimeoutInterface::org_kde_kwin_idle_timeout_release(Resource *resource)
 
 void IdleTimeoutInterface::org_kde_kwin_idle_timeout_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete this;
 }
 
 void IdleTimeoutInterface::org_kde_kwin_idle_timeout_simulate_user_activity(Resource *resource)
 {
-    Q_UNUSED(resource)
     input()->simulateUserActivity();
 }
 

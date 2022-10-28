@@ -60,17 +60,11 @@ std::unique_ptr<QPainterBackend> Platform::createQPainterBackend()
 
 std::optional<DmaBufParams> Platform::testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
 {
-    Q_UNUSED(size)
-    Q_UNUSED(format)
-    Q_UNUSED(modifiers)
     return {};
 }
 
 std::shared_ptr<DmaBufTexture> Platform::createDmaBufTexture(const QSize &size, quint32 format, uint64_t modifier)
 {
-    Q_UNUSED(size)
-    Q_UNUSED(format)
-    Q_UNUSED(modifier)
     return {};
 }
 
@@ -132,9 +126,6 @@ void Platform::setReady(bool ready)
 
 Output *Platform::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
-    Q_UNUSED(name);
-    Q_UNUSED(size);
-    Q_UNUSED(scale);
     return nullptr;
 }
 
@@ -145,7 +136,6 @@ void Platform::removeVirtualOutput(Output *output)
 
 void Platform::warpPointer(const QPointF &globalPos)
 {
-    Q_UNUSED(globalPos)
 }
 
 bool Platform::supportsNativeFence() const
@@ -188,7 +178,6 @@ bool Platform::openGLCompositingIsBroken() const
 
 void Platform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
 {
-    Q_UNUSED(safePoint)
 }
 
 void Platform::startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName)

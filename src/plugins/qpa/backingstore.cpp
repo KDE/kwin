@@ -33,8 +33,6 @@ QPaintDevice *BackingStore::paintDevice()
 
 void BackingStore::resize(const QSize &size, const QRegion &staticContents)
 {
-    Q_UNUSED(staticContents)
-
     if (m_backBuffer.size() == size) {
         return;
     }
@@ -64,8 +62,6 @@ static void blitImage(const QImage &source, QImage &target, const QRegion &regio
 
 void BackingStore::flush(QWindow *window, const QRegion &region, const QPoint &offset)
 {
-    Q_UNUSED(offset)
-
     Window *platformWindow = static_cast<Window *>(window->handle());
     InternalWindow *internalWindow = platformWindow->internalWindow();
     if (!internalWindow) {

@@ -71,7 +71,6 @@ protected:
     }
     void layoutChanged(uint index) override
     {
-        Q_UNUSED(index)
     }
 
 private:

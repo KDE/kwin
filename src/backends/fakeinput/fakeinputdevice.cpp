@@ -16,8 +16,6 @@ FakeInputDevice::FakeInputDevice(KWaylandServer::FakeInputDevice *device, QObjec
     , m_name(QStringLiteral("Fake Input Device %1").arg(++s_lastDeviceId))
 {
     connect(device, &KWaylandServer::FakeInputDevice::authenticationRequested, this, [device](const QString &application, const QString &reason) {
-        Q_UNUSED(application)
-        Q_UNUSED(reason)
         // TODO: make secure
         device->setAuthentication(true);
     });
@@ -99,7 +97,6 @@ bool FakeInputDevice::isEnabled() const
 
 void FakeInputDevice::setEnabled(bool enabled)
 {
-    Q_UNUSED(enabled)
 }
 
 LEDs FakeInputDevice::leds() const
@@ -109,7 +106,6 @@ LEDs FakeInputDevice::leds() const
 
 void FakeInputDevice::setLeds(LEDs leds)
 {
-    Q_UNUSED(leds)
 }
 
 bool FakeInputDevice::isKeyboard() const

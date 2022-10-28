@@ -46,13 +46,11 @@ void PrimarySelectionOfferV1InterfacePrivate::zwp_primary_selection_offer_v1_des
 void PrimarySelectionOfferV1InterfacePrivate::zwp_primary_selection_offer_v1_destroy_resource(
     QtWaylandServer::zwp_primary_selection_offer_v1::Resource *resource)
 {
-    Q_UNUSED(resource)
     delete q;
 }
 
 void PrimarySelectionOfferV1InterfacePrivate::zwp_primary_selection_offer_v1_receive(Resource *resource, const QString &mimeType, qint32 fd)
 {
-    Q_UNUSED(resource)
     if (!source) {
         close(fd);
         return;

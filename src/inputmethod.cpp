@@ -314,7 +314,6 @@ void InputMethod::textInputInterfaceV2StateUpdated(quint32 serial, KWaylandServe
     if (!m_enabled) {
         return;
     }
-    Q_UNUSED(serial);
 
     auto t2 = waylandServer()->seat()->textInputV2();
     auto inputContext = waylandServer()->inputMethod()->context();
@@ -434,8 +433,6 @@ static quint32 keysymToKeycode(quint32 sym)
 
 void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool pressed, quint32 modifiers)
 {
-    Q_UNUSED(serial)
-    Q_UNUSED(time)
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
         if (pressed) {
@@ -457,7 +454,6 @@ void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool
 
 void InputMethod::commitString(qint32 serial, const QString &text)
 {
-    Q_UNUSED(serial)
     if (auto t2 = waylandServer()->seat()->textInputV2(); t2 && t2->isEnabled()) {
         t2->commitString(text.toUtf8());
         t2->preEdit({}, {});
@@ -533,7 +529,6 @@ void InputMethod::setCursorPosition(qint32 index, qint32 anchor)
 
 void InputMethod::setLanguage(uint32_t serial, const QString &language)
 {
-    Q_UNUSED(serial)
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
         t2->setLanguage(language.toUtf8());
@@ -542,7 +537,6 @@ void InputMethod::setLanguage(uint32_t serial, const QString &language)
 
 void InputMethod::setTextDirection(uint32_t serial, Qt::LayoutDirection direction)
 {
-    Q_UNUSED(serial)
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
         t2->setTextDirection(direction);
@@ -578,7 +572,6 @@ void InputMethod::setPreeditStyling(quint32 index, quint32 length, quint32 style
 
 void InputMethod::setPreeditString(uint32_t serial, const QString &text, const QString &commit)
 {
-    Q_UNUSED(serial)
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
         t2->preEdit(text.toUtf8(), commit.toUtf8());
@@ -626,7 +619,6 @@ void InputMethod::key(quint32 /*serial*/, quint32 /*time*/, quint32 keyCode, boo
 
 void InputMethod::modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group)
 {
-    Q_UNUSED(serial)
     auto xkb = input()->keyboard()->xkb();
     xkb->updateModifiers(mods_depressed, mods_latched, mods_locked, group);
 }

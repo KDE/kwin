@@ -80,7 +80,6 @@ void KeyboardShortcutsInhibitorV1InterfacePrivate::zwp_keyboard_shortcuts_inhibi
 
 void KeyboardShortcutsInhibitorV1InterfacePrivate::zwp_keyboard_shortcuts_inhibitor_v1_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     // Ensure manager don't track anymore this inhibitor
     if (m_manager) {
         m_manager->removeInhibitor(m_surface, m_seat);

@@ -39,9 +39,6 @@ LinuxDmaBufV1RendererInterface::~LinuxDmaBufV1RendererInterface()
 
 KWaylandServer::LinuxDmaBufV1ClientBuffer *LinuxDmaBufV1RendererInterface::importBuffer(DmaBufAttributes &&attrs, quint32 flags)
 {
-    Q_UNUSED(attrs)
-    Q_UNUSED(flags)
-
     return nullptr;
 }
 

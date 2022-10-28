@@ -51,7 +51,6 @@ void EglGbmLayer::aboutToStartPainting(const QRegion &damagedRegion)
 
 bool EglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    Q_UNUSED(renderedRegion)
     const bool ret = m_surface.endRendering(m_pipeline->renderOrientation(), damagedRegion);
     if (ret) {
         m_currentDamage = damagedRegion;

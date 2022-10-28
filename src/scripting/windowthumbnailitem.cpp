@@ -262,7 +262,6 @@ qreal WindowThumbnailItem::saturation() const
 
 void WindowThumbnailItem::setSaturation(qreal saturation)
 {
-    Q_UNUSED(saturation)
     qCWarning(KWIN_SCRIPTING) << "ThumbnailItem.saturation is removed. Use a shader effect to change saturation";
 }
 
@@ -273,7 +272,6 @@ qreal WindowThumbnailItem::brightness() const
 
 void WindowThumbnailItem::setBrightness(qreal brightness)
 {
-    Q_UNUSED(brightness)
     qCWarning(KWIN_SCRIPTING) << "ThumbnailItem.brightness is removed. Use a shader effect to change brightness";
 }
 
@@ -284,7 +282,6 @@ QQuickItem *WindowThumbnailItem::clipTo() const
 
 void WindowThumbnailItem::setClipTo(QQuickItem *clip)
 {
-    Q_UNUSED(clip)
     qCWarning(KWIN_SCRIPTING) << "ThumbnailItem.clipTo is removed and it has no replacements";
 }
 

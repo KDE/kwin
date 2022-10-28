@@ -760,7 +760,6 @@ TabletPadV2Interface *TabletSeatV2Interface::addTabletPad(const QString &sysname
                                                           quint32 currentMode,
                                                           TabletV2Interface *tablet)
 {
-    Q_UNUSED(name);
     auto iface = new TabletPadV2Interface(paths.at(0), buttons, rings, strips, modes, currentMode, d->m_display, this);
     iface->d->m_seat = this;
     for (auto r : d->resourceMap()) {

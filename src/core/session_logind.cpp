@@ -326,7 +326,6 @@ void LogindSession::handleResumeDevice(uint major, uint minor, QDBusUnixFileDesc
 {
     // We don't care about the file descriptor as the libinput backend will re-open input devices
     // and the drm file descriptors remain valid after pausing gpus.
-    Q_UNUSED(fileDescriptor)
 
     Q_EMIT deviceResumed(makedev(major, minor));
 }

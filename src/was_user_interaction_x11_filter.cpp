@@ -19,7 +19,6 @@ WasUserInteractionX11Filter::WasUserInteractionX11Filter()
 
 bool WasUserInteractionX11Filter::event(xcb_generic_event_t *event)
 {
-    Q_UNUSED(event);
     workspace()->setWasUserInteraction();
     return false;
 }

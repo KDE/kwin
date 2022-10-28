@@ -119,7 +119,6 @@ void KWinWrapper::run()
     m_kwinProcess->setArguments(args);
 
     connect(m_kwinProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [this](int exitCode, QProcess::ExitStatus exitStatus) {
-        Q_UNUSED(exitStatus)
         if (exitCode == 0) {
             qApp->quit();
             return;

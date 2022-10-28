@@ -194,7 +194,6 @@ void XdgExportedV2Interface::zxdg_exported_v2_destroy(Resource *resource)
 
 void XdgExportedV2Interface::zxdg_exported_v2_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete this;
 }
 
@@ -215,7 +214,6 @@ void XdgDummyImportedV2Interface::zxdg_imported_v2_destroy(Resource *resource)
 
 void XdgDummyImportedV2Interface::zxdg_imported_v2_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete this;
 }
 
@@ -238,7 +236,6 @@ SurfaceInterface *XdgImportedV2Interface::surface() const
 
 void XdgImportedV2Interface::zxdg_imported_v2_set_parent_of(Resource *resource, wl_resource *surface)
 {
-    Q_UNUSED(resource)
     SurfaceInterface *surf = SurfaceInterface::get(surface);
 
     if (!surf) {
@@ -256,7 +253,6 @@ void XdgImportedV2Interface::zxdg_imported_v2_destroy(Resource *resource)
 
 void XdgImportedV2Interface::zxdg_imported_v2_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete this;
 }
 

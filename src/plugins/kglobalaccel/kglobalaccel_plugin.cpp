@@ -21,8 +21,6 @@ KGlobalAccelImpl::~KGlobalAccelImpl() = default;
 
 bool KGlobalAccelImpl::grabKey(int key, bool grab)
 {
-    Q_UNUSED(key)
-    Q_UNUSED(grab)
     return true;
 }
 

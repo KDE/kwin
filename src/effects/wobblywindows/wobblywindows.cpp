@@ -322,7 +322,6 @@ void WobblyWindowsEffect::slotWindowStartUserMovedResized(EffectWindow *w)
 
 void WobblyWindowsEffect::slotWindowStepUserMovedResized(EffectWindow *w, const QRectF &geometry)
 {
-    Q_UNUSED(geometry)
     if (windows.contains(w)) {
         WindowWobblyInfos &wwi = windows[w];
         const QRectF rect = w->frameGeometry();
@@ -364,8 +363,6 @@ void WobblyWindowsEffect::slotWindowFinishUserMovedResized(EffectWindow *w)
 
 void WobblyWindowsEffect::slotWindowMaximizeStateChanged(EffectWindow *w, bool horizontal, bool vertical)
 {
-    Q_UNUSED(horizontal)
-    Q_UNUSED(vertical)
     if (w->isUserMove() || w->isSpecialWindow()) {
         return;
     }

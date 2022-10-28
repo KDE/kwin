@@ -309,7 +309,6 @@ QSize Output::orientateSize(const QSize &size) const
 
 void Output::setDpmsMode(DpmsMode mode)
 {
-    Q_UNUSED(mode)
 }
 
 Output::DpmsMode Output::dpmsMode() const
@@ -395,7 +394,6 @@ Output::RgbRange Output::rgbRange() const
 
 void Output::setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation)
 {
-    Q_UNUSED(transformation);
 }
 
 ContentType Output::contentType() const

@@ -45,8 +45,6 @@ PipeWireCore::~PipeWireCore()
 
 void PipeWireCore::onCoreError(void *data, uint32_t id, int seq, int res, const char *message)
 {
-    Q_UNUSED(seq)
-
     qCWarning(KWIN_SCREENCAST) << "PipeWire remote error: " << message;
     if (id == PW_ID_CORE && res == -EPIPE) {
         PipeWireCore *pw = static_cast<PipeWireCore *>(data);

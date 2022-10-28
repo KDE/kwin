@@ -50,8 +50,6 @@ static void cleanupShmPool(void *poolHandle)
 
 void ShmClientBufferPrivate::buffer_destroy_callback(wl_listener *listener, void *data)
 {
-    Q_UNUSED(data)
-
     auto bufferPrivate = reinterpret_cast<ShmClientBufferPrivate::DestroyListener *>(listener)->receiver;
     wl_shm_buffer *buffer = wl_shm_buffer_get(bufferPrivate->q->resource());
     wl_shm_pool *pool = wl_shm_buffer_ref_pool(buffer);

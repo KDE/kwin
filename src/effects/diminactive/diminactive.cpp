@@ -58,8 +58,6 @@ DimInactiveEffect::~DimInactiveEffect()
 
 void DimInactiveEffect::reconfigure(ReconfigureFlags flags)
 {
-    Q_UNUSED(flags)
-
     DimInactiveConfig::self()->read();
 
     // TODO: Use normalized strength param.

@@ -170,8 +170,6 @@ bool Deleted::isDeleted() const
 
 NET::WindowType Deleted::windowType(bool direct, int supportedTypes) const
 {
-    Q_UNUSED(direct)
-    Q_UNUSED(supportedTypes)
     return m_type;
 }
 

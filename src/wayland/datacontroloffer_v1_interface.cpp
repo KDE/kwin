@@ -44,13 +44,11 @@ void DataControlOfferV1InterfacePrivate::zwlr_data_control_offer_v1_destroy(QtWa
 
 void DataControlOfferV1InterfacePrivate::zwlr_data_control_offer_v1_destroy_resource(QtWaylandServer::zwlr_data_control_offer_v1::Resource *resource)
 {
-    Q_UNUSED(resource)
     delete q;
 }
 
 void DataControlOfferV1InterfacePrivate::zwlr_data_control_offer_v1_receive(Resource *resource, const QString &mimeType, qint32 fd)
 {
-    Q_UNUSED(resource)
     if (!source) {
         close(fd);
         return;

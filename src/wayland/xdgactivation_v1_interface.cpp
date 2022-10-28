@@ -44,20 +44,17 @@ protected:
 
 void XdgActivationTokenV1Interface::xdg_activation_token_v1_set_serial(Resource *resource, uint32_t serial, struct ::wl_resource *seat)
 {
-    Q_UNUSED(resource);
     m_serial = serial;
     m_seat = seat;
 }
 
 void XdgActivationTokenV1Interface::xdg_activation_token_v1_set_app_id(Resource *resource, const QString &app_id)
 {
-    Q_UNUSED(resource);
     m_appId = app_id;
 }
 
 void XdgActivationTokenV1Interface::xdg_activation_token_v1_set_surface(Resource *resource, struct ::wl_resource *surface)
 {
-    Q_UNUSED(resource);
     m_surface = SurfaceInterface::get(surface);
 }
 
@@ -82,7 +79,6 @@ void XdgActivationTokenV1Interface::xdg_activation_token_v1_destroy(Resource *re
 
 void XdgActivationTokenV1Interface::xdg_activation_token_v1_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource);
     delete this;
 }
 
@@ -114,7 +110,6 @@ void XdgActivationV1InterfacePrivate::xdg_activation_v1_get_activation_token(Res
 
 void XdgActivationV1InterfacePrivate::xdg_activation_v1_activate(Resource *resource, const QString &token, struct ::wl_resource *surface)
 {
-    Q_UNUSED(resource);
     Q_EMIT q->activateRequested(SurfaceInterface::get(surface), token);
 }
 

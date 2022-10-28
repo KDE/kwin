@@ -574,7 +574,6 @@ bool XcbEventFilter::nativeEventFilter(const QByteArray &eventType, void *messag
 bool XcbEventFilter::nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result)
 #endif
 {
-    Q_UNUSED(result)
     if (eventType == "xcb_generic_event_t") {
         return kwinApp()->dispatchEvent(static_cast<xcb_generic_event_t *>(message));
     }

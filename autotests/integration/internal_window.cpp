@@ -120,7 +120,6 @@ HelperWindow::~HelperWindow() = default;
 
 void HelperWindow::paintEvent(QPaintEvent *event)
 {
-    Q_UNUSED(event)
     QPainter p(this);
     p.fillRect(0, 0, width(), height(), Qt::red);
 }
@@ -158,19 +157,16 @@ void HelperWindow::mouseReleaseEvent(QMouseEvent *event)
 
 void HelperWindow::wheelEvent(QWheelEvent *event)
 {
-    Q_UNUSED(event)
     Q_EMIT wheel();
 }
 
 void HelperWindow::keyPressEvent(QKeyEvent *event)
 {
-    Q_UNUSED(event)
     Q_EMIT keyPressed();
 }
 
 void HelperWindow::keyReleaseEvent(QKeyEvent *event)
 {
-    Q_UNUSED(event)
     Q_EMIT keyReleased();
 }
 

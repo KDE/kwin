@@ -107,8 +107,6 @@ MouseCursorWidget::~MouseCursorWidget() = default;
 
 void MouseCursorWidget::paintEvent(QPaintEvent *event)
 {
-    Q_UNUSED(event)
-
     QPainter p(this);
     p.fillRect(0, 0, width(), height(), Qt::white);
     if (geometry().contains(m_cursorPos)) {

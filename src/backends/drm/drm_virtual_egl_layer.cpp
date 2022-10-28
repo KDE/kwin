@@ -78,7 +78,6 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame()
 
 bool VirtualEglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    Q_UNUSED(renderedRegion);
     GLFramebuffer::popFramebuffer();
     const auto buffer = m_gbmSurface->swapBuffers(damagedRegion);
     if (buffer) {

@@ -518,9 +518,6 @@ static std::chrono::nanoseconds convertTimestamp(clockid_t sourceClock, clockid_
 
 void DrmGpu::pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, unsigned int usec, unsigned int crtc_id, void *user_data)
 {
-    Q_UNUSED(fd)
-    Q_UNUSED(sequence)
-
     DrmGpu *gpu = static_cast<DrmGpu *>(user_data);
 
     // The static_cast<> here are for a 32-bit environment where

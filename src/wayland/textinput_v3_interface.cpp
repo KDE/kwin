@@ -291,7 +291,6 @@ bool TextInputV3InterfacePrivate::isEnabled() const
 void TextInputV3InterfacePrivate::zwp_text_input_v3_enable(Resource *resource)
 {
     // reset pending state to default
-    Q_UNUSED(resource)
     defaultPending();
     pending.enabled = true;
 }
@@ -299,7 +298,6 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_enable(Resource *resource)
 void TextInputV3InterfacePrivate::zwp_text_input_v3_disable(Resource *resource)
 {
     // reset pending state to default
-    Q_UNUSED(resource)
     defaultPending();
     preeditText = QString();
     preeditCursorBegin = 0;
@@ -308,7 +306,6 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_disable(Resource *resource)
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_set_surrounding_text(Resource *resource, const QString &text, int32_t cursor, int32_t anchor)
 {
-    Q_UNUSED(resource)
     // zwp_text_input_v3_set_surrounding_text is no-op if enabled request is not pending
     if (!pending.enabled) {
         return;
@@ -320,7 +317,6 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_set_surrounding_text(Resourc
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_set_content_type(Resource *resource, uint32_t hint, uint32_t purpose)
 {
-    Q_UNUSED(resource)
     // zwp_text_input_v3_set_content_type is no-op if enabled request is not pending
     if (!pending.enabled) {
         return;
@@ -331,7 +327,6 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_set_content_type(Resource *r
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_set_cursor_rectangle(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    Q_UNUSED(resource)
     // zwp_text_input_v3_set_cursor_rectangle is no-op if enabled request is not pending
     if (!pending.enabled) {
         return;
@@ -341,7 +336,6 @@ void TextInputV3InterfacePrivate::zwp_text_input_v3_set_cursor_rectangle(Resourc
 
 void TextInputV3InterfacePrivate::zwp_text_input_v3_set_text_change_cause(Resource *resource, uint32_t cause)
 {
-    Q_UNUSED(resource)
     // zwp_text_input_v3_set_text_change_cause is no-op if enabled request is not pending
     if (!pending.enabled) {
         return;

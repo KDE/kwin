@@ -107,13 +107,11 @@ QRect ScreenPreviewWidget::previewRect() const
 
 void ScreenPreviewWidget::resizeEvent(QResizeEvent *e)
 {
-    Q_UNUSED(e)
     d->updateScreenGraphics();
 }
 
 void ScreenPreviewWidget::paintEvent(QPaintEvent *event)
 {
-    Q_UNUSED(event)
     if (d->monitorRect.size().isEmpty()) {
         return;
     }

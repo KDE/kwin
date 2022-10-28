@@ -312,7 +312,6 @@ void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qr
 void PointerInputRedirection::processSwipeGestureBegin(int fingerCount, quint32 time, KWin::InputDevice *device)
 {
     input()->setLastInputHandler(this);
-    Q_UNUSED(device)
     if (!inited()) {
         return;
     }
@@ -324,7 +323,6 @@ void PointerInputRedirection::processSwipeGestureBegin(int fingerCount, quint32 
 void PointerInputRedirection::processSwipeGestureUpdate(const QPointF &delta, quint32 time, KWin::InputDevice *device)
 {
     input()->setLastInputHandler(this);
-    Q_UNUSED(device)
     if (!inited()) {
         return;
     }
@@ -337,7 +335,6 @@ void PointerInputRedirection::processSwipeGestureUpdate(const QPointF &delta, qu
 void PointerInputRedirection::processSwipeGestureEnd(quint32 time, KWin::InputDevice *device)
 {
     input()->setLastInputHandler(this);
-    Q_UNUSED(device)
     if (!inited()) {
         return;
     }
@@ -350,7 +347,6 @@ void PointerInputRedirection::processSwipeGestureEnd(quint32 time, KWin::InputDe
 void PointerInputRedirection::processSwipeGestureCancelled(quint32 time, KWin::InputDevice *device)
 {
     input()->setLastInputHandler(this);
-    Q_UNUSED(device)
     if (!inited()) {
         return;
     }
@@ -363,7 +359,6 @@ void PointerInputRedirection::processSwipeGestureCancelled(quint32 time, KWin::I
 void PointerInputRedirection::processPinchGestureBegin(int fingerCount, quint32 time, KWin::InputDevice *device)
 {
     input()->setLastInputHandler(this);
-    Q_UNUSED(device)
     if (!inited()) {
         return;
     }
@@ -376,7 +371,6 @@ void PointerInputRedirection::processPinchGestureBegin(int fingerCount, quint32 
 void PointerInputRedirection::processPinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time, KWin::InputDevice *device)
 {
     input()->setLastInputHandler(this);
-    Q_UNUSED(device)
     if (!inited()) {
         return;
     }
@@ -389,7 +383,6 @@ void PointerInputRedirection::processPinchGestureUpdate(qreal scale, qreal angle
 void PointerInputRedirection::processPinchGestureEnd(quint32 time, KWin::InputDevice *device)
 {
     input()->setLastInputHandler(this);
-    Q_UNUSED(device)
     if (!inited()) {
         return;
     }
@@ -402,7 +395,6 @@ void PointerInputRedirection::processPinchGestureEnd(quint32 time, KWin::InputDe
 void PointerInputRedirection::processPinchGestureCancelled(quint32 time, KWin::InputDevice *device)
 {
     input()->setLastInputHandler(this);
-    Q_UNUSED(device)
     if (!inited()) {
         return;
     }
@@ -414,7 +406,6 @@ void PointerInputRedirection::processPinchGestureCancelled(quint32 time, KWin::I
 
 void PointerInputRedirection::processHoldGestureBegin(int fingerCount, quint32 time, KWin::InputDevice *device)
 {
-    Q_UNUSED(device)
     if (!inited()) {
         return;
     }
@@ -426,7 +417,6 @@ void PointerInputRedirection::processHoldGestureBegin(int fingerCount, quint32 t
 
 void PointerInputRedirection::processHoldGestureEnd(quint32 time, KWin::InputDevice *device)
 {
-    Q_UNUSED(device)
     if (!inited()) {
         return;
     }
@@ -438,7 +428,6 @@ void PointerInputRedirection::processHoldGestureEnd(quint32 time, KWin::InputDev
 
 void PointerInputRedirection::processHoldGestureCancelled(quint32 time, KWin::InputDevice *device)
 {
-    Q_UNUSED(device)
     if (!inited()) {
         return;
     }

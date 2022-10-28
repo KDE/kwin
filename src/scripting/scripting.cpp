@@ -691,8 +691,6 @@ void KWin::Scripting::init()
     qmlRegisterUncreatableType<KWin::QuickSceneView>("org.kde.kwin", 3, 0, "SceneView", QStringLiteral("Can't instantiate an object of type SceneView"));
 
     qmlRegisterSingletonType<DeclarativeScriptWorkspaceWrapper>("org.kde.kwin", 3, 0, "Workspace", [](QQmlEngine *qmlEngine, QJSEngine *jsEngine) {
-        Q_UNUSED(qmlEngine)
-        Q_UNUSED(jsEngine)
         return new DeclarativeScriptWorkspaceWrapper();
     });
     qmlRegisterSingletonInstance("org.kde.kwin", 3, 0, "Options", options);

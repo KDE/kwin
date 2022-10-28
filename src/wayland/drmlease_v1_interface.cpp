@@ -328,7 +328,6 @@ void DrmLeaseRequestV1Interface::invalidate()
 
 void DrmLeaseRequestV1Interface::wp_drm_lease_request_v1_request_connector(Resource *resource, struct ::wl_resource *connector_handle)
 {
-    Q_UNUSED(resource);
     if (auto connector = resource_cast<DrmLeaseConnectorV1Interface *>(connector_handle)) {
         if (connector->device() != m_device) {
             wl_resource_post_error(resource->handle, WP_DRM_LEASE_REQUEST_V1_ERROR_WRONG_DEVICE, "Requested connector from invalid lease device");
@@ -378,7 +377,6 @@ void DrmLeaseRequestV1Interface::wp_drm_lease_request_v1_submit(Resource *resour
 
 void DrmLeaseRequestV1Interface::wp_drm_lease_request_v1_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete this;
 }
 
@@ -444,7 +442,6 @@ void DrmLeaseV1Interface::wp_drm_lease_v1_destroy(Resource *resource)
 
 void DrmLeaseV1Interface::wp_drm_lease_v1_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete this;
 }
 

@@ -90,7 +90,6 @@ bool WaylandWindow::isLocalhost() const
 
 Window *WaylandWindow::findModal(bool allow_itself)
 {
-    Q_UNUSED(allow_itself)
     return nullptr;
 }
 

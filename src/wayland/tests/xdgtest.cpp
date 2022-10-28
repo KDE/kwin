@@ -106,8 +106,6 @@ void XdgTest::setupRegistry(Registry *registry)
                 &XdgShellSurface::configureRequested,
                 this,
                 [this](const QSize &size, KWayland::Client::XdgShellSurface::States states, int serial) {
-                    Q_UNUSED(size);
-                    Q_UNUSED(states);
                     m_xdgShellSurface->ackConfigure(serial);
                     render();
                 });
@@ -124,9 +122,6 @@ void XdgTest::setupRegistry(Registry *registry)
             }
             Pointer *p = s->createPointer(this);
             connect(p, &Pointer::buttonStateChanged, this, [this](quint32 serial, quint32 time, quint32 button, Pointer::ButtonState state) {
-                Q_UNUSED(button)
-                Q_UNUSED(serial)
-                Q_UNUSED(time)
                 if (state == Pointer::ButtonState::Released) {
                     if (m_popupSurface) {
                         m_popupSurface->deleteLater();

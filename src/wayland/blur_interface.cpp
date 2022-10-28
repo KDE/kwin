@@ -42,7 +42,6 @@ void BlurManagerInterfacePrivate::org_kde_kwin_blur_manager_destroy_global()
 
 void BlurManagerInterfacePrivate::org_kde_kwin_blur_manager_unset(Resource *resource, wl_resource *surface)
 {
-    Q_UNUSED(resource);
     SurfaceInterface *s = SurfaceInterface::get(surface);
     if (!s) {
         return;
@@ -101,13 +100,11 @@ protected:
 
 void BlurInterfacePrivate::org_kde_kwin_blur_commit(Resource *resource)
 {
-    Q_UNUSED(resource)
     currentRegion = pendingRegion;
 }
 
 void BlurInterfacePrivate::org_kde_kwin_blur_set_region(Resource *resource, wl_resource *region)
 {
-    Q_UNUSED(resource)
     RegionInterface *r = RegionInterface::get(region);
     if (r) {
         pendingRegion = r->region();
@@ -123,7 +120,6 @@ void BlurInterfacePrivate::org_kde_kwin_blur_release(Resource *resource)
 
 void BlurInterfacePrivate::org_kde_kwin_blur_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete q;
 }
 

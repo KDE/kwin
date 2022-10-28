@@ -124,8 +124,6 @@ void WaylandClientTest::setupRegistry(Registry *registry)
             }
             Pointer *p = s->createPointer(this);
             connect(p, &Pointer::buttonStateChanged, this, [this](quint32 serial, quint32 time, quint32 button, Pointer::ButtonState state) {
-                Q_UNUSED(serial)
-                Q_UNUSED(time)
                 if (state == Pointer::ButtonState::Released) {
                     if (button == BTN_LEFT) {
                         if (m_timer->isActive()) {

@@ -159,7 +159,6 @@ public:
 
     virtual std::shared_ptr<GLTexture> textureForOutput(Output *output) const
     {
-        Q_UNUSED(output);
         return {};
     }
 

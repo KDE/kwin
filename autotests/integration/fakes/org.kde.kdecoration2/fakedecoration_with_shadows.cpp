@@ -27,8 +27,6 @@ public:
 
     void paint(QPainter *painter, const QRect &repaintRegion) override
     {
-        Q_UNUSED(painter)
-        Q_UNUSED(repaintRegion)
     }
 
 public Q_SLOTS:

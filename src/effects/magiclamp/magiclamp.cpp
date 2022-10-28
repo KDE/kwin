@@ -71,8 +71,6 @@ void MagicLampEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, 
 
 void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads)
 {
-    Q_UNUSED(mask)
-    Q_UNUSED(data)
     auto animationIt = m_animations.constFind(w);
     if (animationIt != m_animations.constEnd()) {
         // 0 = not minimized, 1 = fully minimized

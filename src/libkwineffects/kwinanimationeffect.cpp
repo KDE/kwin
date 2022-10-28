@@ -431,6 +431,14 @@ bool AnimationEffect::cancel(quint64 animationId)
     return false;
 }
 
+void AnimationEffect::animationEnded(EffectWindow *w, Attribute a, uint meta)
+{
+}
+
+void AnimationEffect::genericAnimation(EffectWindow *w, WindowPaintData &data, float progress, uint meta)
+{
+}
+
 void AnimationEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     Q_D(AnimationEffect);

@@ -91,7 +91,6 @@ void XdgShellInterfacePrivate::xdg_wm_base_get_xdg_surface(Resource *resource, u
 
 void XdgShellInterfacePrivate::xdg_wm_base_pong(Resource *resource, uint32_t serial)
 {
-    Q_UNUSED(resource)
     if (QTimer *timer = pings.take(serial)) {
         delete timer;
     }
@@ -168,7 +167,6 @@ XdgSurfaceInterfacePrivate *XdgSurfaceInterfacePrivate::get(XdgSurfaceInterface 
 
 void XdgSurfaceInterfacePrivate::xdg_surface_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->aboutToBeDestroyed();
     XdgShellInterfacePrivate::get(shell)->unregisterXdgSurface(q);
     delete q;
@@ -243,7 +241,6 @@ void XdgSurfaceInterfacePrivate::xdg_surface_set_window_geometry(Resource *resou
 
 void XdgSurfaceInterfacePrivate::xdg_surface_ack_configure(Resource *resource, uint32_t serial)
 {
-    Q_UNUSED(resource)
     next.acknowledgedConfigure = serial;
     next.acknowledgedConfigureIsSet = true;
 }
@@ -343,7 +340,6 @@ void XdgToplevelInterfacePrivate::reset()
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->aboutToBeDestroyed();
     delete q;
 }
@@ -355,7 +351,6 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_destroy(Resource *resource)
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_parent(Resource *resource, ::wl_resource *parentResource)
 {
-    Q_UNUSED(resource)
     XdgToplevelInterface *parent = XdgToplevelInterface::get(parentResource);
     if (parentXdgToplevel == parent) {
         return;
@@ -366,7 +361,6 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_set_parent(Resource *resource, ::
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_title(Resource *resource, const QString &title)
 {
-    Q_UNUSED(resource)
     if (windowTitle == title) {
         return;
     }
@@ -376,7 +370,6 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_set_title(Resource *resource, con
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_app_id(Resource *resource, const QString &app_id)
 {
-    Q_UNUSED(resource)
     if (windowClass == app_id) {
         return;
     }
@@ -443,32 +436,27 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_set_min_size(Resource *resource, 
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_maximized(Resource *resource)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->maximizeRequested();
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_unset_maximized(Resource *resource)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->unmaximizeRequested();
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_fullscreen(Resource *resource, ::wl_resource *outputResource)
 {
-    Q_UNUSED(resource)
     OutputInterface *output = OutputInterface::get(outputResource);
     Q_EMIT q->fullscreenRequested(output);
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_unset_fullscreen(Resource *resource)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->unfullscreenRequested();
 }
 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_minimized(Resource *resource)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->minimizeRequested();
 }
 
@@ -647,7 +635,6 @@ void XdgPopupInterfacePrivate::reset()
 
 void XdgPopupInterfacePrivate::xdg_popup_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->aboutToBeDestroyed();
     delete q;
 }
@@ -672,7 +659,6 @@ void XdgPopupInterfacePrivate::xdg_popup_grab(Resource *resource, ::wl_resource 
 
 void XdgPopupInterfacePrivate::xdg_popup_reposition(Resource *resource, ::wl_resource *positionerResource, uint32_t token)
 {
-    Q_UNUSED(resource)
     positioner = XdgPositioner::get(positionerResource);
     Q_EMIT q->repositionRequested(token);
 }
@@ -759,7 +745,6 @@ XdgPositionerPrivate *XdgPositionerPrivate::get(wl_resource *resource)
 
 void XdgPositionerPrivate::xdg_positioner_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete this;
 }
 
@@ -826,19 +811,16 @@ void XdgPositionerPrivate::xdg_positioner_set_anchor(Resource *resource, uint32_
 
 void XdgPositionerPrivate::xdg_positioner_set_parent_size(Resource *resource, int32_t width, int32_t height)
 {
-    Q_UNUSED(resource)
     data->parentSize = QSize(width, height);
 }
 
 void XdgPositionerPrivate::xdg_positioner_set_reactive(Resource *resource)
 {
-    Q_UNUSED(resource)
     data->isReactive = true;
 }
 
 void XdgPositionerPrivate::xdg_positioner_set_parent_configure(Resource *resource, uint32_t serial)
 {
-    Q_UNUSED(resource)
     data->parentConfigure = serial;
 }
 
@@ -882,8 +864,6 @@ void XdgPositionerPrivate::xdg_positioner_set_gravity(Resource *resource, uint32
 
 void XdgPositionerPrivate::xdg_positioner_set_constraint_adjustment(Resource *resource, uint32_t constraint_adjustment)
 {
-    Q_UNUSED(resource)
-
     if (constraint_adjustment & constraint_adjustment_flip_x) {
         data->flipConstraintAdjustments |= Qt::Horizontal;
     } else {
@@ -923,7 +903,6 @@ void XdgPositionerPrivate::xdg_positioner_set_constraint_adjustment(Resource *re
 
 void XdgPositionerPrivate::xdg_positioner_set_offset(Resource *resource, int32_t x, int32_t y)
 {
-    Q_UNUSED(resource)
     data->offset = QPoint(x, y);
 }
 

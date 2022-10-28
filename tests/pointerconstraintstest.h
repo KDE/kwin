@@ -71,8 +71,6 @@ public:
 
     Q_INVOKABLE virtual void lockRequest(bool persistent = true, QRect region = QRect())
     {
-        Q_UNUSED(persistent);
-        Q_UNUSED(region);
     }
     Q_INVOKABLE virtual void unlockRequest()
     {
@@ -80,15 +78,12 @@ public:
 
     Q_INVOKABLE virtual void confineRequest(bool persistent = true, QRect region = QRect())
     {
-        Q_UNUSED(persistent);
-        Q_UNUSED(region);
     }
     Q_INVOKABLE virtual void unconfineRequest()
     {
     }
     Q_INVOKABLE virtual void hideAndConfineRequest(bool confineBeforeHide = false)
     {
-        Q_UNUSED(confineBeforeHide);
     }
     Q_INVOKABLE virtual void undoHideRequest()
     {

@@ -977,7 +977,6 @@ DebugConsoleModel::~DebugConsoleModel() = default;
 
 int DebugConsoleModel::columnCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
     return 2;
 }
 
@@ -1130,7 +1129,6 @@ QModelIndex DebugConsoleModel::parent(const QModelIndex &child) const
 
 QVariant DebugConsoleModel::propertyData(QObject *object, const QModelIndex &index, int role) const
 {
-    Q_UNUSED(role)
     const auto property = object->metaObject()->property(index.row());
     if (index.column() == 0) {
         return property.name();
@@ -1341,7 +1339,6 @@ SurfaceTreeModel::~SurfaceTreeModel() = default;
 
 int SurfaceTreeModel::columnCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
     return 1;
 }
 
@@ -1502,7 +1499,6 @@ InputDeviceModel::~InputDeviceModel() = default;
 
 int InputDeviceModel::columnCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
     return 2;
 }
 
@@ -1609,7 +1605,6 @@ QModelIndex DataSourceModel::index(int row, int column, const QModelIndex &paren
 
 QModelIndex DataSourceModel::parent(const QModelIndex &child) const
 {
-    Q_UNUSED(child)
     return QModelIndex();
 }
 

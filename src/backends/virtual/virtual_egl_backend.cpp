@@ -57,8 +57,6 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
 
 bool VirtualEglLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    Q_UNUSED(renderedRegion)
-    Q_UNUSED(damagedRegion)
     GLFramebuffer::popFramebuffer();
     return true;
 }

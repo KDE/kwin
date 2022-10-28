@@ -62,8 +62,6 @@ SheetEffect::SheetEffect()
 
 void SheetEffect::reconfigure(ReconfigureFlags flags)
 {
-    Q_UNUSED(flags)
-
     SheetConfig::self()->read();
 
     // TODO: Rename AnimationTime config key to Duration.

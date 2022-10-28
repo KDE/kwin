@@ -100,8 +100,6 @@ void ServerSideDecorationPaletteInterfacePrivate::org_kde_kwin_server_decoration
 
 void ServerSideDecorationPaletteInterfacePrivate::org_kde_kwin_server_decoration_palette_set_palette(Resource *resource, const QString &palette)
 {
-    Q_UNUSED(resource)
-
     if (this->palette == palette) {
         return;
     }
@@ -111,7 +109,6 @@ void ServerSideDecorationPaletteInterfacePrivate::org_kde_kwin_server_decoration
 
 void ServerSideDecorationPaletteInterfacePrivate::org_kde_kwin_server_decoration_palette_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete q;
 }
 

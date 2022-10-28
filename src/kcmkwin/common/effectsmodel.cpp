@@ -113,13 +113,11 @@ QModelIndex EffectsModel::index(int row, int column, const QModelIndex &parent) 
 
 QModelIndex EffectsModel::parent(const QModelIndex &child) const
 {
-    Q_UNUSED(child)
     return {};
 }
 
 int EffectsModel::columnCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
     return 1;
 }
 
@@ -651,7 +649,6 @@ void EffectsModel::requestConfigure(const QModelIndex &index, QWindow *transient
 
 bool EffectsModel::shouldStore(const EffectData &data) const
 {
-    Q_UNUSED(data)
     return true;
 }
 

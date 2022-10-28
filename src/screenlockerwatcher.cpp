@@ -46,9 +46,6 @@ void ScreenLockerWatcher::initialize()
 
 void ScreenLockerWatcher::serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner)
 {
-    Q_UNUSED(oldOwner)
-    Q_UNUSED(serviceName)
-
     m_locked = false;
 
     if (!newOwner.isEmpty()) {

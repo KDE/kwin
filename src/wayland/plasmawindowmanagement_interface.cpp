@@ -200,7 +200,6 @@ void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_bi
 
 void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_show_desktop(Resource *resource, uint32_t state)
 {
-    Q_UNUSED(resource)
     PlasmaWindowManagementInterface::ShowingDesktopState s = PlasmaWindowManagementInterface::ShowingDesktopState::Disabled;
     switch (state) {
     case ORG_KDE_PLASMA_WINDOW_MANAGEMENT_SHOW_DESKTOP_ENABLED:
@@ -454,7 +453,6 @@ void PlasmaWindowInterfacePrivate::setResourceName(const QString &resourceName)
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_get_icon(Resource *resource, int32_t fd)
 {
-    Q_UNUSED(resource)
     QtConcurrent::run(
         [fd](const QIcon &icon) {
             QFile file;
@@ -468,37 +466,31 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_get_icon(Resource *reso
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_request_enter_virtual_desktop(Resource *resource, const QString &id)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->enterPlasmaVirtualDesktopRequested(id);
 }
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_request_enter_new_virtual_desktop(Resource *resource)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->enterNewPlasmaVirtualDesktopRequested();
 }
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_request_leave_virtual_desktop(Resource *resource, const QString &id)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->leavePlasmaVirtualDesktopRequested(id);
 }
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_request_enter_activity(Resource *resource, const QString &id)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->enterPlasmaActivityRequested(id);
 }
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_request_leave_activity(Resource *resource, const QString &id)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->leavePlasmaActivityRequested(id);
 }
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_send_to_output(Resource *resource, struct wl_resource *output)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->sendToOutput(KWaylandServer::OutputInterface::get(output));
 }
 
@@ -624,33 +616,26 @@ void PlasmaWindowInterfacePrivate::setApplicationMenuPaths(const QString &servic
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_close(Resource *resource)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->closeRequested();
 }
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_request_move(Resource *resource)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->moveRequested();
 }
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_request_resize(Resource *resource)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->resizeRequested();
 }
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_set_virtual_desktop(Resource *resource, uint32_t number)
 {
-    Q_UNUSED(resource)
-    Q_UNUSED(number)
-
     // This method is intentionally left blank.
 }
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_set_state(Resource *resource, uint32_t flags, uint32_t state)
 {
-    Q_UNUSED(resource)
     if (flags & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_ACTIVE) {
         Q_EMIT q->activeRequested(state & ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_ACTIVE);
     }
@@ -714,7 +699,6 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_set_minimized_geometry(
                                                                                 uint32_t width,
                                                                                 uint32_t height)
 {
-    Q_UNUSED(resource)
     SurfaceInterface *panelSurface = SurfaceInterface::get(panel);
 
     if (!panelSurface) {
@@ -736,7 +720,6 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_set_minimized_geometry(
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_unset_minimized_geometry(Resource *resource, wl_resource *panel)
 {
-    Q_UNUSED(resource)
     SurfaceInterface *panelSurface = SurfaceInterface::get(panel);
 
     if (!panelSurface) {

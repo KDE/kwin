@@ -119,8 +119,6 @@ public:
     }
     void requestData(const QString &mimeType, qint32 fd) override
     {
-        Q_UNUSED(mimeType);
-        Q_UNUSED(fd);
     };
     void cancel() override
     {

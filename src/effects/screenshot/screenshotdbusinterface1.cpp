@@ -298,13 +298,11 @@ ScreenShotSink1::ScreenShotSink1(ScreenShotDBusInterface1 *interface, QDBusMessa
 
 void ScreenShotSink1::flush(const QImage &image)
 {
-    Q_UNUSED(image)
     qCWarning(KWIN_SCREENSHOT) << metaObject()->className() << "does not implement" << Q_FUNC_INFO;
 }
 
 void ScreenShotSink1::flushMulti(const QList<QImage> &images)
 {
-    Q_UNUSED(images)
     qCWarning(KWIN_SCREENSHOT) << metaObject()->className() << "does not implement" << Q_FUNC_INFO;
 }
 

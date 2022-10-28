@@ -125,15 +125,11 @@ void TouchInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
 
 void TouchInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now)
 {
-    Q_UNUSED(old);
-    Q_UNUSED(now);
-
     // nothing to do
 }
 
 void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, quint32 time, InputDevice *device)
 {
-    Q_UNUSED(device)
     if (!inited()) {
         return;
     }
@@ -151,7 +147,6 @@ void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, quint32 t
 
 void TouchInputRedirection::processUp(qint32 id, quint32 time, InputDevice *device)
 {
-    Q_UNUSED(device)
     if (!inited()) {
         return;
     }
@@ -170,7 +165,6 @@ void TouchInputRedirection::processUp(qint32 id, quint32 time, InputDevice *devi
 
 void TouchInputRedirection::processMotion(qint32 id, const QPointF &pos, quint32 time, InputDevice *device)
 {
-    Q_UNUSED(device)
     if (!inited()) {
         return;
     }

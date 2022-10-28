@@ -89,15 +89,12 @@ OutputConfigurationV2Interface::OutputConfigurationV2Interface(wl_resource *reso
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_enable(Resource *resource, wl_resource *outputdevice, int32_t enable)
 {
-    Q_UNUSED(resource)
-
     OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
     config.changeSet(output->handle())->enabled = enable;
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_mode(Resource *resource, wl_resource *outputdevice, wl_resource *modeResource)
 {
-    Q_UNUSED(resource)
     OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
     OutputDeviceModeV2Interface *mode = OutputDeviceModeV2Interface::get(modeResource);
     if (!mode) {
@@ -109,7 +106,6 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_mode(Resource *
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_transform(Resource *resource, wl_resource *outputdevice, int32_t transform)
 {
-    Q_UNUSED(resource)
     auto toTransform = [transform]() {
         switch (transform) {
         case WL_OUTPUT_TRANSFORM_90:
@@ -138,14 +134,12 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_transform(Resou
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_position(Resource *resource, wl_resource *outputdevice, int32_t x, int32_t y)
 {
-    Q_UNUSED(resource)
     OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
     config.changeSet(output->handle())->pos = QPoint(x, y);
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_scale(Resource *resource, wl_resource *outputdevice, wl_fixed_t scale)
 {
-    Q_UNUSED(resource)
     const qreal doubleScale = wl_fixed_to_double(scale);
 
     if (doubleScale <= 0) {
@@ -159,7 +153,6 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_scale(Resource 
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_overscan(Resource *resource, wl_resource *outputdevice, uint32_t overscan)
 {
-    Q_UNUSED(resource)
     if (overscan > 100) {
         qCWarning(KWIN_CORE) << "Invalid overscan requested:" << overscan;
         return;
@@ -170,7 +163,6 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_overscan(Resour
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_set_vrr_policy(Resource *resource, wl_resource *outputdevice, uint32_t policy)
 {
-    Q_UNUSED(resource)
     if (policy > static_cast<uint32_t>(RenderLoop::VrrPolicy::Automatic)) {
         qCWarning(KWIN_CORE) << "Invalid Vrr Policy requested:" << policy;
         return;
@@ -181,7 +173,6 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_vrr_policy(
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_set_rgb_range(Resource *resource, wl_resource *outputdevice, uint32_t rgbRange)
 {
-    Q_UNUSED(resource)
     if (rgbRange > static_cast<uint32_t>(Output::RgbRange::Limited)) {
         qCWarning(KWIN_CORE) << "Invalid Rgb Range requested:" << rgbRange;
         return;
@@ -192,7 +183,6 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_rgb_range(R
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_set_primary_output(Resource *resource, struct ::wl_resource *output)
 {
-    Q_UNUSED(resource);
     primaryOutput = OutputDeviceV2Interface::get(output);
 }
 
@@ -203,7 +193,6 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_destroy(Resourc
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete this;
 }
 

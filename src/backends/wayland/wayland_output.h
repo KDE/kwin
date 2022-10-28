@@ -48,8 +48,6 @@ public:
 
     virtual void lockPointer(KWayland::Client::Pointer *pointer, bool lock)
     {
-        Q_UNUSED(pointer)
-        Q_UNUSED(lock)
     }
 
     virtual bool pointerIsLocked()

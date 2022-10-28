@@ -217,7 +217,6 @@ void RootInfo::moveResizeWindow(xcb_window_t w, int flags, int x, int y, int wid
 
 void RootInfo::showWindowMenu(xcb_window_t w, int device_id, int x_root, int y_root)
 {
-    Q_UNUSED(device_id);
     if (X11Window *c = Workspace::self()->findClient(Predicate::WindowMatch, w)) {
         c->GTKShowWindowMenu(Xcb::fromXNative(x_root), Xcb::fromXNative(y_root));
     }

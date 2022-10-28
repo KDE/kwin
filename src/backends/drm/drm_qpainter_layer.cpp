@@ -46,7 +46,6 @@ std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::beginFrame()
 
 bool DrmQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    Q_UNUSED(renderedRegion)
     m_currentDamage = damagedRegion;
     m_swapchain->releaseBuffer(m_swapchain->currentBuffer(), damagedRegion);
     m_currentFramebuffer = DrmFramebuffer::createFramebuffer(m_swapchain->currentBuffer());
@@ -114,7 +113,6 @@ std::optional<OutputLayerBeginFrameInfo> DrmCursorQPainterLayer::beginFrame()
 
 bool DrmCursorQPainterLayer::endFrame(const QRegion &damagedRegion, const QRegion &renderedRegion)
 {
-    Q_UNUSED(renderedRegion)
     m_swapchain->releaseBuffer(m_swapchain->currentBuffer(), damagedRegion);
     m_currentFramebuffer = DrmFramebuffer::createFramebuffer(m_swapchain->currentBuffer());
     if (!m_currentFramebuffer) {
@@ -161,7 +159,6 @@ std::optional<OutputLayerBeginFrameInfo> DrmVirtualQPainterLayer::beginFrame()
 
 bool DrmVirtualQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    Q_UNUSED(renderedRegion)
     m_currentDamage = damagedRegion;
     return true;
 }

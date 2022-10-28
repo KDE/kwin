@@ -29,10 +29,6 @@ namespace KWin
 
 QObject *GenericScriptedConfigFactory::create(const char *iface, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword)
 {
-    Q_UNUSED(iface)
-    Q_UNUSED(parent)
-    Q_UNUSED(keyword)
-
     // the plugin id is in the args when created by desktop effects kcm or EffectsModel in general
     QString pluginId = args.isEmpty() ? QString() : args.first().toString();
 

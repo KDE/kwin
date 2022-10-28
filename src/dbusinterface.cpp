@@ -114,7 +114,6 @@ bool DBusInterface::startActivity(const QString &in0)
     }
     return Workspace::self()->activities()->start(in0);
 #else
-    Q_UNUSED(in0)
     return false;
 #endif
 }
@@ -127,7 +126,6 @@ bool DBusInterface::stopActivity(const QString &in0)
     }
     return Workspace::self()->activities()->stop(in0);
 #else
-    Q_UNUSED(in0)
     return false;
 #endif
 }
@@ -381,13 +379,10 @@ VirtualDesktopManagerDBusInterface::VirtualDesktopManagerDBusInterface(VirtualDe
                                                  this);
 
     connect(m_manager, &VirtualDesktopManager::currentChanged, this, [this](uint previousDesktop, uint newDesktop) {
-        Q_UNUSED(previousDesktop);
-        Q_UNUSED(newDesktop);
         Q_EMIT currentChanged(m_manager->currentDesktop()->id());
     });
 
     connect(m_manager, &VirtualDesktopManager::countChanged, this, [this](uint previousCount, uint newCount) {
-        Q_UNUSED(previousCount);
         Q_EMIT countChanged(newCount);
         Q_EMIT desktopsChanged(desktops());
     });

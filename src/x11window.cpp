@@ -1994,8 +1994,6 @@ void X11Window::doSetOnActivities(const QStringList &activityList)
         QByteArray joined = activityList.join(QStringLiteral(",")).toLatin1();
         m_client.changeProperty(atoms->activities, XCB_ATOM_STRING, 8, joined.length(), joined.constData());
     }
-#else
-    Q_UNUSED(activityList)
 #endif
 }
 
@@ -2500,8 +2498,6 @@ void X11Window::readActivities(Xcb::StringProperty &property)
     }
 
     setOnActivities(newActivitiesList);
-#else
-    Q_UNUSED(property)
 #endif
 }
 

@@ -52,7 +52,6 @@ void InputPanelV1Window::showOverlayPanel()
 
 void InputPanelV1Window::showTopLevel(OutputInterface *output, InputPanelSurfaceV1Interface::Position position)
 {
-    Q_UNUSED(position);
     m_mode = Mode::VirtualKeyboard;
     setOutput(output);
     maybeShow();
@@ -191,7 +190,6 @@ void InputPanelV1Window::setOutput(OutputInterface *outputIface)
 
 void InputPanelV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 {
-    Q_UNUSED(mode)
     updateGeometry(rect);
 }
 

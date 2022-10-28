@@ -28,7 +28,6 @@ QHash<int, QByteArray> RuleBookModel::roleNames() const
 
 int RuleBookModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
     return m_ruleBook->ruleCount();
 }
 

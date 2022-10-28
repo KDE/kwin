@@ -398,7 +398,6 @@ Q_SIGNALS:
 protected:
     void paintEvent(QPaintEvent *event) override
     {
-        Q_UNUSED(event)
         QPainter p(this);
         p.fillRect(0, 0, width(), height(), Qt::red);
     }

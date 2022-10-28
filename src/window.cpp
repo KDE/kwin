@@ -107,7 +107,6 @@ Window::Window()
 
     // replace on-screen-display on size changes
     connect(this, &Window::frameGeometryChanged, this, [this](Window *c, const QRectF &old) {
-        Q_UNUSED(c)
         if (isOnScreenDisplay() && !frameGeometry().isEmpty() && old.size() != frameGeometry().size() && isPlaceable()) {
             GeometryUpdatesBlocker blocker(this);
             workspace()->placement()->place(this, workspace()->clientArea(PlacementArea, this, workspace()->activeOutput()));
@@ -1162,7 +1161,6 @@ void Window::doSetDesktop()
 
 void Window::doSetOnActivities(const QStringList &activityList)
 {
-    Q_UNUSED(activityList);
 }
 
 void Window::enterDesktop(VirtualDesktop *virtualDesktop)
@@ -1293,7 +1291,6 @@ void Window::setShade(ShadeMode mode)
 
 void Window::doSetShade(ShadeMode previousShadeMode)
 {
-    Q_UNUSED(previousShadeMode)
 }
 
 void Window::shadeHover()
@@ -1582,7 +1579,6 @@ void Window::blockGeometryUpdates(bool block)
 
 void Window::maximize(MaximizeMode mode)
 {
-    Q_UNUSED(mode)
     qCWarning(KWIN_CORE, "%s doesn't support setting maximized state", metaObject()->className());
 }
 
@@ -2137,7 +2133,6 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
 
 StrutRect Window::strutRect(StrutArea area) const
 {
-    Q_UNUSED(area)
     return StrutRect();
 }
 
@@ -2218,7 +2213,6 @@ void Window::setupWindowManagementInterface()
         w->setMinimized(isMinimized());
     });
     connect(this, static_cast<void (Window::*)(Window *, MaximizeMode)>(&Window::clientMaximizedStateChanged), w, [w](KWin::Window *c, MaximizeMode mode) {
-        Q_UNUSED(c);
         w->setMaximized(mode == KWin::MaximizeFull);
     });
     connect(this, &Window::demandsAttentionChanged, w, [w, this] {
@@ -2610,14 +2604,12 @@ bool Window::hasTransientPlacementHint() const
 
 QRectF Window::transientPlacement(const QRectF &bounds) const
 {
-    Q_UNUSED(bounds);
     Q_UNREACHABLE();
     return QRectF();
 }
 
 bool Window::hasTransient(const Window *c, bool indirect) const
 {
-    Q_UNUSED(indirect);
     return c->transientFor() == this;
 }
 
@@ -3484,9 +3476,6 @@ void Window::setOnActivity(const QString &activity, bool enable)
         newActivitiesList.removeOne(activity);
     }
     setOnActivities(newActivitiesList);
-#else
-    Q_UNUSED(activity)
-    Q_UNUSED(enable)
 #endif
 }
 
@@ -3529,8 +3518,6 @@ void Window::setOnActivities(const QStringList &newActivitiesList)
     }
 
     updateActivities(false);
-#else
-    Q_UNUSED(newActivitiesList)
 #endif
 }
 
@@ -3549,8 +3536,6 @@ void Window::setOnAllActivities(bool all)
     } else {
         setOnActivity(Workspace::self()->activities()->current(), true);
     }
-#else
-    Q_UNUSED(all)
 #endif
 }
 
@@ -4190,8 +4175,6 @@ void Window::checkOffscreenPosition(QRectF *geom, const QRectF &screenArea)
  */
 QSizeF Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
 {
-    Q_UNUSED(mode)
-
     qreal width = size.width();
     qreal height = size.height();
 
@@ -4270,8 +4253,6 @@ bool Window::userCanSetFullScreen() const
  */
 void Window::setFullScreen(bool set, bool user)
 {
-    Q_UNUSED(set)
-    Q_UNUSED(user)
     qCWarning(KWIN_CORE, "%s doesn't support setting fullscreen state", metaObject()->className());
 }
 
@@ -4349,7 +4330,6 @@ bool Window::userCanSetNoBorder() const
 
 void Window::setNoBorder(bool set)
 {
-    Q_UNUSED(set)
     qCWarning(KWIN_CORE, "%s doesn't support setting decorations", metaObject()->className());
 }
 

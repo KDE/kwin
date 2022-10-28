@@ -59,25 +59,21 @@ void OpenGLBackend::copyPixels(const QRegion &region, const QSize &screenSize)
 
 std::shared_ptr<KWin::GLTexture> OpenGLBackend::textureForOutput(Output *output) const
 {
-    Q_UNUSED(output)
     return {};
 }
 
 std::unique_ptr<SurfaceTexture> OpenGLBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
-    Q_UNUSED(pixmap)
     return nullptr;
 }
 
 std::unique_ptr<SurfaceTexture> OpenGLBackend::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
 {
-    Q_UNUSED(pixmap)
     return nullptr;
 }
 
 std::unique_ptr<SurfaceTexture> OpenGLBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
-    Q_UNUSED(pixmap)
     return nullptr;
 }
 

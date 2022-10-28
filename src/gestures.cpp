@@ -329,8 +329,6 @@ int GestureRecognizer::startPinchGesture(uint fingerCount)
 
 void GestureRecognizer::updatePinchGesture(qreal scale, qreal angleDelta, const QPointF &posDelta)
 {
-    Q_UNUSED(angleDelta);
-    Q_UNUSED(posDelta);
     m_currentScale = scale;
 
     // Determine the direction of the swipe

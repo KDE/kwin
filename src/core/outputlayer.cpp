@@ -31,12 +31,10 @@ void OutputLayer::resetRepaints()
 
 void OutputLayer::aboutToStartPainting(const QRegion &damage)
 {
-    Q_UNUSED(damage)
 }
 
 bool OutputLayer::scanout(SurfaceItem *surfaceItem)
 {
-    Q_UNUSED(surfaceItem)
     return false;
 }
 

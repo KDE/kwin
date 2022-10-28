@@ -40,18 +40,15 @@ uint NoopSession::terminal() const
 
 int NoopSession::openRestricted(const QString &fileName)
 {
-    Q_UNUSED(fileName)
     return -1;
 }
 
 void NoopSession::closeRestricted(int fileDescriptor)
 {
-    Q_UNUSED(fileDescriptor)
 }
 
 void NoopSession::switchTo(uint terminal)
 {
-    Q_UNUSED(terminal)
 }
 
 } // namespace KWin

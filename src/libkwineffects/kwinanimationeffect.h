@@ -466,12 +466,7 @@ protected:
      * @param meta Originally supplied metadata to animate() or set().
      * @since 4.8
      */
-    virtual void animationEnded(EffectWindow *w, Attribute a, uint meta)
-    {
-        Q_UNUSED(w);
-        Q_UNUSED(a);
-        Q_UNUSED(meta);
-    }
+    virtual void animationEnded(EffectWindow *w, Attribute a, uint meta);
 
     /**
      * Cancels a running animation.
@@ -499,13 +494,7 @@ protected:
      * @param meta The metadata.
      * @since 4.8
      */
-    virtual void genericAnimation(EffectWindow *w, WindowPaintData &data, float progress, uint meta)
-    {
-        Q_UNUSED(w);
-        Q_UNUSED(data);
-        Q_UNUSED(progress);
-        Q_UNUSED(meta);
-    }
+    virtual void genericAnimation(EffectWindow *w, WindowPaintData &data, float progress, uint meta);
 
     /**
      * @internal

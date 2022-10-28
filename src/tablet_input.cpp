@@ -189,9 +189,6 @@ void TabletInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *
 
 void TabletInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
 {
-    Q_UNUSED(focusOld)
-    Q_UNUSED(focusNow)
-
     // This method is left blank intentionally.
 }
 

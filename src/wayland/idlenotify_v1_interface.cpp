@@ -52,7 +52,6 @@ void IdleNotifyV1InterfacePrivate::ext_idle_notifier_v1_destroy(Resource *resour
 
 void IdleNotifyV1InterfacePrivate::ext_idle_notifier_v1_get_idle_notification(Resource *resource, uint32_t id, uint32_t timeout, struct ::wl_resource *seat)
 {
-    Q_UNUSED(seat)
     new IdleNotificationV1Interface(resource->client(), resource->version(), id, std::chrono::milliseconds(timeout));
 }
 
@@ -70,7 +69,6 @@ IdleNotificationV1Interface::IdleNotificationV1Interface(wl_client *client, int 
 
 void IdleNotificationV1Interface::ext_idle_notification_v1_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete this;
 }
 

@@ -39,7 +39,6 @@ PrimarySelectionSourceV1InterfacePrivate::PrimarySelectionSourceV1InterfacePriva
 void PrimarySelectionSourceV1InterfacePrivate::zwp_primary_selection_source_v1_destroy_resource(
     QtWaylandServer::zwp_primary_selection_source_v1::Resource *resource)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->aboutToBeDestroyed();
     delete q;
 }

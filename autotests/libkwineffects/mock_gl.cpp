@@ -45,8 +45,6 @@ static const GLubyte *mock_glGetStringi(GLenum name, GLuint index)
 
 static void mock_glGetIntegerv(GLenum pname, GLint *data)
 {
-    Q_UNUSED(pname)
-    Q_UNUSED(data)
     if (pname == GL_NUM_EXTENSIONS) {
         if (data && s_gl) {
             *data = s_gl->getString.extensions.count();

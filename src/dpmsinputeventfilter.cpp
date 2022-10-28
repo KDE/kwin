@@ -30,15 +30,12 @@ DpmsInputEventFilter::~DpmsInputEventFilter() = default;
 
 bool DpmsInputEventFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
 {
-    Q_UNUSED(event)
-    Q_UNUSED(nativeButton)
     notify();
     return true;
 }
 
 bool DpmsInputEventFilter::wheelEvent(QWheelEvent *event)
 {
-    Q_UNUSED(event)
     notify();
     return true;
 }
@@ -53,8 +50,6 @@ bool DpmsInputEventFilter::keyEvent(QKeyEvent *event)
 
 bool DpmsInputEventFilter::touchDown(qint32 id, const QPointF &pos, quint32 time)
 {
-    Q_UNUSED(pos)
-    Q_UNUSED(time)
     if (m_enableDoubleTap) {
         if (m_touchPoints.isEmpty()) {
             if (!m_doubleTapTimer.isValid()) {
@@ -96,9 +91,6 @@ bool DpmsInputEventFilter::touchUp(qint32 id, quint32 time)
 
 bool DpmsInputEventFilter::touchMotion(qint32 id, const QPointF &pos, quint32 time)
 {
-    Q_UNUSED(id)
-    Q_UNUSED(pos)
-    Q_UNUSED(time)
     // ignore the event
     return true;
 }

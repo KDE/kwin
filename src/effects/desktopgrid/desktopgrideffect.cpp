@@ -120,8 +120,6 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
     for (const int &border : touchActivateBorders) {
         m_touchBorderActivate.append(ElectricBorder(border));
         effects->registerRealtimeTouchBorder(ElectricBorder(border), m_realtimeToggleAction, [this](ElectricBorder border, const QPointF &deltaProgress, const EffectScreen *screen) {
-            Q_UNUSED(screen)
-
             if (m_status == Status::Active) {
                 return;
             }

@@ -29,15 +29,11 @@ WindowSystem::WindowSystem()
 
 void WindowSystem::activateWindow(WId win, long int time)
 {
-    Q_UNUSED(win)
-    Q_UNUSED(time)
     // KWin cannot activate own windows
 }
 
 void WindowSystem::forceActiveWindow(WId win, long int time)
 {
-    Q_UNUSED(win)
-    Q_UNUSED(time)
     // KWin cannot activate own windows
 }
 
@@ -54,7 +50,6 @@ bool WindowSystem::allowedActionsSupported()
 
 void WindowSystem::allowExternalProcessWindowActivation(int pid)
 {
-    Q_UNUSED(pid)
 }
 
 bool WindowSystem::compositingActive()
@@ -65,12 +60,10 @@ bool WindowSystem::compositingActive()
 
 void WindowSystem::connectNotify(const QMetaMethod &signal)
 {
-    Q_UNUSED(signal)
 }
 
 QPoint WindowSystem::constrainViewportRelativePosition(const QPoint &pos)
 {
-    Q_UNUSED(pos)
     return QPoint();
 }
 
@@ -82,27 +75,21 @@ int WindowSystem::currentDesktop()
 
 void WindowSystem::demandAttention(WId win, bool set)
 {
-    Q_UNUSED(win)
-    Q_UNUSED(set)
 }
 
 QString WindowSystem::desktopName(int desktop)
 {
-    Q_UNUSED(desktop)
     return QString();
 }
 
 QPoint WindowSystem::desktopToViewport(int desktop, bool absolute)
 {
-    Q_UNUSED(desktop)
-    Q_UNUSED(absolute)
     return QPoint();
 }
 
 #if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 0)
 WId WindowSystem::groupLeader(WId window)
 {
-    Q_UNUSED(window)
     return 0;
 }
 #endif
@@ -114,17 +101,11 @@ bool WindowSystem::icccmCompliantMappingState()
 
 QPixmap WindowSystem::icon(WId win, int width, int height, bool scale, int flags)
 {
-    Q_UNUSED(win)
-    Q_UNUSED(width)
-    Q_UNUSED(height)
-    Q_UNUSED(scale)
-    Q_UNUSED(flags)
     return QPixmap();
 }
 
 void WindowSystem::lowerWindow(WId win)
 {
-    Q_UNUSED(win)
 }
 
 bool WindowSystem::mapViewport()
@@ -134,12 +115,10 @@ bool WindowSystem::mapViewport()
 
 void WindowSystem::minimizeWindow(WId win)
 {
-    Q_UNUSED(win)
 }
 
 void WindowSystem::unminimizeWindow(WId win)
 {
-    Q_UNUSED(win)
 }
 
 int WindowSystem::numberOfDesktops()
@@ -150,104 +129,64 @@ int WindowSystem::numberOfDesktops()
 
 void WindowSystem::raiseWindow(WId win)
 {
-    Q_UNUSED(win)
 }
 
 QString WindowSystem::readNameProperty(WId window, long unsigned int atom)
 {
-    Q_UNUSED(window)
-    Q_UNUSED(atom)
     return QString();
 }
 
 void WindowSystem::setBlockingCompositing(WId window, bool active)
 {
-    Q_UNUSED(window)
-    Q_UNUSED(active)
 }
 
 void WindowSystem::setCurrentDesktop(int desktop)
 {
-    Q_UNUSED(desktop)
     // KWin internal should not use KWindowSystem to set current desktop
 }
 
 void WindowSystem::setDesktopName(int desktop, const QString &name)
 {
-    Q_UNUSED(desktop)
-    Q_UNUSED(name)
     // KWin internal should not use KWindowSystem to set desktop name
 }
 
 void WindowSystem::setExtendedStrut(WId win, int left_width, int left_start, int left_end, int right_width, int right_start, int right_end, int top_width, int top_start, int top_end, int bottom_width, int bottom_start, int bottom_end)
 {
-    Q_UNUSED(win)
-    Q_UNUSED(left_width)
-    Q_UNUSED(left_start)
-    Q_UNUSED(left_end)
-    Q_UNUSED(right_width)
-    Q_UNUSED(right_start)
-    Q_UNUSED(right_end)
-    Q_UNUSED(top_width)
-    Q_UNUSED(top_start)
-    Q_UNUSED(top_end)
-    Q_UNUSED(bottom_width)
-    Q_UNUSED(bottom_start)
-    Q_UNUSED(bottom_end)
 }
 
 void WindowSystem::setStrut(WId win, int left, int right, int top, int bottom)
 {
-    Q_UNUSED(win)
-    Q_UNUSED(left)
-    Q_UNUSED(right)
-    Q_UNUSED(top)
-    Q_UNUSED(bottom)
 }
 
 void WindowSystem::setIcons(WId win, const QPixmap &icon, const QPixmap &miniIcon)
 {
-    Q_UNUSED(win)
-    Q_UNUSED(icon)
-    Q_UNUSED(miniIcon)
 }
 
 void WindowSystem::setOnActivities(WId win, const QStringList &activities)
 {
-    Q_UNUSED(win)
-    Q_UNUSED(activities)
 }
 
 void WindowSystem::setOnAllDesktops(WId win, bool b)
 {
-    Q_UNUSED(win)
-    Q_UNUSED(b)
 }
 
 void WindowSystem::setOnDesktop(WId win, int desktop)
 {
-    Q_UNUSED(win)
-    Q_UNUSED(desktop)
 }
 
 void WindowSystem::setShowingDesktop(bool showing)
 {
-    Q_UNUSED(showing)
     // KWin should not use KWindowSystem to set showing desktop state
 }
 
 void WindowSystem::clearState(WId win, NET::States state)
 {
     // KWin's windows don't support state
-    Q_UNUSED(win)
-    Q_UNUSED(state)
 }
 
 void WindowSystem::setState(WId win, NET::States state)
 {
     // KWin's windows don't support state
-    Q_UNUSED(win)
-    Q_UNUSED(state)
 }
 
 void WindowSystem::setType(WId win, NET::WindowType windowType)
@@ -265,8 +204,6 @@ void WindowSystem::setType(WId win, NET::WindowType windowType)
 
 void WindowSystem::setUserTime(WId win, long int time)
 {
-    Q_UNUSED(win)
-    Q_UNUSED(time)
 }
 
 bool WindowSystem::showingDesktop()
@@ -284,20 +221,17 @@ QList<WId> WindowSystem::stackingOrder()
 #if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 0)
 WId WindowSystem::transientFor(WId window)
 {
-    Q_UNUSED(window)
     return 0;
 }
 #endif
 
 int WindowSystem::viewportToDesktop(const QPoint &pos)
 {
-    Q_UNUSED(pos)
     return 0;
 }
 
 int WindowSystem::viewportWindowToDesktop(const QRect &r)
 {
-    Q_UNUSED(r)
     return 0;
 }
 
@@ -308,21 +242,16 @@ QList<WId> WindowSystem::windows()
 
 QRect WindowSystem::workArea(const QList<WId> &excludes, int desktop)
 {
-    Q_UNUSED(excludes)
-    Q_UNUSED(desktop)
     return {};
 }
 
 QRect WindowSystem::workArea(int desktop)
 {
-    Q_UNUSED(desktop)
     return {};
 }
 
 void WindowSystem::requestToken(QWindow *win, uint32_t serial, const QString &appId)
 {
-    Q_UNUSED(win); // it's coming from within kwin, it doesn't matter the window
-
     auto seat = KWin::waylandServer()->seat();
     auto token = KWin::waylandServer()->xdgActivationIntegration()->requestPrivilegedToken(nullptr, seat->display()->serial(), seat, appId);
     // Ensure that xdgActivationTokenArrived is always emitted asynchronously
@@ -333,7 +262,6 @@ void WindowSystem::requestToken(QWindow *win, uint32_t serial, const QString &ap
 
 void WindowSystem::setCurrentToken(const QString &token)
 {
-    Q_UNUSED(token)
     // KWin cannot activate own windows
 }
 

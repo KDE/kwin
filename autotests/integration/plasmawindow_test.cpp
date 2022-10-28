@@ -198,7 +198,6 @@ HelperWindow::~HelperWindow() = default;
 
 void HelperWindow::paintEvent(QPaintEvent *event)
 {
-    Q_UNUSED(event)
     QPainter p(this);
     p.fillRect(0, 0, width(), height(), Qt::red);
 }

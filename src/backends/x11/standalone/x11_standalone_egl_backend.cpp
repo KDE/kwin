@@ -152,7 +152,6 @@ void EglBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedR
 
 void EglBackend::present(Output *output)
 {
-    Q_UNUSED(output)
     // Start the software vsync monitor. There is no any reliable way to determine when
     // eglSwapBuffers() or eglSwapBuffersWithDamageEXT() completes.
     m_vsyncMonitor->arm();
@@ -198,7 +197,6 @@ void EglBackend::presentSurface(EGLSurface surface, const QRegion &damage, const
 
 OutputLayer *EglBackend::primaryLayer(Output *output)
 {
-    Q_UNUSED(output)
     return m_layer.get();
 }
 
@@ -226,7 +224,6 @@ bool EglSurfaceTextureX11::create()
 
 void EglSurfaceTextureX11::update(const QRegion &region)
 {
-    Q_UNUSED(region)
     // mipmaps need to be updated
     m_texture->setDirty();
 }

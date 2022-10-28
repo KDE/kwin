@@ -151,7 +151,6 @@ XdgShellOutput::~XdgShellOutput()
 
 void XdgShellOutput::handleConfigure(const QSize &size, XdgShellSurface::States states, quint32 serial)
 {
-    Q_UNUSED(states);
     m_xdgShellSurface->ackConfigure(serial);
     if (size.width() > 0 && size.height() > 0) {
         resize(size * scale());

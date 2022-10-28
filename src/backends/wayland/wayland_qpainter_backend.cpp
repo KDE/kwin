@@ -69,7 +69,6 @@ void WaylandQPainterOutput::remapBuffer()
 
 void WaylandQPainterOutput::updateSize(const QSize &size)
 {
-    Q_UNUSED(size)
     m_back = nullptr;
     m_slots.clear();
 }
@@ -136,8 +135,6 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterOutput::beginFrame()
 
 bool WaylandQPainterOutput::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    Q_UNUSED(renderedRegion)
-
     m_damageJournal.add(damagedRegion);
     return true;
 }

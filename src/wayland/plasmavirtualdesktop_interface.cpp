@@ -84,14 +84,12 @@ void PlasmaVirtualDesktopManagementInterfacePrivate::org_kde_plasma_virtual_desk
                                                                                                                               const QString &name,
                                                                                                                               uint32_t position)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->desktopCreateRequested(name, qBound<quint32>(0, position, (quint32)desktops.count()));
 }
 
 void PlasmaVirtualDesktopManagementInterfacePrivate::org_kde_plasma_virtual_desktop_management_request_remove_virtual_desktop(Resource *resource,
                                                                                                                               const QString &desktop_id)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->desktopRemoveRequested(desktop_id);
 }
 
@@ -222,7 +220,6 @@ void PlasmaVirtualDesktopManagementInterface::sendDone()
 
 void PlasmaVirtualDesktopInterfacePrivate::org_kde_plasma_virtual_desktop_request_activate(Resource *resource)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->activateRequested();
 }
 

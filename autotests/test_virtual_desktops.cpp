@@ -21,20 +21,14 @@ InputRedirection *InputRedirection::s_self = nullptr;
 
 void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action)
 {
-    Q_UNUSED(modifiers)
-    Q_UNUSED(axis)
-    Q_UNUSED(action)
 }
 
 void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection, uint fingerCount, QAction *)
 {
-    Q_UNUSED(fingerCount)
 }
 
 void InputRedirection::registerRealtimeTouchpadSwipeShortcut(SwipeDirection, uint fingerCount, QAction *, std::function<void(qreal)> progressCallback)
 {
-    Q_UNUSED(progressCallback)
-    Q_UNUSED(fingerCount)
 }
 
 void InputRedirection::registerTouchscreenSwipeShortcut(SwipeDirection, uint, QAction *, std::function<void(qreal)>)

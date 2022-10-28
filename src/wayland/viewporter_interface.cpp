@@ -63,7 +63,6 @@ ViewportInterface *ViewportInterface::get(SurfaceInterface *surface)
 
 void ViewportInterface::wp_viewport_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete this;
 }
 

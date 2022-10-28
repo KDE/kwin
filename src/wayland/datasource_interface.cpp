@@ -46,14 +46,12 @@ DataSourceInterfacePrivate::DataSourceInterfacePrivate(DataSourceInterface *_q, 
 
 void DataSourceInterfacePrivate::data_source_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     Q_EMIT q->aboutToBeDestroyed();
     delete q;
 }
 
 void DataSourceInterfacePrivate::data_source_offer(QtWaylandServer::wl_data_source::Resource *resource, const QString &mime_type)
 {
-    Q_UNUSED(resource)
     mimeTypes << mime_type;
     Q_EMIT q->mimeTypeOffered(mime_type);
 }

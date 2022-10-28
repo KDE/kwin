@@ -79,7 +79,6 @@ protected:
 
     virtual bool handleClientMessage(xcb_client_message_event_t *event)
     {
-        Q_UNUSED(event);
         return false;
     }
     // sets the current provider of the selection

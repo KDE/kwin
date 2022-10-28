@@ -80,7 +80,6 @@ public:
     virtual void init();
     virtual void move(const QPointF &globalPosition)
     {
-        Q_UNUSED(globalPosition)
     }
 
     void installImage();

@@ -96,7 +96,6 @@ QString ClientModel::longestCaption() const
 
 int ClientModel::columnCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
     return 1;
 }
 
@@ -110,7 +109,6 @@ int ClientModel::rowCount(const QModelIndex &parent) const
 
 QModelIndex ClientModel::parent(const QModelIndex &child) const
 {
-    Q_UNUSED(child)
     return QModelIndex();
 }
 

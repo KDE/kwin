@@ -339,7 +339,6 @@ void PreviewClient::setBordersTopEdge(bool enabled)
 
 void PreviewClient::requestShowToolTip(const QString &text)
 {
-    Q_UNUSED(text);
 }
 
 void PreviewClient::requestHideToolTip()
@@ -385,19 +384,15 @@ void PreviewClient::requestToggleKeepBelow()
 
 void PreviewClient::requestShowWindowMenu(const QRect &rect)
 {
-    Q_UNUSED(rect)
     Q_EMIT showWindowMenuRequested();
 }
 
 void PreviewClient::requestShowApplicationMenu(const QRect &rect, int actionId)
 {
-    Q_UNUSED(rect);
-    Q_UNUSED(actionId);
 }
 
 void PreviewClient::showApplicationMenu(int actionId)
 {
-    Q_UNUSED(actionId)
 }
 
 void PreviewClient::requestToggleOnAllDesktops()

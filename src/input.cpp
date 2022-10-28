@@ -105,43 +105,31 @@ InputEventFilter::~InputEventFilter()
 
 bool InputEventFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
 {
-    Q_UNUSED(event)
-    Q_UNUSED(nativeButton)
     return false;
 }
 
 bool InputEventFilter::wheelEvent(QWheelEvent *event)
 {
-    Q_UNUSED(event)
     return false;
 }
 
 bool InputEventFilter::keyEvent(QKeyEvent *event)
 {
-    Q_UNUSED(event)
     return false;
 }
 
 bool InputEventFilter::touchDown(qint32 id, const QPointF &point, quint32 time)
 {
-    Q_UNUSED(id)
-    Q_UNUSED(point)
-    Q_UNUSED(time)
     return false;
 }
 
 bool InputEventFilter::touchMotion(qint32 id, const QPointF &point, quint32 time)
 {
-    Q_UNUSED(id)
-    Q_UNUSED(point)
-    Q_UNUSED(time)
     return false;
 }
 
 bool InputEventFilter::touchUp(qint32 id, quint32 time)
 {
-    Q_UNUSED(id)
-    Q_UNUSED(time)
     return false;
 }
 
@@ -157,124 +145,86 @@ bool InputEventFilter::touchFrame()
 
 bool InputEventFilter::pinchGestureBegin(int fingerCount, quint32 time)
 {
-    Q_UNUSED(fingerCount)
-    Q_UNUSED(time)
     return false;
 }
 
 bool InputEventFilter::pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time)
 {
-    Q_UNUSED(scale)
-    Q_UNUSED(angleDelta)
-    Q_UNUSED(delta)
-    Q_UNUSED(time)
     return false;
 }
 
 bool InputEventFilter::pinchGestureEnd(quint32 time)
 {
-    Q_UNUSED(time)
     return false;
 }
 
 bool InputEventFilter::pinchGestureCancelled(quint32 time)
 {
-    Q_UNUSED(time)
     return false;
 }
 
 bool InputEventFilter::swipeGestureBegin(int fingerCount, quint32 time)
 {
-    Q_UNUSED(fingerCount)
-    Q_UNUSED(time)
     return false;
 }
 
 bool InputEventFilter::swipeGestureUpdate(const QPointF &delta, quint32 time)
 {
-    Q_UNUSED(delta)
-    Q_UNUSED(time)
     return false;
 }
 
 bool InputEventFilter::swipeGestureEnd(quint32 time)
 {
-    Q_UNUSED(time)
     return false;
 }
 
 bool InputEventFilter::swipeGestureCancelled(quint32 time)
 {
-    Q_UNUSED(time)
     return false;
 }
 
 bool InputEventFilter::holdGestureBegin(int fingerCount, quint32 time)
 {
-    Q_UNUSED(fingerCount)
-    Q_UNUSED(time)
     return false;
 }
 
 bool InputEventFilter::holdGestureEnd(quint32 time)
 {
-    Q_UNUSED(time)
     return false;
 }
 
 bool InputEventFilter::holdGestureCancelled(quint32 time)
 {
-    Q_UNUSED(time)
     return false;
 }
 
 bool InputEventFilter::switchEvent(SwitchEvent *event)
 {
-    Q_UNUSED(event)
     return false;
 }
 
 bool InputEventFilter::tabletToolEvent(TabletEvent *event)
 {
-    Q_UNUSED(event)
     return false;
 }
 
 bool InputEventFilter::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletId, uint time)
 {
-    Q_UNUSED(button)
-    Q_UNUSED(pressed)
-    Q_UNUSED(tabletId)
-    Q_UNUSED(time)
     return false;
 }
 
 bool InputEventFilter::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, uint time)
 {
-    Q_UNUSED(button)
-    Q_UNUSED(pressed)
-    Q_UNUSED(tabletPadId)
-    Q_UNUSED(time)
     return false;
 }
 
 bool InputEventFilter::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time)
 {
-    Q_UNUSED(number)
-    Q_UNUSED(position)
-    Q_UNUSED(isFinger)
-    Q_UNUSED(tabletPadId)
-    Q_UNUSED(time)
     return false;
 }
 
 bool InputEventFilter::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time)
 {
-    Q_UNUSED(number)
-    Q_UNUSED(position)
-    Q_UNUSED(isFinger)
-    Q_UNUSED(tabletPadId)
-    Q_UNUSED(time)
     return false;
 }
 
@@ -477,69 +427,52 @@ public:
     }
     bool pinchGestureBegin(int fingerCount, quint32 time) override
     {
-        Q_UNUSED(fingerCount)
-        Q_UNUSED(time)
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
     bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time) override
     {
-        Q_UNUSED(scale)
-        Q_UNUSED(angleDelta)
-        Q_UNUSED(delta)
-        Q_UNUSED(time)
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
     bool pinchGestureEnd(quint32 time) override
     {
-        Q_UNUSED(time)
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
     bool pinchGestureCancelled(quint32 time) override
     {
-        Q_UNUSED(time)
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
 
     bool swipeGestureBegin(int fingerCount, quint32 time) override
     {
-        Q_UNUSED(fingerCount)
-        Q_UNUSED(time)
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
     bool swipeGestureUpdate(const QPointF &delta, quint32 time) override
     {
-        Q_UNUSED(delta)
-        Q_UNUSED(time)
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
     bool swipeGestureEnd(quint32 time) override
     {
-        Q_UNUSED(time)
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
     bool swipeGestureCancelled(quint32 time) override
     {
-        Q_UNUSED(time)
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
     bool holdGestureBegin(int fingerCount, quint32 time) override
     {
-        Q_UNUSED(fingerCount)
-        Q_UNUSED(time)
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
     bool holdGestureEnd(quint32 time) override
     {
-        Q_UNUSED(time)
         // no touchpad multi-finger gestures on lock screen
         return waylandServer()->isScreenLocked();
     }
@@ -574,7 +507,6 @@ class EffectsFilter : public InputEventFilter
 public:
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
     {
-        Q_UNUSED(nativeButton)
         if (!effects) {
             return false;
         }
@@ -660,7 +592,6 @@ class MoveResizeFilter : public InputEventFilter
 public:
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
     {
-        Q_UNUSED(nativeButton)
         Window *window = workspace()->moveResizeWindow();
         if (!window) {
             return false;
@@ -681,7 +612,6 @@ public:
     }
     bool wheelEvent(QWheelEvent *event) override
     {
-        Q_UNUSED(event)
         // filter out while moving a window
         return workspace()->moveResizeWindow() != nullptr;
     }
@@ -703,9 +633,6 @@ public:
 
     bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
     {
-        Q_UNUSED(id)
-        Q_UNUSED(pos)
-        Q_UNUSED(time)
         Window *window = workspace()->moveResizeWindow();
         if (!window) {
             return false;
@@ -715,7 +642,6 @@ public:
 
     bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override
     {
-        Q_UNUSED(time)
         Window *window = workspace()->moveResizeWindow();
         if (!window) {
             return false;
@@ -732,7 +658,6 @@ public:
 
     bool touchUp(qint32 id, quint32 time) override
     {
-        Q_UNUSED(time)
         Window *window = workspace()->moveResizeWindow();
         if (!window) {
             return false;
@@ -777,7 +702,6 @@ class WindowSelectorFilter : public InputEventFilter
 public:
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
     {
-        Q_UNUSED(nativeButton)
         if (!m_active) {
             return false;
         }
@@ -798,13 +722,11 @@ public:
     }
     bool wheelEvent(QWheelEvent *event) override
     {
-        Q_UNUSED(event)
         // filter out while selecting a window
         return m_active;
     }
     bool keyEvent(QKeyEvent *event) override
     {
-        Q_UNUSED(event)
         if (!m_active) {
             return false;
         }
@@ -846,7 +768,6 @@ public:
 
     bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
     {
-        Q_UNUSED(time)
         if (!isActive()) {
             return false;
         }
@@ -856,7 +777,6 @@ public:
 
     bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override
     {
-        Q_UNUSED(time)
         if (!isActive()) {
             return false;
         }
@@ -869,7 +789,6 @@ public:
 
     bool touchUp(qint32 id, quint32 time) override
     {
-        Q_UNUSED(time)
         if (!isActive()) {
             return false;
         }
@@ -954,7 +873,6 @@ public:
 
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
     {
-        Q_UNUSED(nativeButton);
         if (event->type() == QEvent::MouseButtonPress) {
             if (input()->shortcuts()->processPointerPressed(event->modifiers(), event->buttons())) {
                 return true;
@@ -1009,7 +927,6 @@ public:
     }
     bool swipeGestureBegin(int fingerCount, quint32 time) override
     {
-        Q_UNUSED(time)
         m_touchpadGestureFingerCount = fingerCount;
         if (m_touchpadGestureFingerCount >= 3) {
             input()->shortcuts()->processSwipeStart(DeviceType::Touchpad, fingerCount);
@@ -1020,7 +937,6 @@ public:
     }
     bool swipeGestureUpdate(const QPointF &delta, quint32 time) override
     {
-        Q_UNUSED(time)
         if (m_touchpadGestureFingerCount >= 3) {
             input()->shortcuts()->processSwipeUpdate(DeviceType::Touchpad, delta);
             return true;
@@ -1030,7 +946,6 @@ public:
     }
     bool swipeGestureCancelled(quint32 time) override
     {
-        Q_UNUSED(time)
         if (m_touchpadGestureFingerCount >= 3) {
             input()->shortcuts()->processSwipeCancel(DeviceType::Touchpad);
             return true;
@@ -1040,7 +955,6 @@ public:
     }
     bool swipeGestureEnd(quint32 time) override
     {
-        Q_UNUSED(time)
         if (m_touchpadGestureFingerCount >= 3) {
             input()->shortcuts()->processSwipeEnd(DeviceType::Touchpad);
             return true;
@@ -1050,7 +964,6 @@ public:
     }
     bool pinchGestureBegin(int fingerCount, quint32 time) override
     {
-        Q_UNUSED(time);
         m_touchpadGestureFingerCount = fingerCount;
         if (m_touchpadGestureFingerCount >= 3) {
             input()->shortcuts()->processPinchStart(fingerCount);
@@ -1061,7 +974,6 @@ public:
     }
     bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time) override
     {
-        Q_UNUSED(time);
         if (m_touchpadGestureFingerCount >= 3) {
             input()->shortcuts()->processPinchUpdate(scale, angleDelta, delta);
             return true;
@@ -1071,7 +983,6 @@ public:
     }
     bool pinchGestureEnd(quint32 time) override
     {
-        Q_UNUSED(time);
         if (m_touchpadGestureFingerCount >= 3) {
             input()->shortcuts()->processPinchEnd();
             return true;
@@ -1081,7 +992,6 @@ public:
     }
     bool pinchGestureCancelled(quint32 time) override
     {
-        Q_UNUSED(time);
         if (m_touchpadGestureFingerCount >= 3) {
             input()->shortcuts()->processPinchCancel();
             return true;
@@ -1135,7 +1045,6 @@ public:
 
     bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override
     {
-        Q_UNUSED(time);
         if (m_gestureTaken) {
             if (m_gestureCancelled) {
                 return true;
@@ -1156,7 +1065,6 @@ public:
 
     bool touchUp(qint32 id, quint32 time) override
     {
-        Q_UNUSED(time);
         m_touchPoints.remove(id);
         if (m_gestureTaken) {
             if (!m_gestureCancelled) {
@@ -1267,7 +1175,6 @@ class InternalWindowEventFilter : public InputEventFilter
 {
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
     {
-        Q_UNUSED(nativeButton)
         if (!input()->pointer()->focus() || !input()->pointer()->focus()->isInternal()) {
             return false;
         }
@@ -1438,7 +1345,6 @@ class DecorationEventFilter : public InputEventFilter
 public:
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
     {
-        Q_UNUSED(nativeButton)
         auto decoration = input()->pointer()->decoration();
         if (!decoration) {
             return false;
@@ -1540,7 +1446,6 @@ public:
     }
     bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override
     {
-        Q_UNUSED(time)
         auto decoration = input()->touch()->decoration();
         if (!decoration) {
             return false;
@@ -1562,7 +1467,6 @@ public:
     }
     bool touchUp(qint32 id, quint32 time) override
     {
-        Q_UNUSED(time);
         auto decoration = input()->touch()->decoration();
         if (!decoration) {
             // can happen when quick tiling
@@ -1653,7 +1557,6 @@ class TabBoxInputFilter : public InputEventFilter
 public:
     bool pointerEvent(QMouseEvent *event, quint32 button) override
     {
-        Q_UNUSED(button)
         if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
             return false;
         }
@@ -1693,14 +1596,12 @@ class ScreenEdgeInputFilter : public InputEventFilter
 public:
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
     {
-        Q_UNUSED(nativeButton)
         workspace()->screenEdges()->isEntered(event);
         // always forward
         return false;
     }
     bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
     {
-        Q_UNUSED(time)
         // TODO: better check whether a touch sequence is in progress
         if (m_touchInProgress || waylandServer()->seat()->isTouchSequence()) {
             // cancel existing touch
@@ -1719,7 +1620,6 @@ public:
     }
     bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override
     {
-        Q_UNUSED(time)
         if (m_touchInProgress && m_id == id) {
             workspace()->screenEdges()->gestureRecognizer()->updateSwipeGesture(pos - m_lastPos);
             m_lastPos = pos;
@@ -1729,7 +1629,6 @@ public:
     }
     bool touchUp(qint32 id, quint32 time) override
     {
-        Q_UNUSED(time)
         if (m_touchInProgress && m_id == id) {
             workspace()->screenEdges()->gestureRecognizer()->endSwipeGesture();
             m_touchInProgress = false;
@@ -1753,7 +1652,6 @@ class WindowActionInputFilter : public InputEventFilter
 public:
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
     {
-        Q_UNUSED(nativeButton)
         if (event->type() != QEvent::MouseButtonPress) {
             return false;
         }
@@ -1785,8 +1683,6 @@ public:
     }
     bool touchDown(qint32 id, const QPointF &pos, quint32 time) override
     {
-        Q_UNUSED(id)
-        Q_UNUSED(time)
         auto seat = waylandServer()->seat();
         if (seat->isTouchSequence()) {
             return false;
@@ -2344,7 +2240,6 @@ public:
 
     bool tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, uint time) override
     {
-        Q_UNUSED(time)
         KWaylandServer::TabletSeatV2Interface *tabletSeat = findTabletSeat();
         auto tool = tabletSeat->toolByHardwareSerial(tabletToolId.m_serialId, getType(tabletToolId));
         if (!tool) {
@@ -2737,7 +2632,6 @@ public:
 
     void tabletPadButtonEvent(uint, bool pressed, const KWin::TabletPadId &, uint time) override
     {
-        Q_UNUSED(time)
         if (!pressed) {
             return;
         }
@@ -2746,7 +2640,6 @@ public:
 
     void tabletToolButtonEvent(uint, bool pressed, const KWin::TabletToolId &, uint time) override
     {
-        Q_UNUSED(time)
         if (!pressed) {
             return;
         }
@@ -2781,144 +2674,96 @@ class UserActivitySpy : public InputEventSpy
 public:
     void pointerEvent(MouseEvent *event) override
     {
-        Q_UNUSED(event)
         notifyActivity();
     }
     void wheelEvent(WheelEvent *event) override
     {
-        Q_UNUSED(event)
         notifyActivity();
     }
 
     void keyEvent(KeyEvent *event) override
     {
-        Q_UNUSED(event)
         notifyActivity();
     }
 
     void touchDown(qint32 id, const QPointF &pos, quint32 time) override
     {
-        Q_UNUSED(id)
-        Q_UNUSED(pos)
-        Q_UNUSED(time)
         notifyActivity();
     }
     void touchMotion(qint32 id, const QPointF &pos, quint32 time) override
     {
-        Q_UNUSED(id)
-        Q_UNUSED(pos)
-        Q_UNUSED(time)
         notifyActivity();
     }
     void touchUp(qint32 id, quint32 time) override
     {
-        Q_UNUSED(id)
-        Q_UNUSED(time)
         notifyActivity();
     }
 
     void pinchGestureBegin(int fingerCount, quint32 time) override
     {
-        Q_UNUSED(fingerCount)
-        Q_UNUSED(time)
         notifyActivity();
     }
     void pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time) override
     {
-        Q_UNUSED(scale)
-        Q_UNUSED(angleDelta)
-        Q_UNUSED(delta)
-        Q_UNUSED(time)
         notifyActivity();
     }
     void pinchGestureEnd(quint32 time) override
     {
-        Q_UNUSED(time)
         notifyActivity();
     }
     void pinchGestureCancelled(quint32 time) override
     {
-        Q_UNUSED(time)
         notifyActivity();
     }
 
     void swipeGestureBegin(int fingerCount, quint32 time) override
     {
-        Q_UNUSED(fingerCount)
-        Q_UNUSED(time)
         notifyActivity();
     }
     void swipeGestureUpdate(const QPointF &delta, quint32 time) override
     {
-        Q_UNUSED(delta)
-        Q_UNUSED(time)
         notifyActivity();
     }
     void swipeGestureEnd(quint32 time) override
     {
-        Q_UNUSED(time)
         notifyActivity();
     }
     void swipeGestureCancelled(quint32 time) override
     {
-        Q_UNUSED(time)
         notifyActivity();
     }
 
     void holdGestureBegin(int fingerCount, quint32 time) override
     {
-        Q_UNUSED(fingerCount)
-        Q_UNUSED(time)
         notifyActivity();
     }
     void holdGestureEnd(quint32 time) override
     {
-        Q_UNUSED(time)
         notifyActivity();
     }
     void holdGestureCancelled(quint32 time) override
     {
-        Q_UNUSED(time)
         notifyActivity();
     }
 
     void tabletToolEvent(TabletEvent *event) override
     {
-        Q_UNUSED(event)
         notifyActivity();
     }
     void tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, uint time) override
     {
-        Q_UNUSED(button)
-        Q_UNUSED(pressed)
-        Q_UNUSED(tabletToolId)
-        Q_UNUSED(time)
         notifyActivity();
     }
     void tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, uint time) override
     {
-        Q_UNUSED(button)
-        Q_UNUSED(pressed)
-        Q_UNUSED(tabletPadId)
-        Q_UNUSED(time)
         notifyActivity();
     }
     void tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time) override
     {
-        Q_UNUSED(number)
-        Q_UNUSED(position)
-        Q_UNUSED(isFinger)
-        Q_UNUSED(tabletPadId)
-        Q_UNUSED(time)
         notifyActivity();
     }
     void tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time) override
     {
-        Q_UNUSED(number)
-        Q_UNUSED(position)
-        Q_UNUSED(isFinger)
-        Q_UNUSED(tabletPadId)
-        Q_UNUSED(time)
         notifyActivity();
     }
 

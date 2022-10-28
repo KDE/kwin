@@ -497,8 +497,6 @@ void ForkLevel::activityAdded(const QString &activityId)
     childLevel->init();
     addChild(childLevel);
     Q_EMIT endInsert();
-#else
-    Q_UNUSED(activityId)
 #endif
 }
 
@@ -516,8 +514,6 @@ void ForkLevel::activityRemoved(const QString &activityId)
             break;
         }
     }
-#else
-    Q_UNUSED(activityId)
 #endif
 }
 
@@ -696,7 +692,6 @@ QVariant ClientModel::data(const QModelIndex &index, int role) const
 
 int ClientModel::columnCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
     return 1;
 }
 

@@ -96,7 +96,6 @@ void TransferWltoX::startTransferFromSource()
 {
     createSocketNotifier(QSocketNotifier::Read);
     connect(socketNotifier(), &QSocketNotifier::activated, this, [this](int socket) {
-        Q_UNUSED(socket);
         readWlSource();
     });
 }
@@ -471,7 +470,6 @@ void TransferXtoWl::dataSourceWrite()
         if (!socketNotifier()) {
             createSocketNotifier(QSocketNotifier::Write);
             connect(socketNotifier(), &QSocketNotifier::activated, this, [this](int socket) {
-                Q_UNUSED(socket);
                 dataSourceWrite();
             });
         }

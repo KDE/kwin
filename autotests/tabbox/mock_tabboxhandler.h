@@ -38,24 +38,17 @@ public:
     }
     QString desktopName(int desktop) const override
     {
-        Q_UNUSED(desktop)
         return "desktop 1";
     }
     QString desktopName(TabBox::TabBoxClient *client) const override
     {
-        Q_UNUSED(client)
         return "desktop";
     }
     void elevateClient(TabBox::TabBoxClient *c, QWindow *tabbox, bool elevate) const override
     {
-        Q_UNUSED(c)
-        Q_UNUSED(tabbox)
-        Q_UNUSED(elevate)
     }
     void shadeClient(TabBox::TabBoxClient *c, bool b) const override
     {
-        Q_UNUSED(c)
-        Q_UNUSED(b)
     }
     virtual void hideOutline()
     {
@@ -65,7 +58,6 @@ public:
     bool isInFocusChain(TabBox::TabBoxClient *client) const override;
     int nextDesktopFocusChain(int desktop) const override
     {
-        Q_UNUSED(desktop)
         return 1;
     }
     int numberOfDesktops() const override
@@ -78,16 +70,12 @@ public:
     }
     void raiseClient(TabBox::TabBoxClient *c) const override
     {
-        Q_UNUSED(c)
     }
     void restack(TabBox::TabBoxClient *c, TabBox::TabBoxClient *under) override
     {
-        Q_UNUSED(c)
-        Q_UNUSED(under)
     }
     virtual void showOutline(const QRect &outline)
     {
-        Q_UNUSED(outline)
     }
     TabBox::TabBoxClientList stackingOrder() const override
     {
@@ -97,8 +85,6 @@ public:
 
     void highlightWindows(TabBox::TabBoxClient *window = nullptr, QWindow *controller = nullptr) override
     {
-        Q_UNUSED(window)
-        Q_UNUSED(controller)
     }
 
     bool noModifierGrab() const override

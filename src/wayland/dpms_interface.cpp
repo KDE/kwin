@@ -101,13 +101,11 @@ void DpmsInterface::org_kde_kwin_dpms_release(Resource *resource)
 
 void DpmsInterface::org_kde_kwin_dpms_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete this;
 }
 
 void DpmsInterface::org_kde_kwin_dpms_set(Resource *resource, uint32_t mode)
 {
-    Q_UNUSED(resource)
     if (!m_output || m_output->isRemoved()) {
         return;
     }

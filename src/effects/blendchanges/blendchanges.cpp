@@ -79,9 +79,6 @@ void BlendChanges::postPaintScreen()
 
 void BlendChanges::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    Q_UNUSED(w)
-    Q_UNUSED(mask)
-    Q_UNUSED(region)
     data.setCrossFadeProgress(m_timeline.value());
     effects->paintWindow(w, mask, region, data);
 }

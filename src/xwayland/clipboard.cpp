@@ -143,8 +143,6 @@ void Clipboard::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
 
 void Clipboard::x11OffersChanged(const QStringList &added, const QStringList &removed)
 {
-    Q_UNUSED(added)
-    Q_UNUSED(removed)
     m_waitingForTargets = false;
     X11Source *source = x11Source();
     if (!source) {

@@ -113,7 +113,6 @@ void PinchGesture::setupGesture()
     m_gesture = m_pointerGestures->createPinchGesture(m_pointer, this);
     connect(m_gesture, &PointerPinchGesture::updated, this,
             [this](const QSizeF &delta, qreal scale) {
-                Q_UNUSED(delta)
                 m_progressScale = scale;
                 Q_EMIT progressScaleChanged();
             });

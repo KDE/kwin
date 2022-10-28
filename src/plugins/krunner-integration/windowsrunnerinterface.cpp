@@ -194,7 +194,6 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
 
 void WindowsRunner::Run(const QString &id, const QString &actionId)
 {
-    Q_UNUSED(actionId)
     // Split id to get actionId and realId. We don't use actionId because our actions list is not constant
     const QStringList parts = id.split(QLatin1Char('_'));
     auto action = WindowsRunnerAction(parts[0].toInt());

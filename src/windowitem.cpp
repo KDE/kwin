@@ -121,7 +121,6 @@ void WindowItem::unrefVisible(int reason)
 
 void WindowItem::handleWindowClosed(Window *original, Deleted *deleted)
 {
-    Q_UNUSED(original)
     m_window = deleted;
 }
 

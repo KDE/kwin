@@ -92,7 +92,6 @@ SubSurfaceInterfacePrivate::SubSurfaceInterfacePrivate(SubSurfaceInterface *q, S
 
 void SubSurfaceInterfacePrivate::subsurface_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete q;
 }
 
@@ -103,7 +102,6 @@ void SubSurfaceInterfacePrivate::subsurface_destroy(Resource *resource)
 
 void SubSurfaceInterfacePrivate::subsurface_set_position(Resource *resource, int32_t x, int32_t y)
 {
-    Q_UNUSED(resource)
     if (pendingPosition == QPoint(x, y)) {
         return;
     }

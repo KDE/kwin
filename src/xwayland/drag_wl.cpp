@@ -42,8 +42,6 @@ WlToXDrag::WlToXDrag(Dnd *dnd)
 
 DragEventReply WlToXDrag::moveFilter(Window *target, const QPoint &pos)
 {
-    Q_UNUSED(target)
-    Q_UNUSED(pos)
     return DragEventReply::Wayland;
 }
 
@@ -153,8 +151,6 @@ bool Xvisit::handleFinished(xcb_client_message_event_t *event)
 
     const bool success = m_version > 4 ? data->data32[1] & 1 : true;
     const xcb_atom_t usedActionAtom = m_version > 4 ? data->data32[2] : static_cast<uint32_t>(XCB_ATOM_NONE);
-    Q_UNUSED(success);
-    Q_UNUSED(usedActionAtom);
 
     if (m_dataSource) {
         m_dataSource->dndFinished();

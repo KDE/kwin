@@ -160,8 +160,6 @@ QSizeF InternalWindow::maxSize() const
 
 NET::WindowType InternalWindow::windowType(bool direct, int supported_types) const
 {
-    Q_UNUSED(direct)
-    Q_UNUSED(supported_types)
     return m_windowType;
 }
 
@@ -295,7 +293,6 @@ void InternalWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 
 Window *InternalWindow::findModal(bool allow_itself)
 {
-    Q_UNUSED(allow_itself)
     return nullptr;
 }
 
@@ -435,7 +432,6 @@ bool InternalWindow::acceptsFocus() const
 
 bool InternalWindow::belongsToSameApplication(const Window *other, SameApplicationChecks checks) const
 {
-    Q_UNUSED(checks)
     const InternalWindow *otherInternal = qobject_cast<const InternalWindow *>(other);
     if (!otherInternal) {
         return false;

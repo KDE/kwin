@@ -315,7 +315,6 @@ public:
         , SurfaceRole(surface, QByteArrayLiteral("input_panel_surface_v1"))
         , q(q)
     {
-        Q_UNUSED(id)
     }
 
     void zwp_input_panel_surface_v1_set_overlay_panel(Resource *) override

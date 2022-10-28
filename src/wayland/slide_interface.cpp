@@ -103,20 +103,17 @@ protected:
 
 void SlideInterfacePrivate::org_kde_kwin_slide_commit(Resource *resource)
 {
-    Q_UNUSED(resource)
     currentLocation = pendingLocation;
     currentOffset = pendingOffset;
 }
 
 void SlideInterfacePrivate::org_kde_kwin_slide_set_location(Resource *resource, uint32_t location)
 {
-    Q_UNUSED(resource)
     pendingLocation = (SlideInterface::Location)location;
 }
 
 void SlideInterfacePrivate::org_kde_kwin_slide_set_offset(Resource *resource, int32_t offset)
 {
-    Q_UNUSED(resource)
     pendingOffset = offset;
 }
 
@@ -127,7 +124,6 @@ void SlideInterfacePrivate::org_kde_kwin_slide_release(Resource *resource)
 
 void SlideInterfacePrivate::org_kde_kwin_slide_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete q;
 }
 

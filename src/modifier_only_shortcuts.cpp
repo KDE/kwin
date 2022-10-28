@@ -89,7 +89,6 @@ void ModifierOnlyShortcuts::pointerEvent(MouseEvent *event)
 
 void ModifierOnlyShortcuts::wheelEvent(WheelEvent *event)
 {
-    Q_UNUSED(event)
     reset();
 }
 

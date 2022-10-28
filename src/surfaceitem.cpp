@@ -24,7 +24,6 @@ Window *SurfaceItem::window() const
 
 void SurfaceItem::handleWindowClosed(Window *original, Deleted *deleted)
 {
-    Q_UNUSED(original)
     m_window = deleted;
 }
 

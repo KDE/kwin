@@ -72,7 +72,6 @@ QString DesktopModel::longestCaption() const
 
 int DesktopModel::columnCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
     return 1;
 }
 

@@ -224,7 +224,6 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
     });
 
     QObject::connect(dataDevice, &DataControlDeviceV1Interface::selectionCleared, q, [this, dataDevice] {
-        Q_UNUSED(dataDevice);
         q->setSelection(nullptr);
     });
 

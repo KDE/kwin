@@ -27,7 +27,6 @@ public:
 
     void zkde_screencast_stream_unstable_v1_destroy_resource(Resource *resource) override
     {
-        Q_UNUSED(resource);
         if (!stopped) {
             Q_EMIT q->finished();
         }
@@ -37,7 +36,6 @@ public:
 
     void zkde_screencast_stream_unstable_v1_close(Resource *resource) override
     {
-        Q_UNUSED(resource);
         Q_EMIT q->finished();
         stopped = true;
         wl_resource_destroy(resource->handle);

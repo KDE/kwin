@@ -44,7 +44,6 @@ namespace KWin
 
 static void xkbLogHandler(xkb_context *context, xkb_log_level priority, const char *format, va_list args)
 {
-    Q_UNUSED(context)
     char buf[1024];
     int length = std::vsnprintf(buf, 1023, format, args);
     while (length > 0 && std::isspace(buf[length - 1])) {

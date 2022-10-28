@@ -91,7 +91,6 @@ bool SlidingPopupsEffect::supported()
 
 void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
 {
-    Q_UNUSED(flags)
     SlidingPopupsConfig::self()->read();
     m_slideInDuration = std::chrono::milliseconds(
         static_cast<int>(animationTime(SlidingPopupsConfig::slideInTime() != 0 ? SlidingPopupsConfig::slideInTime() : 150)));

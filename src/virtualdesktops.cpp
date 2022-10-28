@@ -761,7 +761,8 @@ QString VirtualDesktopManager::defaultName(int desktop) const
 
 void VirtualDesktopManager::setNETDesktopLayout(Qt::Orientation orientation, uint width, uint height, int startingCorner)
 {
-    Q_UNUSED(startingCorner); // Not really worth implementing right now.
+    // startingCorner is not really worth implementing right now.
+
     const uint count = m_desktops.count();
 
     // Calculate valid grid size

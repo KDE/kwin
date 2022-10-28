@@ -806,8 +806,6 @@ void GlxBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedR
 
 void GlxBackend::present(Output *output)
 {
-    Q_UNUSED(output)
-
     // If the GLX_INTEL_swap_event extension is not used for getting presentation feedback,
     // assume that the frame will be presented at the next vblank event, this is racy.
     if (m_vsyncMonitor) {
@@ -861,7 +859,6 @@ OverlayWindow *GlxBackend::overlayWindow() const
 
 OutputLayer *GlxBackend::primaryLayer(Output *output)
 {
-    Q_UNUSED(output)
     return m_layer.get();
 }
 
@@ -883,7 +880,6 @@ bool GlxSurfaceTextureX11::create()
 
 void GlxSurfaceTextureX11::update(const QRegion &region)
 {
-    Q_UNUSED(region)
     // mipmaps need to be updated
     m_texture->setDirty();
 }

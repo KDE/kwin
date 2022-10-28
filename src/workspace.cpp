@@ -1378,8 +1378,6 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     }
 
     Q_EMIT currentActivityChanged();
-#else
-    Q_UNUSED(new_activity)
 #endif
 }
 

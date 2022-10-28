@@ -77,13 +77,11 @@ static GLenum GetGraphicsResetStatus()
 static void ReadnPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,
                         GLenum type, GLsizei bufSize, GLvoid *data)
 {
-    Q_UNUSED(bufSize)
     glReadPixels(x, y, width, height, format, type, data);
 }
 
 static void GetnUniformfv(GLuint program, GLint location, GLsizei bufSize, GLfloat *params)
 {
-    Q_UNUSED(bufSize)
     glGetUniformfv(program, location, params);
 }
 

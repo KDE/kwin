@@ -79,7 +79,6 @@ GlobalPolicy::GlobalPolicy(Xkb *xkb, KeyboardLayout *_layout, const KConfigGroup
     : Policy(xkb, _layout, config)
 {
     connect(workspace()->sessionManager(), &SessionManager::prepareSessionSaveRequested, this, [this, xkb](const QString &name) {
-        Q_UNUSED(name)
         clearLayouts();
         if (const uint layout = xkb->currentLayout()) {
             m_config.writeEntry(defaultLayoutEntryKey(), layout);
@@ -87,7 +86,6 @@ GlobalPolicy::GlobalPolicy(Xkb *xkb, KeyboardLayout *_layout, const KConfigGroup
     });
 
     connect(workspace()->sessionManager(), &SessionManager::loadSessionRequested, this, [this, xkb](const QString &name) {
-        Q_UNUSED(name)
         if (xkb->numberOfLayouts() > 1) {
             setLayout(m_config.readEntry(defaultLayoutEntryKey(), 0));
         }
@@ -103,7 +101,6 @@ VirtualDesktopPolicy::VirtualDesktopPolicy(Xkb *xkb, KeyboardLayout *layout, con
             this, &VirtualDesktopPolicy::desktopChanged);
 
     connect(workspace()->sessionManager(), &SessionManager::prepareSessionSaveRequested, this, [this](const QString &name) {
-        Q_UNUSED(name)
         clearLayouts();
 
         for (auto i = m_layouts.constBegin(); i != m_layouts.constEnd(); ++i) {
@@ -114,7 +111,6 @@ VirtualDesktopPolicy::VirtualDesktopPolicy(Xkb *xkb, KeyboardLayout *layout, con
     });
 
     connect(workspace()->sessionManager(), &SessionManager::loadSessionRequested, this, [this, xkb](const QString &name) {
-        Q_UNUSED(name)
         if (xkb->numberOfLayouts() > 1) {
             const auto &desktops = VirtualDesktopManager::self()->desktops();
             for (KWin::VirtualDesktop *const desktop : desktops) {
@@ -236,7 +232,6 @@ ApplicationPolicy::ApplicationPolicy(KWin::Xkb *xkb, KWin::KeyboardLayout *layou
     connect(workspace(), &Workspace::windowActivated, this, &ApplicationPolicy::windowActivated);
 
     connect(workspace()->sessionManager(), &SessionManager::prepareSessionSaveRequested, this, [this](const QString &name) {
-        Q_UNUSED(name)
         clearLayouts();
 
         for (auto i = m_layouts.constBegin(); i != m_layouts.constEnd(); ++i) {
@@ -250,7 +245,6 @@ ApplicationPolicy::ApplicationPolicy(KWin::Xkb *xkb, KWin::KeyboardLayout *layou
     });
 
     connect(workspace()->sessionManager(), &SessionManager::loadSessionRequested, this, [this, xkb](const QString &name) {
-        Q_UNUSED(name)
         if (xkb->numberOfLayouts() > 1) {
             const QString keyPrefix = defaultLayoutEntryKey();
             const QStringList keyList = m_config.keyList().filter(keyPrefix);

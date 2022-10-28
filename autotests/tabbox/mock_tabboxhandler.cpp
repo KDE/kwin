@@ -23,7 +23,6 @@ MockTabBoxHandler::~MockTabBoxHandler()
 
 void MockTabBoxHandler::grabbedKeyEvent(QKeyEvent *event) const
 {
-    Q_UNUSED(event)
 }
 
 QWeakPointer<TabBox::TabBoxClient> MockTabBoxHandler::activeClient() const
@@ -38,7 +37,6 @@ void MockTabBoxHandler::setActiveClient(const QWeakPointer<TabBox::TabBoxClient>
 
 QWeakPointer<TabBox::TabBoxClient> MockTabBoxHandler::clientToAddToList(TabBox::TabBoxClient *client, int desktop) const
 {
-    Q_UNUSED(desktop)
     QList<QSharedPointer<TabBox::TabBoxClient>>::const_iterator it = m_windows.constBegin();
     for (; it != m_windows.constEnd(); ++it) {
         if ((*it).get() == client) {

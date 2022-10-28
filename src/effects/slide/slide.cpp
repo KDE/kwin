@@ -289,8 +289,6 @@ bool SlideEffect::shouldElevate(const EffectWindow *w) const
  */
 void SlideEffect::startAnimation(int old, int current, EffectWindow *movingWindow)
 {
-    Q_UNUSED(old)
-
     if (m_state == State::Inactive) {
         prepareSwitching();
     }

@@ -66,7 +66,6 @@ XdgToplevelDecorationV1InterfacePrivate::XdgToplevelDecorationV1InterfacePrivate
 
 void XdgToplevelDecorationV1InterfacePrivate::zxdg_toplevel_decoration_v1_destroy_resource(Resource *resource)
 {
-    Q_UNUSED(resource)
     delete q;
 }
 
@@ -77,8 +76,6 @@ void XdgToplevelDecorationV1InterfacePrivate::zxdg_toplevel_decoration_v1_destro
 
 void XdgToplevelDecorationV1InterfacePrivate::zxdg_toplevel_decoration_v1_set_mode(Resource *resource, uint32_t mode)
 {
-    Q_UNUSED(resource)
-
     switch (mode) {
     case mode_client_side:
         preferredMode = XdgToplevelDecorationV1Interface::Mode::Client;
@@ -96,7 +93,6 @@ void XdgToplevelDecorationV1InterfacePrivate::zxdg_toplevel_decoration_v1_set_mo
 
 void XdgToplevelDecorationV1InterfacePrivate::zxdg_toplevel_decoration_v1_unset_mode(Resource *resource)
 {
-    Q_UNUSED(resource)
     preferredMode = XdgToplevelDecorationV1Interface::Mode::Undefined;
     Q_EMIT q->preferredModeChanged(preferredMode);
 }
