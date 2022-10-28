@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-03-26 00:45+0000\n"
+"POT-Creation-Date: 2022-10-28 00:47+0000\n"
 "PO-Revision-Date: 2014-03-29 18:57-0500\n"
 "Last-Translator: A S Alam <aalam@users.sf.net>\n"
 "Language-Team: Punjabi/Panjabi <punjabi-users@lists.sf.net>\n"
@@ -27,10 +27,22 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "aalam@users.sf.net"
 
-#: genericscriptedconfig.cpp:76
+#: genericscriptedconfig.cpp:74
 #, kde-format
 msgctxt "Error message"
-msgid "Plugin does not provide configuration file in expected location"
+msgid "Could not locate package metadata"
+msgstr ""
+
+#: genericscriptedconfig.cpp:88
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr ""
+
+#: genericscriptedconfig.cpp:94 genericscriptedconfig.cpp:100
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
 msgstr ""
 
 #~ msgctxt ""

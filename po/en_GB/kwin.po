@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-27 00:48+0000\n"
+"POT-Creation-Date: 2022-10-28 00:47+0000\n"
 "PO-Revision-Date: 2022-09-18 12:08+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English <kde-l10n-en_gb@kde.org>\n"
@@ -1327,7 +1327,7 @@ msgstr "Starts the session without lock screen support."
 msgid "Starts the session without global shortcuts support."
 msgstr "Starts the session without global shortcuts support."
 
-#: main_wayland.cpp:408 main_x11.cpp:385
+#: main_wayland.cpp:408 main_x11.cpp:383
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Disable KActivities integration."
@@ -1367,7 +1367,7 @@ msgstr ""
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: another window manager is running (try using --replace)\n"
 
-#: main_x11.cpp:378
+#: main_x11.cpp:376
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Replace already-running ICCCM2.0-compliant window manager"
@@ -2058,11 +2058,24 @@ msgstr "Desktop file name"
 msgid "Desktop file name rule type"
 msgstr "Desktop file name rule type"
 
-#: scripting/genericscriptedconfig.cpp:76
+#: scripting/genericscriptedconfig.cpp:74
 #, kde-format
 msgctxt "Error message"
-msgid "Plugin does not provide configuration file in expected location"
-msgstr "Plugin does not provide configuration file in expected location"
+msgid "Could not locate package metadata"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:88
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:94
+#: scripting/genericscriptedconfig.cpp:100
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2704,6 +2717,10 @@ msgstr ""
 "Please post the information provided underneath this introductory text to a "
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
+
+#~ msgctxt "Error message"
+#~ msgid "Plugin does not provide configuration file in expected location"
+#~ msgstr "Plugin does not provide configuration file in expected location"
 
 #~ msgid "Invert Screen Colors"
 #~ msgstr "Invert Screen Colours"

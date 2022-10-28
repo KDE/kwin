@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-27 00:48+0000\n"
+"POT-Creation-Date: 2022-10-28 00:47+0000\n"
 "PO-Revision-Date: 2022-10-25 21:50+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -1330,7 +1330,7 @@ msgstr "திரையை பூட்டும் ஆதரவில்லா�
 msgid "Starts the session without global shortcuts support."
 msgstr "பொது சுருக்குவழிகளுக்கான ஆதரவில்லாமல் அமர்வை துவக்கும்."
 
-#: main_wayland.cpp:408 main_x11.cpp:385
+#: main_wayland.cpp:408 main_x11.cpp:383
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivities ஒருங்கிணைப்பை முடக்கு."
@@ -1371,7 +1371,7 @@ msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "கேவின்: இன்னொரு சாளர மேலாளர் இயங்குகிறது(--replace என்பதை பயன்படுத்தி பாருங்கள்)\n"
 
-#: main_x11.cpp:378
+#: main_x11.cpp:376
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "ஏற்கனவே ஓடிக்கொண்டிருக்கும் ICCCM2.0 சாளர மேலாளருக்கு பதிலாக இயங்கும்"
@@ -2071,11 +2071,24 @@ msgstr "Desktop கோப்பின் பெயர்"
 msgid "Desktop file name rule type"
 msgstr ""
 
-#: scripting/genericscriptedconfig.cpp:76
+#: scripting/genericscriptedconfig.cpp:74
 #, kde-format
 msgctxt "Error message"
-msgid "Plugin does not provide configuration file in expected location"
-msgstr "எதிர்பார்க்கப்பட்ட இடத்தில் செருகுநிரல் விருப்பத்தேர்வு கோப்பை வழங்கவில்லை"
+msgid "Could not locate package metadata"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:88
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:94
+#: scripting/genericscriptedconfig.cpp:100
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2715,6 +2728,10 @@ msgstr ""
 "உதவுவோருக்கு கீழுள்ள விவரங்களை அப்படியே வழங்குவதற்கு பதிலாக, https://paste.kde.org "
 "போன்ற\n"
 "ஒட்டுபலகை (pastebin) சேவையை பயன்படுத்தி ஒட்டியதற்கான இணைப்பை வழங்கலாம்.\n"
+
+#~ msgctxt "Error message"
+#~ msgid "Plugin does not provide configuration file in expected location"
+#~ msgstr "எதிர்பார்க்கப்பட்ட இடத்தில் செருகுநிரல் விருப்பத்தேர்வு கோப்பை வழங்கவில்லை"
 
 #~ msgid "Invert Screen Colors"
 #~ msgstr "திரையிலுள்ள நிறங்களை புரட்டு"

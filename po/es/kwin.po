@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-27 00:48+0000\n"
+"POT-Creation-Date: 2022-10-28 00:47+0000\n"
 "PO-Revision-Date: 2022-10-21 16:26+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -1350,7 +1350,7 @@ msgstr "Inicia la sesión sin permitir el bloqueo de pantalla."
 msgid "Starts the session without global shortcuts support."
 msgstr "Inicia la sesión sin usar los accesos rápidos de teclado globales."
 
-#: main_wayland.cpp:408 main_x11.cpp:385
+#: main_wayland.cpp:408 main_x11.cpp:383
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Desactivar la integración con KActivities."
@@ -1391,7 +1391,7 @@ msgstr ""
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: hay otro gestor de ventanas en marcha (intente usar --replace)\n"
 
-#: main_x11.cpp:378
+#: main_x11.cpp:376
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr ""
@@ -2084,13 +2084,24 @@ msgstr "Nombre del archivo de escritorio"
 msgid "Desktop file name rule type"
 msgstr "Tipo de regla para nombre del archivo de escritorio"
 
-#: scripting/genericscriptedconfig.cpp:76
+#: scripting/genericscriptedconfig.cpp:74
 #, kde-format
 msgctxt "Error message"
-msgid "Plugin does not provide configuration file in expected location"
+msgid "Could not locate package metadata"
 msgstr ""
-"El complemento no proporciona el archivo de configuración en el lugar "
-"esperado"
+
+#: scripting/genericscriptedconfig.cpp:88
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:94
+#: scripting/genericscriptedconfig.cpp:100
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2733,6 +2744,12 @@ msgstr ""
 "de introducción a un\n"
 "servicio de bandeja de pegar como https://paste.kde.org en lugar de pegarla "
 "en hilos de ayuda.\n"
+
+#~ msgctxt "Error message"
+#~ msgid "Plugin does not provide configuration file in expected location"
+#~ msgstr ""
+#~ "El complemento no proporciona el archivo de configuración en el lugar "
+#~ "esperado"
 
 #~ msgid "Invert Screen Colors"
 #~ msgstr "Invertir los colores de la pantalla"

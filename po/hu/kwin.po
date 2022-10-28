@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-27 00:48+0000\n"
+"POT-Creation-Date: 2022-10-28 00:47+0000\n"
 "PO-Revision-Date: 2021-11-23 11:35+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -1332,7 +1332,7 @@ msgstr "Munkamenet indítása képernyőzár támogatás nélkül."
 msgid "Starts the session without global shortcuts support."
 msgstr "Munkamenet indítás a globális billentyűparancsok támogatása nélkül."
 
-#: main_wayland.cpp:408 main_x11.cpp:385
+#: main_wayland.cpp:408 main_x11.cpp:383
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivities intergráció kikapcsolása."
@@ -1374,7 +1374,7 @@ msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "kwin: egy másik ablakkezelő is fut (próbálja a --replace használatát)\n"
 
-#: main_x11.cpp:378
+#: main_x11.cpp:376
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Átváltás már futó ICCCM2.0-kompatibilis ablakkezelőről"
@@ -2065,11 +2065,24 @@ msgstr "Asztali fájl neve"
 msgid "Desktop file name rule type"
 msgstr "Asztali fájl neve szabálytípus"
 
-#: scripting/genericscriptedconfig.cpp:76
+#: scripting/genericscriptedconfig.cpp:74
 #, kde-format
 msgctxt "Error message"
-msgid "Plugin does not provide configuration file in expected location"
-msgstr "A bővítmény nem szolgáltat beállítófájlt az elvárt helyen"
+msgid "Could not locate package metadata"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:88
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:94
+#: scripting/genericscriptedconfig.cpp:100
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2714,6 +2727,10 @@ msgstr ""
 "melyik OpenGL illesztőprogram és mely effektusok futnak.\n"
 "Kérjük töltse fel az alábbi információkat egy szövegmegosztó oldalra, "
 "például a https://paste.kde.org-ra ahelyett, hogy a fórumba illesztené be.\n"
+
+#~ msgctxt "Error message"
+#~ msgid "Plugin does not provide configuration file in expected location"
+#~ msgstr "A bővítmény nem szolgáltat beállítófájlt az elvárt helyen"
 
 #~ msgid "Invert Screen Colors"
 #~ msgstr "Képernyőszínek invertálása"

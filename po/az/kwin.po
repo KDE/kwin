@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-27 00:48+0000\n"
+"POT-Creation-Date: 2022-10-28 00:47+0000\n"
 "PO-Revision-Date: 2022-10-17 23:50+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -1333,7 +1333,7 @@ msgstr "Sesiyanı ekran kilidli olmadan başladır."
 msgid "Starts the session without global shortcuts support."
 msgstr "Sesiyanı qlobal qısayollar dəstəklənməsi olmadan başladır."
 
-#: main_wayland.cpp:408 main_x11.cpp:385
+#: main_wayland.cpp:408 main_x11.cpp:383
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KDE İş otaqları ilə inteqrasiyanı söndürmək"
@@ -1375,7 +1375,7 @@ msgstr ""
 "kwin: başqa pəncərə meneceri başladılıb (--replace istifadə edərək cəhd "
 "edin)\n"
 
-#: main_x11.cpp:378
+#: main_x11.cpp:376
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Artıq başladılmış, ICCCM2.0-yə uyğun pəncərə menecerini əvəzləmək"
@@ -2066,11 +2066,24 @@ msgstr "İş masası faylının adı"
 msgid "Desktop file name rule type"
 msgstr "İş masası faylının adlandırma qaydasının növü"
 
-#: scripting/genericscriptedconfig.cpp:76
+#: scripting/genericscriptedconfig.cpp:74
 #, kde-format
 msgctxt "Error message"
-msgid "Plugin does not provide configuration file in expected location"
-msgstr "Plasma əlavəsi, gözlənilən yerdə tənzimləmə faylını təqdim etmir"
+msgid "Could not locate package metadata"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:88
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:94
+#: scripting/genericscriptedconfig.cpp:100
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2709,6 +2722,10 @@ msgstr ""
 "cari işlək vəziyyət haqqında məlumatları təqdim edir.\n"
 "Lütfən, bu giriş mətninin altındakı məlumatları dəstək mesajları yerinə\n"
 "https://paste.kde.org saytına oxşar bir pastebin xidmətinə göndərin.\n"
+
+#~ msgctxt "Error message"
+#~ msgid "Plugin does not provide configuration file in expected location"
+#~ msgstr "Plasma əlavəsi, gözlənilən yerdə tənzimləmə faylını təqdim etmir"
 
 #~ msgid "Invert Screen Colors"
 #~ msgstr "Ekran Rənglərinin Əks Dəyişimi"

@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-27 00:48+0000\n"
-"PO-Revision-Date: 2022-08-18 09:31+0300\n"
+"PO-Revision-Date: 2022-10-27 13:35+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -315,10 +315,9 @@ msgid "Toggle Invert Effect on Window"
 msgstr "Перемкнути ефект інвертування для вікна"
 
 #: invert/invert.cpp:56
-#, fuzzy, kde-format
-#| msgid "Invert cursor keys"
+#, kde-format
 msgid "Invert Screen Colors"
-msgstr "Інвертувати клавіші керування курсором"
+msgstr "Інвертувати кольори екрана"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: login/package/contents/ui/config.ui:17

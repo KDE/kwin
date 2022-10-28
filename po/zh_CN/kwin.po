@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-27 00:48+0000\n"
+"POT-Creation-Date: 2022-10-28 00:47+0000\n"
 "PO-Revision-Date: 2022-10-22 05:29\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1315,7 +1315,7 @@ msgstr "在没有锁屏支持的情况下启动会话。"
 msgid "Starts the session without global shortcuts support."
 msgstr "在没有全局快捷键支持的情况下启动会话。"
 
-#: main_wayland.cpp:408 main_x11.cpp:385
+#: main_wayland.cpp:408 main_x11.cpp:383
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "禁用 KActivities 集成。"
@@ -1355,7 +1355,7 @@ msgstr ""
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin：其他窗口管理器正在运行 (试着使用 --replace)\n"
 
-#: main_x11.cpp:378
+#: main_x11.cpp:376
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "替换已经运行的 ICCCM2.0 兼容的窗口管理器"
@@ -2046,11 +2046,24 @@ msgstr "桌面文件名"
 msgid "Desktop file name rule type"
 msgstr "桌面文件名规则类型"
 
-#: scripting/genericscriptedconfig.cpp:76
+#: scripting/genericscriptedconfig.cpp:74
 #, kde-format
 msgctxt "Error message"
-msgid "Plugin does not provide configuration file in expected location"
-msgstr "插件未在预期位置提供配置文件"
+msgid "Could not locate package metadata"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:88
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:94
+#: scripting/genericscriptedconfig.cpp:100
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2683,6 +2696,10 @@ msgstr ""
 "正在使用什么 OpenGL 驱动，和哪些特效正在运行。\n"
 "请将此本文下面的信息贴至一个剪贴板服务，\n"
 "例如 https://paste.kde.org ，而不是直接贴到请求支持的贴子中。\n"
+
+#~ msgctxt "Error message"
+#~ msgid "Plugin does not provide configuration file in expected location"
+#~ msgstr "插件未在预期位置提供配置文件"
 
 #~ msgid "Invert Screen Colors"
 #~ msgstr "屏幕反色"

@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-27 00:48+0000\n"
+"POT-Creation-Date: 2022-10-28 00:47+0000\n"
 "PO-Revision-Date: 2020-01-05 18:49+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -1375,7 +1375,7 @@ msgstr "Iniciar a sesión sen funcionalidade de bloqueo de pantalla."
 msgid "Starts the session without global shortcuts support."
 msgstr "Iniciar a sesión sen funcionalidade de atallos globais."
 
-#: main_wayland.cpp:408 main_x11.cpp:385
+#: main_wayland.cpp:408 main_x11.cpp:383
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Desactivar a integración con KActivities."
@@ -1417,7 +1417,7 @@ msgstr ""
 "kwin: hai outro xestor de xanelas en execución (intente empregando --"
 "replace)\n"
 
-#: main_x11.cpp:378
+#: main_x11.cpp:376
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Substituír o xestor de xanelas compatíbel con ICCCM2.0 en execución"
@@ -2151,13 +2151,24 @@ msgstr ""
 msgid "Desktop file name rule type"
 msgstr ""
 
-#: scripting/genericscriptedconfig.cpp:76
+#: scripting/genericscriptedconfig.cpp:74
 #, kde-format
 msgctxt "Error message"
-msgid "Plugin does not provide configuration file in expected location"
+msgid "Could not locate package metadata"
 msgstr ""
-"O complemento non fornece un ficheiro de configuración no lugar que se "
-"agardaba"
+
+#: scripting/genericscriptedconfig.cpp:88
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:94
+#: scripting/genericscriptedconfig.cpp:100
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2812,6 +2823,12 @@ msgstr ""
 "Envíe a información que aparece debaixo deste texto introdutorio a un "
 "servizo de almacenamento de texto\n"
 "como https://paste.kde.org no canto de pegala no fío de asistencia técnica.\n"
+
+#~ msgctxt "Error message"
+#~ msgid "Plugin does not provide configuration file in expected location"
+#~ msgstr ""
+#~ "O complemento non fornece un ficheiro de configuración no lugar que se "
+#~ "agardaba"
 
 #~ msgid "Invert Screen Colors"
 #~ msgstr "Inverter as cores da pantalla"

@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-27 00:48+0000\n"
+"POT-Creation-Date: 2022-10-28 00:47+0000\n"
 "PO-Revision-Date: 2022-10-22 11:33+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@neuf.fr>\n"
 "Language-Team: French <kde-francophone@kde.org>\n"
@@ -1357,7 +1357,7 @@ msgstr "Démarrer la session sans prise en charge du verrouillage d'écran."
 msgid "Starts the session without global shortcuts support."
 msgstr "Démarrer la session sans prise en charge des raccourcis globaux."
 
-#: main_wayland.cpp:408 main_x11.cpp:385
+#: main_wayland.cpp:408 main_x11.cpp:383
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Désactiver l'intégration avec KActivities."
@@ -1403,7 +1403,7 @@ msgstr ""
 "kwin : un autre gestionnaire de fenêtres est fonctionnement (essayez "
 "d'utiliser « --replace »)\n"
 
-#: main_x11.cpp:378
+#: main_x11.cpp:376
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr ""
@@ -2100,13 +2100,24 @@ msgstr "Nom du fichier de bureau"
 msgid "Desktop file name rule type"
 msgstr "Type de règle pour nom du fichier de bureau"
 
-#: scripting/genericscriptedconfig.cpp:76
+#: scripting/genericscriptedconfig.cpp:74
 #, kde-format
 msgctxt "Error message"
-msgid "Plugin does not provide configuration file in expected location"
+msgid "Could not locate package metadata"
 msgstr ""
-"Le module externe ne fournit pas de fichier de configuration à l'emplacement "
-"attendu"
+
+#: scripting/genericscriptedconfig.cpp:88
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:94
+#: scripting/genericscriptedconfig.cpp:100
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2751,6 +2762,12 @@ msgstr ""
 "« copier / coller »\n"
 "tel que « https://paste.kde.org » au lieu de coller cela directement dans le "
 "fil de discussion de la demande d'aide.\n"
+
+#~ msgctxt "Error message"
+#~ msgid "Plugin does not provide configuration file in expected location"
+#~ msgstr ""
+#~ "Le module externe ne fournit pas de fichier de configuration à "
+#~ "l'emplacement attendu"
 
 #~ msgid "Invert Screen Colors"
 #~ msgstr "Inverser les couleurs de l'écran"

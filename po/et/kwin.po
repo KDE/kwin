@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-27 00:48+0000\n"
+"POT-Creation-Date: 2022-10-28 00:47+0000\n"
 "PO-Revision-Date: 2020-10-08 14:55+0200\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -1345,7 +1345,7 @@ msgstr "Seansi käivitamine ekraani lukustamise toetuseta."
 msgid "Starts the session without global shortcuts support."
 msgstr "Seansi käivitamine globaalsete kiirklahvide toetuseta."
 
-#: main_wayland.cpp:408 main_x11.cpp:385
+#: main_wayland.cpp:408 main_x11.cpp:383
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivitiesi lõimimise keelamine"
@@ -1386,7 +1386,7 @@ msgstr ""
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: muu aknahaldur töötab (proovi kasutada võtit --replace)\n"
 
-#: main_x11.cpp:378
+#: main_x11.cpp:376
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Asendab juba töötava ICCCM2.0 ühilduva aknahalduri"
@@ -2094,11 +2094,24 @@ msgstr "Töölauafaili nimi"
 msgid "Desktop file name rule type"
 msgstr "Töölauafaili nime reegli tüüp"
 
-#: scripting/genericscriptedconfig.cpp:76
+#: scripting/genericscriptedconfig.cpp:74
 #, kde-format
 msgctxt "Error message"
-msgid "Plugin does not provide configuration file in expected location"
-msgstr "Plugin ei paku seadistusfaili eeldatud asukohas"
+msgid "Could not locate package metadata"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:88
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:94
+#: scripting/genericscriptedconfig.cpp:100
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2748,6 +2761,10 @@ msgstr ""
 "on kasutusel, milline OpenGL draiver ja millised efektid.\n"
 "Palun postita sissejuhatava teksti all olev teave pastebin-teenussesse,\n"
 "näiteks https://paste.kde.org, mitte ära postita seda foorumisse.\n"
+
+#~ msgctxt "Error message"
+#~ msgid "Plugin does not provide configuration file in expected location"
+#~ msgstr "Plugin ei paku seadistusfaili eeldatud asukohas"
 
 #~ msgid "Invert Screen Colors"
 #~ msgstr "Ekraanivärvide vahetamine"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-27 00:48+0000\n"
+"POT-Creation-Date: 2022-10-28 00:47+0000\n"
 "PO-Revision-Date: 2022-10-21 13:38+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1338,7 +1338,7 @@ msgstr "Inicia la sessió sense el suport del bloqueig de pantalla."
 msgid "Starts the session without global shortcuts support."
 msgstr "Inicia la sessió sense el suport de les dreceres globals."
 
-#: main_wayland.cpp:408 main_x11.cpp:385
+#: main_wayland.cpp:408 main_x11.cpp:383
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Desactiva la integració de les «KActivities»."
@@ -1384,7 +1384,7 @@ msgstr ""
 "kwin: hi ha un altre gestor de finestres executant-se (proveu l'ús de --"
 "replace)\n"
 
-#: main_x11.cpp:378
+#: main_x11.cpp:376
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr ""
@@ -2076,13 +2076,24 @@ msgstr "Nom de fitxer «desktop»"
 msgid "Desktop file name rule type"
 msgstr "Tipus de regla de nom de fitxer «desktop»"
 
-#: scripting/genericscriptedconfig.cpp:76
+#: scripting/genericscriptedconfig.cpp:74
 #, kde-format
 msgctxt "Error message"
-msgid "Plugin does not provide configuration file in expected location"
+msgid "Could not locate package metadata"
 msgstr ""
-"El connector no ha proporcionat cap fitxer de configuració en la ubicació "
-"esperada"
+
+#: scripting/genericscriptedconfig.cpp:88
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:94
+#: scripting/genericscriptedconfig.cpp:100
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2723,6 +2734,12 @@ msgstr ""
 "Si us plau, publiqueu la informació que hi ha sota aquest text introductori "
 "en un servei d'enganxament\n"
 "com https://paste.kde.org en lloc d'enganxar-ho en els fils d'ajuda.\n"
+
+#~ msgctxt "Error message"
+#~ msgid "Plugin does not provide configuration file in expected location"
+#~ msgstr ""
+#~ "El connector no ha proporcionat cap fitxer de configuració en la ubicació "
+#~ "esperada"
 
 #~ msgid "Invert Screen Colors"
 #~ msgstr "Inverteix els colors de la pantalla"

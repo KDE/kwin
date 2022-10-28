@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-06-14 00:50+0000\n"
+"POT-Creation-Date: 2022-10-26 00:47+0000\n"
 "PO-Revision-Date: 2022-01-15 18:27+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -196,48 +196,48 @@ msgstr "Slepp ein knapp her for å fjerna han"
 msgid "Drag buttons between here and the titlebar"
 msgstr "Dra knappar mellom her og tittellinja"
 
-#: package/contents/ui/main.qml:19
+#: package/contents/ui/main.qml:18
 #, kde-format
 msgid "This module lets you configure the window decorations."
 msgstr "Med denne modulen kan du setja opp vindaugspynten."
 
-#: package/contents/ui/main.qml:53
+#: package/contents/ui/main.qml:52
 #, kde-format
 msgctxt "tab label"
 msgid "Theme"
 msgstr "Tema"
 
-#: package/contents/ui/main.qml:57
+#: package/contents/ui/main.qml:56
 #, kde-format
 msgctxt "tab label"
 msgid "Titlebar Buttons"
 msgstr "Knappar på tittellinja"
 
-#: package/contents/ui/main.qml:93
+#: package/contents/ui/main.qml:92
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Storleik på vindaugsramme:"
 
-#: package/contents/ui/main.qml:112
+#: package/contents/ui/main.qml:110
 #, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations..."
 msgstr "Hent ny vindaugspynt …"
 
-#: package/contents/ui/main.qml:141
+#: package/contents/ui/main.qml:139
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
 msgstr "Lukk vindauga ved å dobbeltklikka på menyknappen"
 
-#: package/contents/ui/main.qml:158
+#: package/contents/ui/main.qml:156
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
 msgstr "Trykk på og hald inne meny­knappen for å visa menyen."
 
-#: package/contents/ui/main.qml:165
+#: package/contents/ui/main.qml:163
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"

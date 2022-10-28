@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-27 00:48+0000\n"
+"POT-Creation-Date: 2022-10-28 00:47+0000\n"
 "PO-Revision-Date: 2022-08-02 22:51+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -1346,7 +1346,7 @@ msgstr "Aloittaa istunnon ilman näytönlukitustukea."
 msgid "Starts the session without global shortcuts support."
 msgstr "Aloittaa istunnon ilman yleisten pikanäppäinten tukea."
 
-#: main_wayland.cpp:408 main_x11.cpp:385
+#: main_wayland.cpp:408 main_x11.cpp:383
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Poista KActivities-integraatio käytöstä."
@@ -1388,7 +1388,7 @@ msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "kwin: toinen ikkunointiohjelma on käynnissä (kokeile --replace-valitsinta)\n"
 
-#: main_x11.cpp:378
+#: main_x11.cpp:376
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Korvaa käynnissä oleva ICCCM2.0-yhteensopiva ikkunointiohjelma"
@@ -2079,11 +2079,24 @@ msgstr "Työpöytätiedoston nimi"
 msgid "Desktop file name rule type"
 msgstr "Työpöytätiedoston nimi -säännön tyyppi"
 
-#: scripting/genericscriptedconfig.cpp:76
+#: scripting/genericscriptedconfig.cpp:74
 #, kde-format
 msgctxt "Error message"
-msgid "Plugin does not provide configuration file in expected location"
-msgstr "Liitännäinen ei tarjoa asetustiedostoa odotetussa sijainnissa"
+msgid "Could not locate package metadata"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:88
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:94
+#: scripting/genericscriptedconfig.cpp:100
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2729,6 +2742,10 @@ msgstr ""
 "tiedon OpenGL-ajurin sekä käytössä olevista tehosteista.\n"
 "Liitä alla olevat tiedot mieluummin pastebin-palveluun, esim.\n"
 "https://paste.kde.org/, kuin suoraan tukipalstalle.\n"
+
+#~ msgctxt "Error message"
+#~ msgid "Plugin does not provide configuration file in expected location"
+#~ msgstr "Liitännäinen ei tarjoa asetustiedostoa odotetussa sijainnissa"
 
 #~ msgid "Invert Screen Colors"
 #~ msgstr "Käännä näytön värit"

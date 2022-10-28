@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-27 00:48+0000\n"
+"POT-Creation-Date: 2022-10-28 00:47+0000\n"
 "PO-Revision-Date: 2022-08-19 15:20-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -1344,7 +1344,7 @@ msgstr "Inicia a sessão sem suporte a bloqueio de tela."
 msgid "Starts the session without global shortcuts support."
 msgstr "Inicia a sessão sem suporte para os atalhos globais."
 
-#: main_wayland.cpp:408 main_x11.cpp:385
+#: main_wayland.cpp:408 main_x11.cpp:383
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Desativar a integração com o KActivities."
@@ -1388,7 +1388,7 @@ msgstr ""
 "kwin: outro gerenciador de janelas está em execução (tente usar o --"
 "replace)\n"
 
-#: main_x11.cpp:378
+#: main_x11.cpp:376
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr ""
@@ -2081,11 +2081,24 @@ msgstr "Nome do arquivo desktop"
 msgid "Desktop file name rule type"
 msgstr "Tipo de regra de nome do arquivo da área de trabalho"
 
-#: scripting/genericscriptedconfig.cpp:76
+#: scripting/genericscriptedconfig.cpp:74
 #, kde-format
 msgctxt "Error message"
-msgid "Plugin does not provide configuration file in expected location"
-msgstr "O plugin não possui um arquivo de configuração no local esperado"
+msgid "Could not locate package metadata"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:88
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:94
+#: scripting/genericscriptedconfig.cpp:100
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2729,6 +2742,10 @@ msgstr ""
 "área de transferência\n"
 "remoto, como o https://paste.kde.org, em vez de colar o texto nos tópicos de "
 "suporte.\n"
+
+#~ msgctxt "Error message"
+#~ msgid "Plugin does not provide configuration file in expected location"
+#~ msgstr "O plugin não possui um arquivo de configuração no local esperado"
 
 #~ msgid "Invert Screen Colors"
 #~ msgstr "Inverter cores da tela"

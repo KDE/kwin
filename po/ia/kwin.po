@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-27 00:48+0000\n"
+"POT-Creation-Date: 2022-10-28 00:47+0000\n"
 "PO-Revision-Date: 2022-04-28 14:36+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -1334,7 +1334,7 @@ msgstr "Initia le session sin supporto de bloco de schermo."
 msgid "Starts the session without global shortcuts support."
 msgstr "Initia le session sin supporto de vias breve global."
 
-#: main_wayland.cpp:408 main_x11.cpp:385
+#: main_wayland.cpp:408 main_x11.cpp:383
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Disactiva integration de KActivities."
@@ -1375,7 +1375,7 @@ msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "kwin:  un altere gestor de fenestra  es executante (tu prova --replace)\n"
 
-#: main_x11.cpp:378
+#: main_x11.cpp:376
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Reimplacia gerente de fenestra con facente ICCCM2.0 ja executante"
@@ -2066,11 +2066,24 @@ msgstr "Nomine de file de scriptorio"
 msgid "Desktop file name rule type"
 msgstr "Typo de regula de nomine de file de scriptorio"
 
-#: scripting/genericscriptedconfig.cpp:76
+#: scripting/genericscriptedconfig.cpp:74
 #, kde-format
 msgctxt "Error message"
-msgid "Plugin does not provide configuration file in expected location"
-msgstr "Plugin non forni file de configuration in location expectate"
+msgid "Could not locate package metadata"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:88
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:94
+#: scripting/genericscriptedconfig.cpp:100
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2715,6 +2728,10 @@ msgstr ""
 "Pro favor tu invia information fornite infra iste texto de introduction a un "
 "servicio de receptaculo como http://paste.kde.org in loco de collar a "
 "topicos de supporto.\n"
+
+#~ msgctxt "Error message"
+#~ msgid "Plugin does not provide configuration file in expected location"
+#~ msgstr "Plugin non forni file de configuration in location expectate"
 
 #~ msgid "Invert Screen Colors"
 #~ msgstr "Inverte colores de schermo"
