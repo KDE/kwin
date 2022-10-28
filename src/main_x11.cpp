@@ -299,12 +299,6 @@ void ApplicationX11::crashChecking()
         system(buf);
         ::exit(1);
     }
-    if (crashes >= 2) {
-        // Disable compositing if we have had too many crashes
-        qCDebug(KWIN_CORE) << "Too many crashes recently, disabling compositing";
-        KConfigGroup compgroup(KSharedConfig::openConfig(), "Compositing");
-        compgroup.writeEntry("Enabled", false);
-    }
     // Reset crashes count if we stay up for more that 15 seconds
     QTimer::singleShot(15 * 1000, this, &Application::resetCrashesCount);
 }
