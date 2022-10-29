@@ -10,6 +10,7 @@
 
 #include "workspace_wrapper.h"
 #include "core/output.h"
+#include "cursor.h"
 #include "outline.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
@@ -61,6 +62,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     connect(QApplication::desktop(), &QDesktopWidget::resized, this, &WorkspaceWrapper::screenResized);
 #endif
+    connect(Cursors::self()->mouse(), &Cursor::posChanged, this, &WorkspaceWrapper::cursorPosChanged);
 
     const QList<Window *> clients = ws->allClientList();
     for (Window *client : clients) {
@@ -136,6 +138,11 @@ QStringList WorkspaceWrapper::activityList() const
 #else
     return QStringList();
 #endif
+}
+
+QPoint WorkspaceWrapper::cursorPos() const
+{
+    return Cursors::self()->mouse()->pos();
 }
 
 #define SLOTWRAPPER(name)          \

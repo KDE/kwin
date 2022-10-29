@@ -77,6 +77,10 @@ class WorkspaceWrapper : public QObject
      * @see virtualScreenSize
      */
     Q_PROPERTY(QRect virtualScreenGeometry READ virtualScreenGeometry NOTIFY virtualScreenGeometryChanged)
+    /**
+     * The current position of the cursor.
+     */
+    Q_PROPERTY(QPoint cursorPos READ cursorPos NOTIFY cursorPosChanged)
 
 private:
     Q_DISABLE_COPY(WorkspaceWrapper)
@@ -160,13 +164,17 @@ Q_SIGNALS:
      * @since 5.0
      */
     void virtualScreenGeometryChanged();
-
     /**
      * This signal is emitted when the current virtual desktop changes.
      *
      * @since 5.23
      */
     void currentVirtualDesktopChanged();
+    /**
+     * This signal is emitted when the cursor position changes.
+     * @see cursorPos()
+     */
+    void cursorPosChanged();
 
 public:
     //------------------------------------------------------------------
@@ -231,6 +239,7 @@ public:
     QStringList activityList() const;
     QSize virtualScreenSize() const;
     QRect virtualScreenGeometry() const;
+    QPoint cursorPos() const;
 
     VirtualDesktop *currentVirtualDesktop() const;
     void setCurrentVirtualDesktop(VirtualDesktop *desktop);
