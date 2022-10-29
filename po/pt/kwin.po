@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-28 00:47+0000\n"
-"PO-Revision-Date: 2022-10-07 09:14+0100\n"
+"POT-Creation-Date: 2022-10-29 00:49+0000\n"
+"PO-Revision-Date: 2022-10-28 11:45+0100\n"
 "Last-Translator: Pedro Morais <morais@kde.org>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
 "Language: pt\n"
@@ -31,7 +31,7 @@ msgstr ""
 "X-POFile-IgnoreConsistency: Windows\n"
 "X-POFile-SpellExtra: Roman Gilg Edmundson Tabletes eUmDedo Key desktop min\n"
 "X-POFile-SpellExtra: max Des kwinwaylandwrapper XWayland xwayland\n"
-"X-POFile-SpellExtra: xauthority\n"
+"X-POFile-SpellExtra: xauthority metadata json\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1346,7 +1346,7 @@ msgstr "Inicia a sessão sem o suporte para o bloqueio do ecrã."
 msgid "Starts the session without global shortcuts support."
 msgstr "Inicia a sessão sem o suporte para os atalhos globais."
 
-#: main_wayland.cpp:408 main_x11.cpp:383
+#: main_wayland.cpp:408 main_x11.cpp:377
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Desactivar a integração com o KActivities."
@@ -1389,7 +1389,7 @@ msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "kwin: está outro gestor de janela a correr (tente utilizar o --replace)\n"
 
-#: main_x11.cpp:376
+#: main_x11.cpp:370
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Substituir gestor de janelas (compatível ICCCM2.0) em execução"
@@ -2084,20 +2084,20 @@ msgstr "Tipo de regra do nome do ficheiro 'desktop'"
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "Não foi possível localizar os meta-dados dos pacotes"
 
 #: scripting/genericscriptedconfig.cpp:88
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "O %1 não contém um ficheiro 'metadata.json' válido"
 
 #: scripting/genericscriptedconfig.cpp:94
 #: scripting/genericscriptedconfig.cpp:100
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "O %1 não existe"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2739,10 +2739,3 @@ msgstr ""
 "para um serviço de área de transferência remoto\n"
 "como o https://paste.kde.org, em vez de colar o texto nos tópicos de "
 "suporte.\n"
-
-#~ msgctxt "Error message"
-#~ msgid "Plugin does not provide configuration file in expected location"
-#~ msgstr "O 'plugin' não possui um ficheiro de configuração no local esperado"
-
-#~ msgid "Invert Screen Colors"
-#~ msgstr "Inverter as Cores do Ecrã"

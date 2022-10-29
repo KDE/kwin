@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-28 00:47+0000\n"
+"POT-Creation-Date: 2022-10-29 00:49+0000\n"
 "PO-Revision-Date: 2022-10-17 23:50+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -1333,7 +1333,7 @@ msgstr "Sesiyanı ekran kilidli olmadan başladır."
 msgid "Starts the session without global shortcuts support."
 msgstr "Sesiyanı qlobal qısayollar dəstəklənməsi olmadan başladır."
 
-#: main_wayland.cpp:408 main_x11.cpp:383
+#: main_wayland.cpp:408 main_x11.cpp:377
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KDE İş otaqları ilə inteqrasiyanı söndürmək"
@@ -1375,7 +1375,7 @@ msgstr ""
 "kwin: başqa pəncərə meneceri başladılıb (--replace istifadə edərək cəhd "
 "edin)\n"
 
-#: main_x11.cpp:376
+#: main_x11.cpp:370
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Artıq başladılmış, ICCCM2.0-yə uyğun pəncərə menecerini əvəzləmək"

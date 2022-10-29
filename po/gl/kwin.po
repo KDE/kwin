@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-28 00:47+0000\n"
+"POT-Creation-Date: 2022-10-29 00:49+0000\n"
 "PO-Revision-Date: 2020-01-05 18:49+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -1375,7 +1375,7 @@ msgstr "Iniciar a sesión sen funcionalidade de bloqueo de pantalla."
 msgid "Starts the session without global shortcuts support."
 msgstr "Iniciar a sesión sen funcionalidade de atallos globais."
 
-#: main_wayland.cpp:408 main_x11.cpp:383
+#: main_wayland.cpp:408 main_x11.cpp:377
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Desactivar a integración con KActivities."
@@ -1417,7 +1417,7 @@ msgstr ""
 "kwin: hai outro xestor de xanelas en execución (intente empregando --"
 "replace)\n"
 
-#: main_x11.cpp:376
+#: main_x11.cpp:370
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Substituír o xestor de xanelas compatíbel con ICCCM2.0 en execución"
