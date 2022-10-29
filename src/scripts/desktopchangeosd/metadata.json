@@ -1,4 +1,5 @@
 {
+    "KPackageStructure": "KWin/Script",
     "KPlugin": {
         "Authors": [
             {
@@ -62,6 +63,5 @@
     },
     "X-KWin-Exclude-Listing": "true",
     "X-Plasma-API": "declarativescript",
-    "X-Plasma-MainScript": "ui/main.qml",
-    "KPackageStructure": "KWin/Script"
+    "X-Plasma-MainScript": "ui/main.qml"
 }

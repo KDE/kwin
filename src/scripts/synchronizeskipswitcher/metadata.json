@@ -1,4 +1,5 @@
 {
+    "KPackageStructure": "KWin/Script",
     "KPlugin": {
         "Authors": [
             {
@@ -60,6 +61,5 @@
         "Version": "1.0"
     },
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js",
-    "KPackageStructure": "KWin/Script"
+    "X-Plasma-MainScript": "code/main.js"
 }

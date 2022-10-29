@@ -1,4 +1,5 @@
 {
+    "KPackageStructure": "KWin/Effect",
     "KPlugin": {
         "Authors": [
             {
@@ -64,6 +65,5 @@
     },
     "X-KDE-Ordering": "70",
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js",
-    "KPackageStructure": "KWin/Effect"
+    "X-Plasma-MainScript": "code/main.js"
 }

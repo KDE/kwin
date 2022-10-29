@@ -1,4 +1,5 @@
 {
+    "KPackageStructure": "KWin/Decoration",
     "KPlugin": {
         "Authors": [
             {
@@ -57,6 +58,5 @@
         "Version": "1.0"
     },
     "X-KWin-Config-TranslationDomain": "kwin_clients",
-    "X-Plasma-MainScript": "ui/main.qml",
-    "KPackageStructure": "KWin/Decoration"
+    "X-Plasma-MainScript": "ui/main.qml"
 }

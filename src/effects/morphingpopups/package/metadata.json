@@ -1,4 +1,5 @@
 {
+    "KPackageStructure": "KWin/Effect",
     "KPlugin": {
         "Authors": [
             {
@@ -88,6 +89,5 @@
     "X-KDE-ParentApp": "",
     "X-KWin-Video-Url": "https://files.kde.org/plasma/kwin/effect-videos/morphingpopups.ogv",
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/morphingpopups.js",
-    "KPackageStructure": "KWin/Effect"
+    "X-Plasma-MainScript": "code/morphingpopups.js"
 }

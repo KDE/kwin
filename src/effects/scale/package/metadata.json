@@ -1,4 +1,5 @@
 {
+    "KPackageStructure": "KWin/Effect",
     "KPlugin": {
         "Authors": [
             {
@@ -88,6 +89,5 @@
     "X-KWin-Config-TranslationDomain": "kwin_effects",
     "X-KWin-Exclusive-Category": "toplevel-open-close-animation",
     "X-Plasma-API": "javascript",
-    "X-Plasma-MainScript": "code/main.js",
-    "KPackageStructure": "KWin/Effect"
+    "X-Plasma-MainScript": "code/main.js"
 }
