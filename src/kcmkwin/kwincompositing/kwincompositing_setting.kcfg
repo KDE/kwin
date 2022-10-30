@@ -22,30 +22,12 @@
            </choices>
        </entry>
 
-       <entry name="glTextureFilter" key="GLTextureFilter" type="Enum">
-           <default>Accurate</default>
-           <choices>
-               <choice name="Smooth" value="1"/>
-               <choice name="Accurate" value="2"/>
-           </choices>
-       </entry>
-
        <entry name="Enabled" type="Bool">
         <default>true</default>
        </entry>
 
        <entry name="LastFailureTimestamp" type="Int">
            <default>0</default>
-       </entry>
-
-       <entry name="glPreferBufferSwap" key="GLPreferBufferSwap" type="Enum">
-           <default>AutoSwapStrategy</default>
-           <choices>
-               <choice name="AutoSwapStrategy" value="a" />
-               <choice name="ExtendDamage" value="e" />
-               <choice name="PaintFullScreen" value="p" />
-               <choice name="CopyFrontBuffer" value="c" />
-           </choices>
        </entry>
 
        <entry name="WindowsBlockCompositing" type="Bool">
