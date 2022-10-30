@@ -2143,7 +2143,8 @@ public:
             device->setOutputName(nextOutput->name());
             changedDevice = device;
         }
-        OSD::show(i18np("Tablet moved to %2", "Tablets switched outputs", tabletToolCount, changedDevice->outputName()), QStringLiteral("input-tablet"), 5000);
+        const QString message = tabletToolCount == 1 ? i18n("Tablet moved to %1", changedDevice->outputName()) : i18n("Tablets switched outputs");
+        OSD::show(message, QStringLiteral("input-tablet"), 5000);
     }
 
     void removeDevice(InputDevice *inputDevice)
