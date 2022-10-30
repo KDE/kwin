@@ -314,7 +314,9 @@ bool DrmConnector::updateProperties()
         }
         m_modes.clear();
         m_modes.append(m_driverModes);
-        m_modes.append(generateCommonModes());
+        if (m_driverModes.size() == 1) {
+            m_modes.append(generateCommonModes(m_driverModes.front().get()));
+        }
         if (m_pipeline->mode()) {
             if (const auto mode = findMode(*m_pipeline->mode()->nativeMode())) {
                 m_pipeline->setMode(mode);
@@ -388,23 +390,14 @@ static const QVector<QSize> s_commonModes = {
     QSize(1280, 720),
 };
 
-QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::generateCommonModes()
+QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::generateCommonModes(DrmConnectorMode *baseMode)
 {
     QList<std::shared_ptr<DrmConnectorMode>> ret;
-    uint32_t maxBandwidthEstimation = 0;
-    QSize maxSize;
-    for (const auto &mode : qAsConst(m_driverModes)) {
-        if (mode->size().width() > maxSize.width() || mode->size().height() > maxSize.height()) {
-            maxSize = mode->size();
-            maxBandwidthEstimation = std::max(maxBandwidthEstimation, static_cast<uint32_t>(mode->size().width() * mode->size().height() * mode->refreshRate()));
-        }
-    }
+    const QSize maxSize = baseMode->size();
+    const uint64_t maxBandwidthEstimation = maxSize.width() * maxSize.height() * uint64_t(baseMode->refreshRate());
     for (const auto &size : s_commonModes) {
-        uint32_t bandwidthEstimation = size.width() * size.height() * 60000;
-        const auto it = std::find_if(m_driverModes.constBegin(), m_driverModes.constEnd(), [size](const auto &mode) {
-            return mode->size() == size;
-        });
-        if (it == m_driverModes.constEnd() && size.width() <= maxSize.width() && size.height() <= maxSize.height() && bandwidthEstimation < maxBandwidthEstimation) {
+        const uint64_t bandwidthEstimation = size.width() * size.height() * 60000ull;
+        if (size.width() <= maxSize.width() && size.height() <= maxSize.height() && bandwidthEstimation <= maxBandwidthEstimation) {
             ret << generateMode(size, 60);
         }
     }
