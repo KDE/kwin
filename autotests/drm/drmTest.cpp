@@ -35,6 +35,7 @@ private Q_SLOTS:
     void testAmsDetection();
     void testOutputDetection();
     void testZeroModesHandling();
+    void testModeGeneration();
 };
 
 static void verifyCleanup(MockGpu *mockGpu)
@@ -153,6 +154,35 @@ void DrmTest::testZeroModesHandling()
     QVERIFY(gpu->updateOutputs());
     QCOMPARE(gpu->drmOutputs().size(), 1);
     QVERIFY(!gpu->drmOutputs().constFirst()->modes().empty());
+
+    gpu.reset();
+    verifyCleanup(mockGpu.get());
+}
+
+void DrmTest::testModeGeneration()
+{
+    const auto mockGpu = std::make_unique<MockGpu>(1, 5);
+
+    const auto conn = std::make_shared<MockConnector>(mockGpu.get());
+    mockGpu->connectors.push_back(conn);
+
+    const auto session = Session::create(Session::Type::Noop);
+    const auto backend = std::make_unique<DrmBackend>(session.get());
+    const auto renderBackend = backend->createQPainterBackend();
+    auto gpu = std::make_unique<DrmGpu>(backend.get(), "test", 1, 0);
+
+    conn->modes.clear();
+    conn->addMode(3840, 2160, 60);
+    QVERIFY(gpu->updateOutputs());
+    QCOMPARE(gpu->drmOutputs().size(), 1);
+
+    DrmOutput *const output = gpu->drmOutputs().front();
+    QCOMPARE(output->modes().size(), 14);
+    for (const auto &mode : output->modes()) {
+        QVERIFY(mode->size().width() <= 3840);
+        QVERIFY(mode->size().height() <= 2160);
+        QVERIFY(mode->refreshRate() <= 60000);
+    }
 
     gpu.reset();
     verifyCleanup(mockGpu.get());
