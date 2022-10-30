@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-29 00:49+0000\n"
+"POT-Creation-Date: 2022-10-30 00:47+0000\n"
 "PO-Revision-Date: 2022-10-22 07:08+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -1124,7 +1124,21 @@ msgstr ""
 msgid "Wait Longer"
 msgstr "Wait Longer"
 
-#: input.cpp:3133
+#: input.cpp:2067
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr ""
+
+#: input.cpp:2146
+#, fuzzy, kde-format
+#| msgctxt "Name of a hardware switch"
+#| msgid "Tablet mode"
+msgid "Tablet moved to %2"
+msgid_plural "Tablets switched outputs"
+msgstr[0] "ტაბლეტის რეჟიმი"
+msgstr[1] "ტაბლეტის რეჟიმი"
+
+#: input.cpp:3174
 #, kde-format
 msgid "Touchpad"
 msgstr "თაჩპედი"

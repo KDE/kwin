@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-29 00:49+0000\n"
+"POT-Creation-Date: 2022-10-30 00:47+0000\n"
 "PO-Revision-Date: 2020-01-05 18:49+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -1180,7 +1180,21 @@ msgstr "&Terminar a aplicación %1"
 msgid "Wait Longer"
 msgstr "Seguir agardando"
 
-#: input.cpp:3133
+#: input.cpp:2067
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr ""
+
+#: input.cpp:2146
+#, fuzzy, kde-format
+#| msgctxt "Name of a hardware switch"
+#| msgid "Tablet mode"
+msgid "Tablet moved to %2"
+msgid_plural "Tablets switched outputs"
+msgstr[0] "Modo de tableta"
+msgstr[1] "Modo de tableta"
+
+#: input.cpp:3174
 #, fuzzy, kde-format
 #| msgctxt "A touch up event"
 #| msgid "Touch Up"

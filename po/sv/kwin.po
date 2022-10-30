@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-29 00:49+0000\n"
+"POT-Creation-Date: 2022-10-30 00:47+0000\n"
 "PO-Revision-Date: 2022-09-24 16:08+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -1137,7 +1137,21 @@ msgstr "Avbryt &programmet %1"
 msgid "Wait Longer"
 msgstr "Vänta längre"
 
-#: input.cpp:3133
+#: input.cpp:2067
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr ""
+
+#: input.cpp:2146
+#, fuzzy, kde-format
+#| msgctxt "Name of a hardware switch"
+#| msgid "Tablet mode"
+msgid "Tablet moved to %2"
+msgid_plural "Tablets switched outputs"
+msgstr[0] "Surfläge"
+msgstr[1] "Surfläge"
+
+#: input.cpp:3174
 #, kde-format
 msgid "Touchpad"
 msgstr "Tryckplatta"

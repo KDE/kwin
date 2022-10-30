@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1636879 2022-10-29 01:39:02Z scripty $
+# $Id: kwin.po 1637015 2022-10-30 01:38:09Z scripty $
 # $Source$
 #
 # Roman Maurer <roman.maurer@hermes.si>, 2000.
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-29 00:49+0000\n"
+"POT-Creation-Date: 2022-10-30 00:47+0000\n"
 "PO-Revision-Date: 2022-10-22 04:12+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -1150,7 +1150,23 @@ msgstr "Uniči program %1"
 msgid "Wait Longer"
 msgstr "Čakaj dlje"
 
-#: input.cpp:3133
+#: input.cpp:2067
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr ""
+
+#: input.cpp:2146
+#, fuzzy, kde-format
+#| msgctxt "Name of a hardware switch"
+#| msgid "Tablet mode"
+msgid "Tablet moved to %2"
+msgid_plural "Tablets switched outputs"
+msgstr[0] "Način tabličnega računalnika"
+msgstr[1] "Način tabličnega računalnika"
+msgstr[2] "Način tabličnega računalnika"
+msgstr[3] "Način tabličnega računalnika"
+
+#: input.cpp:3174
 #, kde-format
 msgid "Touchpad"
 msgstr "Drsna ploščica"

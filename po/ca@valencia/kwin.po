@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-29 00:49+0000\n"
-"PO-Revision-Date: 2022-10-21 13:38+0200\n"
+"POT-Creation-Date: 2022-10-30 00:47+0000\n"
+"PO-Revision-Date: 2022-10-28 09:29+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -1142,7 +1142,21 @@ msgstr "&Finalitza l'aplicació %1"
 msgid "Wait Longer"
 msgstr "Espera més llarga"
 
-#: input.cpp:3133
+#: input.cpp:2067
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr ""
+
+#: input.cpp:2146
+#, fuzzy, kde-format
+#| msgctxt "Name of a hardware switch"
+#| msgid "Tablet mode"
+msgid "Tablet moved to %2"
+msgid_plural "Tablets switched outputs"
+msgstr[0] "Mode tauleta"
+msgstr[1] "Mode tauleta"
+
+#: input.cpp:3174
 #, kde-format
 msgid "Touchpad"
 msgstr "Ratolí tàctil"
@@ -2082,20 +2096,20 @@ msgstr "Tipus de regla de nom de fitxer «desktop»"
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "No s'han pogut localitzar les metadades del paquet"
 
 #: scripting/genericscriptedconfig.cpp:88
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "%1 no conté un fitxer «metadata.json» vàlid"
 
 #: scripting/genericscriptedconfig.cpp:94
 #: scripting/genericscriptedconfig.cpp:100
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "%1 no existix"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2736,12 +2750,3 @@ msgstr ""
 "Per favor, publiqueu la informació que hi ha davall este text introductori "
 "en un servei d'apegades\n"
 "com https://paste.kde.org en lloc d'apegar-ho en els fils d'ajuda.\n"
-
-#~ msgctxt "Error message"
-#~ msgid "Plugin does not provide configuration file in expected location"
-#~ msgstr ""
-#~ "El connector no ha proporcionat cap fitxer de configuració en la ubicació "
-#~ "esperada"
-
-#~ msgid "Invert Screen Colors"
-#~ msgstr "Invertix els colors de la pantalla"

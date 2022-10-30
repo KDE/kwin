@@ -1,6 +1,5 @@
 # Translation for kwin.po to Euskara/Basque (eu).
-# Copyright (C) 2002-2018 The Free Software Foundation.
-# Copyright (C) 2019-2022 This file is copyright:
+# Copyright (C) 2002-2022 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 # KDE euskaratzeko proiektuko arduraduna <xalba@ni.eus>.
 #
@@ -15,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-29 00:49+0000\n"
-"PO-Revision-Date: 2022-10-21 20:29+0200\n"
+"POT-Creation-Date: 2022-10-30 00:47+0000\n"
+"PO-Revision-Date: 2022-10-29 14:13+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -1146,7 +1145,21 @@ msgstr "&Amaitu aplikazioa %1"
 msgid "Wait Longer"
 msgstr "Itxaron gehiago"
 
-#: input.cpp:3133
+#: input.cpp:2067
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr ""
+
+#: input.cpp:2146
+#, fuzzy, kde-format
+#| msgctxt "Name of a hardware switch"
+#| msgid "Tablet mode"
+msgid "Tablet moved to %2"
+msgid_plural "Tablets switched outputs"
+msgstr[0] "Tableta modua"
+msgstr[1] "Tableta modua"
+
+#: input.cpp:3174
 #, kde-format
 msgid "Touchpad"
 msgstr "Ukimen-sagua"
@@ -2080,20 +2093,20 @@ msgstr "Mahaigaineko fitxategi-izenaren arau mota"
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "Ezin izan ditu paketearen meta-datuak aurkitu"
 
 #: scripting/genericscriptedconfig.cpp:88
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "%1(e)k ez du meta-datu.json fitxategirik"
 
 #: scripting/genericscriptedconfig.cpp:94
 #: scripting/genericscriptedconfig.cpp:100
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "%1 ez da existitzen"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

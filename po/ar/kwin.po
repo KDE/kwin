@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-29 00:49+0000\n"
-"PO-Revision-Date: 2022-10-22 19:59+0400\n"
+"POT-Creation-Date: 2022-10-30 00:47+0000\n"
+"PO-Revision-Date: 2022-10-29 19:03+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -1130,7 +1130,25 @@ msgstr "أ&نهِ التّطبيق %1"
 msgid "Wait Longer"
 msgstr "انتظر أكثر"
 
-#: input.cpp:3133
+#: input.cpp:2067
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr ""
+
+#: input.cpp:2146
+#, fuzzy, kde-format
+#| msgctxt "Name of a hardware switch"
+#| msgid "Tablet mode"
+msgid "Tablet moved to %2"
+msgid_plural "Tablets switched outputs"
+msgstr[0] "وضع اللوحي"
+msgstr[1] "وضع اللوحي"
+msgstr[2] "وضع اللوحي"
+msgstr[3] "وضع اللوحي"
+msgstr[4] "وضع اللوحي"
+msgstr[5] "وضع اللوحي"
+
+#: input.cpp:3174
 #, kde-format
 msgid "Touchpad"
 msgstr "لوحة اللمس"
@@ -2054,20 +2072,20 @@ msgstr "نوع قاعدة لإسم ملف سطح المكتب"
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "تعذّر تحديد موقع البيانات الوصفية للحزمة"
 
 #: scripting/genericscriptedconfig.cpp:88
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "لا يحوي %1 على ملف metadata.json صالح"
 
 #: scripting/genericscriptedconfig.cpp:94
 #: scripting/genericscriptedconfig.cpp:100
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "%1 غير موجود"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-27 00:48+0000\n"
+"POT-Creation-Date: 2022-10-29 00:49+0000\n"
 "PO-Revision-Date: 2022-07-26 20:47+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -1334,7 +1334,7 @@ msgstr "Startar økta utan støtte for skjermlås."
 msgid "Starts the session without global shortcuts support."
 msgstr "Startar økta utan støtte for globale snarvegar."
 
-#: main_wayland.cpp:408 main_x11.cpp:385
+#: main_wayland.cpp:408 main_x11.cpp:377
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Slå av KActivities-integrasjon."
@@ -1376,7 +1376,7 @@ msgstr ""
 "KWin: Ein annan vindaugshandsamar køyrer. (Du kan prøva med "
 "kommandolinjevalet «--replace».)\n"
 
-#: main_x11.cpp:378
+#: main_x11.cpp:370
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Overta etter ein ICCCM2.0-vindaugshandsamar som køyrer"
@@ -2069,11 +2069,24 @@ msgstr "Namn på skrivebordsfil"
 msgid "Desktop file name rule type"
 msgstr "Regeltype for namn på skrivebordsfil"
 
-#: scripting/genericscriptedconfig.cpp:76
+#: scripting/genericscriptedconfig.cpp:74
 #, kde-format
 msgctxt "Error message"
-msgid "Plugin does not provide configuration file in expected location"
-msgstr "Programtillegget har ikkje oppsettfil på den forventa staden"
+msgid "Could not locate package metadata"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:88
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr ""
+
+#: scripting/genericscriptedconfig.cpp:94
+#: scripting/genericscriptedconfig.cpp:100
+#, kde-format
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

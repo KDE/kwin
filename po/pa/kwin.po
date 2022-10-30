@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-29 00:49+0000\n"
+"POT-Creation-Date: 2022-10-30 00:47+0000\n"
 "PO-Revision-Date: 2021-05-02 16:55-0700\n"
 "Last-Translator: A S Alam <aalam@satluj.org>\n"
 "Language-Team: Punjabi <punjabi-users@lists.sf.net>\n"
@@ -1134,7 +1134,21 @@ msgstr "ਐਪਲੀਕੇਸ਼ਨ %1 ਖਤਮ ਕਰੋ(&T)"
 msgid "Wait Longer"
 msgstr "ਕੁਝ ਉਡੀਕ ਕਰੋ"
 
-#: input.cpp:3133
+#: input.cpp:2067
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr ""
+
+#: input.cpp:2146
+#, fuzzy, kde-format
+#| msgctxt "Name of a hardware switch"
+#| msgid "Tablet mode"
+msgid "Tablet moved to %2"
+msgid_plural "Tablets switched outputs"
+msgstr[0] "ਟੇਬਲੇਟ ਮੋਡ"
+msgstr[1] "ਟੇਬਲੇਟ ਮੋਡ"
+
+#: input.cpp:3174
 #, fuzzy, kde-format
 #| msgctxt "A touch down event"
 #| msgid "Touch down"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-29 00:49+0000\n"
+"POT-Creation-Date: 2022-10-30 00:47+0000\n"
 "PO-Revision-Date: 2022-10-22 05:29\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1129,7 +1129,20 @@ msgstr "终止程序(&T) %1"
 msgid "Wait Longer"
 msgstr "等待更长时间"
 
-#: input.cpp:3133
+#: input.cpp:2067
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr ""
+
+#: input.cpp:2146
+#, fuzzy, kde-format
+#| msgctxt "Name of a hardware switch"
+#| msgid "Tablet mode"
+msgid "Tablet moved to %2"
+msgid_plural "Tablets switched outputs"
+msgstr[0] "平板模式"
+
+#: input.cpp:3174
 #, kde-format
 msgid "Touchpad"
 msgstr "触摸板"

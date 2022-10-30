@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-29 00:49+0000\n"
-"PO-Revision-Date: 2022-10-21 16:26+0200\n"
+"POT-Creation-Date: 2022-10-30 00:47+0000\n"
+"PO-Revision-Date: 2022-10-29 19:05+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -1152,7 +1152,21 @@ msgstr "&Terminar la aplicación %1"
 msgid "Wait Longer"
 msgstr "Esperar más tiempo"
 
-#: input.cpp:3133
+#: input.cpp:2067
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr ""
+
+#: input.cpp:2146
+#, fuzzy, kde-format
+#| msgctxt "Name of a hardware switch"
+#| msgid "Tablet mode"
+msgid "Tablet moved to %2"
+msgid_plural "Tablets switched outputs"
+msgstr[0] "Modo tableta"
+msgstr[1] "Modo tableta"
+
+#: input.cpp:3174
 #, kde-format
 msgid "Touchpad"
 msgstr "Panel táctil"
@@ -2088,20 +2102,20 @@ msgstr "Tipo de regla para nombre del archivo de escritorio"
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "No se han podido localizar los metadatos del paquete"
 
 #: scripting/genericscriptedconfig.cpp:88
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "%1 no contiene un archivo «metadata.json» válido"
 
 #: scripting/genericscriptedconfig.cpp:94
 #: scripting/genericscriptedconfig.cpp:100
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "%1 no existe"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

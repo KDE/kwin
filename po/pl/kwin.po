@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1636879 $
+# Version: $Revision: 1637015 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-29 00:49+0000\n"
+"POT-Creation-Date: 2022-10-30 00:47+0000\n"
 "PO-Revision-Date: 2022-10-18 17:59+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -1152,7 +1152,22 @@ msgstr "&Zakończ program %1"
 msgid "Wait Longer"
 msgstr "Poczekaj dłużej"
 
-#: input.cpp:3133
+#: input.cpp:2067
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr ""
+
+#: input.cpp:2146
+#, fuzzy, kde-format
+#| msgctxt "Name of a hardware switch"
+#| msgid "Tablet mode"
+msgid "Tablet moved to %2"
+msgid_plural "Tablets switched outputs"
+msgstr[0] "Tryb tabletu"
+msgstr[1] "Tryb tabletu"
+msgstr[2] "Tryb tabletu"
+
+#: input.cpp:3174
 #, kde-format
 msgid "Touchpad"
 msgstr "Gładzik"
