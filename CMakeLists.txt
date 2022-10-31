@@ -67,22 +67,6 @@ if (NOT Qt${QT_MAJOR_VERSION}Test_FOUND)
     set(BUILD_TESTING OFF CACHE BOOL "Build the testing tree.")
 endif()
 
-add_definitions(
-    -DQT_DISABLE_DEPRECATED_BEFORE=0
-
-    -DQT_NO_KEYWORDS
-
-    -DQT_USE_QSTRINGBUILDER
-    -DQT_NO_URL_CAST_FROM_STRING
-    -DQT_NO_CAST_TO_ASCII
-    -DQT_NO_FOREACH
-)
-
-# Prevent EGL headers from including platform headers, in particular Xlib.h.
-add_definitions(-DMESA_EGL_NO_X11_HEADERS)
-add_definitions(-DEGL_NO_X11)
-add_definitions(-DEGL_NO_PLATFORM_SPECIFIC_TYPES)
-
 # required frameworks by Core
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     Auth
@@ -445,6 +429,20 @@ check_cxx_compiler_flag(-Wno-unused-parameter COMPILER_UNUSED_PARAMETER_SUPPORTE
 if (COMPILER_UNUSED_PARAMETER_SUPPORTED)
     add_compile_options(-Wno-unused-parameter)
 endif()
+
+add_definitions(
+    -DQT_DISABLE_DEPRECATED_BEFORE=0
+    -DQT_NO_KEYWORDS
+    -DQT_USE_QSTRINGBUILDER
+    -DQT_NO_URL_CAST_FROM_STRING
+    -DQT_NO_CAST_TO_ASCII
+    -DQT_NO_FOREACH
+
+    # Prevent EGL headers from including platform headers, in particular Xlib.h.
+    -DMESA_EGL_NO_X11_HEADERS
+    -DEGL_NO_X11
+    -DEGL_NO_PLATFORM_SPECIFIC_TYPES
+)
 
 if (KF5DocTools_FOUND)
     add_subdirectory(doc)
