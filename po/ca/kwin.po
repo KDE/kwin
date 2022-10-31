@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-30 00:47+0000\n"
-"PO-Revision-Date: 2022-10-28 09:29+0200\n"
+"PO-Revision-Date: 2022-10-30 11:43+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -1145,16 +1145,14 @@ msgstr "Espera més llarga"
 #: input.cpp:2067
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "Mou la tauleta a la sortida següent"
 
 #: input.cpp:2146
 #, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
 msgid "Tablet moved to %2"
 msgid_plural "Tablets switched outputs"
-msgstr[0] "Mode tauleta"
-msgstr[1] "Mode tauleta"
+msgstr[0] "La tauleta s'ha mogut a %2"
+msgstr[1] "Les tauletes han intercanviat les sortides"
 
 #: input.cpp:3174
 #, kde-format

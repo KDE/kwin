@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-09-02 00:47+0000\n"
-"PO-Revision-Date: 2022-10-22 05:29\n"
+"PO-Revision-Date: 2022-10-30 07:48\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -608,13 +608,13 @@ msgstr "隐藏非活动应用程序的工具窗口"
 #: advanced.ui:148
 #, kde-format
 msgid "Virtual Desktop behavior:"
-msgstr ""
+msgstr "虚拟桌面行为："
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
 #: advanced.ui:158
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
-msgstr ""
+msgstr "当激活在其他虚拟桌面上的窗口时："
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:165
@@ -628,18 +628,22 @@ msgid ""
 "Virtual Desktop</span> will cause the window to jump to the active Virtual "
 "Desktop. </p></body></html>"
 msgstr ""
+"<html><head/><body><p>此设置控制激活位于非当前虚拟桌面的已打开窗口时的行为。"
+"</p><p><span style=\" font-style:italic;\">切换到对应的虚拟桌面</span>会将虚"
+"拟桌面切换到被激活窗口所在处。</p><p><span style=\" font-style:italic;\">移动"
+"窗口到当前虚拟桌面</span>会将被激活窗口移动到当前虚拟桌面。</p></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:169
 #, kde-format
 msgid "Switch to that Virtual Desktop"
-msgstr ""
+msgstr "切换到对应的虚拟桌面"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:174
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
-msgstr ""
+msgstr "移动窗口到当前虚拟桌面"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
 #: focus.ui:22

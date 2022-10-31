@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-30 00:47+0000\n"
-"PO-Revision-Date: 2022-10-28 20:51+0300\n"
+"PO-Revision-Date: 2022-10-30 14:44+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -1147,18 +1147,16 @@ msgstr "Почекати ще"
 #: input.cpp:2067
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "Пересунути планшет на наступне виведення"
 
 #: input.cpp:2146
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Tablet moved to %2"
 msgid_plural "Tablets switched outputs"
-msgstr[0] "Режим планшета"
-msgstr[1] "Режим планшета"
-msgstr[2] "Режим планшета"
-msgstr[3] "Режим планшета"
+msgstr[0] "Виконано перемикання виведення планшетів"
+msgstr[1] "Виконано перемикання виведення планшетів"
+msgstr[2] "Виконано перемикання виведення планшетів"
+msgstr[3] "Виконано перемикання виведення планшета"
 
 #: input.cpp:3174
 #, kde-format
