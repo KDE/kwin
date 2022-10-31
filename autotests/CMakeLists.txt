@@ -198,7 +198,7 @@ if (HAVE_EPOXY_GLX)
     set(testOpenGLContextAttributeBuilder_SRCS ${testOpenGLContextAttributeBuilder_SRCS} ../src/backends/x11/standalone/x11_standalone_glx_context_attribute_builder.cpp)
 endif()
 add_executable(testOpenGLContextAttributeBuilder ${testOpenGLContextAttributeBuilder_SRCS})
-target_link_libraries(testOpenGLContextAttributeBuilder Qt::Test)
+target_link_libraries(testOpenGLContextAttributeBuilder epoxy::epoxy Qt::Test)
 add_test(NAME kwin-testOpenGLContextAttributeBuilder COMMAND testOpenGLContextAttributeBuilder)
 ecm_mark_as_test(testOpenGLContextAttributeBuilder)
 
