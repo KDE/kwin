@@ -137,7 +137,7 @@ QVariant OptionsModel::allValues() const
     }
 
     QVariantList list;
-    for (const Data &item : qAsConst(m_data)) {
+    for (const Data &item : std::as_const(m_data)) {
         if (item.optionType == NormalOption) {
             list << item.value;
         }

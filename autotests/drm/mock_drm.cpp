@@ -77,7 +77,7 @@ void MockGpu::flipPage(uint32_t crtcId)
 {
     auto crtc = findCrtc(crtcId);
     Q_ASSERT(crtc);
-    for (const auto &plane : qAsConst(planes)) {
+    for (const auto &plane : std::as_const(planes)) {
         if (plane->getProp(QStringLiteral("CRTC_ID")) == crtc->id) {
             plane->currentFb = plane->nextFb;
         }
@@ -101,7 +101,7 @@ MockObject::~MockObject()
 
 uint64_t MockObject::getProp(const QString &propName) const
 {
-    for (const auto &prop : qAsConst(props)) {
+    for (const auto &prop : std::as_const(props)) {
         if (prop.name == propName) {
             return prop.value;
         }
@@ -122,7 +122,7 @@ void MockObject::setProp(const QString &propName, uint64_t value)
 
 uint32_t MockObject::getPropId(const QString &propName) const
 {
-    for (const auto &prop : qAsConst(props)) {
+    for (const auto &prop : std::as_const(props)) {
         if (prop.name == propName) {
             return prop.id;
         }
@@ -378,28 +378,28 @@ drmModeResPtr drmModeGetResources(int fd)
     res->count_connectors = gpu->connectors.count();
     res->connectors = res->count_connectors ? new uint32_t[res->count_connectors] : nullptr;
     int i = 0;
-    for (const auto &conn : qAsConst(gpu->connectors)) {
+    for (const auto &conn : std::as_const(gpu->connectors)) {
         res->connectors[i++] = conn->id;
     }
 
     res->count_encoders = gpu->encoders.count();
     res->encoders = res->count_encoders ? new uint32_t[res->count_encoders] : nullptr;
     i = 0;
-    for (const auto &enc : qAsConst(gpu->encoders)) {
+    for (const auto &enc : std::as_const(gpu->encoders)) {
         res->encoders[i++] = enc->id;
     }
 
     res->count_crtcs = gpu->crtcs.count();
     res->crtcs = res->count_crtcs ? new uint32_t[res->count_crtcs] : nullptr;
     i = 0;
-    for (const auto &crtc : qAsConst(gpu->crtcs)) {
+    for (const auto &crtc : std::as_const(gpu->crtcs)) {
         res->crtcs[i++] = crtc->id;
     }
 
     res->count_fbs = gpu->fbs.count();
     res->fbs = res->count_fbs ? new uint32_t[res->count_fbs] : nullptr;
     i = 0;
-    for (const auto &fb : qAsConst(gpu->fbs)) {
+    for (const auto &fb : std::as_const(gpu->fbs)) {
         res->fbs[i++] = fb->id;
     }
 
@@ -458,7 +458,7 @@ int drmModeRmFB(int fd, uint32_t bufferId)
     } else {
         auto fb = *it;
         gpu->fbs.erase(it);
-        for (const auto &plane : qAsConst(gpu->planes)) {
+        for (const auto &plane : std::as_const(gpu->planes)) {
             if (plane->nextFb == fb) {
                 plane->nextFb = nullptr;
             }
@@ -473,7 +473,7 @@ int drmModeRmFB(int fd, uint32_t bufferId)
                 crtc->setProp(QStringLiteral("ACTIVE"), 0);
                 qWarning("deactvating crtc %u", crtc->id);
 
-                for (const auto &conn : qAsConst(gpu->connectors)) {
+                for (const auto &conn : std::as_const(gpu->connectors)) {
                     if (conn->getProp(QStringLiteral("CRTC_ID")) == crtc->id) {
                         conn->setProp(QStringLiteral("CRTC_ID"), 0);
                         qWarning("deactvating connector %u", conn->id);
@@ -533,7 +533,7 @@ int drmModeSetCrtc(int fd, uint32_t crtcId, uint32_t bufferId,
     for (int i = 0; i < count; i++) {
         conns << connectors[i];
     }
-    for (const auto &conn : qAsConst(gpu->connectors)) {
+    for (const auto &conn : std::as_const(gpu->connectors)) {
         if (conns.contains(conn->id)) {
             drmModeAtomicAddProperty(req, conn->id, conn->getPropId(QStringLiteral("CRTC_ID")), modeBlob ? crtc->id : 0);
             conns.removeOne(conn->id);
@@ -542,7 +542,7 @@ int drmModeSetCrtc(int fd, uint32_t crtcId, uint32_t bufferId,
         }
     }
     if (!conns.isEmpty()) {
-        for (const auto &c : qAsConst(conns)) {
+        for (const auto &c : std::as_const(conns)) {
             qWarning("invalid connector %u passed to drmModeSetCrtc", c);
         }
         drmModeAtomicFree(req);
@@ -734,8 +734,8 @@ drmModePlanePtr drmModeGetPlane(int fd, uint32_t plane_id)
 drmModePropertyPtr drmModeGetProperty(int fd, uint32_t propertyId)
 {
     GPU(fd, nullptr);
-    for (const auto &obj : qAsConst(gpu->objects)) {
-        for (auto &prop : qAsConst(obj->props)) {
+    for (const auto &obj : std::as_const(gpu->objects)) {
+        for (auto &prop : std::as_const(obj->props)) {
             if (prop.id == propertyId) {
                 drmModePropertyPtr p = new drmModePropertyRes;
                 p->prop_id = prop.id;
@@ -777,7 +777,7 @@ void drmModeFreeProperty(drmModePropertyPtr ptr)
     if (!ptr) {
         return;
     }
-    for (const auto &gpu : qAsConst(s_gpus)) {
+    for (const auto &gpu : std::as_const(s_gpus)) {
         if (gpu->drmProps.removeOne(ptr)) {
             delete[] ptr->values;
             delete[] ptr->blob_ids;
@@ -818,7 +818,7 @@ void drmModeFreePropertyBlob(drmModePropertyBlobPtr ptr)
     if (!ptr) {
         return;
     }
-    for (const auto &gpu : qAsConst(s_gpus)) {
+    for (const auto &gpu : std::as_const(s_gpus)) {
         if (gpu->drmPropertyBlobs.removeOne(ptr)) {
             free(ptr->data);
             delete ptr;
@@ -862,7 +862,7 @@ drmModeObjectPropertiesPtr drmModeObjectGetProperties(int fd, uint32_t object_id
         }
         QVector<MockProperty> props;
         bool deviceAtomic = gpu->clientCaps.contains(DRM_CLIENT_CAP_ATOMIC) && gpu->clientCaps[DRM_CLIENT_CAP_ATOMIC];
-        for (const auto &prop : qAsConst(obj->props)) {
+        for (const auto &prop : std::as_const(obj->props)) {
             if (deviceAtomic || !(prop.flags & DRM_MODE_PROP_ATOMIC)) {
                 props << prop;
             }
@@ -872,7 +872,7 @@ drmModeObjectPropertiesPtr drmModeObjectGetProperties(int fd, uint32_t object_id
         p->props = new uint32_t[p->count_props];
         p->prop_values = new uint64_t[p->count_props];
         int i = 0;
-        for (const auto &prop : qAsConst(props)) {
+        for (const auto &prop : std::as_const(props)) {
             p->props[i] = prop.id;
             p->prop_values[i] = prop.value;
             i++;
@@ -884,7 +884,7 @@ drmModeObjectPropertiesPtr drmModeObjectGetProperties(int fd, uint32_t object_id
 
 void drmModeFreeObjectProperties(drmModeObjectPropertiesPtr ptr)
 {
-    for (const auto &gpu : qAsConst(s_gpus)) {
+    for (const auto &gpu : std::as_const(s_gpus)) {
         if (gpu->drmObjectProperties.removeOne(ptr)) {
             delete[] ptr->props;
             delete[] ptr->prop_values;
@@ -981,15 +981,15 @@ int drmModeAtomicCommit(int fd, drmModeAtomicReqPtr req, uint32_t flags, void *u
     }
 
     QVector<MockConnector> connCopies;
-    for (const auto &conn : qAsConst(gpu->connectors)) {
+    for (const auto &conn : std::as_const(gpu->connectors)) {
         connCopies << *conn;
     }
     QVector<MockCrtc> crtcCopies;
-    for (const auto &crtc : qAsConst(gpu->crtcs)) {
+    for (const auto &crtc : std::as_const(gpu->crtcs)) {
         crtcCopies << *crtc;
     }
     QVector<MockPlane> planeCopies;
-    for (const auto &plane : qAsConst(gpu->planes)) {
+    for (const auto &plane : std::as_const(gpu->planes)) {
         planeCopies << *plane;
     }
 
@@ -1111,7 +1111,7 @@ int drmModeAtomicCommit(int fd, drmModeAtomicReqPtr req, uint32_t flags, void *u
             planeCopies[i].nextFb = nullptr;
         }
     }
-    for (const auto &p : qAsConst(pipelines)) {
+    for (const auto &p : std::as_const(pipelines)) {
         if (p.conns.isEmpty()) {
             qWarning("Active crtc %u has no assigned connectors", p.crtc->id);
             return -(errno = EINVAL);
@@ -1135,7 +1135,7 @@ int drmModeAtomicCommit(int fd, drmModeAtomicReqPtr req, uint32_t flags, void *u
     // if wanted, apply them
 
     if (!(flags & DRM_MODE_ATOMIC_TEST_ONLY)) {
-        for (auto &conn : qAsConst(gpu->connectors)) {
+        for (auto &conn : std::as_const(gpu->connectors)) {
             auto it = std::find_if(connCopies.constBegin(), connCopies.constEnd(), [conn](auto c){return c.id == conn->id;});
             if (it == connCopies.constEnd()) {
                 qCritical("implementation error: can't find connector %u", conn->id);
@@ -1143,7 +1143,7 @@ int drmModeAtomicCommit(int fd, drmModeAtomicReqPtr req, uint32_t flags, void *u
             }
             *conn = *it;
         }
-        for (auto &crtc : qAsConst(gpu->crtcs)) {
+        for (auto &crtc : std::as_const(gpu->crtcs)) {
             auto it = std::find_if(crtcCopies.constBegin(), crtcCopies.constEnd(), [crtc](auto c){return c.id == crtc->id;});
             if (it == crtcCopies.constEnd()) {
                 qCritical("implementation error: can't find crtc %u", crtc->id);
@@ -1151,7 +1151,7 @@ int drmModeAtomicCommit(int fd, drmModeAtomicReqPtr req, uint32_t flags, void *u
             }
             *crtc = *it;
         }
-        for (auto &plane : qAsConst(gpu->planes)) {
+        for (auto &plane : std::as_const(gpu->planes)) {
             auto it = std::find_if(planeCopies.constBegin(), planeCopies.constEnd(), [plane](auto c){return c.id == plane->id;});
             if (it == planeCopies.constEnd()) {
                 qCritical("implementation error: can't find plane %u", plane->id);
@@ -1217,7 +1217,7 @@ int drmModeRevokeLease(int fd, uint32_t lessee_id)
 
 void drmModeFreeResources(drmModeResPtr ptr)
 {
-    for (const auto &gpu : qAsConst(s_gpus)) {
+    for (const auto &gpu : std::as_const(s_gpus)) {
         if (gpu->resPtrs.removeOne(ptr)) {
             delete[] ptr->connectors;
             delete[] ptr->crtcs;
@@ -1230,7 +1230,7 @@ void drmModeFreeResources(drmModeResPtr ptr)
 
 void drmModeFreePlaneResources(drmModePlaneResPtr ptr)
 {
-    for (const auto &gpu : qAsConst(s_gpus)) {
+    for (const auto &gpu : std::as_const(s_gpus)) {
         if (gpu->drmPlaneRes.removeOne(ptr)) {
             delete[] ptr->planes;
             delete ptr;
@@ -1240,7 +1240,7 @@ void drmModeFreePlaneResources(drmModePlaneResPtr ptr)
 
 void drmModeFreeCrtc(drmModeCrtcPtr ptr)
 {
-    for (const auto &gpu : qAsConst(s_gpus)) {
+    for (const auto &gpu : std::as_const(s_gpus)) {
         if (gpu->drmCrtcs.removeOne(ptr)) {
             delete ptr;
             return;
@@ -1251,7 +1251,7 @@ void drmModeFreeCrtc(drmModeCrtcPtr ptr)
 
 void drmModeFreeConnector(drmModeConnectorPtr ptr)
 {
-    for (const auto &gpu : qAsConst(s_gpus)) {
+    for (const auto &gpu : std::as_const(s_gpus)) {
         if (gpu->drmConnectors.removeOne(ptr)) {
             delete[] ptr->encoders;
             delete[] ptr->props;
@@ -1265,7 +1265,7 @@ void drmModeFreeConnector(drmModeConnectorPtr ptr)
 
 void drmModeFreeEncoder(drmModeEncoderPtr ptr)
 {
-    for (const auto &gpu : qAsConst(s_gpus)) {
+    for (const auto &gpu : std::as_const(s_gpus)) {
         if (gpu->drmEncoders.removeOne(ptr)) {
             delete ptr;
             return;
@@ -1276,7 +1276,7 @@ void drmModeFreeEncoder(drmModeEncoderPtr ptr)
 
 void drmModeFreePlane(drmModePlanePtr ptr)
 {
-    for (const auto &gpu : qAsConst(s_gpus)) {
+    for (const auto &gpu : std::as_const(s_gpus)) {
         if (gpu->drmPlanes.removeOne(ptr)) {
             delete ptr;
             return;

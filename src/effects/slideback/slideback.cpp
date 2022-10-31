@@ -56,7 +56,7 @@ void SlideBackEffect::windowRaised(EffectWindow *w)
 {
     // Determine all windows on top of the activated one
     bool currentFound = false;
-    for (EffectWindow *tmp : qAsConst(oldStackingOrder)) {
+    for (EffectWindow *tmp : std::as_const(oldStackingOrder)) {
         if (!currentFound) {
             if (tmp == w) {
                 currentFound = true;
@@ -75,7 +75,7 @@ void SlideBackEffect::windowRaised(EffectWindow *w)
                     coveringWindows.append(tmp);
                 } else {
                     // Does it intersect with a moved (elevated) window and do we have to elevate it too?
-                    for (EffectWindow *elevatedWindow : qAsConst(elevatedList)) {
+                    for (EffectWindow *elevatedWindow : std::as_const(elevatedList)) {
                         if (tmp->frameGeometry().intersects(elevatedWindow->frameGeometry())) {
                             effects->setElevatedWindow(tmp, true);
                             elevatedList.append(tmp);
@@ -93,7 +93,7 @@ void SlideBackEffect::windowRaised(EffectWindow *w)
     // If a window is minimized it could happen that the panels stay elevated without any windows sliding.
     // clear all elevation settings
     if (!motionManager.managingWindows()) {
-        for (EffectWindow *tmp : qAsConst(elevatedList)) {
+        for (EffectWindow *tmp : std::as_const(elevatedList)) {
             effects->setElevatedWindow(tmp, false);
         }
     }
@@ -173,7 +173,7 @@ void SlideBackEffect::paintWindow(EffectWindow *w, int mask, QRegion region, Win
     if (motionManager.isManaging(w)) {
         motionManager.apply(w, data);
     }
-    for (const QRegion &r : qAsConst(clippedRegions)) {
+    for (const QRegion &r : std::as_const(clippedRegions)) {
         region = region.intersected(r);
     }
     effects->paintWindow(w, mask, region, data);
@@ -189,7 +189,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow *w)
                 // restore the stacking order of all windows not intersecting any more except panels
                 if (coveringWindows.contains(w)) {
                     EffectWindowList tmpList;
-                    for (EffectWindow *tmp : qAsConst(elevatedList)) {
+                    for (EffectWindow *tmp : std::as_const(elevatedList)) {
                         QRect elevatedGeometry = tmp->frameGeometry().toRect();
                         if (motionManager.isManaging(tmp)) {
                             elevatedGeometry = motionManager.transformedGeometry(tmp).toAlignedRect();
@@ -205,7 +205,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow *w)
                         } else {
                             if (!tmp->isDock()) {
                                 bool keepElevated = false;
-                                for (EffectWindow *elevatedWindow : qAsConst(tmpList)) {
+                                for (EffectWindow *elevatedWindow : std::as_const(tmpList)) {
                                     if (tmp->frameGeometry().intersects(elevatedWindow->frameGeometry())) {
                                         keepElevated = true;
                                     }
@@ -238,7 +238,7 @@ void SlideBackEffect::postPaintWindow(EffectWindow *w)
                 coveringWindows.removeAll(w);
                 if (coveringWindows.isEmpty()) {
                     // Restore correct stacking order
-                    for (EffectWindow *tmp : qAsConst(elevatedList)) {
+                    for (EffectWindow *tmp : std::as_const(elevatedList)) {
                         effects->setElevatedWindow(tmp, false);
                     }
                     elevatedList.clear();
@@ -311,7 +311,7 @@ EffectWindowList SlideBackEffect::usableWindows(const EffectWindowList &allWindo
     auto isWindowVisible = [](const EffectWindow *window) {
         return window && effects->virtualScreenGeometry().intersects(window->frameGeometry().toAlignedRect());
     };
-    for (EffectWindow *tmp : qAsConst(allWindows)) {
+    for (EffectWindow *tmp : std::as_const(allWindows)) {
         if (isWindowUsable(tmp) && isWindowVisible(tmp)) {
             retList.append(tmp);
         }

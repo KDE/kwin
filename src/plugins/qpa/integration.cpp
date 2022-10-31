@@ -56,7 +56,7 @@ Integration::Integration()
 
 Integration::~Integration()
 {
-    for (QPlatformScreen *platformScreen : qAsConst(m_screens)) {
+    for (QPlatformScreen *platformScreen : std::as_const(m_screens)) {
         QWindowSystemInterface::handleScreenRemoved(platformScreen);
     }
     if (m_dummyScreen) {

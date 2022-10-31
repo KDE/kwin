@@ -303,12 +303,12 @@ static RenderGeometry clipQuads(const Item *item, const SceneOpenGL::RenderConte
     geometry.reserve(quads.count() * 6);
 
     // split all quads in bounding rect with the actual rects in the region
-    for (const WindowQuad &quad : qAsConst(quads)) {
+    for (const WindowQuad &quad : std::as_const(quads)) {
         if (context->clip != infiniteRegion() && !context->hardwareClipping) {
             // Scale to device coordinates, rounding as needed.
             QRectF deviceBounds = logicalRectToDeviceRect(quad.bounds(), scale);
 
-            for (const QRect &clipRect : qAsConst(context->clip)) {
+            for (const QRect &clipRect : std::as_const(context->clip)) {
                 QRectF deviceClipRect = logicalRectToDeviceRect(clipRect, scale).translated(-worldTranslation);
 
                 const QRectF &intersected = deviceClipRect.intersected(deviceBounds);
@@ -449,7 +449,7 @@ void SceneOpenGL::render(Item *item, int mask, const QRegion &region, const Wind
     createRenderNode(item, &renderContext);
 
     int totalVertexCount = 0;
-    for (const RenderNode &node : qAsConst(renderContext.renderNodes)) {
+    for (const RenderNode &node : std::as_const(renderContext.renderNodes)) {
         totalVertexCount += node.geometry.count();
     }
     if (totalVertexCount == 0) {

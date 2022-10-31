@@ -127,7 +127,7 @@ void EglDmabufBuffer::setImages(const QVector<EGLImage> &images)
 
 void EglDmabufBuffer::removeImages()
 {
-    for (auto image : qAsConst(m_images)) {
+    for (auto image : std::as_const(m_images)) {
         eglDestroyImageKHR(m_interfaceImpl->m_backend->eglDisplay(), image);
     }
     m_images.clear();
@@ -320,7 +320,7 @@ void EglDmabuf::setSupportedFormatsAndModifiers()
     filterFormatsWithMultiplePlanes(formats);
 
     QHash<uint32_t, QVector<uint64_t>> supportedFormats;
-    for (auto format : qAsConst(formats)) {
+    for (auto format : std::as_const(formats)) {
         if (eglQueryDmaBufModifiersEXT != nullptr) {
             EGLint count = 0;
             const EGLBoolean success = eglQueryDmaBufModifiersEXT(eglDisplay, format, 0, nullptr, nullptr, &count);

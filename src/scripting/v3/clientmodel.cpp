@@ -21,7 +21,7 @@ ClientModel::ClientModel(QObject *parent)
     connect(workspace(), &Workspace::windowRemoved, this, &ClientModel::handleClientRemoved);
 
     m_clients = workspace()->allClientList();
-    for (Window *client : qAsConst(m_clients)) {
+    for (Window *client : std::as_const(m_clients)) {
         setupClientConnections(client);
     }
 }

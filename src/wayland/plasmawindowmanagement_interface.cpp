@@ -174,7 +174,7 @@ void PlasmaWindowManagementInterfacePrivate::sendStackingOrderUuidsChanged(wl_re
     }
 
     QString uuids;
-    for (const auto &uuid : qAsConst(stackingOrderUuids)) {
+    for (const auto &uuid : std::as_const(stackingOrderUuids)) {
         uuids += uuid;
         uuids += QLatin1Char(';');
     }
@@ -187,7 +187,7 @@ void PlasmaWindowManagementInterfacePrivate::sendStackingOrderUuidsChanged(wl_re
 
 void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_bind_resource(Resource *resource)
 {
-    for (const auto window : qAsConst(windows)) {
+    for (const auto window : std::as_const(windows)) {
         if (resource->version() >= ORG_KDE_PLASMA_WINDOW_MANAGEMENT_WINDOW_WITH_UUID_SINCE_VERSION) {
             send_window_with_uuid(resource->handle, window->d->windowId, window->d->uuid);
         } else {
@@ -215,7 +215,7 @@ void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_sh
 
 void PlasmaWindowManagementInterfacePrivate::org_kde_plasma_window_management_get_window(Resource *resource, uint32_t id, uint32_t internal_window_id)
 {
-    for (const auto window : qAsConst(windows)) {
+    for (const auto window : std::as_const(windows)) {
         if (window->d->windowId == internal_window_id) {
             window->d->add(resource->client(), id, resource->version());
             return;
@@ -338,10 +338,10 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_destroy(Resource *resou
 
 void PlasmaWindowInterfacePrivate::org_kde_plasma_window_bind_resource(Resource *resource)
 {
-    for (const auto &desk : qAsConst(plasmaVirtualDesktops)) {
+    for (const auto &desk : std::as_const(plasmaVirtualDesktops)) {
         send_virtual_desktop_entered(resource->handle, desk);
     }
-    for (const auto &activity : qAsConst(plasmaActivities)) {
+    for (const auto &activity : std::as_const(plasmaActivities)) {
         if (resource->version() >= ORG_KDE_PLASMA_WINDOW_ACTIVITY_ENTERED_SINCE_VERSION) {
             send_activity_entered(resource->handle, activity);
         }

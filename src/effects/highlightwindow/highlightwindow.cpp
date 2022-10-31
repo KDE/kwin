@@ -80,7 +80,7 @@ void HighlightWindowEffect::slotWindowAdded(EffectWindow *w)
             return;
         }
         // This window was demanded to be highlighted before it appeared on the screen.
-        for (const WId &id : qAsConst(m_highlightedIds)) {
+        for (const WId &id : std::as_const(m_highlightedIds)) {
             if (w == effects->findWindow(id)) {
                 const quint64 animationId = startHighlightAnimation(w);
                 complete(animationId);

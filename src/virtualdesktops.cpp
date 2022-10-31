@@ -234,7 +234,7 @@ void VirtualDesktopManager::setRootInfo(NETRootInfo *info)
         m_rootInfo->setDesktopLayout(NET::OrientationHorizontal, columns, m_rows, NET::DesktopLayoutCornerTopLeft);
         updateRootInfo();
         m_rootInfo->setCurrentDesktop(currentDesktop()->x11DesktopNumber());
-        for (auto *vd : qAsConst(m_desktops)) {
+        for (auto *vd : std::as_const(m_desktops)) {
             m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
         }
     }
@@ -595,7 +595,7 @@ void VirtualDesktopManager::setCount(uint count)
     if (!s_loadingDesktopSettings) {
         save();
     }
-    for (auto vd : qAsConst(newDesktops)) {
+    for (auto vd : std::as_const(newDesktops)) {
         Q_EMIT desktopCreated(vd);
     }
     Q_EMIT countChanged(oldCount, m_desktops.count());
@@ -725,7 +725,7 @@ void VirtualDesktopManager::save()
     }
 
     group.writeEntry("Number", count());
-    for (VirtualDesktop *desktop : qAsConst(m_desktops)) {
+    for (VirtualDesktop *desktop : std::as_const(m_desktops)) {
         const uint position = desktop->x11DesktopNumber();
 
         QString s = desktop->name();

@@ -550,7 +550,7 @@ void Connection::processEvents()
 void Connection::updateScreens()
 {
     QMutexLocker locker(&m_mutex);
-    for (auto device : qAsConst(m_devices)) {
+    for (auto device : std::as_const(m_devices)) {
         applyScreenToDevice(device);
     }
 }
@@ -671,7 +671,7 @@ void Connection::slotKGlobalSettingsNotifyChange(int type, int arg)
 QStringList Connection::devicesSysNames() const
 {
     QStringList sl;
-    for (Device *d : qAsConst(m_devices)) {
+    for (Device *d : std::as_const(m_devices)) {
         sl.append(d->sysName());
     }
     return sl;

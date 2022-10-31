@@ -126,7 +126,7 @@ bool Monitor::edge(int edge) const
 
 void Monitor::setEdgeEnabled(int edge, bool enabled)
 {
-    for (QAction *action : qAsConst(popup_actions[edge])) {
+    for (QAction *action : std::as_const(popup_actions[edge])) {
         action->setEnabled(enabled);
     }
 }

@@ -482,7 +482,7 @@ void ForkLevel::activityAdded(const QString &activityId)
         return;
     }
     // verify that our children do not contain this activity
-    for (AbstractLevel *child : qAsConst(m_children)) {
+    for (AbstractLevel *child : std::as_const(m_children)) {
         if (child->activity() == activityId) {
             return;
         }

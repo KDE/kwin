@@ -251,7 +251,7 @@ void ApplicationWayland::startSession()
     }
     // start the applications passed to us as command line arguments
     if (!m_applicationsToStart.isEmpty()) {
-        for (const QString &application : qAsConst(m_applicationsToStart)) {
+        for (const QString &application : std::as_const(m_applicationsToStart)) {
             QStringList arguments = KShell::splitArgs(application);
             if (arguments.isEmpty()) {
                 qWarning("Failed to launch application: %s is an invalid command",

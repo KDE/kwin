@@ -70,7 +70,7 @@ ServerSideDecorationPaletteManagerInterface::~ServerSideDecorationPaletteManager
 
 ServerSideDecorationPaletteInterface *ServerSideDecorationPaletteManagerInterface::paletteForSurface(SurfaceInterface *surface)
 {
-    for (ServerSideDecorationPaletteInterface *menu : qAsConst(d->palettes)) {
+    for (ServerSideDecorationPaletteInterface *menu : std::as_const(d->palettes)) {
         if (menu->surface() == surface) {
             return menu;
         }

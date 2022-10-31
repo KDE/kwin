@@ -58,10 +58,10 @@ void KWinScreenEdgesConfig::load()
 {
     KCModule::load();
     m_data->settings()->load();
-    for (KWinScreenEdgeScriptSettings *setting : qAsConst(m_scriptSettings)) {
+    for (KWinScreenEdgeScriptSettings *setting : std::as_const(m_scriptSettings)) {
         setting->load();
     }
-    for (KWinScreenEdgeEffectSettings *setting : qAsConst(m_effectSettings)) {
+    for (KWinScreenEdgeEffectSettings *setting : std::as_const(m_effectSettings)) {
         setting->load();
     }
 
@@ -79,10 +79,10 @@ void KWinScreenEdgesConfig::save()
     m_data->settings()->setRemainActiveOnFullscreen(m_form->remainActiveOnFullscreen());
     m_data->settings()->setElectricBorderCornerRatio(m_form->electricBorderCornerRatio());
     m_data->settings()->save();
-    for (KWinScreenEdgeScriptSettings *setting : qAsConst(m_scriptSettings)) {
+    for (KWinScreenEdgeScriptSettings *setting : std::as_const(m_scriptSettings)) {
         setting->save();
     }
-    for (KWinScreenEdgeEffectSettings *setting : qAsConst(m_effectSettings)) {
+    for (KWinScreenEdgeEffectSettings *setting : std::as_const(m_effectSettings)) {
         setting->save();
     }
 
@@ -101,7 +101,7 @@ void KWinScreenEdgesConfig::save()
                                          QDBusConnection::sessionBus());
 
     interface.reconfigureEffect(QStringLiteral("windowview"));
-    for (const auto &effectId : qAsConst(m_effects)) {
+    for (const auto &effectId : std::as_const(m_effects)) {
         interface.reconfigureEffect(effectId);
     }
 

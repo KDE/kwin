@@ -76,7 +76,7 @@ QVector<Rules *> RuleBookSettings::rules()
 {
     QVector<Rules *> result;
     result.reserve(m_list.count());
-    for (const auto &settings : qAsConst(m_list)) {
+    for (const auto &settings : std::as_const(m_list)) {
         result.append(new Rules(settings));
     }
     return result;
@@ -85,12 +85,12 @@ QVector<Rules *> RuleBookSettings::rules()
 bool RuleBookSettings::usrSave()
 {
     bool result = true;
-    for (const auto &settings : qAsConst(m_list)) {
+    for (const auto &settings : std::as_const(m_list)) {
         result &= settings->save();
     }
 
     // Remove deleted groups from config
-    for (const QString &groupName : qAsConst(m_storedGroups)) {
+    for (const QString &groupName : std::as_const(m_storedGroups)) {
         if (sharedConfig()->hasGroup(groupName) && !mRuleGroupList.contains(groupName)) {
             sharedConfig()->deleteGroup(groupName);
         }
@@ -118,7 +118,7 @@ void RuleBookSettings::usrRead()
     m_storedGroups = mRuleGroupList;
 
     m_list.reserve(mRuleGroupList.count());
-    for (const QString &groupName : qAsConst(mRuleGroupList)) {
+    for (const QString &groupName : std::as_const(mRuleGroupList)) {
         m_list.append(new RuleSettings(sharedConfig(), groupName, this));
     }
 }

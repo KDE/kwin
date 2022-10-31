@@ -297,7 +297,7 @@ void RulesModel::setSettings(RuleSettings *settings)
 
     m_settings = settings;
 
-    for (RuleItem *rule : qAsConst(m_ruleList)) {
+    for (RuleItem *rule : std::as_const(m_ruleList)) {
         const KConfigSkeletonItem *configItem = m_settings->findItem(rule->key());
         const KConfigSkeletonItem *configPolicyItem = m_settings->findItem(rule->policyKey());
 

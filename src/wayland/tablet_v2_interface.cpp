@@ -619,15 +619,15 @@ public:
 
     void zwp_tablet_seat_v2_bind_resource(Resource *resource) override
     {
-        for (auto tablet : qAsConst(m_tablets)) {
+        for (auto tablet : std::as_const(m_tablets)) {
             sendTabletAdded(resource, tablet);
         }
 
-        for (auto pad : qAsConst(m_pads)) {
+        for (auto pad : std::as_const(m_pads)) {
             sendPadAdded(resource, pad);
         }
 
-        for (auto *tool : qAsConst(m_tools)) {
+        for (auto *tool : std::as_const(m_tools)) {
             sendToolAdded(resource, tool);
         }
     }
@@ -645,7 +645,7 @@ public:
         tool->d->send_type(toolResource, tool->d->m_type);
         tool->d->send_hardware_serial(toolResource, tool->d->m_hardwareSerialHigh, tool->d->m_hardwareSerialLow);
         tool->d->send_hardware_id_wacom(toolResource, tool->d->m_hardwareIdHigh, tool->d->m_hardwareIdLow);
-        for (uint32_t cap : qAsConst(tool->d->m_capabilities)) {
+        for (uint32_t cap : std::as_const(tool->d->m_capabilities)) {
             tool->d->send_capability(toolResource, cap);
         }
         tool->d->send_done(toolResource);
@@ -659,7 +659,7 @@ public:
         if (tablet->d->m_vendorId && tablet->d->m_productId) {
             tablet->d->send_id(tabletResource, tablet->d->m_vendorId, tablet->d->m_productId);
         }
-        for (const QString &path : qAsConst(tablet->d->m_paths)) {
+        for (const QString &path : std::as_const(tablet->d->m_paths)) {
             tablet->d->send_path(tabletResource, path);
         }
         tablet->d->send_done(tabletResource);
@@ -681,12 +681,12 @@ public:
             groupResource->handle,
             QByteArray::fromRawData(reinterpret_cast<const char *>(pad->d->m_buttons.data()), pad->d->m_buttons.size() * sizeof(quint32)));
 
-        for (auto ring : qAsConst(pad->d->m_rings)) {
+        for (auto ring : std::as_const(pad->d->m_rings)) {
             auto ringResource = ring->d->add(resource->client(), resource->version());
             pad->d->m_padGroup->d->send_ring(groupResource->handle, ringResource->handle);
         }
 
-        for (auto strip : qAsConst(pad->d->m_strips)) {
+        for (auto strip : std::as_const(pad->d->m_strips)) {
             auto stripResource = strip->d->add(resource->client(), resource->version());
             pad->d->m_padGroup->d->send_strip(groupResource->handle, stripResource->handle);
         }
@@ -780,7 +780,7 @@ void TabletSeatV2Interface::removeDevice(const QString &sysname)
 
 TabletToolV2Interface *TabletSeatV2Interface::toolByHardwareId(quint64 hardwareId) const
 {
-    for (TabletToolV2Interface *tool : qAsConst(d->m_tools)) {
+    for (TabletToolV2Interface *tool : std::as_const(d->m_tools)) {
         if (tool->d->hardwareId() == hardwareId) {
             return tool;
         }
@@ -790,7 +790,7 @@ TabletToolV2Interface *TabletSeatV2Interface::toolByHardwareId(quint64 hardwareI
 
 TabletToolV2Interface *TabletSeatV2Interface::toolByHardwareSerial(quint64 hardwareSerial, TabletToolV2Interface::Type type) const
 {
-    for (TabletToolV2Interface *tool : qAsConst(d->m_tools)) {
+    for (TabletToolV2Interface *tool : std::as_const(d->m_tools)) {
         if (tool->d->hardwareSerial() == hardwareSerial && tool->d->m_type == type)
             return tool;
     }

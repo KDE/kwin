@@ -138,7 +138,7 @@ void Module::save()
 {
     using namespace KPackage;
     PackageStructure *structure = PackageLoader::self()->loadPackageStructure(QStringLiteral("KWin/Script"));
-    for (const KPluginMetaData &info : qAsConst(m_pendingDeletions)) {
+    for (const KPluginMetaData &info : std::as_const(m_pendingDeletions)) {
         // We can get the package root from the entry path
         QDir root = QFileInfo(info.metaDataFileName()).dir();
         root.cdUp();

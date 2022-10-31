@@ -167,7 +167,7 @@ void ServerSideDecorationInterfacePrivate::org_kde_kwin_server_decoration_destro
 
 ServerSideDecorationInterface *ServerSideDecorationInterfacePrivate::get(SurfaceInterface *surface)
 {
-    for (ServerSideDecorationInterfacePrivate *decoration : qAsConst(s_all)) {
+    for (ServerSideDecorationInterfacePrivate *decoration : std::as_const(s_all)) {
         if (decoration->surface == surface) {
             return decoration->q;
         }

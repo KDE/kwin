@@ -193,7 +193,7 @@ void Workspace::propagateWindows(bool propagate_new_windows)
     QVector<xcb_window_t> cl;
     if (propagate_new_windows) {
         cl.reserve(manual_overlays.size() + m_x11Clients.size());
-        for (const auto win : qAsConst(manual_overlays)) {
+        for (const auto win : std::as_const(manual_overlays)) {
             cl.push_back(win);
         }
         for (auto it = m_x11Clients.constBegin(); it != m_x11Clients.constEnd(); ++it) {
@@ -209,7 +209,7 @@ void Workspace::propagateWindows(bool propagate_new_windows)
             cl.push_back(window->window());
         }
     }
-    for (const auto win : qAsConst(manual_overlays)) {
+    for (const auto win : std::as_const(manual_overlays)) {
         cl.push_back(win);
     }
     rootInfo()->setClientListStacking(cl.constData(), cl.size());
@@ -261,7 +261,7 @@ Window *Workspace::findDesktop(bool topmost, VirtualDesktop *desktop) const
             }
         }
     } else { // bottom-most
-        for (Window *window : qAsConst(stacking_order)) {
+        for (Window *window : std::as_const(stacking_order)) {
             if (window->isClient() && window->isOnDesktop(desktop) && window->isDesktop() && window->isShown()) {
                 return window;
             }
@@ -359,7 +359,7 @@ void Workspace::raiseWindow(Window *window, bool nogroup)
         while ((transient_parent = transient_parent->transientFor())) {
             transients << transient_parent;
         }
-        for (const auto &transient_parent : qAsConst(transients)) {
+        for (const auto &transient_parent : std::as_const(transients)) {
             raiseWindow(transient_parent, true);
         }
     }
@@ -519,7 +519,7 @@ QList<Window *> Workspace::constrainedStackingOrder()
     // Sort the windows based on their layers while preserving their relative order in the
     // unconstrained stacking order.
     std::array<QList<Window *>, NumLayers> windows;
-    for (Window *window : qAsConst(unconstrained_stacking_order)) {
+    for (Window *window : std::as_const(unconstrained_stacking_order)) {
         const Layer layer = computeLayer(window);
         windows[layer] << window;
     }
@@ -534,7 +534,7 @@ QList<Window *> Workspace::constrainedStackingOrder()
     // the ones that are not affected by other constraints.
     QQueue<Constraint *> constraints;
     constraints.reserve(m_constraints.count());
-    for (Constraint *constraint : qAsConst(m_constraints)) {
+    for (Constraint *constraint : std::as_const(m_constraints)) {
         if (constraint->parents.isEmpty()) {
             constraint->enqueued = true;
             constraints.enqueue(constraint);
@@ -558,7 +558,7 @@ QList<Window *> Workspace::constrainedStackingOrder()
             stacking.insert(belowIndex, constraint->above);
         }
 
-        for (Constraint *child : qAsConst(constraint->children)) {
+        for (Constraint *child : std::as_const(constraint->children)) {
             if (!child->enqueued) {
                 child->enqueued = true;
                 constraints.enqueue(child);

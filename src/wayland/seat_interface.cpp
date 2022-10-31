@@ -1292,7 +1292,7 @@ void SeatInterface::setSelection(AbstractDataSource *selection)
 
     d->currentSelection = selection;
 
-    for (auto focussedSelection : qAsConst(d->globalKeyboard.focus.selections)) {
+    for (auto focussedSelection : std::as_const(d->globalKeyboard.focus.selections)) {
         if (selection) {
             focussedSelection->sendSelection(selection);
         } else {
@@ -1300,7 +1300,7 @@ void SeatInterface::setSelection(AbstractDataSource *selection)
         }
     }
 
-    for (auto control : qAsConst(d->dataControlDevices)) {
+    for (auto control : std::as_const(d->dataControlDevices)) {
         if (selection) {
             control->sendSelection(selection);
         } else {
@@ -1350,14 +1350,14 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection)
 
     d->currentPrimarySelection = selection;
 
-    for (auto focussedSelection : qAsConst(d->globalKeyboard.focus.primarySelections)) {
+    for (auto focussedSelection : std::as_const(d->globalKeyboard.focus.primarySelections)) {
         if (selection) {
             focussedSelection->sendSelection(selection);
         } else {
             focussedSelection->sendClearSelection();
         }
     }
-    for (auto control : qAsConst(d->dataControlDevices)) {
+    for (auto control : std::as_const(d->dataControlDevices)) {
         if (selection) {
             control->sendPrimarySelection(selection);
         } else {

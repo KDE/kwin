@@ -55,10 +55,10 @@ void KWinScreenEdgesConfig::load()
 {
     KCModule::load();
     m_data->settings()->load();
-    for (KWinTouchScreenScriptSettings *setting : qAsConst(m_scriptSettings)) {
+    for (KWinTouchScreenScriptSettings *setting : std::as_const(m_scriptSettings)) {
         setting->load();
     }
-    for (KWinTouchScreenEdgeEffectSettings *setting : qAsConst(m_effectSettings)) {
+    for (KWinTouchScreenEdgeEffectSettings *setting : std::as_const(m_effectSettings)) {
         setting->load();
     }
 
@@ -71,10 +71,10 @@ void KWinScreenEdgesConfig::save()
 {
     monitorSaveSettings();
     m_data->settings()->save();
-    for (KWinTouchScreenScriptSettings *setting : qAsConst(m_scriptSettings)) {
+    for (KWinTouchScreenScriptSettings *setting : std::as_const(m_scriptSettings)) {
         setting->save();
     }
-    for (KWinTouchScreenEdgeEffectSettings *setting : qAsConst(m_effectSettings)) {
+    for (KWinTouchScreenEdgeEffectSettings *setting : std::as_const(m_effectSettings)) {
         setting->save();
     }
 
@@ -90,7 +90,7 @@ void KWinScreenEdgesConfig::save()
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
     interface.reconfigureEffect(QStringLiteral("windowview"));
-    for (const auto &effectId : qAsConst(m_effects)) {
+    for (const auto &effectId : std::as_const(m_effects)) {
         interface.reconfigureEffect(effectId);
     }
 

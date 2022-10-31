@@ -1107,14 +1107,14 @@ void Window::setDesktops(QVector<VirtualDesktop *> desktops)
         } else {
             windowManagementInterface()->setOnAllDesktops(false);
             auto currentDesktops = windowManagementInterface()->plasmaVirtualDesktops();
-            for (auto desktop : qAsConst(m_desktops)) {
+            for (auto desktop : std::as_const(m_desktops)) {
                 if (!currentDesktops.contains(desktop->id())) {
                     windowManagementInterface()->addPlasmaVirtualDesktop(desktop->id());
                 } else {
                     currentDesktops.removeOne(desktop->id());
                 }
             }
-            for (const auto &desktopId : qAsConst(currentDesktops)) {
+            for (const auto &desktopId : std::as_const(currentDesktops)) {
                 windowManagementInterface()->removePlasmaVirtualDesktop(desktopId);
             }
         }
@@ -2277,7 +2277,7 @@ void Window::setupWindowManagementInterface()
         setShade(set);
     });
 
-    for (const auto vd : qAsConst(m_desktops)) {
+    for (const auto vd : std::as_const(m_desktops)) {
         w->addPlasmaVirtualDesktop(vd->id());
     }
     // We need to set `OnAllDesktops` after the actual VD list has been added.
@@ -2304,7 +2304,7 @@ void Window::setupWindowManagementInterface()
         }
     });
 
-    for (const auto &activity : qAsConst(m_activityList)) {
+    for (const auto &activity : std::as_const(m_activityList)) {
         w->addPlasmaActivity(activity);
     }
 

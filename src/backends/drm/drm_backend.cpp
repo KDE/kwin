@@ -152,7 +152,7 @@ void DrmBackend::reactivate()
     }
     m_active = true;
 
-    for (const auto &output : qAsConst(m_outputs)) {
+    for (const auto &output : std::as_const(m_outputs)) {
         output->renderLoop()->uninhibit();
         output->renderLoop()->scheduleRepaint();
     }
@@ -169,7 +169,7 @@ void DrmBackend::deactivate()
         return;
     }
 
-    for (const auto &output : qAsConst(m_outputs)) {
+    for (const auto &output : std::as_const(m_outputs)) {
         output->renderLoop()->inhibit();
     }
 
@@ -364,7 +364,7 @@ void DrmBackend::sceneInitialized()
     if (m_outputs.isEmpty()) {
         updateOutputs();
     } else {
-        for (const auto &gpu : qAsConst(m_gpus)) {
+        for (const auto &gpu : std::as_const(m_gpus)) {
             gpu->recreateSurfaces();
         }
     }
@@ -470,7 +470,7 @@ bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
 {
     QVector<DrmOutput *> toBeEnabled;
     QVector<DrmOutput *> toBeDisabled;
-    for (const auto &gpu : qAsConst(m_gpus)) {
+    for (const auto &gpu : std::as_const(m_gpus)) {
         const auto &outputs = gpu->drmOutputs();
         for (const auto &output : outputs) {
             if (output->isNonDesktop()) {
@@ -484,10 +484,10 @@ bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
             }
         }
         if (gpu->testPendingConfiguration() != DrmPipeline::Error::None) {
-            for (const auto &output : qAsConst(toBeEnabled)) {
+            for (const auto &output : std::as_const(toBeEnabled)) {
                 output->revertQueuedChanges();
             }
-            for (const auto &output : qAsConst(toBeDisabled)) {
+            for (const auto &output : std::as_const(toBeDisabled)) {
                 output->revertQueuedChanges();
             }
             return false;
@@ -495,14 +495,14 @@ bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
     }
     // first, apply changes to drm outputs.
     // This may remove the placeholder output and thus change m_outputs!
-    for (const auto &output : qAsConst(toBeEnabled)) {
+    for (const auto &output : std::as_const(toBeEnabled)) {
         output->applyQueuedChanges(config);
     }
-    for (const auto &output : qAsConst(toBeDisabled)) {
+    for (const auto &output : std::as_const(toBeDisabled)) {
         output->applyQueuedChanges(config);
     }
     // only then apply changes to the virtual outputs
-    for (const auto &gpu : qAsConst(m_gpus)) {
+    for (const auto &gpu : std::as_const(m_gpus)) {
         const auto &outputs = gpu->virtualOutputs();
         for (const auto &output : outputs) {
             output->applyChanges(config);
@@ -523,7 +523,7 @@ DrmRenderBackend *DrmBackend::renderBackend() const
 
 void DrmBackend::releaseBuffers()
 {
-    for (const auto &gpu : qAsConst(m_gpus)) {
+    for (const auto &gpu : std::as_const(m_gpus)) {
         gpu->releaseBuffers();
     }
 }

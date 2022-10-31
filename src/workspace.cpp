@@ -528,7 +528,7 @@ QString connectedOutputsHash(const QVector<Output *> &outputs)
 {
     QStringList hashedOutputs;
     hashedOutputs.reserve(outputs.count());
-    for (auto output : qAsConst(outputs)) {
+    for (auto output : std::as_const(outputs)) {
         if (!output->isPlaceholder() && !output->isNonDesktop()) {
             hashedOutputs << outputHash(output);
         }
@@ -644,7 +644,7 @@ void Workspace::updateOutputConfiguration()
     OutputConfiguration cfg;
     // default position goes from left to right
     QPoint pos(0, 0);
-    for (const auto &output : qAsConst(outputs)) {
+    for (const auto &output : std::as_const(outputs)) {
         if (output->isPlaceholder() || output->isNonDesktop()) {
             continue;
         }
@@ -712,7 +712,7 @@ void Workspace::constrain(Window *below, Window *above)
 
     QList<Constraint *> parents;
     QList<Constraint *> children;
-    for (Constraint *constraint : qAsConst(m_constraints)) {
+    for (Constraint *constraint : std::as_const(m_constraints)) {
         if (constraint->below == below && constraint->above == above) {
             return;
         }
@@ -730,11 +730,11 @@ void Workspace::constrain(Window *below, Window *above)
     constraint->children = children;
     m_constraints << constraint;
 
-    for (Constraint *parent : qAsConst(parents)) {
+    for (Constraint *parent : std::as_const(parents)) {
         parent->children << constraint;
     }
 
-    for (Constraint *child : qAsConst(children)) {
+    for (Constraint *child : std::as_const(children)) {
         child->parents << constraint;
     }
 
@@ -799,7 +799,7 @@ void Workspace::replaceInStack(Window *original, Deleted *deleted)
         stacking_order.append(deleted);
     }
 
-    for (Constraint *constraint : qAsConst(m_constraints)) {
+    for (Constraint *constraint : std::as_const(m_constraints)) {
         if (constraint->below == original) {
             constraint->below = deleted;
         } else if (constraint->above == original) {
@@ -821,11 +821,11 @@ void Workspace::removeFromStack(Window *window)
             continue;
         }
         if (isBelow) {
-            for (Constraint *child : qAsConst(constraint->children)) {
+            for (Constraint *child : std::as_const(constraint->children)) {
                 child->parents.removeOne(constraint);
             }
         } else {
-            for (Constraint *parent : qAsConst(constraint->parents)) {
+            for (Constraint *parent : std::as_const(constraint->parents)) {
                 parent->children.removeOne(constraint);
             }
         }
@@ -1159,7 +1159,7 @@ void Workspace::slotReconfigure()
     updateToolWindows(true);
 
     m_rulebook->load();
-    for (Window *window : qAsConst(m_allClients)) {
+    for (Window *window : std::as_const(m_allClients)) {
         if (window->supportsWindowRules()) {
             window->evaluateWindowRules();
             m_rulebook->discardUsed(window, false);
@@ -1947,14 +1947,14 @@ QString Workspace::supportInformation() const
         support.append(QLatin1String("---------------\n"));
         QStringList loadedPlugins = kwinApp()->pluginManager()->loadedPlugins();
         loadedPlugins.sort();
-        for (const QString &plugin : qAsConst(loadedPlugins)) {
+        for (const QString &plugin : std::as_const(loadedPlugins)) {
             support.append(plugin + QLatin1Char('\n'));
         }
         support.append(QLatin1String("\nAvailable Plugins:\n"));
         support.append(QLatin1String("------------------\n"));
         QStringList availablePlugins = kwinApp()->pluginManager()->availablePlugins();
         availablePlugins.sort();
-        for (const QString &plugin : qAsConst(availablePlugins)) {
+        for (const QString &plugin : std::as_const(availablePlugins)) {
             support.append(plugin + QLatin1Char('\n'));
         }
     } else {
@@ -2190,7 +2190,7 @@ void Workspace::updateMinimizedOfTransients(Window *window)
         }
         if (window->isModal()) { // if a modal dialog is minimized, minimize its mainwindow too
             const auto windows = window->mainWindows();
-            for (Window *main : qAsConst(windows)) {
+            for (Window *main : std::as_const(windows)) {
                 main->minimize();
             }
         }
@@ -2204,7 +2204,7 @@ void Workspace::updateMinimizedOfTransients(Window *window)
         }
         if (window->isModal()) {
             const auto windows = window->mainWindows();
-            for (Window *main : qAsConst(windows)) {
+            for (Window *main : std::as_const(windows)) {
                 main->unminimize();
             }
         }
@@ -2396,7 +2396,7 @@ void Workspace::updateClientArea()
         }
     }
 
-    for (Window *window : qAsConst(m_allClients)) {
+    for (Window *window : std::as_const(m_allClients)) {
         if (!window->hasStrut()) {
             continue;
         }

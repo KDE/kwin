@@ -188,10 +188,10 @@ void WindowViewEffect::reconfigure(ReconfigureFlags)
     setAnimationDuration(animationTime(300));
     setLayout(WindowViewConfig::layoutMode());
 
-    for (ElectricBorder border : qAsConst(m_borderActivate)) {
+    for (ElectricBorder border : std::as_const(m_borderActivate)) {
         effects->unreserveElectricBorder(border, this);
     }
-    for (ElectricBorder border : qAsConst(m_borderActivateAll)) {
+    for (ElectricBorder border : std::as_const(m_borderActivateAll)) {
         effects->unreserveElectricBorder(border, this);
     }
 

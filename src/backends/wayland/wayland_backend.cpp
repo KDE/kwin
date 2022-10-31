@@ -881,7 +881,7 @@ void WaylandBackend::togglePointerLock()
         return;
     }
 
-    for (auto output : qAsConst(m_outputs)) {
+    for (auto output : std::as_const(m_outputs)) {
         output->lockPointer(m_seat->pointerDevice()->nativePointer(), !m_pointerLockRequested);
     }
     m_pointerLockRequested = !m_pointerLockRequested;
@@ -890,7 +890,7 @@ void WaylandBackend::togglePointerLock()
 
 bool WaylandBackend::pointerIsLocked()
 {
-    for (auto *output : qAsConst(m_outputs)) {
+    for (auto *output : std::as_const(m_outputs)) {
         if (output->pointerIsLocked()) {
             return true;
         }

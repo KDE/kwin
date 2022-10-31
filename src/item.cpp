@@ -25,7 +25,7 @@ Item::Item(Item *parent)
 Item::~Item()
 {
     setParentItem(nullptr);
-    for (const auto &dirty : qAsConst(m_repaints)) {
+    for (const auto &dirty : std::as_const(m_repaints)) {
         if (!dirty.isEmpty()) {
             Compositor::self()->scene()->addRepaint(dirty);
         }
@@ -157,7 +157,7 @@ QRectF Item::boundingRect() const
 void Item::updateBoundingRect()
 {
     QRectF boundingRect = rect();
-    for (Item *item : qAsConst(m_childItems)) {
+    for (Item *item : std::as_const(m_childItems)) {
         boundingRect |= item->boundingRect().translated(item->position());
     }
     if (m_boundingRect != boundingRect) {
@@ -404,7 +404,7 @@ void Item::updateEffectiveVisibility()
         scheduleRepaintInternal(boundingRect().toAlignedRect());
     }
 
-    for (Item *childItem : qAsConst(m_childItems)) {
+    for (Item *childItem : std::as_const(m_childItems)) {
         childItem->updateEffectiveVisibility();
     }
 }

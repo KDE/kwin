@@ -2823,7 +2823,7 @@ void InputRedirection::updateLeds(LEDs leds)
     if (m_leds != leds) {
         m_leds = leds;
 
-        for (InputDevice *device : qAsConst(m_inputDevices)) {
+        for (InputDevice *device : std::as_const(m_inputDevices)) {
             device->setLeds(leds);
         }
     }
@@ -2954,7 +2954,7 @@ void InputRedirection::toggleTouchpads()
 {
     bool changed = false;
     m_touchpadsEnabled = !m_touchpadsEnabled;
-    for (InputDevice *device : qAsConst(m_inputDevices)) {
+    for (InputDevice *device : std::as_const(m_inputDevices)) {
         if (!device->isTouchpad()) {
             continue;
         }

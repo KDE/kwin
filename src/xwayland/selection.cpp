@@ -252,7 +252,7 @@ bool Selection::handleSelectionNotify(xcb_selection_notify_event_t *event)
     if (m_xSource && m_xSource->handleSelectionNotify(event)) {
         return true;
     }
-    for (TransferXtoWl *transfer : qAsConst(m_xToWlTransfers)) {
+    for (TransferXtoWl *transfer : std::as_const(m_xToWlTransfers)) {
         if (transfer->handleSelectionNotify(event)) {
             return true;
         }
@@ -262,12 +262,12 @@ bool Selection::handleSelectionNotify(xcb_selection_notify_event_t *event)
 
 bool Selection::handlePropertyNotify(xcb_property_notify_event_t *event)
 {
-    for (TransferXtoWl *transfer : qAsConst(m_xToWlTransfers)) {
+    for (TransferXtoWl *transfer : std::as_const(m_xToWlTransfers)) {
         if (transfer->handlePropertyNotify(event)) {
             return true;
         }
     }
-    for (TransferWltoX *transfer : qAsConst(m_wlToXTransfers)) {
+    for (TransferWltoX *transfer : std::as_const(m_wlToXTransfers)) {
         if (transfer->handlePropertyNotify(event)) {
             return true;
         }
@@ -341,10 +341,10 @@ void Selection::endTimeoutTransfersTimer()
 
 void Selection::timeoutTransfers()
 {
-    for (TransferXtoWl *transfer : qAsConst(m_xToWlTransfers)) {
+    for (TransferXtoWl *transfer : std::as_const(m_xToWlTransfers)) {
         transfer->timeout();
     }
-    for (TransferWltoX *transfer : qAsConst(m_wlToXTransfers)) {
+    for (TransferWltoX *transfer : std::as_const(m_wlToXTransfers)) {
         transfer->timeout();
     }
 }

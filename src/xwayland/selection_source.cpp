@@ -90,7 +90,7 @@ void WlSource::sendTargets(xcb_selection_request_event_t *event)
     targets[1] = atoms->targets;
 
     size_t cnt = 2;
-    for (const auto &mime : qAsConst(m_offers)) {
+    for (const auto &mime : std::as_const(m_offers)) {
         targets[cnt] = Selection::mimeTypeToAtom(mime);
         cnt++;
     }
@@ -232,7 +232,7 @@ void X11Source::handleTargets()
         all << mimePair;
     }
     // all left in m_offers are not in the updated targets
-    for (const auto &mimePair : qAsConst(m_offers)) {
+    for (const auto &mimePair : std::as_const(m_offers)) {
         removed << mimePair.first;
     }
     m_offers = all;

@@ -116,7 +116,7 @@ void MouseClickEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
             click->m_frame->render(infiniteRegion(), frameAlpha, frameAlpha);
         }
     }
-    for (const auto &tool : qAsConst(m_tabletTools)) {
+    for (const auto &tool : std::as_const(m_tabletTools)) {
         const int step = m_ringMaxSize * (1. - tool.m_pressure);
         for (qreal size = m_ringMaxSize; size > 0; size -= step) {
             drawCircle(tool.m_color, tool.m_globalPosition.x(), tool.m_globalPosition.y(), size);
@@ -204,7 +204,7 @@ void MouseClickEffect::repaint()
     if (!m_tabletTools.isEmpty()) {
         QRegion dirtyRegion;
         const int radius = m_ringMaxSize + m_lineWidth;
-        for (const auto &event : qAsConst(m_tabletTools)) {
+        for (const auto &event : std::as_const(m_tabletTools)) {
             dirtyRegion |= QRect(event.m_globalPosition.x() - radius, event.m_globalPosition.y() - radius, 2 * radius, 2 * radius);
         }
         effects->addRepaint(dirtyRegion);

@@ -270,7 +270,7 @@ void ScreenShotSourceMulti1::marshal(ScreenShotSink1 *sink)
     QList<QImage> images;
     images.reserve(m_sources.count());
 
-    for (ScreenShotSource1 *source : qAsConst(m_sources)) {
+    for (ScreenShotSource1 *source : std::as_const(m_sources)) {
         images.append(source->data());
     }
 

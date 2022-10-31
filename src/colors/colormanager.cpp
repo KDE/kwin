@@ -79,7 +79,7 @@ void ColorManager::handleSessionActiveChanged(bool active)
     if (!active) {
         return;
     }
-    for (ColorDevice *device : qAsConst(d->devices)) {
+    for (ColorDevice *device : std::as_const(d->devices)) {
         device->scheduleUpdate();
     }
 }

@@ -143,7 +143,7 @@ void GlobalShortcutsManager::objectDeleted(QObject *object)
 
 bool GlobalShortcutsManager::addIfNotExists(GlobalShortcut sc, DeviceType device)
 {
-    for (const auto &cs : qAsConst(m_shortcuts)) {
+    for (const auto &cs : std::as_const(m_shortcuts)) {
         if (sc.shortcut() == cs.shortcut()) {
             return false;
         }

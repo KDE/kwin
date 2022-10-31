@@ -536,7 +536,7 @@ void X11StandalonePlatform::doUpdateOutputs()
     }
 
     // Process new outputs. Note new outputs must be introduced before removing any other outputs.
-    for (Output *output : qAsConst(added)) {
+    for (Output *output : std::as_const(added)) {
         m_outputs.append(output);
         Q_EMIT outputAdded(output);
         if (auto placeholderOutput = qobject_cast<X11PlaceholderOutput *>(output)) {
@@ -547,7 +547,7 @@ void X11StandalonePlatform::doUpdateOutputs()
     }
 
     // Outputs have to be removed last to avoid the case where there are no enabled outputs.
-    for (Output *output : qAsConst(removed)) {
+    for (Output *output : std::as_const(removed)) {
         m_outputs.removeOne(output);
         if (auto placeholderOutput = qobject_cast<X11PlaceholderOutput *>(output)) {
             placeholderOutput->updateEnabled(false);

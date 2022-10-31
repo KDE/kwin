@@ -119,7 +119,7 @@ void Dnd::x11OffersChanged(const QStringList &added, const QStringList &removed)
 
 bool Dnd::handleClientMessage(xcb_client_message_event_t *event)
 {
-    for (Drag *drag : qAsConst(m_oldDrags)) {
+    for (Drag *drag : std::as_const(m_oldDrags)) {
         if (drag->handleClientMessage(event)) {
             return true;
         }

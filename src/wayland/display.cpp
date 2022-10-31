@@ -165,7 +165,7 @@ QList<OutputDeviceV2Interface *> Display::outputDevices() const
 QVector<OutputInterface *> Display::outputsIntersecting(const QRect &rect) const
 {
     QVector<OutputInterface *> outputs;
-    for (auto *output : qAsConst(d->outputs)) {
+    for (auto *output : std::as_const(d->outputs)) {
         if (output->handle()->geometry().intersects(rect)) {
             outputs << output;
         }
@@ -274,7 +274,7 @@ ClientBuffer *Display::clientBufferForResource(wl_resource *resource) const
         return buffer;
     }
 
-    for (ClientBufferIntegration *integration : qAsConst(d->bufferIntegrations)) {
+    for (ClientBufferIntegration *integration : std::as_const(d->bufferIntegrations)) {
         ClientBuffer *buffer = integration->createBuffer(resource);
         if (buffer) {
             d->registerClientBuffer(buffer);

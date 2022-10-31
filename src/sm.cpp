@@ -292,7 +292,7 @@ SessionInfo *SessionManager::takeSessionInfo(X11Window *c)
     // First search ``session''
     if (!sessionId.isEmpty()) {
         // look for a real session managed client (algorithm suggested by ICCCM)
-        for (SessionInfo *info : qAsConst(session)) {
+        for (SessionInfo *info : std::as_const(session)) {
             if (realInfo) {
                 break;
             }
@@ -314,7 +314,7 @@ SessionInfo *SessionManager::takeSessionInfo(X11Window *c)
         }
     } else {
         // look for a sessioninfo with matching features.
-        for (SessionInfo *info : qAsConst(session)) {
+        for (SessionInfo *info : std::as_const(session)) {
             if (realInfo) {
                 break;
             }

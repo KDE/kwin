@@ -36,7 +36,7 @@ void LinuxDmaBufV1ClientBufferIntegrationPrivate::zwp_linux_dmabuf_v1_bind_resou
         for (auto it = supportedModifiers.constBegin(); it != supportedModifiers.constEnd(); ++it) {
             const uint32_t &format = it.key();
             const auto &modifiers = it.value();
-            for (const uint64_t &modifier : qAsConst(modifiers)) {
+            for (const uint64_t &modifier : std::as_const(modifiers)) {
                 if (resource->version() >= ZWP_LINUX_DMABUF_V1_MODIFIER_SINCE_VERSION) {
                     const uint32_t modifier_lo = modifier & 0xffffffff;
                     const uint32_t modifier_hi = modifier >> 32;
@@ -448,7 +448,7 @@ void LinuxDmaBufV1FeedbackPrivate::send(Resource *resource)
         QByteArray indices;
         for (auto it = tranche.formatTable.begin(); it != tranche.formatTable.end(); it++) {
             const uint32_t format = it.key();
-            for (const auto &mod : qAsConst(it.value())) {
+            for (const auto &mod : std::as_const(it.value())) {
                 uint16_t index = m_bufferintegration->table->indices[std::pair<uint32_t, uint64_t>(format, mod)];
                 indices.append(reinterpret_cast<const char *>(&index), 2);
             }
@@ -458,13 +458,13 @@ void LinuxDmaBufV1FeedbackPrivate::send(Resource *resource)
         send_tranche_flags(resource->handle, static_cast<uint32_t>(tranche.flags));
         send_tranche_done(resource->handle);
     };
-    for (const auto &tranche : qAsConst(m_tranches)) {
+    for (const auto &tranche : std::as_const(m_tranches)) {
         sendTranche(tranche);
     }
     // send default hints as the last fallback tranche
     const auto defaultFeedbackPrivate = get(m_bufferintegration->defaultFeedback.get());
     if (this != defaultFeedbackPrivate) {
-        for (const auto &tranche : qAsConst(defaultFeedbackPrivate->m_tranches)) {
+        for (const auto &tranche : std::as_const(defaultFeedbackPrivate->m_tranches)) {
             sendTranche(tranche);
         }
     }

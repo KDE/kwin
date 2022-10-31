@@ -987,7 +987,7 @@ void RuleBook::save()
         return;
     }
     QVector<Rules *> filteredRules;
-    for (const auto &rule : qAsConst(m_rules)) {
+    for (const auto &rule : std::as_const(m_rules)) {
         if (!rule->isTemporary()) {
             filteredRules.append(rule);
         }

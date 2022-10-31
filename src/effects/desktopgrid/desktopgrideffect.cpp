@@ -99,11 +99,11 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
     setLayout(DesktopGridConfig::layoutMode());
     setAnimationDuration(animationTime(300));
 
-    for (const ElectricBorder &border : qAsConst(m_borderActivate)) {
+    for (const ElectricBorder &border : std::as_const(m_borderActivate)) {
         effects->unreserveElectricBorder(border, this);
     }
 
-    for (const ElectricBorder &border : qAsConst(m_touchBorderActivate)) {
+    for (const ElectricBorder &border : std::as_const(m_touchBorderActivate)) {
         effects->unregisterTouchBorder(border, m_toggleAction);
     }
 

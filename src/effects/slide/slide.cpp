@@ -176,7 +176,7 @@ bool SlideEffect::willBePainted(const EffectWindow *w) const
     if (w == m_movingWindow) {
         return true;
     }
-    for (const int &id : qAsConst(m_paintCtx.visibleDesktops)) {
+    for (const int &id : std::as_const(m_paintCtx.visibleDesktops)) {
         if (w->isOnDesktop(id)) {
             return true;
         }
@@ -217,7 +217,7 @@ void SlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
 
     const auto screens = effects->screens();
 
-    for (int desktop : qAsConst(m_paintCtx.visibleDesktops)) {
+    for (int desktop : std::as_const(m_paintCtx.visibleDesktops)) {
         if (!w->isOnDesktop(desktop)) {
             continue;
         }
@@ -342,7 +342,7 @@ void SlideEffect::finishedSwitching()
         w->setData(WindowForceBlurRole, QVariant());
     }
 
-    for (EffectWindow *w : qAsConst(m_elevatedWindows)) {
+    for (EffectWindow *w : std::as_const(m_elevatedWindows)) {
         effects->setElevatedWindow(w, false);
     }
     m_elevatedWindows.clear();

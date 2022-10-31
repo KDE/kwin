@@ -755,12 +755,12 @@ void TabBox::reconfigure()
     QList<ElectricBorder> *borders = &m_borderActivate;
     QString borderConfig = QStringLiteral("BorderActivate");
     for (int i = 0; i < 2; ++i) {
-        for (ElectricBorder border : qAsConst(*borders)) {
+        for (ElectricBorder border : std::as_const(*borders)) {
             workspace()->screenEdges()->unreserve(border, this);
         }
         borders->clear();
         QStringList list = config.readEntry(borderConfig, QStringList());
-        for (const QString &s : qAsConst(list)) {
+        for (const QString &s : std::as_const(list)) {
             bool ok;
             const int i = s.toInt(&ok);
             if (!ok) {

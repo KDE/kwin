@@ -95,7 +95,7 @@ bool XwaylandLauncher::startInternal()
 
     QVector<int> fdsToClose;
     auto cleanup = qScopeGuard([&fdsToClose] {
-        for (const int fd : qAsConst(fdsToClose)) {
+        for (const int fd : std::as_const(fdsToClose)) {
             close(fd);
         }
     });
@@ -146,7 +146,7 @@ bool XwaylandLauncher::startInternal()
             arguments << QStringLiteral("-auth") << m_xAuthority;
         }
 
-        for (int socket : qAsConst(m_listenFds)) {
+        for (int socket : std::as_const(m_listenFds)) {
             int dupSocket = dup(socket);
             fdsToClose << dupSocket;
 #if HAVE_XWAYLAND_LISTENFD

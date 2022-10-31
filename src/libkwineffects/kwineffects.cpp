@@ -937,7 +937,7 @@ WindowQuadList WindowQuadList::makeGrid(int maxQuadSize) const
     double top = first().top();
     double bottom = first().bottom();
 
-    for (const WindowQuad &quad : qAsConst(*this)) {
+    for (const WindowQuad &quad : std::as_const(*this)) {
         left = qMin(left, quad.left());
         right = qMax(right, quad.right());
         top = qMin(top, quad.top());
@@ -946,7 +946,7 @@ WindowQuadList WindowQuadList::makeGrid(int maxQuadSize) const
 
     WindowQuadList ret;
 
-    for (const WindowQuad &quad : qAsConst(*this)) {
+    for (const WindowQuad &quad : std::as_const(*this)) {
         const double quadLeft = quad.left();
         const double quadRight = quad.right();
         const double quadTop = quad.top();

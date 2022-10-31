@@ -306,7 +306,7 @@ void XdgSurfaceWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mod
         }
     } else {
         // If the window is moved, cancel any queued window position updates.
-        for (XdgSurfaceConfigure *configureEvent : qAsConst(m_configureEvents)) {
+        for (XdgSurfaceConfigure *configureEvent : std::as_const(m_configureEvents)) {
             configureEvent->flags.setFlag(XdgSurfaceConfigure::ConfigurePosition, false);
         }
         m_configureFlags.setFlag(XdgSurfaceConfigure::ConfigurePosition, false);

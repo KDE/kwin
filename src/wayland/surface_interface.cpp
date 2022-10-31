@@ -396,10 +396,10 @@ void SurfaceInterface::frameRendered(quint32 msec)
         wl_resource_destroy(resource);
     }
 
-    for (SubSurfaceInterface *subsurface : qAsConst(d->current.below)) {
+    for (SubSurfaceInterface *subsurface : std::as_const(d->current.below)) {
         subsurface->surface()->frameRendered(msec);
     }
-    for (SubSurfaceInterface *subsurface : qAsConst(d->current.above)) {
+    for (SubSurfaceInterface *subsurface : std::as_const(d->current.above)) {
         subsurface->surface()->frameRendered(msec);
     }
 }
@@ -686,11 +686,11 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         Q_EMIT q->childSubSurfacesChanged();
     }
     // The position of a sub-surface is applied when its parent is committed.
-    for (SubSurfaceInterface *subsurface : qAsConst(current.below)) {
+    for (SubSurfaceInterface *subsurface : std::as_const(current.below)) {
         auto subsurfacePrivate = SubSurfaceInterfacePrivate::get(subsurface);
         subsurfacePrivate->parentCommit();
     }
-    for (SubSurfaceInterface *subsurface : qAsConst(current.above)) {
+    for (SubSurfaceInterface *subsurface : std::as_const(current.above)) {
         auto subsurfacePrivate = SubSurfaceInterfacePrivate::get(subsurface);
         subsurfacePrivate->parentCommit();
     }
@@ -752,11 +752,11 @@ void SurfaceInterfacePrivate::updateEffectiveMapped()
         Q_EMIT q->unmapped();
     }
 
-    for (SubSurfaceInterface *subsurface : qAsConst(current.below)) {
+    for (SubSurfaceInterface *subsurface : std::as_const(current.below)) {
         auto surfacePrivate = SurfaceInterfacePrivate::get(subsurface->surface());
         surfacePrivate->updateEffectiveMapped();
     }
-    for (SubSurfaceInterface *subsurface : qAsConst(current.above)) {
+    for (SubSurfaceInterface *subsurface : std::as_const(current.above)) {
         auto surfacePrivate = SurfaceInterfacePrivate::get(subsurface->surface());
         surfacePrivate->updateEffectiveMapped();
     }
@@ -851,11 +851,11 @@ QRectF SurfaceInterface::boundingRect() const
 {
     QRectF rect(QPoint(0, 0), size());
 
-    for (const SubSurfaceInterface *subSurface : qAsConst(d->current.below)) {
+    for (const SubSurfaceInterface *subSurface : std::as_const(d->current.below)) {
         const SurfaceInterface *childSurface = subSurface->surface();
         rect |= childSurface->boundingRect().translated(subSurface->position());
     }
-    for (const SubSurfaceInterface *subSurface : qAsConst(d->current.above)) {
+    for (const SubSurfaceInterface *subSurface : std::as_const(d->current.above)) {
         const SurfaceInterface *childSurface = subSurface->surface();
         rect |= childSurface->boundingRect().translated(subSurface->position());
     }
@@ -936,10 +936,10 @@ void SurfaceInterface::setOutputs(const QVector<OutputInterface *> &outputs)
     }
 
     d->outputs = outputs;
-    for (auto child : qAsConst(d->current.below)) {
+    for (auto child : std::as_const(d->current.below)) {
         child->surface()->setOutputs(outputs);
     }
-    for (auto child : qAsConst(d->current.above)) {
+    for (auto child : std::as_const(d->current.above)) {
         child->surface()->setOutputs(outputs);
     }
 }

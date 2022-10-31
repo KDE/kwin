@@ -72,7 +72,7 @@ EGLConfig configFromFormat(EGLDisplay display, const QSurfaceFormat &surfaceForm
         return EGL_NO_CONFIG_KHR;
     }
 
-    for (const EGLConfig &config : qAsConst(configs)) {
+    for (const EGLConfig &config : std::as_const(configs)) {
         EGLint redConfig, greenConfig, blueConfig, alphaConfig;
         eglGetConfigAttrib(display, config, EGL_RED_SIZE, &redConfig);
         eglGetConfigAttrib(display, config, EGL_GREEN_SIZE, &greenConfig);

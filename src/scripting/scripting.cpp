@@ -341,7 +341,7 @@ void KWin::Script::callDBus(const QString &service, const QString &path, const Q
 
     QVariantList dbusArguments;
     dbusArguments.reserve(jsArguments.count());
-    for (const QJSValue &jsArgument : qAsConst(jsArguments)) {
+    for (const QJSValue &jsArgument : std::as_const(jsArguments)) {
         dbusArguments << jsArgument.toVariant();
     }
 
@@ -471,7 +471,7 @@ QList<QAction *> KWin::Script::actionsForUserActionMenu(KWin::Window *client, QM
     QList<QAction *> actions;
     actions.reserve(m_userActionsMenuCallbacks.count());
 
-    for (QJSValue callback : qAsConst(m_userActionsMenuCallbacks)) {
+    for (QJSValue callback : std::as_const(m_userActionsMenuCallbacks)) {
         const QJSValue result = callback.call({m_engine->toScriptValue(client)});
         if (result.isError()) {
             continue;
@@ -812,7 +812,7 @@ bool KWin::Scripting::isScriptLoaded(const QString &pluginName) const
 KWin::AbstractScript *KWin::Scripting::findScript(const QString &pluginName) const
 {
     QMutexLocker locker(m_scriptsLock.get());
-    for (AbstractScript *script : qAsConst(scripts)) {
+    for (AbstractScript *script : std::as_const(scripts)) {
         if (script->pluginName() == pluginName) {
             return script;
         }
@@ -823,7 +823,7 @@ KWin::AbstractScript *KWin::Scripting::findScript(const QString &pluginName) con
 bool KWin::Scripting::unloadScript(const QString &pluginName)
 {
     QMutexLocker locker(m_scriptsLock.get());
-    for (AbstractScript *script : qAsConst(scripts)) {
+    for (AbstractScript *script : std::as_const(scripts)) {
         if (script->pluginName() == pluginName) {
             script->deleteLater();
             return true;
@@ -881,7 +881,7 @@ KWin::Scripting::~Scripting()
 QList<QAction *> KWin::Scripting::actionsForUserActionMenu(KWin::Window *c, QMenu *parent)
 {
     QList<QAction *> actions;
-    for (AbstractScript *s : qAsConst(scripts)) {
+    for (AbstractScript *s : std::as_const(scripts)) {
         // TODO: Allow declarative scripts to add their own user actions.
         if (Script *script = qobject_cast<Script *>(s)) {
             actions << script->actionsForUserActionMenu(c, parent);

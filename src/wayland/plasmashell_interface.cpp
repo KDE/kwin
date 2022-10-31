@@ -317,7 +317,7 @@ PlasmaShellSurfaceInterface *PlasmaShellSurfaceInterface::get(wl_resource *nativ
 
 PlasmaShellSurfaceInterface *PlasmaShellSurfaceInterface::get(SurfaceInterface *surface)
 {
-    for (PlasmaShellSurfaceInterface *shellSurface : qAsConst(s_shellSurfaces)) {
+    for (PlasmaShellSurfaceInterface *shellSurface : std::as_const(s_shellSurfaces)) {
         if (shellSurface->surface() == surface) {
             return shellSurface;
         }

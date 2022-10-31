@@ -201,7 +201,7 @@ void Activities::reallyStop(const QString &id)
 
     QStringList saveAndClose;
     QStringList saveOnly;
-    for (const QByteArray &sessionId : qAsConst(saveSessionIds)) {
+    for (const QByteArray &sessionId : std::as_const(saveSessionIds)) {
         if (dontCloseSessionIds.contains(sessionId)) {
             saveOnly << sessionId;
         } else {

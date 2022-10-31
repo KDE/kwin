@@ -64,7 +64,7 @@ bool DrmObject::initProps()
 
 bool DrmObject::atomicPopulate(drmModeAtomicReq *req) const
 {
-    for (const auto &property : qAsConst(m_props)) {
+    for (const auto &property : std::as_const(m_props)) {
         if (property && !property->isImmutable() && !property->isLegacy() && property->needsCommit()) {
             if (drmModeAtomicAddProperty(req, m_id, property->propId(), property->pending()) <= 0) {
                 qCWarning(KWIN_DRM) << "Adding property" << property->name() << "->" << property->pending()
@@ -78,7 +78,7 @@ bool DrmObject::atomicPopulate(drmModeAtomicReq *req) const
 
 void DrmObject::commit()
 {
-    for (const auto &prop : qAsConst(m_props)) {
+    for (const auto &prop : std::as_const(m_props)) {
         if (prop) {
             prop->commit();
         }
@@ -87,7 +87,7 @@ void DrmObject::commit()
 
 void DrmObject::commitPending()
 {
-    for (const auto &prop : qAsConst(m_props)) {
+    for (const auto &prop : std::as_const(m_props)) {
         if (prop) {
             prop->commitPending();
         }
@@ -96,7 +96,7 @@ void DrmObject::commitPending()
 
 void DrmObject::rollbackPending()
 {
-    for (const auto &prop : qAsConst(m_props)) {
+    for (const auto &prop : std::as_const(m_props)) {
         if (prop) {
             prop->rollbackPending();
         }
@@ -105,7 +105,7 @@ void DrmObject::rollbackPending()
 
 bool DrmObject::needsCommit() const
 {
-    for (const auto &prop : qAsConst(m_props)) {
+    for (const auto &prop : std::as_const(m_props)) {
         if (prop && prop->needsCommit()) {
             return true;
         }

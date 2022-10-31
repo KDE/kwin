@@ -272,7 +272,7 @@ bool Compositor::setupStart()
         }
     }
 
-    for (auto type : qAsConst(candidateCompositors)) {
+    for (auto type : std::as_const(candidateCompositors)) {
         bool stop = false;
         switch (type) {
         case OpenGLCompositing:
@@ -581,7 +581,7 @@ void Compositor::deleteUnusedSupportProperties()
         return;
     }
     if (auto *con = kwinApp()->x11Connection()) {
-        for (const xcb_atom_t &atom : qAsConst(m_unusedSupportProperties)) {
+        for (const xcb_atom_t &atom : std::as_const(m_unusedSupportProperties)) {
             // remove property from root window
             xcb_delete_property(con, kwinApp()->x11RootWindow(), atom);
         }
@@ -887,7 +887,7 @@ void X11Compositor::composite(RenderLoop *renderLoop)
 
     // Reset the damage state of each window and fetch the damage region
     // without waiting for a reply
-    for (Window *window : qAsConst(windows)) {
+    for (Window *window : std::as_const(windows)) {
         SurfaceItemX11 *surfaceItem = static_cast<SurfaceItemX11 *>(window->surfaceItem());
         if (surfaceItem->fetchDamage()) {
             dirtyItems.append(surfaceItem);
@@ -902,7 +902,7 @@ void X11Compositor::composite(RenderLoop *renderLoop)
     }
 
     // Get the replies
-    for (SurfaceItemX11 *item : qAsConst(dirtyItems)) {
+    for (SurfaceItemX11 *item : std::as_const(dirtyItems)) {
         item->waitForDamage();
     }
 

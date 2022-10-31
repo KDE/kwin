@@ -207,7 +207,7 @@ bool DrmGpu::updateOutputs()
     // In principle these things are supposed to be detected through the wayland protocol.
     // In practice SteamVR doesn't always behave correctly
     DrmUniquePtr<drmModeLesseeListRes> lessees{drmModeListLessees(m_fd)};
-    for (const auto &output : qAsConst(m_drmOutputs)) {
+    for (const auto &output : std::as_const(m_drmOutputs)) {
         if (output->lease()) {
             bool leaseActive = false;
             for (uint i = 0; i < lessees->count; i++) {
@@ -273,16 +273,16 @@ bool DrmGpu::updateOutputs()
     }
 
     // update crtc properties
-    for (const auto &crtc : qAsConst(m_crtcs)) {
+    for (const auto &crtc : std::as_const(m_crtcs)) {
         crtc->updateProperties();
     }
     // update plane properties
-    for (const auto &plane : qAsConst(m_planes)) {
+    for (const auto &plane : std::as_const(m_planes)) {
         plane->updateProperties();
     }
     DrmPipeline::Error err = testPendingConfiguration();
     if (err == DrmPipeline::Error::None) {
-        for (const auto &pipeline : qAsConst(m_pipelines)) {
+        for (const auto &pipeline : std::as_const(m_pipelines)) {
             pipeline->applyPendingChanges();
             if (pipeline->output() && !pipeline->crtc()) {
                 pipeline->setEnable(false);
@@ -290,10 +290,10 @@ bool DrmGpu::updateOutputs()
             }
         }
     } else if (err == DrmPipeline::Error::NoPermission) {
-        for (const auto &pipeline : qAsConst(m_pipelines)) {
+        for (const auto &pipeline : std::as_const(m_pipelines)) {
             pipeline->revertPendingChanges();
         }
-        for (const auto &output : qAsConst(addedOutputs)) {
+        for (const auto &output : std::as_const(addedOutputs)) {
             removeOutput(output);
             const auto it = std::find_if(m_connectors.begin(), m_connectors.end(), [output](const auto &conn) {
                 return conn.get() == output->connector();
@@ -305,10 +305,10 @@ bool DrmGpu::updateOutputs()
         QTimer::singleShot(50, m_platform, &DrmBackend::updateOutputs);
     } else {
         qCWarning(KWIN_DRM, "Failed to find a working setup for new outputs!");
-        for (const auto &pipeline : qAsConst(m_pipelines)) {
+        for (const auto &pipeline : std::as_const(m_pipelines)) {
             pipeline->revertPendingChanges();
         }
-        for (const auto &output : qAsConst(addedOutputs)) {
+        for (const auto &output : std::as_const(addedOutputs)) {
             output->updateEnabled(false);
             output->pipeline()->setEnable(false);
             output->pipeline()->applyPendingChanges();
@@ -339,7 +339,7 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connector
             return DrmPipeline::Error::None;
         }
         // remaining connectors can't be powered
-        for (const auto &conn : qAsConst(connectors)) {
+        for (const auto &conn : std::as_const(connectors)) {
             qCWarning(KWIN_DRM) << "disabling connector" << conn->modelName() << "without a crtc";
             conn->pipeline()->setCrtc(nullptr);
         }
@@ -372,7 +372,7 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QVector<DrmConnector *> connector
             } while (pipeline->pruneModifier());
         }
     }
-    for (const auto &crtc : qAsConst(crtcs)) {
+    for (const auto &crtc : std::as_const(crtcs)) {
         if (connector->isCrtcSupported(crtc) && crtc != currentCrtc) {
             auto crtcsLeft = crtcs;
             crtcsLeft.removeOne(crtc);
@@ -421,7 +421,7 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
     } else {
         // try again without hw rotation
         bool hwRotationUsed = false;
-        for (const auto &pipeline : qAsConst(m_pipelines)) {
+        for (const auto &pipeline : std::as_const(m_pipelines)) {
             hwRotationUsed |= (pipeline->bufferOrientation() != DrmPlane::Transformations(DrmPlane::Transformation::Rotate0));
             pipeline->setBufferOrientation(DrmPlane::Transformation::Rotate0);
         }
@@ -442,11 +442,11 @@ DrmPipeline::Error DrmGpu::testPipelines()
     if (!inactivePipelines.isEmpty() && test == DrmPipeline::Error::None) {
         // ensure that pipelines that are set as enabled but currently inactive
         // still work when they need to be set active again
-        for (const auto pipeline : qAsConst(inactivePipelines)) {
+        for (const auto pipeline : std::as_const(inactivePipelines)) {
             pipeline->setActive(true);
         }
         test = DrmPipeline::commitPipelines(m_pipelines, DrmPipeline::CommitMode::TestAllowModeset, unusedObjects());
-        for (const auto pipeline : qAsConst(inactivePipelines)) {
+        for (const auto pipeline : std::as_const(inactivePipelines)) {
             pipeline->setActive(false);
         }
     }
@@ -601,13 +601,13 @@ std::unique_ptr<DrmLease> DrmGpu::leaseOutputs(const QVector<DrmOutput *> &outpu
     if (!fd.isValid()) {
         qCWarning(KWIN_DRM) << "Could not create DRM lease!" << strerror(errno);
         qCWarning(KWIN_DRM, "Tried to lease the following %d resources:", objects.count());
-        for (const auto &res : qAsConst(objects)) {
+        for (const auto &res : std::as_const(objects)) {
             qCWarning(KWIN_DRM) << res;
         }
         return nullptr;
     } else {
         qCDebug(KWIN_DRM, "Created lease for %d resources:", objects.count());
-        for (const auto &res : qAsConst(objects)) {
+        for (const auto &res : std::as_const(objects)) {
             qCDebug(KWIN_DRM) << res;
         }
         return std::make_unique<DrmLease>(this, std::move(fd), lesseeId, outputs);
@@ -689,7 +689,7 @@ bool DrmGpu::needsModeset() const
 bool DrmGpu::maybeModeset()
 {
     auto pipelines = m_pipelines;
-    for (const auto &output : qAsConst(m_drmOutputs)) {
+    for (const auto &output : std::as_const(m_drmOutputs)) {
         if (output->lease()) {
             pipelines.removeOne(output->pipeline());
         }
@@ -704,7 +704,7 @@ bool DrmGpu::maybeModeset()
     // make sure there's no pending pageflips
     waitIdle();
     const DrmPipeline::Error err = DrmPipeline::commitPipelines(pipelines, DrmPipeline::CommitMode::CommitModeset, unusedObjects());
-    for (DrmPipeline *pipeline : qAsConst(pipelines)) {
+    for (DrmPipeline *pipeline : std::as_const(pipelines)) {
         if (pipeline->modesetPresentPending()) {
             pipeline->resetModesetPresentPending();
             if (err != DrmPipeline::Error::None) {
@@ -746,31 +746,31 @@ QSize DrmGpu::cursorSize() const
 
 void DrmGpu::releaseBuffers()
 {
-    for (const auto &plane : qAsConst(m_planes)) {
+    for (const auto &plane : std::as_const(m_planes)) {
         plane->releaseBuffers();
     }
-    for (const auto &crtc : qAsConst(m_crtcs)) {
+    for (const auto &crtc : std::as_const(m_crtcs)) {
         crtc->releaseBuffers();
     }
-    for (const auto &pipeline : qAsConst(m_pipelines)) {
+    for (const auto &pipeline : std::as_const(m_pipelines)) {
         pipeline->primaryLayer()->releaseBuffers();
         pipeline->cursorLayer()->releaseBuffers();
     }
-    for (const auto &output : qAsConst(m_virtualOutputs)) {
+    for (const auto &output : std::as_const(m_virtualOutputs)) {
         output->outputLayer()->releaseBuffers();
     }
 }
 
 void DrmGpu::recreateSurfaces()
 {
-    for (const auto &pipeline : qAsConst(m_pipelines)) {
+    for (const auto &pipeline : std::as_const(m_pipelines)) {
         pipeline->setLayers(m_platform->renderBackend()->createPrimaryLayer(pipeline), m_platform->renderBackend()->createCursorLayer(pipeline));
         pipeline->applyPendingChanges();
     }
-    for (const auto &output : qAsConst(m_virtualOutputs)) {
+    for (const auto &output : std::as_const(m_virtualOutputs)) {
         output->recreateSurface();
     }
-    for (const auto &output : qAsConst(m_drmOutputs)) {
+    for (const auto &output : std::as_const(m_drmOutputs)) {
         output->updateCursor();
     }
 }

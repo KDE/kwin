@@ -99,7 +99,7 @@ void Deleted::copyToDeleted(Window *window)
     m_minimized = window->isMinimized();
     m_modal = window->isModal();
     m_mainWindows = window->mainWindows();
-    for (Window *w : qAsConst(m_mainWindows)) {
+    for (Window *w : std::as_const(m_mainWindows)) {
         connect(w, &Window::windowClosed, this, &Deleted::mainWindowClosed);
     }
     m_fullscreen = window->isFullScreen();
@@ -107,7 +107,7 @@ void Deleted::copyToDeleted(Window *window)
     m_keepBelow = window->keepBelow();
     m_caption = window->caption();
 
-    for (auto vd : qAsConst(m_desktops)) {
+    for (auto vd : std::as_const(m_desktops)) {
         connect(vd, &QObject::destroyed, this, [=, this] {
             m_desktops.removeOne(vd);
         });

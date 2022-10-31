@@ -278,7 +278,7 @@ EffectsHandlerImpl::~EffectsHandlerImpl()
 
 void EffectsHandlerImpl::unloadAllEffects()
 {
-    for (const EffectPair &pair : qAsConst(loaded_effects)) {
+    for (const EffectPair &pair : std::as_const(loaded_effects)) {
         destroyEffect(pair.second);
     }
 
@@ -1328,7 +1328,7 @@ bool EffectsHandlerImpl::checkInputWindowEvent(QMouseEvent *e)
     if (m_grabbedMouseEffects.isEmpty()) {
         return false;
     }
-    for (Effect *effect : qAsConst(m_grabbedMouseEffects)) {
+    for (Effect *effect : std::as_const(m_grabbedMouseEffects)) {
         effect->windowInputMouseEvent(e);
     }
     return true;
@@ -1339,7 +1339,7 @@ bool EffectsHandlerImpl::checkInputWindowEvent(QWheelEvent *e)
     if (m_grabbedMouseEffects.isEmpty()) {
         return false;
     }
-    for (Effect *effect : qAsConst(m_grabbedMouseEffects)) {
+    for (Effect *effect : std::as_const(m_grabbedMouseEffects)) {
         effect->windowInputMouseEvent(e);
     }
     return true;
@@ -1783,7 +1783,7 @@ EffectScreen *EffectsHandlerImpl::screenAt(const QPoint &point) const
 
 EffectScreen *EffectsHandlerImpl::findScreen(const QString &name) const
 {
-    for (EffectScreen *screen : qAsConst(m_effectScreens)) {
+    for (EffectScreen *screen : std::as_const(m_effectScreens)) {
         if (screen->name() == name) {
             return screen;
         }

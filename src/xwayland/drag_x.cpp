@@ -159,7 +159,7 @@ DragEventReply XToWlDrag::moveFilter(Window *target, const QPoint &pos)
 
 bool XToWlDrag::handleClientMessage(xcb_client_message_event_t *event)
 {
-    for (auto *visit : qAsConst(m_oldVisits)) {
+    for (auto *visit : std::as_const(m_oldVisits)) {
         if (visit->handleClientMessage(event)) {
             return true;
         }

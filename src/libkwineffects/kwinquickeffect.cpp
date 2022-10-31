@@ -203,7 +203,7 @@ QHash<EffectScreen *, QuickSceneView *> QuickSceneEffect::views() const
 
 QuickSceneView *QuickSceneEffect::viewAt(const QPoint &pos) const
 {
-    for (QuickSceneView *screenView : qAsConst(d->views)) {
+    for (QuickSceneView *screenView : std::as_const(d->views)) {
         if (screenView->geometry().contains(pos)) {
             return screenView;
         }
@@ -306,7 +306,7 @@ void QuickSceneEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
             screenView->resetDirty();
         }
     } else {
-        for (QuickSceneView *screenView : qAsConst(d->views)) {
+        for (QuickSceneView *screenView : std::as_const(d->views)) {
             if (screenView->isDirty()) {
                 screenView->update();
                 screenView->resetDirty();
@@ -323,7 +323,7 @@ void QuickSceneEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
             effects->renderOffscreenQuickView(screenView);
         }
     } else {
-        for (QuickSceneView *screenView : qAsConst(d->views)) {
+        for (QuickSceneView *screenView : std::as_const(d->views)) {
             effects->renderOffscreenQuickView(screenView);
         }
     }
@@ -495,7 +495,7 @@ void QuickSceneEffect::grabbedKeyboardEvent(QKeyEvent *keyEvent)
 
 bool QuickSceneEffect::touchDown(qint32 id, const QPointF &pos, quint32 time)
 {
-    for (QuickSceneView *screenView : qAsConst(d->views)) {
+    for (QuickSceneView *screenView : std::as_const(d->views)) {
         if (screenView->geometry().contains(pos.toPoint())) {
             activateView(screenView);
             return screenView->forwardTouchDown(id, pos, time);
@@ -506,7 +506,7 @@ bool QuickSceneEffect::touchDown(qint32 id, const QPointF &pos, quint32 time)
 
 bool QuickSceneEffect::touchMotion(qint32 id, const QPointF &pos, quint32 time)
 {
-    for (QuickSceneView *screenView : qAsConst(d->views)) {
+    for (QuickSceneView *screenView : std::as_const(d->views)) {
         if (screenView->geometry().contains(pos.toPoint())) {
             return screenView->forwardTouchMotion(id, pos, time);
         }
@@ -516,7 +516,7 @@ bool QuickSceneEffect::touchMotion(qint32 id, const QPointF &pos, quint32 time)
 
 bool QuickSceneEffect::touchUp(qint32 id, quint32 time)
 {
-    for (QuickSceneView *screenView : qAsConst(d->views)) {
+    for (QuickSceneView *screenView : std::as_const(d->views)) {
         if (screenView->forwardTouchUp(id, time)) {
             return true;
         }
