@@ -320,14 +320,14 @@ if (QT_MAJOR_VERSION EQUAL "5")
     find_package(Qt5EventDispatcherSupport REQUIRED)
 endif()
 
-find_package(Freetype REQUIRED)
+find_package(Freetype)
 set_package_properties(Freetype PROPERTIES
     DESCRIPTION "A font rendering engine"
     URL "https://www.freetype.org"
     TYPE REQUIRED
     PURPOSE "Needed for KWin's QPA plugin."
 )
-find_package(Fontconfig REQUIRED)
+find_package(Fontconfig)
 set_package_properties(Fontconfig PROPERTIES
     TYPE REQUIRED
     PURPOSE "Needed for KWin's QPA plugin."
@@ -409,7 +409,7 @@ if (KWIN_BUILD_NOTIFICATIONS)
 endif()
 
 if (KWIN_BUILD_SCREENLOCKER)
-    find_package(KScreenLocker CONFIG REQUIRED)
+    find_package(KScreenLocker CONFIG)
     set_package_properties(KScreenLocker PROPERTIES
         TYPE REQUIRED
         PURPOSE "For screenlocker integration in kwin_wayland"
