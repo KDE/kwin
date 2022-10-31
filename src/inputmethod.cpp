@@ -30,6 +30,7 @@
 #include "wayland/seat_interface.h"
 #include "wayland/surface_interface.h"
 #include "wayland/textinput_v3_interface.h"
+#include "xkb.h"
 
 #include <KLocalizedString>
 #include <KShell>

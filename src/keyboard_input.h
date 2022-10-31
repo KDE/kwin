@@ -10,7 +10,6 @@
 #define KWIN_KEYBOARD_INPUT_H
 
 #include "input.h"
-#include "xkb.h"
 
 #include <QObject>
 #include <QPointF>
@@ -37,6 +36,7 @@ class InputDevice;
 class InputRedirection;
 class KeyboardLayout;
 class ModifiersChangedSpy;
+class Xkb;
 
 class KWIN_EXPORT KeyboardInputRedirection : public QObject
 {
@@ -63,18 +63,9 @@ public:
      */
     void processKeymapChange(int fd, uint32_t size);
 
-    Xkb *xkb() const
-    {
-        return m_xkb.get();
-    }
-    Qt::KeyboardModifiers modifiers() const
-    {
-        return m_xkb->modifiers();
-    }
-    Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const
-    {
-        return m_xkb->modifiersRelevantForGlobalShortcuts();
-    }
+    Xkb *xkb() const;
+    Qt::KeyboardModifiers modifiers() const;
+    Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const;
 
 Q_SIGNALS:
     void ledsChanged(KWin::LEDs);

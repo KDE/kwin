@@ -10,6 +10,7 @@
 #include "input_event.h"
 #include "keyboard_input.h"
 #include "keyboard_layout_switching.h"
+#include "xkb.h"
 
 #include <KGlobalAccel>
 #include <KLocalizedString>

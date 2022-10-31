@@ -9,6 +9,7 @@
 
 #include "input_event.h"
 #include "keyboard_input.h"
+#include "xkb.h"
 
 #include <KKeyServer>
 

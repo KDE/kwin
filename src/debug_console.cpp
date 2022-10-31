@@ -31,6 +31,7 @@
 #include "waylandwindow.h"
 #include "workspace.h"
 #include "x11window.h"
+#include "xkb.h"
 #include <cerrno>
 #include <kwinglplatform.h>
 #include <kwinglutils.h>

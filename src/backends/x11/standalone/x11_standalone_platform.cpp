@@ -39,6 +39,7 @@
 #include "x11_standalone_output.h"
 #include "x11_standalone_overlaywindow.h"
 #include "x11_standalone_screenedges_filter.h"
+#include "xkb.h"
 
 #include "../common/kwinxrenderutils.h"
 

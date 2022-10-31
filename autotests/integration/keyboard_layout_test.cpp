@@ -15,6 +15,7 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
+#include "xkb.h"
 
 #include <KConfigGroup>
 #include <KGlobalAccel>

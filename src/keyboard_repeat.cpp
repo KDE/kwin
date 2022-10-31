@@ -12,6 +12,7 @@
 #include "wayland/keyboard_interface.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
+#include "xkb.h"
 
 #include <QTimer>
 

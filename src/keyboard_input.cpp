@@ -23,6 +23,7 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
+#include "xkb.h"
 // screenlocker
 #if KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
@@ -49,6 +50,21 @@ KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
 }
 
 KeyboardInputRedirection::~KeyboardInputRedirection() = default;
+
+Xkb *KeyboardInputRedirection::xkb() const
+{
+    return m_xkb.get();
+}
+
+Qt::KeyboardModifiers KeyboardInputRedirection::modifiers() const
+{
+    return m_xkb->modifiers();
+}
+
+Qt::KeyboardModifiers KeyboardInputRedirection::modifiersRelevantForGlobalShortcuts() const
+{
+    return m_xkb->modifiersRelevantForGlobalShortcuts();
+}
 
 class KeyStateChangedSpy : public InputEventSpy
 {

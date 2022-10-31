@@ -16,6 +16,7 @@
 #include "keyboard_input.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "xkb.h"
 
 #include <KConfigGroup>
 
