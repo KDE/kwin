@@ -388,8 +388,6 @@ set(KWIN_NAME "kwin")
 set(KWIN_INTERNAL_NAME_X11 "kwin_x11")
 set(KWIN_INTERNAL_NAME_WAYLAND "kwin_wayland")
 
-include_directories(${XKB_INCLUDE_DIR})
-
 set(HAVE_EPOXY_GLX ${epoxy_HAS_GLX})
 
 # for kwin internal things
