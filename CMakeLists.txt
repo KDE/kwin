@@ -11,13 +11,18 @@ set(KDE_COMPILERSETTINGS_LEVEL "5.82")
 
 find_package(ECM ${KF5_MIN_VERSION} REQUIRED NO_MODULE)
 
+# where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
+
+include(CMakeDependentOption)
+include(CMakePackageConfigHelpers)
 include(FeatureSummary)
 include(WriteBasicConfigVersionFile)
 include(GenerateExportHeader)
 include(CheckCXXCompilerFlag)
-
-# where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
+include(CheckIncludeFile)
+include(CheckIncludeFiles)
+include(CheckSymbolExists)
 
 include(KDEInstallDirs)
 include(KDECMakeSettings)
@@ -25,10 +30,12 @@ include(KDECompilerSettings NO_POLICY_SCOPE)
 include(KDEClangFormat)
 include(KDEGitCommitHooks)
 
+include(ECMFindQmlModule)
 include(ECMInstallIcons)
 include(ECMOptionalAddSubdirectory)
 include(ECMConfiguredInstall)
 include(ECMQtDeclareLoggingCategory)
+include(ECMSetupQtPluginMacroNames)
 
 find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Concurrent
@@ -371,7 +378,6 @@ set_package_properties(QAccessibilityClient PROPERTIES
 )
 set(HAVE_ACCESSIBILITY ${QAccessibilityClient_FOUND})
 
-include(ECMFindQmlModule)
 ecm_find_qmlmodule(QtQuick 2.3)
 ecm_find_qmlmodule(QtQuick.Controls 2.15)
 ecm_find_qmlmodule(QtQuick.Layouts 1.3)
@@ -382,8 +388,6 @@ ecm_find_qmlmodule(org.kde.plasma.core 2.0)
 ecm_find_qmlmodule(org.kde.plasma.components 2.0)
 
 ########### configure tests ###############
-include(CMakeDependentOption)
-
 option(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
 option(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
 option(KWIN_BUILD_NOTIFICATIONS "Enable building of KWin with knotifications support" ON)
@@ -403,10 +407,6 @@ set(HAVE_EPOXY_GLX ${epoxy_HAS_GLX})
 
 # for kwin internal things
 set(HAVE_X11_XCB ${X11_XCB_FOUND})
-
-include(CheckIncludeFile)
-include(CheckIncludeFiles)
-include(CheckSymbolExists)
 
 check_symbol_exists(SCHED_RESET_ON_FORK "sched.h" HAVE_SCHED_RESET_ON_FORK)
 add_feature_info("SCHED_RESET_ON_FORK"
@@ -451,7 +451,6 @@ if (KF5DocTools_FOUND)
     add_subdirectory(doc)
 endif()
 
-include(ECMSetupQtPluginMacroNames)
 ecm_setup_qtplugin_macro_names(
     JSON_ARG2
         "KWIN_EFFECT_FACTORY"
@@ -482,7 +481,6 @@ kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
-include(CMakePackageConfigHelpers)
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KWinDBusInterface")
 configure_package_config_file(KWinDBusInterfaceConfig.cmake.in
     "${CMAKE_CURRENT_BINARY_DIR}/KWinDBusInterfaceConfig.cmake"
