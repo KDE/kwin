@@ -14,4 +14,13 @@ InputDevice::InputDevice(QObject *parent)
 {
 }
 
+QString InputDevice::outputName() const
+{
+    return {};
+}
+
+void InputDevice::setOutputName(const QString &outputName)
+{
+}
+
 } // namespace KWin
