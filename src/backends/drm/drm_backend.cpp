@@ -243,7 +243,6 @@ void DrmBackend::handleUdevEvent()
         }
 
         if (device->action() == QStringLiteral("add")) {
-            qCDebug(KWIN_DRM) << "New gpu found:" << device->devNode();
             if (addGpu(device->devNode())) {
                 updateOutputs();
             }
@@ -296,6 +295,7 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
         return nullptr;
     }
 
+    qCDebug(KWIN_DRM, "adding GPU %s", qPrintable(fileName));
     m_gpus.push_back(std::make_unique<DrmGpu>(this, fileName, fd, buf.st_rdev));
     auto gpu = m_gpus.back().get();
     m_active = true;
