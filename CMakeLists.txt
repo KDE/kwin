@@ -134,7 +134,11 @@ set_package_properties(KF5Kirigami2 PROPERTIES
     TYPE RUNTIME
 )
 
-find_package(KDecoration2 ${PROJECT_VERSION} CONFIG REQUIRED)
+find_package(KDecoration2 ${PROJECT_VERSION} CONFIG)
+set_package_properties(KDecoration2 PROPERTIES
+    TYPE REQUIRED
+    PURPOSE "Required for server side decoration support"
+)
 
 find_package(Breeze 5.9.0 CONFIG)
 set_package_properties(Breeze PROPERTIES
