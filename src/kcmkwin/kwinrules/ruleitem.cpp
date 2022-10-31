@@ -38,7 +38,7 @@ RuleItem::~RuleItem()
 
 void RuleItem::reset()
 {
-    m_enabled = hasFlag(AlwaysEnabled) | hasFlag(StartEnabled);
+    m_enabled = hasFlag(AlwaysEnabled) || hasFlag(StartEnabled);
     m_value = typedValue(QVariant());
     m_suggestedValue = QVariant();
     m_policy->resetValue();
