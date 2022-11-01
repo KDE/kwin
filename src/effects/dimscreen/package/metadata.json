@@ -20,6 +20,7 @@
                 "Name[ta]": "மார்ட்டின் ஃபுலோசர், விலாட் ஜாஹொரிடுனி",
                 "Name[tr]": "Martin Flöser, Vlad Zahorodnii",
                 "Name[uk]": "Martin Flöser, Влад Завгородній",
+                "Name[vi]": "Martin Flöser, Vlad Zahorodnii",
                 "Name[x-test]": "xxMartin Flöser, Vlad Zahorodniixx"
             }
         ],
@@ -39,6 +40,7 @@
         "Description[ta]": "ரூட் உரிமையை கோரும்போது திரை முழுவதையும் இருளாக்கும்",
         "Description[tr]": "Kök ayrıcalıkları isterken tüm ekranın karartır",
         "Description[uk]": "Притлумлює кольори усього екрана, коли працюємо з доступом root",
+        "Description[vi]": "Làm tối toàn bộ màn hình khi yêu cầu đặc quyền gốc",
         "Description[x-test]": "xxDarkens the entire screen when requesting root privilegesxx",
         "EnabledByDefault": false,
         "Icon": "preferences-system-windows-effect-dimscreen",
@@ -60,6 +62,7 @@
         "Name[ta]": "ரூட் பயன்முறைக்கு திரையை இருளாக்கு",
         "Name[tr]": "Yönetici Kipi için Ekranı Karart",
         "Name[uk]": "Притлумлення кольорів у режимі адміністратора",
+        "Name[vi]": "Làm tối màn hình cho chế độ quản trị viên",
         "Name[x-test]": "xxDim Screen for Administrator Modexx",
         "Version": "1",
         "Website": ""

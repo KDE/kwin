@@ -20,6 +20,7 @@
                 "Name[ta]": "மார்ட்டின் கிராஸ்லின்",
                 "Name[tr]": "Martin Gräßlin",
                 "Name[uk]": "Martin Gräßlin",
+                "Name[vi]": "Martin Gräßlin",
                 "Name[x-test]": "xxMartin Gräßlinxx"
             }
         ],
@@ -39,6 +40,7 @@
         "Description[ta]": "சாளரம் முழுத்திரை முறையில் நுழைவதற்கும் அம்முறையிலிருந்து வெளியேறுவதற்குமான அசைவூட்டம்",
         "Description[tr]": "Tam ekran kipine giren ve çıkan pencere için canlandırma",
         "Description[uk]": "Анімація для вікон під час входу до повноекранного режиму і виходу з нього",
+        "Description[vi]": "Hiệu ứng động cho một cửa sổ đang đi vào và rời khỏi chế độ toàn màn hình",
         "Description[x-test]": "xxAnimation for a window going to and leaving full screen modexx",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-fullscreen",
@@ -60,6 +62,7 @@
         "Name[ta]": "முழுத்திரை",
         "Name[tr]": "Tam Ekran",
         "Name[uk]": "Повноекранний режим",
+        "Name[vi]": "Toàn màn hình",
         "Name[x-test]": "xxFull Screenxx",
         "Version": "1",
         "Website": ""

@@ -20,6 +20,7 @@
                 "Name[ta]": "மார்ட்டின் கிராஸ்லின்",
                 "Name[tr]": "Martin Gräßlin",
                 "Name[uk]": "Martin Gräßlin",
+                "Name[vi]": "Martin Gräßlin",
                 "Name[x-test]": "xxMartin Gräßlinxx"
             }
         ],
@@ -38,6 +39,7 @@
         "Description[ta]": "முழுத்திரை நிகழ்படத்தை பல திரைகளில் பரப்பி ஒரே திரையை போல் காட்டும்",
         "Description[tr]": "Tam ekran video oynatıcılarını tüm bağlı ekranlara genişleterek bir tür Video Duvarı oluşturur",
         "Description[uk]": "Розподіл зображення відеопрогравача у повноекранному режимі на всі екрани з метою створення відеостіни",
+        "Description[vi]": "Trải trình phát phim toàn màn hình ra tất cả các màn hình đang được gắn vào để tạo nên một màn hình ghép",
         "Description[x-test]": "xxSpans fullscreen video player over all attached screens to create a Video Wallxx",
         "Icon": "preferences-system-windows-script-test",
         "Id": "videowall",
@@ -58,6 +60,7 @@
         "Name[ta]": "நிகழ்பட சுவர்",
         "Name[tr]": "Video Duvarı",
         "Name[uk]": "Відеостіна",
+        "Name[vi]": "Màn hình ghép",
         "Name[x-test]": "xxVideo Wallxx",
         "Version": "1.0"
     },

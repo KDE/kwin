@@ -20,6 +20,7 @@
                 "Name[ta]": "டேவிட் எட்மண்டுஸன்",
                 "Name[tr]": "David Edmundson",
                 "Name[uk]": "David Edmundson",
+                "Name[vi]": "David Edmundson",
                 "Name[x-test]": "xxDavid Edmundsonxx"
             }
         ],
@@ -39,6 +40,7 @@
         "Description[ta]": "வெளியேறும்போது கடைசிவரை பணிமேடையின் பின்புல படத்தை வைத்திருக்கும்",
         "Description[tr]": "Çıkış sırasında en son aşamaya dek masaüstü arka planını göster",
         "Description[uk]": "Не вимикати тло стільниці до кінця процедури виходу із облікового запису",
+        "Description[vi]": "Giữ nền bàn làm việc hiện cho đến cuối quá trình đăng xuất",
         "Description[x-test]": "xxKeep the desktop background alive during logout until the endxx",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-logout",
@@ -60,6 +62,7 @@
         "Name[ta]": "அமர்வு வெளியேற்றம்",
         "Name[tr]": "Oturum Çıkışı",
         "Name[uk]": "Вихід з сеансу",
+        "Name[vi]": "Thoát phiên",
         "Name[x-test]": "xxSession Quitxx",
         "Version": "0.2.0"
     },

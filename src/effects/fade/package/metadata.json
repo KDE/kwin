@@ -20,6 +20,7 @@
                 "Name[ta]": "ஃபிலிப்பு ஃபால்குனர், மார்ட்டின் கிராஸ்லின்",
                 "Name[tr]": "Philip Falkner, Martin Gräßlin",
                 "Name[uk]": "Philip Falkner, Martin Gräßlin",
+                "Name[vi]": "Philip Falkner, Martin Gräßlin",
                 "Name[x-test]": "xxPhilip Falkner, Martin Gräßlinxx"
             }
         ],
@@ -39,6 +40,7 @@
         "Description[ta]": "சாளரங்களை காட்டும்போது அவற்றிற்கு படிப்படியாக ஒளிகூட்டி, மறைக்கும்போது அவற்றை மங்கசெய்து மறைக்கும்",
         "Description[tr]": "Pencereler gösterilirken veya gizlenirken pürüzsüzce geçiş yapmalarını sağlar",
         "Description[uk]": "Плавна поява або зникнення вікон",
+        "Description[vi]": "Làm cửa sổ hiện dần và mờ dần một cách êm dịu khi chúng hiện ra và biến mất",
         "Description[x-test]": "xxMake windows smoothly fade in and out when they are shown or hiddenxx",
         "EnabledByDefault": false,
         "Icon": "preferences-system-windows-effect-fade",
@@ -60,6 +62,7 @@
         "Name[ta]": "மங்கசெய்",
         "Name[tr]": "Soldur",
         "Name[uk]": "Згасання",
+        "Name[vi]": "Làm mờ dần",
         "Name[x-test]": "xxFadexx",
         "Version": "0.2.0"
     },

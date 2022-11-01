@@ -20,6 +20,7 @@
                 "Name[ta]": "தாமஸ் லுபுகிங்",
                 "Name[tr]": "Thomas Lübking",
                 "Name[uk]": "Thomas Lübking",
+                "Name[vi]": "Thomas Lübking",
                 "Name[x-test]": "xxThomas Lübkingxx"
             }
         ],
@@ -39,6 +40,7 @@
         "Description[ta]": "பணிமேடைக்குள் சாளரங்கள் உறிஞ்சப்படுவதுபோல் அசைவூட்டும்",
         "Description[tr]": "Pencereleri masaüstüne çek",
         "Description[uk]": "Засмоктування вікон до стільниці",
+        "Description[vi]": "Hút các cửa sổ vào bàn làm việc",
         "Description[x-test]": "xxSuck windows into the desktopxx",
         "EnabledByDefault": false,
         "Icon": "preferences-system-windows-effect-eyeonscreen",
@@ -60,6 +62,7 @@
         "Name[ta]": "திரையில் கண்",
         "Name[tr]": "Göz Ekranda",
         "Name[uk]": "Око на екрані",
+        "Name[vi]": "Theo dõi màn hình",
         "Name[x-test]": "xxEye on Screenxx",
         "Version": "0.1.0"
     },

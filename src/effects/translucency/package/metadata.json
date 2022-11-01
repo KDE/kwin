@@ -20,6 +20,7 @@
                 "Name[ta]": "லூபொசு லுனாக்கு, மார்ட்டின் கிராஸ்லின்",
                 "Name[tr]": "Luboš Luňák, Martin Gräßlin",
                 "Name[uk]": "Luboš Luňák, Martin Gräßlin",
+                "Name[vi]": "Luboš Luňák, Martin Gräßlin",
                 "Name[x-test]": "xxLuboš Luňák, Martin Gräßlinxx"
             }
         ],
@@ -39,6 +40,7 @@
         "Description[ta]": "சில சூழ்நிலைகளில் சாளரங்களின் ஒளிபுகுமையை கூட்டும்",
         "Description[tr]": "Değişik koşullar altında pencereleri yarısaydam yap",
         "Description[uk]": "Додавання прозорості до вікон за різних умов",
+        "Description[vi]": "Làm cửa sổ trong mờ trong các điều kiện khác nhau",
         "Description[x-test]": "xxMake windows translucent under different conditionsxx",
         "Icon": "preferences-system-windows-effect-translucency",
         "Id": "kwin4_effect_translucency",
@@ -59,6 +61,7 @@
         "Name[ta]": "ஒளிபுகுமை",
         "Name[tr]": "Yarısaydamlık",
         "Name[uk]": "Прозорість",
+        "Name[vi]": "Độ trong mờ",
         "Name[x-test]": "xxTranslucencyxx",
         "Version": "0.1.0"
     },

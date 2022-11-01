@@ -20,6 +20,7 @@
                 "Name[ta]": "லூபோசு லுனாக்கு, காய் ஊவே புரோலிக்கு, மார்ட்டின் கிராஸ்லின், மார்க்கோ மார்ட்டின்",
                 "Name[tr]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martin",
                 "Name[uk]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martin",
+                "Name[vi]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martin",
                 "Name[x-test]": "xxLubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martinxx"
             }
         ],
@@ -39,6 +40,7 @@
         "Description[ta]": "திரையில் உள்ளவற்றை படிப்படியாக மங்கசெய்து வெளியேற்ற திரையை காட்டும்",
         "Description[tr]": "Oturumdan çıkarken pürüzsüzce çık",
         "Description[uk]": "Плавний перехід до вікна виходу з системи",
+        "Description[vi]": "Làm mờ dần sang màn hình đăng xuất một cách êm dịu",
         "Description[x-test]": "xxSmoothly fade to the logout screenxx",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-logout",
@@ -60,6 +62,7 @@
         "Name[ta]": "வெளியேற்றம்",
         "Name[tr]": "Çıkış",
         "Name[uk]": "Вихід",
+        "Name[vi]": "Đăng xuất",
         "Name[x-test]": "xxLogoutxx",
         "Version": "0.2.0"
     },

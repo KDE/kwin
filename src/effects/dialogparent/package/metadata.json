@@ -20,6 +20,7 @@
                 "Name[ta]": "ரிவோ லாக்சு, மார்ட்டின் கிராஸ்லின்",
                 "Name[tr]": "Rivo Laks, Martin Gräßlin",
                 "Name[uk]": "Rivo Laks, Martin Gräßlin",
+                "Name[vi]": "Rivo Laks, Martin Gräßlin",
                 "Name[x-test]": "xxRivo Laks, Martin Gräßlinxx"
             }
         ],
@@ -39,6 +40,7 @@
         "Description[ta]": "தற்போது செயலில் உள்ள துணை சாளரத்தின் தாய் சாளரத்தை இருளாக்கும்",
         "Description[tr]": "Geçerli etkin iletişim kutusunun üst penceresini karartır",
         "Description[uk]": "Затемнення батьківських вікон активних діалогових вікон",
+        "Description[vi]": "Làm tối cửa sổ cha của hộp thoại hiện đang hoạt động",
         "Description[x-test]": "xxDarkens the parent window of the currently active dialogxx",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-dialog-parent",
@@ -60,6 +62,7 @@
         "Name[ta]": "துணை சாளரத்தின் தாய்",
         "Name[tr]": "Üst İletişim Kutusu",
         "Name[uk]": "Батьківське вікно",
+        "Name[vi]": "Cha hộp thoại",
         "Name[x-test]": "xxDialog Parentxx",
         "Version": "0.1.0"
     },

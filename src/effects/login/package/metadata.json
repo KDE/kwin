@@ -20,6 +20,7 @@
                 "Name[ta]": "லூபோசு லுனாக்கு, காய் ஊவே புரோலிக்கு, மார்ட்டின் கிராஸ்லின்",
                 "Name[tr]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
                 "Name[uk]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
+                "Name[vi]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
                 "Name[x-test]": "xxLubos Lunak, Kai Uwe Broulik, Martin Gräßlinxx"
             }
         ],
@@ -39,6 +40,7 @@
         "Description[ta]": "அமர்வில் நுழையும்போது பணிமேடையின் ஒளிபுகாமையை படிப்படியாக உயர்த்தி அதைக் காட்டும்",
         "Description[tr]": "Giriş yaparken masaüstüne pürüzsüzce geçiş yap",
         "Description[uk]": "Плавна поява стільниці під час входу",
+        "Description[vi]": "Làm mờ dần sang bàn làm việc một cách êm dịu khi đăng nhập",
         "Description[x-test]": "xxSmoothly fade to the desktop when logging inxx",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-login",
@@ -60,6 +62,7 @@
         "Name[ta]": "நுழைவு",
         "Name[tr]": "Giriş",
         "Name[uk]": "Вхід",
+        "Name[vi]": "Đăng nhập",
         "Name[x-test]": "xxLoginxx",
         "Version": "0.2.0"
     },

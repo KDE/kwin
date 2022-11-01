@@ -20,6 +20,7 @@
                 "Name[ta]": "தாமஸ் லுபுகிங்",
                 "Name[tr]": "Thomas Lübking",
                 "Name[uk]": "Thomas Lübking",
+                "Name[vi]": "Thomas Lübking",
                 "Name[x-test]": "xxThomas Lübkingxx"
             }
         ],
@@ -40,6 +41,7 @@
         "Description[ta]": "சாளரங்களை திரையின் மூலைகளுக்க நகர்த்தும்",
         "Description[tr]": "Pencereleri ekran kenarlarına taşı",
         "Description[uk]": "Пересування вікон до кутів екрана",
+        "Description[vi]": "Di chuyển các cửa sổ đến các góc màn hình",
         "Description[x-test]": "xxMove windows into screen cornersxx",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-windowaperture",
@@ -61,6 +63,7 @@
         "Name[ta]": "ஓரத்தில் சாளரங்கள்",
         "Name[tr]": "Pencere Açıklığı",
         "Name[uk]": "Апертура вікна",
+        "Name[vi]": "Độ mở cửa sổ",
         "Name[x-test]": "xxWindow Aperturexx",
         "Version": "0.1.0"
     },

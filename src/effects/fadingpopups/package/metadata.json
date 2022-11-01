@@ -60,6 +60,7 @@
         "Description[ta]": "தெரித்தெழும் சாளரங்கள் காட்டப்படும்போது படிப்படியாக ஒளிகூடி மறைக்கப்படும்போது மங்கி செல்லும்",
         "Description[tr]": "Açılır pencereler gösterilirken veya gizlenirken pürüzsüzce geçiş yapmalarını sağlar",
         "Description[uk]": "Поступова поява або зникнення контекстних вікон вікон при відкритті чи закритті",
+        "Description[vi]": "Làm ô bật lên hiện dần và mờ dần một cách êm dịu khi chúng hiện ra và biến mất",
         "Description[x-test]": "xxMake popups smoothly fade in and out when they are shown or hiddenxx",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-fadingpopups",
@@ -81,6 +82,7 @@
         "Name[ta]": "தெரித்தெழும் சாளரங்கள் மங்கும்",
         "Name[tr]": "Solan Açılır Pencereler",
         "Name[uk]": "Інтерактивні контекстні панелі",
+        "Name[vi]": "Ô bật lên ngả màu",
         "Name[x-test]": "xxFading Popupsxx",
         "Version": "1.0"
     },

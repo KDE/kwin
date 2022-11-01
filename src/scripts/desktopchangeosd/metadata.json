@@ -20,6 +20,7 @@
                 "Name[ta]": "மார்ட்டின் கிராஸ்லின்",
                 "Name[tr]": "Martin Gräßlin",
                 "Name[uk]": "Martin Gräßlin",
+                "Name[vi]": "Martin Gräßlin",
                 "Name[x-test]": "xxMartin Gräßlinxx"
             }
         ],
@@ -38,6 +39,7 @@
         "Description[ta]": "பணிமேடையை மாற்றும்போது காட்டப்படுவது",
         "Description[tr]": "Masaüstü değişikliğini belirten bir ekran üzeri görünümü",
         "Description[uk]": "Екранна панель спостереження за зміною стільниць",
+        "Description[vi]": "Một ô hiện nổi để biểu thị thay đổi của bàn làm việc",
         "Description[x-test]": "xxAn on screen display indicating the desktop changexx",
         "Icon": "preferences-system-windows-script-test",
         "Id": "desktopchangeosd",
@@ -58,6 +60,7 @@
         "Name[ta]": "பணிமேடை மாற்ற காட்டி",
         "Name[tr]": "OSD Masaüstü Değişimi",
         "Name[uk]": "Панель зміни стільниць",
+        "Name[vi]": "Ô hiện nổi thay đổi bàn làm việc",
         "Name[x-test]": "xxDesktop Change OSDxx",
         "Version": "1.0"
     },
