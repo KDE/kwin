@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-27 00:48+0000\n"
+"POT-Creation-Date: 2022-11-01 00:48+0000\n"
 "PO-Revision-Date: 2015-01-02 10:39+0000\n"
 "Last-Translator: Fadil Ademovic <fademovic2@etf.unsa.ba>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
@@ -602,14 +602,14 @@ msgid "Layout mode:"
 msgstr "Raspored:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:53
+#: overview/kcm/overvieweffectkcm.ui:56
 #, fuzzy, kde-format
 #| msgid "Background"
 msgid "Blur background:"
 msgstr "Pozadina"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:70
+#: overview/kcm/overvieweffectkcm.ui:73
 #, fuzzy, kde-format
 #| msgid "Ignore &minimized windows"
 msgid "Ignore minimized windows:"
@@ -661,7 +661,7 @@ msgstr "Animacija minimiziranja"
 msgid "Window close scale:"
 msgstr "Animacija klika mišem"
 
-#: screenshot/screenshotdbusinterface1.cpp:480
+#: screenshot/screenshotdbusinterface1.cpp:478
 #, fuzzy, kde-format
 #| msgctxt "Name of a KWin Effect"
 #| msgid "Screenshot"
@@ -669,7 +669,7 @@ msgctxt "Notification caption that a screenshot got saved to file"
 msgid "Screenshot"
 msgstr "Snimak ekrana"
 
-#: screenshot/screenshotdbusinterface1.cpp:481
+#: screenshot/screenshotdbusinterface1.cpp:479
 #, fuzzy, kde-format
 #| msgctxt "Name of a KWin Effect"
 #| msgid "Screenshot"
@@ -677,7 +677,7 @@ msgctxt "Notification with path to screenshot file"
 msgid "Screenshot saved to %1"
 msgstr "Snimak ekrana"
 
-#: screenshot/screenshotdbusinterface1.cpp:797
+#: screenshot/screenshotdbusinterface1.cpp:795
 #: screenshot/screenshotdbusinterface2.cpp:472
 #, kde-format
 msgid ""
@@ -685,7 +685,7 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: screenshot/screenshotdbusinterface1.cpp:800
+#: screenshot/screenshotdbusinterface1.cpp:798
 #: screenshot/screenshotdbusinterface2.cpp:490
 #, kde-format
 msgid ""
@@ -952,7 +952,7 @@ msgid "Toggle Present Windows (Window class on current desktop)"
 msgstr "Prisutni prozori (tekuća površ)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
-#: windowview/kcm/windowvieweffectkcm.ui:53
+#: windowview/kcm/windowvieweffectkcm.ui:56
 #, kde-format
 msgid "Ignore &minimized windows"
 msgstr "Ignoriši &minimizovane prozore"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"POT-Creation-Date: 2022-11-01 00:48+0000\n"
 "PO-Revision-Date: 2021-11-22 11:48+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -33,18 +33,8 @@ msgstr ""
 "định, bạn có thể đặt lại tính năng bảo vệ này nhưng hãy lưu ý rằng việc đó "
 "có thể gây ra một sự cố ngay lập tức!"
 
-#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
-#: compositing.ui:44
-#, kde-format
-msgid ""
-"Scale method \"Accurate\" is not supported by all hardware and can cause "
-"performance regressions and rendering artifacts."
-msgstr ""
-"Không phải tất cả các loại phần cứng đều hỗ trợ phương thức đổi cỡ \"Chính "
-"xác\" và nó có thể gây ra thoái hoá về hiệu năng và tạo tác trong kết xuất."
-
 #. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
-#: compositing.ui:67
+#: compositing.ui:44
 #, kde-format
 msgid ""
 "Keeping the window thumbnail always interferes with the minimized state of "
@@ -55,19 +45,19 @@ msgstr ""
 "khi thu nhỏ."
 
 #. i18n: ectx: property (text), widget (QLabel, compositingLabel)
-#: compositing.ui:79
+#: compositing.ui:56
 #, kde-format
 msgid "Compositing:"
 msgstr "Kết hợp:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
-#: compositing.ui:86
+#: compositing.ui:63
 #, kde-format
 msgid "Enable on startup"
 msgstr "Bật khi khởi động"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:95
+#: compositing.ui:72
 #, kde-format
 msgid ""
 "Applications can set a hint to block compositing when the window is open.\n"
@@ -79,133 +69,85 @@ msgstr ""
 " Thiết lập này có thể bị vượt hiệu lực bởi các luật theo cửa sổ."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:98
+#: compositing.ui:75
 #, kde-format
 msgid "Allow applications to block compositing"
 msgstr "Cho phép các ứng dụng ngưng kết hợp"
 
 #. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
-#: compositing.ui:105
+#: compositing.ui:82
 #, kde-format
 msgid "Animation speed:"
 msgstr "Tốc độ hiệu ứng động:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#: compositing.ui:142
+#: compositing.ui:119
 #, kde-format
 msgid "Very slow"
 msgstr "Rất chậm"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: compositing.ui:162
+#: compositing.ui:139
 #, kde-format
 msgid "Instant"
 msgstr "Lập tức"
 
-#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
-#: compositing.ui:174
-#, kde-format
-msgid "Scale method:"
-msgstr "Phương thức đổi cỡ:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
-#: compositing.ui:184
-#, kde-format
-msgid "Smooth"
-msgstr "Mượt mà"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
-#: compositing.ui:189
-#, kde-format
-msgid "Accurate"
-msgstr "Chính xác"
-
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#: compositing.ui:199
-#, kde-format
-msgid "Tearing prevention (\"vsync\"):"
-msgstr "Ngăn ngừa rách hình (\"vsync\"):"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:207
-#, kde-format
-msgid "Automatic"
-msgstr "Tự động"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:212
-#, kde-format
-msgid "Only when cheap"
-msgstr "Chỉ khi tiêu tốn ít"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:217
-#, kde-format
-msgid "Full screen repaints"
-msgstr "Tô lại toàn bộ màn hình"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:222
-#, kde-format
-msgid "Re-use screen content"
-msgstr "Tái sử dụng nội dung màn hình"
-
 #. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
-#: compositing.ui:230
+#: compositing.ui:151
 #, kde-format
 msgid "Keep window thumbnails:"
 msgstr "Giữ lại hình nhỏ của cửa sổ:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:238
+#: compositing.ui:159
 #, kde-format
 msgid "Never"
 msgstr "Không bao giờ"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:243
+#: compositing.ui:164
 #, kde-format
 msgid "Only for Shown Windows"
 msgstr "Chỉ cho các cửa sổ đã hiện"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:248
+#: compositing.ui:169
 #, kde-format
 msgid "Always"
 msgstr "Luôn luôn"
 
 #. i18n: ectx: property (text), widget (QLabel, latencyLabel)
-#: compositing.ui:256
+#: compositing.ui:177
 #, kde-format
 msgid "Latency:"
 msgstr "Độ trễ:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:264
+#: compositing.ui:185
 #, kde-format
 msgid "Force lowest latency (may cause dropped frames)"
 msgstr "Độ trễ thấp nhất có thể (có thể gây mất khung hình)"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:269
+#: compositing.ui:190
 #, kde-format
 msgid "Prefer lower latency"
 msgstr "Ưu tiên độ trễ thấp"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:274
+#: compositing.ui:195
 #, kde-format
 msgid "Balance of latency and smoothness"
 msgstr "Cân bằng giữa độ trễ và sự mượt mà"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:279
+#: compositing.ui:200
 #, kde-format
 msgid "Prefer smoother animations"
 msgstr "Ưu tiên hình ảnh mượt"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:284
+#: compositing.ui:205
 #, kde-format
 msgid "Force smoothest animations"
 msgstr "Hình ảnh mượt mà nhất có thể"
@@ -215,27 +157,54 @@ msgstr "Hình ảnh mượt mà nhất có thể"
 msgid "Re-enable OpenGL detection"
 msgstr "Bật lại tính năng phát hiện OpenGL"
 
-#: main.cpp:135
-#, kde-format
-msgid ""
-"\"Only when cheap\" only prevents tearing for full screen changes like a "
-"video."
-msgstr ""
-"\"Chỉ khi tiêu tốn ít\" chỉ ngăn ngừa rách hình cho các thay đổi toàn màn "
-"hình chẳng hạn như khi phát phim."
+#~ msgid ""
+#~ "Scale method \"Accurate\" is not supported by all hardware and can cause "
+#~ "performance regressions and rendering artifacts."
+#~ msgstr ""
+#~ "Không phải tất cả các loại phần cứng đều hỗ trợ phương thức đổi cỡ "
+#~ "\"Chính xác\" và nó có thể gây ra thoái hoá về hiệu năng và tạo tác trong "
+#~ "kết xuất."
 
-#: main.cpp:139
-#, kde-format
-msgid "\"Full screen repaints\" can cause performance problems."
-msgstr "\"Tô lại toàn bộ màn hình\" có thể gây ra các vấn đề về hiệu năng."
+#~ msgid "Scale method:"
+#~ msgstr "Phương thức đổi cỡ:"
 
-#: main.cpp:143
-#, kde-format
-msgid ""
-"\"Re-use screen content\" causes severe performance problems on MESA drivers."
-msgstr ""
-"\"Tái sử dụng nội dung màn hình\" gây ra các vấn đề nghiêm trọng về hiệu "
-"năng trên các trình điều khiển Mesa."
+#~ msgid "Smooth"
+#~ msgstr "Mượt mà"
+
+#~ msgid "Accurate"
+#~ msgstr "Chính xác"
+
+#~ msgid "Tearing prevention (\"vsync\"):"
+#~ msgstr "Ngăn ngừa rách hình (\"vsync\"):"
+
+#~ msgid "Automatic"
+#~ msgstr "Tự động"
+
+#~ msgid "Only when cheap"
+#~ msgstr "Chỉ khi tiêu tốn ít"
+
+#~ msgid "Full screen repaints"
+#~ msgstr "Tô lại toàn bộ màn hình"
+
+#~ msgid "Re-use screen content"
+#~ msgstr "Tái sử dụng nội dung màn hình"
+
+#~ msgid ""
+#~ "\"Only when cheap\" only prevents tearing for full screen changes like a "
+#~ "video."
+#~ msgstr ""
+#~ "\"Chỉ khi tiêu tốn ít\" chỉ ngăn ngừa rách hình cho các thay đổi toàn màn "
+#~ "hình chẳng hạn như khi phát phim."
+
+#~ msgid "\"Full screen repaints\" can cause performance problems."
+#~ msgstr "\"Tô lại toàn bộ màn hình\" có thể gây ra các vấn đề về hiệu năng."
+
+#~ msgid ""
+#~ "\"Re-use screen content\" causes severe performance problems on MESA "
+#~ "drivers."
+#~ msgstr ""
+#~ "\"Tái sử dụng nội dung màn hình\" gây ra các vấn đề nghiêm trọng về hiệu "
+#~ "năng trên các trình điều khiển Mesa."
 
 #~ msgid "Rendering backend:"
 #~ msgstr "Hậu phương kết xuất:"

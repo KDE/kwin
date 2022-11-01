@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"POT-Creation-Date: 2022-11-01 00:48+0000\n"
 "PO-Revision-Date: 2022-08-22 06:35+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -29,16 +29,8 @@ msgid ""
 "immediate crash!"
 msgstr ""
 
-#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
-#: compositing.ui:44
-#, kde-format
-msgid ""
-"Scale method \"Accurate\" is not supported by all hardware and can cause "
-"performance regressions and rendering artifacts."
-msgstr ""
-
 #. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
-#: compositing.ui:67
+#: compositing.ui:44
 #, kde-format
 msgid ""
 "Keeping the window thumbnail always interferes with the minimized state of "
@@ -46,19 +38,19 @@ msgid ""
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, compositingLabel)
-#: compositing.ui:79
+#: compositing.ui:56
 #, kde-format
 msgid "Compositing:"
 msgstr "კომპოზიცია:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
-#: compositing.ui:86
+#: compositing.ui:63
 #, kde-format
 msgid "Enable on startup"
 msgstr "გაშვებისას ჩართვა"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:95
+#: compositing.ui:72
 #, kde-format
 msgid ""
 "Applications can set a hint to block compositing when the window is open.\n"
@@ -67,134 +59,86 @@ msgid ""
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:98
+#: compositing.ui:75
 #, kde-format
 msgid "Allow applications to block compositing"
 msgstr "აპლიკაციების კომპოზიციების დაბლოკვის ნების დართვა"
 
 #. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
-#: compositing.ui:105
+#: compositing.ui:82
 #, kde-format
 msgid "Animation speed:"
 msgstr "ანიმაციის სიჩქარე:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#: compositing.ui:142
+#: compositing.ui:119
 #, kde-format
 msgid "Very slow"
 msgstr "ძალიან ნელი"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: compositing.ui:162
+#: compositing.ui:139
 #, kde-format
 msgid "Instant"
 msgstr "მყისი"
 
-#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
-#: compositing.ui:174
-#, kde-format
-msgid "Scale method:"
-msgstr "გადიდების მეთოდი:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
-#: compositing.ui:184
-#, kde-format
-msgid "Smooth"
-msgstr "რბილი"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
-#: compositing.ui:189
-#, kde-format
-msgid "Accurate"
-msgstr "ზუსტი"
-
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#: compositing.ui:199
-#, kde-format
-msgid "Tearing prevention (\"vsync\"):"
-msgstr "ფიფქების თავიდან აცილება (\"vsync\"):"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:207
-#, kde-format
-msgid "Automatic"
-msgstr "ავტომატური"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:212
-#, kde-format
-msgid "Only when cheap"
-msgstr "მხოლოდ როცა იაფია"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:217
-#, kde-format
-msgid "Full screen repaints"
-msgstr "ეკრანის სრული გადახატვა"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:222
-#, kde-format
-msgid "Re-use screen content"
-msgstr "ეკრანის შემცველობის თავიდან გამოყენება"
-
 #. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
-#: compositing.ui:230
+#: compositing.ui:151
 #, kde-format
 msgid "Keep window thumbnails:"
 msgstr "ფანჯრის მინიატურების დატოვება:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:238
+#: compositing.ui:159
 #, kde-format
 msgid "Never"
 msgstr "არასდროს"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:243
+#: compositing.ui:164
 #, kde-format
 msgid "Only for Shown Windows"
 msgstr "მხოლოდ ნაჩვენები ფანჯრებისთვის"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:248
+#: compositing.ui:169
 #, kde-format
 msgid "Always"
 msgstr "ყოველთვის"
 
 #. i18n: ectx: property (text), widget (QLabel, latencyLabel)
-#: compositing.ui:256
+#: compositing.ui:177
 #, kde-format
 msgid "Latency:"
 msgstr "დაყოვნება:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:264
+#: compositing.ui:185
 #, kde-format
 msgid "Force lowest latency (may cause dropped frames)"
 msgstr ""
 "ნაძალადევი მინიმალური დაყოვნება (შეიძლება გამოიწვიოს დაკარგული კადრები)"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:269
+#: compositing.ui:190
 #, kde-format
 msgid "Prefer lower latency"
 msgstr "დაბალი დაყოვნების არჩევანი"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:274
+#: compositing.ui:195
 #, kde-format
 msgid "Balance of latency and smoothness"
 msgstr "ბალანსი დაყოვნებასა და სირბილეს შუა"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:279
+#: compositing.ui:200
 #, kde-format
 msgid "Prefer smoother animations"
 msgstr "რბილი ანიმაციების არჩევანი"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:284
+#: compositing.ui:205
 #, kde-format
 msgid "Force smoothest animations"
 msgstr "ნაძალადევი რბილი ანიმაციები"
@@ -204,25 +148,44 @@ msgstr "ნაძალადევი რბილი ანიმაციე�
 msgid "Re-enable OpenGL detection"
 msgstr "OpenGL-ის პოვნის თავიდან ჩართვა"
 
-#: main.cpp:135
-#, kde-format
-msgid ""
-"\"Only when cheap\" only prevents tearing for full screen changes like a "
-"video."
-msgstr ""
-"\"მხოლოდ როცა იაფია\" ფიფქებს მხოლოდ მთელ ეკრანზე გაშვების დროს აცილებს, "
-"მაგალითად, ვიდეოს დაკვრის დროს."
+#~ msgid "Scale method:"
+#~ msgstr "გადიდების მეთოდი:"
 
-#: main.cpp:139
-#, kde-format
-msgid "\"Full screen repaints\" can cause performance problems."
-msgstr ""
-"\"ეკრანის სრული გადახატვა\", როგორც წესი, იწვევს წარმადობის პრობლემებს."
+#~ msgid "Smooth"
+#~ msgstr "რბილი"
 
-#: main.cpp:143
-#, kde-format
-msgid ""
-"\"Re-use screen content\" causes severe performance problems on MESA drivers."
-msgstr ""
-"\"ეკრანის შემცველობის თავიდან გამოყენება\" MESA დრაივერებზე საშინელ "
-"პრობლემებს იწვევს."
+#~ msgid "Accurate"
+#~ msgstr "ზუსტი"
+
+#~ msgid "Tearing prevention (\"vsync\"):"
+#~ msgstr "ფიფქების თავიდან აცილება (\"vsync\"):"
+
+#~ msgid "Automatic"
+#~ msgstr "ავტომატური"
+
+#~ msgid "Only when cheap"
+#~ msgstr "მხოლოდ როცა იაფია"
+
+#~ msgid "Full screen repaints"
+#~ msgstr "ეკრანის სრული გადახატვა"
+
+#~ msgid "Re-use screen content"
+#~ msgstr "ეკრანის შემცველობის თავიდან გამოყენება"
+
+#~ msgid ""
+#~ "\"Only when cheap\" only prevents tearing for full screen changes like a "
+#~ "video."
+#~ msgstr ""
+#~ "\"მხოლოდ როცა იაფია\" ფიფქებს მხოლოდ მთელ ეკრანზე გაშვების დროს აცილებს, "
+#~ "მაგალითად, ვიდეოს დაკვრის დროს."
+
+#~ msgid "\"Full screen repaints\" can cause performance problems."
+#~ msgstr ""
+#~ "\"ეკრანის სრული გადახატვა\", როგორც წესი, იწვევს წარმადობის პრობლემებს."
+
+#~ msgid ""
+#~ "\"Re-use screen content\" causes severe performance problems on MESA "
+#~ "drivers."
+#~ msgstr ""
+#~ "\"ეკრანის შემცველობის თავიდან გამოყენება\" MESA დრაივერებზე საშინელ "
+#~ "პრობლემებს იწვევს."

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-04-27 00:19+0000\n"
+"POT-Creation-Date: 2022-11-01 00:48+0000\n"
 "PO-Revision-Date: 2021-04-28 10:40+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@neuf.fr>\n"
 "Language-Team: French <kde-francophone@kde.org>\n"
@@ -24,22 +24,22 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "xavier.besnard@neuf.fr"
 
-#: kcmvirtualkeyboard.cpp:31
+#: kcmvirtualkeyboard.cpp:29
 #, kde-format
 msgid "Virtual Keyboard"
 msgstr "Clavier virtuel"
 
-#: kcmvirtualkeyboard.cpp:33
+#: kcmvirtualkeyboard.cpp:31
 #, kde-format
 msgid "Choose Virtual Keyboard"
 msgstr "Sélectionner un clavier virtuel"
 
-#: kcmvirtualkeyboard.cpp:70
+#: kcmvirtualkeyboard.cpp:68
 #, kde-format
 msgid "None"
 msgstr "Aucun"
 
-#: kcmvirtualkeyboard.cpp:74
+#: kcmvirtualkeyboard.cpp:72
 #, kde-format
 msgid "Do not use any virtual keyboard"
 msgstr "N'utiliser aucun clavier virtuel"

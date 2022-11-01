@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"POT-Creation-Date: 2022-11-01 00:48+0000\n"
 "PO-Revision-Date: 2013-03-28 16:35+0530\n"
 "Last-Translator: Chetan Khona <chetan@kompkin.com>\n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
@@ -30,16 +30,8 @@ msgid ""
 "immediate crash!"
 msgstr ""
 
-#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
-#: compositing.ui:44
-#, kde-format
-msgid ""
-"Scale method \"Accurate\" is not supported by all hardware and can cause "
-"performance regressions and rendering artifacts."
-msgstr ""
-
 #. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
-#: compositing.ui:67
+#: compositing.ui:44
 #, kde-format
 msgid ""
 "Keeping the window thumbnail always interferes with the minimized state of "
@@ -47,14 +39,14 @@ msgid ""
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, compositingLabel)
-#: compositing.ui:79
+#: compositing.ui:56
 #, fuzzy, kde-format
 #| msgid "Compositing type:"
 msgid "Compositing:"
 msgstr "कंपोझिटींग प्रकार :"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
-#: compositing.ui:86
+#: compositing.ui:63
 #, fuzzy, kde-format
 #| msgctxt "@option:check"
 #| msgid "Enable desktop effects at startup"
@@ -62,7 +54,7 @@ msgid "Enable on startup"
 msgstr "सुरुवात होताना डेस्कटॉप परिणाम कार्यान्वित करा"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:95
+#: compositing.ui:72
 #, kde-format
 msgid ""
 "Applications can set a hint to block compositing when the window is open.\n"
@@ -71,91 +63,40 @@ msgid ""
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:98
+#: compositing.ui:75
 #, kde-format
 msgid "Allow applications to block compositing"
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
-#: compositing.ui:105
+#: compositing.ui:82
 #, fuzzy, kde-format
 #| msgid "Animation speed:"
 msgid "Animation speed:"
 msgstr "ऍनीमेशन वेग:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#: compositing.ui:142
+#: compositing.ui:119
 #, fuzzy, kde-format
 #| msgid "Very Slow"
 msgid "Very slow"
 msgstr "खूप हळु"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: compositing.ui:162
+#: compositing.ui:139
 #, kde-format
 msgid "Instant"
 msgstr "अती जलद"
 
-#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
-#: compositing.ui:174
-#, fuzzy, kde-format
-#| msgid "Scale method:"
-msgid "Scale method:"
-msgstr "प्रमाण पद्धत :"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
-#: compositing.ui:184
-#, kde-format
-msgid "Smooth"
-msgstr "मृदू"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
-#: compositing.ui:189
-#, kde-format
-msgid "Accurate"
-msgstr "यथार्थ"
-
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#: compositing.ui:199
-#, kde-format
-msgid "Tearing prevention (\"vsync\"):"
-msgstr ""
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:207
-#, kde-format
-msgid "Automatic"
-msgstr "स्वयंचलित"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:212
-#, fuzzy, kde-format
-#| msgid "Only when Cheap"
-msgid "Only when cheap"
-msgstr "फक्त स्वस्त असताना"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:217
-#, fuzzy, kde-format
-#| msgid "Full scene repaints"
-msgid "Full screen repaints"
-msgstr "पूर्ण दृश्य पुन्हप्रदर्शन"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:222
-#, kde-format
-msgid "Re-use screen content"
-msgstr "स्क्रीन मजकूर पुन्हा वापरा"
-
 #. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
-#: compositing.ui:230
+#: compositing.ui:151
 #, fuzzy, kde-format
 #| msgid "Keep window thumbnails:"
 msgid "Keep window thumbnails:"
 msgstr "चौकट लघुप्रतिमा ठेवा :"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:238
+#: compositing.ui:159
 #, fuzzy, kde-format
 #| msgctxt ""
 #| "Windows are unmapped as they are requested. This can lead to not having "
@@ -165,7 +106,7 @@ msgid "Never"
 msgstr "कधीही नाही"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:243
+#: compositing.ui:164
 #, fuzzy, kde-format
 #| msgctxt ""
 #| "Windows are not unmapped if the window is somewhere visible on any of the "
@@ -175,43 +116,43 @@ msgid "Only for Shown Windows"
 msgstr "फक्त दर्शविलेल्या चौकटीं करिताच"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:248
+#: compositing.ui:169
 #, kde-format
 msgid "Always"
 msgstr "नेहमी"
 
 #. i18n: ectx: property (text), widget (QLabel, latencyLabel)
-#: compositing.ui:256
+#: compositing.ui:177
 #, kde-format
 msgid "Latency:"
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:264
+#: compositing.ui:185
 #, kde-format
 msgid "Force lowest latency (may cause dropped frames)"
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:269
+#: compositing.ui:190
 #, kde-format
 msgid "Prefer lower latency"
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:274
+#: compositing.ui:195
 #, kde-format
 msgid "Balance of latency and smoothness"
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:279
+#: compositing.ui:200
 #, kde-format
 msgid "Prefer smoother animations"
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:284
+#: compositing.ui:205
 #, fuzzy, kde-format
 #| msgid "Various animations"
 msgid "Force smoothest animations"
@@ -222,23 +163,32 @@ msgstr "विविध ऍनीमेशन"
 msgid "Re-enable OpenGL detection"
 msgstr "OpenGL शोध परत कार्यान्वित करा"
 
-#: main.cpp:135
-#, kde-format
-msgid ""
-"\"Only when cheap\" only prevents tearing for full screen changes like a "
-"video."
-msgstr ""
+#, fuzzy
+#~| msgid "Scale method:"
+#~ msgid "Scale method:"
+#~ msgstr "प्रमाण पद्धत :"
 
-#: main.cpp:139
-#, kde-format
-msgid "\"Full screen repaints\" can cause performance problems."
-msgstr ""
+#~ msgid "Smooth"
+#~ msgstr "मृदू"
 
-#: main.cpp:143
-#, kde-format
-msgid ""
-"\"Re-use screen content\" causes severe performance problems on MESA drivers."
-msgstr ""
+#~ msgid "Accurate"
+#~ msgstr "यथार्थ"
+
+#~ msgid "Automatic"
+#~ msgstr "स्वयंचलित"
+
+#, fuzzy
+#~| msgid "Only when Cheap"
+#~ msgid "Only when cheap"
+#~ msgstr "फक्त स्वस्त असताना"
+
+#, fuzzy
+#~| msgid "Full scene repaints"
+#~ msgid "Full screen repaints"
+#~ msgstr "पूर्ण दृश्य पुन्हप्रदर्शन"
+
+#~ msgid "Re-use screen content"
+#~ msgstr "स्क्रीन मजकूर पुन्हा वापरा"
 
 #, fuzzy
 #~| msgid "OpenGL"

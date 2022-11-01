@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-27 00:48+0000\n"
-"PO-Revision-Date: 2022-08-22 08:46+0200\n"
+"POT-Creation-Date: 2022-11-01 00:48+0000\n"
+"PO-Revision-Date: 2022-10-31 13:00+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
 "Language: vi\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 22.04.1\n"
+"X-Generator: Lokalize 22.08.1\n"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: blur/blur_config.ui:17
@@ -312,7 +312,7 @@ msgstr "Bật/tắt hiệu ứng đảo cho cửa sổ"
 #: invert/invert.cpp:56
 #, kde-format
 msgid "Invert Screen Colors"
-msgstr ""
+msgstr "Đảo màu màn hình"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: login/package/contents/ui/config.ui:17
@@ -547,13 +547,13 @@ msgid "Layout mode:"
 msgstr "Chế độ bố cục:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:53
+#: overview/kcm/overvieweffectkcm.ui:56
 #, kde-format
 msgid "Blur background:"
 msgstr "Nền mờ:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:70
+#: overview/kcm/overvieweffectkcm.ui:73
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Bỏ qua các cửa sổ bị thu nhỏ:"
@@ -596,19 +596,19 @@ msgstr "Cỡ mở cửa sổ:"
 msgid "Window close scale:"
 msgstr "Cỡ đóng cửa sổ:"
 
-#: screenshot/screenshotdbusinterface1.cpp:480
+#: screenshot/screenshotdbusinterface1.cpp:478
 #, kde-format
 msgctxt "Notification caption that a screenshot got saved to file"
 msgid "Screenshot"
 msgstr "Ảnh chụp màn hình"
 
-#: screenshot/screenshotdbusinterface1.cpp:481
+#: screenshot/screenshotdbusinterface1.cpp:479
 #, kde-format
 msgctxt "Notification with path to screenshot file"
 msgid "Screenshot saved to %1"
 msgstr "Ảnh chụp màn hình được lưu vào %1"
 
-#: screenshot/screenshotdbusinterface1.cpp:797
+#: screenshot/screenshotdbusinterface1.cpp:795
 #: screenshot/screenshotdbusinterface2.cpp:472
 #, kde-format
 msgid ""
@@ -618,7 +618,7 @@ msgstr ""
 "Bấm trái hoặc enter để chọn cửa sổ để chụp ảnh màn hình.\n"
 "Escape hoặc bấm phải để huỷ."
 
-#: screenshot/screenshotdbusinterface1.cpp:800
+#: screenshot/screenshotdbusinterface1.cpp:798
 #: screenshot/screenshotdbusinterface2.cpp:490
 #, kde-format
 msgid ""
@@ -876,7 +876,7 @@ msgstr ""
 "Ẩn/hiện \"Các cửa sổ hiện thời\" (Lớp cửa sổ trên bàn làm việc hiện tại)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
-#: windowview/kcm/windowvieweffectkcm.ui:53
+#: windowview/kcm/windowvieweffectkcm.ui:56
 #, kde-format
 msgid "Ignore &minimized windows"
 msgstr "Bỏ &qua các cửa sổ bị thu nhỏ"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-03-26 00:45+0000\n"
+"POT-Creation-Date: 2022-11-01 00:48+0000\n"
 "PO-Revision-Date: 2022-07-03 13:56+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -75,7 +75,7 @@ msgctxt "Category of Desktop Effects, used as section header"
 msgid "Window Open/Close Animation"
 msgstr "Pəncərənin açılış/bağlanış animasiyası"
 
-#: effectsmodel.cpp:243
+#: effectsmodel.cpp:241
 #, kde-format
 msgid "KWin development team"
 msgstr "KWin tərtibatşılar Komandası"

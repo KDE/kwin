@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-27 00:48+0000\n"
+"POT-Creation-Date: 2022-11-01 00:48+0000\n"
 "PO-Revision-Date: 2010-12-17 21:12+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -588,14 +588,14 @@ msgid "Layout mode:"
 msgstr "โหมดการจัดวาง:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:53
+#: overview/kcm/overvieweffectkcm.ui:56
 #, fuzzy, kde-format
 #| msgid "Background"
 msgid "Blur background:"
 msgstr "พื้นหลัง"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:70
+#: overview/kcm/overvieweffectkcm.ui:73
 #, fuzzy, kde-format
 #| msgid "Ignore &minimized windows"
 msgid "Ignore minimized windows:"
@@ -645,19 +645,19 @@ msgstr "การเคลื่อนไหว"
 msgid "Window close scale:"
 msgstr "การเคลื่อนไหว"
 
-#: screenshot/screenshotdbusinterface1.cpp:480
+#: screenshot/screenshotdbusinterface1.cpp:478
 #, kde-format
 msgctxt "Notification caption that a screenshot got saved to file"
 msgid "Screenshot"
 msgstr ""
 
-#: screenshot/screenshotdbusinterface1.cpp:481
+#: screenshot/screenshotdbusinterface1.cpp:479
 #, kde-format
 msgctxt "Notification with path to screenshot file"
 msgid "Screenshot saved to %1"
 msgstr ""
 
-#: screenshot/screenshotdbusinterface1.cpp:797
+#: screenshot/screenshotdbusinterface1.cpp:795
 #: screenshot/screenshotdbusinterface2.cpp:472
 #, kde-format
 msgid ""
@@ -665,7 +665,7 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: screenshot/screenshotdbusinterface1.cpp:800
+#: screenshot/screenshotdbusinterface1.cpp:798
 #: screenshot/screenshotdbusinterface2.cpp:490
 #, kde-format
 msgid ""
@@ -930,7 +930,7 @@ msgid "Toggle Present Windows (Window class on current desktop)"
 msgstr "เปิด/ปิดลูกเล่นกับหน้าต่างต่าง ๆ ในปัจจุบัน (บนพื้นที่ทำงานปัจจุบัน)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
-#: windowview/kcm/windowvieweffectkcm.ui:53
+#: windowview/kcm/windowvieweffectkcm.ui:56
 #, kde-format
 msgid "Ignore &minimized windows"
 msgstr "ละเว้นหน้าต่างต่าง ๆ ที่ถูก&ย่อหายอยู่"

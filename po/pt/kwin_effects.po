@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-27 00:48+0000\n"
+"POT-Creation-Date: 2022-11-01 00:48+0000\n"
 "PO-Revision-Date: 2022-10-27 23:57+0100\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -556,13 +556,13 @@ msgid "Layout mode:"
 msgstr "Modo de disposição:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:53
+#: overview/kcm/overvieweffectkcm.ui:56
 #, kde-format
 msgid "Blur background:"
 msgstr "Borrar o fundo:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:70
+#: overview/kcm/overvieweffectkcm.ui:73
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Ignorar as janelas minimizadas:"
@@ -605,19 +605,19 @@ msgstr "Escala da abertura das janelas:"
 msgid "Window close scale:"
 msgstr "Escala do fecho das janelas:"
 
-#: screenshot/screenshotdbusinterface1.cpp:480
+#: screenshot/screenshotdbusinterface1.cpp:478
 #, kde-format
 msgctxt "Notification caption that a screenshot got saved to file"
 msgid "Screenshot"
 msgstr "Captura"
 
-#: screenshot/screenshotdbusinterface1.cpp:481
+#: screenshot/screenshotdbusinterface1.cpp:479
 #, kde-format
 msgctxt "Notification with path to screenshot file"
 msgid "Screenshot saved to %1"
 msgstr "A captura foi gravada em %1"
 
-#: screenshot/screenshotdbusinterface1.cpp:797
+#: screenshot/screenshotdbusinterface1.cpp:795
 #: screenshot/screenshotdbusinterface2.cpp:472
 #, kde-format
 msgid ""
@@ -627,7 +627,7 @@ msgstr ""
 "Seleccione a janela a capturar com o botão esquerdo ou a tecla Enter\n"
 "Carregue em Escape ou com o botão direito para cancelar."
 
-#: screenshot/screenshotdbusinterface1.cpp:800
+#: screenshot/screenshotdbusinterface1.cpp:798
 #: screenshot/screenshotdbusinterface2.cpp:490
 #, kde-format
 msgid ""
@@ -884,7 +884,7 @@ msgid "Toggle Present Windows (Window class on current desktop)"
 msgstr "Comutar as Janelas Presentes (Classe da janela no ecrã actual)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
-#: windowview/kcm/windowvieweffectkcm.ui:53
+#: windowview/kcm/windowvieweffectkcm.ui:56
 #, kde-format
 msgid "Ignore &minimized windows"
 msgstr "Ignorar as janelas &minimizadas"

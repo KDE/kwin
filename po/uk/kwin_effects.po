@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-27 00:48+0000\n"
+"POT-Creation-Date: 2022-11-01 00:48+0000\n"
 "PO-Revision-Date: 2022-10-27 13:35+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -555,13 +555,13 @@ msgid "Layout mode:"
 msgstr "Режим компонування:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:53
+#: overview/kcm/overvieweffectkcm.ui:56
 #, kde-format
 msgid "Blur background:"
 msgstr "Розмивати тло:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:70
+#: overview/kcm/overvieweffectkcm.ui:73
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Ігнорувати мінімізовані вікна:"
@@ -604,19 +604,19 @@ msgstr "Масштаб відкриття вікна:"
 msgid "Window close scale:"
 msgstr "Масштаб закриття вікна:"
 
-#: screenshot/screenshotdbusinterface1.cpp:480
+#: screenshot/screenshotdbusinterface1.cpp:478
 #, kde-format
 msgctxt "Notification caption that a screenshot got saved to file"
 msgid "Screenshot"
 msgstr "Знімок вікна"
 
-#: screenshot/screenshotdbusinterface1.cpp:481
+#: screenshot/screenshotdbusinterface1.cpp:479
 #, kde-format
 msgctxt "Notification with path to screenshot file"
 msgid "Screenshot saved to %1"
 msgstr "Знімок вікна збережено до %1"
 
-#: screenshot/screenshotdbusinterface1.cpp:797
+#: screenshot/screenshotdbusinterface1.cpp:795
 #: screenshot/screenshotdbusinterface2.cpp:472
 #, kde-format
 msgid ""
@@ -627,7 +627,7 @@ msgstr ""
 "натисканням Enter.\n"
 "Натисніть Esc або клацніть правою кнопкою, щоб скасувати."
 
-#: screenshot/screenshotdbusinterface1.cpp:800
+#: screenshot/screenshotdbusinterface1.cpp:798
 #: screenshot/screenshotdbusinterface2.cpp:490
 #, kde-format
 msgid ""
@@ -885,7 +885,7 @@ msgstr ""
 "Увімкнути або вимкнути «Показ вікон» (клас Window на поточній стільниці)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
-#: windowview/kcm/windowvieweffectkcm.ui:53
+#: windowview/kcm/windowvieweffectkcm.ui:56
 #, kde-format
 msgid "Ignore &minimized windows"
 msgstr "Ігнорувати &мінімізовані вікна"

@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-03-26 00:45+0000\n"
+"POT-Creation-Date: 2022-11-01 00:48+0000\n"
 "PO-Revision-Date: 2018-11-22 16:12+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -89,7 +89,7 @@ msgctxt "Category of Desktop Effects, used as section header"
 msgid "Window Open/Close Animation"
 msgstr "Ikkunan avaus- ja sulkemisanimointi"
 
-#: effectsmodel.cpp:243
+#: effectsmodel.cpp:241
 #, kde-format
 msgid "KWin development team"
 msgstr "KWin-kehitysryhmä"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"POT-Creation-Date: 2022-11-01 00:48+0000\n"
 "PO-Revision-Date: 2019-07-26 16:14+0300\n"
 "Last-Translator: Moo\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
@@ -47,18 +47,8 @@ msgstr ""
 "karto gali sąlygoti lūžimą!\n"
 "Priešingu atveju, vietoj to, galite pageidauti naudoti XRender vidinę pusę."
 
-#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
-#: compositing.ui:44
-#, kde-format
-msgid ""
-"Scale method \"Accurate\" is not supported by all hardware and can cause "
-"performance regressions and rendering artifacts."
-msgstr ""
-"Mastelio keitimo metodas \"Tikslus\" nėra palaikomas visos aparatinės "
-"įrangos ir gali sukelti našumo regresijas bei atvaizdavimo artefaktus."
-
 #. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
-#: compositing.ui:67
+#: compositing.ui:44
 #, kde-format
 msgid ""
 "Keeping the window thumbnail always interferes with the minimized state of "
@@ -68,20 +58,20 @@ msgstr ""
 "gali sąlygoti, kad langai, juos sumažinus, nepristabdys savo darbo."
 
 #. i18n: ectx: property (text), widget (QLabel, compositingLabel)
-#: compositing.ui:79
+#: compositing.ui:56
 #, kde-format
 msgid "Compositing:"
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
-#: compositing.ui:86
+#: compositing.ui:63
 #, fuzzy, kde-format
 #| msgid "Enable compositor on startup"
 msgid "Enable on startup"
 msgstr "Įjungti kompozitorių paleidimo metu"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:95
+#: compositing.ui:72
 #, kde-format
 msgid ""
 "Applications can set a hint to block compositing when the window is open.\n"
@@ -94,133 +84,85 @@ msgstr ""
 " Ši nuostata gali būti nustelbta tam tikromis langų taisyklėmis."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:98
+#: compositing.ui:75
 #, kde-format
 msgid "Allow applications to block compositing"
 msgstr "Leisti programoms blokuoti kompozicionavimą"
 
 #. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
-#: compositing.ui:105
+#: compositing.ui:82
 #, kde-format
 msgid "Animation speed:"
 msgstr "Animacijos greitis:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#: compositing.ui:142
+#: compositing.ui:119
 #, kde-format
 msgid "Very slow"
 msgstr "Labai lėtai"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: compositing.ui:162
+#: compositing.ui:139
 #, kde-format
 msgid "Instant"
 msgstr "Akimirksniu"
 
-#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
-#: compositing.ui:174
-#, kde-format
-msgid "Scale method:"
-msgstr "Mastelio keitimo metodas:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
-#: compositing.ui:184
-#, kde-format
-msgid "Smooth"
-msgstr "Glotnus"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
-#: compositing.ui:189
-#, kde-format
-msgid "Accurate"
-msgstr "Tikslus"
-
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#: compositing.ui:199
-#, kde-format
-msgid "Tearing prevention (\"vsync\"):"
-msgstr "Perskyrimų prevencija („VSync“):"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:207
-#, kde-format
-msgid "Automatic"
-msgstr "Automatiškai"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:212
-#, kde-format
-msgid "Only when cheap"
-msgstr "Tik tuomet, kai lengva"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:217
-#, kde-format
-msgid "Full screen repaints"
-msgstr "Viso ekrano piešimas iš naujo"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:222
-#, kde-format
-msgid "Re-use screen content"
-msgstr "Pakartotinai naudoti ekrano turinį"
-
 #. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
-#: compositing.ui:230
+#: compositing.ui:151
 #, kde-format
 msgid "Keep window thumbnails:"
 msgstr "Saugoti langų miniatiūras:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:238
+#: compositing.ui:159
 #, kde-format
 msgid "Never"
 msgstr "Niekada"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:243
+#: compositing.ui:164
 #, kde-format
 msgid "Only for Shown Windows"
 msgstr "Tik rodomiems langams"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:248
+#: compositing.ui:169
 #, kde-format
 msgid "Always"
 msgstr "Visada"
 
 #. i18n: ectx: property (text), widget (QLabel, latencyLabel)
-#: compositing.ui:256
+#: compositing.ui:177
 #, kde-format
 msgid "Latency:"
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:264
+#: compositing.ui:185
 #, kde-format
 msgid "Force lowest latency (may cause dropped frames)"
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:269
+#: compositing.ui:190
 #, kde-format
 msgid "Prefer lower latency"
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:274
+#: compositing.ui:195
 #, kde-format
 msgid "Balance of latency and smoothness"
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:279
+#: compositing.ui:200
 #, kde-format
 msgid "Prefer smoother animations"
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:284
+#: compositing.ui:205
 #, kde-format
 msgid "Force smoothest animations"
 msgstr ""
@@ -230,27 +172,53 @@ msgstr ""
 msgid "Re-enable OpenGL detection"
 msgstr "Iš naujo įjungti OpenGL aptikimą"
 
-#: main.cpp:135
-#, kde-format
-msgid ""
-"\"Only when cheap\" only prevents tearing for full screen changes like a "
-"video."
-msgstr ""
-"\"Tik tuomet, kai lengva\" neleidžia perskyrimų tik viso ekrano "
-"pakeitimuose, tokiuose kaip vaizdo įrašai."
+#~ msgid ""
+#~ "Scale method \"Accurate\" is not supported by all hardware and can cause "
+#~ "performance regressions and rendering artifacts."
+#~ msgstr ""
+#~ "Mastelio keitimo metodas \"Tikslus\" nėra palaikomas visos aparatinės "
+#~ "įrangos ir gali sukelti našumo regresijas bei atvaizdavimo artefaktus."
 
-#: main.cpp:139
-#, kde-format
-msgid "\"Full screen repaints\" can cause performance problems."
-msgstr "\"Viso ekrano piešimas iš naujo\" gali sukelti našumo problemų."
+#~ msgid "Scale method:"
+#~ msgstr "Mastelio keitimo metodas:"
 
-#: main.cpp:143
-#, kde-format
-msgid ""
-"\"Re-use screen content\" causes severe performance problems on MESA drivers."
-msgstr ""
-"\"Pakartotinai naudoti ekrano turinį\" MESA tvarkyklėse gali sukelti rimtų "
-"našumo problemų."
+#~ msgid "Smooth"
+#~ msgstr "Glotnus"
+
+#~ msgid "Accurate"
+#~ msgstr "Tikslus"
+
+#~ msgid "Tearing prevention (\"vsync\"):"
+#~ msgstr "Perskyrimų prevencija („VSync“):"
+
+#~ msgid "Automatic"
+#~ msgstr "Automatiškai"
+
+#~ msgid "Only when cheap"
+#~ msgstr "Tik tuomet, kai lengva"
+
+#~ msgid "Full screen repaints"
+#~ msgstr "Viso ekrano piešimas iš naujo"
+
+#~ msgid "Re-use screen content"
+#~ msgstr "Pakartotinai naudoti ekrano turinį"
+
+#~ msgid ""
+#~ "\"Only when cheap\" only prevents tearing for full screen changes like a "
+#~ "video."
+#~ msgstr ""
+#~ "\"Tik tuomet, kai lengva\" neleidžia perskyrimų tik viso ekrano "
+#~ "pakeitimuose, tokiuose kaip vaizdo įrašai."
+
+#~ msgid "\"Full screen repaints\" can cause performance problems."
+#~ msgstr "\"Viso ekrano piešimas iš naujo\" gali sukelti našumo problemų."
+
+#~ msgid ""
+#~ "\"Re-use screen content\" causes severe performance problems on MESA "
+#~ "drivers."
+#~ msgstr ""
+#~ "\"Pakartotinai naudoti ekrano turinį\" MESA tvarkyklėse gali sukelti "
+#~ "rimtų našumo problemų."
 
 #~ msgid "Rendering backend:"
 #~ msgstr "Atvaizdavimo vidinė pusė:"

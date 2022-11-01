@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"POT-Creation-Date: 2022-11-01 00:48+0000\n"
 "PO-Revision-Date: 2021-11-17 14:01+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -38,18 +38,8 @@ msgstr ""
 "lahko ponastavite to zaščito. Zavedajte se, da to lahko povzroči takojšnje "
 "sesutje!"
 
-#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
-#: compositing.ui:44
-#, kde-format
-msgid ""
-"Scale method \"Accurate\" is not supported by all hardware and can cause "
-"performance regressions and rendering artifacts."
-msgstr ""
-"Načina umerjanja \"natančno\" ne podpira vsa strojna oprema, zato lahko "
-"upočasni delovanje ali povzroči napake izrisovanja."
-
 #. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
-#: compositing.ui:67
+#: compositing.ui:44
 #, kde-format
 msgid ""
 "Keeping the window thumbnail always interferes with the minimized state of "
@@ -59,19 +49,19 @@ msgstr ""
 "povzroči, da se okna ne prestavijo v pripravljenost, ko so skrčena."
 
 #. i18n: ectx: property (text), widget (QLabel, compositingLabel)
-#: compositing.ui:79
+#: compositing.ui:56
 #, kde-format
 msgid "Compositing:"
 msgstr "Skladnja:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
-#: compositing.ui:86
+#: compositing.ui:63
 #, kde-format
 msgid "Enable on startup"
 msgstr "Omogoči ob zagonu"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:95
+#: compositing.ui:72
 #, kde-format
 msgid ""
 "Applications can set a hint to block compositing when the window is open.\n"
@@ -83,133 +73,85 @@ msgstr ""
 " Nastavitev lahko prepišejo posebne okenske nastavitve."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:98
+#: compositing.ui:75
 #, kde-format
 msgid "Allow applications to block compositing"
 msgstr "Dovoli programom, da blokirajo skladnjo 3D"
 
 #. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
-#: compositing.ui:105
+#: compositing.ui:82
 #, kde-format
 msgid "Animation speed:"
 msgstr "Hitrost animacije:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#: compositing.ui:142
+#: compositing.ui:119
 #, kde-format
 msgid "Very slow"
 msgstr "Zelo počasna"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: compositing.ui:162
+#: compositing.ui:139
 #, kde-format
 msgid "Instant"
 msgstr "Hipna"
 
-#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
-#: compositing.ui:174
-#, kde-format
-msgid "Scale method:"
-msgstr "Metoda umerjanja:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
-#: compositing.ui:184
-#, kde-format
-msgid "Smooth"
-msgstr "Gladko"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
-#: compositing.ui:189
-#, kde-format
-msgid "Accurate"
-msgstr "Natančno"
-
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#: compositing.ui:199
-#, kde-format
-msgid "Tearing prevention (\"vsync\"):"
-msgstr "Preprečevanje trganja (\"vsync\"):"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:207
-#, kde-format
-msgid "Automatic"
-msgstr "Samodejno"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:212
-#, kde-format
-msgid "Only when cheap"
-msgstr "Samo, če ne zmanjša hitrosti delovanja"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:217
-#, kde-format
-msgid "Full screen repaints"
-msgstr "Ponovni izrisi celotnega zaslona"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:222
-#, kde-format
-msgid "Re-use screen content"
-msgstr "Znova uporabi vsebino zaslona"
-
 #. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
-#: compositing.ui:230
+#: compositing.ui:151
 #, kde-format
 msgid "Keep window thumbnails:"
 msgstr "Ohrani sličice oken:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:238
+#: compositing.ui:159
 #, kde-format
 msgid "Never"
 msgstr "Nikoli"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:243
+#: compositing.ui:164
 #, kde-format
 msgid "Only for Shown Windows"
 msgstr "Samo za prikazana okna"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:248
+#: compositing.ui:169
 #, kde-format
 msgid "Always"
 msgstr "Vedno"
 
 #. i18n: ectx: property (text), widget (QLabel, latencyLabel)
-#: compositing.ui:256
+#: compositing.ui:177
 #, kde-format
 msgid "Latency:"
 msgstr "Zakasnitev:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:264
+#: compositing.ui:185
 #, kde-format
 msgid "Force lowest latency (may cause dropped frames)"
 msgstr "Prisili najnižjo zakasnitev (lahko povzroči izpuščene okvirje)"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:269
+#: compositing.ui:190
 #, kde-format
 msgid "Prefer lower latency"
 msgstr "Dajaj prednost zakasnitvi"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:274
+#: compositing.ui:195
 #, kde-format
 msgid "Balance of latency and smoothness"
 msgstr "Ravnotežje zakasnitve in gladkosti"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:279
+#: compositing.ui:200
 #, kde-format
 msgid "Prefer smoother animations"
 msgstr "Dajaj prednost gladkim animacijam"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:284
+#: compositing.ui:205
 #, kde-format
 msgid "Force smoothest animations"
 msgstr "Prisilite gladke animacije"
@@ -219,29 +161,55 @@ msgstr "Prisilite gladke animacije"
 msgid "Re-enable OpenGL detection"
 msgstr "Znova omogoči zaznavanje OpenGL-ja"
 
-#: main.cpp:135
-#, kde-format
-msgid ""
-"\"Only when cheap\" only prevents tearing for full screen changes like a "
-"video."
-msgstr ""
-"\"Samo, če ne zmanjša hitrosti delovanja\" preprečuje trganje samo za "
-"celozaslonske spremembe (npr. ob gledanju videa)."
+#~ msgid ""
+#~ "Scale method \"Accurate\" is not supported by all hardware and can cause "
+#~ "performance regressions and rendering artifacts."
+#~ msgstr ""
+#~ "Načina umerjanja \"natančno\" ne podpira vsa strojna oprema, zato lahko "
+#~ "upočasni delovanje ali povzroči napake izrisovanja."
 
-#: main.cpp:139
-#, kde-format
-msgid "\"Full screen repaints\" can cause performance problems."
-msgstr ""
-"»Ponovni izrisi celotnega zaslona« lahko povzroči težave s hitrostjo "
-"delovanja."
+#~ msgid "Scale method:"
+#~ msgstr "Metoda umerjanja:"
 
-#: main.cpp:143
-#, kde-format
-msgid ""
-"\"Re-use screen content\" causes severe performance problems on MESA drivers."
-msgstr ""
-"»Znova uporabi vsebino zaslona« ima velike težave s hitrostjo delovanja na "
-"gonilnikih MESA."
+#~ msgid "Smooth"
+#~ msgstr "Gladko"
+
+#~ msgid "Accurate"
+#~ msgstr "Natančno"
+
+#~ msgid "Tearing prevention (\"vsync\"):"
+#~ msgstr "Preprečevanje trganja (\"vsync\"):"
+
+#~ msgid "Automatic"
+#~ msgstr "Samodejno"
+
+#~ msgid "Only when cheap"
+#~ msgstr "Samo, če ne zmanjša hitrosti delovanja"
+
+#~ msgid "Full screen repaints"
+#~ msgstr "Ponovni izrisi celotnega zaslona"
+
+#~ msgid "Re-use screen content"
+#~ msgstr "Znova uporabi vsebino zaslona"
+
+#~ msgid ""
+#~ "\"Only when cheap\" only prevents tearing for full screen changes like a "
+#~ "video."
+#~ msgstr ""
+#~ "\"Samo, če ne zmanjša hitrosti delovanja\" preprečuje trganje samo za "
+#~ "celozaslonske spremembe (npr. ob gledanju videa)."
+
+#~ msgid "\"Full screen repaints\" can cause performance problems."
+#~ msgstr ""
+#~ "»Ponovni izrisi celotnega zaslona« lahko povzroči težave s hitrostjo "
+#~ "delovanja."
+
+#~ msgid ""
+#~ "\"Re-use screen content\" causes severe performance problems on MESA "
+#~ "drivers."
+#~ msgstr ""
+#~ "»Znova uporabi vsebino zaslona« ima velike težave s hitrostjo delovanja "
+#~ "na gonilnikih MESA."
 
 #~ msgid "Rendering backend:"
 #~ msgstr "Izrisovalno zaledje:"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-02 00:49+0000\n"
+"POT-Creation-Date: 2022-11-01 00:48+0000\n"
 "PO-Revision-Date: 2021-11-14 15:36+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -40,18 +40,8 @@ msgstr ""
 "dan kunt u deze beveiliging resetten maar wees u bewust dat dit kan "
 "resulteren in een onmiddellijke crash!"
 
-#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
-#: compositing.ui:44
-#, kde-format
-msgid ""
-"Scale method \"Accurate\" is not supported by all hardware and can cause "
-"performance regressions and rendering artifacts."
-msgstr ""
-"Schalingsmethode \"Accuraat\" wordt niet ondersteund door alle hardware en "
-"kan cause regressie in prestaties en weergave van artifacts veroorzaken."
-
 #. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
-#: compositing.ui:67
+#: compositing.ui:44
 #, kde-format
 msgid ""
 "Keeping the window thumbnail always interferes with the minimized state of "
@@ -62,19 +52,19 @@ msgstr ""
 "indien geminimaliseerd."
 
 #. i18n: ectx: property (text), widget (QLabel, compositingLabel)
-#: compositing.ui:79
+#: compositing.ui:56
 #, kde-format
 msgid "Compositing:"
 msgstr "Compositing:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
-#: compositing.ui:86
+#: compositing.ui:63
 #, kde-format
 msgid "Enable on startup"
 msgstr "Inschakelen bij opstarten"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:95
+#: compositing.ui:72
 #, kde-format
 msgid ""
 "Applications can set a hint to block compositing when the window is open.\n"
@@ -87,133 +77,85 @@ msgstr ""
 " De instelling kan overschreven worden door venster-specifieke regels."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:98
+#: compositing.ui:75
 #, kde-format
 msgid "Allow applications to block compositing"
 msgstr "Toepassingen toestaan compositing te blokkeren"
 
 #. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
-#: compositing.ui:105
+#: compositing.ui:82
 #, kde-format
 msgid "Animation speed:"
 msgstr "Animatiesnelheid:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#: compositing.ui:142
+#: compositing.ui:119
 #, kde-format
 msgid "Very slow"
 msgstr "Zeer traag"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: compositing.ui:162
+#: compositing.ui:139
 #, kde-format
 msgid "Instant"
 msgstr "Onmiddellijk"
 
-#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
-#: compositing.ui:174
-#, kde-format
-msgid "Scale method:"
-msgstr "Schalingsmethode:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
-#: compositing.ui:184
-#, kde-format
-msgid "Smooth"
-msgstr "Vloeiend"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
-#: compositing.ui:189
-#, kde-format
-msgid "Accurate"
-msgstr "Accuraat"
-
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#: compositing.ui:199
-#, kde-format
-msgid "Tearing prevention (\"vsync\"):"
-msgstr "Voorkomen van scheeftrekken (\"vsync\"):"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:207
-#, kde-format
-msgid "Automatic"
-msgstr "Automatisch"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:212
-#, kde-format
-msgid "Only when cheap"
-msgstr "Alleen wanneer goedkoop"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:217
-#, kde-format
-msgid "Full screen repaints"
-msgstr "Volledig herschrijven van het scherm"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:222
-#, kde-format
-msgid "Re-use screen content"
-msgstr "Scherminhoud hergebruiken"
-
 #. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
-#: compositing.ui:230
+#: compositing.ui:151
 #, kde-format
 msgid "Keep window thumbnails:"
 msgstr "Vensterminiaturen behouden:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:238
+#: compositing.ui:159
 #, kde-format
 msgid "Never"
 msgstr "Nooit"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:243
+#: compositing.ui:164
 #, kde-format
 msgid "Only for Shown Windows"
 msgstr "Alleen voor weergegeven vensters"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:248
+#: compositing.ui:169
 #, kde-format
 msgid "Always"
 msgstr "Altijd"
 
 #. i18n: ectx: property (text), widget (QLabel, latencyLabel)
-#: compositing.ui:256
+#: compositing.ui:177
 #, kde-format
 msgid "Latency:"
 msgstr "Latency:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:264
+#: compositing.ui:185
 #, kde-format
 msgid "Force lowest latency (may cause dropped frames)"
 msgstr "Laagste latency afdwingen (kan vervallen frames veroorzaken)"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:269
+#: compositing.ui:190
 #, kde-format
 msgid "Prefer lower latency"
 msgstr "Lagere latency heeft voorkeur"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:274
+#: compositing.ui:195
 #, kde-format
 msgid "Balance of latency and smoothness"
 msgstr "Tussen latency en soepelheid balanceren"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:279
+#: compositing.ui:200
 #, kde-format
 msgid "Prefer smoother animations"
 msgstr "Soepeler animaties hebben voorkeur"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
-#: compositing.ui:284
+#: compositing.ui:205
 #, kde-format
 msgid "Force smoothest animations"
 msgstr "Soepelste animaties afdwingen"
@@ -223,29 +165,56 @@ msgstr "Soepelste animaties afdwingen"
 msgid "Re-enable OpenGL detection"
 msgstr "Detectie van OpenGL opnieuw inschakelen"
 
-#: main.cpp:135
-#, kde-format
-msgid ""
-"\"Only when cheap\" only prevents tearing for full screen changes like a "
-"video."
-msgstr ""
-"\"Alleen wanneer goedkoop\" voorkomt alleen schuin trekken bij wijzigingen "
-"in het volledige scherm zoals een video."
+#~ msgid ""
+#~ "Scale method \"Accurate\" is not supported by all hardware and can cause "
+#~ "performance regressions and rendering artifacts."
+#~ msgstr ""
+#~ "Schalingsmethode \"Accuraat\" wordt niet ondersteund door alle hardware "
+#~ "en kan cause regressie in prestaties en weergave van artifacts "
+#~ "veroorzaken."
 
-#: main.cpp:139
-#, kde-format
-msgid "\"Full screen repaints\" can cause performance problems."
-msgstr ""
-"\"Volledig herschrijven van het scherm\" kan problemen met de prestatie "
-"veroorzaken."
+#~ msgid "Scale method:"
+#~ msgstr "Schalingsmethode:"
 
-#: main.cpp:143
-#, kde-format
-msgid ""
-"\"Re-use screen content\" causes severe performance problems on MESA drivers."
-msgstr ""
-"\"Scherminhoud hergebruiken\" veroorzaakt ernstige problemen met de "
-"prestatie bij MESA-stuurprogramma's."
+#~ msgid "Smooth"
+#~ msgstr "Vloeiend"
+
+#~ msgid "Accurate"
+#~ msgstr "Accuraat"
+
+#~ msgid "Tearing prevention (\"vsync\"):"
+#~ msgstr "Voorkomen van scheeftrekken (\"vsync\"):"
+
+#~ msgid "Automatic"
+#~ msgstr "Automatisch"
+
+#~ msgid "Only when cheap"
+#~ msgstr "Alleen wanneer goedkoop"
+
+#~ msgid "Full screen repaints"
+#~ msgstr "Volledig herschrijven van het scherm"
+
+#~ msgid "Re-use screen content"
+#~ msgstr "Scherminhoud hergebruiken"
+
+#~ msgid ""
+#~ "\"Only when cheap\" only prevents tearing for full screen changes like a "
+#~ "video."
+#~ msgstr ""
+#~ "\"Alleen wanneer goedkoop\" voorkomt alleen schuin trekken bij "
+#~ "wijzigingen in het volledige scherm zoals een video."
+
+#~ msgid "\"Full screen repaints\" can cause performance problems."
+#~ msgstr ""
+#~ "\"Volledig herschrijven van het scherm\" kan problemen met de prestatie "
+#~ "veroorzaken."
+
+#~ msgid ""
+#~ "\"Re-use screen content\" causes severe performance problems on MESA "
+#~ "drivers."
+#~ msgstr ""
+#~ "\"Scherminhoud hergebruiken\" veroorzaakt ernstige problemen met de "
+#~ "prestatie bij MESA-stuurprogramma's."
 
 #~ msgid "Rendering backend:"
 #~ msgstr "Backend voor renderen:"

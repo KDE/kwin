@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-28 00:47+0000\n"
+"POT-Creation-Date: 2022-11-01 00:48+0000\n"
 "PO-Revision-Date: 2022-10-29 14:14+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -30,19 +30,19 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "xalba@euskalnet.net"
 
-#: genericscriptedconfig.cpp:74
+#: genericscriptedconfig.cpp:70
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
 msgstr "Ezin izan ditu paketearen meta-datuak aurkitu"
 
-#: genericscriptedconfig.cpp:88
+#: genericscriptedconfig.cpp:84
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
 msgstr "%1(e)k ez du meta-datu.json fitxategirik"
 
-#: genericscriptedconfig.cpp:94 genericscriptedconfig.cpp:100
+#: genericscriptedconfig.cpp:90 genericscriptedconfig.cpp:96
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"

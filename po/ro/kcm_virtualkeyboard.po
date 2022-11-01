@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2021-04-27 00:19+0000\n"
+"POT-Creation-Date: 2022-11-01 00:48+0000\n"
 "PO-Revision-Date: 2021-07-25 12:31+0100\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian\n"
@@ -28,22 +28,22 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "sergiu@cip.md"
 
-#: kcmvirtualkeyboard.cpp:31
+#: kcmvirtualkeyboard.cpp:29
 #, kde-format
 msgid "Virtual Keyboard"
 msgstr "Tastatură virtuală"
 
-#: kcmvirtualkeyboard.cpp:33
+#: kcmvirtualkeyboard.cpp:31
 #, kde-format
 msgid "Choose Virtual Keyboard"
 msgstr "Alege tastatura virtuală"
 
-#: kcmvirtualkeyboard.cpp:70
+#: kcmvirtualkeyboard.cpp:68
 #, kde-format
 msgid "None"
 msgstr "Niciuna"
 
-#: kcmvirtualkeyboard.cpp:74
+#: kcmvirtualkeyboard.cpp:72
 #, kde-format
 msgid "Do not use any virtual keyboard"
 msgstr "Nu folosi nicio tastatură virtuală"
