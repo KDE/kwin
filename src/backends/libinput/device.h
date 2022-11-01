@@ -53,6 +53,7 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(quint32 vendor READ vendor CONSTANT)
     Q_PROPERTY(bool supportsDisableEvents READ supportsDisableEvents CONSTANT)
     Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
+    Q_PROPERTY(bool enabledByDefault READ isEnabledByDefault CONSTANT)
     //
     // advanced
     Q_PROPERTY(int supportedButtons READ supportedButtons CONSTANT)
