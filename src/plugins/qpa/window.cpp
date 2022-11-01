@@ -60,22 +60,29 @@ void Window::requestActivateWindow()
 
 void Window::setGeometry(const QRect &rect)
 {
-    const QRect oldGeometry = geometry();
+    const QRect &oldRect = geometry();
     QPlatformWindow::setGeometry(rect);
+    if (rect.x() != oldRect.x()) {
+        Q_EMIT window()->xChanged(rect.x());
+    }
+    if (rect.y() != oldRect.y()) {
+        Q_EMIT window()->yChanged(rect.y());
+    }
+    if (rect.width() != oldRect.width()) {
+        Q_EMIT window()->widthChanged(rect.width());
+    }
+    if (rect.height() != oldRect.height()) {
+        Q_EMIT window()->heightChanged(rect.height());
+    }
 
-    if (window()->isVisible() && rect.isValid()) {
-        const QSize nativeSize = rect.size() * m_scale;
-        if (m_contentFBO) {
-            if (m_contentFBO->size() != nativeSize) {
-                m_resized = true;
-            }
+    const QSize nativeSize = rect.size() * m_scale;
+
+    if (m_contentFBO) {
+        if (m_contentFBO->size() != nativeSize) {
+            m_resized = true;
         }
-        QWindowSystemInterface::handleGeometryChange(window(), geometry());
     }
-
-    if (isExposed() && oldGeometry.size() != rect.size()) {
-        QWindowSystemInterface::handleExposeEvent(window(), QRect(QPoint(), rect.size()));
-    }
+    QWindowSystemInterface::handleGeometryChange(window(), geometry());
 }
 
 WId Window::winId() const
