@@ -524,7 +524,6 @@ private:
     bool activitiesDefined; // whether the x property was actually set
 
     bool sessionActivityOverride;
-    bool needsXWindowMove;
 
     Xcb::Window m_decoInputExtent;
     QPointF input_offset;

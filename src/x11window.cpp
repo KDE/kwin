@@ -198,7 +198,6 @@ X11Window::X11Window()
     , sm_stacking_order(-1)
     , activitiesDefined(false)
     , sessionActivityOverride(false)
-    , needsXWindowMove(false)
     , m_decoInputExtent()
     , m_focusOutTimer(nullptr)
 {
@@ -4245,16 +4244,8 @@ void X11Window::updateServerGeometry()
         }
         updateShape();
     } else {
-        if (isInteractiveMoveResize()) {
-            if (Compositor::compositing()) { // Defer the X update until we leave this mode
-                needsXWindowMove = true;
-            } else {
-                m_frame.move(m_bufferGeometry.topLeft()); // sendSyntheticConfigureNotify() on finish shall be sufficient
-            }
-        } else {
-            m_frame.move(m_bufferGeometry.topLeft());
-            sendSyntheticConfigureNotify();
-        }
+        m_frame.move(m_bufferGeometry.topLeft());
+        sendSyntheticConfigureNotify();
         // Unconditionally move the input window: it won't affect rendering
         m_decoInputExtent.move(pos().toPoint() + inputPos());
     }
@@ -4673,11 +4664,6 @@ bool X11Window::doStartInteractiveMoveResize()
 
 void X11Window::leaveInteractiveMoveResize()
 {
-    if (needsXWindowMove) {
-        // Do the deferred move
-        m_frame.move(m_bufferGeometry.topLeft().toPoint());
-        needsXWindowMove = false;
-    }
     if (!isInteractiveResize()) {
         sendSyntheticConfigureNotify(); // tell the client about it's new final position
     }
