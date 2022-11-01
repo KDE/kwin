@@ -719,7 +719,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     // TODO: get KMainWindow a correct state storage what will allow to store the restore size as well.
 
     if (!session) { // has a better handling of this
-        setGeometryRestore(frameGeometry()); // Remember restore geometry
+        setGeometryRestore(moveResizeGeometry()); // Remember restore geometry
         if (isMaximizable() && (width() >= area.width() || height() >= area.height())) {
             // Window is too large for the screen, maximize in the
             // directions necessary
@@ -1120,7 +1120,7 @@ void X11Window::updateDecoration(bool check_workspace_pos, bool force)
     if (!force && ((!isDecorated() && noBorder()) || (isDecorated() && !noBorder()))) {
         return;
     }
-    QRectF oldgeom = frameGeometry();
+    QRectF oldgeom = moveResizeGeometry();
     blockGeometryUpdates(true);
     if (force) {
         destroyDecoration();
@@ -1161,7 +1161,7 @@ void X11Window::createDecoration(const QRectF &oldgeom)
 
 void X11Window::destroyDecoration()
 {
-    QRectF oldgeom = frameGeometry();
+    QRectF oldgeom = moveResizeGeometry();
     if (isDecorated()) {
         QPointF grav = calculateGravitation(true);
         setDecoration(nullptr);
@@ -1574,7 +1574,7 @@ void X11Window::doSetShade(ShadeMode previousShadeMode)
         QSizeF s(implicitSize());
         shade_geometry_change = false;
         resize(s);
-        setGeometryRestore(frameGeometry());
+        setGeometryRestore(moveResizeGeometry());
         if ((shadeMode() == ShadeHover || shadeMode() == ShadeActivated) && rules()->checkAcceptFocus(info->input())) {
             setActive(true);
         }
@@ -4422,7 +4422,7 @@ void X11Window::maximize(MaximizeMode mode)
     }
 
     case MaximizeRestore: {
-        QRectF restore = frameGeometry();
+        QRectF restore = moveResizeGeometry();
         // when only partially maximized, geom_restore may not have the other dimension remembered
         if (old_mode & MaximizeVertical) {
             restore.setTop(geometryRestore().top());
@@ -4442,7 +4442,7 @@ void X11Window::maximize(MaximizeMode mode)
             }
             resize(constrainFrameSize(s));
             workspace()->placement()->placeSmart(this, clientArea);
-            restore = frameGeometry();
+            restore = moveResizeGeometry();
             if (geometryRestore().width() > 0) {
                 restore.moveLeft(geometryRestore().x());
             }
@@ -4558,7 +4558,7 @@ void X11Window::setFullScreen(bool set, bool user)
     if (wasFullscreen) {
         workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event
     } else {
-        setFullscreenGeometryRestore(frameGeometry());
+        setFullscreenGeometryRestore(moveResizeGeometry());
     }
 
     if (set) {
