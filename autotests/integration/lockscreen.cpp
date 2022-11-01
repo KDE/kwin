@@ -679,7 +679,7 @@ void LockScreenTest::testKeyboardShortcut()
     using namespace KWayland::Client;
     std::unique_ptr<QAction> action(new QAction(nullptr));
     QSignalSpy actionSpy(action.get(), &QAction::triggered);
-    action->setProperty("componentName", QStringLiteral(KWIN_NAME));
+    action->setProperty("componentName", QStringLiteral("kwin"));
     action->setObjectName("LockScreenTest::testKeyboardShortcut");
     KGlobalAccel::self()->setDefaultShortcut(action.get(), QList<QKeySequence>{Qt::CTRL | Qt::META | Qt::ALT | Qt::Key_Space});
     KGlobalAccel::self()->setShortcut(action.get(), QList<QKeySequence>{Qt::CTRL | Qt::META | Qt::ALT | Qt::Key_Space},

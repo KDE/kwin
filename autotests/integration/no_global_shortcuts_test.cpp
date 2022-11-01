@@ -171,7 +171,7 @@ void NoGlobalShortcutsTest::testTrigger()
 void NoGlobalShortcutsTest::testKGlobalAccel()
 {
     std::unique_ptr<QAction> action(new QAction(nullptr));
-    action->setProperty("componentName", QStringLiteral(KWIN_NAME));
+    action->setProperty("componentName", QStringLiteral("kwin"));
     action->setObjectName(QStringLiteral("globalshortcuts-test-meta-shift-w"));
     QSignalSpy triggeredSpy(action.get(), &QAction::triggered);
     KGlobalAccel::self()->setShortcut(action.get(), QList<QKeySequence>{Qt::META | Qt::SHIFT | Qt::Key_W}, KGlobalAccel::NoAutoloading);

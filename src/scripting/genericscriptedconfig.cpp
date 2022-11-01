@@ -64,7 +64,7 @@ void GenericScriptedConfig::createUi()
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     const QString packageRoot = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                       QLatin1String(KWIN_NAME) + QLatin1Char('/') + typeName() + QLatin1Char('/') + m_packageName,
+                                                       QLatin1String("kwin/") + typeName() + QLatin1Char('/') + m_packageName,
                                                        QStandardPaths::LocateDirectory);
     if (packageRoot.isEmpty()) {
         layout->addWidget(new QLabel(i18nc("Error message", "Could not locate package metadata")));

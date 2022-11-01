@@ -105,7 +105,7 @@ void Helper::unref()
 }
 
 static const QString s_defaultTheme = QStringLiteral("kwin4_decoration_qml_plastik");
-static const QString s_qmlPackageFolder = QStringLiteral(KWIN_NAME "/decorations/");
+static const QString s_qmlPackageFolder = QStringLiteral("kwin/decorations/");
 /*
  * KDecoration2::BorderSize doesn't map to the indices used for the Aurorae SVG Button Sizes.
  * BorderSize defines None and NoSideBorder as index 0 and 1. These do not make sense for Button

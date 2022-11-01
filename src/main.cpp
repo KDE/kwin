@@ -170,7 +170,7 @@ bool Application::wasCrash()
 
 void Application::createAboutData()
 {
-    KAboutData aboutData(QStringLiteral(KWIN_NAME), // The program name used internally
+    KAboutData aboutData(QStringLiteral("kwin"), // The program name used internally
                          i18n("KWin"), // A displayable program name string
                          QStringLiteral(KWIN_VERSION_STRING), // The program version string
                          i18n("KDE window manager"), // Short description of what the app does

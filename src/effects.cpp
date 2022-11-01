@@ -2332,7 +2332,7 @@ EffectFrameQuickScene::EffectFrameQuickScene(EffectFrameStyle style, bool static
         break;
     }
 
-    const QString defaultPath = QStringLiteral(KWIN_NAME "/frames/plasma/frame_%1.qml").arg(name);
+    const QString defaultPath = QStringLiteral("kwin/frames/plasma/frame_%1.qml").arg(name);
     // TODO read from kwinApp()->config() "QmlPath" like Outline/OnScreenNotification
     // *if* someone really needs this to be configurable.
     const QString path = QStandardPaths::locate(QStandardPaths::GenericDataLocation, defaultPath);

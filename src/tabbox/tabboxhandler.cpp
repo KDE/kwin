@@ -244,7 +244,7 @@ QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
             .arg(config.layoutName(),
                  desktopMode ? QStringLiteral("desktopswitcher/DesktopSwitcher.qml") : QStringLiteral("windowswitcher/WindowSwitcher.qml")));
     if (file.isNull()) {
-        const QString folderName = QLatin1String(KWIN_NAME) + (desktopMode ? QLatin1String("/desktoptabbox/") : QLatin1String("/tabbox/"));
+        const QString folderName = desktopMode ? QLatin1String("kwin/desktoptabbox/") : QLatin1String("kwin/tabbox/");
         auto findSwitcher = [this, desktopMode, folderName] {
             const QString type = desktopMode ? QStringLiteral("KWin/DesktopSwitcher") : QStringLiteral("KWin/WindowSwitcher");
             auto offers = KPackage::PackageLoader::self()->findPackages(type, folderName,

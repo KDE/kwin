@@ -383,11 +383,6 @@ option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
 cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "KF5Activities_FOUND" OFF)
 cmake_dependent_option(KWIN_BUILD_RUNNERS "Enable building of KWin with krunner support" ON "KF5Runner_FOUND" OFF)
 
-# Binary name of KWin
-set(KWIN_NAME "kwin")
-set(KWIN_INTERNAL_NAME_X11 "kwin_x11")
-set(KWIN_INTERNAL_NAME_WAYLAND "kwin_wayland")
-
 set(HAVE_EPOXY_GLX ${epoxy_HAS_GLX})
 
 # for kwin internal things

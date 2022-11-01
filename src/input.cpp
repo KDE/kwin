@@ -1960,7 +1960,7 @@ public:
         connect(input(), &InputRedirection::deviceRemoved, this, &TabletInputFilter::removeDevice);
 
         auto tabletNextOutput = new QAction(this);
-        tabletNextOutput->setProperty("componentName", QStringLiteral(KWIN_NAME));
+        tabletNextOutput->setProperty("componentName", QStringLiteral("kwin"));
         tabletNextOutput->setText(i18n("Move the tablet to the next output"));
         tabletNextOutput->setObjectName(QStringLiteral("Move Tablet to Next Output"));
         KGlobalAccel::setGlobalShortcut(tabletNextOutput, QList<QKeySequence>());

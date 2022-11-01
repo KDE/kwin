@@ -138,7 +138,7 @@ void GlobalShortcutsTest::testNonLatinLayout()
     const QKeySequence seq(qtModifier + qtKey);
 
     std::unique_ptr<QAction> action(new QAction(nullptr));
-    action->setProperty("componentName", QStringLiteral(KWIN_NAME));
+    action->setProperty("componentName", QStringLiteral("kwin"));
     action->setObjectName("globalshortcuts-test-non-latin-layout");
 
     QSignalSpy triggeredSpy(action.get(), &QAction::triggered);
@@ -162,7 +162,7 @@ void GlobalShortcutsTest::testConsumedShift()
     // this test verifies that a shortcut with a consumed shift modifier triggers
     // create the action
     std::unique_ptr<QAction> action(new QAction(nullptr));
-    action->setProperty("componentName", QStringLiteral(KWIN_NAME));
+    action->setProperty("componentName", QStringLiteral("kwin"));
     action->setObjectName(QStringLiteral("globalshortcuts-test-consumed-shift"));
     QSignalSpy triggeredSpy(action.get(), &QAction::triggered);
     KGlobalAccel::self()->setShortcut(action.get(), QList<QKeySequence>{Qt::Key_Percent}, KGlobalAccel::NoAutoloading);
@@ -185,7 +185,7 @@ void GlobalShortcutsTest::testRepeatedTrigger()
     // in addition pressing another key should stop triggering the shortcut
 
     std::unique_ptr<QAction> action(new QAction(nullptr));
-    action->setProperty("componentName", QStringLiteral(KWIN_NAME));
+    action->setProperty("componentName", QStringLiteral("kwin"));
     action->setObjectName(QStringLiteral("globalshortcuts-test-consumed-shift"));
     QSignalSpy triggeredSpy(action.get(), &QAction::triggered);
     KGlobalAccel::self()->setShortcut(action.get(), QList<QKeySequence>{Qt::Key_Percent}, KGlobalAccel::NoAutoloading);
@@ -244,7 +244,7 @@ void GlobalShortcutsTest::testMetaShiftW()
 {
     // BUG 370341
     std::unique_ptr<QAction> action(new QAction(nullptr));
-    action->setProperty("componentName", QStringLiteral(KWIN_NAME));
+    action->setProperty("componentName", QStringLiteral("kwin"));
     action->setObjectName(QStringLiteral("globalshortcuts-test-meta-shift-w"));
     QSignalSpy triggeredSpy(action.get(), &QAction::triggered);
     KGlobalAccel::self()->setShortcut(action.get(), QList<QKeySequence>{Qt::META | Qt::SHIFT | Qt::Key_W}, KGlobalAccel::NoAutoloading);
@@ -268,7 +268,7 @@ void GlobalShortcutsTest::testComponseKey()
 {
     // BUG 390110
     std::unique_ptr<QAction> action(new QAction(nullptr));
-    action->setProperty("componentName", QStringLiteral(KWIN_NAME));
+    action->setProperty("componentName", QStringLiteral("kwin"));
     action->setObjectName(QStringLiteral("globalshortcuts-accent"));
     QSignalSpy triggeredSpy(action.get(), &QAction::triggered);
     KGlobalAccel::self()->setShortcut(action.get(), QList<QKeySequence>{Qt::NoModifier}, KGlobalAccel::NoAutoloading);

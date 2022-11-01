@@ -87,13 +87,13 @@ NightColorManager::NightColorManager()
     // legacy shortcut with localized key (to avoid breaking existing config)
     if (i18n("Toggle Night Color") != QStringLiteral("Toggle Night Color")) {
         QAction toggleActionLegacy;
-        toggleActionLegacy.setProperty("componentName", QStringLiteral(KWIN_NAME));
+        toggleActionLegacy.setProperty("componentName", QStringLiteral("kwin"));
         toggleActionLegacy.setObjectName(i18n("Toggle Night Color"));
         KGlobalAccel::self()->removeAllShortcuts(&toggleActionLegacy);
     }
 
     QAction *toggleAction = new QAction(this);
-    toggleAction->setProperty("componentName", QStringLiteral(KWIN_NAME));
+    toggleAction->setProperty("componentName", QStringLiteral("kwin"));
     toggleAction->setObjectName(QStringLiteral("Toggle Night Color"));
     toggleAction->setText(i18n("Toggle Night Color"));
     KGlobalAccel::setGlobalShortcut(toggleAction, QList<QKeySequence>());

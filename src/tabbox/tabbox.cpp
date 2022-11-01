@@ -509,7 +509,7 @@ template<typename Slot>
 void TabBox::key(const KLazyLocalizedString &actionName, Slot slot, const QKeySequence &shortcut)
 {
     QAction *a = new QAction(this);
-    a->setProperty("componentName", QStringLiteral(KWIN_NAME));
+    a->setProperty("componentName", QStringLiteral("kwin"));
     a->setObjectName(QString::fromUtf8(actionName.untranslatedText()));
     a->setText(actionName.toString());
     KGlobalAccel::self()->setGlobalShortcut(a, QList<QKeySequence>() << shortcut);
