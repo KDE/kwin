@@ -386,24 +386,12 @@ void SceneOpenGL::createRenderNode(Item *item, RenderContext *context)
         SurfacePixmap *pixmap = surfaceItem->pixmap();
         if (pixmap) {
             if (!geometry.isEmpty()) {
-                bool hasAlpha = pixmap->hasAlphaChannel();
-                bool isCompletelyOpaque = true;
-                // Don't bother with blending if the entire surface is opaque
-                const QVector<QRectF> shape = surfaceItem->shape();
-                for (const QRectF &shapePart : shape) {
-                    if (!item->opaque().contains(shapePart.toRect())) {
-                        isCompletelyOpaque = false;
-                        break;
-                    }
-                }
-                hasAlpha &= !isCompletelyOpaque;
-
                 context->renderNodes.append(RenderNode{
                     .texture = bindSurfaceTexture(surfaceItem),
                     .geometry = geometry,
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
-                    .hasAlpha = hasAlpha,
+                    .hasAlpha = pixmap->hasAlphaChannel(),
                     .coordinateType = NormalizedCoordinates,
                     .scale = scale,
                 });
