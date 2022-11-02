@@ -327,7 +327,7 @@ bool CompositorDBusInterface::isOpenGLBroken() const
 
 bool CompositorDBusInterface::platformRequiresCompositing() const
 {
-    return kwinApp()->platform()->requiresCompositing();
+    return kwinApp()->operationMode() != Application::OperationModeX11; // TODO: Remove this property?
 }
 
 void CompositorDBusInterface::resume()

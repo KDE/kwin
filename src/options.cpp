@@ -1086,7 +1086,7 @@ QStringList Options::modifierOnlyDBusShortcut(Qt::KeyboardModifier mod) const
 
 bool Options::isUseCompositing() const
 {
-    return m_useCompositing || kwinApp()->platform()->requiresCompositing();
+    return m_useCompositing;
 }
 
 } // namespace

@@ -40,7 +40,6 @@ public:
     std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
     std::unique_ptr<Edge> createScreenEdge(ScreenEdges *parent) override;
     void createPlatformCursor(QObject *parent = nullptr) override;
-    bool requiresCompositing() const override;
     bool compositingPossible() const override;
     QString compositingNotPossibleReason() const override;
     bool openGLCompositingIsBroken() const override;

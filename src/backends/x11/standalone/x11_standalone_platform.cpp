@@ -200,11 +200,6 @@ void X11StandalonePlatform::createPlatformCursor(QObject *parent)
 #endif
 }
 
-bool X11StandalonePlatform::requiresCompositing() const
-{
-    return false;
-}
-
 bool X11StandalonePlatform::openGLCompositingIsBroken() const
 {
     auto timestamp = KConfigGroup(kwinApp()->config(), "Compositing").readEntry(QLatin1String("LastFailureTimestamp"), 0);

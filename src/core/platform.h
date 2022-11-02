@@ -98,12 +98,6 @@ public:
     void setSceneEglGlobalShareContext(EGLContext context);
 
     /**
-     * Whether the Platform requires compositing for rendering.
-     * Default implementation returns @c true. If the implementing Platform allows to be used
-     * without compositing (e.g. rendering is done by the windowing system), re-implement this method.
-     */
-    virtual bool requiresCompositing() const;
-    /**
      * Whether Compositing is possible in the Platform.
      * Returning @c false in this method makes only sense if requiresCompositing returns @c false.
      *

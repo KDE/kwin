@@ -152,11 +152,6 @@ void Platform::setSceneEglDisplay(EGLDisplay display)
     m_eglDisplay = display;
 }
 
-bool Platform::requiresCompositing() const
-{
-    return true;
-}
-
 bool Platform::compositingPossible() const
 {
     return true;
