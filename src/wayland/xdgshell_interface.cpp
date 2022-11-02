@@ -16,7 +16,7 @@
 
 namespace KWaylandServer
 {
-static const int s_version = 4;
+static const int s_version = 5;
 
 XdgShellInterfacePrivate::XdgShellInterfacePrivate(XdgShellInterface *shell)
     : q(shell)
@@ -581,6 +581,29 @@ void XdgToplevelInterface::sendConfigureBounds(const QSize &size)
 {
     if (d->resource()->version() >= XDG_TOPLEVEL_CONFIGURE_BOUNDS_SINCE_VERSION) {
         d->send_configure_bounds(size.width(), size.height());
+    }
+}
+
+void XdgToplevelInterface::sendWmCapabilities(Capabilities capabilities)
+{
+    if (d->resource()->version() >= XDG_TOPLEVEL_WM_CAPABILITIES_SINCE_VERSION) {
+        uint32_t capsData[8] = {0};
+        int i = 0;
+
+        if (capabilities & Capability::WindowMenu) {
+            capsData[i++] = QtWaylandServer::xdg_toplevel::wm_capabilities_window_menu;
+        }
+        if (capabilities & Capability::Maximize) {
+            capsData[i++] = QtWaylandServer::xdg_toplevel::wm_capabilities_maximize;
+        }
+        if (capabilities & Capability::FullScreen) {
+            capsData[i++] = QtWaylandServer::xdg_toplevel::wm_capabilities_fullscreen;
+        }
+        if (capabilities & Capability::Minimize) {
+            capsData[i++] = QtWaylandServer::xdg_toplevel::wm_capabilities_minimize;
+        }
+
+        d->send_wm_capabilities(QByteArray::fromRawData(reinterpret_cast<char *>(capsData), sizeof(uint32_t) * i));
     }
 }
 

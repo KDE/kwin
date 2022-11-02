@@ -1409,6 +1409,11 @@ void XdgToplevelWindow::initialize()
         workspace()->placement()->place(this, area);
     }
 
+    m_shellSurface->sendWmCapabilities(XdgToplevelInterface::Capability::WindowMenu |
+                                       XdgToplevelInterface::Capability::Maximize |
+                                       XdgToplevelInterface::Capability::FullScreen |
+                                       XdgToplevelInterface::Capability::Minimize);
+
     configureDecoration();
     scheduleConfigure();
     updateColorScheme();
