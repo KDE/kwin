@@ -2304,10 +2304,10 @@ static bool hasOffscreenXineramaStrut(Window *window)
 {
     // Get strut as a QRegion
     QRegion region;
-    region += window->strutRect(StrutAreaTop);
-    region += window->strutRect(StrutAreaRight);
-    region += window->strutRect(StrutAreaBottom);
-    region += window->strutRect(StrutAreaLeft);
+    region += window->strutRect(StrutAreaTop).toRect();
+    region += window->strutRect(StrutAreaRight).toRect();
+    region += window->strutRect(StrutAreaBottom).toRect();
+    region += window->strutRect(StrutAreaLeft).toRect();
 
     // Remove all visible areas so that only the invisible remain
     const auto outputs = workspace()->outputs();
