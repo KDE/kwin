@@ -34,6 +34,10 @@ public:
     {
         return m_region;
     }
+    qreal scale() const
+    {
+        return m_scale;
+    }
     void updateOutput(Output *output);
 
 private:
