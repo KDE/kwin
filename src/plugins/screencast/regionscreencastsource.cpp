@@ -45,25 +45,21 @@ void RegionScreenCastSource::updateOutput(Output *output)
     if (m_renderedTexture) {
         const std::shared_ptr<GLTexture> outputTexture = Compositor::self()->scene()->textureForOutput(output);
         const auto outputGeometry = output->geometry();
-        const auto outputScale = output->scale();
         if (!outputTexture || !m_region.intersects(output->geometry())) {
             return;
         }
 
         GLFramebuffer::pushFramebuffer(m_target.get());
-        const QRect geometry({0, 0}, m_target->size());
 
         ShaderBinder shaderBinder(ShaderTrait::MapTexture);
         QMatrix4x4 projectionMatrix;
         projectionMatrix.ortho(m_region);
-
-        const QPoint pos = outputGeometry.topLeft();
-        projectionMatrix.translate(pos.x() * outputScale, pos.y() * outputScale);
+        projectionMatrix.translate(outputGeometry.left() / m_scale, (m_region.bottom() - outputGeometry.bottom()) / m_scale);
 
         shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
         outputTexture->bind();
-        outputTexture->render(output->geometry(), outputScale);
+        outputTexture->render(output->geometry(), 1 / m_scale);
         outputTexture->unbind();
         GLFramebuffer::popFramebuffer();
     }
