@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-01 00:48+0000\n"
-"PO-Revision-Date: 2022-10-30 20:41+0300\n"
+"PO-Revision-Date: 2022-11-01 12:46+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -1148,16 +1148,14 @@ msgid "Move the tablet to the next output"
 msgstr "Tableti, sonraki çıktıya taşı"
 
 #: input.cpp:2042
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Tablet moved to %1"
-msgstr "Tablet kipi"
+msgstr "Tablet şuraya taşındı: %1"
 
 #: input.cpp:2042
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "Tabletler çıktılarını değiştirdiler"
 
 #: input.cpp:3020
 #, kde-format
@@ -1336,7 +1334,7 @@ msgstr "Drm düğümünde gerçekle."
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
-msgstr ""
+msgstr "Yerel ayar bilgisini kullanıcı yapılandırması yerine locale1'den çıkar"
 
 #: main_wayland.cpp:391
 #, kde-format

@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-01 00:48+0000\n"
-"PO-Revision-Date: 2022-10-28 09:29+0200\n"
+"PO-Revision-Date: 2022-11-01 11:09+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -1145,19 +1145,17 @@ msgstr "Espera més llarga"
 #: input.cpp:1963
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "Mou la tauleta a l'eixida següent"
 
 #: input.cpp:2042
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Tablet moved to %1"
-msgstr "Mode tauleta"
+msgstr "La tauleta s'ha mogut a %1"
 
 #: input.cpp:2042
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "Les tauletes han intercanviat les eixides"
 
 #: input.cpp:3020
 #, kde-format
@@ -1342,6 +1340,8 @@ msgstr "Renderitza mitjançant el node del DRM."
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
+"Extrau la informació de la configuració regional a partir de «locale1» en "
+"lloc de la configuració de l'usuari"
 
 #: main_wayland.cpp:391
 #, kde-format

@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-01 00:48+0000\n"
-"PO-Revision-Date: 2022-10-29 19:05+0200\n"
+"PO-Revision-Date: 2022-11-01 12:19+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -1155,19 +1155,17 @@ msgstr "Esperar más tiempo"
 #: input.cpp:1963
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "Mover la tableta a la siguiente salida"
 
 #: input.cpp:2042
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Tablet moved to %1"
-msgstr "Modo tableta"
+msgstr "Tableta movida a %1"
 
 #: input.cpp:2042
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "Las tabletas han cambiado de salida"
 
 #: input.cpp:3020
 #, kde-format
@@ -1352,6 +1350,8 @@ msgstr "Renderizar a través del nodo DRM."
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
+"Extraer información local de «locale1» en lugar de usar la configuración del "
+"usuario"
 
 #: main_wayland.cpp:391
 #, kde-format

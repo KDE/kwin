@@ -579,7 +579,7 @@ msgid ""
 msgstr ""
 "Les finestres poden sol·licitar que apareguen en una posició determinada.\n"
 "De manera predeterminada, açò substituïx l'estratègia d'emplaçament\n"
-"que pot ser desagradable si el client abusa de la funcionalitat\n"
+"que pot ser desagradable si el client abusa de la característica\n"
 "d'emergir incondicionalment en el mig de la pantalla."
 
 #: rulesmodel.cpp:516

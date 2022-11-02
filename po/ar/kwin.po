@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-01 00:48+0000\n"
-"PO-Revision-Date: 2022-10-29 19:03+0400\n"
+"PO-Revision-Date: 2022-11-01 12:17+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -1133,19 +1133,17 @@ msgstr "انتظر أكثر"
 #: input.cpp:1963
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "انقل اللوحي إلى الخرج التالي"
 
 #: input.cpp:2042
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Tablet moved to %1"
-msgstr "وضع اللوحي"
+msgstr "انتقل اللوحي إلى %1"
 
 #: input.cpp:2042
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "بدلت اللوحيات المخرجات"
 
 #: input.cpp:3020
 #, kde-format
@@ -1184,42 +1182,42 @@ msgstr "© 1999-2019 لمطوري «كدي»"
 #: main.cpp:180
 #, kde-format
 msgid "Matthias Ettrich"
-msgstr "Matthias Ettrich"
+msgstr "ماتياس إتريش"
 
 #: main.cpp:181
 #, kde-format
 msgid "Cristian Tibirna"
-msgstr "Cristian Tibirna"
+msgstr "كريستيان تيبيرنا"
 
 #: main.cpp:182
 #, kde-format
 msgid "Daniel M. Duley"
-msgstr "Daniel M. Duley"
+msgstr "دانيال م. دولي"
 
 #: main.cpp:183
 #, kde-format
 msgid "Luboš Luňák"
-msgstr "Luboš Luňák"
+msgstr "لوبوس لوناك"
 
 #: main.cpp:184
 #, kde-format
 msgid "Martin Flöser"
-msgstr "Martin Flöser"
+msgstr "مارتن فلوسر"
 
 #: main.cpp:185
 #, kde-format
 msgid "David Edmundson"
-msgstr "David Edmundson"
+msgstr "ديفيد إدموندسون"
 
 #: main.cpp:186
 #, kde-format
 msgid "Roman Gilg"
-msgstr "Roman Gilg"
+msgstr "رومان غيلغ"
 
 #: main.cpp:187
 #, kde-format
 msgid "Vlad Zahorodnii"
-msgstr "Vlad Zahorodnii"
+msgstr "فلاد زاهورودني"
 
 #: main.cpp:196
 #, kde-format
@@ -1320,7 +1318,7 @@ msgstr "التصيير عن طريق drm."
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
-msgstr ""
+msgstr "استخرج معلومات المحليات من locale1 عوضاً عن ضبط المستخدم"
 
 #: main_wayland.cpp:391
 #, kde-format
