@@ -2418,8 +2418,13 @@ void Workspace::updateClientArea()
         }
         StrutRects strutRegion = window->strutRects();
         const QRect clientsScreenRect = window->output()->geometry();
-        for (auto strut = strutRegion.begin(); strut != strutRegion.end(); strut++) {
-            *strut = StrutRect((*strut).intersected(clientsScreenRect), (*strut).area());
+        for (int i = strutRegion.size() - 1; i >= 0; --i) {
+            const StrutRect clipped = StrutRect(strutRegion[i].intersected(clientsScreenRect), strutRegion[i].area());
+            if (clipped.isEmpty()) {
+                strutRegion.removeAt(i);
+            } else {
+                strutRegion[i] = clipped;
+            }
         }
 
         // Ignore offscreen xinerama struts. These interfere with the larger monitors on the setup
@@ -2528,20 +2533,21 @@ QRect Workspace::geometry() const
     return m_geometry;
 }
 
-static QRegion strutsToRegion(StrutAreas areas, const StrutRects &strut)
+StrutRects Workspace::restrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas) const
 {
-    QRegion region;
+    const StrutRects strut = m_restrictedAreas.value(desktop);
+    if (areas == StrutAreaAll) {
+        return strut;
+    }
+
+    StrutRects ret;
+    ret.reserve(strut.size());
     for (const StrutRect &rect : strut) {
-        if (areas & rect.area()) {
-            region += rect;
+        if (rect.area() & areas) {
+            ret.append(rect);
         }
     }
-    return region;
-}
-
-QRegion Workspace::restrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas) const
-{
-    return strutsToRegion(areas, m_restrictedAreas[desktop]);
+    return ret;
 }
 
 bool Workspace::inUpdateClientArea() const
@@ -2549,9 +2555,21 @@ bool Workspace::inUpdateClientArea() const
     return m_inUpdateClientArea;
 }
 
-QRegion Workspace::previousRestrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas) const
+StrutRects Workspace::previousRestrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas) const
 {
-    return strutsToRegion(areas, m_oldRestrictedAreas[desktop]);
+    const StrutRects strut = m_oldRestrictedAreas.value(desktop);
+    if (areas == StrutAreaAll) {
+        return strut;
+    }
+
+    StrutRects ret;
+    ret.reserve(strut.size());
+    for (const StrutRect &rect : strut) {
+        if (rect.area() & areas) {
+            ret.append(rect);
+        }
+    }
+    return ret;
 }
 
 QHash<const Output *, QRect> Workspace::previousScreenSizes() const

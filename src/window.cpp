@@ -1920,8 +1920,11 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
             // Make sure the titlebar isn't behind a restricted area. We don't need to restrict
             // the other directions. If not visible enough, move the window to the closest valid
             // point. We bruteforce this by slowly moving the window back to its previous position
+            const StrutRects strut = workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
             QRegion availableArea(workspace()->clientArea(FullArea, this, workspace()->activeOutput()).toRect());
-            availableArea -= workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
+            for (const QRect &rect : strut) {
+                availableArea -= rect;
+            }
             bool transposed = false;
             int requiredPixels;
             QRectF bTitleRect = titleBarRect(nextMoveResizeGeom, transposed, requiredPixels);
@@ -2050,9 +2053,11 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
             nextMoveResizeGeom = geometry;
 
             if (!isUnrestrictedInteractiveMoveResize()) {
-                const QRegion strut = workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
+                const StrutRects strut = workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
                 QRegion availableArea(workspace()->clientArea(FullArea, this, workspace()->activeOutput()).toRect());
-                availableArea -= strut; // Strut areas
+                for (const QRect &rect : strut) {
+                    availableArea -= rect; // Strut areas
+                }
                 bool transposed = false;
                 int requiredPixels;
                 QRectF bTitleRect = titleBarRect(nextMoveResizeGeom, transposed, requiredPixels);
@@ -2139,10 +2144,18 @@ StrutRect Window::strutRect(StrutArea area) const
 StrutRects Window::strutRects() const
 {
     StrutRects region;
-    region += strutRect(StrutAreaTop);
-    region += strutRect(StrutAreaRight);
-    region += strutRect(StrutAreaBottom);
-    region += strutRect(StrutAreaLeft);
+    if (const StrutRect strut = strutRect(StrutAreaTop); strut.isValid()) {
+        region += strut;
+    }
+    if (const StrutRect strut = strutRect(StrutAreaRight); strut.isValid()) {
+        region += strut;
+    }
+    if (const StrutRect strut = strutRect(StrutAreaBottom); strut.isValid()) {
+        region += strut;
+    }
+    if (const StrutRect strut = strutRect(StrutAreaLeft); strut.isValid()) {
+        region += strut;
+    }
     return region;
 }
 

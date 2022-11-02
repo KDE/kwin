@@ -61,7 +61,7 @@ enum StrutArea {
 };
 Q_DECLARE_FLAGS(StrutAreas, StrutArea)
 
-class StrutRect : public QRect
+class KWIN_EXPORT StrutRect : public QRect
 {
 public:
     explicit StrutRect(QRect rect = QRect(), StrutArea area = StrutAreaInvalid);
