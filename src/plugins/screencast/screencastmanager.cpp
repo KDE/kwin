@@ -38,6 +38,23 @@ ScreencastManager::ScreencastManager()
     connect(m_screencast, &KWaylandServer::ScreencastV1Interface::regionScreencastRequested, this, &ScreencastManager::streamRegion);
 }
 
+static QRegion scaleRegion(const QRegion &_region, qreal scale)
+{
+    if (scale == 1.) {
+        return _region;
+    }
+
+    QRegion region;
+    for (auto it = _region.begin(), itEnd = _region.end(); it != itEnd; ++it) {
+        region += QRect(std::floor(it->x() * scale),
+                        std::floor(it->y() * scale),
+                        std::ceil(it->width() * scale),
+                        std::ceil(it->height() * scale));
+    }
+
+    return region;
+}
+
 class WindowStream : public ScreenCastStream
 {
 public:
@@ -136,9 +153,9 @@ void ScreencastManager::streamOutput(KWaylandServer::ScreencastStreamV1Interface
     auto stream = new ScreenCastStream(new OutputScreenCastSource(streamOutput), this);
     stream->setObjectName(streamOutput->name());
     stream->setCursorMode(mode, streamOutput->scale(), streamOutput->geometry());
-    auto bufferToStream = [stream](const QRegion &damagedRegion) {
+    auto bufferToStream = [stream, streamOutput](const QRegion &damagedRegion) {
         if (!damagedRegion.isEmpty()) {
-            stream->recordFrame(damagedRegion);
+            stream->recordFrame(scaleRegion(damagedRegion, streamOutput->scale()));
         }
     };
     connect(stream, &ScreenCastStream::startStreaming, waylandStream, [streamOutput, stream, bufferToStream] {
@@ -179,7 +196,7 @@ void ScreencastManager::streamRegion(KWaylandServer::ScreencastStreamV1Interface
                     const QRect streamRegion = source->region();
                     const QRegion region = output->pixelSize() != output->modeSize() ? output->geometry() : damagedRegion;
                     source->updateOutput(output);
-                    stream->recordFrame(region.translated(-streamRegion.topLeft()).intersected(streamRegion));
+                    stream->recordFrame(scaleRegion(region.translated(-streamRegion.topLeft()).intersected(streamRegion), source->scale()));
                 };
                 connect(output, &Output::outputChange, stream, bufferToStream);
             }
