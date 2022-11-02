@@ -4132,10 +4132,10 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
         newGeom.moveTop(qMax(topMax, screenArea.y()));
     }
     if (save[Right] || keep[Right]) {
-        newGeom.moveRight(qMin(rightMax, screenArea.right()));
+        newGeom.moveRight(qMin(rightMax, screenArea.right()) + 1);
     }
     if (save[Bottom] || keep[Bottom]) {
-        newGeom.moveBottom(qMin(bottomMax, screenArea.bottom()));
+        newGeom.moveBottom(qMin(bottomMax, screenArea.bottom()) + 1);
     }
 
     if (oldGeometry.x() >= oldLeftMax && newGeom.x() < leftMax) {
