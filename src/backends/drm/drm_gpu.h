@@ -73,6 +73,7 @@ public:
     bool atomicModeSetting() const;
     bool addFB2ModifiersSupported() const;
     bool isNVidia() const;
+    bool isEvdi() const;
     gbm_device *gbmDevice() const;
     EGLDisplay eglDisplay() const;
     DrmBackend *platform() const;
@@ -129,6 +130,7 @@ private:
     bool m_addFB2ModifiersSupported = false;
     bool m_isNVidia;
     bool m_isVirtualMachine;
+    bool m_isEvdi;
     bool m_isRemoved = false;
     clockid_t m_presentationClock;
     gbm_device *m_gbmDevice;

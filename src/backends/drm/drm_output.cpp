@@ -141,8 +141,8 @@ void DrmOutput::updateCursor()
 {
     static bool valid;
     static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR", &valid) == 1 && valid;
-    // hardware cursors are broken with the NVidia proprietary driver
-    if (forceSoftwareCursor || (!valid && m_gpu->isNVidia())) {
+    // hardware cursors are broken with the NVidia proprietary driver and evdi
+    if (forceSoftwareCursor || (!valid && (m_gpu->isNVidia() || m_gpu->isEvdi()))) {
         m_setCursorSuccessful = false;
         return;
     }

@@ -77,6 +77,7 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
     m_isNVidia = strstr(version->name, "nvidia-drm");
     m_isVirtualMachine = strstr(version->name, "virtio") || strstr(version->name, "qxl")
         || strstr(version->name, "vmwgfx") || strstr(version->name, "vboxvideo");
+    m_isEvdi = strstr(version->name, "evdi");
     m_gbmDevice = gbm_create_device(m_fd);
 
     m_socketNotifier = std::make_unique<QSocketNotifier>(fd, QSocketNotifier::Read);
@@ -667,6 +668,11 @@ bool DrmGpu::addFB2ModifiersSupported() const
 bool DrmGpu::isNVidia() const
 {
     return m_isNVidia;
+}
+
+bool DrmGpu::isEvdi() const
+{
+    return m_isEvdi;
 }
 
 bool DrmGpu::isRemoved() const
