@@ -375,8 +375,9 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         return;
     }
 
-    if (m_source->textureSize() != m_resolution) {
-        m_resolution = m_source->textureSize();
+    const auto size = m_source->textureSize();
+    if (size != m_resolution) {
+        m_resolution = size;
         newStreamParams();
         return;
     }
@@ -406,7 +407,6 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         return;
     }
 
-    const auto size = m_source->textureSize();
     spa_data->chunk->offset = 0;
     if (data || spa_data[0].type == SPA_DATA_MemFd) {
         const bool hasAlpha = m_source->hasAlphaChannel();
