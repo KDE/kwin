@@ -177,6 +177,7 @@ target_link_libraries(kwin
     KF5::ConfigCore
     KF5::ConfigWidgets
     KF5::CoreAddons
+    KF5::Crash
     KF5::GlobalAccel
     KF5::GlobalAccelPrivate
     KF5::I18n
@@ -291,7 +292,6 @@ add_executable(kwin_x11 main_x11.cpp)
 target_link_libraries(kwin_x11
     KWinX11Platform
     kwin
-    KF5::Crash
 )
 kcoreaddons_target_static_plugins(kwin_x11 "kwin/effects/plugins")
 
@@ -302,7 +302,6 @@ add_executable(kwin_wayland main_wayland.cpp)
 
 target_link_libraries(kwin_wayland
     kwin
-    KF5::Crash
     KWinXwaylandServerModule
 )
 kcoreaddons_target_static_plugins(kwin_wayland "kwin/effects/plugins")

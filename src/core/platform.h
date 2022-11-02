@@ -98,48 +98,6 @@ public:
     void setSceneEglGlobalShareContext(EGLContext context);
 
     /**
-     * Whether Compositing is possible in the Platform.
-     * Returning @c false in this method makes only sense if requiresCompositing returns @c false.
-     *
-     * The default implementation returns @c true.
-     * @see requiresCompositing
-     */
-    virtual bool compositingPossible() const;
-    /**
-     * Returns a user facing text explaining why compositing is not possible in case
-     * compositingPossible returns @c false.
-     *
-     * The default implementation returns an empty string.
-     * @see compositingPossible
-     */
-    virtual QString compositingNotPossibleReason() const;
-    /**
-     * Whether OpenGL compositing is broken.
-     * The Platform can implement this method if it is able to detect whether OpenGL compositing
-     * broke (e.g. triggered a crash in a previous run).
-     *
-     * Default implementation returns @c false.
-     * @see createOpenGLSafePoint
-     */
-    virtual bool openGLCompositingIsBroken() const;
-    enum class OpenGLSafePoint {
-        PreInit,
-        PostInit,
-        PreFrame,
-        PostFrame,
-        PostLastGuardedFrame
-    };
-    /**
-     * This method is invoked before and after creating the OpenGL rendering Scene.
-     * An implementing Platform can use it to detect crashes triggered by the OpenGL implementation.
-     * This can be used for openGLCompositingIsBroken.
-     *
-     * The default implementation does nothing.
-     * @see openGLCompositingIsBroken.
-     */
-    virtual void createOpenGLSafePoint(OpenGLSafePoint safePoint);
-
-    /**
      * Starts an interactive window selection process.
      *
      * Once the user selected a window the @p callback is invoked with the selected Window as

@@ -285,11 +285,6 @@ CompositorDBusInterface::CompositorDBusInterface(Compositor *parent)
                  QStringLiteral("reinit"), this, SLOT(reinitialize()));
 }
 
-QString CompositorDBusInterface::compositingNotPossibleReason() const
-{
-    return kwinApp()->platform()->compositingNotPossibleReason();
-}
-
 QString CompositorDBusInterface::compositingType() const
 {
     if (!m_compositor->compositing()) {
@@ -317,12 +312,17 @@ bool CompositorDBusInterface::isActive() const
 
 bool CompositorDBusInterface::isCompositingPossible() const
 {
-    return kwinApp()->platform()->compositingPossible();
+    return m_compositor->compositingPossible();
+}
+
+QString CompositorDBusInterface::compositingNotPossibleReason() const
+{
+    return m_compositor->compositingNotPossibleReason();
 }
 
 bool CompositorDBusInterface::isOpenGLBroken() const
 {
-    return kwinApp()->platform()->openGLCompositingIsBroken();
+    return m_compositor->openGLCompositingIsBroken();
 }
 
 bool CompositorDBusInterface::platformRequiresCompositing() const

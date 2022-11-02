@@ -40,10 +40,6 @@ public:
     std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
     std::unique_ptr<Edge> createScreenEdge(ScreenEdges *parent) override;
     void createPlatformCursor(QObject *parent = nullptr) override;
-    bool compositingPossible() const override;
-    QString compositingNotPossibleReason() const override;
-    bool openGLCompositingIsBroken() const override;
-    void createOpenGLSafePoint(OpenGLSafePoint safePoint) override;
     void startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName = QByteArray()) override;
     void startInteractivePositionSelection(std::function<void(const QPoint &)> callback) override;
 
@@ -81,8 +77,6 @@ private:
     void updateCursor();
 
     std::unique_ptr<XInputIntegration> m_xinputIntegration;
-    std::unique_ptr<QThread> m_openGLFreezeProtectionThread;
-    std::unique_ptr<QTimer> m_openGLFreezeProtection;
     std::unique_ptr<QTimer> m_updateOutputsTimer;
     Display *m_x11Display;
     std::unique_ptr<WindowSelector> m_windowSelector;

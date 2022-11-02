@@ -44,6 +44,7 @@
 #include <kwinglplatform.h>
 #include <kwingltexture.h>
 
+#include <KCrash>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #if KWIN_BUILD_NOTIFICATIONS
@@ -171,14 +172,14 @@ Compositor::~Compositor()
 bool Compositor::attemptOpenGLCompositing()
 {
     // Some broken drivers crash on glXQuery() so to prevent constant KWin crashes:
-    if (kwinApp()->platform()->openGLCompositingIsBroken()) {
+    if (openGLCompositingIsBroken()) {
         qCWarning(KWIN_CORE) << "KWin has detected that your OpenGL library is unsafe to use";
         return false;
     }
 
-    kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreInit);
-    auto safePointScope = qScopeGuard([]() {
-        kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostInit);
+    createOpenGLSafePoint(OpenGLSafePoint::PreInit);
+    auto safePointScope = qScopeGuard([this]() {
+        createOpenGLSafePoint(OpenGLSafePoint::PostInit);
     });
 
     std::unique_ptr<OpenGLBackend> backend = kwinApp()->platform()->createOpenGLBackend();
@@ -732,6 +733,25 @@ bool Compositor::isActive()
     return m_state == State::On;
 }
 
+bool Compositor::compositingPossible() const
+{
+    return true;
+}
+
+QString Compositor::compositingNotPossibleReason() const
+{
+    return QString();
+}
+
+bool Compositor::openGLCompositingIsBroken() const
+{
+    return false;
+}
+
+void Compositor::createOpenGLSafePoint(OpenGLSafePoint safePoint)
+{
+}
+
 WaylandCompositor::WaylandCompositor(QObject *parent)
     : Compositor(parent)
 {
@@ -777,6 +797,10 @@ X11Compositor::X11Compositor(QObject *parent)
 X11Compositor::~X11Compositor()
 {
     Q_EMIT aboutToDestroy();
+    if (m_openGLFreezeProtectionThread) {
+        m_openGLFreezeProtectionThread->quit();
+        m_openGLFreezeProtectionThread->wait();
+    }
     stop(); // this can't be called in the destructor of Compositor
 }
 
@@ -857,7 +881,7 @@ void X11Compositor::start()
         }
         qCInfo(KWIN_CORE) << "Compositing is suspended, reason:" << reasons;
         return;
-    } else if (!kwinApp()->platform()->compositingPossible()) {
+    } else if (!compositingPossible()) {
         qCWarning(KWIN_CORE) << "Compositing is not possible";
         return;
     }
@@ -907,7 +931,7 @@ void X11Compositor::composite(RenderLoop *renderLoop)
     }
 
     if (m_framesToTestForSafety > 0 && (backend()->compositingType() & OpenGLCompositing)) {
-        kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PreFrame);
+        createOpenGLSafePoint(OpenGLSafePoint::PreFrame);
     }
 
     Compositor::composite(renderLoop);
@@ -922,11 +946,11 @@ void X11Compositor::composite(RenderLoop *renderLoop)
 
     if (m_framesToTestForSafety > 0) {
         if (backend()->compositingType() & OpenGLCompositing) {
-            kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostFrame);
+            createOpenGLSafePoint(OpenGLSafePoint::PostFrame);
         }
         m_framesToTestForSafety--;
         if (m_framesToTestForSafety == 0 && (backend()->compositingType() & OpenGLCompositing)) {
-            kwinApp()->platform()->createOpenGLSafePoint(Platform::OpenGLSafePoint::PostLastGuardedFrame);
+            createOpenGLSafePoint(OpenGLSafePoint::PostLastGuardedFrame);
         }
     }
 }
@@ -994,6 +1018,122 @@ void X11Compositor::updateClientCompositeBlocking(X11Window *c)
 X11Compositor *X11Compositor::self()
 {
     return qobject_cast<X11Compositor *>(Compositor::self());
+}
+
+bool X11Compositor::openGLCompositingIsBroken() const
+{
+    auto timestamp = KConfigGroup(kwinApp()->config(), "Compositing").readEntry(QLatin1String("LastFailureTimestamp"), 0);
+    if (timestamp > 0) {
+        if (QDateTime::currentSecsSinceEpoch() - timestamp < 60) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+QString X11Compositor::compositingNotPossibleReason() const
+{
+    // first off, check whether we figured that we'll crash on detection because of a buggy driver
+    KConfigGroup gl_workaround_group(kwinApp()->config(), "Compositing");
+    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") && openGLCompositingIsBroken()) {
+        return i18n("<b>OpenGL compositing (the default) has crashed KWin in the past.</b><br>"
+                    "This was most likely due to a driver bug."
+                    "<p>If you think that you have meanwhile upgraded to a stable driver,<br>"
+                    "you can reset this protection but <b>be aware that this might result in an immediate crash!</b></p>");
+    }
+
+    if (!Xcb::Extensions::self()->isCompositeAvailable() || !Xcb::Extensions::self()->isDamageAvailable()) {
+        return i18n("Required X extensions (XComposite and XDamage) are not available.");
+    }
+    if (!Xcb::Extensions::self()->hasGlx()) {
+        return i18n("GLX/OpenGL is not available.");
+    }
+    return QString();
+}
+
+bool X11Compositor::compositingPossible() const
+{
+    // first off, check whether we figured that we'll crash on detection because of a buggy driver
+    KConfigGroup gl_workaround_group(kwinApp()->config(), "Compositing");
+    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QLatin1String("OpenGL") && openGLCompositingIsBroken()) {
+        qCWarning(KWIN_CORE) << "Compositing disabled: video driver seems unstable. If you think it's a false positive, please try again in a few minutes.";
+        return false;
+    }
+
+    if (!Xcb::Extensions::self()->isCompositeAvailable()) {
+        qCWarning(KWIN_CORE) << "Compositing disabled: no composite extension available";
+        return false;
+    }
+    if (!Xcb::Extensions::self()->isDamageAvailable()) {
+        qCWarning(KWIN_CORE) << "Compositing disabled: no damage extension available";
+        return false;
+    }
+    if (Xcb::Extensions::self()->hasGlx()) {
+        return true;
+    }
+    if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES) {
+        return true;
+    } else if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
+        return true;
+    }
+    qCWarning(KWIN_CORE) << "Compositing disabled: no OpenGL support";
+    return false;
+}
+
+void X11Compositor::createOpenGLSafePoint(OpenGLSafePoint safePoint)
+{
+    auto group = KConfigGroup(kwinApp()->config(), "Compositing");
+    switch (safePoint) {
+    case OpenGLSafePoint::PreInit:
+        // Explicitly write the failure timestamp so that if we crash during
+        // OpenGL init, we know we should not try again.
+        group.writeEntry(QLatin1String("LastFailureTimestamp"), QDateTime::currentSecsSinceEpoch());
+        group.sync();
+        // Deliberately continue with PreFrame
+        Q_FALLTHROUGH();
+    case OpenGLSafePoint::PreFrame:
+        if (m_openGLFreezeProtectionThread == nullptr) {
+            Q_ASSERT(m_openGLFreezeProtection == nullptr);
+            m_openGLFreezeProtectionThread = std::make_unique<QThread>();
+            m_openGLFreezeProtectionThread->setObjectName("FreezeDetector");
+            m_openGLFreezeProtectionThread->start();
+            m_openGLFreezeProtection = std::make_unique<QTimer>();
+            m_openGLFreezeProtection->setInterval(15000);
+            m_openGLFreezeProtection->setSingleShot(true);
+            m_openGLFreezeProtection->start();
+            const QString configName = kwinApp()->config()->name();
+            m_openGLFreezeProtection->moveToThread(m_openGLFreezeProtectionThread.get());
+            connect(
+                m_openGLFreezeProtection.get(), &QTimer::timeout, m_openGLFreezeProtection.get(),
+                [configName] {
+                    auto group = KConfigGroup(KSharedConfig::openConfig(configName), "Compositing");
+                    group.writeEntry(QLatin1String("LastFailureTimestamp"), QDateTime::currentSecsSinceEpoch());
+                    group.sync();
+                    KCrash::setDrKonqiEnabled(false);
+                    qFatal("Freeze in OpenGL initialization detected");
+                },
+                Qt::DirectConnection);
+        } else {
+            Q_ASSERT(m_openGLFreezeProtection);
+            QMetaObject::invokeMethod(m_openGLFreezeProtection.get(), QOverload<>::of(&QTimer::start), Qt::QueuedConnection);
+        }
+        break;
+    case OpenGLSafePoint::PostInit:
+        group.deleteEntry(QLatin1String("LastFailureTimestamp"));
+        group.sync();
+        // Deliberately continue with PostFrame
+        Q_FALLTHROUGH();
+    case OpenGLSafePoint::PostFrame:
+        QMetaObject::invokeMethod(m_openGLFreezeProtection.get(), &QTimer::stop, Qt::QueuedConnection);
+        break;
+    case OpenGLSafePoint::PostLastGuardedFrame:
+        m_openGLFreezeProtectionThread->quit();
+        m_openGLFreezeProtectionThread->wait();
+        m_openGLFreezeProtectionThread.reset();
+        m_openGLFreezeProtection.reset();
+        break;
+    }
 }
 
 }

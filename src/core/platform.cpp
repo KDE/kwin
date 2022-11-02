@@ -152,25 +152,6 @@ void Platform::setSceneEglDisplay(EGLDisplay display)
     m_eglDisplay = display;
 }
 
-bool Platform::compositingPossible() const
-{
-    return true;
-}
-
-QString Platform::compositingNotPossibleReason() const
-{
-    return QString();
-}
-
-bool Platform::openGLCompositingIsBroken() const
-{
-    return false;
-}
-
-void Platform::createOpenGLSafePoint(OpenGLSafePoint safePoint)
-{
-}
-
 void Platform::startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName)
 {
     if (!input()) {
