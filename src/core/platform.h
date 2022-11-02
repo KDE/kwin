@@ -74,7 +74,6 @@ public:
      * The default implementation creates an InputRedirectionCursor.
      */
     virtual void createPlatformCursor(QObject *parent = nullptr);
-    virtual void warpPointer(const QPointF &globalPos);
     /**
      * Whether our Compositing EGL display supports creating native EGL fences.
      */
@@ -203,10 +202,6 @@ public:
     {
         m_deviceIdentifier = identifier;
     }
-    bool supportsPointerWarping() const
-    {
-        return m_pointerWarping;
-    }
     int initialOutputCount() const
     {
         return m_initialOutputCount;
@@ -304,10 +299,6 @@ protected:
     {
         return m_deviceIdentifier;
     }
-    void setSupportsPointerWarping(bool set)
-    {
-        m_pointerWarping = set;
-    }
     void setSupportsGammaControl(bool set)
     {
         m_supportsGammaControl = set;
@@ -317,7 +308,6 @@ private:
     bool m_ready = false;
     QSize m_initialWindowSize;
     QByteArray m_deviceIdentifier;
-    bool m_pointerWarping = false;
     int m_initialOutputCount = 1;
     qreal m_initialOutputScale = 1;
     EGLDisplay m_eglDisplay;

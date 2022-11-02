@@ -155,7 +155,6 @@ void X11WindowedInputBackend::initialize()
 
 X11WindowedBackend::X11WindowedBackend()
 {
-    setSupportsPointerWarping(true);
 }
 
 X11WindowedBackend::~X11WindowedBackend()
@@ -654,13 +653,6 @@ std::unique_ptr<QPainterBackend> X11WindowedBackend::createQPainterBackend()
 std::unique_ptr<InputBackend> X11WindowedBackend::createInputBackend()
 {
     return std::make_unique<X11WindowedInputBackend>(this);
-}
-
-void X11WindowedBackend::warpPointer(const QPointF &globalPos)
-{
-    const xcb_window_t w = m_outputs.at(0)->window();
-    xcb_warp_pointer(m_connection, w, w, 0, 0, 0, 0, globalPos.x(), globalPos.y());
-    xcb_flush(m_connection);
 }
 
 xcb_window_t X11WindowedBackend::windowForScreen(Output *output) const

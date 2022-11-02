@@ -30,7 +30,6 @@ VirtualBackend::VirtualBackend(QObject *parent)
         }
     }
 
-    setSupportsPointerWarping(true);
     setSupportsGammaControl(true);
 }
 

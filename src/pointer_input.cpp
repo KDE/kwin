@@ -815,17 +815,13 @@ void PointerInputRedirection::updateButton(uint32_t button, InputRedirection::Po
 void PointerInputRedirection::warp(const QPointF &pos)
 {
     if (supportsWarping()) {
-        kwinApp()->platform()->warpPointer(pos);
         processMotionAbsolute(pos, waylandServer()->seat()->timestamp());
     }
 }
 
 bool PointerInputRedirection::supportsWarping() const
 {
-    if (!inited()) {
-        return false;
-    }
-    return kwinApp()->platform()->supportsPointerWarping();
+    return inited();
 }
 
 void PointerInputRedirection::updateAfterScreenChange()

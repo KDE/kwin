@@ -134,10 +134,6 @@ void Platform::removeVirtualOutput(Output *output)
     Q_ASSERT(!output);
 }
 
-void Platform::warpPointer(const QPointF &globalPos)
-{
-}
-
 bool Platform::supportsNativeFence() const
 {
     if (Compositor *compositor = Compositor::self()) {
