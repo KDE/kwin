@@ -71,12 +71,15 @@ QRegion X11WindowedEglOutput::lastDamage() const
 }
 
 X11WindowedEglBackend::X11WindowedEglBackend(X11WindowedBackend *backend)
-    : EglOnXBackend(backend->connection(), backend->display(), backend->rootWindow(), XCB_WINDOW_NONE)
+    : EglOnXBackend(backend->connection(), backend->display(), backend->rootWindow())
     , m_backend(backend)
 {
 }
 
-X11WindowedEglBackend::~X11WindowedEglBackend() = default;
+X11WindowedEglBackend::~X11WindowedEglBackend()
+{
+    cleanup();
+}
 
 void X11WindowedEglBackend::init()
 {

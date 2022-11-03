@@ -43,8 +43,9 @@ bool EglLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedReg
 }
 
 EglBackend::EglBackend(Display *display, X11StandalonePlatform *backend)
-    : EglOnXBackend(display)
+    : EglOnXBackend(kwinApp()->x11Connection(), display, kwinApp()->x11RootWindow())
     , m_backend(backend)
+    , m_overlayWindow(backend->createOverlayWindow())
     , m_layer(std::make_unique<EglLayer>(this))
 {
     // There is no any way to determine when a buffer swap completes with EGL. Fallback
@@ -66,6 +67,15 @@ EglBackend::~EglBackend()
     // render loop. We need to ensure that the render loop is back to its initial state
     // if the render backend is about to be destroyed.
     RenderLoopPrivate::get(m_backend->renderLoop())->invalidate();
+
+    if (isFailed() && m_overlayWindow) {
+        m_overlayWindow->destroy();
+    }
+    cleanup();
+
+    if (m_overlayWindow && m_overlayWindow->window()) {
+        m_overlayWindow->destroy();
+    }
 }
 
 std::unique_ptr<SurfaceTexture> EglBackend::createSurfaceTextureX11(SurfacePixmapX11 *texture)
@@ -111,6 +121,27 @@ void EglBackend::init()
     kwinApp()->platform()->setSceneEglDisplay(shareDisplay);
     kwinApp()->platform()->setSceneEglGlobalShareContext(shareContext);
     EglOnXBackend::init();
+}
+
+bool EglBackend::createSurfaces()
+{
+    if (!m_overlayWindow) {
+        return false;
+    }
+
+    if (!m_overlayWindow->create()) {
+        qCCritical(KWIN_X11STANDALONE) << "Could not get overlay window";
+        return false;
+    } else {
+        m_overlayWindow->setup(XCB_WINDOW_NONE);
+    }
+
+    EGLSurface surface = createSurface(m_overlayWindow->window());
+    if (surface == EGL_NO_SURFACE) {
+        return false;
+    }
+    setSurface(surface);
+    return true;
 }
 
 void EglBackend::screenGeometryChanged()
@@ -195,6 +226,11 @@ void EglBackend::presentSurface(EGLSurface surface, const QRegion &damage, const
     }
 }
 
+OverlayWindow *EglBackend::overlayWindow() const
+{
+    return m_overlayWindow.get();
+}
+
 OutputLayer *EglBackend::primaryLayer(Output *output)
 {
     return m_layer.get();
@@ -274,7 +310,7 @@ bool EglPixmapTexturePrivate::create(SurfacePixmapX11 *pixmap)
                                 attribs);
 
     if (EGL_NO_IMAGE_KHR == m_image) {
-        qCDebug(KWIN_CORE) << "failed to create egl image";
+        qCDebug(KWIN_X11STANDALONE) << "failed to create egl image";
         q->unbind();
         return false;
     }

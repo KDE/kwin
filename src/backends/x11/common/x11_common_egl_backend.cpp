@@ -10,10 +10,8 @@
 // kwineffects
 #include <kwinglutils.h>
 // kwin
-#include "core/overlaywindow.h"
 #include "core/platform.h"
 #include "main.h"
-#include "options.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"
 // X11
@@ -23,41 +21,15 @@
 namespace KWin
 {
 
-EglOnXBackend::EglOnXBackend(Display *display)
+EglOnXBackend::EglOnXBackend(xcb_connection_t *connection, Display *display, xcb_window_t rootWindow)
     : AbstractEglBackend()
-    , m_overlayWindow(kwinApp()->platform()->createOverlayWindow())
-    , surfaceHasSubPost(0)
-    , m_connection(connection())
-    , m_x11Display(display)
-    , m_rootWindow(rootWindow())
-{
-    // Egl is always direct rendering
-    setIsDirectRendering(true);
-}
-
-EglOnXBackend::EglOnXBackend(xcb_connection_t *connection, Display *display, xcb_window_t rootWindow, xcb_window_t renderingWindow)
-    : AbstractEglBackend()
-    , m_overlayWindow(nullptr)
     , surfaceHasSubPost(0)
     , m_connection(connection)
     , m_x11Display(display)
     , m_rootWindow(rootWindow)
-    , m_renderingWindow(renderingWindow)
 {
     // Egl is always direct rendering
     setIsDirectRendering(true);
-}
-
-EglOnXBackend::~EglOnXBackend()
-{
-    if (isFailed() && m_overlayWindow) {
-        m_overlayWindow->destroy();
-    }
-    cleanup();
-
-    if (m_overlayWindow && m_overlayWindow->window()) {
-        m_overlayWindow->destroy();
-    }
 }
 
 void EglOnXBackend::init()
@@ -148,14 +120,6 @@ bool EglOnXBackend::initRenderingContext()
 
     initBufferConfigs();
 
-    if (overlayWindow()) {
-        if (!overlayWindow()->create()) {
-            qCCritical(KWIN_CORE) << "Could not get overlay window";
-            return false;
-        } else {
-            overlayWindow()->setup(None);
-        }
-    }
     if (!createSurfaces()) {
         qCCritical(KWIN_CORE) << "Creating egl surface failed";
         return false;
@@ -177,24 +141,6 @@ bool EglOnXBackend::initRenderingContext()
         return false;
     }
 
-    return true;
-}
-
-bool EglOnXBackend::createSurfaces()
-{
-    xcb_window_t window = XCB_WINDOW_NONE;
-    if (m_overlayWindow) {
-        window = m_overlayWindow->window();
-    } else if (m_renderingWindow) {
-        window = m_renderingWindow;
-    }
-
-    EGLSurface surface = createSurface(window);
-
-    if (surface == EGL_NO_SURFACE) {
-        return false;
-    }
-    setSurface(surface);
     return true;
 }
 
@@ -270,11 +216,6 @@ bool EglOnXBackend::initBufferConfigs()
         }
     }
     return true;
-}
-
-OverlayWindow *EglOnXBackend::overlayWindow() const
-{
-    return m_overlayWindow.get();
 }
 
 bool EglOnXBackend::makeContextCurrent(const EGLSurface &surface)

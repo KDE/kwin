@@ -48,7 +48,11 @@ public:
     OutputLayerBeginFrameInfo beginFrame();
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
     void present(Output *output) override;
+    OverlayWindow *overlayWindow() const override;
     OutputLayer *primaryLayer(Output *output) override;
+
+protected:
+    bool createSurfaces() override;
 
 private:
     void screenGeometryChanged();
@@ -57,6 +61,7 @@ private:
 
     X11StandalonePlatform *m_backend;
     std::unique_ptr<SoftwareVsyncMonitor> m_vsyncMonitor;
+    std::unique_ptr<OverlayWindow> m_overlayWindow;
     DamageJournal m_damageJournal;
     std::unique_ptr<GLFramebuffer> m_fbo;
     int m_bufferAge = 0;
