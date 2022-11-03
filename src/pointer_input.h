@@ -284,8 +284,7 @@ public:
 
 protected:
     void doSetPos() override;
-    void doStartCursorTracking() override;
-    void doStopCursorTracking() override;
+
 private Q_SLOTS:
     void slotPosChanged(const QPointF &pos);
     void slotPointerButtonChanged();

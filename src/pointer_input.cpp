@@ -13,7 +13,6 @@
 #include <config-kwin.h>
 
 #include "core/output.h"
-#include "core/platform.h"
 #include "decorations/decoratedclient.h"
 #include "effects.h"
 #include "input_event.h"
@@ -1412,20 +1411,6 @@ void InputRedirectionCursor::slotPointerButtonChanged()
     m_currentButtons = input()->qtButtonStates();
     const QPoint pos = currentPos();
     Q_EMIT mouseChanged(pos, pos, m_currentButtons, oldButtons, input()->keyboardModifiers(), input()->keyboardModifiers());
-}
-
-void InputRedirectionCursor::doStartCursorTracking()
-{
-#ifndef KCMRULES
-//     connect(Cursors::self(), &Cursors::currentCursorChanged, this, &Cursor::cursorChanged);
-#endif
-}
-
-void InputRedirectionCursor::doStopCursorTracking()
-{
-#ifndef KCMRULES
-//     disconnect(kwinApp()->platform(), &Platform::cursorChanged, this, &Cursor::cursorChanged);
-#endif
 }
 
 }
