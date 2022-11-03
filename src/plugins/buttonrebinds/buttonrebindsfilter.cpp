@@ -262,12 +262,13 @@ bool ButtonRebindsFilter::send(TriggerType type, const Trigger &trigger, bool pr
     }
 
     const auto &action = typeActions[trigger];
-    if (const QKeySequence *seq = std::get_if<QKeySequence>(&action))
+    if (const QKeySequence *seq = std::get_if<QKeySequence>(&action)) {
         return sendKeySequence(*seq, pressed, timestamp);
-    else if (const auto mb = std::get_if<MouseButton>(&action))
+    } else if (const auto mb = std::get_if<MouseButton>(&action)) {
         return sendMouseButton(mb->button, pressed, timestamp);
-    else if (const auto tb = std::get_if<TabletToolButton>(&action))
+    } else if (const auto tb = std::get_if<TabletToolButton>(&action)) {
         return sendTabletToolButton(tb->button, pressed, timestamp);
+    }
     return false;
 }
 
