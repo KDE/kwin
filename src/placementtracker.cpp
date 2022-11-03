@@ -8,7 +8,6 @@
 */
 #include "placementtracker.h"
 #include "core/output.h"
-#include "core/platform.h"
 #include "window.h"
 #include "workspace.h"
 
