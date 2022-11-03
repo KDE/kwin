@@ -16,6 +16,7 @@
 #include "surfaceitem_x11.h"
 #include "workspace.h"
 #include "x11_standalone_logging.h"
+#include "x11_standalone_overlaywindow.h"
 #include "x11_standalone_platform.h"
 
 #include <QOpenGLContext>
@@ -45,7 +46,7 @@ bool EglLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedReg
 EglBackend::EglBackend(Display *display, X11StandalonePlatform *backend)
     : EglOnXBackend(kwinApp()->x11Connection(), display, kwinApp()->x11RootWindow())
     , m_backend(backend)
-    , m_overlayWindow(backend->createOverlayWindow())
+    , m_overlayWindow(std::make_unique<OverlayWindowX11>())
     , m_layer(std::make_unique<EglLayer>(this))
 {
     // There is no any way to determine when a buffer swap completes with EGL. Fallback

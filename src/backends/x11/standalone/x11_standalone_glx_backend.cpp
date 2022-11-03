@@ -19,6 +19,7 @@
 #include "x11_standalone_glxconvenience.h"
 #include "x11_standalone_logging.h"
 #include "x11_standalone_omlsynccontrolvsyncmonitor.h"
+#include "x11_standalone_overlaywindow.h"
 #include "x11_standalone_platform.h"
 #include "x11_standalone_sgivideosyncvsyncmonitor.h"
 // kwin
@@ -121,7 +122,7 @@ bool GlxLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedReg
 
 GlxBackend::GlxBackend(Display *display, X11StandalonePlatform *backend)
     : OpenGLBackend()
-    , m_overlayWindow(kwinApp()->platform()->createOverlayWindow())
+    , m_overlayWindow(std::make_unique<OverlayWindowX11>())
     , window(None)
     , fbconfig(nullptr)
     , glxWindow(None)

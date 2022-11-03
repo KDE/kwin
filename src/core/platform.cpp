@@ -18,7 +18,6 @@
 #include "outline.h"
 #include "output.h"
 #include "outputconfiguration.h"
-#include "overlaywindow.h"
 #include "pointer_input.h"
 #include "qpainterbackend.h"
 #include "scene.h"
@@ -168,11 +167,6 @@ void Platform::startInteractivePositionSelection(std::function<void(const QPoint
         return;
     }
     input()->startInteractivePositionSelection(callback);
-}
-
-std::unique_ptr<OverlayWindow> Platform::createOverlayWindow()
-{
-    return nullptr;
 }
 
 std::unique_ptr<OutlineVisual> Platform::createOutline(Outline *outline)

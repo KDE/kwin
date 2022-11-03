@@ -37,7 +37,6 @@
 #include "x11_standalone_logging.h"
 #include "x11_standalone_non_composited_outline.h"
 #include "x11_standalone_output.h"
-#include "x11_standalone_overlaywindow.h"
 #include "x11_standalone_screenedges_filter.h"
 #include "xkb.h"
 
@@ -240,11 +239,6 @@ void X11StandalonePlatform::startInteractivePositionSelection(std::function<void
         m_windowSelector = std::make_unique<WindowSelector>();
     }
     m_windowSelector->start(callback);
-}
-
-std::unique_ptr<OverlayWindow> X11StandalonePlatform::createOverlayWindow()
-{
-    return std::make_unique<OverlayWindowX11>();
 }
 
 std::unique_ptr<OutlineVisual> X11StandalonePlatform::createOutline(Outline *outline)

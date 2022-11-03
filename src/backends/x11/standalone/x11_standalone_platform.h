@@ -42,10 +42,7 @@ public:
     void createPlatformCursor(QObject *parent = nullptr) override;
     void startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName = QByteArray()) override;
     void startInteractivePositionSelection(std::function<void(const QPoint &)> callback) override;
-
     PlatformCursorImage cursorImage() const override;
-
-    std::unique_ptr<OverlayWindow> createOverlayWindow() override;
     std::unique_ptr<OutlineVisual> createOutline(Outline *outline) override;
     void createEffectsHandler(Compositor *compositor, Scene *scene) override;
     QVector<CompositingType> supportedCompositors() const override;

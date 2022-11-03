@@ -28,7 +28,6 @@ class Edge;
 class Compositor;
 class DmaBufTexture;
 class InputBackend;
-class OverlayWindow;
 class OpenGLBackend;
 class Outline;
 class OutlineVisual;
@@ -170,12 +169,6 @@ public:
     {
         m_initialOutputScale = scale;
     }
-
-    /**
-     * Creates the OverlayWindow required for X11 based compositors.
-     * Default implementation returns @c nullptr.
-     */
-    virtual std::unique_ptr<OverlayWindow> createOverlayWindow();
 
     /**
      * Creates the OutlineVisual for the given @p outline.
