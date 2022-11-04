@@ -292,6 +292,9 @@ void ExpoLayout::updatePolish()
         case LayoutNatural:
             calculateWindowTransformationsNatural();
             break;
+        case LayoutNone:
+            resetTransformations();
+            break;
         }
     }
 
@@ -699,5 +702,15 @@ void ExpoLayout::calculateWindowTransformationsNatural()
         cell->setY(rect.y());
         cell->setWidth(rect.width());
         cell->setHeight(rect.height());
+    }
+}
+
+void ExpoLayout::resetTransformations()
+{
+    for (ExpoCell *cell : std::as_const(m_cells)) {
+        cell->setX(cell->naturalX());
+        cell->setY(cell->naturalY());
+        cell->setWidth(cell->naturalWidth());
+        cell->setHeight(cell->naturalHeight());
     }
 }

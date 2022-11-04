@@ -26,6 +26,7 @@ public:
     enum LayoutMode : uint {
         LayoutClosest = 0,
         LayoutNatural = 1,
+        LayoutNone = 2
     };
     Q_ENUM(LayoutMode)
 
@@ -65,6 +66,7 @@ Q_SIGNALS:
 private:
     void calculateWindowTransformationsClosest();
     void calculateWindowTransformationsNatural();
+    void resetTransformations();
 
     QList<ExpoCell *> m_cells;
     LayoutMode m_mode = LayoutNatural;
