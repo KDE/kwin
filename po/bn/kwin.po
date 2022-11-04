@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-03 00:47+0000\n"
+"POT-Creation-Date: 2022-11-04 00:47+0000\n"
 "PO-Revision-Date: 2009-01-09 21:22-0800\n"
 "Last-Translator: Deepayan Sarkar <deepayan.sarkar@gmail.com>\n"
 "Language-Team: en_US <kde-translation@bengalinux.org>\n"
@@ -26,17 +26,37 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "anirban@bengalinux.org"
 
-#: composite.cpp:621
+#: composite.cpp:622
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 
-#: composite.cpp:827
+#: composite.cpp:851
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
 "resume using the '%1' shortcut."
 msgstr ""
+
+#: composite.cpp:1040
+#, kde-format
+msgid ""
+"<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+"b><br>This was most likely due to a driver bug.<p>If you think that you have "
+"meanwhile upgraded to a stable driver,<br>you can reset this protection but "
+"<b>be aware that this might result in an immediate crash!</b></p>"
+msgstr ""
+
+#: composite.cpp:1047
+#, kde-format
+msgid "Required X extensions (XComposite and XDamage) are not available."
+msgstr "প্রয়োজনীয় এক্স এক্সটেনশন (XComposite and XDamage) পাওয়া যায়নি।"
+
+#: composite.cpp:1050
+#, fuzzy, kde-format
+#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+msgid "GLX/OpenGL is not available."
+msgstr "GLX/OpenGL এবং XRender/XFixes পাওয়া যায়নি।"
 
 #: debug_console.cpp:79
 #, kde-format
@@ -2778,7 +2798,7 @@ msgstr "নিচের ডেস্কটপে যাও"
 msgid "Switch to Desktop %1"
 msgstr "১ নং ডেস্কটপে যাও"
 
-#: window.cpp:3419
+#: window.cpp:3432
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -2862,12 +2882,6 @@ msgstr ""
 
 #~ msgid "Maintainer"
 #~ msgstr "রক্ষণাবেক্ষণকারী"
-
-#~ msgid "Required X extensions (XComposite and XDamage) are not available."
-#~ msgstr "প্রয়োজনীয় এক্স এক্সটেনশন (XComposite and XDamage) পাওয়া যায়নি।"
-
-#~ msgid "GLX/OpenGL and XRender/XFixes are not available."
-#~ msgstr "GLX/OpenGL এবং XRender/XFixes পাওয়া যায়নি।"
 
 #~ msgid "Sh&ade"
 #~ msgstr "ছায়াবৃ&ত কর"

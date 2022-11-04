@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-03 00:47+0000\n"
+"POT-Creation-Date: 2022-11-04 00:47+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -26,17 +26,48 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "khoemsokhem@khmeros.info,​​evannak@khmeros.info,piseth_dv@khmeros.info"
 
-#: composite.cpp:621
+#: composite.cpp:622
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 
-#: composite.cpp:827
+#: composite.cpp:851
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
 "resume using the '%1' shortcut."
 msgstr "បែបផែន​ផ្ទៃតុ​ត្រូវបានផ្អាក​ដោយ​កម្មវិធី​ផ្សេង ។<br/>អ្នក​អាច​បន្ត​ ដោយ​ប្រើ​ផ្លូវកាត់ '%1' ។"
+
+#: composite.cpp:1040
+#, fuzzy, kde-format
+#| msgid ""
+#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
+#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
+#| "protection but <b>be aware that this might result in an immediate crash!</"
+#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
+#| "</p>"
+msgid ""
+"<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+"b><br>This was most likely due to a driver bug.<p>If you think that you have "
+"meanwhile upgraded to a stable driver,<br>you can reset this protection but "
+"<b>be aware that this might result in an immediate crash!</b></p>"
+msgstr ""
+"<b>ការ​តែង OpenGL (លំនាំដើម) បាន​ធ្វើ​ឲ្យ KWin គាំង​កាល​ពី​មុន ។</b><br>វា​ទំនង​ជា​ដោយ​សារ​តែ​កំហុស​"
+"កម្មវិធី​បញ្ជា ។<p>ប្រសិន​បើ​អ្នក​គិត​ថា អ្នក​បាន​ធ្វើ​ឲ្យ​កម្មវិធី​បញ្ជា​ដែលស្ថិត​ស្ថេរ​ប្រសើរ​ឡើង​នោះ​<br>អ្នក​"
+"អាច​កំណត់​ការការ​ពារ​នេះ​ឡើង​វិញ ប៉ុន្តែ <b>ត្រូវ​ដឹង​ថា វា​​អាច​ធ្វើ​ឲ្យ​គាំង​ភ្លាមៗ​បាន !</b></p><p>ជា​"
+"ជម្រើស អ្នក​ចង់​ប្រើ​កម្មវិធី​ផ្នែក​ខាង​ក្រោយ XRender ជំនួស​វិញ ។</p>"
+
+#: composite.cpp:1047
+#, kde-format
+msgid "Required X extensions (XComposite and XDamage) are not available."
+msgstr "មិន​មាន​​ផ្នែក​បន្ថែម X (XComposite និង XDamage) ដែល​ទាមទារ ។"
+
+#: composite.cpp:1050
+#, fuzzy, kde-format
+#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+msgid "GLX/OpenGL is not available."
+msgstr "មិន​មាន GLX/OpenGL and XRender/XFixes ។"
 
 #: debug_console.cpp:79
 #, kde-format
@@ -2759,7 +2790,7 @@ msgstr "ប្ដូរ​ចុះ​ក្រោម​មួយ​ផ្ទៃ
 msgid "Switch to Desktop %1"
 msgstr "ប្ដូរ​ទៅ​ផ្ទៃតុ %1"
 
-#: window.cpp:3419
+#: window.cpp:3432
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -2891,27 +2922,8 @@ msgstr ""
 #~ msgid "Maintainer"
 #~ msgstr "អ្នក​ថែទាំ"
 
-#~ msgid ""
-#~ "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#~ "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#~ "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#~ "protection but <b>be aware that this might result in an immediate crash!</"
-#~ "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#~ "</p>"
-#~ msgstr ""
-#~ "<b>ការ​តែង OpenGL (លំនាំដើម) បាន​ធ្វើ​ឲ្យ KWin គាំង​កាល​ពី​មុន ។</b><br>វា​ទំនង​ជា​ដោយ​សារ​តែ​"
-#~ "កំហុស​កម្មវិធី​បញ្ជា ។<p>ប្រសិន​បើ​អ្នក​គិត​ថា អ្នក​បាន​ធ្វើ​ឲ្យ​កម្មវិធី​បញ្ជា​ដែលស្ថិត​ស្ថេរ​ប្រសើរ​ឡើង​នោះ​"
-#~ "<br>អ្នក​អាច​កំណត់​ការការ​ពារ​នេះ​ឡើង​វិញ ប៉ុន្តែ <b>ត្រូវ​ដឹង​ថា វា​​អាច​ធ្វើ​ឲ្យ​គាំង​ភ្លាមៗ​បាន !</"
-#~ "b></p><p>ជា​ជម្រើស អ្នក​ចង់​ប្រើ​កម្មវិធី​ផ្នែក​ខាង​ក្រោយ XRender ជំនួស​វិញ ។</p>"
-
-#~ msgid "Required X extensions (XComposite and XDamage) are not available."
-#~ msgstr "មិន​មាន​​ផ្នែក​បន្ថែម X (XComposite និង XDamage) ដែល​ទាមទារ ។"
-
 #~ msgid "GLX/OpenGL are not available and only OpenGL support is compiled."
 #~ msgstr "មិនមាន GLX/OpenGL និងមាន​តែ​ការគាំទ្រ OpenGL ប៉ុណ្ណោះ​ត្រូវ​បាន​អនុវត្ត ។"
-
-#~ msgid "GLX/OpenGL and XRender/XFixes are not available."
-#~ msgstr "មិន​មាន GLX/OpenGL and XRender/XFixes ។"
 
 #~ msgid "Sh&ade"
 #~ msgstr "ស្រមោល"

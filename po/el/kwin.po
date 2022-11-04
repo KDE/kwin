@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-03 00:47+0000\n"
+"POT-Creation-Date: 2022-11-04 00:47+0000\n"
 "PO-Revision-Date: 2017-06-12 16:22+0200\n"
 "Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -37,13 +37,13 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "sng@hellug.gr, manolis@koppermind.homelinux.org"
 
-#: composite.cpp:621
+#: composite.cpp:622
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Τα εφέ επιφάνειας εργασίας επανεκκινήθηκαν λόγω της επαναφοράς γραφικών"
 
-#: composite.cpp:827
+#: composite.cpp:851
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -51,6 +51,41 @@ msgid ""
 msgstr ""
 "Τα εφέ της επιφάνειας εργασίας αναστάλθηκαν από κάποια άλλη εφαρμογή.<br/"
 ">Μπορείτε να τα επαναφέρετε με τη συντόμευση '%1'."
+
+#: composite.cpp:1040
+#, fuzzy, kde-format
+#| msgid ""
+#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
+#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
+#| "protection but <b>be aware that this might result in an immediate crash!</"
+#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
+#| "</p>"
+msgid ""
+"<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+"b><br>This was most likely due to a driver bug.<p>If you think that you have "
+"meanwhile upgraded to a stable driver,<br>you can reset this protection but "
+"<b>be aware that this might result in an immediate crash!</b></p>"
+msgstr ""
+"<b>Η σύνθεση OpenGL (η προκαθορισμένη) προκάλεσε την κατάρρευση του KWin στο "
+"παρελθόν.</b><br>Αυτό πιθανότατα να οφείλεται σε ένα σφάλμα του οδηγού.<p>Αν "
+"πιστεύεται ότι έχετε αναβαθμίσει σε έναν σταθερό οδηγό,<br>μπορείτε να "
+"επαναφέρετε αυτήν την προστασία αλλά <b>θα πρέπει να γνωρίζετε ότι μπορεί να "
+"προκαλέσει άμεση κατάρρευση!</b></p><p>Εναλλακτικά, μπορείτε να "
+"χρησιμοποιήσετε το σύστημα υποστήριξης XRender.</p>"
+
+#: composite.cpp:1047
+#, kde-format
+msgid "Required X extensions (XComposite and XDamage) are not available."
+msgstr ""
+"Οι απαιτούμενες επεκτάσεις του Χ (τα XComposite και XDamage) δεν είναι "
+"διαθέσιμες."
+
+#: composite.cpp:1050
+#, fuzzy, kde-format
+#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+msgid "GLX/OpenGL is not available."
+msgstr "Τα GLX/OpenGL και XRender/XFixes δεν είναι διαθέσιμα."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -2844,7 +2879,7 @@ msgstr "Μετάβαση μία επιφάνεια εργασίας κάτω"
 msgid "Switch to Desktop %1"
 msgstr "Εναλλαγή στην Επιφάνεια εργασίας %1"
 
-#: window.cpp:3419
+#: window.cpp:3432
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -3143,34 +3178,10 @@ msgstr ""
 #~ "Ο δείκτης κλειδώθηκε στην τρέχουσα θέση.\n"
 #~ "Για τερματισμό του κλειδώματος κρατήστε το Esc για 3 δευτερόλεπτα."
 
-#~ msgid ""
-#~ "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#~ "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#~ "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#~ "protection but <b>be aware that this might result in an immediate crash!</"
-#~ "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#~ "</p>"
-#~ msgstr ""
-#~ "<b>Η σύνθεση OpenGL (η προκαθορισμένη) προκάλεσε την κατάρρευση του KWin "
-#~ "στο παρελθόν.</b><br>Αυτό πιθανότατα να οφείλεται σε ένα σφάλμα του "
-#~ "οδηγού.<p>Αν πιστεύεται ότι έχετε αναβαθμίσει σε έναν σταθερό οδηγό,"
-#~ "<br>μπορείτε να επαναφέρετε αυτήν την προστασία αλλά <b>θα πρέπει να "
-#~ "γνωρίζετε ότι μπορεί να προκαλέσει άμεση κατάρρευση!</b></"
-#~ "p><p>Εναλλακτικά, μπορείτε να χρησιμοποιήσετε το σύστημα υποστήριξης "
-#~ "XRender.</p>"
-
-#~ msgid "Required X extensions (XComposite and XDamage) are not available."
-#~ msgstr ""
-#~ "Οι απαιτούμενες επεκτάσεις του Χ (τα XComposite και XDamage) δεν είναι "
-#~ "διαθέσιμες."
-
 #~ msgid "GLX/OpenGL are not available and only OpenGL support is compiled."
 #~ msgstr ""
 #~ "Το GLX/OpenGL δεν είναι διαθέσιμο και είναι μεταγλωττισμένη μόνο η "
 #~ "υποστήριξη OpenGL."
-
-#~ msgid "GLX/OpenGL and XRender/XFixes are not available."
-#~ msgstr "Τα GLX/OpenGL και XRender/XFixes δεν είναι διαθέσιμα."
 
 #~ msgid "Sh&ade"
 #~ msgstr "&Τύλιγμα"

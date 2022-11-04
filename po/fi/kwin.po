@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-03 00:47+0000\n"
+"POT-Creation-Date: 2022-11-04 00:47+0000\n"
 "PO-Revision-Date: 2022-10-28 22:06+0300\n"
 "Last-Translator: Lasse Liehu <lasse.liehu@iki.fi>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -41,13 +41,13 @@ msgstr ""
 "ilpo@iki.fi, mikko.piippo@helsinki.fi, lliehu@kolumbus.fi, "
 "translator@legisign.org"
 
-#: composite.cpp:621
+#: composite.cpp:622
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Työpöytätehosteet käynnistettiin uudelleen, koska grafiikka nollattiin."
 
-#: composite.cpp:827
+#: composite.cpp:851
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -55,6 +55,40 @@ msgid ""
 msgstr ""
 "Jokin sovellus on poistanut työpöytätehosteet väliaikaisesti<br/>käytöstä. "
 "Voit palauttaa ne käyttöön pikanäppäimellä %1."
+
+# En pidä sanan ”backend” suomentamisesta tässä. Koostamistyyppi löytyy työpöytätehosteiden lisäasetuksista, vaikka ”koostamistapa” voisi olla vielä parempi.
+#: composite.cpp:1040
+#, fuzzy, kde-format
+#| msgid ""
+#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
+#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
+#| "protection but <b>be aware that this might result in an immediate crash!</"
+#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
+#| "</p>"
+msgid ""
+"<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+"b><br>This was most likely due to a driver bug.<p>If you think that you have "
+"meanwhile upgraded to a stable driver,<br>you can reset this protection but "
+"<b>be aware that this might result in an immediate crash!</b></p>"
+msgstr ""
+"<b>OpenGL-koostaminen (oletus) on kaatanut KWinin.</b><br>Tämä johtui "
+"todennäköisesti ajurivirheestä.<p>Jos arvelet päivittäneesi sittemmin "
+"vakaaseen ajuriin,<br>voit nollata tämän suojauksen, mutta <b>tiedä, että "
+"tästä saattaa seurata välitön kaatuminen!</b></p><p>Vaihtoehtoisesti voit "
+"käyttää XRender-koostamistyyppiä.</p>"
+
+#: composite.cpp:1047
+#, kde-format
+msgid "Required X extensions (XComposite and XDamage) are not available."
+msgstr ""
+"Tarvittavat X-laajennukset (XComposite ja XDamage) eivät ole käytettävissä."
+
+#: composite.cpp:1050
+#, fuzzy, kde-format
+#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+msgid "GLX/OpenGL is not available."
+msgstr "GLX/OpenGL- ja XRender/XFixes-laajennuksia eivät ole käytettävissä."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -2735,7 +2769,7 @@ msgstr "Vaihda työpöytää alas päin"
 msgid "Switch to Desktop %1"
 msgstr "Vaihda työpöydälle %1"
 
-#: window.cpp:3419
+#: window.cpp:3432
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -3017,33 +3051,10 @@ msgstr ""
 #~ "Osoittimen sijainti lukittu.\n"
 #~ "Vapauta lukitus painamalla Esc-näppäintä 3 sekuntia."
 
-# En pidä sanan ”backend” suomentamisesta tässä. Koostamistyyppi löytyy työpöytätehosteiden lisäasetuksista, vaikka ”koostamistapa” voisi olla vielä parempi.
-#~ msgid ""
-#~ "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#~ "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#~ "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#~ "protection but <b>be aware that this might result in an immediate crash!</"
-#~ "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#~ "</p>"
-#~ msgstr ""
-#~ "<b>OpenGL-koostaminen (oletus) on kaatanut KWinin.</b><br>Tämä johtui "
-#~ "todennäköisesti ajurivirheestä.<p>Jos arvelet päivittäneesi sittemmin "
-#~ "vakaaseen ajuriin,<br>voit nollata tämän suojauksen, mutta <b>tiedä, että "
-#~ "tästä saattaa seurata välitön kaatuminen!</b></p><p>Vaihtoehtoisesti voit "
-#~ "käyttää XRender-koostamistyyppiä.</p>"
-
-#~ msgid "Required X extensions (XComposite and XDamage) are not available."
-#~ msgstr ""
-#~ "Tarvittavat X-laajennukset (XComposite ja XDamage) eivät ole "
-#~ "käytettävissä."
-
 #~ msgid "GLX/OpenGL are not available and only OpenGL support is compiled."
 #~ msgstr ""
 #~ "GLX/OpenGL-laajennusta ei ole käytettävissä, ja vain OpenGL-tuki on "
 #~ "käännettymukaan."
-
-#~ msgid "GLX/OpenGL and XRender/XFixes are not available."
-#~ msgstr "GLX/OpenGL- ja XRender/XFixes-laajennuksia eivät ole käytettävissä."
 
 #~ msgid "Sh&ade"
 #~ msgstr "&Rullaa"

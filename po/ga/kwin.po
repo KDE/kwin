@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-03 00:47+0000\n"
+"POT-Creation-Date: 2022-11-04 00:47+0000\n"
 "PO-Revision-Date: 2004-12-03 14:52-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -28,12 +28,12 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "seoc@iolfree.ie,kscanne@gmail.com"
 
-#: composite.cpp:621
+#: composite.cpp:622
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 
-#: composite.cpp:827
+#: composite.cpp:851
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -41,6 +41,27 @@ msgid ""
 msgstr ""
 "Chuir feidhmchlár eile maisíochtaí deisce ar fionraí.<br/>Is féidir iad a "
 "atosú trí aicearra '%1'."
+
+#: composite.cpp:1040
+#, kde-format
+msgid ""
+"<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+"b><br>This was most likely due to a driver bug.<p>If you think that you have "
+"meanwhile upgraded to a stable driver,<br>you can reset this protection but "
+"<b>be aware that this might result in an immediate crash!</b></p>"
+msgstr ""
+
+#: composite.cpp:1047
+#, kde-format
+msgid "Required X extensions (XComposite and XDamage) are not available."
+msgstr ""
+"Níl na heisínteachtaí riachtanacha X ar fáil (XComposite agus XDamage)."
+
+#: composite.cpp:1050
+#, fuzzy, kde-format
+#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+msgid "GLX/OpenGL is not available."
+msgstr "Níl GLX/OpenGL ná XRender/XFixes ar fáil."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -2782,7 +2803,7 @@ msgstr "Téigh Síos Deasc Amháin"
 msgid "Switch to Desktop %1"
 msgstr "Téigh go Deasc %1"
 
-#: window.cpp:3419
+#: window.cpp:3432
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -2862,15 +2883,8 @@ msgstr ""
 #~ msgid "Maintainer"
 #~ msgstr "Cothaitheoir"
 
-#~ msgid "Required X extensions (XComposite and XDamage) are not available."
-#~ msgstr ""
-#~ "Níl na heisínteachtaí riachtanacha X ar fáil (XComposite agus XDamage)."
-
 #~ msgid "GLX/OpenGL are not available and only OpenGL support is compiled."
 #~ msgstr "Níl GLX/OpenGL ar fáil agus tiomsaíodh tacaíocht OpenGL amháin."
-
-#~ msgid "GLX/OpenGL and XRender/XFixes are not available."
-#~ msgstr "Níl GLX/OpenGL ná XRender/XFixes ar fáil."
 
 #~ msgid "Sh&ade"
 #~ msgstr "Scáth&aigh"

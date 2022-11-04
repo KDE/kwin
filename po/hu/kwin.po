@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-03 00:47+0000\n"
+"POT-Creation-Date: 2022-11-04 00:47+0000\n"
 "PO-Revision-Date: 2021-11-23 11:35+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -28,13 +28,13 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "ulysses@fsf.hu,miketkf@yahoo.com,tszanto@interware.hu"
 
-#: composite.cpp:621
+#: composite.cpp:622
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Az asztali hatások újra lettek indítva egy grafikai visszaállítás miatt"
 
-#: composite.cpp:827
+#: composite.cpp:851
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -42,6 +42,39 @@ msgid ""
 msgstr ""
 "Egy alkalmazás kikapcsolta az asztali effekteket.<br/>A(z) „%1” "
 "billentyűparanccsal kapcsolhatja be azokat."
+
+#: composite.cpp:1040
+#, fuzzy, kde-format
+#| msgid ""
+#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
+#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
+#| "protection but <b>be aware that this might result in an immediate crash!</"
+#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
+#| "</p>"
+msgid ""
+"<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+"b><br>This was most likely due to a driver bug.<p>If you think that you have "
+"meanwhile upgraded to a stable driver,<br>you can reset this protection but "
+"<b>be aware that this might result in an immediate crash!</b></p>"
+msgstr ""
+"<b>Az OpenGL kompozitálás (ez az alapértelmezett) a KWin összeomlását okozta "
+"korábban.</b><br>Ez valószínűleg az illesztőprogram hibája miatt történt."
+"<p>Ha úgy gondolja, hogy azóta egy stabil illesztőprogramra frissített, "
+"<br>megszüntetheti ezt a védelmet, <b>ez azonban azonnali összeomlást "
+"okozhat.</b></p><p>Alternatívaként használhatja az XRender modult az OpenGL "
+"helyett.</p>"
+
+#: composite.cpp:1047
+#, kde-format
+msgid "Required X extensions (XComposite and XDamage) are not available."
+msgstr "A szükséges X kiterjesztések (XComposite és XDamage) nem érhetők el."
+
+#: composite.cpp:1050
+#, fuzzy, kde-format
+#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+msgid "GLX/OpenGL is not available."
+msgstr "A GLX/OpenGL és XRender/XFixes kiterjesztések nem érhetők el."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -2723,7 +2756,7 @@ msgstr "Váltás a lefelé eső asztalra"
 msgid "Switch to Desktop %1"
 msgstr "Váltás a(z) %1. asztalra"
 
-#: window.cpp:3419
+#: window.cpp:3432
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -2966,32 +2999,10 @@ msgstr ""
 #~ "teljesítményszint akadály a lenti GL_MAX_VIEWPORT_DIMS ellenére, mert a "
 #~ "meghajtó ebben az esetben visszatérhet szoftveres kirajzolásra."
 
-#~ msgid ""
-#~ "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#~ "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#~ "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#~ "protection but <b>be aware that this might result in an immediate crash!</"
-#~ "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#~ "</p>"
-#~ msgstr ""
-#~ "<b>Az OpenGL kompozitálás (ez az alapértelmezett) a KWin összeomlását "
-#~ "okozta korábban.</b><br>Ez valószínűleg az illesztőprogram hibája miatt "
-#~ "történt.<p>Ha úgy gondolja, hogy azóta egy stabil illesztőprogramra "
-#~ "frissített, <br>megszüntetheti ezt a védelmet, <b>ez azonban azonnali "
-#~ "összeomlást okozhat.</b></p><p>Alternatívaként használhatja az XRender "
-#~ "modult az OpenGL helyett.</p>"
-
-#~ msgid "Required X extensions (XComposite and XDamage) are not available."
-#~ msgstr ""
-#~ "A szükséges X kiterjesztések (XComposite és XDamage) nem érhetők el."
-
 #~ msgid "GLX/OpenGL are not available and only OpenGL support is compiled."
 #~ msgstr ""
 #~ "A GLX/OpenGL kiterjesztések nem érhetők el, csak az OpenGL támogatása "
 #~ "lett lefordítva."
-
-#~ msgid "GLX/OpenGL and XRender/XFixes are not available."
-#~ msgstr "A GLX/OpenGL és XRender/XFixes kiterjesztések nem érhetők el."
 
 #~ msgid "Sh&ade"
 #~ msgstr "Fel&gördítés"

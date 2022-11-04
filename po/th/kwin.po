@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-03 00:47+0000\n"
+"POT-Creation-Date: 2022-11-04 00:47+0000\n"
 "PO-Revision-Date: 2010-12-17 20:20+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -28,12 +28,12 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "donga.nb@gmail.com"
 
-#: composite.cpp:621
+#: composite.cpp:622
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 
-#: composite.cpp:827
+#: composite.cpp:851
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -41,6 +41,26 @@ msgid ""
 msgstr ""
 "ลูกเล่นต่าง ๆ ของพื้นที่ทำงานถูกพักการใช้งานชั่วคราวจากโปรแกรมอื่น<br/> "
 "คุณสามารถจะกลับมาใช้งานมันได้อีกโดยการใช้ปุ่มพิมพ์ลัด '%1'"
+
+#: composite.cpp:1040
+#, kde-format
+msgid ""
+"<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+"b><br>This was most likely due to a driver bug.<p>If you think that you have "
+"meanwhile upgraded to a stable driver,<br>you can reset this protection but "
+"<b>be aware that this might result in an immediate crash!</b></p>"
+msgstr ""
+
+#: composite.cpp:1047
+#, kde-format
+msgid "Required X extensions (XComposite and XDamage) are not available."
+msgstr "ส่วนขยายของ X (XComposite และ XDamage) ไม่มีอยู่"
+
+#: composite.cpp:1050
+#, fuzzy, kde-format
+#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+msgid "GLX/OpenGL is not available."
+msgstr "ไม่พบส่วนขยาย GLX/OpenGL และ XRender/XFixes"
 
 #: debug_console.cpp:79
 #, kde-format
@@ -2789,7 +2809,7 @@ msgstr "สลับไปด้านล่างหนึ่งพื้นท
 msgid "Switch to Desktop %1"
 msgstr "สลับไปยังพื้นที่ทำงาน 1"
 
-#: window.cpp:3419
+#: window.cpp:3432
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -2892,15 +2912,9 @@ msgstr ""
 #~ msgid "Maintainer"
 #~ msgstr "ผู้ดูแล"
 
-#~ msgid "Required X extensions (XComposite and XDamage) are not available."
-#~ msgstr "ส่วนขยายของ X (XComposite และ XDamage) ไม่มีอยู่"
-
 #~ msgid "GLX/OpenGL are not available and only OpenGL support is compiled."
 #~ msgstr ""
 #~ "ส่วนขยาย GLX/OpenGL ไม่มีอยู่ และรองรับเพียงส่วนขยาย OpenGL เท่านั้นเมื่อถูกคอมไพล์"
-
-#~ msgid "GLX/OpenGL and XRender/XFixes are not available."
-#~ msgstr "ไม่พบส่วนขยาย GLX/OpenGL และ XRender/XFixes"
 
 #~ msgid "Sh&ade"
 #~ msgstr "&พับเก็บ"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-03 00:47+0000\n"
+"POT-Creation-Date: 2022-11-04 00:47+0000\n"
 "PO-Revision-Date: 2020-03-18 15:37+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -30,12 +30,12 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "rch@richard.eu.org,dgvirtual@akl.lt, <>"
 
-#: composite.cpp:621
+#: composite.cpp:622
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Darbalaukio efektai buvo paleisti iš naujo dėl grafikos atstatymo"
 
-#: composite.cpp:827
+#: composite.cpp:851
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -43,6 +43,39 @@ msgid ""
 msgstr ""
 "Darbalaukio efektus pristabdė kita programa.<br/>Galite juos pratęsti "
 "naudodami spartųjį klavišą „%1“."
+
+#: composite.cpp:1040
+#, fuzzy, kde-format
+#| msgid ""
+#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
+#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
+#| "protection but <b>be aware that this might result in an immediate crash!</"
+#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
+#| "</p>"
+msgid ""
+"<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+"b><br>This was most likely due to a driver bug.<p>If you think that you have "
+"meanwhile upgraded to a stable driver,<br>you can reset this protection but "
+"<b>be aware that this might result in an immediate crash!</b></p>"
+msgstr ""
+"<b>OpenGL komponuoklis (numatytasis) praeityje yra nulaužęs Kwin.</b><br>Tai "
+"greičiausiai įvyko dėl tvarkyklės klaidos.<p>Jei manote, kad nuo to laiko "
+"tvarkyklę atnaujinote į stabilesnę versiją,<br>šią apsaugą galite "
+"panaikinti, tačiau <b>perspėjame, kad tai gali baigtis lūžiu iškart!</b></"
+"p><p>Kaip alternatyva, galite naudoti XRender programinę sąsają vietoje "
+"OpenGL.</p>"
+
+#: composite.cpp:1047
+#, kde-format
+msgid "Required X extensions (XComposite and XDamage) are not available."
+msgstr "Privaloma X praplėtimai  (XComposite and XDamage) nerasti."
+
+#: composite.cpp:1050
+#, fuzzy, kde-format
+#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+msgid "GLX/OpenGL is not available."
+msgstr "GLX/OpenGL ir XRender/XFixes nerasti."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -2765,7 +2798,7 @@ msgstr "Perjungti vienu darbalaukiu į apačią"
 msgid "Switch to Desktop %1"
 msgstr "Perjungti į darbalaukį %1"
 
-#: window.cpp:3419
+#: window.cpp:3432
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -2988,30 +3021,9 @@ msgstr ""
 #~ msgid "Maintainer"
 #~ msgstr "Prižiūrėtojas"
 
-#~ msgid ""
-#~ "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#~ "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#~ "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#~ "protection but <b>be aware that this might result in an immediate crash!</"
-#~ "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#~ "</p>"
-#~ msgstr ""
-#~ "<b>OpenGL komponuoklis (numatytasis) praeityje yra nulaužęs Kwin.</"
-#~ "b><br>Tai greičiausiai įvyko dėl tvarkyklės klaidos.<p>Jei manote, kad "
-#~ "nuo to laiko tvarkyklę atnaujinote į stabilesnę versiją,<br>šią apsaugą "
-#~ "galite panaikinti, tačiau <b>perspėjame, kad tai gali baigtis lūžiu "
-#~ "iškart!</b></p><p>Kaip alternatyva, galite naudoti XRender programinę "
-#~ "sąsają vietoje OpenGL.</p>"
-
-#~ msgid "Required X extensions (XComposite and XDamage) are not available."
-#~ msgstr "Privaloma X praplėtimai  (XComposite and XDamage) nerasti."
-
 #~ msgid "GLX/OpenGL are not available and only OpenGL support is compiled."
 #~ msgstr ""
 #~ "GLX/OpenGL yra nerasti ir tiktai OpenGL palaikymas ir sukompiliuotas."
-
-#~ msgid "GLX/OpenGL and XRender/XFixes are not available."
-#~ msgstr "GLX/OpenGL ir XRender/XFixes nerasti."
 
 #~ msgid "Sh&ade"
 #~ msgstr "&Tik antraštės juosta"

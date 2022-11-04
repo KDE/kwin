@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-03 00:47+0000\n"
+"POT-Creation-Date: 2022-11-04 00:47+0000\n"
 "PO-Revision-Date: 2022-05-14 17:24+0200\n"
 "Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -27,12 +27,12 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "erik@binghamton.edu"
 
-#: composite.cpp:621
+#: composite.cpp:622
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Skrivebordseffekter blev genstartet pga. grafiknulstilling"
 
-#: composite.cpp:827
+#: composite.cpp:851
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -40,6 +40,39 @@ msgid ""
 msgstr ""
 "Skrivebordseffekterne er blevet suspenderet af et andet program.<br/>Du kan "
 "genoptage ved brug af genvejen \"%1\"."
+
+#: composite.cpp:1040
+#, fuzzy, kde-format
+#| msgid ""
+#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
+#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
+#| "protection but <b>be aware that this might result in an immediate crash!</"
+#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
+#| "</p>"
+msgid ""
+"<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+"b><br>This was most likely due to a driver bug.<p>If you think that you have "
+"meanwhile upgraded to a stable driver,<br>you can reset this protection but "
+"<b>be aware that this might result in an immediate crash!</b></p>"
+msgstr ""
+"<b>OpenGL compositing (standard) har tidligere fået KWin til at bryde sammen."
+"</b><br>Dette skyldtes sandsynligvis en fejl i driveren.<p>Hvis du tror at "
+"du i mellemtiden har opgraderet til en stabil driver,<br>kan du nulstille "
+"denne beskyttelse, men<b>vær opmærksom på at dette kan medføre et "
+"øjeblikkeligt sammenbrud!</b></p><p>Alternativt kan overveje at bruge "
+"XRender-motoren i stedet.</p>"
+
+#: composite.cpp:1047
+#, kde-format
+msgid "Required X extensions (XComposite and XDamage) are not available."
+msgstr "Påkrævede X-udvidelser (XComposite og XDamage) er ikke tilgængelige."
+
+#: composite.cpp:1050
+#, fuzzy, kde-format
+#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+msgid "GLX/OpenGL is not available."
+msgstr "GLX/OpenGL og XRender/XFixes er ikke tilgængelige."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -2737,7 +2770,7 @@ msgstr "Skift ét skrivebord nedad"
 msgid "Switch to Desktop %1"
 msgstr "Skift til skrivebord %1"
 
-#: window.cpp:3419
+#: window.cpp:3432
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -3029,31 +3062,9 @@ msgstr ""
 #~ "Markøren er låst til den aktuelle position.\n"
 #~ "For at afslutte låsning af markør hold Esc-tasten nede i tre sekunder."
 
-#~ msgid ""
-#~ "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#~ "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#~ "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#~ "protection but <b>be aware that this might result in an immediate crash!</"
-#~ "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#~ "</p>"
-#~ msgstr ""
-#~ "<b>OpenGL compositing (standard) har tidligere fået KWin til at bryde "
-#~ "sammen.</b><br>Dette skyldtes sandsynligvis en fejl i driveren.<p>Hvis du "
-#~ "tror at du i mellemtiden har opgraderet til en stabil driver,<br>kan du "
-#~ "nulstille denne beskyttelse, men<b>vær opmærksom på at dette kan medføre "
-#~ "et øjeblikkeligt sammenbrud!</b></p><p>Alternativt kan overveje at bruge "
-#~ "XRender-motoren i stedet.</p>"
-
-#~ msgid "Required X extensions (XComposite and XDamage) are not available."
-#~ msgstr ""
-#~ "Påkrævede X-udvidelser (XComposite og XDamage) er ikke tilgængelige."
-
 #~ msgid "GLX/OpenGL are not available and only OpenGL support is compiled."
 #~ msgstr ""
 #~ "GLX/OpenGL er ikke tilængelig og kun OpenGL-understøttelse er indbygget."
-
-#~ msgid "GLX/OpenGL and XRender/XFixes are not available."
-#~ msgstr "GLX/OpenGL og XRender/XFixes er ikke tilgængelige."
 
 #~ msgid "Sh&ade"
 #~ msgstr "Sk&yg"

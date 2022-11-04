@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-03 00:47+0000\n"
+"POT-Creation-Date: 2022-11-04 00:47+0000\n"
 "PO-Revision-Date: 2014-10-20 20:21+0000\n"
 "Last-Translator: Lejla Agic <lagic1@etf.unsa.ba>\n"
 "Language-Team: bosanski <bs@li.org>\n"
@@ -37,12 +37,12 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "Samir.ribic@etf.unsa.ba,lagic1@etf.unsa.ba"
 
-#: composite.cpp:621
+#: composite.cpp:622
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Efekti zaslona su ponovo pokrenuti zbog ponovnog pokretanja grafike"
 
-#: composite.cpp:827
+#: composite.cpp:851
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -50,6 +50,38 @@ msgid ""
 msgstr ""
 "<html>Drugi program je suspendovao efekte površi.<br/>Možete ga nastaviti "
 "prečicom %1.</html>."
+
+#: composite.cpp:1040
+#, fuzzy, kde-format
+#| msgid ""
+#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
+#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
+#| "protection but <b>be aware that this might result in an immediate crash!</"
+#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
+#| "</p>"
+msgid ""
+"<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+"b><br>This was most likely due to a driver bug.<p>If you think that you have "
+"meanwhile upgraded to a stable driver,<br>you can reset this protection but "
+"<b>be aware that this might result in an immediate crash!</b></p>"
+msgstr ""
+"<b>OpenGL kompozit (podrazumijevani) je oborio KWin u prošlosti.</b><br>To "
+"je najčešće zbog lošeg drajvera.<p>Ako smatrate da ste nadogradili drajver "
+"na stabilan,<br>možete isključiti ovu zaštitu <b>ali pazite da to može "
+"izazvati monentalni krah!</b></p><p>Alternativno možda želite koristiti "
+"XRender pozadinu.</p>"
+
+#: composite.cpp:1047
+#, kde-format
+msgid "Required X extensions (XComposite and XDamage) are not available."
+msgstr "Neophodna proširenja X‑a (XComposite i XDamage) nisu dostupna."
+
+#: composite.cpp:1050
+#, fuzzy, kde-format
+#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+msgid "GLX/OpenGL is not available."
+msgstr "GLX/OpenGL i XRender/XFixes nisu dostupni."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -2778,7 +2810,7 @@ msgstr "Na prvu površ ispod"
 msgid "Switch to Desktop %1"
 msgstr "Prebaci na površ %1"
 
-#: window.cpp:3419
+#: window.cpp:3432
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -2993,28 +3025,8 @@ msgstr ""
 #~ "performansi, unatoč nastavku GL_MAX_VIEWPORT_DIMS, jer drajver može pasti "
 #~ "natrag u softversko vraćanje u ovom slučaju."
 
-#~ msgid ""
-#~ "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#~ "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#~ "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#~ "protection but <b>be aware that this might result in an immediate crash!</"
-#~ "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#~ "</p>"
-#~ msgstr ""
-#~ "<b>OpenGL kompozit (podrazumijevani) je oborio KWin u prošlosti.</"
-#~ "b><br>To je najčešće zbog lošeg drajvera.<p>Ako smatrate da ste "
-#~ "nadogradili drajver na stabilan,<br>možete isključiti ovu zaštitu <b>ali "
-#~ "pazite da to može izazvati monentalni krah!</b></p><p>Alternativno možda "
-#~ "želite koristiti XRender pozadinu.</p>"
-
-#~ msgid "Required X extensions (XComposite and XDamage) are not available."
-#~ msgstr "Neophodna proširenja X‑a (XComposite i XDamage) nisu dostupna."
-
 #~ msgid "GLX/OpenGL are not available and only OpenGL support is compiled."
 #~ msgstr "GLX/OpenGL nisu dostupni a ugrađena je samo podrška za OpenGL."
-
-#~ msgid "GLX/OpenGL and XRender/XFixes are not available."
-#~ msgstr "GLX/OpenGL i XRender/XFixes nisu dostupni."
 
 #~ msgid "Sh&ade"
 #~ msgstr "&Namotaj"

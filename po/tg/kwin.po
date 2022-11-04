@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-03 00:47+0000\n"
+"POT-Creation-Date: 2022-11-04 00:47+0000\n"
 "PO-Revision-Date: 2019-09-23 21:11+0500\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: English <kde-i18n-doc@kde.org>\n"
@@ -26,17 +26,36 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "victor.ibragimov@gmail.com"
 
-#: composite.cpp:621
+#: composite.cpp:622
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 
-#: composite.cpp:827
+#: composite.cpp:851
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
 "resume using the '%1' shortcut."
 msgstr ""
+
+#: composite.cpp:1040
+#, kde-format
+msgid ""
+"<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+"b><br>This was most likely due to a driver bug.<p>If you think that you have "
+"meanwhile upgraded to a stable driver,<br>you can reset this protection but "
+"<b>be aware that this might result in an immediate crash!</b></p>"
+msgstr ""
+
+#: composite.cpp:1047
+#, fuzzy, kde-format
+msgid "Required X extensions (XComposite and XDamage) are not available."
+msgstr "Отсутствуют необходимые расширения X-сервера (XComposite и XDamage)."
+
+#: composite.cpp:1050
+#, fuzzy, kde-format
+msgid "GLX/OpenGL is not available."
+msgstr "Расширения GLX/OpenGL и XRender/XFixes недоступны."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -2699,7 +2718,7 @@ msgstr ""
 msgid "Switch to Desktop %1"
 msgstr ""
 
-#: window.cpp:3419
+#: window.cpp:3432
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -2773,19 +2792,10 @@ msgstr ""
 #~ msgstr "Тайёркунанда"
 
 #, fuzzy
-#~ msgid "Required X extensions (XComposite and XDamage) are not available."
-#~ msgstr ""
-#~ "Отсутствуют необходимые расширения X-сервера (XComposite и XDamage)."
-
-#, fuzzy
 #~ msgid "GLX/OpenGL are not available and only OpenGL support is compiled."
 #~ msgstr ""
 #~ "Поддерживается только режим OpenGL, однако расширения GLX/OpenGL "
 #~ "недоступны."
-
-#, fuzzy
-#~ msgid "GLX/OpenGL and XRender/XFixes are not available."
-#~ msgstr "Расширения GLX/OpenGL и XRender/XFixes недоступны."
 
 #~ msgid "Sh&ade"
 #~ msgstr "&Ҳифзпарда"

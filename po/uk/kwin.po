@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-03 00:47+0000\n"
+"POT-Creation-Date: 2022-11-04 00:47+0000\n"
 "PO-Revision-Date: 2022-11-01 22:20+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -34,14 +34,14 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "rysin@kde.org,kov@tokyo.email.ne.jp,iip@telus.net"
 
-#: composite.cpp:621
+#: composite.cpp:622
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Ефекти стільниці було перезапущено через відновлення початкового стану "
 "графіки"
 
-#: composite.cpp:827
+#: composite.cpp:851
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -49,6 +49,39 @@ msgid ""
 msgstr ""
 "Дію ефектів стільниці було призупинено сторонньою програмою.<br/>Ви можете "
 "поновити роботу за допомогою клавіатурного скорочення «%1»."
+
+#: composite.cpp:1040
+#, fuzzy, kde-format
+#| msgid ""
+#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
+#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
+#| "protection but <b>be aware that this might result in an immediate crash!</"
+#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
+#| "</p>"
+msgid ""
+"<b>OpenGL compositing (the default) has crashed KWin in the past.</"
+"b><br>This was most likely due to a driver bug.<p>If you think that you have "
+"meanwhile upgraded to a stable driver,<br>you can reset this protection but "
+"<b>be aware that this might result in an immediate crash!</b></p>"
+msgstr ""
+"<b>Композитний показ за допомогою OpenGL (типовий режим) призводив до аварій "
+"KWin.</b><br>Найімовірнішою причиною аварій є вада у драйвері.<p>Якщо ви "
+"вважаєте, що у вашому драйвері немає цієї вади,<br>ви можете скасувати цей "
+"захист, але <b>зважайте на те, що це може призвести до негайного аварійного "
+"завершення роботи!</b></p><p>Іншим варіантом вирішення проблеми є "
+"використання сервера обробки XRender.</p>"
+
+#: composite.cpp:1047
+#, kde-format
+msgid "Required X extensions (XComposite and XDamage) are not available."
+msgstr "Немає потрібних розширень X (XComposite і XDamage)."
+
+#: composite.cpp:1050
+#, fuzzy, kde-format
+#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+msgid "GLX/OpenGL is not available."
+msgstr "GLX/OpenGL і XRender/XFixes є недоступними."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -2724,7 +2757,7 @@ msgstr "Однією стільницею вниз"
 msgid "Switch to Desktop %1"
 msgstr "Перемкнутися до стільниці %1"
 
-#: window.cpp:3419
+#: window.cpp:3432
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -3015,29 +3048,8 @@ msgstr ""
 #~ "Щоб скасувати обмеження, утримуйте натиснутою клавішу Esc протягом 3 "
 #~ "секунд."
 
-#~ msgid ""
-#~ "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#~ "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#~ "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#~ "protection but <b>be aware that this might result in an immediate crash!</"
-#~ "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#~ "</p>"
-#~ msgstr ""
-#~ "<b>Композитний показ за допомогою OpenGL (типовий режим) призводив до "
-#~ "аварій KWin.</b><br>Найімовірнішою причиною аварій є вада у драйвері."
-#~ "<p>Якщо ви вважаєте, що у вашому драйвері немає цієї вади,<br>ви можете "
-#~ "скасувати цей захист, але <b>зважайте на те, що це може призвести до "
-#~ "негайного аварійного завершення роботи!</b></p><p>Іншим варіантом "
-#~ "вирішення проблеми є використання сервера обробки XRender.</p>"
-
-#~ msgid "Required X extensions (XComposite and XDamage) are not available."
-#~ msgstr "Немає потрібних розширень X (XComposite і XDamage)."
-
 #~ msgid "GLX/OpenGL are not available and only OpenGL support is compiled."
 #~ msgstr "GLX/OpenGL є недоступним, зібрано з підтримкою лише OpenGL."
-
-#~ msgid "GLX/OpenGL and XRender/XFixes are not available."
-#~ msgstr "GLX/OpenGL і XRender/XFixes є недоступними."
 
 #~ msgid "Sh&ade"
 #~ msgstr "З&горнути"
