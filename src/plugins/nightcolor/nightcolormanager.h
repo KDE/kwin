@@ -130,11 +130,6 @@ public:
     bool isRunning() const;
 
     /**
-     * Returns @c true if Night Color is supported by platform; otherwise @c false.
-     */
-    bool isAvailable() const;
-
-    /**
      * Returns the current screen color temperature.
      */
     int currentTemperature() const;

@@ -80,10 +80,6 @@ NightColorManager::NightColorManager()
     // we may always read in the current config
     readConfig();
 
-    if (!isAvailable()) {
-        return;
-    }
-
     // legacy shortcut with localized key (to avoid breaking existing config)
     if (i18n("Toggle Night Color") != QStringLiteral("Toggle Night Color")) {
         QAction toggleActionLegacy;
@@ -150,7 +146,7 @@ void NightColorManager::hardReset()
     updateTransitionTimings(true);
     updateTargetTemperature();
 
-    if (isAvailable() && isEnabled() && !isInhibited()) {
+    if (isEnabled() && !isInhibited()) {
         setRunning(true);
         commitGammaRamps(currentTargetTemp());
     }
@@ -203,11 +199,6 @@ bool NightColorManager::isEnabled() const
 bool NightColorManager::isRunning() const
 {
     return m_running;
-}
-
-bool NightColorManager::isAvailable() const
-{
-    return kwinApp()->platform()->supportsGammaControl();
 }
 
 int NightColorManager::currentTemperature() const
@@ -312,15 +303,11 @@ void NightColorManager::readConfig()
 void NightColorManager::resetAllTimers()
 {
     cancelAllTimers();
-    if (isAvailable()) {
-        setRunning(isEnabled() && !isInhibited());
-        // we do this also for active being false in order to reset the temperature back to the day value
-        updateTransitionTimings(false);
-        updateTargetTemperature();
-        resetQuickAdjustTimer(currentTargetTemp());
-    } else {
-        setRunning(false);
-    }
+    setRunning(isEnabled() && !isInhibited());
+    // we do this also for active being false in order to reset the temperature back to the day value
+    updateTransitionTimings(false);
+    updateTargetTemperature();
+    resetQuickAdjustTimer(currentTargetTemp());
 }
 
 void NightColorManager::cancelAllTimers()

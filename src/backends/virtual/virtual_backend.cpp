@@ -29,8 +29,6 @@ VirtualBackend::VirtualBackend(QObject *parent)
             qDebug() << "Screenshots saved to: " << m_screenshotDir->path();
         }
     }
-
-    setSupportsGammaControl(true);
 }
 
 VirtualBackend::~VirtualBackend()

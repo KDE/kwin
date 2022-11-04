@@ -77,7 +77,6 @@ DrmBackend::DrmBackend(Session *session, QObject *parent)
     , m_explicitGpus(splitPathList(qEnvironmentVariable("KWIN_DRM_DEVICES"), ':'))
     , m_dpmsFilter()
 {
-    setSupportsGammaControl(true);
 }
 
 DrmBackend::~DrmBackend() = default;

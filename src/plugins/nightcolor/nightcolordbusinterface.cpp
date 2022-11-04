@@ -193,7 +193,7 @@ bool NightColorDBusInterface::isRunning() const
 
 bool NightColorDBusInterface::isAvailable() const
 {
-    return m_manager->isAvailable();
+    return true; // TODO: Night color should register its own dbus service instead.
 }
 
 int NightColorDBusInterface::currentTemperature() const

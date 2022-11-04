@@ -188,15 +188,6 @@ public:
      */
     virtual QVector<CompositingType> supportedCompositors() const = 0;
 
-    /**
-     * Whether gamma control is supported by the backend.
-     * @since 5.12
-     */
-    bool supportsGammaControl() const
-    {
-        return m_supportsGammaControl;
-    }
-
     virtual Outputs outputs() const = 0;
     Output *findOutput(const QString &name) const;
 
@@ -244,10 +235,6 @@ protected:
     {
         return m_deviceIdentifier;
     }
-    void setSupportsGammaControl(bool set)
-    {
-        m_supportsGammaControl = set;
-    }
 
 private:
     bool m_ready = false;
@@ -257,7 +244,6 @@ private:
     qreal m_initialOutputScale = 1;
     EGLDisplay m_eglDisplay;
     EGLContext m_globalShareContext = EGL_NO_CONTEXT;
-    bool m_supportsGammaControl = false;
 };
 
 } // namespace KWin

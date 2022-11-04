@@ -121,8 +121,6 @@ X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
     connect(m_updateOutputsTimer.get(), &QTimer::timeout, this, &X11StandalonePlatform::updateOutputs);
 
     m_keyboard = std::make_unique<X11Keyboard>();
-
-    setSupportsGammaControl(true);
 }
 
 X11StandalonePlatform::~X11StandalonePlatform()
