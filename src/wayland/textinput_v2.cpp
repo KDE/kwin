@@ -389,7 +389,8 @@ void TextInputV2InterfacePrivate::zwp_text_input_v2_set_content_type(Resource *r
 
 void TextInputV2InterfacePrivate::zwp_text_input_v2_set_cursor_rectangle(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    const QRect rect = QRect(x, y, width, height);
+    const QRectF rect = QRectF(x / focusedSurface->clientToCompositorScale(), y / focusedSurface->clientToCompositorScale(),
+                               width / focusedSurface->clientToCompositorScale(), height / focusedSurface->clientToCompositorScale());
     if (cursorRectangle != rect) {
         cursorRectangle = rect;
         Q_EMIT q->cursorRectangleChanged(cursorRectangle);
@@ -541,7 +542,7 @@ QPointer<SurfaceInterface> TextInputV2Interface::surface() const
     return d->focusedSurface;
 }
 
-QRect TextInputV2Interface::cursorRectangle() const
+QRectF TextInputV2Interface::cursorRectangle() const
 {
     return d->cursorRectangle;
 }

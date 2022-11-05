@@ -253,9 +253,9 @@ void InputMethod::commitPendingText()
     }
 }
 
-QRect InputMethod::cursorRectangle() const
+QRectF InputMethod::cursorRectangle() const
 {
-    QRect localCursorRect;
+    QRectF localCursorRect;
     auto t1 = waylandServer()->seat()->textInputV1();
     auto t2 = waylandServer()->seat()->textInputV2();
     auto t3 = waylandServer()->seat()->textInputV3();

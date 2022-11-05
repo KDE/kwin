@@ -122,7 +122,7 @@ void InputPanelV1Window::resetPosition()
         moveResize(snapToPixels(geo, targetScale()));
     } break;
     case Mode::Overlay: {
-        QRect cursorRectangle = kwinApp()->inputMethod()->cursorRectangle();
+        QRectF cursorRectangle = kwinApp()->inputMethod()->cursorRectangle();
         const QRectF screen = Workspace::self()->clientArea(PlacementArea, this, cursorRectangle.bottomLeft());
 
         m_windowGeometry = QRectF(QPointF(0, 0), surface()->size());

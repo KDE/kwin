@@ -81,7 +81,7 @@ public:
         return m_internalContext;
     }
 
-    QRect cursorRectangle() const;
+    QRectF cursorRectangle() const;
 
 Q_SIGNALS:
     void panelChanged();

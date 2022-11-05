@@ -56,7 +56,7 @@ public:
     }
 
     QString preferredLanguage;
-    QRect cursorRectangle;
+    QRectF cursorRectangle;
     TextInputContentHints contentHints = TextInputContentHint::None;
     TextInputContentPurpose contentPurpose = TextInputContentPurpose::Normal;
     SeatInterface *seat = nullptr;
