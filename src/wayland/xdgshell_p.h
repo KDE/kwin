@@ -89,15 +89,15 @@ protected:
 class XdgSurfaceCommit
 {
 public:
-    std::optional<QRect> windowGeometry;
+    std::optional<QRectF> windowGeometry;
     std::optional<quint32> acknowledgedConfigure;
 };
 
 class XdgToplevelCommit : public SurfaceAttachedState<XdgToplevelCommit>, public XdgSurfaceCommit
 {
 public:
-    std::optional<QSize> minimumSize;
-    std::optional<QSize> maximumSize;
+    std::optional<QSizeF> minimumSize;
+    std::optional<QSizeF> maximumSize;
 };
 
 class XdgPopupCommit : public SurfaceAttachedState<XdgPopupCommit>, public XdgSurfaceCommit
@@ -121,7 +121,7 @@ public:
     QPointer<XdgPopupInterface> popup;
     QPointer<XXPipV1Interface> pip;
     QPointer<SurfaceInterface> surface;
-    QRect windowGeometry;
+    QRectF windowGeometry;
     bool firstBufferAttached = false;
     bool isConfigured = false;
     bool isInitialized = false;
@@ -158,8 +158,8 @@ public:
     QString appId;
     QString tag;
     QString description;
-    QSize minimumSize = QSize(0, 0);
-    QSize maximumSize = QSize(0, 0);
+    QSizeF minimumSize = QSizeF(0, 0);
+    QSizeF maximumSize = QSizeF(0, 0);
     QIcon customIcon; // managed externally by the xdg_toplevel_icon interface
 
 protected:

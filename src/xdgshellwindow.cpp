@@ -1867,9 +1867,9 @@ void XdgPopupWindow::updateRelativePlacement()
     const XdgPositioner positioner = m_shellSurface->positioner();
 
     if (m_plasmaShellSurface && m_plasmaShellSurface->isPositionSet()) {
-        m_relativePlacement = QRectF(m_plasmaShellSurface->position(), positioner.size()).translated(-parentPosition);
+        m_relativePlacement = QRectF(m_plasmaShellSurface->position(), positioner.size(surface())).translated(-parentPosition);
     } else {
-        m_relativePlacement = positioner.placement(bounds);
+        m_relativePlacement = positioner.placement(bounds, transientFor()->surface(), surface());
     }
 }
 
