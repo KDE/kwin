@@ -10,7 +10,7 @@
 
 #include "backends/virtual/virtual_backend.h"
 #include "composite.h"
-#include "core/platform.h"
+#include "core/outputbackend.h"
 #include "core/session.h"
 #include "effects.h"
 #include "inputmethod.h"
@@ -71,7 +71,7 @@ WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, ch
     addLibraryPath(ownPath);
 
     setSession(Session::create(Session::Type::Noop));
-    setPlatform(std::make_unique<VirtualBackend>());
+    setOutputBackend(std::make_unique<VirtualBackend>());
     WaylandServer::create(this);
     setProcessStartupEnvironment(QProcessEnvironment::systemEnvironment());
 }
@@ -131,7 +131,7 @@ void WaylandTestApplication::performStartup()
 
     // first load options - done internally by a different thread
     createOptions();
-    if (!platform()->initialize()) {
+    if (!outputBackend()->initialize()) {
         std::exit(1);
     }
 

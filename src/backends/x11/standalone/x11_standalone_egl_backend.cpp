@@ -6,8 +6,8 @@
 */
 
 #include "x11_standalone_egl_backend.h"
+#include "core/outputbackend.h"
 #include "core/overlaywindow.h"
-#include "core/platform.h"
 #include "core/renderloop_p.h"
 #include "kwinglplatform.h"
 #include "options.h"
@@ -119,8 +119,8 @@ void EglBackend::init()
 
     m_fbo = std::make_unique<GLFramebuffer>(0, workspace()->geometry().size());
 
-    kwinApp()->platform()->setSceneEglDisplay(shareDisplay);
-    kwinApp()->platform()->setSceneEglGlobalShareContext(shareContext);
+    kwinApp()->outputBackend()->setSceneEglDisplay(shareDisplay);
+    kwinApp()->outputBackend()->setSceneEglGlobalShareContext(shareContext);
     EglOnXBackend::init();
 }
 

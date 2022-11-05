@@ -9,7 +9,7 @@
 */
 
 #include "eglplatformcontext.h"
-#include "core/platform.h"
+#include "core/outputbackend.h"
 #include "eglhelpers.h"
 #include "internalwindow.h"
 #include "offscreensurface.h"
@@ -33,7 +33,7 @@ namespace QPA
 EGLPlatformContext::EGLPlatformContext(QOpenGLContext *context, EGLDisplay display)
     : m_eglDisplay(display)
 {
-    create(context->format(), kwinApp()->platform()->sceneEglGlobalShareContext());
+    create(context->format(), kwinApp()->outputBackend()->sceneEglGlobalShareContext());
 }
 
 EGLPlatformContext::~EGLPlatformContext()

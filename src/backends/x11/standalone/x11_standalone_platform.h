@@ -8,7 +8,7 @@
 */
 #ifndef KWIN_X11_PLATFORM_H
 #define KWIN_X11_PLATFORM_H
-#include "core/platform.h"
+#include "core/outputbackend.h"
 
 #include <kwin_export.h>
 
@@ -35,7 +35,7 @@ class Compositor;
 class Scene;
 class Window;
 
-class KWIN_EXPORT X11StandalonePlatform : public Platform
+class KWIN_EXPORT X11StandalonePlatform : public OutputBackend
 {
     Q_OBJECT
 

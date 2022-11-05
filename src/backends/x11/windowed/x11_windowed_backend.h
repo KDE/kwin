@@ -10,7 +10,7 @@
 
 #include "core/inputbackend.h"
 #include "core/inputdevice.h"
-#include "core/platform.h"
+#include "core/outputbackend.h"
 
 #include <kwin_export.h>
 
@@ -81,7 +81,7 @@ private:
     X11WindowedBackend *m_backend;
 };
 
-class KWIN_EXPORT X11WindowedBackend : public Platform
+class KWIN_EXPORT X11WindowedBackend : public OutputBackend
 {
     Q_OBJECT
 

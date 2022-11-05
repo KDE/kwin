@@ -11,9 +11,9 @@
 #include <config-kwin.h>
 
 #include "core/output.h"
+#include "core/outputbackend.h"
 #include "core/outputlayer.h"
 #include "core/overlaywindow.h"
-#include "core/platform.h"
 #include "core/renderlayer.h"
 #include "core/renderloop.h"
 #include "cursordelegate_opengl.h"
@@ -141,11 +141,11 @@ Compositor::Compositor(QObject *workspace)
     // The ctor of this class is invoked from the Workspace ctor, that means before
     // Workspace is completely constructed, so calling Workspace::self() would result
     // in undefined behavior. This is fixed by using a delayed invocation.
-    if (kwinApp()->platform()->isReady()) {
+    if (kwinApp()->outputBackend()->isReady()) {
         QTimer::singleShot(0, this, &Compositor::start);
     }
     connect(
-        kwinApp()->platform(), &Platform::readyChanged, this, [this](bool ready) {
+        kwinApp()->outputBackend(), &OutputBackend::readyChanged, this, [this](bool ready) {
             if (ready) {
                 start();
             } else {
@@ -182,7 +182,7 @@ bool Compositor::attemptOpenGLCompositing()
         createOpenGLSafePoint(OpenGLSafePoint::PostInit);
     });
 
-    std::unique_ptr<OpenGLBackend> backend = kwinApp()->platform()->createOpenGLBackend();
+    std::unique_ptr<OpenGLBackend> backend = kwinApp()->outputBackend()->createOpenGLBackend();
     if (!backend) {
         return false;
     }
@@ -212,7 +212,7 @@ bool Compositor::attemptOpenGLCompositing()
 
 bool Compositor::attemptQPainterCompositing()
 {
-    std::unique_ptr<QPainterBackend> backend(kwinApp()->platform()->createQPainterBackend());
+    std::unique_ptr<QPainterBackend> backend(kwinApp()->outputBackend()->createQPainterBackend());
     if (!backend || backend->isFailed()) {
         return false;
     }
@@ -255,7 +255,7 @@ bool Compositor::setupStart()
 
     Q_EMIT aboutToToggleCompositing();
 
-    const QVector<CompositingType> availableCompositors = kwinApp()->platform()->supportedCompositors();
+    const QVector<CompositingType> availableCompositors = kwinApp()->outputBackend()->supportedCompositors();
     QVector<CompositingType> candidateCompositors;
 
     // If compositing has been restarted, try to use the last used compositing type.

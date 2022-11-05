@@ -10,8 +10,8 @@
 #include "outputmanagement_v2_interface.h"
 #include "utils/common.h"
 
+#include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
-#include "core/platform.h"
 #include "main.h"
 #include "workspace.h"
 
@@ -205,7 +205,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
 
     applied = true;
 
-    const auto allOutputs = kwinApp()->platform()->outputs();
+    const auto allOutputs = kwinApp()->outputBackend()->outputs();
     const bool allDisabled = !std::any_of(allOutputs.begin(), allOutputs.end(), [this](const auto &output) {
         return config.constChangeSet(output)->enabled;
     });

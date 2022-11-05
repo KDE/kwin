@@ -12,7 +12,7 @@
 
 #include "config-kwin.h"
 
-#include "core/platform.h"
+#include "core/outputbackend.h"
 #include "utils/common.h"
 
 #ifndef KCMRULES
@@ -835,7 +835,7 @@ bool Options::loadCompositingConfig(bool force)
     }
     setCompositingMode(compositingMode);
 
-    const bool platformSupportsNoCompositing = kwinApp()->platform()->supportedCompositors().contains(NoCompositing);
+    const bool platformSupportsNoCompositing = kwinApp()->outputBackend()->supportedCompositors().contains(NoCompositing);
     if (m_compositingMode == NoCompositing && platformSupportsNoCompositing) {
         setUseCompositing(false);
         return false; // do not even detect compositing preferences if explicitly disabled

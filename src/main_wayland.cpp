@@ -15,7 +15,7 @@
 #include "backends/wayland/wayland_backend.h"
 #include "backends/x11/windowed/x11_windowed_backend.h"
 #include "composite.h"
-#include "core/platform.h"
+#include "core/outputbackend.h"
 #include "core/session.h"
 #include "effects.h"
 #include "inputmethod.h"
@@ -139,7 +139,7 @@ void ApplicationWayland::performStartup()
     // first load options - done internally by a different thread
     createOptions();
 
-    if (!platform()->initialize()) {
+    if (!outputBackend()->initialize()) {
         std::exit(1);
     }
 
@@ -149,7 +149,7 @@ void ApplicationWayland::performStartup()
 
     WaylandCompositor::create();
 
-    connect(Compositor::self(), &Compositor::sceneCreated, platform(), &Platform::sceneInitialized);
+    connect(Compositor::self(), &Compositor::sceneCreated, outputBackend(), &OutputBackend::sceneInitialized);
     connect(Compositor::self(), &Compositor::sceneCreated, this, &ApplicationWayland::continueStartupWithScene);
 }
 
@@ -554,30 +554,30 @@ int main(int argc, char *argv[])
             std::cerr << "FATAl ERROR: could not acquire a session" << std::endl;
             return 1;
         }
-        a.setPlatform(std::make_unique<KWin::DrmBackend>(a.session()));
+        a.setOutputBackend(std::make_unique<KWin::DrmBackend>(a.session()));
         break;
     case BackendType::Virtual:
         a.setSession(KWin::Session::create(KWin::Session::Type::Noop));
-        a.setPlatform(std::make_unique<KWin::VirtualBackend>());
+        a.setOutputBackend(std::make_unique<KWin::VirtualBackend>());
         break;
     case BackendType::X11:
         a.setSession(KWin::Session::create(KWin::Session::Type::Noop));
-        a.setPlatform(std::make_unique<KWin::X11WindowedBackend>());
+        a.setOutputBackend(std::make_unique<KWin::X11WindowedBackend>());
         break;
     case BackendType::Wayland:
         a.setSession(KWin::Session::create(KWin::Session::Type::Noop));
-        a.setPlatform(std::make_unique<KWin::Wayland::WaylandBackend>());
+        a.setOutputBackend(std::make_unique<KWin::Wayland::WaylandBackend>());
         break;
     }
 
     if (!deviceIdentifier.isEmpty()) {
-        a.platform()->setDeviceIdentifier(deviceIdentifier);
+        a.outputBackend()->setDeviceIdentifier(deviceIdentifier);
     }
     if (initialWindowSize.isValid()) {
-        a.platform()->setInitialWindowSize(initialWindowSize);
+        a.outputBackend()->setInitialWindowSize(initialWindowSize);
     }
-    a.platform()->setInitialOutputScale(outputScale);
-    a.platform()->setInitialOutputCount(outputCount);
+    a.outputBackend()->setInitialOutputScale(outputScale);
+    a.outputBackend()->setInitialOutputCount(outputCount);
 
     QObject::connect(&a, &KWin::Application::workspaceCreated, server, &KWin::WaylandServer::initWorkspace);
     if (!server->socketName().isEmpty()) {

@@ -9,7 +9,7 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
-#include "core/platform.h"
+#include "core/outputbackend.h"
 #include "cursor.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -36,9 +36,9 @@ private Q_SLOTS:
 void ScreenChangesTest::initTestCase()
 {
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
+    kwinApp()->outputBackend()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 1));
+    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 1));
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
@@ -83,7 +83,7 @@ void ScreenChangesTest::testScreenAddRemove()
 
     // let's announce a new output
     const QVector<QRect> geometries{QRect(0, 0, 1280, 1024), QRect(1280, 0, 1280, 1024)};
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs",
+    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs",
                               Qt::DirectConnection,
                               Q_ARG(int, 2),
                               Q_ARG(QVector<QRect>, geometries));
@@ -115,14 +115,14 @@ void ScreenChangesTest::testScreenAddRemove()
     QVERIFY(o1->isValid());
     QSignalSpy o1ChangedSpy(o1.get(), &KWayland::Client::Output::changed);
     QVERIFY(o1ChangedSpy.wait());
-    KWin::Output *serverOutput1 = kwinApp()->platform()->findOutput(o1->name()); // use wl_output.name to find the compositor side output
+    KWin::Output *serverOutput1 = kwinApp()->outputBackend()->findOutput(o1->name()); // use wl_output.name to find the compositor side output
     QCOMPARE(o1->globalPosition(), serverOutput1->geometry().topLeft());
     QCOMPARE(o1->pixelSize(), serverOutput1->modeSize());
     std::unique_ptr<KWayland::Client::Output> o2(registry.createOutput(outputAnnouncedSpy.last().first().value<quint32>(), outputAnnouncedSpy.last().last().value<quint32>()));
     QVERIFY(o2->isValid());
     QSignalSpy o2ChangedSpy(o2.get(), &KWayland::Client::Output::changed);
     QVERIFY(o2ChangedSpy.wait());
-    KWin::Output *serverOutput2 = kwinApp()->platform()->findOutput(o2->name()); // use wl_output.name to find the compositor side output
+    KWin::Output *serverOutput2 = kwinApp()->outputBackend()->findOutput(o2->name()); // use wl_output.name to find the compositor side output
     QCOMPARE(o2->globalPosition(), serverOutput2->geometry().topLeft());
     QCOMPARE(o2->pixelSize(), serverOutput2->modeSize());
 
@@ -150,7 +150,7 @@ void ScreenChangesTest::testScreenAddRemove()
     QSignalSpy o2RemovedSpy(o2.get(), &KWayland::Client::Output::removed);
 
     const QVector<QRect> geometries2{QRect(0, 0, 1280, 1024)};
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs",
+    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs",
                               Qt::DirectConnection,
                               Q_ARG(int, 1),
                               Q_ARG(QVector<QRect>, geometries2));

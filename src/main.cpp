@@ -14,7 +14,7 @@
 #include "atoms.h"
 #include "colormanager.h"
 #include "composite.h"
-#include "core/platform.h"
+#include "core/outputbackend.h"
 #include "core/session.h"
 #include "cursor.h"
 #include "effects.h"
@@ -155,7 +155,7 @@ void Application::destroyAtoms()
 
 void Application::destroyPlatform()
 {
-    m_platform.reset();
+    m_outputBackend.reset();
 }
 
 void Application::resetCrashesCount()
@@ -618,10 +618,10 @@ void Application::setProcessStartupEnvironment(const QProcessEnvironment &enviro
     m_processEnvironment = environment;
 }
 
-void Application::setPlatform(std::unique_ptr<Platform> &&platform)
+void Application::setOutputBackend(std::unique_ptr<OutputBackend> &&backend)
 {
-    Q_ASSERT(!m_platform);
-    m_platform = std::move(platform);
+    Q_ASSERT(!m_outputBackend);
+    m_outputBackend = std::move(backend);
 }
 
 void Application::setSession(std::unique_ptr<Session> &&session)

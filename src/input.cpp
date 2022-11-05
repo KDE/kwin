@@ -34,7 +34,7 @@
 #include "tabbox/tabbox.h"
 #endif
 #include "core/output.h"
-#include "core/platform.h"
+#include "core/outputbackend.h"
 #include "cursor.h"
 #include "internalwindow.h"
 #include "popup_input_filter.h"
@@ -3003,7 +3003,7 @@ void InputRedirection::addInputBackend(std::unique_ptr<InputBackend> &&inputBack
 
 void InputRedirection::setupInputBackends()
 {
-    std::unique_ptr<InputBackend> inputBackend = kwinApp()->platform()->createInputBackend();
+    std::unique_ptr<InputBackend> inputBackend = kwinApp()->outputBackend()->createInputBackend();
     if (inputBackend) {
         addInputBackend(std::move(inputBackend));
     }

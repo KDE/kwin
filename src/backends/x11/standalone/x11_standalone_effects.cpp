@@ -44,7 +44,7 @@ EffectsHandlerImplX11::~EffectsHandlerImplX11()
 
 bool EffectsHandlerImplX11::doGrabKeyboard()
 {
-    auto keyboard = static_cast<X11StandalonePlatform *>(kwinApp()->platform())->keyboard();
+    auto keyboard = static_cast<X11StandalonePlatform *>(kwinApp()->outputBackend())->keyboard();
     if (!keyboard->xkbKeymap()) {
         return false;
     }

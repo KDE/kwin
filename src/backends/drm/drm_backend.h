@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include "core/platform.h"
+#include "core/outputbackend.h"
 
 #include "dpmsinputeventfilter.h"
 
@@ -34,7 +34,7 @@ class DrmGpu;
 class DrmVirtualOutput;
 class DrmRenderBackend;
 
-class KWIN_EXPORT DrmBackend : public Platform
+class KWIN_EXPORT DrmBackend : public OutputBackend
 {
     Q_OBJECT
 

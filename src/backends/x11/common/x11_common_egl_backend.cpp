@@ -10,7 +10,7 @@
 // kwineffects
 #include <kwinglutils.h>
 // kwin
-#include "core/platform.h"
+#include "core/outputbackend.h"
 #include "main.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"
@@ -90,7 +90,7 @@ void EglOnXBackend::init()
 bool EglOnXBackend::initRenderingContext()
 {
     initClientExtensions();
-    EGLDisplay dpy = kwinApp()->platform()->sceneEglDisplay();
+    EGLDisplay dpy = kwinApp()->outputBackend()->sceneEglDisplay();
 
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.

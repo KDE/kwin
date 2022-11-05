@@ -10,7 +10,7 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
-#include "core/platform.h"
+#include "core/outputbackend.h"
 #include "cursor.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -49,9 +49,9 @@ void ActivationTest::initTestCase()
     qRegisterMetaType<Window *>();
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
+    kwinApp()->outputBackend()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
+    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
@@ -521,7 +521,7 @@ void ActivationTest::stackScreensHorizontally()
         1,
     };
 
-    QMetaObject::invokeMethod(kwinApp()->platform(),
+    QMetaObject::invokeMethod(kwinApp()->outputBackend(),
                               "setVirtualOutputs",
                               Qt::DirectConnection,
                               Q_ARG(int, screenGeometries.count()),
@@ -544,7 +544,7 @@ void ActivationTest::stackScreensVertically()
         1,
     };
 
-    QMetaObject::invokeMethod(kwinApp()->platform(),
+    QMetaObject::invokeMethod(kwinApp()->outputBackend(),
                               "setVirtualOutputs",
                               Qt::DirectConnection,
                               Q_ARG(int, screenGeometries.count()),
