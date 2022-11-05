@@ -174,7 +174,7 @@ public:
     void zwp_tablet_tool_v2_set_cursor(Resource *resource, uint32_t serial, struct ::wl_resource *_surface, int32_t hotspot_x, int32_t hotspot_y) override
     {
         SurfaceInterface *surface = SurfaceInterface::get(_surface);
-        QPointF hotspot = QPointF(hotspot_x, hotspot_y);
+        QPointF hotspot = QPointF(hotspot_x, hotspot_y) / surface->clientToCompositorScale();
         if (surface) {
             static SurfaceRole cursorRole(QByteArrayLiteral("tablet_cursor_v2"));
             if (const SurfaceRole *role = surface->role()) {
