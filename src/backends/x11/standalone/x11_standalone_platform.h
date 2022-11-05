@@ -27,6 +27,13 @@ class WindowSelector;
 class X11EventFilter;
 class X11Output;
 class X11Keyboard;
+class Edge;
+class ScreenEdges;
+class Outline;
+class OutlineVisual;
+class Compositor;
+class Scene;
+class Window;
 
 class KWIN_EXPORT X11StandalonePlatform : public Platform
 {
@@ -38,18 +45,19 @@ public:
     bool initialize() override;
 
     std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
-    std::unique_ptr<Edge> createScreenEdge(ScreenEdges *parent) override;
-    void createPlatformCursor(QObject *parent = nullptr) override;
-    void startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName = QByteArray()) override;
-    void startInteractivePositionSelection(std::function<void(const QPoint &)> callback) override;
-    PlatformCursorImage cursorImage() const override;
-    std::unique_ptr<OutlineVisual> createOutline(Outline *outline) override;
-    void createEffectsHandler(Compositor *compositor, Scene *scene) override;
     QVector<CompositingType> supportedCompositors() const override;
 
     void initOutputs();
     void scheduleUpdateOutputs();
     void updateOutputs();
+
+    std::unique_ptr<Edge> createScreenEdge(ScreenEdges *parent);
+    void createPlatformCursor(QObject *parent = nullptr);
+    void startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName = QByteArray());
+    void startInteractivePositionSelection(std::function<void(const QPoint &)> callback);
+    PlatformCursorImage cursorImage() const;
+    std::unique_ptr<OutlineVisual> createOutline(Outline *outline);
+    void createEffectsHandler(Compositor *compositor, Scene *scene);
 
     X11Keyboard *keyboard() const;
     RenderLoop *renderLoop() const;

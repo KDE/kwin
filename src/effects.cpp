@@ -38,7 +38,6 @@
 #include "screenlockerwatcher.h"
 #endif
 #include "composite.h"
-#include "core/platform.h"
 #include "decorations/decorationbridge.h"
 #include "inputmethod.h"
 #include "inputpanelv1window.h"
@@ -1694,7 +1693,7 @@ void EffectsHandlerImpl::highlightWindows(const QVector<EffectWindow *> &windows
 
 PlatformCursorImage EffectsHandlerImpl::cursorImage() const
 {
-    return kwinApp()->platform()->cursorImage();
+    return kwinApp()->cursorImage();
 }
 
 void EffectsHandlerImpl::hideCursor()
@@ -1709,7 +1708,7 @@ void EffectsHandlerImpl::showCursor()
 
 void EffectsHandlerImpl::startInteractiveWindowSelection(std::function<void(KWin::EffectWindow *)> callback)
 {
-    kwinApp()->platform()->startInteractiveWindowSelection([callback](KWin::Window *window) {
+    kwinApp()->startInteractiveWindowSelection([callback](KWin::Window *window) {
         if (window && window->effectWindow()) {
             callback(window->effectWindow());
         } else {
@@ -1720,7 +1719,7 @@ void EffectsHandlerImpl::startInteractiveWindowSelection(std::function<void(KWin
 
 void EffectsHandlerImpl::startInteractivePositionSelection(std::function<void(const QPoint &)> callback)
 {
-    kwinApp()->platform()->startInteractivePositionSelection(callback);
+    kwinApp()->startInteractivePositionSelection(callback);
 }
 
 void EffectsHandlerImpl::showOnScreenMessage(const QString &message, const QString &iconName)

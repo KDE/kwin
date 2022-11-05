@@ -9,7 +9,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "killwindow.h"
-#include "core/platform.h"
 #include "main.h"
 #include "osd.h"
 #include "unmanaged.h"
@@ -32,7 +31,7 @@ void KillWindow::start()
 {
     OSD::show(i18n("Select window to force close with left click or enter.\nEscape or right click to cancel."),
               QStringLiteral("window-close"));
-    kwinApp()->platform()->startInteractiveWindowSelection(
+    kwinApp()->startInteractiveWindowSelection(
         [](KWin::Window *t) {
             OSD::hide();
             if (!t) {

@@ -15,21 +15,26 @@
 #include "colormanager.h"
 #include "composite.h"
 #include "core/platform.h"
+#include "core/session.h"
 #include "cursor.h"
+#include "effects.h"
 #include "input.h"
 #include "inputmethod.h"
 #include "options.h"
+#include "outline.h"
 #include "pluginmanager.h"
-#if KWIN_BUILD_SCREENLOCKER
-#include "screenlockerwatcher.h"
-#endif
-#include "core/session.h"
+#include "pointer_input.h"
+#include "screenedge.h"
 #include "sm.h"
 #include "tabletmodemanager.h"
 #include "utils/xcbutils.h"
 #include "wayland/surface_interface.h"
 #include "workspace.h"
 #include "x11eventfilter.h"
+
+#if KWIN_BUILD_SCREENLOCKER
+#include "screenlockerwatcher.h"
+#endif
 
 #include <kwineffects.h>
 
@@ -258,7 +263,7 @@ void Application::createInput()
 #endif
     auto input = InputRedirection::create(this);
     input->init();
-    m_platform->createPlatformCursor(this);
+    createPlatformCursor(this);
 }
 
 void Application::createAtoms()
@@ -329,6 +334,29 @@ void Application::destroyColorManager()
 void Application::destroyInputMethod()
 {
     m_inputMethod.reset();
+}
+
+std::unique_ptr<Edge> Application::createScreenEdge(ScreenEdges *edges)
+{
+    return std::make_unique<Edge>(edges);
+}
+
+void Application::createPlatformCursor(QObject *parent)
+{
+    new InputRedirectionCursor(parent);
+}
+
+std::unique_ptr<OutlineVisual> Application::createOutline(Outline *outline)
+{
+    if (Compositor::compositing()) {
+        return std::make_unique<CompositedOutlineVisual>(outline);
+    }
+    return nullptr;
+}
+
+void Application::createEffectsHandler(Compositor *compositor, Scene *scene)
+{
+    new EffectsHandlerImpl(compositor, scene);
 }
 
 void Application::registerEventFilter(X11EventFilter *filter)
@@ -628,5 +656,29 @@ ScreenLockerWatcher *Application::screenLockerWatcher() const
     return m_screenLockerWatcher.get();
 }
 #endif
+
+PlatformCursorImage Application::cursorImage() const
+{
+    Cursor *cursor = Cursors::self()->currentCursor();
+    return PlatformCursorImage(cursor->image(), cursor->hotspot());
+}
+
+void Application::startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName)
+{
+    if (!input()) {
+        callback(nullptr);
+        return;
+    }
+    input()->startInteractiveWindowSelection(callback, cursorName);
+}
+
+void Application::startInteractivePositionSelection(std::function<void(const QPoint &)> callback)
+{
+    if (!input()) {
+        callback(QPoint(-1, -1));
+        return;
+    }
+    input()->startInteractivePositionSelection(callback);
+}
 
 } // namespace

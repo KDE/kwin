@@ -12,28 +12,19 @@
 #include <kwin_export.h>
 #include <kwinglobals.h>
 
-#include <QImage>
 #include <QObject>
 
-#include <functional>
 #include <memory>
 #include <optional>
 
 namespace KWin
 {
 
-class Window;
 class Output;
-class Edge;
-class Compositor;
 class DmaBufTexture;
 class InputBackend;
 class OpenGLBackend;
-class Outline;
-class OutlineVisual;
 class QPainterBackend;
-class Scene;
-class ScreenEdges;
 class OutputConfiguration;
 struct DmaBufParams;
 
@@ -64,16 +55,6 @@ public:
     std::shared_ptr<DmaBufTexture> createDmaBufTexture(const DmaBufParams &attributes);
 
     /**
-     * Allows the platform to create a platform specific screen edge.
-     * The default implementation creates a Edge.
-     */
-    virtual std::unique_ptr<Edge> createScreenEdge(ScreenEdges *parent);
-    /**
-     * Allows the platform to create a platform specific Cursor.
-     * The default implementation creates an InputRedirectionCursor.
-     */
-    virtual void createPlatformCursor(QObject *parent = nullptr);
-    /**
      * The EGLDisplay used by the compositing scene.
      */
     EGLDisplay sceneEglDisplay() const;
@@ -91,51 +72,6 @@ public:
      * by rendering backends.
      */
     void setSceneEglGlobalShareContext(EGLContext context);
-
-    /**
-     * Starts an interactive window selection process.
-     *
-     * Once the user selected a window the @p callback is invoked with the selected Window as
-     * argument. In case the user cancels the interactive window selection or selecting a window is currently
-     * not possible (e.g. screen locked) the @p callback is invoked with a @c nullptr argument.
-     *
-     * During the interactive window selection the cursor is turned into a crosshair cursor unless
-     * @p cursorName is provided. The argument @p cursorName is a QByteArray instead of Qt::CursorShape
-     * to support the "pirate" cursor for kill window which is not wrapped by Qt::CursorShape.
-     *
-     * The default implementation forwards to InputRedirection.
-     *
-     * @param callback The function to invoke once the interactive window selection ends
-     * @param cursorName The optional name of the cursor shape to use, default is crosshair
-     */
-    virtual void startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName = QByteArray());
-
-    /**
-     * Starts an interactive position selection process.
-     *
-     * Once the user selected a position on the screen the @p callback is invoked with
-     * the selected point as argument. In case the user cancels the interactive position selection
-     * or selecting a position is currently not possible (e.g. screen locked) the @p callback
-     * is invoked with a point at @c -1 as x and y argument.
-     *
-     * During the interactive window selection the cursor is turned into a crosshair cursor.
-     *
-     * The default implementation forwards to InputRedirection.
-     *
-     * @param callback The function to invoke once the interactive position selection ends
-     */
-    virtual void startInteractivePositionSelection(std::function<void(const QPoint &)> callback);
-
-    /**
-     * Returns a PlatformCursorImage. By default this is created by softwareCursor and
-     * softwareCursorHotspot. An implementing subclass can use this to provide a better
-     * suited PlatformCursorImage.
-     *
-     * @see softwareCursor
-     * @see softwareCursorHotspot
-     * @since 5.9
-     */
-    virtual PlatformCursorImage cursorImage() const;
 
     bool isReady() const
     {
@@ -165,17 +101,6 @@ public:
     {
         m_initialOutputScale = scale;
     }
-
-    /**
-     * Creates the OutlineVisual for the given @p outline.
-     * Default implementation creates an OutlineVisual suited for composited usage.
-     */
-    virtual std::unique_ptr<OutlineVisual> createOutline(Outline *outline);
-
-    /**
-     * Default implementation creates an EffectsHandlerImp;
-     */
-    virtual void createEffectsHandler(Compositor *compositor, Scene *scene);
 
     /**
      * The CompositingTypes supported by the Platform.
