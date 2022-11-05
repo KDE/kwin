@@ -21,7 +21,6 @@
 #include <config-kwin.h>
 
 #include "core/output.h"
-#include "core/platform.h"
 #include "cursor.h"
 #include "effects.h"
 #include "gestures.h"
@@ -1166,7 +1165,7 @@ void ScreenEdges::createHorizontalEdge(ElectricBorder border, const QRect &scree
 
 std::unique_ptr<Edge> ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, int height, Output *output, bool createAction)
 {
-    std::unique_ptr<Edge> edge = kwinApp()->platform()->createScreenEdge(this);
+    std::unique_ptr<Edge> edge = kwinApp()->createScreenEdge(this);
     // Edges can not have negative size.
     Q_ASSERT(width >= 0);
     Q_ASSERT(height >= 0);

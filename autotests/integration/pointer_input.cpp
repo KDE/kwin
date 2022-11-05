@@ -1620,8 +1620,8 @@ void PointerInputTest::testResizeCursor()
     // load the fallback cursor (arrow cursor)
     const PlatformCursorImage arrowCursor = loadReferenceThemeCursor(Qt::ArrowCursor);
     QVERIFY(!arrowCursor.isNull());
-    QCOMPARE(kwinApp()->platform()->cursorImage().image(), arrowCursor.image());
-    QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), arrowCursor.hotSpot());
+    QCOMPARE(kwinApp()->cursorImage().image(), arrowCursor.image());
+    QCOMPARE(kwinApp()->cursorImage().hotSpot(), arrowCursor.hotSpot());
 
     // we need a pointer to get the enter event
     auto pointer = m_seat->createPointer(m_seat);
@@ -1679,16 +1679,16 @@ void PointerInputTest::testResizeCursor()
     QFETCH(KWin::CursorShape, cursorShape);
     const PlatformCursorImage resizeCursor = loadReferenceThemeCursor(cursorShape);
     QVERIFY(!resizeCursor.isNull());
-    QCOMPARE(kwinApp()->platform()->cursorImage().image(), resizeCursor.image());
-    QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), resizeCursor.hotSpot());
+    QCOMPARE(kwinApp()->cursorImage().image(), resizeCursor.image());
+    QCOMPARE(kwinApp()->cursorImage().hotSpot(), resizeCursor.hotSpot());
 
     // finish resizing the window
     Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
     Test::pointerButtonReleased(BTN_RIGHT, timestamp++);
     QVERIFY(!window->isInteractiveResize());
 
-    QCOMPARE(kwinApp()->platform()->cursorImage().image(), arrowCursor.image());
-    QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), arrowCursor.hotSpot());
+    QCOMPARE(kwinApp()->cursorImage().image(), arrowCursor.image());
+    QCOMPARE(kwinApp()->cursorImage().hotSpot(), arrowCursor.hotSpot());
 }
 
 void PointerInputTest::testMoveCursor()
@@ -1707,8 +1707,8 @@ void PointerInputTest::testMoveCursor()
     // load the fallback cursor (arrow cursor)
     const PlatformCursorImage arrowCursor = loadReferenceThemeCursor(Qt::ArrowCursor);
     QVERIFY(!arrowCursor.isNull());
-    QCOMPARE(kwinApp()->platform()->cursorImage().image(), arrowCursor.image());
-    QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), arrowCursor.hotSpot());
+    QCOMPARE(kwinApp()->cursorImage().image(), arrowCursor.image());
+    QCOMPARE(kwinApp()->cursorImage().hotSpot(), arrowCursor.hotSpot());
 
     // we need a pointer to get the enter event
     auto pointer = m_seat->createPointer(m_seat);
@@ -1746,16 +1746,16 @@ void PointerInputTest::testMoveCursor()
 
     const PlatformCursorImage sizeAllCursor = loadReferenceThemeCursor(Qt::SizeAllCursor);
     QVERIFY(!sizeAllCursor.isNull());
-    QCOMPARE(kwinApp()->platform()->cursorImage().image(), sizeAllCursor.image());
-    QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), sizeAllCursor.hotSpot());
+    QCOMPARE(kwinApp()->cursorImage().image(), sizeAllCursor.image());
+    QCOMPARE(kwinApp()->cursorImage().hotSpot(), sizeAllCursor.hotSpot());
 
     // finish moving the window
     Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QVERIFY(!window->isInteractiveMove());
 
-    QCOMPARE(kwinApp()->platform()->cursorImage().image(), arrowCursor.image());
-    QCOMPARE(kwinApp()->platform()->cursorImage().hotSpot(), arrowCursor.hotSpot());
+    QCOMPARE(kwinApp()->cursorImage().image(), arrowCursor.image());
+    QCOMPARE(kwinApp()->cursorImage().hotSpot(), arrowCursor.hotSpot());
 }
 
 void PointerInputTest::testHideShowCursor()

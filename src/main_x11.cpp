@@ -15,6 +15,8 @@
 #include "backends/x11/standalone/x11_standalone_platform.h"
 #include "core/platform.h"
 #include "core/session.h"
+#include "outline.h"
+#include "screenedge.h"
 #include "sm.h"
 #include "tabletmodemanager.h"
 #include "utils/xcbutils.h"
@@ -194,6 +196,45 @@ ApplicationX11::~ApplicationX11()
 void ApplicationX11::setReplace(bool replace)
 {
     m_replace = replace;
+}
+
+std::unique_ptr<Edge> ApplicationX11::createScreenEdge(ScreenEdges *parent)
+{
+    return static_cast<X11StandalonePlatform *>(platform())->createScreenEdge(parent);
+}
+
+void ApplicationX11::createPlatformCursor(QObject *parent)
+{
+    static_cast<X11StandalonePlatform *>(platform())->createPlatformCursor(parent);
+}
+
+std::unique_ptr<OutlineVisual> ApplicationX11::createOutline(Outline *outline)
+{
+    // first try composited Outline
+    if (auto outlineVisual = Application::createOutline(outline)) {
+        return outlineVisual;
+    }
+    return static_cast<X11StandalonePlatform *>(platform())->createOutline(outline);
+}
+
+void ApplicationX11::createEffectsHandler(Compositor *compositor, Scene *scene)
+{
+    static_cast<X11StandalonePlatform *>(platform())->createEffectsHandler(compositor, scene);
+}
+
+void ApplicationX11::startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName)
+{
+    static_cast<X11StandalonePlatform *>(platform())->startInteractiveWindowSelection(callback, cursorName);
+}
+
+void ApplicationX11::startInteractivePositionSelection(std::function<void(const QPoint &)> callback)
+{
+    static_cast<X11StandalonePlatform *>(platform())->startInteractivePositionSelection(callback);
+}
+
+PlatformCursorImage ApplicationX11::cursorImage() const
+{
+    return static_cast<X11StandalonePlatform *>(platform())->cursorImage();
 }
 
 void ApplicationX11::lostSelection()

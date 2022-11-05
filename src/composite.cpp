@@ -398,7 +398,7 @@ void Compositor::startupWithWorkspace()
     }
 
     // Sets also the 'effects' pointer.
-    kwinApp()->platform()->createEffectsHandler(this, m_scene.get());
+    kwinApp()->createEffectsHandler(this, m_scene.get());
 
     Q_EMIT compositingToggled(true);
 

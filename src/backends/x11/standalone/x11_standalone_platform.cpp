@@ -241,12 +241,7 @@ void X11StandalonePlatform::startInteractivePositionSelection(std::function<void
 
 std::unique_ptr<OutlineVisual> X11StandalonePlatform::createOutline(Outline *outline)
 {
-    // first try composited Outline
-    auto ret = Platform::createOutline(outline);
-    if (!ret) {
-        ret = std::make_unique<NonCompositedOutlineVisual>(outline);
-    }
-    return ret;
+    return std::make_unique<NonCompositedOutlineVisual>(outline);
 }
 
 void X11StandalonePlatform::createEffectsHandler(Compositor *compositor, Scene *scene)

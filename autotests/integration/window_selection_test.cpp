@@ -107,7 +107,7 @@ void TestWindowSelection::testSelectOnWindowPointer()
 
     // start the interaction
     QCOMPARE(input()->isSelectingWindow(), false);
-    kwinApp()->platform()->startInteractiveWindowSelection(callback);
+    kwinApp()->startInteractiveWindowSelection(callback);
     QCOMPARE(input()->isSelectingWindow(), true);
     QVERIFY(!selectedWindow);
     QCOMPARE(keyboardLeftSpy.count(), 0);
@@ -187,7 +187,7 @@ void TestWindowSelection::testSelectOnWindowKeyboard()
 
     // start the interaction
     QCOMPARE(input()->isSelectingWindow(), false);
-    kwinApp()->platform()->startInteractiveWindowSelection(callback);
+    kwinApp()->startInteractiveWindowSelection(callback);
     QCOMPARE(input()->isSelectingWindow(), true);
     QVERIFY(!selectedWindow);
     QCOMPARE(keyboardLeftSpy.count(), 0);
@@ -249,7 +249,7 @@ void TestWindowSelection::testSelectOnWindowTouch()
 
     // start the interaction
     QCOMPARE(input()->isSelectingWindow(), false);
-    kwinApp()->platform()->startInteractiveWindowSelection(callback);
+    kwinApp()->startInteractiveWindowSelection(callback);
     QCOMPARE(input()->isSelectingWindow(), true);
     QVERIFY(!selectedWindow);
 
@@ -263,7 +263,7 @@ void TestWindowSelection::testSelectOnWindowTouch()
 
     // with movement
     selectedWindow = nullptr;
-    kwinApp()->platform()->startInteractiveWindowSelection(callback);
+    kwinApp()->startInteractiveWindowSelection(callback);
     Test::touchDown(0, window->frameGeometry().bottomRight() + QPoint(20, 20), timestamp++);
     QVERIFY(!selectedWindow);
     Test::touchMotion(0, window->frameGeometry().bottomRight() - QPoint(1, 1), timestamp++);
@@ -276,7 +276,7 @@ void TestWindowSelection::testSelectOnWindowTouch()
     Test::touchDown(0, window->frameGeometry().center(), timestamp++);
     QVERIFY(touchStartedSpy.wait());
     selectedWindow = nullptr;
-    kwinApp()->platform()->startInteractiveWindowSelection(callback);
+    kwinApp()->startInteractiveWindowSelection(callback);
     QCOMPARE(input()->isSelectingWindow(), true);
     QVERIFY(touchCanceledSpy.wait());
     QVERIFY(!selectedWindow);
@@ -318,7 +318,7 @@ void TestWindowSelection::testCancelOnWindowPointer()
 
     // start the interaction
     QCOMPARE(input()->isSelectingWindow(), false);
-    kwinApp()->platform()->startInteractiveWindowSelection(callback);
+    kwinApp()->startInteractiveWindowSelection(callback);
     QCOMPARE(input()->isSelectingWindow(), true);
     QVERIFY(!selectedWindow);
     QCOMPARE(keyboardLeftSpy.count(), 0);
@@ -373,7 +373,7 @@ void TestWindowSelection::testCancelOnWindowKeyboard()
 
     // start the interaction
     QCOMPARE(input()->isSelectingWindow(), false);
-    kwinApp()->platform()->startInteractiveWindowSelection(callback);
+    kwinApp()->startInteractiveWindowSelection(callback);
     QCOMPARE(input()->isSelectingWindow(), true);
     QVERIFY(!selectedWindow);
     QCOMPARE(keyboardLeftSpy.count(), 0);
@@ -428,7 +428,7 @@ void TestWindowSelection::testSelectPointPointer()
 
     // start the interaction
     QCOMPARE(input()->isSelectingWindow(), false);
-    kwinApp()->platform()->startInteractivePositionSelection(callback);
+    kwinApp()->startInteractivePositionSelection(callback);
     QCOMPARE(input()->isSelectingWindow(), true);
     QCOMPARE(point, QPoint());
     QCOMPARE(keyboardLeftSpy.count(), 0);
@@ -441,7 +441,7 @@ void TestWindowSelection::testSelectPointPointer()
 
     // trying again should not be allowed
     QPoint point2;
-    kwinApp()->platform()->startInteractivePositionSelection([&point2](const QPoint &p) {
+    kwinApp()->startInteractivePositionSelection([&point2](const QPoint &p) {
         point2 = p;
     });
     QCOMPARE(point2, QPoint(-1, -1));
@@ -492,7 +492,7 @@ void TestWindowSelection::testSelectPointTouch()
 
     // start the interaction
     QCOMPARE(input()->isSelectingWindow(), false);
-    kwinApp()->platform()->startInteractivePositionSelection(callback);
+    kwinApp()->startInteractivePositionSelection(callback);
     QCOMPARE(input()->isSelectingWindow(), true);
     QCOMPARE(point, QPoint());
 

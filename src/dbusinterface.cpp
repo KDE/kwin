@@ -17,7 +17,6 @@
 #include "atoms.h"
 #include "composite.h"
 #include "core/output.h"
-#include "core/platform.h"
 #include "core/renderbackend.h"
 #include "debug_console.h"
 #include "kwinadaptor.h"
@@ -202,7 +201,7 @@ QVariantMap DBusInterface::queryWindowInfo()
 {
     m_replyQueryWindowInfo = message();
     setDelayedReply(true);
-    kwinApp()->platform()->startInteractiveWindowSelection(
+    kwinApp()->startInteractiveWindowSelection(
         [this](Window *t) {
             if (!t) {
                 QDBusConnection::sessionBus().send(m_replyQueryWindowInfo.createErrorReply(

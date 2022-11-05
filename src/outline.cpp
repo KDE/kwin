@@ -11,7 +11,6 @@
 #include "outline.h"
 // KWin
 #include "composite.h"
-#include "core/platform.h"
 #include "main.h"
 #include "scripting/scripting.h"
 #include "utils/common.h"
@@ -105,7 +104,7 @@ void Outline::createHelper()
     if (m_visual) {
         return;
     }
-    m_visual = kwinApp()->platform()->createOutline(this);
+    m_visual = kwinApp()->createOutline(this);
 }
 
 void Outline::compositingChanged()

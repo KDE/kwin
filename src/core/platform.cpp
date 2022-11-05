@@ -9,18 +9,12 @@
 
 #include "platform.h"
 
-#include "composite.h"
-#include "cursor.h"
 #include "dmabuftexture.h"
-#include "effects.h"
 #include "inputbackend.h"
 #include "openglbackend.h"
-#include "outline.h"
 #include "output.h"
 #include "outputconfiguration.h"
-#include "pointer_input.h"
 #include "qpainterbackend.h"
-#include "screenedge.h"
 
 namespace KWin
 {
@@ -33,12 +27,6 @@ Platform::Platform(QObject *parent)
 
 Platform::~Platform()
 {
-}
-
-PlatformCursorImage Platform::cursorImage() const
-{
-    Cursor *cursor = Cursors::self()->currentCursor();
-    return PlatformCursorImage(cursor->image(), cursor->hotspot());
 }
 
 std::unique_ptr<InputBackend> Platform::createInputBackend()
@@ -69,16 +57,6 @@ std::shared_ptr<DmaBufTexture> Platform::createDmaBufTexture(const QSize &size, 
 std::shared_ptr<DmaBufTexture> Platform::createDmaBufTexture(const DmaBufParams &attribs)
 {
     return createDmaBufTexture({attribs.width, attribs.height}, attribs.format, attribs.modifier);
-}
-
-std::unique_ptr<Edge> Platform::createScreenEdge(ScreenEdges *edges)
-{
-    return std::make_unique<Edge>(edges);
-}
-
-void Platform::createPlatformCursor(QObject *parent)
-{
-    new InputRedirectionCursor(parent);
 }
 
 bool Platform::applyOutputChanges(const OutputConfiguration &config)
@@ -140,37 +118,6 @@ EGLDisplay KWin::Platform::sceneEglDisplay() const
 void Platform::setSceneEglDisplay(EGLDisplay display)
 {
     m_eglDisplay = display;
-}
-
-void Platform::startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName)
-{
-    if (!input()) {
-        callback(nullptr);
-        return;
-    }
-    input()->startInteractiveWindowSelection(callback, cursorName);
-}
-
-void Platform::startInteractivePositionSelection(std::function<void(const QPoint &)> callback)
-{
-    if (!input()) {
-        callback(QPoint(-1, -1));
-        return;
-    }
-    input()->startInteractivePositionSelection(callback);
-}
-
-std::unique_ptr<OutlineVisual> Platform::createOutline(Outline *outline)
-{
-    if (Compositor::compositing()) {
-        return std::make_unique<CompositedOutlineVisual>(outline);
-    }
-    return nullptr;
-}
-
-void Platform::createEffectsHandler(Compositor *compositor, Scene *scene)
-{
-    new EffectsHandlerImpl(compositor, scene);
 }
 
 QString Platform::supportInformation() const
