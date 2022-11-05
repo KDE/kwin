@@ -20,7 +20,6 @@
 #include "outputconfiguration.h"
 #include "pointer_input.h"
 #include "qpainterbackend.h"
-#include "scene.h"
 #include "screenedge.h"
 
 namespace KWin
@@ -131,14 +130,6 @@ Output *Platform::createVirtualOutput(const QString &name, const QSize &size, do
 void Platform::removeVirtualOutput(Output *output)
 {
     Q_ASSERT(!output);
-}
-
-bool Platform::supportsNativeFence() const
-{
-    if (Compositor *compositor = Compositor::self()) {
-        return compositor->scene()->supportsNativeFence();
-    }
-    return false;
 }
 
 EGLDisplay KWin::Platform::sceneEglDisplay() const
