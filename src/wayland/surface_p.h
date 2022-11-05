@@ -35,6 +35,7 @@ class AlphaModifierSurfaceV1;
 class FifoV1Surface;
 class FifoBarrier;
 class ColorRepresentationSurfaceV1;
+class FractionalScaleV2;
 
 struct SurfaceState
 {
@@ -206,6 +207,7 @@ public:
     AlphaModifierSurfaceV1 *alphaModifier = nullptr;
     FifoV1Surface *fifoSurface = nullptr;
     ColorRepresentationSurfaceV1 *colorRepresentation = nullptr;
+    FractionalScaleV2 *fractionalScaleV2 = nullptr;
 
     struct
     {

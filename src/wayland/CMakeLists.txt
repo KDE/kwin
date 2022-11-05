@@ -55,6 +55,7 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
         ${WaylandProtocols_DATADIR}/staging/ext-idle-notify/ext-idle-notify-v1.xml
         ${WaylandProtocols_DATADIR}/staging/fifo/fifo-v1.xml
         ${WaylandProtocols_DATADIR}/staging/fractional-scale/fractional-scale-v1.xml
+        ${WaylandProtocols_DATADIR}/staging/fractional-scale/fractional-scale-v2.xml
         ${WaylandProtocols_DATADIR}/staging/linux-drm-syncobj/linux-drm-syncobj-v1.xml
         ${WaylandProtocols_DATADIR}/staging/pointer-warp/pointer-warp-v1.xml
         ${WaylandProtocols_DATADIR}/staging/security-context/security-context-v1.xml
@@ -113,6 +114,7 @@ target_sources(kwin PRIVATE
     filtered_display.cpp
     fixes.cpp
     fractionalscale_v1.cpp
+    fractionalscale_v2.cpp
     frog_colormanagement_v1.cpp
     idle.cpp
     idleinhibit_v1.cpp
@@ -205,6 +207,7 @@ install(FILES
     externalbrightness_v1.h
     fifo_v1.h
     fractionalscale_v1.h
+    fractionalscale_v2.h
     frog_colormanagement_v1.h
     idle.h
     idleinhibit_v1.h

@@ -55,6 +55,7 @@ class XdgDialogWmV1Interface;
 class ExternalBrightnessV1;
 class XdgToplevelTagManagerV1;
 class PointerWarpV1;
+class FractionalScaleManagerV2;
 
 class Window;
 class Output;
@@ -302,6 +303,7 @@ private:
     XdgToplevelTagManagerV1 *m_toplevelTag = nullptr;
     ColorRepresentationManagerV1 *m_colorRepresentation = nullptr;
     PointerWarpV1 *m_pointerWarp = nullptr;
+    FractionalScaleManagerV2 *m_fractionalScaleV2 = nullptr;
     KWIN_SINGLETON(WaylandServer)
 };
 
