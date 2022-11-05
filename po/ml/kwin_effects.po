@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-01 00:48+0000\n"
+"POT-Creation-Date: 2022-11-05 00:47+0000\n"
 "PO-Revision-Date: 2019-12-12 22:14+0000\n"
 "Last-Translator: Vivek KJ Pazhedath <vivekkj2004@gmail.com>\n"
 "Language-Team: SMC <smc.org.in>\n"
@@ -193,14 +193,20 @@ msgstr ""
 msgid "Natural"
 msgstr "സാധാരണ"
 
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: desktopgrid/desktopgrid_config.ui:147
+#, kde-format
+msgid "None"
+msgstr "ഉന്നുമല്ല"
+
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: desktopgrid/desktopgrid_config.ui:150
+#: desktopgrid/desktopgrid_config.ui:155
 #, kde-format
 msgid "Windows layout:"
 msgstr ""
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: desktopgrid/desktopgrid_config.ui:166
+#: desktopgrid/desktopgrid_config.ui:171
 #, kde-format
 msgid "Activation"
 msgstr "പ്രാവര്‍ത്തികമാക്കല്‍"
@@ -1681,9 +1687,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Fix panels while switching desktops"
 #~ msgstr "പണിയിടങ്ങള്‍ മാറുമ്പോള്‍ ക്യൂബ് കാണിക്കുക"
-
-#~ msgid "None"
-#~ msgstr "ഉന്നുമല്ല"
 
 #~ msgid "Shadow opacity:"
 #~ msgstr "നിഴല്‍ അതാര്യത (ഒപേസിറ്റി)"

@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-04 00:47+0000\n"
-"PO-Revision-Date: 2022-11-02 05:43+0100\n"
+"PO-Revision-Date: 2022-11-04 06:17+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -55,25 +55,18 @@ msgstr ""
 "lasterbidea erabil dezakezu berrekiteko."
 
 #: composite.cpp:1040
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#| "protection but <b>be aware that this might result in an immediate crash!</"
-#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#| "</p>"
+#, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
 "b><br>This was most likely due to a driver bug.<p>If you think that you have "
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
-"<b>OpenGL konposizioak (lehenetsia) KWin-i huts eginarazi dio lehenago ere.</"
-"b><br>Ziur asko, kontrolatzaile baten errore batek eragingo zuen hori.<p> "
-"Orain duzun kontrolatzailea seguruagoa dela uste baduzu,<br> babesa berrezar "
-"dezakezu, baina <b>gogoan izan horrek berehala kraskatzea eragin dezakeela! "
-"</b></p><p>Horren ordez, XRender bizkarraldekoa erabil dezakezu.</p>"
+"<b>OpenGL konposizioak (lehenetsia), iraganean KWin kraskarazi du.</"
+"b><br>Hori, ziur asko, gidari baten akats batek eragingo zuen.<p>Ordutik "
+"gidaria egonkor batera bertsio-berritu duzula uste baduzu,<br>babes hau "
+"berrezar dezakezu, baina <b>kontuan izan horrek berehala kraskatzea eragin "
+"dezakeela</b></p>"
 
 #: composite.cpp:1047
 #, kde-format
@@ -81,10 +74,9 @@ msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Beharrezko X luzapenak (XComposite eta XDamage) ez daude eskuragarri."
 
 #: composite.cpp:1050
-#, fuzzy, kde-format
-#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+#, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr "GLX/OpenGL eta XRender/XFixes ez daude eskuragarri."
+msgstr "GLX/OpenGL ez dago erabilgarri."
 
 #: debug_console.cpp:79
 #, kde-format

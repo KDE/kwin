@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-04 00:47+0000\n"
-"PO-Revision-Date: 2022-11-01 12:19+0100\n"
+"PO-Revision-Date: 2022-11-04 11:21+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -61,14 +61,7 @@ msgstr ""
 ">Puede reactivarlos usando el acceso rápido «%1»."
 
 #: composite.cpp:1040
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#| "protection but <b>be aware that this might result in an immediate crash!</"
-#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#| "</p>"
+#, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
 "b><br>This was most likely due to a driver bug.<p>If you think that you have "
@@ -79,8 +72,7 @@ msgstr ""
 "anterioridad.</b><br>Esto fue debido posiblemente a un error en un "
 "controlador.<p>Si cree que se ha actualizado a un controlador estable,"
 "<br>puede reiniciar esta protección pero <b>¡tenga en cuenta que puede "
-"provocar un fallo inmediatamente!</b></p><p>Como alternativa, puede utilizar "
-"el motor XRender.</p>"
+"provocar un fallo inmediatamente!</b></p>"
 
 #: composite.cpp:1047
 #, kde-format
@@ -89,10 +81,9 @@ msgstr ""
 "Las extensiones requeridas (XComposite y XDamage) no están disponibles."
 
 #: composite.cpp:1050
-#, fuzzy, kde-format
-#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+#, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr "Ni GLX/OpenGL ni XRender/XFixes están disponibles."
+msgstr "GLX/OpenGL no está disponible."
 
 #: debug_console.cpp:79
 #, kde-format

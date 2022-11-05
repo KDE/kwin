@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-04 00:47+0000\n"
-"PO-Revision-Date: 2022-11-01 22:20+0200\n"
+"PO-Revision-Date: 2022-11-04 12:57+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -51,14 +51,7 @@ msgstr ""
 "поновити роботу за допомогою клавіатурного скорочення «%1»."
 
 #: composite.cpp:1040
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#| "protection but <b>be aware that this might result in an immediate crash!</"
-#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#| "</p>"
+#, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
 "b><br>This was most likely due to a driver bug.<p>If you think that you have "
@@ -69,8 +62,7 @@ msgstr ""
 "KWin.</b><br>Найімовірнішою причиною аварій є вада у драйвері.<p>Якщо ви "
 "вважаєте, що у вашому драйвері немає цієї вади,<br>ви можете скасувати цей "
 "захист, але <b>зважайте на те, що це може призвести до негайного аварійного "
-"завершення роботи!</b></p><p>Іншим варіантом вирішення проблеми є "
-"використання сервера обробки XRender.</p>"
+"завершення роботи!</b></p>"
 
 #: composite.cpp:1047
 #, kde-format
@@ -78,10 +70,9 @@ msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Немає потрібних розширень X (XComposite і XDamage)."
 
 #: composite.cpp:1050
-#, fuzzy, kde-format
-#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+#, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr "GLX/OpenGL і XRender/XFixes є недоступними."
+msgstr "GLX/OpenGL є недоступним."
 
 #: debug_console.cpp:79
 #, kde-format

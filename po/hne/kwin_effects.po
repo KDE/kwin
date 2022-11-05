@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-01 00:48+0000\n"
+"POT-Creation-Date: 2022-11-05 00:47+0000\n"
 "PO-Revision-Date: 2009-01-29 14:19+0530\n"
 "Last-Translator: Ravishankar Shrivastava <raviratlami@aol.in>\n"
 "Language-Team: Hindi <kde-i18n-doc@lists.kde.org>\n"
@@ -201,14 +201,20 @@ msgstr ""
 msgid "Natural"
 msgstr "प्राकृतिक"
 
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
+#: desktopgrid/desktopgrid_config.ui:147
+#, kde-format
+msgid "None"
+msgstr "कुछ नइ"
+
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: desktopgrid/desktopgrid_config.ui:150
+#: desktopgrid/desktopgrid_config.ui:155
 #, kde-format
 msgid "Windows layout:"
 msgstr ""
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: desktopgrid/desktopgrid_config.ui:166
+#: desktopgrid/desktopgrid_config.ui:171
 #, kde-format
 msgid "Activation"
 msgstr "एक्टिवेसन"
@@ -1722,9 +1728,6 @@ msgstr ""
 
 #~ msgid "Span cube on all screens in multi screen setup"
 #~ msgstr "मल्टी स्क्रीन सेटअप मं घन ल सब्बो स्क्रीन मं स्पान करव"
-
-#~ msgid "None"
-#~ msgstr "कुछ नइ"
 
 #~ msgid "Shadow size (relative to window):"
 #~ msgstr "छइंहा आकार (विंडो के सापेक्छ):"

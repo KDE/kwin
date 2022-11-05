@@ -69,7 +69,8 @@ msgstr ""
 "Backend verwenden.</p>"
 
 #: composite.cpp:1047
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Required X extensions (XComposite and XDamage) are not available."
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Benötigte X-Erweiterungen (XComposite und XDamage) sind nicht verfügbar."
