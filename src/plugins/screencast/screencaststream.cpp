@@ -8,7 +8,7 @@
 
 #include "screencaststream.h"
 #include "composite.h"
-#include "core/platform.h"
+#include "core/outputbackend.h"
 #include "core/renderbackend.h"
 #include "cursor.h"
 #include "dmabuftexture.h"
@@ -159,9 +159,9 @@ void ScreenCastStream::onStreamParamChanged(void *data, uint32_t id, const struc
     }
     if (modifierProperty && (!pw->m_dmabufParams || !receivedModifiers.contains(pw->m_dmabufParams->modifier))) {
         if (modifierProperty->flags & SPA_POD_PROP_FLAG_DONT_FIXATE) {
-            pw->m_dmabufParams = kwinApp()->platform()->testCreateDmaBuf(pw->m_resolution, spaVideoFormatToDrmFormat(pw->videoFormat.format), receivedModifiers);
+            pw->m_dmabufParams = kwinApp()->outputBackend()->testCreateDmaBuf(pw->m_resolution, spaVideoFormatToDrmFormat(pw->videoFormat.format), receivedModifiers);
         } else {
-            pw->m_dmabufParams = kwinApp()->platform()->testCreateDmaBuf(pw->m_resolution, spaVideoFormatToDrmFormat(pw->videoFormat.format), {DRM_FORMAT_MOD_INVALID});
+            pw->m_dmabufParams = kwinApp()->outputBackend()->testCreateDmaBuf(pw->m_resolution, spaVideoFormatToDrmFormat(pw->videoFormat.format), {DRM_FORMAT_MOD_INVALID});
         }
 
         qCDebug(KWIN_SCREENCAST) << "Stream dmabuf modifiers received, offering our best suited modifier" << pw->m_dmabufParams.has_value();
@@ -187,7 +187,7 @@ void ScreenCastStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
 
     if (spa_data[0].type != SPA_ID_INVALID && spa_data[0].type & (1 << SPA_DATA_DmaBuf)) {
         Q_ASSERT(stream->m_dmabufParams);
-        dmabuff = kwinApp()->platform()->createDmaBufTexture(*stream->m_dmabufParams);
+        dmabuff = kwinApp()->outputBackend()->createDmaBufTexture(*stream->m_dmabufParams);
     }
 
     if (dmabuff) {
@@ -324,7 +324,7 @@ bool ScreenCastStream::createStream()
     // it could make sense to offer the same format as the source
     const auto format = m_source->hasAlphaChannel() ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
     const int drmFormat = spaVideoFormatToDrmFormat(format);
-    m_hasDmaBuf = kwinApp()->platform()->testCreateDmaBuf(m_resolution, drmFormat, {DRM_FORMAT_MOD_INVALID}).has_value();
+    m_hasDmaBuf = kwinApp()->outputBackend()->testCreateDmaBuf(m_resolution, drmFormat, {DRM_FORMAT_MOD_INVALID}).has_value();
     m_modifiers = Compositor::self()->backend()->supportedFormats().value(drmFormat);
 
     char buffer[2048];
@@ -580,7 +580,7 @@ void ScreenCastStream::tryEnqueue(pw_buffer *buffer)
     // a corrupted buffer.
     if (Compositor::self()->scene()->supportsNativeFence()) {
         Q_ASSERT_X(eglGetCurrentContext(), "tryEnqueue", "no current context");
-        m_pendingFence = new EGLNativeFence(kwinApp()->platform()->sceneEglDisplay());
+        m_pendingFence = new EGLNativeFence(kwinApp()->outputBackend()->sceneEglDisplay());
         if (!m_pendingFence->isValid()) {
             qCWarning(KWIN_SCREENCAST) << "Failed to create a native EGL fence";
             glFinish();

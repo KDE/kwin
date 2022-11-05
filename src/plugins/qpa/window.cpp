@@ -8,7 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "window.h"
-#include "core/platform.h"
+#include "core/outputbackend.h"
 #include "eglhelpers.h"
 
 #include "internalwindow.h"
@@ -26,7 +26,7 @@ static quint32 s_windowId = 0;
 
 Window::Window(QWindow *window)
     : QPlatformWindow(window)
-    , m_eglDisplay(kwinApp()->platform()->sceneEglDisplay())
+    , m_eglDisplay(kwinApp()->outputBackend()->sceneEglDisplay())
     , m_windowId(++s_windowId)
     , m_scale(kwinApp()->devicePixelRatio())
 {

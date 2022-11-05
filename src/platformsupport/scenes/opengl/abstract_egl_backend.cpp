@@ -9,7 +9,7 @@
 #include "abstract_egl_backend.h"
 #include "composite.h"
 #include "core/output.h"
-#include "core/platform.h"
+#include "core/outputbackend.h"
 #include "dmabuftexture.h"
 #include "egl_dmabuf.h"
 #include "options.h"
@@ -55,24 +55,24 @@ AbstractEglBackend::~AbstractEglBackend()
 
 EGLContext AbstractEglBackend::ensureGlobalShareContext()
 {
-    if (kwinApp()->platform()->sceneEglGlobalShareContext() != EGL_NO_CONTEXT) {
-        return kwinApp()->platform()->sceneEglGlobalShareContext();
+    if (kwinApp()->outputBackend()->sceneEglGlobalShareContext() != EGL_NO_CONTEXT) {
+        return kwinApp()->outputBackend()->sceneEglGlobalShareContext();
     }
 
     s_globalShareContext = createContextInternal(EGL_NO_CONTEXT);
-    kwinApp()->platform()->setSceneEglGlobalShareContext(s_globalShareContext);
+    kwinApp()->outputBackend()->setSceneEglGlobalShareContext(s_globalShareContext);
     return s_globalShareContext;
 }
 
 void AbstractEglBackend::destroyGlobalShareContext()
 {
-    const EGLDisplay eglDisplay = kwinApp()->platform()->sceneEglDisplay();
+    const EGLDisplay eglDisplay = kwinApp()->outputBackend()->sceneEglDisplay();
     if (eglDisplay == EGL_NO_DISPLAY || s_globalShareContext == EGL_NO_CONTEXT) {
         return;
     }
     eglDestroyContext(eglDisplay, s_globalShareContext);
     s_globalShareContext = EGL_NO_CONTEXT;
-    kwinApp()->platform()->setSceneEglGlobalShareContext(EGL_NO_CONTEXT);
+    kwinApp()->outputBackend()->setSceneEglGlobalShareContext(EGL_NO_CONTEXT);
 }
 
 void AbstractEglBackend::teardown()
@@ -361,7 +361,7 @@ EGLContext AbstractEglBackend::createContextInternal(EGLContext sharedContext)
 void AbstractEglBackend::setEglDisplay(const EGLDisplay &display)
 {
     m_display = display;
-    kwinApp()->platform()->setSceneEglDisplay(display);
+    kwinApp()->outputBackend()->setSceneEglDisplay(display);
 }
 
 void AbstractEglBackend::setConfig(const EGLConfig &config)

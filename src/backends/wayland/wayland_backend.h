@@ -13,7 +13,7 @@
 // KWin
 #include "core/inputbackend.h"
 #include "core/inputdevice.h"
-#include "core/platform.h"
+#include "core/outputbackend.h"
 #include "utils/filedescriptor.h"
 #include <kwinglobals.h>
 // Qt
@@ -242,7 +242,7 @@ private:
  * It creates the connection to the Wayland Compositor, sets up the registry and creates
  * the Wayland output surfaces and its shell mappings.
  */
-class KWIN_EXPORT WaylandBackend : public Platform
+class KWIN_EXPORT WaylandBackend : public OutputBackend
 {
     Q_OBJECT
 

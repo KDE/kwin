@@ -20,8 +20,8 @@
 #include "appmenu.h"
 #include "atoms.h"
 #include "composite.h"
+#include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
-#include "core/platform.h"
 #include "cursor.h"
 #include "dbusinterface.h"
 #include "deleted.h"
@@ -208,8 +208,8 @@ void Workspace::init()
     connect(options, &Options::separateScreenFocusChanged, m_focusChain.get(), &FocusChain::setSeparateScreenFocus);
     m_focusChain->setSeparateScreenFocus(options->isSeparateScreenFocus());
 
-    slotPlatformOutputsQueried();
-    connect(kwinApp()->platform(), &Platform::outputsQueried, this, &Workspace::slotPlatformOutputsQueried);
+    slotOutputBackendOutputsQueried();
+    connect(kwinApp()->outputBackend(), &OutputBackend::outputsQueried, this, &Workspace::slotOutputBackendOutputsQueried);
 
     // create VirtualDesktopManager and perform dependency injection
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
@@ -613,7 +613,7 @@ std::shared_ptr<OutputMode> parseMode(Output *output, const QJsonObject &modeInf
 
 bool Workspace::applyOutputConfiguration(const OutputConfiguration &config)
 {
-    if (!kwinApp()->platform()->applyOutputChanges(config)) {
+    if (!kwinApp()->outputBackend()->applyOutputChanges(config)) {
         return false;
     }
     updateOutputs();
@@ -627,7 +627,7 @@ void Workspace::updateOutputConfiguration()
         return;
     }
 
-    const auto outputs = kwinApp()->platform()->outputs();
+    const auto outputs = kwinApp()->outputBackend()->outputs();
     if (outputs.empty()) {
         // nothing to do
         return;
@@ -690,7 +690,7 @@ void Workspace::updateOutputConfiguration()
         qCWarning(KWIN_CORE) << "KScreen config would disable the primary output!";
         return;
     }
-    if (!kwinApp()->platform()->applyOutputChanges(cfg)) {
+    if (!kwinApp()->outputBackend()->applyOutputChanges(cfg)) {
         qCWarning(KWIN_CORE) << "Applying KScreen config failed!";
         return;
     }
@@ -1403,7 +1403,7 @@ Output *Workspace::outputAt(const QPointF &pos) const
     return bestOutput;
 }
 
-void Workspace::slotPlatformOutputsQueried()
+void Workspace::slotOutputBackendOutputsQueried()
 {
     if (waylandServer()) {
         updateOutputConfiguration();
@@ -1413,7 +1413,7 @@ void Workspace::slotPlatformOutputsQueried()
 
 void Workspace::updateOutputs()
 {
-    const auto availableOutputs = kwinApp()->platform()->outputs();
+    const auto availableOutputs = kwinApp()->outputBackend()->outputs();
     const auto oldOutputs = m_outputs;
 
     m_outputs.clear();
@@ -1742,9 +1742,9 @@ QString Workspace::supportInformation() const
         support.append(m_decorationBridge->supportInformation());
         support.append(QStringLiteral("\n"));
     }
-    support.append(QStringLiteral("Platform\n"));
-    support.append(QStringLiteral("==========\n"));
-    support.append(kwinApp()->platform()->supportInformation());
+    support.append(QStringLiteral("Output backend\n"));
+    support.append(QStringLiteral("==============\n"));
+    support.append(kwinApp()->outputBackend()->supportInformation());
     support.append(QStringLiteral("\n"));
 
     const Cursor *cursor = Cursors::self()->mouse();
@@ -1792,7 +1792,7 @@ QString Workspace::supportInformation() const
     } else {
         support.append(QStringLiteral(" no\n"));
     }
-    const QVector<Output *> outputs = kwinApp()->platform()->outputs();
+    const QVector<Output *> outputs = kwinApp()->outputBackend()->outputs();
     support.append(QStringLiteral("Number of Screens: %1\n\n").arg(outputs.count()));
     for (int i = 0; i < outputs.count(); ++i) {
         const auto output = outputs[i];

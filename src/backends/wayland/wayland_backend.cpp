@@ -541,7 +541,7 @@ void WaylandSeat::destroyTouchDevice()
 }
 
 WaylandBackend::WaylandBackend(QObject *parent)
-    : Platform(parent)
+    : OutputBackend(parent)
     , m_display(nullptr)
     , m_eventQueue(std::make_unique<EventQueue>())
     , m_registry(std::make_unique<Registry>())

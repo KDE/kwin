@@ -14,7 +14,7 @@
 // TODO: Make it compile also in testing environment
 #ifndef KWIN_BUILD_TESTING
 #include "core/output.h"
-#include "core/platform.h"
+#include "core/outputbackend.h"
 #include "main.h"
 #include "window.h"
 #include "workspace.h"
@@ -136,7 +136,7 @@ void Connection::doSetup()
             deactivate();
         }
     });
-    connect(kwinApp()->platform(), &Platform::outputsQueried, this, &Connection::updateScreens);
+    connect(kwinApp()->outputBackend(), &OutputBackend::outputsQueried, this, &Connection::updateScreens);
     handleEvent();
 }
 
@@ -564,7 +564,7 @@ void Connection::applyScreenToDevice(Device *device)
     }
 
     Output *deviceOutput = nullptr;
-    const QVector<Output *> outputs = kwinApp()->platform()->outputs();
+    const QVector<Output *> outputs = kwinApp()->outputBackend()->outputs();
 
     // let's try to find a screen for it
     if (!device->outputName().isEmpty()) {

@@ -42,10 +42,10 @@ target_sources(kwin PRIVATE
     core/inputbackend.cpp
     core/inputdevice.cpp
     core/output.cpp
+    core/outputbackend.cpp
     core/outputconfiguration.cpp
     core/outputlayer.cpp
     core/overlaywindow.cpp
-    core/platform.cpp
     core/renderbackend.cpp
     core/renderjournal.cpp
     core/renderlayer.cpp

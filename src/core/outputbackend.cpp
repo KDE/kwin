@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "platform.h"
+#include "outputbackend.h"
 
 #include "dmabuftexture.h"
 #include "inputbackend.h"
@@ -19,47 +19,47 @@
 namespace KWin
 {
 
-Platform::Platform(QObject *parent)
+OutputBackend::OutputBackend(QObject *parent)
     : QObject(parent)
     , m_eglDisplay(EGL_NO_DISPLAY)
 {
 }
 
-Platform::~Platform()
+OutputBackend::~OutputBackend()
 {
 }
 
-std::unique_ptr<InputBackend> Platform::createInputBackend()
-{
-    return nullptr;
-}
-
-std::unique_ptr<OpenGLBackend> Platform::createOpenGLBackend()
+std::unique_ptr<InputBackend> OutputBackend::createInputBackend()
 {
     return nullptr;
 }
 
-std::unique_ptr<QPainterBackend> Platform::createQPainterBackend()
+std::unique_ptr<OpenGLBackend> OutputBackend::createOpenGLBackend()
 {
     return nullptr;
 }
 
-std::optional<DmaBufParams> Platform::testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
+std::unique_ptr<QPainterBackend> OutputBackend::createQPainterBackend()
+{
+    return nullptr;
+}
+
+std::optional<DmaBufParams> OutputBackend::testCreateDmaBuf(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers)
 {
     return {};
 }
 
-std::shared_ptr<DmaBufTexture> Platform::createDmaBufTexture(const QSize &size, quint32 format, uint64_t modifier)
+std::shared_ptr<DmaBufTexture> OutputBackend::createDmaBufTexture(const QSize &size, quint32 format, uint64_t modifier)
 {
     return {};
 }
 
-std::shared_ptr<DmaBufTexture> Platform::createDmaBufTexture(const DmaBufParams &attribs)
+std::shared_ptr<DmaBufTexture> OutputBackend::createDmaBufTexture(const DmaBufParams &attribs)
 {
     return createDmaBufTexture({attribs.width, attribs.height}, attribs.format, attribs.modifier);
 }
 
-bool Platform::applyOutputChanges(const OutputConfiguration &config)
+bool OutputBackend::applyOutputChanges(const OutputConfiguration &config)
 {
     const auto availableOutputs = outputs();
     QVector<Output *> toBeEnabledOutputs;
@@ -80,7 +80,7 @@ bool Platform::applyOutputChanges(const OutputConfiguration &config)
     return true;
 }
 
-Output *Platform::findOutput(const QString &name) const
+Output *OutputBackend::findOutput(const QString &name) const
 {
     const auto candidates = outputs();
     for (Output *candidate : candidates) {
@@ -91,7 +91,7 @@ Output *Platform::findOutput(const QString &name) const
     return nullptr;
 }
 
-void Platform::setReady(bool ready)
+void OutputBackend::setReady(bool ready)
 {
     if (m_ready == ready) {
         return;
@@ -100,37 +100,37 @@ void Platform::setReady(bool ready)
     Q_EMIT readyChanged(m_ready);
 }
 
-Output *Platform::createVirtualOutput(const QString &name, const QSize &size, double scale)
+Output *OutputBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
     return nullptr;
 }
 
-void Platform::removeVirtualOutput(Output *output)
+void OutputBackend::removeVirtualOutput(Output *output)
 {
     Q_ASSERT(!output);
 }
 
-EGLDisplay KWin::Platform::sceneEglDisplay() const
+EGLDisplay KWin::OutputBackend::sceneEglDisplay() const
 {
     return m_eglDisplay;
 }
 
-void Platform::setSceneEglDisplay(EGLDisplay display)
+void OutputBackend::setSceneEglDisplay(EGLDisplay display)
 {
     m_eglDisplay = display;
 }
 
-QString Platform::supportInformation() const
+QString OutputBackend::supportInformation() const
 {
     return QStringLiteral("Name: %1\n").arg(metaObject()->className());
 }
 
-EGLContext Platform::sceneEglGlobalShareContext() const
+EGLContext OutputBackend::sceneEglGlobalShareContext() const
 {
     return m_globalShareContext;
 }
 
-void Platform::setSceneEglGlobalShareContext(EGLContext context)
+void OutputBackend::setSceneEglGlobalShareContext(EGLContext context)
 {
     m_globalShareContext = context;
 }

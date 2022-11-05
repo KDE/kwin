@@ -8,7 +8,7 @@
 */
 #include "kwin_wayland_test.h"
 
-#include "core/platform.h"
+#include "core/outputbackend.h"
 #include "cursor.h"
 #include "effectloader.h"
 #include "scripting/scripting.h"
@@ -49,9 +49,9 @@ private:
 void ScreenEdgeTest::initTestCase()
 {
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
+    kwinApp()->outputBackend()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 1));
+    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 1));
 
     // empty config to have defaults
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);

@@ -7,8 +7,8 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
+#include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
-#include "core/platform.h"
 #include "cursor.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -50,9 +50,9 @@ void OutputChangesTest::initTestCase()
     qRegisterMetaType<Window *>();
 
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    kwinApp()->platform()->setInitialWindowSize(QSize(1280, 1024));
+    kwinApp()->outputBackend()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
+    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
@@ -64,7 +64,7 @@ void OutputChangesTest::initTestCase()
 
 void OutputChangesTest::init()
 {
-    QMetaObject::invokeMethod(kwinApp()->platform(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
+    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
     QVERIFY(Test::setupWaylandConnection());
 
     workspace()->setActiveOutput(QPoint(640, 512));
@@ -78,7 +78,7 @@ void OutputChangesTest::cleanup()
 
 void OutputChangesTest::testWindowSticksToOutputAfterOutputIsDisabled()
 {
-    auto outputs = kwinApp()->platform()->outputs();
+    auto outputs = kwinApp()->outputBackend()->outputs();
 
     // Create a window.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -104,7 +104,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputIsDisabled()
 
 void OutputChangesTest::testWindowSticksToOutputAfterAnotherOutputIsDisabled()
 {
-    auto outputs = kwinApp()->platform()->outputs();
+    auto outputs = kwinApp()->outputBackend()->outputs();
 
     // Create a window.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -134,7 +134,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterAnotherOutputIsDisabled()
 
 void OutputChangesTest::testWindowSticksToOutputAfterOutputIsMoved()
 {
-    auto outputs = kwinApp()->platform()->outputs();
+    auto outputs = kwinApp()->outputBackend()->outputs();
 
     // Create a window.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -163,7 +163,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputsAreSwappedLeftToRigh
     // This test verifies that a window placed on the left monitor sticks
     // to that monitor even after the monitors are swapped horizontally.
 
-    const auto outputs = kwinApp()->platform()->outputs();
+    const auto outputs = kwinApp()->outputBackend()->outputs();
 
     // Create a window.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -196,7 +196,7 @@ void OutputChangesTest::testWindowSticksToOutputAfterOutputsAreSwappedRightToLef
     // This test verifies that a window placed on the right monitor sticks
     // to that monitor even after the monitors are swapped horizontally.
 
-    const auto outputs = kwinApp()->platform()->outputs();
+    const auto outputs = kwinApp()->outputBackend()->outputs();
 
     // Create a window.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -228,7 +228,7 @@ void OutputChangesTest::testWindowRestoredAfterEnablingOutput()
 {
     // This test verifies that a window will be moved back to its original output when it's hotplugged.
 
-    const auto outputs = kwinApp()->platform()->outputs();
+    const auto outputs = kwinApp()->outputBackend()->outputs();
 
     // Create a window.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -271,7 +271,7 @@ void OutputChangesTest::testWindowNotRestoredAfterMovingWindowAndEnablingOutput(
     // This test verifies that a window won't be moved to its original output when it's
     // hotplugged because the window was moved manually by the user.
 
-    const auto outputs = kwinApp()->platform()->outputs();
+    const auto outputs = kwinApp()->outputBackend()->outputs();
 
     // Create a window.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -321,7 +321,7 @@ void OutputChangesTest::testMaximizedWindowRestoredAfterEnablingOutput()
     // This test verifies that a maximized window will be moved to its original
     // output when it's re-enabled.
 
-    const auto outputs = kwinApp()->platform()->outputs();
+    const auto outputs = kwinApp()->outputBackend()->outputs();
 
     // Create a window.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -388,7 +388,7 @@ void OutputChangesTest::testFullScreenWindowRestoredAfterEnablingOutput()
     // This test verifies that a fullscreen window will be moved to its original
     // output when it's re-enabled.
 
-    const auto outputs = kwinApp()->platform()->outputs();
+    const auto outputs = kwinApp()->outputBackend()->outputs();
 
     // Create a window.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -454,7 +454,7 @@ void OutputChangesTest::testWindowRestoredAfterChangingScale()
 {
     // This test verifies that a window will be moved to its original position after changing the scale of an output
 
-    const auto output = kwinApp()->platform()->outputs().front();
+    const auto output = kwinApp()->outputBackend()->outputs().front();
 
     // Create a window.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -498,7 +498,7 @@ void OutputChangesTest::testMaximizeStateRestoredAfterEnablingOutput()
     // This test verifies that the window state will get restored after disabling and enabling an output,
     // even if its maximize state changed in the process
 
-    const auto outputs = kwinApp()->platform()->outputs();
+    const auto outputs = kwinApp()->outputBackend()->outputs();
 
     // Disable the right output
     {

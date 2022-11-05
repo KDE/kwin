@@ -27,7 +27,7 @@ class QCommandLineParser;
 namespace KWin
 {
 
-class Platform;
+class OutputBackend;
 class Session;
 class X11EventFilter;
 class PluginManager;
@@ -221,11 +221,11 @@ public:
     QProcessEnvironment processStartupEnvironment() const;
     void setProcessStartupEnvironment(const QProcessEnvironment &environment);
 
-    Platform *platform() const
+    OutputBackend *outputBackend() const
     {
-        return m_platform.get();
+        return m_outputBackend.get();
     }
-    void setPlatform(std::unique_ptr<Platform> &&platform);
+    void setOutputBackend(std::unique_ptr<OutputBackend> &&backend);
 
     Session *session() const
     {
@@ -366,7 +366,7 @@ private:
     bool m_useKActivities = true;
 #endif
     std::unique_ptr<Session> m_session;
-    std::unique_ptr<Platform> m_platform;
+    std::unique_ptr<OutputBackend> m_outputBackend;
     bool m_terminating = false;
     qreal m_xwaylandScale = 1;
     QProcessEnvironment m_processEnvironment;

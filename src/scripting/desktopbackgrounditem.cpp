@@ -10,7 +10,7 @@
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
-#include "core/platform.h"
+#include "core/outputbackend.h"
 #include "main.h"
 #include "scripting_logging.h"
 #include "virtualdesktops.h"
@@ -37,7 +37,7 @@ QString DesktopBackgroundItem::outputName() const
 
 void DesktopBackgroundItem::setOutputName(const QString &name)
 {
-    setOutput(kwinApp()->platform()->findOutput(name));
+    setOutput(kwinApp()->outputBackend()->findOutput(name));
 }
 
 Output *DesktopBackgroundItem::output() const

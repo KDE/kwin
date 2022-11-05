@@ -13,7 +13,7 @@
 #include "backends/drm/drm_backend.h"
 #include "composite.h"
 #include "core/output.h"
-#include "core/platform.h"
+#include "core/outputbackend.h"
 #include "idle_inhibition.h"
 #include "inputpanelv1integration.h"
 #include "keyboard_input.h"
@@ -548,12 +548,12 @@ void WaylandServer::initWorkspace()
         m_primary->setPrimaryOutput(primaryOutput ? primaryOutput->name() : QString());
     });
 
-    const auto availableOutputs = kwinApp()->platform()->outputs();
+    const auto availableOutputs = kwinApp()->outputBackend()->outputs();
     for (Output *output : availableOutputs) {
         handleOutputAdded(output);
     }
-    connect(kwinApp()->platform(), &Platform::outputAdded, this, &WaylandServer::handleOutputAdded);
-    connect(kwinApp()->platform(), &Platform::outputRemoved, this, &WaylandServer::handleOutputRemoved);
+    connect(kwinApp()->outputBackend(), &OutputBackend::outputAdded, this, &WaylandServer::handleOutputAdded);
+    connect(kwinApp()->outputBackend(), &OutputBackend::outputRemoved, this, &WaylandServer::handleOutputRemoved);
 
     const auto outputs = workspace()->outputs();
     for (Output *output : outputs) {
@@ -566,7 +566,7 @@ void WaylandServer::initWorkspace()
         initScreenLocker();
     }
 
-    if (auto backend = qobject_cast<DrmBackend *>(kwinApp()->platform())) {
+    if (auto backend = qobject_cast<DrmBackend *>(kwinApp()->outputBackend())) {
         m_leaseManager = new KWaylandServer::DrmLeaseManagerV1(backend, m_display, m_display);
     }
 

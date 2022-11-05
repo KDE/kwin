@@ -70,7 +70,7 @@ static QStringList splitPathList(const QString &input, const QChar delimiter)
 }
 
 DrmBackend::DrmBackend(Session *session, QObject *parent)
-    : Platform(parent)
+    : OutputBackend(parent)
     , m_udev(std::make_unique<Udev>())
     , m_udevMonitor(m_udev->monitor())
     , m_session(session)

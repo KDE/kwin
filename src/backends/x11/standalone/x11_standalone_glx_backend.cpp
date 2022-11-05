@@ -24,8 +24,8 @@
 #include "x11_standalone_sgivideosyncvsyncmonitor.h"
 // kwin
 #include "composite.h"
+#include "core/outputbackend.h"
 #include "core/overlaywindow.h"
-#include "core/platform.h"
 #include "core/renderloop_p.h"
 #include "options.h"
 #include "scene.h"
@@ -98,7 +98,7 @@ bool SwapEventFilter::event(xcb_generic_event_t *event)
     // it's CLOCK_MONOTONIC, so no special conversions are needed.
     const std::chrono::microseconds timestamp((uint64_t(swapEvent->ust_hi) << 32) | swapEvent->ust_lo);
 
-    const auto platform = static_cast<X11StandalonePlatform *>(kwinApp()->platform());
+    const auto platform = static_cast<X11StandalonePlatform *>(kwinApp()->outputBackend());
     RenderLoopPrivate::get(platform->renderLoop())->notifyFrameCompleted(timestamp);
 
     return true;

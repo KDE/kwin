@@ -6,8 +6,9 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_PLATFORM_H
-#define KWIN_PLATFORM_H
+
+#pragma once
+
 #include <epoxy/egl.h>
 #include <kwin_export.h>
 #include <kwinglobals.h>
@@ -40,11 +41,11 @@ public:
     }
 };
 
-class KWIN_EXPORT Platform : public QObject
+class KWIN_EXPORT OutputBackend : public QObject
 {
     Q_OBJECT
 public:
-    ~Platform() override;
+    ~OutputBackend() override;
 
     virtual bool initialize() = 0;
     virtual std::unique_ptr<InputBackend> createInputBackend();
@@ -146,7 +147,7 @@ Q_SIGNALS:
     void outputRemoved(Output *output);
 
 protected:
-    explicit Platform(QObject *parent = nullptr);
+    explicit OutputBackend(QObject *parent = nullptr);
     void setReady(bool ready);
     QSize initialWindowSize() const
     {
@@ -168,5 +169,3 @@ private:
 };
 
 } // namespace KWin
-
-#endif

@@ -100,7 +100,7 @@ bool XrandrEventFilter::event(xcb_generic_event_t *event)
 }
 
 X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
-    : Platform(parent)
+    : OutputBackend(parent)
     , m_updateOutputsTimer(std::make_unique<QTimer>())
     , m_x11Display(QX11Info::display())
     , m_renderLoop(std::make_unique<RenderLoop>())
@@ -474,7 +474,7 @@ static int currentRefreshRate()
         return refreshRate;
     }
 
-    const QVector<Output *> outputs = kwinApp()->platform()->outputs();
+    const QVector<Output *> outputs = kwinApp()->outputBackend()->outputs();
     if (outputs.isEmpty()) {
         return 60000;
     }

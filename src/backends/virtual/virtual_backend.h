@@ -8,7 +8,7 @@
 */
 #pragma once
 
-#include "core/platform.h"
+#include "core/outputbackend.h"
 
 #include <kwin_export.h>
 
@@ -22,7 +22,7 @@ namespace KWin
 class VirtualBackend;
 class VirtualOutput;
 
-class KWIN_EXPORT VirtualBackend : public Platform
+class KWIN_EXPORT VirtualBackend : public OutputBackend
 {
     Q_OBJECT
 

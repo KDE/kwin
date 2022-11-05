@@ -11,7 +11,7 @@
 #include <config-kwin.h>
 
 #include "core/output.h"
-#include "core/platform.h"
+#include "core/outputbackend.h"
 #include "libinput_logging.h"
 #include "main.h"
 #include "mousebuttons.h"
@@ -633,7 +633,7 @@ void Device::setOutputName(const QString &name)
     }
 
     setOutput(nullptr);
-    auto outputs = kwinApp()->platform()->outputs();
+    auto outputs = kwinApp()->outputBackend()->outputs();
     for (int i = 0; i < outputs.count(); ++i) {
         if (!outputs[i]->isEnabled()) {
             continue;
