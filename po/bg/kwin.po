@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-04 00:47+0000\n"
-"PO-Revision-Date: 2022-11-02 22:43+0100\n"
+"POT-Creation-Date: 2022-11-06 00:48+0000\n"
+"PO-Revision-Date: 2022-11-05 17:21+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.08.2\n"
+"X-Generator: Lokalize 22.08.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -52,16 +52,21 @@ msgid ""
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
+"<b>Графичните ефекти с OpenGL (по подразбиране) в миналото водеше до сривове "
+"на KWin .</b><br>Това най-вероятно се дължеше на грешки в драйвера.<p>Ако "
+"смятате, че междувременно сте надстроили до стабилен драйвер,<br>можете да "
+"нулирате тази защита, но <b>имайте предвид, че това може да доведе до "
+"незабавен срив!</b></p>"
 
 #: composite.cpp:1047
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
-msgstr ""
+msgstr "Необходимите разширения на X (XComposite и XDamage) не са налични."
 
 #: composite.cpp:1050
 #, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr ""
+msgstr "GLX/OpenGL не е наличен."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -1571,14 +1576,14 @@ msgctxt "Night Color was enabled"
 msgid "Night Color On"
 msgstr "Вечерни цветове включен"
 
-#: plugins/nightcolor/nightcolormanager.cpp:88
-#: plugins/nightcolor/nightcolormanager.cpp:91
-#: plugins/nightcolor/nightcolormanager.cpp:98
+#: plugins/nightcolor/nightcolormanager.cpp:84
+#: plugins/nightcolor/nightcolormanager.cpp:87
+#: plugins/nightcolor/nightcolormanager.cpp:94
 #, kde-format
 msgid "Toggle Night Color"
 msgstr "Превключване на нощния цвят"
 
-#: plugins/nightcolor/nightcolormanager.cpp:493
+#: plugins/nightcolor/nightcolormanager.cpp:480
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Предварителен преглед на цветната температура"

@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1637337 2022-11-04 01:36:41Z scripty $
+# $Id: kwin.po 1637496 2022-11-06 01:37:30Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-04 00:47+0000\n"
+"POT-Creation-Date: 2022-11-06 00:48+0000\n"
 "PO-Revision-Date: 2022-11-01 09:23+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -1585,14 +1585,14 @@ msgctxt "Night Color was enabled"
 msgid "Night Color On"
 msgstr "Vključi nočno barvo"
 
-#: plugins/nightcolor/nightcolormanager.cpp:88
-#: plugins/nightcolor/nightcolormanager.cpp:91
-#: plugins/nightcolor/nightcolormanager.cpp:98
+#: plugins/nightcolor/nightcolormanager.cpp:84
+#: plugins/nightcolor/nightcolormanager.cpp:87
+#: plugins/nightcolor/nightcolormanager.cpp:94
 #, kde-format
 msgid "Toggle Night Color"
 msgstr "Preklopi nočno barvo"
 
-#: plugins/nightcolor/nightcolormanager.cpp:493
+#: plugins/nightcolor/nightcolormanager.cpp:480
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Predogled barvne temperature"

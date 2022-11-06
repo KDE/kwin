@@ -1,6 +1,5 @@
 # Translation for kwin_effects.po to Euskara/Basque (eu).
-# Copyright (C) 2007-2018 The Free Software Foundation, Inc.
-# Copyright (C) 2019-2022 This file is copyright:
+# Copyright (C) 2007-2022 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 # KDE euskaratzeko proiektuko arduraduna <xalba@ni.eus>.
 #
@@ -13,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-05 00:47+0000\n"
-"PO-Revision-Date: 2022-10-27 05:14+0200\n"
+"PO-Revision-Date: 2022-11-05 10:42+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -204,7 +203,7 @@ msgstr "Naturala"
 #: desktopgrid/desktopgrid_config.ui:147
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Batere ez"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: desktopgrid/desktopgrid_config.ui:155

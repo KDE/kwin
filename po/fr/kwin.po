@@ -23,8 +23,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-04 00:47+0000\n"
-"PO-Revision-Date: 2022-11-02 21:47+0100\n"
+"POT-Creation-Date: 2022-11-06 00:48+0000\n"
+"PO-Revision-Date: 2022-11-04 21:52+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@neuf.fr>\n"
 "Language-Team: French <kde-francophone@kde.org>\n"
 "Language: fr\n"
@@ -70,26 +70,18 @@ msgstr ""
 "pouvez les reprendre en utilisant le raccourci clavier « %1 »."
 
 #: composite.cpp:1040
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#| "protection but <b>be aware that this might result in an immediate crash!</"
-#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#| "</p>"
+#, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
 "b><br>This was most likely due to a driver bug.<p>If you think that you have "
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
-"<b>La composition OpenGL (par défaut) a arrêté brutalement KWin par le passé."
-"</b><br>Ceci était probablement dû à un bogue dans le pilote.<p>Si vous "
-"pensez que vous avez néanmoins mis à jour celui-ci vers une version stable,"
-"<br> vous pouvez réinitialiser cette protection, mais restez conscient que "
-"<b>cela peut aboutir à un plantage immédiat !</b></p><p>Vous pouvez "
-"également utiliser le moteur « XRender » à la place.</p>"
+"<b>La composition avec OpenGL (Par défaut) s'est arrêté brutalement KWin par "
+"le passé.</b><br>Ceci était probablement dû à un bogue dans le pilote.<p>Si "
+"vous pensez que vous avez néanmoins mis à jour celui-ci vers une version "
+"stable,<br> vous pouvez réinitialiser cette protection, <b>mais soyez "
+"conscient que cela peut aboutir à un plantage immédiat !</b></p>"
 
 #: composite.cpp:1047
 #, kde-format
@@ -99,12 +91,9 @@ msgstr ""
 "disponibles."
 
 #: composite.cpp:1050
-#, fuzzy, kde-format
-#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+#, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr ""
-"Les extensions « GLX / OpenGL » et « XRender / XFixes » ne sont pas "
-"disponibles."
+msgstr "L'extension « GLX / OpenGL » n'est pas disponible."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -1626,14 +1615,14 @@ msgctxt "Night Color was enabled"
 msgid "Night Color On"
 msgstr "Couleur de nuit activée"
 
-#: plugins/nightcolor/nightcolormanager.cpp:88
-#: plugins/nightcolor/nightcolormanager.cpp:91
-#: plugins/nightcolor/nightcolormanager.cpp:98
+#: plugins/nightcolor/nightcolormanager.cpp:84
+#: plugins/nightcolor/nightcolormanager.cpp:87
+#: plugins/nightcolor/nightcolormanager.cpp:94
 #, kde-format
 msgid "Toggle Night Color"
 msgstr "Basculer la couleur de nuit"
 
-#: plugins/nightcolor/nightcolormanager.cpp:493
+#: plugins/nightcolor/nightcolormanager.cpp:480
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Aperçu de la température de couleurs"
