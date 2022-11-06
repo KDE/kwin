@@ -235,14 +235,14 @@ void Item::updateBoundingRect()
     }
 }
 
-QList<QRectF> Item::shape() const
+RegionF Item::shape() const
 {
-    return QList<QRectF>();
+    return RegionF();
 }
 
-QRegion Item::opaque() const
+RegionF Item::opaque() const
 {
-    return QRegion();
+    return RegionF();
 }
 
 QTransform Item::transform() const
@@ -289,6 +289,15 @@ QRegion Item::mapToView(const QRegion &region, const RenderView *view) const
     return ret;
 }
 
+RegionF Item::mapToView(const RegionF &region, const RenderView *view) const
+{
+    RegionF ret;
+    for (const QRectF &rect : region) {
+        ret |= mapToView(rect, view);
+    }
+    return ret;
+}
+
 QRectF Item::mapToView(const QRectF &rect, const RenderView *view) const
 {
     const auto snappedPosition = snapToPixels(m_position, view->scale());
@@ -306,6 +315,15 @@ QRegion Item::mapToScene(const QRegion &region) const
         return QRegion();
     }
     return m_itemToSceneTransform.map(region);
+}
+
+RegionF Item::mapToScene(const RegionF &region) const
+{
+    RegionF ret;
+    for (const QRectF &rect : region) {
+        ret |= m_itemToSceneTransform.mapRect(rect);
+    }
+    return ret;
 }
 
 QRectF Item::mapToScene(const QRectF &rect) const

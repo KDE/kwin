@@ -10,6 +10,7 @@
 #include "effect/globals.h"
 #include "scene/borderradius.h"
 #include "scene/itemgeometry.h"
+#include "utils/regionf.h"
 
 #include <QList>
 #include <QObject>
@@ -81,8 +82,8 @@ public:
      */
     QRectF boundingRect() const;
 
-    virtual QList<QRectF> shape() const;
-    virtual QRegion opaque() const;
+    virtual RegionF shape() const;
+    virtual RegionF opaque() const;
 
     /**
      * Returns the visual parent of the item. Note that the visual parent differs from
@@ -102,6 +103,11 @@ public:
      */
     QRegion mapToView(const QRegion &region, const RenderView *view) const;
     /**
+     * Maps the given @a region from the item's coordinate system to the view's coordinate
+     * system, snapping positions to the view's coordinate grid to match the renderer
+     */
+    RegionF mapToView(const RegionF &region, const RenderView *view) const;
+    /**
      * Maps the given @a rect from the item's coordinate system to the view's coordinate
      * system, snapping positions to the view's coordinate grid to match the renderer
      */
@@ -112,6 +118,11 @@ public:
      * system.
      */
     QRegion mapToScene(const QRegion &region) const;
+    /**
+     * Maps the given @a region from the item's coordinate system to the scene's coordinate
+     * system.
+     */
+    RegionF mapToScene(const RegionF &region) const;
     /**
      * Maps the given @a rect from the item's coordinate system to the scene's coordinate
      * system.

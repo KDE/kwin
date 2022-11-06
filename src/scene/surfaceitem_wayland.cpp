@@ -76,17 +76,17 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
     connect(&m_fifoFallbackTimer, &QTimer::timeout, this, &SurfaceItemWayland::handleFifoFallback);
 }
 
-QList<QRectF> SurfaceItemWayland::shape() const
+RegionF SurfaceItemWayland::shape() const
 {
-    return {rect()};
+    return RegionF{rect()};
 }
 
-QRegion SurfaceItemWayland::opaque() const
+RegionF SurfaceItemWayland::opaque() const
 {
     if (m_surface) {
-        return m_surface->opaque().toAlignedRegion();
+        return m_surface->opaque();
     }
-    return QRegion();
+    return RegionF();
 }
 
 SurfaceInterface *SurfaceItemWayland::surface() const
@@ -280,25 +280,18 @@ void SurfaceItemXwayland::handleShapeChange()
     discardQuads();
 }
 
-QList<QRectF> SurfaceItemXwayland::shape() const
+RegionF SurfaceItemXwayland::shape() const
 {
-    QList<QRectF> shape = m_window->shapeRegion();
-    for (QRectF &shapePart : shape) {
-        shapePart = shapePart.intersected(rect());
-    }
-    return shape;
+    const QRectF clipRect = rect() & m_window->clientGeometry().translated(-m_window->bufferGeometry().topLeft());
+    return m_window->shapeRegion() & clipRect;
 }
 
-QRegion SurfaceItemXwayland::opaque() const
+RegionF SurfaceItemXwayland::opaque() const
 {
-    QRegion shapeRegion;
-    for (const QRectF &shapePart : shape()) {
-        shapeRegion += shapePart.toRect();
-    }
     if (!m_window->hasAlpha()) {
-        return shapeRegion;
+        return shape();
     } else {
-        return m_window->opaqueRegion() & shapeRegion;
+        return m_window->opaqueRegion() & shape();
     }
     return QRegion();
 }

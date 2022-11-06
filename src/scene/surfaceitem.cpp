@@ -205,15 +205,15 @@ void SurfaceItem::preprocess()
 
 WindowQuadList SurfaceItem::buildQuads() const
 {
-    const QList<QRectF> region = shape();
+    const RegionF region = shape();
     WindowQuadList quads;
-    quads.reserve(region.count());
+    quads.reserve(region.rects().size());
 
     const QRectF sourceBox = m_bufferToSurfaceTransform.map(m_bufferSourceBox, m_bufferSize);
     const qreal xScale = sourceBox.width() / m_destinationSize.width();
     const qreal yScale = sourceBox.height() / m_destinationSize.height();
 
-    for (const QRectF rect : region) {
+    for (const QRectF &rect : region) {
         WindowQuad quad;
 
         const QPointF bufferTopLeft = snapToPixelGridF(m_bufferSourceBox.topLeft() + m_surfaceToBufferTransform.map(QPointF(rect.left() * xScale, rect.top() * yScale), sourceBox.size()));

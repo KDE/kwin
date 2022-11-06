@@ -227,13 +227,14 @@ static bool addCandidates(SceneView *delegate, Item *item, QList<SurfaceItem *> 
         }
     });
 
-    QRegion opaque = item->opaque();
+    RegionF opaque = item->opaque();
     if (!corners.isEmpty()) {
         const auto &top = corners.top();
         opaque = top.radius.clip(opaque, top.box);
     }
 
-    occluded += item->mapToView(opaque, delegate);
+    // TODO map to device coordiantes instead of this underestimation
+    occluded += item->mapToView(opaque, delegate).containedAlignedRegion();
     for (; it != children.rend(); it++) {
         Item *const child = *it;
         if (!delegate->shouldRenderItem(child)) {
@@ -283,7 +284,7 @@ static QRect mapToDevice(SceneView *view, Item *item, const QRectF &itemLocal)
     return snapToPixelGridF(scaledRect(localLogical, view->scale())).toRect();
 }
 
-static QRegion mapToDevice(SceneView *view, Item *item, const QRegion &itemLocal)
+static QRegion mapToDevice(SceneView *view, Item *item, const RegionF &itemLocal)
 {
     QRegion ret;
     for (const QRectF local : itemLocal) {
@@ -536,12 +537,12 @@ void WorkspaceScene::preparePaintSimpleScreen()
         if (window->opacity() == 1.0) {
             const SurfaceItem *surfaceItem = windowItem->surfaceItem();
             if (Q_LIKELY(surfaceItem)) {
-                data.opaque = surfaceItem->mapToScene(surfaceItem->borderRadius().clip(surfaceItem->opaque(), surfaceItem->rect()));
+                data.opaque = surfaceItem->mapToScene(surfaceItem->borderRadius().clip(surfaceItem->opaque(), surfaceItem->rect())).containedAlignedRegion();
             }
 
             const DecorationItem *decorationItem = windowItem->decorationItem();
             if (decorationItem) {
-                data.opaque += decorationItem->mapToScene(decorationItem->borderRadius().clip(decorationItem->opaque(), decorationItem->rect()));
+                data.opaque |= decorationItem->mapToScene(decorationItem->borderRadius().clip(decorationItem->opaque(), decorationItem->rect())).containedAlignedRegion();
             }
         }
 

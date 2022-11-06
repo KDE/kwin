@@ -124,6 +124,33 @@ QRegion BorderRadius::clip(const QRegion &region, const QRectF &bounds) const
     return clipped;
 }
 
+RegionF BorderRadius::clip(const RegionF &region, const QRectF &bounds) const
+{
+    if (region.isEmpty()) {
+        return RegionF();
+    }
+
+    RegionF clipped = region;
+
+    if (m_topLeft > 0) {
+        clipped = clipped.subtracted(QRectF(0, 0, m_topLeft, m_topLeft));
+    }
+
+    if (m_topRight > 0) {
+        clipped = clipped.subtracted(QRectF(bounds.x() + bounds.width() - m_topRight, 0, m_topRight, m_topRight));
+    }
+
+    if (m_bottomRight > 0) {
+        clipped = clipped.subtracted(QRectF(bounds.x() + bounds.width() - m_bottomRight, bounds.y() + bounds.height() - m_bottomRight, m_bottomRight, m_bottomRight));
+    }
+
+    if (m_bottomLeft > 0) {
+        clipped = clipped.subtracted(QRectF(0, bounds.y() + bounds.height() - m_bottomLeft, m_bottomLeft, m_bottomLeft));
+    }
+
+    return clipped;
+}
+
 BorderRadius BorderRadius::from(const KDecoration3::BorderRadius &radius)
 {
     return BorderRadius(radius.topLeft(), radius.topRight(), radius.bottomRight(), radius.bottomLeft());

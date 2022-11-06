@@ -26,7 +26,7 @@ public:
 
     InternalWindow *window() const;
 
-    QList<QRectF> shape() const override;
+    RegionF shape() const override;
 
 private Q_SLOTS:
     void handlePresented(const InternalWindowFrame &frame);

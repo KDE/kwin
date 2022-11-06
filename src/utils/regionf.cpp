@@ -64,6 +64,15 @@ void RegionF::translate(const QPointF &point)
     }
 }
 
+RegionF RegionF::subtracted(const RegionF &region) const
+{
+    RegionF ret;
+    for (const QRectF &rect : *this) {
+        RegionF r = region & rect;
+    }
+    return ret;
+}
+
 void RegionF::operator=(const QRegion &region)
 {
     m_rects.clear();

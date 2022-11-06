@@ -410,31 +410,20 @@ DecorationItem::~DecorationItem()
 {
 }
 
-QList<QRectF> DecorationItem::shape() const
+RegionF DecorationItem::shape() const
 {
     QRectF left, top, right, bottom;
     m_window->layoutDecorationRects(left, top, right, bottom);
-    return {left, top, right, bottom};
+    return RegionF(left) | top | right | bottom;
 }
 
-QRegion DecorationItem::opaque() const
+RegionF DecorationItem::opaque() const
 {
     if (m_window->decorationHasAlpha()) {
-        return QRegion();
+        return RegionF();
+    } else {
+        return shape();
     }
-    QRectF left, top, right, bottom;
-    m_window->layoutDecorationRects(left, top, right, bottom);
-
-    // We have to map to integers which has rounding issues
-    // it's safer for a region to be considered transparent than opaque
-    // so always align inwards
-    const QMargins roundingPad = QMargins(1, 1, 1, 1);
-    QRegion roundedLeft = left.toAlignedRect().marginsRemoved(roundingPad);
-    QRegion roundedTop = top.toAlignedRect().marginsRemoved(roundingPad);
-    QRegion roundedRight = right.toAlignedRect().marginsRemoved(roundingPad);
-    QRegion roundedBottom = bottom.toAlignedRect().marginsRemoved(roundingPad);
-
-    return roundedLeft | roundedTop | roundedRight | roundedBottom;
 }
 
 void DecorationItem::preprocess()

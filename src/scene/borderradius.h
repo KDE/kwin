@@ -7,6 +7,7 @@
 #pragma once
 
 #include "kwin_export.h"
+#include "utils/regionf.h"
 
 #include <QRegion>
 #include <QVector4D>
@@ -37,6 +38,7 @@ public:
 
     bool clips(const QRectF &rect, const QRectF &bounds) const;
     QRegion clip(const QRegion &region, const QRectF &bounds) const;
+    RegionF clip(const RegionF &region, const QRectF &bounds) const;
 
     BorderRadius scaled(qreal scale) const;
     BorderRadius rounded() const;
