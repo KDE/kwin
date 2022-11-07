@@ -35,7 +35,7 @@
         "Description[zh_CN]": "配置触摸屏滑动手势",
         "Description[zh_TW]": "設定觸控螢幕滑動手勢",
         "Icon": "preferences-desktop-gestures-touch",
-        "Name": "Touch Screen",
+        "Name": "Touchscreen Gestures",
         "Name[ar]": "شاشة اللمس",
         "Name[az]": "Toxunma ekranı",
         "Name[bg]": "Сензорен екран",
