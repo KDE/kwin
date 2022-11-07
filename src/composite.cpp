@@ -616,6 +616,9 @@ void Compositor::handleFrameRequested(RenderLoop *renderLoop)
 
 void Compositor::composite(RenderLoop *renderLoop)
 {
+    // QElapsedTimer timer;
+    // timer.start();
+
     if (m_backend->checkGraphicsReset()) {
         qCDebug(KWIN_CORE) << "Graphics reset occurred";
 #if KWIN_BUILD_NOTIFICATIONS
@@ -670,6 +673,8 @@ void Compositor::composite(RenderLoop *renderLoop)
     postPaintPass(superLayer);
 
     m_backend->present(output);
+
+    // qDebug() << (timer.nsecsElapsed() / 1000000.0);
 
     // TODO: Put it inside the cursor layer once the cursor layer can be backed by a real output layer.
     if (waylandServer()) {

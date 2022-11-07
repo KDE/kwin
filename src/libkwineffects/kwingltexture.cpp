@@ -39,49 +39,6 @@ bool GLTexturePrivate::s_supportsTextureFormatRG = false;
 bool GLTexturePrivate::s_supportsTexture16Bit = false;
 uint GLTexturePrivate::s_fbo = 0;
 
-// Table of GL formats/types associated with different values of QImage::Format.
-// Zero values indicate a direct upload is not feasible.
-//
-// Note: Blending is set up to expect premultiplied data, so the non-premultiplied
-// Format_ARGB32 must be converted to Format_ARGB32_Premultiplied ahead of time.
-struct
-{
-    GLenum internalFormat;
-    GLenum format;
-    GLenum type;
-} static const formatTable[] = {
-    {0, 0, 0}, // QImage::Format_Invalid
-    {0, 0, 0}, // QImage::Format_Mono
-    {0, 0, 0}, // QImage::Format_MonoLSB
-    {0, 0, 0}, // QImage::Format_Indexed8
-    {GL_RGB8, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV}, // QImage::Format_RGB32
-    {0, 0, 0}, // QImage::Format_ARGB32
-    {GL_RGBA8, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV}, // QImage::Format_ARGB32_Premultiplied
-    {GL_RGB8, GL_BGR, GL_UNSIGNED_SHORT_5_6_5_REV}, // QImage::Format_RGB16
-    {0, 0, 0}, // QImage::Format_ARGB8565_Premultiplied
-    {0, 0, 0}, // QImage::Format_RGB666
-    {0, 0, 0}, // QImage::Format_ARGB6666_Premultiplied
-    {GL_RGB5, GL_BGRA, GL_UNSIGNED_SHORT_1_5_5_5_REV}, // QImage::Format_RGB555
-    {0, 0, 0}, // QImage::Format_ARGB8555_Premultiplied
-    {GL_RGB8, GL_RGB, GL_UNSIGNED_BYTE}, // QImage::Format_RGB888
-    {GL_RGB4, GL_BGRA, GL_UNSIGNED_SHORT_4_4_4_4_REV}, // QImage::Format_RGB444
-    {GL_RGBA4, GL_BGRA, GL_UNSIGNED_SHORT_4_4_4_4_REV}, // QImage::Format_ARGB4444_Premultiplied
-    {GL_RGB8, GL_RGBA, GL_UNSIGNED_BYTE}, // QImage::Format_RGBX8888
-    {0, 0, 0}, // QImage::Format_RGBA8888
-    {GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE}, // QImage::Format_RGBA8888_Premultiplied
-    {GL_RGB10, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV}, // QImage::Format_BGR30
-    {GL_RGB10_A2, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV}, // QImage::Format_A2BGR30_Premultiplied
-    {GL_RGB10, GL_BGRA, GL_UNSIGNED_INT_2_10_10_10_REV}, // QImage::Format_RGB30
-    {GL_RGB10_A2, GL_BGRA, GL_UNSIGNED_INT_2_10_10_10_REV}, // QImage::Format_A2RGB30_Premultiplied
-    {GL_R8, GL_RED, GL_UNSIGNED_BYTE}, // QImage::Format_Alpha8
-    {GL_R8, GL_RED, GL_UNSIGNED_BYTE}, // QImage::Format_Grayscale8
-    {GL_RGBA16, GL_RGBA, GL_UNSIGNED_SHORT}, // QImage::Format_RGBX64
-    {0, 0, 0}, // QImage::Format_RGBA64
-    {GL_RGBA16, GL_RGBA, GL_UNSIGNED_SHORT}, // QImage::Format_RGBA64_Premultiplied
-    {GL_R16, GL_RED, GL_UNSIGNED_SHORT}, // QImage::Format_Grayscale16
-    {0, 0, 0}, // QImage::Format_BGR888
-};
-
 GLTexture::GLTexture(GLenum target)
     : d_ptr(new GLTexturePrivate())
 {
@@ -137,11 +94,11 @@ GLTexture::GLTexture(const QImage &image, GLenum target)
 
         const QImage::Format index = image.format();
 
-        if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat
-            && !(formatTable[index].type == GL_UNSIGNED_SHORT && !d->s_supportsTexture16Bit)) {
-            internalFormat = formatTable[index].internalFormat;
-            format = formatTable[index].format;
-            type = formatTable[index].type;
+        if (index < sizeof(GLTexturePrivate::s_formatTable) / sizeof(GLTexturePrivate::s_formatTable[0]) && GLTexturePrivate::s_formatTable[index].internalFormat
+            && !(GLTexturePrivate::s_formatTable[index].type == GL_UNSIGNED_SHORT && !d->s_supportsTexture16Bit)) {
+            internalFormat = GLTexturePrivate::s_formatTable[index].internalFormat;
+            format = GLTexturePrivate::s_formatTable[index].format;
+            type = GLTexturePrivate::s_formatTable[index].type;
             im = image;
         } else {
             im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
@@ -236,6 +193,64 @@ GLTexture::GLTexture(GLenum internalFormat, int width, int height, int levels, b
 
 GLTexture::GLTexture(GLenum internalFormat, const QSize &size, int levels, bool needsMutability)
     : GLTexture(internalFormat, size.width(), size.height(), levels, needsMutability)
+{
+}
+
+GLTexture::GLTexture(QImage::Format format, int width, int height, int levels, bool needsMutability)
+    : d_ptr(new GLTexturePrivate())
+{
+    Q_D(GLTexture);
+
+    d->m_target = GL_TEXTURE_2D;
+    d->m_scale.setWidth(1.0 / width);
+    d->m_scale.setHeight(1.0 / height);
+    d->m_size = QSize(width, height);
+    d->m_canUseMipmaps = levels > 1;
+    d->m_mipLevels = levels;
+    d->m_filter = levels > 1 ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST;
+
+    d->updateMatrix();
+
+    create();
+    bind();
+
+    if (!GLPlatform::instance()->isGLES()) {
+        GLenum internalFormat;
+
+        if (format < sizeof(GLTexturePrivate::s_formatTable) / sizeof(GLTexturePrivate::s_formatTable[0]) && GLTexturePrivate::s_formatTable[format].internalFormat
+            && !(GLTexturePrivate::s_formatTable[format].type == GL_UNSIGNED_SHORT && !d->s_supportsTexture16Bit)) {
+            internalFormat = GLTexturePrivate::s_formatTable[format].internalFormat;
+        } else {
+            internalFormat = GL_RGBA8;
+        }
+
+        if (d->s_supportsTextureStorage && !needsMutability) {
+            glTexStorage2D(d->m_target, levels, internalFormat, width, height);
+            d->m_immutable = true;
+        } else {
+            glTexParameteri(d->m_target, GL_TEXTURE_MAX_LEVEL, levels - 1);
+            glTexImage2D(d->m_target, 0, internalFormat, width, height, 0,
+                         GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, nullptr);
+        }
+        d->m_internalFormat = internalFormat;
+    } else {
+        // The format parameter in glTexSubImage() must match the internal format
+        // of the texture, so it's important that we allocate the texture with
+        // the format that will be used in update() and clear().
+        const GLenum format = d->s_supportsARGB32 ? GL_BGRA_EXT : GL_RGBA;
+        glTexImage2D(d->m_target, 0, format, width, height, 0,
+                     format, GL_UNSIGNED_BYTE, nullptr);
+
+        // This is technically not true, but it means that code that calls
+        // internalFormat() won't need to be specialized for GLES2.
+        d->m_internalFormat = GL_RGBA8;
+    }
+
+    unbind();
+}
+
+GLTexture::GLTexture(QImage::Format format, const QSize &size, int levels, bool needsMutability)
+    : GLTexture(format, size.width(), size.height(), levels, needsMutability)
 {
 }
 
@@ -377,10 +392,10 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
     if (!GLPlatform::instance()->isGLES()) {
         const QImage::Format index = image.format();
 
-        if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat
-            && !(formatTable[index].type == GL_UNSIGNED_SHORT && !d->s_supportsTexture16Bit)) {
-            glFormat = formatTable[index].format;
-            type = formatTable[index].type;
+        if (index < sizeof(GLTexturePrivate::s_formatTable) / sizeof(GLTexturePrivate::s_formatTable[0]) && GLTexturePrivate::s_formatTable[index].internalFormat
+            && !(GLTexturePrivate::s_formatTable[index].type == GL_UNSIGNED_SHORT && !d->s_supportsTexture16Bit)) {
+            glFormat = GLTexturePrivate::s_formatTable[index].format;
+            type = GLTexturePrivate::s_formatTable[index].type;
             uploadFormat = index;
         } else {
             glFormat = GL_BGRA;

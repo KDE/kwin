@@ -8,6 +8,7 @@
 #include "egl_dmabuf.h"
 #include "kwineglext.h"
 #include "kwingltexture.h"
+#include "kwingltextureuploader.h"
 #include "surfaceitem_wayland.h"
 #include "utils/common.h"
 #include "wayland/drmclientbuffer.h"
@@ -53,6 +54,7 @@ void BasicEGLSurfaceTextureWayland::destroy()
         m_image = EGL_NO_IMAGE_KHR;
     }
     m_texture.reset();
+    m_uploader.reset();
     m_bufferType = BufferType::None;
 }
 
@@ -74,11 +76,14 @@ bool BasicEGLSurfaceTextureWayland::loadShmTexture(KWaylandServer::ShmClientBuff
         return false;
     }
 
-    m_texture.reset(new GLTexture(image));
+    m_texture.reset(new GLTexture(image.format(), image.size()));
     m_texture->setFilter(GL_LINEAR);
     m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
     m_texture->setYInverted(true);
     m_bufferType = BufferType::Shm;
+
+    m_uploader = std::make_unique<GLTextureUploader>();
+    m_uploader->upload(m_texture.get(), image, image.rect());
 
     return true;
 }
@@ -92,13 +97,8 @@ void BasicEGLSurfaceTextureWayland::updateShmTexture(KWaylandServer::ShmClientBu
     }
 
     const QImage &image = buffer->data();
-    if (Q_UNLIKELY(image.isNull())) {
-        return;
-    }
-
-    const QRegion damage = mapRegion(m_pixmap->item()->surfaceToBufferMatrix(), region);
-    for (const QRect &rect : damage) {
-        m_texture->update(image, rect.topLeft(), rect);
+    if (Q_LIKELY(!image.isNull())) {
+        m_uploader->upload(m_texture.get(), image, mapRegion(m_pixmap->item()->surfaceToBufferMatrix(), region));
     }
 }
 

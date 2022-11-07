@@ -60,6 +60,7 @@ install(TARGETS kwineffects EXPORT KWinEffectsTargets ${KDE_INSTALL_TARGETS_DEFA
 set(kwin_GLUTILSLIB_SRCS
     kwinglplatform.cpp
     kwingltexture.cpp
+    kwingltextureuploader.cpp
     kwinglutils.cpp
     kwinglutils_funcs.cpp
     kwineglimagetexture.cpp

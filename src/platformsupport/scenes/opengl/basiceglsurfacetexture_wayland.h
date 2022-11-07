@@ -21,6 +21,7 @@ namespace KWin
 {
 
 class AbstractEglBackend;
+class GLTextureUploader;
 
 class KWIN_EXPORT BasicEGLSurfaceTextureWayland : public OpenGLSurfaceTextureWayland
 {
@@ -52,6 +53,8 @@ private:
 
     EGLImageKHR m_image = EGL_NO_IMAGE_KHR;
     BufferType m_bufferType = BufferType::None;
+    std::unique_ptr<GLTextureUploader> m_uploader;
+
 };
 
 } // namespace KWin

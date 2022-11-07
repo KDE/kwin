@@ -14,14 +14,12 @@
 #include <kwinglutils_export.h>
 
 #include <QExplicitlySharedDataPointer>
+#include <QImage>
 #include <QMatrix4x4>
 #include <QRegion>
 #include <QSize>
 
 #include <epoxy/gl.h>
-
-class QImage;
-class QPixmap;
 
 /** @addtogroup kwineffects */
 /** @{ */
@@ -47,6 +45,8 @@ public:
     explicit GLTexture(const QString &fileName);
     GLTexture(GLenum internalFormat, int width, int height, int levels = 1, bool needsMutability = false);
     explicit GLTexture(GLenum internalFormat, const QSize &size, int levels = 1, bool needsMutability = false);
+    GLTexture(QImage::Format format, int width, int height, int levels = 1, bool needsMutability = false);
+    explicit GLTexture(QImage::Format format, const QSize &size, int levels = 1, bool needsMutability = false);
 
     /**
      * Creates the underlying texture object. Returns @c true if the texture has been created
