@@ -6,15 +6,15 @@
 # Sebastià Pla i Sanz <sps@sastia.com>, 1999, 2000, 2001, 2002, 2004, 2005, 2006.
 # Albert Astals Cid <aacid@kde.org>, 2005.
 # Josep M. Ferrer <txemaq@gmail.com>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022.
-# Antoni Bella Pérez <antonibella5@yahoo.com>, 2013, 2014, 2015, 2016, 2017, 2019, 2020.
+# Antoni Bella Pérez <antonibella5@yahoo.com>, 2013, 2014, 2015, 2016, 2017, 2019, 2020, 2022.
 # Alfredo Vicente <alviboi@gmail.com>, 2019.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-06 00:48+0000\n"
-"PO-Revision-Date: 2022-11-01 11:09+0100\n"
-"Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
+"PO-Revision-Date: 2022-11-06 16:24+0100\n"
+"Last-Translator: Antoni Bella <antonibella5@yahoo.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
 "MIME-Version: 1.0\n"
@@ -58,16 +58,22 @@ msgid ""
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
+"<b>La composició OpenGL (predeterminada) ha trencat KWin en el passat.</"
+"b><br>Probablement era degut a una fallada en el controlador.<p>Si penseu "
+"que mentrestant l'heu actualitzat a un controlador estable,<br>podeu "
+"reiniciar esta protecció però <b>cal tindre present que podria produir-se "
+"una fallada immediata!</b></p>"
 
 #: composite.cpp:1047
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
+"Les extensions X requerides (XComposite i XDamage) no estan disponibles."
 
 #: composite.cpp:1050
 #, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr ""
+msgstr "No està disponible el GLX/OpenGL."
 
 #: debug_console.cpp:79
 #, kde-format

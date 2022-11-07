@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1637496 2022-11-06 01:37:30Z scripty $
+# $Id: kwin.po 1637572 2022-11-07 01:36:52Z scripty $
 # $Source$
 #
 #
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-06 00:48+0000\n"
-"PO-Revision-Date: 2022-11-01 09:23+0100\n"
+"PO-Revision-Date: 2022-11-06 08:13+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -67,16 +67,21 @@ msgid ""
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
+"<b>OpenGL compositing (privzeto) je sesul KWin v preteklosti.</b><br>To se "
+"je najverjetneje zgodilo zaradi napake v gonilniku.<p>Če menite, da ste "
+"medtem nadgradili sistem s stabilnim gonilnikom,<br>lahko ponovno nastavite "
+"to zaščito, a <b>zavedajte se, da ima to lahko za posledico takojšnje "
+"sesutje!</b></p>"
 
 #: composite.cpp:1047
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
-msgstr ""
+msgstr "Zahtevani razširitvi X (XComposite in XDamage) nista na voljo."
 
 #: composite.cpp:1050
 #, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr ""
+msgstr "GLX/OpenGL ni na voljo."
 
 #: debug_console.cpp:79
 #, kde-format
