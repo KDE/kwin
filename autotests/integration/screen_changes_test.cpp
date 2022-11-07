@@ -19,7 +19,6 @@
 #include <KWayland/Client/xdgoutput.h>
 
 using namespace KWin;
-using namespace KWayland::Client;
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_screen_changes-0");
 
@@ -64,15 +63,15 @@ void ScreenChangesTest::testScreenAddRemove()
     // this test verifies that when a new screen is added it gets synced to Wayland
 
     // first create a registry to get signals about Outputs announced/removed
-    Registry registry;
-    QSignalSpy allAnnounced(&registry, &Registry::interfacesAnnounced);
-    QSignalSpy outputAnnouncedSpy(&registry, &Registry::outputAnnounced);
-    QSignalSpy outputRemovedSpy(&registry, &Registry::outputRemoved);
+    KWayland::Client::Registry registry;
+    QSignalSpy allAnnounced(&registry, &KWayland::Client::Registry::interfacesAnnounced);
+    QSignalSpy outputAnnouncedSpy(&registry, &KWayland::Client::Registry::outputAnnounced);
+    QSignalSpy outputRemovedSpy(&registry, &KWayland::Client::Registry::outputRemoved);
     registry.create(Test::waylandConnection());
     QVERIFY(registry.isValid());
     registry.setup();
     QVERIFY(allAnnounced.wait());
-    const auto xdgOMData = registry.interface(Registry::Interface::XdgOutputUnstableV1);
+    const auto xdgOMData = registry.interface(KWayland::Client::Registry::Interface::XdgOutputUnstableV1);
     auto xdgOutputManager = registry.createXdgOutputManager(xdgOMData.name, xdgOMData.version);
 
     // should be one output
@@ -128,13 +127,13 @@ void ScreenChangesTest::testScreenAddRemove()
     QCOMPARE(o2->pixelSize(), serverOutput2->modeSize());
 
     // and check XDGOutput is synced
-    std::unique_ptr<XdgOutput> xdgO1(xdgOutputManager->getXdgOutput(o1.get()));
-    QSignalSpy xdgO1ChangedSpy(xdgO1.get(), &XdgOutput::changed);
+    std::unique_ptr<KWayland::Client::XdgOutput> xdgO1(xdgOutputManager->getXdgOutput(o1.get()));
+    QSignalSpy xdgO1ChangedSpy(xdgO1.get(), &KWayland::Client::XdgOutput::changed);
     QVERIFY(xdgO1ChangedSpy.wait());
     QCOMPARE(xdgO1->logicalPosition(), serverOutput1->geometry().topLeft());
     QCOMPARE(xdgO1->logicalSize(), serverOutput1->geometry().size());
-    std::unique_ptr<XdgOutput> xdgO2(xdgOutputManager->getXdgOutput(o2.get()));
-    QSignalSpy xdgO2ChangedSpy(xdgO2.get(), &XdgOutput::changed);
+    std::unique_ptr<KWayland::Client::XdgOutput> xdgO2(xdgOutputManager->getXdgOutput(o2.get()));
+    QSignalSpy xdgO2ChangedSpy(xdgO2.get(), &KWayland::Client::XdgOutput::changed);
     QVERIFY(xdgO2ChangedSpy.wait());
     QCOMPARE(xdgO2->logicalPosition(), serverOutput2->geometry().topLeft());
     QCOMPARE(xdgO2->logicalSize(), serverOutput2->geometry().size());

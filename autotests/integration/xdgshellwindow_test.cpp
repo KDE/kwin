@@ -47,7 +47,6 @@
 #include <csignal>
 
 using namespace KWin;
-using namespace KWayland::Client;
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_xdgshellwindow-0");
 
@@ -227,7 +226,7 @@ void TestXdgShellWindow::testMapUnmap()
     QCOMPARE(configureRequestedSpy.count(), 2);
 
     // Unmap the xdg_toplevel surface by committing a null buffer.
-    surface->attachBuffer(Buffer::Ptr());
+    surface->attachBuffer(KWayland::Client::Buffer::Ptr());
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(Test::waitForWindowDestroyed(window));
 
@@ -853,7 +852,7 @@ void TestXdgShellWindow::testAppMenu()
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
-    std::unique_ptr<AppMenu> menu(Test::waylandAppMenuManager()->create(surface.get()));
+    std::unique_ptr<KWayland::Client::AppMenu> menu(Test::waylandAppMenuManager()->create(surface.get()));
     QSignalSpy spy(window, &Window::hasApplicationMenuChanged);
     menu->setAddress("service.name", "object/path");
     spy.wait();
@@ -1116,7 +1115,7 @@ void TestXdgShellWindow::testXdgWindowGeometryIsntSet()
     QCOMPARE(window->bufferGeometry().size(), QSize(100, 50));
 
     std::unique_ptr<KWayland::Client::Surface> childSurface(Test::createSurface());
-    std::unique_ptr<SubSurface> subSurface(Test::createSubSurface(childSurface.get(), surface.get()));
+    std::unique_ptr<KWayland::Client::SubSurface> subSurface(Test::createSubSurface(childSurface.get(), surface.get()));
     QVERIFY(subSurface);
     subSurface->setPosition(QPoint(-20, -10));
     Test::render(childSurface.get(), QSize(100, 50), Qt::blue);
@@ -1200,7 +1199,7 @@ void TestXdgShellWindow::testXdgWindowGeometryAttachSubSurface()
     QCOMPARE(window->bufferGeometry().size(), QSize(200, 100));
 
     std::unique_ptr<KWayland::Client::Surface> childSurface(Test::createSurface());
-    std::unique_ptr<SubSurface> subSurface(Test::createSubSurface(childSurface.get(), surface.get()));
+    std::unique_ptr<KWayland::Client::SubSurface> subSurface(Test::createSubSurface(childSurface.get(), surface.get()));
     QVERIFY(subSurface);
     subSurface->setPosition(QPoint(-20, -20));
     Test::render(childSurface.get(), QSize(100, 50), Qt::blue);

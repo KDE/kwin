@@ -90,8 +90,6 @@ void TransientPlacementTest::cleanup()
 
 void TransientPlacementTest::testXdgPopup_data()
 {
-    using namespace KWayland::Client;
-
     QTest::addColumn<QSize>("parentSize");
     QTest::addColumn<QPoint>("parentPosition");
     QTest::addColumn<PopupLayout>("layout");
@@ -407,8 +405,6 @@ void TransientPlacementTest::testXdgPopup_data()
 
 void TransientPlacementTest::testXdgPopup()
 {
-    using namespace KWayland::Client;
-
     // this test verifies that the position of a transient window is taken from the passed position
     // there are no further constraints like window too large to fit screen, cascading transients, etc
     // some test cases also verify that the transient fits on the screen
@@ -462,19 +458,17 @@ void TransientPlacementTest::testXdgPopup()
 
 void TransientPlacementTest::testXdgPopupWithPanel()
 {
-    using namespace KWayland::Client;
-
     const Output *output = workspace()->activeOutput();
 
     std::unique_ptr<KWayland::Client::Surface> surface{Test::createSurface()};
     QVERIFY(surface != nullptr);
     std::unique_ptr<Test::XdgToplevel> dockShellSurface{Test::createXdgToplevelSurface(surface.get())};
     QVERIFY(dockShellSurface != nullptr);
-    std::unique_ptr<PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(surface.get()));
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(surface.get()));
     QVERIFY(plasmaSurface != nullptr);
-    plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
+    plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
     plasmaSurface->setPosition(QPoint(0, output->geometry().height() - 50));
-    plasmaSurface->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AlwaysVisible);
+    plasmaSurface->setPanelBehavior(KWayland::Client::PlasmaShellSurface::PanelBehavior::AlwaysVisible);
 
     // now render and map the window
     auto dock = Test::renderAndWaitForShown(surface.get(), QSize(1280, 50), Qt::blue);

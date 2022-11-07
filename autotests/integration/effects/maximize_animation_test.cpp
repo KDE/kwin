@@ -82,8 +82,6 @@ void MaximizeAnimationTest::testMaximizeRestore()
     // This test verifies that the maximize effect animates a window
     // when it's maximized or restored.
 
-    using namespace KWayland::Client;
-
     // Create the test window.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);

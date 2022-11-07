@@ -302,7 +302,6 @@ void DebugConsoleTest::testWaylandClient()
     QVERIFY(Test::setupWaylandConnection());
 
     // create the Surface and ShellSurface
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface->isValid());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
@@ -361,7 +360,7 @@ void DebugConsoleTest::testWaylandClient()
     // now close the window again, it should be removed from the model
     QSignalSpy rowsRemovedSpy(&model, &QAbstractItemModel::rowsRemoved);
 
-    surface->attachBuffer(Buffer::Ptr());
+    surface->attachBuffer(KWayland::Client::Buffer::Ptr());
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(rowsRemovedSpy.wait());
 

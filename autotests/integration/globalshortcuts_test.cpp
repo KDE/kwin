@@ -32,7 +32,6 @@
 #include <xcb/xcb_icccm.h>
 
 using namespace KWin;
-using namespace KWayland::Client;
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_globalshortcuts-0");
 

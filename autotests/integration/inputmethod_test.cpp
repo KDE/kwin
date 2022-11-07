@@ -43,7 +43,6 @@
 #include <linux/input-event-codes.h>
 
 using namespace KWin;
-using namespace KWayland::Client;
 using KWin::VirtualKeyboardDBus;
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_inputmethod-0");
@@ -131,7 +130,7 @@ void InputMethodTest::testOpenClose()
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
 
-    std::unique_ptr<TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
+    std::unique_ptr<KWayland::Client::TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
     QVERIFY(textInput != nullptr);
 
     // Show the keyboard
@@ -242,7 +241,7 @@ void InputMethodTest::testEnableActive()
 
     // Show the keyboard
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
-    std::unique_ptr<TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
+    std::unique_ptr<KWayland::Client::TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
     textInput->enable(surface.get());
     QSignalSpy paneladded(kwinApp()->inputMethod(), &KWin::InputMethod::panelChanged);
     QVERIFY(paneladded.wait());
@@ -272,7 +271,7 @@ void InputMethodTest::testHidePanel()
     QSignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
 
     QSignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
-    std::unique_ptr<TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
+    std::unique_ptr<KWayland::Client::TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
 
     // Create an xdg_toplevel surface and wait for the compositor to catch up.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -315,7 +314,7 @@ void InputMethodTest::testSwitchFocusedSurfaces()
     QSignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
 
     QSignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
-    std::unique_ptr<TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
+    std::unique_ptr<KWayland::Client::TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
 
     QVector<Window *> windows;
     std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
@@ -363,7 +362,7 @@ void InputMethodTest::testV2V3SameClient()
     QSignalSpy windowRemovedSpy(workspace(), &Workspace::windowRemoved);
 
     QSignalSpy activateSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
-    std::unique_ptr<TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
+    std::unique_ptr<KWayland::Client::TextInput> textInput(Test::waylandTextInputManager()->createTextInput(Test::waylandSeat()));
 
     auto textInputV3 = std::make_unique<Test::TextInputV3>();
     textInputV3->init(Test::waylandTextInputManagerV3()->get_text_input(*(Test::waylandSeat())));
@@ -572,21 +571,21 @@ void InputMethodTest::testModifierForwarding()
     auto context = Test::inputMethod()->context();
     std::unique_ptr<KWayland::Client::Keyboard> keyboardGrab(new KWayland::Client::Keyboard);
     keyboardGrab->setup(zwp_input_method_context_v1_grab_keyboard(context));
-    QSignalSpy modifierSpy(keyboardGrab.get(), &Keyboard::modifiersChanged);
+    QSignalSpy modifierSpy(keyboardGrab.get(), &KWayland::Client::Keyboard::modifiersChanged);
     // Wait for initial modifiers update
     QVERIFY(modifierSpy.wait());
 
     quint32 timestamp = 1;
 
-    QSignalSpy keySpy(keyboardGrab.get(), &Keyboard::keyChanged);
+    QSignalSpy keySpy(keyboardGrab.get(), &KWayland::Client::Keyboard::keyChanged);
     bool keyChanged = false;
     bool modifiersChanged = false;
     // We want to verify the order of two signals, so SignalSpy is not very useful here.
-    auto keyChangedConnection = connect(keyboardGrab.get(), &Keyboard::keyChanged, [&keyChanged, &modifiersChanged]() {
+    auto keyChangedConnection = connect(keyboardGrab.get(), &KWayland::Client::Keyboard::keyChanged, [&keyChanged, &modifiersChanged]() {
         QVERIFY(!modifiersChanged);
         keyChanged = true;
     });
-    auto modifiersChangedConnection = connect(keyboardGrab.get(), &Keyboard::modifiersChanged, [&keyChanged, &modifiersChanged]() {
+    auto modifiersChangedConnection = connect(keyboardGrab.get(), &KWayland::Client::Keyboard::modifiersChanged, [&keyChanged, &modifiersChanged]() {
         QVERIFY(keyChanged);
         modifiersChanged = true;
     });
@@ -603,11 +602,11 @@ void InputMethodTest::testModifierForwarding()
     // verify the order of key and modifiers again. Key first, then modifiers.
     keyChanged = false;
     modifiersChanged = false;
-    keyChangedConnection = connect(keyboardGrab.get(), &Keyboard::keyChanged, [&keyChanged, &modifiersChanged]() {
+    keyChangedConnection = connect(keyboardGrab.get(), &KWayland::Client::Keyboard::keyChanged, [&keyChanged, &modifiersChanged]() {
         QVERIFY(!modifiersChanged);
         keyChanged = true;
     });
-    modifiersChangedConnection = connect(keyboardGrab.get(), &Keyboard::modifiersChanged, [&keyChanged, &modifiersChanged]() {
+    modifiersChangedConnection = connect(keyboardGrab.get(), &KWayland::Client::Keyboard::modifiersChanged, [&keyChanged, &modifiersChanged]() {
         QVERIFY(keyChanged);
         modifiersChanged = true;
     });
@@ -650,15 +649,15 @@ void InputMethodTest::testFakeEventFallback()
     keySpy.wait();
     QVERIFY(keySpy.count() == 2);
 
-    auto compare = [](const QList<QVariant> &input, quint32 key, Keyboard::KeyState state) {
+    auto compare = [](const QList<QVariant> &input, quint32 key, KWayland::Client::Keyboard::KeyState state) {
         auto inputKey = input.at(0).toInt();
-        auto inputState = input.at(1).value<Keyboard::KeyState>();
+        auto inputState = input.at(1).value<KWayland::Client::Keyboard::KeyState>();
         QCOMPARE(inputKey, key);
         QCOMPARE(inputState, state);
     };
 
-    compare(keySpy.at(0), KEY_A, Keyboard::KeyState::Pressed);
-    compare(keySpy.at(1), KEY_A, Keyboard::KeyState::Released);
+    compare(keySpy.at(0), KEY_A, KWayland::Client::Keyboard::KeyState::Pressed);
+    compare(keySpy.at(1), KEY_A, KWayland::Client::Keyboard::KeyState::Released);
 
     keySpy.clear();
 
@@ -670,10 +669,10 @@ void InputMethodTest::testFakeEventFallback()
     keySpy.wait();
     QVERIFY(keySpy.count() == 4);
 
-    compare(keySpy.at(0), KEY_LEFTSHIFT, Keyboard::KeyState::Pressed);
-    compare(keySpy.at(1), KEY_A, Keyboard::KeyState::Pressed);
-    compare(keySpy.at(2), KEY_A, Keyboard::KeyState::Released);
-    compare(keySpy.at(3), KEY_LEFTSHIFT, Keyboard::KeyState::Released);
+    compare(keySpy.at(0), KEY_LEFTSHIFT, KWayland::Client::Keyboard::KeyState::Pressed);
+    compare(keySpy.at(1), KEY_A, KWayland::Client::Keyboard::KeyState::Pressed);
+    compare(keySpy.at(2), KEY_A, KWayland::Client::Keyboard::KeyState::Released);
+    compare(keySpy.at(3), KEY_LEFTSHIFT, KWayland::Client::Keyboard::KeyState::Released);
 
     keySpy.clear();
 
@@ -685,8 +684,8 @@ void InputMethodTest::testFakeEventFallback()
     keySpy.wait();
     QVERIFY(keySpy.count() == 2);
 
-    compare(keySpy.at(0), KEY_ENTER, Keyboard::KeyState::Pressed);
-    compare(keySpy.at(1), KEY_ENTER, Keyboard::KeyState::Released);
+    compare(keySpy.at(0), KEY_ENTER, KWayland::Client::Keyboard::KeyState::Pressed);
+    compare(keySpy.at(1), KEY_ENTER, KWayland::Client::Keyboard::KeyState::Released);
 }
 
 WAYLANDTEST_MAIN(InputMethodTest)

@@ -103,7 +103,6 @@ void DesktopSwitchingAnimationTest::testSwitchDesktops()
 
     // The Fade Desktop effect will do nothing if there are no windows to fade,
     // so we have to create a dummy test window.
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));

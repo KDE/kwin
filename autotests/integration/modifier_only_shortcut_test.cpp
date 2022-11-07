@@ -25,7 +25,6 @@
 #include <linux/input.h>
 
 using namespace KWin;
-using namespace KWayland::Client;
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_modifier_only_shortcut-0");
 static const QString s_serviceName = QStringLiteral("org.kde.KWin.Test.ModifierOnlyShortcut");

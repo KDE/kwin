@@ -26,7 +26,6 @@
 #include <linux/input.h>
 
 using namespace KWin;
-using namespace KWayland::Client;
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_xdgshellwindow_rules-0");
 

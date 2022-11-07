@@ -187,7 +187,6 @@ void ScriptedEffectsTest::testEffectsHandler()
     // trigger windowAdded signal
 
     // create a window
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
     auto *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
@@ -266,7 +265,6 @@ void ScriptedEffectsTest::testAnimations()
     QVERIFY(effect->load(file));
 
     // animated after window added connect
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
     auto *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
@@ -373,7 +371,6 @@ void ScriptedEffectsTest::testFullScreenEffect()
     QVERIFY(effectOther->load("screenEdgeTouchTest"));
     QSignalSpy isActiveFullScreenEffectSpyOther(effectOther, &ScriptedEffect::isActiveFullScreenEffectChanged);
 
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
     auto *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
@@ -436,7 +433,6 @@ void ScriptedEffectsTest::testKeepAlive()
     QVERIFY(effect->load(file));
 
     // create a window
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
     auto *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
@@ -480,7 +476,6 @@ void ScriptedEffectsTest::testGrab()
     QVERIFY(effect->load(QStringLiteral("grabTest")));
 
     // create test window
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
@@ -511,7 +506,6 @@ void ScriptedEffectsTest::testGrabAlreadyGrabbedWindow()
     QVERIFY(grabber->load(QStringLiteral("grabAlreadyGrabbedWindowTest_grabber")));
 
     // create test window
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
@@ -546,7 +540,6 @@ void ScriptedEffectsTest::testGrabAlreadyGrabbedWindowForced()
     QVERIFY(thief->load(QStringLiteral("grabAlreadyGrabbedWindowForcedTest_thief")));
 
     // create test window
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
@@ -576,7 +569,6 @@ void ScriptedEffectsTest::testUngrab()
     QVERIFY(effect->load(QStringLiteral("ungrabTest")));
 
     // create test window
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
@@ -619,7 +611,6 @@ void ScriptedEffectsTest::testRedirect()
     QVERIFY(effect->load(file));
 
     // create test window
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
@@ -696,7 +687,6 @@ void ScriptedEffectsTest::testComplete()
     QVERIFY(effect->load(QStringLiteral("completeTest")));
 
     // create test window
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
     Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());

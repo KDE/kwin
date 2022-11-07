@@ -134,7 +134,6 @@ void StrutsTest::testWaylandStruts_data()
 void StrutsTest::testWaylandStruts()
 {
     // this test verifies that struts on Wayland panels are handled correctly
-    using namespace KWayland::Client;
 
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
     const QList<Output *> outputs = workspace()->outputs();
@@ -167,9 +166,9 @@ void StrutsTest::testWaylandStruts()
         const QRect windowGeometry = *it;
         std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
         Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly, surface.get());
-        PlasmaShellSurface *plasmaSurface = m_plasmaShell->createSurface(surface.get(), surface.get());
+        KWayland::Client::PlasmaShellSurface *plasmaSurface = m_plasmaShell->createSurface(surface.get(), surface.get());
         plasmaSurface->setPosition(windowGeometry.topLeft());
-        plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
+        plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
 
         QSignalSpy configureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
@@ -225,13 +224,12 @@ void StrutsTest::testMoveWaylandPanel()
     const QList<Output *> outputs = workspace()->outputs();
 
     // this test verifies that repositioning a Wayland panel updates the client area
-    using namespace KWayland::Client;
     const QRect windowGeometry(0, 1000, 1280, 24);
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
-    std::unique_ptr<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.get()));
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.get()));
     plasmaSurface->setPosition(windowGeometry.topLeft());
-    plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
+    plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
 
     QSignalSpy configureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
@@ -264,8 +262,6 @@ void StrutsTest::testMoveWaylandPanel()
 
 void StrutsTest::testWaylandMobilePanel()
 {
-    using namespace KWayland::Client;
-
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
     const QList<Output *> outputs = workspace()->outputs();
 
@@ -279,9 +275,9 @@ void StrutsTest::testWaylandMobilePanel()
     const QRect windowGeometry(0, 0, 1280, 60);
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
-    std::unique_ptr<PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.get()));
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> plasmaSurface(m_plasmaShell->createSurface(surface.get()));
     plasmaSurface->setPosition(windowGeometry.topLeft());
-    plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
+    plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
 
     QSignalSpy configureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
@@ -306,9 +302,9 @@ void StrutsTest::testWaylandMobilePanel()
     const QRect windowGeometry2(0, 874, 1280, 150);
     std::unique_ptr<KWayland::Client::Surface> surface2(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.get(), Test::CreationSetup::CreateOnly));
-    std::unique_ptr<PlasmaShellSurface> plasmaSurface2(m_plasmaShell->createSurface(surface2.get()));
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> plasmaSurface2(m_plasmaShell->createSurface(surface2.get()));
     plasmaSurface2->setPosition(windowGeometry2.topLeft());
-    plasmaSurface2->setRole(PlasmaShellSurface::Role::Panel);
+    plasmaSurface2->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
 
     QSignalSpy configureRequestedSpy2(shellSurface2->xdgSurface(), &Test::XdgSurface::configureRequested);
     surface2->commit(KWayland::Client::Surface::CommitFlag::None);

@@ -109,8 +109,6 @@ void DontCrashReinitializeCompositorTest::testReinitializeCompositor()
     QVERIFY(effectsImpl);
 
     // Create the test window.
-    using namespace KWayland::Client;
-
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));

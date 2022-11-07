@@ -80,8 +80,6 @@ void ActivationTest::testSwitchToWindowToLeft()
 {
     // This test verifies that "Switch to Window to the Left" shortcut works.
 
-    using namespace KWayland::Client;
-
     // Prepare the test environment.
     stackScreensHorizontally();
 
@@ -147,8 +145,6 @@ void ActivationTest::testSwitchToWindowToLeft()
 void ActivationTest::testSwitchToWindowToRight()
 {
     // This test verifies that "Switch to Window to the Right" shortcut works.
-
-    using namespace KWayland::Client;
 
     // Prepare the test environment.
     stackScreensHorizontally();
@@ -216,8 +212,6 @@ void ActivationTest::testSwitchToWindowAbove()
 {
     // This test verifies that "Switch to Window Above" shortcut works.
 
-    using namespace KWayland::Client;
-
     // Prepare the test environment.
     stackScreensVertically();
 
@@ -283,8 +277,6 @@ void ActivationTest::testSwitchToWindowAbove()
 void ActivationTest::testSwitchToWindowBelow()
 {
     // This test verifies that "Switch to Window Bottom" shortcut works.
-
-    using namespace KWayland::Client;
 
     // Prepare the test environment.
     stackScreensVertically();
@@ -352,8 +344,6 @@ void ActivationTest::testSwitchToWindowMaximized()
 {
     // This test verifies that we switch to the top-most maximized window, i.e.
     // the one that user sees at the moment. See bug 411356.
-
-    using namespace KWayland::Client;
 
     // Prepare the test environment.
     stackScreensHorizontally();
@@ -437,8 +427,6 @@ void ActivationTest::testSwitchToWindowFullScreen()
 {
     // This test verifies that we switch to the top-most fullscreen window, i.e.
     // the one that user sees at the moment. See bug 411356.
-
-    using namespace KWayland::Client;
 
     // Prepare the test environment.
     stackScreensVertically();

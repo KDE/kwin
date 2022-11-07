@@ -147,8 +147,6 @@ void QuickTilingTest::testQuickTiling_data()
 
 void QuickTilingTest::testQuickTiling()
 {
-    using namespace KWayland::Client;
-
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
@@ -220,8 +218,6 @@ void QuickTilingTest::testQuickMaximizing_data()
 
 void QuickTilingTest::testQuickMaximizing()
 {
-    using namespace KWayland::Client;
-
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
@@ -324,8 +320,6 @@ void QuickTilingTest::testQuickTilingKeyboardMove_data()
 
 void QuickTilingTest::testQuickTilingKeyboardMove()
 {
-    using namespace KWayland::Client;
-
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
 
@@ -391,8 +385,6 @@ void QuickTilingTest::testQuickTilingPointerMove_data()
 
 void QuickTilingTest::testQuickTilingPointerMove()
 {
-    using namespace KWayland::Client;
-
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
 
@@ -470,11 +462,10 @@ void QuickTilingTest::testQuickTilingTouchMove()
 {
     // test verifies that touch on decoration also allows quick tiling
     // see BUG: 390113
-    using namespace KWayland::Client;
 
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
-    std::unique_ptr<ServerSideDecoration> deco(Test::waylandServerSideDecoration()->create(surface.get()));
+    std::unique_ptr<KWayland::Client::ServerSideDecoration> deco(Test::waylandServerSideDecoration()->create(surface.get()));
 
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly));
     QVERIFY(shellSurface != nullptr);
@@ -717,8 +708,6 @@ void QuickTilingTest::testShortcut_data()
 
 void QuickTilingTest::testShortcut()
 {
-    using namespace KWayland::Client;
-
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
@@ -800,8 +789,6 @@ void QuickTilingTest::testScript_data()
 
 void QuickTilingTest::testScript()
 {
-    using namespace KWayland::Client;
-
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));

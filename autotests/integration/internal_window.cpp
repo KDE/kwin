@@ -28,8 +28,6 @@
 
 #include <linux/input.h>
 
-using namespace KWayland::Client;
-
 Q_DECLARE_METATYPE(NET::WindowType);
 
 namespace KWin
@@ -352,11 +350,11 @@ void InternalWindowTest::testKeyboardTriggersLeave()
 {
     // this test verifies that a leave event is sent to a window when an internal window
     // gets a key event
-    std::unique_ptr<Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
+    std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
     QVERIFY(keyboard != nullptr);
     QVERIFY(keyboard->isValid());
-    QSignalSpy enteredSpy(keyboard.get(), &Keyboard::entered);
-    QSignalSpy leftSpy(keyboard.get(), &Keyboard::left);
+    QSignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    QSignalSpy leftSpy(keyboard.get(), &KWayland::Client::Keyboard::left);
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
 

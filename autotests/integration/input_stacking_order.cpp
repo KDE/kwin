@@ -65,7 +65,6 @@ void InputStackingOrderTest::initTestCase()
 
 void InputStackingOrderTest::init()
 {
-    using namespace KWayland::Client;
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
     QVERIFY(Test::waitForWaylandPointer());
 
@@ -90,13 +89,13 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     // the pointer is in the overlapping area which means the top most window has focus
     // as soon as the top most window gets lowered the window should lose focus and the
     // other window should gain focus without a mouse event in between
-    using namespace KWayland::Client;
+
     // create pointer and signal spy for enter and leave signals
     auto pointer = Test::waylandSeat()->createPointer(Test::waylandSeat());
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
-    QSignalSpy enteredSpy(pointer, &Pointer::entered);
-    QSignalSpy leftSpy(pointer, &Pointer::left);
+    QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
+    QSignalSpy leftSpy(pointer, &KWayland::Client::Pointer::left);
 
     // now create the two windows and make them overlap
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);

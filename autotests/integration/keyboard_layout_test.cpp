@@ -31,7 +31,6 @@
 #include <linux/input.h>
 
 using namespace KWin;
-using namespace KWayland::Client;
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_keyboard_laout-0");
 
@@ -414,7 +413,6 @@ void KeyboardLayoutTest::testWindowPolicy()
     QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
 
     // create a window
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     auto c1 = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);
@@ -461,7 +459,6 @@ void KeyboardLayoutTest::testApplicationPolicy()
     QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
 
     // create a window
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));

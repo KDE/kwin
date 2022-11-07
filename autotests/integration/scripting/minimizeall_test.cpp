@@ -102,8 +102,6 @@ void MinimizeAllScriptTest::testMinimizeUnminimize()
     // This test verifies that all windows are minimized when Meta+Shift+D
     // is pressed, and unminimized when the shortcut is pressed once again.
 
-    using namespace KWayland::Client;
-
     // Create a couple of test windows.
     std::unique_ptr<KWayland::Client::Surface> surface1(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.get()));

@@ -17,7 +17,6 @@
 #include <KWayland/Client/surface.h>
 
 using namespace KWin;
-using namespace KWayland::Client;
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_showing_desktop-0");
 
@@ -82,9 +81,9 @@ void ShowingDesktopTest::testRestoreFocusWithDesktopWindow()
     QVERIFY(desktopSurface != nullptr);
     std::unique_ptr<Test::XdgToplevel> desktopShellSurface(Test::createXdgToplevelSurface(desktopSurface.get()));
     QVERIFY(desktopSurface != nullptr);
-    std::unique_ptr<PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(desktopSurface.get()));
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(desktopSurface.get()));
     QVERIFY(plasmaSurface != nullptr);
-    plasmaSurface->setRole(PlasmaShellSurface::Role::Desktop);
+    plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::Desktop);
 
     auto desktop = Test::renderAndWaitForShown(desktopSurface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(desktop);

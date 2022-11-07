@@ -96,9 +96,7 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
     // This test verifies that a minimize effect tries to animate a window
     // when it's minimized or unminimized.
 
-    using namespace KWayland::Client;
-
-    QSignalSpy plasmaWindowCreatedSpy(Test::waylandWindowManagement(), &PlasmaWindowManagement::windowCreated);
+    QSignalSpy plasmaWindowCreatedSpy(Test::waylandWindowManagement(), &KWayland::Client::PlasmaWindowManagement::windowCreated);
 
     // Create a panel at the top of the screen.
     const QRect panelRect = QRect(0, 0, 1280, 36);
@@ -106,11 +104,11 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
     QVERIFY(panelSurface != nullptr);
     std::unique_ptr<Test::XdgToplevel> panelShellSurface(Test::createXdgToplevelSurface(panelSurface.get()));
     QVERIFY(panelShellSurface != nullptr);
-    std::unique_ptr<PlasmaShellSurface> plasmaPanelShellSurface(Test::waylandPlasmaShell()->createSurface(panelSurface.get()));
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> plasmaPanelShellSurface(Test::waylandPlasmaShell()->createSurface(panelSurface.get()));
     QVERIFY(plasmaPanelShellSurface != nullptr);
-    plasmaPanelShellSurface->setRole(PlasmaShellSurface::Role::Panel);
+    plasmaPanelShellSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
     plasmaPanelShellSurface->setPosition(panelRect.topLeft());
-    plasmaPanelShellSurface->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AlwaysVisible);
+    plasmaPanelShellSurface->setPanelBehavior(KWayland::Client::PlasmaShellSurface::PanelBehavior::AlwaysVisible);
     Window *panel = Test::renderAndWaitForShown(panelSurface.get(), panelRect.size(), Qt::blue);
     QVERIFY(panel);
     QVERIFY(panel->isDock());
@@ -130,7 +128,7 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
 
     // We have to set the minimized geometry because the squash effect needs it,
     // otherwise it won't start animation.
-    auto plasmaWindow = plasmaWindowCreatedSpy.last().first().value<PlasmaWindow *>();
+    auto plasmaWindow = plasmaWindowCreatedSpy.last().first().value<KWayland::Client::PlasmaWindow *>();
     QVERIFY(plasmaWindow);
     const QRect iconRect = QRect(0, 0, 42, 36);
     plasmaWindow->setMinimizedGeometry(panelSurface.get(), iconRect);

@@ -80,7 +80,6 @@ void DontCrashCancelAnimationFromAnimationEndedTest::testScript()
     }
     QVERIFY(static_cast<EffectsHandlerImpl *>(effects)->isEffectLoaded(QStringLiteral("crashy")));
 
-    using namespace KWayland::Client;
     // create a window
     std::unique_ptr<KWayland::Client::Surface> surface{Test::createSurface()};
     QVERIFY(surface);

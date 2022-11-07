@@ -44,8 +44,6 @@ void BufferSizeChangeTest::testShmBufferSizeChange()
 {
     // This test verifies that an SHM buffer size change is handled correctly
 
-    using namespace KWayland::Client;
-
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
 
@@ -72,8 +70,6 @@ void BufferSizeChangeTest::testShmBufferSizeChange()
 
 void BufferSizeChangeTest::testShmBufferSizeChangeOnSubSurface()
 {
-    using namespace KWayland::Client;
-
     // setup parent surface
     std::unique_ptr<KWayland::Client::Surface> parentSurface(Test::createSurface());
     QVERIFY(parentSurface != nullptr);
@@ -83,7 +79,7 @@ void BufferSizeChangeTest::testShmBufferSizeChangeOnSubSurface()
     // setup sub surface
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
-    std::unique_ptr<SubSurface> subSurface(Test::createSubSurface(surface.get(), parentSurface.get()));
+    std::unique_ptr<KWayland::Client::SubSurface> subSurface(Test::createSubSurface(surface.get(), parentSurface.get()));
     QVERIFY(subSurface != nullptr);
 
     // set buffer sizes

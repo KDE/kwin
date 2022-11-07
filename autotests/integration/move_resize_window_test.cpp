@@ -109,8 +109,6 @@ void MoveResizeWindowTest::cleanup()
 
 void MoveResizeWindowTest::testMove()
 {
-    using namespace KWayland::Client;
-
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
 
@@ -182,7 +180,6 @@ void MoveResizeWindowTest::testMove()
 void MoveResizeWindowTest::testResize()
 {
     // a test case which manually resizes a window
-    using namespace KWayland::Client;
 
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
@@ -316,8 +313,6 @@ void MoveResizeWindowTest::testPackTo_data()
 
 void MoveResizeWindowTest::testPackTo()
 {
-    using namespace KWayland::Client;
-
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
 
@@ -354,8 +349,6 @@ void MoveResizeWindowTest::testPackAgainstClient_data()
 
 void MoveResizeWindowTest::testPackAgainstClient()
 {
-    using namespace KWayland::Client;
-
     std::unique_ptr<KWayland::Client::Surface> surface1(Test::createSurface());
     QVERIFY(surface1 != nullptr);
     std::unique_ptr<KWayland::Client::Surface> surface2(Test::createSurface());
@@ -421,8 +414,6 @@ void MoveResizeWindowTest::testGrowShrink_data()
 
 void MoveResizeWindowTest::testGrowShrink()
 {
-    using namespace KWayland::Client;
-
     // block geometry helper
     std::unique_ptr<KWayland::Client::Surface> surface1(Test::createSurface());
     QVERIFY(surface1 != nullptr);
@@ -481,7 +472,6 @@ void MoveResizeWindowTest::testPointerMoveEnd_data()
 void MoveResizeWindowTest::testPointerMoveEnd()
 {
     // this test verifies that moving a window through pointer only ends if all buttons are released
-    using namespace KWayland::Client;
 
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
@@ -519,12 +509,11 @@ void MoveResizeWindowTest::testPointerMoveEnd()
 }
 void MoveResizeWindowTest::testClientSideMove()
 {
-    using namespace KWayland::Client;
     Cursors::self()->mouse()->setPos(640, 512);
-    std::unique_ptr<Pointer> pointer(Test::waylandSeat()->createPointer());
-    QSignalSpy pointerEnteredSpy(pointer.get(), &Pointer::entered);
-    QSignalSpy pointerLeftSpy(pointer.get(), &Pointer::left);
-    QSignalSpy buttonSpy(pointer.get(), &Pointer::buttonStateChanged);
+    std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
+    QSignalSpy pointerEnteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    QSignalSpy pointerLeftSpy(pointer.get(), &KWayland::Client::Pointer::left);
+    QSignalSpy buttonSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
 
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
@@ -578,14 +567,13 @@ void MoveResizeWindowTest::testPlasmaShellSurfaceMovable_data()
 void MoveResizeWindowTest::testPlasmaShellSurfaceMovable()
 {
     // this test verifies that certain window types from PlasmaShellSurface are not moveable or resizable
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
 
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     QVERIFY(shellSurface != nullptr);
     // and a PlasmaShellSurface
-    std::unique_ptr<PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(surface.get()));
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(surface.get()));
     QVERIFY(plasmaSurface != nullptr);
     QFETCH(KWayland::Client::PlasmaShellSurface::Role, role);
     plasmaSurface->setRole(role);
@@ -723,7 +711,6 @@ void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingX11Panel()
     QVERIFY(panel->isDock());
 
     // let's create a window
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
 
@@ -784,15 +771,14 @@ void MoveResizeWindowTest::testAdjustClientGeometryOfAutohidingWaylandPanel()
     // see BUG 365892
 
     // first create our panel
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> panelSurface(Test::createSurface());
     QVERIFY(panelSurface != nullptr);
     std::unique_ptr<Test::XdgToplevel> panelShellSurface(Test::createXdgToplevelSurface(panelSurface.get()));
     QVERIFY(panelShellSurface != nullptr);
-    std::unique_ptr<PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(panelSurface.get()));
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> plasmaSurface(Test::waylandPlasmaShell()->createSurface(panelSurface.get()));
     QVERIFY(plasmaSurface != nullptr);
-    plasmaSurface->setRole(PlasmaShellSurface::Role::Panel);
-    plasmaSurface->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AutoHide);
+    plasmaSurface->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
+    plasmaSurface->setPanelBehavior(KWayland::Client::PlasmaShellSurface::PanelBehavior::AutoHide);
     QFETCH(QRect, panelGeometry);
     plasmaSurface->setPosition(panelGeometry.topLeft());
     // let's render
@@ -855,8 +841,6 @@ void MoveResizeWindowTest::testResizeForVirtualKeyboard_data()
 
 void MoveResizeWindowTest::testResizeForVirtualKeyboard()
 {
-    using namespace KWayland::Client;
-
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
 
@@ -930,8 +914,6 @@ void MoveResizeWindowTest::testResizeForVirtualKeyboard()
 
 void MoveResizeWindowTest::testResizeForVirtualKeyboardWithMaximize()
 {
-    using namespace KWayland::Client;
-
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
 
@@ -980,8 +962,6 @@ void MoveResizeWindowTest::testResizeForVirtualKeyboardWithMaximize()
 
 void MoveResizeWindowTest::testResizeForVirtualKeyboardWithFullScreen()
 {
-    using namespace KWayland::Client;
-
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
 
@@ -1033,7 +1013,6 @@ void MoveResizeWindowTest::testDestroyMoveClient()
     // the associated client is destroyed.
 
     // Create the test client.
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
@@ -1068,7 +1047,6 @@ void MoveResizeWindowTest::testDestroyResizeClient()
     // the associated client is destroyed.
 
     // Create the test client.
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));

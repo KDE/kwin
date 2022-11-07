@@ -82,7 +82,6 @@ private:
 
 std::pair<Window *, std::unique_ptr<KWayland::Client::Surface>> DecorationInputTest::showWindow()
 {
-    using namespace KWayland::Client;
 #define VERIFY(statement)                                                 \
     if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__)) \
         return {nullptr, nullptr};
@@ -146,7 +145,6 @@ void DecorationInputTest::initTestCase()
 
 void DecorationInputTest::init()
 {
-    using namespace KWayland::Client;
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::XdgDecorationV1));
     QVERIFY(Test::waitForWaylandPointer());
 

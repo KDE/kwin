@@ -17,7 +17,6 @@
 #include <KWayland/Client/surface.h>
 
 using namespace KWin;
-using namespace KWayland::Client;
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_idle_inhbition_test-0");
 
@@ -218,7 +217,7 @@ void TestIdleInhibition::testDontInhibitWhenUnmapped()
     QCOMPARE(input()->idleInhibitors(), QList<Window *>{window});
 
     // Unmap the window.
-    surface->attachBuffer(Buffer::Ptr());
+    surface->attachBuffer(KWayland::Client::Buffer::Ptr());
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(Test::waitForWindowDestroyed(window));
 

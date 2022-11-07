@@ -112,7 +112,6 @@ void ToplevelOpenCloseAnimationTest::testAnimateToplevels()
     QVERIFY(!effect->isActive());
 
     // Create the test window.
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
@@ -155,7 +154,6 @@ void ToplevelOpenCloseAnimationTest::testDontAnimatePopups()
     QVERIFY(effectsImpl);
 
     // Create the main window.
-    using namespace KWayland::Client;
     std::unique_ptr<KWayland::Client::Surface> mainWindowSurface(Test::createSurface());
     QVERIFY(mainWindowSurface != nullptr);
     std::unique_ptr<Test::XdgToplevel> mainWindowShellSurface(Test::createXdgToplevelSurface(mainWindowSurface.get()));
