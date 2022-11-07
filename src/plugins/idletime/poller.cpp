@@ -8,7 +8,6 @@
 */
 #include "poller.h"
 #include "idledetector.h"
-#include "input.h"
 
 namespace KWin
 {
@@ -81,9 +80,11 @@ int KWinIdleTimePoller::forcePollRequest()
     return 0;
 }
 
+#if KIDLETIME_BUILD_DEPRECATED_SINCE(5, 100)
 void KWinIdleTimePoller::simulateUserActivity()
 {
-    input()->simulateUserActivity();
+    // This function is left blank intentionally.
 }
+#endif
 
 } // namespace KWin
