@@ -4664,9 +4664,6 @@ bool X11Window::doStartInteractiveMoveResize()
 
 void X11Window::leaveInteractiveMoveResize()
 {
-    if (!isInteractiveResize()) {
-        sendSyntheticConfigureNotify(); // tell the client about it's new final position
-    }
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         if (move_resize_has_keyboard_grab) {
             ungrabXKeyboard();
