@@ -56,8 +56,7 @@ bool PopupInputFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
         }
         if (pointerFocus && pointerFocus->isDecorated()) {
             // test whether it is on the decoration
-            const QRectF clientRect = QRectF(pointerFocus->clientPos(), pointerFocus->clientSize()).translated(pointerFocus->pos());
-            if (!clientRect.contains(event->globalPos())) {
+            if (!pointerFocus->clientGeometry().contains(event->globalPos())) {
                 cancelPopups();
                 return true;
             }
@@ -102,8 +101,7 @@ bool PopupInputFilter::touchDown(qint32 id, const QPointF &pos, quint32 time)
     }
     if (pointerFocus && pointerFocus->isDecorated()) {
         // test whether it is on the decoration
-        const QRectF clientRect = QRectF(pointerFocus->clientPos(), pointerFocus->clientSize()).translated(pointerFocus->pos());
-        if (!clientRect.contains(pos)) {
+        if (!pointerFocus->clientGeometry().contains(pos)) {
             cancelPopups();
             return true;
         }
