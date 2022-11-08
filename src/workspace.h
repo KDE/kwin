@@ -177,8 +177,8 @@ public:
 
     Output *xineramaIndexToOutput(int index) const;
 
-    Output *primaryOutput() const;
-    void setPrimaryOutput(Output *output);
+    void setOutputOrder(const QVector<QString> &order);
+    QVector<QString> outputOrder() const;
 
     Output *activeOutput() const;
     void setActiveOutput(Output *output);
@@ -590,7 +590,7 @@ Q_SIGNALS:
     void deletedRemoved(KWin::Deleted *);
     void configChanged();
     void showingDesktopChanged(bool showing, bool animated);
-    void primaryOutputChanged();
+    void outputOrderChanged();
     void outputAdded(KWin::Output *);
     void outputRemoved(KWin::Output *);
     void outputsChanged();
@@ -679,8 +679,8 @@ private:
 
     QList<Output *> m_outputs;
     Output *m_activeOutput = nullptr;
-    Output *m_primaryOutput = nullptr;
     QString m_outputsHash;
+    QVector<QString> m_outputOrder;
 
     Window *m_activeWindow;
     Window *m_lastActiveWindow;

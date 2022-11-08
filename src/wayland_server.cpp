@@ -44,6 +44,7 @@
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/lockscreen_overlay_v1_interface.h"
 #include "wayland/output_interface.h"
+#include "wayland/output_order_v1_interface.h"
 #include "wayland/outputdevice_v2_interface.h"
 #include "wayland/outputmanagement_v2_interface.h"
 #include "wayland/plasmashell_interface.h"
@@ -51,7 +52,6 @@
 #include "wayland/plasmawindowmanagement_interface.h"
 #include "wayland/pointerconstraints_v1_interface.h"
 #include "wayland/pointergestures_v1_interface.h"
-#include "wayland/primaryoutput_v1_interface.h"
 #include "wayland/primaryselectiondevicemanager_v1_interface.h"
 #include "wayland/relativepointer_v1_interface.h"
 #include "wayland/seat_interface.h"
@@ -486,7 +486,6 @@ bool WaylandServer::init(InitializationFlags flags)
     });
 
     m_outputManagement = new OutputManagementV2Interface(m_display, m_display);
-    m_primary = new PrimaryOutputV1Interface(m_display, m_display);
 
     m_xdgOutputManagerV1 = new XdgOutputManagerV1Interface(m_display, m_display);
     new SubCompositorInterface(m_display, m_display);
@@ -568,14 +567,6 @@ void WaylandServer::initWorkspace()
         });
     }
 
-    if (auto primaryOutput = workspace()->primaryOutput()) {
-        m_primary->setPrimaryOutput(primaryOutput->name());
-    }
-    connect(workspace(), &Workspace::primaryOutputChanged, this, [this]() {
-        const Output *primaryOutput = workspace()->primaryOutput();
-        m_primary->setPrimaryOutput(primaryOutput ? primaryOutput->name() : QString());
-    });
-
     const auto availableOutputs = kwinApp()->outputBackend()->outputs();
     for (Output *output : availableOutputs) {
         handleOutputAdded(output);
@@ -597,6 +588,12 @@ void WaylandServer::initWorkspace()
     if (auto backend = qobject_cast<DrmBackend *>(kwinApp()->outputBackend())) {
         m_leaseManager = new KWaylandServer::DrmLeaseManagerV1(backend, m_display, m_display);
     }
+
+    m_outputOrder = new KWaylandServer::OutputOrderV1Interface(m_display, m_display);
+    m_outputOrder->setOutputOrder(workspace()->outputOrder());
+    connect(workspace(), &Workspace::outputOrderChanged, m_outputOrder, [this]() {
+        m_outputOrder->setOutputOrder(workspace()->outputOrder());
+    });
 
     Q_EMIT initialized();
 }

@@ -645,7 +645,7 @@ void Workspace::updateOutputConfiguration()
     const auto outputsInfo = KWinKScreenIntegration::outputsConfig(outputs, hash);
     m_outputsHash = hash;
 
-    Output *primaryOutput = outputs.constFirst();
+    std::vector<std::pair<uint32_t, Output *>> outputOrder;
     OutputConfiguration cfg;
     // default position goes from left to right
     QPoint pos(0, 0);
@@ -658,7 +658,19 @@ void Workspace::updateOutputConfiguration()
         qCDebug(KWIN_CORE) << "Reading output configuration for " << output;
         if (!outputInfo.isEmpty()) {
             if (outputInfo["primary"].toBool()) {
-                primaryOutput = output;
+                outputOrder.push_back(std::make_pair(1, output));
+                if (!output->isEnabled()) {
+                    qCWarning(KWIN_CORE) << "KScreen config would disable the primary output!";
+                    return;
+                }
+            } else if (int prio = outputInfo["priority"].toInt(); prio > 0) {
+                outputOrder.push_back(std::make_pair(prio, output));
+                if (!output->isEnabled()) {
+                    qCWarning(KWIN_CORE) << "KScreen config would disable an output with priority!";
+                    return;
+                }
+            } else {
+                outputOrder.push_back(std::make_pair(0, output));
             }
             props->enabled = outputInfo["enabled"].toBool(true);
             const QJsonObject pos = outputInfo["pos"].toObject();
@@ -681,6 +693,7 @@ void Workspace::updateOutputConfiguration()
             props->enabled = true;
             props->pos = pos;
             props->transform = output->panelOrientation();
+            outputOrder.push_back(std::make_pair(0, output));
         }
         pos.setX(pos.x() + output->geometry().width());
     }
@@ -691,15 +704,38 @@ void Workspace::updateOutputConfiguration()
         qCWarning(KWIN_CORE) << "KScreen config would disable all outputs!";
         return;
     }
-    if (!cfg.changeSet(primaryOutput)->enabled) {
-        qCWarning(KWIN_CORE) << "KScreen config would disable the primary output!";
-        return;
+    std::erase_if(outputOrder, [&cfg](const auto &pair) {
+        return !cfg.constChangeSet(pair.second)->enabled;
+    });
+    std::sort(outputOrder.begin(), outputOrder.end(), [](const auto &left, const auto &right) {
+        if (left.first == right.first) {
+            // sort alphabetically as a fallback
+            return left.second < right.second;
+        } else {
+            return left.first < right.first;
+        }
+    });
+    uint32_t i = 1;
+    for (const auto &[index, name] : std::as_const(outputOrder)) {
+        if (index == 0) {
+            // old config, ignore
+            continue;
+        } else if (index != i) {
+            qCWarning(KWIN_CORE) << "KScreen config has wrong output order in it";
+            return;
+        }
+        i++;
     }
     if (!kwinApp()->outputBackend()->applyOutputChanges(cfg)) {
         qCWarning(KWIN_CORE) << "Applying KScreen config failed!";
         return;
     }
-    setPrimaryOutput(primaryOutput);
+    QVector<QString> order;
+    order.reserve(outputOrder.size());
+    std::transform(outputOrder.begin(), outputOrder.end(), std::back_inserter(order), [](const auto &pair) {
+        return pair.second->name();
+    });
+    setOutputOrder(order);
 }
 
 void Workspace::setupWindowConnections(Window *window)
@@ -1499,9 +1535,6 @@ void Workspace::updateOutputs()
 
     if (!m_activeOutput || !m_outputs.contains(m_activeOutput)) {
         setActiveOutput(m_outputs[0]);
-    }
-    if (!m_primaryOutput || !m_outputs.contains(m_primaryOutput)) {
-        setPrimaryOutput(m_outputs[0]);
     }
 
     const QSet<Output *> oldOutputsSet(oldOutputs.constBegin(), oldOutputs.constEnd());
@@ -2678,17 +2711,17 @@ Output *Workspace::xineramaIndexToOutput(int index) const
     return nullptr;
 }
 
-Output *Workspace::primaryOutput() const
+void Workspace::setOutputOrder(const QVector<QString> &order)
 {
-    return m_primaryOutput;
+    if (m_outputOrder != order) {
+        m_outputOrder = order;
+        Q_EMIT outputOrderChanged();
+    }
 }
 
-void Workspace::setPrimaryOutput(Output *output)
+QVector<QString> Workspace::outputOrder() const
 {
-    if (m_primaryOutput != output) {
-        m_primaryOutput = output;
-        Q_EMIT primaryOutputChanged();
-    }
+    return m_outputOrder;
 }
 
 Output *Workspace::activeOutput() const

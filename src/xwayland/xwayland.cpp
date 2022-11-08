@@ -150,7 +150,7 @@ void Xwayland::uninstallSocketNotifier()
 
 void Xwayland::handleXwaylandFinished()
 {
-    disconnect(workspace(), &Workspace::primaryOutputChanged, this, &Xwayland::updatePrimary);
+    disconnect(workspace(), &Workspace::outputOrderChanged, this, &Xwayland::updatePrimary);
 
     delete m_xrandrEventsFilter;
     m_xrandrEventsFilter = nullptr;
@@ -198,7 +198,7 @@ void Xwayland::handleXwaylandReady()
     qputenv("XAUTHORITY", m_launcher->xauthority().toLatin1());
     m_app->setProcessStartupEnvironment(env);
 
-    connect(workspace(), &Workspace::primaryOutputChanged, this, &Xwayland::updatePrimary);
+    connect(workspace(), &Workspace::outputOrderChanged, this, &Xwayland::updatePrimary);
     updatePrimary();
 
     Xcb::sync(); // Trigger possible errors, there's still a chance to abort
@@ -209,13 +209,24 @@ void Xwayland::handleXwaylandReady()
 
 void Xwayland::updatePrimary()
 {
+    if (workspace()->outputOrder().empty()) {
+        return;
+    }
     Xcb::RandR::ScreenResources resources(kwinApp()->x11RootWindow());
     xcb_randr_crtc_t *crtcs = resources.crtcs();
     if (!crtcs) {
         return;
     }
 
-    Output *primaryOutput = workspace()->primaryOutput();
+    const QString primaryName = workspace()->outputOrder().front();
+    const auto outputs = workspace()->outputs();
+    const auto it = std::find_if(outputs.begin(), outputs.end(), [primaryName](const auto output) {
+        return output->name() == primaryName;
+    });
+    if (it == outputs.end()) {
+        return;
+    }
+    Output *const primaryOutput = *it;
     for (int i = 0; i < resources->num_crtcs; ++i) {
         Xcb::RandR::CrtcInfo crtcInfo(crtcs[i], resources->config_timestamp);
         const QRect geometry = crtcInfo.rect();

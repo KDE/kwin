@@ -21,10 +21,6 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     BASENAME kde-output-device-v2
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
-    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-primary-output-v1.xml
-    BASENAME kde-primary-output-v1
-)
-ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-management-v2.xml
     BASENAME kde-output-management-v2
 )
@@ -200,6 +196,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/xwayland-shell/xwayland-shell-v1.xml
     BASENAME xwayland-shell-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-output-order-v1.xml
+    BASENAME kde-output-order-v1
+)
 
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/fractional-scale/fractional-scale-v1.xml
@@ -243,6 +243,7 @@ target_sources(kwin PRIVATE
     linuxdmabufv1clientbuffer.cpp
     lockscreen_overlay_v1_interface.cpp
     output_interface.cpp
+    output_order_v1_interface.cpp
     outputdevice_v2_interface.cpp
     outputmanagement_v2_interface.cpp
     plasmashell_interface.cpp
@@ -251,7 +252,6 @@ target_sources(kwin PRIVATE
     pointer_interface.cpp
     pointerconstraints_v1_interface.cpp
     pointergestures_v1_interface.cpp
-    primaryoutput_v1_interface.cpp
     primaryselectiondevice_v1_interface.cpp
     primaryselectiondevicemanager_v1_interface.cpp
     primaryselectionoffer_v1_interface.cpp
