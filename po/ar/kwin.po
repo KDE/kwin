@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-06 00:48+0000\n"
-"PO-Revision-Date: 2022-11-01 12:17+0400\n"
+"PO-Revision-Date: 2022-11-07 19:59+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -48,16 +48,20 @@ msgid ""
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
+"<b>أدى التركيب في أوبن جي إل (المبدئي) إلى تعطل كوين في الماضي.</b><br>كان "
+"هذا على الأرجح بسبب خطأ في المعرف.<p>إذا كنت تعتقد أنك قمت في هذه الأثناء "
+"بالترقية إلى تعريف ثابت مستقر، <br>فيمكنك إعادة تعيين هذه الحماية ولكن يجب "
+"أن تدرك أن هذا قد يؤدي إلى انهيار فوري!</b></p>"
 
 #: composite.cpp:1047
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
-msgstr ""
+msgstr "لا تتوفر امتدادات اكس ( XComposite و XDamage) المطلوبة"
 
 #: composite.cpp:1050
 #, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr ""
+msgstr "لا يتوفر GLX/OpenGL"
 
 #: debug_console.cpp:79
 #, kde-format

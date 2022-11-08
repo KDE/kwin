@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-05 00:47+0000\n"
-"PO-Revision-Date: 2022-10-27 10:32+0400\n"
+"PO-Revision-Date: 2022-11-07 19:56+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -201,7 +201,7 @@ msgstr "طبيعي"
 #: desktopgrid/desktopgrid_config.ui:147
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "لا شيء"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: desktopgrid/desktopgrid_config.ui:155

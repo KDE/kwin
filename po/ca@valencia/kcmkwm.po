@@ -820,8 +820,8 @@ msgstr ""
 "style=\" font-style:italic;\">Extrema:</span> Totes les finestres s'han "
 "d'activar explícitament per l'usuari.</li></ul><p>Les finestres a les quals "
 "s'impedix que roben el focus es marquen com a sol·licitants d'atenció, el "
-"que significa que, de manera predeterminada, la seua entrada en la barra de "
-"tasques es ressaltarà. Açò es pot canviar al mòdul de control de "
+"que significa que, de manera predeterminada, es ressaltarà la seua entrada "
+"en la barra de tasques. Açò es pot canviar al mòdul de control de "
 "Notificacions.</p></body></html>"
 
 #. i18n: Focus Stealing Prevention Level
