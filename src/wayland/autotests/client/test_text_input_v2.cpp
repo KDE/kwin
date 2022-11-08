@@ -21,7 +21,6 @@
 #include "wayland/textinput.h"
 #include "wayland/textinput_v2_interface.h"
 
-using namespace KWayland::Client;
 using namespace KWaylandServer;
 
 class TextInputTest : public QObject
@@ -52,18 +51,18 @@ private Q_SLOTS:
 
 private:
     SurfaceInterface *waitForSurface();
-    TextInput *createTextInput();
+    KWayland::Client::TextInput *createTextInput();
     KWaylandServer::Display *m_display = nullptr;
     SeatInterface *m_seatInterface = nullptr;
     CompositorInterface *m_compositorInterface = nullptr;
     TextInputManagerV2Interface *m_textInputManagerV2Interface = nullptr;
-    ConnectionThread *m_connection = nullptr;
+    KWayland::Client::ConnectionThread *m_connection = nullptr;
     QThread *m_thread = nullptr;
-    EventQueue *m_queue = nullptr;
-    Seat *m_seat = nullptr;
-    Keyboard *m_keyboard = nullptr;
-    Compositor *m_compositor = nullptr;
-    TextInputManager *m_textInputManagerV2 = nullptr;
+    KWayland::Client::EventQueue *m_queue = nullptr;
+    KWayland::Client::Seat *m_seat = nullptr;
+    KWayland::Client::Keyboard *m_keyboard = nullptr;
+    KWayland::Client::Compositor *m_compositor = nullptr;
+    KWayland::Client::TextInputManager *m_textInputManagerV2 = nullptr;
 };
 
 static const QString s_socketName = QStringLiteral("kwayland-test-text-input-0");
@@ -84,7 +83,7 @@ void TextInputTest::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -94,30 +93,30 @@ void TextInputTest::init()
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new EventQueue(this);
+    m_queue = new KWayland::Client::EventQueue(this);
     m_queue->setup(m_connection);
 
-    Registry registry;
-    QSignalSpy interfacesAnnouncedSpy(&registry, &Registry::interfacesAnnounced);
+    KWayland::Client::Registry registry;
+    QSignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
     registry.setEventQueue(m_queue);
     registry.create(m_connection);
     QVERIFY(registry.isValid());
     registry.setup();
     QVERIFY(interfacesAnnouncedSpy.wait());
 
-    m_seat = registry.createSeat(registry.interface(Registry::Interface::Seat).name, registry.interface(Registry::Interface::Seat).version, this);
+    m_seat = registry.createSeat(registry.interface(KWayland::Client::Registry::Interface::Seat).name, registry.interface(KWayland::Client::Registry::Interface::Seat).version, this);
     QVERIFY(m_seat->isValid());
-    QSignalSpy hasKeyboardSpy(m_seat, &Seat::hasKeyboardChanged);
+    QSignalSpy hasKeyboardSpy(m_seat, &KWayland::Client::Seat::hasKeyboardChanged);
     QVERIFY(hasKeyboardSpy.wait());
     m_keyboard = m_seat->createKeyboard(this);
     QVERIFY(m_keyboard->isValid());
 
     m_compositor =
-        registry.createCompositor(registry.interface(Registry::Interface::Compositor).name, registry.interface(Registry::Interface::Compositor).version, this);
+        registry.createCompositor(registry.interface(KWayland::Client::Registry::Interface::Compositor).name, registry.interface(KWayland::Client::Registry::Interface::Compositor).version, this);
     QVERIFY(m_compositor->isValid());
 
-    m_textInputManagerV2 = registry.createTextInputManager(registry.interface(Registry::Interface::TextInputManagerUnstableV2).name,
-                                                           registry.interface(Registry::Interface::TextInputManagerUnstableV2).version,
+    m_textInputManagerV2 = registry.createTextInputManager(registry.interface(KWayland::Client::Registry::Interface::TextInputManagerUnstableV2).name,
+                                                           registry.interface(KWayland::Client::Registry::Interface::TextInputManagerUnstableV2).version,
                                                            this);
     QVERIFY(m_textInputManagerV2->isValid());
 }
@@ -169,7 +168,7 @@ SurfaceInterface *TextInputTest::waitForSurface()
     return surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
 }
 
-TextInput *TextInputTest::createTextInput()
+KWayland::Client::TextInput *TextInputTest::createTextInput()
 {
     return m_textInputManagerV2->createTextInput(m_seat);
 }
@@ -183,14 +182,14 @@ void TextInputTest::testEnterLeave_data()
 void TextInputTest::testEnterLeave()
 {
     // this test verifies that enter leave are sent correctly
-    std::unique_ptr<Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
 
-    std::unique_ptr<TextInput> textInput(createTextInput());
+    std::unique_ptr<KWayland::Client::TextInput> textInput(createTextInput());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
     QVERIFY(textInput != nullptr);
-    QSignalSpy enteredSpy(textInput.get(), &TextInput::entered);
-    QSignalSpy leftSpy(textInput.get(), &TextInput::left);
+    QSignalSpy enteredSpy(textInput.get(), &KWayland::Client::TextInput::entered);
+    QSignalSpy leftSpy(textInput.get(), &KWayland::Client::TextInput::left);
     QSignalSpy textInputChangedSpy(m_seatInterface, &SeatInterface::focusedTextInputSurfaceChanged);
 
     // now let's try to enter it
@@ -264,7 +263,7 @@ void TextInputTest::testEnterLeave()
 void TextInputTest::testFocusedBeforeCreateTextInput()
 {
     // this test verifies that enter leave are sent correctly
-    std::unique_ptr<Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     // now let's try to enter it
     QSignalSpy textInputChangedSpy(m_seatInterface, &SeatInterface::focusedTextInputSurfaceChanged);
@@ -277,10 +276,10 @@ void TextInputTest::testFocusedBeforeCreateTextInput()
     QCOMPARE(m_seatInterface->textInputV2()->surface(), nullptr);
 
     QVERIFY(serverSurface);
-    std::unique_ptr<TextInput> textInput(createTextInput());
+    std::unique_ptr<KWayland::Client::TextInput> textInput(createTextInput());
     QVERIFY(textInput != nullptr);
-    QSignalSpy enteredSpy(textInput.get(), &TextInput::entered);
-    QSignalSpy leftSpy(textInput.get(), &TextInput::left);
+    QSignalSpy enteredSpy(textInput.get(), &KWayland::Client::TextInput::entered);
+    QSignalSpy leftSpy(textInput.get(), &KWayland::Client::TextInput::left);
 
     // and trigger an enter
     if (enteredSpy.isEmpty()) {
@@ -306,11 +305,11 @@ void TextInputTest::testShowHidePanel()
 {
     // this test verifies that the requests for show/hide panel work
     // and that status is properly sent to the client
-    std::unique_ptr<Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
 
-    std::unique_ptr<TextInput> textInput(createTextInput());
+    std::unique_ptr<KWayland::Client::TextInput> textInput(createTextInput());
     QVERIFY(textInput != nullptr);
     textInput->enable(surface.get());
     m_connection->flush();
@@ -322,7 +321,7 @@ void TextInputTest::testShowHidePanel()
 
     QSignalSpy showPanelRequestedSpy(ti, &TextInputV2Interface::requestShowInputPanel);
     QSignalSpy hidePanelRequestedSpy(ti, &TextInputV2Interface::requestHideInputPanel);
-    QSignalSpy inputPanelStateChangedSpy(textInput.get(), &TextInput::inputPanelStateChanged);
+    QSignalSpy inputPanelStateChangedSpy(textInput.get(), &KWayland::Client::TextInput::inputPanelStateChanged);
 
     QCOMPARE(textInput->isInputPanelVisible(), false);
     textInput->showInputPanel();
@@ -342,11 +341,11 @@ void TextInputTest::testCursorRectangle()
 {
     // this test verifies that passing the cursor rectangle from client to server works
     // and that setting visibility state from server to client works
-    std::unique_ptr<Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
 
-    std::unique_ptr<TextInput> textInput(createTextInput());
+    std::unique_ptr<KWayland::Client::TextInput> textInput(createTextInput());
     QVERIFY(textInput != nullptr);
     textInput->enable(surface.get());
     m_connection->flush();
@@ -366,11 +365,11 @@ void TextInputTest::testCursorRectangle()
 void TextInputTest::testPreferredLanguage()
 {
     // this test verifies that passing the preferred language from client to server works
-    std::unique_ptr<Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
 
-    std::unique_ptr<TextInput> textInput(createTextInput());
+    std::unique_ptr<KWayland::Client::TextInput> textInput(createTextInput());
     QVERIFY(textInput != nullptr);
     textInput->enable(surface.get());
     m_connection->flush();
@@ -390,11 +389,11 @@ void TextInputTest::testPreferredLanguage()
 void TextInputTest::testReset()
 {
     // this test verifies that the reset request is properly passed from client to server
-    std::unique_ptr<Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
 
-    std::unique_ptr<TextInput> textInput(createTextInput());
+    std::unique_ptr<KWayland::Client::TextInput> textInput(createTextInput());
     QVERIFY(textInput != nullptr);
     textInput->enable(surface.get());
     m_connection->flush();
@@ -413,11 +412,11 @@ void TextInputTest::testReset()
 void TextInputTest::testSurroundingText()
 {
     // this test verifies that surrounding text is properly passed around
-    std::unique_ptr<Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
 
-    std::unique_ptr<TextInput> textInput(createTextInput());
+    std::unique_ptr<KWayland::Client::TextInput> textInput(createTextInput());
     QVERIFY(textInput != nullptr);
     textInput->enable(surface.get());
     m_connection->flush();
@@ -441,39 +440,39 @@ void TextInputTest::testSurroundingText()
 
 void TextInputTest::testContentHints_data()
 {
-    QTest::addColumn<TextInput::ContentHints>("clientHints");
+    QTest::addColumn<KWayland::Client::TextInput::ContentHints>("clientHints");
     QTest::addColumn<KWaylandServer::TextInputContentHints>("serverHints");
 
-    QTest::newRow("completion/v2") << TextInput::ContentHints(TextInput::ContentHint::AutoCompletion)
+    QTest::newRow("completion/v2") << KWayland::Client::TextInput::ContentHints(KWayland::Client::TextInput::ContentHint::AutoCompletion)
                                    << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::AutoCompletion);
-    QTest::newRow("Correction/v2") << TextInput::ContentHints(TextInput::ContentHint::AutoCorrection)
+    QTest::newRow("Correction/v2") << KWayland::Client::TextInput::ContentHints(KWayland::Client::TextInput::ContentHint::AutoCorrection)
                                    << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::AutoCorrection);
-    QTest::newRow("Capitalization/v2") << TextInput::ContentHints(TextInput::ContentHint::AutoCapitalization)
+    QTest::newRow("Capitalization/v2") << KWayland::Client::TextInput::ContentHints(KWayland::Client::TextInput::ContentHint::AutoCapitalization)
                                        << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::AutoCapitalization);
-    QTest::newRow("Lowercase/v2") << TextInput::ContentHints(TextInput::ContentHint::LowerCase)
+    QTest::newRow("Lowercase/v2") << KWayland::Client::TextInput::ContentHints(KWayland::Client::TextInput::ContentHint::LowerCase)
                                   << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::LowerCase);
-    QTest::newRow("Uppercase/v2") << TextInput::ContentHints(TextInput::ContentHint::UpperCase)
+    QTest::newRow("Uppercase/v2") << KWayland::Client::TextInput::ContentHints(KWayland::Client::TextInput::ContentHint::UpperCase)
                                   << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::UpperCase);
-    QTest::newRow("Titlecase/v2") << TextInput::ContentHints(TextInput::ContentHint::TitleCase)
+    QTest::newRow("Titlecase/v2") << KWayland::Client::TextInput::ContentHints(KWayland::Client::TextInput::ContentHint::TitleCase)
                                   << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::TitleCase);
-    QTest::newRow("HiddenText/v2") << TextInput::ContentHints(TextInput::ContentHint::HiddenText)
+    QTest::newRow("HiddenText/v2") << KWayland::Client::TextInput::ContentHints(KWayland::Client::TextInput::ContentHint::HiddenText)
                                    << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::HiddenText);
-    QTest::newRow("SensitiveData/v2") << TextInput::ContentHints(TextInput::ContentHint::SensitiveData)
+    QTest::newRow("SensitiveData/v2") << KWayland::Client::TextInput::ContentHints(KWayland::Client::TextInput::ContentHint::SensitiveData)
                                       << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::SensitiveData);
-    QTest::newRow("Latin/v2") << TextInput::ContentHints(TextInput::ContentHint::Latin)
+    QTest::newRow("Latin/v2") << KWayland::Client::TextInput::ContentHints(KWayland::Client::TextInput::ContentHint::Latin)
                               << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::Latin);
-    QTest::newRow("Multiline/v2") << TextInput::ContentHints(TextInput::ContentHint::MultiLine)
+    QTest::newRow("Multiline/v2") << KWayland::Client::TextInput::ContentHints(KWayland::Client::TextInput::ContentHint::MultiLine)
                                   << KWaylandServer::TextInputContentHints(KWaylandServer::TextInputContentHint::MultiLine);
 
-    QTest::newRow("autos/v2") << (TextInput::ContentHint::AutoCompletion | TextInput::ContentHint::AutoCorrection | TextInput::ContentHint::AutoCapitalization)
+    QTest::newRow("autos/v2") << (KWayland::Client::TextInput::ContentHint::AutoCompletion | KWayland::Client::TextInput::ContentHint::AutoCorrection | KWayland::Client::TextInput::ContentHint::AutoCapitalization)
                               << (KWaylandServer::TextInputContentHint::AutoCompletion | KWaylandServer::TextInputContentHint::AutoCorrection
                                   | KWaylandServer::TextInputContentHint::AutoCapitalization);
 
     // all has combinations which don't make sense - what's both lowercase and uppercase?
-    QTest::newRow("all/v2") << (TextInput::ContentHint::AutoCompletion | TextInput::ContentHint::AutoCorrection | TextInput::ContentHint::AutoCapitalization
-                                | TextInput::ContentHint::LowerCase | TextInput::ContentHint::UpperCase | TextInput::ContentHint::TitleCase
-                                | TextInput::ContentHint::HiddenText | TextInput::ContentHint::SensitiveData | TextInput::ContentHint::Latin
-                                | TextInput::ContentHint::MultiLine)
+    QTest::newRow("all/v2") << (KWayland::Client::TextInput::ContentHint::AutoCompletion | KWayland::Client::TextInput::ContentHint::AutoCorrection | KWayland::Client::TextInput::ContentHint::AutoCapitalization
+                                | KWayland::Client::TextInput::ContentHint::LowerCase | KWayland::Client::TextInput::ContentHint::UpperCase | KWayland::Client::TextInput::ContentHint::TitleCase
+                                | KWayland::Client::TextInput::ContentHint::HiddenText | KWayland::Client::TextInput::ContentHint::SensitiveData | KWayland::Client::TextInput::ContentHint::Latin
+                                | KWayland::Client::TextInput::ContentHint::MultiLine)
                             << (KWaylandServer::TextInputContentHint::AutoCompletion | KWaylandServer::TextInputContentHint::AutoCorrection
                                 | KWaylandServer::TextInputContentHint::AutoCapitalization | KWaylandServer::TextInputContentHint::LowerCase
                                 | KWaylandServer::TextInputContentHint::UpperCase | KWaylandServer::TextInputContentHint::TitleCase
@@ -484,11 +483,11 @@ void TextInputTest::testContentHints_data()
 void TextInputTest::testContentHints()
 {
     // this test verifies that content hints are properly passed from client to server
-    std::unique_ptr<Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
 
-    std::unique_ptr<TextInput> textInput(createTextInput());
+    std::unique_ptr<KWayland::Client::TextInput> textInput(createTextInput());
     QVERIFY(textInput != nullptr);
     textInput->enable(surface.get());
     m_connection->flush();
@@ -500,48 +499,48 @@ void TextInputTest::testContentHints()
     QCOMPARE(ti->contentHints(), KWaylandServer::TextInputContentHints());
 
     QSignalSpy contentTypeChangedSpy(ti, &TextInputV2Interface::contentTypeChanged);
-    QFETCH(TextInput::ContentHints, clientHints);
-    textInput->setContentType(clientHints, TextInput::ContentPurpose::Normal);
+    QFETCH(KWayland::Client::TextInput::ContentHints, clientHints);
+    textInput->setContentType(clientHints, KWayland::Client::TextInput::ContentPurpose::Normal);
     QVERIFY(contentTypeChangedSpy.wait());
     QTEST(ti->contentHints(), "serverHints");
 
     // setting to same should not trigger an update
-    textInput->setContentType(clientHints, TextInput::ContentPurpose::Normal);
+    textInput->setContentType(clientHints, KWayland::Client::TextInput::ContentPurpose::Normal);
     QVERIFY(!contentTypeChangedSpy.wait(100));
 
     // unsetting should work
-    textInput->setContentType(TextInput::ContentHints(), TextInput::ContentPurpose::Normal);
+    textInput->setContentType(KWayland::Client::TextInput::ContentHints(), KWayland::Client::TextInput::ContentPurpose::Normal);
     QVERIFY(contentTypeChangedSpy.wait());
     QCOMPARE(ti->contentHints(), KWaylandServer::TextInputContentHints());
 }
 
 void TextInputTest::testContentPurpose_data()
 {
-    QTest::addColumn<TextInput::ContentPurpose>("clientPurpose");
+    QTest::addColumn<KWayland::Client::TextInput::ContentPurpose>("clientPurpose");
     QTest::addColumn<KWaylandServer::TextInputContentPurpose>("serverPurpose");
 
-    QTest::newRow("Alpha/v2") << TextInput::ContentPurpose::Alpha << KWaylandServer::TextInputContentPurpose::Alpha;
-    QTest::newRow("Digits/v2") << TextInput::ContentPurpose::Digits << KWaylandServer::TextInputContentPurpose::Digits;
-    QTest::newRow("Number/v2") << TextInput::ContentPurpose::Number << KWaylandServer::TextInputContentPurpose::Number;
-    QTest::newRow("Phone/v2") << TextInput::ContentPurpose::Phone << KWaylandServer::TextInputContentPurpose::Phone;
-    QTest::newRow("Url/v2") << TextInput::ContentPurpose::Url << KWaylandServer::TextInputContentPurpose::Url;
-    QTest::newRow("Email/v2") << TextInput::ContentPurpose::Email << KWaylandServer::TextInputContentPurpose::Email;
-    QTest::newRow("Name/v2") << TextInput::ContentPurpose::Name << KWaylandServer::TextInputContentPurpose::Name;
-    QTest::newRow("Password/v2") << TextInput::ContentPurpose::Password << KWaylandServer::TextInputContentPurpose::Password;
-    QTest::newRow("Date/v2") << TextInput::ContentPurpose::Date << KWaylandServer::TextInputContentPurpose::Date;
-    QTest::newRow("Time/v2") << TextInput::ContentPurpose::Time << KWaylandServer::TextInputContentPurpose::Time;
-    QTest::newRow("Datetime/v2") << TextInput::ContentPurpose::DateTime << KWaylandServer::TextInputContentPurpose::DateTime;
-    QTest::newRow("Terminal/v2") << TextInput::ContentPurpose::Terminal << KWaylandServer::TextInputContentPurpose::Terminal;
+    QTest::newRow("Alpha/v2") << KWayland::Client::TextInput::ContentPurpose::Alpha << KWaylandServer::TextInputContentPurpose::Alpha;
+    QTest::newRow("Digits/v2") << KWayland::Client::TextInput::ContentPurpose::Digits << KWaylandServer::TextInputContentPurpose::Digits;
+    QTest::newRow("Number/v2") << KWayland::Client::TextInput::ContentPurpose::Number << KWaylandServer::TextInputContentPurpose::Number;
+    QTest::newRow("Phone/v2") << KWayland::Client::TextInput::ContentPurpose::Phone << KWaylandServer::TextInputContentPurpose::Phone;
+    QTest::newRow("Url/v2") << KWayland::Client::TextInput::ContentPurpose::Url << KWaylandServer::TextInputContentPurpose::Url;
+    QTest::newRow("Email/v2") << KWayland::Client::TextInput::ContentPurpose::Email << KWaylandServer::TextInputContentPurpose::Email;
+    QTest::newRow("Name/v2") << KWayland::Client::TextInput::ContentPurpose::Name << KWaylandServer::TextInputContentPurpose::Name;
+    QTest::newRow("Password/v2") << KWayland::Client::TextInput::ContentPurpose::Password << KWaylandServer::TextInputContentPurpose::Password;
+    QTest::newRow("Date/v2") << KWayland::Client::TextInput::ContentPurpose::Date << KWaylandServer::TextInputContentPurpose::Date;
+    QTest::newRow("Time/v2") << KWayland::Client::TextInput::ContentPurpose::Time << KWaylandServer::TextInputContentPurpose::Time;
+    QTest::newRow("Datetime/v2") << KWayland::Client::TextInput::ContentPurpose::DateTime << KWaylandServer::TextInputContentPurpose::DateTime;
+    QTest::newRow("Terminal/v2") << KWayland::Client::TextInput::ContentPurpose::Terminal << KWaylandServer::TextInputContentPurpose::Terminal;
 }
 
 void TextInputTest::testContentPurpose()
 {
     // this test verifies that content purpose are properly passed from client to server
-    std::unique_ptr<Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
 
-    std::unique_ptr<TextInput> textInput(createTextInput());
+    std::unique_ptr<KWayland::Client::TextInput> textInput(createTextInput());
     QVERIFY(textInput != nullptr);
     textInput->enable(surface.get());
     m_connection->flush();
@@ -553,17 +552,17 @@ void TextInputTest::testContentPurpose()
     QCOMPARE(ti->contentPurpose(), KWaylandServer::TextInputContentPurpose::Normal);
 
     QSignalSpy contentTypeChangedSpy(ti, &TextInputV2Interface::contentTypeChanged);
-    QFETCH(TextInput::ContentPurpose, clientPurpose);
-    textInput->setContentType(TextInput::ContentHints(), clientPurpose);
+    QFETCH(KWayland::Client::TextInput::ContentPurpose, clientPurpose);
+    textInput->setContentType(KWayland::Client::TextInput::ContentHints(), clientPurpose);
     QVERIFY(contentTypeChangedSpy.wait());
     QTEST(ti->contentPurpose(), "serverPurpose");
 
     // setting to same should not trigger an update
-    textInput->setContentType(TextInput::ContentHints(), clientPurpose);
+    textInput->setContentType(KWayland::Client::TextInput::ContentHints(), clientPurpose);
     QVERIFY(!contentTypeChangedSpy.wait(100));
 
     // unsetting should work
-    textInput->setContentType(TextInput::ContentHints(), TextInput::ContentPurpose::Normal);
+    textInput->setContentType(KWayland::Client::TextInput::ContentHints(), KWayland::Client::TextInput::ContentPurpose::Normal);
     QVERIFY(contentTypeChangedSpy.wait());
     QCOMPARE(ti->contentPurpose(), KWaylandServer::TextInputContentPurpose::Normal);
 }
@@ -582,11 +581,11 @@ void TextInputTest::testTextDirection_data()
 void TextInputTest::testTextDirection()
 {
     // this test verifies that the text direction is sent from server to client
-    std::unique_ptr<Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
 
-    std::unique_ptr<TextInput> textInput(createTextInput());
+    std::unique_ptr<KWayland::Client::TextInput> textInput(createTextInput());
     QVERIFY(textInput != nullptr);
     // default should be auto
     QCOMPARE(textInput->textDirection(), Qt::LayoutDirectionAuto);
@@ -599,7 +598,7 @@ void TextInputTest::testTextDirection()
     QVERIFY(ti);
 
     // let's send the new text direction
-    QSignalSpy textDirectionChangedSpy(textInput.get(), &TextInput::textDirectionChanged);
+    QSignalSpy textDirectionChangedSpy(textInput.get(), &KWayland::Client::TextInput::textDirectionChanged);
     QFETCH(Qt::LayoutDirection, textDirection);
     ti->setTextDirection(textDirection);
     QVERIFY(textDirectionChangedSpy.wait());
@@ -617,11 +616,11 @@ void TextInputTest::testTextDirection()
 void TextInputTest::testLanguage()
 {
     // this test verifies that language is sent from server to client
-    std::unique_ptr<Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
 
-    std::unique_ptr<TextInput> textInput(createTextInput());
+    std::unique_ptr<KWayland::Client::TextInput> textInput(createTextInput());
     QVERIFY(textInput != nullptr);
     // default should be empty
     QVERIFY(textInput->language().isEmpty());
@@ -634,7 +633,7 @@ void TextInputTest::testLanguage()
     QVERIFY(ti);
 
     // let's send the new language
-    QSignalSpy langugageChangedSpy(textInput.get(), &TextInput::languageChanged);
+    QSignalSpy langugageChangedSpy(textInput.get(), &KWayland::Client::TextInput::languageChanged);
     ti->setLanguage(QByteArrayLiteral("foo"));
     QVERIFY(langugageChangedSpy.wait());
     QCOMPARE(textInput->language(), QByteArrayLiteral("foo"));
@@ -650,13 +649,13 @@ void TextInputTest::testLanguage()
 void TextInputTest::testKeyEvent()
 {
     qRegisterMetaType<Qt::KeyboardModifiers>();
-    qRegisterMetaType<TextInput::KeyState>();
+    qRegisterMetaType<KWayland::Client::TextInput::KeyState>();
     // this test verifies that key events are properly sent to the client
-    std::unique_ptr<Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
 
-    std::unique_ptr<TextInput> textInput(createTextInput());
+    std::unique_ptr<KWayland::Client::TextInput> textInput(createTextInput());
     QVERIFY(textInput != nullptr);
     textInput->enable(surface.get());
     m_connection->flush();
@@ -667,13 +666,13 @@ void TextInputTest::testKeyEvent()
     QVERIFY(ti);
 
     // TODO: test modifiers
-    QSignalSpy keyEventSpy(textInput.get(), &TextInput::keyEvent);
+    QSignalSpy keyEventSpy(textInput.get(), &KWayland::Client::TextInput::keyEvent);
     m_seatInterface->setTimestamp(100);
     ti->keysymPressed(2);
     QVERIFY(keyEventSpy.wait());
     QCOMPARE(keyEventSpy.count(), 1);
     QCOMPARE(keyEventSpy.last().at(0).value<quint32>(), 2u);
-    QCOMPARE(keyEventSpy.last().at(1).value<TextInput::KeyState>(), TextInput::KeyState::Pressed);
+    QCOMPARE(keyEventSpy.last().at(1).value<KWayland::Client::TextInput::KeyState>(), KWayland::Client::TextInput::KeyState::Pressed);
     QCOMPARE(keyEventSpy.last().at(2).value<Qt::KeyboardModifiers>(), Qt::KeyboardModifiers());
     QCOMPARE(keyEventSpy.last().at(3).value<quint32>(), 100u);
     m_seatInterface->setTimestamp(101);
@@ -681,7 +680,7 @@ void TextInputTest::testKeyEvent()
     QVERIFY(keyEventSpy.wait());
     QCOMPARE(keyEventSpy.count(), 2);
     QCOMPARE(keyEventSpy.last().at(0).value<quint32>(), 2u);
-    QCOMPARE(keyEventSpy.last().at(1).value<TextInput::KeyState>(), TextInput::KeyState::Released);
+    QCOMPARE(keyEventSpy.last().at(1).value<KWayland::Client::TextInput::KeyState>(), KWayland::Client::TextInput::KeyState::Released);
     QCOMPARE(keyEventSpy.last().at(2).value<Qt::KeyboardModifiers>(), Qt::KeyboardModifiers());
     QCOMPARE(keyEventSpy.last().at(3).value<quint32>(), 101u);
 }
@@ -689,11 +688,11 @@ void TextInputTest::testKeyEvent()
 void TextInputTest::testPreEdit()
 {
     // this test verifies that pre-edit is correctly passed to the client
-    std::unique_ptr<Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
 
-    std::unique_ptr<TextInput> textInput(createTextInput());
+    std::unique_ptr<KWayland::Client::TextInput> textInput(createTextInput());
     QVERIFY(textInput != nullptr);
     // verify default values
     QVERIFY(textInput->composingText().isEmpty());
@@ -709,7 +708,7 @@ void TextInputTest::testPreEdit()
     QVERIFY(ti);
 
     // now let's pass through some pre-edit events
-    QSignalSpy composingTextChangedSpy(textInput.get(), &TextInput::composingTextChanged);
+    QSignalSpy composingTextChangedSpy(textInput.get(), &KWayland::Client::TextInput::composingTextChanged);
     ti->setPreEditCursor(1);
     ti->preEdit(QByteArrayLiteral("foo"), QByteArrayLiteral("bar"));
     QVERIFY(composingTextChangedSpy.wait());
@@ -730,11 +729,11 @@ void TextInputTest::testPreEdit()
 void TextInputTest::testCommit()
 {
     // this test verifies that the commit is handled correctly by the client
-    std::unique_ptr<Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     auto serverSurface = waitForSurface();
     QVERIFY(serverSurface);
 
-    std::unique_ptr<TextInput> textInput(createTextInput());
+    std::unique_ptr<KWayland::Client::TextInput> textInput(createTextInput());
     QVERIFY(textInput != nullptr);
     // verify default values
     QCOMPARE(textInput->commitText(), QByteArray());
@@ -752,7 +751,7 @@ void TextInputTest::testCommit()
     QVERIFY(ti);
 
     // now let's commit
-    QSignalSpy committedSpy(textInput.get(), &TextInput::committed);
+    QSignalSpy committedSpy(textInput.get(), &KWayland::Client::TextInput::committed);
     ti->setCursorPosition(3, 4);
     ti->deleteSurroundingText(2, 1);
     ti->commitString(QByteArrayLiteral("foo"));

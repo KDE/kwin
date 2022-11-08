@@ -56,7 +56,6 @@ TestServerSideDecoration::TestServerSideDecoration(QObject *parent)
 void TestServerSideDecoration::init()
 {
     using namespace KWaylandServer;
-    using namespace KWayland::Client;
     delete m_display;
     m_display = new KWaylandServer::Display(this);
     m_display->addSocketName(s_socketName);
@@ -65,7 +64,7 @@ void TestServerSideDecoration::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -75,14 +74,14 @@ void TestServerSideDecoration::init()
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new EventQueue(this);
+    m_queue = new KWayland::Client::EventQueue(this);
     QVERIFY(!m_queue->isValid());
     m_queue->setup(m_connection);
     QVERIFY(m_queue->isValid());
 
-    m_registry = new Registry();
-    QSignalSpy compositorSpy(m_registry, &Registry::compositorAnnounced);
-    QSignalSpy serverSideDecoManagerSpy(m_registry, &Registry::serverSideDecorationManagerAnnounced);
+    m_registry = new KWayland::Client::Registry();
+    QSignalSpy compositorSpy(m_registry, &KWayland::Client::Registry::compositorAnnounced);
+    QSignalSpy serverSideDecoManagerSpy(m_registry, &KWayland::Client::Registry::serverSideDecorationManagerAnnounced);
 
     QVERIFY(!m_registry->eventQueue());
     m_registry->setEventQueue(m_queue);
@@ -136,19 +135,17 @@ void TestServerSideDecoration::cleanup()
 
 void TestServerSideDecoration::testCreate_data()
 {
-    using namespace KWayland::Client;
     using namespace KWaylandServer;
     QTest::addColumn<ServerSideDecorationManagerInterface::Mode>("serverMode");
-    QTest::addColumn<ServerSideDecoration::Mode>("clientMode");
+    QTest::addColumn<KWayland::Client::ServerSideDecoration::Mode>("clientMode");
 
-    QTest::newRow("none") << ServerSideDecorationManagerInterface::Mode::None << ServerSideDecoration::Mode::None;
-    QTest::newRow("client") << ServerSideDecorationManagerInterface::Mode::Client << ServerSideDecoration::Mode::Client;
-    QTest::newRow("server") << ServerSideDecorationManagerInterface::Mode::Server << ServerSideDecoration::Mode::Server;
+    QTest::newRow("none") << ServerSideDecorationManagerInterface::Mode::None << KWayland::Client::ServerSideDecoration::Mode::None;
+    QTest::newRow("client") << ServerSideDecorationManagerInterface::Mode::Client << KWayland::Client::ServerSideDecoration::Mode::Client;
+    QTest::newRow("server") << ServerSideDecorationManagerInterface::Mode::Server << KWayland::Client::ServerSideDecoration::Mode::Server;
 }
 
 void TestServerSideDecoration::testCreate()
 {
-    using namespace KWayland::Client;
     using namespace KWaylandServer;
     QFETCH(KWaylandServer::ServerSideDecorationManagerInterface::Mode, serverMode);
     m_serverSideDecorationManagerInterface->setDefaultMode(serverMode);
@@ -157,16 +154,16 @@ void TestServerSideDecoration::testCreate()
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
     QSignalSpy decorationCreated(m_serverSideDecorationManagerInterface, &ServerSideDecorationManagerInterface::decorationCreated);
 
-    std::unique_ptr<Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(serverSurfaceCreated.wait());
 
     auto serverSurface = serverSurfaceCreated.first().first().value<SurfaceInterface *>();
     QVERIFY(!ServerSideDecorationInterface::get(serverSurface));
 
     // create server side deco
-    std::unique_ptr<ServerSideDecoration> serverSideDecoration(m_serverSideDecorationManager->create(surface.get()));
-    QCOMPARE(serverSideDecoration->mode(), ServerSideDecoration::Mode::None);
-    QSignalSpy modeChangedSpy(serverSideDecoration.get(), &ServerSideDecoration::modeChanged);
+    std::unique_ptr<KWayland::Client::ServerSideDecoration> serverSideDecoration(m_serverSideDecorationManager->create(surface.get()));
+    QCOMPARE(serverSideDecoration->mode(), KWayland::Client::ServerSideDecoration::Mode::None);
+    QSignalSpy modeChangedSpy(serverSideDecoration.get(), &KWayland::Client::ServerSideDecoration::modeChanged);
 
     QVERIFY(decorationCreated.wait());
 
@@ -188,19 +185,18 @@ void TestServerSideDecoration::testCreate()
 
 void TestServerSideDecoration::testRequest_data()
 {
-    using namespace KWayland::Client;
     using namespace KWaylandServer;
     QTest::addColumn<ServerSideDecorationManagerInterface::Mode>("defaultMode");
-    QTest::addColumn<ServerSideDecoration::Mode>("clientMode");
-    QTest::addColumn<ServerSideDecoration::Mode>("clientRequestMode");
+    QTest::addColumn<KWayland::Client::ServerSideDecoration::Mode>("clientMode");
+    QTest::addColumn<KWayland::Client::ServerSideDecoration::Mode>("clientRequestMode");
     QTest::addColumn<ServerSideDecorationManagerInterface::Mode>("serverRequestedMode");
 
     const auto serverNone = ServerSideDecorationManagerInterface::Mode::None;
     const auto serverClient = ServerSideDecorationManagerInterface::Mode::Client;
     const auto serverServer = ServerSideDecorationManagerInterface::Mode::Server;
-    const auto clientNone = ServerSideDecoration::Mode::None;
-    const auto clientClient = ServerSideDecoration::Mode::Client;
-    const auto clientServer = ServerSideDecoration::Mode::Server;
+    const auto clientNone = KWayland::Client::ServerSideDecoration::Mode::None;
+    const auto clientClient = KWayland::Client::ServerSideDecoration::Mode::Client;
+    const auto clientServer = KWayland::Client::ServerSideDecoration::Mode::Server;
 
     QTest::newRow("none->none") << serverNone << clientNone << clientNone << serverNone;
     QTest::newRow("none->client") << serverNone << clientNone << clientClient << serverClient;
@@ -215,7 +211,6 @@ void TestServerSideDecoration::testRequest_data()
 
 void TestServerSideDecoration::testRequest()
 {
-    using namespace KWayland::Client;
     using namespace KWaylandServer;
     QFETCH(KWaylandServer::ServerSideDecorationManagerInterface::Mode, defaultMode);
     m_serverSideDecorationManagerInterface->setDefaultMode(defaultMode);
@@ -225,10 +220,10 @@ void TestServerSideDecoration::testRequest()
     QSignalSpy decorationCreated(m_serverSideDecorationManagerInterface, &ServerSideDecorationManagerInterface::decorationCreated);
 
     // create server side deco
-    std::unique_ptr<Surface> surface(m_compositor->createSurface());
-    std::unique_ptr<ServerSideDecoration> serverSideDecoration(m_serverSideDecorationManager->create(surface.get()));
-    QCOMPARE(serverSideDecoration->mode(), ServerSideDecoration::Mode::None);
-    QSignalSpy modeChangedSpy(serverSideDecoration.get(), &ServerSideDecoration::modeChanged);
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::ServerSideDecoration> serverSideDecoration(m_serverSideDecorationManager->create(surface.get()));
+    QCOMPARE(serverSideDecoration->mode(), KWayland::Client::ServerSideDecoration::Mode::None);
+    QSignalSpy modeChangedSpy(serverSideDecoration.get(), &KWayland::Client::ServerSideDecoration::modeChanged);
     QVERIFY(decorationCreated.wait());
 
     auto serverDeco = decorationCreated.first().first().value<ServerSideDecorationInterface *>();
@@ -241,7 +236,7 @@ void TestServerSideDecoration::testRequest()
     QTEST(serverSideDecoration->mode(), "clientMode");
 
     // request a change
-    QFETCH(ServerSideDecoration::Mode, clientRequestMode);
+    QFETCH(KWayland::Client::ServerSideDecoration::Mode, clientRequestMode);
     serverSideDecoration->requestMode(clientRequestMode);
     // mode not yet changed
     QTEST(serverSideDecoration->mode(), "clientMode");
@@ -264,7 +259,6 @@ void TestServerSideDecoration::testRequest()
 
 void TestServerSideDecoration::testSurfaceDestroy()
 {
-    using namespace KWayland::Client;
     using namespace KWaylandServer;
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
     QSignalSpy decorationCreated(m_serverSideDecorationManagerInterface, &ServerSideDecorationManagerInterface::decorationCreated);
@@ -273,8 +267,8 @@ void TestServerSideDecoration::testSurfaceDestroy()
     QVERIFY(serverSurfaceCreated.wait());
 
     auto serverSurface = serverSurfaceCreated.first().first().value<SurfaceInterface *>();
-    std::unique_ptr<ServerSideDecoration> serverSideDecoration(m_serverSideDecorationManager->create(surface.get()));
-    QCOMPARE(serverSideDecoration->mode(), ServerSideDecoration::Mode::None);
+    std::unique_ptr<KWayland::Client::ServerSideDecoration> serverSideDecoration(m_serverSideDecorationManager->create(surface.get()));
+    QCOMPARE(serverSideDecoration->mode(), KWayland::Client::ServerSideDecoration::Mode::None);
     QVERIFY(decorationCreated.wait());
     auto serverDeco = decorationCreated.first().first().value<ServerSideDecorationInterface *>();
     QVERIFY(serverDeco);

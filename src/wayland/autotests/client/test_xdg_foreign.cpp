@@ -20,8 +20,6 @@
 #include "KWayland/Client/surface.h"
 #include "KWayland/Client/xdgforeign.h"
 
-using namespace KWayland::Client;
-
 class TestForeign : public QObject
 {
     Q_OBJECT
@@ -91,7 +89,7 @@ void TestForeign::init()
     qRegisterMetaType<SurfaceInterface *>();
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -106,12 +104,12 @@ void TestForeign::init()
     m_queue->setup(m_connection);
     QVERIFY(m_queue->isValid());
 
-    Registry registry;
-    QSignalSpy compositorSpy(&registry, &Registry::compositorAnnounced);
+    KWayland::Client::Registry registry;
+    QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
 
-    QSignalSpy exporterSpy(&registry, &Registry::exporterUnstableV2Announced);
+    QSignalSpy exporterSpy(&registry, &KWayland::Client::Registry::exporterUnstableV2Announced);
 
-    QSignalSpy importerSpy(&registry, &Registry::importerUnstableV2Announced);
+    QSignalSpy importerSpy(&registry, &KWayland::Client::Registry::importerUnstableV2Announced);
 
     QVERIFY(!registry.eventQueue());
     registry.setEventQueue(m_queue);
@@ -177,7 +175,7 @@ void TestForeign::doExport()
     // Export a window
     m_exported = m_exporter->exportTopLevel(m_exportedSurface);
     QVERIFY(m_exported->handle().isEmpty());
-    QSignalSpy doneSpy(m_exported.data(), &XdgExported::done);
+    QSignalSpy doneSpy(m_exported.data(), &KWayland::Client::XdgExported::done);
     QVERIFY(doneSpy.wait());
     QVERIFY(!m_exported->handle().isEmpty());
 
@@ -191,7 +189,7 @@ void TestForeign::doExport()
     m_childSurface = m_compositor->createSurface();
     QVERIFY(childSurfaceInterfaceCreated.wait());
     m_childSurfaceInterface = childSurfaceInterfaceCreated.first().first().value<KWaylandServer::SurfaceInterface *>();
-    m_childSurface->commit(Surface::CommitFlag::None);
+    m_childSurface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     m_imported->setParentOf(m_childSurface);
     QVERIFY(transientSpy.wait());
@@ -278,7 +276,7 @@ void TestForeign::testExportTwoTimes()
     // Export second window
     KWayland::Client::XdgExported *exported2 = m_exporter->exportTopLevel(m_exportedSurface);
     QVERIFY(exported2->handle().isEmpty());
-    QSignalSpy doneSpy(exported2, &XdgExported::done);
+    QSignalSpy doneSpy(exported2, &KWayland::Client::XdgExported::done);
     QVERIFY(doneSpy.wait());
     QVERIFY(!exported2->handle().isEmpty());
 

@@ -17,7 +17,6 @@
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/surface.h"
 
-using namespace KWayland::Client;
 using namespace KWaylandServer;
 
 class TestPlasmaShell : public QObject
@@ -44,12 +43,12 @@ private:
     CompositorInterface *m_compositorInterface = nullptr;
     PlasmaShellInterface *m_plasmaShellInterface = nullptr;
 
-    ConnectionThread *m_connection = nullptr;
-    Compositor *m_compositor = nullptr;
-    EventQueue *m_queue = nullptr;
+    KWayland::Client::ConnectionThread *m_connection = nullptr;
+    KWayland::Client::Compositor *m_compositor = nullptr;
+    KWayland::Client::EventQueue *m_queue = nullptr;
     QThread *m_thread = nullptr;
-    Registry *m_registry = nullptr;
-    PlasmaShell *m_plasmaShell = nullptr;
+    KWayland::Client::Registry *m_registry = nullptr;
+    KWayland::Client::PlasmaShell *m_plasmaShell = nullptr;
 };
 
 static const QString s_socketName = QStringLiteral("kwayland-test-wayland-plasma-shell-0");
@@ -69,7 +68,7 @@ void TestPlasmaShell::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -79,13 +78,13 @@ void TestPlasmaShell::init()
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new EventQueue(this);
+    m_queue = new KWayland::Client::EventQueue(this);
     QVERIFY(!m_queue->isValid());
     m_queue->setup(m_connection);
     QVERIFY(m_queue->isValid());
 
-    m_registry = new Registry();
-    QSignalSpy interfacesAnnouncedSpy(m_registry, &Registry::interfaceAnnounced);
+    m_registry = new KWayland::Client::Registry();
+    QSignalSpy interfacesAnnouncedSpy(m_registry, &KWayland::Client::Registry::interfaceAnnounced);
 
     QVERIFY(!m_registry->eventQueue());
     m_registry->setEventQueue(m_queue);
@@ -97,7 +96,7 @@ void TestPlasmaShell::init()
     QVERIFY(interfacesAnnouncedSpy.wait());
 #define CREATE(variable, factory, iface)                                                                                                                      \
     variable =                                                                                                                                                \
-        m_registry->create##factory(m_registry->interface(Registry::Interface::iface).name, m_registry->interface(Registry::Interface::iface).version, this); \
+        m_registry->create##factory(m_registry->interface(KWayland::Client::Registry::Interface::iface).name, m_registry->interface(KWayland::Client::Registry::Interface::iface).version, this); \
     QVERIFY(variable);
 
     CREATE(m_compositor, Compositor, Compositor)
@@ -136,13 +135,13 @@ void TestPlasmaShell::testRole_data()
     QTest::addColumn<KWayland::Client::PlasmaShellSurface::Role>("clientRole");
     QTest::addColumn<KWaylandServer::PlasmaShellSurfaceInterface::Role>("serverRole");
 
-    QTest::newRow("desktop") << PlasmaShellSurface::Role::Desktop << PlasmaShellSurfaceInterface::Role::Desktop;
-    QTest::newRow("osd") << PlasmaShellSurface::Role::OnScreenDisplay << PlasmaShellSurfaceInterface::Role::OnScreenDisplay;
-    QTest::newRow("panel") << PlasmaShellSurface::Role::Panel << PlasmaShellSurfaceInterface::Role::Panel;
-    QTest::newRow("notification") << PlasmaShellSurface::Role::Notification << PlasmaShellSurfaceInterface::Role::Notification;
-    QTest::newRow("tooltip") << PlasmaShellSurface::Role::ToolTip << PlasmaShellSurfaceInterface::Role::ToolTip;
-    QTest::newRow("criticalnotification") << PlasmaShellSurface::Role::CriticalNotification << PlasmaShellSurfaceInterface::Role::CriticalNotification;
-    QTest::newRow("appletPopup") << PlasmaShellSurface::Role::AppletPopup << PlasmaShellSurfaceInterface::Role::AppletPopup;
+    QTest::newRow("desktop") << KWayland::Client::PlasmaShellSurface::Role::Desktop << PlasmaShellSurfaceInterface::Role::Desktop;
+    QTest::newRow("osd") << KWayland::Client::PlasmaShellSurface::Role::OnScreenDisplay << PlasmaShellSurfaceInterface::Role::OnScreenDisplay;
+    QTest::newRow("panel") << KWayland::Client::PlasmaShellSurface::Role::Panel << PlasmaShellSurfaceInterface::Role::Panel;
+    QTest::newRow("notification") << KWayland::Client::PlasmaShellSurface::Role::Notification << PlasmaShellSurfaceInterface::Role::Notification;
+    QTest::newRow("tooltip") << KWayland::Client::PlasmaShellSurface::Role::ToolTip << PlasmaShellSurfaceInterface::Role::ToolTip;
+    QTest::newRow("criticalnotification") << KWayland::Client::PlasmaShellSurface::Role::CriticalNotification << PlasmaShellSurfaceInterface::Role::CriticalNotification;
+    QTest::newRow("appletPopup") << KWayland::Client::PlasmaShellSurface::Role::AppletPopup << PlasmaShellSurfaceInterface::Role::AppletPopup;
 }
 
 void TestPlasmaShell::testRole()
@@ -154,13 +153,13 @@ void TestPlasmaShell::testRole()
     QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
 
     // create the surface
-    std::unique_ptr<Surface> s(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> s(m_compositor->createSurface());
     // no PlasmaShellSurface for the Surface yet yet
-    QVERIFY(!PlasmaShellSurface::get(s.get()));
-    std::unique_ptr<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
-    QCOMPARE(ps->role(), PlasmaShellSurface::Role::Normal);
+    QVERIFY(!KWayland::Client::PlasmaShellSurface::get(s.get()));
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
+    QCOMPARE(ps->role(), KWayland::Client::PlasmaShellSurface::Role::Normal);
     // now we should have a PlasmaShellSurface for
-    QCOMPARE(PlasmaShellSurface::get(s.get()), ps.get());
+    QCOMPARE(KWayland::Client::PlasmaShellSurface::get(s.get()), ps.get());
 
     // try to create another PlasmaShellSurface for the same Surface, should return from cache
     QCOMPARE(m_plasmaShell->createSurface(s.get()), ps.get());
@@ -181,7 +180,7 @@ void TestPlasmaShell::testRole()
 
     // now change it
     QSignalSpy roleChangedSpy(sps, &PlasmaShellSurfaceInterface::roleChanged);
-    QFETCH(PlasmaShellSurface::Role, clientRole);
+    QFETCH(KWayland::Client::PlasmaShellSurface::Role, clientRole);
     ps->setRole(clientRole);
     QCOMPARE(ps->role(), clientRole);
     QVERIFY(roleChangedSpy.wait());
@@ -193,8 +192,8 @@ void TestPlasmaShell::testRole()
     QVERIFY(!roleChangedSpy.wait(100));
 
     // set role back to normal
-    ps->setRole(PlasmaShellSurface::Role::Normal);
-    QCOMPARE(ps->role(), PlasmaShellSurface::Role::Normal);
+    ps->setRole(KWayland::Client::PlasmaShellSurface::Role::Normal);
+    QCOMPARE(ps->role(), KWayland::Client::PlasmaShellSurface::Role::Normal);
     QVERIFY(roleChangedSpy.wait());
     QCOMPARE(roleChangedSpy.count(), 2);
     QCOMPARE(sps->role(), PlasmaShellSurfaceInterface::Role::Normal);
@@ -205,8 +204,8 @@ void TestPlasmaShell::testPosition()
     // this test verifies that updating the position of a PlasmaShellSurface is properly passed to the server
     QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
 
-    std::unique_ptr<Surface> s(m_compositor->createSurface());
-    std::unique_ptr<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
+    std::unique_ptr<KWayland::Client::Surface> s(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
     QVERIFY(plasmaSurfaceCreatedSpy.wait());
     QCOMPARE(plasmaSurfaceCreatedSpy.count(), 1);
 
@@ -242,8 +241,8 @@ void TestPlasmaShell::testSkipTaskbar()
     // this test verifies that sip taskbar is properly passed to server
     QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
 
-    std::unique_ptr<Surface> s(m_compositor->createSurface());
-    std::unique_ptr<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
+    std::unique_ptr<KWayland::Client::Surface> s(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
     QVERIFY(plasmaSurfaceCreatedSpy.wait());
     QCOMPARE(plasmaSurfaceCreatedSpy.count(), 1);
 
@@ -275,8 +274,8 @@ void TestPlasmaShell::testSkipSwitcher()
     // this test verifies that Skip Switcher is properly passed to server
     QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
 
-    std::unique_ptr<Surface> s(m_compositor->createSurface());
-    std::unique_ptr<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
+    std::unique_ptr<KWayland::Client::Surface> s(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
     QVERIFY(plasmaSurfaceCreatedSpy.wait());
     QCOMPARE(plasmaSurfaceCreatedSpy.count(), 1);
 
@@ -305,12 +304,12 @@ void TestPlasmaShell::testSkipSwitcher()
 
 void TestPlasmaShell::testPanelBehavior_data()
 {
-    QTest::addColumn<PlasmaShellSurface::PanelBehavior>("client");
+    QTest::addColumn<KWayland::Client::PlasmaShellSurface::PanelBehavior>("client");
     QTest::addColumn<PlasmaShellSurfaceInterface::PanelBehavior>("server");
 
-    QTest::newRow("autohide") << PlasmaShellSurface::PanelBehavior::AutoHide << PlasmaShellSurfaceInterface::PanelBehavior::AutoHide;
-    QTest::newRow("can cover") << PlasmaShellSurface::PanelBehavior::WindowsCanCover << PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover;
-    QTest::newRow("go below") << PlasmaShellSurface::PanelBehavior::WindowsGoBelow << PlasmaShellSurfaceInterface::PanelBehavior::WindowsGoBelow;
+    QTest::newRow("autohide") << KWayland::Client::PlasmaShellSurface::PanelBehavior::AutoHide << PlasmaShellSurfaceInterface::PanelBehavior::AutoHide;
+    QTest::newRow("can cover") << KWayland::Client::PlasmaShellSurface::PanelBehavior::WindowsCanCover << PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover;
+    QTest::newRow("go below") << KWayland::Client::PlasmaShellSurface::PanelBehavior::WindowsGoBelow << PlasmaShellSurfaceInterface::PanelBehavior::WindowsGoBelow;
 }
 
 void TestPlasmaShell::testPanelBehavior()
@@ -318,9 +317,9 @@ void TestPlasmaShell::testPanelBehavior()
     // this test verifies that the panel behavior is properly passed to the server
     QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
 
-    std::unique_ptr<Surface> s(m_compositor->createSurface());
-    std::unique_ptr<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
-    ps->setRole(PlasmaShellSurface::Role::Panel);
+    std::unique_ptr<KWayland::Client::Surface> s(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
+    ps->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
     QVERIFY(plasmaSurfaceCreatedSpy.wait());
     QCOMPARE(plasmaSurfaceCreatedSpy.count(), 1);
 
@@ -332,7 +331,7 @@ void TestPlasmaShell::testPanelBehavior()
 
     // now change the behavior
     QSignalSpy behaviorChangedSpy(sps, &PlasmaShellSurfaceInterface::panelBehaviorChanged);
-    QFETCH(PlasmaShellSurface::PanelBehavior, client);
+    QFETCH(KWayland::Client::PlasmaShellSurface::PanelBehavior, client);
     ps->setPanelBehavior(client);
     QVERIFY(behaviorChangedSpy.wait());
     QTEST(sps->panelBehavior(), "server");
@@ -342,7 +341,7 @@ void TestPlasmaShell::testPanelBehavior()
     QVERIFY(!behaviorChangedSpy.wait(100));
 
     // but changing back to Always Visible should work
-    ps->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AlwaysVisible);
+    ps->setPanelBehavior(KWayland::Client::PlasmaShellSurface::PanelBehavior::AlwaysVisible);
     QVERIFY(behaviorChangedSpy.wait());
     QCOMPARE(sps->panelBehavior(), PlasmaShellSurfaceInterface::PanelBehavior::AlwaysVisible);
 }
@@ -352,10 +351,10 @@ void TestPlasmaShell::testAutoHidePanel()
     // this test verifies that auto-hiding panels work correctly
     QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
 
-    std::unique_ptr<Surface> s(m_compositor->createSurface());
-    std::unique_ptr<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
-    ps->setRole(PlasmaShellSurface::Role::Panel);
-    ps->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AutoHide);
+    std::unique_ptr<KWayland::Client::Surface> s(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
+    ps->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
+    ps->setPanelBehavior(KWayland::Client::PlasmaShellSurface::PanelBehavior::AutoHide);
     QVERIFY(plasmaSurfaceCreatedSpy.wait());
     QCOMPARE(plasmaSurfaceCreatedSpy.count(), 1);
     auto sps = plasmaSurfaceCreatedSpy.first().first().value<PlasmaShellSurfaceInterface *>();
@@ -369,8 +368,8 @@ void TestPlasmaShell::testAutoHidePanel()
     QCOMPARE(autoHideRequestedSpy.count(), 1);
     QCOMPARE(autoHideShowRequestedSpy.count(), 0);
 
-    QSignalSpy panelShownSpy(ps.get(), &PlasmaShellSurface::autoHidePanelShown);
-    QSignalSpy panelHiddenSpy(ps.get(), &PlasmaShellSurface::autoHidePanelHidden);
+    QSignalSpy panelShownSpy(ps.get(), &KWayland::Client::PlasmaShellSurface::autoHidePanelShown);
+    QSignalSpy panelHiddenSpy(ps.get(), &KWayland::Client::PlasmaShellSurface::autoHidePanelHidden);
 
     sps->hideAutoHidingPanel();
     QVERIFY(panelHiddenSpy.wait());
@@ -388,9 +387,9 @@ void TestPlasmaShell::testAutoHidePanel()
     QCOMPARE(panelShownSpy.count(), 1);
 
     // change panel type
-    ps->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AlwaysVisible);
+    ps->setPanelBehavior(KWayland::Client::PlasmaShellSurface::PanelBehavior::AlwaysVisible);
     // requesting auto hide should raise error
-    QSignalSpy errorSpy(m_connection, &ConnectionThread::errorOccurred);
+    QSignalSpy errorSpy(m_connection, &KWayland::Client::ConnectionThread::errorOccurred);
     ps->requestHideAutoHidingPanel();
     QVERIFY(errorSpy.wait());
 }
@@ -400,9 +399,9 @@ void TestPlasmaShell::testPanelTakesFocus()
     // this test verifies that whether a panel wants to take focus is passed through correctly
     QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
 
-    std::unique_ptr<Surface> s(m_compositor->createSurface());
-    std::unique_ptr<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
-    ps->setRole(PlasmaShellSurface::Role::Panel);
+    std::unique_ptr<KWayland::Client::Surface> s(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
+    ps->setRole(KWayland::Client::PlasmaShellSurface::Role::Panel);
     QVERIFY(plasmaSurfaceCreatedSpy.wait());
     QCOMPARE(plasmaSurfaceCreatedSpy.count(), 1);
     auto sps = plasmaSurfaceCreatedSpy.first().first().value<PlasmaShellSurfaceInterface *>();
@@ -429,8 +428,8 @@ void TestPlasmaShell::testDisconnect()
     // this test verifies that a disconnect cleans up
     QSignalSpy plasmaSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
     // create the surface
-    std::unique_ptr<Surface> s(m_compositor->createSurface());
-    std::unique_ptr<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
+    std::unique_ptr<KWayland::Client::Surface> s(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
 
     // and get them on the server
     QVERIFY(plasmaSurfaceCreatedSpy.wait());
@@ -462,18 +461,18 @@ void TestPlasmaShell::testWhileDestroying()
     // used for a previous Surface. For each Surface we try to create a PlasmaShellSurface.
     // Even if there was a Surface in the past with the same ID, it should create the PlasmaShellSurface
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    std::unique_ptr<Surface> s(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> s(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
     auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
 
     // create ShellSurface
     QSignalSpy shellSurfaceCreatedSpy(m_plasmaShellInterface, &PlasmaShellInterface::surfaceCreated);
-    std::unique_ptr<PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> ps(m_plasmaShell->createSurface(s.get()));
     QVERIFY(shellSurfaceCreatedSpy.wait());
 
     // now try to create more surfaces
-    QSignalSpy clientErrorSpy(m_connection, &ConnectionThread::errorOccurred);
+    QSignalSpy clientErrorSpy(m_connection, &KWayland::Client::ConnectionThread::errorOccurred);
     for (int i = 0; i < 100; i++) {
         s.reset();
         s.reset(m_compositor->createSurface());

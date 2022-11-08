@@ -16,7 +16,6 @@
 
 #include <linux/input.h>
 
-using namespace KWayland::Client;
 using namespace KWaylandServer;
 
 Q_DECLARE_METATYPE(Qt::MouseButton)
@@ -45,10 +44,10 @@ private:
     KWaylandServer::Display *m_display = nullptr;
     FakeInputInterface *m_fakeInputInterface = nullptr;
     FakeInputDevice *m_device = nullptr;
-    ConnectionThread *m_connection = nullptr;
+    KWayland::Client::ConnectionThread *m_connection = nullptr;
     QThread *m_thread = nullptr;
-    EventQueue *m_queue = nullptr;
-    FakeInput *m_fakeInput = nullptr;
+    KWayland::Client::EventQueue *m_queue = nullptr;
+    KWayland::Client::FakeInput *m_fakeInput = nullptr;
 };
 
 static const QString s_socketName = QStringLiteral("kwayland-test-fake-input-0");
@@ -66,7 +65,7 @@ void FakeInputTest::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -76,11 +75,11 @@ void FakeInputTest::init()
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new EventQueue(this);
+    m_queue = new KWayland::Client::EventQueue(this);
     m_queue->setup(m_connection);
 
-    Registry registry;
-    QSignalSpy interfacesAnnouncedSpy(&registry, &Registry::interfacesAnnounced);
+    KWayland::Client::Registry registry;
+    QSignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
     registry.setEventQueue(m_queue);
     registry.create(m_connection);
     QVERIFY(registry.isValid());
@@ -88,7 +87,7 @@ void FakeInputTest::init()
     QVERIFY(interfacesAnnouncedSpy.wait());
 
     m_fakeInput =
-        registry.createFakeInput(registry.interface(Registry::Interface::FakeInput).name, registry.interface(Registry::Interface::FakeInput).version, this);
+        registry.createFakeInput(registry.interface(KWayland::Client::Registry::Interface::FakeInput).name, registry.interface(KWayland::Client::Registry::Interface::FakeInput).version, this);
     QVERIFY(m_fakeInput->isValid());
 
     QVERIFY(deviceCreatedSpy.wait());

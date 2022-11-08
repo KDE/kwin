@@ -19,8 +19,6 @@
 #include "KWayland/Client/server_decoration_palette.h"
 #include "KWayland/Client/surface.h"
 
-using namespace KWayland::Client;
-
 class TestServerSideDecorationPalette : public QObject
 {
     Q_OBJECT
@@ -67,7 +65,7 @@ void TestServerSideDecorationPalette::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -82,10 +80,10 @@ void TestServerSideDecorationPalette::init()
     m_queue->setup(m_connection);
     QVERIFY(m_queue->isValid());
 
-    Registry registry;
-    QSignalSpy compositorSpy(&registry, &Registry::compositorAnnounced);
+    KWayland::Client::Registry registry;
+    QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
 
-    QSignalSpy registrySpy(&registry, &Registry::serverSideDecorationPaletteManagerAnnounced);
+    QSignalSpy registrySpy(&registry, &KWayland::Client::Registry::serverSideDecorationPaletteManagerAnnounced);
 
     QVERIFY(!registry.eventQueue());
     registry.setEventQueue(m_queue);

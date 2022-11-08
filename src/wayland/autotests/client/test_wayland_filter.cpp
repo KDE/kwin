@@ -21,8 +21,6 @@
 
 #include <wayland-server.h>
 
-using namespace KWayland::Client;
-
 class TestDisplay;
 
 class TestFilter : public QObject
@@ -104,7 +102,7 @@ void TestFilter::testFilter()
 
     // setup connection
     std::unique_ptr<KWayland::Client::ConnectionThread> connection(new KWayland::Client::ConnectionThread());
-    QSignalSpy connectedSpy(connection.get(), &ConnectionThread::connected);
+    QSignalSpy connectedSpy(connection.get(), &KWayland::Client::ConnectionThread::connected);
     connection->setSocketName(s_socketName);
 
     std::unique_ptr<QThread> thread(new QThread(this));
@@ -127,10 +125,10 @@ void TestFilter::testFilter()
     KWayland::Client::EventQueue queue;
     queue.setup(connection.get());
 
-    Registry registry;
-    QSignalSpy registryDoneSpy(&registry, &Registry::interfacesAnnounced);
-    QSignalSpy compositorSpy(&registry, &Registry::compositorAnnounced);
-    QSignalSpy blurSpy(&registry, &Registry::blurAnnounced);
+    KWayland::Client::Registry registry;
+    QSignalSpy registryDoneSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
+    QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
+    QSignalSpy blurSpy(&registry, &KWayland::Client::Registry::blurAnnounced);
 
     registry.setEventQueue(&queue);
     registry.create(connection->display());

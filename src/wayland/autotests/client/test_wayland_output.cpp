@@ -57,7 +57,6 @@ TestWaylandOutput::TestWaylandOutput(QObject *parent)
 
 void TestWaylandOutput::init()
 {
-    using namespace KWaylandServer;
     delete m_display;
     m_display = new KWaylandServer::Display(this);
     m_display->addSocketName(s_socketName);
@@ -160,7 +159,6 @@ void TestWaylandOutput::testModeChange()
 
     auto outputInterface = std::make_unique<KWaylandServer::OutputInterface>(m_display, outputHandle.get());
 
-    using namespace KWayland::Client;
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputAnnounced);
     registry.setEventQueue(m_queue);
@@ -177,10 +175,10 @@ void TestWaylandOutput::testModeChange()
     wl_display_flush(m_connection->display());
     QVERIFY(outputChanged.wait());
     QCOMPARE(modeAddedSpy.count(), 1);
-    QCOMPARE(modeAddedSpy.at(0).first().value<Output::Mode>().size, QSize(1024, 768));
-    QCOMPARE(modeAddedSpy.at(0).first().value<Output::Mode>().refreshRate, 60000);
-    QCOMPARE(modeAddedSpy.at(0).first().value<Output::Mode>().flags, Output::Mode::Flags(Output::Mode::Flag::Current));
-    QCOMPARE(modeAddedSpy.at(0).first().value<Output::Mode>().output, QPointer<Output>(&output));
+    QCOMPARE(modeAddedSpy.at(0).first().value<KWayland::Client::Output::Mode>().size, QSize(1024, 768));
+    QCOMPARE(modeAddedSpy.at(0).first().value<KWayland::Client::Output::Mode>().refreshRate, 60000);
+    QCOMPARE(modeAddedSpy.at(0).first().value<KWayland::Client::Output::Mode>().flags, KWayland::Client::Output::Mode::Flags(KWayland::Client::Output::Mode::Flag::Current));
+    QCOMPARE(modeAddedSpy.at(0).first().value<KWayland::Client::Output::Mode>().output, QPointer<KWayland::Client::Output>(&output));
     QCOMPARE(output.pixelSize(), QSize(1024, 768));
     QCOMPARE(output.refreshRate(), 60000);
 
@@ -188,10 +186,10 @@ void TestWaylandOutput::testModeChange()
     outputHandle->setMode(QSize(1280, 1024), 90000);
     QVERIFY(outputChanged.wait());
     QCOMPARE(modeAddedSpy.count(), 2);
-    QCOMPARE(modeAddedSpy.at(1).first().value<Output::Mode>().size, QSize(1280, 1024));
-    QCOMPARE(modeAddedSpy.at(1).first().value<Output::Mode>().refreshRate, 90000);
-    QCOMPARE(modeAddedSpy.at(1).first().value<Output::Mode>().flags, Output::Mode::Flags(Output::Mode::Flag::Current));
-    QCOMPARE(modeAddedSpy.at(1).first().value<Output::Mode>().output, QPointer<Output>(&output));
+    QCOMPARE(modeAddedSpy.at(1).first().value<KWayland::Client::Output::Mode>().size, QSize(1280, 1024));
+    QCOMPARE(modeAddedSpy.at(1).first().value<KWayland::Client::Output::Mode>().refreshRate, 90000);
+    QCOMPARE(modeAddedSpy.at(1).first().value<KWayland::Client::Output::Mode>().flags, KWayland::Client::Output::Mode::Flags(KWayland::Client::Output::Mode::Flag::Current));
+    QCOMPARE(modeAddedSpy.at(1).first().value<KWayland::Client::Output::Mode>().output, QPointer<KWayland::Client::Output>(&output));
     QCOMPARE(output.pixelSize(), QSize(1280, 1024));
     QCOMPARE(output.refreshRate(), 90000);
 }
@@ -236,16 +234,14 @@ void TestWaylandOutput::testScaleChange()
 
 void TestWaylandOutput::testSubPixel_data()
 {
-    using namespace KWayland::Client;
-    using namespace KWaylandServer;
     QTest::addColumn<KWayland::Client::Output::SubPixel>("expected");
     QTest::addColumn<KWin::Output::SubPixel>("actual");
 
-    QTest::newRow("none") << Output::SubPixel::None << KWin::Output::SubPixel::None;
-    QTest::newRow("horizontal/rgb") << Output::SubPixel::HorizontalRGB << KWin::Output::SubPixel::Horizontal_RGB;
-    QTest::newRow("horizontal/bgr") << Output::SubPixel::HorizontalBGR << KWin::Output::SubPixel::Horizontal_BGR;
-    QTest::newRow("vertical/rgb") << Output::SubPixel::VerticalRGB << KWin::Output::SubPixel::Vertical_RGB;
-    QTest::newRow("vertical/bgr") << Output::SubPixel::VerticalBGR << KWin::Output::SubPixel::Vertical_BGR;
+    QTest::newRow("none") << KWayland::Client::Output::SubPixel::None << KWin::Output::SubPixel::None;
+    QTest::newRow("horizontal/rgb") << KWayland::Client::Output::SubPixel::HorizontalRGB << KWin::Output::SubPixel::Horizontal_RGB;
+    QTest::newRow("horizontal/bgr") << KWayland::Client::Output::SubPixel::HorizontalBGR << KWin::Output::SubPixel::Horizontal_BGR;
+    QTest::newRow("vertical/rgb") << KWayland::Client::Output::SubPixel::VerticalRGB << KWin::Output::SubPixel::Vertical_RGB;
+    QTest::newRow("vertical/bgr") << KWayland::Client::Output::SubPixel::VerticalBGR << KWin::Output::SubPixel::Vertical_BGR;
 }
 
 void TestWaylandOutput::testSubPixel()
@@ -257,9 +253,6 @@ void TestWaylandOutput::testSubPixel()
     outputHandle->setSubPixel(actual);
 
     auto outputInterface = std::make_unique<KWaylandServer::OutputInterface>(m_display, outputHandle.get());
-
-    using namespace KWayland::Client;
-    using namespace KWaylandServer;
 
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputAnnounced);
@@ -282,18 +275,16 @@ void TestWaylandOutput::testSubPixel()
 
 void TestWaylandOutput::testTransform_data()
 {
-    using namespace KWayland::Client;
-    using namespace KWaylandServer;
     QTest::addColumn<KWayland::Client::Output::Transform>("expected");
     QTest::addColumn<KWin::Output::Transform>("actual");
 
-    QTest::newRow("90") << Output::Transform::Rotated90 << KWin::Output::Transform::Rotated90;
-    QTest::newRow("180") << Output::Transform::Rotated180 << KWin::Output::Transform::Rotated180;
-    QTest::newRow("270") << Output::Transform::Rotated270 << KWin::Output::Transform::Rotated270;
-    QTest::newRow("Flipped") << Output::Transform::Flipped << KWin::Output::Transform::Flipped;
-    QTest::newRow("Flipped 90") << Output::Transform::Flipped90 << KWin::Output::Transform::Flipped90;
-    QTest::newRow("Flipped 180") << Output::Transform::Flipped180 << KWin::Output::Transform::Flipped180;
-    QTest::newRow("Flipped 280") << Output::Transform::Flipped270 << KWin::Output::Transform::Flipped270;
+    QTest::newRow("90") << KWayland::Client::Output::Transform::Rotated90 << KWin::Output::Transform::Rotated90;
+    QTest::newRow("180") << KWayland::Client::Output::Transform::Rotated180 << KWin::Output::Transform::Rotated180;
+    QTest::newRow("270") << KWayland::Client::Output::Transform::Rotated270 << KWin::Output::Transform::Rotated270;
+    QTest::newRow("Flipped") << KWayland::Client::Output::Transform::Flipped << KWin::Output::Transform::Flipped;
+    QTest::newRow("Flipped 90") << KWayland::Client::Output::Transform::Flipped90 << KWin::Output::Transform::Flipped90;
+    QTest::newRow("Flipped 180") << KWayland::Client::Output::Transform::Flipped180 << KWin::Output::Transform::Flipped180;
+    QTest::newRow("Flipped 280") << KWayland::Client::Output::Transform::Flipped270 << KWin::Output::Transform::Flipped270;
 }
 
 void TestWaylandOutput::testTransform()
@@ -306,7 +297,6 @@ void TestWaylandOutput::testTransform()
 
     auto outputInterface = std::make_unique<KWaylandServer::OutputInterface>(m_display, outputHandle.get());
 
-    using namespace KWayland::Client;
     using namespace KWaylandServer;
 
     KWayland::Client::Registry registry;
@@ -332,7 +322,7 @@ void TestWaylandOutput::testTransform()
     if (outputChanged.isEmpty()) {
         QVERIFY(outputChanged.wait());
     }
-    QCOMPARE(output->transform(), Output::Transform::Normal);
+    QCOMPARE(output->transform(), KWayland::Client::Output::Transform::Normal);
 }
 
 QTEST_GUILESS_MAIN(TestWaylandOutput)

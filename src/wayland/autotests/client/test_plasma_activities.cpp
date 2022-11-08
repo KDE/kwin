@@ -18,8 +18,6 @@
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/surface.h"
 
-using namespace KWayland::Client;
-
 class TestActivities : public QObject
 {
     Q_OBJECT
@@ -70,7 +68,7 @@ void TestActivities::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -85,10 +83,10 @@ void TestActivities::init()
     m_queue->setup(m_connection);
     QVERIFY(m_queue->isValid());
 
-    Registry registry;
-    QSignalSpy compositorSpy(&registry, &Registry::compositorAnnounced);
+    KWayland::Client::Registry registry;
+    QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
 
-    QSignalSpy windowManagementSpy(&registry, &Registry::plasmaWindowManagementAnnounced);
+    QSignalSpy windowManagementSpy(&registry, &KWayland::Client::Registry::plasmaWindowManagementAnnounced);
 
     QVERIFY(!registry.eventQueue());
     registry.setEventQueue(m_queue);
@@ -107,12 +105,12 @@ void TestActivities::init()
     m_windowManagement =
         registry.createPlasmaWindowManagement(windowManagementSpy.first().first().value<quint32>(), windowManagementSpy.first().last().value<quint32>(), this);
 
-    QSignalSpy windowSpy(m_windowManagement, &PlasmaWindowManagement::windowCreated);
+    QSignalSpy windowSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::windowCreated);
     m_windowInterface = m_windowManagementInterface->createWindow(this, QUuid::createUuid());
     m_windowInterface->setPid(1337);
 
     QVERIFY(windowSpy.wait());
-    m_window = windowSpy.first().first().value<PlasmaWindow *>();
+    m_window = windowSpy.first().first().value<KWayland::Client::PlasmaWindow *>();
 }
 
 void TestActivities::cleanup()

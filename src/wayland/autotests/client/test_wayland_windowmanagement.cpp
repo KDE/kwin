@@ -319,13 +319,12 @@ void TestWindowManagement::testCreateAfterUnmap()
 void TestWindowManagement::testRequests_data()
 {
     using namespace KWaylandServer;
-    using namespace KWayland::Client;
     QTest::addColumn<ServerWindowSignal>("changedSignal");
     QTest::addColumn<ClientWindowVoidSetter>("requester");
 
-    QTest::newRow("close") << &PlasmaWindowInterface::closeRequested << &PlasmaWindow::requestClose;
-    QTest::newRow("move") << &PlasmaWindowInterface::moveRequested << &PlasmaWindow::requestMove;
-    QTest::newRow("resize") << &PlasmaWindowInterface::resizeRequested << &PlasmaWindow::requestResize;
+    QTest::newRow("close") << &PlasmaWindowInterface::closeRequested << &KWayland::Client::PlasmaWindow::requestClose;
+    QTest::newRow("move") << &PlasmaWindowInterface::moveRequested << &KWayland::Client::PlasmaWindow::requestMove;
+    QTest::newRow("resize") << &PlasmaWindowInterface::resizeRequested << &KWayland::Client::PlasmaWindow::requestResize;
 }
 
 void TestWindowManagement::testRequests()
@@ -471,7 +470,6 @@ void TestWindowManagement::testKeepBelow()
 
 void TestWindowManagement::testParentWindow()
 {
-    using namespace KWayland::Client;
     // this test verifies the functionality of ParentWindows
     QCOMPARE(m_windowManagement->windows().count(), 1);
     auto parentWindow = m_windowManagement->windows().first();
@@ -479,15 +477,15 @@ void TestWindowManagement::testParentWindow()
     QVERIFY(parentWindow->parentWindow().isNull());
 
     // now let's create a second window
-    QSignalSpy windowAddedSpy(m_windowManagement, &PlasmaWindowManagement::windowCreated);
+    QSignalSpy windowAddedSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::windowCreated);
     std::unique_ptr<KWaylandServer::PlasmaWindowInterface> serverTransient(m_windowManagementInterface->createWindow(this, QUuid::createUuid()));
     serverTransient->setParentWindow(m_windowInterface);
     QVERIFY(windowAddedSpy.wait());
-    auto transient = windowAddedSpy.first().first().value<PlasmaWindow *>();
+    auto transient = windowAddedSpy.first().first().value<KWayland::Client::PlasmaWindow *>();
     QCOMPARE(transient->parentWindow().data(), parentWindow);
 
     // let's unset the parent
-    QSignalSpy parentWindowChangedSpy(transient, &PlasmaWindow::parentWindowChanged);
+    QSignalSpy parentWindowChangedSpy(transient, &KWayland::Client::PlasmaWindow::parentWindowChanged);
     serverTransient->setParentWindow(nullptr);
     QVERIFY(parentWindowChangedSpy.wait());
     QVERIFY(transient->parentWindow().isNull());
@@ -507,10 +505,9 @@ void TestWindowManagement::testParentWindow()
 
 void TestWindowManagement::testGeometry()
 {
-    using namespace KWayland::Client;
     QVERIFY(m_window);
     QCOMPARE(m_window->geometry(), QRect());
-    QSignalSpy windowGeometryChangedSpy(m_window, &PlasmaWindow::geometryChanged);
+    QSignalSpy windowGeometryChangedSpy(m_window, &KWayland::Client::PlasmaWindow::geometryChanged);
     m_windowInterface->setGeometry(QRect(20, -10, 30, 40));
     QVERIFY(windowGeometryChangedSpy.wait());
     QCOMPARE(m_window->geometry(), QRect(20, -10, 30, 40));
@@ -527,11 +524,11 @@ void TestWindowManagement::testGeometry()
     QCOMPARE(m_window->geometry(), QRect(0, 0, 35, 45));
 
     // let's bind a second PlasmaWindowManagement to verify the initial setting
-    std::unique_ptr<PlasmaWindowManagement> pm(
-        m_registry->createPlasmaWindowManagement(m_registry->interface(Registry::Interface::PlasmaWindowManagement).name,
-                                                 m_registry->interface(Registry::Interface::PlasmaWindowManagement).version));
+    std::unique_ptr<KWayland::Client::PlasmaWindowManagement> pm(
+        m_registry->createPlasmaWindowManagement(m_registry->interface(KWayland::Client::Registry::Interface::PlasmaWindowManagement).name,
+                                                 m_registry->interface(KWayland::Client::Registry::Interface::PlasmaWindowManagement).version));
     QVERIFY(pm != nullptr);
-    QSignalSpy windowAddedSpy(pm.get(), &PlasmaWindowManagement::windowCreated);
+    QSignalSpy windowAddedSpy(pm.get(), &KWayland::Client::PlasmaWindowManagement::windowCreated);
     QVERIFY(windowAddedSpy.wait());
     auto window = pm->windows().first();
     QCOMPARE(window->geometry(), QRect(0, 0, 35, 45));
@@ -539,10 +536,8 @@ void TestWindowManagement::testGeometry()
 
 void TestWindowManagement::testIcon()
 {
-    using namespace KWayland::Client;
-
     // initially, there shouldn't be any icon
-    QSignalSpy iconChangedSpy(m_window, &PlasmaWindow::iconChanged);
+    QSignalSpy iconChangedSpy(m_window, &KWayland::Client::PlasmaWindow::iconChanged);
     QVERIFY(m_window->icon().isNull());
 
     // create an icon with a pixmap
@@ -566,7 +561,6 @@ void TestWindowManagement::testIcon()
 
 void TestWindowManagement::testPid()
 {
-    using namespace KWayland::Client;
     QVERIFY(m_window);
     QVERIFY(m_window->pid() == 1337);
 
@@ -574,21 +568,19 @@ void TestWindowManagement::testPid()
     std::unique_ptr<KWaylandServer::PlasmaWindowInterface> newWindowInterface(m_windowManagementInterface->createWindow(this, QUuid::createUuid()));
     QSignalSpy windowSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::windowCreated);
     QVERIFY(windowSpy.wait());
-    std::unique_ptr<PlasmaWindow> newWindow(windowSpy.first().first().value<KWayland::Client::PlasmaWindow *>());
+    std::unique_ptr<KWayland::Client::PlasmaWindow> newWindow(windowSpy.first().first().value<KWayland::Client::PlasmaWindow *>());
     QVERIFY(newWindow);
     QVERIFY(newWindow->pid() == 0);
 }
 
 void TestWindowManagement::testApplicationMenu()
 {
-    using namespace KWayland::Client;
-
     const auto serviceName = QStringLiteral("org.kde.foo");
     const auto objectPath = QStringLiteral("/org/kde/bar");
 
     m_windowInterface->setApplicationMenuPaths(serviceName, objectPath);
 
-    QSignalSpy applicationMenuChangedSpy(m_window, &PlasmaWindow::applicationMenuChanged);
+    QSignalSpy applicationMenuChangedSpy(m_window, &KWayland::Client::PlasmaWindow::applicationMenuChanged);
     QVERIFY(applicationMenuChangedSpy.wait());
 
     QCOMPARE(m_window->applicationMenuServiceName(), serviceName);

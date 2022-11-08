@@ -21,8 +21,6 @@
 
 #include <wayland-util.h>
 
-using namespace KWayland::Client;
-
 class TestContrast : public QObject
 {
     Q_OBJECT
@@ -70,7 +68,7 @@ void TestContrast::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -85,10 +83,10 @@ void TestContrast::init()
     m_queue->setup(m_connection);
     QVERIFY(m_queue->isValid());
 
-    Registry registry;
-    QSignalSpy compositorSpy(&registry, &Registry::compositorAnnounced);
+    KWayland::Client::Registry registry;
+    QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
 
-    QSignalSpy contrastSpy(&registry, &Registry::contrastAnnounced);
+    QSignalSpy contrastSpy(&registry, &KWayland::Client::Registry::contrastAnnounced);
 
     QVERIFY(!registry.eventQueue());
     registry.setEventQueue(m_queue);

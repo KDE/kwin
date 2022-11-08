@@ -113,13 +113,12 @@ void TestDataSource::cleanup()
 
 void TestDataSource::testOffer()
 {
-    using namespace KWayland::Client;
     using namespace KWaylandServer;
 
     qRegisterMetaType<KWaylandServer::DataSourceInterface *>();
     QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWaylandServer::DataDeviceManagerInterface::dataSourceCreated);
 
-    std::unique_ptr<DataSource> dataSource(m_dataDeviceManager->createDataSource());
+    std::unique_ptr<KWayland::Client::DataSource> dataSource(m_dataDeviceManager->createDataSource());
     QVERIFY(dataSource->isValid());
 
     QVERIFY(dataSourceCreatedSpy.wait());
@@ -170,12 +169,11 @@ void TestDataSource::testTargetAccepts_data()
 
 void TestDataSource::testTargetAccepts()
 {
-    using namespace KWayland::Client;
     using namespace KWaylandServer;
 
     QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWaylandServer::DataDeviceManagerInterface::dataSourceCreated);
 
-    std::unique_ptr<DataSource> dataSource(m_dataDeviceManager->createDataSource());
+    std::unique_ptr<KWayland::Client::DataSource> dataSource(m_dataDeviceManager->createDataSource());
     QVERIFY(dataSource->isValid());
 
     QSignalSpy targetAcceptsSpy(dataSource.get(), &KWayland::Client::DataSource::targetAccepts);
@@ -193,12 +191,11 @@ void TestDataSource::testTargetAccepts()
 
 void TestDataSource::testRequestSend()
 {
-    using namespace KWayland::Client;
     using namespace KWaylandServer;
 
     QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWaylandServer::DataDeviceManagerInterface::dataSourceCreated);
 
-    std::unique_ptr<DataSource> dataSource(m_dataDeviceManager->createDataSource());
+    std::unique_ptr<KWayland::Client::DataSource> dataSource(m_dataDeviceManager->createDataSource());
     QVERIFY(dataSource->isValid());
     QSignalSpy sendRequestedSpy(dataSource.get(), &KWayland::Client::DataSource::sendDataRequested);
 
@@ -222,12 +219,11 @@ void TestDataSource::testRequestSend()
 
 void TestDataSource::testCancel()
 {
-    using namespace KWayland::Client;
     using namespace KWaylandServer;
 
     QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWaylandServer::DataDeviceManagerInterface::dataSourceCreated);
 
-    std::unique_ptr<DataSource> dataSource(m_dataDeviceManager->createDataSource());
+    std::unique_ptr<KWayland::Client::DataSource> dataSource(m_dataDeviceManager->createDataSource());
     QVERIFY(dataSource->isValid());
     QSignalSpy cancelledSpy(dataSource.get(), &KWayland::Client::DataSource::cancelled);
 
@@ -242,12 +238,11 @@ void TestDataSource::testCancel()
 
 void TestDataSource::testServerGet()
 {
-    using namespace KWayland::Client;
     using namespace KWaylandServer;
 
     QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, &KWaylandServer::DataDeviceManagerInterface::dataSourceCreated);
 
-    std::unique_ptr<DataSource> dataSource(m_dataDeviceManager->createDataSource());
+    std::unique_ptr<KWayland::Client::DataSource> dataSource(m_dataDeviceManager->createDataSource());
     QVERIFY(dataSource->isValid());
 
     QVERIFY(!DataSourceInterface::get(nullptr));

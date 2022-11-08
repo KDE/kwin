@@ -19,7 +19,6 @@
 #include "wayland/shadow_interface.h"
 #include "wayland/shmclientbuffer.h"
 
-using namespace KWayland::Client;
 using namespace KWaylandServer;
 
 class ShadowTest : public QObject
@@ -36,14 +35,14 @@ private Q_SLOTS:
 private:
     KWaylandServer::Display *m_display = nullptr;
 
-    ConnectionThread *m_connection = nullptr;
+    KWayland::Client::ConnectionThread *m_connection = nullptr;
     CompositorInterface *m_compositorInterface = nullptr;
     ShadowManagerInterface *m_shadowInterface = nullptr;
     QThread *m_thread = nullptr;
-    EventQueue *m_queue = nullptr;
-    ShmPool *m_shm = nullptr;
-    Compositor *m_compositor = nullptr;
-    ShadowManager *m_shadow = nullptr;
+    KWayland::Client::EventQueue *m_queue = nullptr;
+    KWayland::Client::ShmPool *m_shm = nullptr;
+    KWayland::Client::Compositor *m_compositor = nullptr;
+    KWayland::Client::ShadowManager *m_shadow = nullptr;
 };
 
 static const QString s_socketName = QStringLiteral("kwayland-test-shadow-0");
@@ -61,7 +60,7 @@ void ShadowTest::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -71,24 +70,24 @@ void ShadowTest::init()
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new EventQueue(this);
+    m_queue = new KWayland::Client::EventQueue(this);
     m_queue->setup(m_connection);
 
-    Registry registry;
-    QSignalSpy interfacesAnnouncedSpy(&registry, &Registry::interfacesAnnounced);
+    KWayland::Client::Registry registry;
+    QSignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
     registry.setEventQueue(m_queue);
     registry.create(m_connection);
     QVERIFY(registry.isValid());
     registry.setup();
     QVERIFY(interfacesAnnouncedSpy.wait());
 
-    m_shm = registry.createShmPool(registry.interface(Registry::Interface::Shm).name, registry.interface(Registry::Interface::Shm).version, this);
+    m_shm = registry.createShmPool(registry.interface(KWayland::Client::Registry::Interface::Shm).name, registry.interface(KWayland::Client::Registry::Interface::Shm).version, this);
     QVERIFY(m_shm->isValid());
     m_compositor =
-        registry.createCompositor(registry.interface(Registry::Interface::Compositor).name, registry.interface(Registry::Interface::Compositor).version, this);
+        registry.createCompositor(registry.interface(KWayland::Client::Registry::Interface::Compositor).name, registry.interface(KWayland::Client::Registry::Interface::Compositor).version, this);
     QVERIFY(m_compositor->isValid());
     m_shadow =
-        registry.createShadowManager(registry.interface(Registry::Interface::Shadow).name, registry.interface(Registry::Interface::Shadow).version, this);
+        registry.createShadowManager(registry.interface(KWayland::Client::Registry::Interface::Shadow).name, registry.interface(KWayland::Client::Registry::Interface::Shadow).version, this);
     QVERIFY(m_shadow->isValid());
 }
 
@@ -126,7 +125,7 @@ void ShadowTest::testCreateShadow()
 {
     // this test verifies the basic shadow behavior, create for surface, commit it, etc.
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    std::unique_ptr<Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
     auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
@@ -135,12 +134,12 @@ void ShadowTest::testCreateShadow()
     QSignalSpy shadowChangedSpy(serverSurface, &SurfaceInterface::shadowChanged);
 
     // let's create a shadow for the Surface
-    std::unique_ptr<Shadow> shadow(m_shadow->createShadow(surface.get()));
+    std::unique_ptr<KWayland::Client::Shadow> shadow(m_shadow->createShadow(surface.get()));
     // that should not have triggered the shadowChangedSpy)
     QVERIFY(!shadowChangedSpy.wait(100));
 
     // now let's commit the surface, that should trigger the shadow changed
-    surface->commit(Surface::CommitFlag::None);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(shadowChangedSpy.wait());
     QCOMPARE(shadowChangedSpy.count(), 1);
 
@@ -161,7 +160,7 @@ void ShadowTest::testCreateShadow()
     m_shadow->removeShadow(surface.get());
     // just removing should not remove it yet, surface needs to be committed
     QVERIFY(!shadowChangedSpy.wait(100));
-    surface->commit(Surface::CommitFlag::None);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(shadowChangedSpy.wait());
     QCOMPARE(shadowChangedSpy.count(), 2);
     QVERIFY(!serverSurface->shadow());
@@ -181,14 +180,14 @@ void ShadowTest::testShadowElements()
     // this test verifies that all shadow elements are correctly passed to the server
     // first create surface
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    std::unique_ptr<Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
     auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface);
     QSignalSpy shadowChangedSpy(serverSurface, &SurfaceInterface::shadowChanged);
 
     // now create the shadow
-    std::unique_ptr<Shadow> shadow(m_shadow->createShadow(surface.get()));
+    std::unique_ptr<KWayland::Client::Shadow> shadow(m_shadow->createShadow(surface.get()));
     QImage topLeftImage(QSize(10, 10), QImage::Format_ARGB32_Premultiplied);
     topLeftImage.fill(Qt::white);
     shadow->attachTopLeft(m_shm->createBuffer(topLeftImage));
@@ -215,7 +214,7 @@ void ShadowTest::testShadowElements()
     shadow->attachLeft(m_shm->createBuffer(leftImage));
     shadow->setOffsets(QMarginsF(1, 2, 3, 4));
     shadow->commit();
-    surface->commit(Surface::CommitFlag::None);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     QVERIFY(shadowChangedSpy.wait());
     auto serverShadow = serverSurface->shadow();
@@ -233,7 +232,6 @@ void ShadowTest::testShadowElements()
 
 void ShadowTest::testSurfaceDestroy()
 {
-    using namespace KWayland::Client;
     using namespace KWaylandServer;
     QSignalSpy serverSurfaceCreated(m_compositorInterface, &CompositorInterface::surfaceCreated);
 
@@ -242,9 +240,9 @@ void ShadowTest::testSurfaceDestroy()
     auto serverSurface = serverSurfaceCreated.first().first().value<SurfaceInterface *>();
     QSignalSpy shadowChangedSpy(serverSurface, &SurfaceInterface::shadowChanged);
 
-    std::unique_ptr<Shadow> shadow(m_shadow->createShadow(surface.get()));
+    std::unique_ptr<KWayland::Client::Shadow> shadow(m_shadow->createShadow(surface.get()));
     shadow->commit();
-    surface->commit(Surface::CommitFlag::None);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(shadowChangedSpy.wait());
     auto serverShadow = serverSurface->shadow();
     QVERIFY(serverShadow);

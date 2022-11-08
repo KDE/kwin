@@ -22,7 +22,6 @@
 #include "wayland/display.h"
 #include "wayland/seat_interface.h"
 
-using namespace KWayland::Client;
 using namespace KWaylandServer;
 
 class SelectionTest : public QObject
@@ -41,14 +40,14 @@ private:
 
     struct Connection
     {
-        ConnectionThread *connection = nullptr;
+        KWayland::Client::ConnectionThread *connection = nullptr;
         QThread *thread = nullptr;
-        EventQueue *queue = nullptr;
-        Compositor *compositor = nullptr;
-        Seat *seat = nullptr;
-        DataDeviceManager *ddm = nullptr;
-        Keyboard *keyboard = nullptr;
-        DataDevice *dataDevice = nullptr;
+        KWayland::Client::EventQueue *queue = nullptr;
+        KWayland::Client::Compositor *compositor = nullptr;
+        KWayland::Client::Seat *seat = nullptr;
+        KWayland::Client::DataDeviceManager *ddm = nullptr;
+        KWayland::Client::Keyboard *keyboard = nullptr;
+        KWayland::Client::DataDevice *dataDevice = nullptr;
     };
     bool setupConnection(Connection *c);
     void cleanupConnection(Connection *c);
@@ -79,8 +78,8 @@ void SelectionTest::init()
 
 bool SelectionTest::setupConnection(Connection *c)
 {
-    c->connection = new ConnectionThread;
-    QSignalSpy connectedSpy(c->connection, &ConnectionThread::connected);
+    c->connection = new KWayland::Client::ConnectionThread;
+    QSignalSpy connectedSpy(c->connection, &KWayland::Client::ConnectionThread::connected);
     if (!connectedSpy.isValid()) {
         return false;
     }
@@ -95,11 +94,11 @@ bool SelectionTest::setupConnection(Connection *c)
         return false;
     }
 
-    c->queue = new EventQueue(this);
+    c->queue = new KWayland::Client::EventQueue(this);
     c->queue->setup(c->connection);
 
-    Registry registry;
-    QSignalSpy interfacesAnnouncedSpy(&registry, &Registry::interfacesAnnounced);
+    KWayland::Client::Registry registry;
+    QSignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
     if (!interfacesAnnouncedSpy.isValid()) {
         return false;
     }
@@ -114,21 +113,21 @@ bool SelectionTest::setupConnection(Connection *c)
     }
 
     c->compositor =
-        registry.createCompositor(registry.interface(Registry::Interface::Compositor).name, registry.interface(Registry::Interface::Compositor).version, this);
+        registry.createCompositor(registry.interface(KWayland::Client::Registry::Interface::Compositor).name, registry.interface(KWayland::Client::Registry::Interface::Compositor).version, this);
     if (!c->compositor->isValid()) {
         return false;
     }
-    c->ddm = registry.createDataDeviceManager(registry.interface(Registry::Interface::DataDeviceManager).name,
-                                              registry.interface(Registry::Interface::DataDeviceManager).version,
+    c->ddm = registry.createDataDeviceManager(registry.interface(KWayland::Client::Registry::Interface::DataDeviceManager).name,
+                                              registry.interface(KWayland::Client::Registry::Interface::DataDeviceManager).version,
                                               this);
     if (!c->ddm->isValid()) {
         return false;
     }
-    c->seat = registry.createSeat(registry.interface(Registry::Interface::Seat).name, registry.interface(Registry::Interface::Seat).version, this);
+    c->seat = registry.createSeat(registry.interface(KWayland::Client::Registry::Interface::Seat).name, registry.interface(KWayland::Client::Registry::Interface::Seat).version, this);
     if (!c->seat->isValid()) {
         return false;
     }
-    QSignalSpy keyboardSpy(c->seat, &Seat::hasKeyboardChanged);
+    QSignalSpy keyboardSpy(c->seat, &KWayland::Client::Seat::hasKeyboardChanged);
     if (!keyboardSpy.isValid()) {
         return false;
     }
@@ -195,12 +194,12 @@ void SelectionTest::cleanupConnection(Connection *c)
 void SelectionTest::testClearOnEnter()
 {
     // this test verifies that the selection is cleared prior to keyboard enter if there is no current selection
-    QSignalSpy selectionClearedClient1Spy(m_client1.dataDevice, &DataDevice::selectionCleared);
-    QSignalSpy keyboardEnteredClient1Spy(m_client1.keyboard, &Keyboard::entered);
+    QSignalSpy selectionClearedClient1Spy(m_client1.dataDevice, &KWayland::Client::DataDevice::selectionCleared);
+    QSignalSpy keyboardEnteredClient1Spy(m_client1.keyboard, &KWayland::Client::Keyboard::entered);
 
     // now create a Surface
     QSignalSpy surfaceCreatedSpy(m_compositorInterface, &CompositorInterface::surfaceCreated);
-    std::unique_ptr<Surface> s1(m_client1.compositor->createSurface());
+    std::unique_ptr<KWayland::Client::Surface> s1(m_client1.compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
     auto serverSurface1 = surfaceCreatedSpy.first().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface1);
@@ -211,15 +210,15 @@ void SelectionTest::testClearOnEnter()
     QVERIFY(selectionClearedClient1Spy.wait());
 
     // let's set a selection
-    std::unique_ptr<DataSource> dataSource(m_client1.ddm->createDataSource());
+    std::unique_ptr<KWayland::Client::DataSource> dataSource(m_client1.ddm->createDataSource());
     dataSource->offer(QStringLiteral("text/plain"));
     m_client1.dataDevice->setSelection(keyboardEnteredClient1Spy.first().first().value<quint32>(), dataSource.get());
 
     // now let's bring in client 2
-    QSignalSpy selectionOfferedClient2Spy(m_client2.dataDevice, &DataDevice::selectionOffered);
-    QSignalSpy selectionClearedClient2Spy(m_client2.dataDevice, &DataDevice::selectionCleared);
-    QSignalSpy keyboardEnteredClient2Spy(m_client2.keyboard, &Keyboard::entered);
-    std::unique_ptr<Surface> s2(m_client2.compositor->createSurface());
+    QSignalSpy selectionOfferedClient2Spy(m_client2.dataDevice, &KWayland::Client::DataDevice::selectionOffered);
+    QSignalSpy selectionClearedClient2Spy(m_client2.dataDevice, &KWayland::Client::DataDevice::selectionCleared);
+    QSignalSpy keyboardEnteredClient2Spy(m_client2.keyboard, &KWayland::Client::Keyboard::entered);
+    std::unique_ptr<KWayland::Client::Surface> s2(m_client2.compositor->createSurface());
     QVERIFY(surfaceCreatedSpy.wait());
     auto serverSurface2 = surfaceCreatedSpy.last().first().value<SurfaceInterface *>();
     QVERIFY(serverSurface2);
@@ -230,7 +229,7 @@ void SelectionTest::testClearOnEnter()
     QVERIFY(selectionClearedClient2Spy.isEmpty());
 
     // set a data source but without offers
-    std::unique_ptr<DataSource> dataSource2(m_client2.ddm->createDataSource());
+    std::unique_ptr<KWayland::Client::DataSource> dataSource2(m_client2.ddm->createDataSource());
     m_client2.dataDevice->setSelection(keyboardEnteredClient2Spy.first().first().value<quint32>(), dataSource2.get());
     QVERIFY(selectionOfferedClient2Spy.wait());
     // and clear

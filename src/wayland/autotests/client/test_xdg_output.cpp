@@ -116,7 +116,6 @@ void TestXdgOutput::testChanges()
 {
     // verify the server modes
     using namespace KWaylandServer;
-    using namespace KWayland::Client;
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, &KWayland::Client::Registry::outputAnnounced);
     QSignalSpy xdgOutputAnnounced(&registry, &KWayland::Client::Registry::xdgOutputAnnounced);

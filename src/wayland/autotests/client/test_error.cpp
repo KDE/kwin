@@ -23,7 +23,6 @@
 
 #include <cerrno> // For EPROTO
 
-using namespace KWayland::Client;
 using namespace KWaylandServer;
 
 class ErrorTest : public QObject
@@ -39,11 +38,11 @@ private:
     KWaylandServer::Display *m_display = nullptr;
     CompositorInterface *m_ci = nullptr;
     PlasmaShellInterface *m_psi = nullptr;
-    ConnectionThread *m_connection = nullptr;
+    KWayland::Client::ConnectionThread *m_connection = nullptr;
     QThread *m_thread = nullptr;
-    EventQueue *m_queue = nullptr;
-    Compositor *m_compositor = nullptr;
-    PlasmaShell *m_plasmaShell = nullptr;
+    KWayland::Client::EventQueue *m_queue = nullptr;
+    KWayland::Client::Compositor *m_compositor = nullptr;
+    KWayland::Client::PlasmaShell *m_plasmaShell = nullptr;
 };
 
 static const QString s_socketName = QStringLiteral("kwayland-test-error-0");
@@ -61,7 +60,7 @@ void ErrorTest::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -71,11 +70,11 @@ void ErrorTest::init()
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new EventQueue(this);
+    m_queue = new KWayland::Client::EventQueue(this);
     m_queue->setup(m_connection);
 
-    Registry registry;
-    QSignalSpy interfacesAnnouncedSpy(&registry, &Registry::interfacesAnnounced);
+    KWayland::Client::Registry registry;
+    QSignalSpy interfacesAnnouncedSpy(&registry, &KWayland::Client::Registry::interfacesAnnounced);
     registry.setEventQueue(m_queue);
     registry.create(m_connection);
     QVERIFY(registry.isValid());
@@ -83,10 +82,10 @@ void ErrorTest::init()
     QVERIFY(interfacesAnnouncedSpy.wait());
 
     m_compositor =
-        registry.createCompositor(registry.interface(Registry::Interface::Compositor).name, registry.interface(Registry::Interface::Compositor).version, this);
+        registry.createCompositor(registry.interface(KWayland::Client::Registry::Interface::Compositor).name, registry.interface(KWayland::Client::Registry::Interface::Compositor).version, this);
     QVERIFY(m_compositor);
-    m_plasmaShell = registry.createPlasmaShell(registry.interface(Registry::Interface::PlasmaShell).name,
-                                               registry.interface(Registry::Interface::PlasmaShell).version,
+    m_plasmaShell = registry.createPlasmaShell(registry.interface(KWayland::Client::Registry::Interface::PlasmaShell).name,
+                                               registry.interface(KWayland::Client::Registry::Interface::PlasmaShell).version,
                                                this);
     QVERIFY(m_plasmaShell);
 }
@@ -121,12 +120,12 @@ void ErrorTest::cleanup()
 void ErrorTest::testMultiplePlasmaShellSurfacesForSurface()
 {
     // this test verifies that creating two ShellSurfaces for the same Surface triggers a protocol error
-    QSignalSpy errorSpy(m_connection, &ConnectionThread::errorOccurred);
+    QSignalSpy errorSpy(m_connection, &KWayland::Client::ConnectionThread::errorOccurred);
     // PlasmaShell is too smart and doesn't allow us to create a second PlasmaShellSurface
     // thus we need to cheat by creating a surface manually
     auto surface = wl_compositor_create_surface(*m_compositor);
-    std::unique_ptr<PlasmaShellSurface> shellSurface1(m_plasmaShell->createSurface(surface));
-    std::unique_ptr<PlasmaShellSurface> shellSurface2(m_plasmaShell->createSurface(surface));
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> shellSurface1(m_plasmaShell->createSurface(surface));
+    std::unique_ptr<KWayland::Client::PlasmaShellSurface> shellSurface2(m_plasmaShell->createSurface(surface));
     QVERIFY(!m_connection->hasError());
     QVERIFY(errorSpy.wait());
     QVERIFY(m_connection->hasError());

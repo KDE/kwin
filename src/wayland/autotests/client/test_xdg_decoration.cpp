@@ -57,9 +57,8 @@ TestXdgDecoration::TestXdgDecoration(QObject *parent)
 void TestXdgDecoration::init()
 {
     using namespace KWaylandServer;
-    using namespace KWayland::Client;
 
-    qRegisterMetaType<XdgDecoration::Mode>();
+    qRegisterMetaType<KWayland::Client::XdgDecoration::Mode>();
     qRegisterMetaType<XdgToplevelDecorationV1Interface::Mode>();
 
     delete m_display;
@@ -70,7 +69,7 @@ void TestXdgDecoration::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -80,15 +79,15 @@ void TestXdgDecoration::init()
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
-    m_queue = new EventQueue(this);
+    m_queue = new KWayland::Client::EventQueue(this);
     QVERIFY(!m_queue->isValid());
     m_queue->setup(m_connection);
     QVERIFY(m_queue->isValid());
 
-    m_registry = new Registry();
-    QSignalSpy compositorSpy(m_registry, &Registry::compositorAnnounced);
-    QSignalSpy xdgShellSpy(m_registry, &Registry::xdgShellStableAnnounced);
-    QSignalSpy xdgDecorationManagerSpy(m_registry, &Registry::xdgDecorationAnnounced);
+    m_registry = new KWayland::Client::Registry();
+    QSignalSpy compositorSpy(m_registry, &KWayland::Client::Registry::compositorAnnounced);
+    QSignalSpy xdgShellSpy(m_registry, &KWayland::Client::Registry::xdgShellStableAnnounced);
+    QSignalSpy xdgDecorationManagerSpy(m_registry, &KWayland::Client::Registry::xdgDecorationAnnounced);
 
     QVERIFY(!m_registry->eventQueue());
     m_registry->setEventQueue(m_queue);
@@ -150,7 +149,6 @@ void TestXdgDecoration::cleanup()
 
 void TestXdgDecoration::testDecoration_data()
 {
-    using namespace KWayland::Client;
     using namespace KWaylandServer;
     QTest::addColumn<KWaylandServer::XdgToplevelDecorationV1Interface::Mode>("configuredMode");
     QTest::addColumn<KWayland::Client::XdgDecoration::Mode>("configuredModeExp");
@@ -159,8 +157,8 @@ void TestXdgDecoration::testDecoration_data()
 
     const auto serverClient = XdgToplevelDecorationV1Interface::Mode::Client;
     const auto serverServer = XdgToplevelDecorationV1Interface::Mode::Server;
-    const auto clientClient = XdgDecoration::Mode::ClientSide;
-    const auto clientServer = XdgDecoration::Mode::ServerSide;
+    const auto clientClient = KWayland::Client::XdgDecoration::Mode::ClientSide;
+    const auto clientServer = KWayland::Client::XdgDecoration::Mode::ServerSide;
 
     QTest::newRow("client->client") << serverClient << clientClient << clientClient << serverClient;
     QTest::newRow("client->server") << serverClient << clientClient << clientServer << serverServer;
@@ -170,7 +168,6 @@ void TestXdgDecoration::testDecoration_data()
 
 void TestXdgDecoration::testDecoration()
 {
-    using namespace KWayland::Client;
     using namespace KWaylandServer;
 
     QFETCH(KWaylandServer::XdgToplevelDecorationV1Interface::Mode, configuredMode);
@@ -183,9 +180,9 @@ void TestXdgDecoration::testDecoration()
     QSignalSpy decorationCreatedSpy(m_xdgDecorationManagerInterface, &XdgDecorationManagerV1Interface::decorationCreated);
 
     // create shell surface and deco object
-    std::unique_ptr<Surface> surface(m_compositor->createSurface());
-    std::unique_ptr<XdgShellSurface> shellSurface(m_xdgShell->createSurface(surface.get()));
-    std::unique_ptr<XdgDecoration> decoration(m_xdgDecorationManager->getToplevelDecoration(shellSurface.get()));
+    std::unique_ptr<KWayland::Client::Surface> surface(m_compositor->createSurface());
+    std::unique_ptr<KWayland::Client::XdgShellSurface> shellSurface(m_xdgShell->createSurface(surface.get()));
+    std::unique_ptr<KWayland::Client::XdgDecoration> decoration(m_xdgDecorationManager->getToplevelDecoration(shellSurface.get()));
 
     // and receive all these on the "server"
     QVERIFY(surfaceCreatedSpy.count() || surfaceCreatedSpy.wait());
@@ -200,14 +197,14 @@ void TestXdgDecoration::testDecoration()
     QCOMPARE(decorationIface->toplevel(), shellSurfaceIface);
     QCOMPARE(decorationIface->preferredMode(), XdgToplevelDecorationV1Interface::Mode::Undefined);
 
-    QSignalSpy clientConfiguredSpy(decoration.get(), &XdgDecoration::modeChanged);
+    QSignalSpy clientConfiguredSpy(decoration.get(), &KWayland::Client::XdgDecoration::modeChanged);
     QSignalSpy modeRequestedSpy(decorationIface, &XdgToplevelDecorationV1Interface::preferredModeChanged);
 
     // server configuring a client
     decorationIface->sendConfigure(configuredMode);
     quint32 serial = shellSurfaceIface->sendConfigure(QSize(0, 0), {});
     QVERIFY(clientConfiguredSpy.wait());
-    QCOMPARE(clientConfiguredSpy.first().first().value<XdgDecoration::Mode>(), configuredModeExp);
+    QCOMPARE(clientConfiguredSpy.first().first().value<KWayland::Client::XdgDecoration::Mode>(), configuredModeExp);
 
     shellSurface->ackConfigure(serial);
 

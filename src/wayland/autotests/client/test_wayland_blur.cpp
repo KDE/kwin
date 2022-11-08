@@ -18,8 +18,6 @@
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/surface.h"
 
-using namespace KWayland::Client;
-
 class TestBlur : public QObject
 {
     Q_OBJECT
@@ -67,7 +65,7 @@ void TestBlur::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -82,10 +80,10 @@ void TestBlur::init()
     m_queue->setup(m_connection);
     QVERIFY(m_queue->isValid());
 
-    Registry registry;
-    QSignalSpy compositorSpy(&registry, &Registry::compositorAnnounced);
+    KWayland::Client::Registry registry;
+    QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
 
-    QSignalSpy blurSpy(&registry, &Registry::blurAnnounced);
+    QSignalSpy blurSpy(&registry, &KWayland::Client::Registry::blurAnnounced);
 
     QVERIFY(!registry.eventQueue());
     registry.setEventQueue(m_queue);

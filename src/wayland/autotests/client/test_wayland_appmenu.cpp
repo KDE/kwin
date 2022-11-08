@@ -19,8 +19,6 @@
 #include "KWayland/Client/registry.h"
 #include "KWayland/Client/surface.h"
 
-using namespace KWayland::Client;
-
 Q_DECLARE_METATYPE(KWaylandServer::AppMenuInterface::InterfaceAddress)
 
 class TestAppmenu : public QObject
@@ -70,7 +68,7 @@ void TestAppmenu::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -85,10 +83,10 @@ void TestAppmenu::init()
     m_queue->setup(m_connection);
     QVERIFY(m_queue->isValid());
 
-    Registry registry;
-    QSignalSpy compositorSpy(&registry, &Registry::compositorAnnounced);
+    KWayland::Client::Registry registry;
+    QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
 
-    QSignalSpy appmenuSpy(&registry, &Registry::appMenuAnnounced);
+    QSignalSpy appmenuSpy(&registry, &KWayland::Client::Registry::appMenuAnnounced);
 
     QVERIFY(!registry.eventQueue());
     registry.setEventQueue(m_queue);

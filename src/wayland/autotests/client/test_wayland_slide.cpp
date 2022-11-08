@@ -18,8 +18,6 @@
 #include "KWayland/Client/slide.h"
 #include "KWayland/Client/surface.h"
 
-using namespace KWayland::Client;
-
 class TestSlide : public QObject
 {
     Q_OBJECT
@@ -67,7 +65,7 @@ void TestSlide::init()
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
-    QSignalSpy connectedSpy(m_connection, &ConnectionThread::connected);
+    QSignalSpy connectedSpy(m_connection, &KWayland::Client::ConnectionThread::connected);
     m_connection->setSocketName(s_socketName);
 
     m_thread = new QThread(this);
@@ -82,10 +80,10 @@ void TestSlide::init()
     m_queue->setup(m_connection);
     QVERIFY(m_queue->isValid());
 
-    Registry registry;
-    QSignalSpy compositorSpy(&registry, &Registry::compositorAnnounced);
+    KWayland::Client::Registry registry;
+    QSignalSpy compositorSpy(&registry, &KWayland::Client::Registry::compositorAnnounced);
 
-    QSignalSpy slideSpy(&registry, &Registry::slideAnnounced);
+    QSignalSpy slideSpy(&registry, &KWayland::Client::Registry::slideAnnounced);
 
     QVERIFY(!registry.eventQueue());
     registry.setEventQueue(m_queue);
@@ -166,7 +164,7 @@ void TestSlide::testSurfaceDestroy()
     auto serverSurface = serverSurfaceCreated.first().first().value<SurfaceInterface *>();
     QSignalSpy slideChanged(serverSurface, &SurfaceInterface::slideOnShowHideChanged);
 
-    std::unique_ptr<Slide> slide(m_slideManager->createSlide(surface.get()));
+    std::unique_ptr<KWayland::Client::Slide> slide(m_slideManager->createSlide(surface.get()));
     slide->commit();
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(slideChanged.wait());
