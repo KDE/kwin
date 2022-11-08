@@ -193,11 +193,6 @@ QSize SurfacePixmap::size() const
     return m_size;
 }
 
-QRectF SurfacePixmap::contentsRect() const
-{
-    return m_contentsRect;
-}
-
 bool SurfacePixmap::isDiscarded() const
 {
     return m_isDiscarded;

@@ -239,7 +239,6 @@ void SurfacePixmapX11::create()
     // this class is only used on X11 where the logical size and
     // device pixel size is guaranteed to be the same and we can convert safely
     m_size = bufferGeometry.size().toSize();
-    m_contentsRect = QRectF(window->clientPos(), window->clientSize());
 }
 
 } // namespace KWin
