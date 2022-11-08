@@ -1141,7 +1141,8 @@ void Workspace::setupWindowShortcut(Window *window)
     connect(m_windowKeysDialog, &ShortcutDialog::dialogDone, this, &Workspace::setupWindowShortcutDone);
     QRect r = clientArea(ScreenArea, window).toRect();
     QSize size = m_windowKeysDialog->sizeHint();
-    QPointF pos = window->pos() + window->clientPos();
+    QPointF pos(window->frameGeometry().left() + window->frameMargins().left(),
+                window->frameGeometry().top() + window->frameMargins().top());
     if (pos.x() + size.width() >= r.right()) {
         pos.setX(r.right() - size.width());
     }
@@ -1723,7 +1724,8 @@ void Workspace::slotWindowOperations()
     if (!m_activeWindow) {
         return;
     }
-    QPoint pos = m_activeWindow->pos().toPoint() + m_activeWindow->clientPos().toPoint();
+    const QPoint pos(m_activeWindow->frameGeometry().left() + m_activeWindow->frameMargins().left(),
+                     m_activeWindow->frameGeometry().top() + m_activeWindow->frameMargins().top());
     showWindowMenu(QRect(pos, pos), m_activeWindow);
 }
 
