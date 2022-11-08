@@ -163,7 +163,7 @@ void TouchInputTest::testMultipleTouchPoints()
     QSignalSpy endedSpy(m_touch, &KWayland::Client::Touch::sequenceEnded);
 
     quint32 timestamp = 1;
-    Test::touchDown(1, QPointF(125, 125) + window->clientPos(), timestamp++);
+    Test::touchDown(1, window->mapFromLocal(QPointF(25, 25)), timestamp++);
     QVERIFY(sequenceStartedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
     QCOMPARE(m_touch->sequence().count(), 1);
@@ -173,7 +173,7 @@ void TouchInputTest::testMultipleTouchPoints()
     QCOMPARE(pointMovedSpy.count(), 0);
 
     // a point outside the window
-    Test::touchDown(2, QPointF(0, 0) + window->clientPos(), timestamp++);
+    Test::touchDown(2, window->mapFromLocal(QPointF(-100, -100)), timestamp++);
     QVERIFY(pointAddedSpy.wait());
     QCOMPARE(pointAddedSpy.count(), 1);
     QCOMPARE(m_touch->sequence().count(), 2);
@@ -182,7 +182,7 @@ void TouchInputTest::testMultipleTouchPoints()
     QCOMPARE(pointMovedSpy.count(), 0);
 
     // let's move that one
-    Test::touchMotion(2, QPointF(100, 100) + window->clientPos(), timestamp++);
+    Test::touchMotion(2, window->mapFromLocal(QPointF(0, 0)), timestamp++);
     QVERIFY(pointMovedSpy.wait());
     QCOMPARE(pointMovedSpy.count(), 1);
     QCOMPARE(m_touch->sequence().count(), 2);

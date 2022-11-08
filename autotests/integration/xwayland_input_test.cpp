@@ -173,12 +173,12 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     Cursors::self()->mouse()->setPos(window->frameGeometry().center());
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window->surface());
     QVERIFY(enteredSpy.wait());
-    QCOMPARE(enteredSpy.last().first().toPoint(), (window->frameGeometry().center() - window->clientPos()).toPoint());
+    QCOMPARE(enteredSpy.last().first().toPoint(), (window->frameGeometry().center() - QPointF(window->frameMargins().left(), window->frameMargins().top())).toPoint());
 
     // move out of window
     Cursors::self()->mouse()->setPos(window->frameGeometry().bottomRight() + QPointF(10, 10));
     QVERIFY(leftSpy.wait());
-    QCOMPARE(leftSpy.last().first().toPoint(), (window->frameGeometry().center() - window->clientPos()).toPoint());
+    QCOMPARE(leftSpy.last().first().toPoint(), (window->frameGeometry().center() - QPointF(window->frameMargins().left(), window->frameMargins().top())).toPoint());
 
     // destroy window again
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);

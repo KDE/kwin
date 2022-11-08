@@ -1426,7 +1426,7 @@ void PointerInputTest::testDecoCancelsPopup()
     QVERIFY(popupWindow != window);
     QCOMPARE(window, workspace()->activeWindow());
     QCOMPARE(popupWindow->transientFor(), window);
-    QCOMPARE(popupWindow->pos(), window->pos() + window->clientPos() + QPoint(80, 20));
+    QCOMPARE(popupWindow->pos(), window->mapFromLocal(QPoint(80, 20)));
     QCOMPARE(popupWindow->hasPopupGrab(), true);
 
     // let's move the pointer into the center of the deco
