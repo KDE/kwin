@@ -277,6 +277,14 @@ void Connection::processEvents()
             applyDeviceConfig(device);
             applyScreenToDevice(device);
 
+            connect(device, &Device::outputNameChanged, this, [this, device] {
+                // If the output name changes from something to empty we need to
+                // re-run the assignment heuristic so that an output is assinged
+                if (device->outputName().isEmpty()) {
+                    applyScreenToDevice(device);
+                }
+            });
+
             Q_EMIT deviceAdded(device);
             break;
         }
