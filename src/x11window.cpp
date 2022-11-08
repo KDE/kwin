@@ -30,6 +30,7 @@
 #include "shadow.h"
 #include "surfaceitem_x11.h"
 #include "virtualdesktops.h"
+#include "wayland_server.h"
 #include "windowitem.h"
 #include "workspace.h"
 #include <KDecoration2/DecoratedClient>
@@ -60,19 +61,72 @@
 namespace KWin
 {
 
-const long ClientWinMask = XCB_EVENT_MASK_KEY_PRESS
-    | XCB_EVENT_MASK_KEY_RELEASE
-    | XCB_EVENT_MASK_BUTTON_PRESS
-    | XCB_EVENT_MASK_BUTTON_RELEASE
-    | XCB_EVENT_MASK_KEYMAP_STATE
-    | XCB_EVENT_MASK_BUTTON_MOTION
-    | XCB_EVENT_MASK_POINTER_MOTION // need this, too!
-    | XCB_EVENT_MASK_ENTER_WINDOW
-    | XCB_EVENT_MASK_LEAVE_WINDOW
-    | XCB_EVENT_MASK_FOCUS_CHANGE
-    | XCB_EVENT_MASK_EXPOSURE
-    | XCB_EVENT_MASK_STRUCTURE_NOTIFY
-    | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
+static uint32_t frameEventMask()
+{
+    if (waylandServer()) {
+        return XCB_EVENT_MASK_FOCUS_CHANGE
+            | XCB_EVENT_MASK_STRUCTURE_NOTIFY
+            | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
+            | XCB_EVENT_MASK_PROPERTY_CHANGE;
+    } else {
+        return XCB_EVENT_MASK_FOCUS_CHANGE
+            | XCB_EVENT_MASK_STRUCTURE_NOTIFY
+            | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
+            | XCB_EVENT_MASK_PROPERTY_CHANGE
+            | XCB_EVENT_MASK_KEY_PRESS
+            | XCB_EVENT_MASK_KEY_RELEASE
+            | XCB_EVENT_MASK_ENTER_WINDOW
+            | XCB_EVENT_MASK_LEAVE_WINDOW
+            | XCB_EVENT_MASK_BUTTON_PRESS
+            | XCB_EVENT_MASK_BUTTON_RELEASE
+            | XCB_EVENT_MASK_BUTTON_MOTION
+            | XCB_EVENT_MASK_POINTER_MOTION
+            | XCB_EVENT_MASK_KEYMAP_STATE
+            | XCB_EVENT_MASK_EXPOSURE
+            | XCB_EVENT_MASK_VISIBILITY_CHANGE;
+    }
+}
+
+static uint32_t wrapperEventMask()
+{
+    if (waylandServer()) {
+        return XCB_EVENT_MASK_FOCUS_CHANGE
+            | XCB_EVENT_MASK_STRUCTURE_NOTIFY
+            | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
+            | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY;
+    } else {
+        return XCB_EVENT_MASK_FOCUS_CHANGE
+            | XCB_EVENT_MASK_STRUCTURE_NOTIFY
+            | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
+            | XCB_EVENT_MASK_KEY_PRESS
+            | XCB_EVENT_MASK_KEY_RELEASE
+            | XCB_EVENT_MASK_ENTER_WINDOW
+            | XCB_EVENT_MASK_LEAVE_WINDOW
+            | XCB_EVENT_MASK_BUTTON_PRESS
+            | XCB_EVENT_MASK_BUTTON_RELEASE
+            | XCB_EVENT_MASK_BUTTON_MOTION
+            | XCB_EVENT_MASK_POINTER_MOTION
+            | XCB_EVENT_MASK_KEYMAP_STATE
+            | XCB_EVENT_MASK_EXPOSURE
+            | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY;
+    }
+}
+
+static uint32_t clientEventMask()
+{
+    if (waylandServer()) {
+        return XCB_EVENT_MASK_FOCUS_CHANGE
+            | XCB_EVENT_MASK_PROPERTY_CHANGE;
+    } else {
+        return XCB_EVENT_MASK_FOCUS_CHANGE
+            | XCB_EVENT_MASK_PROPERTY_CHANGE
+            | XCB_EVENT_MASK_COLOR_MAP_CHANGE
+            | XCB_EVENT_MASK_ENTER_WINDOW
+            | XCB_EVENT_MASK_LEAVE_WINDOW
+            | XCB_EVENT_MASK_KEY_PRESS
+            | XCB_EVENT_MASK_KEY_RELEASE;
+    }
+}
 
 // window types that are supported as normal windows (i.e. KWin actually manages them)
 const NET::WindowTypes SUPPORTED_MANAGED_WINDOW_TYPES_MASK = NET::NormalMask
@@ -1013,23 +1067,6 @@ void X11Window::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colorma
         | XCB_CW_COLORMAP
         | XCB_CW_CURSOR;
 
-    const uint32_t common_event_mask = XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_KEY_RELEASE
-        | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW
-        | XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE
-        | XCB_EVENT_MASK_BUTTON_MOTION | XCB_EVENT_MASK_POINTER_MOTION
-        | XCB_EVENT_MASK_KEYMAP_STATE
-        | XCB_EVENT_MASK_FOCUS_CHANGE
-        | XCB_EVENT_MASK_EXPOSURE
-        | XCB_EVENT_MASK_STRUCTURE_NOTIFY | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
-
-    const uint32_t frame_event_mask = common_event_mask | XCB_EVENT_MASK_PROPERTY_CHANGE | XCB_EVENT_MASK_VISIBILITY_CHANGE;
-    const uint32_t wrapper_event_mask = common_event_mask | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY;
-
-    const uint32_t client_event_mask = XCB_EVENT_MASK_FOCUS_CHANGE | XCB_EVENT_MASK_PROPERTY_CHANGE
-        | XCB_EVENT_MASK_COLOR_MAP_CHANGE
-        | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW
-        | XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_KEY_RELEASE;
-
     // Create the frame window
     xcb_window_t frame = xcb_generate_id(conn);
     xcb_create_window(conn, depth, frame, kwinApp()->x11RootWindow(), 0, 0, 1, 1, 0,
@@ -1049,9 +1086,9 @@ void X11Window::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colorma
     // We could specify the event masks when we create the windows, but the original
     // Xlib code didn't.  Let's preserve that behavior here for now so we don't end up
     // receiving any unexpected events from the wrapper creation or the reparenting.
-    m_frame.selectInput(frame_event_mask);
-    m_wrapper.selectInput(wrapper_event_mask);
-    m_client.selectInput(client_event_mask);
+    m_frame.selectInput(frameEventMask());
+    m_wrapper.selectInput(wrapperEventMask());
+    m_client.selectInput(clientEventMask());
 
     updateMouseGrab();
 }
@@ -1548,10 +1585,10 @@ void X11Window::doSetShade(ShadeMode previousShadeMode)
         shade_geometry_change = true;
         QSizeF s(implicitSize());
         s.setHeight(borderTop() + borderBottom());
-        m_wrapper.selectInput(ClientWinMask); // Avoid getting UnmapNotify
+        m_wrapper.selectInput(wrapperEventMask() & ~XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY); // Avoid getting UnmapNotify
         m_wrapper.unmap();
         m_client.unmap();
-        m_wrapper.selectInput(ClientWinMask | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY);
+        m_wrapper.selectInput(wrapperEventMask());
         exportMappingState(XCB_ICCCM_WM_STATE_ICONIC);
         resize(s);
         shade_geometry_change = false;
@@ -1761,12 +1798,12 @@ void X11Window::unmap()
     // which won't be missed, so this shouldn't be a problem. The chance the real UnmapNotify
     // will be missed is also very minimal, so I don't think it's needed to grab the server
     // here.
-    m_wrapper.selectInput(ClientWinMask); // Avoid getting UnmapNotify
+    m_wrapper.selectInput(wrapperEventMask() & ~XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY); // Avoid getting UnmapNotify
     m_frame.unmap();
     m_wrapper.unmap();
     m_client.unmap();
     m_decoInputExtent.unmap();
-    m_wrapper.selectInput(ClientWinMask | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY);
+    m_wrapper.selectInput(wrapperEventMask());
     exportMappingState(XCB_ICCCM_WM_STATE_ICONIC);
 }
 
