@@ -120,7 +120,6 @@ static uint32_t clientEventMask()
     } else {
         return XCB_EVENT_MASK_FOCUS_CHANGE
             | XCB_EVENT_MASK_PROPERTY_CHANGE
-            | XCB_EVENT_MASK_COLOR_MAP_CHANGE
             | XCB_EVENT_MASK_ENTER_WINDOW
             | XCB_EVENT_MASK_LEAVE_WINDOW
             | XCB_EVENT_MASK_KEY_PRESS
