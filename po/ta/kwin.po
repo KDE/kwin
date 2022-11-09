@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-06 00:48+0000\n"
-"PO-Revision-Date: 2022-11-03 21:35+0530\n"
+"POT-Creation-Date: 2022-11-09 00:49+0000\n"
+"PO-Revision-Date: 2022-11-08 21:25+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.08.2\n"
+"X-Generator: Lokalize 22.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1290,17 +1290,17 @@ msgstr ""
 #: main_wayland.cpp:330
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
-msgstr ""
+msgstr "சாளரப் பயன்முறைக்கான அகலம். இயல்பிருப்பு 1024 ஆகும்."
 
 #: main_wayland.cpp:334
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
-msgstr ""
+msgstr "சாளரப் பயன்முறைக்கான உயரம். இயல்பிருப்பு 768 ஆகும்."
 
 #: main_wayland.cpp:339
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
-msgstr ""
+msgstr "சாளரப் பயன்முறைக்கான அளவுகோல். இயல்பிருப்பு 1 ஆகும்."
 
 #: main_wayland.cpp:344
 #, kde-format
@@ -1614,7 +1614,7 @@ msgstr "இவ்விதியை நீக்கு (இறக்குமத
 #: rulesettings.kcfg:20
 #, kde-format
 msgid "Window class (application)"
-msgstr "சாளர வகை (செயலி)"
+msgstr "சாளர வகுப்பு (செயலி)"
 
 #. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:23
@@ -1626,14 +1626,13 @@ msgstr ""
 #: rulesettings.kcfg:29
 #, kde-format
 msgid "Match whole window class"
-msgstr ""
+msgstr "சாளர வகுப்பை பொருத்து"
 
 #. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:34
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window role"
-msgstr "சாளரங்கள்"
+msgstr "சாளர வகை"
 
 #. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:37
@@ -1884,7 +1883,7 @@ msgstr ""
 #: rulesettings.kcfg:249
 #, fuzzy, kde-format
 msgid "Skip pager"
-msgstr "சாளரமாற்றியில் காட்டாத‍து"
+msgstr "பணிமேடை மாற்றியில் காட்டாதே"
 
 #. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:253
@@ -2736,7 +2735,7 @@ msgstr "கீழுள்ள பணிமேடைக்கு தாவு"
 msgid "Switch to Desktop %1"
 msgstr "பணிமேடை %1-க்கு தாவு"
 
-#: window.cpp:3432
+#: window.cpp:3433
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
