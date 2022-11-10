@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
+#include <QSize>
 #include <QtTest>
 
 #include "mock_drm.h"
@@ -35,6 +36,7 @@ private Q_SLOTS:
     void testAmsDetection();
     void testOutputDetection();
     void testZeroModesHandling();
+    void testModeGeneration_data();
     void testModeGeneration();
 };
 
@@ -159,6 +161,91 @@ void DrmTest::testZeroModesHandling()
     verifyCleanup(mockGpu.get());
 }
 
+void DrmTest::testModeGeneration_data()
+{
+    QTest::addColumn<QSize>("nativeMode");
+    QTest::addColumn<QVector<QSize>>("expectedModes");
+
+    QTest::newRow("2160p") << QSize(3840, 2160) << QVector<QSize>{
+        QSize(1600, 1200),
+        QSize(1280, 1024),
+        QSize(1024, 768),
+        QSize(2560, 1600),
+        QSize(1920, 1200),
+        QSize(1280, 800),
+        QSize(3840, 2160),
+        QSize(3200, 1800),
+        QSize(2880, 1620),
+        QSize(2560, 1440),
+        QSize(1920, 1080),
+        QSize(1600, 900),
+        QSize(1368, 768),
+        QSize(1280, 720),
+    };
+    QTest::newRow("1440p") << QSize(2560, 1440) << QVector<QSize>{
+        QSize(1600, 1200),
+        QSize(1280, 1024),
+        QSize(1024, 768),
+        QSize(1920, 1200),
+        QSize(1280, 800),
+        QSize(2560, 1440),
+        QSize(1920, 1080),
+        QSize(1600, 900),
+        QSize(1368, 768),
+        QSize(1280, 720),
+    };
+    QTest::newRow("1080p") << QSize(1920, 1080) << QVector<QSize>{
+        QSize(1280, 1024),
+        QSize(1024, 768),
+        QSize(1280, 800),
+        QSize(1920, 1080),
+        QSize(1600, 900),
+        QSize(1368, 768),
+        QSize(1280, 720),
+    };
+
+    QTest::newRow("2160p 21:9") << QSize(5120, 2160) << QVector<QSize>{
+        QSize(5120, 2160),
+        QSize(1600, 1200),
+        QSize(1280, 1024),
+        QSize(1024, 768),
+        QSize(2560, 1600),
+        QSize(1920, 1200),
+        QSize(1280, 800),
+        QSize(3840, 2160),
+        QSize(3200, 1800),
+        QSize(2880, 1620),
+        QSize(2560, 1440),
+        QSize(1920, 1080),
+        QSize(1600, 900),
+        QSize(1368, 768),
+        QSize(1280, 720),
+    };
+    QTest::newRow("1440p 21:9") << QSize(3440, 1440) << QVector<QSize>{
+        QSize(3440, 1440),
+        QSize(1600, 1200),
+        QSize(1280, 1024),
+        QSize(1024, 768),
+        QSize(1920, 1200),
+        QSize(1280, 800),
+        QSize(2560, 1440),
+        QSize(1920, 1080),
+        QSize(1600, 900),
+        QSize(1368, 768),
+        QSize(1280, 720),
+    };
+    QTest::newRow("1080p 21:9") << QSize(2560, 1080) << QVector<QSize>{
+        QSize(2560, 1080),
+        QSize(1280, 1024),
+        QSize(1024, 768),
+        QSize(1280, 800),
+        QSize(1920, 1080),
+        QSize(1600, 900),
+        QSize(1368, 768),
+        QSize(1280, 720),
+    };
+}
+
 void DrmTest::testModeGeneration()
 {
     const auto mockGpu = std::make_unique<MockGpu>(1, 5);
@@ -171,16 +258,20 @@ void DrmTest::testModeGeneration()
     const auto renderBackend = backend->createQPainterBackend();
     auto gpu = std::make_unique<DrmGpu>(backend.get(), "test", 1, 0);
 
+    QFETCH(QSize, nativeMode);
+    QFETCH(QVector<QSize>, expectedModes);
+
     conn->modes.clear();
-    conn->addMode(3840, 2160, 60);
+    conn->addMode(nativeMode.width(), nativeMode.height(), 60);
     QVERIFY(gpu->updateOutputs());
     QCOMPARE(gpu->drmOutputs().size(), 1);
 
     DrmOutput *const output = gpu->drmOutputs().front();
-    QCOMPARE(output->modes().size(), 14);
+    QCOMPARE(output->modes().size(), expectedModes.size());
     for (const auto &mode : output->modes()) {
-        QVERIFY(mode->size().width() <= 3840);
-        QVERIFY(mode->size().height() <= 2160);
+        QVERIFY(expectedModes.contains(mode->size()));
+        QVERIFY(mode->size().width() <= nativeMode.width());
+        QVERIFY(mode->size().height() <= nativeMode.height());
         QVERIFY(mode->refreshRate() <= 60000);
     }
 
