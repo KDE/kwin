@@ -14,6 +14,7 @@
 #include "basiceglsurfacetexture_wayland.h"
 
 #include "wayland_backend.h"
+#include "wayland_display.h"
 #include "wayland_output.h"
 
 #include "composite.h"
@@ -205,16 +206,6 @@ WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)
     : AbstractEglBackend()
     , m_backend(b)
 {
-    if (!m_backend) {
-        setFailed("Wayland Backend has not been created");
-        return;
-    }
-    qCDebug(KWIN_WAYLAND_BACKEND) << "Connected to Wayland display?" << (m_backend->display() ? "yes" : "no");
-    if (!m_backend->display()) {
-        setFailed("Could not connect to Wayland compositor");
-        return;
-    }
-
     // Egl is always direct rendering
     setIsDirectRendering(true);
 
@@ -267,9 +258,9 @@ bool WaylandEglBackend::initializeEgl()
                 return false;
             }
 
-            display = eglGetPlatformDisplayEXT(EGL_PLATFORM_WAYLAND_EXT, m_backend->display(), nullptr);
+            display = eglGetPlatformDisplayEXT(EGL_PLATFORM_WAYLAND_EXT, m_backend->display()->nativeDisplay(), nullptr);
         } else {
-            display = eglGetDisplay(m_backend->display());
+            display = eglGetDisplay(m_backend->display()->nativeDisplay());
         }
     }
 

@@ -9,6 +9,7 @@
 */
 #include "wayland_qpainter_backend.h"
 #include "wayland_backend.h"
+#include "wayland_display.h"
 #include "wayland_output.h"
 
 #include "composite.h"
@@ -167,7 +168,7 @@ WaylandQPainterBackend::~WaylandQPainterBackend()
 void WaylandQPainterBackend::createOutput(Output *waylandOutput)
 {
     const auto output = std::make_shared<WaylandQPainterOutput>(static_cast<WaylandOutput *>(waylandOutput));
-    output->init(m_backend->shmPool());
+    output->init(m_backend->display()->shmPool());
     m_outputs.insert(waylandOutput, output);
 }
 

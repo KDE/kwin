@@ -9,6 +9,7 @@
 #include "wayland_output.h"
 #include "core/renderloop.h"
 #include "wayland_backend.h"
+#include "wayland_display.h"
 #include "wayland_server.h"
 
 #include <KWayland/Client/pointerconstraints.h>
@@ -149,20 +150,22 @@ XdgShellOutput::~XdgShellOutput()
     m_xdgShellSurface->destroy();
 }
 
+bool XdgShellOutput::isReady() const
+{
+    return m_ready;
+}
+
 void XdgShellOutput::handleConfigure(const QSize &size, XdgShellSurface::States states, quint32 serial)
 {
     m_xdgShellSurface->ackConfigure(serial);
     if (size.width() > 0 && size.height() > 0) {
         resize(size * scale());
-        if (m_hasBeenConfigured) {
+        if (m_ready) {
             Q_EMIT sizeChanged(size);
         }
     }
 
-    if (!m_hasBeenConfigured) {
-        m_hasBeenConfigured = true;
-        backend()->addConfiguredOutput(this);
-    }
+    m_ready = true;
 }
 
 void XdgShellOutput::updateWindowTitle()
@@ -170,7 +173,7 @@ void XdgShellOutput::updateWindowTitle()
     QString grab;
     if (m_hasPointerLock) {
         grab = i18n("Press right control to ungrab pointer");
-    } else if (backend()->pointerConstraints()) {
+    } else if (backend()->display()->pointerConstraints()) {
         grab = i18n("Press right control key to grab pointer");
     }
 
@@ -200,7 +203,7 @@ void XdgShellOutput::lockPointer(Pointer *pointer, bool lock)
     }
 
     Q_ASSERT(!m_pointerLock);
-    m_pointerLock.reset(backend()->pointerConstraints()->lockPointer(surface(), pointer, nullptr, PointerConstraints::LifeTime::OneShot));
+    m_pointerLock.reset(backend()->display()->pointerConstraints()->lockPointer(surface(), pointer, nullptr, PointerConstraints::LifeTime::OneShot));
     if (!m_pointerLock->isValid()) {
         m_pointerLock.reset();
         return;

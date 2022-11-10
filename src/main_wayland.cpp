@@ -563,16 +563,23 @@ int main(int argc, char *argv[])
     case BackendType::X11:
         a.setSession(KWin::Session::create(KWin::Session::Type::Noop));
         a.setOutputBackend(std::make_unique<KWin::X11WindowedBackend>());
+        if (deviceIdentifier.isEmpty()) {
+            a.outputBackend()->setDeviceIdentifier(qgetenv("DISPLAY"));
+        } else {
+            a.outputBackend()->setDeviceIdentifier(deviceIdentifier);
+        }
         break;
     case BackendType::Wayland:
         a.setSession(KWin::Session::create(KWin::Session::Type::Noop));
         a.setOutputBackend(std::make_unique<KWin::Wayland::WaylandBackend>());
+        if (deviceIdentifier.isEmpty()) {
+            a.outputBackend()->setDeviceIdentifier(qgetenv("WAYLAND_DISPLAY"));
+        } else {
+            a.outputBackend()->setDeviceIdentifier(deviceIdentifier);
+        }
         break;
     }
 
-    if (!deviceIdentifier.isEmpty()) {
-        a.outputBackend()->setDeviceIdentifier(deviceIdentifier);
-    }
     if (initialWindowSize.isValid()) {
         a.outputBackend()->setInitialWindowSize(initialWindowSize);
     }

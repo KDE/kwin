@@ -14,6 +14,7 @@
 #include <gbm.h>
 #endif
 #include "core/renderloop_p.h"
+#include "wayland_display.h"
 #include "wayland_logging.h"
 #include "wayland_output.h"
 #include "wayland_qpainter_backend.h"
@@ -25,17 +26,13 @@
 #include "keyboard_input.h"
 #include "pointer_input.h"
 #include "scene.h"
-#include "wayland_server.h"
 
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/compositor.h>
-#include <KWayland/Client/connection_thread.h>
-#include <KWayland/Client/event_queue.h>
 #include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/pointer.h>
 #include <KWayland/Client/pointerconstraints.h>
 #include <KWayland/Client/pointergestures.h>
-#include <KWayland/Client/registry.h>
 #include <KWayland/Client/relativepointer.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/server_decoration.h>
@@ -44,10 +41,8 @@
 #include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/touch.h>
-#include <KWayland/Client/xdgshell.h>
 
-#include <QMetaMethod>
-#include <QThread>
+#include <QAbstractEventDispatcher>
 
 #include <fcntl.h>
 #include <linux/input.h>
@@ -76,7 +71,7 @@ WaylandCursor::~WaylandCursor() = default;
 
 void WaylandCursor::resetSurface()
 {
-    m_surface.reset(backend()->compositor()->createSurface());
+    m_surface.reset(backend()->display()->compositor()->createSurface());
 }
 
 void WaylandCursor::init()
@@ -92,7 +87,7 @@ void WaylandCursor::installImage()
         return;
     }
 
-    auto buffer = m_backend->shmPool()->createBuffer(image).toStrongRef();
+    auto buffer = m_backend->display()->shmPool()->createBuffer(image).toStrongRef();
     wl_buffer *imageBuffer = *buffer.data();
     doInstallImage(imageBuffer, image.size(), image.devicePixelRatio());
 }
@@ -150,7 +145,7 @@ void WaylandSubSurfaceCursor::createSubSurface()
         return;
     }
     resetSurface();
-    m_subSurface.reset(backend()->subCompositor()->createSubSurface(surface(), m_output->surface()));
+    m_subSurface.reset(backend()->display()->subCompositor()->createSubSurface(surface(), m_output->surface()));
     m_subSurface->setMode(SubSurface::Mode::Desynchronized);
 }
 
@@ -264,7 +259,7 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
         Q_EMIT pointerAxisChanged(axis, delta, 0, InputRedirection::PointerAxisSourceUnknown, time, this);
     });
 
-    KWayland::Client::PointerGestures *pointerGestures = m_seat->backend()->pointerGestures();
+    KWayland::Client::PointerGestures *pointerGestures = m_seat->backend()->display()->pointerGestures();
     if (pointerGestures) {
         m_pinchGesture.reset(pointerGestures->createPinchGesture(m_pointer.get(), this));
         connect(m_pinchGesture.get(), &PointerPinchGesture::started, this, [this](quint32 serial, quint32 time) {
@@ -419,29 +414,22 @@ WaylandInputBackend::WaylandInputBackend(WaylandBackend *backend, QObject *paren
 
 void WaylandInputBackend::initialize()
 {
-    connect(m_backend, &WaylandBackend::seatCreated, this, &WaylandInputBackend::checkSeat);
-    checkSeat();
-}
-
-void WaylandInputBackend::checkSeat()
-{
-    if (auto seat = m_backend->seat()) {
-        if (seat->relativePointerDevice()) {
-            Q_EMIT deviceAdded(seat->relativePointerDevice());
-        }
-        if (seat->pointerDevice()) {
-            Q_EMIT deviceAdded(seat->pointerDevice());
-        }
-        if (seat->keyboardDevice()) {
-            Q_EMIT deviceAdded(seat->keyboardDevice());
-        }
-        if (seat->touchDevice()) {
-            Q_EMIT deviceAdded(seat->touchDevice());
-        }
-
-        connect(seat, &WaylandSeat::deviceAdded, this, &InputBackend::deviceAdded);
-        connect(seat, &WaylandSeat::deviceRemoved, this, &InputBackend::deviceRemoved);
+    WaylandSeat *seat = m_backend->seat();
+    if (seat->relativePointerDevice()) {
+        Q_EMIT deviceAdded(seat->relativePointerDevice());
     }
+    if (seat->pointerDevice()) {
+        Q_EMIT deviceAdded(seat->pointerDevice());
+    }
+    if (seat->keyboardDevice()) {
+        Q_EMIT deviceAdded(seat->keyboardDevice());
+    }
+    if (seat->touchDevice()) {
+        Q_EMIT deviceAdded(seat->touchDevice());
+    }
+
+    connect(seat, &WaylandSeat::deviceAdded, this, &InputBackend::deviceAdded);
+    connect(seat, &WaylandSeat::deviceRemoved, this, &InputBackend::deviceRemoved);
 }
 
 WaylandSeat::WaylandSeat(KWayland::Client::Seat *nativeSeat, WaylandBackend *backend)
@@ -449,27 +437,38 @@ WaylandSeat::WaylandSeat(KWayland::Client::Seat *nativeSeat, WaylandBackend *bac
     , m_seat(nativeSeat)
     , m_backend(backend)
 {
-    connect(m_seat, &Seat::hasKeyboardChanged, this, [this](bool hasKeyboard) {
-        if (hasKeyboard) {
+    auto updateKeyboardDevice = [this](){
+        if (m_seat->hasKeyboard()) {
             createKeyboardDevice();
         } else {
             destroyKeyboardDevice();
         }
-    });
-    connect(m_seat, &Seat::hasPointerChanged, this, [this](bool hasPointer) {
-        if (hasPointer && !m_pointerDevice) {
+    };
+
+    updateKeyboardDevice();
+    connect(m_seat, &Seat::hasKeyboardChanged, this, updateKeyboardDevice);
+
+    auto updatePointerDevice = [this]() {
+        if (m_seat->hasPointer()) {
             createPointerDevice();
         } else {
             destroyPointerDevice();
         }
-    });
-    connect(m_seat, &Seat::hasTouchChanged, this, [this](bool hasTouch) {
-        if (hasTouch && !m_touchDevice) {
+    };
+
+    updatePointerDevice();
+    connect(m_seat, &Seat::hasPointerChanged, this, updatePointerDevice);
+
+    auto updateTouchDevice = [this]() {
+        if (m_seat->hasTouch()) {
             createTouchDevice();
         } else {
             destroyTouchDevice();
         }
-    });
+    };
+
+    updateTouchDevice();
+    connect(m_seat, &Seat::hasTouchChanged, this, updateTouchDevice);
 }
 
 WaylandSeat::~WaylandSeat()
@@ -477,7 +476,6 @@ WaylandSeat::~WaylandSeat()
     destroyPointerDevice();
     destroyKeyboardDevice();
     destroyTouchDevice();
-    m_seat->release();
 }
 
 void WaylandSeat::createPointerDevice()
@@ -497,7 +495,7 @@ void WaylandSeat::destroyPointerDevice()
 
 void WaylandSeat::createRelativePointer()
 {
-    KWayland::Client::RelativePointerManager *manager = m_backend->relativePointerManager();
+    KWayland::Client::RelativePointerManager *manager = m_backend->display()->relativePointerManager();
     if (manager) {
         m_relativePointerDevice = std::make_unique<WaylandInputDevice>(manager->createRelativePointer(m_pointerDevice->nativePointer()), this);
         Q_EMIT deviceAdded(m_relativePointerDevice.get());
@@ -542,17 +540,7 @@ void WaylandSeat::destroyTouchDevice()
 
 WaylandBackend::WaylandBackend(QObject *parent)
     : OutputBackend(parent)
-    , m_display(nullptr)
-    , m_eventQueue(std::make_unique<EventQueue>())
-    , m_registry(std::make_unique<Registry>())
-    , m_compositor(std::make_unique<KWayland::Client::Compositor>())
-    , m_subCompositor(std::make_unique<KWayland::Client::SubCompositor>())
-    , m_shm(std::make_unique<ShmPool>())
-    , m_connectionThreadObject(std::make_unique<ConnectionThread>(nullptr))
-    , m_connectionThread(nullptr)
 {
-    connect(this, &WaylandBackend::connectionFailed, qApp, &QCoreApplication::quit);
-
 #if HAVE_WAYLAND_EGL
     char const *drm_render_node = "/dev/dri/renderD128";
     m_drmFileDescriptor = FileDescriptor(open(drm_render_node, O_RDWR));
@@ -571,35 +559,12 @@ WaylandBackend::~WaylandBackend()
         eglTerminate(sceneEglDisplay());
     }
 
-    if (m_relativePointerManager) {
-        m_relativePointerManager->release();
-    }
-    if (m_ssdManager) {
-        m_ssdManager->release();
-    }
-
-    if (m_pointerGestures) {
-        m_pointerGestures->release();
-    }
-    if (m_pointerConstraints) {
-        m_pointerConstraints->release();
-    }
-    m_waylandCursor.reset();
-
-    m_eventQueue->release();
     destroyOutputs();
 
-    if (m_xdgShell) {
-        m_xdgShell->release();
-    }
-    m_subCompositor->release();
-    m_compositor->release();
-    m_registry->release();
+    m_waylandCursor.reset();
     m_seat.reset();
-    m_shm->release();
+    m_display.reset();
 
-    m_connectionThread->quit();
-    m_connectionThread->wait();
 #if HAVE_WAYLAND_EGL
     gbm_device_destroy(m_gbmDevice);
 #endif
@@ -608,57 +573,20 @@ WaylandBackend::~WaylandBackend()
 
 bool WaylandBackend::initialize()
 {
-    connect(m_registry.get(), &Registry::compositorAnnounced, this, [this](quint32 name, quint32 version) {
-        if (version < 4) {
-            qFatal("wl_compositor version 4 or later is required");
-        }
-        m_compositor->setup(m_registry->bindCompositor(name, version));
-    });
-    connect(m_registry.get(), &Registry::subCompositorAnnounced, this, [this](quint32 name) {
-        m_subCompositor->setup(m_registry->bindSubCompositor(name, 1));
-    });
-    connect(m_registry.get(), &Registry::shmAnnounced, this, [this](quint32 name) {
-        m_shm->setup(m_registry->bindShm(name, 1));
-    });
-    connect(m_registry.get(), &Registry::relativePointerManagerUnstableV1Announced, this, [this](quint32 name, quint32 version) {
-        if (m_relativePointerManager) {
-            return;
-        }
-        m_relativePointerManager = m_registry->createRelativePointerManager(name, version, this);
-        if (m_pointerConstraints) {
-            Q_EMIT pointerLockSupportedChanged();
-        }
-    });
-    connect(m_registry.get(), &Registry::pointerConstraintsUnstableV1Announced, this, [this](quint32 name, quint32 version) {
-        if (m_pointerConstraints) {
-            return;
-        }
-        m_pointerConstraints = m_registry->createPointerConstraints(name, version, this);
-        if (m_relativePointerManager) {
-            Q_EMIT pointerLockSupportedChanged();
-        }
-    });
-    connect(m_registry.get(), &Registry::pointerGesturesUnstableV1Announced, this, [this](quint32 name, quint32 version) {
-        if (m_pointerGestures) {
-            return;
-        }
-        m_pointerGestures = m_registry->createPointerGestures(name, version, this);
-    });
-    connect(m_registry.get(), &Registry::interfacesAnnounced, this, &WaylandBackend::createOutputs);
-    connect(m_registry.get(), &Registry::interfacesAnnounced, this, [this]() {
-        const auto seatInterface = m_registry->interface(Registry::Interface::Seat);
-        if (seatInterface.name == 0) {
-            return;
-        }
-
-        m_seat = std::make_unique<WaylandSeat>(m_registry->createSeat(seatInterface.name, std::min(2u, seatInterface.version), this), this);
-        Q_EMIT seatCreated();
-
-        m_waylandCursor = std::make_unique<WaylandCursor>(this);
-    });
-    if (!deviceIdentifier().isEmpty()) {
-        m_connectionThreadObject->setSocketName(deviceIdentifier());
+    m_display = std::make_unique<WaylandDisplay>();
+    if (!m_display->initialize(deviceIdentifier())) {
+        return false;
     }
+
+    createOutputs();
+
+    m_seat = std::make_unique<WaylandSeat>(m_display->seat(), this);
+    m_waylandCursor = std::make_unique<WaylandCursor>(this);
+
+    QAbstractEventDispatcher *dispatcher = QAbstractEventDispatcher::instance();
+    QObject::connect(dispatcher, &QAbstractEventDispatcher::aboutToBlock, m_display.get(), &WaylandDisplay::flush);
+    QObject::connect(dispatcher, &QAbstractEventDispatcher::awake, m_display.get(), &WaylandDisplay::flush);
+
     connect(Cursors::self(), &Cursors::currentCursorChanged, this, [this]() {
         if (!m_seat || !m_waylandCursor) {
             return;
@@ -681,93 +609,36 @@ bool WaylandBackend::initialize()
         }
         m_waylandCursor->init();
     });
-    initConnection();
+
+    setReady(true);
     return true;
-}
-
-void WaylandBackend::initConnection()
-{
-    connect(
-        m_connectionThreadObject.get(), &ConnectionThread::connected, this, [this]() {
-            // create the event queue for the main gui thread
-            m_display = m_connectionThreadObject->display();
-            m_eventQueue->setup(m_connectionThreadObject.get());
-            m_registry->setEventQueue(m_eventQueue.get());
-            // setup registry
-            m_registry->create(m_display);
-            m_registry->setup();
-        },
-        Qt::QueuedConnection);
-    connect(
-        m_connectionThreadObject.get(), &ConnectionThread::connectionDied, this, [this]() {
-            setReady(false);
-            Q_EMIT systemCompositorDied();
-            m_seat.reset();
-            m_shm->destroy();
-
-            destroyOutputs();
-
-            if (m_xdgShell) {
-                m_xdgShell->destroy();
-            }
-            m_subCompositor->destroy();
-            m_compositor->destroy();
-            m_registry->destroy();
-            m_eventQueue->destroy();
-            if (m_display) {
-                m_display = nullptr;
-            }
-        },
-        Qt::QueuedConnection);
-    connect(m_connectionThreadObject.get(), &ConnectionThread::failed, this, &WaylandBackend::connectionFailed, Qt::QueuedConnection);
-
-    m_connectionThread = std::make_unique<QThread>();
-    m_connectionThreadObject->moveToThread(m_connectionThread.get());
-    m_connectionThread->start();
-
-    m_connectionThreadObject->initConnection();
-}
-
-KWayland::Client::ServerSideDecorationManager *WaylandBackend::ssdManager()
-{
-    if (!m_ssdManager) {
-        using namespace KWayland::Client;
-        const auto ssdManagerIface = m_registry->interface(Registry::Interface::ServerSideDecorationManager);
-        m_ssdManager = ssdManagerIface.name == 0 ? nullptr : m_registry->createServerSideDecorationManager(ssdManagerIface.name, ssdManagerIface.version, this);
-    }
-    return m_ssdManager;
 }
 
 void WaylandBackend::createOutputs()
 {
-    using namespace KWayland::Client;
-
-    const auto xdgIface = m_registry->interface(Registry::Interface::XdgShellStable);
-    if (xdgIface.name != 0) {
-        m_xdgShell.reset(m_registry->createXdgShell(xdgIface.name, xdgIface.version));
-    }
-
     // we need to multiply the initial window size with the scale in order to
     // create an output window of this size in the end
-    const int pixelWidth = initialWindowSize().width() * initialOutputScale() + 0.5;
-    const int pixelHeight = initialWindowSize().height() * initialOutputScale() + 0.5;
-
+    const QSize nativeSize = initialWindowSize() * initialOutputScale();
     for (int i = 0; i < initialOutputCount(); i++) {
-        const QString name = QStringLiteral("WL-%1").arg(i);
-        createOutput(name, QSize(pixelWidth, pixelHeight));
+        WaylandOutput *output = createOutput(QStringLiteral("WL-%1").arg(i), nativeSize);
+        m_outputs << output;
+        Q_EMIT outputAdded(output);
+        output->updateEnabled(true);
     }
+
+    Q_EMIT outputsQueried();
 }
 
 WaylandOutput *WaylandBackend::createOutput(const QString &name, const QSize &size)
 {
-    std::unique_ptr<KWayland::Client::Surface> surface{m_compositor->createSurface()};
+    std::unique_ptr<KWayland::Client::Surface> surface{m_display->compositor()->createSurface()};
     if (!surface || !surface->isValid()) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "Creating Wayland Surface failed";
         return nullptr;
     }
 
-    if (ssdManager()) {
-        auto decoration = ssdManager()->create(surface.get(), surface.get());
+    if (KWayland::Client::ServerSideDecorationManager *ssdManager = m_display->serverSideDecorationManager()) {
+        auto decoration = ssdManager->create(surface.get(), surface.get());
         connect(decoration, &ServerSideDecoration::modeChanged, this, [decoration] {
             if (decoration->mode() != ServerSideDecoration::Mode::Server) {
                 decoration->requestMode(ServerSideDecoration::Mode::Server);
@@ -775,18 +646,19 @@ WaylandOutput *WaylandBackend::createOutput(const QString &name, const QSize &si
         });
     }
 
-    WaylandOutput *waylandOutput = nullptr;
-
-    if (m_xdgShell && m_xdgShell->isValid()) {
-        waylandOutput = new XdgShellOutput(name, std::move(surface), m_xdgShell.get(), this, m_nextId++);
-    }
-
+    XdgShellOutput *waylandOutput = waylandOutput = new XdgShellOutput(name, std::move(surface), m_display->xdgShell(), this, m_nextId++);
     if (!waylandOutput) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "Binding to all shell interfaces failed for output";
         return nullptr;
     }
 
     waylandOutput->init(size);
+
+    // Wait until the output window is configured by the host compositor.
+    while (!waylandOutput->isReady()) {
+        wl_display_roundtrip(m_display->nativeDisplay());
+    }
+
     connect(waylandOutput, &WaylandOutput::frameRendered, this, [waylandOutput]() {
         // The current time of the monotonic clock is a pretty good estimate when the frame
         // has been presented, however it will be much better if we check whether the host
@@ -795,9 +667,6 @@ WaylandOutput *WaylandBackend::createOutput(const QString &name, const QSize &si
         renderLoopPrivate->notifyFrameCompleted(std::chrono::steady_clock::now().time_since_epoch());
     });
 
-    // The output will only actually be added when it receives its first
-    // configure event, and buffers can start being attached
-    m_pendingInitialOutputs++;
     return waylandOutput;
 }
 
@@ -832,9 +701,7 @@ std::unique_ptr<QPainterBackend> WaylandBackend::createQPainterBackend()
 
 void WaylandBackend::flush()
 {
-    if (m_connectionThreadObject) {
-        m_connectionThreadObject->flush();
-    }
+    m_display->flush();
 }
 
 WaylandOutput *WaylandBackend::getOutputAt(const QPointF &globalPosition)
@@ -859,15 +726,12 @@ WaylandOutput *WaylandBackend::findOutput(KWayland::Client::Surface *nativeSurfa
 
 bool WaylandBackend::supportsPointerLock()
 {
-    return m_pointerConstraints && m_relativePointerManager;
+    return m_display->pointerConstraints() && m_display->relativePointerManager();
 }
 
 void WaylandBackend::togglePointerLock()
 {
-    if (!m_pointerConstraints) {
-        return;
-    }
-    if (!m_relativePointerManager) {
+    if (!supportsPointerLock()) {
         return;
     }
     if (!m_seat) {
@@ -910,22 +774,6 @@ QVector<CompositingType> WaylandBackend::supportedCompositors() const
 Outputs WaylandBackend::outputs() const
 {
     return m_outputs;
-}
-
-void WaylandBackend::addConfiguredOutput(WaylandOutput *output)
-{
-    m_outputs << output;
-    Q_EMIT outputAdded(output);
-    output->updateEnabled(true);
-
-    m_pendingInitialOutputs--;
-    if (m_pendingInitialOutputs == 0) {
-        // Mark as ready once all the initial set of screens has arrived
-        // (i.e, received their first configure and it is now safe to commit
-        // buffers to them)
-        setReady(true);
-        Q_EMIT outputsQueried();
-    }
 }
 
 void WaylandBackend::createDpmsFilter()

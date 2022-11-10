@@ -95,6 +95,8 @@ public:
 
     void lockPointer(KWayland::Client::Pointer *pointer, bool lock) override;
 
+    bool isReady() const;
+
 private:
     void handleConfigure(const QSize &size, KWayland::Client::XdgShellSurface::States states, quint32 serial);
     void updateWindowTitle();
@@ -103,7 +105,7 @@ private:
     int m_number;
     std::unique_ptr<KWayland::Client::LockedPointer> m_pointerLock;
     bool m_hasPointerLock = false;
-    bool m_hasBeenConfigured = false;
+    bool m_ready = false;
 };
 
 } // namespace Wayland
