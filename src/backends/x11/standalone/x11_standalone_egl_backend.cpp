@@ -15,9 +15,9 @@
 #include "softwarevsyncmonitor.h"
 #include "surfaceitem_x11.h"
 #include "workspace.h"
+#include "x11_standalone_backend.h"
 #include "x11_standalone_logging.h"
 #include "x11_standalone_overlaywindow.h"
-#include "x11_standalone_platform.h"
 
 #include <QOpenGLContext>
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -43,7 +43,7 @@ bool EglLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedReg
     return true;
 }
 
-EglBackend::EglBackend(Display *display, X11StandalonePlatform *backend)
+EglBackend::EglBackend(Display *display, X11StandaloneBackend *backend)
     : EglOnXBackend(kwinApp()->x11Connection(), display, kwinApp()->x11RootWindow())
     , m_backend(backend)
     , m_overlayWindow(std::make_unique<OverlayWindowX11>())

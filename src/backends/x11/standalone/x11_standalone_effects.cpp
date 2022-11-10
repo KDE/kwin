@@ -12,10 +12,10 @@
 #include "screenedge.h"
 #include "utils/common.h"
 #include "workspace.h"
+#include "x11_standalone_backend.h"
 #include "x11_standalone_effects_keyboard_interception_filter.h"
 #include "x11_standalone_effects_mouse_interception_filter.h"
 #include "x11_standalone_keyboard.h"
-#include "x11_standalone_platform.h"
 
 namespace KWin
 {
@@ -44,7 +44,7 @@ EffectsHandlerImplX11::~EffectsHandlerImplX11()
 
 bool EffectsHandlerImplX11::doGrabKeyboard()
 {
-    auto keyboard = static_cast<X11StandalonePlatform *>(kwinApp()->outputBackend())->keyboard();
+    auto keyboard = static_cast<X11StandaloneBackend *>(kwinApp()->outputBackend())->keyboard();
     if (!keyboard->xkbKeymap()) {
         return false;
     }

@@ -12,7 +12,7 @@
 
 #include <config-kwin.h>
 
-#include "backends/x11/standalone/x11_standalone_platform.h"
+#include "backends/x11/standalone/x11_standalone_backend.h"
 #include "core/outputbackend.h"
 #include "core/session.h"
 #include "outline.h"
@@ -200,12 +200,12 @@ void ApplicationX11::setReplace(bool replace)
 
 std::unique_ptr<Edge> ApplicationX11::createScreenEdge(ScreenEdges *parent)
 {
-    return static_cast<X11StandalonePlatform *>(outputBackend())->createScreenEdge(parent);
+    return static_cast<X11StandaloneBackend *>(outputBackend())->createScreenEdge(parent);
 }
 
 void ApplicationX11::createPlatformCursor(QObject *parent)
 {
-    static_cast<X11StandalonePlatform *>(outputBackend())->createPlatformCursor(parent);
+    static_cast<X11StandaloneBackend *>(outputBackend())->createPlatformCursor(parent);
 }
 
 std::unique_ptr<OutlineVisual> ApplicationX11::createOutline(Outline *outline)
@@ -214,27 +214,27 @@ std::unique_ptr<OutlineVisual> ApplicationX11::createOutline(Outline *outline)
     if (auto outlineVisual = Application::createOutline(outline)) {
         return outlineVisual;
     }
-    return static_cast<X11StandalonePlatform *>(outputBackend())->createOutline(outline);
+    return static_cast<X11StandaloneBackend *>(outputBackend())->createOutline(outline);
 }
 
 void ApplicationX11::createEffectsHandler(Compositor *compositor, Scene *scene)
 {
-    static_cast<X11StandalonePlatform *>(outputBackend())->createEffectsHandler(compositor, scene);
+    static_cast<X11StandaloneBackend *>(outputBackend())->createEffectsHandler(compositor, scene);
 }
 
 void ApplicationX11::startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName)
 {
-    static_cast<X11StandalonePlatform *>(outputBackend())->startInteractiveWindowSelection(callback, cursorName);
+    static_cast<X11StandaloneBackend *>(outputBackend())->startInteractiveWindowSelection(callback, cursorName);
 }
 
 void ApplicationX11::startInteractivePositionSelection(std::function<void(const QPoint &)> callback)
 {
-    static_cast<X11StandalonePlatform *>(outputBackend())->startInteractivePositionSelection(callback);
+    static_cast<X11StandaloneBackend *>(outputBackend())->startInteractivePositionSelection(callback);
 }
 
 PlatformCursorImage ApplicationX11::cursorImage() const
 {
-    return static_cast<X11StandalonePlatform *>(outputBackend())->cursorImage();
+    return static_cast<X11StandaloneBackend *>(outputBackend())->cursorImage();
 }
 
 void ApplicationX11::lostSelection()
@@ -441,7 +441,7 @@ int main(int argc, char *argv[])
     }
 
     a.setSession(KWin::Session::create(KWin::Session::Type::Noop));
-    a.setOutputBackend(std::make_unique<KWin::X11StandalonePlatform>());
+    a.setOutputBackend(std::make_unique<KWin::X11StandaloneBackend>());
     a.start();
 
     return a.exec();

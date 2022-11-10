@@ -6,8 +6,9 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_X11_PLATFORM_H
-#define KWIN_X11_PLATFORM_H
+
+#pragma once
+
 #include "core/outputbackend.h"
 
 #include <kwin_export.h>
@@ -35,13 +36,13 @@ class Compositor;
 class Scene;
 class Window;
 
-class KWIN_EXPORT X11StandalonePlatform : public OutputBackend
+class KWIN_EXPORT X11StandaloneBackend : public OutputBackend
 {
     Q_OBJECT
 
 public:
-    X11StandalonePlatform(QObject *parent = nullptr);
-    ~X11StandalonePlatform() override;
+    X11StandaloneBackend(QObject *parent = nullptr);
+    ~X11StandaloneBackend() override;
     bool initialize() override;
 
     std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
@@ -93,5 +94,3 @@ private:
 };
 
 }
-
-#endif

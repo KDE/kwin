@@ -15,12 +15,12 @@
 #include "x11_standalone_glx_backend.h"
 #include "../common/kwinxrenderutils.h"
 #include "softwarevsyncmonitor.h"
+#include "x11_standalone_backend.h"
 #include "x11_standalone_glx_context_attribute_builder.h"
 #include "x11_standalone_glxconvenience.h"
 #include "x11_standalone_logging.h"
 #include "x11_standalone_omlsynccontrolvsyncmonitor.h"
 #include "x11_standalone_overlaywindow.h"
-#include "x11_standalone_platform.h"
 #include "x11_standalone_sgivideosyncvsyncmonitor.h"
 // kwin
 #include "composite.h"
@@ -98,7 +98,7 @@ bool SwapEventFilter::event(xcb_generic_event_t *event)
     // it's CLOCK_MONOTONIC, so no special conversions are needed.
     const std::chrono::microseconds timestamp((uint64_t(swapEvent->ust_hi) << 32) | swapEvent->ust_lo);
 
-    const auto platform = static_cast<X11StandalonePlatform *>(kwinApp()->outputBackend());
+    const auto platform = static_cast<X11StandaloneBackend *>(kwinApp()->outputBackend());
     RenderLoopPrivate::get(platform->renderLoop())->notifyFrameCompleted(timestamp);
 
     return true;
@@ -120,7 +120,7 @@ bool GlxLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedReg
     return true;
 }
 
-GlxBackend::GlxBackend(Display *display, X11StandalonePlatform *backend)
+GlxBackend::GlxBackend(Display *display, X11StandaloneBackend *backend)
     : OpenGLBackend()
     , m_overlayWindow(std::make_unique<OverlayWindowX11>())
     , window(None)

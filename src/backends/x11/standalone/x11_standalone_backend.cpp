@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "x11_standalone_platform.h"
+#include "x11_standalone_backend.h"
 
 #include <config-kwin.h>
 
@@ -61,15 +61,15 @@ namespace KWin
 class XrandrEventFilter : public X11EventFilter
 {
 public:
-    explicit XrandrEventFilter(X11StandalonePlatform *backend);
+    explicit XrandrEventFilter(X11StandaloneBackend *backend);
 
     bool event(xcb_generic_event_t *event) override;
 
 private:
-    X11StandalonePlatform *m_backend;
+    X11StandaloneBackend *m_backend;
 };
 
-XrandrEventFilter::XrandrEventFilter(X11StandalonePlatform *backend)
+XrandrEventFilter::XrandrEventFilter(X11StandaloneBackend *backend)
     : X11EventFilter(Xcb::Extensions::self()->randrNotifyEvent())
     , m_backend(backend)
 {
@@ -99,7 +99,7 @@ bool XrandrEventFilter::event(xcb_generic_event_t *event)
     return false;
 }
 
-X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
+X11StandaloneBackend::X11StandaloneBackend(QObject *parent)
     : OutputBackend(parent)
     , m_updateOutputsTimer(std::make_unique<QTimer>())
     , m_x11Display(QX11Info::display())
@@ -118,12 +118,12 @@ X11StandalonePlatform::X11StandalonePlatform(QObject *parent)
 #endif
 
     m_updateOutputsTimer->setSingleShot(true);
-    connect(m_updateOutputsTimer.get(), &QTimer::timeout, this, &X11StandalonePlatform::updateOutputs);
+    connect(m_updateOutputsTimer.get(), &QTimer::timeout, this, &X11StandaloneBackend::updateOutputs);
 
     m_keyboard = std::make_unique<X11Keyboard>();
 }
 
-X11StandalonePlatform::~X11StandalonePlatform()
+X11StandaloneBackend::~X11StandaloneBackend()
 {
     if (sceneEglDisplay() != EGL_NO_DISPLAY) {
         eglTerminate(sceneEglDisplay());
@@ -133,7 +133,7 @@ X11StandalonePlatform::~X11StandalonePlatform()
     }
 }
 
-bool X11StandalonePlatform::initialize()
+bool X11StandaloneBackend::initialize()
 {
     if (!QX11Info::isPlatformX11()) {
         return false;
@@ -145,11 +145,11 @@ bool X11StandalonePlatform::initialize()
     if (Xcb::Extensions::self()->isRandrAvailable()) {
         m_randrEventFilter = std::make_unique<XrandrEventFilter>(this);
     }
-    connect(Cursors::self(), &Cursors::hiddenChanged, this, &X11StandalonePlatform::updateCursor);
+    connect(Cursors::self(), &Cursors::hiddenChanged, this, &X11StandaloneBackend::updateCursor);
     return true;
 }
 
-std::unique_ptr<OpenGLBackend> X11StandalonePlatform::createOpenGLBackend()
+std::unique_ptr<OpenGLBackend> X11StandaloneBackend::createOpenGLBackend()
 {
     switch (options->glPlatformInterface()) {
 #if HAVE_EPOXY_GLX
@@ -170,7 +170,7 @@ std::unique_ptr<OpenGLBackend> X11StandalonePlatform::createOpenGLBackend()
     }
 }
 
-std::unique_ptr<Edge> X11StandalonePlatform::createScreenEdge(ScreenEdges *edges)
+std::unique_ptr<Edge> X11StandaloneBackend::createScreenEdge(ScreenEdges *edges)
 {
     if (!m_screenEdgesFilter) {
         m_screenEdgesFilter = std::make_unique<ScreenEdgesFilter>();
@@ -178,7 +178,7 @@ std::unique_ptr<Edge> X11StandalonePlatform::createScreenEdge(ScreenEdges *edges
     return std::make_unique<WindowBasedEdge>(edges);
 }
 
-void X11StandalonePlatform::createPlatformCursor(QObject *parent)
+void X11StandaloneBackend::createPlatformCursor(QObject *parent)
 {
     auto c = new X11Cursor(parent, m_xinputIntegration != nullptr);
 #if HAVE_X11_XINPUT
@@ -192,12 +192,12 @@ void X11StandalonePlatform::createPlatformCursor(QObject *parent)
 #endif
 }
 
-bool X11StandalonePlatform::hasGlx()
+bool X11StandaloneBackend::hasGlx()
 {
     return Xcb::Extensions::self()->hasGlx();
 }
 
-PlatformCursorImage X11StandalonePlatform::cursorImage() const
+PlatformCursorImage X11StandaloneBackend::cursorImage() const
 {
     auto c = kwinApp()->x11Connection();
     UniqueCPtr<xcb_xfixes_get_cursor_image_reply_t> cursor(
@@ -214,7 +214,7 @@ PlatformCursorImage X11StandalonePlatform::cursorImage() const
     return PlatformCursorImage(qcursorimg.copy(), QPoint(cursor->xhot, cursor->yhot));
 }
 
-void X11StandalonePlatform::updateCursor()
+void X11StandaloneBackend::updateCursor()
 {
     if (Cursors::self()->isCursorHidden()) {
         xcb_xfixes_hide_cursor(kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
@@ -223,7 +223,7 @@ void X11StandalonePlatform::updateCursor()
     }
 }
 
-void X11StandalonePlatform::startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName)
+void X11StandaloneBackend::startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName)
 {
     if (!m_windowSelector) {
         m_windowSelector = std::make_unique<WindowSelector>();
@@ -231,7 +231,7 @@ void X11StandalonePlatform::startInteractiveWindowSelection(std::function<void(K
     m_windowSelector->start(callback, cursorName);
 }
 
-void X11StandalonePlatform::startInteractivePositionSelection(std::function<void(const QPoint &)> callback)
+void X11StandaloneBackend::startInteractivePositionSelection(std::function<void(const QPoint &)> callback)
 {
     if (!m_windowSelector) {
         m_windowSelector = std::make_unique<WindowSelector>();
@@ -239,17 +239,17 @@ void X11StandalonePlatform::startInteractivePositionSelection(std::function<void
     m_windowSelector->start(callback);
 }
 
-std::unique_ptr<OutlineVisual> X11StandalonePlatform::createOutline(Outline *outline)
+std::unique_ptr<OutlineVisual> X11StandaloneBackend::createOutline(Outline *outline)
 {
     return std::make_unique<NonCompositedOutlineVisual>(outline);
 }
 
-void X11StandalonePlatform::createEffectsHandler(Compositor *compositor, Scene *scene)
+void X11StandaloneBackend::createEffectsHandler(Compositor *compositor, Scene *scene)
 {
     new EffectsHandlerImplX11(compositor, scene);
 }
 
-QVector<CompositingType> X11StandalonePlatform::supportedCompositors() const
+QVector<CompositingType> X11StandaloneBackend::supportedCompositors() const
 {
     QVector<CompositingType> compositors;
 #if HAVE_EPOXY_GLX
@@ -259,25 +259,25 @@ QVector<CompositingType> X11StandalonePlatform::supportedCompositors() const
     return compositors;
 }
 
-void X11StandalonePlatform::initOutputs()
+void X11StandaloneBackend::initOutputs()
 {
     doUpdateOutputs<Xcb::RandR::ScreenResources>();
     updateRefreshRate();
 }
 
-void X11StandalonePlatform::scheduleUpdateOutputs()
+void X11StandaloneBackend::scheduleUpdateOutputs()
 {
     m_updateOutputsTimer->start();
 }
 
-void X11StandalonePlatform::updateOutputs()
+void X11StandaloneBackend::updateOutputs()
 {
     doUpdateOutputs<Xcb::RandR::CurrentResources>();
     updateRefreshRate();
 }
 
 template<typename T>
-void X11StandalonePlatform::doUpdateOutputs()
+void X11StandaloneBackend::doUpdateOutputs()
 {
     QVector<Output *> changed;
     QVector<Output *> added;
@@ -437,7 +437,7 @@ void X11StandalonePlatform::doUpdateOutputs()
     Q_EMIT outputsQueried();
 }
 
-X11Output *X11StandalonePlatform::findX11Output(const QString &name) const
+X11Output *X11StandaloneBackend::findX11Output(const QString &name) const
 {
     for (Output *output : m_outputs) {
         if (output->name() == name) {
@@ -447,17 +447,17 @@ X11Output *X11StandalonePlatform::findX11Output(const QString &name) const
     return nullptr;
 }
 
-Outputs X11StandalonePlatform::outputs() const
+Outputs X11StandaloneBackend::outputs() const
 {
     return m_outputs;
 }
 
-X11Keyboard *X11StandalonePlatform::keyboard() const
+X11Keyboard *X11StandaloneBackend::keyboard() const
 {
     return m_keyboard.get();
 }
 
-RenderLoop *X11StandalonePlatform::renderLoop() const
+RenderLoop *X11StandaloneBackend::renderLoop() const
 {
     return m_renderLoop.get();
 }
@@ -492,7 +492,7 @@ static int currentRefreshRate()
     return (*syncIt)->refreshRate();
 }
 
-void X11StandalonePlatform::updateRefreshRate()
+void X11StandaloneBackend::updateRefreshRate()
 {
     int refreshRate = currentRefreshRate();
     if (refreshRate <= 0) {

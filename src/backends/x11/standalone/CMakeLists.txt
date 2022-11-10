@@ -1,4 +1,5 @@
 set(X11PLATFORM_SOURCES
+    x11_standalone_backend.cpp
     x11_standalone_cursor.cpp
     x11_standalone_edge.cpp
     x11_standalone_effects.cpp
@@ -11,7 +12,6 @@ set(X11PLATFORM_SOURCES
     x11_standalone_output.cpp
     x11_standalone_overlaywindow.cpp
     x11_standalone_placeholderoutput.cpp
-    x11_standalone_platform.cpp
     x11_standalone_screenedges_filter.cpp
     x11_standalone_windowselector.cpp
     x11_standalone_xfixes_cursor_event_filter.cpp

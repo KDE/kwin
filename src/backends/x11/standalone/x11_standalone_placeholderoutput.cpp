@@ -5,13 +5,13 @@
 */
 
 #include "x11_standalone_placeholderoutput.h"
-#include "x11_standalone_platform.h"
 #include "utils/xcbutils.h"
+#include "x11_standalone_backend.h"
 
 namespace KWin
 {
 
-X11PlaceholderOutput::X11PlaceholderOutput(X11StandalonePlatform *backend, QObject *parent)
+X11PlaceholderOutput::X11PlaceholderOutput(X11StandaloneBackend *backend, QObject *parent)
     : Output(parent)
     , m_backend(backend)
 {

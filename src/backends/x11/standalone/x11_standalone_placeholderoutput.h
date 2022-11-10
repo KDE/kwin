@@ -11,21 +11,21 @@
 namespace KWin
 {
 
-class X11StandalonePlatform;
+class X11StandaloneBackend;
 
 class X11PlaceholderOutput : public Output
 {
     Q_OBJECT
 
 public:
-    explicit X11PlaceholderOutput(X11StandalonePlatform *backend, QObject *parent = nullptr);
+    explicit X11PlaceholderOutput(X11StandaloneBackend *backend, QObject *parent = nullptr);
 
     RenderLoop *renderLoop() const override;
 
     void updateEnabled(bool enabled);
 
 private:
-    X11StandalonePlatform *m_backend;
+    X11StandaloneBackend *m_backend;
 };
 
 } // namespace KWin
