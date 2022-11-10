@@ -1327,16 +1327,26 @@ static bool screenSwitchImpossible()
 
 Output *Workspace::nextOutput(Output *reference) const
 {
-    const int index = m_outputs.indexOf(reference);
+    auto outputs = m_outputs;
+    std::sort(outputs.begin(), outputs.end(), [](const Output *o1, const Output *o2) {
+        const auto geo1 = o1->geometry().center(), geo2 = o2->geometry().center();
+        return (geo1.y() < geo2.y() || (geo1.y() == geo2.y() && geo1.x() < geo2.x()));
+    });
+    const int index = outputs.indexOf(reference);
     Q_ASSERT(index != -1);
-    return m_outputs[(index + 1) % m_outputs.count()];
+    return outputs[(index + 1) % outputs.count()];
 }
 
 Output *Workspace::previousOutput(Output *reference) const
 {
-    const int index = m_outputs.indexOf(reference);
+    auto outputs = m_outputs;
+    std::sort(outputs.begin(), outputs.end(), [](const Output *o1, const Output *o2) {
+        const auto geo1 = o1->geometry().center(), geo2 = o2->geometry().center();
+        return (geo1.y() < geo2.y() || (geo1.y() == geo2.y() && geo1.x() < geo2.x()));
+    });
+    const int index = outputs.indexOf(reference);
     Q_ASSERT(index != -1);
-    return m_outputs[(index + m_outputs.count() - 1) % m_outputs.count()];
+    return outputs[(index + outputs.count() - 1) % outputs.count()];
 }
 
 void Workspace::slotSwitchToScreen(Output *output)
