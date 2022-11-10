@@ -314,9 +314,7 @@ bool DrmConnector::updateProperties()
         }
         m_modes.clear();
         m_modes.append(m_driverModes);
-        if (m_driverModes.size() == 1) {
-            m_modes.append(generateCommonModes(m_driverModes.front().get()));
-        }
+        m_modes.append(generateCommonModes());
         if (m_pipeline->mode()) {
             if (const auto mode = findMode(*m_pipeline->mode()->nativeMode())) {
                 m_pipeline->setMode(mode);
@@ -390,16 +388,30 @@ static const QVector<QSize> s_commonModes = {
     QSize(1280, 720),
 };
 
-QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::generateCommonModes(DrmConnectorMode *baseMode)
+QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::generateCommonModes()
 {
     QList<std::shared_ptr<DrmConnectorMode>> ret;
-    const QSize maxSize = baseMode->size();
-    const uint64_t maxBandwidthEstimation = maxSize.width() * maxSize.height() * uint64_t(baseMode->refreshRate());
+    QSize maxSize;
+    uint32_t maxSizeRefreshRate;
+    for (const auto &mode : std::as_const(m_driverModes)) {
+        if (mode->size().width() >= maxSize.width() && mode->size().height() >= maxSize.height() && mode->refreshRate() >= maxSizeRefreshRate) {
+            maxSize = mode->size();
+            maxSizeRefreshRate = mode->refreshRate();
+        }
+    }
+    const uint64_t maxBandwidthEstimation = maxSize.width() * maxSize.height() * uint64_t(maxSizeRefreshRate);
     for (const auto &size : s_commonModes) {
         const uint64_t bandwidthEstimation = size.width() * size.height() * 60000ull;
-        if (size.width() <= maxSize.width() && size.height() <= maxSize.height() && bandwidthEstimation <= maxBandwidthEstimation) {
-            ret << generateMode(size, 60);
+        if (size.width() > maxSize.width() || size.height() > maxSize.height() || bandwidthEstimation > maxBandwidthEstimation) {
+            continue;
         }
+        const auto generatedMode = generateMode(size, 60);
+        if (std::any_of(m_driverModes.cbegin(), m_driverModes.cend(), [generatedMode](const auto &mode) {
+                return mode->size() == generatedMode->size() && mode->refreshRate() == generatedMode->refreshRate();
+            })) {
+            continue;
+        }
+        ret << generatedMode;
     }
     return ret;
 }
