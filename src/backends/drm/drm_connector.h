@@ -114,7 +114,7 @@ public:
     static DrmContentType kwinToDrmContentType(ContentType type);
 
 private:
-    QList<std::shared_ptr<DrmConnectorMode>> generateCommonModes(DrmConnectorMode *baseMode);
+    QList<std::shared_ptr<DrmConnectorMode>> generateCommonModes();
     std::shared_ptr<DrmConnectorMode> generateMode(const QSize &size, float refreshRate);
 
     std::unique_ptr<DrmPipeline> m_pipeline;
