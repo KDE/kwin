@@ -31,6 +31,7 @@
 #include <QPainter>
 // c++
 #include <cerrno>
+#include <math.h>
 // drm
 #include <drm_fourcc.h>
 #include <libdrm/drm_mode.h>
@@ -416,7 +417,8 @@ void DrmOutput::applyQueuedChanges(const OutputConfiguration &config)
     State next = m_state;
     next.enabled = props->enabled && m_pipeline->crtc();
     next.position = props->pos;
-    next.scale = props->scale;
+    next.scale = std::round(props->scale * 120) / 120.0;
+    qDebug() << "SCALEY SCALE " << next.scale;
     next.transform = props->transform;
     next.currentMode = m_pipeline->mode();
     next.overscan = m_pipeline->overscan();

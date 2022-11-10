@@ -39,7 +39,7 @@ DebugEffect::DebugEffect()
     a->setText(i18n("Toggle Debugging Fractional Scaling"));
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << (Qt::CTRL | Qt::META | Qt::Key_F));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << (Qt::CTRL | Qt::META | Qt::Key_F));
-    effects->registerGlobalShortcut(Qt::CTRL | Qt::META | Qt::Key_F, a);
+    // effects->registerGlobalShortcut(Qt::CTRL | Qt::META | Qt::Key_F, a);
     connect(a, &QAction::triggered, this, &DebugEffect::toggleDebugFractional);
 }
 

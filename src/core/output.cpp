@@ -14,6 +14,8 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 
+#include <math.h>
+
 namespace KWin
 {
 
@@ -223,7 +225,9 @@ void Output::applyChanges(const OutputConfiguration &config)
     next.enabled = props->enabled;
     next.transform = props->transform;
     next.position = props->pos;
-    next.scale = props->scale;
+    next.scale = std::round(props->scale * 120) / 120;
+
+    qDebug() << "setting scale to " << next.scale;
     next.rgbRange = props->rgbRange;
 
     setState(next);
