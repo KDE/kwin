@@ -260,7 +260,7 @@ void Scene::prePaint(Output *output)
         setRenderTargetScale(1);
     } else {
         painted_screen = output;
-        setRenderTargetRect(painted_screen->geometry());
+        setRenderTargetRect(painted_screen->fractionalGeometry());
         setRenderTargetScale(painted_screen->scale());
     }
 
@@ -409,7 +409,7 @@ void Scene::postPaint()
     clearStackingOrder();
 }
 
-static QMatrix4x4 createProjectionMatrix(const QRect &rect, qreal scale)
+static QMatrix4x4 createProjectionMatrix(const QRectF &rect, qreal scale)
 {
     QMatrix4x4 ret;
     ret.ortho(QRectF(rect.left() * scale, rect.top() * scale, rect.width() * scale, rect.height() * scale));
@@ -423,10 +423,10 @@ QMatrix4x4 Scene::renderTargetProjectionMatrix() const
 
 QRect Scene::renderTargetRect() const
 {
-    return m_renderTargetRect;
+    return m_renderTargetRect.toRect();
 }
 
-void Scene::setRenderTargetRect(const QRect &rect)
+void Scene::setRenderTargetRect(const QRectF &rect)
 {
     if (rect == m_renderTargetRect) {
         return;

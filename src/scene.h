@@ -168,7 +168,7 @@ public:
 
     QMatrix4x4 renderTargetProjectionMatrix() const;
     QRect renderTargetRect() const;
-    void setRenderTargetRect(const QRect &rect);
+    void setRenderTargetRect(const QRectF &rect);
     qreal renderTargetScale() const;
     void setRenderTargetScale(qreal scale);
 
@@ -233,7 +233,7 @@ private:
     QList<SceneDelegate *> m_delegates;
     QRect m_geometry;
     QMatrix4x4 m_renderTargetProjectionMatrix;
-    QRect m_renderTargetRect;
+    QRectF m_renderTargetRect;
     qreal m_renderTargetScale = 1;
     // how many times finalPaintScreen() has been called
     int m_paintScreenCount = 0;
