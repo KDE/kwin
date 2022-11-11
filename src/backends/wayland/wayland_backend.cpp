@@ -13,7 +13,6 @@
 #include "wayland_egl_backend.h"
 #include <gbm.h>
 #endif
-#include "core/renderloop_p.h"
 #include "wayland_display.h"
 #include "wayland_logging.h"
 #include "wayland_output.h"
@@ -35,7 +34,6 @@
 #include <KWayland/Client/pointergestures.h>
 #include <KWayland/Client/relativepointer.h>
 #include <KWayland/Client/seat.h>
-#include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/subcompositor.h>
 #include <KWayland/Client/subsurface.h>
@@ -631,41 +629,13 @@ void WaylandBackend::createOutputs()
 
 WaylandOutput *WaylandBackend::createOutput(const QString &name, const QSize &size)
 {
-    std::unique_ptr<KWayland::Client::Surface> surface{m_display->compositor()->createSurface()};
-    if (!surface || !surface->isValid()) {
-        qCCritical(KWIN_WAYLAND_BACKEND) << "Creating Wayland Surface failed";
-        return nullptr;
-    }
-
-    if (KWayland::Client::ServerSideDecorationManager *ssdManager = m_display->serverSideDecorationManager()) {
-        auto decoration = ssdManager->create(surface.get(), surface.get());
-        connect(decoration, &ServerSideDecoration::modeChanged, this, [decoration] {
-            if (decoration->mode() != ServerSideDecoration::Mode::Server) {
-                decoration->requestMode(ServerSideDecoration::Mode::Server);
-            }
-        });
-    }
-
-    XdgShellOutput *waylandOutput = waylandOutput = new XdgShellOutput(name, std::move(surface), m_display->xdgShell(), this, m_nextId++);
-    if (!waylandOutput) {
-        qCCritical(KWIN_WAYLAND_BACKEND) << "Binding to all shell interfaces failed for output";
-        return nullptr;
-    }
-
+    WaylandOutput *waylandOutput = new WaylandOutput(name, this);
     waylandOutput->init(size);
 
     // Wait until the output window is configured by the host compositor.
     while (!waylandOutput->isReady()) {
         wl_display_roundtrip(m_display->nativeDisplay());
     }
-
-    connect(waylandOutput, &WaylandOutput::frameRendered, this, [waylandOutput]() {
-        // The current time of the monotonic clock is a pretty good estimate when the frame
-        // has been presented, however it will be much better if we check whether the host
-        // compositor supports the wp_presentation protocol.
-        RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(waylandOutput->renderLoop());
-        renderLoopPrivate->notifyFrameCompleted(std::chrono::steady_clock::now().time_since_epoch());
-    });
 
     return waylandOutput;
 }
@@ -750,16 +720,6 @@ void WaylandBackend::togglePointerLock()
     }
     m_pointerLockRequested = !m_pointerLockRequested;
     flush();
-}
-
-bool WaylandBackend::pointerIsLocked()
-{
-    for (auto *output : std::as_const(m_outputs)) {
-        if (output->pointerIsLocked()) {
-            return true;
-        }
-    }
-    return false;
 }
 
 QVector<CompositingType> WaylandBackend::supportedCompositors() const

@@ -252,7 +252,6 @@ public:
 
     bool supportsPointerLock();
     void togglePointerLock();
-    bool pointerIsLocked();
 
     QVector<CompositingType> supportedCompositors() const override;
 
@@ -298,7 +297,6 @@ private:
     std::unique_ptr<WaylandCursor> m_waylandCursor;
     std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;
     bool m_pointerLockRequested = false;
-    int m_nextId = 0;
 #if HAVE_WAYLAND_EGL
     FileDescriptor m_drmFileDescriptor;
     gbm_device *m_gbmDevice;
