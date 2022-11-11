@@ -431,13 +431,6 @@ public:
     }
 
     void quickTileWindow(QuickTileMode mode);
-
-    enum Direction {
-        DirectionNorth,
-        DirectionEast,
-        DirectionSouth,
-        DirectionWest
-    };
     void switchWindow(Direction direction);
 
     ShortcutDialog *shortcutDialog() const
@@ -491,10 +484,19 @@ public Q_SLOTS:
     // void slotWindowToListPosition( int );
     void slotSwitchToScreen(Output *output);
     void slotWindowToScreen(Output *output);
-    void slotSwitchToNextScreen();
-    void slotWindowToNextScreen();
+    void slotSwitchToLeftScreen();
+    void slotSwitchToRightScreen();
+    void slotSwitchToAboveScreen();
+    void slotSwitchToBelowScreen();
     void slotSwitchToPrevScreen();
+    void slotSwitchToNextScreen();
+    void slotWindowToLeftScreen();
+    void slotWindowToRightScreen();
+    void slotWindowToAboveScreen();
+    void slotWindowToBelowScreen();
+    void slotWindowToNextScreen();
     void slotWindowToPrevScreen();
+
     void slotToggleShowDesktop();
 
     void slotWindowMaximize();

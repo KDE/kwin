@@ -151,8 +151,6 @@ QPoint WorkspaceWrapper::cursorPos() const
         Workspace::self()->name(); \
     }
 
-SLOTWRAPPER(slotSwitchToNextScreen)
-SLOTWRAPPER(slotWindowToNextScreen)
 SLOTWRAPPER(slotToggleShowDesktop)
 
 SLOTWRAPPER(slotWindowMaximize)
@@ -192,6 +190,20 @@ SLOTWRAPPER(slotWindowToDesktopRight)
 SLOTWRAPPER(slotWindowToDesktopLeft)
 SLOTWRAPPER(slotWindowToDesktopUp)
 SLOTWRAPPER(slotWindowToDesktopDown)
+
+SLOTWRAPPER(slotWindowToPrevScreen)
+SLOTWRAPPER(slotWindowToNextScreen)
+SLOTWRAPPER(slotWindowToLeftScreen)
+SLOTWRAPPER(slotWindowToRightScreen)
+SLOTWRAPPER(slotWindowToAboveScreen)
+SLOTWRAPPER(slotWindowToBelowScreen)
+
+SLOTWRAPPER(slotSwitchToPrevScreen)
+SLOTWRAPPER(slotSwitchToNextScreen)
+SLOTWRAPPER(slotSwitchToLeftScreen)
+SLOTWRAPPER(slotSwitchToRightScreen)
+SLOTWRAPPER(slotSwitchToAboveScreen)
+SLOTWRAPPER(slotSwitchToBelowScreen)
 
 #undef SLOTWRAPPER
 

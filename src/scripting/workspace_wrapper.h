@@ -316,7 +316,18 @@ public Q_SLOTS:
     void slotSwitchDesktopDown();
 
     void slotSwitchToNextScreen();
+    void slotSwitchToPrevScreen();
+    void slotSwitchToRightScreen();
+    void slotSwitchToLeftScreen();
+    void slotSwitchToAboveScreen();
+    void slotSwitchToBelowScreen();
     void slotWindowToNextScreen();
+    void slotWindowToPrevScreen();
+    void slotWindowToRightScreen();
+    void slotWindowToLeftScreen();
+    void slotWindowToAboveScreen();
+    void slotWindowToBelowScreen();
+
     void slotToggleShowDesktop();
 
     void slotWindowMaximize();

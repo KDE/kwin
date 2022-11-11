@@ -4,6 +4,7 @@
 
     SPDX-FileCopyrightText: 1999, 2000 Matthias Ettrich <ettrich@kde.org>
     SPDX-FileCopyrightText: 2003 Lubos Lunak <l.lunak@kde.org>
+    SPDX-FileCopyrightText: 2022 Natalie Clarius <natalie_clarius@yahoo.de>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -29,6 +30,7 @@
 #include "cursor.h"
 #include "effects.h"
 #include "input.h"
+#include "options.h"
 #include "scripting/scripting.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
@@ -1104,8 +1106,14 @@ void Workspace::initShortcuts()
                  Qt::META | Qt::SHIFT | Qt::Key_Right, &Workspace::slotWindowToNextScreen);
     initShortcut("Window to Previous Screen", i18n("Window to Previous Screen"),
                  Qt::META | Qt::SHIFT | Qt::Key_Left, &Workspace::slotWindowToPrevScreen);
-    initShortcut("Show Desktop", i18n("Peek at Desktop"),
-                 Qt::META | Qt::Key_D, &Workspace::slotToggleShowDesktop);
+    initShortcut("Window One Screen to the Right", i18n("Window One Screen to the Right"),
+                 0, &Workspace::slotWindowToRightScreen);
+    initShortcut("Window One Screen to the Left", i18n("Window One Screen to the Left"),
+                 0, &Workspace::slotWindowToLeftScreen);
+    initShortcut("Window One Screen Up", i18n("Window One Screen Up"),
+                 0, &Workspace::slotWindowToAboveScreen);
+    initShortcut("Window One Screen Down", i18n("Window One Screen Down"),
+                 0, &Workspace::slotWindowToBelowScreen);
 
     for (int i = 0; i < 8; ++i) {
         initShortcut(QStringLiteral("Switch to Screen %1").arg(i), i18n("Switch to Screen %1", i), 0, [this, i]() {
@@ -1115,9 +1123,19 @@ void Workspace::initShortcuts()
             }
         });
     }
-
     initShortcut("Switch to Next Screen", i18n("Switch to Next Screen"), 0, &Workspace::slotSwitchToNextScreen);
     initShortcut("Switch to Previous Screen", i18n("Switch to Previous Screen"), 0, &Workspace::slotSwitchToPrevScreen);
+    initShortcut("Switch to Screen to the Right", i18n("Switch to Screen to the Right"),
+                 0, &Workspace::slotSwitchToRightScreen);
+    initShortcut("Switch to Screen to the Left", i18n("Switch to Screen to the Left"),
+                 0, &Workspace::slotSwitchToLeftScreen);
+    initShortcut("Switch to Screen Above", i18n("Switch to Screen Above"),
+                 0, &Workspace::slotSwitchToAboveScreen);
+    initShortcut("Switch to Screen Below", i18n("Switch to Screen Below"),
+                 0, &Workspace::slotSwitchToBelowScreen);
+
+    initShortcut("Show Desktop", i18n("Peek at Desktop"),
+                 Qt::META | Qt::Key_D, &Workspace::slotToggleShowDesktop);
 
     initShortcut("Kill Window", i18n("Kill Window"), Qt::META | Qt::CTRL | Qt::Key_Escape, &Workspace::slotKillWindow);
     initShortcut("Suspend Compositing", i18n("Suspend Compositing"), Qt::SHIFT | Qt::ALT | Qt::Key_F12, Compositor::self(), &Compositor::toggleCompositing);
@@ -1332,20 +1350,46 @@ void Workspace::slotSwitchToScreen(Output *output)
     }
 }
 
-void Workspace::slotSwitchToNextScreen()
+void Workspace::slotSwitchToLeftScreen()
 {
-    if (screenSwitchImpossible()) {
-        return;
+    if (!screenSwitchImpossible()) {
+        switchToOutput(outputFrom(activeOutput(), Direction::DirectionWest, true));
     }
-    switchToOutput(nextOutput(activeOutput()));
+}
+
+void Workspace::slotSwitchToRightScreen()
+{
+    if (!screenSwitchImpossible()) {
+        switchToOutput(outputFrom(activeOutput(), Direction::DirectionEast, true));
+    }
+}
+
+void Workspace::slotSwitchToAboveScreen()
+{
+    if (!screenSwitchImpossible()) {
+        switchToOutput(outputFrom(activeOutput(), Direction::DirectionNorth, true));
+    }
+}
+
+void Workspace::slotSwitchToBelowScreen()
+{
+    if (!screenSwitchImpossible()) {
+        switchToOutput(outputFrom(activeOutput(), Direction::DirectionSouth, true));
+    }
 }
 
 void Workspace::slotSwitchToPrevScreen()
 {
-    if (screenSwitchImpossible()) {
-        return;
+    if (!screenSwitchImpossible()) {
+        switchToOutput(outputFrom(activeOutput(), Direction::DirectionPrev, true));
     }
-    switchToOutput(previousOutput(activeOutput()));
+}
+
+void Workspace::slotSwitchToNextScreen()
+{
+    if (!screenSwitchImpossible()) {
+        switchToOutput(outputFrom(activeOutput(), Direction::DirectionNext, true));
+    }
 }
 
 void Workspace::slotWindowToScreen(Output *output)
@@ -1355,17 +1399,45 @@ void Workspace::slotWindowToScreen(Output *output)
     }
 }
 
-void Workspace::slotWindowToNextScreen()
+void Workspace::slotWindowToLeftScreen()
 {
     if (USABLE_ACTIVE_WINDOW) {
-        sendWindowToOutput(m_activeWindow, nextOutput(m_activeWindow->moveResizeOutput()));
+        sendWindowToOutput(m_activeWindow, outputFrom(m_activeWindow->output(), Direction::DirectionWest, true));
+    }
+}
+
+void Workspace::slotWindowToRightScreen()
+{
+    if (USABLE_ACTIVE_WINDOW) {
+        sendWindowToOutput(m_activeWindow, outputFrom(m_activeWindow->output(), Direction::DirectionEast, true));
+    }
+}
+
+void Workspace::slotWindowToAboveScreen()
+{
+    if (USABLE_ACTIVE_WINDOW) {
+        sendWindowToOutput(m_activeWindow, outputFrom(m_activeWindow->output(), Direction::DirectionNorth, true));
+    }
+}
+
+void Workspace::slotWindowToBelowScreen()
+{
+    if (USABLE_ACTIVE_WINDOW) {
+        sendWindowToOutput(m_activeWindow, outputFrom(m_activeWindow->output(), Direction::DirectionSouth, true));
     }
 }
 
 void Workspace::slotWindowToPrevScreen()
 {
     if (USABLE_ACTIVE_WINDOW) {
-        sendWindowToOutput(m_activeWindow, previousOutput(m_activeWindow->moveResizeOutput()));
+        sendWindowToOutput(m_activeWindow, outputFrom(m_activeWindow->output(), Direction::DirectionPrev, true));
+    }
+}
+
+void Workspace::slotWindowToNextScreen()
+{
+    if (USABLE_ACTIVE_WINDOW) {
+        sendWindowToOutput(m_activeWindow, outputFrom(m_activeWindow->output(), Direction::DirectionNext, true));
     }
 }
 
