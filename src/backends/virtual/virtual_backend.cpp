@@ -40,7 +40,6 @@ VirtualBackend::~VirtualBackend()
 
 bool VirtualBackend::initialize()
 {
-    setReady(true);
     return true;
 }
 

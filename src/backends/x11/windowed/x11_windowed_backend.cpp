@@ -206,7 +206,6 @@ bool X11WindowedBackend::initialize()
             KWin::Cursor *c = KWin::Cursors::self()->currentCursor();
             createCursor(c->image(), c->hotspot());
         });
-        setReady(true);
         m_pointerDevice = std::make_unique<X11WindowedInputDevice>();
         m_pointerDevice->setPointer(true);
         m_keyboardDevice = std::make_unique<X11WindowedInputDevice>();

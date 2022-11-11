@@ -91,15 +91,6 @@ Output *OutputBackend::findOutput(const QString &name) const
     return nullptr;
 }
 
-void OutputBackend::setReady(bool ready)
-{
-    if (m_ready == ready) {
-        return;
-    }
-    m_ready = ready;
-    Q_EMIT readyChanged(m_ready);
-}
-
 Output *OutputBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
     return nullptr;

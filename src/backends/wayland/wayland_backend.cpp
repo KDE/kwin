@@ -608,7 +608,6 @@ bool WaylandBackend::initialize()
         m_waylandCursor->init();
     });
 
-    setReady(true);
     return true;
 }
 

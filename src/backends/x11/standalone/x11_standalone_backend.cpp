@@ -128,9 +128,7 @@ X11StandaloneBackend::~X11StandaloneBackend()
     if (sceneEglDisplay() != EGL_NO_DISPLAY) {
         eglTerminate(sceneEglDisplay());
     }
-    if (isReady()) {
-        XRenderUtils::cleanup();
-    }
+    XRenderUtils::cleanup();
 }
 
 bool X11StandaloneBackend::initialize()
@@ -139,7 +137,6 @@ bool X11StandaloneBackend::initialize()
         return false;
     }
     XRenderUtils::init(kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
-    setReady(true);
     initOutputs();
 
     if (Xcb::Extensions::self()->isRandrAvailable()) {

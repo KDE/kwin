@@ -218,7 +218,6 @@ bool DrmBackend::initialize()
             m_udevMonitor->enable();
         }
     }
-    setReady(true);
     return true;
 }
 

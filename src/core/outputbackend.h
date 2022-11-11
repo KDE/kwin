@@ -74,10 +74,6 @@ public:
      */
     void setSceneEglGlobalShareContext(EGLContext context);
 
-    bool isReady() const
-    {
-        return m_ready;
-    }
     void setInitialWindowSize(const QSize &size)
     {
         m_initialWindowSize = size;
@@ -135,7 +131,6 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void outputsQueried();
-    void readyChanged(bool);
     /**
      * This signal is emitted when an output has been connected. The @a output is not ready
      * for compositing yet.
@@ -148,7 +143,6 @@ Q_SIGNALS:
 
 protected:
     explicit OutputBackend(QObject *parent = nullptr);
-    void setReady(bool ready);
     QSize initialWindowSize() const
     {
         return m_initialWindowSize;
@@ -159,7 +153,6 @@ protected:
     }
 
 private:
-    bool m_ready = false;
     QSize m_initialWindowSize;
     QByteArray m_deviceIdentifier;
     int m_initialOutputCount = 1;

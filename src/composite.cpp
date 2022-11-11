@@ -141,18 +141,7 @@ Compositor::Compositor(QObject *workspace)
     // The ctor of this class is invoked from the Workspace ctor, that means before
     // Workspace is completely constructed, so calling Workspace::self() would result
     // in undefined behavior. This is fixed by using a delayed invocation.
-    if (kwinApp()->outputBackend()->isReady()) {
-        QTimer::singleShot(0, this, &Compositor::start);
-    }
-    connect(
-        kwinApp()->outputBackend(), &OutputBackend::readyChanged, this, [this](bool ready) {
-            if (ready) {
-                start();
-            } else {
-                stop();
-            }
-        },
-        Qt::QueuedConnection);
+    QTimer::singleShot(0, this, &Compositor::start);
 
     connect(kwinApp(), &Application::x11ConnectionChanged, this, &Compositor::initializeX11);
     connect(kwinApp(), &Application::x11ConnectionAboutToBeDestroyed, this, &Compositor::cleanupX11);
