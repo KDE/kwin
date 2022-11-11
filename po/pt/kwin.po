@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-09 00:49+0000\n"
+"POT-Creation-Date: 2022-11-11 00:47+0000\n"
 "PO-Revision-Date: 2022-11-04 10:44+0000\n"
 "Last-Translator: Pedro Morais <morais@kde.org>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -1201,7 +1201,7 @@ msgstr "Rato por toque"
 msgid "Keyboard Layout Switcher"
 msgstr "Selector de Disposições do Teclado"
 
-#: killwindow.cpp:33
+#: killwindow.cpp:32
 #, kde-format
 msgid ""
 "Select window to force close with left click or enter.\n"
@@ -1210,67 +1210,67 @@ msgstr ""
 "Seleccione a janela onde forçar o fecho com o botão esquerdo ou o Enter.\n"
 "Carregue em Escape ou no botão direito para cancelar."
 
-#: main.cpp:174
+#: main.cpp:179
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:176 main.cpp:199
+#: main.cpp:181 main.cpp:204
 #, kde-format
 msgid "KDE window manager"
 msgstr "O gestor de janelas do KDE"
 
-#: main.cpp:178
+#: main.cpp:183
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2019, A Equipa de Desenvolvimento do KDE"
 
-#: main.cpp:180
+#: main.cpp:185
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:181
+#: main.cpp:186
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:182
+#: main.cpp:187
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:183
+#: main.cpp:188
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:184
+#: main.cpp:189
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:185
+#: main.cpp:190
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:186
+#: main.cpp:191
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:187
+#: main.cpp:192
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:196
+#: main.cpp:201
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Desactivar as opções de configuração"
 
-#: main.cpp:197
+#: main.cpp:202
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Indica que o KWin estoirou recentemente 'n' vezes"
@@ -1393,7 +1393,7 @@ msgstr "Inicia a sessão sem o suporte para o bloqueio do ecrã."
 msgid "Starts the session without global shortcuts support."
 msgstr "Inicia a sessão sem o suporte para os atalhos globais."
 
-#: main_wayland.cpp:410 main_x11.cpp:377
+#: main_wayland.cpp:410 main_x11.cpp:418
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Desactivar a integração com o KActivities."
@@ -1410,7 +1410,7 @@ msgstr ""
 "As aplicações a iniciar assim que os servidores Wayland e Xwayland sejam "
 "iniciados"
 
-#: main_x11.cpp:65
+#: main_x11.cpp:67
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1421,7 +1421,7 @@ msgstr ""
 "Parece ter estoirado várias vezes seguidas.\n"
 "Poderá seleccionar outro gestor de janelas a executar:"
 
-#: main_x11.cpp:218
+#: main_x11.cpp:259
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1430,13 +1430,13 @@ msgstr ""
 "kwin: não foi possível obter a gestão, está outro gestor de janela a correr? "
 "(tente utilizar --replace)\n"
 
-#: main_x11.cpp:239
+#: main_x11.cpp:280
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "kwin: está outro gestor de janela a correr (tente utilizar o --replace)\n"
 
-#: main_x11.cpp:370
+#: main_x11.cpp:411
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Substituir gestor de janelas (compatível ICCCM2.0) em execução"

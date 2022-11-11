@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-09 00:49+0000\n"
+"POT-Creation-Date: 2022-11-11 00:47+0000\n"
 "PO-Revision-Date: 2022-10-31 13:21+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -1181,7 +1181,7 @@ msgstr "Bàn cảm ứng"
 msgid "Keyboard Layout Switcher"
 msgstr "Trình chuyển bố cục bàn phím"
 
-#: killwindow.cpp:33
+#: killwindow.cpp:32
 #, kde-format
 msgid ""
 "Select window to force close with left click or enter.\n"
@@ -1190,67 +1190,67 @@ msgstr ""
 "Bấm trái hoặc enter để chọn cửa sổ để ép đóng.\n"
 "Escape hoặc bấm phải để huỷ."
 
-#: main.cpp:174
+#: main.cpp:179
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:176 main.cpp:199
+#: main.cpp:181 main.cpp:204
 #, kde-format
 msgid "KDE window manager"
 msgstr "Trình quản lí cửa sổ KDE"
 
-#: main.cpp:178
+#: main.cpp:183
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2019, Các nhà phát triển KDE"
 
-#: main.cpp:180
+#: main.cpp:185
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:181
+#: main.cpp:186
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:182
+#: main.cpp:187
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:183
+#: main.cpp:188
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:184
+#: main.cpp:189
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:185
+#: main.cpp:190
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:186
+#: main.cpp:191
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:187
+#: main.cpp:192
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:196
+#: main.cpp:201
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Tắt các lựa chọn cấu hình"
 
-#: main.cpp:197
+#: main.cpp:202
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Cho biết gần đây KWin đã gặp sự cố n lần"
@@ -1370,7 +1370,7 @@ msgstr "Khởi động phiên mà không có hỗ trợ màn hình khoá."
 msgid "Starts the session without global shortcuts support."
 msgstr "Khởi động phiên mà không có hỗ trợ phím tắt toàn cục."
 
-#: main_wayland.cpp:410 main_x11.cpp:377
+#: main_wayland.cpp:410 main_x11.cpp:418
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Tắt tích hợp KActivities."
@@ -1385,7 +1385,7 @@ msgstr "Thoát sau khi ứng dụng phiên, được khởi động bởi KWin, 
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Ứng dụng để khởi động khi trình chủ Wayland và Xwayland được khởi động"
 
-#: main_x11.cpp:65
+#: main_x11.cpp:67
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1396,7 +1396,7 @@ msgstr ""
 "Nó có vẻ đã gặp sự cố nhiều lần liên tiếp.\n"
 "Bạn có thể chọn một trình quản lí cửa sổ khác để chạy:"
 
-#: main_x11.cpp:218
+#: main_x11.cpp:259
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1405,13 +1405,13 @@ msgstr ""
 "kwin: không thể xác nhận sự lựa chọn của trình quản lí, có phải một wm khác "
 "đang chạy? (hãy thử dùng --replace)\n"
 
-#: main_x11.cpp:239
+#: main_x11.cpp:280
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "kwin: một trình quản lí cửa sổ khác đang chạy (hãy thử dùng --replace)\n"
 
-#: main_x11.cpp:370
+#: main_x11.cpp:411
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Thay thế trình quản lí cửa sổ tương thích với ICCCM2.0 đang chạy"

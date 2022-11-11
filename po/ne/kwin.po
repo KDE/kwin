@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-09 00:49+0000\n"
+"POT-Creation-Date: 2022-11-11 00:47+0000\n"
 "PO-Revision-Date: 2007-11-01 14:27+0545\n"
 "Last-Translator: Shyam Krishna Bal <shyamkrishna_bal@yahoo.com>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -1192,75 +1192,75 @@ msgstr ""
 msgid "Keyboard Layout Switcher"
 msgstr ""
 
-#: killwindow.cpp:33
+#: killwindow.cpp:32
 #, kde-format
 msgid ""
 "Select window to force close with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
 
-#: main.cpp:174
+#: main.cpp:179
 #, kde-format
 msgid "KWin"
 msgstr "केडीई विन"
 
-#: main.cpp:176 main.cpp:199
+#: main.cpp:181 main.cpp:204
 #, kde-format
 msgid "KDE window manager"
 msgstr "केडीई सञ्झ्याल प्रबन्धक"
 
-#: main.cpp:178
+#: main.cpp:183
 #, fuzzy, kde-format
 #| msgid "(c) 1999-2005, The KDE Developers"
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(प्रतिलिपि अधिकार) १९९९-२००५, केडीई विकासकर्ता"
 
-#: main.cpp:180
+#: main.cpp:185
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "माथियस इट्रिच"
 
-#: main.cpp:181
+#: main.cpp:186
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "क्रिस्टियन टिबिर्ना"
 
-#: main.cpp:182
+#: main.cpp:187
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "डानियल एम.डुले"
 
-#: main.cpp:183
+#: main.cpp:188
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "लुबोस लुनाक"
 
-#: main.cpp:184
+#: main.cpp:189
 #, kde-format
 msgid "Martin Flöser"
 msgstr ""
 
-#: main.cpp:185
+#: main.cpp:190
 #, kde-format
 msgid "David Edmundson"
 msgstr ""
 
-#: main.cpp:186
+#: main.cpp:191
 #, kde-format
 msgid "Roman Gilg"
 msgstr ""
 
-#: main.cpp:187
+#: main.cpp:192
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr ""
 
-#: main.cpp:196
+#: main.cpp:201
 #, kde-format
 msgid "Disable configuration options"
 msgstr "कन्फिगरेसन विकल्प अक्षम पार्नुहोस्"
 
-#: main.cpp:197
+#: main.cpp:202
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "भर्खरै केडीई विन एन पटक नष्ट भयो भन्ने इङ्कित गर्नुहोस्"
@@ -1372,7 +1372,7 @@ msgstr ""
 msgid "Starts the session without global shortcuts support."
 msgstr ""
 
-#: main_wayland.cpp:410 main_x11.cpp:377
+#: main_wayland.cpp:410 main_x11.cpp:418
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr ""
@@ -1387,7 +1387,7 @@ msgstr ""
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 
-#: main_x11.cpp:65
+#: main_x11.cpp:67
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1398,7 +1398,7 @@ msgstr ""
 "यो पङ्क्तिमा धेरै पटक नष्ट भएको देखिन्छ ।\n"
 "तपाईँले चलाउनका लागि अर्को सञ्झ्याल प्रबन्धक चयन गर्न सक्नुहुन्छ:"
 
-#: main_x11.cpp:218
+#: main_x11.cpp:259
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1407,7 +1407,7 @@ msgstr ""
 "केडीई विन: प्रबन्धक चयन अनुरोध गर्दा अक्षम, अर्को डब्लु एम चालु छ ? (--'बदल्नुहोस्' प्रयोग "
 "गर्न प्रयास गर्नुहोस्)\n"
 
-#: main_x11.cpp:239
+#: main_x11.cpp:280
 #, fuzzy, kde-format
 #| msgid ""
 #| "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1417,7 +1417,7 @@ msgstr ""
 "केडीई विन: प्रबन्धक चयन अनुरोध गर्दा अक्षम, अर्को डब्लु एम चालु छ ? (--'बदल्नुहोस्' प्रयोग "
 "गर्न प्रयास गर्नुहोस्)\n"
 
-#: main_x11.cpp:370
+#: main_x11.cpp:411
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "चालु ICCCM२.०-कम्प्लेन्ट सञ्झ्याल प्रबन्धक प्रतिस्थापन गर्नुहोस्"

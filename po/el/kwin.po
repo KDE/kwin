@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-09 00:49+0000\n"
+"POT-Creation-Date: 2022-11-11 00:47+0000\n"
 "PO-Revision-Date: 2017-06-12 16:22+0200\n"
 "Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -1248,7 +1248,7 @@ msgstr "Επαφή προς τα πάνω"
 msgid "Keyboard Layout Switcher"
 msgstr "Διάταξη πληκτρολογίου"
 
-#: killwindow.cpp:33
+#: killwindow.cpp:32
 #, kde-format
 msgid ""
 "Select window to force close with left click or enter.\n"
@@ -1257,68 +1257,68 @@ msgstr ""
 "Επιλέξτε παράθυρο για εξαναγκασμένο κλείσιμο με αριστερό κλικ ή enter.\n"
 "Esc ή δεξί κλικ για ακύρωση."
 
-#: main.cpp:174
+#: main.cpp:179
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:176 main.cpp:199
+#: main.cpp:181 main.cpp:204
 #, kde-format
 msgid "KDE window manager"
 msgstr "Ο διαχειριστής παραθύρων του KDE"
 
-#: main.cpp:178
+#: main.cpp:183
 #, fuzzy, kde-format
 #| msgid "(c) 1999-2013, The KDE Developers"
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2013, οι προγραμματιστές του KDE"
 
-#: main.cpp:180
+#: main.cpp:185
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:181
+#: main.cpp:186
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:182
+#: main.cpp:187
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:183
+#: main.cpp:188
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:184
+#: main.cpp:189
 #, kde-format
 msgid "Martin Flöser"
 msgstr ""
 
-#: main.cpp:185
+#: main.cpp:190
 #, kde-format
 msgid "David Edmundson"
 msgstr ""
 
-#: main.cpp:186
+#: main.cpp:191
 #, kde-format
 msgid "Roman Gilg"
 msgstr ""
 
-#: main.cpp:187
+#: main.cpp:192
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr ""
 
-#: main.cpp:196
+#: main.cpp:201
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Απενεργοποίηση επιλογών διαμόρφωσης"
 
-#: main.cpp:197
+#: main.cpp:202
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Υπόδειξη πρόσφατης κατάρρευσης του KWin n φορές στη σειρά"
@@ -1441,7 +1441,7 @@ msgstr "Εκκινεί τη συνεδρία σε κλειδωμένη λειτ�
 msgid "Starts the session without global shortcuts support."
 msgstr "Εκκινεί τη συνεδρία σε κλειδωμένη λειτουργία."
 
-#: main_wayland.cpp:410 main_x11.cpp:377
+#: main_wayland.cpp:410 main_x11.cpp:418
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Απενεργοποίηση της ενσωμάτωσης KActivities."
@@ -1460,7 +1460,7 @@ msgstr ""
 "Οι εφαρμογές που θα εκκινούν όταν οι διακομιστές Wayland και Xwayland "
 "ξεκινούν"
 
-#: main_x11.cpp:65
+#: main_x11.cpp:67
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1471,7 +1471,7 @@ msgstr ""
 "Φαίνεται να έχει καταρρεύσει αρκετές φορές στη σειρά.\n"
 "Μπορείτε να επιλέξετε κάποιον άλλο διαχειριστή παραθύρων:"
 
-#: main_x11.cpp:218
+#: main_x11.cpp:259
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1480,14 +1480,14 @@ msgstr ""
 "kwin: Αδυναμία ορισμού επιλογής διαχειριστή, κάποιος άλλος διαχειριστής "
 "παραθύρων εκτελείται; (δοκιμάστε χρησιμοποιώντας το --replace)\n"
 
-#: main_x11.cpp:239
+#: main_x11.cpp:280
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "kwin: κάποιος άλλος διαχειριστής παραθύρων εκτελείται (δοκιμάστε με το --"
 "replace)\n"
 
-#: main_x11.cpp:370
+#: main_x11.cpp:411
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr ""

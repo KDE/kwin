@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-09 00:49+0000\n"
+"POT-Creation-Date: 2022-11-11 00:47+0000\n"
 "PO-Revision-Date: 2022-11-08 21:25+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -1184,7 +1184,7 @@ msgstr "தொடுபலகை"
 msgid "Keyboard Layout Switcher"
 msgstr "விசைப்பலகை தளவமைப்பு மாற்றி"
 
-#: killwindow.cpp:33
+#: killwindow.cpp:32
 #, kde-format
 msgid ""
 "Select window to force close with left click or enter.\n"
@@ -1193,67 +1193,67 @@ msgstr ""
 "இடது க்ளிக் அல்லது enter விசையை கொண்டு கட்டாயமாக மூட வேண்டிய சாளரத்தை தேர்ந்தெடுங்கள்.\n"
 "கைவிட, Escape விசையையோ வலது க்ளிக்கையோ பயன்படுத்துங்கள்."
 
-#: main.cpp:174
+#: main.cpp:179
 #, kde-format
 msgid "KWin"
 msgstr "கேவின்"
 
-#: main.cpp:176 main.cpp:199
+#: main.cpp:181 main.cpp:204
 #, kde-format
 msgid "KDE window manager"
 msgstr "கேடியி சாளர மேலாளர்"
 
-#: main.cpp:178
+#: main.cpp:183
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2001, கே.டீ.யீ. நிரலாளர்கள்"
 
-#: main.cpp:180
+#: main.cpp:185
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "மத்தையாஸ் எட்ரிச்"
 
-#: main.cpp:181
+#: main.cpp:186
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "கிரிஸ்டியன் டிபிர்னா"
 
-#: main.cpp:182
+#: main.cpp:187
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "டேனியல் எம். டூலீ"
 
-#: main.cpp:183
+#: main.cpp:188
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "லுபோசு லுனாக்"
 
-#: main.cpp:184
+#: main.cpp:189
 #, kde-format
 msgid "Martin Flöser"
 msgstr "மார்ட்டின் ஃபலோசர்"
 
-#: main.cpp:185
+#: main.cpp:190
 #, kde-format
 msgid "David Edmundson"
 msgstr "டேவிட் எட்மண்டுஸன்"
 
-#: main.cpp:186
+#: main.cpp:191
 #, kde-format
 msgid "Roman Gilg"
 msgstr "ரோமன் கில்கு"
 
-#: main.cpp:187
+#: main.cpp:192
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "விலாட் ஜாஹொரிடுனி"
 
-#: main.cpp:196
+#: main.cpp:201
 #, kde-format
 msgid "Disable configuration options"
 msgstr "விருப்பத்தேர்வுகளை முடக்கு"
 
-#: main.cpp:197
+#: main.cpp:202
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "சமீபத்தில் கேவின் n முறை முறிவடைந்துள்ளதென்பதை குறிக்கும்"
@@ -1370,7 +1370,7 @@ msgstr "திரையை பூட்டும் ஆதரவில்லா�
 msgid "Starts the session without global shortcuts support."
 msgstr "பொது சுருக்குவழிகளுக்கான ஆதரவில்லாமல் அமர்வை துவக்கும்."
 
-#: main_wayland.cpp:410 main_x11.cpp:377
+#: main_wayland.cpp:410 main_x11.cpp:418
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivities ஒருங்கிணைப்பை முடக்கு."
@@ -1385,7 +1385,7 @@ msgstr "அமர்வு நிரல் (கேவின்னால் த�
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Wayland மற்றும் Xwayland சேவையகத்தை துவக்கிய பின் துவக்கப்பட வேண்டிய செயலிகள்"
 
-#: main_x11.cpp:65
+#: main_x11.cpp:67
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1396,7 +1396,7 @@ msgstr ""
 "வரிசையாக பலமுறை முறிவடைந்துள்ளது.\n"
 "வேறொரு சாளர மேலாளியை நீங்கள் தேர்வு செய்யலாம்:"
 
-#: main_x11.cpp:218
+#: main_x11.cpp:259
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1405,13 +1405,13 @@ msgstr ""
 "கேவின்: சாளர மேலாளர் ஆக முடியவில்லை. இன்னொரு சாளர மேலாளி உபயோகத்தில் உள்ளதா? (--"
 "replace என்பதை பயன்படுத்தி பாருங்கள்)\n"
 
-#: main_x11.cpp:239
+#: main_x11.cpp:280
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "கேவின்: இன்னொரு சாளர மேலாளர் இயங்குகிறது(--replace என்பதை பயன்படுத்தி பாருங்கள்)\n"
 
-#: main_x11.cpp:370
+#: main_x11.cpp:411
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "ஏற்கனவே ஓடிக்கொண்டிருக்கும் ICCCM2.0 சாளர மேலாளருக்கு பதிலாக இயங்கும்"
