@@ -348,8 +348,15 @@ public:
     // D-Bus interface
     QString supportInformation() const;
 
-    Output *nextOutput(Output *reference) const;
-    Output *previousOutput(Output *reference) const;
+    enum Direction {
+        DirectionNorth,
+        DirectionEast,
+        DirectionSouth,
+        DirectionWest,
+        DirectionPrev,
+        DirectionNext
+    };
+    Output *outputFrom(Output *reference, Direction direction) const;
     void switchToOutput(Output *output);
 
     QList<Output *> outputs() const;
@@ -417,13 +424,6 @@ public:
     }
 
     void quickTileWindow(QuickTileMode mode);
-
-    enum Direction {
-        DirectionNorth,
-        DirectionEast,
-        DirectionSouth,
-        DirectionWest
-    };
     void switchWindow(Direction direction);
 
     ShortcutDialog *shortcutDialog() const
@@ -477,10 +477,9 @@ public Q_SLOTS:
     // void slotWindowToListPosition( int );
     void slotSwitchToScreen(Output *output);
     void slotWindowToScreen(Output *output);
-    void slotSwitchToNextScreen();
-    void slotWindowToNextScreen();
-    void slotSwitchToPrevScreen();
-    void slotWindowToPrevScreen();
+    void slotSwitchToScreen(Direction direction);
+    void slotWindowToScreen(Direction direction);
+
     void slotToggleShowDesktop();
 
     void slotWindowMaximize();

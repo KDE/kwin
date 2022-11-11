@@ -29,6 +29,7 @@
 #include "cursor.h"
 #include "effects.h"
 #include "input.h"
+#include "options.h"
 #include "scripting/scripting.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
@@ -1101,11 +1102,17 @@ void Workspace::initShortcuts()
         });
     }
     initShortcut("Window to Next Screen", i18n("Window to Next Screen"),
-                 Qt::META | Qt::SHIFT | Qt::Key_Right, &Workspace::slotWindowToNextScreen);
+                 Qt::META | Qt::SHIFT | Qt::Key_Right, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::slotWindowToScreen), this, DirectionNext));
     initShortcut("Window to Previous Screen", i18n("Window to Previous Screen"),
-                 Qt::META | Qt::SHIFT | Qt::Key_Left, &Workspace::slotWindowToPrevScreen);
-    initShortcut("Show Desktop", i18n("Peek at Desktop"),
-                 Qt::META | Qt::Key_D, &Workspace::slotToggleShowDesktop);
+                 Qt::META | Qt::SHIFT | Qt::Key_Left, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::slotWindowToScreen), this, DirectionPrev));
+    initShortcut("Window one Screen to the Right", i18n("Window one Screen to the Right"),
+                 0, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::slotWindowToScreen), this, DirectionEast));
+    initShortcut("Window one Screen to the Left", i18n("Window one Screen to the Left"),
+                 0, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::slotWindowToScreen), this, DirectionWest));
+    initShortcut("Window one Screen Up", i18n("Window one Screen Up"),
+                 0, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::slotWindowToScreen), this, DirectionNorth));
+    initShortcut("Window one Screen Down", i18n("Window one Screen Down"),
+                 0, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::slotWindowToScreen), this, DirectionSouth));
 
     for (int i = 0; i < 8; ++i) {
         initShortcut(QStringLiteral("Switch to Screen %1").arg(i), i18n("Switch to Screen %1", i), 0, [this, i]() {
@@ -1115,9 +1122,19 @@ void Workspace::initShortcuts()
             }
         });
     }
+    initShortcut("Switch to Next Screen", i18n("Switch to Next Screen"), 0, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::slotSwitchToScreen), this, DirectionNext));
+    initShortcut("Switch to Previous Screen", i18n("Switch to Previous Screen"), 0, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::slotSwitchToScreen), this, DirectionPrev));
+    initShortcut("Switch to Screen to the Right", i18n("Switch to Screen to the Right"),
+                 0, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::slotSwitchToScreen), this, DirectionEast));
+    initShortcut("Switch to Screen to the Left", i18n("Switch to Screen to the Left"),
+                 0, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::slotSwitchToScreen), this, DirectionWest));
+    initShortcut("Switch to Screen Above", i18n("Switch to Screen Above"),
+                 0, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::slotSwitchToScreen), this, DirectionNorth));
+    initShortcut("Switch to Screen Below", i18n("Switch to Screen Below"),
+                 0, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::slotSwitchToScreen), this, DirectionSouth));
 
-    initShortcut("Switch to Next Screen", i18n("Switch to Next Screen"), 0, &Workspace::slotSwitchToNextScreen);
-    initShortcut("Switch to Previous Screen", i18n("Switch to Previous Screen"), 0, &Workspace::slotSwitchToPrevScreen);
+    initShortcut("Show Desktop", i18n("Peek at Desktop"),
+                 Qt::META | Qt::Key_D, &Workspace::slotToggleShowDesktop);
 
     initShortcut("Kill Window", i18n("Kill Window"), Qt::META | Qt::CTRL | Qt::Key_Escape, &Workspace::slotKillWindow);
     initShortcut("Suspend Compositing", i18n("Suspend Compositing"), Qt::SHIFT | Qt::ALT | Qt::Key_F12, Compositor::self(), &Compositor::toggleCompositing);
@@ -1325,28 +1342,50 @@ static bool screenSwitchImpossible()
     return true;
 }
 
-Output *Workspace::nextOutput(Output *reference) const
+Output *Workspace::outputFrom(Output *reference, Direction direction) const
 {
-    auto outputs = m_outputs;
-    std::sort(outputs.begin(), outputs.end(), [](const Output *o1, const Output *o2) {
-        const auto geo1 = o1->geometry().center(), geo2 = o2->geometry().center();
-        return (geo1.y() < geo2.y() || (geo1.y() == geo2.y() && geo1.x() < geo2.x()));
-    });
-    const int index = outputs.indexOf(reference);
+    QList<Output *> relevant_outputs;
+    switch (direction) {
+    case DirectionEast:
+    case DirectionWest:
+        std::copy_if(m_outputs.begin(), m_outputs.end(), std::back_inserter(relevant_outputs), [reference](Output *output) {
+            return (output->geometry().top() <= reference->geometry().top() && output->geometry().bottom() + 1 > reference->geometry().top()) || (reference->geometry().top() <= output->geometry().top() && reference->geometry().bottom() + 1 > output->geometry().top());
+        });
+        std::sort(relevant_outputs.begin(), relevant_outputs.end(), [](const Output *o1, const Output *o2) {
+            return o1->geometry().center().x() < o2->geometry().center().x();
+        });
+        break;
+    case DirectionSouth:
+    case DirectionNorth:
+        std::copy_if(m_outputs.begin(), m_outputs.end(), std::back_inserter(relevant_outputs), [reference](Output *output) {
+            return (output->geometry().left() <= reference->geometry().left() && output->geometry().right() + 1 > reference->geometry().left()) || (reference->geometry().left() <= output->geometry().left() && reference->geometry().right() + 1 > output->geometry().left());
+        });
+        std::sort(relevant_outputs.begin(), relevant_outputs.end(), [](const Output *o1, const Output *o2) {
+            return o1->geometry().center().y() < o2->geometry().center().y();
+        });
+        break;
+    case DirectionNext:
+    case DirectionPrev:
+        relevant_outputs = m_outputs;
+        std::sort(relevant_outputs.begin(), relevant_outputs.end(), [](const Output *o1, const Output *o2) {
+            return (o1->geometry().center().y() < o2->geometry().center().y() || (o1->geometry().center().y() == o2->geometry().center().y() && o1->geometry().center().x() < o2->geometry().center().x()));
+        });
+        break;
+    }
+    const int index = relevant_outputs.indexOf(reference);
     Q_ASSERT(index != -1);
-    return outputs[(index + 1) % outputs.count()];
-}
-
-Output *Workspace::previousOutput(Output *reference) const
-{
-    auto outputs = m_outputs;
-    std::sort(outputs.begin(), outputs.end(), [](const Output *o1, const Output *o2) {
-        const auto geo1 = o1->geometry().center(), geo2 = o2->geometry().center();
-        return (geo1.y() < geo2.y() || (geo1.y() == geo2.y() && geo1.x() < geo2.x()));
-    });
-    const int index = outputs.indexOf(reference);
-    Q_ASSERT(index != -1);
-    return outputs[(index + outputs.count() - 1) % outputs.count()];
+    switch (direction) {
+    case DirectionEast:
+    case DirectionSouth:
+    case DirectionNext:
+        return relevant_outputs[(index + 1) % relevant_outputs.count()];
+    case DirectionWest:
+    case DirectionNorth:
+    case DirectionPrev:
+        return relevant_outputs[(index + relevant_outputs.count() - 1) % relevant_outputs.count()];
+    default:
+        Q_UNREACHABLE();
+    }
 }
 
 void Workspace::slotSwitchToScreen(Output *output)
@@ -1356,20 +1395,12 @@ void Workspace::slotSwitchToScreen(Output *output)
     }
 }
 
-void Workspace::slotSwitchToNextScreen()
+void Workspace::slotSwitchToScreen(Direction direction)
 {
     if (screenSwitchImpossible()) {
         return;
     }
-    switchToOutput(nextOutput(activeOutput()));
-}
-
-void Workspace::slotSwitchToPrevScreen()
-{
-    if (screenSwitchImpossible()) {
-        return;
-    }
-    switchToOutput(previousOutput(activeOutput()));
+    switchToOutput(outputFrom(activeOutput(), direction));
 }
 
 void Workspace::slotWindowToScreen(Output *output)
@@ -1379,17 +1410,10 @@ void Workspace::slotWindowToScreen(Output *output)
     }
 }
 
-void Workspace::slotWindowToNextScreen()
+void Workspace::slotWindowToScreen(Direction direction)
 {
     if (USABLE_ACTIVE_WINDOW) {
-        sendWindowToOutput(m_activeWindow, nextOutput(m_activeWindow->moveResizeOutput()));
-    }
-}
-
-void Workspace::slotWindowToPrevScreen()
-{
-    if (USABLE_ACTIVE_WINDOW) {
-        sendWindowToOutput(m_activeWindow, previousOutput(m_activeWindow->moveResizeOutput()));
+        sendWindowToOutput(m_activeWindow, outputFrom(m_activeWindow->moveResizeOutput(), direction));
     }
 }
 

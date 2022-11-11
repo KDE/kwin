@@ -149,8 +149,6 @@ QPoint WorkspaceWrapper::cursorPos() const
         Workspace::self()->name(); \
     }
 
-SLOTWRAPPER(slotSwitchToNextScreen)
-SLOTWRAPPER(slotWindowToNextScreen)
 SLOTWRAPPER(slotToggleShowDesktop)
 
 SLOTWRAPPER(slotWindowMaximize)
@@ -235,6 +233,38 @@ SLOTWRAPPER(slotSwitchDesktopRight, Right)
 SLOTWRAPPER(slotSwitchDesktopLeft, Left)
 SLOTWRAPPER(slotSwitchDesktopUp, Up)
 SLOTWRAPPER(slotSwitchDesktopDown, Down)
+
+#undef SLOTWRAPPER
+
+#define SLOTWRAPPER(name, direction)                                 \
+    void WorkspaceWrapper::name()                                    \
+    {                                                                \
+        Workspace::self()->slotSwitchToScreen(Workspace::direction); \
+    }
+
+SLOTWRAPPER(slotSwitchToNextScreen, DirectionNext)
+SLOTWRAPPER(slotSwitchToPreviousScreen, DirectionPrev)
+SLOTWRAPPER(slotSwitchToScreenUp, DirectionNorth)
+SLOTWRAPPER(slotSwitchToScreenDown, DirectionSouth)
+SLOTWRAPPER(slotSwitchToScreenRight, DirectionEast)
+SLOTWRAPPER(slotSwitchToScreenLeft, DirectionWest)
+
+#undef SLOTWRAPPER
+
+#undef SLOTWRAPPER
+
+#define SLOTWRAPPER(name, direction)                                 \
+    void WorkspaceWrapper::name()                                    \
+    {                                                                \
+        Workspace::self()->slotWindowToScreen(Workspace::direction); \
+    }
+
+SLOTWRAPPER(slotWindowToNextScreen, DirectionNext)
+SLOTWRAPPER(slotWindowToPreviousScreen, DirectionPrev)
+SLOTWRAPPER(slotWindowToScreenUp, DirectionNorth)
+SLOTWRAPPER(slotWindowToScreenDown, DirectionSouth)
+SLOTWRAPPER(slotWindowToScreenRight, DirectionEast)
+SLOTWRAPPER(slotWindowToScreenLeft, DirectionWest)
 
 #undef SLOTWRAPPER
 
