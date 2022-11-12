@@ -143,34 +143,21 @@ void Placement::placeAtRandom(Window *c, const QRect &area, PlacementPolicy /*ne
     c->move(QPoint(tx, ty));
 }
 
-// TODO: one day, there'll be C++11 ...
-static inline bool isIrrelevant(const Window *client, const Window *regarding, int desktop)
+static inline bool isIrrelevant(const Window *window, const Window *regarding, VirtualDesktop *desktop)
 {
-    if (!client->isClient()) {
-        return true;
-    }
-    if (client == regarding) {
-        return true;
-    }
-    if (!client->isShown() || client->isShade()) {
-        return true;
-    }
-    if (!client->isOnDesktop(desktop)) {
-        return true;
-    }
-    if (!client->isOnCurrentActivity()) {
-        return true;
-    }
-    if (client->isDesktop()) {
-        return true;
-    }
-    return false;
-}
+    return window == regarding
+        || !window->isClient()
+        || !window->isShown()
+        || window->isShade()
+        || !window->isOnDesktop(desktop)
+        || !window->isOnCurrentActivity()
+        || window->isDesktop();
+};
 
 /**
  * Place the client \a c according to a really smart placement algorithm :-)
  */
-void Placement::placeSmart(Window *c, const QRectF &area, PlacementPolicy /*next*/)
+void Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /*next*/)
 {
     Q_ASSERT(area.isValid());
 
@@ -183,7 +170,7 @@ void Placement::placeSmart(Window *c, const QRectF &area, PlacementPolicy /*next
      * with ideas from xfce.
      */
 
-    if (!c->frameGeometry().isValid()) {
+    if (!window->frameGeometry().isValid()) {
         return;
     }
 
@@ -191,7 +178,7 @@ void Placement::placeSmart(Window *c, const QRectF &area, PlacementPolicy /*next
     long int overlap, min_overlap = 0;
     int x_optimal, y_optimal;
     int possible;
-    int desktop = c->desktop() == 0 || c->isOnAllDesktops() ? VirtualDesktopManager::self()->current() : c->desktop();
+    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
 
     int cxl, cxr, cyt, cyb; // temp coords
     int xl, xr, yt, yb; // temp coords
@@ -204,8 +191,8 @@ void Placement::placeSmart(Window *c, const QRectF &area, PlacementPolicy /*next
     y_optimal = y;
 
     // client gabarit
-    int ch = c->height() - 1;
-    int cw = c->width() - 1;
+    int ch = window->height() - 1;
+    int cw = window->width() - 1;
 
     bool first_pass = true; // CT lame flag. Don't like it. What else would do?
 
@@ -225,7 +212,7 @@ void Placement::placeSmart(Window *c, const QRectF &area, PlacementPolicy /*next
             cyb = y + ch;
             for (auto l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd(); ++l) {
                 auto client = *l;
-                if (isIrrelevant(client, c, desktop)) {
+                if (isIrrelevant(client, window, desktop)) {
                     continue;
                 }
                 xl = client->x();
@@ -279,7 +266,7 @@ void Placement::placeSmart(Window *c, const QRectF &area, PlacementPolicy /*next
             // compare to the position of each client on the same desk
             for (auto l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd(); ++l) {
                 auto client = *l;
-                if (isIrrelevant(client, c, desktop)) {
+                if (isIrrelevant(client, window, desktop)) {
                     continue;
                 }
 
@@ -317,7 +304,7 @@ void Placement::placeSmart(Window *c, const QRectF &area, PlacementPolicy /*next
             // test the position of each window on the desk
             for (auto l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd(); ++l) {
                 auto client = *l;
-                if (isIrrelevant(client, c, desktop)) {
+                if (isIrrelevant(client, window, desktop)) {
                     continue;
                 }
 
@@ -346,7 +333,7 @@ void Placement::placeSmart(Window *c, const QRectF &area, PlacementPolicy /*next
     }
 
     // place the window
-    c->move(QPoint(x_optimal, y_optimal));
+    window->move(QPoint(x_optimal, y_optimal));
 }
 
 void Placement::reinitCascading(int desktop)
@@ -384,71 +371,51 @@ void Placement::placeCascaded(Window *c, const QRect &area, PlacementPolicy next
         return;
     }
 
-    /* cascadePlacement by Cristian Tibirna (tibirna@kde.org) (30Jan98)
-     */
-    // work coords
-    int xp, yp;
-
     // CT how do I get from the 'Client' class the size that NW squarish "handle"
     const QPoint delta = workspace()->cascadeOffset(c);
 
     const int dn = c->desktop() == 0 || c->isOnAllDesktops() ? (VirtualDesktopManager::self()->current() - 1) : (c->desktop() - 1);
-
-    // initialize often used vars: width and height of c; we gain speed
-    const int ch = c->height();
-    const int cw = c->width();
-    const int X = area.left();
-    const int Y = area.top();
-    const int H = area.height();
-    const int W = area.width();
 
     if (nextPlacement == PlacementUnknown) {
         nextPlacement = PlacementSmart;
     }
 
     // initialize if needed
-    if (cci[dn].pos.x() < 0 || cci[dn].pos.x() < X || cci[dn].pos.y() < Y) {
-        cci[dn].pos = QPoint(X, Y);
+    if (cci[dn].pos.x() < 0 || cci[dn].pos.x() < area.left() || cci[dn].pos.y() < area.top()) {
+        cci[dn].pos = QPoint(area.left(), area.top());
         cci[dn].col = cci[dn].row = 0;
     }
 
-    xp = cci[dn].pos.x();
-    yp = cci[dn].pos.y();
+    int xp = cci[dn].pos.x();
+    int yp = cci[dn].pos.y();
 
     // here to touch in case people vote for resize on placement
-    if ((yp + ch) > H) {
-        yp = Y;
+    if ((yp + c->height()) > area.height()) {
+        yp = area.top();
     }
 
-    if ((xp + cw) > W) {
+    if ((xp + c->width()) > area.width()) {
         if (!yp) {
             place(c, area, nextPlacement);
             return;
         } else {
-            xp = X;
+            xp = area.left();
         }
     }
 
     // if this isn't the first window
-    if (cci[dn].pos.x() != X && cci[dn].pos.y() != Y) {
-        /* The following statements cause an internal compiler error with
-         * egcs-2.91.66 on SuSE Linux 6.3. The equivalent forms compile fine.
-         * 22-Dec-1999 CS
-         *
-         * if (xp != X && yp == Y) xp = delta.x() * (++(cci[dn].col));
-         * if (yp != Y && xp == X) yp = delta.y() * (++(cci[dn].row));
-         */
-        if (xp != X && yp == Y) {
-            ++(cci[dn].col);
+    if (cci[dn].pos.x() != area.left() && cci[dn].pos.y() != area.top()) {
+        if (xp != area.left() && yp == area.top()) {
+            cci[dn].col++;
             xp = delta.x() * cci[dn].col;
         }
-        if (yp != Y && xp == X) {
-            ++(cci[dn].row);
+        if (yp != area.top() && xp == area.left()) {
+            cci[dn].row++;
             yp = delta.y() * cci[dn].row;
         }
 
         // last resort: if still doesn't fit, smart place it
-        if (((xp + cw) > W - X) || ((yp + ch) > H - Y)) {
+        if (((xp + c->width()) > area.width() - area.left()) || ((yp + c->height()) > area.height() - area.top())) {
             place(c, area, nextPlacement);
             return;
         }
@@ -865,109 +832,109 @@ void Workspace::quickTileWindow(QuickTileMode mode)
     m_activeWindow->setQuickTileMode(mode, true);
 }
 
-qreal Workspace::packPositionLeft(const Window *client, qreal oldX, bool leftEdge) const
+qreal Workspace::packPositionLeft(const Window *window, qreal oldX, bool leftEdge) const
 {
-    qreal newX = clientArea(MaximizeArea, client).left();
+    qreal newX = clientArea(MaximizeArea, window).left();
     if (oldX <= newX) { // try another Xinerama screen
         newX = clientArea(MaximizeArea,
-                          client,
-                          QPointF(client->frameGeometry().left() - 1, client->frameGeometry().center().y()))
+                          window,
+                          QPointF(window->frameGeometry().left() - 1, window->frameGeometry().center().y()))
                    .left();
     }
     if (oldX <= newX) {
         return oldX;
     }
-    const int desktop = client->desktop() == 0 || client->isOnAllDesktops() ? VirtualDesktopManager::self()->current() : client->desktop();
+    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
     for (auto it = m_allClients.constBegin(), end = m_allClients.constEnd(); it != end; ++it) {
-        if (isIrrelevant(*it, client, desktop)) {
+        if (isIrrelevant(*it, window, desktop)) {
             continue;
         }
         const qreal x = leftEdge ? (*it)->frameGeometry().right() : (*it)->frameGeometry().left() - 1;
         if (x > newX && x < oldX
-            && !(client->frameGeometry().top() > (*it)->frameGeometry().bottom() - 1 // they overlap in Y direction
-                 || client->frameGeometry().bottom() - 1 < (*it)->frameGeometry().top())) {
+            && !(window->frameGeometry().top() > (*it)->frameGeometry().bottom() - 1 // they overlap in Y direction
+                 || window->frameGeometry().bottom() - 1 < (*it)->frameGeometry().top())) {
             newX = x;
         }
     }
     return newX;
 }
 
-qreal Workspace::packPositionRight(const Window *client, qreal oldX, bool rightEdge) const
+qreal Workspace::packPositionRight(const Window *window, qreal oldX, bool rightEdge) const
 {
-    qreal newX = clientArea(MaximizeArea, client).right();
+    qreal newX = clientArea(MaximizeArea, window).right();
     if (oldX >= newX) { // try another Xinerama screen
         newX = clientArea(MaximizeArea,
-                          client,
-                          QPointF(client->frameGeometry().right(), client->frameGeometry().center().y()))
+                          window,
+                          QPointF(window->frameGeometry().right(), window->frameGeometry().center().y()))
                    .right();
     }
     if (oldX >= newX) {
         return oldX;
     }
-    const int desktop = client->desktop() == 0 || client->isOnAllDesktops() ? VirtualDesktopManager::self()->current() : client->desktop();
+    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
     for (auto it = m_allClients.constBegin(), end = m_allClients.constEnd(); it != end; ++it) {
-        if (isIrrelevant(*it, client, desktop)) {
+        if (isIrrelevant(*it, window, desktop)) {
             continue;
         }
         const qreal x = rightEdge ? (*it)->frameGeometry().left() : (*it)->frameGeometry().right() + 1;
 
         if (x < newX && x > oldX
-            && !(client->frameGeometry().top() > (*it)->frameGeometry().bottom() - 1
-                 || client->frameGeometry().bottom() - 1 < (*it)->frameGeometry().top())) {
+            && !(window->frameGeometry().top() > (*it)->frameGeometry().bottom() - 1
+                 || window->frameGeometry().bottom() - 1 < (*it)->frameGeometry().top())) {
             newX = x;
         }
     }
     return newX;
 }
 
-qreal Workspace::packPositionUp(const Window *client, qreal oldY, bool topEdge) const
+qreal Workspace::packPositionUp(const Window *window, qreal oldY, bool topEdge) const
 {
-    qreal newY = clientArea(MaximizeArea, client).top();
+    qreal newY = clientArea(MaximizeArea, window).top();
     if (oldY <= newY) { // try another Xinerama screen
         newY = clientArea(MaximizeArea,
-                          client,
-                          QPointF(client->frameGeometry().center().x(), client->frameGeometry().top() - 1))
+                          window,
+                          QPointF(window->frameGeometry().center().x(), window->frameGeometry().top() - 1))
                    .top();
     }
     if (oldY <= newY) {
         return oldY;
     }
-    const int desktop = client->desktop() == 0 || client->isOnAllDesktops() ? VirtualDesktopManager::self()->current() : client->desktop();
+    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
     for (auto it = m_allClients.constBegin(), end = m_allClients.constEnd(); it != end; ++it) {
-        if (isIrrelevant(*it, client, desktop)) {
+        if (isIrrelevant(*it, window, desktop)) {
             continue;
         }
         const qreal y = topEdge ? (*it)->frameGeometry().bottom() : (*it)->frameGeometry().top() - 1;
         if (y > newY && y < oldY
-            && !(client->frameGeometry().left() > (*it)->frameGeometry().right() - 1 // they overlap in X direction
-                 || client->frameGeometry().right() - 1 < (*it)->frameGeometry().left())) {
+            && !(window->frameGeometry().left() > (*it)->frameGeometry().right() - 1 // they overlap in X direction
+                 || window->frameGeometry().right() - 1 < (*it)->frameGeometry().left())) {
             newY = y;
         }
     }
     return newY;
 }
 
-qreal Workspace::packPositionDown(const Window *client, qreal oldY, bool bottomEdge) const
+qreal Workspace::packPositionDown(const Window *window, qreal oldY, bool bottomEdge) const
 {
-    qreal newY = clientArea(MaximizeArea, client).bottom();
+    qreal newY = clientArea(MaximizeArea, window).bottom();
     if (oldY >= newY) { // try another Xinerama screen
         newY = clientArea(MaximizeArea,
-                          client,
-                          QPointF(client->frameGeometry().center().x(), client->frameGeometry().bottom()))
+                          window,
+                          QPointF(window->frameGeometry().center().x(), window->frameGeometry().bottom()))
                    .bottom();
     }
     if (oldY >= newY) {
         return oldY;
     }
-    const int desktop = client->desktop() == 0 || client->isOnAllDesktops() ? VirtualDesktopManager::self()->current() : client->desktop();
+    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
     for (auto it = m_allClients.constBegin(), end = m_allClients.constEnd(); it != end; ++it) {
-        if (isIrrelevant(*it, client, desktop)) {
+        if (isIrrelevant(*it, window, desktop)) {
             continue;
         }
         const qreal y = bottomEdge ? (*it)->frameGeometry().top() : (*it)->frameGeometry().bottom() + 1;
         if (y < newY && y > oldY
-            && !(client->frameGeometry().left() > (*it)->frameGeometry().right() - 1
-                 || client->frameGeometry().right() - 1 < (*it)->frameGeometry().left())) {
+            && !(window->frameGeometry().left() > (*it)->frameGeometry().right() - 1
+                 || window->frameGeometry().right() - 1 < (*it)->frameGeometry().left())) {
             newY = y;
         }
     }
