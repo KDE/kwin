@@ -428,11 +428,11 @@ static xcb_pixmap_t xpixmapFromImage(const QImage &image)
     const QSize window = pickWindowSize(image);
 
     for (int i = 0; i < image.height(); i += window.height()) {
-        const int targetHeight = qMin(image.height() - i, window.height());
+        const int targetHeight = std::min(image.height() - i, window.height());
         const uint8_t *line = image.scanLine(i);
 
         for (int j = 0; j < image.width(); j += window.width()) {
-            const int targetWidth = qMin(image.width() - j, window.width());
+            const int targetWidth = std::min(image.width() - j, window.width());
             const uint8_t *bytes = line + j * bytesPerPixel;
             const uint32_t byteCount = targetWidth * targetHeight * bytesPerPixel;
 

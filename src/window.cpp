@@ -1075,7 +1075,7 @@ void Window::setDesktop(int desktop)
 {
     const int numberOfDesktops = VirtualDesktopManager::self()->count();
     if (desktop != NET::OnAllDesktops) { // Do range check
-        desktop = std::max(1, qMin(numberOfDesktops, desktop));
+        desktop = std::max(1, std::min(numberOfDesktops, desktop));
     }
 
     QVector<VirtualDesktop *> desktops;
@@ -1714,8 +1714,8 @@ void Window::checkUnrestrictedInteractiveMoveResize()
     int left_marge, right_marge, top_marge, bottom_marge, titlebar_marge;
     // restricted move/resize - keep at least part of the titlebar always visible
     // how much must remain visible when moved away in that direction
-    left_marge = qMin(100. + borderRight(), moveResizeGeom.width());
-    right_marge = qMin(100. + borderLeft(), moveResizeGeom.width());
+    left_marge = std::min(100. + borderRight(), moveResizeGeom.width());
+    right_marge = std::min(100. + borderLeft(), moveResizeGeom.width());
     // width/height change with opaque resizing, use the initial ones
     titlebar_marge = initialInteractiveMoveResizeGeometry().height();
     top_marge = borderBottom();
@@ -1868,8 +1868,8 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
         }
         // When doing a restricted move we must always keep 100px of the titlebar
         // visible to allow the user to be able to move it again.
-        requiredPixels = qMin(100 * (transposed ? titleRect.width() : titleRect.height()),
-                              rect.width() * rect.height());
+        requiredPixels = std::min(100 * (transposed ? titleRect.width() : titleRect.height()),
+                                  rect.width() * rect.height());
         return titleRect;
     };
 
@@ -2498,7 +2498,7 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPointF &globa
         break;
     case Options::MouseOpacityMore:
         if (!isDesktop()) { // No point in changing the opacity of the desktop
-            setOpacity(qMin(opacity() + 0.1, 1.0));
+            setOpacity(std::min(opacity() + 0.1, 1.0));
         }
         break;
     case Options::MouseOpacityLess:
@@ -4052,13 +4052,13 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
     for (const QRect &r : (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaRight)) {
         QRect rect = r & oldGeomWide;
         if (!rect.isEmpty()) {
-            oldRightMax = qMin(oldRightMax, rect.x());
+            oldRightMax = std::min(oldRightMax, rect.x());
         }
     }
     for (const QRect &r : (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaBottom)) {
         QRect rect = r & oldGeomTall;
         if (!rect.isEmpty()) {
-            oldBottomMax = qMin(oldBottomMax, rect.y());
+            oldBottomMax = std::min(oldBottomMax, rect.y());
         }
     }
     for (const QRect &r : (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaLeft)) {
@@ -4078,13 +4078,13 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
     for (const QRect &r : workspace()->restrictedMoveArea(desktop, StrutAreaRight)) {
         QRect rect = r & newGeomWide;
         if (!rect.isEmpty()) {
-            rightMax = qMin(rightMax, rect.x());
+            rightMax = std::min(rightMax, rect.x());
         }
     }
     for (const QRect &r : workspace()->restrictedMoveArea(desktop, StrutAreaBottom)) {
         QRect rect = r & newGeomTall;
         if (!rect.isEmpty()) {
-            bottomMax = qMin(bottomMax, rect.y());
+            bottomMax = std::min(bottomMax, rect.y());
         }
     }
     for (const QRect &r : workspace()->restrictedMoveArea(desktop, StrutAreaLeft)) {
@@ -4146,10 +4146,10 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
         newGeom.moveTop(std::max(topMax, screenArea.y()));
     }
     if (save[Right] || keep[Right]) {
-        newGeom.moveRight(qMin(rightMax, screenArea.right()) + 1);
+        newGeom.moveRight(std::min(rightMax, screenArea.right()) + 1);
     }
     if (save[Bottom] || keep[Bottom]) {
-        newGeom.moveBottom(qMin(bottomMax, screenArea.bottom()) + 1);
+        newGeom.moveBottom(std::min(bottomMax, screenArea.bottom()) + 1);
     }
 
     if (oldGeometry.x() >= oldLeftMax && newGeom.x() < leftMax) {

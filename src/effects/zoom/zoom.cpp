@@ -237,7 +237,7 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
 
         const float zoomDist = qAbs(target_zoom - source_zoom);
         if (target_zoom > zoom) {
-            zoom = qMin(zoom + ((zoomDist * time) / animationTime(150 * zoomFactor)), target_zoom);
+            zoom = std::min(zoom + ((zoomDist * time) / animationTime(150 * zoomFactor)), target_zoom);
         } else {
             zoom = std::max(zoom - ((zoomDist * time) / animationTime(150 * zoomFactor)), target_zoom);
         }
@@ -319,8 +319,8 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
         prevPoint = cursorPoint;
         // fall through
     case MouseTrackingDisabled:
-        xTranslation = qMin(0, std::max(int(screenSize.width() - screenSize.width() * zoom), int(screenSize.width() / 2 - prevPoint.x() * zoom)));
-        yTranslation = qMin(0, std::max(int(screenSize.height() - screenSize.height() * zoom), int(screenSize.height() / 2 - prevPoint.y() * zoom)));
+        xTranslation = std::min(0, std::max(int(screenSize.width() - screenSize.width() * zoom), int(screenSize.width() / 2 - prevPoint.x() * zoom)));
+        yTranslation = std::min(0, std::max(int(screenSize.height() - screenSize.height() * zoom), int(screenSize.height() / 2 - prevPoint.y() * zoom)));
         break;
     case MouseTrackingPush: {
         // touching an edge of the screen moves the zoom-area in that direction.
@@ -339,10 +339,10 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
             yMove = (y + threshold - screenSize.height()) / zoom;
         }
         if (xMove) {
-            prevPoint.setX(std::max(0, qMin(screenSize.width(), prevPoint.x() + xMove)));
+            prevPoint.setX(std::max(0, std::min(screenSize.width(), prevPoint.x() + xMove)));
         }
         if (yMove) {
-            prevPoint.setY(std::max(0, qMin(screenSize.height(), prevPoint.y() + yMove)));
+            prevPoint.setY(std::max(0, std::min(screenSize.height(), prevPoint.y() + yMove)));
         }
         xTranslation = -int(prevPoint.x() * (zoom - 1.0));
         yTranslation = -int(prevPoint.y() * (zoom - 1.0));
@@ -478,8 +478,8 @@ void ZoomEffect::actualSize()
 void ZoomEffect::timelineFrameChanged(int /* frame */)
 {
     const QSize screenSize = effects->virtualScreenSize();
-    prevPoint.setX(std::max(0, qMin(screenSize.width(), prevPoint.x() + xMove)));
-    prevPoint.setY(std::max(0, qMin(screenSize.height(), prevPoint.y() + yMove)));
+    prevPoint.setX(std::max(0, std::min(screenSize.width(), prevPoint.x() + xMove)));
+    prevPoint.setY(std::max(0, std::min(screenSize.height(), prevPoint.y() + yMove)));
     cursorPoint = prevPoint;
     effects->addRepaintFull();
 }

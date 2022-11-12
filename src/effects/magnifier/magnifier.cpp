@@ -86,9 +86,9 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
     if (m_zoom != m_targetZoom) {
         double diff = time / animationTime(500.0);
         if (m_targetZoom > m_zoom) {
-            m_zoom = qMin(m_zoom * std::max(1 + diff, 1.2), m_targetZoom);
+            m_zoom = std::min(m_zoom * std::max(1 + diff, 1.2), m_targetZoom);
         } else {
-            m_zoom = std::max(m_zoom * qMin(1 - diff, 0.8), m_targetZoom);
+            m_zoom = std::max(m_zoom * std::min(1 - diff, 0.8), m_targetZoom);
             if (m_zoom == 1.0) {
                 // zoom ended - delete FBO and texture
                 m_fbo.reset();

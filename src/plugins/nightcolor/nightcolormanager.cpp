@@ -287,7 +287,7 @@ void NightColorManager::readConfig()
     QTime evB = QTime::fromString(s->eveningBeginFixed(), "hhmm");
 
     int diffME = evB > mrB ? mrB.msecsTo(evB) : evB.msecsTo(mrB);
-    int diffMin = qMin(diffME, MSC_DAY - diffME);
+    int diffMin = std::min(diffME, MSC_DAY - diffME);
 
     int trTime = s->transitionTime() * 1000 * 60;
     if (trTime < 0 || diffMin <= trTime) {
@@ -353,7 +353,7 @@ void NightColorManager::quickAdjust(int targetTemp)
     int nextTemp;
 
     if (m_currentTemp < targetTemp) {
-        nextTemp = qMin(m_currentTemp + TEMPERATURE_STEP, targetTemp);
+        nextTemp = std::min(m_currentTemp + TEMPERATURE_STEP, targetTemp);
     } else {
         nextTemp = std::max(m_currentTemp - TEMPERATURE_STEP, targetTemp);
     }
@@ -447,7 +447,7 @@ void NightColorManager::slowUpdate(int targetTemp)
     }
     int nextTemp;
     if (m_currentTemp < targetTemp) {
-        nextTemp = qMin(m_currentTemp + TEMPERATURE_STEP, targetTemp);
+        nextTemp = std::min(m_currentTemp + TEMPERATURE_STEP, targetTemp);
     } else {
         nextTemp = std::max(m_currentTemp - TEMPERATURE_STEP, targetTemp);
     }

@@ -283,8 +283,8 @@ void WobblyWindowsEffect::apply(EffectWindow *w, int mask, WindowPaintData &data
                 Pair newPos = computeBezierPoint(wwi, uv);
                 v.move(newPos.x - tx, newPos.y - ty);
             }
-            left = qMin(left, quads[i].left());
-            top = qMin(top, quads[i].top());
+            left = std::min(left, quads[i].left());
+            top = std::min(top, quads[i].top());
             right = std::max(right, quads[i].right());
             bottom = std::max(bottom, quads[i].bottom());
         }

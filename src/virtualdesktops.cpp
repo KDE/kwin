@@ -496,7 +496,7 @@ void VirtualDesktopManager::removeVirtualDesktop(VirtualDesktop *desktop)
         }
     }
 
-    const uint newCurrent = qMin(oldCurrent, (uint)m_desktops.count());
+    const uint newCurrent = std::min(oldCurrent, (uint)m_desktops.count());
     m_current = m_desktops.at(newCurrent - 1);
     if (oldCurrent != newCurrent) {
         Q_EMIT currentChanged(oldCurrent, newCurrent);
@@ -558,7 +558,7 @@ void VirtualDesktopManager::setCount(uint count)
         m_desktops.resize(count);
         if (m_current) {
             uint oldCurrent = current();
-            uint newCurrent = qMin(oldCurrent, count);
+            uint newCurrent = std::min(oldCurrent, count);
             m_current = m_desktops.at(newCurrent - 1);
             if (oldCurrent != newCurrent) {
                 Q_EMIT currentChanged(oldCurrent, newCurrent);
@@ -646,7 +646,7 @@ void VirtualDesktopManager::updateRootInfo()
 
 void VirtualDesktopManager::updateLayout()
 {
-    m_rows = qMin(m_rows, count());
+    m_rows = std::min(m_rows, count());
     int columns = count() / m_rows;
     Qt::Orientation orientation = Qt::Horizontal;
     if (m_rootInfo) {

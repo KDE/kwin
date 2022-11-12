@@ -306,7 +306,7 @@ void Options::setFocusStealingPreventionLevel(int focusStealingPreventionLevel)
     if (m_focusStealingPreventionLevel == focusStealingPreventionLevel) {
         return;
     }
-    m_focusStealingPreventionLevel = std::max(0, qMin(4, focusStealingPreventionLevel));
+    m_focusStealingPreventionLevel = std::max(0, std::min(4, focusStealingPreventionLevel));
     Q_EMIT focusStealingPreventionLevelChanged();
 }
 

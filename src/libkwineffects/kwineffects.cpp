@@ -938,9 +938,9 @@ WindowQuadList WindowQuadList::makeGrid(int maxQuadSize) const
     double bottom = first().bottom();
 
     for (const WindowQuad &quad : std::as_const(*this)) {
-        left = qMin(left, quad.left());
+        left = std::min(left, quad.left());
         right = std::max(right, quad.right());
-        top = qMin(top, quad.top());
+        top = std::min(top, quad.top());
         bottom = std::max(bottom, quad.bottom());
     }
 
@@ -965,11 +965,11 @@ WindowQuadList WindowQuadList::makeGrid(int maxQuadSize) const
         // Loop over all intersecting cells and add sub-quads
         for (double y = yBegin; y < quadBottom; y += maxQuadSize) {
             const double y0 = std::max(y, quadTop);
-            const double y1 = qMin(quadBottom, y + maxQuadSize);
+            const double y1 = std::min(quadBottom, y + maxQuadSize);
 
             for (double x = xBegin; x < quadRight; x += maxQuadSize) {
                 const double x0 = std::max(x, quadLeft);
-                const double x1 = qMin(quadRight, x + maxQuadSize);
+                const double x1 = std::min(quadRight, x + maxQuadSize);
 
                 ret.append(quad.makeSubQuad(x0, y0, x1, y1));
             }
@@ -992,9 +992,9 @@ WindowQuadList WindowQuadList::makeRegularGrid(int xSubdivisions, int ySubdivisi
     double bottom = first().bottom();
 
     for (const WindowQuad &quad : *this) {
-        left = qMin(left, quad.left());
+        left = std::min(left, quad.left());
         right = std::max(right, quad.right());
-        top = qMin(top, quad.top());
+        top = std::min(top, quad.top());
         bottom = std::max(bottom, quad.bottom());
     }
 
@@ -1022,11 +1022,11 @@ WindowQuadList WindowQuadList::makeRegularGrid(int xSubdivisions, int ySubdivisi
         // Loop over all intersecting cells and add sub-quads
         for (double y = yBegin; y < quadBottom; y += yIncrement) {
             const double y0 = std::max(y, quadTop);
-            const double y1 = qMin(quadBottom, y + yIncrement);
+            const double y1 = std::min(quadBottom, y + yIncrement);
 
             for (double x = xBegin; x < quadRight; x += xIncrement) {
                 const double x0 = std::max(x, quadLeft);
-                const double x1 = qMin(quadRight, x + xIncrement);
+                const double x1 = std::min(quadRight, x + xIncrement);
 
                 ret.append(quad.makeSubQuad(x0, y0, x1, y1));
             }

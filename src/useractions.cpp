@@ -932,7 +932,7 @@ void Workspace::slotIncreaseWindowOpacity()
     if (!m_activeWindow) {
         return;
     }
-    m_activeWindow->setOpacity(qMin(m_activeWindow->opacity() + 0.05, 1.0));
+    m_activeWindow->setOpacity(std::min(m_activeWindow->opacity() + 0.05, 1.0));
 }
 
 void Workspace::slotLowerWindowOpacity()

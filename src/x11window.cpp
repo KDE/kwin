@@ -3581,8 +3581,8 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
             min_size.setHeight(decominsize.height());
         }
     }
-    w = qMin(max_size.width(), w);
-    h = qMin(max_size.height(), h);
+    w = std::min(max_size.width(), w);
+    h = std::min(max_size.height(), h);
     w = std::max(min_size.width(), w);
     h = std::max(min_size.height(), h);
 
@@ -4497,7 +4497,7 @@ void X11Window::maximize(MaximizeMode mode)
         if (r.size() != clientArea.size()) { // to avoid off-by-one errors...
             if (isElectricBorderMaximizing() && r.width() < clientArea.width()) {
                 r.moveLeft(std::max(clientArea.left(), Cursors::self()->mouse()->pos().x() - r.width() / 2));
-                r.moveRight(qMin(clientArea.right(), r.right()));
+                r.moveRight(std::min(clientArea.right(), r.right()));
             } else {
                 r.moveCenter(clientArea.center());
                 const bool closeHeight = r.height() > 97 * clientArea.height() / 100;

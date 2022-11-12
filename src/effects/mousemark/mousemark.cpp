@@ -163,7 +163,7 @@ void MouseMarkEffect::slotMouseChanged(const QPoint &pos, const QPoint &,
         }
         QPoint pos2 = drawing.last();
         drawing.append(pos);
-        QRect repaint = QRect(qMin(pos.x(), pos2.x()), qMin(pos.y(), pos2.y()),
+        QRect repaint = QRect(std::min(pos.x(), pos2.x()), std::min(pos.y(), pos2.y()),
                               std::max(pos.x(), pos2.x()), std::max(pos.y(), pos2.y()));
         repaint.adjust(-width, -width, width, width);
         effects->addRepaint(repaint);

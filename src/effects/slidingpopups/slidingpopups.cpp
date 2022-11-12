@@ -149,7 +149,7 @@ void SlidingPopupsEffect::paintWindow(EffectWindow *w, int mask, QRegion region,
         if (slideLength < geo.width()) {
             data.multiplyOpacity(t);
         }
-        data.translate(-interpolate(qMin(geo.width(), slideLength), 0.0, t));
+        data.translate(-interpolate(std::min(geo.width(), slideLength), 0.0, t));
         splitPoint = geo.width() - (geo.x() + geo.width() - screenRect.x() - animData.offset);
         region &= QRegion(geo.x() + splitPoint, geo.y(), geo.width() - splitPoint, geo.height());
         break;
@@ -157,7 +157,7 @@ void SlidingPopupsEffect::paintWindow(EffectWindow *w, int mask, QRegion region,
         if (slideLength < geo.height()) {
             data.multiplyOpacity(t);
         }
-        data.translate(0.0, -interpolate(qMin(geo.height(), slideLength), 0.0, t));
+        data.translate(0.0, -interpolate(std::min(geo.height(), slideLength), 0.0, t));
         splitPoint = geo.height() - (geo.y() + geo.height() - screenRect.y() - animData.offset);
         region &= QRegion(geo.x(), geo.y() + splitPoint, geo.width(), geo.height() - splitPoint);
         break;
@@ -165,7 +165,7 @@ void SlidingPopupsEffect::paintWindow(EffectWindow *w, int mask, QRegion region,
         if (slideLength < geo.width()) {
             data.multiplyOpacity(t);
         }
-        data.translate(interpolate(qMin(geo.width(), slideLength), 0.0, t));
+        data.translate(interpolate(std::min(geo.width(), slideLength), 0.0, t));
         splitPoint = screenRect.x() + screenRect.width() - geo.x() - animData.offset;
         region &= QRegion(geo.x(), geo.y(), splitPoint, geo.height());
         break;
@@ -174,7 +174,7 @@ void SlidingPopupsEffect::paintWindow(EffectWindow *w, int mask, QRegion region,
         if (slideLength < geo.height()) {
             data.multiplyOpacity(t);
         }
-        data.translate(0.0, interpolate(qMin(geo.height(), slideLength), 0.0, t));
+        data.translate(0.0, interpolate(std::min(geo.height(), slideLength), 0.0, t));
         splitPoint = screenRect.y() + screenRect.height() - geo.y() - animData.offset;
         region &= QRegion(geo.x(), geo.y(), geo.width(), splitPoint);
     }

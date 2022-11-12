@@ -157,7 +157,7 @@ PlasmaVirtualDesktopInterface *PlasmaVirtualDesktopManagementInterface::createDe
         return *i;
     }
 
-    const quint32 actualPosition = qMin(position, (quint32)d->desktops.count());
+    const quint32 actualPosition = std::min(position, (quint32)d->desktops.count());
 
     auto desktop = new PlasmaVirtualDesktopInterface(this);
     desktop->d->id = id;

@@ -1482,7 +1482,7 @@ void Workspace::slotDesktopRemoved(VirtualDesktop *desktop)
         if ((*it)->desktops().count() > 1) {
             (*it)->leaveDesktop(desktop);
         } else {
-            sendWindowToDesktop(*it, qMin(desktop->x11DesktopNumber(), VirtualDesktopManager::self()->count()), true);
+            sendWindowToDesktop(*it, std::min(desktop->x11DesktopNumber(), VirtualDesktopManager::self()->count()), true);
         }
     }
 
@@ -2351,9 +2351,9 @@ QRectF Workspace::adjustClientArea(Window *window, const QRectF &area) const
     // They're given in virtual screen coordinates, make them affect only
     // their xinerama screen.
     strutLeft.setLeft(std::max(strutLeft.left(), screenArea.left()));
-    strutRight.setRight(qMin(strutRight.right(), screenArea.right()));
+    strutRight.setRight(std::min(strutRight.right(), screenArea.right()));
     strutTop.setTop(std::max(strutTop.top(), screenArea.top()));
-    strutBottom.setBottom(qMin(strutBottom.bottom(), screenArea.bottom()));
+    strutBottom.setBottom(std::min(strutBottom.bottom(), screenArea.bottom()));
 
     if (strutLeft.intersects(area)) {
         adjustedArea.setLeft(strutLeft.right());

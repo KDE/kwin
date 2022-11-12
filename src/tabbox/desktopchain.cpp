@@ -52,7 +52,7 @@ void DesktopChain::resize(uint previousSize, uint newSize)
         // But when desktops are removed, we may have to modify the chain a bit,
         // otherwise invalid desktops may show up.
         for (int i = 0; i < m_chain.size(); ++i) {
-            m_chain[i] = qMin(m_chain[i], newSize);
+            m_chain[i] = std::min(m_chain[i], newSize);
         }
     }
 }

@@ -75,7 +75,7 @@ Xvisit::Xvisit(Window *target, KWaylandServer::AbstractDataSource *dataSource, D
         return;
     }
     xcb_atom_t *value = static_cast<xcb_atom_t *>(xcb_get_property_value(reply));
-    m_version = qMin(*value, Dnd::version());
+    m_version = std::min(*value, Dnd::version());
     if (m_version < 1) {
         // minimal version we accept is 1
         doFinish();

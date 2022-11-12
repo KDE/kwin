@@ -160,7 +160,7 @@ void ThumbnailAsideEffect::arrange()
     }
     QRectF area = effects->clientArea(MaximizeArea, effectiveScreen, effects->currentDesktop());
     double scale = area.height() / double(height);
-    scale = qMin(scale, maxwidth / double(mwidth)); // don't be wider than maxwidth pixels
+    scale = std::min(scale, maxwidth / double(mwidth)); // don't be wider than maxwidth pixels
     int add = 0;
     for (int i = 0;
          i < windows.size();

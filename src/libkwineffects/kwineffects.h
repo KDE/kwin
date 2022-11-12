@@ -4141,7 +4141,7 @@ inline const WindowVertex &WindowQuad::operator[](int index) const
 
 inline double WindowQuad::left() const
 {
-    return qMin(verts[0].px, qMin(verts[1].px, qMin(verts[2].px, verts[3].px)));
+    return std::min(verts[0].px, std::min(verts[1].px, std::min(verts[2].px, verts[3].px)));
 }
 
 inline double WindowQuad::right() const
@@ -4151,7 +4151,7 @@ inline double WindowQuad::right() const
 
 inline double WindowQuad::top() const
 {
-    return qMin(verts[0].py, qMin(verts[1].py, qMin(verts[2].py, verts[3].py)));
+    return std::min(verts[0].py, std::min(verts[1].py, std::min(verts[2].py, verts[3].py)));
 }
 
 inline double WindowQuad::bottom() const
