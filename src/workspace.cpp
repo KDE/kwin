@@ -601,7 +601,7 @@ std::shared_ptr<OutputMode> parseMode(Output *output, const QJsonObject &modeInf
 {
     const QJsonObject size = modeInfo["size"].toObject();
     const QSize modeSize = QSize(size["width"].toInt(), size["height"].toInt());
-    const int refreshRate = std::round(modeInfo["refresh"].toDouble() * 1000);
+    const uint32_t refreshRate = std::round(modeInfo["refresh"].toDouble() * 1000);
 
     const auto modes = output->modes();
     auto it = std::find_if(modes.begin(), modes.end(), [&modeSize, &refreshRate](const auto &mode) {
