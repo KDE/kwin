@@ -430,7 +430,7 @@ VirtualDesktop *VirtualDesktopManager::createVirtualDesktop(uint position, const
         return nullptr;
     }
 
-    position = qBound(0u, position, static_cast<uint>(m_desktops.count()));
+    position = std::clamp(position, 0u, static_cast<uint>(m_desktops.count()));
 
     QString desktopName = name;
     if (desktopName.isEmpty()) {
@@ -545,7 +545,7 @@ bool VirtualDesktopManager::setCurrent(VirtualDesktop *newDesktop)
 
 void VirtualDesktopManager::setCount(uint count)
 {
-    count = qBound<uint>(1, count, VirtualDesktopManager::maximum());
+    count = std::clamp<uint>(count, 1, VirtualDesktopManager::maximum());
     if (count == uint(m_desktops.count())) {
         // nothing to change
         return;
@@ -704,7 +704,7 @@ void VirtualDesktopManager::load()
     }
 
     int rows = group.readEntry<int>("Rows", 2);
-    m_rows = qBound(1, rows, n);
+    m_rows = std::clamp(rows, 1, n);
 
     s_loadingDesktopSettings = false;
 }

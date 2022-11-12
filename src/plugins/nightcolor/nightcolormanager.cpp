@@ -258,8 +258,8 @@ void NightColorManager::readConfig()
         break;
     }
 
-    m_dayTargetTemp = qBound(MIN_TEMPERATURE, s->dayTemperature(), DEFAULT_DAY_TEMPERATURE);
-    m_nightTargetTemp = qBound(MIN_TEMPERATURE, s->nightTemperature(), DEFAULT_DAY_TEMPERATURE);
+    m_dayTargetTemp = std::clamp(s->dayTemperature(), MIN_TEMPERATURE, DEFAULT_DAY_TEMPERATURE);
+    m_nightTargetTemp = std::clamp(s->nightTemperature(), MIN_TEMPERATURE, DEFAULT_DAY_TEMPERATURE);
 
     double lat, lng;
     auto correctReadin = [&lat, &lng]() {

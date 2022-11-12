@@ -233,9 +233,9 @@ void AuroraeTheme::borders(int &left, int &top, int &right, int &bottom, bool ma
             maxMargin = 0;
         }
 
-        left = qBound(minMargin, d->themeConfig.borderLeft(), maxMargin);
-        right = qBound(minMargin, d->themeConfig.borderRight(), maxMargin);
-        bottom = qBound(minMargin, d->themeConfig.borderBottom(), maxMargin);
+        left = std::clamp(d->themeConfig.borderLeft(), minMargin, maxMargin);
+        right = std::clamp(d->themeConfig.borderRight(), minMargin, maxMargin);
+        bottom = std::clamp(d->themeConfig.borderBottom(), minMargin, maxMargin);
 
         if (d->borderSize == KDecoration2::BorderSize::None) {
             left = 0;

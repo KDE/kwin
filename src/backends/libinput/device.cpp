@@ -412,7 +412,7 @@ void Device::setPointerAcceleration(qreal acceleration)
     if (!m_supportsPointerAcceleration) {
         return;
     }
-    acceleration = qBound(-1.0, acceleration, 1.0);
+    acceleration = std::clamp(acceleration, -1.0, 1.0);
     if (libinput_device_config_accel_set_speed(m_device, acceleration) == LIBINPUT_CONFIG_STATUS_SUCCESS) {
         if (m_pointerAcceleration != acceleration) {
             m_pointerAcceleration = acceleration;

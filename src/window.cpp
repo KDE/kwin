@@ -323,7 +323,7 @@ qreal Window::opacity() const
 
 void Window::setOpacity(qreal opacity)
 {
-    opacity = qBound(0.0, opacity, 1.0);
+    opacity = std::clamp(opacity, 0.0, 1.0);
     if (m_opacity == opacity) {
         return;
     }
@@ -4204,8 +4204,8 @@ QSizeF Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
     const QSizeF minimumSize = minSize();
     const QSizeF maximumSize = maxSize();
 
-    width = qBound(minimumSize.width(), width, maximumSize.width());
-    height = qBound(minimumSize.height(), height, maximumSize.height());
+    width = std::clamp(width, minimumSize.width(), maximumSize.width());
+    height = std::clamp(height, minimumSize.height(), maximumSize.height());
 
     return QSizeF(width, height);
 }

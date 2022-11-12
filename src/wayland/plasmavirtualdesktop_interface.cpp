@@ -84,7 +84,7 @@ void PlasmaVirtualDesktopManagementInterfacePrivate::org_kde_plasma_virtual_desk
                                                                                                                               const QString &name,
                                                                                                                               uint32_t position)
 {
-    Q_EMIT q->desktopCreateRequested(name, qBound<quint32>(0, position, (quint32)desktops.count()));
+    Q_EMIT q->desktopCreateRequested(name, std::clamp<quint32>(position, 0, desktops.size()));
 }
 
 void PlasmaVirtualDesktopManagementInterfacePrivate::org_kde_plasma_virtual_desktop_management_request_remove_virtual_desktop(Resource *resource,

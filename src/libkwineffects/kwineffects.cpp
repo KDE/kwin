@@ -327,7 +327,7 @@ qreal WindowPaintData::crossFadeProgress() const
 
 void WindowPaintData::setCrossFadeProgress(qreal factor)
 {
-    d->crossFadeProgress = qBound(qreal(0.0), factor, qreal(1.0));
+    d->crossFadeProgress = std::clamp(factor, 0.0, 1.0);
 }
 
 qreal WindowPaintData::multiplyOpacity(qreal factor)
