@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-09 00:49+0000\n"
+"POT-Creation-Date: 2022-11-11 00:47+0000\n"
 "PO-Revision-Date: 2022-09-27 18:25+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -67,7 +67,7 @@ msgstr ""
 "XRender.</p>"
 
 #: composite.cpp:1047
-#, kde-format
+#, fuzzy, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Ekstensi X yang diperlukan (XComposite dan XDamage) tidak tersedia."
 
@@ -1196,7 +1196,7 @@ msgstr "Touchpad"
 msgid "Keyboard Layout Switcher"
 msgstr "Pengalih Tataletak Keyboard"
 
-#: killwindow.cpp:33
+#: killwindow.cpp:32
 #, kde-format
 msgid ""
 "Select window to force close with left click or enter.\n"
@@ -1205,67 +1205,67 @@ msgstr ""
 "Pilih jendela untuk memaksa tutup dengan klik kiri atau enter.\n"
 "Escape atau klik kanan untuk membatalkan."
 
-#: main.cpp:174
+#: main.cpp:179
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:176 main.cpp:199
+#: main.cpp:181 main.cpp:204
 #, kde-format
 msgid "KDE window manager"
 msgstr "Pengelola jendela KDE"
 
-#: main.cpp:178
+#: main.cpp:183
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2019, Para Pengembang KDE"
 
-#: main.cpp:180
+#: main.cpp:185
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:181
+#: main.cpp:186
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:182
+#: main.cpp:187
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:183
+#: main.cpp:188
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:184
+#: main.cpp:189
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:185
+#: main.cpp:190
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:186
+#: main.cpp:191
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:187
+#: main.cpp:192
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:196
+#: main.cpp:201
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Nonfungsikan opsi konfigurasi"
 
-#: main.cpp:197
+#: main.cpp:202
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Mengindikasikan bahwa KWin telah mogok dalam akhir-akhir ini"
@@ -1390,7 +1390,7 @@ msgstr "Menjalankan sesi tanpa dukungan layar kunci."
 msgid "Starts the session without global shortcuts support."
 msgstr "Menjalankan sesi tanpa dukungan pintasan global."
 
-#: main_wayland.cpp:410 main_x11.cpp:377
+#: main_wayland.cpp:410 main_x11.cpp:418
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Nonfungsikan integrasi KActivities."
@@ -1407,7 +1407,7 @@ msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 "Aplikasi untuk menjalankan setelah server Wayland dan Xwayland dijalankan"
 
-#: main_x11.cpp:65
+#: main_x11.cpp:67
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1418,7 +1418,7 @@ msgstr ""
 "Kelihatannya KWin telah beberapa kali mogok secara berturut-turut.\n"
 "Kamu bisa memilih pengelola jendela lain untuk dijalankan:"
 
-#: main_x11.cpp:218
+#: main_x11.cpp:259
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1427,12 +1427,12 @@ msgstr ""
 "kwin: tak dapat mengklaim pemilihan pengelola. wm lain berjalan? (coba "
 "menggunakan --replace)\n"
 
-#: main_x11.cpp:239
+#: main_x11.cpp:280
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: pengelola jendela lain berjalan (coba menggunakan --replace)\n"
 
-#: main_x11.cpp:370
+#: main_x11.cpp:411
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Ganti pengelola jendela sesuai-ICCCM2.0 yang telah berjalan"
