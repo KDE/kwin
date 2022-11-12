@@ -235,9 +235,9 @@ void Placement::placeSmart(Window *c, const QRectF &area, PlacementPolicy /*next
 
                 // if windows overlap, calc the overall overlapping
                 if ((cxl < xr) && (cxr > xl) && (cyt < yb) && (cyb > yt)) {
-                    xl = qMax(cxl, xl);
+                    xl = std::max(cxl, xl);
                     xr = qMin(cxr, xr);
-                    yt = qMax(cyt, yt);
+                    yt = std::max(cyt, yt);
                     yb = qMin(cyb, yb);
                     if (client->keepAbove()) {
                         overlap += 16 * (xr - xl) * (yb - yt);

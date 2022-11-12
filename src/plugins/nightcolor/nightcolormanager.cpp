@@ -298,7 +298,7 @@ void NightColorManager::readConfig()
     }
     m_morning = mrB;
     m_evening = evB;
-    m_trTime = qMax(trTime / 1000 / 60, 1);
+    m_trTime = std::max(trTime / 1000 / 60, 1);
 }
 
 void NightColorManager::resetAllTimers()
@@ -355,7 +355,7 @@ void NightColorManager::quickAdjust(int targetTemp)
     if (m_currentTemp < targetTemp) {
         nextTemp = qMin(m_currentTemp + TEMPERATURE_STEP, targetTemp);
     } else {
-        nextTemp = qMax(m_currentTemp - TEMPERATURE_STEP, targetTemp);
+        nextTemp = std::max(m_currentTemp - TEMPERATURE_STEP, targetTemp);
     }
     commitGammaRamps(nextTemp);
 
@@ -449,7 +449,7 @@ void NightColorManager::slowUpdate(int targetTemp)
     if (m_currentTemp < targetTemp) {
         nextTemp = qMin(m_currentTemp + TEMPERATURE_STEP, targetTemp);
     } else {
-        nextTemp = qMax(m_currentTemp - TEMPERATURE_STEP, targetTemp);
+        nextTemp = std::max(m_currentTemp - TEMPERATURE_STEP, targetTemp);
     }
     commitGammaRamps(nextTemp);
     if (nextTemp == targetTemp) {

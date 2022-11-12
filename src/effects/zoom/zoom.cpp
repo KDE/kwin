@@ -199,7 +199,7 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
 {
     ZoomConfig::self()->read();
     // On zoom-in and zoom-out change the zoom by the defined zoom-factor.
-    zoomFactor = qMax(0.1, ZoomConfig::zoomFactor());
+    zoomFactor = std::max(0.1, ZoomConfig::zoomFactor());
     // Visibility of the mouse-pointer.
     mousePointer = MousePointerType(ZoomConfig::mousePointer());
     // Track moving of the mouse.
@@ -211,9 +211,9 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
     m_accessibilityIntegration->setTextCaretTrackingEnabled(ZoomConfig::enableTextCaretTracking());
 #endif
     // The time in milliseconds to wait before a focus-event takes away a mouse-move.
-    focusDelay = qMax(uint(0), ZoomConfig::focusDelay());
+    focusDelay = std::max(uint(0), ZoomConfig::focusDelay());
     // The factor the zoom-area will be moved on touching an edge on push-mode or using the navigation KAction's.
-    moveFactor = qMax(0.1, ZoomConfig::moveFactor());
+    moveFactor = std::max(0.1, ZoomConfig::moveFactor());
     if (source_zoom < 0) {
         // Load the saved zoom value.
         source_zoom = 1.0;
@@ -239,7 +239,7 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
         if (target_zoom > zoom) {
             zoom = qMin(zoom + ((zoomDist * time) / animationTime(150 * zoomFactor)), target_zoom);
         } else {
-            zoom = qMax(zoom - ((zoomDist * time) / animationTime(150 * zoomFactor)), target_zoom);
+            zoom = std::max(zoom - ((zoomDist * time) / animationTime(150 * zoomFactor)), target_zoom);
         }
     }
 
@@ -319,8 +319,8 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
         prevPoint = cursorPoint;
         // fall through
     case MouseTrackingDisabled:
-        xTranslation = qMin(0, qMax(int(screenSize.width() - screenSize.width() * zoom), int(screenSize.width() / 2 - prevPoint.x() * zoom)));
-        yTranslation = qMin(0, qMax(int(screenSize.height() - screenSize.height() * zoom), int(screenSize.height() / 2 - prevPoint.y() * zoom)));
+        xTranslation = qMin(0, std::max(int(screenSize.width() - screenSize.width() * zoom), int(screenSize.width() / 2 - prevPoint.x() * zoom)));
+        yTranslation = qMin(0, std::max(int(screenSize.height() - screenSize.height() * zoom), int(screenSize.height() / 2 - prevPoint.y() * zoom)));
         break;
     case MouseTrackingPush: {
         // touching an edge of the screen moves the zoom-area in that direction.
@@ -339,10 +339,10 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
             yMove = (y + threshold - screenSize.height()) / zoom;
         }
         if (xMove) {
-            prevPoint.setX(qMax(0, qMin(screenSize.width(), prevPoint.x() + xMove)));
+            prevPoint.setX(std::max(0, qMin(screenSize.width(), prevPoint.x() + xMove)));
         }
         if (yMove) {
-            prevPoint.setY(qMax(0, qMin(screenSize.height(), prevPoint.y() + yMove)));
+            prevPoint.setY(std::max(0, qMin(screenSize.height(), prevPoint.y() + yMove)));
         }
         xTranslation = -int(prevPoint.x() * (zoom - 1.0));
         yTranslation = -int(prevPoint.y() * (zoom - 1.0));
@@ -478,8 +478,8 @@ void ZoomEffect::actualSize()
 void ZoomEffect::timelineFrameChanged(int /* frame */)
 {
     const QSize screenSize = effects->virtualScreenSize();
-    prevPoint.setX(qMax(0, qMin(screenSize.width(), prevPoint.x() + xMove)));
-    prevPoint.setY(qMax(0, qMin(screenSize.height(), prevPoint.y() + yMove)));
+    prevPoint.setX(std::max(0, qMin(screenSize.width(), prevPoint.x() + xMove)));
+    prevPoint.setY(std::max(0, qMin(screenSize.height(), prevPoint.y() + yMove)));
     cursorPoint = prevPoint;
     effects->addRepaintFull();
 }
@@ -492,17 +492,17 @@ void ZoomEffect::moveZoom(int x, int y)
 
     const QSize screenSize = effects->virtualScreenSize();
     if (x < 0) {
-        xMove = -qMax(1.0, screenSize.width() / zoom / moveFactor);
+        xMove = -std::max(1.0, screenSize.width() / zoom / moveFactor);
     } else if (x > 0) {
-        xMove = qMax(1.0, screenSize.width() / zoom / moveFactor);
+        xMove = std::max(1.0, screenSize.width() / zoom / moveFactor);
     } else {
         xMove = 0;
     }
 
     if (y < 0) {
-        yMove = -qMax(1.0, screenSize.height() / zoom / moveFactor);
+        yMove = -std::max(1.0, screenSize.height() / zoom / moveFactor);
     } else if (y > 0) {
-        yMove = qMax(1.0, screenSize.height() / zoom / moveFactor);
+        yMove = std::max(1.0, screenSize.height() / zoom / moveFactor);
     } else {
         yMove = 0;
     }

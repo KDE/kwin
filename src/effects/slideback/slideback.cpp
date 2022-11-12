@@ -291,7 +291,7 @@ void SlideBackEffect::slotTabBoxAdded()
 
 void SlideBackEffect::slotTabBoxClosed()
 {
-    m_tabboxActive = qMax(m_tabboxActive - 1, 0);
+    m_tabboxActive = std::max(m_tabboxActive - 1, 0);
 }
 
 bool SlideBackEffect::isWindowUsable(EffectWindow *w)

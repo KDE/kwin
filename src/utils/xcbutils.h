@@ -1002,7 +1002,7 @@ public:
         if (!hasMaxSize()) {
             return QSize(INT_MAX, INT_MAX);
         }
-        const QSize size(qMax(m_sizeHints->maxWidth, 1), qMax(m_sizeHints->maxHeight, 1));
+        const QSize size(std::max(m_sizeHints->maxWidth, 1), std::max(m_sizeHints->maxHeight, 1));
         return fromXNative(size);
     }
     QSizeF minSize() const
@@ -1043,7 +1043,7 @@ public:
             return QSize(1, INT_MAX);
         }
         // prevent division by zero
-        return QSize(m_sizeHints->minAspect[0], qMax(m_sizeHints->minAspect[1], 1));
+        return QSize(m_sizeHints->minAspect[0], std::max(m_sizeHints->minAspect[1], 1));
     }
     QSize maxAspect() const
     {
@@ -1051,7 +1051,7 @@ public:
             return QSize(INT_MAX, 1);
         }
         // prevent division by zero
-        return QSize(m_sizeHints->maxAspect[0], qMax(m_sizeHints->maxAspect[1], 1));
+        return QSize(m_sizeHints->maxAspect[0], std::max(m_sizeHints->maxAspect[1], 1));
     }
 
 private:

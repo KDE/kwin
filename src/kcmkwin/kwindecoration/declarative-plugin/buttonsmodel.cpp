@@ -142,7 +142,7 @@ void ButtonsModel::add(int index, int type)
 
 void ButtonsModel::move(int sourceIndex, int targetIndex)
 {
-    if (sourceIndex == qMax(0, targetIndex)) {
+    if (sourceIndex == std::max(0, targetIndex)) {
         return;
     }
 
@@ -153,10 +153,10 @@ void ButtonsModel::move(int sourceIndex, int targetIndex)
         // Row will be moved down
         beginMoveRows(QModelIndex(), sourceIndex, sourceIndex, QModelIndex(), targetIndex + 1);
     } else {
-        beginMoveRows(QModelIndex(), sourceIndex, sourceIndex, QModelIndex(), qMax(0, targetIndex));
+        beginMoveRows(QModelIndex(), sourceIndex, sourceIndex, QModelIndex(), std::max(0, targetIndex));
     }
 
-    m_buttons.move(sourceIndex, qMax(0, targetIndex));
+    m_buttons.move(sourceIndex, std::max(0, targetIndex));
     endMoveRows();
 }
 

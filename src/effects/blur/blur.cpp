@@ -273,7 +273,7 @@ void BlurEffect::reconfigure(ReconfigureFlags flags)
     m_expandSize = blurOffsets[m_downSampleIterations - 1].expandSize;
     m_noiseStrength = BlurConfig::noiseStrength();
 
-    m_scalingFactor = qMax(1.0, QGuiApplication::primaryScreen()->logicalDotsPerInch() / 96.0);
+    m_scalingFactor = std::max(1.0, QGuiApplication::primaryScreen()->logicalDotsPerInch() / 96.0);
 
     updateTexture();
 

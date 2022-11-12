@@ -556,16 +556,16 @@ void Decoration::updateExtendedBorders()
 
     if (settings()->borderSize() == KDecoration2::BorderSize::None) {
         if (!clientPointer()->isMaximizedHorizontally()) {
-            extLeft = qMax(m_extendedBorders->left(), extSize);
-            extRight = qMax(m_extendedBorders->right(), extSize);
+            extLeft = std::max(m_extendedBorders->left(), extSize);
+            extRight = std::max(m_extendedBorders->right(), extSize);
         }
         if (!clientPointer()->isMaximizedVertically()) {
-            extBottom = qMax(m_extendedBorders->bottom(), extSize);
+            extBottom = std::max(m_extendedBorders->bottom(), extSize);
         }
 
     } else if (settings()->borderSize() == KDecoration2::BorderSize::NoSides && !clientPointer()->isMaximizedHorizontally()) {
-        extLeft = qMax(m_extendedBorders->left(), extSize);
-        extRight = qMax(m_extendedBorders->right(), extSize);
+        extLeft = std::max(m_extendedBorders->left(), extSize);
+        extRight = std::max(m_extendedBorders->right(), extSize);
     }
 
     setResizeOnlyBorders(QMargins(extLeft, 0, extRight, extBottom));

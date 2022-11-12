@@ -654,7 +654,7 @@ void Edge::updateApproaching(const QPoint &point)
         int factor = 0;
         const int edgeDistance = m_edges->cornerOffset();
         auto cornerDistance = [=](const QPoint &corner) {
-            return qMax(qAbs(corner.x() - point.x()), qAbs(corner.y() - point.y()));
+            return std::max(qAbs(corner.x() - point.x()), qAbs(corner.y() - point.y()));
         };
         switch (border()) {
         case ElectricTopLeft:
@@ -813,7 +813,7 @@ void ScreenEdges::reconfigure()
     // TODO: migrate settings to a group ScreenEdges
     KConfigGroup windowsConfig = m_config->group("Windows");
     setTimeThreshold(windowsConfig.readEntry("ElectricBorderDelay", 150));
-    setReActivationThreshold(qMax(timeThreshold() + 50, windowsConfig.readEntry("ElectricBorderCooldown", 350)));
+    setReActivationThreshold(std::max(timeThreshold() + 50, windowsConfig.readEntry("ElectricBorderCooldown", 350)));
     int desktopSwitching = windowsConfig.readEntry("ElectricBorders", static_cast<int>(ElectricDisabled));
     if (desktopSwitching == ElectricDisabled) {
         setDesktopSwitching(false);

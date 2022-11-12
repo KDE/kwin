@@ -3583,8 +3583,8 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
     }
     w = qMin(max_size.width(), w);
     h = qMin(max_size.height(), h);
-    w = qMax(min_size.width(), w);
-    h = qMax(min_size.height(), h);
+    w = std::max(min_size.width(), w);
+    h = std::max(min_size.height(), h);
 
     if (!rules()->checkStrictGeometry(!isFullScreen())) {
         // Disobey increments and aspect by explicit rule.
@@ -4496,7 +4496,7 @@ void X11Window::maximize(MaximizeMode mode)
         r.setSize(constrainFrameSize(r.size(), SizeModeMax));
         if (r.size() != clientArea.size()) { // to avoid off-by-one errors...
             if (isElectricBorderMaximizing() && r.width() < clientArea.width()) {
-                r.moveLeft(qMax(clientArea.left(), Cursors::self()->mouse()->pos().x() - r.width() / 2));
+                r.moveLeft(std::max(clientArea.left(), Cursors::self()->mouse()->pos().x() - r.width() / 2));
                 r.moveRight(qMin(clientArea.right(), r.right()));
             } else {
                 r.moveCenter(clientArea.center());

@@ -285,8 +285,8 @@ void WobblyWindowsEffect::apply(EffectWindow *w, int mask, WindowPaintData &data
             }
             left = qMin(left, quads[i].left());
             top = qMin(top, quads[i].top());
-            right = qMax(right, quads[i].right());
-            bottom = qMax(bottom, quads[i].bottom());
+            right = std::max(right, quads[i].right());
+            bottom = std::max(bottom, quads[i].bottom());
         }
         QRectF dirtyRect(
             left * data.xScale() + w->x() + data.xTranslation(),

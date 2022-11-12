@@ -30,13 +30,13 @@ bool isOpenGLES()
 
 EGLConfig configFromFormat(EGLDisplay display, const QSurfaceFormat &surfaceFormat, EGLint surfaceType)
 {
-    // qMax as these values are initialized to -1 by default.
-    const EGLint redSize = qMax(surfaceFormat.redBufferSize(), 0);
-    const EGLint greenSize = qMax(surfaceFormat.greenBufferSize(), 0);
-    const EGLint blueSize = qMax(surfaceFormat.blueBufferSize(), 0);
-    const EGLint alphaSize = qMax(surfaceFormat.alphaBufferSize(), 0);
-    const EGLint depthSize = qMax(surfaceFormat.depthBufferSize(), 0);
-    const EGLint stencilSize = qMax(surfaceFormat.stencilBufferSize(), 0);
+    // std::max as these values are initialized to -1 by default.
+    const EGLint redSize = std::max(surfaceFormat.redBufferSize(), 0);
+    const EGLint greenSize = std::max(surfaceFormat.greenBufferSize(), 0);
+    const EGLint blueSize = std::max(surfaceFormat.blueBufferSize(), 0);
+    const EGLint alphaSize = std::max(surfaceFormat.alphaBufferSize(), 0);
+    const EGLint depthSize = std::max(surfaceFormat.depthBufferSize(), 0);
+    const EGLint stencilSize = std::max(surfaceFormat.stencilBufferSize(), 0);
 
     const EGLint renderableType = isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT;
 

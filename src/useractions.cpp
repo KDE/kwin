@@ -940,7 +940,7 @@ void Workspace::slotLowerWindowOpacity()
     if (!m_activeWindow) {
         return;
     }
-    m_activeWindow->setOpacity(qMax(m_activeWindow->opacity() - 0.05, 0.05));
+    m_activeWindow->setOpacity(std::max(m_activeWindow->opacity() - 0.05, 0.05));
 }
 
 void Workspace::closeActivePopup()

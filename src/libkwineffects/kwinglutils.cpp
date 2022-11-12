@@ -1740,8 +1740,8 @@ void GLVertexBufferPrivate::reallocatePersistentBuffer(size_t size)
     }
 
     // Round the size up to 64 kb
-    size_t minSize = qMax<size_t>(frameSizes.average() * 3, 128 * 1024);
-    bufferSize = qMax(size, minSize);
+    size_t minSize = std::max<size_t>(frameSizes.average() * 3, 128 * 1024);
+    bufferSize = std::max(size, minSize);
 
     const GLbitfield storage = GL_DYNAMIC_STORAGE_BIT;
     const GLbitfield access = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
@@ -1823,7 +1823,7 @@ void GLVertexBufferPrivate::reallocateBuffer(size_t size)
 {
     // Round the size up to 4 Kb for streaming/dynamic buffers.
     const size_t minSize = 32768; // Minimum size for streaming buffers
-    const size_t alloc = usage != GL_STATIC_DRAW ? qMax(size, minSize) : size;
+    const size_t alloc = usage != GL_STATIC_DRAW ? std::max(size, minSize) : size;
 
     glBufferData(GL_ARRAY_BUFFER, alloc, nullptr, usage);
 

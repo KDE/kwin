@@ -1075,7 +1075,7 @@ void Window::setDesktop(int desktop)
 {
     const int numberOfDesktops = VirtualDesktopManager::self()->count();
     if (desktop != NET::OnAllDesktops) { // Do range check
-        desktop = qMax(1, qMin(numberOfDesktops, desktop));
+        desktop = std::max(1, qMin(numberOfDesktops, desktop));
     }
 
     QVector<VirtualDesktop *> desktops;
@@ -2503,7 +2503,7 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPointF &globa
         break;
     case Options::MouseOpacityLess:
         if (!isDesktop()) { // No point in changing the opacity of the desktop
-            setOpacity(qMax(opacity() - 0.1, 0.1));
+            setOpacity(std::max(opacity() - 0.1, 0.1));
         }
         break;
     case Options::MouseClose:
@@ -4046,7 +4046,7 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
     for (const QRect &r : (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaTop)) {
         QRect rect = r & oldGeomTall;
         if (!rect.isEmpty()) {
-            oldTopMax = qMax(oldTopMax, rect.y() + rect.height());
+            oldTopMax = std::max(oldTopMax, rect.y() + rect.height());
         }
     }
     for (const QRect &r : (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaRight)) {
@@ -4064,7 +4064,7 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
     for (const QRect &r : (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaLeft)) {
         QRect rect = r & oldGeomWide;
         if (!rect.isEmpty()) {
-            oldLeftMax = qMax(oldLeftMax, rect.x() + rect.width());
+            oldLeftMax = std::max(oldLeftMax, rect.x() + rect.width());
         }
     }
 
@@ -4072,7 +4072,7 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
     for (const QRect &r : workspace()->restrictedMoveArea(desktop, StrutAreaTop)) {
         QRect rect = r & newGeomTall;
         if (!rect.isEmpty()) {
-            topMax = qMax(topMax, rect.y() + rect.height());
+            topMax = std::max(topMax, rect.y() + rect.height());
         }
     }
     for (const QRect &r : workspace()->restrictedMoveArea(desktop, StrutAreaRight)) {
@@ -4090,7 +4090,7 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
     for (const QRect &r : workspace()->restrictedMoveArea(desktop, StrutAreaLeft)) {
         QRect rect = r & newGeomWide;
         if (!rect.isEmpty()) {
-            leftMax = qMax(leftMax, rect.x() + rect.width());
+            leftMax = std::max(leftMax, rect.x() + rect.width());
         }
     }
 
@@ -4140,10 +4140,10 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
     }
 
     if (save[Left] || keep[Left]) {
-        newGeom.moveLeft(qMax(leftMax, screenArea.x()));
+        newGeom.moveLeft(std::max(leftMax, screenArea.x()));
     }
     if (save[Top] || keep[Top]) {
-        newGeom.moveTop(qMax(topMax, screenArea.y()));
+        newGeom.moveTop(std::max(topMax, screenArea.y()));
     }
     if (save[Right] || keep[Right]) {
         newGeom.moveRight(qMin(rightMax, screenArea.right()) + 1);
@@ -4153,10 +4153,10 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
     }
 
     if (oldGeometry.x() >= oldLeftMax && newGeom.x() < leftMax) {
-        newGeom.setLeft(qMax(leftMax, screenArea.x()));
+        newGeom.setLeft(std::max(leftMax, screenArea.x()));
     }
     if (oldGeometry.y() >= oldTopMax && newGeom.y() < topMax) {
-        newGeom.setTop(qMax(topMax, screenArea.y()));
+        newGeom.setTop(std::max(topMax, screenArea.y()));
     }
 
     checkOffscreenPosition(&newGeom, screenArea);

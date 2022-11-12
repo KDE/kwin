@@ -348,7 +348,7 @@ QPixmap PlastikButtonProvider::icon(ButtonIcon icon, int size, bool active, bool
             lw2 = 1;
         }
 
-        int h = qMax((r.width() / 2), (lw1 + 2 * lw2));
+        int h = std::max((r.width() / 2), (lw1 + 2 * lw2));
 
         // horizontal bars
         drawObject(p, HorizontalLine, r.x(), r.y(), r.width(), lw1);

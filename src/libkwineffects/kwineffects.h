@@ -4146,7 +4146,7 @@ inline double WindowQuad::left() const
 
 inline double WindowQuad::right() const
 {
-    return qMax(verts[0].px, qMax(verts[1].px, qMax(verts[2].px, verts[3].px)));
+    return std::max(verts[0].px, std::max(verts[1].px, std::max(verts[2].px, verts[3].px)));
 }
 
 inline double WindowQuad::top() const
@@ -4156,7 +4156,7 @@ inline double WindowQuad::top() const
 
 inline double WindowQuad::bottom() const
 {
-    return qMax(verts[0].py, qMax(verts[1].py, qMax(verts[2].py, verts[3].py)));
+    return std::max(verts[0].py, std::max(verts[1].py, std::max(verts[2].py, verts[3].py)));
 }
 
 inline QRectF WindowQuad::bounds() const
@@ -4203,7 +4203,7 @@ void Motion<T>::calculate(const int msec)
     }
 
     // Poor man's time independent calculation
-    int steps = qMax(1, msec / 5);
+    int steps = std::max(1, msec / 5);
     for (int i = 0; i < steps; i++) {
         T diff = m_target - m_value;
         T strength = diff * m_strength;

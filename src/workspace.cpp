@@ -2350,9 +2350,9 @@ QRectF Workspace::adjustClientArea(Window *window, const QRectF &area) const
     // Handle struts at xinerama edges that are inside the virtual screen.
     // They're given in virtual screen coordinates, make them affect only
     // their xinerama screen.
-    strutLeft.setLeft(qMax(strutLeft.left(), screenArea.left()));
+    strutLeft.setLeft(std::max(strutLeft.left(), screenArea.left()));
     strutRight.setRight(qMin(strutRight.right(), screenArea.right()));
-    strutTop.setTop(qMax(strutTop.top(), screenArea.top()));
+    strutTop.setTop(std::max(strutTop.top(), screenArea.top()));
     strutBottom.setBottom(qMin(strutBottom.bottom(), screenArea.bottom()));
 
     if (strutLeft.intersects(area)) {
@@ -2676,11 +2676,11 @@ QPointF Workspace::adjustWindowPosition(Window *window, QPointF pos, bool unrest
         QRectF geo = window->frameGeometry();
         if (window->maximizeMode() & MaximizeHorizontal && (geo.x() == maxRect.left() || geo.right() == maxRect.right())) {
             guideMaximized |= MaximizeHorizontal;
-            borderSnapZone.setWidth(qMax(borderSnapZone.width() + 2, maxRect.width() / 16));
+            borderSnapZone.setWidth(std::max(borderSnapZone.width() + 2, maxRect.width() / 16));
         }
         if (window->maximizeMode() & MaximizeVertical && (geo.y() == maxRect.top() || geo.bottom() == maxRect.bottom())) {
             guideMaximized |= MaximizeVertical;
-            borderSnapZone.setHeight(qMax(borderSnapZone.height() + 2, maxRect.height() / 16));
+            borderSnapZone.setHeight(std::max(borderSnapZone.height() + 2, maxRect.height() / 16));
         }
     }
 

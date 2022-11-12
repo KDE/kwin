@@ -652,7 +652,7 @@ void VirtualDesktopManager::updateLayout()
     if (m_rootInfo) {
         // TODO: Is there a sane way to avoid overriding the existing grid?
         columns = m_rootInfo->desktopLayoutColumnsRows().width();
-        m_rows = qMax(1, m_rootInfo->desktopLayoutColumnsRows().height());
+        m_rows = std::max(1, m_rootInfo->desktopLayoutColumnsRows().height());
         orientation = m_rootInfo->desktopLayoutOrientation() == NET::OrientationHorizontal ? Qt::Horizontal : Qt::Vertical;
     }
 
@@ -780,7 +780,7 @@ void VirtualDesktopManager::setNETDesktopLayout(Qt::Orientation orientation, uin
         }
     }
 
-    m_rows = qMax(1u, height);
+    m_rows = std::max(1u, height);
 
     m_grid.update(QSize(width, height), orientation, m_desktops);
     // TODO: why is there no call to m_rootInfo->setDesktopLayout?

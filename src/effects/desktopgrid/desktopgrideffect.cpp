@@ -232,7 +232,7 @@ int DesktopGridEffect::gridColumns() const
     case DesktopLayoutMode::LayoutAutomatic:
         return ceil(sqrt(effects->numberOfDesktops()));
     case DesktopLayoutMode::LayoutCustom:
-        return qMax(1.0, ceil(qreal(effects->numberOfDesktops()) / customLayoutRows()));
+        return std::max(1.0, ceil(qreal(effects->numberOfDesktops()) / customLayoutRows()));
     case DesktopLayoutMode::LayoutPager:
     default:
         return effects->desktopGridSize().width();

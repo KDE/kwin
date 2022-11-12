@@ -504,7 +504,7 @@ int main(int argc, char *argv[])
 
     const int count = parser.value(outputCountOption).toInt(&ok);
     if (ok) {
-        outputCount = qMax(1, count);
+        outputCount = std::max(1, count);
     }
 
     // TODO: create backend without having the server running

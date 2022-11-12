@@ -212,8 +212,8 @@ void KeyboardInterface::sendModifiers(quint32 depressed, quint32 latched, quint3
 
 void KeyboardInterface::setRepeatInfo(qint32 charactersPerSecond, qint32 delay)
 {
-    d->keyRepeat.charactersPerSecond = qMax(charactersPerSecond, 0);
-    d->keyRepeat.delay = qMax(delay, 0);
+    d->keyRepeat.charactersPerSecond = std::max(charactersPerSecond, 0);
+    d->keyRepeat.delay = std::max(delay, 0);
     const QList<KeyboardInterfacePrivate::Resource *> keyboards = d->resourceMap().values();
     for (KeyboardInterfacePrivate::Resource *keyboardResource : keyboards) {
         if (keyboardResource->version() >= WL_KEYBOARD_REPEAT_INFO_SINCE_VERSION) {

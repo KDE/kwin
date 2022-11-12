@@ -151,7 +151,7 @@ void ThumbnailAsideEffect::arrange()
     qreal mwidth = 0;
     for (const Data &d : std::as_const(windows)) {
         height += d.window->height();
-        mwidth = qMax(mwidth, d.window->width());
+        mwidth = std::max(mwidth, d.window->width());
         pos[d.index] = d.window->height();
     }
     EffectScreen *effectiveScreen = effects->findScreen(screen);
