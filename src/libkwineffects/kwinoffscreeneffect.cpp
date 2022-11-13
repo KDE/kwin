@@ -72,6 +72,13 @@ void OffscreenEffect::unredirect(EffectWindow *window)
     }
 }
 
+void OffscreenEffect::setShader(EffectWindow *window, GLShader *shader)
+{
+    if (const auto it = d->windows.find(window); it != d->windows.end()) {
+        it->second->setShader(shader);
+    }
+}
+
 void OffscreenEffect::apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads)
 {
 }

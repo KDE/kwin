@@ -13,6 +13,7 @@ namespace KWin
 
 class OffscreenEffectPrivate;
 class CrossFadeEffectPrivate;
+class ShaderEffectPrivate;
 
 /**
  * The OffscreenEffect class is the base class for effects that paint deformed windows.
@@ -56,6 +57,11 @@ protected:
      */
     virtual void apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads);
 
+    /**
+     * Allows to specify a @p shader to draw the redirected texture for @p window.
+     * Can only be called once the window is redirected.
+     **/
+    void setShader(EffectWindow *window, GLShader *shader);
 
 private Q_SLOTS:
     void handleWindowDamaged(EffectWindow *window);
