@@ -24,16 +24,9 @@ RuleItem::RuleItem(const QString &key,
     , m_description(description)
     , m_flags(NoFlags)
     , m_enabled(false)
-    , m_policy(new RulePolicy(policyType))
-    , m_options(nullptr)
+    , m_policy(std::make_unique<RulePolicy>(policyType))
 {
     reset();
-}
-
-RuleItem::~RuleItem()
-{
-    delete m_policy;
-    delete m_options;
 }
 
 void RuleItem::reset()
@@ -133,7 +126,7 @@ QVariant RuleItem::options() const
     if (!m_options) {
         return QVariant();
     }
-    return QVariant::fromValue(m_options);
+    return QVariant::fromValue(m_options.get());
 }
 
 void RuleItem::setOptionsData(const QList<OptionsModel::Data> &data)
@@ -142,7 +135,7 @@ void RuleItem::setOptionsData(const QList<OptionsModel::Data> &data)
         return;
     }
     if (!m_options) {
-        m_options = new OptionsModel({}, m_type == NetTypes);
+        m_options = std::make_unique<OptionsModel>(QList<OptionsModel::Data>{}, m_type == NetTypes);
     }
     m_options->updateModelData(data);
     m_options->setValue(m_value);
@@ -165,7 +158,7 @@ RulePolicy::Type RuleItem::policyType() const
 
 QVariant RuleItem::policyModel() const
 {
-    return QVariant::fromValue(m_policy);
+    return QVariant::fromValue(m_policy.get());
 }
 
 QString RuleItem::policyKey() const
