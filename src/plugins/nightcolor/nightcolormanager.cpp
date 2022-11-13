@@ -81,6 +81,7 @@ NightColorManager::NightColorManager()
     readConfig();
 
     // legacy shortcut with localized key (to avoid breaking existing config)
+    // TODO Plasma 6: Remove it.
     if (i18n("Toggle Night Color") != QStringLiteral("Toggle Night Color")) {
         QAction toggleActionLegacy;
         toggleActionLegacy.setProperty("componentName", QStringLiteral("kwin"));
