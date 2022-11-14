@@ -46,7 +46,6 @@ WaylandOutput::WaylandOutput(const QString &name, std::unique_ptr<Surface> &&sur
 
 WaylandOutput::~WaylandOutput()
 {
-    m_surface->destroy();
 }
 
 RenderLoop *WaylandOutput::renderLoop() const
@@ -120,7 +119,7 @@ XdgShellOutput::XdgShellOutput(const QString &name, std::unique_ptr<Surface> &&w
     updateWindowTitle();
 
     connect(m_xdgShellSurface.get(), &XdgShellSurface::configureRequested, this, &XdgShellOutput::handleConfigure);
-    connect(m_xdgShellSurface.get(), &XdgShellSurface::closeRequested, qApp, &QCoreApplication::quit);
+    connect(m_xdgShellSurface.get(), &XdgShellSurface::closeRequested, this, &WaylandOutput::closeRequested);
     connect(this, &WaylandOutput::enabledChanged, this, &XdgShellOutput::updateWindowTitle);
     connect(this, &WaylandOutput::dpmsModeChanged, this, &XdgShellOutput::updateWindowTitle);
 
@@ -146,7 +145,6 @@ XdgShellOutput::XdgShellOutput(const QString &name, std::unique_ptr<Surface> &&w
 
 XdgShellOutput::~XdgShellOutput()
 {
-    m_xdgShellSurface->destroy();
 }
 
 void XdgShellOutput::handleConfigure(const QSize &size, XdgShellSurface::States states, quint32 serial)
