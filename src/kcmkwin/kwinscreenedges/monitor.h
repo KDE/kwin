@@ -16,6 +16,8 @@
 #include <QActionGroup>
 #include <QGraphicsItem>
 #include <QVector>
+#include <array>
+#include <memory>
 
 class QAction;
 class QGraphicsView;
@@ -30,14 +32,13 @@ class FrameSvg;
 namespace KWin
 {
 
-class Monitor
-    : public ScreenPreviewWidget
+class Monitor : public ScreenPreviewWidget
 {
     Q_OBJECT
 public:
     explicit Monitor(QWidget *parent);
-    void setEdge(int edge, bool set);
-    bool edge(int edge) const;
+    ~Monitor();
+
     void setEdgeEnabled(int edge, bool enabled);
     void setEdgeHidden(int edge, bool set);
     bool edgeHidden(int edge) const;
@@ -72,17 +73,16 @@ private:
     void popup(Corner *c, QPoint pos);
     void flip(Corner *c, QPoint pos);
     void checkSize();
-    QGraphicsView *view;
-    QGraphicsScene *scene;
-    Corner *items[8];
-    bool hidden[8];
-    QMenu *popups[8];
-    QVector<QAction *> popup_actions[8];
-    QActionGroup *grp[8];
+    std::unique_ptr<QGraphicsScene> m_scene;
+    std::unique_ptr<QGraphicsView> m_view;
+    std::array<std::unique_ptr<Corner>, 8> m_items;
+    std::array<bool, 8> m_hidden;
+    std::array<std::unique_ptr<QMenu>, 8> m_popups;
+    std::array<QVector<QAction *>, 8> m_popupActions;
+    std::array<std::unique_ptr<QActionGroup>, 8> m_actionGroups;
 };
 
-class Monitor::Corner
-    : public QGraphicsRectItem
+class Monitor::Corner : public QGraphicsRectItem
 {
 public:
     Corner(Monitor *m);
@@ -98,10 +98,10 @@ protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 
 private:
-    Monitor *monitor;
-    Plasma::FrameSvg *button;
-    bool m_active;
-    bool m_hover;
+    Monitor *const m_monitor;
+    const std::unique_ptr<Plasma::FrameSvg> m_button;
+    bool m_active = false;
+    bool m_hover = false;
 };
 
 } // namespace

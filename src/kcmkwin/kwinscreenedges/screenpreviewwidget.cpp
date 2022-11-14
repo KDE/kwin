@@ -65,17 +65,14 @@ public:
 
 ScreenPreviewWidget::ScreenPreviewWidget(QWidget *parent)
     : QWidget(parent)
-    , d(new ScreenPreviewWidgetPrivate(this))
+    , d(std::make_unique<ScreenPreviewWidgetPrivate>(this))
 {
     d->screenGraphics = new Plasma::FrameSvg(this);
     d->screenGraphics->setImagePath("widgets/monitor");
     d->updateScreenGraphics();
 }
 
-ScreenPreviewWidget::~ScreenPreviewWidget()
-{
-    delete d;
-}
+ScreenPreviewWidget::~ScreenPreviewWidget() = default;
 
 void ScreenPreviewWidget::setPreview(const QPixmap &preview)
 {

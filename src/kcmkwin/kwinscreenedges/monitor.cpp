@@ -38,41 +38,36 @@ static QScreen *screenFromWidget(const QWidget *widget)
 Monitor::Monitor(QWidget *parent)
     : ScreenPreviewWidget(parent)
 {
-    for (int i = 0;
-         i < 8;
-         ++i) {
-        popups[i] = new QMenu(this);
+    for (auto &popup : m_popups) {
+        popup = std::make_unique<QMenu>(this);
     }
-    scene = new QGraphicsScene(this);
-    view = new QGraphicsView(scene, this);
-    view->setBackgroundBrush(Qt::black);
-    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    view->setFocusPolicy(Qt::NoFocus);
-    view->setFrameShape(QFrame::NoFrame);
-    for (int i = 0;
-         i < 8;
-         ++i) {
-        items[i] = new Corner(this);
-        scene->addItem(items[i]);
-        hidden[i] = false;
-        grp[i] = new QActionGroup(this);
+    m_scene = std::make_unique<QGraphicsScene>(this);
+    m_view = std::make_unique<QGraphicsView>(m_scene.get(), this);
+    m_view->setBackgroundBrush(Qt::black);
+    m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_view->setFocusPolicy(Qt::NoFocus);
+    m_view->setFrameShape(QFrame::NoFrame);
+    for (size_t i = 0; i < m_items.size(); i++) {
+        m_items[i] = std::make_unique<Corner>(this);
+        m_scene->addItem(m_items[i].get());
+        m_hidden[i] = false;
+        m_actionGroups[i] = std::make_unique<QActionGroup>(this);
     }
     QRect avail = screenFromWidget(this)->geometry();
     setRatio((qreal)avail.width() / (qreal)avail.height());
     checkSize();
 }
 
+Monitor::~Monitor() = default;
+
 void Monitor::clear()
 {
-    for (int i = 0;
-         i < 8;
-         ++i) {
-        popups[i]->clear();
-        setEdge(i, false);
+    for (size_t i = 0; i < m_popups.size(); i++) {
+        m_popups[i]->clear();
+        m_items[i]->setActive(false);
         setEdgeHidden(i, false);
-        delete grp[i];
-        grp[i] = new QActionGroup(this);
+        m_actionGroups[i] = std::make_unique<QActionGroup>(this);
     }
 }
 
@@ -98,90 +93,80 @@ void Monitor::checkSize()
     QRect contentsRect = previewRect();
     // int w = 151;
     // int h = 115;
-    view->setGeometry(contentsRect);
-    scene->setSceneRect(QRect(QPoint(0, 0), contentsRect.size()));
-    int x2 = (contentsRect.width() - 20) / 2;
-    int x3 = contentsRect.width() - 20;
-    int y2 = (contentsRect.height() - 20) / 2;
-    int y3 = contentsRect.height() - 20;
-    items[0]->setRect(0, y2, 20, 20);
-    items[1]->setRect(x3, y2, 20, 20);
-    items[2]->setRect(x2, 0, 20, 20);
-    items[3]->setRect(x2, y3, 20, 20);
-    items[4]->setRect(0, 0, 20, 20);
-    items[5]->setRect(x3, 0, 20, 20);
-    items[6]->setRect(0, y3, 20, 20);
-    items[7]->setRect(x3, y3, 20, 20);
-}
-
-void Monitor::setEdge(int edge, bool set)
-{
-    items[edge]->setActive(set);
-}
-
-bool Monitor::edge(int edge) const
-{
-    return items[edge]->brush() == Qt::green;
+    m_view->setGeometry(contentsRect);
+    m_scene->setSceneRect(QRect(QPoint(0, 0), contentsRect.size()));
+    const int x2 = (contentsRect.width() - 20) / 2;
+    const int x3 = contentsRect.width() - 20;
+    const int y2 = (contentsRect.height() - 20) / 2;
+    const int y3 = contentsRect.height() - 20;
+    m_items[0]->setRect(0, y2, 20, 20);
+    m_items[1]->setRect(x3, y2, 20, 20);
+    m_items[2]->setRect(x2, 0, 20, 20);
+    m_items[3]->setRect(x2, y3, 20, 20);
+    m_items[4]->setRect(0, 0, 20, 20);
+    m_items[5]->setRect(x3, 0, 20, 20);
+    m_items[6]->setRect(0, y3, 20, 20);
+    m_items[7]->setRect(x3, y3, 20, 20);
 }
 
 void Monitor::setEdgeEnabled(int edge, bool enabled)
 {
-    for (QAction *action : std::as_const(popup_actions[edge])) {
+    for (QAction *action : std::as_const(m_popupActions[edge])) {
         action->setEnabled(enabled);
     }
 }
 
 void Monitor::setEdgeHidden(int edge, bool set)
 {
-    hidden[edge] = set;
+    m_hidden[edge] = set;
     if (set) {
-        items[edge]->hide();
+        m_items[edge]->hide();
     } else {
-        items[edge]->show();
+        m_items[edge]->show();
     }
 }
 
 bool Monitor::edgeHidden(int edge) const
 {
-    return hidden[edge];
+    return m_hidden[edge];
 }
 
 void Monitor::addEdgeItem(int edge, const QString &item)
 {
-    QAction *act = popups[edge]->addAction(item);
+    QAction *act = m_popups[edge]->addAction(item);
     act->setCheckable(true);
-    popup_actions[edge].append(act);
-    grp[edge]->addAction(act);
-    if (popup_actions[edge].count() == 1) {
+    m_popupActions[edge].append(act);
+    m_actionGroups[edge]->addAction(act);
+    if (m_popupActions[edge].count() == 1) {
         act->setChecked(true);
-        items[edge]->setToolTip(item);
+        m_items[edge]->setToolTip(item);
     }
-    setEdge(edge, !popup_actions[edge][0]->isChecked());
+    m_items[edge]->setActive(!m_popupActions[edge].front()->isChecked());
 }
 
 void Monitor::setEdgeItemEnabled(int edge, int index, bool enabled)
 {
-    popup_actions[edge][index]->setEnabled(enabled);
+    m_popupActions[edge][index]->setEnabled(enabled);
 }
 
 bool Monitor::edgeItemEnabled(int edge, int index) const
 {
-    return popup_actions[edge][index]->isEnabled();
+    return m_popupActions[edge][index]->isEnabled();
 }
 
 void Monitor::selectEdgeItem(int edge, int index)
 {
-    popup_actions[edge][index]->setChecked(true);
-    setEdge(edge, !popup_actions[edge][0]->isChecked());
-    QString actionText = popup_actions[edge][index]->text();
+    m_popupActions[edge][index]->setChecked(true);
+    m_items[edge]->setActive(!m_popupActions[edge].front()->isChecked());
+    QString actionText = m_popupActions[edge][index]->text();
     // remove accelerators added by KAcceleratorManager
     actionText = KLocalizedString::removeAcceleratorMarker(actionText);
-    items[edge]->setToolTip(actionText);
+    m_items[edge]->setToolTip(actionText);
 }
 
 int Monitor::selectedEdgeItem(int edge) const
 {
-    const auto actions = popup_actions[edge];
+    const auto &actions = m_popupActions[edge];
     for (QAction *act : actions) {
         if (act->isChecked()) {
             return actions.indexOf(act);
@@ -192,17 +177,15 @@ int Monitor::selectedEdgeItem(int edge) const
 
 void Monitor::popup(Corner *c, QPoint pos)
 {
-    for (int i = 0;
-         i < 8;
-         ++i) {
-        if (items[i] == c) {
-            if (popup_actions[i].count() == 0) {
+    for (size_t i = 0; i < m_items.size(); i++) {
+        if (m_items[i].get() == c) {
+            if (m_popupActions[i].empty()) {
                 return;
             }
-            if (QAction *a = popups[i]->exec(pos)) {
-                selectEdgeItem(i, popup_actions[i].indexOf(a));
+            if (QAction *a = m_popups[i]->exec(pos)) {
+                selectEdgeItem(i, m_popupActions[i].indexOf(a));
                 Q_EMIT changed();
-                Q_EMIT edgeSelectionChanged(i, popup_actions[i].indexOf(a));
+                Q_EMIT edgeSelectionChanged(i, m_popupActions[i].indexOf(a));
                 c->setToolTip(KLocalizedString::removeAcceleratorMarker(a->text()));
             }
             return;
@@ -213,12 +196,10 @@ void Monitor::popup(Corner *c, QPoint pos)
 
 void Monitor::flip(Corner *c, QPoint pos)
 {
-    for (int i = 0;
-         i < 8;
-         ++i) {
-        if (items[i] == c) {
-            if (popup_actions[i].count() == 0) {
-                setEdge(i, !edge(i));
+    for (size_t i = 0; i < m_items.size(); i++) {
+        if (m_items[i].get() == c) {
+            if (m_popupActions[i].empty()) {
+                m_items[i]->setActive(m_items[i]->brush() != Qt::green);
             } else {
                 popup(c, pos);
             }
@@ -229,52 +210,47 @@ void Monitor::flip(Corner *c, QPoint pos)
 }
 
 Monitor::Corner::Corner(Monitor *m)
-    : monitor(m)
-    , m_active(false)
-    , m_hover(false)
+    : m_monitor(m)
+    , m_button(std::make_unique<Plasma::FrameSvg>())
 {
-    button = new Plasma::FrameSvg();
-    button->setImagePath("widgets/button");
+    m_button->setImagePath("widgets/button");
     setAcceptHoverEvents(true);
 }
 
-Monitor::Corner::~Corner()
-{
-    delete button;
-}
+Monitor::Corner::~Corner() = default;
 
 void Monitor::Corner::contextMenuEvent(QGraphicsSceneContextMenuEvent *e)
 {
-    monitor->popup(this, e->screenPos());
+    m_monitor->popup(this, e->screenPos());
 }
 
 void Monitor::Corner::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
-    monitor->flip(this, e->screenPos());
+    m_monitor->flip(this, e->screenPos());
 }
 
 void Monitor::Corner::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     if (m_hover) {
-        button->setElementPrefix("normal");
+        m_button->setElementPrefix("normal");
 
         qreal left, top, right, bottom;
-        button->getMargins(left, top, right, bottom);
+        m_button->getMargins(left, top, right, bottom);
 
-        button->setElementPrefix("active");
+        m_button->setElementPrefix("active");
         qreal activeLeft, activeTop, activeRight, activeBottom;
-        button->getMargins(activeLeft, activeTop, activeRight, activeBottom);
+        m_button->getMargins(activeLeft, activeTop, activeRight, activeBottom);
 
         QRectF activeRect = QRectF(QPointF(0, 0), rect().size());
         activeRect.adjust(left - activeLeft, top - activeTop,
                           -(right - activeRight), -(bottom - activeBottom));
-        button->setElementPrefix("active");
-        button->resizeFrame(activeRect.size());
-        button->paintFrame(painter, rect().topLeft() + activeRect.topLeft());
+        m_button->setElementPrefix("active");
+        m_button->resizeFrame(activeRect.size());
+        m_button->paintFrame(painter, rect().topLeft() + activeRect.topLeft());
     } else {
-        button->setElementPrefix(m_active ? "pressed" : "normal");
-        button->resizeFrame(rect().size());
-        button->paintFrame(painter, rect().topLeft());
+        m_button->setElementPrefix(m_active ? "pressed" : "normal");
+        m_button->resizeFrame(rect().size());
+        m_button->paintFrame(painter, rect().topLeft());
     }
 
     if (m_active) {

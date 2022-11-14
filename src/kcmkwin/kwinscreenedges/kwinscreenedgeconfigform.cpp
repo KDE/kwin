@@ -16,7 +16,7 @@ namespace KWin
 
 KWinScreenEdgesConfigForm::KWinScreenEdgesConfigForm(QWidget *parent)
     : KWinScreenEdge(parent)
-    , ui(new Ui::KWinScreenEdgesConfigUI)
+    , ui(std::make_unique<Ui::KWinScreenEdgesConfigUI>())
 {
     ui->setupUi(this);
 
@@ -32,10 +32,7 @@ KWinScreenEdgesConfigForm::KWinScreenEdgesConfigForm(QWidget *parent)
     connect(ui->electricBorderCornerRatioSpin, qOverload<int>(&QSpinBox::valueChanged), this, &KWinScreenEdgesConfigForm::updateDefaultIndicators);
 }
 
-KWinScreenEdgesConfigForm::~KWinScreenEdgesConfigForm()
-{
-    delete ui;
-}
+KWinScreenEdgesConfigForm::~KWinScreenEdgesConfigForm() = default;
 
 void KWinScreenEdgesConfigForm::setElectricBorderCornerRatio(double value)
 {

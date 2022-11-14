@@ -16,15 +16,12 @@ namespace KWin
 
 KWinTouchScreenEdgeConfigForm::KWinTouchScreenEdgeConfigForm(QWidget *parent)
     : KWinScreenEdge(parent)
-    , ui(new Ui::KWinTouchScreenConfigUi)
+    , ui(std::make_unique<Ui::KWinTouchScreenConfigUi>())
 {
     ui->setupUi(this);
 }
 
-KWinTouchScreenEdgeConfigForm::~KWinTouchScreenEdgeConfigForm()
-{
-    delete ui;
-}
+KWinTouchScreenEdgeConfigForm::~KWinTouchScreenEdgeConfigForm() = default;
 
 Monitor *KWinTouchScreenEdgeConfigForm::monitor() const
 {

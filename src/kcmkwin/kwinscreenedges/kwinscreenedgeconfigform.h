@@ -66,7 +66,7 @@ private:
 
     bool m_defaultIndicatorVisible = false;
 
-    Ui::KWinScreenEdgesConfigUI *ui;
+    std::unique_ptr<Ui::KWinScreenEdgesConfigUI> ui;
 };
 
 } // namespace

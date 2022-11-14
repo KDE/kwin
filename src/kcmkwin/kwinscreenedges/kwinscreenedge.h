@@ -7,9 +7,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
-#ifndef __KWINSCREENEDGE_H__
-#define __KWINSCREENEDGE_H__
+#pragma once
 
 #include <QWidget>
 
@@ -71,5 +69,3 @@ private:
 };
 
 } // namespace
-
-#endif

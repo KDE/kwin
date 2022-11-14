@@ -3,9 +3,7 @@
 
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
-
-#ifndef SCREENPREVIEWWIDGET_H
-#define SCREENPREVIEWWIDGET_H
+#pragma once
 
 #include <QWidget>
 
@@ -35,9 +33,7 @@ Q_SIGNALS:
     void imageDropped(const QString &);
 
 private:
-    ScreenPreviewWidgetPrivate *const d;
+    void updateRect(const QRectF &rect);
 
-    Q_PRIVATE_SLOT(d, void updateRect(const QRectF &rect))
+    const std::unique_ptr<ScreenPreviewWidgetPrivate> d;
 };
-
-#endif

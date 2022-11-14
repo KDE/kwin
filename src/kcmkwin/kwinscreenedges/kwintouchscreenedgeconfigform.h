@@ -33,7 +33,7 @@ protected:
     Monitor *monitor() const override;
 
 private:
-    Ui::KWinTouchScreenConfigUi *ui;
+    std::unique_ptr<Ui::KWinTouchScreenConfigUi> ui;
 };
 
 } // namespace
