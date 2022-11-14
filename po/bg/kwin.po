@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-11 00:47+0000\n"
+"POT-Creation-Date: 2022-11-14 00:47+0000\n"
 "PO-Revision-Date: 2022-11-05 17:21+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -1576,14 +1576,14 @@ msgctxt "Night Color was enabled"
 msgid "Night Color On"
 msgstr "Вечерни цветове включен"
 
-#: plugins/nightcolor/nightcolormanager.cpp:84
-#: plugins/nightcolor/nightcolormanager.cpp:87
-#: plugins/nightcolor/nightcolormanager.cpp:94
+#: plugins/nightcolor/nightcolormanager.cpp:85
+#: plugins/nightcolor/nightcolormanager.cpp:88
+#: plugins/nightcolor/nightcolormanager.cpp:95
 #, kde-format
 msgid "Toggle Night Color"
 msgstr "Превключване на нощния цвят"
 
-#: plugins/nightcolor/nightcolormanager.cpp:480
+#: plugins/nightcolor/nightcolormanager.cpp:481
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Предварителен преглед на цветната температура"
