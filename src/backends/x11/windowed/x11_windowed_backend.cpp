@@ -11,6 +11,7 @@
 
 #include <config-kwin.h>
 
+#include "nestedcompositorinterface.h"
 #include "utils/xcbutils.h"
 #include "wayland_server.h"
 #include "x11_windowed_egl_backend.h"
@@ -201,6 +202,29 @@ bool X11WindowedBackend::initialize()
         initXInput();
         XRenderUtils::init(m_connection, m_screen->root);
         createOutputs();
+        auto nc = new NestedCompositorInterface(this);
+        connect(nc, &NestedCompositorInterface::outputCountRequested, this, [this](int count) {
+            if (int diff = count - m_outputs.size(); diff < 0) {
+                std::for_each(m_outputs.end() + diff, m_outputs.end(), [this](X11WindowedOutput *output) {
+                    output->updateEnabled(false);
+                    Q_EMIT outputRemoved(output);
+                    output->unref();
+                });
+                m_outputs.resize(count);
+            } else {
+                m_outputs.reserve(count);
+                for (int i = 0; i < diff; ++i) {
+                    createOutput();
+                }
+            }
+            updateWindowTitle();
+            Q_EMIT outputsQueried();
+        });
+        connect(nc, &NestedCompositorInterface::resizeRequested, this, [this](Output *output, const QSize &size) {
+            auto x11output = static_cast<X11WindowedOutput *>(output);
+            uint32_t s[]{static_cast<uint32_t>(size.width()), static_cast<uint32_t>(size.height())};
+            xcb_configure_window(m_connection, x11output->window(), XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT, s);
+        });
         connect(kwinApp(), &Application::workspaceCreated, this, &X11WindowedBackend::startEventReading);
         connect(Cursors::self(), &Cursors::currentCursorChanged, this, [this]() {
             KWin::Cursor *c = KWin::Cursors::self()->currentCursor();
@@ -262,34 +286,39 @@ X11WindowedOutput *X11WindowedBackend::findOutput(xcb_window_t window) const
     return nullptr;
 }
 
-void X11WindowedBackend::createOutputs()
+void X11WindowedBackend::createOutput()
 {
-    Xcb::Atom protocolsAtom(QByteArrayLiteral("WM_PROTOCOLS"), false, m_connection);
-    Xcb::Atom deleteWindowAtom(QByteArrayLiteral("WM_DELETE_WINDOW"), false, m_connection);
-
     // we need to multiply the initial window size with the scale in order to
     // create an output window of this size in the end
     const int pixelWidth = initialWindowSize().width() * initialOutputScale() + 0.5;
     const int pixelHeight = initialWindowSize().height() * initialOutputScale() + 0.5;
 
+    auto *output = new X11WindowedOutput(this);
+    output->init(QSize(pixelWidth, pixelHeight));
+
+    xcb_change_property(m_connection,
+                        XCB_PROP_MODE_REPLACE,
+                        output->window(),
+                        m_protocols,
+                        XCB_ATOM_ATOM,
+                        32, 1,
+                        &m_deleteWindowProtocol);
+
+    m_outputs << output;
+    Q_EMIT outputAdded(output);
+    output->updateEnabled(true);
+}
+
+void X11WindowedBackend::createOutputs()
+{
+    Xcb::Atom protocolsAtom(QByteArrayLiteral("WM_PROTOCOLS"), false, m_connection);
+    Xcb::Atom deleteWindowAtom(QByteArrayLiteral("WM_DELETE_WINDOW"), false, m_connection);
+
+    m_protocols = protocolsAtom;
+    m_deleteWindowProtocol = deleteWindowAtom;
+
     for (int i = 0; i < initialOutputCount(); ++i) {
-        auto *output = new X11WindowedOutput(this);
-        output->init(QSize(pixelWidth, pixelHeight));
-
-        m_protocols = protocolsAtom;
-        m_deleteWindowProtocol = deleteWindowAtom;
-
-        xcb_change_property(m_connection,
-                            XCB_PROP_MODE_REPLACE,
-                            output->window(),
-                            m_protocols,
-                            XCB_ATOM_ATOM,
-                            32, 1,
-                            &m_deleteWindowProtocol);
-
-        m_outputs << output;
-        Q_EMIT outputAdded(output);
-        output->updateEnabled(true);
+        createOutput();
     }
 
     updateWindowTitle();

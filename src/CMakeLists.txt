@@ -102,6 +102,7 @@ target_sources(kwin PRIVATE
     modifier_only_shortcuts.cpp
     mousebuttons.cpp
     moving_client_x11_filter.cpp
+    nestedcompositorinterface.cpp
     netinfo.cpp
     onscreennotification.cpp
     options.cpp

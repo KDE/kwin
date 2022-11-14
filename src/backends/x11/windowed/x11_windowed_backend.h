@@ -133,6 +133,7 @@ Q_SIGNALS:
     void sizeChanged();
 
 private:
+    void createOutput();
     void createOutputs();
     void startEventReading();
     void grabKeyboard(xcb_timestamp_t time);

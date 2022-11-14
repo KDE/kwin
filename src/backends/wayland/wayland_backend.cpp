@@ -23,6 +23,7 @@
 #include "dpmsinputeventfilter.h"
 #include "input.h"
 #include "keyboard_input.h"
+#include "nestedcompositorinterface.h"
 #include "pointer_input.h"
 #include "scene.h"
 #include "wayland_server.h"
@@ -680,6 +681,29 @@ bool WaylandBackend::initialize()
             m_waylandCursor = std::make_unique<WaylandCursor>(this);
         }
         m_waylandCursor->init();
+    });
+    auto nc = new NestedCompositorInterface(this);
+    connect(nc, &NestedCompositorInterface::outputCountRequested, this, [this](int count) {
+        if (int diff = count - m_outputs.size(); diff < 0) {
+            std::for_each(m_outputs.end() + diff, m_outputs.end(), [this](WaylandOutput *output) {
+                output->updateEnabled(false);
+                Q_EMIT outputRemoved(output);
+                output->unref();
+            });
+            m_outputs.resize(count);
+        } else {
+            m_outputs.reserve(count);
+            const int pixelWidth = initialWindowSize().width() * initialOutputScale() + 0.5;
+            const int pixelHeight = initialWindowSize().height() * initialOutputScale() + 0.5;
+            for (int i = 0; i < diff; ++i) {
+                const QString name = QStringLiteral("WL-%1").arg(count + i);
+                createOutput(name, QSize(pixelWidth, pixelHeight));
+            }
+        }
+        Q_EMIT outputsQueried();
+    });
+    connect(nc, &NestedCompositorInterface::resizeRequested, this, [](Output *output, const QSize &size) {
+        static_cast<WaylandOutput *>(output)->resize(size);
     });
     initConnection();
     return true;
