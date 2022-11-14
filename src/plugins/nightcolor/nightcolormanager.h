@@ -290,10 +290,10 @@ private:
     double m_latFixed;
     double m_lngFixed;
 
-    QTimer *m_slowUpdateStartTimer = nullptr;
-    QTimer *m_slowUpdateTimer = nullptr;
-    QTimer *m_quickAdjustTimer = nullptr;
-    QTimer *m_previewTimer = nullptr;
+    std::unique_ptr<QTimer> m_slowUpdateStartTimer;
+    std::unique_ptr<QTimer> m_slowUpdateTimer;
+    std::unique_ptr<QTimer> m_quickAdjustTimer;
+    std::unique_ptr<QTimer> m_previewTimer;
 
     int m_currentTemp = DEFAULT_DAY_TEMPERATURE;
     int m_targetTemperature = DEFAULT_DAY_TEMPERATURE;

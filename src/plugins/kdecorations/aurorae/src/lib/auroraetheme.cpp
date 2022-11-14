@@ -72,16 +72,13 @@ void AuroraeThemePrivate::initButtonFrame(AuroraeButtonType type)
  ************************************************/
 AuroraeTheme::AuroraeTheme(QObject *parent)
     : QObject(parent)
-    , d(new AuroraeThemePrivate)
+    , d(std::make_unique<AuroraeThemePrivate>())
 {
     connect(this, &AuroraeTheme::themeChanged, this, &AuroraeTheme::borderSizesChanged);
     connect(this, &AuroraeTheme::buttonSizesChanged, this, &AuroraeTheme::borderSizesChanged);
 }
 
-AuroraeTheme::~AuroraeTheme()
-{
-    delete d;
-}
+AuroraeTheme::~AuroraeTheme() = default;
 
 bool AuroraeTheme::isValid() const
 {

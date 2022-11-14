@@ -256,8 +256,9 @@ Decoration::Decoration(QObject *parent, const QVariantList &args)
 
 Decoration::~Decoration()
 {
-    delete m_qmlContext;
-    delete m_view;
+    m_item.reset();
+    m_qmlContext.reset();
+    m_view.reset();
     Helper::instance().unref();
 }
 
@@ -268,7 +269,7 @@ void Decoration::init()
     auto s = settings();
     connect(s.data(), &KDecoration2::DecorationSettings::reconfigured, this, &Decoration::configChanged);
 
-    m_qmlContext = new QQmlContext(Helper::instance().rootContext(), this);
+    m_qmlContext = std::make_unique<QQmlContext>(Helper::instance().rootContext());
     m_qmlContext->setContextProperty(QStringLiteral("decoration"), this);
     auto component = Helper::instance().component(m_themeName);
     if (!component) {
@@ -295,7 +296,7 @@ void Decoration::init()
         //         m_theme->setTabDragMimeType(tabDragMimeType());
         m_qmlContext->setContextProperty(QStringLiteral("auroraeTheme"), theme);
     }
-    m_item = qobject_cast<QQuickItem *>(component->create(m_qmlContext));
+    m_item.reset(qobject_cast<QQuickItem *>(component->create(m_qmlContext.get())));
     if (!m_item) {
         if (component->isError()) {
             const auto errors = component->errors();
@@ -306,27 +307,25 @@ void Decoration::init()
         return;
     }
 
-    m_item->setParent(m_qmlContext);
-
     QVariant visualParent = property("visualParent");
     if (visualParent.isValid()) {
         m_item->setParentItem(visualParent.value<QQuickItem *>());
         visualParent.value<QQuickItem *>()->setProperty("drawBackground", false);
     } else {
-        m_view = new KWin::OffscreenQuickView(this, KWin::OffscreenQuickView::ExportMode::Image);
+        m_view = std::make_unique<KWin::OffscreenQuickView>(this, KWin::OffscreenQuickView::ExportMode::Image);
         m_item->setParentItem(m_view->contentItem());
         auto updateSize = [this]() {
             m_item->setSize(m_view->contentItem()->size());
         };
         updateSize();
-        connect(m_view->contentItem(), &QQuickItem::widthChanged, m_item, updateSize);
-        connect(m_view->contentItem(), &QQuickItem::heightChanged, m_item, updateSize);
-        connect(m_view, &KWin::OffscreenQuickView::repaintNeeded, this, &Decoration::updateBuffer);
+        connect(m_view->contentItem(), &QQuickItem::widthChanged, m_item.get(), updateSize);
+        connect(m_view->contentItem(), &QQuickItem::heightChanged, m_item.get(), updateSize);
+        connect(m_view.get(), &KWin::OffscreenQuickView::repaintNeeded, this, &Decoration::updateBuffer);
     }
 
     m_supportsMask = m_item->property("supportsMask").toBool();
 
-    setupBorders(m_item);
+    setupBorders(m_item.get());
 
     // TODO: Is there a more efficient way to react to border changes?
     auto trackBorders = [this](KWin::Borders *borders) {
@@ -617,6 +616,11 @@ void Decoration::updateBuffer()
 KDecoration2::DecoratedClient *Decoration::clientPointer() const
 {
     return client().toStrongRef().data();
+}
+
+QQuickItem *Decoration::item() const
+{
+    return m_item.get();
 }
 
 ThemeProvider::ThemeProvider(QObject *parent, const KPluginMetaData &data, const QVariantList &args)

@@ -313,13 +313,9 @@ void NightColorManager::resetAllTimers()
 
 void NightColorManager::cancelAllTimers()
 {
-    delete m_slowUpdateStartTimer;
-    delete m_slowUpdateTimer;
-    delete m_quickAdjustTimer;
-
-    m_slowUpdateStartTimer = nullptr;
-    m_slowUpdateTimer = nullptr;
-    m_quickAdjustTimer = nullptr;
+    m_slowUpdateStartTimer.reset();
+    m_slowUpdateTimer.reset();
+    m_quickAdjustTimer.reset();
 }
 
 void NightColorManager::resetQuickAdjustTimer(int targetTemp)
@@ -328,9 +324,9 @@ void NightColorManager::resetQuickAdjustTimer(int targetTemp)
     // allow tolerance of one TEMPERATURE_STEP to compensate if a slow update is coincidental
     if (tempDiff > TEMPERATURE_STEP) {
         cancelAllTimers();
-        m_quickAdjustTimer = new QTimer(this);
+        m_quickAdjustTimer = std::make_unique<QTimer>();
         m_quickAdjustTimer->setSingleShot(false);
-        connect(m_quickAdjustTimer, &QTimer::timeout, this, [this, targetTemp]() {
+        connect(m_quickAdjustTimer.get(), &QTimer::timeout, this, [this, targetTemp]() {
             quickAdjust(targetTemp);
         });
 
@@ -361,16 +357,14 @@ void NightColorManager::quickAdjust(int targetTemp)
 
     if (nextTemp == targetTemp) {
         // stop timer, we reached the target temp
-        delete m_quickAdjustTimer;
-        m_quickAdjustTimer = nullptr;
+        m_quickAdjustTimer.reset();
         resetSlowUpdateStartTimer();
     }
 }
 
 void NightColorManager::resetSlowUpdateStartTimer()
 {
-    delete m_slowUpdateStartTimer;
-    m_slowUpdateStartTimer = nullptr;
+    m_slowUpdateStartTimer.reset();
 
     if (!m_running || m_quickAdjustTimer) {
         // only reenable the slow update start timer when quick adjust is not active anymore
@@ -384,9 +378,9 @@ void NightColorManager::resetSlowUpdateStartTimer()
     }
 
     // set up the next slow update
-    m_slowUpdateStartTimer = new QTimer(this);
+    m_slowUpdateStartTimer = std::make_unique<QTimer>();
     m_slowUpdateStartTimer->setSingleShot(true);
-    connect(m_slowUpdateStartTimer, &QTimer::timeout, this, &NightColorManager::resetSlowUpdateStartTimer);
+    connect(m_slowUpdateStartTimer.get(), &QTimer::timeout, this, &NightColorManager::resetSlowUpdateStartTimer);
 
     updateTransitionTimings(false);
     updateTargetTemperature();
@@ -404,8 +398,7 @@ void NightColorManager::resetSlowUpdateStartTimer()
 
 void NightColorManager::resetSlowUpdateTimer()
 {
-    delete m_slowUpdateTimer;
-    m_slowUpdateTimer = nullptr;
+    m_slowUpdateTimer.reset();
 
     const QDateTime now = QDateTime::currentDateTime();
     const bool isDay = daylight();
@@ -419,14 +412,14 @@ void NightColorManager::resetSlowUpdateTimer()
 
     if (m_prev.first <= now && now <= m_prev.second) {
         int availTime = now.msecsTo(m_prev.second);
-        m_slowUpdateTimer = new QTimer(this);
+        m_slowUpdateTimer = std::make_unique<QTimer>();
         m_slowUpdateTimer->setSingleShot(false);
         if (isDay) {
-            connect(m_slowUpdateTimer, &QTimer::timeout, this, [this]() {
+            connect(m_slowUpdateTimer.get(), &QTimer::timeout, this, [this]() {
                 slowUpdate(m_dayTargetTemp);
             });
         } else {
-            connect(m_slowUpdateTimer, &QTimer::timeout, this, [this]() {
+            connect(m_slowUpdateTimer.get(), &QTimer::timeout, this, [this]() {
                 slowUpdate(m_nightTargetTemp);
             });
         }
@@ -454,8 +447,7 @@ void NightColorManager::slowUpdate(int targetTemp)
     commitGammaRamps(nextTemp);
     if (nextTemp == targetTemp) {
         // stop timer, we reached the target temp
-        delete m_slowUpdateTimer;
-        m_slowUpdateTimer = nullptr;
+        m_slowUpdateTimer.reset();
     }
 }
 
@@ -463,12 +455,11 @@ void NightColorManager::preview(uint previewTemp)
 {
     resetQuickAdjustTimer((int)previewTemp);
     if (m_previewTimer) {
-        delete m_previewTimer;
-        m_previewTimer = nullptr;
+        m_previewTimer.reset();
     }
-    m_previewTimer = new QTimer(this);
+    m_previewTimer = std::make_unique<QTimer>();
     m_previewTimer->setSingleShot(true);
-    connect(m_previewTimer, &QTimer::timeout, this, &NightColorManager::stopPreview);
+    connect(m_previewTimer.get(), &QTimer::timeout, this, &NightColorManager::stopPreview);
     m_previewTimer->start(15000);
 
     QDBusMessage message = QDBusMessage::createMethodCall(

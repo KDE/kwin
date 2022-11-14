@@ -578,15 +578,14 @@ void ScreenCastStream::tryEnqueue(pw_buffer *buffer)
     // a corrupted buffer.
     if (Compositor::self()->scene()->supportsNativeFence()) {
         Q_ASSERT_X(eglGetCurrentContext(), "tryEnqueue", "no current context");
-        m_pendingFence = new EGLNativeFence(kwinApp()->outputBackend()->sceneEglDisplay());
+        m_pendingFence = std::make_unique<EGLNativeFence>(kwinApp()->outputBackend()->sceneEglDisplay());
         if (!m_pendingFence->isValid()) {
             qCWarning(KWIN_SCREENCAST) << "Failed to create a native EGL fence";
             glFinish();
             enqueue();
         } else {
-            m_pendingNotifier = new QSocketNotifier(m_pendingFence->fileDescriptor(),
-                                                    QSocketNotifier::Read, this);
-            connect(m_pendingNotifier, &QSocketNotifier::activated, this, &ScreenCastStream::enqueue);
+            m_pendingNotifier = std::make_unique<QSocketNotifier>(m_pendingFence->fileDescriptor(), QSocketNotifier::Read);
+            connect(m_pendingNotifier.get(), &QSocketNotifier::activated, this, &ScreenCastStream::enqueue);
         }
     } else {
         // The compositing backend doesn't support native fences. We don't have any other choice
@@ -600,14 +599,12 @@ void ScreenCastStream::enqueue()
 {
     Q_ASSERT_X(m_pendingBuffer, "enqueue", "pending buffer must be valid");
 
-    delete m_pendingFence;
-    delete m_pendingNotifier;
+    m_pendingFence.reset();
+    m_pendingNotifier.reset();
 
     pw_stream_queue_buffer(pwStream, m_pendingBuffer);
 
     m_pendingBuffer = nullptr;
-    m_pendingFence = nullptr;
-    m_pendingNotifier = nullptr;
 }
 
 QVector<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer[2048])

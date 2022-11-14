@@ -210,7 +210,7 @@ private:
      */
     void padding(int &left, int &top, int &right, int &bottom) const;
 
-    AuroraeThemePrivate *const d;
+    const std::unique_ptr<AuroraeThemePrivate> d;
 };
 
 } // namespace

@@ -34,6 +34,7 @@ class Decoration : public KDecoration2::Decoration
 {
     Q_OBJECT
     Q_PROPERTY(KDecoration2::DecoratedClient *client READ clientPointer CONSTANT)
+    Q_PROPERTY(QQuickItem *item READ item)
 public:
     explicit Decoration(QObject *parent = nullptr, const QVariantList &args = QVariantList());
     ~Decoration() override;
@@ -43,6 +44,7 @@ public:
     Q_INVOKABLE QVariant readConfig(const QString &key, const QVariant &defaultValue = QVariant());
 
     KDecoration2::DecoratedClient *clientPointer() const;
+    QQuickItem *item() const;
 
 public Q_SLOTS:
     void init() override;
@@ -71,15 +73,15 @@ private:
     bool m_supportsMask{false};
 
     QRect m_contentRect; // the geometry of the part of the buffer that is not a shadow when buffer was created.
-    QQuickItem *m_item = nullptr;
-    QQmlContext *m_qmlContext = nullptr;
+    std::unique_ptr<QQuickItem> m_item;
+    std::unique_ptr<QQmlContext> m_qmlContext;
     KWin::Borders *m_borders;
     KWin::Borders *m_maximizedBorders;
     KWin::Borders *m_extendedBorders;
     KWin::Borders *m_padding;
     QString m_themeName;
 
-    KWin::OffscreenQuickView *m_view;
+    std::unique_ptr<KWin::OffscreenQuickView> m_view;
 };
 
 class ThemeProvider : public KDecoration2::DecorationThemeProvider

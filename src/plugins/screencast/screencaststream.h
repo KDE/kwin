@@ -121,8 +121,8 @@ private:
     QHash<struct pw_buffer *, std::shared_ptr<DmaBufTexture>> m_dmabufDataForPwBuffer;
 
     pw_buffer *m_pendingBuffer = nullptr;
-    QSocketNotifier *m_pendingNotifier = nullptr;
-    EGLNativeFence *m_pendingFence = nullptr;
+    std::unique_ptr<QSocketNotifier> m_pendingNotifier;
+    std::unique_ptr<EGLNativeFence> m_pendingFence;
     std::optional<std::chrono::nanoseconds> m_start;
     quint64 m_sequential = 0;
     bool m_hasDmaBuf = false;
