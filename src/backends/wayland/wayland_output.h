@@ -110,6 +110,9 @@ public:
     void setOutputLayers(std::vector<std::unique_ptr<OutputLayer>> &&layers);
     QList<OutputLayer *> outputLayers() const;
 
+Q_SIGNALS:
+    void closeRequested();
+
 private:
     void handleConfigure(const QSize &size, KWayland::Client::XdgShellSurface::States states, quint32 serial);
     void updateWindowTitle();

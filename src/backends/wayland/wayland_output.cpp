@@ -166,7 +166,7 @@ WaylandOutput::WaylandOutput(const QString &name, Capabilities capabilities, Way
     }
 
     connect(m_xdgShellSurface.get(), &XdgShellSurface::configureRequested, this, &WaylandOutput::handleConfigure);
-    connect(m_xdgShellSurface.get(), &XdgShellSurface::closeRequested, qApp, &QCoreApplication::quit);
+    connect(m_xdgShellSurface.get(), &XdgShellSurface::closeRequested, this, &WaylandOutput::closeRequested);
     connect(this, &WaylandOutput::enabledChanged, this, &WaylandOutput::updateWindowTitle);
     connect(this, &WaylandOutput::dpmsModeChanged, this, &WaylandOutput::updateWindowTitle);
 }

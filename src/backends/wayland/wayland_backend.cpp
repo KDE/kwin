@@ -489,7 +489,24 @@ WaylandOutput *WaylandBackend::createOutput(const QString &name, const QSize &si
         wl_display_roundtrip(m_display->nativeDisplay());
     }
 
+    connect(waylandOutput, &WaylandOutput::closeRequested, this, [this, waylandOutput] {
+        if (m_outputs.count() == 1) {
+            qApp->quit();
+            return;
+        }
+
+        removeOutput(waylandOutput);
+    });
+
     return waylandOutput;
+}
+
+void WaylandBackend::removeOutput(WaylandOutput *output)
+{
+    m_outputs.removeOne(output);
+    Q_EMIT outputRemoved(output);
+    Q_EMIT outputsQueried();
+    output->unref();
 }
 
 void WaylandBackend::destroyOutputs()
@@ -602,10 +619,8 @@ BackendOutput *WaylandBackend::createVirtualOutput(const QString &name, const QS
 void WaylandBackend::removeVirtualOutput(BackendOutput *output)
 {
     WaylandOutput *waylandOutput = dynamic_cast<WaylandOutput *>(output);
-    if (waylandOutput && m_outputs.removeAll(waylandOutput)) {
-        Q_EMIT outputRemoved(waylandOutput);
-        Q_EMIT outputsQueried();
-        waylandOutput->unref();
+    if (waylandOutput) {
+        removeOutput(waylandOutput);
     }
 }
 

@@ -260,6 +260,7 @@ private:
     void createOutputs();
     void destroyOutputs();
     WaylandOutput *createOutput(const QString &name, const QSize &size, qreal scale, bool fullscreen, BackendOutput::Capabilities capabilities);
+    void removeOutput(WaylandOutput *output);
 
     WaylandBackendOptions m_options;
     std::unique_ptr<WaylandDisplay> m_display;
