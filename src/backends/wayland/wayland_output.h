@@ -70,6 +70,7 @@ public:
 Q_SIGNALS:
     void sizeChanged(const QSize &size);
     void frameRendered();
+    void closeRequested();
 
 protected:
     WaylandBackend *backend()

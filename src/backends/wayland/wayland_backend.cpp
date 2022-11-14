@@ -794,6 +794,16 @@ WaylandOutput *WaylandBackend::createOutput(const QString &name, const QSize &si
         RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(waylandOutput->renderLoop());
         renderLoopPrivate->notifyFrameCompleted(std::chrono::steady_clock::now().time_since_epoch());
     });
+    connect(waylandOutput, &WaylandOutput::closeRequested, this, [this, waylandOutput] {
+        if (m_outputs.count() == 1) {
+            qApp->quit();
+        }
+        m_outputs.removeOne(waylandOutput);
+        waylandOutput->updateEnabled(false);
+        Q_EMIT outputRemoved(waylandOutput);
+        waylandOutput->unref();
+        Q_EMIT outputsQueried();
+    });
 
     // The output will only actually be added when it receives its first
     // configure event, and buffers can start being attached
