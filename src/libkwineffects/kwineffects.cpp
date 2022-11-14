@@ -60,14 +60,11 @@ public:
 };
 
 PaintData::PaintData()
-    : d(new PaintDataPrivate())
+    : d(std::make_unique<PaintDataPrivate>())
 {
 }
 
-PaintData::~PaintData()
-{
-    delete d;
-}
+PaintData::~PaintData() = default;
 
 qreal PaintData::xScale() const
 {
@@ -244,7 +241,7 @@ WindowPaintData::WindowPaintData()
 WindowPaintData::WindowPaintData(const QMatrix4x4 &screenProjectionMatrix)
     : PaintData()
     , shader(nullptr)
-    , d(new WindowPaintDataPrivate())
+    , d(std::make_unique<WindowPaintDataPrivate>())
 {
     d->screenProjectionMatrix = screenProjectionMatrix;
     setOpacity(1.0);
@@ -257,7 +254,7 @@ WindowPaintData::WindowPaintData(const QMatrix4x4 &screenProjectionMatrix)
 WindowPaintData::WindowPaintData(const WindowPaintData &other)
     : PaintData()
     , shader(other.shader)
-    , d(new WindowPaintDataPrivate())
+    , d(std::make_unique<WindowPaintDataPrivate>())
 {
     setXScale(other.xScale());
     setYScale(other.yScale());
@@ -275,10 +272,7 @@ WindowPaintData::WindowPaintData(const WindowPaintData &other)
     d->screenProjectionMatrix = other.d->screenProjectionMatrix;
 }
 
-WindowPaintData::~WindowPaintData()
-{
-    delete d;
-}
+WindowPaintData::~WindowPaintData() = default;
 
 qreal WindowPaintData::opacity() const
 {
@@ -1489,14 +1483,11 @@ EffectFramePrivate::~EffectFramePrivate()
  EffectFrame
 ***************************************************************/
 EffectFrame::EffectFrame()
-    : d(new EffectFramePrivate)
+    : d(std::make_unique<EffectFramePrivate>())
 {
 }
 
-EffectFrame::~EffectFrame()
-{
-    delete d;
-}
+EffectFrame::~EffectFrame() = default;
 
 qreal EffectFrame::crossFadeProgress() const
 {

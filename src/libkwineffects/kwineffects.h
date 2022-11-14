@@ -3206,7 +3206,7 @@ protected:
     PaintData(const PaintData &other);
 
 private:
-    PaintDataPrivate *const d;
+    const std::unique_ptr<PaintDataPrivate> d;
 };
 
 class KWINEFFECTS_EXPORT WindowPaintData : public PaintData
@@ -3393,7 +3393,7 @@ public:
     GLShader *shader;
 
 private:
-    WindowPaintDataPrivate *const d;
+    const std::unique_ptr<WindowPaintDataPrivate> d;
 };
 
 class KWINEFFECTS_EXPORT ScreenPaintData
@@ -3816,7 +3816,7 @@ public:
     virtual qreal crossFadeProgress() const = 0;
 
 private:
-    EffectFramePrivate *const d;
+    const std::unique_ptr<EffectFramePrivate> d;
 };
 
 /**

@@ -33,21 +33,18 @@ private:
 class OffscreenEffectPrivate
 {
 public:
-    QHash<EffectWindow *, OffscreenData *> windows;
+    std::map<EffectWindow *, std::unique_ptr<OffscreenData>> windows;
     QMetaObject::Connection windowDamagedConnection;
     QMetaObject::Connection windowDeletedConnection;
 };
 
 OffscreenEffect::OffscreenEffect(QObject *parent)
     : Effect(parent)
-    , d(new OffscreenEffectPrivate)
+    , d(std::make_unique<OffscreenEffectPrivate>())
 {
 }
 
-OffscreenEffect::~OffscreenEffect()
-{
-    qDeleteAll(d->windows);
-}
+OffscreenEffect::~OffscreenEffect() = default;
 
 bool OffscreenEffect::supported()
 {
@@ -56,21 +53,21 @@ bool OffscreenEffect::supported()
 
 void OffscreenEffect::redirect(EffectWindow *window)
 {
-    OffscreenData *&offscreenData = d->windows[window];
+    std::unique_ptr<OffscreenData> &offscreenData = d->windows[window];
     if (offscreenData) {
         return;
     }
-    offscreenData = new OffscreenData;
+    offscreenData = std::make_unique<OffscreenData>();
 
-    if (d->windows.count() == 1) {
+    if (d->windows.size() == 1) {
         setupConnections();
     }
 }
 
 void OffscreenEffect::unredirect(EffectWindow *window)
 {
-    delete d->windows.take(window);
-    if (d->windows.isEmpty()) {
+    d->windows.erase(window);
+    if (d->windows.empty()) {
         destroyConnections();
     }
 }
@@ -193,11 +190,12 @@ void OffscreenData::paint(EffectWindow *window, const QRegion &region,
 
 void OffscreenEffect::drawWindow(EffectWindow *window, int mask, const QRegion &region, WindowPaintData &data)
 {
-    OffscreenData *offscreenData = d->windows.value(window);
-    if (!offscreenData) {
+    const auto it = d->windows.find(window);
+    if (it == d->windows.end()) {
         effects->drawWindow(window, mask, region, data);
         return;
     }
+    OffscreenData *offscreenData = it->second.get();
 
     const QRectF expandedGeometry = window->expandedGeometry();
     const QRectF frameGeometry = window->frameGeometry();
@@ -220,9 +218,8 @@ void OffscreenEffect::drawWindow(EffectWindow *window, int mask, const QRegion &
 
 void OffscreenEffect::handleWindowDamaged(EffectWindow *window)
 {
-    OffscreenData *offscreenData = d->windows.value(window);
-    if (offscreenData) {
-        offscreenData->setDirty();
+    if (const auto it = d->windows.find(window); it != d->windows.end()) {
+        it->second->setDirty();
     }
 }
 
@@ -258,33 +255,31 @@ public:
 class CrossFadeEffectPrivate
 {
 public:
-    QHash<EffectWindow *, CrossFadeWindowData *> windows;
+    std::map<EffectWindow *, std::unique_ptr<CrossFadeWindowData>> windows;
     qreal progress;
 };
 
 CrossFadeEffect::CrossFadeEffect(QObject *parent)
     : Effect(parent)
-    , d(new CrossFadeEffectPrivate)
+    , d(std::make_unique<CrossFadeEffectPrivate>())
 {
 }
 
-CrossFadeEffect::~CrossFadeEffect()
-{
-    qDeleteAll(d->windows);
-}
+CrossFadeEffect::~CrossFadeEffect() = default;
 
 void CrossFadeEffect::drawWindow(EffectWindow *window, int mask, const QRegion &region, WindowPaintData &data)
 {
-    CrossFadeWindowData *offscreenData = d->windows.value(window);
+    const auto it = d->windows.find(window);
 
     // paint the new window (if applicable) underneath
-    if (data.crossFadeProgress() > 0 || !offscreenData) {
+    if (data.crossFadeProgress() > 0 || it == d->windows.end()) {
         Effect::drawWindow(window, mask, region, data);
     }
 
-    if (!offscreenData) {
+    if (it == d->windows.end()) {
         return;
     }
+    CrossFadeWindowData *offscreenData = it->second.get();
 
     // paint old snapshot on top
     WindowPaintData previousWindowData = data;
@@ -324,15 +319,15 @@ void CrossFadeEffect::drawWindow(EffectWindow *window, int mask, const QRegion &
 
 void CrossFadeEffect::redirect(EffectWindow *window)
 {
-    if (d->windows.isEmpty()) {
+    if (d->windows.empty()) {
         connect(effects, &EffectsHandler::windowDeleted, this, &CrossFadeEffect::handleWindowDeleted);
     }
 
-    CrossFadeWindowData *&offscreenData = d->windows[window];
+    std::unique_ptr<CrossFadeWindowData> &offscreenData = d->windows[window];
     if (offscreenData) {
         return;
     }
-    offscreenData = new CrossFadeWindowData;
+    offscreenData = std::make_unique<CrossFadeWindowData>();
 
     effects->makeOpenGLContextCurrent();
     offscreenData->maybeRender(window);
@@ -341,8 +336,8 @@ void CrossFadeEffect::redirect(EffectWindow *window)
 
 void CrossFadeEffect::unredirect(EffectWindow *window)
 {
-    delete d->windows.take(window);
-    if (d->windows.isEmpty()) {
+    d->windows.erase(window);
+    if (d->windows.empty()) {
         disconnect(effects, &EffectsHandler::windowDeleted, this, &CrossFadeEffect::handleWindowDeleted);
     }
 }
@@ -354,9 +349,8 @@ void CrossFadeEffect::handleWindowDeleted(EffectWindow *window)
 
 void CrossFadeEffect::setShader(EffectWindow *window, GLShader *shader)
 {
-    CrossFadeWindowData *offscreenData = d->windows.value(window);
-    if (offscreenData) {
-        offscreenData->setShader(shader);
+    if (const auto it = d->windows.find(window); it != d->windows.end()) {
+        it->second->setShader(shader);
     }
 }
 

@@ -620,20 +620,19 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char *name)
 //****************************************
 // ShaderManager
 //****************************************
-ShaderManager *ShaderManager::s_shaderManager = nullptr;
+std::unique_ptr<ShaderManager> ShaderManager::s_shaderManager;
 
 ShaderManager *ShaderManager::instance()
 {
     if (!s_shaderManager) {
-        s_shaderManager = new ShaderManager();
+        s_shaderManager.reset(new ShaderManager());
     }
-    return s_shaderManager;
+    return s_shaderManager.get();
 }
 
 void ShaderManager::cleanup()
 {
-    delete s_shaderManager;
-    s_shaderManager = nullptr;
+    s_shaderManager.reset();
 }
 
 ShaderManager::ShaderManager()
@@ -1628,7 +1627,7 @@ public:
     GLenum usage;
     int stride;
     int vertexCount;
-    static GLVertexBuffer *streamingBuffer;
+    static std::unique_ptr<GLVertexBuffer> streamingBuffer;
     static bool haveBufferStorage;
     static bool haveSyncFences;
     static bool hasMapBufferRange;
@@ -1648,15 +1647,15 @@ public:
     FrameSizesArray<4> frameSizes;
     VertexAttrib attrib[VertexAttributeCount];
     Bitfield enabledArrays;
-    static IndexBuffer *s_indexBuffer;
+    static std::unique_ptr<IndexBuffer> s_indexBuffer;
 };
 
 bool GLVertexBufferPrivate::hasMapBufferRange = false;
 bool GLVertexBufferPrivate::supportsIndexedQuads = false;
-GLVertexBuffer *GLVertexBufferPrivate::streamingBuffer = nullptr;
+std::unique_ptr<GLVertexBuffer> GLVertexBufferPrivate::streamingBuffer;
 bool GLVertexBufferPrivate::haveBufferStorage = false;
 bool GLVertexBufferPrivate::haveSyncFences = false;
-IndexBuffer *GLVertexBufferPrivate::s_indexBuffer = nullptr;
+std::unique_ptr<IndexBuffer> GLVertexBufferPrivate::s_indexBuffer;
 
 void GLVertexBufferPrivate::interleaveArrays(float *dst, int dim,
                                              const float *vertices, const float *texcoords,
@@ -1854,14 +1853,11 @@ GLvoid *GLVertexBufferPrivate::mapNextFreeRange(size_t size)
 //*********************************
 
 GLVertexBuffer::GLVertexBuffer(UsageHint hint)
-    : d(new GLVertexBufferPrivate(hint))
+    : d(std::make_unique<GLVertexBufferPrivate>(hint))
 {
 }
 
-GLVertexBuffer::~GLVertexBuffer()
-{
-    delete d;
-}
+GLVertexBuffer::~GLVertexBuffer() = default;
 
 void GLVertexBuffer::setData(const void *data, size_t size)
 {
@@ -2012,14 +2008,12 @@ void GLVertexBuffer::draw(GLenum primitiveMode, int first, int count)
 void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first, int count, bool hardwareClipping)
 {
     if (primitiveMode == GL_QUADS) {
-        IndexBuffer *&indexBuffer = GLVertexBufferPrivate::s_indexBuffer;
-
-        if (!indexBuffer) {
-            indexBuffer = new IndexBuffer;
+        if (!GLVertexBufferPrivate::s_indexBuffer) {
+            GLVertexBufferPrivate::s_indexBuffer = std::make_unique<IndexBuffer>();
         }
 
-        indexBuffer->bind();
-        indexBuffer->accommodate(count / 4);
+        GLVertexBufferPrivate::s_indexBuffer->bind();
+        GLVertexBufferPrivate::s_indexBuffer->accommodate(count / 4);
 
         count = count * 6 / 4;
 
@@ -2145,8 +2139,8 @@ void GLVertexBuffer::initStatic()
         GLVertexBufferPrivate::haveBufferStorage = hasGLVersion(4, 4) || hasGLExtension("GL_ARB_buffer_storage");
         GLVertexBufferPrivate::haveSyncFences = hasGLVersion(3, 2) || hasGLExtension("GL_ARB_sync");
     }
-    GLVertexBufferPrivate::s_indexBuffer = nullptr;
-    GLVertexBufferPrivate::streamingBuffer = new GLVertexBuffer(GLVertexBuffer::Stream);
+    GLVertexBufferPrivate::s_indexBuffer.reset();
+    GLVertexBufferPrivate::streamingBuffer = std::make_unique<GLVertexBuffer>(GLVertexBuffer::Stream);
 
     if (GLVertexBufferPrivate::haveBufferStorage && GLVertexBufferPrivate::haveSyncFences) {
         if (qgetenv("KWIN_PERSISTENT_VBO") != QByteArrayLiteral("0")) {
@@ -2157,17 +2151,15 @@ void GLVertexBuffer::initStatic()
 
 void GLVertexBuffer::cleanup()
 {
-    delete GLVertexBufferPrivate::s_indexBuffer;
-    GLVertexBufferPrivate::s_indexBuffer = nullptr;
+    GLVertexBufferPrivate::s_indexBuffer.reset();
     GLVertexBufferPrivate::hasMapBufferRange = false;
     GLVertexBufferPrivate::supportsIndexedQuads = false;
-    delete GLVertexBufferPrivate::streamingBuffer;
-    GLVertexBufferPrivate::streamingBuffer = nullptr;
+    GLVertexBufferPrivate::streamingBuffer.reset();
 }
 
 GLVertexBuffer *GLVertexBuffer::streamingBuffer()
 {
-    return GLVertexBufferPrivate::streamingBuffer;
+    return GLVertexBufferPrivate::streamingBuffer.get();
 }
 
 } // namespace

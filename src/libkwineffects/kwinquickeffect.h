@@ -85,10 +85,9 @@ public:
     QuickSceneView *activeView() const;
 
     /**
-     * Returns all scene views managed by this effect. If the effect is not running,
-     * this function returns an empty QHash.
+     * Returns the scene view on the specified screen
      */
-    QHash<EffectScreen *, QuickSceneView *> views() const;
+    QuickSceneView *viewForScreen(EffectScreen *screen) const;
 
     /**
      * Returns the view at the specified @a pos in the global screen coordinates.

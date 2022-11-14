@@ -27,7 +27,7 @@
 namespace KWin
 {
 
-GLPlatform *GLPlatform::s_platform = nullptr;
+std::unique_ptr<GLPlatform> GLPlatform::s_platform;
 
 static qint64 parseVersionString(const QByteArray &version)
 {
@@ -1362,8 +1362,7 @@ bool GLPlatform::isGLES() const
 
 void GLPlatform::cleanup()
 {
-    delete s_platform;
-    s_platform = nullptr;
+    s_platform.reset();
 }
 
 } // namespace KWin

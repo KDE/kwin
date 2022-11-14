@@ -524,7 +524,7 @@ private Q_SLOTS:
 
 private:
     static QElapsedTimer s_clock;
-    AnimationEffectPrivate *const d_ptr;
+    const std::unique_ptr<AnimationEffectPrivate> d_ptr;
     Q_DECLARE_PRIVATE(AnimationEffect)
     Q_DISABLE_COPY(AnimationEffect)
 };

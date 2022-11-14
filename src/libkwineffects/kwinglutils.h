@@ -7,9 +7,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
-#ifndef KWIN_GLUTILS_H
-#define KWIN_GLUTILS_H
+#pragma once
 
 // kwin
 #include "kwingltexture.h"
@@ -194,6 +192,8 @@ Q_DECLARE_FLAGS(ShaderTraits, ShaderTrait)
 class KWINGLUTILS_EXPORT ShaderManager
 {
 public:
+    ~ShaderManager();
+
     /**
      * Returns a shader with the given traits, creating it if necessary.
      */
@@ -294,7 +294,6 @@ public:
 
 private:
     ShaderManager();
-    ~ShaderManager();
 
     void bindFragDataLocations(GLShader *shader);
     void bindAttributeLocations(GLShader *shader) const;
@@ -305,7 +304,7 @@ private:
 
     QStack<GLShader *> m_boundShaders;
     std::map<ShaderTraits, std::unique_ptr<GLShader>> m_shaderHash;
-    static ShaderManager *s_shaderManager;
+    static std::unique_ptr<ShaderManager> s_shaderManager;
 };
 
 /**
@@ -712,7 +711,7 @@ public:
     static GLVertexBuffer *streamingBuffer();
 
 private:
-    GLVertexBufferPrivate *const d;
+    const std::unique_ptr<GLVertexBufferPrivate> d;
 };
 
 } // namespace
@@ -720,5 +719,3 @@ private:
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::ShaderTraits)
 
 /** @} */
-
-#endif

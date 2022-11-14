@@ -15,6 +15,7 @@
 
 #include <QByteArray>
 #include <QSet>
+#include <memory>
 
 namespace KWin
 {
@@ -453,16 +454,15 @@ private:
     bool m_preferBufferSubData : 1;
     OpenGLPlatformInterface m_platformInterface;
     bool m_gles : 1;
-    static GLPlatform *s_platform;
+    static std::unique_ptr<GLPlatform> s_platform;
 };
 
 inline GLPlatform *GLPlatform::instance()
 {
     if (!s_platform) {
-        s_platform = new GLPlatform;
+        s_platform.reset(new GLPlatform());
     }
-
-    return s_platform;
+    return s_platform.get();
 }
 
 } // namespace KWin

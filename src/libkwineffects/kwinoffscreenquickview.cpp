@@ -68,13 +68,13 @@ private:
 class Q_DECL_HIDDEN OffscreenQuickView::Private
 {
 public:
-    QQuickWindow *m_view;
-    QQuickRenderControl *m_renderControl;
+    std::unique_ptr<QQuickWindow> m_view;
+    std::unique_ptr<QQuickRenderControl> m_renderControl;
     std::unique_ptr<QOffscreenSurface> m_offscreenSurface;
     std::unique_ptr<QOpenGLContext> m_glcontext;
     std::unique_ptr<QOpenGLFramebufferObject> m_fbo;
 
-    QTimer *m_repaintTimer;
+    std::unique_ptr<QTimer> m_repaintTimer;
     QImage m_image;
     std::unique_ptr<GLTexture> m_textureExport;
     // if we should capture a QImage after rendering into our BO.
@@ -132,9 +132,9 @@ OffscreenQuickView::OffscreenQuickView(QObject *parent, QWindow *renderWindow, E
     : QObject(parent)
     , d(new OffscreenQuickView::Private)
 {
-    d->m_renderControl = new EffectQuickRenderControl(this, renderWindow);
+    d->m_renderControl = std::make_unique<EffectQuickRenderControl>(this, renderWindow);
 
-    d->m_view = new QQuickWindow(d->m_renderControl);
+    d->m_view = std::make_unique<QQuickWindow>(d->m_renderControl.get());
     d->m_view->setFlags(Qt::FramelessWindowHint);
     d->m_view->setColor(Qt::transparent);
 
@@ -190,16 +190,16 @@ OffscreenQuickView::OffscreenQuickView(QObject *parent, QWindow *renderWindow, E
         contentItem()->setSize(d->m_view->size());
     };
     updateSize();
-    connect(d->m_view, &QWindow::widthChanged, this, updateSize);
-    connect(d->m_view, &QWindow::heightChanged, this, updateSize);
+    connect(d->m_view.get(), &QWindow::widthChanged, this, updateSize);
+    connect(d->m_view.get(), &QWindow::heightChanged, this, updateSize);
 
-    d->m_repaintTimer = new QTimer(this);
+    d->m_repaintTimer = std::make_unique<QTimer>();
     d->m_repaintTimer->setSingleShot(true);
     d->m_repaintTimer->setInterval(10);
 
-    connect(d->m_repaintTimer, &QTimer::timeout, this, &OffscreenQuickView::update);
-    connect(d->m_renderControl, &QQuickRenderControl::renderRequested, this, &OffscreenQuickView::handleRenderRequested);
-    connect(d->m_renderControl, &QQuickRenderControl::sceneChanged, this, &OffscreenQuickView::handleSceneChanged);
+    connect(d->m_repaintTimer.get(), &QTimer::timeout, this, &OffscreenQuickView::update);
+    connect(d->m_renderControl.get(), &QQuickRenderControl::renderRequested, this, &OffscreenQuickView::handleRenderRequested);
+    connect(d->m_renderControl.get(), &QQuickRenderControl::sceneChanged, this, &OffscreenQuickView::handleSceneChanged);
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     d->touchDevice = new QTouchDevice{};
@@ -218,11 +218,9 @@ OffscreenQuickView::~OffscreenQuickView()
         d->m_glcontext->makeCurrent(d->m_offscreenSurface.get());
     }
 
-    delete d->m_renderControl; // Always delete render control first.
-    d->m_renderControl = nullptr;
-
-    delete d->m_view;
-    d->m_view = nullptr;
+    // Always delete render control first.
+    d->m_renderControl.reset();
+    d->m_view.reset();
 }
 
 bool OffscreenQuickView::automaticRepaint() const
@@ -331,7 +329,7 @@ void OffscreenQuickView::forwardMouseEvent(QEvent *e)
         QMouseEvent *me = static_cast<QMouseEvent *>(e);
         const QPoint widgetPos = d->m_view->mapFromGlobal(me->pos());
         QMouseEvent cloneEvent(me->type(), widgetPos, me->pos(), me->button(), me->buttons(), me->modifiers());
-        QCoreApplication::sendEvent(d->m_view, &cloneEvent);
+        QCoreApplication::sendEvent(d->m_view.get(), &cloneEvent);
         e->setAccepted(cloneEvent.isAccepted());
 
         if (e->type() == QEvent::MouseButtonPress) {
@@ -342,7 +340,7 @@ void OffscreenQuickView::forwardMouseEvent(QEvent *e)
             if (doubleClick) {
                 d->lastMousePressButton = Qt::NoButton;
                 QMouseEvent doubleClickEvent(QEvent::MouseButtonDblClick, me->localPos(), me->windowPos(), me->screenPos(), me->button(), me->buttons(), me->modifiers());
-                QCoreApplication::sendEvent(d->m_view, &doubleClickEvent);
+                QCoreApplication::sendEvent(d->m_view.get(), &doubleClickEvent);
             }
         }
 
@@ -355,7 +353,7 @@ void OffscreenQuickView::forwardMouseEvent(QEvent *e)
         const QPointF widgetPos = d->m_view->mapFromGlobal(he->pos());
         const QPointF oldWidgetPos = d->m_view->mapFromGlobal(he->oldPos());
         QHoverEvent cloneEvent(he->type(), widgetPos, oldWidgetPos, he->modifiers());
-        QCoreApplication::sendEvent(d->m_view, &cloneEvent);
+        QCoreApplication::sendEvent(d->m_view.get(), &cloneEvent);
         e->setAccepted(cloneEvent.isAccepted());
         return;
     }
@@ -364,7 +362,7 @@ void OffscreenQuickView::forwardMouseEvent(QEvent *e)
         const QPointF widgetPos = d->m_view->mapFromGlobal(we->position().toPoint());
         QWheelEvent cloneEvent(widgetPos, we->globalPosition(), we->pixelDelta(), we->angleDelta(), we->buttons(),
                                we->modifiers(), we->phase(), we->inverted());
-        QCoreApplication::sendEvent(d->m_view, &cloneEvent);
+        QCoreApplication::sendEvent(d->m_view.get(), &cloneEvent);
         e->setAccepted(cloneEvent.isAccepted());
         return;
     }
@@ -378,7 +376,7 @@ void OffscreenQuickView::forwardKeyEvent(QKeyEvent *keyEvent)
     if (!d->m_visible) {
         return;
     }
-    QCoreApplication::sendEvent(d->m_view, keyEvent);
+    QCoreApplication::sendEvent(d->m_view.get(), keyEvent);
 }
 
 bool OffscreenQuickView::forwardTouchDown(qint32 id, const QPointF &pos, quint32 time)
@@ -391,7 +389,7 @@ bool OffscreenQuickView::forwardTouchDown(qint32 id, const QPointF &pos, quint32
     QTouchEvent event(QEvent::TouchBegin, d->touchDevice, Qt::NoModifier, d->touchPoints);
 #endif
     event.setTimestamp(time);
-    QCoreApplication::sendEvent(d->m_view, &event);
+    QCoreApplication::sendEvent(d->m_view.get(), &event);
 
     return event.isAccepted();
 }
@@ -406,7 +404,7 @@ bool OffscreenQuickView::forwardTouchMotion(qint32 id, const QPointF &pos, quint
     QTouchEvent event(QEvent::TouchUpdate, d->touchDevice, Qt::NoModifier, d->touchPoints);
 #endif
     event.setTimestamp(time);
-    QCoreApplication::sendEvent(d->m_view, &event);
+    QCoreApplication::sendEvent(d->m_view.get(), &event);
 
     return event.isAccepted();
 }
@@ -421,7 +419,7 @@ bool OffscreenQuickView::forwardTouchUp(qint32 id, quint32 time)
     QTouchEvent event(QEvent::TouchEnd, d->touchDevice, Qt::NoModifier, d->touchPoints);
 #endif
     event.setTimestamp(time);
-    QCoreApplication::sendEvent(d->m_view, &event);
+    QCoreApplication::sendEvent(d->m_view.get(), &event);
 
     return event.isAccepted();
 }
@@ -448,7 +446,7 @@ QQuickItem *OffscreenQuickView::contentItem() const
 
 QQuickWindow *OffscreenQuickView::window() const
 {
-    return d->m_view;
+    return d->m_view.get();
 }
 
 void OffscreenQuickView::setVisible(bool visible)

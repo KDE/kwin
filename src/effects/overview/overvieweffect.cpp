@@ -261,9 +261,11 @@ void OverviewEffect::cancelPartialActivate()
 
 void OverviewEffect::deactivate()
 {
-    const auto screenViews = views();
-    for (QuickSceneView *view : screenViews) {
-        QMetaObject::invokeMethod(view->rootItem(), "stop");
+    const auto screens = effects->screens();
+    for (const auto screen : screens) {
+        if (QuickSceneView *view = viewForScreen(screen)) {
+            QMetaObject::invokeMethod(view->rootItem(), "stop");
+        }
     }
     m_shutdownTimer->start(animationDuration());
 
