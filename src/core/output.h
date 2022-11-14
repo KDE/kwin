@@ -248,6 +248,7 @@ public:
 
     bool isPlaceholder() const;
     bool isNonDesktop() const;
+    Transform panelOrientation() const;
 
     virtual void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation);
 
@@ -317,6 +318,7 @@ protected:
         QByteArray edid;
         SubPixel subPixel = SubPixel::Unknown;
         Capabilities capabilities;
+        Transform panelOrientation = Transform::Normal;
         bool internal = false;
         bool placeholder = false;
         bool nonDesktop = false;

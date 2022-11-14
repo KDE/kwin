@@ -112,7 +112,8 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
                  PropertyDefinition(QByteArrayLiteral("link-status"), Requirement::Optional,
                                     {QByteArrayLiteral("Good"), QByteArrayLiteral("Bad")}),
                  PropertyDefinition(QByteArrayLiteral("content type"), Requirement::Optional,
-                                    {QByteArrayLiteral("No Data"), QByteArrayLiteral("Graphics"), QByteArrayLiteral("Photo"), QByteArrayLiteral("Cinema"), QByteArrayLiteral("Game")})},
+                                    {QByteArrayLiteral("No Data"), QByteArrayLiteral("Graphics"), QByteArrayLiteral("Photo"), QByteArrayLiteral("Cinema"), QByteArrayLiteral("Game")}),
+                 PropertyDefinition(QByteArrayLiteral("panel orientation"), Requirement::Optional, {QByteArrayLiteral("Normal"), QByteArrayLiteral("Upside Down"), QByteArrayLiteral("Left Side Up"), QByteArrayLiteral("Right Side Up")})},
                 DRM_MODE_OBJECT_CONNECTOR)
     , m_pipeline(std::make_unique<DrmPipeline>(this))
     , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
@@ -447,6 +448,15 @@ std::shared_ptr<DrmConnectorMode> DrmConnector::generateMode(const QSize &size, 
     return std::make_shared<DrmConnectorMode>(this, mode);
 }
 
+DrmConnector::PanelOrientation DrmConnector::panelOrientation() const
+{
+    if (const auto &property = getProp(PropertyIndex::PanelOrientation)) {
+        return property->enumForValue<PanelOrientation>(property->current());
+    } else {
+        return PanelOrientation::Normal;
+    }
+}
+
 QDebug &operator<<(QDebug &s, const KWin::DrmConnector *obj)
 {
     QDebugStateSaver saver(s);
@@ -478,6 +488,22 @@ DrmConnector::DrmContentType DrmConnector::kwinToDrmContentType(ContentType type
         return DrmContentType::Cinema;
     case ContentType::Game:
         return DrmContentType::Game;
+    default:
+        Q_UNREACHABLE();
+    }
+}
+
+Output::Transform DrmConnector::toKWinTransform(PanelOrientation orientation)
+{
+    switch (orientation) {
+    case PanelOrientation::Normal:
+        return KWin::Output::Transform::Normal;
+    case PanelOrientation::RightUp:
+        return KWin::Output::Transform::Rotated270;
+    case PanelOrientation::LeftUp:
+        return KWin::Output::Transform::Rotated90;
+    case PanelOrientation::UpsideDown:
+        return KWin::Output::Transform::Rotated180;
     default:
         Q_UNREACHABLE();
     }

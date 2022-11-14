@@ -675,7 +675,7 @@ void Workspace::updateOutputConfiguration()
         } else {
             props->enabled = true;
             props->pos = pos;
-            props->transform = Output::Transform::Normal;
+            props->transform = output->panelOrientation();
         }
         pos.setX(pos.x() + output->geometry().width());
     }

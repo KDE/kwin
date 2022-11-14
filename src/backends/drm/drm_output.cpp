@@ -76,6 +76,7 @@ DrmOutput::DrmOutput(DrmPipeline *pipeline)
         .edid = edid->raw(),
         .subPixel = conn->subpixel(),
         .capabilities = capabilities,
+        .panelOrientation = DrmConnector::toKWinTransform(conn->panelOrientation()),
         .internal = conn->isInternal(),
         .nonDesktop = conn->isNonDesktop(),
     });

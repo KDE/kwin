@@ -65,6 +65,7 @@ public:
         MaxBpc = 10,
         LinkStatus = 11,
         ContentType = 12,
+        PanelOrientation = 13,
         Count
     };
 
@@ -83,6 +84,12 @@ public:
         Photo = 2,
         Cinema = 3,
         Game = 4
+    };
+    enum class PanelOrientation : uint32_t {
+        Normal = 0,
+        UpsideDown = 1,
+        LeftUp = 2,
+        RightUp = 3
     };
 
     bool init() override;
@@ -110,8 +117,10 @@ public:
     bool hasRgbRange() const;
     Output::RgbRange rgbRange() const;
     LinkStatus linkStatus() const;
+    PanelOrientation panelOrientation() const;
 
     static DrmContentType kwinToDrmContentType(ContentType type);
+    static Output::Transform toKWinTransform(PanelOrientation orientation);
 
 private:
     QList<std::shared_ptr<DrmConnectorMode>> generateCommonModes();

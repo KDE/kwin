@@ -406,4 +406,9 @@ void Output::setContentType(ContentType contentType)
     m_contentType = contentType;
 }
 
+Output::Transform Output::panelOrientation() const
+{
+    return m_information.panelOrientation;
+}
+
 } // namespace KWin
