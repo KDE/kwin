@@ -102,17 +102,15 @@ void ScreenCastStream::newStreamParams()
     const int bpp = videoFormat.format == SPA_VIDEO_FORMAT_RGB || videoFormat.format == SPA_VIDEO_FORMAT_BGR ? 3 : 4;
     const int stride = SPA_ROUND_UP_N(m_resolution.width() * bpp, 4);
 
-    spa_rectangle resolution = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
     struct spa_pod_frame f;
     spa_pod_builder_push_object(&pod_builder, &f, SPA_TYPE_OBJECT_ParamBuffers, SPA_PARAM_Buffers);
     spa_pod_builder_add(&pod_builder,
-                        SPA_FORMAT_VIDEO_size, SPA_POD_Rectangle(&resolution),
+                        SPA_PARAM_BUFFERS_size, SPA_POD_Int(stride * m_resolution.height()),
                         SPA_PARAM_BUFFERS_buffers, SPA_POD_CHOICE_RANGE_Int(16, 2, 16),
                         SPA_PARAM_BUFFERS_stride, SPA_POD_Int(stride),
                         SPA_PARAM_BUFFERS_dataType, SPA_POD_CHOICE_FLAGS_Int(buffertypes), 0);
     if (!m_dmabufParams) {
         spa_pod_builder_add(&pod_builder,
-                            SPA_PARAM_BUFFERS_size, SPA_POD_Int(stride * m_resolution.height()),
                             SPA_PARAM_BUFFERS_blocks, SPA_POD_Int(1),
                             SPA_PARAM_BUFFERS_align, SPA_POD_Int(16), 0);
     } else {
