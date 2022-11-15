@@ -12,9 +12,11 @@
 namespace KWaylandServer
 {
 class ShmClientBufferPrivate;
+class ShmClientBufferIntegrationPrivate;
+class ShmPool;
 
 /**
- * The ShmClientBuffer class represents a wl_shm_buffer client buffer.
+ * The ShmClientBuffer class represents a shared memory client buffer.
  *
  * The buffer's data can be accessed using the data() function. Note that it is not allowed
  * to access data of several shared memory buffers simultaneously.
@@ -25,7 +27,8 @@ class KWIN_EXPORT ShmClientBuffer : public ClientBuffer
     Q_DECLARE_PRIVATE(ShmClientBuffer)
 
 public:
-    explicit ShmClientBuffer(wl_resource *resource);
+    explicit ShmClientBuffer(ShmPool *pool, int32_t offset, int32_t width, int32_t height, int32_t stride, uint32_t format, wl_resource *resource);
+    ~ShmClientBuffer() override;
 
     QImage data() const;
 
@@ -35,7 +38,7 @@ public:
 };
 
 /**
- * The ShmClientBufferIntegration class provides support for wl_shm_buffer buffers.
+ * The ShmClientBufferIntegration class provides support for shared memory client buffers.
  */
 class ShmClientBufferIntegration : public ClientBufferIntegration
 {
@@ -43,8 +46,13 @@ class ShmClientBufferIntegration : public ClientBufferIntegration
 
 public:
     explicit ShmClientBufferIntegration(Display *display);
+    ~ShmClientBufferIntegration() override;
 
-    ClientBuffer *createBuffer(::wl_resource *resource) override;
+    QVector<uint32_t> formats() const;
+
+private:
+    friend class ShmClientBufferIntegrationPrivate;
+    std::unique_ptr<ShmClientBufferIntegrationPrivate> d;
 };
 
 } // namespace KWaylandServer

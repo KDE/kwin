@@ -7,63 +7,203 @@
 #include "shmclientbuffer.h"
 #include "clientbuffer_p.h"
 #include "display.h"
+#include "display_p.h"
+#include "utils/filedescriptor.h"
 
-#include <wayland-server-core.h>
-#include <wayland-server-protocol.h>
+#include <pthread.h>
+#include <signal.h>
+#include <sys/mman.h>
+
+#include "qwayland-server-wayland.h"
+
+using namespace KWin;
 
 namespace KWaylandServer
 {
-static const ShmClientBuffer *s_accessedBuffer = nullptr;
-static int s_accessCounter = 0;
 
-class ShmClientBufferPrivate : public ClientBufferPrivate
+static constexpr int s_version = 1;
+
+static pthread_once_t sigbusOnce = PTHREAD_ONCE_INIT;
+static pthread_key_t sigbusDataKey;
+static struct sigaction prevSigbusAction;
+
+class ShmClientBufferIntegrationPrivate : public QtWaylandServer::wl_shm
 {
 public:
-    ShmClientBufferPrivate(ShmClientBuffer *q);
+    ShmClientBufferIntegrationPrivate(Display *display, ShmClientBufferIntegration *q);
 
-    static void buffer_destroy_callback(wl_listener *listener, void *data);
+    ShmClientBufferIntegration *q;
+    QVector<uint32_t> formats;
 
-    ShmClientBuffer *q;
-    QImage::Format format = QImage::Format_Invalid;
-    uint32_t width = 0;
-    uint32_t height = 0;
-    bool hasAlphaChannel = false;
-    QImage savedData;
-
-    struct DestroyListener
-    {
-        wl_listener listener;
-        ShmClientBufferPrivate *receiver;
-    };
-    DestroyListener destroyListener;
+protected:
+    void shm_bind_resource(Resource *resource) override;
+    void shm_create_pool(Resource *resource, uint32_t id, int32_t fd, int32_t size) override;
 };
 
-ShmClientBufferPrivate::ShmClientBufferPrivate(ShmClientBuffer *q)
-    : q(q)
+class ShmMapping
+{
+public:
+    ShmMapping(int fd, int32_t size);
+    ~ShmMapping();
+
+    bool isValid() const;
+
+    void *data;
+    int32_t size;
+};
+
+class ShmSigbusData
+{
+public:
+    std::shared_ptr<ShmMapping> mapping;
+    int accessCount = 0;
+};
+
+class ShmPool : public QtWaylandServer::wl_shm_pool
+{
+public:
+    ShmPool(ShmClientBufferIntegration *integration, wl_client *client, int id, uint32_t version, FileDescriptor &&fd, std::shared_ptr<ShmMapping> mapping);
+    ~ShmPool() override;
+
+    void ref();
+    void unref();
+
+    ShmClientBufferIntegration *integration;
+    std::shared_ptr<ShmMapping> mapping;
+    FileDescriptor fd;
+    int refCount = 1;
+
+protected:
+    void shm_pool_destroy_resource(Resource *resource) override;
+    void shm_pool_create_buffer(Resource *resource, uint32_t id, int32_t offset, int32_t width, int32_t height, int32_t stride, uint32_t format) override;
+    void shm_pool_destroy(Resource *resource) override;
+    void shm_pool_resize(Resource *resource, int32_t size) override;
+};
+
+class ShmClientBufferPrivate : public ClientBufferPrivate, public QtWaylandServer::wl_buffer
+{
+public:
+    ShmClientBufferPrivate(ShmClientBuffer *q, wl_resource *resource);
+
+    ShmClientBuffer *q;
+    ShmPool *pool;
+    int32_t width;
+    int32_t height;
+    int32_t offset;
+    int32_t stride;
+    QImage::Format format;
+    bool hasAlphaChannel;
+
+protected:
+    void buffer_destroy(Resource *resource) override;
+};
+
+ShmMapping::ShmMapping(int fd, int32_t size)
+    : data(mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0))
+    , size(size)
 {
 }
 
-static void cleanupShmPool(void *poolHandle)
+ShmMapping::~ShmMapping()
 {
-    wl_shm_pool_unref(static_cast<wl_shm_pool *>(poolHandle));
+    if (isValid()) {
+        munmap(data, size);
+    }
 }
 
-void ShmClientBufferPrivate::buffer_destroy_callback(wl_listener *listener, void *data)
+bool ShmMapping::isValid() const
 {
-    auto bufferPrivate = reinterpret_cast<ShmClientBufferPrivate::DestroyListener *>(listener)->receiver;
-    wl_shm_buffer *buffer = wl_shm_buffer_get(bufferPrivate->q->resource());
-    wl_shm_pool *pool = wl_shm_buffer_ref_pool(buffer);
+    return data != MAP_FAILED;
+}
 
-    wl_list_remove(&bufferPrivate->destroyListener.listener.link);
-    wl_list_init(&bufferPrivate->destroyListener.listener.link);
+ShmPool::ShmPool(ShmClientBufferIntegration *integration, wl_client *client, int id, uint32_t version, FileDescriptor &&fd, std::shared_ptr<ShmMapping> mapping)
+    : QtWaylandServer::wl_shm_pool(client, id, version)
+    , integration(integration)
+    , mapping(mapping)
+    , fd(std::move(fd))
+{
+}
 
-    bufferPrivate->savedData = QImage(static_cast<const uchar *>(wl_shm_buffer_get_data(buffer)),
-                                      bufferPrivate->width,
-                                      bufferPrivate->height,
-                                      wl_shm_buffer_get_stride(buffer),
-                                      bufferPrivate->format,
-                                      cleanupShmPool,
-                                      pool);
+ShmPool::~ShmPool()
+{
+}
+
+void ShmPool::ref()
+{
+    ++refCount;
+}
+
+void ShmPool::unref()
+{
+    --refCount;
+    if (refCount == 0) {
+        delete this;
+    }
+}
+
+void ShmPool::shm_pool_destroy_resource(Resource *resource)
+{
+    unref();
+}
+
+void ShmPool::shm_pool_create_buffer(Resource *resource, uint32_t id, int32_t offset, int32_t width, int32_t height, int32_t stride, uint32_t format)
+{
+    if (!integration->formats().contains(format)) {
+        wl_resource_post_error(resource->handle,
+                               WL_SHM_ERROR_INVALID_FORMAT,
+                               "invalid format 0x%x",
+                               format);
+        return;
+    }
+
+    if (offset < 0 || width <= 0 || height <= 0 || stride < width) {
+        wl_resource_post_error(resource->handle,
+                               WL_SHM_ERROR_INVALID_STRIDE,
+                               "invalid width, height or stride (%dx%d, %u)",
+                               width, height, stride);
+        return;
+    }
+
+    wl_resource *bufferResource = wl_resource_create(resource->client(), &wl_buffer_interface, 1, id);
+
+    auto buffer = new ShmClientBuffer(this, offset, width, height, stride, format, bufferResource);
+    DisplayPrivate *displayPrivate = DisplayPrivate::get(integration->display());
+    displayPrivate->registerClientBuffer(buffer);
+}
+
+void ShmPool::shm_pool_destroy(Resource *resource)
+{
+    wl_resource_destroy(resource->handle);
+}
+
+void ShmPool::shm_pool_resize(Resource *resource, int32_t size)
+{
+    if (size < mapping->size) {
+        wl_resource_post_error(resource->handle,
+                               WL_SHM_ERROR_INVALID_FD,
+                               "shrinking pool invalid");
+        return;
+    }
+
+    auto remapping = std::make_shared<ShmMapping>(fd.get(), size);
+    if (remapping->isValid()) {
+        mapping = remapping;
+    } else {
+        wl_resource_post_error(resource->handle,
+                               WL_SHM_ERROR_INVALID_FD,
+                               "failed to map shm pool with the new size");
+    }
+}
+
+ShmClientBufferPrivate::ShmClientBufferPrivate(ShmClientBuffer *q, wl_resource *resource)
+    : QtWaylandServer::wl_buffer(resource)
+    , q(q)
+{
+}
+
+void ShmClientBufferPrivate::buffer_destroy(Resource *resource)
+{
+    wl_resource_destroy(resource->handle);
 }
 
 static bool alphaChannelFromFormat(uint32_t format)
@@ -109,22 +249,25 @@ static QImage::Format imageFormatForShmFormat(uint32_t format)
     }
 }
 
-ShmClientBuffer::ShmClientBuffer(wl_resource *resource)
-    : ClientBuffer(resource, *new ShmClientBufferPrivate(this))
+ShmClientBuffer::ShmClientBuffer(ShmPool *pool, int32_t offset, int32_t width, int32_t height, int32_t stride, uint32_t format, wl_resource *resource)
+    : ClientBuffer(resource, *new ShmClientBufferPrivate(this, resource))
 {
     Q_D(ShmClientBuffer);
+    d->pool = pool;
+    d->pool->ref();
 
-    wl_shm_buffer *buffer = wl_shm_buffer_get(resource);
-    d->width = wl_shm_buffer_get_width(buffer);
-    d->height = wl_shm_buffer_get_height(buffer);
-    d->hasAlphaChannel = alphaChannelFromFormat(wl_shm_buffer_get_format(buffer));
-    d->format = imageFormatForShmFormat(wl_shm_buffer_get_format(buffer));
+    d->width = width;
+    d->height = height;
+    d->offset = offset;
+    d->stride = stride;
+    d->format = imageFormatForShmFormat(format);
+    d->hasAlphaChannel = alphaChannelFromFormat(format);
+}
 
-    // The underlying shm pool will be referenced if the wl_shm_buffer is destroyed so the
-    // compositor can access buffer data even after the buffer is gone.
-    d->destroyListener.receiver = d;
-    d->destroyListener.listener.notify = ShmClientBufferPrivate::buffer_destroy_callback;
-    wl_resource_add_destroy_listener(resource, &d->destroyListener.listener);
+ShmClientBuffer::~ShmClientBuffer()
+{
+    Q_D(ShmClientBuffer);
+    d->pool->unref();
 }
 
 QSize ShmClientBuffer::size() const
@@ -144,54 +287,123 @@ ClientBuffer::Origin ShmClientBuffer::origin() const
     return Origin::TopLeft;
 }
 
-static void cleanupShmData(void *bufferHandle)
+static void sigbusHandler(int signum, siginfo_t *info, void *context)
 {
-    Q_ASSERT_X(s_accessCounter > 0, "cleanup", "access counter must be positive");
-    s_accessCounter--;
-    if (s_accessCounter == 0) {
-        s_accessedBuffer = nullptr;
+    auto reraise = [&]() {
+        if (prevSigbusAction.sa_flags & SA_SIGINFO) {
+            prevSigbusAction.sa_sigaction(signum, info, context);
+        } else {
+            prevSigbusAction.sa_handler(signum);
+        }
+    };
+
+    ShmSigbusData *sigbusData = static_cast<ShmSigbusData *>(pthread_getspecific(sigbusDataKey));
+    if (!sigbusData || !sigbusData->mapping) {
+        reraise();
+        return;
     }
-    wl_shm_buffer_end_access(static_cast<wl_shm_buffer *>(bufferHandle));
+
+    if (mmap(sigbusData->mapping->data, sigbusData->mapping->size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_FIXED | MAP_ANONYMOUS, -1, 0) == MAP_FAILED) {
+        reraise();
+        return;
+    }
 }
 
 QImage ShmClientBuffer::data() const
 {
-    if (s_accessedBuffer && s_accessedBuffer != this) {
-        return QImage();
+    Q_D(const ShmClientBuffer);
+
+    pthread_once(&sigbusOnce, []() {
+        struct sigaction action {
+            .sa_sigaction = sigbusHandler,
+            .sa_flags = SA_SIGINFO | SA_NODEFER,
+        };
+
+        sigemptyset(&action.sa_mask);
+        sigaction(SIGBUS, &action, &prevSigbusAction);
+        pthread_key_create(&sigbusDataKey, [](void *data) {
+            ShmSigbusData *sigbusData = static_cast<ShmSigbusData *>(data);
+            delete sigbusData;
+        });
+    });
+
+    ShmSigbusData *sigbusData = static_cast<ShmSigbusData *>(pthread_getspecific(sigbusDataKey));
+    if (!sigbusData) {
+        sigbusData = new ShmSigbusData;
+        pthread_setspecific(sigbusDataKey, sigbusData);
     }
 
-    Q_D(const ShmClientBuffer);
-    if (wl_shm_buffer *buffer = wl_shm_buffer_get(resource())) {
-        s_accessedBuffer = this;
-        s_accessCounter++;
-        wl_shm_buffer_begin_access(buffer);
-        const uchar *data = static_cast<const uchar *>(wl_shm_buffer_get_data(buffer));
-        const uint32_t stride = wl_shm_buffer_get_stride(buffer);
-        return QImage(data, d->width, d->height, stride, d->format, cleanupShmData, buffer);
+    const auto &mapping = d->pool->mapping;
+    sigbusData->mapping = mapping;
+    ++sigbusData->accessCount;
+
+    return QImage(reinterpret_cast<uchar *>(mapping->data) + d->offset, d->width, d->height, d->stride, d->format, [](void *) {
+        ShmSigbusData *sigbusData = static_cast<ShmSigbusData *>(pthread_getspecific(sigbusDataKey));
+        --sigbusData->accessCount;
+        if (sigbusData->accessCount == 0) {
+            sigbusData->mapping.reset();
+        }
+    });
+}
+
+ShmClientBufferIntegrationPrivate::ShmClientBufferIntegrationPrivate(Display *display, ShmClientBufferIntegration *q)
+    : QtWaylandServer::wl_shm(*display, s_version)
+    , q(q)
+{
+}
+
+void ShmClientBufferIntegrationPrivate::shm_bind_resource(Resource *resource)
+{
+    for (const uint32_t &format : std::as_const(formats)) {
+        send_format(resource->handle, format);
     }
-    return d->savedData;
+}
+
+void ShmClientBufferIntegrationPrivate::shm_create_pool(Resource *resource, uint32_t id, int32_t fd, int32_t size)
+{
+    FileDescriptor fileDescriptor{fd};
+
+    if (size <= 0) {
+        wl_resource_post_error(resource->handle,
+                               error_invalid_stride,
+                               "invalid size (%d)", size);
+        return;
+    }
+
+    auto mapping = std::make_shared<ShmMapping>(fd, size);
+    if (!mapping->isValid()) {
+        wl_resource_post_error(resource->handle,
+                               error_invalid_fd,
+                               "failed to map shm pool");
+        return;
+    }
+
+    new ShmPool(q, resource->client(), id, resource->version(), std::move(fileDescriptor), mapping);
 }
 
 ShmClientBufferIntegration::ShmClientBufferIntegration(Display *display)
     : ClientBufferIntegration(display)
+    , d(new ShmClientBufferIntegrationPrivate(display, this))
 {
+    d->formats.append(WL_SHM_FORMAT_ARGB8888);
+    d->formats.append(WL_SHM_FORMAT_XRGB8888);
 #if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
-    wl_display_add_shm_format(*display, WL_SHM_FORMAT_ARGB2101010);
-    wl_display_add_shm_format(*display, WL_SHM_FORMAT_XRGB2101010);
-    wl_display_add_shm_format(*display, WL_SHM_FORMAT_ABGR2101010);
-    wl_display_add_shm_format(*display, WL_SHM_FORMAT_XBGR2101010);
-    wl_display_add_shm_format(*display, WL_SHM_FORMAT_ABGR16161616);
-    wl_display_add_shm_format(*display, WL_SHM_FORMAT_XBGR16161616);
+    d->formats.append(WL_SHM_FORMAT_ARGB2101010);
+    d->formats.append(WL_SHM_FORMAT_XRGB2101010);
+    d->formats.append(WL_SHM_FORMAT_ABGR2101010);
+    d->formats.append(WL_SHM_FORMAT_XBGR2101010);
+    d->formats.append(WL_SHM_FORMAT_ABGR16161616);
+    d->formats.append(WL_SHM_FORMAT_XBGR16161616);
 #endif
-    wl_display_init_shm(*display);
 }
 
-ClientBuffer *ShmClientBufferIntegration::createBuffer(::wl_resource *resource)
+ShmClientBufferIntegration::~ShmClientBufferIntegration()
 {
-    if (wl_shm_buffer_get(resource)) {
-        return new ShmClientBuffer(resource);
-    }
-    return nullptr;
+}
+
+QVector<uint32_t> ShmClientBufferIntegration::formats() const
+{
+    return d->formats;
 }
 
 } // namespace KWaylandServer
