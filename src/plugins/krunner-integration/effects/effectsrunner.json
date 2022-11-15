@@ -1,0 +1,17 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "natalie_clarius@yahoo.de",
+                "Name": "Natalie Clarius"
+            }
+        ],
+        "Description": "Show desktop effects for window management",
+        "EnabledByDefault": true,
+        "Icon": "preferences-desktop-effects",
+        "Id": "wmeffects",
+        "License": "GPL",
+        "Version": "1.0",
+        "Name": "Window Management Effects"
+    }
+}
