@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-09-02 00:47+0000\n"
-"PO-Revision-Date: 2022-09-02 11:41+0300\n"
+"PO-Revision-Date: 2022-11-14 14:00+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.08.0\n"
+"X-Generator: Lokalize 22.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -150,7 +150,7 @@ msgid ""
 "In this row you can customize behavior when scrolling into an inactive inner "
 "window ('inner' means: not titlebar, not frame)."
 msgstr ""
-"Bu satırdan, pasif bir iç pencere üzerinde kaydırma yapıldığında nasıl "
+"Bu satırdan, pasif bir iç pencere üzerinde sarma yapıldığında nasıl "
 "davranılacağını özelleştirebilirsiniz ('iç' şu anlama gelir: Başlık çubuğu "
 "ve çerçeve değil)."
 
@@ -158,19 +158,19 @@ msgstr ""
 #: actions.ui:163
 #, kde-format
 msgid "Scroll"
-msgstr "Kaydır"
+msgstr "Sar"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
 #: actions.ui:168
 #, kde-format
 msgid "Activate and scroll"
-msgstr "Etkinleştir ve kaydır"
+msgstr "Etkinleştir ve sar"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
 #: actions.ui:173
 #, kde-format
 msgid "Activate, raise and scroll"
-msgstr "Etkinleştir, yükselt ve kaydır"
+msgstr "Etkinleştir, yükselt ve sar"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: actions.ui:184
@@ -399,8 +399,8 @@ msgid ""
 "Here you can customize KDE's behavior when scrolling with the mouse wheel in "
 "a window while pressing the modifier key."
 msgstr ""
-"Bir pencereye değiştirici düğmeye basarken fare tekerleğini "
-"kaydırdığınızdaki KDE davranışını buradan özelleştirebilirsiniz."
+"Bir pencereye değiştirici düğmeye basarken fare tekerleğini sardığınızdaki "
+"KDE davranışını buradan özelleştirebilirsiniz."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
@@ -1150,7 +1150,8 @@ msgstr "Tüm masaüstlerinde göster"
 #: mouse.ui:98
 #, kde-format
 msgid "Behavior on <em>mouse wheel</em> scroll over the titlebar."
-msgstr "Başlık çubuğuna <em>çift</em> tıklandığındaki davranış."
+msgstr ""
+"Başlık çubuğu üzerinde <em>fare tekerleği</em> ile sarıldığındaki davranış."
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: mouse.ui:143

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-14 00:47+0000\n"
-"PO-Revision-Date: 2022-10-31 13:21+0100\n"
+"PO-Revision-Date: 2022-11-14 14:52+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
 "Language: vi\n"
@@ -52,16 +52,21 @@ msgid ""
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
+"<b>Việc kết hợp dùng OpenGL (lựa chọn mặc định) đã từng gây sự cố cho KWin.</"
+"b><br>Việc này có khả năng lớn nhất là do một lỗi của trình điều khiển."
+"<p>Nếu bạn cho rằng từ đó đến giờ bạn đã nâng cấp lên một trình điều khiển "
+"ổn định,<br>bạn có thể đặt lại tính năng bảo vệ này nhưng <b>hãy lưu ý rằng "
+"việc đó có thể gây ra một sự cố ngay lập tức!</b></p>"
 
 #: composite.cpp:1047
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
-msgstr ""
+msgstr "Cần có các phần mở rộng X (XComposite và XDamage) nhưng hiện không có."
 
 #: composite.cpp:1050
 #, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr ""
+msgstr "Không có GLX/OpenGL."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -1160,16 +1165,14 @@ msgid "Move the tablet to the next output"
 msgstr "Chuyển máy tính bảng sang đầu ra tiếp theo"
 
 #: input.cpp:2043
-#, fuzzy, kde-format
-#| msgid "Tablet moved to %2"
-#| msgid_plural "Tablets switched outputs"
+#, kde-format
 msgid "Tablet moved to %1"
-msgstr "Máy tính bảng đã đổi đầu ra"
+msgstr "Máy tính bảng đã chuyển sang %1"
 
 #: input.cpp:2043
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "Máy tính bảng đã đổi đầu ra"
 
 #: input.cpp:3021
 #, kde-format
@@ -1349,6 +1352,8 @@ msgstr "Kết xuất qua nút drm."
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
+"Trích xuất thông tin thiết lập vùng từ locale1 thay vì cấu hình của người "
+"dùng"
 
 #: main_wayland.cpp:390
 #, kde-format

@@ -6,20 +6,20 @@
 # Hasso Tepper <hasso@estpak.ee>, 2002, 2003.
 # Marek Laane <bald@smail.ee>, 2003-2008.
 # Marek Laane <bald@smail.ee>, 2009, 2010, 2011, 2012, 2016, 2019, 2020.
-# Mihkel Tõnnov <mihhkel@gmail.com>, 2020.
+# Mihkel Tõnnov <mihhkel@gmail.com>, 2020, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-14 00:47+0000\n"
-"PO-Revision-Date: 2020-10-08 14:55+0200\n"
+"PO-Revision-Date: 2022-11-14 01:16+0100\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
 "Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 20.08.1\n"
+"X-Generator: Lokalize 22.08.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -47,14 +47,7 @@ msgstr ""
 "lülitada kiirklahviga '%1'."
 
 #: composite.cpp:1040
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#| "protection but <b>be aware that this might result in an immediate crash!</"
-#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#| "</p>"
+#, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
 "b><br>This was most likely due to a driver bug.<p>If you think that you have "
@@ -64,8 +57,7 @@ msgstr ""
 "<b>OpenGL komposiit (vaikimisi) on varem tekitanud KWini krahhe.</"
 "b><br>Tõenäoliselt on tegemist draiveri veaga.<p>Kui arvad, et oled vahepeal "
 "paigaldanud stabiilse draiveri,<br>võid selle kaitse maha võtta, aga "
-"<b>arvesta, et see võib kaasa tuua kohese krahhi!</b></p><p>Teine võimalus "
-"on kasutada selle asemel XRenderi taustaprogrammi.</p>"
+"<b>arvesta, et see võib kaasa tuua kohese krahhi!</b></p>"
 
 #: composite.cpp:1047
 #, kde-format
@@ -73,10 +65,9 @@ msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Nõutavaid X'i laiendusi (XComposite ja XDamage) pole saadaval."
 
 #: composite.cpp:1050
-#, fuzzy, kde-format
-#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+#, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr "GLX/OpenGL ja XRender/XFixes ei ole saadaval."
+msgstr "GLX/OpenGL ei ole saadaval."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -644,24 +635,20 @@ msgid "Tablet Tool Button"
 msgstr "Graafikalaua tööriista nupp"
 
 #: debug_console.cpp:521 debug_console.cpp:535
-#, fuzzy, kde-format
-#| msgctxt "A button in a mouse press/release event"
-#| msgid "Button"
+#, kde-format
 msgid "Button"
 msgstr "Nupp"
 
 #: debug_console.cpp:522 debug_console.cpp:536
-#, fuzzy, kde-format
-#| msgid "Pressure"
+#, kde-format
 msgid "Pressed"
-msgstr "Surve"
+msgstr "Vajutatud"
 
 #: debug_console.cpp:523 debug_console.cpp:537 debug_console.cpp:551
 #: debug_console.cpp:565
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet"
-msgstr "Graafikalaua tööriist"
+msgstr "Graafikalaud"
 
 #: debug_console.cpp:534
 #, kde-format
@@ -874,10 +861,9 @@ msgid "task"
 msgstr "ülesanne"
 
 #: debug_console.cpp:1217
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "X11 Windows"
-msgstr "Aknad"
+msgstr "X11 aknad"
 
 #: debug_console.cpp:1219
 #, kde-format
@@ -1043,13 +1029,13 @@ msgstr "Aktiivsed LED-id"
 #: debug_console.ui:425 debug_console.ui:445
 #, kde-format
 msgid "Clipboard"
-msgstr ""
+msgstr "Lõikepuhver"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: debug_console.ui:491
 #, kde-format
 msgid "Primary Selection"
-msgstr ""
+msgstr "Esmane valik"
 
 #: helpers/killer/killer.cpp:34
 #, kde-format
@@ -1133,49 +1119,36 @@ msgid "<b>Application \"%1\" is not responding</b>"
 msgstr "<b>Rakendus \"%1\" ei reageeri</b>"
 
 #: helpers/killer/killer.cpp:86
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<p>You tried to close window \"%1\" from application \"%2\" (Process ID: "
-#| "%3) but the application is not responding.</p>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
 "%3) but the application is not responding.</para>"
 msgstr ""
-"<p>Üritasid sulgeda rakenduse \"%2\" akent \"%1\" (protsessi ID: %3), kuid "
-"rakendus ei reageeri.</p>"
+"<para>Üritasid sulgeda rakenduse \"%2\" akent \"%1\" (protsessi ID: %3), "
+"kuid rakendus ei reageeri.</para>"
 
 #: helpers/killer/killer.cpp:88
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<p>You tried to close window \"%1\" from application \"%2\" (Process ID: "
-#| "%3), running on host \"%4\", but the application is not responding.</p>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
 "%3), running on host \"%4\", but the application is not responding.</para>"
 msgstr ""
-"<p>Üritasid sulgeda rakenduse \"%2\" akent \"%1\" (protsessi ID: %3), mis "
-"töötab masinas \"%4\", kuid rakendus ei reageeri.</p>"
+"<para>Üritasid sulgeda rakenduse \"%2\" akent \"%1\" (protsessi ID: %3), mis "
+"töötab masinas \"%4\", kuid rakendus ei reageeri.</para>"
 
 #: helpers/killer/killer.cpp:91
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<p>Do you want to terminate this application?</p><p><warning>Terminating "
-#| "the application will close all of its child windows. Any unsaved data "
-#| "will be lost.</warning></p>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para>Do you want to terminate this application?</"
 "para><para><warning>Terminating the application will close all of its child "
 "windows. Any unsaved data will be lost.</warning></para>"
 msgstr ""
-"<p>Kas lõpetada rakenduse töö?</p><p><warning>Rakenduse töö lõpetamisel "
-"suletakse kõik selle alamaknad. Salvestamata andmed lähevad kaotsi.</"
-"warning></p>"
+"<para>Kas lõpetada rakenduse töö?</para><para><warning>Rakenduse töö "
+"lõpetamisel suletakse kõik selle alamaknad. Salvestamata andmed lähevad "
+"kaotsi.</warning></para>"
 
 #: helpers/killer/killer.cpp:94
 #, kde-format
@@ -1193,11 +1166,9 @@ msgid "Move the tablet to the next output"
 msgstr ""
 
 #: input.cpp:2043
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Tablet moved to %1"
-msgstr "Tahvelarvuti režiim"
+msgstr ""
 
 #: input.cpp:2043
 #, kde-format
@@ -1205,18 +1176,14 @@ msgid "Tablets switched outputs"
 msgstr ""
 
 #: input.cpp:3021
-#, fuzzy, kde-format
-#| msgctxt "A touch up event"
-#| msgid "Touch Up"
+#, kde-format
 msgid "Touchpad"
-msgstr "Puutevabastus"
+msgstr "Puutepadi"
 
 #: keyboard_layout.cpp:45
-#, fuzzy, kde-format
-#| msgctxt "tooltip title"
-#| msgid "Keyboard Layout"
+#, kde-format
 msgid "Keyboard Layout Switcher"
-msgstr "Klaviatuuripaigutus"
+msgstr "Klaviatuuripaigutuste vahetaja"
 
 #: killwindow.cpp:32
 #, kde-format
@@ -1346,6 +1313,8 @@ msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
 "socket to name the socket"
 msgstr ""
+"Waylandi pesa, mida sissetulevate ühenduste jaoks kasutada. Pesa nime "
+"määramiseks võib seda kasutada koos võtmega --socket."
 
 #: main_wayland.cpp:353
 #, kde-format
@@ -1353,16 +1322,18 @@ msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
+"XWaylandi pesa, mida XWaylandi sissetulevate ühenduste jaoks kasutada. Võib "
+"anda korduvalt."
 
 #: main_wayland.cpp:357
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
-msgstr ""
+msgstr "Eelseadistatud XWaylandi kuva nimi."
 
 #: main_wayland.cpp:361
 #, kde-format
 msgid "Name of the xauthority file "
-msgstr ""
+msgstr "Xauthority faili nimi."
 
 #: main_wayland.cpp:365
 #, kde-format
@@ -1448,116 +1419,104 @@ msgstr "Asendab juba töötava ICCCM2.0 ühilduva aknahalduri"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:49
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:51
-#, fuzzy, kde-format
-#| msgid "Activity"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "activate"
-msgstr "Tegevus"
+msgstr "aktiveeri"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:52
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:54
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "close"
-msgstr "&Sulge"
+msgstr "sulge"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:55
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:57
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "min"
-msgstr ""
+msgstr "min"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:58
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:60
-#, fuzzy, kde-format
-#| msgid "Minimized"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "minimize"
-msgstr "Minimeeritud"
+msgstr "minimeeri"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:61
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:63
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "max"
-msgstr ""
+msgstr "max"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:64
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:66
-#, fuzzy, kde-format
-#| msgid "Maximize"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "maximize"
-msgstr "Maksimeeri"
+msgstr "maksimeeri"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:67
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:69
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "fullscreen"
-msgstr "Täisekraan"
+msgstr "täisekraan"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:70
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:72
-#, fuzzy, kde-format
-#| msgid "Unshade"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "shade"
-msgstr "Keri lahti"
+msgstr "keri kokku"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:73
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:75
-#, fuzzy, kde-format
-#| msgid "Keep above"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "keep above"
-msgstr "Teiste peal"
+msgstr "teiste peal"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:76
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:78
-#, fuzzy, kde-format
-#| msgid "Keep below"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "keep below"
-msgstr "Teiste all"
+msgstr "teiste all"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:83
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "window"
-msgstr "Aknad"
+msgstr "aken"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:93
-#, fuzzy, kde-format
-#| msgid "name"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "name"
-msgstr "name"
+msgstr "nimi"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:95
 #, fuzzy, kde-format
 #| msgid "name"
 msgctxt "Note this is a KRunner keyword"
 msgid "appname"
-msgstr "name"
+msgstr "appname"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:97
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:150
-#, fuzzy, kde-format
-#| msgid "&Desktops"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
-msgstr "Tööl&auad"
+msgstr "töölaud"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:255
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop %1"
+#, kde-format
 msgid "Switch to desktop %1"
-msgstr "Lülitumine töölauale %1"
+msgstr ""
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:296
 #, kde-format
@@ -1595,10 +1554,9 @@ msgid "Toggle keep below running window on %1"
 msgstr ""
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:318
-#, fuzzy, kde-format
-#| msgid "Activate Window (%1)"
+#, kde-format
 msgid "Activate running window on %1"
-msgstr "Akna aktiveerimine (%1)"
+msgstr ""
 
 #: plugins/nightcolor/nightcolormanager.cpp:64
 #, kde-format
@@ -1622,7 +1580,7 @@ msgstr "Öörežiimi lülitamine"
 #: plugins/nightcolor/nightcolormanager.cpp:481
 #, kde-format
 msgid "Color Temperature Preview"
-msgstr ""
+msgstr "Värvustemperatuuri eelvaade"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -1813,17 +1771,15 @@ msgstr "Nõutava geomeetria eiramise reegli tüüp"
 
 #. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:151
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop 2"
+#, kde-format
 msgid "List of Desktop Ids"
-msgstr "Lülitumine töölauale 2"
+msgstr ""
 
 #. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:155
-#, fuzzy, kde-format
-#| msgid "Desktop number rule type"
+#, kde-format
 msgid "Desktop Ids rule type"
-msgstr "Töölauanumbri reegli tüüp"
+msgstr ""
 
 #. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:162
@@ -2373,20 +2329,17 @@ msgid "Show in &Activities"
 msgstr "Näita &tegevustes"
 
 #: useractions.cpp:524
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "Liiguta &töölauale"
+msgstr "Liiguta &aktiivsele töölauale"
 
 #: useractions.cpp:534 useractions.cpp:601
 #, kde-format
 msgid "&All Desktops"
-msgstr "Kõik tööl&auad"
+msgstr "&Kõik töölauad"
 
 #: useractions.cpp:574
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "&Uus töölaud"
@@ -2397,19 +2350,16 @@ msgid "Move to %1 %2"
 msgstr ""
 
 #: useractions.cpp:658
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
-msgstr "&Uus töölaud"
+msgstr "Lisa uuele töölauale"
 
 #: useractions.cpp:670
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
-msgstr "Liiguta &töölauale"
+msgstr "Liiguta uuele töölauale"
 
 #: useractions.cpp:701
 #, kde-format
@@ -2454,12 +2404,12 @@ msgstr "Akna maksimeerimine"
 #: useractions.cpp:994
 #, kde-format
 msgid "Maximize Window Vertically"
-msgstr "Akna maksimeerimine (püstiselt)"
+msgstr "Akna maksimeerimine püstiselt"
 
 #: useractions.cpp:996
 #, kde-format
 msgid "Maximize Window Horizontally"
-msgstr "Akna maksimeerimine (rõhtsalt)"
+msgstr "Akna maksimeerimine rõhtsalt"
 
 #: useractions.cpp:998
 #, kde-format
@@ -2489,7 +2439,7 @@ msgstr "Akna tõstmine"
 #: useractions.cpp:1008
 #, kde-format
 msgid "Lower Window"
-msgstr "Akna ikoonimine"
+msgstr "Akna langetamine"
 
 #: useractions.cpp:1010
 #, kde-format
@@ -2502,10 +2452,9 @@ msgid "Make Window Fullscreen"
 msgstr "Aken täisekraani"
 
 #: useractions.cpp:1014
-#, fuzzy, kde-format
-#| msgid "Hide Window Border"
+#, kde-format
 msgid "Toggle Window Border"
-msgstr "Aken piireteta"
+msgstr "Akna piirete lülitamine"
 
 #: useractions.cpp:1016
 #, kde-format
@@ -2528,10 +2477,9 @@ msgid "Setup Window Shortcut"
 msgstr "Akna kiirklahvi määramine"
 
 #: useractions.cpp:1024
-#, fuzzy, kde-format
-#| msgid "Move Window to Group"
+#, kde-format
 msgid "Move Window to the Center"
-msgstr "Liiguta aken rühma"
+msgstr "Akna liigutamine keskele"
 
 #: useractions.cpp:1026
 #, kde-format
@@ -2554,26 +2502,22 @@ msgid "Move Window Down"
 msgstr "Akna liigutamine alla"
 
 #: useractions.cpp:1034
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Expand Window Horizontally"
-msgstr "Akna maksimeerimine (rõhtsalt)"
+msgstr "Akna kasvatamine rõhtsalt"
 
 #: useractions.cpp:1036
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Expand Window Vertically"
-msgstr "Akna maksimeerimine (püstiselt)"
+msgstr "Akna kasvatamine püstiselt"
 
 #: useractions.cpp:1038
-#, fuzzy, kde-format
-#| msgid "Pack Shrink Window Horizontally"
+#, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Akna kahandamine rõhtsalt"
 
 #: useractions.cpp:1040
-#, fuzzy, kde-format
-#| msgid "Pack Shrink Window Vertically"
+#, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Akna kahandamine püstiselt"
 
@@ -2703,10 +2647,9 @@ msgid "Window to Previous Screen"
 msgstr "Aken eelmisele ekraanile"
 
 #: useractions.cpp:1107
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "Liiguta &töölauale"
+msgstr "Töölaua näitamine"
 
 #: useractions.cpp:1111
 #, kde-format
