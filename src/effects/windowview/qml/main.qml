@@ -166,7 +166,7 @@ Item {
             organized: container.organized
             showOnly: {
                 switch (container.effect.mode) {
-                    case WindowView.ModeWindowClass:
+                    case WindowView.ModeWindowClassAllDesktops:
                     case WindowView.ModeWindowClassCurrentDesktop:
                         return "activeClass";
                     default:

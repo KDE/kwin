@@ -5,6 +5,7 @@
 */
 
 #include "overvieweffect.h"
+#include "overview1adaptor.h"
 #include "overviewconfig.h"
 
 #include <KGlobalAccel>
@@ -18,9 +19,15 @@
 namespace KWin
 {
 
+static const QString s_dbusObjectPath = QStringLiteral("/org/kde/KWin/Effect/Overview1");
+
 OverviewEffect::OverviewEffect()
     : m_shutdownTimer(new QTimer(this))
 {
+
+    new Overview1Adaptor(this);
+    QDBusConnection::sessionBus().registerObject(s_dbusObjectPath, this);
+
     m_shutdownTimer->setSingleShot(true);
     connect(m_shutdownTimer, &QTimer::timeout, this, &OverviewEffect::realDeactivate);
 
@@ -78,6 +85,7 @@ OverviewEffect::OverviewEffect()
 
 OverviewEffect::~OverviewEffect()
 {
+    QDBusConnection::sessionBus().unregisterObject(s_dbusObjectPath);
 }
 
 QVariantMap OverviewEffect::initialProperties(EffectScreen *screen)

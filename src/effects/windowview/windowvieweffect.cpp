@@ -65,7 +65,7 @@ WindowViewEffect::WindowViewEffect()
     KGlobalAccel::self()->setShortcut(m_exposeClassAction, QList<QKeySequence>() << (Qt::CTRL | Qt::Key_F7));
     m_shortcutClass = KGlobalAccel::self()->shortcut(m_exposeClassAction);
     connect(m_exposeClassAction, &QAction::triggered, this, [this]() {
-        toggleMode(ModeWindowClass);
+        toggleMode(ModeWindowClassAllDesktops);
     });
 
     m_exposeClassCurrentDesktopAction->setObjectName(QStringLiteral("ExposeClassCurrentDesktop"));
@@ -229,7 +229,7 @@ void WindowViewEffect::reconfigure(ReconfigureFlags)
         } else if (m_touchBorderActivateAll.contains(border)) {
             setMode(ModeAllDesktops);
         } else if (m_touchBorderActivateClass.contains(border)) {
-            setMode(ModeWindowClass);
+            setMode(ModeWindowClassAllDesktops);
         } else if (m_touchBorderActivateClassCurrentDesktop.contains(border)) {
             setMode(ModeWindowClassCurrentDesktop);
         }
@@ -274,8 +274,8 @@ void WindowViewEffect::grabbedKeyboardEvent(QKeyEvent *e)
         } else if (m_mode == ModeAllDesktops && m_shortcutAll.contains(e->key() | e->modifiers())) {
             toggleMode(ModeAllDesktops);
             return;
-        } else if (m_mode == ModeWindowClass && m_shortcutClass.contains(e->key() | e->modifiers())) {
-            toggleMode(ModeWindowClass);
+        } else if (m_mode == ModeWindowClassAllDesktops && m_shortcutClass.contains(e->key() | e->modifiers())) {
+            toggleMode(ModeWindowClassAllDesktops);
             return;
         } else if (m_mode == ModeWindowClassCurrentDesktop && m_shortcutClassCurrentDesktop.contains(e->key() | e->modifiers())) {
             toggleMode(ModeWindowClassCurrentDesktop);
@@ -337,6 +337,30 @@ void WindowViewEffect::activate(const QStringList &windowIds)
         m_searchText = QString();
         setRunning(true);
     }
+}
+
+void WindowViewEffect::activateAllDesktops()
+{
+    setMode(ModeAllDesktops);
+    activate();
+}
+
+void WindowViewEffect::activateCurrentDesktop()
+{
+    setMode(ModeCurrentDesktop);
+    activate();
+}
+
+void WindowViewEffect::activateWindowClassAllDesktops()
+{
+    setMode(ModeWindowClassAllDesktops);
+    activate();
+}
+
+void WindowViewEffect::activateWindowClassCurrentDesktop()
+{
+    setMode(ModeWindowClassCurrentDesktop);
+    activate();
 }
 
 void WindowViewEffect::activate()
@@ -452,7 +476,7 @@ bool WindowViewEffect::borderActivated(ElectricBorder border)
     } else if (m_borderActivateAll.contains(border)) {
         toggleMode(ModeAllDesktops);
     } else if (m_borderActivateClass.contains(border)) {
-        toggleMode(ModeWindowClass);
+        toggleMode(ModeWindowClassAllDesktops);
     } else if (m_touchBorderActivateClassCurrentDesktop.contains(border)) {
         toggleMode(ModeWindowClassCurrentDesktop);
     } else {
