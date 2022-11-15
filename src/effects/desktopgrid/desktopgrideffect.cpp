@@ -5,6 +5,7 @@
 */
 
 #include "desktopgrideffect.h"
+#include "desktopgrid1adaptor.h"
 #include "desktopgridconfig.h"
 
 #include <QAction>
@@ -18,12 +19,17 @@
 namespace KWin
 {
 
+static const QString s_dbusObjectPath = QStringLiteral("/org/kde/KWin/Effect/DesktopGrid1");
+
 DesktopGridEffect::DesktopGridEffect()
     : m_shutdownTimer(new QTimer(this))
     , m_toggleAction(new QAction(this))
     , m_realtimeToggleAction(new QAction(this))
 {
     qmlRegisterUncreatableType<DesktopGridEffect>("org.kde.kwin.private.desktopgrid", 1, 0, "DesktopGridEffect", QStringLiteral("Cannot create elements of type DesktopGridEffect"));
+
+    new DesktopGrid1Adaptor(this);
+    QDBusConnection::sessionBus().registerObject(s_dbusObjectPath, this);
 
     m_shutdownTimer->setSingleShot(true);
     connect(m_shutdownTimer, &QTimer::timeout, this, &DesktopGridEffect::realDeactivate);
@@ -83,6 +89,7 @@ DesktopGridEffect::DesktopGridEffect()
 
 DesktopGridEffect::~DesktopGridEffect()
 {
+    QDBusConnection::sessionBus().unregisterObject(s_dbusObjectPath);
 }
 
 void DesktopGridEffect::reconfigure(ReconfigureFlags)

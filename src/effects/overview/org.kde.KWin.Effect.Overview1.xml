@@ -1,0 +1,22 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<!--
+    SPDX-FileCopyrightText: 2022 Natalie Clarius <natalie_clarius@yahoo.de>
+
+    SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+-->
+<node name="/org/kde/KWin/Effect/Overview1">
+    <!--
+        org.kde.KWin.Effect.Overview1:
+        @short_description: Window and desktop selector
+
+        This interface provides a way to select and organize windows and desktops interactively.
+    -->
+    <interface name="org.kde.KWin.Effect.Overview1">
+        <!--
+            activate:
+            @short_description: Activate overview effect
+        -->
+        <method name="activate"/>
+    </interface>
+</node>

@@ -2,6 +2,7 @@
 "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <!--
     SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2022 Natalie Clarius <natalie_clarius@yahoo.de>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 -->
@@ -15,10 +16,31 @@
     <interface name="org.kde.KWin.Effect.WindowView1">
         <!--
             activate:
+            @short_description: Activate window view  effect for a given list of windows
             @windows: The list with window ids.
         -->
         <method name="activate">
             <arg name="handles" type="as" direction="in" />
         </method>
+        <!--
+            activateAllDesktops:
+            @short_description: Activate window view effect for all windows on all desktops
+        -->
+        <method name="activateAllDesktops"/>
+        <!--
+            activateCurrentDesktop:
+            @short_description: Activate window view effect for all windows on the current desktop
+        -->
+        <method name="activateCurrentDesktop"/>
+        <!--
+            activateWindowClass:
+            @short_description: Activate window view effect for windows of the current application on all desktops
+        -->
+        <method name="activateWindowClassAllDesktops"/>
+        <!--
+            activateWindowClassCurrentDesktop:
+            @short_description: Activate window view effect for windows of the current application on the current desktop
+        -->
+        <method name="activateWindowClassCurrentDesktop"/>
     </interface>
 </node>

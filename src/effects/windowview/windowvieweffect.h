@@ -32,7 +32,7 @@ public:
         ModeAllDesktops, // Shows windows of all desktops
         ModeCurrentDesktop, // Shows windows on current desktop
         ModeWindowGroup, // Shows windows selected via property
-        ModeWindowClass, // Shows all windows of same class as selected class
+        ModeWindowClassAllDesktops, // Shows all windows of same class as selected class on all desktops
         ModeWindowClassCurrentDesktop, // Shows windows of same class on current desktop
     };
     Q_ENUM(PresentWindowsMode)
@@ -72,6 +72,10 @@ public:
 
 public Q_SLOTS:
     void activate(const QStringList &windowIds);
+    void activateAllDesktops();
+    void activateCurrentDesktop();
+    void activateWindowClassAllDesktops();
+    void activateWindowClassCurrentDesktop();
     void activate();
     void deactivate(int timeout);
 

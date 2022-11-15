@@ -1,0 +1,22 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<!--
+    SPDX-FileCopyrightText: 2022 Natalie Clarius <natalie_clarius@yahoo.de>
+
+    SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+-->
+<node name="/org/kde/KWin/Effect/DesktopGrid1">
+    <!--
+        org.kde.KWin.Effect.DesktopGrid1:
+        @short_description: Desktop selector
+
+        This interface provides a way to select desktops interactively.
+    -->
+    <interface name="org.kde.KWin.Effect.DesktopGrid1">
+        <!--
+            activate:
+            @short_description: Activate desktop grid effect
+        -->
+        <method name="activate"/>
+    </interface>
+</node>

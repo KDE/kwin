@@ -15,6 +15,10 @@ kconfig_add_kcfg_files(overview_SOURCES
     overviewconfig.kcfgc
 )
 
+qt_add_dbus_adaptor(overview_SOURCES org.kde.KWin.Effect.Overview1.xml overvieweffect.h KWin::OverviewEffect)
+
+qt_add_dbus_adaptor(overview_SOURCES org.kde.KWin.Effect.Overview1.xml overvieweffect.h KWin::OverviewEffect)
+
 kwin_add_builtin_effect(overview ${overview_SOURCES})
 target_link_libraries(overview PRIVATE
     kwineffects
