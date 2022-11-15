@@ -47,7 +47,7 @@ LockscreenOverlayV1Interface::~LockscreenOverlayV1Interface() = default;
 
 LockscreenOverlayV1Interface::LockscreenOverlayV1Interface(Display *display, QObject *parent)
     : QObject(parent)
-    , d(new LockscreenOverlayV1InterfacePrivate(display, this))
+    , d(std::make_unique<LockscreenOverlayV1InterfacePrivate>(display, this))
 {
 }
 

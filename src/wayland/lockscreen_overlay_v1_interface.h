@@ -11,6 +11,7 @@
 #include <QObject>
 #include <QVector>
 #include <functional>
+#include <memory>
 #include <optional>
 
 struct wl_resource;
@@ -37,7 +38,7 @@ Q_SIGNALS:
 private:
     friend class LockscreenOverlayV1InterfacePrivate;
     LockscreenOverlayV1Interface(LockscreenOverlayV1Interface *parent);
-    QScopedPointer<LockscreenOverlayV1InterfacePrivate> d;
+    std::unique_ptr<LockscreenOverlayV1InterfacePrivate> d;
 };
 
 }
