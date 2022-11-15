@@ -14,8 +14,8 @@
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/pointerconstraints.h>
-#include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/surface.h>
+#include <KWayland/Client/xdgdecoration.h>
 
 #include <KLocalizedString>
 
@@ -34,13 +34,9 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
     , m_xdgShellSurface(backend->display()->xdgShell()->createSurface(m_surface.get()))
     , m_backend(backend)
 {
-    if (KWayland::Client::ServerSideDecorationManager *ssdManager = backend->display()->serverSideDecorationManager()) {
-        m_serverDecoration.reset(ssdManager->create(m_surface.get()));
-        connect(m_serverDecoration.get(), &KWayland::Client::ServerSideDecoration::modeChanged, this, [this] {
-            if (m_serverDecoration->mode() != KWayland::Client::ServerSideDecoration::Mode::Server) {
-                m_serverDecoration->requestMode(KWayland::Client::ServerSideDecoration::Mode::Server);
-            }
-        });
+    if (KWayland::Client::XdgDecorationManager *manager = m_backend->display()->xdgDecorationManager()) {
+        m_xdgDecoration.reset(manager->getToplevelDecoration(m_xdgShellSurface.get()));
+        m_xdgDecoration->setMode(KWayland::Client::XdgDecoration::Mode::ServerSide);
     }
 
     setInformation(Information{
@@ -87,8 +83,9 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
 
 WaylandOutput::~WaylandOutput()
 {
-    m_xdgShellSurface->destroy();
-    m_surface->destroy();
+    m_xdgDecoration.reset();
+    m_xdgShellSurface.reset();
+    m_surface.reset();
 }
 
 bool WaylandOutput::isReady() const

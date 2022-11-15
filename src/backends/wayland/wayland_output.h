@@ -22,7 +22,7 @@ namespace Client
 class Surface;
 class Pointer;
 class LockedPointer;
-class ServerSideDecoration;
+class XdgDecoration;
 }
 }
 
@@ -63,7 +63,7 @@ private:
     std::unique_ptr<KWayland::Client::Surface> m_surface;
     std::unique_ptr<KWayland::Client::XdgShellSurface> m_xdgShellSurface;
     std::unique_ptr<KWayland::Client::LockedPointer> m_pointerLock;
-    std::unique_ptr<KWayland::Client::ServerSideDecoration> m_serverDecoration;
+    std::unique_ptr<KWayland::Client::XdgDecoration> m_xdgDecoration;
     WaylandBackend *const m_backend;
     QTimer m_turnOffTimer;
     bool m_hasPointerLock = false;

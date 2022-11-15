@@ -13,9 +13,9 @@
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/relativepointer.h>
 #include <KWayland/Client/seat.h>
-#include <KWayland/Client/server_decoration.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/subcompositor.h>
+#include <KWayland/Client/xdgdecoration.h>
 #include <KWayland/Client/xdgshell.h>
 
 #include <QMutex>
@@ -30,7 +30,7 @@
 #include "wayland-pointer-constraints-unstable-v1-client-protocol.h"
 #include "wayland-pointer-gestures-unstable-v1-server-protocol.h"
 #include "wayland-relative-pointer-unstable-v1-client-protocol.h"
-#include "wayland-server-decoration-client-protocol.h"
+#include "wayland-xdg-decoration-unstable-v1-client-protocol.h"
 #include "wayland-xdg-shell-client-protocol.h"
 
 namespace KWin
@@ -160,7 +160,7 @@ WaylandDisplay::~WaylandDisplay()
     m_pointerGestures.reset();
     m_relativePointerManager.reset();
     m_seat.reset();
-    m_serverSideDecorationManager.reset();
+    m_xdgDecorationManager.reset();
     m_shmPool.reset();
     m_subCompositor.reset();
     m_xdgShell.reset();
@@ -245,9 +245,9 @@ KWayland::Client::XdgShell *WaylandDisplay::xdgShell() const
     return m_xdgShell.get();
 }
 
-KWayland::Client::ServerSideDecorationManager *WaylandDisplay::serverSideDecorationManager() const
+KWayland::Client::XdgDecorationManager *WaylandDisplay::xdgDecorationManager() const
 {
-    return m_serverSideDecorationManager.get();
+    return m_xdgDecorationManager.get();
 }
 
 void WaylandDisplay::registry_global(void *data, wl_registry *registry, uint32_t name, const char *interface, uint32_t version)
@@ -281,9 +281,9 @@ void WaylandDisplay::registry_global(void *data, wl_registry *registry, uint32_t
     } else if (strcmp(interface, zwp_relative_pointer_manager_v1_interface.name) == 0) {
         display->m_relativePointerManager = std::make_unique<KWayland::Client::RelativePointerManager>();
         display->m_relativePointerManager->setup(static_cast<zwp_relative_pointer_manager_v1 *>(wl_registry_bind(registry, name, &zwp_relative_pointer_manager_v1_interface, std::min(version, 1u))));
-    } else if (strcmp(interface, org_kde_kwin_server_decoration_manager_interface.name) == 0) {
-        display->m_serverSideDecorationManager = std::make_unique<KWayland::Client::ServerSideDecorationManager>();
-        display->m_serverSideDecorationManager->setup(static_cast<org_kde_kwin_server_decoration_manager *>(wl_registry_bind(registry, name, &org_kde_kwin_server_decoration_manager_interface, std::min(version, 1u))));
+    } else if (strcmp(interface, zxdg_decoration_manager_v1_interface.name) == 0) {
+        display->m_xdgDecorationManager = std::make_unique<KWayland::Client::XdgDecorationManager>();
+        display->m_xdgDecorationManager->setup(static_cast<zxdg_decoration_manager_v1 *>(wl_registry_bind(registry, name, &zxdg_decoration_manager_v1_interface, std::min(version, 1u))));
     }
 }
 

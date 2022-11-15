@@ -22,9 +22,9 @@ class PointerConstraints;
 class PointerGestures;
 class RelativePointerManager;
 class Seat;
-class ServerSideDecorationManager;
 class ShmPool;
 class SubCompositor;
+class XdgDecorationManager;
 class XdgShell;
 }
 }
@@ -52,7 +52,7 @@ public:
     KWayland::Client::PointerGestures *pointerGestures() const;
     KWayland::Client::RelativePointerManager *relativePointerManager() const;
     KWayland::Client::Seat *seat() const;
-    KWayland::Client::ServerSideDecorationManager *serverSideDecorationManager() const;
+    KWayland::Client::XdgDecorationManager *xdgDecorationManager() const;
     KWayland::Client::ShmPool *shmPool() const;
     KWayland::Client::SubCompositor *subCompositor() const;
     KWayland::Client::XdgShell *xdgShell() const;
@@ -72,7 +72,7 @@ private:
     std::unique_ptr<KWayland::Client::PointerGestures> m_pointerGestures;
     std::unique_ptr<KWayland::Client::RelativePointerManager> m_relativePointerManager;
     std::unique_ptr<KWayland::Client::Seat> m_seat;
-    std::unique_ptr<KWayland::Client::ServerSideDecorationManager> m_serverSideDecorationManager;
+    std::unique_ptr<KWayland::Client::XdgDecorationManager> m_xdgDecorationManager;
     std::unique_ptr<KWayland::Client::ShmPool> m_shmPool;
     std::unique_ptr<KWayland::Client::SubCompositor> m_subCompositor;
     std::unique_ptr<KWayland::Client::XdgShell> m_xdgShell;
