@@ -2,6 +2,7 @@
 "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <!--
     SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2022 Natalie Clarius <natalie_clarius@yahoo.de>
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 -->
@@ -20,5 +21,9 @@
         <method name="activate">
             <arg name="handles" type="as" direction="in" />
         </method>
+        <method name="activateAllDesktops"/>
+        <method name="activateCurrentDesktop"/>
+        <method name="activateWindowClassAllDesktops"/>
+        <method name="activateWindowClassCurrentDesktop"/>
     </interface>
 </node>
