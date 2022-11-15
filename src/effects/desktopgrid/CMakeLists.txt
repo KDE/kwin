@@ -11,6 +11,7 @@ kconfig_add_kcfg_files(desktopgrid_SOURCES
     desktopgridconfig.kcfgc
 )
 
+qt_add_dbus_adaptor(desktopgrid_SOURCES org.kde.KWin.Effect.DesktopGrid1.xml desktopgrideffect.h KWin::DesktopGridEffect)
 
 kwin4_add_effect_module(kwin4_effect_desktopgrid ${desktopgrid_SOURCES})
 
