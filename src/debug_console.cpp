@@ -620,6 +620,7 @@ DebugConsole::DebugConsole()
         m_ui->tabWidget->setTabEnabled(1, false);
         m_ui->tabWidget->setTabEnabled(2, false);
         m_ui->tabWidget->setTabEnabled(6, false);
+        setWindowFlags(Qt::X11BypassWindowManagerHint);
     }
 
     connect(m_ui->quitButton, &QAbstractButton::clicked, this, &DebugConsole::deleteLater);
@@ -648,9 +649,6 @@ DebugConsole::DebugConsole()
             });
         }
     });
-
-    // for X11
-    setWindowFlags(Qt::X11BypassWindowManagerHint);
 
     initGLTab();
 }
