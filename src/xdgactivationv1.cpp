@@ -128,7 +128,7 @@ void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, cons
 
     auto ownerWindow = waylandServer()->findWindow(m_currentActivationToken->surface);
     qCDebug(KWIN_CORE) << "activating" << window << surface << "on behalf of" << m_currentActivationToken->surface << "into" << ownerWindow;
-    if (ws->activeWindow() == ownerWindow || ws->activeWindow()->lastUsageSerial() < m_currentActivationToken->serial || m_currentActivationToken->isPrivileged) {
+    if (!ws->activeWindow() || ws->activeWindow() == ownerWindow || ws->activeWindow()->lastUsageSerial() < m_currentActivationToken->serial || m_currentActivationToken->isPrivileged) {
         ws->activateWindow(window);
     } else {
         qCWarning(KWIN_CORE) << "Activation requested while owner isn't active" << (ownerWindow ? ownerWindow->desktopFileName() : "null")
