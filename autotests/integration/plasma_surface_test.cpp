@@ -60,9 +60,8 @@ void PlasmaSurfaceTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    kwinApp()->outputBackend()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
-    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 1));
+    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, QVector<QRect>() << QRect(0, 0, 1280, 1024)));
 
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
@@ -197,7 +196,6 @@ void PlasmaSurfaceTest::testOSDPlacement()
     const QVector<QRect> geometries{QRect(0, 0, 1280, 1024), QRect(1280, 0, 1280, 1024)};
     QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs",
                               Qt::DirectConnection,
-                              Q_ARG(int, 2),
                               Q_ARG(QVector<QRect>, geometries));
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);

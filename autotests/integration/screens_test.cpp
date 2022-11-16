@@ -43,9 +43,8 @@ void ScreensTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    kwinApp()->outputBackend()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
-    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
+    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, QVector<QRect>() << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024)));
 
     kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 
@@ -85,7 +84,7 @@ void ScreensTest::cleanup()
     workspace()->slotReconfigure();
 
     // Reset the screen layout of the test environment.
-    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
+    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, QVector<QRect>() << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024)));
 }
 
 void ScreensTest::testCurrent_data()
@@ -132,8 +131,7 @@ void ScreensTest::testCurrentWithFollowsMouse()
     workspace()->slotReconfigure();
 
     QFETCH(QVector<QRect>, geometries);
-    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection,
-                              Q_ARG(int, geometries.count()), Q_ARG(QVector<QRect>, geometries));
+    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, geometries));
 
     QFETCH(QPoint, cursorPos);
     KWin::Cursors::self()->mouse()->setPos(cursorPos);
@@ -158,8 +156,7 @@ void ScreensTest::testCurrentPoint_data()
 void ScreensTest::testCurrentPoint()
 {
     QFETCH(QVector<QRect>, geometries);
-    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection,
-                              Q_ARG(int, geometries.count()), Q_ARG(QVector<QRect>, geometries));
+    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, geometries));
 
     // Disable "active screen follows mouse"
     auto group = kwinApp()->config()->group("Windows");

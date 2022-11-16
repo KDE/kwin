@@ -66,23 +66,15 @@ Outputs VirtualBackend::outputs() const
     return m_outputs;
 }
 
-void VirtualBackend::setVirtualOutputs(int count, QVector<QRect> geometries, QVector<int> scales)
+void VirtualBackend::setVirtualOutputs(const QVector<QRect> &geometries, QVector<int> scales)
 {
-    Q_ASSERT(geometries.size() == 0 || geometries.size() == count);
-    Q_ASSERT(scales.size() == 0 || scales.size() == count);
+    Q_ASSERT(scales.size() == 0 || scales.size() == geometries.size());
 
     const QVector<VirtualOutput *> removed = m_outputs;
 
-    int sumWidth = 0;
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i < geometries.size(); i++) {
         VirtualOutput *vo = new VirtualOutput(this);
-        if (geometries.size()) {
-            const QRect geo = geometries.at(i);
-            vo->init(geo.topLeft(), geo.size());
-        } else {
-            vo->init(QPoint(sumWidth, 0), initialWindowSize());
-            sumWidth += initialWindowSize().width();
-        }
+        vo->init(geometries[i].topLeft(), geometries[i].size());
         if (scales.size()) {
             vo->updateScale(scales.at(i));
         }

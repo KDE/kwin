@@ -134,9 +134,8 @@ void PointerInputTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    kwinApp()->outputBackend()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
-    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
+    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, QVector<QRect>() << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024)));
 
     kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 
@@ -378,7 +377,6 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     // now let's remove the screen containing the cursor
     QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs",
                               Qt::DirectConnection,
-                              Q_ARG(int, 1),
                               Q_ARG(QVector<QRect>, QVector<QRect>{QRect(0, 0, 1280, 1024)}));
     QCOMPARE(workspace()->outputs().count(), 1);
 
@@ -590,7 +588,7 @@ void PointerInputTest::testModifierClickUnrestrictedFullscreenMove()
 {
     // this test ensures that Meta+mouse button press triggers unrestricted move for fullscreen windows
     if (workspace()->outputs().size() < 2) {
-        QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
+        QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, QVector<QRect>() << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024)));
     }
 
     // first modify the config for this run
@@ -1564,10 +1562,7 @@ void PointerInputTest::testConfineToScreenGeometry()
         QRect(1280, 0, 1280, 1024),
         QRect(2560, 0, 1280, 1024),
         QRect(1280, 1024, 1280, 1024)};
-    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs",
-                              Qt::DirectConnection,
-                              Q_ARG(int, geometries.count()),
-                              Q_ARG(QVector<QRect>, geometries));
+    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, geometries));
 
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), geometries.count());

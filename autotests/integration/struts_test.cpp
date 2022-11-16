@@ -62,9 +62,8 @@ void StrutsTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    kwinApp()->outputBackend()->setInitialWindowSize(QSize(1280, 1024));
     QVERIFY(waylandServer()->init(s_socketName));
-    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(int, 2));
+    QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, QVector<QRect>() << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024)));
 
     // set custom config which disables the Outline
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
@@ -680,7 +679,6 @@ void StrutsTest::test363804()
     const QVector<QRect> geometries{QRect(0, 0, 1920, 1080), QRect(554, 1080, 1366, 768)};
     QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs",
                               Qt::DirectConnection,
-                              Q_ARG(int, 2),
                               Q_ARG(QVector<QRect>, geometries));
     QCOMPARE(workspace()->geometry(), QRect(0, 0, 1920, 1848));
 
@@ -762,7 +760,6 @@ void StrutsTest::testLeftScreenSmallerBottomAligned()
     const QVector<QRect> geometries{QRect(0, 282, 1366, 768), QRect(1366, 0, 1680, 1050)};
     QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs",
                               Qt::DirectConnection,
-                              Q_ARG(int, 2),
                               Q_ARG(QVector<QRect>, geometries));
     QCOMPARE(workspace()->geometry(), QRect(0, 0, 3046, 1050));
 
@@ -876,7 +873,6 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     const QVector<QRect> geometries{QRect(0, 282, 1366, 768), QRect(1366, 0, 1680, 1050)};
     QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs",
                               Qt::DirectConnection,
-                              Q_ARG(int, 2),
                               Q_ARG(QVector<QRect>, geometries));
     QCOMPARE(workspace()->geometry(), QRect(0, 0, 3046, 1050));
 
