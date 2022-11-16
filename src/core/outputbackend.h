@@ -74,31 +74,6 @@ public:
      */
     void setSceneEglGlobalShareContext(EGLContext context);
 
-    void setInitialWindowSize(const QSize &size)
-    {
-        m_initialWindowSize = size;
-    }
-    void setDeviceIdentifier(const QByteArray &identifier)
-    {
-        m_deviceIdentifier = identifier;
-    }
-    int initialOutputCount() const
-    {
-        return m_initialOutputCount;
-    }
-    void setInitialOutputCount(int count)
-    {
-        m_initialOutputCount = count;
-    }
-    qreal initialOutputScale() const
-    {
-        return m_initialOutputScale;
-    }
-    void setInitialOutputScale(qreal scale)
-    {
-        m_initialOutputScale = scale;
-    }
-
     /**
      * The CompositingTypes supported by the Platform.
      * The first item should be the most preferred one.
@@ -143,20 +118,8 @@ Q_SIGNALS:
 
 protected:
     explicit OutputBackend(QObject *parent = nullptr);
-    QSize initialWindowSize() const
-    {
-        return m_initialWindowSize;
-    }
-    QByteArray deviceIdentifier() const
-    {
-        return m_deviceIdentifier;
-    }
 
 private:
-    QSize m_initialWindowSize;
-    QByteArray m_deviceIdentifier;
-    int m_initialOutputCount = 1;
-    qreal m_initialOutputScale = 1;
     EGLDisplay m_eglDisplay;
     EGLContext m_globalShareContext = EGL_NO_CONTEXT;
 };
