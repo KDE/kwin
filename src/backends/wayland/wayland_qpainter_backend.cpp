@@ -10,10 +10,8 @@
 #include "wayland_qpainter_backend.h"
 #include "wayland_backend.h"
 #include "wayland_display.h"
-#include "wayland_output.h"
-
-#include "composite.h"
 #include "wayland_logging.h"
+#include "wayland_output.h"
 
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/shm_pool.h>

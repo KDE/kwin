@@ -15,19 +15,15 @@
 
 #include "wayland_backend.h"
 #include "wayland_display.h"
-#include "wayland_output.h"
-
-#include "composite.h"
-#include "kwinglutils.h"
-#include "options.h"
 #include "wayland_logging.h"
-#include "wayland_server.h"
+#include "wayland_output.h"
 
 #include <fcntl.h>
 #include <unistd.h>
 
 // kwin libs
 #include <kwinglplatform.h>
+#include <kwinglutils.h>
 
 // KDE
 #include <KWayland/Client/surface.h>
