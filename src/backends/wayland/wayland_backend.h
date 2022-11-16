@@ -220,6 +220,14 @@ private:
     std::unique_ptr<WaylandInputDevice> m_touchDevice;
 };
 
+struct WaylandBackendOptions
+{
+    QString socketName;
+    int outputCount = 1;
+    qreal outputScale = 1;
+    QSize outputSize = QSize(1024, 768);
+};
+
 /**
  * @brief Class encapsulating all Wayland data structures needed by the Egl backend.
  *
@@ -231,7 +239,7 @@ class KWIN_EXPORT WaylandBackend : public OutputBackend
     Q_OBJECT
 
 public:
-    explicit WaylandBackend(QObject *parent = nullptr);
+    explicit WaylandBackend(const WaylandBackendOptions &options, QObject *parent = nullptr);
     ~WaylandBackend() override;
     bool initialize() override;
 
@@ -288,8 +296,9 @@ Q_SIGNALS:
 private:
     void createOutputs();
     void destroyOutputs();
-    WaylandOutput *createOutput(const QString &name, const QSize &size);
+    WaylandOutput *createOutput(const QString &name, const QSize &size, qreal scale);
 
+    WaylandBackendOptions m_options;
     std::unique_ptr<WaylandDisplay> m_display;
     std::unique_ptr<WaylandSeat> m_seat;
     WaylandEglBackend *m_eglBackend = nullptr;

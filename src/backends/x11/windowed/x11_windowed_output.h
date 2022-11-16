@@ -38,7 +38,7 @@ public:
     RenderLoop *renderLoop() const override;
     SoftwareVsyncMonitor *vsyncMonitor() const;
 
-    void init(const QSize &pixelSize);
+    void init(const QSize &pixelSize, qreal scale);
     void resize(const QSize &pixelSize);
 
     xcb_window_t window() const

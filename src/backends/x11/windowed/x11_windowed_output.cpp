@@ -74,7 +74,7 @@ SoftwareVsyncMonitor *X11WindowedOutput::vsyncMonitor() const
     return m_vsyncMonitor.get();
 }
 
-void X11WindowedOutput::init(const QSize &pixelSize)
+void X11WindowedOutput::init(const QSize &pixelSize, qreal scale)
 {
     const int refreshRate = 60000; // TODO: get refresh rate via randr
     m_renderLoop->setRefreshRate(refreshRate);
@@ -85,7 +85,7 @@ void X11WindowedOutput::init(const QSize &pixelSize)
     State initialState;
     initialState.modes = {mode};
     initialState.currentMode = mode;
-    initialState.scale = m_backend->initialOutputScale();
+    initialState.scale = scale;
     setState(initialState);
 
     const uint32_t eventMask = XCB_EVENT_MASK_KEY_PRESS

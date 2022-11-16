@@ -450,7 +450,6 @@ int main(int argc, char *argv[])
     BackendType backendType;
     QString pluginName;
     QSize initialWindowSize;
-    QByteArray deviceIdentifier;
     int outputCount = 1;
     qreal outputScale = 1;
 
@@ -459,10 +458,8 @@ int main(int argc, char *argv[])
         backendType = BackendType::Kms;
     } else if (parser.isSet(x11DisplayOption)) {
         backendType = BackendType::X11;
-        deviceIdentifier = parser.value(x11DisplayOption).toUtf8();
     } else if (parser.isSet(waylandDisplayOption)) {
         backendType = BackendType::Wayland;
-        deviceIdentifier = parser.value(waylandDisplayOption).toUtf8();
     } else if (parser.isSet(virtualFbOption)) {
         backendType = BackendType::Virtual;
     } else {
@@ -560,31 +557,35 @@ int main(int argc, char *argv[])
         a.setSession(KWin::Session::create(KWin::Session::Type::Noop));
         a.setOutputBackend(std::make_unique<KWin::VirtualBackend>());
         break;
-    case BackendType::X11:
-        a.setSession(KWin::Session::create(KWin::Session::Type::Noop));
-        a.setOutputBackend(std::make_unique<KWin::X11WindowedBackend>());
-        if (deviceIdentifier.isEmpty()) {
-            a.outputBackend()->setDeviceIdentifier(qgetenv("DISPLAY"));
-        } else {
-            a.outputBackend()->setDeviceIdentifier(deviceIdentifier);
+    case BackendType::X11: {
+        QString display = parser.value(x11DisplayOption);
+        if (display.isEmpty()) {
+            display = qgetenv("DISPLAY");
         }
-        break;
-    case BackendType::Wayland:
         a.setSession(KWin::Session::create(KWin::Session::Type::Noop));
-        a.setOutputBackend(std::make_unique<KWin::Wayland::WaylandBackend>());
-        if (deviceIdentifier.isEmpty()) {
-            a.outputBackend()->setDeviceIdentifier(qgetenv("WAYLAND_DISPLAY"));
-        } else {
-            a.outputBackend()->setDeviceIdentifier(deviceIdentifier);
-        }
+        a.setOutputBackend(std::make_unique<KWin::X11WindowedBackend>(KWin::X11WindowedBackendOptions{
+            .display = display,
+            .outputCount = outputCount,
+            .outputScale = outputScale,
+            .outputSize = initialWindowSize,
+        }));
         break;
     }
-
-    if (initialWindowSize.isValid()) {
-        a.outputBackend()->setInitialWindowSize(initialWindowSize);
+    case BackendType::Wayland: {
+        QString socketName = parser.value(waylandDisplayOption);
+        if (socketName.isEmpty()) {
+            socketName = qgetenv("WAYLAND_DISPLAY");
+        }
+        a.setSession(KWin::Session::create(KWin::Session::Type::Noop));
+        a.setOutputBackend(std::make_unique<KWin::Wayland::WaylandBackend>(KWin::Wayland::WaylandBackendOptions{
+            .socketName = socketName,
+            .outputCount = outputCount,
+            .outputScale = outputScale,
+            .outputSize = initialWindowSize,
+        }));
+        break;
     }
-    a.outputBackend()->setInitialOutputScale(outputScale);
-    a.outputBackend()->setInitialOutputCount(outputCount);
+    }
 
     QObject::connect(&a, &KWin::Application::workspaceCreated, server, &KWin::WaylandServer::initWorkspace);
     if (!server->socketName().isEmpty()) {

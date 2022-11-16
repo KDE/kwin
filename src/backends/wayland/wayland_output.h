@@ -41,7 +41,7 @@ public:
 
     RenderLoop *renderLoop() const override;
 
-    void init(const QSize &pixelSize);
+    void init(const QSize &pixelSize, qreal scale);
 
     bool isReady() const;
     KWayland::Client::Surface *surface() const;

@@ -153,7 +153,8 @@ void X11WindowedInputBackend::initialize()
     }
 }
 
-X11WindowedBackend::X11WindowedBackend()
+X11WindowedBackend::X11WindowedBackend(const X11WindowedBackendOptions &options)
+    : m_options(options)
 {
 }
 
@@ -181,7 +182,7 @@ bool X11WindowedBackend::initialize()
 {
     int screen = 0;
     xcb_connection_t *c = nullptr;
-    Display *xDisplay = XOpenDisplay(deviceIdentifier().constData());
+    Display *xDisplay = XOpenDisplay(m_options.display.toLatin1().constData());
     if (xDisplay) {
         c = XGetXCBConnection(xDisplay);
         XSetEventQueueOwner(xDisplay, XCBOwnsEventQueue);
@@ -268,12 +269,10 @@ void X11WindowedBackend::createOutputs()
 
     // we need to multiply the initial window size with the scale in order to
     // create an output window of this size in the end
-    const int pixelWidth = initialWindowSize().width() * initialOutputScale() + 0.5;
-    const int pixelHeight = initialWindowSize().height() * initialOutputScale() + 0.5;
-
-    for (int i = 0; i < initialOutputCount(); ++i) {
+    const QSize pixelSize = m_options.outputSize * m_options.outputScale;
+    for (int i = 0; i < m_options.outputCount; ++i) {
         auto *output = new X11WindowedOutput(this);
-        output->init(QSize(pixelWidth, pixelHeight));
+        output->init(pixelSize, m_options.outputScale);
 
         m_protocols = protocolsAtom;
         m_deleteWindowProtocol = deleteWindowAtom;

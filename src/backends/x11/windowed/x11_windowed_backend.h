@@ -81,12 +81,20 @@ private:
     X11WindowedBackend *m_backend;
 };
 
+struct X11WindowedBackendOptions
+{
+    QString display;
+    int outputCount = 1;
+    qreal outputScale = 1;
+    QSize outputSize = QSize(1024, 768);
+};
+
 class KWIN_EXPORT X11WindowedBackend : public OutputBackend
 {
     Q_OBJECT
 
 public:
-    explicit X11WindowedBackend();
+    explicit X11WindowedBackend(const X11WindowedBackendOptions &options);
     ~X11WindowedBackend() override;
     bool initialize() override;
 
@@ -146,6 +154,7 @@ private:
     void initXInput();
     X11WindowedOutput *findOutput(xcb_window_t window) const;
 
+    X11WindowedBackendOptions m_options;
     xcb_connection_t *m_connection = nullptr;
     xcb_screen_t *m_screen = nullptr;
     xcb_key_symbols_t *m_keySymbols = nullptr;

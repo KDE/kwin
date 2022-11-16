@@ -534,8 +534,9 @@ void WaylandSeat::destroyTouchDevice()
     }
 }
 
-WaylandBackend::WaylandBackend(QObject *parent)
+WaylandBackend::WaylandBackend(const WaylandBackendOptions &options, QObject *parent)
     : OutputBackend(parent)
+    , m_options(options)
 {
 #if HAVE_WAYLAND_EGL
     char const *drm_render_node = "/dev/dri/renderD128";
@@ -570,7 +571,7 @@ WaylandBackend::~WaylandBackend()
 bool WaylandBackend::initialize()
 {
     m_display = std::make_unique<WaylandDisplay>();
-    if (!m_display->initialize(deviceIdentifier())) {
+    if (!m_display->initialize(m_options.socketName)) {
         return false;
     }
 
@@ -613,9 +614,9 @@ void WaylandBackend::createOutputs()
 {
     // we need to multiply the initial window size with the scale in order to
     // create an output window of this size in the end
-    const QSize nativeSize = initialWindowSize() * initialOutputScale();
-    for (int i = 0; i < initialOutputCount(); i++) {
-        WaylandOutput *output = createOutput(QStringLiteral("WL-%1").arg(i), nativeSize);
+    const QSize pixelSize = m_options.outputSize * m_options.outputScale;
+    for (int i = 0; i < m_options.outputCount; i++) {
+        WaylandOutput *output = createOutput(QStringLiteral("WL-%1").arg(i), pixelSize, m_options.outputScale);
         m_outputs << output;
         Q_EMIT outputAdded(output);
         output->updateEnabled(true);
@@ -624,10 +625,10 @@ void WaylandBackend::createOutputs()
     Q_EMIT outputsQueried();
 }
 
-WaylandOutput *WaylandBackend::createOutput(const QString &name, const QSize &size)
+WaylandOutput *WaylandBackend::createOutput(const QString &name, const QSize &size, qreal scale)
 {
     WaylandOutput *waylandOutput = new WaylandOutput(name, this);
-    waylandOutput->init(size);
+    waylandOutput->init(size, scale);
 
     // Wait until the output window is configured by the host compositor.
     while (!waylandOutput->isReady()) {
@@ -750,7 +751,7 @@ void WaylandBackend::clearDpmsFilter()
 
 Output *WaylandBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
-    return createOutput(name, size * scale);
+    return createOutput(name, size * scale, scale);
 }
 
 void WaylandBackend::removeVirtualOutput(Output *output)

@@ -103,7 +103,7 @@ RenderLoop *WaylandOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
-void WaylandOutput::init(const QSize &pixelSize)
+void WaylandOutput::init(const QSize &pixelSize, qreal scale)
 {
     m_renderLoop->setRefreshRate(s_refreshRate);
 
@@ -112,7 +112,7 @@ void WaylandOutput::init(const QSize &pixelSize)
     State initialState;
     initialState.modes = {mode};
     initialState.currentMode = mode;
-    initialState.scale = m_backend->initialOutputScale();
+    initialState.scale = scale;
     setState(initialState);
 
     m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
