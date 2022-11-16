@@ -13,6 +13,8 @@
 #include <QDataStream>
 #include <QRect>
 #include <QStringList>
+#include <memory>
+#include <vector>
 
 #include <KConfigGroup>
 
@@ -36,14 +38,13 @@ public:
     };
 
     SessionManager(QObject *parent);
-    ~SessionManager() override;
 
     SessionState state() const;
 
     void loadSubSessionInfo(const QString &name);
     void storeSubSession(const QString &name, QSet<QByteArray> sessionIds);
 
-    SessionInfo *takeSessionInfo(X11Window *);
+    std::unique_ptr<SessionInfo> takeSessionInfo(X11Window *);
 
 Q_SIGNALS:
     void stateChanged();
@@ -72,7 +73,7 @@ private:
     int m_sessionActiveClient;
     int m_sessionDesktop;
 
-    QList<SessionInfo *> session;
+    std::vector<std::unique_ptr<SessionInfo>> session;
 };
 
 struct SessionInfo

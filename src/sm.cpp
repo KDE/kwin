@@ -225,8 +225,7 @@ void SessionManager::addSessionInfo(KConfigGroup &cg)
     int active_client = cg.readEntry("active", 0);
     for (int i = 1; i <= count; i++) {
         QString n = QString::number(i);
-        SessionInfo *info = new SessionInfo;
-        session.append(info);
+        auto info = std::make_unique<SessionInfo>();
         info->sessionId = cg.readEntry(QLatin1String("sessionId") + n, QString()).toLatin1();
         info->windowRole = cg.readEntry(QLatin1String("windowRole") + n, QString());
         info->wmCommand = cg.readEntry(QLatin1String("wmCommand") + n, QString()).toLatin1();
@@ -253,6 +252,7 @@ void SessionManager::addSessionInfo(KConfigGroup &cg)
         info->active = (active_client == i);
         info->stackingOrder = cg.readEntry(QLatin1String("stackingOrder") + n, -1);
         info->activities = cg.readEntry(QLatin1String("activities") + n, QStringList());
+        session.push_back(std::move(info));
     }
 }
 
@@ -280,9 +280,8 @@ static bool sessionInfoWindowTypeMatch(X11Window *c, SessionInfo *info)
  *
  * May return 0 if there's no session info for the client.
  */
-SessionInfo *SessionManager::takeSessionInfo(X11Window *c)
+std::unique_ptr<SessionInfo> SessionManager::takeSessionInfo(X11Window *c)
 {
-    SessionInfo *realInfo = nullptr;
     QByteArray sessionId = c->sessionId();
     QString windowRole = c->windowRole();
     QString wmCommand = c->wmCommand();
@@ -292,43 +291,38 @@ SessionInfo *SessionManager::takeSessionInfo(X11Window *c)
     // First search ``session''
     if (!sessionId.isEmpty()) {
         // look for a real session managed client (algorithm suggested by ICCCM)
-        for (SessionInfo *info : std::as_const(session)) {
-            if (realInfo) {
-                break;
-            }
-            if (info->sessionId == sessionId && sessionInfoWindowTypeMatch(c, info)) {
+        const auto it = std::find_if(session.begin(), session.end(), [c, sessionId, windowRole, wmCommand, resourceName, resourceClass](const auto &info) {
+            if (info->sessionId == sessionId && sessionInfoWindowTypeMatch(c, info.get())) {
                 if (!windowRole.isEmpty()) {
-                    if (info->windowRole == windowRole) {
-                        realInfo = info;
-                        session.removeAll(info);
-                    }
+                    return info->windowRole == windowRole;
                 } else {
-                    if (info->windowRole.isEmpty()
+                    return info->windowRole.isEmpty()
                         && info->resourceName == resourceName
-                        && info->resourceClass == resourceClass) {
-                        realInfo = info;
-                        session.removeAll(info);
-                    }
+                        && info->resourceClass == resourceClass;
                 }
+            } else {
+                return false;
             }
+        });
+        if (it != session.end()) {
+            auto tmp = std::move(*it);
+            session.erase(it);
+            return tmp;
         }
     } else {
-        // look for a sessioninfo with matching features.
-        for (SessionInfo *info : std::as_const(session)) {
-            if (realInfo) {
-                break;
-            }
-            if (info->resourceName == resourceName
+        const auto it = std::find_if(session.begin(), session.end(), [c, resourceName, wmCommand, resourceClass](const auto &info) {
+            return info->resourceName == resourceName
                 && info->resourceClass == resourceClass
-                && sessionInfoWindowTypeMatch(c, info)) {
-                if (wmCommand.isEmpty() || info->wmCommand == wmCommand) {
-                    realInfo = info;
-                    session.removeAll(info);
-                }
-            }
+                && sessionInfoWindowTypeMatch(c, info.get())
+                && (wmCommand.isEmpty() || info->wmCommand == wmCommand);
+        });
+        if (it != session.end()) {
+            auto tmp = std::move(*it);
+            session.erase(it);
+            return tmp;
         }
     }
-    return realInfo;
+    return nullptr;
 }
 
 SessionManager::SessionManager(QObject *parent)
@@ -336,11 +330,6 @@ SessionManager::SessionManager(QObject *parent)
 {
     new SessionAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Session"), this);
-}
-
-SessionManager::~SessionManager()
-{
-    qDeleteAll(session);
 }
 
 SessionState SessionManager::state() const

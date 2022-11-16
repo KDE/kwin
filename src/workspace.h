@@ -349,8 +349,6 @@ public:
     void updateOnAllDesktopsOfTransients(Window *);
     void checkTransients(xcb_window_t w);
 
-    SessionInfo *takeSessionInfo(X11Window *);
-
     // D-Bus interface
     QString supportInformation() const;
 
