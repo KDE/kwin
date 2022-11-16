@@ -208,6 +208,8 @@ void Workspace::init()
     connect(options, &Options::separateScreenFocusChanged, m_focusChain.get(), &FocusChain::setSeparateScreenFocus);
     m_focusChain->setSeparateScreenFocus(options->isSeparateScreenFocus());
 
+    connect(Cursors::self()->mouse(), &Cursor::mouseChanged, this, &Workspace::clampPointerToOutputGeometry);
+
     slotOutputBackendOutputsQueried();
     connect(kwinApp()->outputBackend(), &OutputBackend::outputsQueried, this, &Workspace::slotOutputBackendOutputsQueried);
 
@@ -1551,6 +1553,16 @@ void Workspace::sendWindowToDesktop(Window *window, int desk, bool dont_activate
 void Workspace::sendWindowToOutput(Window *window, Output *output)
 {
     window->sendToOutput(output);
+}
+
+void Workspace::clampPointerToOutputGeometry(const QPoint cursorPos)
+{
+    const Output *output = outputAt(cursorPos);
+    if (!output->geometry().contains(cursorPos)) {
+        Cursors::self()->mouse()->setPos(QPoint(
+            std::clamp(cursorPos.x(), output->geometry().left(), output->geometry().right()),
+            std::clamp(cursorPos.y(), output->geometry().top(), output->geometry().bottom())));
+    }
 }
 
 /**

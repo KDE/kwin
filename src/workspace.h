@@ -393,6 +393,8 @@ public:
     qreal packPositionUp(const Window *window, qreal oldY, bool topEdge) const;
     qreal packPositionDown(const Window *window, qreal oldY, bool bottomEdge) const;
 
+    void clampPointerToOutputGeometry(const QPoint cursorPos);
+
     void cancelDelayFocus();
     void requestDelayFocus(Window *);
 
