@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1638275 2022-11-16 01:41:52Z scripty $
+# $Id: kwin.po 1638358 2022-11-17 01:35:03Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-16 00:48+0000\n"
+"POT-Creation-Date: 2022-11-17 00:47+0000\n"
 "PO-Revision-Date: 2022-11-06 08:13+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -43,14 +43,14 @@ msgstr ""
 "roman.maurer@amis.net,gregor.rakar@kiss.si,jlp@holodeck1.com,andrejm@ubuntu."
 "si,matjaz.jeran@amis.net,miles@filmsi.net"
 
-#: composite.cpp:622
+#: composite.cpp:611
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Namizni učinki so bili znova zagnani zaradi ponovnega zagona grafičnega "
 "sistema"
 
-#: composite.cpp:851
+#: composite.cpp:840
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -59,7 +59,7 @@ msgstr ""
 "Nek program je prestavil namizne učinke v pripravljenost.<br/>Da jih spet "
 "vklopite, lahko uporabite bližnjico »%1«."
 
-#: composite.cpp:1040
+#: composite.cpp:1029
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -73,12 +73,12 @@ msgstr ""
 "to zaščito, a <b>zavedajte se, da ima to lahko za posledico takojšnje "
 "sesutje!</b></p>"
 
-#: composite.cpp:1047
+#: composite.cpp:1036
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Zahtevani razširitvi X (XComposite in XDamage) nista na voljo."
 
-#: composite.cpp:1050
+#: composite.cpp:1039
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ni na voljo."

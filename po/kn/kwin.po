@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-16 00:48+0000\n"
+"POT-Creation-Date: 2022-11-17 00:47+0000\n"
 "PO-Revision-Date: 2011-07-11 12:17+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <kde-l10n-kn@kde.org>\n"
@@ -32,12 +32,12 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "umeshrs@gmail.com,svenkate@redhat.com,ashok567@gmail.com "
 
-#: composite.cpp:622
+#: composite.cpp:611
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 
-#: composite.cpp:851
+#: composite.cpp:840
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -46,7 +46,7 @@ msgstr ""
 "ಗಣಕತೆರೆ ಪರಿಣಾಮಗಳನ್ನು ಮತ್ತೊಂದು ಅನ್ವಯಿಕ ಅಮಾನತುಗೊಳಿಸಿರಬಹುದು <br/>ನೀವು '%1' "
 "ಶೀಘ್ರಕೀಲಿಗಳನ್ನು ಬಳಸಿ ಮುಂದುವರೆಸಬಹುದು."
 
-#: composite.cpp:1040
+#: composite.cpp:1029
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -55,12 +55,12 @@ msgid ""
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
 
-#: composite.cpp:1047
+#: composite.cpp:1036
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 
-#: composite.cpp:1050
+#: composite.cpp:1039
 #, fuzzy, kde-format
 #| msgid "GLX/OpenGL and XRender/XFixes are not available."
 msgid "GLX/OpenGL is not available."
