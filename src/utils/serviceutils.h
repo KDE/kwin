@@ -17,6 +17,7 @@
 // Qt
 #include <QFileInfo>
 #include <QLoggingCategory>
+#include <QProcess>
 // KF
 #include <KApplicationTrader>
 
@@ -31,11 +32,11 @@ static QStringList fetchProcessServiceField(const QString &executablePath, const
     // needed to be able to use the logging category in a header static function
     static QLoggingCategory KWIN_UTILS("KWIN_UTILS", QtWarningMsg);
     const auto servicesFound = KApplicationTrader::query([&executablePath](const KService::Ptr &service) {
-        if (service->exec().isEmpty() || QFileInfo(service->exec()).canonicalFilePath() != executablePath) {
+        const auto splitCommandList = QProcess::splitCommand(service->exec());
+        if (splitCommandList.isEmpty()) {
             return false;
         }
-
-        return true;
+        return QFileInfo(splitCommandList.first()).canonicalFilePath() == executablePath;
     });
 
     if (servicesFound.isEmpty()) {
