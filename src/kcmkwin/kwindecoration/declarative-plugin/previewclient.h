@@ -53,8 +53,10 @@ public:
     ~PreviewClient() override;
 
     QString caption() const override;
+#if KDECORATIONS_PRIVATE_BUILD_DEPRECATED_SINCE(5, 27)
     WId decorationId() const override;
     WId windowId() const override;
+#endif
     int desktop() const override;
     QIcon icon() const override;
     bool isActive() const override;

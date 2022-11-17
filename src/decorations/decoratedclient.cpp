@@ -131,8 +131,11 @@ DELEGATE2(QIcon, icon)
 DELEGATE(bool, isKeepAbove, keepAbove)
 DELEGATE(bool, isKeepBelow, keepBelow)
 DELEGATE(bool, isShaded, isShade)
+
+#if KDECORATIONS_PRIVATE_BUILD_DEPRECATED_SINCE(5, 27)
 DELEGATE(WId, windowId, window)
 DELEGATE(WId, decorationId, frameId)
+#endif
 
 #undef DELEGATE
 

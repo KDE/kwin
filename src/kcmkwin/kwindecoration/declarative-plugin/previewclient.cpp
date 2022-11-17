@@ -126,10 +126,17 @@ QString PreviewClient::caption() const
     return m_caption;
 }
 
+#if KDECORATIONS_PRIVATE_BUILD_DEPRECATED_SINCE(5, 27)
+WId PreviewClient::windowId() const
+{
+    return 0;
+}
+
 WId PreviewClient::decorationId() const
 {
     return 0;
 }
+#endif
 
 int PreviewClient::desktop() const
 {
@@ -236,11 +243,6 @@ bool PreviewClient::isShaded() const
 bool PreviewClient::providesContextHelp() const
 {
     return m_providesContextHelp;
-}
-
-WId PreviewClient::windowId() const
-{
-    return 0;
 }
 
 QPalette PreviewClient::palette() const
