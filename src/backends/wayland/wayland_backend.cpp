@@ -18,13 +18,11 @@
 #include "wayland_output.h"
 #include "wayland_qpainter_backend.h"
 
-#include "composite.h"
 #include "cursor.h"
 #include "dpmsinputeventfilter.h"
 #include "input.h"
 #include "keyboard_input.h"
 #include "pointer_input.h"
-#include "scene.h"
 
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/compositor.h>
@@ -182,7 +180,7 @@ void WaylandSubSurfaceCursor::move(const QPointF &globalPosition)
     // place the sub-surface relative to the output it is on and factor in the hotspot
     const auto relativePosition = globalPosition.toPoint() - Cursors::self()->currentCursor()->hotspot() - m_output->geometry().topLeft();
     m_subSurface->setPosition(relativePosition);
-    Compositor::self()->scene()->addRepaintFull();
+    m_output->renderLoop()->scheduleRepaint();
 }
 
 WaylandInputDevice::WaylandInputDevice(KWayland::Client::Keyboard *keyboard, WaylandSeat *seat)
