@@ -48,7 +48,6 @@ public:
     void setConfig(const KSharedConfigPtr &config);
     void setNumLockConfig(const KSharedConfigPtr &config);
 
-    void installKeymap(int fd, uint32_t size);
     void updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group);
     void updateKey(uint32_t key, InputRedirection::KeyboardKeyState state);
     xkb_keysym_t toKeysym(uint32_t key);
@@ -159,12 +158,6 @@ private:
         xkb_mod_index_t latched = 0;
         xkb_mod_index_t locked = 0;
     } m_modifierState;
-
-    enum class Ownership {
-        Server,
-        Client
-    };
-    Ownership m_ownership = Ownership::Server;
 
     QPointer<KWaylandServer::SeatInterface> m_seat;
     const bool m_followLocale1;

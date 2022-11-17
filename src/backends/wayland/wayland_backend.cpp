@@ -21,7 +21,6 @@
 #include "cursor.h"
 #include "dpmsinputeventfilter.h"
 #include "input.h"
-#include "keyboard_input.h"
 #include "pointer_input.h"
 
 #include <KWayland/Client/buffer.h>
@@ -202,12 +201,6 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Keyboard *keyboard, Way
             Q_UNREACHABLE();
         }
         Q_EMIT keyChanged(key, state, time, this);
-    });
-    connect(keyboard, &Keyboard::modifiersChanged, this, [](quint32 depressed, quint32 latched, quint32 locked, quint32 group) {
-        input()->keyboard()->processModifiers(depressed, latched, locked, group);
-    });
-    connect(keyboard, &Keyboard::keymapChanged, this, [](int fd, quint32 size) {
-        input()->keyboard()->processKeymapChange(fd, size);
     });
 }
 

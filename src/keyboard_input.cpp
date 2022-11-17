@@ -100,11 +100,7 @@ public:
         if (event->isAutoRepeat()) {
             return;
         }
-        updateModifiers(event->modifiers());
-    }
-
-    void updateModifiers(Qt::KeyboardModifiers mods)
-    {
+        const Qt::KeyboardModifiers mods = event->modifiers();
         if (mods == m_modifiers) {
             return;
         }
@@ -280,28 +276,6 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     if (event.modifiersRelevantForGlobalShortcuts() == Qt::KeyboardModifier::NoModifier && type != QEvent::KeyRelease) {
         m_keyboardLayout->checkLayoutChange(previousLayout);
     }
-}
-
-void KeyboardInputRedirection::processModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
-{
-    if (!m_inited) {
-        return;
-    }
-    const quint32 previousLayout = m_xkb->currentLayout();
-    // TODO: send to proper Client and also send when active Client changes
-    m_xkb->updateModifiers(modsDepressed, modsLatched, modsLocked, group);
-    m_modifiersChangedSpy->updateModifiers(modifiers());
-    m_keyboardLayout->checkLayoutChange(previousLayout);
-}
-
-void KeyboardInputRedirection::processKeymapChange(int fd, uint32_t size)
-{
-    if (!m_inited) {
-        return;
-    }
-    // TODO: should we pass the keymap to our Clients? Or only to the currently active one and update
-    m_xkb->installKeymap(fd, size);
-    m_keyboardLayout->resetLayout();
 }
 
 }

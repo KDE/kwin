@@ -256,25 +256,6 @@ xkb_keymap *Xkb::loadKeymapFromLocale1()
     return xkb_keymap_new_from_names(m_context, &ruleNames, XKB_KEYMAP_COMPILE_NO_FLAGS);
 }
 
-void Xkb::installKeymap(int fd, uint32_t size)
-{
-    if (!m_context) {
-        return;
-    }
-    char *map = reinterpret_cast<char *>(mmap(nullptr, size, PROT_READ, MAP_SHARED, fd, 0));
-    if (map == MAP_FAILED) {
-        return;
-    }
-    xkb_keymap *keymap = xkb_keymap_new_from_string(m_context, map, XKB_KEYMAP_FORMAT_TEXT_V1, XKB_MAP_COMPILE_PLACEHOLDER);
-    munmap(map, size);
-    if (!keymap) {
-        qCDebug(KWIN_XKB) << "Could not map keymap from file";
-        return;
-    }
-    m_ownership = Ownership::Client;
-    updateKeymap(keymap);
-}
-
 void Xkb::updateKeymap(xkb_keymap *keymap)
 {
     Q_ASSERT(keymap);
@@ -318,7 +299,7 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
     m_modifierState.locked = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED));
 
     auto setLock = [this](xkb_mod_index_t modifier, bool value) {
-        if (m_ownership == Ownership::Server && modifier != XKB_MOD_INVALID) {
+        if (modifier != XKB_MOD_INVALID) {
             std::bitset<sizeof(xkb_mod_mask_t) * 8> mask{m_modifierState.locked};
             if (mask.size() > modifier) {
                 mask[modifier] = value;
