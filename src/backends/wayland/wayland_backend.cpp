@@ -104,7 +104,6 @@ void WaylandCursor::drawSurface(wl_buffer *image, const QSize &size, qreal scale
     m_surface->setScale(std::ceil(scale));
     m_surface->damageBuffer(QRect(QPoint(0, 0), size));
     m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
-    m_backend->flush();
 }
 
 WaylandSubSurfaceCursor::WaylandSubSurfaceCursor(WaylandBackend *backend)
@@ -667,11 +666,6 @@ std::unique_ptr<QPainterBackend> WaylandBackend::createQPainterBackend()
     return std::make_unique<WaylandQPainterBackend>(this);
 }
 
-void WaylandBackend::flush()
-{
-    m_display->flush();
-}
-
 WaylandOutput *WaylandBackend::getOutputAt(const QPointF &globalPosition)
 {
     const auto pos = globalPosition.toPoint();
@@ -717,7 +711,6 @@ void WaylandBackend::togglePointerLock()
         output->lockPointer(m_seat->pointerDevice()->nativePointer(), !m_pointerLockRequested);
     }
     m_pointerLockRequested = !m_pointerLockRequested;
-    flush();
 }
 
 QVector<CompositingType> WaylandBackend::supportedCompositors() const

@@ -247,8 +247,6 @@ public:
     std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
     std::unique_ptr<QPainterBackend> createQPainterBackend() override;
 
-    void flush();
-
     WaylandDisplay *display() const
     {
         return m_display.get();
