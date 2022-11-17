@@ -83,6 +83,9 @@ public:
     QColor color(ColorGroup group, ColorRole role) const override;
     Qt::Edges adjacentScreenEdges() const override;
 
+    QString resourceName() const override;
+    QString resourceClass() const override;
+
     bool hasApplicationMenu() const override;
     bool isApplicationMenuActive() const override;
 

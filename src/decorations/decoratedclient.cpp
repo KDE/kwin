@@ -137,6 +137,9 @@ DELEGATE(WId, windowId, window)
 DELEGATE(WId, decorationId, frameId)
 #endif
 
+DELEGATE(QString, resourceName, resourceName)
+DELEGATE(QString, resourceClass, resourceClass)
+
 #undef DELEGATE
 
 #define DELEGATE(name, op)                                                \
