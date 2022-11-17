@@ -7,4 +7,6 @@ include:
 
 suse_tumbleweed_qt515_reduced_featureset:
     extends: suse_tumbleweed_qt515
-    script: python3 -u ci-utilities/run-ci-build.py --project $CI_PROJECT_NAME --branch $CI_COMMIT_REF_NAME --platform Linux --extra-cmake-args="-DKWIN_BUILD_KCMS=OFF -DKWIN_BUILD_SCREENLOCKER=OFF -DKWIN_BUILD_TABBOX=OFF -DKWIN_BUILD_ACTIVITIES=OFF -DKWIN_BUILD_RUNNERS=OFF -DKWIN_BUILD_NOTIFICATIONS=OFF" --skip-publishing
+    script:
+    - git config --global --add safe.directory $CI_PROJECT_DIR
+    - python3 -u ci-utilities/run-ci-build.py --project $CI_PROJECT_NAME --branch $CI_COMMIT_REF_NAME --platform Linux --extra-cmake-args="-DKWIN_BUILD_KCMS=OFF -DKWIN_BUILD_SCREENLOCKER=OFF -DKWIN_BUILD_TABBOX=OFF -DKWIN_BUILD_ACTIVITIES=OFF -DKWIN_BUILD_RUNNERS=OFF -DKWIN_BUILD_NOTIFICATIONS=OFF" --skip-publishing
