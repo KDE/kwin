@@ -55,6 +55,7 @@ public:
     bool providesContextHelp() const override;
     QSize size() const override;
     int width() const override;
+    QString windowClass() const override;
     WId windowId() const override;
 
     Qt::Edges adjacentScreenEdges() const override;

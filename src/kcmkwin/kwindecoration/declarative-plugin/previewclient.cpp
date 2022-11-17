@@ -271,6 +271,11 @@ Qt::Edges PreviewClient::adjacentScreenEdges() const
     return edges;
 }
 
+QString PreviewClient::windowClass() const
+{
+    return QString();
+}
+
 bool PreviewClient::hasApplicationMenu() const
 {
     return true;
