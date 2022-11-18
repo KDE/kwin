@@ -42,12 +42,11 @@ namespace KWin
 namespace Xwl
 {
 
-XwaylandLauncher::XwaylandLauncher(QObject *parent)
-    : QObject(parent)
+XwaylandLauncher::XwaylandLauncher()
 {
-    m_resetCrashCountTimer = new QTimer(this);
+    m_resetCrashCountTimer = std::make_unique<QTimer>();
     m_resetCrashCountTimer->setSingleShot(true);
-    connect(m_resetCrashCountTimer, &QTimer::timeout, this, &XwaylandLauncher::resetCrashCount);
+    connect(m_resetCrashCountTimer.get(), &QTimer::timeout, this, &XwaylandLauncher::resetCrashCount);
 }
 
 XwaylandLauncher::~XwaylandLauncher()
@@ -161,7 +160,7 @@ bool XwaylandLauncher::startInternal()
     arguments << QStringLiteral("-rootless");
     arguments << QStringLiteral("-wm") << QString::number(fd);
 
-    m_xwaylandProcess = new QProcess(this);
+    m_xwaylandProcess = std::make_unique<QProcess>();
     m_xwaylandProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
     m_xwaylandProcess->setProgram(QStringLiteral("Xwayland"));
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
@@ -171,14 +170,14 @@ bool XwaylandLauncher::startInternal()
     }
     m_xwaylandProcess->setProcessEnvironment(env);
     m_xwaylandProcess->setArguments(arguments);
-    connect(m_xwaylandProcess, &QProcess::errorOccurred, this, &XwaylandLauncher::handleXwaylandError);
-    connect(m_xwaylandProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+    connect(m_xwaylandProcess.get(), &QProcess::errorOccurred, this, &XwaylandLauncher::handleXwaylandError);
+    connect(m_xwaylandProcess.get(), QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             this, &XwaylandLauncher::handleXwaylandFinished);
 
     // When Xwayland starts writing the display name to displayfd, it is ready. Alternatively,
     // the Xwayland can send us the SIGUSR1 signal, but it's already reserved for VT hand-off.
-    m_readyNotifier = new QSocketNotifier(pipeFds[0], QSocketNotifier::Read, this);
-    connect(m_readyNotifier, &QSocketNotifier::activated, this, [this]() {
+    m_readyNotifier = std::make_unique<QSocketNotifier>(pipeFds[0], QSocketNotifier::Read);
+    connect(m_readyNotifier.get(), &QSocketNotifier::activated, this, [this]() {
         maybeDestroyReadyNotifier();
         Q_EMIT started();
     });
@@ -214,7 +213,7 @@ int XwaylandLauncher::xcbConnectionFd() const
 
 QProcess *XwaylandLauncher::process() const
 {
-    return m_xwaylandProcess;
+    return m_xwaylandProcess.get();
 }
 
 void XwaylandLauncher::stopInternal()
@@ -228,12 +227,11 @@ void XwaylandLauncher::stopInternal()
     // however we don't actually want to process it anymore. Furthermore, we also don't really
     // want to handle any errors that may occur during the teardown.
     if (m_xwaylandProcess->state() != QProcess::NotRunning) {
-        disconnect(m_xwaylandProcess, nullptr, this, nullptr);
+        disconnect(m_xwaylandProcess.get(), nullptr, this, nullptr);
         m_xwaylandProcess->terminate();
         m_xwaylandProcess->waitForFinished(5000);
     }
-    delete m_xwaylandProcess;
-    m_xwaylandProcess = nullptr;
+    m_xwaylandProcess.reset();
 }
 
 void XwaylandLauncher::restartInternal()
@@ -248,9 +246,7 @@ void XwaylandLauncher::maybeDestroyReadyNotifier()
 {
     if (m_readyNotifier) {
         close(m_readyNotifier->socket());
-
-        delete m_readyNotifier;
-        m_readyNotifier = nullptr;
+        m_readyNotifier.reset();
     }
 }
 

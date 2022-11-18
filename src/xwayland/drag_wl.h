@@ -57,7 +57,7 @@ class Xvisit : public QObject
 public:
     // TODO: handle ask action
 
-    Xvisit(Window *target, KWaylandServer::AbstractDataSource *dataSource, Dnd *dnd, QObject *parent);
+    Xvisit(Window *target, KWaylandServer::AbstractDataSource *dataSource, Dnd *dnd);
 
     bool handleClientMessage(xcb_client_message_event_t *event);
     bool handleStatus(xcb_client_message_event_t *event);

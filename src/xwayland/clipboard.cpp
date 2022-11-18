@@ -113,7 +113,7 @@ void Clipboard::checkWlSource()
         // source already exists, nothing more to do
         return;
     }
-    auto *wls = new WlSource(this);
+    auto *wls = new WlSource(this, this);
     setWlSource(wls);
     if (dsi) {
         wls->setDataSourceIface(dsi);

@@ -45,14 +45,12 @@ Transfer::Transfer(xcb_atom_t selection, qint32 fd, xcb_timestamp_t timestamp, Q
 
 void Transfer::createSocketNotifier(QSocketNotifier::Type type)
 {
-    delete m_notifier;
-    m_notifier = new QSocketNotifier(m_fd, type, this);
+    m_notifier = std::make_unique<QSocketNotifier>(m_fd, type);
 }
 
 void Transfer::clearSocketNotifier()
 {
-    delete m_notifier;
-    m_notifier = nullptr;
+    m_notifier.reset();
 }
 
 void Transfer::timeout()
@@ -88,8 +86,7 @@ TransferWltoX::TransferWltoX(xcb_atom_t selection, xcb_selection_request_event_t
 
 TransferWltoX::~TransferWltoX()
 {
-    delete m_request;
-    m_request = nullptr;
+    m_request.reset();
 }
 
 void TransferWltoX::startTransferFromSource()
@@ -148,7 +145,7 @@ void TransferWltoX::startIncr()
     // again by the requestor
     m_flushPropertyOnDelete = true;
     m_propertyIsSet = true;
-    Q_EMIT selectionNotify(m_request, true);
+    Q_EMIT selectionNotify(m_request.get(), true);
 }
 
 void TransferWltoX::readWlSource()
@@ -191,7 +188,7 @@ void TransferWltoX::readWlSource()
             // non incremental transfer is to be completed now,
             // data can be transferred to X client via a single property set
             flushSourceData();
-            Q_EMIT selectionNotify(m_request, true);
+            Q_EMIT selectionNotify(m_request.get(), true);
             endTransfer();
         }
     } else if (m_chunks.last().second == s_incrChunkSize) {
@@ -290,8 +287,7 @@ TransferXtoWl::~TransferXtoWl()
     xcb_destroy_window(xcbConn, m_window);
     xcb_flush(xcbConn);
 
-    delete m_receiver;
-    m_receiver = nullptr;
+    m_receiver.reset();
 }
 
 bool TransferXtoWl::handlePropertyNotify(xcb_property_notify_event_t *event)
@@ -329,7 +325,7 @@ bool TransferXtoWl::handleSelectionNotify(xcb_selection_notify_event_t *event)
         return true;
     }
 
-    m_receiver = new DataReceiver;
+    m_receiver = std::make_unique<DataReceiver>();
 
     startTransfer();
     return true;

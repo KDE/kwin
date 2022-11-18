@@ -79,7 +79,7 @@ XToWlDrag::XToWlDrag(X11Source *source, Dnd *dnd)
     connect(&m_selectionSource, &XwlDataSource::dropped, this, [this] {
         m_performed = true;
         if (m_visit) {
-            connect(m_visit, &WlVisit::finish, this, [this](WlVisit *visit) {
+            connect(m_visit.get(), &WlVisit::finish, this, [this](WlVisit *visit) {
                 checkForFinished();
             });
 
@@ -102,7 +102,7 @@ XToWlDrag::XToWlDrag(X11Source *source, Dnd *dnd)
     });
     connect(&m_selectionSource, &XwlDataSource::cancelled, this, [this] {
         if (m_visit && !m_visit->leave()) {
-            connect(m_visit, &WlVisit::finish, this, &XToWlDrag::checkForFinished);
+            connect(m_visit.get(), &WlVisit::finish, this, &XToWlDrag::checkForFinished);
         }
         checkForFinished();
     });
@@ -126,19 +126,19 @@ DragEventReply XToWlDrag::moveFilter(Window *target, const QPoint &pos)
         // still same Wl target, wait for X events
         return DragEventReply::Ignore;
     }
+    const bool hasCurrent = m_visit != nullptr;
     if (m_visit) {
         if (m_visit->leave()) {
-            delete m_visit;
+            m_visit.reset();
         } else {
-            connect(m_visit, &WlVisit::finish, this, [this](WlVisit *visit) {
-                m_oldVisits.removeOne(visit);
-                delete visit;
+            connect(m_visit.get(), &WlVisit::finish, this, [this](WlVisit *visit) {
+                std::erase_if(m_oldVisits, [visit](const auto &v) {
+                    return v.get() == visit;
+                });
             });
-            m_oldVisits << m_visit;
+            m_oldVisits.push_back(std::move(m_visit));
         }
     }
-    const bool hasCurrent = m_visit;
-    m_visit = nullptr;
 
     if (!target || !target->surface() || target->surface()->client() == waylandServer()->xWaylandConnection()) {
         // currently there is no target or target is an Xwayland window
@@ -152,14 +152,14 @@ DragEventReply XToWlDrag::moveFilter(Window *target, const QPoint &pos)
     }
     // new Wl native target
     auto *ac = static_cast<Window *>(target);
-    m_visit = new WlVisit(ac, this, m_dnd);
-    connect(m_visit, &WlVisit::offersReceived, this, &XToWlDrag::setOffers);
+    m_visit = std::make_unique<WlVisit>(ac, this, m_dnd);
+    connect(m_visit.get(), &WlVisit::offersReceived, this, &XToWlDrag::setOffers);
     return DragEventReply::Ignore;
 }
 
 bool XToWlDrag::handleClientMessage(xcb_client_message_event_t *event)
 {
-    for (auto *visit : std::as_const(m_oldVisits)) {
+    for (const auto &visit : m_oldVisits) {
         if (visit->handleClientMessage(event)) {
             return true;
         }
@@ -251,8 +251,7 @@ bool XToWlDrag::checkForFinished()
 }
 
 WlVisit::WlVisit(Window *target, XToWlDrag *drag, Dnd *dnd)
-    : QObject(drag)
-    , m_dnd(dnd)
+    : m_dnd(dnd)
     , m_target(target)
     , m_drag(drag)
 {

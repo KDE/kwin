@@ -33,9 +33,9 @@ public:
 
 private:
     void drop() override;
-    Xvisit *m_xvisit = nullptr;
+    std::unique_ptr<Xvisit> m_xvisit;
     Dnd *const m_dnd;
-    QVector<Xvisit *> m_previousVisits;
+    std::vector<std::unique_ptr<Xvisit>> m_previousVisits;
 };
 }
 }

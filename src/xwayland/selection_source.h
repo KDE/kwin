@@ -39,7 +39,7 @@ class SelectionSource : public QObject
     Q_OBJECT
 
 public:
-    SelectionSource(Selection *selection);
+    SelectionSource(Selection *selection, QObject *parent);
 
     xcb_timestamp_t timestamp() const
     {
@@ -80,7 +80,7 @@ class WlSource : public SelectionSource
     Q_OBJECT
 
 public:
-    WlSource(Selection *selection);
+    WlSource(Selection *selection, QObject *parent);
     void setDataSourceIface(KWaylandServer::AbstractDataSource *dsi);
 
     bool handleSelectionRequest(xcb_selection_request_event_t *event);

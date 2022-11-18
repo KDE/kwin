@@ -35,7 +35,7 @@ void XwlDropHandler::drop()
 
 bool XwlDropHandler::handleClientMessage(xcb_client_message_event_t *event)
 {
-    for (auto visit : m_previousVisits) {
+    for (const auto &visit : m_previousVisits) {
         if (visit->handleClientMessage(event)) {
             return true;
         }
@@ -59,18 +59,18 @@ void XwlDropHandler::updateDragTarget(KWaylandServer::SurfaceInterface *surface,
     if (m_xvisit) {
         m_xvisit->leave();
         if (!m_xvisit->finished()) {
-            connect(m_xvisit, &Xvisit::finish, this, [this](Xvisit *visit) {
-                m_previousVisits.removeOne(visit);
-                delete visit;
+            connect(m_xvisit.get(), &Xvisit::finish, this, [this](Xvisit *visit) {
+                std::erase_if(m_previousVisits, [visit](const auto &v) {
+                    return v.get() == visit;
+                });
             });
-            m_previousVisits.push_back(m_xvisit);
+            m_previousVisits.push_back(std::move(m_xvisit));
         } else {
-            delete m_xvisit;
+            m_xvisit.reset();
         }
-        m_xvisit = nullptr;
     }
     if (client) {
-        m_xvisit = new Xvisit(client, waylandServer()->seat()->dragSource(), m_dnd, this);
+        m_xvisit = std::make_unique<Xvisit>(client, waylandServer()->seat()->dragSource(), m_dnd);
     }
 }
 }

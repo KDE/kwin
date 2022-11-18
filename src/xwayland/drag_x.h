@@ -63,8 +63,8 @@ private:
     X11Source *m_source;
     QVector<QPair<xcb_timestamp_t, bool>> m_dataRequests;
 
-    WlVisit *m_visit = nullptr;
-    QVector<WlVisit *> m_oldVisits;
+    std::unique_ptr<WlVisit> m_visit;
+    std::vector<std::unique_ptr<WlVisit>> m_oldVisits;
 
     bool m_performed = false;
     KWaylandServer::DataDeviceManagerInterface::DnDAction m_lastSelectedDragAndDropAction = KWaylandServer::DataDeviceManagerInterface::DnDAction::None;

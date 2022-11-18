@@ -25,15 +25,15 @@ namespace KWin
 namespace Xwl
 {
 
-SelectionSource::SelectionSource(Selection *selection)
-    : QObject(selection)
+SelectionSource::SelectionSource(Selection *selection, QObject *parent)
+    : QObject(parent)
     , m_selection(selection)
     , m_window(selection->window())
 {
 }
 
-WlSource::WlSource(Selection *selection)
-    : SelectionSource(selection)
+WlSource::WlSource(Selection *selection, QObject *parent)
+    : SelectionSource(selection, parent)
 {
 }
 
@@ -159,7 +159,7 @@ bool WlSource::checkStartTransfer(xcb_selection_request_event_t *event)
 }
 
 X11Source::X11Source(Selection *selection, xcb_xfixes_selection_notify_event_t *event)
-    : SelectionSource(selection)
+    : SelectionSource(selection, nullptr)
     , m_owner(event->owner)
 {
     setTimestamp(event->timestamp);

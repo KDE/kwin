@@ -76,14 +76,13 @@ private:
 
     DragEventReply dragMoveFilter(Window *target, const QPoint &pos) override;
     KWaylandServer::AbstractDropHandler *xwlDropHandler() override;
-    QSocketNotifier *m_socketNotifier = nullptr;
+    std::unique_ptr<QSocketNotifier> m_socketNotifier;
 
     Application *m_app;
     std::unique_ptr<KSelectionOwner> m_selectionOwner;
     std::unique_ptr<DataBridge> m_dataBridge;
-
-    XrandrEventFilter *m_xrandrEventsFilter = nullptr;
-    XwaylandLauncher *m_launcher;
+    std::unique_ptr<XrandrEventFilter> m_xrandrEventsFilter;
+    std::unique_ptr<XwaylandLauncher> m_launcher;
     std::unique_ptr<XwaylandInputSpy> m_inputSpy;
 
     Q_DISABLE_COPY(Xwayland)

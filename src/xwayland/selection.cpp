@@ -87,6 +87,8 @@ Selection::Selection(xcb_atom_t atom, QObject *parent)
     xcb_flush(xcbConn);
 }
 
+Selection::~Selection() = default;
+
 bool Selection::handleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
 {
     if (event->window != m_window) {
@@ -173,8 +175,7 @@ void Selection::setWlSource(WlSource *source)
         m_waylandSource->deleteLater();
         m_waylandSource = nullptr;
     }
-    delete m_xSource;
-    m_xSource = nullptr;
+    m_xSource.reset();
     if (source) {
         m_waylandSource = source;
         connect(source, &WlSource::transferReady, this, &Selection::startTransferToX);
@@ -187,10 +188,10 @@ void Selection::createX11Source(xcb_xfixes_selection_notify_event_t *event)
     if (!event || event->owner == XCB_WINDOW_NONE) {
         return;
     }
-    m_xSource = new X11Source(this, event);
+    m_xSource = std::make_unique<X11Source>(this, event);
 
-    connect(m_xSource, &X11Source::offersChanged, this, &Selection::x11OffersChanged);
-    connect(m_xSource, &X11Source::transferReady, this, &Selection::startTransferToWayland);
+    connect(m_xSource.get(), &X11Source::offersChanged, this, &Selection::x11OffersChanged);
+    connect(m_xSource.get(), &X11Source::transferReady, this, &Selection::startTransferToWayland);
 }
 
 void Selection::ownSelection(bool own)
@@ -326,16 +327,15 @@ void Selection::startTimeoutTransfersTimer()
     if (m_timeoutTransfers) {
         return;
     }
-    m_timeoutTransfers = new QTimer(this);
-    connect(m_timeoutTransfers, &QTimer::timeout, this, &Selection::timeoutTransfers);
+    m_timeoutTransfers = std::make_unique<QTimer>();
+    connect(m_timeoutTransfers.get(), &QTimer::timeout, this, &Selection::timeoutTransfers);
     m_timeoutTransfers->start(5000);
 }
 
 void Selection::endTimeoutTransfersTimer()
 {
     if (m_xToWlTransfers.isEmpty() && m_wlToXTransfers.isEmpty()) {
-        delete m_timeoutTransfers;
-        m_timeoutTransfers = nullptr;
+        m_timeoutTransfers.reset();
     }
 }
 

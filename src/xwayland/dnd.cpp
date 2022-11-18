@@ -79,7 +79,7 @@ Dnd::Dnd(xcb_atom_t atom, QObject *parent)
 
 void Dnd::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
 {
-    if (qobject_cast<XToWlDrag *>(m_currentDrag)) {
+    if (qobject_cast<XToWlDrag *>(m_currentDrag.get())) {
         // X drag is in progress, rogue X client took over the selection.
         return;
     }
@@ -110,7 +110,7 @@ void Dnd::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
     if (!source) {
         return;
     }
-    m_currentDrag = new XToWlDrag(source, this);
+    m_currentDrag = std::make_unique<XToWlDrag>(source, this);
 }
 
 void Dnd::x11OffersChanged(const QStringList &added, const QStringList &removed)
@@ -119,7 +119,7 @@ void Dnd::x11OffersChanged(const QStringList &added, const QStringList &removed)
 
 bool Dnd::handleClientMessage(xcb_client_message_event_t *event)
 {
-    for (Drag *drag : std::as_const(m_oldDrags)) {
+    for (const auto &drag : m_oldDrags) {
         if (drag->handleClientMessage(event)) {
             return true;
         }
@@ -147,8 +147,8 @@ void Dnd::startDrag()
     Q_ASSERT(!m_currentDrag);
 
     // New Wl to X drag, init drag and Wl source.
-    m_currentDrag = new WlToXDrag(this);
-    auto source = new WlSource(this);
+    m_currentDrag = std::make_unique<WlToXDrag>(this);
+    auto source = new WlSource(this, this);
     source->setDataSourceIface(dragSource);
      connect(dragSource, &KWaylandServer::AbstractDataSource::aboutToBeDestroyed, this, [this, source] {
         if (source == wlSource()) {
@@ -163,16 +163,15 @@ void Dnd::endDrag()
 {
     Q_ASSERT(m_currentDrag);
 
-    connect(m_currentDrag, &Drag::finish, this, &Dnd::clearOldDrag);
-    m_oldDrags << m_currentDrag;
-
-    m_currentDrag = nullptr;
+    connect(m_currentDrag.get(), &Drag::finish, this, &Dnd::clearOldDrag);
+    m_oldDrags.push_back(std::move(m_currentDrag));
 }
 
 void Dnd::clearOldDrag(Drag *drag)
 {
-    m_oldDrags.removeOne(drag);
-    delete drag;
+    std::erase_if(m_oldDrags, [drag](const auto &d) {
+        return d.get() == drag;
+    });
 }
 
 using DnDAction = KWaylandServer::DataDeviceManagerInterface::DnDAction;

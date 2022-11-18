@@ -62,8 +62,8 @@ private:
     void clearOldDrag(Drag *drag);
 
     // active drag or null when no drag active
-    Drag *m_currentDrag = nullptr;
-    QVector<Drag *> m_oldDrags;
+    std::unique_ptr<Drag> m_currentDrag;
+    std::vector<std::unique_ptr<Drag>> m_oldDrags;
 
     XwlDropHandler *m_dropHandler;
 

@@ -11,6 +11,7 @@
 #include <QObject>
 #include <QSocketNotifier>
 #include <QVector>
+#include <memory>
 
 #include <xcb/xcb.h>
 
@@ -88,7 +89,7 @@ protected:
     void clearSocketNotifier();
     QSocketNotifier *socketNotifier() const
     {
-        return m_notifier;
+        return m_notifier.get();
     }
 
 private:
@@ -98,7 +99,7 @@ private:
     qint32 m_fd;
     xcb_timestamp_t m_timestamp = XCB_CURRENT_TIME;
 
-    QSocketNotifier *m_notifier = nullptr;
+    std::unique_ptr<QSocketNotifier> m_notifier;
     bool m_incr = false;
     bool m_timeout = false;
 
@@ -131,7 +132,7 @@ private:
     int flushSourceData();
     void handlePropertyDelete();
 
-    xcb_selection_request_event_t *m_request = nullptr;
+    std::unique_ptr<xcb_selection_request_event_t> m_request;
 
     /* contains all received data portioned in chunks
      * TODO: explain second QPair component
@@ -189,7 +190,7 @@ private:
     void getIncrChunk();
 
     xcb_window_t m_window;
-    DataReceiver *m_receiver = nullptr;
+    std::unique_ptr<DataReceiver> m_receiver;
 
     Q_DISABLE_COPY(TransferXtoWl)
 };

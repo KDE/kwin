@@ -32,7 +32,7 @@ class KWIN_EXPORT XwaylandLauncher : public QObject
 {
     Q_OBJECT
 public:
-    explicit XwaylandLauncher(QObject *parent);
+    explicit XwaylandLauncher();
     ~XwaylandLauncher();
 
     /**
@@ -95,9 +95,9 @@ private:
     void stopInternal();
     void restartInternal();
 
-    QProcess *m_xwaylandProcess = nullptr;
-    QSocketNotifier *m_readyNotifier = nullptr;
-    QTimer *m_resetCrashCountTimer = nullptr;
+    std::unique_ptr<QProcess> m_xwaylandProcess;
+    std::unique_ptr<QSocketNotifier> m_readyNotifier;
+    std::unique_ptr<QTimer> m_resetCrashCountTimer;
     // this is only used when kwin is run without kwin_wayland_wrapper
     std::unique_ptr<XwaylandSocket> m_socket;
     QVector<int> m_listenFds;
