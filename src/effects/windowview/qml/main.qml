@@ -116,6 +116,9 @@ Item {
             Layout.preferredWidth: Math.min(parent.width, 20 * PlasmaCore.Units.gridUnit)
             focus: false
 
+            // Don't confuse users into thinking it's a full search
+            placeholderText: i18n("Filter windows…")
+
             // Otherwise it's always 100% opaque even while the blurry desktop background's
             // opacity is changing, which looks weird and is different from what Overview does.
             opacity: container.organized ? 1 : 0
