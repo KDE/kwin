@@ -13,6 +13,7 @@
 #include <config-kwin.h>
 
 #include "core/output.h"
+#include "cursorsource.h"
 #include "decorations/decoratedclient.h"
 #include "effects.h"
 #include "input_event.h"
@@ -99,8 +100,7 @@ void PointerInputRedirection::init()
 
     connect(Cursors::self()->mouse(), &Cursor::rendered, m_cursor, &CursorImage::markAsRendered);
     connect(m_cursor, &CursorImage::changed, Cursors::self()->mouse(), [this] {
-        auto cursor = Cursors::self()->mouse();
-        cursor->updateCursor(m_cursor->image(), m_cursor->hotSpot());
+        Cursors::self()->mouse()->setSource(m_cursor->source());
         updateCursorOutputs();
     });
     Q_EMIT m_cursor->changed();
@@ -791,7 +791,7 @@ void PointerInputRedirection::updateCursorOutputs()
         return;
     }
 
-    const QRectF cursorGeometry(m_pos - m_cursor->hotSpot(), surface->size());
+    const QRectF cursorGeometry(m_pos - m_cursor->source()->hotspot(), surface->size());
     surface->setOutputs(waylandServer()->display()->outputsIntersecting(cursorGeometry.toAlignedRect()));
 }
 
@@ -886,6 +886,14 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     : QObject(parent)
     , m_pointer(parent)
 {
+    m_effectsCursor = std::make_unique<ImageCursorSource>();
+    m_fallbackCursor = std::make_unique<ImageCursorSource>();
+    m_moveResizeCursor = std::make_unique<ImageCursorSource>();
+    m_windowSelectionCursor = std::make_unique<ImageCursorSource>();
+    m_decoration.cursor = std::make_unique<ImageCursorSource>();
+    m_drag.cursor = std::make_unique<ImageCursorSource>();
+    m_serverCursor.cursor = std::make_unique<ImageCursorSource>();
+
     connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::hasPointerChanged,
             this, &CursorImage::handlePointerChanged);
     connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragStarted, this, &CursorImage::updateDrag);
@@ -907,31 +915,31 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     const auto clients = workspace()->allClientList();
     std::for_each(clients.begin(), clients.end(), setupMoveResizeConnection);
     connect(workspace(), &Workspace::windowAdded, this, setupMoveResizeConnection);
-    loadThemeCursor(Qt::ArrowCursor, &m_fallbackCursor);
+    loadThemeCursor(Qt::ArrowCursor, m_fallbackCursor.get());
 
     connect(&m_waylandImage, &WaylandCursorImage::themeChanged, this, [this] {
-        loadThemeCursor(Qt::ArrowCursor, &m_fallbackCursor);
+        loadThemeCursor(Qt::ArrowCursor, m_fallbackCursor.get());
         updateDecorationCursor();
         updateMoveResize();
         // TODO: update effects
     });
 
     handlePointerChanged();
+    reevaluteSource();
 }
 
 CursorImage::~CursorImage() = default;
 
 void CursorImage::markAsRendered(std::chrono::milliseconds timestamp)
 {
-    if (m_currentSource == CursorSource::DragAndDrop) {
+    if (m_currentSource == m_drag.cursor.get()) {
         // always sending a frame rendered to the drag icon surface to not freeze QtWayland (see https://bugreports.qt.io/browse/QTBUG-51599 )
         if (const KWaylandServer::DragAndDropIcon *icon = waylandServer()->seat()->dragIcon()) {
             icon->surface()->frameRendered(timestamp.count());
         }
     }
-    if (m_currentSource != CursorSource::LockScreen
-        && m_currentSource != CursorSource::PointerSurface
-        && m_currentSource != CursorSource::DragAndDrop) {
+    if (m_currentSource != m_serverCursor.cursor.get()
+        && m_currentSource != m_drag.cursor.get()) {
         return;
     }
     auto p = waylandServer()->seat()->pointer();
@@ -975,89 +983,64 @@ void CursorImage::handleFocusedSurfaceChanged()
 
 void CursorImage::updateDecoration()
 {
-    disconnect(m_decorationConnection);
+    disconnect(m_decoration.connection);
     auto deco = m_pointer->decoration();
     Window *window = deco ? deco->window() : nullptr;
     if (window) {
-        m_decorationConnection = connect(window, &Window::moveResizeCursorChanged, this, &CursorImage::updateDecorationCursor);
+        m_decoration.connection = connect(window, &Window::moveResizeCursorChanged, this, &CursorImage::updateDecorationCursor);
     } else {
-        m_decorationConnection = QMetaObject::Connection();
+        m_decoration.connection = QMetaObject::Connection();
     }
     updateDecorationCursor();
 }
 
 void CursorImage::updateDecorationCursor()
 {
-    m_decorationCursor = {};
     auto deco = m_pointer->decoration();
     if (Window *window = deco ? deco->window() : nullptr) {
-        loadThemeCursor(window->cursor(), &m_decorationCursor);
-        if (m_currentSource == CursorSource::Decoration) {
-            Q_EMIT changed();
-        }
+        loadThemeCursor(window->cursor(), m_decoration.cursor.get());
     }
     reevaluteSource();
 }
 
 void CursorImage::updateMoveResize()
 {
-    m_moveResizeCursor = {};
     if (Window *window = workspace()->moveResizeWindow()) {
-        loadThemeCursor(window->cursor(), &m_moveResizeCursor);
-        if (m_currentSource == CursorSource::MoveResize) {
-            Q_EMIT changed();
-        }
+        loadThemeCursor(window->cursor(), m_moveResizeCursor.get());
     }
     reevaluteSource();
 }
 
 void CursorImage::updateServerCursor()
 {
-    m_serverCursor.cursor = {};
     reevaluteSource();
-    const bool needsEmit = m_currentSource == CursorSource::LockScreen || m_currentSource == CursorSource::PointerSurface;
     auto p = waylandServer()->seat()->pointer();
     if (!p) {
-        if (needsEmit) {
-            Q_EMIT changed();
-        }
         return;
     }
     auto c = p->cursor();
     if (!c) {
-        if (needsEmit) {
-            Q_EMIT changed();
-        }
         return;
     }
-    auto cursorSurface = c->surface();
-    if (!cursorSurface) {
-        if (needsEmit) {
-            Q_EMIT changed();
+
+    QImage image;
+    QPoint hotspot;
+
+    if (c->surface()) {
+        auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(c->surface()->buffer());
+        if (buffer) {
+            image = buffer->data().copy();
+            image.setDevicePixelRatio(c->surface()->bufferScale());
+            hotspot = c->hotspot();
         }
-        return;
     }
-    auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(cursorSurface->buffer());
-    if (!buffer) {
-        if (needsEmit) {
-            Q_EMIT changed();
-        }
-        return;
-    }
-    m_serverCursor.cursor.hotspot = c->hotspot();
-    m_serverCursor.cursor.image = buffer->data().copy();
-    m_serverCursor.cursor.image.setDevicePixelRatio(cursorSurface->bufferScale());
-    if (needsEmit) {
-        Q_EMIT changed();
-    }
+
+    m_serverCursor.cursor->update(image, hotspot);
 }
 
 void CursorImage::setEffectsOverrideCursor(Qt::CursorShape shape)
 {
-    loadThemeCursor(shape, &m_effectsCursor);
-    if (m_currentSource == CursorSource::EffectsOverride) {
-        Q_EMIT changed();
-    }
+    loadThemeCursor(shape, m_effectsCursor.get());
     reevaluteSource();
 }
 
@@ -1069,12 +1052,9 @@ void CursorImage::removeEffectsOverrideCursor()
 void CursorImage::setWindowSelectionCursor(const QByteArray &shape)
 {
     if (shape.isEmpty()) {
-        loadThemeCursor(Qt::CrossCursor, &m_windowSelectionCursor);
+        loadThemeCursor(Qt::CrossCursor, m_windowSelectionCursor.get());
     } else {
-        loadThemeCursor(shape, &m_windowSelectionCursor);
-    }
-    if (m_currentSource == CursorSource::WindowSelector) {
-        Q_EMIT changed();
+        loadThemeCursor(shape, m_windowSelectionCursor.get());
     }
     reevaluteSource();
 }
@@ -1088,7 +1068,6 @@ void CursorImage::updateDrag()
 {
     using namespace KWaylandServer;
     disconnect(m_drag.connection);
-    m_drag.cursor = {};
     reevaluteSource();
     if (waylandServer()->seat()->isDragPointer()) {
         KWaylandServer::PointerInterface *pointer = waylandServer()->seat()->pointer();
@@ -1101,8 +1080,6 @@ void CursorImage::updateDrag()
 
 void CursorImage::updateDragCursor()
 {
-    m_drag.cursor = {};
-    const bool needsEmit = m_currentSource == CursorSource::DragAndDrop;
     QImage additionalIcon;
     if (const KWaylandServer::DragAndDropIcon *dragIcon = waylandServer()->seat()->dragIcon()) {
         if (auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(dragIcon->surface()->buffer())) {
@@ -1113,82 +1090,68 @@ void CursorImage::updateDragCursor()
     }
     auto p = waylandServer()->seat()->pointer();
     if (!p) {
-        if (needsEmit) {
-            Q_EMIT changed();
-        }
         return;
     }
     auto c = p->cursor();
     if (!c) {
-        if (needsEmit) {
-            Q_EMIT changed();
-        }
-        return;
-    }
-    auto cursorSurface = c->surface();
-    if (!cursorSurface) {
-        if (needsEmit) {
-            Q_EMIT changed();
-        }
-        return;
-    }
-    auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(cursorSurface->buffer());
-    if (!buffer) {
-        if (needsEmit) {
-            Q_EMIT changed();
-        }
         return;
     }
 
-    QImage cursorImage = buffer->data();
-    cursorImage.setDevicePixelRatio(cursorSurface->bufferScale());
+    QImage image;
+    QPoint hotspot;
 
-    if (additionalIcon.isNull()) {
-        m_drag.cursor.image = cursorImage.copy();
-        m_drag.cursor.hotspot = c->hotspot();
-    } else {
-        QRect cursorRect(QPoint(0, 0), cursorImage.size() / cursorImage.devicePixelRatio());
-        QRect iconRect(QPoint(0, 0), additionalIcon.size() / additionalIcon.devicePixelRatio());
+    if (c->surface()) {
+        auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(c->surface()->buffer());
+        if (buffer) {
+            QImage cursorImage = buffer->data();
+            cursorImage.setDevicePixelRatio(c->surface()->bufferScale());
 
-        if (-c->hotspot().x() < additionalIcon.offset().x()) {
-            iconRect.moveLeft(c->hotspot().x() - additionalIcon.offset().x());
-        } else {
-            cursorRect.moveLeft(-additionalIcon.offset().x() - c->hotspot().x());
+            if (additionalIcon.isNull()) {
+                image = cursorImage.copy();
+                hotspot = c->hotspot();
+            } else {
+                QRect cursorRect(QPoint(0, 0), cursorImage.size() / cursorImage.devicePixelRatio());
+                QRect iconRect(QPoint(0, 0), additionalIcon.size() / additionalIcon.devicePixelRatio());
+
+                if (-c->hotspot().x() < additionalIcon.offset().x()) {
+                    iconRect.moveLeft(c->hotspot().x() - additionalIcon.offset().x());
+                } else {
+                    cursorRect.moveLeft(-additionalIcon.offset().x() - c->hotspot().x());
+                }
+                if (-c->hotspot().y() < additionalIcon.offset().y()) {
+                    iconRect.moveTop(c->hotspot().y() - additionalIcon.offset().y());
+                } else {
+                    cursorRect.moveTop(-additionalIcon.offset().y() - c->hotspot().y());
+                }
+
+                const QRect viewport = cursorRect.united(iconRect);
+                const qreal scale = c->surface()->bufferScale();
+
+                image = QImage(viewport.size() * scale, QImage::Format_ARGB32_Premultiplied);
+                image.setDevicePixelRatio(scale);
+                image.fill(Qt::transparent);
+
+                QPainter p(&image);
+                p.drawImage(iconRect, additionalIcon);
+                p.drawImage(cursorRect, cursorImage);
+                p.end();
+
+                hotspot = cursorRect.topLeft() + c->hotspot();
+            }
         }
-        if (-c->hotspot().y() < additionalIcon.offset().y()) {
-            iconRect.moveTop(c->hotspot().y() - additionalIcon.offset().y());
-        } else {
-            cursorRect.moveTop(-additionalIcon.offset().y() - c->hotspot().y());
-        }
-
-        const QRect viewport = cursorRect.united(iconRect);
-        const qreal scale = cursorSurface->bufferScale();
-
-        m_drag.cursor.image = QImage(viewport.size() * scale, QImage::Format_ARGB32_Premultiplied);
-        m_drag.cursor.image.setDevicePixelRatio(scale);
-        m_drag.cursor.image.fill(Qt::transparent);
-        m_drag.cursor.hotspot = cursorRect.topLeft() + c->hotspot();
-
-        QPainter p(&m_drag.cursor.image);
-        p.drawImage(iconRect, additionalIcon);
-        p.drawImage(cursorRect, cursorImage);
-        p.end();
     }
 
-    if (needsEmit) {
-        Q_EMIT changed();
-    }
-    // TODO: add the cursor image
+    m_drag.cursor->update(image, hotspot);
 }
 
-void CursorImage::loadThemeCursor(CursorShape shape, WaylandCursorImage::Image *image)
+void CursorImage::loadThemeCursor(CursorShape shape, ImageCursorSource *source)
 {
-    m_waylandImage.loadThemeCursor(shape, image);
+    m_waylandImage.loadThemeCursor(shape, source);
 }
 
-void CursorImage::loadThemeCursor(const QByteArray &shape, WaylandCursorImage::Image *image)
+void CursorImage::loadThemeCursor(const QByteArray &shape, ImageCursorSource *source)
 {
-    m_waylandImage.loadThemeCursor(shape, image);
+    m_waylandImage.loadThemeCursor(shape, source);
 }
 
 WaylandCursorImage::WaylandCursorImage(QObject *parent)
@@ -1234,24 +1197,24 @@ void WaylandCursorImage::invalidateCursorTheme()
     m_cursorTheme = KXcursorTheme();
 }
 
-void WaylandCursorImage::loadThemeCursor(const CursorShape &shape, Image *cursorImage)
+void WaylandCursorImage::loadThemeCursor(const CursorShape &shape, ImageCursorSource *source)
 {
-    loadThemeCursor(shape.name(), cursorImage);
+    loadThemeCursor(shape.name(), source);
 }
 
-void WaylandCursorImage::loadThemeCursor(const QByteArray &name, Image *cursorImage)
+void WaylandCursorImage::loadThemeCursor(const QByteArray &name, ImageCursorSource *source)
 {
     if (!ensureCursorTheme()) {
         return;
     }
 
-    if (loadThemeCursor_helper(name, cursorImage)) {
+    if (loadThemeCursor_helper(name, source)) {
         return;
     }
 
     const auto alternativeNames = Cursor::cursorAlternativeNames(name);
     for (const QByteArray &alternativeName : alternativeNames) {
-        if (loadThemeCursor_helper(alternativeName, cursorImage)) {
+        if (loadThemeCursor_helper(alternativeName, source)) {
             return;
         }
     }
@@ -1259,16 +1222,13 @@ void WaylandCursorImage::loadThemeCursor(const QByteArray &name, Image *cursorIm
     qCWarning(KWIN_CORE) << "Failed to load theme cursor for shape" << name;
 }
 
-bool WaylandCursorImage::loadThemeCursor_helper(const QByteArray &name, Image *cursorImage)
+bool WaylandCursorImage::loadThemeCursor_helper(const QByteArray &name, ImageCursorSource *source)
 {
     const QVector<KXcursorSprite> sprites = m_cursorTheme.shape(name);
     if (sprites.isEmpty()) {
         return false;
     }
-
-    cursorImage->image = sprites.first().data();
-    cursorImage->hotspot = sprites.first().hotspot();
-
+    source->update(sprites.first().data(), sprites.first().hotspot());
     return true;
 }
 
@@ -1276,92 +1236,49 @@ void CursorImage::reevaluteSource()
 {
     if (waylandServer()->seat()->isDragPointer()) {
         // TODO: touch drag?
-        setSource(CursorSource::DragAndDrop);
+        setSource(m_drag.cursor.get());
         return;
     }
     if (waylandServer()->isScreenLocked()) {
-        setSource(CursorSource::LockScreen);
+        setSource(m_serverCursor.cursor.get());
         return;
     }
     if (input()->isSelectingWindow()) {
-        setSource(CursorSource::WindowSelector);
+        setSource(m_windowSelectionCursor.get());
         return;
     }
     if (effects && static_cast<EffectsHandlerImpl *>(effects)->isMouseInterception()) {
-        setSource(CursorSource::EffectsOverride);
+        setSource(m_effectsCursor.get());
         return;
     }
     if (workspace() && workspace()->moveResizeWindow()) {
-        setSource(CursorSource::MoveResize);
+        setSource(m_moveResizeCursor.get());
         return;
     }
     if (m_pointer->decoration()) {
-        setSource(CursorSource::Decoration);
+        setSource(m_decoration.cursor.get());
         return;
     }
     const KWaylandServer::PointerInterface *pointer = waylandServer()->seat()->pointer();
     if (pointer && pointer->focusedSurface()) {
-        setSource(CursorSource::PointerSurface);
+        setSource(m_serverCursor.cursor.get());
         return;
     }
-    setSource(CursorSource::Fallback);
+    setSource(m_fallbackCursor.get());
 }
 
-void CursorImage::setSource(CursorSource source)
+CursorSource *CursorImage::source() const
+{
+    return m_currentSource;
+}
+
+void CursorImage::setSource(CursorSource *source)
 {
     if (m_currentSource == source) {
         return;
     }
     m_currentSource = source;
     Q_EMIT changed();
-}
-
-QImage CursorImage::image() const
-{
-    switch (m_currentSource) {
-    case CursorSource::EffectsOverride:
-        return m_effectsCursor.image;
-    case CursorSource::MoveResize:
-        return m_moveResizeCursor.image;
-    case CursorSource::LockScreen:
-    case CursorSource::PointerSurface:
-        // lockscreen also uses server cursor image
-        return m_serverCursor.cursor.image;
-    case CursorSource::Decoration:
-        return m_decorationCursor.image;
-    case CursorSource::DragAndDrop:
-        return m_drag.cursor.image;
-    case CursorSource::Fallback:
-        return m_fallbackCursor.image;
-    case CursorSource::WindowSelector:
-        return m_windowSelectionCursor.image;
-    default:
-        Q_UNREACHABLE();
-    }
-}
-
-QPoint CursorImage::hotSpot() const
-{
-    switch (m_currentSource) {
-    case CursorSource::EffectsOverride:
-        return m_effectsCursor.hotspot;
-    case CursorSource::MoveResize:
-        return m_moveResizeCursor.hotspot;
-    case CursorSource::LockScreen:
-    case CursorSource::PointerSurface:
-        // lockscreen also uses server cursor image
-        return m_serverCursor.cursor.hotspot;
-    case CursorSource::Decoration:
-        return m_decorationCursor.hotspot;
-    case CursorSource::DragAndDrop:
-        return m_drag.cursor.hotspot;
-    case CursorSource::Fallback:
-        return m_fallbackCursor.hotspot;
-    case CursorSource::WindowSelector:
-        return m_windowSelectionCursor.hotspot;
-    default:
-        Q_UNREACHABLE();
-    }
 }
 
 InputRedirectionCursor::InputRedirectionCursor(QObject *parent)

@@ -11,6 +11,7 @@
 // kwin
 #include "composite.h"
 #include "core/output.h"
+#include "cursorsource.h"
 #include "input.h"
 #include "keyboard_input.h"
 #include "main.h"
@@ -180,6 +181,22 @@ bool Cursor::isOnOutput(Output *output) const
     return !image().isNull();
 }
 
+QImage Cursor::image() const
+{
+    if (Q_UNLIKELY(!m_source)) {
+        return QImage();
+    }
+    return m_source->image();
+}
+
+QPoint Cursor::hotspot() const
+{
+    if (Q_UNLIKELY(!m_source)) {
+        return QPoint();
+    }
+    return m_source->hotspot();
+}
+
 QRect Cursor::geometry() const
 {
     return rect().translated(m_pos - hotspot());
@@ -214,13 +231,6 @@ void Cursor::setPos(const QPoint &pos)
 void Cursor::setPos(int x, int y)
 {
     setPos(QPoint(x, y));
-}
-
-void Cursor::updateCursor(const QImage &image, const QPoint &hotspot)
-{
-    m_image = image;
-    m_hotspot = hotspot;
-    Q_EMIT cursorChanged();
 }
 
 void Cursor::markAsRendered(std::chrono::milliseconds timestamp)
@@ -687,6 +697,24 @@ QByteArray CursorShape::name() const
     default:
         return QByteArray();
     }
+}
+
+CursorSource *Cursor::source() const
+{
+    return m_source;
+}
+
+void Cursor::setSource(CursorSource *source)
+{
+    if (m_source == source) {
+        return;
+    }
+    if (m_source) {
+        disconnect(m_source, &CursorSource::changed, this, &Cursor::cursorChanged);
+    }
+    m_source = source;
+    connect(m_source, &CursorSource::changed, this, &Cursor::cursorChanged);
+    Q_EMIT cursorChanged();
 }
 
 InputConfig *InputConfig::s_self = nullptr;

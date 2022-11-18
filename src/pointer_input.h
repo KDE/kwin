@@ -34,6 +34,7 @@ class CursorImage;
 class InputDevice;
 class InputRedirection;
 class CursorShape;
+class ImageCursorSource;
 
 namespace Decoration
 {
@@ -182,20 +183,14 @@ class WaylandCursorImage : public QObject
 public:
     explicit WaylandCursorImage(QObject *parent = nullptr);
 
-    struct Image
-    {
-        QImage image;
-        QPoint hotspot;
-    };
-
-    void loadThemeCursor(const CursorShape &shape, Image *cursorImage);
-    void loadThemeCursor(const QByteArray &name, Image *cursorImage);
+    void loadThemeCursor(const CursorShape &shape, ImageCursorSource *source);
+    void loadThemeCursor(const QByteArray &name, ImageCursorSource *source);
 
 Q_SIGNALS:
     void themeChanged();
 
 private:
-    bool loadThemeCursor_helper(const QByteArray &name, Image *cursorImage);
+    bool loadThemeCursor_helper(const QByteArray &name, ImageCursorSource *source);
     bool ensureCursorTheme();
     void invalidateCursorTheme();
 
@@ -214,8 +209,8 @@ public:
     void setWindowSelectionCursor(const QByteArray &shape);
     void removeWindowSelectionCursor();
 
-    QImage image() const;
-    QPoint hotSpot() const;
+    CursorSource *source() const;
+    void setSource(CursorSource *source);
     void markAsRendered(std::chrono::milliseconds timestamp);
 
 Q_SIGNALS:
@@ -233,40 +228,32 @@ private:
     void handlePointerChanged();
     void handleFocusedSurfaceChanged();
 
-    void loadThemeCursor(CursorShape shape, WaylandCursorImage::Image *image);
-    void loadThemeCursor(const QByteArray &shape, WaylandCursorImage::Image *image);
-
-    enum class CursorSource {
-        LockScreen,
-        EffectsOverride,
-        MoveResize,
-        PointerSurface,
-        Decoration,
-        DragAndDrop,
-        Fallback,
-        WindowSelector
-    };
-    void setSource(CursorSource source);
+    void loadThemeCursor(CursorShape shape, ImageCursorSource *source);
+    void loadThemeCursor(const QByteArray &shape, ImageCursorSource *source);
 
     PointerInputRedirection *m_pointer;
-    CursorSource m_currentSource = CursorSource::Fallback;
+    CursorSource *m_currentSource = nullptr;
     WaylandCursorImage m_waylandImage;
 
-    WaylandCursorImage::Image m_effectsCursor;
-    WaylandCursorImage::Image m_decorationCursor;
-    QMetaObject::Connection m_decorationConnection;
-    WaylandCursorImage::Image m_fallbackCursor;
-    WaylandCursorImage::Image m_moveResizeCursor;
-    WaylandCursorImage::Image m_windowSelectionCursor;
+    std::unique_ptr<ImageCursorSource> m_effectsCursor;
+    std::unique_ptr<ImageCursorSource> m_fallbackCursor;
+    std::unique_ptr<ImageCursorSource> m_moveResizeCursor;
+    std::unique_ptr<ImageCursorSource> m_windowSelectionCursor;
+
     struct
     {
-        WaylandCursorImage::Image cursor;
+        std::unique_ptr<ImageCursorSource> cursor;
+        QMetaObject::Connection connection;
+    } m_decoration;
+    struct
+    {
+        std::unique_ptr<ImageCursorSource> cursor;
         QMetaObject::Connection connection;
     } m_drag;
     struct
     {
         QMetaObject::Connection connection;
-        WaylandCursorImage::Image cursor;
+        std::unique_ptr<ImageCursorSource> cursor;
     } m_serverCursor;
 };
 

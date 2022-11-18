@@ -24,6 +24,7 @@ class QTimer;
 namespace KWin
 {
 
+class CursorSource;
 class Output;
 
 namespace ExtendedCursor
@@ -174,23 +175,19 @@ public:
      */
     xcb_cursor_t x11Cursor(const QByteArray &name);
 
-    QImage image() const
-    {
-        return m_image;
-    }
-    QPoint hotspot() const
-    {
-        return m_hotspot;
-    }
+    QImage image() const;
+    QPoint hotspot() const;
     QRect geometry() const;
     QRect rect() const;
+
+    CursorSource *source() const;
+    void setSource(CursorSource *source);
 
     /**
      * Returns @c true if the cursor is visible on the given output; otherwise returns @c false.
      */
     bool isOnOutput(Output *output) const;
 
-    void updateCursor(const QImage &image, const QPoint &hotspot);
     void markAsRendered(std::chrono::milliseconds timestamp);
 
 Q_SIGNALS:
@@ -261,10 +258,9 @@ private Q_SLOTS:
 private:
     void updateTheme(const QString &name, int size);
     void loadThemeFromKConfig();
+    CursorSource *m_source = nullptr;
     QHash<QByteArray, xcb_cursor_t> m_cursors;
     QPoint m_pos;
-    QPoint m_hotspot;
-    QImage m_image;
     int m_mousePollingCounter;
     int m_cursorTrackingCounter;
     QString m_themeName;

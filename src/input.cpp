@@ -36,6 +36,7 @@
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "cursor.h"
+#include "cursorsource.h"
 #include "internalwindow.h"
 #include "popup_input_filter.h"
 #include "screenedge.h"
@@ -1904,9 +1905,24 @@ static KWaylandServer::SeatInterface *findSeat()
 class SurfaceCursor : public Cursor
 {
 public:
-    explicit SurfaceCursor(QObject *parent)
-        : Cursor(parent)
+    explicit SurfaceCursor(KWaylandServer::TabletToolV2Interface *tool)
+        : Cursor(tool)
+        , m_source(std::make_unique<ImageCursorSource>())
     {
+        connect(tool, &KWaylandServer::TabletToolV2Interface::cursorChanged, this, [this](KWaylandServer::TabletCursorV2 *tcursor) {
+            if (!tcursor || tcursor->enteredSerial() == 0) {
+                static WaylandCursorImage defaultCursor;
+                defaultCursor.loadThemeCursor(CursorShape(Qt::CrossCursor), m_source.get());
+                return;
+            }
+            auto cursorSurface = tcursor->surface();
+            if (!cursorSurface) {
+                m_source->update(QImage(), QPoint());
+                return;
+            }
+
+            updateCursorSurface(cursorSurface, tcursor->hotspot());
+        });
     }
 
     void updateCursorSurface(KWaylandServer::SurfaceInterface *surface, const QPoint &hotspot)
@@ -1930,17 +1946,18 @@ private:
     {
         auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(m_surface->buffer());
         if (!buffer) {
-            updateCursor({}, {});
+            m_source->update(QImage(), QPoint());
             return;
         }
 
         QImage cursorImage;
         cursorImage = buffer->data().copy();
         cursorImage.setDevicePixelRatio(m_surface->bufferScale());
-        updateCursor(cursorImage, m_hotspot);
+        m_source->update(cursorImage, m_hotspot);
     }
 
     QPointer<KWaylandServer::SurfaceInterface> m_surface;
+    std::unique_ptr<ImageCursorSource> m_source;
     QPoint m_hotspot;
 };
 
@@ -2118,27 +2135,6 @@ public:
         Cursors::self()->addCursor(cursor);
         m_cursorByTool[tool] = cursor;
 
-        connect(tool, &TabletToolV2Interface::cursorChanged, cursor, [cursor](TabletCursorV2 *tcursor) {
-            static const auto createDefaultCursor = [] {
-                WaylandCursorImage defaultCursor;
-                WaylandCursorImage::Image ret;
-                defaultCursor.loadThemeCursor(CursorShape(Qt::CrossCursor), &ret);
-                return ret;
-            };
-            if (!tcursor || tcursor->enteredSerial() == 0) {
-                static const auto defaultCursor = createDefaultCursor();
-                cursor->updateCursor(defaultCursor.image, defaultCursor.hotspot);
-                return;
-            }
-            auto cursorSurface = tcursor->surface();
-            if (!cursorSurface) {
-                cursor->updateCursor({}, {});
-                return;
-            }
-
-            cursor->updateCursorSurface(cursorSurface, tcursor->hotspot());
-        });
-        Q_EMIT cursor->cursorChanged();
         return tool;
     }
 
