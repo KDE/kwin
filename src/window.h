@@ -272,12 +272,6 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(bool skipsCloseAnimation READ skipsCloseAnimation WRITE setSkipCloseAnimation NOTIFY skipCloseAnimationChanged)
 
     /**
-     * Interface to the Wayland Surface.
-     * Relevant only in Wayland, in X11 it will be nullptr
-     */
-    Q_PROPERTY(KWaylandServer::SurfaceInterface *surface READ surface)
-
-    /**
      * Whether the window is a popup.
      */
     Q_PROPERTY(bool popupWindow READ isPopupWindow)
