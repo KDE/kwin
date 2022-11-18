@@ -141,12 +141,12 @@ bool DBusInterface::setCurrentDesktop(int desktop)
 
 void DBusInterface::nextDesktop()
 {
-    VirtualDesktopManager::self()->moveTo<DesktopNext>();
+    VirtualDesktopManager::self()->moveTo(VirtualDesktopManager::Direction::Next);
 }
 
 void DBusInterface::previousDesktop()
 {
-    VirtualDesktopManager::self()->moveTo<DesktopPrevious>();
+    VirtualDesktopManager::self()->moveTo(VirtualDesktopManager::Direction::Previous);
 }
 
 void DBusInterface::showDebugConsole()

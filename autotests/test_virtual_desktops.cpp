@@ -80,8 +80,7 @@ private Q_SLOTS:
 
 private:
     void addDirectionColumns();
-    template<typename T>
-    void testDirection(const QString &actionName);
+    void testDirection(const QString &actionName, VirtualDesktopManager::Direction direction);
 };
 
 void TestVirtualDesktops::init()
@@ -266,8 +265,7 @@ void TestVirtualDesktops::addDirectionColumns()
     QTest::addColumn<uint>("result");
 }
 
-template<typename T>
-void TestVirtualDesktops::testDirection(const QString &actionName)
+void TestVirtualDesktops::testDirection(const QString &actionName, VirtualDesktopManager::Direction direction)
 {
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     QFETCH(uint, initCount);
@@ -277,8 +275,7 @@ void TestVirtualDesktops::testDirection(const QString &actionName)
 
     QFETCH(bool, wrap);
     QFETCH(uint, result);
-    T functor;
-    QCOMPARE(functor(nullptr, wrap)->x11DesktopNumber(), result);
+    QCOMPARE(vds->inDirection(nullptr, direction, wrap)->x11DesktopNumber(), result);
 
     vds->setNavigationWrappingAround(wrap);
     vds->initShortcuts();
@@ -286,7 +283,7 @@ void TestVirtualDesktops::testDirection(const QString &actionName)
     QVERIFY(action);
     action->trigger();
     QCOMPARE(vds->current(), result);
-    QCOMPARE(functor(initCurrent, wrap), result);
+    QCOMPARE(vds->inDirection(initCurrent, direction, wrap), result);
 }
 
 void TestVirtualDesktops::next_data()
@@ -303,7 +300,7 @@ void TestVirtualDesktops::next_data()
 
 void TestVirtualDesktops::next()
 {
-    testDirection<DesktopNext>(QStringLiteral("Switch to Next Desktop"));
+    testDirection(QStringLiteral("Switch to Next Desktop"), VirtualDesktopManager::Direction::Next);
 }
 
 void TestVirtualDesktops::previous_data()
@@ -320,7 +317,7 @@ void TestVirtualDesktops::previous_data()
 
 void TestVirtualDesktops::previous()
 {
-    testDirection<DesktopPrevious>(QStringLiteral("Switch to Previous Desktop"));
+    testDirection(QStringLiteral("Switch to Previous Desktop"), VirtualDesktopManager::Direction::Previous);
 }
 
 void TestVirtualDesktops::left_data()
@@ -345,7 +342,7 @@ void TestVirtualDesktops::left_data()
 
 void TestVirtualDesktops::left()
 {
-    testDirection<DesktopLeft>(QStringLiteral("Switch One Desktop to the Left"));
+    testDirection(QStringLiteral("Switch One Desktop to the Left"), VirtualDesktopManager::Direction::Left);
 }
 
 void TestVirtualDesktops::right_data()
@@ -370,7 +367,7 @@ void TestVirtualDesktops::right_data()
 
 void TestVirtualDesktops::right()
 {
-    testDirection<DesktopRight>(QStringLiteral("Switch One Desktop to the Right"));
+    testDirection(QStringLiteral("Switch One Desktop to the Right"), VirtualDesktopManager::Direction::Right);
 }
 
 void TestVirtualDesktops::above_data()
@@ -391,7 +388,7 @@ void TestVirtualDesktops::above_data()
 
 void TestVirtualDesktops::above()
 {
-    testDirection<DesktopAbove>(QStringLiteral("Switch One Desktop Up"));
+    testDirection(QStringLiteral("Switch One Desktop Up"), VirtualDesktopManager::Direction::Up);
 }
 
 void TestVirtualDesktops::below_data()
@@ -412,7 +409,7 @@ void TestVirtualDesktops::below_data()
 
 void TestVirtualDesktops::below()
 {
-    testDirection<DesktopBelow>(QStringLiteral("Switch One Desktop Down"));
+    testDirection(QStringLiteral("Switch One Desktop Down"), VirtualDesktopManager::Direction::Down);
 }
 
 void TestVirtualDesktops::updateGrid_data()

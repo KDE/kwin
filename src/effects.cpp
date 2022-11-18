@@ -1075,22 +1075,22 @@ QPoint EffectsHandlerImpl::desktopCoords(int id) const
 
 int EffectsHandlerImpl::desktopAbove(int desktop, bool wrap) const
 {
-    return getDesktop<DesktopAbove>(desktop, wrap);
+    return VirtualDesktopManager::self()->inDirection(desktop, VirtualDesktopManager::Direction::Up, wrap);
 }
 
 int EffectsHandlerImpl::desktopToRight(int desktop, bool wrap) const
 {
-    return getDesktop<DesktopRight>(desktop, wrap);
+    return VirtualDesktopManager::self()->inDirection(desktop, VirtualDesktopManager::Direction::Right, wrap);
 }
 
 int EffectsHandlerImpl::desktopBelow(int desktop, bool wrap) const
 {
-    return getDesktop<DesktopBelow>(desktop, wrap);
+    return VirtualDesktopManager::self()->inDirection(desktop, VirtualDesktopManager::Direction::Down, wrap);
 }
 
 int EffectsHandlerImpl::desktopToLeft(int desktop, bool wrap) const
 {
-    return getDesktop<DesktopLeft>(desktop, wrap);
+    return VirtualDesktopManager::self()->inDirection(desktop, VirtualDesktopManager::Direction::Left, wrap);
 }
 
 QString EffectsHandlerImpl::desktopName(int desktop) const

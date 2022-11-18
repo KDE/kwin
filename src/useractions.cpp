@@ -1525,14 +1525,12 @@ void Workspace::slotToggleShowDesktop()
     setShowingDesktop(!showingDesktop());
 }
 
-template<typename Direction>
-void windowToDesktop(Window *window)
+void windowToDesktop(Window *window, VirtualDesktopManager::Direction direction)
 {
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     Workspace *ws = Workspace::self();
-    Direction functor;
     // TODO: why is options->isRollOverDesktops() not honored?
-    const auto desktop = functor(nullptr, true);
+    const auto desktop = vds->inDirection(nullptr, direction, true);
     if (window && !window->isDesktop()
         && !window->isDock()) {
         ws->setMoveResizeWindow(window);
@@ -1553,7 +1551,7 @@ void Workspace::slotWindowToNextDesktop()
 
 void Workspace::windowToNextDesktop(Window *window)
 {
-    windowToDesktop<DesktopNext>(window);
+    windowToDesktop(window, VirtualDesktopManager::Direction::Next);
 }
 
 /**
@@ -1568,17 +1566,15 @@ void Workspace::slotWindowToPreviousDesktop()
 
 void Workspace::windowToPreviousDesktop(Window *window)
 {
-    windowToDesktop<DesktopPrevious>(window);
+    windowToDesktop(window, VirtualDesktopManager::Direction::Previous);
 }
 
-template<typename Direction>
-void activeWindowToDesktop()
+void activeWindowToDesktop(VirtualDesktopManager::Direction direction)
 {
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     Workspace *ws = Workspace::self();
     VirtualDesktop *current = vds->currentDesktop();
-    Direction functor;
-    VirtualDesktop *newCurrent = functor(current, options->isRollOverDesktops());
+    VirtualDesktop *newCurrent = VirtualDesktopManager::self()->inDirection(current, direction, options->isRollOverDesktops());
     if (newCurrent == current) {
         return;
     }
@@ -1590,28 +1586,28 @@ void activeWindowToDesktop()
 void Workspace::slotWindowToDesktopRight()
 {
     if (USABLE_ACTIVE_WINDOW) {
-        activeWindowToDesktop<DesktopRight>();
+        activeWindowToDesktop(VirtualDesktopManager::Direction::Right);
     }
 }
 
 void Workspace::slotWindowToDesktopLeft()
 {
     if (USABLE_ACTIVE_WINDOW) {
-        activeWindowToDesktop<DesktopLeft>();
+        activeWindowToDesktop(VirtualDesktopManager::Direction::Left);
     }
 }
 
 void Workspace::slotWindowToDesktopUp()
 {
     if (USABLE_ACTIVE_WINDOW) {
-        activeWindowToDesktop<DesktopAbove>();
+        activeWindowToDesktop(VirtualDesktopManager::Direction::Up);
     }
 }
 
 void Workspace::slotWindowToDesktopDown()
 {
     if (USABLE_ACTIVE_WINDOW) {
-        activeWindowToDesktop<DesktopBelow>();
+        activeWindowToDesktop(VirtualDesktopManager::Direction::Down);
     }
 }
 

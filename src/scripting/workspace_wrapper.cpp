@@ -223,18 +223,18 @@ SLOTWRAPPER(slotSwitchWindowLeft, DirectionWest)
 
 #undef SLOTWRAPPER
 
-#define SLOTWRAPPER(name, direction)                                                     \
-    void WorkspaceWrapper::name()                                                        \
-    {                                                                                    \
-        VirtualDesktopManager::self()->moveTo<direction>(options->isRollOverDesktops()); \
+#define SLOTWRAPPER(name, direction)                                                                                       \
+    void WorkspaceWrapper::name()                                                                                          \
+    {                                                                                                                      \
+        VirtualDesktopManager::self()->moveTo(VirtualDesktopManager::Direction::direction, options->isRollOverDesktops()); \
     }
 
-SLOTWRAPPER(slotSwitchDesktopNext, DesktopNext)
-SLOTWRAPPER(slotSwitchDesktopPrevious, DesktopPrevious)
-SLOTWRAPPER(slotSwitchDesktopRight, DesktopRight)
-SLOTWRAPPER(slotSwitchDesktopLeft, DesktopLeft)
-SLOTWRAPPER(slotSwitchDesktopUp, DesktopAbove)
-SLOTWRAPPER(slotSwitchDesktopDown, DesktopBelow)
+SLOTWRAPPER(slotSwitchDesktopNext, Next)
+SLOTWRAPPER(slotSwitchDesktopPrevious, Previous)
+SLOTWRAPPER(slotSwitchDesktopRight, Right)
+SLOTWRAPPER(slotSwitchDesktopLeft, Left)
+SLOTWRAPPER(slotSwitchDesktopUp, Up)
+SLOTWRAPPER(slotSwitchDesktopDown, Down)
 
 #undef SLOTWRAPPER
 

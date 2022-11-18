@@ -1476,14 +1476,12 @@ void TabBox::modifiersReleased()
 
 int TabBox::nextDesktopStatic(int iDesktop) const
 {
-    DesktopNext functor;
-    return functor(iDesktop, true);
+    return VirtualDesktopManager::self()->inDirection(iDesktop, VirtualDesktopManager::Direction::Next, true);
 }
 
 int TabBox::previousDesktopStatic(int iDesktop) const
 {
-    DesktopPrevious functor;
-    return functor(iDesktop, true);
+    return VirtualDesktopManager::self()->inDirection(iDesktop, VirtualDesktopManager::Direction::Previous, true);
 }
 
 /**

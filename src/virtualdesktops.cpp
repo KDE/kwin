@@ -240,10 +240,33 @@ void VirtualDesktopManager::setRootInfo(NETRootInfo *info)
     }
 }
 
-uint VirtualDesktopManager::above(uint id, bool wrap) const
+VirtualDesktop *VirtualDesktopManager::inDirection(VirtualDesktop *desktop, Direction direction, bool wrap)
 {
-    auto vd = above(desktopForX11Id(id), wrap);
-    return vd ? vd->x11DesktopNumber() : 0;
+    switch (direction) {
+    case Direction::Up:
+        return above(desktop, wrap);
+    case Direction::Down:
+        return below(desktop, wrap);
+    case Direction::Right:
+        return toRight(desktop, wrap);
+    case Direction::Left:
+        return toLeft(desktop, wrap);
+    case Direction::Next:
+        return next(desktop, wrap);
+    case Direction::Previous:
+        return previous(desktop, wrap);
+    }
+    Q_UNREACHABLE();
+}
+
+uint VirtualDesktopManager::inDirection(uint desktop, Direction direction, bool wrap)
+{
+    return inDirection(desktopForX11Id(desktop), direction, wrap)->x11DesktopNumber();
+}
+
+void VirtualDesktopManager::moveTo(Direction direction, bool wrap)
+{
+    setCurrent(inDirection(nullptr, direction, wrap));
 }
 
 VirtualDesktop *VirtualDesktopManager::above(VirtualDesktop *desktop, bool wrap) const
@@ -270,12 +293,6 @@ VirtualDesktop *VirtualDesktopManager::above(VirtualDesktop *desktop, bool wrap)
     return nullptr;
 }
 
-uint VirtualDesktopManager::toRight(uint id, bool wrap) const
-{
-    auto vd = toRight(desktopForX11Id(id), wrap);
-    return vd ? vd->x11DesktopNumber() : 0;
-}
-
 VirtualDesktop *VirtualDesktopManager::toRight(VirtualDesktop *desktop, bool wrap) const
 {
     Q_ASSERT(m_current);
@@ -298,12 +315,6 @@ VirtualDesktop *VirtualDesktopManager::toRight(VirtualDesktop *desktop, bool wra
         }
     }
     return nullptr;
-}
-
-uint VirtualDesktopManager::below(uint id, bool wrap) const
-{
-    auto vd = below(desktopForX11Id(id), wrap);
-    return vd ? vd->x11DesktopNumber() : 0;
 }
 
 VirtualDesktop *VirtualDesktopManager::below(VirtualDesktop *desktop, bool wrap) const
@@ -329,12 +340,6 @@ VirtualDesktop *VirtualDesktopManager::below(VirtualDesktop *desktop, bool wrap)
         }
     }
     return nullptr;
-}
-
-uint VirtualDesktopManager::toLeft(uint id, bool wrap) const
-{
-    auto vd = toLeft(desktopForX11Id(id), wrap);
-    return vd ? vd->x11DesktopNumber() : 0;
 }
 
 VirtualDesktop *VirtualDesktopManager::toLeft(VirtualDesktop *desktop, bool wrap) const
@@ -950,32 +955,32 @@ void VirtualDesktopManager::setNavigationWrappingAround(bool enabled)
 
 void VirtualDesktopManager::slotDown()
 {
-    moveTo<DesktopBelow>(isNavigationWrappingAround());
+    moveTo(Direction::Down, isNavigationWrappingAround());
 }
 
 void VirtualDesktopManager::slotLeft()
 {
-    moveTo<DesktopLeft>(isNavigationWrappingAround());
+    moveTo(Direction::Left, isNavigationWrappingAround());
 }
 
 void VirtualDesktopManager::slotPrevious()
 {
-    moveTo<DesktopPrevious>(isNavigationWrappingAround());
+    moveTo(Direction::Previous, isNavigationWrappingAround());
 }
 
 void VirtualDesktopManager::slotNext()
 {
-    moveTo<DesktopNext>(isNavigationWrappingAround());
+    moveTo(Direction::Next, isNavigationWrappingAround());
 }
 
 void VirtualDesktopManager::slotRight()
 {
-    moveTo<DesktopRight>(isNavigationWrappingAround());
+    moveTo(Direction::Right, isNavigationWrappingAround());
 }
 
 void VirtualDesktopManager::slotUp()
 {
-    moveTo<DesktopAbove>(isNavigationWrappingAround());
+    moveTo(Direction::Up, isNavigationWrappingAround());
 }
 
 } // KWin
