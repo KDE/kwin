@@ -2104,16 +2104,10 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
                         }
                     }
 
-                    int dx = sign(currentMoveResizeGeom.x() - currentTry.x()),
-                        dy = sign(currentMoveResizeGeom.y() - currentTry.y());
-                    if (visiblePixels && dx) { // means there's no full width cap -> favor horizontally
-                        dy = 0;
-                    } else if (dy) {
-                        dx = 0;
-                    }
+                    int dy = sign(currentMoveResizeGeom.y() - currentTry.y());
 
                     // Move it back
-                    currentTry.translate(dx, dy);
+                    currentTry.translate(0, dy);
                     nextMoveResizeGeom = currentTry;
 
                     if (nextMoveResizeGeom == currentMoveResizeGeom) {
