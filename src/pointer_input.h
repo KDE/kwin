@@ -35,6 +35,7 @@ class InputDevice;
 class InputRedirection;
 class CursorShape;
 class ImageCursorSource;
+class ShapeCursorSource;
 
 namespace Decoration
 {
@@ -183,6 +184,8 @@ class WaylandCursorImage : public QObject
 public:
     explicit WaylandCursorImage(QObject *parent = nullptr);
 
+    KXcursorTheme theme() const;
+
     void loadThemeCursor(const CursorShape &shape, ImageCursorSource *source);
     void loadThemeCursor(const QByteArray &name, ImageCursorSource *source);
 
@@ -191,8 +194,7 @@ Q_SIGNALS:
 
 private:
     bool loadThemeCursor_helper(const QByteArray &name, ImageCursorSource *source);
-    bool ensureCursorTheme();
-    void invalidateCursorTheme();
+    void updateCursorTheme();
 
     KXcursorTheme m_cursorTheme;
 };
@@ -209,6 +211,7 @@ public:
     void setWindowSelectionCursor(const QByteArray &shape);
     void removeWindowSelectionCursor();
 
+    KXcursorTheme theme() const;
     CursorSource *source() const;
     void setSource(CursorSource *source);
     void markAsRendered(std::chrono::milliseconds timestamp);
@@ -228,21 +231,18 @@ private:
     void handlePointerChanged();
     void handleFocusedSurfaceChanged();
 
-    void loadThemeCursor(CursorShape shape, ImageCursorSource *source);
-    void loadThemeCursor(const QByteArray &shape, ImageCursorSource *source);
-
     PointerInputRedirection *m_pointer;
     CursorSource *m_currentSource = nullptr;
     WaylandCursorImage m_waylandImage;
 
-    std::unique_ptr<ImageCursorSource> m_effectsCursor;
-    std::unique_ptr<ImageCursorSource> m_fallbackCursor;
-    std::unique_ptr<ImageCursorSource> m_moveResizeCursor;
-    std::unique_ptr<ImageCursorSource> m_windowSelectionCursor;
+    std::unique_ptr<ShapeCursorSource> m_effectsCursor;
+    std::unique_ptr<ShapeCursorSource> m_fallbackCursor;
+    std::unique_ptr<ShapeCursorSource> m_moveResizeCursor;
+    std::unique_ptr<ShapeCursorSource> m_windowSelectionCursor;
 
     struct
     {
-        std::unique_ptr<ImageCursorSource> cursor;
+        std::unique_ptr<ShapeCursorSource> cursor;
         QMetaObject::Connection connection;
     } m_decoration;
     struct

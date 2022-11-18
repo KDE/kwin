@@ -106,6 +106,9 @@ public:
      */
     KXcursorTheme &operator=(const KXcursorTheme &other);
 
+    bool operator==(const KXcursorTheme &other);
+    bool operator!=(const KXcursorTheme &other);
+
     /**
      * Returns @c true if the Xcursor theme is empty; otherwise returns @c false.
      */

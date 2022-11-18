@@ -218,6 +218,16 @@ KXcursorTheme &KXcursorTheme::operator=(const KXcursorTheme &other)
     return *this;
 }
 
+bool KXcursorTheme::operator==(const KXcursorTheme &other)
+{
+    return d == other.d;
+}
+
+bool KXcursorTheme::operator!=(const KXcursorTheme &other)
+{
+    return !(*this == other);
+}
+
 bool KXcursorTheme::isEmpty() const
 {
     return d->registry.isEmpty();

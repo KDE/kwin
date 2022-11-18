@@ -6,11 +6,12 @@
 
 #pragma once
 
-#include <kwin_export.h>
+#include "utils/xcursortheme.h"
 
 #include <QImage>
 #include <QObject>
 #include <QPoint>
+#include <QTimer>
 
 namespace KWin
 {
@@ -48,6 +49,35 @@ public:
 
 public Q_SLOTS:
     void update(const QImage &image, const QPoint &hotspot);
+};
+
+/**
+ * The ShapeCursorSource class represents the contents of a shape in the cursor theme.
+ */
+class KWIN_EXPORT ShapeCursorSource : public CursorSource
+{
+    Q_OBJECT
+
+public:
+    explicit ShapeCursorSource(QObject *parent = nullptr);
+
+    QByteArray shape() const;
+    void setShape(const QByteArray &shape);
+    void setShape(Qt::CursorShape shape);
+
+    KXcursorTheme theme() const;
+    void setTheme(const KXcursorTheme &theme);
+
+private:
+    void refresh();
+    void selectNextSprite();
+    void selectSprite(int index);
+
+    KXcursorTheme m_theme;
+    QByteArray m_shape;
+    QVector<KXcursorSprite> m_sprites;
+    QTimer m_delayTimer;
+    int m_currentSprite = -1;
 };
 
 } // namespace KWin

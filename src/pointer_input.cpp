@@ -886,11 +886,11 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     : QObject(parent)
     , m_pointer(parent)
 {
-    m_effectsCursor = std::make_unique<ImageCursorSource>();
-    m_fallbackCursor = std::make_unique<ImageCursorSource>();
-    m_moveResizeCursor = std::make_unique<ImageCursorSource>();
-    m_windowSelectionCursor = std::make_unique<ImageCursorSource>();
-    m_decoration.cursor = std::make_unique<ImageCursorSource>();
+    m_effectsCursor = std::make_unique<ShapeCursorSource>();
+    m_fallbackCursor = std::make_unique<ShapeCursorSource>();
+    m_moveResizeCursor = std::make_unique<ShapeCursorSource>();
+    m_windowSelectionCursor = std::make_unique<ShapeCursorSource>();
+    m_decoration.cursor = std::make_unique<ShapeCursorSource>();
     m_drag.cursor = std::make_unique<ImageCursorSource>();
     m_serverCursor.cursor = std::make_unique<ImageCursorSource>();
 
@@ -915,13 +915,21 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     const auto clients = workspace()->allClientList();
     std::for_each(clients.begin(), clients.end(), setupMoveResizeConnection);
     connect(workspace(), &Workspace::windowAdded, this, setupMoveResizeConnection);
-    loadThemeCursor(Qt::ArrowCursor, m_fallbackCursor.get());
+
+    m_fallbackCursor->setShape(Qt::ArrowCursor);
+
+    m_effectsCursor->setTheme(m_waylandImage.theme());
+    m_fallbackCursor->setTheme(m_waylandImage.theme());
+    m_moveResizeCursor->setTheme(m_waylandImage.theme());
+    m_windowSelectionCursor->setTheme(m_waylandImage.theme());
+    m_decoration.cursor->setTheme(m_waylandImage.theme());
 
     connect(&m_waylandImage, &WaylandCursorImage::themeChanged, this, [this] {
-        loadThemeCursor(Qt::ArrowCursor, m_fallbackCursor.get());
-        updateDecorationCursor();
-        updateMoveResize();
-        // TODO: update effects
+        m_effectsCursor->setTheme(m_waylandImage.theme());
+        m_fallbackCursor->setTheme(m_waylandImage.theme());
+        m_moveResizeCursor->setTheme(m_waylandImage.theme());
+        m_windowSelectionCursor->setTheme(m_waylandImage.theme());
+        m_decoration.cursor->setTheme(m_waylandImage.theme());
     });
 
     handlePointerChanged();
@@ -998,7 +1006,7 @@ void CursorImage::updateDecorationCursor()
 {
     auto deco = m_pointer->decoration();
     if (Window *window = deco ? deco->window() : nullptr) {
-        loadThemeCursor(window->cursor(), m_decoration.cursor.get());
+        m_decoration.cursor->setShape(window->cursor().name());
     }
     reevaluteSource();
 }
@@ -1006,7 +1014,7 @@ void CursorImage::updateDecorationCursor()
 void CursorImage::updateMoveResize()
 {
     if (Window *window = workspace()->moveResizeWindow()) {
-        loadThemeCursor(window->cursor(), m_moveResizeCursor.get());
+        m_moveResizeCursor->setShape(window->cursor().name());
     }
     reevaluteSource();
 }
@@ -1040,7 +1048,7 @@ void CursorImage::updateServerCursor()
 
 void CursorImage::setEffectsOverrideCursor(Qt::CursorShape shape)
 {
-    loadThemeCursor(shape, m_effectsCursor.get());
+    m_effectsCursor->setShape(shape);
     reevaluteSource();
 }
 
@@ -1052,9 +1060,9 @@ void CursorImage::removeEffectsOverrideCursor()
 void CursorImage::setWindowSelectionCursor(const QByteArray &shape)
 {
     if (shape.isEmpty()) {
-        loadThemeCursor(Qt::CrossCursor, m_windowSelectionCursor.get());
+        m_windowSelectionCursor->setShape(Qt::CrossCursor);
     } else {
-        loadThemeCursor(shape, m_windowSelectionCursor.get());
+        m_windowSelectionCursor->setShape(shape);
     }
     reevaluteSource();
 }
@@ -1144,31 +1152,23 @@ void CursorImage::updateDragCursor()
     m_drag.cursor->update(image, hotspot);
 }
 
-void CursorImage::loadThemeCursor(CursorShape shape, ImageCursorSource *source)
-{
-    m_waylandImage.loadThemeCursor(shape, source);
-}
-
-void CursorImage::loadThemeCursor(const QByteArray &shape, ImageCursorSource *source)
-{
-    m_waylandImage.loadThemeCursor(shape, source);
-}
-
 WaylandCursorImage::WaylandCursorImage(QObject *parent)
     : QObject(parent)
 {
     Cursor *pointerCursor = Cursors::self()->mouse();
+    updateCursorTheme();
 
-    connect(pointerCursor, &Cursor::themeChanged, this, &WaylandCursorImage::invalidateCursorTheme);
-    connect(workspace(), &Workspace::outputsChanged, this, &WaylandCursorImage::invalidateCursorTheme);
+    connect(pointerCursor, &Cursor::themeChanged, this, &WaylandCursorImage::updateCursorTheme);
+    connect(workspace(), &Workspace::outputsChanged, this, &WaylandCursorImage::updateCursorTheme);
 }
 
-bool WaylandCursorImage::ensureCursorTheme()
+KXcursorTheme WaylandCursorImage::theme() const
 {
-    if (!m_cursorTheme.isEmpty()) {
-        return true;
-    }
+    return m_cursorTheme;
+}
 
+void WaylandCursorImage::updateCursorTheme()
+{
     const Cursor *pointerCursor = Cursors::self()->mouse();
     qreal targetDevicePixelRatio = 1;
 
@@ -1180,21 +1180,11 @@ bool WaylandCursorImage::ensureCursorTheme()
     }
 
     m_cursorTheme = KXcursorTheme(pointerCursor->themeName(), pointerCursor->themeSize(), targetDevicePixelRatio);
-    if (!m_cursorTheme.isEmpty()) {
-        return true;
+    if (m_cursorTheme.isEmpty()) {
+        m_cursorTheme = KXcursorTheme(Cursor::defaultThemeName(), Cursor::defaultThemeSize(), targetDevicePixelRatio);
     }
 
-    m_cursorTheme = KXcursorTheme(Cursor::defaultThemeName(), Cursor::defaultThemeSize(), targetDevicePixelRatio);
-    if (!m_cursorTheme.isEmpty()) {
-        return true;
-    }
-
-    return false;
-}
-
-void WaylandCursorImage::invalidateCursorTheme()
-{
-    m_cursorTheme = KXcursorTheme();
+    Q_EMIT themeChanged();
 }
 
 void WaylandCursorImage::loadThemeCursor(const CursorShape &shape, ImageCursorSource *source)
@@ -1204,10 +1194,6 @@ void WaylandCursorImage::loadThemeCursor(const CursorShape &shape, ImageCursorSo
 
 void WaylandCursorImage::loadThemeCursor(const QByteArray &name, ImageCursorSource *source)
 {
-    if (!ensureCursorTheme()) {
-        return;
-    }
-
     if (loadThemeCursor_helper(name, source)) {
         return;
     }
@@ -1279,6 +1265,11 @@ void CursorImage::setSource(CursorSource *source)
     }
     m_currentSource = source;
     Q_EMIT changed();
+}
+
+KXcursorTheme CursorImage::theme() const
+{
+    return m_waylandImage.theme();
 }
 
 InputRedirectionCursor::InputRedirectionCursor(QObject *parent)
