@@ -110,6 +110,16 @@ public:
     QRect mapFromGlobal(const QRect &rect) const;
 
     /**
+     * Maps the specified @a rect from the global coordinate system to the output-local coords.
+     */
+    QRectF mapFromGlobal(const QRectF &rect) const;
+
+    /**
+     * Maps a @a rect in this output coordinates to the global coordinate system.
+     */
+    QRectF mapToGlobal(const QRectF &rect) const;
+
+    /**
      * Returns a short identifiable name of this output.
      */
     QString name() const;

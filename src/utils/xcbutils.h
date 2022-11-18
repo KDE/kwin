@@ -43,7 +43,6 @@ QSizeF KWIN_EXPORT fromXNative(const QSize &value);
  *  Use when flooring to ints from Xwayland
  *  i.e floor(a/scale) * scale
  */
-qreal KWIN_EXPORT nativeFloor(qreal value);
 QRectF KWIN_EXPORT nativeFloor(const QRectF &value);
 
 // forward declaration of methods

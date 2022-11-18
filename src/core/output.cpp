@@ -154,6 +154,16 @@ QRect Output::mapFromGlobal(const QRect &rect) const
     return rect.translated(-geometry().topLeft());
 }
 
+QRectF Output::mapFromGlobal(const QRectF &rect) const
+{
+    return rect.translated(-geometry().topLeft());
+}
+
+QRectF Output::mapToGlobal(const QRectF &rect) const
+{
+    return rect.translated(geometry().topLeft());
+}
+
 Output::Capabilities Output::capabilities() const
 {
     return m_information.capabilities;

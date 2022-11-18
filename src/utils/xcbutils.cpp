@@ -9,6 +9,9 @@
 */
 #include "utils/xcbutils.h"
 #include "utils/common.h"
+#include <core/output.h>
+#include <workspace.h>
+
 // Qt
 #include <QDebug>
 // xcb
@@ -641,15 +644,17 @@ QSizeF fromXNative(const QSize &s)
     return QSizeF(fromXNative(s.width()), fromXNative(s.height()));
 }
 
-qreal nativeFloor(qreal value)
+static qreal nativeFloor(qreal value)
 {
     return std::floor(value / kwinApp()->xwaylandScale()) * kwinApp()->xwaylandScale();
 }
 
-QRectF nativeFloor(const QRectF &value)
+QRectF nativeFloor(const QRectF &rect)
 {
-    return QRectF(nativeFloor(value.left()), nativeFloor(value.top()),
-                  nativeFloor(value.width()), nativeFloor(value.height()));
+    const auto output = workspace()->outputAt(rect.center());
+    const QRectF outputRect = output->mapFromGlobal(rect);
+    return output->mapToGlobal(QRectF(nativeFloor(outputRect.left()), nativeFloor(outputRect.top()),
+                                      nativeFloor(outputRect.width()), nativeFloor(outputRect.height())));
 }
 
 } // namespace Xcb
