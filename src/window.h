@@ -116,7 +116,6 @@ class KWIN_EXPORT Window : public QObject
      */
     Q_PROPERTY(qreal height READ height NOTIFY frameGeometryChanged)
 
-    Q_PROPERTY(QRectF visibleRect READ visibleGeometry)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
 
     /**
