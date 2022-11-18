@@ -92,6 +92,8 @@ class KWIN_EXPORT X11Window : public Window
      * Only GTK+ are detected.
      */
     Q_PROPERTY(bool clientSideDecorated READ isClientSideDecorated NOTIFY clientSideDecoratedChanged)
+    Q_PROPERTY(qulonglong frameId READ frameId CONSTANT)
+    Q_PROPERTY(qulonglong windowId READ window CONSTANT)
 public:
     explicit X11Window();
     ~X11Window() override; ///< Use destroyWindow() or releaseWindow()

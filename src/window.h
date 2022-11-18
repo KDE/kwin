@@ -79,8 +79,6 @@ class KWIN_EXPORT Window : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(qulonglong frameId READ frameId)
-
     /**
      * This property holds rectangle that the pixmap or buffer of this Window
      * occupies on the screen. This rectangle includes invisible portions of the
@@ -130,8 +128,6 @@ class KWIN_EXPORT Window : public QObject
      * The output (screen) where the window center is on
      */
     Q_PROPERTY(KWin::Output *output READ output NOTIFY screenChanged)
-
-    Q_PROPERTY(qulonglong windowId READ window CONSTANT)
 
     Q_PROPERTY(QRectF rect READ rect)
     Q_PROPERTY(QPointF clientPos READ clientPos)
