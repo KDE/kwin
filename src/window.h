@@ -79,7 +79,6 @@ class KWIN_EXPORT Window : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool alpha READ hasAlpha NOTIFY hasAlphaChanged)
     Q_PROPERTY(qulonglong frameId READ frameId)
 
     /**
