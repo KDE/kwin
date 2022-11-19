@@ -136,7 +136,6 @@ void Connection::doSetup()
             deactivate();
         }
     });
-    connect(kwinApp()->outputBackend(), &OutputBackend::outputsQueried, this, &Connection::updateScreens);
     handleEvent();
 }
 

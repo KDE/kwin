@@ -31,6 +31,10 @@ public:
     {
     }
 
+    virtual void updateScreens()
+    {
+    }
+
 Q_SIGNALS:
     void deviceAdded(InputDevice *device);
     void deviceRemoved(InputDevice *device);

@@ -29,6 +29,7 @@ public:
     ~LibinputBackend() override;
 
     void initialize() override;
+    void updateScreens() override;
 
 private:
     QThread m_thread;
