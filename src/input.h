@@ -313,6 +313,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void handleInputConfigChanged(const KConfigGroup &group);
+    void updateScreens();
 
 private:
     void setupInputBackends();

@@ -2650,6 +2650,7 @@ void InputRedirection::init()
 
 void InputRedirection::setupWorkspace()
 {
+    connect(workspace(), &Workspace::outputsChanged, this, &InputRedirection::updateScreens);
     if (waylandServer()) {
         m_keyboard->init();
         m_pointer->init();
@@ -2661,6 +2662,13 @@ void InputRedirection::setupWorkspace()
 
         setupTouchpadShortcuts();
         setupInputFilters();
+    }
+}
+
+void InputRedirection::updateScreens()
+{
+    for (const auto &backend : m_inputBackends) {
+        backend->updateScreens();
     }
 }
 

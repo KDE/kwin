@@ -46,4 +46,9 @@ void LibinputBackend::initialize()
     m_connection->setup();
 }
 
+void LibinputBackend::updateScreens()
+{
+    m_connection->updateScreens();
+}
+
 } // namespace KWin
