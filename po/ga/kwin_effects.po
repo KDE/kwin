@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase/kwin_effects.po\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-05 00:47+0000\n"
+"POT-Creation-Date: 2022-11-19 00:47+0000\n"
 "PO-Revision-Date: 2007-11-14 08:24-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -936,6 +936,12 @@ msgstr ""
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
+msgstr "Fuinneoga"
+
+#: windowview/qml/main.qml:120
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Filter windows…"
 msgstr "Fuinneoga"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)

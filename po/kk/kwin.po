@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-17 00:47+0000\n"
+"POT-Creation-Date: 2022-11-19 00:47+0000\n"
 "PO-Revision-Date: 2013-10-01 03:27+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -2777,12 +2777,12 @@ msgstr "Терезені құрту"
 msgid "Suspend Compositing"
 msgstr "Композициялауды аялдату"
 
-#: useractions.cpp:1183
+#: useractions.cpp:1184
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Терезені белсендету (%1)"
 
-#: useractions.cpp:1320
+#: useractions.cpp:1321
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
@@ -2793,42 +2793,42 @@ msgstr ""
 "болып саналады.\n"
 "Сондықтан тура басқа экранға ауысу болмайды."
 
-#: virtualdesktops.cpp:688 virtualdesktops.cpp:759
+#: virtualdesktops.cpp:693 virtualdesktops.cpp:764
 #, kde-format
 msgid "Desktop %1"
 msgstr "%1-үстел"
 
-#: virtualdesktops.cpp:795
+#: virtualdesktops.cpp:800
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Келесі үстелге ауысу"
 
-#: virtualdesktops.cpp:796
+#: virtualdesktops.cpp:801
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Алдыңғы үстелге ауысу"
 
-#: virtualdesktops.cpp:799
+#: virtualdesktops.cpp:804
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Оң жақтағы үстелге ауысу"
 
-#: virtualdesktops.cpp:801
+#: virtualdesktops.cpp:806
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Сол жақтағы үстелге ауысу"
 
-#: virtualdesktops.cpp:803
+#: virtualdesktops.cpp:808
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Жоғары жақтағы үстелге ауысу"
 
-#: virtualdesktops.cpp:805
+#: virtualdesktops.cpp:810
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Төмен жақтағы үстелге ауысу"
 
-#: virtualdesktops.cpp:894
+#: virtualdesktops.cpp:899
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "%1-үстелге ауысу"

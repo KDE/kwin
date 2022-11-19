@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-05 00:47+0000\n"
+"POT-Creation-Date: 2022-11-19 00:47+0000\n"
 "PO-Revision-Date: 2016-08-23 23:15+0300\n"
 "Last-Translator: Ingmārs Dīriņš <melhiors14@gmail.com>\n"
 "Language-Team: Latvian <lata-l10n@googlegroups.com>\n"
@@ -950,6 +950,12 @@ msgstr ""
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "Logi"
+
+#: windowview/qml/main.qml:120
+#, fuzzy, kde-format
+#| msgid "Scale window"
+msgid "Filter windows…"
+msgstr "Mērogot logu"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: wobblywindows/wobblywindows_config.ui:20

@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-17 00:47+0000\n"
+"POT-Creation-Date: 2022-11-19 00:47+0000\n"
 "PO-Revision-Date: 2022-08-19 15:20-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -2698,12 +2698,12 @@ msgstr "Matar janela"
 msgid "Suspend Compositing"
 msgstr "Suspender composição"
 
-#: useractions.cpp:1183
+#: useractions.cpp:1184
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Ativar a janela (%1)"
 
-#: useractions.cpp:1320
+#: useractions.cpp:1321
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
@@ -2714,42 +2714,42 @@ msgstr ""
 "mouse está posicionado como sendo a tela ativa.\n"
 "Sendo assim, não é possível mudar de forma explícita para uma tela."
 
-#: virtualdesktops.cpp:688 virtualdesktops.cpp:759
+#: virtualdesktops.cpp:693 virtualdesktops.cpp:764
 #, kde-format
 msgid "Desktop %1"
 msgstr "Área de trabalho %1"
 
-#: virtualdesktops.cpp:795
+#: virtualdesktops.cpp:800
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Mudar para a área de trabalho seguinte"
 
-#: virtualdesktops.cpp:796
+#: virtualdesktops.cpp:801
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Mudar para a área de trabalho anterior"
 
-#: virtualdesktops.cpp:799
+#: virtualdesktops.cpp:804
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Mudar para a área de trabalho à direita"
 
-#: virtualdesktops.cpp:801
+#: virtualdesktops.cpp:806
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Mudar para a área de trabalho à esquerda"
 
-#: virtualdesktops.cpp:803
+#: virtualdesktops.cpp:808
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Mudar para a área de trabalho acima"
 
-#: virtualdesktops.cpp:805
+#: virtualdesktops.cpp:810
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Mudar para a área de trabalho abaixo"
 
-#: virtualdesktops.cpp:894
+#: virtualdesktops.cpp:899
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Mudar para a área de trabalho %1"

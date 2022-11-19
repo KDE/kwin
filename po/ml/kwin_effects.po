@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-05 00:47+0000\n"
+"POT-Creation-Date: 2022-11-19 00:47+0000\n"
 "PO-Revision-Date: 2019-12-12 22:14+0000\n"
 "Last-Translator: Vivek KJ Pazhedath <vivekkj2004@gmail.com>\n"
 "Language-Team: SMC <smc.org.in>\n"
@@ -897,6 +897,11 @@ msgstr ""
 #, fuzzy, kde-format
 msgid "No Windows"
 msgstr "&കുലുക്കം"
+
+#: windowview/qml/main.qml:120
+#, fuzzy, kde-format
+msgid "Filter windows…"
+msgstr "&അലങ്കരിച്ച ജാലകങ്ങള്‍"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: wobblywindows/wobblywindows_config.ui:20

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-17 00:47+0000\n"
+"POT-Creation-Date: 2022-11-19 00:47+0000\n"
 "PO-Revision-Date: 2022-11-06 16:24+0100\n"
 "Last-Translator: Antoni Bella <antonibella5@yahoo.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -2699,12 +2699,12 @@ msgstr "Mata la finestra"
 msgid "Suspend Compositing"
 msgstr "Suspén la composició"
 
-#: useractions.cpp:1183
+#: useractions.cpp:1184
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Activa la finestra (%1)"
 
-#: useractions.cpp:1320
+#: useractions.cpp:1321
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
@@ -2715,42 +2715,42 @@ msgstr ""
 "pantalla amb el cursor del ratolí.\n"
 "Per tant, no es pot canviar explícitament a una pantalla."
 
-#: virtualdesktops.cpp:688 virtualdesktops.cpp:759
+#: virtualdesktops.cpp:693 virtualdesktops.cpp:764
 #, kde-format
 msgid "Desktop %1"
 msgstr "Escriptori %1"
 
-#: virtualdesktops.cpp:795
+#: virtualdesktops.cpp:800
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Canvia a l'escriptori següent"
 
-#: virtualdesktops.cpp:796
+#: virtualdesktops.cpp:801
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Canvia a l'escriptori anterior"
 
-#: virtualdesktops.cpp:799
+#: virtualdesktops.cpp:804
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Canvia un escriptori a la dreta"
 
-#: virtualdesktops.cpp:801
+#: virtualdesktops.cpp:806
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Canvia un escriptori a l'esquerra"
 
-#: virtualdesktops.cpp:803
+#: virtualdesktops.cpp:808
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Canvia un escriptori amunt"
 
-#: virtualdesktops.cpp:805
+#: virtualdesktops.cpp:810
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Canvia un escriptori avall"
 
-#: virtualdesktops.cpp:894
+#: virtualdesktops.cpp:899
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Canvia a l'escriptori %1"

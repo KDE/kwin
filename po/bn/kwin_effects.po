@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-05 00:47+0000\n"
+"POT-Creation-Date: 2022-11-19 00:47+0000\n"
 "PO-Revision-Date: 2010-06-01 10:25-0700\n"
 "Last-Translator: Deepayan Sarkar <deepayan.sarkar@gmail.com>\n"
 "Language-Team: Bengali <kde-translation@bengalinux.org>\n"
@@ -935,6 +935,12 @@ msgstr ""
 msgid "No Windows"
 msgstr "উইণ্ডো"
 
+#: windowview/qml/main.qml:120
+#, fuzzy, kde-format
+#| msgid "All &other windows"
+msgid "Filter windows…"
+msgstr "অন্য &সব উইণ্ডো"
+
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: wobblywindows/wobblywindows_config.ui:20
 #, kde-format
@@ -1771,9 +1777,6 @@ msgstr "মাউসের অনুকরণ"
 
 #~ msgid "&Undecorated normal windows"
 #~ msgstr "সাজহী&ন সাধারণ উইণ্ডো"
-
-#~ msgid "All &other windows"
-#~ msgstr "অন্য &সব উইণ্ডো"
 
 #, fuzzy
 #~ msgid ""

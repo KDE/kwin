@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-17 00:47+0000\n"
+"POT-Creation-Date: 2022-11-19 00:47+0000\n"
 "PO-Revision-Date: 2022-04-28 14:36+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -2699,12 +2699,12 @@ msgstr "Occide  fenestra"
 msgid "Suspend Compositing"
 msgstr "Suspende de facer composition"
 
-#: useractions.cpp:1183
+#: useractions.cpp:1184
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Activa fenestra (%1)"
 
-#: useractions.cpp:1320
+#: useractions.cpp:1321
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
@@ -2715,42 +2715,42 @@ msgstr ""
 "super illo como lo active.\n"
 "Ergo il non es possibile commutar le schermo explicitemente"
 
-#: virtualdesktops.cpp:688 virtualdesktops.cpp:759
+#: virtualdesktops.cpp:693 virtualdesktops.cpp:764
 #, kde-format
 msgid "Desktop %1"
 msgstr "Scriptorio %1"
 
-#: virtualdesktops.cpp:795
+#: virtualdesktops.cpp:800
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Commuta a proxime Scriptorio"
 
-#: virtualdesktops.cpp:796
+#: virtualdesktops.cpp:801
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Commuta a Previe Scriptorio"
 
-#: virtualdesktops.cpp:799
+#: virtualdesktops.cpp:804
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Commuta un Scriptorio a dextera"
 
-#: virtualdesktops.cpp:801
+#: virtualdesktops.cpp:806
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Commuta un Scriptorio a sinistra"
 
-#: virtualdesktops.cpp:803
+#: virtualdesktops.cpp:808
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Commuta un Scriptorio in alto"
 
-#: virtualdesktops.cpp:805
+#: virtualdesktops.cpp:810
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Commuta un Scriptorio a basso"
 
-#: virtualdesktops.cpp:894
+#: virtualdesktops.cpp:899
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Commuta a Scriptorio %1"

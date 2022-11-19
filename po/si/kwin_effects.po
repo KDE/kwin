@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-05 00:47+0000\n"
+"POT-Creation-Date: 2022-11-19 00:47+0000\n"
 "PO-Revision-Date: 2009-12-22 01:06+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <danishka@gmail.com>\n"
@@ -950,6 +950,12 @@ msgstr ""
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
+msgstr "කවුළු"
+
+#: windowview/qml/main.qml:120
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgid "Filter windows…"
 msgstr "කවුළු"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)

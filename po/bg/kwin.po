@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-17 00:47+0000\n"
+"POT-Creation-Date: 2022-11-19 00:47+0000\n"
 "PO-Revision-Date: 2022-11-05 17:21+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -2684,12 +2684,12 @@ msgstr "Принудително затваряне на прозорец"
 msgid "Suspend Compositing"
 msgstr "Спиране на ефектите"
 
-#: useractions.cpp:1183
+#: useractions.cpp:1184
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Активиране на прозорец (%1)"
 
-#: useractions.cpp:1320
+#: useractions.cpp:1321
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
@@ -2700,42 +2700,42 @@ msgstr ""
 "него като активен.\n"
 "Следователно не е възможно да преминете към екран."
 
-#: virtualdesktops.cpp:688 virtualdesktops.cpp:759
+#: virtualdesktops.cpp:693 virtualdesktops.cpp:764
 #, kde-format
 msgid "Desktop %1"
 msgstr "Работен плот %1"
 
-#: virtualdesktops.cpp:795
+#: virtualdesktops.cpp:800
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Превключване към следващия работен плот"
 
-#: virtualdesktops.cpp:796
+#: virtualdesktops.cpp:801
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Превключване към предишния работен плот"
 
-#: virtualdesktops.cpp:799
+#: virtualdesktops.cpp:804
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Превключване един работен плот надясно"
 
-#: virtualdesktops.cpp:801
+#: virtualdesktops.cpp:806
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Превключване един работен плот наляво"
 
-#: virtualdesktops.cpp:803
+#: virtualdesktops.cpp:808
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Превключване един работен плот нагоре"
 
-#: virtualdesktops.cpp:805
+#: virtualdesktops.cpp:810
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Превключване един работен плот надолу"
 
-#: virtualdesktops.cpp:894
+#: virtualdesktops.cpp:899
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Превключване към работен плот %1"

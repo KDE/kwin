@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-05 00:47+0000\n"
+"POT-Creation-Date: 2022-11-19 00:47+0000\n"
 "PO-Revision-Date: 2019-09-23 21:08+0500\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: Tajik <kde-i18n-doc@kde.org>\n"
@@ -895,6 +895,12 @@ msgstr ""
 #, fuzzy, kde-format
 #| msgid "Number of windows:"
 msgid "No Windows"
+msgstr "Количество окон:"
+
+#: windowview/qml/main.qml:120
+#, fuzzy, kde-format
+#| msgid "Number of windows:"
+msgid "Filter windows…"
 msgstr "Количество окон:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
