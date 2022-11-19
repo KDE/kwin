@@ -208,10 +208,13 @@ QuickSceneView *QuickSceneEffect::viewAt(const QPoint &pos) const
 
 QuickSceneView *QuickSceneEffect::activeView() const
 {
-    const auto it = std::find_if(d->views.begin(), d->views.end(), [](const auto &view) {
+    auto it = std::find_if(d->views.begin(), d->views.end(), [](const auto &view) {
         return view.second->window()->activeFocusItem();
     });
-    return it == d->views.end() ? d->views[effects->activeScreen()].get() : it->second.get();
+    if (it == d->views.end()) {
+        it = d->views.find(effects->activeScreen());
+    }
+    return it == d->views.end() ? nullptr : it->second.get();
 }
 
 KWin::QuickSceneView *QuickSceneEffect::getView(Qt::Edge edge)
