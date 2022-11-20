@@ -67,6 +67,7 @@
         "Name[uk]": "Око на екрані",
         "Name[vi]": "Theo dõi màn hình",
         "Name[x-test]": "xxEye on Screenxx",
+        "Name[zh_CN]": "窗口内收",
         "Version": "0.1.0"
     },
     "X-KDE-Ordering": "50",

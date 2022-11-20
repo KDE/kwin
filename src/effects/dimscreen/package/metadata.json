@@ -67,6 +67,7 @@
         "Name[uk]": "Притлумлення кольорів у режимі адміністратора",
         "Name[vi]": "Làm tối màn hình cho chế độ quản trị viên",
         "Name[x-test]": "xxDim Screen for Administrator Modexx",
+        "Name[zh_CN]": "请求管理员模式时降低屏幕亮度",
         "Version": "1",
         "Website": ""
     },

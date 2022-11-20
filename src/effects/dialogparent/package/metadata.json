@@ -67,6 +67,7 @@
         "Name[uk]": "Батьківське вікно",
         "Name[vi]": "Cha hộp thoại",
         "Name[x-test]": "xxDialog Parentxx",
+        "Name[zh_CN]": "对话框父级窗口变暗",
         "Version": "0.1.0"
     },
     "X-KDE-Ordering": "70",
