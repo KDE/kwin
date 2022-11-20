@@ -3,20 +3,20 @@
 # Amanpreet Singh Alam <amanpreetalam@yahoo.com>, 2005.
 # Amanpreet Singh Brar <aalam@redhat.com>, 2005.
 # AP S Alam <aalam@users.sf.net>, 2007.
-# A S Alam <aalam@users.sf.net>, 2007, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2021.
+# A S Alam <aalam@users.sf.net>, 2007, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-19 00:47+0000\n"
-"PO-Revision-Date: 2021-05-02 16:55-0700\n"
+"PO-Revision-Date: 2022-11-19 06:00-0800\n"
 "Last-Translator: A S Alam <aalam@satluj.org>\n"
 "Language-Team: Punjabi <punjabi-users@lists.sf.net>\n"
 "Language: pa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 20.12.2\n"
+"X-Generator: Lokalize 22.08.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "\n"
 
@@ -59,10 +59,9 @@ msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "ਲੋੜੀਦੀ X ਇਕਸਟੈਨਸ਼ਨ (XComposite ਤੇ XDamage) ਉਪਲੱਬਧ ਨਹੀਂ ਹੈ।"
 
 #: composite.cpp:1039
-#, fuzzy, kde-format
-#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+#, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr "GLX/OpenGL ਅਤੇ XRender/XFixes ਉਪਲੱਬਧ ਨਹੀਂ।"
+msgstr "GLX/OpenGL ਮੌਜੂਦ ਨਹੀਂ ਹੈ।"
 
 #: debug_console.cpp:79
 #, kde-format
@@ -542,11 +541,10 @@ msgid "Swipe cancelled"
 msgstr ""
 
 #: debug_console.cpp:463
-#, fuzzy, kde-format
-#| msgid "Switch to Tab"
+#, kde-format
 msgctxt "A hardware switch (e.g. notebook lid) got toggled"
 msgid "Switch toggled"
-msgstr "ਟੈਬ ਲਈ ਬਦਲੋ"
+msgstr "ਸਵਿੱਚ ਬਦਲੀ"
 
 #: debug_console.cpp:471
 #, kde-format
@@ -758,109 +756,108 @@ msgstr "ਵਾਧੂ 8"
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
-msgstr ""
+msgstr "ਵਾਧੂ 9"
 
 #: debug_console.cpp:836
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
-msgstr ""
+msgstr "ਵਾਧੂ 10"
 
 #: debug_console.cpp:839
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
-msgstr ""
+msgstr "ਵਾਧੂ 11"
 
 #: debug_console.cpp:842
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
-msgstr ""
+msgstr "ਵਾਧੂ 12"
 
 #: debug_console.cpp:845
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
-msgstr ""
+msgstr "ਵਾਧੂ 13"
 
 #: debug_console.cpp:848
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
-msgstr ""
+msgstr "ਵਾਧੂ 14"
 
 #: debug_console.cpp:851
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
-msgstr ""
+msgstr "ਵਾਧੂ 15"
 
 #: debug_console.cpp:854
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
-msgstr ""
+msgstr "ਵਾਧੂ 16"
 
 #: debug_console.cpp:857
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
-msgstr ""
+msgstr "ਵਾਧੂ 17"
 
 #: debug_console.cpp:860
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
-msgstr ""
+msgstr "ਵਾਧੂ 18"
 
 #: debug_console.cpp:863
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
-msgstr ""
+msgstr "ਵਾਧੂ 19"
 
 #: debug_console.cpp:866
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
-msgstr ""
+msgstr "ਵਾਧੂ 20"
 
 #: debug_console.cpp:869
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
-msgstr ""
+msgstr "ਵਾਧੂ 21"
 
 #: debug_console.cpp:872
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
-msgstr ""
+msgstr "ਵਾਧੂ 22"
 
 #: debug_console.cpp:875
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
-msgstr ""
+msgstr "ਵਾਧੂ 23"
 
 #: debug_console.cpp:878
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
-msgstr ""
+msgstr "ਵਾਧੂ 24"
 
 #: debug_console.cpp:881
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
-msgstr ""
+msgstr "ਕੰਮ"
 
 #: debug_console.cpp:1215
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "X11 Windows"
-msgstr "ਵਿੰਡੋ"
+msgstr "X11 ਵਿੰਡੋਜ਼"
 
 #: debug_console.cpp:1217
 #, kde-format
@@ -923,7 +920,7 @@ msgstr ""
 #: debug_console.ui:130
 #, kde-format
 msgid "OpenGL (ES) driver information"
-msgstr ""
+msgstr "OpenGL (ES) ਡਰਾਇਵਰ ਜਾਣਕਾਰੀ"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: debug_console.ui:136
@@ -981,10 +978,9 @@ msgstr "ਪਲੇਟਫਾਰਮ ਇਕਸਟੈਨਸ਼ਨ"
 
 #. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
 #: debug_console.ui:267
-#, fuzzy, kde-format
-#| msgid "&Extensions"
+#, kde-format
 msgid "OpenGL (ES) Extensions"
-msgstr "ਇਕਸਟੈਨਸ਼ਨ(&E)"
+msgstr "OpenGL (ES) ਇਕਸਟੈਨਸ਼ਨਾਂ"
 
 #. i18n: ectx: attribute (title), widget (QWidget, keyboard)
 #: debug_console.ui:288
@@ -1027,13 +1023,13 @@ msgstr "ਸਰਗਰਮ LED"
 #: debug_console.ui:425 debug_console.ui:445
 #, kde-format
 msgid "Clipboard"
-msgstr ""
+msgstr "ਕਲਿੱਪਬੋਰਡ"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: debug_console.ui:491
 #, kde-format
 msgid "Primary Selection"
-msgstr ""
+msgstr "ਮੁੱਢਲੀ ਚੋਣ"
 
 #: helpers/killer/killer.cpp:34
 #, kde-format
@@ -1172,17 +1168,14 @@ msgid "Tablets switched outputs"
 msgstr ""
 
 #: input.cpp:3021
-#, fuzzy, kde-format
-#| msgctxt "A touch down event"
-#| msgid "Touch down"
+#, kde-format
 msgid "Touchpad"
-msgstr "ਛੂਹੋ"
+msgstr "ਟੱਚਪੈਡ"
 
 #: keyboard_layout.cpp:45
-#, fuzzy, kde-format
-#| msgid "Next Layout"
+#, kde-format
 msgid "Keyboard Layout Switcher"
-msgstr "ਅਗਲਾ ਲੇਆਉਟ"
+msgstr "ਕੀਬੋਰਡ ਲੇਆਉਟ ਸਵਿੱਚਰ"
 
 #: killwindow.cpp:32
 #, kde-format
@@ -1575,7 +1568,7 @@ msgstr "ਰਾਤ ਦੇ ਰੰਗ ਨੂੰ ਬਦਲੋ"
 #: plugins/nightcolor/nightcolormanager.cpp:472
 #, kde-format
 msgid "Color Temperature Preview"
-msgstr ""
+msgstr "ਰੰਗ ਤਾਪਮਾਨ ਝਲਕ"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -1627,10 +1620,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:34
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window role"
-msgstr "ਝਰੋਖੇ"
+msgstr "ਵਿੰਡੋ ਰੋਲ"
 
 #. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:37
@@ -1640,10 +1632,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:44
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window title"
-msgstr "ਝਰੋਖੇ"
+msgstr "ਵਿੰਡੋ ਟਾਈਟਲ"
 
 #. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:47
@@ -1653,10 +1644,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:54
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgid "Machine (hostname)"
-msgstr "ਹੋਸਟ-ਨਾਂ"
+msgstr "ਮਸ਼ੀਨ (ਹੋਸਟ-ਨਾਂ)"
 
 #. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:57
@@ -1685,24 +1675,21 @@ msgstr "ਪੂਰੀ ਸਕਰੀਨ(&F)"
 
 #. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:79
-#, fuzzy, kde-format
-#| msgid "Window Operations Menu"
+#, kde-format
 msgid "Window position"
-msgstr "ਵਿੰਡੋ ਓਪਰੇਸ਼ਨ ਮੇਨੂ"
+msgstr "ਵਿੰਡੋ ਦੀ ਸਥਿਤੀ"
 
 #. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:83
-#, fuzzy, kde-format
-#| msgid "Window to Screen 0"
+#, kde-format
 msgid "Window position rule type"
-msgstr "ਵਿੰਡੋ ਸਕਰੀਨ 0 ਵਿੱਚ"
+msgstr "ਵਿੰਡੋ ਦੀ ਸਥਿਤੀ ਰੂਲ ਕਿਸਮ"
 
 #. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:90
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window size"
-msgstr "ਝਰੋਖੇ"
+msgstr "ਵਿੰਡੋ ਦਾ ਆਕਾਰ"
 
 #. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:93
@@ -1823,10 +1810,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:194
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Maximized vertically"
-msgstr "ਵਿੰਡੋ ਲੰਬਕਾਰੀ ਵੱਧੋ-ਵੱਧ"
+msgstr "ਖੜ੍ਹਵੇਂ ਰੂਪ ਵਿੱਚ ਵੱਧ ਤੋਂ ਵੱਧ"
 
 #. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:198
@@ -1837,10 +1823,9 @@ msgstr "ਵਿੰਡੋ ਲੰਬਕਾਰੀ ਵੱਧੋ-ਵੱਧ"
 
 #. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:205
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Maximized horizontally"
-msgstr "ਵਿੰਡੋ ਖਿਤਿਜੀ ਲੰਬਕਾਰੀ"
+msgstr "ਲੇਟਵੇਂ ਰੂਪ ਵਿੱਚ ਵੱਧ ਤੋਂ ਵੱਧ"
 
 #. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:209
@@ -1851,8 +1836,7 @@ msgstr "ਵਿੰਡੋ ਖਿਤਿਜੀ ਲੰਬਕਾਰੀ"
 
 #. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:216
-#, fuzzy, kde-format
-#| msgid "Minimize"
+#, kde-format
 msgid "Minimized"
 msgstr "ਘੱਟੋ-ਘੱਟ"
 
@@ -1864,8 +1848,7 @@ msgstr ""
 
 #. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:227
-#, fuzzy, kde-format
-#| msgid "Shade"
+#, kde-format
 msgid "Shaded"
 msgstr "ਸ਼ੇਡ"
 
@@ -1901,10 +1884,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:260
-#, fuzzy, kde-format
-#| msgid "Switch to Tab"
+#, kde-format
 msgid "Skip switcher"
-msgstr "ਟੈਬ ਲਈ ਬਦਲੋ"
+msgstr "ਸਵਿੱਚਰ ਛੱਡੋ"
 
 #. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:264
@@ -1929,7 +1911,7 @@ msgstr "ਸਭ ਤੋਂ ਉੱਤੇ ਰੱਖੋ"
 #: rulesettings.kcfg:282
 #, kde-format
 msgid "Keep below"
-msgstr "ਹੋਰਾਂ ਦੇ ਹੇਠਾਂ ਰੱਖੋ"
+msgstr "ਹੇਠਾਂ ਰੱਖੋ"
 
 #. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:286
@@ -1946,10 +1928,9 @@ msgstr "ਪੂਰੀ ਸਕਰੀਨ"
 
 #. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:297
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen rule type"
-msgstr "ਪੂਰੀ ਸਕਰੀਨ(&F)"
+msgstr "ਪੂਰੀ ਸਕਰੀਨ ਰੂਲ ਕਿਸਮ"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:304
@@ -2026,10 +2007,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:363
-#, fuzzy, kde-format
-#| msgid "Close"
+#, kde-format
 msgid "Closeable"
-msgstr "ਬੰਦ ਕਰੋ"
+msgstr "ਬੰਦ ਕਰਨ ਯੋਗ"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:367
@@ -2120,7 +2100,7 @@ msgstr "ਡੈਸਕਟਾਪ ਫਾਇਲ ਦਾ ਨਾਂ"
 #: rulesettings.kcfg:429
 #, kde-format
 msgid "Desktop file name rule type"
-msgstr ""
+msgstr "ਡੈਸਕਟਾਪ ਫਾਈਲ ਨਾਂ ਰੂਲ ਕਿਸਮ"
 
 #: scripting/genericscriptedconfig.cpp:70
 #, kde-format
@@ -2139,7 +2119,7 @@ msgstr ""
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "%1 ਮੌਜੂਦ ਨਹੀਂ ਹੈ"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2274,22 +2254,19 @@ msgid "&No Border"
 msgstr "ਕੋਈ ਹਾਸ਼ੀਆ ਨਹੀਂ(&N)"
 
 #: useractions.cpp:278
-#, fuzzy, kde-format
-#| msgid "Window &Shortcut..."
+#, kde-format
 msgid "Set Window Short&cut..."
-msgstr "ਵਿੰਡੋ ਸ਼ਾਰਟਕਟ(&S)..."
+msgstr "ਵਿੰਡੋ ਸ਼ਾਰਟਕੱਟ ਸੈਟ ਕਰੋ(&c)..."
 
 #: useractions.cpp:284
-#, fuzzy, kde-format
-#| msgid "&Special Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings..."
-msgstr "ਖਾਸ ਵਿੰਡੋ ਸੈਟਿੰਗ(&S)..."
+msgstr "ਖਾਸ ਵਿੰਡੋ ਸੈਟਿੰਗਾਂ ਦੀ ਸੰਰਚਨਾ(&W)..."
 
 #: useractions.cpp:289
-#, fuzzy, kde-format
-#| msgid "S&pecial Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings..."
-msgstr "ਖਾਸ ਐਪਲੀਕੇਸ਼ਨ ਸੈਟਿੰਗ(&p)..."
+msgstr "ਖਾਸ ਐਪਲੀਕੇਸ਼ਨ ਸੈਟਿੰਗਾਂ(&p)..."
 
 #: useractions.cpp:296
 #, kde-format
@@ -2297,7 +2274,7 @@ msgctxt ""
 "Entry in context menu of window decoration to open the configuration module "
 "of KWin"
 msgid "Configure W&indow Manager..."
-msgstr "ਵਿੰਡੋ ਮੈਨੇਜਰ ਦੀ ਸੰਰਚਨਾ ਕਰੋ(&i)..."
+msgstr "ਵਿੰਡੋ ਮੈਨੇਜਰ ਦੀ ਸੰਰਚਨਾ(&i)..."
 
 #: useractions.cpp:323
 #, kde-format
@@ -2345,10 +2322,9 @@ msgid "Show in &Activities"
 msgstr "ਸਰਗਰਮੀ ਵਿੱਚ ਵੇਖਾਓ(&A)"
 
 #: useractions.cpp:524
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "ਡੈਸਕਟਾਪ ਉੱਤੇ ਭੇਜੋ(&D)"
+msgstr "ਮੌਜੂਦਾ ਡੈਸਕਟਾਪ ਉੱਤੇ ਭੇਜੋ(&T)"
 
 #: useractions.cpp:534 useractions.cpp:601
 #, kde-format
@@ -2356,9 +2332,7 @@ msgid "&All Desktops"
 msgstr "ਸਭ ਡੈਸਕਟਾਪ(&A)"
 
 #: useractions.cpp:574
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "ਨਵਾਂ ਡੈਸਕਟਾਪ(&N)"
@@ -2366,22 +2340,19 @@ msgstr "ਨਵਾਂ ਡੈਸਕਟਾਪ(&N)"
 #: useractions.cpp:645
 #, kde-format
 msgid "Move to %1 %2"
-msgstr ""
+msgstr "%1 %2 ਉੱਤੇ ਭੇਜੋ"
 
 #: useractions.cpp:658
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
-msgstr "ਨਵਾਂ ਡੈਸਕਟਾਪ(&N)"
+msgstr "ਨਵੇਂ ਡੈਸਕਟਾਪ ਉੱਤੇ ਜੋੜੋ(&N)"
 
 #: useractions.cpp:670
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
-msgstr "ਡੈਸਕਟਾਪ ਉੱਤੇ ਭੇਜੋ(&D)"
+msgstr "ਨਵੇਂ ਡੈਸਕਟਾਪ ਉੱਤੇ ਭੇਜੋ"
 
 #: useractions.cpp:701
 #, kde-format
@@ -2474,10 +2445,9 @@ msgid "Make Window Fullscreen"
 msgstr "ਵਿੰਡੋ ਨੂੰ ਪੂਰੀ ਸਕਰੀਨ ਉੱਤੇ ਭੇਜੋ"
 
 #: useractions.cpp:1014
-#, fuzzy, kde-format
-#| msgid "Hide Window Border"
+#, kde-format
 msgid "Toggle Window Border"
-msgstr "ਵਿੰਡੋ ਦਾ ਹਾਸ਼ੀਆ ਓਹਲੇ"
+msgstr "ਵਿੰਡੋ ਦੇ ਹਾਸ਼ੀਏ ਨੂੰ ਬਦਲੋ"
 
 #: useractions.cpp:1016
 #, kde-format
@@ -2500,10 +2470,9 @@ msgid "Setup Window Shortcut"
 msgstr "ਵਿੰਡੋ ਸ਼ਾਰਟਕੱਟ ਸੈੱਟਅੱਪ"
 
 #: useractions.cpp:1024
-#, fuzzy, kde-format
-#| msgid "Move Window to Group"
+#, kde-format
 msgid "Move Window to the Center"
-msgstr "ਵਿੰਡੋ ਗਰੁੱਪ ਵਿੱਚ ਭੇਜੋ"
+msgstr "ਵਿੰਡੋ ਨੂੰ ਕੇਂਦਰ ਵਿੱਚ ਭੇਜੋ"
 
 #: useractions.cpp:1026
 #, kde-format

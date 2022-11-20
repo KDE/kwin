@@ -2768,11 +2768,3 @@ msgstr ""
 "Моля, публикувайте информацията, предоставена под този уводен текст, в "
 "услуга за поставяне на кошчета\n"
 "като https://paste.kde.org, вместо да поставяте в нишки за поддръжка.\n"
-
-#~ msgctxt "Error message"
-#~ msgid "Plugin does not provide configuration file in expected location"
-#~ msgstr ""
-#~ "Приставката не предоставя конфигурационен файл в очакваното местоположение"
-
-#~ msgid "Invert Screen Colors"
-#~ msgstr "Обръщане на цветовете на екрана"

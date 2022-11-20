@@ -44,7 +44,3 @@ msgstr "%1 не съдържа валиден файл metadata.json"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1 не съществува"
-
-#~ msgctxt "Error message"
-#~ msgid "Plugin does not provide configuration file in expected location"
-#~ msgstr "Приставката няма конфигурационен файл в очакваното местоположение"

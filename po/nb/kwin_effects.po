@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-05 00:47+0000\n"
+"POT-Creation-Date: 2022-11-19 00:47+0000\n"
 "PO-Revision-Date: 2015-08-27 20:55+0200\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -892,6 +892,11 @@ msgstr ""
 #: windowview/qml/main.qml:106
 #, kde-format
 msgid "No Windows"
+msgstr ""
+
+#: windowview/qml/main.qml:120
+#, kde-format
+msgid "Filter windows…"
 msgstr ""
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
