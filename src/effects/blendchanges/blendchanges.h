@@ -31,6 +31,11 @@ public:
 
     bool isActive() const override;
 
+    int requestedEffectChainPosition() const override
+    {
+        return 80;
+    }
+
 public Q_SLOTS:
     /**
      * Called from DBus, this should be called before triggering any changes
