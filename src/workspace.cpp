@@ -1643,6 +1643,24 @@ void Workspace::setShowingDesktop(bool showing, bool animated)
     }
 }
 
+void Workspace::toggleMinimizeAll()
+{
+    if (desktopMinimizedWindows.isEmpty()) { // minimize all
+        for (auto it = stacking_order.constBegin(); it >= stacking_order.constEnd(); ++it) {
+            if (!((*it)->isOnCurrentDesktop() && (*it)->isOnCurrentActivity() && (*it)->isMinimizable() && !(*it)->isMinimized())) {
+                continue;
+            }
+            (*it)->minimize();
+            desktopMinimizedWindows.append(*it);
+        }
+    } else { // unnimize all
+        for (auto it = desktopMinimizedWindows.constBegin(); it != desktopMinimizedWindows.constEnd(); ++it) {
+            (*it)->unminimize();
+            desktopMinimizedWindows.removeAll(*it);
+        }
+    }
+}
+
 void Workspace::disableGlobalShortcutsForClient(bool disable)
 {
     if (m_globalShortcutsDisabledForWindow == disable) {
