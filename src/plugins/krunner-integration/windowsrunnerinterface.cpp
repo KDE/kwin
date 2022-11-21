@@ -665,6 +665,9 @@ RemoteMatch WindowsRunner::windowsDesktopMatch(const VirtualDesktop *desktop, co
     case MinimizeAction:
         properties[QStringLiteral("subtext")] = i18n("Minimize all running windows on %1", desktop->name());
         break;
+    case MinimizeAction:
+        properties[QStringLiteral("subtext")] = i18n("Minimize all running windows on %1", desktop->name());
+        break;
     case MoveAction: {
         const QString destinationDesktopName = destination ? destination->name() : i18n("New Desktop");
         match.text = desktop->name() + QStringLiteral(" > ") + destinationDesktopName;
@@ -692,7 +695,7 @@ bool WindowsRunner::actionSupported(const Window *window, const WindowsRunnerAct
         return window->isShadeable();
     case KeepAboveAction:
     case KeepBelowAction:
-        return true;
+        return window->isNormalWindow();
     case PinAction:
     case MoveAction:
         return !window->isSpecialWindow();
