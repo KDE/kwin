@@ -504,8 +504,7 @@ void Connection::processEvents()
                     output = workspace()->activeOutput();
                 }
                 const QPointF globalPos =
-                    devicePointToGlobalPosition(tte->transformedPosition(output->modeSize()),
-                                                output);
+                    devicePointToGlobalPosition(tte->transformedPosition(output), output);
 #else
                 const QPointF globalPos;
 #endif

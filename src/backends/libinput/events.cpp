@@ -10,6 +10,7 @@
 #include "device.h"
 
 #include <QSize>
+#include <core/output.h>
 
 namespace KWin
 {
@@ -350,11 +351,52 @@ TabletToolEvent::TabletToolEvent(libinput_event *event, libinput_event_type type
 {
 }
 
-QPointF TabletToolEvent::transformedPosition(const QSize &size) const
+QPointF TabletToolEvent::transformedPosition(Output *output) const
 {
-    const QRectF outputArea = device()->outputArea();
-    return {size.width() * outputArea.x() + libinput_event_tablet_tool_get_x_transformed(m_tabletToolEvent, size.width() * outputArea.width()),
-            size.height() * outputArea.y() + libinput_event_tablet_tool_get_y_transformed(m_tabletToolEvent, size.height() * outputArea.height())};
+
+#ifndef KWIN_BUILD_TESTING
+    const auto size = output->modeSize();
+    Output::Transform transform = output->transform();
+#else
+    const QSize size = {800, 600};
+    Output::Transform transform = Output::Transform::Normal;
+#endif
+    QMatrix4x4 m;
+    const QPointF centre(.5, .5);
+    m.translate(centre.x(), centre.y());
+    using T = Output::Transform;
+    switch (transform) {
+    case T::Normal:
+        break;
+    case T::Flipped:
+        m.scale(-1, -1);
+        break;
+    case T::Rotated90:
+        m.rotate(270, {0, 0, 1});
+        break;
+    case T::Flipped90:
+        m.scale(-1, -1);
+        m.rotate(270, {0, 0, 1});
+        break;
+    case T::Rotated180:
+        m.rotate(180, {0, 0, 1});
+        break;
+    case T::Flipped180:
+        m.scale(-1, -1);
+        m.rotate(180, {0, 0, 1});
+    case T::Rotated270:
+        m.rotate(90, {0, 0, 1});
+        break;
+    case T::Flipped270:
+        m.scale(-1, -1);
+        m.rotate(90, {0, 0, 1});
+        break;
+    }
+    m.translate(-centre.x(), -centre.y());
+    QRectF outputArea = m.mapRect(device()->outputArea());
+    QPointF p = {size.width() * outputArea.x() + libinput_event_tablet_tool_get_x_transformed(m_tabletToolEvent, size.width() * outputArea.width()),
+                 size.height() * outputArea.y() + libinput_event_tablet_tool_get_y_transformed(m_tabletToolEvent, size.height() * outputArea.height())};
+    return p;
 }
 
 TabletToolButtonEvent::TabletToolButtonEvent(libinput_event *event, libinput_event_type type)

@@ -15,6 +15,8 @@
 
 namespace KWin
 {
+class Output;
+
 namespace LibInput
 {
 
@@ -306,7 +308,7 @@ public:
         return state == LIBINPUT_TABLET_TOOL_PROXIMITY_STATE_IN;
     }
 
-    QPointF transformedPosition(const QSize &size) const;
+    QPointF transformedPosition(Output *output) const;
 
     struct libinput_tablet_tool *tool()
     {
