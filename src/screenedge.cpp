@@ -654,7 +654,7 @@ void Edge::updateApproaching(const QPoint &point)
         int factor = 0;
         const int edgeDistance = m_edges->cornerOffset();
         auto cornerDistance = [=](const QPoint &corner) {
-            return std::max(qAbs(corner.x() - point.x()), qAbs(corner.y() - point.y()));
+            return std::max(std::abs(corner.x() - point.x()), std::abs(corner.y() - point.y()));
         };
         switch (border()) {
         case ElectricTopLeft:
@@ -670,16 +670,16 @@ void Edge::updateApproaching(const QPoint &point)
             factor = (cornerDistance(approachGeometry().bottomLeft()) << 8) / edgeDistance;
             break;
         case ElectricTop:
-            factor = (qAbs(point.y() - approachGeometry().y()) << 8) / edgeDistance;
+            factor = (std::abs(point.y() - approachGeometry().y()) << 8) / edgeDistance;
             break;
         case ElectricRight:
-            factor = (qAbs(point.x() - approachGeometry().right()) << 8) / edgeDistance;
+            factor = (std::abs(point.x() - approachGeometry().right()) << 8) / edgeDistance;
             break;
         case ElectricBottom:
-            factor = (qAbs(point.y() - approachGeometry().bottom()) << 8) / edgeDistance;
+            factor = (std::abs(point.y() - approachGeometry().bottom()) << 8) / edgeDistance;
             break;
         case ElectricLeft:
-            factor = (qAbs(point.x() - approachGeometry().x()) << 8) / edgeDistance;
+            factor = (std::abs(point.x() - approachGeometry().x()) << 8) / edgeDistance;
             break;
         default:
             break;

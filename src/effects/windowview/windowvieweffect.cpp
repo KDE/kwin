@@ -235,9 +235,9 @@ void WindowViewEffect::reconfigure(ReconfigureFlags)
         }
         const int maxDelta = 500; // Arbitrary logical pixels value seems to behave better than scaledScreenSize
         if (border == ElectricTop || border == ElectricBottom) {
-            partialActivate(std::min(1.0, qAbs(deltaProgress.y()) / maxDelta));
+            partialActivate(std::min(1.0, std::abs(deltaProgress.y()) / maxDelta));
         } else {
-            partialActivate(std::min(1.0, qAbs(deltaProgress.x()) / maxDelta));
+            partialActivate(std::min(1.0, std::abs(deltaProgress.x()) / maxDelta));
         }
     };
 

@@ -621,7 +621,7 @@ void ScriptedEffectsTest::testRedirect()
     auto around = [](std::chrono::milliseconds elapsed,
                      std::chrono::milliseconds pivot,
                      std::chrono::milliseconds margin) {
-        return qAbs(elapsed.count() - pivot.count()) < margin.count();
+        return std::abs(elapsed.count() - pivot.count()) < margin.count();
     };
 
     // initially, the test animation is at the source position
@@ -697,7 +697,7 @@ void ScriptedEffectsTest::testComplete()
     auto around = [](std::chrono::milliseconds elapsed,
                      std::chrono::milliseconds pivot,
                      std::chrono::milliseconds margin) {
-        return qAbs(elapsed.count() - pivot.count()) < margin.count();
+        return std::abs(elapsed.count() - pivot.count()) < margin.count();
     };
 
     // initially, the test animation should be at the start position

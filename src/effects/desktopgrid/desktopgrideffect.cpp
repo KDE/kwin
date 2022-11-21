@@ -127,10 +127,10 @@ void DesktopGridEffect::reconfigure(ReconfigureFlags)
             const int columns = gridColumns();
             if (border == ElectricTop || border == ElectricBottom) {
                 const int maxDelta = (screen->geometry().height() / rows) * (rows - (effects->currentDesktop() % rows));
-                partialActivate(std::min(1.0, qAbs(deltaProgress.y()) / maxDelta));
+                partialActivate(std::min(1.0, std::abs(deltaProgress.y()) / maxDelta));
             } else {
                 const int maxDelta = (screen->geometry().width() / columns) * (columns - (effects->currentDesktop() % columns));
-                partialActivate(std::min(1.0, qAbs(deltaProgress.x()) / maxDelta));
+                partialActivate(std::min(1.0, std::abs(deltaProgress.x()) / maxDelta));
             }
         });
     }

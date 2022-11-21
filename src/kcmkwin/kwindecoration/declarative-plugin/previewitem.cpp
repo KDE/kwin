@@ -177,7 +177,7 @@ void PreviewItem::paintShadow(QPainter *painter, int &paddingLeft, int &paddingR
     // tile won't be rendered.
     bool drawTop = true;
     if (topLeftTarget.x() + topLeftTarget.width() >= topRightTarget.x()) {
-        const float halfOverlap = qAbs(topLeftTarget.x() + topLeftTarget.width() - topRightTarget.x()) / 2.0f;
+        const float halfOverlap = std::abs(topLeftTarget.x() + topLeftTarget.width() - topRightTarget.x()) / 2.0f;
         topLeftTarget.setRight(topLeftTarget.right() - std::floor(halfOverlap));
         topRightTarget.setLeft(topRightTarget.left() + std::ceil(halfOverlap));
         drawTop = false;
@@ -185,7 +185,7 @@ void PreviewItem::paintShadow(QPainter *painter, int &paddingLeft, int &paddingR
 
     bool drawRight = true;
     if (topRightTarget.y() + topRightTarget.height() >= bottomRightTarget.y()) {
-        const float halfOverlap = qAbs(topRightTarget.y() + topRightTarget.height() - bottomRightTarget.y()) / 2.0f;
+        const float halfOverlap = std::abs(topRightTarget.y() + topRightTarget.height() - bottomRightTarget.y()) / 2.0f;
         topRightTarget.setBottom(topRightTarget.bottom() - std::floor(halfOverlap));
         bottomRightTarget.setTop(bottomRightTarget.top() + std::ceil(halfOverlap));
         drawRight = false;
@@ -193,7 +193,7 @@ void PreviewItem::paintShadow(QPainter *painter, int &paddingLeft, int &paddingR
 
     bool drawBottom = true;
     if (bottomLeftTarget.x() + bottomLeftTarget.width() >= bottomRightTarget.x()) {
-        const float halfOverlap = qAbs(bottomLeftTarget.x() + bottomLeftTarget.width() - bottomRightTarget.x()) / 2.0f;
+        const float halfOverlap = std::abs(bottomLeftTarget.x() + bottomLeftTarget.width() - bottomRightTarget.x()) / 2.0f;
         bottomLeftTarget.setRight(bottomLeftTarget.right() - std::floor(halfOverlap));
         bottomRightTarget.setLeft(bottomRightTarget.left() + std::ceil(halfOverlap));
         drawBottom = false;
@@ -201,7 +201,7 @@ void PreviewItem::paintShadow(QPainter *painter, int &paddingLeft, int &paddingR
 
     bool drawLeft = true;
     if (topLeftTarget.y() + topLeftTarget.height() >= bottomLeftTarget.y()) {
-        const float halfOverlap = qAbs(topLeftTarget.y() + topLeftTarget.height() - bottomLeftTarget.y()) / 2.0f;
+        const float halfOverlap = std::abs(topLeftTarget.y() + topLeftTarget.height() - bottomLeftTarget.y()) / 2.0f;
         topLeftTarget.setBottom(topLeftTarget.bottom() - std::floor(halfOverlap));
         bottomLeftTarget.setTop(bottomLeftTarget.top() + std::ceil(halfOverlap));
         drawLeft = false;

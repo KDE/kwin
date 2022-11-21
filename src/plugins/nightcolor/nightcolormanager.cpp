@@ -320,7 +320,7 @@ void NightColorManager::cancelAllTimers()
 
 void NightColorManager::resetQuickAdjustTimer(int targetTemp)
 {
-    int tempDiff = qAbs(targetTemp - m_currentTemp);
+    int tempDiff = std::abs(targetTemp - m_currentTemp);
     // allow tolerance of one TEMPERATURE_STEP to compensate if a slow update is coincidental
     if (tempDiff > TEMPERATURE_STEP) {
         cancelAllTimers();
@@ -425,7 +425,7 @@ void NightColorManager::resetSlowUpdateTimer()
         }
 
         // calculate interval such as temperature is changed by TEMPERATURE_STEP K per timer timeout
-        int interval = availTime * TEMPERATURE_STEP / qAbs(targetTemp - m_currentTemp);
+        int interval = availTime * TEMPERATURE_STEP / std::abs(targetTemp - m_currentTemp);
         if (interval == 0) {
             interval = 1;
         }
@@ -667,7 +667,7 @@ void NightColorManager::autoLocationUpdate(double latitude, double longitude)
     }
 
     // we tolerate small deviations with minimal impact on sun timings
-    if (qAbs(m_latAuto - latitude) < 2 && qAbs(m_lngAuto - longitude) < 1) {
+    if (std::abs(m_latAuto - latitude) < 2 && std::abs(m_lngAuto - longitude) < 1) {
         return;
     }
     cancelAllTimers();

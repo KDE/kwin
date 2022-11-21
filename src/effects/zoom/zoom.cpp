@@ -235,7 +235,7 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
         }
         lastPresentTime = presentTime;
 
-        const float zoomDist = qAbs(target_zoom - source_zoom);
+        const float zoomDist = std::abs(target_zoom - source_zoom);
         if (target_zoom > zoom) {
             zoom = std::min(zoom + ((zoomDist * time) / animationTime(150 * zoomFactor)), target_zoom);
         } else {

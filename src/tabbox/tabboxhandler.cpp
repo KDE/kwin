@@ -644,7 +644,7 @@ bool TabBoxHandler::eventFilter(QObject *watched, QEvent *e)
     if (e->type() == QEvent::Wheel && watched == d->window()) {
         QWheelEvent *event = static_cast<QWheelEvent *>(e);
         // On x11 the delta for vertical scrolling might also be on X for whatever reason
-        const int delta = qAbs(event->angleDelta().x()) > qAbs(event->angleDelta().y()) ? event->angleDelta().x() : event->angleDelta().y();
+        const int delta = std::abs(event->angleDelta().x()) > std::abs(event->angleDelta().y()) ? event->angleDelta().x() : event->angleDelta().y();
         d->wheelAngleDelta += delta;
         while (d->wheelAngleDelta <= -120) {
             d->wheelAngleDelta += 120;

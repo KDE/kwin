@@ -1676,19 +1676,19 @@ bool Workspace::switchWindow(Window *window, Direction direction, QPoint curPos,
             switch (direction) {
             case DirectionNorth:
                 distance = curPos.y() - otherCenter.y();
-                offset = qAbs(otherCenter.x() - curPos.x());
+                offset = std::abs(otherCenter.x() - curPos.x());
                 break;
             case DirectionEast:
                 distance = otherCenter.x() - curPos.x();
-                offset = qAbs(otherCenter.y() - curPos.y());
+                offset = std::abs(otherCenter.y() - curPos.y());
                 break;
             case DirectionSouth:
                 distance = otherCenter.y() - curPos.y();
-                offset = qAbs(otherCenter.x() - curPos.x());
+                offset = std::abs(otherCenter.x() - curPos.x());
                 break;
             case DirectionWest:
                 distance = curPos.x() - otherCenter.x();
-                offset = qAbs(otherCenter.y() - curPos.y());
+                offset = std::abs(otherCenter.y() - curPos.y());
                 break;
             default:
                 distance = -1;

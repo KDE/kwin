@@ -2713,20 +2713,20 @@ QPointF Workspace::adjustWindowPosition(Window *window, QPointF pos, bool unrest
         const int borderXSnapZone = borderSnapZone.width() * snapAdjust; // snap trigger
         const int borderYSnapZone = borderSnapZone.height() * snapAdjust;
         if (borderXSnapZone > 0 || borderYSnapZone > 0) {
-            if ((sOWO ? (cx < xmin) : true) && (qAbs(xmin - cx) < borderXSnapZone)) {
+            if ((sOWO ? (cx < xmin) : true) && (std::abs(xmin - cx) < borderXSnapZone)) {
                 deltaX = xmin - cx;
                 nx = xmin;
             }
-            if ((sOWO ? (rx > xmax) : true) && (qAbs(rx - xmax) < borderXSnapZone) && (qAbs(xmax - rx) < deltaX)) {
+            if ((sOWO ? (rx > xmax) : true) && (std::abs(rx - xmax) < borderXSnapZone) && (std::abs(xmax - rx) < deltaX)) {
                 deltaX = rx - xmax;
                 nx = xmax - cw;
             }
 
-            if ((sOWO ? (cy < ymin) : true) && (qAbs(ymin - cy) < borderYSnapZone)) {
+            if ((sOWO ? (cy < ymin) : true) && (std::abs(ymin - cy) < borderYSnapZone)) {
                 deltaY = ymin - cy;
                 ny = ymin;
             }
-            if ((sOWO ? (ry > ymax) : true) && (qAbs(ry - ymax) < borderYSnapZone) && (qAbs(ymax - ry) < deltaY)) {
+            if ((sOWO ? (ry > ymax) : true) && (std::abs(ry - ymax) < borderYSnapZone) && (std::abs(ymax - ry) < deltaY)) {
                 deltaY = ry - ymax;
                 ny = ymax - ch;
             }
@@ -2761,46 +2761,46 @@ QPointF Workspace::adjustWindowPosition(Window *window, QPointF pos, bool unrest
                 lry = ly + (*l)->height();
 
                 if (!(guideMaximized & MaximizeHorizontal) && (((cy <= lry) && (cy >= ly)) || ((ry >= ly) && (ry <= lry)) || ((cy <= ly) && (ry >= lry)))) {
-                    if ((sOWO ? (cx < lrx) : true) && (qAbs(lrx - cx) < windowSnapZone) && (qAbs(lrx - cx) < deltaX)) {
-                        deltaX = qAbs(lrx - cx);
+                    if ((sOWO ? (cx < lrx) : true) && (std::abs(lrx - cx) < windowSnapZone) && (std::abs(lrx - cx) < deltaX)) {
+                        deltaX = std::abs(lrx - cx);
                         nx = lrx;
                     }
-                    if ((sOWO ? (rx > lx) : true) && (qAbs(rx - lx) < windowSnapZone) && (qAbs(rx - lx) < deltaX)) {
-                        deltaX = qAbs(rx - lx);
+                    if ((sOWO ? (rx > lx) : true) && (std::abs(rx - lx) < windowSnapZone) && (std::abs(rx - lx) < deltaX)) {
+                        deltaX = std::abs(rx - lx);
                         nx = lx - cw;
                     }
                 }
 
                 if (!(guideMaximized & MaximizeVertical) && (((cx <= lrx) && (cx >= lx)) || ((rx >= lx) && (rx <= lrx)) || ((cx <= lx) && (rx >= lrx)))) {
-                    if ((sOWO ? (cy < lry) : true) && (qAbs(lry - cy) < windowSnapZone) && (qAbs(lry - cy) < deltaY)) {
-                        deltaY = qAbs(lry - cy);
+                    if ((sOWO ? (cy < lry) : true) && (std::abs(lry - cy) < windowSnapZone) && (std::abs(lry - cy) < deltaY)) {
+                        deltaY = std::abs(lry - cy);
                         ny = lry;
                     }
-                    // if ( (qAbs( ry-ly ) < snap) && (qAbs( ry - ly ) < deltaY ))
-                    if ((sOWO ? (ry > ly) : true) && (qAbs(ry - ly) < windowSnapZone) && (qAbs(ry - ly) < deltaY)) {
-                        deltaY = qAbs(ry - ly);
+                    // if ( (std::abs( ry-ly ) < snap) && (std::abs( ry - ly ) < deltaY ))
+                    if ((sOWO ? (ry > ly) : true) && (std::abs(ry - ly) < windowSnapZone) && (std::abs(ry - ly) < deltaY)) {
+                        deltaY = std::abs(ry - ly);
                         ny = ly - ch;
                     }
                 }
 
                 // Corner snapping
                 if (!(guideMaximized & MaximizeVertical) && (nx == lrx || nx + cw == lx)) {
-                    if ((sOWO ? (ry > lry) : true) && (qAbs(lry - ry) < windowSnapZone) && (qAbs(lry - ry) < deltaY)) {
-                        deltaY = qAbs(lry - ry);
+                    if ((sOWO ? (ry > lry) : true) && (std::abs(lry - ry) < windowSnapZone) && (std::abs(lry - ry) < deltaY)) {
+                        deltaY = std::abs(lry - ry);
                         ny = lry - ch;
                     }
-                    if ((sOWO ? (cy < ly) : true) && (qAbs(cy - ly) < windowSnapZone) && (qAbs(cy - ly) < deltaY)) {
-                        deltaY = qAbs(cy - ly);
+                    if ((sOWO ? (cy < ly) : true) && (std::abs(cy - ly) < windowSnapZone) && (std::abs(cy - ly) < deltaY)) {
+                        deltaY = std::abs(cy - ly);
                         ny = ly;
                     }
                 }
                 if (!(guideMaximized & MaximizeHorizontal) && (ny == lry || ny + ch == ly)) {
-                    if ((sOWO ? (rx > lrx) : true) && (qAbs(lrx - rx) < windowSnapZone) && (qAbs(lrx - rx) < deltaX)) {
-                        deltaX = qAbs(lrx - rx);
+                    if ((sOWO ? (rx > lrx) : true) && (std::abs(lrx - rx) < windowSnapZone) && (std::abs(lrx - rx) < deltaX)) {
+                        deltaX = std::abs(lrx - rx);
                         nx = lrx - cw;
                     }
-                    if ((sOWO ? (cx < lx) : true) && (qAbs(cx - lx) < windowSnapZone) && (qAbs(cx - lx) < deltaX)) {
-                        deltaX = qAbs(cx - lx);
+                    if ((sOWO ? (cx < lx) : true) && (std::abs(cx - lx) < windowSnapZone) && (std::abs(cx - lx) < deltaX)) {
+                        deltaX = std::abs(cx - lx);
                         nx = lx;
                     }
                 }
@@ -2810,8 +2810,8 @@ QPointF Workspace::adjustWindowPosition(Window *window, QPointF pos, bool unrest
         // center snap
         const int centerSnapZone = options->centerSnapZone() * snapAdjust;
         if (centerSnapZone > 0) {
-            int diffX = qAbs((xmin + xmax) / 2 - (cx + cw / 2));
-            int diffY = qAbs((ymin + ymax) / 2 - (cy + ch / 2));
+            int diffX = std::abs((xmin + xmax) / 2 - (cx + cw / 2));
+            int diffY = std::abs((ymin + ymax) / 2 - (cy + ch / 2));
             if (diffX < centerSnapZone && diffY < centerSnapZone && diffX < deltaX && diffY < deltaY) {
                 // Snap to center of screen
                 nx = (xmin + xmax) / 2 - cw / 2;
@@ -2865,28 +2865,28 @@ QRectF Workspace::adjustWindowSize(Window *window, QRectF moveResizeGeom, Gravit
             deltaX = int(snap);
             deltaY = int(snap);
 
-#define SNAP_BORDER_TOP                                                    \
-    if ((sOWO ? (newcy < ymin) : true) && (qAbs(ymin - newcy) < deltaY)) { \
-        deltaY = qAbs(ymin - newcy);                                       \
-        newcy = ymin;                                                      \
+#define SNAP_BORDER_TOP                                                        \
+    if ((sOWO ? (newcy < ymin) : true) && (std::abs(ymin - newcy) < deltaY)) { \
+        deltaY = std::abs(ymin - newcy);                                       \
+        newcy = ymin;                                                          \
     }
 
-#define SNAP_BORDER_BOTTOM                                                 \
-    if ((sOWO ? (newry > ymax) : true) && (qAbs(ymax - newry) < deltaY)) { \
-        deltaY = qAbs(ymax - newcy);                                       \
-        newry = ymax;                                                      \
+#define SNAP_BORDER_BOTTOM                                                     \
+    if ((sOWO ? (newry > ymax) : true) && (std::abs(ymax - newry) < deltaY)) { \
+        deltaY = std::abs(ymax - newcy);                                       \
+        newry = ymax;                                                          \
     }
 
-#define SNAP_BORDER_LEFT                                                   \
-    if ((sOWO ? (newcx < xmin) : true) && (qAbs(xmin - newcx) < deltaX)) { \
-        deltaX = qAbs(xmin - newcx);                                       \
-        newcx = xmin;                                                      \
+#define SNAP_BORDER_LEFT                                                       \
+    if ((sOWO ? (newcx < xmin) : true) && (std::abs(xmin - newcx) < deltaX)) { \
+        deltaX = std::abs(xmin - newcx);                                       \
+        newcx = xmin;                                                          \
     }
 
-#define SNAP_BORDER_RIGHT                                                  \
-    if ((sOWO ? (newrx > xmax) : true) && (qAbs(xmax - newrx) < deltaX)) { \
-        deltaX = qAbs(xmax - newrx);                                       \
-        newrx = xmax;                                                      \
+#define SNAP_BORDER_RIGHT                                                      \
+    if ((sOWO ? (newrx > xmax) : true) && (std::abs(xmax - newrx) < deltaX)) { \
+        deltaX = std::abs(xmax - newrx);                                       \
+        newrx = xmax;                                                          \
     }
             switch (gravity) {
             case Gravity::BottomRight:
@@ -2940,68 +2940,68 @@ QRectF Workspace::adjustWindowSize(Window *window, QRectF moveResizeGeom, Gravit
 
 #define WITHIN_WIDTH (((cx <= lrx) && (cx >= lx)) || ((rx >= lx) && (rx <= lrx)) || ((cx <= lx) && (rx >= lrx)))
 
-#define SNAP_WINDOW_TOP                    \
-    if ((sOWO ? (newcy < lry) : true)      \
-        && WITHIN_WIDTH                    \
-        && (qAbs(lry - newcy) < deltaY)) { \
-        deltaY = qAbs(lry - newcy);        \
-        newcy = lry;                       \
+#define SNAP_WINDOW_TOP                        \
+    if ((sOWO ? (newcy < lry) : true)          \
+        && WITHIN_WIDTH                        \
+        && (std::abs(lry - newcy) < deltaY)) { \
+        deltaY = std::abs(lry - newcy);        \
+        newcy = lry;                           \
     }
 
-#define SNAP_WINDOW_BOTTOM                \
-    if ((sOWO ? (newry > ly) : true)      \
-        && WITHIN_WIDTH                   \
-        && (qAbs(ly - newry) < deltaY)) { \
-        deltaY = qAbs(ly - newry);        \
-        newry = ly;                       \
+#define SNAP_WINDOW_BOTTOM                    \
+    if ((sOWO ? (newry > ly) : true)          \
+        && WITHIN_WIDTH                       \
+        && (std::abs(ly - newry) < deltaY)) { \
+        deltaY = std::abs(ly - newry);        \
+        newry = ly;                           \
     }
 
-#define SNAP_WINDOW_LEFT                   \
-    if ((sOWO ? (newcx < lrx) : true)      \
-        && WITHIN_HEIGHT                   \
-        && (qAbs(lrx - newcx) < deltaX)) { \
-        deltaX = qAbs(lrx - newcx);        \
-        newcx = lrx;                       \
+#define SNAP_WINDOW_LEFT                       \
+    if ((sOWO ? (newcx < lrx) : true)          \
+        && WITHIN_HEIGHT                       \
+        && (std::abs(lrx - newcx) < deltaX)) { \
+        deltaX = std::abs(lrx - newcx);        \
+        newcx = lrx;                           \
     }
 
-#define SNAP_WINDOW_RIGHT                 \
-    if ((sOWO ? (newrx > lx) : true)      \
-        && WITHIN_HEIGHT                  \
-        && (qAbs(lx - newrx) < deltaX)) { \
-        deltaX = qAbs(lx - newrx);        \
-        newrx = lx;                       \
+#define SNAP_WINDOW_RIGHT                     \
+    if ((sOWO ? (newrx > lx) : true)          \
+        && WITHIN_HEIGHT                      \
+        && (std::abs(lx - newrx) < deltaX)) { \
+        deltaX = std::abs(lx - newrx);        \
+        newrx = lx;                           \
     }
 
-#define SNAP_WINDOW_C_TOP                \
-    if ((sOWO ? (newcy < ly) : true)     \
-        && (newcx == lrx || newrx == lx) \
-        && qAbs(ly - newcy) < deltaY) {  \
-        deltaY = qAbs(ly - newcy);       \
-        newcy = ly;                      \
+#define SNAP_WINDOW_C_TOP                   \
+    if ((sOWO ? (newcy < ly) : true)        \
+        && (newcx == lrx || newrx == lx)    \
+        && std::abs(ly - newcy) < deltaY) { \
+        deltaY = std::abs(ly - newcy);      \
+        newcy = ly;                         \
     }
 
-#define SNAP_WINDOW_C_BOTTOM             \
-    if ((sOWO ? (newry > lry) : true)    \
-        && (newcx == lrx || newrx == lx) \
-        && qAbs(lry - newry) < deltaY) { \
-        deltaY = qAbs(lry - newry);      \
-        newry = lry;                     \
+#define SNAP_WINDOW_C_BOTTOM                 \
+    if ((sOWO ? (newry > lry) : true)        \
+        && (newcx == lrx || newrx == lx)     \
+        && std::abs(lry - newry) < deltaY) { \
+        deltaY = std::abs(lry - newry);      \
+        newry = lry;                         \
     }
 
-#define SNAP_WINDOW_C_LEFT               \
-    if ((sOWO ? (newcx < lx) : true)     \
-        && (newcy == lry || newry == ly) \
-        && qAbs(lx - newcx) < deltaX) {  \
-        deltaX = qAbs(lx - newcx);       \
-        newcx = lx;                      \
+#define SNAP_WINDOW_C_LEFT                  \
+    if ((sOWO ? (newcx < lx) : true)        \
+        && (newcy == lry || newry == ly)    \
+        && std::abs(lx - newcx) < deltaX) { \
+        deltaX = std::abs(lx - newcx);      \
+        newcx = lx;                         \
     }
 
-#define SNAP_WINDOW_C_RIGHT              \
-    if ((sOWO ? (newrx > lrx) : true)    \
-        && (newcy == lry || newry == ly) \
-        && qAbs(lrx - newrx) < deltaX) { \
-        deltaX = qAbs(lrx - newrx);      \
-        newrx = lrx;                     \
+#define SNAP_WINDOW_C_RIGHT                  \
+    if ((sOWO ? (newrx > lrx) : true)        \
+        && (newcy == lry || newry == ly)     \
+        && std::abs(lrx - newrx) < deltaX) { \
+        deltaX = std::abs(lrx - newrx);      \
+        newrx = lrx;                         \
     }
 
                     switch (gravity) {
