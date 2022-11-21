@@ -274,6 +274,11 @@ void OutputInterface::remove()
         return;
     }
 
+    d->doneTimer.stop();
+    if (d->handle) {
+        disconnect(d->handle, nullptr, this, nullptr);
+    }
+
     if (d->display) {
         DisplayPrivate *displayPrivate = DisplayPrivate::get(d->display);
         displayPrivate->outputs.removeOne(this);
@@ -298,12 +303,16 @@ QVector<wl_resource *> OutputInterface::clientResources(ClientConnection *client
 
 void OutputInterface::scheduleDone()
 {
-    d->doneTimer.start();
+    if (!d->isGlobalRemoved()) {
+        d->doneTimer.start();
+    }
 }
 
 void OutputInterface::done(wl_client *client)
 {
-    d->sendDone(d->resourceMap().value(client));
+    if (!d->isGlobalRemoved()) {
+        d->sendDone(d->resourceMap().value(client));
+    }
 }
 
 OutputInterface *OutputInterface::get(wl_resource *native)
