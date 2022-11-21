@@ -353,11 +353,11 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
             relevance = qMax(1.0, relevance);
             type = qMax(Plasma::QueryMatch::ExactMatch, type);
         }
-        if (!actionKeyword.isEmpty()) {
+        if (!actionKeyword.isEmpty() && windowListKeyword.isEmpty()) {
             relevance = qMax(0.9, relevance);
             type = qMax(Plasma::QueryMatch::PossibleMatch, type);
         }
-        if (!propertyKeywords.isEmpty()) {
+        if (!propertyKeywords.isEmpty() && windowListKeyword.isEmpty()) {
             if (exactNameMatch) {
                 relevance = qMax(0.8, relevance);
                 type = qMax(Plasma::QueryMatch::ExactMatch, type);
@@ -381,6 +381,7 @@ RemoteMatches WindowsRunner::Match(const QString &searchTerm)
             matches << desktopMatch(desktop, action, &objectTerms, relevance - order, type);
             break;
         case CloseAction:
+        case MinimizeAction:
             matches << windowsDesktopMatch(desktop, action, nullptr, relevance - order, type);
             break;
         case MoveAction:
@@ -431,7 +432,11 @@ void WindowsRunner::Run(const QString &id, const QString &actionId)
         }
         switch (action) {
         case ActivateAction:
-            workspace()->activateWindow(window);
+            if (window->isNormalWindow()) {
+                workspace()->activateWindow(window);
+            } else {
+                workspace()->setShowingDesktop(true);
+            }
             break;
         case CloseAction:
             window->closeWindow();
@@ -513,6 +518,9 @@ void WindowsRunner::Run(const QString &id, const QString &actionId)
             for (Window *window : windows) {
                 window->closeWindow();
             }
+            break;
+        case MinimizeAction:
+            workspace()->toggleMinimizeAll();
             break;
         case MoveAction: {
             const auto destination = vds->desktopForId(parts[3]);
@@ -657,6 +665,9 @@ RemoteMatch WindowsRunner::windowsDesktopMatch(const VirtualDesktop *desktop, co
     case CloseAction:
         properties[QStringLiteral("subtext")] = i18n("Close all windows on %1", desktop->name());
         break;
+    case MinimizeAction:
+        properties[QStringLiteral("subtext")] = i18n("Minimize all running windows on %1", desktop->name());
+        break;
     case MoveAction: {
         const QString destinationDesktopName = destination ? destination->name() : i18n("New Desktop");
         match.text = desktop->name() + QStringLiteral(" > ") + destinationDesktopName;
@@ -686,7 +697,7 @@ bool WindowsRunner::actionSupported(const Window *window, const WindowsRunnerAct
         return window->isShadeable();
     case KeepAboveAction:
     case KeepBelowAction:
-        return true;
+        return window->isNormalWindow();
     case PinAction:
     case MoveAction:
         return !window->isSpecialWindow();
@@ -705,6 +716,7 @@ bool WindowsRunner::actionSupported(const VirtualDesktop *desktop, const Windows
     case RemoveAction:
     case RenameAction:
     case CloseAction:
+    case MinimizeAction:
     case MoveAction:
         return desktop;
     default:
