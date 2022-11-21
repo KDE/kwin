@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-19 00:47+0000\n"
-"PO-Revision-Date: 2022-11-02 05:09+0100\n"
+"PO-Revision-Date: 2022-11-20 07:48+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -57,7 +57,7 @@ msgstr ""
 #: composite.cpp:1039
 #, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr ""
+msgstr "GLX/OpenGL ხელმიუწვდომელია."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -1621,7 +1621,7 @@ msgstr "ფანჯრის სათაური"
 #: rulesettings.kcfg:47
 #, kde-format
 msgid "Window title string match type"
-msgstr ""
+msgstr "ფანჯრის სათაურის სტრიქონის დამთხვევის ტიპი"
 
 #. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:54
@@ -1633,13 +1633,13 @@ msgstr "მანქანა (ჰოსტის სახელი)"
 #: rulesettings.kcfg:57
 #, kde-format
 msgid "Machine string match type"
-msgstr ""
+msgstr "მანქანის სტრიქონის დამთხვევის ტიპი"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:64
 #, kde-format
 msgid "Window types that match"
-msgstr ""
+msgstr "ფანჯრის ტიპები, რომლებიც ემთხვევა"
 
 #. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:69
@@ -1651,7 +1651,7 @@ msgstr "საწყისი განთავსება"
 #: rulesettings.kcfg:74
 #, kde-format
 msgid "Initial placement rule type"
-msgstr ""
+msgstr "საწყისი მდებარეობის წესის ტიპი"
 
 #. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:79
@@ -1663,7 +1663,7 @@ msgstr "ფანჯრის მდებარეობა"
 #: rulesettings.kcfg:83
 #, kde-format
 msgid "Window position rule type"
-msgstr ""
+msgstr "ფანჯრის მდებარეობის წესის ტიპი"
 
 #. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:90
@@ -1675,79 +1675,79 @@ msgstr "ფანჯრის ზომა"
 #: rulesettings.kcfg:93
 #, kde-format
 msgid "Window size rule type"
-msgstr ""
+msgstr "ფანჯრის ზომის წესის ტიპი"
 
 #. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:100
 #, kde-format
 msgid "Window minimum size"
-msgstr ""
+msgstr "ფანჯრის მინიმალური ზომა"
 
 #. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:104
 #, kde-format
 msgid "Window minimum size rule type"
-msgstr ""
+msgstr "ფანჯრის მინიმალური ზომის წესის ტიპი"
 
 #. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:109
 #, kde-format
 msgid "Window maximum size"
-msgstr ""
+msgstr "ფანჯრის მაქსიმალური ზომა"
 
 #. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:113
 #, kde-format
 msgid "Window maximum size rule type"
-msgstr ""
+msgstr "ფანჯრის მაქსიმალური ზომის წესის ტიპი"
 
 #. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:118
 #, kde-format
 msgid "Active opacity"
-msgstr ""
+msgstr "აქტიური გაუმჭვირვალობა"
 
 #. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:124
 #, kde-format
 msgid "Active opacity rule type"
-msgstr ""
+msgstr "აქტიური გაუმჭვირვალობის წესის ტიპი"
 
 #. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:129
 #, kde-format
 msgid "Inactive opacity"
-msgstr ""
+msgstr "არააქტიური გაუმჭვირვალობა"
 
 #. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:135
 #, kde-format
 msgid "Inactive opacity rule type"
-msgstr ""
+msgstr "არააქტიური გაუმჭვირვალობის წესის ტიპი"
 
 #. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:140
 #, kde-format
 msgid "Ignore requested geometry"
-msgstr ""
+msgstr "მოთხოვნილი გეომეტრიის უგულებელყოფა"
 
 #. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:144
 #, kde-format
 msgid "Ignore requested geometry rule type"
-msgstr ""
+msgstr "მოთხოვნილი გეომეტრიის წესის ტიპის უგულებელყოფა"
 
 #. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:151
 #, kde-format
 msgid "List of Desktop Ids"
-msgstr ""
+msgstr "სამუშაო მაგიდების ID-ების სია"
 
 #. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:155
 #, kde-format
 msgid "Desktop Ids rule type"
-msgstr ""
+msgstr "სამუშაო მაგიდის ID-ების წესის ტიპი"
 
 #. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:162
@@ -1759,7 +1759,7 @@ msgstr "ეკრანის ნომერი"
 #: rulesettings.kcfg:166
 #, kde-format
 msgid "Screen number rule type"
-msgstr ""
+msgstr "ეკრანის ნომრის წესის ტიპი"
 
 #. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:173
@@ -1771,103 +1771,103 @@ msgstr "აქტივობა"
 #: rulesettings.kcfg:176
 #, kde-format
 msgid "Activity rule type"
-msgstr ""
+msgstr "აქტივობის წესის ტიპი"
 
 #. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:183
 #, kde-format
 msgid "Set window type to"
-msgstr ""
+msgstr "ფანჯრის ტიპის დაყენება"
 
 #. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:189
 #, kde-format
 msgid "Set window type rule type"
-msgstr ""
+msgstr "ფანჯრის ტიპის წესის ტიპის დაყენება"
 
 #. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:194
 #, kde-format
 msgid "Maximized vertically"
-msgstr ""
+msgstr "ვერტიკალურად გაშლილი"
 
 #. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:198
 #, kde-format
 msgid "Maximized vertically rule type"
-msgstr ""
+msgstr "ვერტიკალურად გაშლის წესის ტიპი"
 
 #. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:205
 #, kde-format
 msgid "Maximized horizontally"
-msgstr ""
+msgstr "ჰორიზონტალურად გაშლილი"
 
 #. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:209
 #, kde-format
 msgid "Maximized horizontally rule type"
-msgstr ""
+msgstr "ჰორიზონტალურად გაშლის წესის ტიპი"
 
 #. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:216
 #, kde-format
 msgid "Minimized"
-msgstr ""
+msgstr "ჩაკეცვა"
 
 #. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:220
 #, kde-format
 msgid "Minimized rule type"
-msgstr ""
+msgstr "ჩაკეცვლის წესის ტიპი"
 
 #. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:227
 #, kde-format
 msgid "Shaded"
-msgstr ""
+msgstr "დაჩრდილული"
 
 #. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:231
 #, kde-format
 msgid "Shaded rule type"
-msgstr ""
+msgstr "დაჩრდილვის წესის ტიპი"
 
 #. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:238
 #, kde-format
 msgid "Skip taskbar"
-msgstr ""
+msgstr "დავალებების პანელის გამოტოვება"
 
 #. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:242
 #, kde-format
 msgid "Skip taskbar rule type"
-msgstr ""
+msgstr "დავალებების პანელის გამოტოვებს წესის ტიპი"
 
 #. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:249
 #, kde-format
 msgid "Skip pager"
-msgstr ""
+msgstr "პეიჯერის გამოტოვება"
 
 #. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:253
 #, kde-format
 msgid "Skip pager rule type"
-msgstr ""
+msgstr "პეიჯერის გამოტოვების წესის ტპი"
 
 #. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:260
 #, kde-format
 msgid "Skip switcher"
-msgstr ""
+msgstr "გადამრთველის გამოტოვება"
 
 #. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:264
 #, kde-format
 msgid "Skip switcher rule type"
-msgstr ""
+msgstr "გადამრთველის გამოტოვების წესის ტიპი"
 
 #. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:271
@@ -1879,19 +1879,19 @@ msgstr "ზემოდან დატოვება"
 #: rulesettings.kcfg:275
 #, kde-format
 msgid "Keep above rule type"
-msgstr ""
+msgstr "წესის ტიპის წემოთ ქონა"
 
 #. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:282
 #, kde-format
 msgid "Keep below"
-msgstr ""
+msgstr "ქვემოთ ქონა"
 
 #. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:286
 #, kde-format
 msgid "Keep below rule type"
-msgstr ""
+msgstr "ქვემოთ ქონის წესის ტიპი"
 
 #. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:293
@@ -1903,31 +1903,31 @@ msgstr "მთელ ეკრანზე"
 #: rulesettings.kcfg:297
 #, kde-format
 msgid "Fullscreen rule type"
-msgstr ""
+msgstr "სრული ეკრანის წესის ტიპი"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:304
 #, kde-format
 msgid "No titlebar and frame"
-msgstr ""
+msgstr "სათაურისა და ჩარჩოს გარეშე"
 
 #. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:308
 #, kde-format
 msgid "No titlebar rule type"
-msgstr ""
+msgstr "სათაურის წესის ტიპის გარეშე"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:315
 #, kde-format
 msgid "Titlebar color and scheme"
-msgstr ""
+msgstr "სათაურის ზოლის ფერი და სქემა"
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:318
 #, kde-format
 msgid "Titlebar color rule type"
-msgstr ""
+msgstr "სათაურის ზოლის წესის ტიპი"
 
 #. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:323
@@ -1945,37 +1945,37 @@ msgstr ""
 #: rulesettings.kcfg:332
 #, kde-format
 msgid "Focus stealing prevention"
-msgstr ""
+msgstr "ფოკუსის მოპარვის აცილება"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:338
 #, kde-format
 msgid "Focus stealing prevention rule type"
-msgstr ""
+msgstr "ფოკუსის მოპარვის აცილების წესის ტიპი"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:343
 #, kde-format
 msgid "Focus protection"
-msgstr ""
+msgstr "ფოკუსის დაცვა"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:349
 #, kde-format
 msgid "Focus protection rule type"
-msgstr ""
+msgstr "ფოკუსის დაცვის წესის ტიპი"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:354
 #, kde-format
 msgid "Accept Focus"
-msgstr ""
+msgstr "ფოკუსის მიღება"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:358
 #, kde-format
 msgid "Accept Focus rule type"
-msgstr ""
+msgstr "ფოკუსის მიღების წესის ტიპი"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:363
@@ -1987,55 +1987,55 @@ msgstr "დახურვადი"
 #: rulesettings.kcfg:367
 #, kde-format
 msgid "Closeable rule type"
-msgstr ""
+msgstr "დახურვადი წესის ტიპი"
 
 #. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:372
 #, kde-format
 msgid "Autogroup with identical"
-msgstr ""
+msgstr "ერთნაირების ავტომატური დაჯგუფება"
 
 #. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:376
 #, kde-format
 msgid "Autogroup with identical rule type"
-msgstr ""
+msgstr "ერთნაირი წესის ტიპების მქონეების ავტომატური დაჯგუფება"
 
 #. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:381
 #, kde-format
 msgid "Autogroup in foreground"
-msgstr ""
+msgstr "ავტომატური დაჯგუფება წინა პლანზე"
 
 #. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:385
 #, kde-format
 msgid "Autogroup in foreground rule type"
-msgstr ""
+msgstr "წინა პლანზე ავტომატური დაჯგუფების წესის ტიპი"
 
 #. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:390
 #, kde-format
 msgid "Autogroup by ID"
-msgstr ""
+msgstr "ავტომატური დაჯგუფება ID-ის მიხედვით"
 
 #. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:393
 #, kde-format
 msgid "Autogroup by ID rule type"
-msgstr ""
+msgstr "ID-ის მიხედვით ავტომატური დაჯგუფების წესის ტიპი"
 
 #. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:398
 #, kde-format
 msgid "Obey geometry restrictions"
-msgstr ""
+msgstr "გეომეტრიის შეზღუდვების დაცვა"
 
 #. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:402
 #, kde-format
 msgid "Obey geometry restrictions rule type"
-msgstr ""
+msgstr "გეომეტრიის შეზღუდვების დაცვის წესის ტიპი"
 
 #. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:407
@@ -2047,43 +2047,43 @@ msgstr "მალსახმობი"
 #: rulesettings.kcfg:410
 #, kde-format
 msgid "Shortcut rule type"
-msgstr ""
+msgstr "მალსახმობის წესის ტიპი"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:417
 #, kde-format
 msgid "Ignore global shortcuts"
-msgstr ""
+msgstr "გლობალური მალსახმობების უგულებელყოფა"
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:421
 #, kde-format
 msgid "Ignore global shortcuts rule type"
-msgstr ""
+msgstr "იგნორირებული გლობალური მალსახმობების წესის ტიპი"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:426
 #, kde-format
 msgid "Desktop file name"
-msgstr ""
+msgstr "სამუშაო მაგიდის ფაილის სახელი"
 
 #. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:429
 #, kde-format
 msgid "Desktop file name rule type"
-msgstr ""
+msgstr "სამუშაო მაგიდის ფაილის სახელის წესის ტიპი"
 
 #: scripting/genericscriptedconfig.cpp:70
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "პაკეტის მეტამონაცემები ვერ ვიპოვე"
 
 #: scripting/genericscriptedconfig.cpp:84
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "%1 metadata.json ფაილს არ შეიცავს"
 
 #: scripting/genericscriptedconfig.cpp:90
 #: scripting/genericscriptedconfig.cpp:96
@@ -2226,12 +2226,12 @@ msgstr "ფანჯრის &მალსახობის დაყენე
 #: useractions.cpp:284
 #, kde-format
 msgid "Configure Special &Window Settings..."
-msgstr ""
+msgstr "&ფანჯრის სპეციალური პარამეტრების მორგება..."
 
 #: useractions.cpp:289
 #, kde-format
 msgid "Configure S&pecial Application Settings..."
-msgstr ""
+msgstr "აპლიკაციის ს&პეციალური პარამეტრების მორგება..."
 
 #: useractions.cpp:296
 #, kde-format
@@ -2239,7 +2239,7 @@ msgctxt ""
 "Entry in context menu of window decoration to open the configuration module "
 "of KWin"
 msgid "Configure W&indow Manager..."
-msgstr ""
+msgstr "&ფანჯრების მმართველის მორგება..."
 
 #: useractions.cpp:323
 #, kde-format
@@ -2305,7 +2305,7 @@ msgstr "&ახალი სამუშაო მაგიდა"
 #: useractions.cpp:645
 #, kde-format
 msgid "Move to %1 %2"
-msgstr ""
+msgstr "%1-ის %2-ზე გადატანა"
 
 #: useractions.cpp:658
 #, kde-format
@@ -2342,7 +2342,7 @@ msgstr "<b>%1</b> უკვე გამოიყენება"
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
-msgstr ""
+msgstr "<b>%1</b> გამოიყენება %2 -ის მიერ %3-ში"
 
 #: useractions.cpp:988
 #, kde-format
@@ -2417,12 +2417,12 @@ msgstr "ფანჯრის საზღვრის გადართვა"
 #: useractions.cpp:1016
 #, kde-format
 msgid "Keep Window Above Others"
-msgstr ""
+msgstr "ფანჯრის დანარჩენი ფანჯრების ზემოთ &ქონა"
 
 #: useractions.cpp:1018
 #, kde-format
 msgid "Keep Window Below Others"
-msgstr ""
+msgstr "ფანჯრის დანარჩენი ფანჯრების ქვემოთ &ქონა"
 
 #: useractions.cpp:1020
 #, kde-format
@@ -2432,7 +2432,7 @@ msgstr ""
 #: useractions.cpp:1022
 #, kde-format
 msgid "Setup Window Shortcut"
-msgstr ""
+msgstr "ფანჯრის მალსახმობის მორგება"
 
 #: useractions.cpp:1024
 #, kde-format

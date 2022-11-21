@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-19 00:47+0000\n"
-"PO-Revision-Date: 2022-11-19 20:24+0100\n"
+"PO-Revision-Date: 2022-11-20 11:16+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -909,7 +909,7 @@ msgstr "Sense finestres"
 #: windowview/qml/main.qml:120
 #, kde-format
 msgid "Filter windows…"
-msgstr "Filtra les finestres..."
+msgstr "Filtra les finestres…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: wobblywindows/wobblywindows_config.ui:20
