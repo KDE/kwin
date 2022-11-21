@@ -29,7 +29,6 @@ public:
     int desktop() const override;
     QStringList activities() const override;
     QVector<VirtualDesktop *> desktops() const override;
-    QPointF clientPos() const override;
     bool isDeleted() const override;
     xcb_window_t frameId() const override;
     void layoutDecorationRects(QRectF &left, QRectF &top, QRectF &right, QRectF &bottom) const override;
@@ -144,7 +143,6 @@ private:
     int delete_refcount;
     int desk;
     QStringList activityList;
-    QRectF contentsRect; // for clientPos()/clientSize()
     xcb_window_t m_frame;
     QVector<VirtualDesktop *> m_desktops;
 

@@ -29,7 +29,6 @@ public:
     int desktop() const override;
     QStringList activities() const override;
     QVector<VirtualDesktop *> desktops() const override;
-    QPointF clientPos() const override;
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     bool isOutline() const override;
     bool isUnmanaged() const override;

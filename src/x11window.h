@@ -137,6 +137,10 @@ public:
     QSizeF minSize() const override;
     QSizeF maxSize() const override;
     QSizeF basicUnit() const;
+    QPointF clientPos() const
+    {
+        return QPointF(borderLeft(), borderTop());
+    }
     QPointF inputPos() const
     {
         return input_offset;

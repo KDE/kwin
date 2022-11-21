@@ -185,11 +185,6 @@ QVector<VirtualDesktop *> Unmanaged::desktops() const
     return QVector<VirtualDesktop *>();
 }
 
-QPointF Unmanaged::clientPos() const
-{
-    return QPoint(0, 0); // unmanaged windows don't have decorations
-}
-
 NET::WindowType Unmanaged::windowType(bool direct, int supportedTypes) const
 {
     // for unmanaged windows the direct does not make any difference

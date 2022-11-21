@@ -631,10 +631,6 @@ public:
     int screen() const;
     Output *output() const;
     void setOutput(Output *output);
-    virtual QPointF clientPos() const
-    {
-        return QPointF(borderLeft(), borderTop());
-    }; // inside of geometry()
     QSizeF clientSize() const;
     /**
      * Returns a rectangle that the window occupies on the screen, including drop-shadows.
