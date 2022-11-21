@@ -129,8 +129,6 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(KWin::Output *output READ output NOTIFY screenChanged)
 
     Q_PROPERTY(QRectF rect READ rect)
-    Q_PROPERTY(QPointF clientPos READ clientPos)
-    Q_PROPERTY(QSizeF clientSize READ clientSize)
     Q_PROPERTY(QString resourceName READ resourceName NOTIFY windowClassChanged)
     Q_PROPERTY(QString resourceClass READ resourceClass NOTIFY windowClassChanged)
     Q_PROPERTY(QString windowRole READ windowRole NOTIFY windowRoleChanged)
