@@ -72,7 +72,7 @@
         "Name[zh_TW]": "合成器"
     },
     "X-DocPath": "https://userbase.kde.org/Desktop_Effects_Performance#Advanced_Desktop_Effects_Settings",
-    "X-KDE-Keywords": "kwin,window,manager,compositing,compositor,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects,graphics,latency,vsync,tearing,window thumbnails,scale method,scaling method,backend",
+    "X-KDE-Keywords": "kwin,window,manager,compositing,compositor,effect,3D effects,2D effects,video settings,graphical effects,desktop effects,graphics,latency,vsync,tearing,window thumbnails",
     "X-KDE-Keywords[ar]": "كوين,نافذة,نوافذ,تأثير,تأثيرات,مصغرات,مصغرة,رسوميات,معالج,تكبير,تصغير,فيديو,تركيب,خلفية",
     "X-KDE-Keywords[az]": "kwin,window,manager,compositing,compositor,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects,graphics,latency,vsync,tearing,window thumbnails,scale method,scaling method,backend,pəncərə,idarəedici,menecer,birləşdirmə,effekt,3D effektlər,2D effektlər,video ayarları,arafik effektlər,qrafiklər,gecikmə,şaquli eyniləşdirmə,pəncərə eskizləri,miqyas üsulu,miqyaslama üsulu,server tərəf",
     "X-KDE-Keywords[ca@valencia]": "kwin,finestra,gestor,composició,compositor,efecte,efectes 3D,efectes 2D,OpenGL,XRender,configuració de vídeo,efectes gràfics,efectes de l'escriptori,gràfics.latència,vsync,tearing,esquinçament,miniatures de finestres,mètode d'esca,mètode d'escalat,dorsal",
