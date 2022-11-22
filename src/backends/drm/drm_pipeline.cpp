@@ -261,6 +261,9 @@ void DrmPipeline::prepareAtomicModeset()
         }
         bpc->setPending(std::min(bpc->maxValue(), preferred));
     }
+    if (const auto hdr = m_connector->getProp(DrmConnector::PropertyIndex::HdrMetadata)) {
+        hdr->setPending(0);
+    }
 
     m_pending.crtc->setPending(DrmCrtc::PropertyIndex::Active, 1);
     m_pending.crtc->setPending(DrmCrtc::PropertyIndex::ModeId, m_pending.mode->blobId());

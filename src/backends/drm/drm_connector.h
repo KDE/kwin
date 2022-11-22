@@ -66,6 +66,7 @@ public:
         LinkStatus = 11,
         ContentType = 12,
         PanelOrientation = 13,
+        HdrMetadata = 14,
         Count
     };
 
