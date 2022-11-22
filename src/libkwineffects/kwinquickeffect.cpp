@@ -6,15 +6,35 @@
 
 #include "kwinquickeffect.h"
 
+#include "logging_p.h"
 #include "sharedqmlengine.h"
 
 #include <QQmlEngine>
+#include <QQmlIncubator>
 #include <QQuickItem>
 #include <QQuickWindow>
 #include <QWindow>
 
 namespace KWin
 {
+
+class QuickSceneViewIncubator : public QQmlIncubator
+{
+public:
+    QuickSceneViewIncubator(const std::function<void(QuickSceneViewIncubator *)> &statusChangedCallback)
+        : QQmlIncubator(QQmlIncubator::Asynchronous)
+        , m_statusChangedCallback(statusChangedCallback)
+    {
+    }
+
+    void statusChanged(QQmlIncubator::Status status) override
+    {
+        m_statusChangedCallback(this);
+    }
+
+private:
+    std::function<void(QuickSceneViewIncubator *)> m_statusChangedCallback;
+};
 
 class QuickSceneEffectPrivate
 {
@@ -28,6 +48,7 @@ public:
     SharedQmlEngine::Ptr qmlEngine;
     std::unique_ptr<QQmlComponent> qmlComponent;
     QUrl source;
+    std::map<EffectScreen *, std::unique_ptr<QQmlIncubator>> incubators;
     std::map<EffectScreen *, std::unique_ptr<QuickSceneView>> views;
     QPointer<QuickSceneView> mouseImplicitGrab;
     bool running = false;
@@ -336,29 +357,39 @@ void QuickSceneEffect::handleScreenAdded(EffectScreen *screen)
 void QuickSceneEffect::handleScreenRemoved(EffectScreen *screen)
 {
     d->views.erase(screen);
+    d->incubators.erase(screen);
 }
 
 void QuickSceneEffect::addScreen(EffectScreen *screen)
 {
-    QuickSceneView *view = new QuickSceneView(this, screen);
     auto properties = initialProperties(screen);
-    properties["width"] = view->geometry().width();
-    properties["height"] = view->geometry().height();
-    view->setRootItem(qobject_cast<QQuickItem *>(d->qmlComponent->createWithInitialProperties(properties)));
-    // we need the focus always set to the view of activescreen at first, and changed only upon user interaction
-    if (view->contentItem()) {
-        view->contentItem()->setFocus(false);
-    }
-    view->setAutomaticRepaint(false);
+    properties["width"] = screen->geometry().width();
+    properties["height"] = screen->geometry().height();
 
-    connect(view, &QuickSceneView::repaintNeeded, this, [view]() {
-        effects->addRepaint(view->geometry());
+    auto incubator = new QuickSceneViewIncubator([this, screen](QuickSceneViewIncubator *incubator) {
+        if (incubator->isReady()) {
+            auto view = new QuickSceneView(this, screen);
+            view->setRootItem(qobject_cast<QQuickItem *>(incubator->object()));
+            if (view->contentItem()) {
+                view->contentItem()->setFocus(false);
+            }
+            view->setAutomaticRepaint(false);
+            connect(view, &QuickSceneView::repaintNeeded, this, [view]() {
+                effects->addRepaint(view->geometry());
+            });
+            connect(view, &QuickSceneView::renderRequested, view, &QuickSceneView::scheduleRepaint);
+            connect(view, &QuickSceneView::sceneChanged, view, &QuickSceneView::scheduleRepaint);
+            view->scheduleRepaint();
+            d->views[screen].reset(view);
+        } else if (incubator->isError()) {
+            qCWarning(LIBKWINEFFECTS) << "Could not create a view for QML file" << d->qmlComponent->url();
+            qCWarning(LIBKWINEFFECTS) << incubator->errors();
+        }
     });
-    connect(view, &QuickSceneView::renderRequested, view, &QuickSceneView::scheduleRepaint);
-    connect(view, &QuickSceneView::sceneChanged, view, &QuickSceneView::scheduleRepaint);
 
-    view->scheduleRepaint();
-    d->views[screen].reset(view);
+    incubator->setInitialProperties(properties);
+    d->incubators[screen].reset(incubator);
+    d->qmlComponent->create(*incubator);
 }
 
 void QuickSceneEffect::startInternal()
@@ -423,6 +454,7 @@ void QuickSceneEffect::stopInternal()
     disconnect(effects, &EffectsHandler::screenAdded, this, &QuickSceneEffect::handleScreenAdded);
     disconnect(effects, &EffectsHandler::screenRemoved, this, &QuickSceneEffect::handleScreenRemoved);
 
+    d->incubators.clear();
     d->views.clear();
     d->dummyWindow.reset();
     d->running = false;
