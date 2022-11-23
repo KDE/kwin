@@ -52,6 +52,7 @@ public:
 
     bool setCursor(const QImage &image, const QPoint &hotspot) override;
     bool moveCursor(const QPoint &position) override;
+    void resetCursorTexture();
 
     DrmLease *lease() const;
     bool addLeaseObjects(QVector<uint32_t> &objectList);

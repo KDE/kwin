@@ -221,6 +221,11 @@ bool DrmOutput::moveCursor(const QPoint &position)
     return m_moveCursorSuccessful;
 }
 
+void DrmOutput::resetCursorTexture()
+{
+    m_cursor.texture.reset();
+}
+
 QList<std::shared_ptr<OutputMode>> DrmOutput::getModes() const
 {
     const auto drmModes = m_pipeline->connector()->modes();

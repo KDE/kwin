@@ -364,6 +364,11 @@ void DrmBackend::sceneInitialized()
         for (const auto &gpu : std::as_const(m_gpus)) {
             gpu->recreateSurfaces();
         }
+        for (const auto &output : qAsConst(m_outputs)) {
+            if (DrmOutput *drmOutput = qobject_cast<DrmOutput *>(output)) {
+                drmOutput->resetCursorTexture();
+            }
+        }
     }
 }
 
