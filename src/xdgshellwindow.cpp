@@ -1255,7 +1255,7 @@ void XdgToplevelWindow::handleUnfullscreenRequested()
 
 void XdgToplevelWindow::handleMinimizeRequested()
 {
-    performMouseCommand(Options::MouseMinimize, Cursors::self()->mouse()->pos());
+    minimize();
 }
 
 void XdgToplevelWindow::handleTransientForChanged()
