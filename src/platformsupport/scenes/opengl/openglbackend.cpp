@@ -86,13 +86,13 @@ bool OpenGLBackend::checkGraphicsReset()
 
     switch (status) {
     case GL_GUILTY_CONTEXT_RESET:
-        qCDebug(KWIN_OPENGL) << "A graphics reset attributable to the current GL context occurred.";
+        qCWarning(KWIN_OPENGL) << "A graphics reset attributable to the current GL context occurred.";
         break;
     case GL_INNOCENT_CONTEXT_RESET:
-        qCDebug(KWIN_OPENGL) << "A graphics reset not attributable to the current GL context occurred.";
+        qCWarning(KWIN_OPENGL) << "A graphics reset not attributable to the current GL context occurred.";
         break;
     case GL_UNKNOWN_CONTEXT_RESET:
-        qCDebug(KWIN_OPENGL) << "A graphics reset of an unknown cause occurred.";
+        qCWarning(KWIN_OPENGL) << "A graphics reset of an unknown cause occurred.";
         break;
     default:
         break;
@@ -104,6 +104,9 @@ bool OpenGLBackend::checkGraphicsReset()
     // Wait until the reset is completed or max 10 seconds
     while (timer.elapsed() < 10000 && KWin::glGetGraphicsResetStatus() != GL_NO_ERROR) {
         usleep(50);
+    }
+    if (timer.elapsed() >= 10000) {
+        qCWarning(KWIN_OPENGL) << "Waiting for glGetGraphicsResetStatus to return GL_NO_ERROR timed out!";
     }
 
     return true;
