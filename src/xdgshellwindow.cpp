@@ -16,6 +16,7 @@
 #include "decorations/decorationbridge.h"
 #include "deleted.h"
 #include "placement.h"
+#include "pointer_input.h"
 #include "screenedge.h"
 #include "touch_input.h"
 #include "utils/subsurfacemonitor.h"
@@ -1121,7 +1122,7 @@ void XdgToplevelWindow::handleMoveRequested(SeatInterface *seat, quint32 serial)
     if (isMovable()) {
         QPointF cursorPos;
         if (seat->hasImplicitPointerGrab(serial)) {
-            cursorPos = Cursors::self()->mouse()->pos();
+            cursorPos = input()->pointer()->pos();
         } else {
             cursorPos = input()->touch()->position();
         }
@@ -1145,7 +1146,7 @@ void XdgToplevelWindow::handleResizeRequested(SeatInterface *seat, XdgToplevelIn
     setInteractiveMoveResizePointerButtonDown(true);
     QPointF cursorPos;
     if (seat->hasImplicitPointerGrab(serial)) {
-        cursorPos = Cursors::self()->mouse()->pos();
+        cursorPos = input()->pointer()->pos();
     } else {
         cursorPos = input()->touch()->position();
     }
