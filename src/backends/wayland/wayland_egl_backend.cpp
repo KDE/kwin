@@ -178,7 +178,6 @@ void WaylandEglOutput::aboutToStartPainting(const QRegion &damage)
 void WaylandEglOutput::present()
 {
     m_waylandOutput->surface()->setupFrameCallback();
-    m_waylandOutput->surface()->setScale(std::ceil(m_waylandOutput->scale()));
     Q_EMIT m_waylandOutput->outputChange(m_damageJournal.lastDamage());
 
     if (m_backend->supportsSwapBuffersWithDamage()) {
