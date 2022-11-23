@@ -221,7 +221,7 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
     connect(pointer, &Pointer::motion, this, [this](const QPointF &relativeToSurface, quint32 time) {
         WaylandOutput *output = m_seat->backend()->findOutput(m_pointer->enteredSurface());
         Q_ASSERT(output);
-        const QPointF absolutePos = output->geometry().topLeft() + relativeToSurface;
+        const QPointF absolutePos = output->geometry().topLeft() + relativeToSurface / output->scale();
         Q_EMIT pointerMotionAbsolute(absolutePos, time, this);
     });
     connect(pointer, &Pointer::buttonStateChanged, this, [this](quint32 serial, quint32 time, quint32 button, Pointer::ButtonState nativeState) {
