@@ -6,6 +6,7 @@
     SPDX-FileCopyrightText: 2003 Lubos Lunak <l.lunak@kde.org>
     SPDX-FileCopyrightText: 2009 Lucas Murray <lmurray@undefinedfire.com>
     SPDX-FileCopyrightText: 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2022 Natalie Clarius <natalie_clarius@yahoo.de>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -354,8 +355,15 @@ public:
     // D-Bus interface
     QString supportInformation() const;
 
-    Output *nextOutput(Output *reference) const;
-    Output *previousOutput(Output *reference) const;
+    enum Direction {
+        DirectionNorth,
+        DirectionEast,
+        DirectionSouth,
+        DirectionWest,
+        DirectionPrev,
+        DirectionNext
+    };
+    Output *outputFrom(Output *reference, Direction direction, bool wrapAround = false) const;
     void switchToOutput(Output *output);
 
     QList<Output *> outputs() const;

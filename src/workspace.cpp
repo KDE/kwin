@@ -5,6 +5,7 @@
     SPDX-FileCopyrightText: 1999, 2000 Matthias Ettrich <ettrich@kde.org>
     SPDX-FileCopyrightText: 2003 Lubos Lunak <l.lunak@kde.org>
     SPDX-FileCopyrightText: 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2022 Natalie Clarius <natalie_clarius@yahoo.de>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -1405,6 +1406,59 @@ Output *Workspace::outputAt(const QPointF &pos) const
         }
     }
     return bestOutput;
+}
+
+Output *Workspace::outputFrom(Output *reference, Direction direction, bool wrapAround) const
+{
+    QList<Output *> relevantOutputs;
+    std::copy_if(m_outputs.begin(), m_outputs.end(), std::back_inserter(relevantOutputs), [reference, direction](Output *output) {
+        switch (direction) {
+        case DirectionEast:
+        case DirectionWest:
+            // filter for outputs on same horizontal line
+            return output->geometry().top() <= reference->geometry().bottom() && output->geometry().bottom() >= reference->geometry().top();
+        case DirectionSouth:
+        case DirectionNorth:
+            // filter for outputs on same vertical line
+            return output->geometry().left() <= reference->geometry().right() && output->geometry().right() >= reference->geometry().left();
+        default:
+            // take all outputs
+            return true;
+        }
+    });
+
+    std::sort(relevantOutputs.begin(), relevantOutputs.end(), [direction](const Output *o1, const Output *o2) {
+        switch (direction) {
+        case DirectionEast:
+        case DirectionWest:
+            // order outputs from left to right
+            return o1->geometry().center().x() < o2->geometry().center().x();
+        case DirectionSouth:
+        case DirectionNorth:
+            // order outputs from top to bottom
+            return o1->geometry().center().y() < o2->geometry().center().y();
+        default:
+            // order outputs from top to bottom, then left to right
+            return (o1->geometry().center().y() < o2->geometry().center().y() || (o1->geometry().center().y() == o2->geometry().center().y() && o1->geometry().center().x() < o2->geometry().center().x()));
+        }
+    });
+
+    const int index = relevantOutputs.indexOf(reference);
+    Q_ASSERT(index != -1);
+    switch (direction) {
+    case DirectionEast:
+    case DirectionSouth:
+    case DirectionNext:
+        // go forward in the list
+        return relevantOutputs[wrapAround ? (index + 1) % relevantOutputs.count() : std::min(index + 1, (int)relevantOutputs.count() - 1)];
+    case DirectionWest:
+    case DirectionNorth:
+    case DirectionPrev:
+        // go backward in the list
+        return relevantOutputs[wrapAround ? (index + relevantOutputs.count() - 1) % relevantOutputs.count() : std::max(index - 1, 0)];
+    default:
+        Q_UNREACHABLE();
+    }
 }
 
 void Workspace::slotOutputBackendOutputsQueried()

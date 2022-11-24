@@ -1325,20 +1325,6 @@ static bool screenSwitchImpossible()
     return true;
 }
 
-Output *Workspace::nextOutput(Output *reference) const
-{
-    const int index = m_outputs.indexOf(reference);
-    Q_ASSERT(index != -1);
-    return m_outputs[(index + 1) % m_outputs.count()];
-}
-
-Output *Workspace::previousOutput(Output *reference) const
-{
-    const int index = m_outputs.indexOf(reference);
-    Q_ASSERT(index != -1);
-    return m_outputs[(index + m_outputs.count() - 1) % m_outputs.count()];
-}
-
 void Workspace::slotSwitchToScreen(Output *output)
 {
     if (!screenSwitchImpossible()) {
