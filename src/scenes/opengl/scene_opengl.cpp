@@ -92,24 +92,23 @@ void SceneOpenGL::paint(RenderTarget *renderTarget, const QRegion &region)
 
 void SceneOpenGL::paintBackground(const QRegion &region)
 {
-    if (region == infiniteRegion()) {
+    if (region == infiniteRegion() || (region.rectCount() == 1 && (*region.begin()) == renderTargetRect())) {
         glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT);
     } else if (!region.isEmpty()) {
-        QVector<float> verts;
-        verts.reserve(region.rectCount() * 6 * 2);
+        glClearColor(0, 0, 0, 0);
+        glEnable(GL_SCISSOR_TEST);
 
         const auto scale = renderTargetScale();
+        const auto targetRect = scaledRect(renderTargetRect(), scale).toRect();
 
         for (const QRect &r : region) {
-            verts << (r.x() + r.width()) * scale << r.y() * scale;
-            verts << r.x() * scale << r.y() * scale;
-            verts << r.x() * scale << (r.y() + r.height()) * scale;
-            verts << r.x() * scale << (r.y() + r.height()) * scale;
-            verts << (r.x() + r.width()) * scale << (r.y() + r.height()) * scale;
-            verts << (r.x() + r.width()) * scale << r.y() * scale;
+            auto deviceRect = scaledRect(r, scale).toAlignedRect();
+            glScissor(deviceRect.x(), targetRect.height() - (deviceRect.y() + deviceRect.height()), deviceRect.width(), deviceRect.height());
+            glClear(GL_COLOR_BUFFER_BIT);
         }
-        doPaintBackground(verts);
+
+        glDisable(GL_SCISSOR_TEST);
     }
 }
 
