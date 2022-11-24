@@ -41,7 +41,6 @@ public:
     ~WaylandEglOutput() override;
 
     bool init();
-    void updateSize();
 
     GLFramebuffer *fbo() const;
     bool makeContextCurrent() const;
@@ -52,8 +51,6 @@ public:
     void aboutToStartPainting(const QRegion &damage) override;
 
 private:
-    void resetBufferAge();
-
     WaylandOutput *m_waylandOutput;
     wl_egl_window *m_overlay = nullptr;
     EGLSurface m_eglSurface = EGL_NO_SURFACE;

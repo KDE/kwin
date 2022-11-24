@@ -151,9 +151,6 @@ void WaylandOutput::handleConfigure(const QSize &size, XdgShellSurface::States s
     m_xdgShellSurface->ackConfigure(serial);
     if (size.width() > 0 && size.height() > 0) {
         resize(size * scale());
-        if (m_ready) {
-            Q_EMIT sizeChanged(size);
-        }
     }
 
     m_ready = true;

@@ -56,7 +56,6 @@ public:
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
     bool init(KWayland::Client::ShmPool *pool);
-    void updateSize(const QSize &size);
     void remapBuffer();
 
     WaylandQPainterBufferSlot *back() const;
@@ -73,6 +72,7 @@ private:
 
     std::vector<std::unique_ptr<WaylandQPainterBufferSlot>> m_slots;
     WaylandQPainterBufferSlot *m_back = nullptr;
+    QSize m_swapchainSize;
 
     friend class WaylandQPainterBackend;
 };

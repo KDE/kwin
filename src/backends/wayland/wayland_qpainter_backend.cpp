@@ -51,7 +51,6 @@ bool WaylandQPainterOutput::init(KWayland::Client::ShmPool *pool)
     m_pool = pool;
 
     connect(pool, &KWayland::Client::ShmPool::poolResized, this, &WaylandQPainterOutput::remapBuffer);
-    connect(m_waylandOutput, &WaylandOutput::sizeChanged, this, &WaylandQPainterOutput::updateSize);
 
     return true;
 }
@@ -64,12 +63,6 @@ void WaylandQPainterOutput::remapBuffer()
     for (const auto &slot : m_slots) {
         slot->image = QImage(slot->buffer->address(), nativeSize.width(), nativeSize.height(), QImage::Format_ARGB32);
     }
-}
-
-void WaylandQPainterOutput::updateSize(const QSize &size)
-{
-    m_back = nullptr;
-    m_slots.clear();
 }
 
 void WaylandQPainterOutput::present()
@@ -96,6 +89,12 @@ WaylandQPainterBufferSlot *WaylandQPainterOutput::back() const
 
 WaylandQPainterBufferSlot *WaylandQPainterOutput::acquire()
 {
+    const QSize nativeSize(m_waylandOutput->pixelSize());
+    if (m_swapchainSize != nativeSize) {
+        m_swapchainSize = nativeSize;
+        m_slots.clear();
+    }
+
     for (const auto &slot : m_slots) {
         if (slot->buffer->isReleased()) {
             m_back = slot.get();
@@ -104,7 +103,6 @@ WaylandQPainterBufferSlot *WaylandQPainterOutput::acquire()
         }
     }
 
-    const QSize nativeSize(m_waylandOutput->geometry().size() * m_waylandOutput->scale());
     auto buffer = m_pool->getBuffer(nativeSize, nativeSize.width() * 4).toStrongRef();
     if (!buffer) {
         qCDebug(KWIN_WAYLAND_BACKEND) << "Did not get a new Buffer from Shm Pool";

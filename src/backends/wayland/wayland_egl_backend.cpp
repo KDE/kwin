@@ -91,10 +91,6 @@ bool WaylandEglOutput::init()
     }
     m_eglSurface = eglSurface;
 
-    connect(m_waylandOutput, &WaylandOutput::sizeChanged, this, &WaylandEglOutput::updateSize);
-    connect(m_waylandOutput, &WaylandOutput::currentModeChanged, this, &WaylandEglOutput::updateSize);
-    connect(m_waylandOutput, &WaylandOutput::geometryChanged, this, &WaylandEglOutput::resetBufferAge);
-
     return true;
 }
 
@@ -106,20 +102,6 @@ WaylandEglOutput::~WaylandEglOutput()
 GLFramebuffer *WaylandEglOutput::fbo() const
 {
     return m_fbo.get();
-}
-
-void WaylandEglOutput::updateSize()
-{
-    const QSize nativeSize = m_waylandOutput->geometry().size() * m_waylandOutput->scale();
-    m_fbo = std::make_unique<GLFramebuffer>(0, nativeSize);
-
-    wl_egl_window_resize(m_overlay, nativeSize.width(), nativeSize.height(), 0, 0);
-    resetBufferAge();
-}
-
-void WaylandEglOutput::resetBufferAge()
-{
-    m_bufferAge = 0;
 }
 
 bool WaylandEglOutput::makeContextCurrent() const
@@ -141,6 +123,13 @@ bool WaylandEglOutput::makeContextCurrent() const
 
 std::optional<OutputLayerBeginFrameInfo> WaylandEglOutput::beginFrame()
 {
+    const QSize nativeSize = m_waylandOutput->pixelSize();
+    if (!m_fbo || m_fbo->size() != nativeSize) {
+        m_fbo = std::make_unique<GLFramebuffer>(0, nativeSize);
+        m_bufferAge = 0;
+        wl_egl_window_resize(m_overlay, nativeSize.width(), nativeSize.height(), 0, 0);
+    }
+
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
     makeContextCurrent();
 
