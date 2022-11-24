@@ -62,23 +62,6 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
     connect(m_xdgShellSurface.get(), &XdgShellSurface::closeRequested, qApp, &QCoreApplication::quit);
     connect(this, &WaylandOutput::enabledChanged, this, &WaylandOutput::updateWindowTitle);
     connect(this, &WaylandOutput::dpmsModeChanged, this, &WaylandOutput::updateWindowTitle);
-
-    connect(backend, &WaylandBackend::pointerLockSupportedChanged, this, &WaylandOutput::updateWindowTitle);
-    connect(backend, &WaylandBackend::pointerLockChanged, this, [this](bool locked) {
-        if (locked) {
-            if (!m_hasPointerLock) {
-                // some other output has locked the pointer
-                // this surface can stop trying to lock the pointer
-                lockPointer(nullptr, false);
-                // set it true for the other surface
-                m_hasPointerLock = true;
-            }
-        } else {
-            // just try unlocking
-            lockPointer(nullptr, false);
-        }
-        updateWindowTitle();
-    });
 }
 
 WaylandOutput::~WaylandOutput()
@@ -205,6 +188,7 @@ void WaylandOutput::lockPointer(Pointer *pointer, bool lock)
         m_pointerLock.reset();
         m_hasPointerLock = false;
         if (surfaceWasLocked) {
+            updateWindowTitle();
             Q_EMIT m_backend->pointerLockChanged(false);
         }
         return;
@@ -218,11 +202,13 @@ void WaylandOutput::lockPointer(Pointer *pointer, bool lock)
     }
     connect(m_pointerLock.get(), &LockedPointer::locked, this, [this]() {
         m_hasPointerLock = true;
+        updateWindowTitle();
         Q_EMIT m_backend->pointerLockChanged(true);
     });
     connect(m_pointerLock.get(), &LockedPointer::unlocked, this, [this]() {
         m_pointerLock.reset();
         m_hasPointerLock = false;
+        updateWindowTitle();
         Q_EMIT m_backend->pointerLockChanged(false);
     });
 }

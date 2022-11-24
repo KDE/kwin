@@ -288,7 +288,6 @@ public:
     }
 
 Q_SIGNALS:
-    void pointerLockSupportedChanged();
     void pointerLockChanged(bool locked);
 
 private:
