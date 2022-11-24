@@ -88,8 +88,7 @@ static GLTexture *bindSurfaceTexture(SurfaceItem *surfaceItem)
 
 static QRectF logicalRectToDeviceRect(const QRectF &logical, qreal deviceScale)
 {
-    return QRectF(QPointF(std::round(logical.left() * deviceScale), std::round(logical.top() * deviceScale)),
-                  QPointF(std::round(logical.right() * deviceScale), std::round(logical.bottom() * deviceScale)));
+    return scaledRect(logical, deviceScale).toRect();
 }
 
 static RenderGeometry clipQuads(const Item *item, const ItemRendererOpenGL::RenderContext *context)
@@ -238,7 +237,7 @@ void ItemRendererOpenGL::renderBackground(const QRegion &region)
         const auto targetRect = scaledRect(renderTargetRect(), scale).toRect();
 
         for (const QRect &r : region) {
-            auto deviceRect = scaledRect(r, scale).toAlignedRect();
+            auto deviceRect = scaledRect(r, scale).toRect();
             glScissor(deviceRect.x(), targetRect.height() - (deviceRect.y() + deviceRect.height()), deviceRect.width(), deviceRect.height());
             glClear(GL_COLOR_BUFFER_BIT);
         }
