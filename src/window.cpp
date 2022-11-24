@@ -11,6 +11,7 @@
 
 #include "core/output.h"
 #include "tiles/tilemanager.h"
+#include "utils/common.h"
 
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
@@ -3860,48 +3861,39 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
     QPointF whichScreen = keyboard ? moveResizeGeometry().center() : Cursors::self()->mouse()->pos();
     if (mode != QuickTileMode(QuickTileFlag::None)) {
         // If trying to tile to the side that the window is already tiled to move the window to the next
-        // screen if it exists, otherwise toggle the mode (set QuickTileFlag::None)
+        // screen near the tile if it exists and swap the tile side, otherwise toggle the mode (set QuickTileFlag::None)
         if (quickTileMode() == mode) {
-            const QList<Output *> outputs = workspace()->outputs();
-            const Output *currentOutput = moveResizeOutput();
-            const Output *nextOutput = currentOutput;
-
-            for (const Output *output : outputs) {
-                if (output == currentOutput) {
-                    continue;
-                }
-
-                if (output->geometry().bottom() <= currentOutput->geometry().top()
-                    || output->geometry().top() >= currentOutput->geometry().bottom()) {
-                    continue; // not in horizontal line
-                }
-
-                const int x = output->geometry().center().x();
-                if ((mode & QuickTileFlag::Horizontal) == QuickTileMode(QuickTileFlag::Left)) {
-                    if (x >= currentOutput->geometry().center().x()
-                        || (currentOutput != nextOutput && x <= nextOutput->geometry().center().x())) {
-                        continue; // not left of current or more left then found next
-                    }
-                } else if ((mode & QuickTileFlag::Horizontal) == QuickTileMode(QuickTileFlag::Right)) {
-                    if (x <= currentOutput->geometry().center().x()
-                        || (currentOutput != nextOutput && x >= nextOutput->geometry().center().x())) {
-                        continue; // not right of current or more right then found next
-                    }
-                }
-
-                nextOutput = output;
+            Output *currentOutput = moveResizeOutput();
+            Output *nextOutput = currentOutput;
+            Output *candidateOutput = currentOutput;
+            if ((mode & QuickTileFlag::Horizontal) == QuickTileMode(QuickTileFlag::Left)) {
+                candidateOutput = workspace()->findOutput(nextOutput, Workspace::DirectionWest);
+            } else if ((mode & QuickTileFlag::Horizontal) == QuickTileMode(QuickTileFlag::Right)) {
+                candidateOutput = workspace()->findOutput(nextOutput, Workspace::DirectionEast);
             }
+            bool shiftHorizontal = candidateOutput != nextOutput;
+            nextOutput = candidateOutput;
+            if ((mode & QuickTileFlag::Vertical) == QuickTileMode(QuickTileFlag::Top)) {
+                candidateOutput = workspace()->findOutput(nextOutput, Workspace::DirectionNorth);
+            } else if ((mode & QuickTileFlag::Vertical) == QuickTileMode(QuickTileFlag::Bottom)) {
+                candidateOutput = workspace()->findOutput(nextOutput, Workspace::DirectionSouth);
+            }
+            bool shiftVertical = candidateOutput != nextOutput;
+            nextOutput = candidateOutput;
 
             if (nextOutput == currentOutput) {
-                mode = QuickTileFlag::None; // No other screens, toggle tiling
+                mode = QuickTileFlag::None; // No other screens in the tile direction, toggle tiling
             } else {
                 // Move to other screen
                 moveResize(geometryRestore().translated(nextOutput->geometry().topLeft() - currentOutput->geometry().topLeft()));
                 whichScreen = nextOutput->geometry().center();
 
                 // Swap sides
-                if (mode & QuickTileFlag::Horizontal) {
+                if (shiftHorizontal) {
                     mode = (~mode & QuickTileFlag::Horizontal) | (mode & QuickTileFlag::Vertical);
+                }
+                if (shiftVertical) {
+                    mode = (~mode & QuickTileFlag::Vertical) | (mode & QuickTileFlag::Horizontal);
                 }
             }
         } else if (quickTileMode() == QuickTileMode(QuickTileFlag::None)) {

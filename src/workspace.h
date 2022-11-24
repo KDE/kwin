@@ -363,7 +363,7 @@ public:
         DirectionPrev,
         DirectionNext
     };
-    Output *outputFrom(Output *reference, Direction direction, bool wrapAround = false) const;
+    Output *findOutput(Output *reference, Direction direction, bool wrapAround = false) const;
     void switchToOutput(Output *output);
 
     QList<Output *> outputs() const;

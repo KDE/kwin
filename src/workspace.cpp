@@ -1408,7 +1408,7 @@ Output *Workspace::outputAt(const QPointF &pos) const
     return bestOutput;
 }
 
-Output *Workspace::outputFrom(Output *reference, Direction direction, bool wrapAround) const
+Output *Workspace::findOutput(Output *reference, Direction direction, bool wrapAround) const
 {
     QList<Output *> relevantOutputs;
     std::copy_if(m_outputs.begin(), m_outputs.end(), std::back_inserter(relevantOutputs), [reference, direction](Output *output) {

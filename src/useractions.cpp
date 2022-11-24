@@ -1353,42 +1353,42 @@ void Workspace::slotSwitchToScreen(Output *output)
 void Workspace::slotSwitchToLeftScreen()
 {
     if (!screenSwitchImpossible()) {
-        switchToOutput(outputFrom(activeOutput(), Direction::DirectionWest, true));
+        switchToOutput(findOutput(activeOutput(), Direction::DirectionWest, true));
     }
 }
 
 void Workspace::slotSwitchToRightScreen()
 {
     if (!screenSwitchImpossible()) {
-        switchToOutput(outputFrom(activeOutput(), Direction::DirectionEast, true));
+        switchToOutput(findOutput(activeOutput(), Direction::DirectionEast, true));
     }
 }
 
 void Workspace::slotSwitchToAboveScreen()
 {
     if (!screenSwitchImpossible()) {
-        switchToOutput(outputFrom(activeOutput(), Direction::DirectionNorth, true));
+        switchToOutput(findOutput(activeOutput(), Direction::DirectionNorth, true));
     }
 }
 
 void Workspace::slotSwitchToBelowScreen()
 {
     if (!screenSwitchImpossible()) {
-        switchToOutput(outputFrom(activeOutput(), Direction::DirectionSouth, true));
+        switchToOutput(findOutput(activeOutput(), Direction::DirectionSouth, true));
     }
 }
 
 void Workspace::slotSwitchToPrevScreen()
 {
     if (!screenSwitchImpossible()) {
-        switchToOutput(outputFrom(activeOutput(), Direction::DirectionPrev, true));
+        switchToOutput(findOutput(activeOutput(), Direction::DirectionPrev, true));
     }
 }
 
 void Workspace::slotSwitchToNextScreen()
 {
     if (!screenSwitchImpossible()) {
-        switchToOutput(outputFrom(activeOutput(), Direction::DirectionNext, true));
+        switchToOutput(findOutput(activeOutput(), Direction::DirectionNext, true));
     }
 }
 
@@ -1402,42 +1402,42 @@ void Workspace::slotWindowToScreen(Output *output)
 void Workspace::slotWindowToLeftScreen()
 {
     if (USABLE_ACTIVE_WINDOW) {
-        sendWindowToOutput(m_activeWindow, outputFrom(m_activeWindow->output(), Direction::DirectionWest, true));
+        sendWindowToOutput(m_activeWindow, findOutput(m_activeWindow->output(), Direction::DirectionWest, true));
     }
 }
 
 void Workspace::slotWindowToRightScreen()
 {
     if (USABLE_ACTIVE_WINDOW) {
-        sendWindowToOutput(m_activeWindow, outputFrom(m_activeWindow->output(), Direction::DirectionEast, true));
+        sendWindowToOutput(m_activeWindow, findOutput(m_activeWindow->output(), Direction::DirectionEast, true));
     }
 }
 
 void Workspace::slotWindowToAboveScreen()
 {
     if (USABLE_ACTIVE_WINDOW) {
-        sendWindowToOutput(m_activeWindow, outputFrom(m_activeWindow->output(), Direction::DirectionNorth, true));
+        sendWindowToOutput(m_activeWindow, findOutput(m_activeWindow->output(), Direction::DirectionNorth, true));
     }
 }
 
 void Workspace::slotWindowToBelowScreen()
 {
     if (USABLE_ACTIVE_WINDOW) {
-        sendWindowToOutput(m_activeWindow, outputFrom(m_activeWindow->output(), Direction::DirectionSouth, true));
+        sendWindowToOutput(m_activeWindow, findOutput(m_activeWindow->output(), Direction::DirectionSouth, true));
     }
 }
 
 void Workspace::slotWindowToPrevScreen()
 {
     if (USABLE_ACTIVE_WINDOW) {
-        sendWindowToOutput(m_activeWindow, outputFrom(m_activeWindow->output(), Direction::DirectionPrev, true));
+        sendWindowToOutput(m_activeWindow, findOutput(m_activeWindow->output(), Direction::DirectionPrev, true));
     }
 }
 
 void Workspace::slotWindowToNextScreen()
 {
     if (USABLE_ACTIVE_WINDOW) {
-        sendWindowToOutput(m_activeWindow, outputFrom(m_activeWindow->output(), Direction::DirectionNext, true));
+        sendWindowToOutput(m_activeWindow, findOutput(m_activeWindow->output(), Direction::DirectionNext, true));
     }
 }
 
