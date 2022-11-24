@@ -142,6 +142,7 @@ void Placement::placeAtRandom(Window *c, const QRect &area, PlacementPolicy /*ne
         py = area.y();
     }
     c->move(QPoint(tx, ty));
+    cascadeIfCovering(c, area);
 }
 
 static inline bool isIrrelevant(const Window *window, const Window *regarding, VirtualDesktop *desktop)
@@ -445,6 +446,7 @@ void Placement::placeCentered(Window *c, const QRectF &area, PlacementPolicy /*n
 
     // place the window
     c->move(QPoint(xp, yp));
+    cascadeIfCovering(c, area);
 }
 
 /**
@@ -456,6 +458,7 @@ void Placement::placeZeroCornered(Window *c, const QRect &area, PlacementPolicy 
 
     // get the maximum allowed windows space and desk's origin
     c->move(area.topLeft());
+    cascadeIfCovering(c, area);
 }
 
 void Placement::placeUtility(Window *c, const QRect &area, PlacementPolicy /*next*/)
@@ -509,6 +512,7 @@ void Placement::placeUnderMouse(Window *c, const QRect &area, PlacementPolicy /*
     geom.moveCenter(Cursors::self()->mouse()->pos());
     c->move(geom.topLeft().toPoint());
     c->keepInArea(area); // make sure it's kept inside workarea
+    cascadeIfCovering(c, area);
 }
 
 void Placement::placeOnMainWindow(Window *c, const QRect &area, PlacementPolicy nextPlacement)
