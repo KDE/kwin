@@ -23,7 +23,6 @@ class PointerGestures;
 class RelativePointerManager;
 class Seat;
 class ShmPool;
-class SubCompositor;
 class XdgDecorationManager;
 class XdgShell;
 }
@@ -54,7 +53,6 @@ public:
     KWayland::Client::Seat *seat() const;
     KWayland::Client::XdgDecorationManager *xdgDecorationManager() const;
     KWayland::Client::ShmPool *shmPool() const;
-    KWayland::Client::SubCompositor *subCompositor() const;
     KWayland::Client::XdgShell *xdgShell() const;
 
 public Q_SLOTS:
@@ -74,7 +72,6 @@ private:
     std::unique_ptr<KWayland::Client::Seat> m_seat;
     std::unique_ptr<KWayland::Client::XdgDecorationManager> m_xdgDecorationManager;
     std::unique_ptr<KWayland::Client::ShmPool> m_shmPool;
-    std::unique_ptr<KWayland::Client::SubCompositor> m_subCompositor;
     std::unique_ptr<KWayland::Client::XdgShell> m_xdgShell;
 };
 

@@ -21,7 +21,6 @@
 #include "cursor.h"
 #include "dpmsinputeventfilter.h"
 #include "input.h"
-#include "pointer_input.h"
 
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/compositor.h>
@@ -32,8 +31,6 @@
 #include <KWayland/Client/relativepointer.h>
 #include <KWayland/Client/seat.h>
 #include <KWayland/Client/shm_pool.h>
-#include <KWayland/Client/subcompositor.h>
-#include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/touch.h>
 
@@ -58,127 +55,59 @@ using namespace KWayland::Client;
 
 WaylandCursor::WaylandCursor(WaylandBackend *backend)
     : m_backend(backend)
+    , m_surface(backend->display()->compositor()->createSurface())
 {
-    resetSurface();
 }
 
 WaylandCursor::~WaylandCursor() = default;
 
-void WaylandCursor::resetSurface()
+void WaylandCursor::enable()
 {
-    m_surface.reset(backend()->display()->compositor()->createSurface());
+    Q_ASSERT(m_disableCount > 0);
+    --m_disableCount;
+    if (m_disableCount == 0) {
+        install();
+    }
 }
 
-void WaylandCursor::init()
+void WaylandCursor::disable()
 {
-    installImage();
+    ++m_disableCount;
+    if (m_disableCount == 1) {
+        uninstall();
+    }
 }
 
-void WaylandCursor::installImage()
+void WaylandCursor::install()
 {
     const QImage image = Cursors::self()->currentCursor()->image();
-    if (image.isNull() || image.size().isEmpty()) {
-        doInstallImage(nullptr, QSize(), 1);
+    if (m_disableCount || image.isNull() || image.size().isEmpty()) {
+        uninstall();
+        return;
+    }
+
+    auto *pointer = m_backend->seat()->pointerDevice()->nativePointer();
+    if (!pointer || !pointer->isValid()) {
         return;
     }
 
     auto buffer = m_backend->display()->shmPool()->createBuffer(image).toStrongRef();
     wl_buffer *imageBuffer = *buffer.data();
-    doInstallImage(imageBuffer, image.size(), image.devicePixelRatio());
+
+    pointer->setCursor(m_surface.get(), imageBuffer ? Cursors::self()->currentCursor()->hotspot() : QPoint());
+    m_surface->attachBuffer(imageBuffer);
+    m_surface->setScale(std::ceil(image.devicePixelRatio()));
+    m_surface->damageBuffer(image.rect());
+    m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
 }
 
-void WaylandCursor::doInstallImage(wl_buffer *image, const QSize &size, qreal scale)
+void WaylandCursor::uninstall()
 {
     auto *pointer = m_backend->seat()->pointerDevice()->nativePointer();
     if (!pointer || !pointer->isValid()) {
         return;
     }
-    pointer->setCursor(m_surface.get(), image ? Cursors::self()->currentCursor()->hotspot() : QPoint());
-    drawSurface(image, size, scale);
-}
-
-void WaylandCursor::drawSurface(wl_buffer *image, const QSize &size, qreal scale)
-{
-    m_surface->attachBuffer(image);
-    m_surface->setScale(std::ceil(scale));
-    m_surface->damageBuffer(QRect(QPoint(0, 0), size));
-    m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
-}
-
-WaylandSubSurfaceCursor::WaylandSubSurfaceCursor(WaylandBackend *backend)
-    : WaylandCursor(backend)
-{
-}
-
-WaylandSubSurfaceCursor::~WaylandSubSurfaceCursor() = default;
-
-void WaylandSubSurfaceCursor::init()
-{
-    if (auto *pointer = backend()->seat()->pointerDevice()->nativePointer()) {
-        pointer->hideCursor();
-    }
-}
-
-void WaylandSubSurfaceCursor::changeOutput(WaylandOutput *output)
-{
-    m_subSurface.reset();
-    m_output = output;
-    if (!output) {
-        return;
-    }
-    createSubSurface();
-    surface()->commit();
-}
-
-void WaylandSubSurfaceCursor::createSubSurface()
-{
-    if (m_subSurface) {
-        return;
-    }
-    if (!m_output) {
-        return;
-    }
-    resetSurface();
-    m_subSurface.reset(backend()->display()->subCompositor()->createSubSurface(surface(), m_output->surface()));
-    m_subSurface->setMode(SubSurface::Mode::Desynchronized);
-}
-
-void WaylandSubSurfaceCursor::doInstallImage(wl_buffer *image, const QSize &size, qreal scale)
-{
-    if (!image) {
-        m_subSurface.reset();
-        return;
-    }
-    createSubSurface();
-    // cursor position might have changed due to different cursor hot spot
-    move(input()->pointer()->pos());
-    drawSurface(image, size, scale);
-}
-
-QPointF WaylandSubSurfaceCursor::absoluteToRelativePosition(const QPointF &position)
-{
-    return position - m_output->geometry().topLeft() - Cursors::self()->currentCursor()->hotspot();
-}
-
-void WaylandSubSurfaceCursor::move(const QPointF &globalPosition)
-{
-    auto *output = backend()->getOutputAt(globalPosition.toPoint());
-    if (!m_output || (output && m_output != output)) {
-        changeOutput(output);
-        if (!m_output) {
-            // cursor might be off the grid
-            return;
-        }
-        installImage();
-        return;
-    }
-    if (!m_subSurface) {
-        return;
-    }
-    // place the sub-surface relative to the output it is on and factor in the hotspot
-    const auto relativePosition = globalPosition.toPoint() - Cursors::self()->currentCursor()->hotspot() - m_output->geometry().topLeft();
-    m_subSurface->setPosition(relativePosition);
-    m_output->renderLoop()->scheduleRepaint();
+    pointer->hideCursor();
 }
 
 WaylandInputDevice::WaylandInputDevice(KWayland::Client::Keyboard *keyboard, WaylandSeat *seat)
@@ -577,26 +506,16 @@ bool WaylandBackend::initialize()
     QObject::connect(dispatcher, &QAbstractEventDispatcher::awake, m_display.get(), &WaylandDisplay::flush);
 
     connect(Cursors::self(), &Cursors::currentCursorChanged, this, [this]() {
-        if (!m_seat || !m_waylandCursor) {
-            return;
-        }
-        m_waylandCursor->installImage();
-    });
-    connect(Cursors::self(), &Cursors::positionChanged, this, [this](Cursor *cursor, const QPoint &position) {
-        if (m_waylandCursor) {
-            m_waylandCursor->move(position);
-        }
+        m_waylandCursor->install();
     });
     connect(this, &WaylandBackend::pointerLockChanged, this, [this](bool locked) {
         if (locked) {
-            m_waylandCursor = std::make_unique<WaylandSubSurfaceCursor>(this);
-            m_waylandCursor->move(input()->pointer()->pos());
+            m_waylandCursor->disable();
             m_seat->createRelativePointer();
         } else {
             m_seat->destroyRelativePointer();
-            m_waylandCursor = std::make_unique<WaylandCursor>(this);
+            m_waylandCursor->enable();
         }
-        m_waylandCursor->init();
     });
 
     return true;

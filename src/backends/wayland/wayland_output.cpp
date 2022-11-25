@@ -86,6 +86,11 @@ RenderLoop *WaylandOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
+bool WaylandOutput::usesSoftwareCursor() const
+{
+    return m_hasPointerLock;
+}
+
 void WaylandOutput::init(const QSize &pixelSize, qreal scale)
 {
     m_renderLoop->setRefreshRate(s_refreshRate);

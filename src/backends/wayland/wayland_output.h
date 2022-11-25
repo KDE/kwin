@@ -40,6 +40,7 @@ public:
     ~WaylandOutput() override;
 
     RenderLoop *renderLoop() const override;
+    bool usesSoftwareCursor() const override;
 
     void init(const QSize &pixelSize, qreal scale);
 

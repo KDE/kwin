@@ -38,7 +38,6 @@ class PointerSwipeGesture;
 class PointerPinchGesture;
 class RelativePointer;
 class Seat;
-class SubSurface;
 class Surface;
 class Touch;
 }
@@ -61,52 +60,18 @@ class WaylandCursor
 {
 public:
     explicit WaylandCursor(WaylandBackend *backend);
-    virtual ~WaylandCursor();
+    ~WaylandCursor();
 
-    virtual void init();
-    virtual void move(const QPointF &globalPosition)
-    {
-    }
+    void enable();
+    void disable();
 
-    void installImage();
-
-protected:
-    void resetSurface();
-    virtual void doInstallImage(wl_buffer *image, const QSize &size, qreal scale);
-    void drawSurface(wl_buffer *image, const QSize &size, qreal scale);
-
-    KWayland::Client::Surface *surface() const
-    {
-        return m_surface.get();
-    }
-    WaylandBackend *backend() const
-    {
-        return m_backend;
-    }
+    void install();
+    void uninstall();
 
 private:
     WaylandBackend *const m_backend;
     std::unique_ptr<KWayland::Client::Surface> m_surface;
-};
-
-class WaylandSubSurfaceCursor : public WaylandCursor
-{
-public:
-    explicit WaylandSubSurfaceCursor(WaylandBackend *backend);
-    ~WaylandSubSurfaceCursor() override;
-
-    void init() override;
-
-    void move(const QPointF &globalPosition) override;
-
-private:
-    void changeOutput(WaylandOutput *output);
-    void doInstallImage(wl_buffer *image, const QSize &size, qreal scale) override;
-    void createSubSurface();
-
-    QPointF absoluteToRelativePosition(const QPointF &position);
-    WaylandOutput *m_output = nullptr;
-    std::unique_ptr<KWayland::Client::SubSurface> m_subSurface;
+    int m_disableCount = 0;
 };
 
 class WaylandInputDevice : public InputDevice
