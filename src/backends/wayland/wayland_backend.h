@@ -115,8 +115,6 @@ private:
     std::unique_ptr<KWayland::Client::Pointer> m_pointer;
     std::unique_ptr<KWayland::Client::PointerPinchGesture> m_pinchGesture;
     std::unique_ptr<KWayland::Client::PointerSwipeGesture> m_swipeGesture;
-
-    uint32_t m_enteredSerial = 0;
 };
 
 class WaylandInputBackend : public InputBackend
@@ -219,6 +217,10 @@ public:
     WaylandSeat *seat() const
     {
         return m_seat.get();
+    }
+    WaylandCursor *cursor() const
+    {
+        return m_waylandCursor.get();
     }
 
     bool supportsPointerLock();

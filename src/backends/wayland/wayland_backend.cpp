@@ -138,7 +138,7 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
     , m_pointer(pointer)
 {
     connect(pointer, &Pointer::entered, this, [this](quint32 serial, const QPointF &relativeToSurface) {
-        m_enteredSerial = serial;
+        m_seat->backend()->cursor()->install();
     });
     connect(pointer, &Pointer::motion, this, [this](const QPointF &relativeToSurface, quint32 time) {
         WaylandOutput *output = m_seat->backend()->findOutput(m_pointer->enteredSurface());
