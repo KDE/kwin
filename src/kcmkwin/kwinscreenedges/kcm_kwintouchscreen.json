@@ -35,7 +35,13 @@
         "Description[zh_CN]": "配置触摸屏滑动手势",
         "Description[zh_TW]": "設定觸控螢幕滑動手勢",
         "Icon": "preferences-desktop-gestures-touch",
-        "Name": "Touchscreen Gestures"
+        "Name": "Touchscreen Gestures",
+        "Name[ar]": "إيماءات شاشة اللمس",
+        "Name[ca@valencia]": "Gestos de pantalla tàctil",
+        "Name[ca]": "Gestos de pantalla tàctil",
+        "Name[eu]": "Ukimen-pantailako keinuak",
+        "Name[tr]": "Dokunmatik Ekran Hareketleri",
+        "Name[x-test]": "xxTouchscreen Gesturesxx"
     },
     "X-DocPath": "kcontrol/kwintouchscreen/index.html",
     "X-KDE-Keywords": "kwin,window,manager,effect,edge,border,action,switch,desktop,desktop edges,screen edges,side of screen,screen behavior,touch screen",
