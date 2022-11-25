@@ -122,7 +122,7 @@ public:
      */
     void setDefaultMaxBufferSize(size_t max);
 
-private Q_SLOTS:
+public Q_SLOTS:
     void flush();
 
 Q_SIGNALS:

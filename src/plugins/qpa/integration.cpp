@@ -10,6 +10,7 @@
 
 #include "integration.h"
 #include "backingstore.h"
+#include "clipboard.h"
 #include "eglplatformcontext.h"
 #include "logging.h"
 #include "offscreensurface.h"
@@ -51,6 +52,7 @@ Integration::Integration()
     , m_fontDb(new QGenericUnixFontDatabase())
     , m_nativeInterface(new QPlatformNativeInterface())
     , m_services(new QGenericUnixServices())
+    , m_clipboard(new Clipboard())
 {
 }
 
@@ -184,6 +186,8 @@ void Integration::handleWorkspaceCreated()
     for (Output *output : outputs) {
         handleOutputEnabled(output);
     }
+
+    m_clipboard->initialize();
 }
 
 void Integration::handleOutputEnabled(Output *output)
@@ -222,6 +226,11 @@ QPlatformNativeInterface *Integration::nativeInterface() const
 QPlatformServices *Integration::services() const
 {
     return m_services.get();
+}
+
+QPlatformClipboard *Integration::clipboard() const
+{
+    return m_clipboard.get();
 }
 
 }
