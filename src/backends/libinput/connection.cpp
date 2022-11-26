@@ -647,12 +647,11 @@ void Connection::applyDeviceConfig(Device *device)
     if (defaults.isValid()) {
         if (device->isAlphaNumericKeyboard() && defaults.hasGroup("Keyboard")) {
             defaults = defaults.group("Keyboard");
-        }
-        if (device->isPointer() && defaults.hasGroup("Pointer")) {
-            defaults = defaults.group("Pointer");
-        }
-        if (device->isTouchpad() && defaults.hasGroup("Touchpad")) {
+        } else if (device->isTouchpad() && defaults.hasGroup("Touchpad")) {
+            // A Touchpad is a Pointer, so we need to check for it before Pointer.
             defaults = defaults.group("Touchpad");
+        } else if (device->isPointer() && defaults.hasGroup("Pointer")) {
+            defaults = defaults.group("Pointer");
         }
 
         device->setDefaultConfig(defaults);
