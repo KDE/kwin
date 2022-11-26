@@ -39,8 +39,13 @@
         "Name[ar]": "إيماءات شاشة اللمس",
         "Name[ca@valencia]": "Gestos de pantalla tàctil",
         "Name[ca]": "Gestos de pantalla tàctil",
+        "Name[es]": "Gestos de la pantalla táctil",
         "Name[eu]": "Ukimen-pantailako keinuak",
+        "Name[ka]": "სენსორული ეკრანის ჟესტები",
+        "Name[nl]": "Veeggebaren voor aanraakscherm",
+        "Name[sl]": "Geste po zaslonu z dotikom",
         "Name[tr]": "Dokunmatik Ekran Hareketleri",
+        "Name[uk]": "Жести на сенсорній панелі",
         "Name[x-test]": "xxTouchscreen Gesturesxx"
     },
     "X-DocPath": "kcontrol/kwintouchscreen/index.html",
