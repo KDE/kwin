@@ -32,6 +32,27 @@ namespace Wayland
 {
 class WaylandBackend;
 
+class WaylandCursor
+{
+public:
+    explicit WaylandCursor(WaylandBackend *backend);
+    ~WaylandCursor();
+
+    KWayland::Client::Pointer *pointer() const;
+    void setPointer(KWayland::Client::Pointer *pointer);
+
+    void enable();
+    void disable();
+    void update();
+
+private:
+    WaylandBackend *const m_backend;
+    KWayland::Client::Pointer *m_pointer = nullptr;
+    std::unique_ptr<KWayland::Client::Surface> m_surface;
+    QPoint m_hotspot;
+    bool m_enabled = true;
+};
+
 class WaylandOutput : public Output
 {
     Q_OBJECT
@@ -46,6 +67,7 @@ public:
 
     bool isReady() const;
     KWayland::Client::Surface *surface() const;
+    WaylandCursor *cursor() const;
 
     void lockPointer(KWayland::Client::Pointer *pointer, bool lock);
     void resize(const QSize &pixelSize);
@@ -63,6 +85,7 @@ private:
     std::unique_ptr<KWayland::Client::LockedPointer> m_pointerLock;
     std::unique_ptr<KWayland::Client::XdgDecoration> m_xdgDecoration;
     WaylandBackend *const m_backend;
+    std::unique_ptr<WaylandCursor> m_cursor;
     QTimer m_turnOffTimer;
     bool m_hasPointerLock = false;
     bool m_ready = false;

@@ -18,19 +18,14 @@
 #include "wayland_output.h"
 #include "wayland_qpainter_backend.h"
 
-#include "cursor.h"
 #include "dpmsinputeventfilter.h"
 #include "input.h"
 
-#include <KWayland/Client/buffer.h>
-#include <KWayland/Client/compositor.h>
 #include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/pointer.h>
-#include <KWayland/Client/pointerconstraints.h>
 #include <KWayland/Client/pointergestures.h>
 #include <KWayland/Client/relativepointer.h>
 #include <KWayland/Client/seat.h>
-#include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/touch.h>
 
@@ -41,7 +36,6 @@
 #include <unistd.h>
 
 #include "../drm/gbm_dmabuf.h"
-#include <cmath>
 #include <drm_fourcc.h>
 
 #define QSIZE_TO_QPOINT(size) QPointF(size.width(), size.height())
@@ -52,63 +46,6 @@ namespace Wayland
 {
 
 using namespace KWayland::Client;
-
-WaylandCursor::WaylandCursor(WaylandBackend *backend)
-    : m_backend(backend)
-    , m_surface(backend->display()->compositor()->createSurface())
-{
-}
-
-WaylandCursor::~WaylandCursor() = default;
-
-void WaylandCursor::enable()
-{
-    Q_ASSERT(m_disableCount > 0);
-    --m_disableCount;
-    if (m_disableCount == 0) {
-        install();
-    }
-}
-
-void WaylandCursor::disable()
-{
-    ++m_disableCount;
-    if (m_disableCount == 1) {
-        uninstall();
-    }
-}
-
-void WaylandCursor::install()
-{
-    const QImage image = Cursors::self()->currentCursor()->image();
-    if (m_disableCount || image.isNull() || image.size().isEmpty()) {
-        uninstall();
-        return;
-    }
-
-    auto *pointer = m_backend->seat()->pointerDevice()->nativePointer();
-    if (!pointer || !pointer->isValid()) {
-        return;
-    }
-
-    auto buffer = m_backend->display()->shmPool()->createBuffer(image).toStrongRef();
-    wl_buffer *imageBuffer = *buffer.data();
-
-    pointer->setCursor(m_surface.get(), imageBuffer ? Cursors::self()->currentCursor()->hotspot() : QPoint());
-    m_surface->attachBuffer(imageBuffer);
-    m_surface->setScale(std::ceil(image.devicePixelRatio()));
-    m_surface->damageBuffer(image.rect());
-    m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
-}
-
-void WaylandCursor::uninstall()
-{
-    auto *pointer = m_backend->seat()->pointerDevice()->nativePointer();
-    if (!pointer || !pointer->isValid()) {
-        return;
-    }
-    pointer->hideCursor();
-}
 
 WaylandInputDevice::WaylandInputDevice(KWayland::Client::Keyboard *keyboard, WaylandSeat *seat)
     : m_seat(seat)
@@ -138,7 +75,19 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
     , m_pointer(pointer)
 {
     connect(pointer, &Pointer::entered, this, [this](quint32 serial, const QPointF &relativeToSurface) {
-        m_seat->backend()->cursor()->install();
+        WaylandOutput *output = m_seat->backend()->findOutput(m_pointer->enteredSurface());
+        Q_ASSERT(output);
+        output->cursor()->setPointer(m_pointer.get());
+    });
+    connect(pointer, &Pointer::left, this, [this]() {
+        // wl_pointer.leave carries the wl_surface, but KWayland::Client::Pointer::left does not.
+        const auto outputs = m_seat->backend()->outputs();
+        for (Output *output : outputs) {
+            WaylandOutput *waylandOutput = static_cast<WaylandOutput *>(output);
+            if (waylandOutput->cursor()->pointer()) {
+                waylandOutput->cursor()->setPointer(nullptr);
+            }
+        }
     });
     connect(pointer, &Pointer::motion, this, [this](const QPointF &relativeToSurface, quint32 time) {
         WaylandOutput *output = m_seat->backend()->findOutput(m_pointer->enteredSurface());
@@ -479,7 +428,6 @@ WaylandBackend::~WaylandBackend()
 
     destroyOutputs();
 
-    m_waylandCursor.reset();
     m_seat.reset();
     m_display.reset();
 
@@ -499,22 +447,16 @@ bool WaylandBackend::initialize()
     createOutputs();
 
     m_seat = std::make_unique<WaylandSeat>(m_display->seat(), this);
-    m_waylandCursor = std::make_unique<WaylandCursor>(this);
 
     QAbstractEventDispatcher *dispatcher = QAbstractEventDispatcher::instance();
     QObject::connect(dispatcher, &QAbstractEventDispatcher::aboutToBlock, m_display.get(), &WaylandDisplay::flush);
     QObject::connect(dispatcher, &QAbstractEventDispatcher::awake, m_display.get(), &WaylandDisplay::flush);
 
-    connect(Cursors::self(), &Cursors::currentCursorChanged, this, [this]() {
-        m_waylandCursor->install();
-    });
     connect(this, &WaylandBackend::pointerLockChanged, this, [this](bool locked) {
         if (locked) {
-            m_waylandCursor->disable();
             m_seat->createRelativePointer();
         } else {
             m_seat->destroyRelativePointer();
-            m_waylandCursor->enable();
         }
     });
 

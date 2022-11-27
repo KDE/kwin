@@ -23,7 +23,6 @@
 #include <QPoint>
 #include <QSize>
 
-struct wl_buffer;
 struct wl_display;
 struct gbm_device;
 struct gbm_bo;
@@ -55,24 +54,6 @@ class WaylandSeat;
 class WaylandOutput;
 class WaylandEglBackend;
 class WaylandDisplay;
-
-class WaylandCursor
-{
-public:
-    explicit WaylandCursor(WaylandBackend *backend);
-    ~WaylandCursor();
-
-    void enable();
-    void disable();
-
-    void install();
-    void uninstall();
-
-private:
-    WaylandBackend *const m_backend;
-    std::unique_ptr<KWayland::Client::Surface> m_surface;
-    int m_disableCount = 0;
-};
 
 class WaylandInputDevice : public InputDevice
 {
@@ -218,10 +199,6 @@ public:
     {
         return m_seat.get();
     }
-    WaylandCursor *cursor() const
-    {
-        return m_waylandCursor.get();
-    }
 
     bool supportsPointerLock();
     void togglePointerLock();
@@ -267,7 +244,6 @@ private:
     std::unique_ptr<WaylandSeat> m_seat;
     WaylandEglBackend *m_eglBackend = nullptr;
     QVector<WaylandOutput *> m_outputs;
-    std::unique_ptr<WaylandCursor> m_waylandCursor;
     std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;
     bool m_pointerLockRequested = false;
 #if HAVE_WAYLAND_EGL
