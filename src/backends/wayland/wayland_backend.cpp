@@ -213,7 +213,7 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::RelativePointer *relati
     , m_relativePointer(relativePointer)
 {
     connect(relativePointer, &RelativePointer::relativeMotion, this, [this](const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 timestamp) {
-        Q_EMIT pointerMotion(QSIZE_TO_QPOINT(delta), QSIZE_TO_QPOINT(deltaNonAccelerated), timestamp, timestamp * 1000, this);
+        Q_EMIT pointerMotion(QSIZE_TO_QPOINT(delta), QSIZE_TO_QPOINT(deltaNonAccelerated), timestamp / 1000, timestamp, this);
     });
 }
 
