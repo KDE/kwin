@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-19 00:47+0000\n"
-"PO-Revision-Date: 2022-07-15 12:07+0200\n"
+"PO-Revision-Date: 2022-11-28 16:20+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -176,10 +176,9 @@ msgstr "Monstra buttones pro cambiar le numero de scriptorios virtual"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: desktopgrid/desktopgrid_config.ui:123
-#, fuzzy, kde-format
-#| msgid "&Layout mode:"
+#, kde-format
 msgid "&Grid layout mode:"
-msgstr "Modo de &disposition:"
+msgstr "Modo de disposition de &Grillia:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: desktopgrid/desktopgrid_config.ui:137 overview/kcm/overvieweffectkcm.ui:30
@@ -199,7 +198,7 @@ msgstr "Natural"
 #: desktopgrid/desktopgrid_config.ui:147
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Necun"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: desktopgrid/desktopgrid_config.ui:155
@@ -317,10 +316,9 @@ msgid "Toggle Invert Effect on Window"
 msgstr "Commuta effecto de inverter sur fenestra"
 
 #: invert/invert.cpp:56
-#, fuzzy, kde-format
-#| msgid "Invert cursor keys"
+#, kde-format
 msgid "Invert Screen Colors"
-msgstr "Inverte clave de cursor"
+msgstr "Inverte colores de schermo"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: login/package/contents/ui/config.ui:17
@@ -541,7 +539,7 @@ msgstr "Designa con le mus per premer claves Shift+Meta e mover le mus."
 #, kde-format
 msgctxt "@label"
 msgid "Unknown"
-msgstr ""
+msgstr "Incognite"
 
 #: overview/kcm/overvieweffectkcm.cpp:41 overview/overvieweffect.cpp:31
 #, kde-format
@@ -568,8 +566,7 @@ msgid "Ignore minimized windows:"
 msgstr "Ignora fenestras minimizate"
 
 #: overview/qml/DesktopBar.qml:186
-#, fuzzy, kde-format
-#| msgid "Delete virtual desktop"
+#, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Dele scriptorio virtual"
 
@@ -579,10 +576,9 @@ msgid "Add Virtual Desktop"
 msgstr "Adde Scriptorio Virtual"
 
 #: overview/qml/ScreenView.qml:226
-#, fuzzy, kde-format
-#| msgid "Moving windows:"
+#, kde-format
 msgid "No matching windows"
-msgstr "Mover fenestras:"
+msgstr "Nulle correspondentia de fenestra"
 
 #: private/qml/WindowHeapDelegate.qml:151
 #, kde-format
@@ -590,8 +586,7 @@ msgid "Drag Down To Close"
 msgstr "Trahe a basso pro clauder"
 
 #: private/qml/WindowHeapDelegate.qml:461
-#, fuzzy, kde-format
-#| msgid "Close window"
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
 msgstr "Claude fenestra"
@@ -641,35 +636,31 @@ msgstr ""
 "Escappa o clicca a dextere pro cancellar."
 
 #: showfps/qml/main.qml:110
-#, fuzzy, kde-format
-#| msgid "Ring Duration:"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr "Duration de circulo:"
+msgstr "Duration de Tinta"
 
 #: showfps/qml/main.qml:162
-#, fuzzy, kde-format
-#| msgid "Ring Count:"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
-msgstr "Conto de circulo:"
+msgstr "Amonta de tinta"
 
 #: showfps/qml/main.qml:175
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr ""
+msgstr "FPS currente"
 
 #: showfps/qml/main.qml:184
-#, fuzzy, kde-format
-#| msgid "Maximum &width:"
+#, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr "Largessa ma&xime:"
+msgstr "FPS Maxime"
 
 #: showfps/qml/main.qml:192
-#, fuzzy, kde-format
-#| msgid "This effect is not a benchmark"
+#, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Iste effecto non es un benchmark"
@@ -886,10 +877,10 @@ msgid "Toggle Present Windows (Window class)"
 msgstr "Commuta fenestra presente (classe de fenestra)"
 
 #: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:72
-#, fuzzy, kde-format
-#| msgid "Toggle Present Windows (Current desktop)"
+#, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
-msgstr "Commuta fenestras presente (scriptorio currente)"
+msgstr ""
+"Commuta fenestras presente (classe de Fenestra sur scriptorio currente)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: windowview/kcm/windowvieweffectkcm.ui:56
@@ -903,16 +894,14 @@ msgid "No Matches"
 msgstr "Nulle correspondentias"
 
 #: windowview/qml/main.qml:106
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "No Windows"
 msgstr "Nulle fenestras"
 
 #: windowview/qml/main.qml:120
-#, fuzzy, kde-format
-#| msgid "Fullscreen windows"
+#, kde-format
 msgid "Filter windows…"
-msgstr "Fenestras de schermo plen"
+msgstr "Filtra fenestras…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: wobblywindows/wobblywindows_config.ui:20

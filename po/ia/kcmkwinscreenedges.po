@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-07-15 00:48+0000\n"
-"PO-Revision-Date: 2022-07-15 12:07+0200\n"
+"PO-Revision-Date: 2022-11-28 16:19+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -35,7 +35,7 @@ msgstr "Nulle action"
 #: main.cpp:131 touch.cpp:125
 #, kde-format
 msgid "Peek at Desktop"
-msgstr ""
+msgstr "Reguarda a Scriptorio"
 
 #: main.cpp:132 touch.cpp:126
 #, kde-format

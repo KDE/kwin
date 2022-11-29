@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-24 00:47+0000\n"
-"PO-Revision-Date: 2022-04-28 14:36+0200\n"
+"PO-Revision-Date: 2022-11-28 16:22+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.04.0\n"
+"X-Generator: Lokalize 21.12.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -1598,7 +1598,7 @@ msgstr "Commuta color de nocte"
 #: plugins/nightcolor/nightcolormanager.cpp:472
 #, kde-format
 msgid "Color Temperature Preview"
-msgstr ""
+msgstr "Vista preliminar de Temperatura de Color "
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -2139,7 +2139,7 @@ msgstr ""
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "%1 non existe"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2348,11 +2348,9 @@ msgid "Show in &Activities"
 msgstr "Monstra in &Activitates"
 
 #: useractions.cpp:524
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move the window to that desktop"
-#| msgid "Move to New Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "Move a Nove Scriptorio"
+msgstr "Move &a le scriptorio currente"
 
 #: useractions.cpp:534 useractions.cpp:601
 #, kde-format
@@ -2672,7 +2670,7 @@ msgstr "Fenestra a Previe Schermo"
 #, fuzzy, kde-format
 #| msgid "Move to &Desktop"
 msgid "Peek at Desktop"
-msgstr "Move a &scriptorio"
+msgstr "Reguarda a Scriptorio"
 
 #: useractions.cpp:1111
 #, kde-format
