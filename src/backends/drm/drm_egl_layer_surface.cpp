@@ -252,6 +252,9 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
         return surface;
     }
     if (m_gpu != m_eglBackend->gpu()) {
+        if (const auto surface = testFormats(preferredFormats, MultiGpuImportMode::DmabufEglRendering)) {
+            return surface;
+        }
         if (const auto surface = testFormats(preferredFormats, MultiGpuImportMode::DumbBuffer)) {
             return surface;
         }
@@ -261,6 +264,9 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
         return surface;
     }
     if (m_gpu != m_eglBackend->gpu()) {
+        if (const auto surface = testFormats(fallbackFormats, MultiGpuImportMode::DmabufEglRendering)) {
+            return surface;
+        }
         if (const auto surface = testFormats(fallbackFormats, MultiGpuImportMode::DumbBuffer)) {
             return surface;
         }
@@ -272,7 +278,7 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
 {
     Surface ret;
     ret.importMode = importMode;
-    ret.gbmSurface = createGbmSurface(size, format, modifiers, importMode == MultiGpuImportMode::DumbBuffer || m_bufferTarget != BufferTarget::Normal);
+    ret.gbmSurface = createGbmSurface(size, format, modifiers, importMode);
     if (!ret.gbmSurface) {
         return std::nullopt;
     }
@@ -288,7 +294,7 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
     return ret;
 }
 
-std::shared_ptr<GbmSurface> EglGbmLayerSurface::createGbmSurface(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool forceLinear) const
+std::shared_ptr<GbmSurface> EglGbmLayerSurface::createGbmSurface(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, MultiGpuImportMode importMode) const
 {
     static bool modifiersEnvSet = false;
     static const bool modifiersEnv = qEnvironmentVariableIntValue("KWIN_DRM_USE_MODIFIERS", &modifiersEnvSet) != 0;
@@ -300,9 +306,11 @@ std::shared_ptr<GbmSurface> EglGbmLayerSurface::createGbmSurface(const QSize &si
     if (!config) {
         return nullptr;
     }
+    const bool forceLinear = importMode != MultiGpuImportMode::Dmabuf || m_bufferTarget != BufferTarget::Normal;
+    DrmGpu *const bufferGpu = importMode == MultiGpuImportMode::DmabufEglRendering ? m_gpu : m_eglBackend->gpu();
 
     if (allowModifiers) {
-        const auto ret = GbmSurface::createSurface(m_eglBackend, size, format, forceLinear ? linearModifier : modifiers, config);
+        const auto ret = GbmSurface::createSurface(m_eglBackend, bufferGpu, size, format, forceLinear ? linearModifier : modifiers, config);
         if (const auto surface = std::get_if<std::shared_ptr<GbmSurface>>(&ret)) {
             return *surface;
         } else if (std::get<GbmSurface::Error>(ret) != GbmSurface::Error::ModifiersUnsupported) {
@@ -310,13 +318,13 @@ std::shared_ptr<GbmSurface> EglGbmLayerSurface::createGbmSurface(const QSize &si
         }
     }
     uint32_t gbmFlags = GBM_BO_USE_RENDERING;
-    if (m_gpu == m_eglBackend->gpu()) {
+    if (m_gpu == m_eglBackend->gpu() || importMode == MultiGpuImportMode::DmabufEglRendering) {
         gbmFlags |= GBM_BO_USE_SCANOUT;
     }
     if (forceLinear || m_gpu != m_eglBackend->gpu()) {
         gbmFlags |= GBM_BO_USE_LINEAR;
     }
-    const auto ret = GbmSurface::createSurface(m_eglBackend, size, format, gbmFlags, config);
+    const auto ret = GbmSurface::createSurface(m_eglBackend, bufferGpu, size, format, gbmFlags, config);
     const auto surface = std::get_if<std::shared_ptr<GbmSurface>>(&ret);
     return surface ? *surface : nullptr;
 }
@@ -344,7 +352,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface &surfac
 {
     if (m_bufferTarget == BufferTarget::Dumb || surface.importMode == MultiGpuImportMode::DumbBuffer) {
         return importWithCpu(surface, sourceBuffer.get());
-    } else if (m_gpu != m_eglBackend->gpu()) {
+    } else if (m_gpu != m_eglBackend->gpu() && surface.importMode == MultiGpuImportMode::Dmabuf) {
         return importDmabuf(sourceBuffer.get());
     } else {
         const auto ret = DrmFramebuffer::createFramebuffer(sourceBuffer);

@@ -22,9 +22,10 @@
 namespace KWin
 {
 
-GbmSurface::GbmSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, uint32_t flags, gbm_surface *surface, EGLSurface eglSurface)
+GbmSurface::GbmSurface(EglGbmBackend *backend, DrmGpu *gpu, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, uint32_t flags, gbm_surface *surface, EGLSurface eglSurface)
     : m_surface(surface)
     , m_eglBackend(backend)
+    , m_gpu(gpu)
     , m_eglSurface(eglSurface)
     , m_size(size)
     , m_format(format)
@@ -72,7 +73,7 @@ std::shared_ptr<GbmBuffer> GbmSurface::swapBuffers(const QRegion &dirty)
         eglQuerySurface(m_eglBackend->eglDisplay(), m_eglSurface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
         m_damageJournal.add(dirty);
     }
-    return std::make_shared<GbmBuffer>(m_eglBackend->gpu(), bo, shared_from_this());
+    return std::make_shared<GbmBuffer>(m_gpu, bo, shared_from_this());
 }
 
 void GbmSurface::releaseBuffer(GbmBuffer *buffer)
@@ -124,9 +125,9 @@ uint32_t GbmSurface::flags() const
     return m_flags;
 }
 
-std::variant<std::shared_ptr<GbmSurface>, GbmSurface::Error> GbmSurface::createSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, uint32_t flags, EGLConfig config)
+std::variant<std::shared_ptr<GbmSurface>, GbmSurface::Error> GbmSurface::createSurface(EglGbmBackend *backend, DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t flags, EGLConfig config)
 {
-    gbm_surface *surface = gbm_surface_create(backend->gpu()->gbmDevice(), size.width(), size.height(), format, flags);
+    gbm_surface *surface = gbm_surface_create(gpu->gbmDevice(), size.width(), size.height(), format, flags);
     if (!surface) {
         qCWarning(KWIN_DRM) << "Creating gbm surface failed!" << strerror(errno);
         return Error::Unknown;
@@ -136,12 +137,12 @@ std::variant<std::shared_ptr<GbmSurface>, GbmSurface::Error> GbmSurface::createS
         qCCritical(KWIN_DRM) << "Creating EGL surface failed!" << getEglErrorString();
         return Error::Unknown;
     }
-    return std::make_shared<GbmSurface>(backend, size, format, QVector<uint64_t>{}, flags, surface, eglSurface);
+    return std::make_shared<GbmSurface>(backend, gpu, size, format, QVector<uint64_t>{}, flags, surface, eglSurface);
 }
 
-std::variant<std::shared_ptr<GbmSurface>, GbmSurface::Error> GbmSurface::createSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, QVector<uint64_t> modifiers, EGLConfig config)
+std::variant<std::shared_ptr<GbmSurface>, GbmSurface::Error> GbmSurface::createSurface(EglGbmBackend *backend, DrmGpu *gpu, const QSize &size, uint32_t format, QVector<uint64_t> modifiers, EGLConfig config)
 {
-    gbm_surface *surface = gbm_surface_create_with_modifiers(backend->gpu()->gbmDevice(), size.width(), size.height(), format, modifiers.data(), modifiers.size());
+    gbm_surface *surface = gbm_surface_create_with_modifiers(gpu->gbmDevice(), size.width(), size.height(), format, modifiers.data(), modifiers.size());
     if (!surface) {
         if (errno == ENOSYS) {
             return Error::ModifiersUnsupported;
@@ -155,6 +156,6 @@ std::variant<std::shared_ptr<GbmSurface>, GbmSurface::Error> GbmSurface::createS
         qCCritical(KWIN_DRM) << "Creating EGL surface failed!" << getEglErrorString();
         return Error::Unknown;
     }
-    return std::make_shared<GbmSurface>(backend, size, format, modifiers, 0, surface, eglSurface);
+    return std::make_shared<GbmSurface>(backend, gpu, size, format, modifiers, 0, surface, eglSurface);
 }
 }

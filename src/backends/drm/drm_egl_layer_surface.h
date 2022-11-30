@@ -62,7 +62,11 @@ private:
     bool doesShadowBufferFit(ShadowBuffer *buffer, const QSize &size, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation) const;
 
     enum class MultiGpuImportMode {
+        /* render with the primary GPU to a gbm surface allocated on the primary GPU, import gbm buffer on secondary GPU for scanout */
         Dmabuf,
+        /* render with the primary GPU to a gbm surface allocated on the secondary GPU, directly use gbm surface on secondary GPU for scanout */
+        DmabufEglRendering,
+        /* render with the primary GPU to a gbm surface allocated on the primary GPU, copy that over to a dumb buffer on the secondary GPU for scanout */
         DumbBuffer
     };
     struct Surface
@@ -77,7 +81,7 @@ private:
     bool doesSurfaceFit(const Surface &surface, const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
     std::optional<Surface> createSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
     std::optional<Surface> createSurface(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, MultiGpuImportMode importMode) const;
-    std::shared_ptr<GbmSurface> createGbmSurface(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool forceLinear) const;
+    std::shared_ptr<GbmSurface> createGbmSurface(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, MultiGpuImportMode importMode) const;
 
     std::shared_ptr<DrmFramebuffer> doRenderTestBuffer(Surface &surface) const;
     std::shared_ptr<DrmFramebuffer> importBuffer(Surface &surface, const std::shared_ptr<GbmBuffer> &sourceBuffer) const;

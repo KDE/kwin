@@ -107,7 +107,7 @@ bool VirtualEglGbmLayer::createGbmSurface()
             const auto modifiers = it.value();
 
             if (allowModifiers && !modifiers.isEmpty()) {
-                const auto ret = GbmSurface::createSurface(m_eglBackend, size, format, modifiers, config);
+                const auto ret = GbmSurface::createSurface(m_eglBackend, m_eglBackend->gpu(), size, format, modifiers, config);
                 if (const auto surface = std::get_if<std::shared_ptr<GbmSurface>>(&ret)) {
                     m_oldGbmSurface = m_gbmSurface;
                     m_gbmSurface = *surface;
@@ -116,7 +116,7 @@ bool VirtualEglGbmLayer::createGbmSurface()
                     continue;
                 }
             }
-            const auto ret = GbmSurface::createSurface(m_eglBackend, size, format, GBM_BO_USE_RENDERING, config);
+            const auto ret = GbmSurface::createSurface(m_eglBackend, m_eglBackend->gpu(), size, format, GBM_BO_USE_RENDERING, config);
             if (const auto surface = std::get_if<std::shared_ptr<GbmSurface>>(&ret)) {
                 m_oldGbmSurface = m_gbmSurface;
                 m_gbmSurface = *surface;

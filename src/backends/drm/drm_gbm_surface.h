@@ -29,7 +29,7 @@ class EglGbmBackend;
 class GbmSurface : public std::enable_shared_from_this<GbmSurface>
 {
 public:
-    explicit GbmSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, uint32_t flags, gbm_surface *surface, EGLSurface eglSurface);
+    explicit GbmSurface(EglGbmBackend *backend, DrmGpu *gpu, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, uint32_t flags, gbm_surface *surface, EGLSurface eglSurface);
     ~GbmSurface();
 
     bool makeContextCurrent() const;
@@ -53,12 +53,13 @@ public:
         EglError,
         Unknown
     };
-    static std::variant<std::shared_ptr<GbmSurface>, Error> createSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, uint32_t flags, EGLConfig config);
-    static std::variant<std::shared_ptr<GbmSurface>, Error> createSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, QVector<uint64_t> modifiers, EGLConfig config);
+    static std::variant<std::shared_ptr<GbmSurface>, Error> createSurface(EglGbmBackend *backend, DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t flags, EGLConfig config);
+    static std::variant<std::shared_ptr<GbmSurface>, Error> createSurface(EglGbmBackend *backend, DrmGpu *gpu, const QSize &size, uint32_t format, QVector<uint64_t> modifiers, EGLConfig config);
 
 private:
     gbm_surface *m_surface;
     EglGbmBackend *const m_eglBackend;
+    DrmGpu *const m_gpu;
     EGLSurface m_eglSurface = EGL_NO_SURFACE;
     QSize m_size;
     const uint32_t m_format;
