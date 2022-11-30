@@ -41,7 +41,6 @@
         <choices name="PlacementChoices">
             <choice name="Smart"></choice>
             <choice name="Maximizing"></choice>
-            <choice name="Cascade"></choice>
             <choice name="Random"></choice>
             <choice name="Centered"></choice>
             <choice name="ZeroCornered"></choice>

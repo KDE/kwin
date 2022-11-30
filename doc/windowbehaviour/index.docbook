@@ -1084,15 +1084,6 @@ Will try to maximize all new windows to fill the whole screen.
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Cascaded</guilabel></term>
-<listitem>
-<para>
-Will cascade all new windows, opening each one down and to the right of the active window, starting from the top left corner of the screen when no windows are already open.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
 <term><guilabel>Random</guilabel></term>
 <listitem>
 <para>

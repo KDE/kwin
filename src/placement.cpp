@@ -74,9 +74,6 @@ void Placement::place(Window *c, const QRectF &area, PlacementPolicy policy, Pla
     case PlacementRandom:
         placeAtRandom(c, area.toRect(), nextPlacement);
         break;
-    case PlacementCascade:
-        placeCascaded(c, area.toRect(), nextPlacement);
-        break;
     case PlacementCentered:
         placeCentered(c, area, nextPlacement);
         break;
@@ -661,7 +658,7 @@ void Placement::unclutterDesktop()
 const char *Placement::policyToString(PlacementPolicy policy)
 {
     const char *const policies[] = {
-        "NoPlacement", "Default", "XXX should never see", "Random", "Smart", "Cascade", "Centered",
+        "NoPlacement", "Default", "XXX should never see", "Random", "Smart", "Centered",
         "ZeroCornered", "UnderMouse", "OnMainWindow", "Maximizing"};
     Q_ASSERT(policy < int(sizeof(policies) / sizeof(policies[0])));
     return policies[policy];

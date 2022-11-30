@@ -793,7 +793,6 @@ QList<OptionsModel::Data> RulesModel::placementModelData() const
         {PlacementNone, i18n("No Placement")},
         {PlacementSmart, i18n("Minimal Overlapping")},
         {PlacementMaximizing, i18n("Maximized")},
-        {PlacementCascade, i18n("Cascaded")},
         {PlacementCentered, i18n("Centered")},
         {PlacementRandom, i18n("Random")},
         {PlacementZeroCornered, i18n("In Top-Left Corner")},

@@ -73,7 +73,6 @@ enum PlacementPolicy {
     PlacementUnknown, // special, means the function should use its default
     PlacementRandom,
     PlacementSmart,
-    PlacementCascade,
     PlacementCentered,
     PlacementZeroCornered,
     PlacementUnderMouse, // special

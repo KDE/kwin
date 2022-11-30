@@ -118,7 +118,6 @@
                 <choice name="PlacementUnknown" value="Unknown"/>
                 <choice name="PlacementRandom" value="Random"/>
                 <choice name="PlacementSmart" value="Smart"/>
-                <choice name="PlacementCascade" value="Cascade"/>
                 <choice name="PlacementCentered" value="Centered"/>
                 <choice name="PlacementZeroCornered" value="ZeroCornered"/>
                 <choice name="PlacementUnderMouse" value="UnderMouse"/>

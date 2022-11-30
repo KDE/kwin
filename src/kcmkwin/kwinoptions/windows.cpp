@@ -245,7 +245,6 @@ void KAdvancedConfig::initialize(KWinOptionsSettings *settings, KWinOptionsKDEGl
 
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::Smart, "Smart");
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::Maximizing, "Maximizing");
-    m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::Cascade, "Cascade");
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::Random, "Random");
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::Centered, "Centered");
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::ZeroCornered, "ZeroCornered");
