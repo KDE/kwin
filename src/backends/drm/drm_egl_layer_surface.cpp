@@ -252,24 +252,30 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
         return surface;
     }
     if (m_gpu != m_eglBackend->gpu()) {
+        qCWarning(KWIN_DRM) << "Dmabuf with preferred formats failed, testing DmabufEglRendering";
         if (const auto surface = testFormats(preferredFormats, MultiGpuImportMode::DmabufEglRendering)) {
             return surface;
         }
+        qCWarning(KWIN_DRM) << "DmabufEglRendering with preferred formats failed, testing DumbBuffer";
         if (const auto surface = testFormats(preferredFormats, MultiGpuImportMode::DumbBuffer)) {
             return surface;
         }
+        qCWarning(KWIN_DRM) << "DumbBuffer with preferred formats failed";
     }
     std::sort(fallbackFormats.begin(), fallbackFormats.end(), sort);
     if (const auto surface = testFormats(fallbackFormats, MultiGpuImportMode::Dmabuf)) {
         return surface;
     }
     if (m_gpu != m_eglBackend->gpu()) {
+        qCWarning(KWIN_DRM) << "Dmabuf with fallback formats failed, testing dmabuf with egl rendering";
         if (const auto surface = testFormats(fallbackFormats, MultiGpuImportMode::DmabufEglRendering)) {
             return surface;
         }
+        qCWarning(KWIN_DRM) << "DmabufEglRendering with fallback formats failed, testing DumbBuffer";
         if (const auto surface = testFormats(fallbackFormats, MultiGpuImportMode::DumbBuffer)) {
             return surface;
         }
+        qCWarning(KWIN_DRM) << "DumbBuffer with fallback formats failed";
     }
     return std::nullopt;
 }
