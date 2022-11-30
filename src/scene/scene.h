@@ -18,6 +18,7 @@ namespace KWin
 class ItemRenderer;
 class Output;
 class Scene;
+class Item;
 
 class KWIN_EXPORT SceneDelegate : public RenderLayerDelegate
 {
@@ -85,6 +86,7 @@ public:
     virtual void prePaint(SceneDelegate *delegate) = 0;
     virtual void postPaint() = 0;
     virtual void paint(RenderTarget *renderTarget, const QRegion &region) = 0;
+    virtual QRegion checkOcclusion(Item *item, QRegion damage) const;
 
 Q_SIGNALS:
     void delegateRemoved(SceneDelegate *delegate);

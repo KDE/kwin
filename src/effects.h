@@ -195,6 +195,7 @@ public:
      * @returns whether or not any effect is currently active where KWin should not use direct scanout
      */
     bool blocksDirectScanout() const;
+    bool transformsWindows() const;
 
     KWaylandServer::Display *waylandDisplay() const override;
 

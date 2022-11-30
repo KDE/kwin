@@ -97,4 +97,9 @@ void BlendChanges::prePaintScreen(ScreenPrePaintData &data, std::chrono::millise
     effects->prePaintScreen(data, presentTime);
 }
 
+bool BlendChanges::transformsWindows() const
+{
+    return false;
+}
+
 } // namespace KWin

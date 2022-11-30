@@ -465,4 +465,9 @@ bool ContrastEffect::blocksDirectScanout() const
     return false;
 }
 
+bool ContrastEffect::transformsWindows() const
+{
+    return false;
+}
+
 } // namespace KWin

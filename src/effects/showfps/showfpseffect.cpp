@@ -123,4 +123,9 @@ bool ShowFpsEffect::supported()
     return effects->isOpenGLCompositing();
 }
 
+bool ShowFpsEffect::transformsWindows() const
+{
+    return false;
+}
+
 } // namespace KWin

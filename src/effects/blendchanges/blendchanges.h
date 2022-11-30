@@ -30,6 +30,7 @@ public:
     void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
 
     bool isActive() const override;
+    bool transformsWindows() const override;
 
     int requestedEffectChainPosition() const override
     {

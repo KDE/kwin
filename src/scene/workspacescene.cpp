@@ -494,4 +494,45 @@ bool WorkspaceScene::supportsNativeFence() const
     return false;
 }
 
+static bool checkOcclusionRecursive(Item *checkedItem, Item *damageItem, QRegion &damage)
+{
+    if (checkedItem == damageItem) {
+        return true;
+    }
+    const auto children = checkedItem->sortedChildItems();
+    for (auto it = children.rbegin(); it != children.rend(); it++) {
+        if (checkOcclusionRecursive(*it, damageItem, damage)) {
+            return true;
+        }
+    }
+    damage = damage.subtracted(checkedItem->mapToGlobal(checkedItem->opaque()));
+    return damage.isEmpty();
+}
+
+QRegion WorkspaceScene::checkOcclusion(Item *item, QRegion damage) const
+{
+    if (static_cast<EffectsHandlerImpl *>(effects)->transformsWindows()) {
+        return damage;
+    }
+    const auto checkWindow = [&damage, item](Window *window) {
+        if (!window->readyForPainting() || !window->windowItem() || !window->windowItem()->isVisible()) {
+            return false;
+        }
+        return checkOcclusionRecursive(window->windowItem(), item, damage);
+    };
+    const QList<EffectWindow *> elevatedList = static_cast<EffectsHandlerImpl *>(effects)->elevatedWindows();
+    for (auto it = elevatedList.rbegin(); it != elevatedList.rend(); it++) {
+        if (checkWindow(static_cast<EffectWindowImpl *>(*it)->window())) {
+            return damage;
+        }
+    }
+    const QList<Window *> windows = workspace()->stackingOrder();
+    for (auto it = windows.rbegin(); it != windows.rend(); it++) {
+        if (checkWindow(*it)) {
+            return damage;
+        }
+    }
+    return damage;
+}
+
 } // namespace

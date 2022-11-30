@@ -678,6 +678,10 @@ public:
      * overwrite this method to return false if your effect does not need to be drawn over opaque fullscreen windows
      */
     virtual bool blocksDirectScanout() const;
+    /**
+     * override this method to turn false if your effect never transforms windows
+     */
+    virtual bool transformsWindows() const;
 
 public Q_SLOTS:
     virtual bool borderActivated(ElectricBorder border);

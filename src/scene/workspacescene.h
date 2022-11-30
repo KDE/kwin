@@ -86,6 +86,8 @@ public:
         return {};
     }
 
+    QRegion checkOcclusion(Item *item, QRegion damage) const override;
+
 Q_SIGNALS:
     void preFrameRender();
     void frameRendered();

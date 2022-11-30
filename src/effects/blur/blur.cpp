@@ -904,4 +904,9 @@ bool BlurEffect::blocksDirectScanout() const
     return false;
 }
 
+bool BlurEffect::transformsWindows() const
+{
+    return false;
+}
+
 } // namespace KWin

@@ -297,7 +297,7 @@ void Item::scheduleRepaint(const QRegion &region)
 
 void Item::scheduleRepaintInternal(const QRegion &region)
 {
-    const QRegion globalRegion = mapToGlobal(region);
+    const QRegion globalRegion = m_scene->checkOcclusion(this, mapToGlobal(region));
     const QList<SceneDelegate *> delegates = m_scene->delegates();
     for (SceneDelegate *delegate : delegates) {
         const QRegion dirtyRegion = globalRegion & delegate->viewport();

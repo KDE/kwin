@@ -39,6 +39,7 @@ public:
     void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
     void paintWindow(KWin::EffectWindow *w, int mask, QRegion region, KWin::WindowPaintData &data) override;
     void postPaintScreen() override;
+    bool transformsWindows() const override;
 
     static bool supported();
 

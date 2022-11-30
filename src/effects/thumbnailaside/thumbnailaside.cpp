@@ -191,4 +191,9 @@ bool ThumbnailAsideEffect::isActive() const
     return !windows.isEmpty() && !effects->isScreenLocked();
 }
 
+bool ThumbnailAsideEffect::transformsWindows() const
+{
+    return false;
+}
+
 } // namespace

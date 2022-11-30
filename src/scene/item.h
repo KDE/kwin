@@ -138,6 +138,7 @@ private:
     void scheduleRepaintInternal(const QRegion &region);
     void markSortedChildItemsDirty();
 
+    QRegion checkOcclusion(const QRegion &damage) const;
     bool computeEffectiveVisibility() const;
     void updateEffectiveVisibility();
     void removeRepaints(SceneDelegate *delegate);

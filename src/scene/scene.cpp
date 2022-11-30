@@ -140,4 +140,9 @@ SurfaceItem *Scene::scanoutCandidate() const
     return nullptr;
 }
 
+QRegion Scene::checkOcclusion(Item *item, QRegion damage) const
+{
+    return damage;
+}
+
 } // namespace KWin

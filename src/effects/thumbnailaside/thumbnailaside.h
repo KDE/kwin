@@ -55,6 +55,7 @@ public:
         return screen;
     }
     bool isActive() const override;
+    bool transformsWindows() const override;
 
 private Q_SLOTS:
     void toggleCurrentThumbnail();

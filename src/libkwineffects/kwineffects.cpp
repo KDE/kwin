@@ -642,6 +642,11 @@ bool Effect::blocksDirectScanout() const
     return true;
 }
 
+bool Effect::transformsWindows() const
+{
+    return true;
+}
+
 //****************************************
 // EffectFactory
 //****************************************
