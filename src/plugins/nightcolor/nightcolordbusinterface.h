@@ -35,7 +35,7 @@ class NightColorDBusInterface : public QObject, public QDBusContext
 
 public:
     explicit NightColorDBusInterface(NightColorManager *parent);
-    ~NightColorDBusInterface() override = default;
+    ~NightColorDBusInterface() override;
 
     bool isInhibited() const;
     bool isEnabled() const;

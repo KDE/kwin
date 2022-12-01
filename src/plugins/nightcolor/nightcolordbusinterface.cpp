@@ -174,6 +174,12 @@ NightColorDBusInterface::NightColorDBusInterface(NightColorManager *parent)
 
     new ColorCorrectAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/ColorCorrect"), this);
+    QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.NightColor"));
+}
+
+NightColorDBusInterface::~NightColorDBusInterface()
+{
+    QDBusConnection::sessionBus().unregisterService(QStringLiteral("org.kde.NightColor"));
 }
 
 bool NightColorDBusInterface::isInhibited() const
