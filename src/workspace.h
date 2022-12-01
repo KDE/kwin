@@ -78,6 +78,7 @@ class PlaceholderInputEventFilter;
 class PlaceholderOutput;
 class Placement;
 class OutputConfiguration;
+class TileManager;
 
 class KWIN_EXPORT Workspace : public QObject
 {
@@ -281,6 +282,11 @@ public:
     void stackScreenEdgesUnderOverrideRedirect();
 
     SessionManager *sessionManager() const;
+
+    /**
+     * @returns the TileManager associated to a given output
+     */
+    TileManager *tileManager(Output *output);
 
 public:
     QPoint cascadeOffset(const Window *c) const;
@@ -757,6 +763,7 @@ private:
 
     PlaceholderOutput *m_placeholderOutput = nullptr;
     std::unique_ptr<PlaceholderInputEventFilter> m_placeholderFilter;
+    std::map<Output *, std::unique_ptr<TileManager>> m_tileManagers;
 
 private:
     friend bool performTransiencyCheck();

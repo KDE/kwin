@@ -21,6 +21,7 @@
 namespace KWin
 {
 // forward declarations
+class TileManager;
 class Window;
 class Output;
 class VirtualDesktop;
@@ -245,6 +246,9 @@ public:
     void setCurrentVirtualDesktop(VirtualDesktop *desktop);
 
     Q_INVOKABLE int screenAt(const QPointF &pos) const;
+
+    Q_INVOKABLE KWin::TileManager *tilingForScreen(const QString &screenName) const;
+    Q_INVOKABLE KWin::TileManager *tilingForScreen(int screen) const;
 
     /**
      * Returns the geometry a Client can use with the specified option.

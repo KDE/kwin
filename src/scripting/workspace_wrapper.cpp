@@ -10,8 +10,10 @@
 
 #include "workspace_wrapper.h"
 #include "core/output.h"
+#include "core/outputbackend.h"
 #include "cursor.h"
 #include "outline.h"
+#include "tiles/tilemanager.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
 #include "x11window.h"
@@ -455,6 +457,24 @@ void WorkspaceWrapper::sendClientToScreen(Window *client, int screen)
     if (output) {
         workspace()->sendWindowToOutput(client, output);
     }
+}
+
+KWin::TileManager *WorkspaceWrapper::tilingForScreen(const QString &screenName) const
+{
+    Output *output = kwinApp()->outputBackend()->findOutput(screenName);
+    if (output) {
+        return workspace()->tileManager(output);
+    }
+    return nullptr;
+}
+
+KWin::TileManager *WorkspaceWrapper::tilingForScreen(int screen) const
+{
+    Output *output = workspace()->outputs().value(screen);
+    if (output) {
+        return workspace()->tileManager(output);
+    }
+    return nullptr;
 }
 
 QtScriptWorkspaceWrapper::QtScriptWorkspaceWrapper(QObject *parent)

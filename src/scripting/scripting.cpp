@@ -27,6 +27,7 @@
 #include "input.h"
 #include "options.h"
 #include "screenedge.h"
+#include "tiles/tilemanager.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
 #include "x11window.h"
@@ -703,6 +704,10 @@ void KWin::Scripting::init()
     qmlRegisterAnonymousType<KWin::VirtualDesktop>("org.kde.kwin", 3);
     qmlRegisterAnonymousType<KWin::X11Window>("org.kde.kwin", 3);
     qmlRegisterAnonymousType<QAbstractItemModel>("org.kde.kwin", 3);
+    qmlRegisterAnonymousType<KWin::TileManager>("org.kde.kwin", 3);
+    // TODO: call the qml types as the C++ types?
+    qmlRegisterUncreatableType<KWin::CustomTile>("org.kde.kwin", 3, 0, "CustomTile", QStringLiteral("Cannot create objects of type Tile"));
+    qmlRegisterUncreatableType<KWin::Tile>("org.kde.kwin", 3, 0, "Tile", QStringLiteral("Cannot create objects of type AbstractTile"));
 
     // TODO Plasma 6: Drop context properties.
     m_qmlEngine->rootContext()->setContextProperty(QStringLiteral("workspace"), m_workspaceWrapper);

@@ -60,6 +60,10 @@ target_sources(kwin PRIVATE
     cursordelegate_opengl.cpp
     cursordelegate_qpainter.cpp
     cursorsource.cpp
+    tiles/customtile.cpp
+    tiles/tile.cpp
+    tiles/tilemanager.cpp
+    tiles/quicktile.cpp
     dbusinterface.cpp
     debug_console.cpp
     decorationitem.cpp
@@ -128,6 +132,7 @@ target_sources(kwin PRIVATE
     scripting/scripting.cpp
     scripting/scripting_logging.cpp
     scripting/scriptingutils.cpp
+    scripting/tilemodel.cpp
     scripting/v2/clientmodel.cpp
     scripting/v3/clientmodel.cpp
     scripting/v3/virtualdesktopmodel.cpp

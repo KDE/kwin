@@ -1,0 +1,11 @@
+{
+    "KPlugin": {
+        "Category": "Window Management",
+        "Description": "Editor for the tiling areas",
+        "EnabledByDefault": true,
+        "Id": "tileseditor",
+        "License": "GPL",
+        "Name": "Tiling Editor"
+    },
+    "X-KDE-ConfigModule": "kwin_tileseditor_config"
+}

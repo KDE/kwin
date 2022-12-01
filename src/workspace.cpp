@@ -40,6 +40,7 @@
 #include "screenedge.h"
 #include "scripting/scripting.h"
 #include "syncalarmx11filter.h"
+#include "tiles/tilemanager.h"
 #include "x11window.h"
 #if KWIN_BUILD_TABBOX
 #include "tabbox.h"
@@ -49,6 +50,7 @@
 #include "placeholderinputeventfilter.h"
 #include "placeholderoutput.h"
 #include "placementtracker.h"
+#include "tiles/tilemanager.h"
 #include "unmanaged.h"
 #include "useractions.h"
 #include "utils/xcbutils.h"
@@ -502,6 +504,8 @@ Workspace::~Workspace()
     if (m_placeholderOutput) {
         m_placeholderOutput->unref();
     }
+    m_tileManagers.clear();
+
     for (Output *output : std::as_const(m_outputs)) {
         output->unref();
     }
@@ -1454,11 +1458,17 @@ void Workspace::updateOutputs()
     const auto added = outputsSet - oldOutputsSet;
     for (Output *output : added) {
         output->ref();
+        m_tileManagers[output] = std::make_unique<TileManager>(output);
         Q_EMIT outputAdded(output);
     }
 
     const auto removed = oldOutputsSet - outputsSet;
     for (Output *output : removed) {
+        auto it = m_tileManagers.find(output);
+        if (it != m_tileManagers.end()) {
+            m_tileManagers.erase(it);
+        }
+
         Q_EMIT outputRemoved(output);
         output->unref();
     }
@@ -2519,7 +2529,6 @@ QRectF Workspace::clientArea(clientAreaOption opt, const Window *window, const O
     } else {
         desktop = window->desktops().constLast();
     }
-
     return clientArea(opt, output, desktop);
 }
 
@@ -3133,6 +3142,12 @@ RuleBook *Workspace::rulebook() const
 ScreenEdges *Workspace::screenEdges() const
 {
     return m_screenEdges.get();
+}
+
+TileManager *Workspace::tileManager(Output *output)
+{
+    Q_ASSERT(m_tileManagers.contains(output));
+    return m_tileManagers.at(output).get();
 }
 
 #if KWIN_BUILD_TABBOX
