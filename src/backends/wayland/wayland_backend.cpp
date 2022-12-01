@@ -520,16 +520,6 @@ std::unique_ptr<QPainterBackend> WaylandBackend::createQPainterBackend()
     return std::make_unique<WaylandQPainterBackend>(this);
 }
 
-WaylandOutput *WaylandBackend::getOutputAt(const QPointF &globalPosition)
-{
-    const auto pos = globalPosition.toPoint();
-    auto checkPosition = [pos](WaylandOutput *output) {
-        return output->geometry().contains(pos);
-    };
-    auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(), checkPosition);
-    return it == m_outputs.constEnd() ? nullptr : *it;
-}
-
 WaylandOutput *WaylandBackend::findOutput(KWayland::Client::Surface *nativeSurface) const
 {
     for (WaylandOutput *output : m_outputs) {

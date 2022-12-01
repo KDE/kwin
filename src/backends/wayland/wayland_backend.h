@@ -205,7 +205,6 @@ public:
 
     QVector<CompositingType> supportedCompositors() const override;
 
-    WaylandOutput *getOutputAt(const QPointF &globalPosition);
     WaylandOutput *findOutput(KWayland::Client::Surface *nativeSurface) const;
     Outputs outputs() const override;
     QVector<WaylandOutput *> waylandOutputs() const
