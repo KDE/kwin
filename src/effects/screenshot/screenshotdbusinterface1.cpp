@@ -507,6 +507,11 @@ bool ScreenShotDBusInterface1::checkCall() const
         return false;
     }
 
+    static bool permissionCheckDisabled = qEnvironmentVariableIntValue("KWIN_SCREENSHOT_NO_PERMISSION_CHECKS") == 1;
+    if (permissionCheckDisabled) {
+        return true;
+    }
+
     const QDBusReply<uint> reply = connection().interface()->servicePid(message().service());
     if (reply.isValid()) {
         const uint pid = reply.value();
