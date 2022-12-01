@@ -97,3 +97,9 @@ Id=animation-speed-cleanup
 File=kwinrc
 Group=KDE
 RemoveKey=AnimationDurationFactor
+
+# Replace the cascaded placement policy by zero-cornered
+Id=replace-cascaded-zerocornered
+File=kwinrc
+Group=Windows
+Script=kwin-5.27-replace-cascaded-zerocornered.sh,sh

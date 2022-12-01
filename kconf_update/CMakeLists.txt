@@ -18,6 +18,8 @@ install(PROGRAMS kwin-5.23-remove-cubeslide.py
         DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
 install(PROGRAMS kwin-5.23-remove-xrender-backend.py
         DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
+install(PROGRAMS kwin-5.27-replace-cascaded-zerocornered.sh
+         DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
 
 install(FILES kwinrules.upd
         DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
