@@ -156,7 +156,6 @@ private:
     static QSizeF s_minimumSize;
     QuickTileMode m_quickTileMode = QuickTileFlag::None;
     qreal m_padding = 4.0;
-    bool m_canBeRemoved = true;
 };
 
 } // namespace KWin
