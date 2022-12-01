@@ -15,7 +15,7 @@
 #include "workspace.h"
 #include "x11window.h"
 
-#include <KWindowSystem>
+#include <KX11Extras>
 #include <QDebug>
 
 namespace KWin
@@ -51,7 +51,7 @@ QIcon Group::icon() const
         QIcon ic;
         NETWinInfo info(kwinApp()->x11Connection(), leader_wid, kwinApp()->x11RootWindow(), NET::WMIcon, NET::WM2IconPixmap);
         auto readIcon = [&ic, &info, this](int size, bool scale = true) {
-            const QPixmap pix = KWindowSystem::icon(leader_wid, size, size, scale, KWindowSystem::NETWM | KWindowSystem::WMHints, &info);
+            const QPixmap pix = KX11Extras::icon(leader_wid, size, size, scale, KX11Extras::NETWM | KX11Extras::WMHints, &info);
             if (!pix.isNull()) {
                 ic.addPixmap(pix);
             }

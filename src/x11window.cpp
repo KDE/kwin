@@ -38,7 +38,7 @@
 // KDE
 #include <KLocalizedString>
 #include <KStartupInfo>
-#include <KWindowSystem>
+#include <KX11Extras>
 // Qt
 #include <QApplication>
 #include <QDebug>
@@ -2283,7 +2283,7 @@ void X11Window::getIcons()
     }
     QIcon icon;
     auto readIcon = [this, &icon](int size, bool scale = true) {
-        const QPixmap pix = KWindowSystem::icon(window(), size, size, scale, KWindowSystem::NETWM | KWindowSystem::WMHints, info);
+        const QPixmap pix = KX11Extras::icon(window(), size, size, scale, KX11Extras::NETWM | KX11Extras::WMHints, info);
         if (!pix.isNull()) {
             icon.addPixmap(pix);
         }
@@ -2309,10 +2309,10 @@ void X11Window::getIcons()
     }
     if (icon.isNull()) {
         // And if nothing else, load icon from classhint or xapp icon
-        icon.addPixmap(KWindowSystem::icon(window(), 32, 32, true, KWindowSystem::ClassHint | KWindowSystem::XApp, info));
-        icon.addPixmap(KWindowSystem::icon(window(), 16, 16, true, KWindowSystem::ClassHint | KWindowSystem::XApp, info));
-        icon.addPixmap(KWindowSystem::icon(window(), 64, 64, false, KWindowSystem::ClassHint | KWindowSystem::XApp, info));
-        icon.addPixmap(KWindowSystem::icon(window(), 128, 128, false, KWindowSystem::ClassHint | KWindowSystem::XApp, info));
+        icon.addPixmap(KX11Extras::icon(window(), 32, 32, true, KX11Extras::ClassHint | KX11Extras::XApp, info));
+        icon.addPixmap(KX11Extras::icon(window(), 16, 16, true, KX11Extras::ClassHint | KX11Extras::XApp, info));
+        icon.addPixmap(KX11Extras::icon(window(), 64, 64, false, KX11Extras::ClassHint | KX11Extras::XApp, info));
+        icon.addPixmap(KX11Extras::icon(window(), 128, 128, false, KX11Extras::ClassHint | KX11Extras::XApp, info));
     }
     setIcon(icon);
 }
