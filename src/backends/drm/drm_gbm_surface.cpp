@@ -134,6 +134,7 @@ std::variant<std::shared_ptr<GbmSurface>, GbmSurface::Error> GbmSurface::createS
     EGLSurface eglSurface = eglCreatePlatformWindowSurfaceEXT(backend->eglDisplay(), config, surface, nullptr);
     if (eglSurface == EGL_NO_SURFACE) {
         qCCritical(KWIN_DRM) << "Creating EGL surface failed!" << getEglErrorString();
+        gbm_surface_destroy(surface);
         return Error::Unknown;
     }
     return std::make_shared<GbmSurface>(backend, size, format, QVector<uint64_t>{}, flags, surface, eglSurface);
@@ -153,6 +154,7 @@ std::variant<std::shared_ptr<GbmSurface>, GbmSurface::Error> GbmSurface::createS
     EGLSurface eglSurface = eglCreatePlatformWindowSurfaceEXT(backend->eglDisplay(), config, surface, nullptr);
     if (eglSurface == EGL_NO_SURFACE) {
         qCCritical(KWIN_DRM) << "Creating EGL surface failed!" << getEglErrorString();
+        gbm_surface_destroy(surface);
         return Error::Unknown;
     }
     return std::make_shared<GbmSurface>(backend, size, format, modifiers, 0, surface, eglSurface);
