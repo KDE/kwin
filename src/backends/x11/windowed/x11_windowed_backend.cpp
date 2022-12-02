@@ -176,42 +176,37 @@ X11WindowedBackend::~X11WindowedBackend()
 
 bool X11WindowedBackend::initialize()
 {
-    int screen = 0;
-    xcb_connection_t *c = nullptr;
-    Display *xDisplay = XOpenDisplay(m_options.display.toLatin1().constData());
-    if (xDisplay) {
-        c = XGetXCBConnection(xDisplay);
-        XSetEventQueueOwner(xDisplay, XCBOwnsEventQueue);
-        screen = XDefaultScreen(xDisplay);
-    }
-    if (c && !xcb_connection_has_error(c)) {
-        m_connection = c;
-        m_screenNumber = screen;
-        m_display = xDisplay;
-        for (xcb_screen_iterator_t it = xcb_setup_roots_iterator(xcb_get_setup(m_connection));
-             it.rem;
-             --screen, xcb_screen_next(&it)) {
-            if (screen == m_screenNumber) {
-                m_screen = it.data;
-            }
-        }
-        initXInput();
-        XRenderUtils::init(m_connection, m_screen->root);
-        createOutputs();
-        connect(kwinApp(), &Application::workspaceCreated, this, &X11WindowedBackend::startEventReading);
-        m_pointerDevice = std::make_unique<X11WindowedInputDevice>();
-        m_pointerDevice->setPointer(true);
-        m_keyboardDevice = std::make_unique<X11WindowedInputDevice>();
-        m_keyboardDevice->setKeyboard(true);
-        if (m_hasXInput) {
-            m_touchDevice = std::make_unique<X11WindowedInputDevice>();
-            m_touchDevice->setTouch(true);
-        }
-        Q_EMIT outputsQueried();
-        return true;
-    } else {
+    m_display = XOpenDisplay(m_options.display.toLatin1().constData());
+    if (!m_display) {
         return false;
     }
+
+    m_connection = XGetXCBConnection(m_display);
+    m_screenNumber = XDefaultScreen(m_display);
+    XSetEventQueueOwner(m_display, XCBOwnsEventQueue);
+
+    int screen = m_screenNumber;
+    for (xcb_screen_iterator_t it = xcb_setup_roots_iterator(xcb_get_setup(m_connection));
+            it.rem;
+            --screen, xcb_screen_next(&it)) {
+        if (screen == m_screenNumber) {
+            m_screen = it.data;
+        }
+    }
+    initXInput();
+    XRenderUtils::init(m_connection, m_screen->root);
+    createOutputs();
+    connect(kwinApp(), &Application::workspaceCreated, this, &X11WindowedBackend::startEventReading);
+    m_pointerDevice = std::make_unique<X11WindowedInputDevice>();
+    m_pointerDevice->setPointer(true);
+    m_keyboardDevice = std::make_unique<X11WindowedInputDevice>();
+    m_keyboardDevice->setKeyboard(true);
+    if (m_hasXInput) {
+        m_touchDevice = std::make_unique<X11WindowedInputDevice>();
+        m_touchDevice->setTouch(true);
+    }
+    Q_EMIT outputsQueried();
+    return true;
 }
 
 void X11WindowedBackend::initXInput()
