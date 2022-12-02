@@ -395,6 +395,10 @@ bool BlurEffect::enabledByDefault()
     if (gl->isPanfrost() && gl->chipClass() <= MaliT8XX) {
         return false;
     }
+    // The blur effect works, but is painfully slow (FPS < 5) on Mali and VideoCore
+    if (gl->isLima() || gl->isVideoCore4() || gl->isVideoCore3D()) {
+        return false;
+    }
     if (gl->isSoftwareEmulation()) {
         return false;
     }

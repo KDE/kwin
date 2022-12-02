@@ -520,17 +520,13 @@ static ChipClass detectQualcommClass(const QByteArray &chipClass)
     if (ok) {
         if (value >= 100 && value < 200) {
             return Adreno1XX;
-        }
-        if (value >= 200 && value < 300) {
+        } else if (value >= 200 && value < 300) {
             return Adreno2XX;
-        }
-        if (value >= 300 && value < 400) {
+        } else if (value >= 300 && value < 400) {
             return Adreno3XX;
-        }
-        if (value >= 400 && value < 500) {
+        } else if (value >= 400 && value < 500) {
             return Adreno4XX;
-        }
-        if (value >= 500 && value < 600) {
+        } else if (value >= 500 && value < 600) {
             return Adreno5XX;
         }
     }
@@ -539,20 +535,51 @@ static ChipClass detectQualcommClass(const QByteArray &chipClass)
 
 static ChipClass detectPanfrostClass(const QByteArray &chipClass)
 {
-
+// Keep the list of supported Mali chipset up to date with https://docs.mesa3d.org/drivers/panfrost.html
     if (chipClass.contains("T720") || chipClass.contains("T760")) {
         return MaliT7XX;
     }
 
-    if (chipClass.contains("T820") || chipClass.contains("T860")) {
+    if (chipClass.contains("T820") || chipClass.contains("T830") || chipClass.contains("T860") || chipClass.contains("T880")) {
         return MaliT8XX;
     }
 
-    if (chipClass.contains("G31") || chipClass.contains("G52") || chipClass.contains("G72")) {
+    if (chipClass.contains("G31") || chipClass.contains("G51") || chipClass.contains("G52") || chipClass.contains("G57") || chipClass.contains("G72") || chipClass.contains("G76")) {
         return MaliGXX;
     }
 
     return UnknownPanfrost;
+}
+
+static ChipClass detectLimaClass(const QByteArray &chipClass)
+{
+    if (chipClass.contains("400")) {
+        return Mali400;
+    } else if (chipClass.contains("450")) {
+        return Mali450;
+    } else if (chipClass.contains("470")) {
+        return Mali470;
+    }
+
+    return UnknownLima;
+}
+
+static ChipClass detectVC4Class(const QByteArray &chipClass)
+{
+    if (chipClass.contains("2.1")) {
+        return VC4_2_1;
+    }
+
+    return UnknownVideoCore4;
+}
+
+static ChipClass detectV3DClass(const QByteArray &chipClass)
+{
+    if (chipClass.contains("4.2")) {
+        return V3D_4_2;
+    }
+
+    return UnknownVideoCore3D;
 }
 
 QString GLPlatform::versionToString(qint64 version)
@@ -618,6 +645,12 @@ QByteArray GLPlatform::driverToString8(Driver driver)
         return QByteArrayLiteral("Virgl (virtio-gpu, Qemu/KVM guest)");
     case Driver_Panfrost:
         return QByteArrayLiteral("Panfrost");
+    case Driver_Lima:
+        return QByteArrayLiteral("Mali (Lima)");
+    case Driver_VC4:
+        return QByteArrayLiteral("VideoCore IV");
+    case Driver_V3D:
+        return QByteArrayLiteral("VideoCore 3D");
 
     default:
         return QByteArrayLiteral("Unknown");
@@ -725,12 +758,24 @@ QByteArray GLPlatform::chipClassToString8(ChipClass chipClass)
     case Adreno5XX:
         return QByteArrayLiteral("Adreno 5xx series");
 
+    case Mali400:
+        return QByteArrayLiteral("Mali 400 series");
+    case Mali450:
+        return QByteArrayLiteral("Mali 450 series");
+    case Mali470:
+        return QByteArrayLiteral("Mali 470 series");
+
     case MaliT7XX:
         return QByteArrayLiteral("Mali T7xx series");
     case MaliT8XX:
         return QByteArrayLiteral("Mali T8xx series");
     case MaliGXX:
         return QByteArrayLiteral("Mali Gxx series");
+
+    case VC4_2_1:
+        return QByteArrayLiteral("VideoCore IV");
+    case V3D_4_2:
+        return QByteArrayLiteral("VideoCore 3D");
 
     default:
         return QByteArrayLiteral("Unknown");
@@ -921,6 +966,21 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         m_chipClass = detectPanfrostClass(m_renderer);
     }
 
+    else if (m_renderer.contains("Mali")) {
+        m_driver = Driver_Lima;
+        m_chipClass = detectLimaClass(m_renderer);
+    }
+
+    else if (m_renderer.startsWith("VC4 ")) {
+        m_driver = Driver_VC4;
+        m_chipClass = detectVC4Class(m_renderer);
+    }
+
+    else if(m_renderer.startsWith("V3D ")) {
+        m_driver = Driver_V3D;
+        m_chipClass = detectV3DClass(m_renderer);
+    }
+
     else if (m_renderer == "Software Rasterizer") {
         m_driver = Driver_Swrast;
     }
@@ -1074,6 +1134,22 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
 
     if (isPanfrost()) {
         m_recommendedCompositor = OpenGLCompositing;
+    }
+
+    if (isLima()) {
+        m_recommendedCompositor = OpenGLCompositing;
+        // GLSL works but causes dramatic FPS drop on this GPU
+        m_supportsGLSL = false;
+    }
+
+    if (isVideoCore4()) {
+        // OpenGL works, but is much slower than QPainter
+        m_recommendedCompositor = QPainterCompositing;
+    }
+
+    if (isVideoCore3D()) {
+        // OpenGL works, but is much slower than QPainter
+        m_recommendedCompositor = QPainterCompositing;
     }
 
     if (isMesaDriver() && platformInterface == EglPlatformInterface) {
@@ -1308,6 +1384,21 @@ bool GLPlatform::isAdreno() const
 bool GLPlatform::isPanfrost() const
 {
     return m_chipClass >= MaliT7XX && m_chipClass <= UnknownPanfrost;
+}
+
+bool GLPlatform::isLima() const
+{
+    return m_chipClass >= Mali400 && m_chipClass <= UnknownLima;
+}
+
+bool GLPlatform::isVideoCore4() const
+{
+    return m_chipClass >= VC4_2_1 && m_chipClass <= UnknownVideoCore4;
+}
+
+bool GLPlatform::isVideoCore3D() const
+{
+    return m_chipClass >= V3D_4_2 && m_chipClass <= UnknownVideoCore3D;
 }
 
 const QByteArray &GLPlatform::glRendererString() const

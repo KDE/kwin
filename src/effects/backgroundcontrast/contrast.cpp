@@ -265,6 +265,9 @@ bool ContrastEffect::enabledByDefault()
     if (gl->isPanfrost() && gl->chipClass() <= MaliT8XX) {
         return false;
     }
+    if (gl->isLima() || gl->isVideoCore4() || gl->isVideoCore3D()) {
+        return false;
+    }
     if (gl->isSoftwareEmulation()) {
         return false;
     }

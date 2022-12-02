@@ -99,6 +99,9 @@ enum Driver {
     Driver_RadeonSI,
     Driver_Virgl,
     Driver_Panfrost,
+    Driver_Lima,
+    Driver_VC4,
+    Driver_V3D,
     Driver_Unknown,
 };
 
@@ -168,6 +171,21 @@ enum ChipClass {
     MaliT8XX,               // GLES3.0
     MaliGXX,                // GLES3.0
     UnknownPanfrost = 4999,
+
+    // Lima Mali
+    // from https://docs.mesa3d.org/drivers/lima.html
+    Mali400       = 5000,
+    Mali450,
+    Mali470,
+    UnknownLima = 5999,
+
+    // Broadcom VideoCore IV (e.g. Raspberry Pi 0 to 3), GLES 2.0/2.1 with caveats
+    VC4_2_1       = 6000, // Found in Raspberry Pi 3B+
+    UnknownVideoCore4 = 6999,
+
+    // Broadcom VideoCore 3D (e.g. Raspberry Pi 4, Raspberry Pi 400)
+    V3D_4_2       = 7000, // Found in Raspberry Pi 400
+    UnknownVideoCore3D = 7999,
 
     UnknownChipClass = 99999,
 };
@@ -318,6 +336,24 @@ public:
      * @since 5.21.5
      **/
     bool isPanfrost() const;
+
+     /**
+     * @returns @c true if the GPU is a Mali GPU supported by the Lima driver (Mali 400, 450)
+     * @since 5.27.1
+     **/
+    bool isLima() const;
+
+    /**
+     * @returns @c true if the GPU is a Broadcom VideoCore IV (e.g. Raspberry Pi 0 to 3)
+     * @since 5.27.1
+     **/
+    bool isVideoCore4() const;
+
+    /**
+     * @returns @c true if the GPU is a Broadcom VideoCore 3D (e.g. Raspberry Pi 4, 400)
+     * @since 5.27.1
+     **/
+    bool isVideoCore3D() const;
 
     /**
      * @returns the GL_VERSION string as provided by the driver.
