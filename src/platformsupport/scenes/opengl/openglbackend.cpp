@@ -101,11 +101,11 @@ bool OpenGLBackend::checkGraphicsReset()
     QElapsedTimer timer;
     timer.start();
 
-    // Wait until the reset is completed or max 10 seconds
-    while (timer.elapsed() < 10000 && KWin::glGetGraphicsResetStatus() != GL_NO_ERROR) {
+    // Wait until the reset is completed or max one second
+    while (timer.elapsed() < 1000 && KWin::glGetGraphicsResetStatus() != GL_NO_ERROR) {
         usleep(50);
     }
-    if (timer.elapsed() >= 10000) {
+    if (timer.elapsed() >= 1000) {
         qCWarning(KWIN_OPENGL) << "Waiting for glGetGraphicsResetStatus to return GL_NO_ERROR timed out!";
     }
 
