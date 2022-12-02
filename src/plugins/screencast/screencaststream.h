@@ -74,6 +74,7 @@ private:
     static void onStreamStateChanged(void *data, pw_stream_state old, pw_stream_state state, const char *error_message);
     static void onStreamAddBuffer(void *data, pw_buffer *buffer);
     static void onStreamRemoveBuffer(void *data, pw_buffer *buffer);
+    static void onStreamRenegotiateFormat(void *data, uint64_t);
 
     bool createStream();
     QVector<const spa_pod *> buildFormats(bool fixate, char buffer[2048]);
@@ -92,6 +93,7 @@ private:
     std::shared_ptr<PipeWireCore> pwCore;
     std::unique_ptr<ScreenCastSource> m_source;
     struct pw_stream *pwStream = nullptr;
+    struct spa_source *pwRenegotiate = nullptr;
     spa_hook streamListener;
     pw_stream_events pwStreamEvents = {};
 
@@ -126,6 +128,7 @@ private:
     std::optional<std::chrono::nanoseconds> m_start;
     quint64 m_sequential = 0;
     bool m_hasDmaBuf = false;
+    bool m_waitForNewBuffers = false;
 };
 
 } // namespace KWin

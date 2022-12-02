@@ -240,6 +240,8 @@ void ScreenCastStream::onStreamAddBuffer(void *data, pw_buffer *buffer)
         }
 #endif
     }
+
+    stream->m_waitForNewBuffers = false;
 }
 
 void ScreenCastStream::onStreamRemoveBuffer(void *data, pw_buffer *buffer)
@@ -257,6 +259,15 @@ void ScreenCastStream::onStreamRemoveBuffer(void *data, pw_buffer *buffer)
             close(buffer->buffer->datas[i].fd);
         }
     }
+}
+
+void ScreenCastStream::onStreamRenegotiateFormat(void *data, uint64_t)
+{
+    ScreenCastStream *stream = static_cast<ScreenCastStream *>(data);
+
+    char buffer[2048];
+    auto params = stream->buildFormats(stream->m_dmabufParams.has_value(), buffer);
+    pw_stream_update_params(stream->pwStream, params.data(), params.count());
 }
 
 ScreenCastStream::ScreenCastStream(ScreenCastSource *source, QObject *parent)
@@ -296,6 +307,8 @@ bool ScreenCastStream::init()
         m_error = i18n("Failed to create PipeWire stream");
         return false;
     }
+
+    pwRenegotiate = pw_loop_add_event(pwCore.get()->pwMainLoop, onStreamRenegotiateFormat, this);
 
     return true;
 }
@@ -373,10 +386,17 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         return;
     }
 
+    if (m_waitForNewBuffers) {
+        qCWarning(KWIN_SCREENCAST) << "Waiting for new buffers to be created";
+        return;
+    }
+
     const auto size = m_source->textureSize();
     if (size != m_resolution) {
         m_resolution = size;
-        newStreamParams();
+        m_waitForNewBuffers = true;
+        m_dmabufParams = std::nullopt;
+        pw_loop_signal_event(pwCore.get()->pwMainLoop, pwRenegotiate);
         return;
     }
 
