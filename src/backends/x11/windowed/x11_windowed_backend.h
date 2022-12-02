@@ -142,7 +142,6 @@ Q_SIGNALS:
 
 private:
     void createOutputs();
-    void startEventReading();
     void grabKeyboard(xcb_timestamp_t time);
     void updateWindowTitle();
     void handleEvent(xcb_generic_event_t *event);

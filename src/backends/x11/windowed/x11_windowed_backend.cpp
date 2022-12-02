@@ -196,7 +196,7 @@ bool X11WindowedBackend::initialize()
     initXInput();
     XRenderUtils::init(m_connection, m_screen->root);
     createOutputs();
-    connect(kwinApp(), &Application::workspaceCreated, this, &X11WindowedBackend::startEventReading);
+
     m_pointerDevice = std::make_unique<X11WindowedInputDevice>();
     m_pointerDevice->setPointer(true);
     m_keyboardDevice = std::make_unique<X11WindowedInputDevice>();
@@ -205,6 +205,19 @@ bool X11WindowedBackend::initialize()
         m_touchDevice = std::make_unique<X11WindowedInputDevice>();
         m_touchDevice->setTouch(true);
     }
+
+    m_eventNotifier = std::make_unique<QSocketNotifier>(xcb_get_file_descriptor(m_connection), QSocketNotifier::Read);
+    auto processXcbEvents = [this] {
+        while (auto event = xcb_poll_for_event(m_connection)) {
+            handleEvent(event);
+            free(event);
+        }
+        xcb_flush(m_connection);
+    };
+    connect(m_eventNotifier.get(), &QSocketNotifier::activated, this, processXcbEvents);
+    connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, processXcbEvents);
+    connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::awake, this, processXcbEvents);
+
     Q_EMIT outputsQueried();
     return true;
 }
@@ -280,21 +293,6 @@ void X11WindowedBackend::createOutputs()
     updateWindowTitle();
 
     xcb_flush(m_connection);
-}
-
-void X11WindowedBackend::startEventReading()
-{
-    m_eventNotifier = std::make_unique<QSocketNotifier>(xcb_get_file_descriptor(m_connection), QSocketNotifier::Read);
-    auto processXcbEvents = [this] {
-        while (auto event = xcb_poll_for_event(m_connection)) {
-            handleEvent(event);
-            free(event);
-        }
-        xcb_flush(m_connection);
-    };
-    connect(m_eventNotifier.get(), &QSocketNotifier::activated, this, processXcbEvents);
-    connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, processXcbEvents);
-    connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::awake, this, processXcbEvents);
 }
 
 #if HAVE_X11_XINPUT
