@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-24 00:47+0000\n"
+"POT-Creation-Date: 2022-12-02 00:48+0000\n"
 "PO-Revision-Date: 2022-07-02 12:42+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -2785,13 +2785,13 @@ msgstr "Eine Arbeitsfläche nach unten"
 msgid "Switch to Desktop %1"
 msgstr "Auf Arbeitsfläche %1 umschalten"
 
-#: window.cpp:3433
+#: window.cpp:3457
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Reagiert nicht)"
 
-#: workspace.cpp:1672
+#: workspace.cpp:1682
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

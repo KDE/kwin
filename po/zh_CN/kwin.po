@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-24 00:47+0000\n"
-"PO-Revision-Date: 2022-11-19 14:48\n"
+"POT-Creation-Date: 2022-12-02 00:48+0000\n"
+"PO-Revision-Date: 2022-12-01 06:52\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -2710,13 +2710,13 @@ msgstr "切换到下面的桌面"
 msgid "Switch to Desktop %1"
 msgstr "切换到桌面 %1"
 
-#: window.cpp:3433
+#: window.cpp:3457
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(未响应)"
 
-#: workspace.cpp:1672
+#: workspace.cpp:1682
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

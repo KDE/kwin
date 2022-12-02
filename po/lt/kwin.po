@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-24 00:47+0000\n"
+"POT-Creation-Date: 2022-12-02 00:48+0000\n"
 "PO-Revision-Date: 2020-03-18 15:37+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -2798,13 +2798,13 @@ msgstr "Perjungti vienu darbalaukiu į apačią"
 msgid "Switch to Desktop %1"
 msgstr "Perjungti į darbalaukį %1"
 
-#: window.cpp:3433
+#: window.cpp:3457
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Neatsako)"
 
-#: workspace.cpp:1672
+#: workspace.cpp:1682
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
