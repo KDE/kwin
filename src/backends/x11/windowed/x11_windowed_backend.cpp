@@ -17,7 +17,6 @@
 #include "x11_windowed_logging.h"
 #include "x11_windowed_output.h"
 #include "x11_windowed_qpainter_backend.h"
-#include <cursor.h>
 #include <pointer_input.h>
 // KDE
 #include <KLocalizedString>
@@ -171,9 +170,6 @@ X11WindowedBackend::~X11WindowedBackend()
         if (m_keySymbols) {
             xcb_key_symbols_free(m_keySymbols);
         }
-        if (m_cursor) {
-            xcb_free_cursor(m_connection, m_cursor);
-        }
         xcb_disconnect(m_connection);
     }
 }
@@ -203,10 +199,6 @@ bool X11WindowedBackend::initialize()
         XRenderUtils::init(m_connection, m_screen->root);
         createOutputs();
         connect(kwinApp(), &Application::workspaceCreated, this, &X11WindowedBackend::startEventReading);
-        connect(Cursors::self(), &Cursors::currentCursorChanged, this, [this]() {
-            KWin::Cursor *c = KWin::Cursors::self()->currentCursor();
-            createCursor(c->image(), c->hotspot());
-        });
         m_pointerDevice = std::make_unique<X11WindowedInputDevice>();
         m_pointerDevice->setPointer(true);
         m_keyboardDevice = std::make_unique<X11WindowedInputDevice>();
@@ -571,48 +563,6 @@ void X11WindowedBackend::updateSize(xcb_configure_notify_event_t *event)
         output->resize(s);
     }
     Q_EMIT sizeChanged();
-}
-
-void X11WindowedBackend::createCursor(const QImage &srcImage, const QPoint &hotspot)
-{
-    xcb_pixmap_t pix = XCB_PIXMAP_NONE;
-    xcb_gcontext_t gc = XCB_NONE;
-    xcb_cursor_t cid = XCB_CURSOR_NONE;
-
-    if (!srcImage.isNull()) {
-        pix = xcb_generate_id(m_connection);
-        gc = xcb_generate_id(m_connection);
-        cid = xcb_generate_id(m_connection);
-
-        // right now on X we only have one scale between all screens, and we know we will have at least one screen
-        const qreal outputScale = 1;
-        const QSize targetSize = srcImage.size() * outputScale / srcImage.devicePixelRatio();
-        const QImage img = srcImage.scaled(targetSize, Qt::KeepAspectRatio);
-
-        xcb_create_pixmap(m_connection, 32, pix, m_screen->root, img.width(), img.height());
-        xcb_create_gc(m_connection, gc, pix, 0, nullptr);
-
-        xcb_put_image(m_connection, XCB_IMAGE_FORMAT_Z_PIXMAP, pix, gc, img.width(), img.height(), 0, 0, 0, 32, img.sizeInBytes(), img.constBits());
-
-        XRenderPicture pic(pix, 32);
-        xcb_render_create_cursor(m_connection, cid, pic, qRound(hotspot.x() * outputScale), qRound(hotspot.y() * outputScale));
-    }
-
-    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-        xcb_change_window_attributes(m_connection, (*it)->window(), XCB_CW_CURSOR, &cid);
-    }
-
-    if (pix) {
-        xcb_free_pixmap(m_connection, pix);
-    }
-    if (gc) {
-        xcb_free_gc(m_connection, gc);
-    }
-    if (m_cursor) {
-        xcb_free_cursor(m_connection, m_cursor);
-    }
-    m_cursor = cid;
-    xcb_flush(m_connection);
 }
 
 xcb_window_t X11WindowedBackend::rootWindow() const

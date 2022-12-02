@@ -150,7 +150,6 @@ private:
     void handleButtonPress(xcb_button_press_event_t *event);
     void handleExpose(xcb_expose_event_t *event);
     void updateSize(xcb_configure_notify_event_t *event);
-    void createCursor(const QImage &img, const QPoint &hotspot);
     void initXInput();
     X11WindowedOutput *findOutput(xcb_window_t window) const;
 
@@ -166,7 +165,6 @@ private:
 
     xcb_atom_t m_protocols = XCB_ATOM_NONE;
     xcb_atom_t m_deleteWindowProtocol = XCB_ATOM_NONE;
-    xcb_cursor_t m_cursor = XCB_CURSOR_NONE;
     Display *m_display = nullptr;
     bool m_keyboardGrabbed = false;
     std::unique_ptr<QSocketNotifier> m_eventNotifier;

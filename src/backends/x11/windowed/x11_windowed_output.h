@@ -24,6 +24,20 @@ namespace KWin
 
 class SoftwareVsyncMonitor;
 class X11WindowedBackend;
+class X11WindowedOutput;
+
+class X11WindowedCursor
+{
+public:
+    explicit X11WindowedCursor(X11WindowedOutput *output);
+    ~X11WindowedCursor();
+
+    void update(const QImage &image, const QPoint &hotspot);
+
+private:
+    X11WindowedOutput *m_output;
+    xcb_cursor_t m_handle = XCB_CURSOR_NONE;
+};
 
 /**
  * Wayland outputs in a nested X11 setup
@@ -41,6 +55,10 @@ public:
     void init(const QSize &pixelSize, qreal scale);
     void resize(const QSize &pixelSize);
 
+    X11WindowedBackend *backend() const
+    {
+        return m_backend;
+    }
     xcb_window_t window() const
     {
         return m_window;
@@ -76,6 +94,7 @@ private:
     std::unique_ptr<NETWinInfo> m_winInfo;
     std::unique_ptr<RenderLoop> m_renderLoop;
     std::unique_ptr<SoftwareVsyncMonitor> m_vsyncMonitor;
+    std::unique_ptr<X11WindowedCursor> m_cursor;
     QPoint m_hostPosition;
     QRegion m_exposedArea;
 

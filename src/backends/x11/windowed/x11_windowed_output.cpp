@@ -7,10 +7,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "x11_windowed_output.h"
+#include "../common/kwinxrenderutils.h"
 
 #include <config-kwin.h>
 
 #include "core/renderloop_p.h"
+#include "cursor.h"
 #include "softwarevsyncmonitor.h"
 #include "x11_windowed_backend.h"
 
@@ -24,6 +26,63 @@
 
 namespace KWin
 {
+
+X11WindowedCursor::X11WindowedCursor(X11WindowedOutput *output)
+    : m_output(output)
+{
+}
+
+X11WindowedCursor::~X11WindowedCursor()
+{
+    if (m_handle != XCB_CURSOR_NONE) {
+        xcb_free_cursor(m_output->backend()->connection(), m_handle);
+        m_handle = XCB_CURSOR_NONE;
+    }
+}
+
+void X11WindowedCursor::update(const QImage &image, const QPoint &hotspot)
+{
+    X11WindowedBackend *backend = m_output->backend();
+
+    xcb_connection_t *connection = backend->connection();
+    xcb_pixmap_t pix = XCB_PIXMAP_NONE;
+    xcb_gcontext_t gc = XCB_NONE;
+    xcb_cursor_t cid = XCB_CURSOR_NONE;
+
+    if (!image.isNull()) {
+        pix = xcb_generate_id(connection);
+        gc = xcb_generate_id(connection);
+        cid = xcb_generate_id(connection);
+
+        // right now on X we only have one scale between all screens, and we know we will have at least one screen
+        const qreal outputScale = 1;
+        const QSize targetSize = image.size() * outputScale / image.devicePixelRatio();
+        const QImage img = image.scaled(targetSize, Qt::KeepAspectRatio);
+
+        xcb_create_pixmap(connection, 32, pix, backend->screen()->root, img.width(), img.height());
+        xcb_create_gc(connection, gc, pix, 0, nullptr);
+
+        xcb_put_image(connection, XCB_IMAGE_FORMAT_Z_PIXMAP, pix, gc, img.width(), img.height(), 0, 0, 0, 32, img.sizeInBytes(), img.constBits());
+
+        XRenderPicture pic(pix, 32);
+        xcb_render_create_cursor(connection, cid, pic, qRound(hotspot.x() * outputScale), qRound(hotspot.y() * outputScale));
+    }
+
+    xcb_change_window_attributes(connection, m_output->window(), XCB_CW_CURSOR, &cid);
+
+    if (pix) {
+        xcb_free_pixmap(connection, pix);
+    }
+    if (gc) {
+        xcb_free_gc(connection, gc);
+    }
+
+    if (m_handle) {
+        xcb_free_cursor(connection, m_handle);
+    }
+    m_handle = cid;
+    xcb_flush(connection);
+}
 
 X11WindowedOutput::X11WindowedOutput(X11WindowedBackend *backend)
     : Output(backend)
@@ -137,6 +196,12 @@ void X11WindowedOutput::init(const QSize &pixelSize, qreal scale)
     addIcon(QSize(16, 16));
     addIcon(QSize(32, 32));
     addIcon(QSize(48, 48));
+
+    m_cursor = std::make_unique<X11WindowedCursor>(this);
+    connect(Cursors::self(), &Cursors::currentCursorChanged, this, [this]() {
+        KWin::Cursor *c = KWin::Cursors::self()->currentCursor();
+        m_cursor->update(c->image(), c->hotspot());
+    });
 
     xcb_map_window(m_backend->connection(), m_window);
 }
