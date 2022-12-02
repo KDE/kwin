@@ -38,6 +38,7 @@
         "Icon": "preferences-desktop-gestures-touch",
         "Name": "Touchscreen Gestures",
         "Name[ar]": "إيماءات شاشة اللمس",
+        "Name[bg]": "Жестове за сензорен екран",
         "Name[ca@valencia]": "Gestos de pantalla tàctil",
         "Name[ca]": "Gestos de pantalla tàctil",
         "Name[es]": "Gestos de la pantalla táctil",
@@ -47,6 +48,7 @@
         "Name[nl]": "Veeggebaren voor aanraakscherm",
         "Name[pt]": "Gestos do Ecrã Táctil",
         "Name[sl]": "Geste po zaslonu z dotikom",
+        "Name[ta]": "தொடுதிரைக்கான சைகைகள்",
         "Name[tr]": "Dokunmatik Ekran Hareketleri",
         "Name[uk]": "Жести на сенсорній панелі",
         "Name[x-test]": "xxTouchscreen Gesturesxx"
