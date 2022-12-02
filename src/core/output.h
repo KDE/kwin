@@ -229,8 +229,6 @@ public:
     Q_ENUM(Transform)
     Transform transform() const;
 
-    virtual bool usesSoftwareCursor() const;
-
     void applyChanges(const OutputConfiguration &config);
 
     SubPixel subPixel() const;
@@ -261,6 +259,9 @@ public:
     Transform panelOrientation() const;
 
     virtual void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation);
+
+    virtual bool setCursor(const QImage &image, const QPoint &hotspot);
+    virtual bool moveCursor(const QPoint &position);
 
 Q_SIGNALS:
     /**

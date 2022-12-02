@@ -8,7 +8,6 @@
 */
 #include "wayland_output.h"
 #include "core/renderloop_p.h"
-#include "cursor.h"
 #include "wayland_backend.h"
 #include "wayland_display.h"
 #include "wayland_server.h"
@@ -60,7 +59,7 @@ void WaylandCursor::enable()
 {
     if (!m_enabled) {
         m_enabled = true;
-        update();
+        sync();
     }
 }
 
@@ -68,23 +67,29 @@ void WaylandCursor::disable()
 {
     if (m_enabled) {
         m_enabled = false;
-        update();
+        sync();
     }
 }
 
-void WaylandCursor::update()
+void WaylandCursor::update(KWayland::Client::Buffer::Ptr buffer, qreal scale, const QPoint &hotspot)
 {
-    const QImage image = Cursors::self()->currentCursor()->image();
-    if (!m_enabled || Cursors::self()->isCursorHidden() || image.isNull()) {
+    m_buffer = buffer;
+    m_scale = scale;
+    m_hotspot = hotspot;
+
+    sync();
+}
+
+void WaylandCursor::sync()
+{
+    if (!m_enabled) {
         m_surface->attachBuffer(KWayland::Client::Buffer::Ptr());
         m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
-        m_hotspot = QPoint();
     } else {
-        m_surface->attachBuffer(m_backend->display()->shmPool()->createBuffer(image));
-        m_surface->setScale(std::ceil(image.devicePixelRatio()));
-        m_surface->damageBuffer(image.rect());
+        m_surface->attachBuffer(m_buffer);
+        m_surface->setScale(std::ceil(m_scale));
+        m_surface->damageBuffer(QRect(0, 0, INT32_MAX, INT32_MAX));
         m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
-        m_hotspot = Cursors::self()->currentCursor()->hotspot();
     }
 
     if (m_pointer) {
@@ -128,10 +133,6 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
     connect(m_xdgShellSurface.get(), &XdgShellSurface::closeRequested, qApp, &QCoreApplication::quit);
     connect(this, &WaylandOutput::enabledChanged, this, &WaylandOutput::updateWindowTitle);
     connect(this, &WaylandOutput::dpmsModeChanged, this, &WaylandOutput::updateWindowTitle);
-
-    connect(Cursors::self(), &Cursors::currentCursorChanged, this, [this]() {
-        m_cursor->update();
-    });
 }
 
 WaylandOutput::~WaylandOutput()
@@ -161,9 +162,20 @@ RenderLoop *WaylandOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
-bool WaylandOutput::usesSoftwareCursor() const
+bool WaylandOutput::setCursor(const QImage &image, const QPoint &hotspot)
 {
-    return m_hasPointerLock;
+    KWayland::Client::Buffer::Ptr buffer;
+    if (!image.isNull()) {
+        buffer = m_backend->display()->shmPool()->createBuffer(image);
+    }
+    m_cursor->update(buffer, image.devicePixelRatio(), hotspot);
+    return !m_hasPointerLock;
+}
+
+bool WaylandOutput::moveCursor(const QPoint &position)
+{
+    // The cursor position is controlled by the host compositor.
+    return !m_hasPointerLock;
 }
 
 void WaylandOutput::init(const QSize &pixelSize, qreal scale)

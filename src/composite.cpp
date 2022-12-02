@@ -430,15 +430,30 @@ void Compositor::addOutput(Output *output)
 
     auto updateCursorLayer = [output, cursorLayer]() {
         const Cursor *cursor = Cursors::self()->currentCursor();
-        cursorLayer->setVisible(cursor->isOnOutput(output) && output->usesSoftwareCursor());
-        cursorLayer->setGeometry(output->mapFromGlobal(cursor->geometry()));
+        const QRect layerRect = output->mapFromGlobal(cursor->geometry());
+        bool usesHardwareCursor = false;
+        if (!Cursors::self()->isCursorHidden()) {
+            usesHardwareCursor = output->setCursor(cursor->image(), cursor->hotspot()) && output->moveCursor(layerRect.topLeft());
+        } else {
+            usesHardwareCursor = output->setCursor(QImage(), QPoint());
+        }
+        cursorLayer->setVisible(cursor->isOnOutput(output) && !usesHardwareCursor);
+        cursorLayer->setGeometry(layerRect);
+        cursorLayer->addRepaintFull();
+    };
+    auto moveCursorLayer = [output, cursorLayer]() {
+        const Cursor *cursor = Cursors::self()->currentCursor();
+        const QRect layerRect = output->mapFromGlobal(cursor->geometry());
+        const bool usesHardwareCursor = output->moveCursor(layerRect.topLeft());
+        cursorLayer->setVisible(cursor->isOnOutput(output) && !usesHardwareCursor);
+        cursorLayer->setGeometry(layerRect);
         cursorLayer->addRepaintFull();
     };
     updateCursorLayer();
     connect(output, &Output::geometryChanged, cursorLayer, updateCursorLayer);
     connect(Cursors::self(), &Cursors::currentCursorChanged, cursorLayer, updateCursorLayer);
     connect(Cursors::self(), &Cursors::hiddenChanged, cursorLayer, updateCursorLayer);
-    connect(Cursors::self(), &Cursors::positionChanged, cursorLayer, updateCursorLayer);
+    connect(Cursors::self(), &Cursors::positionChanged, cursorLayer, moveCursorLayer);
 
     addSuperLayer(workspaceLayer);
 }

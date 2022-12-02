@@ -144,11 +144,6 @@ std::chrono::milliseconds Output::dimAnimationTime()
     return std::chrono::milliseconds(KSharedConfig::openConfig()->group("Effect-Kscreen").readEntry("Duration", 250));
 }
 
-bool Output::usesSoftwareCursor() const
-{
-    return true;
-}
-
 QRect Output::mapFromGlobal(const QRect &rect) const
 {
     return rect.translated(-geometry().topLeft());
@@ -419,6 +414,16 @@ void Output::setContentType(ContentType contentType)
 Output::Transform Output::panelOrientation() const
 {
     return m_information.panelOrientation;
+}
+
+bool Output::setCursor(const QImage &image, const QPoint &hotspot)
+{
+    return false;
+}
+
+bool Output::moveCursor(const QPoint &position)
+{
+    return false;
 }
 
 } // namespace KWin

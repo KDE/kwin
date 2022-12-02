@@ -10,6 +10,7 @@
 
 #include "core/output.h"
 
+#include <KWayland/Client/buffer.h>
 #include <KWayland/Client/xdgshell.h>
 
 #include <QObject>
@@ -43,13 +44,17 @@ public:
 
     void enable();
     void disable();
-    void update();
+    void update(KWayland::Client::Buffer::Ptr buffer, qreal scale, const QPoint &hotspot);
 
 private:
+    void sync();
+
     WaylandBackend *const m_backend;
     KWayland::Client::Pointer *m_pointer = nullptr;
     std::unique_ptr<KWayland::Client::Surface> m_surface;
+    KWayland::Client::Buffer::Ptr m_buffer;
     QPoint m_hotspot;
+    qreal m_scale = 1;
     bool m_enabled = true;
 };
 
@@ -61,7 +66,8 @@ public:
     ~WaylandOutput() override;
 
     RenderLoop *renderLoop() const override;
-    bool usesSoftwareCursor() const override;
+    bool setCursor(const QImage &image, const QPoint &hotspot) override;
+    bool moveCursor(const QPoint &position) override;
 
     void init(const QSize &pixelSize, qreal scale);
 

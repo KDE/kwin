@@ -58,11 +58,6 @@ void X11Output::setGammaRampSize(int size)
     m_gammaRampSize = size;
 }
 
-bool X11Output::usesSoftwareCursor() const
-{
-    return false;
-}
-
 void X11Output::updateEnabled(bool enabled)
 {
     State next = m_state;

@@ -12,7 +12,6 @@
 #include <config-kwin.h>
 
 #include "core/renderloop_p.h"
-#include "cursor.h"
 #include "softwarevsyncmonitor.h"
 #include "x11_windowed_backend.h"
 
@@ -198,10 +197,6 @@ void X11WindowedOutput::init(const QSize &pixelSize, qreal scale)
     addIcon(QSize(48, 48));
 
     m_cursor = std::make_unique<X11WindowedCursor>(this);
-    connect(Cursors::self(), &Cursors::currentCursorChanged, this, [this]() {
-        KWin::Cursor *c = KWin::Cursors::self()->currentCursor();
-        m_cursor->update(c->image(), c->hotspot());
-    });
 
     xcb_map_window(m_backend->connection(), m_window);
 }
@@ -263,9 +258,16 @@ void X11WindowedOutput::vblank(std::chrono::nanoseconds timestamp)
     renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
 
-bool X11WindowedOutput::usesSoftwareCursor() const
+bool X11WindowedOutput::setCursor(const QImage &image, const QPoint &hotspot)
 {
-    return false;
+    m_cursor->update(image, hotspot);
+    return true;
+}
+
+bool X11WindowedOutput::moveCursor(const QPoint &position)
+{
+    // The cursor position is controlled by the host compositor.
+    return true;
 }
 
 void X11WindowedOutput::updateEnabled(bool enabled)
