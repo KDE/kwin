@@ -34,8 +34,6 @@ public:
 
     void updateEnabled(bool enabled);
 
-    bool usesSoftwareCursor() const override;
-
     RenderLoop *renderLoop() const override;
     void setRenderLoop(RenderLoop *loop);
 

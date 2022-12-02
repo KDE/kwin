@@ -12,7 +12,6 @@
 #include <errno.h>
 
 #include "core/session.h"
-#include "cursor.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
 #include "drm_buffer_gbm.h"

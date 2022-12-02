@@ -50,9 +50,8 @@ public:
     void updateModes();
     void updateDpmsMode(DpmsMode dpmsMode);
 
-    bool usesSoftwareCursor() const override;
-    void updateCursor();
-    void moveCursor();
+    bool setCursor(const QImage &image, const QPoint &hotspot) override;
+    bool moveCursor(const QPoint &position) override;
 
     DrmLease *lease() const;
     bool addLeaseObjects(QVector<uint32_t> &objectList);
@@ -75,10 +74,17 @@ private:
 
     bool m_setCursorSuccessful = false;
     bool m_moveCursorSuccessful = false;
-    bool m_cursorTextureDirty = true;
-    std::unique_ptr<GLTexture> m_cursorTexture;
     QTimer m_turnOffTimer;
     DrmLease *m_lease = nullptr;
+
+    struct {
+        QImage image;
+        QPoint hotspot;
+        QPoint position;
+
+        std::unique_ptr<GLTexture> texture;
+        qint64 cacheKey = 0;
+    } m_cursor;
 };
 
 }

@@ -770,9 +770,6 @@ void DrmGpu::recreateSurfaces()
     for (const auto &output : std::as_const(m_virtualOutputs)) {
         output->recreateSurface();
     }
-    for (const auto &output : std::as_const(m_drmOutputs)) {
-        output->updateCursor();
-    }
 }
 
 DrmLease::DrmLease(DrmGpu *gpu, FileDescriptor &&fd, uint32_t lesseeId, const QVector<DrmOutput *> &outputs)
