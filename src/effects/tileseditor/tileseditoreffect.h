@@ -25,6 +25,7 @@ public:
     int animationDuration() const;
     void setAnimationDuration(int duration);
 
+    int requestedEffectChainPosition() const override;
     void grabbedKeyboardEvent(QKeyEvent *keyEvent) override;
 
 public Q_SLOTS:

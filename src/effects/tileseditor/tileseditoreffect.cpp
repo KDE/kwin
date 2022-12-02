@@ -95,6 +95,11 @@ void TilesEditorEffect::setAnimationDuration(int duration)
     }
 }
 
+int TilesEditorEffect::requestedEffectChainPosition() const
+{
+    return 70;
+}
+
 void TilesEditorEffect::grabbedKeyboardEvent(QKeyEvent *keyEvent)
 {
     if (m_toggleShortcut.contains(keyEvent->key() | keyEvent->modifiers())) {
