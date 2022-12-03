@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-08-19 00:47+0000\n"
+"POT-Creation-Date: 2022-12-03 00:48+0000\n"
 "PO-Revision-Date: 2022-05-06 00:08+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -875,63 +875,61 @@ msgstr "최대화"
 
 #: rulesmodel.cpp:796
 #, kde-format
-msgid "Cascaded"
-msgstr "계단식 배열"
-
-#: rulesmodel.cpp:797
-#, kde-format
 msgid "Centered"
 msgstr "가운데"
 
-#: rulesmodel.cpp:798
+#: rulesmodel.cpp:797
 #, kde-format
 msgid "Random"
 msgstr "무작위"
 
-#: rulesmodel.cpp:799
+#: rulesmodel.cpp:798
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "왼쪽 위 꼭짓점에"
 
-#: rulesmodel.cpp:800
+#: rulesmodel.cpp:799
 #, kde-format
 msgid "Under Mouse"
 msgstr "마우스 아래"
 
-#: rulesmodel.cpp:801
+#: rulesmodel.cpp:800
 #, kde-format
 msgid "On Main Window"
 msgstr "주 창에"
 
-#: rulesmodel.cpp:808
+#: rulesmodel.cpp:807
 #, kde-format
 msgid "None"
 msgstr "없음"
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:808
 #, kde-format
 msgid "Low"
 msgstr "낮음"
 
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:809
 #, kde-format
 msgid "Normal"
 msgstr "중간"
 
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:810
 #, kde-format
 msgid "High"
 msgstr "높음"
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:811
 #, kde-format
 msgid "Extreme"
 msgstr "매우 높음"
 
-#: rulesmodel.cpp:855
+#: rulesmodel.cpp:854
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "창 속성을 감지할 수 없습니다. KWin에서 관리하는 창이 아닙니다."
+
+#~ msgid "Cascaded"
+#~ msgstr "계단식 배열"
 
 #~ msgid "Keep above"
 #~ msgstr "위에 두기"

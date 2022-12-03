@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-08-19 00:47+0000\n"
+"POT-Creation-Date: 2022-12-03 00:48+0000\n"
 "PO-Revision-Date: 2014-02-17 01:33+0100\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -914,68 +914,67 @@ msgid "Maximized"
 msgstr "Maximeren"
 
 #: rulesmodel.cpp:796
-#, fuzzy, kde-format
-#| msgid "Cascade"
-msgid "Cascaded"
-msgstr "Treppwies"
-
-#: rulesmodel.cpp:797
 #, kde-format
 msgid "Centered"
 msgstr "In de Merrn"
 
-#: rulesmodel.cpp:798
+#: rulesmodel.cpp:797
 #, kde-format
 msgid "Random"
 msgstr "Tofällig"
 
-#: rulesmodel.cpp:799
+#: rulesmodel.cpp:798
 #, fuzzy, kde-format
 #| msgid "Top-Left Corner"
 msgid "In Top-Left Corner"
 msgstr "Eck links baven"
 
-#: rulesmodel.cpp:800
+#: rulesmodel.cpp:799
 #, kde-format
 msgid "Under Mouse"
 msgstr "Ünner de Muus"
 
-#: rulesmodel.cpp:801
+#: rulesmodel.cpp:800
 #, kde-format
 msgid "On Main Window"
 msgstr "Över dat Hööftfinster"
 
-#: rulesmodel.cpp:808
+#: rulesmodel.cpp:807
 #, fuzzy, kde-format
 #| msgctxt "no focus stealing prevention"
 #| msgid "None"
 msgid "None"
 msgstr "Keen"
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:808
 #, kde-format
 msgid "Low"
 msgstr "Siet"
 
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:809
 #, kde-format
 msgid "Normal"
 msgstr "Normaal"
 
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:810
 #, kde-format
 msgid "High"
 msgstr "Hooch"
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:811
 #, kde-format
 msgid "Extreme"
 msgstr "Övermaten"
 
-#: rulesmodel.cpp:855
+#: rulesmodel.cpp:854
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+
+#, fuzzy
+#~| msgid "Cascade"
+#~ msgid "Cascaded"
+#~ msgstr "Treppwies"
 
 #, fuzzy
 #~| msgid "Keep &above"

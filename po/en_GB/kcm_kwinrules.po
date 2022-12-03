@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-08-19 00:47+0000\n"
+"POT-Creation-Date: 2022-12-03 00:48+0000\n"
 "PO-Revision-Date: 2022-04-23 14:16+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English <kde-l10n-en_gb@kde.org>\n"
@@ -883,63 +883,61 @@ msgstr "Maximised"
 
 #: rulesmodel.cpp:796
 #, kde-format
-msgid "Cascaded"
-msgstr "Cascaded"
-
-#: rulesmodel.cpp:797
-#, kde-format
 msgid "Centered"
 msgstr "Centred"
 
-#: rulesmodel.cpp:798
+#: rulesmodel.cpp:797
 #, kde-format
 msgid "Random"
 msgstr "Random"
 
-#: rulesmodel.cpp:799
+#: rulesmodel.cpp:798
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "In Top-Left Corner"
 
-#: rulesmodel.cpp:800
+#: rulesmodel.cpp:799
 #, kde-format
 msgid "Under Mouse"
 msgstr "Under Mouse"
 
-#: rulesmodel.cpp:801
+#: rulesmodel.cpp:800
 #, kde-format
 msgid "On Main Window"
 msgstr "On Main Window"
 
-#: rulesmodel.cpp:808
+#: rulesmodel.cpp:807
 #, kde-format
 msgid "None"
 msgstr "None"
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:808
 #, kde-format
 msgid "Low"
 msgstr "Low"
 
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:809
 #, kde-format
 msgid "Normal"
 msgstr "Normal"
 
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:810
 #, kde-format
 msgid "High"
 msgstr "High"
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:811
 #, kde-format
 msgid "Extreme"
 msgstr "Extreme"
 
-#: rulesmodel.cpp:855
+#: rulesmodel.cpp:854
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "Could not detect window properties. The window is not managed by KWin."
+
+#~ msgid "Cascaded"
+#~ msgstr "Cascaded"
 
 #~ msgid "Keep above"
 #~ msgstr "Keep above"

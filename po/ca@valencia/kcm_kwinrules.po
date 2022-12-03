@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-08-19 00:47+0000\n"
+"POT-Creation-Date: 2022-12-03 00:48+0000\n"
 "PO-Revision-Date: 2022-04-18 19:03+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -895,62 +895,60 @@ msgstr "Maximitzada"
 
 #: rulesmodel.cpp:796
 #, kde-format
-msgid "Cascaded"
-msgstr "En cascada"
-
-#: rulesmodel.cpp:797
-#, kde-format
 msgid "Centered"
 msgstr "Centrada"
 
-#: rulesmodel.cpp:798
+#: rulesmodel.cpp:797
 #, kde-format
 msgid "Random"
 msgstr "Aleatòria"
 
-#: rulesmodel.cpp:799
+#: rulesmodel.cpp:798
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "En el cantó superior esquerre"
 
-#: rulesmodel.cpp:800
+#: rulesmodel.cpp:799
 #, kde-format
 msgid "Under Mouse"
 msgstr "Davall el ratolí"
 
-#: rulesmodel.cpp:801
+#: rulesmodel.cpp:800
 #, kde-format
 msgid "On Main Window"
 msgstr "En la finestra principal"
 
-#: rulesmodel.cpp:808
+#: rulesmodel.cpp:807
 #, kde-format
 msgid "None"
 msgstr "Sense"
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:808
 #, kde-format
 msgid "Low"
 msgstr "Baixa"
 
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:809
 #, kde-format
 msgid "Normal"
 msgstr "Normal"
 
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:810
 #, kde-format
 msgid "High"
 msgstr "Alta"
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:811
 #, kde-format
 msgid "Extreme"
 msgstr "Extrema"
 
-#: rulesmodel.cpp:855
+#: rulesmodel.cpp:854
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "No s'han pogut detectar les propietats de la finestra. KWin no gestiona esta "
 "finestra."
+
+#~ msgid "Cascaded"
+#~ msgstr "En cascada"

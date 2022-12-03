@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-08-19 00:47+0000\n"
+"POT-Creation-Date: 2022-12-03 00:48+0000\n"
 "PO-Revision-Date: 2022-05-05 12:47+0100\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -893,65 +893,63 @@ msgstr "Maximizat"
 
 #: rulesmodel.cpp:796
 #, kde-format
-msgid "Cascaded"
-msgstr "În cascadă"
-
-#: rulesmodel.cpp:797
-#, kde-format
 msgid "Centered"
 msgstr "Centrat"
 
-#: rulesmodel.cpp:798
+#: rulesmodel.cpp:797
 #, kde-format
 msgid "Random"
 msgstr "Aleator"
 
-#: rulesmodel.cpp:799
+#: rulesmodel.cpp:798
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "În colțul din stânga sus"
 
-#: rulesmodel.cpp:800
+#: rulesmodel.cpp:799
 #, kde-format
 msgid "Under Mouse"
 msgstr "Sub maus"
 
-#: rulesmodel.cpp:801
+#: rulesmodel.cpp:800
 #, kde-format
 msgid "On Main Window"
 msgstr "În fereastra principală"
 
-#: rulesmodel.cpp:808
+#: rulesmodel.cpp:807
 #, kde-format
 msgid "None"
 msgstr "Niciuna"
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:808
 #, kde-format
 msgid "Low"
 msgstr "Mic"
 
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:809
 #, kde-format
 msgid "Normal"
 msgstr "Normal"
 
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:810
 #, kde-format
 msgid "High"
 msgstr "Mare"
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:811
 #, kde-format
 msgid "Extreme"
 msgstr "Extrem"
 
-#: rulesmodel.cpp:855
+#: rulesmodel.cpp:854
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Proprietățile ferestrei nu au putut fi detectate. Fereastra nu e gestionată "
 "de KWin."
+
+#~ msgid "Cascaded"
+#~ msgstr "În cascadă"
 
 #~ msgid "Keep above"
 #~ msgstr "Ține deasupra"

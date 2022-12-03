@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-08-19 00:47+0000\n"
+"POT-Creation-Date: 2022-12-03 00:48+0000\n"
 "PO-Revision-Date: 2022-08-17 18:01+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -902,64 +902,62 @@ msgstr "Maximizatuta"
 
 #: rulesmodel.cpp:796
 #, kde-format
-msgid "Cascaded"
-msgstr "Turrustan"
-
-#: rulesmodel.cpp:797
-#, kde-format
 msgid "Centered"
 msgstr "Erdiratuta"
 
-#: rulesmodel.cpp:798
+#: rulesmodel.cpp:797
 #, kde-format
 msgid "Random"
 msgstr "Ausazkoa"
 
-#: rulesmodel.cpp:799
+#: rulesmodel.cpp:798
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "Goi-ezkerreko izkinan"
 
-#: rulesmodel.cpp:800
+#: rulesmodel.cpp:799
 #, kde-format
 msgid "Under Mouse"
 msgstr "Saguaren azpian"
 
-#: rulesmodel.cpp:801
+#: rulesmodel.cpp:800
 #, kde-format
 msgid "On Main Window"
 msgstr "Leiho nagusiaren gainean"
 
-#: rulesmodel.cpp:808
+#: rulesmodel.cpp:807
 #, kde-format
 msgid "None"
 msgstr "Bat ere ez"
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:808
 #, kde-format
 msgid "Low"
 msgstr "Txikia"
 
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:809
 #, kde-format
 msgid "Normal"
 msgstr "Arrunta"
 
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:810
 #, kde-format
 msgid "High"
 msgstr "Altua"
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:811
 #, kde-format
 msgid "Extreme"
 msgstr "Muturrekoa"
 
-#: rulesmodel.cpp:855
+#: rulesmodel.cpp:854
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Ezin dira hauteman leihoaren propietateak. Leihoa ez du KWin-ek kudeatzen."
+
+#~ msgid "Cascaded"
+#~ msgstr "Turrustan"
 
 #~ msgid "Keep above"
 #~ msgstr "Mantendu gainean"

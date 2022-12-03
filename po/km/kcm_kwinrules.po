@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-08-19 00:47+0000\n"
+"POT-Creation-Date: 2022-12-03 00:48+0000\n"
 "PO-Revision-Date: 2012-06-13 15:34+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -973,46 +973,39 @@ msgstr ""
 msgid "Maximized"
 msgstr "ការ​ពង្រីក​អតិបរមា"
 
-#  i18n: file ruleswidgetbase.ui line 1131
-#: rulesmodel.cpp:796
-#, fuzzy, kde-format
-#| msgid "Cascade"
-msgid "Cascaded"
-msgstr "ល្បាក់"
-
 #  i18n: file ruleswidgetbase.ui line 1136
-#: rulesmodel.cpp:797
+#: rulesmodel.cpp:796
 #, kde-format
 msgid "Centered"
 msgstr "ដាល់​កណ្ដាល"
 
 #  i18n: file ruleswidgetbase.ui line 1141
-#: rulesmodel.cpp:798
+#: rulesmodel.cpp:797
 #, kde-format
 msgid "Random"
 msgstr "ចៃដន្យ"
 
 #  i18n: file ruleswidgetbase.ui line 1146
-#: rulesmodel.cpp:799
+#: rulesmodel.cpp:798
 #, fuzzy, kde-format
 #| msgid "Top-Left Corner"
 msgid "In Top-Left Corner"
 msgstr "ជ្រុង​ឆ្វេង​កំពូល"
 
 #  i18n: file ruleswidgetbase.ui line 1151
-#: rulesmodel.cpp:800
+#: rulesmodel.cpp:799
 #, kde-format
 msgid "Under Mouse"
 msgstr "ក្រោម​កណ្ដុរ"
 
 #  i18n: file ruleswidgetbase.ui line 1156
-#: rulesmodel.cpp:801
+#: rulesmodel.cpp:800
 #, kde-format
 msgid "On Main Window"
 msgstr "លើ​បង្អួច​មេ"
 
 #  i18n: file ruleswidgetbase.ui line 2115
-#: rulesmodel.cpp:808
+#: rulesmodel.cpp:807
 #, fuzzy, kde-format
 #| msgctxt "no focus stealing prevention"
 #| msgid "None"
@@ -1020,33 +1013,39 @@ msgid "None"
 msgstr "គ្មាន"
 
 #  i18n: file ruleswidgetbase.ui line 2120
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:808
 #, kde-format
 msgid "Low"
 msgstr "ទាប"
 
 #  i18n: file ruleswidgetbase.ui line 2125
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:809
 #, kde-format
 msgid "Normal"
 msgstr "ធម្មតា"
 
 #  i18n: file ruleswidgetbase.ui line 2130
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:810
 #, kde-format
 msgid "High"
 msgstr "ខ្ពស់"
 
 #  i18n: file ruleswidgetbase.ui line 2135
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:811
 #, kde-format
 msgid "Extreme"
 msgstr "យ៉ាង​ខ្លាំង"
 
-#: rulesmodel.cpp:855
+#: rulesmodel.cpp:854
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+
+#  i18n: file ruleswidgetbase.ui line 1131
+#, fuzzy
+#~| msgid "Cascade"
+#~ msgid "Cascaded"
+#~ msgstr "ល្បាក់"
 
 #  i18n: file ruleswidgetbase.ui line 1247
 #, fuzzy

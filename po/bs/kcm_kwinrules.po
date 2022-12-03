@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-08-19 00:47+0000\n"
+"POT-Creation-Date: 2022-12-03 00:48+0000\n"
 "PO-Revision-Date: 2014-10-20 19:53+0000\n"
 "Last-Translator: Samir Ribić <Unknown>\n"
 "Language-Team: bosanski <bs@li.org>\n"
@@ -930,44 +930,37 @@ msgstr "Maksimizovano"
 
 # >> @item:inlistbox Placement->Force
 #: rulesmodel.cpp:796
-#, fuzzy, kde-format
-#| msgid "Cascade"
-msgid "Cascaded"
-msgstr "Naslagano"
-
-# >> @item:inlistbox Placement->Force
-#: rulesmodel.cpp:797
 #, kde-format
 msgid "Centered"
 msgstr "Centrirano"
 
 # >> @item:inlistbox Placement->Force
-#: rulesmodel.cpp:798
+#: rulesmodel.cpp:797
 #, kde-format
 msgid "Random"
 msgstr "Nasumično"
 
 # >> @item:inlistbox Placement->Force
-#: rulesmodel.cpp:799
+#: rulesmodel.cpp:798
 #, fuzzy, kde-format
 #| msgid "Top-Left Corner"
 msgid "In Top-Left Corner"
 msgstr "Gornji lijevi ugao"
 
 # >> @item:inlistbox Placement->Force
-#: rulesmodel.cpp:800
+#: rulesmodel.cpp:799
 #, kde-format
 msgid "Under Mouse"
 msgstr "Ispod miša"
 
 # >> @item:inlistbox Placement->Force
-#: rulesmodel.cpp:801
+#: rulesmodel.cpp:800
 #, kde-format
 msgid "On Main Window"
 msgstr "Na glavnom prozoru"
 
 # >> @item:inlistbox +
-#: rulesmodel.cpp:808
+#: rulesmodel.cpp:807
 #, fuzzy, kde-format
 #| msgctxt "no focus stealing prevention"
 #| msgid "None"
@@ -975,33 +968,39 @@ msgid "None"
 msgstr "Nikakvo"
 
 # >> @item:inlistbox Focus stealing prevention->Force
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:808
 #, kde-format
 msgid "Low"
 msgstr "Nisko"
 
 # >> @item:inlistbox Focus stealing prevention->Force
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:809
 #, kde-format
 msgid "Normal"
 msgstr "Normalno"
 
 # >> @item:inlistbox Focus stealing prevention->Force
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:810
 #, kde-format
 msgid "High"
 msgstr "Visoko"
 
 # >> @item:inlistbox Focus stealing prevention->Force
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:811
 #, kde-format
 msgid "Extreme"
 msgstr "Ekstremno"
 
-#: rulesmodel.cpp:855
+#: rulesmodel.cpp:854
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+
+# >> @item:inlistbox Placement->Force
+#, fuzzy
+#~| msgid "Cascade"
+#~ msgid "Cascaded"
+#~ msgstr "Naslagano"
 
 #, fuzzy
 #~| msgid "Keep &above"

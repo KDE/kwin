@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-08-19 00:47+0000\n"
+"POT-Creation-Date: 2022-12-03 00:48+0000\n"
 "PO-Revision-Date: 2019-09-23 21:10+0500\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: English <kde-i18n-doc@kde.org>\n"
@@ -837,62 +837,57 @@ msgstr ""
 
 #: rulesmodel.cpp:796
 #, kde-format
-msgid "Cascaded"
+msgid "Centered"
 msgstr ""
 
 #: rulesmodel.cpp:797
 #, kde-format
-msgid "Centered"
+msgid "Random"
 msgstr ""
 
 #: rulesmodel.cpp:798
 #, kde-format
-msgid "Random"
+msgid "In Top-Left Corner"
 msgstr ""
 
 #: rulesmodel.cpp:799
 #, kde-format
-msgid "In Top-Left Corner"
+msgid "Under Mouse"
 msgstr ""
 
 #: rulesmodel.cpp:800
 #, kde-format
-msgid "Under Mouse"
-msgstr ""
-
-#: rulesmodel.cpp:801
-#, kde-format
 msgid "On Main Window"
 msgstr ""
 
-#: rulesmodel.cpp:808
+#: rulesmodel.cpp:807
 #, fuzzy, kde-format
 #| msgctxt "no focus stealing prevention"
 #| msgid "None"
 msgid "None"
 msgstr "Ҳеҷ чиз"
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:808
 #, kde-format
 msgid "Low"
 msgstr "Паст"
 
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:809
 #, kde-format
 msgid "Normal"
 msgstr "Муқаррар"
 
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:810
 #, kde-format
 msgid "High"
 msgstr "Баланд"
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:811
 #, kde-format
 msgid "Extreme"
 msgstr ""
 
-#: rulesmodel.cpp:855
+#: rulesmodel.cpp:854
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""

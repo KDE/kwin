@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-02 00:48+0000\n"
+"POT-Creation-Date: 2022-12-03 00:48+0000\n"
 "PO-Revision-Date: 2022-12-01 06:52\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -615,8 +615,8 @@ msgctxt "Notification with path to screenshot file"
 msgid "Screenshot saved to %1"
 msgstr "屏幕截图已保存到 %1"
 
-#: screenshot/screenshotdbusinterface1.cpp:795
-#: screenshot/screenshotdbusinterface2.cpp:472
+#: screenshot/screenshotdbusinterface1.cpp:800
+#: screenshot/screenshotdbusinterface2.cpp:477
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -625,8 +625,8 @@ msgstr ""
 "选取要截图的窗口，点击左键或按回车键截图。\n"
 "点击右键或按 ESC 键取消。"
 
-#: screenshot/screenshotdbusinterface1.cpp:798
-#: screenshot/screenshotdbusinterface2.cpp:490
+#: screenshot/screenshotdbusinterface1.cpp:803
+#: screenshot/screenshotdbusinterface2.cpp:495
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

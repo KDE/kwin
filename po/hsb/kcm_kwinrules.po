@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: desktop_kdebase\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-08-19 00:47+0000\n"
+"POT-Creation-Date: 2022-12-03 00:48+0000\n"
 "PO-Revision-Date: 2008-11-21 23:13+0100\n"
 "Last-Translator: Eduard Werner <edi.werner@gmx.de>\n"
 "Language-Team: en_US <kde-i18n-doc@lists.kde.org>\n"
@@ -837,61 +837,56 @@ msgstr ""
 
 #: rulesmodel.cpp:796
 #, kde-format
-msgid "Cascaded"
+msgid "Centered"
 msgstr ""
 
 #: rulesmodel.cpp:797
 #, kde-format
-msgid "Centered"
+msgid "Random"
 msgstr ""
 
 #: rulesmodel.cpp:798
 #, kde-format
-msgid "Random"
+msgid "In Top-Left Corner"
 msgstr ""
 
 #: rulesmodel.cpp:799
 #, kde-format
-msgid "In Top-Left Corner"
+msgid "Under Mouse"
 msgstr ""
 
 #: rulesmodel.cpp:800
 #, kde-format
-msgid "Under Mouse"
-msgstr ""
-
-#: rulesmodel.cpp:801
-#, kde-format
 msgid "On Main Window"
 msgstr ""
 
-#: rulesmodel.cpp:808
+#: rulesmodel.cpp:807
 #, fuzzy, kde-format
 #| msgid "None"
 msgid "None"
 msgstr "Žane"
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:808
 #, kde-format
 msgid "Low"
 msgstr ""
 
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:809
 #, kde-format
 msgid "Normal"
 msgstr ""
 
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:810
 #, kde-format
 msgid "High"
 msgstr ""
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:811
 #, kde-format
 msgid "Extreme"
 msgstr ""
 
-#: rulesmodel.cpp:855
+#: rulesmodel.cpp:854
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
