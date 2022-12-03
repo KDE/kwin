@@ -1464,11 +1464,7 @@ void Workspace::updateOutputs()
 
     const auto removed = oldOutputsSet - outputsSet;
     for (Output *output : removed) {
-        auto it = m_tileManagers.find(output);
-        if (it != m_tileManagers.end()) {
-            m_tileManagers.erase(it);
-        }
-
+        m_tileManagers.erase(output);
         Q_EMIT outputRemoved(output);
         output->unref();
     }
@@ -3146,7 +3142,6 @@ ScreenEdges *Workspace::screenEdges() const
 
 TileManager *Workspace::tileManager(Output *output)
 {
-    Q_ASSERT(m_tileManagers.contains(output));
     return m_tileManagers.at(output).get();
 }
 
