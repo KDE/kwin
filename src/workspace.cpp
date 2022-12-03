@@ -1450,8 +1450,6 @@ void Workspace::updateOutputs()
         setPrimaryOutput(m_outputs[0]);
     }
 
-    desktopResized();
-
     const QSet<Output *> oldOutputsSet(oldOutputs.constBegin(), oldOutputs.constEnd());
     const QSet<Output *> outputsSet(m_outputs.constBegin(), m_outputs.constEnd());
 
@@ -1461,6 +1459,8 @@ void Workspace::updateOutputs()
         m_tileManagers[output] = std::make_unique<TileManager>(output);
         Q_EMIT outputAdded(output);
     }
+
+    desktopResized();
 
     const auto removed = oldOutputsSet - outputsSet;
     for (Output *output : removed) {
