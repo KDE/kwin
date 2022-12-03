@@ -100,7 +100,8 @@ RootInfo *RootInfo::create()
         | NET::WM2KDEShadow
         | NET::WM2OpaqueRegion
         | NET::WM2GTKFrameExtents
-        | NET::WM2GTKShowWindowMenu;
+        | NET::WM2GTKShowWindowMenu
+        | NET::WM2Opacity;
 #if KWIN_BUILD_ACTIVITIES
     properties2 |= NET::WM2Activities;
 #endif
