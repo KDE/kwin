@@ -2,10 +2,24 @@
     "KPlugin": {
         "Category": "Window Management",
         "Description": "Editor for the tiling areas",
+        "Description[ca@valencia]": "Editor per a les àrees de mosaic",
+        "Description[ca]": "Editor per a les àrees de mosaic",
+        "Description[es]": "Editor para las áreas de mosaico",
+        "Description[nl]": "Bewerker voor de gebieden waar tegels worden geplaatst",
+        "Description[tr]": "Döşeme alanları için düzenleyici",
+        "Description[uk]": "Редактор для мозаїчних областей",
+        "Description[x-test]": "xxEditor for the tiling areasxx",
         "EnabledByDefault": true,
         "Id": "tileseditor",
         "License": "GPL",
-        "Name": "Tiling Editor"
+        "Name": "Tiling Editor",
+        "Name[ca@valencia]": "Editor de mosaic",
+        "Name[ca]": "Editor de mosaic",
+        "Name[es]": "Editor de mosaico",
+        "Name[nl]": "Bewerker voor tegels plaatsen",
+        "Name[tr]": "Döşeme Düzenleyici",
+        "Name[uk]": "Редактор мозаїк",
+        "Name[x-test]": "xxTiling Editorxx"
     },
     "X-KDE-ConfigModule": "kwin_tileseditor_config"
 }
