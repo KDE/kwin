@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2022-10-22 07:11+0200\n"
+"PO-Revision-Date: 2022-12-03 06:48+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -490,7 +490,7 @@ msgstr ""
 #: advanced.ui:80
 #, kde-format
 msgid "Minimal Overlapping"
-msgstr ""
+msgstr "მინიმალური გადაფარვა"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:85
@@ -514,13 +514,13 @@ msgstr "შუაზე გასწორებული"
 #: advanced.ui:100
 #, kde-format
 msgid "In Top-Left Corner"
-msgstr ""
+msgstr "ზედა მარცხენა კუთხეში"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:105
 #, kde-format
 msgid "Under mouse"
-msgstr ""
+msgstr "თაგუნას ქვეშ"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
 #: advanced.ui:113
@@ -564,7 +564,7 @@ msgstr ""
 #: advanced.ui:143
 #, kde-format
 msgid "Virtual Desktop behavior:"
-msgstr ""
+msgstr "ვირტუალური სამუშაო მაგიდის ქცევა:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
 #: advanced.ui:153
@@ -589,7 +589,7 @@ msgstr ""
 #: advanced.ui:164
 #, kde-format
 msgid "Switch to that Virtual Desktop"
-msgstr ""
+msgstr "იმ ვირტუალურ სამუშაო მაგიდაზე გადართვა"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:169
@@ -601,7 +601,7 @@ msgstr ""
 #: focus.ui:22
 #, kde-format
 msgid "Window &activation policy:"
-msgstr ""
+msgstr "ფანჯრის &აქტივაციის პოლიტიკა:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, windowFocusPolicy)
 #: focus.ui:32
@@ -614,43 +614,43 @@ msgstr ""
 #, kde-format
 msgctxt "sassa asas"
 msgid "Click to focus"
-msgstr ""
+msgstr "წკაპი ფოკუსისთვის"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:41
 #, kde-format
 msgid "Click to focus (mouse precedence)"
-msgstr ""
+msgstr "წკაპი ფოკუსისთვის (თაგუნა უპირატესია)"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:46
 #, kde-format
 msgid "Focus follows mouse"
-msgstr ""
+msgstr "ფოკუსი მიყვება თაგუნას"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:51
 #, kde-format
 msgid "Focus follows mouse (mouse precedence)"
-msgstr ""
+msgstr "ფოკუსი მიყვება თაგუნას (თაგუნა უპირატესია)"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:56
 #, kde-format
 msgid "Focus under mouse"
-msgstr ""
+msgstr "ფოკუსი თაგუნას ქვეშ"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:61
 #, kde-format
 msgid "Focus strictly under mouse"
-msgstr ""
+msgstr "ფოკუსი მხოლოდ თაგუნას ქვეშ"
 
 #. i18n: ectx: property (text), widget (QLabel, delayFocusOnLabel)
 #: focus.ui:69
 #, kde-format
 msgid "&Delay focus by:"
-msgstr ""
+msgstr "&ფოკუსის დაყოვნება:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_DelayFocusInterval)
 #: focus.ui:82
@@ -664,7 +664,7 @@ msgstr ""
 #: focus.ui:101
 #, kde-format
 msgid "Focus &stealing prevention:"
-msgstr ""
+msgstr "ფოკუსის &მოპარვის აცილება:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_FocusStealingPreventionLevel)
 #: focus.ui:114
@@ -744,7 +744,7 @@ msgstr "ექსტრემალური"
 #: focus.ui:146
 #, kde-format
 msgid "Raising windows:"
-msgstr ""
+msgstr "ფანჯრების ამოწევა:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ClickRaise)
 #: focus.ui:153
@@ -759,7 +759,7 @@ msgstr ""
 #: focus.ui:156
 #, kde-format
 msgid "&Click raises active window"
-msgstr ""
+msgstr "&წკაპი ამოწევს ფანჯარას"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AutoRaise)
 #: focus.ui:165
@@ -822,7 +822,7 @@ msgstr ""
 #: focus.ui:229
 #, kde-format
 msgid "Window activation policy description"
-msgstr ""
+msgstr "ფანჯრის აქტივაციის პოლიტიკის აღწერა"
 
 #: main.cpp:73
 #, kde-format
@@ -832,12 +832,12 @@ msgstr "&ფოკუსი"
 #: main.cpp:79
 #, kde-format
 msgid "Titlebar A&ctions"
-msgstr ""
+msgstr "ქუდის ზოლის &ქმედებები"
 
 #: main.cpp:85
 #, kde-format
 msgid "W&indow Actions"
-msgstr ""
+msgstr "&ფანჯრის ქმედებები"
 
 #: main.cpp:91
 #, kde-format
@@ -852,12 +852,12 @@ msgstr "&დამატებით"
 #: main.cpp:101
 #, kde-format
 msgid "Window Behavior Configuration Module"
-msgstr ""
+msgstr "ფანჯრის ქცევის მორგების მოდული"
 
 #: main.cpp:103
 #, kde-format
 msgid "(c) 1997 - 2002 KWin and KControl Authors"
-msgstr ""
+msgstr "(c) 1997 - 2002 KWin და KControl -ის ავტორები"
 
 #: main.cpp:105
 #, kde-format
@@ -927,9 +927,9 @@ msgstr "ფანჯრის &ქმედებები"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: mouse.ui:17
-#, kde-format
+#, fuzzy, kde-format
 msgid "Titlebar Actions"
-msgstr ""
+msgstr "ქუდის ქმედებები"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: mouse.ui:26

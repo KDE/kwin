@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1639295 $
+# Version: $Revision: 1639412 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-02 00:48+0000\n"
-"PO-Revision-Date: 2022-10-18 17:59+0200\n"
+"POT-Creation-Date: 2022-12-04 00:47+0000\n"
+"PO-Revision-Date: 2022-12-03 09:32+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -31,7 +31,7 @@ msgstr ""
 ">\n"
 ">\n"
 ">\n"
-"X-Generator: Lokalize 22.08.1\n"
+"X-Generator: Lokalize 22.08.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
@@ -61,26 +61,17 @@ msgstr ""
 "kombinacją klawiszy '%1'."
 
 #: composite.cpp:1029
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#| "protection but <b>be aware that this might result in an immediate crash!</"
-#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#| "</p>"
+#, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
 "b><br>This was most likely due to a driver bug.<p>If you think that you have "
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
-"<b>Kompozycja z OpenGL (domyślna) wywołała awarię KWin w przeszłości.</"
-"b><br>Stało się tak najprawdopodobniej przez błąd w sterowniku.<p>Jeżeli "
-"uważasz, że uaktualniłe(a)ś w międzyczasie do stabilnego sterownika,"
-"<br>możesz wyzerować ochronę, ale<b>bądź świadomy(a), że może to spowodować "
-"natychmiastową awarię!</b></p><p>Zamiast tego możesz chcieć użyć silnika "
-"XRender.</p>"
+"<b>Komponowanie OpenGL (domyślna) wysypało KWin w przeszłości.</"
+"b><br>Powodem najprawdopodobniej był błąd w sterowniku.<p>Jeśli masz teraz "
+"stabilniejszy sterownik, <br> to możesz zdjąć to zabezpieczenie <b>lecz "
+"przygotuj się na natychmiastowe wysypanie!</b></p>"
 
 #: composite.cpp:1036
 #, kde-format
@@ -88,10 +79,9 @@ msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Wymagane rozszerzenia X (XComposite i XDamage) są niedostępne."
 
 #: composite.cpp:1039
-#, fuzzy, kde-format
-#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+#, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr "GLX/OpenGL i XRender/XFixes są niedostępne."
+msgstr "GLX/OpenGL jest niedostępny."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -1188,19 +1178,17 @@ msgstr "Poczekaj dłużej"
 #: input.cpp:1981
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "Przenieś tablet na następne wyjście"
 
 #: input.cpp:2060
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Tablet moved to %1"
-msgstr "Tryb tabletu"
+msgstr "Tablet przeniósł się na %1"
 
 #: input.cpp:2060
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "Tablet przełączył wyjście"
 
 #: input.cpp:3025
 #, kde-format
@@ -1382,7 +1370,7 @@ msgstr "Wyświetl przez węzeł drm."
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
-msgstr ""
+msgstr "Wydobądź dane językowe z locale1, a nie z ustawień użytkownika"
 
 #: main_wayland.cpp:390
 #, kde-format
@@ -2143,20 +2131,20 @@ msgstr "Rodzaj zasady nazwy pliku pulpitu"
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "Nie można było znaleźć metadanych pakietu"
 
 #: scripting/genericscriptedconfig.cpp:84
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "%1 nie zawiera prawidłowego pliku metadata.json"
 
 #: scripting/genericscriptedconfig.cpp:90
 #: scripting/genericscriptedconfig.cpp:96
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "%1 nie istnieje"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2362,11 +2350,9 @@ msgid "Show in &Activities"
 msgstr "Pokaż w &aktywnościach"
 
 #: useractions.cpp:524
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move the window to that desktop"
-#| msgid "Move to New Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "Przenieś na nowy pulpit"
+msgstr "&Przenieś na bieżący pulpit"
 
 #: useractions.cpp:534 useractions.cpp:601
 #, kde-format
@@ -2773,7 +2759,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Nie odpowiada)"
 
-#: workspace.cpp:1682
+#: workspace.cpp:1678
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
