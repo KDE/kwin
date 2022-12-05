@@ -38,6 +38,7 @@ private:
 
 TearingControlManagerV1Interface::TearingControlManagerV1Interface(Display *display, QObject *parent)
     : QObject(parent)
+    , d(new TearingControlManagerV1InterfacePrivate(display))
 {
 }
 
