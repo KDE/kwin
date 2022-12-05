@@ -851,7 +851,8 @@ void RulesModel::selectX11Window()
         self->deleteLater();
         if (!reply.isValid()) {
             if (reply.error().name() == QLatin1String("org.kde.KWin.Error.InvalidWindow")) {
-                Q_EMIT showErrorMessage(i18n("Could not detect window properties. The window is not managed by KWin."));
+                Q_EMIT showErrorMessage(i18n("Unmanaged window"),
+                                        i18n("Could not detect window properties. The window is not managed by KWin."));
             }
             return;
         }

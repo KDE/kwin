@@ -78,7 +78,7 @@ Q_SIGNALS:
     void warningMessagesChanged();
 
     void showSuggestions();
-    void showErrorMessage(const QString &message);
+    void showErrorMessage(const QString &title, const QString &message);
 
     void virtualDesktopsUpdated();
 
