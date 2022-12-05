@@ -4,10 +4,10 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 
-import QtQuick 2.14
-import QtQuick.Layouts 1.14
-import QtQuick.Controls 2.14 as QQC2
-import org.kde.kirigami 2.12 as Kirigami
+import QtQuick 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Controls 2.15 as QQC2
+import org.kde.kirigami 2.19 as Kirigami
 import org.kde.kcm 1.2
 import org.kde.kitemmodels 1.0
 import org.kde.kcms.kwinrules 1.0
@@ -97,7 +97,7 @@ ScrollViewKCM {
             id: detectButton
             text: i18n("Detect Window Properties")
             icon.name: "edit-find"
-            enabled: !propertySheet.sheetOpen && !errorSheet.sheetOpen
+            enabled: !propertySheet.sheetOpen && !errorDialog.visible
             onClicked: {
                 overlayModel.onlySuggestions = true;
                 kcm.rulesModel.detectWindowProperties(Math.max(delaySpin.value * 1000,
@@ -132,26 +132,38 @@ ScrollViewKCM {
     Connections {
         target: kcm.rulesModel
         function onShowSuggestions() {
+            if (errorDialog.visible) {
+                return;
+            }
             overlayModel.onlySuggestions = true;
             propertySheet.sheetOpen = true;
         }
         function onShowErrorMessage(title, message) {
-            errorSheet.title = title
-            errorSheet.message = message
-            errorSheet.open()
+            errorDialog.title = title
+            errorDialog.message = message
+            errorDialog.open()
         }
     }
 
-    Kirigami.OverlaySheet {
-        id: errorSheet
+    Kirigami.Dialog {
+        id: errorDialog
 
         property alias message: errorLabel.text
 
-        Kirigami.Heading {
-            id: errorLabel
-            level: 3
-            wrapMode: Text.WordWrap
-            Layout.fillWidth: true
+        preferredWidth: rulesEditor.width - Kirigami.Units.gridUnit * 6
+        maximumWidth: Kirigami.Units.gridUnit * 35
+        footer: null  // Just use the close button on top
+
+        ColumnLayout {
+            // Wrap it in a Layout so we can apply margins to the text while keeping implicit sizes
+            Kirigami.Heading {
+                id: errorLabel
+                level: 4
+                wrapMode: Text.WordWrap
+
+                Layout.fillWidth: true
+                Layout.margins: Kirigami.Units.largeSpacing
+            }
         }
     }
 
