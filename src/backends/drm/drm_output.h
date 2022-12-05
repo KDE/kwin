@@ -42,7 +42,7 @@ public:
     DrmPipeline *pipeline() const;
 
     bool present() override;
-    DrmOutputLayer *outputLayer() const override;
+    DrmOutputLayer *primaryLayer() const override;
 
     bool queueChanges(const OutputConfiguration &config);
     void applyQueuedChanges(const OutputConfiguration &config);

@@ -447,7 +447,7 @@ void DrmOutput::revertQueuedChanges()
     m_pipeline->revertPendingChanges();
 }
 
-DrmOutputLayer *DrmOutput::outputLayer() const
+DrmOutputLayer *DrmOutput::primaryLayer() const
 {
     return m_pipeline->primaryLayer();
 }

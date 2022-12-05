@@ -69,7 +69,7 @@ void DrmVirtualOutput::setDpmsMode(DpmsMode mode)
     setState(next);
 }
 
-DrmOutputLayer *DrmVirtualOutput::outputLayer() const
+DrmOutputLayer *DrmVirtualOutput::primaryLayer() const
 {
     return m_layer.get();
 }

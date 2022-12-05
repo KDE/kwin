@@ -757,7 +757,7 @@ void DrmGpu::releaseBuffers()
         pipeline->cursorLayer()->releaseBuffers();
     }
     for (const auto &output : std::as_const(m_virtualOutputs)) {
-        output->outputLayer()->releaseBuffers();
+        output->primaryLayer()->releaseBuffers();
     }
 }
 

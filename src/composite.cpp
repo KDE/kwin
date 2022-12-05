@@ -630,12 +630,12 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     Output *output = findOutput(renderLoop);
-    OutputLayer *outputLayer = m_backend->primaryLayer(output);
+    OutputLayer *primaryLayer = m_backend->primaryLayer(output);
     fTraceDuration("Paint (", output->name(), ")");
 
     RenderLayer *superLayer = m_superlayers[renderLoop];
     prePaintPass(superLayer);
-    superLayer->setOutputLayer(outputLayer);
+    superLayer->setOutputLayer(primaryLayer);
 
     SurfaceItem *scanoutCandidate = superLayer->delegate()->scanoutCandidate();
     renderLoop->setFullscreenSurface(scanoutCandidate);
@@ -649,24 +649,24 @@ void Compositor::composite(RenderLoop *renderLoop)
             return sublayer->isVisible();
         });
         if (scanoutPossible && !output->directScanoutInhibited()) {
-            directScanout = outputLayer->scanout(scanoutCandidate);
+            directScanout = primaryLayer->scanout(scanoutCandidate);
         }
     }
 
     if (!directScanout) {
-        QRegion surfaceDamage = outputLayer->repaints();
-        outputLayer->resetRepaints();
+        QRegion surfaceDamage = primaryLayer->repaints();
+        primaryLayer->resetRepaints();
         preparePaintPass(superLayer, &surfaceDamage);
 
-        if (auto beginInfo = outputLayer->beginFrame()) {
+        if (auto beginInfo = primaryLayer->beginFrame()) {
             auto &[renderTarget, repaint] = beginInfo.value();
             renderTarget.setDevicePixelRatio(output->scale());
 
             const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(superLayer->rect());
-            outputLayer->aboutToStartPainting(bufferDamage);
+            primaryLayer->aboutToStartPainting(bufferDamage);
 
             paintPass(superLayer, &renderTarget, bufferDamage);
-            outputLayer->endFrame(bufferDamage, surfaceDamage);
+            primaryLayer->endFrame(bufferDamage, surfaceDamage);
         }
     }
     renderLoop->endFrame();
