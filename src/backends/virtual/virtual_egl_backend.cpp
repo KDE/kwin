@@ -198,6 +198,11 @@ OutputLayer *VirtualEglBackend::primaryLayer(Output *output)
     return m_outputs[output].get();
 }
 
+OutputLayer *VirtualEglBackend::cursorLayer(Output *output)
+{
+    return nullptr;
+}
+
 void VirtualEglBackend::present(Output *output)
 {
     glFlush();

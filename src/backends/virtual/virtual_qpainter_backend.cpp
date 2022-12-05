@@ -79,4 +79,10 @@ VirtualQPainterLayer *VirtualQPainterBackend::primaryLayer(Output *output)
 {
     return m_outputs[output].get();
 }
+
+VirtualQPainterLayer *VirtualQPainterBackend::cursorLayer(Output *output)
+{
+    return nullptr;
+}
+
 }

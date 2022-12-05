@@ -66,6 +66,7 @@ public:
 
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
+    OutputLayer *cursorLayer(Output *output) override;
 
     void init() override;
     bool prefer10bpc() const override;

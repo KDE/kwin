@@ -60,6 +60,7 @@ public:
     void endFrame(Output *output, const QRegion &renderedRegion, const QRegion &damagedRegion);
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
+    OutputLayer *cursorLayer(Output *output) override;
 
 protected:
     void cleanupSurfaces() override;

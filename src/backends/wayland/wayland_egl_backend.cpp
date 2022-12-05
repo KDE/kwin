@@ -367,5 +367,10 @@ OutputLayer *WaylandEglBackend::primaryLayer(Output *output)
     return m_outputs[output].get();
 }
 
+OutputLayer *WaylandEglBackend::cursorLayer(Output *output)
+{
+    return nullptr;
+}
+
 }
 }

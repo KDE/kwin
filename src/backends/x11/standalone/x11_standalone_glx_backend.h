@@ -90,6 +90,7 @@ public:
     OverlayWindow *overlayWindow() const override;
     void init() override;
     OutputLayer *primaryLayer(Output *output) override;
+    OutputLayer *cursorLayer(Output *output) override;
 
     Display *display() const
     {

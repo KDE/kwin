@@ -105,4 +105,10 @@ OutputLayer *X11WindowedQPainterBackend::primaryLayer(Output *output)
 {
     return m_outputs[output].get();
 }
+
+OutputLayer *X11WindowedQPainterBackend::cursorLayer(Output *output)
+{
+    return nullptr;
+}
+
 }

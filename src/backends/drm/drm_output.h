@@ -43,6 +43,7 @@ public:
 
     bool present() override;
     DrmOutputLayer *primaryLayer() const override;
+    DrmOutputLayer *cursorLayer() const override;
 
     bool queueChanges(const OutputConfiguration &config);
     void applyQueuedChanges(const OutputConfiguration &config);

@@ -177,5 +177,11 @@ OutputLayer *WaylandQPainterBackend::primaryLayer(Output *output)
 {
     return m_outputs[output].get();
 }
+
+OutputLayer *WaylandQPainterBackend::cursorLayer(Output *output)
+{
+    return nullptr;
+}
+
 }
 }

@@ -50,6 +50,7 @@ public:
     void present(Output *output) override;
     OverlayWindow *overlayWindow() const override;
     OutputLayer *primaryLayer(Output *output) override;
+    OutputLayer *cursorLayer(Output *output) override;
 
 protected:
     bool createSurfaces() override;

@@ -142,6 +142,11 @@ OutputLayer *X11WindowedEglBackend::primaryLayer(Output *output)
     return m_outputs[output].get();
 }
 
+OutputLayer *X11WindowedEglBackend::cursorLayer(Output *output)
+{
+    return nullptr;
+}
+
 std::unique_ptr<SurfaceTexture> X11WindowedEglBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
     return std::make_unique<BasicEGLSurfaceTextureWayland>(this, pixmap);

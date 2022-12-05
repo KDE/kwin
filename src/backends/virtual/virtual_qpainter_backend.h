@@ -44,6 +44,7 @@ public:
 
     void present(Output *output) override;
     VirtualQPainterLayer *primaryLayer(Output *output) override;
+    VirtualQPainterLayer *cursorLayer(Output *output) override;
 
 private:
     void addOutput(Output *output);

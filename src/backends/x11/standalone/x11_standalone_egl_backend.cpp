@@ -237,6 +237,11 @@ OutputLayer *EglBackend::primaryLayer(Output *output)
     return m_layer.get();
 }
 
+OutputLayer *EglBackend::cursorLayer(Output *output)
+{
+    return nullptr;
+}
+
 void EglBackend::vblank(std::chrono::nanoseconds timestamp)
 {
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_backend->renderLoop());

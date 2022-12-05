@@ -863,6 +863,11 @@ OutputLayer *GlxBackend::primaryLayer(Output *output)
     return m_layer.get();
 }
 
+OutputLayer *GlxBackend::cursorLayer(Output *output)
+{
+    return nullptr;
+}
+
 GlxSurfaceTextureX11::GlxSurfaceTextureX11(GlxBackend *backend, SurfacePixmapX11 *texture)
     : OpenGLSurfaceTextureX11(backend, texture)
 {
