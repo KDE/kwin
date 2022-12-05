@@ -416,14 +416,4 @@ Output::Transform Output::panelOrientation() const
     return m_information.panelOrientation;
 }
 
-bool Output::setCursor(const QImage &image, const QPoint &hotspot)
-{
-    return false;
-}
-
-bool Output::moveCursor(const QPoint &position)
-{
-    return false;
-}
-
 } // namespace KWin

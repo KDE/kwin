@@ -258,12 +258,6 @@ void X11WindowedOutput::vblank(std::chrono::nanoseconds timestamp)
     renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
 
-bool X11WindowedOutput::setCursor(const QImage &image, const QPoint &hotspot)
-{
-    m_cursor->update(image, hotspot);
-    return true;
-}
-
 void X11WindowedOutput::updateEnabled(bool enabled)
 {
     State next = m_state;

@@ -66,7 +66,6 @@ public:
     ~WaylandOutput() override;
 
     RenderLoop *renderLoop() const override;
-    bool setCursor(const QImage &image, const QPoint &hotspot) override;
 
     void init(const QSize &pixelSize, qreal scale);
 

@@ -398,9 +398,6 @@ bool DrmPipeline::setCursor(const QPoint &hotspot)
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
     if (m_pending.crtc->cursorPlane()) {
         result = commitPipelines({this}, CommitMode::Test) == Error::None;
-        if (result && m_output) {
-            m_output->renderLoop()->scheduleRepaint();
-        }
     } else {
         result = setCursorLegacy();
     }
@@ -423,9 +420,6 @@ bool DrmPipeline::moveCursor()
     }
     if (result) {
         m_next = m_pending;
-        if (m_output) {
-            m_output->renderLoop()->scheduleRepaint();
-        }
     } else {
         m_pending = m_next;
     }

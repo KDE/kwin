@@ -162,16 +162,6 @@ RenderLoop *WaylandOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
-bool WaylandOutput::setCursor(const QImage &image, const QPoint &hotspot)
-{
-    KWayland::Client::Buffer::Ptr buffer;
-    if (!image.isNull()) {
-        buffer = m_backend->display()->shmPool()->createBuffer(image);
-    }
-    m_cursor->update(buffer, image.devicePixelRatio(), hotspot);
-    return !m_hasPointerLock;
-}
-
 void WaylandOutput::init(const QSize &pixelSize, qreal scale)
 {
     m_renderLoop->setRefreshRate(s_refreshRate);

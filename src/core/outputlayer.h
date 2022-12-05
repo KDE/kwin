@@ -30,6 +30,12 @@ class KWIN_EXPORT OutputLayer : public QObject
 public:
     explicit OutputLayer(QObject *parent = nullptr);
 
+    QPoint position() const;
+    void setPosition(const QPoint &pos);
+
+    bool isVisible() const;
+    void setVisible(bool visible);
+
     QRegion repaints() const;
     void resetRepaints();
     void addRepaint(const QRegion &region);
@@ -52,6 +58,8 @@ public:
 
 private:
     QRegion m_repaints;
+    QPoint m_position;
+    bool m_visible = false;
 };
 
 } // namespace KWin

@@ -198,6 +198,7 @@ private:
     std::unique_ptr<Scene> m_scene;
     std::unique_ptr<RenderBackend> m_backend;
     QHash<RenderLoop *, RenderLayer *> m_superlayers;
+    QHash<Output *, RenderLayer *> m_cursorLayers;
     CompositingType m_selectedCompositor = NoCompositing;
 };
 

@@ -78,8 +78,6 @@ public:
      */
     QPointF mapFromGlobal(const QPointF &pos) const;
 
-    bool setCursor(const QImage &image, const QPoint &hotspot) override;
-
     QRegion exposedArea() const;
     void addExposedArea(const QRect &rect);
     void clearExposedArea();

@@ -41,23 +41,4 @@ DrmOverlayLayer::DrmOverlayLayer(DrmPipeline *pipeline)
 {
 }
 
-void DrmOverlayLayer::setPosition(const QPoint &pos)
-{
-    m_position = pos;
-}
-
-QPoint DrmOverlayLayer::position() const
-{
-    return m_position;
-}
-
-void DrmOverlayLayer::setVisible(bool visible)
-{
-    m_visible = visible;
-}
-
-bool DrmOverlayLayer::isVisible() const
-{
-    return m_visible;
-}
 }

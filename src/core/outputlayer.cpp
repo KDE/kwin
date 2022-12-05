@@ -14,6 +14,26 @@ OutputLayer::OutputLayer(QObject *parent)
 {
 }
 
+void OutputLayer::setPosition(const QPoint &pos)
+{
+    m_position = pos;
+}
+
+QPoint OutputLayer::position() const
+{
+    return m_position;
+}
+
+void OutputLayer::setVisible(bool visible)
+{
+    m_visible = visible;
+}
+
+bool OutputLayer::isVisible() const
+{
+    return m_visible;
+}
+
 QRegion OutputLayer::repaints() const
 {
     return m_repaints;

@@ -131,95 +131,6 @@ DrmLease *DrmOutput::lease() const
     return m_lease;
 }
 
-bool DrmOutput::setCursor(const QImage &image, const QPoint &hotspot)
-{
-    static bool valid;
-    static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR", &valid) == 1 && valid;
-    // hardware cursors are broken with the NVidia proprietary driver
-    if (forceSoftwareCursor || (!valid && m_gpu->isNVidia())) {
-        m_setCursorSuccessful = false;
-        return false;
-    }
-    const auto layer = m_pipeline->cursorLayer();
-    if (!m_pipeline->crtc() || !layer) {
-        return false;
-    }
-    m_cursor.image = image;
-    m_cursor.hotspot = hotspot;
-    if (m_cursor.image.isNull()) {
-        if (layer->isVisible()) {
-            layer->setVisible(false);
-            m_pipeline->setCursor();
-        }
-        return true;
-    }
-    bool rendered = false;
-    const QMatrix4x4 monitorMatrix = logicalToNativeMatrix(rect(), scale(), transform());
-    const QSize cursorSize = m_cursor.image.size() / m_cursor.image.devicePixelRatio();
-    const QRect cursorRect = QRect(m_cursor.position, cursorSize);
-    const QRect nativeCursorRect = monitorMatrix.mapRect(cursorRect);
-    if (nativeCursorRect.width() <= m_gpu->cursorSize().width() && nativeCursorRect.height() <= m_gpu->cursorSize().height()) {
-        if (const auto beginInfo = layer->beginFrame()) {
-            const auto &[renderTarget, repaint] = beginInfo.value();
-            if (dynamic_cast<EglGbmBackend *>(m_gpu->platform()->renderBackend())) {
-                renderCursorOpengl(renderTarget, cursorSize * scale());
-            } else {
-                renderCursorQPainter(renderTarget);
-            }
-            rendered = layer->endFrame(infiniteRegion(), infiniteRegion());
-        }
-    }
-    if (!rendered) {
-        if (layer->isVisible()) {
-            layer->setVisible(false);
-            m_pipeline->setCursor();
-        }
-        m_setCursorSuccessful = false;
-        return false;
-    }
-
-    const QSize layerSize = m_gpu->cursorSize() / scale();
-    const QRect layerRect = monitorMatrix.mapRect(QRect(m_cursor.position, layerSize));
-    layer->setVisible(cursorRect.intersects(rect()));
-    if (layer->isVisible()) {
-        m_setCursorSuccessful = m_pipeline->setCursor(logicalToNativeMatrix(QRect(QPoint(), layerRect.size()), scale(), transform()).map(m_cursor.hotspot));
-        layer->setVisible(m_setCursorSuccessful);
-    }
-    return m_setCursorSuccessful;
-}
-
-bool DrmOutput::moveCursor(const QPoint &position)
-{
-    if (!m_setCursorSuccessful || !m_pipeline->crtc()) {
-        return false;
-    }
-    m_cursor.position = position;
-
-    const QSize cursorSize = m_cursor.image.size() / m_cursor.image.devicePixelRatio();
-    const QRect cursorRect = QRect(m_cursor.position, cursorSize);
-
-    if (m_cursor.image.isNull() || !cursorRect.intersects(rect())) {
-        const auto layer = m_pipeline->cursorLayer();
-        if (layer->isVisible()) {
-            layer->setVisible(false);
-            m_pipeline->setCursor();
-        }
-        return true;
-    }
-    const QMatrix4x4 monitorMatrix = logicalToNativeMatrix(rect(), scale(), transform());
-    const QSize layerSize = m_gpu->cursorSize() / scale();
-    const QRect layerRect = monitorMatrix.mapRect(QRect(m_cursor.position, layerSize));
-    const auto layer = m_pipeline->cursorLayer();
-    layer->setVisible(true);
-    layer->setPosition(layerRect.topLeft());
-    m_moveCursorSuccessful = m_pipeline->moveCursor();
-    layer->setVisible(m_moveCursorSuccessful);
-    if (!m_moveCursorSuccessful) {
-        m_pipeline->setCursor();
-    }
-    return m_moveCursorSuccessful;
-}
-
 QList<std::shared_ptr<OutputMode>> DrmOutput::getModes() const
 {
     const auto drmModes = m_pipeline->connector()->modes();
@@ -347,6 +258,11 @@ void DrmOutput::updateDpmsMode(DpmsMode dpmsMode)
 
 bool DrmOutput::present()
 {
+    if (m_pipeline->cursorLayer()) {
+        m_pipeline->setCursor();
+        m_pipeline->moveCursor();
+    }
+
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop.get());
     const auto type = DrmConnector::kwinToDrmContentType(contentType());
     if (m_pipeline->syncMode() != renderLoopPrivate->presentMode || type != m_pipeline->contentType()) {
@@ -468,60 +384,4 @@ void DrmOutput::setColorTransformation(const std::shared_ptr<ColorTransformation
     }
 }
 
-void DrmOutput::renderCursorOpengl(const RenderTarget &renderTarget, const QSize &cursorSize)
-{
-    auto allocateTexture = [this]() {
-        if (m_cursor.image.isNull()) {
-            m_cursor.texture.reset();
-            m_cursor.cacheKey = 0;
-        } else {
-            m_cursor.texture = std::make_unique<GLTexture>(m_cursor.image);
-            m_cursor.texture->setWrapMode(GL_CLAMP_TO_EDGE);
-            m_cursor.cacheKey = m_cursor.image.cacheKey();
-        }
-    };
-
-    if (!m_cursor.texture) {
-        allocateTexture();
-    } else if (m_cursor.cacheKey != m_cursor.image.cacheKey()) {
-        if (m_cursor.image.size() == m_cursor.texture->size()) {
-            m_cursor.texture->update(m_cursor.image);
-            m_cursor.cacheKey = m_cursor.image.cacheKey();
-        } else {
-            allocateTexture();
-        }
-    }
-
-    QMatrix4x4 mvp;
-    mvp.ortho(QRect(QPoint(), renderTarget.size()));
-
-    glClearColor(0, 0, 0, 0);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    m_cursor.texture->bind();
-    ShaderBinder binder(ShaderTrait::MapTexture);
-    binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-    m_cursor.texture->render(QRect(0, 0, cursorSize.width(), cursorSize.height()), renderTarget.devicePixelRatio());
-    m_cursor.texture->unbind();
-    glDisable(GL_BLEND);
-}
-
-void DrmOutput::renderCursorQPainter(const RenderTarget &renderTarget)
-{
-    const QRect cursorRect(QPoint(0, 0), m_cursor.image.size() / m_cursor.image.devicePixelRatio());
-
-    QImage *c = std::get<QImage *>(renderTarget.nativeHandle());
-    c->setDevicePixelRatio(scale());
-    c->fill(Qt::transparent);
-
-    QPainter p;
-    p.begin(c);
-    p.setWorldTransform(logicalToNativeMatrix(cursorRect, 1, transform()).toTransform());
-    p.setRenderHint(QPainter::SmoothPixmapTransform);
-    p.drawImage(QPoint(0, 0), m_cursor.image);
-    p.end();
-}
 }
