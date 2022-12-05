@@ -34,6 +34,13 @@ namespace KWin
 
 static const QVector<uint64_t> linearModifier = {DRM_FORMAT_MOD_LINEAR};
 
+static gbm_format_name_desc formatName(uint32_t format)
+{
+    gbm_format_name_desc ret;
+    gbm_format_get_name(format, &ret);
+    return ret;
+}
+
 EglGbmLayerSurface::EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target)
     : m_gpu(gpu)
     , m_eglBackend(eglBackend)
@@ -349,7 +356,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface &surfac
     } else {
         const auto ret = DrmFramebuffer::createFramebuffer(sourceBuffer);
         if (!ret) {
-            qCWarning(KWIN_DRM, "Failed to create framebuffer: %s", strerror(errno));
+            qCWarning(KWIN_DRM, "Failed to create %s framebuffer: %s", formatName(sourceBuffer->format()).name, strerror(errno));
         }
         return ret;
     }
@@ -359,12 +366,12 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importDmabuf(GbmBuffer *sour
 {
     const auto imported = GbmBuffer::importBuffer(m_gpu, sourceBuffer, sourceBuffer->flags() | GBM_BO_USE_SCANOUT);
     if (!imported) {
-        qCWarning(KWIN_DRM, "failed to import gbm_bo for multi-gpu usage: %s", strerror(errno));
+        qCWarning(KWIN_DRM, "failed to import %s gbm_bo for multi-gpu usage: %s", formatName(sourceBuffer->format()).name, strerror(errno));
         return nullptr;
     }
     const auto ret = DrmFramebuffer::createFramebuffer(imported);
     if (!ret) {
-        qCWarning(KWIN_DRM, "Failed to create framebuffer for multi-gpu: %s", strerror(errno));
+        qCWarning(KWIN_DRM, "Failed to create %s framebuffer for multi-gpu: %s", formatName(imported->format()).name, strerror(errno));
     }
     return ret;
 }
@@ -373,12 +380,13 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithCpu(Surface &surfa
 {
     Q_ASSERT(surface.importSwapchain && !surface.importSwapchain->isEmpty());
     if (!sourceBuffer->map(GBM_BO_TRANSFER_READ)) {
-        qCWarning(KWIN_DRM, "mapping a gbm_bo failed: %s", strerror(errno));
+        qCWarning(KWIN_DRM, "mapping a %s gbm_bo failed: %s", formatName(sourceBuffer->format()).name, strerror(errno));
         return nullptr;
     }
     const auto importBuffer = surface.importSwapchain->acquireBuffer();
     if (sourceBuffer->planeCount() != 1 || sourceBuffer->strides()[0] != importBuffer->strides()[0]) {
-        qCCritical(KWIN_DRM, "stride of gbm_bo (%d) and dumb buffer (%d) don't match!", sourceBuffer->strides()[0], importBuffer->strides()[0]);
+        qCCritical(KWIN_DRM, "stride of gbm_bo (%d) and dumb buffer (%d) with format %s don't match!",
+                   sourceBuffer->strides()[0], importBuffer->strides()[0], formatName(sourceBuffer->format()).name);
         return nullptr;
     }
     if (!memcpy(importBuffer->data(), sourceBuffer->mappedData(), importBuffer->size().height() * importBuffer->strides()[0])) {
@@ -386,7 +394,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithCpu(Surface &surfa
     }
     const auto ret = DrmFramebuffer::createFramebuffer(importBuffer);
     if (!ret) {
-        qCWarning(KWIN_DRM, "Failed to create framebuffer for CPU import: %s", strerror(errno));
+        qCWarning(KWIN_DRM, "Failed to create %s framebuffer for CPU import: %s", formatName(sourceBuffer->format()).name, strerror(errno));
     }
     return ret;
 }
