@@ -40,7 +40,7 @@ void RenderLoopPrivate::scheduleRepaint()
         return;
     }
     if (vrrPolicy == RenderLoop::VrrPolicy::Always || (vrrPolicy == RenderLoop::VrrPolicy::Automatic && fullscreenItem != nullptr)) {
-        presentMode = SyncMode::Adaptive;
+        presentMode = allowTearing ? SyncMode::AdaptiveAsync : SyncMode::Adaptive;
     } else {
         presentMode = allowTearing ? SyncMode::Async : SyncMode::Fixed;
     }
@@ -95,7 +95,7 @@ void RenderLoopPrivate::scheduleRepaint()
         nextRenderTimestamp = currentTime;
     }
 
-    if (presentMode == SyncMode::Async) {
+    if (presentMode == SyncMode::Async || presentMode == SyncMode::AdaptiveAsync) {
         compositeTimer.start(0);
     } else {
         const std::chrono::nanoseconds waitInterval = nextRenderTimestamp - currentTime;

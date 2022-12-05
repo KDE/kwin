@@ -210,7 +210,7 @@ void DrmPipeline::prepareAtomicPresentation()
         contentType->setEnum(m_pending.contentType);
     }
 
-    m_pending.crtc->setPending(DrmCrtc::PropertyIndex::VrrEnabled, m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive);
+    m_pending.crtc->setPending(DrmCrtc::PropertyIndex::VrrEnabled, m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync);
     m_pending.crtc->setPending(DrmCrtc::PropertyIndex::Gamma_LUT, m_pending.gamma ? m_pending.gamma->blobId() : 0);
     const auto modeSize = m_pending.mode->size();
     const auto fb = m_pending.layer->currentBuffer().get();

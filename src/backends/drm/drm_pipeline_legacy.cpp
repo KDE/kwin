@@ -31,7 +31,7 @@ DrmPipeline::Error DrmPipeline::presentLegacy()
     }
     const auto buffer = m_pending.layer->currentBuffer();
     uint32_t flags = DRM_MODE_PAGE_FLIP_EVENT;
-    if (m_pending.syncMode == RenderLoopPrivate::SyncMode::Async) {
+    if (m_pending.syncMode == RenderLoopPrivate::SyncMode::Async || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync) {
         flags |= DRM_MODE_PAGE_FLIP_ASYNC;
     }
     if (drmModePageFlip(gpu()->fd(), m_pending.crtc->id(), buffer->framebufferId(), flags, gpu()) != 0) {
@@ -97,7 +97,7 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
     }
     if (activePending()) {
         auto vrr = m_pending.crtc->getProp(DrmCrtc::PropertyIndex::VrrEnabled);
-        if (vrr && !vrr->setPropertyLegacy(m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive)) {
+        if (vrr && !vrr->setPropertyLegacy(m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync)) {
             qCWarning(KWIN_DRM) << "Setting vrr failed!" << strerror(errno);
             return errnoToError();
         }

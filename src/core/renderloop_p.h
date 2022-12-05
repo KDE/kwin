@@ -50,6 +50,8 @@ public:
     enum class SyncMode {
         Fixed,
         Adaptive,
+        /* adaptive if possible, async if not */
+        AdaptiveAsync,
         Async
     };
     SyncMode presentMode = SyncMode::Fixed;
