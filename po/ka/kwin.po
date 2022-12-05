@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-04 00:47+0000\n"
-"PO-Revision-Date: 2022-12-03 06:51+0100\n"
+"PO-Revision-Date: 2022-12-04 07:12+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -2427,7 +2427,7 @@ msgstr "ფანჯრის დანარჩენი ფანჯრებ�
 #: useractions.cpp:1020
 #, kde-format
 msgid "Activate Window Demanding Attention"
-msgstr ""
+msgstr "ყურადღების მომთხოვნ ფანჯარაზე გადართვა"
 
 #: useractions.cpp:1022
 #, kde-format
@@ -2522,52 +2522,52 @@ msgstr ""
 #: useractions.cpp:1058
 #, kde-format
 msgid "Switch to Window Above"
-msgstr ""
+msgstr "ზედა ფანჯარაზე გადართვა"
 
 #: useractions.cpp:1060
 #, kde-format
 msgid "Switch to Window Below"
-msgstr ""
+msgstr "ქვედა ფანჯარაზე გადართვა"
 
 #: useractions.cpp:1062
 #, kde-format
 msgid "Switch to Window to the Right"
-msgstr ""
+msgstr "მარჯვენა ფანჯარაზე გადართვა"
 
 #: useractions.cpp:1064
 #, kde-format
 msgid "Switch to Window to the Left"
-msgstr ""
+msgstr "მარცხენა ფანჯარაზე გადართვა"
 
 #: useractions.cpp:1066
 #, kde-format
 msgid "Increase Opacity of Active Window by 5 %"
-msgstr ""
+msgstr "ფანჯრის გაუმჭვირვალობის 5%-ით გაზრდა"
 
 #: useractions.cpp:1068
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5 %"
-msgstr ""
+msgstr "ფანჯრის გაუმჭვირვალობის 5%-ით Semcireba"
 
 #: useractions.cpp:1071
 #, kde-format
 msgid "Keep Window on All Desktops"
-msgstr ""
+msgstr "ფანჯრის ყველა სამუშაო მაგიდაზე ჩვენება"
 
 #: useractions.cpp:1082
 #, kde-format
 msgid "Window to Desktop %1"
-msgstr ""
+msgstr "ფანჯრის გადატანა მაგიდაზე %1"
 
 #: useractions.cpp:1084
 #, kde-format
 msgid "Window to Next Desktop"
-msgstr ""
+msgstr "ფანჯრის შემდეგ სამუშაო მაგიდაზე გადატანა"
 
 #: useractions.cpp:1085
 #, kde-format
 msgid "Window to Previous Desktop"
-msgstr ""
+msgstr "ფანჯრის წინა სამუშაო მაგიდაზე გადატანა"
 
 #: useractions.cpp:1086
 #, kde-format
