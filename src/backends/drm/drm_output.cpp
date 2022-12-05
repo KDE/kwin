@@ -453,7 +453,7 @@ bool DrmOutput::usesSoftwareCursor() const
     return !m_setCursorSuccessful || !m_moveCursorSuccessful;
 }
 
-DrmOutputLayer *DrmOutput::outputLayer() const
+DrmOutputLayer *DrmOutput::primaryLayer() const
 {
     return m_pipeline->primaryLayer();
 }

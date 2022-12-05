@@ -208,13 +208,13 @@ void EglGbmBackend::present(Output *output)
 
 OutputLayer *EglGbmBackend::primaryLayer(Output *output)
 {
-    return static_cast<DrmAbstractOutput *>(output)->outputLayer();
+    return static_cast<DrmAbstractOutput *>(output)->primaryLayer();
 }
 
 std::shared_ptr<GLTexture> EglGbmBackend::textureForOutput(Output *output) const
 {
     const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
-    return static_cast<EglGbmLayer *>(drmOutput->outputLayer())->texture();
+    return static_cast<EglGbmLayer *>(drmOutput->primaryLayer())->texture();
 }
 
 std::optional<GbmFormat> EglGbmBackend::gbmFormatForDrmFormat(uint32_t format) const

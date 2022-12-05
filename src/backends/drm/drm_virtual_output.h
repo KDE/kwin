@@ -30,7 +30,7 @@ public:
     ~DrmVirtualOutput() override;
 
     bool present() override;
-    DrmOutputLayer *outputLayer() const override;
+    DrmOutputLayer *primaryLayer() const override;
     void recreateSurface();
 
 private:
