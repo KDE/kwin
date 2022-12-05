@@ -419,7 +419,9 @@ void KCMKWinRules::fillSettingsFromProperties(RuleSettings *settings, const QVar
     settings->setDefaults();
 
     if (wholeApp) {
-        settings->setDescription(i18n("Application settings for %1", wmclass_class));
+        if (!wmclass_class.isEmpty()) {
+            settings->setDescription(i18n("Application settings for %1", wmclass_class));
+        }
         // TODO maybe exclude some types? If yes, then also exclude them when searching.
         settings->setTypes(NET::AllTypesMask);
         settings->setTitlematch(Rules::UnimportantMatch);
@@ -439,7 +441,9 @@ void KCMKWinRules::fillSettingsFromProperties(RuleSettings *settings, const QVar
         return;
     }
 
-    settings->setDescription(i18n("Window settings for %1", wmclass_class));
+    if (!wmclass_class.isEmpty()) {
+        settings->setDescription(i18n("Window settings for %1", wmclass_class));
+    }
     if (type == NET::Unknown) {
         settings->setTypes(NET::NormalMask);
     } else {

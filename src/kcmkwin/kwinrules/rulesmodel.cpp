@@ -697,6 +697,17 @@ void RulesModel::setSuggestedProperties(const QVariantMap &info)
     const QString wmcompleteclass = QStringLiteral("%1 %2").arg(info.value("resourceName").toString(),
                                                                 info.value("resourceClass").toString());
 
+    // This window is not providing the class according to spec (WM_CLASS on X11, appId on Wayland)
+    // Notify the user that this is a bug within the application, so there's nothing we can do
+    if (wmsimpleclass.isEmpty()) {
+        Q_EMIT showErrorMessage(i18n("Window class not available"),
+                                xi18nc("@info", "This application is not providing a class for the window, "
+                                                "so KWin cannot use it to match and apply any rules. "
+                                                "If you still want to apply some rules to it, "
+                                                "try to match other properties like the window title instead.<nl/><nl/>"
+                                                "Please consider reporting this bug to the application's developers."));
+    }
+
     m_rules["wmclass"]->setSuggestedValue(wmsimpleclass);
     m_rules["wmclasshelper"]->setSuggestedValue(wmcompleteclass);
 
