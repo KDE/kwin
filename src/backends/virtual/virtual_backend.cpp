@@ -66,6 +66,23 @@ Outputs VirtualBackend::outputs() const
     return m_outputs;
 }
 
+VirtualOutput *VirtualBackend::createOutput(const QPoint &position, const QSize &size, qreal scale)
+{
+    VirtualOutput *output = new VirtualOutput(this);
+    output->init(position, size, scale);
+    m_outputs.append(output);
+    Q_EMIT outputAdded(output);
+    output->updateEnabled(true);
+    return output;
+}
+
+Output *VirtualBackend::addOutput(const QSize &size, qreal scale)
+{
+    VirtualOutput *output = createOutput(QPoint(), size * scale, scale);
+    Q_EMIT outputsQueried();
+    return output;
+}
+
 void VirtualBackend::setVirtualOutputs(const QVector<QRect> &geometries, QVector<int> scales)
 {
     Q_ASSERT(scales.size() == 0 || scales.size() == geometries.size());
@@ -73,14 +90,7 @@ void VirtualBackend::setVirtualOutputs(const QVector<QRect> &geometries, QVector
     const QVector<VirtualOutput *> removed = m_outputs;
 
     for (int i = 0; i < geometries.size(); i++) {
-        VirtualOutput *vo = new VirtualOutput(this);
-        vo->init(geometries[i].topLeft(), geometries[i].size());
-        if (scales.size()) {
-            vo->updateScale(scales.at(i));
-        }
-        m_outputs.append(vo);
-        Q_EMIT outputAdded(vo);
-        vo->updateEnabled(true);
+        createOutput(geometries[i].topLeft(), geometries[i].size(), scales.value(i, 1.0));
     }
 
     for (VirtualOutput *output : removed) {

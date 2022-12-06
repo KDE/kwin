@@ -41,6 +41,7 @@ public:
     std::unique_ptr<QPainterBackend> createQPainterBackend() override;
     std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
 
+    Output *addOutput(const QSize &size, qreal scale);
     Q_INVOKABLE void setVirtualOutputs(const QVector<QRect> &geometries, QVector<int> scales = QVector<int>());
 
     Outputs outputs() const override;
@@ -54,6 +55,8 @@ Q_SIGNALS:
     void virtualOutputsSet(bool countChanged);
 
 private:
+    VirtualOutput *createOutput(const QPoint &position, const QSize &size, qreal scale);
+
     QVector<VirtualOutput *> m_outputs;
     std::unique_ptr<QTemporaryDir> m_screenshotDir;
 };

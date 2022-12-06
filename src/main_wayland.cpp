@@ -553,10 +553,15 @@ int main(int argc, char *argv[])
         }
         a.setOutputBackend(std::make_unique<KWin::DrmBackend>(a.session()));
         break;
-    case BackendType::Virtual:
+    case BackendType::Virtual: {
+        auto outputBackend = std::make_unique<KWin::VirtualBackend>();
+        for (int i = 0; i < outputCount; ++i) {
+            outputBackend->addOutput(initialWindowSize, outputScale);
+        }
         a.setSession(KWin::Session::create(KWin::Session::Type::Noop));
-        a.setOutputBackend(std::make_unique<KWin::VirtualBackend>());
+        a.setOutputBackend(std::move(outputBackend));
         break;
+    }
     case BackendType::X11: {
         QString display = parser.value(x11DisplayOption);
         if (display.isEmpty()) {

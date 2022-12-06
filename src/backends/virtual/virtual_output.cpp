@@ -44,32 +44,20 @@ SoftwareVsyncMonitor *VirtualOutput::vsyncMonitor() const
     return m_vsyncMonitor.get();
 }
 
-void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize)
+void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize, qreal scale)
 {
     const int refreshRate = 60000; // TODO: Make the refresh rate configurable.
     m_renderLoop->setRefreshRate(refreshRate);
     m_vsyncMonitor->setRefreshRate(refreshRate);
 
-    setGeometry(QRect(logicalPosition, pixelSize));
-}
+    auto mode = std::make_shared<OutputMode>(pixelSize, m_vsyncMonitor->refreshRate());
 
-void VirtualOutput::setGeometry(const QRect &geo)
-{
-    auto mode = std::make_shared<OutputMode>(geo.size(), m_vsyncMonitor->refreshRate());
-
-    State next = m_state;
-    next.modes = {mode};
-    next.currentMode = mode;
-    next.position = geo.topLeft();
-
-    setState(next);
-}
-
-void VirtualOutput::updateScale(qreal scale)
-{
-    State next = m_state;
-    next.scale = scale;
-    setState(next);
+    setState(State{
+        .position = logicalPosition,
+        .scale = scale,
+        .modes = {mode},
+        .currentMode = mode,
+    });
 }
 
 void VirtualOutput::updateEnabled(bool enabled)

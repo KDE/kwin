@@ -30,9 +30,7 @@ public:
     RenderLoop *renderLoop() const override;
     SoftwareVsyncMonitor *vsyncMonitor() const;
 
-    void init(const QPoint &logicalPosition, const QSize &pixelSize);
-    void setGeometry(const QRect &geo);
-    void updateScale(qreal scale);
+    void init(const QPoint &logicalPosition, const QSize &pixelSize, qreal scale);
     void updateEnabled(bool enabled);
 
 private:
