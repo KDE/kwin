@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2022-11-21 12:25+0100\n"
+"PO-Revision-Date: 2022-12-04 17:15+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@neuf.fr>\n"
 "Language-Team: French <kde-francophone@kde.org>\n"
 "Language: fr\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.11.80\n"
+"X-Generator: Lokalize 22.11.90\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -753,45 +753,42 @@ msgstr " %"
 #: tileseditor/tileseditoreffect.cpp:29
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr ""
+msgstr "Basculer ou sortir de l'éditeur de recouvrement"
 
 #: tileseditor/qml/main.qml:147
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "Remplissage :"
 
 #: tileseditor/qml/main.qml:157
 #, kde-format
 msgid "Load Layout..."
-msgstr ""
+msgstr "Charger une disposition..."
 
 #: tileseditor/qml/main.qml:271
-#, fuzzy, kde-format
-#| msgid "Closest"
+#, kde-format
 msgid "Close"
-msgstr "Le plus proche"
+msgstr "Proche"
 
 #: tileseditor/qml/TileDelegate.qml:171
-#, fuzzy, kde-format
-#| msgid "Horizontal:"
+#, kde-format
 msgid "Split Horizontally"
-msgstr "Horizontal :"
+msgstr "Scinder horizontalement"
 
 #: tileseditor/qml/TileDelegate.qml:178
-#, fuzzy, kde-format
-#| msgid "Vertical:"
+#, kde-format
 msgid "Split Vertically"
-msgstr "Vertical :"
+msgstr "Scinder verticalement"
 
 #: tileseditor/qml/TileDelegate.qml:186 tileseditor/qml/TileDelegate.qml:215
 #, kde-format
 msgid "Add Floating Tile"
-msgstr ""
+msgstr "Ajouter un recouvrement flottant"
 
 #: tileseditor/qml/TileDelegate.qml:195
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "Supprimer"
 
 #: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
 #, kde-format

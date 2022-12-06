@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-01 00:48+0000\n"
+"POT-Creation-Date: 2022-12-06 00:47+0000\n"
 "PO-Revision-Date: 2010-12-17 21:24+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -151,6 +151,18 @@ msgstr ""
 #| msgid "Various animations"
 msgid "Force smoothest animations"
 msgstr "การเคลื่อนไหวแบบต่าง ๆ"
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_AllowTearing)
+#: compositing.ui:213
+#, kde-format
+msgid "Allows applications to cause screen tearing in fullscreen."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowTearing)
+#: compositing.ui:216
+#, kde-format
+msgid "Allow tearing in fullscreen"
+msgstr ""
 
 #: main.cpp:79
 #, kde-format

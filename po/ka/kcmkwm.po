@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2022-12-03 06:48+0100\n"
+"PO-Revision-Date: 2022-12-05 05:29+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -32,7 +32,7 @@ msgstr "Temuri.doghonadze@gmail.com"
 #: actions.ui:17
 #, kde-format
 msgid "Inactive Inner Window Actions"
-msgstr ""
+msgstr "არააქტიური შიდა ფანჯრის ქმედებები"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -55,7 +55,7 @@ msgstr ""
 #: actions.ui:43 actions.ui:83 actions.ui:123
 #, kde-format
 msgid "Activate, raise and pass click"
-msgstr ""
+msgstr "გაააქტიურეთ, ამოწიეთ და დააწკაპუნეთ"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -156,7 +156,7 @@ msgstr "გაააქტიურეთ, აწიეთ და ჩამო�
 #: actions.ui:184
 #, kde-format
 msgid "Inner Window, Titlebar and Frame Actions"
-msgstr ""
+msgstr "შიდა ფანჯრის, სათაურის ზოლისა და ჩარჩოს ქმედებები"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: actions.ui:195
@@ -405,7 +405,7 @@ msgstr "ზემოდან დატოვება/ფანჯრის ქ
 #: actions.ui:495 mouse.ui:122
 #, kde-format
 msgid "Move to previous/next desktop"
-msgstr ""
+msgstr "წინა/შემდეგ სამუშაო მაგიდაზე გადატანა"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
@@ -418,7 +418,7 @@ msgstr "გაუმჭვირვალობის შეცვლა"
 #: advanced.ui:20
 #, kde-format
 msgid "Window &unshading:"
-msgstr ""
+msgstr "ფანჯრის &განჩრდილვა:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:32
@@ -455,7 +455,7 @@ msgstr " მწმ"
 #: advanced.ui:66
 #, kde-format
 msgid "Window &placement:"
-msgstr ""
+msgstr "ფანჯრის &მდებარეობა:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_Placement)
 #: advanced.ui:76
@@ -927,7 +927,7 @@ msgstr "ფანჯრის &ქმედებები"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: mouse.ui:17
-#, fuzzy, kde-format
+#, kde-format
 msgid "Titlebar Actions"
 msgstr "ქუდის ქმედებები"
 
