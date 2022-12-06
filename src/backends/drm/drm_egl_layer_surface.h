@@ -72,6 +72,7 @@ private:
         MultiGpuImportMode importMode;
         std::shared_ptr<GbmBuffer> currentBuffer;
         std::shared_ptr<DrmFramebuffer> currentFramebuffer;
+        bool forceLinear = false;
     };
     bool checkSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats);
     bool doesSurfaceFit(const Surface &surface, const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;

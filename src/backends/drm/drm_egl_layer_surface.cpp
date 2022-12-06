@@ -216,7 +216,7 @@ bool EglGbmLayerSurface::doesSurfaceFit(const Surface &surface, const QSize &siz
     return surface.gbmSurface
         && surface.gbmSurface->size() == size
         && formats.contains(surface.gbmSurface->format())
-        && (surface.gbmSurface->modifiers().empty() || surface.gbmSurface->modifiers() == formats[surface.gbmSurface->format()]);
+        && (surface.forceLinear || surface.gbmSurface->modifiers().empty() || surface.gbmSurface->modifiers() == formats[surface.gbmSurface->format()]);
 }
 
 std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const
@@ -279,7 +279,8 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
 {
     Surface ret;
     ret.importMode = importMode;
-    ret.gbmSurface = createGbmSurface(size, format, modifiers, importMode == MultiGpuImportMode::DumbBuffer || m_bufferTarget != BufferTarget::Normal);
+    ret.forceLinear = importMode == MultiGpuImportMode::DumbBuffer || m_bufferTarget != BufferTarget::Normal;
+    ret.gbmSurface = createGbmSurface(size, format, modifiers, ret.forceLinear);
     if (!ret.gbmSurface) {
         return std::nullopt;
     }
