@@ -73,9 +73,11 @@ int WindowSystem::currentDesktop()
     return 0;
 }
 
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 101)
 void WindowSystem::demandAttention(WId win, bool set)
 {
 }
+#endif
 
 QString WindowSystem::desktopName(int desktop)
 {
@@ -158,9 +160,11 @@ void WindowSystem::setStrut(WId win, int left, int right, int top, int bottom)
 {
 }
 
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 101)
 void WindowSystem::setIcons(WId win, const QPixmap &icon, const QPixmap &miniIcon)
 {
 }
+#endif
 
 void WindowSystem::setOnActivities(WId win, const QStringList &activities)
 {

@@ -22,7 +22,9 @@ public:
     WId activeWindow() override;
     void activateWindow(WId win, long time) override;
     void forceActiveWindow(WId win, long time) override;
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 101)
     void demandAttention(WId win, bool set) override;
+#endif
     bool compositingActive() override;
     int currentDesktop() override;
     int numberOfDesktops() override;
@@ -35,7 +37,9 @@ public:
     WId groupLeader(WId window) override;
 #endif
     QPixmap icon(WId win, int width, int height, bool scale, int flags) override;
+#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 101)
     void setIcons(WId win, const QPixmap &icon, const QPixmap &miniIcon) override;
+#endif
     void setType(WId win, NET::WindowType windowType) override;
     void setState(WId win, NET::States state) override;
     void clearState(WId win, NET::States state) override;
