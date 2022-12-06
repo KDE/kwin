@@ -96,32 +96,33 @@ void GlobalShortcutsTest::testNonLatinLayout_data()
     QTest::addColumn<int>("key");
     QTest::addColumn<Qt::Key>("qtKey");
 
-    for (const auto &modifier :
+    for (const auto &[modifier, qtModifier] :
          QVector<QPair<int, Qt::Modifier>>{
              {KEY_LEFTCTRL, Qt::CTRL},
              {KEY_LEFTALT, Qt::ALT},
              {KEY_LEFTSHIFT, Qt::SHIFT},
              {KEY_LEFTMETA, Qt::META},
          }) {
-        for (const auto &key :
+        for (const auto &[key, qtKey] :
              QVector<QPair<int, Qt::Key>> {
                  // Tab is example of a key usually the same on different layouts, check it first
-                 {KEY_TAB, Qt::Key_Tab},
+                 {KEY_TAB, qtModifier != Qt::SHIFT ? Qt::Key_Tab : Qt::Key_Backtab},
 
                      // Then check a key with a Latin letter.
                      // The symbol will probably be differ on non-Latin layout.
                      // On Russian layout, "w" key has a cyrillic letter "ц"
                      {KEY_W, Qt::Key_W},
 
-#if QT_VERSION_MAJOR > 5 // since Qt 5 LTS is frozen
                      // More common case with any Latin1 symbol keys, including punctuation, should work also.
                      // "`" key has a "ё" letter on Russian layout
                      // FIXME: QTBUG-90611
-                     {KEY_GRAVE, Qt::Key_QuoteLeft},
-#endif
+                 {KEY_GRAVE, qtModifier != Qt::SHIFT ? Qt::Key_QuoteLeft : Qt::Key_AsciiTilde},
              }) {
-            QTest::newRow(QKeySequence(modifier.second + key.second).toString().toLatin1().constData())
-                << modifier.first << modifier.second << key.first << key.second;
+            // remove Shift modifier is it's consumed (see BUG 370341 for why to check isletter() here)
+            auto possiblyConsumedModifier = qtModifier == Qt::SHIFT && !QChar::isLetter(qtKey) ? Qt::Modifier() : qtModifier;
+            QTest::newRow(QKeySequence(possiblyConsumedModifier + qtKey).toString().toLatin1())
+                << modifier << possiblyConsumedModifier
+                << key << qtKey;
         }
     }
 }
@@ -151,8 +152,10 @@ void GlobalShortcutsTest::testNonLatinLayout()
 
     quint32 timestamp = 0;
     Test::keyboardKeyPressed(modifierKey, timestamp++);
-    QCOMPARE(input()->keyboardModifiers(), qtModifier);
     Test::keyboardKeyPressed(key, timestamp++);
+
+    // passing keycode so the function returns precise result
+    QCOMPARE(xkb->modifiersRelevantForGlobalShortcuts(key), qtModifier);
 
     Test::keyboardKeyReleased(key, timestamp++);
     Test::keyboardKeyReleased(modifierKey, timestamp++);
@@ -417,10 +420,12 @@ void GlobalShortcutsTest::testSetupWindowShortcut()
     auto sequenceEdit = workspace()->shortcutDialog()->findChild<QKeySequenceEdit *>();
     QVERIFY(sequenceEdit);
 
+#if QT_VERSION_MAJOR < 6
     // the QKeySequenceEdit field does not get focus, we need to pass it focus manually
     QEXPECT_FAIL("", "Edit does not have focus", Continue);
     QVERIFY(sequenceEdit->hasFocus());
     sequenceEdit->setFocus();
+#endif
     QTRY_VERIFY(sequenceEdit->hasFocus());
 
     quint32 timestamp = 0;

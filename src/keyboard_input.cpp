@@ -249,9 +249,10 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     }
 
     const xkb_keysym_t keySym = m_xkb->currentKeysym();
-    const Qt::KeyboardModifiers globalShortcutsModifiers = m_xkb->modifiersRelevantForGlobalShortcuts(key);
     KeyEvent event(type,
-                   m_xkb->toQtKey(keySym, key, globalShortcutsModifiers ? Qt::ControlModifier : Qt::KeyboardModifiers()),
+                   // passing Qt::ControlModifier makes layout hopping on Qt side,
+                   // needed for proper shortcuts work
+                   m_xkb->toQtKey(keySym, key, m_xkb->modifiers() ? Qt::ControlModifier : Qt::NoModifier),
                    m_xkb->modifiers(),
                    key,
                    keySym,
@@ -259,7 +260,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
                    autoRepeat,
                    time,
                    device);
-    event.setModifiersRelevantForGlobalShortcuts(globalShortcutsModifiers);
+    event.setModifiersRelevantForGlobalShortcuts(m_xkb->modifiersRelevantForGlobalShortcuts(key));
 
     m_input->processSpies(std::bind(&InputEventSpy::keyEvent, std::placeholders::_1, &event));
     if (!m_inited) {
