@@ -206,7 +206,7 @@ void VirtualEglBackend::present(Output *output)
 
     if (m_backend->saveFrames()) {
         const std::unique_ptr<VirtualEglLayer> &layer = m_outputs[output];
-        layer->texture()->toImage().save(QStringLiteral("%1/%2.png").arg(m_backend->saveFrames()).arg(QString::number(m_frameCounter++)));
+        layer->texture()->toImage().save(QStringLiteral("%1/%2-%3.png").arg(m_backend->screenshotDirPath(), output->name(), QString::number(m_frameCounter++)));
     }
 }
 
