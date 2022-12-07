@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-06 00:47+0000\n"
-"PO-Revision-Date: 2022-03-19 19:50+0300\n"
+"PO-Revision-Date: 2022-12-06 19:24+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 22.08.3\n"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
 #: compositing.ui:31
@@ -39,9 +39,9 @@ msgid ""
 "Keeping the window thumbnail always interferes with the minimized state of "
 "windows. This can result in windows not suspending their work when minimized."
 msgstr ""
-"Pencere küçük görsellerini tutumak herzaman pencerelerin simge durumuna "
-"gelmesini engeller. Bunun sonucu olarak, pencere küçültüldüğünde kendi işini "
-"durdurabilir."
+"Pencere küçük görselini tutmak, her zaman pencerelerin simge durumuna "
+"küçültülmüş durumuna müdahale eder. Bu, pencerelerin simge durumuna "
+"küçültüldüğünde çalışmalarını askıya almamasına neden olabilir."
 
 #. i18n: ectx: property (text), widget (QLabel, compositingLabel)
 #: compositing.ui:56
@@ -156,13 +156,13 @@ msgstr "En pürüzsüz canlandırmayı zorla"
 #: compositing.ui:213
 #, kde-format
 msgid "Allows applications to cause screen tearing in fullscreen."
-msgstr ""
+msgstr "Tam ekrandayken uygulamaların yıpranmaya neden olmasına izin verir"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowTearing)
 #: compositing.ui:216
 #, kde-format
 msgid "Allow tearing in fullscreen"
-msgstr ""
+msgstr "Tam ekranda yıpranmaya izin ver"
 
 #: main.cpp:79
 #, kde-format

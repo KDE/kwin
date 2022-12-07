@@ -11,17 +11,17 @@ msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2022-12-03 07:36+0100\n"
+"PO-Revision-Date: 2022-12-06 08:27+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
-"%100==4 ? 3 : 0);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100>=3 && n"
+"%100<=4 ? 2 : 3);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
-"X-Generator: Lokalize 22.08.3\n"
+"X-Generator: Poedit 3.1.1\n"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: blur/blur_config.ui:17
@@ -745,7 +745,7 @@ msgstr " %"
 
 #: tileseditor/kcm/tileseditoreffectkcm.cpp:37
 #: tileseditor/tileseditoreffect.cpp:29
-#, fuzzy, kde-format
+#, kde-format
 msgid "Toggle Tiles Editor"
 msgstr "Preklopi urejevalnik sličic"
 
@@ -775,7 +775,7 @@ msgid "Split Vertically"
 msgstr "Razcepi navpično"
 
 #: tileseditor/qml/TileDelegate.qml:186 tileseditor/qml/TileDelegate.qml:215
-#, fuzzy, kde-format
+#, kde-format
 msgid "Add Floating Tile"
 msgstr "Dodaj plavajočo sličico"
 

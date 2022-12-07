@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: கேபசூ 4.1 தமிழாக்கம்\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2022-11-22 21:42+0530\n"
+"PO-Revision-Date: 2022-12-06 20:05+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -747,30 +747,27 @@ msgstr ""
 #: tileseditor/qml/main.qml:147
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "இடையிலான இடைவெளி:"
 
 #: tileseditor/qml/main.qml:157
 #, kde-format
 msgid "Load Layout..."
-msgstr ""
+msgstr "தளவமைப்பை ஏற்று..."
 
 #: tileseditor/qml/main.qml:271
-#, fuzzy, kde-format
-#| msgid "Closest"
+#, kde-format
 msgid "Close"
-msgstr "பக்கத்து பக்கத்தில்"
+msgstr "மூடு"
 
 #: tileseditor/qml/TileDelegate.qml:171
-#, fuzzy, kde-format
-#| msgid "Horizontal:"
+#, kde-format
 msgid "Split Horizontally"
-msgstr "கிடைமட்டமாக:"
+msgstr "கிடைமட்டமாக பிரி"
 
 #: tileseditor/qml/TileDelegate.qml:178
-#, fuzzy, kde-format
-#| msgid "Vertical:"
+#, kde-format
 msgid "Split Vertically"
-msgstr "நெடுக்காக:"
+msgstr "நெடுக்காக பிரி"
 
 #: tileseditor/qml/TileDelegate.qml:186 tileseditor/qml/TileDelegate.qml:215
 #, kde-format
@@ -780,7 +777,7 @@ msgstr ""
 #: tileseditor/qml/TileDelegate.qml:195
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "நீக்கு"
 
 #: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
 #, kde-format

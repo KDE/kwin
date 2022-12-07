@@ -1,9 +1,9 @@
 # Translation of kcmkwincompositing.po to Catalan
-# Copyright (C) 2007-2021 This_file_is_part_of_KDE
+# Copyright (C) 2007-2022 This_file_is_part_of_KDE
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# Josep M. Ferrer <txemaq@gmail.com>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021.
+# Josep M. Ferrer <txemaq@gmail.com>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022.
 # Antoni Bella Pérez <antonibella5@yahoo.com>, 2014, 2016, 2020.
 # Empar Montoro Martín <montoro_mde@gva.es>, 2019.
 msgid ""
@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-06 00:47+0000\n"
-"PO-Revision-Date: 2021-11-14 09:54+0100\n"
+"PO-Revision-Date: 2022-12-06 10:21+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -163,80 +163,16 @@ msgstr "Força animacions més suaus"
 #, kde-format
 msgid "Allows applications to cause screen tearing in fullscreen."
 msgstr ""
+"Permet que les aplicacions puguin provocar esquinçaments de pantalla a "
+"pantalla completa."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowTearing)
 #: compositing.ui:216
 #, kde-format
 msgid "Allow tearing in fullscreen"
-msgstr ""
+msgstr "Permet esquinçaments a pantalla completa"
 
 #: main.cpp:79
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Torna a activar la detecció de l'OpenGL"
-
-#~ msgid ""
-#~ "Scale method \"Accurate\" is not supported by all hardware and can cause "
-#~ "performance regressions and rendering artifacts."
-#~ msgstr ""
-#~ "El mètode d'escala «Exacta» no està admès per tot el maquinari i pot "
-#~ "provocar regressions al rendiment i objectes a la representació."
-
-#~ msgid "Scale method:"
-#~ msgstr "Mètode d'escala:"
-
-#~ msgid "Smooth"
-#~ msgstr "Suavitzat"
-
-#~ msgid "Accurate"
-#~ msgstr "Acurat"
-
-#~ msgid "Tearing prevention (\"vsync\"):"
-#~ msgstr "Prevenció de l'esquinçament («vsync»):"
-
-#~ msgid "Automatic"
-#~ msgstr "Automàtic"
-
-#~ msgid "Only when cheap"
-#~ msgstr "Només quan sigui econòmic"
-
-#~ msgid "Full screen repaints"
-#~ msgstr "Repinta tota la pantalla"
-
-#~ msgid "Re-use screen content"
-#~ msgstr "Torna a usar el contingut de la pantalla"
-
-#~ msgid ""
-#~ "\"Only when cheap\" only prevents tearing for full screen changes like a "
-#~ "video."
-#~ msgstr ""
-#~ "«Només quan sigui econòmic» només prevé el parpelleig dels canvis a "
-#~ "pantalla completa, com un vídeo."
-
-#~ msgid "\"Full screen repaints\" can cause performance problems."
-#~ msgstr "«Repinta tota la pantalla» pot causar problemes de rendiment."
-
-#~ msgid ""
-#~ "\"Re-use screen content\" causes severe performance problems on MESA "
-#~ "drivers."
-#~ msgstr ""
-#~ "«Torna a usar el contingut de la pantalla» causa greus problemes de "
-#~ "rendiment amb els controladors de MESA."
-
-#~ msgid "Rendering backend:"
-#~ msgstr "Dorsal de renderització:"
-
-#~ msgid "OpenGL 3.1"
-#~ msgstr "OpenGL 3.1"
-
-#~ msgid "OpenGL 2.0"
-#~ msgstr "OpenGL 2.0"
-
-#~ msgid "Crisp"
-#~ msgstr "Remarcat"
-
-#~ msgid "Smooth (slower)"
-#~ msgstr "Suau (més lent)"
-
-#~ msgid "XRender"
-#~ msgstr "XRender"
