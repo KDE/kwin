@@ -23,8 +23,12 @@
 find_package(PkgConfig)
 pkg_check_modules(PKG_xwayland QUIET xwayland)
 
-set(Xwayland_VERSION ${PKG_xwayland_VERSION})
-pkg_get_variable(Xwayland_HAVE_LISTENFD xwayland have_listenfd)
+if(PKG_xwayland_FOUND)
+    set(Xwayland_VERSION ${PKG_xwayland_VERSION})
+    pkg_get_variable(Xwayland_HAVE_LISTENFD xwayland have_listenfd)
+else()
+    set(Xwayland_HAVE_LISTENFD Y)
+endif()
 
 find_program(Xwayland_EXECUTABLE NAMES Xwayland)
 find_package_handle_standard_args(Xwayland
