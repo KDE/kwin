@@ -42,8 +42,6 @@ public:
     WaylandEglPrimaryLayer(WaylandOutput *output, WaylandEglBackend *backend);
     ~WaylandEglPrimaryLayer() override;
 
-    bool init();
-
     GLFramebuffer *fbo() const;
     void present();
 
@@ -53,7 +51,7 @@ public:
 
 private:
     WaylandOutput *m_waylandOutput;
-    wl_egl_window *m_overlay = nullptr;
+    wl_egl_window *m_eglWindow = nullptr;
     EGLSurface m_eglSurface = EGL_NO_SURFACE;
     int m_bufferAge = 0;
     DamageJournal m_damageJournal;

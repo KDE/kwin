@@ -66,38 +66,27 @@ WaylandEglPrimaryLayer::WaylandEglPrimaryLayer(WaylandOutput *output, WaylandEgl
     : m_waylandOutput(output)
     , m_backend(backend)
 {
-}
-
-bool WaylandEglPrimaryLayer::init()
-{
-    auto surface = m_waylandOutput->surface();
-    const QSize nativeSize = m_waylandOutput->geometry().size() * m_waylandOutput->scale();
-    auto overlay = wl_egl_window_create(*surface, nativeSize.width(), nativeSize.height());
-    if (!overlay) {
+    const QSize nativeSize = m_waylandOutput->pixelSize();
+    m_eglWindow = wl_egl_window_create(*m_waylandOutput->surface(), nativeSize.width(), nativeSize.height());
+    if (!m_eglWindow) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "Creating Wayland Egl window failed";
-        return false;
+        return;
     }
-    m_overlay = overlay;
     m_fbo = std::make_unique<GLFramebuffer>(0, nativeSize);
 
-    EGLSurface eglSurface = EGL_NO_SURFACE;
     if (m_backend->havePlatformBase()) {
-        eglSurface = eglCreatePlatformWindowSurfaceEXT(m_backend->eglDisplay(), m_backend->config(), (void *)overlay, nullptr);
+        m_eglSurface = eglCreatePlatformWindowSurfaceEXT(m_backend->eglDisplay(), m_backend->config(), (void *)m_eglWindow, nullptr);
     } else {
-        eglSurface = eglCreateWindowSurface(m_backend->eglDisplay(), m_backend->config(), overlay, nullptr);
+        m_eglSurface = eglCreateWindowSurface(m_backend->eglDisplay(), m_backend->config(), m_eglWindow, nullptr);
     }
-    if (eglSurface == EGL_NO_SURFACE) {
+    if (m_eglSurface == EGL_NO_SURFACE) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "Create Window Surface failed";
-        return false;
     }
-    m_eglSurface = eglSurface;
-
-    return true;
 }
 
 WaylandEglPrimaryLayer::~WaylandEglPrimaryLayer()
 {
-    wl_egl_window_destroy(m_overlay);
+    wl_egl_window_destroy(m_eglWindow);
 }
 
 GLFramebuffer *WaylandEglPrimaryLayer::fbo() const
@@ -116,7 +105,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
     if (!m_fbo || m_fbo->size() != nativeSize) {
         m_fbo = std::make_unique<GLFramebuffer>(0, nativeSize);
         m_bufferAge = 0;
-        wl_egl_window_resize(m_overlay, nativeSize.width(), nativeSize.height(), 0, 0);
+        wl_egl_window_resize(m_eglWindow, nativeSize.width(), nativeSize.height(), 0, 0);
     }
 
     QRegion repair;
@@ -275,14 +264,9 @@ void WaylandEglBackend::cleanupSurfaces()
 
 bool WaylandEglBackend::createEglWaylandOutput(Output *waylandOutput)
 {
-    auto cursorLayer = std::make_unique<WaylandEglCursorLayer>(static_cast<WaylandOutput *>(waylandOutput), this);
-    auto primaryLayer = std::make_unique<WaylandEglPrimaryLayer>(static_cast<WaylandOutput *>(waylandOutput), this);
-    if (!primaryLayer->init()) {
-        return false;
-    }
     m_outputs[waylandOutput] = Layers{
-        .primaryLayer = std::move(primaryLayer),
-        .cursorLayer = std::move(cursorLayer),
+        .primaryLayer = std::make_unique<WaylandEglPrimaryLayer>(static_cast<WaylandOutput *>(waylandOutput), this),
+        .cursorLayer = std::make_unique<WaylandEglCursorLayer>(static_cast<WaylandOutput *>(waylandOutput), this),
     };
     return true;
 }
