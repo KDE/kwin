@@ -572,7 +572,7 @@ void OutputDeviceV2Interface::updateRgbRange()
 
 OutputDeviceV2Interface *OutputDeviceV2Interface::get(wl_resource *native)
 {
-    if (auto devicePrivate = resource_cast<OutputDeviceV2InterfacePrivate *>(native)) {
+    if (auto devicePrivate = resource_cast<OutputDeviceV2InterfacePrivate *>(native); devicePrivate && !devicePrivate->isGlobalRemoved()) {
         return devicePrivate->q;
     }
     return nullptr;

@@ -35,12 +35,14 @@ protected:
     void kde_output_management_v2_create_configuration(Resource *resource, uint32_t id) override;
 };
 
-class OutputConfigurationV2Interface : public QtWaylandServer::kde_output_configuration_v2
+class OutputConfigurationV2Interface : public QObject, QtWaylandServer::kde_output_configuration_v2
 {
+    Q_OBJECT
 public:
     explicit OutputConfigurationV2Interface(wl_resource *resource);
 
     bool applied = false;
+    bool invalid = false;
     OutputConfiguration config;
     std::optional<OutputDeviceV2Interface *> primaryOutput;
 
@@ -85,27 +87,42 @@ OutputManagementV2Interface::~OutputManagementV2Interface() = default;
 OutputConfigurationV2Interface::OutputConfigurationV2Interface(wl_resource *resource)
     : QtWaylandServer::kde_output_configuration_v2(resource)
 {
+    const auto reject = [this](Output *output) {
+        invalid = true;
+    };
+    connect(workspace(), &Workspace::outputAdded, this, reject);
+    connect(workspace(), &Workspace::outputRemoved, this, reject);
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_enable(Resource *resource, wl_resource *outputdevice, int32_t enable)
 {
-    OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
-    config.changeSet(output->handle())->enabled = enable;
+    if (invalid) {
+        return;
+    }
+    if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
+        config.changeSet(output->handle())->enabled = enable;
+    }
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_mode(Resource *resource, wl_resource *outputdevice, wl_resource *modeResource)
 {
-    OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
-    OutputDeviceModeV2Interface *mode = OutputDeviceModeV2Interface::get(modeResource);
-    if (!mode) {
+    if (invalid) {
         return;
     }
-
-    config.changeSet(output->handle())->mode = mode->handle().lock();
+    OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
+    OutputDeviceModeV2Interface *mode = OutputDeviceModeV2Interface::get(modeResource);
+    if (output && mode) {
+        config.changeSet(output->handle())->mode = mode->handle().lock();
+    } else {
+        invalid = true;
+    }
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_transform(Resource *resource, wl_resource *outputdevice, int32_t transform)
 {
+    if (invalid) {
+        return;
+    }
     auto toTransform = [transform]() {
         switch (transform) {
         case WL_OUTPUT_TRANSFORM_90:
@@ -128,18 +145,26 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_transform(Resou
         }
     };
     auto _transform = toTransform();
-    OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
-    config.changeSet(output->handle())->transform = _transform;
+    if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
+        config.changeSet(output->handle())->transform = _transform;
+    }
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_position(Resource *resource, wl_resource *outputdevice, int32_t x, int32_t y)
 {
-    OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
-    config.changeSet(output->handle())->pos = QPoint(x, y);
+    if (invalid) {
+        return;
+    }
+    if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
+        config.changeSet(output->handle())->pos = QPoint(x, y);
+    }
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_scale(Resource *resource, wl_resource *outputdevice, wl_fixed_t scale)
 {
+    if (invalid) {
+        return;
+    }
     const qreal doubleScale = wl_fixed_to_double(scale);
 
     if (doubleScale <= 0) {
@@ -147,43 +172,61 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_scale(Resource 
         return;
     }
 
-    OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
-    config.changeSet(output->handle())->scale = doubleScale;
+    if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
+        config.changeSet(output->handle())->scale = doubleScale;
+    }
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_overscan(Resource *resource, wl_resource *outputdevice, uint32_t overscan)
 {
+    if (invalid) {
+        return;
+    }
     if (overscan > 100) {
         qCWarning(KWIN_CORE) << "Invalid overscan requested:" << overscan;
         return;
     }
-    OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
-    config.changeSet(output->handle())->overscan = overscan;
+    if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
+        config.changeSet(output->handle())->overscan = overscan;
+    }
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_set_vrr_policy(Resource *resource, wl_resource *outputdevice, uint32_t policy)
 {
+    if (invalid) {
+        return;
+    }
     if (policy > static_cast<uint32_t>(RenderLoop::VrrPolicy::Automatic)) {
         qCWarning(KWIN_CORE) << "Invalid Vrr Policy requested:" << policy;
         return;
     }
-    OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
-    config.changeSet(output->handle())->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(policy);
+    if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
+        config.changeSet(output->handle())->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(policy);
+    }
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_set_rgb_range(Resource *resource, wl_resource *outputdevice, uint32_t rgbRange)
 {
+    if (invalid) {
+        return;
+    }
     if (rgbRange > static_cast<uint32_t>(Output::RgbRange::Limited)) {
         qCWarning(KWIN_CORE) << "Invalid Rgb Range requested:" << rgbRange;
         return;
     }
-    OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
-    config.changeSet(output->handle())->rgbRange = static_cast<Output::RgbRange>(rgbRange);
+    if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
+        config.changeSet(output->handle())->rgbRange = static_cast<Output::RgbRange>(rgbRange);
+    }
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_set_primary_output(Resource *resource, struct ::wl_resource *output)
 {
-    primaryOutput = OutputDeviceV2Interface::get(output);
+    if (invalid) {
+        return;
+    }
+    if (auto o = OutputDeviceV2Interface::get(output)) {
+        primaryOutput = o;
+    }
 }
 
 void OutputConfigurationV2Interface::kde_output_configuration_v2_destroy(Resource *resource)
@@ -204,6 +247,11 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
     }
 
     applied = true;
+    if (invalid) {
+        qCWarning(KWIN_CORE) << "Rejecting configuration change because a request output is no longer available";
+        send_failed();
+        return;
+    }
 
     const auto allOutputs = kwinApp()->outputBackend()->outputs();
     const bool allDisabled = !std::any_of(allOutputs.begin(), allOutputs.end(), [this](const auto &output) {
@@ -230,3 +278,4 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
 }
 
 }
+#include "outputmanagement_v2_interface.moc"
