@@ -36,26 +36,19 @@ WaylandQPainterBufferSlot::~WaylandQPainterBufferSlot()
     buffer->setUsed(false);
 }
 
-WaylandQPainterOutput::WaylandQPainterOutput(WaylandOutput *output)
+WaylandQPainterPrimaryLayer::WaylandQPainterPrimaryLayer(WaylandOutput *output)
     : m_waylandOutput(output)
+    , m_pool(output->backend()->display()->shmPool())
 {
+    connect(m_pool, &KWayland::Client::ShmPool::poolResized, this, &WaylandQPainterPrimaryLayer::remapBuffer);
 }
 
-WaylandQPainterOutput::~WaylandQPainterOutput()
+WaylandQPainterPrimaryLayer::~WaylandQPainterPrimaryLayer()
 {
     m_slots.clear();
 }
 
-bool WaylandQPainterOutput::init(KWayland::Client::ShmPool *pool)
-{
-    m_pool = pool;
-
-    connect(pool, &KWayland::Client::ShmPool::poolResized, this, &WaylandQPainterOutput::remapBuffer);
-
-    return true;
-}
-
-void WaylandQPainterOutput::remapBuffer()
+void WaylandQPainterPrimaryLayer::remapBuffer()
 {
     qCDebug(KWIN_WAYLAND_BACKEND) << "Remapped back buffer of surface" << m_waylandOutput->surface();
 
@@ -65,7 +58,7 @@ void WaylandQPainterOutput::remapBuffer()
     }
 }
 
-void WaylandQPainterOutput::present()
+void WaylandQPainterPrimaryLayer::present()
 {
     for (const auto &slot : m_slots) {
         if (slot.get() == m_back) {
@@ -82,12 +75,12 @@ void WaylandQPainterOutput::present()
     s->commit();
 }
 
-WaylandQPainterBufferSlot *WaylandQPainterOutput::back() const
+WaylandQPainterBufferSlot *WaylandQPainterPrimaryLayer::back() const
 {
     return m_back;
 }
 
-WaylandQPainterBufferSlot *WaylandQPainterOutput::acquire()
+WaylandQPainterBufferSlot *WaylandQPainterPrimaryLayer::acquire()
 {
     const QSize nativeSize(m_waylandOutput->pixelSize());
     if (m_swapchainSize != nativeSize) {
@@ -116,12 +109,12 @@ WaylandQPainterBufferSlot *WaylandQPainterOutput::acquire()
     return m_back;
 }
 
-QRegion WaylandQPainterOutput::accumulateDamage(int bufferAge) const
+QRegion WaylandQPainterPrimaryLayer::accumulateDamage(int bufferAge) const
 {
     return m_damageJournal.accumulate(bufferAge, infiniteRegion());
 }
 
-std::optional<OutputLayerBeginFrameInfo> WaylandQPainterOutput::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::beginFrame()
 {
     WaylandQPainterBufferSlot *slot = acquire();
     return OutputLayerBeginFrameInfo{
@@ -130,9 +123,68 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterOutput::beginFrame()
     };
 }
 
-bool WaylandQPainterOutput::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool WaylandQPainterPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_damageJournal.add(damagedRegion);
+    return true;
+}
+
+WaylandQPainterCursorLayer::WaylandQPainterCursorLayer(WaylandOutput *output)
+    : m_output(output)
+{
+}
+
+WaylandQPainterCursorLayer::~WaylandQPainterCursorLayer()
+{
+}
+
+qreal WaylandQPainterCursorLayer::scale() const
+{
+    return m_scale;
+}
+
+void WaylandQPainterCursorLayer::setScale(qreal scale)
+{
+    m_scale = scale;
+}
+
+QPoint WaylandQPainterCursorLayer::hotspot() const
+{
+    return m_hotspot;
+}
+
+void WaylandQPainterCursorLayer::setHotspot(const QPoint &hotspot)
+{
+    m_hotspot = hotspot;
+}
+
+QSize WaylandQPainterCursorLayer::size() const
+{
+    return m_size;
+}
+
+void WaylandQPainterCursorLayer::setSize(const QSize &size)
+{
+    m_size = size;
+}
+
+std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame()
+{
+    const QSize bufferSize = m_size.expandedTo(QSize(64, 64));
+    if (m_backingStore.size() != bufferSize) {
+        m_backingStore = QImage(bufferSize, QImage::Format_ARGB32_Premultiplied);
+    }
+
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(&m_backingStore),
+        .repaint = infiniteRegion(),
+    };
+}
+
+bool WaylandQPainterCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+{
+    KWayland::Client::Buffer::Ptr buffer = m_output->backend()->display()->shmPool()->createBuffer(m_backingStore);
+    m_output->cursor()->update(buffer, m_scale, m_hotspot);
     return true;
 }
 
@@ -147,13 +199,7 @@ WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)
     }
     connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandQPainterBackend::createOutput);
     connect(m_backend, &WaylandBackend::outputRemoved, this, [this](Output *waylandOutput) {
-        auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [waylandOutput](const auto &output) {
-            return output->m_waylandOutput == waylandOutput;
-        });
-        if (it == m_outputs.end()) {
-            return;
-        }
-        m_outputs.erase(it);
+        m_outputs.erase(waylandOutput);
     });
 }
 
@@ -163,19 +209,26 @@ WaylandQPainterBackend::~WaylandQPainterBackend()
 
 void WaylandQPainterBackend::createOutput(Output *waylandOutput)
 {
-    const auto output = std::make_shared<WaylandQPainterOutput>(static_cast<WaylandOutput *>(waylandOutput));
-    output->init(m_backend->display()->shmPool());
-    m_outputs.insert(waylandOutput, output);
+    m_outputs[waylandOutput] = Layers{
+        .primaryLayer = std::make_unique<WaylandQPainterPrimaryLayer>(static_cast<WaylandOutput *>(waylandOutput)),
+        .cursorLayer = std::make_unique<WaylandQPainterCursorLayer>(static_cast<WaylandOutput *>(waylandOutput)),
+    };
 }
 
 void WaylandQPainterBackend::present(Output *output)
 {
-    m_outputs[output]->present();
+    m_outputs[output].primaryLayer->present();
 }
 
 OutputLayer *WaylandQPainterBackend::primaryLayer(Output *output)
 {
-    return m_outputs[output].get();
+    return m_outputs[output].primaryLayer.get();
 }
+
+WaylandQPainterCursorLayer *WaylandQPainterBackend::cursorLayer(Output *output)
+{
+    return m_outputs[output].cursorLayer.get();
+}
+
 }
 }

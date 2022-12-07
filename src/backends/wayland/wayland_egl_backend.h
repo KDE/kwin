@@ -17,6 +17,8 @@
 #include <optional>
 #include <wayland-egl.h>
 
+#include <KWayland/Client/buffer.h>
+
 #include <memory>
 
 class QTemporaryFile;
@@ -34,16 +36,15 @@ class WaylandBackend;
 class WaylandOutput;
 class WaylandEglBackend;
 
-class WaylandEglOutput : public OutputLayer
+class WaylandEglPrimaryLayer : public OutputLayer
 {
 public:
-    WaylandEglOutput(WaylandOutput *output, WaylandEglBackend *backend);
-    ~WaylandEglOutput() override;
+    WaylandEglPrimaryLayer(WaylandOutput *output, WaylandEglBackend *backend);
+    ~WaylandEglPrimaryLayer() override;
 
     bool init();
 
     GLFramebuffer *fbo() const;
-    bool makeContextCurrent() const;
     void present();
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
@@ -60,6 +61,36 @@ private:
     WaylandEglBackend *const m_backend;
 
     friend class WaylandEglBackend;
+};
+
+class WaylandEglCursorLayer : public OutputLayer
+{
+    Q_OBJECT
+
+public:
+    WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBackend *backend);
+    ~WaylandEglCursorLayer() override;
+
+    qreal scale() const;
+    void setScale(qreal scale);
+
+    QPoint hotspot() const;
+    void setHotspot(const QPoint &hotspot);
+
+    QSize size() const;
+    void setSize(const QSize &size);
+
+    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
+    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+
+private:
+    WaylandOutput *m_output;
+    WaylandEglBackend *m_backend;
+    std::unique_ptr<GLFramebuffer> m_framebuffer;
+    std::unique_ptr<GLTexture> m_texture;
+    QPoint m_hotspot;
+    QSize m_size;
+    qreal m_scale = 1.0;
 };
 
 /**
@@ -87,6 +118,7 @@ public:
     void init() override;
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
+    WaylandEglCursorLayer *cursorLayer(Output *output);
 
     bool havePlatformBase() const
     {
@@ -105,10 +137,16 @@ private:
 
     void cleanupSurfaces() override;
 
-    void presentOnSurface(WaylandEglOutput *output, const QRegion &damagedRegion);
+    void presentOnSurface(WaylandEglPrimaryLayer *output, const QRegion &damagedRegion);
+
+    struct Layers
+    {
+        std::unique_ptr<WaylandEglPrimaryLayer> primaryLayer;
+        std::unique_ptr<WaylandEglCursorLayer> cursorLayer;
+    };
 
     WaylandBackend *m_backend;
-    QMap<Output *, std::shared_ptr<WaylandEglOutput>> m_outputs;
+    std::map<Output *, Layers> m_outputs;
     bool m_havePlatformBase;
     friend class EglWaylandTexture;
 };

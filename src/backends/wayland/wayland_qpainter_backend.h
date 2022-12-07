@@ -13,6 +13,8 @@
 #include "qpainterbackend.h"
 #include "utils/damagejournal.h"
 
+#include <KWayland/Client/buffer.h>
+
 #include <QImage>
 #include <QObject>
 #include <QWeakPointer>
@@ -46,16 +48,15 @@ public:
     int age = 0;
 };
 
-class WaylandQPainterOutput : public OutputLayer
+class WaylandQPainterPrimaryLayer : public OutputLayer
 {
 public:
-    WaylandQPainterOutput(WaylandOutput *output);
-    ~WaylandQPainterOutput() override;
+    WaylandQPainterPrimaryLayer(WaylandOutput *output);
+    ~WaylandQPainterPrimaryLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
-    bool init(KWayland::Client::ShmPool *pool);
     void remapBuffer();
 
     WaylandQPainterBufferSlot *back() const;
@@ -77,6 +78,34 @@ private:
     friend class WaylandQPainterBackend;
 };
 
+class WaylandQPainterCursorLayer : public OutputLayer
+{
+    Q_OBJECT
+
+public:
+    explicit WaylandQPainterCursorLayer(WaylandOutput *output);
+    ~WaylandQPainterCursorLayer() override;
+
+    qreal scale() const;
+    void setScale(qreal scale);
+
+    QPoint hotspot() const;
+    void setHotspot(const QPoint &hotspot);
+
+    QSize size() const;
+    void setSize(const QSize &size);
+
+    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
+    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+
+private:
+    WaylandOutput *m_output;
+    QImage m_backingStore;
+    QPoint m_hotspot;
+    QSize m_size;
+    qreal m_scale = 1.0;
+};
+
 class WaylandQPainterBackend : public QPainterBackend
 {
     Q_OBJECT
@@ -86,13 +115,20 @@ public:
 
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
+    WaylandQPainterCursorLayer *cursorLayer(Output *output);
 
 private:
     void createOutput(Output *waylandOutput);
     void frameRendered();
 
+    struct Layers
+    {
+        std::unique_ptr<WaylandQPainterPrimaryLayer> primaryLayer;
+        std::unique_ptr<WaylandQPainterCursorLayer> cursorLayer;
+    };
+
     WaylandBackend *m_backend;
-    QMap<Output *, std::shared_ptr<WaylandQPainterOutput>> m_outputs;
+    std::map<Output *, Layers> m_outputs;
 };
 
 } // namespace Wayland

@@ -26,6 +26,7 @@
 #include <kwinglutils.h>
 
 // KDE
+#include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
 
 // Qt
@@ -61,13 +62,13 @@ static QVector<EGLint> regionToRects(const QRegion &region, Output *output)
     return rects;
 }
 
-WaylandEglOutput::WaylandEglOutput(WaylandOutput *output, WaylandEglBackend *backend)
+WaylandEglPrimaryLayer::WaylandEglPrimaryLayer(WaylandOutput *output, WaylandEglBackend *backend)
     : m_waylandOutput(output)
     , m_backend(backend)
 {
 }
 
-bool WaylandEglOutput::init()
+bool WaylandEglPrimaryLayer::init()
 {
     auto surface = m_waylandOutput->surface();
     const QSize nativeSize = m_waylandOutput->geometry().size() * m_waylandOutput->scale();
@@ -94,44 +95,29 @@ bool WaylandEglOutput::init()
     return true;
 }
 
-WaylandEglOutput::~WaylandEglOutput()
+WaylandEglPrimaryLayer::~WaylandEglPrimaryLayer()
 {
     wl_egl_window_destroy(m_overlay);
 }
 
-GLFramebuffer *WaylandEglOutput::fbo() const
+GLFramebuffer *WaylandEglPrimaryLayer::fbo() const
 {
     return m_fbo.get();
 }
 
-bool WaylandEglOutput::makeContextCurrent() const
+std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
 {
-    if (m_eglSurface == EGL_NO_SURFACE) {
-        return false;
-    }
     if (eglMakeCurrent(m_backend->eglDisplay(), m_eglSurface, m_eglSurface, m_backend->context()) == EGL_FALSE) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "Make Context Current failed";
-        return false;
+        return std::nullopt;
     }
-    EGLint error = eglGetError();
-    if (error != EGL_SUCCESS) {
-        qCWarning(KWIN_WAYLAND_BACKEND) << "Error occurred while creating context " << error;
-        return false;
-    }
-    return true;
-}
 
-std::optional<OutputLayerBeginFrameInfo> WaylandEglOutput::beginFrame()
-{
     const QSize nativeSize = m_waylandOutput->pixelSize();
     if (!m_fbo || m_fbo->size() != nativeSize) {
         m_fbo = std::make_unique<GLFramebuffer>(0, nativeSize);
         m_bufferAge = 0;
         wl_egl_window_resize(m_overlay, nativeSize.width(), nativeSize.height(), 0, 0);
     }
-
-    eglWaitNative(EGL_CORE_NATIVE_ENGINE);
-    makeContextCurrent();
 
     QRegion repair;
     if (m_backend->supportsBufferAge()) {
@@ -145,14 +131,14 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglOutput::beginFrame()
     };
 }
 
-bool WaylandEglOutput::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool WaylandEglPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_damageJournal.add(damagedRegion);
     GLFramebuffer::popFramebuffer();
     return true;
 }
 
-void WaylandEglOutput::aboutToStartPainting(const QRegion &damage)
+void WaylandEglPrimaryLayer::aboutToStartPainting(const QRegion &damage)
 {
     if (m_bufferAge > 0 && !damage.isEmpty() && m_backend->supportsPartialUpdate()) {
         QVector<EGLint> rects = regionToRects(damage, m_waylandOutput);
@@ -164,7 +150,7 @@ void WaylandEglOutput::aboutToStartPainting(const QRegion &damage)
     }
 }
 
-void WaylandEglOutput::present()
+void WaylandEglPrimaryLayer::present()
 {
     m_waylandOutput->surface()->setupFrameCallback();
     m_waylandOutput->surface()->setScale(std::ceil(m_waylandOutput->scale()));
@@ -187,6 +173,81 @@ void WaylandEglOutput::present()
     }
 }
 
+WaylandEglCursorLayer::WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBackend *backend)
+    : m_output(output)
+    , m_backend(backend)
+{
+}
+
+WaylandEglCursorLayer::~WaylandEglCursorLayer()
+{
+    eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context());
+    m_framebuffer.reset();
+    m_texture.reset();
+}
+
+qreal WaylandEglCursorLayer::scale() const
+{
+    return m_scale;
+}
+
+void WaylandEglCursorLayer::setScale(qreal scale)
+{
+    m_scale = scale;
+}
+
+QPoint WaylandEglCursorLayer::hotspot() const
+{
+    return m_hotspot;
+}
+
+void WaylandEglCursorLayer::setHotspot(const QPoint &hotspot)
+{
+    m_hotspot = hotspot;
+}
+
+QSize WaylandEglCursorLayer::size() const
+{
+    return m_size;
+}
+
+void WaylandEglCursorLayer::setSize(const QSize &size)
+{
+    m_size = size;
+}
+
+std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
+{
+    if (eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context()) == EGL_FALSE) {
+        qCCritical(KWIN_WAYLAND_BACKEND) << "Make Context Current failed";
+        return std::nullopt;
+    }
+
+    const QSize bufferSize = m_size.expandedTo(QSize(64, 64));
+    if (!m_texture || m_texture->size() != bufferSize) {
+        m_texture = std::make_unique<GLTexture>(GL_RGBA8, bufferSize);
+        m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
+    }
+
+    GLFramebuffer::pushFramebuffer(m_framebuffer.get());
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(m_framebuffer.get()),
+        .repaint = infiniteRegion(),
+    };
+}
+
+bool WaylandEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+{
+    GLFramebuffer::popFramebuffer();
+
+    // Technically, we could pass a linux-dmabuf buffer, but host kwin does not support that atm.
+    const QImage image = m_texture->toImage().mirrored(false, true);
+    KWayland::Client::Buffer::Ptr buffer = m_output->backend()->display()->shmPool()->createBuffer(image);
+    m_output->cursor()->update(buffer, m_scale, m_hotspot);
+
+    return true;
+}
+
 WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)
     : AbstractEglBackend()
     , m_backend(b)
@@ -196,13 +257,7 @@ WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)
 
     connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandEglBackend::createEglWaylandOutput);
     connect(m_backend, &WaylandBackend::outputRemoved, this, [this](Output *output) {
-        auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [output](const auto &o) {
-            return o->m_waylandOutput == output;
-        });
-        if (it == m_outputs.end()) {
-            return;
-        }
-        m_outputs.erase(it);
+        m_outputs.erase(output);
     });
 
     b->setEglBackend(this);
@@ -220,11 +275,15 @@ void WaylandEglBackend::cleanupSurfaces()
 
 bool WaylandEglBackend::createEglWaylandOutput(Output *waylandOutput)
 {
-    const auto output = std::make_shared<WaylandEglOutput>(static_cast<WaylandOutput *>(waylandOutput), this);
-    if (!output->init()) {
+    auto cursorLayer = std::make_unique<WaylandEglCursorLayer>(static_cast<WaylandOutput *>(waylandOutput), this);
+    auto primaryLayer = std::make_unique<WaylandEglPrimaryLayer>(static_cast<WaylandOutput *>(waylandOutput), this);
+    if (!primaryLayer->init()) {
         return false;
     }
-    m_outputs.insert(waylandOutput, output);
+    m_outputs[waylandOutput] = Layers{
+        .primaryLayer = std::move(primaryLayer),
+        .cursorLayer = std::move(cursorLayer),
+    };
     return true;
 }
 
@@ -293,13 +352,12 @@ bool WaylandEglBackend::initRenderingContext()
         }
     }
 
-    if (m_outputs.isEmpty()) {
+    if (m_outputs.empty()) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "Create Window Surfaces failed";
         return false;
     }
 
-    const auto &firstOutput = m_outputs.first();
-    return firstOutput->makeContextCurrent();
+    return makeCurrent();
 }
 
 bool WaylandEglBackend::initBufferConfigs()
@@ -340,7 +398,7 @@ bool WaylandEglBackend::initBufferConfigs()
 std::shared_ptr<KWin::GLTexture> WaylandEglBackend::textureForOutput(KWin::Output *output) const
 {
     auto texture = std::make_unique<GLTexture>(GL_RGBA8, output->pixelSize());
-    GLFramebuffer::pushFramebuffer(m_outputs[output]->fbo());
+    GLFramebuffer::pushFramebuffer(m_outputs.at(output).primaryLayer->fbo());
     GLFramebuffer renderTarget(texture.get());
     renderTarget.blitFromFramebuffer(QRect(0, texture->height(), texture->width(), -texture->height()));
     GLFramebuffer::popFramebuffer();
@@ -359,12 +417,17 @@ std::unique_ptr<SurfaceTexture> WaylandEglBackend::createSurfaceTextureWayland(S
 
 void WaylandEglBackend::present(Output *output)
 {
-    m_outputs[output]->present();
+    m_outputs[output].primaryLayer->present();
 }
 
 OutputLayer *WaylandEglBackend::primaryLayer(Output *output)
 {
-    return m_outputs[output].get();
+    return m_outputs[output].primaryLayer.get();
+}
+
+WaylandEglCursorLayer *WaylandEglBackend::cursorLayer(Output *output)
+{
+    return m_outputs[output].cursorLayer.get();
 }
 
 }
