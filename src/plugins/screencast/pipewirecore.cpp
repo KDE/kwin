@@ -12,6 +12,7 @@
 
 #include <KLocalizedString>
 
+#include <QScopeGuard>
 #include <QSocketNotifier>
 
 namespace KWin
@@ -27,7 +28,7 @@ PipeWireCore::PipeWireCore()
 PipeWireCore::~PipeWireCore()
 {
     if (pwMainLoop) {
-        pw_loop_leave(pwMainLoop);
+        pw_thread_loop_stop(pwMainLoop);
     }
 
     if (pwCore) {
@@ -37,9 +38,8 @@ PipeWireCore::~PipeWireCore()
     if (pwContext) {
         pw_context_destroy(pwContext);
     }
-
     if (pwMainLoop) {
-        pw_loop_destroy(pwMainLoop);
+        pw_thread_loop_destroy(pwMainLoop);
     }
 }
 
@@ -54,23 +54,24 @@ void PipeWireCore::onCoreError(void *data, uint32_t id, int seq, int res, const 
 
 bool PipeWireCore::init()
 {
-    pwMainLoop = pw_loop_new(nullptr);
+    pwMainLoop = pw_thread_loop_new("kwin-pipewire", nullptr);
     if (!pwMainLoop) {
         qCWarning(KWIN_SCREENCAST, "Failed to create PipeWire loop: %s", strerror(errno));
         m_error = i18n("Failed to start main PipeWire loop");
         return false;
     }
-    pw_loop_enter(pwMainLoop);
 
-    QSocketNotifier *notifier = new QSocketNotifier(pw_loop_get_fd(pwMainLoop), QSocketNotifier::Read, this);
-    connect(notifier, &QSocketNotifier::activated, this, [this] {
-        int result = pw_loop_iterate(pwMainLoop, 0);
-        if (result < 0) {
-            qCWarning(KWIN_SCREENCAST) << "pipewire_loop_iterate failed: " << result;
-        }
+    pw_thread_loop_lock(pwMainLoop);
+    if (pw_thread_loop_start(pwMainLoop) < 0) {
+        qCWarning(KWIN_SCREENCAST) << "Failed to start main PipeWire loop";
+        return false;
+    }
+
+    auto x = qScopeGuard([this] {
+        pw_thread_loop_unlock(pwMainLoop);
     });
 
-    pwContext = pw_context_new(pwMainLoop, nullptr, 0);
+    pwContext = pw_context_new(pw_thread_loop_get_loop(pwMainLoop), nullptr, 0);
     if (!pwContext) {
         qCWarning(KWIN_SCREENCAST) << "Failed to create PipeWire context";
         m_error = i18n("Failed to create PipeWire context");
@@ -81,12 +82,6 @@ bool PipeWireCore::init()
     if (!pwCore) {
         qCWarning(KWIN_SCREENCAST) << "Failed to connect PipeWire context";
         m_error = i18n("Failed to connect PipeWire context");
-        return false;
-    }
-
-    if (pw_loop_iterate(pwMainLoop, 0) < 0) {
-        qCWarning(KWIN_SCREENCAST) << "Failed to start main PipeWire loop";
-        m_error = i18n("Failed to start main PipeWire loop");
         return false;
     }
 

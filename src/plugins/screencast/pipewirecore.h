@@ -33,7 +33,7 @@ public:
 
     struct pw_core *pwCore = nullptr;
     struct pw_context *pwContext = nullptr;
-    struct pw_loop *pwMainLoop = nullptr;
+    struct pw_thread_loop *pwMainLoop = nullptr;
     spa_hook coreListener;
     QString m_error;
 

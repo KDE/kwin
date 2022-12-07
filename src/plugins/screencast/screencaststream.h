@@ -70,14 +70,20 @@ Q_SIGNALS:
     void stopStreaming();
 
 private:
-    static void onStreamParamChanged(void *data, uint32_t id, const struct spa_pod *format);
-    static void onStreamStateChanged(void *data, pw_stream_state old, pw_stream_state state, const char *error_message);
-    static void onStreamAddBuffer(void *data, pw_buffer *buffer);
-    static void onStreamRemoveBuffer(void *data, pw_buffer *buffer);
-    static void onStreamRenegotiateFormat(void *data, uint64_t);
+    void onStreamParamChanged(uint32_t id, const struct spa_pod *format);
+    void onStreamStateChanged(pw_stream_state old, pw_stream_state state, const char *error_message);
+    void onStreamRemoveBuffer(pw_buffer *buffer);
+    void onStreamRenegotiateFormat(uint64_t);
+    void onStreamAddBuffer(pw_buffer *buffer);
+
+    static void streamAddBuffer(void *data, pw_buffer *buffer);
+    static void streamParamChanged(void *data, uint32_t id, const struct spa_pod *format);
+    static void streamStateChanged(void *data, pw_stream_state old, pw_stream_state state, const char *error_message);
+    static void streamRemoveBuffer(void *data, pw_buffer *buffer);
+    static void streamRenegotiateFormat(void *data, uint64_t);
 
     bool createStream();
-    QVector<const spa_pod *> buildFormats(bool fixate, char buffer[2048]);
+    QVector<const spa_pod *> buildFormats(bool fixate, char buffer[2048]) const;
     void updateParams();
     void coreFailed(const QString &errorMessage);
     void sendCursorData(Cursor *cursor, spa_meta_cursor *spa_cursor);
@@ -86,9 +92,9 @@ private:
     void newStreamParams();
     void tryEnqueue(pw_buffer *buffer);
     void enqueue();
-    spa_pod *buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
-                         struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
-                         const QVector<uint64_t> &modifiers, quint32 modifiersFlags);
+    static spa_pod *buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
+                                struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
+                                const QVector<uint64_t> &modifiers, quint32 modifiersFlags);
 
     std::shared_ptr<PipeWireCore> pwCore;
     std::unique_ptr<ScreenCastSource> m_source;
