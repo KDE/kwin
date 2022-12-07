@@ -34,5 +34,4 @@ std::shared_ptr<OutputChangeSet> OutputConfiguration::constChangeSet(Output *out
     }
     return m_properties[output];
 }
-
 }
