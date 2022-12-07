@@ -37,6 +37,7 @@
 
 #include "../drm/gbm_dmabuf.h"
 #include <drm_fourcc.h>
+#include <kwineglutils_p.h>
 
 #define QSIZE_TO_QPOINT(size) QPointF(size.width(), size.height())
 
@@ -623,7 +624,10 @@ std::shared_ptr<DmaBufTexture> WaylandBackend::createDmaBufTexture(const QSize &
     // The bo will be kept around until the last fd is closed.
     DmaBufAttributes attributes = dmaBufAttributesForBo(bo);
     gbm_bo_destroy(bo);
-    m_eglBackend->makeCurrent();
+    if (!m_eglBackend->makeCurrent()) {
+        qCDebug(KWIN_WAYLAND_BACKEND) << "could not make context current" << getEglErrorString();
+        return {};
+    }
     return std::make_shared<DmaBufTexture>(m_eglBackend->importDmaBufAsTexture(attributes), std::move(attributes));
 }
 

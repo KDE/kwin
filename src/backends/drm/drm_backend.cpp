@@ -26,6 +26,7 @@
 #include "drm_render_backend.h"
 #include "drm_virtual_output.h"
 #include "gbm_dmabuf.h"
+#include "kwineglutils_p.h"
 #include "utils/udev.h"
 // KF5
 #include <KCoreAddons>
@@ -437,7 +438,10 @@ std::shared_ptr<DmaBufTexture> DrmBackend::createDmaBufTexture(const QSize &size
     DmaBufAttributes attributes = dmaBufAttributesForBo(bo);
     gbm_bo_destroy(bo);
     const auto eglBackend = static_cast<EglGbmBackend *>(m_renderBackend);
-    eglBackend->makeCurrent();
+    if (!eglBackend->makeCurrent()) {
+        qCDebug(KWIN_DRM) << "Could not make context current" << getEglErrorString();
+        return {};
+    }
     if (auto texture = eglBackend->importDmaBufAsTexture(attributes)) {
         return std::make_shared<DmaBufTexture>(texture, std::move(attributes));
     } else {
