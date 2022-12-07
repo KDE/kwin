@@ -21,11 +21,11 @@ class X11WindowedBackend;
 class X11WindowedOutput;
 class X11WindowedEglBackend;
 
-class X11WindowedEglOutput : public OutputLayer
+class X11WindowedEglPrimaryLayer : public OutputLayer
 {
 public:
-    X11WindowedEglOutput(X11WindowedEglBackend *backend, X11WindowedOutput *output, EGLSurface surface);
-    ~X11WindowedEglOutput();
+    X11WindowedEglPrimaryLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output, EGLSurface surface);
+    ~X11WindowedEglPrimaryLayer();
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
@@ -41,6 +41,32 @@ private:
 
     X11WindowedOutput *const m_output;
     X11WindowedEglBackend *const m_backend;
+};
+
+class X11WindowedEglCursorLayer : public OutputLayer
+{
+    Q_OBJECT
+
+public:
+    X11WindowedEglCursorLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output);
+    ~X11WindowedEglCursorLayer() override;
+
+    QPoint hotspot() const;
+    void setHotspot(const QPoint &hotspot);
+
+    QSize size() const;
+    void setSize(const QSize &size);
+
+    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
+    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+
+private:
+    X11WindowedOutput *const m_output;
+    X11WindowedEglBackend *const m_backend;
+    std::unique_ptr<GLFramebuffer> m_framebuffer;
+    std::unique_ptr<GLTexture> m_texture;
+    QPoint m_hotspot;
+    QSize m_size;
 };
 
 /**
@@ -60,6 +86,7 @@ public:
     void endFrame(Output *output, const QRegion &renderedRegion, const QRegion &damagedRegion);
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
+    X11WindowedEglCursorLayer *cursorLayer(Output *output);
 
 protected:
     void cleanupSurfaces() override;
@@ -68,7 +95,13 @@ protected:
 private:
     void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
 
-    QMap<Output *, std::shared_ptr<X11WindowedEglOutput>> m_outputs;
+    struct Layers
+    {
+        std::unique_ptr<X11WindowedEglPrimaryLayer> primaryLayer;
+        std::unique_ptr<X11WindowedEglCursorLayer> cursorLayer;
+    };
+
+    std::map<Output *, Layers> m_outputs;
     X11WindowedBackend *m_backend;
 };
 

@@ -8,10 +8,13 @@
 */
 #include "x11_windowed_output.h"
 #include "../common/kwinxrenderutils.h"
+#include "x11_windowed_egl_backend.h"
+#include "x11_windowed_qpainter_backend.h"
 
 #include <config-kwin.h>
 
 #include "core/renderloop_p.h"
+#include "composite.h"
 #include "softwarevsyncmonitor.h"
 #include "x11_windowed_backend.h"
 
@@ -22,6 +25,7 @@
 #endif
 
 #include <QIcon>
+#include <QPainter>
 
 namespace KWin
 {
@@ -260,7 +264,12 @@ void X11WindowedOutput::vblank(std::chrono::nanoseconds timestamp)
 
 bool X11WindowedOutput::setCursor(const QImage &image, const QPoint &hotspot)
 {
-    m_cursor->update(image, hotspot);
+    if (X11WindowedEglBackend *backend = qobject_cast<X11WindowedEglBackend *>(Compositor::self()->backend())) {
+        renderCursorOpengl(backend, image, hotspot);
+    } else if (X11WindowedQPainterBackend *backend = qobject_cast<X11WindowedQPainterBackend *>(Compositor::self()->backend())) {
+        renderCursorQPainter(backend, image, hotspot);
+    }
+
     return true;
 }
 
@@ -268,6 +277,66 @@ bool X11WindowedOutput::moveCursor(const QPoint &position)
 {
     // The cursor position is controlled by the host compositor.
     return true;
+}
+
+void X11WindowedOutput::renderCursorOpengl(X11WindowedEglBackend *backend, const QImage &image, const QPoint &hotspot)
+{
+    X11WindowedEglCursorLayer *cursorLayer = backend->cursorLayer(this);
+    cursorLayer->setHotspot(hotspot);
+    cursorLayer->setSize(image.size());
+
+    std::optional<OutputLayerBeginFrameInfo> beginInfo = cursorLayer->beginFrame();
+    if (!beginInfo) {
+        return;
+    }
+
+    const QRect cursorRect(QPoint(0, 0), image.size() / image.devicePixelRatio());
+
+    QMatrix4x4 mvp;
+    mvp.ortho(QRect(QPoint(), beginInfo->renderTarget.size()));
+
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    GLTexture texture(image);
+    texture.bind();
+    ShaderBinder binder(ShaderTrait::MapTexture);
+    binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+    texture.render(cursorRect, beginInfo->renderTarget.devicePixelRatio());
+    texture.unbind();
+    glDisable(GL_BLEND);
+
+    cursorLayer->endFrame(infiniteRegion(), infiniteRegion());
+}
+
+void X11WindowedOutput::renderCursorQPainter(X11WindowedQPainterBackend *backend, const QImage &image, const QPoint &hotspot)
+{
+    X11WindowedQPainterCursorLayer *cursorLayer = backend->cursorLayer(this);
+    cursorLayer->setHotspot(hotspot);
+    cursorLayer->setSize(image.size());
+
+    std::optional<OutputLayerBeginFrameInfo> beginInfo = cursorLayer->beginFrame();
+    if (!beginInfo) {
+        return;
+    }
+
+    const QRect cursorRect(QPoint(0, 0), image.size() / image.devicePixelRatio());
+
+    QImage *c = std::get<QImage *>(beginInfo->renderTarget.nativeHandle());
+    c->setDevicePixelRatio(scale());
+    c->fill(Qt::transparent);
+
+    QPainter p;
+    p.begin(c);
+    p.setWorldTransform(logicalToNativeMatrix(cursorRect, 1, transform()).toTransform());
+    p.setRenderHint(QPainter::SmoothPixmapTransform);
+    p.drawImage(QPoint(0, 0), image);
+    p.end();
+
+    cursorLayer->endFrame(infiniteRegion(), infiniteRegion());
 }
 
 void X11WindowedOutput::updateEnabled(bool enabled)

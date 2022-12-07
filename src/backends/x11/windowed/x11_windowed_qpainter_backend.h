@@ -25,10 +25,10 @@ namespace KWin
 class X11WindowedBackend;
 class X11WindowedOutput;
 
-class X11WindowedQPainterOutput : public OutputLayer
+class X11WindowedQPainterPrimaryLayer : public OutputLayer
 {
 public:
-    X11WindowedQPainterOutput(X11WindowedOutput *output, xcb_window_t window);
+    X11WindowedQPainterPrimaryLayer(X11WindowedOutput *output, xcb_window_t window);
 
     void ensureBuffer();
 
@@ -40,6 +40,29 @@ public:
     X11WindowedOutput *const m_output;
 };
 
+class X11WindowedQPainterCursorLayer : public OutputLayer
+{
+    Q_OBJECT
+
+public:
+    explicit X11WindowedQPainterCursorLayer(X11WindowedOutput *output);
+
+    QPoint hotspot() const;
+    void setHotspot(const QPoint &hotspot);
+
+    QSize size() const;
+    void setSize(const QSize &size);
+
+    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
+    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+
+private:
+    QImage m_buffer;
+    X11WindowedOutput *m_output;
+    QPoint m_hotspot;
+    QSize m_size;
+};
+
 class X11WindowedQPainterBackend : public QPainterBackend
 {
     Q_OBJECT
@@ -49,14 +72,21 @@ public:
 
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
+    X11WindowedQPainterCursorLayer *cursorLayer(Output *output);
 
 private:
     void addOutput(Output *output);
     void removeOutput(Output *output);
 
+    struct Layers
+    {
+        std::unique_ptr<X11WindowedQPainterPrimaryLayer> primaryLayer;
+        std::unique_ptr<X11WindowedQPainterCursorLayer> cursorLayer;
+    };
+
     xcb_gcontext_t m_gc = XCB_NONE;
     X11WindowedBackend *m_backend;
-    std::map<Output *, std::unique_ptr<X11WindowedQPainterOutput>> m_outputs;
+    std::map<Output *, Layers> m_outputs;
 };
 
 } // namespace KWin

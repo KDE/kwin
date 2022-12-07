@@ -19,26 +19,26 @@
 namespace KWin
 {
 
-X11WindowedEglOutput::X11WindowedEglOutput(X11WindowedEglBackend *backend, X11WindowedOutput *output, EGLSurface surface)
+X11WindowedEglPrimaryLayer::X11WindowedEglPrimaryLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output, EGLSurface surface)
     : m_eglSurface(surface)
     , m_output(output)
     , m_backend(backend)
 {
 }
 
-X11WindowedEglOutput::~X11WindowedEglOutput()
+X11WindowedEglPrimaryLayer::~X11WindowedEglPrimaryLayer()
 {
     eglDestroySurface(m_backend->eglDisplay(), m_eglSurface);
 }
 
-void X11WindowedEglOutput::ensureFbo()
+void X11WindowedEglPrimaryLayer::ensureFbo()
 {
     if (!m_fbo || m_fbo->size() != m_output->pixelSize()) {
         m_fbo = std::make_unique<GLFramebuffer>(0, m_output->pixelSize());
     }
 }
 
-std::optional<OutputLayerBeginFrameInfo> X11WindowedEglOutput::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame()
 {
     eglMakeCurrent(m_backend->eglDisplay(), m_eglSurface, m_eglSurface, m_backend->context());
     ensureFbo();
@@ -53,21 +53,81 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglOutput::beginFrame()
     };
 }
 
-bool X11WindowedEglOutput::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool X11WindowedEglPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_lastDamage = damagedRegion;
     GLFramebuffer::popFramebuffer();
     return true;
 }
 
-EGLSurface X11WindowedEglOutput::surface() const
+EGLSurface X11WindowedEglPrimaryLayer::surface() const
 {
     return m_eglSurface;
 }
 
-QRegion X11WindowedEglOutput::lastDamage() const
+QRegion X11WindowedEglPrimaryLayer::lastDamage() const
 {
     return m_lastDamage;
+}
+
+X11WindowedEglCursorLayer::X11WindowedEglCursorLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output)
+    : m_output(output)
+    , m_backend(backend)
+{
+}
+
+X11WindowedEglCursorLayer::~X11WindowedEglCursorLayer()
+{
+    eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context());
+    m_framebuffer.reset();
+    m_texture.reset();
+}
+
+QPoint X11WindowedEglCursorLayer::hotspot() const
+{
+    return m_hotspot;
+}
+
+void X11WindowedEglCursorLayer::setHotspot(const QPoint &hotspot)
+{
+    m_hotspot = hotspot;
+}
+
+QSize X11WindowedEglCursorLayer::size() const
+{
+    return m_size;
+}
+
+void X11WindowedEglCursorLayer::setSize(const QSize &size)
+{
+    m_size = size;
+}
+
+std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame()
+{
+    eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context());
+
+    const QSize bufferSize = m_size.expandedTo(QSize(64, 64));
+    if (!m_texture || m_texture->size() != bufferSize) {
+        m_texture = std::make_unique<GLTexture>(GL_RGBA8, bufferSize);
+        m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
+    }
+
+    GLFramebuffer::pushFramebuffer(m_framebuffer.get());
+    return OutputLayerBeginFrameInfo{
+        .renderTarget = RenderTarget(m_framebuffer.get()),
+        .repaint = infiniteRegion(),
+    };
+}
+
+bool X11WindowedEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+{
+    GLFramebuffer::popFramebuffer();
+
+    const QImage buffer = m_texture->toImage().mirrored(false, true);
+    m_output->cursor()->update(buffer, m_hotspot);
+
+    return true;
 }
 
 X11WindowedEglBackend::X11WindowedEglBackend(X11WindowedBackend *backend)
@@ -103,9 +163,12 @@ bool X11WindowedEglBackend::createSurfaces()
         if (s == EGL_NO_SURFACE) {
             return false;
         }
-        m_outputs[output] = std::make_shared<X11WindowedEglOutput>(this, static_cast<X11WindowedOutput *>(output), s);
+        m_outputs[output] = Layers{
+            .primaryLayer = std::make_unique<X11WindowedEglPrimaryLayer>(this, static_cast<X11WindowedOutput *>(output), s),
+            .cursorLayer = std::make_unique<X11WindowedEglCursorLayer>(this, static_cast<X11WindowedOutput *>(output)),
+        };
     }
-    if (m_outputs.isEmpty()) {
+    if (m_outputs.empty()) {
         return false;
     }
     return true;
@@ -116,7 +179,7 @@ void X11WindowedEglBackend::present(Output *output)
     static_cast<X11WindowedOutput *>(output)->vsyncMonitor()->arm();
 
     const auto &renderOutput = m_outputs[output];
-    presentSurface(renderOutput->surface(), renderOutput->lastDamage(), output->geometry());
+    presentSurface(renderOutput.primaryLayer->surface(), renderOutput.primaryLayer->lastDamage(), output->geometry());
 }
 
 void X11WindowedEglBackend::presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry)
@@ -139,7 +202,12 @@ void X11WindowedEglBackend::presentSurface(EGLSurface surface, const QRegion &da
 
 OutputLayer *X11WindowedEglBackend::primaryLayer(Output *output)
 {
-    return m_outputs[output].get();
+    return m_outputs[output].primaryLayer.get();
+}
+
+X11WindowedEglCursorLayer *X11WindowedEglBackend::cursorLayer(Output *output)
+{
+    return m_outputs[output].cursorLayer.get();
 }
 
 std::unique_ptr<SurfaceTexture> X11WindowedEglBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)

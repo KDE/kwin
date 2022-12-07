@@ -25,6 +25,8 @@ namespace KWin
 class SoftwareVsyncMonitor;
 class X11WindowedBackend;
 class X11WindowedOutput;
+class X11WindowedEglBackend;
+class X11WindowedQPainterBackend;
 
 class X11WindowedCursor
 {
@@ -59,6 +61,10 @@ public:
     {
         return m_backend;
     }
+    X11WindowedCursor *cursor() const
+    {
+        return m_cursor.get();
+    }
     xcb_window_t window() const
     {
         return m_window;
@@ -90,6 +96,8 @@ public:
 private:
     void initXInputForWindow();
     void vblank(std::chrono::nanoseconds timestamp);
+    void renderCursorOpengl(X11WindowedEglBackend *backend, const QImage &image, const QPoint &hotspot);
+    void renderCursorQPainter(X11WindowedQPainterBackend *backend, const QImage &image, const QPoint &hotspot);
 
     xcb_window_t m_window = XCB_WINDOW_NONE;
     std::unique_ptr<NETWinInfo> m_winInfo;
