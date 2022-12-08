@@ -30,6 +30,9 @@ class KWIN_EXPORT OutputLayer : public QObject
 public:
     explicit OutputLayer(QObject *parent = nullptr);
 
+    bool isAccepted() const;
+    void setAccepted(bool accepted);
+
     qreal scale() const;
     void setScale(qreal scale);
 
@@ -72,6 +75,7 @@ private:
     QSize m_size;
     qreal m_scale = 1.0;
     bool m_visible = false;
+    bool m_accepted = false;
 };
 
 } // namespace KWin

@@ -32,8 +32,6 @@ namespace KWin
 namespace Wayland
 {
 class WaylandBackend;
-class WaylandEglBackend;
-class WaylandQPainterBackend;
 
 class WaylandCursor
 {
@@ -68,13 +66,12 @@ public:
     ~WaylandOutput() override;
 
     RenderLoop *renderLoop() const override;
-    bool setCursor(const QImage &image, const QPoint &hotspot) override;
-    bool moveCursor(const QPoint &position) override;
 
     void init(const QSize &pixelSize, qreal scale);
 
     bool isReady() const;
     KWayland::Client::Surface *surface() const;
+    bool wantsSoftwareCursor() const;
     WaylandCursor *cursor() const;
     WaylandBackend *backend() const;
 
@@ -87,8 +84,6 @@ public:
 private:
     void handleConfigure(const QSize &size, KWayland::Client::XdgShellSurface::States states, quint32 serial);
     void updateWindowTitle();
-    void renderCursorOpengl(WaylandEglBackend *backend, const QImage &image, const QPoint &hotspot);
-    void renderCursorQPainter(WaylandQPainterBackend *backend, const QImage &image, const QPoint &hotspot);
 
     std::unique_ptr<RenderLoop> m_renderLoop;
     std::unique_ptr<KWayland::Client::Surface> m_surface;

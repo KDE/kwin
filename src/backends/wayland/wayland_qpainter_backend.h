@@ -101,7 +101,9 @@ public:
     explicit WaylandQPainterBackend(WaylandBackend *b);
     ~WaylandQPainterBackend() override;
 
+    void prepare(Output *output) override;
     void present(Output *output) override;
+
     OutputLayer *primaryLayer(Output *output) override;
     WaylandQPainterCursorLayer *cursorLayer(Output *output) override;
 

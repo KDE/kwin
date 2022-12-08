@@ -107,6 +107,13 @@ void X11WindowedQPainterBackend::removeOutput(Output *output)
     m_outputs.erase(output);
 }
 
+void X11WindowedQPainterBackend::prepare(Output *output)
+{
+    Layers &layers = m_outputs[output];
+    layers.primaryLayer->setAccepted(true);
+    layers.cursorLayer->setAccepted(true);
+}
+
 void X11WindowedQPainterBackend::present(Output *output)
 {
     static_cast<X11WindowedOutput *>(output)->vsyncMonitor()->arm();

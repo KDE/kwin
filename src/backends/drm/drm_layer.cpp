@@ -16,6 +16,26 @@ namespace KWin
 
 DrmOutputLayer::~DrmOutputLayer() = default;
 
+QPoint DrmOutputLayer::nativePosition() const
+{
+    return m_nativePosition;
+}
+
+void DrmOutputLayer::setNativePosition(const QPoint &point)
+{
+    m_nativePosition = point;
+}
+
+QPoint DrmOutputLayer::nativeOrigin() const
+{
+    return m_nativeOrigin;
+}
+
+void DrmOutputLayer::setNativeOrigin(const QPoint &point)
+{
+    m_nativeOrigin = point;
+}
+
 QRegion DrmOutputLayer::currentDamage() const
 {
     return {};

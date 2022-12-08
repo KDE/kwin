@@ -57,6 +57,7 @@ target_sources(kwin PRIVATE
     core/session_logind.cpp
     core/session_noop.cpp
     cursor.cpp
+    cursordelegate.cpp
     cursordelegate_opengl.cpp
     cursordelegate_qpainter.cpp
     cursorsource.cpp

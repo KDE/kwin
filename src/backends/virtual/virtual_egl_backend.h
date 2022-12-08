@@ -49,6 +49,7 @@ public:
     std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
     OutputLayer *primaryLayer(Output *output) override;
+    void prepare(Output *output) override;
     void present(Output *output) override;
     void init() override;
 

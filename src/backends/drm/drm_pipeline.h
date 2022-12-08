@@ -77,9 +77,6 @@ public:
     void applyPendingChanges();
     void revertPendingChanges();
 
-    bool setCursor(const QPoint &hotspot = QPoint());
-    bool moveCursor();
-
     DrmConnector *connector() const;
     DrmCrtc *currentCrtc() const;
     DrmGpu *gpu() const;
@@ -192,7 +189,6 @@ private:
 
         std::shared_ptr<DrmPipelineLayer> layer;
         std::shared_ptr<DrmOverlayLayer> cursorLayer;
-        QPoint cursorHotspot;
 
         // the transformation that this pipeline will apply to submitted buffers
         DrmPlane::Transformations bufferOrientation = DrmPlane::Transformation::Rotate0;

@@ -260,9 +260,6 @@ public:
 
     virtual void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation);
 
-    virtual bool setCursor(const QImage &image, const QPoint &hotspot);
-    virtual bool moveCursor(const QPoint &position);
-
 Q_SIGNALS:
     /**
      * This signal is emitted when the geometry of this output has changed.

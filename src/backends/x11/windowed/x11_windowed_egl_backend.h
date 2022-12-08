@@ -76,6 +76,7 @@ public:
     std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
     void init() override;
     void endFrame(Output *output, const QRegion &renderedRegion, const QRegion &damagedRegion);
+    void prepare(Output *output) override;
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
     X11WindowedEglCursorLayer *cursorLayer(Output *output) override;

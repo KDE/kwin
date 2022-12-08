@@ -27,8 +27,6 @@ class DrmConnector;
 class DrmGpu;
 class DrmPipeline;
 class DumbSwapchain;
-class GLTexture;
-class RenderTarget;
 class DrmLease;
 
 class KWIN_EXPORT DrmOutput : public DrmAbstractOutput
@@ -41,6 +39,7 @@ public:
     DrmConnector *connector() const;
     DrmPipeline *pipeline() const;
 
+    void prepare() override;
     bool present() override;
     DrmOutputLayer *primaryLayer() const override;
     DrmOutputLayer *cursorLayer() const override;
@@ -50,9 +49,6 @@ public:
     void revertQueuedChanges();
     void updateModes();
     void updateDpmsMode(DpmsMode dpmsMode);
-
-    bool setCursor(const QImage &image, const QPoint &hotspot) override;
-    bool moveCursor(const QPoint &position) override;
 
     DrmLease *lease() const;
     bool addLeaseObjects(QVector<uint32_t> &objectList);
@@ -64,28 +60,13 @@ public:
 private:
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
-
     QList<std::shared_ptr<OutputMode>> getModes() const;
-
-    void renderCursorOpengl(const RenderTarget &renderTarget, const QSize &cursorSize);
-    void renderCursorQPainter(const RenderTarget &renderTarget);
+    bool wantsSoftwareCursor() const;
 
     DrmPipeline *m_pipeline;
     DrmConnector *m_connector;
-
-    bool m_setCursorSuccessful = false;
-    bool m_moveCursorSuccessful = false;
     QTimer m_turnOffTimer;
     DrmLease *m_lease = nullptr;
-
-    struct {
-        QImage image;
-        QPoint hotspot;
-        QPoint position;
-
-        std::unique_ptr<GLTexture> texture;
-        qint64 cacheKey = 0;
-    } m_cursor;
 };
 
 }

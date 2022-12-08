@@ -358,7 +358,9 @@ void Compositor::startupWithWorkspace()
         connect(workspace(), &Workspace::geometryChanged, workspaceLayer, [workspaceLayer]() {
             workspaceLayer->setGeometry(workspace()->geometry());
         });
-        addSuperLayer(workspaceLayer);
+        addStage(workspaceLayer->loop(), Stage{
+            .primaryLayer = workspaceLayer,
+        });
     } else {
         for (Output *output : outputs) {
             addOutput(output);
@@ -421,64 +423,52 @@ void Compositor::addOutput(Output *output)
     auto cursorLayer = new RenderLayer(output->renderLoop());
     cursorLayer->setVisible(false);
     if (m_backend->compositingType() == OpenGLCompositing) {
-        cursorLayer->setDelegate(new CursorDelegateOpenGL());
+        cursorLayer->setDelegate(new CursorDelegateOpenGL(output));
     } else {
-        cursorLayer->setDelegate(new CursorDelegateQPainter());
+        cursorLayer->setDelegate(new CursorDelegateQPainter(output));
     }
     cursorLayer->setParent(workspaceLayer);
     cursorLayer->setSuperlayer(workspaceLayer);
 
     auto updateCursorLayer = [output, cursorLayer]() {
         const Cursor *cursor = Cursors::self()->currentCursor();
-        const QRect layerRect = output->mapFromGlobal(cursor->geometry());
-        bool usesHardwareCursor = false;
-        if (!Cursors::self()->isCursorHidden()) {
-            usesHardwareCursor = output->setCursor(cursor->image(), cursor->hotspot()) && output->moveCursor(layerRect.topLeft());
-        } else {
-            usesHardwareCursor = output->setCursor(QImage(), QPoint());
-        }
-        cursorLayer->setVisible(cursor->isOnOutput(output) && !usesHardwareCursor);
-        cursorLayer->setGeometry(layerRect);
-        cursorLayer->addRepaintFull();
-    };
-    auto moveCursorLayer = [output, cursorLayer]() {
-        const Cursor *cursor = Cursors::self()->currentCursor();
-        const QRect layerRect = output->mapFromGlobal(cursor->geometry());
-        const bool usesHardwareCursor = output->moveCursor(layerRect.topLeft());
-        cursorLayer->setVisible(cursor->isOnOutput(output) && !usesHardwareCursor);
-        cursorLayer->setGeometry(layerRect);
+        cursorLayer->setOrigin(cursor->hotspot());
+        cursorLayer->setVisible(cursor->isOnOutput(output));
+        cursorLayer->setGeometry(output->mapFromGlobal(cursor->geometry()));
         cursorLayer->addRepaintFull();
     };
     updateCursorLayer();
     connect(output, &Output::geometryChanged, cursorLayer, updateCursorLayer);
     connect(Cursors::self(), &Cursors::currentCursorChanged, cursorLayer, updateCursorLayer);
     connect(Cursors::self(), &Cursors::hiddenChanged, cursorLayer, updateCursorLayer);
-    connect(Cursors::self(), &Cursors::positionChanged, cursorLayer, moveCursorLayer);
+    connect(Cursors::self(), &Cursors::positionChanged, cursorLayer, updateCursorLayer);
 
-    addSuperLayer(workspaceLayer);
+    addStage(output->renderLoop(), Stage{
+        .primaryLayer = workspaceLayer,
+        .cursorLayer = cursorLayer,
+    });
 }
 
 void Compositor::removeOutput(Output *output)
 {
-    removeSuperLayer(m_superlayers[output->renderLoop()]);
+    removeStage(output->renderLoop());
 }
 
-void Compositor::addSuperLayer(RenderLayer *layer)
+void Compositor::addStage(RenderLoop *loop, const Stage &stage)
 {
-    m_superlayers.insert(layer->loop(), layer);
-    connect(layer->loop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
+    m_stages.insert(loop, stage);
+    connect(loop, &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
 }
 
-void Compositor::removeSuperLayer(RenderLayer *layer)
+void Compositor::removeStage(RenderLoop *loop)
 {
-    m_superlayers.remove(layer->loop());
-    disconnect(layer->loop(), &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
-    delete layer;
+    delete m_stages.take(loop).primaryLayer;
+    disconnect(loop, &RenderLoop::frameRequested, this, &Compositor::handleFrameRequested);
 }
 
 void Compositor::scheduleRepaint()
 {
-    for (auto it = m_superlayers.constBegin(); it != m_superlayers.constEnd(); ++it) {
+    for (auto it = m_stages.constBegin(); it != m_stages.constEnd(); ++it) {
         it.key()->scheduleRepaint();
     }
 }
@@ -528,9 +518,9 @@ void Compositor::stop()
         }
     }
 
-    const auto superlayers = m_superlayers;
-    for (auto it = superlayers.begin(); it != superlayers.end(); ++it) {
-        removeSuperLayer(*it);
+    const auto stages = m_stages;
+    for (auto it = stages.begin(); it != stages.end(); ++it) {
+        removeStage(it.key());
     }
 
     m_scene.reset();
@@ -630,63 +620,99 @@ void Compositor::composite(RenderLoop *renderLoop)
     }
 
     Output *output = findOutput(renderLoop);
-    OutputLayer *primaryLayer = m_backend->primaryLayer(output);
     fTraceDuration("Paint (", output->name(), ")");
-
-    RenderLayer *superLayer = m_superlayers[renderLoop];
-    prePaintPass(superLayer);
-    superLayer->setOutputLayer(primaryLayer);
-
-    SurfaceItem *scanoutCandidate = superLayer->delegate()->scanoutCandidate();
-    renderLoop->setFullscreenSurface(scanoutCandidate);
-    output->setContentType(scanoutCandidate ? scanoutCandidate->contentType() : ContentType::None);
-
     renderLoop->beginFrame();
-    bool directScanout = false;
-    if (scanoutCandidate) {
-        const auto sublayers = superLayer->sublayers();
-        const bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
-            return sublayer->isVisible();
-        });
-        if (scanoutPossible && !output->directScanoutInhibited()) {
-            directScanout = primaryLayer->scanout(scanoutCandidate);
-        }
+
+    OutputLayer *primaryLayer = m_backend->primaryLayer(output);
+    OutputLayer *cursorLayer = m_backend->cursorLayer(output);
+
+    const Stage &stage = m_stages[renderLoop];
+    RenderLayer *primaryRenderLayer = stage.primaryLayer;
+    RenderLayer *cursorRenderLayer = stage.cursorLayer;
+
+    // First step, describe the state of the output layers.
+    // vlad: what coordinate system to use? logical or native?
+    primaryLayer->setPosition(QPoint(0, 0));
+    primaryLayer->setScale(output->scale());
+    primaryLayer->setSize(output->geometry().size());
+    primaryLayer->setVisible(true);
+
+    if (cursorLayer) {
+        cursorLayer->setScale(output->scale());
+        cursorLayer->setPosition(cursorRenderLayer->geometry().topLeft());
+        cursorLayer->setSize(cursorRenderLayer->geometry().size());
+        cursorLayer->setVisible(cursorRenderLayer->isVisible());
+        cursorLayer->setOrigin(cursorRenderLayer->origin());
     }
 
-    if (!directScanout) {
-        QRegion surfaceDamage = primaryLayer->repaints();
-        primaryLayer->resetRepaints();
-        preparePaintPass(superLayer, &surfaceDamage);
+    // Second step, let the output backend check output layer state.
+    m_backend->prepare(output);
 
-        if (auto beginInfo = primaryLayer->beginFrame()) {
-            auto &[renderTarget, repaint] = beginInfo.value();
-            renderTarget.setDevicePixelRatio(output->scale());
+    // Third step, assign render layers to output layers.
+    primaryRenderLayer->setOutputLayer(primaryLayer);
 
-            const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(superLayer->rect());
-            primaryLayer->aboutToStartPainting(bufferDamage);
-
-            paintPass(superLayer, &renderTarget, bufferDamage);
-            primaryLayer->endFrame(bufferDamage, surfaceDamage);
-        }
+    if (cursorLayer && cursorLayer->isAccepted()) {
+        cursorRenderLayer->setSuperlayer(nullptr);
+        cursorRenderLayer->setOutputLayer(cursorLayer);
+    } else {
+        cursorRenderLayer->setSuperlayer(primaryRenderLayer);
+        cursorRenderLayer->setOutputLayer(primaryLayer);
     }
-    renderLoop->endFrame();
 
-    postPaintPass(superLayer);
+    // Fourth step, decide the order in which render layers will be rendered.
+    QList<RenderLayer *> roots{primaryRenderLayer};
+    if (cursorRenderLayer && cursorRenderLayer->outputLayer() != primaryRenderLayer->outputLayer()) {
+        roots.append(cursorRenderLayer);
+    }
 
-    m_backend->present(output);
+    // Fifth step, update buffers.
+    for (RenderLayer *renderLayer : std::as_const(roots)) {
+        OutputLayer *outputLayer = renderLayer->outputLayer();
+        if (!outputLayer->isVisible()) {
+            continue;
+        }
+        prePaintPass(renderLayer);
 
-    // TODO: Put it inside the cursor layer once the cursor layer can be backed by a real output layer.
-    if (waylandServer()) {
-        const std::chrono::milliseconds frameTime =
-            std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
+        SurfaceItem *scanoutCandidate = renderLayer->delegate()->scanoutCandidate();
+        if (renderLayer == primaryRenderLayer) {
+            renderLoop->setFullscreenSurface(scanoutCandidate);
+            output->setContentType(scanoutCandidate ? scanoutCandidate->contentType() : ContentType::None);
+        }
 
-        if (!Cursors::self()->isCursorHidden()) {
-            Cursor *cursor = Cursors::self()->currentCursor();
-            if (cursor->geometry().intersects(output->geometry())) {
-                cursor->markAsRendered(frameTime);
+        bool directScanout = false;
+        if (scanoutCandidate) {
+            const auto sublayers = renderLayer->sublayers();
+            const bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
+                return sublayer->isVisible();
+            });
+            if (scanoutPossible && !output->directScanoutInhibited()) {
+                directScanout = outputLayer->scanout(scanoutCandidate);
             }
         }
+
+        if (!directScanout) {
+            QRegion surfaceDamage = outputLayer->repaints();
+            outputLayer->resetRepaints();
+            preparePaintPass(renderLayer, &surfaceDamage);
+
+            if (auto beginInfo = outputLayer->beginFrame()) {
+                auto &[renderTarget, repaint] = beginInfo.value();
+                renderTarget.setDevicePixelRatio(output->scale());
+
+                const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(renderLayer->rect());
+                outputLayer->aboutToStartPainting(bufferDamage);
+
+                paintPass(renderLayer, &renderTarget, bufferDamage);
+                outputLayer->endFrame(bufferDamage, surfaceDamage);
+            }
+        }
+
+        postPaintPass(renderLayer);
     }
+
+    // Sixth step, finish the frame.
+    renderLoop->endFrame();
+    m_backend->present(output);
 }
 
 void Compositor::prePaintPass(RenderLayer *layer)
@@ -710,7 +736,7 @@ void Compositor::postPaintPass(RenderLayer *layer)
 void Compositor::preparePaintPass(RenderLayer *layer, QRegion *repaint)
 {
     // TODO: Cull opaque region.
-    *repaint += layer->mapToGlobal(layer->repaints() + layer->delegate()->repaints());
+    *repaint += layer->mapToRoot(layer->repaints() + layer->delegate()->repaints());
     layer->resetRepaints();
     const auto sublayers = layer->sublayers();
     for (RenderLayer *sublayer : sublayers) {

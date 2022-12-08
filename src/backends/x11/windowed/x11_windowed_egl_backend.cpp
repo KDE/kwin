@@ -154,6 +154,13 @@ bool X11WindowedEglBackend::createSurfaces()
     return true;
 }
 
+void X11WindowedEglBackend::prepare(Output *output)
+{
+    Layers &layers = m_outputs[output];
+    layers.primaryLayer->setAccepted(true);
+    layers.cursorLayer->setAccepted(true);
+}
+
 void X11WindowedEglBackend::present(Output *output)
 {
     static_cast<X11WindowedOutput *>(output)->vsyncMonitor()->arm();

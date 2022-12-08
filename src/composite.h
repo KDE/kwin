@@ -169,6 +169,12 @@ private Q_SLOTS:
     void handleFrameRequested(RenderLoop *renderLoop);
 
 private:
+    struct Stage
+    {
+        RenderLayer *primaryLayer = nullptr;
+        RenderLayer *cursorLayer = nullptr;
+    };
+
     void initializeX11();
     void cleanupX11();
 
@@ -182,8 +188,8 @@ private:
     void addOutput(Output *output);
     void removeOutput(Output *output);
 
-    void addSuperLayer(RenderLayer *layer);
-    void removeSuperLayer(RenderLayer *layer);
+    void addStage(RenderLoop *loop, const Stage &stage);
+    void removeStage(RenderLoop *loop);
 
     void prePaintPass(RenderLayer *layer);
     void postPaintPass(RenderLayer *layer);
@@ -197,7 +203,7 @@ private:
     QTimer m_unusedSupportPropertyTimer;
     std::unique_ptr<Scene> m_scene;
     std::unique_ptr<RenderBackend> m_backend;
-    QHash<RenderLoop *, RenderLayer *> m_superlayers;
+    QHash<RenderLoop *, Stage> m_stages;
     CompositingType m_selectedCompositor = NoCompositing;
 };
 

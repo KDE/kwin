@@ -805,6 +805,10 @@ void GlxBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedR
     m_lastRenderedRegion = renderedRegion;
 }
 
+void GlxBackend::prepare(Output *output)
+{
+}
+
 void GlxBackend::present(Output *output)
 {
     // If the GLX_INTEL_swap_event extension is not used for getting presentation feedback,

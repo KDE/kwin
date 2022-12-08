@@ -14,14 +14,14 @@
 namespace KWin
 {
 
-CursorDelegateQPainter::CursorDelegateQPainter(QObject *parent)
-    : RenderLayerDelegate(parent)
+CursorDelegateQPainter::CursorDelegateQPainter(Output *output, QObject *parent)
+    : CursorDelegate(output, parent)
 {
 }
 
 void CursorDelegateQPainter::paint(RenderTarget *renderTarget, const QRegion &region)
 {
-    if (!region.intersects(layer()->mapToGlobal(layer()->rect()))) {
+    if (region.isEmpty()) {
         return;
     }
 
@@ -30,10 +30,18 @@ void CursorDelegateQPainter::paint(RenderTarget *renderTarget, const QRegion &re
         return;
     }
 
+    if (!layer()->superlayer()) {
+        buffer->fill(Qt::transparent);
+    }
+
+    if (!region.intersects(layer()->mapToRoot(layer()->rect()))) {
+        return;
+    }
+
     const Cursor *cursor = Cursors::self()->currentCursor();
     QPainter painter(buffer);
     painter.setClipRegion(region);
-    painter.drawImage(layer()->mapToGlobal(layer()->rect()), cursor->image());
+    painter.drawImage(layer()->mapToRoot(layer()->rect()), cursor->image());
 }
 
 } // namespace KWin

@@ -26,9 +26,19 @@ class DrmOutputLayer : public OutputLayer
 public:
     virtual ~DrmOutputLayer();
 
+    QPoint nativePosition() const;
+    void setNativePosition(const QPoint &point);
+
+    QPoint nativeOrigin() const;
+    void setNativeOrigin(const QPoint &point);
+
     virtual std::shared_ptr<GLTexture> texture() const;
     virtual QRegion currentDamage() const;
     virtual void releaseBuffers() = 0;
+
+private:
+    QPoint m_nativePosition;
+    QPoint m_nativeOrigin;
 };
 
 class DrmPipelineLayer : public DrmOutputLayer

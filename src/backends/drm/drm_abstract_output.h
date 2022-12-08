@@ -29,6 +29,7 @@ public:
     QVector<int32_t> regionToRects(const QRegion &region) const;
     DrmGpu *gpu() const;
 
+    virtual void prepare() = 0;
     virtual bool present() = 0;
     virtual DrmOutputLayer *primaryLayer() const = 0;
     virtual DrmOutputLayer *cursorLayer() const = 0;

@@ -29,6 +29,7 @@ public:
     DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size, qreal scale);
     ~DrmVirtualOutput() override;
 
+    void prepare() override;
     bool present() override;
     DrmOutputLayer *primaryLayer() const override;
     DrmOutputLayer *cursorLayer() const override;

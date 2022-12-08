@@ -66,6 +66,11 @@ void VirtualQPainterBackend::removeOutput(Output *output)
     m_outputs.erase(output);
 }
 
+void VirtualQPainterBackend::prepare(Output *output)
+{
+    m_outputs[output]->setAccepted(true);
+}
+
 void VirtualQPainterBackend::present(Output *output)
 {
     static_cast<VirtualOutput *>(output)->vsyncMonitor()->arm();

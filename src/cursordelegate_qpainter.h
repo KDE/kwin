@@ -6,17 +6,19 @@
 
 #pragma once
 
-#include "core/renderlayerdelegate.h"
+#include "cursordelegate.h"
 
 namespace KWin
 {
 
-class CursorDelegateQPainter final : public RenderLayerDelegate
+class Output;
+
+class CursorDelegateQPainter final : public CursorDelegate
 {
     Q_OBJECT
 
 public:
-    explicit CursorDelegateQPainter(QObject *parent = nullptr);
+    explicit CursorDelegateQPainter(Output *output, QObject *parent = nullptr);
 
     void paint(RenderTarget *renderTarget, const QRegion &region) override;
 };

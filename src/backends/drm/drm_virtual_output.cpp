@@ -47,6 +47,11 @@ DrmVirtualOutput::~DrmVirtualOutput()
 {
 }
 
+void DrmVirtualOutput::prepare()
+{
+    m_layer->setAccepted(true);
+}
+
 bool DrmVirtualOutput::present()
 {
     m_vsyncMonitor->arm();

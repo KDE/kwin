@@ -7,26 +7,27 @@
 #pragma once
 #include <memory>
 
-#include "core/renderlayerdelegate.h"
+#include "cursordelegate.h"
 
 namespace KWin
 {
 
 class GLTexture;
+class Output;
 
-class CursorDelegateOpenGL final : public RenderLayerDelegate
+class CursorDelegateOpenGL final : public CursorDelegate
 {
     Q_OBJECT
 
 public:
-    explicit CursorDelegateOpenGL(QObject *parent = nullptr);
+    explicit CursorDelegateOpenGL(Output *output, QObject *parent = nullptr);
     ~CursorDelegateOpenGL() override;
 
     void paint(RenderTarget *renderTarget, const QRegion &region) override;
 
 private:
     std::unique_ptr<GLTexture> m_cursorTexture;
-    bool m_cursorTextureDirty = false;
+    qint64 m_cacheKey = 0;
 };
 
 } // namespace KWin

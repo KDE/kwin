@@ -138,25 +138,25 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
 bool DrmPipeline::setCursorLegacy()
 {
     const auto bo = cursorLayer()->currentBuffer();
-    const uint32_t handle = bo && bo->buffer() && cursorLayer()->isVisible() ? bo->buffer()->handles()[0] : 0;
+    const uint32_t handle = bo && bo->buffer() && cursorLayer()->isVisible() && cursorLayer()->isAccepted() ? bo->buffer()->handles()[0] : 0;
 
     struct drm_mode_cursor2 arg = {
         .flags = DRM_MODE_CURSOR_BO | DRM_MODE_CURSOR_MOVE,
         .crtc_id = m_pending.crtc->id(),
-        .x = m_pending.cursorLayer->position().x(),
-        .y = m_pending.cursorLayer->position().y(),
+        .x = m_pending.cursorLayer->nativePosition().x(),
+        .y = m_pending.cursorLayer->nativePosition().y(),
         .width = (uint32_t)gpu()->cursorSize().width(),
         .height = (uint32_t)gpu()->cursorSize().height(),
         .handle = handle,
-        .hot_x = m_pending.cursorHotspot.x(),
-        .hot_y = m_pending.cursorHotspot.y(),
+        .hot_x = m_pending.cursorLayer->nativeOrigin().x(),
+        .hot_y = m_pending.cursorLayer->nativeOrigin().y(),
     };
     return drmIoctl(gpu()->fd(), DRM_IOCTL_MODE_CURSOR2, &arg) == 0;
 }
 
 bool DrmPipeline::moveCursorLegacy()
 {
-    return drmModeMoveCursor(gpu()->fd(), m_pending.crtc->id(), cursorLayer()->position().x(), cursorLayer()->position().y()) == 0;
+    return drmModeMoveCursor(gpu()->fd(), m_pending.crtc->id(), cursorLayer()->nativePosition().x(), cursorLayer()->nativePosition().y()) == 0;
 }
 
 }

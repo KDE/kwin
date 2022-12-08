@@ -218,9 +218,14 @@ void DrmPipeline::prepareAtomicPresentation()
 
     if (m_pending.crtc->cursorPlane()) {
         const auto layer = cursorLayer();
-        m_pending.crtc->cursorPlane()->set(QPoint(0, 0), gpu()->cursorSize(), layer->position(), gpu()->cursorSize());
-        m_pending.crtc->cursorPlane()->setBuffer(layer->isVisible() ? layer->currentBuffer().get() : nullptr);
-        m_pending.crtc->cursorPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, layer->isVisible() ? m_pending.crtc->id() : 0);
+        if (layer->isVisible() && layer->isAccepted()) {
+            m_pending.crtc->cursorPlane()->set(QPoint(0, 0), gpu()->cursorSize(), layer->nativePosition(), gpu()->cursorSize());
+            m_pending.crtc->cursorPlane()->setBuffer(layer->currentBuffer().get());
+            m_pending.crtc->cursorPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, m_pending.crtc->id());
+        } else {
+            m_pending.crtc->cursorPlane()->setBuffer(nullptr);
+            m_pending.crtc->cursorPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, 0);
+        }
     }
 }
 
@@ -389,47 +394,6 @@ void DrmPipeline::atomicModesetSuccessful()
     if (activePending()) {
         pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
     }
-}
-
-bool DrmPipeline::setCursor(const QPoint &hotspot)
-{
-    bool result;
-    m_pending.cursorHotspot = hotspot;
-    // explicitly check for the cursor plane and not for AMS, as we might not always have one
-    if (m_pending.crtc->cursorPlane()) {
-        result = commitPipelines({this}, CommitMode::Test) == Error::None;
-        if (result && m_output) {
-            m_output->renderLoop()->scheduleRepaint();
-        }
-    } else {
-        result = setCursorLegacy();
-    }
-    if (result) {
-        m_next = m_pending;
-    } else {
-        m_pending = m_next;
-    }
-    return result;
-}
-
-bool DrmPipeline::moveCursor()
-{
-    bool result;
-    // explicitly check for the cursor plane and not for AMS, as we might not always have one
-    if (m_pending.crtc->cursorPlane()) {
-        result = commitPipelines({this}, CommitMode::Test) == Error::None;
-    } else {
-        result = moveCursorLegacy();
-    }
-    if (result) {
-        m_next = m_pending;
-        if (m_output) {
-            m_output->renderLoop()->scheduleRepaint();
-        }
-    } else {
-        m_pending = m_next;
-    }
-    return result;
 }
 
 void DrmPipeline::applyPendingChanges()

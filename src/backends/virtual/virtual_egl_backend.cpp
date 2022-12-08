@@ -198,6 +198,11 @@ OutputLayer *VirtualEglBackend::primaryLayer(Output *output)
     return m_outputs[output].get();
 }
 
+void VirtualEglBackend::prepare(Output *output)
+{
+    m_outputs[output]->setAccepted(true);
+}
+
 void VirtualEglBackend::present(Output *output)
 {
     glFlush();

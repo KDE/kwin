@@ -182,6 +182,10 @@ void EglBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedR
     m_lastRenderedRegion = renderedRegion;
 }
 
+void EglBackend::prepare(Output *output)
+{
+}
+
 void EglBackend::present(Output *output)
 {
     // Start the software vsync monitor. There is no any reliable way to determine when

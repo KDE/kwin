@@ -145,6 +145,12 @@ void WaylandEglPrimaryLayer::present()
     m_waylandOutput->surface()->setScale(std::ceil(m_waylandOutput->scale()));
     Q_EMIT m_waylandOutput->outputChange(m_damageJournal.lastDamage());
 
+    // The current opengl context might have been changed by the cursor layer.
+    if (eglMakeCurrent(m_backend->eglDisplay(), m_eglSurface, m_eglSurface, m_backend->context()) == EGL_FALSE) {
+        qCCritical(KWIN_WAYLAND_BACKEND) << "Make Context Current failed";
+        return;
+    }
+
     if (m_backend->supportsSwapBuffersWithDamage()) {
         QVector<EGLint> rects = regionToRects(m_damageJournal.lastDamage(), m_waylandOutput);
         if (!eglSwapBuffersWithDamageEXT(m_backend->eglDisplay(), m_eglSurface,
@@ -182,7 +188,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
         return std::nullopt;
     }
 
-    const QSize bufferSize = size().expandedTo(QSize(64, 64));
+    const QSize bufferSize = (size() * scale()).expandedTo(QSize(64, 64));
     if (!m_texture || m_texture->size() != bufferSize) {
         m_texture = std::make_unique<GLTexture>(GL_RGBA8, bufferSize);
         m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
@@ -367,6 +373,14 @@ std::unique_ptr<SurfaceTexture> WaylandEglBackend::createSurfaceTextureInternal(
 std::unique_ptr<SurfaceTexture> WaylandEglBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
 {
     return std::make_unique<BasicEGLSurfaceTextureWayland>(this, pixmap);
+}
+
+void WaylandEglBackend::prepare(Output *output)
+{
+    auto waylandOutput = static_cast<WaylandOutput *>(output);
+    Layers &layers = m_outputs[output];
+    layers.primaryLayer->setAccepted(true);
+    layers.cursorLayer->setAccepted(!waylandOutput->wantsSoftwareCursor());
 }
 
 void WaylandEglBackend::present(Output *output)

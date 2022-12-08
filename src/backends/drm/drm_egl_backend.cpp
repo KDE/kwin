@@ -201,6 +201,11 @@ std::unique_ptr<SurfaceTexture> EglGbmBackend::createSurfaceTextureWayland(Surfa
     return std::make_unique<BasicEGLSurfaceTextureWayland>(this, pixmap);
 }
 
+void EglGbmBackend::prepare(Output *output)
+{
+    static_cast<DrmAbstractOutput *>(output)->prepare();
+}
+
 void EglGbmBackend::present(Output *output)
 {
     static_cast<DrmAbstractOutput *>(output)->present();

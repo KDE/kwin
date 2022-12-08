@@ -54,16 +54,19 @@ public:
     bool isVisible() const;
     void setVisible(bool visible);
 
-    QPoint mapToGlobal(const QPoint &point) const;
-    QRegion mapToGlobal(const QRegion &region) const;
-    QRect mapToGlobal(const QRect &rect) const;
+    QPoint mapToRoot(const QPoint &point) const;
+    QRegion mapToRoot(const QRegion &region) const;
+    QRect mapToRoot(const QRect &rect) const;
 
-    QPoint mapFromGlobal(const QPoint &point) const;
-    QRegion mapFromGlobal(const QRegion &region) const;
-    QRect mapFromGlobal(const QRect &rect) const;
+    QPoint mapFromRoot(const QPoint &point) const;
+    QRegion mapFromRoot(const QRegion &region) const;
+    QRect mapFromRoot(const QRect &rect) const;
 
     QRect rect() const;
     QRect boundingRect() const;
+
+    QPoint origin() const;
+    void setOrigin(const QPoint &origin);
 
     QRect geometry() const;
     void setGeometry(const QRect &rect);
@@ -87,6 +90,7 @@ private:
     QRegion m_repaints;
     QRect m_boundingRect;
     QRect m_geometry;
+    QPoint m_origin;
     QPointer<OutputLayer> m_outputLayer;
     RenderLayer *m_superlayer = nullptr;
     QList<RenderLayer *> m_sublayers;

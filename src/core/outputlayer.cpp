@@ -14,6 +14,16 @@ OutputLayer::OutputLayer(QObject *parent)
 {
 }
 
+bool OutputLayer::isAccepted() const
+{
+    return m_accepted;
+}
+
+void OutputLayer::setAccepted(bool accepted)
+{
+    m_accepted = accepted;
+}
+
 QRegion OutputLayer::repaints() const
 {
     return m_repaints;

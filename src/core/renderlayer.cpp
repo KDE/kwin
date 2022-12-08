@@ -38,7 +38,7 @@ void RenderLayer::setOutputLayer(OutputLayer *layer)
         return;
     }
     if (m_outputLayer) {
-        m_outputLayer->addRepaint(mapToGlobal(boundingRect()));
+        m_outputLayer->addRepaint(mapToRoot(boundingRect()));
     }
     m_outputLayer = layer;
     for (RenderLayer *sublayer : std::as_const(m_sublayers)) {
@@ -111,6 +111,16 @@ QRect RenderLayer::boundingRect() const
     return m_boundingRect;
 }
 
+QPoint RenderLayer::origin() const
+{
+    return m_origin;
+}
+
+void RenderLayer::setOrigin(const QPoint &origin)
+{
+    m_origin = origin;
+}
+
 QRect RenderLayer::geometry() const
 {
     return m_geometry;
@@ -122,7 +132,7 @@ void RenderLayer::setGeometry(const QRect &geometry)
         return;
     }
     if (m_effectiveVisible && m_outputLayer) {
-        m_outputLayer->addRepaint(mapToGlobal(boundingRect()));
+        m_outputLayer->addRepaint(mapToRoot(boundingRect()));
     }
 
     m_geometry = geometry;
@@ -216,7 +226,7 @@ void RenderLayer::updateEffectiveVisibility()
         addRepaintFull();
     } else {
         if (m_outputLayer) {
-            m_outputLayer->addRepaint(mapToGlobal(boundingRect()));
+            m_outputLayer->addRepaint(mapToRoot(boundingRect()));
         }
     }
 
@@ -225,52 +235,52 @@ void RenderLayer::updateEffectiveVisibility()
     }
 }
 
-QPoint RenderLayer::mapToGlobal(const QPoint &point) const
+QPoint RenderLayer::mapToRoot(const QPoint &point) const
 {
     QPoint result = point;
     const RenderLayer *layer = this;
-    while (layer) {
+    while (layer->superlayer()) {
         result += layer->geometry().topLeft();
         layer = layer->superlayer();
     }
     return result;
 }
 
-QRect RenderLayer::mapToGlobal(const QRect &rect) const
+QRect RenderLayer::mapToRoot(const QRect &rect) const
 {
-    return rect.translated(mapToGlobal(QPoint(0, 0)));
+    return rect.translated(mapToRoot(QPoint(0, 0)));
 }
 
-QRegion RenderLayer::mapToGlobal(const QRegion &region) const
+QRegion RenderLayer::mapToRoot(const QRegion &region) const
 {
     if (region.isEmpty()) {
         return QRegion();
     }
-    return region.translated(mapToGlobal(QPoint(0, 0)));
+    return region.translated(mapToRoot(QPoint(0, 0)));
 }
 
-QPoint RenderLayer::mapFromGlobal(const QPoint &point) const
+QPoint RenderLayer::mapFromRoot(const QPoint &point) const
 {
     QPoint result = point;
     const RenderLayer *layer = this;
-    while (layer) {
+    while (layer->superlayer()) {
         result -= layer->geometry().topLeft();
         layer = layer->superlayer();
     }
     return result;
 }
 
-QRect RenderLayer::mapFromGlobal(const QRect &rect) const
+QRect RenderLayer::mapFromRoot(const QRect &rect) const
 {
-    return rect.translated(mapFromGlobal(QPoint(0, 0)));
+    return rect.translated(mapFromRoot(QPoint(0, 0)));
 }
 
-QRegion RenderLayer::mapFromGlobal(const QRegion &region) const
+QRegion RenderLayer::mapFromRoot(const QRegion &region) const
 {
     if (region.isEmpty()) {
         return QRegion();
     }
-    return region.translated(mapFromGlobal(QPoint(0, 0)));
+    return region.translated(mapFromRoot(QPoint(0, 0)));
 }
 
 } // namespace KWin

@@ -34,6 +34,11 @@ DrmQPainterBackend::~DrmQPainterBackend()
     m_backend->setRenderBackend(nullptr);
 }
 
+void DrmQPainterBackend::prepare(Output *output)
+{
+    static_cast<DrmAbstractOutput *>(output)->prepare();
+}
+
 void DrmQPainterBackend::present(Output *output)
 {
     static_cast<DrmAbstractOutput *>(output)->present();

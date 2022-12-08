@@ -140,7 +140,7 @@ WaylandQPainterCursorLayer::~WaylandQPainterCursorLayer()
 
 std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame()
 {
-    const QSize bufferSize = size().expandedTo(QSize(64, 64));
+    const QSize bufferSize = (size() * scale()).expandedTo(QSize(64, 64));
     if (m_backingStore.size() != bufferSize) {
         m_backingStore = QImage(bufferSize, QImage::Format_ARGB32_Premultiplied);
     }
@@ -183,6 +183,14 @@ void WaylandQPainterBackend::createOutput(Output *waylandOutput)
         .primaryLayer = std::make_unique<WaylandQPainterPrimaryLayer>(static_cast<WaylandOutput *>(waylandOutput)),
         .cursorLayer = std::make_unique<WaylandQPainterCursorLayer>(static_cast<WaylandOutput *>(waylandOutput)),
     };
+}
+
+void WaylandQPainterBackend::prepare(Output *output)
+{
+    auto waylandOutput = static_cast<WaylandOutput *>(output);
+    Layers &layers = m_outputs[output];
+    layers.primaryLayer->setAccepted(true);
+    layers.cursorLayer->setAccepted(!waylandOutput->wantsSoftwareCursor());
 }
 
 void WaylandQPainterBackend::present(Output *output)
