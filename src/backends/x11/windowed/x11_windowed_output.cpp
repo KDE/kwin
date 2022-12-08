@@ -282,7 +282,7 @@ bool X11WindowedOutput::moveCursor(const QPoint &position)
 void X11WindowedOutput::renderCursorOpengl(X11WindowedEglBackend *backend, const QImage &image, const QPoint &hotspot)
 {
     X11WindowedEglCursorLayer *cursorLayer = backend->cursorLayer(this);
-    cursorLayer->setHotspot(hotspot);
+    cursorLayer->setOrigin(hotspot);
     cursorLayer->setSize(image.size());
 
     std::optional<OutputLayerBeginFrameInfo> beginInfo = cursorLayer->beginFrame();
@@ -315,7 +315,7 @@ void X11WindowedOutput::renderCursorOpengl(X11WindowedEglBackend *backend, const
 void X11WindowedOutput::renderCursorQPainter(X11WindowedQPainterBackend *backend, const QImage &image, const QPoint &hotspot)
 {
     X11WindowedQPainterCursorLayer *cursorLayer = backend->cursorLayer(this);
-    cursorLayer->setHotspot(hotspot);
+    cursorLayer->setOrigin(hotspot);
     cursorLayer->setSize(image.size());
 
     std::optional<OutputLayerBeginFrameInfo> beginInfo = cursorLayer->beginFrame();

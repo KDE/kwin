@@ -47,20 +47,12 @@ class X11WindowedQPainterCursorLayer : public OutputLayer
 public:
     explicit X11WindowedQPainterCursorLayer(X11WindowedOutput *output);
 
-    QPoint hotspot() const;
-    void setHotspot(const QPoint &hotspot);
-
-    QSize size() const;
-    void setSize(const QSize &size);
-
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
 private:
     QImage m_buffer;
     X11WindowedOutput *m_output;
-    QPoint m_hotspot;
-    QSize m_size;
 };
 
 class X11WindowedQPainterBackend : public QPainterBackend

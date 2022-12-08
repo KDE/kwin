@@ -69,15 +69,6 @@ public:
     WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBackend *backend);
     ~WaylandEglCursorLayer() override;
 
-    qreal scale() const;
-    void setScale(qreal scale);
-
-    QPoint hotspot() const;
-    void setHotspot(const QPoint &hotspot);
-
-    QSize size() const;
-    void setSize(const QSize &size);
-
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
@@ -86,9 +77,6 @@ private:
     WaylandEglBackend *m_backend;
     std::unique_ptr<GLFramebuffer> m_framebuffer;
     std::unique_ptr<GLTexture> m_texture;
-    QPoint m_hotspot;
-    QSize m_size;
-    qreal m_scale = 1.0;
 };
 
 /**

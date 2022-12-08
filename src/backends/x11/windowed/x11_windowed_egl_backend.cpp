@@ -83,31 +83,11 @@ X11WindowedEglCursorLayer::~X11WindowedEglCursorLayer()
     m_texture.reset();
 }
 
-QPoint X11WindowedEglCursorLayer::hotspot() const
-{
-    return m_hotspot;
-}
-
-void X11WindowedEglCursorLayer::setHotspot(const QPoint &hotspot)
-{
-    m_hotspot = hotspot;
-}
-
-QSize X11WindowedEglCursorLayer::size() const
-{
-    return m_size;
-}
-
-void X11WindowedEglCursorLayer::setSize(const QSize &size)
-{
-    m_size = size;
-}
-
 std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame()
 {
     eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context());
 
-    const QSize bufferSize = m_size.expandedTo(QSize(64, 64));
+    const QSize bufferSize = size().expandedTo(QSize(64, 64));
     if (!m_texture || m_texture->size() != bufferSize) {
         m_texture = std::make_unique<GLTexture>(GL_RGBA8, bufferSize);
         m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
@@ -125,7 +105,7 @@ bool X11WindowedEglCursorLayer::endFrame(const QRegion &renderedRegion, const QR
     GLFramebuffer::popFramebuffer();
 
     const QImage buffer = m_texture->toImage().mirrored(false, true);
-    m_output->cursor()->update(buffer, m_hotspot);
+    m_output->cursor()->update(buffer, origin());
 
     return true;
 }

@@ -175,36 +175,6 @@ WaylandEglCursorLayer::~WaylandEglCursorLayer()
     m_texture.reset();
 }
 
-qreal WaylandEglCursorLayer::scale() const
-{
-    return m_scale;
-}
-
-void WaylandEglCursorLayer::setScale(qreal scale)
-{
-    m_scale = scale;
-}
-
-QPoint WaylandEglCursorLayer::hotspot() const
-{
-    return m_hotspot;
-}
-
-void WaylandEglCursorLayer::setHotspot(const QPoint &hotspot)
-{
-    m_hotspot = hotspot;
-}
-
-QSize WaylandEglCursorLayer::size() const
-{
-    return m_size;
-}
-
-void WaylandEglCursorLayer::setSize(const QSize &size)
-{
-    m_size = size;
-}
-
 std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
 {
     if (eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context()) == EGL_FALSE) {
@@ -212,7 +182,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
         return std::nullopt;
     }
 
-    const QSize bufferSize = m_size.expandedTo(QSize(64, 64));
+    const QSize bufferSize = size().expandedTo(QSize(64, 64));
     if (!m_texture || m_texture->size() != bufferSize) {
         m_texture = std::make_unique<GLTexture>(GL_RGBA8, bufferSize);
         m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
@@ -232,7 +202,7 @@ bool WaylandEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegio
     // Technically, we could pass a linux-dmabuf buffer, but host kwin does not support that atm.
     const QImage image = m_texture->toImage().mirrored(false, true);
     KWayland::Client::Buffer::Ptr buffer = m_output->backend()->display()->shmPool()->createBuffer(image);
-    m_output->cursor()->update(buffer, m_scale, m_hotspot);
+    m_output->cursor()->update(buffer, scale(), origin());
 
     return true;
 }

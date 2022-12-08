@@ -203,7 +203,7 @@ void WaylandOutput::renderCursorOpengl(WaylandEglBackend *backend, const QImage 
     WaylandEglCursorLayer *cursorLayer = backend->cursorLayer(this);
     cursorLayer->setSize(image.size());
     cursorLayer->setScale(image.devicePixelRatio());
-    cursorLayer->setHotspot(hotspot);
+    cursorLayer->setOrigin(hotspot);
 
     std::optional<OutputLayerBeginFrameInfo> beginInfo = cursorLayer->beginFrame();
     if (!beginInfo) {
@@ -237,7 +237,7 @@ void WaylandOutput::renderCursorQPainter(WaylandQPainterBackend *backend, const 
     WaylandQPainterCursorLayer *cursorLayer = backend->cursorLayer(this);
     cursorLayer->setSize(image.size());
     cursorLayer->setScale(image.devicePixelRatio());
-    cursorLayer->setHotspot(hotspot);
+    cursorLayer->setOrigin(hotspot);
 
     std::optional<OutputLayerBeginFrameInfo> beginInfo = cursorLayer->beginFrame();
     if (!beginInfo) {

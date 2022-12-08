@@ -51,12 +51,6 @@ public:
     X11WindowedEglCursorLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output);
     ~X11WindowedEglCursorLayer() override;
 
-    QPoint hotspot() const;
-    void setHotspot(const QPoint &hotspot);
-
-    QSize size() const;
-    void setSize(const QSize &size);
-
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
@@ -65,8 +59,6 @@ private:
     X11WindowedEglBackend *const m_backend;
     std::unique_ptr<GLFramebuffer> m_framebuffer;
     std::unique_ptr<GLTexture> m_texture;
-    QPoint m_hotspot;
-    QSize m_size;
 };
 
 /**
