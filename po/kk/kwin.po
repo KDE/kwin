@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-04 00:47+0000\n"
+"POT-Creation-Date: 2022-12-08 00:47+0000\n"
 "PO-Revision-Date: 2013-10-01 03:27+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -34,12 +34,12 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "ak78@sci.kz, sairan@computer.org"
 
-#: composite.cpp:611
+#: composite.cpp:626
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Үстел эффекттері графика ысыруға байланысты жаңадан басталды"
 
-#: composite.cpp:840
+#: composite.cpp:855
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -48,7 +48,7 @@ msgstr ""
 "Үстел эффекттерді басқа бір қолданба аялдатты.<br/>'%1' перне тіркесімін "
 "басып жалғастыруға болады."
 
-#: composite.cpp:1029
+#: composite.cpp:1044
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -69,12 +69,12 @@ msgstr ""
 "ол бірден қирауға апарып соғуға мүмкін!</b></p><p>Басқа амал - XRender "
 "тетігін қолдану.</p>"
 
-#: composite.cpp:1036
+#: composite.cpp:1051
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Қажетті X кеңейтулері (XComposite пен XDamage) жоқ."
 
-#: composite.cpp:1039
+#: composite.cpp:1054
 #, fuzzy, kde-format
 #| msgid "GLX/OpenGL and XRender/XFixes are not available."
 msgid "GLX/OpenGL is not available."
