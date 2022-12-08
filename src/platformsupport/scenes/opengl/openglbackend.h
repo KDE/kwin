@@ -79,10 +79,6 @@ public:
         return m_haveBufferAge;
     }
 
-    bool supportsPartialUpdate() const
-    {
-        return m_havePartialUpdate;
-    }
     bool supportsSwapBuffersWithDamage() const
     {
         return m_haveSwapBuffersWithDamage;
@@ -147,11 +143,6 @@ protected:
         m_haveBufferAge = value;
     }
 
-    void setSupportsPartialUpdate(bool value)
-    {
-        m_havePartialUpdate = value;
-    }
-
     void setSupportsSwapBuffersWithDamage(bool value)
     {
         m_haveSwapBuffersWithDamage = value;
@@ -181,10 +172,6 @@ private:
      * @brief Whether the backend supports GLX_EXT_buffer_age / EGL_EXT_buffer_age.
      */
     bool m_haveBufferAge;
-    /**
-     * @brief Whether the backend supports EGL_KHR_partial_update
-     */
-    bool m_havePartialUpdate = false;
     bool m_haveSwapBuffersWithDamage = false;
     /**
      * @brief Whether the backend supports EGL_ANDROID_native_fence_sync.

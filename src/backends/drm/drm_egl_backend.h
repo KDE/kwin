@@ -33,7 +33,6 @@ class DrmAbstractOutput;
 class DrmBuffer;
 class DrmGbmBuffer;
 class DrmOutput;
-class GbmSurface;
 class GbmBuffer;
 class DumbSwapchain;
 class ShadowBuffer;

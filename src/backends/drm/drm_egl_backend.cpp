@@ -17,7 +17,7 @@
 #include "drm_dumb_swapchain.h"
 #include "drm_egl_cursor_layer.h"
 #include "drm_egl_layer.h"
-#include "drm_gbm_surface.h"
+#include "drm_gbm_swapchain.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "drm_output.h"

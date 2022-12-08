@@ -44,11 +44,6 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::beginFrame()
     return m_surface.startRendering(m_pipeline->bufferSize(), m_pipeline->renderOrientation(), m_pipeline->bufferOrientation(), m_pipeline->formats());
 }
 
-void EglGbmLayer::aboutToStartPainting(const QRegion &damagedRegion)
-{
-    m_surface.aboutToStartPainting(m_pipeline->output(), damagedRegion);
-}
-
 bool EglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     const bool ret = m_surface.endRendering(m_pipeline->renderOrientation(), damagedRegion);

@@ -59,10 +59,6 @@ void OutputLayer::resetRepaints()
     m_repaints = QRegion();
 }
 
-void OutputLayer::aboutToStartPainting(const QRegion &damage)
-{
-}
-
 bool OutputLayer::scanout(SurfaceItem *surfaceItem)
 {
     return false;

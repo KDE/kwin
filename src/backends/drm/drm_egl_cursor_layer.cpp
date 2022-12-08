@@ -28,11 +28,6 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmCursorLayer::beginFrame()
     return m_surface.startRendering(m_pipeline->gpu()->cursorSize(), m_pipeline->renderOrientation(), DrmPlane::Transformation::Rotate0, m_pipeline->cursorFormats());
 }
 
-void EglGbmCursorLayer::aboutToStartPainting(const QRegion &damagedRegion)
-{
-    m_surface.aboutToStartPainting(m_pipeline->output(), damagedRegion);
-}
-
 bool EglGbmCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     return m_surface.endRendering(m_pipeline->renderOrientation(), damagedRegion);

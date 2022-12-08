@@ -13,14 +13,16 @@
 #include "drm_dumb_buffer.h"
 #include "drm_dumb_swapchain.h"
 #include "drm_egl_backend.h"
-#include "drm_gbm_surface.h"
+#include "drm_gbm_swapchain.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "drm_output.h"
 #include "drm_shadow_buffer.h"
 #include "egl_dmabuf.h"
+#include "gbm_dmabuf.h"
 #include "kwineglutils_p.h"
 #include "scene/surfaceitem_wayland.h"
+#include "kwinglplatform.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/surface_interface.h"
 
@@ -55,11 +57,11 @@ EglGbmLayerSurface::~EglGbmLayerSurface()
 
 void EglGbmLayerSurface::destroyResources()
 {
-    if (m_surface.gbmSurface && (m_shadowBuffer || m_oldShadowBuffer)) {
-        m_surface.gbmSurface->makeContextCurrent();
+    if (m_shadowBuffer || m_oldShadowBuffer) {
+        eglMakeCurrent(m_eglBackend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_eglBackend->context());
+        m_shadowBuffer.reset();
+        m_oldShadowBuffer.reset();
     }
-    m_shadowBuffer.reset();
-    m_oldShadowBuffer.reset();
     m_surface = {};
     m_oldSurface = {};
 }
@@ -69,12 +71,12 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     if (!checkSurface(bufferSize, formats)) {
         return std::nullopt;
     }
-    if (!m_surface.gbmSurface->makeContextCurrent()) {
+    if (eglMakeCurrent(m_eglBackend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_eglBackend->context()) != EGL_TRUE) {
         return std::nullopt;
     }
 
     // shadow buffer
-    const QSize renderSize = (renderOrientation & (DrmPlane::Transformation::Rotate90 | DrmPlane::Transformation::Rotate270)) ? m_surface.gbmSurface->size().transposed() : m_surface.gbmSurface->size();
+    const QSize renderSize = (renderOrientation & (DrmPlane::Transformation::Rotate90 | DrmPlane::Transformation::Rotate270)) ? m_surface.gbmSwapchain->size().transposed() : m_surface.gbmSwapchain->size();
     if (doesShadowBufferFit(m_shadowBuffer.get(), renderSize, renderOrientation, bufferOrientation)) {
         m_oldShadowBuffer.reset();
     } else {
@@ -82,7 +84,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
             m_shadowBuffer = m_oldShadowBuffer;
         } else {
             if (renderOrientation != bufferOrientation) {
-                const auto format = m_eglBackend->gbmFormatForDrmFormat(m_surface.gbmSurface->format());
+                const auto format = m_eglBackend->gbmFormatForDrmFormat(m_surface.gbmSwapchain->format());
                 if (!format.has_value()) {
                     return std::nullopt;
                 }
@@ -96,6 +98,27 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
         }
     }
 
+    const auto [buffer, repaint] = m_surface.gbmSwapchain->acquire();
+    if (!buffer) {
+        return std::nullopt;
+    }
+    auto &[texture, fbo] = m_surface.textureCache[buffer->bo()];
+    if (!texture) {
+        texture = m_eglBackend->importDmaBufAsTexture(dmaBufAttributesForBo(buffer->bo()));
+        if (!texture) {
+            return std::nullopt;
+        }
+    }
+    if (!fbo) {
+        fbo = std::make_shared<GLFramebuffer>(texture.get());
+        if (!fbo->valid()) {
+            fbo.reset();
+            return std::nullopt;
+        }
+    }
+    m_surface.currentBuffer = buffer;
+    m_surface.texture = texture;
+
     if (m_shadowBuffer) {
         // the blit after rendering will completely overwrite the back buffer anyways
         return OutputLayerBeginFrameInfo{
@@ -104,42 +127,24 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
         };
     } else {
         return OutputLayerBeginFrameInfo{
-            .renderTarget = RenderTarget(m_surface.gbmSurface->fbo()),
-            .repaint = m_surface.gbmSurface->repaintRegion(),
+            .renderTarget = RenderTarget(fbo.get()),
+            .repaint = repaint,
         };
-    }
-}
-
-void EglGbmLayerSurface::aboutToStartPainting(DrmOutput *output, const QRegion &damagedRegion)
-{
-    if (m_shadowBuffer) {
-        // with a shadow buffer, we always fully damage the surface
-        return;
-    }
-    if (m_surface.gbmSurface && m_surface.gbmSurface->bufferAge() > 0 && !damagedRegion.isEmpty() && m_eglBackend->supportsPartialUpdate()) {
-        QVector<EGLint> rects = output->regionToRects(damagedRegion);
-        const bool correct = eglSetDamageRegionKHR(m_eglBackend->eglDisplay(), m_surface.gbmSurface->eglSurface(), rects.data(), rects.count() / 4);
-        if (!correct) {
-            qCWarning(KWIN_DRM) << "eglSetDamageRegionKHR failed:" << getEglErrorString();
-        }
     }
 }
 
 bool EglGbmLayerSurface::endRendering(DrmPlane::Transformations renderOrientation, const QRegion &damagedRegion)
 {
+    m_surface.gbmSwapchain->damage(damagedRegion);
     if (m_shadowBuffer) {
-        GLFramebuffer::pushFramebuffer(m_surface.gbmSurface->fbo());
+        GLFramebuffer::pushFramebuffer(m_surface.fbo.get());
         // TODO handle bufferOrientation != Rotate0
         m_shadowBuffer->render(renderOrientation);
         GLFramebuffer::popFramebuffer();
     }
-    const auto gbmBuffer = m_surface.gbmSurface->swapBuffers(damagedRegion);
-    if (!gbmBuffer) {
-        return false;
-    }
-    const auto buffer = importBuffer(m_surface, gbmBuffer);
+    glFlush();
+    const auto buffer = importBuffer(m_surface, m_surface.currentBuffer);
     if (buffer) {
-        m_surface.currentBuffer = gbmBuffer;
         m_surface.currentFramebuffer = buffer;
         return true;
     } else {
@@ -150,7 +155,7 @@ bool EglGbmLayerSurface::endRendering(DrmPlane::Transformations renderOrientatio
 bool EglGbmLayerSurface::doesShadowBufferFit(ShadowBuffer *buffer, const QSize &size, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation) const
 {
     if (renderOrientation != bufferOrientation) {
-        return buffer && buffer->texture()->size() == size && buffer->drmFormat() == m_surface.gbmSurface->format();
+        return buffer && buffer->texture()->size() == size && buffer->drmFormat() == m_surface.gbmSwapchain->format();
     } else {
         return buffer == nullptr;
     }
@@ -211,10 +216,11 @@ bool EglGbmLayerSurface::checkSurface(const QSize &size, const QMap<uint32_t, QV
 
 bool EglGbmLayerSurface::doesSurfaceFit(const Surface &surface, const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const
 {
-    return surface.gbmSurface
-        && surface.gbmSurface->size() == size
-        && formats.contains(surface.gbmSurface->format())
-        && (surface.forceLinear || surface.gbmSurface->modifiers().empty() || surface.gbmSurface->modifiers() == formats[surface.gbmSurface->format()]);
+    const auto &swapchain = surface.gbmSwapchain;
+    return swapchain
+        && swapchain->size() == size
+        && formats.contains(swapchain->format())
+        && (surface.forceLinear || swapchain->modifier() == DRM_FORMAT_MOD_INVALID || formats[swapchain->format()].contains(swapchain->modifier()));
 }
 
 std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const
@@ -278,8 +284,8 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
     Surface ret;
     ret.importMode = importMode;
     ret.forceLinear = importMode == MultiGpuImportMode::DumbBuffer || m_bufferTarget != BufferTarget::Normal;
-    ret.gbmSurface = createGbmSurface(size, format, modifiers, ret.forceLinear);
-    if (!ret.gbmSurface) {
+    ret.gbmSwapchain = createGbmSwapchain(size, format, modifiers, ret.forceLinear);
+    if (!ret.gbmSwapchain) {
         return std::nullopt;
     }
     if (importMode == MultiGpuImportMode::DumbBuffer || m_bufferTarget == BufferTarget::Dumb) {
@@ -294,7 +300,7 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
     return ret;
 }
 
-std::shared_ptr<GbmSurface> EglGbmLayerSurface::createGbmSurface(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool forceLinear) const
+std::shared_ptr<GbmSwapchain> EglGbmLayerSurface::createGbmSwapchain(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool forceLinear) const
 {
     static bool modifiersEnvSet = false;
     static const bool modifiersEnv = qEnvironmentVariableIntValue("KWIN_DRM_USE_MODIFIERS", &modifiersEnvSet) != 0;
@@ -302,16 +308,12 @@ std::shared_ptr<GbmSurface> EglGbmLayerSurface::createGbmSurface(const QSize &si
 #if !HAVE_GBM_BO_GET_FD_FOR_PLANE
     allowModifiers &= m_gpu == m_eglBackend->gpu();
 #endif
-    const auto config = m_eglBackend->config(format);
-    if (!config) {
-        return nullptr;
-    }
 
     if (allowModifiers) {
-        const auto ret = GbmSurface::createSurface(m_eglBackend, size, format, forceLinear ? linearModifier : modifiers, config);
-        if (const auto surface = std::get_if<std::shared_ptr<GbmSurface>>(&ret)) {
+        const auto ret = GbmSwapchain::createSwapchain(m_eglBackend->gpu(), size, format, forceLinear ? linearModifier : modifiers);
+        if (const auto surface = std::get_if<std::shared_ptr<GbmSwapchain>>(&ret)) {
             return *surface;
-        } else if (std::get<GbmSurface::Error>(ret) != GbmSurface::Error::ModifiersUnsupported) {
+        } else if (std::get<GbmSwapchain::Error>(ret) != GbmSwapchain::Error::ModifiersUnsupported) {
             return nullptr;
         }
     }
@@ -322,18 +324,14 @@ std::shared_ptr<GbmSurface> EglGbmLayerSurface::createGbmSurface(const QSize &si
     if (forceLinear || m_gpu != m_eglBackend->gpu()) {
         gbmFlags |= GBM_BO_USE_LINEAR;
     }
-    const auto ret = GbmSurface::createSurface(m_eglBackend, size, format, gbmFlags, config);
-    const auto surface = std::get_if<std::shared_ptr<GbmSurface>>(&ret);
-    return surface ? *surface : nullptr;
+    const auto ret = GbmSwapchain::createSwapchain(m_eglBackend->gpu(), size, format, gbmFlags);
+    const auto swapchain = std::get_if<std::shared_ptr<GbmSwapchain>>(&ret);
+    return swapchain ? *swapchain : nullptr;
 }
 
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface &surface) const
 {
-    if (!surface.gbmSurface->makeContextCurrent()) {
-        return nullptr;
-    }
-    glClear(GL_COLOR_BUFFER_BIT);
-    const auto buffer = surface.gbmSurface->swapBuffers(infiniteRegion());
+    const auto [buffer, repair] = surface.gbmSwapchain->acquire();
     if (!buffer) {
         return nullptr;
     }

@@ -8,7 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_buffer_gbm.h"
-#include "drm_gbm_surface.h"
+#include "drm_gbm_swapchain.h"
 
 #include "config-kwin.h"
 #include "drm_backend.h"
@@ -68,11 +68,11 @@ static std::array<uint32_t, 4> getOffsets(gbm_bo *bo)
     return ret;
 }
 
-GbmBuffer::GbmBuffer(DrmGpu *gpu, gbm_bo *bo, const std::shared_ptr<GbmSurface> &surface)
-    : DrmGpuBuffer(gpu, QSize(gbm_bo_get_width(bo), gbm_bo_get_height(bo)), gbm_bo_get_format(bo), gbm_bo_get_modifier(bo), getHandles(bo), getStrides(bo), getOffsets(bo), gbm_bo_get_plane_count(bo))
+GbmBuffer::GbmBuffer(gbm_bo *bo, const std::shared_ptr<GbmSwapchain> &swapchain)
+    : DrmGpuBuffer(swapchain->gpu(), swapchain->size(), swapchain->format(), swapchain->modifier(), getHandles(bo), getStrides(bo), getOffsets(bo), gbm_bo_get_plane_count(bo))
     , m_bo(bo)
-    , m_surface(surface)
-    , m_flags(surface->flags())
+    , m_swapchain(swapchain)
+    , m_flags(swapchain->flags())
 {
 }
 
@@ -100,8 +100,8 @@ GbmBuffer::~GbmBuffer()
     if (m_mapping) {
         gbm_bo_unmap(m_bo, m_mapping);
     }
-    if (m_surface) {
-        m_surface->releaseBuffer(this);
+    if (const auto swapchain = m_swapchain.lock()) {
+        swapchain->releaseBuffer(this);
     } else {
         gbm_bo_destroy(m_bo);
     }

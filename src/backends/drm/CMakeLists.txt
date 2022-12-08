@@ -12,7 +12,7 @@ target_sources(kwin PRIVATE
     drm_egl_cursor_layer.cpp
     drm_egl_layer.cpp
     drm_egl_layer_surface.cpp
-    drm_gbm_surface.cpp
+    drm_gbm_swapchain.cpp
     drm_gpu.cpp
     drm_layer.cpp
     drm_logging.cpp

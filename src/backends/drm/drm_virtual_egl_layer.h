@@ -23,7 +23,7 @@ class SurfaceInterface;
 namespace KWin
 {
 
-class GbmSurface;
+class GbmSwapchain;
 class GLTexture;
 class EglGbmBackend;
 class GbmBuffer;
@@ -34,7 +34,6 @@ class VirtualEglGbmLayer : public DrmOutputLayer
 public:
     VirtualEglGbmLayer(EglGbmBackend *eglBackend, DrmVirtualOutput *output);
 
-    void aboutToStartPainting(const QRegion &damagedRegion) override;
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool scanout(SurfaceItem *surfaceItem) override;
@@ -45,14 +44,16 @@ public:
     quint32 format() const override;
 
 private:
-    bool createGbmSurface();
-    bool doesGbmSurfaceFit(GbmSurface *surf) const;
+    std::shared_ptr<GbmSwapchain> createGbmSwapchain() const;
+    bool doesGbmSwapchainFit(GbmSwapchain *swapchain) const;
 
     QPointer<KWaylandServer::SurfaceInterface> m_scanoutSurface;
     std::shared_ptr<GbmBuffer> m_currentBuffer;
+    std::shared_ptr<GLFramebuffer> m_fbo;
+    std::shared_ptr<GLTexture> m_texture;
     QRegion m_currentDamage;
-    std::shared_ptr<GbmSurface> m_gbmSurface;
-    std::shared_ptr<GbmSurface> m_oldGbmSurface;
+    std::shared_ptr<GbmSwapchain> m_gbmSwapchain;
+    std::shared_ptr<GbmSwapchain> m_oldGbmSwapchain;
 
     DrmVirtualOutput *const m_output;
     EglGbmBackend *const m_eglBackend;
