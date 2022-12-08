@@ -26,6 +26,11 @@ bool RenderBackend::checkGraphicsReset()
     return false;
 }
 
+OutputLayer *RenderBackend::cursorLayer(Output *output)
+{
+    return nullptr;
+}
+
 QHash<uint32_t, QVector<uint64_t>> RenderBackend::supportedFormats() const
 {
     return QHash<uint32_t, QVector<uint64_t>>{{DRM_FORMAT_XRGB8888, QVector<uint64_t>{DRM_FORMAT_MOD_LINEAR}}};

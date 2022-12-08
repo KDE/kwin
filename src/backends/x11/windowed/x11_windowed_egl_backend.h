@@ -86,7 +86,7 @@ public:
     void endFrame(Output *output, const QRegion &renderedRegion, const QRegion &damagedRegion);
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
-    X11WindowedEglCursorLayer *cursorLayer(Output *output);
+    X11WindowedEglCursorLayer *cursorLayer(Output *output) override;
 
 protected:
     void cleanupSurfaces() override;

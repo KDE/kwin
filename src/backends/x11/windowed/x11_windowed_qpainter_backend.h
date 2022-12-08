@@ -72,7 +72,7 @@ public:
 
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
-    X11WindowedQPainterCursorLayer *cursorLayer(Output *output);
+    X11WindowedQPainterCursorLayer *cursorLayer(Output *output) override;
 
 private:
     void addOutput(Output *output);

@@ -115,7 +115,7 @@ public:
 
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
-    WaylandQPainterCursorLayer *cursorLayer(Output *output);
+    WaylandQPainterCursorLayer *cursorLayer(Output *output) override;
 
 private:
     void createOutput(Output *waylandOutput);

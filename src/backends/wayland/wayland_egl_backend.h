@@ -116,7 +116,7 @@ public:
     void init() override;
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
-    WaylandEglCursorLayer *cursorLayer(Output *output);
+    WaylandEglCursorLayer *cursorLayer(Output *output) override;
 
     bool havePlatformBase() const
     {
