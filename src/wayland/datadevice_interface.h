@@ -79,7 +79,6 @@ public:
     DataSourceInterface *selection() const;
 
     void sendSelection(KWaylandServer::AbstractDataSource *other);
-    void sendClearSelection();
     /**
      * The event is sent when a drag-and-drop operation is ended because the implicit grab is removed.
      */
@@ -103,7 +102,6 @@ Q_SIGNALS:
     void aboutToBeDestroyed();
     void dragStarted(AbstractDataSource *source, SurfaceInterface *originSurface, quint32 serial, DragAndDropIcon *dragIcon);
     void selectionChanged(KWaylandServer::DataSourceInterface *);
-    void selectionCleared();
 
 private:
     friend class DataDeviceManagerInterfacePrivate;

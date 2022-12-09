@@ -118,20 +118,8 @@ PrimarySelectionSourceV1Interface *PrimarySelectionDeviceV1Interface::selection(
 
 void PrimarySelectionDeviceV1Interface::sendSelection(AbstractDataSource *other)
 {
-    if (!other) {
-        sendClearSelection();
-        return;
-    }
     PrimarySelectionOfferV1Interface *offer = d->createDataOffer(other);
-    if (!offer) {
-        return;
-    }
-    d->send_selection(offer->resource());
-}
-
-void PrimarySelectionDeviceV1Interface::sendClearSelection()
-{
-    d->send_selection(nullptr);
+    d->send_selection(offer ? offer->resource() : nullptr);
 }
 
 wl_client *PrimarySelectionDeviceV1Interface::client() const

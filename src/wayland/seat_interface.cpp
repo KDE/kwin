@@ -165,9 +165,6 @@ void SeatInterfacePrivate::registerDataDevice(DataDeviceInterface *dataDevice)
     QObject::connect(dataDevice, &DataDeviceInterface::selectionChanged, q, [this, dataDevice] {
         updateSelection(dataDevice);
     });
-    QObject::connect(dataDevice, &DataDeviceInterface::selectionCleared, q, [this, dataDevice] {
-        updateSelection(dataDevice);
-    });
     QObject::connect(dataDevice,
                      &DataDeviceInterface::dragStarted,
                      q,
@@ -223,10 +220,6 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
         q->setSelection(dataDevice->selection());
     });
 
-    QObject::connect(dataDevice, &DataControlDeviceV1Interface::selectionCleared, q, [this, dataDevice] {
-        q->setSelection(nullptr);
-    });
-
     QObject::connect(dataDevice, &DataControlDeviceV1Interface::primarySelectionChanged, q, [this, dataDevice] {
         // Special klipper workaround to avoid a race
         // If the mimetype x-kde-onlyReplaceEmpty is set, and we've had another update in the meantime, do nothing
@@ -258,9 +251,6 @@ void SeatInterfacePrivate::registerPrimarySelectionDevice(PrimarySelectionDevice
     };
     QObject::connect(primarySelectionDevice, &QObject::destroyed, q, dataDeviceCleanup);
     QObject::connect(primarySelectionDevice, &PrimarySelectionDeviceV1Interface::selectionChanged, q, [this, primarySelectionDevice] {
-        updatePrimarySelection(primarySelectionDevice);
-    });
-    QObject::connect(primarySelectionDevice, &PrimarySelectionDeviceV1Interface::selectionCleared, q, [this, primarySelectionDevice] {
         updatePrimarySelection(primarySelectionDevice);
     });
     // is the new DataDevice for the current keyoard focus?
@@ -937,11 +927,7 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
         const QVector<DataDeviceInterface *> dataDevices = d->dataDevicesForSurface(surface);
         d->globalKeyboard.focus.selections = dataDevices;
         for (auto dataDevice : dataDevices) {
-            if (d->currentSelection) {
-                dataDevice->sendSelection(d->currentSelection);
-            } else {
-                dataDevice->sendClearSelection();
-            }
+            dataDevice->sendSelection(d->currentSelection);
         }
         // primary selection
         QVector<PrimarySelectionDeviceV1Interface *> primarySelectionDevices;
@@ -953,11 +939,7 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
 
         d->globalKeyboard.focus.primarySelections = primarySelectionDevices;
         for (auto primaryDataDevice : primarySelectionDevices) {
-            if (d->currentPrimarySelection) {
-                primaryDataDevice->sendSelection(d->currentPrimarySelection);
-            } else {
-                primaryDataDevice->sendClearSelection();
-            }
+            primaryDataDevice->sendSelection(d->currentPrimarySelection);
         }
     }
 
@@ -1293,19 +1275,11 @@ void SeatInterface::setSelection(AbstractDataSource *selection)
     d->currentSelection = selection;
 
     for (auto focussedSelection : std::as_const(d->globalKeyboard.focus.selections)) {
-        if (selection) {
-            focussedSelection->sendSelection(selection);
-        } else {
-            focussedSelection->sendClearSelection();
-        }
+        focussedSelection->sendSelection(selection);
     }
 
     for (auto control : std::as_const(d->dataControlDevices)) {
-        if (selection) {
-            control->sendSelection(selection);
-        } else {
-            control->sendClearSelection();
-        }
+        control->sendSelection(selection);
     }
 
     Q_EMIT selectionChanged(selection);
@@ -1351,18 +1325,10 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection)
     d->currentPrimarySelection = selection;
 
     for (auto focussedSelection : std::as_const(d->globalKeyboard.focus.primarySelections)) {
-        if (selection) {
-            focussedSelection->sendSelection(selection);
-        } else {
-            focussedSelection->sendClearSelection();
-        }
+        focussedSelection->sendSelection(selection);
     }
     for (auto control : std::as_const(d->dataControlDevices)) {
-        if (selection) {
-            control->sendPrimarySelection(selection);
-        } else {
-            control->sendClearPrimarySelection();
-        }
+        control->sendPrimarySelection(selection);
     }
 
     Q_EMIT primarySelectionChanged(selection);

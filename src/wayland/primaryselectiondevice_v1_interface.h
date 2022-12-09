@@ -41,13 +41,11 @@ public:
     PrimarySelectionSourceV1Interface *selection() const;
 
     void sendSelection(AbstractDataSource *other);
-    void sendClearSelection();
 
     wl_client *client() const;
 
 Q_SIGNALS:
     void selectionChanged(KWaylandServer::PrimarySelectionSourceV1Interface *);
-    void selectionCleared();
 
 private:
     friend class PrimarySelectionDeviceManagerV1InterfacePrivate;

@@ -371,13 +371,11 @@ void TestDataDevice::testSetSelection()
 
     // everything setup, now we can test setting the selection
     QSignalSpy selectionChangedSpy(deviceInterface, &KWaylandServer::DataDeviceInterface::selectionChanged);
-    QSignalSpy selectionClearedSpy(deviceInterface, &KWaylandServer::DataDeviceInterface::selectionCleared);
 
     QVERIFY(!deviceInterface->selection());
     dataDevice->setSelection(1, dataSource.get());
     QVERIFY(selectionChangedSpy.wait());
     QCOMPARE(selectionChangedSpy.count(), 1);
-    QCOMPARE(selectionClearedSpy.count(), 0);
     QCOMPARE(selectionChangedSpy.first().first().value<DataSourceInterface *>(), sourceInterface);
     QCOMPARE(deviceInterface->selection(), sourceInterface);
 
@@ -403,9 +401,8 @@ void TestDataDevice::testSetSelection()
 
     // now clear the selection
     dataDevice->clearSelection(1);
-    QVERIFY(selectionClearedSpy.wait());
-    QCOMPARE(selectionChangedSpy.count(), 1);
-    QCOMPARE(selectionClearedSpy.count(), 1);
+    QVERIFY(selectionChangedSpy.wait());
+    QCOMPARE(selectionChangedSpy.count(), 2);
     QVERIFY(!deviceInterface->selection());
 
     // set another selection
