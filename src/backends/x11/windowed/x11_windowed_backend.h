@@ -103,7 +103,6 @@ public:
     int screenNumer() const;
     xcb_window_t rootWindow() const;
 
-    xcb_window_t window() const;
     bool hasXInput() const;
 
     bool initialize() override;

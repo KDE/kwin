@@ -415,17 +415,18 @@ void X11WindowedBackend::grabKeyboard(xcb_timestamp_t time)
         xcb_ungrab_pointer(m_connection, time);
         m_keyboardGrabbed = false;
     } else {
-        const auto c = xcb_grab_keyboard_unchecked(m_connection, false, window(), time,
+        const X11WindowedOutput *output = static_cast<X11WindowedOutput *>(m_outputs[0]);
+        const auto c = xcb_grab_keyboard_unchecked(m_connection, false, output->window(), time,
                                                    XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC);
         UniqueCPtr<xcb_grab_keyboard_reply_t> grab(xcb_grab_keyboard_reply(m_connection, c, nullptr));
         if (!grab) {
             return;
         }
         if (grab->status == XCB_GRAB_STATUS_SUCCESS) {
-            const auto c = xcb_grab_pointer_unchecked(m_connection, false, window(),
+            const auto c = xcb_grab_pointer_unchecked(m_connection, false, output->window(),
                                                       XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW,
                                                       XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC,
-                                                      window(), XCB_CURSOR_NONE, time);
+                                                      output->window(), XCB_CURSOR_NONE, time);
             UniqueCPtr<xcb_grab_pointer_reply_t> grab(xcb_grab_pointer_reply(m_connection, c, nullptr));
             if (!grab || grab->status != XCB_GRAB_STATUS_SUCCESS) {
                 xcb_ungrab_keyboard(m_connection, time);
@@ -623,11 +624,6 @@ bool X11WindowedBackend::hasXInput() const
 QVector<CompositingType> X11WindowedBackend::supportedCompositors() const
 {
     return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
-}
-
-xcb_window_t X11WindowedBackend::window() const
-{
-    return m_outputs.first()->window();
 }
 
 Outputs X11WindowedBackend::outputs() const
