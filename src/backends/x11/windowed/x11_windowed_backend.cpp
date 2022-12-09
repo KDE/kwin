@@ -603,6 +603,36 @@ xcb_window_t X11WindowedBackend::windowForScreen(Output *output) const
     return static_cast<X11WindowedOutput *>(output)->window();
 }
 
+xcb_connection_t *X11WindowedBackend::connection() const
+{
+    return m_connection;
+}
+
+xcb_screen_t *X11WindowedBackend::screen() const
+{
+    return m_screen;
+}
+
+int X11WindowedBackend::screenNumer() const
+{
+    return m_screenNumber;
+}
+
+Display *X11WindowedBackend::display() const
+{
+    return m_display;
+}
+
+bool X11WindowedBackend::hasXInput() const
+{
+    return m_hasXInput;
+}
+
+QVector<CompositingType> X11WindowedBackend::supportedCompositors() const
+{
+    return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
+}
+
 xcb_window_t X11WindowedBackend::window() const
 {
     return m_outputs.first()->window();

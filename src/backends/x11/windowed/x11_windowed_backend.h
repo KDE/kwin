@@ -96,46 +96,27 @@ class KWIN_EXPORT X11WindowedBackend : public OutputBackend
 public:
     explicit X11WindowedBackend(const X11WindowedBackendOptions &options);
     ~X11WindowedBackend() override;
-    bool initialize() override;
 
-    xcb_connection_t *connection() const
-    {
-        return m_connection;
-    }
-    xcb_screen_t *screen() const
-    {
-        return m_screen;
-    }
-    int screenNumer() const
-    {
-        return m_screenNumber;
-    }
+    Display *display() const;
+    xcb_connection_t *connection() const;
+    xcb_screen_t *screen() const;
+    int screenNumer() const;
+    xcb_window_t rootWindow() const;
+
     xcb_window_t window() const;
     xcb_window_t windowForScreen(Output *output) const;
-    Display *display() const
-    {
-        return m_display;
-    }
-    xcb_window_t rootWindow() const;
-    bool hasXInput() const
-    {
-        return m_hasXInput;
-    }
+    bool hasXInput() const;
 
+    bool initialize() override;
     std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
     std::unique_ptr<QPainterBackend> createQPainterBackend() override;
     std::unique_ptr<InputBackend> createInputBackend() override;
-
-    QVector<CompositingType> supportedCompositors() const override
-    {
-        return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
-    }
+    QVector<CompositingType> supportedCompositors() const override;
+    Outputs outputs() const override;
 
     X11WindowedInputDevice *pointerDevice() const;
     X11WindowedInputDevice *keyboardDevice() const;
     X11WindowedInputDevice *touchDevice() const;
-
-    Outputs outputs() const override;
 
 private:
     void createOutputs();

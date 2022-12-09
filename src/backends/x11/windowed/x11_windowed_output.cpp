@@ -136,6 +136,26 @@ SoftwareVsyncMonitor *X11WindowedOutput::vsyncMonitor() const
     return m_vsyncMonitor.get();
 }
 
+X11WindowedBackend *X11WindowedOutput::backend() const
+{
+    return m_backend;
+}
+
+X11WindowedCursor *X11WindowedOutput::cursor() const
+{
+    return m_cursor.get();
+}
+
+xcb_window_t X11WindowedOutput::window() const
+{
+    return m_window;
+}
+
+QPoint X11WindowedOutput::hostPosition() const
+{
+    return m_hostPosition;
+}
+
 void X11WindowedOutput::init(const QSize &pixelSize, qreal scale)
 {
     const int refreshRate = 60000; // TODO: get refresh rate via randr

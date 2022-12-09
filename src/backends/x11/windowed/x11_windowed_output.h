@@ -57,24 +57,12 @@ public:
     void init(const QSize &pixelSize, qreal scale);
     void resize(const QSize &pixelSize);
 
-    X11WindowedBackend *backend() const
-    {
-        return m_backend;
-    }
-    X11WindowedCursor *cursor() const
-    {
-        return m_cursor.get();
-    }
-    xcb_window_t window() const
-    {
-        return m_window;
-    }
+    X11WindowedBackend *backend() const;
+    X11WindowedCursor *cursor() const;
+    xcb_window_t window() const;
 
     QPoint internalPosition() const;
-    QPoint hostPosition() const
-    {
-        return m_hostPosition;
-    }
+    QPoint hostPosition() const;
     void setHostPosition(const QPoint &pos);
 
     void setWindowTitle(const QString &title);
