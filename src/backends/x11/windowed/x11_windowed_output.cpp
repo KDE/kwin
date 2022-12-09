@@ -15,7 +15,6 @@
 
 #include "core/renderloop_p.h"
 #include "composite.h"
-#include "softwarevsyncmonitor.h"
 #include "x11_windowed_backend.h"
 
 #include <NETWM>
@@ -90,7 +89,6 @@ void X11WindowedCursor::update(const QImage &image, const QPoint &hotspot)
 X11WindowedOutput::X11WindowedOutput(X11WindowedBackend *backend)
     : Output(backend)
     , m_renderLoop(std::make_unique<RenderLoop>())
-    , m_vsyncMonitor(SoftwareVsyncMonitor::create())
     , m_backend(backend)
 {
     m_window = xcb_generate_id(m_backend->connection());
@@ -100,12 +98,11 @@ X11WindowedOutput::X11WindowedOutput(X11WindowedBackend *backend)
     setInformation(Information{
         .name = QStringLiteral("X11-%1").arg(identifier),
     });
-
-    connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &X11WindowedOutput::vblank);
 }
 
 X11WindowedOutput::~X11WindowedOutput()
 {
+    xcb_present_select_input(m_backend->connection(), m_presentEvent, m_window, 0);
     xcb_unmap_window(m_backend->connection(), m_window);
     xcb_destroy_window(m_backend->connection(), m_window);
     xcb_flush(m_backend->connection());
@@ -129,11 +126,6 @@ void X11WindowedOutput::clearExposedArea()
 RenderLoop *X11WindowedOutput::renderLoop() const
 {
     return m_renderLoop.get();
-}
-
-SoftwareVsyncMonitor *X11WindowedOutput::vsyncMonitor() const
-{
-    return m_vsyncMonitor.get();
 }
 
 X11WindowedBackend *X11WindowedOutput::backend() const
@@ -160,7 +152,6 @@ void X11WindowedOutput::init(const QSize &pixelSize, qreal scale)
 {
     const int refreshRate = 60000; // TODO: get refresh rate via randr
     m_renderLoop->setRefreshRate(refreshRate);
-    m_vsyncMonitor->setRefreshRate(refreshRate);
 
     auto mode = std::make_shared<OutputMode>(pixelSize, m_renderLoop->refreshRate());
 
@@ -198,6 +189,10 @@ void X11WindowedOutput::init(const QSize &pixelSize, qreal scale)
 
     // select xinput 2 events
     initXInputForWindow();
+
+    const uint32_t presentEventMask = XCB_PRESENT_EVENT_MASK_COMPLETE_NOTIFY;
+    m_presentEvent = xcb_generate_id(m_backend->connection());
+    xcb_present_select_input(m_backend->connection(), m_presentEvent, m_window, presentEventMask);
 
     m_winInfo = std::make_unique<NETWinInfo>(m_backend->connection(), m_window, m_backend->screen()->root,
                                              NET::WMWindowType, NET::Properties2());
@@ -256,6 +251,12 @@ void X11WindowedOutput::resize(const QSize &pixelSize)
     setState(next);
 }
 
+void X11WindowedOutput::handlePresentCompleteNotify(xcb_present_complete_notify_event_t *event)
+{
+    std::chrono::microseconds timestamp(event->ust);
+    RenderLoopPrivate::get(m_renderLoop.get())->notifyFrameCompleted(timestamp);
+}
+
 void X11WindowedOutput::setWindowTitle(const QString &title)
 {
     m_winInfo->setName(title.toUtf8().constData());
@@ -274,12 +275,6 @@ void X11WindowedOutput::setHostPosition(const QPoint &pos)
 QPointF X11WindowedOutput::mapFromGlobal(const QPointF &pos) const
 {
     return (pos - hostPosition() + internalPosition()) / scale();
-}
-
-void X11WindowedOutput::vblank(std::chrono::nanoseconds timestamp)
-{
-    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop.get());
-    renderLoopPrivate->notifyFrameCompleted(timestamp);
 }
 
 bool X11WindowedOutput::setCursor(const QImage &image, const QPoint &hotspot)

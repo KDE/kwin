@@ -16,13 +16,13 @@
 #include <QString>
 
 #include <xcb/xcb.h>
+#include <xcb/present.h>
 
 class NETWinInfo;
 
 namespace KWin
 {
 
-class SoftwareVsyncMonitor;
 class X11WindowedBackend;
 class X11WindowedOutput;
 class X11WindowedEglBackend;
@@ -52,7 +52,6 @@ public:
     ~X11WindowedOutput() override;
 
     RenderLoop *renderLoop() const override;
-    SoftwareVsyncMonitor *vsyncMonitor() const;
 
     void init(const QSize &pixelSize, qreal scale);
     void resize(const QSize &pixelSize);
@@ -81,16 +80,17 @@ public:
 
     void updateEnabled(bool enabled);
 
+    void handlePresentCompleteNotify(xcb_present_complete_notify_event_t *event);
+
 private:
     void initXInputForWindow();
-    void vblank(std::chrono::nanoseconds timestamp);
     void renderCursorOpengl(X11WindowedEglBackend *backend, const QImage &image, const QPoint &hotspot);
     void renderCursorQPainter(X11WindowedQPainterBackend *backend, const QImage &image, const QPoint &hotspot);
 
     xcb_window_t m_window = XCB_WINDOW_NONE;
+    xcb_present_event_t m_presentEvent = XCB_NONE;
     std::unique_ptr<NETWinInfo> m_winInfo;
     std::unique_ptr<RenderLoop> m_renderLoop;
-    std::unique_ptr<SoftwareVsyncMonitor> m_vsyncMonitor;
     std::unique_ptr<X11WindowedCursor> m_cursor;
     QPoint m_hostPosition;
     QRegion m_exposedArea;

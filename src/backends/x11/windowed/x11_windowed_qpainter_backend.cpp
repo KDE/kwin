@@ -7,7 +7,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "x11_windowed_qpainter_backend.h"
-#include "softwarevsyncmonitor.h"
 #include "x11_windowed_backend.h"
 #include "x11_windowed_output.h"
 
@@ -128,7 +127,6 @@ void X11WindowedQPainterBackend::removeOutput(Output *output)
 
 void X11WindowedQPainterBackend::present(Output *output)
 {
-    static_cast<X11WindowedOutput *>(output)->vsyncMonitor()->arm();
     const auto &rendererOutput = m_outputs[output];
 
     xcb_connection_t *c = m_backend->connection();

@@ -6,7 +6,11 @@ target_sources(kwin PRIVATE
     x11_windowed_qpainter_backend.cpp
 )
 
-target_link_libraries(kwin X11::XCB X11::X11)
+target_link_libraries(kwin
+    X11::XCB
+    X11::X11
+    XCB::PRESENT
+)
 if (X11_Xi_FOUND)
     target_link_libraries(kwin X11::Xi)
 endif()

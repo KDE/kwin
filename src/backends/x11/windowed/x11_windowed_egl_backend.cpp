@@ -10,7 +10,6 @@
 // kwin
 #include "basiceglsurfacetexture_internal.h"
 #include "basiceglsurfacetexture_wayland.h"
-#include "softwarevsyncmonitor.h"
 #include "x11_windowed_backend.h"
 #include "x11_windowed_output.h"
 // kwin libs
@@ -177,8 +176,6 @@ bool X11WindowedEglBackend::createSurfaces()
 
 void X11WindowedEglBackend::present(Output *output)
 {
-    static_cast<X11WindowedOutput *>(output)->vsyncMonitor()->arm();
-
     const auto &renderOutput = m_outputs[output];
     presentSurface(renderOutput.primaryLayer->surface(), renderOutput.primaryLayer->lastDamage(), output->geometry());
 }

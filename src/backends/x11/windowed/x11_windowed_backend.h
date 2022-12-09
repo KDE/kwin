@@ -124,6 +124,8 @@ private:
     void handleClientMessage(xcb_client_message_event_t *event);
     void handleButtonPress(xcb_button_press_event_t *event);
     void handleExpose(xcb_expose_event_t *event);
+    void handleXinputEvent(xcb_ge_generic_event_t *event);
+    void handlePresentEvent(xcb_ge_generic_event_t *event);
     void updateSize(xcb_configure_notify_event_t *event);
     void initXInput();
     X11WindowedOutput *findOutput(xcb_window_t window) const;
@@ -148,6 +150,10 @@ private:
     int m_xiOpcode = 0;
     int m_majorVersion = 0;
     int m_minorVersion = 0;
+
+    int m_presentOpcode = 0;
+    int m_presentMajorVersion = 0;
+    int m_presentMinorVersion = 0;
 
     QVector<X11WindowedOutput *> m_outputs;
 };

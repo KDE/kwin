@@ -25,11 +25,11 @@
 #include <QSocketNotifier>
 // xcb
 #include <xcb/xcb_keysyms.h>
+#include <xcb/present.h>
 // X11
 #include <X11/Xlib-xcb.h>
 #include <fixx11h.h>
 #if HAVE_X11_XINPUT
-#include "../common/ge_event_mem_mover.h"
 #include <X11/extensions/XI2proto.h>
 #include <X11/extensions/XInput2.h>
 #endif
@@ -193,6 +193,24 @@ bool X11WindowedBackend::initialize()
             m_screen = it.data;
         }
     }
+
+    const xcb_query_extension_reply_t *presentExtension = xcb_get_extension_data(m_connection, &xcb_present_id);
+    if (presentExtension && presentExtension->present) {
+        m_presentOpcode = presentExtension->major_opcode;
+        xcb_present_query_version_cookie_t cookie = xcb_present_query_version(m_connection, 1, 2);
+        xcb_present_query_version_reply_t *reply = xcb_present_query_version_reply(m_connection, cookie, nullptr);
+        if (!reply) {
+            qCWarning(KWIN_X11WINDOWED) << "Requested Present extension version is unsupported";
+            return false;
+        }
+        m_presentMajorVersion = reply->major_version;
+        m_presentMinorVersion = reply->minor_version;
+        free(reply);
+    } else {
+        qCWarning(KWIN_X11WINDOWED) << "Present X11 extension is unavailable";
+        return false;
+    }
+
     initXInput();
     XRenderUtils::init(m_connection, m_screen->root);
     createOutputs();
@@ -365,43 +383,15 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
             xcb_refresh_keyboard_mapping(m_keySymbols, reinterpret_cast<xcb_mapping_notify_event_t *>(e));
         }
         break;
-#if HAVE_X11_XINPUT
     case XCB_GE_GENERIC: {
-        GeEventMemMover ge(e);
-        auto te = reinterpret_cast<xXIDeviceEvent *>(e);
-        const X11WindowedOutput *output = findOutput(te->event);
-        if (!output) {
-            break;
-        }
-
-        const QPointF position = output->mapFromGlobal(QPointF(fixed1616ToReal(te->root_x), fixed1616ToReal(te->root_y)));
-
-        switch (ge->event_type) {
-
-        case XI_TouchBegin: {
-            Q_EMIT m_touchDevice->touchDown(te->detail, position, te->time, m_touchDevice.get());
-            Q_EMIT m_touchDevice->touchFrame(m_touchDevice.get());
-            break;
-        }
-        case XI_TouchUpdate: {
-            Q_EMIT m_touchDevice->touchMotion(te->detail, position, te->time, m_touchDevice.get());
-            Q_EMIT m_touchDevice->touchFrame(m_touchDevice.get());
-            break;
-        }
-        case XI_TouchEnd: {
-            Q_EMIT m_touchDevice->touchUp(te->detail, te->time, m_touchDevice.get());
-            Q_EMIT m_touchDevice->touchFrame(m_touchDevice.get());
-            break;
-        }
-        case XI_TouchOwnership: {
-            auto te = reinterpret_cast<xXITouchOwnershipEvent *>(e);
-            XIAllowTouchEvents(m_display, te->deviceid, te->sourceid, te->touchid, XIAcceptTouch);
-            break;
-        }
+        xcb_ge_generic_event_t *ev = reinterpret_cast<xcb_ge_generic_event_t *>(e);
+        if (ev->extension == m_presentOpcode) {
+            handlePresentEvent(ev);
+        } else if (ev->extension == m_xiOpcode) {
+            handleXinputEvent(ev);
         }
         break;
     }
-#endif
     default:
         break;
     }
@@ -555,6 +545,55 @@ void X11WindowedBackend::updateSize(xcb_configure_notify_event_t *event)
     const QSize s = QSize(event->width, event->height);
     if (s != output->pixelSize()) {
         output->resize(s);
+    }
+}
+
+void X11WindowedBackend::handleXinputEvent(xcb_ge_generic_event_t *ge)
+{
+#if HAVE_X11_XINPUT
+    auto te = reinterpret_cast<xXIDeviceEvent *>(ge);
+    const X11WindowedOutput *output = findOutput(te->event);
+    if (!output) {
+        return;
+    }
+
+    const QPointF position = output->mapFromGlobal(QPointF(fixed1616ToReal(te->root_x), fixed1616ToReal(te->root_y)));
+
+    switch (ge->event_type) {
+    case XI_TouchBegin: {
+        Q_EMIT m_touchDevice->touchDown(te->detail, position, te->time, m_touchDevice.get());
+        Q_EMIT m_touchDevice->touchFrame(m_touchDevice.get());
+        break;
+    }
+    case XI_TouchUpdate: {
+        Q_EMIT m_touchDevice->touchMotion(te->detail, position, te->time, m_touchDevice.get());
+        Q_EMIT m_touchDevice->touchFrame(m_touchDevice.get());
+        break;
+    }
+    case XI_TouchEnd: {
+        Q_EMIT m_touchDevice->touchUp(te->detail, te->time, m_touchDevice.get());
+        Q_EMIT m_touchDevice->touchFrame(m_touchDevice.get());
+        break;
+    }
+    case XI_TouchOwnership: {
+        auto te = reinterpret_cast<xXITouchOwnershipEvent *>(ge);
+        XIAllowTouchEvents(m_display, te->deviceid, te->sourceid, te->touchid, XIAcceptTouch);
+        break;
+    }
+    }
+#endif
+}
+
+void X11WindowedBackend::handlePresentEvent(xcb_ge_generic_event_t *ge)
+{
+    switch (ge->event_type) {
+    case XCB_PRESENT_EVENT_COMPLETE_NOTIFY: {
+        xcb_present_complete_notify_event_t *completeNotify = reinterpret_cast<xcb_present_complete_notify_event_t *>(ge);
+        if (X11WindowedOutput *output = findOutput(completeNotify->window)) {
+            output->handlePresentCompleteNotify(completeNotify);
+        }
+        break;
+    }
     }
 }
 
