@@ -154,16 +154,11 @@ public:
     std::shared_ptr<KWin::GLTexture> textureForOutput(KWin::Output *output) const override;
 
 private:
-    gbm_bo *createBo(const QSize &size, quint32 format, const QVector<uint64_t> &modifiers);
     bool initializeEgl();
     bool initBufferConfigs();
     bool initRenderingContext();
-
     bool createEglWaylandOutput(Output *output);
-
     void cleanupSurfaces() override;
-
-    void presentOnSurface(WaylandEglPrimaryLayer *output, const QRegion &damagedRegion);
 
     struct Layers
     {
@@ -174,7 +169,6 @@ private:
     WaylandBackend *m_backend;
     std::map<Output *, Layers> m_outputs;
     bool m_havePlatformBase;
-    friend class EglWaylandTexture;
 };
 
 } // namespace Wayland

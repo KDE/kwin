@@ -119,7 +119,6 @@ public:
 
 private:
     void createOutput(Output *waylandOutput);
-    void frameRendered();
 
     struct Layers
     {
