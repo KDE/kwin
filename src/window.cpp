@@ -1994,10 +1994,10 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
                 // precedence. The opposing edge has no impact on visiblePixels and only one of
                 // the adjacent can alter at a time, ie. it's enough to ignore adjacent edges
                 // if the title edge altered
-                bool leftChanged = currentMoveResizeGeom.left() != currentTry.left();
-                bool rightChanged = currentMoveResizeGeom.right() != currentTry.right();
-                bool topChanged = currentMoveResizeGeom.top() != currentTry.top();
-                bool btmChanged = currentMoveResizeGeom.bottom() != currentTry.bottom();
+                bool leftChanged = !qFuzzyCompare(currentMoveResizeGeom.left(), currentTry.left());
+                bool rightChanged = !qFuzzyCompare(currentMoveResizeGeom.right(), currentTry.right());
+                bool topChanged = !qFuzzyCompare(currentMoveResizeGeom.top(), currentTry.top());
+                bool btmChanged = !qFuzzyCompare(currentMoveResizeGeom.bottom(), currentTry.bottom());
                 auto fixChangedState = [titleFailed](bool &major, bool &counter, bool &ad1, bool &ad2) {
                     counter = false;
                     if (titleFailed) {
@@ -2023,13 +2023,13 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
                     break;
                 }
                 if (topChanged) {
-                    currentTry.setTop(currentTry.y() + sign(currentMoveResizeGeom.y() - currentTry.y()));
+                    currentTry.setTop(currentTry.y() + qBound(-1.0, currentMoveResizeGeom.y() - currentTry.y(), 1.0));
                 } else if (leftChanged) {
-                    currentTry.setLeft(currentTry.x() + sign(currentMoveResizeGeom.x() - currentTry.x()));
+                    currentTry.setLeft(currentTry.x() + qBound(-1.0, currentMoveResizeGeom.x() - currentTry.x(), 1.0));
                 } else if (btmChanged) {
-                    currentTry.setBottom(currentTry.bottom() + sign(currentMoveResizeGeom.bottom() - currentTry.bottom()));
+                    currentTry.setBottom(currentTry.bottom() + qBound(-1.0, currentMoveResizeGeom.bottom() - currentTry.bottom(), 1.0));
                 } else if (rightChanged) {
-                    currentTry.setRight(currentTry.right() + sign(currentMoveResizeGeom.right() - currentTry.right()));
+                    currentTry.setRight(currentTry.right() + qBound(-1.0, currentMoveResizeGeom.right() - currentTry.right(), 1.0));
                 } else {
                     break; // no position changed - that's certainly not good
                 }
