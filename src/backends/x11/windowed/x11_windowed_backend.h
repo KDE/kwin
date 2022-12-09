@@ -104,7 +104,6 @@ public:
     xcb_window_t rootWindow() const;
 
     xcb_window_t window() const;
-    xcb_window_t windowForScreen(Output *output) const;
     bool hasXInput() const;
 
     bool initialize() override;

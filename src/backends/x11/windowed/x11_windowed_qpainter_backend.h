@@ -28,14 +28,13 @@ class X11WindowedOutput;
 class X11WindowedQPainterPrimaryLayer : public OutputLayer
 {
 public:
-    X11WindowedQPainterPrimaryLayer(X11WindowedOutput *output, xcb_window_t window);
+    explicit X11WindowedQPainterPrimaryLayer(X11WindowedOutput *output);
 
     void ensureBuffer();
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
-    xcb_window_t window;
     QImage buffer;
     X11WindowedOutput *const m_output;
 };

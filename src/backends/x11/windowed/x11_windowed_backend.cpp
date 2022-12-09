@@ -595,14 +595,6 @@ std::unique_ptr<InputBackend> X11WindowedBackend::createInputBackend()
     return std::make_unique<X11WindowedInputBackend>(this);
 }
 
-xcb_window_t X11WindowedBackend::windowForScreen(Output *output) const
-{
-    if (!output) {
-        return XCB_WINDOW_NONE;
-    }
-    return static_cast<X11WindowedOutput *>(output)->window();
-}
-
 xcb_connection_t *X11WindowedBackend::connection() const
 {
     return m_connection;

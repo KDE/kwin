@@ -14,9 +14,8 @@
 namespace KWin
 {
 
-X11WindowedQPainterPrimaryLayer::X11WindowedQPainterPrimaryLayer(X11WindowedOutput *output, xcb_window_t window)
-    : window(window)
-    , m_output(output)
+X11WindowedQPainterPrimaryLayer::X11WindowedQPainterPrimaryLayer(X11WindowedOutput *output)
+    : m_output(output)
 {
 }
 
@@ -117,7 +116,7 @@ void X11WindowedQPainterBackend::addOutput(Output *output)
 {
     X11WindowedOutput *x11Output = static_cast<X11WindowedOutput *>(output);
     m_outputs[output] = Layers{
-        .primaryLayer = std::make_unique<X11WindowedQPainterPrimaryLayer>(x11Output, m_backend->windowForScreen(x11Output)),
+        .primaryLayer = std::make_unique<X11WindowedQPainterPrimaryLayer>(x11Output),
         .cursorLayer = std::make_unique<X11WindowedQPainterCursorLayer>(x11Output),
     };
 }
@@ -130,19 +129,18 @@ void X11WindowedQPainterBackend::removeOutput(Output *output)
 void X11WindowedQPainterBackend::present(Output *output)
 {
     static_cast<X11WindowedOutput *>(output)->vsyncMonitor()->arm();
+    const auto &rendererOutput = m_outputs[output];
 
     xcb_connection_t *c = m_backend->connection();
-    const xcb_window_t window = m_backend->window();
+    const xcb_window_t window = rendererOutput.primaryLayer->m_output->window();
     if (m_gc == XCB_NONE) {
         m_gc = xcb_generate_id(c);
         xcb_create_gc(c, m_gc, window, 0, nullptr);
     }
 
-    const auto &rendererOutput = m_outputs[output];
-
     // TODO: only update changes?
     const QImage &buffer = rendererOutput.primaryLayer->buffer;
-    xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, rendererOutput.primaryLayer->window,
+    xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, window,
                   m_gc, buffer.width(), buffer.height(), 0, 0, 0, 24,
                   buffer.sizeInBytes(), buffer.constBits());
 }

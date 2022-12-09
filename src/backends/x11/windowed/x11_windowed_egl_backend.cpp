@@ -159,13 +159,14 @@ bool X11WindowedEglBackend::createSurfaces()
 {
     const auto &outputs = m_backend->outputs();
     for (const auto &output : outputs) {
-        EGLSurface s = createSurface(m_backend->windowForScreen(output));
+        X11WindowedOutput *x11Output = static_cast<X11WindowedOutput *>(output);
+        EGLSurface s = createSurface(x11Output->window());
         if (s == EGL_NO_SURFACE) {
             return false;
         }
         m_outputs[output] = Layers{
-            .primaryLayer = std::make_unique<X11WindowedEglPrimaryLayer>(this, static_cast<X11WindowedOutput *>(output), s),
-            .cursorLayer = std::make_unique<X11WindowedEglCursorLayer>(this, static_cast<X11WindowedOutput *>(output)),
+            .primaryLayer = std::make_unique<X11WindowedEglPrimaryLayer>(this, x11Output, s),
+            .cursorLayer = std::make_unique<X11WindowedEglCursorLayer>(this, x11Output),
         };
     }
     if (m_outputs.empty()) {
