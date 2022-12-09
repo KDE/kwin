@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-08 00:47+0000\n"
+"POT-Creation-Date: 2022-12-09 00:47+0000\n"
 "PO-Revision-Date: 2004-12-03 14:52-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -2240,7 +2240,7 @@ msgid ""
 "Contact your distribution about this."
 msgstr ""
 
-#: useractions.cpp:159
+#: useractions.cpp:161
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -2253,7 +2253,7 @@ msgstr ""
 "mór duit an roghchlár oibrithe fuinneoige a úsáid, roghchlár is féidir a "
 "ghníomhachtú leis an aicearra %1."
 
-#: useractions.cpp:166
+#: useractions.cpp:168
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -2266,62 +2266,62 @@ msgstr ""
 "féidir é a dhíchumasú leis an luch: ní mór duit an roghchlár oibrithe "
 "fuinneoige a úsáid, roghchlár is féidir a ghníomhachtú leis an aicearra %1."
 
-#: useractions.cpp:236
+#: useractions.cpp:238
 #, kde-format
 msgid "&Move"
 msgstr "&Bog"
 
-#: useractions.cpp:241
+#: useractions.cpp:243
 #, fuzzy, kde-format
 #| msgid "Re&size"
 msgid "&Resize"
 msgstr "Athraigh an &mhéid"
 
-#: useractions.cpp:246
+#: useractions.cpp:248
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "Coimeád &Os Cionn"
 
-#: useractions.cpp:252
+#: useractions.cpp:254
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "Coimeád &Faoi Chinn Eile"
 
-#: useractions.cpp:258
+#: useractions.cpp:260
 #, kde-format
 msgid "&Fullscreen"
 msgstr "&Lánscáileán"
 
-#: useractions.cpp:264
+#: useractions.cpp:266
 #, fuzzy, kde-format
 #| msgid "Shade"
 msgid "&Shade"
 msgstr "Scáthaigh"
 
-#: useractions.cpp:270
+#: useractions.cpp:272
 #, kde-format
 msgid "&No Border"
 msgstr "Ga&n Imlíne"
 
-#: useractions.cpp:278
+#: useractions.cpp:280
 #, fuzzy, kde-format
 #| msgid "Window &Shortcut..."
 msgid "Set Window Short&cut..."
 msgstr "&Aicearra Fuinneoige..."
 
-#: useractions.cpp:284
+#: useractions.cpp:286
 #, fuzzy, kde-format
 #| msgid "&Special Window Settings..."
 msgid "Configure Special &Window Settings..."
 msgstr "&Socruithe Speisialta Fuinneoige..."
 
-#: useractions.cpp:289
+#: useractions.cpp:291
 #, fuzzy, kde-format
 #| msgid "S&pecial Application Settings..."
 msgid "Configure S&pecial Application Settings..."
 msgstr "&Socruithe Speisialta Feidhmchláir..."
 
-#: useractions.cpp:296
+#: useractions.cpp:298
 #, fuzzy, kde-format
 #| msgid "KDE window manager"
 msgctxt ""
@@ -2330,67 +2330,67 @@ msgctxt ""
 msgid "Configure W&indow Manager..."
 msgstr "Bainisteoir fuinneog KDE"
 
-#: useractions.cpp:323
+#: useractions.cpp:325
 #, kde-format
 msgid "Ma&ximize"
 msgstr "&Uasmhéadaigh"
 
-#: useractions.cpp:329
+#: useractions.cpp:331
 #, kde-format
 msgid "Mi&nimize"
 msgstr "Íos&laghdaigh"
 
-#: useractions.cpp:335
+#: useractions.cpp:337
 #, fuzzy, kde-format
 #| msgid "More Actions"
 msgid "&More Actions"
 msgstr "Tuilleadh Gníomhartha"
 
-#: useractions.cpp:338
+#: useractions.cpp:340
 #, kde-format
 msgid "&Close"
 msgstr "&Dún"
 
-#: useractions.cpp:408
+#: useractions.cpp:410
 #, kde-format
 msgid "&Extensions"
 msgstr ""
 
-#: useractions.cpp:459
+#: useractions.cpp:461
 #, fuzzy, kde-format
 #| msgid "&All Desktops"
 msgid "&Desktops"
 msgstr "G&ach Deasc"
 
-#: useractions.cpp:473
+#: useractions.cpp:475
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgid "Move to &Desktop"
 msgstr "Bog Go &Deasc"
 
-#: useractions.cpp:490
+#: useractions.cpp:492
 #, fuzzy, kde-format
 #| msgid "Window to Screen 0"
 msgid "Move to &Screen"
 msgstr "Fuinneog go Scáileán 0"
 
-#: useractions.cpp:507
+#: useractions.cpp:509
 #, kde-format
 msgid "Show in &Activities"
 msgstr ""
 
-#: useractions.cpp:524
+#: useractions.cpp:526
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgid "Move &To Current Desktop"
 msgstr "Bog Go &Deasc"
 
-#: useractions.cpp:534 useractions.cpp:601
+#: useractions.cpp:536 useractions.cpp:603
 #, kde-format
 msgid "&All Desktops"
 msgstr "G&ach Deasc"
 
-#: useractions.cpp:574
+#: useractions.cpp:576
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move there the window"
 #| msgid "&New Desktop"
@@ -2398,12 +2398,12 @@ msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "Deasc &Nua"
 
-#: useractions.cpp:645
+#: useractions.cpp:647
 #, kde-format
 msgid "Move to %1 %2"
 msgstr ""
 
-#: useractions.cpp:658
+#: useractions.cpp:660
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move there the window"
 #| msgid "&New Desktop"
@@ -2411,14 +2411,14 @@ msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "Deasc &Nua"
 
-#: useractions.cpp:670
+#: useractions.cpp:672
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "Bog Go &Deasc"
 
-#: useractions.cpp:701
+#: useractions.cpp:703
 #, fuzzy, kde-format
 #| msgctxt "@item:inmenu List of all Screens to send a window to"
 #| msgid "Screen &%1"
@@ -2428,334 +2428,382 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Scáileán &%1"
 
-#: useractions.cpp:727
+#: useractions.cpp:729
 #, kde-format
 msgid "&All Activities"
 msgstr ""
 
-#: useractions.cpp:906
+#: useractions.cpp:908
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "Tá <b>%1</b> in úsáid cheana"
 
-#: useractions.cpp:908
+#: useractions.cpp:910
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "Tá <b>%1</b> in úsáid ag %2 i %3"
 
-#: useractions.cpp:988
+#: useractions.cpp:990
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "Roghchlár Oibríochtaí na bhFuinneog"
 
-#: useractions.cpp:990
+#: useractions.cpp:992
 #, kde-format
 msgid "Close Window"
 msgstr "Dún Fuinneog"
 
-#: useractions.cpp:992
+#: useractions.cpp:994
 #, kde-format
 msgid "Maximize Window"
 msgstr "Uasmhéadaigh Fuinneog"
 
-#: useractions.cpp:994
+#: useractions.cpp:996
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Uasmhéadaigh Fuinneog go hIngearach"
 
-#: useractions.cpp:996
+#: useractions.cpp:998
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Uasmhéadaigh Fuinneog go Cothrománach"
 
-#: useractions.cpp:998
+#: useractions.cpp:1000
 #, kde-format
 msgid "Minimize Window"
 msgstr "Íoslaghdaigh Fuinneog"
 
-#: useractions.cpp:1000
+#: useractions.cpp:1002
 #, kde-format
 msgid "Shade Window"
 msgstr "Scáthaigh Fuinneog"
 
-#: useractions.cpp:1002
+#: useractions.cpp:1004
 #, kde-format
 msgid "Move Window"
 msgstr "Bog Fuinneog"
 
-#: useractions.cpp:1004
+#: useractions.cpp:1006
 #, kde-format
 msgid "Resize Window"
 msgstr "Athraigh Méid na Fuinneoige"
 
-#: useractions.cpp:1006
+#: useractions.cpp:1008
 #, kde-format
 msgid "Raise Window"
 msgstr "Ardaigh Fuinneog"
 
-#: useractions.cpp:1008
+#: useractions.cpp:1010
 #, kde-format
 msgid "Lower Window"
 msgstr "Ísligh Fuinneog"
 
-#: useractions.cpp:1010
+#: useractions.cpp:1012
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Scoránaigh Ardú/Ísliú Fuinneog"
 
-#: useractions.cpp:1012
+#: useractions.cpp:1014
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Fuinneog ar an Scáileán Iomlán"
 
-#: useractions.cpp:1014
+#: useractions.cpp:1016
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Border"
 msgstr "Folaigh Imlíne na Fuinneoga"
 
-#: useractions.cpp:1016
+#: useractions.cpp:1018
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Coimeád Fuinneog Os Cionn Cinn Eile"
 
-#: useractions.cpp:1018
+#: useractions.cpp:1020
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Coimeád Fuinneog Faoi Chinn Eile"
 
-#: useractions.cpp:1020
+#: useractions.cpp:1022
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Gníomhachtaigh Fuinneog ag Éileamh Airde"
 
-#: useractions.cpp:1022
+#: useractions.cpp:1024
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Socraigh Aicearra Fuinneoige"
 
-#: useractions.cpp:1024
+#: useractions.cpp:1026
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Move Window to the Center"
 msgstr "Pacáil Fuinneog Faoi Chlé"
 
-#: useractions.cpp:1026
+#: useractions.cpp:1028
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Right"
 msgstr "Bog Fuinneog"
 
-#: useractions.cpp:1028
+#: useractions.cpp:1030
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Left"
 msgstr "Bog Fuinneog"
 
-#: useractions.cpp:1030
+#: useractions.cpp:1032
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Up"
 msgstr "Bog Fuinneog"
 
-#: useractions.cpp:1032
+#: useractions.cpp:1034
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Down"
 msgstr "Bog Fuinneog"
 
-#: useractions.cpp:1034
+#: useractions.cpp:1036
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "Uasmhéadaigh Fuinneog go Cothrománach"
 
-#: useractions.cpp:1036
+#: useractions.cpp:1038
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Expand Window Vertically"
 msgstr "Uasmhéadaigh Fuinneog go hIngearach"
 
-#: useractions.cpp:1038
+#: useractions.cpp:1040
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Horizontally"
 msgid "Shrink Window Horizontally"
 msgstr "Pacáil agus Laghdaigh Fuinneog go Cothrománach"
 
-#: useractions.cpp:1040
+#: useractions.cpp:1042
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Vertically"
 msgid "Shrink Window Vertically"
 msgstr "Pacáil agus Laghdaigh Fuinneog go hIngearach"
 
-#: useractions.cpp:1042
+#: useractions.cpp:1044
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr ""
 
-#: useractions.cpp:1044
+#: useractions.cpp:1046
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr ""
 
-#: useractions.cpp:1046
+#: useractions.cpp:1048
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Top"
 msgstr "Pacáil Fuinneog Faoi Chlé"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1050
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Bottom"
 msgstr "Pacáil Fuinneog Faoi Chlé"
 
-#: useractions.cpp:1050
+#: useractions.cpp:1052
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr ""
 
-#: useractions.cpp:1052
+#: useractions.cpp:1054
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr ""
 
-#: useractions.cpp:1054
+#: useractions.cpp:1056
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr ""
 
-#: useractions.cpp:1056
+#: useractions.cpp:1058
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr ""
 
-#: useractions.cpp:1058
+#: useractions.cpp:1060
 #, kde-format
 msgid "Switch to Window Above"
 msgstr ""
 
-#: useractions.cpp:1060
+#: useractions.cpp:1062
 #, kde-format
 msgid "Switch to Window Below"
 msgstr ""
 
-#: useractions.cpp:1062
+#: useractions.cpp:1064
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr ""
 
-#: useractions.cpp:1064
+#: useractions.cpp:1066
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr ""
 
-#: useractions.cpp:1066
+#: useractions.cpp:1068
 #, kde-format
 msgid "Increase Opacity of Active Window by 5 %"
 msgstr ""
 
-#: useractions.cpp:1068
+#: useractions.cpp:1070
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5 %"
 msgstr ""
 
-#: useractions.cpp:1071
+#: useractions.cpp:1073
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Coimeád Fuinneog ar Gach Deasc"
 
-#: useractions.cpp:1082
+#: useractions.cpp:1084
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Fuinneog go Deasc %1"
 
-#: useractions.cpp:1084
+#: useractions.cpp:1086
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Fuinneog go dtí an Chéad Deasc Eile"
 
-#: useractions.cpp:1085
+#: useractions.cpp:1087
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Fuinneog go dtí an Deasc Roimhe Seo"
 
-#: useractions.cpp:1086
+#: useractions.cpp:1088
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Fuinneog go dtí an Deasc Ar Dheis"
 
-#: useractions.cpp:1088
+#: useractions.cpp:1090
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Fuinneog go dtí an Deasc Ar Chlé"
 
-#: useractions.cpp:1090
+#: useractions.cpp:1092
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Fuinneog go dtí an Deasc Thuas"
 
-#: useractions.cpp:1092
+#: useractions.cpp:1094
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Fuinneog go dtí an Deasc Thíos"
 
-#: useractions.cpp:1096
+#: useractions.cpp:1098
 #, kde-format
 msgid "Window to Screen %1"
 msgstr "Fuinneog go Scáileán %1"
 
-#: useractions.cpp:1103
+#: useractions.cpp:1105
 #, kde-format
 msgid "Window to Next Screen"
 msgstr "Fuinneog go dtí an Chéad Scáileán Eile"
 
-#: useractions.cpp:1105
+#: useractions.cpp:1107
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
 msgid "Window to Previous Screen"
 msgstr "Fuinneog go dtí an Deasc Roimhe Seo"
 
-#: useractions.cpp:1107
+#: useractions.cpp:1109
 #, fuzzy, kde-format
-#| msgid "Move To &Desktop"
-msgid "Peek at Desktop"
-msgstr "Bog Go &Deasc"
+#| msgid "Window One Desktop to the Right"
+msgid "Window One Screen to the Right"
+msgstr "Fuinneog go dtí an Deasc Ar Dheis"
 
 #: useractions.cpp:1111
+#, fuzzy, kde-format
+#| msgid "Window One Desktop to the Left"
+msgid "Window One Screen to the Left"
+msgstr "Fuinneog go dtí an Deasc Ar Chlé"
+
+#: useractions.cpp:1113
+#, fuzzy, kde-format
+#| msgid "Window to Screen 3"
+msgid "Window One Screen Up"
+msgstr "Fuinneog go Scáileán 3"
+
+#: useractions.cpp:1115
+#, fuzzy, kde-format
+#| msgid "Window One Desktop Down"
+msgid "Window One Screen Down"
+msgstr "Fuinneog go dtí an Deasc Thíos"
+
+#: useractions.cpp:1119
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Téigh go Scáileán %1"
 
-#: useractions.cpp:1119
+#: useractions.cpp:1126
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Téigh go dtí an Chéad Scáileán Eile"
 
-#: useractions.cpp:1120
+#: useractions.cpp:1127
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Previous Screen"
 msgstr "Téigh go dtí an Deasc roimhe seo"
 
-#: useractions.cpp:1122
+#: useractions.cpp:1128
+#, fuzzy, kde-format
+#| msgid "Switch One Desktop to the Right"
+msgid "Switch to Screen to the Right"
+msgstr "Téigh go dtí an Deasc ar dheis"
+
+#: useractions.cpp:1130
+#, fuzzy, kde-format
+#| msgid "Switch to Screen 3"
+msgid "Switch to Screen to the Left"
+msgstr "Téigh go Scáileán 3"
+
+#: useractions.cpp:1132
+#, fuzzy, kde-format
+#| msgid "Switch to Screen 3"
+msgid "Switch to Screen Above"
+msgstr "Téigh go Scáileán 3"
+
+#: useractions.cpp:1134
+#, fuzzy, kde-format
+#| msgid "Switch to Screen 3"
+msgid "Switch to Screen Below"
+msgstr "Téigh go Scáileán 3"
+
+#: useractions.cpp:1137
+#, fuzzy, kde-format
+#| msgid "Move To &Desktop"
+msgid "Peek at Desktop"
+msgstr "Bog Go &Deasc"
+
+#: useractions.cpp:1140
 #, kde-format
 msgid "Kill Window"
 msgstr "Maraigh Fuinneog"
 
-#: useractions.cpp:1123
+#: useractions.cpp:1141
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "Cuir Comhshuí Ar Fionraí"
 
-#: useractions.cpp:1184
+#: useractions.cpp:1202
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Gníomhachtaigh Fuinneog (%1)"
 
-#: useractions.cpp:1321
+#: useractions.cpp:1339
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
@@ -2803,13 +2851,13 @@ msgstr "Téigh Síos Deasc Amháin"
 msgid "Switch to Desktop %1"
 msgstr "Téigh go Deasc %1"
 
-#: window.cpp:3457
+#: window.cpp:3458
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1678
+#: workspace.cpp:1732
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -3051,9 +3099,6 @@ msgstr ""
 #~ msgid "Window to Desktop 20"
 #~ msgstr "Fuinneog go Deasc 20"
 
-#~ msgid "Window to Screen 3"
-#~ msgstr "Fuinneog go Scáileán 3"
-
 #~ msgid "Window to Screen 4"
 #~ msgstr "Fuinneog go Scáileán 4"
 
@@ -3119,9 +3164,6 @@ msgstr ""
 
 #~ msgid "Switch to Desktop 20"
 #~ msgstr "Téigh go Deasc 20"
-
-#~ msgid "Switch to Screen 3"
-#~ msgstr "Téigh go Scáileán 3"
 
 #~ msgid "Switch to Screen 4"
 #~ msgstr "Téigh go Scáileán 4"

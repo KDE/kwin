@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-08 00:47+0000\n"
+"POT-Creation-Date: 2022-12-09 00:47+0000\n"
 "PO-Revision-Date: 2022-11-28 16:22+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -2217,7 +2217,7 @@ msgstr ""
 "ressources es mancante.\n"
 "Continge tu distrubution re iste cosa.."
 
-#: useractions.cpp:159
+#: useractions.cpp:161
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -2230,7 +2230,7 @@ msgstr ""
 "tu in vice usa le menu de operationes de fenestra, activate con uso de %1 "
 "via breve de claviero."
 
-#: useractions.cpp:166
+#: useractions.cpp:168
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -2244,57 +2244,57 @@ msgstr ""
 "menu de operationes de fenestra, activate con uso de %1 via breve de "
 "claviero."
 
-#: useractions.cpp:236
+#: useractions.cpp:238
 #, kde-format
 msgid "&Move"
 msgstr "&Move"
 
-#: useractions.cpp:241
+#: useractions.cpp:243
 #, kde-format
 msgid "&Resize"
 msgstr "Redimen&siona"
 
-#: useractions.cpp:246
+#: useractions.cpp:248
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "Mantene  Super &Alteres"
 
-#: useractions.cpp:252
+#: useractions.cpp:254
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "Mantene  Su&b Alteres"
 
-#: useractions.cpp:258
+#: useractions.cpp:260
 #, kde-format
 msgid "&Fullscreen"
 msgstr "Sc&hermo plen"
 
-#: useractions.cpp:264
+#: useractions.cpp:266
 #, kde-format
 msgid "&Shade"
 msgstr "Adum&bra"
 
-#: useractions.cpp:270
+#: useractions.cpp:272
 #, kde-format
 msgid "&No Border"
 msgstr "&Nulle Bordo"
 
-#: useractions.cpp:278
+#: useractions.cpp:280
 #, kde-format
 msgid "Set Window Short&cut..."
 msgstr "Fixa Via breve de Fene&stra ..."
 
-#: useractions.cpp:284
+#: useractions.cpp:286
 #, kde-format
 msgid "Configure Special &Window Settings..."
 msgstr "Configura &Preferentias de fenestra special ..."
 
-#: useractions.cpp:289
+#: useractions.cpp:291
 #, kde-format
 msgid "Configure S&pecial Application Settings..."
 msgstr "Configura Preferentias de Applicationes s&pecial ..."
 
-#: useractions.cpp:296
+#: useractions.cpp:298
 #, kde-format
 msgctxt ""
 "Entry in context menu of window decoration to open the configuration module "
@@ -2302,85 +2302,85 @@ msgctxt ""
 msgid "Configure W&indow Manager..."
 msgstr "Conf&igura le gerente de fenestra..."
 
-#: useractions.cpp:323
+#: useractions.cpp:325
 #, kde-format
 msgid "Ma&ximize"
 msgstr "Ma&ximiza"
 
-#: useractions.cpp:329
+#: useractions.cpp:331
 #, kde-format
 msgid "Mi&nimize"
 msgstr "Mi&nimisa"
 
-#: useractions.cpp:335
+#: useractions.cpp:337
 #, kde-format
 msgid "&More Actions"
 msgstr "&Altere actiones"
 
-#: useractions.cpp:338
+#: useractions.cpp:340
 #, kde-format
 msgid "&Close"
 msgstr "&Claude"
 
-#: useractions.cpp:408
+#: useractions.cpp:410
 #, kde-format
 msgid "&Extensions"
 msgstr "&Extensiones"
 
-#: useractions.cpp:459
+#: useractions.cpp:461
 #, kde-format
 msgid "&Desktops"
 msgstr "&Scriptorios"
 
-#: useractions.cpp:473
+#: useractions.cpp:475
 #, kde-format
 msgid "Move to &Desktop"
 msgstr "Move a &scriptorio"
 
-#: useractions.cpp:490
+#: useractions.cpp:492
 #, kde-format
 msgid "Move to &Screen"
 msgstr "Move a &Schermo"
 
-#: useractions.cpp:507
+#: useractions.cpp:509
 #, kde-format
 msgid "Show in &Activities"
 msgstr "Monstra in &Activitates"
 
-#: useractions.cpp:524
+#: useractions.cpp:526
 #, kde-format
 msgid "Move &To Current Desktop"
 msgstr "Move &a le scriptorio currente"
 
-#: useractions.cpp:534 useractions.cpp:601
+#: useractions.cpp:536 useractions.cpp:603
 #, kde-format
 msgid "&All Desktops"
 msgstr "&Omne Scriptorios"
 
-#: useractions.cpp:574
+#: useractions.cpp:576
 #, kde-format
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "&Nove scriptorio"
 
-#: useractions.cpp:645
+#: useractions.cpp:647
 #, kde-format
 msgid "Move to %1 %2"
 msgstr "Move a %1 %2"
 
-#: useractions.cpp:658
+#: useractions.cpp:660
 #, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "Adde  &Nove scriptorio"
 
-#: useractions.cpp:670
+#: useractions.cpp:672
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "Move a Nove Scriptorio"
 
-#: useractions.cpp:701
+#: useractions.cpp:703
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -2388,321 +2388,369 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Schermo &%1 (%2)"
 
-#: useractions.cpp:727
+#: useractions.cpp:729
 #, kde-format
 msgid "&All Activities"
 msgstr "Omne &Activitates"
 
-#: useractions.cpp:906
+#: useractions.cpp:908
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b>ja es in uso"
 
-#: useractions.cpp:908
+#: useractions.cpp:910
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> es usate per %2 in %3"
 
-#: useractions.cpp:988
+#: useractions.cpp:990
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "Menu de operationes de fenestra"
 
-#: useractions.cpp:990
+#: useractions.cpp:992
 #, kde-format
 msgid "Close Window"
 msgstr "Claude fenestra"
 
-#: useractions.cpp:992
+#: useractions.cpp:994
 #, kde-format
 msgid "Maximize Window"
 msgstr "Maximisa fenestra"
 
-#: useractions.cpp:994
+#: useractions.cpp:996
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Maximisa fenestra verticalmente"
 
-#: useractions.cpp:996
+#: useractions.cpp:998
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Maximiar fenestra horizontalmente"
 
-#: useractions.cpp:998
+#: useractions.cpp:1000
 #, kde-format
 msgid "Minimize Window"
 msgstr "Minimisa fenestra"
 
-#: useractions.cpp:1000
+#: useractions.cpp:1002
 #, kde-format
 msgid "Shade Window"
 msgstr "Adumbra fenestra"
 
-#: useractions.cpp:1002
+#: useractions.cpp:1004
 #, kde-format
 msgid "Move Window"
 msgstr "Move fenestra"
 
-#: useractions.cpp:1004
+#: useractions.cpp:1006
 #, kde-format
 msgid "Resize Window"
 msgstr "Redimensiona fenestra"
 
-#: useractions.cpp:1006
+#: useractions.cpp:1008
 #, kde-format
 msgid "Raise Window"
 msgstr "Altia fenestra"
 
-#: useractions.cpp:1008
+#: useractions.cpp:1010
 #, kde-format
 msgid "Lower Window"
 msgstr "Bassa fenestra"
 
-#: useractions.cpp:1010
+#: useractions.cpp:1012
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Commuta inter Altia/Bassa fenestra"
 
-#: useractions.cpp:1012
+#: useractions.cpp:1014
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Face fenestra a schermo plen"
 
-#: useractions.cpp:1014
+#: useractions.cpp:1016
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Border"
 msgstr "Cela bordo de fenestra"
 
-#: useractions.cpp:1016
+#: useractions.cpp:1018
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Mantene fenestra super alteres"
 
-#: useractions.cpp:1018
+#: useractions.cpp:1020
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Mantene fenestra a basso de alteres"
 
-#: useractions.cpp:1020
+#: useractions.cpp:1022
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Fenestra activate demandante attention"
 
-#: useractions.cpp:1022
+#: useractions.cpp:1024
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Via breve de fenestra de configuration"
 
-#: useractions.cpp:1024
+#: useractions.cpp:1026
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Move fenestra al Centro"
 
-#: useractions.cpp:1026
+#: useractions.cpp:1028
 #, kde-format
 msgid "Move Window Right"
 msgstr "Move Fenestra a dextera"
 
-#: useractions.cpp:1028
+#: useractions.cpp:1030
 #, kde-format
 msgid "Move Window Left"
 msgstr "Move Fenestra a sinistra"
 
-#: useractions.cpp:1030
+#: useractions.cpp:1032
 #, kde-format
 msgid "Move Window Up"
 msgstr "Move Fenestra in  alto"
 
-#: useractions.cpp:1032
+#: useractions.cpp:1034
 #, kde-format
 msgid "Move Window Down"
 msgstr "Move Fenestra a basso"
 
-#: useractions.cpp:1034
+#: useractions.cpp:1036
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Expande fenestra horizontalmente"
 
-#: useractions.cpp:1036
+#: useractions.cpp:1038
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Expande fenestra verticalmente"
 
-#: useractions.cpp:1038
+#: useractions.cpp:1040
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Comprime fenestra horizontalmente"
 
-#: useractions.cpp:1040
+#: useractions.cpp:1042
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Comprime fenestra verticalmente"
 
-#: useractions.cpp:1042
+#: useractions.cpp:1044
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Fenestra de tegula rapide a sinistra"
 
-#: useractions.cpp:1044
+#: useractions.cpp:1046
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Fenestra de tegula rapide a dextera"
 
-#: useractions.cpp:1046
+#: useractions.cpp:1048
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Fenestra de tegula rapide in alto"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1050
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Fenestra de tegula rapide a basso"
 
-#: useractions.cpp:1050
+#: useractions.cpp:1052
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Fenestra de tegula rapide in alto a sinistra"
 
-#: useractions.cpp:1052
+#: useractions.cpp:1054
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Fenestra de tegula rapide a basso a sinistra"
 
-#: useractions.cpp:1054
+#: useractions.cpp:1056
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Fenestra de tegula rapide in alto a dextera"
 
-#: useractions.cpp:1056
+#: useractions.cpp:1058
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Fenestra de tegula rapide in basso a dextera"
 
-#: useractions.cpp:1058
+#: useractions.cpp:1060
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Passa a fenestra de supra"
 
-#: useractions.cpp:1060
+#: useractions.cpp:1062
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Passa a fenestra a basso"
 
-#: useractions.cpp:1062
+#: useractions.cpp:1064
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Passa a fenestra a dextera"
 
-#: useractions.cpp:1064
+#: useractions.cpp:1066
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Passa a fenestra a sinistra"
 
-#: useractions.cpp:1066
+#: useractions.cpp:1068
 #, kde-format
 msgid "Increase Opacity of Active Window by 5 %"
 msgstr "Augmenta opacitate del fenestra active per le  5 %"
 
-#: useractions.cpp:1068
+#: useractions.cpp:1070
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5 %"
 msgstr "Diminue opacitate del fenestra active per le  5 %"
 
-#: useractions.cpp:1071
+#: useractions.cpp:1073
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Mantene fenestra super omne scriptorios"
 
-#: useractions.cpp:1082
+#: useractions.cpp:1084
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Fenestra a Scriptorio %1"
 
-#: useractions.cpp:1084
+#: useractions.cpp:1086
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Fenestra a proxime scriptorio"
 
-#: useractions.cpp:1085
+#: useractions.cpp:1087
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Fenestra a previe scriptorio"
 
-#: useractions.cpp:1086
+#: useractions.cpp:1088
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Fenestra un scriptorio a dextera"
 
-#: useractions.cpp:1088
+#: useractions.cpp:1090
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Fenestra un scriptorio a sinistra"
 
-#: useractions.cpp:1090
+#: useractions.cpp:1092
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Fenestra un scriptorio in alto"
 
-#: useractions.cpp:1092
+#: useractions.cpp:1094
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Fenestra un scriptorio a basso"
 
-#: useractions.cpp:1096
+#: useractions.cpp:1098
 #, kde-format
 msgid "Window to Screen %1"
 msgstr "Fenestra a Schermo %1"
 
-#: useractions.cpp:1103
+#: useractions.cpp:1105
 #, kde-format
 msgid "Window to Next Screen"
 msgstr "Fenestra a proxime Schermo"
 
-#: useractions.cpp:1105
+#: useractions.cpp:1107
 #, kde-format
 msgid "Window to Previous Screen"
 msgstr "Fenestra a Previe Schermo"
 
-#: useractions.cpp:1107
+#: useractions.cpp:1109
+#, fuzzy, kde-format
+#| msgid "Window One Desktop to the Right"
+msgid "Window One Screen to the Right"
+msgstr "Fenestra un scriptorio a dextera"
+
+#: useractions.cpp:1111
+#, fuzzy, kde-format
+#| msgid "Window One Desktop to the Left"
+msgid "Window One Screen to the Left"
+msgstr "Fenestra un scriptorio a sinistra"
+
+#: useractions.cpp:1113
+#, fuzzy, kde-format
+#| msgid "Window to Screen 2"
+msgid "Window One Screen Up"
+msgstr "Fenestra a Schermo 2"
+
+#: useractions.cpp:1115
+#, fuzzy, kde-format
+#| msgid "Window One Desktop Down"
+msgid "Window One Screen Down"
+msgstr "Fenestra un scriptorio a basso"
+
+#: useractions.cpp:1119
+#, kde-format
+msgid "Switch to Screen %1"
+msgstr "Commuta  a Schermo %1"
+
+#: useractions.cpp:1126
+#, kde-format
+msgid "Switch to Next Screen"
+msgstr "Commuta  a Proxime Schermo"
+
+#: useractions.cpp:1127
+#, kde-format
+msgid "Switch to Previous Screen"
+msgstr "Commuta a Previe Schermo"
+
+#: useractions.cpp:1128
+#, fuzzy, kde-format
+#| msgid "Switch to Window to the Right"
+msgid "Switch to Screen to the Right"
+msgstr "Passa a fenestra a dextera"
+
+#: useractions.cpp:1130
+#, fuzzy, kde-format
+#| msgid "Switch to Window to the Left"
+msgid "Switch to Screen to the Left"
+msgstr "Passa a fenestra a sinistra"
+
+#: useractions.cpp:1132
+#, fuzzy, kde-format
+#| msgid "Switch to Screen 0"
+msgid "Switch to Screen Above"
+msgstr "Commuta  a Schermo 0"
+
+#: useractions.cpp:1134
+#, fuzzy, kde-format
+#| msgid "Switch to Screen 0"
+msgid "Switch to Screen Below"
+msgstr "Commuta  a Schermo 0"
+
+#: useractions.cpp:1137
 #, fuzzy, kde-format
 #| msgid "Move to &Desktop"
 msgid "Peek at Desktop"
 msgstr "Reguarda a Scriptorio"
 
-#: useractions.cpp:1111
-#, kde-format
-msgid "Switch to Screen %1"
-msgstr "Commuta  a Schermo %1"
-
-#: useractions.cpp:1119
-#, kde-format
-msgid "Switch to Next Screen"
-msgstr "Commuta  a Proxime Schermo"
-
-#: useractions.cpp:1120
-#, kde-format
-msgid "Switch to Previous Screen"
-msgstr "Commuta a Previe Schermo"
-
-#: useractions.cpp:1122
+#: useractions.cpp:1140
 #, kde-format
 msgid "Kill Window"
 msgstr "Occide  fenestra"
 
-#: useractions.cpp:1123
+#: useractions.cpp:1141
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "Suspende de facer composition"
 
-#: useractions.cpp:1184
+#: useractions.cpp:1202
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Activa fenestra (%1)"
 
-#: useractions.cpp:1321
+#: useractions.cpp:1339
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
@@ -2753,13 +2801,13 @@ msgstr "Commuta un Scriptorio a basso"
 msgid "Switch to Desktop %1"
 msgstr "Commuta a Scriptorio %1"
 
-#: window.cpp:3457
+#: window.cpp:3458
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(non respondente)"
 
-#: workspace.cpp:1678
+#: workspace.cpp:1732
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -3276,9 +3324,6 @@ msgstr ""
 #~ msgid "Window to Desktop 20"
 #~ msgstr "Fenestra a Scriptorio 20"
 
-#~ msgid "Window to Screen 2"
-#~ msgstr "Fenestra a Schermo 2"
-
 #~ msgid "Window to Screen 3"
 #~ msgstr "Fenestra a Schermo 3"
 
@@ -3347,9 +3392,6 @@ msgstr ""
 
 #~ msgid "Switch to Desktop 20"
 #~ msgstr "Commuta a Scriptorio 20"
-
-#~ msgid "Switch to Screen 0"
-#~ msgstr "Commuta  a Schermo 0"
 
 #~ msgid "Switch to Screen 2"
 #~ msgstr "Commuta  a Schermo 2"

@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-08 00:47+0000\n"
+"POT-Creation-Date: 2022-12-09 00:47+0000\n"
 "PO-Revision-Date: 2022-10-01 15:09+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -2248,7 +2248,7 @@ msgstr ""
 "отсутствуют.\n"
 "Обратитесь к производителю дистрибутива."
 
-#: useractions.cpp:159
+#: useractions.cpp:161
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -2261,7 +2261,7 @@ msgstr ""
 "Используйте вместо этого меню действий с окном, которое можно открыть "
 "комбинацией клавиш %1."
 
-#: useractions.cpp:166
+#: useractions.cpp:168
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -2275,57 +2275,57 @@ msgstr ""
 "вместо этого меню действий с окном, которое можно открыть комбинацией клавиш "
 "%1."
 
-#: useractions.cpp:236
+#: useractions.cpp:238
 #, kde-format
 msgid "&Move"
 msgstr "&Переместить"
 
-#: useractions.cpp:241
+#: useractions.cpp:243
 #, kde-format
 msgid "&Resize"
 msgstr "&Изменить размер"
 
-#: useractions.cpp:246
+#: useractions.cpp:248
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "Поддержи&вать поверх других"
 
-#: useractions.cpp:252
+#: useractions.cpp:254
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "Поддерживать на &заднем плане"
 
-#: useractions.cpp:258
+#: useractions.cpp:260
 #, kde-format
 msgid "&Fullscreen"
 msgstr "На весь &экран"
 
-#: useractions.cpp:264
+#: useractions.cpp:266
 #, kde-format
 msgid "&Shade"
 msgstr "&Свернуть в заголовок"
 
-#: useractions.cpp:270
+#: useractions.cpp:272
 #, kde-format
 msgid "&No Border"
 msgstr "Без &рамки"
 
-#: useractions.cpp:278
+#: useractions.cpp:280
 #, kde-format
 msgid "Set Window Short&cut..."
 msgstr "Задать &комбинацию клавиш для переключения в это окно..."
 
-#: useractions.cpp:284
+#: useractions.cpp:286
 #, kde-format
 msgid "Configure Special &Window Settings..."
 msgstr "Настроить индивидуальные параметры &окна..."
 
-#: useractions.cpp:289
+#: useractions.cpp:291
 #, kde-format
 msgid "Configure S&pecial Application Settings..."
 msgstr "Настроить индивидуальные параметры &приложения..."
 
-#: useractions.cpp:296
+#: useractions.cpp:298
 #, kde-format
 msgctxt ""
 "Entry in context menu of window decoration to open the configuration module "
@@ -2333,87 +2333,87 @@ msgctxt ""
 msgid "Configure W&indow Manager..."
 msgstr "Настроить о&формление окон..."
 
-#: useractions.cpp:323
+#: useractions.cpp:325
 #, kde-format
 msgid "Ma&ximize"
 msgstr "Р&аспахнуть"
 
-#: useractions.cpp:329
+#: useractions.cpp:331
 #, kde-format
 msgid "Mi&nimize"
 msgstr "&Свернуть"
 
-#: useractions.cpp:335
+#: useractions.cpp:337
 #, kde-format
 msgid "&More Actions"
 msgstr "&Дополнительно"
 
-#: useractions.cpp:338
+#: useractions.cpp:340
 #, kde-format
 msgid "&Close"
 msgstr "&Закрыть"
 
-#: useractions.cpp:408
+#: useractions.cpp:410
 #, kde-format
 msgid "&Extensions"
 msgstr "&Расширения"
 
-#: useractions.cpp:459
+#: useractions.cpp:461
 #, kde-format
 msgid "&Desktops"
 msgstr "&На рабочих столах"
 
-#: useractions.cpp:473
+#: useractions.cpp:475
 #, kde-format
 msgid "Move to &Desktop"
 msgstr "Переместить &на рабочий стол"
 
-#: useractions.cpp:490
+#: useractions.cpp:492
 #, kde-format
 msgid "Move to &Screen"
 msgstr "Переместить на &экран"
 
-#: useractions.cpp:507
+#: useractions.cpp:509
 #, kde-format
 msgid "Show in &Activities"
 msgstr "Показывать в &комнатах"
 
-#: useractions.cpp:524
+#: useractions.cpp:526
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move the window to that desktop"
 #| msgid "Move to New Desktop"
 msgid "Move &To Current Desktop"
 msgstr "Переместить на новый рабочий стол"
 
-#: useractions.cpp:534 useractions.cpp:601
+#: useractions.cpp:536 useractions.cpp:603
 #, kde-format
 msgid "&All Desktops"
 msgstr "На &всех рабочих столах"
 
-#: useractions.cpp:574
+#: useractions.cpp:576
 #, kde-format
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "&Новый рабочий стол"
 
-#: useractions.cpp:645
+#: useractions.cpp:647
 #, kde-format
 msgid "Move to %1 %2"
 msgstr "Переместить на %1 %2"
 
-#: useractions.cpp:658
+#: useractions.cpp:660
 #, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "Добавить на &новый рабочий стол"
 
-#: useractions.cpp:670
+#: useractions.cpp:672
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "Переместить на новый рабочий стол"
 
-#: useractions.cpp:701
+#: useractions.cpp:703
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -2421,320 +2421,368 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Экран &%1 (%2)"
 
-#: useractions.cpp:727
+#: useractions.cpp:729
 #, kde-format
 msgid "&All Activities"
 msgstr "Во &всех комнатах"
 
-#: useractions.cpp:906
+#: useractions.cpp:908
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> уже используется"
 
-#: useractions.cpp:908
+#: useractions.cpp:910
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> уже используется для действия «%2» в приложении %3"
 
-#: useractions.cpp:988
+#: useractions.cpp:990
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "Меню действий с окном"
 
-#: useractions.cpp:990
+#: useractions.cpp:992
 #, kde-format
 msgid "Close Window"
 msgstr "Закрыть окно"
 
-#: useractions.cpp:992
+#: useractions.cpp:994
 #, kde-format
 msgid "Maximize Window"
 msgstr "Распахнуть окно"
 
-#: useractions.cpp:994
+#: useractions.cpp:996
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Распахнуть окно по вертикали"
 
-#: useractions.cpp:996
+#: useractions.cpp:998
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Распахнуть окно по горизонтали"
 
-#: useractions.cpp:998
+#: useractions.cpp:1000
 #, kde-format
 msgid "Minimize Window"
 msgstr "Свернуть окно"
 
-#: useractions.cpp:1000
+#: useractions.cpp:1002
 #, kde-format
 msgid "Shade Window"
 msgstr "Свернуть окно в заголовок"
 
-#: useractions.cpp:1002
+#: useractions.cpp:1004
 #, kde-format
 msgid "Move Window"
 msgstr "Переместить окно"
 
-#: useractions.cpp:1004
+#: useractions.cpp:1006
 #, kde-format
 msgid "Resize Window"
 msgstr "Изменить размер окна"
 
-#: useractions.cpp:1006
+#: useractions.cpp:1008
 #, kde-format
 msgid "Raise Window"
 msgstr "Поднять окно"
 
-#: useractions.cpp:1008
+#: useractions.cpp:1010
 #, kde-format
 msgid "Lower Window"
 msgstr "Опустить окно"
 
-#: useractions.cpp:1010
+#: useractions.cpp:1012
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Переключить передний/задний план"
 
-#: useractions.cpp:1012
+#: useractions.cpp:1014
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Распахнуть окно на весь экран"
 
-#: useractions.cpp:1014
+#: useractions.cpp:1016
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Border"
 msgstr "Скрыть границы окна"
 
-#: useractions.cpp:1016
+#: useractions.cpp:1018
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Поместить окно на передний план"
 
-#: useractions.cpp:1018
+#: useractions.cpp:1020
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Поместить окно на задний план"
 
-#: useractions.cpp:1020
+#: useractions.cpp:1022
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Активировать окно, требующее внимания"
 
-#: useractions.cpp:1022
+#: useractions.cpp:1024
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Задать комбинацию клавиш для переключения в это окно"
 
-#: useractions.cpp:1024
+#: useractions.cpp:1026
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Переместить окно в центр"
 
-#: useractions.cpp:1026
+#: useractions.cpp:1028
 #, kde-format
 msgid "Move Window Right"
 msgstr "Переместить окно вправо"
 
-#: useractions.cpp:1028
+#: useractions.cpp:1030
 #, kde-format
 msgid "Move Window Left"
 msgstr "Переместить окно влево"
 
-#: useractions.cpp:1030
+#: useractions.cpp:1032
 #, kde-format
 msgid "Move Window Up"
 msgstr "Переместить окно вверх"
 
-#: useractions.cpp:1032
+#: useractions.cpp:1034
 #, kde-format
 msgid "Move Window Down"
 msgstr "Переместить окно вниз"
 
-#: useractions.cpp:1034
+#: useractions.cpp:1036
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Распахнуть окно по горизонтали"
 
-#: useractions.cpp:1036
+#: useractions.cpp:1038
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Распахнуть окно по вертикали"
 
-#: useractions.cpp:1038
+#: useractions.cpp:1040
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Сжать окно по горизонтали"
 
-#: useractions.cpp:1040
+#: useractions.cpp:1042
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Сжать окно по вертикали"
 
-#: useractions.cpp:1042
+#: useractions.cpp:1044
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Распахнуть окно на левую половину экрана"
 
-#: useractions.cpp:1044
+#: useractions.cpp:1046
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Распахнуть окно на правую половину экрана"
 
-#: useractions.cpp:1046
+#: useractions.cpp:1048
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Распахнуть окно на верхнюю половину экрана"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1050
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Распахнуть окно на нижнюю половину экрана"
 
-#: useractions.cpp:1050
+#: useractions.cpp:1052
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Распахнуть окно на левую верхнюю четверть экрана"
 
-#: useractions.cpp:1052
+#: useractions.cpp:1054
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Распахнуть окно на левую нижнюю четверть экрана"
 
-#: useractions.cpp:1054
+#: useractions.cpp:1056
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Распахнуть окно на правую верхнюю четверть экрана"
 
-#: useractions.cpp:1056
+#: useractions.cpp:1058
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Распахнуть окно на правую нижнюю четверть экрана"
 
-#: useractions.cpp:1058
+#: useractions.cpp:1060
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Переключиться на окно сверху"
 
-#: useractions.cpp:1060
+#: useractions.cpp:1062
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Переключиться на окно снизу"
 
-#: useractions.cpp:1062
+#: useractions.cpp:1064
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Переключиться на окно справа"
 
-#: useractions.cpp:1064
+#: useractions.cpp:1066
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Переключиться на окно слева"
 
-#: useractions.cpp:1066
+#: useractions.cpp:1068
 #, kde-format
 msgid "Increase Opacity of Active Window by 5 %"
 msgstr "Увеличить непрозрачность окна на 5%"
 
-#: useractions.cpp:1068
+#: useractions.cpp:1070
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5 %"
 msgstr "Уменьшить непрозрачность окна на 5%"
 
-#: useractions.cpp:1071
+#: useractions.cpp:1073
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Поддерживать окно на всех рабочих столах"
 
-#: useractions.cpp:1082
+#: useractions.cpp:1084
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Переместить окно на рабочий стол %1"
 
-#: useractions.cpp:1084
+#: useractions.cpp:1086
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Переместить окно на следующий рабочий стол"
 
-#: useractions.cpp:1085
+#: useractions.cpp:1087
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Переместить окно на предыдущий рабочий стол"
 
-#: useractions.cpp:1086
+#: useractions.cpp:1088
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Окно на один рабочий стол вправо"
 
-#: useractions.cpp:1088
+#: useractions.cpp:1090
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Окно на один рабочий стол влево"
 
-#: useractions.cpp:1090
+#: useractions.cpp:1092
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Окно на один рабочий стол вверх"
 
-#: useractions.cpp:1092
+#: useractions.cpp:1094
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Окно на один рабочий стол вниз"
 
-#: useractions.cpp:1096
+#: useractions.cpp:1098
 #, kde-format
 msgid "Window to Screen %1"
 msgstr "Переместить окно на экран %1"
 
-#: useractions.cpp:1103
+#: useractions.cpp:1105
 #, kde-format
 msgid "Window to Next Screen"
 msgstr "Переместить окно на следующий экран"
 
-#: useractions.cpp:1105
+#: useractions.cpp:1107
 #, kde-format
 msgid "Window to Previous Screen"
 msgstr "Переместить окно на предыдущий экран"
 
-#: useractions.cpp:1107
-#, kde-format
-msgid "Peek at Desktop"
-msgstr "Взглянуть на рабочий стол"
+#: useractions.cpp:1109
+#, fuzzy, kde-format
+#| msgid "Window One Desktop to the Right"
+msgid "Window One Screen to the Right"
+msgstr "Окно на один рабочий стол вправо"
 
 #: useractions.cpp:1111
+#, fuzzy, kde-format
+#| msgid "Window One Desktop to the Left"
+msgid "Window One Screen to the Left"
+msgstr "Окно на один рабочий стол влево"
+
+#: useractions.cpp:1113
+#, fuzzy, kde-format
+#| msgid "Window to Screen 2"
+msgid "Window One Screen Up"
+msgstr "Переместить окно на рабочий стол 2"
+
+#: useractions.cpp:1115
+#, fuzzy, kde-format
+#| msgid "Window One Desktop Down"
+msgid "Window One Screen Down"
+msgstr "Окно на один рабочий стол вниз"
+
+#: useractions.cpp:1119
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Переключиться на экран %1"
 
-#: useractions.cpp:1119
+#: useractions.cpp:1126
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Переключиться на следующий экран"
 
-#: useractions.cpp:1120
+#: useractions.cpp:1127
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Переключиться на предыдущий экран"
 
-#: useractions.cpp:1122
+#: useractions.cpp:1128
+#, fuzzy, kde-format
+#| msgid "Switch to Window to the Right"
+msgid "Switch to Screen to the Right"
+msgstr "Переключиться на окно справа"
+
+#: useractions.cpp:1130
+#, fuzzy, kde-format
+#| msgid "Switch to Window to the Left"
+msgid "Switch to Screen to the Left"
+msgstr "Переключиться на окно слева"
+
+#: useractions.cpp:1132
+#, fuzzy, kde-format
+#| msgid "Switch to Screen 0"
+msgid "Switch to Screen Above"
+msgstr "Переключиться на рабочий стол 0"
+
+#: useractions.cpp:1134
+#, fuzzy, kde-format
+#| msgid "Switch to Screen 0"
+msgid "Switch to Screen Below"
+msgstr "Переключиться на рабочий стол 0"
+
+#: useractions.cpp:1137
+#, kde-format
+msgid "Peek at Desktop"
+msgstr "Взглянуть на рабочий стол"
+
+#: useractions.cpp:1140
 #, kde-format
 msgid "Kill Window"
 msgstr "Принудительно закрыть окно"
 
-#: useractions.cpp:1123
+#: useractions.cpp:1141
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "Приостановить композитное расширение"
 
-#: useractions.cpp:1184
+#: useractions.cpp:1202
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Активировать окно (%1)"
 
-#: useractions.cpp:1321
+#: useractions.cpp:1339
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
@@ -2785,14 +2833,14 @@ msgstr "Переключиться на один рабочий стол вни�
 msgid "Switch to Desktop %1"
 msgstr "Переключиться на рабочий стол %1"
 
-#: window.cpp:3457
+#: window.cpp:3458
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(не отвечает)"
 
 # BUGME: please proofread this translation, it's full of worms --aspotashev
-#: workspace.cpp:1678
+#: workspace.cpp:1732
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -3324,9 +3372,6 @@ msgstr ""
 #~ msgid "Window to Desktop 20"
 #~ msgstr "Переместить окно на рабочий стол 20"
 
-#~ msgid "Window to Screen 2"
-#~ msgstr "Переместить окно на рабочий стол 2"
-
 #~ msgid "Window to Screen 3"
 #~ msgstr "Переместить окно на рабочий стол 3"
 
@@ -3395,9 +3440,6 @@ msgstr ""
 
 #~ msgid "Switch to Desktop 20"
 #~ msgstr "Переключиться на рабочий стол 20"
-
-#~ msgid "Switch to Screen 0"
-#~ msgstr "Переключиться на рабочий стол 0"
 
 #~ msgid "Switch to Screen 2"
 #~ msgstr "Переключиться на рабочий стол 2"

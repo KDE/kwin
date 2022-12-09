@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-08 00:47+0000\n"
+"POT-Creation-Date: 2022-12-09 00:47+0000\n"
 "PO-Revision-Date: 2009-01-06 03:15+0200\n"
 "Last-Translator: Omer Ensari <oensari@gmail.com>\n"
 "Language-Team: Kurdish <gnu-ku-wergerandin at lists dot sourceforge dot "
@@ -2228,7 +2228,7 @@ msgid ""
 "Contact your distribution about this."
 msgstr ""
 
-#: useractions.cpp:159
+#: useractions.cpp:161
 #, kde-format
 msgid ""
 "You have selected to show a window without its border.\n"
@@ -2237,7 +2237,7 @@ msgid ""
 "keyboard shortcut."
 msgstr ""
 
-#: useractions.cpp:166
+#: useractions.cpp:168
 #, kde-format
 msgid ""
 "You have selected to show a window in fullscreen mode.\n"
@@ -2246,62 +2246,62 @@ msgid ""
 "window operations menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 
-#: useractions.cpp:236
+#: useractions.cpp:238
 #, kde-format
 msgid "&Move"
 msgstr "&Guhestin"
 
-#: useractions.cpp:241
+#: useractions.cpp:243
 #, fuzzy, kde-format
 #| msgid "Re&size"
 msgid "&Resize"
 msgstr "Mezinahî Bi&guherîne"
 
-#: useractions.cpp:246
+#: useractions.cpp:248
 #, kde-format
 msgid "Keep &Above Others"
 msgstr "Li &ser yên Din Bigire"
 
-#: useractions.cpp:252
+#: useractions.cpp:254
 #, kde-format
 msgid "Keep &Below Others"
 msgstr "Li &bin yên Din Bigire"
 
-#: useractions.cpp:258
+#: useractions.cpp:260
 #, kde-format
 msgid "&Fullscreen"
 msgstr "Dîmender &Tije"
 
-#: useractions.cpp:264
+#: useractions.cpp:266
 #, fuzzy, kde-format
 #| msgid "Shade"
 msgid "&Shade"
 msgstr "Sî"
 
-#: useractions.cpp:270
+#: useractions.cpp:272
 #, kde-format
 msgid "&No Border"
 msgstr "&Bê kelek"
 
-#: useractions.cpp:278
+#: useractions.cpp:280
 #, fuzzy, kde-format
 #| msgid "Window &Shortcut..."
 msgid "Set Window Short&cut..."
 msgstr "&Kurterê ya Paceyê..."
 
-#: useractions.cpp:284
+#: useractions.cpp:286
 #, fuzzy, kde-format
 #| msgid "&Special Window Settings..."
 msgid "Configure Special &Window Settings..."
 msgstr "Mîhengên Paceyê yên &Taybet..."
 
-#: useractions.cpp:289
+#: useractions.cpp:291
 #, fuzzy, kde-format
 #| msgid "&Special Application Settings..."
 msgid "Configure S&pecial Application Settings..."
 msgstr "Mîhengên Sepanê yên &Taybet..."
 
-#: useractions.cpp:296
+#: useractions.cpp:298
 #, fuzzy, kde-format
 #| msgid "KDE window manager"
 msgctxt ""
@@ -2310,92 +2310,92 @@ msgctxt ""
 msgid "Configure W&indow Manager..."
 msgstr "Gerînendeyê Paceyan yê KDE"
 
-#: useractions.cpp:323
+#: useractions.cpp:325
 #, kde-format
 msgid "Ma&ximize"
 msgstr "&Mezintirîn"
 
-#: useractions.cpp:329
+#: useractions.cpp:331
 #, kde-format
 msgid "Mi&nimize"
 msgstr "&Biçûktirîn"
 
-#: useractions.cpp:335
+#: useractions.cpp:337
 #, kde-format
 msgid "&More Actions"
 msgstr ""
 
-#: useractions.cpp:338
+#: useractions.cpp:340
 #, kde-format
 msgid "&Close"
 msgstr "&Dadan"
 
-#: useractions.cpp:408
+#: useractions.cpp:410
 #, kde-format
 msgid "&Extensions"
 msgstr ""
 
-#: useractions.cpp:459
+#: useractions.cpp:461
 #, fuzzy, kde-format
 #| msgid "&All Desktops"
 msgid "&Desktops"
 msgstr "&Hemû Sermaseyan"
 
-#: useractions.cpp:473
+#: useractions.cpp:475
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Move to &Desktop"
 msgstr "Jê &Sermasê re"
 
-#: useractions.cpp:490
+#: useractions.cpp:492
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Move to &Screen"
 msgstr "Jê &Sermasê re"
 
-#: useractions.cpp:507
+#: useractions.cpp:509
 #, kde-format
 msgid "Show in &Activities"
 msgstr ""
 
-#: useractions.cpp:524
+#: useractions.cpp:526
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Move &To Current Desktop"
 msgstr "Jê &Sermasê re"
 
-#: useractions.cpp:534 useractions.cpp:601
+#: useractions.cpp:536 useractions.cpp:603
 #, kde-format
 msgid "&All Desktops"
 msgstr "&Hemû Sermaseyan"
 
-#: useractions.cpp:574
+#: useractions.cpp:576
 #, fuzzy, kde-format
 #| msgid "Show Desktop Grid"
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "Izxere ya Sermasê Nîşan Bide"
 
-#: useractions.cpp:645
+#: useractions.cpp:647
 #, kde-format
 msgid "Move to %1 %2"
 msgstr ""
 
-#: useractions.cpp:658
+#: useractions.cpp:660
 #, fuzzy, kde-format
 #| msgid "Show Desktop Grid"
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "Izxere ya Sermasê Nîşan Bide"
 
-#: useractions.cpp:670
+#: useractions.cpp:672
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "Jê &Sermasê re"
 
-#: useractions.cpp:701
+#: useractions.cpp:703
 #, fuzzy, kde-format
 #| msgid "Window to Screen 1"
 msgctxt ""
@@ -2404,347 +2404,395 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Paceyê bibe Dîmena 1ê"
 
-#: useractions.cpp:727
+#: useractions.cpp:729
 #, kde-format
 msgid "&All Activities"
 msgstr ""
 
-#: useractions.cpp:906
+#: useractions.cpp:908
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr ""
 
-#: useractions.cpp:908
+#: useractions.cpp:910
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr ""
 
-#: useractions.cpp:988
+#: useractions.cpp:990
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "Pêşeka Xebatên Paceyê"
 
-#: useractions.cpp:990
+#: useractions.cpp:992
 #, kde-format
 msgid "Close Window"
 msgstr "Paceyê Dade"
 
-#: useractions.cpp:992
+#: useractions.cpp:994
 #, kde-format
 msgid "Maximize Window"
 msgstr "Paceyê Mezintirîn bike"
 
-#: useractions.cpp:994
+#: useractions.cpp:996
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Paceyê Tîkane Mezintir Bike"
 
-#: useractions.cpp:996
+#: useractions.cpp:998
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Paceyê Berwarî Mezintir Bike "
 
-#: useractions.cpp:998
+#: useractions.cpp:1000
 #, kde-format
 msgid "Minimize Window"
 msgstr "Paceyê Kêmtirîn bike"
 
-#: useractions.cpp:1000
+#: useractions.cpp:1002
 #, kde-format
 msgid "Shade Window"
 msgstr "Pace ya bi Sî"
 
-#: useractions.cpp:1002
+#: useractions.cpp:1004
 #, kde-format
 msgid "Move Window"
 msgstr "Paceyê Bikişîne"
 
-#: useractions.cpp:1004
+#: useractions.cpp:1006
 #, kde-format
 msgid "Resize Window"
 msgstr "Mezinahiya paceyê biguherîne"
 
-#: useractions.cpp:1006
+#: useractions.cpp:1008
 #, kde-format
 msgid "Raise Window"
 msgstr "Paceyê bilindtir bike"
 
-#: useractions.cpp:1008
+#: useractions.cpp:1010
 #, kde-format
 msgid "Lower Window"
 msgstr "Paceyê Nizimtir bike"
 
-#: useractions.cpp:1010
+#: useractions.cpp:1012
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Paceyê Bilindtir/Biçûktir Bike"
 
-#: useractions.cpp:1012
+#: useractions.cpp:1014
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Paceyê Bike Dîmender-Tijî"
 
-#: useractions.cpp:1014
+#: useractions.cpp:1016
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Border"
 msgstr "Kêlekên Paceyê Veşêre"
 
-#: useractions.cpp:1016
+#: useractions.cpp:1018
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Paceyê li Ser yên Din Bigire"
 
-#: useractions.cpp:1018
+#: useractions.cpp:1020
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Paceyê li Bin yên Din Bigire"
 
-#: useractions.cpp:1020
+#: useractions.cpp:1022
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr ""
 
-#: useractions.cpp:1022
+#: useractions.cpp:1024
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Kurterê yên Paceyê Veava Bike"
 
-#: useractions.cpp:1024
+#: useractions.cpp:1026
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window to the Center"
 msgstr "Paceyê Bikişîne"
 
-#: useractions.cpp:1026
+#: useractions.cpp:1028
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Right"
 msgstr "Paceyê Bikişîne"
 
-#: useractions.cpp:1028
+#: useractions.cpp:1030
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Left"
 msgstr "Paceyê Bikişîne"
 
-#: useractions.cpp:1030
+#: useractions.cpp:1032
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Up"
 msgstr "Paceyê Bikişîne"
 
-#: useractions.cpp:1032
+#: useractions.cpp:1034
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Down"
 msgstr "Paceyê Bikişîne"
 
-#: useractions.cpp:1034
+#: useractions.cpp:1036
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "Paceyê Berwarî Mezintir Bike "
 
-#: useractions.cpp:1036
+#: useractions.cpp:1038
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Expand Window Vertically"
 msgstr "Paceyê Tîkane Mezintir Bike"
 
-#: useractions.cpp:1038
+#: useractions.cpp:1040
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Horizontally"
 msgid "Shrink Window Horizontally"
 msgstr "Loda Paceyê Berwarî Biçûk Bike"
 
-#: useractions.cpp:1040
+#: useractions.cpp:1042
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Vertically"
 msgid "Shrink Window Vertically"
 msgstr "Loda Paceyê Tîkane Biçûk Bike"
 
-#: useractions.cpp:1042
+#: useractions.cpp:1044
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Left"
 msgstr "Paceyê lod bike milê Çepê"
 
-#: useractions.cpp:1044
+#: useractions.cpp:1046
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Quick Tile Window to the Right"
 msgstr "Paceyê lod bike milê Rastê"
 
-#: useractions.cpp:1046
+#: useractions.cpp:1048
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Top"
 msgstr "Paceyê lod bike milê Çepê"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1050
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Bottom"
 msgstr "Paceyê lod bike milê Çepê"
 
-#: useractions.cpp:1050
+#: useractions.cpp:1052
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Top Left"
 msgstr "Paceyê lod bike milê Çepê"
 
-#: useractions.cpp:1052
+#: useractions.cpp:1054
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Paceyê lod bike milê Çepê"
 
-#: useractions.cpp:1054
+#: useractions.cpp:1056
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Quick Tile Window to the Top Right"
 msgstr "Paceyê lod bike milê Rastê"
 
-#: useractions.cpp:1056
+#: useractions.cpp:1058
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Paceyê lod bike milê Rastê"
 
-#: useractions.cpp:1058
+#: useractions.cpp:1060
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Window Above"
 msgstr "Biçe Dîmena 0ê"
 
-#: useractions.cpp:1060
+#: useractions.cpp:1062
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Window Below"
 msgstr "Biçe Sermase ya Paş"
 
-#: useractions.cpp:1062
+#: useractions.cpp:1064
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Switch to Window to the Right"
 msgstr "Paceyê lod bike milê Rastê"
 
-#: useractions.cpp:1064
+#: useractions.cpp:1066
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Switch to Window to the Left"
 msgstr "Paceyê lod bike milê Çepê"
 
-#: useractions.cpp:1066
+#: useractions.cpp:1068
 #, kde-format
 msgid "Increase Opacity of Active Window by 5 %"
 msgstr ""
 
-#: useractions.cpp:1068
+#: useractions.cpp:1070
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5 %"
 msgstr ""
 
-#: useractions.cpp:1071
+#: useractions.cpp:1073
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Paceyê di Hemû Sermaseyan de Bigire"
 
-#: useractions.cpp:1082
+#: useractions.cpp:1084
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
 msgid "Window to Desktop %1"
 msgstr "Paceyê bibe Sermase ya 1ê "
 
-#: useractions.cpp:1084
+#: useractions.cpp:1086
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Paceyê bibe Sermase ya Pêş"
 
-#: useractions.cpp:1085
+#: useractions.cpp:1087
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Paceyê bibe Sermase ya Paş"
 
-#: useractions.cpp:1086
+#: useractions.cpp:1088
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Paceyê bibe Sermase ya Rastê"
 
-#: useractions.cpp:1088
+#: useractions.cpp:1090
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Paceyê bibe Sermase ya Çepê"
 
-#: useractions.cpp:1090
+#: useractions.cpp:1092
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Paceyê bibe Sermase ya Jorê"
 
-#: useractions.cpp:1092
+#: useractions.cpp:1094
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Paceyê bibe Sermase ya Jêrê"
 
-#: useractions.cpp:1096
+#: useractions.cpp:1098
 #, fuzzy, kde-format
 #| msgid "Window to Screen 1"
 msgid "Window to Screen %1"
 msgstr "Paceyê bibe Dîmena 1ê"
 
-#: useractions.cpp:1103
+#: useractions.cpp:1105
 #, kde-format
 msgid "Window to Next Screen"
 msgstr "Paceyê bibe Dîmena Pêş"
 
-#: useractions.cpp:1105
+#: useractions.cpp:1107
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
 msgid "Window to Previous Screen"
 msgstr "Paceyê bibe Sermase ya Paş"
 
-#: useractions.cpp:1107
+#: useractions.cpp:1109
 #, fuzzy, kde-format
-#| msgid "To &Desktop"
-msgid "Peek at Desktop"
-msgstr "Jê &Sermasê re"
+#| msgid "Window One Desktop to the Right"
+msgid "Window One Screen to the Right"
+msgstr "Paceyê bibe Sermase ya Rastê"
 
 #: useractions.cpp:1111
+#, fuzzy, kde-format
+#| msgid "Window One Desktop to the Left"
+msgid "Window One Screen to the Left"
+msgstr "Paceyê bibe Sermase ya Çepê"
+
+#: useractions.cpp:1113
+#, fuzzy, kde-format
+#| msgid "Window to Screen 2"
+msgid "Window One Screen Up"
+msgstr "Paceyê bibe Dîmena 2ê"
+
+#: useractions.cpp:1115
+#, fuzzy, kde-format
+#| msgid "Window One Desktop Down"
+msgid "Window One Screen Down"
+msgstr "Paceyê bibe Sermase ya Jêrê"
+
+#: useractions.cpp:1119
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Switch to Screen %1"
 msgstr "Biçe Dîmena 1ê"
 
-#: useractions.cpp:1119
+#: useractions.cpp:1126
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Biçe Dîmena Pêş"
 
-#: useractions.cpp:1120
+#: useractions.cpp:1127
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Previous Screen"
 msgstr "Biçe Sermase ya Paş"
 
-#: useractions.cpp:1122
+#: useractions.cpp:1128
+#, fuzzy, kde-format
+#| msgid "Pack Window to the Right"
+msgid "Switch to Screen to the Right"
+msgstr "Paceyê lod bike milê Rastê"
+
+#: useractions.cpp:1130
+#, fuzzy, kde-format
+#| msgid "Pack Window to the Left"
+msgid "Switch to Screen to the Left"
+msgstr "Paceyê lod bike milê Çepê"
+
+#: useractions.cpp:1132
+#, fuzzy, kde-format
+#| msgid "Switch to Screen 0"
+msgid "Switch to Screen Above"
+msgstr "Biçe Dîmena 0ê"
+
+#: useractions.cpp:1134
+#, fuzzy, kde-format
+#| msgid "Switch to Screen 0"
+msgid "Switch to Screen Below"
+msgstr "Biçe Dîmena 0ê"
+
+#: useractions.cpp:1137
+#, fuzzy, kde-format
+#| msgid "To &Desktop"
+msgid "Peek at Desktop"
+msgstr "Jê &Sermasê re"
+
+#: useractions.cpp:1140
 #, kde-format
 msgid "Kill Window"
 msgstr "Paceyê Bikuje"
 
-#: useractions.cpp:1123
+#: useractions.cpp:1141
 #, kde-format
 msgid "Suspend Compositing"
 msgstr ""
 
-#: useractions.cpp:1184
+#: useractions.cpp:1202
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Paceyê (%1) Çalak bike"
 
-#: useractions.cpp:1321
+#: useractions.cpp:1339
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
@@ -2793,13 +2841,13 @@ msgstr "Biçe Sermase ya Jêrê"
 msgid "Switch to Desktop %1"
 msgstr "Biçe Sermase ya 1ê"
 
-#: window.cpp:3457
+#: window.cpp:3458
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1678
+#: workspace.cpp:1732
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -3014,9 +3062,6 @@ msgstr ""
 #~ msgid "Window to Desktop 20"
 #~ msgstr "Paceyê bibe Sermase ya 20ê "
 
-#~ msgid "Window to Screen 2"
-#~ msgstr "Paceyê bibe Dîmena 2ê"
-
 #~ msgid "Window to Screen 3"
 #~ msgstr "Paceyê bibe Dîmena 3ê"
 
@@ -3085,9 +3130,6 @@ msgstr ""
 
 #~ msgid "Switch to Desktop 20"
 #~ msgstr "Biçe Sermase ya 20ê"
-
-#~ msgid "Switch to Screen 0"
-#~ msgstr "Biçe Dîmena 0ê"
 
 #~ msgid "Switch to Screen 2"
 #~ msgstr "Biçe Dîmena 2ê"
