@@ -9,11 +9,8 @@
 */
 #include "wayland_backend.h"
 
-#if HAVE_WAYLAND_EGL
-#include "wayland_egl_backend.h"
-#include <gbm.h>
-#endif
 #include "wayland_display.h"
+#include "wayland_egl_backend.h"
 #include "wayland_logging.h"
 #include "wayland_output.h"
 #include "wayland_qpainter_backend.h"
@@ -31,12 +28,14 @@
 
 #include <QAbstractEventDispatcher>
 
+#include <drm_fourcc.h>
 #include <fcntl.h>
+#include <gbm.h>
 #include <linux/input.h>
 #include <unistd.h>
+#include <wayland-client-core.h>
 
 #include "../drm/gbm_dmabuf.h"
-#include <drm_fourcc.h>
 
 #define QSIZE_TO_QPOINT(size) QPointF(size.width(), size.height())
 
@@ -408,7 +407,6 @@ WaylandBackend::WaylandBackend(const WaylandBackendOptions &options, QObject *pa
     : OutputBackend(parent)
     , m_options(options)
 {
-#if HAVE_WAYLAND_EGL
     char const *drm_render_node = "/dev/dri/renderD128";
     m_drmFileDescriptor = FileDescriptor(open(drm_render_node, O_RDWR));
     if (!m_drmFileDescriptor.isValid()) {
@@ -417,7 +415,6 @@ WaylandBackend::WaylandBackend(const WaylandBackendOptions &options, QObject *pa
         return;
     }
     m_gbmDevice = gbm_create_device(m_drmFileDescriptor.get());
-#endif
 }
 
 WaylandBackend::~WaylandBackend()
@@ -431,9 +428,7 @@ WaylandBackend::~WaylandBackend()
     m_seat.reset();
     m_display.reset();
 
-#if HAVE_WAYLAND_EGL
     gbm_device_destroy(m_gbmDevice);
-#endif
     qCDebug(KWIN_WAYLAND_BACKEND) << "Destroyed Wayland display";
 }
 
@@ -508,11 +503,7 @@ std::unique_ptr<InputBackend> WaylandBackend::createInputBackend()
 
 std::unique_ptr<OpenGLBackend> WaylandBackend::createOpenGLBackend()
 {
-#if HAVE_WAYLAND_EGL
     return std::make_unique<WaylandEglBackend>(this);
-#else
-    return nullptr;
-#endif
 }
 
 std::unique_ptr<QPainterBackend> WaylandBackend::createQPainterBackend()
@@ -559,11 +550,12 @@ void WaylandBackend::togglePointerLock()
 
 QVector<CompositingType> WaylandBackend::supportedCompositors() const
 {
-#if HAVE_WAYLAND_EGL
-    return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
-#else
-    return QVector<CompositingType>{QPainterCompositing};
-#endif
+    QVector<CompositingType> ret;
+    if (m_display->linuxDmabuf()) {
+        ret.append(OpenGLCompositing);
+    }
+    ret.append(QPainterCompositing);
+    return ret;
 }
 
 Outputs WaylandBackend::outputs() const

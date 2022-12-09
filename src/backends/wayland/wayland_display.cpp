@@ -22,11 +22,13 @@
 #include <QThread>
 #include <QWaitCondition>
 
+#include <drm_fourcc.h>
 #include <poll.h>
 #include <unistd.h>
 #include <wayland-client.h>
 
 // Generated in src/wayland.
+#include "wayland-linux-dmabuf-unstable-v1-client-protocol.h"
 #include "wayland-pointer-constraints-unstable-v1-client-protocol.h"
 #include "wayland-pointer-gestures-unstable-v1-server-protocol.h"
 #include "wayland-relative-pointer-unstable-v1-client-protocol.h"
@@ -146,6 +148,44 @@ private:
     bool m_quitting;
 };
 
+WaylandLinuxDmabufV1::WaylandLinuxDmabufV1(wl_registry *registry, uint32_t name, uint32_t version)
+{
+    m_dmabuf = static_cast<zwp_linux_dmabuf_v1 *>(wl_registry_bind(registry, name, &zwp_linux_dmabuf_v1_interface, version));
+
+    static const struct zwp_linux_dmabuf_v1_listener dmabufListener = {
+        .format = format,
+        .modifier = modifier,
+    };
+    zwp_linux_dmabuf_v1_add_listener(m_dmabuf, &dmabufListener, this);
+}
+
+WaylandLinuxDmabufV1::~WaylandLinuxDmabufV1()
+{
+    zwp_linux_dmabuf_v1_destroy(m_dmabuf);
+}
+
+zwp_linux_dmabuf_v1 *WaylandLinuxDmabufV1::handle() const
+{
+    return m_dmabuf;
+}
+
+QHash<uint32_t, QVector<uint64_t>> WaylandLinuxDmabufV1::formats() const
+{
+    return m_formats;
+}
+
+void WaylandLinuxDmabufV1::format(void *data, struct zwp_linux_dmabuf_v1 *zwp_linux_dmabuf_v1, uint32_t format)
+{
+    WaylandLinuxDmabufV1 *dmabuf = static_cast<WaylandLinuxDmabufV1 *>(data);
+    dmabuf->m_formats[format].append(DRM_FORMAT_MOD_INVALID);
+}
+
+void WaylandLinuxDmabufV1::modifier(void *data, struct zwp_linux_dmabuf_v1 *zwp_linux_dmabuf_v1, uint32_t format, uint32_t modifier_hi, uint32_t modifier_lo)
+{
+    WaylandLinuxDmabufV1 *dmabuf = static_cast<WaylandLinuxDmabufV1 *>(data);
+    dmabuf->m_formats[format].append((static_cast<uint64_t>(modifier_hi) << 32) | modifier_lo);
+}
+
 WaylandDisplay::WaylandDisplay()
 {
 }
@@ -163,6 +203,7 @@ WaylandDisplay::~WaylandDisplay()
     m_xdgDecorationManager.reset();
     m_shmPool.reset();
     m_xdgShell.reset();
+    m_linuxDmabuf.reset();
 
     if (m_registry) {
         wl_registry_destroy(m_registry);
@@ -195,6 +236,7 @@ bool WaylandDisplay::initialize(const QString &socketName)
     m_registry = wl_display_get_registry(m_display);
     wl_registry_add_listener(m_registry, &registryListener, this);
     wl_display_roundtrip(m_display);
+    wl_display_roundtrip(m_display); // get dmabuf formats
 
     return true;
 }
@@ -244,6 +286,11 @@ KWayland::Client::XdgDecorationManager *WaylandDisplay::xdgDecorationManager() c
     return m_xdgDecorationManager.get();
 }
 
+WaylandLinuxDmabufV1 *WaylandDisplay::linuxDmabuf() const
+{
+    return m_linuxDmabuf.get();
+}
+
 void WaylandDisplay::registry_global(void *data, wl_registry *registry, uint32_t name, const char *interface, uint32_t version)
 {
     WaylandDisplay *display = static_cast<WaylandDisplay *>(data);
@@ -275,6 +322,8 @@ void WaylandDisplay::registry_global(void *data, wl_registry *registry, uint32_t
     } else if (strcmp(interface, zxdg_decoration_manager_v1_interface.name) == 0) {
         display->m_xdgDecorationManager = std::make_unique<KWayland::Client::XdgDecorationManager>();
         display->m_xdgDecorationManager->setup(static_cast<zxdg_decoration_manager_v1 *>(wl_registry_bind(registry, name, &zxdg_decoration_manager_v1_interface, std::min(version, 1u))));
+    } else if (strcmp(interface, zwp_linux_dmabuf_v1_interface.name) == 0) {
+        display->m_linuxDmabuf = std::make_unique<WaylandLinuxDmabufV1>(registry, name, std::min(version, 3u));
     }
 }
 

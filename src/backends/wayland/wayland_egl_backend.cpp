@@ -7,11 +7,11 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#define WL_EGL_PLATFORM 1
 
 #include "wayland_egl_backend.h"
 #include "basiceglsurfacetexture_internal.h"
 #include "basiceglsurfacetexture_wayland.h"
+#include "../drm/gbm_dmabuf.h"
 
 #include "wayland_backend.h"
 #include "wayland_display.h"
@@ -37,85 +37,168 @@
 #include <drm_fourcc.h>
 #include <gbm.h>
 
+#include "wayland-linux-dmabuf-unstable-v1-client-protocol.h"
+
 namespace KWin
 {
 namespace Wayland
 {
 
-static QVector<EGLint> regionToRects(const QRegion &region, Output *output)
+WaylandEglLayerBuffer::WaylandEglLayerBuffer(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, WaylandEglBackend *backend)
+    : m_backend(backend)
 {
-    const int height = output->modeSize().height();
-    const QMatrix4x4 matrix = WaylandOutput::logicalToNativeMatrix(output->rect(),
-                                                                   output->scale(),
-                                                                   output->transform());
+    gbm_device *gbmDevice = backend->backend()->gbmDevice();
 
-    QVector<EGLint> rects;
-    rects.reserve(region.rectCount() * 4);
-    for (const QRect &_rect : region) {
-        const QRect rect = matrix.mapRect(_rect);
-
-        rects << rect.left();
-        rects << height - (rect.y() + rect.height());
-        rects << rect.width();
-        rects << rect.height();
+    if (modifiers.isEmpty()) {
+        m_bo = gbm_bo_create(gbmDevice,
+                             size.width(),
+                             size.height(),
+                             format,
+                             GBM_BO_USE_RENDERING);
+    } else {
+        m_bo = gbm_bo_create_with_modifiers2(gbmDevice,
+                                             size.width(),
+                                             size.height(),
+                                             format,
+                                             modifiers.constData(),
+                                             modifiers.size(),
+                                             GBM_BO_USE_RENDERING);
     }
-    return rects;
+
+    if (!m_bo) {
+        qCCritical(KWIN_WAYLAND_BACKEND) << "Failed to allocate a buffer for an output layer";
+        return;
+    }
+
+    DmaBufAttributes attributes = dmaBufAttributesForBo(m_bo);
+
+    zwp_linux_buffer_params_v1 *params = zwp_linux_dmabuf_v1_create_params(backend->backend()->display()->linuxDmabuf()->handle());
+    for (int i = 0; i < attributes.planeCount; ++i) {
+        zwp_linux_buffer_params_v1_add(params,
+                                       attributes.fd[i].get(),
+                                       i,
+                                       attributes.offset[i],
+                                       attributes.pitch[i],
+                                       attributes.modifier >> 32,
+                                       attributes.modifier & 0xffffffff);
+    }
+
+    m_buffer = zwp_linux_buffer_params_v1_create_immed(params, size.width(), size.height(), format, ZWP_LINUX_BUFFER_PARAMS_V1_FLAGS_Y_INVERT);
+    zwp_linux_buffer_params_v1_destroy(params);
+
+    m_texture = backend->importDmaBufAsTexture(std::move(attributes));
+    m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
+}
+
+WaylandEglLayerBuffer::~WaylandEglLayerBuffer()
+{
+    m_texture.reset();
+    m_framebuffer.reset();
+
+    if (m_buffer) {
+        wl_buffer_destroy(m_buffer);
+    }
+    if (m_bo) {
+        gbm_bo_destroy(m_bo);
+    }
+}
+
+wl_buffer *WaylandEglLayerBuffer::buffer() const
+{
+    return m_buffer;
+}
+
+GLFramebuffer *WaylandEglLayerBuffer::framebuffer() const
+{
+    return m_framebuffer.get();
+}
+
+int WaylandEglLayerBuffer::age() const
+{
+    return m_age;
+}
+
+WaylandEglLayerSwapchain::WaylandEglLayerSwapchain(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, WaylandEglBackend *backend)
+    : m_backend(backend)
+    , m_size(size)
+{
+    for (int i = 0; i < 2; ++i) {
+        m_buffers.append(std::make_shared<WaylandEglLayerBuffer>(size, format, modifiers, backend));
+    }
+}
+
+WaylandEglLayerSwapchain::~WaylandEglLayerSwapchain()
+{
+}
+
+QSize WaylandEglLayerSwapchain::size() const
+{
+    return m_size;
+}
+
+std::shared_ptr<WaylandEglLayerBuffer> WaylandEglLayerSwapchain::acquire()
+{
+    m_index = (m_index + 1) % m_buffers.count();
+    return m_buffers[m_index];
+}
+
+void WaylandEglLayerSwapchain::release(std::shared_ptr<WaylandEglLayerBuffer> buffer)
+{
+    Q_ASSERT(m_buffers[m_index] == buffer);
+
+    for (qsizetype i = 0; i < m_buffers.count(); ++i) {
+        if (m_buffers[i] == buffer) {
+            m_buffers[i]->m_age = 1;
+        } else if (m_buffers[i]->m_age > 0) {
+            m_buffers[i]->m_age++;
+        }
+    }
 }
 
 WaylandEglPrimaryLayer::WaylandEglPrimaryLayer(WaylandOutput *output, WaylandEglBackend *backend)
     : m_waylandOutput(output)
     , m_backend(backend)
 {
-    const QSize nativeSize = m_waylandOutput->pixelSize();
-    m_eglWindow = wl_egl_window_create(*m_waylandOutput->surface(), nativeSize.width(), nativeSize.height());
-    if (!m_eglWindow) {
-        qCCritical(KWIN_WAYLAND_BACKEND) << "Creating Wayland Egl window failed";
-        return;
-    }
-    m_fbo = std::make_unique<GLFramebuffer>(0, nativeSize);
-
-    if (m_backend->havePlatformBase()) {
-        m_eglSurface = eglCreatePlatformWindowSurfaceEXT(m_backend->eglDisplay(), m_backend->config(), (void *)m_eglWindow, nullptr);
-    } else {
-        m_eglSurface = eglCreateWindowSurface(m_backend->eglDisplay(), m_backend->config(), m_eglWindow, nullptr);
-    }
-    if (m_eglSurface == EGL_NO_SURFACE) {
-        qCCritical(KWIN_WAYLAND_BACKEND) << "Create Window Surface failed";
-    }
 }
 
 WaylandEglPrimaryLayer::~WaylandEglPrimaryLayer()
 {
-    wl_egl_window_destroy(m_eglWindow);
 }
 
 GLFramebuffer *WaylandEglPrimaryLayer::fbo() const
 {
-    return m_fbo.get();
+    return m_buffer->framebuffer();
 }
 
 std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
 {
-    if (eglMakeCurrent(m_backend->eglDisplay(), m_eglSurface, m_eglSurface, m_backend->context()) == EGL_FALSE) {
+    if (eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context()) == EGL_FALSE) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "Make Context Current failed";
         return std::nullopt;
     }
 
     const QSize nativeSize = m_waylandOutput->pixelSize();
-    if (!m_fbo || m_fbo->size() != nativeSize) {
-        m_fbo = std::make_unique<GLFramebuffer>(0, nativeSize);
-        m_bufferAge = 0;
-        wl_egl_window_resize(m_eglWindow, nativeSize.width(), nativeSize.height(), 0, 0);
+    if (!m_swapchain || m_swapchain->size() != nativeSize) {
+        const WaylandLinuxDmabufV1 *dmabuf = m_backend->backend()->display()->linuxDmabuf();
+        const uint32_t format = DRM_FORMAT_XRGB8888;
+        if (!dmabuf->formats().contains(format)) {
+            qCCritical(KWIN_WAYLAND_BACKEND) << "DRM_FORMAT_XRGB8888 is unsupported";
+            return std::nullopt;
+        }
+        const QVector<uint64_t> modifiers = dmabuf->formats().value(format);
+        m_swapchain = std::make_unique<WaylandEglLayerSwapchain>(nativeSize, format, modifiers, m_backend);
     }
+
+    m_buffer = m_swapchain->acquire();
 
     QRegion repair;
     if (m_backend->supportsBufferAge()) {
-        repair = m_damageJournal.accumulate(m_bufferAge, infiniteRegion());
+        repair = m_damageJournal.accumulate(m_buffer->age(), infiniteRegion());
     }
 
-    GLFramebuffer::pushFramebuffer(m_fbo.get());
+    GLFramebuffer::pushFramebuffer(m_buffer->framebuffer());
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_fbo.get()),
+        .renderTarget = RenderTarget(m_buffer->framebuffer()),
         .repaint = repair,
     };
 }
@@ -127,39 +210,16 @@ bool WaylandEglPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegi
     return true;
 }
 
-void WaylandEglPrimaryLayer::aboutToStartPainting(const QRegion &damage)
-{
-    if (m_bufferAge > 0 && !damage.isEmpty() && m_backend->supportsPartialUpdate()) {
-        QVector<EGLint> rects = regionToRects(damage, m_waylandOutput);
-        const bool correct = eglSetDamageRegionKHR(m_backend->eglDisplay(), m_eglSurface,
-                                                   rects.data(), rects.count() / 4);
-        if (!correct) {
-            qCWarning(KWIN_WAYLAND_BACKEND) << "failed eglSetDamageRegionKHR" << eglGetError();
-        }
-    }
-}
-
 void WaylandEglPrimaryLayer::present()
 {
-    m_waylandOutput->surface()->setupFrameCallback();
-    m_waylandOutput->surface()->setScale(std::ceil(m_waylandOutput->scale()));
+    KWayland::Client::Surface *surface = m_waylandOutput->surface();
+    surface->attachBuffer(m_buffer->buffer());
+    surface->damage(m_damageJournal.lastDamage());
+    surface->setScale(std::ceil(m_waylandOutput->scale()));
+    surface->commit();
     Q_EMIT m_waylandOutput->outputChange(m_damageJournal.lastDamage());
 
-    if (m_backend->supportsSwapBuffersWithDamage()) {
-        QVector<EGLint> rects = regionToRects(m_damageJournal.lastDamage(), m_waylandOutput);
-        if (!eglSwapBuffersWithDamageEXT(m_backend->eglDisplay(), m_eglSurface,
-                                         rects.data(), rects.count() / 4)) {
-            qCCritical(KWIN_WAYLAND_BACKEND, "eglSwapBuffersWithDamage() failed: %x", eglGetError());
-        }
-    } else {
-        if (!eglSwapBuffers(m_backend->eglDisplay(), m_eglSurface)) {
-            qCCritical(KWIN_WAYLAND_BACKEND, "eglSwapBuffers() failed: %x", eglGetError());
-        }
-    }
-
-    if (m_backend->supportsBufferAge()) {
-        eglQuerySurface(m_backend->eglDisplay(), m_eglSurface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
-    }
+    m_swapchain->release(m_buffer);
 }
 
 WaylandEglCursorLayer::WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBackend *backend)
@@ -255,6 +315,11 @@ WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)
 WaylandEglBackend::~WaylandEglBackend()
 {
     cleanup();
+}
+
+WaylandBackend *WaylandEglBackend::backend() const
+{
+    return m_backend;
 }
 
 void WaylandEglBackend::cleanupSurfaces()

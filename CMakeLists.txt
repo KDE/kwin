@@ -190,19 +190,10 @@ int main() {
     mmap(nullptr, size, PROT_WRITE, MAP_SHARED, fd, 0);
 }" HAVE_MEMFD)
 
-find_package(Wayland 1.2 OPTIONAL_COMPONENTS Egl)
+find_package(Wayland 1.21)
 set_package_properties(Wayland PROPERTIES
     TYPE REQUIRED
     PURPOSE "Required for building KWin with Wayland support"
-)
-add_feature_info("Wayland::EGL" Wayland_Egl_FOUND "Enable building of Wayland backend.")
-set(HAVE_WAYLAND_EGL FALSE)
-if (Wayland_Egl_FOUND)
-    set(HAVE_WAYLAND_EGL TRUE)
-endif()
-
-find_package(Wayland 1.21 REQUIRED COMPONENTS
-    Server
 )
 
 find_package(WaylandProtocols 1.30)

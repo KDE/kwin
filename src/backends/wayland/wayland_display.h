@@ -6,12 +6,14 @@
 
 #pragma once
 
+#include <QHash>
 #include <QObject>
 
 #include <memory>
 
 struct wl_display;
 struct wl_registry;
+struct zwp_linux_dmabuf_v1;
 
 namespace KWayland
 {
@@ -35,6 +37,23 @@ namespace Wayland
 
 class WaylandEventThread;
 
+class WaylandLinuxDmabufV1
+{
+public:
+    WaylandLinuxDmabufV1(wl_registry *registry, uint32_t name, uint32_t version);
+    ~WaylandLinuxDmabufV1();
+
+    zwp_linux_dmabuf_v1 *handle() const;
+    QHash<uint32_t, QVector<uint64_t>> formats() const;
+
+private:
+    static void format(void *data, struct zwp_linux_dmabuf_v1 *zwp_linux_dmabuf_v1, uint32_t format);
+    static void modifier(void *data, struct zwp_linux_dmabuf_v1 *zwp_linux_dmabuf_v1, uint32_t format, uint32_t modifier_hi, uint32_t modifier_lo);
+
+    zwp_linux_dmabuf_v1 *m_dmabuf;
+    QHash<uint32_t, QVector<uint64_t>> m_formats;
+};
+
 class WaylandDisplay : public QObject
 {
     Q_OBJECT
@@ -54,6 +73,7 @@ public:
     KWayland::Client::XdgDecorationManager *xdgDecorationManager() const;
     KWayland::Client::ShmPool *shmPool() const;
     KWayland::Client::XdgShell *xdgShell() const;
+    WaylandLinuxDmabufV1 *linuxDmabuf() const;
 
 public Q_SLOTS:
     void flush();
@@ -65,6 +85,7 @@ private:
     wl_display *m_display = nullptr;
     wl_registry *m_registry = nullptr;
     std::unique_ptr<WaylandEventThread> m_eventThread;
+    std::unique_ptr<WaylandLinuxDmabufV1> m_linuxDmabuf;
     std::unique_ptr<KWayland::Client::Compositor> m_compositor;
     std::unique_ptr<KWayland::Client::PointerConstraints> m_pointerConstraints;
     std::unique_ptr<KWayland::Client::PointerGestures> m_pointerGestures;

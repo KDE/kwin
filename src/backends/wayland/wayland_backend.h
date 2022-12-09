@@ -245,10 +245,8 @@ private:
     QVector<WaylandOutput *> m_outputs;
     std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;
     bool m_pointerLockRequested = false;
-#if HAVE_WAYLAND_EGL
     FileDescriptor m_drmFileDescriptor;
     gbm_device *m_gbmDevice;
-#endif
 };
 
 } // namespace Wayland

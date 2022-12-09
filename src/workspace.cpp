@@ -1777,8 +1777,6 @@ QString Workspace::supportInformation() const
     support.append(HAVE_X11_XCB ? yes : no);
     support.append(QStringLiteral("HAVE_EPOXY_GLX: "));
     support.append(HAVE_EPOXY_GLX ? yes : no);
-    support.append(QStringLiteral("HAVE_WAYLAND_EGL: "));
-    support.append(HAVE_WAYLAND_EGL ? yes : no);
     support.append(QStringLiteral("\n"));
 
     if (auto c = kwinApp()->x11Connection()) {

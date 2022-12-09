@@ -12,10 +12,6 @@
 #include "abstract_egl_backend.h"
 #include "core/outputlayer.h"
 #include "utils/damagejournal.h"
-// wayland
-#include <dmabuftexture.h>
-#include <optional>
-#include <wayland-egl.h>
 
 #include <KWayland/Client/buffer.h>
 
@@ -36,6 +32,44 @@ class WaylandBackend;
 class WaylandOutput;
 class WaylandEglBackend;
 
+class WaylandEglLayerBuffer
+{
+public:
+    WaylandEglLayerBuffer(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, WaylandEglBackend *backend);
+    ~WaylandEglLayerBuffer();
+
+    wl_buffer *buffer() const;
+    GLFramebuffer *framebuffer() const;
+    int age() const;
+
+private:
+    WaylandEglBackend *m_backend;
+    wl_buffer *m_buffer = nullptr;
+    gbm_bo *m_bo = nullptr;
+    std::unique_ptr<GLFramebuffer> m_framebuffer;
+    std::shared_ptr<GLTexture> m_texture;
+    int m_age = 0;
+    friend class WaylandEglLayerSwapchain;
+};
+
+class WaylandEglLayerSwapchain
+{
+public:
+    WaylandEglLayerSwapchain(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, WaylandEglBackend *backend);
+    ~WaylandEglLayerSwapchain();
+
+    QSize size() const;
+
+    std::shared_ptr<WaylandEglLayerBuffer> acquire();
+    void release(std::shared_ptr<WaylandEglLayerBuffer> buffer);
+
+private:
+    WaylandEglBackend *m_backend;
+    QSize m_size;
+    QVector<std::shared_ptr<WaylandEglLayerBuffer>> m_buffers;
+    int m_index = 0;
+};
+
 class WaylandEglPrimaryLayer : public OutputLayer
 {
 public:
@@ -47,15 +81,12 @@ public:
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
-    void aboutToStartPainting(const QRegion &damage) override;
 
 private:
     WaylandOutput *m_waylandOutput;
-    wl_egl_window *m_eglWindow = nullptr;
-    EGLSurface m_eglSurface = EGL_NO_SURFACE;
-    int m_bufferAge = 0;
     DamageJournal m_damageJournal;
-    std::unique_ptr<GLFramebuffer> m_fbo;
+    std::unique_ptr<WaylandEglLayerSwapchain> m_swapchain;
+    std::shared_ptr<WaylandEglLayerBuffer> m_buffer;
     WaylandEglBackend *const m_backend;
 
     friend class WaylandEglBackend;
@@ -110,6 +141,8 @@ public:
     WaylandEglBackend(WaylandBackend *b);
     ~WaylandEglBackend() override;
 
+    WaylandBackend *backend() const;
+
     std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
@@ -117,11 +150,6 @@ public:
     void present(Output *output) override;
     OutputLayer *primaryLayer(Output *output) override;
     WaylandEglCursorLayer *cursorLayer(Output *output);
-
-    bool havePlatformBase() const
-    {
-        return m_havePlatformBase;
-    }
 
     std::shared_ptr<KWin::GLTexture> textureForOutput(KWin::Output *output) const override;
 

@@ -15,7 +15,6 @@
 #cmakedefine01 HAVE_X11_XINPUT
 #cmakedefine01 HAVE_GBM_BO_GET_FD_FOR_PLANE
 #cmakedefine01 HAVE_MEMFD
-#cmakedefine01 HAVE_WAYLAND_EGL
 #cmakedefine01 HAVE_BREEZE_DECO
 #cmakedefine01 HAVE_SCHED_RESET_ON_FORK
 #cmakedefine01 HAVE_ACCESSIBILITY
