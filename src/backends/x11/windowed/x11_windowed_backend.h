@@ -137,9 +137,6 @@ public:
 
     Outputs outputs() const override;
 
-Q_SIGNALS:
-    void sizeChanged();
-
 private:
     void createOutputs();
     void grabKeyboard(xcb_timestamp_t time);

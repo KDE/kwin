@@ -555,7 +555,6 @@ void X11WindowedBackend::updateSize(xcb_configure_notify_event_t *event)
     if (s != output->pixelSize()) {
         output->resize(s);
     }
-    Q_EMIT sizeChanged();
 }
 
 xcb_window_t X11WindowedBackend::rootWindow() const
