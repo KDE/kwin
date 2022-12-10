@@ -8,35 +8,131 @@
 */
 #include "x11_windowed_qpainter_backend.h"
 #include "x11_windowed_backend.h"
+#include "x11_windowed_logging.h"
 #include "x11_windowed_output.h"
+
+#include <string.h>
+#include <sys/shm.h>
+#include <xcb/present.h>
+#include <xcb/shm.h>
 
 namespace KWin
 {
+
+X11WindowedQPainterLayerBuffer::X11WindowedQPainterLayerBuffer(const QSize &size, X11WindowedOutput *output)
+    : m_connection(output->backend()->connection())
+    , m_size(size)
+{
+    QImage::Format format;
+    int bytesPerPixel;
+    switch (output->depth()) {
+    case 24:
+    case 32:
+        format = QImage::Format_ARGB32_Premultiplied;
+        bytesPerPixel = 4;
+        break;
+    case 30:
+        format = QImage::Format_A2RGB30_Premultiplied;
+        bytesPerPixel = 4;
+        break;
+    default:
+        qCWarning(KWIN_X11WINDOWED) << "Unsupported output depth:" << output->depth() << ". Falling back to ARGB32";
+        format = QImage::Format_ARGB32_Premultiplied;
+        bytesPerPixel = 4;
+        break;
+    }
+
+    int shmId = shmget(IPC_PRIVATE, size.width() * size.height() * bytesPerPixel, IPC_CREAT | 0600);
+    if (shmId < 0) {
+        qCWarning(KWIN_X11WINDOWED) << "shmget() failed:" << strerror(errno);
+        return;
+    }
+
+    m_buffer = shmat(shmId, nullptr, 0 /*read/write*/);
+    shmctl(shmId, IPC_RMID, nullptr);
+    if (reinterpret_cast<long>(m_buffer) == -1) {
+        qCWarning(KWIN_X11WINDOWED) << "shmat() failed:" << strerror(errno);
+        return;
+    }
+
+    xcb_shm_seg_t segment = xcb_generate_id(m_connection);
+    xcb_shm_attach(m_connection, segment, shmId, false);
+
+    m_pixmap = xcb_generate_id(m_connection);
+    xcb_shm_create_pixmap(m_connection, m_pixmap, output->window(), size.width(), size.height(), output->depth(), segment, 0);
+    xcb_shm_detach(m_connection, segment);
+
+    m_view = std::make_unique<QImage>(static_cast<uchar *>(m_buffer), size.width(), size.height(), format);
+}
+
+X11WindowedQPainterLayerBuffer::~X11WindowedQPainterLayerBuffer()
+{
+    if (m_pixmap != XCB_PIXMAP_NONE) {
+        xcb_free_pixmap(m_connection, m_pixmap);
+    }
+    m_view.reset();
+    if (reinterpret_cast<long>(m_buffer) != -1) {
+        shmdt(m_buffer);
+    }
+}
+
+QSize X11WindowedQPainterLayerBuffer::size() const
+{
+    return m_size;
+}
+
+xcb_pixmap_t X11WindowedQPainterLayerBuffer::pixmap() const
+{
+    return m_pixmap;
+}
+
+QImage *X11WindowedQPainterLayerBuffer::view() const
+{
+    return m_view.get();
+}
+
+X11WindowedQPainterLayerSwapchain::X11WindowedQPainterLayerSwapchain(const QSize &size, X11WindowedOutput *output)
+    : m_size(size)
+{
+    for (int i = 0; i < 2; ++i) {
+        m_buffers.append(std::make_shared<X11WindowedQPainterLayerBuffer>(size, output));
+    }
+}
+
+QSize X11WindowedQPainterLayerSwapchain::size() const
+{
+    return m_size;
+}
+
+std::shared_ptr<X11WindowedQPainterLayerBuffer> X11WindowedQPainterLayerSwapchain::acquire()
+{
+    m_index = (m_index + 1) % m_buffers.count();
+    return m_buffers[m_index];
+}
+
+void X11WindowedQPainterLayerSwapchain::release(std::shared_ptr<X11WindowedQPainterLayerBuffer> buffer)
+{
+    Q_ASSERT(m_buffers[m_index] == buffer);
+}
 
 X11WindowedQPainterPrimaryLayer::X11WindowedQPainterPrimaryLayer(X11WindowedOutput *output)
     : m_output(output)
 {
 }
 
-void X11WindowedQPainterPrimaryLayer::ensureBuffer()
-{
-    const QSize nativeSize(m_output->pixelSize() * m_output->scale());
-
-    if (buffer.size() != nativeSize) {
-        buffer = QImage(nativeSize, QImage::Format_RGB32);
-        buffer.fill(Qt::black);
-    }
-}
-
 std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterPrimaryLayer::beginFrame()
 {
-    ensureBuffer();
+    const QSize bufferSize = m_output->pixelSize();
+    if (!m_swapchain || m_swapchain->size() != bufferSize) {
+        m_swapchain = std::make_unique<X11WindowedQPainterLayerSwapchain>(bufferSize, m_output);
+    }
 
     QRegion repaint = m_output->exposedArea() + m_output->rect();
     m_output->clearExposedArea();
 
+    m_buffer = m_swapchain->acquire();
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(&buffer),
+        .renderTarget = RenderTarget(m_buffer->view()),
         .repaint = repaint,
     };
 }
@@ -44,6 +140,35 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterPrimaryLayer::beginF
 bool X11WindowedQPainterPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     return true;
+}
+
+void X11WindowedQPainterPrimaryLayer::present()
+{
+    xcb_xfixes_region_t valid = 0;
+    xcb_xfixes_region_t update = 0;
+    uint32_t serial = 0;
+    uint32_t options = 0;
+    uint64_t targetMsc = 0;
+
+    xcb_present_pixmap(m_output->backend()->connection(),
+                       m_output->window(),
+                       m_buffer->pixmap(),
+                       serial,
+                       valid,
+                       update,
+                       0,
+                       0,
+                       XCB_NONE,
+                       XCB_NONE,
+                       XCB_NONE,
+                       options,
+                       targetMsc,
+                       0,
+                       0,
+                       0,
+                       nullptr);
+
+    m_swapchain->release(m_buffer);
 }
 
 X11WindowedQPainterCursorLayer::X11WindowedQPainterCursorLayer(X11WindowedOutput *output)
@@ -106,9 +231,6 @@ X11WindowedQPainterBackend::X11WindowedQPainterBackend(X11WindowedBackend *backe
 X11WindowedQPainterBackend::~X11WindowedQPainterBackend()
 {
     m_outputs.clear();
-    if (m_gc) {
-        xcb_free_gc(m_backend->connection(), m_gc);
-    }
 }
 
 void X11WindowedQPainterBackend::addOutput(Output *output)
@@ -127,20 +249,7 @@ void X11WindowedQPainterBackend::removeOutput(Output *output)
 
 void X11WindowedQPainterBackend::present(Output *output)
 {
-    const auto &rendererOutput = m_outputs[output];
-
-    xcb_connection_t *c = m_backend->connection();
-    const xcb_window_t window = rendererOutput.primaryLayer->m_output->window();
-    if (m_gc == XCB_NONE) {
-        m_gc = xcb_generate_id(c);
-        xcb_create_gc(c, m_gc, window, 0, nullptr);
-    }
-
-    // TODO: only update changes?
-    const QImage &buffer = rendererOutput.primaryLayer->buffer;
-    xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, window,
-                  m_gc, buffer.width(), buffer.height(), 0, 0, 0, 24,
-                  buffer.sizeInBytes(), buffer.constBits());
+    m_outputs[output].primaryLayer->present();
 }
 
 OutputLayer *X11WindowedQPainterBackend::primaryLayer(Output *output)

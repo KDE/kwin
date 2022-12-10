@@ -143,6 +143,11 @@ xcb_window_t X11WindowedOutput::window() const
     return m_window;
 }
 
+int X11WindowedOutput::depth() const
+{
+    return m_backend->screen()->root_depth;
+}
+
 QPoint X11WindowedOutput::hostPosition() const
 {
     return m_hostPosition;

@@ -25,18 +25,54 @@ namespace KWin
 class X11WindowedBackend;
 class X11WindowedOutput;
 
+class X11WindowedQPainterLayerBuffer
+{
+public:
+    X11WindowedQPainterLayerBuffer(const QSize &size, X11WindowedOutput *output);
+    ~X11WindowedQPainterLayerBuffer();
+
+    QSize size() const;
+    xcb_pixmap_t pixmap() const;
+    QImage *view() const;
+
+private:
+    xcb_connection_t *m_connection;
+    QSize m_size;
+    void *m_buffer = nullptr;
+    std::unique_ptr<QImage> m_view;
+    xcb_pixmap_t m_pixmap = XCB_PIXMAP_NONE;
+};
+
+class X11WindowedQPainterLayerSwapchain
+{
+public:
+    X11WindowedQPainterLayerSwapchain(const QSize &size, X11WindowedOutput *output);
+
+    QSize size() const;
+
+    std::shared_ptr<X11WindowedQPainterLayerBuffer> acquire();
+    void release(std::shared_ptr<X11WindowedQPainterLayerBuffer> buffer);
+
+private:
+    QSize m_size;
+    QVector<std::shared_ptr<X11WindowedQPainterLayerBuffer>> m_buffers;
+    int m_index = 0;
+};
+
 class X11WindowedQPainterPrimaryLayer : public OutputLayer
 {
 public:
     explicit X11WindowedQPainterPrimaryLayer(X11WindowedOutput *output);
 
-    void ensureBuffer();
-
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
-    QImage buffer;
+    void present();
+
+private:
     X11WindowedOutput *const m_output;
+    std::unique_ptr<X11WindowedQPainterLayerSwapchain> m_swapchain;
+    std::shared_ptr<X11WindowedQPainterLayerBuffer> m_buffer;
 };
 
 class X11WindowedQPainterCursorLayer : public OutputLayer
@@ -83,7 +119,6 @@ private:
         std::unique_ptr<X11WindowedQPainterCursorLayer> cursorLayer;
     };
 
-    xcb_gcontext_t m_gc = XCB_NONE;
     X11WindowedBackend *m_backend;
     std::map<Output *, Layers> m_outputs;
 };

@@ -59,6 +59,7 @@ public:
     X11WindowedBackend *backend() const;
     X11WindowedCursor *cursor() const;
     xcb_window_t window() const;
+    int depth() const;
 
     QPoint internalPosition() const;
     QPoint hostPosition() const;

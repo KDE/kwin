@@ -26,6 +26,7 @@
 // xcb
 #include <xcb/xcb_keysyms.h>
 #include <xcb/present.h>
+#include <xcb/shm.h>
 // X11
 #include <X11/Xlib-xcb.h>
 #include <fixx11h.h>
@@ -209,6 +210,18 @@ bool X11WindowedBackend::initialize()
     } else {
         qCWarning(KWIN_X11WINDOWED) << "Present X11 extension is unavailable";
         return false;
+    }
+
+    const xcb_query_extension_reply_t *shmExtension = xcb_get_extension_data(m_connection, &xcb_shm_id);
+    if (shmExtension && shmExtension->present) {
+        xcb_shm_query_version_cookie_t cookie = xcb_shm_query_version(m_connection);
+        xcb_shm_query_version_reply_t *reply = xcb_shm_query_version_reply(m_connection, cookie, nullptr);
+        if (!reply) {
+            qCWarning(KWIN_X11WINDOWED) << "Requested SHM extension version is unsupported";
+        } else {
+            m_hasShm = true;
+            free(reply);
+        }
     }
 
     initXInput();
@@ -662,7 +675,11 @@ bool X11WindowedBackend::hasXInput() const
 
 QVector<CompositingType> X11WindowedBackend::supportedCompositors() const
 {
-    return QVector<CompositingType>{OpenGLCompositing, QPainterCompositing};
+    QVector<CompositingType> ret{OpenGLCompositing};
+    if (m_hasShm) {
+        ret.append(QPainterCompositing);
+    }
+    return ret;
 }
 
 Outputs X11WindowedBackend::outputs() const

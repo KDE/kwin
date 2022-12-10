@@ -155,6 +155,8 @@ private:
     int m_presentMajorVersion = 0;
     int m_presentMinorVersion = 0;
 
+    bool m_hasShm = false;
+
     QVector<X11WindowedOutput *> m_outputs;
 };
 
