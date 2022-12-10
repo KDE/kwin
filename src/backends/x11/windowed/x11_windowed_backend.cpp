@@ -25,6 +25,7 @@
 #include <QCoreApplication>
 #include <QSocketNotifier>
 // xcb
+#include <xcb/dri3.h>
 #include <xcb/xcb_keysyms.h>
 #include <xcb/present.h>
 #include <xcb/shm.h>
@@ -38,6 +39,9 @@
 // system
 #include <X11/Xlib-xcb.h>
 #include <X11/keysym.h>
+#include <drm_fourcc.h>
+#include <fcntl.h>
+#include <gbm.h>
 #include <linux/input.h>
 
 namespace KWin
@@ -169,6 +173,11 @@ X11WindowedBackend::~X11WindowedBackend()
     if (sceneEglDisplay() != EGL_NO_DISPLAY) {
         eglTerminate(sceneEglDisplay());
     }
+
+    if (m_gbmDevice) {
+        gbm_device_destroy(m_gbmDevice);
+    }
+
     if (m_connection) {
         if (m_keySymbols) {
             xcb_key_symbols_free(m_keySymbols);
@@ -231,7 +240,22 @@ bool X11WindowedBackend::initialize()
         }
     }
 
+    const xcb_query_extension_reply_t *driExtension = xcb_get_extension_data(m_connection, &xcb_dri3_id);
+    if (driExtension && driExtension->present) {
+        xcb_dri3_query_version_cookie_t cookie = xcb_dri3_query_version(m_connection, 1, 2);
+        UniqueCPtr<xcb_dri3_query_version_reply_t> reply(xcb_dri3_query_version_reply(m_connection, cookie, nullptr));
+        if (reply) {
+            m_hasDri = true;
+            m_driMajorVersion = reply->major_version;
+            m_driMinorVersion = reply->minor_version;
+        } else {
+            qCWarning(KWIN_X11WINDOWED) << "Requested DRI3 extension version is unsupported";
+        }
+    }
+
     initXInput();
+    initDri3();
+
     XRenderUtils::init(m_connection, m_screen->root);
     createOutputs();
 
@@ -286,6 +310,46 @@ void X11WindowedBackend::initXInput()
     m_minorVersion = minor;
     m_hasXInput = m_majorVersion >= 2 && m_minorVersion >= 2;
 #endif
+}
+
+void X11WindowedBackend::initDri3()
+{
+    if (m_hasDri) {
+        xcb_dri3_open_cookie_t cookie = xcb_dri3_open(m_connection, m_screen->root, 0);
+        UniqueCPtr<xcb_dri3_open_reply_t> reply(xcb_dri3_open_reply(m_connection, cookie, nullptr));
+        if (reply && reply->nfd == 1) {
+            int fd = xcb_dri3_open_reply_fds(m_connection, reply.get())[0];
+            fcntl(fd, F_SETFD, fcntl(fd, F_GETFD) | FD_CLOEXEC);
+            m_drmFileDescriptor = FileDescriptor{fd};
+            m_gbmDevice = gbm_create_device(m_drmFileDescriptor.get());
+        }
+    }
+
+    xcb_depth_iterator_t it = xcb_screen_allowed_depths_iterator(m_screen);
+    while (it.rem > 0) {
+        uint32_t format = driFormatForDepth(it.data->depth);
+        if (format) {
+            QVector<uint64_t> &mods = m_driFormats[format];
+
+            if (m_driMajorVersion > 1 || m_driMinorVersion >= 2) {
+                xcb_dri3_get_supported_modifiers_cookie_t cookie = xcb_dri3_get_supported_modifiers(m_connection, m_screen->root, it.data->depth, 32);
+                UniqueCPtr<xcb_dri3_get_supported_modifiers_reply_t> reply(xcb_dri3_get_supported_modifiers_reply(m_connection, cookie, nullptr));
+                if (reply) {
+                    const uint64_t *modifiers = xcb_dri3_get_supported_modifiers_screen_modifiers(reply.get());
+                    const int modifierCount = xcb_dri3_get_supported_modifiers_screen_modifiers_length(reply.get());
+                    for (int i = 0; i < modifierCount; ++i) {
+                        mods.append(modifiers[i]);
+                    }
+                }
+            }
+
+            if (mods.isEmpty()) {
+                mods.append(DRM_FORMAT_MOD_INVALID);
+            }
+        }
+
+        xcb_depth_next(&it);
+    }
 }
 
 X11WindowedOutput *X11WindowedBackend::findOutput(xcb_window_t window) const
@@ -625,6 +689,11 @@ xcb_window_t X11WindowedBackend::rootWindow() const
     return m_screen->root;
 }
 
+gbm_device *X11WindowedBackend::gbmDevice() const
+{
+    return m_gbmDevice;
+}
+
 X11WindowedInputDevice *X11WindowedBackend::pointerDevice() const
 {
     return m_pointerDevice.get();
@@ -680,9 +749,39 @@ bool X11WindowedBackend::hasXInput() const
     return m_hasXInput;
 }
 
+QHash<uint32_t, QVector<uint64_t>> X11WindowedBackend::driFormats() const
+{
+    return m_driFormats;
+}
+
+uint32_t X11WindowedBackend::driFormatForDepth(int depth) const
+{
+    switch (depth) {
+    case 24:
+        return DRM_FORMAT_XRGB8888;
+    case 32:
+        return DRM_FORMAT_ARGB8888;
+    default:
+        return 0;
+    }
+}
+
+int X11WindowedBackend::driMajorVersion() const
+{
+    return m_driMajorVersion;
+}
+
+int X11WindowedBackend::driMinorVersion() const
+{
+    return m_driMinorVersion;
+}
+
 QVector<CompositingType> X11WindowedBackend::supportedCompositors() const
 {
-    QVector<CompositingType> ret{OpenGLCompositing};
+    QVector<CompositingType> ret;
+    if (m_gbmDevice) {
+        ret.append(OpenGLCompositing);
+    }
     if (m_hasShm) {
         ret.append(QPainterCompositing);
     }

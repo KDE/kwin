@@ -14,6 +14,8 @@
 
 #include <QMap>
 
+struct gbm_bo;
+
 namespace KWin
 {
 
@@ -21,26 +23,60 @@ class X11WindowedBackend;
 class X11WindowedOutput;
 class X11WindowedEglBackend;
 
+class X11WindowedEglLayerBuffer
+{
+public:
+    X11WindowedEglLayerBuffer(const QSize &size, uint32_t format, uint32_t depth, uint32_t bpp, const QVector<uint64_t> &modifiers, xcb_drawable_t drawable, X11WindowedEglBackend *backend);
+    ~X11WindowedEglLayerBuffer();
+
+    xcb_pixmap_t pixmap() const;
+    std::shared_ptr<GLTexture> texture() const;
+    GLFramebuffer *framebuffer() const;
+    int age() const;
+
+private:
+    X11WindowedEglBackend *m_backend;
+    xcb_pixmap_t m_pixmap = XCB_PIXMAP_NONE;
+    gbm_bo *m_bo = nullptr;
+    std::unique_ptr<GLFramebuffer> m_framebuffer;
+    std::shared_ptr<GLTexture> m_texture;
+    int m_age = 0;
+    friend class X11WindowedEglLayerSwapchain;
+};
+
+class X11WindowedEglLayerSwapchain
+{
+public:
+    X11WindowedEglLayerSwapchain(const QSize &size, uint32_t format, uint32_t depth, uint32_t bpp, const QVector<uint64_t> &modifiers, xcb_drawable_t drawable, X11WindowedEglBackend *backend);
+    ~X11WindowedEglLayerSwapchain();
+
+    QSize size() const;
+
+    std::shared_ptr<X11WindowedEglLayerBuffer> acquire();
+    void release(std::shared_ptr<X11WindowedEglLayerBuffer> buffer);
+
+private:
+    X11WindowedEglBackend *m_backend;
+    QSize m_size;
+    QVector<std::shared_ptr<X11WindowedEglLayerBuffer>> m_buffers;
+    int m_index = 0;
+};
+
 class X11WindowedEglPrimaryLayer : public OutputLayer
 {
 public:
-    X11WindowedEglPrimaryLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output, EGLSurface surface);
-    ~X11WindowedEglPrimaryLayer();
+    X11WindowedEglPrimaryLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output);
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     quint32 format() const override;
-    EGLSurface surface() const;
-    QRegion lastDamage() const;
-    GLFramebuffer *fbo() const;
+
+    std::shared_ptr<GLTexture> texture() const;
+    void present();
 
 private:
-    void ensureFbo();
-
-    EGLSurface m_eglSurface;
-    std::unique_ptr<GLFramebuffer> m_fbo;
-    QRegion m_lastDamage;
-
+    std::unique_ptr<X11WindowedEglLayerSwapchain> m_swapchain;
+    std::shared_ptr<X11WindowedEglLayerBuffer> m_buffer;
     X11WindowedOutput *const m_output;
     X11WindowedEglBackend *const m_backend;
 };
@@ -75,6 +111,8 @@ public:
     explicit X11WindowedEglBackend(X11WindowedBackend *backend);
     ~X11WindowedEglBackend() override;
 
+    X11WindowedBackend *backend() const;
+
     std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
     std::shared_ptr<GLTexture> textureForOutput(Output *output) const override;
@@ -89,8 +127,6 @@ protected:
     bool createSurfaces() override;
 
 private:
-    void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
-
     struct Layers
     {
         std::unique_ptr<X11WindowedEglPrimaryLayer> primaryLayer;

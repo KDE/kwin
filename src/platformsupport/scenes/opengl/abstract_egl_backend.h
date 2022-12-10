@@ -62,7 +62,6 @@ public:
         return m_config;
     }
 
-    std::shared_ptr<GLTexture> textureForOutput(Output *output) const override;
     QHash<uint32_t, QVector<uint64_t>> supportedFormats() const override;
 
     dev_t deviceId() const;

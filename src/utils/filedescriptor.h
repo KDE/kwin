@@ -24,6 +24,7 @@ public:
 
     bool isValid() const;
     int get() const;
+    int take();
     FileDescriptor duplicate() const;
 
 private:

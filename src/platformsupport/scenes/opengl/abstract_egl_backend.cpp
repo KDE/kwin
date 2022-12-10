@@ -367,14 +367,6 @@ void AbstractEglBackend::setSurface(const EGLSurface &surface)
     m_surface = surface;
 }
 
-std::shared_ptr<GLTexture> AbstractEglBackend::textureForOutput(Output *requestedOutput) const
-{
-    std::shared_ptr<GLTexture> texture(new GLTexture(GL_RGBA8, requestedOutput->pixelSize()));
-    GLFramebuffer renderTarget(texture.get());
-    renderTarget.blitFromFramebuffer(QRect(0, texture->height(), texture->width(), -texture->height()));
-    return texture;
-}
-
 dev_t AbstractEglBackend::deviceId() const
 {
     return m_deviceId;

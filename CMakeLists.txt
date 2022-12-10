@@ -274,6 +274,7 @@ find_package(XCB 1.10 REQUIRED COMPONENTS
     COMPOSITE
     CURSOR
     DAMAGE
+    DRI3
     GLX
     ICCCM
     IMAGE

@@ -11,6 +11,7 @@
 #include "core/inputbackend.h"
 #include "core/inputdevice.h"
 #include "core/outputbackend.h"
+#include "utils/filedescriptor.h"
 
 #include <kwin_export.h>
 
@@ -19,6 +20,7 @@
 
 #include <xcb/xcb.h>
 
+struct gbm_device;
 struct _XDisplay;
 typedef struct _XDisplay Display;
 typedef struct _XCBKeySymbols xcb_key_symbols_t;
@@ -102,8 +104,14 @@ public:
     xcb_screen_t *screen() const;
     int screenNumer() const;
     xcb_window_t rootWindow() const;
+    gbm_device *gbmDevice() const;
 
     bool hasXInput() const;
+
+    QHash<uint32_t, QVector<uint64_t>> driFormats() const;
+    uint32_t driFormatForDepth(int depth) const;
+    int driMajorVersion() const;
+    int driMinorVersion() const;
 
     bool initialize() override;
     std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
@@ -128,6 +136,7 @@ private:
     void handlePresentEvent(xcb_ge_generic_event_t *event);
     void updateSize(xcb_configure_notify_event_t *event);
     void initXInput();
+    void initDri3();
     X11WindowedOutput *findOutput(xcb_window_t window) const;
     void destroyOutputs();
 
@@ -157,6 +166,14 @@ private:
     int m_presentMinorVersion = 0;
 
     bool m_hasShm = false;
+
+    bool m_hasDri = false;
+    int m_driMajorVersion = 0;
+    int m_driMinorVersion = 0;
+    QHash<uint32_t, QVector<uint64_t>> m_driFormats;
+
+    FileDescriptor m_drmFileDescriptor;
+    gbm_device *m_gbmDevice = nullptr;
 
     QVector<X11WindowedOutput *> m_outputs;
 };
