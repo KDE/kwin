@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-09 00:47+0000\n"
-"PO-Revision-Date: 2022-11-24 16:54+0300\n"
+"PO-Revision-Date: 2022-12-09 19:13+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -2656,28 +2656,24 @@ msgid "Window to Previous Screen"
 msgstr "Pencere Önceki Ekrana"
 
 #: useractions.cpp:1109
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "Pencere Bir Sağ Masaüstüne"
+msgstr "Pencere Bir Sağ Ekrana"
 
 #: useractions.cpp:1111
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "Pencere Bir Sol Masaüstüne"
+msgstr "Pencere Bir Sol Ekrana"
 
 #: useractions.cpp:1113
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "Pencere %1. Ekrana"
+msgstr "Pencere Bir Ekran Yukarı"
 
 #: useractions.cpp:1115
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "Pencere Bir Alt Masaüstüne"
+msgstr "Pencere Bir Ekran Aşağı"
 
 #: useractions.cpp:1119
 #, kde-format
@@ -2695,28 +2691,24 @@ msgid "Switch to Previous Screen"
 msgstr "Önceki Ekrana Geç"
 
 #: useractions.cpp:1128
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Sağdaki Pencereye Geç"
+msgstr "Sağdaki Ekrana Geç"
 
 #: useractions.cpp:1130
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Soldaki Pencereye Geç"
+msgstr "Soldaki Ekrana Geç"
 
 #: useractions.cpp:1132
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "%1. Ekrana Geç"
+msgstr "Yukarıdaki Ekrana Geç"
 
 #: useractions.cpp:1134
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "%1. Ekrana Geç"
+msgstr "Aşağıdaki Ekrana Geç"
 
 #: useractions.cpp:1137
 #, kde-format

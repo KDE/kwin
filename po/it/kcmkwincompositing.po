@@ -4,14 +4,14 @@
 # Luciano Montanaro <mikelima@cirulla.net>, 2007, 2008, 2010, 2012.
 # Andrea Rizzi <rizzi@sns.it>, 2007.
 # Federico Zenith <federico.zenith@member.fsf.org>, 2009.
-# Vincenzo Reale <smart2128vr@gmail.com>, 2015, 2017, 2018, 2019, 2021.
+# Vincenzo Reale <smart2128vr@gmail.com>, 2015, 2017, 2018, 2019, 2021, 2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-06 00:47+0000\n"
-"PO-Revision-Date: 2021-11-15 00:18+0100\n"
+"PO-Revision-Date: 2022-12-06 14:32+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 21.08.2\n"
+"X-Generator: Lokalize 22.08.3\n"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
 #: compositing.ui:31
@@ -164,12 +164,14 @@ msgstr "Forza le animazioni più fluide"
 #, kde-format
 msgid "Allows applications to cause screen tearing in fullscreen."
 msgstr ""
+"Consente alle applicazioni di causare disturbi dello schermo in modalità a "
+"schermo intero."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowTearing)
 #: compositing.ui:216
 #, kde-format
 msgid "Allow tearing in fullscreen"
-msgstr ""
+msgstr "Consenti i disturbi a schermo intero"
 
 #: main.cpp:79
 #, kde-format

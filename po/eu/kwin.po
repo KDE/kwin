@@ -15,14 +15,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-09 00:47+0000\n"
-"PO-Revision-Date: 2022-11-04 06:17+0100\n"
+"PO-Revision-Date: 2022-12-09 20:37+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
-"Language-Team: Basque <kde-i18n-eu@kde.org>\n"
+"Language-Team: Basque\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.08.1\n"
+"X-Generator: Lokalize 22.08.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, kde-format
@@ -2667,28 +2667,24 @@ msgid "Window to Previous Screen"
 msgstr "Aldatu leihoa aurreko pantailara"
 
 #: useractions.cpp:1109
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "Aldatu leihoa eskuineko mahaigainera"
+msgstr "Leihoa, pantaila bat eskuinerantz"
 
 #: useractions.cpp:1111
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "Aldatu leihoa ezkerreko mahaigainera"
+msgstr "Leihoa, pantaila bat ezkerrerantz"
 
 #: useractions.cpp:1113
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "Leihoa 2. pantailera"
+msgstr "Leihoa, pantaila bat gorantz"
 
 #: useractions.cpp:1115
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "Aldatu leihoa beheko mahaigainera"
+msgstr "Leihoa, pantaila bat beherantz"
 
 #: useractions.cpp:1119
 #, kde-format
@@ -2706,28 +2702,24 @@ msgid "Switch to Previous Screen"
 msgstr "Aldatu aurreko pantailara"
 
 #: useractions.cpp:1128
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "Aldatu eskuineko leihora"
 
 #: useractions.cpp:1130
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "Aldatu ezkerreko leihora"
 
 #: useractions.cpp:1132
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Aldatu 0. pantailera"
+msgstr "Aldatu goiko pantailara"
 
 #: useractions.cpp:1134
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Aldatu 0. pantailera"
+msgstr "Aldatu beheko leihora"
 
 #: useractions.cpp:1137
 #, kde-format

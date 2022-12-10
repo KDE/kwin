@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-09 00:47+0000\n"
-"PO-Revision-Date: 2022-11-04 12:57+0200\n"
+"PO-Revision-Date: 2022-12-09 08:43+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -2663,28 +2663,24 @@ msgid "Window to Previous Screen"
 msgstr "Вікно на попередній екран"
 
 #: useractions.cpp:1109
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "Вікно на одну стільницю праворуч"
+msgstr "Вікно на один екран праворуч"
 
 #: useractions.cpp:1111
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "Вікно на одну стільницю ліворуч"
+msgstr "Вікно на один екран ліворуч"
 
 #: useractions.cpp:1113
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "Вікно на екран %1"
+msgstr "Вікно на один екран вище"
 
 #: useractions.cpp:1115
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "Вікно на одну стільницю вниз"
+msgstr "Вікно на один екран нижче"
 
 #: useractions.cpp:1119
 #, kde-format
@@ -2702,28 +2698,24 @@ msgid "Switch to Previous Screen"
 msgstr "Перемкнутися до попереднього екрана"
 
 #: useractions.cpp:1128
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Перемкнутися на вікно праворуч"
+msgstr "Перемкнутися на екран праворуч"
 
 #: useractions.cpp:1130
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Перемкнутися на вікно ліворуч"
+msgstr "Перемкнутися на екран ліворуч"
 
 #: useractions.cpp:1132
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Перемкнути на екран %1"
+msgstr "Перемкнути на екран вище"
 
 #: useractions.cpp:1134
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Перемкнути на екран %1"
+msgstr "Перемкнути на екран нижче"
 
 #: useractions.cpp:1137
 #, kde-format

@@ -20,14 +20,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-09 00:47+0000\n"
-"PO-Revision-Date: 2022-11-04 09:38+0100\n"
+"PO-Revision-Date: 2022-12-09 10:13+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.08.2\n"
+"X-Generator: Lokalize 22.08.3\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -2668,28 +2668,24 @@ msgid "Window to Previous Screen"
 msgstr "Venster naar vorig scherm"
 
 #: useractions.cpp:1109
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "Venster een bureaublad naar rechts"
+msgstr "Venster één scherm naar rechts"
 
 #: useractions.cpp:1111
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "Venster een bureaublad naar links"
+msgstr "Venster één scherm naar links"
 
 #: useractions.cpp:1113
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "Venster naar scherm 2"
+msgstr "Venster één scherm omhoog"
 
 #: useractions.cpp:1115
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "Venster een bureaublad naar beneden"
+msgstr "Venster één scherm omlaag"
 
 #: useractions.cpp:1119
 #, kde-format
@@ -2707,28 +2703,24 @@ msgid "Switch to Previous Screen"
 msgstr "Omschakelen naar vorig scherm"
 
 #: useractions.cpp:1128
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Naar het venster rechts schakelen"
+msgstr "Naar het scherm rechts schakelen"
 
 #: useractions.cpp:1130
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Naar het venster links schakelen"
+msgstr "Naar het scherm links schakelen"
 
 #: useractions.cpp:1132
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Schakelen naar scherm 0"
+msgstr "Naar het scherm erboven schakelen"
 
 #: useractions.cpp:1134
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Schakelen naar scherm 0"
+msgstr "Naar het scherm eronder schakelen"
 
 #: useractions.cpp:1137
 #, kde-format
