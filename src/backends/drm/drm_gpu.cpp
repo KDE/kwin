@@ -170,27 +170,44 @@ void DrmGpu::initDrmResources()
     QVector<DrmPlane *> assignedPlanes;
     for (int i = 0; i < resources->count_crtcs; ++i) {
         uint32_t crtcId = resources->crtcs[i];
-        DrmPlane *primary = nullptr;
-        DrmPlane *cursor = nullptr;
+        QVector<DrmPlane *> primaryCandidates;
+        QVector<DrmPlane *> cursorCandidates;
         for (const auto &plane : m_planes) {
             if (plane->isCrtcSupported(i) && !assignedPlanes.contains(plane.get())) {
                 if (plane->type() == DrmPlane::TypeIndex::Primary) {
-                    if (!primary || primary->getProp(DrmPlane::PropertyIndex::CrtcId)->pending() == crtcId) {
-                        primary = plane.get();
-                    }
+                    primaryCandidates.push_back(plane.get());
                 } else if (plane->type() == DrmPlane::TypeIndex::Cursor) {
-                    if (!cursor || cursor->getProp(DrmPlane::PropertyIndex::CrtcId)->pending() == crtcId) {
-                        cursor = plane.get();
-                    }
+                    cursorCandidates.push_back(plane.get());
                 }
             }
         }
-        if (m_atomicModeSetting && !primary) {
+        if (m_atomicModeSetting && primaryCandidates.empty()) {
             qCWarning(KWIN_DRM) << "Could not find a suitable primary plane for crtc" << resources->crtcs[i];
             continue;
         }
+        const auto findBestPlane = [crtcId](const QVector<DrmPlane *> &list) {
+            // if the plane is already used with this crtc, prefer it
+            const auto connected = std::find_if(list.begin(), list.end(), [crtcId](DrmPlane *plane) {
+                return plane->getProp(DrmPlane::PropertyIndex::CrtcId)->pending() == crtcId;
+            });
+            if (connected != list.end()) {
+                return *connected;
+            }
+            // don't take away planes from other crtcs. The kernel currently rejects such commits
+            const auto notconnected = std::find_if(list.begin(), list.end(), [](DrmPlane *plane) {
+                return plane->getProp(DrmPlane::PropertyIndex::CrtcId)->pending() == 0;
+            });
+            if (notconnected == list.end()) {
+                return *notconnected;
+            }
+            return list.empty() ? nullptr : list.front();
+        };
+        DrmPlane *primary = findBestPlane(primaryCandidates);
+        DrmPlane *cursor = findBestPlane(cursorCandidates);
         assignedPlanes.push_back(primary);
-        assignedPlanes.push_back(cursor);
+        if (cursor) {
+            assignedPlanes.push_back(cursor);
+        }
         auto crtc = std::make_unique<DrmCrtc>(this, crtcId, i, primary, cursor);
         if (!crtc->init()) {
             continue;
