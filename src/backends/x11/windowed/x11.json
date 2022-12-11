@@ -36,7 +36,7 @@
         "Description[sr@latin]": "Renderovanje u ugnežđeni prozor na prozorskom sistemu X11.",
         "Description[sr]": "Рендеровање у угнежђени прозор на прозорском систему Икс11.",
         "Description[sv]": "Återge till ett nästlat fönster på X11-fönstersystem.",
-        "Description[tr]": "X11 pencere sisteminde iç içe geçmiş bir pencereye gerçekle.",
+        "Description[tr]": "X11 pencere sisteminde iç içe geçmiş bir pencereye sunun.",
         "Description[uk]": "Обробляти у вкладене вікно системи керування вікнами X11.",
         "Description[vi]": "Kết xuất vào một cửa sổ lồng trong hệ thống cửa sổ X11.",
         "Description[x-test]": "xxRender to a nested window on X11 windowing system.xx",
