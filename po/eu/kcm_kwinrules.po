@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-03 00:48+0000\n"
+"POT-Creation-Date: 2022-12-11 00:48+0000\n"
 "PO-Revision-Date: 2022-08-17 18:01+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -75,12 +75,12 @@ msgstr ""
 msgid "Copy of %1"
 msgstr "%1(e)n kopia"
 
-#: kcmrules.cpp:422
+#: kcmrules.cpp:423
 #, kde-format
 msgid "Application settings for %1"
 msgstr "%1(r)entzako aplikazio-ezarpenak"
 
-#: kcmrules.cpp:442 rulesmodel.cpp:215
+#: kcmrules.cpp:445 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "%1(r)entzako leiho-ezarpenak"
@@ -371,42 +371,37 @@ msgid_plural "After %1 seconds"
 msgstr[0] "Segundo %1 igarota"
 msgstr[1] "%1 segundo igarota"
 
-#: package/contents/ui/RulesEditor.qml:147
-#, kde-format
-msgid "Error"
-msgstr "Errorea"
-
-#: package/contents/ui/RulesEditor.qml:162
+#: package/contents/ui/RulesEditor.qml:175
 #, kde-format
 msgid "Add property to the rule"
 msgstr "Gehitu propietate bat arauari"
 
-#: package/contents/ui/RulesEditor.qml:260
+#: package/contents/ui/RulesEditor.qml:273
 #: package/contents/ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
 msgstr "Bai"
 
-#: package/contents/ui/RulesEditor.qml:260
+#: package/contents/ui/RulesEditor.qml:273
 #: package/contents/ui/ValueEditor.qml:60
 #, kde-format
 msgid "No"
 msgstr "Ez"
 
-#: package/contents/ui/RulesEditor.qml:262
+#: package/contents/ui/RulesEditor.qml:275
 #: package/contents/ui/ValueEditor.qml:171
 #: package/contents/ui/ValueEditor.qml:178
 #, kde-format
 msgid "%1 %"
 msgstr "%%1"
 
-#: package/contents/ui/RulesEditor.qml:264
+#: package/contents/ui/RulesEditor.qml:277
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: package/contents/ui/RulesEditor.qml:266
+#: package/contents/ui/RulesEditor.qml:279
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"
@@ -802,159 +797,184 @@ msgstr "Mahaiganeko fitxategiaren izena"
 msgid "Block compositing"
 msgstr "Bloke-konposizioa"
 
-#: rulesmodel.cpp:727
+#: rulesmodel.cpp:703
+#, fuzzy, kde-format
+#| msgid "Window class (application)"
+msgid "Window class not available"
+msgstr "Leiho klasea (aplikazioa)"
+
+#: rulesmodel.cpp:704
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"This application is not providing a class for the window, so KWin cannot use "
+"it to match and apply any rules. If you still want to apply some rules to "
+"it, try to match other properties like the window title instead.<nl/><nl/"
+">Please consider reporting this bug to the application's developers."
+msgstr ""
+
+#: rulesmodel.cpp:738
 #, kde-format
 msgid "All Window Types"
 msgstr "Leiho mota guztiak"
 
-#: rulesmodel.cpp:728
+#: rulesmodel.cpp:739
 #, kde-format
 msgid "Normal Window"
 msgstr "Leiho normala"
 
-#: rulesmodel.cpp:729
+#: rulesmodel.cpp:740
 #, kde-format
 msgid "Dialog Window"
 msgstr "Elkarrizketa-leihoa"
 
-#: rulesmodel.cpp:730
+#: rulesmodel.cpp:741
 #, kde-format
 msgid "Utility Window"
 msgstr "Utilitate-leihoa"
 
-#: rulesmodel.cpp:731
+#: rulesmodel.cpp:742
 #, kde-format
 msgid "Dock (panel)"
 msgstr "Atrakatu (panela)"
 
-#: rulesmodel.cpp:732
+#: rulesmodel.cpp:743
 #, kde-format
 msgid "Toolbar"
 msgstr "Tresna-barra"
 
-#: rulesmodel.cpp:733
+#: rulesmodel.cpp:744
 #, kde-format
 msgid "Torn-Off Menu"
 msgstr "Goitik beherako menua"
 
-#: rulesmodel.cpp:734
+#: rulesmodel.cpp:745
 #, kde-format
 msgid "Splash Screen"
 msgstr "Harrerako pantaila"
 
-#: rulesmodel.cpp:735
+#: rulesmodel.cpp:746
 #, kde-format
 msgid "Desktop"
 msgstr "Mahaigaina"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:737
+#: rulesmodel.cpp:748
 #, kde-format
 msgid "Standalone Menubar"
 msgstr "Menu-barra autonomoa"
 
-#: rulesmodel.cpp:738
+#: rulesmodel.cpp:749
 #, kde-format
 msgid "On Screen Display"
 msgstr "Pantaila gainean bistaratzea"
 
-#: rulesmodel.cpp:748
+#: rulesmodel.cpp:759
 #, kde-format
 msgid "All Desktops"
 msgstr "Mahaigain guztiak"
 
-#: rulesmodel.cpp:750
+#: rulesmodel.cpp:761
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "Jarri leihoa mahaigain guztietan erabilgarri"
 
-#: rulesmodel.cpp:769
+#: rulesmodel.cpp:780
 #, kde-format
 msgid "All Activities"
 msgstr "Jarduera guztiak"
 
-#: rulesmodel.cpp:771
+#: rulesmodel.cpp:782
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "Jarri leihoa ekintza guztietan erabilgarri"
 
-#: rulesmodel.cpp:792
+#: rulesmodel.cpp:803
 #, kde-format
 msgid "Default"
 msgstr "Lehenetsia"
 
-#: rulesmodel.cpp:793
+#: rulesmodel.cpp:804
 #, kde-format
 msgid "No Placement"
 msgstr "Kokapenik gabe"
 
-#: rulesmodel.cpp:794
+#: rulesmodel.cpp:805
 #, kde-format
 msgid "Minimal Overlapping"
 msgstr "Gutxieneko gainezarpena"
 
-#: rulesmodel.cpp:795
+#: rulesmodel.cpp:806
 #, kde-format
 msgid "Maximized"
 msgstr "Maximizatuta"
 
-#: rulesmodel.cpp:796
+#: rulesmodel.cpp:807
 #, kde-format
 msgid "Centered"
 msgstr "Erdiratuta"
 
-#: rulesmodel.cpp:797
+#: rulesmodel.cpp:808
 #, kde-format
 msgid "Random"
 msgstr "Ausazkoa"
 
-#: rulesmodel.cpp:798
+#: rulesmodel.cpp:809
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "Goi-ezkerreko izkinan"
 
-#: rulesmodel.cpp:799
+#: rulesmodel.cpp:810
 #, kde-format
 msgid "Under Mouse"
 msgstr "Saguaren azpian"
 
-#: rulesmodel.cpp:800
+#: rulesmodel.cpp:811
 #, kde-format
 msgid "On Main Window"
 msgstr "Leiho nagusiaren gainean"
 
-#: rulesmodel.cpp:807
+#: rulesmodel.cpp:818
 #, kde-format
 msgid "None"
 msgstr "Bat ere ez"
 
-#: rulesmodel.cpp:808
+#: rulesmodel.cpp:819
 #, kde-format
 msgid "Low"
 msgstr "Txikia"
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:820
 #, kde-format
 msgid "Normal"
 msgstr "Arrunta"
 
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:821
 #, kde-format
 msgid "High"
 msgstr "Altua"
 
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:822
 #, kde-format
 msgid "Extreme"
 msgstr "Muturrekoa"
 
-#: rulesmodel.cpp:854
+#: rulesmodel.cpp:865
+#, fuzzy, kde-format
+#| msgid "Unmanaged Window"
+msgid "Unmanaged window"
+msgstr "Kudeatu gabeko leihoa"
+
+#: rulesmodel.cpp:866
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Ezin dira hauteman leihoaren propietateak. Leihoa ez du KWin-ek kudeatzen."
+
+#~ msgid "Error"
+#~ msgstr "Errorea"
 
 #~ msgid "Cascaded"
 #~ msgstr "Turrustan"
@@ -1158,9 +1178,6 @@ msgstr ""
 
 #~ msgid "s delay"
 #~ msgstr "s-ko atzerapena"
-
-#~ msgid "Unmanaged Window"
-#~ msgstr "Kudeatu gabeko leihoa"
 
 #~ msgid "x,y"
 #~ msgstr "x,y"

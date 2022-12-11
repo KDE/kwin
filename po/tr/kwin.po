@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-09 00:47+0000\n"
-"PO-Revision-Date: 2022-12-09 19:13+0300\n"
+"PO-Revision-Date: 2022-12-10 18:11+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -943,7 +943,7 @@ msgstr "Üretici:"
 #: debug_console.ui:143
 #, kde-format
 msgid "Renderer:"
-msgstr "Gerçekleyici:"
+msgstr "Sunucu:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: debug_console.ui:150
@@ -1290,7 +1290,7 @@ msgstr "Wayland platformunda pencereli kipte kullanılacak Wayland Ekranı."
 #: main_wayland.cpp:328
 #, kde-format
 msgid "Render to a virtual framebuffer."
-msgstr "Sanal bir çerçeve tamponuna gerçekle."
+msgstr "Sanal bir çerçeve arabelleğine sun."
 
 #: main_wayland.cpp:330
 #, kde-format
@@ -1352,7 +1352,7 @@ msgstr ""
 #: main_wayland.cpp:367
 #, kde-format
 msgid "Render through drm node."
-msgstr "Drm düğümünde gerçekle."
+msgstr "Drm düğümü ile sunun."
 
 #: main_wayland.cpp:368
 #, kde-format

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-03 00:48+0000\n"
+"POT-Creation-Date: 2022-12-11 00:48+0000\n"
 "PO-Revision-Date: 2022-04-19 18:33+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -72,12 +72,12 @@ msgstr ""
 msgid "Copy of %1"
 msgstr "%1 – kopio"
 
-#: kcmrules.cpp:422
+#: kcmrules.cpp:423
 #, kde-format
 msgid "Application settings for %1"
 msgstr "Sovelluksen %1 asetukset"
 
-#: kcmrules.cpp:442 rulesmodel.cpp:215
+#: kcmrules.cpp:445 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Ikkunan %1 asetukset"
@@ -366,42 +366,37 @@ msgid_plural "After %1 seconds"
 msgstr[0] "%1 sekunnin kuluttua"
 msgstr[1] "%1 sekunnin kuluttua"
 
-#: package/contents/ui/RulesEditor.qml:147
-#, kde-format
-msgid "Error"
-msgstr "Virhe"
-
-#: package/contents/ui/RulesEditor.qml:162
+#: package/contents/ui/RulesEditor.qml:175
 #, kde-format
 msgid "Add property to the rule"
 msgstr "Lisää sääntöön ominaisuus"
 
-#: package/contents/ui/RulesEditor.qml:260
+#: package/contents/ui/RulesEditor.qml:273
 #: package/contents/ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
 msgstr "Kyllä"
 
-#: package/contents/ui/RulesEditor.qml:260
+#: package/contents/ui/RulesEditor.qml:273
 #: package/contents/ui/ValueEditor.qml:60
 #, kde-format
 msgid "No"
 msgstr "Ei"
 
-#: package/contents/ui/RulesEditor.qml:262
+#: package/contents/ui/RulesEditor.qml:275
 #: package/contents/ui/ValueEditor.qml:171
 #: package/contents/ui/ValueEditor.qml:178
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
 
-#: package/contents/ui/RulesEditor.qml:264
+#: package/contents/ui/RulesEditor.qml:277
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: package/contents/ui/RulesEditor.qml:266
+#: package/contents/ui/RulesEditor.qml:279
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"
@@ -792,158 +787,183 @@ msgstr "Työpöytätiedoston nimi"
 msgid "Block compositing"
 msgstr "Estä koostaminen"
 
-#: rulesmodel.cpp:727
+#: rulesmodel.cpp:703
+#, fuzzy, kde-format
+#| msgid "Window class (application)"
+msgid "Window class not available"
+msgstr "Ikkunaluokka (sovellus)"
+
+#: rulesmodel.cpp:704
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"This application is not providing a class for the window, so KWin cannot use "
+"it to match and apply any rules. If you still want to apply some rules to "
+"it, try to match other properties like the window title instead.<nl/><nl/"
+">Please consider reporting this bug to the application's developers."
+msgstr ""
+
+#: rulesmodel.cpp:738
 #, kde-format
 msgid "All Window Types"
 msgstr "Kaikki ikkunatyypit"
 
-#: rulesmodel.cpp:728
+#: rulesmodel.cpp:739
 #, kde-format
 msgid "Normal Window"
 msgstr "Normaali ikkuna"
 
-#: rulesmodel.cpp:729
+#: rulesmodel.cpp:740
 #, kde-format
 msgid "Dialog Window"
 msgstr "Kyselyikkuna"
 
-#: rulesmodel.cpp:730
+#: rulesmodel.cpp:741
 #, kde-format
 msgid "Utility Window"
 msgstr "Apuikkuna"
 
-#: rulesmodel.cpp:731
+#: rulesmodel.cpp:742
 #, kde-format
 msgid "Dock (panel)"
 msgstr "Telakka (paneeli)"
 
-#: rulesmodel.cpp:732
+#: rulesmodel.cpp:743
 #, kde-format
 msgid "Toolbar"
 msgstr "Työkalurivi"
 
-#: rulesmodel.cpp:733
+#: rulesmodel.cpp:744
 #, kde-format
 msgid "Torn-Off Menu"
 msgstr "Irrotettu valikko"
 
-#: rulesmodel.cpp:734
+#: rulesmodel.cpp:745
 #, kde-format
 msgid "Splash Screen"
 msgstr "Tervetuloikkuna"
 
-#: rulesmodel.cpp:735
+#: rulesmodel.cpp:746
 #, kde-format
 msgid "Desktop"
 msgstr "Työpöytä"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:737
+#: rulesmodel.cpp:748
 #, kde-format
 msgid "Standalone Menubar"
 msgstr "Irrallinen valikkorivi"
 
-#: rulesmodel.cpp:738
+#: rulesmodel.cpp:749
 #, kde-format
 msgid "On Screen Display"
 msgstr "Ruutunäyttö"
 
-#: rulesmodel.cpp:748
+#: rulesmodel.cpp:759
 #, kde-format
 msgid "All Desktops"
 msgstr "Kaikki työpöydät"
 
-#: rulesmodel.cpp:750
+#: rulesmodel.cpp:761
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "Aseta saataville kaikilta työpöydiltä"
 
-#: rulesmodel.cpp:769
+#: rulesmodel.cpp:780
 #, kde-format
 msgid "All Activities"
 msgstr "Kaikki aktiviteetit"
 
-#: rulesmodel.cpp:771
+#: rulesmodel.cpp:782
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "Aseta saataville kaikista aktiviteeteista"
 
-#: rulesmodel.cpp:792
+#: rulesmodel.cpp:803
 #, kde-format
 msgid "Default"
 msgstr "Oletus"
 
-#: rulesmodel.cpp:793
+#: rulesmodel.cpp:804
 #, kde-format
 msgid "No Placement"
 msgstr "Ei sijoitusta"
 
-#: rulesmodel.cpp:794
+#: rulesmodel.cpp:805
 #, kde-format
 msgid "Minimal Overlapping"
 msgstr "Lomita mahdollisimman vähän"
 
-#: rulesmodel.cpp:795
+#: rulesmodel.cpp:806
 #, kde-format
 msgid "Maximized"
 msgstr "Suurenna"
 
-#: rulesmodel.cpp:796
+#: rulesmodel.cpp:807
 #, kde-format
 msgid "Centered"
 msgstr "Keskitä"
 
-#: rulesmodel.cpp:797
+#: rulesmodel.cpp:808
 #, kde-format
 msgid "Random"
 msgstr "Satunnainen"
 
-#: rulesmodel.cpp:798
+#: rulesmodel.cpp:809
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "Vasempaan yläkulmaan"
 
-#: rulesmodel.cpp:799
+#: rulesmodel.cpp:810
 #, kde-format
 msgid "Under Mouse"
 msgstr "Osoittimen kohdalle"
 
-#: rulesmodel.cpp:800
+#: rulesmodel.cpp:811
 #, kde-format
 msgid "On Main Window"
 msgstr "Pääikkunaan"
 
-#: rulesmodel.cpp:807
+#: rulesmodel.cpp:818
 #, kde-format
 msgid "None"
 msgstr "Ei mitään"
 
-#: rulesmodel.cpp:808
+#: rulesmodel.cpp:819
 #, kde-format
 msgid "Low"
 msgstr "Alhainen"
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:820
 #, kde-format
 msgid "Normal"
 msgstr "Normaali"
 
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:821
 #, kde-format
 msgid "High"
 msgstr "Korkea"
 
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:822
 #, kde-format
 msgid "Extreme"
 msgstr "Äärimmäinen"
 
-#: rulesmodel.cpp:854
+#: rulesmodel.cpp:865
+#, fuzzy, kde-format
+#| msgid "Unmanaged Window"
+msgid "Unmanaged window"
+msgstr "Ei-hallittu ikkuna"
+
+#: rulesmodel.cpp:866
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "Ikkunan ominaisuuksia ei voitu tunnistaa. KWin ei hallitse ikkunaa."
+
+#~ msgid "Error"
+#~ msgstr "Virhe"
 
 #~ msgid "Cascaded"
 #~ msgstr "Porrasta"
@@ -1146,9 +1166,6 @@ msgstr "Ikkunan ominaisuuksia ei voitu tunnistaa. KWin ei hallitse ikkunaa."
 
 #~ msgid "s delay"
 #~ msgstr " s viive"
-
-#~ msgid "Unmanaged Window"
-#~ msgstr "Ei-hallittu ikkuna"
 
 #~ msgid "x,y"
 #~ msgstr "x,y"

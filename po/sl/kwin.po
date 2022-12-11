@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1639675 2022-12-09 01:36:42Z scripty $
+# $Id: kwin.po 1639772 2022-12-11 01:39:01Z scripty $
 # $Source$
 #
 #
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-09 00:47+0000\n"
-"PO-Revision-Date: 2022-11-06 08:13+0100\n"
+"PO-Revision-Date: 2022-12-10 09:23+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
-"X-Generator: Lokalize 22.08.1\n"
+"X-Generator: Lokalize 22.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2665,28 +2665,24 @@ msgid "Window to Previous Screen"
 msgstr "Okno na prejšnji zaslon"
 
 #: useractions.cpp:1109
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "Okno na eno namizje desno"
+msgstr "Okno en zaslon na desno"
 
 #: useractions.cpp:1111
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "Okno na eno namizje levo"
+msgstr "Okno en zaslon na levo"
 
 #: useractions.cpp:1113
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "Okno na zaslon %1"
+msgstr "Okno en zaslon navzgor"
 
 #: useractions.cpp:1115
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "Okno na eno namizje dol"
+msgstr "Okno en zaslon dol"
 
 #: useractions.cpp:1119
 #, kde-format
@@ -2704,28 +2700,24 @@ msgid "Switch to Previous Screen"
 msgstr "Preklopi na prejšnji zaslon"
 
 #: useractions.cpp:1128
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Preklopi na okno desno"
+msgstr "Preklopi na zaslon na desni"
 
 #: useractions.cpp:1130
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Preklopi na okno levo"
+msgstr "Preklopi na zaslon na levi"
 
 #: useractions.cpp:1132
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Preklopi na zaslon %1"
+msgstr "Preklopi na zaslon navzgor"
 
 #: useractions.cpp:1134
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Preklopi na zaslon %1"
+msgstr "Preklopi na zaslon navzdol"
 
 #: useractions.cpp:1137
 #, kde-format

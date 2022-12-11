@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-03 00:48+0000\n"
+"POT-Creation-Date: 2022-12-11 00:48+0000\n"
 "PO-Revision-Date: 2012-06-13 15:34+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -65,12 +65,12 @@ msgstr ""
 msgid "Copy of %1"
 msgstr ""
 
-#: kcmrules.cpp:422
+#: kcmrules.cpp:423
 #, kde-format
 msgid "Application settings for %1"
 msgstr "ការ​កំណត់​កម្មវិធី​សម្រាប់ %1"
 
-#: kcmrules.cpp:442 rulesmodel.cpp:215
+#: kcmrules.cpp:445 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "ការ​កំណត់​បង្អួច​សម្រាប់ %1"
@@ -369,24 +369,19 @@ msgid "After %1 second"
 msgid_plural "After %1 seconds"
 msgstr[0] ""
 
-#: package/contents/ui/RulesEditor.qml:147
-#, kde-format
-msgid "Error"
-msgstr ""
-
-#: package/contents/ui/RulesEditor.qml:162
+#: package/contents/ui/RulesEditor.qml:175
 #, kde-format
 msgid "Add property to the rule"
 msgstr ""
 
-#: package/contents/ui/RulesEditor.qml:260
+#: package/contents/ui/RulesEditor.qml:273
 #: package/contents/ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
 msgstr ""
 
 #  i18n: file ruleswidgetbase.ui line 2115
-#: package/contents/ui/RulesEditor.qml:260
+#: package/contents/ui/RulesEditor.qml:273
 #: package/contents/ui/ValueEditor.qml:60
 #, fuzzy, kde-format
 #| msgctxt "no focus stealing prevention"
@@ -394,20 +389,20 @@ msgstr ""
 msgid "No"
 msgstr "គ្មាន"
 
-#: package/contents/ui/RulesEditor.qml:262
+#: package/contents/ui/RulesEditor.qml:275
 #: package/contents/ui/ValueEditor.qml:171
 #: package/contents/ui/ValueEditor.qml:178
 #, kde-format
 msgid "%1 %"
 msgstr ""
 
-#: package/contents/ui/RulesEditor.qml:264
+#: package/contents/ui/RulesEditor.qml:277
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
 msgstr ""
 
-#: package/contents/ui/RulesEditor.qml:266
+#: package/contents/ui/RulesEditor.qml:279
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"
@@ -861,151 +856,168 @@ msgstr ""
 msgid "Block compositing"
 msgstr "ប្លុក compositing"
 
+#  i18n: file ruleswidgetbase.ui line 58
+#: rulesmodel.cpp:703
+#, fuzzy, kde-format
+#| msgid "Window &class (application):"
+msgid "Window class not available"
+msgstr "ថ្នាក់​បង្អួច (ប្រភេទ​កម្មវិធី) ៖"
+
+#: rulesmodel.cpp:704
+#, kde-kuit-format
+msgctxt "@info"
+msgid ""
+"This application is not providing a class for the window, so KWin cannot use "
+"it to match and apply any rules. If you still want to apply some rules to "
+"it, try to match other properties like the window title instead.<nl/><nl/"
+">Please consider reporting this bug to the application's developers."
+msgstr ""
+
 #  i18n: file ruleswidgetbase.ui line 326
-#: rulesmodel.cpp:727
+#: rulesmodel.cpp:738
 #, fuzzy, kde-format
 #| msgid "Window &types:"
 msgid "All Window Types"
 msgstr "ប្រភេទ​បង្អួច ៖"
 
 #  i18n: file ruleswidgetbase.ui line 335
-#: rulesmodel.cpp:728
+#: rulesmodel.cpp:739
 #, kde-format
 msgid "Normal Window"
 msgstr "បង្អួច​ធម្មតា"
 
 #  i18n: file ruleswidgetbase.ui line 340
-#: rulesmodel.cpp:729
+#: rulesmodel.cpp:740
 #, kde-format
 msgid "Dialog Window"
 msgstr "ប្រអប់​បង្អួច"
 
 #  i18n: file ruleswidgetbase.ui line 345
-#: rulesmodel.cpp:730
+#: rulesmodel.cpp:741
 #, kde-format
 msgid "Utility Window"
 msgstr "បង្អួច​ឧបករណ៍​ប្រើប្រាស់"
 
 #  i18n: file ruleswidgetbase.ui line 350
-#: rulesmodel.cpp:731
+#: rulesmodel.cpp:742
 #, kde-format
 msgid "Dock (panel)"
 msgstr "ចត (បន្ទះ)"
 
 #  i18n: file ruleswidgetbase.ui line 355
-#: rulesmodel.cpp:732
+#: rulesmodel.cpp:743
 #, kde-format
 msgid "Toolbar"
 msgstr "របារ​ឧបករណ៍"
 
 #  i18n: file ruleswidgetbase.ui line 360
-#: rulesmodel.cpp:733
+#: rulesmodel.cpp:744
 #, kde-format
 msgid "Torn-Off Menu"
 msgstr "បិទ​ម៉ឺនុយ"
 
 #  i18n: file ruleswidgetbase.ui line 365
-#: rulesmodel.cpp:734
+#: rulesmodel.cpp:745
 #, kde-format
 msgid "Splash Screen"
 msgstr "អេក្រង់​ស្វាគមន៍"
 
 #  i18n: file ruleswidgetbase.ui line 370
-#: rulesmodel.cpp:735
+#: rulesmodel.cpp:746
 #, kde-format
 msgid "Desktop"
 msgstr "ផ្ទៃ​តុ"
 
 #  i18n: file ruleswidgetbase.ui line 380
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:737
+#: rulesmodel.cpp:748
 #, kde-format
 msgid "Standalone Menubar"
 msgstr "របារ​ម៉ឺនុយ​ឈរ​តែ​ឯង"
 
-#: rulesmodel.cpp:738
+#: rulesmodel.cpp:749
 #, kde-format
 msgid "On Screen Display"
 msgstr ""
 
-#: rulesmodel.cpp:748
+#: rulesmodel.cpp:759
 #, kde-format
 msgid "All Desktops"
 msgstr "ផ្ទៃតុ​ទាំងអស់"
 
-#: rulesmodel.cpp:750
+#: rulesmodel.cpp:761
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr ""
 
-#: rulesmodel.cpp:769
+#: rulesmodel.cpp:780
 #, kde-format
 msgid "All Activities"
 msgstr "សកម្មភាព​ទាំងអស់"
 
-#: rulesmodel.cpp:771
+#: rulesmodel.cpp:782
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr ""
 
-#: rulesmodel.cpp:792
+#: rulesmodel.cpp:803
 #, kde-format
 msgid "Default"
 msgstr "លំនាំ​ដើម​"
 
 #  i18n: file ruleswidgetbase.ui line 1116
-#: rulesmodel.cpp:793
+#: rulesmodel.cpp:804
 #, kde-format
 msgid "No Placement"
 msgstr "គ្មាន​ការ​ជំនួស"
 
-#: rulesmodel.cpp:794
+#: rulesmodel.cpp:805
 #, kde-format
 msgid "Minimal Overlapping"
 msgstr ""
 
 #  i18n: file ruleswidgetbase.ui line 1126
-#: rulesmodel.cpp:795
+#: rulesmodel.cpp:806
 #, fuzzy, kde-format
 #| msgid "Maximizing"
 msgid "Maximized"
 msgstr "ការ​ពង្រីក​អតិបរមា"
 
 #  i18n: file ruleswidgetbase.ui line 1136
-#: rulesmodel.cpp:796
+#: rulesmodel.cpp:807
 #, kde-format
 msgid "Centered"
 msgstr "ដាល់​កណ្ដាល"
 
 #  i18n: file ruleswidgetbase.ui line 1141
-#: rulesmodel.cpp:797
+#: rulesmodel.cpp:808
 #, kde-format
 msgid "Random"
 msgstr "ចៃដន្យ"
 
 #  i18n: file ruleswidgetbase.ui line 1146
-#: rulesmodel.cpp:798
+#: rulesmodel.cpp:809
 #, fuzzy, kde-format
 #| msgid "Top-Left Corner"
 msgid "In Top-Left Corner"
 msgstr "ជ្រុង​ឆ្វេង​កំពូល"
 
 #  i18n: file ruleswidgetbase.ui line 1151
-#: rulesmodel.cpp:799
+#: rulesmodel.cpp:810
 #, kde-format
 msgid "Under Mouse"
 msgstr "ក្រោម​កណ្ដុរ"
 
 #  i18n: file ruleswidgetbase.ui line 1156
-#: rulesmodel.cpp:800
+#: rulesmodel.cpp:811
 #, kde-format
 msgid "On Main Window"
 msgstr "លើ​បង្អួច​មេ"
 
 #  i18n: file ruleswidgetbase.ui line 2115
-#: rulesmodel.cpp:807
+#: rulesmodel.cpp:818
 #, fuzzy, kde-format
 #| msgctxt "no focus stealing prevention"
 #| msgid "None"
@@ -1013,30 +1025,37 @@ msgid "None"
 msgstr "គ្មាន"
 
 #  i18n: file ruleswidgetbase.ui line 2120
-#: rulesmodel.cpp:808
+#: rulesmodel.cpp:819
 #, kde-format
 msgid "Low"
 msgstr "ទាប"
 
 #  i18n: file ruleswidgetbase.ui line 2125
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:820
 #, kde-format
 msgid "Normal"
 msgstr "ធម្មតា"
 
 #  i18n: file ruleswidgetbase.ui line 2130
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:821
 #, kde-format
 msgid "High"
 msgstr "ខ្ពស់"
 
 #  i18n: file ruleswidgetbase.ui line 2135
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:822
 #, kde-format
 msgid "Extreme"
 msgstr "យ៉ាង​ខ្លាំង"
 
-#: rulesmodel.cpp:854
+#  i18n: file ruleswidgetbase.ui line 1156
+#: rulesmodel.cpp:865
+#, fuzzy, kde-format
+#| msgid "Unmanaged Window"
+msgid "Unmanaged window"
+msgstr "បង្អួច​ដែល​មិនអាច​គ្រប់គ្រ​ងបាន"
+
+#: rulesmodel.cpp:866
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
@@ -1267,10 +1286,6 @@ msgstr ""
 
 #~ msgid "s delay"
 #~ msgstr "ការ​ពន្យា​ពេល s"
-
-#  i18n: file ruleswidgetbase.ui line 1156
-#~ msgid "Unmanaged Window"
-#~ msgstr "បង្អួច​ដែល​មិនអាច​គ្រប់គ្រ​ងបាន"
 
 #~ msgid "x,y"
 #~ msgstr "x,y"

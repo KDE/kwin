@@ -5,13 +5,13 @@
 #
 # Marta Rybczyńska <kde-i18n@rybczynska.net>, 2007, 2008, 2009.
 # Marta Rybczynska <kde-i18n@rybczynska.net>, 2009, 2010, 2013.
-# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2021.
+# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-06 00:47+0000\n"
-"PO-Revision-Date: 2021-11-14 09:18+0100\n"
+"PO-Revision-Date: 2022-12-10 11:10+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 22.03.70\n"
+"X-Generator: Lokalize 22.08.3\n"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
 #: compositing.ui:31
@@ -162,13 +162,13 @@ msgstr "Wymuś najpłynniejsze animacje"
 #: compositing.ui:213
 #, kde-format
 msgid "Allows applications to cause screen tearing in fullscreen."
-msgstr ""
+msgstr "Pozwala aplikacją powodowanie cięcia ekranu w trybie na całym ekranie."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowTearing)
 #: compositing.ui:216
 #, kde-format
 msgid "Allow tearing in fullscreen"
-msgstr ""
+msgstr "Zezwól na cięcie w trybie całego ekranu"
 
 #: main.cpp:79
 #, kde-format
