@@ -1,15 +1,13 @@
-# translation of kcmkwm.po to Belarusian
-#
 # Darafei Praliaskouski <symbol@akeeri.tk>, 2006.
 # Darafei Praliaskouski <komzpa@licei2.com>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: kcmkwm\n"
+"Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2007-08-26 21:22+0300\n"
+"PO-Revision-Date: 2022-11-28 15:31\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
-"Language-Team: Belarusian <i18n@mova.org>\n"
+"Language-Team: Belarusian\n"
 "Language: be\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,31 +16,34 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || n%10>=5 && n%10<=9 || n"
 "%100>=11 && n%100<=14 ? 2 : 3);\n"
+"X-Crowdin-Project: 86ff119b1606fcaa910d6b44fc14b611\n"
+"X-Crowdin-Project-ID: 127\n"
+"X-Crowdin-Language: be\n"
+"X-Crowdin-File: /main/be/kwin/kcmkwm.po\n"
+"X-Crowdin-File-ID: 8361\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Дарафей Праляскоўскі"
+msgstr "Дарафей Праляскоўскі, Antikruk"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "komzpa@licei2.com"
+msgstr "komzpa@licei2.com, nashtlumach@gmail.com"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
-#, fuzzy, kde-format
-#| msgid "Window Actio&ns"
+#, kde-format
 msgid "Inactive Inner Window Actions"
-msgstr "Днеянні во&кнаў"
+msgstr "Дзеянні з унутранай вобласцю неактыўнага акна"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: actions.ui:26 mouse.ui:177
-#, fuzzy, kde-format
-#| msgid "&Titlebar double-click:"
+#, kde-format
 msgid "&Left click:"
-msgstr "Падвоеная пстрычка па загалоўку:"
+msgstr "Пстрыканне &левай кнопкай мышы:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow1)
 #: actions.ui:39
@@ -51,24 +52,25 @@ msgid ""
 "In this row you can customize left click behavior when clicking into an "
 "inactive inner window ('inner' means: not titlebar, not frame)."
 msgstr ""
+"У гэтым радку вы можаце наладзіць паводзіны пры пстрыканні левай кнопкай "
+"мышы ва ўнутранай вобласці неактыўнага акна (унутраная вобласць - вобласць "
+"акна, за выключэннем панэлі загалоўка і рамкі)."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
 #: actions.ui:43 actions.ui:83 actions.ui:123
-#, fuzzy, kde-format
-#| msgid "Activate"
+#, kde-format
 msgid "Activate, raise and pass click"
-msgstr "Актывізаваць"
+msgstr "Актываваць, узняць і перадаць пстрыканне"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
 #: actions.ui:48 actions.ui:88 actions.ui:128
-#, fuzzy, kde-format
-#| msgid "Activate"
+#, kde-format
 msgid "Activate and pass click"
-msgstr "Актывізаваць"
+msgstr "Актываваць і перадаць пстрыканне"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -80,7 +82,7 @@ msgstr "Актывізаваць"
 #: mouse.ui:523
 #, kde-format
 msgid "Activate"
-msgstr "Актывізаваць"
+msgstr "Актываваць"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
@@ -90,18 +92,16 @@ msgstr "Актывізаваць"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:58 actions.ui:98 actions.ui:138 mouse.ui:283 mouse.ui:398
 #: mouse.ui:513
-#, fuzzy, kde-format
-#| msgid "Activate"
+#, kde-format
 msgid "Activate and raise"
-msgstr "Актывізаваць"
+msgstr "Актываваць і ўзняць"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: actions.ui:66 mouse.ui:200
-#, fuzzy, kde-format
-#| msgid "&Titlebar double-click:"
+#, kde-format
 msgid "&Middle click:"
-msgstr "Падвоеная пстрычка па загалоўку:"
+msgstr "Пстрыканне &сярэдняй кнопкай мышы:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow2)
 #: actions.ui:79
@@ -110,13 +110,16 @@ msgid ""
 "In this row you can customize middle click behavior when clicking into an "
 "inactive inner window ('inner' means: not titlebar, not frame)."
 msgstr ""
+"У гэтым радку вы можаце наладзіць паводзіны пры пстрыканні сярэдняй кнопкай "
+"мышы ва ўнутранай вобласці неактыўнага акна (унутраная вобласць - вобласць "
+"акна, за выключэннем панэлі загалоўка і рамкі)."
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: actions.ui:106 mouse.ui:213
 #, kde-format
 msgid "&Right click:"
-msgstr ""
+msgstr "Пстрыканне &правай кнопкай мышы:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow3)
 #: actions.ui:119
@@ -125,13 +128,16 @@ msgid ""
 "In this row you can customize right click behavior when clicking into an "
 "inactive inner window ('inner' means: not titlebar, not frame)."
 msgstr ""
+"У гэтым радку вы можаце наладзіць паводзіны пры пстрыканні правай кнопкай "
+"мышы ва ўнутранай вобласці неактыўнага акна (унутраная вобласць - вобласць "
+"акна, за выключэннем панэлі загалоўка і рамкі)."
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: actions.ui:146 mouse.ui:88
 #, kde-format
 msgid "Mouse &wheel:"
-msgstr ""
+msgstr "&Кола мышы:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindowWheel)
 #: actions.ui:159
@@ -140,38 +146,39 @@ msgid ""
 "In this row you can customize behavior when scrolling into an inactive inner "
 "window ('inner' means: not titlebar, not frame)."
 msgstr ""
+"У гэтым радку вы можаце наладзіць паводзіны пры пракручванні колам мышы ва "
+"ўнутранай вобласці неактыўнага акна (унутраная вобласць - вобласць акна, за "
+"выключэннем панэлі загалоўка і рамкі)."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
 #: actions.ui:163
 #, kde-format
 msgid "Scroll"
-msgstr ""
+msgstr "Пракручванне"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
 #: actions.ui:168
-#, fuzzy, kde-format
-#| msgid "Activate"
+#, kde-format
 msgid "Activate and scroll"
-msgstr "Актывізаваць"
+msgstr "Актываваць і пракруціць"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
 #: actions.ui:173
-#, fuzzy, kde-format
-#| msgid "Activate"
+#, kde-format
 msgid "Activate, raise and scroll"
-msgstr "Актывізаваць"
+msgstr "Актываваць, узняць і пракруціць"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: actions.ui:184
 #, kde-format
 msgid "Inner Window, Titlebar and Frame Actions"
-msgstr ""
+msgstr "Дзеянні з унутранай вобласцю акна, панэллю загалоўка і рамкаю"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: actions.ui:195
 #, kde-format
 msgid "Mo&difier key:"
-msgstr ""
+msgstr "Клавіша-&мадыфікатар:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllKey)
 #: actions.ui:205
@@ -180,6 +187,8 @@ msgid ""
 "Here you select whether holding the Meta key or Alt key will allow you to "
 "perform the following actions."
 msgstr ""
+"Тут вы выбіраеце, ці дазволіць вам выканаць наступныя дзеянні, утрымліваючы "
+"клавішу Meta або Alt."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
 #: actions.ui:209
@@ -197,15 +206,14 @@ msgstr "Alt"
 #: actions.ui:236
 #, kde-format
 msgid "  + "
-msgstr ""
+msgstr "  + "
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: actions.ui:248 mouse.ui:601
-#, fuzzy, kde-format
-#| msgid "&Titlebar double-click:"
+#, kde-format
 msgid "L&eft click:"
-msgstr "Падвоеная пстрычка па загалоўку:"
+msgstr "Пстрыканне &левай кнопкай мышы:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll1)
 #: actions.ui:261
@@ -214,6 +222,8 @@ msgid ""
 "In this row you can customize left click behavior when clicking into the "
 "titlebar or the frame."
 msgstr ""
+"У гэтым радку вы можаце наладзіць паводзіны пры пстрыканні левай кнопкай "
+"мышы па панэлі загалоўка або рамцы."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
@@ -221,16 +231,15 @@ msgstr ""
 #: actions.ui:265 actions.ui:335 actions.ui:405
 #, kde-format
 msgid "Move"
-msgstr "Перанесці"
+msgstr "Перамясціць"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
 #: actions.ui:270 actions.ui:340 actions.ui:410
-#, fuzzy, kde-format
-#| msgid "Activate"
+#, kde-format
 msgid "Activate, raise and move"
-msgstr "Актывізаваць"
+msgstr "Актываваць, узняць і перамясціць"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
@@ -245,7 +254,7 @@ msgstr "Актывізаваць"
 #: mouse.ui:361 mouse.ui:423 mouse.ui:476 mouse.ui:538
 #, kde-format
 msgid "Toggle raise and lower"
-msgstr ""
+msgstr "Узняць або апусціць"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
@@ -268,7 +277,7 @@ msgstr "Змяніць памер"
 #: mouse.ui:351 mouse.ui:413 mouse.ui:466 mouse.ui:528
 #, kde-format
 msgid "Raise"
-msgstr "Падняць"
+msgstr "Узняць"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -285,7 +294,7 @@ msgstr "Падняць"
 #: mouse.ui:303 mouse.ui:356 mouse.ui:418 mouse.ui:471 mouse.ui:533
 #, kde-format
 msgid "Lower"
-msgstr "Пасунуць ніжэй"
+msgstr "Апусціць"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -302,25 +311,23 @@ msgstr "Пасунуць ніжэй"
 #: mouse.ui:313 mouse.ui:366 mouse.ui:428 mouse.ui:481 mouse.ui:543
 #, kde-format
 msgid "Minimize"
-msgstr "Найменшыць"
+msgstr "Згарнуць"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
 #: actions.ui:300 actions.ui:370 actions.ui:440
-#, fuzzy, kde-format
-#| msgid "Change Opacity"
+#, kde-format
 msgid "Decrease opacity"
-msgstr "Змяніць празрыстасць"
+msgstr "Паменшыць непразрыстасць"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
 #: actions.ui:305 actions.ui:375 actions.ui:445
-#, fuzzy, kde-format
-#| msgid "Change Opacity"
+#, kde-format
 msgid "Increase opacity"
-msgstr "Змяніць празрыстасць"
+msgstr "Павылічыць непразрыстасць"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -338,17 +345,15 @@ msgstr "Змяніць празрыстасць"
 #: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 mouse.ui:80
 #: mouse.ui:132 mouse.ui:271 mouse.ui:333 mouse.ui:386 mouse.ui:448
 #: mouse.ui:501 mouse.ui:563
-#, fuzzy, kde-format
-#| msgid "Nothing"
+#, kde-format
 msgid "Do nothing"
-msgstr "Нічога"
+msgstr "Нічога не рабіць"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: actions.ui:318
-#, fuzzy, kde-format
-#| msgid "Middle button:"
+#, kde-format
 msgid "Middle &click:"
-msgstr "Сярэдняя кнопка:"
+msgstr "Пстрыканне &сярэдняй кнопкай мышы:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
 #: actions.ui:331
@@ -357,13 +362,15 @@ msgid ""
 "In this row you can customize middle click behavior when clicking into the "
 "titlebar or the frame."
 msgstr ""
+"У гэтым радку вы можаце наладзіць паводзіны пры пстрыканні сярэдняй кнопкай "
+"мышы па панэлі загалоўка або рамцы."
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 #: actions.ui:388 mouse.ui:671
 #, kde-format
 msgid "Right clic&k:"
-msgstr ""
+msgstr "Пстрыканне &правай кнопкай мышы:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll3)
 #: actions.ui:401
@@ -372,12 +379,14 @@ msgid ""
 "In this row you can customize right click behavior when clicking into the "
 "titlebar or the frame."
 msgstr ""
+"У гэтым радку вы можаце наладзіць паводзіны пры пстрыканні правай кнопкай "
+"мышы па панэлі загалоўка або рамцы."
 
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 #: actions.ui:458
 #, kde-format
 msgid "Mo&use wheel:"
-msgstr ""
+msgstr "Кола &мышы:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllWheel)
 #: actions.ui:471
@@ -386,59 +395,56 @@ msgid ""
 "Here you can customize KDE's behavior when scrolling with the mouse wheel in "
 "a window while pressing the modifier key."
 msgstr ""
+"Тут вы можаце наладзіць паводзіны KDE падчас пракручвання колам мышы ў "
+"вокнах пры націснутай клавішы-мадыфікатары."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
 #: actions.ui:475 mouse.ui:102
-#, fuzzy, kde-format
-#| msgid "Lower"
+#, kde-format
 msgid "Raise/lower"
-msgstr "Пасунуць ніжэй"
+msgstr "Узняць/апусціць"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
 #: actions.ui:480 mouse.ui:107
 #, kde-format
 msgid "Shade/unshade"
-msgstr ""
+msgstr "Згарнуць у загаловак/разгарнуць з загалоўка"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
 #: actions.ui:485 mouse.ui:112
-#, fuzzy, kde-format
-#| msgid "Maximize"
+#, kde-format
 msgid "Maximize/restore"
-msgstr "Найбольшыць"
+msgstr "Разгарнуць/вярнуць"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
 #: actions.ui:490 mouse.ui:117
 #, kde-format
 msgid "Keep above/below"
-msgstr ""
+msgstr "Размяшчаць вышэй астатніх акон/ніжэй астатніх акон"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
 #: actions.ui:495 mouse.ui:122
-#, fuzzy, kde-format
-#| msgid "Move to Previous/Next Desktop"
+#, kde-format
 msgid "Move to previous/next desktop"
 msgstr "Перамясціць на папярэдні/наступны працоўны стол"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
 #: actions.ui:500 mouse.ui:127
-#, fuzzy, kde-format
-#| msgid "Change Opacity"
+#, kde-format
 msgid "Change opacity"
-msgstr "Змяніць празрыстасць"
+msgstr "Змяніць непразрыстасць"
 
 #. i18n: ectx: property (text), widget (QLabel, shadeHoverLabel)
 #: advanced.ui:20
-#, fuzzy, kde-format
-#| msgid "Window Actio&ns"
+#, kde-format
 msgid "Window &unshading:"
-msgstr "Днеянні во&кнаў"
+msgstr "&Разгортванне акна з загалоўка:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:32
@@ -448,12 +454,15 @@ msgid ""
 "unshade automatically when the mouse pointer has been over the titlebar for "
 "some time.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Калі гэты параметр уключаны, то згорнутае ў загаловак "
+"акно будзе аўтаматычна разгортвацца, калі курсор мышы будзе знаходзіцца на "
+"панэлі загалоўка пэўны час.</p></body></html>"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:35
 #, kde-format
 msgid "On titlebar hover after:"
-msgstr ""
+msgstr "Час знаходжання на панэлі загалоўка:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_ShadeHoverInterval)
 #: advanced.ui:42
@@ -462,13 +471,14 @@ msgid ""
 "Sets the time in milliseconds before the window unshades when the mouse "
 "pointer goes over the shaded window."
 msgstr ""
+"Вызначае час у мілісекундах, які курсор мышы мусіць знаходзіцца на панэлі "
+"загалоўка, каб акно разгарнулася з загалоўка."
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AutoRaiseInterval)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ShadeHoverInterval)
 #: advanced.ui:45 focus.ui:85 focus.ui:178
-#, fuzzy, kde-format
-#| msgid " msec"
+#, kde-format
 msgid " ms"
 msgstr " мс"
 
@@ -476,11 +486,39 @@ msgstr " мс"
 #: advanced.ui:66
 #, kde-format
 msgid "Window &placement:"
-msgstr ""
+msgstr "&Размяшчэнне акна:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_Placement)
 #: advanced.ui:76
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "<html><head/><body><p>The placement policy determines where a new window "
+#| "will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-"
+#| "bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;"
+#| "\"><li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; "
+#| "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
+#| "font-style:italic;\">Smart</span> will try to achieve a minimum overlap "
+#| "of windows</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+#| "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+#| "style=\" font-style:italic;\">Maximizing</span> will try to maximize "
+#| "every window to fill the whole screen. It might be useful to selectively "
+#| "affect placement of some windows using the window-specific settings.</"
+#| "li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
+#| "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
+#| "font-style:italic;\">Cascade</span> will cascade the windows</li><li "
+#| "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+#| "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#| "style:italic;\">Random</span> will use a random position</li><li style=\" "
+#| "margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
+#| "block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+#| "\">Centered</span> will place the window centered</li><li style=\" margin-"
+#| "top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+#| "indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Zero-"
+#| "cornered</span> will place the window in the top-left corner</li><li "
+#| "style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-"
+#| "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
+#| "style:italic;\">Under mouse</span> will place the window under the "
+#| "pointer</li></ul></body></html>"
 msgid ""
 "<html><head/><body><p>The placement policy determines where a new window "
 "will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-bottom: "
@@ -506,43 +544,67 @@ msgid ""
 "\"><span style=\" font-style:italic;\">Under mouse</span> will place the "
 "window under the pointer</li></ul></body></html>"
 msgstr ""
+"<html><head/><body><p>Палітыка размяшчэння вызначае месца з'яўлення акна.</"
+"p><ul style=\"margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-"
+"right: 0px; -qt-list-indent: 1;\"><li style=\" margin-top:12px; margin-"
+"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">Разумнае</span> будзе "
+"спрабаваць дамагчыся мінімальнага перакрыцця акон</li><li style=\" margin-"
+"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Разгорнута</"
+"span> будзе спрабаваць павялічыць кожнае акно, каб запоўніць увесь экран. "
+"Можа быць карысна пры размяшчэнні некаторых акон з дапамогай адмысловых "
+"налад для асобных акон.</li><li style=\" margin-top:0px; margin-bottom:0px; "
+"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+"\"><span style=\" font-style:italic;\">Каскадам</span> каскад акон</li><li "
+"style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
+"italic;\">Выпадковае</span> выкарыстанне выпадковай пазіцыі</li><li style=\" "
+"margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
+"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Па "
+"цэнтры</span> вокны будуць з'яўляцца па цэнтры</li><li style=\" margin-"
+"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">У нулявым "
+"куце</span> вокны будуць з'яўляцца ў верхнім левым куце</li><li style=\" "
+"margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-"
+"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Пад "
+"мышшу</span> вокны будуць з'яўляцца пад курсорам мышы</li></ul></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:80
 #, kde-format
 msgid "Minimal Overlapping"
-msgstr ""
+msgstr "Мінімальнае перакрыццё"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:85
-#, fuzzy, kde-format
-#| msgid "Maximize"
+#, kde-format
 msgid "Maximized"
-msgstr "Найбольшыць"
+msgstr "Разнорнута"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:90
 #, kde-format
 msgid "Random"
-msgstr "Выпадковыя"
+msgstr "Выпадковае"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:95
 #, kde-format
 msgid "Centered"
-msgstr "Пасярэдзіне"
+msgstr "Па цэнтры"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:100
 #, kde-format
 msgid "In Top-Left Corner"
-msgstr ""
+msgstr "У левым верхнім куце"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:105
 #, kde-format
 msgid "Under mouse"
-msgstr ""
+msgstr "Пад мышшу"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
 #: advanced.ui:113
@@ -552,6 +614,9 @@ msgid ""
 "windows are allowed to do so. This will override the window placement mode "
 "defined above."
 msgstr ""
+"Калі ўключана, праграмы, якія могуць запамінаць пазіцыю сваіх акон, могуць "
+"гэта рабіць. Гэты параметр перавызначыць рэжым размяшчэння акон, вызначаны "
+"вышэй."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
 #: advanced.ui:116
@@ -559,13 +624,14 @@ msgstr ""
 msgid ""
 "Allow apps to remember the positions of their own windows, if they support it"
 msgstr ""
+"Дазволіць праграмам запамінаць пазіцыю сваіх акон, калі яны падтрымліваюць "
+"гэтую функцыю"
 
 #. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
 #: advanced.ui:123
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "&Special windows:"
-msgstr "Вокны"
+msgstr "&Адмысловыя вокны:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
 #: advanced.ui:133
@@ -576,24 +642,28 @@ msgid ""
 "application becomes active. Note that applications have to mark the windows "
 "with the proper window type for this feature to work."
 msgstr ""
+"Калі параметр уключаны, службовыя вокны (вокны інструментаў, адасобленыя "
+"меню,...) неактыўных праграм будуць хавацца, і будуць паказвацца толькі "
+"тады, калі праграма стане актыўнай. Звярніце ўвагу, што для таго, каб гэтая "
+"функцыя працавала, праграмы мусяць пазначаць вокны адпаведным тыпам."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
 #: advanced.ui:136
 #, kde-format
 msgid "Hide utility windows for inactive applications"
-msgstr ""
+msgstr "Хаваць службовыя вокны неактыўных праграм"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
 #: advanced.ui:143
 #, kde-format
 msgid "Virtual Desktop behavior:"
-msgstr ""
+msgstr "Паводзіны віртуальных працоўных сталоў:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
 #: advanced.ui:153
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
-msgstr ""
+msgstr "Пры актывацыі акна на іншым віртуальным працоўным стале:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:160
@@ -607,73 +677,82 @@ msgid ""
 "Virtual Desktop</span> will cause the window to jump to the active Virtual "
 "Desktop. </p></body></html>"
 msgstr ""
+"<html><head/><body><p>Гэты параметр вызначае паводзіны пры адкрыцці акна, "
+"якое размешчана на іншым віртуальным працоўным стале. </p><p><span style=\" "
+"font-style:italic;\">Пераключэнне на віртуальны працоўны стол мэтавага акна</"
+"span> будзе выканана пераключэнне на віртуальны працоўны стол, на якім "
+"знаходзіцца акно. </p><p><span style=\" font-style:italic;\">Перанос акна на "
+"бягучы віртуальны працоўны стол</span> мэтавае акно будзе перанесена на "
+"актыўны віртуальны працоўны стол. </p></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:164
 #, kde-format
 msgid "Switch to that Virtual Desktop"
-msgstr ""
+msgstr "Пераключэнне на віртуальны працоўны стол мэтавага акна"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:169
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
-msgstr ""
+msgstr "Перанос на бягучы віртуальны працоўны стол"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
 #: focus.ui:22
 #, kde-format
 msgid "Window &activation policy:"
-msgstr ""
+msgstr "Палітыка &актывацыі акон:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, windowFocusPolicy)
 #: focus.ui:32
 #, kde-format
 msgid "With this option you can specify how and when windows will be focused."
 msgstr ""
+"З дапамогай гэтага параметра можна вызначыць, як і калі вокны будуць "
+"трапляць у фокус."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:36
 #, kde-format
 msgctxt "sassa asas"
 msgid "Click to focus"
-msgstr ""
+msgstr "Факусавацца пры пстрыканні"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:41
 #, kde-format
 msgid "Click to focus (mouse precedence)"
-msgstr ""
+msgstr "Факусавацца пры пстрыканні (прыярытэт мышы)"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:46
 #, kde-format
 msgid "Focus follows mouse"
-msgstr ""
+msgstr "Факусавацца ўслед за мышшу"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:51
 #, kde-format
 msgid "Focus follows mouse (mouse precedence)"
-msgstr ""
+msgstr "Факусавацца ўслед за мышшу (прыярытэт мышы)"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:56
 #, kde-format
 msgid "Focus under mouse"
-msgstr ""
+msgstr "Факусавацца пад мышшу"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:61
 #, kde-format
 msgid "Focus strictly under mouse"
-msgstr ""
+msgstr "Факусавацца строга пад мышшу"
 
 #. i18n: ectx: property (text), widget (QLabel, delayFocusOnLabel)
 #: focus.ui:69
 #, kde-format
 msgid "&Delay focus by:"
-msgstr ""
+msgstr "&Затрымліванне фокуса:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_DelayFocusInterval)
 #: focus.ui:82
@@ -682,12 +761,14 @@ msgid ""
 "This is the delay after which the window the mouse pointer is over will "
 "automatically receive focus."
 msgstr ""
+"Гэта час затрымлівання, пасля завяршэння якога акно, над якім знаходзіцца "
+"паказальнік мышы, аўтаматычна атрымлівае фокус."
 
 #. i18n: ectx: property (text), widget (QLabel, focusStealingLabel)
 #: focus.ui:101
 #, kde-format
 msgid "Focus &stealing prevention:"
-msgstr ""
+msgstr "&Прадухіленне перахоплівання фокуса:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_FocusStealingPreventionLevel)
 #: focus.ui:114
@@ -724,6 +805,37 @@ msgid ""
 "by default means their taskbar entry will be highlighted. This can be "
 "changed in the Notifications control module.</p></body></html>"
 msgstr ""
+"<html><head/><body><p>Гэты параметр вызначае, колькі KWin будзе спрабаваць "
+"прадухіліць перахопліванне фокуса, выкліканае нечаканай актывацыяй новых "
+"акон. (Заўвага: гэтая функцыя не працуе з <span style=\" font-style:italic;"
+"\">Факусаваннем пад мышшу</span> або <span style=\" font-style:italic;"
+"\">Факусаваннем строга пад мышгу</span>.) </p><ul style=\"margin-top: 0px; "
+"margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;"
+"\"><li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
+"italic;\">Няма:</span>прадухіленне адключана, новыя вокны будуць адразу "
+"актывавацца.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Нізкі ўзровень:</span> прадухіленне ўключана; "
+"калі нейкае акно не падтрымлівае асноўны механізм і KWin не можа дакладна "
+"вырашыць, актываваць акно ці не, яно будзе актывавана. У залежнасці ад "
+"праграмы, з гэтым параметрам могуць быць як горшыя, так і лепшыя вынікі, чым "
+"з сярэднім ўзроўнем.</li><li style=\" margin-top:0px; margin-bottom:0px; "
+"margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"
+"\"><span style=\" font-style:italic;\">Сярэдні ўзровень:</span> Прадухіленне "
+"ўключана.</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Высокі ўзровень:</span> новыя вокны актывуюцца "
+"толькі ў тым выпадку, калі ў гэты момант няма актыўных вокнаў або яны "
+"належаць актыўнай праграме. Гэты параметр немагчыма выкарыстоўваць, калі не "
+"выкарыстоўваецца палітыка факусавання мышы.</li><li style=\" margin-top:0px; "
+"margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
+"text-indent:0px;\"><span style=\" font-style:italic;\">Экстрэмальны ўзровень:"
+"</span> усе вокны мусяць быць актываваныя карыстальнікам.</li></ul><p>вокны, "
+"якія не могуць перахапіць фокус, пазначаюцца як вокны, якія патрабуюць "
+"увагі. Прадвызначана гэта азначае, што іх запіс на панэлі задач будзе "
+"абраны. Гэта можна змяніць у модулі кіравання апавяшчэннямі.</p></body></"
+"html>"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)
@@ -731,52 +843,43 @@ msgstr ""
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_CenterSnapZone)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
 #: focus.ui:118 moving.ui:33 moving.ui:65 moving.ui:97
-#, fuzzy, kde-format
-#| msgctxt "Focus Stealing Prevention Level"
-#| msgid "None"
+#, kde-format
 msgid "None"
 msgstr "Няма"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
 #: focus.ui:123
-#, fuzzy, kde-format
-#| msgctxt "Focus Stealing Prevention Level"
-#| msgid "Low"
+#, kde-format
 msgid "Low"
-msgstr "Нізкі"
+msgstr "Нізкі ўзровень"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
 #: focus.ui:128
 #, kde-format
 msgid "Medium"
-msgstr ""
+msgstr "Сярэдні ўзровень"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
 #: focus.ui:133
-#, fuzzy, kde-format
-#| msgctxt "Focus Stealing Prevention Level"
-#| msgid "High"
+#, kde-format
 msgid "High"
-msgstr "Высокі"
+msgstr "Высокі ўзровень"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_FocusStealingPreventionLevel)
 #: focus.ui:138
-#, fuzzy, kde-format
-#| msgctxt "Focus Stealing Prevention Level"
-#| msgid "Extreme"
+#, kde-format
 msgid "Extreme"
-msgstr "Экстрымальна"
+msgstr "Экстрэмальны ўзровень"
 
 #. i18n: ectx: property (text), widget (QLabel, raisingWindowsLabel)
 #: focus.ui:146
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Raising windows:"
-msgstr "Вокны"
+msgstr "Узніманне акон:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ClickRaise)
 #: focus.ui:153
@@ -786,12 +889,15 @@ msgid ""
 "when you click somewhere into the window contents. To change it for inactive "
 "windows, you need to change the settings in the Actions tab."
 msgstr ""
+"Калі гэты параметр уключаны, актыўнае акно будзе ўзнімацца на пярэдні план, "
+"калі вы націснеце дзе-небудзь у вобласці акна. Каб змяніць гэта для "
+"неактыўных акон, трэба змяніць налады ва ўкладцы дзеянняў."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ClickRaise)
 #: focus.ui:156
 #, kde-format
 msgid "&Click raises active window"
-msgstr ""
+msgstr "Узніманне &актыўнага акна пстрыканнем"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AutoRaise)
 #: focus.ui:165
@@ -800,12 +906,14 @@ msgid ""
 "When this option is enabled, a window in the background will automatically "
 "come to the front when the mouse pointer has been over it for some time."
 msgstr ""
+"Калі гэты параметр уключаны, то фонавае акно будзе аўтаматычна пераносіцца "
+"на пярэдні план, калі курсор мышы будзе знаходзіцца паверх яго пэўны час."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AutoRaise)
 #: focus.ui:168
 #, kde-format
 msgid "&Raise on hover, delayed by:"
-msgstr ""
+msgstr "Узніманне пры &навядзенні, затрымліванне на:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_AutoRaiseInterval)
 #: focus.ui:175
@@ -814,12 +922,14 @@ msgid ""
 "This is the delay after which the window that the mouse pointer is over will "
 "automatically come to the front."
 msgstr ""
+"Гэта час затрымлівання, пасля завяршэння якога акно, над якім знаходзіцца "
+"паказальнік мышы, аўтаматычна пераносіцца на пярэдні план."
 
 #. i18n: ectx: property (text), widget (QLabel, multiscreenBehaviorLabel)
 #: focus.ui:196
 #, kde-format
 msgid "Multiscreen behavior:"
-msgstr ""
+msgstr "Паводзіны пры некалькіх экранах:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
 #: focus.ui:203
@@ -829,12 +939,15 @@ msgid ""
 "for example) is the screen containing the mouse pointer. When disabled, the "
 "active screen is the screen containing the focused window."
 msgstr ""
+"Калі гэты параметр уключаны, актыўны экран (напрыклад, дзе з'яўляюцца новыя "
+"вокны) - экран, які змяшчае паказальнік мышы. Калі гэты параметр адключаны, "
+"актыўны экран - экран, які змяшчае акно ў фокусе."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
 #: focus.ui:206
 #, kde-format
 msgid "Active screen follows &mouse"
-msgstr ""
+msgstr "Актыўны экран пільнуецца &мышы"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:213
@@ -843,51 +956,50 @@ msgid ""
 "When this option is enabled, focus operations are limited only to the active "
 "screen"
 msgstr ""
+"Калі гэты параметр уключаны, аперацыі факусавання абмяжоўваюцца толькі "
+"актыўным экранам"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:216
 #, kde-format
 msgid "&Separate screen focus"
-msgstr ""
+msgstr "&Асобнае факусаванне экранаў"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
 #: focus.ui:229
 #, kde-format
 msgid "Window activation policy description"
-msgstr ""
+msgstr "Апісанне палітыкі актывацыі акон"
 
 #: main.cpp:73
 #, kde-format
 msgid "&Focus"
-msgstr "Фокус"
+msgstr "&Фокус"
 
 #: main.cpp:79
-#, fuzzy, kde-format
-#| msgid "&Titlebar Actions"
+#, kde-format
 msgid "Titlebar A&ctions"
-msgstr "Дзеянні радку загалоўку"
+msgstr "Дзеянні &панэляў загалоўкаў"
 
 #: main.cpp:85
-#, fuzzy, kde-format
-#| msgid "Window Actio&ns"
+#, kde-format
 msgid "W&indow Actions"
-msgstr "Днеянні во&кнаў"
+msgstr "Дзеянні &акон"
 
 #: main.cpp:91
 #, kde-format
 msgid "Mo&vement"
-msgstr ""
+msgstr "&Перамяшчэнне"
 
 #: main.cpp:97
-#, fuzzy, kde-format
-#| msgid "Ad&vanced"
+#, kde-format
 msgid "Adva&nced"
-msgstr "Ад&мысловыя"
+msgstr "&Дадатковыя налады"
 
 #: main.cpp:101
 #, kde-format
 msgid "Window Behavior Configuration Module"
-msgstr "Модуль настаўлення паводзін вокнаў"
+msgstr "Модуль наладжвання паводзін акон"
 
 #: main.cpp:103
 #, kde-format
@@ -897,47 +1009,47 @@ msgstr "(c) 1997 - 2002 Аўтары KWin і KControl"
 #: main.cpp:105
 #, kde-format
 msgid "Matthias Ettrich"
-msgstr "Матыяс Эттрых"
+msgstr "Matthias Ettrich"
 
 #: main.cpp:106
 #, kde-format
 msgid "Waldo Bastian"
-msgstr "Вальдо Басціян"
+msgstr "Waldo Bastian"
 
 #: main.cpp:107
 #, kde-format
 msgid "Cristian Tibirna"
-msgstr "Крысціян Цібірна"
+msgstr "Cristian Tibirna"
 
 #: main.cpp:108
 #, kde-format
 msgid "Matthias Kalle Dalheimer"
-msgstr "Маттыяс Калле Дальхеймер"
+msgstr "Matthias Kalle Dalheimer"
 
 #: main.cpp:109
 #, kde-format
 msgid "Daniel Molkentin"
-msgstr "Даніель Молькенцін"
+msgstr "Daniel Molkentin"
 
 #: main.cpp:110
 #, kde-format
 msgid "Wynn Wilkes"
-msgstr "Вінн Вількс"
+msgstr "Wynn Wilkes"
 
 #: main.cpp:111
 #, kde-format
 msgid "Pat Dowler"
-msgstr "Пэт Доўлер"
+msgstr "Pat Dowler"
 
 #: main.cpp:112
 #, kde-format
 msgid "Bernd Wuebben"
-msgstr "Бернд Уэббен"
+msgstr "Bernd Wuebben"
 
 #: main.cpp:113
 #, kde-format
 msgid "Matthias Hoelzer-Kluepfel"
-msgstr "Матыяс Хёльцэр-Клюпфэл"
+msgstr "Matthias Hoelzer-Kluepfel"
 
 #: main.cpp:161
 #, kde-format
@@ -949,36 +1061,40 @@ msgid ""
 "manager. If you do use a different window manager, please refer to its "
 "documentation for how to customize window behavior.</p>"
 msgstr ""
+"<p><h1>Паводзіны акон</h1> Тут вы можаце наладзіць паводзіны акон пры "
+"перамяшчэнні, змене памеру або пстрыканні па іх. Вы таксама можаце вызначыць "
+"правілы факусавання і размяшчэння новых акон.</p> <p>Звярніце ўвагу на тое, "
+"што гэтая канфігурацыя не будзе дзейнічаць, калі вы не выкарыстоўваеце KWin "
+"як кіраўніка акон. Калі вы выкарыстоўваеце іншы кіраўнік акон, звярніцеся да "
+"яго дакументацыі, каб даведацца як наладзіць паводзіны акон.</p>"
 
 #: main.cpp:202
 #, kde-format
 msgid "&Titlebar Actions"
-msgstr "Дзеянні радку загалоўку"
+msgstr "Дзеянні &панэляў загалоўкаў"
 
 #: main.cpp:208
 #, kde-format
 msgid "Window Actio&ns"
-msgstr "Днеянні во&кнаў"
+msgstr "Дзеянні &акон"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: mouse.ui:17
-#, fuzzy, kde-format
-#| msgid "&Titlebar Actions"
+#, kde-format
 msgid "Titlebar Actions"
-msgstr "Дзеянні радку загалоўку"
+msgstr "Дзеянні панэляў загалоўкаў"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: mouse.ui:26
-#, fuzzy, kde-format
-#| msgid "&Titlebar double-click:"
+#, kde-format
 msgid "&Double-click:"
-msgstr "Падвоеная пстрычка па загалоўку:"
+msgstr "&Падвойнае пстрыканне:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
 #: mouse.ui:36
 #, kde-format
 msgid "Behavior on <em>double</em> click into the titlebar."
-msgstr ""
+msgstr "Паводзіны пры <em>падвойным</em> пстрыканні па панэлі загалоўка."
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
@@ -986,10 +1102,9 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
 #: mouse.ui:40 mouse.ui:615 mouse.ui:650 mouse.ui:685
-#, fuzzy, kde-format
-#| msgid "Maximize"
+#, kde-format
 msgid "Maximize"
-msgstr "Найбольшыць"
+msgstr "Разгарнуць"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
@@ -999,7 +1114,7 @@ msgstr "Найбольшыць"
 #: mouse.ui:45 mouse.ui:620 mouse.ui:655 mouse.ui:690
 #, kde-format
 msgid "Vertically maximize"
-msgstr ""
+msgstr "Разгарнуць па вертыкалі"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
@@ -1009,7 +1124,7 @@ msgstr ""
 #: mouse.ui:50 mouse.ui:625 mouse.ui:660 mouse.ui:695
 #, kde-format
 msgid "Horizontally maximize"
-msgstr ""
+msgstr "Разгарнуць па гарызанталі"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
@@ -1023,7 +1138,7 @@ msgstr ""
 #: mouse.ui:548
 #, kde-format
 msgid "Shade"
-msgstr "Зацяніць"
+msgstr "Згарнуць у загаловак"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
@@ -1037,41 +1152,38 @@ msgstr "Зацяніць"
 #: mouse.ui:553
 #, kde-format
 msgid "Close"
-msgstr ""
+msgstr "Закрыць"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
 #: mouse.ui:75
-#, fuzzy, kde-format
-#| msgid "On All Desktops"
+#, kde-format
 msgid "Show on all desktops"
-msgstr "На ўсіх працоўных сталах"
+msgstr "Паказваць на ўсіх працоўных сталах"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandTitlebarWheel)
 #: mouse.ui:98
 #, kde-format
 msgid "Behavior on <em>mouse wheel</em> scroll over the titlebar."
-msgstr ""
+msgstr "Паводзіны пры <em>пракручванні колам машы</em> на панэлі загалоўка."
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: mouse.ui:143
-#, fuzzy, kde-format
-#| msgid "&Titlebar Actions"
+#, kde-format
 msgid "Titlebar and Frame Actions"
-msgstr "Дзеянні радку загалоўку"
+msgstr "Дзеянні панэляў загалоўкаў і рамак"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: mouse.ui:167
 #, kde-format
 msgid "Active"
-msgstr "Актыўная"
+msgstr "Актыўнае"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: mouse.ui:190
-#, fuzzy, kde-format
-#| msgid "Active"
+#, kde-format
 msgid "Inactive"
-msgstr "Актыўная"
+msgstr "Неактыўнае"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar1)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar2)
@@ -1082,6 +1194,8 @@ msgid ""
 "Behavior on <em>left</em> click into the titlebar or frame of an <em>active</"
 "em> window."
 msgstr ""
+"Паводзіны пры націсканні <em>левай кнопкай мышы</em> па панэлі загалоўка або "
+"рамцы <em>актыўнага</em> акна."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
@@ -1091,10 +1205,9 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: mouse.ui:266 mouse.ui:328 mouse.ui:381 mouse.ui:443 mouse.ui:496
 #: mouse.ui:558
-#, fuzzy, kde-format
-#| msgid "Operations Menu"
+#, kde-format
 msgid "Show actions menu"
-msgstr "Меню аперацый"
+msgstr "Паказаць меню дзеянняў"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar2)
@@ -1105,22 +1218,22 @@ msgid ""
 "Behavior on <em>left</em> click into the titlebar or frame of an "
 "<em>inactive</em> window."
 msgstr ""
+"Паводзіны пры націсканні <em>левай кнопкай мышы</em> па панэлі загалоўка або "
+"рамцы <em>неактыўнага</em> акна."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: mouse.ui:288 mouse.ui:403 mouse.ui:518
-#, fuzzy, kde-format
-#| msgid "Activate"
+#, kde-format
 msgid "Activate and lower"
-msgstr "Актывізаваць"
+msgstr "Актываваць і апусціць"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: mouse.ui:589
-#, fuzzy, kde-format
-#| msgid "Maximize"
+#, kde-format
 msgid "Maximize Button Actions"
-msgstr "Найбольшыць"
+msgstr "Дзеянні кнопкі разгортвання"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_8)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
@@ -1128,6 +1241,7 @@ msgstr "Найбольшыць"
 #, kde-format
 msgid "Behavior on <em>left</em> click onto the maximize button."
 msgstr ""
+"Паводзіны пры пстрыканні <em>левай кнопкай мышы</em> па кнопцы разгортвання."
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_9)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
@@ -1135,13 +1249,14 @@ msgstr ""
 #, kde-format
 msgid "Behavior on <em>middle</em> click onto the maximize button."
 msgstr ""
+"Паводзіны пры пстрыканні <em>сярэдняй кнопкай мышы</em> па кнопцы "
+"разгортвання."
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #: mouse.ui:636
-#, fuzzy, kde-format
-#| msgid "Middle button:"
+#, kde-format
 msgid "Middle c&lick:"
-msgstr "Сярэдняя кнопка:"
+msgstr "Пстрыканне &сярэдняй кнопкай мышы:"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_10)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
@@ -1149,12 +1264,13 @@ msgstr "Сярэдняя кнопка:"
 #, kde-format
 msgid "Behavior on <em>right</em> click onto the maximize button."
 msgstr ""
+"Паводзіны пры пстрыканні <em>правай кнопкай мышы</em> па кнопцы разгортвання."
 
 #. i18n: ectx: property (text), widget (QLabel, borderSnapLabel)
 #: moving.ui:20
 #, kde-format
 msgid "Screen &edge snap zone:"
-msgstr ""
+msgstr "Зона прывязвання да &краёў экрана:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_BorderSnapZone)
 #: moving.ui:30
@@ -1163,6 +1279,9 @@ msgid ""
 "Here you can set the snap zone for screen edges, i.e. the 'strength' of the "
 "magnetic field which will make windows snap to the border when moved near it."
 msgstr ""
+"Тут вы можаце вызначыць зону прывязвання да краёў экрана, г.зн. \"магутнасць"
+"\" магнітнага поля, якое прымусіць вокны прымыкаць да межаў пры набліжэнні "
+"да іх."
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_BorderSnapZone)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_WindowSnapZone)
@@ -1170,13 +1289,13 @@ msgstr ""
 #: moving.ui:36 moving.ui:68 moving.ui:100
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " пікс."
 
 #. i18n: ectx: property (text), widget (QLabel, windowSnapLabel)
 #: moving.ui:52
 #, kde-format
 msgid "&Window snap zone:"
-msgstr ""
+msgstr "Зона прывязвання &акон:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_WindowSnapZone)
 #: moving.ui:62
@@ -1186,12 +1305,15 @@ msgid ""
 "magnetic field which will make windows snap to each other when they are "
 "moved near another window."
 msgstr ""
+"Тут вы можаце вызначыць зону прывязвання для акон, г.зн. \"магутнасць\" "
+"магнітнага поля, якое прымусіць вокны прымыкаць адно да аднаго пры "
+"набліжэнні да іншага акна."
 
 #. i18n: ectx: property (text), widget (QLabel, centerSnaplabel)
 #: moving.ui:84
 #, kde-format
 msgid "&Center snap zone:"
-msgstr ""
+msgstr "Зона прывязвання да &цэнтра:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_CenterSnapZone)
 #: moving.ui:94
@@ -1201,13 +1323,15 @@ msgid ""
 "the magnetic field which will make windows snap to the center of the screen "
 "when moved near it."
 msgstr ""
+"Тут вы можаце вызначыць зону прывязвання да цэнтра экрана, г.зн. \"магутнасць"
+"\" магнітнага поля, якое прымусіць вокны прымыкаць да цэнтра экрана пры "
+"набліжэнні да яго."
 
 #. i18n: ectx: property (text), widget (QLabel, OverlapSnapLabel)
 #: moving.ui:113
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "&Snap windows:"
-msgstr "Вокны"
+msgstr "&Прывязванне акон:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
 #: moving.ui:123
@@ -1217,12 +1341,15 @@ msgid ""
 "them, i.e. they will not be snapped if the windows comes only near another "
 "window or border."
 msgstr ""
+"Тут вы можаце вызначыць, што вокны будуць прывязвацца толькі тады, калі вы "
+"паспрабуеце накласці іх адно на адно, г.зн. яны не будуць прывязваецца, калі "
+"вокны будуць набліжацца да іншых акон або межаў."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
 #: moving.ui:126
 #, kde-format
 msgid "Only when overlapping"
-msgstr ""
+msgstr "Толькі пры накладанні"
 
 #: windows.cpp:97
 #, kde-format
@@ -1230,6 +1357,9 @@ msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
 "This behavior is common on other operating systems and likely what you want."
 msgstr ""
+"<em>Факусаванне пры пстрыканні:</em> Акно становіцца актыўным, калі вы "
+"пстрыкаеце па ім. Такія паводзіны часта сустракаюцца ў іншых аперацыйных "
+"сістэмах. Хутчэй за ўсё, гэта тое, што вам патрэбна."
 
 #: windows.cpp:101
 #, kde-format
@@ -1240,6 +1370,11 @@ msgid ""
 "preferred candidate. Unusual, but possible variant of <em>Click to focus</"
 "em>."
 msgstr ""
+"<em>Факусавацца пры пстрыканні (прыярытэт мышы):</em> Амаль тое самае, што і "
+"<em>Факусавацца пры пстрыканні</em>. Калі актыўнае акно мусіць быць абрана "
+"сістэмай (напрыклад, таму што актыўнае на дадзены момант акно было закрыта), "
+"акно пад мышшу - пераважны кандыдат. Незвычайны, але магчымы варыянт "
+"<em>Факусавацца пры пстрыканні</em>."
 
 #: windows.cpp:106
 #, kde-format
@@ -1249,6 +1384,11 @@ msgid ""
 "<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
 "to focus</em> just without having to actually click."
 msgstr ""
+"<em>Факусавацца ўслед за мышшу</em> Перамяшчэнне курсора мышы на акно будзе "
+"актываваць яго. Напрыклад, вокны, якія выпадкова з'яўляюцца пад мышшу, не "
+"будуць трапляць у фокус. <em>Прадухіленне перахоплівання фокуса</em> "
+"функцыянуе звычайным чынам. Падобна на <em>Факусавацца пры пстрыканні</em>, "
+"але няма патрэбы пстрыкаць."
 
 #: windows.cpp:110
 #, kde-format
@@ -1258,6 +1398,10 @@ msgid ""
 "closed) the window under the mouse is the preferred candidate. Choose this, "
 "if you want a hover controlled focus."
 msgstr ""
+"Амаль тое самае, што <em>Факусавацца ўслед за мышшу</em>. Калі актыўнае акно "
+"мусіць быць абрана сістэмай (напрыклад, бо актыўнае на дадзены момант акно "
+"было закрыта), акно пад мышшу - пераважны кандыдат. Абярыце гэта, калі "
+"хочаце кантраляваць факусаванне пры навядзенні."
 
 #: windows.cpp:115
 #, kde-format
@@ -1268,6 +1412,10 @@ msgid ""
 "not work. You very likely want to use <em>Focus follows mouse (mouse "
 "precedence)</em> instead!"
 msgstr ""
+"<em>Факусавацца пад мышшу:</em> Фокус заўсёды знаходзіцца ў акне пад мышшу."
+"<br/><strong>Увага:</strong> <em>Прадухіленне перахоплівання фокуса</em> і "
+"<em>Alt+Tab</em> супярэчаць правілам актывацыі і не будуць працаваць. "
+"Напэўна, вам патрэбна <em>Факусавацца ўслед за мышшу (прыярытэт мышы)</em>!"
 
 #: windows.cpp:119
 #, kde-format
@@ -1279,11 +1427,16 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
+"<em>Факусавацца строга пад мышшу:</em> Фокус заўсёды знаходзіцца ў акне пад "
+"мышшу (сумненняў нідзе няма), вельмі падобна на паводзіны факусавання ў "
+"старым асяроддзі X11.<br/><strong>Увага:</strong> <em>Прадухіленне "
+"перахоплівання фокуса</em> і <em>Alt+Tab</em> супярэчаць правілам актывацыі "
+"і не будуць працаваць. Напэўна, вам патрэбна <em>Факусавацца ўслед за мышшу "
+"(прыярытэт мышы)</em>!"
 
-#, fuzzy
 #~| msgid "Cascade"
 #~ msgid "Cascaded"
-#~ msgstr "Каскад"
+#~ msgstr "Каскадам"
 
 #~ msgid "Maximize (vertical only)"
 #~ msgstr "Найбольшыць (толькі вертыкальна)"

@@ -16,14 +16,14 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-11 00:48+0000\n"
-"PO-Revision-Date: 2022-04-18 10:20+0200\n"
+"PO-Revision-Date: 2022-12-11 14:16+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 22.12.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -796,10 +796,9 @@ msgid "Block compositing"
 msgstr "Compositing blokkeren"
 
 #: rulesmodel.cpp:703
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Vensterklasse (toepassing)"
+msgstr "Vensterklasse niet beschikbaar"
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -810,6 +809,11 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Deze toepassing levert geen klasse voor het venster, dus kan KWin het niet "
+"gebruiken om het te koppelen en regels toepassen. Als u toch enige regels op "
+"wilt toepassen, probeer het te koppelen aan andere eigenschappen zoals in "
+"plaats daarvan de venstertitel.<nl/><nl/>Overweeg om deze bug aan de "
+"ontwikkelaars van de toepassing te rapporteren."
 
 #: rulesmodel.cpp:738
 #, kde-format
@@ -960,8 +964,7 @@ msgid "Extreme"
 msgstr "Extreem"
 
 #: rulesmodel.cpp:865
-#, fuzzy, kde-format
-#| msgid "Unmanaged Window"
+#, kde-format
 msgid "Unmanaged window"
 msgstr "Niet beheerd venster"
 

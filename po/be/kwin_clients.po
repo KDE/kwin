@@ -1,16 +1,14 @@
-# translation of kwin_clients.po to Belarusian
-#
 # Darafei Praliaskouski <symbol@akeeri.tk>, 2006.
 # Darafei Praliaskouski <komzpa@licei2.com>, 2007.
 # Darafei Praliaskouski <komzpa@gmail.com>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: kwin_clients\n"
+"Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-16 00:48+0000\n"
-"PO-Revision-Date: 2008-02-29 13:09+0200\n"
+"PO-Revision-Date: 2022-12-08 11:16\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@gmail.com>\n"
-"Language-Team: Belarusian <i18n@mova.org>\n"
+"Language-Team: Belarusian\n"
 "Language: be\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,88 +17,88 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || n%10>=5 && n%10<=9 || n"
 "%100>=11 && n%100<=14 ? 2 : 3);\n"
+"X-Crowdin-Project: 86ff119b1606fcaa910d6b44fc14b611\n"
+"X-Crowdin-Project-ID: 127\n"
+"X-Crowdin-Language: be\n"
+"X-Crowdin-File: /main/be/kwin/kwin_clients.po\n"
+"X-Crowdin-File-ID: 8367\n"
 
 #: aurorae/src/aurorae.cpp:725
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
-msgstr ""
+msgstr "Малюсенькія"
 
 #: aurorae/src/aurorae.cpp:726
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
-msgstr ""
+msgstr "Звычайныя"
 
 #: aurorae/src/aurorae.cpp:727
-#, fuzzy, kde-format
-#| msgid "Large"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
-msgstr "Вялікі"
+msgstr "Вялікія"
 
 #: aurorae/src/aurorae.cpp:728
-#, fuzzy, kde-format
-#| msgid "Large"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
-msgstr "Вялікі"
+msgstr "Вельмі вялікія"
 
 #: aurorae/src/aurorae.cpp:729
-#, fuzzy, kde-format
-#| msgid "Large"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
-msgstr "Вялікі"
+msgstr "Велізарныя"
 
 #: aurorae/src/aurorae.cpp:730
-#, fuzzy, kde-format
-#| msgid "Large"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
-msgstr "Вялікі"
+msgstr "Надта вялізныя"
 
 #: aurorae/src/aurorae.cpp:731
-#, fuzzy, kde-format
-#| msgid "Resize"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
-msgstr "Змяніць памер"
+msgstr "Празмерныя"
 
 #: aurorae/src/aurorae.cpp:734
 #, kde-format
 msgid "Button size:"
-msgstr ""
+msgstr "Памеры кнопак:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
 #: aurorae/themes/plastik/package/contents/ui/config.ui:14
 #, kde-format
 msgid "Config Dialog"
-msgstr "Дыялог настаўленняў"
+msgstr "Дыялогавае акно наладжвання"
 
 #. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
 #: aurorae/themes/plastik/package/contents/ui/config.ui:23
 #, kde-format
 msgid "Title &Alignment"
-msgstr "Месцазнаходжанне загалоўку"
+msgstr "Выраўноўванне &загалоўка"
 
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
 #: aurorae/themes/plastik/package/contents/ui/config.ui:29
 #, kde-format
 msgid "Left"
-msgstr "Леваруч"
+msgstr "Па левым боку"
 
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignCenter)
 #: aurorae/themes/plastik/package/contents/ui/config.ui:36
 #, kde-format
 msgid "Center"
-msgstr "Пасярэдзіне"
+msgstr "Па цэнтры"
 
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
 #: aurorae/themes/plastik/package/contents/ui/config.ui:43
 #, kde-format
 msgid "Right"
-msgstr "Праваруч"
+msgstr "Па правым боку"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_coloredBorder)
 #: aurorae/themes/plastik/package/contents/ui/config.ui:53
@@ -109,13 +107,14 @@ msgid ""
 "Check this option if the window border should be painted in the titlebar "
 "color. Otherwise it will be painted in the background color."
 msgstr ""
+"Адзначце гэты параметр, калі рамка акна павінна быць афарбаваная ў колер "
+"панэлі загалоўка. У адваротным выпадку рамка будўе мець колер фону."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, fuzzy, kde-format
-#| msgid "Colored Window Border"
+#, kde-format
 msgid "Colored window border"
-msgstr "Каляровая рамка акна"
+msgstr "Каляровыя рамкі акон"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
 #: aurorae/themes/plastik/package/contents/ui/config.ui:66
@@ -124,12 +123,14 @@ msgid ""
 "Check this option if you want the buttons to fade in when the mouse pointer "
 "hovers over them and fade out again when it moves away."
 msgstr ""
+"Адзначце гэты параметр, калі вы хочаце, каб кнопкі з'яўляліся, калі на іх "
+"наводзіцца курсор мышы, і зноў знікалі, калі ён прыбіраецца."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
 #: aurorae/themes/plastik/package/contents/ui/config.ui:69
 #, kde-format
 msgid "Animate buttons"
-msgstr "Анімаваць кнопкі"
+msgstr "Анімацыя кнопак"
 
 #, fuzzy
 #~| msgid "Animate buttons"

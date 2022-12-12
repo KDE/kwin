@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-11 00:48+0000\n"
-"PO-Revision-Date: 2022-11-14 14:23+0300\n"
+"PO-Revision-Date: 2022-12-11 12:09+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.08.3\n"
+"X-Generator: Lokalize 22.12.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -783,10 +783,9 @@ msgid "Block compositing"
 msgstr "Bileşikleştirmeyi engelle"
 
 #: rulesmodel.cpp:703
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Pencere sınıfı (uygulama)"
+msgstr "Pencere sınıfı kullanılabilir değil"
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -797,6 +796,11 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Bu uygulama, pencere için bir sınıf sağlamıyor, dolayısıyla KWin onu "
+"herhangi bir kuralı eşleştirmek ve uygulamak için kullanamaz. Hâlâ ona bazı "
+"kurallar uygulamak istiyorsanız, bunun yerine pencere başlığı gibi diğer "
+"özellikleri eşleştirmeyi deneyin.<nl/><nl/>Lütfen bu hatayı uygulamanın "
+"geliştiricilerine bildirmeyi düşünün."
 
 #: rulesmodel.cpp:738
 #, kde-format
@@ -947,10 +951,9 @@ msgid "Extreme"
 msgstr "Çok Yüksek"
 
 #: rulesmodel.cpp:865
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "Unmanaged window"
-msgstr "Ana Pencerede"
+msgstr "Yönetilmeyen pencere"
 
 #: rulesmodel.cpp:866
 #, kde-format

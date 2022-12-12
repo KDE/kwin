@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-11 00:48+0000\n"
-"PO-Revision-Date: 2022-04-18 19:03+0200\n"
+"PO-Revision-Date: 2022-12-11 08:56+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -82,7 +82,7 @@ msgstr "Valors de la finestra per a %1"
 #: main.cpp:31
 #, kde-format
 msgid "KWinRules KCM launcher"
-msgstr "Iniciador del KCM de KWinRules"
+msgstr "Iniciador de KCM de KWinRules"
 
 #: main.cpp:32
 #, kde-format
@@ -791,10 +791,9 @@ msgid "Block compositing"
 msgstr "Bloqueja la composició"
 
 #: rulesmodel.cpp:703
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Classe de finestra (aplicació)"
+msgstr "Classe de finestra no disponible"
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -805,6 +804,11 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Esta aplicació no proporciona cap classe per a la finestra, així que KWin no "
+"la pot utilitzar per a fer-la coincidir i aplicar les regles. Si encara "
+"voleu aplicar-hi regles, intenteu fer-hi coincidir altres propietats com el "
+"títol de la finestra.<nl/><nl/>Considereu informar d'este error als "
+"desenvolupadors de l'aplicació."
 
 #: rulesmodel.cpp:738
 #, kde-format
@@ -955,10 +959,9 @@ msgid "Extreme"
 msgstr "Extrema"
 
 #: rulesmodel.cpp:865
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "Unmanaged window"
-msgstr "En la finestra principal"
+msgstr "Finestra no gestionada"
 
 #: rulesmodel.cpp:866
 #, kde-format
@@ -966,9 +969,3 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "No s'han pogut detectar les propietats de la finestra. KWin no gestiona esta "
 "finestra."
-
-#~ msgid "Error"
-#~ msgstr "S'ha produït un error"
-
-#~ msgid "Cascaded"
-#~ msgstr "En cascada"

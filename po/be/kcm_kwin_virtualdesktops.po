@@ -1,17 +1,13 @@
-# translation of kcm_kwindesktop.po to Belarusian
-# Copyright (C) YEAR This_file_is_part_of_KDE
-# This file is distributed under the same license as the PACKAGE package.
-#
 # Darafei Praliaskouski <komzpa@licei2.com>, 2007.
 # Darafei Praliaskouski <komzpa@gmail.com>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: kcm_kwindesktop\n"
+"Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-07-12 00:47+0000\n"
-"PO-Revision-Date: 2008-02-29 12:53+0200\n"
+"PO-Revision-Date: 2022-11-17 16:46\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@gmail.com>\n"
-"Language-Team: Belarusian <i18n@mova.org>\n"
+"Language-Team: Belarusian\n"
 "Language: be\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,31 +16,36 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || n%10>=5 && n%10<=9 || n"
 "%100>=11 && n%100<=14 ? 2 : 3);\n"
+"X-Crowdin-Project: 86ff119b1606fcaa910d6b44fc14b611\n"
+"X-Crowdin-Project-ID: 127\n"
+"X-Crowdin-Language: be\n"
+"X-Crowdin-File: /main/be/kwin/kcm_kwin_virtualdesktops.po\n"
+"X-Crowdin-File-ID: 8353\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr ""
+msgstr "Дарафей Праляскоўскі, Antikruk"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
+msgstr "komzpa@licei2. com, nashtlumach@gmail. com"
 
 #: desktopsmodel.cpp:467
 #, kde-format
 msgid "There was an error connecting to the compositor."
-msgstr ""
+msgstr "Не ўдалося злучыцца са сродкам кампазітынгу."
 
 #: desktopsmodel.cpp:666
 #, kde-format
 msgid "There was an error saving the settings to the compositor."
-msgstr ""
+msgstr "Не ўдалося захаваць налады сродку кампазітынгу."
 
 #: desktopsmodel.cpp:669
 #, kde-format
 msgid "There was an error requesting information from the compositor."
-msgstr ""
+msgstr "Не ўдалося атрымаць звесткі пра сродак кампазітынгу."
 
 #: package/contents/ui/main.qml:17
 #, kde-format
@@ -52,24 +53,26 @@ msgid ""
 "This module lets you configure the navigation, number and layout of virtual "
 "desktops."
 msgstr ""
+"Гэты модуль дазваляе вам наладжваць навігацыю, колькасць і макет "
+"кампанавання віртуальных працоўных сталоў."
 
 #: package/contents/ui/main.qml:91
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
-msgstr ""
+msgstr "Змяніць назву"
 
 #: package/contents/ui/main.qml:102
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
-msgstr ""
+msgstr "Пацвердзіце новую назву"
 
 #: package/contents/ui/main.qml:110
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
-msgstr ""
+msgstr "Выдаліць"
 
 #: package/contents/ui/main.qml:137
 #, kde-format
@@ -77,67 +80,68 @@ msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
 "now will overwrite the changes."
 msgstr ""
+"Віртуальныя працоўныя сталы былі змененыя па-за межамі гэтай праграмы. Калі "
+"захаваць, то змены перазапішуцца."
 
 #: package/contents/ui/main.qml:153
 #, kde-format
 msgid "Row %1"
-msgstr ""
+msgstr "Радок %1"
 
 #: package/contents/ui/main.qml:166
 #, kde-format
 msgctxt "@action:button"
 msgid "Add"
-msgstr ""
+msgstr "Дадаць"
 
 #: package/contents/ui/main.qml:169
-#, fuzzy, kde-format
-#| msgid "Desktop %1"
+#, kde-format
 msgid "New Desktop"
-msgstr "Працоўны стол %1"
+msgstr "Новы працоўны стол"
 
 #: package/contents/ui/main.qml:184
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%1 радок"
+msgstr[1] "%1 радкі"
+msgstr[2] "%1 радкоў"
+msgstr[3] "%1 радкі"
 
 #: package/contents/ui/main.qml:200
 #, kde-format
 msgid "Options:"
-msgstr ""
+msgstr "Параметры:"
 
 #: package/contents/ui/main.qml:202
 #, kde-format
 msgid "Navigation wraps around"
-msgstr ""
+msgstr "Навігацыя па коле"
 
 #: package/contents/ui/main.qml:220
 #, kde-format
 msgid "Show animation when switching:"
-msgstr ""
+msgstr "Паказ анімацыі пры пераключэнні:"
 
 #: package/contents/ui/main.qml:271
 #, kde-format
 msgid "Show on-screen display when switching:"
-msgstr ""
+msgstr "Паказ індыкацыі пры пераключэнні:"
 
 #: package/contents/ui/main.qml:290
 #, kde-format
 msgid "%1 ms"
-msgstr ""
+msgstr "%1 мс"
 
 #: package/contents/ui/main.qml:314
 #, kde-format
 msgid "Show desktop layout indicators"
-msgstr ""
+msgstr "Паказваць індыкатары макета працоўных сталоў"
 
 #: virtualdesktops.cpp:33
-#, fuzzy, kde-format
-#| msgid "Desktop %1"
+#, kde-format
 msgid "Virtual Desktops"
-msgstr "Працоўны стол %1"
+msgstr "Віртуальныя працоўныя сталы"
 
 #~ msgid "Desktop %1:"
 #~ msgstr "Працоўны стол %1:"

@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-09 00:47+0000\n"
-"PO-Revision-Date: 2022-11-06 16:24+0100\n"
-"Last-Translator: Antoni Bella <antonibella5@yahoo.com>\n"
+"PO-Revision-Date: 2022-12-09 08:50+0100\n"
+"Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
 "MIME-Version: 1.0\n"
@@ -2670,28 +2670,24 @@ msgid "Window to Previous Screen"
 msgstr "Finestra a la pantalla anterior"
 
 #: useractions.cpp:1109
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "Envia la finestra un escriptori a la dreta"
+msgstr "Envia la finestra una pantalla cap a la dreta"
 
 #: useractions.cpp:1111
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "Envia la finestra un escriptori a l'esquerra"
+msgstr "Envia la finestra una pantalla cap a l'esquerra"
 
 #: useractions.cpp:1113
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "Finestra a la pantalla %1"
+msgstr "Envia la finestra una pantalla amunt"
 
 #: useractions.cpp:1115
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "Envia la finestra un escriptori avall"
+msgstr "Envia la finestra una pantalla avall"
 
 #: useractions.cpp:1119
 #, kde-format
@@ -2709,28 +2705,24 @@ msgid "Switch to Previous Screen"
 msgstr "Canvia a la pantalla anterior"
 
 #: useractions.cpp:1128
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Canvia a la finestra de la dreta"
+msgstr "Canvia a la pantalla de la dreta"
 
 #: useractions.cpp:1130
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Canvia a la finestra de l'esquerra"
+msgstr "Canvia a la pantalla de l'esquerra"
 
 #: useractions.cpp:1132
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Canvia a la pantalla %1"
+msgstr "Canvia a la pantalla de dalt"
 
 #: useractions.cpp:1134
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Canvia a la pantalla %1"
+msgstr "Canvia a la pantalla de davall"
 
 #: useractions.cpp:1137
 #, kde-format

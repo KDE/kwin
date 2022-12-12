@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-11 00:48+0000\n"
-"PO-Revision-Date: 2022-04-18 08:45+0300\n"
+"PO-Revision-Date: 2022-12-11 08:56+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -797,10 +797,9 @@ msgid "Block compositing"
 msgstr "Блоковий композитний режим"
 
 #: rulesmodel.cpp:703
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Клас вікна (програма)"
+msgstr "Немає доступу до класу вікна"
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -811,6 +810,11 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Ця програма не надає класу для вікна, тому KWin не може скористатися ним для "
+"встановлення відповідності і застосування якихось правил. Якщо ви хочете "
+"застосувати до вікна певні правила, спробуйте скористатися відповідністю "
+"якихось інших властивостей, зокрема заголовка вікна.<nl/><nl/>Вам варто "
+"повідомити про цю проблему розробникам відповідної програми."
 
 #: rulesmodel.cpp:738
 #, kde-format
@@ -961,8 +965,7 @@ msgid "Extreme"
 msgstr "Екстремальний"
 
 #: rulesmodel.cpp:865
-#, fuzzy, kde-format
-#| msgid "Unmanaged Window"
+#, kde-format
 msgid "Unmanaged window"
 msgstr "Некероване вікно"
 

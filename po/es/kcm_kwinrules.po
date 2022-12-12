@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-11 00:48+0000\n"
-"PO-Revision-Date: 2022-04-19 01:30+0200\n"
+"PO-Revision-Date: 2022-12-11 12:07+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "com>\n"
-"X-Generator: Lokalize 22.03.90\n"
+"X-Generator: Lokalize 22.12.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -793,10 +793,9 @@ msgid "Block compositing"
 msgstr "Bloquear composición"
 
 #: rulesmodel.cpp:703
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Clase de ventana (aplicación)"
+msgstr "Clase de ventana no disponible"
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -807,6 +806,11 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Esta aplicación no proporciona una clase para la ventana, por lo que KWin no "
+"puede usarla para identificarla y aplicar reglas. Si realmente desea aplicar "
+"reglas sobre ella, pruebe a identificarla mediante otras propiedades, como "
+"el título de la ventana.<nl/><nl/>Considere informar de este fallo a los "
+"desarrolladores de la aplicación."
 
 #: rulesmodel.cpp:738
 #, kde-format
@@ -957,8 +961,7 @@ msgid "Extreme"
 msgstr "Extremo"
 
 #: rulesmodel.cpp:865
-#, fuzzy, kde-format
-#| msgid "Unmanaged Window"
+#, kde-format
 msgid "Unmanaged window"
 msgstr "Ventana no gestionada"
 

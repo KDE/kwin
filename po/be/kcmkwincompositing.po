@@ -1,16 +1,12 @@
-# translation of kcmkwincompositing.po to Belarusian
-# Copyright (C) YEAR This_file_is_part_of_KDE
-# This file is distributed under the same license as the PACKAGE package.
-#
 # Darafei Praliaskouski <komzpa@licei2.com>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: kcmkwincompositing\n"
+"Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-06 00:47+0000\n"
-"PO-Revision-Date: 2007-08-27 12:19+0300\n"
+"PO-Revision-Date: 2022-11-22 17:31\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
-"Language-Team: Belarusian <i18n@mova.org>\n"
+"Language-Team: Belarusian\n"
 "Language: be\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,6 +15,11 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || n%10>=5 && n%10<=9 || n"
 "%100>=11 && n%100<=14 ? 2 : 3);\n"
+"X-Crowdin-Project: 86ff119b1606fcaa910d6b44fc14b611\n"
+"X-Crowdin-Project-ID: 127\n"
+"X-Crowdin-Language: be\n"
+"X-Crowdin-File: /main/be/kwin/kcmkwincompositing.po\n"
+"X-Crowdin-File-ID: 8359\n"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
 #: compositing.ui:31
@@ -30,6 +31,11 @@ msgid ""
 "you can reset this protection but be aware that this might result in an "
 "immediate crash!"
 msgstr ""
+"Кампазітынг OpenGL (прадвызначана) у мінулым прыводзіў да збояў у KWin.\n"
+"Хутчэй за ўсё, гэта адбылося праз памылкі драйвера.\n"
+"Калі вы лічыце, што ўжо абнавілі драйвер да стабільнай версіі, вы можаце "
+"скінуць гэтую абарону, але майце на ўвазе, што гэта можа прывесці да "
+"неадкладнага збою!"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
 #: compositing.ui:44
@@ -38,20 +44,20 @@ msgid ""
 "Keeping the window thumbnail always interferes with the minimized state of "
 "windows. This can result in windows not suspending their work when minimized."
 msgstr ""
+"Захаванне мініяцюр акон заўсёды перашкаджае згорнутаму стану акон. Гэта можа "
+"прывесці да таго, што вокны не прыпыняць сваю працу пры згортванні."
 
 #. i18n: ectx: property (text), widget (QLabel, compositingLabel)
 #: compositing.ui:56
-#, fuzzy, kde-format
-#| msgid "kcmkwincompositing"
+#, kde-format
 msgid "Compositing:"
-msgstr "kcmkwincompositing"
+msgstr "Кампазітынг:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
 #: compositing.ui:63
-#, fuzzy, kde-format
-#| msgid "Enable desktop effects"
+#, kde-format
 msgid "Enable on startup"
-msgstr "Уключыць эфекты працоўнага стала"
+msgstr "Уключаць падчас запуску"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
 #: compositing.ui:72
@@ -61,91 +67,94 @@ msgid ""
 " This brings performance improvements for e.g. games.\n"
 " The setting can be overruled by window-specific rules."
 msgstr ""
+"Праграмы могуць вызначаць падказкі для блакавання кампазітынгу, калі акно "
+"адкрыта.\n"
+" Напрыклад, гэта можа палепшыць прадукцыйнасць гульні.\n"
+" Параметр можна скасаваць адмысловымі правіламі для асобных акон."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
 #: compositing.ui:75
 #, kde-format
 msgid "Allow applications to block compositing"
-msgstr ""
+msgstr "Дазволіць праграмам блакаваць кампазітынг"
 
 #. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
 #: compositing.ui:82
 #, kde-format
 msgid "Animation speed:"
-msgstr ""
+msgstr "Хуткасць анімацыі:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: compositing.ui:119
 #, kde-format
 msgid "Very slow"
-msgstr ""
+msgstr "Вельмі павольна"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: compositing.ui:139
 #, kde-format
 msgid "Instant"
-msgstr ""
+msgstr "Імгненна"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
 #: compositing.ui:151
 #, kde-format
 msgid "Keep window thumbnails:"
-msgstr ""
+msgstr "Пакіданне мініяцюр акон:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
 #: compositing.ui:159
 #, kde-format
 msgid "Never"
-msgstr ""
+msgstr "Ніколі"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
 #: compositing.ui:164
 #, kde-format
 msgid "Only for Shown Windows"
-msgstr ""
+msgstr "Толькі для акон, якія паказваюцца"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
 #: compositing.ui:169
 #, kde-format
 msgid "Always"
-msgstr ""
+msgstr "Заўсёды"
 
 #. i18n: ectx: property (text), widget (QLabel, latencyLabel)
 #: compositing.ui:177
 #, kde-format
 msgid "Latency:"
-msgstr ""
+msgstr "Затрымліванне:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
 #: compositing.ui:185
 #, kde-format
 msgid "Force lowest latency (may cause dropped frames)"
-msgstr ""
+msgstr "Прымусовае мінімальнае затрымліванне (можа быць прапусканне кадраў)"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
 #: compositing.ui:190
 #, kde-format
 msgid "Prefer lower latency"
-msgstr ""
+msgstr "Аддаваць перавагу меншаму затрымліванню"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
 #: compositing.ui:195
 #, kde-format
 msgid "Balance of latency and smoothness"
-msgstr ""
+msgstr "Баланс затрымлівання і плаўнасці"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
 #: compositing.ui:200
 #, kde-format
 msgid "Prefer smoother animations"
-msgstr ""
+msgstr "Аддаваць перавагу больш плаўнай анімацыі"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
 #: compositing.ui:205
-#, fuzzy, kde-format
-#| msgid "Various animations"
+#, kde-format
 msgid "Force smoothest animations"
-msgstr "Розныя анімацыі"
+msgstr "Прымусовая плаўная анімацыя"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_AllowTearing)
 #: compositing.ui:213
@@ -162,7 +171,7 @@ msgstr ""
 #: main.cpp:79
 #, kde-format
 msgid "Re-enable OpenGL detection"
-msgstr ""
+msgstr "Паўторна ўключыць выяўленне OpenGL"
 
 #, fuzzy
 #~| msgid "OpenGL"
