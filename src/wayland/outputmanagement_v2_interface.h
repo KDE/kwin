@@ -36,6 +36,7 @@ class KWIN_EXPORT OutputManagementV2Interface : public QObject
 public:
     explicit OutputManagementV2Interface(Display *display, QObject *parent = nullptr);
     ~OutputManagementV2Interface() override;
+    bool isBound() const;
 
 private:
     std::unique_ptr<OutputManagementV2InterfacePrivate> d;

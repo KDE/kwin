@@ -239,6 +239,8 @@ public:
         return m_xdgActivationIntegration;
     }
 
+    bool outputManagementBound() const;
+
 Q_SIGNALS:
     void windowAdded(KWin::Window *);
     void windowRemoved(KWin::Window *);

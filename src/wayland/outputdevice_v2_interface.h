@@ -47,6 +47,7 @@ public:
     ~OutputDeviceV2Interface() override;
 
     void remove();
+    bool isBound();
 
     KWin::Output *handle() const;
 
