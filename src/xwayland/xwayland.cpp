@@ -218,15 +218,7 @@ void Xwayland::updatePrimary()
         return;
     }
 
-    const QString primaryName = workspace()->outputOrder().front();
-    const auto outputs = workspace()->outputs();
-    const auto it = std::find_if(outputs.begin(), outputs.end(), [primaryName](const auto output) {
-        return output->name() == primaryName;
-    });
-    if (it == outputs.end()) {
-        return;
-    }
-    Output *const primaryOutput = *it;
+    Output *const primaryOutput = workspace()->outputOrder().front();
     for (int i = 0; i < resources->num_crtcs; ++i) {
         Xcb::RandR::CrtcInfo crtcInfo(crtcs[i], resources->config_timestamp);
         const QRect geometry = crtcInfo.rect();

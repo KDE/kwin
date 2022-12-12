@@ -638,12 +638,21 @@ void Workspace::updateOutputConfiguration()
         return;
     }
     const QString hash = KWinKScreenIntegration::connectedOutputsHash(outputs);
-    if (m_outputsHash == hash) {
-        return;
-    }
-
     const auto outputsInfo = KWinKScreenIntegration::outputsConfig(outputs, hash);
     m_outputsHash = hash;
+
+    // Update the output order to a fallback list, to avoid dangling pointers
+    const auto setFallbackOutputOrder = [this, &outputs]() {
+        auto newOrder = outputs;
+        newOrder.erase(std::remove_if(newOrder.begin(), newOrder.end(), [](Output *o) {
+                           return !o->isEnabled();
+                       }),
+                       newOrder.end());
+        std::sort(newOrder.begin(), newOrder.end(), [](Output *left, Output *right) {
+            return left->name() < right->name();
+        });
+        setOutputOrder(newOrder);
+    };
 
     std::vector<std::pair<uint32_t, Output *>> outputOrder;
     OutputConfiguration cfg;
@@ -661,12 +670,14 @@ void Workspace::updateOutputConfiguration()
                 outputOrder.push_back(std::make_pair(1, output));
                 if (!output->isEnabled()) {
                     qCWarning(KWIN_CORE) << "KScreen config would disable the primary output!";
+                    setFallbackOutputOrder();
                     return;
                 }
             } else if (int prio = outputInfo["priority"].toInt(); prio > 0) {
                 outputOrder.push_back(std::make_pair(prio, output));
                 if (!output->isEnabled()) {
                     qCWarning(KWIN_CORE) << "KScreen config would disable an output with priority!";
+                    setFallbackOutputOrder();
                     return;
                 }
             } else {
@@ -702,6 +713,7 @@ void Workspace::updateOutputConfiguration()
     });
     if (allDisabled) {
         qCWarning(KWIN_CORE) << "KScreen config would disable all outputs!";
+        setFallbackOutputOrder();
         return;
     }
     std::erase_if(outputOrder, [&cfg](const auto &pair) {
@@ -722,18 +734,20 @@ void Workspace::updateOutputConfiguration()
             continue;
         } else if (index != i) {
             qCWarning(KWIN_CORE) << "KScreen config has wrong output order in it";
+            setFallbackOutputOrder();
             return;
         }
         i++;
     }
     if (!kwinApp()->outputBackend()->applyOutputChanges(cfg)) {
         qCWarning(KWIN_CORE) << "Applying KScreen config failed!";
+        setFallbackOutputOrder();
         return;
     }
-    QVector<QString> order;
+    QVector<Output *> order;
     order.reserve(outputOrder.size());
     std::transform(outputOrder.begin(), outputOrder.end(), std::back_inserter(order), [](const auto &pair) {
-        return pair.second->name();
+        return pair.second;
     });
     setOutputOrder(order);
 }
@@ -2711,7 +2725,7 @@ Output *Workspace::xineramaIndexToOutput(int index) const
     return nullptr;
 }
 
-void Workspace::setOutputOrder(const QVector<QString> &order)
+void Workspace::setOutputOrder(const QVector<Output *> &order)
 {
     if (m_outputOrder != order) {
         m_outputOrder = order;
@@ -2719,7 +2733,7 @@ void Workspace::setOutputOrder(const QVector<QString> &order)
     }
 }
 
-QVector<QString> Workspace::outputOrder() const
+QVector<Output *> Workspace::outputOrder() const
 {
     return m_outputOrder;
 }

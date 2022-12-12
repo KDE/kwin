@@ -177,8 +177,8 @@ public:
 
     Output *xineramaIndexToOutput(int index) const;
 
-    void setOutputOrder(const QVector<QString> &order);
-    QVector<QString> outputOrder() const;
+    void setOutputOrder(const QVector<Output *> &order);
+    QVector<Output *> outputOrder() const;
 
     Output *activeOutput() const;
     void setActiveOutput(Output *output);
@@ -680,7 +680,7 @@ private:
     QList<Output *> m_outputs;
     Output *m_activeOutput = nullptr;
     QString m_outputsHash;
-    QVector<QString> m_outputOrder;
+    QVector<Output *> m_outputOrder;
 
     Window *m_activeWindow;
     Window *m_lastActiveWindow;

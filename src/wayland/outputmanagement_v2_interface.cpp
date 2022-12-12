@@ -291,10 +291,10 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
         }
         i++;
     }
-    QVector<QString> sortedOrder;
+    QVector<Output *> sortedOrder;
     sortedOrder.reserve(outputOrder.size());
     std::transform(outputOrder.begin(), outputOrder.end(), std::back_inserter(sortedOrder), [](const auto &pair) {
-        return pair.second->handle()->name();
+        return pair.second->handle();
     });
     if (workspace()->applyOutputConfiguration(config)) {
         workspace()->setOutputOrder(sortedOrder);

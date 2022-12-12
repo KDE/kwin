@@ -8,6 +8,11 @@
 #include <QObject>
 #include <memory>
 
+namespace KWin
+{
+class Output;
+}
+
 namespace KWaylandServer
 {
 
@@ -21,7 +26,7 @@ public:
     explicit OutputOrderV1Interface(Display *display, QObject *parent);
     ~OutputOrderV1Interface() override;
 
-    void setOutputOrder(const QVector<QString> &outputOrder);
+    void setOutputOrder(const QVector<KWin::Output *> &outputOrder);
 
 private:
     std::unique_ptr<OutputOrderV1InterfacePrivate> d;
