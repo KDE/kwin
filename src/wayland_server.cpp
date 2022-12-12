@@ -785,6 +785,11 @@ QString WaylandServer::socketName() const
     return QString();
 }
 
+bool WaylandServer::outputManagementBound() const
+{
+    return m_outputManagement->isBound();
+}
+
 #if KWIN_BUILD_SCREENLOCKER
 WaylandServer::LockScreenPresentationWatcher::LockScreenPresentationWatcher(WaylandServer *server)
 {

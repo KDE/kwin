@@ -27,6 +27,8 @@
 #include "drm_virtual_output.h"
 #include "gbm_dmabuf.h"
 #include "utils/udev.h"
+#include "wayland/display.h"
+#include "wayland_server.h"
 // KF5
 #include <KCoreAddons>
 #include <KLocalizedString>
@@ -306,7 +308,10 @@ void DrmBackend::addOutput(DrmAbstractOutput *o)
 {
     m_outputs.append(o);
     Q_EMIT outputAdded(o);
-    o->updateEnabled(true);
+    // yes vlad, I'll move this code out of the backend
+    if (!waylandServer()->outputManagementBound()) {
+        o->updateEnabled(true);
+    }
 }
 
 void DrmBackend::removeOutput(DrmAbstractOutput *o)

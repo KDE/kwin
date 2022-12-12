@@ -80,6 +80,11 @@ OutputManagementV2Interface::OutputManagementV2Interface(Display *display, QObje
 {
 }
 
+bool OutputManagementV2Interface::isBound() const
+{
+    return d->resourceMap().count() > 0;
+}
+
 OutputManagementV2Interface::~OutputManagementV2Interface() = default;
 
 OutputConfigurationV2Interface::OutputConfigurationV2Interface(wl_resource *resource)
