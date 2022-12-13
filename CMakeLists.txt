@@ -278,6 +278,7 @@ find_package(XCB 1.10 REQUIRED COMPONENTS
     ICCCM
     IMAGE
     KEYSYMS
+    PRESENT
     RANDR
     RENDER
     SHAPE

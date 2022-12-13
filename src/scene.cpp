@@ -412,6 +412,7 @@ void Scene::postPaint()
 static QMatrix4x4 createProjectionMatrix(const QRectF &rect, qreal scale)
 {
     QMatrix4x4 ret;
+    ret.scale(1, -1);
     ret.ortho(QRectF(rect.left() * scale, rect.top() * scale, rect.width() * scale, rect.height() * scale));
     return ret;
 }

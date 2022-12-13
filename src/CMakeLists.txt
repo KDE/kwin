@@ -200,6 +200,7 @@ target_link_libraries(kwin
     XCB::GLX
     XCB::ICCCM
     XCB::KEYSYMS
+    XCB::PRESENT
     XCB::RANDR
     XCB::RENDER
     XCB::SHAPE

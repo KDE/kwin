@@ -59,6 +59,37 @@ private:
     xcb_glx_drawable_t m_glxDrawable;
 };
 
+class GlxLayerBuffer
+{
+public:
+    GlxLayerBuffer(const QSize &size, int depth, xcb_drawable_t drawable, GLXFBConfig config, GlxBackend *backend);
+    ~GlxLayerBuffer();
+
+    xcb_pixmap_t pixmap() const;
+    GLFramebuffer *framebuffer() const;
+
+private:
+    GlxBackend *m_backend;
+    xcb_pixmap_t m_pixmap = 0;
+    GLXPixmap m_glxPixmap = 0;
+    std::unique_ptr<GLFramebuffer> m_framebuffer;
+    std::unique_ptr<GLTexture> m_texture;
+};
+
+class GlxLayerSwapchain
+{
+public:
+    GlxLayerSwapchain(const QSize &size, int depth, xcb_drawable_t drawable, GLXFBConfig config, GlxBackend *backend);
+
+    QSize size() const;
+    std::shared_ptr<GlxLayerBuffer> acquire();
+
+private:
+    std::vector<std::shared_ptr<GlxLayerBuffer>> m_buffers;
+    QSize m_size;
+    int m_index = 0;
+};
+
 class GlxLayer : public OutputLayer
 {
 public:
@@ -69,6 +100,8 @@ public:
 
 private:
     GlxBackend *const m_backend;
+    std::unique_ptr<GlxLayerSwapchain> m_swapchain;
+    std::shared_ptr<GlxLayerBuffer> m_buffer;
 };
 
 /**
@@ -82,8 +115,6 @@ public:
     GlxBackend(Display *display, X11StandaloneBackend *backend);
     ~GlxBackend() override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
-    OutputLayerBeginFrameInfo beginFrame();
-    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
     void present(Output *output) override;
     bool makeCurrent() override;
     void doneCurrent() override;
@@ -95,10 +126,13 @@ public:
     {
         return m_x11Display;
     }
+    GLXFBConfig config() const
+    {
+        return fbconfig;
+    }
 
 private:
     void vblank(std::chrono::nanoseconds timestamp);
-    void present(const QRegion &damage);
     bool initBuffer();
     bool checkVersion();
     void initExtensions();
@@ -117,12 +151,11 @@ private:
     std::unique_ptr<OverlayWindow> m_overlayWindow;
     ::Window window;
     GLXFBConfig fbconfig;
-    GLXWindow glxWindow;
+    GLXPbuffer m_pbuffer;
     GLXContext ctx;
     QHash<xcb_visualid_t, FBConfigInfo> m_fbconfigHash;
     QHash<xcb_visualid_t, int> m_visualDepthHash;
     std::unique_ptr<SwapEventFilter> m_swapEventFilter;
-    std::unique_ptr<GLFramebuffer> m_fbo;
     DamageJournal m_damageJournal;
     QRegion m_lastRenderedRegion;
     int m_bufferAge;
