@@ -170,8 +170,6 @@ public:
     void setTimestamp(quint32 time);
     quint32 timestamp() const;
 
-    void setPrimarySelectionEnabled(bool enabled);
-
     /**
      * @name Drag'n'Drop related methods
      */

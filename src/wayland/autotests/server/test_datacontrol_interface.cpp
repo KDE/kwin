@@ -122,16 +122,11 @@ public:
         Q_UNUSED(mimeType);
         Q_UNUSED(fd);
     };
-    void cancel() override
-    {
-        Q_EMIT cancelled();
-    };
+    void cancel() override{};
     QStringList mimeTypes() const override
     {
         return {"text/test1", "text/test2"};
     }
-Q_SIGNALS:
-    void cancelled();
 };
 
 // The test itself
@@ -148,7 +143,6 @@ private Q_SLOTS:
     void testCopyFromControl();
     void testCopyFromControlPrimarySelection();
     void testKlipperCase();
-    void testPrimarySelectionDisabled();
 
 private:
     KWayland::Client::ConnectionThread *m_connection;
@@ -302,32 +296,6 @@ void DataControlInterfaceTest::testCopyToControlPrimarySelection()
     QCOMPARE(offer->receivedOffers().count(), 2);
     QCOMPARE(offer->receivedOffers()[0], "text/test1");
     QCOMPARE(offer->receivedOffers()[1], "text/test2");
-}
-
-void DataControlInterfaceTest::testPrimarySelectionDisabled()
-{
-    // we set a dummy data source on the seat using abstract client directly
-    // then confirm we receive the offer despite not having a surface
-
-    // disable primary selection
-    m_seat->setPrimarySelectionEnabled(false);
-
-    std::unique_ptr<DataControlDevice> dataControlDevice(new DataControlDevice);
-    dataControlDevice->init(m_dataControlDeviceManager->get_data_device(*m_clientSeat));
-
-    QSignalSpy newOfferSpy(dataControlDevice.get(), &DataControlDevice::dataControlOffer);
-    QSignalSpy selectionSpy(dataControlDevice.get(), &DataControlDevice::primary_selection);
-
-    std::unique_ptr<TestDataSource> testSelection(new TestDataSource);
-    QSignalSpy cancelSpy(testSelection.get(), &TestDataSource::cancelled);
-
-    m_seat->setPrimarySelection(testSelection.get());
-
-    // selection will be sent after we've been sent a new offer object and the mimes have been sent to that object
-    cancelSpy.wait();
-
-    QCOMPARE(newOfferSpy.count(), 0);
-    QCOMPARE(cancelSpy.count(), 1);
 }
 
 void DataControlInterfaceTest::testCopyFromControl()
