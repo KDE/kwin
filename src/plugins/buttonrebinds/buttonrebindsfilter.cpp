@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2022 David Redondo <kde@david-redono.de>
+    SPDX-FileCopyrightText: 2022 Harald Sitter <sitter@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
@@ -35,6 +36,7 @@ public:
         Q_ASSERT(s_scopes > 0);
         s_scopes--;
     }
+    Q_DISABLE_COPY_MOVE(RebindScope)
     static bool isRebinding()
     {
         return s_scopes > 0;
@@ -54,7 +56,7 @@ QString InputDevice::name() const
 
 QString InputDevice::sysName() const
 {
-    return QString();
+    return {};
 }
 
 KWin::LEDs InputDevice::leds() const
@@ -121,9 +123,7 @@ bool InputDevice::isTouchpad() const
 }
 
 ButtonRebindsFilter::ButtonRebindsFilter()
-    : KWin::Plugin()
-    , KWin::InputEventFilter()
-    , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("kcminputrc")))
+    : m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("kcminputrc")))
 {
     KWin::input()->addInputDevice(&m_inputDevice);
     const QLatin1String groupName("ButtonRebinds");
@@ -148,7 +148,8 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
     bool foundActions = false;
     const auto mouseButtonEnum = QMetaEnum::fromType<Qt::MouseButtons>();
     const auto mouseGroup = group.group("Mouse");
-    for (int i = 1; i <= 24; ++i) {
+    static constexpr auto maximumQtExtraButton = 24;
+    for (int i = 1; i <= maximumQtExtraButton; ++i) {
         const QByteArray buttonName = QByteArray("ExtraButton") + QByteArray::number(i);
         if (mouseGroup.hasKey(buttonName.constData())) {
             const auto entry = mouseGroup.readEntry(buttonName.constData(), QStringList());
@@ -165,7 +166,7 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
         const auto tabletButtons = tabletGroup.keyList();
         for (const auto &buttonName : tabletButtons) {
             const auto entry = tabletGroup.readEntry(buttonName, QStringList());
-            bool ok;
+            bool ok = false;
             const uint button = buttonName.toUInt(&ok);
             if (ok) {
                 foundActions = true;
@@ -181,7 +182,7 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
         const auto tabletToolButtons = toolGroup.keyList();
         for (const auto &buttonName : tabletToolButtons) {
             const auto entry = toolGroup.readEntry(buttonName, QStringList());
-            bool ok;
+            bool ok = false;
             const uint button = buttonName.toUInt(&ok);
             if (ok) {
                 foundActions = true;
@@ -233,21 +234,21 @@ void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const
     if (entry.first() == QLatin1String("Key")) {
         const auto keys = QKeySequence::fromString(entry.at(1), QKeySequence::PortableText);
         if (!keys.isEmpty()) {
-            m_actions[type].insert(trigger, keys);
+            m_actions.at(type).insert(trigger, keys);
         }
     } else if (entry.first() == QLatin1String("MouseButton")) {
-        bool ok;
+        bool ok = false;
         const MouseButton mb{entry.last().toUInt(&ok)};
         if (ok) {
-            m_actions[type].insert(trigger, mb);
+            m_actions.at(type).insert(trigger, mb);
         } else {
             qCWarning(KWIN_BUTTONREBINDS) << "Could not convert" << entry << "into a mouse button";
         }
     } else if (entry.first() == QLatin1String("TabletToolButton")) {
-        bool ok;
+        bool ok = false;
         const TabletToolButton tb{entry.last().toUInt(&ok)};
         if (ok) {
-            m_actions[type].insert(trigger, tb);
+            m_actions.at(type).insert(trigger, tb);
         } else {
             qCWarning(KWIN_BUTTONREBINDS) << "Could not convert" << entry << "into a mouse button";
         }
@@ -256,7 +257,7 @@ void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const
 
 bool ButtonRebindsFilter::send(TriggerType type, const Trigger &trigger, bool pressed, uint timestamp)
 {
-    const auto &typeActions = m_actions[type];
+    const auto &typeActions = m_actions.at(type);
     if (typeActions.isEmpty()) {
         return false;
     }
@@ -264,9 +265,11 @@ bool ButtonRebindsFilter::send(TriggerType type, const Trigger &trigger, bool pr
     const auto &action = typeActions[trigger];
     if (const QKeySequence *seq = std::get_if<QKeySequence>(&action)) {
         return sendKeySequence(*seq, pressed, timestamp);
-    } else if (const auto mb = std::get_if<MouseButton>(&action)) {
+    }
+    if (const auto mb = std::get_if<MouseButton>(&action)) {
         return sendMouseButton(mb->button, pressed, timestamp);
-    } else if (const auto tb = std::get_if<TabletToolButton>(&action)) {
+    }
+    if (const auto tb = std::get_if<TabletToolButton>(&action)) {
         return sendTabletToolButton(tb->button, pressed, timestamp);
     }
     return false;
@@ -279,7 +282,7 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
     }
     const auto &key = keys[0];
 
-    int sym;
+    int sym = -1;
     if (!KKeyServer::keyQtToSymX(keys[0], &sym)) {
         qCWarning(KWIN_BUTTONREBINDS) << "Could not convert" << keys << "to keysym";
         return false;

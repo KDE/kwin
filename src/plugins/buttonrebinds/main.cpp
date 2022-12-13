@@ -16,11 +16,6 @@ class KWIN_EXPORT ButtonRebindsFactory : public KWin::PluginFactory
     Q_INTERFACES(KWin::PluginFactory)
 
 public:
-    explicit ButtonRebindsFactory()
-        : PluginFactory()
-    {
-    }
-
     std::unique_ptr<KWin::Plugin> create() const override
     {
         switch (KWin::kwinApp()->operationMode()) {

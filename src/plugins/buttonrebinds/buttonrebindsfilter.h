@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2022 David Redondo <kde@david-redono.de>
+    SPDX-FileCopyrightText: 2022 Harald Sitter <sitter@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
@@ -7,6 +8,7 @@
 #pragma once
 
 #include "plugin.h"
+#include <array>
 #include <optional>
 #include <variant>
 
@@ -82,7 +84,7 @@ private:
     bool sendTabletToolButton(quint32 button, bool pressed, uint time);
 
     InputDevice m_inputDevice;
-    QHash<Trigger, std::variant<QKeySequence, MouseButton, TabletToolButton>> m_actions[LastType];
+    std::array<QHash<Trigger, std::variant<QKeySequence, MouseButton, TabletToolButton>>, LastType> m_actions;
     KConfigWatcher::Ptr m_configWatcher;
     std::optional<KWin::TabletToolId> m_tabletTool;
 };
