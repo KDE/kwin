@@ -218,16 +218,18 @@ void WaylandOutput::renderCursorOpengl(WaylandEglBackend *backend, const QImage 
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    if (!image.isNull()) {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    GLTexture texture(image);
-    texture.bind();
-    ShaderBinder binder(ShaderTrait::MapTexture);
-    binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-    texture.render(cursorRect, beginInfo->renderTarget.devicePixelRatio());
-    texture.unbind();
-    glDisable(GL_BLEND);
+        GLTexture texture(image);
+        texture.bind();
+        ShaderBinder binder(ShaderTrait::MapTexture);
+        binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+        texture.render(cursorRect, beginInfo->renderTarget.devicePixelRatio());
+        texture.unbind();
+        glDisable(GL_BLEND);
+    }
 
     cursorLayer->endFrame(infiniteRegion(), infiniteRegion());
 }
@@ -250,12 +252,14 @@ void WaylandOutput::renderCursorQPainter(WaylandQPainterBackend *backend, const 
     c->setDevicePixelRatio(scale());
     c->fill(Qt::transparent);
 
-    QPainter p;
-    p.begin(c);
-    p.setWorldTransform(logicalToNativeMatrix(cursorRect, 1, transform()).toTransform());
-    p.setRenderHint(QPainter::SmoothPixmapTransform);
-    p.drawImage(QPoint(0, 0), image);
-    p.end();
+    if (!image.isNull()) {
+        QPainter p;
+        p.begin(c);
+        p.setWorldTransform(logicalToNativeMatrix(cursorRect, 1, transform()).toTransform());
+        p.setRenderHint(QPainter::SmoothPixmapTransform);
+        p.drawImage(QPoint(0, 0), image);
+        p.end();
+    }
 
     cursorLayer->endFrame(infiniteRegion(), infiniteRegion());
 }
