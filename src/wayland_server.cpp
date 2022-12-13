@@ -178,7 +178,8 @@ public:
             return false;
         }
 
-        {
+        static bool permissionCheckDisabled = qEnvironmentVariableIntValue("KWIN_WAYLAND_NO_PERMISSION_CHECKS") == 1;
+        if (!permissionCheckDisabled) {
             auto requestedInterfaces = client->property("requestedInterfaces");
             if (requestedInterfaces.isNull()) {
                 requestedInterfaces = fetchRequestedInterfaces(client);
