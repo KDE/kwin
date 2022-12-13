@@ -320,6 +320,16 @@ void WaylandServer::handleOutputDisabled(Output *output)
     }
 }
 
+void WaylandServer::setEnablePrimarySelection(bool enable)
+{
+    if (!enable && m_primarySelectionDeviceManager != nullptr) {
+        delete m_primarySelectionDeviceManager;
+        m_primarySelectionDeviceManager = nullptr;
+    } else if (enable && m_primarySelectionDeviceManager == nullptr) {
+        m_primarySelectionDeviceManager = new PrimarySelectionDeviceManagerV1Interface(m_display, m_display);
+    }
+}
+
 bool WaylandServer::start()
 {
     return m_display->start();
@@ -420,8 +430,7 @@ bool WaylandServer::init(InitializationFlags flags)
     new DataControlDeviceManagerV1Interface(m_display, m_display);
 
     const auto kwinConfig = kwinApp()->config();
-    m_seat->setPrimarySelectionEnabled(kwinConfig->group("Wayland").readEntry("EnablePrimarySelection", true));
-    new PrimarySelectionDeviceManagerV1Interface(m_display, m_display);
+    setEnablePrimarySelection(kwinConfig->group("Wayland").readEntry("EnablePrimarySelection", true));
 
     m_idle = new IdleInterface(m_display, m_display);
     auto idleInhibition = new IdleInhibition(m_idle);

@@ -67,7 +67,6 @@ public:
     // the last thing copied into the clipboard content
     AbstractDataSource *currentSelection = nullptr;
     AbstractDataSource *currentPrimarySelection = nullptr;
-    bool primarySelectionEnabled = true;
 
     // Pointer related members
     struct Pointer
