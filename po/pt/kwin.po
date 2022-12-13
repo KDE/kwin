@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-09 00:47+0000\n"
-"PO-Revision-Date: 2022-11-04 10:44+0000\n"
+"PO-Revision-Date: 2022-12-12 18:01+0000\n"
 "Last-Translator: Pedro Morais <morais@kde.org>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
 "Language: pt\n"
@@ -2671,26 +2671,22 @@ msgid "Window to Previous Screen"
 msgstr "Janela para o Ecrã Anterior"
 
 #: useractions.cpp:1109
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
 msgstr "Janela para um Ecrã à Direita"
 
 #: useractions.cpp:1111
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
 msgstr "Janela para um Ecrã à Esquerda"
 
 #: useractions.cpp:1113
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "Janela para o Ecrã %1"
+msgstr "Janela para um Ecrã Acima"
 
 #: useractions.cpp:1115
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
 msgstr "Janela para um Ecrã Abaixo"
 
@@ -2710,28 +2706,24 @@ msgid "Switch to Previous Screen"
 msgstr "Mudar para o Ecrã Anterior"
 
 #: useractions.cpp:1128
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Mudar para a Janela à Direita"
+msgstr "Mudar para o Ecrã à Direita"
 
 #: useractions.cpp:1130
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Mudar para a Janela à Esquerda"
+msgstr "Mudar para o Ecrã à Esquerda"
 
 #: useractions.cpp:1132
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Mudar para o Ecrã %1"
+msgstr "Mudar para o Ecrã Acima"
 
 #: useractions.cpp:1134
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Mudar para o Ecrã %1"
+msgstr "Mudar para o Ecrã Abaixo"
 
 #: useractions.cpp:1137
 #, kde-format

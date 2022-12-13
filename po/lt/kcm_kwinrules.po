@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-11 00:48+0000\n"
-"PO-Revision-Date: 2020-04-29 13:55+0300\n"
-"Last-Translator: Moo\n"
+"PO-Revision-Date: 2022-12-12 21:54+0200\n"
+"Last-Translator: Moo <<>>\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -64,7 +64,7 @@ msgstr ""
 #: kcmrules.cpp:243
 #, kde-format
 msgid "Copy of %1"
-msgstr ""
+msgstr "%1 kopija"
 
 #: kcmrules.cpp:423
 #, kde-format
@@ -79,7 +79,7 @@ msgstr "Lango nuostatos, skirtos %1"
 #: main.cpp:31
 #, kde-format
 msgid "KWinRules KCM launcher"
-msgstr ""
+msgstr "KWinRules KCM paleidyklė"
 
 #: main.cpp:32
 #, kde-format
@@ -217,7 +217,7 @@ msgstr ""
 #: package/contents/ui/FileDialogLoader.qml:14
 #, kde-format
 msgid "Select File"
-msgstr ""
+msgstr "Pasirinkti failą"
 
 #: package/contents/ui/FileDialogLoader.qml:26
 #, kde-format
@@ -227,57 +227,55 @@ msgstr "KWin taisyklės (*.kwinrule)"
 #: package/contents/ui/main.qml:59
 #, kde-format
 msgid "No rules for specific windows are currently set"
-msgstr ""
+msgstr "Šiuo metu jokiems konkretiems langams nėra nustatytų taisyklių"
 
 #: package/contents/ui/main.qml:60
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New...</interface> button below to add some"
 msgstr ""
+"Norėdami pridėti taisyklių, žemiau spustelėkite mygtuką <interface>Pridėti "
+"naują...</interface>"
 
 #: package/contents/ui/main.qml:68
 #, kde-format
 msgid "Select the rules to export"
-msgstr ""
+msgstr "Pažymėkite taisykles, kurias norite eksportuoti"
 
 #: package/contents/ui/main.qml:72
 #, kde-format
 msgid "Unselect All"
-msgstr ""
+msgstr "Nuimti žymėjimą nuo visų"
 
 #: package/contents/ui/main.qml:72
 #, kde-format
 msgid "Select All"
-msgstr ""
+msgstr "Žymėti visas"
 
 #: package/contents/ui/main.qml:86
 #, kde-format
 msgid "Save Rules"
-msgstr ""
+msgstr "Įrašyti taisykles"
 
 #: package/contents/ui/main.qml:97
-#, fuzzy, kde-format
-#| msgid "&New..."
+#, kde-format
 msgid "Add New..."
-msgstr "&Nauja..."
+msgstr "Pridėti naują..."
 
 #: package/contents/ui/main.qml:108
-#, fuzzy, kde-format
-#| msgid "&Import"
+#, kde-format
 msgid "Import..."
-msgstr "&Importuoti"
+msgstr "Importuoti..."
 
 #: package/contents/ui/main.qml:116
-#, fuzzy, kde-format
-#| msgid "&Export"
+#, kde-format
 msgid "Cancel Export"
-msgstr "&Eksportuoti"
+msgstr "Atsisakyti importavimo"
 
 #: package/contents/ui/main.qml:116
-#, fuzzy, kde-format
-#| msgid "&Export"
+#, kde-format
 msgid "Export..."
-msgstr "&Eksportuoti"
+msgstr "Eksportuoti..."
 
 #: package/contents/ui/main.qml:206
 #, kde-format
@@ -287,7 +285,7 @@ msgstr "Taisyti"
 #: package/contents/ui/main.qml:215
 #, kde-format
 msgid "Duplicate"
-msgstr ""
+msgstr "Dubliuoti"
 
 #: package/contents/ui/main.qml:224
 #, kde-format
@@ -307,27 +305,26 @@ msgstr "Eksportuoti taisykles"
 #: package/contents/ui/OptionsComboBox.qml:35
 #, kde-format
 msgid "None selected"
-msgstr ""
+msgstr "Nėra pažymėtų"
 
 #: package/contents/ui/OptionsComboBox.qml:41
 #, kde-format
 msgid "All selected"
-msgstr ""
+msgstr "Visi pažymėti"
 
 #: package/contents/ui/OptionsComboBox.qml:43
 #, kde-format
 msgid "%1 selected"
 msgid_plural "%1 selected"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "%1 pažymėtas"
+msgstr[1] "%1 pažymėti"
+msgstr[2] "%1 pažymėtų"
+msgstr[3] "%1 pažymėtas"
 
 #: package/contents/ui/RulesEditor.qml:63
-#, fuzzy, kde-format
-#| msgid "&Detect Window Properties"
+#, kde-format
 msgid "No window properties changed"
-msgstr "&Aptikti lango savybes"
+msgstr "Nepasikeitė jokios lango savybės"
 
 #: package/contents/ui/RulesEditor.qml:64
 #, kde-kuit-format
@@ -336,45 +333,44 @@ msgid ""
 "Click the <interface>Add Property...</interface> button below to add some "
 "window properties that will be affected by the rule"
 msgstr ""
+"Norėdami pridėti lango savybių, kurias paveiks taisyklė, žemiau spustelėkite "
+"mygtuką <interface>Pridėti savybę...</interface>"
 
 #: package/contents/ui/RulesEditor.qml:85
-#, fuzzy, kde-format
-#| msgid "Closeable"
+#, kde-format
 msgid "Close"
-msgstr "Galimas užverti"
+msgstr "Užverti"
 
 #: package/contents/ui/RulesEditor.qml:85
-#, fuzzy, kde-format
-#| msgid "&New..."
+#, kde-format
 msgid "Add Property..."
-msgstr "&Nauja..."
+msgstr "Pridėti savybę..."
 
 #: package/contents/ui/RulesEditor.qml:98
-#, fuzzy, kde-format
-#| msgid "&Detect Window Properties"
+#, kde-format
 msgid "Detect Window Properties"
-msgstr "&Aptikti lango savybes"
+msgstr "Aptikti lango savybes"
 
 #: package/contents/ui/RulesEditor.qml:114
 #: package/contents/ui/RulesEditor.qml:121
 #, kde-format
 msgid "Instantly"
-msgstr ""
+msgstr "Nedelsiant"
 
 #: package/contents/ui/RulesEditor.qml:115
 #: package/contents/ui/RulesEditor.qml:126
 #, kde-format
 msgid "After %1 second"
 msgid_plural "After %1 seconds"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Po %1 sekundės"
+msgstr[1] "Po %1 sekundžių"
+msgstr[2] "Po %1 sekundžių"
+msgstr[3] "Po %1 sekundės"
 
 #: package/contents/ui/RulesEditor.qml:175
 #, kde-format
 msgid "Add property to the rule"
-msgstr ""
+msgstr "Pridėti savybę į taisyklę"
 
 #: package/contents/ui/RulesEditor.qml:273
 #: package/contents/ui/ValueEditor.qml:54
@@ -393,25 +389,25 @@ msgstr "Ne"
 #: package/contents/ui/ValueEditor.qml:178
 #, kde-format
 msgid "%1 %"
-msgstr ""
+msgstr "%1 %"
 
 #: package/contents/ui/RulesEditor.qml:277
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
-msgstr ""
+msgstr "(%1, %2)"
 
 #: package/contents/ui/RulesEditor.qml:279
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"
-msgstr ""
+msgstr "(%1, %2)"
 
 #: package/contents/ui/ValueEditor.qml:206
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #: rulesmodel.cpp:218
 #, kde-format
@@ -444,6 +440,10 @@ msgid ""
 "initial settings for size and position. To enforce these settings, also "
 "force the property \"%1\" to \"Yes\"."
 msgstr ""
+"Kai kurios programos po paleidimo pačios nusistato savo geometriją, "
+"nustelbdamos jūsų pradines dydžio ir pozicijos nuostatas. Norėdami "
+"priverstinai naudoti šias nuostatas, nustatykite priverstinai savybę „%1“ į "
+"„Taip“."
 
 #: rulesmodel.cpp:359
 #, kde-format
@@ -467,10 +467,9 @@ msgid "Match whole window class"
 msgstr "Atitikti visą lango klasę"
 
 #: rulesmodel.cpp:382
-#, fuzzy, kde-format
-#| msgid "Match whole window class"
+#, kde-format
 msgid "Whole window class"
-msgstr "Atitikti visą lango klasę"
+msgstr "Visa lango klasė"
 
 #: rulesmodel.cpp:388
 #, kde-format
@@ -526,16 +525,14 @@ msgid "Virtual Desktop"
 msgstr "Virtualus darbalaukis"
 
 #: rulesmodel.cpp:444
-#, fuzzy, kde-format
-#| msgid "Virtual Desktop"
+#, kde-format
 msgid "Virtual Desktops"
-msgstr "Virtualus darbalaukis"
+msgstr "Virtualūs darbalaukiai"
 
 #: rulesmodel.cpp:463
-#, fuzzy, kde-format
-#| msgid "All Activities"
+#, kde-format
 msgid "Activities"
-msgstr "Visos veiklos"
+msgstr "Veiklos"
 
 #: rulesmodel.cpp:479
 #, kde-format
@@ -615,7 +612,7 @@ msgstr ""
 #: rulesmodel.cpp:537
 #, kde-format
 msgid "Keep above other windows"
-msgstr ""
+msgstr "Laikyti virš kitų langų"
 
 #: rulesmodel.cpp:537 rulesmodel.cpp:542 rulesmodel.cpp:547 rulesmodel.cpp:553
 #: rulesmodel.cpp:559 rulesmodel.cpp:565
@@ -626,7 +623,7 @@ msgstr "Išdėstymas ir prieiga"
 #: rulesmodel.cpp:542
 #, kde-format
 msgid "Keep below other windows"
-msgstr ""
+msgstr "Laikyti po kitais langais"
 
 #: rulesmodel.cpp:547
 #, kde-format
@@ -793,10 +790,9 @@ msgid "Block compositing"
 msgstr "Blokuoti komponavimą"
 
 #: rulesmodel.cpp:703
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Lango klasė (programa)"
+msgstr "Lango klasė neprieinama"
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -807,12 +803,16 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Ši programa nepateikia lango klasės, taigi KWin negali jos naudoti, kad "
+"rastų atitikmenį ir taikytų kokias nors taisykles. Jei vis tiek norite "
+"taikyti langui kažkokias taisykles, pabandykite vietoj to, rasti kitų "
+"savybių atitikmenį, pavyzdžiui, lango pavadinimą.<nl/><nl/>Apsvarstykite "
+"galimybę pranešti apie šią klaidą programos plėtotojams."
 
 #: rulesmodel.cpp:738
-#, fuzzy, kde-format
-#| msgid "Window types"
+#, kde-format
 msgid "All Window Types"
-msgstr "Lango tipai"
+msgstr "Visi langų tipai"
 
 #: rulesmodel.cpp:739
 #, kde-format
@@ -863,7 +863,7 @@ msgstr "Atskira meniu juosta"
 #: rulesmodel.cpp:749
 #, kde-format
 msgid "On Screen Display"
-msgstr ""
+msgstr "Ekraninis pranešimas"
 
 #: rulesmodel.cpp:759
 #, kde-format
@@ -874,7 +874,7 @@ msgstr "Visi darbalaukiai"
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
-msgstr ""
+msgstr "Padaryti langą prieinamą visuose darbalaukiuose"
 
 #: rulesmodel.cpp:780
 #, kde-format
@@ -885,7 +885,7 @@ msgstr "Visos veiklos"
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
-msgstr ""
+msgstr "Padaryti langą prieinamą visose veiklose"
 
 #: rulesmodel.cpp:803
 #, kde-format
@@ -958,15 +958,14 @@ msgid "Extreme"
 msgstr "Ekstremali"
 
 #: rulesmodel.cpp:865
-#, fuzzy, kde-format
-#| msgid "Unmanaged Window"
+#, kde-format
 msgid "Unmanaged window"
 msgstr "Nevaldomas langas"
 
 #: rulesmodel.cpp:866
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
-msgstr ""
+msgstr "Nepavyko aptikti lango savybių. Šis langas nėra valdomas KWin."
 
 #~ msgid "Cascaded"
 #~ msgstr "Pakopomis"

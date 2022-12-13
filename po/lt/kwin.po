@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-09 00:47+0000\n"
-"PO-Revision-Date: 2020-03-18 15:37+0200\n"
-"Last-Translator: Moo\n"
+"PO-Revision-Date: 2022-12-12 22:06+0200\n"
+"Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -643,9 +643,7 @@ msgid "Tablet Tool Button"
 msgstr "Planšetės įrankio mygtukas"
 
 #: debug_console.cpp:521 debug_console.cpp:535
-#, fuzzy, kde-format
-#| msgctxt "A button in a mouse press/release event"
-#| msgid "Button"
+#, kde-format
 msgid "Button"
 msgstr "Mygtukas"
 
@@ -657,10 +655,9 @@ msgstr "Spaudimas"
 
 #: debug_console.cpp:523 debug_console.cpp:537 debug_console.cpp:551
 #: debug_console.cpp:565
-#, fuzzy, kde-format
-#| msgid "Tablet Tool"
+#, kde-format
 msgid "Tablet"
-msgstr "Planšetės įrankis"
+msgstr "Planšetė"
 
 #: debug_console.cpp:534
 #, kde-format
@@ -873,10 +870,9 @@ msgid "task"
 msgstr "užduotis"
 
 #: debug_console.cpp:1215
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "X11 Windows"
-msgstr "Langai"
+msgstr "X11 langai"
 
 #: debug_console.cpp:1217
 #, kde-format
@@ -1042,7 +1038,7 @@ msgstr "Aktyvūs šviesos diodai"
 #: debug_console.ui:425 debug_console.ui:445
 #, kde-format
 msgid "Clipboard"
-msgstr ""
+msgstr "Iškarpinė"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: debug_console.ui:491
@@ -1132,49 +1128,37 @@ msgid "<b>Application \"%1\" is not responding</b>"
 msgstr "<b>Programa „\"%1“ neatsako</b>"
 
 #: helpers/killer/killer.cpp:86
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<p>You tried to close window \"%1\" from application \"%2\" (Process ID: "
-#| "%3) but the application is not responding.</p>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
 "%3) but the application is not responding.</para>"
 msgstr ""
-"<p>Jūs bandėte užverti langą \"%1\" iš programos \"%2\" (Proceso ID: %3), "
-"tačiau programa neatsako.</p>"
+"<para>Jūs bandėte užverti langą „%1“, kuris priklauso programai "
+"„%2“ (Proceso ID: %3), tačiau programa neatsako.</para>"
 
 #: helpers/killer/killer.cpp:88
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<p>You tried to close window \"%1\" from application \"%2\" (Process ID: "
-#| "%3), running on host \"%4\", but the application is not responding.</p>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
 "%3), running on host \"%4\", but the application is not responding.</para>"
 msgstr ""
-"<p>Jūs bandėte užverti langą \"%1\" iš programos \"%2\" (Proceso ID: %3), "
-"veikiančios mazge \"%4\", tačiau programa neatsako.</p>"
+"<para>Jūs bandėte užverti langą „%1“, kuris priklauso programai "
+"„%2“ (Proceso ID: %3), veikiančios mazge „%4“, tačiau programa neatsako.</"
+"para>"
 
 #: helpers/killer/killer.cpp:91
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<p>Do you want to terminate this application?</p><p><warning>Terminating "
-#| "the application will close all of its child windows. Any unsaved data "
-#| "will be lost.</warning></p>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para>Do you want to terminate this application?</"
 "para><para><warning>Terminating the application will close all of its child "
 "windows. Any unsaved data will be lost.</warning></para>"
 msgstr ""
-"<p>Ar norite baigti šios programos darbą?</p><p><warning>Baigus programos "
-"darbą, bus užverti visi jos antriniai langai. Bet kokie neįrašyti duomenys "
-"bus prarasti.</warning></p>"
+"<para>Ar norite baigti šios programos darbą?</para><para><warning>Baigus "
+"programos darbą, bus užverti visi jos antriniai langai. Bet kokie neįrašyti "
+"duomenys bus prarasti.</warning></para>"
 
 #: helpers/killer/killer.cpp:94
 #, kde-format
@@ -1192,11 +1176,9 @@ msgid "Move the tablet to the next output"
 msgstr ""
 
 #: input.cpp:2060
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Tablet moved to %1"
-msgstr "Planšetės veiksena"
+msgstr "Planšetė perkelta į %1"
 
 #: input.cpp:2060
 #, kde-format
@@ -1204,18 +1186,14 @@ msgid "Tablets switched outputs"
 msgstr ""
 
 #: input.cpp:3025
-#, fuzzy, kde-format
-#| msgctxt "A touch up event"
-#| msgid "Touch Up"
+#, kde-format
 msgid "Touchpad"
-msgstr "Prilietimas aukštyn"
+msgstr "Jutiklinis kilimėlis"
 
 #: keyboard_layout.cpp:45
-#, fuzzy, kde-format
-#| msgctxt "tooltip title"
-#| msgid "Keyboard Layout"
+#, kde-format
 msgid "Keyboard Layout Switcher"
-msgstr "Klaviatūros išdėstymas"
+msgstr "Klaviatūros išdėstymo perjungiklis"
 
 #: killwindow.cpp:32
 #, kde-format
@@ -1453,19 +1431,17 @@ msgstr "Pakeisti jau veikiančią, su ICCCM2.0 suderinamą, langų tvarkytuvę"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:49
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:51
-#, fuzzy, kde-format
-#| msgid "Activity"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "activate"
-msgstr "Veikla"
+msgstr "aktyvuoti"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:52
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:54
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "close"
-msgstr "&Užverti"
+msgstr "užverti"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:55
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:57
@@ -1476,11 +1452,10 @@ msgstr ""
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:58
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:60
-#, fuzzy, kde-format
-#| msgid "Minimized"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "minimize"
-msgstr "Suskleistas"
+msgstr "suskleisti"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:61
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:63
@@ -1491,19 +1466,17 @@ msgstr ""
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:64
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:66
-#, fuzzy, kde-format
-#| msgid "Ma&ximize"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "maximize"
-msgstr "&Išskleisti"
+msgstr "išskleisti"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:67
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:69
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "fullscreen"
-msgstr "Visas ekranas"
+msgstr "visas ekranas"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:70
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:72
@@ -1530,15 +1503,13 @@ msgid "keep below"
 msgstr "Laikyti žemiau"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:83
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "window"
-msgstr "Langai"
+msgstr "langas"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:93
-#, fuzzy, kde-format
-#| msgid "name"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "name"
 msgstr "pavadinimas"
@@ -1552,15 +1523,13 @@ msgstr "pavadinimas"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:97
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:150
-#, fuzzy, kde-format
-#| msgid "&Desktops"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
-msgstr "&Darbalaukiai"
+msgstr "darbalaukis"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:255
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop %1"
+#, kde-format
 msgid "Switch to desktop %1"
 msgstr "Perjungti į darbalaukį %1"
 
@@ -1627,7 +1596,7 @@ msgstr "Perjungti naktinę spalvą"
 #: plugins/nightcolor/nightcolormanager.cpp:472
 #, kde-format
 msgid "Color Temperature Preview"
-msgstr ""
+msgstr "Spalvos temperatūros peržiūra"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -2158,20 +2127,20 @@ msgstr "Darbalaukio failo pavadinimo taisyklės tipas"
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "Nepavyko nustatyti paketo metaduomenų vietos"
 
 #: scripting/genericscriptedconfig.cpp:84
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "%1 neturi tinkamo metadata.json failo"
 
 #: scripting/genericscriptedconfig.cpp:90
 #: scripting/genericscriptedconfig.cpp:96
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "%1 nėra"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2378,10 +2347,9 @@ msgid "Show in &Activities"
 msgstr "Rodyti &veiklose"
 
 #: useractions.cpp:526
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "Perkelti į &darbalaukį"
+msgstr "Perkelti į dabartinį &darbalaukį"
 
 #: useractions.cpp:536 useractions.cpp:603
 #, kde-format
@@ -2389,9 +2357,7 @@ msgid "&All Desktops"
 msgstr "&Visi darbalaukiai"
 
 #: useractions.cpp:576
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "&Naujas darbalaukis"
@@ -2399,22 +2365,19 @@ msgstr "&Naujas darbalaukis"
 #: useractions.cpp:647
 #, kde-format
 msgid "Move to %1 %2"
-msgstr ""
+msgstr "Perkelti į %1 %2"
 
 #: useractions.cpp:660
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
-msgstr "&Naujas darbalaukis"
+msgstr "Pridėti į &naują darbalaukį"
 
 #: useractions.cpp:672
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
-msgstr "Perkelti į &darbalaukį"
+msgstr "Perkelti į naują darbalaukį"
 
 #: useractions.cpp:703
 #, kde-format
@@ -2507,10 +2470,9 @@ msgid "Make Window Fullscreen"
 msgstr "Išskleisti langą per visą ekraną"
 
 #: useractions.cpp:1016
-#, fuzzy, kde-format
-#| msgid "Hide Window Border"
+#, kde-format
 msgid "Toggle Window Border"
-msgstr "Slėpti lango rėmelį"
+msgstr "Perjungti lango rėmelį"
 
 #: useractions.cpp:1018
 #, kde-format
@@ -2533,34 +2495,29 @@ msgid "Setup Window Shortcut"
 msgstr "Nustatyti lango sparčiuosius klavišus"
 
 #: useractions.cpp:1026
-#, fuzzy, kde-format
-#| msgid "Pack Window to the Left"
+#, kde-format
 msgid "Move Window to the Center"
-msgstr "Pakuoti langą į kairę"
+msgstr "Perkelti langą į centrą"
 
 #: useractions.cpp:1028
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Right"
-msgstr "Perkelti langą"
+msgstr "Perkelti langą dešinėn"
 
 #: useractions.cpp:1030
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Left"
-msgstr "Perkelti langą"
+msgstr "Perkelti langą kairėn"
 
 #: useractions.cpp:1032
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Up"
-msgstr "Perkelti langą"
+msgstr "Perkelti langą aukštyn"
 
 #: useractions.cpp:1034
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Down"
-msgstr "Perkelti langą"
+msgstr "Perkelti langą žemyn"
 
 #: useractions.cpp:1036
 #, fuzzy, kde-format
@@ -2751,34 +2708,29 @@ msgid "Switch to Previous Screen"
 msgstr "Perjungti į ankstesnį ekraną"
 
 #: useractions.cpp:1128
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Perjungti į langą dešinėje"
+msgstr "Perjungti į ekraną dešinėje"
 
 #: useractions.cpp:1130
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Perjungti į langą kairėje"
+msgstr "Perjungti į ekraną kairėje"
 
 #: useractions.cpp:1132
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Perjungti į ekraną %1"
+msgstr "Perjungti į ekraną aukščiau"
 
 #: useractions.cpp:1134
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Perjungti į ekraną %1"
+msgstr "Perjungti į ekraną žemiau"
 
 #: useractions.cpp:1137
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "Perkelti į &darbalaukį"
+msgstr "Žvilgsnis į darbalaukį"
 
 #: useractions.cpp:1140
 #, kde-format

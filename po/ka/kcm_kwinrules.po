@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-11 00:48+0000\n"
-"PO-Revision-Date: 2022-12-03 06:45+0100\n"
+"PO-Revision-Date: 2022-12-12 07:15+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -584,7 +584,7 @@ msgstr "დავალებების პანელის გამოტ�
 #: rulesmodel.cpp:549
 #, kde-format
 msgid "Window shall (not) appear in the taskbar."
-msgstr ""
+msgstr "ფანჯარა დავალებების ზოლში (არ) უნდა გამოჩენილიყო."
 
 #: rulesmodel.cpp:553
 #, kde-format
@@ -594,7 +594,7 @@ msgstr "პეიჯერის გამოტოვება"
 #: rulesmodel.cpp:555
 #, kde-format
 msgid "Window shall (not) appear in the manager for virtual desktops"
-msgstr ""
+msgstr "ფანჯარა ვირტუალური სამუშაო მაგიდების მმართველში (არ) უნდა გამოჩენილყო"
 
 #: rulesmodel.cpp:559
 #, kde-format
@@ -604,7 +604,7 @@ msgstr "გადამრთველის გამოტოვება"
 #: rulesmodel.cpp:561
 #, kde-format
 msgid "Window shall (not) appear in the Alt+Tab list"
-msgstr ""
+msgstr "ფანჯარა Alt+Tab-ის სიაში (არ) უნდა გამოჩენილიყო"
 
 #: rulesmodel.cpp:565
 #, kde-format
@@ -720,10 +720,9 @@ msgid "Block compositing"
 msgstr ""
 
 #: rulesmodel.cpp:703
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "ფანჯრის კლასი (აპლიკაცია)"
+msgstr "ფანჯრის კლასი ხელმიუწვდომელია"
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -884,10 +883,9 @@ msgid "Extreme"
 msgstr "ექსტრემალური"
 
 #: rulesmodel.cpp:865
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "Unmanaged window"
-msgstr "მთავარ ფანჯარაზე"
+msgstr "უმართავი ფანჯარა"
 
 #: rulesmodel.cpp:866
 #, kde-format

@@ -9,17 +9,17 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-11 00:48+0000\n"
-"PO-Revision-Date: 2022-12-06 08:28+0100\n"
+"PO-Revision-Date: 2022-12-12 06:49+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
-"%100==4 ? 3 : 0);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100>=3 && n"
+"%100<=4 ? 2 : 3);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -784,10 +784,9 @@ msgid "Block compositing"
 msgstr "Blokiraj skladnjo 3D"
 
 #: rulesmodel.cpp:703
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Razred okna (program)"
+msgstr "Razred okna ni na voljo"
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -798,6 +797,11 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Ta aplikacija ne zagotavlja razreda za okno, zato ga Kwin ne more uporabiti "
+"in uporabiti njegova pravila. Če kljub temu želite uporabiti nekatera "
+"pravila namesto tega poskusite uskladiti druge lastnosti, kot je naslov okna."
+"<nl/><nl/>Prosimo, razmislite o poročanju o tej napaki razvijalcem "
+"aplikacije."
 
 #: rulesmodel.cpp:738
 #, kde-format
@@ -948,8 +952,7 @@ msgid "Extreme"
 msgstr "Zelo visoko"
 
 #: rulesmodel.cpp:865
-#, fuzzy, kde-format
-#| msgid "Unmanaged Window"
+#, kde-format
 msgid "Unmanaged window"
 msgstr "Neupravljano okno"
 

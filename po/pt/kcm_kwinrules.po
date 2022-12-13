@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-11 00:48+0000\n"
-"PO-Revision-Date: 2022-04-21 09:22+0100\n"
+"PO-Revision-Date: 2022-12-12 18:03+0000\n"
 "Last-Translator: José Nuno Pires <zepires@gmail.com>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
 "Language: pt\n"
@@ -784,10 +784,9 @@ msgid "Block compositing"
 msgstr "Bloquear a composição"
 
 #: rulesmodel.cpp:703
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Classe da janela (aplicação)"
+msgstr "Classe da janela indisponível"
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -798,6 +797,11 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Esta aplicação não está a fornecer uma classe para a janela, pelo que o KWin "
+"não a pode usar para corresponder e aplicar quaisquer regras. Se quiser à "
+"mesma aplicar algumas regras à mesma, tente fazer a correspondência com "
+"outras propriedades, como o título da janela, em alternativa.<nl/><nl/>Por "
+"favor, pense em comunicar este erro aos programadores da aplicação."
 
 #: rulesmodel.cpp:738
 #, kde-format
@@ -948,10 +952,9 @@ msgid "Extreme"
 msgstr "Extrema"
 
 #: rulesmodel.cpp:865
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "Unmanaged window"
-msgstr "Na Janela Principal"
+msgstr "Janela não gerida"
 
 #: rulesmodel.cpp:866
 #, kde-format
@@ -959,9 +962,3 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Não foi possível detectar as propriedades da janela. A mesma não é gerida "
 "pelo KWin."
-
-#~ msgid "Error"
-#~ msgstr "Erro"
-
-#~ msgid "Cascaded"
-#~ msgstr "Cascata"

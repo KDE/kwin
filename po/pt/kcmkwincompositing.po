@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-06 00:47+0000\n"
-"PO-Revision-Date: 2022-03-27 00:20+0000\n"
+"PO-Revision-Date: 2022-12-12 18:04+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
 "Language: pt\n"
@@ -158,63 +158,16 @@ msgstr "Forçar as animações mais suaves"
 #, kde-format
 msgid "Allows applications to cause screen tearing in fullscreen."
 msgstr ""
+"Permite que as aplicações provoquem interferências no ecrã no modo de ecrã "
+"completo."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowTearing)
 #: compositing.ui:216
 #, kde-format
 msgid "Allow tearing in fullscreen"
-msgstr ""
+msgstr "Permitir interferências no ecrã com o ecrã completo"
 
 #: main.cpp:79
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Reactivar a detecção do OpenGL"
-
-#~ msgid ""
-#~ "Scale method \"Accurate\" is not supported by all hardware and can cause "
-#~ "performance regressions and rendering artifacts."
-#~ msgstr ""
-#~ "O método de escala \"Preciso\" não é suportado por todo o 'hardware' e "
-#~ "poderá provocar problemas de performance e defeitos no desenho."
-
-#~ msgid "Scale method:"
-#~ msgstr "Método de escala:"
-
-#~ msgid "Smooth"
-#~ msgstr "Suave"
-
-#~ msgid "Accurate"
-#~ msgstr "Preciso"
-
-#~ msgid "Tearing prevention (\"vsync\"):"
-#~ msgstr "Prevenção de deslizamento (Sinc-V):"
-
-#~ msgid "Automatic"
-#~ msgstr "Automática"
-
-#~ msgid "Only when cheap"
-#~ msgstr "Só quando barato"
-
-#~ msgid "Full screen repaints"
-#~ msgstr "Actualizações totais do ecrã"
-
-#~ msgid "Re-use screen content"
-#~ msgstr "Reutilizar o conteúdo do ecrã"
-
-#~ msgid ""
-#~ "\"Only when cheap\" only prevents tearing for full screen changes like a "
-#~ "video."
-#~ msgstr ""
-#~ "O \"Apenas quando barato\" apenas evita as intermitências nas mudanças de "
-#~ "ecrã completo, como num vídeo."
-
-#~ msgid "\"Full screen repaints\" can cause performance problems."
-#~ msgstr ""
-#~ "O \"Actualização do ecrã completo\" pode causar problemas de performance."
-
-#~ msgid ""
-#~ "\"Re-use screen content\" causes severe performance problems on MESA "
-#~ "drivers."
-#~ msgstr ""
-#~ "O \"Reutilizar o conteúdo do ecrã\" causa problemas graves de performance "
-#~ "nos controladores MESA."
