@@ -562,16 +562,42 @@ QMap<Output *, QJsonObject> outputsConfig(const QVector<Output *> &outputs, cons
         return {};
     }
 
+    QHash<Output *, bool> duplicate;
+    QHash<Output *, QString> outputHashes;
+    for (Output *output : outputs) {
+        const QString hash = outputHash(output);
+        const auto it = std::find_if(outputHashes.cbegin(), outputHashes.cend(), [hash](const auto &value) {
+            return value == hash;
+        });
+        if (it == outputHashes.cend()) {
+            duplicate[output] = false;
+        } else {
+            duplicate[output] = true;
+            duplicate[it.key()] = true;
+        }
+        outputHashes[output] = hash;
+    }
+
     QMap<Output *, QJsonObject> ret;
     const auto outputsJson = doc.array();
     for (const auto &outputJson : outputsJson) {
         const auto outputObject = outputJson.toObject();
-        for (auto it = outputs.constBegin(), itEnd = outputs.constEnd(); it != itEnd;) {
-            if (!ret.contains(*it) && outputObject["id"] == outputHash(*it)) {
-                ret[*it] = outputObject;
-                continue;
+        const auto id = outputObject["id"];
+        const auto output = std::find_if(outputs.begin(), outputs.end(), [&duplicate, &id, &outputObject](Output *output) {
+            if (outputHash(output) != id.toString()) {
+                return false;
             }
-            ++it;
+            if (duplicate[output]) {
+                // can't distinguish between outputs by hash alone, need to look at connector names
+                const auto metadata = outputObject[QStringLiteral("metadata")];
+                const auto outputName = metadata[QStringLiteral("name")].toString();
+                return outputName == output->name();
+            } else {
+                return true;
+            }
+        });
+        if (output != outputs.end()) {
+            ret[*output] = outputObject;
         }
     }
     return ret;
