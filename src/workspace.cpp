@@ -519,13 +519,13 @@ namespace KWinKScreenIntegration
 /// See KScreen::Output::hashMd5
 QString outputHash(Output *output)
 {
-    QCryptographicHash hash(QCryptographicHash::Md5);
     if (!output->edid().isEmpty()) {
+        QCryptographicHash hash(QCryptographicHash::Md5);
         hash.addData(output->edid());
+        return QString::fromLatin1(hash.result().toHex());
     } else {
-        hash.addData(output->name().toLatin1());
+        return output->name();
     }
-    return QString::fromLatin1(hash.result().toHex());
 }
 
 /// See KScreen::Config::connectedOutputsHash in libkscreen
