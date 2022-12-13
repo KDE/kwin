@@ -1513,7 +1513,7 @@ Output *Workspace::findOutput(Output *reference, Direction direction, bool wrapA
 
 void Workspace::slotOutputBackendOutputsQueried()
 {
-    if (waylandServer()) {
+    if (waylandServer() && !waylandServer()->outputManagementBound()) {
         updateOutputConfiguration();
     }
     updateOutputs();
