@@ -214,7 +214,7 @@ void KeyboardInterface::setRepeatInfo(qint32 charactersPerSecond, qint32 delay)
 {
     d->keyRepeat.charactersPerSecond = std::max(charactersPerSecond, 0);
     d->keyRepeat.delay = std::max(delay, 0);
-    const QList<KeyboardInterfacePrivate::Resource *> keyboards = d->resourceMap().values();
+    const auto keyboards = d->resourceMap();
     for (KeyboardInterfacePrivate::Resource *keyboardResource : keyboards) {
         if (keyboardResource->version() >= WL_KEYBOARD_REPEAT_INFO_SINCE_VERSION) {
             d->send_repeat_info(keyboardResource->handle, d->keyRepeat.charactersPerSecond, d->keyRepeat.delay);
