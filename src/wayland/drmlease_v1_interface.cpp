@@ -6,8 +6,11 @@
 #include "drmlease_v1_interface.h"
 #include "display.h"
 #include "drmlease_v1_interface_p.h"
+#include "surface_interface.h"
 #include "utils.h"
 #include "utils/common.h"
+#include "window.h"
+#include "workspace.h"
 
 #include <fcntl.h>
 #include <unistd.h>
@@ -75,6 +78,7 @@ DrmLeaseDeviceV1Interface::DrmLeaseDeviceV1Interface(Display *display, KWin::Drm
     }
     connect(gpu, &KWin::DrmGpu::outputAdded, this, &DrmLeaseDeviceV1Interface::addOutput);
     connect(gpu, &KWin::DrmGpu::outputRemoved, this, &DrmLeaseDeviceV1Interface::removeOutput);
+    connect(KWin::workspace(), &KWin::Workspace::stackingOrderChanged, this, &DrmLeaseDeviceV1Interface::updateFullscreenOffers);
 }
 
 DrmLeaseDeviceV1Interface::~DrmLeaseDeviceV1Interface()
@@ -90,10 +94,51 @@ void DrmLeaseDeviceV1Interface::addOutput(KWin::DrmAbstractOutput *output)
     if (!drmOutput || !drmOutput->isNonDesktop()) {
         return;
     }
-    m_connectors[drmOutput] = std::make_unique<DrmLeaseConnectorV1Interface>(this, drmOutput);
+    m_connectors[drmOutput] = std::make_unique<DrmLeaseConnectorV1Interface>(this, drmOutput, nullptr);
 
     if (m_hasDrmMaster) {
         offerConnector(m_connectors[drmOutput].get());
+    }
+}
+
+void DrmLeaseDeviceV1Interface::updateFullscreenOffers()
+{
+    const auto outputs = m_gpu->drmOutputs();
+    const auto stackingOrder = KWin::workspace()->stackingOrder();
+    for (KWin::DrmOutput *output : outputs) {
+        if (output->isNonDesktop() || !output->isEnabled()) {
+            continue;
+        }
+        // find topmost window on the output
+        const auto it = std::find_if(stackingOrder.rbegin(), stackingOrder.rend(), [output](KWin::Window *window) {
+            return window->isOnOutput(output);
+        });
+        if (it == stackingOrder.rend()) {
+            removeOutput(output);
+            continue;
+        }
+        KWin::Window *const window = *it;
+        SurfaceInterface *const surface = window->surface();
+        if (!surface) {
+            removeOutput(output);
+            continue;
+        }
+        if (!window->isFullScreen()) {
+            removeOutput(output);
+            m_fullscreenCandidates[output] = window;
+            connect(window, &KWin::Window::fullScreenChanged, this, &DrmLeaseDeviceV1Interface::updateFullscreenOffers);
+            continue;
+        }
+        const auto offer = m_connectors.find(output);
+        if (offer != m_connectors.end() && offer->second->surface() == surface) {
+            // already offered to the correct client
+            continue;
+        }
+        removeOutput(output);
+        m_connectors[output] = std::make_unique<DrmLeaseConnectorV1Interface>(this, output, surface);
+        if (m_hasDrmMaster) {
+            offerConnector(m_connectors[output].get());
+        }
     }
 }
 
@@ -116,6 +161,10 @@ void DrmLeaseDeviceV1Interface::removeOutput(KWin::DrmAbstractOutput *output)
         }
         m_connectors.erase(it);
     }
+    if (const auto window = m_fullscreenCandidates[output]) {
+        disconnect(window, &KWin::Window::fullScreenChanged, this, &DrmLeaseDeviceV1Interface::updateFullscreenOffers);
+    }
+    m_fullscreenCandidates.erase(output);
 }
 
 void DrmLeaseDeviceV1Interface::setDrmMaster(bool hasDrmMaster)
@@ -203,6 +252,9 @@ KWin::DrmGpu *DrmLeaseDeviceV1Interface::gpu() const
 void DrmLeaseDeviceV1Interface::offerConnector(DrmLeaseConnectorV1Interface *connector)
 {
     for (const auto &resource : resourceMap()) {
+        if (connector->surface() && resource->client() != connector->surface()->client()->client()) {
+            continue;
+        }
         auto connectorResource = connector->add(resource->client(), 0, resource->version());
         send_connector(resource->handle, connectorResource->handle);
         connector->send(connectorResource->handle);
@@ -238,7 +290,7 @@ void DrmLeaseDeviceV1Interface::wp_drm_lease_device_v1_bind_resource(Resource *r
     KWin::FileDescriptor fd = m_gpu->createNonMasterFd();
     send_drm_fd(resource->handle, fd.get());
     for (const auto &[output, connector] : m_connectors) {
-        if (!connector->withdrawn()) {
+        if (!connector->withdrawn() && (!connector->surface() || connector->surface()->client()->client() == resource->client())) {
             auto connectorResource = connector->add(resource->client(), 0, s_version);
             send_connector(resource->handle, connectorResource->handle);
             connector->send(connectorResource->handle);
@@ -252,11 +304,15 @@ void DrmLeaseDeviceV1Interface::wp_drm_lease_device_v1_destroy_global()
     delete this;
 }
 
-DrmLeaseConnectorV1Interface::DrmLeaseConnectorV1Interface(DrmLeaseDeviceV1Interface *leaseDevice, KWin::DrmOutput *output)
+DrmLeaseConnectorV1Interface::DrmLeaseConnectorV1Interface(DrmLeaseDeviceV1Interface *leaseDevice, KWin::DrmOutput *output, SurfaceInterface *surface)
     : wp_drm_lease_connector_v1()
     , m_device(leaseDevice)
     , m_output(output)
+    , m_surface(surface)
 {
+    if (surface) {
+        connect(surface, &SurfaceInterface::aboutToBeDestroyed, this, &DrmLeaseConnectorV1Interface::handleSurfaceDestruction);
+    }
 }
 
 uint32_t DrmLeaseConnectorV1Interface::id() const
@@ -277,6 +333,11 @@ KWin::DrmOutput *DrmLeaseConnectorV1Interface::output() const
 bool DrmLeaseConnectorV1Interface::withdrawn() const
 {
     return m_withdrawn;
+}
+
+SurfaceInterface *DrmLeaseConnectorV1Interface::surface() const
+{
+    return m_surface;
 }
 
 void DrmLeaseConnectorV1Interface::send(wl_resource *resource)
@@ -301,6 +362,12 @@ void DrmLeaseConnectorV1Interface::withdraw()
 void DrmLeaseConnectorV1Interface::wp_drm_lease_connector_v1_destroy(Resource *resource)
 {
     wl_resource_destroy(resource->handle);
+}
+
+void DrmLeaseConnectorV1Interface::handleSurfaceDestruction()
+{
+    m_surface = nullptr;
+    m_device->removeOutput(m_output);
 }
 
 DrmLeaseRequestV1Interface::DrmLeaseRequestV1Interface(DrmLeaseDeviceV1Interface *device, wl_resource *resource)

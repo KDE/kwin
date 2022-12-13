@@ -122,12 +122,18 @@ bool DrmOutput::addLeaseObjects(QVector<uint32_t> &objectList)
 void DrmOutput::leased(DrmLease *lease)
 {
     m_lease = lease;
+    m_renderLoop->inhibit();
 }
 
 void DrmOutput::leaseEnded()
 {
     qCDebug(KWIN_DRM) << "ended lease for connector" << m_pipeline->connector()->id();
     m_lease = nullptr;
+    m_renderLoop->uninhibit();
+    // check if a modeset is needed
+    if (m_gpu->testPendingConfiguration() != DrmPipeline::Error::None) {
+        qCWarning(KWIN_DRM) << "Can't apply output config after drm lease was revoked!";
+    }
 }
 
 DrmLease *DrmOutput::lease() const

@@ -17,6 +17,11 @@
 #include <QPointer>
 #include <QQueue>
 
+namespace KWin
+{
+class Window;
+}
+
 namespace KWaylandServer
 {
 
@@ -24,6 +29,7 @@ class Display;
 class DrmLeaseConnectorV1Interface;
 class DrmLeaseRequestV1Interface;
 class DrmLeaseV1Interface;
+class SurfaceInterface;
 
 class DrmLeaseDeviceV1Interface : public QObject, public QtWaylandServer::wp_drm_lease_device_v1
 {
@@ -50,10 +56,12 @@ private:
     void wp_drm_lease_device_v1_release(Resource *resource) override;
     void wp_drm_lease_device_v1_bind_resource(Resource *resource) override;
     void wp_drm_lease_device_v1_destroy_global() override;
+    void updateFullscreenOffers();
 
     KWin::DrmGpu *const m_gpu;
     bool m_hasDrmMaster = true;
     std::map<KWin::DrmAbstractOutput *, std::unique_ptr<DrmLeaseConnectorV1Interface>> m_connectors;
+    std::map<KWin::DrmAbstractOutput *, QPointer<KWin::Window>> m_fullscreenCandidates;
     QQueue<wl_resource *> m_pendingFds;
     QVector<DrmLeaseRequestV1Interface *> m_leaseRequests;
     QVector<DrmLeaseV1Interface *> m_leases;
@@ -63,7 +71,7 @@ class DrmLeaseConnectorV1Interface : public QObject, public QtWaylandServer::wp_
 {
     Q_OBJECT
 public:
-    explicit DrmLeaseConnectorV1Interface(DrmLeaseDeviceV1Interface *leaseDevice, KWin::DrmOutput *output);
+    explicit DrmLeaseConnectorV1Interface(DrmLeaseDeviceV1Interface *leaseDevice, KWin::DrmOutput *output, SurfaceInterface *surface);
 
     uint32_t id() const;
     void send(wl_resource *resource);
@@ -72,13 +80,16 @@ public:
     DrmLeaseDeviceV1Interface *device() const;
     KWin::DrmOutput *output() const;
     bool withdrawn() const;
+    SurfaceInterface *surface() const;
 
 private:
     void wp_drm_lease_connector_v1_destroy(Resource *resource) override;
+    void handleSurfaceDestruction();
 
     QPointer<DrmLeaseDeviceV1Interface> m_device;
     bool m_withdrawn = false;
     KWin::DrmOutput *const m_output;
+    SurfaceInterface *m_surface;
 };
 
 class DrmLeaseRequestV1Interface : public QtWaylandServer::wp_drm_lease_request_v1
