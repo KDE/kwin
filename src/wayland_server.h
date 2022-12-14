@@ -47,7 +47,6 @@ class LinuxDmaBufV1ClientBuffer;
 class TabletManagerV2Interface;
 class KeyboardShortcutsInhibitManagerV1Interface;
 class XdgDecorationManagerV1Interface;
-class PrimarySelectionDeviceManagerV1Interface;
 class XWaylandKeyboardGrabManagerV1Interface;
 class ContentTypeManagerV1Interface;
 class DrmLeaseManagerV1;
@@ -228,7 +227,6 @@ public:
     {
         m_linuxDmabufBuffers.remove(buffer);
     }
-    void setEnablePrimarySelection(bool enable);
 
     /**
      * Returns the first socket name that can be used to connect to this server.
@@ -295,7 +293,6 @@ private:
     KWaylandServer::ClientConnection *m_screenLockerClientConnection = nullptr;
     KWaylandServer::XdgForeignV2Interface *m_XdgForeign = nullptr;
     XdgActivationV1Integration *m_xdgActivationIntegration = nullptr;
-    KWaylandServer::PrimarySelectionDeviceManagerV1Interface *m_primarySelectionDeviceManager = nullptr;
     KWaylandServer::XWaylandKeyboardGrabManagerV1Interface *m_xWaylandKeyboardGrabManager = nullptr;
     KWaylandServer::ContentTypeManagerV1Interface *m_contentTypeManager = nullptr;
     KWaylandServer::TearingControlManagerV1Interface *m_tearingControlInterface = nullptr;
