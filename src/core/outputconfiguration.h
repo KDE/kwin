@@ -21,7 +21,7 @@ namespace KWin
 class KWIN_EXPORT OutputChangeSet
 {
 public:
-    std::shared_ptr<OutputMode> mode;
+    std::weak_ptr<OutputMode> mode;
     bool enabled;
     QPoint pos;
     float scale;
