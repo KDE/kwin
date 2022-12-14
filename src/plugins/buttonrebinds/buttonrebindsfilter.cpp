@@ -191,9 +191,42 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
         }
     }
 
+    const auto keyboardsGroup = group.group("Keyboard");
+    const auto keyboards = keyboardsGroup.groupList();
+    for (const auto &keyboardName : keyboards) {
+        const auto keyboardGroup = keyboardsGroup.group(keyboardName);
+        const auto keyboardButtons = keyboardGroup.keyList();
+        for (const auto &buttonName : keyboardButtons) {
+            const auto entry = keyboardGroup.readEntry(buttonName, QStringList());
+            bool ok = false;
+            const uint button = buttonName.toUInt(&ok);
+            if (ok) {
+                foundActions = true;
+                insert(Keyboard, {keyboardName, button}, entry);
+            }
+        }
+    }
+
     if (foundActions) {
         KWin::input()->prependInputEventFilter(this);
     }
+}
+
+bool ButtonRebindsFilter::keyEvent(QKeyEvent *event)
+{
+    if (RebindScope::isRebinding()) {
+        return false;
+    }
+
+    const auto keyEvent = dynamic_cast<KWin::KeyEvent *>(event);
+    const auto device = keyEvent->device();
+    if (!device) {
+        // Without device we don't know which mapping to apply. Also, chances are
+        // we caused the event to begin with so we'd only be endlessly looping.
+        return true;
+    }
+
+    return send(Keyboard, {device->name(), uint(event->key())}, event->type() == QEvent::KeyPress, event->timestamp());
 }
 
 bool ButtonRebindsFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
