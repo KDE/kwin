@@ -65,7 +65,7 @@ msgstr ""
 #: composite.cpp:1051
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
-msgstr ""
+msgstr "必要な X 拡張 (XComposite と XDamage) がありません"
 
 #: composite.cpp:1054
 #, kde-format

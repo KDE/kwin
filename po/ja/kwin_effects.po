@@ -208,7 +208,7 @@ msgstr "自然"
 #: desktopgrid/desktopgrid_config.ui:147
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "なし"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: desktopgrid/desktopgrid_config.ui:155

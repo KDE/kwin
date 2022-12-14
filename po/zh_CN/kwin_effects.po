@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2022-12-01 06:52\n"
+"PO-Revision-Date: 2022-12-13 12:21\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -749,22 +749,19 @@ msgid "Load Layout..."
 msgstr ""
 
 #: tileseditor/qml/main.qml:271
-#, fuzzy, kde-format
-#| msgid "Closest"
+#, kde-format
 msgid "Close"
-msgstr "最接近"
+msgstr ""
 
 #: tileseditor/qml/TileDelegate.qml:171
-#, fuzzy, kde-format
-#| msgid "Horizontal:"
+#, kde-format
 msgid "Split Horizontally"
-msgstr "水平："
+msgstr ""
 
 #: tileseditor/qml/TileDelegate.qml:178
-#, fuzzy, kde-format
-#| msgid "Vertical:"
+#, kde-format
 msgid "Split Vertically"
-msgstr "垂直："
+msgstr ""
 
 #: tileseditor/qml/TileDelegate.qml:186 tileseditor/qml/TileDelegate.qml:215
 #, kde-format

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-09 00:47+0000\n"
-"PO-Revision-Date: 2022-12-01 06:52\n"
+"PO-Revision-Date: 2022-12-13 12:21\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -2626,28 +2626,24 @@ msgid "Window to Previous Screen"
 msgstr "窗口到前一屏幕"
 
 #: useractions.cpp:1109
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "窗口右移一个桌面"
+msgstr ""
 
 #: useractions.cpp:1111
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "窗口左移一个桌面"
+msgstr ""
 
 #: useractions.cpp:1113
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "窗口到屏幕 %1"
+msgstr ""
 
 #: useractions.cpp:1115
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "窗口下移一个桌面"
+msgstr ""
 
 #: useractions.cpp:1119
 #, kde-format
@@ -2665,28 +2661,24 @@ msgid "Switch to Previous Screen"
 msgstr "切换到上一个屏幕"
 
 #: useractions.cpp:1128
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "切换到右边的窗口"
+msgstr ""
 
 #: useractions.cpp:1130
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "切换到左边的窗口"
+msgstr ""
 
 #: useractions.cpp:1132
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "切换到屏幕 %1"
+msgstr ""
 
 #: useractions.cpp:1134
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "切换到屏幕 %1"
+msgstr ""
 
 #: useractions.cpp:1137
 #, kde-format

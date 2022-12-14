@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-11 00:48+0000\n"
-"PO-Revision-Date: 2022-12-01 06:52\n"
+"PO-Revision-Date: 2022-12-13 12:21\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -763,10 +763,9 @@ msgid "Block compositing"
 msgstr "阻止显示特效合成"
 
 #: rulesmodel.cpp:703
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "窗口类 (应用程序)"
+msgstr ""
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -927,18 +926,11 @@ msgid "Extreme"
 msgstr "终极"
 
 #: rulesmodel.cpp:865
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "Unmanaged window"
-msgstr "主窗口"
+msgstr ""
 
 #: rulesmodel.cpp:866
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "无法检测窗口属性。该窗口不受 KWin 管理。"
-
-#~ msgid "Error"
-#~ msgstr "错误"
-
-#~ msgid "Cascaded"
-#~ msgstr "层叠"

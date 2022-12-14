@@ -955,9 +955,3 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "ウィンドウプロパティを検出できませんでした。このウィンドウは KWin によって管"
 "理されていません。"
-
-#~ msgid "Error"
-#~ msgstr "エラー"
-
-#~ msgid "Cascaded"
-#~ msgstr "カスケード"

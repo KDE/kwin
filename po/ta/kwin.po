@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-09 00:47+0000\n"
-"PO-Revision-Date: 2022-11-08 21:25+0530\n"
+"PO-Revision-Date: 2022-12-13 19:52+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.08.3\n"
+"X-Generator: Lokalize 22.12.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2651,28 +2651,24 @@ msgid "Window to Previous Screen"
 msgstr "சாளரத்தை முந்தைய காட்சிக் கருவிக்கு அனுப்பு"
 
 #: useractions.cpp:1109
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "சாளரத்தை வலதிலுள்ள பணிமேடைக்கு அனுப்பு"
+msgstr "சாளரத்தை வலதிலுள்ள திரைக்கு அனுப்பு"
 
 #: useractions.cpp:1111
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "சாளரத்தை இடதிலுள்ள பணிமேடைக்கு அனுப்பு"
+msgstr "சாளரத்தை இடதிலுள்ள திரைக்கு அனுப்பு"
 
 #: useractions.cpp:1113
-#, fuzzy, kde-format
-#| msgid "Window to Desktop 2"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "சாளரத்தை 2வது மேசைக்கு"
+msgstr "சாளரத்தை மேலுள்ள திரைக்கு அனுப்பு"
 
 #: useractions.cpp:1115
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "சாளரத்தை கீழுள்ள பணிமேடைக்கு அனுப்பு"
+msgstr "சாளரத்தை கீழுள்ள திரைக்கு அனுப்பு"
 
 #: useractions.cpp:1119
 #, kde-format
@@ -2690,28 +2686,24 @@ msgid "Switch to Previous Screen"
 msgstr "முந்தைய காட்சிக் கருவிக்கு தாவு"
 
 #: useractions.cpp:1128
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "வலதிலுள்ள சாளரத்திற்கு தாவு"
+msgstr "வலதிலுள்ள திரைக்கு தாவு"
 
 #: useractions.cpp:1130
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "இடதிலுள்ள சாளரத்திற்கு தாவு"
+msgstr "இடதிலுள்ள திரைக்கு தாவு"
 
 #: useractions.cpp:1132
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop 10"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "மேசை 10க்கு மாற்று "
+msgstr "மேலுள்ள திரைக்கு தாவு"
 
 #: useractions.cpp:1134
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop 10"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "மேசை 10க்கு மாற்று "
+msgstr "கீழுள்ள திரைக்கு தாவு"
 
 #: useractions.cpp:1137
 #, kde-format

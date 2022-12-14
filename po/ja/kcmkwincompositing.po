@@ -163,27 +163,3 @@ msgstr ""
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr ""
-
-#~ msgid "Scale method:"
-#~ msgstr "拡大方法:"
-
-#~ msgid "Smooth"
-#~ msgstr "スムーズ"
-
-#~ msgid "Accurate"
-#~ msgstr "正確"
-
-#~ msgid "Tearing prevention (\"vsync\"):"
-#~ msgstr "ティアリング防止 (\"vsync\"):"
-
-#~ msgid "Automatic"
-#~ msgstr "自動"
-
-#~ msgid "Only when cheap"
-#~ msgstr "チープな場合のみ"
-
-#~ msgid "Full screen repaints"
-#~ msgstr "フルスクリーン再描画"
-
-#~ msgid "Re-use screen content"
-#~ msgstr "画面の内容を再利用"

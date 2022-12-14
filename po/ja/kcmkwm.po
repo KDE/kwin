@@ -1502,8 +1502,3 @@ msgstr ""
 "ス ('Alt+Tab') </span>はアクティブ化ポリシーに反するため機能しません。代わり"
 "に<span style=\" font-style:italic;\">マウスに従ってフォーカス (マウス優先)</"
 "span>を使用するべきでしょう。</p></body></html>"
-
-#, fuzzy
-#~| msgid "Cascade"
-#~ msgid "Cascaded"
-#~ msgstr "カスケード"
