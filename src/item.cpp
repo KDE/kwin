@@ -91,6 +91,8 @@ void Item::addChild(Item *item)
 
     updateBoundingRect();
     scheduleRepaint(item->boundingRect().translated(item->position()));
+
+    Q_EMIT childAdded(item);
 }
 
 void Item::removeChild(Item *item)

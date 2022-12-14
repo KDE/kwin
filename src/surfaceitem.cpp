@@ -5,26 +5,13 @@
 */
 
 #include "surfaceitem.h"
-#include "deleted.h"
 
 namespace KWin
 {
 
-SurfaceItem::SurfaceItem(Window *window, Item *parent)
+SurfaceItem::SurfaceItem(Item *parent)
     : Item(parent)
-    , m_window(window)
 {
-    connect(window, &Window::windowClosed, this, &SurfaceItem::handleWindowClosed);
-}
-
-Window *SurfaceItem::window() const
-{
-    return m_window;
-}
-
-void SurfaceItem::handleWindowClosed(Window *original, Deleted *deleted)
-{
-    m_window = deleted;
 }
 
 QMatrix4x4 SurfaceItem::surfaceToBufferMatrix() const
@@ -41,8 +28,7 @@ void SurfaceItem::addDamage(const QRegion &region)
 {
     m_damage += region;
     scheduleRepaint(region);
-
-    Q_EMIT m_window->damaged(m_window);
+    Q_EMIT damaged();
 }
 
 void SurfaceItem::resetDamage()

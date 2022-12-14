@@ -6,6 +6,7 @@
 
 #include "surfaceitem_internal.h"
 #include "composite.h"
+#include "deleted.h"
 #include "internalwindow.h"
 #include "scene.h"
 
@@ -15,10 +16,13 @@ namespace KWin
 {
 
 SurfaceItemInternal::SurfaceItemInternal(InternalWindow *window, Item *parent)
-    : SurfaceItem(window, parent)
+    : SurfaceItem(parent)
+    , m_window(window)
 {
     connect(window, &Window::bufferGeometryChanged,
             this, &SurfaceItemInternal::handleBufferGeometryChanged);
+    connect(window, &Window::windowClosed,
+            this, &SurfaceItemInternal::handleWindowClosed);
 
     setSize(window->bufferGeometry().size());
 
@@ -26,6 +30,11 @@ SurfaceItemInternal::SurfaceItemInternal(InternalWindow *window, Item *parent)
     QMatrix4x4 surfaceToBufferMatrix;
     surfaceToBufferMatrix.scale(window->bufferScale());
     setSurfaceToBufferMatrix(surfaceToBufferMatrix);
+}
+
+Window *SurfaceItemInternal::window() const
+{
+    return m_window;
 }
 
 QVector<QRectF> SurfaceItemInternal::shape() const
@@ -44,6 +53,11 @@ void SurfaceItemInternal::handleBufferGeometryChanged(Window *window, const QRec
         discardPixmap();
     }
     setSize(window->bufferGeometry().size());
+}
+
+void SurfaceItemInternal::handleWindowClosed(Window *original, Deleted *deleted)
+{
+    m_window = deleted;
 }
 
 SurfacePixmapInternal::SurfacePixmapInternal(SurfaceItemInternal *item, QObject *parent)

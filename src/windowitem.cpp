@@ -176,6 +176,12 @@ void WindowItem::updateSurfaceItem(SurfaceItem *surfaceItem)
         connect(m_window, &Window::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
         connect(m_window, &Window::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
 
+        connect(surfaceItem, &SurfaceItem::damaged, this, &WindowItem::markDamaged);
+        connect(surfaceItem, &SurfaceItem::childAdded, this, [this](Item *item) {
+            auto surfaceItem = static_cast<SurfaceItem *>(item);
+            connect(surfaceItem, &SurfaceItem::damaged, this, &WindowItem::markDamaged);
+        });
+
         updateSurfacePosition();
         updateSurfaceVisibility();
     } else {
@@ -237,6 +243,11 @@ void WindowItem::updateOpacity()
     setOpacity(m_window->opacity());
 }
 
+void WindowItem::markDamaged()
+{
+    Q_EMIT m_window->damaged(m_window);
+}
+
 WindowItemX11::WindowItemX11(Window *window, Item *parent)
     : WindowItem(window, parent)
 {
@@ -267,7 +278,7 @@ void WindowItemX11::initialize()
 WindowItemWayland::WindowItemWayland(Window *window, Item *parent)
     : WindowItem(window, parent)
 {
-    updateSurfaceItem(new SurfaceItemWayland(window->surface(), window, this));
+    updateSurfaceItem(new SurfaceItemWayland(window->surface(), this));
 }
 
 WindowItemInternal::WindowItemInternal(InternalWindow *window, Item *parent)

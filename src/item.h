@@ -108,6 +108,7 @@ public:
     virtual void preprocess();
 
 Q_SIGNALS:
+    void childAdded(Item *item);
     /**
      * This signal is emitted when the position of this item has changed.
      */

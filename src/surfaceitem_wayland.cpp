@@ -6,6 +6,7 @@
 
 #include "surfaceitem_wayland.h"
 #include "composite.h"
+#include "deleted.h"
 #include "scene.h"
 #include "wayland/clientbuffer.h"
 #include "wayland/subcompositor_interface.h"
@@ -14,9 +15,8 @@
 namespace KWin
 {
 
-SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface,
-                                       Window *window, Item *parent)
-    : SurfaceItem(window, parent)
+SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface, Item *parent)
+    : SurfaceItem(parent)
     , m_surface(surface)
 {
     connect(surface, &KWaylandServer::SurfaceInterface::surfaceToBufferMatrixChanged,
@@ -94,7 +94,7 @@ SurfaceItemWayland *SurfaceItemWayland::getOrCreateSubSurfaceItem(KWaylandServer
 {
     SurfaceItemWayland *&item = m_subsurfaces[child];
     if (!item) {
-        item = new SurfaceItemWayland(child->surface(), window());
+        item = new SurfaceItemWayland(child->surface());
         item->setParent(this);
         item->setParentItem(this);
     }
@@ -203,21 +203,28 @@ void SurfacePixmapWayland::setBuffer(KWaylandServer::ClientBuffer *buffer)
 }
 
 SurfaceItemXwayland::SurfaceItemXwayland(Window *window, Item *parent)
-    : SurfaceItemWayland(window->surface(), window, parent)
+    : SurfaceItemWayland(window->surface(), parent)
+    , m_window(window)
 {
     connect(window, &Window::geometryShapeChanged, this, &SurfaceItemXwayland::discardQuads);
+    connect(window, &Window::windowClosed, this, &SurfaceItemXwayland::handleWindowClosed);
 }
 
 QVector<QRectF> SurfaceItemXwayland::shape() const
 {
-    const QRectF clipRect = rect() & window()->clientGeometry().translated(-window()->bufferGeometry().topLeft());
-    QVector<QRectF> shape = window()->shapeRegion();
+    const QRectF clipRect = rect() & m_window->clientGeometry().translated(-m_window->bufferGeometry().topLeft());
+    QVector<QRectF> shape = m_window->shapeRegion();
 
     // bounded to clipRect
     for (QRectF &shapePart : shape) {
         shapePart = shapePart.intersected(clipRect);
     }
     return shape;
+}
+
+void SurfaceItemXwayland::handleWindowClosed(Window *original, Deleted *deleted)
+{
+    m_window = deleted;
 }
 
 } // namespace KWin

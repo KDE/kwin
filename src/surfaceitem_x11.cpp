@@ -6,6 +6,7 @@
 
 #include "surfaceitem_x11.h"
 #include "composite.h"
+#include "deleted.h"
 #include "scene.h"
 #include "x11syncmanager.h"
 
@@ -13,12 +14,15 @@ namespace KWin
 {
 
 SurfaceItemX11::SurfaceItemX11(Window *window, Item *parent)
-    : SurfaceItem(window, parent)
+    : SurfaceItem(parent)
+    , m_window(window)
 {
     connect(window, &Window::bufferGeometryChanged,
             this, &SurfaceItemX11::handleBufferGeometryChanged);
     connect(window, &Window::geometryShapeChanged,
             this, &SurfaceItemX11::handleGeometryShapeChanged);
+    connect(window, &Window::windowClosed,
+            this, &SurfaceItemX11::handleWindowClosed);
 
     m_damageHandle = xcb_generate_id(kwinApp()->x11Connection());
     xcb_damage_create(kwinApp()->x11Connection(), m_damageHandle, window->frameId(),
@@ -38,6 +42,16 @@ SurfaceItemX11::SurfaceItemX11(Window *window, Item *parent)
 SurfaceItemX11::~SurfaceItemX11()
 {
     // destroyDamage() will be called by the associated Window.
+}
+
+Window *SurfaceItemX11::window() const
+{
+    return m_window;
+}
+
+void SurfaceItemX11::handleWindowClosed(Window *original, Deleted *deleted)
+{
+    m_window = deleted;
 }
 
 void SurfaceItemX11::preprocess()
@@ -140,8 +154,8 @@ void SurfaceItemX11::handleGeometryShapeChanged()
 
 QVector<QRectF> SurfaceItemX11::shape() const
 {
-    const QRectF clipRect = window()->clientGeometry().translated(-window()->bufferGeometry().topLeft());
-    QVector<QRectF> shape = window()->shapeRegion();
+    const QRectF clipRect = m_window->clientGeometry().translated(-m_window->bufferGeometry().topLeft());
+    QVector<QRectF> shape = m_window->shapeRegion();
     // bounded to clipRect
     for (QRectF &shapePart : shape) {
         shapePart = shapePart.intersected(clipRect);
@@ -155,10 +169,10 @@ QRegion SurfaceItemX11::opaque() const
     for (const QRectF &shapePart : shape()) {
         shapeRegion |= shapePart.toRect();
     }
-    if (!window()->hasAlpha()) {
+    if (!m_window->hasAlpha()) {
         return shapeRegion;
     } else {
-        return window()->opaqueRegion() & shapeRegion;
+        return m_window->opaqueRegion() & shapeRegion;
     }
     return QRegion();
 }

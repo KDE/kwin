@@ -68,6 +68,7 @@ private Q_SLOTS:
 private:
     bool computeVisibility() const;
     void updateVisibility();
+    void markDamaged();
 
     Window *m_window;
     std::unique_ptr<SurfaceItem> m_surfaceItem;

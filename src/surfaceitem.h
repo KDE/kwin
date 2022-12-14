@@ -12,7 +12,6 @@
 namespace KWin
 {
 
-class Deleted;
 class SurfacePixmap;
 class Window;
 
@@ -26,8 +25,6 @@ class KWIN_EXPORT SurfaceItem : public Item
 public:
     QMatrix4x4 surfaceToBufferMatrix() const;
     void setSurfaceToBufferMatrix(const QMatrix4x4 &matrix);
-
-    Window *window() const;
 
     void addDamage(const QRegion &region);
     void resetDamage();
@@ -44,16 +41,16 @@ public:
 
     virtual ContentType contentType() const;
 
+Q_SIGNALS:
+    void damaged();
+
 protected:
-    explicit SurfaceItem(Window *window, Item *parent = nullptr);
+    explicit SurfaceItem(Item *parent = nullptr);
 
     virtual std::unique_ptr<SurfacePixmap> createPixmap() = 0;
     void preprocess() override;
     WindowQuadList buildQuads() const override;
 
-    void handleWindowClosed(Window *original, Deleted *deleted);
-
-    Window *m_window;
     QRegion m_damage;
     std::unique_ptr<SurfacePixmap> m_pixmap;
     std::unique_ptr<SurfacePixmap> m_previousPixmap;
