@@ -72,7 +72,7 @@ public:
     };
 
     explicit ButtonRebindsFilter();
-    bool keyEvent(QKeyEvent *event) override;
+    bool keyEvent(KWin::KeyEvent *event) override;
     bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override;
     bool tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId, uint time) override;
     bool tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &tabletToolId, uint time) override;

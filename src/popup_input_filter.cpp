@@ -6,6 +6,7 @@
 */
 #include "popup_input_filter.h"
 #include "deleted.h"
+#include "input_event.h"
 #include "internalwindow.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
@@ -65,7 +66,7 @@ bool PopupInputFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
     return false;
 }
 
-bool PopupInputFilter::keyEvent(QKeyEvent *event)
+bool PopupInputFilter::keyEvent(KeyEvent *event)
 {
     if (m_popupWindows.isEmpty()) {
         return false;

@@ -212,14 +212,13 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
     }
 }
 
-bool ButtonRebindsFilter::keyEvent(QKeyEvent *event)
+bool ButtonRebindsFilter::keyEvent(KWin::KeyEvent *event)
 {
     if (RebindScope::isRebinding()) {
         return false;
     }
 
-    const auto keyEvent = dynamic_cast<KWin::KeyEvent *>(event);
-    const auto device = keyEvent->device();
+    const auto device = event->device();
     if (!device) {
         // Without device we don't know which mapping to apply. Also, chances are
         // we caused the event to begin with so we'd only be endlessly looping.
