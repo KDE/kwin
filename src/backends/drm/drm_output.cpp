@@ -396,7 +396,11 @@ bool DrmOutput::queueChanges(const OutputConfiguration &config)
     static int envOnlySoftwareRotations = qEnvironmentVariableIntValue("KWIN_DRM_SW_ROTATIONS_ONLY", &valid) == 1 || !valid;
 
     const auto props = config.constChangeSet(this);
-    m_pipeline->setMode(std::static_pointer_cast<DrmConnectorMode>(props->mode));
+    const auto mode = props->mode.lock();
+    if (!mode) {
+        return false;
+    }
+    m_pipeline->setMode(std::static_pointer_cast<DrmConnectorMode>(mode));
     m_pipeline->setOverscan(props->overscan);
     m_pipeline->setRgbRange(props->rgbRange);
     m_pipeline->setRenderOrientation(outputToPlaneTransform(props->transform));
