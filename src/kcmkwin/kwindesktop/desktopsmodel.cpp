@@ -21,6 +21,7 @@
 #include <QDBusServiceWatcher>
 #include <QDBusVariant>
 #include <QMetaEnum>
+#include <QRegularExpression>
 #include <QUuid>
 
 namespace KWin
@@ -183,7 +184,18 @@ int DesktopsModel::desktopCount() const
     return rowCount();
 }
 
-void DesktopsModel::createDesktop(const QString &name)
+QString DesktopsModel::createDesktopName() const
+{
+    const QStringList nameValues = m_names.values();
+    for (int index = 1;; ++index) {
+        const QString desktopName = i18ncp("A numbered name for virtual desktops", "Desktop %1", "Desktop %1", index);
+        if (!nameValues.contains(desktopName)) {
+            return desktopName;
+        }
+    }
+}
+
+void DesktopsModel::createDesktop()
 {
     if (!ready()) {
         return;
@@ -194,7 +206,7 @@ void DesktopsModel::createDesktop(const QString &name)
     const QString &dummyId = QUuid::createUuid().toString(QUuid::WithoutBraces);
 
     m_desktops.append(dummyId);
-    m_names[dummyId] = name;
+    m_names[dummyId] = createDesktopName();
 
     endInsertRows();
     Q_EMIT desktopCountChanged();

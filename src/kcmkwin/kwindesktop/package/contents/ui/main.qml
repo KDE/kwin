@@ -166,7 +166,7 @@ KCM.ScrollViewKCM {
                 text: i18nc("@action:button", "Add")
                 icon.name: "list-add"
 
-                onClicked: kcm.desktopsModel.createDesktop(i18n("New Desktop"))
+                onClicked: kcm.desktopsModel.createDesktop()
             }
 
             Item { // Spacer

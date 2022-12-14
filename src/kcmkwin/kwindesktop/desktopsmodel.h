@@ -79,7 +79,8 @@ public:
 
     int desktopCount() const;
 
-    Q_INVOKABLE void createDesktop(const QString &name);
+    QString createDesktopName() const;
+    Q_INVOKABLE void createDesktop();
     Q_INVOKABLE void removeDesktop(const QString &id);
     Q_INVOKABLE void setDesktopName(const QString &id, const QString &name);
 
