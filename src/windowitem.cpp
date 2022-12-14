@@ -208,7 +208,7 @@ void WindowItem::updateShadowItem()
         if (m_decorationItem) {
             m_shadowItem->stackBefore(m_decorationItem.get());
         } else if (m_surfaceItem) {
-            m_shadowItem->stackBefore(m_decorationItem.get());
+            m_shadowItem->stackBefore(m_surfaceItem.get());
         }
     } else {
         m_shadowItem.reset();
