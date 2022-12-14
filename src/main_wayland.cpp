@@ -200,10 +200,6 @@ void ApplicationWayland::refreshSettings(const KConfigGroup &group, const QByteA
     if (m_startXWayland && group.name() == "Xwayland" && names.contains("Scale")) {
         setXwaylandScale(group.readEntry("Scale", 1.0));
     }
-
-    if (group.name() == "Wayland" && names.contains("EnablePrimarySelection")) {
-        waylandServer()->setEnablePrimarySelection(group.readEntry("EnablePrimarySelection", true));
-    }
 }
 
 void ApplicationWayland::startSession()

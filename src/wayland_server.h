@@ -48,7 +48,6 @@ class LinuxDmaBufV1ClientBuffer;
 class TabletManagerV2Interface;
 class KeyboardShortcutsInhibitManagerV1Interface;
 class XdgDecorationManagerV1Interface;
-class PrimarySelectionDeviceManagerV1Interface;
 }
 
 namespace KWin
@@ -220,7 +219,6 @@ public:
     {
         m_linuxDmabufBuffers.remove(buffer);
     }
-    void setEnablePrimarySelection(bool enable);
 
     /**
      * Returns the first socket name that can be used to connect to this server.
@@ -288,7 +286,6 @@ private:
     KWaylandServer::XdgForeignV2Interface *m_XdgForeign = nullptr;
     KWaylandServer::PrimaryOutputV1Interface *m_primary = nullptr;
     XdgActivationV1Integration *m_xdgActivationIntegration = nullptr;
-    KWaylandServer::PrimarySelectionDeviceManagerV1Interface *m_primarySelectionDeviceManager = nullptr;
     QList<Window *> m_windows;
     InitializationFlags m_initFlags;
     QHash<Output *, WaylandOutput *> m_waylandOutputs;
