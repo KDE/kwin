@@ -72,8 +72,8 @@ private:
     {
         connect(Compositor::self()->scene(), &Scene::frameRendered, this, &WindowStream::bufferToStream);
 
-        connect(m_window, &Window::damaged, this, &WindowStream::includeDamage);
-        m_damagedRegion = m_window->visibleGeometry().toAlignedRect();
+        connect(m_window, &Window::damaged, this, &WindowStream::markDirty);
+        markDirty();
         m_window->output()->renderLoop()->scheduleRepaint();
     }
 
@@ -82,22 +82,21 @@ private:
         disconnect(Compositor::self()->scene(), &Scene::frameRendered, this, &WindowStream::bufferToStream);
     }
 
-    void includeDamage(Window *window, const QRegion &damage)
+    void markDirty()
     {
-        Q_ASSERT(m_window == window);
-        m_damagedRegion |= damage;
+        m_dirty = true;
     }
 
     void bufferToStream()
     {
-        if (!m_damagedRegion.isEmpty()) {
-            recordFrame(m_damagedRegion);
-            m_damagedRegion = {};
+        if (m_dirty) {
+            recordFrame(QRegion(0, 0, m_window->width(), m_window->height()));
+            m_dirty = false;
         }
     }
 
-    QRegion m_damagedRegion;
     Window *m_window;
+    bool m_dirty = false;
 };
 
 void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamV1Interface *waylandStream,

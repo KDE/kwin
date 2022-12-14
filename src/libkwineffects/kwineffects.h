@@ -1702,7 +1702,7 @@ Q_SIGNALS:
      * @param r Always empty.
      * @since 4.7
      */
-    void windowDamaged(KWin::EffectWindow *w, const QRegion &r);
+    void windowDamaged(KWin::EffectWindow *w);
     /**
      * Signal emitted when a tabbox is added.
      * An effect who wants to replace the tabbox with itself should use refTabBox.

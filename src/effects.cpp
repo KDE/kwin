@@ -562,13 +562,13 @@ void EffectsHandlerImpl::slotTabRemoved(EffectWindow *w, EffectWindow *leaderOfF
     Q_EMIT tabRemoved(w, leaderOfFormerGroup);
 }
 
-void EffectsHandlerImpl::slotWindowDamaged(Window *window, const QRegion &r)
+void EffectsHandlerImpl::slotWindowDamaged(Window *window)
 {
     if (!window->effectWindow()) {
         // can happen during tear down of window
         return;
     }
-    Q_EMIT windowDamaged(window->effectWindow(), r);
+    Q_EMIT windowDamaged(window->effectWindow());
 }
 
 void EffectsHandlerImpl::slotGeometryShapeChanged(Window *window, const QRectF &old)

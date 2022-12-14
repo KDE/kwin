@@ -42,7 +42,7 @@ void SurfaceItem::addDamage(const QRegion &region)
     m_damage += region;
     scheduleRepaint(region);
 
-    Q_EMIT m_window->damaged(m_window, region);
+    Q_EMIT m_window->damaged(m_window);
 }
 
 void SurfaceItem::resetDamage()

@@ -1438,7 +1438,7 @@ Q_SIGNALS:
     void stackingOrderChanged();
     void shadeChanged();
     void opacityChanged(KWin::Window *window, qreal oldOpacity);
-    void damaged(KWin::Window *window, const QRegion &damage);
+    void damaged(KWin::Window *window);
     void inputTransformationChanged();
     /**
      * This signal is emitted when the Window's frame geometry changes.
