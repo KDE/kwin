@@ -271,7 +271,10 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
 
     QVector<Output *> sortedOrder;
     if (!outputOrder.empty()) {
-        if (outputOrder.size() != allOutputs.size()) {
+        const int desktopOutputs = std::count_if(allOutputs.begin(), allOutputs.end(), [](Output *output) {
+            return !output->isNonDesktop();
+        });
+        if (outputOrder.size() != desktopOutputs) {
             qWarning(KWIN_CORE) << "Provided output order doesn't contain all outputs!";
             send_failed();
             return;
