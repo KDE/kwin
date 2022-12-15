@@ -38,7 +38,6 @@ class PlasmaShellInterface;
 class PlasmaWindowActivationFeedbackInterface;
 class PlasmaVirtualDesktopManagementInterface;
 class PlasmaWindowManagementInterface;
-class PrimaryOutputV1Interface;
 class OutputDeviceV2Interface;
 class OutputManagementV2Interface;
 class XdgForeignV2Interface;
@@ -53,6 +52,7 @@ class ContentTypeManagerV1Interface;
 class DrmLeaseManagerV1;
 class TearingControlManagerV1Interface;
 class XwaylandShellV1Interface;
+class OutputOrderV1Interface;
 }
 
 namespace KWin
@@ -292,7 +292,6 @@ private:
     QPointer<KWaylandServer::ClientConnection> m_inputMethodServerConnection;
     KWaylandServer::ClientConnection *m_screenLockerClientConnection = nullptr;
     KWaylandServer::XdgForeignV2Interface *m_XdgForeign = nullptr;
-    KWaylandServer::PrimaryOutputV1Interface *m_primary = nullptr;
     XdgActivationV1Integration *m_xdgActivationIntegration = nullptr;
     KWaylandServer::XWaylandKeyboardGrabManagerV1Interface *m_xWaylandKeyboardGrabManager = nullptr;
     KWaylandServer::ContentTypeManagerV1Interface *m_contentTypeManager = nullptr;
@@ -303,6 +302,7 @@ private:
     QHash<Output *, KWaylandServer::OutputInterface *> m_waylandOutputs;
     QHash<Output *, KWaylandServer::OutputDeviceV2Interface *> m_waylandOutputDevices;
     KWaylandServer::DrmLeaseManagerV1 *m_leaseManager = nullptr;
+    KWaylandServer::OutputOrderV1Interface *m_outputOrder = nullptr;
     KWIN_SINGLETON(WaylandServer)
 };
 

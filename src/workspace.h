@@ -177,8 +177,8 @@ public:
 
     Output *xineramaIndexToOutput(int index) const;
 
-    Output *primaryOutput() const;
-    void setPrimaryOutput(Output *output);
+    void setOutputOrder(const QVector<Output *> &order);
+    QVector<Output *> outputOrder() const;
 
     Output *activeOutput() const;
     void setActiveOutput(Output *output);
@@ -473,7 +473,7 @@ public:
      * Apply the requested output configuration. Note that you must use this function
      * instead of Platform::applyOutputChanges().
      */
-    bool applyOutputConfiguration(const OutputConfiguration &config);
+    bool applyOutputConfiguration(const OutputConfiguration &config, const QVector<Output *> &outputOrder = {});
 
 public Q_SLOTS:
     void performWindowOperation(KWin::Window *window, Options::WindowOperation op);
@@ -590,7 +590,7 @@ Q_SIGNALS:
     void deletedRemoved(KWin::Deleted *);
     void configChanged();
     void showingDesktopChanged(bool showing, bool animated);
-    void primaryOutputChanged();
+    void outputOrderChanged();
     void outputAdded(KWin::Output *);
     void outputRemoved(KWin::Output *);
     void outputsChanged();
@@ -655,7 +655,7 @@ private:
     QString getPlacementTrackerHash();
 
     void updateOutputConfiguration();
-    void updateOutputs();
+    void updateOutputs(const QVector<Output *> &outputOrder = {});
 
     struct Constraint
     {
@@ -679,8 +679,8 @@ private:
 
     QList<Output *> m_outputs;
     Output *m_activeOutput = nullptr;
-    Output *m_primaryOutput = nullptr;
     QString m_outputsHash;
+    QVector<Output *> m_outputOrder;
 
     Window *m_activeWindow;
     Window *m_lastActiveWindow;
