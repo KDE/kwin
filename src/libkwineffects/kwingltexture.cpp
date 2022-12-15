@@ -732,8 +732,21 @@ bool GLTexture::supportsFormatRG()
 
 QImage GLTexture::toImage() const
 {
+    if (target() != GL_TEXTURE_2D) {
+        return QImage();
+    }
     QImage ret(size(), QImage::Format_RGBA8888_Premultiplied);
-    glGetTextureImage(texture(), 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, ret.sizeInBytes(), ret.bits());
+
+    GLint currentTextureBinding;
+    glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTextureBinding);
+
+    if (currentTextureBinding != texture()) {
+        glBindTexture(GL_TEXTURE_2D, texture());
+    }
+    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, ret.bits());
+    if (currentTextureBinding != texture()) {
+        glBindTexture(GL_TEXTURE_2D, currentTextureBinding);
+    }
     return ret;
 }
 
