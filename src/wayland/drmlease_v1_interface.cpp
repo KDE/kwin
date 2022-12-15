@@ -401,7 +401,7 @@ void DrmLeaseV1Interface::grant(std::unique_ptr<KWin::DrmLease> &&lease)
     KWin::FileDescriptor tmp = std::move(lease->fd());
     send_lease_fd(tmp.get());
     m_lease = std::move(lease);
-    connect(lease.get(), &KWin::DrmLease::revokeRequested, this, &DrmLeaseV1Interface::revoke);
+    connect(m_lease.get(), &KWin::DrmLease::revokeRequested, this, &DrmLeaseV1Interface::revoke);
     for (const auto &connector : std::as_const(m_connectors)) {
         connector->withdraw();
     }
