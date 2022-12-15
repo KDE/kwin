@@ -332,13 +332,15 @@ void DrmLeaseRequestV1Interface::wp_drm_lease_request_v1_request_connector(Resou
             wl_resource_post_error(resource->handle, WP_DRM_LEASE_REQUEST_V1_ERROR_WRONG_DEVICE, "Requested connector from invalid lease device");
         } else if (connector->withdrawn()) {
             qCWarning(KWIN_CORE) << "DrmLease: withdrawn connector requested";
+            invalidate();
         } else if (m_connectors.contains(connector)) {
             wl_resource_post_error(resource->handle, WP_DRM_LEASE_REQUEST_V1_ERROR_DUPLICATE_CONNECTOR, "Requested connector twice");
-        } else {
+        } else if (!m_invalid) {
             m_connectors << connector;
         }
     } else {
         qCWarning(KWIN_CORE, "DrmLease: Invalid connector requested");
+        invalidate();
     }
 }
 
