@@ -63,7 +63,7 @@ WaylandEglLayerBuffer::WaylandEglLayerBuffer(const QSize &size, uint32_t format,
                              size.width(),
                              size.height(),
                              format,
-                             GBM_BO_USE_RENDERING);
+                             GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
     }
 
     if (!m_bo) {
