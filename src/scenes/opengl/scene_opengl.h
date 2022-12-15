@@ -53,7 +53,7 @@ public:
 
     explicit SceneOpenGL(OpenGLBackend *backend);
     ~SceneOpenGL() override;
-    bool initFailed() const override;
+
     void paint(RenderTarget *renderTarget, const QRegion &region) override;
     Shadow *createShadow(Window *window) override;
     bool makeOpenGLContextCurrent() override;
@@ -74,9 +74,6 @@ public:
     QVector<QByteArray> openGLPlatformInterfaceExtensions() const override;
     std::shared_ptr<GLTexture> textureForOutput(Output *output) const override;
 
-    static std::unique_ptr<SceneOpenGL> createScene(OpenGLBackend *backend);
-    static bool supported(OpenGLBackend *backend);
-
 protected:
     void paintBackground(const QRegion &region) override;
     void paintOffscreenQuickView(OffscreenQuickView *w) override;
@@ -88,7 +85,6 @@ private:
     void setBlendEnabled(bool enabled);
     void createRenderNode(Item *item, RenderContext *context);
 
-    bool init_ok = true;
     OpenGLBackend *m_backend;
     GLuint vao = 0;
     bool m_blendingEnabled = false;

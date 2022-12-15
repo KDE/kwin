@@ -23,9 +23,10 @@ class KWIN_EXPORT SceneQPainter : public Scene
     Q_OBJECT
 
 public:
+    explicit SceneQPainter(QPainterBackend *backend);
     ~SceneQPainter() override;
+
     void paint(RenderTarget *renderTarget, const QRegion &region) override;
-    bool initFailed() const override;
     Shadow *createShadow(Window *window) override;
     DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
@@ -44,15 +45,11 @@ public:
         return m_backend;
     }
 
-    static std::unique_ptr<SceneQPainter> createScene(QPainterBackend *backend);
-
 protected:
     void paintBackground(const QRegion &region) override;
     void paintOffscreenQuickView(OffscreenQuickView *w) override;
 
 private:
-    explicit SceneQPainter(QPainterBackend *backend);
-
     void renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem) const;
     void renderDecorationItem(QPainter *painter, DecorationItem *decorationItem) const;
     void renderItem(QPainter *painter, Item *item) const;

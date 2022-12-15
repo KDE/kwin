@@ -93,9 +93,6 @@ public:
     void addDelegate(SceneDelegate *delegate);
     void removeDelegate(SceneDelegate *delegate);
 
-    // Returns true if the ctor failed to properly initialize.
-    virtual bool initFailed() const = 0;
-
     SurfaceItem *scanoutCandidate() const;
     void prePaint(Output *output);
     void postPaint();

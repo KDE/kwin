@@ -182,13 +182,32 @@ bool Compositor::attemptOpenGLCompositing()
         return false;
     }
 
-    std::unique_ptr<Scene> scene = SceneOpenGL::createScene(backend.get());
-    if (!scene || scene->initFailed()) {
+    const QByteArray forceEnv = qgetenv("KWIN_COMPOSE");
+    if (!forceEnv.isEmpty()) {
+        if (qstrcmp(forceEnv, "O2") == 0 || qstrcmp(forceEnv, "O2ES") == 0) {
+            qCDebug(KWIN_CORE) << "OpenGL 2 compositing enforced by environment variable";
+        } else {
+            // OpenGL 2 disabled by environment variable
+            return false;
+        }
+    } else {
+        if (!backend->isDirectRendering()) {
+            return false;
+        }
+        if (GLPlatform::instance()->recommendedCompositor() < OpenGLCompositing) {
+            qCDebug(KWIN_CORE) << "Driver does not recommend OpenGL compositing";
+            return false;
+        }
+    }
+
+    // We only support the OpenGL 2+ shader API, not GL_ARB_shader_objects
+    if (!hasGLVersion(2, 0)) {
+        qCDebug(KWIN_CORE) << "OpenGL 2.0 is not supported";
         return false;
     }
 
+    m_scene = std::make_unique<SceneOpenGL>(backend.get());
     m_backend = std::move(backend);
-    m_scene = std::move(scene);
 
     // set strict binding
     if (options->isGlStrictBindingFollowsDriver()) {
@@ -206,13 +225,8 @@ bool Compositor::attemptQPainterCompositing()
         return false;
     }
 
-    std::unique_ptr<Scene> scene = SceneQPainter::createScene(backend.get());
-    if (!scene || scene->initFailed()) {
-        return false;
-    }
-
+    m_scene = std::make_unique<SceneQPainter>(backend.get());
     m_backend = std::move(backend);
-    m_scene = std::move(scene);
 
     qCDebug(KWIN_CORE) << "QPainter compositing has been successfully initialized";
     return true;

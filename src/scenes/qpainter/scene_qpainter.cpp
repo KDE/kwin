@@ -30,10 +30,6 @@ namespace KWin
 //****************************************
 // SceneQPainter
 //****************************************
-std::unique_ptr<SceneQPainter> SceneQPainter::createScene(QPainterBackend *backend)
-{
-    return std::unique_ptr<SceneQPainter>(new SceneQPainter(backend));
-}
 
 SceneQPainter::SceneQPainter(QPainterBackend *backend)
     : m_backend(backend)
@@ -43,11 +39,6 @@ SceneQPainter::SceneQPainter(QPainterBackend *backend)
 
 SceneQPainter::~SceneQPainter()
 {
-}
-
-bool SceneQPainter::initFailed() const
-{
-    return false;
 }
 
 void SceneQPainter::paint(RenderTarget *target, const QRegion &region)

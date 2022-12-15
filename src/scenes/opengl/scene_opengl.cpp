@@ -48,13 +48,6 @@ namespace KWin
 SceneOpenGL::SceneOpenGL(OpenGLBackend *backend)
     : m_backend(backend)
 {
-    // We only support the OpenGL 2+ shader API, not GL_ARB_shader_objects
-    if (!hasGLVersion(2, 0)) {
-        qCDebug(KWIN_OPENGL) << "OpenGL 2.0 is not supported";
-        init_ok = false;
-        return;
-    }
-
     // It is not legal to not have a vertex array object bound in a core context
     if (!GLPlatform::instance()->isGLES() && hasGLExtension(QByteArrayLiteral("GL_ARB_vertex_array_object"))) {
         glGenVertexArrays(1, &vao);
@@ -64,23 +57,7 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend)
 
 SceneOpenGL::~SceneOpenGL()
 {
-    if (init_ok) {
-        makeOpenGLContextCurrent();
-    }
-}
-
-std::unique_ptr<SceneOpenGL> SceneOpenGL::createScene(OpenGLBackend *backend)
-{
-    if (SceneOpenGL::supported(backend)) {
-        return std::make_unique<SceneOpenGL>(backend);
-    } else {
-        return nullptr;
-    }
-}
-
-bool SceneOpenGL::initFailed() const
-{
-    return !init_ok;
+    makeOpenGLContextCurrent();
 }
 
 void SceneOpenGL::paint(RenderTarget *renderTarget, const QRegion &region)
@@ -199,28 +176,6 @@ std::unique_ptr<SurfaceTexture> SceneOpenGL::createSurfaceTextureWayland(Surface
 std::unique_ptr<SurfaceTexture> SceneOpenGL::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
 {
     return m_backend->createSurfaceTextureX11(pixmap);
-}
-
-bool SceneOpenGL::supported(OpenGLBackend *backend)
-{
-    const QByteArray forceEnv = qgetenv("KWIN_COMPOSE");
-    if (!forceEnv.isEmpty()) {
-        if (qstrcmp(forceEnv, "O2") == 0 || qstrcmp(forceEnv, "O2ES") == 0) {
-            qCDebug(KWIN_OPENGL) << "OpenGL 2 compositing enforced by environment variable";
-            return true;
-        } else {
-            // OpenGL 2 disabled by environment variable
-            return false;
-        }
-    }
-    if (!backend->isDirectRendering()) {
-        return false;
-    }
-    if (GLPlatform::instance()->recommendedCompositor() < OpenGLCompositing) {
-        qCDebug(KWIN_OPENGL) << "Driver does not recommend OpenGL compositing";
-        return false;
-    }
-    return true;
 }
 
 void SceneOpenGL::doPaintBackground(const QVector<float> &vertices)
