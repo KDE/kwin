@@ -25,7 +25,7 @@ KCM.SimpleKCM {
     implicitHeight: Kirigami.Units.gridUnit * 33
 
     QQC2.ButtonGroup {
-        buttons: column.children
+        buttons: form.children
         exclusive: true
         checkedButton: buttons[kcm.settings.xwaylandEavesdrops]
         onCheckedButtonChanged: {
@@ -41,23 +41,28 @@ KCM.SimpleKCM {
 
     ColumnLayout {
         id: column
-        QQC2.Label {
-            Layout.fillWidth: true
-            text: i18n("Allow legacy X11 apps to read keystrokes typed in all apps:")
-        }
+        spacing: Kirigami.Units.smallSpacing
 
-        QQC2.RadioButton {
-            text: i18n("Never")
-        }
-        QQC2.RadioButton {
-            text: i18n("Only Meta, Control, Alt, and Shift keys")
-        }
-        QQC2.RadioButton {
-            text: i18n("All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed")
-        }
-        QQC2.RadioButton {
-            id: always
-            text: i18n("Always")
+        Kirigami.FormLayout {
+            id: form
+
+            Layout.leftMargin: Kirigami.Units.gridUnit
+            Layout.rightMargin: Kirigami.Units.gridUnit
+
+            QQC2.RadioButton {
+                Kirigami.FormData.label: i18n("Allow legacy X11 apps to read keystrokes typed in all apps:")
+                text: i18n("Never")
+            }
+            QQC2.RadioButton {
+                text: i18n("Only Meta, Control, Alt, and Shift keys")
+            }
+            QQC2.RadioButton {
+                text: i18n("All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed")
+            }
+            QQC2.RadioButton {
+                id: always
+                text: i18n("Always")
+            }
         }
 
         Kirigami.InlineMessage {
