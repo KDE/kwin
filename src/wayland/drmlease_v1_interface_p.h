@@ -24,7 +24,6 @@ class Display;
 class DrmLeaseConnectorV1Interface;
 class DrmLeaseRequestV1Interface;
 class DrmLeaseV1Interface;
-class DrmLeaseConnectorV1InterfacePrivate;
 
 class DrmLeaseDeviceV1Interface : public QObject, public QtWaylandServer::wp_drm_lease_device_v1
 {
@@ -54,7 +53,7 @@ private:
 
     KWin::DrmGpu *const m_gpu;
     bool m_hasDrmMaster = true;
-    QHash<KWin::DrmAbstractOutput *, DrmLeaseConnectorV1Interface *> m_connectors;
+    std::map<KWin::DrmAbstractOutput *, std::unique_ptr<DrmLeaseConnectorV1Interface>> m_connectors;
     QQueue<wl_resource *> m_pendingFds;
     QVector<DrmLeaseRequestV1Interface *> m_leaseRequests;
     QVector<DrmLeaseV1Interface *> m_leases;
