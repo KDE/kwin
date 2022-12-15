@@ -49,20 +49,21 @@ WaylandEglLayerBuffer::WaylandEglLayerBuffer(const QSize &size, uint32_t format,
 {
     gbm_device *gbmDevice = backend->backend()->gbmDevice();
 
-    if (modifiers.isEmpty()) {
+    if (!modifiers.isEmpty()) {
+        m_bo = gbm_bo_create_with_modifiers(gbmDevice,
+                                            size.width(),
+                                            size.height(),
+                                            format,
+                                            modifiers.constData(),
+                                            modifiers.size());
+    }
+
+    if (!m_bo) {
         m_bo = gbm_bo_create(gbmDevice,
                              size.width(),
                              size.height(),
                              format,
                              GBM_BO_USE_RENDERING);
-    } else {
-        m_bo = gbm_bo_create_with_modifiers2(gbmDevice,
-                                             size.width(),
-                                             size.height(),
-                                             format,
-                                             modifiers.constData(),
-                                             modifiers.size(),
-                                             GBM_BO_USE_RENDERING);
     }
 
     if (!m_bo) {
