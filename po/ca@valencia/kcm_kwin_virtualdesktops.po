@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"POT-Creation-Date: 2022-12-15 00:49+0000\n"
 "PO-Revision-Date: 2021-10-11 17:45+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -32,17 +32,26 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "alviboi@gmail.com,txemaq@gmail.com"
 
-#: desktopsmodel.cpp:467
+#: desktopsmodel.cpp:191
+#, fuzzy, kde-format
+#| msgid "New Desktop"
+msgctxt "A numbered name for virtual desktops"
+msgid "Desktop %1"
+msgid_plural "Desktop %1"
+msgstr[0] "Escriptori nou"
+msgstr[1] "Escriptori nou"
+
+#: desktopsmodel.cpp:479
 #, kde-format
 msgid "There was an error connecting to the compositor."
 msgstr "S'ha produït un error en connectar amb el compositor."
 
-#: desktopsmodel.cpp:666
+#: desktopsmodel.cpp:678
 #, kde-format
 msgid "There was an error saving the settings to the compositor."
 msgstr "S'ha produït un error en guardar la configuració al compositor."
 
-#: desktopsmodel.cpp:669
+#: desktopsmodel.cpp:681
 #, kde-format
 msgid "There was an error requesting information from the compositor."
 msgstr "S'ha produït un error en sol·licitar informació des del compositor."
@@ -93,11 +102,6 @@ msgstr "Fila %1"
 msgctxt "@action:button"
 msgid "Add"
 msgstr "Afig"
-
-#: package/contents/ui/main.qml:169
-#, kde-format
-msgid "New Desktop"
-msgstr "Escriptori nou"
 
 #: package/contents/ui/main.qml:184
 #, kde-format

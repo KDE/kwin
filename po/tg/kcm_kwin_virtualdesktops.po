@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"POT-Creation-Date: 2022-12-15 00:49+0000\n"
 "PO-Revision-Date: 2019-09-16 13:47+0500\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: Tajik <kde-i18n-doc@kde.org>\n"
@@ -27,17 +27,26 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "victor.ibragimov@gmail.com"
 
-#: desktopsmodel.cpp:467
+#: desktopsmodel.cpp:191
+#, fuzzy, kde-format
+#| msgid "Desktop %1"
+msgctxt "A numbered name for virtual desktops"
+msgid "Desktop %1"
+msgid_plural "Desktop %1"
+msgstr[0] "Мизи кории %1"
+msgstr[1] "Мизи кории %1"
+
+#: desktopsmodel.cpp:479
 #, kde-format
 msgid "There was an error connecting to the compositor."
 msgstr ""
 
-#: desktopsmodel.cpp:666
+#: desktopsmodel.cpp:678
 #, kde-format
 msgid "There was an error saving the settings to the compositor."
 msgstr ""
 
-#: desktopsmodel.cpp:669
+#: desktopsmodel.cpp:681
 #, kde-format
 msgid "There was an error requesting information from the compositor."
 msgstr ""
@@ -85,11 +94,6 @@ msgctxt "@action:button"
 msgid "Add"
 msgstr "Илова кардан"
 
-#: package/contents/ui/main.qml:169
-#, kde-format
-msgid "New Desktop"
-msgstr "Мизи кории нав"
-
 #: package/contents/ui/main.qml:184
 #, kde-format
 msgid "1 Row"
@@ -132,14 +136,14 @@ msgstr ""
 msgid "Virtual Desktops"
 msgstr ""
 
+#~ msgid "New Desktop"
+#~ msgstr "Мизи кории нав"
+
 #~ msgid "Desktop %1:"
 #~ msgstr "Мизи кории %1:"
 
 #~ msgid "Here you can enter the name for desktop %1"
 #~ msgstr "Дар ин ҷо Шумо метавонед ягон ном барои мизи кории %1 ворид кунед"
-
-#~ msgid "Desktop %1"
-#~ msgstr "Мизи кории %1"
 
 #~ msgid ""
 #~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "

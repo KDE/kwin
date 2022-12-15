@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"POT-Creation-Date: 2022-12-15 00:49+0000\n"
 "PO-Revision-Date: 2021-05-27 15:17+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: Dutch <kde-i18n-nl@kde.org>\n"
@@ -27,17 +27,26 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "freekdekruijf@kde.nl"
 
-#: desktopsmodel.cpp:467
+#: desktopsmodel.cpp:191
+#, fuzzy, kde-format
+#| msgid "New Desktop"
+msgctxt "A numbered name for virtual desktops"
+msgid "Desktop %1"
+msgid_plural "Desktop %1"
+msgstr[0] "Nieuw bureaublad"
+msgstr[1] "Nieuw bureaublad"
+
+#: desktopsmodel.cpp:479
 #, kde-format
 msgid "There was an error connecting to the compositor."
 msgstr "Er deed zich een fout voor tijdens het verbinden met de opsteller."
 
-#: desktopsmodel.cpp:666
+#: desktopsmodel.cpp:678
 #, kde-format
 msgid "There was an error saving the settings to the compositor."
 msgstr "Er deed zich een fout voor tijdens het instellen van de opsteller."
 
-#: desktopsmodel.cpp:669
+#: desktopsmodel.cpp:681
 #, kde-format
 msgid "There was an error requesting information from the compositor."
 msgstr ""
@@ -90,11 +99,6 @@ msgstr "Rij %1"
 msgctxt "@action:button"
 msgid "Add"
 msgstr "Toevoegen"
-
-#: package/contents/ui/main.qml:169
-#, kde-format
-msgid "New Desktop"
-msgstr "Nieuw bureaublad"
 
 #: package/contents/ui/main.qml:184
 #, kde-format

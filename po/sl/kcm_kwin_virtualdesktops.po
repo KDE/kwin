@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"POT-Creation-Date: 2022-12-15 00:49+0000\n"
 "PO-Revision-Date: 2022-12-06 08:28+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -33,17 +33,28 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "jlp@holodeck1.com,andrejm@ubuntu.si,matjaz.jeran@amis.net"
 
-#: desktopsmodel.cpp:467
+#: desktopsmodel.cpp:191
+#, fuzzy, kde-format
+#| msgid "Desktop %1"
+msgctxt "A numbered name for virtual desktops"
+msgid "Desktop %1"
+msgid_plural "Desktop %1"
+msgstr[0] "Namizje %1"
+msgstr[1] "Namizje %1"
+msgstr[2] "Namizje %1"
+msgstr[3] "Namizje %1"
+
+#: desktopsmodel.cpp:479
 #, kde-format
 msgid "There was an error connecting to the compositor."
 msgstr "Pri povezovanju z upodobilnikom je prišlo do napake."
 
-#: desktopsmodel.cpp:666
+#: desktopsmodel.cpp:678
 #, kde-format
 msgid "There was an error saving the settings to the compositor."
 msgstr "Pri shranjevanju nastavitev v upodobilniku je prišlo do napake."
 
-#: desktopsmodel.cpp:669
+#: desktopsmodel.cpp:681
 #, kde-format
 msgid "There was an error requesting information from the compositor."
 msgstr "Pri zahtevah informacij od upodobilnika je prišlo do napake."
@@ -95,11 +106,6 @@ msgctxt "@action:button"
 msgid "Add"
 msgstr "Dodaj"
 
-#: package/contents/ui/main.qml:169
-#, kde-format
-msgid "New Desktop"
-msgstr "Novo namizje"
-
 #: package/contents/ui/main.qml:184
 #, kde-format
 msgid "1 Row"
@@ -144,14 +150,14 @@ msgstr "Prikaži prikazovalnik razporeda namizij"
 msgid "Virtual Desktops"
 msgstr "Navidezna namizja"
 
+#~ msgid "New Desktop"
+#~ msgstr "Novo namizje"
+
 #~ msgid "Desktop %1:"
 #~ msgstr "Namizje %1:"
 
 #~ msgid "Here you can enter the name for desktop %1"
 #~ msgstr "Tu lahko vnesete ime za namizje %1"
-
-#~ msgid "Desktop %1"
-#~ msgstr "Namizje %1"
 
 #~ msgid ""
 #~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "

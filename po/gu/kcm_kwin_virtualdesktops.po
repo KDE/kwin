@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"POT-Creation-Date: 2022-12-15 00:49+0000\n"
 "PO-Revision-Date: 2008-07-22 12:17+0530\n"
 "Last-Translator: Sweta Kothari <swkothar@redhat.com>\n"
 "Language-Team: Gujarati\n"
@@ -28,17 +28,26 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
 
-#: desktopsmodel.cpp:467
+#: desktopsmodel.cpp:191
+#, fuzzy, kde-format
+#| msgid "Desktop %1"
+msgctxt "A numbered name for virtual desktops"
+msgid "Desktop %1"
+msgid_plural "Desktop %1"
+msgstr[0] "ડેસ્કટોપ %1"
+msgstr[1] "ડેસ્કટોપ %1"
+
+#: desktopsmodel.cpp:479
 #, kde-format
 msgid "There was an error connecting to the compositor."
 msgstr ""
 
-#: desktopsmodel.cpp:666
+#: desktopsmodel.cpp:678
 #, kde-format
 msgid "There was an error saving the settings to the compositor."
 msgstr ""
 
-#: desktopsmodel.cpp:669
+#: desktopsmodel.cpp:681
 #, kde-format
 msgid "There was an error requesting information from the compositor."
 msgstr ""
@@ -86,12 +95,6 @@ msgctxt "@action:button"
 msgid "Add"
 msgstr ""
 
-#: package/contents/ui/main.qml:169
-#, fuzzy, kde-format
-#| msgid "Desktop %1"
-msgid "New Desktop"
-msgstr "ડેસ્કટોપ %1"
-
 #: package/contents/ui/main.qml:184
 #, kde-format
 msgid "1 Row"
@@ -135,14 +138,16 @@ msgstr ""
 msgid "Virtual Desktops"
 msgstr "ડેસ્કટોપ %1"
 
+#, fuzzy
+#~| msgid "Desktop %1"
+#~ msgid "New Desktop"
+#~ msgstr "ડેસ્કટોપ %1"
+
 #~ msgid "Desktop %1:"
 #~ msgstr "ડેસ્કટોપ %1:"
 
 #~ msgid "Here you can enter the name for desktop %1"
 #~ msgstr "ડેસ્કટોપ %1 માટે અહિંયા તમે નામનો પ્રવેશ કરી શકો છો"
-
-#~ msgid "Desktop %1"
-#~ msgstr "ડેસ્કટોપ %1"
 
 #~ msgid ""
 #~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "

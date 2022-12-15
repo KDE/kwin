@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"POT-Creation-Date: 2022-12-15 00:49+0000\n"
 "PO-Revision-Date: 2021-07-25 12:31+0100\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian\n"
@@ -32,18 +32,28 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "sergiu@cip.md"
 
-#: desktopsmodel.cpp:467
+#: desktopsmodel.cpp:191
+#, fuzzy, kde-format
+#| msgid "Desktop %1"
+msgctxt "A numbered name for virtual desktops"
+msgid "Desktop %1"
+msgid_plural "Desktop %1"
+msgstr[0] "Biroul %1"
+msgstr[1] "Biroul %1"
+msgstr[2] "Biroul %1"
+
+#: desktopsmodel.cpp:479
 #, kde-format
 msgid "There was an error connecting to the compositor."
 msgstr "A avut loc o eroare în timpul conectării la compozitor."
 
-#: desktopsmodel.cpp:666
+#: desktopsmodel.cpp:678
 #, kde-format
 msgid "There was an error saving the settings to the compositor."
 msgstr ""
 "A avut loc o eroare în timpul salvării configurărilor pentru compozitor."
 
-#: desktopsmodel.cpp:669
+#: desktopsmodel.cpp:681
 #, kde-format
 msgid "There was an error requesting information from the compositor."
 msgstr "A avut loc o eroare în timpul cererii informațiilor de la compozitor."
@@ -95,11 +105,6 @@ msgctxt "@action:button"
 msgid "Add"
 msgstr "Adaugă"
 
-#: package/contents/ui/main.qml:169
-#, kde-format
-msgid "New Desktop"
-msgstr "Birou nou"
-
 #: package/contents/ui/main.qml:184
 #, kde-format
 msgid "1 Row"
@@ -143,14 +148,14 @@ msgstr "Arată indicatorii de așezare a birourilor"
 msgid "Virtual Desktops"
 msgstr "Birouri virtuale"
 
+#~ msgid "New Desktop"
+#~ msgstr "Birou nou"
+
 #~ msgid "Desktop %1:"
 #~ msgstr "Biroul %1:"
 
 #~ msgid "Here you can enter the name for desktop %1"
 #~ msgstr "Aici puteți introduce denumirea biroului %1"
-
-#~ msgid "Desktop %1"
-#~ msgstr "Biroul %1"
 
 #~ msgid ""
 #~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "

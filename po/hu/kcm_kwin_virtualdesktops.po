@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.0\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"POT-Creation-Date: 2022-12-15 00:49+0000\n"
 "PO-Revision-Date: 2021-11-18 14:20+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -30,17 +30,26 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "ulysses@fsf.hu"
 
-#: desktopsmodel.cpp:467
+#: desktopsmodel.cpp:191
+#, fuzzy, kde-format
+#| msgid "Desktop %1"
+msgctxt "A numbered name for virtual desktops"
+msgid "Desktop %1"
+msgid_plural "Desktop %1"
+msgstr[0] "%1. asztal"
+msgstr[1] "%1. asztal"
+
+#: desktopsmodel.cpp:479
 #, kde-format
 msgid "There was an error connecting to the compositor."
 msgstr "Hiba történt a kompozitorhoz csatlakozás során."
 
-#: desktopsmodel.cpp:666
+#: desktopsmodel.cpp:678
 #, kde-format
 msgid "There was an error saving the settings to the compositor."
 msgstr "Hiba történt a kompozitor beállításainak mentése során."
 
-#: desktopsmodel.cpp:669
+#: desktopsmodel.cpp:681
 #, kde-format
 msgid "There was an error requesting information from the compositor."
 msgstr "Hiba történt a kompozitortól történi információlekérés során."
@@ -92,11 +101,6 @@ msgctxt "@action:button"
 msgid "Add"
 msgstr "Hozzáadás"
 
-#: package/contents/ui/main.qml:169
-#, kde-format
-msgid "New Desktop"
-msgstr "Új asztal"
-
 #: package/contents/ui/main.qml:184
 #, kde-format
 msgid "1 Row"
@@ -139,14 +143,14 @@ msgstr "Asztalelrendezés-jelzők megjelenítése"
 msgid "Virtual Desktops"
 msgstr "Virtuális asztalok"
 
+#~ msgid "New Desktop"
+#~ msgstr "Új asztal"
+
 #~ msgid "Desktop %1:"
 #~ msgstr "%1. asztal:"
 
 #~ msgid "Here you can enter the name for desktop %1"
 #~ msgstr "Itt lehet megadni a(z) %1. asztal nevét"
-
-#~ msgid "Desktop %1"
-#~ msgstr "%1. asztal"
 
 #~ msgid ""
 #~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "

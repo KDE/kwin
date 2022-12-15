@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"POT-Creation-Date: 2022-12-15 00:49+0000\n"
 "PO-Revision-Date: 2021-05-28 02:11+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -27,17 +27,25 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "kde@peremen.name"
 
-#: desktopsmodel.cpp:467
+#: desktopsmodel.cpp:191
+#, fuzzy, kde-format
+#| msgid "Desktop %1"
+msgctxt "A numbered name for virtual desktops"
+msgid "Desktop %1"
+msgid_plural "Desktop %1"
+msgstr[0] "데스크톱 %1"
+
+#: desktopsmodel.cpp:479
 #, kde-format
 msgid "There was an error connecting to the compositor."
 msgstr "컴포지터에 연결하는 중 오류가 발생했습니다."
 
-#: desktopsmodel.cpp:666
+#: desktopsmodel.cpp:678
 #, kde-format
 msgid "There was an error saving the settings to the compositor."
 msgstr "컴포지터에 설정을 저장하는 중 오류가 발생했습니다."
 
-#: desktopsmodel.cpp:669
+#: desktopsmodel.cpp:681
 #, kde-format
 msgid "There was an error requesting information from the compositor."
 msgstr "컴포지터에 정보를 요청하는 중 오류가 발생했습니다."
@@ -87,11 +95,6 @@ msgctxt "@action:button"
 msgid "Add"
 msgstr "추가"
 
-#: package/contents/ui/main.qml:169
-#, kde-format
-msgid "New Desktop"
-msgstr "새 바탕 화면"
-
 #: package/contents/ui/main.qml:184
 #, kde-format
 msgid "1 Row"
@@ -133,6 +136,9 @@ msgstr "바탕 화면 레이아웃 표시기 표시"
 msgid "Virtual Desktops"
 msgstr "가상 바탕 화면"
 
+#~ msgid "New Desktop"
+#~ msgstr "새 바탕 화면"
+
 #~ msgid "Rows:"
 #~ msgstr "줄:"
 
@@ -144,9 +150,6 @@ msgstr "가상 바탕 화면"
 
 #~ msgid "Here you can enter the name for desktop %1"
 #~ msgstr "데스크톱 %1의 이름을 입력하십시오"
-
-#~ msgid "Desktop %1"
-#~ msgstr "데스크톱 %1"
 
 #~ msgid ""
 #~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"POT-Creation-Date: 2022-12-15 00:49+0000\n"
 "PO-Revision-Date: 2021-06-06 06:50+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -32,17 +32,27 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "maciej.wiklo@wp.pl, lukasz.wojnilowicz@gmail.com"
 
-#: desktopsmodel.cpp:467
+#: desktopsmodel.cpp:191
+#, fuzzy, kde-format
+#| msgid "Desktop %1"
+msgctxt "A numbered name for virtual desktops"
+msgid "Desktop %1"
+msgid_plural "Desktop %1"
+msgstr[0] "Pulpit %1"
+msgstr[1] "Pulpit %1"
+msgstr[2] "Pulpit %1"
+
+#: desktopsmodel.cpp:479
 #, kde-format
 msgid "There was an error connecting to the compositor."
 msgstr "Wystąpił błąd podczas łączenia z kompozytorem."
 
-#: desktopsmodel.cpp:666
+#: desktopsmodel.cpp:678
 #, kde-format
 msgid "There was an error saving the settings to the compositor."
 msgstr "Wystąpił błąd podczas zapisywania ustawień kompozytora."
 
-#: desktopsmodel.cpp:669
+#: desktopsmodel.cpp:681
 #, kde-format
 msgid "There was an error requesting information from the compositor."
 msgstr "Wystąpił błąd podczas żądania informacji od kompozytora."
@@ -94,11 +104,6 @@ msgctxt "@action:button"
 msgid "Add"
 msgstr "Dodaj"
 
-#: package/contents/ui/main.qml:169
-#, kde-format
-msgid "New Desktop"
-msgstr "Nowy pulpit"
-
 #: package/contents/ui/main.qml:184
 #, kde-format
 msgid "1 Row"
@@ -142,6 +147,9 @@ msgstr "Pokaż wskaźniki układu pulpitów"
 msgid "Virtual Desktops"
 msgstr "Pulpity wirtualne"
 
+#~ msgid "New Desktop"
+#~ msgstr "Nowy pulpit"
+
 #~ msgid "Rows:"
 #~ msgstr "Wiersze:"
 
@@ -153,9 +161,6 @@ msgstr "Pulpity wirtualne"
 
 #~ msgid "Here you can enter the name for desktop %1"
 #~ msgstr "Tutaj możesz podać nazwę dla pulpitu %1"
-
-#~ msgid "Desktop %1"
-#~ msgstr "Pulpit %1"
 
 #~ msgid ""
 #~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "

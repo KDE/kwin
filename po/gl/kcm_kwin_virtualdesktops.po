@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"POT-Creation-Date: 2022-12-15 00:49+0000\n"
 "PO-Revision-Date: 2019-10-19 22:07+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -32,17 +32,26 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "xabigf@gmx.net, mvillarino@users.sourceforge.net, adrian@chaves.io"
 
-#: desktopsmodel.cpp:467
+#: desktopsmodel.cpp:191
+#, fuzzy, kde-format
+#| msgid "Desktop %1"
+msgctxt "A numbered name for virtual desktops"
+msgid "Desktop %1"
+msgid_plural "Desktop %1"
+msgstr[0] "Escritorio %1"
+msgstr[1] "Escritorio %1"
+
+#: desktopsmodel.cpp:479
 #, kde-format
 msgid "There was an error connecting to the compositor."
 msgstr "Produciuse un erro ao conectar ao compositor."
 
-#: desktopsmodel.cpp:666
+#: desktopsmodel.cpp:678
 #, kde-format
 msgid "There was an error saving the settings to the compositor."
 msgstr "Produciuse un erro ao gardar a configuración no compositor."
 
-#: desktopsmodel.cpp:669
+#: desktopsmodel.cpp:681
 #, kde-format
 msgid "There was an error requesting information from the compositor."
 msgstr "Produciuse un erro ao solicitar información do compositor."
@@ -94,11 +103,6 @@ msgctxt "@action:button"
 msgid "Add"
 msgstr "Engadir"
 
-#: package/contents/ui/main.qml:169
-#, kde-format
-msgid "New Desktop"
-msgstr "Novo escritorio"
-
 #: package/contents/ui/main.qml:184
 #, kde-format
 msgid "1 Row"
@@ -141,6 +145,9 @@ msgstr "Mostrar indicadores da disposición do escritorio"
 msgid "Virtual Desktops"
 msgstr "Escritorios virtuais"
 
+#~ msgid "New Desktop"
+#~ msgstr "Novo escritorio"
+
 #~ msgid "Rows:"
 #~ msgstr "Filas:"
 
@@ -152,9 +159,6 @@ msgstr "Escritorios virtuais"
 
 #~ msgid "Here you can enter the name for desktop %1"
 #~ msgstr "Aquí pode inserir o nome do escritorio %1"
-
-#~ msgid "Desktop %1"
-#~ msgstr "Escritorio %1"
 
 #~ msgid ""
 #~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "

@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-09 00:47+0000\n"
-"PO-Revision-Date: 2022-11-05 17:21+0100\n"
+"POT-Creation-Date: 2022-12-15 00:49+0000\n"
+"PO-Revision-Date: 2022-12-14 20:27+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.08.3\n"
+"X-Generator: Lokalize 22.12.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -2655,28 +2655,24 @@ msgid "Window to Previous Screen"
 msgstr "Прозорец към предишния екран"
 
 #: useractions.cpp:1109
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "Преместване на прозорец на десния работен плот"
+msgstr "Прозорец един екран на дясно"
 
 #: useractions.cpp:1111
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "Преместване на прозорец на левия работен плот"
+msgstr "Прозорец един екран на ляво"
 
 #: useractions.cpp:1113
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "Прозорец към екран %1"
+msgstr "Прозорец един екран на горе"
 
 #: useractions.cpp:1115
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "Преместване на прозорец на долния работен плот"
+msgstr "Прозорец един екран на долу"
 
 #: useractions.cpp:1119
 #, kde-format
@@ -2694,28 +2690,24 @@ msgid "Switch to Previous Screen"
 msgstr "Превключване към предишния екран"
 
 #: useractions.cpp:1128
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Превключване към прозореца отдясно"
+msgstr "Превключване към екрана отдясно"
 
 #: useractions.cpp:1130
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Превключване към прозореца отляво"
+msgstr "Превключване към екрана отляво"
 
 #: useractions.cpp:1132
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Превключване към екран %1"
+msgstr "Превключване към екрана отгоре"
 
 #: useractions.cpp:1134
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Превключване към екран %1"
+msgstr "Превключване към екрана отдолу"
 
 #: useractions.cpp:1137
 #, kde-format
@@ -2794,7 +2786,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Не отговаря)"
 
-#: workspace.cpp:1732
+#: workspace.cpp:1758
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"POT-Creation-Date: 2022-12-15 00:49+0000\n"
 "PO-Revision-Date: 2010-07-11 15:05+0200\n"
 "Last-Translator: Andrej Dundovic <andrej@dundovic.com.hr>\n"
 "Language-Team: Croatian <kde-croatia-list@lists.sourceforge.net>\n"
@@ -32,17 +32,27 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "zarko.pintar@gmail.com, adundovi@gmail.com"
 
-#: desktopsmodel.cpp:467
+#: desktopsmodel.cpp:191
+#, fuzzy, kde-format
+#| msgid "Desktop %1"
+msgctxt "A numbered name for virtual desktops"
+msgid "Desktop %1"
+msgid_plural "Desktop %1"
+msgstr[0] "Radna površina %1"
+msgstr[1] "Radna površina %1"
+msgstr[2] "Radna površina %1"
+
+#: desktopsmodel.cpp:479
 #, kde-format
 msgid "There was an error connecting to the compositor."
 msgstr ""
 
-#: desktopsmodel.cpp:666
+#: desktopsmodel.cpp:678
 #, kde-format
 msgid "There was an error saving the settings to the compositor."
 msgstr ""
 
-#: desktopsmodel.cpp:669
+#: desktopsmodel.cpp:681
 #, kde-format
 msgid "There was an error requesting information from the compositor."
 msgstr ""
@@ -90,12 +100,6 @@ msgctxt "@action:button"
 msgid "Add"
 msgstr ""
 
-#: package/contents/ui/main.qml:169
-#, fuzzy, kde-format
-#| msgid "Desktops"
-msgid "New Desktop"
-msgstr "Radne površine"
-
 #: package/contents/ui/main.qml:184
 #, kde-format
 msgid "1 Row"
@@ -141,14 +145,16 @@ msgstr "Prikaži indikatore rasporeda radne površine"
 msgid "Virtual Desktops"
 msgstr "Radne površine"
 
+#, fuzzy
+#~| msgid "Desktops"
+#~ msgid "New Desktop"
+#~ msgstr "Radne površine"
+
 #~ msgid "Desktop %1:"
 #~ msgstr "Radna površina %1:"
 
 #~ msgid "Here you can enter the name for desktop %1"
 #~ msgstr "Ovdje možete unjeti naziv za radnu površinu %1"
-
-#~ msgid "Desktop %1"
-#~ msgstr "Radna površina %1"
 
 #~ msgid ""
 #~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "

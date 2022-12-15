@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-11 00:48+0000\n"
-"PO-Revision-Date: 2022-05-21 18:35+0200\n"
+"PO-Revision-Date: 2022-12-14 20:33+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
-"Language-Team: Bulgarian <dict@fsa-bg.org>\n"
+"Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.04.0\n"
+"X-Generator: Lokalize 22.12.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -89,7 +89,7 @@ msgstr "Дали настройките да важат за всички про
 #: main.cpp:40
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
-msgstr "This helper utility is not supposed to be called directly."
+msgstr "Тази помощна програма не трябва да се извиква директно."
 
 #: main.cpp:44
 #, kde-format
@@ -787,10 +787,9 @@ msgid "Block compositing"
 msgstr "Блоково композиране"
 
 #: rulesmodel.cpp:703
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Клас на прозорец (приложение)"
+msgstr "Не е наличен клас на прозорец"
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -801,6 +800,11 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Това приложение не предоставя клас за прозореца, така че KWin не може да го "
+"използва, за да съпостави и приложи някакви правила. Ако все пак искате да "
+"приложите някои правила, вместо това се опитайте да съпоставите други "
+"свойства като заглавието на прозореца.<nl/><nl/>Моля, помислете дали да не "
+"съобщите за тази грешка на разработчиците на приложението."
 
 #: rulesmodel.cpp:738
 #, kde-format
@@ -856,7 +860,7 @@ msgstr "Независимо меню"
 #: rulesmodel.cpp:749
 #, kde-format
 msgid "On Screen Display"
-msgstr "On Screen Display (OSD)"
+msgstr "Екранни надписи - On Screen Display (OSD)"
 
 #: rulesmodel.cpp:759
 #, kde-format
@@ -951,10 +955,9 @@ msgid "Extreme"
 msgstr "Крайно"
 
 #: rulesmodel.cpp:865
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "Unmanaged window"
-msgstr "В главния прозорец"
+msgstr "Неуправляван прозорец"
 
 #: rulesmodel.cpp:866
 #, kde-format
@@ -962,9 +965,3 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Не може да открие свойствата на прозореца. Прозорецът не се управлява от "
 "Kwin."
-
-#~ msgid "Error"
-#~ msgstr "Грешка"
-
-#~ msgid "Cascaded"
-#~ msgstr "Каскадно"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-12 00:47+0000\n"
+"POT-Creation-Date: 2022-12-15 00:49+0000\n"
 "PO-Revision-Date: 2019-11-01 15:52+0200\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -28,17 +28,26 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "qiilaq69@gmail.com"
 
-#: desktopsmodel.cpp:467
+#: desktopsmodel.cpp:191
+#, fuzzy, kde-format
+#| msgid "Desktop %1"
+msgctxt "A numbered name for virtual desktops"
+msgid "Desktop %1"
+msgid_plural "Desktop %1"
+msgstr[0] "Töölaud %1"
+msgstr[1] "Töölaud %1"
+
+#: desktopsmodel.cpp:479
 #, kde-format
 msgid "There was an error connecting to the compositor."
 msgstr "Komposiitoriga ühendumisel tekkis tõrge."
 
-#: desktopsmodel.cpp:666
+#: desktopsmodel.cpp:678
 #, kde-format
 msgid "There was an error saving the settings to the compositor."
 msgstr "Seadistuste salvestamisel komposiitorisse tekkis tõrge."
 
-#: desktopsmodel.cpp:669
+#: desktopsmodel.cpp:681
 #, kde-format
 msgid "There was an error requesting information from the compositor."
 msgstr "Teabe hankimisel komposiitorist tekkis tõrge."
@@ -90,11 +99,6 @@ msgctxt "@action:button"
 msgid "Add"
 msgstr "Lisa"
 
-#: package/contents/ui/main.qml:169
-#, kde-format
-msgid "New Desktop"
-msgstr "Uus töölaud"
-
 #: package/contents/ui/main.qml:184
 #, kde-format
 msgid "1 Row"
@@ -137,14 +141,14 @@ msgstr "Töölaua paigutuse indikaatorite näitamine"
 msgid "Virtual Desktops"
 msgstr "Virtuaalsed töölauad"
 
+#~ msgid "New Desktop"
+#~ msgstr "Uus töölaud"
+
 #~ msgid "Desktop %1:"
 #~ msgstr "Töölaud %1:"
 
 #~ msgid "Here you can enter the name for desktop %1"
 #~ msgstr "Siin saab anda töölauale %1 nime"
-
-#~ msgid "Desktop %1"
-#~ msgstr "Töölaud %1"
 
 #~ msgid ""
 #~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "
