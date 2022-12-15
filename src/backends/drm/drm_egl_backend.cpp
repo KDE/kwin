@@ -29,7 +29,7 @@
 #include "kwineglutils_p.h"
 #include "linux_dmabuf.h"
 #include "options.h"
-#include "surfaceitem_wayland.h"
+#include "scene/surfaceitem_wayland.h"
 #include "wayland/clientconnection.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/surface_interface.h"

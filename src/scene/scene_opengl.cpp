@@ -22,11 +22,11 @@
 #include "decorations/decoratedclient.h"
 #include "effects.h"
 #include "main.h"
-#include "shadowitem.h"
-#include "surfaceitem.h"
+#include "scene/shadowitem.h"
+#include "scene/surfaceitem.h"
+#include "scene/windowitem.h"
 #include "utils/common.h"
 #include "window.h"
-#include "windowitem.h"
 
 #include <cmath>
 #include <cstddef>

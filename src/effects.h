@@ -14,7 +14,7 @@
 #include "kwineffects.h"
 
 #include "kwinoffscreenquickview.h"
-#include "scene.h"
+#include "scene/scene.h"
 
 #include <QFont>
 #include <QHash>

@@ -11,8 +11,8 @@
 
 #include "qpainterbackend.h"
 
-#include "decorationitem.h"
-#include "scene.h"
+#include "scene/decorationitem.h"
+#include "scene/scene.h"
 #include "shadow.h"
 
 namespace KWin

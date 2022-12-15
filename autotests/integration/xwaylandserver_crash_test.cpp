@@ -10,7 +10,7 @@
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "main.h"
-#include "scene.h"
+#include "scene/scene.h"
 #include "unmanaged.h"
 #include "wayland_server.h"
 #include "workspace.h"

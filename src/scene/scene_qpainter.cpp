@@ -12,9 +12,9 @@
 #include "core/output.h"
 #include "decorations/decoratedclient.h"
 #include "effects.h"
-#include "surfaceitem.h"
+#include "scene/surfaceitem.h"
+#include "scene/windowitem.h"
 #include "window.h"
-#include "windowitem.h"
 
 #include <kwinoffscreenquickview.h>
 // Qt

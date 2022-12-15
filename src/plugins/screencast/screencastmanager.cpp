@@ -15,7 +15,7 @@
 #include "kwingltexture.h"
 #include "outputscreencastsource.h"
 #include "regionscreencastsource.h"
-#include "scene.h"
+#include "scene/scene.h"
 #include "screencaststream.h"
 #include "wayland/display.h"
 #include "wayland/output_interface.h"

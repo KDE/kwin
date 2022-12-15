@@ -42,12 +42,12 @@
 #include "inputmethod.h"
 #include "inputpanelv1window.h"
 #include "kwinglutils.h"
+#include "scene/windowitem.h"
 #include "utils/xcbutils.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "waylandwindow.h"
 #include "window_property_notify_x11_filter.h"
-#include "windowitem.h"
 #include "workspace.h"
 
 #include <KDecoration2/Decoration>

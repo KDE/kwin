@@ -4,14 +4,14 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "windowitem.h"
-#include "decorationitem.h"
+#include "scene/windowitem.h"
 #include "deleted.h"
 #include "internalwindow.h"
-#include "shadowitem.h"
-#include "surfaceitem_internal.h"
-#include "surfaceitem_wayland.h"
-#include "surfaceitem_x11.h"
+#include "scene/decorationitem.h"
+#include "scene/shadowitem.h"
+#include "scene/surfaceitem_internal.h"
+#include "scene/surfaceitem_wayland.h"
+#include "scene/surfaceitem_x11.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"

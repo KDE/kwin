@@ -31,17 +31,17 @@
 #if KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
+#include "scene/shadowitem.h"
+#include "scene/surfaceitem_x11.h"
+#include "scene/windowitem.h"
 #include "screenedge.h"
 #include "shadow.h"
-#include "shadowitem.h"
-#include "surfaceitem_x11.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
 #include "wayland/output_interface.h"
 #include "wayland/plasmawindowmanagement_interface.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
-#include "windowitem.h"
 #include "workspace.h"
 
 #include <KDecoration2/DecoratedClient>

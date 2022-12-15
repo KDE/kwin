@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "shadowitem.h"
+#include "scene/shadowitem.h"
 #include "deleted.h"
 #include "shadow.h"
 

@@ -20,7 +20,7 @@
 #include "kwinscreencast_logging.h"
 #include "main.h"
 #include "pipewirecore.h"
-#include "scene.h"
+#include "scene/scene.h"
 #include "screencastsource.h"
 #include "utils/common.h"
 

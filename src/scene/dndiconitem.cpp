@@ -4,8 +4,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "dndiconitem.h"
-#include "surfaceitem_wayland.h"
+#include "scene/dndiconitem.h"
+#include "scene/surfaceitem_wayland.h"
 #include "wayland/datadevice_interface.h"
 #include "wayland/surface_interface.h"
 

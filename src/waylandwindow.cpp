@@ -7,12 +7,12 @@
 */
 
 #include "waylandwindow.h"
+#include "scene/windowitem.h"
 #include "wayland/clientbuffer.h"
 #include "wayland/clientconnection.h"
 #include "wayland/display.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
-#include "windowitem.h"
 #include "workspace.h"
 
 #include <QFileInfo>

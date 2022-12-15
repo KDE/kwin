@@ -20,7 +20,7 @@
 #include "drm_shadow_buffer.h"
 #include "egl_dmabuf.h"
 #include "kwineglutils_p.h"
-#include "surfaceitem_wayland.h"
+#include "scene/surfaceitem_wayland.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/surface_interface.h"
 

@@ -8,7 +8,7 @@
 #include "egl_dmabuf.h"
 #include "kwineglext.h"
 #include "kwingltexture.h"
-#include "surfaceitem_wayland.h"
+#include "scene/surfaceitem_wayland.h"
 #include "utils/common.h"
 #include "wayland/drmclientbuffer.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"

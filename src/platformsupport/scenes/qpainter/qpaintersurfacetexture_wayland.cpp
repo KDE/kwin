@@ -5,7 +5,7 @@
 */
 
 #include "qpaintersurfacetexture_wayland.h"
-#include "surfaceitem_wayland.h"
+#include "scene/surfaceitem_wayland.h"
 #include "utils/common.h"
 #include "wayland/shmclientbuffer.h"
 #include "wayland/surface_interface.h"

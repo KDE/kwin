@@ -4,12 +4,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "item.h"
+#include "scene/item.h"
 #include "composite.h"
 #include "core/output.h"
 #include "core/renderloop.h"
 #include "main.h"
-#include "scene.h"
+#include "scene/scene.h"
 #include "utils/common.h"
 #include "workspace.h"
 

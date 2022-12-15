@@ -11,7 +11,7 @@
 #include <kwineffects.h>
 #include <kwinglutils_funcs.h>
 
-#include "surfaceitem.h"
+#include "scene/surfaceitem.h"
 #include "utils/common.h"
 #include "workspace.h"
 

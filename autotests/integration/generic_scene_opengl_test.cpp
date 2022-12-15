@@ -12,7 +12,7 @@
 #include "core/renderbackend.h"
 #include "cursor.h"
 #include "effectloader.h"
-#include "scene.h"
+#include "scene/scene.h"
 #include "wayland_server.h"
 #include "window.h"
 

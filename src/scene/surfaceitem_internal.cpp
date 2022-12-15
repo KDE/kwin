@@ -4,11 +4,11 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "surfaceitem_internal.h"
+#include "scene/surfaceitem_internal.h"
 #include "composite.h"
 #include "deleted.h"
 #include "internalwindow.h"
-#include "scene.h"
+#include "scene/scene.h"
 
 #include <QOpenGLFramebufferObject>
 

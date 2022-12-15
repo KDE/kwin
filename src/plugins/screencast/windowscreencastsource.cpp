@@ -15,9 +15,9 @@
 #include "kwineffects.h"
 #include "kwingltexture.h"
 #include "kwinglutils.h"
-#include "scene.h"
+#include "scene/scene.h"
+#include "scene/windowitem.h"
 #include "window.h"
-#include "windowitem.h"
 
 namespace KWin
 {

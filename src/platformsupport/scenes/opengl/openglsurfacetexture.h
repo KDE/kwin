@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "surfaceitem.h"
+#include "scene/surfaceitem.h"
 
 namespace KWin
 {

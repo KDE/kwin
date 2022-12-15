@@ -62,7 +62,6 @@ target_sources(kwin PRIVATE
     cursorsource.cpp
     dbusinterface.cpp
     debug_console.cpp
-    decorationitem.cpp
     decorations/decoratedclient.cpp
     decorations/decorationbridge.cpp
     decorations/decorationpalette.cpp
@@ -70,7 +69,6 @@ target_sources(kwin PRIVATE
     decorations/settings.cpp
     deleted.cpp
     dmabuftexture.cpp
-    dndiconitem.cpp
     dpmsinputeventfilter.cpp
     effectloader.cpp
     effects.cpp
@@ -90,7 +88,6 @@ target_sources(kwin PRIVATE
     inputpanelv1integration.cpp
     inputpanelv1window.cpp
     internalwindow.cpp
-    item.cpp
     keyboard_input.cpp
     keyboard_layout.cpp
     keyboard_layout_switching.cpp
@@ -120,7 +117,18 @@ target_sources(kwin PRIVATE
     rootinfo_filter.cpp
     rulebooksettings.cpp
     rules.cpp
-    scene.cpp
+    scene/decorationitem.cpp
+    scene/dndiconitem.cpp
+    scene/item.cpp
+    scene/scene.cpp
+    scene/scene_opengl.cpp
+    scene/scene_qpainter.cpp
+    scene/shadowitem.cpp
+    scene/surfaceitem.cpp
+    scene/surfaceitem_internal.cpp
+    scene/surfaceitem_wayland.cpp
+    scene/surfaceitem_x11.cpp
+    scene/windowitem.cpp
     screenedge.cpp
     scripting/dbuscall.cpp
     scripting/desktopbackgrounditem.cpp
@@ -136,12 +144,7 @@ target_sources(kwin PRIVATE
     scripting/windowthumbnailitem.cpp
     scripting/workspace_wrapper.cpp
     shadow.cpp
-    shadowitem.cpp
     sm.cpp
-    surfaceitem.cpp
-    surfaceitem_internal.cpp
-    surfaceitem_wayland.cpp
-    surfaceitem_x11.cpp
     syncalarmx11filter.cpp
     tablet_input.cpp
     tabletmodemanager.cpp
@@ -161,7 +164,6 @@ target_sources(kwin PRIVATE
     waylandwindow.cpp
     window.cpp
     window_property_notify_x11_filter.cpp
-    windowitem.cpp
     workspace.cpp
     x11eventfilter.cpp
     x11syncmanager.cpp
@@ -260,7 +262,6 @@ target_sources(kwin PRIVATE
 )
 
 add_subdirectory(backends)
-add_subdirectory(scenes)
 add_subdirectory(utils)
 add_subdirectory(wayland)
 add_subdirectory(xwayland)

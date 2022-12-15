@@ -6,8 +6,8 @@
 
 #include "renderloop.h"
 #include "renderloop_p.h"
-#include "surfaceitem.h"
-#include "surfaceitem_wayland.h"
+#include "scene/surfaceitem.h"
+#include "scene/surfaceitem_wayland.h"
 #include "utils/common.h"
 #include "wayland/surface_interface.h"
 

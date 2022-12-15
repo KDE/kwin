@@ -26,12 +26,12 @@
 #include "group.h"
 #include "netinfo.h"
 #include "placement.h"
+#include "scene/surfaceitem_x11.h"
+#include "scene/windowitem.h"
 #include "screenedge.h"
 #include "shadow.h"
-#include "surfaceitem_x11.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
-#include "windowitem.h"
 #include "workspace.h"
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>

@@ -10,8 +10,8 @@
 #include "internalwindow.h"
 #include "decorations/decorationbridge.h"
 #include "deleted.h"
-#include "surfaceitem.h"
-#include "windowitem.h"
+#include "scene/surfaceitem.h"
+#include "scene/windowitem.h"
 #include "workspace.h"
 
 #include <KDecoration2/Decoration>

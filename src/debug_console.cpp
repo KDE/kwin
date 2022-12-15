@@ -13,7 +13,7 @@
 #include "internalwindow.h"
 #include "keyboard_input.h"
 #include "main.h"
-#include "scene.h"
+#include "scene/scene.h"
 #include "unmanaged.h"
 #include "utils/filedescriptor.h"
 #include "utils/subsurfacemonitor.h"

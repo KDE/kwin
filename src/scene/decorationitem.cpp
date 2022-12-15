@@ -5,12 +5,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "decorationitem.h"
+#include "scene/decorationitem.h"
 #include "composite.h"
 #include "core/output.h"
 #include "decorations/decoratedclient.h"
 #include "deleted.h"
-#include "scene.h"
+#include "scene/scene.h"
 #include "utils/common.h"
 #include "window.h"
 

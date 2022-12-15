@@ -16,7 +16,7 @@
 #include "drm_output.h"
 #include "drm_pipeline.h"
 #include "egl_dmabuf.h"
-#include "surfaceitem_wayland.h"
+#include "scene/surfaceitem_wayland.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/surface_interface.h"
 

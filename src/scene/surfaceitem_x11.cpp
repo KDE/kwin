@@ -4,10 +4,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "surfaceitem_x11.h"
+#include "scene/surfaceitem_x11.h"
 #include "composite.h"
 #include "deleted.h"
-#include "scene.h"
+#include "scene/scene.h"
 #include "x11syncmanager.h"
 
 namespace KWin

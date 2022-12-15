@@ -11,7 +11,7 @@
 #include "core/outputbackend.h"
 #include "core/renderbackend.h"
 #include "main.h"
-#include "scene.h"
+#include "scene/scene.h"
 #include "utils/common.h"
 
 #include "kwinglplatform.h"

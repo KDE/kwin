@@ -11,10 +11,10 @@
 
 #include "deleted.h"
 #include "effects.h"
-#include "surfaceitem_x11.h"
+#include "scene/surfaceitem_x11.h"
+#include "scene/windowitem.h"
 #include "utils/common.h"
 #include "wayland/surface_interface.h"
-#include "windowitem.h"
 #include "workspace.h"
 
 #include <QDebug>

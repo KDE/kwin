@@ -9,7 +9,7 @@
 #include "composite.h"
 #include "core/outputbackend.h"
 #include "main.h"
-#include "scene.h"
+#include "scene/scene.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"

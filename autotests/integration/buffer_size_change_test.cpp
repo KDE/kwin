@@ -9,7 +9,7 @@
 #include "generic_scene_opengl_test.h"
 
 #include "composite.h"
-#include "scene.h"
+#include "scene/scene.h"
 #include "wayland_server.h"
 #include "window.h"
 

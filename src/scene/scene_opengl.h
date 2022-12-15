@@ -13,8 +13,8 @@
 
 #include "openglbackend.h"
 
-#include "decorationitem.h"
-#include "scene.h"
+#include "scene/decorationitem.h"
+#include "scene/scene.h"
 #include "shadow.h"
 
 #include "kwinglutils.h"

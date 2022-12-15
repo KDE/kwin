@@ -10,11 +10,11 @@
 #include "composite.h"
 #include "core/renderbackend.h"
 #include "effects.h"
-#include "scene.h"
+#include "scene/scene.h"
+#include "scene/windowitem.h"
 #include "scripting_logging.h"
 #include "virtualdesktops.h"
 #include "window.h"
-#include "windowitem.h"
 #include "workspace.h"
 
 #include <kwingltexture.h>

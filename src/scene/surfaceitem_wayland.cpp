@@ -4,10 +4,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "surfaceitem_wayland.h"
+#include "scene/surfaceitem_wayland.h"
 #include "composite.h"
 #include "deleted.h"
-#include "scene.h"
+#include "scene/scene.h"
 #include "wayland/clientbuffer.h"
 #include "wayland/subcompositor_interface.h"
 #include "wayland/surface_interface.h"

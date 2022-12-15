@@ -11,7 +11,7 @@
 #pragma once
 
 // kwin
-#include "decorationitem.h"
+#include "scene/decorationitem.h"
 #include "utils/xcbutils.h"
 #include "window.h"
 // Qt
