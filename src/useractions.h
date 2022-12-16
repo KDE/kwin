@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_USERACTIONS_H
-#define KWIN_USERACTIONS_H
+#pragma once
 #include "ui_shortcutdialog.h"
 
 #include <kwinglobals.h>
@@ -240,5 +239,3 @@ private:
 };
 
 } // namespace
-
-#endif //  KWIN_USERACTIONS_H

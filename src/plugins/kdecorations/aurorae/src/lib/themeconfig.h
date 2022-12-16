@@ -3,8 +3,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef THEMECONFIG_H
-#define THEMECONFIG_H
+#pragma once
 // This class encapsulates all theme config values
 // it's a separate class as it's needed by both deco and config dialog
 
@@ -496,5 +495,3 @@ private:
 };
 
 }
-
-#endif

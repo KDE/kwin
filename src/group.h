@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_GROUP_H
-#define KWIN_GROUP_H
+#pragma once
 
 #include "utils/common.h"
 #include <netwm.h>
@@ -82,5 +81,3 @@ inline EffectWindowGroupImpl *Group::effectGroup()
 }
 
 } // namespace
-
-#endif

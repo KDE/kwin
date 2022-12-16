@@ -3,8 +3,7 @@
 
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
-#ifndef KDECOARTIONS_PREVIEW_BUTTON_ITEM_H
-#define KDECOARTIONS_PREVIEW_BUTTON_ITEM_H
+#pragma once
 
 #include <KDecoration2/DecorationButton>
 #include <QColor>
@@ -71,5 +70,3 @@ private:
 
 } // Preview
 } // KDecoration2
-
-#endif

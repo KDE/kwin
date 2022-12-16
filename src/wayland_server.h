@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_WAYLAND_SERVER_H
-#define KWIN_WAYLAND_SERVER_H
+#pragma once
 
 #include <kwinglobals.h>
 
@@ -312,5 +311,3 @@ inline WaylandServer *waylandServer()
 }
 
 } // namespace KWin
-
-#endif

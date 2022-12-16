@@ -7,8 +7,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_XWL_XWAYLAND
-#define KWIN_XWL_XWAYLAND
+#pragma once
 
 #include <memory>
 
@@ -92,5 +91,3 @@ private:
 
 } // namespace Xwl
 } // namespace KWin
-
-#endif

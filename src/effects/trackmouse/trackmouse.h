@@ -9,8 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_TRACKMOUSE_H
-#define KWIN_TRACKMOUSE_H
+#pragma once
 
 #include <kwineffects.h>
 
@@ -71,5 +70,3 @@ private:
 };
 
 } // namespace
-
-#endif

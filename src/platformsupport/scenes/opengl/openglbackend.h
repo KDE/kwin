@@ -7,8 +7,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_SCENE_OPENGL_BACKEND_H
-#define KWIN_SCENE_OPENGL_BACKEND_H
+#pragma once
 
 #include "core/renderbackend.h"
 
@@ -208,5 +207,3 @@ private:
 };
 
 }
-
-#endif

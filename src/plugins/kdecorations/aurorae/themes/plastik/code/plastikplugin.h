@@ -3,8 +3,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef PLASTIK_PLUGIN_H
-#define PLASTIK_PLUGIN_H
+#pragma once
 
 #include <QQmlExtensionPlugin>
 
@@ -16,5 +15,3 @@ public:
     void registerTypes(const char *uri) override;
     void initializeEngine(QQmlEngine *engine, const char *uri) override;
 };
-
-#endif // PLASTIK_PLUGIN_H

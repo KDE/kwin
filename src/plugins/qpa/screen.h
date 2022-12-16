@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_QPA_SCREEN_H
-#define KWIN_QPA_SCREEN_H
+#pragma once
 
 #include <qpa/qplatformscreen.h>
 
@@ -57,5 +56,3 @@ public:
 
 }
 }
-
-#endif

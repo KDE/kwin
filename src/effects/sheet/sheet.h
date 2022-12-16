@@ -9,8 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_SHEET_H
-#define KWIN_SHEET_H
+#pragma once
 
 // kwineffects
 #include <kwineffects.h>
@@ -73,5 +72,3 @@ inline int SheetEffect::duration() const
 }
 
 } // namespace KWin
-
-#endif

@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_ABSTRACT_EGL_BACKEND_H
-#define KWIN_ABSTRACT_EGL_BACKEND_H
+#pragma once
 #include "openglbackend.h"
 
 #include <QObject>
@@ -110,5 +109,3 @@ private:
 };
 
 }
-
-#endif

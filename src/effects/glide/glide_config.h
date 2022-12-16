@@ -5,8 +5,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef GLIDE_CONFIG_H
-#define GLIDE_CONFIG_H
+#pragma once
 
 #include "ui_glide_config.h"
 #include <KCModule>
@@ -29,5 +28,3 @@ private:
 };
 
 } // namespace KWin
-
-#endif

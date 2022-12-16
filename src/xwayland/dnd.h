@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_XWL_DND
-#define KWIN_XWL_DND
+#pragma once
 
 #include "selection.h"
 
@@ -73,5 +72,3 @@ private:
 
 } // namespace Xwl
 } // namespace KWin
-
-#endif

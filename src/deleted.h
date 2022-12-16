@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_DELETED_H
-#define KWIN_DELETED_H
+#pragma once
 
 #include "window.h"
 
@@ -177,5 +176,3 @@ inline void Deleted::refWindow()
 } // namespace
 
 Q_DECLARE_METATYPE(KWin::Deleted *)
-
-#endif

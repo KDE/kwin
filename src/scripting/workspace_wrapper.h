@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_SCRIPTING_WORKSPACE_WRAPPER_H
-#define KWIN_SCRIPTING_WORKSPACE_WRAPPER_H
+#pragma once
 
 #include <QObject>
 #include <QQmlListProperty>
@@ -480,5 +479,3 @@ public:
 };
 
 }
-
-#endif

@@ -5,8 +5,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef DESKTOPSMODEL_H
-#define DESKTOPSMODEL_H
+#pragma once
 
 #include <QAbstractListModel>
 
@@ -124,5 +123,3 @@ private:
 };
 
 }
-
-#endif

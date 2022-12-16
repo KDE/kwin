@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_TABBOX_LAYOUTPREVIEW_H
-#define KWIN_TABBOX_LAYOUTPREVIEW_H
+#pragma once
 
 #include <QAbstractListModel>
 #include <QQuickView>
@@ -149,5 +148,3 @@ inline QObject *SwitcherItem::item() const
 
 } // namespace TabBox
 } // namespace KWin
-
-#endif // KWIN_TABBOX_LAYOUTPREVIEW_H

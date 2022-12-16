@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWINEGLEXT_H
-#define KWINEGLEXT_H
+#pragma once
 
 #include <EGL/eglext.h>
 
@@ -61,5 +60,3 @@
 #define EGL_DMA_BUF_PLANE3_MODIFIER_LO_EXT 0x3449
 #define EGL_DMA_BUF_PLANE3_MODIFIER_HI_EXT 0x344A
 #endif // EGL_EXT_image_dma_buf_import_modifiers
-
-#endif // KWINEGLEXT_H

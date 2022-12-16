@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_FOCUS_CHAIN_H
-#define KWIN_FOCUS_CHAIN_H
+#pragma once
 // KWin
 #include <kwinglobals.h>
 // Qt
@@ -228,5 +227,3 @@ inline void FocusChain::setCurrentDesktop(VirtualDesktop *desktop)
 }
 
 } // namespace
-
-#endif // KWIN_FOCUS_CHAIN_H

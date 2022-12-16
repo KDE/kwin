@@ -9,8 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_GLTEXTURE_P_H
-#define KWIN_GLTEXTURE_P_H
+#pragma once
 
 #include "kwinconfig.h" // KWIN_HAVE_OPENGL
 #include "kwinglutils.h"
@@ -78,5 +77,3 @@ private:
 };
 
 } // namespace
-
-#endif

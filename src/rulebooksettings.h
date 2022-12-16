@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef RULEBOOKSETTINGS_H
-#define RULEBOOKSETTINGS_H
+#pragma once
 
 #include "rulebooksettingsbase.h"
 #include <KSharedConfig>
@@ -50,5 +49,3 @@ private:
 };
 
 }
-
-#endif // RULEBOOKSETTINGS_H

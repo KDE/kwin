@@ -16,8 +16,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_SCREENEDGE_H
-#define KWIN_SCREENEDGE_H
+#pragma once
 // KWin
 #include "kwinglobals.h"
 // KDE includes
@@ -616,4 +615,3 @@ ACTION(actionLeft)
 #undef ACTION
 
 }
-#endif // KWIN_SCREENEDGE_H

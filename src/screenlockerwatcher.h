@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_SCREENLOCKERWATCHER_H
-#define KWIN_SCREENLOCKERWATCHER_H
+#pragma once
 
 #include <QObject>
 
@@ -45,5 +44,3 @@ private:
     bool m_locked;
 };
 }
-
-#endif

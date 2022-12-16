@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_SNAPHELPER_H
-#define KWIN_SNAPHELPER_H
+#pragma once
 
 #include <kwineffects.h>
 
@@ -52,5 +51,3 @@ private:
 };
 
 } // namespace KWin
-
-#endif

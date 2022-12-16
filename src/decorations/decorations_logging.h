@@ -6,10 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_DECORATIONS_LOGGING_H
-#define KWIN_DECORATIONS_LOGGING_H
+#pragma once
 #include <QDebug>
 #include <QLoggingCategory>
 Q_DECLARE_LOGGING_CATEGORY(KWIN_DECORATIONS)
-
-#endif

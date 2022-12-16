@@ -3,8 +3,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_DECORATION_OPTIONS_H
-#define KWIN_DECORATION_OPTIONS_H
+#pragma once
 
 #include <KDecoration2/Decoration>
 
@@ -321,4 +320,3 @@ GETTER(bottom)
 #undef GETTER
 
 } // namespace
-#endif // KWIN_DECORATION_OPTIONS_H

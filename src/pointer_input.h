@@ -8,8 +8,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_POINTER_INPUT_H
-#define KWIN_POINTER_INPUT_H
+#pragma once
 
 #include "cursor.h"
 #include "input.h"
@@ -275,5 +274,3 @@ private:
 };
 
 }
-
-#endif

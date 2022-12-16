@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_MAIN_WAYLAND_H
-#define KWIN_MAIN_WAYLAND_H
+#pragma once
 #include "main.h"
 #include <KConfigWatcher>
 #include <QTimer>
@@ -79,5 +78,3 @@ private:
 };
 
 }
-
-#endif

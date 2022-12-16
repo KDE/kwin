@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_OUTLINE_H
-#define KWIN_OUTLINE_H
+#pragma once
 #include <QObject>
 #include <QRect>
 #include <kwinglobals.h>
@@ -145,5 +144,3 @@ private:
     std::unique_ptr<QObject> m_mainItem;
 };
 }
-
-#endif

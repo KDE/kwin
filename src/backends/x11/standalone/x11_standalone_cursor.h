@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_X11CURSOR_H
-#define KWIN_X11CURSOR_H
+#pragma once
 #include "cursor.h"
 
 #include <QTimer>
@@ -68,5 +67,3 @@ private:
 };
 
 }
-
-#endif

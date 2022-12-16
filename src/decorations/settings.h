@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_DECORATION_SETTINGS_H
-#define KWIN_DECORATION_SETTINGS_H
+#pragma once
 
 #include <KDecoration2/Private/DecorationSettingsPrivate>
 
@@ -60,5 +59,3 @@ private:
 };
 } // Decoration
 } // KWin
-
-#endif

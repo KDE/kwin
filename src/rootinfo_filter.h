@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_ROOTINFO_FILTER_H
-#define KWIN_ROOTINFO_FILTER_H
+#pragma once
 
 #include "x11eventfilter.h"
 
@@ -27,5 +26,3 @@ private:
 };
 
 }
-
-#endif

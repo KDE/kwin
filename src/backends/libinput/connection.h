@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_LIBINPUT_CONNECTION_H
-#define KWIN_LIBINPUT_CONNECTION_H
+#pragma once
 
 #include <kwinglobals.h>
 
@@ -86,5 +85,3 @@ private:
 
 }
 }
-
-#endif

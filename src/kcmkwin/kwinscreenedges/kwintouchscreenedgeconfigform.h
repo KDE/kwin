@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef __KWINTOUCHSCREENEDGECONFIGFORM_H__
-#define __KWINTOUCHSCREENEDGECONFIGFORM_H__
+#pragma once
 
 #include "kwinscreenedge.h"
 
@@ -37,5 +36,3 @@ private:
 };
 
 } // namespace
-
-#endif

@@ -3,8 +3,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef DECORATION_PLUGIN_H
-#define DECORATION_PLUGIN_H
+#pragma once
 #include <QQmlExtensionPlugin>
 
 class DecorationPlugin : public QQmlExtensionPlugin
@@ -14,5 +13,3 @@ class DecorationPlugin : public QQmlExtensionPlugin
 public:
     void registerTypes(const char *uri) override;
 };
-
-#endif

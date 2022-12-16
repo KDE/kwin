@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef __KKWMMOUSECONFIG_H__
-#define __KKWMMOUSECONFIG_H__
+#pragma once
 
 class KConfig;
 
@@ -82,5 +81,3 @@ private:
     KWinActionsConfigForm *m_ui;
     KWinOptionsSettings *m_settings;
 };
-
-#endif

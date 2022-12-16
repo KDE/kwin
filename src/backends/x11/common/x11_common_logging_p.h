@@ -6,12 +6,9 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_KWINXRENDERUTILS_LOGGING_P_H
-#define KWIN_KWINXRENDERUTILS_LOGGING_P_H
+#pragma once
 
 #include <QDebug>
 #include <QLoggingCategory>
 
 Q_DECLARE_LOGGING_CATEGORY(LIBKWINXRENDERUTILS)
-
-#endif

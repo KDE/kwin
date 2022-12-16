@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_XWL_XWAYLAND_INTERFACE
-#define KWIN_XWL_XWAYLAND_INTERFACE
+#pragma once
 
 #include <kwinglobals.h>
 
@@ -52,5 +51,3 @@ private:
 };
 
 } // namespace KWin
-
-#endif

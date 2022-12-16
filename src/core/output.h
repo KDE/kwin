@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_ABSTRACT_OUTPUT_H
-#define KWIN_ABSTRACT_OUTPUT_H
+#pragma once
 
 #include <kwin_export.h>
 
@@ -374,5 +373,3 @@ KWIN_EXPORT QDebug operator<<(QDebug debug, const Output *output);
 } // namespace KWin
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Output::Capabilities)
-
-#endif

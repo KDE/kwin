@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_DPMSINPUTEVENTFILTER_H
-#define KWIN_DPMSINPUTEVENTFILTER_H
+#pragma once
 #include "input.h"
 
 #include <QElapsedTimer>
@@ -41,5 +40,3 @@ private:
 };
 
 }
-
-#endif

@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_GENERICSCRIPTEDCONFIG_H
-#define KWIN_GENERICSCRIPTEDCONFIG_H
+#pragma once
 
 #include <KCModule>
 #include <KConfigGroup>
@@ -84,5 +83,3 @@ inline const QString &GenericScriptedConfig::packageName() const
 }
 
 }
-
-#endif // KWIN_GENERICSCRIPTEDCONFIG_H

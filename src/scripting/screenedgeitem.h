@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_SCREENEDGEITEM_H
-#define KWIN_SCREENEDGEITEM_H
+#pragma once
 
 #include <QObject>
 #include <kwinglobals.h>
@@ -113,5 +112,3 @@ inline ScreenEdgeItem::Edge ScreenEdgeItem::edge() const
 }
 
 } // namespace KWin
-
-#endif //  KWIN_SCREENEDGEITEM_H

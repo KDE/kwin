@@ -7,8 +7,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_QPA_BACKINGSTORE_H
-#define KWIN_QPA_BACKINGSTORE_H
+#pragma once
 
 #include <epoxy/egl.h>
 
@@ -36,5 +35,3 @@ private:
 
 }
 }
-
-#endif

@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef XWLDROPHANDLER_H
-#define XWLDROPHANDLER_H
+#pragma once
 
 #include "wayland/datadevice_interface.h"
 
@@ -40,4 +39,3 @@ private:
 };
 }
 }
-#endif // XWLDROPHANDLER_H

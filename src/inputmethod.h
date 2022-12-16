@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_VIRTUAL_KEYBOARD_H
-#define KWIN_VIRTUAL_KEYBOARD_H
+#pragma once
 
 #include "wayland/textinput_v2_interface.h"
 
@@ -144,5 +143,3 @@ private:
 };
 
 }
-
-#endif

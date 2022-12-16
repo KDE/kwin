@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_DECORATION_BRIDGE_H
-#define KWIN_DECORATION_BRIDGE_H
+#pragma once
 
 #include <kwinglobals.h>
 
@@ -85,5 +84,3 @@ private:
 };
 } // Decoration
 } // KWin
-
-#endif

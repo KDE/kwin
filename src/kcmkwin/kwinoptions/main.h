@@ -9,8 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef __MAIN_H__
-#define __MAIN_H__
+#pragma once
 
 #include <QTabWidget>
 #include <kcmodule.h>
@@ -73,5 +72,3 @@ private:
 
     KWinOptionsSettings *mSettings;
 };
-
-#endif

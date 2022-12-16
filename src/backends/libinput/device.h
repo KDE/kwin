@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_LIBINPUT_DEVICE_H
-#define KWIN_LIBINPUT_DEVICE_H
+#pragma once
 
 #include "core/inputdevice.h"
 
@@ -747,5 +746,3 @@ private:
 }
 
 Q_DECLARE_METATYPE(KWin::LibInput::Device *)
-
-#endif

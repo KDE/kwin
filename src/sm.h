@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_SM_H
-#define KWIN_SM_H
+#pragma once
 
 #include <QDataStream>
 #include <QRect>
@@ -110,5 +109,3 @@ struct SessionInfo
 };
 
 } // namespace
-
-#endif

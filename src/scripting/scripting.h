@@ -9,8 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_SCRIPTING_H
-#define KWIN_SCRIPTING_H
+#pragma once
 
 #include <kwinglobals.h>
 
@@ -399,4 +398,3 @@ inline Scripting *Scripting::self()
 }
 
 }
-#endif

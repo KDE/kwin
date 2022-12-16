@@ -4,8 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef MODULE_H
-#define MODULE_H
+#pragma once
 
 #include <KCModule>
 #include <KPluginMetaData>
@@ -83,5 +82,3 @@ private:
     QString m_errorMessage;
     QString m_infoMessage;
 };
-
-#endif // MODULE_H

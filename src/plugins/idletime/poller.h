@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef POLLER_H
-#define POLLER_H
+#pragma once
 
 #include <KIdleTime/private/abstractsystempoller.h>
 #include <QHash>
@@ -46,5 +45,3 @@ private:
 };
 
 }
-
-#endif

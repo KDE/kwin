@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_XWL_CLIPBOARD
-#define KWIN_XWL_CLIPBOARD
+#pragma once
 
 #include "selection.h"
 
@@ -62,5 +61,3 @@ private:
 
 } // namespace Xwl
 } // namespace KWin
-
-#endif

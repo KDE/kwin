@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_TABLET_INPUT_H
-#define KWIN_TABLET_INPUT_H
+#pragma once
 #include "input.h"
 
 #include <QHash>
@@ -76,5 +75,3 @@ private:
 };
 
 }
-
-#endif

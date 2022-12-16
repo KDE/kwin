@@ -9,8 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_OPTIONS_H
-#define KWIN_OPTIONS_H
+#pragma once
 
 #include "main.h"
 
@@ -1077,5 +1076,3 @@ extern KWIN_EXPORT Options *options;
 
 Q_DECLARE_METATYPE(KWin::Options::WindowOperation)
 Q_DECLARE_METATYPE(KWin::OpenGLPlatformInterface)
-
-#endif

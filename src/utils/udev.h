@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_UDEV_H
-#define KWIN_UDEV_H
+#pragma once
 #include <kwin_export.h>
 #include <memory>
 
@@ -100,5 +99,3 @@ private:
 };
 
 }
-
-#endif

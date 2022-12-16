@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_NIGHTCOLOR_CONSTANTS_H
-#define KWIN_NIGHTCOLOR_CONSTANTS_H
+#pragma once
 
 namespace KWin
 {
@@ -19,5 +18,3 @@ static const int DEFAULT_NIGHT_TEMPERATURE = 4500;
 static const int FALLBACK_SLOW_UPDATE_TIME = 1800000; /* 30 minutes */
 
 }
-
-#endif // KWIN_NIGHTCOLOR_CONSTANTS_H

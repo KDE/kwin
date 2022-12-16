@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_OVERLAYWINDOW_X11_H
-#define KWIN_OVERLAYWINDOW_X11_H
+#pragma once
 
 #include "core/overlaywindow.h"
 #include "x11eventfilter.h"
@@ -45,5 +44,3 @@ private:
     xcb_window_t m_window;
 };
 } // namespace
-
-#endif // KWIN_OVERLAYWINDOW_H

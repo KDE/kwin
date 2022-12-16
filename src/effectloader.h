@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_EFFECT_LOADER_H
-#define KWIN_EFFECT_LOADER_H
+#pragma once
 #include <kwin_export.h>
 // KDE
 #include <KPluginMetaData>
@@ -342,5 +341,3 @@ private:
 
 }
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::LoadEffectFlags)
-
-#endif

@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KGLOBALACCEL_PLUGIN_H
-#define KGLOBALACCEL_PLUGIN_H
+#pragma once
 
 #include <KGlobalAccel/private/kglobalaccel_interface.h>
 
@@ -34,5 +33,3 @@ private:
     bool m_shuttingDown = false;
     QMetaObject::Connection m_inputDestroyedConnection;
 };
-
-#endif

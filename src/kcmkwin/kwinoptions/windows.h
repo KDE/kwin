@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KKWMWINDOWS_H
-#define KKWMWINDOWS_H
+#pragma once
 
 #include <QWidget>
 #include <kcmodule.h>
@@ -127,5 +126,3 @@ private:
     KWinAdvancedConfigForm *m_ui;
     KWinOptionsSettings *m_settings;
 };
-
-#endif // KKWMWINDOWS_H

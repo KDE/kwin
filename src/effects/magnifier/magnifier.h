@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_MAGNIFIER_H
-#define KWIN_MAGNIFIER_H
+#pragma once
 
 #include <kwineffects.h>
 
@@ -58,5 +57,3 @@ private:
 };
 
 } // namespace
-
-#endif

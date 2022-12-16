@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_TABBOX_SWITCHERITEM_H
-#define KWIN_TABBOX_SWITCHERITEM_H
+#pragma once
 
 #include <QObject>
 #include <QRect>
@@ -107,5 +106,3 @@ inline QObject *SwitcherItem::item() const
 
 } // TabBox
 } // KWin
-
-#endif // KWIN_TABBOX_SWITCHERITEM_H

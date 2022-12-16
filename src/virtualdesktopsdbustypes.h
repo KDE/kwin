@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_VIRTUALDESKTOPS_DBUS_TYPES_H
-#define KWIN_VIRTUALDESKTOPS_DBUS_TYPES_H
+#pragma once
 
 #include <QtDBus>
 
@@ -33,5 +32,3 @@ const QDBusArgument &operator<<(QDBusArgument &argument, const KWin::DBusDesktop
 const QDBusArgument &operator>>(const QDBusArgument &argument, KWin::DBusDesktopDataVector &deskVector);
 
 Q_DECLARE_METATYPE(KWin::DBusDesktopDataVector)
-
-#endif // KWIN_VIRTUALDESKTOPS_DBUS_TYPES_H

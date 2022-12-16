@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_RULES_H
-#define KWIN_RULES_H
+#pragma once
 
 #include <QRectF>
 #include <QVector>
@@ -388,5 +387,3 @@ QDebug &operator<<(QDebug &stream, const Rules *);
 } // namespace
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Rules::Types)
-
-#endif

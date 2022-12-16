@@ -5,8 +5,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef CONTRAST_H
-#define CONTRAST_H
+#pragma once
 
 #include <kwineffects.h>
 #include <kwinglplatform.h>
@@ -87,5 +86,3 @@ inline bool ContrastEffect::provides(Effect::Feature feature)
 }
 
 } // namespace KWin
-
-#endif

@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_X11_OUTPUT_H
-#define KWIN_X11_OUTPUT_H
+#pragma once
 
 #include "core/output.h"
 #include <kwin_export.h>
@@ -56,5 +55,3 @@ private:
 };
 
 }
-
-#endif

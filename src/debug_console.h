@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_DEBUG_CONSOLE_H
-#define KWIN_DEBUG_CONSOLE_H
+#pragma once
 
 #include "input.h"
 #include "input_event_spy.h"
@@ -205,5 +204,3 @@ private:
     QVector<QByteArray> m_data;
 };
 }
-
-#endif

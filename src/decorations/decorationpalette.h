@@ -9,8 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_DECORATION_PALETTE_H
-#define KWIN_DECORATION_PALETTE_H
+#pragma once
 
 #include <KColorScheme>
 #include <KConfigWatcher>
@@ -73,5 +72,3 @@ private:
 
 }
 }
-
-#endif

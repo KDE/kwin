@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_TOUCHPOINTS_H
-#define KWIN_TOUCHPOINTS_H
+#pragma once
 
 #include <kwineffects.h>
 
@@ -88,5 +87,3 @@ private:
 };
 
 } // namespace
-
-#endif

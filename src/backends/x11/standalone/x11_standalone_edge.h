@@ -15,8 +15,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_EDGE_H
-#define KWIN_EDGE_H
+#pragma once
 #include "screenedge.h"
 #include "utils/xcbutils.h"
 
@@ -64,5 +63,3 @@ inline quint32 WindowBasedEdge::approachWindow() const
 }
 
 }
-
-#endif

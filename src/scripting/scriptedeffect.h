@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_SCRIPTEDEFFECT_H
-#define KWIN_SCRIPTEDEFFECT_H
+#pragma once
 
 #include <kwinanimationeffect.h>
 
@@ -222,5 +221,3 @@ private:
     uint m_nextShaderId{1u};
 };
 }
-
-#endif // KWIN_SCRIPTEDEFFECT_H

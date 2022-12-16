@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_SUNCALCULATOR_H
-#define KWIN_SUNCALCULATOR_H
+#pragma once
 
 #include <QDate>
 #include <QPair>
@@ -27,5 +26,3 @@ namespace KWin
 QPair<QDateTime, QDateTime> calculateSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning);
 
 }
-
-#endif // KWIN_SUNCALCULATOR_H

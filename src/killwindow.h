@@ -9,8 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_KILLWINDOW_H
-#define KWIN_KILLWINDOW_H
+#pragma once
 
 namespace KWin
 {
@@ -25,5 +24,3 @@ public:
 };
 
 } // namespace
-
-#endif

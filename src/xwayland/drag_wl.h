@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_XWL_DRAG_WL
-#define KWIN_XWL_DRAG_WL
+#pragma once
 
 #include "drag.h"
 
@@ -130,5 +129,3 @@ private:
 
 } // namespace Xwl
 } // namespace KWin
-
-#endif

@@ -10,8 +10,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_GLIDE_H
-#define KWIN_GLIDE_H
+#pragma once
 
 // kwineffects
 #include <kwineffects.h>
@@ -150,5 +149,3 @@ inline qreal GlideEffect::outOpacity() const
 }
 
 } // namespace KWin
-
-#endif

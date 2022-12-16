@@ -3,8 +3,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_PLASTIK_BUTTON_H
-#define KWIN_PLASTIK_BUTTON_H
+#pragma once
 
 #include <QQuickImageProvider>
 
@@ -69,5 +68,3 @@ private:
 };
 
 } // namespace
-
-#endif //  KWIN_PLASTIK_BUTTON_H

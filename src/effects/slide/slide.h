@@ -9,8 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_SLIDE_H
-#define KWIN_SLIDE_H
+#pragma once
 
 // kwineffects
 #include <kwineffects.h>
@@ -159,5 +158,3 @@ inline int SlideEffect::requestedEffectChainPosition() const
 }
 
 } // namespace KWin
-
-#endif

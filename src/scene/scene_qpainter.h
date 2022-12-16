@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_SCENE_QPAINTER_H
-#define KWIN_SCENE_QPAINTER_H
+#pragma once
 
 #include "qpainterbackend.h"
 
@@ -96,5 +95,3 @@ inline QPainter *SceneQPainter::scenePainter() const
 }
 
 } // KWin
-
-#endif // KWIN_SCENEQPAINTER_H

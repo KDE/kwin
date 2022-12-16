@@ -3,8 +3,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef COLOR_HELPER_H
-#define COLOR_HELPER_H
+#pragma once
 
 #include <QColor>
 #include <QObject>
@@ -226,5 +225,3 @@ public:
 
     qreal contrast() const;
 };
-
-#endif

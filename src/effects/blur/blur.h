@@ -5,8 +5,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef BLUR_H
-#define BLUR_H
+#pragma once
 
 #include <kwineffects.h>
 #include <kwinglplatform.h>
@@ -138,5 +137,3 @@ inline bool BlurEffect::provides(Effect::Feature feature)
 }
 
 } // namespace KWin
-
-#endif

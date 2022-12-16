@@ -6,13 +6,10 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_KWINEFFECTS_LOGGING_P_H
-#define KWIN_KWINEFFECTS_LOGGING_P_H
+#pragma once
 
 #include <QDebug>
 #include <QLoggingCategory>
 
 Q_DECLARE_LOGGING_CATEGORY(LIBKWINEFFECTS)
 Q_DECLARE_LOGGING_CATEGORY(LIBKWINGLUTILS)
-
-#endif

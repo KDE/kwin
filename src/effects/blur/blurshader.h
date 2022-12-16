@@ -5,8 +5,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef BLURSHADER_H
-#define BLURSHADER_H
+#pragma once
 
 #include <kwinglutils.h>
 
@@ -98,5 +97,3 @@ inline bool BlurShader::isValid() const
 }
 
 } // namespace KWin
-
-#endif

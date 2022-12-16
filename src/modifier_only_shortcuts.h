@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_MODIFIER_ONLY_SHORTCUTS_H
-#define KWIN_MODIFIER_ONLY_SHORTCUTS_H
+#pragma once
 
 #include "input_event_spy.h"
 #include <kwin_export.h>
@@ -42,5 +41,3 @@ private:
 };
 
 }
-
-#endif

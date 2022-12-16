@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_MOUSECLICK_H
-#define KWIN_MOUSECLICK_H
+#pragma once
 
 #include <KLocalizedString>
 #include <QFont>
@@ -158,5 +157,3 @@ private:
 };
 
 } // namespace
-
-#endif

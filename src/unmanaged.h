@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_UNMANAGED_H
-#define KWIN_UNMANAGED_H
+#pragma once
 
 #include <netwm.h>
 
@@ -79,5 +78,3 @@ private:
 };
 
 } // namespace
-
-#endif

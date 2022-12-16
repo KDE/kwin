@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_INVERT_H
-#define KWIN_INVERT_H
+#pragma once
 
 #include <kwinoffscreeneffect.h>
 
@@ -62,5 +61,3 @@ inline int InvertEffect::requestedEffectChainPosition() const
 }
 
 } // namespace
-
-#endif

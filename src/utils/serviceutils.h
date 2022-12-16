@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef SERVICE_UTILS_H
-#define SERVICE_UTILS_H
+#pragma once
 
 // cmake stuff
 #include <config-kwin.h>
@@ -63,5 +62,3 @@ static inline QStringList fetchRestrictedDBusInterfacesFromPid(const uint pid)
 }
 
 } // namespace
-
-#endif // SERVICE_UTILS_H

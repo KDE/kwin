@@ -4,8 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef BLUR_CONFIG_H
-#define BLUR_CONFIG_H
+#pragma once
 
 #include "ui_blur_config.h"
 #include <KCModule>
@@ -28,5 +27,3 @@ private:
 };
 
 } // namespace KWin
-
-#endif

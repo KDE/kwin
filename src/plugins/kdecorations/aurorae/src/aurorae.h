@@ -4,8 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef AURORAE_H
-#define AURORAE_H
+#pragma once
 
 #include <KCModule>
 #include <KDecoration2/Decoration>
@@ -120,5 +119,3 @@ private:
 };
 
 }
-
-#endif

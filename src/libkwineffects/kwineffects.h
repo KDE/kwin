@@ -10,8 +10,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWINEFFECTS_H
-#define KWINEFFECTS_H
+#pragma once
 
 #include <kwinconfig.h>
 #include <kwineffects_export.h>
@@ -4249,5 +4248,3 @@ Q_DECLARE_METATYPE(KWin::TimeLine)
 Q_DECLARE_METATYPE(KWin::TimeLine::Direction)
 
 /** @} */
-
-#endif // KWINEFFECTS_H

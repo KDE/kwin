@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_KEYBOARD_LAYOUT_SWITCHING_H
-#define KWIN_KEYBOARD_LAYOUT_SWITCHING_H
+#pragma once
 
 #include <KConfigGroup>
 #include <QHash>
@@ -142,5 +141,3 @@ private:
 
 }
 }
-
-#endif

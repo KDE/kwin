@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_CLIENT_MACHINE_H
-#define KWIN_CLIENT_MACHINE_H
+#pragma once
 
 #include <QObject>
 #include <memory>
@@ -100,5 +99,3 @@ inline bool ClientMachine::isResolving() const
 }
 
 } // namespace
-
-#endif

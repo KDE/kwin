@@ -7,8 +7,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_TOUCH_INPUT_H
-#define KWIN_TOUCH_INPUT_H
+#pragma once
 #include "input.h"
 
 #include <QHash>
@@ -87,5 +86,3 @@ private:
 };
 
 }
-
-#endif

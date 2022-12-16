@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_NON_COMPOSITED_OUTLINE_H
-#define KWIN_NON_COMPOSITED_OUTLINE_H
+#pragma once
 #include "outline.h"
 #include "utils/xcbutils.h"
 
@@ -43,5 +42,3 @@ inline void NonCompositedOutlineVisual::forEachWindow(T method)
 }
 
 }
-
-#endif

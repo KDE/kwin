@@ -5,8 +5,7 @@
 
 */
 
-#ifndef KWIN_TABLETMODEMANAGER_H
-#define KWIN_TABLETMODEMANAGER_H
+#pragma once
 
 #include <KConfigWatcher>
 #include <QObject>
@@ -59,5 +58,3 @@ private:
     ConfiguredMode m_configuredMode = ConfiguredMode::Auto;
 };
 }
-
-#endif // KWIN_TABLETMODEMANAGER_H

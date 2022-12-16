@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef TABBOXCONFIG_H
-#define TABBOXCONFIG_H
+#pragma once
 
 #include <QString>
 
@@ -347,5 +346,3 @@ private:
 
 } // namespace TabBox
 } // namespace KWin
-
-#endif // TABBOXCONFIG_H

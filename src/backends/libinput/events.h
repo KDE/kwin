@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_LIBINPUT_EVENTS_H
-#define KWIN_LIBINPUT_EVENTS_H
+#pragma once
 
 #include "input.h"
 
@@ -429,5 +428,3 @@ inline libinput_event_type Event::type() const
 
 }
 }
-
-#endif

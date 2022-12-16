@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_SCENE_OPENGL_H
-#define KWIN_SCENE_OPENGL_H
+#pragma once
 
 #include "openglbackend.h"
 
@@ -149,5 +148,3 @@ private:
 };
 
 } // namespace
-
-#endif

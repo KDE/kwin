@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_THUMBNAILASIDE_CONFIG_H
-#define KWIN_THUMBNAILASIDE_CONFIG_H
+#pragma once
 
 #include <kcmodule.h>
 
@@ -41,5 +40,3 @@ private:
 };
 
 } // namespace
-
-#endif

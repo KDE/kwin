@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_DIMINACTIVE_CONFIG_H
-#define KWIN_DIMINACTIVE_CONFIG_H
+#pragma once
 
 #include <KCModule>
 
@@ -33,5 +32,3 @@ private:
 };
 
 } // namespace KWin
-
-#endif

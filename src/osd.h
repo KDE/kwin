@@ -5,8 +5,7 @@
 
 */
 
-#ifndef KWIN_OSD_H
-#define KWIN_OSD_H
+#pragma once
 
 #include <QFlags>
 #include <QString>
@@ -27,5 +26,3 @@ void hide(HideFlags flags = HideFlags());
 
 }
 }
-
-#endif

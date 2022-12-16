@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef __KWINTABBOXCONFIGFORM_H__
-#define __KWINTABBOXCONFIGFORM_H__
+#pragma once
 
 #include <QStandardItemModel>
 #include <QWidget>
@@ -132,5 +131,3 @@ private:
 };
 
 } // namespace
-
-#endif

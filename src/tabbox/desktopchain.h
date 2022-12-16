@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_TABBOX_DESKTOP_CHAIN_H
-#define KWIN_TABBOX_DESKTOP_CHAIN_H
+#pragma once
 // Qt
 #include <QHash>
 #include <QObject>
@@ -133,5 +132,3 @@ private:
 
 } // TabBox
 } // namespace KWin
-
-#endif

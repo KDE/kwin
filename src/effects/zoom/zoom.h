@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_ZOOM_H
-#define KWIN_ZOOM_H
+#pragma once
 
 #include <config-kwin.h>
 
@@ -136,5 +135,3 @@ private:
 };
 
 } // namespace
-
-#endif

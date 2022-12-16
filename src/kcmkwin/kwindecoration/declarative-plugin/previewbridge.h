@@ -3,8 +3,7 @@
 
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
-#ifndef KDECOARTIONS_PREVIEW_BRIDGE_H
-#define KDECOARTIONS_PREVIEW_BRIDGE_H
+#pragma once
 
 #include <KDecoration2/DecorationButton>
 #include <KDecoration2/Private/DecorationBridge>
@@ -129,5 +128,3 @@ private:
 }
 
 Q_DECLARE_METATYPE(KDecoration2::Preview::PreviewBridge *)
-
-#endif

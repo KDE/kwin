@@ -5,8 +5,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef VIRTUALDESKTOPS_H
-#define VIRTUALDESKTOPS_H
+#pragma once
 
 #include <KQuickAddons/ManagedConfigModule>
 #include <KSharedConfig>
@@ -53,5 +52,3 @@ private:
 };
 
 }
-
-#endif

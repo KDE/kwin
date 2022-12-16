@@ -7,8 +7,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_EFFECTS_X11_H
-#define KWIN_EFFECTS_X11_H
+#pragma once
 
 #include "effects.h"
 #include "utils/xcbutils.h"
@@ -45,5 +44,3 @@ private:
 };
 
 }
-
-#endif

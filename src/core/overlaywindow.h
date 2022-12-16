@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_OVERLAYWINDOW_H
-#define KWIN_OVERLAYWINDOW_H
+#pragma once
 
 #include <QRegion>
 // xcb
@@ -40,5 +39,3 @@ protected:
     OverlayWindow();
 };
 } // namespace
-
-#endif // KWIN_OVERLAYWINDOW_H

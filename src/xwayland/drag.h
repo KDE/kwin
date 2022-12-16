@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_XWL_DRAG
-#define KWIN_XWL_DRAG
+#pragma once
 
 #include <QObject>
 #include <QPoint>
@@ -47,5 +46,3 @@ private:
 
 } // namespace Xwl
 } // namespace KWin
-
-#endif

@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_COLORPICKER_H
-#define KWIN_COLORPICKER_H
+#pragma once
 
 #include <QColor>
 #include <QDBusContext>
@@ -49,5 +48,3 @@ private:
 };
 
 } // namespace
-
-#endif

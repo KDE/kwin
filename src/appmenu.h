@@ -8,8 +8,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_APPMENU_H
-#define KWIN_APPMENU_H
+#pragma once
 // KWin
 #include <kwinglobals.h>
 // Qt
@@ -58,5 +57,3 @@ private:
 };
 
 }
-
-#endif // KWIN_APPMENU_H

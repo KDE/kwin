@@ -9,8 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_TABBOX_H
-#define KWIN_TABBOX_H
+#pragma once
 
 #include "tabbox/tabboxhandler.h"
 #include "utils/common.h"
@@ -360,4 +359,3 @@ private:
 
 } // namespace TabBox
 } // namespace
-#endif

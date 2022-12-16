@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_HIGHLIGHTWINDOW_H
-#define KWIN_HIGHLIGHTWINDOW_H
+#pragma once
 
 #include <kwinanimationeffect.h>
 
@@ -60,5 +59,3 @@ private:
 };
 
 } // namespace
-
-#endif

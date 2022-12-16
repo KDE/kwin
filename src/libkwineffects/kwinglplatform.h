@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_GLPLATFORM_H
-#define KWIN_GLPLATFORM_H
+#pragma once
 
 #include <kwinglobals.h>
 #include <kwinglutils_export.h>
@@ -466,5 +465,3 @@ inline GLPlatform *GLPlatform::instance()
 }
 
 } // namespace KWin
-
-#endif // KWIN_GLPLATFORM_H

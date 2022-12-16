@@ -4,8 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef DESKTOPEFFECTSDATA_H
-#define DESKTOPEFFECTSDATA_H
+#pragma once
 
 #include <QObject>
 
@@ -30,5 +29,3 @@ private:
 };
 
 }
-
-#endif // DESKTOPEFFECTSDATA_H

@@ -8,8 +8,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_INPUT_H
-#define KWIN_INPUT_H
+#pragma once
 #include <config-kwin.h>
 
 #include <QObject>
@@ -538,5 +537,3 @@ Q_DECLARE_METATYPE(KWin::InputRedirection::KeyboardKeyState)
 Q_DECLARE_METATYPE(KWin::InputRedirection::PointerButtonState)
 Q_DECLARE_METATYPE(KWin::InputRedirection::PointerAxis)
 Q_DECLARE_METATYPE(KWin::InputRedirection::PointerAxisSource)
-
-#endif // KWIN_INPUT_H

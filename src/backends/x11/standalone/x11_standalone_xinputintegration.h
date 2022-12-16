@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_XINPUTINTEGRATION_H
-#define KWIN_XINPUTINTEGRATION_H
+#pragma once
 
 #include <QObject>
 #include <QPointer>
@@ -56,5 +55,3 @@ private:
 };
 
 }
-
-#endif

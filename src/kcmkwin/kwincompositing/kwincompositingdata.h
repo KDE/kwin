@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWINCOMPOSITINGDATA_H
-#define KWINCOMPOSITINGDATA_H
+#pragma once
 
 #include <QObject>
 
@@ -28,5 +27,3 @@ public:
 private:
     KWinCompositingSetting *m_settings;
 };
-
-#endif // KWINCOMPOSITINGDATA_H

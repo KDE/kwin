@@ -7,8 +7,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_SHADOW_H
-#define KWIN_SHADOW_H
+#pragma once
 
 #include <QObject>
 #include <QPixmap>
@@ -156,5 +155,3 @@ private:
 };
 
 }
-
-#endif // KWIN_SHADOW_H

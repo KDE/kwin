@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_SLIDINGPOPUPS_H
-#define KWIN_SLIDINGPOPUPS_H
+#pragma once
 
 // Include with base class for effects.
 #include <kwineffects.h>
@@ -118,5 +117,3 @@ inline int SlidingPopupsEffect::slideOutDuration() const
 }
 
 } // namespace
-
-#endif

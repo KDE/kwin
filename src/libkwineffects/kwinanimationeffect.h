@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef ANIMATION_EFFECT_H
-#define ANIMATION_EFFECT_H
+#pragma once
 
 #include <QEasingCurve>
 #include <QElapsedTimer>
@@ -533,5 +532,3 @@ private:
 
 Q_DECLARE_METATYPE(KWin::FPx2)
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::AnimationEffect::TerminationFlags)
-
-#endif // ANIMATION_EFFECT_H

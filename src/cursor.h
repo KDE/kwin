@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_CURSOR_H
-#define KWIN_CURSOR_H
+#pragma once
 // kwin
 #include <kwinglobals.h>
 // Qt
@@ -366,5 +365,3 @@ inline bool Cursor::isCursorTracking() const
 }
 
 Q_DECLARE_METATYPE(KWin::CursorShape)
-
-#endif // KWIN_CURSOR_H

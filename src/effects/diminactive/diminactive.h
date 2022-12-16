@@ -9,8 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_DIMINACTIVE_H
-#define KWIN_DIMINACTIVE_H
+#pragma once
 
 // kwineffects
 #include <kwineffects.h>
@@ -126,5 +125,3 @@ inline bool DimInactiveEffect::dimFullScreen() const
 }
 
 } // namespace KWin
-
-#endif

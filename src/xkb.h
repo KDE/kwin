@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_XKB_H
-#define KWIN_XKB_H
+#pragma once
 #include "input.h"
 #include <xkbcommon/xkbcommon.h>
 
@@ -169,5 +168,3 @@ inline Qt::KeyboardModifiers Xkb::modifiers() const
 }
 
 }
-
-#endif

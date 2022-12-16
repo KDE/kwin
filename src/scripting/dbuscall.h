@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_DBUSCALL_H
-#define KWIN_DBUSCALL_H
+#pragma once
 
 #include <QObject>
 #include <QString>
@@ -133,5 +132,3 @@ GENERIC_WRAPPER(const QVariantList &, arguments, Arguments)
 #undef GENERIC_WRAPPER
 
 } // KWin
-
-#endif //  KWIN_SCRIPTING_DBUSCALL_H

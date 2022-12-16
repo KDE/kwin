@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_KEYBOARD_LAYOUT_H
-#define KWIN_KEYBOARD_LAYOUT_H
+#pragma once
 
 #include "input_event_spy.h"
 #include <QObject>
@@ -104,5 +103,3 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, KeyboardLayoutDBu
 
 }
 Q_DECLARE_METATYPE(KWin::KeyboardLayoutDBusInterface::LayoutNames)
-
-#endif

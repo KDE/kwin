@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_THUMBNAILITEM_H
-#define KWIN_THUMBNAILITEM_H
+#pragma once
 
 #include <QImage>
 #include <QQuickItem>
@@ -83,5 +82,3 @@ private:
 };
 
 } // KWin
-
-#endif // KWIN_THUMBNAILITEM_H

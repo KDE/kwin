@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef CCSM_MONITOR_H
-#define CCSM_MONITOR_H
+#pragma once
 
 #include "screenpreviewwidget.h"
 
@@ -105,5 +104,3 @@ private:
 };
 
 } // namespace
-
-#endif

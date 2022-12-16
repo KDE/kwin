@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_VIRTUAL_DESKTOPS_H
-#define KWIN_VIRTUAL_DESKTOPS_H
+#pragma once
 // KWin
 #include <kwin_export.h>
 #include <kwinglobals.h>
@@ -541,4 +540,3 @@ inline const VirtualDesktopGrid &VirtualDesktopManager::grid() const
 }
 
 } // namespace KWin
-#endif

@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef X11EVENTFILTER_H
-#define X11EVENTFILTER_H
+#pragma once
 
 #include <xcb/xcb.h>
 
@@ -81,5 +80,3 @@ private:
 };
 
 } // namespace KWin
-
-#endif

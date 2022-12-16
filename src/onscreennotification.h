@@ -5,8 +5,7 @@
 
 */
 
-#ifndef KWIN_ONSCREENNOTIFICATION_H
-#define KWIN_ONSCREENNOTIFICATION_H
+#pragma once
 
 #include <KSharedConfig>
 #include <QObject>
@@ -77,5 +76,3 @@ private:
     bool m_containsPointer = false;
 };
 }
-
-#endif // KWIN_ONSCREENNOTIFICATION_H

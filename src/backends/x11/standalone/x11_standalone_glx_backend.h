@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_GLX_BACKEND_H
-#define KWIN_GLX_BACKEND_H
+#pragma once
 #include "core/outputlayer.h"
 #include "openglbackend.h"
 #include "openglsurfacetexture_x11.h"
@@ -175,4 +174,3 @@ public:
 };
 
 } // namespace
-#endif // KWIN_GLX_BACKEND_H

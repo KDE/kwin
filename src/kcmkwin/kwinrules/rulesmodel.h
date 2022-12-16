@@ -4,8 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 
-#ifndef KWIN_RULES_MODEL_H
-#define KWIN_RULES_MODEL_H
+#pragma once
 
 #include "ruleitem.h"
 #include <rules.h>
@@ -117,5 +116,3 @@ private:
 };
 
 }
-
-#endif

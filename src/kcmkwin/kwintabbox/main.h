@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef __MAIN_H__
-#define __MAIN_H__
+#pragma once
 
 #include "tabboxconfig.h"
 #include <kcmodule.h>
@@ -62,5 +61,3 @@ private:
 };
 
 } // namespace
-
-#endif

@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_GLOBALSHORTCUTS_H
-#define KWIN_GLOBALSHORTCUTS_H
+#pragma once
 // KWin
 #include <kwinglobals.h>
 // Qt
@@ -225,5 +224,3 @@ private:
 };
 
 } // namespace
-
-#endif

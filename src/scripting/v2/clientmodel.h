@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_SCRIPTING_MODEL_H
-#define KWIN_SCRIPTING_MODEL_H
+#pragma once
 
 #include <QAbstractItemModel>
 #include <QList>
@@ -368,5 +367,3 @@ inline const QString &ClientFilterModel::filter() const
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::ScriptingModels::V2::ClientModel::Exclusions)
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::ScriptingModels::V2::ClientModel::LevelRestrictions)
-
-#endif // KWIN_SCRIPTING_MODEL_H

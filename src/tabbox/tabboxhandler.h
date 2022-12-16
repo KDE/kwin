@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef TABBOXHANDLER_H
-#define TABBOXHANDLER_H
+#pragma once
 
 #include "tabboxconfig.h"
 
@@ -387,5 +386,3 @@ extern TabBoxHandler *tabBox;
 
 } // namespace TabBox
 } // namespace KWin
-
-#endif // TABBOXHANDLER_H

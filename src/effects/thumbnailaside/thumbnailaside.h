@@ -14,8 +14,7 @@
 
 */
 
-#ifndef KWIN_THUMBNAILASIDE_H
-#define KWIN_THUMBNAILASIDE_H
+#pragma once
 
 #include <kwineffects.h>
 
@@ -83,5 +82,3 @@ private:
 };
 
 } // namespace
-
-#endif

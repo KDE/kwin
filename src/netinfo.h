@@ -9,8 +9,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_NETINFO_H
-#define KWIN_NETINFO_H
+#pragma once
 
 #include <NETWM>
 
@@ -80,5 +79,3 @@ private:
 };
 
 } // KWin
-
-#endif

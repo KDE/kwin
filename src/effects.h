@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_EFFECTSIMPL_H
-#define KWIN_EFFECTSIMPL_H
+#pragma once
 
 #include "kwineffects.h"
 
@@ -678,5 +677,3 @@ inline Window *EffectWindowImpl::window()
 }
 
 } // namespace
-
-#endif

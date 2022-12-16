@@ -9,8 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_ATOMS_H
-#define KWIN_ATOMS_H
+#pragma once
 
 #include "utils/xcbutils.h"
 
@@ -94,5 +93,3 @@ private:
 extern KWIN_EXPORT Atoms *atoms;
 
 } // namespace
-
-#endif

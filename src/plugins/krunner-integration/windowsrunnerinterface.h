@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef WINDOWSRUNNER_H
-#define WINDOWSRUNNER_H
+#pragma once
 
 #pragma once
 
@@ -61,5 +60,3 @@ private:
     bool actionSupported(const Window *window, const WindowsRunnerAction action) const;
 };
 }
-
-#endif // WINDOWSRUNNER_H

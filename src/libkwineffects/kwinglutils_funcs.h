@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_GLUTILS_FUNCS_H
-#define KWIN_GLUTILS_FUNCS_H
+#pragma once
 
 #include <kwinglutils_export.h>
 
@@ -45,5 +44,3 @@ extern KWINGLUTILS_EXPORT glReadnPixels_func glReadnPixels;
 extern KWINGLUTILS_EXPORT glGetnUniformfv_func glGetnUniformfv;
 
 } // namespace
-
-#endif // KWIN_GLUTILS_FUNCS_H

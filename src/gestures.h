@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_GESTURES_H
-#define KWIN_GESTURES_H
+#pragma once
 
 #include <kwin_export.h>
 
@@ -231,5 +230,3 @@ private:
 
 Q_DECLARE_METATYPE(KWin::SwipeGesture::Direction)
 Q_DECLARE_METATYPE(KWin::PinchGesture::Direction)
-
-#endif

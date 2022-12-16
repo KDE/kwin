@@ -5,8 +5,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef CONTRASTSHADER_H
-#define CONTRASTSHADER_H
+#pragma once
 
 #include <kwinglutils.h>
 
@@ -47,5 +46,3 @@ private:
 };
 
 } // namespace KWin
-
-#endif

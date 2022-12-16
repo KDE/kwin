@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_WOBBLYWINDOWS_H
-#define KWIN_WOBBLYWINDOWS_H
+#pragma once
 
 // Include with base class for effects.
 #include <kwinoffscreeneffect.h>
@@ -167,5 +166,3 @@ private:
 };
 
 } // namespace KWin
-
-#endif // WOBBLYWINDOWS_H

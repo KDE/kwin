@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWINTABBOXDATA_H
-#define KWINTABBOXDATA_H
+#pragma once
 
 #include <QObject>
 
@@ -42,5 +41,3 @@ private:
 }
 
 }
-
-#endif // KWINTABBOXDATA_H

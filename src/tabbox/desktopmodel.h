@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef DESKTOPMODEL_H
-#define DESKTOPMODEL_H
+#pragma once
 
 #include <QModelIndex>
 /**
@@ -77,4 +76,3 @@ private:
 
 } // namespace Tabbox
 } // namespace KWin
-#endif // DESKTOPMODEL_H

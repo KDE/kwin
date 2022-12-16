@@ -4,8 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWINSCRIPTSDATA_H
-#define KWINSCRIPTSDATA_H
+#pragma once
 
 #include <QObject>
 #include <QVector>
@@ -28,5 +27,3 @@ public:
 private:
     KSharedConfigPtr m_kwinConfig;
 };
-
-#endif // KWINSCRIPTSDATA_H

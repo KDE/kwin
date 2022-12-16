@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_ACTIVITIES_H
-#define KWIN_ACTIVITIES_H
+#pragma once
 
 #include <kwinglobals.h>
 
@@ -109,5 +108,3 @@ inline QString Activities::nullUuid()
 }
 
 }
-
-#endif // KWIN_ACTIVITIES_H

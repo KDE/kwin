@@ -11,8 +11,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_WORKSPACE_H
-#define KWIN_WORKSPACE_H
+#pragma once
 
 // kwin
 #include "options.h"
@@ -902,5 +901,3 @@ inline Workspace *workspace()
 
 } // namespace
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Workspace::ActivityFlags)
-
-#endif

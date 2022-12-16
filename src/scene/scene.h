@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_SCENE_H
-#define KWIN_SCENE_H
+#pragma once
 
 #include "core/renderlayerdelegate.h"
 #include "kwineffects.h"
@@ -243,5 +242,3 @@ private:
 };
 
 } // namespace
-
-#endif

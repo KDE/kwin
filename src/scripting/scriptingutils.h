@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_SCRIPTINGUTILS_H
-#define KWIN_SCRIPTINGUTILS_H
+#pragma once
 
 #include <QVariant>
 
@@ -18,5 +17,3 @@ namespace KWin
 QVariant dbusToVariant(const QVariant &variant);
 
 } // namespace KWin
-
-#endif // KWIN_SCRIPTINGUTILS_H

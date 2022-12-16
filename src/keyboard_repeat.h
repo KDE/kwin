@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_KEYBOARD_REPEAT
-#define KWIN_KEYBOARD_REPEAT
+#pragma once
 
 #include "input_event_spy.h"
 
@@ -40,5 +39,3 @@ private:
 };
 
 }
-
-#endif

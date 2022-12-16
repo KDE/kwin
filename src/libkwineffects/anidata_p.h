@@ -8,8 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef ANIDATA_H
-#define ANIDATA_H
+#pragma once
 
 #include "kwinanimationeffect.h"
 
@@ -85,5 +84,3 @@ public:
 } // namespace
 
 QDebug operator<<(QDebug dbg, const KWin::AniData &a);
-
-#endif // ANIDATA_H

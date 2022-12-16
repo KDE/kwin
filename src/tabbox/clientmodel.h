@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef CLIENTMODEL_H
-#define CLIENTMODEL_H
+#pragma once
 #include "tabboxhandler.h"
 
 #include <QModelIndex>
@@ -104,5 +103,3 @@ private:
 
 } // namespace Tabbox
 } // namespace KWin
-
-#endif // CLIENTMODEL_H

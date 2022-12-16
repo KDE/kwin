@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_WAS_USER_INTERACTION_X11_FILTER_H
-#define KWIN_WAS_USER_INTERACTION_X11_FILTER_H
+#pragma once
 #include "x11eventfilter.h"
 
 namespace KWin
@@ -22,5 +21,3 @@ public:
 };
 
 }
-
-#endif

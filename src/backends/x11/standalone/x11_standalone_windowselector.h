@@ -9,8 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_WINDOWSELECTOR_H
-#define KWIN_WINDOWSELECTOR_H
+#pragma once
 
 #include "x11eventfilter.h"
 
@@ -55,5 +54,3 @@ private:
 };
 
 } // namespace
-
-#endif

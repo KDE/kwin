@@ -9,8 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_XRENDERUTILS_H
-#define KWIN_XRENDERUTILS_H
+#pragma once
 
 // KWin
 #include <kwin_export.h>
@@ -110,5 +109,3 @@ KWIN_EXPORT void cleanup();
 } // namespace KWin
 
 /** @} */
-
-#endif

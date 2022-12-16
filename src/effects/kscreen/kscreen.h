@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_KSCREEN_H
-#define KWIN_KSCREEN_H
+#pragma once
 
 #include <kwineffects.h>
 
@@ -64,4 +63,3 @@ private:
 };
 
 } // namespace KWin
-#endif // KWIN_KSCREEN_H

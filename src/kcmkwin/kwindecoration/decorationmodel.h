@@ -3,8 +3,7 @@
 
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
-#ifndef KDECORATION_DECORATION_MODEL_H
-#define KDECORATION_DECORATION_MODEL_H
+#pragma once
 
 #include "utils.h"
 
@@ -53,5 +52,3 @@ private:
 
 }
 }
-
-#endif

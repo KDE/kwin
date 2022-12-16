@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_XWL_DATABRIDGE
-#define KWIN_XWL_DATABRIDGE
+#pragma once
 
 #include "kwinglobals.h"
 
@@ -68,5 +67,3 @@ private:
 
 } // namespace Xwl
 } // namespace KWin
-
-#endif

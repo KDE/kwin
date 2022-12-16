@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_FALLAPART_H
-#define KWIN_FALLAPART_H
+#pragma once
 
 #include <kwinoffscreeneffect.h>
 
@@ -63,5 +62,3 @@ private:
 };
 
 } // namespace
-
-#endif

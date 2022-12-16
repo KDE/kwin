@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_DECORATED_CLIENT_H
-#define KWIN_DECORATED_CLIENT_H
+#pragma once
 #include "options.h"
 
 #include <KDecoration2/Private/DecoratedClientPrivate>
@@ -104,5 +103,3 @@ private:
 
 }
 }
-
-#endif

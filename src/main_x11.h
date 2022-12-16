@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_MAIN_X11_H
-#define KWIN_MAIN_X11_H
+#pragma once
 #include "main.h"
 
 namespace KWin
@@ -50,5 +49,3 @@ private:
 };
 
 }
-
-#endif

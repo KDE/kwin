@@ -7,8 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef KWIN_STARTUPFEEDBACK_H
-#define KWIN_STARTUPFEEDBACK_H
+#pragma once
 #include <KConfigWatcher>
 #include <KStartupInfo>
 #include <QObject>
@@ -96,5 +95,3 @@ private:
     std::chrono::seconds m_timeout;
 };
 } // namespace
-
-#endif

@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_XCB_UTILS_H
-#define KWIN_XCB_UTILS_H
+#pragma once
 
 #include "main.h"
 #include "utils/c_ptr.h"
@@ -2082,4 +2081,3 @@ inline uint8_t Shm::pixmapFormat() const
 } // namespace X11
 
 } // namespace KWin
-#endif // KWIN_X11_UTILS_H

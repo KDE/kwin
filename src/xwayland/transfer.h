@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_XWL_TRANSFER
-#define KWIN_XWL_TRANSFER
+#pragma once
 
 #include <QObject>
 #include <QSocketNotifier>
@@ -197,5 +196,3 @@ private:
 
 } // namespace Xwl
 } // namespace KWin
-
-#endif

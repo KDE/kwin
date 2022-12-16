@@ -6,8 +6,7 @@
 
 */
 
-#ifndef AURORAETHEME_H
-#define AURORAETHEME_H
+#pragma once
 
 // #include "libaurorae_export.h"
 
@@ -214,5 +213,3 @@ private:
 };
 
 } // namespace
-
-#endif // AURORAETHEME_H

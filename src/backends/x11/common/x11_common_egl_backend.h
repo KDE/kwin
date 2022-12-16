@@ -6,8 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#ifndef KWIN_EGL_ON_X_BACKEND_H
-#define KWIN_EGL_ON_X_BACKEND_H
+#pragma once
 #include "abstract_egl_backend.h"
 
 #include <xcb/xcb.h>
@@ -60,5 +59,3 @@ private:
 };
 
 } // namespace
-
-#endif //  KWIN_EGL_ON_X_BACKEND_H

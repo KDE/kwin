@@ -4,8 +4,7 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-#ifndef DECORATIONPACKAGE_H
-#define DECORATIONPACKAGE_H
+#pragma once
 
 #include <KPackage/PackageStructure>
 
@@ -18,5 +17,3 @@ public:
     void initPackage(KPackage::Package *package) override;
     void pathChanged(KPackage::Package *package) override;
 };
-
-#endif

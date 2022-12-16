@@ -3,8 +3,7 @@
 
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
-#ifndef KDECOARTIONS_PREVIEW_SETTINGS_H
-#define KDECOARTIONS_PREVIEW_SETTINGS_H
+#pragma once
 
 #include <KDecoration2/DecorationSettings>
 #include <KDecoration2/Private/DecorationSettingsPrivate>
@@ -149,5 +148,3 @@ private:
 
 }
 }
-
-#endif
