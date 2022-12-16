@@ -46,7 +46,7 @@ KCM.SimpleKCM {
         QQC2.Label {
             Layout.fillWidth: true
             Layout.margins: Kirigami.Units.gridUnit
-            text: i18n("Legacy X11 apps require the ability to read keystrokes typed in other apps for features that are activated using global keyboard shortcuts. This is disabled by default for security reasons. If you need to use such apps, you can chose your preferred balance of security and functionality here.")
+            text: i18n("Legacy X11 apps require the ability to read keystrokes typed in other apps for features that are activated using global keyboard shortcuts. This is disabled by default for security reasons. If you need to use such apps, you can choose your preferred balance of security and functionality here.")
             wrapMode: Text.Wrap
         }
 
