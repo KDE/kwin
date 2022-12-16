@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-15 00:49+0000\n"
+"POT-Creation-Date: 2022-12-16 00:51+0000\n"
 "PO-Revision-Date: 2022-12-10 18:11+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -1166,22 +1166,22 @@ msgstr "%1 Uygulamasını &Sonlandır"
 msgid "Wait Longer"
 msgstr "Daha Fazla Bekle"
 
-#: input.cpp:1981
+#: input.cpp:1982
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Tableti, sonraki çıktıya taşı"
 
-#: input.cpp:2060
+#: input.cpp:2061
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tablet şuraya taşındı: %1"
 
-#: input.cpp:2060
+#: input.cpp:2061
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Tabletler çıktılarını değiştirdiler"
 
-#: input.cpp:3025
+#: input.cpp:3026
 #, kde-format
 msgid "Touchpad"
 msgstr "Dokunmatik Yüzey"
@@ -2787,7 +2787,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Yanıt Vermiyor)"
 
-#: workspace.cpp:1758
+#: workspace.cpp:1810
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-15 00:49+0000\n"
+"POT-Creation-Date: 2022-12-16 00:51+0000\n"
 "PO-Revision-Date: 2017-06-12 16:22+0200\n"
 "Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -1219,22 +1219,22 @@ msgstr "&Τερματισμός εφαρμογής %1"
 msgid "Wait Longer"
 msgstr "Αναμονή περισσότερο"
 
-#: input.cpp:1981
+#: input.cpp:1982
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2060
+#: input.cpp:2061
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr ""
 
-#: input.cpp:2060
+#: input.cpp:2061
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3025
+#: input.cpp:3026
 #, fuzzy, kde-format
 #| msgctxt "A touch up event"
 #| msgid "Touch Up"
@@ -2933,7 +2933,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(δεν ανταποκρίνεται)"
 
-#: workspace.cpp:1758
+#: workspace.cpp:1810
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

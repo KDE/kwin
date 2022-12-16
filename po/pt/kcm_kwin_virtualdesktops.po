@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-15 00:49+0000\n"
-"PO-Revision-Date: 2021-06-08 19:22+0100\n"
+"PO-Revision-Date: 2022-12-15 09:36+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
 "Language: pt\n"
@@ -24,13 +24,12 @@ msgid "Your emails"
 msgstr "zepires@gmail.com"
 
 #: desktopsmodel.cpp:191
-#, fuzzy, kde-format
-#| msgid "New Desktop"
+#, kde-format
 msgctxt "A numbered name for virtual desktops"
 msgid "Desktop %1"
 msgid_plural "Desktop %1"
-msgstr[0] "Novo Ecrã"
-msgstr[1] "Novo Ecrã"
+msgstr[0] "Ecrã %1"
+msgstr[1] "Ecrã %1"
 
 #: desktopsmodel.cpp:479
 #, kde-format

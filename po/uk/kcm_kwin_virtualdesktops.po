@@ -3,14 +3,14 @@
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# Yuri Chornoivan <yurchor@ukr.net>, 2018, 2019, 2021.
+# Yuri Chornoivan <yurchor@ukr.net>, 2018, 2019, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwin_virtualdesktops\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-15 00:49+0000\n"
-"PO-Revision-Date: 2021-05-27 08:37+0300\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
+"PO-Revision-Date: 2022-12-15 09:12+0200\n"
+"Last-Translator: Fracture dept <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
@@ -31,15 +31,14 @@ msgid "Your emails"
 msgstr "yurchor@ukr.net"
 
 #: desktopsmodel.cpp:191
-#, fuzzy, kde-format
-#| msgid "New Desktop"
+#, kde-format
 msgctxt "A numbered name for virtual desktops"
 msgid "Desktop %1"
 msgid_plural "Desktop %1"
-msgstr[0] "Створити стільницю"
-msgstr[1] "Створити стільницю"
-msgstr[2] "Створити стільницю"
-msgstr[3] "Створити стільницю"
+msgstr[0] "Стільниця %1"
+msgstr[1] "Стільниця %1"
+msgstr[2] "Стільниця %1"
+msgstr[3] "Стільниця %1"
 
 #: desktopsmodel.cpp:479
 #, kde-format
