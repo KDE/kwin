@@ -48,9 +48,6 @@ public:
     QVector<QByteArray> openGLPlatformInterfaceExtensions() const override;
     std::shared_ptr<GLTexture> textureForOutput(Output *output) const override;
 
-protected:
-    void paintOffscreenQuickView(OffscreenQuickView *w) override;
-
 private:
     OpenGLBackend *m_backend;
     GLuint vao = 0;

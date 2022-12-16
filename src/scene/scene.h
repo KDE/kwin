@@ -184,8 +184,6 @@ protected:
     // called after all effects had their drawWindow() called
     void finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data);
 
-    virtual void paintOffscreenQuickView(OffscreenQuickView *w) = 0;
-
     // saved data for 2nd pass of optimized screen painting
     struct Phase2Data
     {

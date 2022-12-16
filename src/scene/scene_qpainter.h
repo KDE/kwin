@@ -40,9 +40,6 @@ public:
         return m_backend;
     }
 
-protected:
-    void paintOffscreenQuickView(OffscreenQuickView *w) override;
-
 private:
     QPainterBackend *m_backend;
 };

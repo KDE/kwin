@@ -14,7 +14,6 @@
 #include "scene_opengl.h"
 
 #include <kwinglplatform.h>
-#include <kwinoffscreenquickview.h>
 
 #include "composite.h"
 #include "core/output.h"
@@ -54,40 +53,6 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend)
 SceneOpenGL::~SceneOpenGL()
 {
     makeOpenGLContextCurrent();
-}
-
-void SceneOpenGL::paintOffscreenQuickView(OffscreenQuickView *w)
-{
-    GLTexture *t = w->bufferAsTexture();
-    if (!t) {
-        return;
-    }
-
-    ShaderTraits traits = ShaderTrait::MapTexture;
-    const qreal a = w->opacity();
-    if (a != 1.0) {
-        traits |= ShaderTrait::Modulate;
-    }
-
-    GLShader *shader = ShaderManager::instance()->pushShader(traits);
-    const QRectF rect = scaledRect(w->geometry(), renderer()->renderTargetScale());
-
-    QMatrix4x4 mvp(renderer()->renderTargetProjectionMatrix());
-    mvp.translate(rect.x(), rect.y());
-    shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-
-    if (a != 1.0) {
-        shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
-    }
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    t->bind();
-    t->render(w->geometry(), renderer()->renderTargetScale());
-    t->unbind();
-    glDisable(GL_BLEND);
-
-    ShaderManager::instance()->popShader();
 }
 
 bool SceneOpenGL::makeOpenGLContextCurrent()

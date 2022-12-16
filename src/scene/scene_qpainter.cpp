@@ -13,7 +13,6 @@
 #include "scene/surfaceitem.h"
 #include "window.h"
 
-#include <kwinoffscreenquickview.h>
 // Qt
 #include <KDecoration2/Decoration>
 #include <QDebug>
@@ -36,19 +35,6 @@ SceneQPainter::SceneQPainter(QPainterBackend *backend)
 
 SceneQPainter::~SceneQPainter()
 {
-}
-
-void SceneQPainter::paintOffscreenQuickView(OffscreenQuickView *w)
-{
-    QPainter *painter = effects->scenePainter();
-    const QImage buffer = w->bufferAsImage();
-    if (buffer.isNull()) {
-        return;
-    }
-    painter->save();
-    painter->setOpacity(w->opacity());
-    painter->drawImage(w->geometry(), buffer);
-    painter->restore();
 }
 
 Shadow *SceneQPainter::createShadow(Window *window)

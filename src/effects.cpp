@@ -56,6 +56,7 @@
 
 #include <QDebug>
 #include <QMouseEvent>
+#include <QPainter>
 #include <QQmlEngine>
 #include <QQuickItem>
 #include <QQuickWindow>
@@ -1763,7 +1764,48 @@ void EffectsHandlerImpl::renderOffscreenQuickView(OffscreenQuickView *w) const
     if (!w->isVisible()) {
         return;
     }
-    scene()->paintOffscreenQuickView(w);
+    if (compositingType() == OpenGLCompositing) {
+        GLTexture *t = w->bufferAsTexture();
+        if (!t) {
+            return;
+        }
+
+        ShaderTraits traits = ShaderTrait::MapTexture;
+        const qreal a = w->opacity();
+        if (a != 1.0) {
+            traits |= ShaderTrait::Modulate;
+        }
+
+        GLShader *shader = ShaderManager::instance()->pushShader(traits);
+        const QRectF rect = scaledRect(w->geometry(), m_scene->renderer()->renderTargetScale());
+
+        QMatrix4x4 mvp(m_scene->renderer()->renderTargetProjectionMatrix());
+        mvp.translate(rect.x(), rect.y());
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+
+        if (a != 1.0) {
+            shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
+        }
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        t->bind();
+        t->render(w->geometry(), m_scene->renderer()->renderTargetScale());
+        t->unbind();
+        glDisable(GL_BLEND);
+
+        ShaderManager::instance()->popShader();
+    } else if (compositingType() == QPainterCompositing) {
+        QPainter *painter = effects->scenePainter();
+        const QImage buffer = w->bufferAsImage();
+        if (buffer.isNull()) {
+            return;
+        }
+        painter->save();
+        painter->setOpacity(w->opacity());
+        painter->drawImage(w->geometry(), buffer);
+        painter->restore();
+    }
 }
 
 SessionState EffectsHandlerImpl::sessionState() const
