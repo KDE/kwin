@@ -120,6 +120,9 @@ target_sources(kwin PRIVATE
     scene/decorationitem.cpp
     scene/dndiconitem.cpp
     scene/item.cpp
+    scene/itemrenderer.cpp
+    scene/itemrenderer_opengl.cpp
+    scene/itemrenderer_qpainter.cpp
     scene/scene.cpp
     scene/scene_opengl.cpp
     scene/scene_qpainter.cpp

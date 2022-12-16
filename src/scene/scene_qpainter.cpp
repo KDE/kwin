@@ -7,13 +7,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "scene_qpainter.h"
-#include "qpaintersurfacetexture.h"
 // KWin
-#include "core/output.h"
 #include "decorations/decoratedclient.h"
-#include "effects.h"
+#include "scene/itemrenderer_qpainter.h"
 #include "scene/surfaceitem.h"
-#include "scene/windowitem.h"
 #include "window.h"
 
 #include <kwinoffscreenquickview.h>
@@ -32,31 +29,13 @@ namespace KWin
 //****************************************
 
 SceneQPainter::SceneQPainter(QPainterBackend *backend)
-    : m_backend(backend)
-    , m_painter(new QPainter())
+    : Scene(std::make_unique<ItemRendererQPainter>())
+    , m_backend(backend)
 {
 }
 
 SceneQPainter::~SceneQPainter()
 {
-}
-
-void SceneQPainter::paint(RenderTarget *target, const QRegion &region)
-{
-    QImage *buffer = std::get<QImage *>(target->nativeHandle());
-    if (buffer && !buffer->isNull()) {
-        m_painter->begin(buffer);
-        m_painter->setWindow(painted_screen->geometry());
-        paintScreen(region);
-        m_painter->end();
-    }
-}
-
-void SceneQPainter::paintBackground(const QRegion &region)
-{
-    for (const QRect &rect : region) {
-        m_painter->fillRect(rect, Qt::black);
-    }
 }
 
 void SceneQPainter::paintOffscreenQuickView(OffscreenQuickView *w)
@@ -75,110 +54,6 @@ void SceneQPainter::paintOffscreenQuickView(OffscreenQuickView *w)
 Shadow *SceneQPainter::createShadow(Window *window)
 {
     return new SceneQPainterShadow(window);
-}
-
-void SceneQPainter::render(Item *item, int mask, const QRegion &_region, const WindowPaintData &data)
-{
-    QRegion region = _region;
-
-    const QRect boundingRect = item->mapToGlobal(item->boundingRect()).toAlignedRect();
-    if (!(mask & (Scene::PAINT_WINDOW_TRANSFORMED | Scene::PAINT_SCREEN_TRANSFORMED))) {
-        region &= boundingRect;
-    }
-
-    if (region.isEmpty()) {
-        return;
-    }
-
-    QPainter *painter = scenePainter();
-    painter->save();
-    painter->setClipRegion(region);
-    painter->setClipping(true);
-    painter->setOpacity(data.opacity());
-
-    if (mask & Scene::PAINT_WINDOW_TRANSFORMED) {
-        painter->translate(data.xTranslation(), data.yTranslation());
-        painter->scale(data.xScale(), data.yScale());
-    }
-
-    renderItem(painter, item);
-
-    painter->restore();
-}
-
-void SceneQPainter::renderItem(QPainter *painter, Item *item) const
-{
-    const QList<Item *> sortedChildItems = item->sortedChildItems();
-
-    painter->save();
-    painter->translate(item->position());
-    painter->setOpacity(painter->opacity() * item->opacity());
-
-    for (Item *childItem : sortedChildItems) {
-        if (childItem->z() >= 0) {
-            break;
-        }
-        if (childItem->explicitVisible()) {
-            renderItem(painter, childItem);
-        }
-    }
-
-    item->preprocess();
-    if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
-        renderSurfaceItem(painter, surfaceItem);
-    } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
-        renderDecorationItem(painter, decorationItem);
-    }
-
-    for (Item *childItem : sortedChildItems) {
-        if (childItem->z() < 0) {
-            continue;
-        }
-        if (childItem->explicitVisible()) {
-            renderItem(painter, childItem);
-        }
-    }
-
-    painter->restore();
-}
-
-void SceneQPainter::renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem) const
-{
-    const SurfacePixmap *surfaceTexture = surfaceItem->pixmap();
-    if (!surfaceTexture || !surfaceTexture->isValid()) {
-        return;
-    }
-
-    QPainterSurfaceTexture *platformSurfaceTexture =
-        static_cast<QPainterSurfaceTexture *>(surfaceTexture->texture());
-    if (!platformSurfaceTexture->isValid()) {
-        platformSurfaceTexture->create();
-    } else {
-        platformSurfaceTexture->update(surfaceItem->damage());
-    }
-    surfaceItem->resetDamage();
-
-    const QVector<QRectF> shape = surfaceItem->shape();
-    for (const QRectF rect : shape) {
-        const QMatrix4x4 matrix = surfaceItem->surfaceToBufferMatrix();
-        const QPointF bufferTopLeft = matrix.map(rect.topLeft());
-        const QPointF bufferBottomRight = matrix.map(rect.bottomRight());
-
-        painter->drawImage(rect, platformSurfaceTexture->image(),
-                           QRectF(bufferTopLeft, bufferBottomRight));
-    }
-}
-
-void SceneQPainter::renderDecorationItem(QPainter *painter, DecorationItem *decorationItem) const
-{
-    const auto renderer = static_cast<const SceneQPainterDecorationRenderer *>(decorationItem->renderer());
-    QRectF dtr, dlr, drr, dbr;
-    decorationItem->window()->layoutDecorationRects(dlr, dtr, drr, dbr);
-
-    painter->drawImage(dtr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Top));
-    painter->drawImage(dlr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Left));
-    painter->drawImage(drr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Right));
-    painter->drawImage(dbr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Bottom));
 }
 
 DecorationRenderer *SceneQPainter::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)

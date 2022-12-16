@@ -15,6 +15,7 @@
 #include "kwineffects.h"
 #include "kwingltexture.h"
 #include "kwinglutils.h"
+#include "scene/itemrenderer.h"
 #include "scene/scene.h"
 #include "scene/windowitem.h"
 #include "window.h"
@@ -62,7 +63,7 @@ void WindowScreenCastSource::render(GLFramebuffer *target)
     GLFramebuffer::pushFramebuffer(target);
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    Compositor::self()->scene()->render(m_window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), data);
+    Compositor::self()->scene()->renderer()->renderItem(m_window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), data);
     GLFramebuffer::popFramebuffer();
 }
 

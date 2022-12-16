@@ -10,6 +10,7 @@
 #include "composite.h"
 #include "core/renderbackend.h"
 #include "effects.h"
+#include "scene/itemrenderer.h"
 #include "scene/scene.h"
 #include "scene/windowitem.h"
 #include "scripting_logging.h"
@@ -430,7 +431,7 @@ void WindowThumbnailItem::updateOffscreenTexture()
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    auto scale = Compositor::self()->scene()->renderTargetScale();
+    auto scale = Compositor::self()->scene()->renderer()->renderTargetScale();
 
     QMatrix4x4 projectionMatrix;
     projectionMatrix.ortho(geometry.x() * scale, (geometry.x() + geometry.width()) * scale,
@@ -443,7 +444,7 @@ void WindowThumbnailItem::updateOffscreenTexture()
     // shared across contexts. Unfortunately, this also introduces a latency of 1
     // frame, which is not ideal, but it is acceptable for things such as thumbnails.
     const int mask = Scene::PAINT_WINDOW_TRANSFORMED;
-    Compositor::self()->scene()->render(m_client->windowItem(), mask, infiniteRegion(), data);
+    Compositor::self()->scene()->renderer()->renderItem(m_client->windowItem(), mask, infiniteRegion(), data);
     GLFramebuffer::popFramebuffer();
 
     // The fence is needed to avoid the case where qtquick renderer starts using

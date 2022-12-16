@@ -61,6 +61,7 @@
 #include "effects.h"
 #include "internalwindow.h"
 #include "scene/dndiconitem.h"
+#include "scene/itemrenderer.h"
 #include "scene/shadowitem.h"
 #include "scene/surfaceitem.h"
 #include "scene/windowitem.h"
@@ -132,7 +133,10 @@ QRect SceneDelegate::viewport() const
 // Scene
 //****************************************
 
-Scene::Scene() = default;
+Scene::Scene(std::unique_ptr<ItemRenderer> renderer)
+    : m_renderer(std::move(renderer))
+{
+}
 
 Scene::~Scene()
 {
@@ -288,12 +292,12 @@ void Scene::prePaint(Output *output)
 
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         painted_screen = workspace()->outputs().constFirst();
-        setRenderTargetRect(geometry());
-        setRenderTargetScale(1);
+        m_renderer->setRenderTargetRect(geometry());
+        m_renderer->setRenderTargetScale(1);
     } else {
         painted_screen = output;
-        setRenderTargetRect(painted_screen->fractionalGeometry());
-        setRenderTargetScale(painted_screen->scale());
+        m_renderer->setRenderTargetRect(painted_screen->fractionalGeometry());
+        m_renderer->setRenderTargetScale(painted_screen->scale());
     }
 
     const RenderLoop *renderLoop = painted_screen->renderLoop();
@@ -371,7 +375,7 @@ void Scene::preparePaintGenericScreen()
         });
     }
 
-    m_paintContext.damage = renderTargetRect();
+    m_paintContext.damage = m_renderer->renderTargetRect();
 }
 
 void Scene::preparePaintSimpleScreen()
@@ -449,67 +453,21 @@ void Scene::postPaint()
     clearStackingOrder();
 }
 
-static QMatrix4x4 createProjectionMatrix(const QRectF &rect, qreal scale)
+void Scene::paint(RenderTarget *renderTarget, const QRegion &region)
 {
-    QMatrix4x4 ret;
-    ret.ortho(QRectF(rect.left() * scale, rect.top() * scale, rect.width() * scale, rect.height() * scale));
-    return ret;
-}
+    m_renderer->beginFrame(renderTarget);
 
-QMatrix4x4 Scene::renderTargetProjectionMatrix() const
-{
-    return m_renderTargetProjectionMatrix;
-}
-
-QRect Scene::renderTargetRect() const
-{
-    return m_renderTargetRect.toRect();
-}
-
-void Scene::setRenderTargetRect(const QRectF &rect)
-{
-    if (rect == m_renderTargetRect) {
-        return;
-    }
-
-    m_renderTargetRect = rect;
-    m_renderTargetProjectionMatrix = createProjectionMatrix(rect, m_renderTargetScale);
-}
-
-qreal Scene::renderTargetScale() const
-{
-    return m_renderTargetScale;
-}
-
-void Scene::setRenderTargetScale(qreal scale)
-{
-    if (qFuzzyCompare(scale, m_renderTargetScale)) {
-        return;
-    }
-
-    m_renderTargetScale = scale;
-    m_renderTargetProjectionMatrix = createProjectionMatrix(m_renderTargetRect, scale);
-}
-
-QRegion Scene::mapToRenderTarget(const QRegion &region) const
-{
-    QRegion result;
-    for (const QRect &rect : region) {
-        result += QRect((rect.x() - m_renderTargetRect.x()) * m_renderTargetScale,
-                        (rect.y() - m_renderTargetRect.y()) * m_renderTargetScale,
-                        rect.width() * m_renderTargetScale,
-                        rect.height() * m_renderTargetScale);
-    }
-    return result;
-}
-
-void Scene::paintScreen(const QRegion &region)
-{
-    ScreenPaintData data(m_renderTargetProjectionMatrix, EffectScreenImpl::get(painted_screen));
+    ScreenPaintData data(m_renderer->renderTargetProjectionMatrix(), EffectScreenImpl::get(painted_screen));
     effects->paintScreen(m_paintContext.mask, region, data);
-
     m_paintScreenCount = 0;
     Q_EMIT frameRendered();
+
+    m_renderer->endFrame();
+}
+
+ItemRenderer *Scene::renderer() const
+{
+    return m_renderer.get();
 }
 
 // the function that'll be eventually called by paintScreen() above
@@ -529,10 +487,10 @@ void Scene::paintGenericScreen(int, const ScreenPaintData &)
 {
     if (m_paintContext.mask & PAINT_SCREEN_BACKGROUND_FIRST) {
         if (m_paintScreenCount == 1) {
-            paintBackground(infiniteRegion());
+            m_renderer->renderBackground(infiniteRegion());
         }
     } else {
-        paintBackground(infiniteRegion());
+        m_renderer->renderBackground(infiniteRegion());
     }
 
     for (const Phase2Data &paintData : std::as_const(m_paintContext.phase2Data)) {
@@ -560,7 +518,7 @@ void Scene::paintSimpleScreen(int, const QRegion &region)
         }
     }
 
-    paintBackground(visible);
+    m_renderer->renderBackground(visible);
 
     for (const Phase2Data &paintData : std::as_const(m_paintContext.phase2Data)) {
         paintWindow(paintData.item, paintData.mask, paintData.region);
@@ -569,7 +527,7 @@ void Scene::paintSimpleScreen(int, const QRegion &region)
     if (m_dndIcon) {
         const QRegion repaint = region & m_dndIcon->mapToGlobal(m_dndIcon->boundingRect()).toRect();
         if (!repaint.isEmpty()) {
-            render(m_dndIcon.get(), 0, repaint, WindowPaintData(m_renderTargetProjectionMatrix));
+            m_renderer->renderItem(m_dndIcon.get(), 0, repaint, WindowPaintData(m_renderer->renderTargetProjectionMatrix()));
         }
     }
 }
@@ -615,7 +573,7 @@ void Scene::paintWindow(WindowItem *item, int mask, const QRegion &region)
         return;
     }
 
-    WindowPaintData data(renderTargetProjectionMatrix());
+    WindowPaintData data(m_renderer->renderTargetProjectionMatrix());
     effects->paintWindow(item->window()->effectWindow(), mask, region, data);
 }
 
@@ -628,7 +586,7 @@ void Scene::finalPaintWindow(EffectWindowImpl *w, int mask, const QRegion &regio
 // will be eventually called from drawWindow()
 void Scene::finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
 {
-    render(w->windowItem(), mask, region, data);
+    m_renderer->renderItem(w->windowItem(), mask, region, data);
 }
 
 bool Scene::makeOpenGLContextCurrent()
@@ -643,11 +601,6 @@ void Scene::doneOpenGLContextCurrent()
 bool Scene::supportsNativeFence() const
 {
     return false;
-}
-
-QPainter *Scene::scenePainter() const
-{
-    return nullptr;
 }
 
 QVector<QByteArray> Scene::openGLPlatformInterfaceExtensions() const

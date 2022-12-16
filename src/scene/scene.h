@@ -27,6 +27,7 @@ namespace Decoration
 class DecoratedClientImpl;
 }
 
+class ItemRenderer;
 class Output;
 class DecorationRenderer;
 class Deleted;
@@ -72,7 +73,7 @@ class KWIN_EXPORT Scene : public QObject
     Q_OBJECT
 
 public:
-    explicit Scene();
+    explicit Scene(std::unique_ptr<ItemRenderer> renderer);
     ~Scene() override;
 
     void initialize();
@@ -95,7 +96,7 @@ public:
     SurfaceItem *scanoutCandidate() const;
     void prePaint(Output *output);
     void postPaint();
-    virtual void paint(RenderTarget *renderTarget, const QRegion &region) = 0;
+    void paint(RenderTarget *renderTarget, const QRegion &region);
 
     /**
      * @brief Creates the Scene specific Shadow subclass.
@@ -140,12 +141,6 @@ public:
     virtual bool animationsSupported() const = 0;
 
     /**
-     * The QPainter used by a QPainter based compositor scene.
-     * Default implementation returns @c nullptr;
-     */
-    virtual QPainter *scenePainter() const;
-
-    /**
      * The backend specific extensions (e.g. EGL/GLX extensions).
      *
      * Not the OpenGL (ES) extension!
@@ -163,15 +158,7 @@ public:
     virtual std::unique_ptr<SurfaceTexture> createSurfaceTextureX11(SurfacePixmapX11 *pixmap);
     virtual std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
 
-    QMatrix4x4 renderTargetProjectionMatrix() const;
-    QRect renderTargetRect() const;
-    void setRenderTargetRect(const QRectF &rect);
-    qreal renderTargetScale() const;
-    void setRenderTargetScale(qreal scale);
-
-    QRegion mapToRenderTarget(const QRegion &region) const;
-
-    virtual void render(Item *item, int mask, const QRegion &region, const WindowPaintData &data) = 0;
+    ItemRenderer *renderer() const;
 
 Q_SIGNALS:
     void preFrameRender();
@@ -180,8 +167,6 @@ Q_SIGNALS:
 protected:
     void createStackingOrder();
     void clearStackingOrder();
-    // shared implementation, starts painting the screen
-    void paintScreen(const QRegion &region);
     friend class EffectsHandlerImpl;
     // called after all effects had their paintScreen() called
     void finalPaintScreen(int mask, const QRegion &region, ScreenPaintData &data);
@@ -192,8 +177,6 @@ protected:
     // shared implementation of painting the screen in an optimized way
     void preparePaintSimpleScreen();
     void paintSimpleScreen(int mask, const QRegion &region);
-    // paint the background (not the desktop background - the whole background)
-    virtual void paintBackground(const QRegion &region) = 0;
     // called after all effects had their paintWindow() called
     void finalPaintWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data);
     // shared implementation, starts painting the window
@@ -229,12 +212,10 @@ private:
     void createDndIconItem();
     void destroyDndIconItem();
 
+    std::unique_ptr<ItemRenderer> m_renderer;
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
     QList<SceneDelegate *> m_delegates;
     QRect m_geometry;
-    QMatrix4x4 m_renderTargetProjectionMatrix;
-    QRectF m_renderTargetRect;
-    qreal m_renderTargetScale = 1;
     // how many times finalPaintScreen() has been called
     int m_paintScreenCount = 0;
     PaintContext m_paintContext;

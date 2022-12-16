@@ -25,19 +25,15 @@ public:
     explicit SceneQPainter(QPainterBackend *backend);
     ~SceneQPainter() override;
 
-    void paint(RenderTarget *renderTarget, const QRegion &region) override;
     Shadow *createShadow(Window *window) override;
     DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
-    void render(Item *item, int mask, const QRegion &region, const WindowPaintData &data) override;
 
     bool animationsSupported() const override
     {
         return false;
     }
-
-    QPainter *scenePainter() const override;
 
     QPainterBackend *backend() const
     {
@@ -45,16 +41,10 @@ public:
     }
 
 protected:
-    void paintBackground(const QRegion &region) override;
     void paintOffscreenQuickView(OffscreenQuickView *w) override;
 
 private:
-    void renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem) const;
-    void renderDecorationItem(QPainter *painter, DecorationItem *decorationItem) const;
-    void renderItem(QPainter *painter, Item *item) const;
-
     QPainterBackend *m_backend;
-    std::unique_ptr<QPainter> m_painter;
 };
 
 class SceneQPainterShadow : public Shadow
@@ -88,10 +78,5 @@ private:
     void resizeImages();
     QImage m_images[int(DecorationPart::Count)];
 };
-
-inline QPainter *SceneQPainter::scenePainter() const
-{
-    return m_painter.get();
-}
 
 } // KWin

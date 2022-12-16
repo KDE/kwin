@@ -27,6 +27,7 @@
 #include "internalwindow.h"
 #include "osd.h"
 #include "pointer_input.h"
+#include "scene/itemrenderer.h"
 #include "unmanaged.h"
 #include "x11window.h"
 #if KWIN_BUILD_TABBOX
@@ -1414,7 +1415,7 @@ void EffectsHandlerImpl::unregisterTouchBorder(ElectricBorder border, QAction *a
 
 QPainter *EffectsHandlerImpl::scenePainter()
 {
-    return m_scene->scenePainter();
+    return m_scene->renderer()->painter();
 }
 
 void EffectsHandlerImpl::toggleEffect(const QString &name)
@@ -1828,12 +1829,12 @@ bool EffectsHandlerImpl::isCursorHidden() const
 
 QRect EffectsHandlerImpl::renderTargetRect() const
 {
-    return m_scene->renderTargetRect();
+    return m_scene->renderer()->renderTargetRect();
 }
 
 qreal EffectsHandlerImpl::renderTargetScale() const
 {
-    return m_scene->renderTargetScale();
+    return m_scene->renderer()->renderTargetScale();
 }
 
 KWin::EffectWindow *EffectsHandlerImpl::inputPanel() const

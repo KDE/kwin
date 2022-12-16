@@ -22,38 +22,14 @@ namespace KWin
 {
 class OpenGLBackend;
 
-class KWIN_EXPORT SceneOpenGL
-    : public Scene
+class KWIN_EXPORT SceneOpenGL : public Scene
 {
     Q_OBJECT
+
 public:
-    struct RenderNode
-    {
-        GLTexture *texture = nullptr;
-        RenderGeometry geometry;
-        QMatrix4x4 transformMatrix;
-        int firstVertex = 0;
-        int vertexCount = 0;
-        qreal opacity = 1;
-        bool hasAlpha = false;
-        TextureCoordinateType coordinateType = UnnormalizedCoordinates;
-        qreal scale = 1.0;
-    };
-
-    struct RenderContext
-    {
-        QVector<RenderNode> renderNodes;
-        QStack<QMatrix4x4> transformStack;
-        QStack<qreal> opacityStack;
-        const QRegion clip;
-        const bool hardwareClipping;
-        const qreal renderTargetScale;
-    };
-
     explicit SceneOpenGL(OpenGLBackend *backend);
     ~SceneOpenGL() override;
 
-    void paint(RenderTarget *renderTarget, const QRegion &region) override;
     Shadow *createShadow(Window *window) override;
     bool makeOpenGLContextCurrent() override;
     void doneOpenGLContextCurrent() override;
@@ -63,7 +39,6 @@ public:
     std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
-    void render(Item *item, int mask, const QRegion &region, const WindowPaintData &data) override;
 
     OpenGLBackend *backend() const
     {
@@ -74,19 +49,11 @@ public:
     std::shared_ptr<GLTexture> textureForOutput(Output *output) const override;
 
 protected:
-    void paintBackground(const QRegion &region) override;
     void paintOffscreenQuickView(OffscreenQuickView *w) override;
 
 private:
-    void doPaintBackground(const QVector<float> &vertices);
-    QMatrix4x4 modelViewProjectionMatrix(const WindowPaintData &data) const;
-    QVector4D modulate(float opacity, float brightness) const;
-    void setBlendEnabled(bool enabled);
-    void createRenderNode(Item *item, RenderContext *context);
-
     OpenGLBackend *m_backend;
     GLuint vao = 0;
-    bool m_blendingEnabled = false;
 };
 
 /**
