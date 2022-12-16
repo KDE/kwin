@@ -170,6 +170,7 @@ public:
     void setTimestamp(quint32 time);
     quint32 timestamp() const;
 
+    bool primarySelectionEnabled() const;
     void setPrimarySelectionEnabled(bool enabled);
 
     /**

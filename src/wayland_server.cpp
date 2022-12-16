@@ -169,6 +169,10 @@ public:
             return false;
         }
 
+        if (!waylandServer()->seat()->primarySelectionEnabled() && interfaceName == QLatin1String("zwp_primary_selection_device_manager_v1")) {
+            return false;
+        }
+
         if (!interfacesBlackList.contains(interfaceName)) {
             return true;
         }
