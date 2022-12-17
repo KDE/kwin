@@ -84,11 +84,6 @@ bool SceneOpenGL::animationsSupported() const
     return !GLPlatform::instance()->isSoftwareEmulation();
 }
 
-QVector<QByteArray> SceneOpenGL::openGLPlatformInterfaceExtensions() const
-{
-    return m_backend->extensions().toVector();
-}
-
 std::shared_ptr<GLTexture> SceneOpenGL::textureForOutput(Output *output) const
 {
     return m_backend->textureForOutput(output);

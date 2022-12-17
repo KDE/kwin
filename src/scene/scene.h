@@ -136,15 +136,6 @@ public:
      */
     virtual bool animationsSupported() const = 0;
 
-    /**
-     * The backend specific extensions (e.g. EGL/GLX extensions).
-     *
-     * Not the OpenGL (ES) extension!
-     *
-     * Default implementation returns empty list
-     */
-    virtual QVector<QByteArray> openGLPlatformInterfaceExtensions() const;
-
     virtual std::shared_ptr<GLTexture> textureForOutput(Output *output) const
     {
         return {};

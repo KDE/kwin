@@ -13,7 +13,7 @@
 #include "internalwindow.h"
 #include "keyboard_input.h"
 #include "main.h"
-#include "scene/scene.h"
+#include "platformsupport/scenes/opengl/openglbackend.h"
 #include "unmanaged.h"
 #include "utils/filedescriptor.h"
 #include "utils/subsurfacemonitor.h"
@@ -683,7 +683,8 @@ void DebugConsole::initGLTab()
         return text;
     };
 
-    m_ui->platformExtensionsLabel->setText(extensionsString(Compositor::self()->scene()->openGLPlatformInterfaceExtensions()));
+    const OpenGLBackend *backend = static_cast<OpenGLBackend *>(Compositor::self()->backend());
+    m_ui->platformExtensionsLabel->setText(extensionsString(backend->extensions()));
     m_ui->openGLExtensionsLabel->setText(extensionsString(openGLExtensions()));
 }
 

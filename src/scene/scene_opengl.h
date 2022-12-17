@@ -42,7 +42,6 @@ public:
         return m_backend;
     }
 
-    QVector<QByteArray> openGLPlatformInterfaceExtensions() const override;
     std::shared_ptr<GLTexture> textureForOutput(Output *output) const override;
 
 private:

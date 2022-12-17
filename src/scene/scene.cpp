@@ -603,9 +603,4 @@ bool Scene::supportsNativeFence() const
     return false;
 }
 
-QVector<QByteArray> Scene::openGLPlatformInterfaceExtensions() const
-{
-    return QVector<QByteArray>{};
-}
-
 } // namespace
