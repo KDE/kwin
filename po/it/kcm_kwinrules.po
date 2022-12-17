@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-11 00:48+0000\n"
-"PO-Revision-Date: 2022-04-19 18:18+0200\n"
+"PO-Revision-Date: 2022-12-12 16:35+0100\n"
 "Last-Translator: Paolo Zamponi <zapaolo@email.it>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 22.12.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -117,12 +117,12 @@ msgstr "Non importante"
 #: optionsmodel.cpp:199
 #, kde-format
 msgid "Exact Match"
-msgstr "Esattamente"
+msgstr "Corrispondenza esatta"
 
 #: optionsmodel.cpp:200
 #, kde-format
 msgid "Substring Match"
-msgstr "Sottostringa"
+msgstr "Corrispondenza della sotto-stringa"
 
 #: optionsmodel.cpp:201
 #, kde-format
@@ -309,19 +309,19 @@ msgstr "Esporta regole"
 #: package/contents/ui/OptionsComboBox.qml:35
 #, kde-format
 msgid "None selected"
-msgstr "Nessuna selezionato"
+msgstr "Nessuna selezionata"
 
 #: package/contents/ui/OptionsComboBox.qml:41
 #, kde-format
 msgid "All selected"
-msgstr "Tutti selezionati"
+msgstr "Tutte selezionate"
 
 #: package/contents/ui/OptionsComboBox.qml:43
 #, kde-format
 msgid "%1 selected"
 msgid_plural "%1 selected"
-msgstr[0] "%1 selezionato"
-msgstr[1] "%1 selezionati"
+msgstr[0] "%1 selezionata"
+msgstr[1] "%1 selezionate"
 
 #: package/contents/ui/RulesEditor.qml:63
 #, kde-format
@@ -790,10 +790,9 @@ msgid "Block compositing"
 msgstr "Blocca la composizione"
 
 #: rulesmodel.cpp:703
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Classe della finestra (applicazione)"
+msgstr "Classe della finestra non disponibile"
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -804,6 +803,11 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Questa applicazione non sta fornendo una classe per la finestra, quindi KWin "
+"non può usarla per associare e applicare le regole. Se vuoi ancora "
+"applicargli delle regole, cerca piuttosto di associare altre proprietà, ad "
+"esempio il suo titolo.<nl/><nl/>Considera l'idea di segnalare questo bug "
+"agli sviluppatori di questa applicazione."
 
 #: rulesmodel.cpp:738
 #, kde-format
@@ -954,8 +958,7 @@ msgid "Extreme"
 msgstr "Estrema"
 
 #: rulesmodel.cpp:865
-#, fuzzy, kde-format
-#| msgid "Unmanaged Window"
+#, kde-format
 msgid "Unmanaged window"
 msgstr "Finestra non gestita"
 

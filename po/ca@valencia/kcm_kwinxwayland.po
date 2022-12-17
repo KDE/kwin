@@ -1,0 +1,113 @@
+# Translation of kcm_kwinxwayland.po to Catalan (Valencian)
+# Copyright (C) 2022 This_file_is_part_of_KDE
+# This file is distributed under the license LGPL version 2.1 or
+# version 3 or later versions approved by the membership of KDE e.V.
+#
+# Josep M. Ferrer <txemaq@gmail.com>, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-12-17 00:51+0000\n"
+"PO-Revision-Date: 2022-12-16 14:18+0100\n"
+"Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
+"Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
+"Language: ca@valencia\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 20.12.0\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Josep M. Ferrer"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "txemaq@gmail.com"
+
+#: kcmkwinxwayland.cpp:30
+#, kde-format
+msgid "Legacy X11 App Support"
+msgstr "Implementació de les aplicacions X11 antigues"
+
+#: kcmkwinxwayland.cpp:32
+#, kde-format
+msgid "Allow legacy X11 apps to read keystrokes typed in other apps"
+msgstr ""
+"Permet que les aplicacions X11 antigues lligen les pulsacions de tecles "
+"teclejades en altres aplicacions"
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid ""
+"This module lets configure which keyboard events are forwarded to X11 apps "
+"regardless of their focus."
+msgstr ""
+"Este mòdul permet configurar quins esdeveniments de teclat es reenviaran a "
+"les aplicacions X11 independentment del seu focus."
+
+#: package/contents/ui/main.qml:49
+#, fuzzy, kde-format
+#| msgid ""
+#| "Legacy X11 apps require the ability to read keystrokes typed in other "
+#| "apps for features that are activated using global keyboard shortcuts. "
+#| "This is disabled by default for security reasons. If you need to use such "
+#| "apps, you can chose your preferred balance of security and functionality "
+#| "here."
+msgid ""
+"Legacy X11 apps require the ability to read keystrokes typed in other apps "
+"for features that are activated using global keyboard shortcuts. This is "
+"disabled by default for security reasons. If you need to use such apps, you "
+"can choose your preferred balance of security and functionality here."
+msgstr ""
+"Les aplicacions X11 antigues requerixen la capacitat de llegir les "
+"pulsacions de tecles teclejades en altres aplicacions per a característiques "
+"que s'activen mitjançant dreceres globals de teclat. De manera "
+"predeterminada està desactivada per motius de seguretat. Si necessiteu "
+"utilitzar estes aplicacions, podeu triar ací l'equilibri preferit entre "
+"seguretat i funcionalitat."
+
+#: package/contents/ui/main.qml:66
+#, kde-format
+msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
+msgstr ""
+"Permet que les aplicacions X11 antigues lligen les pulsacions de tecles "
+"teclejades en totes aplicacions:"
+
+#: package/contents/ui/main.qml:67
+#, kde-format
+msgid "Never"
+msgstr "Mai"
+
+#: package/contents/ui/main.qml:70
+#, kde-format
+msgid "Only Meta, Control, Alt, and Shift keys"
+msgstr "Només les tecles Meta, Control, Alt i Majúscules"
+
+#: package/contents/ui/main.qml:73
+#, kde-format
+msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+msgstr ""
+"Totes les tecles, però només quan es premen les tecles Meta, Ctrl, Alt o "
+"Majúscules"
+
+#: package/contents/ui/main.qml:77
+#, kde-format
+msgid "Always"
+msgstr "Sempre"
+
+#: package/contents/ui/main.qml:84
+#, kde-format
+msgid ""
+"Note that using this setting will reduce system security to that of the X11 "
+"session by permitting malicious software to steal passwords and spy on the "
+"text that you type. Make sure you understand and accept this risk."
+msgstr ""
+"Cal tindre en compte que l'ús d'este paràmetre reduirà la seguretat del "
+"sistema a la de la sessió X11 permetent que programari maliciós robe "
+"contrasenyes i espie el text que escriviu. Assegureu-vos d'entendre i "
+"acceptar este risc."
