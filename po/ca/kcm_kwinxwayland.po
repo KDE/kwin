@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-17 00:51+0000\n"
-"PO-Revision-Date: 2022-12-16 14:18+0100\n"
+"PO-Revision-Date: 2022-12-17 11:39+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -51,7 +51,7 @@ msgstr ""
 "les aplicacions X11 independentment del seu focus."
 
 #: package/contents/ui/main.qml:49
-#, fuzzy, kde-format
+#, kde-format
 #| msgid ""
 #| "Legacy X11 apps require the ability to read keystrokes typed in other "
 #| "apps for features that are activated using global keyboard shortcuts. "

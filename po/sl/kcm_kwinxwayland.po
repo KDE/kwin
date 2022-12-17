@@ -1,42 +1,42 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# Freek de Kruijf <freekdekruijf@kde.nl>, 2022.
+# Matjaž Jeran <matjaz.jeran@amis.net>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-17 00:51+0000\n"
-"PO-Revision-Date: 2022-12-16 11:13+0100\n"
-"Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
-"Language-Team: \n"
-"Language: nl\n"
+"PO-Revision-Date: 2022-12-17 07:09+0100\n"
+"Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
+"Language-Team: Slovenian <lugos-slo@lugos.si>\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.0\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100>=3 && n"
+"%100<=4 ? 2 : 3);\n"
+"X-Generator: Lokalize 22.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Freek de Kruijf - 2022"
+msgstr "Matjaž Jeran"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "freekdekruijf@kde.nl"
+msgstr "matjaz.jeran@amis.net"
 
 #: kcmkwinxwayland.cpp:30
 #, kde-format
 msgid "Legacy X11 App Support"
-msgstr "Verouderde ondersteuning voor X11 App"
+msgstr "Podpora tradicionalnim aplikacijam X11"
 
 #: kcmkwinxwayland.cpp:32
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in other apps"
-msgstr ""
-"Verouderde X11 apps toestaan om toetsaanslagen te lezen getypt in andere apps"
+msgstr "Dovoli tradicionalnim aplikacijam X11 branje tipk v drugih aplikacijah"
 
 #: package/contents/ui/main.qml:19
 #, kde-format
@@ -44,56 +44,50 @@ msgid ""
 "This module lets configure which keyboard events are forwarded to X11 apps "
 "regardless of their focus."
 msgstr ""
-"Deze module laat configureren welke toetsenbordgebeurtenissen doorgestuurd "
-"worden naar X11 apps ongeacht hun focus."
+"Ta modul omogoča konfiguriranje, katere dogodke na tipkovnici se posredujejo "
+"aplikacijam X11 ne glede na njihovo osredotočenost."
 
 #: package/contents/ui/main.qml:49
-#, fuzzy, kde-format
-#| msgid ""
-#| "Legacy X11 apps require the ability to read keystrokes typed in other "
-#| "apps for features that are activated using global keyboard shortcuts. "
-#| "This is disabled by default for security reasons. If you need to use such "
-#| "apps, you can chose your preferred balance of security and functionality "
-#| "here."
+#, kde-format
 msgid ""
 "Legacy X11 apps require the ability to read keystrokes typed in other apps "
 "for features that are activated using global keyboard shortcuts. This is "
 "disabled by default for security reasons. If you need to use such apps, you "
 "can choose your preferred balance of security and functionality here."
 msgstr ""
-"Verouderde X11 apps vereisen de mogelijkheid om toetsenbordaanslagen te "
-"lezen die zijn getypt in andere apps voor functies die geactiveerd worden "
-"met gebruik van globale toetsenbordsneltoetsen. Dit is standaard "
-"uitgeschakeld vanwege beveiliging. Als u zulke apps nodig hebt, dan kunt u "
-"kunt u hier uw voorkeur afwegen tussen beveiliging en functionaliteit."
+"Tradicionalne aplikacije X11 zahtevajo branje tipk, vtipkanih v druge "
+"aplikacije za funkcije, ki se aktivirajo z globalnimi bližnjicami na "
+"tipkovnici. To je privzeto onemogočeno iz varnostnih razlogov. Če že morate "
+"uporabljati takšne aplikacije, lahko tu izberete želeno ravnovesje med "
+"varnostjo in funkcionalnostjo."
 
 #: package/contents/ui/main.qml:66
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
-"Verouderde X11 apps toestaan om toetsaanslagen te lezen getypt in alle apps:"
+"Dovolite, da tradicionalne aplikacije X11 prebirajo tipke, vtipkane v vseh "
+"aplikacijah:"
 
 #: package/contents/ui/main.qml:67
 #, kde-format
 msgid "Never"
-msgstr "Nooit"
+msgstr "Nikoli"
 
 #: package/contents/ui/main.qml:70
 #, kde-format
 msgid "Only Meta, Control, Alt, and Shift keys"
-msgstr "Alleen toetsen Meta, Ctrl, Alt en Shift"
+msgstr "Samo tipke Meta, kontrolka, Alt in dvigalka"
 
 #: package/contents/ui/main.qml:73
 #, kde-format
 msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
 msgstr ""
-"Alle toetsen, maar alleen wanneer toetsen Meta, Ctrl, Alt of Shift zijn "
-"ingedrukt"
+"Vse tipke, ampak samo kadar so pritisnjene Meta, kontrolka, Alt ali dvigalka"
 
 #: package/contents/ui/main.qml:77
 #, kde-format
 msgid "Always"
-msgstr "Altijd"
+msgstr "Vedno"
 
 #: package/contents/ui/main.qml:84
 #, kde-format
@@ -102,7 +96,6 @@ msgid ""
 "session by permitting malicious software to steal passwords and spy on the "
 "text that you type. Make sure you understand and accept this risk."
 msgstr ""
-"Merk op dat deze instelling de systeembeveiliging zal verminderen tot die "
-"van de X11-sessie door toe te staan dat kwaadaardige software wachtwoorden "
-"steelt en spioneert op de tekst die u typt. Ga na dat u dit begrijpt en dit "
-"risico accepteert."
+"Upoštevajte, da bo ta nastavitev zmanjšala varnost sistema seje X11, ker "
+"dovoljuje zlonamernim programom krajo gesel in vohunjenje za besedilom, ki "
+"ga tipkate. Prepričajte se, če razumete in sprejemate to tveganje."
