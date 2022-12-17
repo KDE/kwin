@@ -215,6 +215,9 @@ void WaylandOutput::renderCursorOpengl(WaylandEglBackend *backend, const QImage 
     QMatrix4x4 mvp;
     mvp.ortho(QRect(QPoint(), beginInfo->renderTarget.size()));
 
+    GLFramebuffer *fbo = std::get<GLFramebuffer *>(beginInfo->renderTarget.nativeHandle());
+    GLFramebuffer::pushFramebuffer(fbo);
+
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -230,6 +233,8 @@ void WaylandOutput::renderCursorOpengl(WaylandEglBackend *backend, const QImage 
         texture.unbind();
         glDisable(GL_BLEND);
     }
+
+    GLFramebuffer::popFramebuffer();
 
     cursorLayer->endFrame(infiniteRegion(), infiniteRegion());
 }

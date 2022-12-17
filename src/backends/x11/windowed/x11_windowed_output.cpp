@@ -315,6 +315,9 @@ void X11WindowedOutput::renderCursorOpengl(X11WindowedEglBackend *backend, const
     QMatrix4x4 mvp;
     mvp.ortho(QRect(QPoint(), beginInfo->renderTarget.size()));
 
+    GLFramebuffer *fbo = std::get<GLFramebuffer *>(beginInfo->renderTarget.nativeHandle());
+    GLFramebuffer::pushFramebuffer(fbo);
+
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -330,6 +333,8 @@ void X11WindowedOutput::renderCursorOpengl(X11WindowedEglBackend *backend, const
         texture.unbind();
         glDisable(GL_BLEND);
     }
+
+    GLFramebuffer::popFramebuffer();
 
     cursorLayer->endFrame(infiniteRegion(), infiniteRegion());
 }

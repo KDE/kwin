@@ -69,7 +69,6 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame()
     if (!m_gbmSurface->makeContextCurrent()) {
         return std::nullopt;
     }
-    GLFramebuffer::pushFramebuffer(m_gbmSurface->fbo());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_gbmSurface->fbo()),
         .repaint = m_gbmSurface->repaintRegion(),
@@ -78,7 +77,6 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame()
 
 bool VirtualEglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    GLFramebuffer::popFramebuffer();
     const auto buffer = m_gbmSurface->swapBuffers(damagedRegion);
     if (buffer) {
         m_currentBuffer = buffer;

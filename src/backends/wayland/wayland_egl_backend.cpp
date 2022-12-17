@@ -197,7 +197,6 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
         repair = m_damageJournal.accumulate(m_buffer->age(), infiniteRegion());
     }
 
-    GLFramebuffer::pushFramebuffer(m_buffer->framebuffer());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_buffer->framebuffer()),
         .repaint = repair,
@@ -207,7 +206,6 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
 bool WaylandEglPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_damageJournal.add(damagedRegion);
-    GLFramebuffer::popFramebuffer();
     return true;
 }
 
@@ -279,7 +277,6 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
         m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
     }
 
-    GLFramebuffer::pushFramebuffer(m_framebuffer.get());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_framebuffer.get()),
         .repaint = infiniteRegion(),
@@ -288,8 +285,6 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
 
 bool WaylandEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    GLFramebuffer::popFramebuffer();
-
     // Technically, we could pass a linux-dmabuf buffer, but host kwin does not support that atm.
     const QImage image = m_texture->toImage().mirrored(false, true);
     KWayland::Client::Buffer::Ptr buffer = m_output->backend()->display()->shmPool()->createBuffer(image);

@@ -783,7 +783,6 @@ OutputLayerBeginFrameInfo GlxBackend::beginFrame()
     QRegion repaint;
     makeCurrent();
 
-    GLFramebuffer::pushFramebuffer(m_fbo.get());
     if (supportsBufferAge()) {
         repaint = m_damageJournal.accumulate(m_bufferAge, infiniteRegion());
     }
@@ -822,8 +821,6 @@ void GlxBackend::present(Output *output)
         glReadBuffer(GL_BACK);
         effectiveRenderedRegion = displayRect;
     }
-
-    GLFramebuffer::popFramebuffer();
 
     present(effectiveRenderedRegion);
 

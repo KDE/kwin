@@ -20,12 +20,16 @@ ItemRendererOpenGL::ItemRendererOpenGL()
 
 void ItemRendererOpenGL::beginFrame(RenderTarget *renderTarget)
 {
+    GLFramebuffer *fbo = std::get<GLFramebuffer *>(renderTarget->nativeHandle());
+    GLFramebuffer::pushFramebuffer(fbo);
+
     GLVertexBuffer::streamingBuffer()->beginFrame();
 }
 
 void ItemRendererOpenGL::endFrame()
 {
     GLVertexBuffer::streamingBuffer()->endOfFrame();
+    GLFramebuffer::popFramebuffer();
 }
 
 QVector4D ItemRendererOpenGL::modulate(float opacity, float brightness) const

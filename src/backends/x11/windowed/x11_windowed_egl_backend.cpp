@@ -41,7 +41,6 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
 {
     eglMakeCurrent(m_backend->eglDisplay(), m_eglSurface, m_eglSurface, m_backend->context());
     ensureFbo();
-    GLFramebuffer::pushFramebuffer(m_fbo.get());
 
     QRegion repaint = m_output->exposedArea() + m_output->rect();
     m_output->clearExposedArea();
@@ -55,7 +54,6 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
 bool X11WindowedEglPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_lastDamage = damagedRegion;
-    GLFramebuffer::popFramebuffer();
     return true;
 }
 
@@ -112,7 +110,6 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame()
         m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
     }
 
-    GLFramebuffer::pushFramebuffer(m_framebuffer.get());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_framebuffer.get()),
         .repaint = infiniteRegion(),
@@ -121,8 +118,6 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame()
 
 bool X11WindowedEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    GLFramebuffer::popFramebuffer();
-
     const QImage buffer = m_texture->toImage().mirrored(false, true);
     m_output->cursor()->update(buffer, m_hotspot);
 

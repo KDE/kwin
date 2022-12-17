@@ -165,8 +165,6 @@ OutputLayerBeginFrameInfo EglBackend::beginFrame()
 
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
 
-    // Push the default framebuffer to the render target stack.
-    GLFramebuffer::pushFramebuffer(m_fbo.get());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_fbo.get()),
         .repaint = repaint,
@@ -198,9 +196,6 @@ void EglBackend::present(Output *output)
             effectiveRenderedRegion = displayRect;
         }
     }
-
-    // Pop the default render target from the render target stack.
-    GLFramebuffer::popFramebuffer();
 
     presentSurface(surface(), effectiveRenderedRegion, workspace()->geometry());
 

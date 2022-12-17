@@ -500,6 +500,9 @@ void DrmOutput::renderCursorOpengl(const RenderTarget &renderTarget, const QSize
     QMatrix4x4 mvp;
     mvp.ortho(QRect(QPoint(), renderTarget.size()));
 
+    GLFramebuffer *fbo = std::get<GLFramebuffer *>(renderTarget.nativeHandle());
+    GLFramebuffer::pushFramebuffer(fbo);
+
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -512,6 +515,8 @@ void DrmOutput::renderCursorOpengl(const RenderTarget &renderTarget, const QSize
     m_cursor.texture->render(QRect(0, 0, cursorSize.width(), cursorSize.height()), renderTarget.devicePixelRatio());
     m_cursor.texture->unbind();
     glDisable(GL_BLEND);
+
+    GLFramebuffer::popFramebuffer();
 }
 
 void DrmOutput::renderCursorQPainter(const RenderTarget &renderTarget)

@@ -96,9 +96,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
         }
     }
 
-    GLFramebuffer::pushFramebuffer(m_surface.gbmSurface->fbo());
     if (m_shadowBuffer) {
-        GLFramebuffer::pushFramebuffer(m_shadowBuffer->fbo());
         // the blit after rendering will completely overwrite the back buffer anyways
         return OutputLayerBeginFrameInfo{
             .renderTarget = RenderTarget(m_shadowBuffer->fbo()),
@@ -130,11 +128,11 @@ void EglGbmLayerSurface::aboutToStartPainting(DrmOutput *output, const QRegion &
 bool EglGbmLayerSurface::endRendering(DrmPlane::Transformations renderOrientation, const QRegion &damagedRegion)
 {
     if (m_shadowBuffer) {
-        GLFramebuffer::popFramebuffer();
+        GLFramebuffer::pushFramebuffer(m_surface.gbmSurface->fbo());
         // TODO handle bufferOrientation != Rotate0
         m_shadowBuffer->render(renderOrientation);
+        GLFramebuffer::popFramebuffer();
     }
-    GLFramebuffer::popFramebuffer();
     const auto gbmBuffer = m_surface.gbmSurface->swapBuffers(damagedRegion);
     if (!gbmBuffer) {
         return false;

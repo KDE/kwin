@@ -48,7 +48,6 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
         m_fbo = std::make_unique<GLFramebuffer>(m_texture.get());
     }
 
-    GLFramebuffer::pushFramebuffer(m_fbo.get());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_fbo.get()),
         .repaint = infiniteRegion(),
@@ -57,7 +56,6 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
 
 bool VirtualEglLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    GLFramebuffer::popFramebuffer();
     return true;
 }
 
