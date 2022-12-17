@@ -202,7 +202,7 @@ void DrmGpu::initDrmResources()
             const auto notconnected = std::find_if(list.begin(), list.end(), [](DrmPlane *plane) {
                 return plane->getProp(DrmPlane::PropertyIndex::CrtcId)->pending() == 0;
             });
-            if (notconnected == list.end()) {
+            if (notconnected != list.end()) {
                 return *notconnected;
             }
             return list.empty() ? nullptr : list.front();
