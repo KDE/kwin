@@ -18,7 +18,7 @@ add_subdirectory(qml)
 
 add_subdirectory(libkwineffects)
 if (KWIN_BUILD_KCMS)
-    add_subdirectory(kcmkwin)
+    add_subdirectory(kcms)
 endif()
 
 add_library(kwin SHARED)
