@@ -6,8 +6,8 @@
 
 #include "scene/surfaceitem_x11.h"
 #include "composite.h"
+#include "core/renderbackend.h"
 #include "deleted.h"
-#include "scene/scene.h"
 #include "x11syncmanager.h"
 
 namespace KWin
@@ -183,7 +183,7 @@ std::unique_ptr<SurfacePixmap> SurfaceItemX11::createPixmap()
 }
 
 SurfacePixmapX11::SurfacePixmapX11(SurfaceItemX11 *item, QObject *parent)
-    : SurfacePixmap(Compositor::self()->scene()->createSurfaceTextureX11(this), parent)
+    : SurfacePixmap(Compositor::self()->backend()->createSurfaceTextureX11(this), parent)
     , m_item(item)
 {
 }

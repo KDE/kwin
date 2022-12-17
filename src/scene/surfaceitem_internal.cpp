@@ -6,9 +6,9 @@
 
 #include "scene/surfaceitem_internal.h"
 #include "composite.h"
+#include "core/renderbackend.h"
 #include "deleted.h"
 #include "internalwindow.h"
-#include "scene/scene.h"
 
 #include <QOpenGLFramebufferObject>
 
@@ -61,7 +61,7 @@ void SurfaceItemInternal::handleWindowClosed(Window *original, Deleted *deleted)
 }
 
 SurfacePixmapInternal::SurfacePixmapInternal(SurfaceItemInternal *item, QObject *parent)
-    : SurfacePixmap(Compositor::self()->scene()->createSurfaceTextureInternal(this), parent)
+    : SurfacePixmap(Compositor::self()->backend()->createSurfaceTextureInternal(this), parent)
     , m_item(item)
 {
 }

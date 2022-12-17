@@ -11,12 +11,18 @@
 
 #include <QObject>
 
+#include <memory>
+
 namespace KWin
 {
 
 class Output;
 class OverlayWindow;
 class OutputLayer;
+class SurfacePixmapInternal;
+class SurfacePixmapWayland;
+class SurfacePixmapX11;
+class SurfaceTexture;
 
 /**
  * The RenderBackend class is the base class for all rendering backends.
@@ -37,6 +43,10 @@ public:
     virtual void present(Output *output) = 0;
 
     virtual QHash<uint32_t, QVector<uint64_t>> supportedFormats() const;
+
+    virtual std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
+    virtual std::unique_ptr<SurfaceTexture> createSurfaceTextureX11(SurfacePixmapX11 *pixmap);
+    virtual std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
 };
 
 } // namespace KWin

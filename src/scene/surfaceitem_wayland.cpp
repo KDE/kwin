@@ -6,8 +6,8 @@
 
 #include "scene/surfaceitem_wayland.h"
 #include "composite.h"
+#include "core/renderbackend.h"
 #include "deleted.h"
-#include "scene/scene.h"
 #include "wayland/clientbuffer.h"
 #include "wayland/subcompositor_interface.h"
 #include "wayland/surface_interface.h"
@@ -143,7 +143,7 @@ ContentType SurfaceItemWayland::contentType() const
 }
 
 SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item, QObject *parent)
-    : SurfacePixmap(Compositor::self()->scene()->createSurfaceTextureWayland(this), parent)
+    : SurfacePixmap(Compositor::self()->backend()->createSurfaceTextureWayland(this), parent)
     , m_item(item)
 {
 }

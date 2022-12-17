@@ -11,7 +11,6 @@
 #include <kwineffects.h>
 #include <kwinglutils_funcs.h>
 
-#include "scene/surfaceitem.h"
 #include "utils/common.h"
 #include "workspace.h"
 
@@ -60,21 +59,6 @@ void OpenGLBackend::copyPixels(const QRegion &region, const QSize &screenSize)
 std::shared_ptr<KWin::GLTexture> OpenGLBackend::textureForOutput(Output *output) const
 {
     return {};
-}
-
-std::unique_ptr<SurfaceTexture> OpenGLBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
-{
-    return nullptr;
-}
-
-std::unique_ptr<SurfaceTexture> OpenGLBackend::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
-{
-    return nullptr;
-}
-
-std::unique_ptr<SurfaceTexture> OpenGLBackend::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
-{
-    return nullptr;
 }
 
 bool OpenGLBackend::checkGraphicsReset()

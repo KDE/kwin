@@ -608,19 +608,4 @@ QVector<QByteArray> Scene::openGLPlatformInterfaceExtensions() const
     return QVector<QByteArray>{};
 }
 
-std::unique_ptr<SurfaceTexture> Scene::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
-{
-    return nullptr;
-}
-
-std::unique_ptr<SurfaceTexture> Scene::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
-{
-    return nullptr;
-}
-
-std::unique_ptr<SurfaceTexture> Scene::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
-{
-    return nullptr;
-}
-
 } // namespace

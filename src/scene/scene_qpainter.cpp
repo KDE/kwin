@@ -10,7 +10,6 @@
 // KWin
 #include "decorations/decoratedclient.h"
 #include "scene/itemrenderer_qpainter.h"
-#include "scene/surfaceitem.h"
 #include "window.h"
 
 // Qt
@@ -45,16 +44,6 @@ Shadow *SceneQPainter::createShadow(Window *window)
 DecorationRenderer *SceneQPainter::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)
 {
     return new SceneQPainterDecorationRenderer(impl);
-}
-
-std::unique_ptr<SurfaceTexture> SceneQPainter::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
-{
-    return m_backend->createSurfaceTextureInternal(pixmap);
-}
-
-std::unique_ptr<SurfaceTexture> SceneQPainter::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
-{
-    return m_backend->createSurfaceTextureWayland(pixmap);
 }
 
 //****************************************

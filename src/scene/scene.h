@@ -40,10 +40,6 @@ class Scene;
 class Shadow;
 class ShadowItem;
 class SurfaceItem;
-class SurfacePixmapInternal;
-class SurfacePixmapWayland;
-class SurfacePixmapX11;
-class SurfaceTexture;
 class WindowItem;
 
 class SceneDelegate : public RenderLayerDelegate
@@ -153,10 +149,6 @@ public:
     {
         return {};
     }
-
-    virtual std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
-    virtual std::unique_ptr<SurfaceTexture> createSurfaceTextureX11(SurfacePixmapX11 *pixmap);
-    virtual std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
 
     ItemRenderer *renderer() const;
 

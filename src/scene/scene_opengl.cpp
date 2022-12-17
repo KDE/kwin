@@ -19,7 +19,6 @@
 #include "core/output.h"
 #include "decorations/decoratedclient.h"
 #include "scene/itemrenderer_opengl.h"
-#include "scene/surfaceitem.h"
 #include "window.h"
 
 #include <cmath>
@@ -93,21 +92,6 @@ QVector<QByteArray> SceneOpenGL::openGLPlatformInterfaceExtensions() const
 std::shared_ptr<GLTexture> SceneOpenGL::textureForOutput(Output *output) const
 {
     return m_backend->textureForOutput(output);
-}
-
-std::unique_ptr<SurfaceTexture> SceneOpenGL::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
-{
-    return m_backend->createSurfaceTextureInternal(pixmap);
-}
-
-std::unique_ptr<SurfaceTexture> SceneOpenGL::createSurfaceTextureWayland(SurfacePixmapWayland *pixmap)
-{
-    return m_backend->createSurfaceTextureWayland(pixmap);
-}
-
-std::unique_ptr<SurfaceTexture> SceneOpenGL::createSurfaceTextureX11(SurfacePixmapX11 *pixmap)
-{
-    return m_backend->createSurfaceTextureX11(pixmap);
 }
 
 //****************************************

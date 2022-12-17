@@ -20,9 +20,6 @@ class QString;
 namespace KWin
 {
 
-class SurfacePixmapInternal;
-class SurfacePixmapWayland;
-class SurfaceTexture;
 class Output;
 
 class KWIN_EXPORT QPainterBackend : public RenderBackend
@@ -34,8 +31,8 @@ public:
 
     CompositingType compositingType() const override final;
 
-    std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap);
-    std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap);
+    std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
+    std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
 
     /**
      * @brief Whether the creation of the Backend failed.
