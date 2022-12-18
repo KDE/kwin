@@ -168,7 +168,7 @@ void Scene::createDndIconItem()
     if (!dragIcon) {
         return;
     }
-    m_dndIcon = std::make_unique<DragAndDropIconItem>(dragIcon);
+    m_dndIcon = std::make_unique<DragAndDropIconItem>(dragIcon, this);
     if (waylandServer()->seat()->isDragPointer()) {
         m_dndIcon->setPosition(waylandServer()->seat()->pointerPos());
         connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::pointerPosChanged, m_dndIcon.get(), [this]() {

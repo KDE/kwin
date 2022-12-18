@@ -11,8 +11,8 @@
 namespace KWin
 {
 
-ShadowItem::ShadowItem(Shadow *shadow, Window *window, Item *parent)
-    : Item(parent)
+ShadowItem::ShadowItem(Shadow *shadow, Window *window, Scene *scene, Item *parent)
+    : Item(scene, parent)
     , m_window(window)
     , m_shadow(shadow)
 {

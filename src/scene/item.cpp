@@ -5,7 +5,6 @@
 */
 
 #include "scene/item.h"
-#include "composite.h"
 #include "core/renderlayer.h"
 #include "core/renderloop.h"
 #include "scene/scene.h"
@@ -14,8 +13,8 @@
 namespace KWin
 {
 
-Item::Item(Item *parent)
-    : m_scene(Compositor::self()->scene())
+Item::Item(Scene *scene, Item *parent)
+    : m_scene(scene)
 {
     setParentItem(parent);
     connect(m_scene, &Scene::delegateRemoved, this, &Item::removeRepaints);
@@ -29,6 +28,11 @@ Item::~Item()
             m_scene->addRepaint(dirty);
         }
     }
+}
+
+Scene *Item::scene() const
+{
+    return m_scene;
 }
 
 qreal Item::opacity() const
@@ -76,6 +80,7 @@ void Item::setParentItem(Item *item)
     }
     m_parentItem = item;
     if (m_parentItem) {
+        Q_ASSERT(m_parentItem->m_scene == m_scene);
         m_parentItem->addChild(this);
     }
     updateEffectiveVisibility();

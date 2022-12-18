@@ -15,8 +15,8 @@
 namespace KWin
 {
 
-SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface, Item *parent)
-    : SurfaceItem(parent)
+SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface, Scene *scene, Item *parent)
+    : SurfaceItem(scene, parent)
     , m_surface(surface)
 {
     connect(surface, &KWaylandServer::SurfaceInterface::surfaceToBufferMatrixChanged,
@@ -94,7 +94,7 @@ SurfaceItemWayland *SurfaceItemWayland::getOrCreateSubSurfaceItem(KWaylandServer
 {
     SurfaceItemWayland *&item = m_subsurfaces[child];
     if (!item) {
-        item = new SurfaceItemWayland(child->surface());
+        item = new SurfaceItemWayland(child->surface(), scene());
         item->setParent(this);
         item->setParentItem(this);
     }
@@ -202,8 +202,8 @@ void SurfacePixmapWayland::setBuffer(KWaylandServer::ClientBuffer *buffer)
     }
 }
 
-SurfaceItemXwayland::SurfaceItemXwayland(Window *window, Item *parent)
-    : SurfaceItemWayland(window->surface(), parent)
+SurfaceItemXwayland::SurfaceItemXwayland(Window *window, Scene *scene, Item *parent)
+    : SurfaceItemWayland(window->surface(), scene, parent)
     , m_window(window)
 {
     connect(window, &Window::geometryShapeChanged, this, &SurfaceItemXwayland::discardQuads);

@@ -19,8 +19,8 @@
 namespace KWin
 {
 
-WindowItem::WindowItem(Window *window, Item *parent)
-    : Item(parent)
+WindowItem::WindowItem(Window *window, Scene *scene, Item *parent)
+    : Item(scene, parent)
     , m_window(window)
 {
     connect(window, &Window::decorationChanged, this, &WindowItem::updateDecorationItem);
@@ -209,7 +209,7 @@ void WindowItem::updateShadowItem()
     Shadow *shadow = m_window->shadow();
     if (shadow) {
         if (!m_shadowItem || m_shadowItem->shadow() != shadow) {
-            m_shadowItem.reset(new ShadowItem(shadow, m_window, this));
+            m_shadowItem.reset(new ShadowItem(shadow, m_window, scene(), this));
         }
         if (m_decorationItem) {
             m_shadowItem->stackBefore(m_decorationItem.get());
@@ -227,7 +227,7 @@ void WindowItem::updateDecorationItem()
         return;
     }
     if (m_window->decoration()) {
-        m_decorationItem.reset(new DecorationItem(m_window->decoration(), m_window, this));
+        m_decorationItem.reset(new DecorationItem(m_window->decoration(), m_window, scene(), this));
         if (m_shadowItem) {
             m_decorationItem->stackAfter(m_shadowItem.get());
         } else if (m_surfaceItem) {
@@ -248,8 +248,8 @@ void WindowItem::markDamaged()
     Q_EMIT m_window->damaged(m_window);
 }
 
-WindowItemX11::WindowItemX11(Window *window, Item *parent)
-    : WindowItem(window, parent)
+WindowItemX11::WindowItemX11(Window *window, Scene *scene, Item *parent)
+    : WindowItem(window, scene, parent)
 {
     initialize();
 
@@ -261,13 +261,13 @@ void WindowItemX11::initialize()
 {
     switch (kwinApp()->operationMode()) {
     case Application::OperationModeX11:
-        updateSurfaceItem(new SurfaceItemX11(window(), this));
+        updateSurfaceItem(new SurfaceItemX11(window(), scene(), this));
         break;
     case Application::OperationModeXwayland:
         if (!window()->surface()) {
             updateSurfaceItem(nullptr);
         } else {
-            updateSurfaceItem(new SurfaceItemXwayland(window(), this));
+            updateSurfaceItem(new SurfaceItemXwayland(window(), scene(), this));
         }
         break;
     case Application::OperationModeWaylandOnly:
@@ -275,16 +275,16 @@ void WindowItemX11::initialize()
     }
 }
 
-WindowItemWayland::WindowItemWayland(Window *window, Item *parent)
-    : WindowItem(window, parent)
+WindowItemWayland::WindowItemWayland(Window *window, Scene *scene, Item *parent)
+    : WindowItem(window, scene, parent)
 {
-    updateSurfaceItem(new SurfaceItemWayland(window->surface(), this));
+    updateSurfaceItem(new SurfaceItemWayland(window->surface(), scene, this));
 }
 
-WindowItemInternal::WindowItemInternal(InternalWindow *window, Item *parent)
-    : WindowItem(window, parent)
+WindowItemInternal::WindowItemInternal(InternalWindow *window, Scene *scene, Item *parent)
+    : WindowItem(window, scene, parent)
 {
-    updateSurfaceItem(new SurfaceItemInternal(window, this));
+    updateSurfaceItem(new SurfaceItemInternal(window, scene, this));
 }
 
 } // namespace KWin

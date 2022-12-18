@@ -53,9 +53,9 @@ WaylandWindow::WaylandWindow(SurfaceInterface *surface)
     updateIcon();
 }
 
-WindowItem *WaylandWindow::createItem()
+WindowItem *WaylandWindow::createItem(Scene *scene)
 {
-    return new WindowItemWayland(this);
+    return new WindowItemWayland(this, scene);
 }
 
 QString WaylandWindow::captionNormal() const

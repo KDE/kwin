@@ -9,8 +9,8 @@
 namespace KWin
 {
 
-SurfaceItem::SurfaceItem(Item *parent)
-    : Item(parent)
+SurfaceItem::SurfaceItem(Scene *scene, Item *parent)
+    : Item(scene, parent)
 {
 }
 

@@ -79,7 +79,7 @@ class KWIN_EXPORT DecorationItem : public Item
     Q_OBJECT
 
 public:
-    explicit DecorationItem(KDecoration2::Decoration *decoration, Window *window, Item *parent = nullptr);
+    explicit DecorationItem(KDecoration2::Decoration *decoration, Window *window, Scene *scene, Item *parent = nullptr);
 
     DecorationRenderer *renderer() const;
     Window *window() const;

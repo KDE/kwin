@@ -29,8 +29,10 @@ class KWIN_EXPORT Item : public QObject
     Q_OBJECT
 
 public:
-    explicit Item(Item *parent = nullptr);
+    explicit Item(Scene *scene, Item *parent = nullptr);
     ~Item() override;
+
+    Scene *scene() const;
 
     qreal opacity() const;
     void setOpacity(qreal opacity);

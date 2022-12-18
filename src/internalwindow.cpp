@@ -67,9 +67,9 @@ InternalWindow::~InternalWindow()
 {
 }
 
-WindowItem *InternalWindow::createItem()
+WindowItem *InternalWindow::createItem(Scene *scene)
 {
-    return new WindowItemInternal(this);
+    return new WindowItemInternal(this, scene);
 }
 
 bool InternalWindow::isClient() const
