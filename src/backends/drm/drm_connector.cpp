@@ -222,10 +222,8 @@ uint32_t DrmConnector::overscan() const
 
 bool DrmConnector::vrrCapable() const
 {
-    if (const auto &prop = getProp(PropertyIndex::VrrCapable)) {
-        return prop->pending();
-    }
-    return false;
+    const auto prop = getProp(PropertyIndex::VrrCapable);
+    return prop && prop->current() == 1;
 }
 
 bool DrmConnector::hasRgbRange() const
