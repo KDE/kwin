@@ -320,7 +320,7 @@ msgstr "Canvia l'efecte d'inversió"
 #: invert/invert.cpp:49 invert/invert_config.cpp:44
 #, kde-format
 msgid "Toggle Invert Effect on Window"
-msgstr "Canvia l'efecte d'inversió a la finestra"
+msgstr "Canvia l'efecte d'inversió en la finestra"
 
 #: invert/invert.cpp:56
 #, kde-format

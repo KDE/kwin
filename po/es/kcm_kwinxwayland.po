@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-17 00:51+0000\n"
-"PO-Revision-Date: 2022-12-16 03:12+0100\n"
+"PO-Revision-Date: 2022-12-17 18:52+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -51,13 +51,7 @@ msgstr ""
 "aplicaciones X11 independientemente de su foco."
 
 #: package/contents/ui/main.qml:49
-#, fuzzy, kde-format
-#| msgid ""
-#| "Legacy X11 apps require the ability to read keystrokes typed in other "
-#| "apps for features that are activated using global keyboard shortcuts. "
-#| "This is disabled by default for security reasons. If you need to use such "
-#| "apps, you can chose your preferred balance of security and functionality "
-#| "here."
+#, kde-format
 msgid ""
 "Legacy X11 apps require the ability to read keystrokes typed in other apps "
 "for features that are activated using global keyboard shortcuts. This is "

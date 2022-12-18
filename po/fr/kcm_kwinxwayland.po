@@ -1,36 +1,40 @@
+# Xavier Besnard <xavier.besnard@neuf.fr>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-17 00:51+0000\n"
-"PO-Revision-Date: 2022-12-16 18:34+0100\n"
-"Last-Translator: KDE Francophone <kde-francophone@kde.org>\n"
-"Language-Team: KDE Francophone <kde-francophone@kde.org>\n"
+"PO-Revision-Date: 2022-12-17 15:21+0100\n"
+"Last-Translator: Xavier Besnard <xavier.besnard@neuf.fr>\n"
+"Language-Team: French <kde-francophone@kde.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Lokalize 22.12.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr ""
+msgstr "Xavier Besnard"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
+msgstr "xavier.besnard@neuf.fr"
 
 #: kcmkwinxwayland.cpp:30
 #, kde-format
 msgid "Legacy X11 App Support"
-msgstr ""
+msgstr "Prise en charge des anciennes applications sous X11"
 
 #: kcmkwinxwayland.cpp:32
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in other apps"
 msgstr ""
+"Autoriser les anciennes applications X11 à lire les appuis de touches "
+"saisies dans les autres applications"
 
 #: package/contents/ui/main.qml:19
 #, kde-format
@@ -38,6 +42,8 @@ msgid ""
 "This module lets configure which keyboard events are forwarded to X11 apps "
 "regardless of their focus."
 msgstr ""
+"Ce module permet de configurer les évènements du clavier qui sont transmis "
+"aux applications sous X11, indépendamment de leur objectif."
 
 #: package/contents/ui/main.qml:49
 #, kde-format
@@ -52,26 +58,30 @@ msgstr ""
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
+"Autoriser les anciennes applications X11 à lire les appuis de touches "
+"saisies dans toutes les applications :"
 
 #: package/contents/ui/main.qml:67
 #, kde-format
 msgid "Never"
-msgstr ""
+msgstr "Jamais"
 
 #: package/contents/ui/main.qml:70
 #, kde-format
 msgid "Only Meta, Control, Alt, and Shift keys"
-msgstr ""
+msgstr "Seulement les touches « WIN », « CTRL », « ALT » et « MAJ »"
 
 #: package/contents/ui/main.qml:73
 #, kde-format
 msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
 msgstr ""
+"Toutes les touches mais seulement les touches « WIN », « CTRL », « ALT » et "
+"« MAJ » sont utilisées"
 
 #: package/contents/ui/main.qml:77
 #, kde-format
 msgid "Always"
-msgstr ""
+msgstr "Toujours"
 
 #: package/contents/ui/main.qml:84
 #, kde-format
