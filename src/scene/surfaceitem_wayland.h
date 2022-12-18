@@ -53,7 +53,7 @@ private:
     SurfaceItemWayland *getOrCreateSubSurfaceItem(KWaylandServer::SubSurfaceInterface *s);
 
     QPointer<KWaylandServer::SurfaceInterface> m_surface;
-    QHash<KWaylandServer::SubSurfaceInterface *, SurfaceItemWayland *> m_subsurfaces;
+    std::map<KWaylandServer::SubSurfaceInterface *, std::unique_ptr<SurfaceItemWayland>> m_subsurfaces;
 };
 
 class KWIN_EXPORT SurfacePixmapWayland final : public SurfacePixmap
