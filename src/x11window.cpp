@@ -316,7 +316,7 @@ X11Window::~X11Window()
     Q_ASSERT(!check_active_modal);
 }
 
-WindowItem *X11Window::createItem(Scene *scene)
+WindowItem *X11Window::createItem(WorkspaceScene *scene)
 {
     return new WindowItemX11(this, scene);
 }

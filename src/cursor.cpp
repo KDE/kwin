@@ -15,7 +15,7 @@
 #include "input.h"
 #include "keyboard_input.h"
 #include "main.h"
-#include "scene/scene.h"
+#include "scene/workspacescene.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"
 // KDE

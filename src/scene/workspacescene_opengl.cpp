@@ -11,7 +11,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "scene_opengl.h"
+#include "workspacescene_opengl.h"
 
 #include <kwinglplatform.h>
 
@@ -38,8 +38,8 @@ namespace KWin
  * SceneOpenGL
  ***********************************************/
 
-SceneOpenGL::SceneOpenGL(OpenGLBackend *backend)
-    : Scene(std::make_unique<ItemRendererOpenGL>())
+WorkspaceSceneOpenGL::WorkspaceSceneOpenGL(OpenGLBackend *backend)
+    : WorkspaceScene(std::make_unique<ItemRendererOpenGL>())
     , m_backend(backend)
 {
     // It is not legal to not have a vertex array object bound in a core context
@@ -49,42 +49,42 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend)
     }
 }
 
-SceneOpenGL::~SceneOpenGL()
+WorkspaceSceneOpenGL::~WorkspaceSceneOpenGL()
 {
     makeOpenGLContextCurrent();
 }
 
-bool SceneOpenGL::makeOpenGLContextCurrent()
+bool WorkspaceSceneOpenGL::makeOpenGLContextCurrent()
 {
     return m_backend->makeCurrent();
 }
 
-void SceneOpenGL::doneOpenGLContextCurrent()
+void WorkspaceSceneOpenGL::doneOpenGLContextCurrent()
 {
     m_backend->doneCurrent();
 }
 
-bool SceneOpenGL::supportsNativeFence() const
+bool WorkspaceSceneOpenGL::supportsNativeFence() const
 {
     return m_backend->supportsNativeFence();
 }
 
-Shadow *SceneOpenGL::createShadow(Window *window)
+Shadow *WorkspaceSceneOpenGL::createShadow(Window *window)
 {
     return new SceneOpenGLShadow(window);
 }
 
-DecorationRenderer *SceneOpenGL::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)
+DecorationRenderer *WorkspaceSceneOpenGL::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)
 {
     return new SceneOpenGLDecorationRenderer(impl);
 }
 
-bool SceneOpenGL::animationsSupported() const
+bool WorkspaceSceneOpenGL::animationsSupported() const
 {
     return !GLPlatform::instance()->isSoftwareEmulation();
 }
 
-std::shared_ptr<GLTexture> SceneOpenGL::textureForOutput(Output *output) const
+std::shared_ptr<GLTexture> WorkspaceSceneOpenGL::textureForOutput(Output *output) const
 {
     return m_backend->textureForOutput(output);
 }
@@ -172,7 +172,7 @@ SceneOpenGLShadow::SceneOpenGLShadow(Window *window)
 
 SceneOpenGLShadow::~SceneOpenGLShadow()
 {
-    Scene *scene = Compositor::self()->scene();
+    WorkspaceScene *scene = Compositor::self()->scene();
     if (scene) {
         scene->makeOpenGLContextCurrent();
         DecorationShadowTextureCache::instance().unregister(this);
@@ -184,7 +184,7 @@ bool SceneOpenGLShadow::prepareBackend()
 {
     if (hasDecorationShadow()) {
         // simplifies a lot by going directly to
-        Scene *scene = Compositor::self()->scene();
+        WorkspaceScene *scene = Compositor::self()->scene();
         scene->makeOpenGLContextCurrent();
         m_texture = DecorationShadowTextureCache::instance().getTexture(this);
 
@@ -251,7 +251,7 @@ bool SceneOpenGLShadow::prepareBackend()
         }
     }
 
-    Scene *scene = Compositor::self()->scene();
+    WorkspaceScene *scene = Compositor::self()->scene();
     scene->makeOpenGLContextCurrent();
     m_texture = std::make_shared<GLTexture>(image);
 
@@ -272,7 +272,7 @@ SceneOpenGLDecorationRenderer::SceneOpenGLDecorationRenderer(Decoration::Decorat
 
 SceneOpenGLDecorationRenderer::~SceneOpenGLDecorationRenderer()
 {
-    if (Scene *scene = Compositor::self()->scene()) {
+    if (WorkspaceScene *scene = Compositor::self()->scene()) {
         scene->makeOpenGLContextCurrent();
     }
 }

@@ -13,7 +13,7 @@
 #include "openglbackend.h"
 
 #include "scene/decorationitem.h"
-#include "scene/scene.h"
+#include "scene/workspacescene.h"
 #include "shadow.h"
 
 #include "kwinglutils.h"
@@ -22,13 +22,13 @@ namespace KWin
 {
 class OpenGLBackend;
 
-class KWIN_EXPORT SceneOpenGL : public Scene
+class KWIN_EXPORT WorkspaceSceneOpenGL : public WorkspaceScene
 {
     Q_OBJECT
 
 public:
-    explicit SceneOpenGL(OpenGLBackend *backend);
-    ~SceneOpenGL() override;
+    explicit WorkspaceSceneOpenGL(OpenGLBackend *backend);
+    ~WorkspaceSceneOpenGL() override;
 
     Shadow *createShadow(Window *window) override;
     bool makeOpenGLContextCurrent() override;

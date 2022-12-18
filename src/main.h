@@ -40,7 +40,7 @@ class ScreenEdges;
 class Outline;
 class OutlineVisual;
 class Compositor;
-class Scene;
+class WorkspaceScene;
 class Window;
 
 class XcbEventFilter : public QAbstractNativeEventFilter
@@ -254,7 +254,7 @@ public:
     virtual std::unique_ptr<Edge> createScreenEdge(ScreenEdges *parent);
     virtual void createPlatformCursor(QObject *parent = nullptr);
     virtual std::unique_ptr<OutlineVisual> createOutline(Outline *outline);
-    virtual void createEffectsHandler(Compositor *compositor, Scene *scene);
+    virtual void createEffectsHandler(Compositor *compositor, WorkspaceScene *scene);
 
     static void setupMalloc();
     static void setupLocalizedString();

@@ -19,7 +19,7 @@
 #include "keyboard_input.h"
 #include "layershellv1integration.h"
 #include "main.h"
-#include "scene/scene.h"
+#include "scene/workspacescene.h"
 #include "unmanaged.h"
 #include "utils/serviceutils.h"
 #include "virtualdesktops.h"

@@ -9,7 +9,7 @@
 namespace KWin
 {
 
-SurfaceItem::SurfaceItem(Scene *scene, Item *parent)
+SurfaceItem::SurfaceItem(WorkspaceScene *scene, Item *parent)
     : Item(scene, parent)
 {
 }

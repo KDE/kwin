@@ -19,7 +19,7 @@
 namespace KWin
 {
 
-WindowItem::WindowItem(Window *window, Scene *scene, Item *parent)
+WindowItem::WindowItem(Window *window, WorkspaceScene *scene, Item *parent)
     : Item(scene, parent)
     , m_window(window)
 {
@@ -248,7 +248,7 @@ void WindowItem::markDamaged()
     Q_EMIT m_window->damaged(m_window);
 }
 
-WindowItemX11::WindowItemX11(Window *window, Scene *scene, Item *parent)
+WindowItemX11::WindowItemX11(Window *window, WorkspaceScene *scene, Item *parent)
     : WindowItem(window, scene, parent)
 {
     initialize();
@@ -275,13 +275,13 @@ void WindowItemX11::initialize()
     }
 }
 
-WindowItemWayland::WindowItemWayland(Window *window, Scene *scene, Item *parent)
+WindowItemWayland::WindowItemWayland(Window *window, WorkspaceScene *scene, Item *parent)
     : WindowItem(window, scene, parent)
 {
     updateSurfaceItem(new SurfaceItemWayland(window->surface(), scene, this));
 }
 
-WindowItemInternal::WindowItemInternal(InternalWindow *window, Scene *scene, Item *parent)
+WindowItemInternal::WindowItemInternal(InternalWindow *window, WorkspaceScene *scene, Item *parent)
     : WindowItem(window, scene, parent)
 {
     updateSurfaceItem(new SurfaceItemInternal(window, scene, this));

@@ -118,7 +118,7 @@ static xcb_atom_t registerSupportProperty(const QByteArray &propertyName)
 
 //---------------------
 
-EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
+EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *scene)
     : EffectsHandler(Compositor::self()->backend()->compositingType())
     , keyboard_grab_effect(nullptr)
     , fullscreen_effect(nullptr)

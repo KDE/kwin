@@ -71,7 +71,7 @@ Unmanaged::~Unmanaged()
 {
 }
 
-WindowItem *Unmanaged::createItem(Scene *scene)
+WindowItem *Unmanaged::createItem(WorkspaceScene *scene)
 {
     return new WindowItemX11(this, scene);
 }

@@ -45,7 +45,7 @@ Q_SIGNALS:
     void damaged();
 
 protected:
-    explicit SurfaceItem(Scene *scene, Item *parent = nullptr);
+    explicit SurfaceItem(WorkspaceScene *scene, Item *parent = nullptr);
 
     virtual std::unique_ptr<SurfacePixmap> createPixmap() = 0;
     void preprocess() override;

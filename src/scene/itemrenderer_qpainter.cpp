@@ -6,7 +6,7 @@
 
 #include "scene/itemrenderer_qpainter.h"
 #include "platformsupport/scenes/qpainter/qpaintersurfacetexture.h"
-#include "scene/scene_qpainter.h"
+#include "scene/workspacescene_qpainter.h"
 
 #include <QPainter>
 
@@ -53,7 +53,7 @@ void ItemRendererQPainter::renderItem(Item *item, int mask, const QRegion &_regi
     QRegion region = _region;
 
     const QRect boundingRect = item->mapToGlobal(item->boundingRect()).toAlignedRect();
-    if (!(mask & (Scene::PAINT_WINDOW_TRANSFORMED | Scene::PAINT_SCREEN_TRANSFORMED))) {
+    if (!(mask & (WorkspaceScene::PAINT_WINDOW_TRANSFORMED | WorkspaceScene::PAINT_SCREEN_TRANSFORMED))) {
         region &= boundingRect;
     }
 
@@ -66,7 +66,7 @@ void ItemRendererQPainter::renderItem(Item *item, int mask, const QRegion &_regi
     m_painter->setClipping(true);
     m_painter->setOpacity(data.opacity());
 
-    if (mask & Scene::PAINT_WINDOW_TRANSFORMED) {
+    if (mask & WorkspaceScene::PAINT_WINDOW_TRANSFORMED) {
         m_painter->translate(data.xTranslation(), data.yTranslation());
         m_painter->scale(data.xScale(), data.yScale());
     }

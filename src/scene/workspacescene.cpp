@@ -52,7 +52,7 @@
 
 */
 
-#include "scene/scene.h"
+#include "scene/workspacescene.h"
 #include "composite.h"
 #include "core/output.h"
 #include "core/renderlayer.h"
@@ -79,13 +79,13 @@
 namespace KWin
 {
 
-SceneDelegate::SceneDelegate(Scene *scene)
+SceneDelegate::SceneDelegate(WorkspaceScene *scene)
     : m_scene(scene)
 {
     m_scene->addDelegate(this);
 }
 
-SceneDelegate::SceneDelegate(Scene *scene, Output *output)
+SceneDelegate::SceneDelegate(WorkspaceScene *scene, Output *output)
     : m_scene(scene)
     , m_output(output)
 {
@@ -136,18 +136,18 @@ QRect SceneDelegate::viewport() const
 // Scene
 //****************************************
 
-Scene::Scene(std::unique_ptr<ItemRenderer> renderer)
+WorkspaceScene::WorkspaceScene(std::unique_ptr<ItemRenderer> renderer)
     : m_renderer(std::move(renderer))
 {
 }
 
-Scene::~Scene()
+WorkspaceScene::~WorkspaceScene()
 {
 }
 
-void Scene::initialize()
+void WorkspaceScene::initialize()
 {
-    connect(workspace(), &Workspace::stackingOrderChanged, this, &Scene::addRepaintFull);
+    connect(workspace(), &Workspace::stackingOrderChanged, this, &WorkspaceScene::addRepaintFull);
 
     setGeometry(workspace()->geometry());
     connect(workspace(), &Workspace::geometryChanged, this, [this]() {
@@ -155,12 +155,12 @@ void Scene::initialize()
     });
 
     if (waylandServer()) {
-        connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragStarted, this, &Scene::createDndIconItem);
-        connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragEnded, this, &Scene::destroyDndIconItem);
+        connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragStarted, this, &WorkspaceScene::createDndIconItem);
+        connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::dragEnded, this, &WorkspaceScene::destroyDndIconItem);
     }
 }
 
-void Scene::createDndIconItem()
+void WorkspaceScene::createDndIconItem()
 {
     KWaylandServer::DragAndDropIcon *dragIcon = waylandServer()->seat()->dragIcon();
     if (!dragIcon) {
@@ -180,22 +180,22 @@ void Scene::createDndIconItem()
     }
 }
 
-void Scene::destroyDndIconItem()
+void WorkspaceScene::destroyDndIconItem()
 {
     m_dndIcon.reset();
 }
 
-void Scene::addRepaintFull()
+void WorkspaceScene::addRepaintFull()
 {
     addRepaint(geometry());
 }
 
-void Scene::addRepaint(int x, int y, int width, int height)
+void WorkspaceScene::addRepaint(int x, int y, int width, int height)
 {
     addRepaint(QRegion(x, y, width, height));
 }
 
-void Scene::addRepaint(const QRegion &region)
+void WorkspaceScene::addRepaint(const QRegion &region)
 {
     for (const auto &delegate : std::as_const(m_delegates)) {
         const QRect viewport = delegate->viewport();
@@ -207,17 +207,17 @@ void Scene::addRepaint(const QRegion &region)
     }
 }
 
-QRegion Scene::damage() const
+QRegion WorkspaceScene::damage() const
 {
     return m_paintContext.damage;
 }
 
-QRect Scene::geometry() const
+QRect WorkspaceScene::geometry() const
 {
     return m_geometry;
 }
 
-void Scene::setGeometry(const QRect &rect)
+void WorkspaceScene::setGeometry(const QRect &rect)
 {
     if (m_geometry != rect) {
         m_geometry = rect;
@@ -225,17 +225,17 @@ void Scene::setGeometry(const QRect &rect)
     }
 }
 
-QList<SceneDelegate *> Scene::delegates() const
+QList<SceneDelegate *> WorkspaceScene::delegates() const
 {
     return m_delegates;
 }
 
-void Scene::addDelegate(SceneDelegate *delegate)
+void WorkspaceScene::addDelegate(SceneDelegate *delegate)
 {
     m_delegates.append(delegate);
 }
 
-void Scene::removeDelegate(SceneDelegate *delegate)
+void WorkspaceScene::removeDelegate(SceneDelegate *delegate)
 {
     m_delegates.removeOne(delegate);
     Q_EMIT delegateRemoved(delegate);
@@ -251,7 +251,7 @@ static SurfaceItem *findTopMostSurface(SurfaceItem *item)
     }
 }
 
-SurfaceItem *Scene::scanoutCandidate() const
+SurfaceItem *WorkspaceScene::scanoutCandidate() const
 {
     if (!waylandServer()) {
         return nullptr;
@@ -290,7 +290,7 @@ SurfaceItem *Scene::scanoutCandidate() const
     return candidate;
 }
 
-void Scene::prePaint(SceneDelegate *delegate)
+void WorkspaceScene::prePaint(SceneDelegate *delegate)
 {
     createStackingOrder();
 
@@ -362,7 +362,7 @@ static void accumulateRepaints(Item *item, SceneDelegate *delegate, QRegion *rep
     }
 }
 
-void Scene::preparePaintGenericScreen()
+void WorkspaceScene::preparePaintGenericScreen()
 {
     for (WindowItem *windowItem : std::as_const(stacking_order)) {
         resetRepaintsHelper(windowItem, painted_delegate);
@@ -383,7 +383,7 @@ void Scene::preparePaintGenericScreen()
     m_paintContext.damage = m_renderer->renderTargetRect();
 }
 
-void Scene::preparePaintSimpleScreen()
+void WorkspaceScene::preparePaintSimpleScreen()
 {
     for (WindowItem *windowItem : std::as_const(stacking_order)) {
         Window *window = windowItem->window();
@@ -428,7 +428,7 @@ void Scene::preparePaintSimpleScreen()
     }
 }
 
-void Scene::postPaint()
+void WorkspaceScene::postPaint()
 {
     for (WindowItem *w : std::as_const(stacking_order)) {
         effects->postPaintWindow(w->window()->effectWindow());
@@ -458,7 +458,7 @@ void Scene::postPaint()
     clearStackingOrder();
 }
 
-void Scene::paint(RenderTarget *renderTarget, const QRegion &region)
+void WorkspaceScene::paint(RenderTarget *renderTarget, const QRegion &region)
 {
     m_renderer->beginFrame(renderTarget);
 
@@ -470,13 +470,13 @@ void Scene::paint(RenderTarget *renderTarget, const QRegion &region)
     m_renderer->endFrame();
 }
 
-ItemRenderer *Scene::renderer() const
+ItemRenderer *WorkspaceScene::renderer() const
 {
     return m_renderer.get();
 }
 
 // the function that'll be eventually called by paintScreen() above
-void Scene::finalPaintScreen(int mask, const QRegion &region, ScreenPaintData &data)
+void WorkspaceScene::finalPaintScreen(int mask, const QRegion &region, ScreenPaintData &data)
 {
     m_paintScreenCount++;
     if (mask & (PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) {
@@ -488,7 +488,7 @@ void Scene::finalPaintScreen(int mask, const QRegion &region, ScreenPaintData &d
 
 // The generic painting code that can handle even transformations.
 // It simply paints bottom-to-top.
-void Scene::paintGenericScreen(int, const ScreenPaintData &)
+void WorkspaceScene::paintGenericScreen(int, const ScreenPaintData &)
 {
     if (m_paintContext.mask & PAINT_SCREEN_BACKGROUND_FIRST) {
         if (m_paintScreenCount == 1) {
@@ -506,7 +506,7 @@ void Scene::paintGenericScreen(int, const ScreenPaintData &)
 // The optimized case without any transformations at all.
 // It can paint only the requested region and can use clipping
 // to reduce painting and improve performance.
-void Scene::paintSimpleScreen(int, const QRegion &region)
+void WorkspaceScene::paintSimpleScreen(int, const QRegion &region)
 {
     // This is the occlusion culling pass
     QRegion visible = region;
@@ -537,7 +537,7 @@ void Scene::paintSimpleScreen(int, const QRegion &region)
     }
 }
 
-void Scene::createStackingOrder()
+void WorkspaceScene::createStackingOrder()
 {
     // Create a list of all windows in the stacking order
     QList<Window *> windows = workspace()->stackingOrder();
@@ -567,12 +567,12 @@ void Scene::createStackingOrder()
     }
 }
 
-void Scene::clearStackingOrder()
+void WorkspaceScene::clearStackingOrder()
 {
     stacking_order.clear();
 }
 
-void Scene::paintWindow(WindowItem *item, int mask, const QRegion &region)
+void WorkspaceScene::paintWindow(WindowItem *item, int mask, const QRegion &region)
 {
     if (region.isEmpty()) { // completely clipped
         return;
@@ -583,27 +583,27 @@ void Scene::paintWindow(WindowItem *item, int mask, const QRegion &region)
 }
 
 // the function that'll be eventually called by paintWindow() above
-void Scene::finalPaintWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
+void WorkspaceScene::finalPaintWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
 {
     effects->drawWindow(w, mask, region, data);
 }
 
 // will be eventually called from drawWindow()
-void Scene::finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
+void WorkspaceScene::finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
 {
     m_renderer->renderItem(w->windowItem(), mask, region, data);
 }
 
-bool Scene::makeOpenGLContextCurrent()
+bool WorkspaceScene::makeOpenGLContextCurrent()
 {
     return false;
 }
 
-void Scene::doneOpenGLContextCurrent()
+void WorkspaceScene::doneOpenGLContextCurrent()
 {
 }
 
-bool Scene::supportsNativeFence() const
+bool WorkspaceScene::supportsNativeFence() const
 {
     return false;
 }

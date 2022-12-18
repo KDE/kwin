@@ -28,8 +28,8 @@
 #include "core/overlaywindow.h"
 #include "core/renderloop_p.h"
 #include "options.h"
-#include "scene/scene.h"
 #include "scene/surfaceitem_x11.h"
+#include "scene/workspacescene.h"
 #include "utils/xcbutils.h"
 #include "workspace.h"
 // kwin libs

@@ -26,7 +26,7 @@ public:
     std::unique_ptr<Edge> createScreenEdge(ScreenEdges *parent) override;
     void createPlatformCursor(QObject *parent = nullptr) override;
     std::unique_ptr<OutlineVisual> createOutline(Outline *outline) override;
-    void createEffectsHandler(Compositor *compositor, Scene *scene) override;
+    void createEffectsHandler(Compositor *compositor, WorkspaceScene *scene) override;
     void startInteractiveWindowSelection(std::function<void(KWin::Window *)> callback, const QByteArray &cursorName = QByteArray()) override;
     void startInteractivePositionSelection(std::function<void(const QPoint &)> callback) override;
     PlatformCursorImage cursorImage() const override;

@@ -13,7 +13,7 @@
 #include "kwineffects.h"
 
 #include "kwinoffscreenquickview.h"
-#include "scene/scene.h"
+#include "scene/workspacescene.h"
 
 #include <QFont>
 #include <QHash>
@@ -52,7 +52,7 @@ class KWIN_EXPORT EffectsHandlerImpl : public EffectsHandler
     Q_PROPERTY(QStringList loadedEffects READ loadedEffects)
     Q_PROPERTY(QStringList listOfEffects READ listOfEffects)
 public:
-    EffectsHandlerImpl(Compositor *compositor, Scene *scene);
+    EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *scene);
     ~EffectsHandlerImpl() override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
@@ -214,7 +214,7 @@ public:
     KSharedConfigPtr config() const override;
     KSharedConfigPtr inputConfig() const override;
 
-    Scene *scene() const
+    WorkspaceScene *scene() const
     {
         return m_scene;
     }
@@ -342,7 +342,7 @@ private:
     PropertyEffectMap m_propertiesForEffects;
     QHash<QByteArray, qulonglong> m_managedProperties;
     Compositor *m_compositor;
-    Scene *m_scene;
+    WorkspaceScene *m_scene;
     QList<Effect *> m_grabbedMouseEffects;
     EffectLoader *m_effectLoader;
     int m_trackingCursorChanges;

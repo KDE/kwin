@@ -26,7 +26,7 @@ class RenderBackend;
 class RenderLayer;
 class RenderLoop;
 class RenderTarget;
-class Scene;
+class WorkspaceScene;
 class Window;
 class X11Window;
 class X11SyncManager;
@@ -69,7 +69,7 @@ public:
      */
     bool isActive();
 
-    Scene *scene() const
+    WorkspaceScene *scene() const
     {
         return m_scene.get();
     }
@@ -195,7 +195,7 @@ private:
     QTimer m_releaseSelectionTimer;
     QList<xcb_atom_t> m_unusedSupportProperties;
     QTimer m_unusedSupportPropertyTimer;
-    std::unique_ptr<Scene> m_scene;
+    std::unique_ptr<WorkspaceScene> m_scene;
     std::unique_ptr<RenderBackend> m_backend;
     QHash<RenderLoop *, RenderLayer *> m_superlayers;
     CompositingType m_selectedCompositor = NoCompositing;

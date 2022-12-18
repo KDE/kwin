@@ -15,7 +15,7 @@
 namespace KWin
 {
 
-SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface, Scene *scene, Item *parent)
+SurfaceItemWayland::SurfaceItemWayland(KWaylandServer::SurfaceInterface *surface, WorkspaceScene *scene, Item *parent)
     : SurfaceItem(scene, parent)
     , m_surface(surface)
 {
@@ -202,7 +202,7 @@ void SurfacePixmapWayland::setBuffer(KWaylandServer::ClientBuffer *buffer)
     }
 }
 
-SurfaceItemXwayland::SurfaceItemXwayland(Window *window, Scene *scene, Item *parent)
+SurfaceItemXwayland::SurfaceItemXwayland(Window *window, WorkspaceScene *scene, Item *parent)
     : SurfaceItemWayland(window->surface(), scene, parent)
     , m_window(window)
 {

@@ -11,7 +11,7 @@
 #include <core/output.h>
 #include <kwingltexture.h>
 #include <kwinglutils.h>
-#include <scene/scene.h>
+#include <scene/workspacescene.h>
 #include <workspace.h>
 
 #include <QPainter>

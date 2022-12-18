@@ -12,7 +12,7 @@
 #include "atoms.h"
 #include "composite.h"
 #include "internalwindow.h"
-#include "scene/scene.h"
+#include "scene/workspacescene.h"
 #include "wayland/shadow_interface.h"
 #include "wayland/shmclientbuffer.h"
 #include "wayland/surface_interface.h"

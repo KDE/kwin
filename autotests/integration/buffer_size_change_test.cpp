@@ -9,7 +9,7 @@
 #include "generic_scene_opengl_test.h"
 
 #include "composite.h"
-#include "scene/scene.h"
+#include "scene/workspacescene.h"
 #include "wayland_server.h"
 #include "window.h"
 
@@ -55,7 +55,7 @@ void BufferSizeChangeTest::testShmBufferSizeChange()
     QVERIFY(window);
 
     // add a first repaint
-    QSignalSpy frameRenderedSpy(Compositor::self()->scene(), &Scene::frameRendered);
+    QSignalSpy frameRenderedSpy(Compositor::self()->scene(), &WorkspaceScene::frameRendered);
     Compositor::self()->scene()->addRepaintFull();
     QVERIFY(frameRenderedSpy.wait());
 
@@ -88,7 +88,7 @@ void BufferSizeChangeTest::testShmBufferSizeChangeOnSubSurface()
     QVERIFY(parent);
 
     // add a first repaint
-    QSignalSpy frameRenderedSpy(Compositor::self()->scene(), &Scene::frameRendered);
+    QSignalSpy frameRenderedSpy(Compositor::self()->scene(), &WorkspaceScene::frameRendered);
     Compositor::self()->scene()->addRepaintFull();
     QVERIFY(frameRenderedSpy.wait());
 

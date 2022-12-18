@@ -19,7 +19,7 @@ namespace KWin
 {
 
 class SceneDelegate;
-class Scene;
+class WorkspaceScene;
 
 /**
  * The Item class is the base class for items in the scene.
@@ -29,10 +29,10 @@ class KWIN_EXPORT Item : public QObject
     Q_OBJECT
 
 public:
-    explicit Item(Scene *scene, Item *parent = nullptr);
+    explicit Item(WorkspaceScene *scene, Item *parent = nullptr);
     ~Item() override;
 
-    Scene *scene() const;
+    WorkspaceScene *scene() const;
 
     qreal opacity() const;
     void setOpacity(qreal opacity);
@@ -142,7 +142,7 @@ private:
     void updateEffectiveVisibility();
     void removeRepaints(SceneDelegate *delegate);
 
-    Scene *m_scene;
+    WorkspaceScene *m_scene;
     QPointer<Item> m_parentItem;
     QList<Item *> m_childItems;
     QMatrix4x4 m_transform;

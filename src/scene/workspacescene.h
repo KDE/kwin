@@ -36,7 +36,7 @@ class EffectWindowImpl;
 class GLTexture;
 class Item;
 class RenderLoop;
-class Scene;
+class WorkspaceScene;
 class Shadow;
 class ShadowItem;
 class SurfaceItem;
@@ -45,8 +45,8 @@ class WindowItem;
 class SceneDelegate : public RenderLayerDelegate
 {
 public:
-    explicit SceneDelegate(Scene *scene);
-    explicit SceneDelegate(Scene *scene, Output *output);
+    explicit SceneDelegate(WorkspaceScene *scene);
+    explicit SceneDelegate(WorkspaceScene *scene, Output *output);
     ~SceneDelegate() override;
 
     Output *output() const;
@@ -59,17 +59,17 @@ public:
     void paint(RenderTarget *renderTarget, const QRegion &region) override;
 
 private:
-    Scene *m_scene;
+    WorkspaceScene *m_scene;
     Output *m_output = nullptr;
 };
 
-class KWIN_EXPORT Scene : public QObject
+class KWIN_EXPORT WorkspaceScene : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit Scene(std::unique_ptr<ItemRenderer> renderer);
-    ~Scene() override;
+    explicit WorkspaceScene(std::unique_ptr<ItemRenderer> renderer);
+    ~WorkspaceScene() override;
 
     void initialize();
 

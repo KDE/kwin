@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "scene_qpainter.h"
+#include "workspacescene_qpainter.h"
 // KWin
 #include "decorations/decoratedclient.h"
 #include "scene/itemrenderer_qpainter.h"
@@ -26,22 +26,22 @@ namespace KWin
 // SceneQPainter
 //****************************************
 
-SceneQPainter::SceneQPainter(QPainterBackend *backend)
-    : Scene(std::make_unique<ItemRendererQPainter>())
+WorkspaceSceneQPainter::WorkspaceSceneQPainter(QPainterBackend *backend)
+    : WorkspaceScene(std::make_unique<ItemRendererQPainter>())
     , m_backend(backend)
 {
 }
 
-SceneQPainter::~SceneQPainter()
+WorkspaceSceneQPainter::~WorkspaceSceneQPainter()
 {
 }
 
-Shadow *SceneQPainter::createShadow(Window *window)
+Shadow *WorkspaceSceneQPainter::createShadow(Window *window)
 {
     return new SceneQPainterShadow(window);
 }
 
-DecorationRenderer *SceneQPainter::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)
+DecorationRenderer *WorkspaceSceneQPainter::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)
 {
     return new SceneQPainterDecorationRenderer(impl);
 }

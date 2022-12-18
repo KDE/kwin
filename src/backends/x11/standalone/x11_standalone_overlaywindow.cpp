@@ -11,7 +11,7 @@
 
 #include "composite.h"
 #include "kwinglobals.h"
-#include "scene/scene.h"
+#include "scene/workspacescene.h"
 #include "utils/common.h"
 #include "utils/xcbutils.h"
 #include "workspace.h"

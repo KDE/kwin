@@ -217,7 +217,7 @@ std::unique_ptr<OutlineVisual> ApplicationX11::createOutline(Outline *outline)
     return static_cast<X11StandaloneBackend *>(outputBackend())->createOutline(outline);
 }
 
-void ApplicationX11::createEffectsHandler(Compositor *compositor, Scene *scene)
+void ApplicationX11::createEffectsHandler(Compositor *compositor, WorkspaceScene *scene)
 {
     static_cast<X11StandaloneBackend *>(outputBackend())->createEffectsHandler(compositor, scene);
 }

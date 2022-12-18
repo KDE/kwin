@@ -11,19 +11,19 @@
 #include "qpainterbackend.h"
 
 #include "scene/decorationitem.h"
-#include "scene/scene.h"
+#include "scene/workspacescene.h"
 #include "shadow.h"
 
 namespace KWin
 {
 
-class KWIN_EXPORT SceneQPainter : public Scene
+class KWIN_EXPORT WorkspaceSceneQPainter : public WorkspaceScene
 {
     Q_OBJECT
 
 public:
-    explicit SceneQPainter(QPainterBackend *backend);
-    ~SceneQPainter() override;
+    explicit WorkspaceSceneQPainter(QPainterBackend *backend);
+    ~WorkspaceSceneQPainter() override;
 
     Shadow *createShadow(Window *window) override;
     DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;

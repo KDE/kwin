@@ -341,7 +341,7 @@ void Window::setOpacity(qreal opacity)
 
 bool Window::setupCompositing()
 {
-    Scene *scene = Compositor::self()->scene();
+    WorkspaceScene *scene = Compositor::self()->scene();
     if (!scene) {
         return false;
     }

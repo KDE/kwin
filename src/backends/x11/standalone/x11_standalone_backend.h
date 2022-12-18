@@ -33,7 +33,7 @@ class ScreenEdges;
 class Outline;
 class OutlineVisual;
 class Compositor;
-class Scene;
+class WorkspaceScene;
 class Window;
 
 class KWIN_EXPORT X11StandaloneBackend : public OutputBackend
@@ -58,7 +58,7 @@ public:
     void startInteractivePositionSelection(std::function<void(const QPoint &)> callback);
     PlatformCursorImage cursorImage() const;
     std::unique_ptr<OutlineVisual> createOutline(Outline *outline);
-    void createEffectsHandler(Compositor *compositor, Scene *scene);
+    void createEffectsHandler(Compositor *compositor, WorkspaceScene *scene);
 
     X11Keyboard *keyboard() const;
     RenderLoop *renderLoop() const;

@@ -241,7 +241,7 @@ std::unique_ptr<OutlineVisual> X11StandaloneBackend::createOutline(Outline *outl
     return std::make_unique<NonCompositedOutlineVisual>(outline);
 }
 
-void X11StandaloneBackend::createEffectsHandler(Compositor *compositor, Scene *scene)
+void X11StandaloneBackend::createEffectsHandler(Compositor *compositor, WorkspaceScene *scene)
 {
     new EffectsHandlerImplX11(compositor, scene);
 }

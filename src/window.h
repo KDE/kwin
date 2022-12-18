@@ -1579,7 +1579,7 @@ protected:
     void getWmOpaqueRegion();
     void discardShapeRegion();
 
-    virtual WindowItem *createItem(Scene *scene) = 0;
+    virtual WindowItem *createItem(WorkspaceScene *scene) = 0;
     void deleteItem();
 
     void getResourceClass();

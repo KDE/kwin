@@ -123,15 +123,15 @@ target_sources(kwin PRIVATE
     scene/itemrenderer.cpp
     scene/itemrenderer_opengl.cpp
     scene/itemrenderer_qpainter.cpp
-    scene/scene.cpp
-    scene/scene_opengl.cpp
-    scene/scene_qpainter.cpp
     scene/shadowitem.cpp
     scene/surfaceitem.cpp
     scene/surfaceitem_internal.cpp
     scene/surfaceitem_wayland.cpp
     scene/surfaceitem_x11.cpp
     scene/windowitem.cpp
+    scene/workspacescene.cpp
+    scene/workspacescene_opengl.cpp
+    scene/workspacescene_qpainter.cpp
     screenedge.cpp
     scripting/dbuscall.cpp
     scripting/desktopbackgrounditem.cpp

@@ -11,8 +11,8 @@
 #include "core/renderbackend.h"
 #include "effects.h"
 #include "scene/itemrenderer.h"
-#include "scene/scene.h"
 #include "scene/windowitem.h"
+#include "scene/workspacescene.h"
 #include "scripting_logging.h"
 #include "virtualdesktops.h"
 #include "window.h"
@@ -166,7 +166,7 @@ void WindowThumbnailItem::updateFrameRenderingConnection()
     }
 
     if (useGlThumbnails()) {
-        m_frameRenderingConnection = connect(Compositor::self()->scene(), &Scene::preFrameRender, this, &WindowThumbnailItem::updateOffscreenTexture);
+        m_frameRenderingConnection = connect(Compositor::self()->scene(), &WorkspaceScene::preFrameRender, this, &WindowThumbnailItem::updateOffscreenTexture);
     }
 }
 
@@ -200,7 +200,7 @@ void WindowThumbnailItem::destroyOffscreenTexture()
     }
 
     if (m_offscreenTexture) {
-        Scene *scene = Compositor::self()->scene();
+        WorkspaceScene *scene = Compositor::self()->scene();
         scene->makeOpenGLContextCurrent();
         m_offscreenTarget.reset();
         m_offscreenTexture.reset();
@@ -443,7 +443,7 @@ void WindowThumbnailItem::updateOffscreenTexture()
     // The thumbnail must be rendered using kwin's opengl context as VAOs are not
     // shared across contexts. Unfortunately, this also introduces a latency of 1
     // frame, which is not ideal, but it is acceptable for things such as thumbnails.
-    const int mask = Scene::PAINT_WINDOW_TRANSFORMED;
+    const int mask = WorkspaceScene::PAINT_WINDOW_TRANSFORMED;
     Compositor::self()->scene()->renderer()->renderItem(m_client->windowItem(), mask, infiniteRegion(), data);
     GLFramebuffer::popFramebuffer();
 

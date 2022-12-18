@@ -12,7 +12,7 @@
 #include "core/renderloop.h"
 #include "kwingltexture.h"
 #include "kwinglutils.h"
-#include "scene/scene.h"
+#include "scene/workspacescene.h"
 
 namespace KWin
 {

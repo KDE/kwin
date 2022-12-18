@@ -15,7 +15,7 @@
 #include "kwingltexture.h"
 #include "outputscreencastsource.h"
 #include "regionscreencastsource.h"
-#include "scene/scene.h"
+#include "scene/workspacescene.h"
 #include "screencaststream.h"
 #include "wayland/display.h"
 #include "wayland/output_interface.h"
@@ -70,7 +70,7 @@ public:
 private:
     void startFeeding()
     {
-        connect(Compositor::self()->scene(), &Scene::frameRendered, this, &WindowStream::bufferToStream);
+        connect(Compositor::self()->scene(), &WorkspaceScene::frameRendered, this, &WindowStream::bufferToStream);
 
         connect(m_window, &Window::damaged, this, &WindowStream::markDirty);
         markDirty();
@@ -79,7 +79,7 @@ private:
 
     void stopFeeding()
     {
-        disconnect(Compositor::self()->scene(), &Scene::frameRendered, this, &WindowStream::bufferToStream);
+        disconnect(Compositor::self()->scene(), &WorkspaceScene::frameRendered, this, &WindowStream::bufferToStream);
     }
 
     void markDirty()

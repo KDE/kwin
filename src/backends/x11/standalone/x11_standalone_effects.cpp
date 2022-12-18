@@ -20,7 +20,7 @@
 namespace KWin
 {
 
-EffectsHandlerImplX11::EffectsHandlerImplX11(Compositor *compositor, Scene *scene)
+EffectsHandlerImplX11::EffectsHandlerImplX11(Compositor *compositor, WorkspaceScene *scene)
     : EffectsHandlerImpl(compositor, scene)
 {
     connect(this, &EffectsHandlerImpl::virtualScreenGeometryChanged, this, [this]() {

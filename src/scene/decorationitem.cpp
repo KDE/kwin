@@ -10,7 +10,7 @@
 #include "core/output.h"
 #include "decorations/decoratedclient.h"
 #include "deleted.h"
-#include "scene/scene.h"
+#include "scene/workspacescene.h"
 #include "utils/common.h"
 #include "window.h"
 
@@ -124,7 +124,7 @@ void DecorationRenderer::renderToPainter(QPainter *painter, const QRect &rect)
     client()->decoration()->paint(painter, rect);
 }
 
-DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *window, Scene *scene, Item *parent)
+DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *window, WorkspaceScene *scene, Item *parent)
     : Item(scene, parent)
     , m_window(window)
 {

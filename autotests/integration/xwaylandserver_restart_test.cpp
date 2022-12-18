@@ -9,7 +9,7 @@
 #include "composite.h"
 #include "core/outputbackend.h"
 #include "main.h"
-#include "scene/scene.h"
+#include "scene/workspacescene.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
@@ -100,7 +100,7 @@ void XwaylandServerRestartTest::testRestart()
 
     // Render a frame to ensure that the compositor doesn't crash.
     Compositor::self()->scene()->addRepaintFull();
-    QSignalSpy frameRenderedSpy(Compositor::self()->scene(), &Scene::frameRendered);
+    QSignalSpy frameRenderedSpy(Compositor::self()->scene(), &WorkspaceScene::frameRendered);
     QVERIFY(frameRenderedSpy.wait());
 
     // Destroy the test window.

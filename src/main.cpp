@@ -354,7 +354,7 @@ std::unique_ptr<OutlineVisual> Application::createOutline(Outline *outline)
     return nullptr;
 }
 
-void Application::createEffectsHandler(Compositor *compositor, Scene *scene)
+void Application::createEffectsHandler(Compositor *compositor, WorkspaceScene *scene)
 {
     new EffectsHandlerImpl(compositor, scene);
 }

@@ -15,7 +15,7 @@
 namespace KWin
 {
 
-SurfaceItemInternal::SurfaceItemInternal(InternalWindow *window, Scene *scene, Item *parent)
+SurfaceItemInternal::SurfaceItemInternal(InternalWindow *window, WorkspaceScene *scene, Item *parent)
     : SurfaceItem(scene, parent)
     , m_window(window)
 {

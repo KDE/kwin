@@ -26,9 +26,9 @@
 #include "internalwindow.h"
 #include "openglbackend.h"
 #include "qpainterbackend.h"
-#include "scene/scene_opengl.h"
-#include "scene/scene_qpainter.h"
 #include "scene/surfaceitem_x11.h"
+#include "scene/workspacescene_opengl.h"
+#include "scene/workspacescene_qpainter.h"
 #include "shadow.h"
 #include "unmanaged.h"
 #include "useractions.h"
@@ -205,7 +205,7 @@ bool Compositor::attemptOpenGLCompositing()
         return false;
     }
 
-    m_scene = std::make_unique<SceneOpenGL>(backend.get());
+    m_scene = std::make_unique<WorkspaceSceneOpenGL>(backend.get());
     m_backend = std::move(backend);
 
     // set strict binding
@@ -224,7 +224,7 @@ bool Compositor::attemptQPainterCompositing()
         return false;
     }
 
-    m_scene = std::make_unique<SceneQPainter>(backend.get());
+    m_scene = std::make_unique<WorkspaceSceneQPainter>(backend.get());
     m_backend = std::move(backend);
 
     qCDebug(KWIN_CORE) << "QPainter compositing has been successfully initialized";
