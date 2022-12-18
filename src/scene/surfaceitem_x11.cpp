@@ -13,7 +13,7 @@
 namespace KWin
 {
 
-SurfaceItemX11::SurfaceItemX11(Window *window, WorkspaceScene *scene, Item *parent)
+SurfaceItemX11::SurfaceItemX11(Window *window, Scene *scene, Item *parent)
     : SurfaceItem(scene, parent)
     , m_window(window)
 {

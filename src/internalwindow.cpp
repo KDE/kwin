@@ -67,7 +67,7 @@ InternalWindow::~InternalWindow()
 {
 }
 
-WindowItem *InternalWindow::createItem(WorkspaceScene *scene)
+WindowItem *InternalWindow::createItem(Scene *scene)
 {
     return new WindowItemInternal(this, scene);
 }

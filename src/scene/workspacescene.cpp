@@ -79,65 +79,12 @@
 namespace KWin
 {
 
-SceneDelegate::SceneDelegate(WorkspaceScene *scene)
-    : m_scene(scene)
-{
-    m_scene->addDelegate(this);
-}
-
-SceneDelegate::SceneDelegate(WorkspaceScene *scene, Output *output)
-    : m_scene(scene)
-    , m_output(output)
-{
-    m_scene->addDelegate(this);
-}
-
-SceneDelegate::~SceneDelegate()
-{
-    m_scene->removeDelegate(this);
-}
-
-QRegion SceneDelegate::repaints() const
-{
-    return m_scene->damage().translated(-viewport().topLeft());
-}
-
-SurfaceItem *SceneDelegate::scanoutCandidate() const
-{
-    return m_scene->scanoutCandidate();
-}
-
-void SceneDelegate::prePaint()
-{
-    m_scene->prePaint(this);
-}
-
-void SceneDelegate::postPaint()
-{
-    m_scene->postPaint();
-}
-
-void SceneDelegate::paint(RenderTarget *renderTarget, const QRegion &region)
-{
-    m_scene->paint(renderTarget, region.translated(viewport().topLeft()));
-}
-
-Output *SceneDelegate::output() const
-{
-    return m_output;
-}
-
-QRect SceneDelegate::viewport() const
-{
-    return m_output ? m_output->geometry() : m_scene->geometry();
-}
-
 //****************************************
 // Scene
 //****************************************
 
 WorkspaceScene::WorkspaceScene(std::unique_ptr<ItemRenderer> renderer)
-    : m_renderer(std::move(renderer))
+    : Scene(std::move(renderer))
 {
 }
 
@@ -185,60 +132,9 @@ void WorkspaceScene::destroyDndIconItem()
     m_dndIcon.reset();
 }
 
-void WorkspaceScene::addRepaintFull()
-{
-    addRepaint(geometry());
-}
-
-void WorkspaceScene::addRepaint(int x, int y, int width, int height)
-{
-    addRepaint(QRegion(x, y, width, height));
-}
-
-void WorkspaceScene::addRepaint(const QRegion &region)
-{
-    for (const auto &delegate : std::as_const(m_delegates)) {
-        const QRect viewport = delegate->viewport();
-        QRegion dirtyRegion = region & viewport;
-        dirtyRegion.translate(-viewport.topLeft());
-        if (!dirtyRegion.isEmpty()) {
-            delegate->layer()->addRepaint(dirtyRegion);
-        }
-    }
-}
-
 QRegion WorkspaceScene::damage() const
 {
     return m_paintContext.damage;
-}
-
-QRect WorkspaceScene::geometry() const
-{
-    return m_geometry;
-}
-
-void WorkspaceScene::setGeometry(const QRect &rect)
-{
-    if (m_geometry != rect) {
-        m_geometry = rect;
-        addRepaintFull();
-    }
-}
-
-QList<SceneDelegate *> WorkspaceScene::delegates() const
-{
-    return m_delegates;
-}
-
-void WorkspaceScene::addDelegate(SceneDelegate *delegate)
-{
-    m_delegates.append(delegate);
-}
-
-void WorkspaceScene::removeDelegate(SceneDelegate *delegate)
-{
-    m_delegates.removeOne(delegate);
-    Q_EMIT delegateRemoved(delegate);
 }
 
 static SurfaceItem *findTopMostSurface(SurfaceItem *item)
@@ -468,11 +364,6 @@ void WorkspaceScene::paint(RenderTarget *renderTarget, const QRegion &region)
     Q_EMIT frameRendered();
 
     m_renderer->endFrame();
-}
-
-ItemRenderer *WorkspaceScene::renderer() const
-{
-    return m_renderer.get();
 }
 
 // the function that'll be eventually called by paintScreen() above

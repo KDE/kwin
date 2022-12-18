@@ -252,7 +252,7 @@ void ItemRendererOpenGL::renderItem(Item *item, int mask, const QRegion &region,
 
     RenderContext renderContext{
         .clip = region,
-        .hardwareClipping = region != infiniteRegion() && ((mask & WorkspaceScene::PAINT_WINDOW_TRANSFORMED) || (mask & WorkspaceScene::PAINT_SCREEN_TRANSFORMED)),
+        .hardwareClipping = region != infiniteRegion() && ((mask & Scene::PAINT_WINDOW_TRANSFORMED) || (mask & Scene::PAINT_SCREEN_TRANSFORMED)),
         .renderTargetScale = data.renderTargetScale().value_or(renderTargetScale()),
     };
 

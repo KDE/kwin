@@ -53,7 +53,7 @@ WaylandWindow::WaylandWindow(SurfaceInterface *surface)
     updateIcon();
 }
 
-WindowItem *WaylandWindow::createItem(WorkspaceScene *scene)
+WindowItem *WaylandWindow::createItem(Scene *scene)
 {
     return new WindowItemWayland(this, scene);
 }

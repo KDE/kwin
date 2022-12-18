@@ -59,7 +59,7 @@ public:
     { /* nothing to do */
         return geometry;
     }
-    WindowItem *createItem(WorkspaceScene *scene) override;
+    WindowItem *createItem(Scene *scene) override;
 
 public Q_SLOTS:
     void release(ReleaseReason releaseReason = ReleaseReason::Release);

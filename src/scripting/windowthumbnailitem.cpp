@@ -443,7 +443,7 @@ void WindowThumbnailItem::updateOffscreenTexture()
     // The thumbnail must be rendered using kwin's opengl context as VAOs are not
     // shared across contexts. Unfortunately, this also introduces a latency of 1
     // frame, which is not ideal, but it is acceptable for things such as thumbnails.
-    const int mask = WorkspaceScene::PAINT_WINDOW_TRANSFORMED;
+    const int mask = Scene::PAINT_WINDOW_TRANSFORMED;
     Compositor::self()->scene()->renderer()->renderItem(m_client->windowItem(), mask, infiniteRegion(), data);
     GLFramebuffer::popFramebuffer();
 

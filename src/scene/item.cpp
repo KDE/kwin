@@ -7,17 +7,17 @@
 #include "scene/item.h"
 #include "core/renderlayer.h"
 #include "core/renderloop.h"
-#include "scene/workspacescene.h"
+#include "scene/scene.h"
 #include "utils/common.h"
 
 namespace KWin
 {
 
-Item::Item(WorkspaceScene *scene, Item *parent)
+Item::Item(Scene *scene, Item *parent)
     : m_scene(scene)
 {
     setParentItem(parent);
-    connect(m_scene, &WorkspaceScene::delegateRemoved, this, &Item::removeRepaints);
+    connect(m_scene, &Scene::delegateRemoved, this, &Item::removeRepaints);
 }
 
 Item::~Item()
@@ -30,7 +30,7 @@ Item::~Item()
     }
 }
 
-WorkspaceScene *Item::scene() const
+Scene *Item::scene() const
 {
     return m_scene;
 }

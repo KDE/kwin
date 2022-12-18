@@ -52,7 +52,7 @@ Deleted::~Deleted()
     deleteShadow();
 }
 
-WindowItem *Deleted::createItem(WorkspaceScene *scene)
+WindowItem *Deleted::createItem(Scene *scene)
 {
     Q_UNREACHABLE();
 }

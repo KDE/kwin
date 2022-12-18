@@ -9,7 +9,8 @@
 
 #pragma once
 
-#include "core/renderlayerdelegate.h"
+#include "scene/scene.h"
+
 #include "kwineffects.h"
 #include "utils/common.h"
 #include "window.h"
@@ -27,8 +28,6 @@ namespace Decoration
 class DecoratedClientImpl;
 }
 
-class ItemRenderer;
-class Output;
 class DecorationRenderer;
 class Deleted;
 class DragAndDropIconItem;
@@ -42,28 +41,7 @@ class ShadowItem;
 class SurfaceItem;
 class WindowItem;
 
-class SceneDelegate : public RenderLayerDelegate
-{
-public:
-    explicit SceneDelegate(WorkspaceScene *scene);
-    explicit SceneDelegate(WorkspaceScene *scene, Output *output);
-    ~SceneDelegate() override;
-
-    Output *output() const;
-    QRect viewport() const;
-
-    QRegion repaints() const override;
-    SurfaceItem *scanoutCandidate() const override;
-    void prePaint() override;
-    void postPaint() override;
-    void paint(RenderTarget *renderTarget, const QRegion &region) override;
-
-private:
-    WorkspaceScene *m_scene;
-    Output *m_output = nullptr;
-};
-
-class KWIN_EXPORT WorkspaceScene : public QObject
+class KWIN_EXPORT WorkspaceScene : public Scene
 {
     Q_OBJECT
 
@@ -73,25 +51,11 @@ public:
 
     void initialize();
 
-    /**
-     * Schedules a repaint for the specified @a region.
-     */
-    void addRepaint(const QRegion &region);
-    void addRepaint(int x, int y, int width, int height);
-    void addRepaintFull();
-    QRegion damage() const;
-
-    QRect geometry() const;
-    void setGeometry(const QRect &rect);
-
-    QList<SceneDelegate *> delegates() const;
-    void addDelegate(SceneDelegate *delegate);
-    void removeDelegate(SceneDelegate *delegate);
-
-    SurfaceItem *scanoutCandidate() const;
-    void prePaint(SceneDelegate *delegate);
-    void postPaint();
-    void paint(RenderTarget *renderTarget, const QRegion &region);
+    QRegion damage() const override;
+    SurfaceItem *scanoutCandidate() const override;
+    void prePaint(SceneDelegate *delegate) override;
+    void postPaint() override;
+    void paint(RenderTarget *renderTarget, const QRegion &region) override;
 
     /**
      * @brief Creates the Scene specific Shadow subclass.
@@ -102,24 +66,6 @@ public:
      * @param window The Window for which the Shadow needs to be created.
      */
     virtual Shadow *createShadow(Window *window) = 0;
-    // Flags controlling how painting is done.
-    enum {
-        // WindowItem (or at least part of it) will be painted opaque.
-        PAINT_WINDOW_OPAQUE = 1 << 0,
-        // WindowItem (or at least part of it) will be painted translucent.
-        PAINT_WINDOW_TRANSLUCENT = 1 << 1,
-        // WindowItem will be painted with transformed geometry.
-        PAINT_WINDOW_TRANSFORMED = 1 << 2,
-        // Paint only a region of the screen (can be optimized, cannot
-        // be used together with TRANSFORMED flags).
-        PAINT_SCREEN_REGION = 1 << 3,
-        // Whole screen will be painted with transformed geometry.
-        PAINT_SCREEN_TRANSFORMED = 1 << 4,
-        // At least one window will be painted with transformed geometry.
-        PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS = 1 << 5,
-        // Clear whole background as the very first step, without optimizing it
-        PAINT_SCREEN_BACKGROUND_FIRST = 1 << 6,
-    };
 
     virtual bool makeOpenGLContextCurrent();
     virtual void doneOpenGLContextCurrent();
@@ -140,12 +86,9 @@ public:
         return {};
     }
 
-    ItemRenderer *renderer() const;
-
 Q_SIGNALS:
     void preFrameRender();
     void frameRendered();
-    void delegateRemoved(SceneDelegate *delegate);
 
 protected:
     void createStackingOrder();
@@ -194,10 +137,7 @@ private:
     void createDndIconItem();
     void destroyDndIconItem();
 
-    std::unique_ptr<ItemRenderer> m_renderer;
     std::chrono::milliseconds m_expectedPresentTimestamp = std::chrono::milliseconds::zero();
-    QList<SceneDelegate *> m_delegates;
-    QRect m_geometry;
     // how many times finalPaintScreen() has been called
     int m_paintScreenCount = 0;
     PaintContext m_paintContext;

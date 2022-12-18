@@ -51,6 +51,7 @@ class ClientMachine;
 class Deleted;
 class EffectWindowImpl;
 class Tile;
+class Scene;
 class Shadow;
 class SurfaceItem;
 class VirtualDesktop;
@@ -1579,7 +1580,7 @@ protected:
     void getWmOpaqueRegion();
     void discardShapeRegion();
 
-    virtual WindowItem *createItem(WorkspaceScene *scene) = 0;
+    virtual WindowItem *createItem(Scene *scene) = 0;
     void deleteItem();
 
     void getResourceClass();
