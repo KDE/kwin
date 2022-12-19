@@ -54,7 +54,7 @@ void WaylandQPainterPrimaryLayer::remapBuffer()
 
     const QSize nativeSize(m_waylandOutput->geometry().size() * m_waylandOutput->scale());
     for (const auto &slot : m_slots) {
-        slot->image = QImage(slot->buffer->address(), nativeSize.width(), nativeSize.height(), QImage::Format_ARGB32);
+        slot->image = QImage(slot->buffer->address(), nativeSize.width(), nativeSize.height(), QImage::Format_RGB32);
     }
 }
 
