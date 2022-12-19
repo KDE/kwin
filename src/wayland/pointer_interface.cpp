@@ -345,11 +345,11 @@ void CursorPrivate::update(SurfaceInterface *s, quint32 serial, const QPoint &p)
     }
     if (surface != s) {
         if (!surface.isNull()) {
-            QObject::disconnect(surface.data(), &SurfaceInterface::damaged, q, &Cursor::changed);
+            QObject::disconnect(surface.data(), &SurfaceInterface::committed, q, &Cursor::changed);
         }
         surface = s;
         if (!surface.isNull()) {
-            QObject::connect(surface.data(), &SurfaceInterface::damaged, q, &Cursor::changed);
+            QObject::connect(surface.data(), &SurfaceInterface::committed, q, &Cursor::changed);
         }
         emitChanged = true;
         Q_EMIT q->surfaceChanged();
