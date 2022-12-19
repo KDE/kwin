@@ -43,6 +43,7 @@ void QPainterSurfaceTextureWayland::update(const QRegion &region)
     const QImage image = buffer->data();
     const QRegion dirtyRegion = mapRegion(m_pixmap->item()->surfaceToBufferMatrix(), region);
     QPainter painter(&m_image);
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
 
     // The buffer data is copied as the buffer interface returns a QImage
     // which doesn't own the data of the underlying wl_shm_buffer object.
