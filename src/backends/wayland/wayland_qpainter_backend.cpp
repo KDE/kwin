@@ -96,7 +96,7 @@ WaylandQPainterBufferSlot *WaylandQPainterPrimaryLayer::acquire()
         }
     }
 
-    auto buffer = m_pool->getBuffer(nativeSize, nativeSize.width() * 4).toStrongRef();
+    auto buffer = m_pool->getBuffer(nativeSize, nativeSize.width() * 4, KWayland::Client::Buffer::Format::RGB32).toStrongRef();
     if (!buffer) {
         qCDebug(KWIN_WAYLAND_BACKEND) << "Did not get a new Buffer from Shm Pool";
         return nullptr;
