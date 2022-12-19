@@ -41,9 +41,11 @@ void ItemRendererQPainter::endFrame()
 
 void ItemRendererQPainter::renderBackground(const QRegion &region)
 {
+    m_painter->setCompositionMode(QPainter::CompositionMode_Source);
     for (const QRect &rect : region) {
-        m_painter->fillRect(rect, Qt::black);
+        m_painter->fillRect(rect, Qt::transparent);
     }
+    m_painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
 }
 
 void ItemRendererQPainter::renderItem(Item *item, int mask, const QRegion &_region, const WindowPaintData &data)
