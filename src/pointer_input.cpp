@@ -20,12 +20,10 @@
 #include "input_event_spy.h"
 #include "mousebuttons.h"
 #include "osd.h"
-#include "wayland/datadevice_interface.h"
 #include "wayland/display.h"
 #include "wayland/pointer_interface.h"
 #include "wayland/pointerconstraints_v1_interface.h"
 #include "wayland/seat_interface.h"
-#include "wayland/shmclientbuffer.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -891,7 +889,7 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     m_moveResizeCursor = std::make_unique<ShapeCursorSource>();
     m_windowSelectionCursor = std::make_unique<ShapeCursorSource>();
     m_decoration.cursor = std::make_unique<ShapeCursorSource>();
-    m_serverCursor.cursor = std::make_unique<ImageCursorSource>();
+    m_serverCursor.cursor = std::make_unique<SurfaceCursorSource>();
 
     connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::hasPointerChanged,
             this, &CursorImage::handlePointerChanged);
@@ -1014,23 +1012,9 @@ void CursorImage::updateServerCursor()
         return;
     }
     auto c = p->cursor();
-    if (!c) {
-        return;
+    if (c) {
+        m_serverCursor.cursor->update(c->surface(), c->hotspot());
     }
-
-    QImage image;
-    QPoint hotspot;
-
-    if (c->surface()) {
-        auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(c->surface()->buffer());
-        if (buffer) {
-            image = buffer->data().copy();
-            image.setDevicePixelRatio(c->surface()->bufferScale());
-            hotspot = c->hotspot();
-        }
-    }
-
-    m_serverCursor.cursor->update(image, hotspot);
 }
 
 void CursorImage::setEffectsOverrideCursor(Qt::CursorShape shape)

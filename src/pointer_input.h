@@ -35,6 +35,7 @@ class InputRedirection;
 class CursorShape;
 class ImageCursorSource;
 class ShapeCursorSource;
+class SurfaceCursorSource;
 
 namespace Decoration
 {
@@ -245,7 +246,7 @@ private:
     struct
     {
         QMetaObject::Connection connection;
-        std::unique_ptr<ImageCursorSource> cursor;
+        std::unique_ptr<SurfaceCursorSource> cursor;
     } m_serverCursor;
 };
 

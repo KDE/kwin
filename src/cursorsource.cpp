@@ -6,6 +6,8 @@
 
 #include "cursorsource.h"
 #include "cursor.h"
+#include "wayland/shmclientbuffer.h"
+#include "wayland/surface_interface.h"
 
 namespace KWin
 {
@@ -112,6 +114,36 @@ void ShapeCursorSource::selectSprite(int index)
     m_hotspot = sprite.hotspot();
     if (sprite.delay().count() && m_sprites.size() > 1) {
         m_delayTimer.start(sprite.delay());
+    }
+    Q_EMIT changed();
+}
+
+SurfaceCursorSource::SurfaceCursorSource(QObject *parent)
+    : CursorSource(parent)
+{
+}
+
+KWaylandServer::SurfaceInterface *SurfaceCursorSource::surface() const
+{
+    return m_surface;
+}
+
+void SurfaceCursorSource::update(KWaylandServer::SurfaceInterface *surface, const QPoint &hotspot)
+{
+    if (!surface) {
+        m_image = QImage();
+        m_hotspot = QPoint();
+        m_surface = nullptr;
+    } else {
+        auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(surface->buffer());
+        if (buffer) {
+            m_image = buffer->data().copy();
+            m_image.setDevicePixelRatio(surface->bufferScale());
+        } else {
+            m_image = QImage();
+        }
+        m_hotspot = hotspot;
+        m_surface = surface;
     }
     Q_EMIT changed();
 }

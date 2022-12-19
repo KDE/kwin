@@ -11,7 +11,13 @@
 #include <QImage>
 #include <QObject>
 #include <QPoint>
+#include <QPointer>
 #include <QTimer>
+
+namespace KWaylandServer
+{
+class SurfaceInterface;
+}
 
 namespace KWin
 {
@@ -78,6 +84,25 @@ private:
     QVector<KXcursorSprite> m_sprites;
     QTimer m_delayTimer;
     int m_currentSprite = -1;
+};
+
+/**
+ * The SurfaceCursorSource class repsents the contents of a cursor backed by a wl_surface.
+ */
+class KWIN_EXPORT SurfaceCursorSource : public CursorSource
+{
+    Q_OBJECT
+
+public:
+    explicit SurfaceCursorSource(QObject *parent = nullptr);
+
+    KWaylandServer::SurfaceInterface *surface() const;
+
+public Q_SLOTS:
+    void update(KWaylandServer::SurfaceInterface *surface, const QPoint &hotspot);
+
+private:
+    QPointer<KWaylandServer::SurfaceInterface> m_surface;
 };
 
 } // namespace KWin
