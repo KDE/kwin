@@ -9,6 +9,8 @@
         "Description[eu]": "Hautatu ze tekla egongo diren X11 ondare aplikazioetarako globalki erabilgarri",
         "Description[fr]": "Sélectionnez quelles touches doivent être totalement disponibles pour les applications anciennes sous X11",
         "Description[nl]": "Selecteer welke toetsen globaal beschikbaar zijn aan verouderde X11 apps",
+        "Description[pt]": "Seleccione as teclas que estarão disponíveis globalmente para as aplicações antigas em X11",
+        "Description[sl]": "Izberite tipke, ki bodo globalno na voljo za tradicionalne aplikacije X11",
         "Description[tr]": "Eski X11 uygulamalarına hangi düğmelerin global olarak kullanılabilir olacağını seç",
         "Description[uk]": "Вибір клавіш, які будуть доступні на загальному рівні програмам X11",
         "Description[x-test]": "xxSelect which keys will be globally available to legacy X11 appsxx",
@@ -20,6 +22,8 @@
         "Name[eu]": "X11 ondare aplikazioen euskarria",
         "Name[fr]": "Prise en charge des applications anciennes sous X11",
         "Name[nl]": "Verouderde ondersteuning voor X11 App",
+        "Name[pt]": "Suporte para Aplicações de X11 Antigas",
+        "Name[sl]": "Podpora tradicionalnim aplikacijam X11",
         "Name[tr]": "Eski X11 Uygulamaları Desteği",
         "Name[uk]": "Підтримка застарілих програм X11",
         "Name[x-test]": "xxLegacy X11 App Supportxx"
