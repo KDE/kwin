@@ -27,8 +27,6 @@ class DrmConnector;
 class DrmGpu;
 class DrmPipeline;
 class DumbSwapchain;
-class GLTexture;
-class RenderTarget;
 class DrmLease;
 
 class KWIN_EXPORT DrmOutput : public DrmAbstractOutput
@@ -52,7 +50,6 @@ public:
 
     bool setCursor(const QImage &image, const QPoint &hotspot) override;
     bool moveCursor(const QPoint &position) override;
-    void resetCursorTexture();
 
     DrmLease *lease() const;
     bool addLeaseObjects(QVector<uint32_t> &objectList);
@@ -67,9 +64,6 @@ private:
 
     QList<std::shared_ptr<OutputMode>> getModes() const;
 
-    void renderCursorOpengl(const RenderTarget &renderTarget, const QSize &cursorSize);
-    void renderCursorQPainter(const RenderTarget &renderTarget);
-
     DrmPipeline *m_pipeline;
     const std::shared_ptr<DrmConnector> m_connector;
 
@@ -82,9 +76,6 @@ private:
         QImage image;
         QPoint hotspot;
         QPoint position;
-
-        std::unique_ptr<GLTexture> texture;
-        qint64 cacheKey = 0;
     } m_cursor;
 };
 

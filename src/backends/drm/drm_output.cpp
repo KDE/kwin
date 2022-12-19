@@ -17,7 +17,6 @@
 #include "core/outputconfiguration.h"
 #include "core/renderloop.h"
 #include "core/renderloop_p.h"
-#include "core/session.h"
 #include "drm_dumb_buffer.h"
 #include "drm_dumb_swapchain.h"
 #include "drm_egl_backend.h"
@@ -34,6 +33,10 @@
 #include <drm_fourcc.h>
 #include <libdrm/drm_mode.h>
 #include <xf86drm.h>
+
+#include "composite.h"
+#include "core/renderlayer.h"
+#include "scene/cursorscene.h"
 
 namespace KWin
 {
@@ -159,13 +162,17 @@ bool DrmOutput::setCursor(const QImage &image, const QPoint &hotspot)
     const QRect cursorRect = QRect(m_cursor.position, cursorSize);
     const QRect nativeCursorRect = monitorMatrix.mapRect(cursorRect);
     if (nativeCursorRect.width() <= m_gpu->cursorSize().width() && nativeCursorRect.height() <= m_gpu->cursorSize().height()) {
-        if (const auto beginInfo = layer->beginFrame()) {
-            const auto &[renderTarget, repaint] = beginInfo.value();
-            if (dynamic_cast<EglGbmBackend *>(m_gpu->platform()->renderBackend())) {
-                renderCursorOpengl(renderTarget, cursorSize * scale());
-            } else {
-                renderCursorQPainter(renderTarget);
-            }
+        if (auto beginInfo = layer->beginFrame()) {
+            RenderTarget *renderTarget = &beginInfo->renderTarget;
+            renderTarget->setDevicePixelRatio(scale());
+
+            RenderLayer renderLayer(m_renderLoop.get());
+            renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene()));
+
+            renderLayer.delegate()->prePaint();
+            renderLayer.delegate()->paint(renderTarget, infiniteRegion());
+            renderLayer.delegate()->postPaint();
+
             rendered = layer->endFrame(infiniteRegion(), infiniteRegion());
         }
     }
@@ -218,11 +225,6 @@ bool DrmOutput::moveCursor(const QPoint &position)
         m_pipeline->setCursor();
     }
     return m_moveCursorSuccessful;
-}
-
-void DrmOutput::resetCursorTexture()
-{
-    m_cursor.texture.reset();
 }
 
 QList<std::shared_ptr<OutputMode>> DrmOutput::getModes() const
@@ -472,65 +474,4 @@ void DrmOutput::setColorTransformation(const std::shared_ptr<ColorTransformation
     }
 }
 
-void DrmOutput::renderCursorOpengl(const RenderTarget &renderTarget, const QSize &cursorSize)
-{
-    auto allocateTexture = [this]() {
-        if (m_cursor.image.isNull()) {
-            m_cursor.texture.reset();
-            m_cursor.cacheKey = 0;
-        } else {
-            m_cursor.texture = std::make_unique<GLTexture>(m_cursor.image);
-            m_cursor.texture->setWrapMode(GL_CLAMP_TO_EDGE);
-            m_cursor.cacheKey = m_cursor.image.cacheKey();
-        }
-    };
-
-    if (!m_cursor.texture) {
-        allocateTexture();
-    } else if (m_cursor.cacheKey != m_cursor.image.cacheKey()) {
-        if (m_cursor.image.size() == m_cursor.texture->size()) {
-            m_cursor.texture->update(m_cursor.image);
-            m_cursor.cacheKey = m_cursor.image.cacheKey();
-        } else {
-            allocateTexture();
-        }
-    }
-
-    QMatrix4x4 mvp;
-    mvp.ortho(QRect(QPoint(), renderTarget.size()));
-
-    GLFramebuffer *fbo = std::get<GLFramebuffer *>(renderTarget.nativeHandle());
-    GLFramebuffer::pushFramebuffer(fbo);
-
-    glClearColor(0, 0, 0, 0);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    m_cursor.texture->bind();
-    ShaderBinder binder(ShaderTrait::MapTexture);
-    binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-    m_cursor.texture->render(QRect(0, 0, cursorSize.width(), cursorSize.height()), renderTarget.devicePixelRatio());
-    m_cursor.texture->unbind();
-    glDisable(GL_BLEND);
-
-    GLFramebuffer::popFramebuffer();
-}
-
-void DrmOutput::renderCursorQPainter(const RenderTarget &renderTarget)
-{
-    const QRect cursorRect(QPoint(0, 0), m_cursor.image.size() / m_cursor.image.devicePixelRatio());
-
-    QImage *c = std::get<QImage *>(renderTarget.nativeHandle());
-    c->setDevicePixelRatio(scale());
-    c->fill(Qt::transparent);
-
-    QPainter p;
-    p.begin(c);
-    p.setWorldTransform(logicalToNativeMatrix(cursorRect, 1, transform()).toTransform());
-    p.setRenderHint(QPainter::SmoothPixmapTransform);
-    p.drawImage(QPoint(0, 0), m_cursor.image);
-    p.end();
-}
 }

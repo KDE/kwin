@@ -13,6 +13,7 @@
 namespace KWin
 {
 
+class GLFramebuffer;
 class GLTexture;
 
 class CursorDelegateOpenGL final : public QObject, public RenderLayerDelegate
@@ -25,8 +26,8 @@ public:
     void paint(RenderTarget *renderTarget, const QRegion &region) override;
 
 private:
-    std::unique_ptr<GLTexture> m_cursorTexture;
-    bool m_cursorTextureDirty = false;
+    std::unique_ptr<GLTexture> m_texture;
+    std::unique_ptr<GLFramebuffer> m_framebuffer;
 };
 
 } // namespace KWin

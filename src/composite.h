@@ -21,6 +21,7 @@ namespace KWin
 
 class Output;
 class CompositorSelectionOwner;
+class CursorScene;
 class CursorView;
 class RenderBackend;
 class RenderLayer;
@@ -72,6 +73,10 @@ public:
     WorkspaceScene *scene() const
     {
         return m_scene.get();
+    }
+    CursorScene *cursorScene() const
+    {
+        return m_cursorScene.get();
     }
     RenderBackend *backend() const
     {
@@ -196,6 +201,7 @@ private:
     QList<xcb_atom_t> m_unusedSupportProperties;
     QTimer m_unusedSupportPropertyTimer;
     std::unique_ptr<WorkspaceScene> m_scene;
+    std::unique_ptr<CursorScene> m_cursorScene;
     std::unique_ptr<RenderBackend> m_backend;
     QHash<RenderLoop *, RenderLayer *> m_superlayers;
     CompositingType m_selectedCompositor = NoCompositing;

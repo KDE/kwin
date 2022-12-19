@@ -26,6 +26,9 @@
 #include <QIcon>
 #include <QPainter>
 
+#include "core/renderlayer.h"
+#include "scene/cursorscene.h"
+
 namespace KWin
 {
 
@@ -310,31 +313,15 @@ void X11WindowedOutput::renderCursorOpengl(X11WindowedEglBackend *backend, const
         return;
     }
 
-    const QRect cursorRect(QPoint(0, 0), image.size() / image.devicePixelRatio());
+    RenderTarget *renderTarget = &beginInfo->renderTarget;
+    renderTarget->setDevicePixelRatio(scale());
 
-    QMatrix4x4 mvp;
-    mvp.ortho(QRect(QPoint(), beginInfo->renderTarget.size()));
+    RenderLayer renderLayer(m_renderLoop.get());
+    renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene()));
 
-    GLFramebuffer *fbo = std::get<GLFramebuffer *>(beginInfo->renderTarget.nativeHandle());
-    GLFramebuffer::pushFramebuffer(fbo);
-
-    glClearColor(0, 0, 0, 0);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    if (!image.isNull()) {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        GLTexture texture(image);
-        texture.bind();
-        ShaderBinder binder(ShaderTrait::MapTexture);
-        binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-        texture.render(cursorRect, beginInfo->renderTarget.devicePixelRatio());
-        texture.unbind();
-        glDisable(GL_BLEND);
-    }
-
-    GLFramebuffer::popFramebuffer();
+    renderLayer.delegate()->prePaint();
+    renderLayer.delegate()->paint(renderTarget, infiniteRegion());
+    renderLayer.delegate()->postPaint();
 
     cursorLayer->endFrame(infiniteRegion(), infiniteRegion());
 }
@@ -350,20 +337,15 @@ void X11WindowedOutput::renderCursorQPainter(X11WindowedQPainterBackend *backend
         return;
     }
 
-    const QRect cursorRect(QPoint(0, 0), image.size() / image.devicePixelRatio());
+    RenderTarget *renderTarget = &beginInfo->renderTarget;
+    renderTarget->setDevicePixelRatio(scale());
 
-    QImage *c = std::get<QImage *>(beginInfo->renderTarget.nativeHandle());
-    c->setDevicePixelRatio(scale());
-    c->fill(Qt::transparent);
+    RenderLayer renderLayer(m_renderLoop.get());
+    renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene()));
 
-    if (!image.isNull()) {
-        QPainter p;
-        p.begin(c);
-        p.setWorldTransform(logicalToNativeMatrix(cursorRect, 1, transform()).toTransform());
-        p.setRenderHint(QPainter::SmoothPixmapTransform);
-        p.drawImage(QPoint(0, 0), image);
-        p.end();
-    }
+    renderLayer.delegate()->prePaint();
+    renderLayer.delegate()->paint(renderTarget, infiniteRegion());
+    renderLayer.delegate()->postPaint();
 
     cursorLayer->endFrame(infiniteRegion(), infiniteRegion());
 }
