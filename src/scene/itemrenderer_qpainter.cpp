@@ -6,6 +6,7 @@
 
 #include "scene/itemrenderer_qpainter.h"
 #include "platformsupport/scenes/qpainter/qpaintersurfacetexture.h"
+#include "scene/imageitem.h"
 #include "scene/workspacescene_qpainter.h"
 
 #include <QPainter>
@@ -20,6 +21,11 @@ ItemRendererQPainter::ItemRendererQPainter()
 
 ItemRendererQPainter::~ItemRendererQPainter()
 {
+}
+
+ImageItem *ItemRendererQPainter::createImageItem(Scene *scene, Item *parent)
+{
+    return new ImageItem(scene, parent);
 }
 
 QPainter *ItemRendererQPainter::painter() const
@@ -98,6 +104,8 @@ void ItemRendererQPainter::renderItem(QPainter *painter, Item *item) const
         renderSurfaceItem(painter, surfaceItem);
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
         renderDecorationItem(painter, decorationItem);
+    } else if (auto imageItem = qobject_cast<ImageItem *>(item)) {
+        renderImageItem(painter, imageItem);
     }
 
     for (Item *childItem : sortedChildItems) {
@@ -149,6 +157,11 @@ void ItemRendererQPainter::renderDecorationItem(QPainter *painter, DecorationIte
     painter->drawImage(dlr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Left));
     painter->drawImage(drr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Right));
     painter->drawImage(dbr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Bottom));
+}
+
+void ItemRendererQPainter::renderImageItem(QPainter *painter, ImageItem *imageItem) const
+{
+    painter->drawImage(imageItem->rect(), imageItem->image());
 }
 
 } // namespace KWin

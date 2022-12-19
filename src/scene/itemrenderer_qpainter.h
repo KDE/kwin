@@ -30,9 +30,12 @@ public:
     void renderBackground(const QRegion &region) override;
     void renderItem(Item *item, int mask, const QRegion &region, const WindowPaintData &data) override;
 
+    ImageItem *createImageItem(Scene *scene, Item *parent = nullptr) override;
+
 private:
     void renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem) const;
     void renderDecorationItem(QPainter *painter, DecorationItem *decorationItem) const;
+    void renderImageItem(QPainter *painter, ImageItem *imageItem) const;
     void renderItem(QPainter *painter, Item *item) const;
 
     std::unique_ptr<QPainter> m_painter;

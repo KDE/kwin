@@ -119,6 +119,7 @@ target_sources(kwin PRIVATE
     rules.cpp
     scene/decorationitem.cpp
     scene/dndiconitem.cpp
+    scene/imageitem.cpp
     scene/item.cpp
     scene/itemrenderer.cpp
     scene/itemrenderer_opengl.cpp

@@ -15,8 +15,10 @@ class QPainter;
 namespace KWin
 {
 
+class ImageItem;
 class Item;
 class RenderTarget;
+class Scene;
 class WindowPaintData;
 
 class KWIN_EXPORT ItemRenderer
@@ -39,6 +41,8 @@ public:
 
     virtual void renderBackground(const QRegion &region) = 0;
     virtual void renderItem(Item *item, int mask, const QRegion &region, const WindowPaintData &data) = 0;
+
+    virtual ImageItem *createImageItem(Scene *scene, Item *parent = nullptr) = 0;
 
 protected:
     QMatrix4x4 m_renderTargetProjectionMatrix;

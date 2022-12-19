@@ -7,6 +7,7 @@
 #include "scene/itemrenderer_opengl.h"
 #include "platformsupport/scenes/opengl/openglsurfacetexture.h"
 #include "scene/decorationitem.h"
+#include "scene/imageitem.h"
 #include "scene/shadowitem.h"
 #include "scene/surfaceitem.h"
 #include "scene/workspacescene_opengl.h"
@@ -16,6 +17,11 @@ namespace KWin
 
 ItemRendererOpenGL::ItemRendererOpenGL()
 {
+}
+
+ImageItem *ItemRendererOpenGL::createImageItem(Scene *scene, Item *parent)
+{
+    return new ImageItemOpenGL(scene, parent);
 }
 
 void ItemRendererOpenGL::beginFrame(RenderTarget *renderTarget)
@@ -191,6 +197,18 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                     .scale = scale,
                 });
             }
+        }
+    } else if (auto imageItem = qobject_cast<ImageItemOpenGL *>(item)) {
+        if (!geometry.isEmpty()) {
+            context->renderNodes.append(RenderNode{
+                .texture = imageItem->texture(),
+                .geometry = geometry,
+                .transformMatrix = context->transformStack.top(),
+                .opacity = context->opacityStack.top(),
+                .hasAlpha = imageItem->image().hasAlphaChannel(),
+                .coordinateType = NormalizedCoordinates,
+                .scale = scale,
+            });
         }
     }
 
