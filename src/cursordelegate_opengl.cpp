@@ -60,6 +60,9 @@ void CursorDelegateOpenGL::paint(RenderTarget *renderTarget, const QRegion &regi
     mvp.ortho(QRect(QPoint(0, 0), renderTarget->size()));
     mvp.translate(cursorRect.x() * scale, cursorRect.y() * scale);
 
+    GLFramebuffer *fbo = std::get<GLFramebuffer *>(renderTarget->nativeHandle());
+    GLFramebuffer::pushFramebuffer(fbo);
+
     // Don't need to call GLVertexBuffer::beginFrame() and GLVertexBuffer::endOfFrame() because
     // the GLVertexBuffer::streamingBuffer() is not being used when painting cursor.
     glEnable(GL_BLEND);
@@ -71,6 +74,8 @@ void CursorDelegateOpenGL::paint(RenderTarget *renderTarget, const QRegion &regi
     m_cursorTexture->render(region, QRect(0, 0, cursorRect.width(), cursorRect.height()), scale);
     m_cursorTexture->unbind();
     glDisable(GL_BLEND);
+
+    GLFramebuffer::popFramebuffer();
 }
 
 } // namespace KWin
