@@ -44,11 +44,9 @@ class WindowItem;
 
 class SceneDelegate : public RenderLayerDelegate
 {
-    Q_OBJECT
-
 public:
-    explicit SceneDelegate(Scene *scene, QObject *parent = nullptr);
-    explicit SceneDelegate(Scene *scene, Output *output, QObject *parent = nullptr);
+    explicit SceneDelegate(Scene *scene);
+    explicit SceneDelegate(Scene *scene, Output *output);
     ~SceneDelegate() override;
 
     Output *output() const;

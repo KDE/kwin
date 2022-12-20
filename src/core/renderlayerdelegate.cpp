@@ -9,11 +9,6 @@
 namespace KWin
 {
 
-RenderLayerDelegate::RenderLayerDelegate(QObject *parent)
-    : QObject(parent)
-{
-}
-
 RenderLayer *RenderLayerDelegate::layer() const
 {
     return m_layer;

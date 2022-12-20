@@ -14,11 +14,6 @@
 namespace KWin
 {
 
-CursorDelegateOpenGL::CursorDelegateOpenGL(QObject *parent)
-    : RenderLayerDelegate(parent)
-{
-}
-
 CursorDelegateOpenGL::~CursorDelegateOpenGL()
 {
 }

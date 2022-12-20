@@ -5,6 +5,7 @@
 */
 
 #pragma once
+#include <QObject>
 #include <memory>
 
 #include "core/renderlayerdelegate.h"
@@ -14,12 +15,11 @@ namespace KWin
 
 class GLTexture;
 
-class CursorDelegateOpenGL final : public RenderLayerDelegate
+class CursorDelegateOpenGL final : public QObject, public RenderLayerDelegate
 {
     Q_OBJECT
 
 public:
-    explicit CursorDelegateOpenGL(QObject *parent = nullptr);
     ~CursorDelegateOpenGL() override;
 
     void paint(RenderTarget *renderTarget, const QRegion &region) override;

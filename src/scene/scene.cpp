@@ -79,16 +79,14 @@
 namespace KWin
 {
 
-SceneDelegate::SceneDelegate(Scene *scene, QObject *parent)
-    : RenderLayerDelegate(parent)
-    , m_scene(scene)
+SceneDelegate::SceneDelegate(Scene *scene)
+    : m_scene(scene)
 {
     m_scene->addDelegate(this);
 }
 
-SceneDelegate::SceneDelegate(Scene *scene, Output *output, QObject *parent)
-    : RenderLayerDelegate(parent)
-    , m_scene(scene)
+SceneDelegate::SceneDelegate(Scene *scene, Output *output)
+    : m_scene(scene)
     , m_output(output)
 {
     m_scene->addDelegate(this);

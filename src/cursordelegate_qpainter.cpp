@@ -14,11 +14,6 @@
 namespace KWin
 {
 
-CursorDelegateQPainter::CursorDelegateQPainter(QObject *parent)
-    : RenderLayerDelegate(parent)
-{
-}
-
 void CursorDelegateQPainter::paint(RenderTarget *renderTarget, const QRegion &region)
 {
     if (!region.intersects(layer()->mapToGlobal(layer()->rect()))) {

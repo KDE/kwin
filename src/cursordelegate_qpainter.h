@@ -13,11 +13,7 @@ namespace KWin
 
 class CursorDelegateQPainter final : public RenderLayerDelegate
 {
-    Q_OBJECT
-
 public:
-    explicit CursorDelegateQPainter(QObject *parent = nullptr);
-
     void paint(RenderTarget *renderTarget, const QRegion &region) override;
 };
 

@@ -45,7 +45,7 @@ public:
 
     RenderLoop *loop() const;
     RenderLayerDelegate *delegate() const;
-    void setDelegate(RenderLayerDelegate *delegate);
+    void setDelegate(std::unique_ptr<RenderLayerDelegate> delegate);
 
     QList<RenderLayer *> sublayers() const;
     RenderLayer *superlayer() const;

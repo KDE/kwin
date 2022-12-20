@@ -8,7 +8,6 @@
 
 #include "kwin_export.h"
 
-#include <QObject>
 #include <QRegion>
 
 namespace KWin
@@ -21,12 +20,10 @@ class SurfaceItem;
 /**
  * The RenderLayerDelegate class represents a render layer's contents.
  */
-class KWIN_EXPORT RenderLayerDelegate : public QObject
+class KWIN_EXPORT RenderLayerDelegate
 {
-    Q_OBJECT
-
 public:
-    explicit RenderLayerDelegate(QObject *parent = nullptr);
+    virtual ~RenderLayerDelegate() = default;
 
     RenderLayer *layer() const;
     void setLayer(RenderLayer *layer);

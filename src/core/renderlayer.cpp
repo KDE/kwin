@@ -95,9 +95,9 @@ RenderLayerDelegate *RenderLayer::delegate() const
     return m_delegate.get();
 }
 
-void RenderLayer::setDelegate(RenderLayerDelegate *delegate)
+void RenderLayer::setDelegate(std::unique_ptr<RenderLayerDelegate> delegate)
 {
-    m_delegate.reset(delegate);
+    m_delegate = std::move(delegate);
     m_delegate->setLayer(this);
 }
 

@@ -366,7 +366,7 @@ void Compositor::startupWithWorkspace()
     const QList<Output *> outputs = workspace()->outputs();
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         auto workspaceLayer = new RenderLayer(outputs.constFirst()->renderLoop());
-        workspaceLayer->setDelegate(new SceneDelegate(m_scene.get()));
+        workspaceLayer->setDelegate(std::make_unique<SceneDelegate>(m_scene.get()));
         workspaceLayer->setGeometry(workspace()->geometry());
         connect(workspace(), &Workspace::geometryChanged, workspaceLayer, [workspaceLayer]() {
             workspaceLayer->setGeometry(workspace()->geometry());
@@ -425,7 +425,7 @@ void Compositor::addOutput(Output *output)
     Q_ASSERT(kwinApp()->operationMode() != Application::OperationModeX11);
 
     auto workspaceLayer = new RenderLayer(output->renderLoop());
-    workspaceLayer->setDelegate(new SceneDelegate(m_scene.get(), output));
+    workspaceLayer->setDelegate(std::make_unique<SceneDelegate>(m_scene.get(), output));
     workspaceLayer->setGeometry(output->rect());
     connect(output, &Output::geometryChanged, workspaceLayer, [output, workspaceLayer]() {
         workspaceLayer->setGeometry(output->rect());
@@ -434,9 +434,9 @@ void Compositor::addOutput(Output *output)
     auto cursorLayer = new RenderLayer(output->renderLoop());
     cursorLayer->setVisible(false);
     if (m_backend->compositingType() == OpenGLCompositing) {
-        cursorLayer->setDelegate(new CursorDelegateOpenGL());
+        cursorLayer->setDelegate(std::make_unique<CursorDelegateOpenGL>());
     } else {
-        cursorLayer->setDelegate(new CursorDelegateQPainter());
+        cursorLayer->setDelegate(std::make_unique<CursorDelegateQPainter>());
     }
     cursorLayer->setParent(workspaceLayer);
     cursorLayer->setSuperlayer(workspaceLayer);
