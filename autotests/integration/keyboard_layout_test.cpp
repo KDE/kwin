@@ -228,26 +228,29 @@ void KeyboardLayoutTest::testChangeLayoutThroughDBus()
     QCOMPARE(layoutChangedSpy.count(), 1);
     layoutChangedSpy.clear();
 
-    // switch to a layout which does not exist
+    // switch to a layout which does not exist should wrap
     reply = changeLayout(Layout::bad);
     QVERIFY(!reply.isError());
-    QCOMPARE(reply.reply().arguments().first().toBool(), false);
-    QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
-    QVERIFY(!layoutChangedSpy.wait(1000));
+    QCOMPARE(reply.reply().arguments().first().toBool(), true);
+    QCOMPARE(xkb->currentLayout(), Layout::bad % xkb->numberOfLayouts());
+    QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
+    QVERIFY(layoutChangedSpy.wait());
+    QCOMPARE(layoutChangedSpy.count(), 1);
+    layoutChangedSpy.clear();
 
     // switch to another layout should work
-    reply = changeLayout(Layout::de);
+    reply = changeLayout(Layout::us);
     QVERIFY(!reply.isError());
     QCOMPARE(reply.reply().arguments().first().toBool(), true);
-    QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
+    QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
     QVERIFY(layoutChangedSpy.wait(1000));
     QCOMPARE(layoutChangedSpy.count(), 1);
 
-    // switching to same layout should also work
-    reply = changeLayout(Layout::de);
+    // switching to the same layout should fail
+    reply = changeLayout(Layout::us);
     QVERIFY(!reply.isError());
-    QCOMPARE(reply.reply().arguments().first().toBool(), true);
-    QCOMPARE(xkb->layoutName(), QStringLiteral("German"));
+    QCOMPARE(reply.reply().arguments().first().toBool(), false);
+    QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
     QVERIFY(!layoutChangedSpy.wait(1000));
 }
 

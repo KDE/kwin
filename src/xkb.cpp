@@ -180,6 +180,8 @@ static bool stringIsEmptyOrNull(const char *str)
  * libxkbcommon uses secure_getenv to read the XKB_DEFAULT_* variables.
  * As kwin_wayland may have the CAP_SET_NICE capability, it returns nullptr
  * so we need to do it ourselves (see xkb_context_sanitize_rule_names).
+ *
+ * TODO: make use of new XKB_CONTEXT_NO_SECURE_GETENV flag instead
  **/
 void Xkb::applyEnvironmentRules(xkb_rule_names &ruleNames)
 {
@@ -590,35 +592,27 @@ bool Xkb::shouldKeyRepeat(quint32 key) const
 
 void Xkb::switchToNextLayout()
 {
-    if (!m_keymap || !m_state) {
-        return;
-    }
-    const xkb_layout_index_t numLayouts = xkb_keymap_num_layouts(m_keymap);
-    const xkb_layout_index_t nextLayout = (xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE) + 1) % numLayouts;
-    switchToLayout(nextLayout);
+    switchToLayout(m_currentLayout + 1);
 }
 
 void Xkb::switchToPreviousLayout()
 {
-    if (!m_keymap || !m_state) {
-        return;
-    }
-    const xkb_layout_index_t previousLayout = m_currentLayout == 0 ? numberOfLayouts() - 1 : m_currentLayout - 1;
-    switchToLayout(previousLayout);
+    switchToLayout(m_currentLayout == 0 ? numberOfLayouts() - 1 : m_currentLayout - 1);
 }
 
 bool Xkb::switchToLayout(xkb_layout_index_t layout)
 {
-    if (!m_keymap || !m_state || layout >= numberOfLayouts()) {
-        return false;
+    if (m_state && xkb_state_update_mask(m_state,
+                     xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_DEPRESSED)),
+                     xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LATCHED)),
+                     xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED)),
+                     0, 0, layout)) {
+        // TODO: pass xkb_state_update_mask() result into updateModifiers()
+        updateModifiers();
+        forwardModifiers();
+        return true;
     }
-    const xkb_mod_mask_t depressed = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_DEPRESSED));
-    const xkb_mod_mask_t latched = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LATCHED));
-    const xkb_mod_mask_t locked = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED));
-    xkb_state_update_mask(m_state, depressed, latched, locked, 0, 0, layout);
-    updateModifiers();
-    forwardModifiers();
-    return true;
+    return false;
 }
 
 quint32 Xkb::numberOfLayouts() const
