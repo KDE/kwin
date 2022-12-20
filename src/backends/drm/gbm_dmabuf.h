@@ -58,11 +58,20 @@ inline gbm_bo *createGbmBo(gbm_device *device, const QSize &size, quint32 format
 {
     gbm_bo *bo = nullptr;
     if (modifiers.count() > 0 && !(modifiers.count() == 1 && modifiers[0] == DRM_FORMAT_MOD_INVALID)) {
+#if HAVE_GBM_BO_CREATE_WITH_MODIFIERS2
+        bo = gbm_bo_create_with_modifiers2(device,
+                                           size.width(),
+                                           size.height(),
+                                           format,
+                                           modifiers.constData(), modifiers.count(),
+                                           GBM_BO_USE_RENDERING);
+#else
         bo = gbm_bo_create_with_modifiers(device,
                                           size.width(),
                                           size.height(),
                                           format,
                                           modifiers.constData(), modifiers.count());
+#endif
     }
 
     if (!bo && (modifiers.isEmpty() || modifiers.contains(DRM_FORMAT_MOD_INVALID))) {
