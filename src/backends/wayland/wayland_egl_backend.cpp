@@ -205,6 +205,9 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
 
 bool WaylandEglPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    // Flush rendering commands to the dmabuf.
+    glFlush();
+
     m_damageJournal.add(damagedRegion);
     return true;
 }
