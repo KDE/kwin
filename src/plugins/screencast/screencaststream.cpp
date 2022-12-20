@@ -151,7 +151,7 @@ void ScreenCastStream::onStreamParamChanged(void *data, uint32_t id, const struc
     if (modifierProperty) {
         const struct spa_pod *modifierPod = &modifierProperty->value;
 
-        uint32_t modifiersCount = SPA_POD_CHOICE_N_VALUES(modifierPod) - 1;
+        uint32_t modifiersCount = SPA_POD_CHOICE_N_VALUES(modifierPod);
         uint64_t *modifiers = (uint64_t *)SPA_POD_CHOICE_VALUES(modifierPod);
         receivedModifiers = QVector<uint64_t>(modifiers, modifiers + modifiersCount);
     }
