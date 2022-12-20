@@ -983,6 +983,8 @@ GLFramebuffer *GLFramebuffer::popFramebuffer()
     GLFramebuffer *ret = s_fbos.pop();
     if (!s_fbos.isEmpty()) {
         s_fbos.top()->bind();
+    } else {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     return ret;
