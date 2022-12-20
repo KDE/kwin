@@ -18,6 +18,7 @@
 #include <QObject>
 #include <QPointF>
 #include <QPointer>
+#include <chrono>
 
 class QWindow;
 
@@ -154,8 +155,9 @@ private:
 
     void updateOnStartMoveResize();
     void updateToReset();
-    void updatePosition(const QPointF &pos);
+    void updatePosition(const QPointF &pos, uint64_t timeUsec);
     void updateButton(uint32_t button, InputRedirection::PointerButtonState state);
+    QPointF applyMoveResizeConfinement(const QPointF &pos, uint64_t timeUsec);
     QPointF applyPointerConfinement(const QPointF &pos) const;
     void disconnectConfinedPointerRegionConnection();
     void disconnectLockedPointerAboutToBeUnboundConnection();
@@ -175,6 +177,8 @@ private:
     bool m_confined = false;
     bool m_locked = false;
     bool m_enableConstraints = true;
+    std::chrono::microseconds m_lastMoveResizeTime = std::chrono::microseconds::zero();
+    double m_moveResizeSpeed = 0;
     friend class PositionUpdateBlocker;
 };
 

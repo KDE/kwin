@@ -236,7 +236,7 @@ void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QP
     }
 
     PositionUpdateBlocker blocker(this);
-    updatePosition(pos);
+    updatePosition(pos, timeUsec);
     MouseEvent event(QEvent::MouseMove, m_pos, Qt::NoButton, m_qtButtons,
                      input()->keyboardModifiers(), time,
                      delta, deltaNonAccelerated, device);
@@ -738,7 +738,30 @@ QPointF PointerInputRedirection::applyPointerConfinement(const QPointF &pos) con
     return m_pos;
 }
 
-void PointerInputRedirection::updatePosition(const QPointF &pos)
+QPointF PointerInputRedirection::applyMoveResizeConfinement(const QPointF &pos, uint64_t timeUsec)
+{
+    if (workspace()->moveResizeWindow() && workspace()->moveResizeWindow()->isInteractiveMove()) {
+        if (timeUsec == 0) {
+            // we don't always get timing information
+            timeUsec = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+        }
+        const std::chrono::microseconds timeDiff = std::chrono::microseconds(timeUsec) - m_lastMoveResizeTime;
+        m_lastMoveResizeTime = std::chrono::microseconds(timeUsec);
+        const auto speed = (pos - m_pos).manhattanLength() / (timeDiff.count() * 0.000'001);
+        // create a rolling average over 0.1s; estimating the speed from a single delta alone isn't accurate
+        const auto speedRatio = std::min((timeDiff.count() * 0.000'001) / 0.1, 1.0);
+        m_moveResizeSpeed = (1 - speedRatio) * m_moveResizeSpeed + speedRatio * speed;
+        if (m_moveResizeSpeed < 3000) {
+            const QRectF currentScreenGeometry = workspace()->outputAt(m_pos)->geometry();
+            return QPointF(
+                std::clamp(pos.x(), currentScreenGeometry.left() + 1, currentScreenGeometry.right() - 1),
+                std::clamp(pos.y(), currentScreenGeometry.top() + 1, currentScreenGeometry.bottom() - 1));
+        }
+    }
+    return pos;
+}
+
+void PointerInputRedirection::updatePosition(const QPointF &pos, uint64_t timeUsec)
 {
     if (m_locked) {
         // locked pointer should not move
@@ -754,6 +777,7 @@ void PointerInputRedirection::updatePosition(const QPointF &pos)
             p = confineToBoundingBox(p, currentOutput->geometry());
         }
     }
+    p = applyMoveResizeConfinement(p, timeUsec);
     p = applyPointerConfinement(p);
     if (p == m_pos) {
         // didn't change due to confinement
