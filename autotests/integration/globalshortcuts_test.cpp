@@ -35,6 +35,28 @@ using namespace KWin;
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_globalshortcuts-0");
 
+static const struct {const char shortName[3]; const QByteArray longName;} layouts[] = {
+    // It's important the first layout is "US-compatible",
+    // otherwise default shortcuts might not work
+    // as keycode to QtKey mapping wouldn't match.
+    {"us", QByteArrayLiteral("English (US)")},
+
+    // QTBUG-90611
+    // KEY_GRAVE ("`") has a "ё" symbol here
+    {"ru", QByteArrayLiteral("Russian")},
+
+    // QTBUG-108761
+    // KEY_GRAVE is a circumflex accent dead key here
+    {"de", QByteArrayLiteral("German")},
+    // KEY_GRAVE is a Qt::Key_Semicolon (";") on Czech and Hebrew layouts
+//    {"cz", QByteArrayLiteral("Czech")},
+    // KEY_Q -> Qt::Key_Slash ("/"), KEY_W -> Qt::Key_Apostrophe ("'")
+    {"il", QByteArrayLiteral("Hebrew")},
+
+    // FIXME: due to libxkbcommon artificial restriction we can't add more than 4 layouts:
+    // https://github.com/xkbcommon/libxkbcommon/issues/311
+};
+
 class GlobalShortcutsTest : public QObject
 {
     Q_OBJECT
@@ -57,6 +79,17 @@ private Q_SLOTS:
 
 void GlobalShortcutsTest::initTestCase()
 {
+    // to overcome kf.i18n flood
+    KLocalizedString::setApplicationDomain("fooapp");
+
+    QByteArray layoutsList;
+    for (const auto &l : layouts) {
+        (layoutsList += l.shortName) += ',';
+    }
+    qputenv("KWIN_XKB_DEFAULT_KEYMAP", "1");
+    qputenv("XKB_DEFAULT_RULES", "evdev");
+    qputenv("XKB_DEFAULT_LAYOUT", layoutsList);
+
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::InternalWindow *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
@@ -64,10 +97,6 @@ void GlobalShortcutsTest::initTestCase()
     QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, QVector<QRect>() << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024)));
 
     kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
-    qputenv("KWIN_XKB_DEFAULT_KEYMAP", "1");
-    qputenv("XKB_DEFAULT_RULES", "evdev");
-    qputenv("XKB_DEFAULT_LAYOUT", "us,ru");
-
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
 }
@@ -99,6 +128,7 @@ void GlobalShortcutsTest::testNonLatinLayout_data()
     for (const auto &[modifier, qtModifier] :
          QVector<QPair<int, Qt::Modifier>>{
              {KEY_LEFTCTRL, Qt::CTRL},
+//             {KEY_RIGHTCTRL, Qt::CTRL},	// this works also
              {KEY_LEFTALT, Qt::ALT},
              {KEY_LEFTSHIFT, Qt::SHIFT},
              {KEY_LEFTMETA, Qt::META},
@@ -108,15 +138,24 @@ void GlobalShortcutsTest::testNonLatinLayout_data()
                  // Tab is example of a key usually the same on different layouts, check it first
                  {KEY_TAB, qtModifier != Qt::SHIFT ? Qt::Key_Tab : Qt::Key_Backtab},
 
-                     // Then check a key with a Latin letter.
-                     // The symbol will probably be differ on non-Latin layout.
-                     // On Russian layout, "w" key has a cyrillic letter "ц"
-                     {KEY_W, Qt::Key_W},
+                 // Then check a key with a Latin letter.
+                 // The symbol will probably differ on non-Latin layout.
+                 // On Russian layout, KEY_W has a Cyrillic letter "ц", see BUG 375518.
+                 // On Hebrew layout, it become other Latin symbol "'", see QTBUG-108761
+                 {KEY_W, Qt::Key_W},
 
-                     // More common case with any Latin1 symbol keys, including punctuation, should work also.
-                     // "`" key has a "ё" letter on Russian layout
-                     // FIXME: QTBUG-90611
+                 // KEY_Y is "z" on German layout (QWERTZ), so QTBUG-108761
+                 {KEY_Y, Qt::Key_Y},
+
+                 // More common case with any Latin1 symbol keys, including punctuation, should work also.
+                 // KEY_GRAVE ("`") key has a "ё" letter on Russian layout, see QTBUG-90611.
+                 // It's also a circumflex dead key ("^") on German layout,
+                 // and has ";" symbol on Czech and Hebrew layouts: QTBUG-108761
                  {KEY_GRAVE, qtModifier != Qt::SHIFT ? Qt::Key_QuoteLeft : Qt::Key_AsciiTilde},
+
+                 {KEY_1, qtModifier != Qt::SHIFT ? Qt::Key_1 : Qt::Key_Exclam},
+                 // note shifted KEY_2 has different Latin symbol on Russian layout - '"' vs "@", so QTBUG-108761
+                 {KEY_2, qtModifier != Qt::SHIFT ? Qt::Key_2 : Qt::Key_At},
              }) {
             // remove Shift modifier is it's consumed (see BUG 370341 for why to check isletter() here)
             auto possiblyConsumedModifier = qtModifier == Qt::SHIFT && !QChar::isLetter(qtKey) ? Qt::Modifier() : qtModifier;
@@ -129,10 +168,8 @@ void GlobalShortcutsTest::testNonLatinLayout_data()
 
 void GlobalShortcutsTest::testNonLatinLayout()
 {
-    // Shortcuts on non-Latin layouts should still work, see BUG 375518
-    auto xkb = input()->keyboard()->xkb();
-    xkb->switchToLayout(1);
-    QCOMPARE(xkb->layoutName(), QStringLiteral("Russian"));
+    // Shortcuts on non-Latin layouts should still work, see BUG 375518.
+    // Also tests some problematic Latin-derived layouts
 
     QFETCH(int, modifierKey);
     QFETCH(Qt::Modifier, qtModifier);
@@ -150,17 +187,36 @@ void GlobalShortcutsTest::testNonLatinLayout()
     KGlobalAccel::self()->stealShortcutSystemwide(seq);
     KGlobalAccel::self()->setShortcut(action.get(), {seq}, KGlobalAccel::NoAutoloading);
 
+    // FIXME: workaround for some unexpected fails on English layout after Modifier+<dead key> combination on German.
+    // If no shortcut has triggered, the dead key seem continues it's influence even on new layout, modifying keysym produced by the next key press.
+    // Pressing the key cancels the behavior for consequent presses.
+    // Doesn't needed with QTBUG-108761 patch applied
     quint32 timestamp = 0;
-    Test::keyboardKeyPressed(modifierKey, timestamp++);
     Test::keyboardKeyPressed(key, timestamp++);
-
-    // passing keycode so the function returns precise result
-    QCOMPARE(xkb->modifiersRelevantForGlobalShortcuts(key), qtModifier);
-
     Test::keyboardKeyReleased(key, timestamp++);
-    Test::keyboardKeyReleased(modifierKey, timestamp++);
 
-    QTRY_COMPARE_WITH_TIMEOUT(triggeredSpy.count(), 1, 100);
+    auto xkb = input()->keyboard()->xkb();
+    for (uint layoutIndex = 0; const auto &layout : layouts) {
+        xkb->switchToLayout(layoutIndex++);
+        QCOMPARE(xkb->layoutName(), layout.longName);
+
+        Test::keyboardKeyPressed(modifierKey, timestamp++);
+        Test::keyboardKeyPressed(key, timestamp++);
+
+        QString s(QChar('\n'));
+        char keysymName[64];
+        xkb_keysym_get_name(xkb->currentKeysym(), keysymName, 64);
+        QDebug(&s) << input()->keyboardModifiers() << xkb->modifiersRelevantForGlobalShortcuts(key) << Qt::KeyboardModifiers(qtModifier) << keysymName;
+
+        // passing keycode so the function returns precise result
+        QVERIFY2(xkb->modifiersRelevantForGlobalShortcuts(key) == qtModifier, s.toLatin1());
+
+        Test::keyboardKeyReleased(key, timestamp++);
+        Test::keyboardKeyReleased(modifierKey, timestamp++);
+
+        QTRY_VERIFY2_WITH_TIMEOUT(triggeredSpy.count(), "Probably you have unpatched Qt, see QTBUG-90611 and QTBUG-108761. Current layout: " + layout.longName + s.toLatin1(), 100);
+        triggeredSpy.clear();
+    }
 }
 
 void GlobalShortcutsTest::testConsumedShift()
