@@ -347,7 +347,6 @@ public:
         return s_clock.elapsed();
     }
 
-protected:
     /**
      * Starts an animated transition of any supported attribute.
      *
@@ -426,6 +425,15 @@ protected:
      */
     bool retarget(quint64 animationId, FPx2 newTarget, int newRemainingTime = -1);
 
+    /**
+     * Advance the specified animation to the given time point. The animation
+     * will continue running as usual after calling this function.
+     */
+    bool advance(quint64 animationId, qint64 time);
+
+    /**
+     * Advance the specified animation to the given time point and keep it there.
+     */
     bool freezeInTime(quint64 animationId, qint64 frozenTime);
 
     /**

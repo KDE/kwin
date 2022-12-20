@@ -34,6 +34,8 @@
 #include <QJSValue>
 #include <QQmlEngine>
 
+Q_DECLARE_METATYPE(KWin::AnimationEffect::TerminationFlag)
+
 using namespace KWin;
 using namespace std::chrono_literals;
 
@@ -593,20 +595,22 @@ void ScriptedEffectsTest::testUngrab()
 void ScriptedEffectsTest::testRedirect_data()
 {
     QTest::addColumn<QString>("file");
-    QTest::addColumn<bool>("shouldTerminate");
-    QTest::newRow("animate/DontTerminateAtSource") << "redirectAnimateDontTerminateTest" << false;
-    QTest::newRow("animate/TerminateAtSource") << "redirectAnimateTerminateTest" << true;
-    QTest::newRow("set/DontTerminate") << "redirectSetDontTerminateTest" << false;
-    QTest::newRow("set/Terminate") << "redirectSetTerminateTest" << true;
+    QTest::addColumn<AnimationEffect::TerminationFlag>("terminationFlags");
+    QTest::newRow("animate-dont-terminate") << "redirectAnimateDontTerminateTest" << AnimationEffect::TerminationFlag::DontTerminate;
+    QTest::newRow("animate-terminate-at-source") << "redirectAnimateTerminateTest" << AnimationEffect::TerminationFlag::TerminateAtSource;
+    QTest::newRow("set-dont-terminate") << "redirectSetDontTerminateTest" << AnimationEffect::TerminationFlag::DontTerminate;
+    QTest::newRow("set-terminate-at-source") << "redirectSetTerminateTest" << AnimationEffect::TerminationFlag::TerminateAtSource;
 }
 
 void ScriptedEffectsTest::testRedirect()
 {
     // this test verifies that redirect() works
 
+    QFETCH(QString, file);
+    QFETCH(AnimationEffect::TerminationFlag, terminationFlags);
+
     // load the test effect
     auto effect = new ScriptedEffectWithDebugSpy;
-    QFETCH(QString, file);
     QVERIFY(effect->load(file));
 
     // create test window
@@ -618,14 +622,8 @@ void ScriptedEffectsTest::testRedirect()
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
 
-    auto around = [](std::chrono::milliseconds elapsed,
-                     std::chrono::milliseconds pivot,
-                     std::chrono::milliseconds margin) {
-        return std::abs(elapsed.count() - pivot.count()) < margin.count();
-    };
-
     // initially, the test animation is at the source position
-
+    quint64 animationId;
     {
         const auto state = effect->state();
         QCOMPARE(state.count(), 1);
@@ -633,17 +631,16 @@ void ScriptedEffectsTest::testRedirect()
         const QList<AniData> animations = state.first().first;
         QCOMPARE(animations.count(), 1);
         QCOMPARE(animations[0].timeLine.direction(), TimeLine::Forward);
-        QVERIFY(around(animations[0].timeLine.elapsed(), 0ms, 50ms));
+        QCOMPARE(animations[0].timeLine.elapsed(), 0ms);
+        animationId = animations[0].id;
     }
 
     // minimize the test window after 250ms, when the test effect sees that
     // a window was minimized, it will try to reverse animation for it
-    QTest::qWait(250);
+    effect->advance(animationId, 250);
 
     QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
-
     window->setMinimized(true);
-
     QCOMPARE(effectOutputSpy.count(), 1);
     QCOMPARE(effectOutputSpy.first().first(), QStringLiteral("ok"));
 
@@ -654,26 +651,8 @@ void ScriptedEffectsTest::testRedirect()
         const QList<AniData> animations = state.first().first;
         QCOMPARE(animations.count(), 1);
         QCOMPARE(animations[0].timeLine.direction(), TimeLine::Backward);
-        QVERIFY(around(animations[0].timeLine.elapsed(), 1000ms - 250ms, 50ms));
-    }
-
-    // wait for the animation to reach the start position, 100ms is an extra
-    // safety margin
-    QTest::qWait(250 + 100);
-
-    QFETCH(bool, shouldTerminate);
-    if (shouldTerminate) {
-        const auto state = effect->state();
-        QCOMPARE(state.count(), 0);
-    } else {
-        const auto state = effect->state();
-        QCOMPARE(state.count(), 1);
-        QCOMPARE(state.firstKey(), window->effectWindow());
-        const QList<AniData> animations = state.first().first;
-        QCOMPARE(animations.count(), 1);
-        QCOMPARE(animations[0].timeLine.direction(), TimeLine::Backward);
-        QCOMPARE(animations[0].timeLine.elapsed(), 1000ms);
-        QCOMPARE(animations[0].timeLine.value(), 0.0);
+        QCOMPARE(animations[0].timeLine.elapsed(), 1000ms - 250ms);
+        QCOMPARE(animations[0].terminationFlags, terminationFlags);
     }
 }
 
@@ -694,25 +673,21 @@ void ScriptedEffectsTest::testComplete()
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
 
-    auto around = [](std::chrono::milliseconds elapsed,
-                     std::chrono::milliseconds pivot,
-                     std::chrono::milliseconds margin) {
-        return std::abs(elapsed.count() - pivot.count()) < margin.count();
-    };
-
     // initially, the test animation should be at the start position
+    quint64 animationId;
     {
         const auto state = effect->state();
         QCOMPARE(state.count(), 1);
         QCOMPARE(state.firstKey(), window->effectWindow());
         const QList<AniData> animations = state.first().first;
         QCOMPARE(animations.count(), 1);
-        QVERIFY(around(animations[0].timeLine.elapsed(), 0ms, 50ms));
+        QCOMPARE(animations[0].timeLine.elapsed(), 0ms);
         QVERIFY(!animations[0].timeLine.done());
+        animationId = animations[0].id;
     }
 
-    // wait for 250ms
-    QTest::qWait(250);
+    // pretend that 250ms have passed
+    effect->advance(animationId, 250);
 
     {
         const auto state = effect->state();
@@ -720,7 +695,7 @@ void ScriptedEffectsTest::testComplete()
         QCOMPARE(state.firstKey(), window->effectWindow());
         const QList<AniData> animations = state.first().first;
         QCOMPARE(animations.count(), 1);
-        QVERIFY(around(animations[0].timeLine.elapsed(), 250ms, 50ms));
+        QCOMPARE(animations[0].timeLine.elapsed(), 250ms);
         QVERIFY(!animations[0].timeLine.done());
     }
 

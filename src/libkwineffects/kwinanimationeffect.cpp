@@ -316,6 +316,28 @@ bool AnimationEffect::retarget(quint64 animationId, FPx2 newTarget, int newRemai
     return false; // no animation found
 }
 
+bool AnimationEffect::advance(quint64 animationId, qint64 time)
+{
+    Q_D(AnimationEffect);
+
+    if (animationId == d->m_justEndedAnimation) {
+        return false; // this is just ending, do not try to retarget it
+    }
+    for (AniMap::iterator entry = d->m_animations.begin(),
+                          mapEnd = d->m_animations.end();
+         entry != mapEnd; ++entry) {
+        for (QList<AniData>::iterator anim = entry->first.begin(),
+                                      animEnd = entry->first.end();
+             anim != animEnd; ++anim) {
+            if (anim->id == animationId) {
+                anim->timeLine.setElapsed(std::chrono::milliseconds(time));
+                return true;
+            }
+        }
+    }
+    return false; // no animation found
+}
+
 bool AnimationEffect::freezeInTime(quint64 animationId, qint64 frozenTime)
 {
     Q_D(AnimationEffect);
