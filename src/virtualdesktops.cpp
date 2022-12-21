@@ -22,6 +22,7 @@
 #include <QUuid>
 
 #include <algorithm>
+#include <qnamespace.h>
 
 namespace KWin
 {
@@ -475,6 +476,19 @@ VirtualDesktop *VirtualDesktopManager::createVirtualDesktop(uint position, const
     return vd;
 }
 
+void VirtualDesktopManager::createVirtualDesktopAtEnd()
+{
+    VirtualDesktop *newDesktop = createVirtualDesktop(m_desktops.count());
+}
+
+void VirtualDesktopManager::createSwitchVirtualDesktopAtEnd()
+{
+    VirtualDesktop *newDesktop = createVirtualDesktop(m_desktops.count());
+    if (newDesktop) {
+        setCurrent(newDesktop);
+    }
+}
+
 void VirtualDesktopManager::removeVirtualDesktop(const QString &id)
 {
     auto desktop = desktopForId(id);
@@ -514,6 +528,11 @@ void VirtualDesktopManager::removeVirtualDesktop(VirtualDesktop *desktop)
     Q_EMIT countChanged(m_desktops.count() + 1, m_desktops.count());
 
     desktop->deleteLater();
+}
+
+void VirtualDesktopManager::removeCurrentVirtualDesktop()
+{
+    removeVirtualDesktop(m_current);
 }
 
 uint VirtualDesktopManager::current() const
@@ -810,8 +829,12 @@ void VirtualDesktopManager::initShortcuts()
     QAction *slotDownAction = addAction(QStringLiteral("Switch One Desktop Down"), i18n("Switch One Desktop Down"), &VirtualDesktopManager::slotDown);
     KGlobalAccel::setGlobalShortcut(slotDownAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Down));
 
-    Q_UNUSED(addAction(QStringLiteral("Add Virtual Desktop"), i18n("Add Virtual Desktop"), &VirtualDesktopManager::slotCreate));
-    Q_UNUSED(addAction(QStringLiteral("Remove Virtual Desktop"), i18n("Remove Virtual Desktop"), &VirtualDesktopManager::slotRemove));
+    QAction *switchToNewAction = addAction(QStringLiteral("Switch to New Desktop"), i18n("Switch to New Desktop"), &VirtualDesktopManager::createSwitchVirtualDesktopAtEnd);
+    KGlobalAccel::setGlobalShortcut(switchToNewAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Plus));
+    QAction *addAtEndAction = addAction(QStringLiteral("Add New Desktop"), i18n("Add New Desktop"), &VirtualDesktopManager::createVirtualDesktopAtEnd);
+    KGlobalAccel::setGlobalShortcut(addAtEndAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Asterisk));
+    QAction *removeCurrentAction = addAction(QStringLiteral("Remove Desktop"), i18n("Remove Desktop"), &VirtualDesktopManager::removeCurrentVirtualDesktop);
+    KGlobalAccel::setGlobalShortcut(removeCurrentAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Minus));
 
     // Gestures
     // These connections decide which desktop to end on after gesture ends
@@ -984,16 +1007,6 @@ void VirtualDesktopManager::slotRight()
 void VirtualDesktopManager::slotUp()
 {
     moveTo(Direction::Up, isNavigationWrappingAround());
-}
-
-void VirtualDesktopManager::slotCreate()
-{
-    createVirtualDesktop(VirtualDesktopManager::count());
-}
-
-void VirtualDesktopManager::slotRemove()
-{
-    removeVirtualDesktop(VirtualDesktopManager::currentDesktop());
 }
 
 } // KWin

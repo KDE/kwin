@@ -1083,6 +1083,7 @@ void Workspace::initShortcuts()
         };
         initShortcut(QStringLiteral("Window to Desktop %1").arg(i + 1), i18n("Window to Desktop %1", i + 1), 0, handler);
     }
+    initShortcut("Window to New Desktop", i18n("Window to New Desktop"), 0, &Workspace::slotWindowToNewDesktop);
     initShortcut("Window to Next Desktop", i18n("Window to Next Desktop"), 0, &Workspace::slotWindowToNextDesktop);
     initShortcut("Window to Previous Desktop", i18n("Window to Previous Desktop"), 0, &Workspace::slotWindowToPreviousDesktop);
     initShortcut("Window One Desktop to the Right", i18n("Window One Desktop to the Right"),
@@ -1593,6 +1594,25 @@ void windowToDesktop(Window *window, VirtualDesktopManager::Direction direction)
         && !window->isDock()) {
         ws->setMoveResizeWindow(window);
         vds->setCurrent(desktop);
+        ws->setMoveResizeWindow(nullptr);
+    }
+}
+
+void Workspace::slotWindowToNewDesktop()
+{
+    if (USABLE_ACTIVE_WINDOW) {
+        windowToNewDesktop(m_activeWindow);
+    }
+}
+
+void Workspace::windowToNewDesktop(Window *window)
+{
+    VirtualDesktopManager *vds = VirtualDesktopManager::self();
+    VirtualDesktop *newDesktop = vds->createVirtualDesktop(vds->count());
+    Workspace *ws = Workspace::self();
+    if (newDesktop) {
+        ws->setMoveResizeWindow(window);
+        vds->setCurrent(newDesktop);
         ws->setMoveResizeWindow(nullptr);
     }
 }

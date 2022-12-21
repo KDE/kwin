@@ -277,6 +277,16 @@ public:
     VirtualDesktop *createVirtualDesktop(uint position, const QString &name = QString());
 
     /**
+     * Create a new virtual desktop after the last one if possible.
+     */
+    void createVirtualDesktopAtEnd();
+
+    /**
+     * Create a new virtual desktop after the last one and switch to it if possible.
+     */
+    void createSwitchVirtualDesktopAtEnd();
+
+    /**
      * Remove the virtual desktop identified by id, if it exists
      * difference with setCount is that is possible to remove an arbitrary desktop,
      * not only the last one.
@@ -284,6 +294,11 @@ public:
      */
     void removeVirtualDesktop(const QString &id);
     void removeVirtualDesktop(VirtualDesktop *desktop);
+
+    /**
+     * Remove the current virtual desktop.
+     */
+    void removeCurrentVirtualDesktop();
 
     /**
      * Updates the net root info for new number of desktops
@@ -441,14 +456,6 @@ private Q_SLOTS:
      * Slot for switch to desktop below action.
      */
     void slotDown();
-    /**
-     * Slot for create new desktop action.
-     */
-    void slotCreate();
-    /**
-     * Slot for remove desktop action.
-     */
-    void slotRemove();
 
     /* For gestured desktopSwitching
      * Called when gesture ended, the thing that actually switches the desktop.

@@ -320,6 +320,7 @@ public:
                                bool only_normal = true) const;
     Window *findDesktop(bool topmost, VirtualDesktop *desktop) const;
     void sendWindowToDesktop(Window *window, int desktop, bool dont_activate);
+    void windowToNewDesktop(Window *window);
     void windowToPreviousDesktop(Window *window);
     void windowToNextDesktop(Window *window);
     void sendWindowToOutput(Window *window, Output *output);
@@ -532,6 +533,7 @@ public Q_SLOTS:
     void slotWindowFullScreen();
     void slotWindowNoBorder();
 
+    void slotWindowToNewDesktop();
     void slotWindowToNextDesktop();
     void slotWindowToPreviousDesktop();
     void slotWindowToDesktopRight();
