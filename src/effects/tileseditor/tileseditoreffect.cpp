@@ -16,14 +16,14 @@ namespace KWin
 {
 
 TilesEditorEffect::TilesEditorEffect()
-    : m_shutdownTimer(new QTimer(this))
+    : m_shutdownTimer(std::make_unique<QTimer>())
 {
     m_shutdownTimer->setSingleShot(true);
     connect(m_shutdownTimer.get(), &QTimer::timeout, this, &TilesEditorEffect::realDeactivate);
     connect(effects, &EffectsHandler::screenAboutToLock, this, &TilesEditorEffect::realDeactivate);
 
     const QKeySequence defaultToggleShortcut = Qt::META | Qt::Key_T;
-    m_toggleAction.reset(new QAction(this));
+    m_toggleAction = std::make_unique<QAction>();
     connect(m_toggleAction.get(), &QAction::triggered, this, &TilesEditorEffect::toggle);
     m_toggleAction->setObjectName(QStringLiteral("Edit Tiles"));
     m_toggleAction->setText(i18n("Toggle Tiles Editor"));
