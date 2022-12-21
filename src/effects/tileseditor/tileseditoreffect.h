@@ -20,7 +20,7 @@ public:
     TilesEditorEffect();
     ~TilesEditorEffect() override;
 
-    void reconfigure(ReconfigureFlags);
+    void reconfigure(ReconfigureFlags) override;
 
     int animationDuration() const;
     void setAnimationDuration(int duration);

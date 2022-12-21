@@ -740,11 +740,11 @@ QImage GLTexture::toImage() const
     GLint currentTextureBinding;
     glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTextureBinding);
 
-    if (currentTextureBinding != texture()) {
+    if (GLuint(currentTextureBinding) != texture()) {
         glBindTexture(GL_TEXTURE_2D, texture());
     }
     glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, ret.bits());
-    if (currentTextureBinding != texture()) {
+    if (GLuint(currentTextureBinding) != texture()) {
         glBindTexture(GL_TEXTURE_2D, currentTextureBinding);
     }
     return ret;
