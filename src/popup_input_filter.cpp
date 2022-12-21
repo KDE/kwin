@@ -65,7 +65,7 @@ bool PopupInputFilter::pointerEvent(MouseEvent *event, quint32 nativeButton)
     return false;
 }
 
-bool PopupInputFilter::keyEvent(QKeyEvent *event)
+bool PopupInputFilter::keyEvent(KeyEvent *event)
 {
     if (m_popupWindows.isEmpty()) {
         return false;

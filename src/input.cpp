@@ -115,7 +115,7 @@ bool InputEventFilter::wheelEvent(WheelEvent *event)
     return false;
 }
 
-bool InputEventFilter::keyEvent(QKeyEvent *event)
+bool InputEventFilter::keyEvent(KeyEvent *event)
 {
     return false;
 }
@@ -271,7 +271,7 @@ bool InputEventFilter::passToInputMethod(QKeyEvent *event)
 class VirtualTerminalFilter : public InputEventFilter
 {
 public:
-    bool keyEvent(QKeyEvent *event) override
+    bool keyEvent(KeyEvent *event) override
     {
         // really on press and not on release? X11 switches on press.
         if (event->type() == QEvent::KeyPress && !event->isAutoRepeat()) {
@@ -288,7 +288,7 @@ public:
 class TerminateServerFilter : public InputEventFilter
 {
 public:
-    bool keyEvent(QKeyEvent *event) override
+    bool keyEvent(KeyEvent *event) override
     {
         if (event->type() == QEvent::KeyPress && !event->isAutoRepeat()) {
             if (event->nativeVirtualKey() == XKB_KEY_Terminate_Server) {
@@ -352,7 +352,7 @@ public:
         }
         return true;
     }
-    bool keyEvent(QKeyEvent *event) override
+    bool keyEvent(KeyEvent *event) override
     {
         if (!waylandServer()->isScreenLocked()) {
             return false;
@@ -522,7 +522,7 @@ public:
         }
         return static_cast<EffectsHandlerImpl *>(effects)->checkInputWindowEvent(event);
     }
-    bool keyEvent(QKeyEvent *event) override
+    bool keyEvent(KeyEvent *event) override
     {
         if (!effects || !static_cast<EffectsHandlerImpl *>(effects)->hasKeyboardGrab()) {
             return false;
@@ -618,7 +618,7 @@ public:
         // filter out while moving a window
         return workspace()->moveResizeWindow() != nullptr;
     }
-    bool keyEvent(QKeyEvent *event) override
+    bool keyEvent(KeyEvent *event) override
     {
         Window *window = workspace()->moveResizeWindow();
         if (!window) {
@@ -728,7 +728,7 @@ public:
         // filter out while selecting a window
         return m_active;
     }
-    bool keyEvent(QKeyEvent *event) override
+    bool keyEvent(KeyEvent *event) override
     {
         if (!m_active) {
             return false;
@@ -900,7 +900,7 @@ public:
         }
         return input()->shortcuts()->processAxis(event->modifiers(), direction);
     }
-    bool keyEvent(QKeyEvent *event) override
+    bool keyEvent(KeyEvent *event) override
     {
         if (event->key() == Qt::Key_PowerOff) {
             const auto modifiers = static_cast<KeyEvent *>(event)->modifiersRelevantForGlobalShortcuts();
@@ -1205,7 +1205,7 @@ class InternalWindowEventFilter : public InputEventFilter
         QCoreApplication::sendEvent(internal, &wheelEvent);
         return wheelEvent.isAccepted();
     }
-    bool keyEvent(QKeyEvent *event) override
+    bool keyEvent(KeyEvent *event) override
     {
         const QList<InternalWindow *> &windows = workspace()->internalWindows();
         QWindow *found = nullptr;
@@ -1565,7 +1565,7 @@ public:
         }
         return workspace()->tabbox()->handleMouseEvent(event);
     }
-    bool keyEvent(QKeyEvent *event) override
+    bool keyEvent(KeyEvent *event) override
     {
         if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
             return false;
@@ -1722,7 +1722,7 @@ public:
 class InputKeyboardFilter : public InputEventFilter
 {
 public:
-    bool keyEvent(QKeyEvent *event) override
+    bool keyEvent(KeyEvent *event) override
     {
         return passToInputMethod(event);
     }
@@ -1771,7 +1771,7 @@ public:
         seat->notifyPointerFrame();
         return true;
     }
-    bool keyEvent(QKeyEvent *event) override
+    bool keyEvent(KeyEvent *event) override
     {
         if (event->isAutoRepeat()) {
             // handled by Wayland client
@@ -2487,7 +2487,7 @@ public:
         }
         return true;
     }
-    bool keyEvent(QKeyEvent *event) override
+    bool keyEvent(KeyEvent *event) override
     {
         if (event->key() != Qt::Key_Escape) {
             return false;

@@ -47,6 +47,7 @@ class TabletToolId;
 class TabletPadId;
 class MouseEvent;
 class WheelEvent;
+class KeyEvent;
 
 namespace Decoration
 {
@@ -399,7 +400,7 @@ public:
      * @param event The event information about the key event
      * @return @c true to stop further event processing, @c false to pass to next filter.
      */
-    virtual bool keyEvent(QKeyEvent *event);
+    virtual bool keyEvent(KeyEvent *event);
     virtual bool touchDown(qint32 id, const QPointF &pos, quint32 time);
     virtual bool touchMotion(qint32 id, const QPointF &pos, quint32 time);
     virtual bool touchUp(qint32 id, quint32 time);

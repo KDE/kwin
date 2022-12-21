@@ -8,6 +8,7 @@
 */
 #include "dpmsinputeventfilter.h"
 #include "core/output.h"
+#include "input_event.h"
 #include "main.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
@@ -40,7 +41,7 @@ bool DpmsInputEventFilter::wheelEvent(WheelEvent *event)
     return true;
 }
 
-bool DpmsInputEventFilter::keyEvent(QKeyEvent *event)
+bool DpmsInputEventFilter::keyEvent(KeyEvent *event)
 {
     if (event->type() == QKeyEvent::KeyPress) {
         notify();

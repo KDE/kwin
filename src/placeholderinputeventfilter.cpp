@@ -22,7 +22,7 @@ bool PlaceholderInputEventFilter::wheelEvent(WheelEvent *event)
     return true;
 }
 
-bool PlaceholderInputEventFilter::keyEvent(QKeyEvent *event)
+bool PlaceholderInputEventFilter::keyEvent(KeyEvent *event)
 {
     return true;
 }
