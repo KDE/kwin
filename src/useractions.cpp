@@ -1319,7 +1319,8 @@ void Workspace::slotActivateAttentionWindow()
 void Workspace::slotWindowToDesktop(VirtualDesktop *desktop)
 {
     if (USABLE_ACTIVE_WINDOW) {
-        sendWindowToDesktop(m_activeWindow, desktop->x11DesktopNumber(), true);
+        sendWindowToDesktop(m_activeWindow, desktop->x11DesktopNumber(), false);
+        VirtualDesktopManager::self()->setCurrent(desktop);
     }
 }
 
