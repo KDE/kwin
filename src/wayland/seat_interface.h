@@ -123,35 +123,6 @@ enum class KeyboardKeyState : quint32 {
 class KWIN_EXPORT SeatInterface : public QObject
 {
     Q_OBJECT
-    /**
-     * The name of the Seat
-     */
-    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-    /**
-     * Whether the SeatInterface supports a pointer device.
-     */
-    Q_PROPERTY(bool pointer READ hasPointer WRITE setHasPointer NOTIFY hasPointerChanged)
-    /**
-     * Whether the SeatInterface supports a keyboard device.
-     */
-    Q_PROPERTY(bool keyboard READ hasKeyboard WRITE setHasKeyboard NOTIFY hasKeyboardChanged)
-    /**
-     * Whether the SeatInterface supports a touch device.
-     * @deprecated Since 5.5, use touch
-     */
-    Q_PROPERTY(bool tourch READ hasTouch WRITE setHasTouch NOTIFY hasTouchChanged)
-    /**
-     * Whether the SeatInterface supports a touch device.
-     */
-    Q_PROPERTY(bool touch READ hasTouch WRITE setHasTouch NOTIFY hasTouchChanged)
-    /**
-     * The global pointer position.
-     */
-    Q_PROPERTY(QPointF pointerPos READ pointerPos WRITE notifyPointerMotion NOTIFY pointerPosChanged)
-    /**
-     * The current timestamp passed to the input events.
-     */
-    Q_PROPERTY(quint32 timestamp READ timestamp WRITE setTimestamp NOTIFY timestampChanged)
 public:
     explicit SeatInterface(Display *display, QObject *parent = nullptr);
     virtual ~SeatInterface();
