@@ -167,7 +167,7 @@ void CompositorWindow::keyPressEvent(QKeyEvent *event)
     if (!m_seat->focusedKeyboardSurface()) {
         updateFocus();
     }
-    m_seat->setTimestamp(event->timestamp());
+    m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
     m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWaylandServer::KeyboardKeyState::Pressed);
 }
 
@@ -177,7 +177,7 @@ void CompositorWindow::keyReleaseEvent(QKeyEvent *event)
     if (!m_seat) {
         return;
     }
-    m_seat->setTimestamp(event->timestamp());
+    m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
     m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWaylandServer::KeyboardKeyState::Released);
 }
 
@@ -187,7 +187,7 @@ void CompositorWindow::mouseMoveEvent(QMouseEvent *event)
     if (!m_seat->focusedPointerSurface()) {
         updateFocus();
     }
-    m_seat->setTimestamp(event->timestamp());
+    m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
     m_seat->notifyPointerMotion(event->localPos().toPoint());
     m_seat->notifyPointerFrame();
 }
@@ -200,7 +200,7 @@ void CompositorWindow::mousePressEvent(QMouseEvent *event)
             m_seat->notifyPointerEnter(m_stackingOrder.last()->surface(), event->globalPos());
         }
     }
-    m_seat->setTimestamp(event->timestamp());
+    m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
     m_seat->notifyPointerButton(event->button(), KWaylandServer::PointerButtonState::Pressed);
     m_seat->notifyPointerFrame();
 }
@@ -208,7 +208,7 @@ void CompositorWindow::mousePressEvent(QMouseEvent *event)
 void CompositorWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     QWidget::mouseReleaseEvent(event);
-    m_seat->setTimestamp(event->timestamp());
+    m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
     m_seat->notifyPointerButton(event->button(), KWaylandServer::PointerButtonState::Released);
     m_seat->notifyPointerFrame();
 }
@@ -216,7 +216,7 @@ void CompositorWindow::mouseReleaseEvent(QMouseEvent *event)
 void CompositorWindow::wheelEvent(QWheelEvent *event)
 {
     QWidget::wheelEvent(event);
-    m_seat->setTimestamp(event->timestamp());
+    m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
     const QPoint &angle = event->angleDelta() / (8 * 15);
     if (angle.x() != 0) {
         m_seat->notifyPointerAxis(Qt::Horizontal, angle.x(), 1, KWaylandServer::PointerAxisSource::Wheel);

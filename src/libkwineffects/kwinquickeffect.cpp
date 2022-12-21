@@ -481,7 +481,7 @@ void QuickSceneEffect::grabbedKeyboardEvent(QKeyEvent *keyEvent)
     }
 }
 
-bool QuickSceneEffect::touchDown(qint32 id, const QPointF &pos, quint32 time)
+bool QuickSceneEffect::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     for (const auto &[screen, screenView] : d->views) {
         if (screenView->geometry().contains(pos.toPoint())) {
@@ -492,7 +492,7 @@ bool QuickSceneEffect::touchDown(qint32 id, const QPointF &pos, quint32 time)
     return false;
 }
 
-bool QuickSceneEffect::touchMotion(qint32 id, const QPointF &pos, quint32 time)
+bool QuickSceneEffect::touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     for (const auto &[screen, screenView] : d->views) {
         if (screenView->geometry().contains(pos.toPoint())) {
@@ -502,7 +502,7 @@ bool QuickSceneEffect::touchMotion(qint32 id, const QPointF &pos, quint32 time)
     return false;
 }
 
-bool QuickSceneEffect::touchUp(qint32 id, quint32 time)
+bool QuickSceneEffect::touchUp(qint32 id, std::chrono::microseconds time)
 {
     for (const auto &[screen, screenView] : d->views) {
         if (screenView->forwardTouchUp(id, time)) {

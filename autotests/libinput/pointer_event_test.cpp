@@ -19,6 +19,7 @@ Q_DECLARE_METATYPE(libinput_event_type)
 Q_DECLARE_METATYPE(libinput_button_state)
 
 using namespace KWin::LibInput;
+using namespace std::literals;
 
 class TestLibinputPointerEvent : public QObject
 {
@@ -115,7 +116,7 @@ void TestLibinputPointerEvent::testButton()
     QFETCH(quint32, button);
     pointerEvent->button = button;
     QFETCH(quint32, time);
-    pointerEvent->time = time;
+    pointerEvent->time = std::chrono::milliseconds(time);
 
     std::unique_ptr<Event> event(Event::create(pointerEvent));
     auto pe = dynamic_cast<PointerEvent *>(event.get());
@@ -123,8 +124,7 @@ void TestLibinputPointerEvent::testButton()
     QCOMPARE(pe->type(), LIBINPUT_EVENT_POINTER_BUTTON);
     QTEST(pe->buttonState(), "expectedButtonState");
     QCOMPARE(pe->button(), button);
-    QCOMPARE(pe->time(), time);
-    QCOMPARE(pe->timeMicroseconds(), quint64(time * 1000));
+    QCOMPARE(pe->time(), pointerEvent->time);
 }
 
 void TestLibinputPointerEvent::testScrollWheel_data()
@@ -157,7 +157,7 @@ void TestLibinputPointerEvent::testScrollWheel()
     pointerEvent->verticalScrollValue = value.y();
     pointerEvent->horizontalScrollValueV120 = valueV120.x();
     pointerEvent->verticalScrollValueV120 = valueV120.y();
-    pointerEvent->time = time;
+    pointerEvent->time = std::chrono::milliseconds(time);
 
     std::unique_ptr<Event> event(Event::create(pointerEvent));
     auto pe = dynamic_cast<PointerEvent *>(event.get());
@@ -169,7 +169,7 @@ void TestLibinputPointerEvent::testScrollWheel()
     QCOMPARE(pe->scrollValue(KWin::InputRedirection::PointerAxisVertical), value.y());
     QCOMPARE(pe->scrollValueV120(KWin::InputRedirection::PointerAxisHorizontal), valueV120.x());
     QCOMPARE(pe->scrollValueV120(KWin::InputRedirection::PointerAxisVertical), valueV120.y());
-    QCOMPARE(pe->time(), time);
+    QCOMPARE(pe->time(), pointerEvent->time);
 }
 
 void TestLibinputPointerEvent::testScrollFinger_data()
@@ -201,7 +201,7 @@ void TestLibinputPointerEvent::testScrollFinger()
     pointerEvent->verticalAxis = vertical;
     pointerEvent->horizontalScrollValue = value.x();
     pointerEvent->verticalScrollValue = value.y();
-    pointerEvent->time = time;
+    pointerEvent->time = std::chrono::milliseconds(time);
 
     std::unique_ptr<Event> event(Event::create(pointerEvent));
     auto pe = dynamic_cast<PointerEvent *>(event.get());
@@ -211,7 +211,7 @@ void TestLibinputPointerEvent::testScrollFinger()
     QCOMPARE(pe->axis().contains(KWin::InputRedirection::PointerAxisVertical), vertical);
     QCOMPARE(pe->scrollValue(KWin::InputRedirection::PointerAxisHorizontal), value.x());
     QCOMPARE(pe->scrollValue(KWin::InputRedirection::PointerAxisVertical), value.y());
-    QCOMPARE(pe->time(), time);
+    QCOMPARE(pe->time(), pointerEvent->time);
 }
 
 void TestLibinputPointerEvent::testScrollContinuous_data()
@@ -240,7 +240,7 @@ void TestLibinputPointerEvent::testScrollContinuous()
     pointerEvent->verticalAxis = vertical;
     pointerEvent->horizontalScrollValue = value.x();
     pointerEvent->verticalScrollValue = value.y();
-    pointerEvent->time = time;
+    pointerEvent->time = std::chrono::milliseconds(time);
 
     std::unique_ptr<Event> event(Event::create(pointerEvent));
     auto pe = dynamic_cast<PointerEvent *>(event.get());
@@ -250,7 +250,7 @@ void TestLibinputPointerEvent::testScrollContinuous()
     QCOMPARE(pe->axis().contains(KWin::InputRedirection::PointerAxisVertical), vertical);
     QCOMPARE(pe->scrollValue(KWin::InputRedirection::PointerAxisHorizontal), value.x());
     QCOMPARE(pe->scrollValue(KWin::InputRedirection::PointerAxisVertical), value.y());
-    QCOMPARE(pe->time(), time);
+    QCOMPARE(pe->time(), pointerEvent->time);
 }
 
 void TestLibinputPointerEvent::testMotion()
@@ -260,13 +260,13 @@ void TestLibinputPointerEvent::testMotion()
     pointerEvent->device = m_nativeDevice;
     pointerEvent->type = LIBINPUT_EVENT_POINTER_MOTION;
     pointerEvent->delta = QPointF(2.1, 4.5);
-    pointerEvent->time = 500u;
+    pointerEvent->time = 500ms;
 
     std::unique_ptr<Event> event(Event::create(pointerEvent));
     auto pe = dynamic_cast<PointerEvent *>(event.get());
     QVERIFY(pe);
     QCOMPARE(pe->type(), LIBINPUT_EVENT_POINTER_MOTION);
-    QCOMPARE(pe->time(), 500u);
+    QCOMPARE(pe->time(), pointerEvent->time);
     QCOMPARE(pe->delta(), QPointF(2.1, 4.5));
 }
 
@@ -277,13 +277,13 @@ void TestLibinputPointerEvent::testAbsoluteMotion()
     pointerEvent->device = m_nativeDevice;
     pointerEvent->type = LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE;
     pointerEvent->absolutePos = QPointF(6.25, 6.9);
-    pointerEvent->time = 500u;
+    pointerEvent->time = 500ms;
 
     std::unique_ptr<Event> event(Event::create(pointerEvent));
     auto pe = dynamic_cast<PointerEvent *>(event.get());
     QVERIFY(pe);
     QCOMPARE(pe->type(), LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE);
-    QCOMPARE(pe->time(), 500u);
+    QCOMPARE(pe->time(), pointerEvent->time);
     QCOMPARE(pe->absolutePos(), QPointF(6.25, 6.9));
     QCOMPARE(pe->absolutePos(QSize(1280, 1024)), QPointF(640, 512));
 }

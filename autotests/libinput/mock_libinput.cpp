@@ -460,9 +460,9 @@ int libinput_event_gesture_get_cancelled(struct libinput_event_gesture *event)
     return 0;
 }
 
-uint32_t libinput_event_gesture_get_time(struct libinput_event_gesture *event)
+uint64_t libinput_event_gesture_get_time_usec(struct libinput_event_gesture *event)
 {
-    return event->time;
+    return event->time.count();
 }
 
 int libinput_event_gesture_get_finger_count(struct libinput_event_gesture *event)
@@ -517,9 +517,9 @@ enum libinput_key_state libinput_event_keyboard_get_key_state(struct libinput_ev
     return event->state;
 }
 
-uint32_t libinput_event_keyboard_get_time(struct libinput_event_keyboard *event)
+uint64_t libinput_event_keyboard_get_time_usec(struct libinput_event_keyboard *event)
 {
-    return event->time;
+    return event->time.count();
 }
 
 double libinput_event_pointer_get_absolute_x(struct libinput_event_pointer *event)
@@ -568,14 +568,9 @@ double libinput_event_pointer_get_dy_unaccelerated(struct libinput_event_pointer
     return event->delta.y();
 }
 
-uint32_t libinput_event_pointer_get_time(struct libinput_event_pointer *event)
-{
-    return event->time;
-}
-
 uint64_t libinput_event_pointer_get_time_usec(struct libinput_event_pointer *event)
 {
-    return quint64(event->time * 1000);
+    return event->time.count();
 }
 
 uint32_t libinput_event_pointer_get_button(struct libinput_event_pointer *event)
@@ -615,9 +610,9 @@ double libinput_event_pointer_get_scroll_value_v120(struct libinput_event_pointe
     }
 }
 
-uint32_t libinput_event_touch_get_time(struct libinput_event_touch *event)
+uint64_t libinput_event_touch_get_time_usec(struct libinput_event_touch *event)
 {
-    return event->time;
+    return event->time.count();
 }
 
 double libinput_event_touch_get_x(struct libinput_event_touch *event)
@@ -876,14 +871,9 @@ enum libinput_switch_state libinput_event_switch_get_switch_state(struct libinpu
     }
 }
 
-uint32_t libinput_event_switch_get_time(struct libinput_event_switch *event)
-{
-    return event->time;
-}
-
 uint64_t libinput_event_switch_get_time_usec(struct libinput_event_switch *event)
 {
-    return event->timeMicroseconds;
+    return event->time.count();
 }
 
 struct libinput_event_tablet_pad *libinput_event_get_tablet_pad_event(struct libinput_event *event)

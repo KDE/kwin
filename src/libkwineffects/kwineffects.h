@@ -536,7 +536,7 @@ public:
      * @see touchUp
      * @since 5.8
      */
-    virtual bool touchDown(qint32 id, const QPointF &pos, quint32 time);
+    virtual bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time);
     /**
      * A touch point moved.
      *
@@ -556,7 +556,7 @@ public:
      * @see touchUp
      * @since 5.8
      */
-    virtual bool touchMotion(qint32 id, const QPointF &pos, quint32 time);
+    virtual bool touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time);
     /**
      * A touch point was released.
      *
@@ -575,7 +575,7 @@ public:
      * @see touchMotion
      * @since 5.8
      */
-    virtual bool touchUp(qint32 id, quint32 time);
+    virtual bool touchUp(qint32 id, std::chrono::microseconds time);
 
     /**
      * There has been an event from a drawing tablet tool

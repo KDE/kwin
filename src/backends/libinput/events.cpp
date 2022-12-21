@@ -123,9 +123,9 @@ InputRedirection::KeyboardKeyState KeyEvent::state() const
     }
 }
 
-uint32_t KeyEvent::time() const
+std::chrono::microseconds KeyEvent::time() const
 {
-    return libinput_event_keyboard_get_time(m_keyboardEvent);
+    return std::chrono::microseconds(libinput_event_keyboard_get_time_usec(m_keyboardEvent));
 }
 
 PointerEvent::PointerEvent(libinput_event *event, libinput_event_type type)
@@ -162,14 +162,9 @@ QPointF PointerEvent::deltaUnaccelerated() const
     return QPointF(libinput_event_pointer_get_dx_unaccelerated(m_pointerEvent), libinput_event_pointer_get_dy_unaccelerated(m_pointerEvent));
 }
 
-uint32_t PointerEvent::time() const
+std::chrono::microseconds PointerEvent::time() const
 {
-    return libinput_event_pointer_get_time(m_pointerEvent);
-}
-
-quint64 PointerEvent::timeMicroseconds() const
-{
-    return libinput_event_pointer_get_time_usec(m_pointerEvent);
+    return std::chrono::microseconds(libinput_event_pointer_get_time_usec(m_pointerEvent));
 }
 
 uint32_t PointerEvent::button() const
@@ -227,9 +222,9 @@ TouchEvent::TouchEvent(libinput_event *event, libinput_event_type type)
 
 TouchEvent::~TouchEvent() = default;
 
-quint32 TouchEvent::time() const
+std::chrono::microseconds TouchEvent::time() const
 {
-    return libinput_event_touch_get_time(m_touchEvent);
+    return std::chrono::microseconds(libinput_event_touch_get_time_usec(m_touchEvent));
 }
 
 QPointF TouchEvent::absolutePos() const
@@ -261,9 +256,9 @@ GestureEvent::GestureEvent(libinput_event *event, libinput_event_type type)
 
 GestureEvent::~GestureEvent() = default;
 
-quint32 GestureEvent::time() const
+std::chrono::microseconds GestureEvent::time() const
 {
-    return libinput_event_gesture_get_time(m_gestureEvent);
+    return std::chrono::microseconds(libinput_event_gesture_get_time_usec(m_gestureEvent));
 }
 
 int GestureEvent::fingerCount() const
@@ -334,14 +329,9 @@ SwitchEvent::State SwitchEvent::state() const
     return State::Off;
 }
 
-quint32 SwitchEvent::time() const
+std::chrono::microseconds SwitchEvent::time() const
 {
-    return libinput_event_switch_get_time(m_switchEvent);
-}
-
-quint64 SwitchEvent::timeMicroseconds() const
-{
-    return libinput_event_switch_get_time_usec(m_switchEvent);
+    return std::chrono::microseconds(libinput_event_switch_get_time_usec(m_switchEvent));
 }
 
 TabletToolEvent::TabletToolEvent(libinput_event *event, libinput_event_type type)

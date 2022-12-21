@@ -182,7 +182,7 @@ public:
         if (s_counter == 0) {
             if (!s_scheduledPositions.isEmpty()) {
                 const auto pos = s_scheduledPositions.takeFirst();
-                m_pointer->processMotionInternal(pos.pos, pos.delta, pos.deltaNonAccelerated, pos.time, pos.timeUsec, nullptr);
+                m_pointer->processMotionInternal(pos.pos, pos.delta, pos.deltaNonAccelerated, pos.time, nullptr);
             }
         }
     }
@@ -192,9 +192,9 @@ public:
         return s_counter > 0;
     }
 
-    static void schedulePosition(const QPointF &pos, const QPointF &delta, const QPointF &deltaNonAccelerated, uint32_t time, quint64 timeUsec)
+    static void schedulePosition(const QPointF &pos, const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time)
     {
-        s_scheduledPositions.append({pos, delta, deltaNonAccelerated, time, timeUsec});
+        s_scheduledPositions.append({pos, delta, deltaNonAccelerated, time});
     }
 
 private:
@@ -204,8 +204,7 @@ private:
         QPointF pos;
         QPointF delta;
         QPointF deltaNonAccelerated;
-        quint32 time;
-        quint64 timeUsec;
+        std::chrono::microseconds time;
     };
     static QVector<ScheduledPosition> s_scheduledPositions;
 
@@ -215,24 +214,24 @@ private:
 int PositionUpdateBlocker::s_counter = 0;
 QVector<PositionUpdateBlocker::ScheduledPosition> PositionUpdateBlocker::s_scheduledPositions;
 
-void PointerInputRedirection::processMotionAbsolute(const QPointF &pos, uint32_t time, InputDevice *device)
+void PointerInputRedirection::processMotionAbsolute(const QPointF &pos, std::chrono::microseconds time, InputDevice *device)
 {
-    processMotionInternal(pos, QPointF(), QPointF(), time, 0, device);
+    processMotionInternal(pos, QPointF(), QPointF(), time, device);
 }
 
-void PointerInputRedirection::processMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, InputDevice *device)
+void PointerInputRedirection::processMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, InputDevice *device)
 {
-    processMotionInternal(m_pos + delta, delta, deltaNonAccelerated, time, timeUsec, device);
+    processMotionInternal(m_pos + delta, delta, deltaNonAccelerated, time, device);
 }
 
-void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QPointF &delta, const QPointF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, InputDevice *device)
+void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, InputDevice *device)
 {
     input()->setLastInputHandler(this);
     if (!inited()) {
         return;
     }
     if (PositionUpdateBlocker::isPositionBlocked()) {
-        PositionUpdateBlocker::schedulePosition(pos, delta, deltaNonAccelerated, time, timeUsec);
+        PositionUpdateBlocker::schedulePosition(pos, delta, deltaNonAccelerated, time);
         return;
     }
 
@@ -240,7 +239,7 @@ void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QP
     updatePosition(pos);
     MouseEvent event(QEvent::MouseMove, m_pos, Qt::NoButton, m_qtButtons,
                      input()->keyboardModifiers(), time,
-                     delta, deltaNonAccelerated, timeUsec, device);
+                     delta, deltaNonAccelerated, device);
     event.setModifiersRelevantForGlobalShortcuts(input()->modifiersRelevantForGlobalShortcuts());
 
     update();
@@ -248,7 +247,7 @@ void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QP
     input()->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event, 0));
 }
 
-void PointerInputRedirection::processButton(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time, InputDevice *device)
+void PointerInputRedirection::processButton(uint32_t button, InputRedirection::PointerButtonState state, std::chrono::microseconds time, InputDevice *device)
 {
     input()->setLastInputHandler(this);
     QEvent::Type type;
@@ -268,7 +267,7 @@ void PointerInputRedirection::processButton(uint32_t button, InputRedirection::P
     updateButton(button, state);
 
     MouseEvent event(type, m_pos, buttonToQtMouseButton(button), m_qtButtons,
-                     input()->keyboardModifiers(), time, QPointF(), QPointF(), 0, device);
+                     input()->keyboardModifiers(), time, QPointF(), QPointF(), device);
     event.setModifiersRelevantForGlobalShortcuts(input()->modifiersRelevantForGlobalShortcuts());
     event.setNativeButton(button);
 
@@ -286,7 +285,7 @@ void PointerInputRedirection::processButton(uint32_t button, InputRedirection::P
 }
 
 void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qreal delta, qint32 deltaV120,
-                                          InputRedirection::PointerAxisSource source, uint32_t time, InputDevice *device)
+                                          InputRedirection::PointerAxisSource source, std::chrono::microseconds time, InputDevice *device)
 {
     input()->setLastInputHandler(this);
     update();
@@ -306,7 +305,7 @@ void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qr
     input()->processFilters(std::bind(&InputEventFilter::wheelEvent, std::placeholders::_1, &wheelEvent));
 }
 
-void PointerInputRedirection::processSwipeGestureBegin(int fingerCount, quint32 time, KWin::InputDevice *device)
+void PointerInputRedirection::processSwipeGestureBegin(int fingerCount, std::chrono::microseconds time, KWin::InputDevice *device)
 {
     input()->setLastInputHandler(this);
     if (!inited()) {
@@ -317,7 +316,7 @@ void PointerInputRedirection::processSwipeGestureBegin(int fingerCount, quint32 
     input()->processFilters(std::bind(&InputEventFilter::swipeGestureBegin, std::placeholders::_1, fingerCount, time));
 }
 
-void PointerInputRedirection::processSwipeGestureUpdate(const QPointF &delta, quint32 time, KWin::InputDevice *device)
+void PointerInputRedirection::processSwipeGestureUpdate(const QPointF &delta, std::chrono::microseconds time, KWin::InputDevice *device)
 {
     input()->setLastInputHandler(this);
     if (!inited()) {
@@ -329,7 +328,7 @@ void PointerInputRedirection::processSwipeGestureUpdate(const QPointF &delta, qu
     input()->processFilters(std::bind(&InputEventFilter::swipeGestureUpdate, std::placeholders::_1, delta, time));
 }
 
-void PointerInputRedirection::processSwipeGestureEnd(quint32 time, KWin::InputDevice *device)
+void PointerInputRedirection::processSwipeGestureEnd(std::chrono::microseconds time, KWin::InputDevice *device)
 {
     input()->setLastInputHandler(this);
     if (!inited()) {
@@ -341,7 +340,7 @@ void PointerInputRedirection::processSwipeGestureEnd(quint32 time, KWin::InputDe
     input()->processFilters(std::bind(&InputEventFilter::swipeGestureEnd, std::placeholders::_1, time));
 }
 
-void PointerInputRedirection::processSwipeGestureCancelled(quint32 time, KWin::InputDevice *device)
+void PointerInputRedirection::processSwipeGestureCancelled(std::chrono::microseconds time, KWin::InputDevice *device)
 {
     input()->setLastInputHandler(this);
     if (!inited()) {
@@ -353,7 +352,7 @@ void PointerInputRedirection::processSwipeGestureCancelled(quint32 time, KWin::I
     input()->processFilters(std::bind(&InputEventFilter::swipeGestureCancelled, std::placeholders::_1, time));
 }
 
-void PointerInputRedirection::processPinchGestureBegin(int fingerCount, quint32 time, KWin::InputDevice *device)
+void PointerInputRedirection::processPinchGestureBegin(int fingerCount, std::chrono::microseconds time, KWin::InputDevice *device)
 {
     input()->setLastInputHandler(this);
     if (!inited()) {
@@ -365,7 +364,7 @@ void PointerInputRedirection::processPinchGestureBegin(int fingerCount, quint32 
     input()->processFilters(std::bind(&InputEventFilter::pinchGestureBegin, std::placeholders::_1, fingerCount, time));
 }
 
-void PointerInputRedirection::processPinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time, KWin::InputDevice *device)
+void PointerInputRedirection::processPinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, std::chrono::microseconds time, KWin::InputDevice *device)
 {
     input()->setLastInputHandler(this);
     if (!inited()) {
@@ -377,7 +376,7 @@ void PointerInputRedirection::processPinchGestureUpdate(qreal scale, qreal angle
     input()->processFilters(std::bind(&InputEventFilter::pinchGestureUpdate, std::placeholders::_1, scale, angleDelta, delta, time));
 }
 
-void PointerInputRedirection::processPinchGestureEnd(quint32 time, KWin::InputDevice *device)
+void PointerInputRedirection::processPinchGestureEnd(std::chrono::microseconds time, KWin::InputDevice *device)
 {
     input()->setLastInputHandler(this);
     if (!inited()) {
@@ -389,7 +388,7 @@ void PointerInputRedirection::processPinchGestureEnd(quint32 time, KWin::InputDe
     input()->processFilters(std::bind(&InputEventFilter::pinchGestureEnd, std::placeholders::_1, time));
 }
 
-void PointerInputRedirection::processPinchGestureCancelled(quint32 time, KWin::InputDevice *device)
+void PointerInputRedirection::processPinchGestureCancelled(std::chrono::microseconds time, KWin::InputDevice *device)
 {
     input()->setLastInputHandler(this);
     if (!inited()) {
@@ -401,7 +400,7 @@ void PointerInputRedirection::processPinchGestureCancelled(quint32 time, KWin::I
     input()->processFilters(std::bind(&InputEventFilter::pinchGestureCancelled, std::placeholders::_1, time));
 }
 
-void PointerInputRedirection::processHoldGestureBegin(int fingerCount, quint32 time, KWin::InputDevice *device)
+void PointerInputRedirection::processHoldGestureBegin(int fingerCount, std::chrono::microseconds time, KWin::InputDevice *device)
 {
     if (!inited()) {
         return;
@@ -412,7 +411,7 @@ void PointerInputRedirection::processHoldGestureBegin(int fingerCount, quint32 t
     input()->processFilters(std::bind(&InputEventFilter::holdGestureBegin, std::placeholders::_1, fingerCount, time));
 }
 
-void PointerInputRedirection::processHoldGestureEnd(quint32 time, KWin::InputDevice *device)
+void PointerInputRedirection::processHoldGestureEnd(std::chrono::microseconds time, KWin::InputDevice *device)
 {
     if (!inited()) {
         return;
@@ -423,7 +422,7 @@ void PointerInputRedirection::processHoldGestureEnd(quint32 time, KWin::InputDev
     input()->processFilters(std::bind(&InputEventFilter::holdGestureEnd, std::placeholders::_1, time));
 }
 
-void PointerInputRedirection::processHoldGestureCancelled(quint32 time, KWin::InputDevice *device)
+void PointerInputRedirection::processHoldGestureCancelled(std::chrono::microseconds time, KWin::InputDevice *device)
 {
     if (!inited()) {
         return;

@@ -18,6 +18,7 @@
 Q_DECLARE_METATYPE(libinput_event_type)
 
 using namespace KWin::LibInput;
+using namespace std::literals;
 
 class TestLibinputGestureEvent : public QObject
 {
@@ -107,7 +108,7 @@ void TestLibinputGestureEvent::testStart()
     QFETCH(libinput_event_type, type);
     gestureEvent->type = type;
     gestureEvent->fingerCount = 3;
-    gestureEvent->time = 100u;
+    gestureEvent->time = 100ms;
 
     std::unique_ptr<Event> event(Event::create(gestureEvent));
     auto ge = dynamic_cast<GestureEvent *>(event.get());
@@ -129,7 +130,7 @@ void TestLibinputGestureEvent::testSwipeUpdate()
     gestureEvent->device = m_nativeDevice;
     gestureEvent->type = LIBINPUT_EVENT_GESTURE_SWIPE_UPDATE;
     gestureEvent->fingerCount = 2;
-    gestureEvent->time = 200u;
+    gestureEvent->time = 200ms;
     gestureEvent->delta = QPointF(2, 3);
 
     std::unique_ptr<Event> event(Event::create(gestureEvent));
@@ -147,7 +148,7 @@ void TestLibinputGestureEvent::testPinchUpdate()
     gestureEvent->device = m_nativeDevice;
     gestureEvent->type = LIBINPUT_EVENT_GESTURE_PINCH_UPDATE;
     gestureEvent->fingerCount = 4;
-    gestureEvent->time = 600u;
+    gestureEvent->time = 600ms;
     gestureEvent->delta = QPointF(5, 4);
     gestureEvent->scale = 2;
     gestureEvent->angleDelta = -30;
@@ -183,7 +184,7 @@ void TestLibinputGestureEvent::testEnd()
     gestureEvent->fingerCount = 4;
     QFETCH(bool, cancelled);
     gestureEvent->cancelled = cancelled;
-    gestureEvent->time = 300u;
+    gestureEvent->time = 300ms;
     gestureEvent->scale = 3;
 
     std::unique_ptr<Event> event(Event::create(gestureEvent));

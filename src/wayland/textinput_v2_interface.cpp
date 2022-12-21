@@ -215,7 +215,7 @@ void TextInputV2InterfacePrivate::keysymPressed(quint32 keysym, quint32 modifier
 
     const QList<Resource *> textInputs = textInputsForClient(surface->client());
     for (auto resource : textInputs) {
-        send_keysym(resource->handle, seat ? seat->timestamp() : 0, keysym, WL_KEYBOARD_KEY_STATE_PRESSED, modifiers);
+        send_keysym(resource->handle, seat ? seat->timestamp().count() : 0, keysym, WL_KEYBOARD_KEY_STATE_PRESSED, modifiers);
     }
 }
 
@@ -227,7 +227,7 @@ void TextInputV2InterfacePrivate::keysymReleased(quint32 keysym, quint32 modifie
 
     const QList<Resource *> textInputs = textInputsForClient(surface->client());
     for (auto resource : textInputs) {
-        send_keysym(resource->handle, seat ? seat->timestamp() : 0, keysym, WL_KEYBOARD_KEY_STATE_RELEASED, modifiers);
+        send_keysym(resource->handle, seat ? seat->timestamp().count() : 0, keysym, WL_KEYBOARD_KEY_STATE_RELEASED, modifiers);
     }
 }
 

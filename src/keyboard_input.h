@@ -52,7 +52,7 @@ public:
     /**
      * @internal
      */
-    void processKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time, InputDevice *device = nullptr);
+    void processKey(uint32_t key, InputRedirection::KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device = nullptr);
 
     Xkb *xkb() const;
     Qt::KeyboardModifiers modifiers() const;

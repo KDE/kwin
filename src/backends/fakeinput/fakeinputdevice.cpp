@@ -21,19 +21,19 @@ FakeInputDevice::FakeInputDevice(KWaylandServer::FakeInputDevice *device, QObjec
     });
     connect(device, &KWaylandServer::FakeInputDevice::pointerMotionRequested, this, [this](const QPointF &delta) {
         // TODO: Fix time
-        Q_EMIT pointerMotion(delta, delta, 0, 0, this);
+        Q_EMIT pointerMotion(delta, delta, std::chrono::microseconds::zero(), this);
     });
     connect(device, &KWaylandServer::FakeInputDevice::pointerMotionAbsoluteRequested, this, [this](const QPointF &pos) {
         // TODO: Fix time
-        Q_EMIT pointerMotionAbsolute(pos, 0, this);
+        Q_EMIT pointerMotionAbsolute(pos, std::chrono::microseconds::zero(), this);
     });
     connect(device, &KWaylandServer::FakeInputDevice::pointerButtonPressRequested, this, [this](quint32 button) {
         // TODO: Fix time
-        Q_EMIT pointerButtonChanged(button, InputRedirection::PointerButtonPressed, 0, this);
+        Q_EMIT pointerButtonChanged(button, InputRedirection::PointerButtonPressed, std::chrono::microseconds::zero(), this);
     });
     connect(device, &KWaylandServer::FakeInputDevice::pointerButtonReleaseRequested, this, [this](quint32 button) {
         // TODO: Fix time
-        Q_EMIT pointerButtonChanged(button, InputRedirection::PointerButtonReleased, 0, this);
+        Q_EMIT pointerButtonChanged(button, InputRedirection::PointerButtonReleased, std::chrono::microseconds::zero(), this);
     });
     connect(device, &KWaylandServer::FakeInputDevice::pointerAxisRequested, this, [this](Qt::Orientation orientation, qreal delta) {
         // TODO: Fix time
@@ -50,19 +50,19 @@ FakeInputDevice::FakeInputDevice(KWaylandServer::FakeInputDevice *device, QObjec
             break;
         }
         // TODO: Fix time
-        Q_EMIT pointerAxisChanged(axis, delta, 0, InputRedirection::PointerAxisSourceUnknown, 0, this);
+        Q_EMIT pointerAxisChanged(axis, delta, 0, InputRedirection::PointerAxisSourceUnknown, std::chrono::microseconds::zero(), this);
     });
     connect(device, &KWaylandServer::FakeInputDevice::touchDownRequested, this, [this](qint32 id, const QPointF &pos) {
         // TODO: Fix time
-        Q_EMIT touchDown(id, pos, 0, this);
+        Q_EMIT touchDown(id, pos, std::chrono::microseconds::zero(), this);
     });
     connect(device, &KWaylandServer::FakeInputDevice::touchMotionRequested, this, [this](qint32 id, const QPointF &pos) {
         // TODO: Fix time
-        Q_EMIT touchMotion(id, pos, 0, this);
+        Q_EMIT touchMotion(id, pos, std::chrono::microseconds::zero(), this);
     });
     connect(device, &KWaylandServer::FakeInputDevice::touchUpRequested, this, [this](qint32 id) {
         // TODO: Fix time
-        Q_EMIT touchUp(id, 0, this);
+        Q_EMIT touchUp(id, std::chrono::microseconds::zero(), this);
     });
     connect(device, &KWaylandServer::FakeInputDevice::touchCancelRequested, this, [this]() {
         Q_EMIT touchCanceled(this);
@@ -72,11 +72,11 @@ FakeInputDevice::FakeInputDevice(KWaylandServer::FakeInputDevice *device, QObjec
     });
     connect(device, &KWaylandServer::FakeInputDevice::keyboardKeyPressRequested, this, [this](quint32 button) {
         // TODO: Fix time
-        Q_EMIT keyChanged(button, InputRedirection::KeyboardKeyPressed, 0, this);
+        Q_EMIT keyChanged(button, InputRedirection::KeyboardKeyPressed, std::chrono::microseconds::zero(), this);
     });
     connect(device, &KWaylandServer::FakeInputDevice::keyboardKeyReleaseRequested, this, [this](quint32 button) {
         // TODO: Fix time
-        Q_EMIT keyChanged(button, InputRedirection::KeyboardKeyReleased, 0, this);
+        Q_EMIT keyChanged(button, InputRedirection::KeyboardKeyReleased, std::chrono::microseconds::zero(), this);
     });
 }
 

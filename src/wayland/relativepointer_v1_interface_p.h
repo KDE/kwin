@@ -33,7 +33,7 @@ public:
     explicit RelativePointerV1Interface(PointerInterface *pointer);
 
     static RelativePointerV1Interface *get(PointerInterface *pointer);
-    void sendRelativeMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, quint64 microseconds);
+    void sendRelativeMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time);
 
 protected:
     void zwp_relative_pointer_v1_destroy(Resource *resource) override;

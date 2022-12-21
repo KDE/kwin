@@ -379,7 +379,7 @@ void OffscreenQuickView::forwardKeyEvent(QKeyEvent *keyEvent)
     QCoreApplication::sendEvent(d->m_view.get(), keyEvent);
 }
 
-bool OffscreenQuickView::forwardTouchDown(qint32 id, const QPointF &pos, quint32 time)
+bool OffscreenQuickView::forwardTouchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     d->updateTouchState(Qt::TouchPointPressed, id, pos);
 
@@ -388,13 +388,13 @@ bool OffscreenQuickView::forwardTouchDown(qint32 id, const QPointF &pos, quint32
 #else
     QTouchEvent event(QEvent::TouchBegin, d->touchDevice, Qt::NoModifier, d->touchPoints);
 #endif
-    event.setTimestamp(time);
+    event.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
     QCoreApplication::sendEvent(d->m_view.get(), &event);
 
     return event.isAccepted();
 }
 
-bool OffscreenQuickView::forwardTouchMotion(qint32 id, const QPointF &pos, quint32 time)
+bool OffscreenQuickView::forwardTouchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     d->updateTouchState(Qt::TouchPointMoved, id, pos);
 
@@ -403,13 +403,13 @@ bool OffscreenQuickView::forwardTouchMotion(qint32 id, const QPointF &pos, quint
 #else
     QTouchEvent event(QEvent::TouchUpdate, d->touchDevice, Qt::NoModifier, d->touchPoints);
 #endif
-    event.setTimestamp(time);
+    event.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
     QCoreApplication::sendEvent(d->m_view.get(), &event);
 
     return event.isAccepted();
 }
 
-bool OffscreenQuickView::forwardTouchUp(qint32 id, quint32 time)
+bool OffscreenQuickView::forwardTouchUp(qint32 id, std::chrono::microseconds time)
 {
     d->updateTouchState(Qt::TouchPointReleased, id, QPointF{});
 
@@ -418,7 +418,7 @@ bool OffscreenQuickView::forwardTouchUp(qint32 id, quint32 time)
 #else
     QTouchEvent event(QEvent::TouchEnd, d->touchDevice, Qt::NoModifier, d->touchPoints);
 #endif
-    event.setTimestamp(time);
+    event.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
     QCoreApplication::sendEvent(d->m_view.get(), &event);
 
     return event.isAccepted();

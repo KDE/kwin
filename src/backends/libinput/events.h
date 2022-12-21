@@ -56,7 +56,7 @@ public:
 
     uint32_t key() const;
     InputRedirection::KeyboardKeyState state() const;
-    uint32_t time() const;
+    std::chrono::microseconds time() const;
 
     operator libinput_event_keyboard *()
     {
@@ -83,8 +83,7 @@ public:
     QPointF deltaUnaccelerated() const;
     uint32_t button() const;
     InputRedirection::PointerButtonState buttonState() const;
-    uint32_t time() const;
-    quint64 timeMicroseconds() const;
+    std::chrono::microseconds time() const;
     QVector<InputRedirection::PointerAxis> axis() const;
     qreal scrollValue(InputRedirection::PointerAxis a) const;
     qint32 scrollValueV120(InputRedirection::PointerAxis axis) const;
@@ -108,7 +107,7 @@ public:
     TouchEvent(libinput_event *event, libinput_event_type type);
     ~TouchEvent() override;
 
-    quint32 time() const;
+    std::chrono::microseconds time() const;
     QPointF absolutePos() const;
     QPointF absolutePos(const QSize &size) const;
     qint32 id() const;
@@ -131,7 +130,7 @@ class GestureEvent : public Event
 public:
     ~GestureEvent() override;
 
-    quint32 time() const;
+    std::chrono::microseconds time() const;
     int fingerCount() const;
 
     QPointF delta() const;
@@ -188,8 +187,7 @@ public:
     };
     State state() const;
 
-    quint32 time() const;
-    quint64 timeMicroseconds() const;
+    std::chrono::microseconds time() const;
 
 private:
     libinput_event_switch *m_switchEvent;
@@ -200,9 +198,9 @@ class TabletToolEvent : public Event
 public:
     TabletToolEvent(libinput_event *event, libinput_event_type type);
 
-    uint32_t time() const
+    std::chrono::microseconds time() const
     {
-        return libinput_event_tablet_tool_get_time(m_tabletToolEvent);
+        return std::chrono::microseconds(libinput_event_tablet_tool_get_time_usec(m_tabletToolEvent));
     }
     bool xHasChanged() const
     {
@@ -337,9 +335,9 @@ public:
         return libinput_event_tablet_tool_get_tool(m_tabletToolEvent);
     }
 
-    uint32_t time() const
+    std::chrono::microseconds time() const
     {
-        return libinput_event_tablet_tool_get_time(m_tabletToolEvent);
+        return std::chrono::microseconds(libinput_event_tablet_tool_get_time_usec(m_tabletToolEvent));
     }
 
 private:
@@ -363,9 +361,9 @@ public:
     {
         return libinput_event_tablet_pad_get_ring_source(m_tabletPadEvent);
     }
-    uint32_t time() const
+    std::chrono::microseconds time() const
     {
-        return libinput_event_tablet_pad_get_time(m_tabletPadEvent);
+        return std::chrono::microseconds(libinput_event_tablet_pad_get_time_usec(m_tabletPadEvent));
     }
 
 private:
@@ -389,9 +387,9 @@ public:
     {
         return libinput_event_tablet_pad_get_strip_source(m_tabletPadEvent);
     }
-    uint32_t time() const
+    std::chrono::microseconds time() const
     {
-        return libinput_event_tablet_pad_get_time(m_tabletPadEvent);
+        return std::chrono::microseconds(libinput_event_tablet_pad_get_time_usec(m_tabletPadEvent));
     }
 
 private:
@@ -412,9 +410,9 @@ public:
         const auto state = libinput_event_tablet_pad_get_button_state(m_tabletPadEvent);
         return state == LIBINPUT_BUTTON_STATE_PRESSED;
     }
-    uint32_t time() const
+    std::chrono::microseconds time() const
     {
-        return libinput_event_tablet_pad_get_time(m_tabletPadEvent);
+        return std::chrono::microseconds(libinput_event_tablet_pad_get_time_usec(m_tabletPadEvent));
     }
 
 private:

@@ -17,6 +17,7 @@ Q_DECLARE_METATYPE(KWin::SwitchEvent::State);
 
 using namespace KWin;
 using namespace KWin::LibInput;
+using namespace std::literals;
 
 class InputEventsTest : public QObject
 {
@@ -52,7 +53,7 @@ void InputEventsTest::testInitMouseEvent()
     QFETCH(QEvent::Type, type);
     // now create our own event
     MouseEvent event(type, QPointF(100, 200), Qt::LeftButton, Qt::LeftButton | Qt::RightButton,
-                     Qt::ShiftModifier | Qt::ControlModifier, 300, QPointF(1, 2), QPointF(3, 4), quint64(-1), &d);
+                     Qt::ShiftModifier | Qt::ControlModifier, 300ms, QPointF(1, 2), QPointF(3, 4), &d);
     // and verify the contract of QMouseEvent
     QCOMPARE(event.type(), type);
     QCOMPARE(event.globalPos(), QPoint(100, 200));
@@ -61,12 +62,11 @@ void InputEventsTest::testInitMouseEvent()
     QCOMPARE(event.button(), Qt::LeftButton);
     QCOMPARE(event.buttons(), Qt::LeftButton | Qt::RightButton);
     QCOMPARE(event.modifiers(), Qt::ShiftModifier | Qt::ControlModifier);
-    QCOMPARE(event.timestamp(), 300ul);
+    QCOMPARE(event.timestamp(), 300ms);
     // and our custom argument
     QCOMPARE(event.device(), &d);
     QCOMPARE(event.delta(), QPointF(1, 2));
     QCOMPARE(event.deltaUnaccelerated(), QPointF(3, 4));
-    QCOMPARE(event.timestampMicroseconds(), quint64(-1));
 }
 
 void InputEventsTest::testInitKeyEvent_data()
@@ -91,7 +91,7 @@ void InputEventsTest::testInitKeyEvent()
     QFETCH(QEvent::Type, type);
     QFETCH(bool, autorepeat);
     KeyEvent event(type, Qt::Key_Space, Qt::ShiftModifier | Qt::ControlModifier, 200, 300,
-                   QStringLiteral(" "), autorepeat, 400, &d);
+                   QStringLiteral(" "), autorepeat, 400ms, &d);
     // and verify the contract of QKeyEvent
     QCOMPARE(event.type(), type);
     QCOMPARE(event.isAutoRepeat(), autorepeat);
@@ -102,7 +102,7 @@ void InputEventsTest::testInitKeyEvent()
     QCOMPARE(event.count(), 1);
     QCOMPARE(event.nativeModifiers(), 0u);
     QCOMPARE(event.modifiers(), Qt::ShiftModifier | Qt::ControlModifier);
-    QCOMPARE(event.timestamp(), 400ul);
+    QCOMPARE(event.timestamp(), 400ms);
     // and our custom argument
     QCOMPARE(event.device(), &d);
 }
@@ -131,14 +131,14 @@ void InputEventsTest::testInitWheelEvent()
     QFETCH(qreal, delta);
     QFETCH(qint32, deltaV120);
     WheelEvent event(QPointF(100, 200), delta, deltaV120, orientation, Qt::LeftButton | Qt::RightButton,
-                     Qt::ShiftModifier | Qt::ControlModifier, InputRedirection::PointerAxisSourceWheel, 300, &d);
+                     Qt::ShiftModifier | Qt::ControlModifier, InputRedirection::PointerAxisSourceWheel, 300ms, &d);
     // compare QWheelEvent contract
     QCOMPARE(event.type(), QEvent::Wheel);
     QCOMPARE(event.position(), QPointF(100, 200));
     QCOMPARE(event.globalPosition(), QPointF(100, 200));
     QCOMPARE(event.buttons(), Qt::LeftButton | Qt::RightButton);
     QCOMPARE(event.modifiers(), Qt::ShiftModifier | Qt::ControlModifier);
-    QCOMPARE(event.timestamp(), 300ul);
+    QCOMPARE(event.timestamp(), 300ms);
     QTEST(event.angleDelta(), "expectedAngleDelta");
     QTEST(event.orientation(), "orientation");
     QTEST(event.delta(), "delta");
@@ -151,11 +151,10 @@ void InputEventsTest::testInitWheelEvent()
 void InputEventsTest::testInitSwitchEvent_data()
 {
     QTest::addColumn<KWin::SwitchEvent::State>("state");
-    QTest::addColumn<quint32>("timestamp");
-    QTest::addColumn<quint64>("micro");
+    QTest::addColumn<quint64>("timestamp");
 
-    QTest::newRow("on") << SwitchEvent::State::On << 23u << quint64{23456790};
-    QTest::newRow("off") << SwitchEvent::State::Off << 456892u << quint64{45689235987};
+    QTest::newRow("on") << SwitchEvent::State::On << quint64{23456790};
+    QTest::newRow("off") << SwitchEvent::State::Off << quint64{45689235987};
 }
 
 void InputEventsTest::testInitSwitchEvent()
@@ -165,13 +164,11 @@ void InputEventsTest::testInitSwitchEvent()
     Device d(&device);
 
     QFETCH(SwitchEvent::State, state);
-    QFETCH(quint32, timestamp);
-    QFETCH(quint64, micro);
-    SwitchEvent event(state, timestamp, micro, &d);
+    QFETCH(quint64, timestamp);
+    SwitchEvent event(state, std::chrono::microseconds(timestamp), &d);
 
     QCOMPARE(event.state(), state);
-    QCOMPARE(event.timestamp(), ulong(timestamp));
-    QCOMPARE(event.timestampMicroseconds(), micro);
+    QCOMPARE(event.timestamp(), std::chrono::microseconds(timestamp));
     QCOMPARE(event.device(), &d);
 }
 

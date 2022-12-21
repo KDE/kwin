@@ -87,7 +87,7 @@ bool PopupInputFilter::keyEvent(KeyEvent *event)
     return true;
 }
 
-bool PopupInputFilter::touchDown(qint32 id, const QPointF &pos, quint32 time)
+bool PopupInputFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     if (m_popupWindows.isEmpty()) {
         return false;

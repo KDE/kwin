@@ -349,7 +349,7 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
             break;
         }
         const QPointF position = output->mapFromGlobal(QPointF(event->root_x, event->root_y));
-        Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, event->time, m_pointerDevice.get());
+        Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, std::chrono::milliseconds(event->time), m_pointerDevice.get());
     } break;
     case XCB_KEY_PRESS:
     case XCB_KEY_RELEASE: {
@@ -364,12 +364,12 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
             }
             Q_EMIT m_keyboardDevice->keyChanged(event->detail - 8,
                                                 InputRedirection::KeyboardKeyPressed,
-                                                event->time,
+                                                std::chrono::milliseconds(event->time),
                                                 m_keyboardDevice.get());
         } else {
             Q_EMIT m_keyboardDevice->keyChanged(event->detail - 8,
                                                 InputRedirection::KeyboardKeyReleased,
-                                                event->time,
+                                                std::chrono::milliseconds(event->time),
                                                 m_keyboardDevice.get());
         }
     } break;
@@ -383,7 +383,7 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
             break;
         }
         const QPointF position = output->mapFromGlobal(QPointF(event->root_x, event->root_y));
-        Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, event->time, m_pointerDevice.get());
+        Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, std::chrono::milliseconds(event->time), m_pointerDevice.get());
     } break;
     case XCB_CLIENT_MESSAGE:
         handleClientMessage(reinterpret_cast<xcb_client_message_event_t *>(e));
@@ -507,7 +507,7 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
                                                    delta * s_defaultAxisStepDistance,
                                                    delta,
                                                    InputRedirection::PointerAxisSourceUnknown,
-                                                   event->time,
+                                                   std::chrono::milliseconds(event->time),
                                                    m_pointerDevice.get());
         return;
     }
@@ -528,12 +528,12 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
     }
 
     const QPointF position = output->mapFromGlobal(QPointF(event->root_x, event->root_y));
-    Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, event->time, m_pointerDevice.get());
+    Q_EMIT m_pointerDevice->pointerMotionAbsolute(position, std::chrono::milliseconds(event->time), m_pointerDevice.get());
 
     if (pressed) {
-        Q_EMIT m_pointerDevice->pointerButtonChanged(button, InputRedirection::PointerButtonPressed, event->time, m_pointerDevice.get());
+        Q_EMIT m_pointerDevice->pointerButtonChanged(button, InputRedirection::PointerButtonPressed, std::chrono::milliseconds(event->time), m_pointerDevice.get());
     } else {
-        Q_EMIT m_pointerDevice->pointerButtonChanged(button, InputRedirection::PointerButtonReleased, event->time, m_pointerDevice.get());
+        Q_EMIT m_pointerDevice->pointerButtonChanged(button, InputRedirection::PointerButtonReleased, std::chrono::milliseconds(event->time), m_pointerDevice.get());
     }
 }
 
@@ -574,17 +574,17 @@ void X11WindowedBackend::handleXinputEvent(xcb_ge_generic_event_t *ge)
 
     switch (ge->event_type) {
     case XI_TouchBegin: {
-        Q_EMIT m_touchDevice->touchDown(te->detail, position, te->time, m_touchDevice.get());
+        Q_EMIT m_touchDevice->touchDown(te->detail, position, std::chrono::milliseconds(te->time), m_touchDevice.get());
         Q_EMIT m_touchDevice->touchFrame(m_touchDevice.get());
         break;
     }
     case XI_TouchUpdate: {
-        Q_EMIT m_touchDevice->touchMotion(te->detail, position, te->time, m_touchDevice.get());
+        Q_EMIT m_touchDevice->touchMotion(te->detail, position, std::chrono::milliseconds(te->time), m_touchDevice.get());
         Q_EMIT m_touchDevice->touchFrame(m_touchDevice.get());
         break;
     }
     case XI_TouchEnd: {
-        Q_EMIT m_touchDevice->touchUp(te->detail, te->time, m_touchDevice.get());
+        Q_EMIT m_touchDevice->touchUp(te->detail, std::chrono::milliseconds(te->time), m_touchDevice.get());
         Q_EMIT m_touchDevice->touchFrame(m_touchDevice.get());
         break;
     }

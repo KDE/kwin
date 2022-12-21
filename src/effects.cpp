@@ -708,7 +708,7 @@ bool EffectsHandlerImpl::isMouseInterception() const
     return m_grabbedMouseEffects.count() > 0;
 }
 
-bool EffectsHandlerImpl::touchDown(qint32 id, const QPointF &pos, quint32 time)
+bool EffectsHandlerImpl::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
@@ -719,7 +719,7 @@ bool EffectsHandlerImpl::touchDown(qint32 id, const QPointF &pos, quint32 time)
     return false;
 }
 
-bool EffectsHandlerImpl::touchMotion(qint32 id, const QPointF &pos, quint32 time)
+bool EffectsHandlerImpl::touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
@@ -730,7 +730,7 @@ bool EffectsHandlerImpl::touchMotion(qint32 id, const QPointF &pos, quint32 time
     return false;
 }
 
-bool EffectsHandlerImpl::touchUp(qint32 id, quint32 time)
+bool EffectsHandlerImpl::touchUp(qint32 id, std::chrono::microseconds time)
 {
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
@@ -752,7 +752,7 @@ bool EffectsHandlerImpl::tabletToolEvent(TabletEvent *event)
     return false;
 }
 
-bool EffectsHandlerImpl::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, uint time)
+bool EffectsHandlerImpl::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, std::chrono::microseconds time)
 {
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
@@ -763,7 +763,7 @@ bool EffectsHandlerImpl::tabletToolButtonEvent(uint button, bool pressed, const 
     return false;
 }
 
-bool EffectsHandlerImpl::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, uint time)
+bool EffectsHandlerImpl::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, std::chrono::microseconds time)
 {
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
@@ -774,7 +774,7 @@ bool EffectsHandlerImpl::tabletPadButtonEvent(uint button, bool pressed, const T
     return false;
 }
 
-bool EffectsHandlerImpl::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time)
+bool EffectsHandlerImpl::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time)
 {
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
@@ -785,7 +785,7 @@ bool EffectsHandlerImpl::tabletPadStripEvent(int number, int position, bool isFi
     return false;
 }
 
-bool EffectsHandlerImpl::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time)
+bool EffectsHandlerImpl::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time)
 {
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {

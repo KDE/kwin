@@ -18,6 +18,7 @@
 Q_DECLARE_METATYPE(libinput_event_type)
 
 using namespace KWin::LibInput;
+using namespace std::literals;
 
 class TestLibinputTouchEvent : public QObject
 {
@@ -104,14 +105,14 @@ void TestLibinputTouchEvent::testAbsoluteMotion()
     QFETCH(libinput_event_type, type);
     touchEvent->type = type;
     touchEvent->absolutePos = QPointF(6.25, 6.9);
-    touchEvent->time = 500u;
+    touchEvent->time = 500ms;
     touchEvent->slot = 1;
 
     std::unique_ptr<Event> event(Event::create(touchEvent));
     auto te = dynamic_cast<TouchEvent *>(event.get());
     QVERIFY(te);
     QCOMPARE(te->type(), type);
-    QCOMPARE(te->time(), 500u);
+    QCOMPARE(te->time(), touchEvent->time);
     QCOMPARE(te->absolutePos(), QPointF(6.25, 6.9));
     QCOMPARE(te->absolutePos(QSize(1280, 1024)), QPointF(640, 512));
 }

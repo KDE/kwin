@@ -355,8 +355,7 @@ void Connection::processEvents()
             PointerEvent *pe = static_cast<PointerEvent *>(event.get());
             auto delta = pe->delta();
             auto deltaNonAccel = pe->deltaUnaccelerated();
-            quint32 latestTime = pe->time();
-            quint64 latestTimeUsec = pe->timeMicroseconds();
+            auto latestTime = pe->time();
             auto it = m_eventQueue.begin();
             while (it != m_eventQueue.end()) {
                 if ((*it)->type() == LIBINPUT_EVENT_POINTER_MOTION) {
@@ -364,13 +363,12 @@ void Connection::processEvents()
                     delta += p->delta();
                     deltaNonAccel += p->deltaUnaccelerated();
                     latestTime = p->time();
-                    latestTimeUsec = p->timeMicroseconds();
                     it = m_eventQueue.erase(it);
                 } else {
                     break;
                 }
             }
-            Q_EMIT pe->device()->pointerMotion(delta, deltaNonAccel, latestTime, latestTimeUsec, pe->device());
+            Q_EMIT pe->device()->pointerMotion(delta, deltaNonAccel, latestTime, pe->device());
             break;
         }
         case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE: {
@@ -465,10 +463,10 @@ void Connection::processEvents()
             SwitchEvent *se = static_cast<SwitchEvent *>(event.get());
             switch (se->state()) {
             case SwitchEvent::State::Off:
-                Q_EMIT se->device()->switchToggledOff(se->time(), se->timeMicroseconds(), se->device());
+                Q_EMIT se->device()->switchToggledOff(se->time(), se->device());
                 break;
             case SwitchEvent::State::On:
-                Q_EMIT se->device()->switchToggledOn(se->time(), se->timeMicroseconds(), se->device());
+                Q_EMIT se->device()->switchToggledOn(se->time(), se->device());
                 break;
             default:
                 Q_UNREACHABLE();

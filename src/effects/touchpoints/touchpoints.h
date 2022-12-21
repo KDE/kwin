@@ -30,9 +30,9 @@ public:
     void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
     void postPaintScreen() override;
     bool isActive() const override;
-    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override;
-    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override;
-    bool touchUp(qint32 id, quint32 time) override;
+    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;
+    bool touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;
+    bool touchUp(qint32 id, std::chrono::microseconds time) override;
 
     // for properties
     qreal lineWidth() const

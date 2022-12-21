@@ -72,16 +72,16 @@ public:
 
     explicit ButtonRebindsFilter();
     bool pointerEvent(KWin::MouseEvent *event, quint32 nativeButton) override;
-    bool tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId, uint time) override;
-    bool tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &tabletToolId, uint time) override;
+    bool tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time) override;
+    bool tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &tabletToolId, std::chrono::microseconds time) override;
 
 private:
     void loadConfig(const KConfigGroup &group);
     void insert(TriggerType type, const Trigger &trigger, const QStringList &action);
-    bool send(TriggerType type, const Trigger &trigger, bool pressed, uint timestamp);
-    bool sendKeySequence(const QKeySequence &sequence, bool pressed, uint time);
-    bool sendMouseButton(quint32 button, bool pressed, uint time);
-    bool sendTabletToolButton(quint32 button, bool pressed, uint time);
+    bool send(TriggerType type, const Trigger &trigger, bool pressed, std::chrono::microseconds timestamp);
+    bool sendKeySequence(const QKeySequence &sequence, bool pressed, std::chrono::microseconds time);
+    bool sendMouseButton(quint32 button, bool pressed, std::chrono::microseconds time);
+    bool sendTabletToolButton(quint32 button, bool pressed, std::chrono::microseconds time);
 
     InputDevice m_inputDevice;
     std::array<QHash<Trigger, std::variant<QKeySequence, MouseButton, TabletToolButton>>, LastType> m_actions;

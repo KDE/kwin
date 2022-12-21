@@ -49,7 +49,7 @@ bool DpmsInputEventFilter::keyEvent(KeyEvent *event)
     return true;
 }
 
-bool DpmsInputEventFilter::touchDown(qint32 id, const QPointF &pos, quint32 time)
+bool DpmsInputEventFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     if (m_enableDoubleTap) {
         if (m_touchPoints.isEmpty()) {
@@ -74,13 +74,13 @@ bool DpmsInputEventFilter::touchDown(qint32 id, const QPointF &pos, quint32 time
     return true;
 }
 
-bool DpmsInputEventFilter::touchUp(qint32 id, quint32 time)
+bool DpmsInputEventFilter::touchUp(qint32 id, std::chrono::microseconds time)
 {
     if (m_enableDoubleTap) {
         m_touchPoints.removeAll(id);
         if (m_touchPoints.isEmpty() && m_doubleTapTimer.isValid() && m_secondTap) {
             if (m_doubleTapTimer.elapsed() < qApp->doubleClickInterval()) {
-                waylandServer()->seat()->setTimestamp(time);
+                waylandServer()->seat()->setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time));
                 notify();
             }
             m_doubleTapTimer.invalidate();
@@ -90,7 +90,7 @@ bool DpmsInputEventFilter::touchUp(qint32 id, quint32 time)
     return true;
 }
 
-bool DpmsInputEventFilter::touchMotion(qint32 id, const QPointF &pos, quint32 time)
+bool DpmsInputEventFilter::touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     // ignore the event
     return true;

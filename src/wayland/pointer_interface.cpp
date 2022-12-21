@@ -204,7 +204,7 @@ void PointerInterface::sendButton(quint32 button, PointerButtonState state, quin
 
     const auto pointerResources = d->pointersForClient(d->focusedSurface->client());
     for (PointerInterfacePrivate::Resource *resource : pointerResources) {
-        d->send_button(resource->handle, serial, d->seat->timestamp(), button, quint32(state));
+        d->send_button(resource->handle, serial, d->seat->timestamp().count(), button, quint32(state));
     }
 }
 
@@ -276,9 +276,9 @@ void PointerInterface::sendAxis(Qt::Orientation orientation, qreal delta, qint32
                     d->send_axis_discrete(resource->handle, wlOrientation, deltaDiscrete);
                 }
             }
-            d->send_axis(resource->handle, d->seat->timestamp(), wlOrientation, wl_fixed_from_double(delta));
+            d->send_axis(resource->handle, d->seat->timestamp().count(), wlOrientation, wl_fixed_from_double(delta));
         } else if (version >= WL_POINTER_AXIS_STOP_SINCE_VERSION) {
-            d->send_axis_stop(resource->handle, d->seat->timestamp(), wlOrientation);
+            d->send_axis_stop(resource->handle, d->seat->timestamp().count(), wlOrientation);
         }
     }
 }
@@ -295,7 +295,7 @@ void PointerInterface::sendMotion(const QPointF &position)
 
     const auto pointerResources = d->pointersForClient(d->focusedSurface->client());
     for (PointerInterfacePrivate::Resource *resource : pointerResources) {
-        d->send_motion(resource->handle, d->seat->timestamp(), wl_fixed_from_double(localPos.x()), wl_fixed_from_double(localPos.y()));
+        d->send_motion(resource->handle, d->seat->timestamp().count(), wl_fixed_from_double(localPos.x()), wl_fixed_from_double(localPos.y()));
     }
 }
 

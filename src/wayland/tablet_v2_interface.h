@@ -150,7 +150,7 @@ public:
 
     TabletPadRingV2Interface *ring(uint at) const;
     TabletPadStripV2Interface *strip(uint at) const;
-    void sendButton(quint32 time, quint32 button, bool pressed);
+    void sendButton(std::chrono::microseconds time, quint32 button, bool pressed);
 
     void setCurrentSurface(SurfaceInterface *surface, TabletV2Interface *tablet);
     SurfaceInterface *currentSurface() const;

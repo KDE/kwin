@@ -28,13 +28,13 @@ public:
     void keyEvent(KeyEvent *event) override;
 
 Q_SIGNALS:
-    void keyRepeat(quint32 key, quint32 time);
+    void keyRepeat(quint32 key, std::chrono::microseconds time);
 
 private:
     void handleKeyRepeat();
     QTimer *m_timer;
     Xkb *m_xkb;
-    quint32 m_time;
+    std::chrono::microseconds m_time;
     quint32 m_key = 0;
 };
 

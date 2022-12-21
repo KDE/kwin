@@ -138,8 +138,8 @@ public:
     void setHasKeyboard(bool has);
     void setHasTouch(bool has);
 
-    void setTimestamp(quint32 time);
-    quint32 timestamp() const;
+    void setTimestamp(std::chrono::microseconds time);
+    std::chrono::milliseconds timestamp() const;
 
     /**
      * @name Drag'n'Drop related methods
@@ -385,7 +385,7 @@ public:
      * @param microseconds timestamp with microseconds granularity
      * @see setPointerPos
      */
-    void relativePointerMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, quint64 microseconds);
+    void relativePointerMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds timestamp);
 
     /**
      * Starts a multi-finger swipe gesture for the currently focused pointer surface.
@@ -649,7 +649,7 @@ Q_SIGNALS:
     void hasTouchChanged(bool);
     void pointerPosChanged(const QPointF &pos);
     void touchMoved(qint32 id, quint32 serial, const QPointF &globalPosition);
-    void timestampChanged(quint32);
+    void timestampChanged();
 
     /**
      * Emitted whenever the selection changes

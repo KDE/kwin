@@ -88,7 +88,7 @@ void TouchInterface::sendMotion(qint32 id, const QPointF &localPos)
 
     const auto touchResources = d->touchesForClient(d->focusedSurface->client());
     for (TouchInterfacePrivate::Resource *resource : touchResources) {
-        d->send_motion(resource->handle, d->seat->timestamp(), id, wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+        d->send_motion(resource->handle, d->seat->timestamp().count(), id, wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
     }
 }
 
@@ -100,7 +100,7 @@ void TouchInterface::sendUp(qint32 id, quint32 serial)
 
     const auto touchResources = d->touchesForClient(d->focusedSurface->client());
     for (TouchInterfacePrivate::Resource *resource : touchResources) {
-        d->send_up(resource->handle, serial, d->seat->timestamp(), id);
+        d->send_up(resource->handle, serial, d->seat->timestamp().count(), id);
     }
 }
 
@@ -118,7 +118,7 @@ void TouchInterface::sendDown(qint32 id, quint32 serial, const QPointF &localPos
     for (TouchInterfacePrivate::Resource *resource : touchResources) {
         d->send_down(resource->handle,
                      serial,
-                     d->seat->timestamp(),
+                     d->seat->timestamp().count(),
                      d->focusedSurface->resource(),
                      id,
                      wl_fixed_from_double(pos.x()),

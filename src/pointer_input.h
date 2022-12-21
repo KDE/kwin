@@ -86,66 +86,66 @@ public:
     /**
      * @internal
      */
-    void processMotionAbsolute(const QPointF &pos, uint32_t time, InputDevice *device = nullptr);
+    void processMotionAbsolute(const QPointF &pos, std::chrono::microseconds time, InputDevice *device = nullptr);
     /**
      * @internal
      */
-    void processMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, InputDevice *device);
+    void processMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, InputDevice *device);
     /**
      * @internal
      */
-    void processButton(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time, InputDevice *device = nullptr);
+    void processButton(uint32_t button, InputRedirection::PointerButtonState state, std::chrono::microseconds time, InputDevice *device = nullptr);
     /**
      * @internal
      */
-    void processAxis(InputRedirection::PointerAxis axis, qreal delta, qint32 deltaV120, InputRedirection::PointerAxisSource source, uint32_t time, InputDevice *device = nullptr);
+    void processAxis(InputRedirection::PointerAxis axis, qreal delta, qint32 deltaV120, InputRedirection::PointerAxisSource source, std::chrono::microseconds time, InputDevice *device = nullptr);
     /**
      * @internal
      */
-    void processSwipeGestureBegin(int fingerCount, quint32 time, KWin::InputDevice *device = nullptr);
+    void processSwipeGestureBegin(int fingerCount, std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
     /**
      * @internal
      */
-    void processSwipeGestureUpdate(const QPointF &delta, quint32 time, KWin::InputDevice *device = nullptr);
+    void processSwipeGestureUpdate(const QPointF &delta, std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
     /**
      * @internal
      */
-    void processSwipeGestureEnd(quint32 time, KWin::InputDevice *device = nullptr);
+    void processSwipeGestureEnd(std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
     /**
      * @internal
      */
-    void processSwipeGestureCancelled(quint32 time, KWin::InputDevice *device = nullptr);
+    void processSwipeGestureCancelled(std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
     /**
      * @internal
      */
-    void processPinchGestureBegin(int fingerCount, quint32 time, KWin::InputDevice *device = nullptr);
+    void processPinchGestureBegin(int fingerCount, std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
     /**
      * @internal
      */
-    void processPinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time, KWin::InputDevice *device = nullptr);
+    void processPinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
     /**
      * @internal
      */
-    void processPinchGestureEnd(quint32 time, KWin::InputDevice *device = nullptr);
+    void processPinchGestureEnd(std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
     /**
      * @internal
      */
-    void processPinchGestureCancelled(quint32 time, KWin::InputDevice *device = nullptr);
+    void processPinchGestureCancelled(std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
     /**
      * @internal
      */
-    void processHoldGestureBegin(int fingerCount, quint32 time, KWin::InputDevice *device = nullptr);
+    void processHoldGestureBegin(int fingerCount, std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
     /**
      * @internal
      */
-    void processHoldGestureEnd(quint32 time, KWin::InputDevice *device = nullptr);
+    void processHoldGestureEnd(std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
     /**
      * @internal
      */
-    void processHoldGestureCancelled(quint32 time, KWin::InputDevice *device = nullptr);
+    void processHoldGestureCancelled(std::chrono::microseconds time, KWin::InputDevice *device = nullptr);
 
 private:
-    void processMotionInternal(const QPointF &pos, const QPointF &delta, const QPointF &deltaNonAccelerated, uint32_t time, quint64 timeUsec, InputDevice *device);
+    void processMotionInternal(const QPointF &pos, const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, InputDevice *device);
     void cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now) override;
 
     void focusUpdate(Window *focusOld, Window *focusNow) override;

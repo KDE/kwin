@@ -11,6 +11,7 @@
 #include "input.h"
 
 #include <QInputEvent>
+#include <chrono>
 
 namespace KWin
 {
@@ -21,9 +22,8 @@ class MouseEvent : public QMouseEvent
 {
 public:
     explicit MouseEvent(QEvent::Type type, const QPointF &pos, Qt::MouseButton button, Qt::MouseButtons buttons,
-                        Qt::KeyboardModifiers modifiers, quint32 timestamp,
-                        const QPointF &delta, const QPointF &deltaNonAccelerated, quint64 timestampMicroseconds,
-                        InputDevice *device);
+                        Qt::KeyboardModifiers modifiers, std::chrono::microseconds timestamp,
+                        const QPointF &delta, const QPointF &deltaNonAccelerated, InputDevice *device);
 
     QPointF delta() const
     {
@@ -35,9 +35,9 @@ public:
         return m_deltaUnccelerated;
     }
 
-    quint64 timestampMicroseconds() const
+    std::chrono::microseconds timestamp() const
     {
-        return m_timestampMicroseconds;
+        return m_timestamp;
     }
 
     InputDevice *device() const
@@ -68,7 +68,7 @@ public:
 private:
     QPointF m_delta;
     QPointF m_deltaUnccelerated;
-    quint64 m_timestampMicroseconds;
+    std::chrono::microseconds m_timestamp;
     InputDevice *m_device;
     Qt::KeyboardModifiers m_modifiersRelevantForShortcuts = Qt::KeyboardModifiers();
     quint32 m_nativeButton = 0;
@@ -80,7 +80,7 @@ class WheelEvent : public QWheelEvent
 public:
     explicit WheelEvent(const QPointF &pos, qreal delta, qint32 deltaV120, Qt::Orientation orientation,
                         Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, InputRedirection::PointerAxisSource source,
-                        quint32 timestamp, InputDevice *device);
+                        std::chrono::microseconds timestamp, InputDevice *device);
 
     Qt::Orientation orientation() const
     {
@@ -117,6 +117,8 @@ public:
         m_modifiersRelevantForShortcuts = mods;
     }
 
+    std::chrono::microseconds timestamp() const;
+
 private:
     InputDevice *m_device;
     Qt::Orientation m_orientation;
@@ -124,13 +126,14 @@ private:
     qint32 m_deltaV120;
     InputRedirection::PointerAxisSource m_source;
     Qt::KeyboardModifiers m_modifiersRelevantForShortcuts = Qt::KeyboardModifiers();
+    const std::chrono::microseconds m_timestamp;
 };
 
 class KeyEvent : public QKeyEvent
 {
 public:
     explicit KeyEvent(QEvent::Type type, Qt::Key key, Qt::KeyboardModifiers modifiers, quint32 code, quint32 keysym,
-                      const QString &text, bool autorepeat, quint32 timestamp, InputDevice *device);
+                      const QString &text, bool autorepeat, std::chrono::microseconds timestamp, InputDevice *device);
 
     InputDevice *device() const
     {
@@ -147,9 +150,12 @@ public:
         m_modifiersRelevantForShortcuts = mods;
     }
 
+    std::chrono::microseconds timestamp() const;
+
 private:
     InputDevice *m_device;
     Qt::KeyboardModifiers m_modifiersRelevantForShortcuts = Qt::KeyboardModifiers();
+    const std::chrono::microseconds m_timestamp;
 };
 
 class SwitchEvent : public QEvent
@@ -159,21 +165,16 @@ public:
         Off,
         On
     };
-    explicit SwitchEvent(State state, quint32 timestamp, quint64 timestampMicroseconds, InputDevice *device);
+    explicit SwitchEvent(State state, std::chrono::microseconds timestamp, InputDevice *device);
 
     State state() const
     {
         return m_state;
     }
 
-    quint64 timestamp() const
+    std::chrono::microseconds timestamp() const
     {
         return m_timestamp;
-    }
-
-    quint64 timestampMicroseconds() const
-    {
-        return m_timestampMicroseconds;
     }
 
     InputDevice *device() const
@@ -183,8 +184,7 @@ public:
 
 private:
     State m_state;
-    quint64 m_timestampMicroseconds;
-    quint64 m_timestamp;
+    std::chrono::microseconds m_timestamp;
     InputDevice *m_device;
 };
 

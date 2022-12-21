@@ -476,18 +476,19 @@ void SeatInterface::notifyPointerMotion(const QPointF &pos)
     d->pointer->sendMotion(localPosition);
 }
 
-quint32 SeatInterface::timestamp() const
+std::chrono::milliseconds SeatInterface::timestamp() const
 {
     return d->timestamp;
 }
 
-void SeatInterface::setTimestamp(quint32 time)
+void SeatInterface::setTimestamp(std::chrono::microseconds time)
 {
-    if (d->timestamp == time) {
+    const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(time);
+    if (d->timestamp == milliseconds) {
         return;
     }
-    d->timestamp = time;
-    Q_EMIT timestampChanged(time);
+    d->timestamp = milliseconds;
+    Q_EMIT timestampChanged();
 }
 
 void SeatInterface::setDragTarget(AbstractDropHandler *dropTarget,
@@ -753,7 +754,7 @@ quint32 SeatInterface::pointerButtonSerial(quint32 button) const
     return it.value();
 }
 
-void SeatInterface::relativePointerMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, quint64 microseconds)
+void SeatInterface::relativePointerMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time)
 {
     if (!d->pointer) {
         return;
@@ -761,7 +762,7 @@ void SeatInterface::relativePointerMotion(const QPointF &delta, const QPointF &d
 
     auto relativePointer = RelativePointerV1Interface::get(pointer());
     if (relativePointer) {
-        relativePointer->sendRelativeMotion(delta, deltaNonAccelerated, microseconds);
+        relativePointer->sendRelativeMotion(delta, deltaNonAccelerated, time);
     }
 }
 

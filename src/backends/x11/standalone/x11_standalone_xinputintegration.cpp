@@ -52,12 +52,12 @@ public:
         switch (ge->event_type) {
         case XI_RawKeyPress: {
             auto re = reinterpret_cast<xXIRawEvent *>(event);
-            input()->keyboard()->processKey(re->detail - 8, InputRedirection::KeyboardKeyPressed, re->time);
+            input()->keyboard()->processKey(re->detail - 8, InputRedirection::KeyboardKeyPressed, std::chrono::milliseconds(re->time));
             break;
         }
         case XI_RawKeyRelease: {
             auto re = reinterpret_cast<xXIRawEvent *>(event);
-            input()->keyboard()->processKey(re->detail - 8, InputRedirection::KeyboardKeyReleased, re->time);
+            input()->keyboard()->processKey(re->detail - 8, InputRedirection::KeyboardKeyReleased, std::chrono::milliseconds(re->time));
             break;
         }
         case XI_RawButtonPress: {
@@ -66,13 +66,13 @@ public:
             // TODO: this currently ignores left handed settings, for current usage not needed
             // if we want to use also for global mouse shortcuts, this needs to reflect state correctly
             case XCB_BUTTON_INDEX_1:
-                input()->pointer()->processButton(BTN_LEFT, InputRedirection::PointerButtonPressed, e->time);
+                input()->pointer()->processButton(BTN_LEFT, InputRedirection::PointerButtonPressed, std::chrono::milliseconds(e->time));
                 break;
             case XCB_BUTTON_INDEX_2:
-                input()->pointer()->processButton(BTN_MIDDLE, InputRedirection::PointerButtonPressed, e->time);
+                input()->pointer()->processButton(BTN_MIDDLE, InputRedirection::PointerButtonPressed, std::chrono::milliseconds(e->time));
                 break;
             case XCB_BUTTON_INDEX_3:
-                input()->pointer()->processButton(BTN_RIGHT, InputRedirection::PointerButtonPressed, e->time);
+                input()->pointer()->processButton(BTN_RIGHT, InputRedirection::PointerButtonPressed, std::chrono::milliseconds(e->time));
                 break;
             case XCB_BUTTON_INDEX_4:
             case XCB_BUTTON_INDEX_5:
@@ -91,19 +91,19 @@ public:
             // TODO: this currently ignores left handed settings, for current usage not needed
             // if we want to use also for global mouse shortcuts, this needs to reflect state correctly
             case XCB_BUTTON_INDEX_1:
-                input()->pointer()->processButton(BTN_LEFT, InputRedirection::PointerButtonReleased, e->time);
+                input()->pointer()->processButton(BTN_LEFT, InputRedirection::PointerButtonReleased, std::chrono::milliseconds(e->time));
                 break;
             case XCB_BUTTON_INDEX_2:
-                input()->pointer()->processButton(BTN_MIDDLE, InputRedirection::PointerButtonReleased, e->time);
+                input()->pointer()->processButton(BTN_MIDDLE, InputRedirection::PointerButtonReleased, std::chrono::milliseconds(e->time));
                 break;
             case XCB_BUTTON_INDEX_3:
-                input()->pointer()->processButton(BTN_RIGHT, InputRedirection::PointerButtonReleased, e->time);
+                input()->pointer()->processButton(BTN_RIGHT, InputRedirection::PointerButtonReleased, std::chrono::milliseconds(e->time));
                 break;
             case XCB_BUTTON_INDEX_4:
-                input()->pointer()->processAxis(InputRedirection::PointerAxisVertical, 120, 1, InputRedirection::PointerAxisSourceWheel, e->time);
+                input()->pointer()->processAxis(InputRedirection::PointerAxisVertical, 120, 1, InputRedirection::PointerAxisSourceWheel, std::chrono::milliseconds(e->time));
                 break;
             case XCB_BUTTON_INDEX_5:
-                input()->pointer()->processAxis(InputRedirection::PointerAxisVertical, -120, 1, InputRedirection::PointerAxisSourceWheel, e->time);
+                input()->pointer()->processAxis(InputRedirection::PointerAxisVertical, -120, 1, InputRedirection::PointerAxisSourceWheel, std::chrono::milliseconds(e->time));
                 break;
                 // TODO: further buttons, horizontal scrolling?
             }
@@ -194,9 +194,9 @@ public:
         if (ke->event == ke->root) {
             const uint8_t eventType = event->response_type & ~0x80;
             if (eventType == XCB_KEY_PRESS) {
-                input()->keyboard()->processKey(ke->detail - 8, InputRedirection::KeyboardKeyPressed, ke->time);
+                input()->keyboard()->processKey(ke->detail - 8, InputRedirection::KeyboardKeyPressed, std::chrono::milliseconds(ke->time));
             } else {
-                input()->keyboard()->processKey(ke->detail - 8, InputRedirection::KeyboardKeyReleased, ke->time);
+                input()->keyboard()->processKey(ke->detail - 8, InputRedirection::KeyboardKeyReleased, std::chrono::milliseconds(ke->time));
             }
         }
         return false;

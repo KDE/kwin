@@ -149,9 +149,9 @@ public:
      */
     void forwardKeyEvent(QKeyEvent *keyEvent);
 
-    bool forwardTouchDown(qint32 id, const QPointF &pos, quint32 time);
-    bool forwardTouchMotion(qint32 id, const QPointF &pos, quint32 time);
-    bool forwardTouchUp(qint32 id, quint32 time);
+    bool forwardTouchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time);
+    bool forwardTouchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time);
+    bool forwardTouchUp(qint32 id, std::chrono::microseconds time);
 
 Q_SIGNALS:
     /**

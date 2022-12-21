@@ -74,12 +74,22 @@ static QString tableRow(const QString &title, const T &argument)
     return QStringLiteral("<tr><td>%1</td><td>%2</td></tr>").arg(title).arg(argument);
 }
 
-static QString timestampRow(quint32 timestamp)
+static QString timestampRow(uint32_t timestamp)
 {
     return tableRow(i18n("Timestamp"), timestamp);
 }
 
-static QString timestampRowUsec(quint64 timestamp)
+static QString timestampRow(std::chrono::microseconds timestamp)
+{
+    return tableRow(i18n("Timestamp"), std::chrono::duration_cast<std::chrono::milliseconds>(timestamp).count());
+}
+
+static QString timestampRowUsec(std::chrono::microseconds timestamp)
+{
+    return tableRow(i18n("Timestamp (µsec)"), timestamp.count());
+}
+
+static QString timestampRowUsec(uint64_t timestamp)
 {
     return tableRow(i18n("Timestamp (µsec)"), timestamp);
 }
@@ -189,9 +199,7 @@ void DebugConsoleFilter::pointerEvent(MouseEvent *event)
         text.append(tableHeaderRow(i18nc("A mouse pointer motion event", "Pointer Motion")));
         text.append(deviceRow(event->device()));
         text.append(timestamp);
-        if (event->timestampMicroseconds() != 0) {
-            text.append(timestampRowUsec(event->timestampMicroseconds()));
-        }
+        text.append(timestampRowUsec(event->timestamp()));
         if (!event->delta().isNull()) {
             text.append(tableRow(i18nc("The relative mouse movement", "Delta"),
                                  QStringLiteral("%1/%2").arg(event->delta().x()).arg(event->delta().y())));
@@ -309,7 +317,7 @@ void DebugConsoleFilter::keyEvent(KeyEvent *event)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::touchDown(qint32 id, const QPointF &pos, quint32 time)
+void DebugConsoleFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -324,7 +332,7 @@ void DebugConsoleFilter::touchDown(qint32 id, const QPointF &pos, quint32 time)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::touchMotion(qint32 id, const QPointF &pos, quint32 time)
+void DebugConsoleFilter::touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -339,7 +347,7 @@ void DebugConsoleFilter::touchMotion(qint32 id, const QPointF &pos, quint32 time
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::touchUp(qint32 id, quint32 time)
+void DebugConsoleFilter::touchUp(qint32 id, std::chrono::microseconds time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -352,7 +360,7 @@ void DebugConsoleFilter::touchUp(qint32 id, quint32 time)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::pinchGestureBegin(int fingerCount, quint32 time)
+void DebugConsoleFilter::pinchGestureBegin(int fingerCount, std::chrono::microseconds time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -365,7 +373,7 @@ void DebugConsoleFilter::pinchGestureBegin(int fingerCount, quint32 time)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time)
+void DebugConsoleFilter::pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, std::chrono::microseconds time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -381,7 +389,7 @@ void DebugConsoleFilter::pinchGestureUpdate(qreal scale, qreal angleDelta, const
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::pinchGestureEnd(quint32 time)
+void DebugConsoleFilter::pinchGestureEnd(std::chrono::microseconds time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -393,7 +401,7 @@ void DebugConsoleFilter::pinchGestureEnd(quint32 time)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::pinchGestureCancelled(quint32 time)
+void DebugConsoleFilter::pinchGestureCancelled(std::chrono::microseconds time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -405,7 +413,7 @@ void DebugConsoleFilter::pinchGestureCancelled(quint32 time)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::swipeGestureBegin(int fingerCount, quint32 time)
+void DebugConsoleFilter::swipeGestureBegin(int fingerCount, std::chrono::microseconds time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -418,7 +426,7 @@ void DebugConsoleFilter::swipeGestureBegin(int fingerCount, quint32 time)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::swipeGestureUpdate(const QPointF &delta, quint32 time)
+void DebugConsoleFilter::swipeGestureUpdate(const QPointF &delta, std::chrono::microseconds time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -432,7 +440,7 @@ void DebugConsoleFilter::swipeGestureUpdate(const QPointF &delta, quint32 time)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::swipeGestureEnd(quint32 time)
+void DebugConsoleFilter::swipeGestureEnd(std::chrono::microseconds time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -444,7 +452,7 @@ void DebugConsoleFilter::swipeGestureEnd(quint32 time)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::swipeGestureCancelled(quint32 time)
+void DebugConsoleFilter::swipeGestureCancelled(std::chrono::microseconds time)
 {
     QString text = s_hr;
     text.append(s_tableStart);
@@ -462,9 +470,7 @@ void DebugConsoleFilter::switchEvent(SwitchEvent *event)
     text.append(s_tableStart);
     text.append(tableHeaderRow(i18nc("A hardware switch (e.g. notebook lid) got toggled", "Switch toggled")));
     text.append(timestampRow(event->timestamp()));
-    if (event->timestampMicroseconds() != 0) {
-        text.append(timestampRowUsec(event->timestampMicroseconds()));
-    }
+    text.append(timestampRowUsec(event->timestamp()));
     text.append(deviceRow(event->device()));
     QString switchName;
     if (event->device()->isLidSwitch()) {
@@ -515,7 +521,7 @@ void DebugConsoleFilter::tabletToolEvent(TabletEvent *event)
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, uint time)
+void DebugConsoleFilter::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, std::chrono::microseconds time)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Tool Button"))
         + tableRow(i18n("Button"), button)
@@ -528,7 +534,7 @@ void DebugConsoleFilter::tabletToolButtonEvent(uint button, bool pressed, const 
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, uint time)
+void DebugConsoleFilter::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, std::chrono::microseconds time)
 {
     QString text = s_hr + s_tableStart
         + tableHeaderRow(i18n("Tablet Pad Button"))
@@ -542,7 +548,7 @@ void DebugConsoleFilter::tabletPadButtonEvent(uint button, bool pressed, const T
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time)
+void DebugConsoleFilter::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Pad Strip"))
         + tableRow(i18n("Number"), number)
@@ -556,7 +562,7 @@ void DebugConsoleFilter::tabletPadStripEvent(int number, int position, bool isFi
     m_textEdit->ensureCursorVisible();
 }
 
-void DebugConsoleFilter::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time)
+void DebugConsoleFilter::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time)
 {
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Pad Ring"))
         + tableRow(i18n("Number"), number)

@@ -568,9 +568,9 @@ TabletPadV2Interface::~TabletPadV2Interface()
     }
 }
 
-void TabletPadV2Interface::sendButton(quint32 time, quint32 button, bool pressed)
+void TabletPadV2Interface::sendButton(std::chrono::microseconds time, quint32 button, bool pressed)
 {
-    d->send_button(d->resourceForSurface(currentSurface()), time, button, pressed);
+    d->send_button(d->resourceForSurface(currentSurface()), std::chrono::duration_cast<std::chrono::milliseconds>(time).count(), button, pressed);
 }
 
 TabletPadRingV2Interface *TabletPadV2Interface::ring(uint at) const

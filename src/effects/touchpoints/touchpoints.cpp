@@ -54,7 +54,7 @@ Qt::GlobalColor TouchPointsEffect::colorForId(quint32 id)
     return s_colors[s_colorIndex];
 }
 
-bool TouchPointsEffect::touchDown(qint32 id, const QPointF &pos, quint32 time)
+bool TouchPointsEffect::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     TouchPoint point;
     point.pos = pos;
@@ -66,7 +66,7 @@ bool TouchPointsEffect::touchDown(qint32 id, const QPointF &pos, quint32 time)
     return false;
 }
 
-bool TouchPointsEffect::touchMotion(qint32 id, const QPointF &pos, quint32 time)
+bool TouchPointsEffect::touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     TouchPoint point;
     point.pos = pos;
@@ -78,7 +78,7 @@ bool TouchPointsEffect::touchMotion(qint32 id, const QPointF &pos, quint32 time)
     return false;
 }
 
-bool TouchPointsEffect::touchUp(qint32 id, quint32 time)
+bool TouchPointsEffect::touchUp(qint32 id, std::chrono::microseconds time)
 {
     auto it = m_latestPositions.constFind(id);
     if (it != m_latestPositions.constEnd()) {

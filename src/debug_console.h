@@ -135,27 +135,27 @@ public:
     void pointerEvent(MouseEvent *event) override;
     void wheelEvent(WheelEvent *event) override;
     void keyEvent(KeyEvent *event) override;
-    void touchDown(qint32 id, const QPointF &pos, quint32 time) override;
-    void touchMotion(qint32 id, const QPointF &pos, quint32 time) override;
-    void touchUp(qint32 id, quint32 time) override;
+    void touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;
+    void touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;
+    void touchUp(qint32 id, std::chrono::microseconds time) override;
 
-    void pinchGestureBegin(int fingerCount, quint32 time) override;
-    void pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time) override;
-    void pinchGestureEnd(quint32 time) override;
-    void pinchGestureCancelled(quint32 time) override;
+    void pinchGestureBegin(int fingerCount, std::chrono::microseconds time) override;
+    void pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, std::chrono::microseconds time) override;
+    void pinchGestureEnd(std::chrono::microseconds time) override;
+    void pinchGestureCancelled(std::chrono::microseconds time) override;
 
-    void swipeGestureBegin(int fingerCount, quint32 time) override;
-    void swipeGestureUpdate(const QPointF &delta, quint32 time) override;
-    void swipeGestureEnd(quint32 time) override;
-    void swipeGestureCancelled(quint32 time) override;
+    void swipeGestureBegin(int fingerCount, std::chrono::microseconds time) override;
+    void swipeGestureUpdate(const QPointF &delta, std::chrono::microseconds time) override;
+    void swipeGestureEnd(std::chrono::microseconds time) override;
+    void swipeGestureCancelled(std::chrono::microseconds time) override;
 
     void switchEvent(SwitchEvent *event) override;
 
     void tabletToolEvent(TabletEvent *event) override;
-    void tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, uint time) override;
-    void tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, uint time) override;
-    void tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time) override;
-    void tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time) override;
+    void tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, std::chrono::microseconds time) override;
+    void tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, std::chrono::microseconds time) override;
+    void tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time) override;
+    void tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time) override;
 
 private:
     QTextEdit *m_textEdit;

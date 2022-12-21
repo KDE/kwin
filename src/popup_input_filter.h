@@ -22,7 +22,7 @@ public:
     explicit PopupInputFilter();
     bool pointerEvent(MouseEvent *event, quint32 nativeButton) override;
     bool keyEvent(KeyEvent *event) override;
-    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override;
+    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;
 
 private:
     void handleWindowAdded(Window *client);

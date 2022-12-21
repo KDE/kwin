@@ -22,6 +22,7 @@
 #include "wayland/textinput_v2_interface.h"
 
 using namespace KWaylandServer;
+using namespace std::literals;
 
 class TextInputTest : public QObject
 {
@@ -667,7 +668,7 @@ void TextInputTest::testKeyEvent()
 
     // TODO: test modifiers
     QSignalSpy keyEventSpy(textInput.get(), &KWayland::Client::TextInput::keyEvent);
-    m_seatInterface->setTimestamp(100);
+    m_seatInterface->setTimestamp(100ms);
     ti->keysymPressed(2);
     QVERIFY(keyEventSpy.wait());
     QCOMPARE(keyEventSpy.count(), 1);
@@ -675,7 +676,7 @@ void TextInputTest::testKeyEvent()
     QCOMPARE(keyEventSpy.last().at(1).value<KWayland::Client::TextInput::KeyState>(), KWayland::Client::TextInput::KeyState::Pressed);
     QCOMPARE(keyEventSpy.last().at(2).value<Qt::KeyboardModifiers>(), Qt::KeyboardModifiers());
     QCOMPARE(keyEventSpy.last().at(3).value<quint32>(), 100u);
-    m_seatInterface->setTimestamp(101);
+    m_seatInterface->setTimestamp(101ms);
     ti->keysymReleased(2);
     QVERIFY(keyEventSpy.wait());
     QCOMPARE(keyEventSpy.count(), 2);

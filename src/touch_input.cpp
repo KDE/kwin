@@ -128,7 +128,7 @@ void TouchInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *o
     // nothing to do
 }
 
-void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, quint32 time, InputDevice *device)
+void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, std::chrono::microseconds time, InputDevice *device)
 {
     if (!inited()) {
         return;
@@ -145,7 +145,7 @@ void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, quint32 t
     m_windowUpdatedInCycle = false;
 }
 
-void TouchInputRedirection::processUp(qint32 id, quint32 time, InputDevice *device)
+void TouchInputRedirection::processUp(qint32 id, std::chrono::microseconds time, InputDevice *device)
 {
     if (!inited()) {
         return;
@@ -163,7 +163,7 @@ void TouchInputRedirection::processUp(qint32 id, quint32 time, InputDevice *devi
     }
 }
 
-void TouchInputRedirection::processMotion(qint32 id, const QPointF &pos, quint32 time, InputDevice *device)
+void TouchInputRedirection::processMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time, InputDevice *device)
 {
     if (!inited()) {
         return;

@@ -592,17 +592,17 @@ xcb_window_t Effect::x11RootWindow() const
     return effects->x11RootWindow();
 }
 
-bool Effect::touchDown(qint32 id, const QPointF &pos, quint32 time)
+bool Effect::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     return false;
 }
 
-bool Effect::touchMotion(qint32 id, const QPointF &pos, quint32 time)
+bool Effect::touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     return false;
 }
 
-bool Effect::touchUp(qint32 id, quint32 time)
+bool Effect::touchUp(qint32 id, std::chrono::microseconds time)
 {
     return false;
 }

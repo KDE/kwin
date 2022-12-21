@@ -16,6 +16,7 @@
 #include <QVector>
 
 #include <array>
+#include <chrono>
 
 struct libinput_device
 {
@@ -109,7 +110,7 @@ struct libinput_event
     }
     libinput_device *device = nullptr;
     libinput_event_type type = LIBINPUT_EVENT_NONE;
-    quint32 time = 0;
+    std::chrono::microseconds time = std::chrono::microseconds::zero();
 };
 
 struct libinput_event_keyboard : libinput_event
@@ -158,7 +159,6 @@ struct libinput_event_switch : libinput_event
         On
     };
     State state = State::Off;
-    quint64 timeMicroseconds = 0;
 };
 
 struct libinput

@@ -269,7 +269,7 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
     if (d->seat->isDragPointer()) {
         d->drag.posConnection = connect(d->seat, &SeatInterface::pointerPosChanged, this, [this] {
             const QPointF pos = d->seat->dragSurfaceTransformation().map(d->seat->pointerPos());
-            d->send_motion(d->seat->timestamp(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+            d->send_motion(d->seat->timestamp().count(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
         });
     } else if (d->seat->isDragTouch()) {
         // When dragging from one window to another, we may end up in a data_device
@@ -287,7 +287,7 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
                 return;
             }
             const QPointF pos = d->seat->dragSurfaceTransformation().map(globalPosition);
-            d->send_motion(d->seat->timestamp(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+            d->send_motion(d->seat->timestamp().count(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
         });
     }
     d->drag.destroyConnection = connect(d->drag.surface, &QObject::destroyed, this, [this] {

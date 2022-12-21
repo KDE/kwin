@@ -219,15 +219,15 @@ public:
         return m_scene;
     }
 
-    bool touchDown(qint32 id, const QPointF &pos, quint32 time);
-    bool touchMotion(qint32 id, const QPointF &pos, quint32 time);
-    bool touchUp(qint32 id, quint32 time);
+    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time);
+    bool touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time);
+    bool touchUp(qint32 id, std::chrono::microseconds time);
 
     bool tabletToolEvent(KWin::TabletEvent *event);
-    bool tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &tabletToolId, uint time);
-    bool tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId, uint time);
-    bool tabletPadStripEvent(int number, int position, bool isFinger, const KWin::TabletPadId &tabletPadId, uint time);
-    bool tabletPadRingEvent(int number, int position, bool isFinger, const KWin::TabletPadId &tabletPadId, uint time);
+    bool tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &tabletToolId, std::chrono::microseconds time);
+    bool tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time);
+    bool tabletPadStripEvent(int number, int position, bool isFinger, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time);
+    bool tabletPadRingEvent(int number, int position, bool isFinger, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time);
 
     void highlightWindows(const QVector<EffectWindow *> &windows);
 

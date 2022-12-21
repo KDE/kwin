@@ -27,9 +27,9 @@ public:
     bool pointerEvent(MouseEvent *event, quint32 nativeButton) override;
     bool wheelEvent(WheelEvent *event) override;
     bool keyEvent(KeyEvent *event) override;
-    bool touchDown(qint32 id, const QPointF &pos, quint32 time) override;
-    bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override;
-    bool touchUp(qint32 id, quint32 time) override;
+    bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;
+    bool touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;
+    bool touchUp(qint32 id, std::chrono::microseconds time) override;
 
 private:
     void notify();

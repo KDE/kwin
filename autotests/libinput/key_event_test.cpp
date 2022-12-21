@@ -92,14 +92,14 @@ void TestLibinputKeyEvent::testEvent()
     QFETCH(quint32, key);
     keyEvent->key = key;
     QFETCH(quint32, time);
-    keyEvent->time = time;
+    keyEvent->time = std::chrono::milliseconds(time);
 
     std::unique_ptr<Event> event(Event::create(keyEvent));
     auto ke = dynamic_cast<KeyEvent *>(event.get());
     QVERIFY(ke);
     QTEST(ke->state(), "expectedKeyState");
     QCOMPARE(ke->key(), key);
-    QCOMPARE(ke->time(), time);
+    QCOMPARE(ke->time(), keyEvent->time);
 }
 
 QTEST_GUILESS_MAIN(TestLibinputKeyEvent)

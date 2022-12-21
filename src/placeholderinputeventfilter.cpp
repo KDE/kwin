@@ -27,17 +27,17 @@ bool PlaceholderInputEventFilter::keyEvent(KeyEvent *event)
     return true;
 }
 
-bool PlaceholderInputEventFilter::touchDown(qint32 id, const QPointF &pos, quint32 time)
+bool PlaceholderInputEventFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     return true;
 }
 
-bool PlaceholderInputEventFilter::touchMotion(qint32 id, const QPointF &pos, quint32 time)
+bool PlaceholderInputEventFilter::touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     return true;
 }
 
-bool PlaceholderInputEventFilter::touchUp(qint32 id, quint32 time)
+bool PlaceholderInputEventFilter::touchUp(qint32 id, std::chrono::microseconds time)
 {
     return true;
 }

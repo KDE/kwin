@@ -35,59 +35,59 @@ void InputEventSpy::keyEvent(KeyEvent *event)
 {
 }
 
-void InputEventSpy::touchDown(qint32 id, const QPointF &point, quint32 time)
+void InputEventSpy::touchDown(qint32 id, const QPointF &point, std::chrono::microseconds time)
 {
 }
 
-void InputEventSpy::touchMotion(qint32 id, const QPointF &point, quint32 time)
+void InputEventSpy::touchMotion(qint32 id, const QPointF &point, std::chrono::microseconds time)
 {
 }
 
-void InputEventSpy::touchUp(qint32 id, quint32 time)
+void InputEventSpy::touchUp(qint32 id, std::chrono::microseconds time)
 {
 }
 
-void InputEventSpy::pinchGestureBegin(int fingerCount, quint32 time)
+void InputEventSpy::pinchGestureBegin(int fingerCount, std::chrono::microseconds time)
 {
 }
 
-void InputEventSpy::pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, quint32 time)
+void InputEventSpy::pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, std::chrono::microseconds time)
 {
 }
 
-void InputEventSpy::pinchGestureEnd(quint32 time)
+void InputEventSpy::pinchGestureEnd(std::chrono::microseconds time)
 {
 }
 
-void InputEventSpy::pinchGestureCancelled(quint32 time)
+void InputEventSpy::pinchGestureCancelled(std::chrono::microseconds time)
 {
 }
 
-void InputEventSpy::swipeGestureBegin(int fingerCount, quint32 time)
+void InputEventSpy::swipeGestureBegin(int fingerCount, std::chrono::microseconds time)
 {
 }
 
-void InputEventSpy::swipeGestureUpdate(const QPointF &delta, quint32 time)
+void InputEventSpy::swipeGestureUpdate(const QPointF &delta, std::chrono::microseconds time)
 {
 }
 
-void InputEventSpy::swipeGestureEnd(quint32 time)
+void InputEventSpy::swipeGestureEnd(std::chrono::microseconds time)
 {
 }
 
-void InputEventSpy::swipeGestureCancelled(quint32 time)
+void InputEventSpy::swipeGestureCancelled(std::chrono::microseconds time)
 {
 }
 
-void InputEventSpy::holdGestureBegin(int fingerCount, quint32 time)
+void InputEventSpy::holdGestureBegin(int fingerCount, std::chrono::microseconds time)
 {
 }
 
-void InputEventSpy::holdGestureEnd(quint32 time)
+void InputEventSpy::holdGestureEnd(std::chrono::microseconds time)
 {
 }
 
-void InputEventSpy::holdGestureCancelled(quint32 time)
+void InputEventSpy::holdGestureCancelled(std::chrono::microseconds time)
 {
 }
 
@@ -99,19 +99,19 @@ void InputEventSpy::tabletToolEvent(TabletEvent *event)
 {
 }
 
-void InputEventSpy::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, uint time)
+void InputEventSpy::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, std::chrono::microseconds time)
 {
 }
 
-void InputEventSpy::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, uint time)
+void InputEventSpy::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, std::chrono::microseconds time)
 {
 }
 
-void InputEventSpy::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time)
+void InputEventSpy::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time)
 {
 }
 
-void InputEventSpy::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, uint time)
+void InputEventSpy::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time)
 {
 }
 }

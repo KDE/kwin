@@ -24,7 +24,7 @@ void HideCursorSpy::wheelEvent(KWin::WheelEvent *event)
     showCursor();
 }
 
-void HideCursorSpy::touchDown(qint32 id, const QPointF &pos, quint32 time)
+void HideCursorSpy::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
 {
     hideCursor();
 }

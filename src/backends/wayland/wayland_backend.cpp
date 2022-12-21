@@ -65,7 +65,7 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Keyboard *keyboard, Way
         default:
             Q_UNREACHABLE();
         }
-        Q_EMIT keyChanged(key, state, time, this);
+        Q_EMIT keyChanged(key, state, std::chrono::milliseconds(time), this);
     });
 }
 
@@ -92,7 +92,7 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
         WaylandOutput *output = m_seat->backend()->findOutput(m_pointer->enteredSurface());
         Q_ASSERT(output);
         const QPointF absolutePos = output->geometry().topLeft() + relativeToSurface;
-        Q_EMIT pointerMotionAbsolute(absolutePos, time, this);
+        Q_EMIT pointerMotionAbsolute(absolutePos, std::chrono::milliseconds(time), this);
     });
     connect(pointer, &Pointer::buttonStateChanged, this, [this](quint32 serial, quint32 time, quint32 button, Pointer::ButtonState nativeState) {
         InputRedirection::PointerButtonState state;
@@ -106,7 +106,7 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
         default:
             Q_UNREACHABLE();
         }
-        Q_EMIT pointerButtonChanged(button, state, time, this);
+        Q_EMIT pointerButtonChanged(button, state, std::chrono::milliseconds(time), this);
     });
     // TODO: Send discreteDelta and source as well.
     connect(pointer, &Pointer::axisChanged, this, [this](quint32 time, Pointer::Axis nativeAxis, qreal delta) {
@@ -121,37 +121,37 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Pointer *pointer, Wayla
         default:
             Q_UNREACHABLE();
         }
-        Q_EMIT pointerAxisChanged(axis, delta, 0, InputRedirection::PointerAxisSourceUnknown, time, this);
+        Q_EMIT pointerAxisChanged(axis, delta, 0, InputRedirection::PointerAxisSourceUnknown, std::chrono::milliseconds(time), this);
     });
 
     KWayland::Client::PointerGestures *pointerGestures = m_seat->backend()->display()->pointerGestures();
     if (pointerGestures) {
         m_pinchGesture.reset(pointerGestures->createPinchGesture(m_pointer.get(), this));
         connect(m_pinchGesture.get(), &PointerPinchGesture::started, this, [this](quint32 serial, quint32 time) {
-            Q_EMIT pinchGestureBegin(m_pinchGesture->fingerCount(), time, this);
+            Q_EMIT pinchGestureBegin(m_pinchGesture->fingerCount(), std::chrono::milliseconds(time), this);
         });
         connect(m_pinchGesture.get(), &PointerPinchGesture::updated, this, [this](const QSizeF &delta, qreal scale, qreal rotation, quint32 time) {
-            Q_EMIT pinchGestureUpdate(scale, rotation, QSIZE_TO_QPOINT(delta), time, this);
+            Q_EMIT pinchGestureUpdate(scale, rotation, QSIZE_TO_QPOINT(delta), std::chrono::milliseconds(time), this);
         });
         connect(m_pinchGesture.get(), &PointerPinchGesture::ended, this, [this](quint32 serial, quint32 time) {
-            Q_EMIT pinchGestureEnd(time, this);
+            Q_EMIT pinchGestureEnd(std::chrono::milliseconds(time), this);
         });
         connect(m_pinchGesture.get(), &PointerPinchGesture::cancelled, this, [this](quint32 serial, quint32 time) {
-            Q_EMIT pinchGestureCancelled(time, this);
+            Q_EMIT pinchGestureCancelled(std::chrono::milliseconds(time), this);
         });
 
         m_swipeGesture.reset(pointerGestures->createSwipeGesture(m_pointer.get(), this));
         connect(m_swipeGesture.get(), &PointerSwipeGesture::started, this, [this](quint32 serial, quint32 time) {
-            Q_EMIT swipeGestureBegin(m_swipeGesture->fingerCount(), time, this);
+            Q_EMIT swipeGestureBegin(m_swipeGesture->fingerCount(), std::chrono::milliseconds(time), this);
         });
         connect(m_swipeGesture.get(), &PointerSwipeGesture::updated, this, [this](const QSizeF &delta, quint32 time) {
-            Q_EMIT swipeGestureUpdate(QSIZE_TO_QPOINT(delta), time, this);
+            Q_EMIT swipeGestureUpdate(QSIZE_TO_QPOINT(delta), std::chrono::milliseconds(time), this);
         });
         connect(m_swipeGesture.get(), &PointerSwipeGesture::ended, this, [this](quint32 serial, quint32 time) {
-            Q_EMIT swipeGestureEnd(time, this);
+            Q_EMIT swipeGestureEnd(std::chrono::milliseconds(time), this);
         });
         connect(m_swipeGesture.get(), &PointerSwipeGesture::cancelled, this, [this](quint32 serial, quint32 time) {
-            Q_EMIT swipeGestureCancelled(time, this);
+            Q_EMIT swipeGestureCancelled(std::chrono::milliseconds(time), this);
         });
     }
 }
@@ -161,7 +161,7 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::RelativePointer *relati
     , m_relativePointer(relativePointer)
 {
     connect(relativePointer, &RelativePointer::relativeMotion, this, [this](const QSizeF &delta, const QSizeF &deltaNonAccelerated, quint64 timestamp) {
-        Q_EMIT pointerMotion(QSIZE_TO_QPOINT(delta), QSIZE_TO_QPOINT(deltaNonAccelerated), timestamp / 1000, timestamp, this);
+        Q_EMIT pointerMotion(QSIZE_TO_QPOINT(delta), QSIZE_TO_QPOINT(deltaNonAccelerated), std::chrono::microseconds(timestamp), this);
     });
 }
 
@@ -176,16 +176,16 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Touch *touch, WaylandSe
         Q_EMIT touchFrame(this);
     });
     connect(touch, &Touch::sequenceStarted, this, [this](TouchPoint *tp) {
-        Q_EMIT touchDown(tp->id(), tp->position(), tp->time(), this);
+        Q_EMIT touchDown(tp->id(), tp->position(), std::chrono::milliseconds(tp->time()), this);
     });
     connect(touch, &Touch::pointAdded, this, [this](TouchPoint *tp) {
-        Q_EMIT touchDown(tp->id(), tp->position(), tp->time(), this);
+        Q_EMIT touchDown(tp->id(), tp->position(), std::chrono::milliseconds(tp->time()), this);
     });
     connect(touch, &Touch::pointRemoved, this, [this](TouchPoint *tp) {
-        Q_EMIT touchUp(tp->id(), tp->time(), this);
+        Q_EMIT touchUp(tp->id(), std::chrono::milliseconds(tp->time()), this);
     });
     connect(touch, &Touch::pointMoved, this, [this](TouchPoint *tp) {
-        Q_EMIT touchMotion(tp->id(), tp->position(), tp->time(), this);
+        Q_EMIT touchMotion(tp->id(), tp->position(), std::chrono::milliseconds(tp->time()), this);
     });
 }
 

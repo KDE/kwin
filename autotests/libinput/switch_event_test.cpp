@@ -18,6 +18,7 @@
 Q_DECLARE_METATYPE(KWin::LibInput::SwitchEvent::State)
 
 using namespace KWin::LibInput;
+using namespace std::literals;
 
 class TestLibinputSwitchEvent : public QObject
 {
@@ -71,8 +72,7 @@ void TestLibinputSwitchEvent::testToggled()
     default:
         Q_UNREACHABLE();
     }
-    nativeEvent->time = 23;
-    nativeEvent->timeMicroseconds = 23456789;
+    nativeEvent->time = 23456789us;
 
     std::unique_ptr<Event> event(Event::create(nativeEvent));
     auto se = dynamic_cast<SwitchEvent *>(event.get());
@@ -81,8 +81,7 @@ void TestLibinputSwitchEvent::testToggled()
     QCOMPARE(se->nativeDevice(), m_nativeDevice.get());
     QCOMPARE(se->type(), LIBINPUT_EVENT_SWITCH_TOGGLE);
     QCOMPARE(se->state(), state);
-    QCOMPARE(se->time(), 23u);
-    QCOMPARE(se->timeMicroseconds(), 23456789u);
+    QCOMPARE(se->time(), 23456789us);
 }
 
 QTEST_GUILESS_MAIN(TestLibinputSwitchEvent)

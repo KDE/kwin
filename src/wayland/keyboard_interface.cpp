@@ -174,7 +174,7 @@ void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state, ClientConne
     const QList<KeyboardInterfacePrivate::Resource *> keyboards = d->keyboardsForClient(client);
     const quint32 serial = d->seat->display()->nextSerial();
     for (KeyboardInterfacePrivate::Resource *keyboardResource : keyboards) {
-        d->send_key(keyboardResource->handle, serial, d->seat->timestamp(), key, quint32(state));
+        d->send_key(keyboardResource->handle, serial, d->seat->timestamp().count(), key, quint32(state));
     }
 }
 
