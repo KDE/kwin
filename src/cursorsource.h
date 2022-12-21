@@ -33,6 +33,7 @@ public:
     explicit CursorSource(QObject *parent = nullptr);
 
     QImage image() const;
+    QSize size() const;
     QPoint hotspot() const;
 
 Q_SIGNALS:
@@ -40,6 +41,7 @@ Q_SIGNALS:
 
 protected:
     QImage m_image;
+    QSize m_size = QSize(0, 0);
     QPoint m_hotspot;
 };
 

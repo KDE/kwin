@@ -175,10 +175,7 @@ bool Cursor::isOnOutput(Output *output) const
     if (Cursors::self()->isCursorHidden()) {
         return false;
     }
-    if (!geometry().intersects(output->geometry())) {
-        return false;
-    }
-    return !image().isNull();
+    return geometry().intersects(output->geometry());
 }
 
 QImage Cursor::image() const
@@ -204,7 +201,11 @@ QRect Cursor::geometry() const
 
 QRect Cursor::rect() const
 {
-    return QRect(QPoint(0, 0), image().size() / image().devicePixelRatio());
+    if (Q_UNLIKELY(!m_source)) {
+        return QRect();
+    } else {
+        return QRect(QPoint(0, 0), m_source->size());
+    }
 }
 
 QPoint Cursor::pos()
