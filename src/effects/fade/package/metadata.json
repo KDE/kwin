@@ -48,6 +48,7 @@
         "Description[uk]": "Плавна поява або зникнення вікон",
         "Description[vi]": "Làm cửa sổ hiện dần và mờ dần một cách êm dịu khi chúng hiện ra và biến mất",
         "Description[x-test]": "xxMake windows smoothly fade in and out when they are shown or hiddenxx",
+        "Description[zh_TW]": "讓視窗在顯示或隱藏的時候平滑地淡入或淡出",
         "EnabledByDefault": false,
         "Icon": "preferences-system-windows-effect-fade",
         "Id": "kwin4_effect_fade",

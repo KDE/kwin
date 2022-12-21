@@ -74,6 +74,7 @@
         "Name[uk]": "Затемнення стільниці",
         "Name[vi]": "Làm mờ dần bàn làm việc",
         "Name[x-test]": "xxFade Desktopxx",
+        "Name[zh_TW]": "淡出淡入桌面",
         "Version": "0.2.0"
     },
     "X-KDE-Ordering": "50",

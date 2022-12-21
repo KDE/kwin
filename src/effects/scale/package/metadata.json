@@ -68,6 +68,7 @@
         "Description[uk]": "Плавне масштабування вікон при появі або приховуванні",
         "Description[vi]": "Làm cửa sổ đổi cỡ một cách êm dịu khi chúng hiện ra và biến mất",
         "Description[x-test]": "xxMake windows smoothly scale in and out when they are shown or hiddenxx",
+        "Description[zh_TW]": "讓視窗在顯示或隱藏的時候平滑地以比例縮放方式出現或消失",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-scale",
         "Id": "kwin4_effect_scale",

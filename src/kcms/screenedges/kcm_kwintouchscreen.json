@@ -56,7 +56,8 @@
         "Name[ta]": "தொடுதிரைக்கான சைகைகள்",
         "Name[tr]": "Dokunmatik Ekran Hareketleri",
         "Name[uk]": "Жести на сенсорній панелі",
-        "Name[x-test]": "xxTouchscreen Gesturesxx"
+        "Name[x-test]": "xxTouchscreen Gesturesxx",
+        "Name[zh_TW]": "觸控螢幕手勢"
     },
     "X-DocPath": "kcontrol/kwintouchscreen/index.html",
     "X-KDE-Keywords": "kwin,window,manager,effect,edge,border,action,switch,desktop,desktop edges,screen edges,side of screen,screen behavior,touch screen",

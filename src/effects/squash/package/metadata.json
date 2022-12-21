@@ -24,7 +24,8 @@
                 "Name[tr]": "Rivo Laks, Vlad Zahorodnii",
                 "Name[uk]": "Rivo Laks, Влад Завгородній",
                 "Name[vi]": "Rivo Laks, Vlad Zahorodnii",
-                "Name[x-test]": "xxRivo Laks, Vlad Zahorodniixx"
+                "Name[x-test]": "xxRivo Laks, Vlad Zahorodniixx",
+                "Name[zh_TW]": "Rivo Laks, Vlad Zahorodnii"
             }
         ],
         "Category": "Appearance",
@@ -49,6 +50,7 @@
         "Description[uk]": "Складує вікна, якщо їх мінімізовано",
         "Description[vi]": "Ép nhỏ cửa sổ khi thu nhỏ",
         "Description[x-test]": "xxSquash windows when they are minimizedxx",
+        "Description[zh_TW]": "最小化視窗時擠壓它們",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-squash",
         "Id": "kwin4_effect_squash",
