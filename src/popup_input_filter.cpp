@@ -6,13 +6,12 @@
 */
 #include "popup_input_filter.h"
 #include "deleted.h"
+#include "input_event.h"
 #include "internalwindow.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-
-#include <QMouseEvent>
 
 namespace KWin
 {
@@ -41,7 +40,8 @@ void PopupInputFilter::handleWindowRemoved(Window *window)
 {
     m_popupWindows.removeOne(window);
 }
-bool PopupInputFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
+
+bool PopupInputFilter::pointerEvent(MouseEvent *event, quint32 nativeButton)
 {
     if (m_popupWindows.isEmpty()) {
         return false;

@@ -196,7 +196,7 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
     }
 }
 
-bool ButtonRebindsFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
+bool ButtonRebindsFilter::pointerEvent(KWin::MouseEvent *event, quint32 nativeButton)
 {
     if (event->type() != QEvent::MouseButtonPress && event->type() != QEvent::MouseButtonRelease) {
         return false;

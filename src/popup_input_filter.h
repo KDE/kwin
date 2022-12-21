@@ -20,7 +20,7 @@ class PopupInputFilter : public QObject, public InputEventFilter
     Q_OBJECT
 public:
     explicit PopupInputFilter();
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override;
+    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override;
     bool keyEvent(QKeyEvent *event) override;
     bool touchDown(qint32 id, const QPointF &pos, quint32 time) override;
 

@@ -105,7 +105,7 @@ InputEventFilter::~InputEventFilter()
     }
 }
 
-bool InputEventFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
+bool InputEventFilter::pointerEvent(MouseEvent *event, quint32 nativeButton)
 {
     return false;
 }
@@ -304,7 +304,7 @@ public:
 class LockScreenFilter : public InputEventFilter
 {
 public:
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         if (!waylandServer()->isScreenLocked()) {
             return false;
@@ -508,7 +508,7 @@ private:
 class EffectsFilter : public InputEventFilter
 {
 public:
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         if (!effects) {
             return false;
@@ -593,7 +593,7 @@ public:
 class MoveResizeFilter : public InputEventFilter
 {
 public:
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         Window *window = workspace()->moveResizeWindow();
         if (!window) {
@@ -703,7 +703,7 @@ private:
 class WindowSelectorFilter : public InputEventFilter
 {
 public:
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         if (!m_active) {
             return false;
@@ -874,7 +874,7 @@ public:
         m_powerDown.setInterval(1000);
     }
 
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         if (event->type() == QEvent::MouseButtonPress) {
             if (input()->shortcuts()->processPointerPressed(event->modifiers(), event->buttons())) {
@@ -1176,7 +1176,7 @@ std::pair<bool, bool> performWindowWheelAction(QWheelEvent *event, Window *windo
 
 class InternalWindowEventFilter : public InputEventFilter
 {
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         if (!input()->pointer()->focus() || !input()->pointer()->focus()->isInternal()) {
             return false;
@@ -1346,7 +1346,7 @@ private:
 class DecorationEventFilter : public InputEventFilter
 {
 public:
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         auto decoration = input()->pointer()->decoration();
         if (!decoration) {
@@ -1558,7 +1558,7 @@ private:
 class TabBoxInputFilter : public InputEventFilter
 {
 public:
-    bool pointerEvent(QMouseEvent *event, quint32 button) override
+    bool pointerEvent(MouseEvent *event, quint32 button) override
     {
         if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
             return false;
@@ -1597,7 +1597,7 @@ public:
 class ScreenEdgeInputFilter : public InputEventFilter
 {
 public:
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         workspace()->screenEdges()->isEntered(event);
         // always forward
@@ -1653,7 +1653,7 @@ private:
 class WindowActionInputFilter : public InputEventFilter
 {
 public:
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         if (event->type() != QEvent::MouseButtonPress) {
             return false;
@@ -1734,7 +1734,7 @@ public:
 class ForwardInputFilter : public InputEventFilter
 {
 public:
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp());
@@ -2343,7 +2343,7 @@ public:
         connect(&m_raiseTimer, &QTimer::timeout, this, &DragAndDropInputFilter::raiseDragTarget);
     }
 
-    bool pointerEvent(QMouseEvent *event, quint32 nativeButton) override
+    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         auto seat = waylandServer()->seat();
         if (!seat->isDragPointer()) {

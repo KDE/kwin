@@ -12,7 +12,7 @@
 namespace KWin
 {
 
-bool PlaceholderInputEventFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
+bool PlaceholderInputEventFilter::pointerEvent(MouseEvent *event, quint32 nativeButton)
 {
     return true;
 }

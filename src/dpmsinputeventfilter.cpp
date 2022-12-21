@@ -28,7 +28,7 @@ DpmsInputEventFilter::DpmsInputEventFilter()
 
 DpmsInputEventFilter::~DpmsInputEventFilter() = default;
 
-bool DpmsInputEventFilter::pointerEvent(QMouseEvent *event, quint32 nativeButton)
+bool DpmsInputEventFilter::pointerEvent(MouseEvent *event, quint32 nativeButton)
 {
     notify();
     return true;

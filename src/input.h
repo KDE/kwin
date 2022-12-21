@@ -45,6 +45,7 @@ class SwitchEvent;
 class TabletEvent;
 class TabletToolId;
 class TabletPadId;
+class MouseEvent;
 
 namespace Decoration
 {
@@ -383,7 +384,7 @@ public:
      * @param nativeButton The native key code of the button, for move events 0
      * @return @c true to stop further event processing, @c false to pass to next filter
      */
-    virtual bool pointerEvent(QMouseEvent *event, quint32 nativeButton);
+    virtual bool pointerEvent(MouseEvent *event, quint32 nativeButton);
     /**
      * Event filter for pointer axis events.
      *
