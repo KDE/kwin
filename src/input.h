@@ -46,6 +46,7 @@ class TabletEvent;
 class TabletToolId;
 class TabletPadId;
 class MouseEvent;
+class WheelEvent;
 
 namespace Decoration
 {
@@ -391,7 +392,7 @@ public:
      * @param event The event information about the axis event
      * @return @c true to stop further event processing, @c false to pass to next filter
      */
-    virtual bool wheelEvent(QWheelEvent *event);
+    virtual bool wheelEvent(WheelEvent *event);
     /**
      * Event filter for keyboard events.
      *

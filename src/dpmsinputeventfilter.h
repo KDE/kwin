@@ -25,7 +25,7 @@ public:
     ~DpmsInputEventFilter() override;
 
     bool pointerEvent(MouseEvent *event, quint32 nativeButton) override;
-    bool wheelEvent(QWheelEvent *event) override;
+    bool wheelEvent(WheelEvent *event) override;
     bool keyEvent(QKeyEvent *event) override;
     bool touchDown(qint32 id, const QPointF &pos, quint32 time) override;
     bool touchMotion(qint32 id, const QPointF &pos, quint32 time) override;

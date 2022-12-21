@@ -17,7 +17,7 @@ bool PlaceholderInputEventFilter::pointerEvent(MouseEvent *event, quint32 native
     return true;
 }
 
-bool PlaceholderInputEventFilter::wheelEvent(QWheelEvent *event)
+bool PlaceholderInputEventFilter::wheelEvent(WheelEvent *event)
 {
     return true;
 }

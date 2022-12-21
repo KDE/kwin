@@ -110,7 +110,7 @@ bool InputEventFilter::pointerEvent(MouseEvent *event, quint32 nativeButton)
     return false;
 }
 
-bool InputEventFilter::wheelEvent(QWheelEvent *event)
+bool InputEventFilter::wheelEvent(WheelEvent *event)
 {
     return false;
 }
@@ -336,7 +336,7 @@ public:
         }
         return true;
     }
-    bool wheelEvent(QWheelEvent *event) override
+    bool wheelEvent(WheelEvent *event) override
     {
         if (!waylandServer()->isScreenLocked()) {
             return false;
@@ -515,7 +515,7 @@ public:
         }
         return static_cast<EffectsHandlerImpl *>(effects)->checkInputWindowEvent(event);
     }
-    bool wheelEvent(QWheelEvent *event) override
+    bool wheelEvent(WheelEvent *event) override
     {
         if (!effects) {
             return false;
@@ -613,7 +613,7 @@ public:
         }
         return true;
     }
-    bool wheelEvent(QWheelEvent *event) override
+    bool wheelEvent(WheelEvent *event) override
     {
         // filter out while moving a window
         return workspace()->moveResizeWindow() != nullptr;
@@ -723,7 +723,7 @@ public:
         }
         return true;
     }
-    bool wheelEvent(QWheelEvent *event) override
+    bool wheelEvent(WheelEvent *event) override
     {
         // filter out while selecting a window
         return m_active;
@@ -883,7 +883,7 @@ public:
         }
         return false;
     }
-    bool wheelEvent(QWheelEvent *event) override
+    bool wheelEvent(WheelEvent *event) override
     {
         if (event->modifiers() == Qt::NoModifier) {
             return false;
@@ -1189,7 +1189,7 @@ class InternalWindowEventFilter : public InputEventFilter
         QCoreApplication::sendEvent(internal, &mouseEvent);
         return mouseEvent.isAccepted();
     }
-    bool wheelEvent(QWheelEvent *event) override
+    bool wheelEvent(WheelEvent *event) override
     {
         if (!input()->pointer()->focus() || !input()->pointer()->focus()->isInternal()) {
             return false;
@@ -1383,7 +1383,7 @@ public:
         }
         return false;
     }
-    bool wheelEvent(QWheelEvent *event) override
+    bool wheelEvent(WheelEvent *event) override
     {
         auto decoration = input()->pointer()->decoration();
         if (!decoration) {
@@ -1584,7 +1584,7 @@ public:
         }
         return true;
     }
-    bool wheelEvent(QWheelEvent *event) override
+    bool wheelEvent(WheelEvent *event) override
     {
         if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
             return false;
@@ -1668,7 +1668,7 @@ public:
         }
         return false;
     }
-    bool wheelEvent(QWheelEvent *event) override
+    bool wheelEvent(WheelEvent *event) override
     {
         if (event->angleDelta().y() == 0) {
             // only actions on vertical scroll
@@ -1761,7 +1761,7 @@ public:
         }
         return true;
     }
-    bool wheelEvent(QWheelEvent *event) override
+    bool wheelEvent(WheelEvent *event) override
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp());

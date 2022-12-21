@@ -34,7 +34,7 @@ bool DpmsInputEventFilter::pointerEvent(MouseEvent *event, quint32 nativeButton)
     return true;
 }
 
-bool DpmsInputEventFilter::wheelEvent(QWheelEvent *event)
+bool DpmsInputEventFilter::wheelEvent(WheelEvent *event)
 {
     notify();
     return true;
