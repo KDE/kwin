@@ -475,6 +475,19 @@ VirtualDesktop *VirtualDesktopManager::createVirtualDesktop(uint position, const
     return vd;
 }
 
+void VirtualDesktopManager::appendVirtualDesktop()
+{
+    createVirtualDesktop(m_desktops.count());
+}
+
+void VirtualDesktopManager::switchAppendVirtualDesktop()
+{
+    VirtualDesktop *newDesktop = createVirtualDesktop(m_desktops.count());
+    if (newDesktop) {
+        setCurrent(newDesktop);
+    }
+}
+
 void VirtualDesktopManager::removeVirtualDesktop(const QString &id)
 {
     auto desktop = desktopForId(id);
@@ -514,6 +527,11 @@ void VirtualDesktopManager::removeVirtualDesktop(VirtualDesktop *desktop)
     Q_EMIT countChanged(m_desktops.count() + 1, m_desktops.count());
 
     desktop->deleteLater();
+}
+
+void VirtualDesktopManager::removeCurrentVirtualDesktop()
+{
+    removeVirtualDesktop(m_current);
 }
 
 uint VirtualDesktopManager::current() const
@@ -809,6 +827,13 @@ void VirtualDesktopManager::initShortcuts()
     KGlobalAccel::setGlobalShortcut(slotUpAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Up));
     QAction *slotDownAction = addAction(QStringLiteral("Switch One Desktop Down"), i18n("Switch One Desktop Down"), &VirtualDesktopManager::slotDown);
     KGlobalAccel::setGlobalShortcut(slotDownAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Down));
+
+    QAction *switchToNewAction = addAction(QStringLiteral("Switch to New Desktop"), i18n("Add New Desktop and Switch to it"), &VirtualDesktopManager::switchAppendVirtualDesktop);
+    KGlobalAccel::setGlobalShortcut(switchToNewAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Plus));
+    QAction *addNewAction = addAction(QStringLiteral("Add New Desktop"), i18n("Add New Desktop"), &VirtualDesktopManager::appendVirtualDesktop);
+    KGlobalAccel::setGlobalShortcut(addNewAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Asterisk));
+    QAction *removeCurrentAction = addAction(QStringLiteral("Remove Desktop"), i18n("Remove Desktop"), &VirtualDesktopManager::removeCurrentVirtualDesktop);
+    KGlobalAccel::setGlobalShortcut(removeCurrentAction, QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Minus));
 
     // Gestures
     // These connections decide which desktop to end on after gesture ends
