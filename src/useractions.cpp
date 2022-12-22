@@ -1065,9 +1065,9 @@ void Workspace::initShortcuts()
                  Qt::META | Qt::ALT | Qt::Key_Right, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::switchWindow), this, DirectionEast));
     initShortcut("Switch Window Left", i18n("Switch to Window to the Left"),
                  Qt::META | Qt::ALT | Qt::Key_Left, std::bind(static_cast<void (Workspace::*)(Direction)>(&Workspace::switchWindow), this, DirectionWest));
-    initShortcut("Increase Opacity", i18n("Increase Opacity of Active Window by 5 %"),
+    initShortcut("Increase Opacity", i18n("Increase Opacity of Active Window by 5%"),
                  0, &Workspace::slotIncreaseWindowOpacity);
-    initShortcut("Decrease Opacity", i18n("Decrease Opacity of Active Window by 5 %"),
+    initShortcut("Decrease Opacity", i18n("Decrease Opacity of Active Window by 5%"),
                  0, &Workspace::slotLowerWindowOpacity);
 
     initShortcut("Window On All Desktops", i18n("Keep Window on All Desktops"),
