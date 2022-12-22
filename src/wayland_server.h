@@ -298,7 +298,7 @@ private:
     KWaylandServer::XwaylandShellV1Interface *m_xwaylandShell = nullptr;
     QList<Window *> m_windows;
     InitializationFlags m_initFlags;
-    QHash<Output *, KWaylandServer::OutputInterface *> m_waylandOutputs;
+    std::map<Output *, std::unique_ptr<KWaylandServer::OutputInterface>> m_waylandOutputs;
     std::map<Output *, std::unique_ptr<KWaylandServer::OutputDeviceV2Interface>> m_waylandOutputDevices;
     KWaylandServer::DrmLeaseManagerV1 *m_leaseManager = nullptr;
     KWaylandServer::OutputOrderV1Interface *m_outputOrder = nullptr;

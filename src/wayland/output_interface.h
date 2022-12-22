@@ -39,9 +39,6 @@ public:
     explicit OutputInterface(Display *display, KWin::Output *handle, QObject *parent = nullptr);
     ~OutputInterface() override;
 
-    bool isRemoved() const;
-    void remove();
-
     KWin::Output *handle() const;
 
     /**
@@ -73,7 +70,7 @@ Q_SIGNALS:
     void bound(ClientConnection *client, wl_resource *boundResource);
 
 private:
-    std::unique_ptr<OutputInterfacePrivate> d;
+    OutputInterfacePrivate *d;
 };
 
 } // namespace KWaylandServer

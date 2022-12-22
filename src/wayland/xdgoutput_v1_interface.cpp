@@ -50,7 +50,7 @@ class XdgOutputManagerV1InterfacePrivate : public QtWaylandServer::zxdg_output_m
 public:
     explicit XdgOutputManagerV1InterfacePrivate(Display *display);
 
-    QHash<OutputInterface *, XdgOutputV1Interface *> outputs;
+    std::map<OutputInterface *, std::unique_ptr<XdgOutputV1Interface>> outputs;
 
 protected:
     void zxdg_output_manager_v1_destroy(Resource *resource) override;
@@ -71,10 +71,9 @@ void XdgOutputManagerV1Interface::offer(OutputInterface *output)
 {
     Q_ASSERT_X(!d->outputs.contains(output), "offer", "An XdgOuputInterface already exists for this output");
 
-    auto xdgOutput = new XdgOutputV1Interface(output);
-    d->outputs[output] = xdgOutput;
+    d->outputs[output] = std::make_unique<XdgOutputV1Interface>(output);
     connect(output, &QObject::destroyed, this, [this, output]() {
-        delete d->outputs.take(output);
+        d->outputs.erase(output);
     });
 }
 
@@ -86,14 +85,13 @@ XdgOutputManagerV1InterfacePrivate::XdgOutputManagerV1InterfacePrivate(Display *
 void XdgOutputManagerV1InterfacePrivate::zxdg_output_manager_v1_get_xdg_output(Resource *resource, uint32_t id, wl_resource *outputResource)
 {
     auto output = OutputInterface::get(outputResource);
-    if (!output) { // output client is requesting XdgOutput for an Output that doesn't exist
+    if (!output || !outputs.contains(output)) {
+        // client is requesting XdgOutput for an Output that doesn't exist (anymore), create a resource to not crash it
+        const auto dummyOutput = std::make_unique<XdgOutputV1Interface>(nullptr);
+        dummyOutput->add(resource->client(), id, resource->version());
         return;
     }
-    auto xdgOutput = outputs.value(output);
-    if (!xdgOutput) {
-        return; // client is requesting XdgOutput for an Output that doesn't exist
-    }
-    xdgOutput->add(resource->client(), id, resource->version());
+    outputs[output]->add(resource->client(), id, resource->version());
 }
 
 void XdgOutputManagerV1InterfacePrivate::zxdg_output_manager_v1_destroy(Resource *resource)
@@ -104,6 +102,9 @@ void XdgOutputManagerV1InterfacePrivate::zxdg_output_manager_v1_destroy(Resource
 XdgOutputV1Interface::XdgOutputV1Interface(OutputInterface *output)
     : output(output)
 {
+    if (!output) {
+        return;
+    }
     const Output *handle = output->handle();
 
     name = handle->name();
@@ -116,7 +117,7 @@ XdgOutputV1Interface::XdgOutputV1Interface(OutputInterface *output)
 
 void XdgOutputV1Interface::update()
 {
-    if (!output || output->isRemoved()) {
+    if (!output) {
         return;
     }
 
@@ -153,7 +154,7 @@ void XdgOutputV1Interface::zxdg_output_v1_destroy(Resource *resource)
 
 void XdgOutputV1Interface::zxdg_output_v1_bind_resource(Resource *resource)
 {
-    if (!output || output->isRemoved()) {
+    if (!output) {
         return;
     }
 
@@ -199,7 +200,7 @@ void XdgOutputV1Interface::sendDone(Resource *resource)
 
 void XdgOutputV1Interface::resend()
 {
-    if (!output || output->isRemoved()) {
+    if (!output) {
         return;
     }
 

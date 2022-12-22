@@ -139,7 +139,7 @@ void OutputInterfacePrivate::sendDone(Resource *resource)
 
 void OutputInterfacePrivate::output_destroy_global()
 {
-    delete q;
+    delete this;
 }
 
 void OutputInterfacePrivate::output_release(Resource *resource)
@@ -250,30 +250,6 @@ OutputInterface::OutputInterface(Display *display, KWin::Output *handle, QObject
 
 OutputInterface::~OutputInterface()
 {
-    remove();
-}
-
-Display *OutputInterface::display() const
-{
-    return d->display;
-}
-
-KWin::Output *OutputInterface::handle() const
-{
-    return d->handle;
-}
-
-bool OutputInterface::isRemoved() const
-{
-    return d->isGlobalRemoved();
-}
-
-void OutputInterface::remove()
-{
-    if (d->isGlobalRemoved()) {
-        return;
-    }
-
     d->doneTimer.stop();
     if (d->handle) {
         disconnect(d->handle, nullptr, this, nullptr);
@@ -286,6 +262,17 @@ void OutputInterface::remove()
 
     Q_EMIT removed();
     d->globalRemove();
+    d->q = nullptr;
+}
+
+Display *OutputInterface::display() const
+{
+    return d->display;
+}
+
+KWin::Output *OutputInterface::handle() const
+{
+    return d->handle;
 }
 
 QVector<wl_resource *> OutputInterface::clientResources(ClientConnection *client) const

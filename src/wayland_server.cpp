@@ -308,18 +308,15 @@ void WaylandServer::handleOutputRemoved(Output *output)
 void WaylandServer::handleOutputEnabled(Output *output)
 {
     if (!output->isPlaceholder() && !output->isNonDesktop()) {
-        auto waylandOutput = new KWaylandServer::OutputInterface(waylandServer()->display(), output);
-        m_xdgOutputManagerV1->offer(waylandOutput);
-
-        m_waylandOutputs.insert(output, waylandOutput);
+        auto waylandOutput = std::make_unique<KWaylandServer::OutputInterface>(waylandServer()->display(), output);
+        m_xdgOutputManagerV1->offer(waylandOutput.get());
+        m_waylandOutputs[output] = std::move(waylandOutput);
     }
 }
 
 void WaylandServer::handleOutputDisabled(Output *output)
 {
-    if (auto waylandOutput = m_waylandOutputs.take(output)) {
-        waylandOutput->remove();
-    }
+    m_waylandOutputs.erase(output);
 }
 
 bool WaylandServer::start()
