@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(QT_MIN_VERSION "5.15.2")
-set(KF5_MIN_VERSION "5.98.0")
+set(KF5_MIN_VERSION "5.101.0")
 set(KDE_COMPILERSETTINGS_LEVEL "5.82")
 
 find_package(ECM ${KF5_MIN_VERSION} REQUIRED NO_MODULE)
@@ -477,3 +477,6 @@ ecm_install_configured_files(INPUT plasma-kwin_x11.service.in plasma-kwin_waylan
             DESTINATION ${KDE_INSTALL_SYSTEMDUSERUNITDIR})
 
 ki18n_install(po)
+
+install(FILES completions/kwin_x11.zsh     RENAME _kwin_x11     DESTINATION ${KDE_INSTALL_ZSHAUTOCOMPLETEDIR})
+install(FILES completions/kwin_wayland.zsh RENAME _kwin_wayland DESTINATION ${KDE_INSTALL_ZSHAUTOCOMPLETEDIR})
