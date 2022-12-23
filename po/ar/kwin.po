@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-22 00:49+0000\n"
-"PO-Revision-Date: 2022-11-07 19:59+0400\n"
+"PO-Revision-Date: 2022-12-22 12:13+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -2635,28 +2635,24 @@ msgid "Window to Previous Screen"
 msgstr "انقل النّافذة إلى الشاشة السابقة"
 
 #: useractions.cpp:1109
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "انقل النافذة إلى سطح المكتب الأيمن"
+msgstr "انقل النافذة إلى شاشة اليمنى التالية"
 
 #: useractions.cpp:1111
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "انقل النافذة إلى سطح المكتب الأيسر"
+msgstr "انقل النافذة إلى الشاشة اليسرى التالية"
 
 #: useractions.cpp:1113
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "انقل النّافذة إلى الشاشة %1"
+msgstr "انقل النّافذة إلى الشاشة العليا التالية"
 
 #: useractions.cpp:1115
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "انقل النافذة إلى سطح المكتب الأسفل"
+msgstr "انقل النافذة إلى الشاشة السفلى التالية"
 
 #: useractions.cpp:1119
 #, kde-format
@@ -2674,28 +2670,24 @@ msgid "Switch to Previous Screen"
 msgstr "بدّل إلى الشّاشة السّابقة"
 
 #: useractions.cpp:1128
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "بدّل إلى النّافذة اليمنى"
+msgstr "بدّل إلى الشاشة اليمنى"
 
 #: useractions.cpp:1130
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "بدّل إلى النّافذة اليسرى"
+msgstr "بدّل إلى الشاشة اليسرى"
 
 #: useractions.cpp:1132
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "بدّل إلى الشّاشة %1"
+msgstr "بدّل إلى الشّاشة العليا"
 
 #: useractions.cpp:1134
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "بدّل إلى الشّاشة %1"
+msgstr "بدّل إلى الشّاشة السفلى"
 
 #: useractions.cpp:1137
 #, kde-format

@@ -1,0 +1,98 @@
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the kwin package.
+#
+# Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-12-17 00:51+0000\n"
+"PO-Revision-Date: 2022-12-22 13:26+0400\n"
+"Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
+"Language-Team: ar\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"X-Generator: Lokalize 21.12.3\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "زايد السعيدي"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "zayed.alsaidi@gmail.com"
+
+#: kcmkwinxwayland.cpp:30
+#, kde-format
+msgid "Legacy X11 App Support"
+msgstr "دعم تطبيقات اكس١١ القديمة"
+
+#: kcmkwinxwayland.cpp:32
+#, kde-format
+msgid "Allow legacy X11 apps to read keystrokes typed in other apps"
+msgstr ""
+"اسمح لتطبيقات اكس١١ القديمة بقراءة المفاتيح المضغوطة في التطبيقات الأخرى"
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid ""
+"This module lets configure which keyboard events are forwarded to X11 apps "
+"regardless of their focus."
+msgstr ""
+"تتيح هذه الوحدة ضبط أحداث لوحة المفاتيح التي يعاد توجيهها إلى تطبيقات اكس١١ "
+"بغض النظر عن موضع تركيز لوحة المفاتيح."
+
+#: package/contents/ui/main.qml:49
+#, kde-format
+msgid ""
+"Legacy X11 apps require the ability to read keystrokes typed in other apps "
+"for features that are activated using global keyboard shortcuts. This is "
+"disabled by default for security reasons. If you need to use such apps, you "
+"can choose your preferred balance of security and functionality here."
+msgstr ""
+"تتطلب تطبيقات اكس١١ القديمة القدرة على قراءة ضغطات المفاتيح التي تكتب في "
+"تطبيقات أخرى للميزات التي تنشط باستخدام اختصارات لوحة المفاتيح العالمية. هذا "
+"الخيار معطل افتراضيًا لأسباب أمنية. إذا كنت بحاجة إلى استخدام مثل هذه "
+"التطبيقات، فيمكنك اختيار توازن الأمان والوظائف المفضل لديك هنا."
+
+#: package/contents/ui/main.qml:66
+#, kde-format
+msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
+msgstr "اسمح لتطبيقات اكس١١ القديمة بقراءة المفاتيح المضغوطة في كل التطبيقات:"
+
+#: package/contents/ui/main.qml:67
+#, kde-format
+msgid "Never"
+msgstr "لا، مطلقاً"
+
+#: package/contents/ui/main.qml:70
+#, kde-format
+msgid "Only Meta, Control, Alt, and Shift keys"
+msgstr "فقط مفاتيح Meta و Control و Alt و Shift"
+
+#: package/contents/ui/main.qml:73
+#, kde-format
+msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+msgstr "كل المفاتيح لكن فقط حينما تكون Meta أو Alt أو Shift مضغوطة"
+
+#: package/contents/ui/main.qml:77
+#, kde-format
+msgid "Always"
+msgstr "دائما"
+
+#: package/contents/ui/main.qml:84
+#, kde-format
+msgid ""
+"Note that using this setting will reduce system security to that of the X11 "
+"session by permitting malicious software to steal passwords and spy on the "
+"text that you type. Make sure you understand and accept this risk."
+msgstr ""
+"لاحظ أن استخدام هذا الإعداد سيقلل من أمان النظام إلى جلسة اكس١١ من خلال "
+"السماح للبرامج الضارة بسرقة كلمات المرور والتجسس على النص الذي تكتبه. تأكد "
+"من فهمك وقبول هذا الخطر."
