@@ -86,7 +86,7 @@ public:
 
     KWaylandServer::Display *display() const
     {
-        return m_display;
+        return m_display.get();
     }
     KWaylandServer::CompositorInterface *compositor() const
     {
@@ -267,7 +267,7 @@ private:
         QSet<Output *> m_signaledOutputs;
     };
 
-    KWaylandServer::Display *m_display = nullptr;
+    std::unique_ptr<KWaylandServer::Display> m_display;
     KWaylandServer::CompositorInterface *m_compositor = nullptr;
     KWaylandServer::SeatInterface *m_seat = nullptr;
     KWaylandServer::TabletManagerV2Interface *m_tabletManagerV2 = nullptr;
