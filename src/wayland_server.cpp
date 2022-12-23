@@ -225,6 +225,53 @@ WaylandServer::WaylandServer(QObject *parent)
 
 WaylandServer::~WaylandServer()
 {
+    m_display->destroyClients();
+    // remove all globals
+    m_compositor.reset();
+    m_seat.reset();
+    m_tabletManagerV2.reset();
+    m_dataDeviceManager.reset();
+    m_plasmaShell.reset();
+    m_plasmaActivationFeedback.reset();
+    m_windowManagement.reset();
+    m_virtualDesktopManagement.reset();
+    m_decorationManager.reset();
+    m_outputManagement.reset();
+    m_appMenuManager.reset();
+    m_paletteManager.reset();
+    m_idle.reset();
+    m_xdgOutputManagerV1.reset();
+    m_xdgDecorationManagerV1.reset();
+    m_linuxDmabuf.reset();
+    m_keyboardShortcutsInhibitManager.reset();
+    m_inputMethod.reset();
+    m_XdgForeign.reset();
+    m_xWaylandKeyboardGrabManager.reset();
+    m_contentTypeManager.reset();
+    m_tearingControlInterface.reset();
+    m_xwaylandShell.reset();
+    m_viewporter.reset();
+    m_fractionalScaleManager.reset();
+    m_pointerGestures.reset();
+    m_pointerConstraints.reset();
+    m_relativePointerManager.reset();
+    m_dataControlDeviceManager.reset();
+    m_primarySelectionDeviceManager.reset();
+    m_idleInhibitManager.reset();
+    m_idleNotifyInterface.reset();
+    m_shadowManager.reset();
+    m_dpmsManager.reset();
+    m_subCompositor.reset();
+    m_xdgActivation.reset();
+    m_waylandOutputs.clear();
+    m_waylandOutputDevices.clear();
+
+    m_xdgActivationIntegration.reset();
+    m_inputPanelV1Integration.reset();
+    m_xdgShelLIntegration.reset();
+    m_layerShellIntegration.reset();
+
+    m_display.reset();
     s_self = nullptr;
 }
 
@@ -272,7 +319,7 @@ void WaylandServer::registerXdgToplevelWindow(XdgToplevelWindow *window)
         window->installPalette(palette);
     }
 
-    connect(m_XdgForeign, &XdgForeignV2Interface::transientChanged, window, [this](SurfaceInterface *child) {
+    connect(m_XdgForeign.get(), &XdgForeignV2Interface::transientChanged, window, [this](SurfaceInterface *child) {
         Q_EMIT foreignTransientChanged(child);
     });
 }
@@ -335,8 +382,8 @@ bool WaylandServer::init(const QString &socketName, InitializationFlags flags)
 bool WaylandServer::init(InitializationFlags flags)
 {
     m_initFlags = flags;
-    m_compositor = new CompositorInterface(m_display.get(), m_display.get());
-    connect(m_compositor, &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
+    m_compositor = std::make_unique<CompositorInterface>(m_display.get());
+    connect(m_compositor.get(), &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
         // check whether we have a Window with the Surface's id
         Workspace *ws = Workspace::self();
         if (!ws) {
@@ -367,8 +414,8 @@ bool WaylandServer::init(InitializationFlags flags)
         // The surface will be bound later when a WL_SURFACE_ID message is received.
     });
 
-    m_xwaylandShell = new KWaylandServer::XwaylandShellV1Interface(m_display.get(), m_display.get());
-    connect(m_xwaylandShell, &KWaylandServer::XwaylandShellV1Interface::surfaceAssociated, this, [](KWaylandServer::XwaylandSurfaceV1Interface *surface) {
+    m_xwaylandShell = std::make_unique<KWaylandServer::XwaylandShellV1Interface>(m_display.get());
+    connect(m_xwaylandShell.get(), &KWaylandServer::XwaylandShellV1Interface::surfaceAssociated, this, [](KWaylandServer::XwaylandSurfaceV1Interface *surface) {
         X11Window *window = workspace()->findClient([&surface](const X11Window *window) {
             return window->surfaceSerial() == surface->serial();
         });
@@ -386,70 +433,70 @@ bool WaylandServer::init(InitializationFlags flags)
         }
     });
 
-    m_tabletManagerV2 = new TabletManagerV2Interface(m_display.get(), m_display.get());
-    m_keyboardShortcutsInhibitManager = new KeyboardShortcutsInhibitManagerV1Interface(m_display.get(), m_display.get());
+    m_tabletManagerV2 = std::make_unique<TabletManagerV2Interface>(m_display.get());
+    m_keyboardShortcutsInhibitManager = std::make_unique<KeyboardShortcutsInhibitManagerV1Interface>(m_display.get());
 
-    auto inputPanelV1Integration = new InputPanelV1Integration(this);
-    connect(inputPanelV1Integration, &InputPanelV1Integration::windowCreated,
+    m_inputPanelV1Integration = std::make_unique<InputPanelV1Integration>();
+    connect(m_inputPanelV1Integration.get(), &InputPanelV1Integration::windowCreated,
             this, &WaylandServer::registerWindow);
 
-    auto xdgShellIntegration = new XdgShellIntegration(this);
-    connect(xdgShellIntegration, &XdgShellIntegration::windowCreated,
+    m_xdgShelLIntegration = std::make_unique<XdgShellIntegration>();
+    connect(m_xdgShelLIntegration.get(), &XdgShellIntegration::windowCreated,
             this, &WaylandServer::registerXdgGenericWindow);
 
-    auto layerShellV1Integration = new LayerShellV1Integration(this);
-    connect(layerShellV1Integration, &LayerShellV1Integration::windowCreated,
+    m_layerShellIntegration = std::make_unique<LayerShellV1Integration>();
+    connect(m_layerShellIntegration.get(), &LayerShellV1Integration::windowCreated,
             this, &WaylandServer::registerWindow);
 
-    m_xdgDecorationManagerV1 = new XdgDecorationManagerV1Interface(m_display.get(), m_display.get());
-    connect(m_xdgDecorationManagerV1, &XdgDecorationManagerV1Interface::decorationCreated, this, [this](XdgToplevelDecorationV1Interface *decoration) {
+    m_xdgDecorationManagerV1 = std::make_unique<XdgDecorationManagerV1Interface>(m_display.get());
+    connect(m_xdgDecorationManagerV1.get(), &XdgDecorationManagerV1Interface::decorationCreated, this, [this](XdgToplevelDecorationV1Interface *decoration) {
         if (XdgToplevelWindow *toplevel = findXdgToplevelWindow(decoration->toplevel()->surface())) {
             toplevel->installXdgDecoration(decoration);
         }
     });
 
-    new ViewporterInterface(m_display.get(), m_display.get());
-    new FractionalScaleManagerV1Interface(m_display.get(), m_display.get());
+    m_viewporter = std::make_unique<ViewporterInterface>(m_display.get());
+    m_fractionalScaleManager = std::make_unique<FractionalScaleManagerV1Interface>(m_display.get());
     m_display->createShm();
-    m_seat = new SeatInterface(m_display.get(), m_display.get());
-    new PointerGesturesV1Interface(m_display.get(), m_display.get());
-    new PointerConstraintsV1Interface(m_display.get(), m_display.get());
-    new RelativePointerManagerV1Interface(m_display.get(), m_display.get());
-    m_dataDeviceManager = new DataDeviceManagerInterface(m_display.get(), m_display.get());
-    new DataControlDeviceManagerV1Interface(m_display.get(), m_display.get());
+    m_seat = std::make_unique<SeatInterface>(m_display.get());
+    m_pointerGestures = std::make_unique<PointerGesturesV1Interface>(m_display.get());
+    m_pointerConstraints = std::make_unique<PointerConstraintsV1Interface>(m_display.get());
+    m_relativePointerManager = std::make_unique<RelativePointerManagerV1Interface>(m_display.get());
+    m_dataDeviceManager = std::make_unique<DataDeviceManagerInterface>(m_display.get());
+    m_dataControlDeviceManager = std::make_unique<DataControlDeviceManagerV1Interface>(m_display.get());
 
     const auto kwinConfig = kwinApp()->config();
     if (kwinConfig->group("Wayland").readEntry("EnablePrimarySelection", true)) {
-        new PrimarySelectionDeviceManagerV1Interface(m_display.get(), m_display.get());
+        m_primarySelectionDeviceManager = std::make_unique<PrimarySelectionDeviceManagerV1Interface>(m_display.get());
     }
 
-    m_idle = new IdleInterface(m_display.get(), m_display.get());
-    auto idleInhibition = new IdleInhibition(m_idle);
+    m_idle = std::make_unique<IdleInterface>(m_display.get());
+    auto idleInhibition = new IdleInhibition(m_idle.get());
     connect(this, &WaylandServer::windowAdded, idleInhibition, &IdleInhibition::registerClient);
-    new IdleInhibitManagerV1Interface(m_display.get(), m_display.get());
-    new IdleNotifyV1Interface(m_display.get(), m_display.get());
-    m_plasmaShell = new PlasmaShellInterface(m_display.get(), m_display.get());
-    connect(m_plasmaShell, &PlasmaShellInterface::surfaceCreated, this, [this](PlasmaShellSurfaceInterface *surface) {
+    m_idleInhibitManager = std::make_unique<IdleInhibitManagerV1Interface>(m_display.get());
+    m_idleNotifyInterface = std::make_unique<IdleNotifyV1Interface>(m_display.get());
+    m_plasmaShell = std::make_unique<PlasmaShellInterface>(m_display.get());
+    connect(m_plasmaShell.get(), &PlasmaShellInterface::surfaceCreated, this, [this](PlasmaShellSurfaceInterface *surface) {
         if (XdgSurfaceWindow *window = findXdgSurfaceWindow(surface->surface())) {
             window->installPlasmaShellSurface(surface);
         }
     });
-    m_appMenuManager = new AppMenuManagerInterface(m_display.get(), m_display.get());
-    connect(m_appMenuManager, &AppMenuManagerInterface::appMenuCreated, this, [this](AppMenuInterface *appMenu) {
+    m_appMenuManager = std::make_unique<AppMenuManagerInterface>(m_display.get());
+    connect(m_appMenuManager.get(), &AppMenuManagerInterface::appMenuCreated, this, [this](AppMenuInterface *appMenu) {
         if (XdgToplevelWindow *window = findXdgToplevelWindow(appMenu->surface())) {
             window->installAppMenu(appMenu);
         }
     });
-    m_paletteManager = new ServerSideDecorationPaletteManagerInterface(m_display.get(), m_display.get());
-    connect(m_paletteManager, &ServerSideDecorationPaletteManagerInterface::paletteCreated, this, [this](ServerSideDecorationPaletteInterface *palette) {
+    m_paletteManager = std::make_unique<ServerSideDecorationPaletteManagerInterface>(m_display.get());
+    connect(m_paletteManager.get(), &ServerSideDecorationPaletteManagerInterface::paletteCreated, this, [this](ServerSideDecorationPaletteInterface *palette) {
         if (XdgToplevelWindow *window = findXdgToplevelWindow(palette->surface())) {
             window->installPalette(palette);
         }
     });
 
-    m_windowManagement = new PlasmaWindowManagementInterface(m_display.get(), m_display.get());
+    m_windowManagement = std::make_unique<PlasmaWindowManagementInterface>(m_display.get());
     m_windowManagement->setShowingDesktopState(PlasmaWindowManagementInterface::ShowingDesktopState::Disabled);
-    connect(m_windowManagement, &PlasmaWindowManagementInterface::requestChangeShowingDesktop, this, [](PlasmaWindowManagementInterface::ShowingDesktopState state) {
+    connect(m_windowManagement.get(), &PlasmaWindowManagementInterface::requestChangeShowingDesktop, this, [](PlasmaWindowManagementInterface::ShowingDesktopState state) {
         if (!workspace()) {
             return;
         }
@@ -471,32 +518,32 @@ bool WaylandServer::init(InitializationFlags flags)
         workspace()->setShowingDesktop(set);
     });
 
-    m_virtualDesktopManagement = new PlasmaVirtualDesktopManagementInterface(m_display.get(), m_display.get());
-    m_windowManagement->setPlasmaVirtualDesktopManagementInterface(m_virtualDesktopManagement);
+    m_virtualDesktopManagement = std::make_unique<PlasmaVirtualDesktopManagementInterface>(m_display.get());
+    m_windowManagement->setPlasmaVirtualDesktopManagementInterface(m_virtualDesktopManagement.get());
 
-    m_plasmaActivationFeedback = new PlasmaWindowActivationFeedbackInterface(m_display.get(), m_display.get());
+    m_plasmaActivationFeedback = std::make_unique<PlasmaWindowActivationFeedbackInterface>(m_display.get());
 
-    new ShadowManagerInterface(m_display.get(), m_display.get());
-    new DpmsManagerInterface(m_display.get(), m_display.get());
+    m_shadowManager = std::make_unique<ShadowManagerInterface>(m_display.get());
+    m_dpmsManager = std::make_unique<DpmsManagerInterface>(m_display.get());
 
-    m_decorationManager = new ServerSideDecorationManagerInterface(m_display.get(), m_display.get());
-    connect(m_decorationManager, &ServerSideDecorationManagerInterface::decorationCreated, this, [this](ServerSideDecorationInterface *decoration) {
+    m_decorationManager = std::make_unique<ServerSideDecorationManagerInterface>(m_display.get());
+    connect(m_decorationManager.get(), &ServerSideDecorationManagerInterface::decorationCreated, this, [this](ServerSideDecorationInterface *decoration) {
         if (XdgToplevelWindow *window = findXdgToplevelWindow(decoration->surface())) {
             window->installServerDecoration(decoration);
         }
     });
 
-    m_outputManagement = new OutputManagementV2Interface(m_display.get(), m_display.get());
+    m_outputManagement = std::make_unique<OutputManagementV2Interface>(m_display.get());
 
-    m_xdgOutputManagerV1 = new XdgOutputManagerV1Interface(m_display.get(), m_display.get());
-    new SubCompositorInterface(m_display.get(), m_display.get());
-    m_XdgForeign = new XdgForeignV2Interface(m_display.get(), m_display.get());
-    m_inputMethod = new InputMethodV1Interface(m_display.get(), m_display.get());
-    m_xWaylandKeyboardGrabManager = new XWaylandKeyboardGrabManagerV1Interface(m_display.get(), m_display.get());
+    m_xdgOutputManagerV1 = std::make_unique<XdgOutputManagerV1Interface>(m_display.get());
+    m_subCompositor = std::make_unique<SubCompositorInterface>(m_display.get());
+    m_XdgForeign = std::make_unique<XdgForeignV2Interface>(m_display.get());
+    m_inputMethod = std::make_unique<InputMethodV1Interface>(m_display.get());
+    m_xWaylandKeyboardGrabManager = std::make_unique<XWaylandKeyboardGrabManagerV1Interface>(m_display.get());
 
-    auto activation = new KWaylandServer::XdgActivationV1Interface(m_display.get(), this);
-    auto init = [this, activation] {
-        m_xdgActivationIntegration = new XdgActivationV1Integration(activation, this);
+    m_xdgActivation = std::make_unique<KWaylandServer::XdgActivationV1Interface>(m_display.get());
+    auto init = [this] {
+        m_xdgActivationIntegration = std::make_unique<XdgActivationV1Integration>(m_xdgActivation.get());
     };
     if (Workspace::self()) {
         init();
@@ -513,8 +560,8 @@ bool WaylandServer::init(InitializationFlags flags)
         w->setLockScreenOverlay(true);
     });
 
-    m_contentTypeManager = new KWaylandServer::ContentTypeManagerV1Interface(m_display.get(), m_display.get());
-    m_tearingControlInterface = new KWaylandServer::TearingControlManagerV1Interface(m_display.get(), m_display.get());
+    m_contentTypeManager = std::make_unique<KWaylandServer::ContentTypeManagerV1Interface>(m_display.get());
+    m_tearingControlInterface = std::make_unique<KWaylandServer::TearingControlManagerV1Interface>(m_display.get());
 
     return true;
 }
@@ -522,9 +569,9 @@ bool WaylandServer::init(InitializationFlags flags)
 KWaylandServer::LinuxDmaBufV1ClientBufferIntegration *WaylandServer::linuxDmabuf()
 {
     if (!m_linuxDmabuf) {
-        m_linuxDmabuf = new LinuxDmaBufV1ClientBufferIntegration(m_display.get());
+        m_linuxDmabuf = std::make_unique<LinuxDmaBufV1ClientBufferIntegration>(m_display.get());
     }
-    return m_linuxDmabuf;
+    return m_linuxDmabuf.get();
 }
 
 SurfaceInterface *WaylandServer::findForeignTransientForSurface(SurfaceInterface *surface)
@@ -542,7 +589,7 @@ void WaylandServer::initWorkspace()
 {
     new KeyStateInterface(m_display.get(), m_display.get());
 
-    VirtualDesktopManager::self()->setVirtualDesktopManagement(m_virtualDesktopManagement);
+    VirtualDesktopManager::self()->setVirtualDesktopManagement(m_virtualDesktopManagement.get());
 
     if (m_windowManagement) {
         connect(workspace(), &Workspace::showingDesktopChanged, this, [this](bool set) {

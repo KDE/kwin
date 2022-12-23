@@ -146,6 +146,8 @@ public:
      */
     ClientBuffer *clientBufferForResource(wl_resource *resource) const;
 
+    void destroyClients();
+
 private Q_SLOTS:
     void flush();
 

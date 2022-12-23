@@ -29,7 +29,7 @@ class KWIN_EXPORT XdgActivationV1Integration : public QObject
 {
     Q_OBJECT
 public:
-    XdgActivationV1Integration(KWaylandServer::XdgActivationV1Interface *activation, QObject *parent);
+    XdgActivationV1Integration(KWaylandServer::XdgActivationV1Interface *activation, QObject *parent = nullptr);
 
     QString requestPrivilegedToken(KWaylandServer::SurfaceInterface *surface, uint serial, KWaylandServer::SeatInterface *seat, const QString &appId)
     {

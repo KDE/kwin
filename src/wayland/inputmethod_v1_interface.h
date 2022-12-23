@@ -43,7 +43,7 @@ class KWIN_EXPORT InputMethodV1Interface : public QObject
 {
     Q_OBJECT
 public:
-    InputMethodV1Interface(Display *d, QObject *parent);
+    InputMethodV1Interface(Display *d, QObject *parent = nullptr);
     ~InputMethodV1Interface() override;
 
     /**

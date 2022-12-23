@@ -38,7 +38,7 @@ class KWIN_EXPORT PlasmaShellInterface : public QObject
     Q_OBJECT
 
 public:
-    explicit PlasmaShellInterface(Display *display, QObject *parent);
+    explicit PlasmaShellInterface(Display *display, QObject *parent = nullptr);
     virtual ~PlasmaShellInterface();
 
 Q_SIGNALS:

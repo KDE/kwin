@@ -49,6 +49,11 @@ Display::~Display()
     wl_display_destroy(d->display);
 }
 
+void Display::destroyClients()
+{
+    wl_display_destroy_clients(d->display);
+}
+
 bool Display::addSocketFileDescriptor(int fileDescriptor, const QString &name)
 {
     if (wl_display_add_socket_fd(d->display, fileDescriptor)) {
