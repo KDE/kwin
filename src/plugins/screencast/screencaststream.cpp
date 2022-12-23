@@ -465,36 +465,41 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
 
         auto cursor = Cursors::self()->currentCursor();
         if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
-            GLFramebuffer::pushFramebuffer(buf->framebuffer());
+            if (!cursor->image().isNull()) {
+                GLFramebuffer::pushFramebuffer(buf->framebuffer());
 
-            QRect r(QPoint(), size);
-            auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
+                QRect r(QPoint(), size);
+                auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
 
-            QMatrix4x4 mvp;
-            mvp.ortho(r);
-            shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+                QMatrix4x4 mvp;
+                mvp.ortho(r);
+                shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
 
-            if (!m_cursor.texture || m_cursor.lastKey != cursor->image().cacheKey()) {
-                m_cursor.texture.reset(new GLTexture(cursor->image()));
+                if (!m_cursor.texture || m_cursor.lastKey != cursor->image().cacheKey()) {
+                    m_cursor.texture.reset(new GLTexture(cursor->image()));
+                }
+
+                m_cursor.texture->setYInverted(false);
+                m_cursor.texture->bind();
+                const auto cursorRect = cursorGeometry(cursor);
+                mvp.translate(cursorRect.left(), r.height() - cursorRect.top() - cursor->image().height());
+                shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                m_cursor.texture->render(cursorRect, m_cursor.scale);
+                glDisable(GL_BLEND);
+                m_cursor.texture->unbind();
+
+                ShaderManager::instance()->popShader();
+                GLFramebuffer::popFramebuffer();
+
+                damagedRegion += QRegion{m_cursor.lastRect} | cursorRect;
+                m_cursor.lastRect = cursorRect;
+            } else {
+                damagedRegion |= m_cursor.lastRect;
+                m_cursor.lastRect = {};
             }
-
-            m_cursor.texture->setYInverted(false);
-            m_cursor.texture->bind();
-            const auto cursorRect = cursorGeometry(cursor);
-            mvp.translate(cursorRect.left(), r.height() - cursorRect.top() - cursor->image().height());
-            shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            m_cursor.texture->render(cursorRect, m_cursor.scale);
-            glDisable(GL_BLEND);
-            m_cursor.texture->unbind();
-
-            ShaderManager::instance()->popShader();
-            GLFramebuffer::popFramebuffer();
-
-            damagedRegion += QRegion{m_cursor.lastRect} | cursorRect;
-            m_cursor.lastRect = cursorRect;
         }
     }
 
