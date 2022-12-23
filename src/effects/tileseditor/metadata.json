@@ -2,6 +2,7 @@
     "KPlugin": {
         "Category": "Window Management",
         "Description": "Editor for the tiling areas",
+        "Description[ar]": "محرر لترتيب المساحات",
         "Description[bg]": "Редактиране на зоните на плочковидно разпределяне",
         "Description[ca@valencia]": "Editor per a les àrees de mosaic",
         "Description[ca]": "Editor per a les àrees de mosaic",
@@ -20,6 +21,7 @@
         "Id": "tileseditor",
         "License": "GPL",
         "Name": "Tiling Editor",
+        "Name[ar]": "محرر الترتيب",
         "Name[bg]": "Редактор на разпределяне",
         "Name[ca@valencia]": "Editor de mosaic",
         "Name[ca]": "Editor de mosaic",

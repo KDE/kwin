@@ -3,6 +3,7 @@
     "KPlugin": {
         "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=systemsettings&component=kcm_kwinxwayland",
         "Description": "Select which keys will be globally available to legacy X11 apps",
+        "Description[ar]": "حدد أي المفاتيح التي ستكون متوفرة لتطبيقات اكس ١١ القديمة",
         "Description[bg]": "Изберете, кои клавиши да бъдат достъпни на глобално ниво за X11 приложения с минали версии",
         "Description[ca@valencia]": "Seleccioneu les tecles que estaran disponibles globalment a les aplicacions X11 antigues",
         "Description[ca]": "Seleccioneu les tecles que seran disponibles globalment a les aplicacions X11 antigues",
@@ -18,6 +19,7 @@
         "Description[x-test]": "xxSelect which keys will be globally available to legacy X11 appsxx",
         "Icon": "xorg",
         "Name": "Legacy X11 App Support",
+        "Name[ar]": "دعم تطبيقات اكس١١ القديمة",
         "Name[bg]": "Поддръжка на минали версии  X11 приложения",
         "Name[ca@valencia]": "Implementació de les aplicacions X11 antigues",
         "Name[ca]": "Implementació de les aplicacions X11 antigues",
