@@ -96,29 +96,34 @@ void GlobalShortcutsTest::testNonLatinLayout_data()
     QTest::addColumn<int>("key");
     QTest::addColumn<Qt::Key>("qtKey");
 
-    // KEY_W is "ц" in the RU layout and "w" in the US layout
-    // KEY_GRAVE is "ё" in the RU layout and "`" in the US layout
-    // TAB_KEY is the same both in the US and RU layout
+    for (const auto &modifier :
+         QVector<QPair<int, Qt::Modifier>>{
+             {KEY_LEFTCTRL, Qt::CTRL},
+             {KEY_LEFTALT, Qt::ALT},
+             {KEY_LEFTSHIFT, Qt::SHIFT},
+             {KEY_LEFTMETA, Qt::META},
+         }) {
+        for (const auto &key :
+             QVector<QPair<int, Qt::Key>> {
+                 // Tab is example of a key usually the same on different layouts, check it first
+                 {KEY_TAB, Qt::Key_Tab},
 
-    QTest::newRow("Left Ctrl + Tab") << KEY_LEFTCTRL << Qt::CTRL << KEY_TAB << Qt::Key_Tab;
-    QTest::newRow("Left Ctrl + W") << KEY_LEFTCTRL << Qt::CTRL << KEY_W << Qt::Key_W;
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    QTest::newRow("Left Ctrl + `") << KEY_LEFTCTRL << Qt::CTRL << KEY_GRAVE << Qt::Key_QuoteLeft;
+                     // Then check a key with a Latin letter.
+                     // The symbol will probably be differ on non-Latin layout.
+                     // On Russian layout, "w" key has a cyrillic letter "ц"
+                     {KEY_W, Qt::Key_W},
+
+#if QT_VERSION_MAJOR > 5 // since Qt 5 LTS is frozen
+                     // More common case with any Latin1 symbol keys, including punctuation, should work also.
+                     // "`" key has a "ё" letter on Russian layout
+                     // FIXME: QTBUG-90611
+                     {KEY_GRAVE, Qt::Key_QuoteLeft},
 #endif
-
-    QTest::newRow("Left Alt + Tab") << KEY_LEFTALT << Qt::ALT << KEY_TAB << Qt::Key_Tab;
-    QTest::newRow("Left Alt + W") << KEY_LEFTALT << Qt::ALT << KEY_W << Qt::Key_W;
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    QTest::newRow("Left Alt + `") << KEY_LEFTALT << Qt::ALT << KEY_GRAVE << Qt::Key_QuoteLeft;
-#endif
-
-    QTest::newRow("Left Shift + Tab") << KEY_LEFTSHIFT << Qt::SHIFT << KEY_TAB << Qt::Key_Tab;
-
-    QTest::newRow("Left Meta + Tab") << KEY_LEFTMETA << Qt::META << KEY_TAB << Qt::Key_Tab;
-    QTest::newRow("Left Meta + W") << KEY_LEFTMETA << Qt::META << KEY_W << Qt::Key_W;
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-    QTest::newRow("Left Meta + `") << KEY_LEFTMETA << Qt::META << KEY_GRAVE << Qt::Key_QuoteLeft;
-#endif
+             }) {
+            QTest::newRow(QKeySequence(modifier.second + key.second).toString().toLatin1().constData())
+                << modifier.first << modifier.second << key.first << key.second;
+        }
+    }
 }
 
 void GlobalShortcutsTest::testNonLatinLayout()
@@ -412,12 +417,10 @@ void GlobalShortcutsTest::testSetupWindowShortcut()
     auto sequenceEdit = workspace()->shortcutDialog()->findChild<QKeySequenceEdit *>();
     QVERIFY(sequenceEdit);
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     // the QKeySequenceEdit field does not get focus, we need to pass it focus manually
     QEXPECT_FAIL("", "Edit does not have focus", Continue);
     QVERIFY(sequenceEdit->hasFocus());
     sequenceEdit->setFocus();
-#endif
     QTRY_VERIFY(sequenceEdit->hasFocus());
 
     quint32 timestamp = 0;
