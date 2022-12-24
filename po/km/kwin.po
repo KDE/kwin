@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-22 00:49+0000\n"
+"POT-Creation-Date: 2022-12-24 00:51+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -2640,13 +2640,15 @@ msgid "Switch to Window to the Left"
 msgstr "ប្ដូរ​ទៅបង្អួច​ទៅ​ឆ្វេង"
 
 #: useractions.cpp:1068
-#, kde-format
-msgid "Increase Opacity of Active Window by 5 %"
+#, fuzzy, kde-format
+#| msgid "Increase Opacity of Active Window by 5 %"
+msgid "Increase Opacity of Active Window by 5%"
 msgstr "បន្ថែម​ភាព​ស្រអាប់​នៃ​បង្អួច​សកម្ម​ដោយ 5 %"
 
 #: useractions.cpp:1070
-#, kde-format
-msgid "Decrease Opacity of Active Window by 5 %"
+#, fuzzy, kde-format
+#| msgid "Decrease Opacity of Active Window by 5 %"
+msgid "Decrease Opacity of Active Window by 5%"
 msgstr "បន្ថយ​ភាព​ស្រអាប់​នៃ​បង្អួច​សកម្ម​ដោយ 5 %"
 
 #: useractions.cpp:1073

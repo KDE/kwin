@@ -9,13 +9,13 @@
 # Yuri Efremov <yur.arh@gmail.com>, 2010, 2012, 2013.
 # Julia Dronova <juliette.tux@gmail.com>, 2012.
 # Alexander Lakhin <exclusion@gmail.com>, 2013.
-# Alexander Yavorsky <kekcuha@gmail.com>, 2018, 2021.
+# Alexander Yavorsky <kekcuha@gmail.com>, 2018, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-06 00:47+0000\n"
-"PO-Revision-Date: 2021-11-22 22:01+0300\n"
+"PO-Revision-Date: 2022-12-23 11:09+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -170,12 +170,14 @@ msgstr "Принудительно наиболее плавная анимац�
 #, kde-format
 msgid "Allows applications to cause screen tearing in fullscreen."
 msgstr ""
+"Разрешить приложениям отключать вертикальную синхронизацию, что может "
+"приводить  к разрыву изображения (tearing) в полноэкранном режиме"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowTearing)
 #: compositing.ui:216
 #, kde-format
 msgid "Allow tearing in fullscreen"
-msgstr ""
+msgstr "Разрешить разрыв изображения (tearing) в полноэкранном режиме"
 
 #: main.cpp:79
 #, kde-format

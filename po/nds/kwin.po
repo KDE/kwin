@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-22 00:49+0000\n"
+"POT-Creation-Date: 2022-12-24 00:51+0000\n"
 "PO-Revision-Date: 2014-08-21 16:21+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -2684,13 +2684,15 @@ msgid "Switch to Window to the Left"
 msgstr "Na Finster linkerhand wesseln"
 
 #: useractions.cpp:1068
-#, kde-format
-msgid "Increase Opacity of Active Window by 5 %"
+#, fuzzy, kde-format
+#| msgid "Increase Opacity of Active Window by 5 %"
+msgid "Increase Opacity of Active Window by 5%"
 msgstr "Deckstärk vun't aktive Finster 5% ropsetten"
 
 #: useractions.cpp:1070
-#, kde-format
-msgid "Decrease Opacity of Active Window by 5 %"
+#, fuzzy, kde-format
+#| msgid "Decrease Opacity of Active Window by 5 %"
+msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Deckstärk vun't aktive Finster 5% minnern"
 
 #: useractions.cpp:1073

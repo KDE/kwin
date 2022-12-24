@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-22 00:49+0000\n"
+"POT-Creation-Date: 2022-12-24 00:51+0000\n"
 "PO-Revision-Date: 2008-08-05 22:26+0200\n"
 "Last-Translator: Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>\n"
 "Language-Team: Occitan (lengadocian) <ubuntu-l10n-oci@lists.ubuntu.com>\n"
@@ -2580,12 +2580,12 @@ msgstr ""
 
 #: useractions.cpp:1068
 #, kde-format
-msgid "Increase Opacity of Active Window by 5 %"
+msgid "Increase Opacity of Active Window by 5%"
 msgstr ""
 
 #: useractions.cpp:1070
 #, kde-format
-msgid "Decrease Opacity of Active Window by 5 %"
+msgid "Decrease Opacity of Active Window by 5%"
 msgstr ""
 
 #: useractions.cpp:1073

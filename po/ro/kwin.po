@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-22 00:49+0000\n"
+"POT-Creation-Date: 2022-12-24 00:51+0000\n"
 "PO-Revision-Date: 2022-04-04 09:50+0100\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -2612,13 +2612,15 @@ msgid "Switch to Window to the Left"
 msgstr "Schimbă la fereastra din stânga"
 
 #: useractions.cpp:1068
-#, kde-format
-msgid "Increase Opacity of Active Window by 5 %"
+#, fuzzy, kde-format
+#| msgid "Increase Opacity of Active Window by 5 %"
+msgid "Increase Opacity of Active Window by 5%"
 msgstr "Crește opacitatea ferestrei active cu 5%"
 
 #: useractions.cpp:1070
-#, kde-format
-msgid "Decrease Opacity of Active Window by 5 %"
+#, fuzzy, kde-format
+#| msgid "Decrease Opacity of Active Window by 5 %"
+msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Scade opacitatea ferestrei active cu 5%"
 
 #: useractions.cpp:1073

@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-22 00:49+0000\n"
+"POT-Creation-Date: 2022-12-24 00:51+0000\n"
 "PO-Revision-Date: 2017-05-22 05:42-0400\n"
 "Last-Translator: Elkana Bardugo <ttv200@gmail.com>\n"
 "Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
@@ -2652,13 +2652,15 @@ msgid "Switch to Window to the Left"
 msgstr "עבור אל החלון משמאל"
 
 #: useractions.cpp:1068
-#, kde-format
-msgid "Increase Opacity of Active Window by 5 %"
+#, fuzzy, kde-format
+#| msgid "Increase Opacity of Active Window by 5 %"
+msgid "Increase Opacity of Active Window by 5%"
 msgstr "הקטן את השקיפות של החלון הפעיל ב־5%"
 
 #: useractions.cpp:1070
-#, kde-format
-msgid "Decrease Opacity of Active Window by 5 %"
+#, fuzzy, kde-format
+#| msgid "Decrease Opacity of Active Window by 5 %"
+msgid "Decrease Opacity of Active Window by 5%"
 msgstr "הגדל את השקיפות של החלון הפעיל ב־5%"
 
 #: useractions.cpp:1073

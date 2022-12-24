@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-11 00:48+0000\n"
-"PO-Revision-Date: 2022-05-05 22:50+0300\n"
+"PO-Revision-Date: 2022-12-23 10:39+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -810,10 +810,9 @@ msgid "Block compositing"
 msgstr "Не применять графические эффекты"
 
 #: rulesmodel.cpp:703
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Класс окна (приложение)"
+msgstr "Класс окна недоступен"
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -824,6 +823,11 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Это приложение не предоставляет сведения о классе окна, поэтому KWin не "
+"может использовать эти сведения для сопоставления и применения каких-либо "
+"правил. Если к этому окну необходимо применить какие-либо некоторые правила, "
+"попробуйте вместо этого сопоставить другие свойства, такие как заголовок "
+"окна.Пожалуйста, сообщите об этой ошибке разработчикам приложения."
 
 #: rulesmodel.cpp:738
 #, kde-format
@@ -974,8 +978,7 @@ msgid "Extreme"
 msgstr "Не передавать фокус автоматически"
 
 #: rulesmodel.cpp:865
-#, fuzzy, kde-format
-#| msgid "Unmanaged Window"
+#, kde-format
 msgid "Unmanaged window"
 msgstr "Без элементов управления"
 
