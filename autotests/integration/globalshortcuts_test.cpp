@@ -203,10 +203,11 @@ void GlobalShortcutsTest::testNonLatinLayout()
         Test::keyboardKeyPressed(modifierKey, timestamp++);
         Test::keyboardKeyPressed(key, timestamp++);
 
-        QString s(QChar('\n'));
+        QString s;
         char keysymName[64];
         xkb_keysym_get_name(xkb->currentKeysym(), keysymName, 64);
-        QDebug(&s) << input()->keyboardModifiers() << xkb->modifiersRelevantForGlobalShortcuts(key) << Qt::KeyboardModifiers(qtModifier) << keysymName;
+        QDebug(&s).noquote() << QLatin1String("Current layout:") << layout.longName << '\n'
+                             << input()->keyboardModifiers() << xkb->modifiersRelevantForGlobalShortcuts(key) << Qt::KeyboardModifiers(qtModifier) << keysymName;
 
         // passing keycode so the function returns precise result
         QVERIFY2(xkb->modifiersRelevantForGlobalShortcuts(key) == qtModifier, s.toLatin1());
@@ -214,7 +215,14 @@ void GlobalShortcutsTest::testNonLatinLayout()
         Test::keyboardKeyReleased(key, timestamp++);
         Test::keyboardKeyReleased(modifierKey, timestamp++);
 
-        QTRY_VERIFY2_WITH_TIMEOUT(triggeredSpy.count(), "Probably you have unpatched Qt, see QTBUG-90611 and QTBUG-108761. Current layout: " + layout.longName + s.toLatin1(), 100);
+        if (
+            (qtModifier != Qt::SHIFT && qtKey == Qt::Key_W && layout.longName == QByteArrayLiteral("Hebrew")) ||
+            ((qtKey == Qt::Key_QuoteLeft || qtKey == Qt::Key_AsciiTilde || qtKey == Qt::Key_Y) && layout.longName == QByteArrayLiteral("German")) ||
+            (qtKey == Qt::Key_At && layout.longName == QByteArrayLiteral("Russian"))
+        ) {
+            QEXPECT_FAIL("", "This currently is broken until the patch won't be applied upstream, see QTBUG-108761. " + s.toLatin1(), Abort);
+        }
+        QTRY_VERIFY2_WITH_TIMEOUT(triggeredSpy.count(), "Probably you have unpatched Qt, see QTBUG-90611. " + s.toLatin1(), 100);
         triggeredSpy.clear();
     }
 }
