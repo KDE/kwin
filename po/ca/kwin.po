@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-24 00:51+0000\n"
-"PO-Revision-Date: 2022-12-09 08:50+0100\n"
+"PO-Revision-Date: 2022-12-24 11:17+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -2602,14 +2602,12 @@ msgid "Switch to Window to the Left"
 msgstr "Canvia a la finestra de l'esquerra"
 
 #: useractions.cpp:1068
-#, fuzzy, kde-format
-#| msgid "Increase Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Augmenta l'opacitat de la finestra activa en un 5%"
 
 #: useractions.cpp:1070
-#, fuzzy, kde-format
-#| msgid "Decrease Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Disminueix l'opacitat de la finestra activa en un 5%"
 
