@@ -500,7 +500,6 @@ void UserActionsMenu::initActivityPopup()
     }
 
     m_activityMenu = new QMenu(m_menu);
-    connect(m_activityMenu, &QMenu::triggered, this, &UserActionsMenu::slotToggleOnActivity);
     connect(m_activityMenu, &QMenu::aboutToShow, this, &UserActionsMenu::activityPopupAboutToShow);
 
     QAction *action = m_activityMenu->menuAction();
@@ -727,8 +726,12 @@ void UserActionsMenu::activityPopupAboutToShow()
         m_activityMenu->setPalette(m_window->palette());
     }
     QAction *action = m_activityMenu->addAction(i18n("&All Activities"));
-    action->setData(QString());
     action->setCheckable(true);
+    connect(action, &QAction::triggered, this, [this]() {
+        if (m_window) {
+            m_window->setOnAllActivities(!m_window->isOnAllActivities());
+        }
+    });
     static QPointer<QActionGroup> allActivitiesGroup;
     if (!allActivitiesGroup) {
         allActivitiesGroup = new QActionGroup(m_activityMenu);
@@ -752,11 +755,33 @@ void UserActionsMenu::activityPopupAboutToShow()
             action->setIcon(QIcon::fromTheme(icon));
         }
         m_activityMenu->addAction(action);
-        action->setData(id);
+        connect(action, &QAction::triggered, this, [this, id]() {
+            if (m_window) {
+                Workspace::self()->activities()->toggleWindowOnActivity(m_window, id, false);
+            }
+        });
 
         if (m_window && !m_window->isOnAllActivities() && m_window->isOnActivity(id)) {
             action->setChecked(true);
         }
+    }
+
+    m_activityMenu->addSeparator();
+    for (const QString &id : activities) {
+        const KActivities::Info activity(id);
+        if (m_window->activities().size() == 1 && m_window->activities().front() == id) {
+            // no need to show a button that doesn't do anything
+            continue;
+        }
+        const QString name = i18n("Move to %1", activity.name().replace('&', "&&"));
+        const auto action = m_activityMenu->addAction(name);
+        if (const QString icon = activity.icon(); !icon.isEmpty()) {
+            action->setIcon(QIcon::fromTheme(icon));
+        }
+        connect(action, &QAction::triggered, this, [this, id] {
+            m_window->setOnActivities({id});
+        });
+        m_activityMenu->addAction(action);
     }
 #endif
 }
@@ -794,38 +819,6 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
     // user actions menu closed before we destroy the decoration. Otherwise Qt crashes
     qRegisterMetaType<Options::WindowOperation>();
     QMetaObject::invokeMethod(workspace(), std::bind(&Workspace::performWindowOperation, workspace(), c, op), Qt::QueuedConnection);
-}
-
-void UserActionsMenu::slotToggleOnActivity(QAction *action)
-{
-#if KWIN_BUILD_ACTIVITIES
-    if (!Workspace::self()->activities()) {
-        return;
-    }
-    QString activity = action->data().toString();
-    if (m_window.isNull()) {
-        return;
-    }
-    if (activity.isEmpty()) {
-        // the 'on_all_activities' menu entry
-        m_window->setOnAllActivities(!m_window->isOnAllActivities());
-        return;
-    }
-
-    Workspace::self()->activities()->toggleWindowOnActivity(m_window, activity, false);
-    if (m_activityMenu && m_activityMenu->isVisible() && m_activityMenu->actions().count()) {
-        const bool isOnAll = m_window->isOnAllActivities();
-        m_activityMenu->actions().at(0)->setChecked(isOnAll);
-        if (isOnAll) {
-            // toggleClientOnActivity interprets "on all" as "on none" and
-            // susequent toggling ("off") would move the window to only that activity.
-            // bug #330838 -> set all but "on all" off to "force proper usage"
-            for (int i = 1; i < m_activityMenu->actions().count(); ++i) {
-                m_activityMenu->actions().at(i)->setChecked(true);
-            }
-        }
-    }
-#endif
 }
 
 //****************************************

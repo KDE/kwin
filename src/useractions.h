@@ -136,12 +136,6 @@ private Q_SLOTS:
      */
     void activityPopupAboutToShow();
     /**
-     * Toggles whether the Window is on the \a activity
-     *
-     * @param action Invoked Action containing the Id of the Activity to toggle the Window on
-     */
-    void slotToggleOnActivity(QAction *action);
-    /**
      * Performs a window operation.
      *
      * @param action Invoked Action containing the Window Operation to perform for the Window
