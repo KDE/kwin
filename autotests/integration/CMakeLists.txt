@@ -165,6 +165,7 @@ integrationTest(NAME testFakeInput SRCS fakeinput_test.cpp)
 integrationTest(NAME testSecurityContext SRCS security_context_test.cpp)
 integrationTest(NAME testStickyKeys SRCS sticky_keys_test.cpp)
 integrationTest(NAME testWorkspace SRCS workspace_test.cpp)
+integrationTest(NAME testMouseKeys SRCS mouse_keys_test.cpp)
 
 if(KWIN_BUILD_X11)
     integrationTest(NAME testDontCrashEmptyDeco SRCS dont_crash_empty_deco.cpp LIBS KDecoration2::KDecoration)
