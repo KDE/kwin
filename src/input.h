@@ -323,6 +323,7 @@ enum Order {
     ButtonRebind,
     BounceKeys,
     StickyKeys,
+    MouseKeys,
     EisInput,
 
     VirtualTerminal,
