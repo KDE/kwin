@@ -147,6 +147,7 @@ integrationTest(NAME testMouseActions SRCS mouseactions_test.cpp LIBS)
 integrationTest(NAME testColorManagement SRCS test_colormanagement.cpp)
 integrationTest(NAME testKeyboardInput SRCS keyboard_input_test.cpp)
 integrationTest(NAME testFifo SRCS test_fifo.cpp)
+integrationTest(NAME testMouseKeys SRCS mouse_keys_test.cpp)
 
 if(KWIN_BUILD_X11)
     integrationTest(NAME testDontCrashEmptyDeco SRCS dont_crash_empty_deco.cpp LIBS KDecoration3::KDecoration)
