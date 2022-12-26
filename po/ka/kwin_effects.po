@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-17 00:51+0000\n"
-"PO-Revision-Date: 2022-12-03 06:51+0100\n"
+"PO-Revision-Date: 2022-12-25 07:09+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -630,6 +630,8 @@ msgid ""
 "Create screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
+"ეკრანის ანაბეჭდის მარცხენა წკაპით ან Enter-ით გადაღება.\n"
+"გასაუქმებლად Esc ან მარჯვენა წკაპი."
 
 #: showfps/qml/main.qml:110
 #, kde-format
@@ -901,17 +903,17 @@ msgstr "მოგლეჯილი მენიუები:"
 #: windowview/kcm/windowvieweffectkcm.cpp:42 windowview/windowvieweffect.cpp:45
 #, kde-format
 msgid "Toggle Present Windows (Current desktop)"
-msgstr ""
+msgstr "მიმდინარე ფანჯრების გადართვა (მიმდინარე სამუშაო მაგიდა)"
 
 #: windowview/kcm/windowvieweffectkcm.cpp:49 windowview/windowvieweffect.cpp:54
 #, kde-format
 msgid "Toggle Present Windows (All desktops)"
-msgstr ""
+msgstr "მიმდინარე ფანჯრების გადართვა (ყველა სამუშაო მაგიდა)"
 
 #: windowview/kcm/windowvieweffectkcm.cpp:56 windowview/windowvieweffect.cpp:63
 #, kde-format
 msgid "Toggle Present Windows (Window class)"
-msgstr ""
+msgstr "მიმდინარე ფანჯრების გადართვა (ფანჯრების კლასი)"
 
 #: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:72
 #, kde-format

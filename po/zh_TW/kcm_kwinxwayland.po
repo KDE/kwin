@@ -1,0 +1,92 @@
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the kwin package.
+#
+# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-12-17 00:51+0000\n"
+"PO-Revision-Date: 2022-12-26 03:34+0900\n"
+"Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
+"Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Lokalize 22.12.0\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Kisaragi Hiu"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "mail@kisaragi-hiu.com"
+
+#: kcmkwinxwayland.cpp:30
+#, kde-format
+msgid "Legacy X11 App Support"
+msgstr "舊式 X11 應用程式支援"
+
+#: kcmkwinxwayland.cpp:32
+#, kde-format
+msgid "Allow legacy X11 apps to read keystrokes typed in other apps"
+msgstr "允許舊式 X11 應用程式讀取在其他應用程式內的鍵盤輸入"
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid ""
+"This module lets configure which keyboard events are forwarded to X11 apps "
+"regardless of their focus."
+msgstr "此模組讓您設定哪些鍵盤事件要傳送給 X11 應用程式，不論它們是否有焦點。"
+
+#: package/contents/ui/main.qml:49
+#, kde-format
+msgid ""
+"Legacy X11 apps require the ability to read keystrokes typed in other apps "
+"for features that are activated using global keyboard shortcuts. This is "
+"disabled by default for security reasons. If you need to use such apps, you "
+"can choose your preferred balance of security and functionality here."
+msgstr ""
+"舊式 X11 應用程式若有使用全域鍵盤快捷鍵觸發的功能，會需要能夠讀取在其他應用程"
+"式的鍵盤輸入。為了安全性考量，這個選項預設是關閉的。如果您需要使用這樣的應用"
+"程式，您可以在這裡對安全性與功能性間選擇您所偏好的平衡。"
+
+#: package/contents/ui/main.qml:66
+#, kde-format
+msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
+msgstr "允許舊式 X11 應用程式讀取在所有應用程式內的鍵盤輸入："
+
+#: package/contents/ui/main.qml:67
+#, kde-format
+msgid "Never"
+msgstr "永不"
+
+#: package/contents/ui/main.qml:70
+#, kde-format
+msgid "Only Meta, Control, Alt, and Shift keys"
+msgstr "僅 Meta、Control、Alt 與 Shift 鍵"
+
+#: package/contents/ui/main.qml:73
+#, kde-format
+msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+msgstr "所有按鍵，但只在 Meta、Control、Alt 或 Shift 鍵也按下時"
+
+#: package/contents/ui/main.qml:77
+#, kde-format
+msgid "Always"
+msgstr "總是"
+
+#: package/contents/ui/main.qml:84
+#, kde-format
+msgid ""
+"Note that using this setting will reduce system security to that of the X11 "
+"session by permitting malicious software to steal passwords and spy on the "
+"text that you type. Make sure you understand and accept this risk."
+msgstr ""
+"請注意，使用這個設定將會使系統安全性降低至與 X11 工作階段相同：惡意軟體執行時"
+"可以監視您所輸入的文字並盜取密碼。請確保您理解並接受這個風險。"

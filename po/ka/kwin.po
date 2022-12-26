@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-24 00:51+0000\n"
-"PO-Revision-Date: 2022-12-16 06:54+0100\n"
+"PO-Revision-Date: 2022-12-25 06:59+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -39,6 +39,8 @@ msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
 "resume using the '%1' shortcut."
 msgstr ""
+"სამუშაო მაგიდის ეფექტები სხვა აპლიკაციამ აიღო თავის თავზე.<br/>შეგიძლიათ "
+"გააგრძელოთ '%1'-ის მალსახმობის გამოყენება."
 
 #: composite.cpp:1057
 #, kde-format
@@ -48,6 +50,10 @@ msgid ""
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
+"<b>OpenGL-ის კომპოზიტირება (ნაგულისხმები) KWin-სთვის წარსულში ავარიულად "
+"დასრულდა.</b><b>დიდი შანსია, ეს დრაივერის შეცდომის ბრალი იყოს.<p>თუ ფიქრობთ, "
+"რომ დრაივერი უკვე განაახლეთ, ეს დაცვა <b>შეგიძლიათ გამორთოთ, მაგრამ "
+"გაითვალისწინეთ, რომ ის შეიძლება ავარიულად დასრულდეს!</b></p>"
 
 #: composite.cpp:1064
 #, kde-format
@@ -643,12 +649,12 @@ msgstr "ტაბლეტი"
 #: debug_console.cpp:540
 #, kde-format
 msgid "Tablet Pad Button"
-msgstr ""
+msgstr "ტაბლეტის ხელსაწყოს ღილაკი"
 
 #: debug_console.cpp:553
 #, kde-format
 msgid "Tablet Pad Strip"
-msgstr ""
+msgstr "ტაბლეტის ხელსაწყოს ზოლი"
 
 #: debug_console.cpp:554 debug_console.cpp:568
 #, kde-format
@@ -663,7 +669,7 @@ msgstr "თითია"
 #: debug_console.cpp:567
 #, kde-format
 msgid "Tablet Pad Ring"
-msgstr ""
+msgstr "ტაბლეტის ხელსაწყოს რგოლი"
 
 #: debug_console.cpp:797
 #, kde-format
@@ -1085,7 +1091,7 @@ msgstr "id"
 #: helpers/killer/killer.cpp:48
 #, kde-format
 msgid "Time of user action causing termination"
-msgstr ""
+msgstr "ავარიის გამომწვევი მომხმარებლის ქმედების დრო"
 
 #: helpers/killer/killer.cpp:48
 #, kde-format
@@ -1115,6 +1121,8 @@ msgid ""
 "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
 "%3) but the application is not responding.</para>"
 msgstr ""
+"<para>სცადეთ დაგეხურათ ფანჯარა \"%1\" აპლიკაციიდან \"%2\" (პროცესის ID: %3) "
+"მაგრამ აპლიკაცია არ პასუხობს.</para>"
 
 #: helpers/killer/killer.cpp:88
 #, kde-kuit-format
@@ -1123,6 +1131,8 @@ msgid ""
 "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: "
 "%3), running on host \"%4\", but the application is not responding.</para>"
 msgstr ""
+"<para>სცადეთ დაგეხურათ ფანჯარა \"%1\" აპლიკაციიდან \"%2\" (პროცესის ID: %3), "
+"გაშვებული ჰოსტზე \"%4\", მაგრამ აპლიკაცია არ პასუხობს.</para>"
 
 #: helpers/killer/killer.cpp:91
 #, kde-kuit-format
@@ -1250,21 +1260,24 @@ msgstr "Xwayland სერვერის საწყისი საქაღ�
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
+"Wayland-ის მოსასმენი სოკეტის სახელი. თუ მითითებული არაა, გამოიყენება "
+"'wayland-0'."
 
 #: main_wayland.cpp:319
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
-msgstr ""
+msgstr "X11 პლატფორმაზე გამოყენებული ფანჯრული რეჟიმის საჩვენებელი X11 ეკრანი."
 
 #: main_wayland.cpp:322
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
+"Wayland პლატფორმაზე გამოყენებული ფანჯრული რეჟიმის საჩვენებელი Wayland ეკრანი."
 
 #: main_wayland.cpp:324
 #, kde-format
 msgid "Render to a virtual framebuffer."
-msgstr ""
+msgstr "ვირტუალურ Framebuffer-ში რენდერი."
 
 #: main_wayland.cpp:326
 #, kde-format
@@ -1495,22 +1508,22 @@ msgstr "გაშვებულ ფანჯრის დახურვა %1-
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:299
 #, kde-format
 msgid "(Un)minimize running window on %1"
-msgstr ""
+msgstr "%1-ზე გაშვებული ფანჯრის ჩაკეცვა/აღდგენა"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:302
 #, kde-format
 msgid "Maximize/restore running window on %1"
-msgstr ""
+msgstr "%1-ზე გაშვებული ფანჯრის მთელ ეკრანზე გადიდება/აღდგენა"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:305
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
-msgstr ""
+msgstr "%1-ზე გაშვებული ფანჯრის მთელ ეკრანზე გაშვების გადართვა"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:308
 #, kde-format
 msgid "(Un)shade running window on %1"
-msgstr ""
+msgstr "%1-ზე გაშვებული ფანჯრის დაჩრდილვის გადართვა"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:311
 #, kde-format
@@ -1525,7 +1538,7 @@ msgstr ""
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:318
 #, kde-format
 msgid "Activate running window on %1"
-msgstr ""
+msgstr "გაშვებული ფანჯრის გააქტიურება %1-ზე"
 
 #: plugins/nightcolor/nightcolormanager.cpp:64
 #, kde-format
@@ -1555,13 +1568,13 @@ msgstr "ფერის ტემპერატურის გადახე�
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
 msgid "Total rules count (legacy)"
-msgstr ""
+msgstr "წესების ჯამური რაოდენობა (მოძველებული)"
 
 #. i18n: ectx: label, entry (ruleGroupList), group (General)
 #: rulebooksettingsbase.kcfg:13
 #, kde-format
 msgid "Ordered list of rules groups"
-msgstr ""
+msgstr "წესების ჯგუფების დალაგებული სია"
 
 #. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:10
@@ -1573,13 +1586,13 @@ msgstr "წესის აღწერა"
 #: rulesettings.kcfg:13
 #, kde-format
 msgid "Rule description (legacy)"
-msgstr ""
+msgstr "წესის აღწერა (მოძველებული)"
 
 #. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:16
 #, kde-format
 msgid "Delete this rule (for use in imports)"
-msgstr ""
+msgstr "ამ წესის წაშლა (შემოტანებში გამოსაყენებლად)"
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:20
@@ -1591,7 +1604,7 @@ msgstr "ფანჯრის კლასი (აპლიკაცია)"
 #: rulesettings.kcfg:23
 #, kde-format
 msgid "Window class string match type"
-msgstr ""
+msgstr "ფანჯრის კლასის სტრიქონის დამთხვევის ტიპი"
 
 #. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:29
@@ -1609,7 +1622,7 @@ msgstr "ფანჯრის როლი"
 #: rulesettings.kcfg:37
 #, kde-format
 msgid "Window role string match type"
-msgstr ""
+msgstr "ფანჯრის როლის სტრიქონის დამთხვევის ტიპი"
 
 #. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:44
@@ -1933,13 +1946,13 @@ msgstr "სათაურის ზოლის წესის ტიპი"
 #: rulesettings.kcfg:323
 #, kde-format
 msgid "Block Compositing"
-msgstr ""
+msgstr "კომპოზიტირების დაბლოკვა"
 
 #. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:327
 #, kde-format
 msgid "Block Compositing rule type"
-msgstr ""
+msgstr "კომპოზიტირების წესის ტიპის დაბლოკვა"
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
@@ -2540,16 +2553,14 @@ msgid "Switch to Window to the Left"
 msgstr "მარცხენა ფანჯარაზე გადართვა"
 
 #: useractions.cpp:1068
-#, fuzzy, kde-format
-#| msgid "Increase Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr "ფანჯრის გაუმჭვირვალობის 5%-ით გაზრდა"
+msgstr "აქტიური ფანჯრის გაუმჭვირვალობის 5%-ით გაზრდა"
 
 #: useractions.cpp:1070
-#, fuzzy, kde-format
-#| msgid "Decrease Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr "ფანჯრის გაუმჭვირვალობის 5%-ით Semcireba"
+msgstr "აქტიური ფანჯრის გაუმჭვირვალობის 5%-ით შემცირება"
 
 #: useractions.cpp:1073
 #, kde-format

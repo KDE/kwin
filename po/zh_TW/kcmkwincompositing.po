@@ -14,14 +14,14 @@ msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-06 00:47+0000\n"
-"PO-Revision-Date: 2022-06-24 02:11+0900\n"
+"PO-Revision-Date: 2022-12-26 03:41+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.04.2\n"
+"X-Generator: Lokalize 22.12.0\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
@@ -161,13 +161,13 @@ msgstr "強制最平滑的動畫"
 #: compositing.ui:213
 #, kde-format
 msgid "Allows applications to cause screen tearing in fullscreen."
-msgstr ""
+msgstr "讓應用程式能在全螢幕顯示時造成畫面撕裂。"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowTearing)
 #: compositing.ui:216
 #, kde-format
 msgid "Allow tearing in fullscreen"
-msgstr ""
+msgstr "全螢幕時允許畫面撕裂"
 
 #: main.cpp:79
 #, kde-format
