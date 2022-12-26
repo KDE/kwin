@@ -1458,7 +1458,7 @@ void Workspace::updateOutputs()
     // The workspace requires at least one output connected.
     if (m_outputs.isEmpty()) {
         if (!m_placeholderOutput) {
-            m_placeholderOutput = new PlaceholderOutput(QSize(16535, 16535), 1);
+            m_placeholderOutput = new PlaceholderOutput(QSize(8192, 8192), 1);
             m_placeholderFilter = std::make_unique<PlaceholderInputEventFilter>();
             input()->prependInputEventFilter(m_placeholderFilter.get());
         }
