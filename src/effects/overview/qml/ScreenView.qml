@@ -247,7 +247,8 @@ FocusScope {
                     minimizedWindows: !effect.ignoreMinimized
                     windowType: ~KWinComponents.ClientFilterModel.Dock &
                                 ~KWinComponents.ClientFilterModel.Desktop &
-                                ~KWinComponents.ClientFilterModel.Notification
+                                ~KWinComponents.ClientFilterModel.Notification &
+                                ~KWinComponents.ClientFilterModel.CriticalNotification
                 }
                 delegate: WindowHeapDelegate {
                     windowHeap: heap
