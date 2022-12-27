@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-24 00:51+0000\n"
-"PO-Revision-Date: 2022-12-10 18:11+0300\n"
+"PO-Revision-Date: 2022-12-26 21:50+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.08.3\n"
+"X-Generator: Lokalize 22.12.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2591,16 +2591,14 @@ msgid "Switch to Window to the Left"
 msgstr "Soldaki Pencereye Geç"
 
 #: useractions.cpp:1068
-#, fuzzy, kde-format
-#| msgid "Increase Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr "Etkin Pencerenin Saydamlığını %​5 Artır"
+msgstr "Etkin Pencerenin Matlığını %​5 Artır"
 
 #: useractions.cpp:1070
-#, fuzzy, kde-format
-#| msgid "Decrease Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr "Etkin Pencerenin Saydamlığını %​5 Azalt"
+msgstr "Etkin Pencerenin Matlığını %​5 Azalt"
 
 #: useractions.cpp:1073
 #, kde-format
