@@ -124,7 +124,8 @@ FocusScope {
             clientModel: desktopView.clientModel
             windowType: ~KWinComponents.ClientFilterModel.Dock &
                         ~KWinComponents.ClientFilterModel.Desktop &
-                        ~KWinComponents.ClientFilterModel.Notification
+                        ~KWinComponents.ClientFilterModel.Notification &
+                        ~KWinComponents.ClientFilterModel.CriticalNotification
         }
         delegate: WindowHeapDelegate {
             windowHeap: heap
