@@ -70,7 +70,7 @@ static void xkbLogHandler(xkb_context *context, xkb_log_level priority, const ch
     }
 }
 
-Xkb::Xkb(QObject *parent)
+Xkb::Xkb(QObject *parent, bool followLocale1)
     : QObject(parent)
     , m_context(xkb_context_new(XKB_CONTEXT_NO_FLAGS))
     , m_keymap(nullptr)
@@ -88,7 +88,7 @@ Xkb::Xkb(QObject *parent)
     , m_consumedModifiers(Qt::NoModifier)
     , m_keysym(XKB_KEY_NoSymbol)
     , m_leds()
-    , m_followLocale1(kwinApp()->followLocale1())
+    , m_followLocale1(followLocale1)
 {
     qRegisterMetaType<KWin::LEDs>();
     if (!m_context) {

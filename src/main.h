@@ -380,6 +380,8 @@ private:
 
 inline static Application *kwinApp()
 {
+    Q_ASSERT(qobject_cast<Application *>(QCoreApplication::instance()));
+
     return static_cast<Application *>(QCoreApplication::instance());
 }
 

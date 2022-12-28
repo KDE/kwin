@@ -41,7 +41,7 @@ namespace KWin
 KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
     : QObject(parent)
     , m_input(parent)
-    , m_xkb(new Xkb(parent))
+    , m_xkb(new Xkb(parent, kwinApp()->followLocale1()))
 {
     connect(m_xkb.get(), &Xkb::ledsChanged, this, &KeyboardInputRedirection::ledsChanged);
     if (waylandServer()) {

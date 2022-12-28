@@ -42,7 +42,7 @@ class KWIN_EXPORT Xkb : public QObject
 {
     Q_OBJECT
 public:
-    Xkb(QObject *parent = nullptr);
+    Xkb(QObject *parent = nullptr, bool followLocale1 = false);
     ~Xkb() override;
     void setConfig(const KSharedConfigPtr &config);
     void setNumLockConfig(const KSharedConfigPtr &config);
