@@ -38,14 +38,13 @@
 namespace KWin
 {
 
-DrmOutput::DrmOutput(DrmPipeline *pipeline)
-    : DrmAbstractOutput(pipeline->connector()->gpu())
-    , m_pipeline(pipeline)
-    , m_connector(pipeline->connector())
+DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
+    : DrmAbstractOutput(conn->gpu())
+    , m_pipeline(conn->pipeline())
+    , m_connector(conn)
 {
     RenderLoopPrivate::get(m_renderLoop.get())->canDoTearing = gpu()->asyncPageflipSupported();
     m_pipeline->setOutput(this);
-    const auto conn = m_pipeline->connector();
     m_renderLoop->setRefreshRate(m_pipeline->mode()->refreshRate());
 
     Capabilities capabilities = Capability::Dpms;
@@ -387,7 +386,7 @@ bool DrmOutput::present()
 
 DrmConnector *DrmOutput::connector() const
 {
-    return m_connector;
+    return m_connector.get();
 }
 
 DrmPipeline *DrmOutput::pipeline() const
