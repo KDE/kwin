@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-24 00:51+0000\n"
-"PO-Revision-Date: 2022-12-13 19:52+0530\n"
+"PO-Revision-Date: 2022-12-27 21:52+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -1881,9 +1881,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:249
-#, fuzzy, kde-format
+#, kde-format
 msgid "Skip pager"
-msgstr "பணிமேடை மாற்றியில் காட்டாதே"
+msgstr "பணி மாற்றியில் காட்டாதே"
 
 #. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:253
@@ -2054,7 +2054,7 @@ msgstr ""
 #: rulesettings.kcfg:390
 #, kde-format
 msgid "Autogroup by ID"
-msgstr ""
+msgstr "அடையாள அடிப்படையில் குழுப்படுத்து"
 
 #. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:393
@@ -2586,16 +2586,14 @@ msgid "Switch to Window to the Left"
 msgstr "இடதிலுள்ள சாளரத்திற்கு தாவு"
 
 #: useractions.cpp:1068
-#, fuzzy, kde-format
-#| msgid "Increase Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr "செயலிலுள்ள சாளரத்தின் ஒளிபுகாமையை 5 % அதிகமாக்கு"
+msgstr "செயலிலுள்ள சாளரத்தின் ஒளிபுகுமையை 5% அதிகமாக்கு"
 
 #: useractions.cpp:1070
-#, fuzzy, kde-format
-#| msgid "Decrease Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr "செயலிலுள்ள சாளரத்தின் ஒளிபுகாமையை 5 % குறை"
+msgstr "செயலிலுள்ள சாளரத்தின் ஒளிபுகுமையை 5% குறை"
 
 #: useractions.cpp:1073
 #, kde-format

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2022-12-05 05:29+0100\n"
+"PO-Revision-Date: 2022-12-27 07:39+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -1052,7 +1052,7 @@ msgstr ""
 #: mouse.ui:558
 #, kde-format
 msgid "Show actions menu"
-msgstr ""
+msgstr "ქმედებების მენიუს ჩვენება"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar2)
@@ -1161,7 +1161,7 @@ msgstr ""
 #: moving.ui:113
 #, kde-format
 msgid "&Snap windows:"
-msgstr ""
+msgstr "ფანჯრების &მიმაგრება:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
 #: moving.ui:123
@@ -1176,7 +1176,7 @@ msgstr ""
 #: moving.ui:126
 #, kde-format
 msgid "Only when overlapping"
-msgstr ""
+msgstr "მხოლოდ გადაფარვისას"
 
 #: windows.cpp:97
 #, kde-format
