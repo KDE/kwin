@@ -40,13 +40,12 @@
 namespace KWin
 {
 
-DrmOutput::DrmOutput(DrmPipeline *pipeline, KWaylandServer::DrmLeaseDeviceV1Interface *leaseDevice)
-    : DrmAbstractOutput(pipeline->connector()->gpu())
-    , m_pipeline(pipeline)
-    , m_connector(pipeline->connector())
+DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn, KWaylandServer::DrmLeaseDeviceV1Interface *leaseDevice)
+    : DrmAbstractOutput(conn->gpu())
+    , m_pipeline(conn->pipeline())
+    , m_connector(conn)
 {
     m_pipeline->setOutput(this);
-    const auto conn = m_pipeline->connector();
     m_renderLoop->setRefreshRate(m_pipeline->mode()->refreshRate());
 
     Capabilities capabilities = Capability::Dpms;
@@ -386,7 +385,7 @@ bool DrmOutput::present()
 
 DrmConnector *DrmOutput::connector() const
 {
-    return m_connector;
+    return m_connector.get();
 }
 
 DrmPipeline *DrmOutput::pipeline() const

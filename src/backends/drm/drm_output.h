@@ -42,7 +42,7 @@ class KWIN_EXPORT DrmOutput : public DrmAbstractOutput
 {
     Q_OBJECT
 public:
-    DrmOutput(DrmPipeline *pipeline, KWaylandServer::DrmLeaseDeviceV1Interface *leaseDevice);
+    DrmOutput(const std::shared_ptr<DrmConnector> &connector, KWaylandServer::DrmLeaseDeviceV1Interface *leaseDevice);
     ~DrmOutput() override;
 
     DrmConnector *connector() const;
@@ -78,7 +78,7 @@ private:
     void renderCursorQPainter(const RenderTarget &renderTarget);
 
     DrmPipeline *m_pipeline;
-    DrmConnector *m_connector;
+    const std::shared_ptr<DrmConnector> m_connector;
 
     bool m_setCursorSuccessful = false;
     bool m_moveCursorSuccessful = false;
