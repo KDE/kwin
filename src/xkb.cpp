@@ -88,7 +88,7 @@ Xkb::Xkb(QObject *parent)
     , m_consumedModifiers(Qt::NoModifier)
     , m_keysym(XKB_KEY_NoSymbol)
     , m_leds()
-    , m_followLocale1(kwinApp()->followLocale1())
+    , m_followLocale1(qobject_cast<Application *>(QCoreApplication::instance()) && kwinApp()->followLocale1())
 {
     qRegisterMetaType<KWin::LEDs>();
     if (!m_context) {
