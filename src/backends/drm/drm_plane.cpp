@@ -115,17 +115,17 @@ void DrmPlane::flipBuffer()
     m_next = nullptr;
 }
 
-void DrmPlane::set(const QPoint &srcPos, const QSize &srcSize, const QPoint &dstPos, const QSize &dstSize)
+void DrmPlane::set(const QPoint &srcPos, const QSize &srcSize, const QRect &dst)
 {
     // Src* are in 16.16 fixed point format
     setPending(PropertyIndex::SrcX, srcPos.x() << 16);
     setPending(PropertyIndex::SrcY, srcPos.y() << 16);
     setPending(PropertyIndex::SrcW, srcSize.width() << 16);
     setPending(PropertyIndex::SrcH, srcSize.height() << 16);
-    setPending(PropertyIndex::CrtcX, dstPos.x());
-    setPending(PropertyIndex::CrtcY, dstPos.y());
-    setPending(PropertyIndex::CrtcW, dstSize.width());
-    setPending(PropertyIndex::CrtcH, dstSize.height());
+    setPending(PropertyIndex::CrtcX, dst.x());
+    setPending(PropertyIndex::CrtcY, dst.y());
+    setPending(PropertyIndex::CrtcW, dst.width());
+    setPending(PropertyIndex::CrtcH, dst.height());
 }
 
 void DrmPlane::setBuffer(DrmFramebuffer *buffer)

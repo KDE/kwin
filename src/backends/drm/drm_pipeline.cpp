@@ -54,6 +54,10 @@ bool DrmPipeline::testScanout()
     if (gpu()->atomicModeSetting()) {
         return commitPipelines({this}, CommitMode::Test) == Error::None;
     } else {
+        if (m_pending.layer->currentBuffer()->buffer()->size() != m_pending.mode->size()) {
+            // scaling isn't supported with the legacy API
+            return false;
+        }
         // no other way to test than to do it.
         // As we only have a maximum of one test per scanout cycle, this is fine
         return presentLegacy() == Error::None;
@@ -203,6 +207,21 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
     }
 }
 
+static QRect centerBuffer(const QSize &bufferSize, const QSize &modeSize)
+{
+    const double widthScale = bufferSize.width() / double(modeSize.width());
+    const double heightScale = bufferSize.height() / double(modeSize.height());
+    if (widthScale > heightScale) {
+        const QSize size = bufferSize / widthScale;
+        const uint32_t yOffset = (modeSize.height() - size.height()) / 2;
+        return QRect(QPoint(0, yOffset), size);
+    } else {
+        const QSize size = bufferSize / heightScale;
+        const uint32_t xOffset = (modeSize.width() - size.width()) / 2;
+        return QRect(QPoint(xOffset, 0), size);
+    }
+}
+
 void DrmPipeline::prepareAtomicPresentation()
 {
     if (const auto contentType = m_connector->getProp(DrmConnector::PropertyIndex::ContentType)) {
@@ -211,14 +230,13 @@ void DrmPipeline::prepareAtomicPresentation()
 
     m_pending.crtc->setPending(DrmCrtc::PropertyIndex::VrrEnabled, m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync);
     m_pending.crtc->setPending(DrmCrtc::PropertyIndex::Gamma_LUT, m_pending.gamma ? m_pending.gamma->blobId() : 0);
-    const auto modeSize = m_pending.mode->size();
     const auto fb = m_pending.layer->currentBuffer().get();
-    m_pending.crtc->primaryPlane()->set(QPoint(0, 0), fb->buffer()->size(), QPoint(0, 0), modeSize);
+    m_pending.crtc->primaryPlane()->set(QPoint(0, 0), fb->buffer()->size(), centerBuffer(fb->buffer()->size(), m_pending.mode->size()));
     m_pending.crtc->primaryPlane()->setBuffer(fb);
 
     if (m_pending.crtc->cursorPlane()) {
         const auto layer = cursorLayer();
-        m_pending.crtc->cursorPlane()->set(QPoint(0, 0), gpu()->cursorSize(), layer->position(), gpu()->cursorSize());
+        m_pending.crtc->cursorPlane()->set(QPoint(0, 0), gpu()->cursorSize(), QRect(layer->position(), gpu()->cursorSize()));
         m_pending.crtc->cursorPlane()->setBuffer(layer->isVisible() ? layer->currentBuffer().get() : nullptr);
         m_pending.crtc->cursorPlane()->setPending(DrmPlane::PropertyIndex::CrtcId, layer->isVisible() ? m_pending.crtc->id() : 0);
     }

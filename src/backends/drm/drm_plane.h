@@ -80,7 +80,7 @@ public:
     void flipBuffer();
 
     void setBuffer(DrmFramebuffer *buffer);
-    void set(const QPoint &srcPos, const QSize &srcSize, const QPoint &dstPos, const QSize &dstSize);
+    void set(const QPoint &srcPos, const QSize &srcSize, const QRect &dst);
 
     Transformations transformation();
     Transformations supportedTransformations() const;

@@ -123,7 +123,7 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
         return false;
     }
     const auto buffer = qobject_cast<KWaylandServer::LinuxDmaBufV1ClientBuffer *>(surface->buffer());
-    if (!buffer || buffer->size() != m_pipeline->bufferSize()) {
+    if (!buffer) {
         return false;
     }
 
