@@ -70,9 +70,8 @@ static void xkbLogHandler(xkb_context *context, xkb_log_level priority, const ch
     }
 }
 
-Xkb::Xkb(QObject *parent, bool followLocale1)
-    : QObject(parent)
-    , m_context(xkb_context_new(XKB_CONTEXT_NO_FLAGS))
+Xkb::Xkb(bool followLocale1)
+    : m_context(xkb_context_new(XKB_CONTEXT_NO_FLAGS))
     , m_keymap(nullptr)
     , m_state(nullptr)
     , m_shiftModifier(0)

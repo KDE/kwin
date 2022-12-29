@@ -64,7 +64,7 @@ Q_SIGNALS:
 private:
     InputRedirection *m_input;
     bool m_inited = false;
-    std::unique_ptr<Xkb> m_xkb;
+    const std::unique_ptr<Xkb> m_xkb;
     QMetaObject::Connection m_activeWindowSurfaceChangedConnection;
     ModifiersChangedSpy *m_modifiersChangedSpy = nullptr;
     KeyboardLayout *m_keyboardLayout = nullptr;
