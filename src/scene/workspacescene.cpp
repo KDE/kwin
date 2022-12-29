@@ -165,17 +165,12 @@ SurfaceItem *WorkspaceScene::scanoutCandidate() const
                     break;
                 }
                 SurfaceItem *topMost = findTopMostSurface(windowItem->surfaceItem());
-                auto pixmap = topMost->pixmap();
-                if (!pixmap) {
-                    break;
-                }
-                pixmap->update();
                 // the subsurface has to be able to cover the whole window
                 if (topMost->position() != QPoint(0, 0)) {
                     break;
                 }
                 // and it has to be completely opaque
-                if (pixmap->hasAlphaChannel() && !topMost->opaque().contains(QRect(0, 0, window->width(), window->height()))) {
+                if (!topMost->opaque().contains(QRect(0, 0, window->width(), window->height()))) {
                     break;
                 }
                 candidate = topMost;

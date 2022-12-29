@@ -32,6 +32,7 @@ public:
 
     void discardPixmap();
     void updatePixmap();
+    void destroyPixmap();
 
     SurfacePixmap *pixmap() const;
     SurfacePixmap *previousPixmap() const;

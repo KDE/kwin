@@ -105,6 +105,11 @@ void SurfaceItem::discardPixmap()
     addDamage(rect().toAlignedRect());
 }
 
+void SurfaceItem::destroyPixmap()
+{
+    m_pixmap.reset();
+}
+
 void SurfaceItem::preprocess()
 {
     updatePixmap();

@@ -149,6 +149,8 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
         m_dmabufFeedback.scanoutSuccessful(surface);
         m_currentDamage = surfaceItem->damage();
         surfaceItem->resetDamage();
+        // ensure the pixmap is updated when direct scanout ends
+        surfaceItem->destroyPixmap();
         return true;
     } else {
         m_dmabufFeedback.scanoutFailed(surface, formats);
