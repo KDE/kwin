@@ -2143,6 +2143,8 @@ public:
 
     bool tabletToolEvent(TabletEvent *event) override
     {
+        using namespace KWaylandServer;
+
         if (!workspace()) {
             return false;
         }
@@ -2205,7 +2207,17 @@ public:
             break;
         }
         const quint32 MAX_VAL = 65535;
-        tool->sendPressure(MAX_VAL * event->pressure());
+
+        if (tool->hasCapability(TabletToolV2Interface::Pressure)) {
+            tool->sendPressure(MAX_VAL * event->pressure());
+        }
+        if (tool->hasCapability(TabletToolV2Interface::Tilt)) {
+            tool->sendTilt(event->xTilt(), event->yTilt());
+        }
+        if (tool->hasCapability(TabletToolV2Interface::Rotation)) {
+            tool->sendRotation(event->rotation());
+        }
+
         tool->sendFrame(event->timestamp());
         return true;
     }

@@ -83,6 +83,8 @@ public:
     };
     Q_ENUM(Capability)
 
+    bool hasCapability(Capability capability) const;
+
     /**
      * Sets the surface the events will be sent to.
      *

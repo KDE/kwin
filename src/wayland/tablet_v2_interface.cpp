@@ -222,6 +222,11 @@ TabletToolV2Interface::~TabletToolV2Interface()
     }
 }
 
+bool TabletToolV2Interface::hasCapability(Capability capability) const
+{
+    return d->m_capabilities.contains(capability);
+}
+
 void TabletToolV2Interface::setCurrentSurface(SurfaceInterface *surface)
 {
     if (d->m_surface == surface)
