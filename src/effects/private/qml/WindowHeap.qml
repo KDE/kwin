@@ -309,37 +309,47 @@ FocusScope {
         return false;
     }
 
-    onActiveFocusChanged: resetSelected();
 
     Keys.onPressed: {
         let handled = false;
         switch (event.key) {
         case Qt.Key_Up:
             handled = selectNextItem(WindowHeap.Direction.Up);
+            heap.focus = true;
             break;
         case Qt.Key_Down:
             handled = selectNextItem(WindowHeap.Direction.Down);
+            heap.focus = true;
             break;
         case Qt.Key_Left:
             handled = selectNextItem(WindowHeap.Direction.Left);
+            heap.focus = true;
             break;
         case Qt.Key_Right:
             handled = selectNextItem(WindowHeap.Direction.Right);
+            heap.focus = true;
             break;
         case Qt.Key_Home:
             handled = selectLastItem(WindowHeap.Direction.Left);
+            heap.focus = true;
             break;
         case Qt.Key_End:
             handled = selectLastItem(WindowHeap.Direction.Right);
+            heap.focus = true;
             break;
         case Qt.Key_PageUp:
             handled = selectLastItem(WindowHeap.Direction.Up);
+            heap.focus = true;
             break;
         case Qt.Key_PageDown:
             handled = selectLastItem(WindowHeap.Direction.Down);
+            heap.focus = true;
             break;
-        case Qt.Key_Return:
         case Qt.Key_Space:
+            if (!heap.focus) {
+                break;
+            }
+        case Qt.Key_Return:
             handled = false;
             let selectedItem = null;
             if (selectedIndex !== -1) {

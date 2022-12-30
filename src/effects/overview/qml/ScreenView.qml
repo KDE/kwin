@@ -40,7 +40,6 @@ FocusScope {
 
     Keys.onEscapePressed: effect.deactivate();
 
-    Keys.priority: Keys.AfterItem
     Keys.forwardTo: searchField
 
     Keys.onEnterPressed: {
@@ -209,6 +208,7 @@ FocusScope {
                         effect.searchText = text;
                         heap.resetSelected();
                         heap.selectNextItem(WindowHeap.Direction.Down);
+                        searchField.focus = true;
                     }
                 }
             }
