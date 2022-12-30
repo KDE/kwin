@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-01 00:48+0000\n"
+"POT-Creation-Date: 2022-12-30 00:54+0000\n"
 "PO-Revision-Date: 2022-08-22 06:35+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -47,9 +47,11 @@ msgid "Focus"
 msgstr "ფოკუსი"
 
 #: effectsmodel.cpp:55
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "Category of Desktop Effects, used as section header"
+#| msgid "Show Desktop Animation"
 msgctxt "Category of Desktop Effects, used as section header"
-msgid "Show Desktop Animation"
+msgid "Peek at Desktop Animation"
 msgstr "სამუშაო მაგიდის ანიმაციების ჩვენება"
 
 #: effectsmodel.cpp:56

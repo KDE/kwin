@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-01 00:48+0000\n"
+"POT-Creation-Date: 2022-12-30 00:54+0000\n"
 "PO-Revision-Date: 2020-01-29 00:03+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -47,9 +47,11 @@ msgid "Focus"
 msgstr "초점"
 
 #: effectsmodel.cpp:55
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "Category of Desktop Effects, used as section header"
+#| msgid "Show Desktop Animation"
 msgctxt "Category of Desktop Effects, used as section header"
-msgid "Show Desktop Animation"
+msgid "Peek at Desktop Animation"
 msgstr "데스크톱 애니메이션 표시"
 
 #: effectsmodel.cpp:56

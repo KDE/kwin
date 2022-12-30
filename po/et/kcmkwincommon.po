@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-01 00:48+0000\n"
+"POT-Creation-Date: 2022-12-30 00:54+0000\n"
 "PO-Revision-Date: 2019-11-08 21:21+0200\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -46,9 +46,11 @@ msgid "Focus"
 msgstr "Fookus"
 
 #: effectsmodel.cpp:55
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "Category of Desktop Effects, used as section header"
+#| msgid "Show Desktop Animation"
 msgctxt "Category of Desktop Effects, used as section header"
-msgid "Show Desktop Animation"
+msgid "Peek at Desktop Animation"
 msgstr "Töölaua animeerimise näitamine"
 
 #: effectsmodel.cpp:56

@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-17 00:51+0000\n"
-"PO-Revision-Date: 2022-05-05 12:51+0100\n"
+"PO-Revision-Date: 2022-12-28 21:13+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -204,16 +204,15 @@ msgstr "Natural"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: desktopgrid/desktopgrid_config.ui:147
-#, kde-format
+#, fuzzy, kde-format
 msgid "None"
 msgstr "Nimic"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: desktopgrid/desktopgrid_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Windows layout:"
-msgstr "Ferestre"
+msgstr "Aranjare ferestre:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: desktopgrid/desktopgrid_config.ui:171
@@ -572,28 +571,24 @@ msgstr "Estompează fundalul:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: overview/kcm/overvieweffectkcm.ui:73
-#, fuzzy, kde-format
-#| msgid "Ignore &minimized windows"
+#, kde-format
 msgid "Ignore minimized windows:"
-msgstr "Ignoră ferestrele &minimizate"
+msgstr "Ignoră ferestrele minimizate:"
 
 #: overview/qml/DesktopBar.qml:186
-#, fuzzy, kde-format
-#| msgid "Delete virtual desktop"
+#, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Șterge biroul virtual"
 
 #: overview/qml/DesktopBar.qml:282
-#, fuzzy, kde-format
-#| msgid "Add Desktop"
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "Adaugă birou"
+msgstr "Adaugă birou virtual"
 
 #: overview/qml/ScreenView.qml:226
-#, fuzzy, kde-format
-#| msgid "Moving windows:"
+#, kde-format
 msgid "No matching windows"
-msgstr "Ferestre mutate:"
+msgstr "Nicio fereastră potrivită"
 
 #: private/qml/WindowHeapDelegate.qml:151
 #, kde-format
@@ -601,8 +596,7 @@ msgid "Drag Down To Close"
 msgstr "Trage în jos pentru a închide"
 
 #: private/qml/WindowHeapDelegate.qml:461
-#, fuzzy, kde-format
-#| msgid "Close window"
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
 msgstr "Închide fereastra"
@@ -955,13 +949,12 @@ msgstr "Ignoră ferestrele &minimizate"
 #: windowview/qml/main.qml:106
 #, kde-format
 msgid "No Matches"
-msgstr ""
+msgstr "Nicio potrivire"
 
 #: windowview/qml/main.qml:106
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "No Windows"
-msgstr "Ferestre"
+msgstr "Nicio fereastră"
 
 #: windowview/qml/main.qml:120
 #, fuzzy, kde-format

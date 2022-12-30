@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-07-15 00:48+0000\n"
-"PO-Revision-Date: 2022-04-01 10:26+0100\n"
+"PO-Revision-Date: 2022-12-28 21:12+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -38,7 +38,7 @@ msgstr "Nicio acțiune"
 #: main.cpp:131 touch.cpp:125
 #, kde-format
 msgid "Peek at Desktop"
-msgstr ""
+msgstr "Trage cu ochiul la birou"
 
 #: main.cpp:132 touch.cpp:126
 #, kde-format
@@ -128,13 +128,13 @@ msgstr "Ferestrele trase la marginea din stânga sau dreapta"
 #: main.ui:101
 #, kde-format
 msgid "Behavior:"
-msgstr ""
+msgstr "Comportament:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, remainActiveOnFullscreen)
 #: main.ui:108
 #, kde-format
 msgid "Remain active when windows are fullscreen"
-msgstr ""
+msgstr "Rămâne activ când ferestrele sunt pe tot ecranul"
 
 #. i18n: ectx: property (text), widget (QLabel, electricBorderCornerRatioLabel)
 #: main.ui:115

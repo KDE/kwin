@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-24 00:51+0000\n"
-"PO-Revision-Date: 2022-04-04 09:50+0100\n"
+"PO-Revision-Date: 2022-12-28 21:14+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -68,7 +68,7 @@ msgstr ""
 "suportul XRender.</p>"
 
 #: composite.cpp:1064
-#, kde-format
+#, fuzzy, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Extensiile X necesare (XComposite și XDamage) nu sunt disponibile."
 
@@ -870,10 +870,9 @@ msgid "task"
 msgstr "sarcină"
 
 #: debug_console.cpp:1222
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "X11 Windows"
-msgstr "Ferestre"
+msgstr "Ferestre X11"
 
 #: debug_console.cpp:1224
 #, kde-format
