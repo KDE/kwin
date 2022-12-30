@@ -767,13 +767,11 @@ void X11Window::startupIdChanged()
     // If the ASN contains desktop, move it to the desktop, otherwise move it to the current
     // desktop (since the new ASN should make the window act like if it's a new application
     // launched). However don't affect the window's desktop if it's set to be on all desktops.
-    int desktop = VirtualDesktopManager::self()->current();
-    if (asn_data.desktop() != 0) {
-        desktop = asn_data.desktop();
+
+    if (asn_data.desktop() != 0 && !isOnAllDesktops()) {
+        workspace()->sendWindowToDesktop(this, asn_data.desktop(), true);
     }
-    if (!isOnAllDesktops()) {
-        workspace()->sendWindowToDesktop(this, desktop, true);
-    }
+
     if (asn_data.xinerama() != -1) {
         Output *output = workspace()->xineramaIndexToOutput(asn_data.xinerama());
         if (output) {
@@ -783,9 +781,6 @@ void X11Window::startupIdChanged()
     const xcb_timestamp_t timestamp = asn_id.timestamp();
     if (timestamp != 0) {
         bool activate = allowWindowActivation(timestamp);
-        if (asn_data.desktop() != 0 && !isOnCurrentDesktop()) {
-            activate = false; // it was started on different desktop than current one
-        }
         if (activate) {
             workspace()->activateWindow(this);
         } else {
