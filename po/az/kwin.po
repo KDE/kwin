@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-24 00:51+0000\n"
+"POT-Creation-Date: 2022-12-30 08:46+0000\n"
 "PO-Revision-Date: 2022-10-17 23:50+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -1172,7 +1172,7 @@ msgstr "Planşet rejimi"
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3028
+#: input.cpp:3040
 #, kde-format
 msgid "Touchpad"
 msgstr "Toxunma Paneli"
