@@ -13,6 +13,7 @@
 #include <QDebug>
 #include <QHash>
 #include <QPointer>
+#include <cmath>
 
 namespace KWaylandServer
 {
