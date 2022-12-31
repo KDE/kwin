@@ -725,9 +725,6 @@ void TabBox::hide(bool abort)
         qCDebug(KWIN_TABBOX) << "Tab box was not properly closed by an effect";
     }
     m_tabBox->hide(abort);
-    if (kwinApp()->x11Connection()) {
-        Xcb::sync();
-    }
 }
 
 void TabBox::reconfigure()
