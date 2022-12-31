@@ -9,8 +9,9 @@
 
 #pragma once
 
-#include "core/outputbackend.h"
+#include <config-kwin.h>
 
+#include "core/outputbackend.h"
 #include <kwin_export.h>
 
 #include <QObject>
@@ -82,7 +83,9 @@ private:
     void updateRefreshRate();
     void updateCursor();
 
+#if HAVE_X11_XINPUT
     std::unique_ptr<XInputIntegration> m_xinputIntegration;
+#endif
     std::unique_ptr<QTimer> m_updateOutputsTimer;
     Display *m_x11Display;
     std::unique_ptr<WindowSelector> m_windowSelector;

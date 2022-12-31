@@ -8,8 +8,6 @@
 */
 #include "x11_standalone_backend.h"
 
-#include <config-kwin.h>
-
 #include "atoms.h"
 #include "core/session.h"
 #include "x11_standalone_cursor.h"
@@ -177,8 +175,8 @@ std::unique_ptr<Edge> X11StandaloneBackend::createScreenEdge(ScreenEdges *edges)
 
 void X11StandaloneBackend::createPlatformCursor(QObject *parent)
 {
-    auto c = new X11Cursor(parent, m_xinputIntegration != nullptr);
 #if HAVE_X11_XINPUT
+    auto c = new X11Cursor(parent, m_xinputIntegration != nullptr);
     if (m_xinputIntegration) {
         m_xinputIntegration->setCursor(c);
         // we know we have xkb already
@@ -186,6 +184,8 @@ void X11StandaloneBackend::createPlatformCursor(QObject *parent)
         xkb->setConfig(kwinApp()->kxkbConfig());
         xkb->reconfigure();
     }
+#else
+    new X11Cursor(parent, false);
 #endif
 }
 
