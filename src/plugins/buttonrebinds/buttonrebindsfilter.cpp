@@ -209,6 +209,8 @@ bool ButtonRebindsFilter::tabletToolEvent(KWin::TabletEvent *event)
         return false;
     }
 
+    RebindScope scope;
+
     auto eventTimestamp = std::chrono::microseconds(event->timestamp() * 1000);
     if (event->tabletId().m_toolType != KWin::InputRedirection::TabletToolType::Eraser) {
         if (m_eraserButtonStatus[tabletToolName]) {
@@ -218,8 +220,6 @@ bool ButtonRebindsFilter::tabletToolEvent(KWin::TabletEvent *event)
         }
         return false;
     }
-
-    RebindScope scope;
 
     m_eraserButtonStatus[tabletToolName] = true;
 
