@@ -1252,17 +1252,6 @@
 <varlistentry>
 <term
 ><guilabel
->Trapsgewijs</guilabel
-></term>
-<listitem>
-<para
->Zal alle nieuwe vensters achter elkaar zetten, waarbij elke nieuwe lager en rechts van het actieve venster wordt geopend, beginnend linksboven op het scherm wanneer geen vensters al geopend zijn. </para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term
-><guilabel
 >Willekeurig</guilabel
 ></term>
 <listitem>

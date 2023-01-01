@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-30 08:46+0000\n"
-"PO-Revision-Date: 2020-01-05 18:49+0100\n"
+"PO-Revision-Date: 2020-01-11 11:32+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -79,7 +79,8 @@ msgstr ""
 "infraestrutura XRender.</p>"
 
 #: composite.cpp:1064
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Required X extensions (XComposite and XDamage) are not available."
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Non están dispoñíbeis as extensións das X requiridas (XComposite e XDamage)."

@@ -1254,17 +1254,6 @@
 <varlistentry>
 <term
 ><guilabel
->En cascada</guilabel
-></term>
-<listitem>
-<para
->Totes les finestres noves en cascada, obrint-se cadascuna cap avall i cap a la dreta de la finestra activa, començant des de la cantonada superior esquerra de la pantalla quan no hi hagi finestres obertes. </para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term
-><guilabel
 >Aleatòria</guilabel
 ></term>
 <listitem>
