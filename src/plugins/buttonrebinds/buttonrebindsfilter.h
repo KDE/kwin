@@ -17,6 +17,8 @@
 #include "input_event.h"
 
 #include <QKeySequence>
+// no stylus button have the id 0 as far as I know, use it as special id for eraser button
+#define TABLETTOOL_ERASER_BUTTON 0x0000
 
 class InputDevice : public KWin::InputDevice
 {
@@ -74,6 +76,7 @@ public:
     bool pointerEvent(KWin::MouseEvent *event, quint32 nativeButton) override;
     bool tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time) override;
     bool tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &tabletToolId, std::chrono::microseconds time) override;
+    bool tabletToolEvent(KWin::TabletEvent *event) override;
 
 private:
     void loadConfig(const KConfigGroup &group);
@@ -85,6 +88,7 @@ private:
 
     InputDevice m_inputDevice;
     std::array<QHash<Trigger, std::variant<QKeySequence, MouseButton, TabletToolButton>>, LastType> m_actions;
+    QHash<QString /*device name*/, bool /*erase button pressed*/> m_eraserButtonStatus;
     KConfigWatcher::Ptr m_configWatcher;
     std::optional<KWin::TabletToolId> m_tabletTool;
 };

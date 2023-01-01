@@ -196,6 +196,71 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
     }
 }
 
+bool ButtonRebindsFilter::tabletToolEvent(KWin::TabletEvent *event)
+{
+    if (RebindScope::isRebinding()) {
+        return false;
+    }
+
+    QString tabletToolName = event->tabletId().m_name;
+    Trigger trigger{tabletToolName, TABLETTOOL_ERASER_BUTTON};
+    if (!m_actions[TabletToolButtonType].contains(trigger)) {
+        // we don't have a rebind for eraser button
+        return false;
+    }
+
+    auto eventTimestamp = std::chrono::microseconds(event->timestamp() * 1000);
+    if (event->tabletId().m_toolType != KWin::InputRedirection::TabletToolType::Eraser) {
+        if (m_eraserButtonStatus[tabletToolName]) {
+            // on the first event that the tool isn't eraser, we emit a remapped button released event
+            m_eraserButtonStatus[tabletToolName] = false;
+            send(TabletToolButtonType, trigger, false, eventTimestamp);
+        }
+        return false;
+    }
+
+    RebindScope scope;
+
+    m_eraserButtonStatus[tabletToolName] = true;
+
+    auto fakeTablet = event->tabletId();
+
+    KWin::InputRedirection::TabletEventType type = KWin::InputRedirection::TabletEventType::Axis;
+    switch (event->type()) {
+    case QEvent::TabletEnterProximity:
+        type = KWin::InputRedirection::TabletEventType::Proximity;
+        break;
+    case QEvent::TabletLeaveProximity:
+        // if the eraser is leaving, we send rebind button release event before it's too late
+        m_eraserButtonStatus[tabletToolName] = false;
+        send(TabletToolButtonType, trigger, false, eventTimestamp);
+        type = KWin::InputRedirection::TabletEventType::Proximity;
+        break;
+    case QEvent::TabletPress:
+        [[fallthrough]];
+    case QEvent::TabletRelease:
+        type = KWin::InputRedirection::TabletEventType::Tip;
+        break;
+    case QEvent::TabletMove:
+        type = KWin::InputRedirection::TabletEventType::Axis;
+        break;
+    default:
+        qCWarning(KWIN_BUTTONREBINDS) << "Invalid event type: " << event->type() << " send to tabletToolEvent, defaults to Axis";
+    }
+
+    fakeTablet.m_toolType = KWin::InputRedirection::TabletToolType::Pen;
+
+    Q_EMIT m_inputDevice.tabletToolEvent(type, event->pos(), event->pressure(),
+                                         event->xTilt(), event->yTilt(), event->rotation(),
+                                         event->type() == QEvent::TabletPress, event->type() == QEvent::TabletEnterProximity,
+                                         fakeTablet, eventTimestamp);
+    if (event->type() != QEvent::TabletLeaveProximity) {
+        // don't trigger button if we're leaving, otherwise button is always pressed
+        send(TabletToolButtonType, trigger, true /* map eraser tool event to pen event plus button pressed */, eventTimestamp);
+    }
+    return true;
+}
+
 bool ButtonRebindsFilter::pointerEvent(KWin::MouseEvent *event, quint32 nativeButton)
 {
     if (event->type() != QEvent::MouseButtonPress && event->type() != QEvent::MouseButtonRelease) {
