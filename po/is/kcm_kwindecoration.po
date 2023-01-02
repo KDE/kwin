@@ -7,19 +7,20 @@
 # Svanur Palsson <svanur@tern.is>, 2004.
 # Arnar Leosson <leosson@frisurf.no>, 2005.
 # Sveinn í Felli <sveinki@nett.is>, 2007, 2009, 2010.
+# Gummi <gudmundure@gmail.com>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-10-26 00:47+0000\n"
-"PO-Revision-Date: 2010-05-30 16:24+0000\n"
-"Last-Translator: Sveinn í Felli <sveinki@nett.is>\n"
-"Language-Team: Icelandic <kde-isl@molar.is>\n"
+"PO-Revision-Date: 2022-12-14 02:33+0000\n"
+"Last-Translator: gummi <gudmundure@gmail.com>\n"
+"Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
 "Language: is\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.4\n"
+"X-Generator: Lokalize 22.08.3\n"
 "Plural-Forms: Plural-Forms: nplurals=2; plural=n != 1;\n"
 "\n"
 "\n"
@@ -28,38 +29,39 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Pjetur G. Hjaltason, Richard Allen, Svanur Pálsson"
+msgstr ""
+"Pjetur G. Hjaltason, Richard Allen, Svanur Pálsson,Guðmundur Erlingsson"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "pjetur@pjetur.net, ra@ra.is, svanurpalsson@hotmail.com"
+msgstr ""
+"pjetur@pjetur.net, ra@ra.is, svanurpalsson@hotmail.com,gudmundure@gmail.com"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
 msgid "More actions for this window"
-msgstr ""
+msgstr "Fleiri aðgerðir fyrir þennan glugga"
 
 #: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
 msgid "Application menu"
-msgstr ""
+msgstr "Forritavalmynd"
 
 #: declarative-plugin/buttonsmodel.cpp:57
-#, fuzzy, kde-format
-#| msgid "On All Desktops"
+#, kde-format
 msgid "On all desktops"
 msgstr "Á öllum skjáborðum"
 
 #: declarative-plugin/buttonsmodel.cpp:59
 #, kde-format
 msgid "Minimize"
-msgstr "Minnka"
+msgstr "Fela"
 
 #: declarative-plugin/buttonsmodel.cpp:61
 #, kde-format
 msgid "Maximize"
-msgstr "Hámarka"
+msgstr "Fullstækka"
 
 #: declarative-plugin/buttonsmodel.cpp:63
 #, kde-format
@@ -69,44 +71,43 @@ msgstr "Loka"
 #: declarative-plugin/buttonsmodel.cpp:65
 #, kde-format
 msgid "Context help"
-msgstr ""
+msgstr "Samhengishjálp"
 
 #: declarative-plugin/buttonsmodel.cpp:67
 #, kde-format
 msgid "Shade"
-msgstr "Skyggja"
+msgstr "Rúlla upp"
 
 #: declarative-plugin/buttonsmodel.cpp:69
 #, kde-format
 msgid "Keep below other windows"
-msgstr ""
+msgstr "Hafa undir öðrum gluggum"
 
 #: declarative-plugin/buttonsmodel.cpp:71
 #, kde-format
 msgid "Keep above other windows"
-msgstr ""
+msgstr "Hafa yfir öðrum gluggum"
 
 #: kcm.cpp:49
-#, fuzzy, kde-format
-#| msgid "Get New Decorations..."
+#, kde-format
 msgid "Window Decorations"
-msgstr "Sækja nýjar gluggaskreytingar..."
+msgstr "Gluggaskreytingar"
 
 #: kcm.cpp:53
 #, kde-format
 msgid "Valerio Pilo"
-msgstr ""
+msgstr "Valerio Pilo"
 
 #: kcm.cpp:54
 #, kde-format
 msgid "Author"
-msgstr ""
+msgstr "Höfundur"
 
 #: kcm.cpp:183
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
-msgstr ""
+msgstr "Sjálfgildi fyrir þemað (%1)"
 
 #: kwin-applywindowdecoration.cpp:32
 #, kde-format
@@ -115,6 +116,9 @@ msgid ""
 "active session, without accidentally setting it to one that is either not "
 "available, or which is already set."
 msgstr ""
+"Með þessu verkfæri geturðu valið gluggaskreytingaþema fyrir núverandi setu, "
+"án þess að velja fyrir slysni þema sem er annað hvort ekki tiltækt eða nú "
+"þegar búið að velja."
 
 #: kwin-applywindowdecoration.cpp:33
 #, kde-format
@@ -123,12 +127,15 @@ msgid ""
 "full path will attempt to find a theme in that directory, and then apply "
 "that if one can be deduced."
 msgstr ""
+"Heiti gluggaskreytingaþemans sem þú vilt velja fyrir KWin. Ef full slóð er "
+"slegin inn verður reynt að finna þema í þeirri möppu og velja það."
 
 #: kwin-applywindowdecoration.cpp:34
 #, kde-format
 msgid ""
 "Show all the themes available on the system (and which is the current theme)"
 msgstr ""
+"Sýna öll þemu sem tiltæk eru í tölvunni (og hvert þeirra er núverandi þema)"
 
 #: kwin-applywindowdecoration.cpp:65
 #, kde-format
@@ -136,6 +143,8 @@ msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
 "as your current theme."
 msgstr ""
+"Fann út að %1 væri KWin Aurorae þemað \"%2\" og mun reyna að velja það sem "
+"núverandi þema."
 
 #: kwin-applywindowdecoration.cpp:71
 #, kde-format
@@ -143,17 +152,19 @@ msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
 "theme, and we will have to abort, due to having no theme to set"
 msgstr ""
+"Þú reyndir að setja inn skráarslóð en það reyndist ekki vera þema, við "
+"þurfum því að hætta vegna þess að ekkert þema er til að velja"
 
 #: kwin-applywindowdecoration.cpp:77
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
-msgstr ""
+msgstr "Umbeðna þemað \"%1\" er nú þegar valið sem gluggaskreytingaþema."
 
 #: kwin-applywindowdecoration.cpp:99
 #, kde-format
 msgid "Successfully applied the cursor theme %1 to your current Plasma session"
-msgstr ""
+msgstr "Tókst að velja bendilsþemað %1 fyrir núverandi Plasma-setu þína"
 
 #: kwin-applywindowdecoration.cpp:103
 #, kde-format
@@ -161,6 +172,8 @@ msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
 "unrecoverable error. You may find that simply trying again will work."
 msgstr ""
+"Mistókst að vista þemastillingarnar þínar. Ástæðan er óþekkt, en þessi villa "
+"er óviðráðanleg. Hugsanlega dugar að reyna aftur."
 
 #: kwin-applywindowdecoration.cpp:107
 #, kde-format
@@ -168,55 +181,54 @@ msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
 "options: %2"
 msgstr ""
+"Ekki tókst að finna þemað \"%1\". Þetta þema þarf að vera einn af "
+"eftirfarandi valkostum: %2"
 
 #: kwin-applywindowdecoration.cpp:112
 #, kde-format
 msgid "You have the following KWin window decoration themes on your system:"
-msgstr ""
+msgstr "Þú ert með eftirfarandi KWin gluggaskreytingaþemu í tölvunni:"
 
 #: package/contents/ui/Buttons.qml:85
 #, kde-format
 msgid "Titlebar"
-msgstr ""
+msgstr "Titilstika"
 
 #: package/contents/ui/Buttons.qml:245
 #, kde-format
 msgid "Drop button here to remove it"
-msgstr ""
+msgstr "Slepptu hnappi hér til að fjarlægja hann"
 
 #: package/contents/ui/Buttons.qml:261
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
-msgstr ""
+msgstr "Dragðu hnappa á milli þessa staðar og titilstikunnar"
 
 #: package/contents/ui/main.qml:18
 #, kde-format
 msgid "This module lets you configure the window decorations."
-msgstr ""
+msgstr "Þú getur grunnstillt gluggaskreytingar í þessari einingu."
 
 #: package/contents/ui/main.qml:52
 #, kde-format
 msgctxt "tab label"
 msgid "Theme"
-msgstr ""
+msgstr "Þema"
 
 #: package/contents/ui/main.qml:56
-#, fuzzy, kde-format
-#| msgid "Buttons"
+#, kde-format
 msgctxt "tab label"
 msgid "Titlebar Buttons"
-msgstr "Hnappar"
+msgstr "Hnappar á titilstiku"
 
 #: package/contents/ui/main.qml:92
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
-msgstr "Rammabreidd:"
+msgstr "Útlínustærð glugga:"
 
 #: package/contents/ui/main.qml:110
-#, fuzzy, kde-format
-#| msgid "Get New Decorations..."
+#, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations..."
 msgstr "Sækja nýjar gluggaskreytingar..."
@@ -225,84 +237,67 @@ msgstr "Sækja nýjar gluggaskreytingar..."
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
-msgstr ""
+msgstr "Loka gluggum með því að tvísmella á valmyndarhnappinn"
 
 #: package/contents/ui/main.qml:156
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
-msgstr ""
+msgstr "Smella og halda valmyndarhnappinum til að birta valmyndina."
 
 #: package/contents/ui/main.qml:163
-#, fuzzy, kde-format
-#| msgid "&Show window button tooltips"
+#, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
-msgstr "&Sýna flýtihjálp um gluggatakka"
+msgstr "Sýna vísbendingar á titilstikuhnöppum"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
 msgid "Edit %1 Theme"
-msgstr ""
+msgstr "Breyta þemanu %1"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgid "No Borders"
-msgstr "Rammabreidd:"
+msgstr "Engar útlínur"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgid "No Side Borders"
-msgstr "Rammabreidd:"
+msgstr "Engar hliðarútlínur"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Tiny"
+#, kde-format
 msgid "Tiny"
 msgstr "Örsmátt"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Normal"
+#, kde-format
 msgid "Normal"
-msgstr "Venulegt"
+msgstr "Venjulegt"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Large"
+#, kde-format
 msgid "Large"
 msgstr "Stórt"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Large"
+#, kde-format
 msgid "Very Large"
 msgstr "Mjög stórt"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Huge"
+#, kde-format
 msgid "Huge"
 msgstr "Risastórt"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Huge"
+#, kde-format
 msgid "Very Huge"
 msgstr "Hrikalega stórt"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Oversized"
+#, kde-format
 msgid "Oversized"
 msgstr "Yfirstærð"
 

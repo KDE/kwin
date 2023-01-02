@@ -2261,7 +2261,7 @@ msgstr "&Redimensiona"
 #: useractions.cpp:248
 #, kde-format
 msgid "Keep &Above Others"
-msgstr "Mantín sobre les &altres"
+msgstr "Mantín damunt les &altres"
 
 #: useractions.cpp:254
 #, kde-format

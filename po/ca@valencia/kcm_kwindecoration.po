@@ -81,7 +81,7 @@ msgstr "Mantín davall les altres finestres"
 #: declarative-plugin/buttonsmodel.cpp:71
 #, kde-format
 msgid "Keep above other windows"
-msgstr "Mantín sobre les altres finestres"
+msgstr "Mantín damunt les altres finestres"
 
 #: kcm.cpp:49
 #, kde-format

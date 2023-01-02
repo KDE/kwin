@@ -3,19 +3,20 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Sveinn í Felli <sveinki@nett.is>, 2009, 2010.
+# Guðmundur Erlingsson <gudmundure@gmail.com>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-06-15 00:48+0000\n"
-"PO-Revision-Date: 2010-04-04 14:36+0000\n"
-"Last-Translator: Sveinn í Felli <sveinki@nett.is>\n"
-"Language-Team: Icelandic <kde-isl@molar.is>\n"
+"PO-Revision-Date: 2022-12-15 10:49+0000\n"
+"Last-Translator: gummi <gudmundure@gmail.com>\n"
+"Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
 "Language: is\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.4\n"
+"X-Generator: Lokalize 22.08.3\n"
 "Plural-Forms: Plural-Forms: nplurals=2; plural=n != 1;\n"
 "\n"
 "\n"
@@ -23,20 +24,18 @@ msgstr ""
 #: kwintabboxconfigform.cpp:77
 #, kde-format
 msgid "KWin"
-msgstr ""
+msgstr "KWin"
 
 #: layoutpreview.cpp:133
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "Show Desktop"
-msgstr "Öll skjáborð"
+msgstr "Sýna skjáborðið"
 
 #: layoutpreview.cpp:163
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
-msgstr "Öll skjáborð"
+msgstr "Skjáborð 1"
 
 #: main.cpp:58
 #, kde-format
@@ -46,32 +45,31 @@ msgstr "Aðal"
 #: main.cpp:59
 #, kde-format
 msgid "Alternative"
-msgstr "Varaleið"
+msgstr "Vara"
 
 #: main.cpp:61
 #, kde-format
 msgid "Get New Task Switchers..."
-msgstr ""
+msgstr "Sækja nýja verkefnaskipta..."
 
 #: main.cpp:75
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
 msgstr ""
-"Stillingar stefnu á virknifókus takmarka möguleika við flakk á milli glugga."
+"Stillingar á fókusreglum takmarka möguleika þegar farið er á milli glugga."
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: main.ui:32
 #, kde-format
 msgid "Content"
-msgstr ""
+msgstr "Innihald"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include desktop"
+#, kde-format
 msgid "Include \"Show Desktop\" icon"
-msgstr "Innifela skjáborð"
+msgstr "Hafa með táknið \"Sýna skjáborð\""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55
@@ -83,19 +81,19 @@ msgstr "Nýlega notað"
 #: main.ui:60
 #, kde-format
 msgid "Stacking order"
-msgstr "Stöflun:"
+msgstr "Stöflunarröð:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, oneAppWindow)
 #: main.ui:68
 #, kde-format
 msgid "Only one window per application"
-msgstr ""
+msgstr "Bara einn gluggi fyrir hvert forrit"
 
 #. i18n: ectx: property (text), widget (QCheckBox, orderMinimized)
 #: main.ui:78
 #, kde-format
 msgid "Order minimized windows after unminimized windows"
-msgstr ""
+msgstr "Raða földum gluggum eftir opnum gluggum"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: main.ui:88
@@ -105,130 +103,119 @@ msgstr "Röðun:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: main.ui:114
-#, fuzzy, kde-format
-#| msgid "List windows:"
+#, kde-format
 msgid "Filter windows by"
-msgstr "Telja upp glugga:"
+msgstr "Sía glugga eftir:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterDesktops)
 #: main.ui:123
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "Virtual desktops"
-msgstr "Öll skjáborð"
+msgstr "Sýndarskjáborð"
 
 #. i18n: ectx: property (text), widget (QRadioButton, currentDesktop)
 #: main.ui:167
-#, fuzzy, kde-format
-#| msgid "Current Desktop"
+#, kde-format
 msgid "Current desktop"
 msgstr "Núverandi skjáborð"
 
 #. i18n: ectx: property (text), widget (QRadioButton, otherDesktops)
 #: main.ui:174
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "All other desktops"
-msgstr "Öll skjáborð"
+msgstr "Öll önnur skjáborð"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterActivities)
 #: main.ui:184
 #, kde-format
 msgid "Activities"
-msgstr ""
+msgstr "Athafnir"
 
 #. i18n: ectx: property (text), widget (QRadioButton, currentActivity)
 #: main.ui:228
 #, kde-format
 msgid "Current activity"
-msgstr ""
+msgstr "Núverandi athafnasvæði"
 
 #. i18n: ectx: property (text), widget (QRadioButton, otherActivities)
 #: main.ui:235
 #, kde-format
 msgid "All other activities"
-msgstr ""
+msgstr "Öll önnur athafnasvæði"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterScreens)
 #: main.ui:245
 #, kde-format
 msgid "Screens"
-msgstr ""
+msgstr "Skjáir"
 
 #. i18n: ectx: property (text), widget (QRadioButton, currentScreen)
 #: main.ui:289
-#, fuzzy, kde-format
-#| msgid "Current Desktop"
+#, kde-format
 msgid "Current screen"
-msgstr "Núverandi skjáborð"
+msgstr "Núverandi skjár"
 
 #. i18n: ectx: property (text), widget (QRadioButton, otherScreens)
 #: main.ui:296
 #, kde-format
 msgid "All other screens"
-msgstr ""
+msgstr "Allir aðrir skjáir"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterMinimization)
 #: main.ui:306
-#, fuzzy, kde-format
-#| msgid "Minimum Size"
+#, kde-format
 msgid "Minimization"
-msgstr "Lágmarksstærð"
+msgstr "Gluggi falinn"
 
 #. i18n: ectx: property (text), widget (QRadioButton, visibleWindows)
 #: main.ui:350
-#, fuzzy, kde-format
-#| msgid "List windows:"
+#, kde-format
 msgid "Visible windows"
-msgstr "Telja upp glugga:"
+msgstr "Sýnilegir gluggar"
 
 #. i18n: ectx: property (text), widget (QRadioButton, hiddenWindows)
 #: main.ui:357
-#, fuzzy, kde-format
-#| msgid "List windows:"
+#, kde-format
 msgid "Hidden windows"
-msgstr "Telja upp glugga:"
+msgstr "Faldir gluggar"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
 #: main.ui:396
 #, kde-format
 msgid "Shortcuts"
-msgstr ""
+msgstr "Flýtilyklar"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: main.ui:405 main.ui:448
 #, kde-format
 msgid "Forward"
-msgstr ""
+msgstr "Áfram"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: main.ui:428
-#, fuzzy, kde-format
-#| msgid "List windows:"
+#, kde-format
 msgid "All windows"
-msgstr "Telja upp glugga:"
+msgstr "Allir gluggar"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: main.ui:438 main.ui:458
 #, kde-format
 msgid "Reverse"
-msgstr ""
+msgstr "Snúa við"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: main.ui:480
-#, fuzzy, kde-format
-#| msgid "Current Desktop Grouped by Applications"
+#, kde-format
 msgid "Current application"
-msgstr "Þetta skjáborð hópað eftir forritum"
+msgstr "Núverandi forrit"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: main.ui:499
-#, fuzzy, kde-format
-#| msgid "Navigation"
+#, kde-format
 msgid "Visualization"
-msgstr "Leiðarstýring"
+msgstr "Birting"
 
 #. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
 #: main.ui:529
@@ -244,15 +231,14 @@ msgid ""
 "The currently selected window will be highlighted by fading out all other "
 "windows. This option requires desktop effects to be active."
 msgstr ""
-"Glugginn sem er valinn verður ljómaður með því að deyfa alla aðra glugga. "
+"Glugginn sem er valinn verður auðkenndur með því að deyfa alla aðra glugga. "
 "Þetta krefst þess að skjáborðsbrellur séu virkar."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
 #: main.ui:562
-#, fuzzy, kde-format
-#| msgid "Show outline of selected window"
+#, kde-format
 msgid "Show selected window"
-msgstr "Sýna útlínur valinna glugga"
+msgstr "Sýna valinn glugga"
 
 #, fuzzy
 #~| msgid "Show outline of selected window"

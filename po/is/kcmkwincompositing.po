@@ -4,14 +4,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Sveinn í Felli <sveinki@nett.is>, 2008, 2009, 2010, 2016.
+# Guðmundur Erlingsson <gudmundure@gmail.com>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-06 00:47+0000\n"
-"PO-Revision-Date: 2016-04-08 22:57+0000\n"
-"Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
-"Language-Team: Icelandic <translation-team-is@lists.sourceforge.net>\n"
+"PO-Revision-Date: 2022-12-15 10:54+0000\n"
+"Last-Translator: gummi <gudmundure@gmail.com>\n"
+"Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
 "Language: is\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Plural-Forms: Plural-Forms: nplurals=2; plural=n != 1;\n"
 "\n"
 "\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Lokalize 22.08.3\n"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
 #: compositing.ui:31
@@ -31,6 +32,11 @@ msgid ""
 "you can reset this protection but be aware that this might result in an "
 "immediate crash!"
 msgstr ""
+"OpenGL-myndsmíði (sjálfgefið) hefur áður valdið því að KWin hrynur.\n"
+"Líklega stafar það af galla í rekli.\n"
+"Ef þú telur þig hafa uppfært í stöðugan rekil síðan það gerðist\n"
+"geturðu endurstillt þessa vörn en gættu að því að það gæti valdið tafarlausu "
+"hruni!"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
 #: compositing.ui:44
@@ -39,21 +45,20 @@ msgid ""
 "Keeping the window thumbnail always interferes with the minimized state of "
 "windows. This can result in windows not suspending their work when minimized."
 msgstr ""
+"Ef smámyndum glugga er haldið truflar það alltaf falda stöðu glugga. Það "
+"getur valdið því að vinnsla hættir ekki í gluggum þegar þeir eru faldir."
 
 #. i18n: ectx: property (text), widget (QLabel, compositingLabel)
 #: compositing.ui:56
-#, fuzzy, kde-format
-#| msgid "Compositing type:"
+#, kde-format
 msgid "Compositing:"
-msgstr "Tegund skjásamsetningar:"
+msgstr "Myndsmíði (compositing):"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
 #: compositing.ui:63
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Enable desktop effects"
+#, kde-format
 msgid "Enable on startup"
-msgstr "Virkja viðmótsbrellur fyrir skjáborð"
+msgstr "Virkja við ræsingu"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
 #: compositing.ui:72
@@ -63,51 +68,50 @@ msgid ""
 " This brings performance improvements for e.g. games.\n"
 " The setting can be overruled by window-specific rules."
 msgstr ""
+"Forrit geta sent boð um að loka á myndsmíði þegar glugginn er opinn.\n"
+" Þetta getur bætt afköst, til dæmis í leikjum.\n"
+" Hægt er að stjórna þessari stillingu með reglum fyrir hvern glugga fyrir "
+"sig."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
 #: compositing.ui:75
 #, kde-format
 msgid "Allow applications to block compositing"
-msgstr ""
+msgstr "Leyfa forritum að loka á myndsmíði"
 
 #. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
 #: compositing.ui:82
-#, fuzzy, kde-format
-#| msgid "Animation speed:"
+#, kde-format
 msgid "Animation speed:"
-msgstr "Hraði hreyfimyndar:"
+msgstr "Hraði hreyfiáhrifa:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: compositing.ui:119
-#, fuzzy, kde-format
-#| msgid "Very Slow"
+#, kde-format
 msgid "Very slow"
-msgstr "Mjög hægt"
+msgstr "Mjög hægur"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: compositing.ui:139
 #, kde-format
 msgid "Instant"
-msgstr "Samstundis"
+msgstr "Tafarlaus"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
 #: compositing.ui:151
-#, fuzzy, kde-format
-#| msgid "Keep window thumbnails:"
+#, kde-format
 msgid "Keep window thumbnails:"
 msgstr "Halda smámyndum glugga:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
 #: compositing.ui:159
-#, fuzzy, kde-format
-#| msgid "Never"
+#, kde-format
 msgid "Never"
 msgstr "Aldrei"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
 #: compositing.ui:164
-#, fuzzy, kde-format
-#| msgid "Only for Shown Windows"
+#, kde-format
 msgid "Only for Shown Windows"
 msgstr "Aðeins fyrir glugga sem hafa verið sýndir"
 
@@ -115,44 +119,43 @@ msgstr "Aðeins fyrir glugga sem hafa verið sýndir"
 #: compositing.ui:169
 #, kde-format
 msgid "Always"
-msgstr ""
+msgstr "Alltaf"
 
 #. i18n: ectx: property (text), widget (QLabel, latencyLabel)
 #: compositing.ui:177
 #, kde-format
 msgid "Latency:"
-msgstr ""
+msgstr "Biðtími (latency):"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
 #: compositing.ui:185
 #, kde-format
 msgid "Force lowest latency (may cause dropped frames)"
-msgstr ""
+msgstr "Þvinga lægsta biðtíma (getur valdið því að rammar detti út)"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
 #: compositing.ui:190
 #, kde-format
 msgid "Prefer lower latency"
-msgstr ""
+msgstr "Nota frekar lægri biðtíma"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
 #: compositing.ui:195
 #, kde-format
 msgid "Balance of latency and smoothness"
-msgstr ""
+msgstr "Jafnvægi milli biðtíma og mýktar"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
 #: compositing.ui:200
 #, kde-format
 msgid "Prefer smoother animations"
-msgstr ""
+msgstr "Nota frekar mýkri hreyfiáhrif"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
 #: compositing.ui:205
-#, fuzzy, kde-format
-#| msgid "Various animations"
+#, kde-format
 msgid "Force smoothest animations"
-msgstr "Ýmsar hreyfingar"
+msgstr "Þvinga mýkstu hreyfiáhrif"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_AllowTearing)
 #: compositing.ui:213
@@ -169,7 +172,54 @@ msgstr ""
 #: main.cpp:79
 #, kde-format
 msgid "Re-enable OpenGL detection"
-msgstr ""
+msgstr "Virkja greiningu á OpenGL aftur"
+
+#~ msgid ""
+#~ "Scale method \"Accurate\" is not supported by all hardware and can cause "
+#~ "performance regressions and rendering artifacts."
+#~ msgstr ""
+#~ "Stækkunaraðferðin \"Nákvæm\" er ekki studd í öllum vélbúnaði og getur "
+#~ "valdið lélegum afköstum og göllum í myndgerð."
+
+#~ msgid "Scale method:"
+#~ msgstr "Stækkunaraðferð:"
+
+#~ msgid "Smooth"
+#~ msgstr "Mjúk"
+
+#~ msgid "Accurate"
+#~ msgstr "Nákvæm"
+
+#~ msgid "Tearing prevention (\"vsync\"):"
+#~ msgstr "Rifvörn (\"vsync\"):"
+
+#~ msgid "Automatic"
+#~ msgstr "Sjálfvirkt"
+
+#~ msgid "Only when cheap"
+#~ msgstr "Bara þegar það krefst lítils"
+
+#~ msgid "Full screen repaints"
+#~ msgstr "Allur skjárinn endurmyndast"
+
+#~ msgid "Re-use screen content"
+#~ msgstr "Endurnýta efni á skjánum"
+
+#~ msgid ""
+#~ "\"Only when cheap\" only prevents tearing for full screen changes like a "
+#~ "video."
+#~ msgstr ""
+#~ "\"Bara þegar það krefst lítils\" kemur bara í veg fyrir rifgalla í "
+#~ "breytingum á öllum skjánum, eins og í myndskeiðum."
+
+#~ msgid "\"Full screen repaints\" can cause performance problems."
+#~ msgstr "\"Allur skjárinn endurmyndast\" getur valdið afkastavandamálum."
+
+#~ msgid ""
+#~ "\"Re-use screen content\" causes severe performance problems on MESA "
+#~ "drivers."
+#~ msgstr ""
+#~ "\"Endurnýta efni á skjánum\" veldur alvarlegum afkastavanda á MESA-reklum."
 
 #, fuzzy
 #~| msgid "OpenGL"
