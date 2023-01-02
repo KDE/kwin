@@ -33,7 +33,7 @@
         "Description[ar]": "تعتم النافذة المولدة للحوار النشط حالياً",
         "Description[be]": "Зацямненне бацькоўскага акна актыўнага дыялогавага акна",
         "Description[bg]": "Затъмняване на главния от активните прозорци",
-        "Description[ca@valencia]": "Enfosquix la finestra principal del diàleg actual actiu",
+        "Description[ca@valencia]": "Enfosquix la finestra principal del diàleg actualment actiu",
         "Description[ca]": "Enfosqueix la finestra principal del diàleg actualment actiu",
         "Description[en_GB]": "Darkens the parent window of the currently active dialog",
         "Description[es]": "Oscurece la ventana padre del diálogo activo",
