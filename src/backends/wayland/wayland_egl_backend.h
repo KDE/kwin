@@ -115,8 +115,8 @@ public:
 private:
     WaylandOutput *m_output;
     WaylandEglBackend *m_backend;
-    std::unique_ptr<GLFramebuffer> m_framebuffer;
-    std::unique_ptr<GLTexture> m_texture;
+    std::unique_ptr<WaylandEglLayerSwapchain> m_swapchain;
+    std::shared_ptr<WaylandEglLayerBuffer> m_buffer;
     QPoint m_hotspot;
     QSize m_size;
     qreal m_scale = 1.0;

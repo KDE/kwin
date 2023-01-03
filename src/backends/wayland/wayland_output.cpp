@@ -83,7 +83,7 @@ void WaylandCursor::disable()
     }
 }
 
-void WaylandCursor::update(KWayland::Client::Buffer::Ptr buffer, qreal scale, const QPoint &hotspot)
+void WaylandCursor::update(wl_buffer *buffer, qreal scale, const QPoint &hotspot)
 {
     if (m_buffer != buffer || m_scale != scale || m_hotspot != hotspot) {
         m_buffer = buffer;

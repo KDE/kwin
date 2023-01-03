@@ -46,7 +46,7 @@ public:
 
     void enable();
     void disable();
-    void update(KWayland::Client::Buffer::Ptr buffer, qreal scale, const QPoint &hotspot);
+    void update(wl_buffer *buffer, qreal scale, const QPoint &hotspot);
 
 private:
     void sync();
@@ -54,7 +54,7 @@ private:
     WaylandBackend *const m_backend;
     KWayland::Client::Pointer *m_pointer = nullptr;
     std::unique_ptr<KWayland::Client::Surface> m_surface;
-    KWayland::Client::Buffer::Ptr m_buffer;
+    wl_buffer *m_buffer = nullptr;
     QPoint m_hotspot;
     qreal m_scale = 1;
     bool m_enabled = true;

@@ -184,7 +184,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame(
 bool WaylandQPainterCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     KWayland::Client::Buffer::Ptr buffer = m_output->backend()->display()->shmPool()->createBuffer(m_backingStore);
-    m_output->cursor()->update(buffer, m_scale, m_hotspot);
+    m_output->cursor()->update(*buffer.lock(), m_scale, m_hotspot);
     return true;
 }
 

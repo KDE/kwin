@@ -233,8 +233,6 @@ WaylandEglCursorLayer::WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBa
 WaylandEglCursorLayer::~WaylandEglCursorLayer()
 {
     eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context());
-    m_framebuffer.reset();
-    m_texture.reset();
 }
 
 qreal WaylandEglCursorLayer::scale() const
@@ -275,24 +273,32 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
     }
 
     const QSize bufferSize = m_size.expandedTo(QSize(64, 64));
-    if (!m_texture || m_texture->size() != bufferSize) {
-        m_texture = std::make_unique<GLTexture>(GL_RGBA8, bufferSize);
-        m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
+    if (!m_swapchain || m_swapchain->size() != bufferSize) {
+        const WaylandLinuxDmabufV1 *dmabuf = m_backend->backend()->display()->linuxDmabuf();
+        const uint32_t format = DRM_FORMAT_ARGB8888;
+        if (!dmabuf->formats().contains(format)) {
+            qCCritical(KWIN_WAYLAND_BACKEND) << "DRM_FORMAT_ARGB8888 is unsupported";
+            return std::nullopt;
+        }
+        const QVector<uint64_t> modifiers = dmabuf->formats().value(format);
+        m_swapchain = std::make_unique<WaylandEglLayerSwapchain>(bufferSize, format, modifiers, m_backend);
     }
 
+    m_buffer = m_swapchain->acquire();
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_framebuffer.get()),
+        .renderTarget = RenderTarget(m_buffer->framebuffer()),
         .repaint = infiniteRegion(),
     };
 }
 
 bool WaylandEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    // Technically, we could pass a linux-dmabuf buffer, but host kwin does not support that atm.
-    const QImage image = m_texture->toImage().mirrored(false, true);
-    KWayland::Client::Buffer::Ptr buffer = m_output->backend()->display()->shmPool()->createBuffer(image);
-    m_output->cursor()->update(buffer, m_scale, m_hotspot);
+    // Flush rendering commands to the dmabuf.
+    glFlush();
 
+    m_output->cursor()->update(m_buffer->buffer(), m_scale, m_hotspot);
+
+    m_swapchain->release(m_buffer);
     return true;
 }
 
