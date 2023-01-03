@@ -102,7 +102,6 @@ void SurfaceItem::discardPixmap()
             m_pixmap.reset();
         }
     }
-    addDamage(rect().toAlignedRect());
 }
 
 void SurfaceItem::destroyPixmap()
