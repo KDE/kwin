@@ -51,6 +51,26 @@ static const QString windowDesktopFileName(Window *window)
     return ret;
 }
 
+bool isSameApp(const QString &appId1, const QString &appId2)
+{
+    if (appId1 == appId2) {
+        return true;
+    }
+
+    // Check if one appid is an alias for the other
+    KService::Ptr service1 = KService::serviceByDesktopName(appId1);
+    if (service1->aliasFor() == appId2) {
+        return true;
+    }
+
+    KService::Ptr service2 = KService::serviceByDesktopName(appId2);
+    if (service2->aliasFor() == appId1) {
+        return true;
+    }
+
+    return false;
+}
+
 XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface *activation, QObject *parent)
     : QObject(parent)
 {
@@ -61,7 +81,7 @@ XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface 
         }
 
         // We check that it's not the app that we are trying to activate
-        if (windowDesktopFileName(window) != m_currentActivationToken->applicationId) {
+        if (!isSameApp(windowDesktopFileName(window), m_currentActivationToken->applicationId)) {
             // But also that the new one has been requested after the token was requested
             if (window->lastUsageSerial() < m_currentActivationToken->serial) {
                 return;
@@ -98,7 +118,7 @@ QString XdgActivationV1Integration::requestToken(bool isPrivileged, SurfaceInter
     if (const QString desktopFilePath = Window::findDesktopFile(appId); !desktopFilePath.isEmpty()) {
         KDesktopFile df(desktopFilePath);
         Window *window = Workspace::self()->activeWindow();
-        if (!window || appId != window->desktopFileName()) {
+        if (!window || !isSameApp(appId, window->desktopFileName())) {
             const auto desktop = df.desktopGroup();
             showNotify = desktop.readEntry("X-KDE-StartupNotify", desktop.readEntry("StartupNotify", true));
         }
