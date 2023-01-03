@@ -207,6 +207,15 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QVector<DrmPipeline 
     }
 }
 
+static QSize orientateSize(const QSize &size, DrmPlane::Transformations transforms)
+{
+    if (transforms & (DrmPlane::Transformation::Rotate90 | DrmPlane::Transformation::Rotate270)) {
+        return size.transposed();
+    } else {
+        return size;
+    }
+}
+
 static QRect centerBuffer(const QSize &bufferSize, const QSize &modeSize)
 {
     const double widthScale = bufferSize.width() / double(modeSize.width());
@@ -231,7 +240,7 @@ void DrmPipeline::prepareAtomicPresentation()
     m_pending.crtc->setPending(DrmCrtc::PropertyIndex::VrrEnabled, m_pending.syncMode == RenderLoopPrivate::SyncMode::Adaptive || m_pending.syncMode == RenderLoopPrivate::SyncMode::AdaptiveAsync);
     m_pending.crtc->setPending(DrmCrtc::PropertyIndex::Gamma_LUT, m_pending.gamma ? m_pending.gamma->blobId() : 0);
     const auto fb = m_pending.layer->currentBuffer().get();
-    m_pending.crtc->primaryPlane()->set(QPoint(0, 0), fb->buffer()->size(), centerBuffer(fb->buffer()->size(), m_pending.mode->size()));
+    m_pending.crtc->primaryPlane()->set(QPoint(0, 0), fb->buffer()->size(), centerBuffer(orientateSize(fb->buffer()->size(), m_pending.bufferOrientation), m_pending.mode->size()));
     m_pending.crtc->primaryPlane()->setBuffer(fb);
 
     if (m_pending.crtc->cursorPlane()) {
