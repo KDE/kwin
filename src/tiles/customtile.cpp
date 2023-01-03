@@ -33,12 +33,12 @@ CustomTile::CustomTile(TileManager *tiling, CustomTile *parentItem)
 {
     setQuickTileMode(QuickTileFlag::Custom);
     m_geometryLock = true;
-    connect(this, &CustomTile::layoutModified, parentItem, &CustomTile::layoutModified);
 }
 
 CustomTile *CustomTile::createChildAt(const QRectF &relativeGeometry, LayoutDirection layoutDirection, int position)
 {
     CustomTile *tile = new CustomTile(manager(), this);
+    connect(tile, &CustomTile::layoutModified, this, &CustomTile::layoutModified);
     tile->setRelativeGeometry(relativeGeometry);
     tile->setLayoutDirection(layoutDirection);
     manager()->model()->beginInsertTile(tile, position);
