@@ -322,6 +322,8 @@ public:
     void sendWindowToDesktop(Window *window, int desktop, bool dont_activate);
     void windowToPreviousDesktop(Window *window);
     void windowToNextDesktop(Window *window);
+    void windowToPreviousDesktopAndSwitch(Window *window);
+    void windowToNextDesktopAndSwitch(Window *window);
     void sendWindowToOutput(Window *window, Output *output);
 
     void addManualOverlay(xcb_window_t id)
@@ -479,6 +481,7 @@ public Q_SLOTS:
     // Keybindings
     // void slotSwitchToWindow( int );
     void slotWindowToDesktop(VirtualDesktop *desktop);
+    void slotWindowToDesktopAndSwitch(VirtualDesktop *desktop);
 
     // void slotWindowToListPosition( int );
     void slotSwitchToScreen(Output *output);
@@ -538,6 +541,13 @@ public Q_SLOTS:
     void slotWindowToDesktopLeft();
     void slotWindowToDesktopUp();
     void slotWindowToDesktopDown();
+
+    void slotWindowToNextDesktopAndSwitch();
+    void slotWindowToPreviousDesktopAndSwitch();
+    void slotWindowToDesktopRightAndSwitch();
+    void slotWindowToDesktopLeftAndSwitch();
+    void slotWindowToDesktopUpAndSwitch();
+    void slotWindowToDesktopDownAndSwitch();
 
     void reconfigure();
     void slotReconfigure();

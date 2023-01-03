@@ -1074,18 +1074,38 @@ void Workspace::initShortcuts()
                 slotWindowToDesktop(desktops[i]);
             }
         };
-        initShortcut(QStringLiteral("Window to Desktop %1").arg(i + 1), i18n("Window to Desktop %1", i + 1), 0, handler);
+        initShortcut(QStringLiteral("Window to Desktop %1").arg(i + 1), i18n("Window to Desktop %1 in Background", i + 1), 0, handler);
     }
-    initShortcut("Window to Next Desktop", i18n("Window to Next Desktop"), 0, &Workspace::slotWindowToNextDesktop);
-    initShortcut("Window to Previous Desktop", i18n("Window to Previous Desktop"), 0, &Workspace::slotWindowToPreviousDesktop);
-    initShortcut("Window One Desktop to the Right", i18n("Window One Desktop to the Right"),
+    initShortcut("Window to Next Desktop", i18n("Window to Next Desktop in Background"), 0, &Workspace::slotWindowToNextDesktop);
+    initShortcut("Window to Previous Desktop", i18n("Window to Previous Desktop in Background"), 0, &Workspace::slotWindowToPreviousDesktop);
+    initShortcut("Window One Desktop to the Right", i18n("Window One Desktop to the Right in Background"),
                  Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Right, &Workspace::slotWindowToDesktopRight);
-    initShortcut("Window One Desktop to the Left", i18n("Window One Desktop to the Left"),
+    initShortcut("Window One Desktop to the Left", i18n("Window One Desktop to the Left in Background"),
                  Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Left, &Workspace::slotWindowToDesktopLeft);
-    initShortcut("Window One Desktop Up", i18n("Window One Desktop Up"),
+    initShortcut("Window One Desktop Up", i18n("Window One Desktop Up in Background"),
                  Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Up, &Workspace::slotWindowToDesktopUp);
-    initShortcut("Window One Desktop Down", i18n("Window One Desktop Down"),
+    initShortcut("Window One Desktop Down", i18n("Window One Desktop Down in Background"),
                  Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Down, &Workspace::slotWindowToDesktopDown);
+
+    for (uint i = 0; i < vds->maximum(); ++i) {
+        auto handler = [this, i]() {
+            const QVector<VirtualDesktop *> desktops = VirtualDesktopManager::self()->desktops();
+            if (i < uint(desktops.count())) {
+                slotWindowToDesktopAndSwitch(desktops[i]);
+            }
+        };
+        initShortcut(QStringLiteral("Window to Desktop %1 and Switch").arg(i + 1), i18n("Window to Desktop %1 in Foreground", i + 1), 0, handler);
+    }
+    initShortcut("Window to Next Desktop and Switch", i18n("Window to Next Desktop in Foreground"), 0, &Workspace::slotWindowToNextDesktopAndSwitch);
+    initShortcut("Window to Previous Desktop and Switch", i18n("Window to Previous Desktop in Foreground"), 0, &Workspace::slotWindowToPreviousDesktopAndSwitch);
+    initShortcut("Window One Desktop to the Right and Switch", i18n("Window One Desktop to the Right in Foreground"),
+                 Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Right, &Workspace::slotWindowToDesktopRightAndSwitch);
+    initShortcut("Window One Desktop to the Left and Switch", i18n("Window One Desktop to the Left in Foreground"),
+                 Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Left, &Workspace::slotWindowToDesktopLeftAndSwitch);
+    initShortcut("Window One Desktop Up and Switch", i18n("Window One Desktop Up in Foreground"),
+                 Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Up, &Workspace::slotWindowToDesktopUpAndSwitch);
+    initShortcut("Window One Desktop Down and Switch", i18n("Window One Desktop Down in Foreground"),
+                 Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Down, &Workspace::slotWindowToDesktopDownAndSwitch);
 
     for (int i = 0; i < 8; ++i) {
         initShortcut(QStringLiteral("Window to Screen %1").arg(i), i18n("Window to Screen %1", i), 0, [this, i]() {
@@ -1317,6 +1337,13 @@ void Workspace::slotActivateAttentionWindow()
 #define USABLE_ACTIVE_WINDOW (m_activeWindow && !(m_activeWindow->isDesktop() || m_activeWindow->isDock()))
 
 void Workspace::slotWindowToDesktop(VirtualDesktop *desktop)
+{
+    if (USABLE_ACTIVE_WINDOW) {
+        sendWindowToDesktop(m_activeWindow, desktop->x11DesktopNumber(), true);
+    }
+}
+
+void Workspace::slotWindowToDesktopAndSwitch(VirtualDesktop *desktop)
 {
     if (USABLE_ACTIVE_WINDOW) {
         sendWindowToDesktop(m_activeWindow, desktop->x11DesktopNumber(), false);
@@ -1585,6 +1612,18 @@ void windowToDesktop(Window *window, VirtualDesktopManager::Direction direction)
     const auto desktop = vds->inDirection(nullptr, direction, true);
     if (window && !window->isDesktop()
         && !window->isDock()) {
+        ws->sendWindowToDesktop(window, desktop->x11DesktopNumber(), true);
+    }
+}
+
+void windowToDesktopAndSwitch(Window *window, VirtualDesktopManager::Direction direction)
+{
+    VirtualDesktopManager *vds = VirtualDesktopManager::self();
+    Workspace *ws = Workspace::self();
+    // TODO: why is options->isRollOverDesktops() not honored?
+    const auto desktop = vds->inDirection(nullptr, direction, true);
+    if (window && !window->isDesktop()
+        && !window->isDock()) {
         ws->setMoveResizeWindow(window);
         vds->setCurrent(desktop);
         ws->setMoveResizeWindow(nullptr);
@@ -1621,6 +1660,36 @@ void Workspace::windowToPreviousDesktop(Window *window)
     windowToDesktop(window, VirtualDesktopManager::Direction::Previous);
 }
 
+/**
+ * Moves the active window to the next desktop and switches to it.
+ */
+void Workspace::slotWindowToNextDesktopAndSwitch()
+{
+    if (USABLE_ACTIVE_WINDOW) {
+        windowToNextDesktopAndSwitch(m_activeWindow);
+    }
+}
+
+void Workspace::windowToNextDesktopAndSwitch(Window *window)
+{
+    windowToDesktopAndSwitch(window, VirtualDesktopManager::Direction::Next);
+}
+
+/**
+ * Moves the active window to the previous desktop and switches to it.
+ */
+void Workspace::slotWindowToPreviousDesktopAndSwitch()
+{
+    if (USABLE_ACTIVE_WINDOW) {
+        windowToPreviousDesktopAndSwitch(m_activeWindow);
+    }
+}
+
+void Workspace::windowToPreviousDesktopAndSwitch(Window *window)
+{
+    windowToDesktopAndSwitch(window, VirtualDesktopManager::Direction::Previous);
+}
+
 void activeWindowToDesktop(VirtualDesktopManager::Direction direction)
 {
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
@@ -1633,6 +1702,18 @@ void activeWindowToDesktop(VirtualDesktopManager::Direction direction)
     ws->setMoveResizeWindow(ws->activeWindow());
     vds->setCurrent(newCurrent);
     ws->setMoveResizeWindow(nullptr);
+}
+
+void activeWindowToDesktopAndSwitch(VirtualDesktopManager::Direction direction)
+{
+    VirtualDesktopManager *vds = VirtualDesktopManager::self();
+    Workspace *ws = Workspace::self();
+    VirtualDesktop *current = vds->currentDesktop();
+    VirtualDesktop *newCurrent = VirtualDesktopManager::self()->inDirection(current, direction, options->isRollOverDesktops());
+    if (newCurrent == current) {
+        return;
+    }
+    ws->sendWindowToDesktop(ws->activeWindow(), newCurrent->x11DesktopNumber(), true);
 }
 
 void Workspace::slotWindowToDesktopRight()
@@ -1660,6 +1741,34 @@ void Workspace::slotWindowToDesktopDown()
 {
     if (USABLE_ACTIVE_WINDOW) {
         activeWindowToDesktop(VirtualDesktopManager::Direction::Down);
+    }
+}
+
+void Workspace::slotWindowToDesktopRightAndSwitch()
+{
+    if (USABLE_ACTIVE_WINDOW) {
+        activeWindowToDesktopAndSwitch(VirtualDesktopManager::Direction::Right);
+    }
+}
+
+void Workspace::slotWindowToDesktopLeftAndSwitch()
+{
+    if (USABLE_ACTIVE_WINDOW) {
+        activeWindowToDesktopAndSwitch(VirtualDesktopManager::Direction::Left);
+    }
+}
+
+void Workspace::slotWindowToDesktopUpAndSwitch()
+{
+    if (USABLE_ACTIVE_WINDOW) {
+        activeWindowToDesktopAndSwitch(VirtualDesktopManager::Direction::Up);
+    }
+}
+
+void Workspace::slotWindowToDesktopDownAndSwitch()
+{
+    if (USABLE_ACTIVE_WINDOW) {
+        activeWindowToDesktopAndSwitch(VirtualDesktopManager::Direction::Down);
     }
 }
 
