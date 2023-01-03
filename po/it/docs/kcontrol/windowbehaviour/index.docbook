@@ -1274,17 +1274,6 @@
 <varlistentry>
 <term
 ><guilabel
->A cascata</guilabel
-></term>
-<listitem>
-<para
->Saranno sovrapposte tutte le nuove finestre, aprendole ciascuna in basso e a destra della finestra attiva, a partire dall'angolo in alto a sinistra dello schermo quando nessuna finestra è già aperta. </para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term
-><guilabel
 >Casuali</guilabel
 ></term>
 <listitem>
