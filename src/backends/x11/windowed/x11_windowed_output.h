@@ -72,7 +72,7 @@ public:
      */
     QPointF mapFromGlobal(const QPointF &pos) const;
 
-    bool setCursor(const QImage &image, const QPoint &hotspot) override;
+    bool setCursor(CursorSource *source) override;
     bool moveCursor(const QPoint &position) override;
 
     QRegion exposedArea() const;
@@ -85,8 +85,8 @@ public:
 
 private:
     void initXInputForWindow();
-    void renderCursorOpengl(X11WindowedEglBackend *backend, const QImage &image, const QPoint &hotspot);
-    void renderCursorQPainter(X11WindowedQPainterBackend *backend, const QImage &image, const QPoint &hotspot);
+    void renderCursorOpengl(X11WindowedEglBackend *backend, CursorSource *source);
+    void renderCursorQPainter(X11WindowedQPainterBackend *backend, CursorSource *source);
 
     xcb_window_t m_window = XCB_WINDOW_NONE;
     xcb_present_event_t m_presentEvent = XCB_NONE;

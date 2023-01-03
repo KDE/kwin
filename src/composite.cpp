@@ -452,9 +452,9 @@ void Compositor::addOutput(Output *output)
         const QRect layerRect = output->mapFromGlobal(cursor->geometry());
         bool usesHardwareCursor = false;
         if (!Cursors::self()->isCursorHidden()) {
-            usesHardwareCursor = output->setCursor(cursor->image(), cursor->hotspot()) && output->moveCursor(layerRect.topLeft());
+            usesHardwareCursor = output->setCursor(cursor->source()) && output->moveCursor(layerRect.topLeft());
         } else {
-            usesHardwareCursor = output->setCursor(QImage(), QPoint());
+            usesHardwareCursor = output->setCursor(nullptr);
         }
         cursorLayer->setVisible(cursor->isOnOutput(output) && !usesHardwareCursor);
         cursorLayer->setGeometry(layerRect);

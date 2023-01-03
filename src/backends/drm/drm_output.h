@@ -14,6 +14,7 @@
 
 #include <QObject>
 #include <QPoint>
+#include <QPointer>
 #include <QSize>
 #include <QTimer>
 #include <QVector>
@@ -48,7 +49,7 @@ public:
     void updateModes();
     void updateDpmsMode(DpmsMode dpmsMode);
 
-    bool setCursor(const QImage &image, const QPoint &hotspot) override;
+    bool setCursor(CursorSource *source) override;
     bool moveCursor(const QPoint &position) override;
 
     DrmLease *lease() const;
@@ -73,8 +74,7 @@ private:
     DrmLease *m_lease = nullptr;
 
     struct {
-        QImage image;
-        QPoint hotspot;
+        QPointer<CursorSource> source;
         QPoint position;
     } m_cursor;
 };

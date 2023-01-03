@@ -36,6 +36,7 @@
 
 #include "composite.h"
 #include "core/renderlayer.h"
+#include "cursorsource.h"
 #include "scene/cursorscene.h"
 
 namespace KWin
@@ -134,7 +135,7 @@ DrmLease *DrmOutput::lease() const
     return m_lease;
 }
 
-bool DrmOutput::setCursor(const QImage &image, const QPoint &hotspot)
+bool DrmOutput::setCursor(CursorSource *source)
 {
     static bool valid;
     static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR", &valid) == 1 && valid;
@@ -147,9 +148,8 @@ bool DrmOutput::setCursor(const QImage &image, const QPoint &hotspot)
     if (!m_pipeline->crtc() || !layer) {
         return false;
     }
-    m_cursor.image = image;
-    m_cursor.hotspot = hotspot;
-    if (m_cursor.image.isNull()) {
+    m_cursor.source = source;
+    if (!m_cursor.source || m_cursor.source->size().isEmpty()) {
         if (layer->isVisible()) {
             layer->setVisible(false);
             m_pipeline->setCursor();
@@ -158,7 +158,7 @@ bool DrmOutput::setCursor(const QImage &image, const QPoint &hotspot)
     }
     bool rendered = false;
     const QMatrix4x4 monitorMatrix = logicalToNativeMatrix(rect(), scale(), transform());
-    const QSize cursorSize = m_cursor.image.size() / m_cursor.image.devicePixelRatio();
+    const QSize cursorSize = m_cursor.source->size();
     const QRect cursorRect = QRect(m_cursor.position, cursorSize);
     const QRect nativeCursorRect = monitorMatrix.mapRect(cursorRect);
     if (nativeCursorRect.width() <= m_gpu->cursorSize().width() && nativeCursorRect.height() <= m_gpu->cursorSize().height()) {
@@ -189,7 +189,7 @@ bool DrmOutput::setCursor(const QImage &image, const QPoint &hotspot)
     const QRect layerRect = monitorMatrix.mapRect(QRect(m_cursor.position, layerSize));
     layer->setVisible(cursorRect.intersects(rect()));
     if (layer->isVisible()) {
-        m_setCursorSuccessful = m_pipeline->setCursor(logicalToNativeMatrix(QRect(QPoint(), layerRect.size()), scale(), transform()).map(m_cursor.hotspot));
+        m_setCursorSuccessful = m_pipeline->setCursor(logicalToNativeMatrix(QRect(QPoint(), layerRect.size()), scale(), transform()).map(m_cursor.source->hotspot()));
         layer->setVisible(m_setCursorSuccessful);
     }
     return m_setCursorSuccessful;
@@ -202,10 +202,10 @@ bool DrmOutput::moveCursor(const QPoint &position)
     }
     m_cursor.position = position;
 
-    const QSize cursorSize = m_cursor.image.size() / m_cursor.image.devicePixelRatio();
+    const QSize cursorSize = m_cursor.source ? m_cursor.source->size() : QSize(0, 0);
     const QRect cursorRect = QRect(m_cursor.position, cursorSize);
 
-    if (m_cursor.image.isNull() || !cursorRect.intersects(rect())) {
+    if (!cursorRect.intersects(rect())) {
         const auto layer = m_pipeline->cursorLayer();
         if (layer->isVisible()) {
             layer->setVisible(false);

@@ -23,6 +23,7 @@
 namespace KWin
 {
 
+class CursorSource;
 class EffectScreenImpl;
 class RenderLoop;
 class OutputConfiguration;
@@ -259,7 +260,7 @@ public:
 
     virtual void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation);
 
-    virtual bool setCursor(const QImage &image, const QPoint &hotspot);
+    virtual bool setCursor(CursorSource *source);
     virtual bool moveCursor(const QPoint &position);
 
 Q_SIGNALS:

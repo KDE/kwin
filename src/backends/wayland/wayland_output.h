@@ -68,7 +68,7 @@ public:
     ~WaylandOutput() override;
 
     RenderLoop *renderLoop() const override;
-    bool setCursor(const QImage &image, const QPoint &hotspot) override;
+    bool setCursor(CursorSource *source) override;
     bool moveCursor(const QPoint &position) override;
 
     void init(const QSize &pixelSize, qreal scale);
@@ -87,8 +87,8 @@ public:
 private:
     void handleConfigure(const QSize &size, KWayland::Client::XdgShellSurface::States states, quint32 serial);
     void updateWindowTitle();
-    void renderCursorOpengl(WaylandEglBackend *backend, const QImage &image, const QPoint &hotspot);
-    void renderCursorQPainter(WaylandQPainterBackend *backend, const QImage &image, const QPoint &hotspot);
+    void renderCursorOpengl(WaylandEglBackend *backend, CursorSource *source);
+    void renderCursorQPainter(WaylandQPainterBackend *backend, CursorSource *source);
 
     std::unique_ptr<RenderLoop> m_renderLoop;
     std::unique_ptr<KWayland::Client::Surface> m_surface;

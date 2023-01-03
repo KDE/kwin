@@ -416,7 +416,7 @@ Output::Transform Output::panelOrientation() const
     return m_information.panelOrientation;
 }
 
-bool Output::setCursor(const QImage &image, const QPoint &hotspot)
+bool Output::setCursor(CursorSource *source)
 {
     return false;
 }
