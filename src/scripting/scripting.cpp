@@ -35,6 +35,7 @@
 #include <KConfigGroup>
 #include <KGlobalAccel>
 #include <KLocalizedContext>
+#include <KLocalizedString>
 #include <KPackage/PackageLoader>
 // Qt
 #include <QDBusConnection>
@@ -874,6 +875,13 @@ int KWin::Scripting::loadDeclarativeScript(const QString &filePath, const QStrin
     if (isScriptLoaded(pluginName)) {
         return -1;
     }
+
+    const QString localeDir = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("kwin/scripts/") + pluginName + QLatin1String("/contents/locale"), QStandardPaths::LocateDirectory);
+
+    if (QFileInfo::exists(localeDir)) {
+        KLocalizedString::addDomainLocaleDir(pluginName.toUtf8(), localeDir);
+    }
+
     const int id = scripts.size();
     KWin::DeclarativeScript *script = new KWin::DeclarativeScript(id, filePath, pluginName, this);
     connect(script, &QObject::destroyed, this, &Scripting::scriptDestroyed);
