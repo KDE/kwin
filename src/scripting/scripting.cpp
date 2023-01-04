@@ -34,6 +34,7 @@
 // KDE
 #include <KConfigGroup>
 #include <KGlobalAccel>
+#include <KLocalizedContext>
 #include <KPackage/PackageLoader>
 // Qt
 #include <QDBusConnection>
@@ -713,6 +714,9 @@ void KWin::Scripting::init()
     m_qmlEngine->rootContext()->setContextProperty(QStringLiteral("workspace"), m_workspaceWrapper);
     m_qmlEngine->rootContext()->setContextProperty(QStringLiteral("options"), options);
     m_declarativeScriptSharedContext->setContextProperty(QStringLiteral("workspace"), new DeclarativeScriptWorkspaceWrapper(this));
+
+    auto *i18nContext = new KLocalizedContext(m_qmlEngine);
+    m_qmlEngine->rootContext()->setContextObject(i18nContext);
 
     // QQmlListProperty interfaces only work via properties, rebind them as functions here
     QQmlExpression expr(m_declarativeScriptSharedContext, nullptr, "workspace.clientList = function() { return workspace.clients }");
