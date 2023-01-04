@@ -118,6 +118,7 @@ private:
     bool touchEventTriggered() const;
     void resetPendingPreedit();
     void refreshActive();
+    void updateAllowed();
 
     struct
     {
@@ -140,6 +141,7 @@ private:
     bool m_hasPendingModifiers = false;
     bool m_activeClientSupportsTextInput = false;
     bool m_shouldShowPanel = false;
+    bool m_allowShowPanel = false;
 };
 
 }

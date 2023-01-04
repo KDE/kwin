@@ -57,10 +57,14 @@ void InputPanelV1Window::showTopLevel(OutputInterface *output, InputPanelSurface
     maybeShow();
 }
 
-void InputPanelV1Window::allow()
+void InputPanelV1Window::setVirtualKeyboardAllowed(bool allow)
 {
-    m_allowed = true;
-    maybeShow();
+    m_allowed = allow;
+    if (allow) {
+        maybeShow();
+    } else if (readyForPainting() && m_mode != Mode::Overlay) {
+        hideClient();
+    }
 }
 
 void InputPanelV1Window::show()

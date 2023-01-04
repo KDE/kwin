@@ -10,6 +10,7 @@
 
 #include <config-kwin.h>
 
+#include "core/inputdevice.h"
 #include "input_event.h"
 #include "input_event_spy.h"
 #include "inputmethod.h"
@@ -226,6 +227,7 @@ void KeyboardInputRedirection::update()
 
 void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device)
 {
+    m_lastInputDevice = device;
     QEvent::Type type;
     bool autoRepeat = false;
     switch (state) {
@@ -277,4 +279,8 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     }
 }
 
+InputDevice *KeyboardInputRedirection::lastDevice() const
+{
+    return m_lastInputDevice;
+}
 }

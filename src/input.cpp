@@ -2628,7 +2628,10 @@ QObject *InputRedirection::lastInputHandler() const
 
 void InputRedirection::setLastInputHandler(QObject *device)
 {
-    m_lastInputDevice = device;
+    if (m_lastInputDevice != device) {
+        m_lastInputDevice = device;
+        Q_EMIT lastInputHandlerChanged();
+    }
 }
 
 class WindowInteractedSpy : public InputEventSpy

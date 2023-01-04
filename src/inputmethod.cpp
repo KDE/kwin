@@ -21,7 +21,9 @@
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
 #endif
+#include "core/inputdevice.h"
 #include "deleted.h"
+#include "pointer_input.h"
 #include "tablet_input.h"
 #include "touch_input.h"
 #include "wayland/display.h"
@@ -136,6 +138,8 @@ void InputMethod::init()
         connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this]() {
             m_hasPendingModifiers = true;
         });
+
+        connect(input(), &InputRedirection::lastInputHandlerChanged, this, &InputMethod::updateAllowed);
     }
 }
 
@@ -143,6 +147,7 @@ void InputMethod::show()
 {
     m_shouldShowPanel = true;
     if (m_panel) {
+        updateAllowed();
         m_panel->show();
         updateInputPanelState();
     }
@@ -155,13 +160,6 @@ void InputMethod::hide()
         m_panel->hide();
         updateInputPanelState();
     }
-}
-
-bool InputMethod::shouldShowOnActive() const
-{
-    static bool alwaysShowIm = qEnvironmentVariableIntValue("KWIN_IM_SHOW_ALWAYS") != 0;
-    return alwaysShowIm || input()->touch() == input()->lastInputHandler()
-        || input()->tablet() == input()->lastInputHandler();
 }
 
 void InputMethod::refreshActive()
@@ -220,6 +218,7 @@ void InputMethod::setPanel(InputPanelV1Window *panel)
     }
 
     m_panel = panel;
+    updateAllowed();
     connect(panel->surface(), &SurfaceInterface::inputChanged, this, &InputMethod::updateInputPanelState);
     connect(panel, &QObject::destroyed, this, [this] {
         if (m_trackedWindow) {
@@ -323,9 +322,6 @@ void InputMethod::textInputInterfaceV2StateUpdated(quint32 serial, KWaylandServe
     }
     if (!t2 || !t2->isEnabled()) {
         return;
-    }
-    if (m_panel && shouldShowOnActive()) {
-        m_panel->allow();
     }
     switch (reason) {
     case KWaylandServer::TextInputV2Interface::UpdateReason::StateChange:
@@ -692,10 +688,6 @@ void InputMethod::updateInputPanelState()
         return;
     }
 
-    if (m_panel && shouldShowOnActive()) {
-        m_panel->allow();
-    }
-
     QRectF overlap = QRectF(0, 0, 0, 0);
     if (m_trackedWindow) {
         const bool bottomKeyboard = m_panel && m_panel->mode() != InputPanelV1Window::Mode::Overlay && m_panel->isShown();
@@ -850,5 +842,29 @@ void InputMethod::textInputInterfaceV3EnableRequested()
 {
     refreshActive();
     show();
+}
+
+bool InputMethod::shouldShowOnActive() const
+{
+    return m_allowShowPanel;
+}
+
+void InputMethod::updateAllowed()
+{
+    static const bool alwaysShowIm = qEnvironmentVariableIntValue("KWIN_IM_SHOW_ALWAYS") != 0;
+    if (alwaysShowIm) {
+        m_allowShowPanel = true;
+        return;
+    }
+    if (m_allowShowPanel) {
+        // disallow if a pointing device or an alphanumerical keyboard was used
+        m_allowShowPanel &= !(input()->pointer() == input()->lastInputHandler() || (input()->keyboard() == input()->lastInputHandler() && input()->keyboard()->lastDevice() && input()->keyboard()->lastDevice()->isAlphaNumericKeyboard()));
+    } else {
+        // allow if touch or tablet was used
+        m_allowShowPanel |= input()->touch() == input()->lastInputHandler() || input()->tablet() == input()->lastInputHandler();
+    }
+    if (m_panel) {
+        m_panel->setVirtualKeyboardAllowed(m_allowShowPanel);
+    }
 }
 }
