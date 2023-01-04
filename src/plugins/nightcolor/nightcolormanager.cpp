@@ -467,7 +467,7 @@ void NightColorManager::preview(uint previewTemp)
         QStringLiteral("org.kde.osdService"),
         QStringLiteral("showText"));
     message.setArguments(
-        {QStringLiteral("preferences-desktop-display-nightcolor-on"),
+        {QStringLiteral("redshift-status-on"),
          i18n("Color Temperature Preview")});
     QDBusConnection::sessionBus().asyncCall(message);
 }
