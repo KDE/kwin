@@ -463,6 +463,11 @@ DrmOutputLayer *DrmOutput::primaryLayer() const
     return m_pipeline->primaryLayer();
 }
 
+DrmOutputLayer *DrmOutput::cursorLayer() const
+{
+    return m_pipeline->cursorLayer();
+}
+
 void DrmOutput::setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation)
 {
     m_pipeline->setColorTransformation(transformation);

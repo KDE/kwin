@@ -44,6 +44,11 @@ OutputLayer *DrmQPainterBackend::primaryLayer(Output *output)
     return static_cast<DrmAbstractOutput *>(output)->primaryLayer();
 }
 
+OutputLayer *DrmQPainterBackend::cursorLayer(Output *output)
+{
+    return static_cast<DrmAbstractOutput *>(output)->cursorLayer();
+}
+
 std::shared_ptr<DrmPipelineLayer> DrmQPainterBackend::createPrimaryLayer(DrmPipeline *pipeline)
 {
     return std::make_shared<DrmQPainterLayer>(pipeline);

@@ -32,8 +32,6 @@ namespace KWin
 namespace Wayland
 {
 class WaylandBackend;
-class WaylandEglBackend;
-class WaylandQPainterBackend;
 
 class WaylandCursor
 {
@@ -87,8 +85,6 @@ public:
 private:
     void handleConfigure(const QSize &size, KWayland::Client::XdgShellSurface::States states, quint32 serial);
     void updateWindowTitle();
-    void renderCursorOpengl(WaylandEglBackend *backend, CursorSource *source);
-    void renderCursorQPainter(WaylandQPainterBackend *backend, CursorSource *source);
 
     std::unique_ptr<RenderLoop> m_renderLoop;
     std::unique_ptr<KWayland::Client::Surface> m_surface;

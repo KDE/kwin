@@ -14,6 +14,36 @@ OutputLayer::OutputLayer(QObject *parent)
 {
 }
 
+qreal OutputLayer::scale() const
+{
+    return m_scale;
+}
+
+void OutputLayer::setScale(qreal scale)
+{
+    m_scale = scale;
+}
+
+QPoint OutputLayer::hotspot() const
+{
+    return m_hotspot;
+}
+
+void OutputLayer::setHotspot(const QPoint &hotspot)
+{
+    m_hotspot = hotspot;
+}
+
+QSize OutputLayer::size() const
+{
+    return m_size;
+}
+
+void OutputLayer::setSize(const QSize &size)
+{
+    m_size = size;
+}
+
 QRegion OutputLayer::repaints() const
 {
     return m_repaints;

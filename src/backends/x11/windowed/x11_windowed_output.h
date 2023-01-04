@@ -25,8 +25,6 @@ namespace KWin
 
 class X11WindowedBackend;
 class X11WindowedOutput;
-class X11WindowedEglBackend;
-class X11WindowedQPainterBackend;
 
 class X11WindowedCursor
 {
@@ -85,8 +83,6 @@ public:
 
 private:
     void initXInputForWindow();
-    void renderCursorOpengl(X11WindowedEglBackend *backend, CursorSource *source);
-    void renderCursorQPainter(X11WindowedQPainterBackend *backend, CursorSource *source);
 
     xcb_window_t m_window = XCB_WINDOW_NONE;
     xcb_present_event_t m_presentEvent = XCB_NONE;

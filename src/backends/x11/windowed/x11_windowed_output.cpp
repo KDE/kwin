@@ -9,12 +9,11 @@
 #include "x11_windowed_output.h"
 #include "../common/kwinxrenderutils.h"
 #include "x11_windowed_backend.h"
-#include "x11_windowed_egl_backend.h"
-#include "x11_windowed_qpainter_backend.h"
 
 #include <config-kwin.h>
 
 #include "composite.h"
+#include "core/renderbackend.h"
 #include "core/renderlayer.h"
 #include "core/renderloop_p.h"
 #include "cursorsource.h"
@@ -287,12 +286,31 @@ QPointF X11WindowedOutput::mapFromGlobal(const QPointF &pos) const
 
 bool X11WindowedOutput::setCursor(CursorSource *source)
 {
-    if (X11WindowedEglBackend *backend = qobject_cast<X11WindowedEglBackend *>(Compositor::self()->backend())) {
-        renderCursorOpengl(backend, source);
-    } else if (X11WindowedQPainterBackend *backend = qobject_cast<X11WindowedQPainterBackend *>(Compositor::self()->backend())) {
-        renderCursorQPainter(backend, source);
+    OutputLayer *cursorLayer = Compositor::self()->backend()->cursorLayer(this);
+    if (source) {
+        cursorLayer->setSize(source->size());
+        cursorLayer->setHotspot(source->hotspot());
+    } else {
+        cursorLayer->setSize(QSize());
+        cursorLayer->setHotspot(QPoint());
     }
 
+    std::optional<OutputLayerBeginFrameInfo> beginInfo = cursorLayer->beginFrame();
+    if (!beginInfo) {
+        return false;
+    }
+
+    RenderTarget *renderTarget = &beginInfo->renderTarget;
+    renderTarget->setDevicePixelRatio(scale());
+
+    RenderLayer renderLayer(m_renderLoop.get());
+    renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene()));
+
+    renderLayer.delegate()->prePaint();
+    renderLayer.delegate()->paint(renderTarget, infiniteRegion());
+    renderLayer.delegate()->postPaint();
+
+    cursorLayer->endFrame(infiniteRegion(), infiniteRegion());
     return true;
 }
 
@@ -300,64 +318,6 @@ bool X11WindowedOutput::moveCursor(const QPoint &position)
 {
     // The cursor position is controlled by the host compositor.
     return true;
-}
-
-void X11WindowedOutput::renderCursorOpengl(X11WindowedEglBackend *backend, CursorSource *source)
-{
-    X11WindowedEglCursorLayer *cursorLayer = backend->cursorLayer(this);
-    if (source) {
-        cursorLayer->setSize(source->size());
-        cursorLayer->setHotspot(source->hotspot());
-    } else {
-        cursorLayer->setSize(QSize());
-        cursorLayer->setHotspot(QPoint());
-    }
-
-    std::optional<OutputLayerBeginFrameInfo> beginInfo = cursorLayer->beginFrame();
-    if (!beginInfo) {
-        return;
-    }
-
-    RenderTarget *renderTarget = &beginInfo->renderTarget;
-    renderTarget->setDevicePixelRatio(scale());
-
-    RenderLayer renderLayer(m_renderLoop.get());
-    renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene()));
-
-    renderLayer.delegate()->prePaint();
-    renderLayer.delegate()->paint(renderTarget, infiniteRegion());
-    renderLayer.delegate()->postPaint();
-
-    cursorLayer->endFrame(infiniteRegion(), infiniteRegion());
-}
-
-void X11WindowedOutput::renderCursorQPainter(X11WindowedQPainterBackend *backend, CursorSource *source)
-{
-    X11WindowedQPainterCursorLayer *cursorLayer = backend->cursorLayer(this);
-    if (source) {
-        cursorLayer->setSize(source->size());
-        cursorLayer->setHotspot(source->hotspot());
-    } else {
-        cursorLayer->setSize(QSize());
-        cursorLayer->setHotspot(QPoint());
-    }
-
-    std::optional<OutputLayerBeginFrameInfo> beginInfo = cursorLayer->beginFrame();
-    if (!beginInfo) {
-        return;
-    }
-
-    RenderTarget *renderTarget = &beginInfo->renderTarget;
-    renderTarget->setDevicePixelRatio(scale());
-
-    RenderLayer renderLayer(m_renderLoop.get());
-    renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene()));
-
-    renderLayer.delegate()->prePaint();
-    renderLayer.delegate()->paint(renderTarget, infiniteRegion());
-    renderLayer.delegate()->postPaint();
-
-    cursorLayer->endFrame(infiniteRegion(), infiniteRegion());
 }
 
 void X11WindowedOutput::updateEnabled(bool enabled)

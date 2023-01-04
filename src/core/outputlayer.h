@@ -30,6 +30,15 @@ class KWIN_EXPORT OutputLayer : public QObject
 public:
     explicit OutputLayer(QObject *parent = nullptr);
 
+    qreal scale() const;
+    void setScale(qreal scale);
+
+    QPoint hotspot() const;
+    void setHotspot(const QPoint &hotspot);
+
+    QSize size() const;
+    void setSize(const QSize &size);
+
     QRegion repaints() const;
     void resetRepaints();
     void addRepaint(const QRegion &region);
@@ -52,6 +61,9 @@ public:
 
 private:
     QRegion m_repaints;
+    QPoint m_hotspot;
+    QSize m_size;
+    qreal m_scale = 1.0;
 };
 
 } // namespace KWin

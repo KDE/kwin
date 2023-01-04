@@ -40,6 +40,7 @@ public:
     virtual bool checkGraphicsReset();
 
     virtual OutputLayer *primaryLayer(Output *output) = 0;
+    virtual OutputLayer *cursorLayer(Output *output);
     virtual void present(Output *output) = 0;
 
     virtual QHash<uint32_t, QVector<uint64_t>> supportedFormats() const;

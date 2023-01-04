@@ -211,6 +211,11 @@ OutputLayer *EglGbmBackend::primaryLayer(Output *output)
     return static_cast<DrmAbstractOutput *>(output)->primaryLayer();
 }
 
+OutputLayer *EglGbmBackend::cursorLayer(Output *output)
+{
+    return static_cast<DrmAbstractOutput *>(output)->cursorLayer();
+}
+
 std::shared_ptr<GLTexture> EglGbmBackend::textureForOutput(Output *output) const
 {
     const auto drmOutput = static_cast<DrmAbstractOutput *>(output);

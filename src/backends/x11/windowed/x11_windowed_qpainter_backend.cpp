@@ -176,29 +176,9 @@ X11WindowedQPainterCursorLayer::X11WindowedQPainterCursorLayer(X11WindowedOutput
 {
 }
 
-QPoint X11WindowedQPainterCursorLayer::hotspot() const
-{
-    return m_hotspot;
-}
-
-void X11WindowedQPainterCursorLayer::setHotspot(const QPoint &hotspot)
-{
-    m_hotspot = hotspot;
-}
-
-QSize X11WindowedQPainterCursorLayer::size() const
-{
-    return m_size;
-}
-
-void X11WindowedQPainterCursorLayer::setSize(const QSize &size)
-{
-    m_size = size;
-}
-
 std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterCursorLayer::beginFrame()
 {
-    const QSize bufferSize = m_size.expandedTo(QSize(64, 64));
+    const QSize bufferSize = size().expandedTo(QSize(64, 64));
     if (m_buffer.size() != bufferSize) {
         m_buffer = QImage(bufferSize, QImage::Format_ARGB32_Premultiplied);
     }
@@ -211,7 +191,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterCursorLayer::beginFr
 
 bool X11WindowedQPainterCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    m_output->cursor()->update(m_buffer, m_hotspot);
+    m_output->cursor()->update(m_buffer, hotspot());
     return true;
 }
 
@@ -257,7 +237,7 @@ OutputLayer *X11WindowedQPainterBackend::primaryLayer(Output *output)
     return m_outputs[output].primaryLayer.get();
 }
 
-X11WindowedQPainterCursorLayer *X11WindowedQPainterBackend::cursorLayer(Output *output)
+OutputLayer *X11WindowedQPainterBackend::cursorLayer(Output *output)
 {
     return m_outputs[output].cursorLayer.get();
 }

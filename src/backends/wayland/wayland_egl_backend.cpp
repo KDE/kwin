@@ -235,36 +235,6 @@ WaylandEglCursorLayer::~WaylandEglCursorLayer()
     eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context());
 }
 
-qreal WaylandEglCursorLayer::scale() const
-{
-    return m_scale;
-}
-
-void WaylandEglCursorLayer::setScale(qreal scale)
-{
-    m_scale = scale;
-}
-
-QPoint WaylandEglCursorLayer::hotspot() const
-{
-    return m_hotspot;
-}
-
-void WaylandEglCursorLayer::setHotspot(const QPoint &hotspot)
-{
-    m_hotspot = hotspot;
-}
-
-QSize WaylandEglCursorLayer::size() const
-{
-    return m_size;
-}
-
-void WaylandEglCursorLayer::setSize(const QSize &size)
-{
-    m_size = size;
-}
-
 std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
 {
     if (eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context()) == EGL_FALSE) {
@@ -272,7 +242,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
         return std::nullopt;
     }
 
-    const QSize bufferSize = m_size.expandedTo(QSize(64, 64));
+    const QSize bufferSize = size().expandedTo(QSize(64, 64));
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
         const WaylandLinuxDmabufV1 *dmabuf = m_backend->backend()->display()->linuxDmabuf();
         const uint32_t format = DRM_FORMAT_ARGB8888;
@@ -296,7 +266,7 @@ bool WaylandEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegio
     // Flush rendering commands to the dmabuf.
     glFlush();
 
-    m_output->cursor()->update(m_buffer->buffer(), m_scale, m_hotspot);
+    m_output->cursor()->update(m_buffer->buffer(), scale(), hotspot());
 
     m_swapchain->release(m_buffer);
     return true;
@@ -479,7 +449,7 @@ OutputLayer *WaylandEglBackend::primaryLayer(Output *output)
     return m_outputs[output].primaryLayer.get();
 }
 
-WaylandEglCursorLayer *WaylandEglBackend::cursorLayer(Output *output)
+OutputLayer *WaylandEglBackend::cursorLayer(Output *output)
 {
     return m_outputs[output].cursorLayer.get();
 }

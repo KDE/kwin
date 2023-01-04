@@ -12,8 +12,6 @@
 #include "cursorsource.h"
 #include "wayland_backend.h"
 #include "wayland_display.h"
-#include "wayland_egl_backend.h"
-#include "wayland_qpainter_backend.h"
 #include "wayland_server.h"
 
 #include "kwingltexture.h"
@@ -26,6 +24,7 @@
 #include <KWayland/Client/surface.h>
 #include <KWayland/Client/xdgdecoration.h>
 
+#include "core/renderbackend.h"
 #include "core/renderlayer.h"
 #include "scene/cursorscene.h"
 
@@ -187,12 +186,32 @@ bool WaylandOutput::setCursor(CursorSource *source)
         return false;
     }
 
-    if (WaylandEglBackend *backend = qobject_cast<WaylandEglBackend *>(Compositor::self()->backend())) {
-        renderCursorOpengl(backend, source);
-    } else if (WaylandQPainterBackend *backend = qobject_cast<WaylandQPainterBackend *>(Compositor::self()->backend())) {
-        renderCursorQPainter(backend, source);
+    OutputLayer *cursorLayer = Compositor::self()->backend()->cursorLayer(this);
+    if (source) {
+        cursorLayer->setSize(source->size());
+        cursorLayer->setScale(scale());
+        cursorLayer->setHotspot(source->hotspot());
+    } else {
+        cursorLayer->setSize(QSize());
+        cursorLayer->setHotspot(QPoint());
     }
 
+    std::optional<OutputLayerBeginFrameInfo> beginInfo = cursorLayer->beginFrame();
+    if (!beginInfo) {
+        return false;
+    }
+
+    RenderTarget *renderTarget = &beginInfo->renderTarget;
+    renderTarget->setDevicePixelRatio(scale());
+
+    RenderLayer renderLayer(m_renderLoop.get());
+    renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene()));
+
+    renderLayer.delegate()->prePaint();
+    renderLayer.delegate()->paint(renderTarget, infiniteRegion());
+    renderLayer.delegate()->postPaint();
+
+    cursorLayer->endFrame(infiniteRegion(), infiniteRegion());
     return true;
 }
 
@@ -200,66 +219,6 @@ bool WaylandOutput::moveCursor(const QPoint &position)
 {
     // The cursor position is controlled by the host compositor.
     return !m_hasPointerLock;
-}
-
-void WaylandOutput::renderCursorOpengl(WaylandEglBackend *backend, CursorSource *source)
-{
-    WaylandEglCursorLayer *cursorLayer = backend->cursorLayer(this);
-    if (source) {
-        cursorLayer->setSize(source->size());
-        cursorLayer->setScale(scale());
-        cursorLayer->setHotspot(source->hotspot());
-    } else {
-        cursorLayer->setSize(QSize());
-        cursorLayer->setHotspot(QPoint());
-    }
-
-    std::optional<OutputLayerBeginFrameInfo> beginInfo = cursorLayer->beginFrame();
-    if (!beginInfo) {
-        return;
-    }
-
-    RenderTarget *renderTarget = &beginInfo->renderTarget;
-    renderTarget->setDevicePixelRatio(scale());
-
-    RenderLayer renderLayer(m_renderLoop.get());
-    renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene()));
-
-    renderLayer.delegate()->prePaint();
-    renderLayer.delegate()->paint(renderTarget, infiniteRegion());
-    renderLayer.delegate()->postPaint();
-
-    cursorLayer->endFrame(infiniteRegion(), infiniteRegion());
-}
-
-void WaylandOutput::renderCursorQPainter(WaylandQPainterBackend *backend, CursorSource *source)
-{
-    WaylandQPainterCursorLayer *cursorLayer = backend->cursorLayer(this);
-    if (source) {
-        cursorLayer->setSize(source->size());
-        cursorLayer->setScale(scale());
-        cursorLayer->setHotspot(source->hotspot());
-    } else {
-        cursorLayer->setSize(QSize());
-        cursorLayer->setHotspot(QPoint());
-    }
-
-    std::optional<OutputLayerBeginFrameInfo> beginInfo = cursorLayer->beginFrame();
-    if (!beginInfo) {
-        return;
-    }
-
-    RenderTarget *renderTarget = &beginInfo->renderTarget;
-    renderTarget->setDevicePixelRatio(scale());
-
-    RenderLayer renderLayer(m_renderLoop.get());
-    renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene()));
-
-    renderLayer.delegate()->prePaint();
-    renderLayer.delegate()->paint(renderTarget, infiniteRegion());
-    renderLayer.delegate()->postPaint();
-
-    cursorLayer->endFrame(infiniteRegion(), infiniteRegion());
 }
 
 void WaylandOutput::init(const QSize &pixelSize, qreal scale)

@@ -138,39 +138,9 @@ WaylandQPainterCursorLayer::~WaylandQPainterCursorLayer()
 {
 }
 
-qreal WaylandQPainterCursorLayer::scale() const
-{
-    return m_scale;
-}
-
-void WaylandQPainterCursorLayer::setScale(qreal scale)
-{
-    m_scale = scale;
-}
-
-QPoint WaylandQPainterCursorLayer::hotspot() const
-{
-    return m_hotspot;
-}
-
-void WaylandQPainterCursorLayer::setHotspot(const QPoint &hotspot)
-{
-    m_hotspot = hotspot;
-}
-
-QSize WaylandQPainterCursorLayer::size() const
-{
-    return m_size;
-}
-
-void WaylandQPainterCursorLayer::setSize(const QSize &size)
-{
-    m_size = size;
-}
-
 std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame()
 {
-    const QSize bufferSize = m_size.expandedTo(QSize(64, 64));
+    const QSize bufferSize = size().expandedTo(QSize(64, 64));
     if (m_backingStore.size() != bufferSize) {
         m_backingStore = QImage(bufferSize, QImage::Format_ARGB32_Premultiplied);
     }
@@ -184,7 +154,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame(
 bool WaylandQPainterCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     KWayland::Client::Buffer::Ptr buffer = m_output->backend()->display()->shmPool()->createBuffer(m_backingStore);
-    m_output->cursor()->update(*buffer.lock(), m_scale, m_hotspot);
+    m_output->cursor()->update(*buffer.lock(), scale(), hotspot());
     return true;
 }
 
@@ -225,7 +195,7 @@ OutputLayer *WaylandQPainterBackend::primaryLayer(Output *output)
     return m_outputs[output].primaryLayer.get();
 }
 
-WaylandQPainterCursorLayer *WaylandQPainterBackend::cursorLayer(Output *output)
+OutputLayer *WaylandQPainterBackend::cursorLayer(Output *output)
 {
     return m_outputs[output].cursorLayer.get();
 }
