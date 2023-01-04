@@ -41,12 +41,13 @@ InputPanelV1Window::InputPanelV1Window(InputPanelSurfaceV1Interface *panelSurfac
     connect(panelSurface, &InputPanelSurfaceV1Interface::overlayPanel, this, &InputPanelV1Window::showOverlayPanel);
     connect(panelSurface, &InputPanelSurfaceV1Interface::destroyed, this, &InputPanelV1Window::destroyWindow);
 
+    connect(workspace(), &Workspace::outputsChanged, this, &InputPanelV1Window::reposition);
+
     kwinApp()->inputMethod()->setPanel(this);
 }
 
 void InputPanelV1Window::showOverlayPanel()
 {
-    setOutput(nullptr);
     m_mode = Mode::Overlay;
     maybeShow();
 }
@@ -54,7 +55,6 @@ void InputPanelV1Window::showOverlayPanel()
 void InputPanelV1Window::showTopLevel(OutputInterface *output, InputPanelSurfaceV1Interface::Position position)
 {
     m_mode = Mode::VirtualKeyboard;
-    setOutput(output);
     maybeShow();
 }
 
@@ -94,18 +94,13 @@ void KWin::InputPanelV1Window::reposition()
             return;
         }
 
+        const auto activeOutput = workspace()->activeOutput();
+        const QRectF outputArea = activeOutput->geometry();
         QRectF availableArea;
-        QRectF outputArea;
-        if (m_output) {
-            outputArea = m_output->geometry();
-            if (waylandServer()->isScreenLocked()) {
-                availableArea = outputArea;
-            } else {
-                availableArea = workspace()->clientArea(MaximizeArea, this, m_output);
-            }
+        if (waylandServer()->isScreenLocked()) {
+            availableArea = outputArea;
         } else {
-            availableArea = workspace()->clientArea(MaximizeArea, this);
-            outputArea = workspace()->clientArea(FullScreenArea, this);
+            availableArea = workspace()->clientArea(MaximizeArea, this, activeOutput);
         }
 
         panelSize = panelSize.boundedTo(availableArea.size());
@@ -178,19 +173,6 @@ NET::WindowType InputPanelV1Window::windowType(bool, int) const
 QRectF InputPanelV1Window::inputGeometry() const
 {
     return readyForPainting() ? QRectF(surface()->input().boundingRect()).translated(pos()) : QRectF();
-}
-
-void InputPanelV1Window::setOutput(OutputInterface *outputIface)
-{
-    if (m_output) {
-        disconnect(m_output, &Output::geometryChanged, this, &InputPanelV1Window::reposition);
-    }
-
-    m_output = outputIface ? outputIface->handle() : nullptr;
-
-    if (m_output) {
-        connect(m_output, &Output::geometryChanged, this, &InputPanelV1Window::reposition);
-    }
 }
 
 void InputPanelV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)

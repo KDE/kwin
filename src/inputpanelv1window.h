@@ -88,11 +88,9 @@ private:
     void showTopLevel(KWaylandServer::OutputInterface *output, KWaylandServer::InputPanelSurfaceV1Interface::Position position);
     void showOverlayPanel();
     void reposition();
-    void setOutput(KWaylandServer::OutputInterface *output);
     void handleMapped();
     void maybeShow();
 
-    QPointer<Output> m_output;
     Mode m_mode = Mode::None;
     bool m_allowed = false;
     bool m_virtualKeyboardShouldBeShown = false;
