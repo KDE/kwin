@@ -46,7 +46,3 @@ msgstr ""
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr ""
-
-#~ msgctxt "Error message"
-#~ msgid "Plugin does not provide configuration file in expected location"
-#~ msgstr "Modul neposkytuje soubor s nastavením na obvyklém místě"

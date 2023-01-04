@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-18 00:56+0000\n"
+"POT-Creation-Date: 2022-12-30 08:46+0000\n"
 "PO-Revision-Date: 2015-08-27 20:54+0200\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -71,813 +71,813 @@ msgstr ""
 msgid "GLX/OpenGL is not available."
 msgstr ""
 
-#: debug_console.cpp:79
+#: debug_console.cpp:79 debug_console.cpp:84
 #, kde-format
 msgid "Timestamp"
 msgstr ""
 
-#: debug_console.cpp:84
+#: debug_console.cpp:89 debug_console.cpp:94
 #, kde-format
 msgid "Timestamp (µsec)"
-msgstr ""
-
-#: debug_console.cpp:91
-#, kde-format
-msgctxt "A mouse button"
-msgid "Left"
-msgstr ""
-
-#: debug_console.cpp:93
-#, kde-format
-msgctxt "A mouse button"
-msgid "Right"
-msgstr ""
-
-#: debug_console.cpp:95
-#, kde-format
-msgctxt "A mouse button"
-msgid "Middle"
-msgstr ""
-
-#: debug_console.cpp:97
-#, kde-format
-msgctxt "A mouse button"
-msgid "Back"
-msgstr ""
-
-#: debug_console.cpp:99
-#, kde-format
-msgctxt "A mouse button"
-msgid "Forward"
 msgstr ""
 
 #: debug_console.cpp:101
 #, kde-format
 msgctxt "A mouse button"
-msgid "Task"
+msgid "Left"
 msgstr ""
 
 #: debug_console.cpp:103
 #, kde-format
 msgctxt "A mouse button"
-msgid "Extra Button 4"
+msgid "Right"
 msgstr ""
 
 #: debug_console.cpp:105
 #, kde-format
 msgctxt "A mouse button"
-msgid "Extra Button 5"
+msgid "Middle"
 msgstr ""
 
 #: debug_console.cpp:107
 #, kde-format
 msgctxt "A mouse button"
-msgid "Extra Button 6"
+msgid "Back"
 msgstr ""
 
 #: debug_console.cpp:109
 #, kde-format
 msgctxt "A mouse button"
-msgid "Extra Button 7"
+msgid "Forward"
 msgstr ""
 
 #: debug_console.cpp:111
 #, kde-format
 msgctxt "A mouse button"
-msgid "Extra Button 8"
+msgid "Task"
 msgstr ""
 
 #: debug_console.cpp:113
 #, kde-format
 msgctxt "A mouse button"
-msgid "Extra Button 9"
+msgid "Extra Button 4"
 msgstr ""
 
 #: debug_console.cpp:115
 #, kde-format
 msgctxt "A mouse button"
-msgid "Extra Button 10"
+msgid "Extra Button 5"
 msgstr ""
 
 #: debug_console.cpp:117
 #, kde-format
 msgctxt "A mouse button"
-msgid "Extra Button 11"
+msgid "Extra Button 6"
 msgstr ""
 
 #: debug_console.cpp:119
 #, kde-format
 msgctxt "A mouse button"
-msgid "Extra Button 12"
+msgid "Extra Button 7"
 msgstr ""
 
 #: debug_console.cpp:121
 #, kde-format
 msgctxt "A mouse button"
-msgid "Extra Button 13"
+msgid "Extra Button 8"
 msgstr ""
 
 #: debug_console.cpp:123
 #, kde-format
 msgctxt "A mouse button"
-msgid "Extra Button 14"
+msgid "Extra Button 9"
 msgstr ""
 
 #: debug_console.cpp:125
 #, kde-format
 msgctxt "A mouse button"
-msgid "Extra Button 15"
+msgid "Extra Button 10"
 msgstr ""
 
 #: debug_console.cpp:127
 #, kde-format
 msgctxt "A mouse button"
-msgid "Extra Button 16"
+msgid "Extra Button 11"
 msgstr ""
 
 #: debug_console.cpp:129
 #, kde-format
 msgctxt "A mouse button"
-msgid "Extra Button 17"
+msgid "Extra Button 12"
 msgstr ""
 
 #: debug_console.cpp:131
 #, kde-format
 msgctxt "A mouse button"
-msgid "Extra Button 18"
+msgid "Extra Button 13"
 msgstr ""
 
 #: debug_console.cpp:133
 #, kde-format
 msgctxt "A mouse button"
-msgid "Extra Button 19"
+msgid "Extra Button 14"
 msgstr ""
 
 #: debug_console.cpp:135
 #, kde-format
 msgctxt "A mouse button"
-msgid "Extra Button 20"
+msgid "Extra Button 15"
 msgstr ""
 
 #: debug_console.cpp:137
 #, kde-format
 msgctxt "A mouse button"
-msgid "Extra Button 21"
+msgid "Extra Button 16"
 msgstr ""
 
 #: debug_console.cpp:139
 #, kde-format
 msgctxt "A mouse button"
-msgid "Extra Button 22"
+msgid "Extra Button 17"
 msgstr ""
 
 #: debug_console.cpp:141
 #, kde-format
 msgctxt "A mouse button"
-msgid "Extra Button 23"
+msgid "Extra Button 18"
 msgstr ""
 
 #: debug_console.cpp:143
 #, kde-format
 msgctxt "A mouse button"
+msgid "Extra Button 19"
+msgstr ""
+
+#: debug_console.cpp:145
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 20"
+msgstr ""
+
+#: debug_console.cpp:147
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 21"
+msgstr ""
+
+#: debug_console.cpp:149
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 22"
+msgstr ""
+
+#: debug_console.cpp:151
+#, kde-format
+msgctxt "A mouse button"
+msgid "Extra Button 23"
+msgstr ""
+
+#: debug_console.cpp:153
+#, kde-format
+msgctxt "A mouse button"
 msgid "Extra Button 24"
 msgstr ""
 
-#: debug_console.cpp:152 debug_console.cpp:154
+#: debug_console.cpp:162 debug_console.cpp:164
 #, kde-format
 msgid "Input Device"
 msgstr ""
 
-#: debug_console.cpp:152
+#: debug_console.cpp:162
 #, kde-format
 msgctxt "The input device of the event is not known"
 msgid "Unknown"
 msgstr ""
 
-#: debug_console.cpp:189
+#: debug_console.cpp:199
 #, kde-format
 msgctxt "A mouse pointer motion event"
 msgid "Pointer Motion"
 msgstr ""
 
-#: debug_console.cpp:196
+#: debug_console.cpp:204
 #, kde-format
 msgctxt "The relative mouse movement"
 msgid "Delta"
 msgstr ""
 
-#: debug_console.cpp:200
+#: debug_console.cpp:208
 #, kde-format
 msgctxt "The relative mouse movement"
 msgid "Delta (not accelerated)"
 msgstr ""
 
-#: debug_console.cpp:203
+#: debug_console.cpp:211
 #, kde-format
 msgctxt "The global mouse pointer position"
 msgid "Global Position"
 msgstr ""
 
-#: debug_console.cpp:207
+#: debug_console.cpp:215
 #, kde-format
 msgctxt "A mouse pointer button press event"
 msgid "Pointer Button Press"
 msgstr ""
 
-#: debug_console.cpp:210 debug_console.cpp:218
+#: debug_console.cpp:218 debug_console.cpp:226
 #, kde-format
 msgctxt "A button in a mouse press/release event"
 msgid "Button"
 msgstr ""
 
-#: debug_console.cpp:211 debug_console.cpp:219
+#: debug_console.cpp:219 debug_console.cpp:227
 #, kde-format
 msgctxt "A button in a mouse press/release event"
 msgid "Native Button code"
 msgstr ""
 
-#: debug_console.cpp:212 debug_console.cpp:220
+#: debug_console.cpp:220 debug_console.cpp:228
 #, kde-format
 msgctxt "All currently pressed buttons in a mouse press/release event"
 msgid "Pressed Buttons"
 msgstr ""
 
-#: debug_console.cpp:215
+#: debug_console.cpp:223
 #, kde-format
 msgctxt "A mouse pointer button release event"
 msgid "Pointer Button Release"
 msgstr ""
 
-#: debug_console.cpp:235
+#: debug_console.cpp:243
 #, kde-format
 msgctxt "A mouse pointer axis (wheel) event"
 msgid "Pointer Axis"
 msgstr ""
 
-#: debug_console.cpp:239
+#: debug_console.cpp:247
 #, kde-format
 msgctxt "The orientation of a pointer axis event"
 msgid "Orientation"
 msgstr ""
 
-#: debug_console.cpp:240
+#: debug_console.cpp:248
 #, kde-format
 msgctxt "An orientation of a pointer axis event"
 msgid "Horizontal"
 msgstr ""
 
-#: debug_console.cpp:241
+#: debug_console.cpp:249
 #, kde-format
 msgctxt "An orientation of a pointer axis event"
 msgid "Vertical"
 msgstr ""
 
-#: debug_console.cpp:242
+#: debug_console.cpp:250
 #, kde-format
 msgctxt "The angle delta of a pointer axis event"
 msgid "Delta"
 msgstr ""
 
-#: debug_console.cpp:257
+#: debug_console.cpp:265
 #, kde-format
 msgctxt "A key press event"
 msgid "Key Press"
 msgstr ""
 
-#: debug_console.cpp:260
+#: debug_console.cpp:268
 #, kde-format
 msgctxt "A key release event"
 msgid "Key Release"
 msgstr ""
 
-#: debug_console.cpp:269
+#: debug_console.cpp:277
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Shift"
 msgstr ""
 
-#: debug_console.cpp:273
+#: debug_console.cpp:281
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Control"
 msgstr ""
 
-#: debug_console.cpp:277
+#: debug_console.cpp:285
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Alt"
 msgstr ""
 
-#: debug_console.cpp:281
+#: debug_console.cpp:289
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Meta"
 msgstr ""
 
-#: debug_console.cpp:285
+#: debug_console.cpp:293
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Keypad"
 msgstr ""
 
-#: debug_console.cpp:289
+#: debug_console.cpp:297
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Group-switch"
 msgstr ""
 
-#: debug_console.cpp:295
+#: debug_console.cpp:303
 #, kde-format
 msgctxt "Whether the event is an automatic key repeat"
 msgid "Repeat"
 msgstr ""
 
-#: debug_console.cpp:299
+#: debug_console.cpp:307
 #, kde-format
 msgctxt "The code as read from the input device"
 msgid "Scan code"
 msgstr ""
 
-#: debug_console.cpp:300
+#: debug_console.cpp:308
 #, kde-format
 msgctxt "Key according to Qt"
 msgid "Qt::Key code"
 msgstr ""
 
-#: debug_console.cpp:302
+#: debug_console.cpp:310
 #, kde-format
 msgctxt "The translated code to an Xkb symbol"
 msgid "Xkb symbol"
 msgstr ""
 
-#: debug_console.cpp:303
+#: debug_console.cpp:311
 #, kde-format
 msgctxt "The translated code interpreted as text"
 msgid "Utf8"
 msgstr ""
 
-#: debug_console.cpp:304
+#: debug_console.cpp:312
 #, kde-format
 msgctxt "The currently active modifiers"
 msgid "Modifiers"
 msgstr ""
 
-#: debug_console.cpp:316
+#: debug_console.cpp:324
 #, kde-format
 msgctxt "A touch down event"
 msgid "Touch down"
 msgstr ""
 
-#: debug_console.cpp:318 debug_console.cpp:333 debug_console.cpp:348
+#: debug_console.cpp:326 debug_console.cpp:341 debug_console.cpp:356
 #, kde-format
 msgctxt "The id of the touch point in the touch event"
 msgid "Point identifier"
 msgstr ""
 
-#: debug_console.cpp:319 debug_console.cpp:334
+#: debug_console.cpp:327 debug_console.cpp:342
 #, kde-format
 msgctxt "The global position of the touch point"
 msgid "Global position"
 msgstr ""
 
-#: debug_console.cpp:331
+#: debug_console.cpp:339
 #, kde-format
 msgctxt "A touch motion event"
 msgid "Touch Motion"
 msgstr ""
 
-#: debug_console.cpp:346
+#: debug_console.cpp:354
 #, kde-format
 msgctxt "A touch up event"
 msgid "Touch Up"
 msgstr ""
 
-#: debug_console.cpp:359
+#: debug_console.cpp:367
 #, kde-format
 msgctxt "A pinch gesture is started"
 msgid "Pinch start"
 msgstr ""
 
-#: debug_console.cpp:361
+#: debug_console.cpp:369
 #, kde-format
 msgctxt "Number of fingers in this pinch gesture"
 msgid "Finger count"
 msgstr ""
 
-#: debug_console.cpp:372
+#: debug_console.cpp:380
 #, kde-format
 msgctxt "A pinch gesture is updated"
 msgid "Pinch update"
 msgstr ""
 
-#: debug_console.cpp:374
+#: debug_console.cpp:382
 #, kde-format
 msgctxt "Current scale in pinch gesture"
 msgid "Scale"
 msgstr ""
 
-#: debug_console.cpp:375
+#: debug_console.cpp:383
 #, kde-format
 msgctxt "Current angle in pinch gesture"
 msgid "Angle delta"
 msgstr ""
 
-#: debug_console.cpp:376
+#: debug_console.cpp:384
 #, kde-format
 msgctxt "Current delta in pinch gesture"
 msgid "Delta x"
 msgstr ""
 
-#: debug_console.cpp:377
+#: debug_console.cpp:385
 #, kde-format
 msgctxt "Current delta in pinch gesture"
 msgid "Delta y"
 msgstr ""
 
-#: debug_console.cpp:388
+#: debug_console.cpp:396
 #, kde-format
 msgctxt "A pinch gesture ended"
 msgid "Pinch end"
 msgstr ""
 
-#: debug_console.cpp:400
+#: debug_console.cpp:408
 #, kde-format
 msgctxt "A pinch gesture got cancelled"
 msgid "Pinch cancelled"
 msgstr ""
 
-#: debug_console.cpp:412
+#: debug_console.cpp:420
 #, kde-format
 msgctxt "A swipe gesture is started"
 msgid "Swipe start"
 msgstr ""
 
-#: debug_console.cpp:414
+#: debug_console.cpp:422
 #, kde-format
 msgctxt "Number of fingers in this swipe gesture"
 msgid "Finger count"
 msgstr ""
 
-#: debug_console.cpp:425
+#: debug_console.cpp:433
 #, kde-format
 msgctxt "A swipe gesture is updated"
 msgid "Swipe update"
 msgstr ""
 
-#: debug_console.cpp:427
+#: debug_console.cpp:435
 #, kde-format
 msgctxt "Current delta in swipe gesture"
 msgid "Delta x"
 msgstr ""
 
-#: debug_console.cpp:428
+#: debug_console.cpp:436
 #, kde-format
 msgctxt "Current delta in swipe gesture"
 msgid "Delta y"
 msgstr ""
 
-#: debug_console.cpp:439
+#: debug_console.cpp:447
 #, kde-format
 msgctxt "A swipe gesture ended"
 msgid "Swipe end"
 msgstr ""
 
-#: debug_console.cpp:451
+#: debug_console.cpp:459
 #, kde-format
 msgctxt "A swipe gesture got cancelled"
 msgid "Swipe cancelled"
 msgstr ""
 
-#: debug_console.cpp:463
+#: debug_console.cpp:471
 #, kde-format
 msgctxt "A hardware switch (e.g. notebook lid) got toggled"
 msgid "Switch toggled"
 msgstr ""
 
-#: debug_console.cpp:471
+#: debug_console.cpp:477
 #, kde-format
 msgctxt "Name of a hardware switch"
 msgid "Notebook lid"
 msgstr ""
 
-#: debug_console.cpp:473
+#: debug_console.cpp:479
 #, kde-format
 msgctxt "Name of a hardware switch"
 msgid "Tablet mode"
 msgstr ""
 
-#: debug_console.cpp:475
+#: debug_console.cpp:481
 #, kde-format
 msgctxt "A hardware switch"
 msgid "Switch"
 msgstr ""
 
-#: debug_console.cpp:479
+#: debug_console.cpp:485
 #, kde-format
 msgctxt "The hardware switch got turned off"
 msgid "Off"
 msgstr ""
 
-#: debug_console.cpp:482
+#: debug_console.cpp:488
 #, kde-format
 msgctxt "The hardware switch got turned on"
 msgid "On"
 msgstr ""
 
-#: debug_console.cpp:487
+#: debug_console.cpp:493
 #, kde-format
 msgctxt "State of a hardware switch (on/off)"
 msgid "State"
 msgstr ""
 
-#: debug_console.cpp:502
+#: debug_console.cpp:508
 #, kde-format
 msgid "Tablet Tool"
 msgstr ""
 
-#: debug_console.cpp:503
+#: debug_console.cpp:509
 #, kde-format
 msgid "EventType"
 msgstr ""
 
-#: debug_console.cpp:504 debug_console.cpp:549 debug_console.cpp:563
+#: debug_console.cpp:510 debug_console.cpp:555 debug_console.cpp:569
 #, kde-format
 msgid "Position"
 msgstr ""
 
-#: debug_console.cpp:506
+#: debug_console.cpp:512
 #, kde-format
 msgid "Tilt"
 msgstr ""
 
-#: debug_console.cpp:508
+#: debug_console.cpp:514
 #, kde-format
 msgid "Rotation"
 msgstr ""
 
-#: debug_console.cpp:509
+#: debug_console.cpp:515
 #, kde-format
 msgid "Pressure"
 msgstr ""
 
-#: debug_console.cpp:510
+#: debug_console.cpp:516
 #, kde-format
 msgid "Buttons"
 msgstr ""
 
 #. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
-#: debug_console.cpp:511 debug_console.ui:356
+#: debug_console.cpp:517 debug_console.ui:356
 #, kde-format
 msgid "Modifiers"
 msgstr ""
 
-#: debug_console.cpp:520
+#: debug_console.cpp:526
 #, kde-format
 msgid "Tablet Tool Button"
 msgstr ""
 
-#: debug_console.cpp:521 debug_console.cpp:535
+#: debug_console.cpp:527 debug_console.cpp:541
 #, kde-format
 msgid "Button"
 msgstr ""
 
-#: debug_console.cpp:522 debug_console.cpp:536
+#: debug_console.cpp:528 debug_console.cpp:542
 #, kde-format
 msgid "Pressed"
 msgstr ""
 
-#: debug_console.cpp:523 debug_console.cpp:537 debug_console.cpp:551
-#: debug_console.cpp:565
+#: debug_console.cpp:529 debug_console.cpp:543 debug_console.cpp:557
+#: debug_console.cpp:571
 #, kde-format
 msgid "Tablet"
 msgstr ""
 
-#: debug_console.cpp:534
+#: debug_console.cpp:540
 #, kde-format
 msgid "Tablet Pad Button"
 msgstr ""
 
-#: debug_console.cpp:547
+#: debug_console.cpp:553
 #, kde-format
 msgid "Tablet Pad Strip"
 msgstr ""
 
-#: debug_console.cpp:548 debug_console.cpp:562
+#: debug_console.cpp:554 debug_console.cpp:568
 #, kde-format
 msgid "Number"
 msgstr ""
 
-#: debug_console.cpp:550 debug_console.cpp:564
+#: debug_console.cpp:556 debug_console.cpp:570
 #, kde-format
 msgid "isFinger"
 msgstr ""
 
-#: debug_console.cpp:561
+#: debug_console.cpp:567
 #, kde-format
 msgid "Tablet Pad Ring"
 msgstr ""
 
-#: debug_console.cpp:791
+#: debug_console.cpp:797
 #, kde-format
 msgid "No Mouse Buttons"
-msgstr ""
-
-#: debug_console.cpp:795
-#, kde-format
-msgctxt "Mouse Button"
-msgid "left"
-msgstr ""
-
-#: debug_console.cpp:798
-#, kde-format
-msgctxt "Mouse Button"
-msgid "right"
 msgstr ""
 
 #: debug_console.cpp:801
 #, kde-format
 msgctxt "Mouse Button"
-msgid "middle"
+msgid "left"
 msgstr ""
 
 #: debug_console.cpp:804
 #, kde-format
 msgctxt "Mouse Button"
-msgid "back"
+msgid "right"
 msgstr ""
 
 #: debug_console.cpp:807
 #, kde-format
 msgctxt "Mouse Button"
-msgid "forward"
+msgid "middle"
 msgstr ""
 
 #: debug_console.cpp:810
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 1"
+msgid "back"
 msgstr ""
 
 #: debug_console.cpp:813
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 2"
+msgid "forward"
 msgstr ""
 
 #: debug_console.cpp:816
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 3"
+msgid "extra 1"
 msgstr ""
 
 #: debug_console.cpp:819
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 4"
+msgid "extra 2"
 msgstr ""
 
 #: debug_console.cpp:822
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 5"
+msgid "extra 3"
 msgstr ""
 
 #: debug_console.cpp:825
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 6"
+msgid "extra 4"
 msgstr ""
 
 #: debug_console.cpp:828
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 7"
+msgid "extra 5"
 msgstr ""
 
 #: debug_console.cpp:831
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 8"
+msgid "extra 6"
 msgstr ""
 
 #: debug_console.cpp:834
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 9"
+msgid "extra 7"
 msgstr ""
 
 #: debug_console.cpp:837
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 10"
+msgid "extra 8"
 msgstr ""
 
 #: debug_console.cpp:840
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 11"
+msgid "extra 9"
 msgstr ""
 
 #: debug_console.cpp:843
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 12"
+msgid "extra 10"
 msgstr ""
 
 #: debug_console.cpp:846
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 13"
+msgid "extra 11"
 msgstr ""
 
 #: debug_console.cpp:849
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 14"
+msgid "extra 12"
 msgstr ""
 
 #: debug_console.cpp:852
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 15"
+msgid "extra 13"
 msgstr ""
 
 #: debug_console.cpp:855
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 16"
+msgid "extra 14"
 msgstr ""
 
 #: debug_console.cpp:858
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 17"
+msgid "extra 15"
 msgstr ""
 
 #: debug_console.cpp:861
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 18"
+msgid "extra 16"
 msgstr ""
 
 #: debug_console.cpp:864
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 19"
+msgid "extra 17"
 msgstr ""
 
 #: debug_console.cpp:867
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 20"
+msgid "extra 18"
 msgstr ""
 
 #: debug_console.cpp:870
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 21"
+msgid "extra 19"
 msgstr ""
 
 #: debug_console.cpp:873
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 22"
+msgid "extra 20"
 msgstr ""
 
 #: debug_console.cpp:876
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 23"
+msgid "extra 21"
 msgstr ""
 
 #: debug_console.cpp:879
 #, kde-format
 msgctxt "Mouse Button"
-msgid "extra 24"
+msgid "extra 22"
 msgstr ""
 
 #: debug_console.cpp:882
 #, kde-format
 msgctxt "Mouse Button"
+msgid "extra 23"
+msgstr ""
+
+#: debug_console.cpp:885
+#, kde-format
+msgctxt "Mouse Button"
+msgid "extra 24"
+msgstr ""
+
+#: debug_console.cpp:888
+#, kde-format
+msgctxt "Mouse Button"
 msgid "task"
 msgstr ""
 
-#: debug_console.cpp:1216
+#: debug_console.cpp:1222
 #, kde-format
 msgid "X11 Windows"
 msgstr ""
 
-#: debug_console.cpp:1218
+#: debug_console.cpp:1224
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr ""
 
-#: debug_console.cpp:1220
+#: debug_console.cpp:1226
 #, kde-format
 msgid "Wayland Windows"
 msgstr ""
 
-#: debug_console.cpp:1222
+#: debug_console.cpp:1228
 #, kde-format
 msgid "Internal Windows"
 msgstr ""
@@ -1155,22 +1155,22 @@ msgstr "&Avslutt program %1"
 msgid "Wait Longer"
 msgstr "Vent lenger"
 
-#: input.cpp:1982
+#: input.cpp:1984
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2061
+#: input.cpp:2063
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr ""
 
-#: input.cpp:2061
+#: input.cpp:2063
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3026
+#: input.cpp:3040
 #, kde-format
 msgid "Touchpad"
 msgstr ""
@@ -2569,13 +2569,13 @@ msgstr "Bytt til vinduet til venstre"
 
 #: useractions.cpp:1068
 #, kde-format
-msgid "Increase Opacity of Active Window by 5 %"
-msgstr "Øk tetthet med 5 % i det aktive vinduet"
+msgid "Increase Opacity of Active Window by 5%"
+msgstr ""
 
 #: useractions.cpp:1070
 #, kde-format
-msgid "Decrease Opacity of Active Window by 5 %"
-msgstr "Minsk tetthet med 5 % i det aktive vinduet"
+msgid "Decrease Opacity of Active Window by 5%"
+msgstr ""
 
 #: useractions.cpp:1073
 #, kde-format
@@ -2758,7 +2758,7 @@ msgstr "Hopp ett skrivebord ned"
 msgid "Switch to Desktop %1"
 msgstr "Bytt til skrivebord %1"
 
-#: window.cpp:3458
+#: window.cpp:3459
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

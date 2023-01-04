@@ -3,7 +3,7 @@
 # Lukáš Tinkl <lukas@kde.org>, 2010, 2011, 2012.
 # Vít Pelčák <vit@pelcak.org>, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017.
 # Tomáš Chvátal <tomas.chvatal@gmail.com>, 2013.
-# Vit Pelcak <vpelcak@suse.cz>, 2017, 2018, 2019, 2021, 2022.
+# Vit Pelcak <vit@pelcak.org>, 2017, 2018, 2019, 2021, 2022.
 #
 msgid ""
 msgstr ""
@@ -167,44 +167,3 @@ msgstr ""
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Znovu povolit detekci OpenGL"
-
-#~ msgid "Scale method:"
-#~ msgstr "Metoda škálování:"
-
-#~ msgid "Smooth"
-#~ msgstr "Jemná"
-
-#~ msgid "Accurate"
-#~ msgstr "Přesná"
-
-#~ msgid "Tearing prevention (\"vsync\"):"
-#~ msgstr "Zabránění trhání (\"VSync\"):"
-
-#~ msgid "Automatic"
-#~ msgstr "Automaticky"
-
-#~ msgid "Only when cheap"
-#~ msgstr "Pouze pokud není náročné"
-
-#~ msgid "Full screen repaints"
-#~ msgstr "Překreslení celé obrazovky"
-
-#~ msgid "Re-use screen content"
-#~ msgstr "Znovu využít obsah obrazovky"
-
-#~ msgid ""
-#~ "\"Only when cheap\" only prevents tearing for full screen changes like a "
-#~ "video."
-#~ msgstr ""
-#~ "\"Pouze pokud není náročné\" zabrání trhání pouze po změny na celé "
-#~ "obrazovce jako třeba při přehrávání videa."
-
-#~ msgid "\"Full screen repaints\" can cause performance problems."
-#~ msgstr "\"Překreslení celé obrazovky\" může způsobit výkonnostní problémy"
-
-#~ msgid ""
-#~ "\"Re-use screen content\" causes severe performance problems on MESA "
-#~ "drivers."
-#~ msgstr ""
-#~ "\"Znovu využít obsah obrazovky\" způsobuje na ovladačích MESA vážné "
-#~ "výkonnostní problémy."

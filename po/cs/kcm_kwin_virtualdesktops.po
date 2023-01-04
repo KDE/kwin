@@ -28,14 +28,13 @@ msgid "Your emails"
 msgstr "vit@pelcak.org"
 
 #: desktopsmodel.cpp:191
-#, fuzzy, kde-format
-#| msgid "New Desktop"
+#, kde-format
 msgctxt "A numbered name for virtual desktops"
 msgid "Desktop %1"
 msgid_plural "Desktop %1"
-msgstr[0] "Nová pracovní plocha"
-msgstr[1] "Nová pracovní plocha"
-msgstr[2] "Nová pracovní plocha"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: desktopsmodel.cpp:479
 #, kde-format

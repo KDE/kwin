@@ -3,7 +3,7 @@
 # Lukáš Tinkl <lukas@kde.org>, 2010, 2011, 2012.
 # Vít Pelčák <vit@pelcak.org>, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017.
 # Tomáš Chvátal <tomas.chvatal@gmail.com>, 2013.
-# Vit Pelcak <vpelcak@suse.cz>, 2017, 2018, 2019.
+# Vit Pelcak <vit@pelcak.org>, 2017, 2018, 2019.
 #
 msgid ""
 msgstr ""
@@ -51,12 +51,10 @@ msgid "Focus"
 msgstr "Zaměření"
 
 #: effectsmodel.cpp:55
-#, fuzzy, kde-format
-#| msgctxt "Category of Desktop Effects, used as section header"
-#| msgid "Show Desktop Animation"
+#, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Peek at Desktop Animation"
-msgstr "Zobrazit animaci pracovní plochy"
+msgstr ""
 
 #: effectsmodel.cpp:56
 #, kde-format

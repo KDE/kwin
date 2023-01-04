@@ -3,7 +3,7 @@
 # Vít Pelčák <vit@pelcak.org>, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020.
 # Lukáš Tinkl <lukas@kde.org>, 2010, 2011, 2012.
 # Tomáš Chvátal <tomas.chvatal@gmail.com>, 2012.
-# Vit Pelcak <vpelcak@suse.cz>, 2021, 2022.
+# Vit Pelcak <vit@pelcak.org>, 2021, 2022.
 #
 msgid ""
 msgstr ""
@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-17 00:51+0000\n"
 "PO-Revision-Date: 2022-06-27 14:36+0200\n"
-"Last-Translator: Vit Pelcak <vpelcak@suse.cz>\n"
+"Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
@@ -198,11 +198,12 @@ msgstr "Nejbližší"
 msgid "Natural"
 msgstr "Přirozený"
 
+# žádné parametry funkce v inspektoru funkcí
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: desktopgrid/desktopgrid_config.ui:147
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Nic"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: desktopgrid/desktopgrid_config.ui:155
@@ -322,7 +323,7 @@ msgstr "Přepnout inverzní efekt na okno"
 #: invert/invert.cpp:56
 #, kde-format
 msgid "Invert Screen Colors"
-msgstr ""
+msgstr "Invertovat barvy na obrazovce"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: login/package/contents/ui/config.ui:17
@@ -742,7 +743,7 @@ msgstr ""
 #: tileseditor/qml/main.qml:147
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "Odstup:"
 
 #: tileseditor/qml/main.qml:157
 #, kde-format
@@ -750,22 +751,19 @@ msgid "Load Layout..."
 msgstr ""
 
 #: tileseditor/qml/main.qml:271
-#, fuzzy, kde-format
-#| msgid "Closest"
+#, kde-format
 msgid "Close"
-msgstr "Nejbližší"
+msgstr "Zavřít"
 
 #: tileseditor/qml/TileDelegate.qml:171
-#, fuzzy, kde-format
-#| msgid "Horizontal:"
+#, kde-format
 msgid "Split Horizontally"
-msgstr "Vodorovně:"
+msgstr ""
 
 #: tileseditor/qml/TileDelegate.qml:178
-#, fuzzy, kde-format
-#| msgid "Vertical:"
+#, kde-format
 msgid "Split Vertically"
-msgstr "Svisle:"
+msgstr "Rozdělit svisle"
 
 #: tileseditor/qml/TileDelegate.qml:186 tileseditor/qml/TileDelegate.qml:215
 #, kde-format
@@ -775,7 +773,7 @@ msgstr ""
 #: tileseditor/qml/TileDelegate.qml:195
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "Smazat"
 
 #: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
 #, kde-format
@@ -943,10 +941,9 @@ msgid "No Windows"
 msgstr "Žádná okna"
 
 #: windowview/qml/main.qml:120
-#, fuzzy, kde-format
-#| msgid "Fullscreen windows"
+#, kde-format
 msgid "Filter windows…"
-msgstr "Okna přes celou obrazovku"
+msgstr ""
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: wobblywindows/wobblywindows_config.ui:20

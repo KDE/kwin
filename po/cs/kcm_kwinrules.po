@@ -3,7 +3,7 @@
 # Vít Pelčák <vit@pelcak.org>, 2010, 2011, 2012, 2013, 2014, 2015, 2017.
 # Lukáš Tinkl <ltinkl@redhat.com>, 2010, 2011.
 # Tomáš Chvátal <tomas.chvatal@gmail.com>, 2012, 2013.
-# Vit Pelcak <vpelcak@suse.cz>, 2017, 2018, 2019, 2020, 2021, 2022.
+# Vit Pelcak <vit@pelcak.org>, 2017, 2018, 2019, 2020, 2021, 2022.
 #
 msgid ""
 msgstr ""
@@ -762,10 +762,9 @@ msgid "Block compositing"
 msgstr "Zablokovat kompozici"
 
 #: rulesmodel.cpp:703
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Třída okna (aplikace)"
+msgstr ""
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -927,18 +926,11 @@ msgid "Extreme"
 msgstr "Extrémní"
 
 #: rulesmodel.cpp:865
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "Unmanaged window"
-msgstr "Na hlavním okně"
+msgstr ""
 
 #: rulesmodel.cpp:866
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
-
-#~ msgid "Error"
-#~ msgstr "Chyba"
-
-#~ msgid "Cascaded"
-#~ msgstr "Kaskáda"
