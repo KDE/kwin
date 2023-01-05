@@ -689,9 +689,9 @@ void Compositor::composite(RenderLoop *renderLoop)
             primaryLayer->endFrame(bufferDamage, surfaceDamage);
         }
     }
-    renderLoop->endFrame();
 
     postPaintPass(superLayer);
+    renderLoop->endFrame();
 
     m_backend->present(output);
 
