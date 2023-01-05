@@ -266,7 +266,7 @@ void TestTabletInterface::testAdd()
     QCOMPARE(m_tabletSeatClient->m_tablets.count(), 1);
 
     QSignalSpy toolSpy(m_tabletSeatClient, &TabletSeat::toolAdded);
-    m_tool = seatInterface->addTool(KWaylandServer::TabletToolV2Interface::Pen, 0, 0, {TabletToolV2Interface::Tilt, TabletToolV2Interface::Pressure});
+    m_tool = seatInterface->addTool(KWaylandServer::TabletToolV2Interface::Pen, 0, 0, {TabletToolV2Interface::Tilt, TabletToolV2Interface::Pressure}, "my tablet");
     QVERIFY(m_tool);
     QVERIFY(toolSpy.wait() || toolSpy.count() == 1);
     QCOMPARE(m_tabletSeatClient->m_tools.count(), 1);

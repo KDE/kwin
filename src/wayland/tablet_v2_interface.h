@@ -121,8 +121,7 @@ private:
                                    quint32 hsl,
                                    quint32 hih,
                                    quint32 hil,
-                                   const QVector<Capability> &capability,
-                                   QObject *parent);
+                                   const QVector<Capability> &capability);
     std::unique_ptr<TabletToolV2InterfacePrivate> d;
 };
 
@@ -276,7 +275,7 @@ public:
                                        quint32 currentMode,
                                        TabletV2Interface *tablet);
     TabletToolV2Interface *
-    addTool(TabletToolV2Interface::Type type, quint64 hardwareSerial, quint64 hardwareId, const QVector<TabletToolV2Interface::Capability> &capabilities);
+    addTool(TabletToolV2Interface::Type type, quint64 hardwareSerial, quint64 hardwareId, const QVector<TabletToolV2Interface::Capability> &capabilities, const QString &deviceSysName);
 
     TabletToolV2Interface *toolByHardwareId(quint64 hardwareId) const;
     TabletToolV2Interface *toolByHardwareSerial(quint64 hardwareSerial, TabletToolV2Interface::Type type) const;

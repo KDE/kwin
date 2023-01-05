@@ -2132,7 +2132,7 @@ public:
         ifaceCapabilities.resize(tabletToolId.m_capabilities.size());
         std::transform(tabletToolId.m_capabilities.constBegin(), tabletToolId.m_capabilities.constEnd(), ifaceCapabilities.begin(), f);
 
-        TabletToolV2Interface *tool = tabletSeat->addTool(getType(tabletToolId), tabletToolId.m_serialId, tabletToolId.m_uniqueId, ifaceCapabilities);
+        TabletToolV2Interface *tool = tabletSeat->addTool(getType(tabletToolId), tabletToolId.m_serialId, tabletToolId.m_uniqueId, ifaceCapabilities, tabletToolId.deviceSysName);
 
         const auto cursor = new SurfaceCursor(tool);
         Cursors::self()->addCursor(cursor);

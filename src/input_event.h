@@ -191,6 +191,7 @@ private:
 class TabletToolId
 {
 public:
+    QString deviceSysName;
     InputRedirection::TabletToolType m_toolType;
     QVector<InputRedirection::Capability> m_capabilities;
     quint64 m_serialId;

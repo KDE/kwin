@@ -207,10 +207,8 @@ TabletToolV2Interface::TabletToolV2Interface(Display *display,
                                              uint32_t hsl,
                                              uint32_t hih,
                                              uint32_t hil,
-                                             const QVector<Capability> &capabilities,
-                                             QObject *parent)
-    : QObject(parent)
-    , d(new TabletToolV2InterfacePrivate(this, display, type, hsh, hsl, hih, hil, capabilities))
+                                             const QVector<Capability> &capabilities)
+    : d(new TabletToolV2InterfacePrivate(this, display, type, hsh, hsl, hih, hil, capabilities))
 {
 }
 
@@ -632,8 +630,10 @@ public:
             sendPadAdded(resource, pad);
         }
 
-        for (auto *tool : std::as_const(m_tools)) {
-            sendToolAdded(resource, tool);
+        for (const auto &tools : std::as_const(m_tools)) {
+            for (auto *tool : tools) {
+                sendToolAdded(resource, tool);
+            }
         }
     }
 
@@ -700,7 +700,7 @@ public:
     }
 
     TabletSeatV2Interface *const q;
-    QVector<TabletToolV2Interface *> m_tools;
+    QHash<QString, QVector<TabletToolV2Interface *>> m_tools;
     QHash<QString, TabletV2Interface *> m_tablets;
     QHash<QString, TabletPadV2Interface *> m_pads;
     Display *const m_display;
@@ -717,7 +717,8 @@ TabletSeatV2Interface::~TabletSeatV2Interface() = default;
 TabletToolV2Interface *TabletSeatV2Interface::addTool(TabletToolV2Interface::Type type,
                                                       quint64 hardwareSerial,
                                                       quint64 hardwareId,
-                                                      const QVector<TabletToolV2Interface::Capability> &capabilities)
+                                                      const QVector<TabletToolV2Interface::Capability> &capabilities,
+                                                      const QString &deviceSysName)
 {
     constexpr auto MAX_UINT_32 = std::numeric_limits<quint32>::max();
     auto tool = new TabletToolV2Interface(d->m_display,
@@ -726,17 +727,12 @@ TabletToolV2Interface *TabletSeatV2Interface::addTool(TabletToolV2Interface::Typ
                                           hardwareSerial & MAX_UINT_32,
                                           hardwareId >> 32,
                                           hardwareId & MAX_UINT_32,
-                                          capabilities,
-                                          this);
+                                          capabilities);
     for (QtWaylandServer::zwp_tablet_seat_v2::Resource *resource : d->resourceMap()) {
         d->sendToolAdded(resource, tool);
     }
 
-    d->m_tools.append(tool);
-    QObject::connect(tool, &QObject::destroyed, this, [this](QObject *object) {
-        auto tti = static_cast<TabletToolV2Interface *>(object);
-        d->m_tools.removeAll(tti);
-    });
+    d->m_tools[deviceSysName].append(tool);
     return tool;
 }
 
@@ -781,13 +777,17 @@ void TabletSeatV2Interface::removeDevice(const QString &sysname)
 {
     delete d->m_tablets.take(sysname);
     delete d->m_pads.take(sysname);
+
+    qDeleteAll(d->m_tools.take(sysname));
 }
 
 TabletToolV2Interface *TabletSeatV2Interface::toolByHardwareId(quint64 hardwareId) const
 {
-    for (TabletToolV2Interface *tool : std::as_const(d->m_tools)) {
-        if (tool->d->hardwareId() == hardwareId) {
-            return tool;
+    for (const auto &tools : std::as_const(d->m_tools)) {
+        for (TabletToolV2Interface *tool : tools) {
+            if (tool->d->hardwareId() == hardwareId) {
+                return tool;
+            }
         }
     }
     return nullptr;
@@ -795,9 +795,12 @@ TabletToolV2Interface *TabletSeatV2Interface::toolByHardwareId(quint64 hardwareI
 
 TabletToolV2Interface *TabletSeatV2Interface::toolByHardwareSerial(quint64 hardwareSerial, TabletToolV2Interface::Type type) const
 {
-    for (TabletToolV2Interface *tool : std::as_const(d->m_tools)) {
-        if (tool->d->hardwareSerial() == hardwareSerial && tool->d->m_type == type)
-            return tool;
+    for (const auto &tools : std::as_const(d->m_tools)) {
+        for (TabletToolV2Interface *tool : tools) {
+            if (tool->d->hardwareSerial() == hardwareSerial && tool->d->m_type == type) {
+                return tool;
+            }
+        }
     }
     return nullptr;
 }
