@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-04 00:50+0000\n"
-"PO-Revision-Date: 2022-12-25 06:59+0100\n"
+"PO-Revision-Date: 2023-01-04 07:36+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -2346,10 +2346,9 @@ msgid "&All Activities"
 msgstr "&ყველა აქტივობა"
 
 #: useractions.cpp:776
-#, fuzzy, kde-format
-#| msgid "Move to %1 %2"
+#, kde-format
 msgid "Move to %1"
-msgstr "%1-ის %2-ზე გადატანა"
+msgstr "%1-ზე გადატანა"
 
 #: useractions.cpp:901
 #, kde-format
@@ -2691,7 +2690,7 @@ msgstr "ფანჯრის ნაძალადევი დაღუპვ�
 #: useractions.cpp:1134
 #, kde-format
 msgid "Suspend Compositing"
-msgstr ""
+msgstr "კომპოზიტური გაფართოების შეჩერება"
 
 #: useractions.cpp:1195
 #, kde-format

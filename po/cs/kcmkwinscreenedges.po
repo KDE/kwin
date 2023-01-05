@@ -2,22 +2,22 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Lukáš Tinkl <lukas@kde.org>, 2010, 2012, 2013.
 # Vít Pelčák <vit@pelcak.org>, 2014, 2016, 2017, 2018, 2019.
-# Vit Pelcak <vit@pelcak.org>, 2021.
+# Vit Pelcak <vit@pelcak.org>, 2021, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-07-15 00:48+0000\n"
-"PO-Revision-Date: 2021-10-26 17:22+0200\n"
-"Last-Translator: Vit Pelcak <vpelcak@suse.cz>\n"
+"PO-Revision-Date: 2023-01-04 15:26+0100\n"
+"Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 21.08.2\n"
+"X-Generator: Lokalize 22.12.0\n"
 "X-Language: cs_CZ\n"
 "X-Source-Language: en_US\n"
 
@@ -39,7 +39,7 @@ msgstr "Žádná činnost"
 #: main.cpp:131 touch.cpp:125
 #, kde-format
 msgid "Peek at Desktop"
-msgstr ""
+msgstr "Nakouknout na pracovní plochu"
 
 #: main.cpp:132 touch.cpp:126
 #, kde-format
@@ -98,6 +98,8 @@ msgid ""
 "You can trigger an action by pushing the mouse cursor against the "
 "corresponding screen edge or corner."
 msgstr ""
+"Můžete spustit činnost posunutím kurzoru myši proti odpovídajícímu okraji "
+"nebo rohu."
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
 #: main.ui:67
@@ -133,13 +135,13 @@ msgstr "Chování:"
 #: main.ui:108
 #, kde-format
 msgid "Remain active when windows are fullscreen"
-msgstr ""
+msgstr "Zůstat aktivní pokud jsou okna přes celou obrazovku"
 
 #. i18n: ectx: property (text), widget (QLabel, electricBorderCornerRatioLabel)
 #: main.ui:115
 #, kde-format
 msgid "Trigger &quarter tiling in:"
-msgstr ""
+msgstr "Spustit čtvrtinové &dlaždicování v:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, electricBorderCornerRatioSpin)
 #: main.ui:130
@@ -236,4 +238,4 @@ msgstr "Prodleva &reaktivace:"
 msgid ""
 "You can trigger an action by swiping from the screen edge towards the center "
 "of the screen."
-msgstr ""
+msgstr "Můžete spustit činnost přejetím z kraje obrazovky k jejímu středu"

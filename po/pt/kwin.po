@@ -2399,10 +2399,9 @@ msgid "&All Activities"
 msgstr "Tod&as as Actividades"
 
 #: useractions.cpp:776
-#, fuzzy, kde-format
-#| msgid "Move to %1 %2"
+#, kde-format
 msgid "Move to %1"
-msgstr "Mover para o %1 %2"
+msgstr "Mover para o %1"
 
 #: useractions.cpp:901
 #, kde-format
