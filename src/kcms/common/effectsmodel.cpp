@@ -536,12 +536,18 @@ void EffectsModel::save()
         return;
     }
 
-    for (const EffectData &effect : dirtyEffects) {
-        if (effect.status != Status::Disabled) {
-            interface.loadEffect(effect.serviceName);
-        } else {
-            interface.unloadEffect(effect.serviceName);
-        }
+    // Unload effects first, it's need to ensure that switching between mutually exclusive
+    // effects works as expected, for example so global shortcuts are handed over, etc.
+    auto split = std::partition(dirtyEffects.begin(), dirtyEffects.end(), [](const EffectData &data) {
+        return data.status == Status::Disabled;
+    });
+
+    for (auto it = dirtyEffects.begin(); it != split; ++it) {
+        interface.unloadEffect(it->serviceName);
+    }
+
+    for (auto it = split; it != dirtyEffects.end(); ++it) {
+        interface.loadEffect(it->serviceName);
     }
 }
 
