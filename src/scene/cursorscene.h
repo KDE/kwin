@@ -27,8 +27,12 @@ public:
     void postPaint() override;
     void paint(RenderTarget *renderTarget, const QRegion &region) override;
 
+    qreal scale() const;
+    void setScale(qreal scale);
+
 private:
     std::unique_ptr<CursorItem> m_rootItem;
+    qreal m_scale = 1;
 };
 
 } // namespace KWin

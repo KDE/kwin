@@ -24,6 +24,16 @@ CursorScene::~CursorScene()
     m_rootItem.reset();
 }
 
+qreal CursorScene::scale() const
+{
+    return m_scale;
+}
+
+void CursorScene::setScale(qreal scale)
+{
+    m_scale = scale;
+}
+
 void CursorScene::initialize()
 {
     m_rootItem = std::make_unique<CursorItem>(this);
@@ -57,9 +67,12 @@ void CursorScene::paint(RenderTarget *renderTarget, const QRegion &region)
     m_renderer->setRenderTargetRect(QRect(QPoint(0, 0), renderTarget->size() / renderTarget->devicePixelRatio()));
     m_renderer->setRenderTargetScale(renderTarget->devicePixelRatio());
 
+    WindowPaintData paintData(m_renderer->renderTargetProjectionMatrix());
+    paintData *= m_scale;
+
     m_renderer->beginFrame(renderTarget);
     m_renderer->renderBackground(region);
-    m_renderer->renderItem(m_rootItem.get(), 0, region, WindowPaintData(m_renderer->renderTargetProjectionMatrix()));
+    m_renderer->renderItem(m_rootItem.get(), 0, region, paintData);
     m_renderer->endFrame();
 }
 
