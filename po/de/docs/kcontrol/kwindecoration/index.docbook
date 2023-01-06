@@ -2,146 +2,108 @@
 <!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
 "dtd/kdedbx45.dtd" [
 <!ENTITY % addindex "IGNORE">
-<!ENTITY % German "INCLUDE"
-> <!-- change language only here -->
+<!ENTITY % English "INCLUDE" > <!-- change language only here -->
 ]>
 
 <article id="kwindecoration" lang="&language;">
 <articleinfo>
 <authorgroup>
-<author
->&Rik.Hemsley; &Rik.Hemsley.mail;</author>
-<author
->&Anne-Marie.Mahfouf; &Anne-Marie.Mahfouf.mail;</author>
-<othercredit role="translator"
-><firstname
->Stephan</firstname
-><surname
->Kulow</surname
-><affiliation
-><address
-><email
->coolo@kde.org</email
-></address
-></affiliation
-><contrib
->Deutsche Übersetzung</contrib
-></othercredit
-> 
+<author>&Rik.Hemsley; &Rik.Hemsley.mail;</author>
+<author>&Anne-Marie.Mahfouf; &Anne-Marie.Mahfouf.mail;</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date
->2021-04-09</date>
-<releaseinfo
->Plasma 5.21</releaseinfo>
+<date>2021-04-09</date>
+<releaseinfo>Plasma 5.21</releaseinfo>
 
 <keywordset>
-<keyword
->KDE</keyword>
-<keyword
->Systemeinstellungen</keyword>
-<keyword
->kwin</keyword>
-<keyword
->Fenster</keyword>
-<keyword
->Rand</keyword>
-<keyword
->Design</keyword>
-<keyword
->Stil</keyword>
+<keyword>KDE</keyword>
+<keyword>Systemsettings</keyword>
+<keyword>kwin</keyword>
+<keyword>window</keyword>
+<keyword>border</keyword>
+<keyword>theme</keyword>
+<keyword>style</keyword>
 </keywordset>
 </articleinfo>
 <sect1 id="window-deco">
-<title
->Fensterdekoration</title>
+<title>Window Decorations</title>
 
-<para
->Dieses Modul erlaubt Ihnen einen Stil für den Rahmen um die Fenster auszuwählen.</para>
+<para>This module allows you to select a style for the buttons and borders around
+the windows.</para>
 
 <sect2>
-<title
->Fensterdekoration</title>
+<title>Window Decorations</title>
 
 <para>
 <screenshot>
-<screeninfo
->Einstellungsmodul für die Fensterdekoration</screeninfo>
+<screeninfo>Window Decoration Configuration Module</screeninfo>
   <mediaobject>
     <imageobject>
       <imagedata fileref="main.png" format="PNG"/>
     </imageobject>
     <textobject>
-      <phrase
->Einstellungsmodul für die Fensterdekoration</phrase>
+      <phrase>Window Decoration Configuration Module</phrase>
     </textobject>
   </mediaobject>
 </screenshot>
 </para>
 
-<para
->Wählen Sie einen Fensterstil aus der Vorschauliste, die angezeigten Stile können mit der Suchleiste oben im Dialog gefiltert werden oder laden Sie einen neuen Stil mit dem Knopf <guibutton
->Neue Fensterdekorationen holen</guibutton
-> herunter.</para>
+<para>Choose a window decoration style from the preview list, using the 
+search field at the top of the screen or download a new style using the 
+<guibutton>Get New Window Decorations</guibutton> button.</para>
 
-<para
->Als Standard-Fensterdekoration der Stil <quote
->Breeze</quote
-> eingestellt.</para>
+<para>The default window decoration is called <quote>Breeze</quote>.</para>
 
-<para
->Jede Fensterdekoration hat ein anderes Aussehen und damit verbunden auch eigene Konventionen. Manche haben rundum (manchmal unsichtbare) Ränder zur Größenänderung, die zwar das Ändern der Fenstergröße erleichtern, aber das Verschieben schwieriger machen. Manche besitzen an einigen Kanten gar keine Ränder.</para>
+<para>Each style has a different look, but also a different
+<quote>feel</quote>. Some have (sometimes invisible)
+<quote>resize</quote> borders all around the edge, which make resizing
+easier but moving more difficult. Some have no borders on certain
+edges.</para>
 
-<para
->Probieren Sie ruhig mit den verschiedenen Stilen herum, bis Sie einen finden, der Ihnen und Ihrem Arbeitsstil am besten entgegenkommt.</para>
+<para>You are encouraged to experiment with the different styles until
+you find one which best suits your pattern of work.</para>
 
-<para
->Auf der Vorschau eines Stils finden Sie einen Einrichtungsknopf <inlinemediaobject
-><imageobject
-> <imagedata fileref="configure.png" format="PNG"/></imageobject
-></inlinemediaobject
->, um den Einstellungsdialog für die Dekoration zu öffnen.</para>
+<para>In the preview of each style you find a <inlinemediaobject><imageobject>
+<imagedata fileref="configure.png" format="PNG"/></imageobject></inlinemediaobject> 
+configure button to open configuration dialogs for the decoration.</para>
 
-<para
->Die Einstellungen in diesem Modul werden auf alle Fenster angewendet. Für einige Fensterdekorationen wie &eg; <quote
->Breeze</quote
-> gibt es zusätzlich die Karteikarte <guilabel
->Fensterspezifische Einstellungen</guilabel
->. Auf dieser Karteikarte können Sie die Rahmenbreite und die Anzeige der Titelleiste für bestimmte Fenster ändern.</para>
+<para>The options in this configuration dialog are applied to all windows. 
+Some window decorations (&eg; <quote>Breeze</quote>)
+provide a <guilabel>Window-Specific Overrides</guilabel> tab.
+On this tab you can change the border size and the visibility 
+of the window titlebar for particular windows.</para>
 
-<para
->Zusätzliche Einstellungen für bestimmte Fenster finden Sie im &systemsettings;-Modul <ulink url="help:/kcontrol/windowspecific"
->Fensterregeln</ulink
->. </para>
+<para>Different options for particular windows you find in the &systemsettings;
+module <ulink url="help:/kcontrol/windowspecific">Window Rules</ulink>.
+</para>
 
 <tip>
-<para
->Als Zugangshilfe unterstützen einige Fensterdekorationen besonders breite Rahmen. Ist diese Einstellung verfügbar, können Sie hier die <guilabel
->Rahmenbreite des Fensters</guilabel
-> festlegen. Diese breiten Rahmen sind für sehbehinderte Anwender leichter zu erkennen und können von Menschen mit eingeschränkter Beweglichkeit oder solchen, die Schwierigkeiten bei der Benutzung einer Maus haben, leichter <quote
->angefasst</quote
-> werden.</para>
+<para>For accessibility purposes, some window decorations support
+extra wide borders.  If this is available, you can also choose a
+<guilabel>Window border size</guilabel> here.  The large borders are easier to see for low
+vision users, and easier to grab for people with limited mobility or
+difficulty using a mouse.</para>
 </tip>
 
 </sect2>
 
 <sect2>
-<title
->Dekorationen</title>
+<title>Decorations</title>
 
-<para
->In diesem Dialog können Sie die Dekoration für Fenster einstellen. Abhängig vom ausgewählten Stil gibt es unterschiedliche Einstellungsmöglichkeiten. </para>
+<para>In this dialog you can change the decoration of the window. 
+
+The available options depend on the selected style.
+</para>
 <para>
 <screenshot>
-<screeninfo
->Einstellungen für die Dekoration „Breeze“</screeninfo>
+<screeninfo>Breeze Decoration Options</screeninfo>
   <mediaobject>
     <imageobject>
       <imagedata fileref="decoration.png" format="PNG"/>
     </imageobject>
     <textobject>
-      <phrase
->Einstellungen für die Dekoration „Breeze“</phrase>
+      <phrase>Breeze Decoration Options</phrase>
     </textobject>
   </mediaobject>
 </screenshot>
@@ -149,37 +111,33 @@
 </sect2>
 
 <sect2>
-<title
->Titelleistenknöpfe</title>
+<title>Titlebar Buttons</title>
 
-<para
->Auf dieser Karteikarte können Sie die Anordnung der Knöpfe in der Titelleiste einstellen. Verschieben Sie die angezeigten Knöpfe wie &eg; das <guilabel
->Anwendungsmenü</guilabel
-> so lange, bis Ihnen die Anordnung zusagt. </para>
+<para>This tab allows you to customize the button location on the titlebar. 
+You can drag buttons &eg; the <guilabel>Application menu</guilabel> into the 
+titlebar, remove them or drag around the
+buttons until you have the order that makes you comfortable.
+</para>
 
 <screenshot>
-<screeninfo
->Einstellungen für Knöpfe</screeninfo>
+<screeninfo>Button Options</screeninfo>
   <mediaobject>
     <imageobject>
       <imagedata fileref="button.png" format="PNG"/>
     </imageobject>
     <textobject>
-      <phrase
->Einstellungen für für Knöpfe</phrase>
+      <phrase>Button Options</phrase>
     </textobject>
   </mediaobject>
 </screenshot>
 
-<para
->Aktivieren Sie <guilabel
->Fenster durch Doppelklick auf Menüknopf schließen</guilabel
->, um eine zusätzlich Möglichkeit zum Schließknopf zu haben oder wenn Sie diesen Knopf aus der Titelleiste entfernt haben. </para>
+<para>Enable <guilabel>Close windows by double clicking the menu button</guilabel>
+to have an additional option to the Close button or if you have removed the Close button from the titlebar.
+</para>
 
-<para
->Aktivieren Sie die Einstellung <guilabel
->Kurzinfos für Knöpfe der Titelleiste anzeigen</guilabel
->, damit beim Überfahren der Knöpfe in der Titelleiste mit dem Mauszeiger Kurzinfos angezeigt werden. </para>
+<para>Check the <guilabel>Show titlebar buttons tooltips</guilabel> item if you
+want to see the default tooltips when you hover the titlebar buttons with the mouse pointer.
+</para>
 
 </sect2>
 

@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1641394 2023-01-04 01:44:18Z scripty $
+# $Id: kwin.po 1641558 2023-01-06 01:42:04Z scripty $
 # $Source$
 #
 #
@@ -10,14 +10,14 @@
 # Jure Repinc <jlp@holodeck1.com>, 2005, 2007, 2008, 2009, 2010, 2011, 2012.
 # Andrej Vernekar <andrej.vernekar@moj.net>, 2007, 2012.
 # Andrej Mernik <andrejm@ubuntu.si>, 2013, 2014, 2015, 2016, 2017, 2018.
-# Matjaž Jeran <matjaz.jeran@amis.net>, 2020, 2021, 2022.
+# Matjaž Jeran <matjaz.jeran@amis.net>, 2020, 2021, 2022, 2023.
 # Martin Srebotnjak <miles@filmsi.net>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-04 00:50+0000\n"
-"PO-Revision-Date: 2022-12-25 08:55+0100\n"
+"PO-Revision-Date: 2023-01-05 08:58+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
-"X-Generator: Lokalize 22.08.3\n"
+"X-Generator: Lokalize 22.12.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2393,10 +2393,9 @@ msgid "&All Activities"
 msgstr "Vse dejavnosti"
 
 #: useractions.cpp:776
-#, fuzzy, kde-format
-#| msgid "Move to %1 %2"
+#, kde-format
 msgid "Move to %1"
-msgstr "Prenesi v %1 %2"
+msgstr "Prenesi v %1"
 
 #: useractions.cpp:901
 #, kde-format

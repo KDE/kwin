@@ -5,13 +5,13 @@
 #
 # Vasee Vaseeharan <vasee@ieee.org>, 2004.
 # root <root@localhost.localdomain>, 2004.
-# Kishore G <kishore96@gmail.com>, 2021, 2022.
+# Kishore G <kishore96@gmail.com>, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-04 00:50+0000\n"
-"PO-Revision-Date: 2022-12-27 21:52+0530\n"
+"PO-Revision-Date: 2023-01-05 21:34+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -2379,10 +2379,9 @@ msgid "&All Activities"
 msgstr "&அனைத்து செயல்பாடுகளிலும்"
 
 #: useractions.cpp:776
-#, fuzzy, kde-format
-#| msgid "Move to %1 %2"
+#, kde-format
 msgid "Move to %1"
-msgstr "%1 %2 -க்கு நகர்த்து"
+msgstr "%1-க்கு நகர்த்து"
 
 #: useractions.cpp:901
 #, kde-format

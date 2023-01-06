@@ -2,91 +2,61 @@
 <!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
 "dtd/kdedbx45.dtd" [
 <!ENTITY % addindex "IGNORE">
-<!ENTITY % German "INCLUDE"
-> <!-- change language only here -->
+<!ENTITY % English "INCLUDE" > <!-- change language only here -->
 ]>
 
 <article id="kwinscreenedges" lang="&language;">
 <articleinfo>
 
-<title
->Bildschirmränder</title>
+<title>Screen Edges</title>
 <authorgroup>
-<author
->&Mike.McBride; &Mike.McBride.mail;</author>
-<othercredit role="translator"
-><firstname
->Burkhard</firstname
-><surname
->Lück</surname
-><affiliation
-><address
-><email
->lueck@hube-lueck.de</email
-></address
-></affiliation
-><contrib
->Übersetzung</contrib
-></othercredit
-> 
+<author>&Mike.McBride; &Mike.McBride.mail;</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date
->2021-04-09</date>
-<releaseinfo
->Plasma 5.20</releaseinfo>
+<date>2021-04-09</date>
+<releaseinfo>Plasma 5.20</releaseinfo>
 
 <keywordset>
-<keyword
->KDE</keyword>
-<keyword
->Systemeinstellungen</keyword>
-<keyword
->Arbeitsfläche</keyword>
-<keyword
->Effekte</keyword>
+<keyword>KDE</keyword>
+<keyword>Systemsettings</keyword>
+<keyword>desktop</keyword>
+<keyword>effects</keyword>
 </keywordset>
 </articleinfo>
 
-<para
->Aktive Bildschirmränder ermöglichen Ihnen das Auslösen eines Effektes, indem Sie die Maus an eine Bildschirmränder bewegen. Hier können Sie einstellen, welche Effekte für welche Bildschirmränder aktiviert werden sollen. </para>
+<para>Active screen edges allow you to activate effects by pushing your mouse 
+cursor against the edge of the screen. Here you can configure which effect 
+will get activated on each edge and corner of the screen.
+</para>
 
-<para
->Klicken Sie mit einer Maustaste auf ein Quadrat und wählen Sie aus dem Kontextmenü einen Effekt aus. Ränder mit aktivierten Effekten werden als blaues Quadrat angezeigt, für Ränder mit grauen Quadraten sind keine Effekte ausgewählt.</para>
+<para>Click with any mouse button onto a square and select an effect 
+in the context menu. Edges with a blue square have already an attached effect, 
+a grey-colored square indicates that no effect is selected for this edge.</para>
 
-<para
->Die Anzahl der verfügbaren Elemente im Kontextmenü hängt von den Einstellungen im Modul <ulink url="help:/kcontrol/kwineffects/index.html"
-><guilabel
->Arbeitsflächen-Effekte</guilabel
-></ulink
-> in der Kategorie <guilabel
->Arbeitsbereich</guilabel
-> ab. Wählen Sie dann Ihre bevorzugten Effekte aus der Gruppe <guilabel
->Fensterverwaltung</guilabel
->. Damit werden dann auch die zugehörigen Einträge im Kontextmenü dieses Moduls aktiviert.</para>
+<para>The number of accessible items in the context menu depends on the settings in the module
+	<ulink url="help:/kcontrol/kwineffects/index.html">
+<guilabel>Desktop Effects</guilabel></ulink> in the <guilabel>Workspace</guilabel>
+category. Select your favorite effects from the <guilabel>Window Management</guilabel> 
+group. This activates the corresponding items in the context menu.</para>
 
-<para
->Einstellungsmöglichkeiten für den Wechsel der Arbeitsfläche durch Berührung des Bildschirmrandes mit dem Mauszeiger finden Sie im Kontextmenü, wählen Sie im Kontextmenü den Effekt <guilabel
->Fenster zeigen</guilabel
->.</para>
+<para>If you are looking for the setting to enable switching of desktops by 
+pushing your mouse cursor against the edge of the screen choose one of the <guilabel>Present 
+Windows</guilabel> effects from the context menu.</para>
 
-<para
->Sie können <guilabel
->Maximieren: Zum oberen Bildschirmrand gezogene Fenster</guilabel
-> oder <guilabel
->Kacheln: Zum rechten oder linken Bildschirmrand gezogene Fenster</guilabel
-> aktivieren und einen Prozentwert des Bildschirms zum Auslösen des Effekts einstellen. </para>
+<para>You can enable <guilabel>Maximize: Windows dragged to top edge</guilabel>
+or <guilabel>Tile: Windows dragged to left or right edge</guilabel>
+and set a percentage of the screen to trigger the tiling.
+</para>
 
-<para
->Mit der Einstellung <guilabel
->Rand für Arbeitsflächenwechsel</guilabel
-> können Sie festlegen, das durch das Anstoßen eines Bildschirmrands mit dem Mauszeiger zu einer anderen Arbeitsfläche gewechselt wird, &eg; nur beim Verschieben von Fenstern. </para>
-<para
-><guilabel
->Aktivierungsverzögerung</guilabel
-> ist die benötigte Zeit zum Anstoßen an einen Arbeitsflächenrand, bevor die Aktion ausgelöst wird. </para>
-<para
-><guilabel
->Reaktivierungsverzögerung</guilabel
-> ist das erforderliche Zeitfenster nach einer Aktion, bevor die nächste ausgelöst werden kann. </para>
+<para>Using the <guilabel>Switch desktop on edge</guilabel> item, configure if you want to switch 
+to another desktop when pushing the mouse cursor to an edge of the screen, &eg; only when 
+moving windows.
+</para>
+<para><guilabel>Activation delay</guilabel> is the amount of time required for the mouse cursor 
+to be pushed against the edge of the screen before the action is triggered.
+</para>
+<para><guilabel>Reactivation delay</guilabel> is the amount of time required after triggering 
+an action until the next trigger can occur.
+</para>
 </article>
