@@ -267,9 +267,9 @@ private:
     void handleRepositionRequested(quint32 token);
     void initialize();
     void relayout();
-    void updateReactive();
 
     KWaylandServer::XdgPopupInterface *m_shellSurface;
+    QRectF m_placement;
     bool m_haveExplicitGrab = false;
 };
 
