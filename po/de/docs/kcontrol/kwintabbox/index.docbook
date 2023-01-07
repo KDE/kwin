@@ -2,90 +2,244 @@
 <!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
 "dtd/kdedbx45.dtd" [
   <!ENTITY % addindex "IGNORE">
-  <!ENTITY % English "INCLUDE">
+  <!ENTITY % German "INCLUDE">
 ]>
 <article id="kwintabbox" lang="&language;">
 <articleinfo>
-<title>Task Switcher</title>
+<title
+>Anwendungsumschalter</title>
 <authorgroup>
-<author>&Martin.Graesslin;&Martin.Graesslin.mail;</author>
-<!-- TRANS:ROLES_OF_TRANSLATORS -->
+<author
+>&Martin.Graesslin;&Martin.Graesslin.mail;</author>
+<othercredit role="translator"
+><firstname
+>Burkhard</firstname
+><surname
+>Lück</surname
+><affiliation
+><address
+><email
+>lueck@hube-lueck.de</email
+></address
+></affiliation
+><contrib
+>Übersetzung</contrib
+></othercredit
+> 
 </authorgroup>
 
-<date>2020-12-31</date>
-<releaseinfo>&plasma; 5.21</releaseinfo>
+<date
+>2020-12-31</date>
+<releaseinfo
+>&plasma; 5.21</releaseinfo>
 
 <keywordset>
-<keyword>KDE</keyword>
-<keyword>System Settings</keyword>
-<keyword>desktop</keyword>
-<keyword>window</keyword>
-<keyword>navigation</keyword>
-<keyword>switch</keyword>
-<keyword>alt-tab</keyword>
+<keyword
+>KDE</keyword>
+<keyword
+>Systemeinstellungen</keyword>
+<keyword
+>Desktop</keyword>
+<keyword
+>Fenster</keyword>
+<keyword
+>Navigation</keyword>
+<keyword
+>Wechseln</keyword>
+<keyword
+>Alt-Tab</keyword>
 </keywordset>
 </articleinfo>
 
 <sect1 id="windows-navigating">
-<title>Navigating through Windows</title>
+<title
+>Wechseln zwischen Fenstern</title>
 
-<para>The Task Switcher allows the user to easily switch between currently open windows using the keyboard.  It is highly configurable, and allows the user to control its behavior, visual appearance, keyboard shortcuts, and window filtering.</para>
+<para
+>Mit dem Anwendungsumschalter kann der Benutzer einfach zwischen den aktuell geöffneten Fenstern über die Tastatur zu wechseln. Er ist in hohem Maße konfigurierbar und erlaubt dem Benutzer Verhalten, das visuelle Erscheinungsbild, die Tastenkombinationen und die Fensterfilterung zu steuern.</para>
 
-<para>The Task Switcher is often invoked using the key combination <keycombo>&Alt;&Tab;</keycombo>, but this can be changed. When invoked, it shows a list of all the currently open windows, optionally filtered and augmented according to the configuration settings. For example, the list may be filtered to show only windows that meet certain criteria, such as windows that are currently visible.  Once the window list is shown, the user can cycle forward and backward through all the listed windows by repeatedly hitting the Task Switcher key combination.  Releasing the Task Switcher key combination will activate the window that was selected in the list.</para>
+<para
+>Der Anwendungsumschalter wird normalerweise mit der Tastenkombination <keycombo
+>&Alt;&Tab;</keycombo
+> aufgerufen, aber dies kann geändert werden. Beim Aufruf des Anwendungsumschalters wird eine Liste mit allen aktuell geöffneten Fenstern angezeigt, optional gefiltert und nach weiteren Kriterien entsprechend den Einstellungen ergänzt. Zum Beispiel kann die Liste gefiltert werden, um nur Fenster anzuzeigen, die bestimmte Kriterien erfüllen, z. B. Fenster, die gerade sichtbar sind. Sobald die Fensterliste angezeigt wird, kann der Benutzer vorwärts und vorwärts und rückwärts durch alle aufgelisteten Fenster blättern, indem er wiederholt die Tastenkombination für den Anwendungsumschalter drückt. Durch Loslassen der Tastenkombinationwird das Fenster aktiviert, das in der Liste ausgewählt wurde.</para>
 
-<para>Because the Task Switcher offers so many configuration options, two distinct collections of configuration settings can be defined. These collections are called <guilabel>Main</guilabel> and <guilabel>Alternative</guilabel>, and each can have a unique set of key combinations assigned to them.</para>
+<para
+>Weil es für den Anwendungsumschalter so viele Einstellungsmöglichkeiten gibt, können zwei getrennte Einstellungsgruppen definiert werden. Diese Einstellungsgruppen werden als <guilabel
+>Allgemein</guilabel
+> und <guilabel
+>Alternativ</guilabel
+> bezeichnet. Jeder Einstellungsgruppe kann eine eigene Gruppe von Tastenkombinationen zugewiesen werden.</para>
 
-<para>The configuration options for each of the Main and Alternative collections are presented in four groupings, as follows:</para>
+<para
+>Die Einstellungsoptionen auf den Karteikarten der Allgemein und Alternativsind in vier Abschnitte unterteilt:</para>
 
 <sect2 id="visualization">
-<title>Visualization</title>
-<para>This group of configuration options controls how the list of windows is displayed on the screen. The default visualization is called <guilabel>Breeze</guilabel>.  It lists all open windows along the left-hand side of the screen.  Other visualizations include <guilabel>Cover Switch</guilabel> (a 3D carousel), <guilabel>Flip Switch</guilabel> (a 3D stack of cards), and <guilabel>Medium Rounded</guilabel> (a Microsoft &Windows;-style list of icons).  Many more visualizations can be downloaded and installed by clicking the <guibutton>Get New Task Switchers...</guibutton> button at the bottom right of the dialog box.</para>
+<title
+>Darstellung</title>
+<para
+>In diesem Abschnitt können Sie festlegen, wie die Liste der Fenster auf dem Bildschirm angezeigt wird. Als Standard wird <guilabel
+>Breeze</guilabel
+> verwendet. Damit werden alle geöffneten Fenster auf der linken Seite des Bildschirms angezeigt. Andere Darstellungen sind <guilabel
+>3D-Fenstergalerie</guilabel
+> (ein 3D-Karussell) und <guilabel
+>3D-Fensterstapel</guilabel
+> (ein 3D-Stapel von Karten). Viele weitere Darstellungen können heruntergeladen und installiert werden, indem Sie auf  <guibutton
+>Neue Aufgabenumschalter herunterladen ...</guibutton
+> unten rechts im Dialogfeld klicken.</para>
 
-<para>Once a visualization has been selected from the drop-down list, the button to the right of the list can be clicked to see a preview or to configure visualization-specific options.</para>
+<para
+>Wenn Sie eine Darstellung im Auswahlfeld gewählt haben, können Sie durch Klicken auf den Knopf rechts neben dem Auswahlfeld eine Vorschau anzeigen lassen oder weiter Einstellungen zur Darstellung vornehmen.</para>
 
-<para>The <guilabel>Show selected window</guilabel> checkbox determines how clearly the user will see which window will be activated.  If this box is checked, then all windows will be dimmed except for the one that is currently highlighted in the Task Switcher.</para>
+<para
+>Im Ankreuzfeld <guilabel
+>Ausgewähltes Fenster anzeigen</guilabel
+> wird festgelegt wie das aktivierte Fenster dargestellt wird. Ist diese Einstellung aktiviert werden alle Fenster bis auf das aktuell im Anwendungsumschalter hervorgehobene Fenster abgeblendet.</para>
 
-<note><para>There may be cases where the desired Task Switcher visualization cannot be shown.  One of these situations can be when a process called 'compositing' is turned off or disabled.  If this ever happens, the window list will still be shown, but in a very simple format.</para></note>
+<note
+><para
+>Manchmal kann die gewünschte Darstellung für den Anwendungsumschalter nicht angezeigt werde, z. B. wenn „Compositing“ausgeschaltet oder deaktiviert ist. In diesem Fall wird die Fensterliste trotzdem angezeigt, allerdings in einem sehr einfachen Format.</para
+></note>
 </sect2>
 
 <sect2 id="shortcuts">
-<title>Shortcuts</title>
-<para>This section allows you to define up to four Task Switcher keyboard shortcuts for the <guilabel>Main</guilabel> configuration and four more for the <guilabel>Alternative</guilabel> configuration.  The <guilabel>Main</guilabel> shortcuts are predefined, while the <guilabel>Alternative</guilabel> shortcuts need to be defined manually.</para>
-<para>In the <guilabel>All Windows</guilabel> section, the <guilabel>Forward</guilabel> and <guilabel>Reverse</guilabel> shortcuts will cycle forward and backward through the list of open windows.</para>
-<para>In the <guilabel>Current Application</guilabel> section, the <guilabel>Forward</guilabel> and <guilabel>Reverse</guilabel> shortcuts can be set to cycle through the windows of the currently active application.  For example, if you have three &dolphin; file browser windows open, then you would be able to use these shortcuts to just cycle among the three &dolphin; windows.</para>
-<para>To change a keyboard shortcut, click the <guibutton>Forward</guibutton> or <guibutton>Reverse</guibutton> button and type the desired shortcut combination.  Be sure to use a modifier key like &Ctrl; or &Alt; as part of the shortcut, otherwise you might not be able to cycle through the window list properly.</para>
+<title
+>Kurzbefehle</title>
+<para
+>In diesem Abschnitt können Sie bis zu vier Kurzbefehle für das Wechseln von Fenster auf der Karteikarte <guilabel
+>Allgemein</guilabel
+> und vier weitere auf der Karteikarte <guilabel
+>Alternativ</guilabel
+> festlegen. Auf der Karteikarte <guilabel
+>Allgemein</guilabel
+> sind sie Kurzbefehle vordefiniert, auf der Karteikarte <guilabel
+>Alternativ</guilabel
+> müssen die Kurzbefehle manuell eingegeben werden.</para>
+<para
+>Im Abschnitt <guilabel
+>Alle Fenster</guilabel
+> können Sie die Kurzbefehle für das Wechseln <guilabel
+>Vorwärts</guilabel
+> und <guilabel
+>Rückwärts</guilabel
+> in der Liste der geöffneten Fenster einstellen.</para>
+<para
+>Im Abschnitt <guilabel
+>Aktuelle Anwendung</guilabel
+> können die Kurzbefehle für das Wechseln <guilabel
+>Vorwärts</guilabel
+> und <guilabel
+>Rückwärts</guilabel
+> in der Liste der aktuell aktiven Anwendung gewählt werden. Haben Sie zum Beispiel drei Fenster mit der Dateiverwaltung &dolphin; geöffnet, dann können Sie mit diesen Kurzbefehlen nur zwischen den drei &dolphin;-Fenstern wechseln.</para>
+<para
+>Um einen Kurzbefehl zu ändern, klicken Sie auf <guilabel
+>Vorwärts</guilabel
+> oder <guilabel
+>Rückwärts</guilabel
+> und geben die gewünschte Tastenkombination ein. Benutzen Sie eine Sondertaste wie &Ctrl; oder &Alt; als Teil des Kurzbefehls, sonst können Sie möglicherweise nicht richtig zwischen den Fenstern in der Liste wechseln.</para>
 
-<note><para>Any of the defined keyboard shortcuts can be used to invoke the Task Switcher.  To invoke the Task Switcher without using the keyboard, you can define screen edge actions in the &systemsettings; module <ulink url="help:/kcontrol/kwinscreenedges/index.html"><guilabel>Screen Edges</guilabel></ulink>.</para></note>
+<note
+><para
+>Mit allen definierten Kurzbefehlen können Sie den Anwendungsumschalter aufrufen.Zum Wechseln zwischen Fenstern ohne die Tastatur können Sie Aktionen für Bildschirmränder im Modul <ulink url="help:/kcontrol/kwinscreenedges/index.html"
+>Bildschirmränder</ulink
+> in den &systemsettings; festlegen.</para
+></note>
 </sect2>
 
 <sect2 id="content">
-<title>Content</title>
-<para>The options in this section partially control which windows will appear in the Task Switcher list.</para>
+<title
+>Inhalt</title>
+<para
+>Die Einstellungen in diesem Abschnitt legen teilweise fest, welche Fenster in der der Liste im Anwendungsumschalter angezeigt werden.</para>
 
-<para>The <guilabel>Sort Order</guilabel> drop-down list specifies whether the windows should be listed in <guilabel>Stacking Order</guilabel> or <guilabel>Recently Used</guilabel> order.  <guilabel>Stacking Order</guilabel> is the order in which the windows appear on the screen, while <guilabel>Recently Used</guilabel> order is the order in which the windows have been used. <guilabel>Recently Used</guilabel> order makes it very easy to switch between the two most frequently used windows because they will always appear in the top 2 positions in the list.</para>
+<para
+>Mit dem Auswahlfeld <guilabel
+>Sortierreihenfolge</guilabel
+> legen Sie fest, ob Fenster nach der <guilabel
+>Stapel-Reihenfolge</guilabel
+> oder nach <guilabel
+>Kürzlich verwendete</guilabel
+> in der Fensterliste sortiert werden. <guilabel
+>Stapel-Reihenfolge</guilabel
+> ist die Reihenfolge, in der die Fenster auf dem Bildschirm auf dem Bildschirm erscheinen, während mit <guilabel
+>Kürzlich verwendete</guilabel
+> die Fenster in der Reihenfolge der Nutzung sortiert sind. Mit <guilabel
+>Kürzlich verwendete</guilabel
+> können Sie einfach und schnell zwischen zwei am meisten benutzten Fenstern wechseln, da sie immer auf den zwei ersten Positionen in der Liste angezeigt werde.</para>
 
-<para>The <guilabel>Include "Show Desktop" icon</guilabel> option will add a Show Desktop option to the window list. This allows the user to easily select the Desktop as the 'window' to show.</para>
+<para
+>Wenn <guilabel
+>Symbol „Arbeitsfläche anzeigen“ einfügen</guilabel
+> aktiviert ist, wird ein Eintrag für die Arbeitsfläche zur Liste mit den Anwendungen hinzugefügt. Dann können Sie diesen Eintrag auswählen, um die Fenster aller Anwendungen zu minimieren und schnell zur Arbeitsfläche wechseln.</para>
 
-<para>The <guilabel>Only one window per application</guilabel> option reduces clutter by only showing one window for each open application.  If an application has multiple windows open, then its most recently activated window will be shown in the list and the others will not be shown.</para>
+<para
+>Die Einstellung <guilabel
+>Nur ein Fenster pro Anwendung</guilabel
+> reduziert Unübersichtlichkeit, indem nur ein Fenster für jede geöffnete Anwendung angezeigt wird. Wenn eine Anwendung mehrere Fenster geöffnet hat, wird das zuletzt aktivierte Fenster in der in der Liste angezeigt und die anderen werden ausgeblendet.</para>
 </sect2>
 
 <sect2 id="filter-windows-by">
-<title>Filter Windows By</title>
-<para>This section contains options for additionally filtering the Task Switcher's list of windows.</para>
+<title
+>Fenster filtern nach</title>
+<para
+>Dieser Abschnitt enthält Einstellungen zur zusätzlichen Filterung der Fensterliste im Anwendungsumschalter.</para>
 
-<para>The <guilabel>Virtual Desktops</guilabel> option filters the list of windows according to which virtual desktop is currently active.  If you consistently put specific windows on specific virtual desktops, then this filtering option can make it easy to switch to windows within or across those virtual desktops. Select <guilabel>Current desktop</guilabel> to only show windows on the current virtual desktop.  Select <guilabel>All other desktops</guilabel> to show only the windows on the virtual desktops that are not currently active.</para>
+<para
+>Die Einstellung <guilabel
+>Virtuellen Arbeitsflächen</guilabel
+> filtert die Liste der Fenster nach den Arbeitsflächen. Wenn Sie regelmäßig bestimmte Fenster auf bestimmte virtuelle Arbeitsflächen legen, dann kann diese Filterung den Wechsel zu Fenstern innerhalb oder zwischen diesen virtuellen Arbeitsflächen erleichtern. Desktops. Wählen Sie <guilabel
+>Aktuelle Arbeitsfläche</guilabel
+>, um nur die Fenster auf der aktuellen virtuellen Arbeitsfläche anzuzeigen. Wählen Sie <guilabel
+>Alle anderen Arbeitsflächen</guilabel
+>, um nur die Fenster auf den nicht aktiven virtuellen Arbeitsflächen anzuzeigen.</para>
 
-<para>The <guilabel>Activities</guilabel> option filters the list of windows according to which Activity is currently active.  As with Virtual Desktop filtering, this option can make it easier to switch to applications within or across all Activities. Select <guilabel>Current activity</guilabel> to only show windows that are part of the current Activity.  Select <guilabel>All other activities</guilabel> to only show windows that are part of the Activities that are not currently active.</para>
+<para
+>Die Einstellung <guilabel
+>Aktivitäten</guilabel
+> filtert die Liste der Fenster nach den Aktivitäten. Wie bei der Filterung nach <guilabel
+>Virtuellen Arbeitsflächen</guilabel
+> kann diese Einstellung das Wechseln zu Anwendungen innerhalb oder über alle Aktivitäten hinweg erleichtern. Wählen Sie <guilabel
+>Aktuelle Aktivität</guilabel
+>, um nur Fenster anzuzeigen, die Teil der aktuellen Aktivität sind. Wählen Sie . <guilabel
+>Alle anderen Aktivitäten</guilabel
+>, um nur die Fenster anzuzeigen, die zu den gerade nicht aktiven Aktivitäten gehören.</para>
 
-<para>The <guilabel>Screens</guilabel> option filters the list of windows according to which display screen is currently active.  Select <guilabel>Current screen</guilabel> to only show windows that are on the display that currently has the mouse pointer on it.  Select <guilabel>All other screens</guilabel> to show the windows that are on all other displays. This option can be useful to users who want to quickly switch between windows that are on the same monitor in a multi-monitor setup.</para>
-<note><para>The active screen is the one that the mouse pointer is currently on, not the screen that the currently active window is on.</para></note>
+<para
+>Die Einstellung <guilabel
+>Bildschirme</guilabel
+> filtert die Liste der Fenster nach den aktiven Bildschirm. Wählen Sie <guilabel
+>Aktueller Bildschirm</guilabel
+>, um nur die Fenster anzuzeigen, die sich auf dem die sich auf dem Bildschirm mit dem Mauszeiger befinden. Wählen Sie <guilabel
+>Alle andere Bildschirme</guilabel
+>, um die Fenster auf allen anderen Bildschirmen anzuzeigen. Diese Einstellung kann für Benutzer nützlich sein, die schnell zwischen Fenstern auf demselben Bildschirm bei Verwendung mehrere Bildschirme wechseln möchten.</para>
+<note
+><para
+>Aktiv ist der Bildschirm, der aktuell den Mauszeiger enthält, nicht der Bildschirm mit dem aktuell aktiven Fenster.</para
+></note>
 
-<para>The <guilabel>Minimization</guilabel> option filters the list of windows according to whether they are hidden or not.  Select <guilabel>Visible windows</guilabel> to only show windows that have not been minimized.  Select <guilabel>Hidden windows</guilabel> to only show the minimized windows.</para>
+<para
+>Mit der Einstellung <guilabel
+>Minimierung</guilabel
+> wird die Fensterliste nach dem Anzeigestatus gefiltert, d. h. ob sie sichtbar oder ausgeblendet sind. Mit <guilabel
+>Sichtbare Fenster</guilabel
+> werden nur Fenster angezeigt, die nicht minimiert wurden. Um nur diese minimierten Fenster anzuzeigen, wählen Sie <guilabel
+>Ausgeblendete Fenster</guilabel
+>.</para>
 
-<para> If you uncheck an option in this section, then no filtering will be applied for that option. For example, if you check the Screens option and clear the other three options, then the Task Switcher window list will only be filtered according to which windows are on the current display.</para>
-<para>All of the options described in the above sections work together to provide very fine-grained control of the Task Switcher's behavior and appearance.  For example, you could define the <guilabel>Main</guilabel> settings collection to be invoked with the <keycombo>&Alt;&Tab;</keycombo> key combination, to show the open windows in a carousel, to only show one window per application, and to only list windows that are on the current desktop and on the currently active screen.  This can provide very fast context-sensitive window switching if you have both 'work' and 'home' virtual desktops, and then keep all of your spreadsheets for work and home on the same monitor.</para>
+<para
+>Wenn Sie eine Einstellung abwählen, wird diese nicht beim Filtern verwendet. Wenn Sie zum Beispiel nur die Einstellung <guilabel
+>Bildschirm</guilabel
+> auswählen und alle anderen drei Einstellungen abgewählt sind, werden in der Fensterliste nur Fenster auf dem aktuell aktivierten Bildschirm angezeigt.</para>
+<para
+>Alle in den obigen Abschnitten beschriebenen Einstellungen funktionieren zusammen und lassen Sie  das Verhalten und das Erscheinungsbild des Anwendungsumschalters sehr genau steuern. Sie können zum Beispiel die für die Einstellungen auf der Karteikarte <guilabel
+>Allgemein</guilabel
+> mit der Tastenkombination <keycombo
+>&Alt;&Tab;</keycombo
+> aufgerufen, um die die geöffneten Fenster in einem Karussell, nur ein Fenster pro Anwendung und nur Fenster auf der aktuellen Arbeitsfläche  und auf dem aktuell aktiven Bildschirm anzuzeigen. Dies kann ein sehr schnellen kontextsensitives Umschalten von Fenstern ermöglichen, wenn Sie virtuelle Arbeitsflächen für die Arbeit und Zuhause haben und dann alle Ihre Tabellenkalkulationen für Arbeit und Zuhause auf dem gleichen Bildschirm halten.</para>
 
-<para>The availability of the <guilabel>Alternative</guilabel> Task Switcher configuration gives you a second way to easily filter and browse through the window lists. With eight key combinations available across the two Task Switcher configurations, it should be possible to easily and quickly navigate through large numbers of windows.</para>
+<para
+>Mit den Einstellungen auf der Karteikarte <guilabel
+>Alternativ</guilabel
+> gibt es noch eine weitere Möglichkeit, die Fensterliste einfach zu filtern und durchzublättern. Mit den acht Tastatur-Kurzbefehlen der beiden Karteikarten sollte es möglich sein, einfach und schnell durch eine große Anzahl von Fenstern zu navigieren.</para>
 </sect2>
 </sect1>
 </article>

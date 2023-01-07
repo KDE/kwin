@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-17 00:51+0000\n"
-"PO-Revision-Date: 2022-12-09 11:46\n"
+"PO-Revision-Date: 2023-01-06 10:31\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
 "Language: be\n"
@@ -746,45 +746,42 @@ msgstr " %"
 #: tileseditor/tileseditoreffect.cpp:29
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr ""
+msgstr "Пераключыць рэдактар ​​кампанавання"
 
 #: tileseditor/qml/main.qml:147
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "Водступ:"
 
 #: tileseditor/qml/main.qml:157
 #, kde-format
 msgid "Load Layout..."
-msgstr ""
+msgstr "Загрузіць макет..."
 
 #: tileseditor/qml/main.qml:271
-#, fuzzy, kde-format
-#| msgid "Closest"
+#, kde-format
 msgid "Close"
-msgstr "Шчыльны"
+msgstr "Закрыць"
 
 #: tileseditor/qml/TileDelegate.qml:171
-#, fuzzy, kde-format
-#| msgid "Horizontal:"
+#, kde-format
 msgid "Split Horizontally"
-msgstr "Па гарызанталі:"
+msgstr "Падзяліць гарызантальна"
 
 #: tileseditor/qml/TileDelegate.qml:178
-#, fuzzy, kde-format
-#| msgid "Vertical:"
+#, kde-format
 msgid "Split Vertically"
-msgstr "Па вертыкалі:"
+msgstr "Падзяліць вертыкальна"
 
 #: tileseditor/qml/TileDelegate.qml:186 tileseditor/qml/TileDelegate.qml:215
 #, kde-format
 msgid "Add Floating Tile"
-msgstr ""
+msgstr "Дадаць элемент, які плавае"
 
 #: tileseditor/qml/TileDelegate.qml:195
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "Выдаліць"
 
 #: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
 #, kde-format

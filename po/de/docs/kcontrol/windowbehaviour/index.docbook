@@ -2,1197 +2,835 @@
 <!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
 "dtd/kdedbx45.dtd" [
 <!ENTITY % addindex "IGNORE">
-<!ENTITY % English "INCLUDE" > <!-- change language only here -->
+<!ENTITY % German "INCLUDE"
+> <!-- change language only here -->
 ]>
 
 <!--copy from r308626 Tue May 4 17:11:51 2004 UTC -->
 
 <article id="windowbehaviour" lang="&language;">
 <articleinfo>
-<title>Window Behavior</title>
+<title
+>Fensterverhalten</title>
 <authorgroup>
-<author>&Mike.McBride; &Mike.McBride.mail;</author>
-<author>&Jost.Schenck; &Jost.Schenck.mail;</author>
-<author><firstname>Natalie</firstname><surname>Clarius</surname><email>natalie_clarius@yahoo.de</email></author>
-<!-- TRANS:ROLES_OF_TRANSLATORS -->
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<author
+>&Jost.Schenck; &Jost.Schenck.mail;</author>
+<othercredit role="translator"
+><firstname
+>Matthias</firstname
+><surname
+>Kiefer</surname
+><affiliation
+><address
+><email
+>Matthias.Kiefer@gmx.de</email
+></address
+></affiliation
+><contrib
+>Deutsche Übersetzung</contrib
+></othercredit
+> 
 </authorgroup>
 
-<date>2022-08-31</date>
-<releaseinfo>Plasma 5.26</releaseinfo>
+<date
+>2021-04-09</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
 
 <keywordset>
-<keyword>KDE</keyword>
-<keyword>KControl</keyword>
-<keyword>system settings</keyword>
-<keyword>actions</keyword>
-<keyword>window</keyword>
-<keyword>window placement</keyword>
-<keyword>window size</keyword>
-<keyword>window management</keyword>
-<keyword>window behavior</keyword>
-<keyword>focus</keyword>
-<keyword>raise</keyword>
-<keyword>titlebar</keyword>
-<keyword>screen</keyword>
-<keyword>snap</keyword>
+<keyword
+>KDE</keyword>
+<keyword
+>Kontrollzentrum</keyword>
+<keyword
+>Systemeinstellungen</keyword>
+<keyword
+>Aktionen</keyword>
+<keyword
+>Fensterpositionierung</keyword>
+<keyword
+>Fenstergröße</keyword>
 </keywordset>
 </articleinfo>
-
 <sect1 id="window-behavior">
-<title>Window Behavior</title>
+<title
+>Fensterverhalten</title>
 
-<para> In the upper part of this control module you can see several
-tabs: <guilabel>Focus</guilabel>, <guilabel>Titlebar Actions</guilabel>,
-<guilabel>Window Actions</guilabel>, <guilabel>Movement</guilabel> and
-<guilabel>Advanced</guilabel>. In the
-<guilabel>Focus</guilabel> panel you can configure how windows gain or
-lose focus, &ie; become active or inactive. Using
-<guilabel>Titlebar Actions</guilabel> and <guilabel>Window Actions</guilabel>
-you can configure how titlebars and windows react to
-mouse clicks. <guilabel>Movement</guilabel> allows you to configure how
-windows move and place themselves when started. The
-<guilabel>Advanced</guilabel> options cover some specialized options
-like <quote>window shading</quote>.
-</para>
-
-<note>
-<para>
-Please note that the configuration in this module will not take effect
-if you do not use &plasma;'s native window manager, &kwin;. If you do use a
-different window manager, please refer to its documentation for how to
-customize window behavior.
-</para>
-</note>
-
-<sect2 id="focus">
-<title>Focus</title>
-
-<para>
-The <quote>focus</quote> of the workspace refers to the window which the
-user is currently working on. The window with focus is often referred to
-as the <quote>active window</quote>.
-</para>
-
-<para>
-Focus does not necessarily mean the window is the one at the
-front &mdash; this is referred to as <quote>raised</quote>, and
-although this is configured here as well, focus and raising of windows
-are configured independently.
-</para>
-
-<sect3 id="focus-focuspolicy">
-<title>Windows activation policy</title>
-
-<para>
-There are six methods &kwin; can use to determine the current focus:
-</para>
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Click to focus</guilabel></term>
-<listitem>
-<para>
-A window becomes active when you click into it.
-This behaviour is common on other operating systems and likely what you want.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Click to focus (mouse precedence)</guilabel></term>
-<listitem>
-<para>
-This is mostly the same as <guilabel>Click to focus</guilabel>.
-If an active window has to be chosen by the system
-(&eg; because the currently active one was closed) 
-the window under the mouse is the preferred candidate.
-Unusual, but possible variant of <guilabel>Click to focus</guilabel>.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Focus follows mouse</guilabel></term>
-<listitem>
-<para>
-Moving the mouse pointer actively over a normal window activates it. New
-windows such as the mini command line invoked with
-<keycombo action="simul">&Alt;<keycap>F2</keycap></keycombo> will receive the focus,
-without you having to point the mouse at them explicitly.
-&eg; windows randomly appearing under the mouse will not gain the focus.
-Focus stealing prevention takes place as usual.
-Think as <guilabel>Click to focus</guilabel> just without having to actually click.
-</para>
-<para>
-In other window managers, this is sometimes known as <quote>Sloppy focus
-follows mouse</quote>.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Focus follows mouse (mouse precedence)</guilabel></term>
-<listitem>
-<para>
-This is mostly the same as <guilabel>Focus follows mouse</guilabel>.
-If an active window has to be chosen by the system
-(&eg; because the currently active one was closed) 
-the window under the mouse is the preferred candidate.
-Choose this, if you want a hover controlled focus.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Focus under mouse</guilabel></term>
-<listitem>
-<para>
-The window that happens to be under the mouse pointer becomes active. If
-the mouse is not over a window (for instance, it's over the desktop wallpaper) the last
-window that was under the mouse has focus. New windows such as the mini
-command line invoked with <keycombo action="simul">&Alt;<keycap>F2</keycap></keycombo> will
-not receive the focus, you must move the mouse over them to type.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Focus strictly under mouse</guilabel></term>
-<listitem>
-<para>
-Similar to <guilabel>Focus under mouse</guilabel>, but even more
-strict with its interpretation. Only the window under the mouse pointer is
-active. If the mouse pointer is not over a window, no window has focus.
-New windows such as the mini command line invoked with
-<keycombo action="simul">&Alt;<keycap>F2</keycap></keycombo> will not receive the focus,
-you must move the mouse over them to type. 
-</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
+<para
+>Im oberen Bereich dieses Moduls sieht man mehrere Karteikarten: <guilabel
+>Aktivierung</guilabel
+>, <guilabel
+>Titelleiste</guilabel
+>, <guilabel
+>Fenster</guilabel
+>, <guilabel
+>Verschiebung</guilabel
+> und <guilabel
+>Erweitert</guilabel
+>. In der Karteikarte <guilabel
+>Aktivierung</guilabel
+> kann man einstellen, auf welche Weise Fenster aktiviert bzw. deaktiviert werden. Unter <guilabel
+>Titelleiste</guilabel
+> und <guilabel
+>Fenster</guilabel
+> kann man festlegen, wie Titelleisten und Fenster auf Mausklicks reagieren. <guilabel
+>Verschiebung</guilabel
+> erlaubt die Einstellung, wie Fenster verschoben und wo sie positioniert werden können. Die Karteikarte <guilabel
+>Erweitert</guilabel
+> enthält einige spezielle Einstellungen wie <quote
+>Fensterheber</quote
+>. </para>
 
 <note>
-<para>
-Note that <guilabel>Focus under mouse</guilabel> and
-<guilabel>Focus strictly under mouse</guilabel> prevent certain
-features, such as <guilabel>Focus stealing prevention</guilabel> and the 
-<keycombo action="simul">&Alt;&Tab;</keycombo>
-walk-through-windows dialog, from working properly.
-</para>
+<para
+>Die Einstellungen in diesem Modul wirken sich nur dann aus, wenn Sie &plasma;'s Fensterverwaltung &kwin; verwenden. Verwenden Sie eine andere Fensterverwaltung, müssen Sie dessen Dokumentation konsultieren. </para>
+</note>
+
+<sect2 id="action-focus">
+<title
+>Aktivierung</title>
+
+<para
+>Die <quote
+>Aktivierung</quote
+> bezieht sich auf das Fenster, in dem der Benutzer gerade arbeitet. Man sagt auch, das aktive Fenster hat den <quote
+>Fokus</quote
+>. </para>
+
+<para
+>Aktivierung bedeutet nicht automatisch, dass das Fenster dasjenige im Vordergrund ist. Dies wird als <quote
+>Fenster heben</quote
+> bezeichnet und kann ebenfalls hier eingerichtet werden. Trotzdem werden die Aktivierung und das Heben der Fenster voneinander unabhängig eingestellt.</para>
+
+<sect3 id="action-focus-focuspolicy">
+<title
+>Regelung zur Fensteraktivierung</title>
+
+<para
+>Es gibt sechs Methoden, das gerade aktivierte Fenster in &kwin; festzulegen: </para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Aktivierung nach Klick</guilabel
+></term>
+<listitem>
+<para
+>Ein Fenster wird aktiv, wenn Sie mit der Maus hinein klicken.Dieses Verhalten ist in vielen Betriebssystemen bekannt und wahrscheinlich die gewünschte Einstellung.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktivierung nach Klick – Vorrang für Maus</guilabel
+></term>
+<listitem>
+<para
+>Dies ist fast wie <guilabel
+>Aktivierung nach Klick</guilabel
+>. Wenn eine aktives Fenster durch das System gewählt werden muss, &eg; wenn das zurzeit aktive Fenster geschlossen wurde, dann ist das Fenster unter dem Mauszeiger der bevorzugte Kandidat. Ungewöhnliche aber mögliche Variante von <guilabel
+>Aktivierung nach Klick</guilabel
+>. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktivierung bei Mauskontakt</guilabel
+></term>
+<listitem>
+<para
+>Bewegen Sie den Mauszeiger aktiv über ein normales Fenster, so wird dieses aktiviert. Neue Fenster wie das Fenster Befehl ausführen, die mit <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+> aufgerufen wird, erhalten den Fokus ohne dass Sie den Mauszeiger dorthin bewegen müssen. Fenster, die zufälligerweise unter dem Mauszeiger erscheinen, werden nicht aktiviert. Die Vorbeugung gegen unerwünschte Aktivierung funktioniert normal. Dies ist wie <guilabel
+>Aktivierung nach Klick</guilabel
+> nur ohne tatsächlich klicken zu müssen. </para>
+
+<para
+>Bei anderen Fensterverwaltungen wird dieser Modus manchmal als <quote
+>Aktivierung folgt dem Mauszeiger schlampig</quote
+> bezeichnet. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktivierung bei Mauskontakt – Vorrang für Maus</guilabel
+></term>
+<listitem>
+<para
+>Dies ist fast wie <guilabel
+>Aktivierung bei Mauskontakt</guilabel
+>. Wenn eine aktives Fenster durch das System gewählt werden muss, &eg; wenn das zurzeit aktive Fenster geschlossen wurde,dann ist das Fenster unter dem Mauszeiger der bevorzugte Kandidat. Wählen Sie diese Einstellung für eine durch Mauskontakt gesteuerte Aktivierung. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktivierung unter Mauszeiger</guilabel
+></term>
+<listitem>
+<para
+>Das Fenster, das sich unter dem Mauszeiger befindet, wird aktiv. Befindet sich der Mauszeiger nicht über einem Fenster (wenn er sich zum Beispiel über der Arbeitsfläche befindet) ist das Fenster aktiv, das sich zuletzt unter dem Mauszeiger befunden hat. Neue Fenster wie Befehl ausführen, das über <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+> aufgerufen wird, erhalten den Fokus nicht automatisch. Sie müssen erst den Mauszeiger darüber bewegen. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktivierung genau unter Mauszeiger</guilabel
+></term>
+<listitem>
+<para
+>Ähnlich wie <guilabel
+>Aktivierung unter Mauszeiger</guilabel
+>, aber noch strikter in der Interpretation. Nur das Fenster unter dem Mauszeiger ist aktiv. Befindet sich der Mauszeiger nicht über einem Fenster, hat kein Fenster den Fokus. Neu Fenster wie Befehl ausführen, das über <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+> aufgerufen wird, erhalten nicht den Fokus. Sie müssen erst den Mauszeiger darüber bewegen. </para>
+
+</listitem>
+</varlistentry>
+</variablelist>
+
+<note
+><para
+>Beachten Sie, dass bei <guilabel
+>Aktivierung unter Mauszeiger</guilabel
+> und <guilabel
+>Aktivierung genau unter Mauszeiger</guilabel
+> bestimmte Funktionen nicht korrekt funktionieren. Darunter die <guilabel
+>Verhinderung unerwünschter Aktivierung</guilabel
+> und die Auswahl des aktiven Fensters mit <keycombo action="simul"
+>&Alt;&Tab;</keycombo
+>.</para>
 </note>
 
 </sect3>
 
-<sect3 id="focus-focusdelay">
-<title>Delay focus by</title>
+<sect3 id="action-focus-focusstealin">
+<title
+>Verhindern unerwünschter Aktivierung</title>
 
-<para>
-This is the delay after which the window the mouse pointer is over will automatically receive focus.
-</para>
-
-</sect3>
-
-<sect3 id="focus-focusstealing">
-<title>Focus stealing prevention</title>
-
-<para>
-This option specifies how much KWin will try to prevent unwanted focus 
-stealing caused by unexpected activation of new windows.
-</para> 
+<para
+>Diese Einstellung legt fest, wie sehr KWin zu verhindern versucht, dass sich neu öffnende Fenster unerwünscht in den Vordergrund drängen bzw. aktiviert werden.</para
+> 
 
 <variablelist>
-
 <varlistentry>
-<term><guilabel>None</guilabel></term>
-<listitem><para>Prevention is turned off and new windows always become activated.</para></listitem>
+<term
+><guilabel
+>Keine</guilabel
+></term>
+<listitem
+><para
+>Es wird keine solche Vorbeugung versucht, alle neuen Fenster werden automatisch aktiviert.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><guilabel
+>Niedrig</guilabel
+></term>
+<listitem
+><para
+>Für den Fall, dass ein Fenster auf den eigentlichen Mechanismus nicht reagiert und KWin nicht entscheiden kann, ob eine Aktivierung gewünscht wird oder nicht, dann wird das Fenster automatisch aktiviert. Diese Einstellung führt teils zu besseren, teils aber auch schlechteren Ergebnissen als die folgende, je nach den verwendeten Programmen.</para
+></listitem>
+</varlistentry>
+<varlistentry>
+<term
+><guilabel
+>Mittel</guilabel
+></term>
+<listitem
+><para
+>Vorbeugungsmaßnahmen werden aktiviert.</para
+></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Low</guilabel></term>
-<listitem><para>Prevention is enabled; when some window does not have support 
-for the underlying mechanism and KWin cannot reliably decide whether to activate 
-the window or not, it will be activated. This setting may have both worse and better 
-results than the medium level, depending on the applications.</para></listitem>
+<term
+><guilabel
+>Hoch</guilabel
+></term>
+<listitem
+><para
+>Neue Fenster werden nur dann aktiviert, wenn gerade kein anderes Fenster aktiv ist oder sie zum gerade benutzten Programm gehören. Diese Einstellung ist nur dann sinnvoll, wenn der Fokus der Maus folgt.</para
+></listitem>
 </varlistentry>
-
 <varlistentry>
-<term><guilabel>Medium</guilabel></term>
-<listitem><para>Prevention is enabled.</para></listitem>
+<term
+><guilabel
+>Extrem</guilabel
+></term>
+<listitem
+><para
+>Sämtliche Fenster müssen manuell vom Benutzer aktiviert werden.</para
+></listitem>
 </varlistentry>
-
-<varlistentry>
-<term><guilabel>High</guilabel></term>
-<listitem><para>New windows get activated only 
-if no window is currently active or if they belong to the currently active 
-application. This setting is probably not really usable when not using mouse 
-focus policy.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Extreme</guilabel></term>
-<listitem><para>All windows must be explicitly activated by the user.</para></listitem>
-</varlistentry>
-
 </variablelist>
-
-<para>
-Windows that are prevented from stealing focus are marked as demanding 
-attention, which by default means their taskbar entry will be highlighted. 
-This can be changed in the Notifications control module.
-</para>
-
+<para
+>Fenster, die aufgrund dieser Regelung nicht nach vorne geholt wurden, erscheinen als Fenster, die Ihre Aufmerksamkeit erfordern. D. h. ihr Eintrag in der Kontrollleiste wird hervorgehoben. Dieses Verhalten kann im Einstellungsmodul für Systemnachrichten geändert werden.</para>
 </sect3>
+  
+<sect3 id="action-focus-raisingwindow">
+<title
+>Fenster nach vorne holen</title>
+<para
+>Wenn Sie den Standard für die Aktivierung festgelegt haben, stehen weitere Optionen zur Verfügung. </para>
 
-<sect3 id="focus-raisingwindow">
-<title>Raising windows</title>
+<para
+>Mit einer Aktivierung durch Klicken ist als Standard <guilabel
+>Aktives Fenster auf Klick nach vorne holen</guilabel
+> eingeschaltet und das Hervorheben durch Überfahren mit dem Mauszeiger ist nicht verfügbar. </para>
 
-<para>
-Besides receiving focus, you can also control under which conditions windows get raised, &ie; brought to the front.
-</para>
-
-<para>
-You should make sure that at least one of the raising options is enabled, otherwise windows will not be raised at all.
-</para>
-
-<para>
-<guilabel>Click raises active window</guilabel> will bring a window to the front when it is clicked on. This is enabled by default with a click to focus policy.
-</para>
-
-<para>
-By activating <guilabel>Raise on hover, delayed by</guilabel> you can alternatively bring a window to the front if the mouse pointer is over that window for a specified period of time. You can determine the delay for this option by using the spin box control. This auto-raising option is only available with a hover to focus policy.
-</para>
+<para
+>Mit der Regelung Aktivieren durch Überfahren können Sie alternativ das automatische Hervorheben verwenden. Ist <guilabel
+>Hervorheben beim Überfahren, verzögert um</guilabel
+> aktiviert, so platziert &kwin; das Fenster automatisch nach vorne, wenn sich der Mauszeiger für eine bestimmte Zeit über dem Fenster befindet. Die Verzögerungszeit können Sie mit dem Drehfeld einstellen. </para>
 
 <tip>
-<para>
-Setting the delay too short will cause a rapid fire changing of
-windows, which can be quite distracting. Most people will like a delay
-of 100-300 ms. This is responsive, but it will let you slide over the
-corners of a window on your way to your destination without bringing
-that window to the front. 
-</para>
+<para
+>Setzt man die Verzögerungszeit auf einen zu geringen Wert, führt das zu einer schnellen Folge von Fensterwechseln, die sehr störend sein kann. Sinnvoll ist ein Wert von 100-300 ms. Die Fensterverwaltung reagiert schnell genug, dennoch kann man auf dem Weg zum Ziel ein anderes Fenster überqueren, ohne dieses nach vorn zu bringen. </para>
 </tip>
 
-</sect3>
-
-<sect3 id="focus-multiscreen">
-<title>Multiscreen behavior</title>
-
-<para>
-This controls the behavior of window focus with multiple screens. Note that these options appear only when more than one screen is currently connected.
-</para>
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Active screen follows mouse</guilabel></term>
-<listitem>
-<para>
-When this option is enabled, the active screen (where new windows appear, for example) is the screen containing the mouse pointer. When disabled, the active screen is the screen containing the focused window.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Separate screen focus</guilabel></term>
-<listitem>
-<para>
-When this option is enabled, focus operations are limited only to the active screen. For instance, when you close a window, then the next window to receive focus will be a window on the active screen, even if there is a more recently used window on a different screen.
-</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
+<para
+>Wenn Sie das automatische nach vorne holen nicht benutzen, sollten Sie auf jeden Fall <guilabel
+>Aktives Fenster auf Klick nach vorne holen</guilabel
+> aktivieren. Sind beide Einstellungen abgeschaltet, zeigt der Fensterverwaltung ein nicht sonderlich sinnvolles Verhalten, da die Fenster überhaupt nicht in den Vordergrund geholt werden. </para>
 
 </sect3>
 
 </sect2>
 
 <sect2 id="titlebar-actions">
-<title>Titlebar Actions</title>
+<title
+>Titelleiste</title>
 
-<para>
-In this panel you can configure what happens to windows when a mousebutton is
-clicked on their titlebars.
-</para>
+<para
+>Auf dieser Karteikarte können Sie festlegen, was mit einem Fenster passiert, wenn mit der Maus auf die Titelleiste geklickt wird. </para>
 
-<sect3 id="actions-titlebar">
-<title><guilabel>Titlebar Actions</guilabel></title>
+<sect3 id="action-actions-sec1">
+<title
+>Doppelklick</title>
 
-<para>
-This section allows you to determine what happens when you double-click
-or scroll the mouse wheel on the titlebar of a window.
-</para>
+<para
+>In diesem Auswahlfeld können Sie entweder <guilabel
+>Fensterheber</guilabel
+>, verschiedene Formen von <guilabel
+>Maximieren</guilabel
+> oder <guilabel
+>Nach hinten</guilabel
+>, <guilabel
+>Schließen</guilabel
+> und <guilabel
+>Auf allen Arbeitsflächen</guilabel
+> auswählen. </para>
 
-<para>
-The following actions are available for <guilabel>Double-click</guilabel>:
-</para>
+<para
+>Bei <guilabel
+>Maximieren</guilabel
+> wird &kwin; das Fenster bei einem Doppelklick auf die Titelleiste maximieren. Sie können außerdem auswählen, ob ein Fenster nur horizontal oder nur vertikal maximiert werden soll.</para>
 
-<variablelist>
+<para
+>Bei <guilabel
+>Fensterheber</guilabel
+> wird das Fenster auf die Titelleiste reduziert. Ein zweiter Doppelklick stellt die vorherige Fenstergröße wieder her. </para>
 
-<varlistentry>
-<term><guilabel>Maximize</guilabel></term>
-<listitem>
-<para>
-Resizes the window to fill the height and width of the screen.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Vertically maximize</guilabel></term>
-<listitem>
-<para>
-Resizes the window to the height of the screen.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Horizontally maximize</guilabel></term>
-<listitem>
-<para>
-Resizes the window to the width of the screen.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Minimize</guilabel></term>
-<listitem>
-<para>
-Hides the window into its minimized state, from which it can be restored &eg; via the Task Manager or Task Switcher.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Shade</guilabel></term>
-<listitem>
-<para>
-Causes the window to be
-reduced to simply the titlebar. Double-clicking on the titlebar again
-restores the window to its normal size.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Close</guilabel></term>
-<listitem>
-<para>
-Closes the window.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Show on all desktops</guilabel></term>
-<listitem>
-<para>
-Makes the window be visible on all Virtual Desktops.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Do nothing</guilabel></term>
-<listitem>
-<para>
-Nothing happens on double-click.
-</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
-
-<para>
-The <guilabel>Mouse wheel</guilabel> can be used to trigger an action depending on whether it is scrolled up or down:
-</para>
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Raise/lower</guilabel></term>
-<listitem>
-<para>
-Scrolling up will move the window on top of other windows.
-</para>
-<para>
-Scrolling down will move the window below other windows.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Shade/unshade</guilabel></term>
-<listitem>
-<para>
-Scrolling up will collapse the window to just its titlebar.
-</para>
-<para>
-Scrolling down will restore the window to its normal size.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Maximize/restore</guilabel></term>
-<listitem>
-<para>
-Scrolling up will maximize the window to fill the whole screen.
-</para>
-<para>
-Scrolling down will restore it to its previous size.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Keep above/below</guilabel></term>
-<listitem>
-<para>
-Scrolling up will make the window stay on top, covering other windows.
-</para>
-<para>
-Scrolling down will make the window stay covered below other windows.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Move to previous/next desktop</guilabel></term>
-<listitem>
-<para>
-Scrolling up will move the window to the previous Virtual Desktop.
-</para>
-<para>
-Scrolling down will move the window to the next Virtual Desktop.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Change opacity</guilabel></term>
-<listitem>
-<para>
-Scrolling up will make the window less transparent.
-</para>
-<para>
-Scrolling down will make the window more transparent.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Do nothing</guilabel></term>
-<listitem>
-<para>
-Nothing happens when scrolling up or down on the window's titlebar.
-</para>
-</listitem>
-</varlistentry>
-  
-</variablelist>
+<para
+>Ähnliche Einstellungen sind für das <guilabel
+>Mausrad</guilabel
+> vorhanden. </para>
+<!--FIXME Raise/Lower Shade/Unshade Maximize/Restore Keep Above/Below Move to Previous/Next Desktop Change Opacity -->
 
 <tip>
-<para>
-You can have windows automatically unshade when you simply place the
-mouse over their shaded titlebar. Just check the <link  linkend="advanced-unshading"><guilabel>Window
-unshading</guilabel></link> check box in the <guilabel>Advanced</guilabel> tab of
-this module. This is a great way to reclaim screen space when you are
-cutting and pasting between a lot of windows, for example.
-</para>
+<para
+>Soll ein auf die Titelleiste reduziertes Fenster automatisch wiederhergestellt werden, wenn die Maus darüber platziert wird, müssen Sie auf der Karteikarte <guilabel
+>Erweitert</guilabel
+> das Markierungsfeld <guilabel
+>Fensterheber ausfahren</guilabel
+> auswählen. Damit lässt sich hervorragend Platz auf der Arbeitsfläche sparen, wenn man z.B. zwischen vielen Fenster Inhalte durch Ausschneiden und Kopieren überträgt. </para>
 </tip>
 
 </sect3>
 
-<sect3 id="actions-titlebar-frame">
-<title><guilabel>Titlebar and Frame Actions</guilabel></title>
+<sect3 id="action-actions-sec2">
+<title
+><guilabel
+>Aktionen für Titelleiste und Rahmen</guilabel
+></title>
 
-<para>
-This section allows you to determine what happens when you single click
-on the titlebar or frame of a window. Notice that you can have
-different actions associated with the same click depending on whether
-the window is active or not.
-</para>
+<para
+>In diesem Abschnitt kann man festlegen, wie sich ein Fenster bei einfachem Klick auf die Titelleiste oder den Rahmen verhält. Man kann dabei unterschiedliche Aktionen einstellen, je nachdem ob das Fenster aktiv ist oder nicht. </para>
 
-<para> For each combination of mousebuttons, Active and
-Inactive, you can select the most appropriate choice. The actions are
-as follows:
-</para>
+<para
+>Man kann für jede Kombination der Maustasten und Aktiv/Inaktiv die geeignete Aktion einstellen. Die möglichen Aktionen sind: </para>
 
 <variablelist>
 
 <varlistentry>
-<term><guilabel>Raise</guilabel></term>
+<term
+><guilabel
+>Nach vorn</guilabel
+></term>
 <listitem>
-<para>
-Will bring the window to the top of the window stack. All other windows
-which overlap with this one will be hidden <quote>below</quote> it.
-</para>
+<para
+>Bringt das Fenster ganz nach vorn. Alle anderen Fenster, die dieses überlappen, werden <quote
+>dahinter</quote
+> gestellt. </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Lower</guilabel></term>
+<term
+><guilabel
+>Nach hinten</guilabel
+></term>
 <listitem>
-<para>
-Will move this window to the bottom of the window stack. This will get the
-window out of the way.
-</para>
+<para
+>Platziert das Fenster an das Ende des Bildschirms. Damit wird das Fenster aus dem Weg bewegt. </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Toggle raise and lower</guilabel></term>
+<term
+><guilabel
+>Nach vorn bringen und hinten stellen umschalten</guilabel
+></term>
 <listitem>
-<para>
-This will raise windows which are not on top, and lower windows which
-are already on top.
-</para>
+<para
+>Bringt ein Fenster nach vorn, wenn es vorher nicht vorn war, und nach hinten, wenn es vorher vorn war. </para>
+</listitem>
+</varlistentry>
+
+<!--FIXME missing:
+Minimize, Shade, Close
+-->
+
+<varlistentry>
+<term
+><guilabel
+>Nichts unternehmen</guilabel
+></term>
+<listitem>
+<para
+>Offensichtlich passiert hier nichts. </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Minimize</guilabel></term>
+<term
+><guilabel
+>Aktionenmenü anzeigen</guilabel
+></term>
 <listitem>
-<para>
-Hides the window into its minimized state, from which it can be restored &eg; via the Task Manager or Task Switcher.
-</para>
-</listitem>
-</varlistentry>
-<varlistentry>
-
-<term><guilabel>Shade</guilabel></term>
-<listitem>
-<para>
-Causes the window to be
-reduced to simply the titlebar. Double-clicking on the titlebar again
-restores the window to its normal size.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Close</guilabel></term>
-<listitem>
-<para>
-Closes the window.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Show actions menu</guilabel></term>
-<listitem>
-<para>
-Will bring up a small submenu where you can choose window related
-commands (&ie; Move to Desktop, Move to Screen, Maximize, Minimize, Close, &etc;).
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Do nothing</guilabel></term>
-<listitem>
-<para>
-Nothing happens on click.
-</para>
+<para
+>Ein Untermenü mit fensterbezogenen Befehlen wird angezeigt (unter anderem Maximieren, Minimieren, Schließen &etc;). </para>
 </listitem>
 </varlistentry>
 
 </variablelist>
-
 </sect3>
 
-<sect3 id="actions-maximize-button">
-<title><guilabel>Maximize Button Actions</guilabel></title>
-
-<para>
-This section allows you to determine the behavior of the three mouse buttons 
-onto the maximize button.
-</para>
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Maximize</guilabel></term>
-<listitem>
-<para>
-Resizes the window to the height and width of the screen.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Vertically maximize</guilabel></term>
-<listitem>
-<para>
-Resizes the window to the height of the screen.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Horizontally maximize</guilabel></term>
-<listitem>
-<para>
-Resizes the window to the width of the screen.
-</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
-
+<sect3 id="action-actions-maximize-button">
+<title
+><guilabel
+>Aktionen für den Maximieren-Knopf</guilabel
+></title>
+<para
+>In diesem Abschnitt können Sie die Aktion für alle drei Maustasten beim Klick auf den Knopf „Maximieren“ einstellen. Nur vertikal, nur horizontal und beide Richtungen für das „Maximieren“ des Fensters stehen zur Auswahl. </para>
 </sect3>
 
 </sect2>
 
 <sect2 id="window-actions">
-<title>Window Actions</title>
+<title
+>Fenster</title>
 
-<sect3 id="actions-inactive-inner-window">
-<title><guilabel>Inactive Inner Window</guilabel></title>
+<sect3 id="action-actions-sec3">
+<title
+><guilabel
+>Inaktives, inneres Fenster</guilabel
+></title>
 
-<para>
-This part of the module, allows you to configure what happens when you
-click on an inactive window, with any of the three mouse buttons or use
-the mouse wheel.
-</para>
+<para
+>Dieser Abschnitt des Moduls legt fest, was passiert, wenn Sie mit einer der drei Maustasten in ein inaktives Fenster klicken oder das Mausrad verwenden. </para>
 
-<para>
-Your choices are as follows:
-</para>
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Activate, raise and pass click</guilabel></term>
-<listitem>
-<para>
-This makes the clicked window active, raises it to the top of the
-display, and passes a mouse click to the application within the window.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Activate and pass click</guilabel></term>
-<listitem>
-<para>
-This makes the clicked window active and passes a mouse click to the
-application within the window.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Activate</guilabel></term>
-<listitem>
-<para>
-This simply makes the clicked window active. The mouse click is not
-passed on to the application within the window.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Activate and raise</guilabel></term>
-<listitem>
-<para>
-This makes the clicked window active and raises the window to the top of
-the display. The mouse click is not passed on to the application within
-the window.
-</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
-
-<para>
-Your choices for <guilabel>Mouse wheel</guilabel> are as follows:
-</para>
+<para
+>Es gibt folgende Einstellmöglichkeiten: </para>
 
 <variablelist>
-
 <varlistentry>
-<term><guilabel>Scroll</guilabel></term>
+<term
+><guilabel
+>Aktivieren, nach vorn und mit Klick ansprechen</guilabel
+></term>
 <listitem>
-<para>
-Just scrolls the content within the window.
-</para>
+<para
+>Das angeklickte Fenster wird aktiviert, auf der Arbeitsfläche ganz nach vorne geholt und an die Anwendung im Fenster wird ein Mausklick übertragen. </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Activate and scroll</guilabel></term>
+<term
+><guilabel
+>Aktivieren und mit Klick ansprechen</guilabel
+></term>
 <listitem>
-<para>
-This makes the clicked window active and scrolls the content.
-</para>
+<para
+>Das angeklickte Fenster wird aktiviert und an die Anwendung im Fenster ein Mausklick übertragen. </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Activate, raise and scroll</guilabel></term>
+<term
+><guilabel
+>Aktivieren</guilabel
+></term>
 <listitem>
-<para>
-This makes the clicked window active, raises the window to the top of
-the display, and scrolls the content.
-</para>
+<para
+>Hierdurch wird das angeklickte Fenster lediglich aktiviert. Der Mausklick wird nicht an die Anwendung im Fenster weitergegeben. </para>
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term
+><guilabel
+>Aktivieren und nach vorne</guilabel
+></term>
+<listitem>
+<para
+>Das angeklickte Fenster wird aktiviert und ganz vorne auf der Arbeitsfläche dargestellt. Der Mausklick wird nicht an die Anwendung im Fenster weitergegeben. </para>
+</listitem>
+</varlistentry>
 </variablelist>
 
+<para
+>Für das <guilabel
+>Mausrad</guilabel
+> gibt es folgende Einstellmöglichkeiten: </para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Blättern</guilabel
+></term>
+<listitem>
+<para
+>Verschiebt den Inhalt des Fenster nach oben oder unten. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktivieren und blättern</guilabel
+></term>
+<listitem>
+<para
+>Das angeklickte Fenster wird aktiviert und der Inhalt wird nach oben oder unten verschoben. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktivieren, nach vorne und blättern</guilabel
+></term>
+<listitem>
+<para
+>Das angeklickte Fenster wird aktiviert, auf der Arbeitsfläche ganz nach vorne geholt und  und der Inhalt wird nach oben oder unten verschoben. </para>
+</listitem>
+</varlistentry>
+</variablelist>
 </sect3>
 
-<sect3 id="actions-inner-window-titlebar-frame">
-<title><guilabel>Inner Window, Titlebar and Frame</guilabel></title>
+<sect3 id="action-actions-sec4">
+<title
+><guilabel
+>Inneres Fenster, Titelleiste und Rahmen</guilabel
+></title>
 
-<para>
-This bottom section allows you to configure additional actions when
-clicking on a window with a modifier key pressed.
-</para>
+<para
+>Dieser unterste Abschnitt ermöglicht die Einstellung zusätzlicher Aktionen, wenn beim Mausklick eine Sondertaste (&Meta; ist der Standard) gedrückt wird.</para>
 
-<para>
-As a <guilabel>Modifier key</guilabel>, you can select between <guilabel>Meta</guilabel> (default) or <guilabel>Alt</guilabel>.
-</para>
+<para
+>Sie können auch hier unterschiedliche Aktionen für die &LMB;, &MMB;, &RMB; und das Mausrad festlegen. </para>
 
-<para>
-Once again, you can select different actions for
-<mousebutton>Left</mousebutton>, <mousebutton>Middle</mousebutton> and
-<mousebutton>Right</mousebutton> button clicks and the <guilabel>Mouse 
-wheel</guilabel>.
-</para>
-
-<para>
-Your choices for the mouse buttons are:
-</para>
+<para
+>Die Wahlmöglichkeiten sind:</para>
 
 <variablelist>
-
 <varlistentry>
-<term><guilabel>Move</guilabel></term>
+<term
+><guilabel
+>Verschieben</guilabel
+></term>
 <listitem>
-<para>
-Allows you to drag the selected window around the workspace.
-</para>
+<para
+>Bewegt das Fenster auf der Arbeitsfläche. </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Activate, raise and move</guilabel></term>
+<term
+><guilabel
+>Nach hinten</guilabel
+></term>
 <listitem>
-<para>
-This makes the clicked window active, raises it to the top of the
-window stack, and drags the window around the workspace.
-</para>
+<para
+>Platziert das Fenster an das Ende des Bildschirms. Damit wird das Fenster aus dem Weg bewegt. </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Toggle raise and lower</guilabel></term>
+<term
+><guilabel
+>Nichts</guilabel
+></term>
 <listitem>
-<para>
-This will raise windows which are not on top, and lower windows which
-are already on top.
-</para>
+<para
+>Offensichtlich passiert hier nichts. </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Resize</guilabel></term>
+<term
+><guilabel
+>Nach vorn</guilabel
+></term>
 <listitem>
-<para>
-Allows you to change the size of the selected window.
-</para>
+<para
+>Bringt das Fenster ganz nach vorn. Alle anderen Fenster, die dieses überlappen, werden <quote
+>dahinter</quote
+> gestellt. </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Raise</guilabel></term>
+<term
+><guilabel
+>Größe ändern</guilabel
+></term>
 <listitem>
-<para>
-Will bring the window to the top of the window stack. All other windows
-which overlap with this one will be hidden <quote>below</quote> it.
-</para>
+<para
+>Ändert die Größe des ausgewählten Fensters. </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Lower</guilabel></term>
+<term
+><guilabel
+>Nach vorn bringen und hinten stellen umschalten</guilabel
+></term>
 <listitem>
-<para>
- Will move this window to the bottom of the window stack. This will get the
-window out of the way.
-</para>
+<para
+>Bringt ein Fenster nach vorn, wenn es vorher nicht vorn war, und nach hinten, wenn es vorher vorn war. </para>
 </listitem>
 </varlistentry>
-
 <varlistentry>
-<term><guilabel>Minimize</guilabel></term>
+<term
+><guilabel
+>Aktivieren</guilabel
+></term>
 <listitem>
-<para>
-Hides the window into its minimized state, from which it can be restored &eg; via the Task Manager or Task Switcher.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Decrease opacity</guilabel></term>
-<listitem>
-<para>
-Makes the window more transparent.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Increase opacity</guilabel></term>
-<listitem>
-<para>
-Makes the window less transparent.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Do nothing</guilabel></term>
-<listitem>
-<para>
-Nothing happens on click.
-</para>
+<para
+>Aktiviert dieses Fenster. </para>
 </listitem>
 </varlistentry>
 
 </variablelist>
-
-<para>
-Your choices for the mouse wheel are:
-</para>
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Raise/lower</guilabel></term>
-<listitem>
-<para>
-Scrolling up will move the window on top of other windows.
-</para>
-<para>
-Scrolling down will move the window below other windows.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Shade/unshade</guilabel></term>
-<listitem>
-<para>
-Scrolling up will collapse the window to just its titlebar.
-</para>
-<para>
-Scrolling down will restore the window to its normal size.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Maximize/restore</guilabel></term>
-<listitem>
-<para>
-Scrolling up will maximize the window to fill the whole screen.
-</para>
-<para>
-Scrolling down will restore it to its previous size.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Keep above/below</guilabel></term>
-<listitem>
-<para>
-Scrolling up will make the window stay on top, covering other windows.
-</para>
-<para>
-Scrolling down will make the window stay covered below other windows.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Move to previous/next desktop</guilabel></term>
-<listitem>
-<para>
-Scrolling up will move the window to the previous Virtual Desktop.
-</para>
-<para>
-Scrolling down will move the window to the next Virtual Desktop.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Change opacity</guilabel></term>
-<listitem>
-<para>
-Scrolling up will make the window less transparent.
-</para>
-<para>
-Scrolling down will make the window more transparent.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Do nothing</guilabel></term>
-<listitem>
-<para>
-Nothing happens on when scrolling up or down the window's titlebar.
-</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
+<!-- FIXME missing:
+Activate, Raise &amp; Move
+Minimize
+Increase Opacity + Decrease Opacity
+-->
+<!--FIXME
+Mouse Wheel has different choices:
+Raise/Lower, Shade/Unshade, Maximize/Restore, Keep Above/Below, 
+Move to Previous/Next Desktop, Change Opacity
+Nothing
+-->
 
 </sect3>
 
 </sect2>
 
-<sect2 id="movement">
-<title>Movement</title>
+<sect2 id="action-moving">
+<title
+>Verschiebung</title>
 
-<para>This page allows you to configure the <guilabel>Snap
-Zones</guilabel>. These are like a magnetic field along the side of
-the screen and each window, which will make windows snap alongside
-when moved near.
-</para>
+<para
+>Diese Einstellungen bestimmen das Erscheinungsbild von Fenster auf dem Bildschirm, wenn sie verschoben werden.</para>
+
+<sect3>
+<title
+><guilabel
+>Fenstergeometrie</guilabel
+></title>
 
 <variablelist>
-
 <varlistentry>
-<term><guilabel>Screen edge snap zone</guilabel></term>
+<term
+><guilabel
+>Bei Bewegungen oder Größenänderungen anzeigen</guilabel
+></term>
 <listitem>
-<para>Here you can set the snap zone for screen borders. Moving a
-window within the configured distance will make it snap to the edge of
-the screen.
-</para>
+<para
+>Aktivieren Sie diese Einstellung, wenn Sie Angaben zur Geometrie des Fensters eingeblendet haben möchten, während Sie seine Größe oder Position ändern. Es werden dann die relative Position zur linken oberen Ecke des Bildschirms und die Abmessungen angezeigt.</para>
 </listitem>
 </varlistentry>
-
-<varlistentry>
-<term><guilabel>Window snap zone</guilabel></term>
-<listitem>
-<para>
-Here you can set the snap zone for windows. As with screen
-borders, moving a window near to another will make it snap to the edge
-as if the windows were magnetized.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Center snap zone</guilabel></term>
-<listitem>
-<para>
-Here you can set the snap zone for the screen center, &ie; the 
-<quote>strength</quote> of the magnetic field which will make windows snap 
-to the center of the screen when moved near it.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Snap windows: Only when overlapping</guilabel></term>
-<listitem>
-<para>
-If checked, windows will not snap together if they are only near
-each other, they must be overlapping, by the configured amount or
-less.
-</para>
-</listitem>
-</varlistentry>
-
 </variablelist>
 
-<tip>
-<para>
-In the <guilabel>Screen Edges</guilabel> settings module in the <guilabel>Workspace Behavior</guilabel> section of the system settings, you can configure windows to be quick-tiled to the whole, half, or quarter of the screen when dragged near the screen edges.
-</para>
-</tip>
+</sect3>
+
+<sect3>
+<title
+><guilabel
+>Einrastzonen</guilabel
+></title>
+
+<para
+>Der Rest dieser Seite erlaubt die Einrichtung der <guilabel
+>Einrastzonen</guilabel
+>. Diese wirken wie ein magnetisches Feld entlang der Ränder von Fenstern und der Arbeitsfläche, die Fenster gleichsam einrasten lassen, wenn sie sich einander nähern.</para>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>Bildschirmrand-Einrastzone:</guilabel
+></term>
+<listitem>
+
+<para
+>Hier können Sie die Einrastzonen für die Arbeitsflächenränder festlegen. Wird ein Fenster in eine dieser Zonen verschoben, so rastet es an einer Kante der Arbeitsoberfläche ein.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Fenster-Einrastzone:</guilabel
+></term>
+<listitem>
+
+<para
+>Hier können Sie die Einrastzone für Fenster festlegen. Wie beim Arbeitsflächenrand rastet ein Fenster ein, wenn es in die Einrastzone eines Anderen gerät.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Bildschirmmitte-Einrastzone:</guilabel
+></term>
+<listitem>
+
+<para
+>Hier können Sie die Einrastzone für die Bildschirmmitte festlegen, also die „Stärke des magnetischen Feldes“, das Fenster in der Bildschirmmitte andocken lässt, sobald sie in deren Nähe gebracht werden</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry>
+<term
+><guilabel
+>Fenster nur einrasten lassen, wenn sie sich überlappen</guilabel
+></term>
+<listitem>
+
+<para
+>Ist diese Option markiert, rasten Fenster nur dann ein, wenn sie sich überlappen.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect3>
 
 </sect2>
 
-<sect2 id="advanced">
-<title>Advanced</title>
+<sect2 id="action-advanced">
+<title
+>Erweitert</title>
 
-<para>
-In the <guilabel>Advanced</guilabel> panel you can do more advanced fine
-tuning to the window behavior.
-</para>
-
-<sect3 id="advanced-unshading">
-<title>Window unshading</title>
+<para
+>Auf der Karteikarte <guilabel
+>Erweitert</guilabel
+> kann man einige Feinheiten des Fensterverhaltens beeinflussen. </para>
 
 <variablelist>
+<title
+>Fensterheber ausfahren</title>
+
 <varlistentry>
-<term><guilabel>On titlebar hover after</guilabel></term>
+<term
+><guilabel
+>Beim Überfahren der Titelleiste nach</guilabel
+></term>
 <listitem>
-<para>
-If this option is enabled, a shaded window will un-shade automatically
-when the mouse pointer has been over the titlebar for some time. Use
-the spinbox to configure the delay un-shading.
-</para>
+<para
+>Ist diese Option markiert, wird ein auf die Titelleiste reduziertes Fenster automatisch wiederhergestellt, wenn sich der Mauszeiger für eine einstellbare Zeit über der Titelleiste befindet. Mit dem Drehfeld kann man die Verzögerungszeit bis zur automatischen Wiederherstellung einstellen. </para>
 </listitem>
 </varlistentry>
 </variablelist>
-</sect3>
-
-<sect3 id="advanced-placement">
-<title>Window placement</title>
-
-<para>
-The placement policy determines where a new window will appear
-on the screen.
-</para>
-
-<para>
-In a multi-monitor setup, the screen for windows to appear on is always the active screen (that is, the screen that has the mouse pointer or the focused window; see <link linkend="focus-multiscreen">Multiscreen behavior</link>), with the exception of windows remembering their previous position (see <link  linkend="advanced-remember-positions">below</link>).
-</para>
 
 <variablelist>
 
 <varlistentry>
-<term><guilabel>Minimal Overlapping</guilabel></term>
-<listitem>
-<para>
-Will place all new windows in such a manner as to overlap existing windows as little as possible.
-</para>
-</listitem>
+<term
+><guilabel
+>Fensterpositionierung</guilabel
+></term>
+<listitem
+><para
+>Die Platzierung legt fest, wo ein neues Fenster auf dem Bildschirm erscheinen wird. <guilabel
+>Minimale Überlappung</guilabel
+> platziert die Fenster mit einer möglichst geringen Überlappung, <guilabel
+>Gestaffelt</guilabel
+> kaskadiert die Fenster und <guilabel
+>Zufällig</guilabel
+> verwendet eine zufällige Position. <guilabel
+>Zentriert</guilabel
+> öffnet alle neuen Fenster in der Mitte des Bildschirms und <guilabel
+>Links oben</guilabel
+> öffnet alle Fenster mit ihrer linken oberen Ecke in der linken oberen Ecke des Bildschirms. Klicken Sie auf <guilabel
+>Anwendungen erlauben, die Position ihrer eigenen Fenster zu speichern, wenn sie das unterstützen</guilabel
+>, um die Position der &plasma;-Fenster zu behalten.</para
+></listitem>
 </varlistentry>
 
-<varlistentry>
-<term><guilabel>Maximized</guilabel></term>
-<listitem>
-<para>
-Will try to maximize all new windows to fill the whole screen.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Random</guilabel></term>
-<listitem>
-<para>
-Will place all new windows in random locations.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Centered</guilabel></term>
-<listitem>
-<para>
-Will place all new windows in the center of the screen.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>In Top-Left Corner</guilabel></term>
-<listitem>
-<para>
-Will place all new windows with their top left corner in the top left corner of
-the screen. 
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Under Mouse</guilabel></term>
-<listitem>
-<para>
-Will place all new windows centered under the mouse pointer.
-</para>
-</listitem>
-</varlistentry>
-  
 </variablelist>
-
-<para id="advanced-remember-positions">
-Check the <guilabel>Allow apps to remember the positions of
-their own windows</guilabel> item to open windows where they previously were rather than by the placement method chosen above. Note that this remembered position includes the screen assignment, so windows may open on a screen other than the active one if this is where they were last located. Note also that this option is only available on X11, not on Wayland, and is only supported by some KDE applications.
-</para>
-
-<tip>
-<para>
-If you would like some windows to appear on specific positions, screens, or Virtual Desktops, you can set up <guilabel>Window Rules</guilabel> to configure special window or application settings. You can find this by right-clicking on the titlebar of a window and choosing <guimenu>More Actions</guimenu>, or in the <guilabel>Window Rules</guilabel> module in the <guilabel>Window Management</guilabel> section of system settings.
-</para>
-</tip>
-
-
-</sect3>
-
-<sect3 id="advanced-special-windows">
-<title>Special windows</title>
 
 <variablelist>
-
+<title
+>Besondere Fenster</title>
 <varlistentry>
-<term><guilabel>Hide utility windows for inactive applications</guilabel></term>
-<listitem>
-<para>
-When turned on, utility windows (tool windows, torn-off menus, ...) of 
-inactive applications will be hidden and will be shown only when the 
-application becomes active. Note that applications have to mark the windows 
-with the proper window type for this feature to work.
-</para>
-</listitem>
+<term
+><guilabel
+>Werkzeugfenster von inaktiven Programmen ausblenden</guilabel
+></term>
+<listitem
+><para
+>Wenn diese Einstellung aktiviert ist, werden Dienstprogrammfenster (Werkzeugfenster, schwebende Menüs, ...) nur angezeigt, wenn das zugehörige Hauptfenster aktiv ist.</para
+></listitem>
 </varlistentry>
 
 </variablelist>
-
-</sect3>
-
-<sect3 id="advanced-virtual-desktop-behavior">
-<title>Virtual Desktop behavior</title>
-
-<para>
-Sometimes calling an application will activate an existing window rather than opening a new window. This setting controls what should happen if that activated window is located on a Virtual Desktop other than the current one.
-</para>
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Switch to that Virtual Desktop</guilabel></term>
-<listitem>
-<para>
-Will switch to the Virtual Desktop where the window is currently located.
-</para>
-<para>
-Choose this option if you would like the active Virtual Desktop to automatically follow windows to their assigned Virtual Desktop.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Bring window to current Virtual Desktop</guilabel></term>
-<listitem>
-<para>
-Will cause the window to jump to the active Virtual Desktop.
-</para>
-<para>
-Choose this option if you would like windows to always open on the current Virtual Desktop, and the active Virtual Desktop to only switch when navigating there manually.
-</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
-
-</sect3>
 
 </sect2>
 

@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-11 00:48+0000\n"
-"PO-Revision-Date: 2022-11-30 21:02\n"
+"PO-Revision-Date: 2023-01-06 10:31\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
 "Language: be\n"
@@ -781,10 +781,9 @@ msgid "Block compositing"
 msgstr "Блакаванне кампазітынгу"
 
 #: rulesmodel.cpp:703
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Клас акна (праграма)"
+msgstr "Клас акна недаступны"
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -795,6 +794,11 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Гэтая праграма не падае клас для акна, таму KWin не можа выкарыстаць яго для "
+"супастаўлення і ўжывання якіх-небудзь правіл. Калі вы ўсё яшчэ хочаце ўжыць "
+"да яго нейкія правілы, паспрабуйце супаставіць іншыя ўласцівасці, такія як "
+"загаловак акна.<nl/><nl/>Калі ласка, паведаміце пра гэтую хібу "
+"распрацоўнікам праграмы."
 
 #: rulesmodel.cpp:738
 #, kde-format
@@ -945,10 +949,9 @@ msgid "Extreme"
 msgstr "Экстрымальны ўзровень"
 
 #: rulesmodel.cpp:865
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "Unmanaged window"
-msgstr "На галоўным акне"
+msgstr "Акно без кіравання"
 
 #: rulesmodel.cpp:866
 #, kde-format

@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-04 00:50+0000\n"
-"PO-Revision-Date: 2022-12-11 10:14\n"
+"PO-Revision-Date: 2023-01-06 10:31\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
 "Language: be\n"
@@ -2598,14 +2598,12 @@ msgid "Switch to Window to the Left"
 msgstr "Пераключыцца на акно злева"
 
 #: useractions.cpp:1061
-#, fuzzy, kde-format
-#| msgid "Increase Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Павялічыць непразрыстасць актыўнага акна на 5 %"
 
 #: useractions.cpp:1063
-#, fuzzy, kde-format
-#| msgid "Decrease Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Паменшыць непразрыстасць актыўнага акна на 5 %"
 
@@ -2665,28 +2663,24 @@ msgid "Window to Previous Screen"
 msgstr "Акно на папярэдні экран"
 
 #: useractions.cpp:1102
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "Акно на працоўны стол справа"
+msgstr "Акно на адзін экран управа"
 
 #: useractions.cpp:1104
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "Акно на працоўны стол злева"
+msgstr "Акно на адзін экран улева"
 
 #: useractions.cpp:1106
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "Акно на экран 2"
+msgstr "Акно на адзін экран уверх"
 
 #: useractions.cpp:1108
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "Акно на ніжэйшы працоўны стол"
+msgstr "Акно на адзін экран уніз"
 
 #: useractions.cpp:1112
 #, kde-format
@@ -2704,28 +2698,24 @@ msgid "Switch to Previous Screen"
 msgstr "Пераключыцца на папярэдні экран"
 
 #: useractions.cpp:1121
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Пераключыцца на акно справа"
+msgstr "Пераключыцца на экран справа"
 
 #: useractions.cpp:1123
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Пераключыцца на акно злева"
+msgstr "Пераключыцца на экран злева"
 
 #: useractions.cpp:1125
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Пераключыцца на экран 0"
+msgstr "Пераключыцца на экран вышэй"
 
 #: useractions.cpp:1127
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Пераключыцца на экран 0"
+msgstr "Пераключыцца на экран ніжэй"
 
 #: useractions.cpp:1130
 #, kde-format

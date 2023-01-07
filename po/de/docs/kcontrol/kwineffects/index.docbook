@@ -2,79 +2,130 @@
 <!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
 "dtd/kdedbx45.dtd" [
 <!ENTITY % addindex "IGNORE">
-<!ENTITY % English "INCLUDE" > <!-- change language only here -->
+<!ENTITY % German "INCLUDE"
+> <!-- change language only here -->
 ]>
 
 <article id="kwineffects" lang="&language;">
 <articleinfo>
 
-<title>Desktop Effects</title>
+<title
+>Arbeitsflächen-Effekte</title>
 <authorgroup>
-<author>&Mike.McBride; &Mike.McBride.mail;</author>
-<!-- TRANS:ROLES_OF_TRANSLATORS -->
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><firstname
+>Burkhard</firstname
+><surname
+>Lück</surname
+><affiliation
+><address
+><email
+>lueck@hube-lueck.de</email
+></address
+></affiliation
+><contrib
+>Übersetzung</contrib
+></othercredit
+> 
 </authorgroup>
 
-<date>2021-04-09</date>
-<releaseinfo>Plasma 5.20</releaseinfo>
+<date
+>2021-04-09</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
 
 <keywordset>
-<keyword>KDE</keyword>
-<keyword>KControl</keyword>
-<keyword>desktop</keyword>
-<keyword>effects</keyword>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>Arbeitsfläche</keyword>
+<keyword
+>Effekte</keyword>
 </keywordset>
 </articleinfo>
 
 <!--FIXME Compositor Enable compositor on startup necessary to have effects?-->
 
-<para>This module is used to enable and configure desktop effects
-for Plasma.</para>
+<para
+>In diesem Modul können die Arbeitsflächen-Effekte für Plasma aktiviert und eingerichtet werden</para>
 
-<para>The main part of this page is a list of all available effects grouped 
-by <guilabel>Accessibility</guilabel>, <guilabel>Appearance</guilabel>, 
-<guilabel>Focus</guilabel>, <guilabel>Peek at Desktop Animation</guilabel>, <guilabel>Tools</guilabel>,
-<guilabel>Virtual Desktop Switching Animation</guilabel>, <guilabel>Window Management</guilabel>,
-and <guilabel>Window Open/Close Animation</guilabel>.</para>
-<para>Use the incremental search bar above the list window to find items in the list.</para>
+<para
+>Auf dieser Seite wird eine Liste aller verfügbaren Effekte in den Kategorien <guilabel
+>Zugangshilfen</guilabel
+>, <guilabel
+>Erscheinungsbild</guilabel
+>, <guilabel
+>Fokus</guilabel
+>, <guilabel
+>Animation der Arbeitsfläche anzeigen</guilabel
+>, <guilabel
+>Extras</guilabel
+>, <guilabel
+>Animation beim Wechseln der virtuellen Arbeitsfläche</guilabel
+>, <guilabel
+>Fensterverwaltung</guilabel
+> und <guilabel
+>Animation beim Öffnen/Schließen von Fenstern</guilabel
+> angezeigt.</para>
+<para
+>Benutzen Sie die inkrementelle Suchleiste über dem Listenfenster, um Elemente in der Liste zu finden.</para>
 
-<para>Normally there is no reason for users to change that, but 
-there is a <inlinemediaobject><imageobject><imagedata fileref="configure-effects.png" format="PNG"/>
-</imageobject></inlinemediaobject> configuration button to modify the filtering of the list to show 
-also those effects.
-</para>
+<para
+>Normalerweise ist es nicht nötig, den Auswahlfilter für die Anzeige von Effekten zu ändern. Sie können jedoch den Knopf <inlinemediaobject
+><imageobject
+><imagedata fileref="configure-effects.png" format="PNG"/> </imageobject
+></inlinemediaobject
+> benutzen, um den Filter für die Anzeige von weiteren Effekten anzupassen. </para>
 
-<para>The easiest way of installing new effects is by using the built-in
-KNewStuff support in &kwin;. Press the <guibutton>Get New Desktop Effects</guibutton> button to open 
-a dialog with a list of available effects from the Internet and to install and uninstall effects.</para>
-<note><para>Please keep in mind that changing these sensible defaults can break your system.</para>
+<para
+>Am einfachsten können Sie neue Effekte mit der in &kwin; enthaltenen Funktion installieren. Drücken Sie dazu auf <guibutton
+>Neue Arbeitsflächen-Effekte herunterladen</guibutton
+>. Es wird ein Dialog mit allen verfügbaren Effekten angezeigt, in dem Sie diese Effekte installieren und wieder deinstallieren können.</para>
+<note
+><para
+>Bedenken Sie, dass das Ändern der sinnvollen Voreinstellungen dazu führen kann, dass Ihr System nicht mehr richtig funktioniert.</para>
 </note>
 
-<para>Check an effect in the list to enable it. Display information about Author and License by 
-clicking the <inlinemediaobject><imageobject><imagedata fileref="dialog-information.png" format="PNG"/>
-</imageobject> </inlinemediaobject> info button at the right side of the list item.</para>
+<para
+>Markieren Sie das Ankreuzfeld vor dem Effekt, um ihn zu aktivieren. Informationen über den Autor und die Lizenz können Sie durch Klicken auf <inlinemediaobject
+><imageobject
+><imagedata fileref="dialog-information.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> an der rechten Seite des Eintrags in der Liste ansehen.</para>
 
-<para>Some effects have settings options, in this case there is a <inlinemediaobject><imageobject>
-<imagedata fileref="configure-effects.png" format="PNG"/></imageobject></inlinemediaobject> configure button 
-at the left of the info button. Click it to open a configuration dialog.</para>
-<para>To see a video preview of an effect click on the <inlinemediaobject><imageobject><imagedata fileref="video.png" format="PNG"/>
-</imageobject></inlinemediaobject> button.</para>
+<para
+>Für einige Effekte gibt es Einstellungen, dann wird ein <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure-effects.png" format="PNG"/></imageobject
+></inlinemediaobject
+> Einrichtungsknopf angezeigt. Ist der Effekt aktiviert, können Sie durch Klicken auf diesen Knopf den Einrichtungsdialog öffnen.</para>
+<para
+>Um eine Videovorschau eines Effekts zu sehen, klicken Sie auf <inlinemediaobject
+><imageobject
+><imagedata fileref="video.png" format="PNG"/> </imageobject
+></inlinemediaobject
+>.</para>
 
-<para>Some effects are mutual exclusive to other effects. For example one would only want to activate the 
-<guilabel>Maximize</guilabel> or the <guilabel>Magic Lamp</guilabel> effect. Both activated at the same 
-time result in broken animations. 
-</para>
+<para
+>Einige Effekte schließen sich gegenseitig aus. Sie sollten zum Beispiel nur den Effekt <guilabel
+>Maximieren</guilabel
+> oder <guilabel
+>Wunderlampe</guilabel
+> aktivieren, da mit beiden Effekten Animationen nicht richtig funktionieren. </para>
 
-<para>For effects in a mutual exclusive group the &GUI; uses radio buttons and manages that only one of these 
-effects can be activated.
-</para>
+<para
+>Für diese sich gegenseitig ausschließenden Effekte werden in der &GUI; Auswahlknöpfe benutzt, so dass nur einer dieser Effekte aktiviert werden kann. </para>
 
-<para>All effects which are not supported by the currently used compositing backend 
-are hidden by default (&eg; OpenGL effects when using software renderer).
-</para> 
+<para
+>Alle Effekte, die vom aktuell verwendeten Compositing-Backend nicht unterstützt werden, sind in der Voreinstellung ausgeblendet. Die trifft &eg; für OpenGL-Effekte zu, wenn Software-Renderer verwendet wird. </para
+> 
 
-<para>Also all internal or helper effects are hidden by default. These are effects which replace 
-functionality from KWin Core or provide interaction with other elements of the desktop shell.
-</para>
+<para
+>In der Voreinstellung sind auch alle internen und Hilfseffekte ausgeblendet. Diese Effekte betreffen die Kernfunktionalität von KWin oder die Interaktion mit anderen Elementen der Arbeitsfläche. </para>
 
 <!--FIXME 
 39 effects + 7 internal (XRender compositor)
