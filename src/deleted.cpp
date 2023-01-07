@@ -47,7 +47,6 @@ Deleted::~Deleted()
     if (workspace()) {
         workspace()->removeDeleted(this);
     }
-    deleteEffectWindow();
     deleteItem();
 }
 

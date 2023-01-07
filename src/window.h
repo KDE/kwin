@@ -1590,7 +1590,6 @@ protected:
     void getSkipCloseAnimation();
     void copyToDeleted(Window *c);
     void disownDataPassedToDeleted();
-    void deleteEffectWindow();
     void setDepth(int depth);
 
     Output *m_output = nullptr;
@@ -1919,7 +1918,7 @@ private:
     QUuid m_internalId;
     Xcb::Window m_client;
     bool is_shape;
-    EffectWindowImpl *m_effectWindow;
+    std::unique_ptr<EffectWindowImpl> m_effectWindow;
     WindowItem *m_windowItem = nullptr;
     std::unique_ptr<Shadow> m_shadow;
     QString resource_name;
@@ -2256,12 +2255,12 @@ inline const QRegion &Window::opaqueRegion() const
 
 inline EffectWindowImpl *Window::effectWindow()
 {
-    return m_effectWindow;
+    return m_effectWindow.get();
 }
 
 inline const EffectWindowImpl *Window::effectWindow() const
 {
-    return m_effectWindow;
+    return m_effectWindow.get();
 }
 
 inline WindowItem *Window::windowItem() const

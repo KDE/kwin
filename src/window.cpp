@@ -74,7 +74,6 @@ Window::Window()
     , m_internalId(QUuid::createUuid())
     , m_client()
     , is_shape(false)
-    , m_effectWindow(nullptr)
     , m_clientMachine(new ClientMachine(this))
     , m_wmClientLeader(XCB_WINDOW_NONE)
     , m_skipCloseAnimation(false)
@@ -186,7 +185,7 @@ void Window::copyToDeleted(Window *c)
     m_client.reset(c->m_client, false);
     ready_for_painting = c->ready_for_painting;
     is_shape = c->is_shape;
-    m_effectWindow = std::exchange(c->m_effectWindow, nullptr);
+    m_effectWindow = std::move(c->m_effectWindow);
     if (m_effectWindow != nullptr) {
         m_effectWindow->setWindow(this);
     }
@@ -346,7 +345,7 @@ bool Window::setupCompositing()
         return false;
     }
 
-    m_effectWindow = new EffectWindowImpl(this);
+    m_effectWindow = std::make_unique<EffectWindowImpl>(this);
     updateShadow();
 
     m_windowItem = createItem(scene);
@@ -367,7 +366,7 @@ void Window::finishCompositing(ReleaseReason releaseReason)
         }
     }
     m_shadow.reset();
-    deleteEffectWindow();
+    m_effectWindow.reset();
     deleteItem();
 }
 
@@ -398,12 +397,6 @@ void Window::setReadyForPainting()
             Q_EMIT windowShown(this);
         }
     }
-}
-
-void Window::deleteEffectWindow()
-{
-    delete m_effectWindow;
-    m_effectWindow = nullptr;
 }
 
 void Window::deleteItem()

@@ -748,9 +748,8 @@ EffectWindow::Private::Private(EffectWindow *q)
 {
 }
 
-EffectWindow::EffectWindow(QObject *parent)
-    : QObject(parent)
-    , d(new Private(this))
+EffectWindow::EffectWindow()
+    : d(new Private(this))
 {
 }
 
