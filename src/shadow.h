@@ -71,7 +71,7 @@ public:
      * @param window The Window for which the shadow should be created
      * @return Created Shadow or @c NULL in case there is no shadow defined.
      */
-    static Shadow *createShadow(Window *window);
+    static std::unique_ptr<Shadow> createShadow(Window *window);
 
     Window *window() const;
     /**
@@ -134,10 +134,10 @@ protected:
     void setShadowElement(const QPixmap &shadow, ShadowElements element);
 
 private:
-    static Shadow *createShadowFromX11(Window *window);
-    static Shadow *createShadowFromDecoration(Window *window);
-    static Shadow *createShadowFromWayland(Window *window);
-    static Shadow *createShadowFromInternalWindow(Window *window);
+    static std::unique_ptr<Shadow> createShadowFromX11(Window *window);
+    static std::unique_ptr<Shadow> createShadowFromDecoration(Window *window);
+    static std::unique_ptr<Shadow> createShadowFromWayland(Window *window);
+    static std::unique_ptr<Shadow> createShadowFromInternalWindow(Window *window);
     static QVector<uint32_t> readX11ShadowProperty(xcb_window_t id);
     bool init(const QVector<uint32_t> &data);
     bool init(KDecoration2::Decoration *decoration);

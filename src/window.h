@@ -1590,7 +1590,6 @@ protected:
     void getSkipCloseAnimation();
     void copyToDeleted(Window *c);
     void disownDataPassedToDeleted();
-    void deleteShadow();
     void deleteEffectWindow();
     void setDepth(int depth);
 
@@ -1922,7 +1921,7 @@ private:
     bool is_shape;
     EffectWindowImpl *m_effectWindow;
     WindowItem *m_windowItem = nullptr;
-    Shadow *m_shadow = nullptr;
+    std::unique_ptr<Shadow> m_shadow;
     QString resource_name;
     QString resource_class;
     ClientMachine *m_clientMachine;

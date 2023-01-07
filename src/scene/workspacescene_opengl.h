@@ -30,7 +30,7 @@ public:
     explicit WorkspaceSceneOpenGL(OpenGLBackend *backend);
     ~WorkspaceSceneOpenGL() override;
 
-    Shadow *createShadow(Window *window) override;
+    std::unique_ptr<Shadow> createShadow(Window *window) override;
     bool makeOpenGLContextCurrent() override;
     void doneOpenGLContextCurrent() override;
     bool supportsNativeFence() const override;

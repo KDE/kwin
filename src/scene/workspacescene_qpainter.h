@@ -25,7 +25,7 @@ public:
     explicit WorkspaceSceneQPainter(QPainterBackend *backend);
     ~WorkspaceSceneQPainter() override;
 
-    Shadow *createShadow(Window *window) override;
+    std::unique_ptr<Shadow> createShadow(Window *window) override;
     DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
 
     bool animationsSupported() const override

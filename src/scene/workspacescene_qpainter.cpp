@@ -36,9 +36,9 @@ WorkspaceSceneQPainter::~WorkspaceSceneQPainter()
 {
 }
 
-Shadow *WorkspaceSceneQPainter::createShadow(Window *window)
+std::unique_ptr<Shadow> WorkspaceSceneQPainter::createShadow(Window *window)
 {
-    return new SceneQPainterShadow(window);
+    return std::make_unique<SceneQPainterShadow>(window);
 }
 
 DecorationRenderer *WorkspaceSceneQPainter::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)

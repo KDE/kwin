@@ -191,7 +191,7 @@ void Window::copyToDeleted(Window *c)
         m_effectWindow->setWindow(this);
     }
     m_windowItem = std::exchange(c->m_windowItem, nullptr);
-    m_shadow = std::exchange(c->m_shadow, nullptr);
+    m_shadow = std::move(c->m_shadow);
     if (m_shadow) {
         m_shadow->setWindow(this);
     }
@@ -366,7 +366,7 @@ void Window::finishCompositing(ReleaseReason releaseReason)
             item->destroyDamage();
         }
     }
-    deleteShadow();
+    m_shadow.reset();
     deleteEffectWindow();
     deleteItem();
 }
@@ -398,12 +398,6 @@ void Window::setReadyForPainting()
             Q_EMIT windowShown(this);
         }
     }
-}
-
-void Window::deleteShadow()
-{
-    delete m_shadow;
-    m_shadow = nullptr;
 }
 
 void Window::deleteEffectWindow()
@@ -448,7 +442,7 @@ bool Window::isOnOutput(Output *output) const
 
 Shadow *Window::shadow() const
 {
-    return m_shadow;
+    return m_shadow.get();
 }
 
 void Window::updateShadow()
@@ -458,7 +452,7 @@ void Window::updateShadow()
     }
     if (m_shadow) {
         if (!m_shadow->updateShadow()) {
-            deleteShadow();
+            m_shadow.reset();
         }
         Q_EMIT shadowChanged();
     } else {

@@ -49,7 +49,6 @@ Deleted::~Deleted()
     }
     deleteEffectWindow();
     deleteItem();
-    deleteShadow();
 }
 
 WindowItem *Deleted::createItem(Scene *scene)

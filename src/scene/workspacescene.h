@@ -65,7 +65,7 @@ public:
      *
      * @param window The Window for which the Shadow needs to be created.
      */
-    virtual Shadow *createShadow(Window *window) = 0;
+    virtual std::unique_ptr<Shadow> createShadow(Window *window) = 0;
 
     virtual bool makeOpenGLContextCurrent();
     virtual void doneOpenGLContextCurrent();

@@ -41,9 +41,9 @@ Shadow::~Shadow()
 {
 }
 
-Shadow *Shadow::createShadow(Window *window)
+std::unique_ptr<Shadow> Shadow::createShadow(Window *window)
 {
-    Shadow *shadow = createShadowFromDecoration(window);
+    auto shadow = createShadowFromDecoration(window);
     if (!shadow && waylandServer()) {
         shadow = createShadowFromWayland(window);
     }
@@ -56,14 +56,12 @@ Shadow *Shadow::createShadow(Window *window)
     return shadow;
 }
 
-Shadow *Shadow::createShadowFromX11(Window *window)
+std::unique_ptr<Shadow> Shadow::createShadowFromX11(Window *window)
 {
     auto data = Shadow::readX11ShadowProperty(window->window());
     if (!data.isEmpty()) {
-        Shadow *shadow = Compositor::self()->scene()->createShadow(window);
-
+        auto shadow = Compositor::self()->scene()->createShadow(window);
         if (!shadow->init(data)) {
-            delete shadow;
             return nullptr;
         }
         return shadow;
@@ -72,20 +70,19 @@ Shadow *Shadow::createShadowFromX11(Window *window)
     }
 }
 
-Shadow *Shadow::createShadowFromDecoration(Window *window)
+std::unique_ptr<Shadow> Shadow::createShadowFromDecoration(Window *window)
 {
     if (!window->decoration()) {
         return nullptr;
     }
-    Shadow *shadow = Compositor::self()->scene()->createShadow(window);
+    auto shadow = Compositor::self()->scene()->createShadow(window);
     if (!shadow->init(window->decoration())) {
-        delete shadow;
         return nullptr;
     }
     return shadow;
 }
 
-Shadow *Shadow::createShadowFromWayland(Window *window)
+std::unique_ptr<Shadow> Shadow::createShadowFromWayland(Window *window)
 {
     auto surface = window->surface();
     if (!surface) {
@@ -95,15 +92,14 @@ Shadow *Shadow::createShadowFromWayland(Window *window)
     if (!s) {
         return nullptr;
     }
-    Shadow *shadow = Compositor::self()->scene()->createShadow(window);
+    auto shadow = Compositor::self()->scene()->createShadow(window);
     if (!shadow->init(s)) {
-        delete shadow;
         return nullptr;
     }
     return shadow;
 }
 
-Shadow *Shadow::createShadowFromInternalWindow(Window *window)
+std::unique_ptr<Shadow> Shadow::createShadowFromInternalWindow(Window *window)
 {
     const InternalWindow *internalWindow = qobject_cast<InternalWindow *>(window);
     if (!internalWindow) {
@@ -113,9 +109,8 @@ Shadow *Shadow::createShadowFromInternalWindow(Window *window)
     if (!handle) {
         return nullptr;
     }
-    Shadow *shadow = Compositor::self()->scene()->createShadow(window);
+    auto shadow = Compositor::self()->scene()->createShadow(window);
     if (!shadow->init(handle)) {
-        delete shadow;
         return nullptr;
     }
     return shadow;
