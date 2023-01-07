@@ -357,7 +357,7 @@ protected:
     QSizeF resizeIncrements() const override;
     bool acceptsFocus() const override;
     void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
-    WindowItem *createItem(Scene *scene) override;
+    std::unique_ptr<WindowItem> createItem(Scene *scene) override;
 
     // Signals for the scripting interface
     // Signals make an excellent way for communication

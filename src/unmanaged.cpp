@@ -71,9 +71,9 @@ Unmanaged::~Unmanaged()
 {
 }
 
-WindowItem *Unmanaged::createItem(Scene *scene)
+std::unique_ptr<WindowItem> Unmanaged::createItem(Scene *scene)
 {
-    return new WindowItemX11(this, scene);
+    return std::make_unique<WindowItemX11>(this, scene);
 }
 
 void Unmanaged::associate()

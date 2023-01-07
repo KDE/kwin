@@ -189,7 +189,7 @@ void Window::copyToDeleted(Window *c)
     if (m_effectWindow != nullptr) {
         m_effectWindow->setWindow(this);
     }
-    m_windowItem = std::exchange(c->m_windowItem, nullptr);
+    m_windowItem = std::move(c->m_windowItem);
     m_shadow = std::move(c->m_shadow);
     if (m_shadow) {
         m_shadow->setWindow(this);
@@ -349,7 +349,7 @@ bool Window::setupCompositing()
     updateShadow();
 
     m_windowItem = createItem(scene);
-    m_effectWindow->setWindowItem(m_windowItem);
+    m_effectWindow->setWindowItem(m_windowItem.get());
 
     connect(windowItem(), &WindowItem::positionChanged, this, &Window::visibleGeometryChanged);
     connect(windowItem(), &WindowItem::boundingRectChanged, this, &Window::visibleGeometryChanged);
@@ -367,7 +367,7 @@ void Window::finishCompositing(ReleaseReason releaseReason)
     }
     m_shadow.reset();
     m_effectWindow.reset();
-    deleteItem();
+    m_windowItem.reset();
 }
 
 void Window::addWorkspaceRepaint(int x, int y, int w, int h)
@@ -397,12 +397,6 @@ void Window::setReadyForPainting()
             Q_EMIT windowShown(this);
         }
     }
-}
-
-void Window::deleteItem()
-{
-    delete m_windowItem;
-    m_windowItem = nullptr;
 }
 
 int Window::screen() const

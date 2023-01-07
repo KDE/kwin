@@ -1580,8 +1580,7 @@ protected:
     void getWmOpaqueRegion();
     void discardShapeRegion();
 
-    virtual WindowItem *createItem(Scene *scene) = 0;
-    void deleteItem();
+    virtual std::unique_ptr<WindowItem> createItem(Scene *scene) = 0;
 
     void getResourceClass();
     void setResourceClass(const QString &name, const QString &className = QString());
@@ -1919,7 +1918,7 @@ private:
     Xcb::Window m_client;
     bool is_shape;
     std::unique_ptr<EffectWindowImpl> m_effectWindow;
-    WindowItem *m_windowItem = nullptr;
+    std::unique_ptr<WindowItem> m_windowItem;
     std::unique_ptr<Shadow> m_shadow;
     QString resource_name;
     QString resource_class;
@@ -2265,7 +2264,7 @@ inline const EffectWindowImpl *Window::effectWindow() const
 
 inline WindowItem *Window::windowItem() const
 {
-    return m_windowItem;
+    return m_windowItem.get();
 }
 
 inline bool Window::isOnAllDesktops() const

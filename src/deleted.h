@@ -104,7 +104,7 @@ public:
     { /* nothing to do */
         return geometry;
     }
-    WindowItem *createItem(Scene *scene) override;
+    std::unique_ptr<WindowItem> createItem(Scene *scene) override;
 
     /**
      * Returns whether the client was a popup.

@@ -44,7 +44,7 @@ protected:
     bool belongsToDesktop() const override;
     void doSetActive() override;
     void updateCaption() override;
-    WindowItem *createItem(Scene *scene) override;
+    std::unique_ptr<WindowItem> createItem(Scene *scene) override;
 
     void cleanGrouping();
     void updateGeometry(const QRectF &rect);

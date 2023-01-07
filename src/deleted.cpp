@@ -47,10 +47,9 @@ Deleted::~Deleted()
     if (workspace()) {
         workspace()->removeDeleted(this);
     }
-    deleteItem();
 }
 
-WindowItem *Deleted::createItem(Scene *scene)
+std::unique_ptr<WindowItem> Deleted::createItem(Scene *scene)
 {
     Q_UNREACHABLE();
 }
