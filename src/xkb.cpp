@@ -70,8 +70,14 @@ static void xkbLogHandler(xkb_context *context, xkb_log_level priority, const ch
     }
 }
 
+#if HAVE_XKBCOMMON_NO_SECURE_GETENV
+constexpr xkb_context_flags KWIN_XKB_CONTEXT_FLAGS = XKB_CONTEXT_NO_SECURE_GETENV;
+#else
+constexpr xkb_context_flags KWIN_XKB_CONTEXT_FLAGS = XKB_CONTEXT_NO_FLAGS;
+#endif
+
 Xkb::Xkb(bool followLocale1)
-    : m_context(xkb_context_new(XKB_CONTEXT_NO_FLAGS))
+    : m_context(xkb_context_new(KWIN_XKB_CONTEXT_FLAGS))
     , m_keymap(nullptr)
     , m_state(nullptr)
     , m_shiftModifier(0)

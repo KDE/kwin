@@ -223,6 +223,11 @@ set_package_properties(XKB PROPERTIES
     TYPE REQUIRED
     PURPOSE "Required for building KWin with Wayland support"
 )
+if (XKB_VERSION VERSION_GREATER_EQUAL 1.5.0)
+    set(HAVE_XKBCOMMON_NO_SECURE_GETENV 1)
+else()
+    set(HAVE_XKBCOMMON_NO_SECURE_GETENV 0)
+endif()
 
 pkg_check_modules(XKBX11 IMPORTED_TARGET xkbcommon-x11 REQUIRED)
 add_feature_info(XKBX11 XKBX11_FOUND "Required for handling keyboard events in X11 backend")
