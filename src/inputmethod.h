@@ -87,9 +87,13 @@ private Q_SLOTS:
     void handleFocusedSurfaceChanged();
     void surroundingTextChanged();
     void contentTypeChanged();
+    void textInputInterfaceV1EnabledChanged();
     void textInputInterfaceV2EnabledChanged();
     void textInputInterfaceV3EnabledChanged();
     void stateCommitted(uint32_t serial);
+    void textInputInterfaceV1StateUpdated(quint32 serial);
+    void textInputInterfaceV1Reset();
+    void invokeAction(quint32 button, quint32 index);
     void textInputInterfaceV2StateUpdated(quint32 serial, KWaylandServer::TextInputV2Interface::UpdateReason reason);
     void textInputInterfaceV3EnableRequested();
 

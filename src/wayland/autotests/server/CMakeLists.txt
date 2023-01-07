@@ -127,19 +127,11 @@ if (QT_MAJOR_VERSION EQUAL "5")
         PROTOCOL ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
         BASENAME input-method-unstable-v1
     )
-    ecm_add_qtwayland_client_protocol(VIEWPORTER_SRCS
-        PROTOCOL ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v1.xml
-        BASENAME text-input-unstable-v1
-    )
 else()
     qt6_generate_wayland_protocol_client_sources(testInputMethodInterface
         NO_INCLUDE_CORE_ONLY
         FILES
             ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
-    )
-    qt6_generate_wayland_protocol_client_sources(testInputMethodInterface
-        FILES
-            ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v1.xml
     )
 endif()
 target_sources(testInputMethodInterface PRIVATE test_inputmethod_interface.cpp ../../tests/fakeoutput.cpp ${INPUTMETHOD_SRCS})
@@ -189,3 +181,21 @@ target_sources(testTextInputV3Interface PRIVATE test_textinputv3_interface.cpp $
 target_link_libraries(testTextInputV3Interface Qt::Test kwin KF5::WaylandClient Wayland::Client)
 add_test(NAME kwayland-testTextInputV3Interface COMMAND testTextInputV3Interface)
 ecm_mark_as_test(testTextInputV3Interface)
+
+########################################################
+# Test TextInputV1 Interface
+########################################################
+add_executable(testTextInputV1Interface)
+if (QT_MAJOR_VERSION EQUAL "5")
+    ecm_add_qtwayland_client_protocol(TEXTINPUTV1_SRCS
+        PROTOCOL ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v1.xml
+        BASENAME text-input-unstable-v1
+    )
+else()
+    qt6_generate_wayland_protocol_client_sources(testTextInputV1Interface FILES
+        ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v1.xml)
+endif()
+target_sources(testTextInputV1Interface PRIVATE test_textinputv1_interface.cpp ${TEXTINPUTV1_SRCS})
+target_link_libraries(testTextInputV1Interface Qt::Test kwin KF5::WaylandClient Wayland::Client)
+add_test(NAME kwayland-testTextInputV1Interface COMMAND testTextInputV1Interface)
+ecm_mark_as_test(testTextInputV1Interface)

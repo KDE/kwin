@@ -14,6 +14,7 @@
 #include "wayland/output_interface.h"
 #include "wayland/seat_interface.h"
 #include "wayland/surface_interface.h"
+#include "wayland/textinput_v1_interface.h"
 #include "wayland/textinput_v2_interface.h"
 #include "wayland/textinput_v3_interface.h"
 #include "wayland_server.h"
@@ -116,6 +117,10 @@ void KWin::InputPanelV1Window::reposition()
         auto textInputSurface = waylandServer()->seat()->focusedTextInputSurface();
         auto textWindow = waylandServer()->findWindow(textInputSurface);
         QRect cursorRectangle;
+        auto textInputV1 = waylandServer()->seat()->textInputV1();
+        if (textInputV1 && textInputV1->isEnabled() && textInputV1->surface() == textInputSurface) {
+            cursorRectangle = textInputV1->cursorRectangle();
+        }
         auto textInputV2 = waylandServer()->seat()->textInputV2();
         if (textInputV2 && textInputV2->isEnabled() && textInputV2->surface() == textInputSurface) {
             cursorRectangle = textInputV2->cursorRectangle();
