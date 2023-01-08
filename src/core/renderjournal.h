@@ -33,6 +33,9 @@ public:
      */
     void endFrame();
 
+    // I'll move this too...
+    void updateLastResultWithGpuTiming(std::chrono::nanoseconds gpuTime);
+
     /**
      * Returns the maximum estimated amount of time that it takes to render a single frame.
      */

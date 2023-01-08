@@ -47,6 +47,8 @@ public:
     Item *fullscreenItem = nullptr;
     bool allowTearing = false;
 
+    /*glUint*/ uint openGlTimerId = 0;
+
     enum class SyncMode {
         Fixed,
         Adaptive,

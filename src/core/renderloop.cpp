@@ -11,6 +11,8 @@
 #include "utils/common.h"
 #include "wayland/surface_interface.h"
 
+#include <epoxy/gl.h>
+
 namespace KWin
 {
 
@@ -131,6 +133,18 @@ void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp)
     Q_ASSERT(pendingFrameCount > 0);
     pendingFrameCount--;
 
+    // fetch last frame GPU timings
+    // we've already swapped, so therefore we know our GPU queue has completed and the elapsed time will be ready
+    effects->makeOpenGLContextCurrent();
+    uint timerIsComplete = 0;
+    glGetQueryObjectuiv(openGlTimerId, GL_QUERY_RESULT_AVAILABLE, &timerIsComplete);
+    if (timerIsComplete) {
+        GLint64 gpuTime = 0;
+        glGetQueryObjecti64v(openGlTimerId, GL_QUERY_RESULT, &gpuTime);
+        renderJournal.updateLastResultWithGpuTiming(std::chrono::nanoseconds(gpuTime));
+    }
+    // note we also get frameCompletes even if we haven't rendered anything, so the timer can be legit blank
+
     if (lastPresentationTimestamp <= timestamp) {
         lastPresentationTimestamp = timestamp;
     } else {
@@ -201,11 +215,24 @@ void RenderLoop::beginFrame()
     d->pendingRepaint = false;
     d->pendingFrameCount++;
     d->renderJournal.beginFrame();
+
+    // Obviously this isn't the right place for any OpenGL code, it all belongs with the scene
+    // then connect all the hooks and somehow push into the renderloop
+    // but I wanted something quick and dirty for now to check validity on a range of PCs before continuing.
+    effects->makeOpenGLContextCurrent();
+    if (!d->openGlTimerId) {
+        glGenQueries(1, &d->openGlTimerId);
+    }
+    // this should be done once and cleaned up
+    glBeginQuery(GL_TIME_ELAPSED, d->openGlTimerId);
 }
 
 void RenderLoop::endFrame()
 {
     d->renderJournal.endFrame();
+
+    effects->makeOpenGLContextCurrent();
+    glEndQuery(GL_TIME_ELAPSED);
 }
 
 int RenderLoop::refreshRate() const

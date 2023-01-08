@@ -4,6 +4,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
+#include <QDebug>
+
 #include "renderjournal.h"
 
 namespace KWin
@@ -25,6 +27,14 @@ void RenderJournal::endFrame()
         m_log.dequeue();
     }
     m_log.enqueue(duration);
+}
+
+void RenderJournal::updateLastResultWithGpuTiming(std::chrono::nanoseconds gpuTime)
+{
+    qDebug() << "GPU: " << gpuTime.count() << "CPU: " << m_log.last().count();
+
+    std::chrono::nanoseconds &last = m_log.last();
+    last += gpuTime;
 }
 
 std::chrono::nanoseconds RenderJournal::minimum() const
