@@ -1910,6 +1910,15 @@ bool EffectsHandlerImpl::isInputPanelOverlay() const
     return true;
 }
 
+QRegion EffectsHandlerImpl::adjustBackgroundEffectRegion(EffectWindow *window, const QRegion &region) const
+{
+    QRegion ret = region;
+    for (const auto &[effectName, effect] : std::as_const(loaded_effects)) {
+        ret = effect->adjustBackgroundEffectRegion(window, ret);
+    }
+    return ret;
+}
+
 //****************************************
 // EffectScreenImpl
 //****************************************

@@ -635,6 +635,11 @@ bool Effect::blocksDirectScanout() const
     return true;
 }
 
+QRegion Effect::adjustBackgroundEffectRegion(EffectWindow *window, const QRegion &region) const
+{
+    return region;
+}
+
 //****************************************
 // EffectFactory
 //****************************************

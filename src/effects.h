@@ -261,6 +261,7 @@ public:
 
     KWin::EffectWindow *inputPanel() const override;
     bool isInputPanelOverlay() const override;
+    QRegion adjustBackgroundEffectRegion(EffectWindow *window, const QRegion &region) const override;
 
 public Q_SLOTS:
     void slotCurrentTabAboutToChange(EffectWindow *from, EffectWindow *to);

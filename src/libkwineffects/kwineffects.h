@@ -679,6 +679,12 @@ public:
      */
     virtual bool blocksDirectScanout() const;
 
+    /**
+     * Override in order to modify backdrop effect regions
+     * @since 5.27
+     */
+    virtual QRegion adjustBackgroundEffectRegion(EffectWindow *window, const QRegion &region) const;
+
 public Q_SLOTS:
     virtual bool borderActivated(ElectricBorder border);
 
@@ -1448,6 +1454,8 @@ public:
 
     virtual KWin::EffectWindow *inputPanel() const = 0;
     virtual bool isInputPanelOverlay() const = 0;
+
+    virtual QRegion adjustBackgroundEffectRegion(EffectWindow *window, const QRegion &region) const = 0;
 
 Q_SIGNALS:
     /**

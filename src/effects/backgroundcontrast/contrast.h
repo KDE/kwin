@@ -56,7 +56,7 @@ public Q_SLOTS:
     void slotScreenGeometryChanged();
 
 private:
-    QRegion contrastRegion(const EffectWindow *w) const;
+    QRegion contrastRegion(EffectWindow *w) const;
     bool shouldContrast(const EffectWindow *w, int mask, const WindowPaintData &data) const;
     void updateContrastRegion(EffectWindow *w);
     void doContrast(EffectWindow *w, const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection);

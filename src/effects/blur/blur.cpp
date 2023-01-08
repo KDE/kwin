@@ -450,7 +450,7 @@ QRegion BlurEffect::expand(const QRegion &region) const
     return expanded;
 }
 
-QRegion BlurEffect::blurRegion(const EffectWindow *w) const
+QRegion BlurEffect::blurRegion(EffectWindow *w) const
 {
     QRegion region;
 
@@ -472,7 +472,7 @@ QRegion BlurEffect::blurRegion(const EffectWindow *w) const
         region = decorationBlurRegion(w);
     }
 
-    return region;
+    return effects->adjustBackgroundEffectRegion(w, region);
 }
 
 void BlurEffect::uploadRegion(QVector2D *&map, const QRegion &region, const int downSampleIterations)

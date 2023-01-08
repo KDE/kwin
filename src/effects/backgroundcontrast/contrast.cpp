@@ -288,7 +288,7 @@ bool ContrastEffect::supported()
     return supported;
 }
 
-QRegion ContrastEffect::contrastRegion(const EffectWindow *w) const
+QRegion ContrastEffect::contrastRegion(EffectWindow *w) const
 {
     QRegion region;
     if (const auto it = m_windowData.find(w); it != m_windowData.end()) {
@@ -302,7 +302,7 @@ QRegion ContrastEffect::contrastRegion(const EffectWindow *w) const
         }
     }
 
-    return region;
+    return effects->adjustBackgroundEffectRegion(w, region);
 }
 
 void ContrastEffect::uploadRegion(QVector2D *&map, const QRegion &region, qreal scale)
