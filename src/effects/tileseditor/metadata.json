@@ -18,6 +18,7 @@
         "Description[sl]": "Urejevalnik za področja s sličicami",
         "Description[tr]": "Döşeme alanları için düzenleyici",
         "Description[uk]": "Редактор для мозаїчних областей",
+        "Description[vi]": "Trình biên tập các vùng lát",
         "Description[x-test]": "xxEditor for the tiling areasxx",
         "EnabledByDefault": true,
         "Id": "tileseditor",
@@ -40,6 +41,7 @@
         "Name[sl]": "Urejevalnik sličic",
         "Name[tr]": "Döşeme Düzenleyici",
         "Name[uk]": "Редактор мозаїк",
+        "Name[vi]": "Trình biên tập lát",
         "Name[x-test]": "xxTiling Editorxx"
     },
     "X-KDE-ConfigModule": "kwin_tileseditor_config"
