@@ -88,6 +88,8 @@ public:
     bool isMoveWobble() const;
     bool isResizeWobble() const;
 
+    QRegion adjustBackgroundEffectRegion(KWin::EffectWindow *window, const QRegion &region) const override;
+
 protected:
     void apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads) override;
 

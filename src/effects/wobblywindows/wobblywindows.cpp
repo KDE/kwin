@@ -1157,4 +1157,59 @@ bool WobblyWindowsEffect::isResizeWobble() const
     return m_resizeWobble;
 }
 
+QRegion WobblyWindowsEffect::adjustBackgroundEffectRegion(EffectWindow *window, const QRegion &region) const
+{
+    static constexpr uint32_t subdivisions = 20;
+
+    if (region.isNull()) {
+        return region;
+    }
+
+    const auto it = windows.find(window);
+    if (it != windows.end()) {
+        const auto &ww = *it;
+        QRegion ret;
+        // divide the region into multiple smaller ones
+        for (uint32_t x = 0; x < subdivisions; x++) {
+            for (uint32_t y = 0; y < subdivisions; y++) {
+                const QRectF rect = QRectF(QPointF(x, y) / double(subdivisions), QSizeF(1, 1) / double(subdivisions));
+                for (const auto &regionRect : region) {
+                    // computeBezierPoint needs UV coordinates (0 - 1)
+                    const QRectF relativeRegionRect = QRectF(regionRect.x() / window->width(), regionRect.y() / window->height(),
+                                                             regionRect.width() / window->width(), regionRect.height() / window->height());
+                    const QRectF subRect = rect & relativeRegionRect;
+                    if (subRect.isEmpty()) {
+                        continue;
+                    }
+                    std::array edges = {
+                        Pair{subRect.x(), subRect.y()},
+                        Pair{subRect.x() + subRect.width(), subRect.y()},
+                        Pair{subRect.x(), subRect.y() + subRect.height()},
+                        Pair{subRect.x() + subRect.width(), subRect.y() + subRect.height()},
+                    };
+                    for (auto &edge : edges) {
+                        edge = computeBezierPoint(ww, edge);
+                        edge.x -= window->frameGeometry().x();
+                        edge.y -= window->frameGeometry().y();
+                    }
+
+                    // find the smallest rectangle completely encompassing the four edges
+                    auto topLeft = edges.front();
+                    auto bottomRight = topLeft;
+                    for (auto it = edges.begin() + 1; it != edges.end(); it++) {
+                        topLeft.x = std::min(topLeft.x, it->x);
+                        topLeft.y = std::min(topLeft.y, it->y);
+                        bottomRight.x = std::max(bottomRight.x, it->x);
+                        bottomRight.y = std::max(bottomRight.y, it->y);
+                    }
+                    ret += QRectF(QPointF(topLeft.x, topLeft.y), QPointF(bottomRight.x, bottomRight.y)).toAlignedRect();
+                }
+            }
+        }
+        return ret;
+    } else {
+        return region;
+    }
+}
+
 } // namespace KWin
