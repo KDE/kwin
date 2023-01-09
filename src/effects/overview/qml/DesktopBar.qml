@@ -153,6 +153,7 @@ Item {
                         Rectangle {
                             readonly property bool active: !thumbnail.scaled && (delegate.activeFocus || dropArea.containsDrag || mouseArea.containsPress || bar.selectedDesktop === delegate.desktop)
                             anchors.fill: parent
+                            anchors.margins: -border.width
                             radius: 3
                             color: "transparent"
                             border.width: 2
