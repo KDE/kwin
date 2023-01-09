@@ -269,7 +269,7 @@ void UserActionsMenu::init()
     m_shadeOperation->setCheckable(true);
     m_shadeOperation->setData(Options::ShadeOp);
 
-    m_noBorderOperation = advancedMenu->addAction(i18n("&No Border"));
+    m_noBorderOperation = advancedMenu->addAction(i18n("&No Titlebar and Frame"));
     m_noBorderOperation->setIcon(QIcon::fromTheme(QStringLiteral("edit-none-border")));
     setShortcut(m_noBorderOperation, QStringLiteral("Window No Border"));
     m_noBorderOperation->setCheckable(true);
@@ -1006,7 +1006,7 @@ void Workspace::initShortcuts()
                  0, &Workspace::slotWindowRaiseOrLower);
     initShortcut("Window Fullscreen", i18n("Make Window Fullscreen"),
                  0, &Workspace::slotWindowFullScreen);
-    initShortcut("Window No Border", i18n("Toggle Window Border"),
+    initShortcut("Window No Border", i18n("Toggle Window Titlebar and Frame"),
                  0, &Workspace::slotWindowNoBorder);
     initShortcut("Window Above Other Windows", i18n("Keep Window Above Others"),
                  0, &Workspace::slotWindowAbove);
