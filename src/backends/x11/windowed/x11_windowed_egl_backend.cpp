@@ -177,9 +177,6 @@ void X11WindowedEglBackend::present(Output *output)
 
 void X11WindowedEglBackend::presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry)
 {
-    if (damage.isEmpty()) {
-        return;
-    }
     const bool fullRepaint = supportsBufferAge() || (damage == screenGeometry);
 
     if (fullRepaint || !havePostSubBuffer()) {
