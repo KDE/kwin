@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "eglcontext.h"
 #include "egldisplay.h"
 #include "openglbackend.h"
 
@@ -47,18 +48,13 @@ public:
         return &m_functions;
     }
     EGLDisplay eglDisplay() const;
-    EGLContext context() const
-    {
-        return m_context;
-    }
+    EGLContext context() const;
+    EGLConfig config() const;
     EGLSurface surface() const
     {
         return m_surface;
     }
-    EGLConfig config() const
-    {
-        return m_config;
-    }
+    KWinEglContext *contextObject();
 
     std::shared_ptr<GLTexture> textureForOutput(Output *output) const override;
     QHash<uint32_t, QVector<uint64_t>> supportedFormats() const override;
@@ -73,7 +69,6 @@ public:
 protected:
     AbstractEglBackend(dev_t deviceId = 0);
     void setSurface(const EGLSurface &surface);
-    void setConfig(const EGLConfig &config);
     void cleanup();
     virtual void cleanupSurfaces();
     bool initEglAPI(EGLDisplay display);
@@ -82,10 +77,10 @@ protected:
     void initWayland();
     bool hasClientExtension(const QByteArray &ext) const;
     bool isOpenGLES() const;
-    bool createContext();
+    bool createContext(EGLConfig config);
 
 private:
-    EGLContext ensureGlobalShareContext();
+    bool ensureGlobalShareContext(EGLConfig config);
     void destroyGlobalShareContext();
     EGLContext createContextInternal(EGLContext sharedContext);
 
@@ -93,9 +88,8 @@ private:
 
     AbstractEglBackendFunctions m_functions;
     KWinEglDisplay m_display;
+    KWinEglContext m_context;
     EGLSurface m_surface = EGL_NO_SURFACE;
-    EGLContext m_context = EGL_NO_CONTEXT;
-    EGLConfig m_config = nullptr;
     // note: m_dmaBuf is nullptr if this is not the primary backend
     EglDmabuf *m_dmaBuf = nullptr;
     QList<QByteArray> m_clientExtensions;

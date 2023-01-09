@@ -117,15 +117,13 @@ bool EglOnXBackend::initRenderingContext()
     }
     initEglAPI(dpy);
 
-    initBufferConfigs();
-
-    if (!createSurfaces()) {
-        qCCritical(KWIN_CORE) << "Creating egl surface failed";
+    if (!createContext(chooseBufferConfig())) {
+        qCCritical(KWIN_CORE) << "Create OpenGL context failed";
         return false;
     }
 
-    if (!createContext()) {
-        qCCritical(KWIN_CORE) << "Create OpenGL context failed";
+    if (!createSurfaces()) {
+        qCCritical(KWIN_CORE) << "Creating egl surface failed";
         return false;
     }
 
@@ -167,7 +165,7 @@ EGLSurface EglOnXBackend::createSurface(xcb_window_t window)
     return surface;
 }
 
-bool EglOnXBackend::initBufferConfigs()
+EGLConfig EglOnXBackend::chooseBufferConfig()
 {
     const EGLint config_attribs[] = {
         EGL_SURFACE_TYPE,
@@ -191,7 +189,7 @@ bool EglOnXBackend::initBufferConfigs()
     EGLConfig configs[1024];
     if (eglChooseConfig(eglDisplay(), config_attribs, configs, 1024, &count) == EGL_FALSE) {
         qCCritical(KWIN_CORE) << "choose config failed";
-        return false;
+        return EGL_NO_CONFIG_KHR;
     }
 
     UniqueCPtr<xcb_get_window_attributes_reply_t> attribs(xcb_get_window_attributes_reply(m_connection,
@@ -199,21 +197,19 @@ bool EglOnXBackend::initBufferConfigs()
                                                                                           nullptr));
     if (!attribs) {
         qCCritical(KWIN_CORE) << "Failed to get window attributes of root window";
-        return false;
+        return EGL_NO_CONFIG_KHR;
     }
 
-    setConfig(configs[0]);
     for (int i = 0; i < count; i++) {
         EGLint val;
         if (eglGetConfigAttrib(eglDisplay(), configs[i], EGL_NATIVE_VISUAL_ID, &val) == EGL_FALSE) {
             qCCritical(KWIN_CORE) << "egl get config attrib failed";
         }
         if (uint32_t(val) == attribs->visual) {
-            setConfig(configs[i]);
-            break;
+            return configs[i];
         }
     }
-    return true;
+    return configs[0];
 }
 
 bool EglOnXBackend::makeContextCurrent(const EGLSurface &surface)

@@ -3,6 +3,7 @@ target_sources(kwin PRIVATE
     basiceglsurfacetexture_internal.cpp
     basiceglsurfacetexture_wayland.cpp
     egl_dmabuf.cpp
+    eglcontext.cpp
     egldisplay.cpp
     openglbackend.cpp
     openglsurfacetexture.cpp

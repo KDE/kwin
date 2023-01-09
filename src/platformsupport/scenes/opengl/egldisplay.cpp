@@ -1,19 +1,12 @@
 
 #include "egldisplay.h"
+#include "kwineglutils_p.h"
 #include "utils/common.h"
 
 #include <QOpenGLContext>
 
 namespace KWin
 {
-
-static bool isOpenGLES()
-{
-    if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
-        return true;
-    }
-    return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
-}
 
 bool KWinEglDisplay::init(EGLDisplay display)
 {

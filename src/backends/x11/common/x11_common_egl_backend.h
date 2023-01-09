@@ -49,7 +49,7 @@ protected:
     bool makeContextCurrent(const EGLSurface &surface);
 
 private:
-    bool initBufferConfigs();
+    EGLConfig chooseBufferConfig();
     bool initRenderingContext();
     int surfaceHasSubPost;
     xcb_connection_t *m_connection;

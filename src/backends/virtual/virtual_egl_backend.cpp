@@ -127,12 +127,9 @@ void VirtualEglBackend::init()
 
 bool VirtualEglBackend::initRenderingContext()
 {
-    initBufferConfigs();
-
-    if (!createContext()) {
+    if (!createContext(chooseBufferConfig())) {
         return false;
     }
-
     return makeCurrent();
 }
 
@@ -148,7 +145,7 @@ void VirtualEglBackend::removeOutput(Output *output)
     m_outputs.erase(output);
 }
 
-bool VirtualEglBackend::initBufferConfigs()
+EGLConfig VirtualEglBackend::chooseBufferConfig() const
 {
     const EGLint config_attribs[] = {
         EGL_SURFACE_TYPE,
@@ -171,14 +168,12 @@ bool VirtualEglBackend::initBufferConfigs()
     EGLint count;
     EGLConfig configs[1024];
     if (eglChooseConfig(eglDisplay(), config_attribs, configs, 1, &count) == EGL_FALSE) {
-        return false;
+        return EGL_NO_CONFIG_KHR;
     }
     if (count != 1) {
-        return false;
+        return EGL_NO_CONFIG_KHR;
     }
-    setConfig(configs[0]);
-
-    return true;
+    return configs[0];
 }
 
 std::unique_ptr<SurfaceTexture> VirtualEglBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)

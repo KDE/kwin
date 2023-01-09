@@ -113,7 +113,7 @@ bool EglGbmBackend::initRenderingContext()
     if (!initBufferConfigs()) {
         return false;
     }
-    if (!createContext() || !makeCurrent()) {
+    if (!createContext(EGL_NO_CONFIG_KHR) || !makeCurrent()) {
         return false;
     }
     return true;
@@ -147,8 +147,6 @@ bool EglGbmBackend::initBufferConfigs()
         qCCritical(KWIN_DRM) << "eglChooseConfig failed:" << getEglErrorString();
         return false;
     }
-
-    setConfig(EGL_NO_CONFIG_KHR);
 
     // Loop through all configs, choosing the first one that has suitable format.
     for (EGLint i = 0; i < count; i++) {

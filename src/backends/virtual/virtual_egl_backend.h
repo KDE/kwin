@@ -54,7 +54,7 @@ public:
 
 private:
     bool initializeEgl();
-    bool initBufferConfigs();
+    EGLConfig chooseBufferConfig() const;
     bool initRenderingContext();
 
     void addOutput(Output *output);

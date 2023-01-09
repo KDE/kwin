@@ -8,10 +8,11 @@
 */
 #pragma once
 
+#include <QOpenGLContext>
 #include <QString>
 #include <epoxy/egl.h>
 
-static QString getEglErrorString(EGLint errorCode)
+inline static QString getEglErrorString(EGLint errorCode)
 {
     switch (errorCode) {
     case EGL_SUCCESS:
@@ -49,7 +50,15 @@ static QString getEglErrorString(EGLint errorCode)
     }
 }
 
-static QString getEglErrorString()
+inline static QString getEglErrorString()
 {
     return getEglErrorString(eglGetError());
+}
+
+inline static bool isOpenGLES()
+{
+    if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
+        return true;
+    }
+    return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
 }

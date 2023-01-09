@@ -385,9 +385,7 @@ void WaylandEglBackend::init()
 
 bool WaylandEglBackend::initRenderingContext()
 {
-    initBufferConfigs();
-
-    if (!createContext()) {
+    if (!createContext(chooseBufferConfig())) {
         return false;
     }
 
@@ -412,7 +410,7 @@ bool WaylandEglBackend::initRenderingContext()
     return makeCurrent();
 }
 
-bool WaylandEglBackend::initBufferConfigs()
+EGLConfig WaylandEglBackend::chooseBufferConfig() const
 {
     const EGLint config_attribs[] = {
         EGL_SURFACE_TYPE,
@@ -436,15 +434,13 @@ bool WaylandEglBackend::initBufferConfigs()
     EGLConfig configs[1024];
     if (eglChooseConfig(eglDisplay(), config_attribs, configs, 1, &count) == EGL_FALSE) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "choose config failed";
-        return false;
+        return EGL_NO_CONFIG_KHR;
     }
     if (count != 1) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "choose config did not return a config" << count;
-        return false;
+        return EGL_NO_CONFIG_KHR;
     }
-    setConfig(configs[0]);
-
-    return true;
+    return configs[0];
 }
 
 std::shared_ptr<KWin::GLTexture> WaylandEglBackend::textureForOutput(KWin::Output *output) const
