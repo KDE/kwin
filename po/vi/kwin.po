@@ -3,13 +3,13 @@
 #
 # Nguyễn Hưng Vũ <Vu.Hung@techviet.com>, 2002.
 # Phan Vĩnh Thịnh <teppi82@gmail.com>, 2006.
-# Phu Hung Nguyen <phu.nguyen@kdemail.net>, 2020, 2021, 2022.
+# Phu Hung Nguyen <phu.nguyen@kdemail.net>, 2020, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-08 01:00+0000\n"
-"PO-Revision-Date: 2022-11-14 14:52+0100\n"
+"PO-Revision-Date: 2023-01-08 17:58+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
 "Language: vi\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 22.08.1\n"
+"X-Generator: Lokalize 22.12.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2376,10 +2376,9 @@ msgid "&All Activities"
 msgstr "&Tất cả các Hoạt động"
 
 #: useractions.cpp:776
-#, fuzzy, kde-format
-#| msgid "Move to %1 %2"
+#, kde-format
 msgid "Move to %1"
-msgstr "Chuyển đến %1 %2"
+msgstr "Chuyển đến %1"
 
 #: useractions.cpp:901
 #, kde-format
@@ -2589,14 +2588,12 @@ msgid "Switch to Window to the Left"
 msgstr "Chuyển sang cửa sổ bên trái"
 
 #: useractions.cpp:1061
-#, fuzzy, kde-format
-#| msgid "Increase Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Tăng độ mờ đục của cửa sổ hoạt động thêm 5%"
 
 #: useractions.cpp:1063
-#, fuzzy, kde-format
-#| msgid "Decrease Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Giảm độ mờ đục của cửa sổ hoạt động bớt 5%"
 
@@ -2656,28 +2653,24 @@ msgid "Window to Previous Screen"
 msgstr "Cửa sổ đến màn hình trước"
 
 #: useractions.cpp:1102
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "Cửa sổ đến bàn làm việc bên phải"
+msgstr "Cửa sổ đến màn hình bên phải"
 
 #: useractions.cpp:1104
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "Cửa sổ đến bàn làm việc bên trái"
+msgstr "Cửa sổ đến màn hình bên trái"
 
 #: useractions.cpp:1106
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "Cửa sổ đến màn hình %1"
+msgstr "Cửa sổ đến màn hình phía trên"
 
 #: useractions.cpp:1108
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "Cửa sổ đến bàn làm việc phía dưới"
+msgstr "Cửa sổ đến màn hình phía dưới"
 
 #: useractions.cpp:1112
 #, kde-format
@@ -2695,28 +2688,24 @@ msgid "Switch to Previous Screen"
 msgstr "Chuyển sang màn hình trước"
 
 #: useractions.cpp:1121
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Chuyển sang cửa sổ bên phải"
+msgstr "Chuyển sang màn hình bên phải"
 
 #: useractions.cpp:1123
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Chuyển sang cửa sổ bên trái"
+msgstr "Chuyển sang màn hình bên trái"
 
 #: useractions.cpp:1125
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Chuyển sang màn hình %1"
+msgstr "Chuyển sang màn hình phía trên"
 
 #: useractions.cpp:1127
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Chuyển sang màn hình %1"
+msgstr "Chuyển sang màn hình phía dưới"
 
 #: useractions.cpp:1130
 #, kde-format

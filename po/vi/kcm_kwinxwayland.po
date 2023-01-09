@@ -1,0 +1,101 @@
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the kwin package.
+#
+# Phu Hung Nguyen <phu.nguyen@kdemail.net>, 2023.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-12-17 00:51+0000\n"
+"PO-Revision-Date: 2023-01-08 18:14+0100\n"
+"Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
+"Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Lokalize 22.12.0\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Nguyễn Hùng Phú"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "phu.nguyen@kdemail.net"
+
+#: kcmkwinxwayland.cpp:30
+#, kde-format
+msgid "Legacy X11 App Support"
+msgstr "Hỗ trợ ứng dụng X11 đời cũ"
+
+#: kcmkwinxwayland.cpp:32
+#, kde-format
+msgid "Allow legacy X11 apps to read keystrokes typed in other apps"
+msgstr ""
+"Cho phép các ứng dụng X11 đời cũ đọc các phím gõ trong các ứng dụng khác"
+
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid ""
+"This module lets configure which keyboard events are forwarded to X11 apps "
+"regardless of their focus."
+msgstr ""
+"Khối này cho phép bạn cấu hình các sự kiện bàn phím nào sẽ được chuyển tiếp "
+"đến các ứng dụng X11 bất chấp nhắm của chúng đang ở đâu."
+
+#: package/contents/ui/main.qml:49
+#, kde-format
+msgid ""
+"Legacy X11 apps require the ability to read keystrokes typed in other apps "
+"for features that are activated using global keyboard shortcuts. This is "
+"disabled by default for security reasons. If you need to use such apps, you "
+"can choose your preferred balance of security and functionality here."
+msgstr ""
+"Các ứng dụng X11 đời cũ đòi hỏi khả năng đọc các phím gõ trong các ứng dụng "
+"khác để dùng cho các tính năng được kích hoạt bằng các phím tắt toàn cục. "
+"Việc này mặc định là bị tắt vì các lí do an ninh. Nếu bạn cần dùng các ứng "
+"dụng như thế, bạn có thể chọn sự cân đối giữa an ninh và chức năng cho riêng "
+"mình tại đây."
+
+#: package/contents/ui/main.qml:66
+#, kde-format
+msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
+msgstr ""
+"Cho phép các ứng dụng X11 đời cũ đọc các phím gõ trong tất cả các ứng dụng:"
+
+#: package/contents/ui/main.qml:67
+#, kde-format
+msgid "Never"
+msgstr "Không bao giờ"
+
+#: package/contents/ui/main.qml:70
+#, kde-format
+msgid "Only Meta, Control, Alt, and Shift keys"
+msgstr "Chỉ các phím Meta, Control, Alt, và Shift"
+
+#: package/contents/ui/main.qml:73
+#, kde-format
+msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+msgstr ""
+"Tất cả các phím, nhưng chỉ trong khi Meta, Ctrl, Alt, hoặc Shift được ấn"
+
+#: package/contents/ui/main.qml:77
+#, kde-format
+msgid "Always"
+msgstr "Luôn luôn"
+
+#: package/contents/ui/main.qml:84
+#, kde-format
+msgid ""
+"Note that using this setting will reduce system security to that of the X11 "
+"session by permitting malicious software to steal passwords and spy on the "
+"text that you type. Make sure you understand and accept this risk."
+msgstr ""
+"Lưu ý rằng việc dùng thiết lập này sẽ giảm mức an ninh của hệ thống xuống "
+"như một phiên X11, với việc cho phép phần mềm có hại đánh cắp mật khẩu và "
+"theo dõi văn bản mà bạn gõ. Hãy đảm bảo rằng bạn hiểu và chấp nhận rủi ro "
+"này."

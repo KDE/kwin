@@ -1,15 +1,16 @@
-# translation of kcm_kwindesktop.po to Esperanto
-# Copyright (C) YEAR This_file_is_part_of_KDE
-# This file is distributed under the same license as the PACKAGE package.
+# translation of kcm_kwin_virtualdesktops.pot to Esperanto
+# Copyright (C) 2007 Free Software Foundation, Inc.
+# This file is distributed under the same license as the kwin package.
 # Cindy McKee <cfmckee@gmail.com>, 2007.
+# Oliver Kellogg <okellogg@users.sourceforge.net>, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-15 00:49+0000\n"
-"PO-Revision-Date: 2009-11-10 09:29+0100\n"
-"Last-Translator: Axel Rousseau <axel@esperanto-jeunes.org>\n"
+"PO-Revision-Date: 2023-01-08 12:30+0100\n"
+"Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
 "MIME-Version: 1.0\n"
@@ -21,16 +22,15 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Axel Rousseau"
+msgstr "Axel Rousseau, Oliver Kellogg"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "axel@esperanto-jeunes.org"
+msgstr "axel@esperanto-jeunes.org, okellogg@users.sourceforge.net"
 
 #: desktopsmodel.cpp:191
-#, fuzzy, kde-format
-#| msgid "Desktop %1"
+#, kde-format
 msgctxt "A numbered name for virtual desktops"
 msgid "Desktop %1"
 msgid_plural "Desktop %1"
@@ -40,12 +40,12 @@ msgstr[1] "Labortablo %1"
 #: desktopsmodel.cpp:479
 #, kde-format
 msgid "There was an error connecting to the compositor."
-msgstr ""
+msgstr "Okazis eraro konektante al kompostisto."
 
 #: desktopsmodel.cpp:678
 #, kde-format
 msgid "There was an error saving the settings to the compositor."
-msgstr ""
+msgstr "Okazis eraro konservante la metojn al kompostisto."
 
 #: desktopsmodel.cpp:681
 #, kde-format
@@ -63,19 +63,19 @@ msgstr ""
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
-msgstr ""
+msgstr "Alinomi"
 
 #: package/contents/ui/main.qml:102
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
-msgstr ""
+msgstr "Konfirmi novan nomon"
 
 #: package/contents/ui/main.qml:110
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
-msgstr ""
+msgstr "Forigi"
 
 #: package/contents/ui/main.qml:137
 #, kde-format
@@ -87,25 +87,25 @@ msgstr ""
 #: package/contents/ui/main.qml:153
 #, kde-format
 msgid "Row %1"
-msgstr ""
+msgstr "Vico %1"
 
 #: package/contents/ui/main.qml:166
 #, kde-format
 msgctxt "@action:button"
 msgid "Add"
-msgstr ""
+msgstr "Aldoni"
 
 #: package/contents/ui/main.qml:184
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1 Vico"
+msgstr[1] "%1 Vicoj"
 
 #: package/contents/ui/main.qml:200
 #, kde-format
 msgid "Options:"
-msgstr ""
+msgstr "Opcioj:"
 
 #: package/contents/ui/main.qml:202
 #, kde-format
@@ -125,106 +125,14 @@ msgstr ""
 #: package/contents/ui/main.qml:290
 #, kde-format
 msgid "%1 ms"
-msgstr ""
+msgstr "%1 ms"
 
 #: package/contents/ui/main.qml:314
 #, kde-format
 msgid "Show desktop layout indicators"
-msgstr ""
+msgstr "Montri labortablajn aranĝoindikilojn"
 
 #: virtualdesktops.cpp:33
-#, fuzzy, kde-format
-#| msgid "Desktops"
+#, kde-format
 msgid "Virtual Desktops"
-msgstr "Labortabloj"
-
-#, fuzzy
-#~| msgid "Desktops"
-#~ msgid "New Desktop"
-#~ msgstr "Labortabloj"
-
-#~ msgid "Desktop %1:"
-#~ msgstr "Labortablo %1:"
-
-#~ msgid "Here you can enter the name for desktop %1"
-#~ msgstr "Ĉi tie vi entajpas la nomon de labortablo %1"
-
-#~ msgid ""
-#~ "<h1>Multiple Desktops</h1>In this module, you can configure how many "
-#~ "virtual desktops you want and how these should be labeled."
-#~ msgstr ""
-#~ "<h1>Pluraj labortabloj</h1>Per ĉi tiu modulo, vi povas fiksi la nombron "
-#~ "de virtualaj labortabloj kiujn vi volas uzi, kaj iliajn titoletojn."
-
-#~ msgid "Switch to Next Desktop"
-#~ msgstr "Ŝalti al venonta labortablo"
-
-#~ msgid "Switch to Previous Desktop"
-#~ msgstr "Ŝalti al pasinta labortablo"
-
-#~ msgid "Switch One Desktop to the Right"
-#~ msgstr "Ŝalti al la dekstra labortablo"
-
-#~ msgid "Switch One Desktop to the Left"
-#~ msgstr "Ŝalti al la maldekstra labortablo"
-
-#~ msgid "Switch One Desktop Up"
-#~ msgstr "Ŝalti al supra labortablo"
-
-#~ msgid "Switch One Desktop Down"
-#~ msgstr "Ŝalti al suba labortablo"
-
-#~ msgid "Desktop Switching"
-#~ msgstr "Labortabla Ŝaltado"
-
-#~ msgid "Switch to Desktop %1"
-#~ msgstr "Ŝalti al Labortablo %1"
-
-#~ msgid "No Animation"
-#~ msgstr "Neniu animacio"
-
-#~ msgid "Layout"
-#~ msgstr "Aranĝo"
-
-#~ msgid ""
-#~ "Here you can set how many virtual desktops you want on your KDE desktop."
-#~ msgstr ""
-#~ "Ĉi tie vi fiksas la kvanton de virtualaj labortabloj kiujn vi volas uzi "
-#~ "en via KDE-laborspaco. "
-
-#~ msgid "&Number of desktops:"
-#~ msgstr "&Kvanto da labortabloj:"
-
-#~ msgid "N&umber of rows:"
-#~ msgstr "K&vanto da linioj: "
-
-#~ msgid "Desktop Names"
-#~ msgstr "Labortablaj nomoj"
-
-#~ msgid "Switching"
-#~ msgstr "Ŝaltanta"
-
-#~ msgid ""
-#~ "Enable this option if you want keyboard or active desktop border "
-#~ "navigation beyond the edge of a desktop to take you to the opposite edge "
-#~ "of the new desktop."
-#~ msgstr ""
-#~ "Ebligi, se vi volas klavan aŭ alian labortablan navigadon kiu povas "
-#~ "atingi preter la rando de la nuna labortablo al la ekstrema rando de nova "
-#~ "labortablo."
-
-#~ msgid "Animation:"
-#~ msgstr "Animacio:"
-
-#~ msgid "Duration:"
-#~ msgstr "Daŭro "
-
-#~ msgid " msec"
-#~ msgstr " ms"
-
-#~ msgid "Shortcuts"
-#~ msgstr "Klavkombinoj"
-
-#~ msgid "Mouse wheel over desktop background switches desktop"
-#~ msgstr ""
-#~ "Rulado de la musrado super la labortabla fono interŝanĝas labortablojn"
+msgstr "Virtualaj Labortabloj"
