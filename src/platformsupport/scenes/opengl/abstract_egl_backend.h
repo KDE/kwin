@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "egldisplay.h"
 #include "openglbackend.h"
 
 #include <QObject>
@@ -45,10 +46,7 @@ public:
     {
         return &m_functions;
     }
-    EGLDisplay eglDisplay() const
-    {
-        return m_display;
-    }
+    EGLDisplay eglDisplay() const;
     EGLContext context() const
     {
         return m_context;
@@ -74,14 +72,12 @@ public:
 
 protected:
     AbstractEglBackend(dev_t deviceId = 0);
-    void setEglDisplay(const EGLDisplay &display);
     void setSurface(const EGLSurface &surface);
     void setConfig(const EGLConfig &config);
     void cleanup();
     virtual void cleanupSurfaces();
-    bool initEglAPI();
+    bool initEglAPI(EGLDisplay display);
     void initKWinGL();
-    void initBufferAge();
     void initClientExtensions();
     void initWayland();
     bool hasClientExtension(const QByteArray &ext) const;
@@ -96,7 +92,7 @@ private:
     void teardown();
 
     AbstractEglBackendFunctions m_functions;
-    EGLDisplay m_display = EGL_NO_DISPLAY;
+    KWinEglDisplay m_display;
     EGLSurface m_surface = EGL_NO_SURFACE;
     EGLContext m_context = EGL_NO_CONTEXT;
     EGLConfig m_config = nullptr;

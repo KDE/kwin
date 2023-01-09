@@ -77,8 +77,8 @@ void AbstractEglBackend::destroyGlobalShareContext()
 
 void AbstractEglBackend::teardown()
 {
-    if (m_functions.eglUnbindWaylandDisplayWL && m_display != EGL_NO_DISPLAY) {
-        m_functions.eglUnbindWaylandDisplayWL(m_display, *(WaylandServer::self()->display()));
+    if (m_functions.eglUnbindWaylandDisplayWL && m_display.isValid()) {
+        m_functions.eglUnbindWaylandDisplayWL(m_display.display(), *(WaylandServer::self()->display()));
     }
     destroyGlobalShareContext();
 }
@@ -88,55 +88,28 @@ void AbstractEglBackend::cleanup()
     cleanupSurfaces();
     cleanupGL();
     doneCurrent();
-    eglDestroyContext(m_display, m_context);
+    eglDestroyContext(m_display.display(), m_context);
     eglReleaseThread();
 }
 
 void AbstractEglBackend::cleanupSurfaces()
 {
     if (m_surface != EGL_NO_SURFACE) {
-        eglDestroySurface(m_display, m_surface);
+        eglDestroySurface(m_display.display(), m_surface);
     }
 }
 
-bool AbstractEglBackend::initEglAPI()
+bool AbstractEglBackend::initEglAPI(EGLDisplay display)
 {
-    EGLint major, minor;
-    if (eglInitialize(m_display, &major, &minor) == EGL_FALSE) {
-        qCWarning(KWIN_OPENGL) << "eglInitialize failed";
-        EGLint error = eglGetError();
-        if (error != EGL_SUCCESS) {
-            qCWarning(KWIN_OPENGL) << "Error during eglInitialize " << error;
-        }
+    if (!m_display.init(display)) {
         return false;
     }
-    EGLint error = eglGetError();
-    if (error != EGL_SUCCESS) {
-        qCWarning(KWIN_OPENGL) << "Error during eglInitialize " << error;
-        return false;
-    }
-    qCDebug(KWIN_OPENGL) << "Egl Initialize succeeded";
-
-    if (eglBindAPI(isOpenGLES() ? EGL_OPENGL_ES_API : EGL_OPENGL_API) == EGL_FALSE) {
-        qCCritical(KWIN_OPENGL) << "bind OpenGL API failed";
-        return false;
-    }
-    qCDebug(KWIN_OPENGL) << "EGL version: " << major << "." << minor;
-    const QByteArray eglExtensions = eglQueryString(m_display, EGL_EXTENSIONS);
-    setExtensions(eglExtensions.split(' '));
-
-    const QByteArray requiredExtensions[] = {
-        QByteArrayLiteral("EGL_KHR_no_config_context"),
-        QByteArrayLiteral("EGL_KHR_surfaceless_context"),
-    };
-    for (const QByteArray &extensionName : requiredExtensions) {
-        if (!hasExtension(extensionName)) {
-            qCWarning(KWIN_OPENGL) << extensionName << "extension is unsupported";
-            return false;
-        }
-    }
-
+    kwinApp()->outputBackend()->setSceneEglDisplay(display);
+    setExtensions(m_display.extensions());
     setSupportsNativeFence(hasExtension(QByteArrayLiteral("EGL_ANDROID_native_fence_sync")));
+    setSupportsBufferAge(m_display.supportsBufferAge());
+    setSupportsPartialUpdate(m_display.supportsPartialUpdate());
+    setSupportsSwapBuffersWithDamage(m_display.supportsSwapBuffersWithDamage());
     return true;
 }
 
@@ -156,27 +129,6 @@ void AbstractEglBackend::initKWinGL()
     }
     glPlatform->printResults();
     initGL(&getProcAddress);
-}
-
-void AbstractEglBackend::initBufferAge()
-{
-    setSupportsBufferAge(false);
-
-    if (hasExtension(QByteArrayLiteral("EGL_EXT_buffer_age"))) {
-        const QByteArray useBufferAge = qgetenv("KWIN_USE_BUFFER_AGE");
-
-        if (useBufferAge != "0") {
-            setSupportsBufferAge(true);
-        }
-    }
-
-    if (hasExtension(QByteArrayLiteral("EGL_KHR_partial_update"))) {
-        const QByteArray usePartialUpdate = qgetenv("KWIN_USE_PARTIAL_UPDATE");
-        if (usePartialUpdate != "0") {
-            setSupportsPartialUpdate(true);
-        }
-    }
-    setSupportsSwapBuffersWithDamage(hasExtension(QByteArrayLiteral("EGL_EXT_swap_buffers_with_damage")));
 }
 
 void AbstractEglBackend::initWayland()
@@ -228,13 +180,13 @@ bool AbstractEglBackend::makeCurrent()
         // Workaround to tell Qt that no QOpenGLContext is current
         context->doneCurrent();
     }
-    const bool current = eglMakeCurrent(m_display, m_surface, m_surface, m_context);
+    const bool current = eglMakeCurrent(m_display.display(), m_surface, m_surface, m_context);
     return current;
 }
 
 void AbstractEglBackend::doneCurrent()
 {
-    eglMakeCurrent(m_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    eglMakeCurrent(m_display.display(), EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 }
 
 bool AbstractEglBackend::isOpenGLES() const
@@ -345,7 +297,7 @@ EGLContext AbstractEglBackend::createContextInternal(EGLContext sharedContext)
     EGLContext ctx = EGL_NO_CONTEXT;
     for (auto it = candidates.begin(); it != candidates.end(); it++) {
         const auto attribs = (*it)->build();
-        ctx = eglCreateContext(m_display, config(), sharedContext, attribs.data());
+        ctx = eglCreateContext(m_display.display(), config(), sharedContext, attribs.data());
         if (ctx != EGL_NO_CONTEXT) {
             qCDebug(KWIN_OPENGL) << "Created EGL context with attributes:" << (*it).get();
             break;
@@ -356,12 +308,6 @@ EGLContext AbstractEglBackend::createContextInternal(EGLContext sharedContext)
         qCCritical(KWIN_OPENGL) << "Create Context failed";
     }
     return ctx;
-}
-
-void AbstractEglBackend::setEglDisplay(const EGLDisplay &display)
-{
-    m_display = display;
-    kwinApp()->outputBackend()->setSceneEglDisplay(display);
 }
 
 void AbstractEglBackend::setConfig(const EGLConfig &config)
@@ -455,7 +401,7 @@ EGLImageKHR AbstractEglBackend::importDmaBufAsImage(const DmaBufAttributes &dmab
 
     attribs << EGL_NONE;
 
-    return eglCreateImageKHR(m_display, EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, nullptr, attribs.data());
+    return eglCreateImageKHR(m_display.display(), EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, nullptr, attribs.data());
 }
 
 std::shared_ptr<GLTexture> AbstractEglBackend::importDmaBufAsTexture(const DmaBufAttributes &attributes) const
@@ -476,5 +422,10 @@ QHash<uint32_t, QVector<uint64_t>> AbstractEglBackend::supportedFormats() const
     } else {
         return RenderBackend::supportedFormats();
     }
+}
+
+EGLDisplay AbstractEglBackend::eglDisplay() const
+{
+    return m_display.display();
 }
 }

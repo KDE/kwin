@@ -115,8 +115,7 @@ bool EglOnXBackend::initRenderingContext()
         qCWarning(KWIN_CORE) << "Failed to get the EGLDisplay";
         return false;
     }
-    setEglDisplay(dpy);
-    initEglAPI();
+    initEglAPI(dpy);
 
     initBufferConfigs();
 
@@ -170,7 +169,6 @@ EGLSurface EglOnXBackend::createSurface(xcb_window_t window)
 
 bool EglOnXBackend::initBufferConfigs()
 {
-    initBufferAge();
     const EGLint config_attribs[] = {
         EGL_SURFACE_TYPE,
         EGL_WINDOW_BIT | (supportsBufferAge() ? 0 : EGL_SWAP_BEHAVIOR_PRESERVED_BIT),

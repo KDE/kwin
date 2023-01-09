@@ -90,8 +90,7 @@ bool EglGbmBackend::initializeEgl()
     if (display == EGL_NO_DISPLAY) {
         return false;
     }
-    setEglDisplay(display);
-    return initEglAPI();
+    return initEglAPI(display);
 }
 
 void EglGbmBackend::init()
@@ -105,7 +104,6 @@ void EglGbmBackend::init()
         setFailed("Could not initialize rendering context");
         return;
     }
-    initBufferAge();
     initKWinGL();
     initWayland();
 }

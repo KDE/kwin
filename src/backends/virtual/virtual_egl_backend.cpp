@@ -93,8 +93,7 @@ bool VirtualEglBackend::initializeEgl()
     if (display == EGL_NO_DISPLAY) {
         return false;
     }
-    setEglDisplay(display);
-    return initEglAPI();
+    return initEglAPI(display);
 }
 
 void VirtualEglBackend::init()
