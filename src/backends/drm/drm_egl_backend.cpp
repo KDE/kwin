@@ -150,25 +150,11 @@ bool EglGbmBackend::initBufferConfigs()
 
     // Loop through all configs, choosing the first one that has suitable format.
     for (EGLint i = 0; i < count; i++) {
-        EGLint gbmFormat;
-        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_NATIVE_VISUAL_ID, &gbmFormat);
-
-        GbmFormat format;
-        format.drmFormat = gbmFormat;
-        EGLint red, green, blue;
-        // Query number of bits for color channel
-        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_RED_SIZE, &red);
-        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_GREEN_SIZE, &green);
-        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_BLUE_SIZE, &blue);
-        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_ALPHA_SIZE, &format.alphaSize);
-        format.bpp = red + green + blue;
-        if (m_formats.contains(gbmFormat)) {
-            continue;
-        }
-        m_formats[gbmFormat] = format;
-        m_configs[format.drmFormat] = configs[i];
+        EGLint drmFormat;
+        eglGetConfigAttrib(eglDisplay(), configs[i], EGL_NATIVE_VISUAL_ID, &drmFormat);
+        m_configs[drmFormat] = configs[i];
     }
-    if (!m_formats.isEmpty()) {
+    if (!m_configs.empty()) {
         return true;
     }
 
@@ -213,13 +199,6 @@ std::shared_ptr<GLTexture> EglGbmBackend::textureForOutput(Output *output) const
     return static_cast<EglGbmLayer *>(drmOutput->primaryLayer())->texture();
 }
 
-std::optional<GbmFormat> EglGbmBackend::gbmFormatForDrmFormat(uint32_t format) const
-{
-    // TODO use a hardcoded lookup table where needed instead?
-    const auto it = m_formats.constFind(format);
-    return it == m_formats.constEnd() ? std::optional<GbmFormat>() : *it;
-}
-
 bool EglGbmBackend::prefer10bpc() const
 {
     static bool ok = false;
@@ -250,11 +229,6 @@ std::shared_ptr<DrmOutputLayer> EglGbmBackend::createLayer(DrmVirtualOutput *out
 DrmGpu *EglGbmBackend::gpu() const
 {
     return m_backend->primaryGpu();
-}
-
-bool operator==(const GbmFormat &lhs, const GbmFormat &rhs)
-{
-    return lhs.drmFormat == rhs.drmFormat;
 }
 
 EGLImageKHR EglGbmBackend::importBufferObjectAsImage(gbm_bo *bo)

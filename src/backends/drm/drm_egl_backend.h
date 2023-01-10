@@ -43,14 +43,6 @@ class EglGbmLayer;
 class DrmOutputLayer;
 class DrmPipeline;
 
-struct GbmFormat
-{
-    uint32_t drmFormat = 0;
-    uint32_t bpp;
-    EGLint alphaSize = -1;
-};
-bool operator==(const GbmFormat &lhs, const GbmFormat &rhs);
-
 /**
  * @brief OpenGL Backend using Egl on a GBM surface.
  */
@@ -77,7 +69,6 @@ public:
 
     std::shared_ptr<DrmBuffer> testBuffer(DrmAbstractOutput *output);
     EGLConfig config(uint32_t format) const;
-    std::optional<GbmFormat> gbmFormatForDrmFormat(uint32_t format) const;
     DrmGpu *gpu() const;
 
     EGLImageKHR importBufferObjectAsImage(gbm_bo *bo);
@@ -89,7 +80,6 @@ private:
     bool initRenderingContext();
 
     DrmBackend *m_backend;
-    QHash<uint32_t, GbmFormat> m_formats;
     QHash<uint32_t, EGLConfig> m_configs;
 
     friend class EglGbmTexture;

@@ -39,11 +39,11 @@ static const float texCoords[] = {
     1.0f, 0.0f,
     1.0f, 1.0f};
 
-ShadowBuffer::ShadowBuffer(const QSize &size, const GbmFormat &format)
+ShadowBuffer::ShadowBuffer(const QSize &size, const DrmFormat &drmFormat)
     : m_size(size)
-    , m_drmFormat(format.drmFormat)
+    , m_drmFormat(drmFormat.drmFormat)
 {
-    m_texture = std::make_unique<GLTexture>(internalFormat(format), size);
+    m_texture = std::make_unique<GLTexture>(drmFormat.openGlFormat, size);
     m_texture->setFilter(GL_NEAREST);
     m_texture->setYInverted(true);
 
@@ -105,16 +105,4 @@ uint32_t ShadowBuffer::drmFormat() const
 {
     return m_drmFormat;
 }
-
-GLint ShadowBuffer::internalFormat(const GbmFormat &format) const
-{
-    if (format.bpp <= 24) {
-        return GL_RGBA8;
-    } else if (format.bpp <= 30) {
-        return GL_RGB10_A2;
-    } else {
-        return GL_RGBA16;
-    }
-}
-
 }

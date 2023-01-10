@@ -12,6 +12,7 @@
 #include <kwinglutils.h>
 
 #include "drm_egl_backend.h"
+#include "drm_formats.h"
 #include "drm_plane.h"
 
 namespace KWin
@@ -20,7 +21,7 @@ namespace KWin
 class ShadowBuffer
 {
 public:
-    ShadowBuffer(const QSize &size, const GbmFormat &format);
+    ShadowBuffer(const QSize &size, const DrmFormat &format);
     ~ShadowBuffer();
 
     bool isComplete() const;
@@ -31,7 +32,6 @@ public:
     uint32_t drmFormat() const;
 
 private:
-    GLint internalFormat(const GbmFormat &format) const;
     std::shared_ptr<GLTexture> m_texture;
     std::unique_ptr<GLFramebuffer> m_fbo;
     std::unique_ptr<GLVertexBuffer> m_vbo;
