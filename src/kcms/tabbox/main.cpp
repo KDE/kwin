@@ -214,6 +214,7 @@ void KWinTabBoxConfig::createConnections(KWinTabBoxConfigForm *form)
     connect(form, &KWinTabBoxConfigForm::showDesktopModeChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
     connect(form, &KWinTabBoxConfigForm::switchingModeChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
     connect(form, &KWinTabBoxConfigForm::layoutNameChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
+    connect(form, &KWinTabBoxConfigForm::shortcutChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
 }
 
 void KWinTabBoxConfig::updateUnmanagedState()
@@ -252,6 +253,7 @@ bool KWinTabBoxConfig::updateUnmanagedIsNeedSave(const KWinTabBoxConfigForm *for
     isNeedSave |= form->showDesktopMode() != config->showDesktopMode();
     isNeedSave |= form->switchingMode() != config->switchingMode();
     isNeedSave |= form->layoutName() != config->layoutName();
+    isNeedSave |= form->isShortcutsChanged();
 
     return isNeedSave;
 }
@@ -268,6 +270,7 @@ bool KWinTabBoxConfig::updateUnmanagedIsDefault(KWinTabBoxConfigForm *form, cons
     isDefault &= form->showDesktopMode() == config->defaultShowDesktopModeValue();
     isDefault &= form->switchingMode() == config->defaultSwitchingModeValue();
     isDefault &= form->layoutName() == config->defaultLayoutNameValue();
+    isDefault &= form->isShortcutsDefault();
 
     return isDefault;
 }
@@ -314,6 +317,9 @@ void KWinTabBoxConfig::save()
 
     updateConfigFromUi(m_primaryTabBoxUi, m_data->tabBoxConfig());
     updateConfigFromUi(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
+
+    m_primaryTabBoxUi->saveShortcuts();
+    m_alternativeTabBoxUi->saveShortcuts();
 
     m_data->tabBoxConfig()->save();
     m_data->tabBoxAlternativeConfig()->save();
