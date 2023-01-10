@@ -61,7 +61,6 @@ private:
     void removeOutput(Output *output);
 
     VirtualBackend *m_backend;
-    int m_frameCounter = 0;
     std::map<Output *, std::unique_ptr<VirtualEglLayer>> m_outputs;
 };
 

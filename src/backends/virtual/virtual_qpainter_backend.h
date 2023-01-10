@@ -50,8 +50,6 @@ private:
     void removeOutput(Output *output);
 
     std::map<Output *, std::unique_ptr<VirtualQPainterLayer>> m_outputs;
-    VirtualBackend *m_backend;
-    int m_frameCounter = 0;
 };
 
 } // namespace KWin

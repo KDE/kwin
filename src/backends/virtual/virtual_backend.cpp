@@ -11,8 +11,6 @@
 #include "virtual_egl_backend.h"
 #include "virtual_output.h"
 #include "virtual_qpainter_backend.h"
-// Qt
-#include <QTemporaryDir>
 
 namespace KWin
 {
@@ -20,15 +18,6 @@ namespace KWin
 VirtualBackend::VirtualBackend(QObject *parent)
     : OutputBackend(parent)
 {
-    if (qEnvironmentVariableIsSet("KWIN_WAYLAND_VIRTUAL_SCREENSHOTS")) {
-        m_screenshotDir.reset(new QTemporaryDir);
-        if (!m_screenshotDir->isValid()) {
-            m_screenshotDir.reset();
-        }
-        if (m_screenshotDir) {
-            qDebug() << "Screenshots saved to: " << m_screenshotDir->path();
-        }
-    }
 }
 
 VirtualBackend::~VirtualBackend()
@@ -41,14 +30,6 @@ VirtualBackend::~VirtualBackend()
 bool VirtualBackend::initialize()
 {
     return true;
-}
-
-QString VirtualBackend::screenshotDirPath() const
-{
-    if (!m_screenshotDir) {
-        return QString();
-    }
-    return m_screenshotDir->path();
 }
 
 std::unique_ptr<QPainterBackend> VirtualBackend::createQPainterBackend()

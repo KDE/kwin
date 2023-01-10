@@ -42,8 +42,6 @@ QImage *VirtualQPainterLayer::image()
 }
 
 VirtualQPainterBackend::VirtualQPainterBackend(VirtualBackend *backend)
-    : QPainterBackend()
-    , m_backend(backend)
 {
     connect(backend, &VirtualBackend::outputAdded, this, &VirtualQPainterBackend::addOutput);
     connect(backend, &VirtualBackend::outputRemoved, this, &VirtualQPainterBackend::removeOutput);
@@ -69,10 +67,6 @@ void VirtualQPainterBackend::removeOutput(Output *output)
 void VirtualQPainterBackend::present(Output *output)
 {
     static_cast<VirtualOutput *>(output)->vsyncMonitor()->arm();
-
-    if (m_backend->saveFrames()) {
-        m_outputs[output]->image()->save(QStringLiteral("%1/%2-%3.png").arg(m_backend->screenshotDirPath(), output->name(), QString::number(m_frameCounter++)));
-    }
 }
 
 VirtualQPainterLayer *VirtualQPainterBackend::primaryLayer(Output *output)
