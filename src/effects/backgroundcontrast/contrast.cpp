@@ -307,6 +307,7 @@ QRegion ContrastEffect::contrastRegion(const EffectWindow *w) const
 
 void ContrastEffect::uploadRegion(QVector2D *&map, const QRegion &region, qreal scale)
 {
+    Q_ASSERT(map);
     for (const QRect &r : region) {
         const auto deviceRect = scaledRect(r, scale);
         const QVector2D topLeft(deviceRect.x(), deviceRect.y());
@@ -326,14 +327,17 @@ void ContrastEffect::uploadRegion(QVector2D *&map, const QRegion &region, qreal 
     }
 }
 
-void ContrastEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &region, qreal scale)
+bool ContrastEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &region, qreal scale)
 {
     const int vertexCount = region.rectCount() * 6;
     if (!vertexCount) {
-        return;
+        return false;
     }
 
     QVector2D *map = (QVector2D *)vbo->map(vertexCount * sizeof(QVector2D));
+    if (!map) {
+        return false;
+    }
     uploadRegion(map, region, scale);
     vbo->unmap();
 
@@ -342,6 +346,7 @@ void ContrastEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &region, 
         {VA_TexCoord, 2, GL_FLOAT, 0}};
 
     vbo->setAttribLayout(layout, 2, sizeof(QVector2D));
+    return true;
 }
 
 bool ContrastEffect::shouldContrast(const EffectWindow *w, int mask, const WindowPaintData &data) const
@@ -413,7 +418,9 @@ void ContrastEffect::doContrast(EffectWindow *w, const QRegion &shape, const QRe
     // Upload geometry for the horizontal and vertical passes
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
-    uploadGeometry(vbo, actualShape, scale);
+    if (!uploadGeometry(vbo, actualShape, scale)) {
+        return;
+    }
     vbo->bindArrays();
 
     // Create a scratch texture and copy the area in the back buffer that we're

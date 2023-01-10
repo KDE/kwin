@@ -61,7 +61,7 @@ private:
     void updateContrastRegion(EffectWindow *w);
     void doContrast(EffectWindow *w, const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection);
     void uploadRegion(QVector2D *&map, const QRegion &region, qreal scale);
-    void uploadGeometry(GLVertexBuffer *vbo, const QRegion &region, qreal scale);
+    Q_REQUIRED_RESULT bool uploadGeometry(GLVertexBuffer *vbo, const QRegion &region, qreal scale);
 
 private:
     std::unique_ptr<ContrastShader> m_shader;
