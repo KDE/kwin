@@ -165,7 +165,7 @@ void OffscreenData::paint(EffectWindow *window, const QRegion &region,
     const qreal rgb = data.brightness() * data.opacity();
     const qreal a = data.opacity();
 
-    QMatrix4x4 mvp = data.screenProjectionMatrix();
+    QMatrix4x4 mvp = data.projectionMatrix();
     mvp.translate(window->x() * scale, window->y() * scale);
 
     shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp * data.toMatrix(effects->renderTargetScale()));

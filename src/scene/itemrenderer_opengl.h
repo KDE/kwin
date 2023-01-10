@@ -50,7 +50,6 @@ public:
     ImageItem *createImageItem(Scene *scene, Item *parent = nullptr) override;
 
 private:
-    QMatrix4x4 modelViewProjectionMatrix(const WindowPaintData &data) const;
     QVector4D modulate(float opacity, float brightness) const;
     void setBlendEnabled(bool enabled);
     void createRenderNode(Item *item, RenderContext *context);

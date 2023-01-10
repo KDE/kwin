@@ -3211,7 +3211,7 @@ class KWINEFFECTS_EXPORT WindowPaintData : public PaintData
 {
 public:
     WindowPaintData();
-    explicit WindowPaintData(const QMatrix4x4 &screenProjectionMatrix);
+    explicit WindowPaintData(const QMatrix4x4 &projectionMatrix);
     WindowPaintData(const WindowPaintData &other);
     ~WindowPaintData() override;
     /**
@@ -3367,14 +3367,6 @@ public:
      * Returns a reference to the projection matrix.
      */
     QMatrix4x4 &rprojectionMatrix();
-
-    /**
-     * Returns The projection matrix as used by the current screen painting pass
-     * including screen transformations.
-     *
-     * @since 5.6
-     */
-    QMatrix4x4 screenProjectionMatrix() const;
 
     /**
      * An override for the scale the window should be rendered at.

@@ -225,21 +225,6 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
     context->opacityStack.pop();
 }
 
-QMatrix4x4 ItemRendererOpenGL::modelViewProjectionMatrix(const WindowPaintData &data) const
-{
-    // An effect may want to override the default projection matrix in some cases,
-    // such as when it is rendering a window on a render target that doesn't have
-    // the same dimensions as the default framebuffer.
-    //
-    // Note that the screen transformation is not applied here.
-    const QMatrix4x4 pMatrix = data.projectionMatrix();
-    if (!pMatrix.isIdentity()) {
-        return pMatrix;
-    } else {
-        return renderTargetProjectionMatrix();
-    }
-}
-
 void ItemRendererOpenGL::renderBackground(const QRegion &region)
 {
     if (region == infiniteRegion() || (region.rectCount() == 1 && (*region.begin()) == renderTargetRect())) {
@@ -360,7 +345,7 @@ void ItemRendererOpenGL::renderItem(Item *item, int mask, const QRegion &region,
         scissorRegion = mapToRenderTarget(region);
     }
 
-    const QMatrix4x4 projectionMatrix = modelViewProjectionMatrix(data);
+    const QMatrix4x4 projectionMatrix = data.projectionMatrix();
     for (int i = 0; i < renderContext.renderNodes.count(); i++) {
         const RenderNode &renderNode = renderContext.renderNodes[i];
         if (renderNode.vertexCount == 0) {

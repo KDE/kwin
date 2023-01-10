@@ -396,7 +396,7 @@ void ContrastEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region
         }
 
         if (!shape.isEmpty()) {
-            doContrast(w, shape, screen, data.opacity(), data.screenProjectionMatrix());
+            doContrast(w, shape, screen, data.opacity(), data.projectionMatrix());
         }
     }
 
