@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-17 00:51+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2019-09-23 21:08+0500\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: Tajik <kde-i18n-doc@kde.org>\n"
@@ -565,12 +565,12 @@ msgstr ""
 msgid "Ignore minimized windows:"
 msgstr "Показать &за окнами:"
 
-#: overview/qml/DesktopBar.qml:186
+#: overview/qml/DesktopBar.qml:187
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr ""
 
-#: overview/qml/DesktopBar.qml:282
+#: overview/qml/DesktopBar.qml:283
 #, fuzzy, kde-format
 #| msgid "Desktop"
 msgid "Add Virtual Desktop"

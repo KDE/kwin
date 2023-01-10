@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2007-07-31 19:27+0330\n"
 "Last-Translator: Nazanin Kazemi <kazemi@itland.ir>\n"
 "Language-Team: Persian <kde-i18n-fa@kde.org>\n"
@@ -2298,8 +2298,8 @@ msgstr "سایه‌دار کردن"
 
 #: useractions.cpp:272
 #, kde-format
-msgid "&No Border"
-msgstr "&بدون لبه‌"
+msgid "&No Titlebar and Frame"
+msgstr ""
 
 #: useractions.cpp:280
 #, fuzzy, kde-format
@@ -2513,7 +2513,7 @@ msgstr "تمام پرده کردن پنجره"
 #: useractions.cpp:1009
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
-msgid "Toggle Window Border"
+msgid "Toggle Window Titlebar and Frame"
 msgstr "مخفی کردن لبه پنجره"
 
 #: useractions.cpp:1011
@@ -2885,6 +2885,9 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
+
+#~ msgid "&No Border"
+#~ msgstr "&بدون لبه‌"
 
 #, fuzzy
 #~| msgid "Show Desktop Grid"

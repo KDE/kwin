@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-17 00:51+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2022-08-19 17:11+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -567,12 +567,12 @@ msgstr "Fon bulanıqlığı:"
 msgid "Ignore minimized windows:"
 msgstr "Yığılmış pəncərələri yox saymaq:"
 
-#: overview/qml/DesktopBar.qml:186
+#: overview/qml/DesktopBar.qml:187
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Virtual iş masasını silin"
 
-#: overview/qml/DesktopBar.qml:282
+#: overview/qml/DesktopBar.qml:283
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Virtual iş masası əlavə edin"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2023-01-08 17:58+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -2257,9 +2257,10 @@ msgid "&Shade"
 msgstr "Ch&e"
 
 #: useractions.cpp:272
-#, kde-format
-msgid "&No Border"
-msgstr "Không &viền"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "&No Titlebar and Frame"
+msgstr "Không có thanh tiêu đề và khung"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2458,9 +2459,10 @@ msgid "Make Window Fullscreen"
 msgstr "Làm cửa sổ toàn màn hình"
 
 #: useractions.cpp:1009
-#, kde-format
-msgid "Toggle Window Border"
-msgstr "Ẩn/hiện viền cửa sổ"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "Toggle Window Titlebar and Frame"
+msgstr "Không có thanh tiêu đề và khung"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2806,6 +2808,12 @@ msgstr ""
 "Vui lòng đăng thông tin được cung cấp bên dưới phần văn bản giới thiệu này "
 "vào một dịch vụ lưu trữ văn bản,\n"
 "chẳng hạn như https://paste.kde.org, thay vì dán vào mạch bài hỗ trợ.\n"
+
+#~ msgid "&No Border"
+#~ msgstr "Không &viền"
+
+#~ msgid "Toggle Window Border"
+#~ msgstr "Ẩn/hiện viền cửa sổ"
 
 #~ msgctxt "Error message"
 #~ msgid "Plugin does not provide configuration file in expected location"

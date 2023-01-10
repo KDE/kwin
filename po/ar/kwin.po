@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2023-01-07 16:56+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -2244,9 +2244,10 @@ msgid "&Shade"
 msgstr "&ظلّل"
 
 #: useractions.cpp:272
-#, kde-format
-msgid "&No Border"
-msgstr "&بلا حدّ"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "&No Titlebar and Frame"
+msgstr "بدون شريط العنوان والإطار"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2445,9 +2446,10 @@ msgid "Make Window Fullscreen"
 msgstr "اجعل النّافذة بملء الشّاشة"
 
 #: useractions.cpp:1009
-#, kde-format
-msgid "Toggle Window Border"
-msgstr "بدّل حدّ النّافذة"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "Toggle Window Titlebar and Frame"
+msgstr "بدون شريط العنوان والإطار"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2792,6 +2794,12 @@ msgstr ""
 "الرجاء نشر المعلومات المتوفرة أسفل هذا الملحق التمهيدي إلى خدمة حاوية "
 "اللصق \n"
 "مثل https://paste.kde.org بدلاً من اللصق في موضوع الدعم. \n"
+
+#~ msgid "&No Border"
+#~ msgstr "&بلا حدّ"
+
+#~ msgid "Toggle Window Border"
+#~ msgstr "بدّل حدّ النّافذة"
 
 #~ msgctxt "Error message"
 #~ msgid "Plugin does not provide configuration file in expected location"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2022-11-28 16:22+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -2275,9 +2275,10 @@ msgid "&Shade"
 msgstr "Adum&bra"
 
 #: useractions.cpp:272
-#, kde-format
-msgid "&No Border"
-msgstr "&Nulle Bordo"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "&No Titlebar and Frame"
+msgstr "Nulle barra de titulo e quadro"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2478,9 +2479,9 @@ msgstr "Face fenestra a schermo plen"
 
 #: useractions.cpp:1009
 #, fuzzy, kde-format
-#| msgid "Hide Window Border"
-msgid "Toggle Window Border"
-msgstr "Cela bordo de fenestra"
+#| msgid "No titlebar and frame"
+msgid "Toggle Window Titlebar and Frame"
+msgstr "Nulle barra de titulo e quadro"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2838,6 +2839,14 @@ msgstr ""
 "Pro favor tu invia information fornite infra iste texto de introduction a un "
 "servicio de receptaculo como http://paste.kde.org in loco de collar a "
 "topicos de supporto.\n"
+
+#~ msgid "&No Border"
+#~ msgstr "&Nulle Bordo"
+
+#, fuzzy
+#~| msgid "Hide Window Border"
+#~ msgid "Toggle Window Border"
+#~ msgstr "Cela bordo de fenestra"
 
 #~ msgctxt "Error message"
 #~ msgid "Plugin does not provide configuration file in expected location"

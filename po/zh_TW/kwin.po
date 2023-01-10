@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2022-06-24 03:21+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
@@ -2247,9 +2247,10 @@ msgid "&Shade"
 msgstr "收起(&S)"
 
 #: useractions.cpp:272
-#, kde-format
-msgid "&No Border"
-msgstr "沒有邊框(&N)"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "&No Titlebar and Frame"
+msgstr "沒有標題列及框架"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2452,9 +2453,9 @@ msgstr "全螢幕"
 
 #: useractions.cpp:1009
 #, fuzzy, kde-format
-#| msgid "Hide Window Border"
-msgid "Toggle Window Border"
-msgstr "隱藏視窗邊框"
+#| msgid "No titlebar and frame"
+msgid "Toggle Window Titlebar and Frame"
+msgstr "沒有標題列及框架"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2808,6 +2809,14 @@ msgstr ""
 "執行哪些特效。\n"
 "請將這些資訊寫在這段介紹文字下面，送到代碼儲存 (paste bin) 服務，如 https://"
 "paste.kde.org 而不是貼到支援討論串中。\n"
+
+#~ msgid "&No Border"
+#~ msgstr "沒有邊框(&N)"
+
+#, fuzzy
+#~| msgid "Hide Window Border"
+#~ msgid "Toggle Window Border"
+#~ msgstr "隱藏視窗邊框"
 
 #~ msgctxt "Error message"
 #~ msgid "Plugin does not provide configuration file in expected location"

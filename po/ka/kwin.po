@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2023-01-04 07:36+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -2227,9 +2227,10 @@ msgid "&Shade"
 msgstr "&დაჩრდილვა"
 
 #: useractions.cpp:272
-#, kde-format
-msgid "&No Border"
-msgstr "&საზღვრის გარეშე"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "&No Titlebar and Frame"
+msgstr "სათაურისა და ჩარჩოს გარეშე"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2428,9 +2429,10 @@ msgid "Make Window Fullscreen"
 msgstr "ფანჯრის მთელ ეკრანზე გატანა"
 
 #: useractions.cpp:1009
-#, kde-format
-msgid "Toggle Window Border"
-msgstr "ფანჯრის საზღვრის გადართვა"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "Toggle Window Titlebar and Frame"
+msgstr "სათაურისა და ჩარჩოს გარეშე"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2765,6 +2767,12 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
+
+#~ msgid "&No Border"
+#~ msgstr "&საზღვრის გარეშე"
+
+#~ msgid "Toggle Window Border"
+#~ msgstr "ფანჯრის საზღვრის გადართვა"
 
 #~ msgctxt "Error message"
 #~ msgid "Plugin does not provide configuration file in expected location"

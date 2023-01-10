@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2021-11-18 13:04+0100\n"
 "Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -2273,9 +2273,10 @@ msgid "&Shade"
 msgstr "Za&baliť"
 
 #: useractions.cpp:272
-#, kde-format
-msgid "&No Border"
-msgstr "&Bez okraja"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "&No Titlebar and Frame"
+msgstr "Bez záhlavia a rámu"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2478,9 +2479,9 @@ msgstr "Okno na celú obrazovku"
 
 #: useractions.cpp:1009
 #, fuzzy, kde-format
-#| msgid "Hide Window Border"
-msgid "Toggle Window Border"
-msgstr "Skryť okraj okna"
+#| msgid "No titlebar and frame"
+msgid "Toggle Window Titlebar and Frame"
+msgstr "Bez záhlavia a rámu"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2836,6 +2837,14 @@ msgstr ""
 "aký OpenGL ovládač a aké efekty bežia.\n"
 "Prosím zadajte dolu poskytnuté informácie na službu pastebin\n"
 "ako http://paste.kde.org namiesto vloženia do fóra podpory.\n"
+
+#~ msgid "&No Border"
+#~ msgstr "&Bez okraja"
+
+#, fuzzy
+#~| msgid "Hide Window Border"
+#~ msgid "Toggle Window Border"
+#~ msgstr "Skryť okraj okna"
 
 #~ msgctxt "Error message"
 #~ msgid "Plugin does not provide configuration file in expected location"

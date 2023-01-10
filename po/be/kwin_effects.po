@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-17 00:51+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2023-01-06 10:31\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -573,12 +573,12 @@ msgstr "Размыццё фону:"
 msgid "Ignore minimized windows:"
 msgstr "Ігнараванне згорнутых акон:"
 
-#: overview/qml/DesktopBar.qml:186
+#: overview/qml/DesktopBar.qml:187
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Выдаліць віртуальны працоўны стол"
 
-#: overview/qml/DesktopBar.qml:282
+#: overview/qml/DesktopBar.qml:283
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Дадаць віртуальны працоўны стол"

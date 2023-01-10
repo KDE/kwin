@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2022-09-27 18:25+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -2275,9 +2275,10 @@ msgid "&Shade"
 msgstr "&Tirai"
 
 #: useractions.cpp:272
-#, kde-format
-msgid "&No Border"
-msgstr "&Tanpa Bingkai"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "&No Titlebar and Frame"
+msgstr "Tanpa bilah judul dan kerangka"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2480,9 +2481,9 @@ msgstr "Buat Jendela Layar Penuh"
 
 #: useractions.cpp:1009
 #, fuzzy, kde-format
-#| msgid "Hide Window Border"
-msgid "Toggle Window Border"
-msgstr "Sembunyikan Bingkai Jendela"
+#| msgid "No titlebar and frame"
+msgid "Toggle Window Titlebar and Frame"
+msgstr "Tanpa bilah judul dan kerangka"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2841,6 +2842,14 @@ msgstr ""
 "layanan tempel\n"
 "seperti https://paste.kde.org ketimbang menempelkannya di pembicaraan "
 "dukungan.\n"
+
+#~ msgid "&No Border"
+#~ msgstr "&Tanpa Bingkai"
+
+#, fuzzy
+#~| msgid "Hide Window Border"
+#~ msgid "Toggle Window Border"
+#~ msgstr "Sembunyikan Bingkai Jendela"
 
 #~ msgctxt "Error message"
 #~ msgid "Plugin does not provide configuration file in expected location"

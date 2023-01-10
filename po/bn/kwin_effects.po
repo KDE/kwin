@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-17 00:51+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2010-06-01 10:25-0700\n"
 "Last-Translator: Deepayan Sarkar <deepayan.sarkar@gmail.com>\n"
 "Language-Team: Bengali <kde-translation@bengalinux.org>\n"
@@ -598,12 +598,12 @@ msgstr "পটভূমি"
 msgid "Ignore minimized windows:"
 msgstr "মিনিমাই&জ করা উইণ্ডো বাদ দাও"
 
-#: overview/qml/DesktopBar.qml:186
+#: overview/qml/DesktopBar.qml:187
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr ""
 
-#: overview/qml/DesktopBar.qml:282
+#: overview/qml/DesktopBar.qml:283
 #, fuzzy, kde-format
 #| msgctxt "@title:group actions when clicking on desktop"
 #| msgid "Desktop"

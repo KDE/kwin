@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2022-05-14 17:24+0200\n"
 "Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -2284,8 +2284,8 @@ msgstr "&Rul ind"
 
 #: useractions.cpp:272
 #, kde-format
-msgid "&No Border"
-msgstr "Uden kant"
+msgid "&No Titlebar and Frame"
+msgstr ""
 
 #: useractions.cpp:280
 #, kde-format
@@ -2492,7 +2492,7 @@ msgstr "Gør vindue til fuld skærm"
 #: useractions.cpp:1009
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
-msgid "Toggle Window Border"
+msgid "Toggle Window Titlebar and Frame"
 msgstr "Skjul vindueskant"
 
 #: useractions.cpp:1011
@@ -2857,6 +2857,9 @@ msgstr ""
 "til en pastebin-tjeneste\n"
 "såsom https://paste.kde.org i stedet for at indsætte den i direkte i support-"
 "tråde.\n"
+
+#~ msgid "&No Border"
+#~ msgstr "Uden kant"
 
 #~ msgctxt "Error message"
 #~ msgid "Plugin does not provide configuration file in expected location"

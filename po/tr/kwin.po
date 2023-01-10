@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2023-01-04 22:29+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -2265,9 +2265,10 @@ msgid "&Shade"
 msgstr "&Panjuru Kapat"
 
 #: useractions.cpp:272
-#, kde-format
-msgid "&No Border"
-msgstr "Ke&narlık Yok"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "&No Titlebar and Frame"
+msgstr "Başlık çubuğu ve çerçeve yok"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2466,9 +2467,10 @@ msgid "Make Window Fullscreen"
 msgstr "Pencereyi Tam Ekran Yap"
 
 #: useractions.cpp:1009
-#, kde-format
-msgid "Toggle Window Border"
-msgstr "Pencere Kenarlığını Aç/Kapat"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "Toggle Window Titlebar and Frame"
+msgstr "Başlık çubuğu ve çerçeve yok"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2813,3 +2815,9 @@ msgstr ""
 "bilgi sağlar. Lütfen bu tanıtım metninin altında verilen bilgileri destek\n"
 "konularına yapıştırmak yerine https://paste.kde.org gibi bir yapıştırma\n"
 "kutusu hizmetine gönderin.\n"
+
+#~ msgid "&No Border"
+#~ msgstr "Ke&narlık Yok"
+
+#~ msgid "Toggle Window Border"
+#~ msgstr "Pencere Kenarlığını Aç/Kapat"

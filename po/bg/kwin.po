@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2023-01-07 17:37+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -2264,9 +2264,10 @@ msgid "&Shade"
 msgstr "&Сгъване"
 
 #: useractions.cpp:272
-#, kde-format
-msgid "&No Border"
-msgstr "&Без рамка"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "&No Titlebar and Frame"
+msgstr "Без заглавна лента и рамка"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2465,9 +2466,10 @@ msgid "Make Window Fullscreen"
 msgstr "Прозорец на цял екран"
 
 #: useractions.cpp:1009
-#, kde-format
-msgid "Toggle Window Border"
-msgstr "Показване/скриване на рамката на прозореца"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "Toggle Window Titlebar and Frame"
+msgstr "Без заглавна лента и рамка"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2813,3 +2815,9 @@ msgstr ""
 "Моля, публикувайте информацията, предоставена под този уводен текст, в "
 "услуга за поставяне на кошчета\n"
 "като https://paste.kde.org, вместо да поставяте в нишки за поддръжка.\n"
+
+#~ msgid "&No Border"
+#~ msgstr "&Без рамка"
+
+#~ msgid "Toggle Window Border"
+#~ msgstr "Показване/скриване на рамката на прозореца"

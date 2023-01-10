@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-17 00:51+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2022-08-19 15:19-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -574,12 +574,12 @@ msgstr "Borrar plano de fundo:"
 msgid "Ignore minimized windows:"
 msgstr "Ignorar janelas minimizadas:"
 
-#: overview/qml/DesktopBar.qml:186
+#: overview/qml/DesktopBar.qml:187
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "Excluir área de trabalho virtual"
 
-#: overview/qml/DesktopBar.qml:282
+#: overview/qml/DesktopBar.qml:283
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Adicionar área de trabalho virtual"

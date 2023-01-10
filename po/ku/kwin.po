@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2009-01-06 03:15+0200\n"
 "Last-Translator: Omer Ensari <oensari@gmail.com>\n"
 "Language-Team: Kurdish <gnu-ku-wergerandin at lists dot sourceforge dot "
@@ -2280,8 +2280,8 @@ msgstr "Sî"
 
 #: useractions.cpp:272
 #, kde-format
-msgid "&No Border"
-msgstr "&Bê kelek"
+msgid "&No Titlebar and Frame"
+msgstr ""
 
 #: useractions.cpp:280
 #, fuzzy, kde-format
@@ -2495,7 +2495,7 @@ msgstr "Paceyê Bike Dîmender-Tijî"
 #: useractions.cpp:1009
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
-msgid "Toggle Window Border"
+msgid "Toggle Window Titlebar and Frame"
 msgstr "Kêlekên Paceyê Veşêre"
 
 #: useractions.cpp:1011
@@ -2867,6 +2867,9 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
+
+#~ msgid "&No Border"
+#~ msgstr "&Bê kelek"
 
 #, fuzzy
 #~| msgid "Show Desktop Grid"

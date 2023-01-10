@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2022-10-17 23:50+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -2258,9 +2258,10 @@ msgid "&Shade"
 msgstr "&Başlığa yığmaq"
 
 #: useractions.cpp:272
-#, kde-format
-msgid "&No Border"
-msgstr "Çərçivə&siz"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "&No Titlebar and Frame"
+msgstr "Başlıqsız və çərçivəsiz"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2462,9 +2463,10 @@ msgid "Make Window Fullscreen"
 msgstr "Pəncərəni Tam Ekran Açmaq"
 
 #: useractions.cpp:1009
-#, kde-format
-msgid "Toggle Window Border"
-msgstr "Pəncərə çərçivəsini aktiv edin və ya söndürün"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "Toggle Window Titlebar and Frame"
+msgstr "Başlıqsız və çərçivəsiz"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2820,6 +2822,12 @@ msgstr ""
 "cari işlək vəziyyət haqqında məlumatları təqdim edir.\n"
 "Lütfən, bu giriş mətninin altındakı məlumatları dəstək mesajları yerinə\n"
 "https://paste.kde.org saytına oxşar bir pastebin xidmətinə göndərin.\n"
+
+#~ msgid "&No Border"
+#~ msgstr "Çərçivə&siz"
+
+#~ msgid "Toggle Window Border"
+#~ msgstr "Pəncərə çərçivəsini aktiv edin və ya söndürün"
 
 #~ msgctxt "Error message"
 #~ msgid "Plugin does not provide configuration file in expected location"

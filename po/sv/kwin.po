@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2022-09-24 16:08+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -2269,9 +2269,10 @@ msgid "&Shade"
 msgstr "&Rulla upp"
 
 #: useractions.cpp:272
-#, kde-format
-msgid "&No Border"
-msgstr "Uta&n kant"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "&No Titlebar and Frame"
+msgstr "Ingen namnlist och ram"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2474,9 +2475,9 @@ msgstr "Gör fönster fullskärm"
 
 #: useractions.cpp:1009
 #, fuzzy, kde-format
-#| msgid "Hide Window Border"
-msgid "Toggle Window Border"
-msgstr "Dölj fönsterkant"
+#| msgid "No titlebar and frame"
+msgid "Toggle Window Titlebar and Frame"
+msgstr "Ingen namnlist och ram"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2832,6 +2833,14 @@ msgstr ""
 "Klistra gärna in informationen som tillhandahålls under den här inledande "
 "texten på en inklistringstjänst\n"
 "som https://paste.kde.org istället för att klistra in den i supporttrådar.\n"
+
+#~ msgid "&No Border"
+#~ msgstr "Uta&n kant"
+
+#, fuzzy
+#~| msgid "Hide Window Border"
+#~ msgid "Toggle Window Border"
+#~ msgstr "Dölj fönsterkant"
 
 #~ msgctxt "Error message"
 #~ msgid "Plugin does not provide configuration file in expected location"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2002-10-26 11:38SAST\n"
 "Last-Translator: Lwandle Mgidlana <lwandle@translate.org.za>\n"
 "Language-Team: Xhosa <xhosa@translate.org.za>\n"
@@ -2249,9 +2249,9 @@ msgid "&Shade"
 msgstr "Um&thunzi"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-msgid "&No Border"
-msgstr "Window Esezantsi"
+#, kde-format
+msgid "&No Titlebar and Frame"
+msgstr ""
 
 #: useractions.cpp:280
 #, fuzzy, kde-format
@@ -2460,7 +2460,7 @@ msgstr "Udubulo lwekhusi Lwefestile"
 
 #: useractions.cpp:1009
 #, fuzzy, kde-format
-msgid "Toggle Window Border"
+msgid "Toggle Window Titlebar and Frame"
 msgstr "Window Esezantsi"
 
 #: useractions.cpp:1011
@@ -2810,6 +2810,10 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
+
+#, fuzzy
+#~ msgid "&No Border"
+#~ msgstr "Window Esezantsi"
 
 #, fuzzy
 #~| msgid "Switch to Desktop 1"

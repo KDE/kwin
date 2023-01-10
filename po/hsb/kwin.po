@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2008-11-21 01:39+0100\n"
 "Last-Translator: Eduard Werner <edi.werner@gmx.de>\n"
 "Language-Team: en_US <kde-i18n-doc@lists.kde.org>\n"
@@ -2284,8 +2284,8 @@ msgstr "&Sćin podkłasć"
 
 #: useractions.cpp:272
 #, kde-format
-msgid "&No Border"
-msgstr "&Bjez ramika"
+msgid "&No Titlebar and Frame"
+msgstr ""
 
 #: useractions.cpp:280
 #, fuzzy, kde-format
@@ -2499,7 +2499,7 @@ msgstr "Wokno přez cyłu wobrazowku"
 #: useractions.cpp:1009
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
-msgid "Toggle Window Border"
+msgid "Toggle Window Titlebar and Frame"
 msgstr "Ramik wokna chować"
 
 #: useractions.cpp:1011
@@ -2871,6 +2871,9 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
+
+#~ msgid "&No Border"
+#~ msgstr "&Bjez ramika"
 
 #, fuzzy
 #~| msgid "To &Desktop"

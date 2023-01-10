@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2009-01-09 21:22-0800\n"
 "Last-Translator: Deepayan Sarkar <deepayan.sarkar@gmail.com>\n"
 "Language-Team: en_US <kde-translation@bengalinux.org>\n"
@@ -2285,8 +2285,8 @@ msgstr "ছায়াবৃত কর"
 
 #: useractions.cpp:272
 #, kde-format
-msgid "&No Border"
-msgstr "সীমারেখাবিহী&ন"
+msgid "&No Titlebar and Frame"
+msgstr ""
 
 #: useractions.cpp:280
 #, fuzzy, kde-format
@@ -2500,7 +2500,7 @@ msgstr "উইণ্ডো পুরো পর্দা জুড়ে কর"
 #: useractions.cpp:1009
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
-msgid "Toggle Window Border"
+msgid "Toggle Window Titlebar and Frame"
 msgstr "উইণ্ডোর সীমানা লুকাও"
 
 #: useractions.cpp:1011
@@ -2872,6 +2872,9 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
+
+#~ msgid "&No Border"
+#~ msgstr "সীমারেখাবিহী&ন"
 
 #, fuzzy
 #~| msgid "Show Desktop Grid"

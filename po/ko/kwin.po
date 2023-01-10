@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2022-08-09 13:31+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -2261,9 +2261,10 @@ msgid "&Shade"
 msgstr "말아 올리기(&S)"
 
 #: useractions.cpp:272
-#, kde-format
-msgid "&No Border"
-msgstr "테두리 없음(&N)"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "&No Titlebar and Frame"
+msgstr "제목 표시줄과 프레임 없음"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2466,9 +2467,9 @@ msgstr "창을 전체 화면으로"
 
 #: useractions.cpp:1009
 #, fuzzy, kde-format
-#| msgid "Hide Window Border"
-msgid "Toggle Window Border"
-msgstr "창 테두리 숨기기"
+#| msgid "No titlebar and frame"
+msgid "Toggle Window Titlebar and Frame"
+msgstr "제목 표시줄과 프레임 없음"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2823,6 +2824,14 @@ msgstr ""
 "창 관리자의 상태 정보를 제공합니다.\n"
 "이 메시지 아래에 있는 지원 정보를 글에 바로 붙여넣기보다는\n"
 "https://paste.kde.org 등 외부 사이트에 링크하는 것을 권장합니다.\n"
+
+#~ msgid "&No Border"
+#~ msgstr "테두리 없음(&N)"
+
+#, fuzzy
+#~| msgid "Hide Window Border"
+#~ msgid "Toggle Window Border"
+#~ msgstr "창 테두리 숨기기"
 
 #~ msgctxt "Error message"
 #~ msgid "Plugin does not provide configuration file in expected location"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2008-07-08 18:58+0530\n"
 "Last-Translator: \n"
 "Language-Team: SMC <smc.org.in>\n"
@@ -2242,8 +2242,8 @@ msgstr "മറയ്ക്കുക"
 
 #: useractions.cpp:272
 #, kde-format
-msgid "&No Border"
-msgstr "&അതിരില്ല"
+msgid "&No Titlebar and Frame"
+msgstr ""
 
 #: useractions.cpp:280
 #, fuzzy, kde-format
@@ -2444,7 +2444,7 @@ msgstr "ജാലകം പൂര്‍ണ്ണവലിപ്പത്തി�
 #: useractions.cpp:1009
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
-msgid "Toggle Window Border"
+msgid "Toggle Window Titlebar and Frame"
 msgstr "ജാലകത്തിന്റെ അതിരു് അദൃശ്യമാക്കുക"
 
 #: useractions.cpp:1011
@@ -2790,6 +2790,9 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
+
+#~ msgid "&No Border"
+#~ msgstr "&അതിരില്ല"
 
 #, fuzzy
 #~ msgid "Show Desktop"

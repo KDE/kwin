@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin-gu\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2009-01-04 13:06+0530\n"
 "Last-Translator: Kartik Mistry <kartik.mistry@gmail.com>\n"
 "Language-Team: Gujarati <kde-i18n-doc@kde.org>\n"
@@ -2278,8 +2278,8 @@ msgstr "છાંયડો"
 
 #: useractions.cpp:272
 #, kde-format
-msgid "&No Border"
-msgstr "કિનારી નથી (&N)"
+msgid "&No Titlebar and Frame"
+msgstr ""
 
 #: useractions.cpp:280
 #, fuzzy, kde-format
@@ -2493,7 +2493,7 @@ msgstr "વિન્ડોને પૂર્ણસ્ક્રિન બના�
 #: useractions.cpp:1009
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
-msgid "Toggle Window Border"
+msgid "Toggle Window Titlebar and Frame"
 msgstr "વિન્ડો કિનારી છુપાવો"
 
 #: useractions.cpp:1011
@@ -2859,6 +2859,9 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
+
+#~ msgid "&No Border"
+#~ msgstr "કિનારી નથી (&N)"
 
 #~ msgid "Show Desktop"
 #~ msgstr "ડેસ્કટોપ બતાવો"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2022-12-11 23:34+0100\n"
 "Last-Translator: Enol P. <enolp@softastur.org>\n"
 "Language-Team: \n"
@@ -2227,7 +2227,7 @@ msgstr ""
 
 #: useractions.cpp:272
 #, kde-format
-msgid "&No Border"
+msgid "&No Titlebar and Frame"
 msgstr ""
 
 #: useractions.cpp:280
@@ -2428,7 +2428,7 @@ msgstr ""
 
 #: useractions.cpp:1009
 #, kde-format
-msgid "Toggle Window Border"
+msgid "Toggle Window Titlebar and Frame"
 msgstr ""
 
 #: useractions.cpp:1011

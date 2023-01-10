@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2009-12-05 20:43+0200\n"
 "Last-Translator: Viesturs Zarins <viesturs.zarins@mii.lu.lv>\n"
 "Language-Team: Latvian <locale@laka.lv>\n"
@@ -2307,8 +2307,8 @@ msgstr "Saritināt"
 
 #: useractions.cpp:272
 #, kde-format
-msgid "&No Border"
-msgstr "&Bez ietvara"
+msgid "&No Titlebar and Frame"
+msgstr ""
 
 #: useractions.cpp:280
 #, fuzzy, kde-format
@@ -2522,7 +2522,7 @@ msgstr "Rādīt logu pilnekrāna režīmā"
 #: useractions.cpp:1009
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
-msgid "Toggle Window Border"
+msgid "Toggle Window Titlebar and Frame"
 msgstr "Slēpt loga ietvaru"
 
 #: useractions.cpp:1011
@@ -2888,6 +2888,9 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
+
+#~ msgid "&No Border"
+#~ msgstr "&Bez ietvara"
 
 #~ msgid "Show Desktop"
 #~ msgstr "Rādīt darbvirsmu"

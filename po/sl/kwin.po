@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1641708 2023-01-08 01:46:44Z scripty $
+# $Id: kwin.po 1641836 2023-01-10 01:45:39Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2023-01-05 08:58+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -2274,9 +2274,10 @@ msgid "&Shade"
 msgstr "Zvi&j"
 
 #: useractions.cpp:272
-#, kde-format
-msgid "&No Border"
-msgstr "&Brez obrobe"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "&No Titlebar and Frame"
+msgstr "Brez naslovne letvice in okvirja"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2475,9 +2476,10 @@ msgid "Make Window Fullscreen"
 msgstr "Okno v celozaslonski način"
 
 #: useractions.cpp:1009
-#, kde-format
-msgid "Toggle Window Border"
-msgstr "Preklopi obrobo okna"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "Toggle Window Titlebar and Frame"
+msgstr "Brez naslovne letvice in okvirja"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2821,6 +2823,12 @@ msgstr ""
 "možnostih, gonilniku za grafično kartico in dejavnih namiznih učinkih. \n"
 "Podatke pod tem uvodnim besedilom objavite na storitev paste bin service\n"
 " kothttps://paste.kde.org namesto neposredno v teme na forumu.\n"
+
+#~ msgid "&No Border"
+#~ msgstr "&Brez obrobe"
+
+#~ msgid "Toggle Window Border"
+#~ msgstr "Preklopi obrobo okna"
 
 #~ msgctxt "Error message"
 #~ msgid "Plugin does not provide configuration file in expected location"

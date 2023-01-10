@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: கேபசூ 4.1 தமிழாக்கம்\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-17 00:51+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2022-12-06 20:05+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -568,12 +568,12 @@ msgstr "பின்புலத்தை மங்கலாக்கு:"
 msgid "Ignore minimized windows:"
 msgstr "ஒதுக்கப்பட்ட சாளரங்களை பொருட்படுத்தாதே:"
 
-#: overview/qml/DesktopBar.qml:186
+#: overview/qml/DesktopBar.qml:187
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "மெய்நிகர் பணிமேடையை நீக்கு"
 
-#: overview/qml/DesktopBar.qml:282
+#: overview/qml/DesktopBar.qml:283
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "மெய்நிகர் பணிமேடையைச் சேர்"

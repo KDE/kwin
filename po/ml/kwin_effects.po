@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-17 00:51+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2019-12-12 22:14+0000\n"
 "Last-Translator: Vivek KJ Pazhedath <vivekkj2004@gmail.com>\n"
 "Language-Team: SMC <smc.org.in>\n"
@@ -568,12 +568,12 @@ msgstr "പശ്ചാത്തലം"
 msgid "Ignore minimized windows:"
 msgstr "&മിനിമൈസ് ചെയ്തിരിക്കുന്ന ജാലകങ്ങള്‍ അവഗണിക്കുക"
 
-#: overview/qml/DesktopBar.qml:186
+#: overview/qml/DesktopBar.qml:187
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr ""
 
-#: overview/qml/DesktopBar.qml:282
+#: overview/qml/DesktopBar.qml:283
 #, fuzzy, kde-format
 msgid "Add Virtual Desktop"
 msgstr "പണിയിട ക്യൂബ്"

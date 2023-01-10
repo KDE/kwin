@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-17 00:51+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2022-05-16 18:28+0200\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -570,13 +570,13 @@ msgstr "Rozmazať pozadie:"
 msgid "Ignore minimized windows:"
 msgstr "Ignorovať minimalizované okná:"
 
-#: overview/qml/DesktopBar.qml:186
+#: overview/qml/DesktopBar.qml:187
 #, fuzzy, kde-format
 #| msgid "Delete virtual desktop"
 msgid "Delete Virtual Desktop"
 msgstr "Vymazať virtuálnu plochu"
 
-#: overview/qml/DesktopBar.qml:282
+#: overview/qml/DesktopBar.qml:283
 #, fuzzy, kde-format
 #| msgid "Add Desktop"
 msgid "Add Virtual Desktop"

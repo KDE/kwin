@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2023-01-04 03:37+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -2286,9 +2286,10 @@ msgid "&Shade"
 msgstr "&Recoger"
 
 #: useractions.cpp:272
-#, kde-format
-msgid "&No Border"
-msgstr "Si&n borde"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "&No Titlebar and Frame"
+msgstr "Sin barra de título ni marco"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2487,9 +2488,10 @@ msgid "Make Window Fullscreen"
 msgstr "Ventana en pantalla completa"
 
 #: useractions.cpp:1009
-#, kde-format
-msgid "Toggle Window Border"
-msgstr "Conmutar el borde de la ventana"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "Toggle Window Titlebar and Frame"
+msgstr "Sin barra de título ni marco"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2837,6 +2839,12 @@ msgstr ""
 "de introducción a un\n"
 "servicio de bandeja de pegar como https://paste.kde.org en lugar de pegarla "
 "en hilos de ayuda.\n"
+
+#~ msgid "&No Border"
+#~ msgstr "Si&n borde"
+
+#~ msgid "Toggle Window Border"
+#~ msgstr "Conmutar el borde de la ventana"
 
 #~ msgctxt "Error message"
 #~ msgid "Plugin does not provide configuration file in expected location"

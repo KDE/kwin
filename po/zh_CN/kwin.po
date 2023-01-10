@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2023-01-02 07:11\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -2235,9 +2235,10 @@ msgid "&Shade"
 msgstr "折叠(&S)"
 
 #: useractions.cpp:272
-#, kde-format
-msgid "&No Border"
-msgstr "无边框(&N)"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "&No Titlebar and Frame"
+msgstr "无标题栏和边框"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2437,9 +2438,10 @@ msgid "Make Window Fullscreen"
 msgstr "将窗口放至全屏"
 
 #: useractions.cpp:1009
-#, kde-format
-msgid "Toggle Window Border"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "Toggle Window Titlebar and Frame"
+msgstr "无标题栏和边框"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2782,3 +2784,6 @@ msgstr ""
 "正在使用什么 OpenGL 驱动，和哪些特效正在运行。\n"
 "请将此本文下面的信息贴至一个剪贴板服务，\n"
 "例如 https://paste.kde.org ，而不是直接贴到请求支持的贴子中。\n"
+
+#~ msgid "&No Border"
+#~ msgstr "无边框(&N)"

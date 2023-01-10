@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2013-02-24 11:33+0530\n"
 "Last-Translator: Chetan Khona <chetan@kompkin.com>\n"
 "Language-Team: Marathi <kde-i18n-doc@kde.org>\n"
@@ -2282,8 +2282,8 @@ msgstr "रंगछटा"
 
 #: useractions.cpp:272
 #, kde-format
-msgid "&No Border"
-msgstr "किनार नाही (&N)"
+msgid "&No Titlebar and Frame"
+msgstr ""
 
 #: useractions.cpp:280
 #, fuzzy, kde-format
@@ -2502,7 +2502,7 @@ msgstr "चौकट पूर्ण स्क्रीन करा"
 #: useractions.cpp:1009
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
-msgid "Toggle Window Border"
+msgid "Toggle Window Titlebar and Frame"
 msgstr "चौकट किनार लपवा"
 
 #: useractions.cpp:1011
@@ -2862,6 +2862,9 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
+
+#~ msgid "&No Border"
+#~ msgstr "किनार नाही (&N)"
 
 #~ msgid "Invert Screen Colors"
 #~ msgstr "स्क्रीन रंग उलटे करा"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2022-12-31 14:10+0000\n"
 "Last-Translator: gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -2261,9 +2261,10 @@ msgid "&Shade"
 msgstr "&Rúlla upp"
 
 #: useractions.cpp:272
-#, kde-format
-msgid "&No Border"
-msgstr "E&nginn rammi"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "&No Titlebar and Frame"
+msgstr "Engin titilstika og rammi"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2466,9 +2467,9 @@ msgstr "Láta gluggann fylla allan skjáinn"
 
 #: useractions.cpp:1009
 #, fuzzy, kde-format
-#| msgid "Hide Window Border"
-msgid "Toggle Window Border"
-msgstr "Fela rammann á glugganum"
+#| msgid "No titlebar and frame"
+msgid "Toggle Window Titlebar and Frame"
+msgstr "Engin titilstika og rammi"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2824,6 +2825,14 @@ msgstr ""
 "hvaða OpenGL-rekill og hvaða brellur eru keyrðar.\n"
 "Settu upplýsingarnar fyrir neðan þennan inngangstexta í afritunarsíðu \n"
 "eins og https://paste.kde.org í stað þess að líma þær inn í aðstoðarbeiðni.\n"
+
+#~ msgid "&No Border"
+#~ msgstr "E&nginn rammi"
+
+#, fuzzy
+#~| msgid "Hide Window Border"
+#~ msgid "Toggle Window Border"
+#~ msgstr "Fela rammann á glugganum"
 
 #~ msgctxt "Error message"
 #~ msgid "Plugin does not provide configuration file in expected location"

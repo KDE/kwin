@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2020-01-11 11:32+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -2361,8 +2361,8 @@ msgstr "&Sombra"
 
 #: useractions.cpp:272
 #, kde-format
-msgid "&No Border"
-msgstr "Sen &moldura"
+msgid "&No Titlebar and Frame"
+msgstr ""
 
 #: useractions.cpp:280
 #, kde-format
@@ -2571,7 +2571,7 @@ msgstr "Pór a xanela a pantalla completa"
 #: useractions.cpp:1009
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
-msgid "Toggle Window Border"
+msgid "Toggle Window Titlebar and Frame"
 msgstr "Agochar a moldura da xanela"
 
 #: useractions.cpp:1011
@@ -2938,6 +2938,9 @@ msgstr ""
 "Envíe a información que aparece debaixo deste texto introdutorio a un "
 "servizo de almacenamento de texto\n"
 "como https://paste.kde.org no canto de pegala no fío de asistencia técnica.\n"
+
+#~ msgid "&No Border"
+#~ msgstr "Sen &moldura"
 
 #~ msgctxt "Error message"
 #~ msgid "Plugin does not provide configuration file in expected location"

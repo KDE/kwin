@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2013-10-01 03:27+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -2333,8 +2333,8 @@ msgstr "Айдарға түю"
 
 #: useractions.cpp:272
 #, kde-format
-msgid "&No Border"
-msgstr "Шегі &жоқ"
+msgid "&No Titlebar and Frame"
+msgstr ""
 
 #: useractions.cpp:280
 #, fuzzy, kde-format
@@ -2552,7 +2552,7 @@ msgstr "Терезені толық экранды қылу"
 #: useractions.cpp:1009
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
-msgid "Toggle Window Border"
+msgid "Toggle Window Titlebar and Frame"
 msgstr "Терезенің шегін жасыру"
 
 #: useractions.cpp:1011
@@ -2927,6 +2927,9 @@ msgstr ""
 "қандай OpenGL драйвері және эффекттер жегілген.\n"
 "Төмендегі мәліметті, көмек сұрау мәтініне келтірмей, арнаулы\n"
 "http://paste.kde.org секілді қызметпен жіберген жөн.\n"
+
+#~ msgid "&No Border"
+#~ msgstr "Шегі &жоқ"
 
 #~ msgid "Invert Screen Colors"
 #~ msgstr "Экраның түстерін терістеу"

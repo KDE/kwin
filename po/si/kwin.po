@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2009-12-23 10:11+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <danishka@gmail.com>\n"
@@ -2297,8 +2297,8 @@ msgstr "සෙවණ කරන්න"
 
 #: useractions.cpp:272
 #, kde-format
-msgid "&No Border"
-msgstr "දාරය නොමැත (&N)"
+msgid "&No Titlebar and Frame"
+msgstr ""
 
 #: useractions.cpp:280
 #, fuzzy, kde-format
@@ -2512,7 +2512,7 @@ msgstr "කවුළුම මුළුතිරයක් බවට පත්ක
 #: useractions.cpp:1009
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
-msgid "Toggle Window Border"
+msgid "Toggle Window Titlebar and Frame"
 msgstr "කවුළු රාමුව සඟවන්න"
 
 #: useractions.cpp:1011
@@ -2878,6 +2878,9 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
+
+#~ msgid "&No Border"
+#~ msgstr "දාරය නොමැත (&N)"
 
 #~ msgid "Show Desktop"
 #~ msgstr "වැඩතලය පෙන්වන්න"

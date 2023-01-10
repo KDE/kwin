@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-10 00:57+0000\n"
 "PO-Revision-Date: 2023-01-06 10:31\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -2266,9 +2266,10 @@ msgid "&Shade"
 msgstr "&Згарнуць у загаловак"
 
 #: useractions.cpp:272
-#, kde-format
-msgid "&No Border"
-msgstr "&Без рамкі"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "&No Titlebar and Frame"
+msgstr "Без панэлі загалоўка і рамкі"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2468,9 +2469,10 @@ msgid "Make Window Fullscreen"
 msgstr "Разгарнуць акно на ўвесь экран"
 
 #: useractions.cpp:1009
-#, kde-format
-msgid "Toggle Window Border"
-msgstr "Уключыць ці адключыць рамку"
+#, fuzzy, kde-format
+#| msgid "No titlebar and frame"
+msgid "Toggle Window Titlebar and Frame"
+msgstr "Без панэлі загалоўка і рамкі"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2816,6 +2818,12 @@ msgstr ""
 "Калі ласка, размясціце звесткі, пададзеныя пад гэтым тэкстам, у службу "
 "ўстаўляння\n"
 "накшталт https://paste.kde.org, а не ў паведамленне запыту.\n"
+
+#~ msgid "&No Border"
+#~ msgstr "&Без рамкі"
+
+#~ msgid "Toggle Window Border"
+#~ msgstr "Уключыць ці адключыць рамку"
 
 #, fuzzy
 #~| msgid "Show Desktop Grid"
