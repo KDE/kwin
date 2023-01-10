@@ -15,6 +15,8 @@
 #include <variant>
 
 #include "drm_buffer_gbm.h"
+#include "eglcontext.h"
+#include "egldisplay.h"
 #include "utils/damagejournal.h"
 
 struct gbm_device;
@@ -23,13 +25,13 @@ struct gbm_surface;
 namespace KWin
 {
 
-class GLFramebuffer;
 class EglGbmBackend;
+class GLFramebuffer;
 
 class GbmSurface : public std::enable_shared_from_this<GbmSurface>
 {
 public:
-    explicit GbmSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, uint32_t flags, gbm_surface *surface, EGLSurface eglSurface);
+    explicit GbmSurface(KWinEglContext *context, DrmGpu *gpu, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, uint32_t flags, gbm_surface *surface, EGLSurface eglSurface);
     ~GbmSurface();
 
     bool makeContextCurrent() const;
@@ -51,14 +53,16 @@ public:
     enum class Error {
         ModifiersUnsupported,
         EglError,
+        EglNotSupported,
         Unknown
     };
     static std::variant<std::shared_ptr<GbmSurface>, Error> createSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, uint32_t flags, EGLConfig config);
     static std::variant<std::shared_ptr<GbmSurface>, Error> createSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, QVector<uint64_t> modifiers, EGLConfig config);
 
 private:
-    gbm_surface *m_surface;
-    EglGbmBackend *const m_eglBackend;
+    gbm_surface *const m_surface;
+    DrmGpu *const m_gpu;
+    KWinEglContext *const m_context;
     EGLSurface m_eglSurface = EGL_NO_SURFACE;
     QSize m_size;
     const uint32_t m_format;

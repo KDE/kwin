@@ -100,7 +100,7 @@ bool VirtualEglGbmLayer::createGbmSurface()
     for (const auto &tranche : tranches) {
         for (auto it = tranche.formatTable.constBegin(); it != tranche.formatTable.constEnd(); it++) {
             const auto size = m_output->pixelSize();
-            const auto config = m_eglBackend->config(it.key());
+            const auto config = m_eglBackend->config(m_eglBackend->gpu(), it.key());
             const auto format = it.key();
             const auto modifiers = it.value();
 

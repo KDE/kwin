@@ -22,9 +22,10 @@
 namespace KWin
 {
 
-GbmSurface::GbmSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, uint32_t flags, gbm_surface *surface, EGLSurface eglSurface)
+GbmSurface::GbmSurface(KWinEglContext *context, DrmGpu *gpu, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, uint32_t flags, gbm_surface *surface, EGLSurface eglSurface)
     : m_surface(surface)
-    , m_eglBackend(backend)
+    , m_gpu(gpu)
+    , m_context(context)
     , m_eglSurface(eglSurface)
     , m_size(size)
     , m_format(format)
@@ -37,7 +38,7 @@ GbmSurface::GbmSurface(EglGbmBackend *backend, const QSize &size, uint32_t forma
 GbmSurface::~GbmSurface()
 {
     if (m_eglSurface != EGL_NO_SURFACE) {
-        eglDestroySurface(m_eglBackend->eglDisplay(), m_eglSurface);
+        eglDestroySurface(m_context->display(), m_eglSurface);
     }
     if (m_surface) {
         gbm_surface_destroy(m_surface);
@@ -46,7 +47,7 @@ GbmSurface::~GbmSurface()
 
 bool GbmSurface::makeContextCurrent() const
 {
-    if (eglMakeCurrent(m_eglBackend->eglDisplay(), m_eglSurface, m_eglSurface, m_eglBackend->context()) == EGL_FALSE) {
+    if (eglMakeCurrent(m_context->display(), m_eglSurface, m_eglSurface, m_context->context()) == EGL_FALSE) {
         qCCritical(KWIN_DRM) << "eglMakeCurrent failed:" << getEglErrorString();
         return false;
     }
@@ -59,7 +60,7 @@ bool GbmSurface::makeContextCurrent() const
 
 std::shared_ptr<GbmBuffer> GbmSurface::swapBuffers(const QRegion &dirty)
 {
-    auto error = eglSwapBuffers(m_eglBackend->eglDisplay(), m_eglSurface);
+    auto error = eglSwapBuffers(m_context->display(), m_eglSurface);
     if (error != EGL_TRUE) {
         qCCritical(KWIN_DRM) << "an error occurred while swapping buffers" << getEglErrorString();
         return nullptr;
@@ -68,11 +69,11 @@ std::shared_ptr<GbmBuffer> GbmSurface::swapBuffers(const QRegion &dirty)
     if (!bo) {
         return nullptr;
     }
-    if (m_eglBackend->supportsBufferAge()) {
-        eglQuerySurface(m_eglBackend->eglDisplay(), m_eglSurface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
+    if (m_context->displayObject()->supportsBufferAge()) {
+        eglQuerySurface(m_context->display(), m_eglSurface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
         m_damageJournal.add(dirty);
     }
-    return std::make_shared<GbmBuffer>(m_eglBackend->gpu(), bo, shared_from_this());
+    return std::make_shared<GbmBuffer>(m_gpu, bo, shared_from_this());
 }
 
 void GbmSurface::releaseBuffer(GbmBuffer *buffer)
@@ -112,7 +113,7 @@ int GbmSurface::bufferAge() const
 
 QRegion GbmSurface::repaintRegion() const
 {
-    if (m_eglBackend->supportsBufferAge()) {
+    if (m_context->displayObject()->supportsBufferAge()) {
         return m_damageJournal.accumulate(m_bufferAge, infiniteRegion());
     } else {
         return infiniteRegion();
@@ -126,23 +127,33 @@ uint32_t GbmSurface::flags() const
 
 std::variant<std::shared_ptr<GbmSurface>, GbmSurface::Error> GbmSurface::createSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, uint32_t flags, EGLConfig config)
 {
-    gbm_surface *surface = gbm_surface_create(backend->gpu()->gbmDevice(), size.width(), size.height(), format, flags);
+    DrmGpu *const gpu = backend->gpu();
+    const auto context = backend->contextObject(gpu);
+    if (!context) {
+        return Error::EglNotSupported;
+    }
+    gbm_surface *surface = gbm_surface_create(gpu->gbmDevice(), size.width(), size.height(), format, flags);
     if (!surface) {
         qCWarning(KWIN_DRM) << "Creating gbm surface failed!" << strerror(errno);
         return Error::Unknown;
     }
-    EGLSurface eglSurface = eglCreatePlatformWindowSurfaceEXT(backend->eglDisplay(), config, surface, nullptr);
+    EGLSurface eglSurface = eglCreatePlatformWindowSurfaceEXT(context->display(), config, surface, nullptr);
     if (eglSurface == EGL_NO_SURFACE) {
         qCCritical(KWIN_DRM) << "Creating EGL surface failed!" << getEglErrorString();
         gbm_surface_destroy(surface);
         return Error::Unknown;
     }
-    return std::make_shared<GbmSurface>(backend, size, format, QVector<uint64_t>{}, flags, surface, eglSurface);
+    return std::make_shared<GbmSurface>(context, gpu, size, format, QVector<uint64_t>{}, flags, surface, eglSurface);
 }
 
 std::variant<std::shared_ptr<GbmSurface>, GbmSurface::Error> GbmSurface::createSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, QVector<uint64_t> modifiers, EGLConfig config)
 {
-    gbm_surface *surface = gbm_surface_create_with_modifiers(backend->gpu()->gbmDevice(), size.width(), size.height(), format, modifiers.data(), modifiers.size());
+    DrmGpu *const gpu = backend->gpu();
+    const auto context = backend->contextObject(gpu);
+    if (!context) {
+        return Error::EglNotSupported;
+    }
+    gbm_surface *surface = gbm_surface_create_with_modifiers(gpu->gbmDevice(), size.width(), size.height(), format, modifiers.data(), modifiers.size());
     if (!surface) {
         if (errno == ENOSYS) {
             return Error::ModifiersUnsupported;
@@ -151,12 +162,12 @@ std::variant<std::shared_ptr<GbmSurface>, GbmSurface::Error> GbmSurface::createS
             return Error::Unknown;
         }
     }
-    EGLSurface eglSurface = eglCreatePlatformWindowSurfaceEXT(backend->eglDisplay(), config, surface, nullptr);
+    EGLSurface eglSurface = eglCreatePlatformWindowSurfaceEXT(context->display(), config, surface, nullptr);
     if (eglSurface == EGL_NO_SURFACE) {
         qCCritical(KWIN_DRM) << "Creating EGL surface failed!" << getEglErrorString();
         gbm_surface_destroy(surface);
         return Error::Unknown;
     }
-    return std::make_shared<GbmSurface>(backend, size, format, modifiers, 0, surface, eglSurface);
+    return std::make_shared<GbmSurface>(context, gpu, size, format, modifiers, 0, surface, eglSurface);
 }
 }

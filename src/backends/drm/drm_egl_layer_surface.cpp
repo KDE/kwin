@@ -303,7 +303,7 @@ std::shared_ptr<GbmSurface> EglGbmLayerSurface::createGbmSurface(const QSize &si
 #if !HAVE_GBM_BO_GET_FD_FOR_PLANE
     allowModifiers &= m_gpu == m_eglBackend->gpu();
 #endif
-    const auto config = m_eglBackend->config(format);
+    const auto config = m_eglBackend->config(m_eglBackend->gpu(), format);
     if (!config) {
         return nullptr;
     }
