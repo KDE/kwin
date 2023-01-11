@@ -863,9 +863,6 @@ void PointerInputTest::testScrollAction()
 
     // but also the wheel event should be passed to the window
     QVERIFY(axisSpy.wait());
-
-    // we need to wait a little bit, otherwise the test crashes in effectshandler, needs fixing
-    QTest::qWait(100);
 }
 
 void PointerInputTest::testFocusFollowsMouse()
