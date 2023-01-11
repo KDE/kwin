@@ -46,6 +46,7 @@ public:
     bool m_skipTaskbar = false;
     bool m_skipSwitcher = false;
     bool m_panelTakesFocus = false;
+    QRect m_struts = QRect(0, 0, 0, 0);
     bool m_openUnderCursorRequested = false;
 
 private:
@@ -59,6 +60,7 @@ private:
     void org_kde_plasma_surface_panel_auto_hide_hide(Resource *resource) override;
     void org_kde_plasma_surface_panel_auto_hide_show(Resource *resource) override;
     void org_kde_plasma_surface_set_panel_takes_focus(Resource *resource, uint32_t takes_focus) override;
+    void org_kde_plasma_surface_set_struts(Resource *resource, int x, int y, int w, int h) override;
     void org_kde_plasma_surface_set_skip_switcher(Resource *resource, uint32_t skip) override;
     void org_kde_plasma_surface_open_under_cursor(Resource *resource) override;
 };
@@ -257,6 +259,16 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_panel_takes_
     Q_EMIT q->panelTakesFocusChanged();
 }
 
+void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_struts(Resource *resource, int x, int y, int w, int h)
+{
+    QRect newStruts = QRect(x, y, w, h);
+    if (newStruts == m_struts) {
+        return;
+    }
+    m_struts = newStruts;
+    Q_EMIT q->strutsChanged();
+}
+
 QPoint PlasmaShellSurfaceInterface::position() const
 {
     return d->m_globalPos;
@@ -305,6 +317,10 @@ void PlasmaShellSurfaceInterface::showAutoHidingPanel()
 bool PlasmaShellSurfaceInterface::panelTakesFocus() const
 {
     return d->m_panelTakesFocus;
+}
+
+QRect PlasmaShellSurfaceInterface::struts() const {
+    return d->m_struts;
 }
 
 PlasmaShellSurfaceInterface *PlasmaShellSurfaceInterface::get(wl_resource *native)

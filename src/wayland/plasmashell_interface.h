@@ -155,6 +155,8 @@ public:
     // TODO KF6 rename to something generic
     bool panelTakesFocus() const;
 
+    QRect struts() const;
+
     /**
      * @returns The PlasmaShellSurfaceInterface for the @p native resource.
      */
@@ -221,6 +223,8 @@ Q_SIGNALS:
      * @see panelTakesFocus
      */
     void panelTakesFocusChanged();
+
+    void strutsChanged();
 
 private:
     friend class PlasmaShellInterfacePrivate;
