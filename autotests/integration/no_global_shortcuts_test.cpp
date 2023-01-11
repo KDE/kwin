@@ -188,7 +188,7 @@ void NoGlobalShortcutsTest::testKGlobalAccel()
     Test::keyboardKeyReleased(KEY_LEFTSHIFT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
 
-    QVERIFY(!triggeredSpy.wait());
+    QVERIFY(!triggeredSpy.wait(100));
     QCOMPARE(triggeredSpy.count(), 0);
 }
 
