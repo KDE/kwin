@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-10 00:57+0000\n"
-"PO-Revision-Date: 2023-01-04 03:37+0100\n"
+"PO-Revision-Date: 2023-01-11 00:37+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "First-Translator: Boris Wesslowski <Boris@Wesslowski.com>\n"
-"X-Generator: Lokalize 22.12.0\n"
+"X-Generator: Lokalize 22.12.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -2286,10 +2286,9 @@ msgid "&Shade"
 msgstr "&Recoger"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "Sin barra de título ni marco"
+msgstr "Si&n barra de título ni marco"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2488,10 +2487,9 @@ msgid "Make Window Fullscreen"
 msgstr "Ventana en pantalla completa"
 
 #: useractions.cpp:1009
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "Sin barra de título ni marco"
+msgstr "Conmutar barra de título y marco de la ventana"
 
 #: useractions.cpp:1011
 #, kde-format

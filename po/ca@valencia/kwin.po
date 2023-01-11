@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-10 00:57+0000\n"
-"PO-Revision-Date: 2023-01-04 16:09+0100\n"
+"PO-Revision-Date: 2023-01-10 10:38+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -27,12 +27,12 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Empar Montoro Martín,Alfredo Vicente,Sebastià Pla i Sanz"
+msgstr "Alfredo Vicente,Sebastià Pla i Sanz"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "montoro_mde@gva.es,alviboi@gmail.com,sps@sastia.com"
+msgstr "alviboi@gmail.com,sps@sastia.com"
 
 #: composite.cpp:646
 #, kde-format
@@ -2279,10 +2279,9 @@ msgid "&Shade"
 msgstr "&Plega"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "Sense barra de títol ni marc"
+msgstr "Se&nse barra de títol ni marc"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2481,10 +2480,9 @@ msgid "Make Window Fullscreen"
 msgstr "Fes de la finestra una pantalla completa"
 
 #: useractions.cpp:1009
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "Sense barra de títol ni marc"
+msgstr "Canvia la barra de títol i el marc de la finestra"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2831,9 +2829,3 @@ msgstr ""
 "Per favor, publiqueu la informació que hi ha davall este text introductori "
 "en un servei d'apegades\n"
 "com https://paste.kde.org en lloc d'apegar-ho en els fils d'ajuda.\n"
-
-#~ msgid "&No Border"
-#~ msgstr "&Sense vores"
-
-#~ msgid "Toggle Window Border"
-#~ msgstr "Canvia la vora de la finestra"

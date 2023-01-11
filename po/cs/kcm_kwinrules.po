@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-11 00:48+0000\n"
-"PO-Revision-Date: 2023-01-04 15:17+0100\n"
+"PO-Revision-Date: 2023-01-05 09:40+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -188,7 +188,7 @@ msgstr "Vynutit"
 #: optionsmodel.cpp:222
 #, kde-format
 msgid "The window property will be always forced to the given value."
-msgstr ""
+msgstr "Vlastnost okna bude vždy vynucena na danou hodnotu."
 
 #: optionsmodel.cpp:224
 #, kde-format
@@ -309,7 +309,7 @@ msgstr[2] "%1 vybráno"
 #: package/contents/ui/RulesEditor.qml:63
 #, kde-format
 msgid "No window properties changed"
-msgstr ""
+msgstr "Nebyly změněny žádné vlastnosti okna"
 
 #: package/contents/ui/RulesEditor.qml:64
 #, kde-kuit-format
@@ -318,6 +318,8 @@ msgid ""
 "Click the <interface>Add Property...</interface> button below to add some "
 "window properties that will be affected by the rule"
 msgstr ""
+"Klikněte na tlačítko <interface>Přidat vlastnost...</interface> níže a "
+"přidejte některé vlastnosti okna, které budou pravidlem ovlivněny"
 
 #: package/contents/ui/RulesEditor.qml:85
 #, kde-format
@@ -764,7 +766,7 @@ msgstr "Zablokovat kompozici"
 #: rulesmodel.cpp:703
 #, kde-format
 msgid "Window class not available"
-msgstr ""
+msgstr "Třída okna není dostupná"
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -779,7 +781,7 @@ msgstr ""
 #: rulesmodel.cpp:738
 #, kde-format
 msgid "All Window Types"
-msgstr ""
+msgstr "Všechny typy oken"
 
 #: rulesmodel.cpp:739
 #, kde-format
@@ -841,7 +843,7 @@ msgstr "Všechny plochy"
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
-msgstr ""
+msgstr "Zpřístupnit okna na všech plochách"
 
 #: rulesmodel.cpp:780
 #, kde-format
@@ -852,7 +854,7 @@ msgstr "Všechny aktivity"
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
-msgstr ""
+msgstr "Zpřístupnit okno ve všech aktivitách"
 
 #: rulesmodel.cpp:803
 #, kde-format
@@ -928,7 +930,7 @@ msgstr "Extrémní"
 #: rulesmodel.cpp:865
 #, kde-format
 msgid "Unmanaged window"
-msgstr ""
+msgstr "Nespravované okno"
 
 #: rulesmodel.cpp:866
 #, kde-format

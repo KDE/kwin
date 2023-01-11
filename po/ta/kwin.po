@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-10 00:57+0000\n"
-"PO-Revision-Date: 2023-01-05 21:34+0530\n"
+"PO-Revision-Date: 2023-01-10 21:43+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.0\n"
+"X-Generator: Lokalize 22.12.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1825,10 +1825,9 @@ msgstr "நெடுக்காக அதிகபட்ச பெரிதா�
 
 #. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:198
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Maximized vertically rule type"
-msgstr "சாளரத்தை மேல்கீழாக  பெரிதாக்கு"
+msgstr "நெடுக்காக அதிகபட்ச பெரிதாக்கும் விதி"
 
 #. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:205
@@ -1838,10 +1837,9 @@ msgstr "கிடைமட்டமாக அதிகபட்ச பெரி�
 
 #. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:209
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Maximized horizontally rule type"
-msgstr "சாளரத்தை மேல்கீழாக பெரிதாக்கு"
+msgstr "கிடைமட்டமாக அதிகபட்ச பெரிதாக்கும் விதி"
 
 #. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:216
@@ -1853,7 +1851,7 @@ msgstr "ஒதுக்கப்பட்டதா"
 #: rulesettings.kcfg:220
 #, kde-format
 msgid "Minimized rule type"
-msgstr ""
+msgstr "ஒதுக்கும் விதி"
 
 #. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:227
@@ -1911,10 +1909,9 @@ msgstr "மற்றவற்றிற்கு மேலே வை"
 
 #. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:275
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgid "Keep above rule type"
-msgstr "மற்றவைகளுக்கு மேலே வை"
+msgstr "மற்றவைகளுக்கு மேலே வைக்கும் விதி"
 
 #. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:282
@@ -1924,10 +1921,9 @@ msgstr "மற்றவற்றிற்கு கீழே வை"
 
 #. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:286
-#, fuzzy, kde-format
-#| msgid "Keep below others"
+#, kde-format
 msgid "Keep below rule type"
-msgstr "மற்றவைகளுக்கு கீழே வைக்கவும்"
+msgstr "மற்றவைகளுக்கு கீழே வைக்கும் விதி"
 
 #. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:293
@@ -1937,10 +1933,9 @@ msgstr "முழுத்திரை"
 
 #. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:297
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen rule type"
-msgstr "&முழுத்திரை"
+msgstr "முழுத்திரை விதி"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:304
@@ -1952,7 +1947,7 @@ msgstr "விளிம்பும் தலைப்புப்பட்ட�
 #: rulesettings.kcfg:308
 #, kde-format
 msgid "No titlebar rule type"
-msgstr ""
+msgstr "தலைப்புப்பட்டையை மறைக்கும் விதி"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:315
@@ -1964,7 +1959,7 @@ msgstr "தலைப்புப்பட்டயின் நிறமும�
 #: rulesettings.kcfg:318
 #, kde-format
 msgid "Titlebar color rule type"
-msgstr ""
+msgstr "தலைப்புப்பட்டையின் நிறத்தை மாற்றும் விதி"
 
 #. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:323
@@ -2260,10 +2255,9 @@ msgid "&Shade"
 msgstr "&நிழலிடு"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "விளிம்பும் தலைப்புப்பட்டையும் வேண்டாம்"
+msgstr "&விளிம்பும் தலைப்புப்பட்டையும் வேண்டாம்"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2462,10 +2456,9 @@ msgid "Make Window Fullscreen"
 msgstr "சாளரத்தை முழுத் திரையாக்கு"
 
 #: useractions.cpp:1009
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "விளிம்பும் தலைப்புப்பட்டையும் வேண்டாம்"
+msgstr "விளிம்பையும் தலைப்புப்பட்டையையும் நிலைமாற்று"
 
 #: useractions.cpp:1011
 #, kde-format

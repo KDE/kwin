@@ -2241,10 +2241,9 @@ msgid "&Shade"
 msgstr "Z&asunout"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "Bez titulku a rámu"
+msgstr ""
 
 #: useractions.cpp:280
 #, kde-format
@@ -2443,10 +2442,9 @@ msgid "Make Window Fullscreen"
 msgstr "Okno na celou obrazovku"
 
 #: useractions.cpp:1009
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "Bez titulku a rámu"
+msgstr ""
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2781,6 +2779,3 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
-
-#~ msgid "&No Border"
-#~ msgstr "Bez o&krajů"

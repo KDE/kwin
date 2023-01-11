@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-10 00:57+0000\n"
-"PO-Revision-Date: 2023-01-04 08:30+0200\n"
+"PO-Revision-Date: 2023-01-10 21:37+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -2272,10 +2272,9 @@ msgid "&Shade"
 msgstr "З&горнути"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "Без смужки заголовка і рамки"
+msgstr "&Без смужки заголовка і рамки"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2474,10 +2473,9 @@ msgid "Make Window Fullscreen"
 msgstr "Помістити вікно на весь екран"
 
 #: useractions.cpp:1009
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "Без смужки заголовка і рамки"
+msgstr "Перемкнути показ смужки заголовка і рамки"
 
 #: useractions.cpp:1011
 #, kde-format

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-10 00:57+0000\n"
-"PO-Revision-Date: 2022-12-24 07:21+0000\n"
+"PO-Revision-Date: 2023-01-10 09:54+0000\n"
 "Last-Translator: Pedro Morais <morais@kde.org>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
 "Language: pt\n"
@@ -2280,10 +2280,9 @@ msgid "&Shade"
 msgstr "Enro&lar"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "Sem barra de título nem contorno"
+msgstr "Sem &Barra de Título nem Contorno"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2482,10 +2481,9 @@ msgid "Make Window Fullscreen"
 msgstr "Janela a Ocupar Todo o Ecrã"
 
 #: useractions.cpp:1009
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "Sem barra de título nem contorno"
+msgstr "Comutar a Barra de Título e o Contorno"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2833,9 +2831,3 @@ msgstr ""
 "para um serviço de área de transferência remoto\n"
 "como o https://paste.kde.org, em vez de colar o texto nos tópicos de "
 "suporte.\n"
-
-#~ msgid "&No Border"
-#~ msgstr "Sem Co&ntorno"
-
-#~ msgid "Toggle Window Border"
-#~ msgstr "Comutar o Contorno da Janela"

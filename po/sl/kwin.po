@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1641836 2023-01-10 01:45:39Z scripty $
+# $Id: kwin.po 1641852 2023-01-10 07:51:00Z matjazjeran $
 # $Source$
 #
 #
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-10 00:57+0000\n"
-"PO-Revision-Date: 2023-01-05 08:58+0100\n"
+"PO-Revision-Date: 2023-01-09 08:25+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -2820,9 +2820,9 @@ msgstr ""
 "Podrobnosti o podpori za KWin:\n"
 "Naslednje podatke uporabite pri iskanju pomoči, npr: https://forum.kde.org.\n"
 "Podatki vsebujejo podrobnosti o trenutno zagnanem pojavku, uporabljenih\n"
-"možnostih, gonilniku za grafično kartico in dejavnih namiznih učinkih. \n"
+"možnostih, gonilniku za grafično kartico in dejavnih namiznih učinkih.\n"
 "Podatke pod tem uvodnim besedilom objavite na storitev paste bin service\n"
-" kothttps://paste.kde.org namesto neposredno v teme na forumu.\n"
+"kot https://paste.kde.org namesto neposredno v teme na forumu.\n"
 
 #~ msgid "&No Border"
 #~ msgstr "&Brez obrobe"
