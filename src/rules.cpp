@@ -23,11 +23,12 @@
 #include "main.h"
 #include "virtualdesktops.h"
 #include "window.h"
-#include "workspace.h"
 #endif
 
+#include "core/output.h"
 #include "rulebooksettings.h"
 #include "rulesettings.h"
+#include "workspace.h"
 
 namespace KWin
 {
@@ -814,6 +815,28 @@ CHECK_FORCE_RULE(Placement, PlacementPolicy)
 QRectF WindowRules::checkGeometry(QRectF rect, bool init) const
 {
     return QRectF(checkPosition(rect.topLeft(), init), checkSize(rect.size(), init));
+}
+
+QRectF WindowRules::checkGeometrySafe(QRectF rect, bool init) const
+{
+    return QRectF(checkPositionSafe(rect.topLeft(), init), checkSize(rect.size(), init));
+}
+
+QPointF WindowRules::checkPositionSafe(QPointF pos, bool init) const
+{
+    const auto ret = checkPosition(pos, init);
+    if (ret == pos || ret == invalidPoint) {
+        return ret;
+    }
+    const auto outputs = workspace()->outputs();
+    const bool inAnyOutput = std::any_of(outputs.begin(), outputs.end(), [ret](const auto output) {
+        return output->fractionalGeometry().contains(ret);
+    });
+    if (inAnyOutput) {
+        return ret;
+    } else {
+        return invalidPoint;
+    }
 }
 
 CHECK_RULE(Position, QPointF)

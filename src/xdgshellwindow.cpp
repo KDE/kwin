@@ -1363,7 +1363,7 @@ void XdgToplevelWindow::initialize()
     setupWindowRules(false);
 
     // Move or resize the window only if enforced by a window rule.
-    const QPointF forcedPosition = rules()->checkPosition(invalidPoint, true);
+    const QPointF forcedPosition = rules()->checkPositionSafe(invalidPoint, true);
     if (forcedPosition != invalidPoint) {
         move(forcedPosition);
     }

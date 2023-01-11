@@ -42,7 +42,9 @@ public:
     void remove(Rules *rule);
     PlacementPolicy checkPlacement(PlacementPolicy placement) const;
     QRectF checkGeometry(QRectF rect, bool init = false) const;
+    QRectF checkGeometrySafe(QRectF rect, bool init = false) const;
     // use 'invalidPoint' with checkPosition, unlike QSize() and QRect(), QPoint() is a valid point
+    QPointF checkPositionSafe(QPointF pos, bool init = false) const;
     QPointF checkPosition(QPointF pos, bool init = false) const;
     QSizeF checkSize(QSizeF s, bool init = false) const;
     QSizeF checkMinSize(QSizeF s) const;
