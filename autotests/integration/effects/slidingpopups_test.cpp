@@ -156,9 +156,6 @@ void SlidingPopupsTest::testWithOtherEffect()
     QVERIFY(!slidingPoupus->isActive());
     QVERIFY(!otherEffect->isActive());
 
-    // give the compositor some time to render
-    QTest::qWait(50);
-
     QSignalSpy windowAddedSpy(effects, &EffectsHandler::windowAdded);
 
     // create an xcb window
@@ -209,8 +206,7 @@ void SlidingPopupsTest::testWithOtherEffect()
 
     // wait till effect ends
     QTRY_VERIFY(!slidingPoupus->isActive());
-    QTest::qWait(300);
-    QVERIFY(!otherEffect->isActive());
+    QTRY_VERIFY(!otherEffect->isActive());
 
     // and destroy the window again
     xcb_unmap_window(c.get(), windowId);
@@ -228,8 +224,7 @@ void SlidingPopupsTest::testWithOtherEffect()
     QVERIFY(windowDeletedSpy.wait());
 
     QCOMPARE(windowDeletedSpy.count(), 1);
-    QTRY_VERIFY(!slidingPoupus->isActive());
-    QTest::qWait(300);
+    QVERIFY(!slidingPoupus->isActive());
     QVERIFY(!otherEffect->isActive());
     xcb_destroy_window(c.get(), windowId);
     c.reset();
@@ -322,8 +317,7 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
 
     // wait till effect ends
     QTRY_VERIFY(!slidingPoupus->isActive());
-    QTest::qWait(300);
-    QVERIFY(!otherEffect->isActive());
+    QTRY_VERIFY(!otherEffect->isActive());
 
     // and destroy the window again
     shellSurface.reset();
@@ -341,8 +335,7 @@ void SlidingPopupsTest::testWithOtherEffectWayland()
     QVERIFY(windowDeletedSpy.wait());
 
     QCOMPARE(windowDeletedSpy.count(), 1);
-    QTRY_VERIFY(!slidingPoupus->isActive());
-    QTest::qWait(300);
+    QVERIFY(!slidingPoupus->isActive());
     QVERIFY(!otherEffect->isActive());
 }
 
