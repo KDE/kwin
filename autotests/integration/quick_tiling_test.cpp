@@ -730,12 +730,6 @@ void QuickTilingTest::testShortcut()
     QFETCH(QStringList, shortcutList);
     QFETCH(QRect, expectedGeometry);
 
-    const int numberOfQuickTileActions = shortcutList.count();
-
-    if (numberOfQuickTileActions > 1) {
-        QTest::qWait(1001);
-    }
-
     for (QString shortcut : shortcutList) {
         // invoke global shortcut through dbus
         auto msg = QDBusMessage::createMethodCall(
@@ -748,7 +742,7 @@ void QuickTilingTest::testShortcut()
     }
 
     QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
-    QTRY_COMPARE(quickTileChangedSpy.count(), numberOfQuickTileActions);
+    QTRY_COMPARE(quickTileChangedSpy.count(), shortcutList.count());
     // at this point the geometry did not yet change
     QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
     // but quick tile mode already changed

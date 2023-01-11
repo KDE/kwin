@@ -263,6 +263,8 @@ void Workspace::setActiveWindow(Window *window)
         rootInfo()->setActiveClient(m_activeWindow);
     }
 
+    m_quickTileCombineTimer->stop();
+
     Q_EMIT windowActivated(m_activeWindow);
     --m_setActiveWindowRecursion;
 }
