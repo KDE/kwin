@@ -286,6 +286,7 @@ void KWinTabBoxConfig::updateUiDefaultIndicator(bool visible, KWinTabBoxConfigFo
     form->setShowDesktopModeDefaultIndicatorVisible(visible && form->showDesktopMode() != config->defaultShowDesktopModeValue());
     form->setSwitchingModeDefaultIndicatorVisible(visible && form->switchingMode() != config->defaultSwitchingModeValue());
     form->setLayoutNameDefaultIndicatorVisible(visible && form->layoutName() != config->defaultLayoutNameValue());
+    form->setShortcutsDefaultIndicatorVisible(visible);
 }
 
 void KWinTabBoxConfig::load()

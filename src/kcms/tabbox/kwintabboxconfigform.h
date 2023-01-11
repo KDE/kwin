@@ -96,6 +96,7 @@ public:
     void setShowDesktopModeDefaultIndicatorVisible(bool visible);
     void setSwitchingModeDefaultIndicatorVisible(bool visible);
     void setLayoutNameDefaultIndicatorVisible(bool visible);
+    void setShortcutsDefaultIndicatorVisible(bool visible);
 
 Q_SIGNALS:
     void filterScreenChanged(int value);

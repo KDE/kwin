@@ -410,6 +410,17 @@ void KWinTabBoxConfigForm::setLayoutNameDefaultIndicatorVisible(bool visible)
     setDefaultIndicatorVisible(ui->effectCombo, visible);
 }
 
+void KWinTabBoxConfigForm::setShortcutsDefaultIndicatorVisible(bool visible)
+{
+    for (const auto &widget : {ui->scAll, ui->scAllReverse, ui->scCurrent, ui->scCurrentReverse}) {
+        const QString actionName = widget->property("shortcutAction").toString();
+        QAction *action = m_actionCollection->action(actionName);
+        const bool isDefault = (action->shortcut() == m_actionCollection->defaultShortcut(action));
+
+        setDefaultIndicatorVisible(widget, visible && !isDefault);
+    }
+}
+
 void KWinTabBoxConfigForm::tabBoxToggled(bool on)
 {
     // Highlight Windows options is availabled if no TabBox effect is selected
