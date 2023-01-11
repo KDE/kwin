@@ -970,7 +970,6 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     // move to next screen - step is 8 pixel, so 800 pixel
     for (int i = 0; i < 100; i++) {
         window2->keyPressEvent(Qt::Key_Left);
-        QTest::qWait(50);
     }
     window2->keyPressEvent(Qt::Key_Enter);
     QCOMPARE(window2->isInteractiveMove(), false);
