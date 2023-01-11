@@ -259,6 +259,9 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
         return surface;
     }
     if (m_gpu != m_eglBackend->gpu()) {
+        if (const auto surface = testFormats(preferredFormats, MultiGpuImportMode::LinearDmabuf)) {
+            return surface;
+        }
         if (const auto surface = testFormats(preferredFormats, MultiGpuImportMode::Egl)) {
             return surface;
         }
@@ -271,6 +274,9 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
         return surface;
     }
     if (m_gpu != m_eglBackend->gpu()) {
+        if (const auto surface = testFormats(fallbackFormats, MultiGpuImportMode::LinearDmabuf)) {
+            return surface;
+        }
         if (const auto surface = testFormats(fallbackFormats, MultiGpuImportMode::Egl)) {
             return surface;
         }
@@ -364,7 +370,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface &surfac
     if (m_bufferTarget == BufferTarget::Dumb || surface.importMode == MultiGpuImportMode::DumbBuffer) {
         return importWithCpu(surface, sourceBuffer.get());
     } else if (m_gpu != m_eglBackend->gpu()) {
-        if (surface.importMode == MultiGpuImportMode::Dmabuf) {
+        if (surface.importMode == MultiGpuImportMode::Dmabuf || surface.importMode == MultiGpuImportMode::LinearDmabuf) {
             return importDmabuf(sourceBuffer.get());
         } else {
             return importWithEgl(surface, sourceBuffer.get());
