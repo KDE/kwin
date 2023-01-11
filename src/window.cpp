@@ -4462,7 +4462,7 @@ void Window::applyWindowRules()
     // Geometry : setGeometry() doesn't check rules
     auto client_rules = rules();
     const QRectF oldGeometry = moveResizeGeometry();
-    const QRectF geometry = client_rules->checkGeometry(oldGeometry);
+    const QRectF geometry = client_rules->checkGeometrySafe(oldGeometry);
     if (geometry != oldGeometry) {
         moveResize(geometry);
     }
