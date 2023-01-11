@@ -56,8 +56,8 @@ public:
         EglNotSupported,
         Unknown
     };
-    static std::variant<std::shared_ptr<GbmSurface>, Error> createSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, uint32_t flags, EGLConfig config);
-    static std::variant<std::shared_ptr<GbmSurface>, Error> createSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, QVector<uint64_t> modifiers, EGLConfig config);
+    static std::variant<std::shared_ptr<GbmSurface>, Error> createSurface(EglGbmBackend *backend, DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t flags, EGLConfig config);
+    static std::variant<std::shared_ptr<GbmSurface>, Error> createSurface(EglGbmBackend *backend, DrmGpu *gpu, const QSize &size, uint32_t format, QVector<uint64_t> modifiers, EGLConfig config);
 
 private:
     gbm_surface *const m_surface;

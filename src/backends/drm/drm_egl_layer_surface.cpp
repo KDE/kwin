@@ -20,6 +20,7 @@
 #include "drm_output.h"
 #include "drm_shadow_buffer.h"
 #include "egl_dmabuf.h"
+#include "gbm_dmabuf.h"
 #include "kwineglutils_p.h"
 #include "scene/surfaceitem_wayland.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
@@ -258,6 +259,9 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
         return surface;
     }
     if (m_gpu != m_eglBackend->gpu()) {
+        if (const auto surface = testFormats(preferredFormats, MultiGpuImportMode::Egl)) {
+            return surface;
+        }
         if (const auto surface = testFormats(preferredFormats, MultiGpuImportMode::DumbBuffer)) {
             return surface;
         }
@@ -267,6 +271,9 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
         return surface;
     }
     if (m_gpu != m_eglBackend->gpu()) {
+        if (const auto surface = testFormats(fallbackFormats, MultiGpuImportMode::Egl)) {
+            return surface;
+        }
         if (const auto surface = testFormats(fallbackFormats, MultiGpuImportMode::DumbBuffer)) {
             return surface;
         }
@@ -278,14 +285,19 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
 {
     Surface ret;
     ret.importMode = importMode;
-    ret.forceLinear = importMode == MultiGpuImportMode::DumbBuffer || m_bufferTarget != BufferTarget::Normal;
-    ret.gbmSurface = createGbmSurface(size, format, modifiers, ret.forceLinear);
+    ret.forceLinear = importMode != MultiGpuImportMode::Dmabuf || m_bufferTarget != BufferTarget::Normal;
+    ret.gbmSurface = createGbmSurface(m_eglBackend->gpu(), size, format, modifiers, ret.forceLinear);
     if (!ret.gbmSurface) {
         return std::nullopt;
     }
     if (importMode == MultiGpuImportMode::DumbBuffer || m_bufferTarget == BufferTarget::Dumb) {
         ret.importSwapchain = std::make_shared<DumbSwapchain>(m_gpu, size, format);
         if (ret.importSwapchain->isEmpty()) {
+            return std::nullopt;
+        }
+    } else if (importMode == MultiGpuImportMode::Egl) {
+        ret.importSurface = createGbmSurface(m_gpu, size, format, modifiers, false);
+        if (!ret.importSurface) {
             return std::nullopt;
         }
     }
@@ -295,21 +307,21 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
     return ret;
 }
 
-std::shared_ptr<GbmSurface> EglGbmLayerSurface::createGbmSurface(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool forceLinear) const
+std::shared_ptr<GbmSurface> EglGbmLayerSurface::createGbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool forceLinear) const
 {
     static bool modifiersEnvSet = false;
     static const bool modifiersEnv = qEnvironmentVariableIntValue("KWIN_DRM_USE_MODIFIERS", &modifiersEnvSet) != 0;
     bool allowModifiers = m_gpu->addFB2ModifiersSupported() && (!modifiersEnvSet || (modifiersEnvSet && modifiersEnv)) && !modifiers.isEmpty();
 #if !HAVE_GBM_BO_GET_FD_FOR_PLANE
-    allowModifiers &= m_gpu == m_eglBackend->gpu();
+    allowModifiers &= m_gpu == gpu;
 #endif
-    const auto config = m_eglBackend->config(m_eglBackend->gpu(), format);
+    const auto config = m_eglBackend->config(gpu, format);
     if (!config) {
         return nullptr;
     }
 
     if (allowModifiers) {
-        const auto ret = GbmSurface::createSurface(m_eglBackend, size, format, forceLinear ? linearModifier : modifiers, config);
+        const auto ret = GbmSurface::createSurface(m_eglBackend, gpu, size, format, forceLinear ? linearModifier : modifiers, config);
         if (const auto surface = std::get_if<std::shared_ptr<GbmSurface>>(&ret)) {
             return *surface;
         } else if (std::get<GbmSurface::Error>(ret) != GbmSurface::Error::ModifiersUnsupported) {
@@ -317,13 +329,13 @@ std::shared_ptr<GbmSurface> EglGbmLayerSurface::createGbmSurface(const QSize &si
         }
     }
     uint32_t gbmFlags = GBM_BO_USE_RENDERING;
-    if (m_gpu == m_eglBackend->gpu()) {
+    if (m_gpu == gpu) {
         gbmFlags |= GBM_BO_USE_SCANOUT;
     }
-    if (forceLinear || m_gpu != m_eglBackend->gpu()) {
+    if (forceLinear || m_gpu != gpu) {
         gbmFlags |= GBM_BO_USE_LINEAR;
     }
-    const auto ret = GbmSurface::createSurface(m_eglBackend, size, format, gbmFlags, config);
+    const auto ret = GbmSurface::createSurface(m_eglBackend, gpu, size, format, gbmFlags, config);
     const auto surface = std::get_if<std::shared_ptr<GbmSurface>>(&ret);
     return surface ? *surface : nullptr;
 }
@@ -352,7 +364,11 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface &surfac
     if (m_bufferTarget == BufferTarget::Dumb || surface.importMode == MultiGpuImportMode::DumbBuffer) {
         return importWithCpu(surface, sourceBuffer.get());
     } else if (m_gpu != m_eglBackend->gpu()) {
-        return importDmabuf(sourceBuffer.get());
+        if (surface.importMode == MultiGpuImportMode::Dmabuf) {
+            return importDmabuf(sourceBuffer.get());
+        } else {
+            return importWithEgl(surface, sourceBuffer.get());
+        }
     } else {
         const auto ret = DrmFramebuffer::createFramebuffer(sourceBuffer);
         if (!ret) {
@@ -372,6 +388,28 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importDmabuf(GbmBuffer *sour
     const auto ret = DrmFramebuffer::createFramebuffer(imported);
     if (!ret) {
         qCWarning(KWIN_DRM, "Failed to create %s framebuffer for multi-gpu: %s", formatName(imported->format()).name, strerror(errno));
+    }
+    return ret;
+}
+
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface &surface, GbmBuffer *sourceBuffer) const
+{
+    const auto context = m_eglBackend->contextObject(m_gpu);
+    if (!context || !surface.importSurface->makeContextCurrent()) {
+        return nullptr;
+    }
+    const auto image = context->importDmaBufAsTexture(dmaBufAttributesForBo(sourceBuffer->bo()));
+    if (!image) {
+        return nullptr;
+    }
+    image->render(QRect(QPoint(), surface.importSurface->size()), 1);
+    const auto buffer = surface.importSurface->swapBuffers(infiniteRegion());
+    if (!buffer) {
+        return nullptr;
+    }
+    const auto ret = DrmFramebuffer::createFramebuffer(buffer);
+    if (!ret) {
+        qCWarning(KWIN_DRM, "Failed to create %s framebuffer for gbm surface on secondary gpu: %s", formatName(buffer->format()).name, strerror(errno));
     }
     return ret;
 }

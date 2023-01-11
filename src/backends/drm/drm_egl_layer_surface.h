@@ -63,12 +63,14 @@ private:
 
     enum class MultiGpuImportMode {
         Dmabuf,
+        Egl,
         DumbBuffer
     };
     struct Surface
     {
         std::shared_ptr<GbmSurface> gbmSurface;
         std::shared_ptr<DumbSwapchain> importSwapchain;
+        std::shared_ptr<GbmSurface> importSurface;
         MultiGpuImportMode importMode;
         std::shared_ptr<GbmBuffer> currentBuffer;
         std::shared_ptr<DrmFramebuffer> currentFramebuffer;
@@ -78,11 +80,12 @@ private:
     bool doesSurfaceFit(const Surface &surface, const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
     std::optional<Surface> createSurface(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
     std::optional<Surface> createSurface(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, MultiGpuImportMode importMode) const;
-    std::shared_ptr<GbmSurface> createGbmSurface(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool forceLinear) const;
+    std::shared_ptr<GbmSurface> createGbmSurface(DrmGpu *gpu, const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, bool forceLinear) const;
 
     std::shared_ptr<DrmFramebuffer> doRenderTestBuffer(Surface &surface) const;
     std::shared_ptr<DrmFramebuffer> importBuffer(Surface &surface, const std::shared_ptr<GbmBuffer> &sourceBuffer) const;
     std::shared_ptr<DrmFramebuffer> importDmabuf(GbmBuffer *sourceBuffer) const;
+    std::shared_ptr<DrmFramebuffer> importWithEgl(Surface &surface, GbmBuffer *sourceBuffer) const;
     std::shared_ptr<DrmFramebuffer> importWithCpu(Surface &surface, GbmBuffer *sourceBuffer) const;
 
     Surface m_surface;

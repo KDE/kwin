@@ -125,9 +125,8 @@ uint32_t GbmSurface::flags() const
     return m_flags;
 }
 
-std::variant<std::shared_ptr<GbmSurface>, GbmSurface::Error> GbmSurface::createSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, uint32_t flags, EGLConfig config)
+std::variant<std::shared_ptr<GbmSurface>, GbmSurface::Error> GbmSurface::createSurface(EglGbmBackend *backend, DrmGpu *gpu, const QSize &size, uint32_t format, uint32_t flags, EGLConfig config)
 {
-    DrmGpu *const gpu = backend->gpu();
     const auto context = backend->contextObject(gpu);
     if (!context) {
         return Error::EglNotSupported;
@@ -146,9 +145,8 @@ std::variant<std::shared_ptr<GbmSurface>, GbmSurface::Error> GbmSurface::createS
     return std::make_shared<GbmSurface>(context, gpu, size, format, QVector<uint64_t>{}, flags, surface, eglSurface);
 }
 
-std::variant<std::shared_ptr<GbmSurface>, GbmSurface::Error> GbmSurface::createSurface(EglGbmBackend *backend, const QSize &size, uint32_t format, QVector<uint64_t> modifiers, EGLConfig config)
+std::variant<std::shared_ptr<GbmSurface>, GbmSurface::Error> GbmSurface::createSurface(EglGbmBackend *backend, DrmGpu *gpu, const QSize &size, uint32_t format, QVector<uint64_t> modifiers, EGLConfig config)
 {
-    DrmGpu *const gpu = backend->gpu();
     const auto context = backend->contextObject(gpu);
     if (!context) {
         return Error::EglNotSupported;
