@@ -207,7 +207,7 @@ void PlasmaWindowTest::testInternalWindowNoPlasmaWindow()
     win.setGeometry(0, 0, 100, 100);
     win.show();
 
-    QVERIFY(!plasmaWindowCreatedSpy.wait());
+    QVERIFY(!plasmaWindowCreatedSpy.wait(100));
 }
 
 void PlasmaWindowTest::testPopupWindowNoPlasmaWindow()
@@ -257,7 +257,7 @@ void PlasmaWindowTest::testLockScreenNoPlasmaWindow()
     QVERIFY(windowAddedSpy.first().first().value<Window *>()->isLockScreen());
     // should not be sent to the window
     QVERIFY(plasmaWindowCreatedSpy.isEmpty());
-    QVERIFY(!plasmaWindowCreatedSpy.wait());
+    QVERIFY(!plasmaWindowCreatedSpy.wait(100));
 
     // fake unlock
     QSignalSpy lockStateChangedSpy(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged);
