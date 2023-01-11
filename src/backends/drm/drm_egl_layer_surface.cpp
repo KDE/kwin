@@ -256,31 +256,39 @@ std::optional<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(con
     };
     std::sort(preferredFormats.begin(), preferredFormats.end(), sort);
     if (const auto surface = testFormats(preferredFormats, MultiGpuImportMode::Dmabuf)) {
+        qWarning() << "created surface with preferred formats and dmabuf import";
         return surface;
     }
     if (m_gpu != m_eglBackend->gpu()) {
         if (const auto surface = testFormats(preferredFormats, MultiGpuImportMode::LinearDmabuf)) {
+            qWarning() << "created surface with preferred formats and linear dmabuf import";
             return surface;
         }
         if (const auto surface = testFormats(preferredFormats, MultiGpuImportMode::Egl)) {
+            qWarning() << "created surface with preferred formats and egl import";
             return surface;
         }
         if (const auto surface = testFormats(preferredFormats, MultiGpuImportMode::DumbBuffer)) {
+            qWarning() << "created surface with preferred formats and cpu import";
             return surface;
         }
     }
     std::sort(fallbackFormats.begin(), fallbackFormats.end(), sort);
     if (const auto surface = testFormats(fallbackFormats, MultiGpuImportMode::Dmabuf)) {
+        qWarning() << "created surface with fallback formats and dmabuf import";
         return surface;
     }
     if (m_gpu != m_eglBackend->gpu()) {
         if (const auto surface = testFormats(fallbackFormats, MultiGpuImportMode::LinearDmabuf)) {
+            qWarning() << "created surface with fallback formats and linear dmabuf import";
             return surface;
         }
         if (const auto surface = testFormats(fallbackFormats, MultiGpuImportMode::Egl)) {
+            qWarning() << "created surface with fallback formats and egl import";
             return surface;
         }
         if (const auto surface = testFormats(fallbackFormats, MultiGpuImportMode::DumbBuffer)) {
+            qWarning() << "created surface with fallback formats and cpu import";
             return surface;
         }
     }
