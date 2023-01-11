@@ -8,8 +8,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-//#define QT_CLEAN_NAMESPACE
-
 #include "group.h"
 #include "effects.h"
 #include "workspace.h"

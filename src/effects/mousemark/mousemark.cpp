@@ -26,7 +26,10 @@
 namespace KWin
 {
 
-#define NULL_POINT (QPoint(-1, -1)) // null point is (0,0), which is valid :-/
+static consteval QPoint nullPoint()
+{
+    return QPoint(-1, -1);
+}
 
 MouseMarkEffect::MouseMarkEffect()
 {
@@ -47,7 +50,7 @@ MouseMarkEffect::MouseMarkEffect()
     connect(effects, &EffectsHandler::mouseChanged, this, &MouseMarkEffect::slotMouseChanged);
     connect(effects, &EffectsHandler::screenLockingChanged, this, &MouseMarkEffect::screenLockingChanged);
     reconfigure(ReconfigureAll);
-    arrow_start = NULL_POINT;
+    arrow_start = nullPoint();
     effects->startMousePolling(); // We require it to detect activation as well
 }
 
@@ -141,16 +144,16 @@ void MouseMarkEffect::slotMouseChanged(const QPoint &pos, const QPoint &,
                                        Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers)
 {
     if (modifiers == (Qt::META | Qt::SHIFT | Qt::CTRL)) { // start/finish arrow
-        if (arrow_start != NULL_POINT) {
+        if (arrow_start != nullPoint()) {
             marks.append(createArrow(arrow_start, pos));
-            arrow_start = NULL_POINT;
+            arrow_start = nullPoint();
             effects->addRepaintFull();
             return;
         } else {
             arrow_start = pos;
         }
     }
-    if (arrow_start != NULL_POINT) {
+    if (arrow_start != nullPoint()) {
         return;
     }
     // TODO the shortcuts now trigger this right before they're activated
@@ -182,8 +185,8 @@ void MouseMarkEffect::clear()
 
 void MouseMarkEffect::clearLast()
 {
-    if (arrow_start != NULL_POINT) {
-        arrow_start = NULL_POINT;
+    if (arrow_start != nullPoint()) {
+        arrow_start = nullPoint();
     } else if (!drawing.isEmpty()) {
         drawing.clear();
         effects->addRepaintFull();

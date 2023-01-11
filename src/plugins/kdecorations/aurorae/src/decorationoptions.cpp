@@ -206,22 +206,34 @@ Borders::~Borders()
 {
 }
 
-#define SETTER(methodName, name)       \
-    void Borders::methodName(int name) \
-    {                                  \
-        if (m_##name == name) {        \
-            return;                    \
-        }                              \
-        m_##name = name;               \
-        Q_EMIT name##Changed();        \
+void Borders::setLeft(int left)
+{
+    if (m_left != left) {
+        m_left = left;
+        Q_EMIT leftChanged();
     }
-
-SETTER(setLeft, left)
-SETTER(setRight, right)
-SETTER(setTop, top)
-SETTER(setBottom, bottom)
-
-#undef SETTER
+}
+void Borders::setRight(int right)
+{
+    if (m_right != right) {
+        m_right = right;
+        Q_EMIT rightChanged();
+    }
+}
+void Borders::setTop(int top)
+{
+    if (m_top != top) {
+        m_top = top;
+        Q_EMIT topChanged();
+    }
+}
+void Borders::setBottom(int bottom)
+{
+    if (m_bottom != bottom) {
+        m_bottom = bottom;
+        Q_EMIT bottomChanged();
+    }
+}
 
 void Borders::setAllBorders(int border)
 {

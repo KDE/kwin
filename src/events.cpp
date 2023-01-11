@@ -698,10 +698,8 @@ void X11Window::enterNotifyEvent(xcb_enter_notify_event_t *e)
         return; // care only about entering the whole frame
     }
 
-#define MOUSE_DRIVEN_FOCUS (!options->focusPolicyIsReasonable() || (options->focusPolicy() == Options::FocusFollowsMouse && options->isNextFocusPrefersMouse()))
-    if (e->mode == XCB_NOTIFY_MODE_NORMAL || (e->mode == XCB_NOTIFY_MODE_UNGRAB && MOUSE_DRIVEN_FOCUS)) {
-#undef MOUSE_DRIVEN_FOCUS
-
+    const bool mouseDrivenFocus = !options->focusPolicyIsReasonable() || (options->focusPolicy() == Options::FocusFollowsMouse && options->isNextFocusPrefersMouse());
+    if (e->mode == XCB_NOTIFY_MODE_NORMAL || (e->mode == XCB_NOTIFY_MODE_UNGRAB && mouseDrivenFocus)) {
         pointerEnterEvent(QPoint(e->root_x, e->root_y));
         return;
     }

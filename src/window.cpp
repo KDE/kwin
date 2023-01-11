@@ -2729,17 +2729,25 @@ bool Window::isActiveFullScreen() const
     return ac && (ac == this || !ac->isOnOutput(output()) || ac->allMainWindows().contains(const_cast<Window *>(this)));
 }
 
-#define BORDER(which)                                             \
-    int Window::border##which() const                             \
-    {                                                             \
-        return isDecorated() ? decoration()->border##which() : 0; \
-    }
+int Window::borderBottom() const
+{
+    return isDecorated() ? decoration()->borderBottom() : 0;
+}
 
-BORDER(Bottom)
-BORDER(Left)
-BORDER(Right)
-BORDER(Top)
-#undef BORDER
+int Window::borderLeft() const
+{
+    return isDecorated() ? decoration()->borderLeft() : 0;
+}
+
+int Window::borderRight() const
+{
+    return isDecorated() ? decoration()->borderRight() : 0;
+}
+
+int Window::borderTop() const
+{
+    return isDecorated() ? decoration()->borderTop() : 0;
+}
 
 void Window::updateInitialMoveResizeGeometry()
 {

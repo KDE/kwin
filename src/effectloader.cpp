@@ -364,21 +364,19 @@ EffectLoader::~EffectLoader()
 {
 }
 
-#define BOOL_MERGE(method)                                                         \
-    bool EffectLoader::method(const QString &name) const                           \
-    {                                                                              \
-        for (auto it = m_loaders.constBegin(); it != m_loaders.constEnd(); ++it) { \
-            if ((*it)->method(name)) {                                             \
-                return true;                                                       \
-            }                                                                      \
-        }                                                                          \
-        return false;                                                              \
-    }
+bool EffectLoader::hasEffect(const QString &name) const
+{
+    return std::any_of(m_loaders.cbegin(), m_loaders.cend(), [&name](const auto &loader) {
+        return loader->hasEffect(name);
+    });
+}
 
-BOOL_MERGE(hasEffect)
-BOOL_MERGE(isEffectSupported)
-
-#undef BOOL_MERGE
+bool EffectLoader::isEffectSupported(const QString &name) const
+{
+    return std::any_of(m_loaders.cbegin(), m_loaders.cend(), [&name](const auto &loader) {
+        return loader->isEffectSupported(name);
+    });
+}
 
 QStringList EffectLoader::listOfKnownEffects() const
 {

@@ -62,43 +62,30 @@ bool DBusInterface::showingDesktop() const
     return workspace()->showingDesktop();
 }
 
-// wrap void methods with no arguments to Workspace
-#define WRAP(name)                 \
-    void DBusInterface::name()     \
-    {                              \
-        Workspace::self()->name(); \
-    }
-
-WRAP(reconfigure)
-
-#undef WRAP
+void DBusInterface::reconfigure()
+{
+    Workspace::self()->reconfigure();
+}
 
 void DBusInterface::killWindow()
 {
     Workspace::self()->slotKillWindow();
 }
 
-#define WRAP(name)                        \
-    void DBusInterface::name()            \
-    {                                     \
-        workspace()->placement()->name(); \
-    }
+void DBusInterface::cascadeDesktop()
+{
+    workspace()->placement()->cascadeDesktop();
+}
 
-WRAP(cascadeDesktop)
-WRAP(unclutterDesktop)
+void DBusInterface::unclutterDesktop()
+{
+    workspace()->placement()->unclutterDesktop();
+}
 
-#undef WRAP
-
-// wrap returning methods with no arguments to Workspace
-#define WRAP(rettype, name)               \
-    rettype DBusInterface::name()         \
-    {                                     \
-        return Workspace::self()->name(); \
-    }
-
-WRAP(QString, supportInformation)
-
-#undef WRAP
+QString DBusInterface::supportInformation()
+{
+    return Workspace::self()->supportInformation();
+}
 
 QString DBusInterface::activeOutputName()
 {

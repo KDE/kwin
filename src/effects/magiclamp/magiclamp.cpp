@@ -181,14 +181,6 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
             }
         }
 
-#define SANITIZE_PROGRESS               \
-    if (p_progress[0] < 0) {            \
-        p_progress[0] = -p_progress[0]; \
-    }                                   \
-    if (p_progress[1] < 0) {            \
-        p_progress[1] = -p_progress[1]; \
-    }
-
 #define SET_QUADS(_SET_A_, _A_, _DA_, _SET_B_, _B_, _O0_, _O1_, _O2_, _O3_)                                                                      \
     quad[0]._SET_A_((icon._A_() + icon._DA_() * (quad[0]._A_() / geo._DA_()) - (quad[0]._A_() + geo._A_())) * p_progress[_O0_] + quad[0]._A_()); \
     quad[1]._SET_A_((icon._A_() + icon._DA_() * (quad[1]._A_() / geo._DA_()) - (quad[1]._A_() + geo._A_())) * p_progress[_O1_] + quad[1]._A_()); \
@@ -231,7 +223,8 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
                     lastQuad = quad;
                 }
 
-                SANITIZE_PROGRESS;
+                p_progress[0] = std::abs(p_progress[0]);
+                p_progress[1] = std::abs(p_progress[1]);
                 // x values are moved towards the center of the icon
                 SET_QUADS(setX, x, width, setY, y, 0, 0, 1, 1);
             }
@@ -253,7 +246,8 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
                 offset[0] = -offset[0];
                 offset[1] = -offset[1];
 
-                SANITIZE_PROGRESS;
+                p_progress[0] = std::abs(p_progress[0]);
+                p_progress[1] = std::abs(p_progress[1]);
                 // x values are moved towards the center of the icon
                 SET_QUADS(setX, x, width, setY, y, 0, 0, 1, 1);
             }
@@ -275,7 +269,8 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
                 offset[0] = -offset[0];
                 offset[1] = -offset[1];
 
-                SANITIZE_PROGRESS;
+                p_progress[0] = std::abs(p_progress[0]);
+                p_progress[1] = std::abs(p_progress[1]);
                 // y values are moved towards the center of the icon
                 SET_QUADS(setY, y, height, setX, x, 0, 1, 1, 0);
             }
@@ -294,7 +289,8 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
                     lastQuad = quad;
                 }
 
-                SANITIZE_PROGRESS;
+                p_progress[0] = std::abs(p_progress[0]);
+                p_progress[1] = std::abs(p_progress[1]);
                 // y values are moved towards the center of the icon
                 SET_QUADS(setY, y, height, setX, x, 0, 1, 1, 0);
             }
