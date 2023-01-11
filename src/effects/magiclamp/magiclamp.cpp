@@ -357,6 +357,7 @@ void MagicLampEffect::slotWindowUnminimized(EffectWindow *w)
     if (animation.timeLine.running()) {
         animation.timeLine.toggleDirection();
     } else {
+        animation.visibleRef = EffectWindowVisibleRef(w, EffectWindow::PAINT_DISABLED_BY_MINIMIZE);
         animation.timeLine.setDirection(TimeLine::Backward);
         animation.timeLine.setDuration(m_duration);
         animation.timeLine.setEasingCurve(QEasingCurve::Linear);
