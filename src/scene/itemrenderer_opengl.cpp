@@ -285,14 +285,9 @@ void ItemRendererOpenGL::renderItem(Item *item, int mask, const QRegion &region,
         shaderTraits |= ShaderTrait::AdjustSaturation;
     }
 
-    const GLVertexAttrib attribs[] = {
-        {VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position)},
-        {VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord)},
-    };
-
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
-    vbo->setAttribLayout(attribs, 2, sizeof(GLVertex2D));
+    vbo->setAttribLayout(GLVertexBuffer::GLVertex2DLayout, 2, sizeof(GLVertex2D));
 
     GLVertex2D *map = (GLVertex2D *)vbo->map(size);
 

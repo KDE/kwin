@@ -710,6 +710,9 @@ public:
      */
     static GLVertexBuffer *streamingBuffer();
 
+    static const GLVertexAttrib GLVertex2DLayout[2];
+    static const GLVertexAttrib GLVertex3DLayout[2];
+
 private:
     const std::unique_ptr<GLVertexBufferPrivate> d;
 };

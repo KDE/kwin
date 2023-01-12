@@ -1854,6 +1854,16 @@ GLvoid *GLVertexBufferPrivate::mapNextFreeRange(size_t size)
 // GLVertexBuffer
 //*********************************
 
+const GLVertexAttrib GLVertexBuffer::GLVertex2DLayout[2] = {
+    {VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position)},
+    {VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord)},
+};
+
+const GLVertexAttrib GLVertexBuffer::GLVertex3DLayout[2] = {
+    {VA_Position, 3, GL_FLOAT, offsetof(GLVertex3D, position)},
+    {VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex3D, texcoord)},
+};
+
 GLVertexBuffer::GLVertexBuffer(UsageHint hint)
     : d(std::make_unique<GLVertexBufferPrivate>(hint))
 {
