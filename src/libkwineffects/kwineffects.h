@@ -2963,6 +2963,45 @@ class KWINEFFECTS_EXPORT RenderGeometry : public QVector<GLVertex2D>
 {
 public:
     /**
+     * In what way should vertices snap to integer device coordinates?
+     *
+     * Vertices are converted to device coordinates before being sent to the
+     * rendering system. Depending on scaling factors, this may lead to device
+     * coordinates with fractional parts. For some cases, this may not be ideal
+     * as fractional coordinates need to be interpolated and can lead to
+     * "blurry" rendering. To avoid that, we can snap the vertices to integer
+     * device coordinates when they are added.
+     */
+    enum class VertexSnappingMode {
+        None, //< No rounding, device coordinates containing fractional parts
+              //  are passed directly to the rendering system.
+        Round, //< Perform a simple rounding, device coordinates will not have
+               //  any fractional parts.
+    };
+
+    /**
+     * The vertex snapping mode to use for this geometry.
+     *
+     * By default, this is VertexSnappingMode::Round.
+     */
+    inline VertexSnappingMode vertexSnappingMode() const
+    {
+        return m_vertexSnappingMode;
+    }
+    /**
+     * Set the vertex snapping mode to use for this geometry.
+     *
+     * Note that this doesn't change vertices retroactively, so you should set
+     * this before adding any vertices, or clear and rebuild the geometry after
+     * setting it.
+     *
+     * @param mode The new rounding mode.
+     */
+    void setVertexSnappingMode(VertexSnappingMode mode)
+    {
+        m_vertexSnappingMode = mode;
+    }
+    /**
      * Copy geometry data into another buffer.
      *
      * This is primarily intended for copying into a vertex buffer for rendering.
@@ -3012,6 +3051,9 @@ public:
      *                    device coordinates.
      */
     void appendSubQuad(const WindowQuad &quad, const QRectF &subquad, qreal deviceScale);
+
+private:
+    VertexSnappingMode m_vertexSnappingMode = VertexSnappingMode::Round;
 };
 
 class KWINEFFECTS_EXPORT WindowPrePaintData

@@ -1119,7 +1119,14 @@ void RenderGeometry::copy(std::span<GLVertex2D> destination)
 void RenderGeometry::appendWindowVertex(const WindowVertex &windowVertex, qreal deviceScale)
 {
     GLVertex2D glVertex;
-    glVertex.position = roundVector(QVector2D(windowVertex.x(), windowVertex.y()) * deviceScale);
+    switch (m_vertexSnappingMode) {
+    case VertexSnappingMode::None:
+        glVertex.position = QVector2D(windowVertex.x(), windowVertex.y() * deviceScale);
+        break;
+    case VertexSnappingMode::Round:
+        glVertex.position = roundVector(QVector2D(windowVertex.x(), windowVertex.y()) * deviceScale);
+        break;
+    }
     glVertex.texcoord = QVector2D(windowVertex.u(), windowVertex.v());
     append(glVertex);
 }
