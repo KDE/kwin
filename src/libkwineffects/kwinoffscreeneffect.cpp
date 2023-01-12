@@ -17,6 +17,7 @@ public:
     virtual ~OffscreenData();
     void setDirty();
     void setShader(GLShader *newShader);
+    void setVertexSnappingMode(RenderGeometry::VertexSnappingMode mode);
 
     void paint(EffectWindow *window, const QRegion &region,
                const WindowPaintData &data, const WindowQuadList &quads);
@@ -28,6 +29,7 @@ private:
     std::unique_ptr<GLFramebuffer> m_fbo;
     bool m_isDirty = true;
     GLShader *m_shader = nullptr;
+    RenderGeometry::VertexSnappingMode m_vertexSnappingMode = RenderGeometry::VertexSnappingMode::Round;
 };
 
 class OffscreenEffectPrivate
@@ -36,6 +38,7 @@ public:
     std::map<EffectWindow *, std::unique_ptr<OffscreenData>> windows;
     QMetaObject::Connection windowDamagedConnection;
     QMetaObject::Connection windowDeletedConnection;
+    RenderGeometry::VertexSnappingMode vertexSnappingMode = RenderGeometry::VertexSnappingMode::Round;
 };
 
 OffscreenEffect::OffscreenEffect(QObject *parent)
@@ -58,6 +61,7 @@ void OffscreenEffect::redirect(EffectWindow *window)
         return;
     }
     offscreenData = std::make_unique<OffscreenData>();
+    offscreenData->setVertexSnappingMode(d->vertexSnappingMode);
 
     if (d->windows.size() == 1) {
         setupConnections();
@@ -134,6 +138,11 @@ void OffscreenData::setShader(GLShader *newShader)
     m_shader = newShader;
 }
 
+void OffscreenData::setVertexSnappingMode(RenderGeometry::VertexSnappingMode mode)
+{
+    m_vertexSnappingMode = mode;
+}
+
 void OffscreenData::paint(EffectWindow *window, const QRegion &region,
                           const WindowPaintData &data, const WindowQuadList &quads)
 {
@@ -147,6 +156,7 @@ void OffscreenData::paint(EffectWindow *window, const QRegion &region,
     vbo->setAttribLayout(GLVertexBuffer::GLVertex2DLayout, 2, sizeof(GLVertex2D));
 
     RenderGeometry geometry;
+    geometry.setVertexSnappingMode(m_vertexSnappingMode);
     for (auto &quad : quads) {
         geometry.appendWindowQuad(quad, scale);
     }
@@ -247,6 +257,14 @@ void OffscreenEffect::destroyConnections()
 
     d->windowDamagedConnection = {};
     d->windowDeletedConnection = {};
+}
+
+void OffscreenEffect::setVertexSnappingMode(RenderGeometry::VertexSnappingMode mode)
+{
+    d->vertexSnappingMode = mode;
+    for (auto &window : std::as_const(d->windows)) {
+        window.second->setVertexSnappingMode(mode);
+    }
 }
 
 class CrossFadeWindowData : public OffscreenData
