@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-10 00:57+0000\n"
-"PO-Revision-Date: 2022-12-25 07:09+0100\n"
+"POT-Creation-Date: 2023-01-12 00:56+0000\n"
+"PO-Revision-Date: 2023-01-11 10:00+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -50,6 +50,8 @@ msgid ""
 "Select a position for color picking with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
+"აირჩიეთ ფერის ასაღები ადგილი მარცხენა წკაპით ან Enter-ით.\n"
+"გასაუქმებლად მარჯვენა წკაპი ან Esc."
 
 #: desktopgrid/desktopgrid_config.cpp:49 invert/invert_config.cpp:35
 #: magnifier/magnifier_config.cpp:55 mouseclick/mouseclick_config.cpp:48
@@ -494,12 +496,12 @@ msgstr "ფონტი:"
 msgid "Show Text:"
 msgstr "ტექსტის ჩვენება:"
 
-#: mousemark/mousemark.cpp:36
+#: mousemark/mousemark.cpp:39
 #, kde-format
 msgid "Clear All Mouse Marks"
 msgstr "თაგუნას კვალის სრულად გასუფთავება"
 
-#: mousemark/mousemark.cpp:42 mousemark/mousemark_config.cpp:59
+#: mousemark/mousemark.cpp:45 mousemark/mousemark_config.cpp:59
 #, kde-format
 msgid "Clear Last Mouse Mark"
 msgstr "თაგუნას ბოლო კვალის ფასუფთავება"
@@ -533,7 +535,7 @@ msgstr "&ფერი:"
 #: mousemark/mousemark_config.ui:82
 #, kde-format
 msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
-msgstr ""
+msgstr "დახატეთ თაგუნით Shift+Meta ღილაკების დაჭერით და თაგუნას მოძრაობით."
 
 #: outputlocator/outputlocator.cpp:48
 #, kde-format
@@ -622,6 +624,8 @@ msgid ""
 "Select window to screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
+"ფანჯრის ანაბეჭდის მარცხენა წკაპით ან Enter-ით გადაღება.\n"
+"გასაუქმებლად Esc ან მარჯვენა წკაპი."
 
 #: screenshot/screenshotdbusinterface1.cpp:803
 #: screenshot/screenshotdbusinterface2.cpp:495
@@ -1057,6 +1061,7 @@ msgstr "ჩამოწევა"
 #, kde-format
 msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
 msgstr ""
+"გადიდების და დაპატარავების გადიდების კოეფიციენტის შენარჩუნებით მოხდენა."
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: zoom/zoom_config.ui:28

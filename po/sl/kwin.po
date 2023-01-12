@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1641852 2023-01-10 07:51:00Z matjazjeran $
+# $Id: kwin.po 1641979 2023-01-12 01:47:04Z scripty $
 # $Source$
 #
 #
@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-10 00:57+0000\n"
-"PO-Revision-Date: 2023-01-09 08:25+0100\n"
+"POT-Creation-Date: 2023-01-12 00:56+0000\n"
+"PO-Revision-Date: 2023-01-11 07:48+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -2274,10 +2274,9 @@ msgid "&Shade"
 msgstr "Zvi&j"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "Brez naslovne letvice in okvirja"
+msgstr "Brez &naslovne letvice in okvirja"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2476,10 +2475,9 @@ msgid "Make Window Fullscreen"
 msgstr "Okno v celozaslonski način"
 
 #: useractions.cpp:1009
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "Brez naslovne letvice in okvirja"
+msgstr "Preklopi naslovno letvico in okvir"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2797,7 +2795,7 @@ msgstr "Preklopi na eno namizje navzdol"
 msgid "Switch to Desktop %1"
 msgstr "Preklopi na namizje %1"
 
-#: window.cpp:3440
+#: window.cpp:3448
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

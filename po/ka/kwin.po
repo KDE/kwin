@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-10 00:57+0000\n"
-"PO-Revision-Date: 2023-01-04 07:36+0100\n"
+"POT-Creation-Date: 2023-01-12 00:56+0000\n"
+"PO-Revision-Date: 2023-01-11 09:57+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -1184,6 +1184,8 @@ msgid ""
 "Select window to force close with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
+"აირჩიეთ ფანჯარა, რომლის ძალით დახურვაც გნებავთ მარცხენა წკაპით ან Enter-ით.\n"
+"გასაუქმებლად Esc ან მარჯვენა წკაპი."
 
 #: main.cpp:179
 #, kde-format
@@ -1528,12 +1530,12 @@ msgstr "%1-ზე გაშვებული ფანჯრის დაჩრ
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:311
 #, kde-format
 msgid "Toggle keep above for running window on %1"
-msgstr ""
+msgstr "%1-ზე გაშვებული ფანჯრის ყველაზე ზემოთ ქონის გადართვა"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:314
 #, kde-format
 msgid "Toggle keep below running window on %1"
-msgstr ""
+msgstr "%1-ზე გაშვებული ფანჯრის ყველაზე ქვემოთ ქონის გადართვა"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:318
 #, kde-format
@@ -2227,10 +2229,9 @@ msgid "&Shade"
 msgstr "&დაჩრდილვა"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "სათაურისა და ჩარჩოს გარეშე"
+msgstr "&სათაურისა და ჩარჩოს გარეშე"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2429,10 +2430,9 @@ msgid "Make Window Fullscreen"
 msgstr "ფანჯრის მთელ ეკრანზე გატანა"
 
 #: useractions.cpp:1009
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "სათაურისა და ჩარჩოს გარეშე"
+msgstr "ფანჯრის სათაურის ზოლისა და ჩარჩოს ხილვადობის გადართვა"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2502,42 +2502,42 @@ msgstr "ფანჯრის ვერტიკალურად შემც�
 #: useractions.cpp:1037
 #, kde-format
 msgid "Quick Tile Window to the Left"
-msgstr ""
+msgstr "ფანჯრის ეკრანის მარცხენა მხარეს გაშლა"
 
 #: useractions.cpp:1039
 #, kde-format
 msgid "Quick Tile Window to the Right"
-msgstr ""
+msgstr "ფანჯრის ეკრანის მარჯვენა მხარეს გაშლა"
 
 #: useractions.cpp:1041
 #, kde-format
 msgid "Quick Tile Window to the Top"
-msgstr ""
+msgstr "ფანჯრის ეკრანის ზედა მხარეს გაშლა"
 
 #: useractions.cpp:1043
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
-msgstr ""
+msgstr "ფანჯრის ეკრანის ქვედა მხარეს გაშლა"
 
 #: useractions.cpp:1045
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
-msgstr ""
+msgstr "ფანჯრის ეკრანის ზედა მარცხენა მხარეს გაშლა"
 
 #: useractions.cpp:1047
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
-msgstr ""
+msgstr "ფანჯრის ეკრანის ქვედა მარცხენა მხარეს გაშლა"
 
 #: useractions.cpp:1049
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
-msgstr ""
+msgstr "ფანჯრის ეკრანის ზედა მარჯვენა მხარეს გაშლა"
 
 #: useractions.cpp:1051
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
-msgstr ""
+msgstr "ფანჯრის ეკრანის ქვედა მარჯვენა მხარეს გაშლა"
 
 #: useractions.cpp:1053
 #, kde-format
@@ -2747,7 +2747,7 @@ msgstr "ერთი სამუშაო მაგიდის დაბლა
 msgid "Switch to Desktop %1"
 msgstr "%1-ე სამუშაო მაგიდაზე გადართვა"
 
-#: window.cpp:3440
+#: window.cpp:3448
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
