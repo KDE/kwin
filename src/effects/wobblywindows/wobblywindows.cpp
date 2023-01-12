@@ -127,6 +127,8 @@ WobblyWindowsEffect::WobblyWindowsEffect()
     connect(effects, &EffectsHandler::windowStepUserMovedResized, this, &WobblyWindowsEffect::slotWindowStepUserMovedResized);
     connect(effects, &EffectsHandler::windowFinishUserMovedResized, this, &WobblyWindowsEffect::slotWindowFinishUserMovedResized);
     connect(effects, &EffectsHandler::windowMaximizedStateChanged, this, &WobblyWindowsEffect::slotWindowMaximizeStateChanged);
+
+    setVertexSnappingMode(RenderGeometry::VertexSnappingMode::None);
 }
 
 WobblyWindowsEffect::~WobblyWindowsEffect()

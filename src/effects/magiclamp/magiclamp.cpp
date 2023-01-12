@@ -23,6 +23,8 @@ MagicLampEffect::MagicLampEffect()
     connect(effects, &EffectsHandler::windowDeleted, this, &MagicLampEffect::slotWindowDeleted);
     connect(effects, &EffectsHandler::windowMinimized, this, &MagicLampEffect::slotWindowMinimized);
     connect(effects, &EffectsHandler::windowUnminimized, this, &MagicLampEffect::slotWindowUnminimized);
+
+    setVertexSnappingMode(RenderGeometry::VertexSnappingMode::None);
 }
 
 bool MagicLampEffect::supported()
