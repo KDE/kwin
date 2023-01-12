@@ -1182,6 +1182,18 @@ void RenderGeometry::appendSubQuad(const WindowQuad &quad, const QRectF &subquad
     append(vertices[2]);
 }
 
+void RenderGeometry::postProcessTextureCoordinates(const QMatrix4x4 &textureMatrix)
+{
+    if (!textureMatrix.isIdentity()) {
+        const QVector2D coeff(textureMatrix(0, 0), textureMatrix(1, 1));
+        const QVector2D offset(textureMatrix(0, 3), textureMatrix(1, 3));
+
+        for (auto &vertex : (*this)) {
+            vertex.texcoord = vertex.texcoord * coeff + offset;
+        }
+    }
+}
+
 /***************************************************************
  Motion1D
 ***************************************************************/

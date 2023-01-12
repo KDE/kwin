@@ -304,16 +304,7 @@ void ItemRendererOpenGL::renderItem(Item *item, int mask, const QRegion &region,
         renderNode.firstVertex = v;
         renderNode.vertexCount = renderNode.geometry.count();
 
-        const QMatrix4x4 textureMatrix = renderNode.texture->matrix(renderNode.coordinateType);
-        if (!textureMatrix.isIdentity()) {
-            // Adjust the vertex' texture coordinates with the specified matrix.
-            const QVector2D coeff(textureMatrix(0, 0), textureMatrix(1, 1));
-            const QVector2D offset(textureMatrix(0, 3), textureMatrix(1, 3));
-
-            for (auto &vertex : renderNode.geometry) {
-                vertex.texcoord = vertex.texcoord * coeff + offset;
-            }
-        }
+        renderNode.geometry.postProcessTextureCoordinates(renderNode.texture->matrix(renderNode.coordinateType));
 
         renderNode.geometry.copy(std::span(&map[v], renderNode.geometry.count()));
         v += renderNode.geometry.count();

@@ -3051,6 +3051,17 @@ public:
      *                    device coordinates.
      */
     void appendSubQuad(const WindowQuad &quad, const QRectF &subquad, qreal deviceScale);
+    /**
+     * Modify this geometry's texture coordinates based on a matrix.
+     *
+     * This is primarily intended to convert from non-normalised to normalised
+     * texture coordinates.
+     *
+     * @param textureMatrix The texture matrix to use for modifying the
+     *                      texture coordinates. Note that only the 2D scale and
+     *                      translation are used.
+     */
+    void postProcessTextureCoordinates(const QMatrix4x4 &textureMatrix);
 
 private:
     VertexSnappingMode m_vertexSnappingMode = VertexSnappingMode::Round;
