@@ -140,26 +140,22 @@ void OffscreenData::paint(EffectWindow *window, const QRegion &region,
     GLShader *shader = m_shader ? m_shader : ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::Modulate | ShaderTrait::AdjustSaturation);
     ShaderBinder binder(shader);
 
-    const bool indexedQuads = GLVertexBuffer::supportsIndexedQuads();
-    const GLenum primitiveType = indexedQuads ? GL_QUADS : GL_TRIANGLES;
-    const int verticesPerQuad = indexedQuads ? 4 : 6;
-
     const qreal scale = effects->renderTargetScale();
-
-    const GLVertexAttrib attribs[] = {
-        {VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position)},
-        {VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord)},
-    };
 
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
-    vbo->setAttribLayout(attribs, 2, sizeof(GLVertex2D));
-    const size_t size = verticesPerQuad * quads.count() * sizeof(GLVertex2D);
-    GLVertex2D *map = static_cast<GLVertex2D *>(vbo->map(size));
+    vbo->setAttribLayout(GLVertexBuffer::GLVertex2DLayout, 2, sizeof(GLVertex2D));
 
-    quads.makeInterleavedArrays(primitiveType, map, m_texture->matrix(NormalizedCoordinates), scale);
+    RenderGeometry geometry;
+    for (auto &quad : quads) {
+        geometry.appendWindowQuad(quad, scale);
+    }
+    geometry.postProcessTextureCoordinates(m_texture->matrix(NormalizedCoordinates));
 
+    GLVertex2D *map = static_cast<GLVertex2D *>(vbo->map(geometry.count() * sizeof(GLVertex2D)));
+    geometry.copy(std::span(map, geometry.count()));
     vbo->unmap();
+
     vbo->bindArrays();
 
     const qreal rgb = data.brightness() * data.opacity();
@@ -185,7 +181,7 @@ void OffscreenData::paint(EffectWindow *window, const QRegion &region,
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
     m_texture->bind();
-    vbo->draw(clipRegion, primitiveType, 0, verticesPerQuad * quads.count(), clipping);
+    vbo->draw(clipRegion, GL_TRIANGLES, 0, geometry.count(), clipping);
     m_texture->unbind();
 
     glDisable(GL_BLEND);
