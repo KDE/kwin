@@ -276,7 +276,7 @@ bool KWinTabBoxConfigForm::isShortcutsChanged() const
     for (const auto &widget : {ui->scAll, ui->scAllReverse, ui->scCurrent, ui->scCurrentReverse}) {
         const QString actionName = widget->property("shortcutAction").toString();
         QAction *action = m_actionCollection->action(actionName);
-        const auto shortcuts = KGlobalAccel::self()->shortcut(action);
+        const auto shortcuts = KGlobalAccel::self()->globalShortcut(QStringLiteral("kwin"), actionName);
         const QKeySequence savedShortcut = shortcuts.isEmpty() ? QKeySequence() : shortcuts.first();
 
         if (action->shortcut() != savedShortcut) {
