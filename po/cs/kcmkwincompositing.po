@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-06 00:47+0000\n"
+"POT-Creation-Date: 2023-01-13 00:58+0000\n"
 "PO-Revision-Date: 2023-01-04 09:54+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -151,19 +151,20 @@ msgstr "Preferovat plynulejší animace"
 msgid "Force smoothest animations"
 msgstr "Vynutit nejplynulejší animace"
 
-#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_AllowTearing)
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowTearing)
 #: compositing.ui:213
 #, kde-format
-msgid "Allows applications to cause screen tearing in fullscreen."
-msgstr "Povolí aplikacím trhání při zobrazení přes celou obrazovku."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowTearing)
-#: compositing.ui:216
-#, kde-format
-msgid "Allow tearing in fullscreen"
-msgstr "Povolit trhání při zobrazení přes celou obrazovku"
+msgid ""
+"Reduce latency by allowing screen tearing artifacts in fullscreen windows"
+msgstr ""
 
 #: main.cpp:79
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Znovu povolit detekci OpenGL"
+
+#~ msgid "Allows applications to cause screen tearing in fullscreen."
+#~ msgstr "Povolí aplikacím trhání při zobrazení přes celou obrazovku."
+
+#~ msgid "Allow tearing in fullscreen"
+#~ msgstr "Povolit trhání při zobrazení přes celou obrazovku"

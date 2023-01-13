@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-17 00:51+0000\n"
-"PO-Revision-Date: 2023-01-02 07:11\n"
+"PO-Revision-Date: 2023-01-12 10:31\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -20,29 +20,29 @@ msgstr ""
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr ""
+msgstr "Tyson Tan"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
+msgstr "tysontan@tysontan.com"
 
 #: kcmkwinxwayland.cpp:30
 #, kde-format
 msgid "Legacy X11 App Support"
-msgstr ""
+msgstr "旧式 X11 应用程序支持"
 
 #: kcmkwinxwayland.cpp:32
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in other apps"
-msgstr ""
+msgstr "允许旧式 X11 应用程序读取在其他应用程序中的键盘输入"
 
 #: package/contents/ui/main.qml:19
 #, kde-format
 msgid ""
 "This module lets configure which keyboard events are forwarded to X11 apps "
 "regardless of their focus."
-msgstr ""
+msgstr "此模块用于配置被转发到 X11 应用的键盘时间，而不论其焦点位置。"
 
 #: package/contents/ui/main.qml:49
 #, kde-format
@@ -52,31 +52,34 @@ msgid ""
 "disabled by default for security reasons. If you need to use such apps, you "
 "can choose your preferred balance of security and functionality here."
 msgstr ""
+"旧式 X11 应用程序需要通过读取其他应用程序中的键盘输入事件才能激活使用全局键盘"
+"快捷键的功能。出于安全考虑，此功能默认是禁用的。如果您需要使用这种应用程序，"
+"您可以按需在安全和功能之间作出权衡。"
 
 #: package/contents/ui/main.qml:66
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
-msgstr ""
+msgstr "允许旧式 X11 应用程序读取在所有应用程序中的键盘输入："
 
 #: package/contents/ui/main.qml:67
 #, kde-format
 msgid "Never"
-msgstr ""
+msgstr "永不"
 
 #: package/contents/ui/main.qml:70
 #, kde-format
 msgid "Only Meta, Control, Alt, and Shift keys"
-msgstr ""
+msgstr "仅 Meta、Ctrl、Alt、Shift 键"
 
 #: package/contents/ui/main.qml:73
 #, kde-format
 msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
-msgstr ""
+msgstr "所有键，但仅在按下了 Meta、Ctrl、Alt、Shift 键时"
 
 #: package/contents/ui/main.qml:77
 #, kde-format
 msgid "Always"
-msgstr ""
+msgstr "总是"
 
 #: package/contents/ui/main.qml:84
 #, kde-format
@@ -85,3 +88,5 @@ msgid ""
 "session by permitting malicious software to steal passwords and spy on the "
 "text that you type. Make sure you understand and accept this risk."
 msgstr ""
+"请注意，使用这些设置将使得恶意软件能够盗取密码、监听您输入的内容，从而降低 "
+"X11 桌面进程的系统安全性。请确保您充分理解并接受随之而来的风险。"

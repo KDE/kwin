@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-06 00:47+0000\n"
+"POT-Creation-Date: 2023-01-13 00:58+0000\n"
 "PO-Revision-Date: 2022-12-31 17:41+0000\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: English <kde-i18n-doc@kde.org>\n"
@@ -154,22 +154,23 @@ msgstr "Prefer smoother animations"
 msgid "Force smoothest animations"
 msgstr "Force smoothest animations"
 
-#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_AllowTearing)
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowTearing)
 #: compositing.ui:213
 #, kde-format
-msgid "Allows applications to cause screen tearing in fullscreen."
-msgstr "Allows applications to cause screen tearing in fullscreen."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowTearing)
-#: compositing.ui:216
-#, kde-format
-msgid "Allow tearing in fullscreen"
-msgstr "Allow tearing in fullscreen"
+msgid ""
+"Reduce latency by allowing screen tearing artifacts in fullscreen windows"
+msgstr ""
 
 #: main.cpp:79
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Re-enable OpenGL detection"
+
+#~ msgid "Allows applications to cause screen tearing in fullscreen."
+#~ msgstr "Allows applications to cause screen tearing in fullscreen."
+
+#~ msgid "Allow tearing in fullscreen"
+#~ msgstr "Allow tearing in fullscreen"
 
 #~ msgid ""
 #~ "Scale method \"Accurate\" is not supported by all hardware and can cause "

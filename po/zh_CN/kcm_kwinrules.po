@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-11 00:48+0000\n"
-"PO-Revision-Date: 2023-01-02 07:11\n"
+"PO-Revision-Date: 2023-01-12 10:31\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -765,7 +765,7 @@ msgstr "阻止显示特效合成"
 #: rulesmodel.cpp:703
 #, kde-format
 msgid "Window class not available"
-msgstr ""
+msgstr "窗口类不可用"
 
 #: rulesmodel.cpp:704
 #, kde-kuit-format
@@ -776,6 +776,9 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"此应用程序没有为它的窗口提供类，所以 KWin 无法通过窗口类来匹配并应用任何规"
+"则。如果您仍然想要为该应用程序应用规则，请尝试匹配其他属性，例如窗口标题。"
+"<nl/><nl/>请考虑将此问题作为程序缺陷报告给该应用程序的开发人员。"
 
 #: rulesmodel.cpp:738
 #, kde-format
@@ -928,7 +931,7 @@ msgstr "终极"
 #: rulesmodel.cpp:865
 #, kde-format
 msgid "Unmanaged window"
-msgstr ""
+msgstr "未管理窗口"
 
 #: rulesmodel.cpp:866
 #, kde-format

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-12 00:56+0000\n"
-"PO-Revision-Date: 2023-01-02 07:11\n"
+"PO-Revision-Date: 2023-01-12 10:31\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -199,7 +199,7 @@ msgstr "自然"
 #: desktopgrid/desktopgrid_config.ui:147
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "无"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: desktopgrid/desktopgrid_config.ui:155
@@ -319,7 +319,7 @@ msgstr "开启/关闭窗口反相显示"
 #: invert/invert.cpp:56
 #, kde-format
 msgid "Invert Screen Colors"
-msgstr ""
+msgstr "屏幕反色"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: login/package/contents/ui/config.ui:17
@@ -736,42 +736,42 @@ msgstr " %"
 #: tileseditor/tileseditoreffect.cpp:29
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr ""
+msgstr "瓷贴编辑器开关"
 
 #: tileseditor/qml/main.qml:147
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "边距："
 
 #: tileseditor/qml/main.qml:157
 #, kde-format
 msgid "Load Layout..."
-msgstr ""
+msgstr "加载布局..."
 
 #: tileseditor/qml/main.qml:271
 #, kde-format
 msgid "Close"
-msgstr ""
+msgstr "关闭"
 
 #: tileseditor/qml/TileDelegate.qml:171
 #, kde-format
 msgid "Split Horizontally"
-msgstr ""
+msgstr "水平分割"
 
 #: tileseditor/qml/TileDelegate.qml:178
 #, kde-format
 msgid "Split Vertically"
-msgstr ""
+msgstr "垂直分割"
 
 #: tileseditor/qml/TileDelegate.qml:186 tileseditor/qml/TileDelegate.qml:215
 #, kde-format
 msgid "Add Floating Tile"
-msgstr ""
+msgstr "添加浮动瓷贴"
 
 #: tileseditor/qml/TileDelegate.qml:195
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "删除"
 
 #: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
 #, kde-format
@@ -941,7 +941,7 @@ msgstr "无窗口"
 #: windowview/qml/main.qml:120
 #, kde-format
 msgid "Filter windows…"
-msgstr ""
+msgstr "筛选窗口…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: wobblywindows/wobblywindows_config.ui:20

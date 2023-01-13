@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-06 00:47+0000\n"
+"POT-Creation-Date: 2023-01-13 00:58+0000\n"
 "PO-Revision-Date: 2023-01-06 10:31\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -156,22 +156,23 @@ msgstr "Аддаваць перавагу больш плаўнай анімац
 msgid "Force smoothest animations"
 msgstr "Прымусовая плаўная анімацыя"
 
-#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_AllowTearing)
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowTearing)
 #: compositing.ui:213
 #, kde-format
-msgid "Allows applications to cause screen tearing in fullscreen."
-msgstr "Дазваляе праграмам разрыванне экрана ў поўнаэкранным рэжыме."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowTearing)
-#: compositing.ui:216
-#, kde-format
-msgid "Allow tearing in fullscreen"
-msgstr "Дазволіць разрыванне ў поўнаэкранным рэжыме"
+msgid ""
+"Reduce latency by allowing screen tearing artifacts in fullscreen windows"
+msgstr ""
 
 #: main.cpp:79
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Паўторна ўключыць выяўленне OpenGL"
+
+#~ msgid "Allows applications to cause screen tearing in fullscreen."
+#~ msgstr "Дазваляе праграмам разрыванне экрана ў поўнаэкранным рэжыме."
+
+#~ msgid "Allow tearing in fullscreen"
+#~ msgstr "Дазволіць разрыванне ў поўнаэкранным рэжыме"
 
 #, fuzzy
 #~| msgid "OpenGL"

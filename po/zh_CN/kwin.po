@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-12 00:56+0000\n"
-"PO-Revision-Date: 2023-01-02 07:11\n"
+"PO-Revision-Date: 2023-01-12 10:31\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -47,16 +47,20 @@ msgid ""
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
+"<b>OpenGL 渲染模式 (默认设置) 曾经导致本机的 KWin 崩溃。</b><br>该情况可能是"
+"当时安装的旧版显示驱动程序的缺陷所致。<p>如果您的系统已经更新为更加稳定的新版"
+"显示驱动程序，<br>您可以重置此保护措施，<b>但不排除这会导致 KWin 立即崩溃！</"
+"b></p>"
 
 #: composite.cpp:1071
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
-msgstr ""
+msgstr "需要的 X 扩展功能(XComposite and XDamage)不可用。"
 
 #: composite.cpp:1074
 #, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr ""
+msgstr "GLX/OpenGL 不可用。"
 
 #: debug_console.cpp:79 debug_console.cpp:84
 #, kde-format
@@ -557,7 +561,7 @@ msgstr "平板模式"
 #, kde-format
 msgctxt "A hardware switch"
 msgid "Switch"
-msgstr "切换"
+msgstr "开关"
 
 #: debug_console.cpp:485
 #, kde-format
@@ -621,7 +625,7 @@ msgstr "修饰符"
 #: debug_console.cpp:526
 #, kde-format
 msgid "Tablet Tool Button"
-msgstr "数位板画笔按钮"
+msgstr "数位板笔身按钮"
 
 #: debug_console.cpp:527 debug_console.cpp:541
 #, kde-format
@@ -637,7 +641,7 @@ msgstr "按下"
 #: debug_console.cpp:571
 #, kde-format
 msgid "Tablet"
-msgstr "平板"
+msgstr "数位板"
 
 #: debug_console.cpp:540
 #, kde-format
@@ -1151,17 +1155,17 @@ msgstr "等待更长时间"
 #: input.cpp:1984
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "移动数位板到下一个输出设备"
 
 #: input.cpp:2063
 #, kde-format
 msgid "Tablet moved to %1"
-msgstr ""
+msgstr "数位板已经移动到 %1"
 
 #: input.cpp:2063
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "数位板已切换输出设备"
 
 #: input.cpp:3040
 #, kde-format
@@ -1333,7 +1337,7 @@ msgstr "通过 drm 结点渲染。"
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
-msgstr ""
+msgstr "从 locale1 提取本地化信息，而不从用户配置中提取。"
 
 #: main_wayland.cpp:386
 #, kde-format
@@ -2090,20 +2094,20 @@ msgstr "桌面文件名规则类型"
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "无法定位软件包元数据"
 
 #: scripting/genericscriptedconfig.cpp:84
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "%1 不包含有效的 metadata.json 文件"
 
 #: scripting/genericscriptedconfig.cpp:90
 #: scripting/genericscriptedconfig.cpp:96
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "%1 不存在"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2235,10 +2239,9 @@ msgid "&Shade"
 msgstr "折叠(&S)"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "无标题栏和边框"
+msgstr ""
 
 #: useractions.cpp:280
 #, kde-format
@@ -2311,7 +2314,7 @@ msgstr "在活动中显示"
 #: useractions.cpp:525
 #, kde-format
 msgid "Move &To Current Desktop"
-msgstr ""
+msgstr "移动到当前桌面(&T)"
 
 #: useractions.cpp:535 useractions.cpp:602
 #, kde-format
@@ -2355,10 +2358,9 @@ msgid "&All Activities"
 msgstr "全部活动(&A)"
 
 #: useractions.cpp:776
-#, fuzzy, kde-format
-#| msgid "Move to %1 %2"
+#, kde-format
 msgid "Move to %1"
-msgstr "移动到 %1 %2"
+msgstr "移动到 %1"
 
 #: useractions.cpp:901
 #, kde-format
@@ -2438,10 +2440,9 @@ msgid "Make Window Fullscreen"
 msgstr "将窗口放至全屏"
 
 #: useractions.cpp:1009
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "无标题栏和边框"
+msgstr ""
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2571,12 +2572,12 @@ msgstr "切换到左边的窗口"
 #: useractions.cpp:1061
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr ""
+msgstr "提高活动窗口不透明度 5%"
 
 #: useractions.cpp:1063
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr ""
+msgstr "降低活动窗口不透明度 5%"
 
 #: useractions.cpp:1066
 #, kde-format
@@ -2636,22 +2637,22 @@ msgstr "窗口到前一屏幕"
 #: useractions.cpp:1102
 #, kde-format
 msgid "Window One Screen to the Right"
-msgstr ""
+msgstr "窗口右移一个屏幕"
 
 #: useractions.cpp:1104
 #, kde-format
 msgid "Window One Screen to the Left"
-msgstr ""
+msgstr "窗口左移一个屏幕"
 
 #: useractions.cpp:1106
 #, kde-format
 msgid "Window One Screen Up"
-msgstr ""
+msgstr "窗口上移一个屏幕"
 
 #: useractions.cpp:1108
 #, kde-format
 msgid "Window One Screen Down"
-msgstr ""
+msgstr "窗口下移一个屏幕"
 
 #: useractions.cpp:1112
 #, kde-format
@@ -2671,22 +2672,22 @@ msgstr "切换到上一个屏幕"
 #: useractions.cpp:1121
 #, kde-format
 msgid "Switch to Screen to the Right"
-msgstr ""
+msgstr "切换到右边的屏幕"
 
 #: useractions.cpp:1123
 #, kde-format
 msgid "Switch to Screen to the Left"
-msgstr ""
+msgstr "切换到左边的屏幕"
 
 #: useractions.cpp:1125
 #, kde-format
 msgid "Switch to Screen Above"
-msgstr ""
+msgstr "切换到上边的屏幕"
 
 #: useractions.cpp:1127
 #, kde-format
 msgid "Switch to Screen Below"
-msgstr ""
+msgstr "切换到下边的屏幕"
 
 #: useractions.cpp:1130
 #, kde-format
@@ -2784,6 +2785,3 @@ msgstr ""
 "正在使用什么 OpenGL 驱动，和哪些特效正在运行。\n"
 "请将此本文下面的信息贴至一个剪贴板服务，\n"
 "例如 https://paste.kde.org ，而不是直接贴到请求支持的贴子中。\n"
-
-#~ msgid "&No Border"
-#~ msgstr "无边框(&N)"
