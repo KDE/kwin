@@ -148,6 +148,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
     QVERIFY(reply.isValid());
     QVERIFY(!reply.isError());
     auto windowData = reply.value();
+    windowData.remove(QStringLiteral("uuid"));
     QCOMPARE(windowData, expectedData);
 
     auto verifyProperty = [window](const QString &name) {
@@ -293,6 +294,7 @@ void TestDbusInterface::testGetWindowInfoX11Client()
     // not testing clientmachine as that is system dependent due to that also not testing localhost
     windowData.remove(QStringLiteral("clientMachine"));
     windowData.remove(QStringLiteral("localhost"));
+    windowData.remove(QStringLiteral("uuid"));
     QCOMPARE(windowData, expectedData);
 
     auto verifyProperty = [window](const QString &name) {

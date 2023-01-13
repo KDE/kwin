@@ -177,6 +177,7 @@ QVariantMap clientToVariantMap(const Window *c)
             {QStringLiteral("skipSwitcher"), c->skipSwitcher()},
             {QStringLiteral("maximizeHorizontal"), c->maximizeMode() & MaximizeHorizontal},
             {QStringLiteral("maximizeVertical"), c->maximizeMode() & MaximizeVertical},
+            {QStringLiteral("uuid"), c->internalId().toString()},
 #if KWIN_BUILD_ACTIVITIES
             {QStringLiteral("activities"), c->activities()},
 #endif
