@@ -144,9 +144,15 @@ void KWinTabBoxConfig::initLayoutLists()
     const auto lnfPackages = availableLnFPackages();
     for (const auto &package : lnfPackages) {
         const auto &metaData = package.metadata();
+
+        const QString switcherFile = package.filePath("windowswitcher", QStringLiteral("WindowSwitcher.qml"));
+        if (switcherFile.isEmpty()) {
+            // Skip lnfs that don't actually ship a switcher
+            continue;
+        }
         layoutNames << metaData.name();
         layoutPlugins << metaData.pluginId();
-        layoutPaths << package.filePath("windowswitcher", QStringLiteral("WindowSwitcher.qml"));
+        layoutPaths << switcherFile;
     }
 
     for (const auto &offer : offers) {
