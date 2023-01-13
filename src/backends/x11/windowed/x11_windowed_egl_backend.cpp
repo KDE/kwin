@@ -118,8 +118,13 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame()
 
 bool X11WindowedEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    const QImage buffer = m_texture->toImage().mirrored(false, true);
-    m_output->cursor()->update(buffer, m_hotspot);
+    QImage buffer(m_framebuffer->size(), QImage::Format_RGBA8888_Premultiplied);
+
+    GLFramebuffer::pushFramebuffer(m_framebuffer.get());
+    glReadPixels(0, 0, buffer.width(), buffer.height(), GL_RGBA, GL_UNSIGNED_BYTE, buffer.bits());
+    GLFramebuffer::popFramebuffer();
+
+    m_output->cursor()->update(buffer.mirrored(false, true), m_hotspot);
 
     return true;
 }
