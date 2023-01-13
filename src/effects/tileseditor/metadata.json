@@ -20,6 +20,7 @@
         "Description[uk]": "Редактор для мозаїчних областей",
         "Description[vi]": "Trình biên tập các vùng lát",
         "Description[x-test]": "xxEditor for the tiling areasxx",
+        "Description[zh_CN]": "瓷贴区域的编辑器",
         "EnabledByDefault": true,
         "Id": "tileseditor",
         "License": "GPL",
@@ -42,7 +43,8 @@
         "Name[tr]": "Döşeme Düzenleyici",
         "Name[uk]": "Редактор мозаїк",
         "Name[vi]": "Trình biên tập lát",
-        "Name[x-test]": "xxTiling Editorxx"
+        "Name[x-test]": "xxTiling Editorxx",
+        "Name[zh_CN]": "瓷贴编辑器"
     },
     "X-KDE-ConfigModule": "kwin_tileseditor_config"
 }

@@ -42,7 +42,16 @@
         "EnabledByDefault": true,
         "Id": "contrast",
         "License": "GPL",
-        "Name": "Background Contrast"
+        "Name": "Background Contrast",
+        "Name[bg]": "Контраст на фона",
+        "Name[ca@valencia]": "Contrast del fons",
+        "Name[ca]": "Contrast del fons",
+        "Name[eu]": "Atzeko planoaren kontrastea",
+        "Name[nl]": "Contrast in achtergrond",
+        "Name[ta]": "பின்புல நிறமாறுபாடு",
+        "Name[tr]": "Arka Plan Karşıtlığı",
+        "Name[uk]": "Контрастність тла",
+        "Name[x-test]": "xxBackground Contrastxx"
     },
     "org.kde.kwin.effect": {
         "enabledByDefaultMethod": true

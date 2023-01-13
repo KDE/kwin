@@ -27,7 +27,8 @@
                 "Name[tr]": "Thomas Lübking",
                 "Name[uk]": "Thomas Lübking",
                 "Name[vi]": "Thomas Lübking",
-                "Name[x-test]": "xxThomas Lübkingxx"
+                "Name[x-test]": "xxThomas Lübkingxx",
+                "Name[zh_CN]": "Thomas Lübking"
             }
         ],
         "Description": "Adds a shortcut to minimize and restore all windows",
@@ -52,6 +53,7 @@
         "Description[uk]": "Додає скорочення мінімізації усіх вікон або скасування такої мінімізації для усіх вікон",
         "Description[vi]": "Thêm một phím tắt để thu nhỏ và khôi phục tất cả các cửa sổ",
         "Description[x-test]": "xxAdds a shortcut to minimize and restore all windowsxx",
+        "Description[zh_CN]": "添加最小化/恢复全部窗口的快捷方式",
         "Icon": "preferences-system-windows-script-test",
         "Id": "minimizeall",
         "License": "GPL",
@@ -79,6 +81,7 @@
         "Name[uk]": "Мінімізувати усі",
         "Name[vi]": "Thu nhỏ tất cả",
         "Name[x-test]": "xxMinimizeAllxx",
+        "Name[zh_CN]": "最小化全部",
         "Version": "1.0"
     },
     "X-KDE-PluginKeyword": "minimizeall",

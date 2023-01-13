@@ -13,7 +13,7 @@
         "Description[en_GB]": "Sliding animation for Plasma popups",
         "Description[es]": "Animación de deslizamiento para las ventanas emergentes de Plasma",
         "Description[et]": "Plasma hüpikdialoogide liuguv animatsioon",
-        "Description[eu]": "Animazio irristalaria Plasmaren gainerakorrentzat",
+        "Description[eu]": "Animazio irristakorra Plasmaren gainerakorrentzat",
         "Description[fi]": "Plasma-ponnahdusikkunoiden liukuanimaatio",
         "Description[fr]": "Animation de glissement pour les menus contextuels de Plasma",
         "Description[hu]": "Csúszó animáció a felugró Plasma ablakokhoz",
@@ -42,7 +42,15 @@
         "EnabledByDefault": true,
         "Id": "slidingpopups",
         "License": "GPL",
-        "Name": "Sliding Popups"
+        "Name": "Sliding Popups",
+        "Name[bg]": "Плъзгащи се изскачащи прозорци",
+        "Name[ca@valencia]": "Missatges emergents desplaçant-se",
+        "Name[ca]": "Missatges emergents desplaçant-se",
+        "Name[eu]": "Gainerakor irristakorrak",
+        "Name[nl]": "Schuivende pop-ups",
+        "Name[tr]": "Kayan Açılır Pencereler",
+        "Name[uk]": "Ковзні контекстні вікна",
+        "Name[x-test]": "xxSliding Popupsxx"
     },
     "org.kde.kwin.effect": {
         "video": "https://files.kde.org/plasma/kwin/effect-videos/sliding_popups.mp4"

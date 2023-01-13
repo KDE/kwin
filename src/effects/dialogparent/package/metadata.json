@@ -26,7 +26,8 @@
                 "Name[tr]": "Rivo Laks, Martin Gräßlin",
                 "Name[uk]": "Rivo Laks, Martin Gräßlin",
                 "Name[vi]": "Rivo Laks, Martin Gräßlin",
-                "Name[x-test]": "xxRivo Laks, Martin Gräßlinxx"
+                "Name[x-test]": "xxRivo Laks, Martin Gräßlinxx",
+                "Name[zh_CN]": "Rivo Laks, Martin Gräßlin"
             }
         ],
         "Category": "Focus",
@@ -52,6 +53,7 @@
         "Description[uk]": "Затемнення батьківських вікон активних діалогових вікон",
         "Description[vi]": "Làm tối cửa sổ cha của hộp thoại hiện đang hoạt động",
         "Description[x-test]": "xxDarkens the parent window of the currently active dialogxx",
+        "Description[zh_CN]": "当前活动对话框的父窗口将会变暗",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-dialog-parent",
         "Id": "kwin4_effect_dialogparent",

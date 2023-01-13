@@ -28,7 +28,8 @@
                 "Name[tr]": "David Edmundson",
                 "Name[uk]": "David Edmundson",
                 "Name[vi]": "David Edmundson",
-                "Name[x-test]": "xxDavid Edmundsonxx"
+                "Name[x-test]": "xxDavid Edmundsonxx",
+                "Name[zh_CN]": "David Edmundson"
             }
         ],
         "Category": "Appearance",
@@ -54,6 +55,7 @@
         "Description[uk]": "Не вимикати тло стільниці до кінця процедури виходу із облікового запису",
         "Description[vi]": "Giữ nền bàn làm việc hiện cho đến cuối quá trình đăng xuất",
         "Description[x-test]": "xxKeep the desktop background alive during logout until the endxx",
+        "Description[zh_CN]": "注销时继续显示桌面背景，直到完全退出会话",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-logout",
         "Id": "kwin4_effect_sessionquit",
@@ -82,6 +84,7 @@
         "Name[uk]": "Вихід з сеансу",
         "Name[vi]": "Thoát phiên",
         "Name[x-test]": "xxSession Quitxx",
+        "Name[zh_CN]": "会话退出优化",
         "Version": "0.2.0"
     },
     "X-KDE-Ordering": "40",

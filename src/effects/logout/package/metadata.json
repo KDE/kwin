@@ -27,7 +27,8 @@
                 "Name[tr]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martin",
                 "Name[uk]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martin",
                 "Name[vi]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martin",
-                "Name[x-test]": "xxLubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martinxx"
+                "Name[x-test]": "xxLubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martinxx",
+                "Name[zh_CN]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin, Marco Martin"
             }
         ],
         "Category": "Appearance",
@@ -54,6 +55,7 @@
         "Description[uk]": "Плавний перехід до вікна виходу з системи",
         "Description[vi]": "Làm mờ dần sang màn hình đăng xuất một cách êm dịu",
         "Description[x-test]": "xxSmoothly fade to the logout screenxx",
+        "Description[zh_CN]": "注销时平滑地过渡到注销屏幕",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-logout",
         "Id": "kwin4_effect_logout",
@@ -82,6 +84,7 @@
         "Name[uk]": "Вихід",
         "Name[vi]": "Đăng xuất",
         "Name[x-test]": "xxLogoutxx",
+        "Name[zh_CN]": "注销过渡动画",
         "Version": "0.2.0"
     },
     "X-KDE-Ordering": "40",

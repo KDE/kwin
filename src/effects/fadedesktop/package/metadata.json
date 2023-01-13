@@ -26,7 +26,8 @@
                 "Name[tr]": "Lucas Murray, Martin Gräßlin",
                 "Name[uk]": "Lucas Murray, Martin Gräßlin",
                 "Name[vi]": "Lucas Murray, Martin Gräßlin",
-                "Name[x-test]": "xxLucas Murray, Martin Gräßlinxx"
+                "Name[x-test]": "xxLucas Murray, Martin Gräßlinxx",
+                "Name[zh_CN]": "Lucas Murray, Martin Gräßlin"
             }
         ],
         "Category": "Virtual Desktop Switching Animation",
@@ -51,6 +52,7 @@
         "Description[uk]": "Затемнення перед час перемикання між віртуальними стільницями",
         "Description[vi]": "Làm mờ dần giữa các bàn làm việc ảo khi chuyển đổi giữa chúng",
         "Description[x-test]": "xxFade between virtual desktops when switching between themxx",
+        "Description[zh_CN]": "在虚拟桌面间切换时呈现渐入渐出动效",
         "EnabledByDefault": false,
         "Icon": "preferences-system-windows-effect-fadedesktop",
         "Id": "kwin4_effect_fadedesktop",
@@ -79,6 +81,7 @@
         "Name[uk]": "Затемнення стільниці",
         "Name[vi]": "Làm mờ dần bàn làm việc",
         "Name[x-test]": "xxFade Desktopxx",
+        "Name[zh_CN]": "淡出桌面",
         "Name[zh_TW]": "淡出淡入桌面",
         "Version": "0.2.0"
     },

@@ -26,7 +26,8 @@
                 "Name[tr]": "Martin Gräßlin",
                 "Name[uk]": "Martin Gräßlin",
                 "Name[vi]": "Martin Gräßlin",
-                "Name[x-test]": "xxMartin Gräßlinxx"
+                "Name[x-test]": "xxMartin Gräßlinxx",
+                "Name[zh_CN]": "Martin Gräßlin"
             }
         ],
         "Description": "Spans fullscreen video player over all attached screens to create a Video Wall",
@@ -52,6 +53,7 @@
         "Description[uk]": "Розподіл зображення відеопрогравача у повноекранному режимі на всі екрани з метою створення відеостіни",
         "Description[vi]": "Trải trình phát phim toàn màn hình ra tất cả các màn hình đang được gắn vào để tạo nên một màn hình ghép",
         "Description[x-test]": "xxSpans fullscreen video player over all attached screens to create a Video Wallxx",
+        "Description[zh_CN]": "视频播放器在全屏时将显示在全部已连接的屏幕上，组成视频墙",
         "Icon": "preferences-system-windows-script-test",
         "Id": "videowall",
         "License": "GPL",
@@ -79,6 +81,7 @@
         "Name[uk]": "Відеостіна",
         "Name[vi]": "Màn hình ghép",
         "Name[x-test]": "xxVideo Wallxx",
+        "Name[zh_CN]": "视频墙",
         "Version": "1.0"
     },
     "X-KDE-ConfigModule": "kwin/effects/configs/kcm_kwin4_genericscripted",

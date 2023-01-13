@@ -27,6 +27,7 @@
                 "Name[uk]": "Martin Flöser, Влад Завгородній",
                 "Name[vi]": "Martin Flöser, Vlad Zahorodnii",
                 "Name[x-test]": "xxMartin Flöser, Vlad Zahorodniixx",
+                "Name[zh_CN]": "Martin Flöser, Vlad Zahorodnii",
                 "Name[zh_TW]": "Martin Flöser, Vlad Zahorodnii"
             }
         ],
@@ -52,6 +53,7 @@
         "Description[uk]": "Притлумлює кольори усього екрана, коли працюємо з доступом root",
         "Description[vi]": "Làm tối toàn bộ màn hình khi yêu cầu đặc quyền gốc",
         "Description[x-test]": "xxDarkens the entire screen when requesting root privilegesxx",
+        "Description[zh_CN]": "系统请求 root 权限时降低屏幕亮度",
         "EnabledByDefault": false,
         "Icon": "preferences-system-windows-effect-dimscreen",
         "Id": "kwin4_effect_dimscreen",

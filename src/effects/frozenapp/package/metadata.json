@@ -28,7 +28,8 @@
                 "Name[tr]": "Kai Uwe Broulik",
                 "Name[uk]": "Kai Uwe Broulik",
                 "Name[vi]": "Kai Uwe Broulik",
-                "Name[x-test]": "xxKai Uwe Broulikxx"
+                "Name[x-test]": "xxKai Uwe Broulikxx",
+                "Name[zh_CN]": "Kai Uwe Broulik"
             }
         ],
         "Category": "Appearance",
@@ -55,6 +56,7 @@
         "Description[uk]": "Зменшення насиченості кольорів вікон програм, які не відповідають на запити (повисли)",
         "Description[vi]": "Khử bão hoà các cửa sổ của các ứng dụng không hồi đáp (đơ)",
         "Description[x-test]": "xxDesaturate windows of unresponsive (frozen) applicationsxx",
+        "Description[zh_CN]": "降低无响应/已卡死窗口的颜色饱和度",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-frozenapp",
         "Id": "kwin4_effect_frozenapp",
@@ -83,6 +85,7 @@
         "Name[uk]": "Зненасичення вікон, які не відповідають на запити",
         "Name[vi]": "Khử bão hoà các ứng dụng không hồi đáp",
         "Name[x-test]": "xxDesaturate Unresponsive Applicationsxx",
+        "Name[zh_CN]": "无响应窗口灰化",
         "Version": "1.0"
     },
     "X-KDE-Ordering": "60",

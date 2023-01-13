@@ -26,7 +26,8 @@
                 "Name[tr]": "Philip Falkner, Martin Gräßlin",
                 "Name[uk]": "Philip Falkner, Martin Gräßlin",
                 "Name[vi]": "Philip Falkner, Martin Gräßlin",
-                "Name[x-test]": "xxPhilip Falkner, Martin Gräßlinxx"
+                "Name[x-test]": "xxPhilip Falkner, Martin Gräßlinxx",
+                "Name[zh_CN]": "Philip Falkner, Martin Gräßlin"
             }
         ],
         "Category": "Window Open/Close Animation",
@@ -51,6 +52,7 @@
         "Description[uk]": "Плавна поява або зникнення вікон",
         "Description[vi]": "Làm cửa sổ hiện dần và mờ dần một cách êm dịu khi chúng hiện ra và biến mất",
         "Description[x-test]": "xxMake windows smoothly fade in and out when they are shown or hiddenxx",
+        "Description[zh_CN]": "窗口显示/隐藏时呈现渐入渐出过渡动效",
         "Description[zh_TW]": "讓視窗在顯示或隱藏的時候平滑地淡入或淡出",
         "EnabledByDefault": false,
         "Icon": "preferences-system-windows-effect-fade",
@@ -80,6 +82,7 @@
         "Name[uk]": "Згасання",
         "Name[vi]": "Làm mờ dần",
         "Name[x-test]": "xxFadexx",
+        "Name[zh_CN]": "淡出淡入动画",
         "Version": "0.2.0"
     },
     "X-KDE-Ordering": "60",

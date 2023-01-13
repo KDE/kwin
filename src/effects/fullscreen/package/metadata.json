@@ -26,7 +26,8 @@
                 "Name[tr]": "Martin Gräßlin",
                 "Name[uk]": "Martin Gräßlin",
                 "Name[vi]": "Martin Gräßlin",
-                "Name[x-test]": "xxMartin Gräßlinxx"
+                "Name[x-test]": "xxMartin Gräßlinxx",
+                "Name[zh_CN]": "Martin Gräßlin"
             }
         ],
         "Category": "Appearance",
@@ -52,6 +53,7 @@
         "Description[uk]": "Анімація для вікон під час входу до повноекранного режиму і виходу з нього",
         "Description[vi]": "Hiệu ứng động cho một cửa sổ đang đi vào và rời khỏi chế độ toàn màn hình",
         "Description[x-test]": "xxAnimation for a window going to and leaving full screen modexx",
+        "Description[zh_CN]": "窗口进入/退出全屏模式时呈现过渡动效",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-fullscreen",
         "Id": "kwin4_effect_fullscreen",
@@ -80,6 +82,7 @@
         "Name[uk]": "Повноекранний режим",
         "Name[vi]": "Toàn màn hình",
         "Name[x-test]": "xxFull Screenxx",
+        "Name[zh_CN]": "全屏模式过渡动画",
         "Name[zh_TW]": "全螢幕",
         "Version": "1",
         "Website": ""

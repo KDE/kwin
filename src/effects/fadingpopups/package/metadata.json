@@ -69,6 +69,7 @@
         "Description[uk]": "Поступова поява або зникнення контекстних вікон вікон при відкритті чи закритті",
         "Description[vi]": "Làm ô bật lên hiện dần và mờ dần một cách êm dịu khi chúng hiện ra và biến mất",
         "Description[x-test]": "xxMake popups smoothly fade in and out when they are shown or hiddenxx",
+        "Description[zh_CN]": "气泡信息显示/隐藏时呈现渐入渐出过渡动画",
         "Description[zh_TW]": "讓彈出視窗在顯示或隱藏的時候平滑地淡入或淡出",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-fadingpopups",
@@ -98,6 +99,7 @@
         "Name[uk]": "Інтерактивні контекстні панелі",
         "Name[vi]": "Ô bật lên ngả màu",
         "Name[x-test]": "xxFading Popupsxx",
+        "Name[zh_CN]": "气泡显隐渐变动画",
         "Name[zh_TW]": "淡化彈出視窗",
         "Version": "1.0"
     },

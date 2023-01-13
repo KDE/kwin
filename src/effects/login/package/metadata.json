@@ -27,7 +27,8 @@
                 "Name[tr]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
                 "Name[uk]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
                 "Name[vi]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin",
-                "Name[x-test]": "xxLubos Lunak, Kai Uwe Broulik, Martin Gräßlinxx"
+                "Name[x-test]": "xxLubos Lunak, Kai Uwe Broulik, Martin Gräßlinxx",
+                "Name[zh_CN]": "Lubos Lunak, Kai Uwe Broulik, Martin Gräßlin"
             }
         ],
         "Category": "Appearance",
@@ -53,6 +54,7 @@
         "Description[uk]": "Плавна поява стільниці під час входу",
         "Description[vi]": "Làm mờ dần sang bàn làm việc một cách êm dịu khi đăng nhập",
         "Description[x-test]": "xxSmoothly fade to the desktop when logging inxx",
+        "Description[zh_CN]": "登录时平滑地过渡到桌面",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-login",
         "Id": "kwin4_effect_login",
@@ -81,6 +83,7 @@
         "Name[uk]": "Вхід",
         "Name[vi]": "Đăng nhập",
         "Name[x-test]": "xxLoginxx",
+        "Name[zh_CN]": "登录渐变动画",
         "Version": "0.2.0"
     },
     "X-KDE-Ordering": "40",

@@ -60,6 +60,7 @@
         "Name[uk]": "Жести на сенсорній панелі",
         "Name[vi]": "Các động tác của màn hình cảm ứng",
         "Name[x-test]": "xxTouchscreen Gesturesxx",
+        "Name[zh_CN]": "触摸屏手势",
         "Name[zh_TW]": "觸控螢幕手勢"
     },
     "X-DocPath": "kcontrol/kwintouchscreen/index.html",
