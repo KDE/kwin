@@ -42,7 +42,7 @@ public:
 
     int requestedEffectChainPosition() const override
     {
-        return 76;
+        return 21;
     }
 
     bool eventFilter(QObject *watched, QEvent *event) override;
