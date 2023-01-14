@@ -477,7 +477,7 @@ void TestDragAndDrop::testPointerEventsIgnored()
     m_seatInterface->setTimestamp(timestamp++);
     m_seatInterface->notifyPointerMotion(QPointF(10, 10));
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerAxis(Qt::Vertical, 5, 1, PointerAxisSource::Wheel);
+    m_seatInterface->notifyPointerAxis(Qt::Vertical, 5, 120, PointerAxisSource::Wheel);
     m_seatInterface->notifyPointerFrame();
     // verify that we have those
     QVERIFY(axisSpy.wait());

@@ -43,6 +43,7 @@ public:
     std::unique_ptr<PointerPinchGestureV1Interface> pinchGesturesV1;
     std::unique_ptr<PointerHoldGestureV1Interface> holdGesturesV1;
     QPointF lastPosition;
+    QPointF accumulatorAxis;
     QPoint accumulatorV120;
 
     void sendLeave(quint32 serial);
