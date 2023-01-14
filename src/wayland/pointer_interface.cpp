@@ -214,35 +214,63 @@ static bool shouldResetAccumulator(int accumulator, int delta)
     return accumulator && (accumulator < 0 != delta < 0);
 }
 
+static void updateAccumulators(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerInterfacePrivate *d, qint32 &valueAxisLowRes, qint32 &valueDiscrete)
+{
+    qint32 *accumulatorV120;
+    qreal *accumulatorAxis;
+
+    if (orientation == Qt::Horizontal) {
+        accumulatorV120 = &d->accumulatorV120.rx();
+        accumulatorAxis = &d->accumulatorAxis.rx();
+    } else {
+        accumulatorV120 = &d->accumulatorV120.ry();
+        accumulatorAxis = &d->accumulatorAxis.ry();
+    }
+
+    if (shouldResetAccumulator(*accumulatorV120, deltaV120)) {
+        *accumulatorV120 = 0;
+        *accumulatorAxis = 0;
+    }
+
+    *accumulatorAxis += delta;
+    *accumulatorV120 += deltaV120;
+
+    // ±120 is a "wheel click"
+    valueDiscrete = *accumulatorV120 / 120;
+    *accumulatorV120 -= valueDiscrete * 120;
+
+    if (valueDiscrete) {
+        // Accumulate the axis values to send to low-res clients
+        valueAxisLowRes = *accumulatorAxis;
+        *accumulatorAxis = 0;
+    }
+}
+
 void PointerInterface::sendAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source)
 {
     if (!d->focusedSurface) {
         return;
     }
 
-    qint32 deltaDiscrete;
-    if (orientation == Qt::Horizontal) {
-        if (shouldResetAccumulator(d->accumulatorV120.x(), deltaV120)) {
-            d->accumulatorV120.setX(0);
-        }
-        d->accumulatorV120.rx() += deltaV120;
-        deltaDiscrete = d->accumulatorV120.x() / 120;
-        d->accumulatorV120.rx() -= deltaDiscrete * 120;
+    qint32 valueAxisLowRes = 0;
+    qint32 valueDiscrete = 0;
+
+    if (deltaV120) {
+        updateAccumulators(orientation, delta, deltaV120, d.get(),
+                           valueAxisLowRes, valueDiscrete);
     } else {
-        if (shouldResetAccumulator(d->accumulatorV120.y(), deltaV120)) {
-            d->accumulatorV120.setY(0);
-        }
-        d->accumulatorV120.ry() += deltaV120;
-        deltaDiscrete = d->accumulatorV120.y() / 120;
-        d->accumulatorV120.ry() -= deltaDiscrete * 120;
+        valueAxisLowRes = delta;
     }
 
     const auto pointerResources = d->pointersForClient(d->focusedSurface->client());
     for (PointerInterfacePrivate::Resource *resource : pointerResources) {
         const quint32 version = resource->version();
 
-        const auto wlOrientation =
-            (orientation == Qt::Vertical) ? PointerInterfacePrivate::axis_vertical_scroll : PointerInterfacePrivate::axis_horizontal_scroll;
+        // Don't send anything if the client doesn't support high-res scrolling and
+        // we haven't accumulated a wheel click's worth of events.
+        if (version < WL_POINTER_AXIS_VALUE120_SINCE_VERSION && deltaV120 && !valueDiscrete) {
+            continue;
+        }
 
         if (source != PointerAxisSource::Unknown && version >= WL_POINTER_AXIS_SOURCE_SINCE_VERSION) {
             PointerInterfacePrivate::axis_source wlSource;
@@ -266,17 +294,31 @@ void PointerInterface::sendAxis(Qt::Orientation orientation, qreal delta, qint32
             d->send_axis_source(resource->handle, wlSource);
         }
 
-        if (delta != 0.0) {
-            if (version >= WL_POINTER_AXIS_VALUE120_SINCE_VERSION) {
-                if (deltaV120) {
+        const auto wlOrientation =
+            (orientation == Qt::Vertical) ? PointerInterfacePrivate::axis_vertical_scroll : PointerInterfacePrivate::axis_horizontal_scroll;
+
+        if (delta) {
+            if (deltaV120) {
+                if (version >= WL_POINTER_AXIS_VALUE120_SINCE_VERSION) {
+                    // Send high resolution scroll events if client supports them
                     d->send_axis_value120(resource->handle, wlOrientation, deltaV120);
+                    d->send_axis(resource->handle, d->seat->timestamp().count(), wlOrientation,
+                                 wl_fixed_from_double(delta));
+                } else {
+                    if (version >= WL_POINTER_AXIS_DISCRETE_SINCE_VERSION && valueDiscrete) {
+                        // Send discrete scroll events if client supports them.
+                        d->send_axis_discrete(resource->handle, wlOrientation,
+                                              valueDiscrete);
+                    }
+                    // Send accumulated axis values
+                    d->send_axis(resource->handle, d->seat->timestamp().count(), wlOrientation,
+                                 wl_fixed_from_double(valueAxisLowRes));
                 }
-            } else if (version >= WL_POINTER_AXIS_DISCRETE_SINCE_VERSION) {
-                if (deltaDiscrete) {
-                    d->send_axis_discrete(resource->handle, wlOrientation, deltaDiscrete);
-                }
+            } else {
+                // Finger or continuous scroll
+                d->send_axis(resource->handle, d->seat->timestamp().count(), wlOrientation,
+                             wl_fixed_from_double(delta));
             }
-            d->send_axis(resource->handle, d->seat->timestamp().count(), wlOrientation, wl_fixed_from_double(delta));
         } else if (version >= WL_POINTER_AXIS_STOP_SINCE_VERSION) {
             d->send_axis_stop(resource->handle, d->seat->timestamp().count(), wlOrientation);
         }
