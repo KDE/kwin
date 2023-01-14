@@ -46,8 +46,11 @@
         "Name[bg]": "Плъзгащи се изскачащи прозорци",
         "Name[ca@valencia]": "Missatges emergents desplaçant-se",
         "Name[ca]": "Missatges emergents desplaçant-se",
+        "Name[es]": "Deslizar ventanas emergentes",
         "Name[eu]": "Gainerakor irristakorrak",
+        "Name[ka]": "მცურავი მხტუნარები",
         "Name[nl]": "Schuivende pop-ups",
+        "Name[pt]": "Janelas Deslizantes",
         "Name[tr]": "Kayan Açılır Pencereler",
         "Name[uk]": "Ковзні контекстні вікна",
         "Name[x-test]": "xxSliding Popupsxx"
