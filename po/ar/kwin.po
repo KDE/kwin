@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-12 00:56+0000\n"
-"PO-Revision-Date: 2023-01-07 16:56+0400\n"
+"PO-Revision-Date: 2023-01-14 16:45+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -2244,10 +2244,9 @@ msgid "&Shade"
 msgstr "&ظلّل"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "بدون شريط العنوان والإطار"
+msgstr "بدون &شريط العنوان والإطار"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2446,10 +2445,9 @@ msgid "Make Window Fullscreen"
 msgstr "اجعل النّافذة بملء الشّاشة"
 
 #: useractions.cpp:1009
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "بدون شريط العنوان والإطار"
+msgstr "بدّل حالة شريط العنوان والإطار"
 
 #: useractions.cpp:1011
 #, kde-format

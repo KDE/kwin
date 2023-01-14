@@ -6,14 +6,14 @@
 # Youssef Chahibi <chahibi@gmail.com>, 2007.
 # Abdulaziz AlSharif <a.a-a.s@hotmail.com>, 2007.
 # zayed <zayed.alsaidi@gmail.com>, 2008.
-# Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2010, 2021, 2022.
+# Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2010, 2021, 2022, 2023.
 # Abdalrahim G. Fakhouri <abdilra7eem@yahoo.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-13 00:58+0000\n"
-"PO-Revision-Date: 2022-12-22 12:43+0400\n"
+"PO-Revision-Date: 2023-01-14 16:47+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -163,7 +163,7 @@ msgstr "فرض التحريك الأكثر سلاسة"
 #, kde-format
 msgid ""
 "Reduce latency by allowing screen tearing artifacts in fullscreen windows"
-msgstr ""
+msgstr "قلل من التأخير عن طريق السماح بعيوب تمزيق الشاشة في وضع ملء الشاشة"
 
 #: main.cpp:79
 #, kde-format
