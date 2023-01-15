@@ -136,6 +136,7 @@
             <choices name="KWin::Options::ActivationDesktopPolicy">
                 <choice name="SwitchToOtherDesktop"/>
                 <choice name="BringToCurrentDesktop"/>
+                <choice name="DoNothing"/>
             </choices>
             <default>KWin::Options::ActivationDesktopPolicy::SwitchToOtherDesktop</default>
         </entry>

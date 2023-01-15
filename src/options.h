@@ -360,7 +360,8 @@ public:
 
     enum ActivationDesktopPolicy {
         SwitchToOtherDesktop,
-        BringToCurrentDesktop
+        BringToCurrentDesktop,
+        DoNothing,
     };
     Q_ENUM(ActivationDesktopPolicy)
 

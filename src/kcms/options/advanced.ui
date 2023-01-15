@@ -169,6 +169,11 @@
        <string>Bring window to current Virtual Desktop</string>
       </property>
      </item>
+     <item>
+      <property name="text">
+       <string>Do nothing</string>
+      </property>
+     </item>
     </widget>
    </item>
   </layout>

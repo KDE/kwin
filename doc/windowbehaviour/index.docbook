@@ -1190,6 +1190,18 @@ Choose this option if you would like windows to always open on the current Virtu
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term><guilabel>Do nothing</guilabel></term>
+<listitem>
+<para>
+The window stays on the desktop it currently is and the current desktop doesn't change.
+</para>
+<para>
+Choose this option if you would like to keep the windows and desktops as they are.
+</para>
+</listitem>
+</varlistentry>
+
 </variablelist>
 
 </sect3>

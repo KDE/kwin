@@ -296,6 +296,8 @@ void Workspace::activateWindow(Window *window, bool force)
         case Options::ActivationDesktopPolicy::BringToCurrentDesktop:
             window->enterDesktop(VirtualDesktopManager::self()->currentDesktop());
             break;
+        case Options::ActivationDesktopPolicy::DoNothing:
+            break;
         }
         --block_focus;
     }
