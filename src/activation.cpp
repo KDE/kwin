@@ -814,9 +814,7 @@ enum Level {
 }
 
 // focus_in -> the window got FocusIn event
-// ignore_desktop - call comes from _NET_ACTIVE_WINDOW message, don't refuse just because of window
-//     is on a different desktop
-bool X11Window::allowWindowActivation(xcb_timestamp_t time, bool focus_in, bool ignore_desktop)
+bool X11Window::allowWindowActivation(xcb_timestamp_t time, bool focus_in)
 {
     auto window = this;
     // options->focusStealingPreventionLevel :
@@ -860,11 +858,6 @@ bool X11Window::allowWindowActivation(xcb_timestamp_t time, bool focus_in, bool 
         return false;
     }
 
-    // Desktop switching is only allowed in the "no protection" case
-    if (!ignore_desktop && !window->isOnCurrentDesktop()) {
-        return false; // allow only with level == 0
-    }
-
     // No active window, it's ok to pass focus
     // NOTICE that extreme protection needs to be handled before to allow protection on unmanged windows
     if (ac == nullptr || ac->isDesktop()) {
@@ -879,10 +872,6 @@ bool X11Window::allowWindowActivation(xcb_timestamp_t time, bool focus_in, bool 
     if (Window::belongToSameApplication(window, ac, Window::SameApplicationCheck::RelaxedForActive) && protection < FSP::High) {
         qCDebug(KWIN_CORE) << "Activation: Belongs to active application";
         return true;
-    }
-
-    if (!window->isOnCurrentDesktop()) { // we allowed explicit self-activation across virtual desktops
-        return false; // inside a window or if no window was active, but not otherwise
     }
 
     // High FPS, not intr-window change. Only allow if the active window has only minor interest
