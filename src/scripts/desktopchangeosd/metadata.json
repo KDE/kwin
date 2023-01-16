@@ -27,7 +27,8 @@
                 "Name[uk]": "Martin Gräßlin",
                 "Name[vi]": "Martin Gräßlin",
                 "Name[x-test]": "xxMartin Gräßlinxx",
-                "Name[zh_CN]": "Martin Gräßlin"
+                "Name[zh_CN]": "Martin Gräßlin",
+                "Name[zh_TW]": "Martin Gräßlin"
             }
         ],
         "Description": "An on screen display indicating the desktop change",
@@ -53,6 +54,7 @@
         "Description[vi]": "Một ô hiện nổi để biểu thị thay đổi của bàn làm việc",
         "Description[x-test]": "xxAn on screen display indicating the desktop changexx",
         "Description[zh_CN]": "能够突出显示桌面内容变化的辅助显示功能",
+        "Description[zh_TW]": "表示桌面變更用的螢幕顯示（OSD）",
         "Icon": "preferences-system-windows-script-test",
         "Id": "desktopchangeosd",
         "License": "GPL",
@@ -81,6 +83,7 @@
         "Name[vi]": "Ô hiện nổi thay đổi bàn làm việc",
         "Name[x-test]": "xxDesktop Change OSDxx",
         "Name[zh_CN]": "桌面变化突出显示",
+        "Name[zh_TW]": "桌面變更時的螢幕顯示",
         "Version": "1.0"
     },
     "X-KWin-Exclude-Listing": "true",

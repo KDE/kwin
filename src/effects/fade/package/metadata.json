@@ -27,7 +27,8 @@
                 "Name[uk]": "Philip Falkner, Martin Gräßlin",
                 "Name[vi]": "Philip Falkner, Martin Gräßlin",
                 "Name[x-test]": "xxPhilip Falkner, Martin Gräßlinxx",
-                "Name[zh_CN]": "Philip Falkner, Martin Gräßlin"
+                "Name[zh_CN]": "Philip Falkner, Martin Gräßlin",
+                "Name[zh_TW]": "Philip Falkner, Martin Gräßlin"
             }
         ],
         "Category": "Window Open/Close Animation",
@@ -83,6 +84,7 @@
         "Name[vi]": "Làm mờ dần",
         "Name[x-test]": "xxFadexx",
         "Name[zh_CN]": "淡出淡入动画",
+        "Name[zh_TW]": "淡化",
         "Version": "0.2.0"
     },
     "X-KDE-Ordering": "60",

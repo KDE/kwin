@@ -27,7 +27,8 @@
                 "Name[uk]": "Martin Gräßlin",
                 "Name[vi]": "Martin Gräßlin",
                 "Name[x-test]": "xxMartin Gräßlinxx",
-                "Name[zh_CN]": "Martin Gräßlin"
+                "Name[zh_CN]": "Martin Gräßlin",
+                "Name[zh_TW]": "Martin Gräßlin"
             }
         ],
         "Category": "Appearance",
@@ -54,6 +55,7 @@
         "Description[vi]": "Hiệu ứng động cho một cửa sổ chuẩn bị phóng to hoặc khôi phục từ trạng thái phóng to",
         "Description[x-test]": "xxAnimation for a window going to maximize/restore from maximizexx",
         "Description[zh_CN]": "窗口最大化/恢复时呈现过渡动效",
+        "Description[zh_TW]": "視窗最大化/回復時的動畫",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-maximize",
         "Id": "kwin4_effect_maximize",
@@ -83,6 +85,7 @@
         "Name[vi]": "Phóng to",
         "Name[x-test]": "xxMaximizexx",
         "Name[zh_CN]": "最大化过渡动画",
+        "Name[zh_TW]": "最大化",
         "Version": "1",
         "Website": ""
     },

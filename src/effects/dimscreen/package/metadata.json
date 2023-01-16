@@ -54,6 +54,7 @@
         "Description[vi]": "Làm tối toàn bộ màn hình khi yêu cầu đặc quyền gốc",
         "Description[x-test]": "xxDarkens the entire screen when requesting root privilegesxx",
         "Description[zh_CN]": "系统请求 root 权限时降低屏幕亮度",
+        "Description[zh_TW]": "請求 root 權限時將整個螢幕變暗",
         "EnabledByDefault": false,
         "Icon": "preferences-system-windows-effect-dimscreen",
         "Id": "kwin4_effect_dimscreen",
@@ -82,6 +83,7 @@
         "Name[vi]": "Làm tối màn hình cho chế độ quản trị viên",
         "Name[x-test]": "xxDim Screen for Administrator Modexx",
         "Name[zh_CN]": "请求管理员模式时降低屏幕亮度",
+        "Name[zh_TW]": "為管理員模式暗化螢幕",
         "Version": "1",
         "Website": ""
     },

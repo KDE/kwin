@@ -100,6 +100,7 @@
         "Name[vi]": "Đổi cỡ",
         "Name[x-test]": "xxScalexx",
         "Name[zh_CN]": "按比例缩放",
+        "Name[zh_TW]": "縮放",
         "Version": "1"
     },
     "X-KDE-Ordering": "60",

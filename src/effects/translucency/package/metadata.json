@@ -27,7 +27,8 @@
                 "Name[uk]": "Luboš Luňák, Martin Gräßlin",
                 "Name[vi]": "Luboš Luňák, Martin Gräßlin",
                 "Name[x-test]": "xxLuboš Luňák, Martin Gräßlinxx",
-                "Name[zh_CN]": "Luboš Luňák, Martin Gräßlin"
+                "Name[zh_CN]": "Luboš Luňák, Martin Gräßlin",
+                "Name[zh_TW]": "Luboš Luňák, Martin Gräßlin"
             }
         ],
         "Category": "Appearance",
@@ -55,6 +56,7 @@
         "Description[vi]": "Làm cửa sổ trong mờ trong các điều kiện khác nhau",
         "Description[x-test]": "xxMake windows translucent under different conditionsxx",
         "Description[zh_CN]": "窗口在某些条件下呈现透明效果",
+        "Description[zh_TW]": "在不同的情況下讓視窗變半透明",
         "Icon": "preferences-system-windows-effect-translucency",
         "Id": "kwin4_effect_translucency",
         "License": "GPL",
@@ -83,6 +85,7 @@
         "Name[vi]": "Độ trong mờ",
         "Name[x-test]": "xxTranslucencyxx",
         "Name[zh_CN]": "窗口透明度",
+        "Name[zh_TW]": "半透明",
         "Version": "0.1.0"
     },
     "X-KDE-Ordering": "50",

@@ -27,7 +27,8 @@
                 "Name[uk]": "Rivo Laks, Martin Gräßlin",
                 "Name[vi]": "Rivo Laks, Martin Gräßlin",
                 "Name[x-test]": "xxRivo Laks, Martin Gräßlinxx",
-                "Name[zh_CN]": "Rivo Laks, Martin Gräßlin"
+                "Name[zh_CN]": "Rivo Laks, Martin Gräßlin",
+                "Name[zh_TW]": "Rivo Laks, Martin Gräßlin"
             }
         ],
         "Category": "Focus",
@@ -54,6 +55,7 @@
         "Description[vi]": "Làm tối cửa sổ cha của hộp thoại hiện đang hoạt động",
         "Description[x-test]": "xxDarkens the parent window of the currently active dialogxx",
         "Description[zh_CN]": "当前活动对话框的父窗口将会变暗",
+        "Description[zh_TW]": "將目前對話框的親視窗變暗",
         "EnabledByDefault": true,
         "Icon": "preferences-system-windows-effect-dialog-parent",
         "Id": "kwin4_effect_dialogparent",
@@ -83,6 +85,7 @@
         "Name[vi]": "Cha hộp thoại",
         "Name[x-test]": "xxDialog Parentxx",
         "Name[zh_CN]": "对话框父级窗口变暗",
+        "Name[zh_TW]": "對話框上層",
         "Version": "0.1.0"
     },
     "X-KDE-Ordering": "70",

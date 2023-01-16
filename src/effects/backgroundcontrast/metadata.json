@@ -49,6 +49,8 @@
         "Name[ca]": "Contrast del fons",
         "Name[es]": "Contraste del fondo",
         "Name[eu]": "Atzeko planoaren kontrastea",
+        "Name[fr]": "Contraste de l'arrière-plan",
+        "Name[it]": "Contrasto dello sfondo",
         "Name[ka]": "ფონის კონტრასტი",
         "Name[nl]": "Contrast in achtergrond",
         "Name[pt]": "Contraste do Fundo",
@@ -56,7 +58,8 @@
         "Name[ta]": "பின்புல நிறமாறுபாடு",
         "Name[tr]": "Arka Plan Karşıtlığı",
         "Name[uk]": "Контрастність тла",
-        "Name[x-test]": "xxBackground Contrastxx"
+        "Name[x-test]": "xxBackground Contrastxx",
+        "Name[zh_TW]": "背景對比"
     },
     "org.kde.kwin.effect": {
         "enabledByDefaultMethod": true

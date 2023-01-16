@@ -23,6 +23,7 @@
         "Description[vi]": "Chọn các phím khả dụng toàn cục cho các ứng dụng X11 đời cũ",
         "Description[x-test]": "xxSelect which keys will be globally available to legacy X11 appsxx",
         "Description[zh_CN]": "选择对旧式 X11 应用程序全局可用的按键",
+        "Description[zh_TW]": "選擇舊式 X11 應用程式可以全域使用的按鍵",
         "Icon": "xorg",
         "Name": "Legacy X11 App Support",
         "Name[ar]": "دعم تطبيقات اكس١١ القديمة",
@@ -45,7 +46,8 @@
         "Name[uk]": "Підтримка застарілих програм X11",
         "Name[vi]": "Hỗ trợ ứng dụng X11 đời cũ",
         "Name[x-test]": "xxLegacy X11 App Supportxx",
-        "Name[zh_CN]": "旧式 X11 应用程序支持"
+        "Name[zh_CN]": "旧式 X11 应用程序支持",
+        "Name[zh_TW]": "舊式 X11 應用程式支援"
     },
     "X-KDE-Keywords": "xwayland,global,keys,forward",
     "X-KDE-OnlyShowOnQtPlatforms": [

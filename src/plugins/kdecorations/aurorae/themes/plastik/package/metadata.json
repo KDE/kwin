@@ -27,7 +27,8 @@
                 "Name[uk]": "Martin Gräßlin",
                 "Name[vi]": "Martin Gräßlin",
                 "Name[x-test]": "xxMartin Gräßlinxx",
-                "Name[zh_CN]": "Martin Gräßlin"
+                "Name[zh_CN]": "Martin Gräßlin",
+                "Name[zh_TW]": "Martin Gräßlin"
             }
         ],
         "Description": "The classic theme known from KDE 3",
@@ -54,6 +55,7 @@
         "Description[vi]": "Chủ đề cổ điển được biết đến từ KDE 3",
         "Description[x-test]": "xxThe classic theme known from KDE 3xx",
         "Description[zh_CN]": "KDE 3 时代的经典主题",
+        "Description[zh_TW]": "從 KDE3 來的傳統主題",
         "Id": "kwin4_decoration_qml_plastik",
         "License": "GPL",
         "Name": "Plastik",
@@ -80,6 +82,7 @@
         "Name[vi]": "Plastik",
         "Name[x-test]": "xxPlastikxx",
         "Name[zh_CN]": "Plastik 百相",
+        "Name[zh_TW]": "Plastik",
         "Version": "1.0"
     },
     "X-KWin-Config-TranslationDomain": "kwin_clients",

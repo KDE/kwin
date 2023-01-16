@@ -49,13 +49,16 @@
         "Name[ca]": "Missatges emergents desplaçant-se",
         "Name[es]": "Deslizar ventanas emergentes",
         "Name[eu]": "Gainerakor irristakorrak",
+        "Name[fr]": "Annotations glissantes",
+        "Name[it]": "Finestre a comparsa che scivolano",
         "Name[ka]": "მცურავი მხტუნარები",
         "Name[nl]": "Schuivende pop-ups",
         "Name[pt]": "Janelas Deslizantes",
         "Name[sl]": "Drsne pretvorbe",
         "Name[tr]": "Kayan Açılır Pencereler",
         "Name[uk]": "Ковзні контекстні вікна",
-        "Name[x-test]": "xxSliding Popupsxx"
+        "Name[x-test]": "xxSliding Popupsxx",
+        "Name[zh_TW]": "滑動的彈出視窗"
     },
     "org.kde.kwin.effect": {
         "video": "https://files.kde.org/plasma/kwin/effect-videos/sliding_popups.mp4"
