@@ -324,9 +324,9 @@ void KCMKWinRules::importFromFile(const QUrl &path)
 // Code adapted from original `findRule()` method in `kwin_rules_dialog::main.cpp`
 QModelIndex KCMKWinRules::findRuleWithProperties(const QVariantMap &info, bool wholeApp) const
 {
-    const QString wmclass_class = info.value("resourceClass").toString().toLower();
-    const QString wmclass_name = info.value("resourceName").toString().toLower();
-    const QString role = info.value("role").toString().toLower();
+    const QString wmclass_class = info.value("resourceClass").toString();
+    const QString wmclass_name = info.value("resourceName").toString();
+    const QString role = info.value("role").toString();
     const NET::WindowType type = static_cast<NET::WindowType>(info.value("type").toInt());
     const QString title = info.value("caption").toString();
     const QString machine = info.value("clientMachine").toString();
@@ -409,9 +409,9 @@ QModelIndex KCMKWinRules::findRuleWithProperties(const QVariantMap &info, bool w
 // Code adapted from original `findRule()` method in `kwin_rules_dialog::main.cpp`
 void KCMKWinRules::fillSettingsFromProperties(RuleSettings *settings, const QVariantMap &info, bool wholeApp) const
 {
-    const QString wmclass_class = info.value("resourceClass").toString().toLower();
-    const QString wmclass_name = info.value("resourceName").toString().toLower();
-    const QString role = info.value("role").toString().toLower();
+    const QString wmclass_class = info.value("resourceClass").toString();
+    const QString wmclass_name = info.value("resourceName").toString();
+    const QString role = info.value("role").toString();
     const NET::WindowType type = static_cast<NET::WindowType>(info.value("type").toInt());
     const QString title = info.value("caption").toString();
     const QString machine = info.value("clientMachine").toString();

@@ -120,9 +120,9 @@ void Rules::readFromSettings(const RuleSettings *settings)
     if (description.isEmpty()) {
         description = settings->descriptionLegacy();
     }
-    READ_MATCH_STRING(wmclass, .toLower());
+    READ_MATCH_STRING(wmclass, );
     wmclasscomplete = settings->wmclasscomplete();
-    READ_MATCH_STRING(windowrole, .toLower());
+    READ_MATCH_STRING(windowrole, );
     READ_MATCH_STRING(title, );
     READ_MATCH_STRING(clientmachine, .toLower());
     types = NET::WindowTypeMask(settings->types());
@@ -345,10 +345,10 @@ bool Rules::matchWMClass(const QString &match_class, const QString &match_name) 
         if (wmclassmatch == RegExpMatch && !QRegularExpression(wmclass).match(cwmclass).hasMatch()) {
             return false;
         }
-        if (wmclassmatch == ExactMatch && wmclass != cwmclass) {
+        if (wmclassmatch == ExactMatch && cwmclass.compare(wmclass, Qt::CaseInsensitive) != 0) { // TODO Plasma 6: Make it case sensitive
             return false;
         }
-        if (wmclassmatch == SubstringMatch && !cwmclass.contains(wmclass)) {
+        if (wmclassmatch == SubstringMatch && !cwmclass.contains(wmclass, Qt::CaseInsensitive)) { // TODO Plasma 6: Make it case sensitive
             return false;
         }
     }
@@ -361,10 +361,10 @@ bool Rules::matchRole(const QString &match_role) const
         if (windowrolematch == RegExpMatch && !QRegularExpression(windowrole).match(match_role).hasMatch()) {
             return false;
         }
-        if (windowrolematch == ExactMatch && windowrole != match_role) {
+        if (windowrolematch == ExactMatch && match_role.compare(windowrole, Qt::CaseInsensitive) != 0) { // TODO Plasma 6: Make it case sensitive
             return false;
         }
-        if (windowrolematch == SubstringMatch && !match_role.contains(windowrole)) {
+        if (windowrolematch == SubstringMatch && !match_role.contains(windowrole, Qt::CaseInsensitive)) { // TODO Plasma 6: Make it case sensitive
             return false;
         }
     }
@@ -420,7 +420,7 @@ bool Rules::match(const Window *c) const
     if (!matchWMClass(c->resourceClass(), c->resourceName())) {
         return false;
     }
-    if (!matchRole(c->windowRole().toLower())) {
+    if (!matchRole(c->windowRole())) {
         return false;
     }
     if (!matchClientMachine(c->clientMachine()->hostName(), c->clientMachine()->isLocal())) {
