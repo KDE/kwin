@@ -903,6 +903,7 @@ void RuleBook::initializeX11()
     if (!c) {
         return;
     }
+    // TODO Plasma 6: Drop _KDE_NET_WM_TEMPORARY_RULES support in kwin and kstart.
     m_temporaryRulesMessages.reset(new KXMessages(c, kwinApp()->x11RootWindow(), "_KDE_NET_WM_TEMPORARY_RULES", nullptr));
     connect(m_temporaryRulesMessages.get(), &KXMessages::gotMessage, this, &RuleBook::temporaryRulesMessage);
 }
