@@ -32,6 +32,7 @@ public:
     void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void postPaintScreen() override;
     bool isActive() const override;
+    QRegion adjustBackgroundEffectRegion(EffectWindow *window, const QRegion &region) const override;
 
     int requestedEffectChainPosition() const override
     {

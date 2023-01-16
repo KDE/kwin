@@ -212,4 +212,9 @@ bool FallApartEffect::isActive() const
     return !windows.isEmpty();
 }
 
+QRegion FallApartEffect::adjustBackgroundEffectRegion(EffectWindow *window, const QRegion &region) const
+{
+    return windows.contains(window) ? QRegion() : region;
+}
+
 } // namespace

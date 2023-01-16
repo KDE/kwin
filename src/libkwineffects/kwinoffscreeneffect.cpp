@@ -278,6 +278,7 @@ class CrossFadeEffectPrivate
 public:
     std::map<EffectWindow *, std::unique_ptr<CrossFadeWindowData>> windows;
     qreal progress;
+    bool redirectingWindow = false;
 };
 
 CrossFadeEffect::CrossFadeEffect(QObject *parent)
@@ -353,17 +354,13 @@ void CrossFadeEffect::redirect(EffectWindow *window)
     // Avoid including blur and contrast effects. During a normal painting cycle they
     // won't be included, but since we call effects->drawWindow() outside usual compositing
     // cycle, we have to prevent backdrop effects kicking in.
-    const QVariant blurRole = window->data(WindowForceBlurRole);
-    window->setData(WindowForceBlurRole, QVariant());
-    const QVariant contrastRole = window->data(WindowForceBackgroundContrastRole);
-    window->setData(WindowForceBackgroundContrastRole, QVariant());
+    d->redirectingWindow = true;
 
     effects->makeOpenGLContextCurrent();
     offscreenData->maybeRender(window);
     offscreenData->frameGeometryAtCapture = window->frameGeometry();
 
-    window->setData(WindowForceBlurRole, blurRole);
-    window->setData(WindowForceBackgroundContrastRole, contrastRole);
+    d->redirectingWindow = false;
 }
 
 void CrossFadeEffect::unredirect(EffectWindow *window)
@@ -384,6 +381,11 @@ void CrossFadeEffect::setShader(EffectWindow *window, GLShader *shader)
     if (const auto it = d->windows.find(window); it != d->windows.end()) {
         it->second->setShader(shader);
     }
+}
+
+QRegion CrossFadeEffect::adjustBackgroundEffectRegion(EffectWindow *window, const QRegion &region) const
+{
+    return d->redirectingWindow ? QRegion() : region;
 }
 
 } // namespace KWin

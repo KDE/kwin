@@ -187,10 +187,6 @@ void SlidingPopupsEffect::postPaintWindow(EffectWindow *w)
     auto animationIt = m_animations.find(w);
     if (animationIt != m_animations.end()) {
         if ((*animationIt).timeLine.done()) {
-            if (!w->isDeleted()) {
-                w->setData(WindowForceBackgroundContrastRole, QVariant());
-                w->setData(WindowForceBlurRole, QVariant());
-            }
             m_animations.erase(animationIt);
         }
         effects->addRepaint(w->expandedGeometry());
@@ -514,8 +510,6 @@ void SlidingPopupsEffect::slideIn(EffectWindow *w)
     }
 
     w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
-    w->setData(WindowForceBackgroundContrastRole, QVariant(true));
-    w->setData(WindowForceBlurRole, QVariant(true));
 
     w->addRepaintFull();
 }
@@ -554,23 +548,12 @@ void SlidingPopupsEffect::slideOut(EffectWindow *w)
     }
 
     w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
-    w->setData(WindowForceBackgroundContrastRole, QVariant(true));
-    w->setData(WindowForceBlurRole, QVariant(true));
 
     w->addRepaintFull();
 }
 
 void SlidingPopupsEffect::stopAnimations()
 {
-    for (auto it = m_animations.constBegin(); it != m_animations.constEnd(); ++it) {
-        EffectWindow *w = it.key();
-
-        if (!w->isDeleted()) {
-            w->setData(WindowForceBackgroundContrastRole, QVariant());
-            w->setData(WindowForceBlurRole, QVariant());
-        }
-    }
-
     m_animations.clear();
 }
 

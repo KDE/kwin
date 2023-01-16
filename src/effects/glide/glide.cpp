@@ -342,4 +342,9 @@ bool GlideEffect::isGlideWindow(EffectWindow *w) const
         || w->isDialog();
 }
 
+QRegion GlideEffect::adjustBackgroundEffectRegion(EffectWindow *window, const QRegion &region) const
+{
+    return m_animations.contains(window) ? QRegion() : region;
+}
+
 } // namespace KWin

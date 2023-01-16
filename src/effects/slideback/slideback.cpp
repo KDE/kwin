@@ -139,9 +139,6 @@ void SlideBackEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
     }
 
     const EffectWindowList windows = effects->stackingOrder();
-    for (auto *w : windows) {
-        w->setData(WindowForceBlurRole, QVariant(true));
-    }
 
     effects->prePaintScreen(data, presentTime);
 }
@@ -150,10 +147,6 @@ void SlideBackEffect::postPaintScreen()
 {
     if (motionManager.areWindowsMoving()) {
         effects->addRepaintFull();
-    }
-
-    for (auto &w : effects->stackingOrder()) {
-        w->setData(WindowForceBlurRole, QVariant());
     }
 
     effects->postPaintScreen();

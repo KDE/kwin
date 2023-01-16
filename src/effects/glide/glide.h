@@ -51,6 +51,7 @@ public:
 
     bool isActive() const override;
     int requestedEffectChainPosition() const override;
+    QRegion adjustBackgroundEffectRegion(EffectWindow *window, const QRegion &region) const override;
 
     static bool supported();
 

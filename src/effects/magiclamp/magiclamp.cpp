@@ -370,4 +370,9 @@ bool MagicLampEffect::isActive() const
     return !m_animations.isEmpty();
 }
 
+QRegion MagicLampEffect::adjustBackgroundEffectRegion(EffectWindow *window, const QRegion &region) const
+{
+    return m_animations.contains(window) ? QRegion() : region;
+}
+
 } // namespace

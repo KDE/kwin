@@ -120,6 +120,8 @@ public:
      **/
     void setShader(EffectWindow *window, GLShader *shader);
 
+    QRegion adjustBackgroundEffectRegion(EffectWindow *window, const QRegion &region) const override;
+
     static bool supported();
 
 private:
