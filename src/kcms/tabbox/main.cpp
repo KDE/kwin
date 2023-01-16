@@ -4,6 +4,7 @@
 
     SPDX-FileCopyrightText: 2009 Martin Gräßlin <mgraesslin@kde.org>
     SPDX-FileCopyrightText: 2020 Cyril Rossi <cyril.rossi@enioka.com>
+    SPDX-FileCopyrightText: 2023 Ismael Asensio <isma.af@gmail.com>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -53,8 +54,8 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget *parent, const QVariantList &args)
     , m_data(new KWinTabboxData(this))
 {
     QTabWidget *tabWidget = new QTabWidget(this);
-    m_primaryTabBoxUi = new KWinTabBoxConfigForm(KWinTabBoxConfigForm::TabboxType::Main, tabWidget);
-    m_alternativeTabBoxUi = new KWinTabBoxConfigForm(KWinTabBoxConfigForm::TabboxType::Alternative, tabWidget);
+    m_primaryTabBoxUi = new KWinTabBoxConfigForm(KWinTabBoxConfigForm::TabboxType::Main, m_data->tabBoxConfig(), tabWidget);
+    m_alternativeTabBoxUi = new KWinTabBoxConfigForm(KWinTabBoxConfigForm::TabboxType::Alternative, m_data->tabBoxAlternativeConfig(), tabWidget);
     tabWidget->addTab(m_primaryTabBoxUi, i18n("Main"));
     tabWidget->addTab(m_alternativeTabBoxUi, i18n("Alternative"));
 
@@ -85,7 +86,6 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget *parent, const QVariantList &args)
 
     initLayoutLists();
 
-    connect(this, &KWinTabBoxConfig::defaultsIndicatorsVisibleChanged, this, &KWinTabBoxConfig::updateDefaultIndicator);
     createConnections(m_primaryTabBoxUi);
     createConnections(m_alternativeTabBoxUi);
 
@@ -98,9 +98,6 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget *parent, const QVariantList &args)
     } else {
         infoLabel->hide();
     }
-
-    setEnabledUi(m_primaryTabBoxUi, m_data->tabBoxConfig());
-    setEnabledUi(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
 }
 
 KWinTabBoxConfig::~KWinTabBoxConfig()
@@ -187,106 +184,27 @@ void KWinTabBoxConfig::initLayoutLists()
     m_alternativeTabBoxUi->setEffectComboModel(model);
 }
 
-void KWinTabBoxConfig::setEnabledUi(KWinTabBoxConfigForm *form, const TabBoxSettings *config)
-{
-    form->setHighlightWindowsEnabled(!config->isHighlightWindowsImmutable());
-    form->setFilterScreenEnabled(!config->isMultiScreenModeImmutable());
-    form->setFilterDesktopEnabled(!config->isDesktopModeImmutable());
-    form->setFilterActivitiesEnabled(!config->isActivitiesModeImmutable());
-    form->setFilterMinimizationEnabled(!config->isMinimizedModeImmutable());
-    form->setApplicationModeEnabled(!config->isApplicationsModeImmutable());
-    form->setOrderMinimizedModeEnabled(!config->isOrderMinimizedModeImmutable());
-    form->setShowDesktopModeEnabled(!config->isShowDesktopModeImmutable());
-    form->setSwitchingModeEnabled(!config->isSwitchingModeImmutable());
-    form->setLayoutNameEnabled(!config->isLayoutNameImmutable());
-}
-
 void KWinTabBoxConfig::createConnections(KWinTabBoxConfigForm *form)
 {
     connect(form, &KWinTabBoxConfigForm::effectConfigButtonClicked, this, &KWinTabBoxConfig::configureEffectClicked);
+    connect(form, &KWinTabBoxConfigForm::configChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
 
-    connect(form, &KWinTabBoxConfigForm::filterScreenChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
-    connect(form, &KWinTabBoxConfigForm::filterDesktopChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
-    connect(form, &KWinTabBoxConfigForm::filterActivitiesChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
-    connect(form, &KWinTabBoxConfigForm::filterMinimizationChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
-    connect(form, &KWinTabBoxConfigForm::applicationModeChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
-    connect(form, &KWinTabBoxConfigForm::orderMinimizedModeChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
-    connect(form, &KWinTabBoxConfigForm::showDesktopModeChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
-    connect(form, &KWinTabBoxConfigForm::switchingModeChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
-    connect(form, &KWinTabBoxConfigForm::layoutNameChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
-    connect(form, &KWinTabBoxConfigForm::shortcutChanged, this, &KWinTabBoxConfig::updateUnmanagedState);
+    connect(this, &KWinTabBoxConfig::defaultsIndicatorsVisibleChanged, form, &KWinTabBoxConfigForm::setDefaultIndicatorVisible);
 }
 
 void KWinTabBoxConfig::updateUnmanagedState()
 {
     bool isNeedSave = false;
-    isNeedSave |= updateUnmanagedIsNeedSave(m_primaryTabBoxUi, m_data->tabBoxConfig());
-    isNeedSave |= updateUnmanagedIsNeedSave(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
+    isNeedSave |= m_data->tabBoxConfig()->isSaveNeeded() || m_primaryTabBoxUi->isShortcutsChanged();
+    isNeedSave |= m_data->tabBoxAlternativeConfig()->isSaveNeeded() || m_alternativeTabBoxUi->isShortcutsChanged();
 
     unmanagedWidgetChangeState(isNeedSave);
 
     bool isDefault = true;
-    isDefault &= updateUnmanagedIsDefault(m_primaryTabBoxUi, m_data->tabBoxConfig());
-    isDefault &= updateUnmanagedIsDefault(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
+    isDefault &= m_data->tabBoxConfig()->isDefaults() && m_primaryTabBoxUi->isShortcutsDefault();
+    isDefault &= m_data->tabBoxAlternativeConfig()->isDefaults() && m_alternativeTabBoxUi->isShortcutsDefault();
 
     unmanagedWidgetDefaultState(isDefault);
-
-    updateDefaultIndicator();
-}
-
-void KWinTabBoxConfig::updateDefaultIndicator()
-{
-    const bool visible = defaultsIndicatorsVisible();
-    updateUiDefaultIndicator(visible, m_primaryTabBoxUi, m_data->tabBoxConfig());
-    updateUiDefaultIndicator(visible, m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
-}
-
-bool KWinTabBoxConfig::updateUnmanagedIsNeedSave(const KWinTabBoxConfigForm *form, const TabBoxSettings *config)
-{
-    bool isNeedSave = false;
-    isNeedSave |= form->filterScreen() != config->multiScreenMode();
-    isNeedSave |= form->filterDesktop() != config->desktopMode();
-    isNeedSave |= form->filterActivities() != config->activitiesMode();
-    isNeedSave |= form->filterMinimization() != config->minimizedMode();
-    isNeedSave |= form->applicationMode() != config->applicationsMode();
-    isNeedSave |= form->orderMinimizedMode() != config->orderMinimizedMode();
-    isNeedSave |= form->showDesktopMode() != config->showDesktopMode();
-    isNeedSave |= form->switchingMode() != config->switchingMode();
-    isNeedSave |= form->layoutName() != config->layoutName();
-    isNeedSave |= form->isShortcutsChanged();
-
-    return isNeedSave;
-}
-
-bool KWinTabBoxConfig::updateUnmanagedIsDefault(KWinTabBoxConfigForm *form, const TabBoxSettings *config)
-{
-    bool isDefault = true;
-    isDefault &= form->filterScreen() == config->defaultMultiScreenModeValue();
-    isDefault &= form->filterDesktop() == config->defaultDesktopModeValue();
-    isDefault &= form->filterActivities() == config->defaultActivitiesModeValue();
-    isDefault &= form->filterMinimization() == config->defaultMinimizedModeValue();
-    isDefault &= form->applicationMode() == config->defaultApplicationsModeValue();
-    isDefault &= form->orderMinimizedMode() == config->defaultOrderMinimizedModeValue();
-    isDefault &= form->showDesktopMode() == config->defaultShowDesktopModeValue();
-    isDefault &= form->switchingMode() == config->defaultSwitchingModeValue();
-    isDefault &= form->layoutName() == config->defaultLayoutNameValue();
-    isDefault &= form->isShortcutsDefault();
-
-    return isDefault;
-}
-
-void KWinTabBoxConfig::updateUiDefaultIndicator(bool visible, KWinTabBoxConfigForm *form, const TabBoxSettings *config)
-{
-    form->setFilterScreenDefaultIndicatorVisible(visible && form->filterScreen() != config->defaultMultiScreenModeValue());
-    form->setFilterDesktopDefaultIndicatorVisible(visible && form->filterDesktop() != config->defaultDesktopModeValue());
-    form->setFilterActivitiesDefaultIndicatorVisible(visible && form->filterActivities() != config->defaultActivitiesModeValue());
-    form->setFilterMinimizationDefaultIndicatorVisible(visible && form->filterMinimization() != config->defaultMinimizedModeValue());
-    form->setApplicationModeDefaultIndicatorVisible(visible && form->applicationMode() != config->defaultApplicationsModeValue());
-    form->setOrderMinimizedDefaultIndicatorVisible(visible && form->orderMinimizedMode() != config->defaultOrderMinimizedModeValue());
-    form->setShowDesktopModeDefaultIndicatorVisible(visible && form->showDesktopMode() != config->defaultShowDesktopModeValue());
-    form->setSwitchingModeDefaultIndicatorVisible(visible && form->switchingMode() != config->defaultSwitchingModeValue());
-    form->setLayoutNameDefaultIndicatorVisible(visible && form->layoutName() != config->defaultLayoutNameValue());
-    form->setShortcutsDefaultIndicatorVisible(visible);
 }
 
 void KWinTabBoxConfig::load()
@@ -296,10 +214,10 @@ void KWinTabBoxConfig::load()
     m_data->tabBoxConfig()->load();
     m_data->tabBoxAlternativeConfig()->load();
 
-    updateUiFromConfig(m_primaryTabBoxUi, m_data->tabBoxConfig());
-    updateUiFromConfig(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
-
     m_data->pluginsConfig()->load();
+
+    m_primaryTabBoxUi->updateUiFromConfig();
+    m_alternativeTabBoxUi->updateUiFromConfig();
 
     m_primaryTabBoxUi->loadShortcuts();
     m_alternativeTabBoxUi->loadShortcuts();
@@ -315,9 +233,6 @@ void KWinTabBoxConfig::save()
     // activate effects if they are used otherwise deactivate them.
     m_data->pluginsConfig()->setHighlightwindowEnabled(highlightWindows);
     m_data->pluginsConfig()->save();
-
-    updateConfigFromUi(m_primaryTabBoxUi, m_data->tabBoxConfig());
-    updateConfigFromUi(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
 
     m_primaryTabBoxUi->saveShortcuts();
     m_alternativeTabBoxUi->saveShortcuts();
@@ -335,8 +250,11 @@ void KWinTabBoxConfig::save()
 
 void KWinTabBoxConfig::defaults()
 {
-    updateUiFromDefaultConfig(m_primaryTabBoxUi, m_data->tabBoxConfig());
-    updateUiFromDefaultConfig(m_alternativeTabBoxUi, m_data->tabBoxAlternativeConfig());
+    m_data->tabBoxConfig()->setDefaults();
+    m_data->tabBoxAlternativeConfig()->setDefaults();
+
+    m_primaryTabBoxUi->updateUiFromConfig();
+    m_alternativeTabBoxUi->updateUiFromConfig();
 
     m_primaryTabBoxUi->resetShortcuts();
     m_alternativeTabBoxUi->resetShortcuts();
@@ -344,46 +262,6 @@ void KWinTabBoxConfig::defaults()
     KCModule::defaults();
     updateUnmanagedState();
 }
-
-void KWinTabBoxConfig::updateUiFromConfig(KWinTabBoxConfigForm *form, const KWin::TabBox::TabBoxSettings *config)
-{
-    form->setFilterScreen(static_cast<TabBoxConfig::ClientMultiScreenMode>(config->multiScreenMode()));
-    form->setFilterDesktop(static_cast<TabBoxConfig::ClientDesktopMode>(config->desktopMode()));
-    form->setFilterActivities(static_cast<TabBoxConfig::ClientActivitiesMode>(config->activitiesMode()));
-    form->setFilterMinimization(static_cast<TabBoxConfig::ClientMinimizedMode>(config->minimizedMode()));
-    form->setApplicationMode(static_cast<TabBoxConfig::ClientApplicationsMode>(config->applicationsMode()));
-    form->setOrderMinimizedMode(static_cast<TabBoxConfig::OrderMinimizedMode>(config->orderMinimizedMode()));
-    form->setShowDesktopMode(static_cast<TabBoxConfig::ShowDesktopMode>(config->showDesktopMode()));
-    form->setSwitchingModeChanged(static_cast<TabBoxConfig::ClientSwitchingMode>(config->switchingMode()));
-    form->setLayoutName(config->layoutName());
-}
-
-void KWinTabBoxConfig::updateConfigFromUi(const KWinTabBoxConfigForm *form, TabBoxSettings *config)
-{
-    config->setMultiScreenMode(form->filterScreen());
-    config->setDesktopMode(form->filterDesktop());
-    config->setActivitiesMode(form->filterActivities());
-    config->setMinimizedMode(form->filterMinimization());
-    config->setApplicationsMode(form->applicationMode());
-    config->setOrderMinimizedMode(form->orderMinimizedMode());
-    config->setShowDesktopMode(form->showDesktopMode());
-    config->setSwitchingMode(form->switchingMode());
-    config->setLayoutName(form->layoutName());
-}
-
-void KWinTabBoxConfig::updateUiFromDefaultConfig(KWinTabBoxConfigForm *form, const KWin::TabBox::TabBoxSettings *config)
-{
-    form->setFilterScreen(static_cast<TabBoxConfig::ClientMultiScreenMode>(config->defaultMultiScreenModeValue()));
-    form->setFilterDesktop(static_cast<TabBoxConfig::ClientDesktopMode>(config->defaultDesktopModeValue()));
-    form->setFilterActivities(static_cast<TabBoxConfig::ClientActivitiesMode>(config->defaultActivitiesModeValue()));
-    form->setFilterMinimization(static_cast<TabBoxConfig::ClientMinimizedMode>(config->defaultMinimizedModeValue()));
-    form->setApplicationMode(static_cast<TabBoxConfig::ClientApplicationsMode>(config->defaultApplicationsModeValue()));
-    form->setOrderMinimizedMode(static_cast<TabBoxConfig::OrderMinimizedMode>(config->defaultOrderMinimizedModeValue()));
-    form->setShowDesktopMode(static_cast<TabBoxConfig::ShowDesktopMode>(config->defaultShowDesktopModeValue()));
-    form->setSwitchingModeChanged(static_cast<TabBoxConfig::ClientSwitchingMode>(config->defaultSwitchingModeValue()));
-    form->setLayoutName(config->defaultLayoutNameValue());
-}
-
 void KWinTabBoxConfig::configureEffectClicked()
 {
     auto form = qobject_cast<KWinTabBoxConfigForm *>(sender());
@@ -392,7 +270,7 @@ void KWinTabBoxConfig::configureEffectClicked()
     if (form->effectComboCurrentData(KWinTabBoxConfigForm::AddonEffect).toBool()) {
         // Show the preview for addon effect
         new LayoutPreview(form->effectComboCurrentData(KWinTabBoxConfigForm::LayoutPath).toString(),
-                          form->showDesktopMode(),
+                          form->config()->desktopMode(),
                           this);
     }
 }

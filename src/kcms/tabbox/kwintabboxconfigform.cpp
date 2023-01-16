@@ -4,27 +4,26 @@
 
     SPDX-FileCopyrightText: 2009 Martin Gräßlin <mgraesslin@kde.org>
     SPDX-FileCopyrightText: 2020 Cyril Rossi <cyril.rossi@enioka.com>
+    SPDX-FileCopyrightText: 2023 Ismael Asensio <isma.af@gmail.com>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
 #include "kwintabboxconfigform.h"
+#include "kwintabboxsettings.h"
 #include "ui_main.h"
-
-#include <QDebug>
 
 #include <KActionCollection>
 #include <KGlobalAccel>
-#include <KShortcutsEditor>
 
 namespace KWin
 {
 
 using namespace TabBox;
 
-KWinTabBoxConfigForm::KWinTabBoxConfigForm(TabboxType type, QWidget *parent)
+KWinTabBoxConfigForm::KWinTabBoxConfigForm(TabboxType type, TabBoxSettings *config, QWidget *parent)
     : QWidget(parent)
-    , m_type(type)
+    , m_config(config)
     , ui(new Ui::KWinTabBoxConfigForm)
 {
     ui->setupUi(this);
@@ -35,6 +34,8 @@ KWinTabBoxConfigForm::KWinTabBoxConfigForm(TabboxType type, QWidget *parent)
         ui->filterScreens->hide();
         ui->screenFilter->hide();
     }
+
+    connect(this, &KWinTabBoxConfigForm::configChanged, this, &KWinTabBoxConfigForm::updateDefaultIndicators);
 
     connect(ui->effectConfigButton, &QPushButton::clicked, this, &KWinTabBoxConfigForm::effectConfigButtonClicked);
 
@@ -81,22 +82,29 @@ KWinTabBoxConfigForm::KWinTabBoxConfigForm(TabboxType type, QWidget *parent)
     m_actionCollection->setConfigGroup("Navigation");
     m_actionCollection->setConfigGlobal(true);
 
-    if (TabboxType::Main == m_type) {
+    if (TabboxType::Main == type) {
         addShortcut("Walk Through Windows", ui->scAll, Qt::ALT | Qt::Key_Tab);
         addShortcut("Walk Through Windows (Reverse)", ui->scAllReverse, Qt::ALT | Qt::SHIFT | Qt::Key_Backtab);
         addShortcut("Walk Through Windows of Current Application", ui->scCurrent, Qt::ALT | Qt::Key_QuoteLeft);
         addShortcut("Walk Through Windows of Current Application (Reverse)", ui->scCurrentReverse, Qt::ALT | Qt::Key_AsciiTilde);
-    } else if (TabboxType::Alternative == m_type) {
+    } else if (TabboxType::Alternative == type) {
         addShortcut("Walk Through Windows Alternative", ui->scAll);
         addShortcut("Walk Through Windows Alternative (Reverse)", ui->scAllReverse);
         addShortcut("Walk Through Windows of Current Application Alternative", ui->scCurrent);
         addShortcut("Walk Through Windows of Current Application Alternative (Reverse)", ui->scCurrentReverse);
     }
+
+    updateUiFromConfig();
 }
 
 KWinTabBoxConfigForm::~KWinTabBoxConfigForm()
 {
     delete ui;
+}
+
+TabBoxSettings *KWinTabBoxConfigForm::config() const
+{
+    return m_config;
 }
 
 bool KWinTabBoxConfigForm::highlightWindows() const
@@ -220,21 +228,18 @@ void KWinTabBoxConfigForm::setSwitchingModeChanged(TabBox::TabBoxConfig::ClientS
 
 void KWinTabBoxConfigForm::setLayoutName(const QString &layoutName)
 {
-    ui->effectCombo->setCurrentIndex(ui->effectCombo->findData(layoutName));
+    const int index = ui->effectCombo->findData(layoutName);
+    if (index >= 0) {
+        ui->effectCombo->setCurrentIndex(index);
+    }
 }
 
 void KWinTabBoxConfigForm::setEffectComboModel(QStandardItemModel *model)
 {
-    int index = ui->effectCombo->currentIndex();
-    QVariant data = ui->effectCombo->itemData(index);
-
+    // We don't want to lose the config layout when resetting the combo model
+    const QString layout = m_config->layoutName();
     ui->effectCombo->setModel(model);
-
-    if (data.isValid()) {
-        ui->effectCombo->setCurrentIndex(ui->effectCombo->findData(data));
-    } else if (index != -1) {
-        ui->effectCombo->setCurrentIndex(index);
-    }
+    setLayoutName(layout);
 }
 
 QVariant KWinTabBoxConfigForm::effectComboCurrentData(int role) const
@@ -298,129 +303,6 @@ bool KWinTabBoxConfigForm::isShortcutsDefault() const
     return true;
 }
 
-void KWinTabBoxConfigForm::setHighlightWindowsEnabled(bool enabled)
-{
-    m_isHighlightWindowsEnabled = enabled;
-    ui->kcfg_HighlightWindows->setEnabled(m_isHighlightWindowsEnabled);
-}
-
-void KWinTabBoxConfigForm::setFilterScreenEnabled(bool enabled)
-{
-    ui->filterScreens->setEnabled(enabled);
-    ui->currentScreen->setEnabled(enabled);
-    ui->otherScreens->setEnabled(enabled);
-}
-
-void KWinTabBoxConfigForm::setFilterDesktopEnabled(bool enabled)
-{
-    ui->filterDesktops->setEnabled(enabled);
-    ui->currentDesktop->setEnabled(enabled);
-    ui->otherDesktops->setEnabled(enabled);
-}
-
-void KWinTabBoxConfigForm::setFilterActivitiesEnabled(bool enabled)
-{
-    ui->filterActivities->setEnabled(enabled);
-    ui->currentActivity->setEnabled(enabled);
-    ui->otherActivities->setEnabled(enabled);
-}
-
-void KWinTabBoxConfigForm::setFilterMinimizationEnabled(bool enabled)
-{
-    ui->filterMinimization->setEnabled(enabled);
-    ui->visibleWindows->setEnabled(enabled);
-    ui->hiddenWindows->setEnabled(enabled);
-}
-
-void KWinTabBoxConfigForm::setApplicationModeEnabled(bool enabled)
-{
-    ui->oneAppWindow->setEnabled(enabled);
-}
-
-void KWinTabBoxConfigForm::setOrderMinimizedModeEnabled(bool enabled)
-{
-    ui->orderMinimized->setEnabled(enabled);
-}
-
-void KWinTabBoxConfigForm::setShowDesktopModeEnabled(bool enabled)
-{
-    ui->showDesktop->setEnabled(enabled);
-}
-
-void KWinTabBoxConfigForm::setSwitchingModeEnabled(bool enabled)
-{
-    ui->switchingModeCombo->setEnabled(enabled);
-}
-
-void KWinTabBoxConfigForm::setLayoutNameEnabled(bool enabled)
-{
-    ui->effectCombo->setEnabled(enabled);
-}
-
-void KWinTabBoxConfigForm::setFilterScreenDefaultIndicatorVisible(bool visible)
-{
-    setDefaultIndicatorVisible(ui->filterScreens, visible);
-    setDefaultIndicatorVisible(ui->currentScreen, visible);
-    setDefaultIndicatorVisible(ui->otherScreens, visible);
-}
-
-void KWinTabBoxConfigForm::setFilterDesktopDefaultIndicatorVisible(bool visible)
-{
-    setDefaultIndicatorVisible(ui->filterDesktops, visible);
-    setDefaultIndicatorVisible(ui->currentDesktop, visible);
-    setDefaultIndicatorVisible(ui->otherDesktops, visible);
-}
-
-void KWinTabBoxConfigForm::setFilterActivitiesDefaultIndicatorVisible(bool visible)
-{
-    setDefaultIndicatorVisible(ui->filterActivities, visible);
-    setDefaultIndicatorVisible(ui->currentActivity, visible);
-    setDefaultIndicatorVisible(ui->otherActivities, visible);
-}
-
-void KWinTabBoxConfigForm::setFilterMinimizationDefaultIndicatorVisible(bool visible)
-{
-    setDefaultIndicatorVisible(ui->filterMinimization, visible);
-    setDefaultIndicatorVisible(ui->visibleWindows, visible);
-    setDefaultIndicatorVisible(ui->hiddenWindows, visible);
-}
-
-void KWinTabBoxConfigForm::setApplicationModeDefaultIndicatorVisible(bool visible)
-{
-    setDefaultIndicatorVisible(ui->oneAppWindow, visible);
-}
-
-void KWinTabBoxConfigForm::setOrderMinimizedDefaultIndicatorVisible(bool visible)
-{
-    setDefaultIndicatorVisible(ui->orderMinimized, visible);
-}
-
-void KWinTabBoxConfigForm::setShowDesktopModeDefaultIndicatorVisible(bool visible)
-{
-    setDefaultIndicatorVisible(ui->showDesktop, visible);
-}
-
-void KWinTabBoxConfigForm::setSwitchingModeDefaultIndicatorVisible(bool visible)
-{
-    setDefaultIndicatorVisible(ui->switchingModeCombo, visible);
-}
-
-void KWinTabBoxConfigForm::setLayoutNameDefaultIndicatorVisible(bool visible)
-{
-    setDefaultIndicatorVisible(ui->effectCombo, visible);
-}
-
-void KWinTabBoxConfigForm::setShortcutsDefaultIndicatorVisible(bool visible)
-{
-    for (const auto &widget : {ui->scAll, ui->scAllReverse, ui->scCurrent, ui->scCurrentReverse}) {
-        const QString actionName = widget->property("shortcutAction").toString();
-        QAction *action = m_actionCollection->action(actionName);
-        const bool isDefault = (action->shortcut() == m_actionCollection->defaultShortcut(action));
-
-        setDefaultIndicatorVisible(widget, visible && !isDefault);
-    }
-}
-
 void KWinTabBoxConfigForm::tabBoxToggled(bool on)
 {
     // Highlight Windows options is availabled if no TabBox effect is selected
@@ -431,42 +313,50 @@ void KWinTabBoxConfigForm::tabBoxToggled(bool on)
 
 void KWinTabBoxConfigForm::onFilterScreen()
 {
-    Q_EMIT filterScreenChanged(filterScreen());
+    m_config->setMultiScreenMode(filterScreen());
+    Q_EMIT configChanged();
 }
 
 void KWinTabBoxConfigForm::onFilterDesktop()
 {
-    Q_EMIT filterDesktopChanged(filterDesktop());
+    m_config->setDesktopMode(filterDesktop());
+    Q_EMIT configChanged();
 }
 
 void KWinTabBoxConfigForm::onFilterActivites()
 {
-    Q_EMIT filterActivitiesChanged(filterActivities());
+    m_config->setActivitiesMode(filterActivities());
+    Q_EMIT configChanged();
 }
 
 void KWinTabBoxConfigForm::onFilterMinimization()
 {
-    Q_EMIT filterMinimizationChanged(filterMinimization());
+    m_config->setMinimizedMode(filterMinimization());
+    Q_EMIT configChanged();
 }
 
 void KWin::KWinTabBoxConfigForm::onApplicationMode()
 {
-    Q_EMIT applicationModeChanged(applicationMode());
+    m_config->setApplicationsMode(applicationMode());
+    Q_EMIT configChanged();
 }
 
 void KWinTabBoxConfigForm::onOrderMinimizedMode()
 {
-    Q_EMIT orderMinimizedModeChanged(orderMinimizedMode());
+    m_config->setOrderMinimizedMode(orderMinimizedMode());
+    Q_EMIT configChanged();
 }
 
 void KWinTabBoxConfigForm::onShowDesktopMode()
 {
-    Q_EMIT showDesktopModeChanged(showDesktopMode());
+    m_config->setShowDesktopMode(showDesktopMode());
+    Q_EMIT configChanged();
 }
 
 void KWinTabBoxConfigForm::onSwitchingMode()
 {
-    Q_EMIT switchingModeChanged(switchingMode());
+    m_config->setSwitchingMode(switchingMode());
+    Q_EMIT configChanged();
 }
 
 void KWinTabBoxConfigForm::onEffectCombo()
@@ -478,7 +368,8 @@ void KWinTabBoxConfigForm::onEffectCombo()
     }
     ui->kcfg_HighlightWindows->setEnabled(isAddonEffect && m_isHighlightWindowsEnabled);
 
-    Q_EMIT layoutNameChanged(layoutName());
+    m_config->setLayoutName(layoutName());
+    Q_EMIT configChanged();
 }
 
 void KWinTabBoxConfigForm::onShortcutChanged(const QKeySequence &seq)
@@ -493,13 +384,88 @@ void KWinTabBoxConfigForm::onShortcutChanged(const QKeySequence &seq)
     QAction *action = m_actionCollection->action(actionName);
     action->setShortcut(seq);
 
-    Q_EMIT shortcutChanged();
+    Q_EMIT configChanged();
 }
 
-void KWinTabBoxConfigForm::setDefaultIndicatorVisible(QWidget *widget, bool visible)
+void KWinTabBoxConfigForm::updateUiFromConfig()
 {
-    widget->setProperty("_kde_highlight_neutral", visible);
-    widget->update();
+    setFilterScreen(static_cast<TabBoxConfig::ClientMultiScreenMode>(m_config->multiScreenMode()));
+    setFilterDesktop(static_cast<TabBoxConfig::ClientDesktopMode>(m_config->desktopMode()));
+    setFilterActivities(static_cast<TabBoxConfig::ClientActivitiesMode>(m_config->activitiesMode()));
+    setFilterMinimization(static_cast<TabBoxConfig::ClientMinimizedMode>(m_config->minimizedMode()));
+    setApplicationMode(static_cast<TabBoxConfig::ClientApplicationsMode>(m_config->applicationsMode()));
+    setOrderMinimizedMode(static_cast<TabBoxConfig::OrderMinimizedMode>(m_config->orderMinimizedMode()));
+    setShowDesktopMode(static_cast<TabBoxConfig::ShowDesktopMode>(m_config->showDesktopMode()));
+    setSwitchingModeChanged(static_cast<TabBoxConfig::ClientSwitchingMode>(m_config->switchingMode()));
+    setLayoutName(m_config->layoutName());
+
+    updateDefaultIndicators();
+}
+
+void KWinTabBoxConfigForm::setEnabledUi()
+{
+    m_isHighlightWindowsEnabled = !m_config->isHighlightWindowsImmutable();
+    ui->kcfg_HighlightWindows->setEnabled(!m_config->isHighlightWindowsImmutable());
+
+    ui->filterScreens->setEnabled(!m_config->isMultiScreenModeImmutable());
+    ui->currentScreen->setEnabled(!m_config->isMultiScreenModeImmutable());
+    ui->otherScreens->setEnabled(!m_config->isMultiScreenModeImmutable());
+
+    ui->filterDesktops->setEnabled(!m_config->isDesktopModeImmutable());
+    ui->currentDesktop->setEnabled(!m_config->isDesktopModeImmutable());
+    ui->otherDesktops->setEnabled(!m_config->isDesktopModeImmutable());
+
+    ui->filterActivities->setEnabled(!m_config->isActivitiesModeImmutable());
+    ui->currentActivity->setEnabled(!m_config->isActivitiesModeImmutable());
+    ui->otherActivities->setEnabled(!m_config->isActivitiesModeImmutable());
+
+    ui->filterMinimization->setEnabled(!m_config->isMinimizedModeImmutable());
+    ui->visibleWindows->setEnabled(!m_config->isMinimizedModeImmutable());
+    ui->hiddenWindows->setEnabled(!m_config->isMinimizedModeImmutable());
+
+    ui->oneAppWindow->setEnabled(!m_config->isApplicationsModeImmutable());
+    ui->orderMinimized->setEnabled(!m_config->isOrderMinimizedModeImmutable());
+    ui->showDesktop->setEnabled(!m_config->isShowDesktopModeImmutable());
+    ui->switchingModeCombo->setEnabled(!m_config->isSwitchingModeImmutable());
+    ui->effectCombo->setEnabled(!m_config->isLayoutNameImmutable());
+}
+
+void KWinTabBoxConfigForm::setDefaultIndicatorVisible(bool show)
+{
+    m_showDefaultIndicator = show;
+    updateDefaultIndicators();
+}
+
+void KWinTabBoxConfigForm::updateDefaultIndicators()
+{
+    applyDefaultIndicator({ui->filterScreens, ui->currentScreen, ui->otherScreens},
+                          m_config->multiScreenMode() == m_config->defaultMultiScreenModeValue());
+    applyDefaultIndicator({ui->filterDesktops, ui->currentDesktop, ui->otherDesktops},
+                          m_config->desktopMode() == m_config->defaultDesktopModeValue());
+    applyDefaultIndicator({ui->filterActivities, ui->currentActivity, ui->otherActivities},
+                          m_config->activitiesMode() == m_config->defaultActivitiesModeValue());
+    applyDefaultIndicator({ui->filterMinimization, ui->visibleWindows, ui->hiddenWindows},
+                          m_config->minimizedMode() == m_config->defaultMinimizedModeValue());
+    applyDefaultIndicator({ui->oneAppWindow}, m_config->applicationsMode() == m_config->defaultApplicationsModeValue());
+    applyDefaultIndicator({ui->orderMinimized}, m_config->orderMinimizedMode() == m_config->defaultOrderMinimizedModeValue());
+    applyDefaultIndicator({ui->showDesktop}, m_config->showDesktopMode() == m_config->defaultShowDesktopModeValue());
+    applyDefaultIndicator({ui->switchingModeCombo}, m_config->switchingMode() == m_config->defaultSwitchingModeValue());
+    applyDefaultIndicator({ui->effectCombo}, m_config->layoutName() == m_config->defaultLayoutNameValue());
+
+    for (const auto &widget : {ui->scAll, ui->scAllReverse, ui->scCurrent, ui->scCurrentReverse}) {
+        const QString actionName = widget->property("shortcutAction").toString();
+        QAction *action = m_actionCollection->action(actionName);
+        const bool isDefault = (action->shortcut() == m_actionCollection->defaultShortcut(action));
+        applyDefaultIndicator({widget}, isDefault);
+    }
+}
+
+void KWinTabBoxConfigForm::applyDefaultIndicator(QList<QWidget *> widgets, bool isDefault)
+{
+    for (auto widget : widgets) {
+        widget->setProperty("_kde_highlight_neutral", m_showDefaultIndicator && !isDefault);
+        widget->update();
+    }
 }
 
 } // namespace
