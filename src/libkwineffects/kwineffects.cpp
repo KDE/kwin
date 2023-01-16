@@ -1033,7 +1033,7 @@ void RenderGeometry::appendWindowVertex(const WindowVertex &windowVertex, qreal 
     GLVertex2D glVertex;
     switch (m_vertexSnappingMode) {
     case VertexSnappingMode::None:
-        glVertex.position = QVector2D(windowVertex.x(), windowVertex.y() * deviceScale);
+        glVertex.position = QVector2D(windowVertex.x(), windowVertex.y()) * deviceScale;
         break;
     case VertexSnappingMode::Round:
         glVertex.position = roundVector(QVector2D(windowVertex.x(), windowVertex.y()) * deviceScale);
