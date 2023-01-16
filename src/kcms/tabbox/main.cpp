@@ -139,20 +139,26 @@ static QList<KPackage::Package> availableLnFPackages()
 void KWinTabBoxConfig::initLayoutLists()
 {
     QList<KPluginMetaData> offers = KPackage::PackageLoader::self()->listPackages("KWin/WindowSwitcher");
-    QStringList layoutNames, layoutPlugins, layoutPaths;
+    QStandardItemModel *model = new QStandardItemModel;
+
+    auto addToModel = [model](const QString &name, const QString &pluginId, const QString &path) {
+        QStandardItem *item = new QStandardItem(name);
+        item->setData(pluginId, Qt::UserRole);
+        item->setData(path, KWinTabBoxConfigForm::LayoutPath);
+        item->setData(true, KWinTabBoxConfigForm::AddonEffect);
+        model->appendRow(item);
+    };
 
     const auto lnfPackages = availableLnFPackages();
     for (const auto &package : lnfPackages) {
         const auto &metaData = package.metadata();
-
         const QString switcherFile = package.filePath("windowswitcher", QStringLiteral("WindowSwitcher.qml"));
         if (switcherFile.isEmpty()) {
             // Skip lnfs that don't actually ship a switcher
             continue;
         }
-        layoutNames << metaData.name();
-        layoutPlugins << metaData.pluginId();
-        layoutPaths << switcherFile;
+
+        addToModel(metaData.name(), metaData.pluginId(), switcherFile);
     }
 
     for (const auto &offer : offers) {
@@ -172,25 +178,13 @@ void KWinTabBoxConfig::initLayoutLists()
             continue;
         }
 
-        layoutNames << offer.name();
-        layoutPlugins << pluginName;
-        layoutPaths << scriptFile;
+        addToModel(offer.name(), pluginName, scriptFile);
     }
 
-    KWinTabBoxConfigForm *ui[2] = {m_primaryTabBoxUi, m_alternativeTabBoxUi};
-    for (int i = 0; i < 2; ++i) {
-        QStandardItemModel *model = new QStandardItemModel;
+    model->sort(0);
 
-        for (int j = 0; j < layoutNames.count(); ++j) {
-            QStandardItem *item = new QStandardItem(layoutNames[j]);
-            item->setData(layoutPlugins[j], Qt::UserRole);
-            item->setData(layoutPaths[j], KWinTabBoxConfigForm::LayoutPath);
-            item->setData(true, KWinTabBoxConfigForm::AddonEffect);
-            model->appendRow(item);
-        }
-        model->sort(0);
-        ui[i]->setEffectComboModel(model);
-    }
+    m_primaryTabBoxUi->setEffectComboModel(model);
+    m_alternativeTabBoxUi->setEffectComboModel(model);
 }
 
 void KWinTabBoxConfig::setEnabledUi(KWinTabBoxConfigForm *form, const TabBoxSettings *config)
