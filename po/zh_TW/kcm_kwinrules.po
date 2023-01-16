@@ -8,13 +8,13 @@
 # Franklin Weng <franklin@goodhorse.idv.tw>, 2011, 2012, 2013, 2015.
 # Jeff Huang <s8321414@gmail.com>, 2016, 2022.
 # pan93412 <pan93412@gmail.com>, 2018, 2019, 2020.
-# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2022.
+# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-11 00:48+0000\n"
-"PO-Revision-Date: 2022-12-26 03:37+0900\n"
+"PO-Revision-Date: 2023-01-15 19:32+0800\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
 "Language: zh_TW\n"
@@ -617,7 +617,7 @@ msgstr "不讓視窗出現在工具列中。"
 #: rulesmodel.cpp:553
 #, kde-format
 msgid "Skip pager"
-msgstr "略過呼叫器"
+msgstr "略過虛擬桌面管理器"
 
 #: rulesmodel.cpp:555
 #, kde-format
@@ -740,7 +740,7 @@ msgstr ""
 "\n"
 "警告：\n"
 "如此一來，在該視窗啟動時，您就不能使用 Alt+Tab 離開視窗。\n"
-"也沒辦法用任何其它的全域捷徑鍵（如按 Alt+F2 叫出 KRunner）。"
+"也沒辦法用任何其它的全域快捷鍵（如按 Alt+F2 叫出 KRunner）。"
 
 #: rulesmodel.cpp:635
 #, kde-format

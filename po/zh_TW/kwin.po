@@ -11,20 +11,20 @@
 # pan93412 <pan93412@gmail.com>, 2018, 2019, 2020.
 # Frank Weng (a.k.a. Franklin) <franklin at goodhorse dot idv dot tw>, 2007, 2008, 2009, 2010.
 # Franklin Weng <franklin at goodhorse dot idv dot tw>, 2007, 2008.
-# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2022.
+# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-12 00:56+0000\n"
-"PO-Revision-Date: 2022-06-24 03:21+0900\n"
+"PO-Revision-Date: 2023-01-15 19:45+0800\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.04.2\n"
+"X-Generator: Lokalize 22.12.0\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #, kde-format
@@ -59,16 +59,19 @@ msgid ""
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
+"<b>OpenGL 合成（預設值）曾經使 KWin 崩潰。</b><br>這很可能是因為一個驅動程式"
+"問題。<p>如果您認為從上次崩潰到現在您已經更新到了<br>穩定的驅動程式版本，您可"
+"以重設這個保護機制，但<b>請注意這可能會馬上造成崩潰！</b></p>"
 
 #: composite.cpp:1071
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
-msgstr ""
+msgstr "需要的 X 擴充功能（XComposite 和 XDamage）無法使用。"
 
 #: composite.cpp:1074
 #, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr ""
+msgstr "GLX/OpenGL 無法使用。"
 
 #: debug_console.cpp:79 debug_console.cpp:84
 #, kde-format
@@ -563,7 +566,7 @@ msgstr "筆記本蓋"
 #, kde-format
 msgctxt "Name of a hardware switch"
 msgid "Tablet mode"
-msgstr "平板模式"
+msgstr "繪圖板模式"
 
 #: debug_console.cpp:481
 #, kde-format
@@ -592,7 +595,7 @@ msgstr "狀態"
 #: debug_console.cpp:508
 #, kde-format
 msgid "Tablet Tool"
-msgstr "平板工具"
+msgstr "繪圖板工具"
 
 #: debug_console.cpp:509
 #, kde-format
@@ -633,7 +636,7 @@ msgstr "修飾元"
 #: debug_console.cpp:526
 #, kde-format
 msgid "Tablet Tool Button"
-msgstr "平板工具按鈕"
+msgstr "繪圖板工具按鈕"
 
 #: debug_console.cpp:527 debug_console.cpp:541
 #, kde-format
@@ -654,7 +657,7 @@ msgstr "繪圖板"
 #: debug_console.cpp:540
 #, kde-format
 msgid "Tablet Pad Button"
-msgstr "平板按鈕"
+msgstr "繪圖板按鈕"
 
 #: debug_console.cpp:553
 #, kde-format
@@ -1163,19 +1166,17 @@ msgstr "等久一點"
 #: input.cpp:1984
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "移動繪圖板到下一個輸出"
 
 #: input.cpp:2063
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Tablet moved to %1"
-msgstr "平板模式"
+msgstr "繪圖板已移動到 %1"
 
 #: input.cpp:2063
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "繪圖板已切換輸出"
 
 #: input.cpp:3040
 #, kde-format
@@ -1346,7 +1347,7 @@ msgstr "透過 drm 節點成像。"
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
-msgstr ""
+msgstr "從 locale1 抓取地域資訊而非從使用者設定"
 
 #: main_wayland.cpp:386
 #, kde-format
@@ -1574,7 +1575,7 @@ msgstr "切換夜色模式"
 #: plugins/nightcolor/nightcolormanager.cpp:471
 #, kde-format
 msgid "Color Temperature Preview"
-msgstr ""
+msgstr "色溫預覽"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -1874,13 +1875,13 @@ msgstr "跳過工作列規則類型"
 #: rulesettings.kcfg:249
 #, kde-format
 msgid "Skip pager"
-msgstr "略過呼叫器"
+msgstr "略過虛擬桌面切換器"
 
 #. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:253
 #, kde-format
 msgid "Skip pager rule type"
-msgstr "略過呼叫器規則類型"
+msgstr "略過虛擬桌面切換器規則類型"
 
 #. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:260
@@ -2102,20 +2103,20 @@ msgstr "桌面檔案名稱規則類型"
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "找不到軟體包中繼資料"
 
 #: scripting/genericscriptedconfig.cpp:84
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "%1 不含有效的 metadata.json 檔案"
 
 #: scripting/genericscriptedconfig.cpp:90
 #: scripting/genericscriptedconfig.cpp:96
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "%1 不存在"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2247,10 +2248,9 @@ msgid "&Shade"
 msgstr "收起(&S)"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "沒有標題列及框架"
+msgstr "沒有標題列及框架(&N)"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2321,11 +2321,9 @@ msgid "Show in &Activities"
 msgstr "在活動顯示(&A)"
 
 #: useractions.cpp:525
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move the window to that desktop"
-#| msgid "Move to New Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "移動至新桌面"
+msgstr "移動至目前桌面(&T)"
 
 #: useractions.cpp:535 useractions.cpp:602
 #, kde-format
@@ -2369,10 +2367,9 @@ msgid "&All Activities"
 msgstr "所有的活動(&A)"
 
 #: useractions.cpp:776
-#, fuzzy, kde-format
-#| msgid "Move to %1 %2"
+#, kde-format
 msgid "Move to %1"
-msgstr "移動至 %1 %2"
+msgstr "移動至 %1"
 
 #: useractions.cpp:901
 #, kde-format
@@ -2452,10 +2449,9 @@ msgid "Make Window Fullscreen"
 msgstr "全螢幕"
 
 #: useractions.cpp:1009
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "沒有標題列及框架"
+msgstr "切換視窗標題列及框架"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2583,16 +2579,14 @@ msgid "Switch to Window to the Left"
 msgstr "切換到左方視窗"
 
 #: useractions.cpp:1061
-#, fuzzy, kde-format
-#| msgid "Increase Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr "增加作用中的視窗的不透明度 5 %"
+msgstr "增加作用中的視窗的不透明度 5%"
 
 #: useractions.cpp:1063
-#, fuzzy, kde-format
-#| msgid "Decrease Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr "減少作用中的視窗的不透明度 5 %"
+msgstr "減少作用中的視窗的不透明度 5%"
 
 #: useractions.cpp:1066
 #, kde-format
@@ -2650,28 +2644,24 @@ msgid "Window to Previous Screen"
 msgstr "視窗移到上一個螢幕"
 
 #: useractions.cpp:1102
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "視窗右移一個桌面"
+msgstr "視窗右移一個螢幕"
 
 #: useractions.cpp:1104
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "視窗左移一個桌面"
+msgstr "視窗左移一個螢幕"
 
 #: useractions.cpp:1106
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "視窗移至螢幕 %1"
+msgstr "視窗上移一個螢幕"
 
 #: useractions.cpp:1108
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "視窗下移一個桌面"
+msgstr "視窗下移一個螢幕"
 
 #: useractions.cpp:1112
 #, kde-format
@@ -2689,34 +2679,29 @@ msgid "Switch to Previous Screen"
 msgstr "切換到上一個螢幕"
 
 #: useractions.cpp:1121
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "切換到右方視窗"
+msgstr "切換到右方螢幕"
 
 #: useractions.cpp:1123
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "切換到左方視窗"
+msgstr "切換到左方螢幕"
 
 #: useractions.cpp:1125
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "切換到螢幕 %1"
+msgstr "切換到上方螢幕"
 
 #: useractions.cpp:1127
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "切換到螢幕 %1"
+msgstr "切換到下方螢幕"
 
 #: useractions.cpp:1130
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "移動至桌面(&D)"
+msgstr "看一下桌面"
 
 #: useractions.cpp:1133
 #, kde-format

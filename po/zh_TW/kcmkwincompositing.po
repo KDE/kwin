@@ -8,13 +8,13 @@
 # pan93412 <pan93412@gmail.com>, 2018, 2019.
 # Franklin Weng <franklin at goodhorse dot idv dot tw>, 2007, 2008.
 # Frank Weng (a.k.a. Franklin) <franklin at goodhorse dot idv dot tw>, 2008, 2009, 2010.
-# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2022.
+# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-13 00:58+0000\n"
-"PO-Revision-Date: 2022-12-26 03:41+0900\n"
+"PO-Revision-Date: 2023-01-15 19:49+0800\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
 "Language: zh_TW\n"
@@ -162,7 +162,7 @@ msgstr "強制最平滑的動畫"
 #, kde-format
 msgid ""
 "Reduce latency by allowing screen tearing artifacts in fullscreen windows"
-msgstr ""
+msgstr "藉由允許全螢幕視窗產生螢幕撕裂雜訊來降低延遲"
 
 #: main.cpp:79
 #, kde-format

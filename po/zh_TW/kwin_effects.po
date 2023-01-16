@@ -8,20 +8,20 @@
 # pan93412 <pan93412@gmail.com>, 2018, 2019, 2020.
 # Franklin Weng <franklin at goodhorse dot idv dot tw>, 2007, 2008.
 # Frank Weng (a.k.a. Franklin) <franklin at goodhorse dot idv dot tw>, 2008, 2009, 2010.
-# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2022.
+# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-12 00:56+0000\n"
-"PO-Revision-Date: 2022-06-24 02:29+0900\n"
+"PO-Revision-Date: 2023-01-15 20:17+0800\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.04.2\n"
+"X-Generator: Lokalize 22.12.0\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
@@ -150,7 +150,7 @@ msgstr "外觀"
 #: desktopgrid/desktopgrid_config.ui:30
 #, kde-format
 msgid "Pager"
-msgstr "呼叫器"
+msgstr "虛擬桌面管理器"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_DesktopLayoutMode)
 #: desktopgrid/desktopgrid_config.ui:35
@@ -206,7 +206,7 @@ msgstr "自然"
 #: desktopgrid/desktopgrid_config.ui:147
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "無"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: desktopgrid/desktopgrid_config.ui:155
@@ -324,10 +324,9 @@ msgid "Toggle Invert Effect on Window"
 msgstr "在視窗上切換反轉效果"
 
 #: invert/invert.cpp:56
-#, fuzzy, kde-format
-#| msgid "Invert cursor keys"
+#, kde-format
 msgid "Invert Screen Colors"
-msgstr "反轉游標"
+msgstr "反轉螢幕顏色"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: login/package/contents/ui/config.ui:17
@@ -547,7 +546,7 @@ msgstr "按住 Shift+Meta 鍵並移動滑鼠時繪製"
 #, kde-format
 msgctxt "@label"
 msgid "Unknown"
-msgstr ""
+msgstr "未知"
 
 #: overview/kcm/overvieweffectkcm.cpp:41 overview/overvieweffect.cpp:31
 #, kde-format
@@ -574,22 +573,19 @@ msgid "Ignore minimized windows:"
 msgstr "忽略已最小化的視窗："
 
 #: overview/qml/DesktopBar.qml:187
-#, fuzzy, kde-format
-#| msgid "Delete virtual desktop"
+#, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "刪除虛擬桌面"
 
 #: overview/qml/DesktopBar.qml:283
-#, fuzzy, kde-format
-#| msgid "Add Desktop"
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "新增桌面"
+msgstr "新增虛擬桌面"
 
 #: overview/qml/ScreenView.qml:226
-#, fuzzy, kde-format
-#| msgid "Moving windows:"
+#, kde-format
 msgid "No matching windows"
-msgstr "移動中視窗："
+msgstr "沒有相符的視窗"
 
 #: private/qml/WindowHeapDelegate.qml:151
 #, kde-format
@@ -597,8 +593,7 @@ msgid "Drag Down To Close"
 msgstr "下拉關閉"
 
 #: private/qml/WindowHeapDelegate.qml:461
-#, fuzzy, kde-format
-#| msgid "Close window"
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
 msgstr "關閉視窗"
@@ -646,35 +641,31 @@ msgstr ""
 "Esc 或右鍵點選以取消。"
 
 #: showfps/qml/main.qml:110
-#, fuzzy, kde-format
-#| msgid "Ring Duration:"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr "環繞時間："
+msgstr "繪製時間"
 
 #: showfps/qml/main.qml:162
-#, fuzzy, kde-format
-#| msgid "Ring Count:"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
-msgstr "環繞計數："
+msgstr "繪製數量"
 
 #: showfps/qml/main.qml:175
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr ""
+msgstr "目前 FPS"
 
 #: showfps/qml/main.qml:184
-#, fuzzy, kde-format
-#| msgid "Maximum &width:"
+#, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr "最大寬度(&W)："
+msgstr "最大 FPS"
 
 #: showfps/qml/main.qml:192
-#, fuzzy, kde-format
-#| msgid "This effect is not a benchmark"
+#, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "此效果非性能測試"
@@ -750,45 +741,42 @@ msgstr " %"
 #: tileseditor/tileseditoreffect.cpp:29
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr ""
+msgstr "切換方塊編輯器"
 
 #: tileseditor/qml/main.qml:147
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "填充："
 
 #: tileseditor/qml/main.qml:157
 #, kde-format
 msgid "Load Layout..."
-msgstr ""
+msgstr "載入佈局…"
 
 #: tileseditor/qml/main.qml:271
-#, fuzzy, kde-format
-#| msgid "Closest"
+#, kde-format
 msgid "Close"
-msgstr "最近的"
+msgstr "關閉"
 
 #: tileseditor/qml/TileDelegate.qml:171
-#, fuzzy, kde-format
-#| msgid "Horizontal:"
+#, kde-format
 msgid "Split Horizontally"
-msgstr "水平："
+msgstr "水平分割"
 
 #: tileseditor/qml/TileDelegate.qml:178
-#, fuzzy, kde-format
-#| msgid "Vertical:"
+#, kde-format
 msgid "Split Vertically"
-msgstr "垂直："
+msgstr "垂直分割"
 
 #: tileseditor/qml/TileDelegate.qml:186 tileseditor/qml/TileDelegate.qml:215
 #, kde-format
 msgid "Add Floating Tile"
-msgstr ""
+msgstr "新增浮動方塊"
 
 #: tileseditor/qml/TileDelegate.qml:195
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "刪除"
 
 #: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
 #, kde-format
@@ -935,10 +923,9 @@ msgid "Toggle Present Windows (Window class)"
 msgstr "切換展示視窗（視窗類別）"
 
 #: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:72
-#, fuzzy, kde-format
-#| msgid "Toggle Present Windows (Current desktop)"
+#, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
-msgstr "切換展示視窗（目前的桌面）"
+msgstr "切換展示視窗（目前桌面上同視窗類別）"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: windowview/kcm/windowvieweffectkcm.ui:56
@@ -957,10 +944,9 @@ msgid "No Windows"
 msgstr "無視窗"
 
 #: windowview/qml/main.qml:120
-#, fuzzy, kde-format
-#| msgid "Fullscreen windows"
+#, kde-format
 msgid "Filter windows…"
-msgstr "全螢幕視窗"
+msgstr "過濾視窗…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: wobblywindows/wobblywindows_config.ui:20

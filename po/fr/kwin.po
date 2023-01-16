@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-12 00:56+0000\n"
-"PO-Revision-Date: 2023-01-05 16:11+0100\n"
+"PO-Revision-Date: 2023-01-14 19:43+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -33,7 +33,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.0\n"
+"X-Generator: Lokalize 22.12.1\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -2306,10 +2306,9 @@ msgid "&Shade"
 msgstr "Enro&uler"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "Aucune barre de titre et de cadre"
+msgstr "Aucu&ne barre de titre et aucun cadre"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2508,10 +2507,9 @@ msgid "Make Window Fullscreen"
 msgstr "Mettre une fenêtre en plein écran"
 
 #: useractions.cpp:1009
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "Aucune barre de titre et de cadre"
+msgstr "Afficher / Masquer la barre de titre et la bordure"
 
 #: useractions.cpp:1011
 #, kde-format
