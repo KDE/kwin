@@ -38,6 +38,7 @@ class RenderLoop;
 class WorkspaceScene;
 class Shadow;
 class ShadowItem;
+class ShadowTextureProvider;
 class SurfaceItem;
 class WindowItem;
 
@@ -57,21 +58,12 @@ public:
     void postPaint() override;
     void paint(RenderTarget *renderTarget, const QRegion &region) override;
 
-    /**
-     * @brief Creates the Scene specific Shadow subclass.
-     *
-     * An implementing class has to create a proper instance. It is not allowed to
-     * return @c null.
-     *
-     * @param window The Window for which the Shadow needs to be created.
-     */
-    virtual std::unique_ptr<Shadow> createShadow(Window *window) = 0;
-
     virtual bool makeOpenGLContextCurrent();
     virtual void doneOpenGLContextCurrent();
     virtual bool supportsNativeFence() const;
 
     virtual DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *) = 0;
+    virtual std::unique_ptr<ShadowTextureProvider> createShadowTextureProvider(Shadow *shadow) = 0;
 
     /**
      * Whether the Scene is able to drive animations.

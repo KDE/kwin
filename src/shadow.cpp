@@ -10,9 +10,7 @@
 #include "shadow.h"
 // kwin
 #include "atoms.h"
-#include "composite.h"
 #include "internalwindow.h"
-#include "scene/workspacescene.h"
 #include "wayland/shadow_interface.h"
 #include "wayland/shmclientbuffer.h"
 #include "wayland/surface_interface.h"
@@ -60,7 +58,7 @@ std::unique_ptr<Shadow> Shadow::createShadowFromX11(Window *window)
 {
     auto data = Shadow::readX11ShadowProperty(window->window());
     if (!data.isEmpty()) {
-        auto shadow = Compositor::self()->scene()->createShadow(window);
+        auto shadow = std::make_unique<Shadow>(window);
         if (!shadow->init(data)) {
             return nullptr;
         }
@@ -75,7 +73,7 @@ std::unique_ptr<Shadow> Shadow::createShadowFromDecoration(Window *window)
     if (!window->decoration()) {
         return nullptr;
     }
-    auto shadow = Compositor::self()->scene()->createShadow(window);
+    auto shadow = std::make_unique<Shadow>(window);
     if (!shadow->init(window->decoration())) {
         return nullptr;
     }
@@ -92,7 +90,7 @@ std::unique_ptr<Shadow> Shadow::createShadowFromWayland(Window *window)
     if (!s) {
         return nullptr;
     }
-    auto shadow = Compositor::self()->scene()->createShadow(window);
+    auto shadow = std::make_unique<Shadow>(window);
     if (!shadow->init(s)) {
         return nullptr;
     }
@@ -109,7 +107,7 @@ std::unique_ptr<Shadow> Shadow::createShadowFromInternalWindow(Window *window)
     if (!handle) {
         return nullptr;
     }
-    auto shadow = Compositor::self()->scene()->createShadow(window);
+    auto shadow = std::make_unique<Shadow>(window);
     if (!shadow->init(handle)) {
         return nullptr;
     }
@@ -170,9 +168,6 @@ bool Shadow::init(const QVector<uint32_t> &data)
                         data[ShadowElementsCount + 1],
                         data[ShadowElementsCount + 2]);
     Q_EMIT offsetChanged();
-    if (!prepareBackend()) {
-        return false;
-    }
     Q_EMIT textureChanged();
     return true;
 }
@@ -196,9 +191,6 @@ bool Shadow::init(KDecoration2::Decoration *decoration)
 
     m_offset = m_decorationShadow->padding();
     Q_EMIT offsetChanged();
-    if (!prepareBackend()) {
-        return false;
-    }
     Q_EMIT textureChanged();
     return true;
 }
@@ -229,9 +221,6 @@ bool Shadow::init(const QPointer<KWaylandServer::ShadowInterface> &shadow)
 
     m_offset = shadow->offset().toMargins();
     Q_EMIT offsetChanged();
-    if (!prepareBackend()) {
-        return false;
-    }
     Q_EMIT textureChanged();
     return true;
 }
@@ -263,10 +252,6 @@ bool Shadow::init(const QWindow *window)
 
     m_offset = window->property("kwin_shadow_padding").value<QMargins>();
     Q_EMIT offsetChanged();
-
-    if (!prepareBackend()) {
-        return false;
-    }
     Q_EMIT textureChanged();
     return true;
 }

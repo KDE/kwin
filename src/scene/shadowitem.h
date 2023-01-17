@@ -15,6 +15,20 @@ class Deleted;
 class Shadow;
 class Window;
 
+class KWIN_EXPORT ShadowTextureProvider
+{
+public:
+    explicit ShadowTextureProvider(Shadow *shadow);
+    virtual ~ShadowTextureProvider();
+
+    Shadow *shadow() const { return m_shadow; }
+
+    virtual void update() = 0;
+
+protected:
+    Shadow *m_shadow;
+};
+
 /**
  * The ShadowItem class represents a nine-tile patch server-side drop-shadow.
  */
@@ -27,9 +41,11 @@ public:
     ~ShadowItem() override;
 
     Shadow *shadow() const;
+    ShadowTextureProvider *textureProvider() const;
 
 protected:
     WindowQuadList buildQuads() const override;
+    void preprocess() override;
 
 private Q_SLOTS:
     void handleTextureChanged();
@@ -39,6 +55,8 @@ private Q_SLOTS:
 private:
     Window *m_window;
     Shadow *m_shadow = nullptr;
+    std::unique_ptr<ShadowTextureProvider> m_textureProvider;
+    bool m_textureDirty = true;
 };
 
 } // namespace KWin

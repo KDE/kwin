@@ -36,31 +36,26 @@ WorkspaceSceneQPainter::~WorkspaceSceneQPainter()
 {
 }
 
-std::unique_ptr<Shadow> WorkspaceSceneQPainter::createShadow(Window *window)
-{
-    return std::make_unique<SceneQPainterShadow>(window);
-}
-
 DecorationRenderer *WorkspaceSceneQPainter::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)
 {
     return new SceneQPainterDecorationRenderer(impl);
 }
 
+std::unique_ptr<ShadowTextureProvider> WorkspaceSceneQPainter::createShadowTextureProvider(Shadow *shadow)
+{
+    return std::make_unique<QPainterShadowTextureProvider>(shadow);
+}
+
 //****************************************
 // QPainterShadow
 //****************************************
-SceneQPainterShadow::SceneQPainterShadow(Window *window)
-    : Shadow(window)
+QPainterShadowTextureProvider::QPainterShadowTextureProvider(Shadow *shadow)
+    : ShadowTextureProvider(shadow)
 {
 }
 
-SceneQPainterShadow::~SceneQPainterShadow()
+void QPainterShadowTextureProvider::update()
 {
-}
-
-bool SceneQPainterShadow::prepareBackend()
-{
-    return true;
 }
 
 //****************************************

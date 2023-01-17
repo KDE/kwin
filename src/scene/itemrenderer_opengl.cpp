@@ -159,9 +159,9 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
 
     if (auto shadowItem = qobject_cast<ShadowItem *>(item)) {
         if (!geometry.isEmpty()) {
-            SceneOpenGLShadow *shadow = static_cast<SceneOpenGLShadow *>(shadowItem->shadow());
+            OpenGLShadowTextureProvider *textureProvider = static_cast<OpenGLShadowTextureProvider *>(shadowItem->textureProvider());
             context->renderNodes.append(RenderNode{
-                .texture = shadow->shadowTexture(),
+                .texture = textureProvider->shadowTexture(),
                 .geometry = geometry,
                 .transformMatrix = context->transformStack.top(),
                 .opacity = context->opacityStack.top(),

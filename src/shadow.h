@@ -47,6 +47,7 @@ class KWIN_EXPORT Shadow : public QObject
 {
     Q_OBJECT
 public:
+    explicit Shadow(Window *window);
     ~Shadow() override;
 
     /**
@@ -58,7 +59,7 @@ public:
      * delete the Shadow.
      * @returns @c true when the shadow has been updated, @c false if the property is not set anymore.
      */
-    virtual bool updateShadow();
+    bool updateShadow();
 
     /**
      * Factory Method to create the shadow from the property.
@@ -112,6 +113,10 @@ public:
     {
         return m_offset;
     }
+    inline const QImage &shadowElement(ShadowElements element) const
+    {
+        return m_shadowElements[element];
+    }
 
 Q_SIGNALS:
     void offsetChanged();
@@ -120,16 +125,6 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void geometryChanged();
-
-protected:
-    Shadow(Window *window);
-
-    inline const QImage &shadowElement(ShadowElements element) const
-    {
-        return m_shadowElements[element];
-    };
-
-    virtual bool prepareBackend() = 0;
 
 private:
     static std::unique_ptr<Shadow> createShadowFromX11(Window *window);

@@ -11,8 +11,8 @@
 #include "qpainterbackend.h"
 
 #include "scene/decorationitem.h"
+#include "scene/shadowitem.h"
 #include "scene/workspacescene.h"
-#include "shadow.h"
 
 namespace KWin
 {
@@ -25,8 +25,8 @@ public:
     explicit WorkspaceSceneQPainter(QPainterBackend *backend);
     ~WorkspaceSceneQPainter() override;
 
-    std::unique_ptr<Shadow> createShadow(Window *window) override;
     DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
+    std::unique_ptr<ShadowTextureProvider> createShadowTextureProvider(Shadow *shadow) override;
 
     bool animationsSupported() const override
     {
@@ -42,14 +42,12 @@ private:
     QPainterBackend *m_backend;
 };
 
-class SceneQPainterShadow : public Shadow
+class QPainterShadowTextureProvider : public ShadowTextureProvider
 {
 public:
-    SceneQPainterShadow(Window *window);
-    ~SceneQPainterShadow() override;
+    explicit QPainterShadowTextureProvider(Shadow *shadow);
 
-protected:
-    bool prepareBackend() override;
+    void update() override;
 };
 
 class SceneQPainterDecorationRenderer : public DecorationRenderer

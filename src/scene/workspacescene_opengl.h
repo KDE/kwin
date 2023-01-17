@@ -13,8 +13,8 @@
 #include "openglbackend.h"
 
 #include "scene/decorationitem.h"
+#include "scene/shadowitem.h"
 #include "scene/workspacescene.h"
-#include "shadow.h"
 
 #include "kwinglutils.h"
 
@@ -30,11 +30,11 @@ public:
     explicit WorkspaceSceneOpenGL(OpenGLBackend *backend);
     ~WorkspaceSceneOpenGL() override;
 
-    std::unique_ptr<Shadow> createShadow(Window *window) override;
     bool makeOpenGLContextCurrent() override;
     void doneOpenGLContextCurrent() override;
     bool supportsNativeFence() const override;
     DecorationRenderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
+    std::unique_ptr<ShadowTextureProvider> createShadowTextureProvider(Shadow *shadow) override;
     bool animationsSupported() const override;
 
     OpenGLBackend *backend() const
@@ -55,20 +55,18 @@ private:
  * This class extends Shadow by the Elements required for OpenGL rendering.
  * @author Martin Gräßlin <mgraesslin@kde.org>
  */
-class SceneOpenGLShadow
-    : public Shadow
+class OpenGLShadowTextureProvider : public ShadowTextureProvider
 {
 public:
-    explicit SceneOpenGLShadow(Window *window);
-    ~SceneOpenGLShadow() override;
+    explicit OpenGLShadowTextureProvider(Shadow *shadow);
+    ~OpenGLShadowTextureProvider() override;
 
     GLTexture *shadowTexture()
     {
         return m_texture.get();
     }
 
-protected:
-    bool prepareBackend() override;
+    void update() override;
 
 private:
     std::shared_ptr<GLTexture> m_texture;
