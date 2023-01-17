@@ -10,7 +10,6 @@
 #pragma once
 
 #include <QObject>
-#include <QPixmap>
 #include <kwineffects.h>
 
 namespace KDecoration2
@@ -125,13 +124,12 @@ public Q_SLOTS:
 protected:
     Shadow(Window *window);
 
-    inline const QPixmap &shadowPixmap(ShadowElements element) const
+    inline const QImage &shadowElement(ShadowElements element) const
     {
         return m_shadowElements[element];
     };
 
     virtual bool prepareBackend() = 0;
-    void setShadowElement(const QPixmap &shadow, ShadowElements element);
 
 private:
     static std::unique_ptr<Shadow> createShadowFromX11(Window *window);
@@ -144,8 +142,8 @@ private:
     bool init(const QPointer<KWaylandServer::ShadowInterface> &shadow);
     bool init(const QWindow *window);
     Window *m_window;
-    // shadow pixmaps
-    QPixmap m_shadowElements[ShadowElementsCount];
+    // shadow elements
+    QImage m_shadowElements[ShadowElementsCount];
     // shadow offsets
     QMargins m_offset;
     // caches

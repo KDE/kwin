@@ -162,7 +162,7 @@ bool Shadow::init(const QVector<uint32_t> &data)
         }
         auto &geo = pixmapGeometries[i];
         QImage image(xcb_get_image_data(reply), geo->width, geo->height, QImage::Format_ARGB32);
-        m_shadowElements[i] = QPixmap::fromImage(image);
+        m_shadowElements[i] = image.copy();
         free(reply);
     }
     m_offset = QMargins(data[ShadowElementsCount + 3],
@@ -203,13 +203,13 @@ bool Shadow::init(KDecoration2::Decoration *decoration)
     return true;
 }
 
-static QPixmap shadowTileForBuffer(KWaylandServer::ClientBuffer *buffer)
+static QImage shadowTileForBuffer(KWaylandServer::ClientBuffer *buffer)
 {
     auto shmBuffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(buffer);
     if (shmBuffer) {
-        return QPixmap::fromImage(shmBuffer->data().copy());
+        return shmBuffer->data().copy();
     }
-    return QPixmap();
+    return QImage();
 }
 
 bool Shadow::init(const QPointer<KWaylandServer::ShadowInterface> &shadow)
@@ -252,14 +252,14 @@ bool Shadow::init(const QWindow *window)
     const QImage bottomTile = window->property("kwin_shadow_bottom_tile").value<QImage>();
     const QImage bottomLeftTile = window->property("kwin_shadow_bottom_left_tile").value<QImage>();
 
-    m_shadowElements[ShadowElementLeft] = QPixmap::fromImage(leftTile);
-    m_shadowElements[ShadowElementTopLeft] = QPixmap::fromImage(topLeftTile);
-    m_shadowElements[ShadowElementTop] = QPixmap::fromImage(topTile);
-    m_shadowElements[ShadowElementTopRight] = QPixmap::fromImage(topRightTile);
-    m_shadowElements[ShadowElementRight] = QPixmap::fromImage(rightTile);
-    m_shadowElements[ShadowElementBottomRight] = QPixmap::fromImage(bottomRightTile);
-    m_shadowElements[ShadowElementBottom] = QPixmap::fromImage(bottomTile);
-    m_shadowElements[ShadowElementBottomLeft] = QPixmap::fromImage(bottomLeftTile);
+    m_shadowElements[ShadowElementLeft] = leftTile;
+    m_shadowElements[ShadowElementTopLeft] = topLeftTile;
+    m_shadowElements[ShadowElementTop] = topTile;
+    m_shadowElements[ShadowElementTopRight] = topRightTile;
+    m_shadowElements[ShadowElementRight] = rightTile;
+    m_shadowElements[ShadowElementBottomRight] = bottomRightTile;
+    m_shadowElements[ShadowElementBottom] = bottomTile;
+    m_shadowElements[ShadowElementBottomLeft] = bottomLeftTile;
 
     m_offset = window->property("kwin_shadow_padding").value<QMargins>();
     Q_EMIT offsetChanged();
@@ -367,11 +367,6 @@ QSize Shadow::elementSize(Shadow::ShadowElements element) const
     } else {
         return m_shadowElements[element].size();
     }
-}
-
-void Shadow::setShadowElement(const QPixmap &shadow, Shadow::ShadowElements element)
-{
-    m_shadowElements[element] = shadow;
 }
 
 } // namespace

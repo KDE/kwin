@@ -190,14 +190,14 @@ bool SceneOpenGLShadow::prepareBackend()
 
         return true;
     }
-    const QSize top(shadowPixmap(ShadowElementTop).size());
-    const QSize topRight(shadowPixmap(ShadowElementTopRight).size());
-    const QSize right(shadowPixmap(ShadowElementRight).size());
-    const QSize bottom(shadowPixmap(ShadowElementBottom).size());
-    const QSize bottomLeft(shadowPixmap(ShadowElementBottomLeft).size());
-    const QSize left(shadowPixmap(ShadowElementLeft).size());
-    const QSize topLeft(shadowPixmap(ShadowElementTopLeft).size());
-    const QSize bottomRight(shadowPixmap(ShadowElementBottomRight).size());
+    const QSize top(shadowElement(ShadowElementTop).size());
+    const QSize topRight(shadowElement(ShadowElementTopRight).size());
+    const QSize right(shadowElement(ShadowElementRight).size());
+    const QSize bottom(shadowElement(ShadowElementBottom).size());
+    const QSize bottomLeft(shadowElement(ShadowElementBottomLeft).size());
+    const QSize left(shadowElement(ShadowElementLeft).size());
+    const QSize topLeft(shadowElement(ShadowElementTopLeft).size());
+    const QSize bottomRight(shadowElement(ShadowElementBottomRight).size());
 
     const int width = std::max({topLeft.width(), left.width(), bottomLeft.width()}) + std::max(top.width(), bottom.width()) + std::max({topRight.width(), right.width(), bottomRight.width()});
     const int height = std::max({topLeft.height(), top.height(), topRight.height()}) + std::max(left.height(), right.height()) + std::max({bottomLeft.height(), bottom.height(), bottomRight.height()});
@@ -215,16 +215,16 @@ bool SceneOpenGLShadow::prepareBackend()
     QPainter p;
     p.begin(&image);
 
-    p.drawPixmap(0, 0, topLeft.width(), topLeft.height(), shadowPixmap(ShadowElementTopLeft));
-    p.drawPixmap(innerRectLeft, 0, top.width(), top.height(), shadowPixmap(ShadowElementTop));
-    p.drawPixmap(width - topRight.width(), 0, topRight.width(), topRight.height(), shadowPixmap(ShadowElementTopRight));
+    p.drawImage(QRectF(0, 0, topLeft.width(), topLeft.height()), shadowElement(ShadowElementTopLeft));
+    p.drawImage(QRectF(innerRectLeft, 0, top.width(), top.height()), shadowElement(ShadowElementTop));
+    p.drawImage(QRectF(width - topRight.width(), 0, topRight.width(), topRight.height()), shadowElement(ShadowElementTopRight));
 
-    p.drawPixmap(0, innerRectTop, left.width(), left.height(), shadowPixmap(ShadowElementLeft));
-    p.drawPixmap(width - right.width(), innerRectTop, right.width(), right.height(), shadowPixmap(ShadowElementRight));
+    p.drawImage(QRectF(0, innerRectTop, left.width(), left.height()), shadowElement(ShadowElementLeft));
+    p.drawImage(QRectF(width - right.width(), innerRectTop, right.width(), right.height()), shadowElement(ShadowElementRight));
 
-    p.drawPixmap(0, height - bottomLeft.height(), bottomLeft.width(), bottomLeft.height(), shadowPixmap(ShadowElementBottomLeft));
-    p.drawPixmap(innerRectLeft, height - bottom.height(), bottom.width(), bottom.height(), shadowPixmap(ShadowElementBottom));
-    p.drawPixmap(width - bottomRight.width(), height - bottomRight.height(), bottomRight.width(), bottomRight.height(), shadowPixmap(ShadowElementBottomRight));
+    p.drawImage(QRectF(0, height - bottomLeft.height(), bottomLeft.width(), bottomLeft.height()), shadowElement(ShadowElementBottomLeft));
+    p.drawImage(QRectF(innerRectLeft, height - bottom.height(), bottom.width(), bottom.height()), shadowElement(ShadowElementBottom));
+    p.drawImage(QRectF(width - bottomRight.width(), height - bottomRight.height(), bottomRight.width(), bottomRight.height()), shadowElement(ShadowElementBottomRight));
 
     p.end();
 
