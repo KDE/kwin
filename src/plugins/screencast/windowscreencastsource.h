@@ -7,13 +7,13 @@
 #pragma once
 
 #include "screencastsource.h"
+#include "window.h"
 
 #include <QPointer>
+#include <QTimer>
 
 namespace KWin
 {
-
-class Window;
 
 class WindowScreenCastSource : public ScreenCastSource
 {
@@ -31,6 +31,7 @@ public:
 
 private:
     QPointer<Window> m_window;
+    WindowOffscreenRenderRef m_offscreenRef;
 };
 
 } // namespace KWin

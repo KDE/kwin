@@ -27,6 +27,7 @@
 #include <QObject>
 #include <QPointer>
 #include <QRectF>
+#include <QTimer>
 #include <QUuid>
 
 class QMouseEvent;
@@ -1429,6 +1430,9 @@ public:
 
     void setTile(Tile *tile);
 
+    void refOffscreenRendering();
+    void unrefOffscreenRendering();
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 
@@ -1913,6 +1917,8 @@ private Q_SLOTS:
     void shadeUnhover();
 
 private:
+    void maybeSendFrameCallback();
+
     // when adding new data members, check also copyToDeleted()
     QUuid m_internalId;
     Xcb::Window m_client;
@@ -2029,6 +2035,8 @@ private:
     WindowRules m_rules;
     quint32 m_lastUsageSerial = 0;
     bool m_lockScreenOverlay = false;
+    uint32_t m_offscreenRenderCount = 0;
+    QTimer m_offscreenFramecallbackTimer;
 };
 
 /**
@@ -2374,6 +2382,17 @@ inline void Window::setPendingMoveResizeMode(MoveResizeMode mode)
 }
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const Window *window);
+
+class KWIN_EXPORT WindowOffscreenRenderRef
+{
+public:
+    WindowOffscreenRenderRef(Window *window);
+    WindowOffscreenRenderRef() = default;
+    ~WindowOffscreenRenderRef();
+
+private:
+    QPointer<Window> m_window;
+};
 
 } // namespace KWin
 

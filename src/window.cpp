@@ -119,6 +119,7 @@ Window::Window()
     connect(Workspace::self()->applicationMenu(), &ApplicationMenu::applicationMenuEnabledChanged, this, [this] {
         Q_EMIT hasApplicationMenuChanged(hasApplicationMenu());
     });
+    connect(&m_offscreenFramecallbackTimer, &QTimer::timeout, this, &Window::maybeSendFrameCallback);
 }
 
 Window::~Window()
@@ -4535,6 +4536,45 @@ void Window::setLockScreenOverlay(bool allowed)
 bool Window::isLockScreenOverlay() const
 {
     return m_lockScreenOverlay;
+}
+
+void Window::refOffscreenRendering()
+{
+    if (m_offscreenRenderCount == 0) {
+        m_offscreenFramecallbackTimer.start(1'000'000 / output()->refreshRate());
+    }
+    m_offscreenRenderCount++;
+}
+
+void Window::unrefOffscreenRendering()
+{
+    Q_ASSERT(m_offscreenRenderCount);
+    m_offscreenRenderCount--;
+    if (m_offscreenRenderCount == 0) {
+        m_offscreenFramecallbackTimer.stop();
+    }
+}
+
+void Window::maybeSendFrameCallback()
+{
+    if (m_surface && !m_windowItem->isVisible()) {
+        m_surface->frameRendered(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+        // update refresh rate, it might have changed
+        m_offscreenFramecallbackTimer.start(1'000'000 / output()->refreshRate());
+    }
+}
+
+WindowOffscreenRenderRef::WindowOffscreenRenderRef(Window *window)
+    : m_window(window)
+{
+    window->refOffscreenRendering();
+}
+
+WindowOffscreenRenderRef::~WindowOffscreenRenderRef()
+{
+    if (m_window) {
+        m_window->unrefOffscreenRendering();
+    }
 }
 
 } // namespace KWin

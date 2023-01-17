@@ -18,7 +18,6 @@
 #include "scene/itemrenderer.h"
 #include "scene/windowitem.h"
 #include "scene/workspacescene.h"
-#include "window.h"
 
 namespace KWin
 {
@@ -26,6 +25,7 @@ namespace KWin
 WindowScreenCastSource::WindowScreenCastSource(Window *window, QObject *parent)
     : ScreenCastSource(parent)
     , m_window(window)
+    , m_offscreenRef(window)
 {
     connect(m_window, &Window::windowClosed, this, &ScreenCastSource::closed);
 }
