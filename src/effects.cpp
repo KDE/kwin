@@ -167,19 +167,14 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *s
         Q_EMIT desktopPresenceChanged(window->effectWindow(), old, window->desktop());
     });
     connect(ws, &Workspace::windowAdded, this, [this](Window *window) {
-        if (window->readyForPainting()) {
-            slotWindowShown(window);
-        } else {
-            connect(window, &Window::windowShown, this, &EffectsHandlerImpl::slotWindowShown);
-        }
+        slotWindowShown(window);
     });
     connect(ws, &Workspace::unmanagedAdded, this, [this](Unmanaged *u) {
         // it's never initially ready but has synthetic 50ms delay
         connect(u, &Window::windowShown, this, &EffectsHandlerImpl::slotUnmanagedShown);
     });
     connect(ws, &Workspace::internalWindowAdded, this, [this](InternalWindow *window) {
-        setupWindowConnections(window);
-        Q_EMIT windowAdded(window->effectWindow());
+        slotWindowShown(window);
     });
     connect(ws, &Workspace::windowActivated, this, [this](Window *window) {
         Q_EMIT windowActivated(window ? window->effectWindow() : nullptr);
@@ -244,11 +239,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *s
 
     // connect all clients
     for (Window *window : ws->allClientList()) {
-        if (window->readyForPainting()) {
-            setupWindowConnections(window);
-        } else {
-            connect(window, &Window::windowShown, this, &EffectsHandlerImpl::slotWindowShown);
-        }
+        setupWindowConnections(window);
     }
     for (Unmanaged *u : ws->unmanagedList()) {
         setupUnmanagedConnections(u);
@@ -523,7 +514,6 @@ void EffectsHandlerImpl::slotOpacityChanged(Window *window, qreal oldOpacity)
 void EffectsHandlerImpl::slotWindowShown(Window *window)
 {
     Q_ASSERT(window->isClient());
-    disconnect(window, &Window::windowShown, this, &EffectsHandlerImpl::slotWindowShown);
     setupWindowConnections(window);
     Q_EMIT windowAdded(window->effectWindow());
 }
