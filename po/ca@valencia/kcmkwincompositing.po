@@ -1,9 +1,9 @@
 # Translation of kcmkwincompositing.po to Catalan (Valencian)
-# Copyright (C) 2007-2022 This_file_is_part_of_KDE
+# Copyright (C) 2007-2023 This_file_is_part_of_KDE
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# Josep M. Ferrer <txemaq@gmail.com>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022.
+# Josep M. Ferrer <txemaq@gmail.com>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 # Antoni Bella Pérez <antonibella5@yahoo.com>, 2014, 2016, 2020.
 # Empar Montoro Martín <montoro_mde@gva.es>, 2019.
 msgid ""
@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-13 00:58+0000\n"
-"PO-Revision-Date: 2022-12-06 10:21+0100\n"
+"PO-Revision-Date: 2023-01-13 13:34+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -165,16 +165,10 @@ msgstr "Força animacions més suaus"
 msgid ""
 "Reduce latency by allowing screen tearing artifacts in fullscreen windows"
 msgstr ""
+"Reduïx la latència permetent defectes d'esquinçament de la pantalla en les "
+"finestres a pantalla completa"
 
 #: main.cpp:79
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Torna a activar la detecció d'OpenGL"
-
-#~ msgid "Allows applications to cause screen tearing in fullscreen."
-#~ msgstr ""
-#~ "Permet que les aplicacions puguen provocar esquinçaments de pantalla a "
-#~ "pantalla completa."
-
-#~ msgid "Allow tearing in fullscreen"
-#~ msgstr "Permet esquinçaments a pantalla completa"

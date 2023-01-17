@@ -72,7 +72,7 @@ msgstr "Animació per al canvi d'escriptori virtual"
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Window Management"
-msgstr "Gestió de les finestres"
+msgstr "Gestioneu les finestres"
 
 #: effectsmodel.cpp:59
 #, kde-format

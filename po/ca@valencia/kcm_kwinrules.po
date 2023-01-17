@@ -221,7 +221,7 @@ msgstr ""
 #: package/contents/ui/FileDialogLoader.qml:14
 #, kde-format
 msgid "Select File"
-msgstr "Seleccioneu el fitxer"
+msgstr "Seleccioneu un fitxer"
 
 #: package/contents/ui/FileDialogLoader.qml:26
 #, kde-format
@@ -417,7 +417,7 @@ msgstr "Valors per a %1"
 #: rulesmodel.cpp:221
 #, kde-format
 msgid "New window settings"
-msgstr "Configuració de les finestres noves"
+msgstr "Configureu les finestres noves"
 
 #: rulesmodel.cpp:237
 #, kde-format
