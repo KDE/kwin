@@ -268,7 +268,7 @@
                 <choice name="LatencyHigh" value="High"/>
                 <choice name="LatencyExtremelyHigh" value="ExtremelyHigh"/>
             </choices>
-            <default>LatencyMedium</default>
+            <default>LatencyExtremelyHigh</default>
         </entry>
         <entry name="RenderTimeEstimator" type="Enum">
             <choices name="KWin::RenderTimeEstimator">
