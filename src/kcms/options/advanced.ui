@@ -140,7 +140,7 @@
    <item row="4" column="0">
     <widget class="QLabel" name="activationDesktopPolicyLabel">
      <property name="text">
-      <string>Virtual Desktop behavior:</string>
+      <string>Virtual desktop behavior:</string>
      </property>
      <property name="buddy">
       <cstring>kcfg_ActivationDesktopPolicy</cstring>
@@ -150,23 +150,23 @@
    <item row="4" column="1">
     <widget class="QLabel" name="activationDesktopPolicyDescriptionLabel">
      <property name="text">
-      <string>When activating a window on a different Virtual Desktop:</string>
+      <string>When activating a window on a different virtual desktop:</string>
      </property>
     </widget>
    </item>
    <item row="5" column="1">
     <widget class="QComboBox" name="kcfg_ActivationDesktopPolicy">
      <property name="whatsThis">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This setting controls what happens when an open window located on a Virtual Desktop other than the current one is activated. &lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Switch to that Virtual Desktop&lt;/span&gt; will switch to the Virtual Desktop where the window is currently located. &lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Bring window to current Virtual Desktop&lt;/span&gt; will cause the window to jump to the active Virtual Desktop. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;This setting controls what happens when an open window located on a virtual desktop other than the current one is activated. &lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Switch to that virtual desktop&lt;/span&gt; will switch to the virtual desktop where the window is currently located. &lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Bring window to current virtual desktop&lt;/span&gt; will cause the window to jump to the active virtual desktop. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <item>
       <property name="text">
-       <string>Switch to that Virtual Desktop</string>
+       <string>Switch to that virtual desktop</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>Bring window to current Virtual Desktop</string>
+       <string>Bring window to current virtual desktop</string>
       </property>
      </item>
     </widget>
