@@ -1345,6 +1345,28 @@ private:
     QPointF m_lastLocalTouchPos;
 };
 
+class MouseWheelAccumulator
+{
+public:
+    float accumulate(WheelEvent *event)
+    {
+        m_scrollV120 += event->deltaV120();
+        m_scrollDistance += event->delta();
+        if (std::abs(m_scrollV120) >= 120 || (!event->deltaV120() && std::abs(m_scrollDistance) >= 15)) {
+            float ret = m_scrollDistance;
+            m_scrollV120 = 0;
+            m_scrollDistance = 0;
+            return ret;
+        } else {
+            return 0;
+        }
+    }
+
+private:
+    float m_scrollDistance = 0;
+    int m_scrollV120 = 0;
+};
+
 class DecorationEventFilter : public InputEventFilter
 {
 public:
@@ -1400,7 +1422,6 @@ public:
         }
         const QPointF localPos = event->globalPosition() - decoration->window()->pos();
         const Qt::Orientation orientation = (event->angleDelta().x() != 0) ? Qt::Horizontal : Qt::Vertical;
-        const int delta = event->angleDelta().x() != 0 ? event->angleDelta().x() : event->angleDelta().y();
         QWheelEvent e(localPos, event->globalPosition(), QPoint(),
                       event->angleDelta(),
                       event->buttons(),
@@ -1413,8 +1434,10 @@ public:
             return true;
         }
         if ((orientation == Qt::Vertical) && decoration->window()->titlebarPositionUnderMouse()) {
-            decoration->window()->performMouseCommand(options->operationTitlebarMouseWheel(delta * -1),
-                                                      event->globalPosition());
+            if (float delta = m_accumulator.accumulate(event)) {
+                decoration->window()->performMouseCommand(options->operationTitlebarMouseWheel(delta * -1),
+                                                          event->globalPosition());
+            }
         }
         return true;
     }
@@ -1554,6 +1577,7 @@ public:
 private:
     QPointF m_lastGlobalTouchPos;
     QPointF m_lastLocalTouchPos;
+    MouseWheelAccumulator m_accumulator;
 };
 
 #if KWIN_BUILD_TABBOX
