@@ -168,6 +168,8 @@ void DecorationInputTest::testAxis_data()
 
 void DecorationInputTest::testAxis()
 {
+    static constexpr double oneTick = 15;
+
     const auto [window, surface] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
@@ -183,13 +185,13 @@ void DecorationInputTest::testAxis()
 
     // TODO: mouse wheel direction looks wrong to me
     // simulate wheel
-    Test::pointerAxisVertical(5.0, timestamp++);
+    Test::pointerAxisVertical(oneTick, timestamp++);
     QVERIFY(window->keepBelow());
     QVERIFY(!window->keepAbove());
-    Test::pointerAxisVertical(-5.0, timestamp++);
+    Test::pointerAxisVertical(-oneTick, timestamp++);
     QVERIFY(!window->keepBelow());
     QVERIFY(!window->keepAbove());
-    Test::pointerAxisVertical(-5.0, timestamp++);
+    Test::pointerAxisVertical(-oneTick, timestamp++);
     QVERIFY(!window->keepBelow());
     QVERIFY(window->keepAbove());
 
@@ -200,7 +202,7 @@ void DecorationInputTest::testAxis()
     QVERIFY(input()->pointer()->decoration());
     QCOMPARE(input()->pointer()->decoration()->window(), window);
     QTEST(input()->pointer()->decoration()->decoration()->sectionUnderMouse(), "expectedSection");
-    Test::pointerAxisVertical(5.0, timestamp++);
+    Test::pointerAxisVertical(oneTick, timestamp++);
     QVERIFY(!window->keepBelow());
     QVERIFY(!window->keepAbove());
 }
