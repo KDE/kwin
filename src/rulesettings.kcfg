@@ -158,12 +158,12 @@
       <default code="true">Rules::UnusedSetRule</default>
     </entry>
 
-    <entry name="screen" type="Int">
-      <label>Screen number</label>
-      <default>0</default>
+    <entry name="screen" type="String">
+      <label>Screen</label>
+      <default></default>
     </entry>
     <entry name="screenrule" type="Int">
-      <label>Screen number rule type</label>
+      <label>Screen rule type</label>
       <min code="true">Rules::UnusedSetRule</min>
       <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
       <default code="true">Rules::UnusedSetRule</default>

@@ -101,6 +101,7 @@ private:
     QList<OptionsModel::Data> placementModelData() const;
     QList<OptionsModel::Data> focusModelData() const;
     QList<OptionsModel::Data> colorSchemesModelData() const;
+    QList<OptionsModel::Data> screenModelData() const;
 
 private Q_SLOTS:
     void selectX11Window();

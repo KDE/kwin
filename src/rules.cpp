@@ -20,6 +20,7 @@
 
 #ifndef KCMRULES
 #include "client_machine.h"
+#include "core/output.h"
 #include "main.h"
 #include "virtualdesktops.h"
 #include "window.h"
@@ -477,8 +478,8 @@ bool Rules::update(Window *c, int selection)
         desktops = c->desktopIds();
     }
     if NOW_REMEMBER (Screen, screen) {
-        updated = updated || screen != c->screen();
-        screen = c->screen();
+        updated = updated || screen != c->output()->name();
+        screen = c->output()->name();
     }
     if NOW_REMEMBER (Activity, activity) {
         updated = updated || activity != c->activities();
@@ -593,9 +594,21 @@ APPLY_FORCE_RULE(opacityactive, OpacityActive, int)
 APPLY_FORCE_RULE(opacityinactive, OpacityInactive, int)
 APPLY_RULE(ignoregeometry, IgnoreGeometry, bool)
 
-APPLY_RULE(screen, Screen, int)
 APPLY_RULE(activity, Activity, QStringList)
 APPLY_FORCE_RULE(type, Type, NET::WindowType)
+
+bool Rules::applyScreen(Output *&output, bool init) const
+{
+    if (checkSetRule(screenrule, init)) {
+        const auto availableOutputs = workspace()->outputs();
+        for (Output *candidate : availableOutputs) {
+            if (candidate->name() == this->screen) {
+
+            }
+        }
+    }
+    return checkSetStop(screenrule);
+}
 
 bool Rules::applyDesktops(QVector<VirtualDesktop *> &vds, bool init) const
 {
@@ -837,21 +850,7 @@ MaximizeMode WindowRules::checkMaximize(MaximizeMode mode, bool init) const
     return static_cast<MaximizeMode>((vert ? MaximizeVertical : 0) | (horiz ? MaximizeHorizontal : 0));
 }
 
-Output *WindowRules::checkOutput(Output *output, bool init) const
-{
-    if (rules.isEmpty()) {
-        return output;
-    }
-    int ret = workspace()->outputs().indexOf(output);
-    for (Rules *rule : rules) {
-        if (rule->applyScreen(ret, init)) {
-            break;
-        }
-    }
-    Output *ruleOutput = workspace()->outputs().value(ret);
-    return ruleOutput ? ruleOutput : output;
-}
-
+CHECK_RULE(Screen, Output *)
 CHECK_RULE(Minimize, bool)
 CHECK_RULE(Shade, ShadeMode)
 CHECK_RULE(SkipTaskbar, bool)

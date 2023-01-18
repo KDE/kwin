@@ -51,7 +51,7 @@ public:
     int checkOpacityInactive(int s) const;
     bool checkIgnoreGeometry(bool ignore, bool init = false) const;
     QVector<VirtualDesktop *> checkDesktops(QVector<VirtualDesktop *> desktops, bool init = false) const;
-    Output *checkOutput(Output *output, bool init = false) const;
+    Output *checkScreen(Output *output, bool init = false) const;
     QStringList checkActivity(QStringList activity, bool init = false) const;
     NET::WindowType checkType(NET::WindowType type) const;
     MaximizeMode checkMaximize(MaximizeMode mode, bool init = false) const;
@@ -160,7 +160,7 @@ public:
     bool applyOpacityInactive(int &s) const;
     bool applyIgnoreGeometry(bool &ignore, bool init) const;
     bool applyDesktops(QVector<VirtualDesktop *> &desktops, bool init) const;
-    bool applyScreen(int &desktop, bool init) const;
+    bool applyScreen(Output *&output, bool init) const;
     bool applyActivity(QStringList &activity, bool init) const;
     bool applyType(NET::WindowType &type) const;
     bool applyMaximizeVert(MaximizeMode &mode, bool init) const;
@@ -237,7 +237,7 @@ private:
     SetRule ignoregeometryrule;
     QStringList desktops;
     SetRule desktopsrule;
-    int screen;
+    QString screen;
     SetRule screenrule;
     QStringList activity;
     SetRule activityrule;

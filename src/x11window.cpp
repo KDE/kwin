@@ -672,7 +672,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         if (!output) {
             output = workspace()->activeOutput();
         }
-        output = rules()->checkOutput(output, !isMapped);
+        output = rules()->checkScreen(output, !isMapped);
         area = workspace()->clientArea(PlacementArea, this, output->geometry().center());
     }
 
@@ -3952,7 +3952,7 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
         new_pos = rules()->checkPosition(new_pos);
 
         Output *newOutput = workspace()->outputAt(QRectF(new_pos, requestedFrameSize).center());
-        if (newOutput != rules()->checkOutput(newOutput)) {
+        if (newOutput != rules()->checkScreen(newOutput)) {
             return; // not allowed by rule
         }
 

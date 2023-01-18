@@ -13,6 +13,7 @@
 
 #include <QIcon>
 #include <QQmlEngine>
+#include <QScreen>
 #include <QtDBus>
 
 #include <KColorSchemeManager>
@@ -474,10 +475,19 @@ void RulesModel::populateRuleList()
     connect(m_activities, &KActivities::Consumer::serviceStatusChanged, this, updateActivities);
 #endif
 
-    addRule(new RuleItem(QLatin1String("screen"),
-                         RulePolicy::SetRule, RuleItem::Integer,
-                         i18n("Screen"), i18n("Size & Position"),
-                         QIcon::fromTheme("osd-shutd-screen")));
+    auto screenRule = addRule(new RuleItem(QLatin1String("screen"),
+                                           RulePolicy::SetRule, RuleItem::OptionList,
+                                           i18n("Screen"), i18n("Size & Position"),
+                                           QIcon::fromTheme("osd-shutd-screen")));
+    screenRule->setOptionsData(screenModelData());
+
+    auto updateScreens = [this]() {
+        m_rules["screen"]->setOptionsData(screenModelData());
+        const QModelIndex index = indexOf("screen");
+        Q_EMIT dataChanged(index, index, {OptionsModelRole});
+    };
+    connect(qGuiApp, &QGuiApplication::screenAdded, this, updateScreens);
+    connect(qGuiApp, &QGuiApplication::screenRemoved, this, updateScreens);
 
     addRule(new RuleItem(QLatin1String("fullscreen"),
                          RulePolicy::SetRule, RuleItem::Boolean,
@@ -837,6 +847,21 @@ QList<OptionsModel::Data> RulesModel::colorSchemesModelData() const
             QFileInfo(index.data(Qt::UserRole).toString()).baseName(),
             index.data(Qt::DisplayRole).toString(),
             index.data(Qt::DecorationRole).value<QIcon>()};
+    }
+
+    return modelData;
+}
+
+QList<OptionsModel::Data> RulesModel::screenModelData() const
+{
+    QList<OptionsModel::Data> modelData;
+
+    const QList<QScreen *> screens = qGuiApp->screens();
+    for (const QScreen *screen : screens) {
+        modelData << OptionsModel::Data{
+            screen->name(),
+            screen->name()
+        };
     }
 
     return modelData;

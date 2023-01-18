@@ -2797,7 +2797,7 @@ void TestXdgShellWindowRules::testScreenDontAffect()
 {
     const QList<KWin::Output *> outputs = workspace()->outputs();
 
-    setWindowRule("screen", int(1), int(Rules::DontAffect));
+    setWindowRule("screen", outputs.at(1)->name(), int(Rules::DontAffect));
 
     createTestWindow();
 
@@ -2815,7 +2815,7 @@ void TestXdgShellWindowRules::testScreenApply()
 {
     const QList<KWin::Output *> outputs = workspace()->outputs();
 
-    setWindowRule("screen", int(1), int(Rules::Apply));
+    setWindowRule("screen", outputs.at(1)->name(), int(Rules::Apply));
 
     createTestWindow();
 
@@ -2834,7 +2834,7 @@ void TestXdgShellWindowRules::testScreenRemember()
 {
     const QList<KWin::Output *> outputs = workspace()->outputs();
 
-    setWindowRule("screen", int(1), int(Rules::Remember));
+    setWindowRule("screen", outputs.at(1)->name(), int(Rules::Remember));
 
     createTestWindow();
 
@@ -2862,7 +2862,7 @@ void TestXdgShellWindowRules::testScreenForce()
     createTestWindow();
     QVERIFY(m_window->isActive());
 
-    setWindowRule("screen", int(1), int(Rules::Force));
+    setWindowRule("screen", outputs.at(1)->name(), int(Rules::Force));
 
     // The window should be forced to the screen specified by the rule.
     QCOMPARE(m_window->output()->name(), outputs.at(1)->name());
@@ -2906,7 +2906,7 @@ void TestXdgShellWindowRules::testScreenApplyNow()
     QCOMPARE(m_window->output()->name(), outputs.at(0)->name());
 
     // Set the rule so the window should move to the screen specified by the rule.
-    setWindowRule("screen", int(1), int(Rules::ApplyNow));
+    setWindowRule("screen", outputs.at(1)->name(), int(Rules::ApplyNow));
     QCOMPARE(m_window->output()->name(), outputs.at(1)->name());
 
     // The user can move the window to another screen.
@@ -2926,7 +2926,7 @@ void TestXdgShellWindowRules::testScreenForceTemporarily()
 
     createTestWindow();
 
-    setWindowRule("screen", int(1), int(Rules::ForceTemporarily));
+    setWindowRule("screen", outputs.at(1)->name(), int(Rules::ForceTemporarily));
 
     // The window should be forced the second screen
     QCOMPARE(m_window->output()->name(), outputs.at(1)->name());

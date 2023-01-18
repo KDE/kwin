@@ -3993,7 +3993,7 @@ QRectF Window::ensureSpecialStateGeometry(const QRectF &geometry)
 
 void Window::sendToOutput(Output *newOutput)
 {
-    newOutput = rules()->checkOutput(newOutput);
+    newOutput = rules()->checkScreen(newOutput);
     if (isActive()) {
         workspace()->setActiveOutput(newOutput);
         // might impact the layer of a fullscreen window
