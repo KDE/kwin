@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-12 00:56+0000\n"
+"POT-Creation-Date: 2023-01-18 00:58+0000\n"
 "PO-Revision-Date: 2009-01-05 19:38+0530\n"
 "Last-Translator: Runa Bhattacharjee <runab@redhat.com>\n"
 "Language-Team: Bengali INDIA <fedora-trans-bn_IN@redhat.com>\n"
@@ -958,18 +958,18 @@ msgstr ""
 msgid "Ignore &minimized windows"
 msgstr "আড়াল করা উইন্ডো অগ্রাহ্য করা হবে (&m)"
 
-#: windowview/qml/main.qml:106
+#: windowview/qml/main.qml:108
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: windowview/qml/main.qml:106
+#: windowview/qml/main.qml:108
 #, fuzzy, kde-format
 #| msgid "Number of windows:"
 msgid "No Windows"
 msgstr "উইন্ডোর সংখ্যা:"
 
-#: windowview/qml/main.qml:120
+#: windowview/qml/main.qml:123
 #, fuzzy, kde-format
 #| msgid "All &other windows"
 msgid "Filter windows…"

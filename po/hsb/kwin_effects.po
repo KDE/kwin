@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: desktop_kdebase\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-12 00:56+0000\n"
+"POT-Creation-Date: 2023-01-18 00:58+0000\n"
 "PO-Revision-Date: 2008-11-06 22:08+0100\n"
 "Last-Translator: Eduard Werner <edi.werner@gmx.de>\n"
 "Language-Team: en_US <kde-i18n-doc@lists.kde.org>\n"
@@ -956,18 +956,18 @@ msgstr ""
 msgid "Ignore &minimized windows"
 msgstr ""
 
-#: windowview/qml/main.qml:106
+#: windowview/qml/main.qml:108
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: windowview/qml/main.qml:106
+#: windowview/qml/main.qml:108
 #, fuzzy, kde-format
 #| msgid "Close window?"
 msgid "No Windows"
 msgstr "Wokno začinić?"
 
-#: windowview/qml/main.qml:120
+#: windowview/qml/main.qml:123
 #, fuzzy, kde-format
 #| msgid "Close window?"
 msgid "Filter windows…"

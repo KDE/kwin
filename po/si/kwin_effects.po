@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-12 00:56+0000\n"
+"POT-Creation-Date: 2023-01-18 00:58+0000\n"
 "PO-Revision-Date: 2009-12-22 01:06+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <danishka@gmail.com>\n"
@@ -985,18 +985,18 @@ msgstr "පවතින කවුළු අතර මාරුවන්න (ව�
 msgid "Ignore &minimized windows"
 msgstr "හැකිලූ කවුළු මඟහරින්න  (&m)"
 
-#: windowview/qml/main.qml:106
+#: windowview/qml/main.qml:108
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: windowview/qml/main.qml:106
+#: windowview/qml/main.qml:108
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "කවුළු"
 
-#: windowview/qml/main.qml:120
+#: windowview/qml/main.qml:123
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "Filter windows…"

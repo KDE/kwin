@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-12 00:56+0000\n"
+"POT-Creation-Date: 2023-01-18 00:58+0000\n"
 "PO-Revision-Date: 2014-06-27 01:00+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-doc@kde.org>\n"
@@ -985,18 +985,18 @@ msgstr "»Vörhannen Finstern« an- oder utmaken (aktuell Schriefdisch)"
 msgid "Ignore &minimized windows"
 msgstr "&Minimeert Finstern övergahn"
 
-#: windowview/qml/main.qml:106
+#: windowview/qml/main.qml:108
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: windowview/qml/main.qml:106
+#: windowview/qml/main.qml:108
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "Finstern"
 
-#: windowview/qml/main.qml:120
+#: windowview/qml/main.qml:123
 #, fuzzy, kde-format
 #| msgctxt "Name of a KWin Effect"
 #| msgid "Present Windows"

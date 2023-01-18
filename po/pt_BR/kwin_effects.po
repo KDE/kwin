@@ -4,15 +4,15 @@
 #
 # Diniz Bortolotto <diniz.bortolotto@gmail.com>, 2007, 2008.
 # André Marcelo Alvarenga <alvarenga@kde.org>, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2018, 2019, 2020.
-# Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2012, 2016, 2018, 2019, 2020, 2021, 2022.
+# Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2012, 2016, 2018, 2019, 2020, 2021, 2022, 2023.
 # Aracele Torres <aracele@kde.org>, 2017.
 # Thiago Masato Costa Sueto <herzenschein@gmail.com>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-12 00:56+0000\n"
-"PO-Revision-Date: 2022-08-19 15:19-0300\n"
+"POT-Creation-Date: 2023-01-18 00:58+0000\n"
+"PO-Revision-Date: 2023-01-16 23:34-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -645,31 +645,28 @@ msgstr ""
 "Escape ou clique direito para cancelar."
 
 #: showfps/qml/main.qml:110
-#, fuzzy, kde-format
-#| msgid "Ring Duration:"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr "Duração dos anéis:"
+msgstr "Duração da pintura"
 
 #: showfps/qml/main.qml:162
-#, fuzzy, kde-format
-#| msgid "Ring Count:"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
-msgstr "Número de anéis:"
+msgstr "Quantidade de pinturas"
 
 #: showfps/qml/main.qml:175
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr ""
+msgstr "FPS atual"
 
 #: showfps/qml/main.qml:184
-#, fuzzy, kde-format
-#| msgid "Maximum &width:"
+#, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr "&Largura máxima:"
+msgstr "FPS máximo"
 
 #: showfps/qml/main.qml:192
 #, kde-format
@@ -944,17 +941,17 @@ msgstr "Alternar as janelas presentes (área de trabalho atual)"
 msgid "Ignore &minimized windows"
 msgstr "Ignorar as janelas &minimizadas"
 
-#: windowview/qml/main.qml:106
+#: windowview/qml/main.qml:108
 #, kde-format
 msgid "No Matches"
 msgstr "Nenhuma ocorrência"
 
-#: windowview/qml/main.qml:106
+#: windowview/qml/main.qml:108
 #, kde-format
 msgid "No Windows"
 msgstr "Sem janelas"
 
-#: windowview/qml/main.qml:120
+#: windowview/qml/main.qml:123
 #, fuzzy, kde-format
 #| msgid "Fullscreen windows"
 msgid "Filter windows…"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-12 00:56+0000\n"
+"POT-Creation-Date: 2023-01-18 00:58+0000\n"
 "PO-Revision-Date: 2022-12-02 16:12+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -938,17 +938,17 @@ msgstr ""
 msgid "Ignore &minimized windows"
 msgstr "Ігнорувати &мінімізовані вікна"
 
-#: windowview/qml/main.qml:106
+#: windowview/qml/main.qml:108
 #, kde-format
 msgid "No Matches"
 msgstr "Немає відповідників"
 
-#: windowview/qml/main.qml:106
+#: windowview/qml/main.qml:108
 #, kde-format
 msgid "No Windows"
 msgstr "Немає вікон"
 
-#: windowview/qml/main.qml:120
+#: windowview/qml/main.qml:123
 #, kde-format
 msgid "Filter windows…"
 msgstr "Фільтрувати вікна…"
