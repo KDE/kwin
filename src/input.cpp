@@ -363,7 +363,8 @@ public:
             seat->setTimestamp(wheelEvent->timestamp());
             seat->notifyPointerAxis(wheelEvent->orientation(), wheelEvent->delta(),
                                     wheelEvent->deltaV120(),
-                                    kwinAxisSourceToKWaylandAxisSource(wheelEvent->axisSource()));
+                                    kwinAxisSourceToKWaylandAxisSource(wheelEvent->axisSource()),
+                                    wheelEvent->inverted() ? PointerAxisRelativeDirection::Inverted : PointerAxisRelativeDirection::Normal);
         }
         return true;
     }
@@ -1817,7 +1818,8 @@ public:
         seat->setTimestamp(event->timestamp());
         auto _event = static_cast<WheelEvent *>(event);
         seat->notifyPointerAxis(_event->orientation(), _event->delta(), _event->deltaV120(),
-                                kwinAxisSourceToKWaylandAxisSource(_event->axisSource()));
+                                kwinAxisSourceToKWaylandAxisSource(_event->axisSource()),
+                                _event->inverted() ? PointerAxisRelativeDirection::Inverted : PointerAxisRelativeDirection::Normal);
         return true;
     }
     bool keyEvent(KeyEvent *event) override

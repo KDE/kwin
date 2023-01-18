@@ -59,6 +59,14 @@ enum class PointerAxisSource {
 };
 
 /**
+ * Maps to wl_pointer.axis_relative_direction. Currently used for y axis only
+ */
+enum class PointerAxisRelativeDirection {
+    Normal,
+    Inverted
+};
+
+/**
  * This enum type is used to describe the state of a pointer button. It
  * is equivalent to the @c wl_pointer.button_state enum.
  */
@@ -353,7 +361,7 @@ public:
      * @param deltaV120 The high-resolution scrolling axis value.
      * @param source Describes how the axis event was physically generated.
      */
-    void notifyPointerAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source);
+    void notifyPointerAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source, PointerAxisRelativeDirection direction = PointerAxisRelativeDirection::Normal);
     /**
      * @returns true if there is a pressed button with the given @p serial
      */

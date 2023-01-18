@@ -23,6 +23,11 @@ void InputDevice::setOutputName(const QString &outputName)
 {
 }
 
+bool InputDevice::isNaturalScroll() const
+{
+    return false;
+}
+
 } // namespace KWin
 
 #include "moc_inputdevice.cpp"

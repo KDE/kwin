@@ -255,7 +255,7 @@ static void updateAccumulators(Qt::Orientation orientation, qreal delta, qint32 
     }
 }
 
-void PointerInterface::sendAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source)
+void PointerInterface::sendAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source, PointerAxisRelativeDirection direction)
 {
     if (!d->focusedSurface) {
         return;
@@ -307,6 +307,11 @@ void PointerInterface::sendAxis(Qt::Orientation orientation, qreal delta, qint32
             (orientation == Qt::Vertical) ? PointerInterfacePrivate::axis_vertical_scroll : PointerInterfacePrivate::axis_horizontal_scroll;
 
         if (delta) {
+            if (version >= WL_POINTER_AXIS_RELATIVE_DIRECTION_SINCE_VERSION) {
+                auto wlRelativeDirection = direction == PointerAxisRelativeDirection::Normal ? PointerInterfacePrivate::axis_relative_direction_identical : PointerInterfacePrivate::axis_relative_direction_inverted;
+
+                d->send_axis_relative_direction(resource->handle, wlOrientation, wlRelativeDirection);
+            }
             if (deltaV120) {
                 if (version >= WL_POINTER_AXIS_VALUE120_SINCE_VERSION) {
                     // Send high resolution scroll events if client supports them

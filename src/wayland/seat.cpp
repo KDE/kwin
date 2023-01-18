@@ -39,7 +39,7 @@
 
 namespace KWin
 {
-static const int s_version = 8;
+static const int s_version = 9;
 
 SeatInterfacePrivate *SeatInterfacePrivate::get(SeatInterface *seat)
 {
@@ -683,7 +683,7 @@ bool SeatInterface::isPointerButtonPressed(quint32 button) const
     return it.value() == SeatInterfacePrivate::Pointer::State::Pressed;
 }
 
-void SeatInterface::notifyPointerAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source)
+void SeatInterface::notifyPointerAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source, PointerAxisRelativeDirection direction)
 {
     if (!d->pointer) {
         return;
@@ -692,7 +692,7 @@ void SeatInterface::notifyPointerAxis(Qt::Orientation orientation, qreal delta, 
         // ignore
         return;
     }
-    d->pointer->sendAxis(orientation, delta, deltaV120, source);
+    d->pointer->sendAxis(orientation, delta, deltaV120, source, direction);
 }
 
 void SeatInterface::notifyPointerButton(Qt::MouseButton button, PointerButtonState state)

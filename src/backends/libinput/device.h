@@ -351,7 +351,7 @@ public:
         return m_middleEmulation;
     }
     void setMiddleEmulation(bool set);
-    bool isNaturalScroll() const
+    bool isNaturalScroll() const override
     {
         return m_naturalScroll;
     }
