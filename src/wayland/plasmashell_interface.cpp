@@ -41,12 +41,13 @@ public:
     PlasmaShellSurfaceInterface *q;
     QPoint m_globalPos;
     PlasmaShellSurfaceInterface::Role m_role = PlasmaShellSurfaceInterface::Role::Normal;
+    PlasmaShellSurfaceInterface::Anchor m_anchor = PlasmaShellSurfaceInterface::Anchor::None;
     PlasmaShellSurfaceInterface::PanelBehavior m_panelBehavior = PlasmaShellSurfaceInterface::PanelBehavior::AlwaysVisible;
     bool m_positionSet = false;
     bool m_skipTaskbar = false;
     bool m_skipSwitcher = false;
     bool m_panelTakesFocus = false;
-    QRect m_struts = QRect(0, 0, 0, 0);
+    int m_zone = 0;
     bool m_openUnderCursorRequested = false;
 
 private:
@@ -60,9 +61,10 @@ private:
     void org_kde_plasma_surface_panel_auto_hide_hide(Resource *resource) override;
     void org_kde_plasma_surface_panel_auto_hide_show(Resource *resource) override;
     void org_kde_plasma_surface_set_panel_takes_focus(Resource *resource, uint32_t takes_focus) override;
-    void org_kde_plasma_surface_set_struts(Resource *resource, int x, int y, int w, int h) override;
+    void org_kde_plasma_surface_set_exclusive_zone(Resource *resource, int zone) override;
     void org_kde_plasma_surface_set_skip_switcher(Resource *resource, uint32_t skip) override;
     void org_kde_plasma_surface_open_under_cursor(Resource *resource) override;
+    void org_kde_plasma_surface_set_anchor(Resource *resource, uint32_t anchor) override;
 };
 
 PlasmaShellInterface::PlasmaShellInterface(Display *display, QObject *parent)
@@ -194,6 +196,30 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_role(Resourc
     Q_EMIT q->roleChanged();
 }
 
+void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_anchor(Resource *resource, uint32_t anchor)
+{
+    PlasmaShellSurfaceInterface::Anchor a = PlasmaShellSurfaceInterface::Anchor::None;
+    switch (anchor) {
+    case anchor_top:
+        a = PlasmaShellSurfaceInterface::Anchor::Top;
+        break;
+    case anchor_bottom:
+        a = PlasmaShellSurfaceInterface::Anchor::Bottom;
+        break;
+    case anchor_left:
+        a = PlasmaShellSurfaceInterface::Anchor::Left;
+        break;
+    case anchor_right:
+        a = PlasmaShellSurfaceInterface::Anchor::Right;
+        break;
+    case anchor_none:
+        a = PlasmaShellSurfaceInterface::Anchor::None;
+        break;
+    }
+    m_anchor = a;
+    Q_EMIT q->anchorChanged();
+}
+
 void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_panel_behavior(Resource *resource, uint32_t flag)
 {
     PlasmaShellSurfaceInterface::PanelBehavior newBehavior = PlasmaShellSurfaceInterface::PanelBehavior::AlwaysVisible;
@@ -259,14 +285,13 @@ void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_panel_takes_
     Q_EMIT q->panelTakesFocusChanged();
 }
 
-void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_struts(Resource *resource, int x, int y, int w, int h)
+void PlasmaShellSurfaceInterfacePrivate::org_kde_plasma_surface_set_exclusive_zone(Resource *resource, int zone)
 {
-    QRect newStruts = QRect(x, y, w, h);
-    if (newStruts == m_struts) {
+    if (zone == m_zone) {
         return;
     }
-    m_struts = newStruts;
-    Q_EMIT q->strutsChanged();
+    m_zone = zone;
+    Q_EMIT q->exclusiveZoneChanged();
 }
 
 QPoint PlasmaShellSurfaceInterface::position() const
@@ -277,6 +302,11 @@ QPoint PlasmaShellSurfaceInterface::position() const
 PlasmaShellSurfaceInterface::Role PlasmaShellSurfaceInterface::role() const
 {
     return d->m_role;
+}
+
+PlasmaShellSurfaceInterface::Anchor PlasmaShellSurfaceInterface::anchor() const
+{
+    return d->m_anchor;
 }
 
 bool PlasmaShellSurfaceInterface::isPositionSet() const
@@ -319,8 +349,8 @@ bool PlasmaShellSurfaceInterface::panelTakesFocus() const
     return d->m_panelTakesFocus;
 }
 
-QRect PlasmaShellSurfaceInterface::struts() const {
-    return d->m_struts;
+int PlasmaShellSurfaceInterface::exclusiveZone() const {
+    return d->m_zone;
 }
 
 PlasmaShellSurfaceInterface *PlasmaShellSurfaceInterface::get(wl_resource *native)

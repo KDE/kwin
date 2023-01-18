@@ -155,7 +155,26 @@ public:
     // TODO KF6 rename to something generic
     bool panelTakesFocus() const;
 
-    QRect struts() const;
+    /**
+    * The size of the exclusive zone / strut to create; this overrides the width/height of
+    * the surface if the value is different from zero.
+    **/
+    int exclusiveZone() const;
+
+    /**
+     * Describes which screen side the window is anchored to.
+     */
+    enum class Anchor {
+        None = 0, //
+        Top = 1, //
+        Bottom = 2, //
+        Left = 4, //
+        Right = 8 //
+    };
+    /**
+     * @returns The current screen side the window is anchored to.
+     */
+    Anchor anchor() const;
 
     /**
      * @returns The PlasmaShellSurfaceInterface for the @p native resource.
@@ -178,6 +197,10 @@ Q_SIGNALS:
      * A change of the role has been requested.
      */
     void roleChanged();
+    /**
+     * A change of screen side anchor has been requested.
+     */
+    void anchorChanged();
     /**
      * A change of the panel behavior has been requested.
      */
@@ -224,7 +247,11 @@ Q_SIGNALS:
      */
     void panelTakesFocusChanged();
 
-    void strutsChanged();
+    /*
+     * Emitted when exclusiveZone changes
+     * @see exclusiveZone
+     */
+    void exclusiveZoneChanged();
 
 private:
     friend class PlasmaShellInterfacePrivate;

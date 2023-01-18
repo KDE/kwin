@@ -765,33 +765,54 @@ StrutRect XdgToplevelWindow::strutRect(StrutArea area) const
         return StrutRect();
     }
 
-    const QRect windowRect = frameGeometry().toRect();
-    const QRect outputRect = output()->geometry();
+    QRect windowRect = frameGeometry().toRect();
+    bool horizontal, left, right, top, bottom;
 
-    const bool left = windowRect.left() == outputRect.left();
-    const bool right = windowRect.right() == outputRect.right();
-    const bool top = windowRect.top() == outputRect.top();
-    const bool bottom = windowRect.bottom() == outputRect.bottom();
-    const bool horizontal = width() >= height();
+    if (m_plasmaShellSurface) {
+        const QRect outputRect = output()->geometry();
+        left = windowRect.left() == outputRect.left();
+        right = windowRect.right() == outputRect.right();
+        top = windowRect.top() == outputRect.top();
+        bottom = windowRect.bottom() == outputRect.bottom();
+        horizontal = width() >= height();
+    } else {
+        top = m_plasmaShellSurface->anchor() == PlasmaShellSurfaceInterface::Anchor::Top;
+        left = m_plasmaShellSurface->anchor() == PlasmaShellSurfaceInterface::Anchor::Left;
+        right = m_plasmaShellSurface->anchor() == PlasmaShellSurfaceInterface::Anchor::Right;
+        bottom = m_plasmaShellSurface->anchor() == PlasmaShellSurfaceInterface::Anchor::Bottom;
+        horizontal = top || bottom;
+    }
 
     switch (area) {
     case StrutAreaTop:
         if (top && horizontal) {
+            if (m_plasmaShellSurface && m_plasmaShellSurface->exclusiveZone()) {
+                windowRect.setHeight(m_plasmaShellSurface->exclusiveZone());
+            }
             return StrutRect(windowRect, StrutAreaTop);
         }
         return StrutRect();
     case StrutAreaRight:
         if (right && !horizontal) {
+            if (m_plasmaShellSurface && m_plasmaShellSurface->exclusiveZone()) {
+                windowRect.setLeft(windowRect.right() - m_plasmaShellSurface->exclusiveZone() + 1);
+            }
             return StrutRect(windowRect, StrutAreaRight);
         }
         return StrutRect();
     case StrutAreaBottom:
         if (bottom && horizontal) {
+            if (m_plasmaShellSurface && m_plasmaShellSurface->exclusiveZone()) {
+                windowRect.setTop(windowRect.bottom() - m_plasmaShellSurface->exclusiveZone() + 1);
+            }
             return StrutRect(windowRect, StrutAreaBottom);
         }
         return StrutRect();
     case StrutAreaLeft:
         if (left && !horizontal) {
+            if (m_plasmaShellSurface && m_plasmaShellSurface->exclusiveZone()) {
+                windowRect.setWidth(m_plasmaShellSurface->exclusiveZone());
+            }
             return StrutRect(windowRect, StrutAreaLeft);
         }
         return StrutRect();
