@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-12 00:56+0000\n"
+"POT-Creation-Date: 2023-01-19 00:59+0000\n"
 "PO-Revision-Date: 2021-08-21 16:25+0530\n"
 "Last-Translator: Raghavendra Kamath <raghu@raghukamath.com>\n"
 "Language-Team: kde-hindi\n"
@@ -1164,22 +1164,22 @@ msgstr ""
 msgid "Wait Longer"
 msgstr ""
 
-#: input.cpp:1984
+#: input.cpp:2008
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2063
+#: input.cpp:2087
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr ""
 
-#: input.cpp:2063
+#: input.cpp:2087
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3040
+#: input.cpp:3064
 #, kde-format
 msgid "Touchpad"
 msgstr ""
@@ -2871,7 +2871,7 @@ msgstr "एक डेस्कटॉप नीचे स्विच करे�
 msgid "Switch to Desktop %1"
 msgstr "डेस्कटॉप 1 पर स्विच करें"
 
-#: window.cpp:3448
+#: window.cpp:3449
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

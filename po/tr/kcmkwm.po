@@ -11,13 +11,13 @@
 # Serdar SOYTETİR <tulliana@gmail.com>, 2010, 2012.
 # Volkan Gezer <volkangezer@gmail.com>, 2013, 2015, 2017.
 # Kaan Ozdincer <kaanozdincer@gmail.com>, 2014.
-# Emir SARI <emir_sari@icloud.com>, 2022.
+# Emir SARI <emir_sari@icloud.com>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2022-12-03 18:58+0300\n"
+"PO-Revision-Date: 2023-01-18 22:31+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.08.3\n"
+"X-Generator: Lokalize 22.12.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -617,7 +617,7 @@ msgid ""
 "with the proper window type for this feature to work."
 msgstr ""
 "Açıldığında, etkin olmayan pencerelere ait yardımcı pencereler (araç "
-"pencereleri, ayrık menüler, ...) gizlenecektir ve sadece uygulama etkin "
+"pencereleri, ayrık menüler, ...) gizlenecektir ve yalnızca uygulama etkin "
 "olduğunda gösterilecektir. Bu özelliğin çalışması için uygulamaların "
 "pencerelerini doğru şekilde işaretlemeleri gereklidir."
 
@@ -798,16 +798,16 @@ msgstr ""
 "indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Orta:</"
 "span>Engelleme açıktır.</li><li style=\" margin-top:0px; margin-bottom:0px; "
 "margin-left:0px;margin-right:0px; -qt-block-indent:0; text-indent:0px;"
-"\"><span style=\" font-style:italic;\">Yüksek:</span> Yeni pencereler sadece "
-"hiçbir pencere etkin değilse veya geçerli uygulamaya aitse etkinleştirilir. "
-"Bu ayar fare odaklama yöntemi kullanılmıyorsa kullanışlı olmayabilir.</"
-"li><li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-"
-"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">Çok Yüksek:</span> Tüm pencereler kullanıcı tarafından "
-"etkinleştirilmelidir.</li></ul><p>Odak çalması engellenen pencereler ilgi "
-"istiyor olarak işaretlenir, yani öntanımlı olarak görev çubuğu girdisi "
-"vurgulanır. Bu davranış Bildirimler denetim modülünden değiştirilebilir.</"
-"p></body></html>"
+"\"><span style=\" font-style:italic;\">Yüksek:</span> Yeni pencereler "
+"yalnızca hiçbir pencere etkin değilse veya geçerli uygulamaya aitse "
+"etkinleştirilir. Bu ayar fare odaklama yöntemi kullanılmıyorsa kullanışlı "
+"olmayabilir.</li><li style=\" margin-top:0px; margin-bottom:12px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Çok Yüksek:</span> Tüm pencereler kullanıcı "
+"tarafından etkinleştirilmelidir.</li></ul><p>Odak çalması engellenen "
+"pencereler ilgi istiyor olarak işaretlenir, yani öntanımlı olarak görev "
+"çubuğu girdisi vurgulanır. Bu davranış Bildirimler denetim modülünden "
+"değiştirilebilir.</p></body></html>"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)

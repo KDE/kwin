@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-13 00:58+0000\n"
-"PO-Revision-Date: 2022-12-12 18:04+0000\n"
+"PO-Revision-Date: 2023-01-18 13:38+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
 "Language: pt\n"
@@ -159,16 +159,10 @@ msgstr "Forçar as animações mais suaves"
 msgid ""
 "Reduce latency by allowing screen tearing artifacts in fullscreen windows"
 msgstr ""
+"Reduzir a latência, permitindo a criação de intermitências com as janelas de "
+"ecrã completo"
 
 #: main.cpp:79
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Reactivar a detecção do OpenGL"
-
-#~ msgid "Allows applications to cause screen tearing in fullscreen."
-#~ msgstr ""
-#~ "Permite que as aplicações provoquem interferências no ecrã no modo de "
-#~ "ecrã completo."
-
-#~ msgid "Allow tearing in fullscreen"
-#~ msgstr "Permitir interferências no ecrã com o ecrã completo"
