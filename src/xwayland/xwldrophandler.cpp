@@ -21,7 +21,7 @@ namespace KWin::Xwl
 {
 
 XwlDropHandler::XwlDropHandler(Dnd *dnd)
-    : KWaylandServer::AbstractDropHandler(nullptr)
+    : KWaylandServer::AbstractDropHandler(dnd)
     , m_dnd(dnd)
 {
 }
