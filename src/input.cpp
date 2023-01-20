@@ -1936,6 +1936,7 @@ public:
         : Cursor(tool)
         , m_source(std::make_unique<ImageCursorSource>())
     {
+        setSource(m_source.get());
         connect(tool, &KWaylandServer::TabletToolV2Interface::cursorChanged, this, [this](KWaylandServer::TabletCursorV2 *tcursor) {
             if (!tcursor || tcursor->enteredSerial() == 0) {
                 static WaylandCursorImage defaultCursor;
