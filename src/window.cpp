@@ -1607,6 +1607,12 @@ bool Window::startInteractiveMoveResize()
     setInteractiveMoveResize(true);
     workspace()->setMoveResizeWindow(this);
 
+    m_interactiveMoveResize.initialGeometry = moveResizeGeometry();
+    m_interactiveMoveResize.startOutput = moveResizeOutput();
+    m_interactiveMoveResize.initialMaximizeMode = requestedMaximizeMode();
+    m_interactiveMoveResize.initialQuickTileMode = quickTileMode();
+    m_interactiveMoveResize.initialGeometryRestore = geometryRestore();
+
     if (requestedMaximizeMode() != MaximizeRestore) {
         switch (interactiveMoveResizeGravity()) {
         case Gravity::Left:
@@ -1648,7 +1654,6 @@ bool Window::startInteractiveMoveResize()
         setQuickTileMode(QuickTileFlag::None);
     }
 
-    updateInitialMoveResizeGeometry();
     updateElectricGeometryRestore();
     checkUnrestrictedInteractiveMoveResize();
     Q_EMIT clientStartUserMovedResized(this);
@@ -1668,8 +1673,14 @@ void Window::finishInteractiveMoveResize(bool cancel)
 
     if (cancel) {
         moveResize(initialInteractiveMoveResizeGeometry());
-    }
-    if (moveResizeOutput() != interactiveMoveResizeStartOutput()) {
+        if (m_interactiveMoveResize.initialMaximizeMode != MaximizeMode::MaximizeRestore) {
+            setMaximize(m_interactiveMoveResize.initialMaximizeMode & MaximizeMode::MaximizeVertical, m_interactiveMoveResize.initialMaximizeMode & MaximizeMode::MaximizeHorizontal);
+            setGeometryRestore(m_interactiveMoveResize.initialGeometryRestore);
+        } else if (m_interactiveMoveResize.initialQuickTileMode) {
+            setQuickTileMode(m_interactiveMoveResize.initialQuickTileMode, true);
+            setGeometryRestore(m_interactiveMoveResize.initialGeometryRestore);
+        }
+    } else if (moveResizeOutput() != interactiveMoveResizeStartOutput()) {
         workspace()->sendWindowToOutput(this, moveResizeOutput()); // checks rule validity
         if (isRequestedFullScreen() || requestedMaximizeMode() != MaximizeRestore) {
             checkWorkspacePosition();
@@ -2748,12 +2759,6 @@ int Window::borderRight() const
 int Window::borderTop() const
 {
     return isDecorated() ? decoration()->borderTop() : 0;
-}
-
-void Window::updateInitialMoveResizeGeometry()
-{
-    m_interactiveMoveResize.initialGeometry = frameGeometry();
-    m_interactiveMoveResize.startOutput = output();
 }
 
 void Window::updateCursor()
