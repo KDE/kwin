@@ -8,13 +8,13 @@
 # Franklin Weng <franklin at goodhorse dot idv dot tw>, 2007, 2008.
 # pan93412 <pan93412@gmail.com>, 2019, 2020.
 # Jeff Huang <s8321414@gmail.com>, 2022.
-# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2022.
+# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2022-12-26 03:39+0900\n"
+"PO-Revision-Date: 2023-01-21 19:11+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
 "Language: zh_TW\n"
@@ -1360,7 +1360,7 @@ msgid ""
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
 "<em>嚴格將游標下位置設為焦點：</em>焦點永遠在滑鼠下方的視窗（就算在不確定的地"
-"方），非常類似過去未管理之舊式 X11 環境的焦點行為。<br/<strong>警告：</"
+"方），非常類似過去未管理之舊式 X11 環境的焦點行為。<br/><strong>警告：</"
 "strong><em>防止盜取焦點</em> 及 <em>tabbox ('Alt+Tab')</em> 會與啟用策略相衝"
 "突，且不會運作。通常你可能會想用<em>將焦點設為滑鼠所在位置 (滑鼠優先)</em>代"
 "替！"

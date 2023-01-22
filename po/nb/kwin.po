@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-08 01:00+0000\n"
+"POT-Creation-Date: 2023-01-21 00:59+0000\n"
 "PO-Revision-Date: 2015-08-27 20:54+0200\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -1155,22 +1155,22 @@ msgstr "&Avslutt program %1"
 msgid "Wait Longer"
 msgstr "Vent lenger"
 
-#: input.cpp:1984
+#: input.cpp:2009
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2063
+#: input.cpp:2088
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr ""
 
-#: input.cpp:2063
+#: input.cpp:2088
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3040
+#: input.cpp:3065
 #, kde-format
 msgid "Touchpad"
 msgstr ""
@@ -2243,8 +2243,8 @@ msgstr "&Rull opp"
 
 #: useractions.cpp:272
 #, kde-format
-msgid "&No Border"
-msgstr "&Ingen kanter"
+msgid "&No Titlebar and Frame"
+msgstr ""
 
 #: useractions.cpp:280
 #, kde-format
@@ -2444,7 +2444,7 @@ msgstr "Gjør vinduet til fullskjerm"
 
 #: useractions.cpp:1009
 #, kde-format
-msgid "Toggle Window Border"
+msgid "Toggle Window Titlebar and Frame"
 msgstr ""
 
 #: useractions.cpp:1011
@@ -2763,7 +2763,7 @@ msgstr "Hopp ett skrivebord ned"
 msgid "Switch to Desktop %1"
 msgstr "Bytt til skrivebord %1"
 
-#: window.cpp:3440
+#: window.cpp:3449
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
