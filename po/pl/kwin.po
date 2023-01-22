@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1642668 $
+# Version: $Revision: 1642904 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -10,13 +10,13 @@
 # Marta Rybczyńska <kde-i18n@rybczynska.net>, 2009, 2013.
 # Maciej Wikło <maciej.wiklo@wp.pl>, 2010.
 # Mirek Sabiniewicz <m.sabiniewicz@gmail.com>, 2010.
-# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022.
+# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-19 00:59+0000\n"
-"PO-Revision-Date: 2022-12-29 10:15+0100\n"
+"POT-Creation-Date: 2023-01-22 02:53+0000\n"
+"PO-Revision-Date: 2023-01-21 10:05+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -31,7 +31,7 @@ msgstr ""
 ">\n"
 ">\n"
 ">\n"
-"X-Generator: Lokalize 22.12.0\n"
+"X-Generator: Lokalize 22.12.1\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
@@ -1175,22 +1175,22 @@ msgstr "&Zakończ program %1"
 msgid "Wait Longer"
 msgstr "Poczekaj dłużej"
 
-#: input.cpp:2008
+#: input.cpp:2009
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Przenieś tablet na następne wyjście"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tablet przeniósł się na %1"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Tablet przełączył wyjście"
 
-#: input.cpp:3064
+#: input.cpp:3065
 #, kde-format
 msgid "Touchpad"
 msgstr "Gładzik"
@@ -2277,10 +2277,9 @@ msgid "&Shade"
 msgstr "&Zwinięte"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "Bez paska nazwy i obramowania"
+msgstr "Bez paska &nazwy i obramowania"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2397,10 +2396,9 @@ msgid "&All Activities"
 msgstr "Wszystkie &aktywności"
 
 #: useractions.cpp:776
-#, fuzzy, kde-format
-#| msgid "Move to %1 %2"
+#, kde-format
 msgid "Move to %1"
-msgstr "Przenieś do %1 %2"
+msgstr "Przenieś do %1"
 
 #: useractions.cpp:901
 #, kde-format
@@ -2480,10 +2478,9 @@ msgid "Make Window Fullscreen"
 msgstr "Uczyń oknem pełnoekranowym"
 
 #: useractions.cpp:1009
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "Bez paska nazwy i obramowania"
+msgstr "Wł./Wył. pasek nazwy i obramowanie"
 
 #: useractions.cpp:1011
 #, kde-format

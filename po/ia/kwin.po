@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-19 00:59+0000\n"
+"POT-Creation-Date: 2023-01-22 02:53+0000\n"
 "PO-Revision-Date: 2022-11-28 16:22+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -1169,24 +1169,24 @@ msgstr "&Termina Application %1"
 msgid "Wait Longer"
 msgstr "Attende plus longe"
 
-#: input.cpp:2008
+#: input.cpp:2009
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, fuzzy, kde-format
 #| msgctxt "Name of a hardware switch"
 #| msgid "Tablet mode"
 msgid "Tablet moved to %1"
 msgstr "Modo de tabletta"
 
-#: input.cpp:2087
+#: input.cpp:2088
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3064
+#: input.cpp:3065
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"

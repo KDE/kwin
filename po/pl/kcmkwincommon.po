@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2019.
+# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2019, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-30 00:54+0000\n"
-"PO-Revision-Date: 2019-12-02 11:04+0100\n"
+"PO-Revision-Date: 2023-01-21 10:04+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 19.07.70\n"
+"X-Generator: Lokalize 22.12.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -47,12 +47,10 @@ msgid "Focus"
 msgstr "Uaktywnianie"
 
 #: effectsmodel.cpp:55
-#, fuzzy, kde-format
-#| msgctxt "Category of Desktop Effects, used as section header"
-#| msgid "Show Desktop Animation"
+#, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Peek at Desktop Animation"
-msgstr "Animacje pokazywania pulpitu"
+msgstr "Podejrzyj animacje pulpitu"
 
 #: effectsmodel.cpp:56
 #, kde-format
