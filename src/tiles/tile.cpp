@@ -91,15 +91,17 @@ void Tile::setGeometryFromAbsolute(const QRectF &geom)
 
 void Tile::setRelativeGeometry(const QRectF &geom)
 {
-    if (m_relativeGeometry == geom) {
+    QRectF constrainedGeom = geom;
+    constrainedGeom.setWidth(std::max(constrainedGeom.width(), s_minimumSize.width()));
+    constrainedGeom.setHeight(std::max(constrainedGeom.height(), s_minimumSize.height()));
+
+    if (m_relativeGeometry == constrainedGeom) {
         return;
     }
 
-    m_relativeGeometry = geom;
-    m_relativeGeometry.setWidth(std::max(m_relativeGeometry.width(), s_minimumSize.width()));
-    m_relativeGeometry.setHeight(std::max(m_relativeGeometry.height(), s_minimumSize.height()));
+    m_relativeGeometry = constrainedGeom;
 
-    Q_EMIT relativeGeometryChanged(geom);
+    Q_EMIT relativeGeometryChanged();
     Q_EMIT absoluteGeometryChanged();
     Q_EMIT windowGeometryChanged();
 

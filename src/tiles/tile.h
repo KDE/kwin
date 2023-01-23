@@ -44,6 +44,7 @@ public:
     };
     Q_ENUM(LayoutDirection)
 
+    explicit Tile(TileManager *tiling, Tile *parentItem = nullptr);
     ~Tile();
 
     void setGeometryFromWindow(const QRectF &geom);
@@ -85,6 +86,7 @@ public:
     void setPadding(qreal padding);
 
     QuickTileMode quickTileMode() const;
+    void setQuickTileMode(QuickTileMode mode);
 
     /**
      * All tiles directly children of this tile
@@ -129,7 +131,7 @@ public:
     }
 
 Q_SIGNALS:
-    void relativeGeometryChanged(const QRectF &relativeGeometry);
+    void relativeGeometryChanged();
     void absoluteGeometryChanged();
     void windowGeometryChanged();
     void paddingChanged(qreal padding);
@@ -141,8 +143,6 @@ Q_SIGNALS:
     void windowsChanged();
 
 protected:
-    explicit Tile(TileManager *tiling, Tile *parentItem = nullptr);
-    void setQuickTileMode(QuickTileMode mode);
     void insertChild(int position, Tile *item);
     void removeChild(Tile *child);
 
