@@ -1423,6 +1423,12 @@ void pointerMotion(const QPointF &position, quint32 time)
     Q_EMIT virtualPointer->pointerMotionAbsolute(position, std::chrono::milliseconds(time), virtualPointer);
 }
 
+void pointerMotionRelative(const QPointF &delta, quint32 time)
+{
+    auto virtualPointer = static_cast<WaylandTestApplication *>(kwinApp())->virtualPointer();
+    Q_EMIT virtualPointer->pointerMotion(delta, delta, std::chrono::milliseconds(time), virtualPointer);
+}
+
 void touchCancel()
 {
     auto virtualTouch = static_cast<WaylandTestApplication *>(kwinApp())->virtualTouch();
