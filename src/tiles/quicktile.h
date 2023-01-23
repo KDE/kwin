@@ -16,23 +16,6 @@
 namespace KWin
 {
 
-class QuickRootTile;
-
-class KWIN_EXPORT QuickTile : public Tile
-{
-    Q_OBJECT
-public:
-    QuickTile(TileManager *tiling, ElectricBorder border, QuickRootTile *parentItem = nullptr);
-    ~QuickTile();
-
-    void setRelativeGeometry(const QRectF &geom) override;
-
-private:
-    QuickRootTile *m_root = nullptr;
-    ElectricBorder m_border;
-    bool m_geometryLock = false;
-};
-
 class KWIN_EXPORT QuickRootTile : public Tile
 {
     Q_OBJECT
@@ -50,16 +33,20 @@ public:
     void setVerticalSplit(qreal split);
 
 private:
-    std::unique_ptr<QuickTile> m_leftVerticalTile;
-    std::unique_ptr<QuickTile> m_rightVerticalTile;
+    void relayoutToFit(Tile *tile);
 
-    std::unique_ptr<QuickTile> m_topHorizontalTile;
-    std::unique_ptr<QuickTile> m_bottomHorizontalTile;
+    Tile *m_resizedTile = nullptr;
 
-    std::unique_ptr<QuickTile> m_topLeftTile;
-    std::unique_ptr<QuickTile> m_topRightTile;
-    std::unique_ptr<QuickTile> m_bottomLeftTile;
-    std::unique_ptr<QuickTile> m_bottomRightTile;
+    std::unique_ptr<Tile> m_leftVerticalTile;
+    std::unique_ptr<Tile> m_rightVerticalTile;
+
+    std::unique_ptr<Tile> m_topHorizontalTile;
+    std::unique_ptr<Tile> m_bottomHorizontalTile;
+
+    std::unique_ptr<Tile> m_topLeftTile;
+    std::unique_ptr<Tile> m_topRightTile;
+    std::unique_ptr<Tile> m_bottomLeftTile;
+    std::unique_ptr<Tile> m_bottomRightTile;
 };
 
 } // namespace KWin
