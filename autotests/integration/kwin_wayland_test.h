@@ -553,6 +553,7 @@ void pointerAxisVertical(qreal delta,
 void pointerButtonPressed(quint32 button, quint32 time);
 void pointerButtonReleased(quint32 button, quint32 time);
 void pointerMotion(const QPointF &position, quint32 time);
+void pointerMotionRelative(const QPointF &delta, quint32 time);
 void touchCancel();
 void touchDown(qint32 id, const QPointF &pos, quint32 time);
 void touchMotion(qint32 id, const QPointF &pos, quint32 time);

@@ -70,6 +70,8 @@ private Q_SLOTS:
     void testResizeForVirtualKeyboardWithFullScreen();
     void testDestroyMoveClient();
     void testDestroyResizeClient();
+    void testCancelInteractiveMoveResize_data();
+    void testCancelInteractiveMoveResize();
 
 private:
     KWayland::Client::ConnectionThread *m_connection = nullptr;
@@ -1074,6 +1076,76 @@ void MoveResizeWindowTest::testDestroyResizeClient()
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
 }
 
+void MoveResizeWindowTest::testCancelInteractiveMoveResize_data()
+{
+    QTest::addColumn<QuickTileMode>("quickTileMode");
+    QTest::addColumn<MaximizeMode>("maximizeMode");
+
+    QTest::newRow("quicktile_bottom") << QuickTileMode(QuickTileFlag::Bottom) << MaximizeMode::MaximizeRestore;
+    QTest::newRow("quicktile_top") << QuickTileMode(QuickTileFlag::Top) << MaximizeMode::MaximizeRestore;
+    QTest::newRow("quicktile_left") << QuickTileMode(QuickTileFlag::Left) << MaximizeMode::MaximizeRestore;
+    QTest::newRow("quicktile_right") << QuickTileMode(QuickTileFlag::Right) << MaximizeMode::MaximizeRestore;
+    QTest::newRow("maximize_vertical") << QuickTileMode(QuickTileFlag::None) << MaximizeMode::MaximizeVertical;
+    QTest::newRow("maximize_horizontal") << QuickTileMode(QuickTileFlag::None) << MaximizeMode::MaximizeHorizontal;
+    QTest::newRow("maximize_full") << QuickTileMode(QuickTileFlag::Maximize) << MaximizeMode::MaximizeFull;
+}
+
+void MoveResizeWindowTest::testCancelInteractiveMoveResize()
+{
+    // This test verifies that after moveresize is cancelled, all relevant window states are restored
+    // to what they were before moveresize began
+
+    // Create the test client.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    QVERIFY(surface != nullptr);
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    QVERIFY(shellSurface != nullptr);
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+
+    // tile / maximize window
+    QFETCH(QuickTileMode, quickTileMode);
+    QFETCH(MaximizeMode, maximizeMode);
+    if (maximizeMode) {
+        window->setMaximize(maximizeMode & MaximizeMode::MaximizeVertical, maximizeMode & MaximizeMode::MaximizeHorizontal);
+    } else {
+        window->setQuickTileMode(quickTileMode, true);
+    }
+    QCOMPARE(window->quickTileMode(), quickTileMode);
+    QCOMPARE(window->requestedMaximizeMode(), maximizeMode);
+
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().first().toSize(), Qt::blue);
+
+    const QRectF geometry = window->moveResizeGeometry();
+    const QRectF geometryRestore = window->geometryRestore();
+
+    // Start resizing the client.
+    QSignalSpy clientStartMoveResizedSpy(window, &Window::clientStartUserMovedResized);
+    QSignalSpy clientFinishUserMovedResizedSpy(window, &Window::clientFinishUserMovedResized);
+
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
+    QCOMPARE(window->isInteractiveMove(), false);
+    QCOMPARE(window->isInteractiveResize(), false);
+    workspace()->slotWindowResize();
+    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QCOMPARE(workspace()->moveResizeWindow(), window);
+    QCOMPARE(window->isInteractiveMove(), false);
+    QCOMPARE(window->isInteractiveResize(), true);
+
+    Test::pointerMotionRelative(QPoint(1, 1), 1);
+    QCOMPARE(window->quickTileMode(), QuickTileMode());
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+
+    // cancel moveresize, all state from before should be restored
+    window->keyPressEvent(Qt::Key::Key_Escape);
+    QCOMPARE(window->moveResizeGeometry(), geometry);
+    QCOMPARE(window->quickTileMode(), quickTileMode);
+    QCOMPARE(window->requestedMaximizeMode(), maximizeMode);
+    QCOMPARE(window->geometryRestore(), geometryRestore);
+}
 }
 
 WAYLANDTEST_MAIN(KWin::MoveResizeWindowTest)
