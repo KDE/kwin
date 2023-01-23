@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2022-12-27 07:39+0100\n"
+"PO-Revision-Date: 2023-01-22 07:10+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -802,7 +802,7 @@ msgstr ""
 #: focus.ui:206
 #, kde-format
 msgid "Active screen follows &mouse"
-msgstr ""
+msgstr "აქტიური ეკრანი &თაგუნას დასდევს"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:213
