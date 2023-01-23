@@ -371,7 +371,7 @@ QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::generateCommonModes()
 {
     QList<std::shared_ptr<DrmConnectorMode>> ret;
     QSize maxSize;
-    uint32_t maxSizeRefreshRate;
+    uint32_t maxSizeRefreshRate = 0;
     for (const auto &mode : std::as_const(m_driverModes)) {
         if (mode->size().width() >= maxSize.width() && mode->size().height() >= maxSize.height() && mode->refreshRate() >= maxSizeRefreshRate) {
             maxSize = mode->size();
