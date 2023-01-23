@@ -142,28 +142,31 @@ qreal QuickRootTile::horizontalSplit() const
 
 void QuickRootTile::setHorizontalSplit(qreal split)
 {
+    const QSizeF minSize = minimumSize(); // minimum size is the same for all tiles
+    const qreal effectiveSplit = std::clamp(split, minSize.width(), 1.0 - minSize.width());
+
     auto geom = m_leftVerticalTile->relativeGeometry();
-    geom.setRight(split);
+    geom.setRight(effectiveSplit);
     m_leftVerticalTile->setRelativeGeometry(geom);
 
     geom = m_rightVerticalTile->relativeGeometry();
-    geom.setLeft(split);
+    geom.setLeft(effectiveSplit);
     m_rightVerticalTile->setRelativeGeometry(geom);
 
     geom = m_topLeftTile->relativeGeometry();
-    geom.setRight(split);
+    geom.setRight(effectiveSplit);
     m_topLeftTile->setRelativeGeometry(geom);
 
     geom = m_topRightTile->relativeGeometry();
-    geom.setLeft(split);
+    geom.setLeft(effectiveSplit);
     m_topRightTile->setRelativeGeometry(geom);
 
     geom = m_bottomLeftTile->relativeGeometry();
-    geom.setRight(split);
+    geom.setRight(effectiveSplit);
     m_bottomLeftTile->setRelativeGeometry(geom);
 
     geom = m_bottomRightTile->relativeGeometry();
-    geom.setLeft(split);
+    geom.setLeft(effectiveSplit);
     m_bottomRightTile->setRelativeGeometry(geom);
 }
 
@@ -174,28 +177,31 @@ qreal QuickRootTile::verticalSplit() const
 
 void QuickRootTile::setVerticalSplit(qreal split)
 {
+    const QSizeF minSize = minimumSize(); // minimum size is the same for all tiles
+    const qreal effectiveSplit = std::clamp(split, minSize.height(), 1.0 - minSize.height());
+
     auto geom = m_topHorizontalTile->relativeGeometry();
-    geom.setBottom(split);
+    geom.setBottom(effectiveSplit);
     m_topHorizontalTile->setRelativeGeometry(geom);
 
     geom = m_bottomHorizontalTile->relativeGeometry();
-    geom.setTop(split);
+    geom.setTop(effectiveSplit);
     m_bottomHorizontalTile->setRelativeGeometry(geom);
 
     geom = m_topLeftTile->relativeGeometry();
-    geom.setBottom(split);
+    geom.setBottom(effectiveSplit);
     m_topLeftTile->setRelativeGeometry(geom);
 
     geom = m_topRightTile->relativeGeometry();
-    geom.setBottom(split);
+    geom.setBottom(effectiveSplit);
     m_topRightTile->setRelativeGeometry(geom);
 
     geom = m_bottomLeftTile->relativeGeometry();
-    geom.setTop(split);
+    geom.setTop(effectiveSplit);
     m_bottomLeftTile->setRelativeGeometry(geom);
 
     geom = m_bottomRightTile->relativeGeometry();
-    geom.setTop(split);
+    geom.setTop(effectiveSplit);
     m_bottomRightTile->setRelativeGeometry(geom);
 }
 
