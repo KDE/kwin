@@ -32,7 +32,6 @@ PreviewItem::PreviewItem(QQuickItem *parent)
     , m_windowColor(QPalette().window().color())
 {
     setAcceptHoverEvents(true);
-    setFiltersChildMouseEvents(true);
     setAcceptedMouseButtons(Qt::MouseButtons(~Qt::NoButton));
     connect(this, &PreviewItem::widthChanged, this, &PreviewItem::syncSize);
     connect(this, &PreviewItem::heightChanged, this, &PreviewItem::syncSize);
