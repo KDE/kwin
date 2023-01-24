@@ -127,7 +127,7 @@ void PreviewItem::paint(QPainter *painter)
 
 void PreviewItem::paintShadow(QPainter *painter, int &paddingLeft, int &paddingRight, int &paddingTop, int &paddingBottom)
 {
-    const auto &shadow = ((const Decoration *)(m_decoration))->shadow();
+    const auto &shadow = m_decoration->shadow();
     if (!shadow) {
         return;
     }
