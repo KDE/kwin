@@ -3754,14 +3754,11 @@ QRectF Window::quickTileGeometry(QuickTileMode mode, const QPointF &pos) const
         }
     }
 
-    QRectF ret = workspace()->clientArea(MaximizeArea, this, pos);
-
     Tile *tile = workspace()->tileManager(output)->quickTile(mode);
     if (tile) {
         return tile->windowGeometry();
     }
-
-    return ret;
+    return workspace()->clientArea(MaximizeArea, this, pos);
 }
 
 void Window::updateElectricGeometryRestore()
