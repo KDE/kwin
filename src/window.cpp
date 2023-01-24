@@ -1804,7 +1804,7 @@ void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &gl
         }
 
         if (input()->modifiersRelevantForGlobalShortcuts() & Qt::ShiftModifier) {
-            const auto &r = quickTileGeometry(QuickTileFlag::Custom, Cursors::self()->mouse()->pos());
+            const auto &r = quickTileGeometry(QuickTileFlag::Custom, global);
             if (r.isEmpty()) {
                 workspace()->outline()->hide();
             } else {
