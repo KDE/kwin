@@ -355,7 +355,9 @@ Tile *Tile::childTile(int row)
 
 int Tile::childCount() const
 {
-    return m_children.count();
+    return std::accumulate(m_children.begin(), m_children.end(), 0, [](int acum, Tile *a) {
+        return acum + 1 + a->childCount();
+    });
 }
 
 QList<Tile *> Tile::descendants() const
@@ -388,12 +390,12 @@ int Tile::row() const
 
 Tile *Tile::nextSibling() const
 {
-    const int r = row();
-    if (!m_parentTile || row() >= m_parentTile->childCount() - 1) {
+    if (!m_parentTile) {
         return nullptr;
-    } else {
-        return m_parentTile->childTiles()[r + 1];
     }
+
+    const auto tiles = m_parentTile->childTiles();
+    return tiles.value(row() + 1, nullptr);
 }
 
 Tile *Tile::previousSibling() const
