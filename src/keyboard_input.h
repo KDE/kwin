@@ -48,6 +48,7 @@ public:
     void reconfigure();
 
     void update();
+    void updateKeyboardModifierAtPos(const QPointF &pos);
 
     /**
      * @internal

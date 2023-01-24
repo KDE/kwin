@@ -224,6 +224,24 @@ void KeyboardInputRedirection::update()
     }
 }
 
+void KeyboardInputRedirection::updateKeyboardModifierAtPos(const QPointF &pos)
+{
+    Window *found = nullptr;
+
+    if (!pos.isNull()) {
+        found = workspace()->windowUnderMouse(workspace()->outputAt(pos));
+    }
+
+    if (!found || !found->isDock()) {
+        return;
+    }
+
+    auto seat = waylandServer()->seat();
+    auto oldFocusedKeyboardSurface = seat->focusedKeyboardSurface();
+    seat->setFocusedKeyboardSurface(found->surface());
+    seat->setFocusedKeyboardSurface(oldFocusedKeyboardSurface);
+}
+
 void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device)
 {
     QEvent::Type type;

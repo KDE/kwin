@@ -1775,6 +1775,7 @@ public:
             break;
         }
         case QEvent::MouseButtonPress:
+            input()->keyboard()->updateKeyboardModifierAtPos(event->pos());
             seat->notifyPointerButton(nativeButton, KWaylandServer::PointerButtonState::Pressed);
             seat->notifyPointerFrame();
             break;
@@ -1805,6 +1806,7 @@ public:
         }
         auto seat = waylandServer()->seat();
         input()->keyboard()->update();
+        input()->keyboard()->updateKeyboardModifierAtPos(Cursors::self()->currentCursor()->pos());
         seat->setTimestamp(event->timestamp());
         passToWaylandServer(event);
         return true;
