@@ -1803,7 +1803,7 @@ void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &gl
             checkQuickTilingMaximizationZones(global.x(), global.y());
         }
 
-        if ((input()->modifiersRelevantForGlobalShortcuts() & Qt::ShiftModifier) && workspace()->tileManager(output())->rootTile()->childCount() > 1) {
+        if (input()->modifiersRelevantForGlobalShortcuts() & Qt::ShiftModifier) {
             const auto &r = quickTileGeometry(QuickTileFlag::Custom, Cursors::self()->mouse()->pos());
             if (r.isEmpty()) {
                 workspace()->outline()->hide();
