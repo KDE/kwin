@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1642904 2023-01-22 03:23:53Z scripty $
+# $Id: kwin.po 1643141 2023-01-25 03:28:15Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-22 02:53+0000\n"
+"POT-Creation-Date: 2023-01-25 02:55+0000\n"
 "PO-Revision-Date: 2023-01-11 07:48+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -2795,7 +2795,7 @@ msgstr "Preklopi na eno namizje navzdol"
 msgid "Switch to Desktop %1"
 msgstr "Preklopi na namizje %1"
 
-#: window.cpp:3449
+#: window.cpp:3454
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

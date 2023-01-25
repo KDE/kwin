@@ -1,14 +1,14 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# g.sora <g.sora@tiscali.it>, 2010, 2011, 2012, 2013, 2017, 2020, 2021, 2022.
+# g.sora <g.sora@tiscali.it>, 2010, 2011, 2012, 2013, 2017, 2020, 2021, 2022, 2023.
 # Giovanni Sora <g.sora@tioscali.it>, 2014, 2020, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-22 02:53+0000\n"
-"PO-Revision-Date: 2022-11-28 16:22+0100\n"
+"POT-Creation-Date: 2023-01-25 02:55+0000\n"
+"PO-Revision-Date: 2023-01-24 15:01+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -44,14 +44,7 @@ msgstr ""
 ">Tu pote resumer los usante le via breve '%1'."
 
 #: composite.cpp:1064
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#| "protection but <b>be aware that this might result in an immediate crash!</"
-#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#| "</p>"
+#, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
 "b><br>This was most likely due to a driver bug.<p>If you think that you have "
@@ -62,8 +55,7 @@ msgstr ""
 "b> <br> Isto plus probabilemente es debite a un defecto del driver.<p>Si tu "
 "pensa de haber actualisate a un driver stabile, <br>Tu pote re-fixar iste "
 "protection ma <b>tu debe saper que isto poterea procurar un crash immediate!"
-"</b></p> <p>Alternativemente, tu poterea voler usar in vice le retro-"
-"administration de XRender.</p>"
+"</b></p>"
 
 #: composite.cpp:1071
 #, kde-format
@@ -71,10 +63,9 @@ msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Extensiones de X Requirite (XComposite e XDamage) non es disponibile."
 
 #: composite.cpp:1074
-#, fuzzy, kde-format
-#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+#, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr "GLX/OpenGL e XRender/XFixes non es disponibile."
+msgstr "GLX/OpenGL non es disponibile."
 
 #: debug_console.cpp:79 debug_console.cpp:84
 #, kde-format
@@ -1172,19 +1163,17 @@ msgstr "Attende plus longe"
 #: input.cpp:2009
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "Move le tabletta al proxime exito"
 
 #: input.cpp:2088
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Tablet moved to %1"
-msgstr "Modo de tabletta"
+msgstr "Tabletta movite a %1"
 
 #: input.cpp:2088
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "Exitos commutate de tablettas"
 
 #: input.cpp:3065
 #, kde-format
@@ -1369,6 +1358,8 @@ msgstr "Render a transverso nodo drm."
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
+"Extrahe information locale ex locale1 plus tosto que ex le configuration del "
+"usator"
 
 #: main_wayland.cpp:386
 #, kde-format
@@ -2126,13 +2117,13 @@ msgstr "Typo de regula de nomine de file de scriptorio"
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "Non pote locar metadata de pacchetto"
 
 #: scripting/genericscriptedconfig.cpp:84
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "%1 non contine un file de metadata.json valide"
 
 #: scripting/genericscriptedconfig.cpp:90
 #: scripting/genericscriptedconfig.cpp:96
@@ -2275,10 +2266,9 @@ msgid "&Shade"
 msgstr "Adum&bra"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "Nulle barra de titulo e quadro"
+msgstr "&Nulle barra de titulo e quadro"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2395,10 +2385,9 @@ msgid "&All Activities"
 msgstr "Omne &Activitates"
 
 #: useractions.cpp:776
-#, fuzzy, kde-format
-#| msgid "Move to %1 %2"
+#, kde-format
 msgid "Move to %1"
-msgstr "Move a %1 %2"
+msgstr "Move a %1"
 
 #: useractions.cpp:901
 #, kde-format
@@ -2478,10 +2467,9 @@ msgid "Make Window Fullscreen"
 msgstr "Face fenestra a schermo plen"
 
 #: useractions.cpp:1009
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "Nulle barra de titulo e quadro"
+msgstr "Commuta barra de titulo e quadro"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2609,16 +2597,14 @@ msgid "Switch to Window to the Left"
 msgstr "Passa a fenestra a sinistra"
 
 #: useractions.cpp:1061
-#, fuzzy, kde-format
-#| msgid "Increase Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr "Augmenta opacitate del fenestra active per le  5 %"
+msgstr "Augmenta opacitate del fenestra active per  5 %"
 
 #: useractions.cpp:1063
-#, fuzzy, kde-format
-#| msgid "Decrease Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr "Diminue opacitate del fenestra active per le  5 %"
+msgstr "Diminue opacitate del fenestra active per  5 %"
 
 #: useractions.cpp:1066
 #, kde-format
@@ -2676,28 +2662,24 @@ msgid "Window to Previous Screen"
 msgstr "Fenestra a Previe Schermo"
 
 #: useractions.cpp:1102
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "Fenestra un scriptorio a dextera"
+msgstr "Fenestra un schermo a dextera"
 
 #: useractions.cpp:1104
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "Fenestra un scriptorio a sinistra"
+msgstr "Fenestra un schermo a sinistra"
 
 #: useractions.cpp:1106
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "Fenestra a Schermo 2"
+msgstr "Fenestra un Schermo in alto"
 
 #: useractions.cpp:1108
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "Fenestra un scriptorio a basso"
+msgstr "Fenestra un schermo a basso"
 
 #: useractions.cpp:1112
 #, kde-format
@@ -2715,32 +2697,27 @@ msgid "Switch to Previous Screen"
 msgstr "Commuta a Previe Schermo"
 
 #: useractions.cpp:1121
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Passa a fenestra a dextera"
+msgstr "Passa a schermo a dextera"
 
 #: useractions.cpp:1123
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Passa a fenestra a sinistra"
+msgstr "Passa a schermo a sinistra"
 
 #: useractions.cpp:1125
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Commuta  a Schermo 0"
+msgstr "Passa  a Schermo de supra"
 
 #: useractions.cpp:1127
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Commuta  a Schermo 0"
+msgstr "Passa  a Schermo a basso"
 
 #: useractions.cpp:1130
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgid "Peek at Desktop"
 msgstr "Reguarda a Scriptorio"
 
@@ -2810,7 +2787,7 @@ msgstr "Commuta un Scriptorio a basso"
 msgid "Switch to Desktop %1"
 msgstr "Commuta a Scriptorio %1"
 
-#: window.cpp:3449
+#: window.cpp:3454
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
