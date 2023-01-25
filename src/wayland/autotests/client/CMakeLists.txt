@@ -2,8 +2,8 @@
 # Test WaylandOutput
 ########################################################
 set( testWaylandOutput_SRCS
-        test_wayland_output.cpp
-        ../../tests/fakeoutput.cpp
+        test_wayland_output.cpp test_wayland_output.h
+        ../../tests/fakeoutput.cpp ../../tests/fakeoutput.h
     )
 add_executable(testWaylandOutput ${testWaylandOutput_SRCS})
 target_link_libraries( testWaylandOutput Qt::Test Qt::Gui KF5::WaylandClient kwin Wayland::Client Wayland::Server)
@@ -14,8 +14,8 @@ ecm_mark_as_test(testWaylandOutput)
 # Test WaylandSurface
 ########################################################
 set( testWaylandSurface_SRCS
-        test_wayland_surface.cpp
-        ../../tests/fakeoutput.cpp
+        test_wayland_surface.cpp test_wayland_surface.h
+        ../../tests/fakeoutput.cpp ../../tests/fakeoutput.h
     )
 add_executable(testWaylandSurface ${testWaylandSurface_SRCS})
 target_link_libraries( testWaylandSurface Qt::Test Qt::Gui KF5::WaylandClient kwin Wayland::Client Wayland::Server)
@@ -27,7 +27,7 @@ ecm_mark_as_test(testWaylandSurface)
 ########################################################
 add_executable(testWaylandSeat)
 set( testWaylandSeat_SRCS
-        test_wayland_seat.cpp
+        test_wayland_seat.cpp test_wayland_seat.h
     )
 if (QT_MAJOR_VERSION EQUAL "5")
     ecm_add_qtwayland_client_protocol(testWaylandSeat_SRCS
@@ -47,7 +47,7 @@ ecm_mark_as_test(testWaylandSeat)
 # Test ShmPool
 ########################################################
 set( testShmPool_SRCS
-        test_shm_pool.cpp
+        test_shm_pool.cpp test_shm_pool.h
     )
 add_executable(testShmPool ${testShmPool_SRCS})
 target_link_libraries( testShmPool Qt::Test Qt::Gui KF5::WaylandClient kwin)
@@ -58,7 +58,7 @@ ecm_mark_as_test(testShmPool)
 # Test SubSurface
 ########################################################
 set( testSubSurface_SRCS
-        test_wayland_subsurface.cpp
+        test_wayland_subsurface.cpp test_wayland_subsurface.h
     )
 add_executable(testSubSurface ${testSubSurface_SRCS})
 target_link_libraries( testSubSurface Qt::Test Qt::Gui KF5::WaylandClient kwin Wayland::Client)
@@ -69,7 +69,7 @@ ecm_mark_as_test(testSubSurface)
 # Test Blur
 ########################################################
 set( testBlur_SRCS
-        test_wayland_blur.cpp
+        test_wayland_blur.cpp test_wayland_blur.h
     )
 add_executable(testBlur ${testBlur_SRCS})
 target_link_libraries( testBlur Qt::Test Qt::Gui KF5::WaylandClient kwin)
@@ -80,7 +80,7 @@ ecm_mark_as_test(testBlur)
 # Test Contrast
 ########################################################
 set( testContrast_SRCS
-        test_wayland_contrast.cpp
+        test_wayland_contrast.cpp test_wayland_contrast.h
     )
 add_executable(testContrast ${testContrast_SRCS})
 target_link_libraries( testContrast Qt::Test Qt::Gui KF5::WaylandClient kwin Wayland::Client)
@@ -91,7 +91,7 @@ ecm_mark_as_test(testContrast)
 # Test Slide
 ########################################################
 set( testSlide_SRCS
-        test_wayland_slide.cpp
+        test_wayland_slide.cpp test_wayland_slide.h
     )
 add_executable(testSlide ${testSlide_SRCS})
 target_link_libraries( testSlide Qt::Test Qt::Gui KF5::WaylandClient kwin Wayland::Client)
@@ -102,7 +102,7 @@ ecm_mark_as_test(testSlide)
 # Test Window Management
 ########################################################
 set( testWindowmanagement_SRCS
-        test_wayland_windowmanagement.cpp
+        test_wayland_windowmanagement.cpp test_wayland_windowmanagement.h
     )
 add_executable(testWindowmanagement ${testWindowmanagement_SRCS})
 target_link_libraries( testWindowmanagement Qt::Test Qt::Gui KF5::WaylandClient kwin Wayland::Client)
@@ -113,7 +113,7 @@ ecm_mark_as_test(testWindowmanagement)
 # Test DataSource
 ########################################################
 set( testDataSource_SRCS
-        test_datasource.cpp
+        test_datasource.cpp test_datasource.h
     )
 add_executable(testDataSource ${testDataSource_SRCS})
 target_link_libraries( testDataSource Qt::Test Qt::Gui KF5::WaylandClient kwin Wayland::Client)
@@ -124,7 +124,7 @@ ecm_mark_as_test(testDataSource)
 # Test DataDevice
 ########################################################
 set( testDataDevice_SRCS
-        test_datadevice.cpp
+        test_datadevice.cpp test_datadevice.h
     )
 add_executable(testDataDevice ${testDataDevice_SRCS})
 target_link_libraries( testDataDevice Qt::Test Qt::Gui KF5::WaylandClient kwin Wayland::Client)
@@ -135,7 +135,7 @@ ecm_mark_as_test(testDataDevice)
 # Test ServerSideDecoration
 ########################################################
 set( testServerSideDecoration_SRCS
-        test_server_side_decoration.cpp
+        test_server_side_decoration.cpp test_server_side_decoration.h
     )
 add_executable(testServerSideDecoration ${testServerSideDecoration_SRCS})
 target_link_libraries( testServerSideDecoration Qt::Test Qt::Gui KF5::WaylandClient kwin Wayland::Client)
@@ -146,7 +146,7 @@ ecm_mark_as_test(testServerSideDecoration)
 # Test Drag'N'Drop
 ########################################################
 set( testDragAndDrop_SRCS
-        test_drag_drop.cpp
+        test_drag_drop.cpp test_drag_drop.h
     )
 add_executable(testDragAndDrop ${testDragAndDrop_SRCS})
 target_link_libraries( testDragAndDrop Qt::Test Qt::Gui KF5::WaylandClient kwin Wayland::Client)
@@ -157,7 +157,7 @@ ecm_mark_as_test(testDragAndDrop)
 # Test PlasmaShell
 ########################################################
 set( testPlasmaShell_SRCS
-        test_plasmashell.cpp
+        test_plasmashell.cpp test_plasmashell.h
     )
 add_executable(testPlasmaShell ${testPlasmaShell_SRCS})
 target_link_libraries( testPlasmaShell Qt::Test Qt::Gui KF5::WaylandClient kwin Wayland::Client)
@@ -168,7 +168,7 @@ ecm_mark_as_test(testPlasmaShell)
 # Test Shadow
 ########################################################
 set( testShadow_SRCS
-        test_shadow.cpp
+        test_shadow.cpp test_shadow.h
     )
 add_executable(testShadow ${testShadow_SRCS})
 target_link_libraries( testShadow Qt::Test Qt::Gui KF5::WaylandClient kwin)
@@ -179,7 +179,7 @@ ecm_mark_as_test(testShadow)
 # Test FakeInput
 ########################################################
 set( testFakeInput_SRCS
-        test_fake_input.cpp
+        test_fake_input.cpp test_fake_input.h
     )
 add_executable(testFakeInput ${testFakeInput_SRCS})
 target_link_libraries( testFakeInput Qt::Test Qt::Gui KF5::WaylandClient kwin)
@@ -190,7 +190,7 @@ ecm_mark_as_test(testFakeInput)
 # Test TextInputV2
 ########################################################
 set( testTextInputV2_SRCS
-        test_text_input_v2.cpp
+        test_text_input_v2.cpp test_text_input_v2.h
     )
 add_executable(testTextInputV2 ${testTextInputV2_SRCS})
 target_link_libraries( testTextInputV2 Qt::Test Qt::Gui KF5::WaylandClient kwin)
@@ -201,7 +201,7 @@ ecm_mark_as_test(testTextInputV2)
 # Test Error
 ########################################################
 set( testError_SRCS
-        test_error.cpp
+        test_error.cpp test_error.h
     )
 add_executable(testError ${testError_SRCS})
 target_link_libraries( testError Qt::Test Qt::Gui KF5::WaylandClient kwin Wayland::Client)
@@ -212,7 +212,7 @@ ecm_mark_as_test(testError)
 # Test Selection
 ########################################################
 set( testSelection_SRCS
-        test_selection.cpp
+        test_selection.cpp test_selection.h
     )
 add_executable(testSelection ${testSelection_SRCS})
 target_link_libraries( testSelection Qt::Test Qt::Gui KF5::WaylandClient kwin Wayland::Client)
@@ -223,7 +223,7 @@ ecm_mark_as_test(testSelection)
 # Test XdgForeign
 ########################################################
 set( testXdgForeign_SRCS
-      test_xdg_foreign.cpp
+      test_xdg_foreign.cpp test_xdg_foreign.h
       )
 add_executable(testXdgForeign ${testXdgForeign_SRCS})
 target_link_libraries( testXdgForeign Qt::Test Qt::Gui kwin KF5::WaylandClient Wayland::Client)
@@ -233,7 +233,7 @@ ecm_mark_as_test(testXdgForeign)
 ########################################################
 # Test XdgShell
 ########################################################
-set(testXdgShell_SRCS test_xdg_shell.cpp ../../tests/fakeoutput.cpp)
+set(testXdgShell_SRCS test_xdg_shell.cpp test_xdg_shell.h ../../tests/fakeoutput.cpp)
 add_executable(testXdgShell ${testXdgShell_SRCS})
 target_link_libraries( testXdgShell Qt::Test Qt::Gui kwin KF5::WaylandClient Wayland::Client)
 add_test(NAME kwayland-testXdgShell COMMAND testXdgShell)
@@ -242,7 +242,7 @@ ecm_mark_as_test(testXdgShell)
 ########################################################
 # Test Pointer Constraints
 ########################################################
-add_executable(testPointerConstraintsInterface test_pointer_constraints.cpp)
+add_executable(testPointerConstraintsInterface test_pointer_constraints.cpp test_pointer_constraints.h)
 target_link_libraries( testPointerConstraintsInterface Qt::Test Qt::Gui kwin KF5::WaylandClient Wayland::Client)
 add_test(NAME kwayland-testPointerConstraintsInterface COMMAND testPointerConstraintsInterface)
 ecm_mark_as_test(testPointerConstraintsInterface)
@@ -252,7 +252,7 @@ ecm_mark_as_test(testPointerConstraintsInterface)
 # Test Filter
 ########################################################
 set( testFilter_SRCS
-        test_wayland_filter.cpp
+        test_wayland_filter.cpp test_wayland_filter.h
     )
 add_executable(testFilter ${testFilter_SRCS})
 target_link_libraries( testFilter Qt::Test Qt::Gui KF5::WaylandClient kwin Wayland::Server)
@@ -263,7 +263,7 @@ ecm_mark_as_test(testFilter)
 # Test Appmenu
 ########################################################
 set( testAppmenu_SRCS
-        test_wayland_appmenu.cpp
+        test_wayland_appmenu.cpp test_wayland_appmenu.h
     )
 add_executable(testAppmenu ${testAppmenu_SRCS})
 target_link_libraries( testAppmenu Qt::Test Qt::Gui KF5::WaylandClient kwin)
@@ -274,7 +274,7 @@ ecm_mark_as_test(testAppmenu)
 # Test Appmenu
 ########################################################
 set( testServerSideDecorationPalette_SRCS
-        test_server_side_decoration_palette.cpp
+        test_server_side_decoration_palette.cpp test_server_side_decoration_palette.h
     )
 add_executable(testServerSideDecorationPalette ${testServerSideDecorationPalette_SRCS})
 target_link_libraries( testServerSideDecorationPalette Qt::Test Qt::Gui KF5::WaylandClient kwin)
@@ -285,7 +285,7 @@ ecm_mark_as_test(testServerSideDecorationPalette)
 # Test VirtualDesktop
 ########################################################
 set( testPlasmaVirtualDesktop_SRCS
-        test_plasma_virtual_desktop.cpp
+        test_plasma_virtual_desktop.cpp test_plasma_virtual_desktop.h
     )
 add_executable(testPlasmaVirtualDesktop ${testPlasmaVirtualDesktop_SRCS})
 target_link_libraries( testPlasmaVirtualDesktop Qt::Test Qt::Gui KF5::WaylandClient kwin)
@@ -296,7 +296,7 @@ ecm_mark_as_test(testPlasmaVirtualDesktop)
 # Test Activities
 ########################################################
 set( testPlasmaActivities_SRCS
-        test_plasma_activities.cpp
+        test_plasma_activities.cpp test_plasma_activities.h
     )
 add_executable(testPlasmaActivities ${testPlasmaActivities_SRCS})
 target_link_libraries( testPlasmaActivities Qt::Test Qt::Gui KF5::WaylandClient kwin)
@@ -307,8 +307,8 @@ ecm_mark_as_test(testPlasmaActivities)
 # Test XDG Output
 ########################################################
 set( testXdgOutput_SRCS
-        test_xdg_output.cpp
-        ../../tests/fakeoutput.cpp
+        test_xdg_output.cpp test_xdg_output.h
+        ../../tests/fakeoutput.cpp ../../tests/fakeoutput.h
     )
 add_executable(testXdgOutput ${testXdgOutput_SRCS})
 target_link_libraries( testXdgOutput Qt::Test Qt::Gui KF5::WaylandClient kwin Wayland::Client Wayland::Server)
@@ -319,7 +319,7 @@ ecm_mark_as_test(testXdgOutput)
 # Test XDG Decoration
 ########################################################
 set( testXdgdecoration_SRCS
-        test_xdg_decoration.cpp
+        test_xdg_decoration.cpp test_xdg_decoration.h
     )
 add_executable(testXdgDecoration ${testXdgdecoration_SRCS})
 target_link_libraries( testXdgDecoration Qt::Test Qt::Gui KF5::WaylandClient kwin Wayland::Client Wayland::Server)

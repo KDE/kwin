@@ -2,8 +2,8 @@
 # Effect
 
 set(showpaint_SOURCES
-    main.cpp
-    showpaint.cpp
+    main.cpp main.h
+    showpaint.cpp showpaint.h
 )
 
 kwin4_add_effect_module(kwin4_effect_showpaint ${showpaint_SOURCES})
@@ -18,7 +18,7 @@ target_link_libraries(kwin4_effect_showpaint PRIVATE
 #######################################
 # Config
 if (KWIN_BUILD_KCMS)
-    set(kwin_showpaint_config_SRCS showpaint_config.cpp)
+    set(kwin_showpaint_config_SRCS showpaint_config.cpp showpaint_config.h)
     ki18n_wrap_ui(kwin_showpaint_config_SRCS showpaint_config.ui)
 
     kwin_add_effect_config(kwin_showpaint_config ${kwin_showpaint_config_SRCS})

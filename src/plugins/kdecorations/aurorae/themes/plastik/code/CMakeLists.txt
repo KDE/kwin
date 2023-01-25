@@ -1,6 +1,6 @@
 set(plastik_plugin_SRCS
-    plastikbutton.cpp
-    plastikplugin.cpp
+    plastikbutton.cpp plastikbutton.h
+    plastikplugin.cpp plastikplugin.h
 )
 
 add_library(plastikplugin SHARED ${plastik_plugin_SRCS})

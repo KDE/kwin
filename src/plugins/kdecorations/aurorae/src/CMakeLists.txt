@@ -6,10 +6,10 @@ include_directories(
 )
 
 set(kwin5_aurorae_PART_SRCS
-    aurorae.cpp
-    decorationoptions.cpp
-    lib/auroraetheme.cpp
-    lib/themeconfig.cpp
+    aurorae.cpp aurorae.h
+    decorationoptions.cpp decorationoptions.h
+    lib/auroraetheme.cpp lib/auroraetheme.h
+    lib/themeconfig.cpp lib/themeconfig.h
 )
 
 add_library(kwin5_aurorae MODULE ${kwin5_aurorae_PART_SRCS})
@@ -29,9 +29,9 @@ target_link_libraries(kwin5_aurorae
 install(TARGETS kwin5_aurorae DESTINATION ${KDE_INSTALL_PLUGINDIR}/org.kde.kdecoration2)
 
 set(decoration_plugin_SRCS
-    colorhelper.cpp
-    decorationoptions.cpp
-    decorationplugin.cpp
+    colorhelper.cpp colorhelper.h
+    decorationoptions.cpp decorationoptions.h
+    decorationplugin.cpp decorationplugin.h
 )
 
 add_library(decorationplugin SHARED ${decoration_plugin_SRCS})

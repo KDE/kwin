@@ -23,14 +23,14 @@ ecm_setup_qtplugin_macro_names(
 
 ###  effects lib  ###
 set(kwin_EFFECTSLIB_SRCS
-    anidata.cpp
-    kwinanimationeffect.cpp
-    kwineffects.cpp
-    kwinoffscreeneffect.cpp
-    kwinoffscreenquickview.cpp
-    kwinquickeffect.cpp
-    logging.cpp
-    sharedqmlengine.cpp
+    anidata.cpp anidata.h
+    kwinanimationeffect.cpp kwinanimationeffect.h
+    kwineffects.cpp kwineffects.h
+    kwinoffscreeneffect.cpp kwinoffscreeneffect.h
+    kwinoffscreenquickview.cpp kwinoffscreenquickview.h
+    kwinquickeffect.cpp kwinquickeffect.h
+    logging.cpp logging.h
+    sharedqmlengine.cpp sharedqmlengine.h
 )
 
 add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
@@ -58,12 +58,12 @@ install(TARGETS kwineffects EXPORT KWinEffectsTargets ${KDE_INSTALL_TARGETS_DEFA
 
 # kwingl(es)utils library
 set(kwin_GLUTILSLIB_SRCS
-    kwinglplatform.cpp
-    kwingltexture.cpp
-    kwinglutils.cpp
-    kwinglutils_funcs.cpp
-    kwineglimagetexture.cpp
-    logging.cpp
+    kwinglplatform.cpp kwinglplatform.h
+    kwingltexture.cpp kwingltexture.h
+    kwinglutils.cpp kwinglutils.h
+    kwinglutils_funcs.cpp kwinglutils_funcs.h
+    kwineglimagetexture.cpp kwineglimagetexture.h
+    logging.cpp logging.h
 )
 
 add_library(kwinglutils SHARED ${kwin_GLUTILSLIB_SRCS})

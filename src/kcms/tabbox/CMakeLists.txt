@@ -6,12 +6,12 @@ include_directories(${KWin_SOURCE_DIR}/src/effects ${KWin_SOURCE_DIR}/src/tabbox
 ########### next target ###############
 
 set(kcm_kwintabbox_PART_SRCS
-    ${KWin_SOURCE_DIR}/src/tabbox/tabboxconfig.cpp
-    layoutpreview.cpp
-    main.cpp
-    thumbnailitem.cpp
-    kwintabboxconfigform.cpp
-    kwintabboxdata.cpp
+    ${KWin_SOURCE_DIR}/src/tabbox/tabboxconfig.cpp ${KWin_SOURCE_DIR}/src/tabbox/tabboxconfig.h
+    layoutpreview.cpp layoutpreview.h
+    main.cpp main.h
+    thumbnailitem.cpp thumbnailitem.h
+    kwintabboxconfigform.cpp kwintabboxconfigform.h
+    kwintabboxdata.cpp kwintabboxdata.h
 )
 
 ki18n_wrap_ui(kcm_kwintabbox_PART_SRCS main.ui)

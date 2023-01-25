@@ -1,6 +1,6 @@
 ########### next target ###############
 
-set(kwin_killer_helper_SRCS killer.cpp)
+set(kwin_killer_helper_SRCS killer.cpp killer.h)
 
 add_executable(kwin_killer_helper ${kwin_killer_helper_SRCS})
 

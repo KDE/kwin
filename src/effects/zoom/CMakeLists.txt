@@ -2,13 +2,13 @@
 # Effect
 
 set(zoom_SOURCES
-    main.cpp
-    zoom.cpp
+    main.cpp main.h
+    zoom.cpp zoom.h
 )
 
 if (HAVE_ACCESSIBILITY)
     set(zoom_SOURCES ${zoom_SOURCES}
-        accessibilityintegration.cpp
+        accessibilityintegration.cpp accessibilityintegration.h
     )
 endif()
 
@@ -35,7 +35,7 @@ endif()
 #######################################
 # Config
 if (KWIN_BUILD_KCMS)
-    set(kwin_zoom_config_SRCS zoom_config.cpp)
+    set(kwin_zoom_config_SRCS zoom_config.cpp zoom_config.h)
     ki18n_wrap_ui(kwin_zoom_config_SRCS zoom_config.ui)
     kconfig_add_kcfg_files(kwin_zoom_config_SRCS zoomconfig.kcfgc)
 

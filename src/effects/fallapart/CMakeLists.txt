@@ -3,8 +3,8 @@
 
 # Source files
 set(fallapart_SOURCES
-    fallapart.cpp
-    main.cpp
+    fallapart.cpp fallapart.h
+    main.cpp main.h
 )
 
 kconfig_add_kcfg_files(fallapart_SOURCES

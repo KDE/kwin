@@ -3,8 +3,8 @@
 
 # Source files
 set(kscreen_SOURCES
-    kscreen.cpp
-    main.cpp
+    kscreen.cpp kscreen.h
+    main.cpp main.h
 )
 
 kconfig_add_kcfg_files(kscreen_SOURCES kscreenconfig.kcfgc)

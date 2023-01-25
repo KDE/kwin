@@ -1,14 +1,14 @@
 add_library(KWinScreencastPlugin OBJECT)
 target_sources(KWinScreencastPlugin PRIVATE
-    eglnativefence.cpp
-    main.cpp
-    outputscreencastsource.cpp
-    pipewirecore.cpp
-    regionscreencastsource.cpp
-    screencastmanager.cpp
-    screencastsource.cpp
-    screencaststream.cpp
-    windowscreencastsource.cpp
+    eglnativefence.cpp eglnativefence.h
+    main.cpp main.h
+    outputscreencastsource.cpp outputscreencastsource.h
+    pipewirecore.cpp pipewirecore.h
+    regionscreencastsource.cpp regionscreencastsource.h
+    screencastmanager.cpp screencastmanager.h
+    screencastsource.cpp screencastsource.h
+    screencaststream.cpp screencaststream.h
+    windowscreencastsource.cpp windowscreencastsource.h
 )
 
 ecm_qt_declare_logging_category(KWinScreencastPlugin

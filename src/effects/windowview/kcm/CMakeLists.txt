@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-set(kwin_windowview_config_SOURCES windowvieweffectkcm.cpp)
+set(kwin_windowview_config_SOURCES windowvieweffectkcm.cpp windowvieweffectkcm.h)
 ki18n_wrap_ui(kwin_windowview_config_SOURCES windowvieweffectkcm.ui)
 kconfig_add_kcfg_files(kwin_windowview_config_SOURCES ../windowviewconfig.kcfgc)
 

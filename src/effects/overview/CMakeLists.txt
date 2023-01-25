@@ -7,8 +7,8 @@ if (KWIN_BUILD_KCMS)
 endif()
 
 set(overview_SOURCES
-    main.cpp
-    overvieweffect.cpp
+    main.cpp main.h
+    overvieweffect.cpp overvieweffect.h
 )
 
 kconfig_add_kcfg_files(overview_SOURCES

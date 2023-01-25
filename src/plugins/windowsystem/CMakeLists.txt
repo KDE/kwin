@@ -1,8 +1,8 @@
 set(kwindowsystem_plugin_SRCS
-    plugin.cpp
-    windoweffects.cpp
-    windowshadow.cpp
-    windowsystem.cpp
+    plugin.cpp plugin.h
+    windoweffects.cpp windoweffects.h
+    windowshadow.cpp windowshadow.h
+    windowsystem.cpp windowsystem.h
 )
 
 add_library(KF5WindowSystemKWinPlugin OBJECT ${kwindowsystem_plugin_SRCS})

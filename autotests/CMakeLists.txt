@@ -9,7 +9,7 @@ add_subdirectory(drm)
 ########################################################
 # Test WindowPaintData
 ########################################################
-set(testWindowPaintData_SRCS test_window_paint_data.cpp)
+set(testWindowPaintData_SRCS test_window_paint_data.cpp test_window_paint_data.h)
 add_executable(testWindowPaintData ${testWindowPaintData_SRCS})
 target_link_libraries(testWindowPaintData kwineffects Qt::Widgets Qt::Test )
 add_test(NAME kwin-testWindowPaintData COMMAND testWindowPaintData)
@@ -19,8 +19,8 @@ ecm_mark_as_test(testWindowPaintData)
 # Test VirtualDesktopManager
 ########################################################
 set(testVirtualDesktops_SRCS
-    ../src/virtualdesktops.cpp
-    test_virtual_desktops.cpp
+    ../src/virtualdesktops.cpp ../src/virtualdesktops.h
+    test_virtual_desktops.cpp test_virtual_desktops.h
 )
 add_executable(testVirtualDesktops ${testVirtualDesktops_SRCS})
 
@@ -42,9 +42,9 @@ ecm_mark_as_test(testVirtualDesktops)
 # Test ClientMachine
 ########################################################
 set(testClientMachine_SRCS
-    ../src/client_machine.cpp
-    test_client_machine.cpp
-    xcb_scaling_mock.cpp
+    ../src/client_machine.cpp ../src/client_machine.h
+    test_client_machine.cpp test_client_machine.h
+    xcb_scaling_mock.cpp xcb_scaling_mock.h
 )
 add_executable(testClientMachine ${testClientMachine_SRCS})
 set_target_properties(testClientMachine PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
@@ -73,7 +73,7 @@ ecm_mark_as_test(testClientMachine)
 ########################################################
 # Test XcbWrapper
 ########################################################
-add_executable(testXcbWrapper test_xcb_wrapper.cpp xcb_scaling_mock.cpp)
+add_executable(testXcbWrapper test_xcb_wrapper.cpp test_xcb_wrapper.h xcb_scaling_mock.cpp)
 
 target_link_libraries(testXcbWrapper
     Qt::Test
@@ -93,7 +93,7 @@ add_test(NAME kwin-testXcbWrapper COMMAND testXcbWrapper)
 ecm_mark_as_test(testXcbWrapper)
 
 if (XCB_ICCCM_FOUND)
-    add_executable(testXcbSizeHints test_xcb_size_hints.cpp xcb_scaling_mock.cpp)
+    add_executable(testXcbSizeHints test_xcb_size_hints.cpp test_xcb_size_hints.h xcb_scaling_mock.cpp)
     set_target_properties(testXcbSizeHints PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
     target_link_libraries(testXcbSizeHints
         Qt::Test
@@ -117,7 +117,7 @@ endif()
 ########################################################
 # Test XcbWindow
 ########################################################
-add_executable(testXcbWindow test_xcb_window.cpp xcb_scaling_mock.cpp)
+add_executable(testXcbWindow test_xcb_window.cpp test_xcb_window.h xcb_scaling_mock.cpp)
 
 target_link_libraries(testXcbWindow
     Qt::Test
@@ -142,9 +142,9 @@ include_directories(${KWin_SOURCE_DIR}/src)
 # Test OnScreenNotification
 ########################################################
 set(testOnScreenNotification_SRCS
-    ../src/input_event_spy.cpp
-    ../src/onscreennotification.cpp
-    onscreennotificationtest.cpp
+    ../src/input_event_spy.cpp ../src/input_event_spy.h
+    ../src/onscreennotification.cpp ../src/onscreennotification.h
+    onscreennotificationtest.cpp onscreennotificationtest.h
 )
 add_executable(testOnScreenNotification ${testOnScreenNotification_SRCS})
 
@@ -164,8 +164,8 @@ ecm_mark_as_test(testOnScreenNotification)
 # Test Gestures
 ########################################################
 set(testGestures_SRCS
-    ../src/gestures.cpp
-    test_gestures.cpp
+    ../src/gestures.cpp ../src/gestures.h
+    test_gestures.cpp test_gestures.h
 )
 add_executable(testGestures ${testGestures_SRCS})
 
@@ -179,7 +179,7 @@ ecm_mark_as_test(testGestures)
 ########################################################
 # Test X11 TimestampUpdate
 ########################################################
-add_executable(testX11TimestampUpdate test_x11_timestamp_update.cpp)
+add_executable(testX11TimestampUpdate test_x11_timestamp_update.cpp test_x11_timestamp_update.h)
 target_link_libraries(testX11TimestampUpdate
     KF5::CoreAddons
     Qt::Test
@@ -189,13 +189,13 @@ add_test(NAME kwin-testX11TimestampUpdate COMMAND testX11TimestampUpdate)
 ecm_mark_as_test(testX11TimestampUpdate)
 
 set(testOpenGLContextAttributeBuilder_SRCS
-    ../src/utils/abstract_opengl_context_attribute_builder.cpp
-    ../src/utils/egl_context_attribute_builder.cpp
-    opengl_context_attribute_builder_test.cpp
+    ../src/utils/abstract_opengl_context_attribute_builder.cpp ../src/utils/abstract_opengl_context_attribute_builder.h
+    ../src/utils/egl_context_attribute_builder.cpp ../src/utils/egl_context_attribute_builder.h
+    opengl_context_attribute_builder_test.cpp opengl_context_attribute_builder_test.h
 )
 
 if (HAVE_EPOXY_GLX)
-    set(testOpenGLContextAttributeBuilder_SRCS ${testOpenGLContextAttributeBuilder_SRCS} ../src/backends/x11/standalone/x11_standalone_glx_context_attribute_builder.cpp)
+    set(testOpenGLContextAttributeBuilder_SRCS ${testOpenGLContextAttributeBuilder_SRCS} ../src/backends/x11/standalone/x11_standalone_glx_context_attribute_builder.cpp ../src/backends/x11/standalone/x11_standalone_glx_context_attribute_builder.h)
 endif()
 add_executable(testOpenGLContextAttributeBuilder ${testOpenGLContextAttributeBuilder_SRCS})
 target_link_libraries(testOpenGLContextAttributeBuilder epoxy::epoxy Qt::Test)
@@ -203,8 +203,8 @@ add_test(NAME kwin-testOpenGLContextAttributeBuilder COMMAND testOpenGLContextAt
 ecm_mark_as_test(testOpenGLContextAttributeBuilder)
 
 set(testXkb_SRCS
-    ../src/xkb.cpp
-    test_xkb.cpp
+    ../src/xkb.cpp ../src/xkb.h
+    test_xkb.cpp test_xkb.h
 )
 qt_add_dbus_interface(testXkb_SRCS ${CMAKE_SOURCE_DIR}/src/org.freedesktop.DBus.Properties.xml dbusproperties_interface)
 add_executable(testXkb ${testXkb_SRCS})
@@ -233,7 +233,7 @@ ecm_mark_as_test(testXkb)
 ########################################################
 # Test FTrace
 ########################################################
-add_executable(testFtrace test_ftrace.cpp)
+add_executable(testFtrace test_ftrace.cpp test_ftrace.h)
 target_link_libraries(testFtrace
     Qt::Test
     kwin
@@ -244,7 +244,7 @@ ecm_mark_as_test(testFtrace)
 ########################################################
 # Test KWin Utils
 ########################################################
-add_executable(testUtils test_utils.cpp)
+add_executable(testUtils test_utils.cpp test_utils.h)
 target_link_libraries(testUtils
     Qt::Test
     kwin

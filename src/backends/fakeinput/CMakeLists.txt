@@ -1,4 +1,4 @@
 target_sources(kwin PRIVATE
-    fakeinputbackend.cpp
-    fakeinputdevice.cpp
+    fakeinputbackend.cpp fakeinputbackend.h
+    fakeinputdevice.cpp fakeinputdevice.h
 )

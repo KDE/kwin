@@ -2,9 +2,9 @@
 # Effect
 
 set(invert_SOURCES
-    invert.cpp
+    invert.cpp invert.h
     invert.qrc
-    main.cpp
+    main.cpp main.h
 )
 
 kwin4_add_effect_module(kwin4_effect_invert ${invert_SOURCES})
@@ -19,7 +19,7 @@ target_link_libraries(kwin4_effect_invert PRIVATE
 #######################################
 # Config
 if (KWIN_BUILD_KCMS)
-    set(kwin_invert_config_SRCS invert_config.cpp)
+    set(kwin_invert_config_SRCS invert_config.cpp invert_config.h)
 
     kwin_add_effect_config(kwin_invert_config ${kwin_invert_config_SRCS})
 

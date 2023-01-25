@@ -2,9 +2,9 @@
 # Effect
 
 set(slide_SOURCES
-    main.cpp
-    slide.cpp
-    springmotion.cpp
+    main.cpp main.h
+    slide.cpp slide.h
+    springmotion.cpp springmotion.h
 )
 
 kconfig_add_kcfg_files(slide_SOURCES
@@ -21,7 +21,7 @@ target_link_libraries(kwin4_effect_slide PRIVATE
 #######################################
 # Config
 if (KWIN_BUILD_KCMS)
-    set(kwin_slide_config_SRCS slide_config.cpp)
+    set(kwin_slide_config_SRCS slide_config.cpp slide_config.h)
     ki18n_wrap_ui(kwin_slide_config_SRCS slide_config.ui)
     kconfig_add_kcfg_files(kwin_slide_config_SRCS slideconfig.kcfgc)
 

@@ -1,6 +1,6 @@
 set(krunnerintegration_SOURCES
-    main.cpp
-    windowsrunnerinterface.cpp
+    main.cpp main.h
+    windowsrunnerinterface.cpp windowsrunnerinterface.h
 )
 
 qt_add_dbus_adaptor(krunnerintegration_SOURCES org.kde.krunner1.xml windowsrunnerinterface.h KWin::WindowsRunner)

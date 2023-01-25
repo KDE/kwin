@@ -29,157 +29,157 @@ set_target_properties(kwin PROPERTIES
 
 target_sources(kwin PRIVATE
     3rdparty/xcursor.c
-    activation.cpp
-    appmenu.cpp
-    atoms.cpp
-    client_machine.cpp
-    colors/colordevice.cpp
-    colors/colormanager.cpp
-    composite.cpp
-    core/colorlut.cpp
-    core/colorpipelinestage.cpp
-    core/colortransformation.cpp
-    core/inputbackend.cpp
-    core/inputdevice.cpp
-    core/output.cpp
-    core/outputbackend.cpp
-    core/outputconfiguration.cpp
-    core/outputlayer.cpp
-    core/overlaywindow.cpp
-    core/renderbackend.cpp
-    core/renderjournal.cpp
-    core/renderlayer.cpp
-    core/renderlayerdelegate.cpp
-    core/renderloop.cpp
-    core/rendertarget.cpp
-    core/session.cpp
-    core/session_consolekit.cpp
-    core/session_logind.cpp
-    core/session_noop.cpp
-    cursor.cpp
-    cursordelegate_opengl.cpp
-    cursordelegate_qpainter.cpp
-    cursorsource.cpp
-    dbusinterface.cpp
-    debug_console.cpp
-    decorations/decoratedclient.cpp
-    decorations/decorationbridge.cpp
-    decorations/decorationpalette.cpp
-    decorations/decorations_logging.cpp
-    decorations/settings.cpp
-    deleted.cpp
-    dmabuftexture.cpp
-    dpmsinputeventfilter.cpp
-    effectloader.cpp
-    effects.cpp
-    events.cpp
-    focuschain.cpp
-    ftrace.cpp
-    gestures.cpp
-    globalshortcuts.cpp
-    group.cpp
-    hide_cursor_spy.cpp
-    idle_inhibition.cpp
-    idledetector.cpp
-    input.cpp
-    input_event.cpp
-    input_event_spy.cpp
-    inputmethod.cpp
-    inputpanelv1integration.cpp
-    inputpanelv1window.cpp
-    internalwindow.cpp
-    keyboard_input.cpp
-    keyboard_layout.cpp
-    keyboard_layout_switching.cpp
-    keyboard_repeat.cpp
-    killwindow.cpp
-    layers.cpp
-    layershellv1integration.cpp
-    layershellv1window.cpp
-    linux_dmabuf.cpp
-    main.cpp
-    modifier_only_shortcuts.cpp
-    mousebuttons.cpp
-    moving_client_x11_filter.cpp
-    netinfo.cpp
-    onscreennotification.cpp
-    options.cpp
-    osd.cpp
-    outline.cpp
-    placeholderinputeventfilter.cpp
-    placeholderoutput.cpp
-    placement.cpp
-    placementtracker.cpp
-    plugin.cpp
-    pluginmanager.cpp
-    pointer_input.cpp
-    popup_input_filter.cpp
-    rootinfo_filter.cpp
-    rulebooksettings.cpp
-    rules.cpp
-    scene/cursoritem.cpp
-    scene/cursorscene.cpp
-    scene/decorationitem.cpp
-    scene/dndiconitem.cpp
-    scene/imageitem.cpp
-    scene/item.cpp
-    scene/itemrenderer.cpp
-    scene/itemrenderer_opengl.cpp
-    scene/itemrenderer_qpainter.cpp
-    scene/scene.cpp
-    scene/shadowitem.cpp
-    scene/surfaceitem.cpp
-    scene/surfaceitem_internal.cpp
-    scene/surfaceitem_wayland.cpp
-    scene/surfaceitem_x11.cpp
-    scene/windowitem.cpp
-    scene/workspacescene.cpp
-    scene/workspacescene_opengl.cpp
-    scene/workspacescene_qpainter.cpp
-    screenedge.cpp
-    scripting/dbuscall.cpp
-    scripting/desktopbackgrounditem.cpp
-    scripting/screenedgeitem.cpp
-    scripting/scriptedeffect.cpp
-    scripting/scripting.cpp
-    scripting/scripting_logging.cpp
-    scripting/scriptingutils.cpp
-    scripting/tilemodel.cpp
-    scripting/v2/clientmodel.cpp
-    scripting/v3/clientmodel.cpp
-    scripting/v3/virtualdesktopmodel.cpp
-    scripting/windowthumbnailitem.cpp
-    scripting/workspace_wrapper.cpp
-    shadow.cpp
-    sm.cpp
-    syncalarmx11filter.cpp
-    tablet_input.cpp
-    tabletmodemanager.cpp
-    tiles/customtile.cpp
-    tiles/quicktile.cpp
-    tiles/tile.cpp
-    tiles/tilemanager.cpp
-    touch_input.cpp
-    unmanaged.cpp
-    useractions.cpp
-    virtualdesktops.cpp
-    virtualdesktopsdbustypes.cpp
-    virtualkeyboard_dbus.cpp
-    was_user_interaction_x11_filter.cpp
-    wayland_server.cpp
-    waylandshellintegration.cpp
-    waylandwindow.cpp
-    window.cpp
-    window_property_notify_x11_filter.cpp
-    workspace.cpp
-    x11eventfilter.cpp
-    x11syncmanager.cpp
-    x11window.cpp
-    xdgactivationv1.cpp
-    xdgshellintegration.cpp
-    xdgshellwindow.cpp
-    xkb.cpp
-    xwaylandwindow.cpp
+    activation.cpp activation.h
+    appmenu.cpp appmenu.h
+    atoms.cpp atoms.h
+    client_machine.cpp client_machine.h
+    colors/colordevice.cpp colors/colordevice.h
+    colors/colormanager.cpp colors/colormanager.h
+    composite.cpp composite.h
+    core/colorlut.cpp core/colorlut.h
+    core/colorpipelinestage.cpp core/colorpipelinestage.h
+    core/colortransformation.cpp core/colortransformation.h
+    core/inputbackend.cpp core/inputbackend.h
+    core/inputdevice.cpp core/inputdevice.h
+    core/output.cpp core/output.h
+    core/outputbackend.cpp core/outputbackend.h
+    core/outputconfiguration.cpp core/outputconfiguration.h
+    core/outputlayer.cpp core/outputlayer.h
+    core/overlaywindow.cpp core/overlaywindow.h
+    core/renderbackend.cpp core/renderbackend.h
+    core/renderjournal.cpp core/renderjournal.h
+    core/renderlayer.cpp core/renderlayer.h
+    core/renderlayerdelegate.cpp core/renderlayerdelegate.h
+    core/renderloop.cpp core/renderloop.h
+    core/rendertarget.cpp core/rendertarget.h
+    core/session.cpp core/session.h
+    core/session_consolekit.cpp core/session_consolekit.h
+    core/session_logind.cpp core/session_logind.h
+    core/session_noop.cpp core/session_noop.h
+    cursor.cpp cursor.h
+    cursordelegate_opengl.cpp cursordelegate_opengl.h
+    cursordelegate_qpainter.cpp cursordelegate_qpainter.h
+    cursorsource.cpp cursorsource.h
+    dbusinterface.cpp dbusinterface.h
+    debug_console.cpp debug_console.h
+    decorations/decoratedclient.cpp decorations/decoratedclient.h
+    decorations/decorationbridge.cpp decorations/decorationbridge.h
+    decorations/decorationpalette.cpp decorations/decorationpalette.h
+    decorations/decorations_logging.cpp decorations/decorations_logging.h
+    decorations/settings.cpp decorations/settings.h
+    deleted.cpp deleted.h
+    dmabuftexture.cpp dmabuftexture.h
+    dpmsinputeventfilter.cpp dpmsinputeventfilter.h
+    effectloader.cpp effectloader.h
+    effects.cpp effects.h
+    events.cpp events.h
+    focuschain.cpp focuschain.h
+    ftrace.cpp ftrace.h
+    gestures.cpp gestures.h
+    globalshortcuts.cpp globalshortcuts.h
+    group.cpp group.h
+    hide_cursor_spy.cpp hide_cursor_spy.h
+    idle_inhibition.cpp idle_inhibition.h
+    idledetector.cpp idledetector.h
+    input.cpp input.h
+    input_event.cpp input_event.h
+    input_event_spy.cpp input_event_spy.h
+    inputmethod.cpp inputmethod.h
+    inputpanelv1integration.cpp inputpanelv1integration.h
+    inputpanelv1window.cpp inputpanelv1window.h
+    internalwindow.cpp internalwindow.h
+    keyboard_input.cpp keyboard_input.h
+    keyboard_layout.cpp keyboard_layout.h
+    keyboard_layout_switching.cpp keyboard_layout_switching.h
+    keyboard_repeat.cpp keyboard_repeat.h
+    killwindow.cpp killwindow.h
+    layers.cpp layers.h
+    layershellv1integration.cpp layershellv1integration.h
+    layershellv1window.cpp layershellv1window.h
+    linux_dmabuf.cpp linux_dmabuf.h
+    main.cpp main.h
+    modifier_only_shortcuts.cpp modifier_only_shortcuts.h
+    mousebuttons.cpp mousebuttons.h
+    moving_client_x11_filter.cpp moving_client_x11_filter.h
+    netinfo.cpp netinfo.h
+    onscreennotification.cpp onscreennotification.h
+    options.cpp options.h
+    osd.cpp osd.h
+    outline.cpp outline.h
+    placeholderinputeventfilter.cpp placeholderinputeventfilter.h
+    placeholderoutput.cpp placeholderoutput.h
+    placement.cpp placement.h
+    placementtracker.cpp placementtracker.h
+    plugin.cpp plugin.h
+    pluginmanager.cpp pluginmanager.h
+    pointer_input.cpp pointer_input.h
+    popup_input_filter.cpp popup_input_filter.h
+    rootinfo_filter.cpp rootinfo_filter.h
+    rulebooksettings.cpp rulebooksettings.h
+    rules.cpp rules.h
+    scene/cursoritem.cpp scene/cursoritem.h
+    scene/cursorscene.cpp scene/cursorscene.h
+    scene/decorationitem.cpp scene/decorationitem.h
+    scene/dndiconitem.cpp scene/dndiconitem.h
+    scene/imageitem.cpp scene/imageitem.h
+    scene/item.cpp scene/item.h
+    scene/itemrenderer.cpp scene/itemrenderer.h
+    scene/itemrenderer_opengl.cpp scene/itemrenderer_opengl.h
+    scene/itemrenderer_qpainter.cpp scene/itemrenderer_qpainter.h
+    scene/scene.cpp scene/scene.h
+    scene/shadowitem.cpp scene/shadowitem.h
+    scene/surfaceitem.cpp scene/surfaceitem.h
+    scene/surfaceitem_internal.cpp scene/surfaceitem_internal.h
+    scene/surfaceitem_wayland.cpp scene/surfaceitem_wayland.h
+    scene/surfaceitem_x11.cpp scene/surfaceitem_x11.h
+    scene/windowitem.cpp scene/windowitem.h
+    scene/workspacescene.cpp scene/workspacescene.h
+    scene/workspacescene_opengl.cpp scene/workspacescene_opengl.h
+    scene/workspacescene_qpainter.cpp scene/workspacescene_qpainter.h
+    screenedge.cpp screenedge.h
+    scripting/dbuscall.cpp scripting/dbuscall.h
+    scripting/desktopbackgrounditem.cpp scripting/desktopbackgrounditem.h
+    scripting/screenedgeitem.cpp scripting/screenedgeitem.h
+    scripting/scriptedeffect.cpp scripting/scriptedeffect.h
+    scripting/scripting.cpp scripting/scripting.h
+    scripting/scripting_logging.cpp scripting/scripting_logging.h
+    scripting/scriptingutils.cpp scripting/scriptingutils.h
+    scripting/tilemodel.cpp scripting/tilemodel.h
+    scripting/v2/clientmodel.cpp scripting/v2/clientmodel.h
+    scripting/v3/clientmodel.cpp scripting/v3/clientmodel.h
+    scripting/v3/virtualdesktopmodel.cpp scripting/v3/virtualdesktopmodel.h
+    scripting/windowthumbnailitem.cpp scripting/windowthumbnailitem.h
+    scripting/workspace_wrapper.cpp scripting/workspace_wrapper.h
+    shadow.cpp shadow.h
+    sm.cpp sm.h
+    syncalarmx11filter.cpp syncalarmx11filter.h
+    tablet_input.cpp tablet_input.h
+    tabletmodemanager.cpp tabletmodemanager.h
+    tiles/customtile.cpp tiles/customtile.h
+    tiles/quicktile.cpp tiles/quicktile.h
+    tiles/tile.cpp tiles/tile.h
+    tiles/tilemanager.cpp tiles/tilemanager.h
+    touch_input.cpp touch_input.h
+    unmanaged.cpp unmanaged.h
+    useractions.cpp useractions.h
+    virtualdesktops.cpp virtualdesktops.h
+    virtualdesktopsdbustypes.cpp virtualdesktopsdbustypes.h
+    virtualkeyboard_dbus.cpp virtualkeyboard_dbus.h
+    was_user_interaction_x11_filter.cpp was_user_interaction_x11_filter.h
+    wayland_server.cpp wayland_server.h
+    waylandshellintegration.cpp waylandshellintegration.h
+    waylandwindow.cpp waylandwindow.h
+    window.cpp window.h
+    window_property_notify_x11_filter.cpp window_property_notify_x11_filter.h
+    workspace.cpp workspace.h
+    x11eventfilter.cpp x11eventfilter.h
+    x11syncmanager.cpp x11syncmanager.h
+    x11window.cpp x11window.h
+    xdgactivationv1.cpp xdgactivationv1.h
+    xdgshellintegration.cpp xdgshellintegration.h
+    xdgshellwindow.cpp xdgshellwindow.h
+    xkb.cpp xkb.h
+    xwaylandwindow.cpp xwaylandwindow.h
 )
 
 target_link_libraries(kwin
@@ -274,26 +274,26 @@ add_subdirectory(wayland)
 add_subdirectory(xwayland)
 
 if (KWIN_BUILD_ACTIVITIES)
-    target_sources(kwin PRIVATE activities.cpp)
+    target_sources(kwin PRIVATE activities.cpp activities.h)
     target_link_libraries(kwin KF5::Activities)
 endif()
 
 if (KWIN_BUILD_SCREENLOCKER)
-    target_sources(kwin PRIVATE screenlockerwatcher.cpp)
+    target_sources(kwin PRIVATE screenlockerwatcher.cpp screenlockerwatcher.h)
     target_link_libraries(kwin PW::KScreenLocker)
 endif()
 
 if (KWIN_BUILD_TABBOX)
     target_sources(kwin PRIVATE
-        tabbox/clientmodel.cpp
-        tabbox/desktopchain.cpp
-        tabbox/desktopmodel.cpp
-        tabbox/switcheritem.cpp
-        tabbox/tabbox.cpp
-        tabbox/tabbox_logging.cpp
-        tabbox/tabboxconfig.cpp
-        tabbox/tabboxhandler.cpp
-        tabbox/x11_filter.cpp
+        tabbox/clientmodel.cpp tabbox/clientmodel.h
+        tabbox/desktopchain.cpp tabbox/desktopchain.h
+        tabbox/desktopmodel.cpp tabbox/desktopmodel.h
+        tabbox/switcheritem.cpp tabbox/switcheritem.h
+        tabbox/tabbox.cpp tabbox/tabbox.h
+        tabbox/tabbox_logging.cpp tabbox/tabbox_logging.h
+        tabbox/tabboxconfig.cpp tabbox/tabboxconfig.h
+        tabbox/tabboxhandler.cpp tabbox/tabboxhandler.h
+        tabbox/x11_filter.cpp tabbox/x11_filter.h
     )
     target_link_libraries(kwin Qt::GuiPrivate)
 endif()
@@ -303,7 +303,7 @@ qt_generate_dbus_interface(tabletmodemanager.h org.kde.KWin.TabletModeManager.xm
 
 generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
 
-add_executable(kwin_x11 main_x11.cpp)
+add_executable(kwin_x11 main_x11.cpp main_x11.h)
 target_link_libraries(kwin_x11
     KWinX11Platform
     kwin
@@ -313,7 +313,7 @@ kcoreaddons_target_static_plugins(kwin_x11 "kwin/effects/plugins")
 install(TARGETS kwin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 install(TARGETS kwin_x11 ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
-add_executable(kwin_wayland main_wayland.cpp)
+add_executable(kwin_wayland main_wayland.cpp main_wayland.h)
 
 target_link_libraries(kwin_wayland
     kwin

@@ -5,8 +5,8 @@ kcoreaddons_add_plugin(kcm_kwin_scripts INSTALL_NAMESPACE plasma/kcms/systemsett
 
 kcmutils_generate_desktop_file(kcm_kwin_scripts)
 target_sources(kcm_kwin_scripts PRIVATE
-    module.cpp
-    kwinscriptsdata.cpp
+    module.cpp module.h
+    kwinscriptsdata.cpp kwinscriptsdata.h
 )
 
 target_link_libraries(kcm_kwin_scripts

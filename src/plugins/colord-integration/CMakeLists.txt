@@ -1,8 +1,8 @@
 add_library(colordintegration MODULE)
 target_sources(colordintegration PRIVATE
-    colorddevice.cpp
-    colordintegration.cpp
-    main.cpp
+    colorddevice.cpp colorddevice.h
+    colordintegration.cpp colordintegration.h
+    main.cpp main.h
 )
 
 ecm_qt_declare_logging_category(colordintegration

@@ -2,8 +2,8 @@
 # Effect
 
 set(blendchanges_SOURCES
-    main.cpp
-    blendchanges.cpp
+    main.cpp main.h
+    blendchanges.cpp blendchanges.h
 )
 
 kwin4_add_effect_module(kwin4_effect_blend ${blendchanges_SOURCES})

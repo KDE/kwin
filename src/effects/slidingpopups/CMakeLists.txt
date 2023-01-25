@@ -3,8 +3,8 @@
 
 # Source files
 set(slidingpopups_SOURCES
-    main.cpp
-    slidingpopups.cpp
+    main.cpp main.h
+    slidingpopups.cpp slidingpopups.h
 )
 
 kconfig_add_kcfg_files(slidingpopups_SOURCES

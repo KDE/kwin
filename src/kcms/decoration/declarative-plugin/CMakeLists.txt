@@ -1,13 +1,13 @@
 set(plugin_SRCS
-    previewbutton.cpp
-    previewbridge.cpp
-    previewclient.cpp
-    previewitem.cpp
-    previewsettings.cpp
-    plugin.cpp
-    buttonsmodel.cpp
-    ../../../decorations/decorationpalette.cpp
-    ../../../decorations/decorations_logging.cpp
+    previewbutton.cpp previewbutton.h
+    previewbridge.cpp previewbridge.h
+    previewclient.cpp previewclient.h
+    previewitem.cpp previewitem.h
+    previewsettings.cpp previewsettings.h
+    plugin.cpp plugin.h
+    buttonsmodel.cpp buttonsmodel.h
+    ../../../decorations/decorationpalette.cpp ../../../decorations/decorationpalette.h
+    ../../../decorations/decorations_logging.cpp ../../../decorations/decorations_logging.h
 )
 
 add_library(kdecorationprivatedeclarative SHARED ${plugin_SRCS})

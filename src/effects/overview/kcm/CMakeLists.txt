@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-set(kwin_overview_config_SOURCES overvieweffectkcm.cpp)
+set(kwin_overview_config_SOURCES overvieweffectkcm.cpp overvieweffectkcm.h)
 ki18n_wrap_ui(kwin_overview_config_SOURCES overvieweffectkcm.ui)
 kconfig_add_kcfg_files(kwin_overview_config_SOURCES ../overviewconfig.kcfgc)
 

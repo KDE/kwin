@@ -3,8 +3,8 @@
 
 # Source files
 set(slideback_SOURCES
-    main.cpp
-    slideback.cpp
+    main.cpp main.h
+    slideback.cpp slideback.h
 )
 
 kwin4_add_effect_module(kwin4_effect_slideback ${slideback_SOURCES})

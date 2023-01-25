@@ -3,8 +3,8 @@
 
 # Source files
 set(startupfeedback_SOURCES
-    main.cpp
-    startupfeedback.cpp
+    main.cpp main.h
+    startupfeedback.cpp startupfeedback.h
     startupfeedback.qrc
 )
 

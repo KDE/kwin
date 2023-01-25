@@ -1,15 +1,15 @@
 add_library(KWinQpaPlugin OBJECT)
 set_property(TARGET KWinQpaPlugin PROPERTY POSITION_INDEPENDENT_CODE ON)
 target_sources(KWinQpaPlugin PRIVATE
-    backingstore.cpp
-    eglhelpers.cpp
-    eglplatformcontext.cpp
-    integration.cpp
-    main.cpp
-    offscreensurface.cpp
-    platformcursor.cpp
-    screen.cpp
-    window.cpp
+    backingstore.cpp backingstore.h
+    eglhelpers.cpp eglhelpers.h
+    eglplatformcontext.cpp eglplatformcontext.h
+    integration.cpp integration.h
+    main.cpp main.h
+    offscreensurface.cpp offscreensurface.h
+    platformcursor.cpp platformcursor.h
+    screen.cpp screen.h
+    window.cpp window.h
 )
 
 ecm_qt_declare_logging_category(KWinQpaPlugin

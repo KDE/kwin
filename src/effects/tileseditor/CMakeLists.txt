@@ -7,8 +7,8 @@ if (KWIN_BUILD_KCMS)
 endif()
 
 set(tileseditor_SOURCES
-    main.cpp
-    tileseditoreffect.cpp
+    main.cpp main.h
+    tileseditoreffect.cpp tileseditoreffect.h
 )
 
 kwin4_add_effect_module(kwin4_effect_tileseditor ${tileseditor_SOURCES})

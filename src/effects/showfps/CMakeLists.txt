@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 set(showfps_SOURCES
-    main.cpp
-    showfpseffect.cpp
+    main.cpp main.h
+    showfpseffect.cpp showfpseffect.h
 )
 
 kwin4_add_effect_module(kwin4_effect_showfps ${showfps_SOURCES})

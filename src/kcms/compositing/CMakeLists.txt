@@ -5,8 +5,8 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kcmkwincompositing\")
 ################# configure checks and create the configured files #################
 
 set(kwincompositing_SRC
-    main.cpp
-    kwincompositingdata.cpp
+    main.cpp main.h
+    kwincompositingdata.cpp kwincompositingdata.h
 )
 
 kconfig_add_kcfg_files(kwincompositing_SRC kwincompositing_setting.kcfgc GENERATE_MOC)

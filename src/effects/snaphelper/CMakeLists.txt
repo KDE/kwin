@@ -3,8 +3,8 @@
 
 # Source files
 set(snaphelper_SOURCES
-    main.cpp
-    snaphelper.cpp
+    main.cpp main.h
+    snaphelper.cpp snaphelper.h
 )
 
 kwin4_add_effect_module(kwin4_effect_snaphelper ${snaphelper_SOURCES})

@@ -4,10 +4,10 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kwindecoration\")
 add_subdirectory(declarative-plugin)
 
 set(kcmkwindecoration_SRCS
-    declarative-plugin/buttonsmodel.cpp
-    decorationmodel.cpp
-    kcm.cpp
-    utils.cpp
+    declarative-plugin/buttonsmodel.cpp declarative-plugin/buttonsmodel.h
+    decorationmodel.cpp decorationmodel.h
+    kcm.cpp kcm.h
+    utils.cpp utils.h
 )
 
 kcmutils_generate_module_data(
@@ -33,9 +33,9 @@ target_link_libraries(kcm_kwindecoration
 )
 
 set(kwin-applywindowdecoration_SRCS
-    kwin-applywindowdecoration.cpp
-    decorationmodel.cpp
-    utils.cpp
+    kwin-applywindowdecoration.cpp kwin-applywindowdecoration.h
+    decorationmodel.cpp decorationmodel.h
+    utils.cpp utils.h
 )
 
 kconfig_add_kcfg_files(kwin-applywindowdecoration_SRCS kwindecorationsettings.kcfgc GENERATE_MOC)

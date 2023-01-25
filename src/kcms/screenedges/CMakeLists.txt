@@ -3,15 +3,15 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kcmkwinscreenedges\")
 
 include_directories(${KWin_SOURCE_DIR}/src/effects)
 set(kcm_screenedges_SRCS
-    monitor.cpp
-    screenpreviewwidget.cpp
-    kwinscreenedge.cpp
-    kwinscreenedgeconfigform.cpp
+    monitor.cpp monitor.h
+    screenpreviewwidget.cpp screenpreviewwidget.h
+    kwinscreenedge.cpp kwinscreenedge.h
+    kwinscreenedgeconfigform.cpp kwinscreenedgeconfigform.h
 )
 
 qt_add_dbus_interface(kcm_screenedges_SRCS ${KWin_SOURCE_DIR}/src/org.kde.kwin.Effects.xml kwin_effects_interface)
 
-set(kcm_kwinscreenedges_PART_SRCS main.cpp ${kcm_screenedges_SRCS})
+set(kcm_kwinscreenedges_PART_SRCS main.cpp main.h ${kcm_screenedges_SRCS})
 
 kcmutils_generate_module_data(
     kcm_kwinscreenedges_PART_SRCS
@@ -39,8 +39,8 @@ set(kcm_screenedges_LIBS
 target_link_libraries(kcm_kwinscreenedges ${X11_LIBRARIES} ${kcm_screenedges_LIBS})
 
 set(kcm_kwintouchscreenedges_PART_SRCS
-    touch.cpp
-    kwintouchscreenedgeconfigform.cpp
+    touch.cpp touch.h
+    kwintouchscreenedgeconfigform.cpp kwintouchscreenedgeconfigform.h
     ${kcm_screenedges_SRCS}
 )
 

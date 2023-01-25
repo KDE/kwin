@@ -1,5 +1,5 @@
 set(idletime_plugin_SRCS
-    poller.cpp
+    poller.cpp poller.h
 )
 
 add_library(KF5IdleTimeKWinPlugin OBJECT ${idletime_plugin_SRCS})

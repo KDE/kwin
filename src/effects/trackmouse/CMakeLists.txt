@@ -4,8 +4,8 @@
 install(FILES data/tm_inner.png data/tm_outer.png DESTINATION ${KDE_INSTALL_DATADIR}/kwin)
 
 set(trackmouse_SOURCES
-    main.cpp
-    trackmouse.cpp
+    main.cpp main.h
+    trackmouse.cpp trackmouse.h
 )
 
 kconfig_add_kcfg_files(trackmouse_SOURCES
@@ -25,7 +25,7 @@ target_link_libraries(kwin4_effect_trackmouse PRIVATE
 #######################################
 # Config
 if (KWIN_BUILD_KCMS)
-    set(kwin_trackmouse_config_SRCS trackmouse_config.cpp)
+    set(kwin_trackmouse_config_SRCS trackmouse_config.cpp trackmouse_config.h)
     ki18n_wrap_ui(kwin_trackmouse_config_SRCS trackmouse_config.ui)
     kconfig_add_kcfg_files(kwin_trackmouse_config_SRCS trackmouseconfig.kcfgc)
 

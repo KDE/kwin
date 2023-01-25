@@ -41,7 +41,7 @@ elseif(CMAKE_CROSSCOMPILING)
 else()
     # host build
     remove_definitions(-DQT_NO_CAST_FROM_ASCII)
-    add_executable(qtwaylandscanner_kde qtwaylandscanner.cpp)
+    add_executable(qtwaylandscanner_kde qtwaylandscanner.cpp qtwaylandscanner.h)
     target_link_libraries(qtwaylandscanner_kde Qt::Core)
     include(ECMMarkNonGuiExecutable)
     ecm_mark_nongui_executable(qtwaylandscanner_kde)
@@ -66,7 +66,7 @@ function(ecm_add_qtwayland_server_protocol_kde target)
 
     get_filename_component(_infile ${ARGS_PROTOCOL} ABSOLUTE)
     set(_header "${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-${ARGS_BASENAME}.h")
-    set(_code "${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-${ARGS_BASENAME}.cpp")
+    set(_code "${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-${ARGS_BASENAME}.cpp "${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-${ARGS_BASENAME}.h")
 
     set_source_files_properties(${_header} ${_code} GENERATED)
 

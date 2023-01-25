@@ -1,5 +1,5 @@
 set(kglobalaccel_plugin_SRCS
-    kglobalaccel_plugin.cpp
+    kglobalaccel_plugin.cpp kglobalaccel_plugin.h
 )
 
 add_library(KF5GlobalAccelKWinPlugin OBJECT ${kglobalaccel_plugin_SRCS})

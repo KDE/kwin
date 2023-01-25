@@ -2,8 +2,8 @@
 # Effect
 
 set(thumbnailaside_SOURCES
-    main.cpp
-    thumbnailaside.cpp
+    main.cpp main.h
+    thumbnailaside.cpp thumbnailaside.h
 )
 
 kconfig_add_kcfg_files(thumbnailaside_SOURCES
@@ -23,7 +23,7 @@ target_link_libraries(kwin4_effect_thumbnailaside PRIVATE
 #######################################
 # Config
 if (KWIN_BUILD_KCMS)
-    set(kwin_thumbnailaside_config_SRCS thumbnailaside_config.cpp)
+    set(kwin_thumbnailaside_config_SRCS thumbnailaside_config.cpp thumbnailaside_config.h)
     ki18n_wrap_ui(kwin_thumbnailaside_config_SRCS thumbnailaside_config.ui)
     kconfig_add_kcfg_files(kwin_thumbnailaside_config_SRCS thumbnailasideconfig.kcfgc)
 

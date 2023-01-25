@@ -1,6 +1,6 @@
 add_executable(kwin_wayland_wrapper)
 target_sources(kwin_wayland_wrapper PRIVATE
-    kwin_wrapper.cpp
+    kwin_wrapper.cpp kwin_wrapper.h
     wl-socket.c
 )
 

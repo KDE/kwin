@@ -2,8 +2,8 @@
 # Effect
 
 set(wobblywindows_SOURCES
-    main.cpp
-    wobblywindows.cpp
+    main.cpp main.h
+    wobblywindows.cpp wobblywindows.h
 )
 
 kconfig_add_kcfg_files(wobblywindows_SOURCES
@@ -20,7 +20,7 @@ target_link_libraries(kwin4_effect_wobblywindows PRIVATE
 #######################################
 # Config
 if (KWIN_BUILD_KCMS)
-    set(kwin_wobblywindows_config_SRCS wobblywindows_config.cpp)
+    set(kwin_wobblywindows_config_SRCS wobblywindows_config.cpp wobblywindows_config.h)
     ki18n_wrap_ui(kwin_wobblywindows_config_SRCS wobblywindows_config.ui)
     kconfig_add_kcfg_files(kwin_wobblywindows_config_SRCS wobblywindowsconfig.kcfgc)
 

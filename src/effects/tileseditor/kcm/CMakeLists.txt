@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-set(kwin_tileseditor_config_SOURCES tileseditoreffectkcm.cpp)
+set(kwin_tileseditor_config_SOURCES tileseditoreffectkcm.cpp tileseditoreffectkcm.h)
 ki18n_wrap_ui(kwin_tileseditor_config_SOURCES tileseditoreffectkcm.ui)
 
 kwin_add_effect_config(kwin_tileseditor_config ${kwin_tileseditor_config_SOURCES})

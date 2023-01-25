@@ -15,11 +15,11 @@ install(
 )
 
 target_sources(kwin PRIVATE
-    connection.cpp
-    context.cpp
-    device.cpp
-    events.cpp
-    libinput_logging.cpp
-    libinputbackend.cpp
+    connection.cpp connection.h
+    context.cpp context.h
+    device.cpp device.h
+    events.cpp events.h
+    libinput_logging.cpp libinput_logging.h
+    libinputbackend.cpp libinputbackend.h
 )
 target_link_libraries(kwin Libinput::Libinput)

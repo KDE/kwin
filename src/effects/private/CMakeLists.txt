@@ -3,9 +3,9 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 add_library(effectsplugin
-    expoarea.cpp
-    expolayout.cpp
-    plugin.cpp
+    expoarea.cpp expoarea.h
+    expolayout.cpp expolayout.h
+    plugin.cpp plugin.h
 )
 
 target_link_libraries(effectsplugin

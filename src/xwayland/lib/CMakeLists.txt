@@ -1,6 +1,6 @@
 add_library(KWinXwaylandCommon STATIC
-    xwaylandsocket.cpp
-    xauthority.cpp
+    xwaylandsocket.cpp xwaylandsocket.h
+    xauthority.cpp xauthority.h
 )
 
 ecm_qt_declare_logging_category(KWinXwaylandCommon

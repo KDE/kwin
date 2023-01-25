@@ -1,6 +1,6 @@
 add_definitions(-DTRANSLATION_DOMAIN=\"kwin_package_aurorae\")
 
-kcoreaddons_add_plugin(kwin_packagestructure_aurorae SOURCES aurorae.cpp INSTALL_NAMESPACE "kpackage/packagestructure")
+kcoreaddons_add_plugin(kwin_packagestructure_aurorae SOURCES aurorae.cpp aurorae.h INSTALL_NAMESPACE "kpackage/packagestructure")
 
 target_link_libraries(kwin_packagestructure_aurorae
    KF5::I18n

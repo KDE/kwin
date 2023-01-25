@@ -2,8 +2,8 @@
 # Effect
 
 set(touchpoints_SOURCES
-    main.cpp
-    touchpoints.cpp
+    main.cpp main.h
+    touchpoints.cpp touchpoints.h
 )
 
 kwin4_add_effect_module(kwin4_effect_touchpoints ${touchpoints_SOURCES})

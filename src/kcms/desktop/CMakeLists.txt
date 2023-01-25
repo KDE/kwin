@@ -4,11 +4,11 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kwin_virtualdesktops\")
 ########### next target ###############
 
 set(kcm_kwin_virtualdesktops_PART_SRCS
-    ../../virtualdesktopsdbustypes.cpp
-    animationsmodel.cpp
-    desktopsmodel.cpp
-    virtualdesktops.cpp
-    virtualdesktopsdata.cpp
+    ../../virtualdesktopsdbustypes.cpp ../../virtualdesktopsdbustypes.h
+    animationsmodel.cpp animationsmodel.h
+    desktopsmodel.cpp desktopsmodel.h
+    virtualdesktops.cpp virtualdesktops.h
+    virtualdesktopsdata.cpp virtualdesktopsdata.h
 )
 
 kconfig_add_kcfg_files(kcm_kwin_virtualdesktops_PART_SRCS virtualdesktopssettings.kcfgc GENERATE_MOC)

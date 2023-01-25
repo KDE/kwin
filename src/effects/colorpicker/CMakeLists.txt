@@ -2,8 +2,8 @@
 # Effect
 
 set(colorpicker_SOURCES
-    colorpicker.cpp
-    main.cpp
+    colorpicker.cpp colorpicker.h
+    main.cpp main.h
 )
 
 kwin4_add_effect_module(kwin4_effect_colorpicker ${colorpicker_SOURCES})

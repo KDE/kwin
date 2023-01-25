@@ -2,10 +2,10 @@
 # Effect
 
 set(blur_SOURCES
-    blur.cpp
+    blur.cpp blur.h
     blur.qrc
-    blurshader.cpp
-    main.cpp
+    blurshader.cpp blurshader.h
+    main.cpp main.h
 )
 
 kconfig_add_kcfg_files(blur_SOURCES
@@ -26,7 +26,7 @@ target_link_libraries(kwin4_effect_blur PRIVATE
 #######################################
 # Config
 if (KWIN_BUILD_KCMS)
-    set(kwin_blur_config_SRCS blur_config.cpp)
+    set(kwin_blur_config_SRCS blur_config.cpp blur_config.h)
     ki18n_wrap_ui(kwin_blur_config_SRCS blur_config.ui)
     kconfig_add_kcfg_files(kwin_blur_config_SRCS blurconfig.kcfgc)
 

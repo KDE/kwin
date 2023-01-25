@@ -4,9 +4,9 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kwin_effects\")
 ########### next target ###############
 
 set(kcm_kwin_effects_PART_SRCS
-    kcm.cpp
-    effectsfilterproxymodel.cpp
-    desktopeffectsdata.cpp
+    kcm.cpp kcm.h
+    effectsfilterproxymodel.cpp effectsfilterproxymodel.h
+    desktopeffectsdata.cpp desktopeffectsdata.h
 )
 
 kcoreaddons_add_plugin(kcm_kwin_effects SOURCES ${kcm_kwin_effects_PART_SRCS} INSTALL_NAMESPACE "plasma/kcms/systemsettings")

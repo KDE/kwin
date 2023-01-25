@@ -207,87 +207,87 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
 )
 
 target_sources(kwin PRIVATE
-    abstract_data_source.cpp
-    abstract_drop_handler.cpp
-    appmenu_interface.cpp
-    blur_interface.cpp
-    clientbuffer.cpp
-    clientbufferintegration.cpp
-    clientconnection.cpp
-    compositor_interface.cpp
-    contenttype_v1_interface.cpp
-    contrast_interface.cpp
-    datacontroldevice_v1_interface.cpp
-    datacontroldevicemanager_v1_interface.cpp
-    datacontroloffer_v1_interface.cpp
-    datacontrolsource_v1_interface.cpp
-    datadevice_interface.cpp
-    datadevicemanager_interface.cpp
-    dataoffer_interface.cpp
-    datasource_interface.cpp
-    display.cpp
-    dpms_interface.cpp
-    drmclientbuffer.cpp
-    drmlease_v1_interface.cpp
-    fakeinput_interface.cpp
-    fractionalscale_v1_interface.cpp
-    filtered_display.cpp
-    idle_interface.cpp
-    idleinhibit_v1_interface.cpp
-    idlenotify_v1_interface.cpp
-    inputmethod_v1_interface.cpp
-    keyboard_interface.cpp
-    keyboard_shortcuts_inhibit_v1_interface.cpp
-    keystate_interface.cpp
-    layershell_v1_interface.cpp
-    linuxdmabufv1clientbuffer.cpp
-    lockscreen_overlay_v1_interface.cpp
-    output_interface.cpp
-    output_order_v1_interface.cpp
-    outputdevice_v2_interface.cpp
-    outputmanagement_v2_interface.cpp
-    plasmashell_interface.cpp
-    plasmavirtualdesktop_interface.cpp
-    plasmawindowmanagement_interface.cpp
-    pointer_interface.cpp
-    pointerconstraints_v1_interface.cpp
-    pointergestures_v1_interface.cpp
-    primaryselectiondevice_v1_interface.cpp
-    primaryselectiondevicemanager_v1_interface.cpp
-    primaryselectionoffer_v1_interface.cpp
-    primaryselectionsource_v1_interface.cpp
-    region_interface.cpp
-    relativepointer_v1_interface.cpp
-    screencast_v1_interface.cpp
-    seat_interface.cpp
-    server_decoration_interface.cpp
-    server_decoration_palette_interface.cpp
-    shadow_interface.cpp
-    shmclientbuffer.cpp
-    slide_interface.cpp
-    subcompositor_interface.cpp
-    surface_interface.cpp
-    surfacerole.cpp
-    tablet_v2_interface.cpp
-    tearingcontrol_v1_interface.cpp
-    textinput.cpp
-    textinput_v2_interface.cpp
-    textinput_v3_interface.cpp
-    touch_interface.cpp
-    viewporter_interface.cpp
-    xdgactivation_v1_interface.cpp
-    xdgdecoration_v1_interface.cpp
-    xdgforeign_v2_interface.cpp
-    xdgoutput_v1_interface.cpp
-    xdgshell_interface.cpp
-    xwaylandkeyboardgrab_v1_interface.cpp
-    xwaylandshell_v1_interface.cpp
+    abstract_data_source.cpp abstract_data_source.h
+    abstract_drop_handler.cpp abstract_drop_handler.h
+    appmenu_interface.cpp appmenu_interface.h
+    blur_interface.cpp blur_interface.h
+    clientbuffer.cpp clientbuffer.h
+    clientbufferintegration.cpp clientbufferintegration.h
+    clientconnection.cpp clientconnection.h
+    compositor_interface.cpp compositor_interface.h
+    contenttype_v1_interface.cpp contenttype_v1_interface.h
+    contrast_interface.cpp contrast_interface.h
+    datacontroldevice_v1_interface.cpp datacontroldevice_v1_interface.h
+    datacontroldevicemanager_v1_interface.cpp datacontroldevicemanager_v1_interface.h
+    datacontroloffer_v1_interface.cpp datacontroloffer_v1_interface.h
+    datacontrolsource_v1_interface.cpp datacontrolsource_v1_interface.h
+    datadevice_interface.cpp datadevice_interface.h
+    datadevicemanager_interface.cpp datadevicemanager_interface.h
+    dataoffer_interface.cpp dataoffer_interface.h
+    datasource_interface.cpp datasource_interface.h
+    display.cpp display.h
+    dpms_interface.cpp dpms_interface.h
+    drmclientbuffer.cpp drmclientbuffer.h
+    drmlease_v1_interface.cpp drmlease_v1_interface.h
+    fakeinput_interface.cpp fakeinput_interface.h
+    fractionalscale_v1_interface.cpp fractionalscale_v1_interface.h
+    filtered_display.cpp filtered_display.h
+    idle_interface.cpp idle_interface.h
+    idleinhibit_v1_interface.cpp idleinhibit_v1_interface.h
+    idlenotify_v1_interface.cpp idlenotify_v1_interface.h
+    inputmethod_v1_interface.cpp inputmethod_v1_interface.h
+    keyboard_interface.cpp keyboard_interface.h
+    keyboard_shortcuts_inhibit_v1_interface.cpp keyboard_shortcuts_inhibit_v1_interface.h
+    keystate_interface.cpp keystate_interface.h
+    layershell_v1_interface.cpp layershell_v1_interface.h
+    linuxdmabufv1clientbuffer.cpp linuxdmabufv1clientbuffer.h
+    lockscreen_overlay_v1_interface.cpp lockscreen_overlay_v1_interface.h
+    output_interface.cpp output_interface.h
+    output_order_v1_interface.cpp output_order_v1_interface.h
+    outputdevice_v2_interface.cpp outputdevice_v2_interface.h
+    outputmanagement_v2_interface.cpp outputmanagement_v2_interface.h
+    plasmashell_interface.cpp plasmashell_interface.h
+    plasmavirtualdesktop_interface.cpp plasmavirtualdesktop_interface.h
+    plasmawindowmanagement_interface.cpp plasmawindowmanagement_interface.h
+    pointer_interface.cpp pointer_interface.h
+    pointerconstraints_v1_interface.cpp pointerconstraints_v1_interface.h
+    pointergestures_v1_interface.cpp pointergestures_v1_interface.h
+    primaryselectiondevice_v1_interface.cpp primaryselectiondevice_v1_interface.h
+    primaryselectiondevicemanager_v1_interface.cpp primaryselectiondevicemanager_v1_interface.h
+    primaryselectionoffer_v1_interface.cpp primaryselectionoffer_v1_interface.h
+    primaryselectionsource_v1_interface.cpp primaryselectionsource_v1_interface.h
+    region_interface.cpp region_interface.h
+    relativepointer_v1_interface.cpp relativepointer_v1_interface.h
+    screencast_v1_interface.cpp screencast_v1_interface.h
+    seat_interface.cpp seat_interface.h
+    server_decoration_interface.cpp server_decoration_interface.h
+    server_decoration_palette_interface.cpp server_decoration_palette_interface.h
+    shadow_interface.cpp shadow_interface.h
+    shmclientbuffer.cpp shmclientbuffer.h
+    slide_interface.cpp slide_interface.h
+    subcompositor_interface.cpp subcompositor_interface.h
+    surface_interface.cpp surface_interface.h
+    surfacerole.cpp surfacerole.h
+    tablet_v2_interface.cpp tablet_v2_interface.h
+    tearingcontrol_v1_interface.cpp tearingcontrol_v1_interface.h
+    textinput.cpp textinput.h
+    textinput_v2_interface.cpp textinput_v2_interface.h
+    textinput_v3_interface.cpp textinput_v3_interface.h
+    touch_interface.cpp touch_interface.h
+    viewporter_interface.cpp viewporter_interface.h
+    xdgactivation_v1_interface.cpp xdgactivation_v1_interface.h
+    xdgdecoration_v1_interface.cpp xdgdecoration_v1_interface.h
+    xdgforeign_v2_interface.cpp xdgforeign_v2_interface.h
+    xdgoutput_v1_interface.cpp xdgoutput_v1_interface.h
+    xdgshell_interface.cpp xdgshell_interface.h
+    xwaylandkeyboardgrab_v1_interface.cpp xwaylandkeyboardgrab_v1_interface.h
+    xwaylandshell_v1_interface.cpp xwaylandshell_v1_interface.h
 )
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    target_sources(kwin PRIVATE utils/executable_path_proc.cpp)
+    target_sources(kwin PRIVATE utils/executable_path_proc.cpp utils/executable_path_proc.h)
 elseif(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
-    target_sources(kwin PRIVATE utils/executable_path_sysctl.cpp)
+    target_sources(kwin PRIVATE utils/executable_path_sysctl.cpp utils/executable_path_sysctl.h)
 else()
     message(FATAL_ERROR "Unsupported platform ${CMAKE_SYSTEM_NAME}")
 endif()

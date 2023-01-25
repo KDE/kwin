@@ -2,8 +2,8 @@
 # Effect
 
 set(mouseclick_SOURCES
-    main.cpp
-    mouseclick.cpp
+    main.cpp main.h
+    mouseclick.cpp mouseclick.h
 )
 
 kconfig_add_kcfg_files(mouseclick_SOURCES
@@ -24,7 +24,7 @@ target_link_libraries(kwin4_effect_mouseclick PRIVATE
 ## configurtion dialog
 ##########################
 if (KWIN_BUILD_KCMS)
-    set(kwin_mouseclick_config_SRCS mouseclick_config.cpp)
+    set(kwin_mouseclick_config_SRCS mouseclick_config.cpp mouseclick_config.h)
     ki18n_wrap_ui(kwin_mouseclick_config_SRCS mouseclick_config.ui)
     kconfig_add_kcfg_files(kwin_mouseclick_config_SRCS mouseclickconfig.kcfgc)
 

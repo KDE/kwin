@@ -1,7 +1,7 @@
 ########################################################
 # FakeDecoWithShadows
 ########################################################
-add_library(fakedecoshadows MODULE fakedecoration_with_shadows.cpp)
+add_library(fakedecoshadows MODULE fakedecoration_with_shadows.cpp fakedecoration_with_shadows.h)
 set_target_properties(fakedecoshadows PROPERTIES
     PREFIX ""
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/fakes/org.kde.kdecoration2")

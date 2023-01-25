@@ -2,8 +2,8 @@
 # Effect
 
 set(mousemark_SOURCES
-    main.cpp
-    mousemark.cpp
+    main.cpp main.h
+    mousemark.cpp mousemark.h
 )
 
 kconfig_add_kcfg_files(mousemark_SOURCES
@@ -23,7 +23,7 @@ target_link_libraries(kwin4_effect_mousemark PRIVATE
 #######################################
 # Config
 if (KWIN_BUILD_KCMS)
-    set(kwin_mousemark_config_SRCS mousemark_config.cpp)
+    set(kwin_mousemark_config_SRCS mousemark_config.cpp mousemark_config.h)
     ki18n_wrap_ui(kwin_mousemark_config_SRCS mousemark_config.ui)
     kconfig_add_kcfg_files(kwin_mousemark_config_SRCS mousemarkconfig.kcfgc)
 

@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 set(desktopgrid_SOURCES
-    main.cpp
-    desktopgrideffect.cpp
+    main.cpp main.h
+    desktopgrideffect.cpp desktopgrideffect.h
 )
 
 kconfig_add_kcfg_files(desktopgrid_SOURCES
@@ -27,7 +27,7 @@ target_link_libraries(kwin4_effect_desktopgrid PRIVATE
 #######################################
 # Config
 if (KWIN_BUILD_KCMS)
-    set(kwin_desktopgrid_config_SRCS desktopgrid_config.cpp)
+    set(kwin_desktopgrid_config_SRCS desktopgrid_config.cpp desktopgrid_config.h)
     ki18n_wrap_ui(kwin_desktopgrid_config_SRCS desktopgrid_config.ui)
     kconfig_add_kcfg_files(kwin_desktopgrid_config_SRCS desktopgridconfig.kcfgc)
 

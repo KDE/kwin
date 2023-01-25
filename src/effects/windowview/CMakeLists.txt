@@ -7,8 +7,8 @@ if (KWIN_BUILD_KCMS)
 endif()
 
 set(windowview_SOURCES
-    main.cpp
-    windowvieweffect.cpp
+    main.cpp main.h
+    windowvieweffect.cpp windowvieweffect.h
 )
 
 kconfig_add_kcfg_files(windowview_SOURCES

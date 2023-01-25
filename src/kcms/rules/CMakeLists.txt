@@ -5,15 +5,15 @@ add_definitions(-DKCMRULES)
 include_directories(../../)
 
 set(kwinrules_SRCS
-    ../../rulebooksettings.cpp
-    ../../rules.cpp
-    ../../utils/common.cpp
-    ../../virtualdesktopsdbustypes.cpp
-    kwinsrc.cpp
-    optionsmodel.cpp
-    ruleitem.cpp
-    rulesmodel.cpp
-    rulebookmodel.cpp
+    ../../rulebooksettings.cpp ../../rulebooksettings.h
+    ../../rules.cpp ../../rules.h
+    ../../utils/common.cpp ../../utils/common.h
+    ../../virtualdesktopsdbustypes.cpp ../../virtualdesktopsdbustypes.h
+    kwinsrc.cpp kwinsrc.h
+    optionsmodel.cpp optionsmodel.h
+    ruleitem.cpp ruleitem.h
+    rulesmodel.cpp rulesmodel.h
+    rulebookmodel.cpp rulebookmodel.h
 )
 
 kconfig_add_kcfg_files(kwinrules_SRCS ../../rulesettings.kcfgc)
@@ -43,12 +43,12 @@ if (KWIN_BUILD_ACTIVITIES)
 endif()
 target_link_libraries(KWinRulesObjects ${kcm_libs} ${kwin_kcm_rules_XCB_LIBS})
 
-add_executable(kwin_rules_dialog main.cpp)
+add_executable(kwin_rules_dialog main.cpp main.h)
 target_link_libraries(kwin_rules_dialog KWinRulesObjects)
 target_compile_definitions(kwin_rules_dialog PRIVATE KCMRULES_PLUGIN="plasma/kcms/systemsettings/kcm_kwinrules")
 install(TARGETS kwin_rules_dialog DESTINATION ${KDE_INSTALL_LIBEXECDIR})
 
-kcoreaddons_add_plugin(kcm_kwinrules SOURCES kcmrules.cpp INSTALL_NAMESPACE "plasma/kcms/systemsettings")
+kcoreaddons_add_plugin(kcm_kwinrules SOURCES kcmrules.cpp kcmrules.h INSTALL_NAMESPACE "plasma/kcms/systemsettings")
 kcmutils_generate_desktop_file(kcm_kwinrules)
 target_link_libraries(kcm_kwinrules KWinRulesObjects)
 

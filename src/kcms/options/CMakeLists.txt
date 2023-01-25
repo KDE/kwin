@@ -3,9 +3,9 @@
 add_definitions(-DTRANSLATION_DOMAIN=\"kcmkwm\")
 
 set(kcm_kwinoptions_PART_SRCS
-    main.cpp
-    mouse.cpp
-    windows.cpp
+    main.cpp main.h
+    mouse.cpp mouse.h
+    windows.cpp windows.h
 )
 
 ki18n_wrap_ui(kcm_kwinoptions_PART_SRCS

@@ -2,8 +2,8 @@
 # Effect
 
 set(diminactive_SOURCES
-    diminactive.cpp
-    main.cpp
+    diminactive.cpp diminactive.h
+    main.cpp main.h
 )
 
 kconfig_add_kcfg_files(diminactive_SOURCES
@@ -20,7 +20,7 @@ target_link_libraries(kwin4_effect_diminactive PRIVATE
 #######################################
 # Config
 if (KWIN_BUILD_KCMS)
-    set(kwin_diminactive_config_SRCS diminactive_config.cpp)
+    set(kwin_diminactive_config_SRCS diminactive_config.cpp diminactive_config.h)
     ki18n_wrap_ui(kwin_diminactive_config_SRCS diminactive_config.ui)
     kconfig_add_kcfg_files(kwin_diminactive_config_SRCS diminactiveconfig.kcfgc)
 
