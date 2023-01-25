@@ -742,7 +742,6 @@ void TabBox::reconfigure()
 
     m_tabBox->setConfig(m_defaultConfig);
 
-    m_delayShow = config.readEntry<bool>("ShowDelay", true);
     m_delayShowTime = config.readEntry<int>("DelayTime", 90);
 
     const QString defaultDesktopLayout = QStringLiteral("org.kde.breeze.desktop");
