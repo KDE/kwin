@@ -74,10 +74,8 @@ KCM.GridView {
             }
             MouseArea {
                 anchors.fill: parent
-                onClicked: {
-                    kcm.theme = index;
-                    view.currentIndex = index;
-                }
+                onClicked: delegate.clicked()
+                onDoubleClicked: delegate.doubleClicked()
             }
             Connections {
                 target: kcm
@@ -114,4 +112,3 @@ KCM.GridView {
         }
     }
 }
-
