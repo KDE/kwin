@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# giovanni <g.sora@tiscali.it>, 2022.
+# giovanni <g.sora@tiscali.it>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-17 00:51+0000\n"
-"PO-Revision-Date: 2022-12-18 23:03+0100\n"
+"PO-Revision-Date: 2023-01-24 15:51+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.0\n"
+"X-Generator: Lokalize 21.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -30,12 +30,14 @@ msgstr "g.sora@tiscali.it"
 #: kcmkwinxwayland.cpp:30
 #, kde-format
 msgid "Legacy X11 App Support"
-msgstr ""
+msgstr "Legacy X11 App Support (Supporto de App de X11 de Hereditage)"
 
 #: kcmkwinxwayland.cpp:32
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in other apps"
 msgstr ""
+"Permitte a apps de X11 Legacy (hereditage) leger claves keystroke typate in "
+"altere apps"
 
 #: package/contents/ui/main.qml:19
 #, kde-format
@@ -43,6 +45,8 @@ msgid ""
 "This module lets configure which keyboard events are forwarded to X11 apps "
 "regardless of their focus."
 msgstr ""
+"Iste modulo permitte configurar qual eventos de claviero es inviate a apps "
+"de X11 sin regardo al loro focus."
 
 #: package/contents/ui/main.qml:49
 #, kde-format
@@ -52,11 +56,18 @@ msgid ""
 "disabled by default for security reasons. If you need to use such apps, you "
 "can choose your preferred balance of security and functionality here."
 msgstr ""
+"Apps de X11 Legacy (hereditage) require le habilitate de leger claves "
+"keystrokes typate in altere apps pe characteristicas que es activate usante "
+"vias breve de claviero global. Isto es dishabilitate per definition per "
+"rationse de securitate. Si tu necessita tal apps, tu pote seliger tu "
+"balantiamento de securitate e functionalitate hic."
 
 #: package/contents/ui/main.qml:66
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
+"Permitte a apps de X11 Legacy (hereditage) leger claves keystroke typate in "
+"omne apps:"
 
 #: package/contents/ui/main.qml:67
 #, kde-format
@@ -66,12 +77,14 @@ msgstr "Jammais"
 #: package/contents/ui/main.qml:70
 #, kde-format
 msgid "Only Meta, Control, Alt, and Shift keys"
-msgstr ""
+msgstr "Solmente claves  Meta, Control, Alt, e Shift"
 
 #: package/contents/ui/main.qml:73
 #, kde-format
 msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
 msgstr ""
+"Omne claves, ma solmente durante que claves Meta, Ctrl, Alt, o Shift es "
+"pressate"
 
 #: package/contents/ui/main.qml:77
 #, kde-format
@@ -85,3 +98,6 @@ msgid ""
 "session by permitting malicious software to steal passwords and spy on the "
 "text that you type. Make sure you understand and accept this risk."
 msgstr ""
+"Nota que usar iste preferentia reducera le securitate de systema a illo del "
+"session de X11 per permitter a software malevole rubar contrasignos e spiar "
+"le textoque tu es typante. Assecura te que tu comprende e accepta iste risco."

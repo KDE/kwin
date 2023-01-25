@@ -4,13 +4,13 @@
 # Serdar Soytetir <tulliana@gmail.com>, 2009, 2012.
 # Ozan Çağlayan <ozan@pardus.org.tr>, 2010.
 # Volkan Gezer <volkangezer@gmail.com>, 2013, 2014, 2015, 2017.
-# Emir SARI <emir_sari@icloud.com>, 2022.
+# Emir SARI <emir_sari@icloud.com>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-07-15 00:48+0000\n"
-"PO-Revision-Date: 2022-07-15 11:46+0300\n"
+"PO-Revision-Date: 2023-01-24 22:11+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.04.2\n"
+"X-Generator: Lokalize 22.12.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -48,7 +48,7 @@ msgstr "Ekranı Kilitle"
 #: main.cpp:133 touch.cpp:127
 #, kde-format
 msgid "Show KRunner"
-msgstr "KRunner'i Göster"
+msgstr "K Çalıştır'ı Göster"
 
 #: main.cpp:134 touch.cpp:128
 #, kde-format
