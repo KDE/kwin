@@ -3230,24 +3230,14 @@ void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, Poi
     m_shortcuts->registerAxisShortcut(action, modifiers, axis);
 }
 
-void InputRedirection::registerRealtimeTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> cb)
+void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> cb)
 {
-    m_shortcuts->registerRealtimeTouchpadSwipe(action, cb, direction, fingerCount);
+    m_shortcuts->registerTouchpadSwipe(direction, fingerCount, action, cb);
 }
 
-void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action)
+void InputRedirection::registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
 {
-    m_shortcuts->registerTouchpadSwipe(action, direction, fingerCount);
-}
-
-void InputRedirection::registerTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *action)
-{
-    m_shortcuts->registerTouchpadPinch(action, direction, fingerCount);
-}
-
-void InputRedirection::registerRealtimeTouchpadPinchShortcut(PinchDirection direction, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)
-{
-    m_shortcuts->registerRealtimeTouchpadPinch(onUp, progressCallback, direction, fingerCount);
+    m_shortcuts->registerTouchpadPinch(direction, fingerCount, onUp, progressCallback);
 }
 
 void InputRedirection::registerGlobalAccel(KGlobalAccelInterface *interface)
@@ -3257,12 +3247,12 @@ void InputRedirection::registerGlobalAccel(KGlobalAccelInterface *interface)
 
 void InputRedirection::registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
 {
-    m_shortcuts->registerTouchscreenSwipe(action, progressCallback, direction, fingerCount);
+    m_shortcuts->registerTouchscreenSwipe(direction, fingerCount, action, progressCallback);
 }
 
 void InputRedirection::forceRegisterTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
 {
-    m_shortcuts->forceRegisterTouchscreenSwipe(action, progressCallback, direction, fingerCount);
+    m_shortcuts->forceRegisterTouchscreenSwipe(direction, fingerCount, action, progressCallback);
 }
 
 void InputRedirection::warpPointer(const QPointF &pos)

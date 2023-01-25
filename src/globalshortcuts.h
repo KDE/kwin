@@ -64,16 +64,10 @@ public:
      */
     void registerAxisShortcut(QAction *action, Qt::KeyboardModifiers modifiers, PointerAxisDirection axis);
 
-    void registerTouchpadSwipe(QAction *action, SwipeDirection direction, uint fingerCount = 4);
-
-    void registerRealtimeTouchpadSwipe(QAction *onUp, std::function<void(qreal)> progressCallback, SwipeDirection direction, uint fingerCount = 4);
-
-    void registerTouchpadPinch(QAction *action, PinchDirection direction, uint fingerCount = 4);
-
-    void registerRealtimeTouchpadPinch(QAction *onUp, std::function<void(qreal)> progressCallback, PinchDirection direction, uint fingerCount = 4);
-
-    void registerTouchscreenSwipe(QAction *action, std::function<void(qreal)> progressCallback, SwipeDirection direction, uint fingerCount);
-    void forceRegisterTouchscreenSwipe(QAction *action, std::function<void(qreal)> progressCallback, SwipeDirection direction, uint fingerCount);
+    void registerTouchpadSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
+    void registerTouchpadPinch(PinchDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
+    void registerTouchscreenSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
+    void forceRegisterTouchscreenSwipe(SwipeDirection direction, uint32_t fingerCount, QAction *action, std::function<void(qreal)> progressCallback = {});
 
     /**
      * @brief Processes a key event to decide whether a shortcut needs to be triggered.
@@ -155,16 +149,6 @@ struct PointerAxisShortcut
         return axisModifiers == rhs.axisModifiers && axisDirection == rhs.axisDirection;
     }
 };
-struct SwipeShortcut
-{
-    DeviceType device;
-    SwipeDirection direction;
-    uint fingerCount;
-    bool operator==(const SwipeShortcut &rhs) const
-    {
-        return direction == rhs.direction && fingerCount == rhs.fingerCount && device == rhs.device;
-    }
-};
 struct RealtimeFeedbackSwipeShortcut
 {
     DeviceType device;
@@ -178,17 +162,6 @@ struct RealtimeFeedbackSwipeShortcut
         return direction == rhs.direction && fingerCount == rhs.fingerCount && device == rhs.device;
     }
 };
-
-struct PinchShortcut
-{
-    PinchDirection direction;
-    uint fingerCount;
-    bool operator==(const PinchShortcut &rhs) const
-    {
-        return direction == rhs.direction && fingerCount == rhs.fingerCount;
-    }
-};
-
 struct RealtimeFeedbackPinchShortcut
 {
     PinchDirection direction;
@@ -202,7 +175,7 @@ struct RealtimeFeedbackPinchShortcut
     }
 };
 
-using Shortcut = std::variant<KeyboardShortcut, PointerButtonShortcut, PointerAxisShortcut, SwipeShortcut, RealtimeFeedbackSwipeShortcut, PinchShortcut, RealtimeFeedbackPinchShortcut>;
+using Shortcut = std::variant<KeyboardShortcut, PointerButtonShortcut, PointerAxisShortcut, RealtimeFeedbackSwipeShortcut, RealtimeFeedbackPinchShortcut>;
 
 class GlobalShortcut
 {
