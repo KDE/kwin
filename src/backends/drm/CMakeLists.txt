@@ -19,7 +19,7 @@ target_sources(kwin PRIVATE
     drm_object.cpp drm_object.h
     drm_output.cpp drm_output.h
     drm_pipeline.cpp drm_pipeline.h
-    drm_pipeline_legacy.cpp drm_pipeline_legacy.h
+    drm_pipeline_legacy.cpp
     drm_plane.cpp drm_plane.h
     drm_property.cpp drm_property.h
     drm_qpainter_backend.cpp drm_qpainter_backend.h

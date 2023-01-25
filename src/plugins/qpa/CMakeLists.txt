@@ -5,7 +5,7 @@ target_sources(KWinQpaPlugin PRIVATE
     eglhelpers.cpp eglhelpers.h
     eglplatformcontext.cpp eglplatformcontext.h
     integration.cpp integration.h
-    main.cpp main.h
+    main.cpp
     offscreensurface.cpp offscreensurface.h
     platformcursor.cpp platformcursor.h
     screen.cpp screen.h

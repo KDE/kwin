@@ -1,10 +1,10 @@
 add_library(KWinNightColorPlugin SHARED)
 target_sources(KWinNightColorPlugin PRIVATE
     clockskewnotifier.cpp clockskewnotifier.h
-    clockskewnotifierengine.cpp clockskewnotifierengine.h
+    clockskewnotifierengine.cpp clockskewnotifierengine_p.h clockskewnotifierengine_linux.h
     nightcolordbusinterface.cpp nightcolordbusinterface.h
     nightcolormanager.cpp nightcolormanager.h
-    main.cpp main.h
+    main.cpp
     suncalc.cpp suncalc.h
 )
 

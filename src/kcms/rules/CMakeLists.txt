@@ -9,7 +9,7 @@ set(kwinrules_SRCS
     ../../rules.cpp ../../rules.h
     ../../utils/common.cpp ../../utils/common.h
     ../../virtualdesktopsdbustypes.cpp ../../virtualdesktopsdbustypes.h
-    kwinsrc.cpp kwinsrc.h
+    kwinsrc.cpp
     optionsmodel.cpp optionsmodel.h
     ruleitem.cpp ruleitem.h
     rulesmodel.cpp rulesmodel.h
@@ -43,7 +43,7 @@ if (KWIN_BUILD_ACTIVITIES)
 endif()
 target_link_libraries(KWinRulesObjects ${kcm_libs} ${kwin_kcm_rules_XCB_LIBS})
 
-add_executable(kwin_rules_dialog main.cpp main.h)
+add_executable(kwin_rules_dialog main.cpp)
 target_link_libraries(kwin_rules_dialog KWinRulesObjects)
 target_compile_definitions(kwin_rules_dialog PRIVATE KCMRULES_PLUGIN="plasma/kcms/systemsettings/kcm_kwinrules")
 install(TARGETS kwin_rules_dialog DESTINATION ${KDE_INSTALL_LIBEXECDIR})

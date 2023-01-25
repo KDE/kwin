@@ -28,8 +28,8 @@ set_target_properties(kwin PROPERTIES
 )
 
 target_sources(kwin PRIVATE
-    3rdparty/xcursor.c
-    activation.cpp activation.h
+    3rdparty/xcursor.c 3rdparty/xcursor.h
+    activation.cpp
     appmenu.cpp appmenu.h
     atoms.cpp atoms.h
     client_machine.cpp client_machine.h
@@ -72,7 +72,7 @@ target_sources(kwin PRIVATE
     dpmsinputeventfilter.cpp dpmsinputeventfilter.h
     effectloader.cpp effectloader.h
     effects.cpp effects.h
-    events.cpp events.h
+    events.cpp
     focuschain.cpp focuschain.h
     ftrace.cpp ftrace.h
     gestures.cpp gestures.h
@@ -93,7 +93,7 @@ target_sources(kwin PRIVATE
     keyboard_layout_switching.cpp keyboard_layout_switching.h
     keyboard_repeat.cpp keyboard_repeat.h
     killwindow.cpp killwindow.h
-    layers.cpp layers.h
+    layers.cpp
     layershellv1integration.cpp layershellv1integration.h
     layershellv1window.cpp layershellv1window.h
     linux_dmabuf.cpp linux_dmabuf.h

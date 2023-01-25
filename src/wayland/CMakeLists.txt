@@ -256,7 +256,7 @@ target_sources(kwin PRIVATE
     primaryselectiondevicemanager_v1_interface.cpp primaryselectiondevicemanager_v1_interface.h
     primaryselectionoffer_v1_interface.cpp primaryselectionoffer_v1_interface.h
     primaryselectionsource_v1_interface.cpp primaryselectionsource_v1_interface.h
-    region_interface.cpp region_interface.h
+    region_interface.cpp region_interface_p.h
     relativepointer_v1_interface.cpp relativepointer_v1_interface.h
     screencast_v1_interface.cpp screencast_v1_interface.h
     seat_interface.cpp seat_interface.h
@@ -267,7 +267,7 @@ target_sources(kwin PRIVATE
     slide_interface.cpp slide_interface.h
     subcompositor_interface.cpp subcompositor_interface.h
     surface_interface.cpp surface_interface.h
-    surfacerole.cpp surfacerole.h
+    surfacerole.cpp surfacerole_p.h
     tablet_v2_interface.cpp tablet_v2_interface.h
     tearingcontrol_v1_interface.cpp tearingcontrol_v1_interface.h
     textinput.cpp textinput.h
@@ -285,9 +285,9 @@ target_sources(kwin PRIVATE
 )
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    target_sources(kwin PRIVATE utils/executable_path_proc.cpp utils/executable_path_proc.h)
+    target_sources(kwin PRIVATE utils/executable_path_proc.cpp utils/executable_path.h)
 elseif(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
-    target_sources(kwin PRIVATE utils/executable_path_sysctl.cpp utils/executable_path_sysctl.h)
+    target_sources(kwin PRIVATE utils/executable_path_sysctl.cpp utils/executable_path.h)
 else()
     message(FATAL_ERROR "Unsupported platform ${CMAKE_SYSTEM_NAME}")
 endif()

@@ -33,7 +33,7 @@ target_link_libraries(kcm_kwindecoration
 )
 
 set(kwin-applywindowdecoration_SRCS
-    kwin-applywindowdecoration.cpp kwin-applywindowdecoration.h
+    kwin-applywindowdecoration.cpp
     decorationmodel.cpp decorationmodel.h
     utils.cpp utils.h
 )

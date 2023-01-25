@@ -7,5 +7,5 @@ endif()
 target_sources(kwin PRIVATE
     kwinxrenderutils.cpp kwinxrenderutils.h
     x11_common_egl_backend.cpp x11_common_egl_backend.h
-    x11_common_logging.cpp x11_common_logging.h
+    x11_common_logging.cpp x11_common_logging_p.h
 )

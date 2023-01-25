@@ -23,13 +23,13 @@ ecm_setup_qtplugin_macro_names(
 
 ###  effects lib  ###
 set(kwin_EFFECTSLIB_SRCS
-    anidata.cpp anidata.h
+    anidata.cpp anidata_p.h
     kwinanimationeffect.cpp kwinanimationeffect.h
     kwineffects.cpp kwineffects.h
     kwinoffscreeneffect.cpp kwinoffscreeneffect.h
     kwinoffscreenquickview.cpp kwinoffscreenquickview.h
     kwinquickeffect.cpp kwinquickeffect.h
-    logging.cpp logging.h
+    logging.cpp logging_p.h
     sharedqmlengine.cpp sharedqmlengine.h
 )
 
@@ -63,7 +63,7 @@ set(kwin_GLUTILSLIB_SRCS
     kwinglutils.cpp kwinglutils.h
     kwinglutils_funcs.cpp kwinglutils_funcs.h
     kwineglimagetexture.cpp kwineglimagetexture.h
-    logging.cpp logging.h
+    logging.cpp logging_p.h
 )
 
 add_library(kwinglutils SHARED ${kwin_GLUTILSLIB_SRCS})

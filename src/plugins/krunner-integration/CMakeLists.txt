@@ -1,5 +1,5 @@
 set(krunnerintegration_SOURCES
-    main.cpp main.h
+    main.cpp
     windowsrunnerinterface.cpp windowsrunnerinterface.h
 )
 

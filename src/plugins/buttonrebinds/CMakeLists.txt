@@ -11,7 +11,7 @@ ecm_qt_declare_logging_category(MouseButtonToKeyPlugin
 )
 
 target_sources(MouseButtonToKeyPlugin PRIVATE
-    main.cpp main.h
+    main.cpp
     buttonrebindsfilter.cpp buttonrebindsfilter.h
 )
 target_link_libraries(MouseButtonToKeyPlugin PRIVATE kwin KF5::WindowSystem)

@@ -1,7 +1,7 @@
 add_library(KWinScreencastPlugin OBJECT)
 target_sources(KWinScreencastPlugin PRIVATE
     eglnativefence.cpp eglnativefence.h
-    main.cpp main.h
+    main.cpp
     outputscreencastsource.cpp outputscreencastsource.h
     pipewirecore.cpp pipewirecore.h
     regionscreencastsource.cpp regionscreencastsource.h
