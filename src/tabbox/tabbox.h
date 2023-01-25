@@ -174,7 +174,7 @@ public:
     /**
      * Shows the tab box after some delay.
      *
-     * If the 'ShowDelay' setting is false, show() is simply called.
+     * If the 'DelayTime' setting is 0, show() is simply called.
      *
      * Otherwise, we start a timer for the delay given in the settings and only
      * do a show() when it times out.
@@ -324,7 +324,6 @@ private Q_SLOTS:
 private:
     TabBoxMode m_tabBoxMode;
     TabBoxHandlerImpl *m_tabBox;
-    bool m_delayShow;
     int m_delayShowTime;
 
     QTimer m_delayedShowTimer;

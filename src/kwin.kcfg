@@ -283,9 +283,6 @@
         </entry>
     </group>
     <group name="TabBox">
-        <entry name="ShowDelay" type="Bool">
-            <default>true</default>
-        </entry>
         <entry name="DelayTime" type="Int">
             <default>90</default>
         </entry>
