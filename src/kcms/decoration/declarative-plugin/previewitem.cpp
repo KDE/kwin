@@ -269,106 +269,70 @@ void PreviewItem::paintShadow(QPainter *painter, int &paddingLeft, int &paddingR
     }
 }
 
-void PreviewItem::mouseDoubleClickEvent(QMouseEvent *event)
+static QMouseEvent cloneEventWithPadding(QMouseEvent *event, int paddingLeft, int paddingTop)
+{
+    return QMouseEvent(
+        event->type(),
+        event->localPos() - QPointF(paddingLeft, paddingTop),
+        event->button(),
+        event->buttons(),
+        event->modifiers());
+}
+
+static QHoverEvent cloneEventWithPadding(QHoverEvent *event, int paddingLeft, int paddingTop)
+{
+    return QHoverEvent(
+        event->type(),
+        event->posF() - QPointF(paddingLeft, paddingTop),
+        event->oldPosF() - QPointF(paddingLeft, paddingTop),
+        event->modifiers());
+}
+
+template <typename E>
+void PreviewItem::proxyPassEvent(E *event) const
 {
     const auto &shadow = m_decoration->shadow();
     if (shadow) {
-        QMouseEvent e(event->type(),
-                      event->localPos() - QPointF(shadow->paddingLeft(), shadow->paddingTop()),
-                      event->button(),
-                      event->buttons(),
-                      event->modifiers());
+        E e = cloneEventWithPadding(event, shadow->paddingLeft(), shadow->paddingTop());
         QCoreApplication::instance()->sendEvent(decoration(), &e);
     } else {
         QCoreApplication::instance()->sendEvent(decoration(), event);
     }
+}
+
+void PreviewItem::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    proxyPassEvent(event);
 }
 
 void PreviewItem::mousePressEvent(QMouseEvent *event)
 {
-    const auto &shadow = m_decoration->shadow();
-    if (shadow) {
-        QMouseEvent e(event->type(),
-                      event->localPos() - QPointF(shadow->paddingLeft(), shadow->paddingTop()),
-                      event->button(),
-                      event->buttons(),
-                      event->modifiers());
-        QCoreApplication::instance()->sendEvent(decoration(), &e);
-    } else {
-        QCoreApplication::instance()->sendEvent(decoration(), event);
-    }
+    proxyPassEvent(event);
 }
 
 void PreviewItem::mouseReleaseEvent(QMouseEvent *event)
 {
-    const auto &shadow = m_decoration->shadow();
-    if (shadow) {
-        QMouseEvent e(event->type(),
-                      event->localPos() - QPointF(shadow->paddingLeft(), shadow->paddingTop()),
-                      event->button(),
-                      event->buttons(),
-                      event->modifiers());
-        QCoreApplication::instance()->sendEvent(decoration(), &e);
-    } else {
-        QCoreApplication::instance()->sendEvent(decoration(), event);
-    }
+    proxyPassEvent(event);
 }
 
 void PreviewItem::mouseMoveEvent(QMouseEvent *event)
 {
-    const auto &shadow = m_decoration->shadow();
-    if (shadow) {
-        QMouseEvent e(event->type(),
-                      event->localPos() - QPointF(shadow->paddingLeft(), shadow->paddingTop()),
-                      event->button(),
-                      event->buttons(),
-                      event->modifiers());
-        QCoreApplication::instance()->sendEvent(decoration(), &e);
-    } else {
-        QCoreApplication::instance()->sendEvent(decoration(), event);
-    }
+    proxyPassEvent(event);
 }
 
 void PreviewItem::hoverEnterEvent(QHoverEvent *event)
 {
-    const auto &shadow = m_decoration->shadow();
-    if (shadow) {
-        QHoverEvent e(event->type(),
-                      event->posF() - QPointF(shadow->paddingLeft(), shadow->paddingTop()),
-                      event->oldPosF() - QPointF(shadow->paddingLeft(), shadow->paddingTop()),
-                      event->modifiers());
-        QCoreApplication::instance()->sendEvent(decoration(), &e);
-    } else {
-        QCoreApplication::instance()->sendEvent(decoration(), event);
-    }
+    proxyPassEvent(event);
 }
 
 void PreviewItem::hoverLeaveEvent(QHoverEvent *event)
 {
-    const auto &shadow = m_decoration->shadow();
-    if (shadow) {
-        QHoverEvent e(event->type(),
-                      event->posF() - QPointF(shadow->paddingLeft(), shadow->paddingTop()),
-                      event->oldPosF() - QPointF(shadow->paddingLeft(), shadow->paddingTop()),
-                      event->modifiers());
-        QCoreApplication::instance()->sendEvent(decoration(), &e);
-    } else {
-        QCoreApplication::instance()->sendEvent(decoration(), event);
-    }
+    proxyPassEvent(event);
 }
 
 void PreviewItem::hoverMoveEvent(QHoverEvent *event)
 {
-    const auto &shadow = m_decoration->shadow();
-    if (shadow) {
-        QHoverEvent e(event->type(),
-                      event->posF() - QPointF(shadow->paddingLeft(), shadow->paddingTop()),
-                      event->oldPosF() - QPointF(shadow->paddingLeft(), shadow->paddingTop()),
-                      event->modifiers());
-        QCoreApplication::instance()->sendEvent(decoration(), &e);
-    } else {
-        QCoreApplication::instance()->sendEvent(decoration(), event);
-    }
+    proxyPassEvent(event);
 }
 
 bool PreviewItem::isDrawingBackground() const
