@@ -3,7 +3,7 @@
 
 # Source files
 set(slidingpopups_SOURCES
-    main.cpp main.h
+    main.cpp
     slidingpopups.cpp slidingpopups.h
 )
 

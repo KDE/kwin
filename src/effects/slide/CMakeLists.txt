@@ -2,7 +2,7 @@
 # Effect
 
 set(slide_SOURCES
-    main.cpp main.h
+    main.cpp
     slide.cpp slide.h
     springmotion.cpp springmotion.h
 )

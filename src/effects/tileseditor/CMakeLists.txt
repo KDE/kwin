@@ -7,7 +7,7 @@ if (KWIN_BUILD_KCMS)
 endif()
 
 set(tileseditor_SOURCES
-    main.cpp main.h
+    main.cpp
     tileseditoreffect.cpp tileseditoreffect.h
 )
 

@@ -2,7 +2,7 @@
 # Effect
 
 set(showpaint_SOURCES
-    main.cpp main.h
+    main.cpp
     showpaint.cpp showpaint.h
 )
 

@@ -2,7 +2,7 @@
 # Effect
 
 set(wobblywindows_SOURCES
-    main.cpp main.h
+    main.cpp
     wobblywindows.cpp wobblywindows.h
 )
 

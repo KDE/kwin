@@ -2,7 +2,7 @@
 # Effect
 
 set(blendchanges_SOURCES
-    main.cpp main.h
+    main.cpp
     blendchanges.cpp blendchanges.h
 )
 

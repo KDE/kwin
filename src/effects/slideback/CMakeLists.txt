@@ -3,7 +3,7 @@
 
 # Source files
 set(slideback_SOURCES
-    main.cpp main.h
+    main.cpp
     slideback.cpp slideback.h
 )
 

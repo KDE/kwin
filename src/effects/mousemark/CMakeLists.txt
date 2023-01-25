@@ -2,7 +2,7 @@
 # Effect
 
 set(mousemark_SOURCES
-    main.cpp main.h
+    main.cpp
     mousemark.cpp mousemark.h
 )
 

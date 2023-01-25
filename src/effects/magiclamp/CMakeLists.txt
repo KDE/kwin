@@ -3,7 +3,7 @@
 
 set(magiclamp_SOURCES
     magiclamp.cpp magiclamp.h
-    main.cpp main.h
+    main.cpp
 )
 
 kconfig_add_kcfg_files(magiclamp_SOURCES

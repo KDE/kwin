@@ -2,7 +2,7 @@
 # Effect
 
 set(zoom_SOURCES
-    main.cpp main.h
+    main.cpp
     zoom.cpp zoom.h
 )
 

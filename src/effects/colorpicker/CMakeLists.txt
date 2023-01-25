@@ -3,7 +3,7 @@
 
 set(colorpicker_SOURCES
     colorpicker.cpp colorpicker.h
-    main.cpp main.h
+    main.cpp
 )
 
 kwin4_add_effect_module(kwin4_effect_colorpicker ${colorpicker_SOURCES})

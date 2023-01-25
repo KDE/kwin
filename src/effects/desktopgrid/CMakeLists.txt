@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 set(desktopgrid_SOURCES
-    main.cpp main.h
+    main.cpp
     desktopgrideffect.cpp desktopgrideffect.h
 )
 

@@ -2,7 +2,7 @@
 # Effect
 
 set(touchpoints_SOURCES
-    main.cpp main.h
+    main.cpp
     touchpoints.cpp touchpoints.h
 )
 

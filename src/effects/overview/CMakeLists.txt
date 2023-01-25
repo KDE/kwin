@@ -7,7 +7,7 @@ if (KWIN_BUILD_KCMS)
 endif()
 
 set(overview_SOURCES
-    main.cpp main.h
+    main.cpp
     overvieweffect.cpp overvieweffect.h
 )
 

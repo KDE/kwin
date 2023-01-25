@@ -2,7 +2,7 @@
 # Effect
 
 set(screentransform_SOURCES
-    main.cpp main.h
+    main.cpp
     screentransform.cpp screentransform.h
     screentransform.qrc
 )

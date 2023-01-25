@@ -3,7 +3,7 @@
 
 # Source files
 set(snaphelper_SOURCES
-    main.cpp main.h
+    main.cpp
     snaphelper.cpp snaphelper.h
 )
 

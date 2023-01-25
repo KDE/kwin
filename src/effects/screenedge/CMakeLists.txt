@@ -3,7 +3,7 @@
 
 # Source files
 set(screenedge_SOURCES
-    main.cpp main.h
+    main.cpp
     screenedgeeffect.cpp screenedgeeffect.h
 )
 

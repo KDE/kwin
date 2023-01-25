@@ -7,7 +7,7 @@ if (KWIN_BUILD_KCMS)
 endif()
 
 set(windowview_SOURCES
-    main.cpp main.h
+    main.cpp
     windowvieweffect.cpp windowvieweffect.h
 )
 

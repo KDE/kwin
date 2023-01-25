@@ -4,7 +4,7 @@
 set(invert_SOURCES
     invert.cpp invert.h
     invert.qrc
-    main.cpp main.h
+    main.cpp
 )
 
 kwin4_add_effect_module(kwin4_effect_invert ${invert_SOURCES})

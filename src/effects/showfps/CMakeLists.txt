@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 set(showfps_SOURCES
-    main.cpp main.h
+    main.cpp
     showfpseffect.cpp showfpseffect.h
 )
 
