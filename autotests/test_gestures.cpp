@@ -15,6 +15,9 @@
 
 using namespace KWin;
 
+Q_DECLARE_METATYPE(SwipeDirection);
+Q_DECLARE_METATYPE(PinchDirection);
+
 class GestureTest : public QObject
 {
     Q_OBJECT
@@ -168,44 +171,44 @@ void GestureTest::testPinchMaxFinger()
 
 void GestureTest::testSwipeDirection_data()
 {
-    QTest::addColumn<KWin::SwipeGesture::Direction>("swipe_direction");
+    QTest::addColumn<SwipeDirection>("swipe_direction");
 
-    QTest::newRow("Up") << KWin::SwipeGesture::Direction::Up;
-    QTest::newRow("Left") << KWin::SwipeGesture::Direction::Left;
-    QTest::newRow("Right") << KWin::SwipeGesture::Direction::Right;
-    QTest::newRow("Down") << KWin::SwipeGesture::Direction::Down;
+    QTest::newRow("Up") << SwipeDirection::Up;
+    QTest::newRow("Left") << SwipeDirection::Left;
+    QTest::newRow("Right") << SwipeDirection::Right;
+    QTest::newRow("Down") << SwipeDirection::Down;
 }
 
 void GestureTest::testSwipeDirection()
 {
     SwipeGesture gesture;
-    QCOMPARE(gesture.direction(), SwipeGesture::Direction::Down);
-    QFETCH(KWin::SwipeGesture::Direction, swipe_direction);
+    QCOMPARE(gesture.direction(), SwipeDirection::Down);
+    QFETCH(SwipeDirection, swipe_direction);
     gesture.setDirection(swipe_direction);
     QCOMPARE(gesture.direction(), swipe_direction);
     // back to down
-    gesture.setDirection(SwipeGesture::Direction::Down);
-    QCOMPARE(gesture.direction(), SwipeGesture::Direction::Down);
+    gesture.setDirection(SwipeDirection::Down);
+    QCOMPARE(gesture.direction(), SwipeDirection::Down);
 }
 
 void GestureTest::testPinchDirection_data()
 {
-    QTest::addColumn<KWin::PinchGesture::Direction>("pinch_direction");
+    QTest::addColumn<PinchDirection>("pinch_direction");
 
-    QTest::newRow("Contracting") << KWin::PinchGesture::Direction::Contracting;
-    QTest::newRow("Expanding") << KWin::PinchGesture::Direction::Expanding;
+    QTest::newRow("Contracting") << PinchDirection::Contracting;
+    QTest::newRow("Expanding") << PinchDirection::Expanding;
 }
 
 void GestureTest::testPinchDirection()
 {
     PinchGesture gesture;
-    QCOMPARE(gesture.direction(), PinchGesture::Direction::Expanding);
-    QFETCH(KWin::PinchGesture::Direction, pinch_direction);
+    QCOMPARE(gesture.direction(), PinchDirection::Expanding);
+    QFETCH(PinchDirection, pinch_direction);
     gesture.setDirection(pinch_direction);
     QCOMPARE(gesture.direction(), pinch_direction);
     // back to down
-    gesture.setDirection(PinchGesture::Direction::Expanding);
-    QCOMPARE(gesture.direction(), PinchGesture::Direction::Expanding);
+    gesture.setDirection(PinchDirection::Expanding);
+    QCOMPARE(gesture.direction(), PinchDirection::Expanding);
 }
 
 void GestureTest::testMinimumX_data()
@@ -327,24 +330,24 @@ void GestureTest::testSetMinimumDelta()
 
 void GestureTest::testMinimumDeltaReached_data()
 {
-    QTest::addColumn<KWin::SwipeGesture::Direction>("direction");
+    QTest::addColumn<SwipeDirection>("direction");
     QTest::addColumn<QPointF>("minimumDelta");
     QTest::addColumn<QPointF>("delta");
     QTest::addColumn<bool>("reached");
     QTest::addColumn<qreal>("progress");
 
-    QTest::newRow("Up (more)") << KWin::SwipeGesture::Direction::Up << QPointF(0, -30) << QPointF(0, -40) << true << 1.0;
-    QTest::newRow("Up (exact)") << KWin::SwipeGesture::Direction::Up << QPointF(0, -30) << QPointF(0, -30) << true << 1.0;
-    QTest::newRow("Up (less)") << KWin::SwipeGesture::Direction::Up << QPointF(0, -30) << QPointF(0, -29) << false << 29.0 / 30.0;
-    QTest::newRow("Left (more)") << KWin::SwipeGesture::Direction::Left << QPointF(-30, -30) << QPointF(-40, 20) << true << 1.0;
-    QTest::newRow("Left (exact)") << KWin::SwipeGesture::Direction::Left << QPointF(-30, -40) << QPointF(-30, 0) << true << 1.0;
-    QTest::newRow("Left (less)") << KWin::SwipeGesture::Direction::Left << QPointF(-30, -30) << QPointF(-29, 0) << false << 29.0 / 30.0;
-    QTest::newRow("Right (more)") << KWin::SwipeGesture::Direction::Right << QPointF(30, -30) << QPointF(40, 20) << true << 1.0;
-    QTest::newRow("Right (exact)") << KWin::SwipeGesture::Direction::Right << QPointF(30, -40) << QPointF(30, 0) << true << 1.0;
-    QTest::newRow("Right (less)") << KWin::SwipeGesture::Direction::Right << QPointF(30, -30) << QPointF(29, 0) << false << 29.0 / 30.0;
-    QTest::newRow("Down (more)") << KWin::SwipeGesture::Direction::Down << QPointF(0, 30) << QPointF(0, 40) << true << 1.0;
-    QTest::newRow("Down (exact)") << KWin::SwipeGesture::Direction::Down << QPointF(0, 30) << QPointF(0, 30) << true << 1.0;
-    QTest::newRow("Down (less)") << KWin::SwipeGesture::Direction::Down << QPointF(0, 30) << QPointF(0, 29) << false << 29.0 / 30.0;
+    QTest::newRow("Up (more)") << SwipeDirection::Up << QPointF(0, -30) << QPointF(0, -40) << true << 1.0;
+    QTest::newRow("Up (exact)") << SwipeDirection::Up << QPointF(0, -30) << QPointF(0, -30) << true << 1.0;
+    QTest::newRow("Up (less)") << SwipeDirection::Up << QPointF(0, -30) << QPointF(0, -29) << false << 29.0 / 30.0;
+    QTest::newRow("Left (more)") << SwipeDirection::Left << QPointF(-30, -30) << QPointF(-40, 20) << true << 1.0;
+    QTest::newRow("Left (exact)") << SwipeDirection::Left << QPointF(-30, -40) << QPointF(-30, 0) << true << 1.0;
+    QTest::newRow("Left (less)") << SwipeDirection::Left << QPointF(-30, -30) << QPointF(-29, 0) << false << 29.0 / 30.0;
+    QTest::newRow("Right (more)") << SwipeDirection::Right << QPointF(30, -30) << QPointF(40, 20) << true << 1.0;
+    QTest::newRow("Right (exact)") << SwipeDirection::Right << QPointF(30, -40) << QPointF(30, 0) << true << 1.0;
+    QTest::newRow("Right (less)") << SwipeDirection::Right << QPointF(30, -30) << QPointF(29, 0) << false << 29.0 / 30.0;
+    QTest::newRow("Down (more)") << SwipeDirection::Down << QPointF(0, 30) << QPointF(0, 40) << true << 1.0;
+    QTest::newRow("Down (exact)") << SwipeDirection::Down << QPointF(0, 30) << QPointF(0, 30) << true << 1.0;
+    QTest::newRow("Down (less)") << SwipeDirection::Down << QPointF(0, 30) << QPointF(0, 29) << false << 29.0 / 30.0;
 }
 
 void GestureTest::testMinimumDeltaReached()
@@ -353,7 +356,7 @@ void GestureTest::testMinimumDeltaReached()
 
     // swipe gesture
     SwipeGesture gesture;
-    QFETCH(SwipeGesture::Direction, direction);
+    QFETCH(SwipeDirection, direction);
     gesture.setDirection(direction);
     QFETCH(QPointF, minimumDelta);
     gesture.setMinimumDelta(minimumDelta);
@@ -392,7 +395,7 @@ void GestureTest::testMinimumScaleDelta()
 {
     // pinch gesture
     PinchGesture gesture;
-    gesture.setDirection(PinchGesture::Direction::Contracting);
+    gesture.setDirection(PinchDirection::Contracting);
     gesture.setMinimumScaleDelta(.5);
     gesture.setMinimumFingerCount(3);
     gesture.setMaximumFingerCount(4);
@@ -470,19 +473,19 @@ void GestureTest::testDeleteSwipeCancels()
 
 void GestureTest::testSwipeCancel_data()
 {
-    QTest::addColumn<KWin::SwipeGesture::Direction>("direction");
+    QTest::addColumn<SwipeDirection>("direction");
 
-    QTest::newRow("Up") << KWin::SwipeGesture::Direction::Up;
-    QTest::newRow("Left") << KWin::SwipeGesture::Direction::Left;
-    QTest::newRow("Right") << KWin::SwipeGesture::Direction::Right;
-    QTest::newRow("Down") << KWin::SwipeGesture::Direction::Down;
+    QTest::newRow("Up") << SwipeDirection::Up;
+    QTest::newRow("Left") << SwipeDirection::Left;
+    QTest::newRow("Right") << SwipeDirection::Right;
+    QTest::newRow("Down") << SwipeDirection::Down;
 }
 
 void GestureTest::testSwipeCancel()
 {
     GestureRecognizer recognizer;
     std::unique_ptr<SwipeGesture> gesture(new SwipeGesture);
-    QFETCH(SwipeGesture::Direction, direction);
+    QFETCH(SwipeDirection, direction);
     gesture->setDirection(direction);
     QSignalSpy startedSpy(gesture.get(), &SwipeGesture::started);
     QSignalSpy cancelledSpy(gesture.get(), &SwipeGesture::cancelled);
@@ -499,20 +502,20 @@ void GestureTest::testSwipeCancel()
 
 void GestureTest::testSwipeUpdateTrigger_data()
 {
-    QTest::addColumn<KWin::SwipeGesture::Direction>("direction");
+    QTest::addColumn<SwipeDirection>("direction");
     QTest::addColumn<QPointF>("delta");
 
-    QTest::newRow("Up") << KWin::SwipeGesture::Direction::Up << QPointF(2, -3);
-    QTest::newRow("Left") << KWin::SwipeGesture::Direction::Left << QPointF(-3, 1);
-    QTest::newRow("Right") << KWin::SwipeGesture::Direction::Right << QPointF(20, -19);
-    QTest::newRow("Down") << KWin::SwipeGesture::Direction::Down << QPointF(0, 50);
+    QTest::newRow("Up") << SwipeDirection::Up << QPointF(2, -3);
+    QTest::newRow("Left") << SwipeDirection::Left << QPointF(-3, 1);
+    QTest::newRow("Right") << SwipeDirection::Right << QPointF(20, -19);
+    QTest::newRow("Down") << SwipeDirection::Down << QPointF(0, 50);
 }
 
 void GestureTest::testSwipeUpdateTrigger()
 {
     GestureRecognizer recognizer;
     SwipeGesture gesture;
-    QFETCH(SwipeGesture::Direction, direction);
+    QFETCH(SwipeDirection, direction);
     gesture.setDirection(direction);
 
     QSignalSpy triggeredSpy(&gesture, &SwipeGesture::triggered);
@@ -591,11 +594,11 @@ void GestureTest::testNotEmitCallbacksBeforeDirectionDecided()
     SwipeGesture right;
     PinchGesture expand;
     PinchGesture contract;
-    up.setDirection(SwipeGesture::Direction::Up);
-    down.setDirection(SwipeGesture::Direction::Down);
-    right.setDirection(SwipeGesture::Direction::Right);
-    expand.setDirection(PinchGesture::Direction::Expanding);
-    contract.setDirection(PinchGesture::Direction::Contracting);
+    up.setDirection(SwipeDirection::Up);
+    down.setDirection(SwipeDirection::Down);
+    right.setDirection(SwipeDirection::Right);
+    expand.setDirection(PinchDirection::Expanding);
+    contract.setDirection(PinchDirection::Contracting);
     recognizer.registerSwipeGesture(&up);
     recognizer.registerSwipeGesture(&down);
     recognizer.registerSwipeGesture(&right);

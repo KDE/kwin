@@ -171,6 +171,7 @@ add_executable(testGestures ${testGestures_SRCS})
 
 target_link_libraries(testGestures
     Qt::Test
+    Qt::Widgets
 )
 
 add_test(NAME kwin-testGestures COMMAND testGestures)

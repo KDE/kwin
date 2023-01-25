@@ -709,16 +709,16 @@ void Edge::setBorder(ElectricBorder border)
     m_border = border;
     switch (m_border) {
     case ElectricTop:
-        m_gesture->setDirection(SwipeGesture::Direction::Down);
+        m_gesture->setDirection(SwipeDirection::Down);
         break;
     case ElectricRight:
-        m_gesture->setDirection(SwipeGesture::Direction::Left);
+        m_gesture->setDirection(SwipeDirection::Left);
         break;
     case ElectricBottom:
-        m_gesture->setDirection(SwipeGesture::Direction::Up);
+        m_gesture->setDirection(SwipeDirection::Up);
         break;
     case ElectricLeft:
-        m_gesture->setDirection(SwipeGesture::Direction::Right);
+        m_gesture->setDirection(SwipeDirection::Right);
         break;
     default:
         break;
