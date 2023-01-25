@@ -176,8 +176,6 @@ void Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /
         return;
     }
 
-    unclutterDesktop();
-
     QList<Window *> relevantClients;
     QList<qreal> xPossible = {area.left()};
     QList<qreal> yPossible = {area.top()};
