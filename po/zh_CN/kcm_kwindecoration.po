@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-26 00:47+0000\n"
+"POT-Creation-Date: 2023-01-26 00:58+0000\n"
 "PO-Revision-Date: 2023-01-12 10:31\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -233,7 +233,7 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "显示标题栏按钮提示"
 
-#: package/contents/ui/Themes.qml:92
+#: package/contents/ui/Themes.qml:90
 #, kde-format
 msgid "Edit %1 Theme"
 msgstr "编辑 %1 主题"

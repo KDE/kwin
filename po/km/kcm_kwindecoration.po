@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-26 00:47+0000\n"
+"POT-Creation-Date: 2023-01-26 00:58+0000\n"
 "PO-Revision-Date: 2010-05-24 08:43+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer <support@khmeros.info>\n"
@@ -233,7 +233,7 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "បង្ហាញ​ព័ត៌មាន​ជំនួយ​ប៊ូតុង​របស់​បង្អួច"
 
-#: package/contents/ui/Themes.qml:92
+#: package/contents/ui/Themes.qml:90
 #, kde-format
 msgid "Edit %1 Theme"
 msgstr ""

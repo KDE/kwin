@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration trunk\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-26 00:47+0000\n"
+"POT-Creation-Date: 2023-01-26 00:58+0000\n"
 "PO-Revision-Date: 2019-12-12 22:21+0000\n"
 "Last-Translator: Vivek KJ Pazhedath <vivekkj2004@gmail.com>\n"
 "Language-Team: Swathanthra|സ്വതന്ത്ര Malayalam|മലയാളം Computing|കമ്പ്യൂട്ടിങ്ങ് <smc-"
@@ -228,7 +228,7 @@ msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "ജാലകത്തിന്റെ ബട്ടണുകളെക്കുറിച്ചുള്ള സൂചനകള്‍ &കാണിയ്ക്കുക"
 
-#: package/contents/ui/Themes.qml:92
+#: package/contents/ui/Themes.qml:90
 #, kde-format
 msgid "Edit %1 Theme"
 msgstr ""
