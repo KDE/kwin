@@ -29,7 +29,7 @@ void CursorDelegateQPainter::paint(const RenderTarget &renderTarget, const QRegi
         return;
     }
 
-    QImage *buffer = std::get<QImage *>(renderTarget.nativeHandle());
+    QImage *buffer = renderTarget.image();
     if (Q_UNLIKELY(!buffer)) {
         return;
     }

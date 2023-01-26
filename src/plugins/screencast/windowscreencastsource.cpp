@@ -67,7 +67,7 @@ void WindowScreenCastSource::render(GLFramebuffer *target)
     data.setRenderTargetScale(1.0);
 
     RenderTarget renderTarget(target);
-    RenderViewport viewport(geometry, 1);
+    RenderViewport viewport(geometry, 1, renderTarget);
     GLFramebuffer::pushFramebuffer(target);
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);

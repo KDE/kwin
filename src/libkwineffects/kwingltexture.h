@@ -31,6 +31,15 @@ namespace KWin
 class GLVertexBuffer;
 class GLTexturePrivate;
 
+enum class TextureTransform {
+    Rotate90 = 0b00001,
+    Rotate180 = 0b00010,
+    Rotate270 = 0b00100,
+    MirrorY = 0b01000,
+    MirrorX = 0b10000,
+};
+Q_DECLARE_FLAGS(TextureTransforms, TextureTransform);
+
 enum TextureCoordinateType {
     NormalizedCoordinates = 0,
     UnnormalizedCoordinates,
@@ -69,14 +78,21 @@ public:
     void setSize(const QSize &size);
     int width() const;
     int height() const;
+
     /**
-     * @since 4.7
+     * sets the transform between the content and the buffer
      */
-    bool isYInverted() const;
+    void setContentTransform(TextureTransforms transform);
+
     /**
-     * @since 4.8
+     * @returns the transform between the content and the buffer
      */
-    void setYInverted(bool inverted);
+    TextureTransforms contentTransforms() const;
+
+    /**
+     * @returns the transform between the content and the buffer as a matrix
+     */
+    QMatrix4x4 contentTransformMatrix() const;
 
     /**
      * Specifies which component of a texel is placed in each respective
@@ -103,6 +119,7 @@ public:
     void unbind();
     void render(const QSizeF &size, double scale);
     void render(const QRegion &region, const QSizeF &size, double scale, bool hardwareClipping = false);
+    void render(const QRectF &source, const QRegion &region, const QSizeF &targetSize, double scale, bool hardwareClipping = false);
 
     GLuint texture() const;
     GLenum target() const;

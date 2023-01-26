@@ -24,7 +24,6 @@ target_sources(kwin PRIVATE
     drm_property.cpp
     drm_qpainter_backend.cpp
     drm_qpainter_layer.cpp
-    drm_shadow_buffer.cpp
     drm_virtual_egl_layer.cpp
     drm_virtual_output.cpp
 )

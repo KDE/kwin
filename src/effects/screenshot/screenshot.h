@@ -83,15 +83,15 @@ private Q_SLOTS:
 
 private:
     void takeScreenShot(ScreenShotWindowData *screenshot);
-    bool takeScreenShot(const RenderViewport &viewport, ScreenShotAreaData *screenshot);
-    bool takeScreenShot(const RenderViewport &viewport, ScreenShotScreenData *screenshot);
+    bool takeScreenShot(const RenderTarget &renderTarget, const RenderViewport &viewport, ScreenShotAreaData *screenshot);
+    bool takeScreenShot(const RenderTarget &renderTarget, const RenderViewport &viewport, ScreenShotScreenData *screenshot);
 
     void cancelWindowScreenShots();
     void cancelAreaScreenShots();
     void cancelScreenScreenShots();
 
     void grabPointerImage(QImage &snapshot, int xOffset, int yOffset) const;
-    QImage blitScreenshot(const RenderViewport &viewport, const QRect &geometry, qreal devicePixelRatio = 1.0) const;
+    QImage blitScreenshot(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRect &geometry, qreal devicePixelRatio = 1.0) const;
 
     std::vector<ScreenShotWindowData> m_windowScreenShots;
     std::vector<ScreenShotAreaData> m_areaScreenShots;

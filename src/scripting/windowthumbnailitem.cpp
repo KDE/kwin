@@ -237,13 +237,7 @@ QSGNode *WindowThumbnailItem::updatePaintNode(QSGNode *oldNode, QQuickItem::Upda
         node->setFiltering(QSGTexture::Linear);
     }
     node->setTexture(m_provider->texture());
-
-    if (m_offscreenTexture && m_offscreenTexture->isYInverted()) {
-        node->setTextureCoordinatesTransform(QSGImageNode::MirrorVertically);
-    } else {
-        node->setTextureCoordinatesTransform(QSGImageNode::NoTransform);
-    }
-
+    node->setTextureCoordinatesTransform(QSGImageNode::NoTransform);
     node->setRect(paintedRect());
 
     return node;
@@ -391,7 +385,7 @@ void WindowThumbnailItem::updateOffscreenTexture()
     }
 
     RenderTarget offscreenRenderTarget(m_offscreenTarget.get());
-    RenderViewport offscreenViewport(geometry, m_devicePixelRatio);
+    RenderViewport offscreenViewport(geometry, m_devicePixelRatio, offscreenRenderTarget);
     GLFramebuffer::pushFramebuffer(m_offscreenTarget.get());
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);

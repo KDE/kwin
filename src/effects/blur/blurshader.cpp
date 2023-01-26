@@ -53,7 +53,7 @@ BlurShader::BlurShader(QObject *parent)
 
         m_mvpMatrixLocationUpsample = m_shaderUpsample->uniformLocation("modelViewProjectionMatrix");
         m_offsetLocationUpsample = m_shaderUpsample->uniformLocation("offset");
-        m_renderTextureSizeLocationUpsample = m_shaderUpsample->uniformLocation("renderTextureSize");
+        m_fragCoordToUvLocationUpsample = m_shaderUpsample->uniformLocation("fragCoordToUv");
         m_halfpixelLocationUpsample = m_shaderUpsample->uniformLocation("halfpixel");
 
         m_mvpMatrixLocationCopysample = m_shaderCopysample->uniformLocation("modelViewProjectionMatrix");
@@ -82,7 +82,7 @@ BlurShader::BlurShader(QObject *parent)
         ShaderManager::instance()->pushShader(m_shaderUpsample.get());
         m_shaderUpsample->setUniform(m_mvpMatrixLocationUpsample, modelViewProjection);
         m_shaderUpsample->setUniform(m_offsetLocationUpsample, float(1.0));
-        m_shaderUpsample->setUniform(m_renderTextureSizeLocationUpsample, QVector2D(1.0, 1.0));
+        m_shaderUpsample->setUniform(m_fragCoordToUvLocationUpsample, QMatrix4x4());
         m_shaderUpsample->setUniform(m_halfpixelLocationUpsample, QVector2D(1.0, 1.0));
         ShaderManager::instance()->popShader();
 
@@ -211,7 +211,6 @@ void BlurShader::setTargetTextureSize(const QSize &renderTextureSize)
         break;
 
     case UpSampleType:
-        m_shaderUpsample->setUniform(m_renderTextureSizeLocationUpsample, texSize);
         m_shaderUpsample->setUniform(m_halfpixelLocationUpsample, QVector2D(0.5 / texSize.x(), 0.5 / texSize.y()));
         break;
 
@@ -231,6 +230,15 @@ void BlurShader::setTargetTextureSize(const QSize &renderTextureSize)
     }
 }
 
+void BlurShader::setFragCoordToUv(const QMatrix4x4 &fragCoordToUv)
+{
+    if (!isValid()) {
+        return;
+    }
+    Q_ASSERT(m_activeSampleType == UpSampleType);
+    m_shaderUpsample->setUniform(m_fragCoordToUvLocationUpsample, fragCoordToUv);
+}
+
 void BlurShader::setNoiseTextureSize(const QSize &noiseTextureSize)
 {
     const QVector2D noiseTexSize(noiseTextureSize.width(), noiseTextureSize.height());
@@ -246,7 +254,7 @@ void BlurShader::setTexturePosition(const QPoint &texPos)
     m_shaderNoisesample->setUniform(m_texStartPosLocationNoisesample, QVector2D(-texPos.x(), texPos.y()));
 }
 
-void BlurShader::setBlurRect(const QRect &blurRect, const QSize &screenSize)
+void BlurShader::setBlurRect(const QRect &blurRect, const QSizeF &screenSize)
 {
     if (!isValid()) {
         return;

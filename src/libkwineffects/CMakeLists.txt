@@ -57,12 +57,14 @@ install(TARGETS kwineffects EXPORT KWinEffectsTargets ${KDE_INSTALL_TARGETS_DEFA
 
 # kwingl(es)utils library
 set(kwin_GLUTILSLIB_SRCS
+    kwineglimagetexture.cpp
     kwinglplatform.cpp
     kwingltexture.cpp
     kwinglutils.cpp
     kwinglutils_funcs.cpp
-    kwineglimagetexture.cpp
     logging.cpp
+    rendertarget.cpp
+    renderviewport.cpp
 )
 
 add_library(kwinglutils SHARED ${kwin_GLUTILSLIB_SRCS})

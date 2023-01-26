@@ -144,7 +144,7 @@ public:
     OutputLayer *primaryLayer(Output *output) override;
     OutputLayer *cursorLayer(Output *output) override;
 
-    std::shared_ptr<KWin::GLTexture> textureForOutput(KWin::Output *output) const override;
+    std::shared_ptr<GLTexture> textureForOutput(KWin::Output *output) const override;
 
 private:
     bool initializeEgl();

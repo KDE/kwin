@@ -87,6 +87,8 @@ public:
 
     void releaseBuffers();
 
+    static int32_t transformationToDegrees(DrmPlane::Transformations transformation);
+
 private:
     std::shared_ptr<DrmFramebuffer> m_current;
     std::shared_ptr<DrmFramebuffer> m_next;

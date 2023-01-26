@@ -302,7 +302,7 @@ bool EglPixmapTexturePrivate::create(SurfacePixmapX11 *pixmap)
     }
     glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(m_image));
     q->unbind();
-    q->setYInverted(true);
+    q->setContentTransform(TextureTransform::MirrorY);
     m_size = pixmap->size();
     updateMatrix();
     return true;

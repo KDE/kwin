@@ -122,7 +122,7 @@ void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const Render
                        cursor.y() - (double)area.height() / (m_zoom * 2),
                        (double)area.width() / m_zoom, (double)area.height() / m_zoom);
         if (effects->isOpenGLCompositing()) {
-            m_fbo->blitFromFramebuffer(viewport.mapToRenderTarget(srcArea).toRect());
+            m_fbo->blitFromRenderTarget(renderTarget, viewport, srcArea.toRect(), QRect(QPoint(), m_fbo->size()));
             // paint magnifier
             m_texture->bind();
             auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
@@ -203,7 +203,7 @@ void MagnifierEffect::zoomIn()
     if (effects->isOpenGLCompositing() && !m_texture) {
         effects->makeOpenGLContextCurrent();
         m_texture = std::make_unique<GLTexture>(GL_RGBA8, m_magnifierSize.width(), m_magnifierSize.height());
-        m_texture->setYInverted(false);
+        m_texture->setContentTransform(TextureTransforms());
         m_fbo = std::make_unique<GLFramebuffer>(m_texture.get());
     }
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));
@@ -240,7 +240,7 @@ void MagnifierEffect::toggle()
         if (effects->isOpenGLCompositing() && !m_texture) {
             effects->makeOpenGLContextCurrent();
             m_texture = std::make_unique<GLTexture>(GL_RGBA8, m_magnifierSize.width(), m_magnifierSize.height());
-            m_texture->setYInverted(false);
+            m_texture->setContentTransform(TextureTransforms());
             m_fbo = std::make_unique<GLFramebuffer>(m_texture.get());
         }
     } else {

@@ -54,12 +54,11 @@ void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion
     renderLayer.delegate()->paint(offscreenRenderTarget, infiniteRegion());
     renderLayer.delegate()->postPaint();
 
-
-    QMatrix4x4 mvp;
-    mvp.ortho(QRect(QPoint(0, 0), renderTarget.size()));
+    QMatrix4x4 mvp = renderTarget.transformation();
+    mvp.ortho(QRectF(QPointF(0, 0), renderTarget.size()));
     mvp.translate(std::round(cursorRect.x() * scale), std::round(cursorRect.y() * scale));
 
-    GLFramebuffer *fbo = std::get<GLFramebuffer *>(renderTarget.nativeHandle());
+    GLFramebuffer *fbo = renderTarget.framebuffer();
     GLFramebuffer::pushFramebuffer(fbo);
 
     // Don't need to call GLVertexBuffer::beginFrame() and GLVertexBuffer::endOfFrame() because

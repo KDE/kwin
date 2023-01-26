@@ -939,7 +939,7 @@ bool GlxPixmapTexturePrivate::create(SurfacePixmapX11 *texture)
 
     m_glxPixmap = glXCreatePixmap(m_backend->display(), info.fbconfig, texture->pixmap(), attrs);
     m_size = texture->size();
-    m_yInverted = info.y_inverted ? true : false;
+    q->setContentTransform(info.y_inverted ? TextureTransform::MirrorY : TextureTransforms());
     m_canUseMipmaps = false;
 
     glGenTextures(1, &m_texture);

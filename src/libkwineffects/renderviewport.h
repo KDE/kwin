@@ -20,7 +20,7 @@ class RenderTarget;
 class KWINEFFECTS_EXPORT RenderViewport
 {
 public:
-    explicit RenderViewport(const QRectF &renderRect, double scale);
+    explicit RenderViewport(const QRectF &renderRect, double scale, const RenderTarget &renderTarget);
 
     QMatrix4x4 projectionMatrix() const;
     QRectF renderRect() const;
@@ -32,10 +32,17 @@ public:
     QPointF mapToRenderTarget(const QPointF &logicalGeometry) const;
     QRegion mapToRenderTarget(const QRegion &logicalGeometry) const;
 
+    QRectF mapToRenderTargetTexture(const QRectF &logicalGeometry) const;
+    QRect mapToRenderTargetTexture(const QRect &logicalGeometry) const;
+    QPoint mapToRenderTargetTexture(const QPoint &logicalGeometry) const;
+    QPointF mapToRenderTargetTexture(const QPointF &logicalGeometry) const;
+    QRegion mapToRenderTargetTexture(const QRegion &logicalGeometry) const;
+
 private:
     const QRectF m_renderRect;
     const QMatrix4x4 m_projectionMatrix;
     const QMatrix4x4 m_logicalToLocal;
+    const QMatrix4x4 m_logicalToLocalTexture;
     const double m_scale;
 };
 

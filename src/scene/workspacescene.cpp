@@ -352,7 +352,7 @@ void WorkspaceScene::postPaint()
 void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &region)
 {
     Output *output = kwinApp()->operationMode() == Application::OperationMode::OperationModeX11 ? nullptr : painted_screen;
-    RenderViewport viewport(output ? output->geometry() : workspace()->geometry(), output ? output->scale() : 1);
+    RenderViewport viewport(output ? output->geometry() : workspace()->geometry(), output ? output->scale() : 1, renderTarget);
 
     m_renderer->beginFrame(renderTarget, viewport);
 

@@ -35,7 +35,6 @@ class DrmGbmBuffer;
 class DrmOutput;
 class GbmBuffer;
 class DumbSwapchain;
-class ShadowBuffer;
 class DrmBackend;
 class DrmGpu;
 class EglGbmLayer;

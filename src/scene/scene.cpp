@@ -46,7 +46,7 @@ void SceneDelegate::postPaint()
 
 void SceneDelegate::paint(const RenderTarget &renderTarget, const QRegion &region)
 {
-    m_scene->paint(renderTarget, region.translated(viewport().topLeft()));
+    m_scene->paint(renderTarget, region == infiniteRegion() ? infiniteRegion() : region.translated(viewport().topLeft()));
 }
 
 Output *SceneDelegate::output() const

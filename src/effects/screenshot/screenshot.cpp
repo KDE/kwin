@@ -42,7 +42,7 @@ struct ScreenShotScreenData
     EffectScreen *screen = nullptr;
 };
 
-static void convertFromGLImage(QImage &img, int w, int h)
+static void convertFromGLImage(QImage &img, int w, int h, const QMatrix4x4 &renderTargetTransformation)
 {
     // from QtOpenGL/qgl.cpp
     // SPDX-FileCopyrightText: 2010 Nokia Corporation and /or its subsidiary(-ies)
@@ -69,7 +69,13 @@ static void convertFromGLImage(QImage &img, int w, int h)
             }
         }
     }
-    img = img.mirrored();
+
+    QMatrix4x4 matrix;
+    // OpenGL textures are flipped vs QImage
+    matrix.scale(1, -1);
+    // apply render target transformation
+    matrix *= renderTargetTransformation.inverted();
+    img = img.transformed(matrix.toTransform());
 }
 
 bool ScreenShotEffect::supported()
@@ -201,13 +207,13 @@ void ScreenShotEffect::paintScreen(const RenderTarget &renderTarget, const Rende
     m_windowScreenShots.clear();
 
     for (int i = m_areaScreenShots.size() - 1; i >= 0; --i) {
-        if (takeScreenShot(viewport, &m_areaScreenShots[i])) {
+        if (takeScreenShot(renderTarget, viewport, &m_areaScreenShots[i])) {
             m_areaScreenShots.erase(m_areaScreenShots.begin() + i);
         }
     }
 
     for (int i = m_screenScreenShots.size() - 1; i >= 0; --i) {
-        if (takeScreenShot(viewport, &m_screenScreenShots[i])) {
+        if (takeScreenShot(renderTarget, viewport, &m_screenScreenShots[i])) {
             m_screenScreenShots.erase(m_screenScreenShots.begin() + i);
         }
     }
@@ -248,7 +254,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
         QImage img;
         if (effects->isOpenGLCompositing()) {
             RenderTarget renderTarget(target.get());
-            RenderViewport viewport(geometry, devicePixelRatio);
+            RenderViewport viewport(geometry, devicePixelRatio, renderTarget);
             GLFramebuffer::pushFramebuffer(target.get());
             glClearColor(0.0, 0.0, 0.0, 0.0);
             glClear(GL_COLOR_BUFFER_BIT);
@@ -266,7 +272,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
             glReadnPixels(0, 0, img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE, img.sizeInBytes(),
                           static_cast<GLvoid *>(img.bits()));
             GLFramebuffer::popFramebuffer();
-            convertFromGLImage(img, img.width(), img.height());
+            convertFromGLImage(img, img.width(), img.height(), renderTarget.transformation());
         }
 
         if (screenshot->flags & ScreenShotIncludeCursor) {
@@ -278,11 +284,11 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
     }
 }
 
-bool ScreenShotEffect::takeScreenShot(const RenderViewport &viewport, ScreenShotAreaData *screenshot)
+bool ScreenShotEffect::takeScreenShot(const RenderTarget &renderTarget, const RenderViewport &viewport, ScreenShotAreaData *screenshot)
 {
     if (!effects->waylandDisplay()) {
         // On X11, all screens are painted simultaneously and there is no native HiDPI support.
-        QImage snapshot = blitScreenshot(viewport, screenshot->area);
+        QImage snapshot = blitScreenshot(renderTarget, viewport, screenshot->area);
         if (screenshot->flags & ScreenShotIncludeCursor) {
             grabPointerImage(snapshot, screenshot->area.x(), screenshot->area.y());
         }
@@ -301,7 +307,7 @@ bool ScreenShotEffect::takeScreenShot(const RenderViewport &viewport, ScreenShot
             sourceDevicePixelRatio = m_paintedScreen->devicePixelRatio();
         }
 
-        const QImage snapshot = blitScreenshot(viewport, sourceRect, sourceDevicePixelRatio);
+        const QImage snapshot = blitScreenshot(renderTarget, viewport, sourceRect, sourceDevicePixelRatio);
         const QRect nativeArea(screenshot->area.topLeft(),
                                screenshot->area.size() * screenshot->result.devicePixelRatio());
 
@@ -323,7 +329,7 @@ bool ScreenShotEffect::takeScreenShot(const RenderViewport &viewport, ScreenShot
     return false;
 }
 
-bool ScreenShotEffect::takeScreenShot(const RenderViewport &viewport, ScreenShotScreenData *screenshot)
+bool ScreenShotEffect::takeScreenShot(const RenderTarget &renderTarget, const RenderViewport &viewport, ScreenShotScreenData *screenshot)
 {
     if (m_paintedScreen && screenshot->screen != m_paintedScreen) {
         return false;
@@ -334,7 +340,7 @@ bool ScreenShotEffect::takeScreenShot(const RenderViewport &viewport, ScreenShot
         devicePixelRatio = screenshot->screen->devicePixelRatio();
     }
 
-    QImage snapshot = blitScreenshot(viewport, screenshot->screen->geometry(), devicePixelRatio);
+    QImage snapshot = blitScreenshot(renderTarget, viewport, screenshot->screen->geometry(), devicePixelRatio);
     if (screenshot->flags & ScreenShotIncludeCursor) {
         const int xOffset = screenshot->screen->geometry().x();
         const int yOffset = screenshot->screen->geometry().y();
@@ -347,15 +353,16 @@ bool ScreenShotEffect::takeScreenShot(const RenderViewport &viewport, ScreenShot
     return true;
 }
 
-QImage ScreenShotEffect::blitScreenshot(const RenderViewport &viewport, const QRect &geometry, qreal devicePixelRatio) const
+QImage ScreenShotEffect::blitScreenshot(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRect &geometry, qreal devicePixelRatio) const
 {
     QImage image;
 
     if (effects->isOpenGLCompositing()) {
-        const QSize nativeSize = geometry.size() * devicePixelRatio;
+        const auto screenGeometry = m_paintedScreen ? m_paintedScreen->geometry() : effects->virtualScreenGeometry();
+        const QSize nativeSize = renderTarget.applyTransformation(geometry, screenGeometry).size() * devicePixelRatio;
+        image = QImage(nativeSize, QImage::Format_ARGB32);
 
         if (GLFramebuffer::blitSupported() && !GLPlatform::instance()->isGLES()) {
-            image = QImage(nativeSize.width(), nativeSize.height(), QImage::Format_ARGB32);
             GLTexture texture(GL_RGBA8, nativeSize.width(), nativeSize.height());
             GLFramebuffer target(&texture);
             target.blitFromFramebuffer(viewport.mapToRenderTarget(geometry));
@@ -365,11 +372,10 @@ QImage ScreenShotEffect::blitScreenshot(const RenderViewport &viewport, const QR
                           static_cast<GLvoid *>(image.bits()));
             texture.unbind();
         } else {
-            image = QImage(nativeSize.width(), nativeSize.height(), QImage::Format_ARGB32);
             glReadPixels(0, 0, nativeSize.width(), nativeSize.height(), GL_RGBA,
                          GL_UNSIGNED_BYTE, static_cast<GLvoid *>(image.bits()));
         }
-        convertFromGLImage(image, nativeSize.width(), nativeSize.height());
+        convertFromGLImage(image, nativeSize.width(), nativeSize.height(), renderTarget.transformation());
     }
 
     image.setDevicePixelRatio(devicePixelRatio);

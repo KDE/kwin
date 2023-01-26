@@ -24,7 +24,7 @@ EGLImageTexture::EGLImageTexture(EGLDisplay display, EGLImage image, int interna
         return;
     }
 
-    setYInverted(true);
+    setContentTransform(TextureTransform::MirrorY);
     bind();
     glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, m_image);
 }

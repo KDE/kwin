@@ -14,6 +14,7 @@ namespace KWin
 {
 
 class GLFramebuffer;
+class GLTexture;
 
 class ScreenCastSource : public QObject
 {

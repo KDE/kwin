@@ -277,8 +277,11 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
     OffscreenData *offscreenData = ensureOffscreenData(viewport, data.screen());
 
     // Render the scene in an offscreen texture and then upscale it.
+    RenderTarget offscreenRenderTarget(offscreenData->framebuffer.get());
+    RenderViewport offscreenViewport(data.screen()->geometry(), data.screen()->devicePixelRatio(), offscreenRenderTarget);
+    ScreenPaintData offscreenPaintData{offscreenViewport.projectionMatrix(), data.screen()};
     GLFramebuffer::pushFramebuffer(offscreenData->framebuffer.get());
-    effects->paintScreen(renderTarget, viewport, mask, region, data);
+    effects->paintScreen(offscreenRenderTarget, offscreenViewport, mask, region, offscreenPaintData);
     GLFramebuffer::popFramebuffer();
 
     const QSize screenSize = effects->virtualScreenSize();

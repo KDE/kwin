@@ -46,7 +46,7 @@ QSize OutputScreenCastSource::textureSize() const
 
 void OutputScreenCastSource::render(spa_data *spa, spa_video_format format)
 {
-    const std::shared_ptr<GLTexture> outputTexture = Compositor::self()->scene()->textureForOutput(m_output);
+    const auto outputTexture = Compositor::self()->scene()->textureForOutput(m_output);
     if (outputTexture) {
         grabTexture(outputTexture.get(), spa, format);
     }

@@ -119,7 +119,7 @@ GLTexture::GLTexture(const QImage &image, GLenum target)
     }
 
     d->m_size = image.size();
-    d->m_yInverted = true;
+    setContentTransform(TextureTransform::MirrorY);
     d->m_canUseMipmaps = false;
     d->m_mipLevels = 1;
 
@@ -283,7 +283,6 @@ GLTexturePrivate::GLTexturePrivate()
     , m_internalFormat(0)
     , m_filter(GL_NEAREST)
     , m_wrapMode(GL_REPEAT)
-    , m_yInverted(false)
     , m_canUseMipmaps(false)
     , m_markedDirty(false)
     , m_filterChanged(true)
@@ -511,16 +510,24 @@ void GLTexture::render(const QSizeF &size, qreal scale)
     render(infiniteRegion(), size, scale, false);
 }
 
-void GLTexture::render(const QRegion &region, const QSizeF &size, double scale, bool hardwareClipping)
+void GLTexture::render(const QRegion &region, const QSizeF &targetSize, double scale, bool hardwareClipping)
 {
     Q_D(GLTexture);
-    if (size.isEmpty()) {
+    const auto rotatedSize = d->m_textureToBufferMatrix.mapRect(QRect(QPoint(), size())).size();
+    render(QRectF(QPoint(), rotatedSize), region, targetSize, scale, hardwareClipping);
+}
+
+void GLTexture::render(const QRectF &source, const QRegion &region, const QSizeF &targetSize, double scale, bool hardwareClipping)
+{
+    Q_D(GLTexture);
+    if (targetSize.isEmpty()) {
         return; // nothing to paint and m_vbo is likely nullptr and d->m_cachedSize empty as well, #337090
     }
 
-    QSizeF destinationSize = (size * scale).toSize();
-    if (destinationSize != d->m_cachedSize) {
+    QSizeF destinationSize = (targetSize * scale).toSize();
+    if (destinationSize != d->m_cachedSize || d->m_cachedSource != source) {
         d->m_cachedSize = destinationSize;
+        d->m_cachedSource = source;
         if (!d->m_vbo) {
             d->m_vbo = std::make_unique<GLVertexBuffer>(KWin::GLVertexBuffer::Static);
         }
@@ -528,17 +535,32 @@ void GLTexture::render(const QRegion &region, const QSizeF &size, double scale, 
         const float verts[4 * 2] = {
             0.0f, 0.0f,
             0.0f, float(destinationSize.height()),
-            float(destinationSize.width()), 0,
+            float(destinationSize.width()), 0.0f,
             float(destinationSize.width()), float(destinationSize.height())};
 
         const float texWidth = (target() == GL_TEXTURE_RECTANGLE_ARB) ? width() : 1.0f;
         const float texHeight = (target() == GL_TEXTURE_RECTANGLE_ARB) ? height() : 1.0f;
 
+        const QSize rotatedSize = d->m_textureToBufferMatrix.mapRect(QRect(QPoint(), size())).size();
+
+        QMatrix4x4 textureMat;
+        textureMat.translate(texWidth / 2, texHeight / 2);
+        textureMat *= d->m_textureToBufferMatrix;
+        // our Y axis is flipped vs OpenGL
+        textureMat.scale(1, -1);
+        textureMat.translate(-texWidth / 2, -texHeight / 2);
+        textureMat.scale(texWidth / rotatedSize.width(), texHeight / rotatedSize.height());
+
+        const QPointF p1 = textureMat.map(QPointF(source.x(), source.y()));
+        const QPointF p2 = textureMat.map(QPointF(source.x(), source.y() + source.height()));
+        const QPointF p3 = textureMat.map(QPointF(source.x() + source.width(), source.y()));
+        const QPointF p4 = textureMat.map(QPointF(source.x() + source.width(), source.y() + source.height()));
+
         const float texcoords[4 * 2] = {
-            0.0f, d->m_yInverted ? 0.0f : texHeight, // y needs to be swapped (normalized coords)
-            0.0f, d->m_yInverted ? texHeight : 0.0f,
-            texWidth, d->m_yInverted ? 0.0f : texHeight,
-            texWidth, d->m_yInverted ? texHeight : 0.0f};
+            float(p1.x()), float(p1.y()),
+            float(p2.x()), float(p2.y()),
+            float(p3.x()), float(p3.y()),
+            float(p4.x()), float(p4.y())};
 
         d->m_vbo->setData(4, 2, verts, texcoords);
     }
@@ -644,6 +666,21 @@ void GLTexture::setDirty()
 
 void GLTexturePrivate::updateMatrix()
 {
+    m_textureToBufferMatrix.setToIdentity();
+    if (m_textureToBufferTransform & TextureTransform::MirrorX) {
+        m_textureToBufferMatrix.scale(-1, 1);
+    }
+    if (m_textureToBufferTransform & TextureTransform::MirrorY) {
+        m_textureToBufferMatrix.scale(1, -1);
+    }
+    if (m_textureToBufferTransform & TextureTransform::Rotate90) {
+        m_textureToBufferMatrix.rotate(90, 0, 0, 1);
+    } else if (m_textureToBufferTransform & TextureTransform::Rotate180) {
+        m_textureToBufferMatrix.rotate(180, 0, 0, 1);
+    } else if (m_textureToBufferTransform & TextureTransform::Rotate270) {
+        m_textureToBufferMatrix.rotate(270, 0, 0, 1);
+    }
+
     m_matrix[NormalizedCoordinates].setToIdentity();
     m_matrix[UnnormalizedCoordinates].setToIdentity();
 
@@ -653,30 +690,37 @@ void GLTexturePrivate::updateMatrix()
         m_matrix[UnnormalizedCoordinates].scale(1.0 / m_size.width(), 1.0 / m_size.height());
     }
 
-    if (!m_yInverted) {
-        m_matrix[NormalizedCoordinates].translate(0.0, 1.0);
-        m_matrix[NormalizedCoordinates].scale(1.0, -1.0);
+    m_matrix[NormalizedCoordinates].translate(0.5, 0.5);
+    m_matrix[NormalizedCoordinates] *= m_textureToBufferMatrix;
+    // our Y axis is flipped vs OpenGL
+    m_matrix[NormalizedCoordinates].scale(1, -1);
+    m_matrix[NormalizedCoordinates].translate(-0.5, -0.5);
 
-        m_matrix[UnnormalizedCoordinates].translate(0.0, m_size.height());
-        m_matrix[UnnormalizedCoordinates].scale(1.0, -1.0);
-    }
+    m_matrix[UnnormalizedCoordinates].translate(m_size.width() / 2, m_size.height() / 2);
+    m_matrix[UnnormalizedCoordinates] *= m_textureToBufferMatrix;
+    m_matrix[UnnormalizedCoordinates].scale(1, -1);
+    m_matrix[UnnormalizedCoordinates].translate(-m_size.width() / 2, -m_size.height() / 2);
 }
 
-bool GLTexture::isYInverted() const
-{
-    Q_D(const GLTexture);
-    return d->m_yInverted;
-}
-
-void GLTexture::setYInverted(bool inverted)
+void GLTexture::setContentTransform(TextureTransforms transform)
 {
     Q_D(GLTexture);
-    if (d->m_yInverted == inverted) {
-        return;
+    if (d->m_textureToBufferTransform != transform) {
+        d->m_textureToBufferTransform = transform;
+        d->updateMatrix();
     }
+}
 
-    d->m_yInverted = inverted;
-    d->updateMatrix();
+TextureTransforms GLTexture::contentTransforms() const
+{
+    Q_D(const GLTexture);
+    return d->m_textureToBufferTransform;
+}
+
+QMatrix4x4 GLTexture::contentTransformMatrix() const
+{
+    Q_D(const GLTexture);
+    return d->m_textureToBufferMatrix;
 }
 
 void GLTexture::setSwizzle(GLenum red, GLenum green, GLenum blue, GLenum alpha)

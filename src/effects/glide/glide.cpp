@@ -32,9 +32,9 @@ static const QSet<QString> s_blacklist{
     QStringLiteral("ksplashqml ksplashqml"),
 };
 
-static QMatrix4x4 createPerspectiveMatrix(const QRectF &rect, const qreal scale)
+static QMatrix4x4 createPerspectiveMatrix(const QRectF &rect, const qreal scale, const QMatrix4x4 &renderTargetTransformation)
 {
-    QMatrix4x4 ret;
+    QMatrix4x4 ret = renderTargetTransformation;
 
     const float fovY = std::tan(qDegreesToRadians(60.0f) / 2);
     const float aspect = 1.0f;
@@ -135,7 +135,7 @@ void GlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderView
     //  [move to the origin] -> [rotate] -> [translate] ->
     //    -> [perspective projection] -> [reverse "move to the origin"]
 
-    const QMatrix4x4 oldProjMatrix = createPerspectiveMatrix(viewport.renderRect(), viewport.scale());
+    const QMatrix4x4 oldProjMatrix = createPerspectiveMatrix(viewport.renderRect(), viewport.scale(), renderTarget.transformation());
     const auto frame = w->frameGeometry();
     const QRectF windowGeo = scaledRect(frame, viewport.scale());
     const QVector3D invOffset = oldProjMatrix.map(QVector3D(windowGeo.center()));

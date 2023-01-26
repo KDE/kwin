@@ -194,8 +194,11 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
     }
 
     RenderTarget fboRenderTarget(it->m_current.framebuffer.get());
+    RenderViewport fboViewport(viewport.renderRect(), viewport.scale(), fboRenderTarget);
+
     GLFramebuffer::pushFramebuffer(it->m_current.framebuffer.get());
-    effects->paintScreen(fboRenderTarget, viewport, mask, region, data);
+    ScreenPaintData adjustedData{fboViewport.projectionMatrix(), data.screen()};
+    effects->paintScreen(fboRenderTarget, fboViewport, mask, region, adjustedData);
     GLFramebuffer::popFramebuffer();
 
     const qreal blendFactor = it->m_timeLine.value();

@@ -16,7 +16,6 @@
 #include "drm_logging.h"
 #include "drm_output.h"
 #include "drm_pipeline.h"
-#include "drm_shadow_buffer.h"
 #include "drm_virtual_output.h"
 #include "egl_dmabuf.h"
 #include "gbm_dmabuf.h"
@@ -66,6 +65,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame()
     if (!texture) {
         return std::nullopt;
     }
+    texture->setContentTransform(TextureTransform::MirrorY);
     auto fbo = std::make_shared<GLFramebuffer>(texture.get());
     if (!fbo) {
         return std::nullopt;

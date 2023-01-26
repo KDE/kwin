@@ -3305,14 +3305,11 @@ public:
      * Sets the projection matrix that will be used when painting the window.
      *
      * The default projection matrix can be overridden by setting this matrix
-     * to a non-identity matrix.
      */
     void setProjectionMatrix(const QMatrix4x4 &matrix);
 
     /**
      * Returns the current projection matrix.
-     *
-     * The default value for this matrix is the identity matrix.
      */
     QMatrix4x4 projectionMatrix() const;
 

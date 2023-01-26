@@ -29,6 +29,26 @@
 namespace KWin
 {
 
+static TextureTransforms drmToTextureRotation(DrmPipeline *pipeline)
+{
+    auto angle = DrmPlane::transformationToDegrees(pipeline->renderOrientation()) - DrmPlane::transformationToDegrees(pipeline->bufferOrientation());
+    if (angle < 0) {
+        angle += 360;
+    }
+    switch (angle % 360) {
+    case 0:
+        return TextureTransforms();
+    case 90:
+        return TextureTransform::Rotate90;
+    case 180:
+        return TextureTransform::Rotate180;
+    case 270:
+        return TextureTransform::Rotate270;
+    default:
+        Q_UNREACHABLE();
+    }
+}
+
 EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline)
     : DrmPipelineLayer(pipeline)
     , m_surface(pipeline->gpu(), eglBackend)
@@ -41,12 +61,12 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::beginFrame()
     m_scanoutBuffer.reset();
     m_dmabufFeedback.renderingSurface();
 
-    return m_surface.startRendering(m_pipeline->bufferSize(), m_pipeline->renderOrientation(), m_pipeline->bufferOrientation(), m_pipeline->formats());
+    return m_surface.startRendering(m_pipeline->bufferSize(), drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY, m_pipeline->formats());
 }
 
 bool EglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    const bool ret = m_surface.endRendering(m_pipeline->renderOrientation(), damagedRegion);
+    const bool ret = m_surface.endRendering(damagedRegion);
     if (ret) {
         m_currentDamage = damagedRegion;
     }
@@ -66,7 +86,9 @@ bool EglGbmLayer::checkTestBuffer()
 std::shared_ptr<GLTexture> EglGbmLayer::texture() const
 {
     if (m_scanoutBuffer) {
-        return m_surface.eglBackend()->importBufferObjectAsTexture(static_cast<GbmBuffer *>(m_scanoutBuffer->buffer())->bo());
+        const auto ret = m_surface.eglBackend()->importBufferObjectAsTexture(static_cast<GbmBuffer *>(m_scanoutBuffer->buffer())->bo());
+        ret->setContentTransform(drmToTextureRotation(m_pipeline));
+        return ret;
     } else {
         return m_surface.texture();
     }

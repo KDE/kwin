@@ -26,7 +26,7 @@ ImageItem *ItemRendererOpenGL::createImageItem(Scene *scene, Item *parent)
 
 void ItemRendererOpenGL::beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport)
 {
-    GLFramebuffer *fbo = std::get<GLFramebuffer *>(renderTarget.nativeHandle());
+    GLFramebuffer *fbo = renderTarget.framebuffer();
     GLFramebuffer::pushFramebuffer(fbo);
 
     GLVertexBuffer::streamingBuffer()->beginFrame();
@@ -234,7 +234,7 @@ void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, cons
         glClearColor(0, 0, 0, 0);
         glEnable(GL_SCISSOR_TEST);
 
-        const auto targetSize = renderTarget.size();
+        const auto targetSize = viewport.mapToRenderTarget(viewport.renderRect());
 
         for (const QRect &r : region) {
             const auto deviceRect = viewport.mapToRenderTarget(r);

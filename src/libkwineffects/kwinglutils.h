@@ -34,6 +34,8 @@ namespace KWin
 
 class GLVertexBuffer;
 class GLVertexBufferPrivate;
+class RenderTarget;
+class RenderViewport;
 
 // Initializes OpenGL stuff. This includes resolving function pointers as
 //  well as checking for GL version and extensions
@@ -467,7 +469,18 @@ public:
      * @see blitSupported
      * @since 4.8
      */
-    void blitFromFramebuffer(const QRect &source = QRect(), const QRect &destination = QRect(), GLenum filter = GL_LINEAR);
+    void blitFromFramebuffer(const QRect &source = QRect(), const QRect &destination = QRect(), GLenum filter = GL_LINEAR, bool flipX = false, bool flipY = false);
+
+    /**
+     * Blits from @a source rectangle in logical coordinates in the current framebuffer to the @a destination rectangle in texture-local coordinates
+     * in this framebuffer, taking into account any transformations the source render target may have
+     */
+    bool blitFromRenderTarget(const RenderTarget &sourceRenderTarget, const RenderViewport &sourceViewport, const QRect &source, const QRect &destination);
+
+    /**
+     * @returns the color attachment of this fbo. May be nullptr
+     */
+    GLTexture *colorAttachment() const;
 
 protected:
     void initFBO(GLTexture *colorAttachment);
@@ -485,6 +498,7 @@ private:
     QSize mSize;
     bool mValid = false;
     bool mForeign = false;
+    GLTexture *const m_colorAttachment;
 };
 
 enum VertexAttributeType {

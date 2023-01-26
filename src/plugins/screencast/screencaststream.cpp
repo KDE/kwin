@@ -498,7 +498,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
                     m_cursor.texture.reset(new GLTexture(cursor->image()));
                 }
 
-                m_cursor.texture->setYInverted(false);
+                m_cursor.texture->setContentTransform(TextureTransforms());
                 m_cursor.texture->bind();
                 const auto cursorRect = cursorGeometry(cursor);
                 mvp.translate(cursorRect.left(), r.height() - cursorRect.top() - cursor->image().height());

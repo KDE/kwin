@@ -22,7 +22,6 @@
 #include "drm_logging.h"
 #include "drm_output.h"
 #include "drm_pipeline.h"
-#include "drm_shadow_buffer.h"
 #include "drm_virtual_egl_layer.h"
 #include "egl_dmabuf.h"
 #include "gbm_dmabuf.h"

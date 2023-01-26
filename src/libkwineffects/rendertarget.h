@@ -6,31 +6,38 @@
 
 #pragma once
 
-#include "kwineffects_export.h"
+#include <kwinglutils_export.h>
 
 #include <QImage>
 #include <QMatrix4x4>
-
 #include <variant>
 
 namespace KWin
 {
 
 class GLFramebuffer;
+class GLTexture;
 
-class KWINEFFECTS_EXPORT RenderTarget
+class KWINGLUTILS_EXPORT RenderTarget
 {
 public:
     explicit RenderTarget(GLFramebuffer *fbo);
     explicit RenderTarget(QImage *image);
 
-    using NativeHandle = std::variant<GLFramebuffer *, QImage *>;
-    NativeHandle nativeHandle() const;
-
     QSize size() const;
+    QMatrix4x4 transformation() const;
+    QRectF applyTransformation(const QRectF &rect, const QRectF &viewport) const;
+    QRect applyTransformation(const QRect &rect, const QRect &viewport) const;
+
+    QImage *image() const;
+    GLFramebuffer *framebuffer() const;
+    GLTexture *texture() const;
 
 private:
-    NativeHandle m_nativeHandle;
+    QImage *m_image = nullptr;
+    GLFramebuffer *m_framebuffer = nullptr;
+    GLTexture *m_texture = nullptr;
+    QMatrix4x4 m_transformation;
 };
 
 } // namespace KWin

@@ -16,6 +16,7 @@
 
 #include "core/outputlayer.h"
 #include "drm_plane.h"
+#include "kwingltexture.h"
 
 namespace KWaylandServer
 {
@@ -49,8 +50,8 @@ public:
     EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal);
     ~EglGbmLayerSurface();
 
-    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation, const QMap<uint32_t, QVector<uint64_t>> &formats);
-    bool endRendering(DrmPlane::Transformations renderOrientation, const QRegion &damagedRegion);
+    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QVector<uint64_t>> &formats);
+    bool endRendering(const QRegion &damagedRegion);
 
     bool doesSurfaceFit(const QSize &size, const QMap<uint32_t, QVector<uint64_t>> &formats) const;
     std::shared_ptr<GLTexture> texture() const;
@@ -61,8 +62,6 @@ public:
     std::shared_ptr<DrmFramebuffer> currentBuffer() const;
 
 private:
-    bool doesShadowBufferFit(ShadowBuffer *buffer, const QSize &size, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation) const;
-
     enum class MultiGpuImportMode {
         Dmabuf,
         DumbBuffer
@@ -91,8 +90,6 @@ private:
 
     Surface m_surface;
     Surface m_oldSurface;
-    std::shared_ptr<ShadowBuffer> m_shadowBuffer;
-    std::shared_ptr<ShadowBuffer> m_oldShadowBuffer;
 
     DrmGpu *const m_gpu;
     EglGbmBackend *const m_eglBackend;

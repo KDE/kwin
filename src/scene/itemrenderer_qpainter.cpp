@@ -35,7 +35,7 @@ QPainter *ItemRendererQPainter::painter() const
 
 void ItemRendererQPainter::beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport)
 {
-    QImage *buffer = std::get<QImage *>(renderTarget.nativeHandle());
+    QImage *buffer = renderTarget.image();
     m_painter->begin(buffer);
     m_painter->setWindow(viewport.renderRect().toRect());
 }

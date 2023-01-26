@@ -77,7 +77,7 @@ bool BasicEGLSurfaceTextureWayland::loadShmTexture(KWaylandServer::ShmClientBuff
     m_texture.reset(new GLTexture(image));
     m_texture->setFilter(GL_LINEAR);
     m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
-    m_texture->setYInverted(true);
+    m_texture->setContentTransform(TextureTransform::MirrorY);
     m_bufferType = BufferType::Shm;
 
     return true;
@@ -169,7 +169,7 @@ bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(KWaylandServer::LinuxDmaBu
     m_texture->bind();
     glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(dmabuf->images().constFirst()));
     m_texture->unbind();
-    m_texture->setYInverted(dmabuf->origin() == KWaylandServer::ClientBuffer::Origin::TopLeft);
+    m_texture->setContentTransform(dmabuf->origin() == KWaylandServer::ClientBuffer::Origin::TopLeft ? TextureTransform::MirrorY : TextureTransforms());
     m_bufferType = BufferType::DmaBuf;
 
     return true;
@@ -189,7 +189,7 @@ void BasicEGLSurfaceTextureWayland::updateDmabufTexture(KWaylandServer::LinuxDma
     m_texture->unbind();
     // The origin in a dmabuf-buffer is at the upper-left corner, so the meaning
     // of Y-inverted is the inverse of OpenGL.
-    m_texture->setYInverted(dmabuf->origin() == KWaylandServer::ClientBuffer::Origin::TopLeft);
+    m_texture->setContentTransform(dmabuf->origin() == KWaylandServer::ClientBuffer::Origin::TopLeft ? TextureTransform::MirrorY : TextureTransforms());
 }
 
 EGLImageKHR BasicEGLSurfaceTextureWayland::attach(KWaylandServer::DrmClientBuffer *buffer)
@@ -207,7 +207,7 @@ EGLImageKHR BasicEGLSurfaceTextureWayland::attach(KWaylandServer::DrmClientBuffe
                                           static_cast<EGLClientBuffer>(buffer->resource()), attribs);
     if (image != EGL_NO_IMAGE_KHR) {
         glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(image));
-        m_texture->setYInverted(buffer->origin() == KWaylandServer::ClientBuffer::Origin::TopLeft);
+        m_texture->setContentTransform(buffer->origin() == KWaylandServer::ClientBuffer::Origin::TopLeft ? TextureTransform::MirrorY : TextureTransforms());
     }
     return image;
 }

@@ -179,4 +179,17 @@ void DrmPlane::releaseBuffers()
         m_current->releaseBuffer();
     }
 }
+
+int32_t DrmPlane::transformationToDegrees(DrmPlane::Transformations transformation)
+{
+    if (transformation & DrmPlane::Transformation::Rotate0) {
+        return 0;
+    } else if (transformation & DrmPlane::Transformation::Rotate90) {
+        return 90;
+    } else if (transformation & DrmPlane::Transformation::Rotate180) {
+        return 180;
+    } else {
+        return 270;
+    }
+}
 }
