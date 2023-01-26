@@ -1799,11 +1799,10 @@ void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &gl
                 setMoveResizeGeometry(geom_restore);
             }
             handleInteractiveMoveResize(local.x(), local.y(), global.x(), global.y()); // fix position
-        } else if (quickTileMode() == QuickTileMode(QuickTileFlag::None) && isResizable()) {
-            checkQuickTilingMaximizationZones(global.x(), global.y());
         }
 
         if (input()->modifiersRelevantForGlobalShortcuts() & Qt::ShiftModifier) {
+            resetQuickTilingMaximizationZones();
             const auto &r = quickTileGeometry(QuickTileFlag::Custom, global);
             if (r.isEmpty()) {
                 workspace()->outline()->hide();
@@ -1812,10 +1811,15 @@ void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &gl
                     workspace()->outline()->show(r.toRect(), moveResizeGeometry().toRect());
                 }
             }
-        } else if (!m_electricMaximizing) {
-            // Only if we are in an electric maximizing gesture we should keep the outline,
-            // otherwise we must make sure it's hidden
-            workspace()->outline()->hide();
+        } else {
+            if (quickTileMode() == QuickTileMode(QuickTileFlag::None) && isResizable()) {
+                checkQuickTilingMaximizationZones(global.x(), global.y());
+            }
+            if (!m_electricMaximizing) {
+                // Only if we are in an electric maximizing gesture we should keep the outline,
+                // otherwise we must make sure it's hidden
+                workspace()->outline()->hide();
+            }
         }
     }
 }
@@ -2902,6 +2906,17 @@ void Window::checkQuickTilingMaximizationZones(int xroot, int yroot)
         } else {
             setElectricBorderMaximizing(mode != QuickTileMode(QuickTileFlag::None));
         }
+    }
+}
+
+void Window::resetQuickTilingMaximizationZones()
+{
+    if (electricBorderMode() != QuickTileMode(QuickTileFlag::None)) {
+        if (m_electricMaximizingDelay) {
+            m_electricMaximizingDelay->stop();
+        }
+        setElectricBorderMaximizing(false);
+        setElectricBorderMode(QuickTileFlag::None);
     }
 }
 

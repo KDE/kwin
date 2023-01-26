@@ -1841,6 +1841,7 @@ protected:
      * activates quick tiling or maximization
      */
     void checkQuickTilingMaximizationZones(int xroot, int yroot);
+    void resetQuickTilingMaximizationZones();
     /**
      * Whether a sync request is still pending.
      * Default implementation returns @c false.
