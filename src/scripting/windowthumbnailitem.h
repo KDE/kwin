@@ -24,23 +24,7 @@ class WindowThumbnailItem : public QQuickItem
     Q_OBJECT
     Q_PROPERTY(QUuid wId READ wId WRITE setWId NOTIFY wIdChanged)
     Q_PROPERTY(KWin::Window *client READ client WRITE setClient NOTIFY clientChanged)
-
     Q_PROPERTY(QSize sourceSize READ sourceSize WRITE setSourceSize NOTIFY sourceSizeChanged)
-    /**
-     * TODO Plasma 6: Remove.
-     * @deprecated use a shader effect to change the brightness
-     */
-    Q_PROPERTY(qreal brightness READ brightness WRITE setBrightness NOTIFY brightnessChanged)
-    /**
-     * TODO Plasma 6: Remove.
-     * @deprecated use a shader effect to change color saturation
-     */
-    Q_PROPERTY(qreal saturation READ saturation WRITE setSaturation NOTIFY saturationChanged)
-    /**
-     * TODO Plasma 6: Remove.
-     * @deprecated clipTo has no replacement
-     */
-    Q_PROPERTY(QQuickItem *clipTo READ clipTo WRITE setClipTo NOTIFY clipToChanged)
 
 public:
     explicit WindowThumbnailItem(QQuickItem *parent = nullptr);
@@ -51,15 +35,6 @@ public:
 
     Window *client() const;
     void setClient(Window *client);
-
-    qreal brightness() const;
-    void setBrightness(qreal brightness);
-
-    qreal saturation() const;
-    void setSaturation(qreal saturation);
-
-    QQuickItem *clipTo() const;
-    void setClipTo(QQuickItem *clip);
 
     QSize sourceSize() const;
     void setSourceSize(const QSize &sourceSize);
@@ -74,9 +49,6 @@ protected:
 Q_SIGNALS:
     void wIdChanged();
     void clientChanged();
-    void brightnessChanged();
-    void saturationChanged();
-    void clipToChanged();
     void sourceSizeChanged();
 
 private:
