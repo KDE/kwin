@@ -219,7 +219,11 @@ bool X11WindowedBackend::initialize()
         if (!reply) {
             qCWarning(KWIN_X11WINDOWED) << "Requested SHM extension version is unsupported";
         } else {
-            m_hasShm = true;
+            if (!reply->shared_pixmaps) {
+                qCWarning(KWIN_X11WINDOWED) << "X server supports SHM extension but not shared pixmaps";
+            } else {
+                m_hasShm = true;
+            }
             free(reply);
         }
     }
