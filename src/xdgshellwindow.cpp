@@ -1360,7 +1360,7 @@ bool XdgToplevelWindow::initialFullScreenMode() const
 void XdgToplevelWindow::initialize()
 {
     bool needsPlacement = isPlaceable();
-    setupWindowRules(false);
+    setupWindowRules();
 
     // Move or resize the window only if enforced by a window rule.
     const QPointF forcedPosition = rules()->checkPositionSafe(invalidPoint, true);
@@ -1398,7 +1398,6 @@ void XdgToplevelWindow::initialize()
         needsPlacement = false;
     }
 
-    discardTemporaryRules();
     workspace()->rulebook()->discardUsed(this, false); // Remove Apply Now rules.
     updateWindowRules(Rules::All);
 

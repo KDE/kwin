@@ -3477,14 +3477,9 @@ void Window::removeRule(Rules *rule)
     m_rules.remove(rule);
 }
 
-void Window::discardTemporaryRules()
-{
-    m_rules.discardTemporary();
-}
-
 void Window::evaluateWindowRules()
 {
-    setupWindowRules(true);
+    setupWindowRules();
     applyWindowRules();
 }
 
@@ -4448,10 +4443,10 @@ void Window::cleanTabBox()
 #endif
 }
 
-void Window::setupWindowRules(bool ignore_temporary)
+void Window::setupWindowRules()
 {
     disconnect(this, &Window::captionChanged, this, &Window::evaluateWindowRules);
-    m_rules = workspace()->rulebook()->find(this, ignore_temporary);
+    m_rules = workspace()->rulebook()->find(this);
     // check only after getting the rules, because there may be a rule forcing window type
 }
 

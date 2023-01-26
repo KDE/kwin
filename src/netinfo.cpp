@@ -92,7 +92,6 @@ RootInfo *RootInfo::create()
         | NET::WM2RestackWindow
         | NET::WM2MoveResizeWindow
         | NET::WM2ExtendedStrut
-        | NET::WM2KDETemporaryRules
         | NET::WM2ShowingDesktop
         | NET::WM2DesktopLayout
         | NET::WM2FullPlacement

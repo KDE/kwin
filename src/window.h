@@ -1084,7 +1084,7 @@ public:
         return &m_rules;
     }
     void removeRule(Rules *r);
-    void setupWindowRules(bool ignore_temporary);
+    void setupWindowRules();
     void evaluateWindowRules();
     virtual void applyWindowRules();
     virtual bool takeFocus() = 0;
@@ -1890,7 +1890,6 @@ protected:
     Window *findWindowWithSameCaption() const;
 
     void finishWindowRules();
-    void discardTemporaryRules();
 
     bool tabTo(Window *other, bool behind, bool activate);
 

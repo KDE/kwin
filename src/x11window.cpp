@@ -493,7 +493,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     // and only then really set the caption using setCaption(), which checks for duplicates etc.
     // and also relies on rules already existing
     cap_normal = readName();
-    setupWindowRules(false);
+    setupWindowRules();
     setCaption(cap_normal, true);
 
     connect(this, &X11Window::windowClassChanged, this, &X11Window::evaluateWindowRules);
@@ -1006,7 +1006,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
 
     delete session;
 
-    discardTemporaryRules();
     applyWindowRules(); // Just in case
     workspace()->rulebook()->discardUsed(this, false); // Remove ApplyNow rules
     updateWindowRules(Rules::All); // Was blocked while !isManaged()
