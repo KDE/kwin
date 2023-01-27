@@ -9,7 +9,6 @@
 #include <config-kwin.h>
 
 #include "kwin_wayland_test.h"
-#include "qtconcurrentrun.h"
 
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
@@ -995,7 +994,15 @@ void XcbConnectionDeleter::operator()(xcb_connection_t *pointer)
 
 Test::XcbConnectionPtr createX11Connection()
 {
-    return Test::XcbConnectionPtr(xcb_connect(null, null));
+    QFutureWatcher<xcb_connection_t *> watcher;
+    QEventLoop e;
+    e.connect(&watcher, &QFutureWatcher<xcb_connection_t *>::finished, &e, &QEventLoop::quit);
+    QFuture<xcb_connection_t *> future = QtConcurrent::run([]() {
+        return xcb_connect(nullptr, nullptr);
+    });
+    watcher.setFuture(future);
+    e.exec();
+    return Test::XcbConnectionPtr(future.result());
 }
 
 WaylandOutputManagementV2::WaylandOutputManagementV2(struct ::wl_registry *registry, int id, int version)

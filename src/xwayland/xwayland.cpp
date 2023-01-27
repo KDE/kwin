@@ -207,9 +207,16 @@ Xwayland::~Xwayland()
     m_launcher->stop();
 }
 
-void Xwayland::start()
+void Xwayland::init()
 {
-    m_launcher->start();
+    m_launcher->enable();
+
+    auto env = m_app->processStartupEnvironment();
+    env.insert(QStringLiteral("DISPLAY"), m_launcher->displayName());
+    env.insert(QStringLiteral("XAUTHORITY"), m_launcher->xauthority());
+    qputenv("DISPLAY", m_launcher->displayName().toLatin1());
+    qputenv("XAUTHORITY", m_launcher->xauthority().toLatin1());
+    m_app->setProcessStartupEnvironment(env);
 }
 
 XwaylandLauncher *Xwayland::xwaylandLauncher() const
@@ -313,13 +320,6 @@ void Xwayland::handleXwaylandReady()
     }
 
     m_dataBridge = std::make_unique<DataBridge>();
-
-    auto env = m_app->processStartupEnvironment();
-    env.insert(QStringLiteral("DISPLAY"), m_launcher->displayName());
-    env.insert(QStringLiteral("XAUTHORITY"), m_launcher->xauthority());
-    qputenv("DISPLAY", m_launcher->displayName().toLatin1());
-    qputenv("XAUTHORITY", m_launcher->xauthority().toLatin1());
-    m_app->setProcessStartupEnvironment(env);
 
     connect(workspace(), &Workspace::outputOrderChanged, this, &Xwayland::updatePrimary);
     updatePrimary();

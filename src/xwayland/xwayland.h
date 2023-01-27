@@ -38,7 +38,7 @@ public:
     Xwayland(Application *app);
     ~Xwayland() override;
 
-    void start();
+    void init();
 
     XwaylandLauncher *xwaylandLauncher() const;
 

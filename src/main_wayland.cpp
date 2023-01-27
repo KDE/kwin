@@ -167,25 +167,12 @@ void ApplicationWayland::continueStartupWithScene()
         qFatal("Failed to initialze the Wayland server, exiting now");
     }
 
-    if (operationMode() == OperationModeWaylandOnly) {
-        finalizeStartup();
-        return;
-    }
-
-    m_xwayland = std::make_unique<Xwl::Xwayland>(this);
-    m_xwayland->xwaylandLauncher()->setListenFDs(m_xwaylandListenFds);
-    m_xwayland->xwaylandLauncher()->setDisplayName(m_xwaylandDisplay);
-    m_xwayland->xwaylandLauncher()->setXauthority(m_xwaylandXauthority);
-    connect(m_xwayland.get(), &Xwl::Xwayland::errorOccurred, this, &ApplicationWayland::finalizeStartup);
-    connect(m_xwayland.get(), &Xwl::Xwayland::started, this, &ApplicationWayland::finalizeStartup);
-    m_xwayland->start();
-}
-
-void ApplicationWayland::finalizeStartup()
-{
-    if (m_xwayland) {
-        disconnect(m_xwayland.get(), &Xwl::Xwayland::errorOccurred, this, &ApplicationWayland::finalizeStartup);
-        disconnect(m_xwayland.get(), &Xwl::Xwayland::started, this, &ApplicationWayland::finalizeStartup);
+    if (operationMode() == OperationModeXwayland) {
+        m_xwayland = std::make_unique<Xwl::Xwayland>(this);
+        m_xwayland->xwaylandLauncher()->setListenFDs(m_xwaylandListenFds);
+        m_xwayland->xwaylandLauncher()->setDisplayName(m_xwaylandDisplay);
+        m_xwayland->xwaylandLauncher()->setXauthority(m_xwaylandXauthority);
+        m_xwayland->init();
     }
     startSession();
     notifyStarted();
