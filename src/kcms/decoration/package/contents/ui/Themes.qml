@@ -53,6 +53,7 @@ KCM.GridView {
                 bridge: bridgeItem.bridge
                 settings: settingsItem
                 anchors.fill: parent
+                smooth: false
                 onShadowChanged: updateDecoration(inactivePreview, 0, client.decoration.titleBar.height)
                 Component.onCompleted: {
                     client.active = false;
@@ -65,6 +66,7 @@ KCM.GridView {
                 bridge: bridgeItem.bridge
                 settings: settingsItem
                 anchors.fill: parent
+                smooth: false
                 onShadowChanged: updateDecoration(activePreview, client.decoration.titleBar.height, 0)
                 Component.onCompleted: {
                     client.active = true;
