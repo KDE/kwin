@@ -11,6 +11,7 @@
 #include <KDecoration2/Decoration>
 
 #include <QPainter>
+#include <QQuickWindow>
 
 namespace KDecoration2
 {
@@ -107,21 +108,24 @@ void PreviewButtonItem::createButton()
 
 void PreviewButtonItem::syncGeometry()
 {
-    if (!m_button) {
+    if (!m_button || !window()) {
         return;
     }
-    m_button->setGeometry(QRect(0, 0, width(), height()));
+    const qreal dpr = window()->devicePixelRatio();
+    m_button->setGeometry(QRectF(0, 0, width() * dpr, height() * dpr));
 }
 
 void PreviewButtonItem::paint(QPainter *painter)
 {
-    if (!m_button) {
+    if (!m_button || !window()) {
         return;
     }
-    QRect size{0, 0, (int)width(), (int)height()};
-    m_button->paint(painter, size);
+    const qreal dpr = window()->devicePixelRatio();
+    QRectF backgroundRect{QPointF(0, 0), size() * dpr};
+    painter->scale(1 / dpr, 1 / dpr);
+    m_button->paint(painter, backgroundRect.toRect());
     painter->setCompositionMode(QPainter::CompositionMode_SourceAtop);
-    painter->fillRect(size, m_color);
+    painter->fillRect(backgroundRect, m_color);
 }
 
 void PreviewButtonItem::setColor(const QColor &color)
