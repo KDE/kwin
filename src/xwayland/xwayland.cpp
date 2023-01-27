@@ -282,6 +282,9 @@ void Xwayland::handleXwaylandFinished()
     m_dataBridge.reset();
     m_selectionOwner.reset();
 
+    m_inputSpy.reset();
+    disconnect(options, &Options::xwaylandEavesdropsChanged, this, &Xwayland::refreshEavesdropping);
+
     destroyX11Connection();
 }
 
