@@ -1081,10 +1081,6 @@ void MoveResizeWindowTest::testCancelInteractiveMoveResize_data()
     QTest::addColumn<QuickTileMode>("quickTileMode");
     QTest::addColumn<MaximizeMode>("maximizeMode");
 
-    QTest::newRow("quicktile_bottom") << QuickTileMode(QuickTileFlag::Bottom) << MaximizeMode::MaximizeRestore;
-    QTest::newRow("quicktile_top") << QuickTileMode(QuickTileFlag::Top) << MaximizeMode::MaximizeRestore;
-    QTest::newRow("quicktile_left") << QuickTileMode(QuickTileFlag::Left) << MaximizeMode::MaximizeRestore;
-    QTest::newRow("quicktile_right") << QuickTileMode(QuickTileFlag::Right) << MaximizeMode::MaximizeRestore;
     QTest::newRow("maximize_vertical") << QuickTileMode(QuickTileFlag::None) << MaximizeMode::MaximizeVertical;
     QTest::newRow("maximize_horizontal") << QuickTileMode(QuickTileFlag::None) << MaximizeMode::MaximizeHorizontal;
     QTest::newRow("maximize_full") << QuickTileMode(QuickTileFlag::Maximize) << MaximizeMode::MaximizeFull;

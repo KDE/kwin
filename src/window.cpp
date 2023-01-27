@@ -1598,6 +1598,13 @@ bool Window::startInteractiveMoveResize()
     if (isRequestedFullScreen() && (workspace()->outputs().count() < 2 || !isMovableAcrossScreens())) {
         return false;
     }
+
+    if (m_tile) {
+        if (interactiveMoveResizeGravity() != Gravity::None && !m_tile->supportsResizeGravity(interactiveMoveResizeGravity())) {
+            return false;
+        }
+    }
+
     if (!doStartInteractiveMoveResize()) {
         return false;
     }
@@ -1648,10 +1655,6 @@ bool Window::startInteractiveMoveResize()
         default:
             break;
         }
-    }
-
-    if (m_tile && !m_tile->supportsResizeGravity(interactiveMoveResizeGravity())) {
-        setQuickTileMode(QuickTileFlag::None);
     }
 
     updateElectricGeometryRestore();
@@ -1826,15 +1829,11 @@ void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &gl
 
 void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
 {
-    const Gravity gravity = interactiveMoveResizeGravity();
-    if (m_tile && m_tile->supportsResizeGravity(gravity)) {
-        m_tile->resizeFromGravity(gravity, x_root, y_root);
-        return;
-    }
     if (isWaitingForInteractiveMoveResizeSync()) {
         return; // we're still waiting for the client or the timeout
     }
 
+    const Gravity gravity = interactiveMoveResizeGravity();
     if ((gravity == Gravity::None && !isMovableAcrossScreens())
         || (gravity != Gravity::None && (isShade() || !isResizable()))) {
         return;
@@ -1897,6 +1896,11 @@ void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
     };
 
     if (isInteractiveResize()) {
+        if (m_tile) {
+            m_tile->resizeFromGravity(gravity, x_root, y_root);
+            return;
+        }
+
         QRectF orig = initialInteractiveMoveResizeGeometry();
         SizeMode sizeMode = SizeModeAny;
         auto calculateMoveResizeGeom = [&topleft, &bottomright, &orig, &nextMoveResizeGeom, &sizeMode, &gravity]() {
