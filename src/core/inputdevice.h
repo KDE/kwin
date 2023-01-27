@@ -83,6 +83,7 @@ Q_SIGNALS:
     void tabletPadButtonEvent(uint button, bool isPressed, const TabletPadId &tabletPadId, std::chrono::microseconds time);
     void tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time);
     void tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time);
+    void tabletPadDialEvent(double delta, unsigned int number, const TabletPadId &tabletPadId, std::chrono::microseconds time);
 };
 
 } // namespace KWin
