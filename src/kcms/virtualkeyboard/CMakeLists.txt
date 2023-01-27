@@ -19,6 +19,7 @@ kcmutils_generate_desktop_file(kcm_virtualkeyboard)
 target_link_libraries(kcm_virtualkeyboard
     KF5::I18n
     KF5::KCMUtils
+    KF5::Service
     KF5::QuickAddons
 )
 

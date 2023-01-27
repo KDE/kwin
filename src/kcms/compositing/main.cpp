@@ -15,10 +15,9 @@
 #include <QApplication>
 #include <QLayout>
 
+#include <KCModule>
 #include <KPluginFactory>
 #include <KWindowSystem>
-#include <kcmodule.h>
-#include <kservice.h>
 
 #include <algorithm>
 #include <functional>

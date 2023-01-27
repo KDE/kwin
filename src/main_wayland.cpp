@@ -42,6 +42,7 @@
 #include <QFileInfo>
 #include <QProcess>
 #include <QWindow>
+#include <QtPlugin>
 #include <qplatformdefs.h>
 
 #include <sched.h>

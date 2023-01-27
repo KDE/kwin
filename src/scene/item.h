@@ -11,6 +11,7 @@
 
 #include <QMatrix4x4>
 #include <QObject>
+#include <QPointer>
 #include <QVector>
 
 #include <optional>

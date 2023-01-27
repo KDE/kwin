@@ -22,6 +22,7 @@
 // Qt
 #include <QDebug>
 #include <QFutureWatcher>
+#include <QPluginLoader>
 #include <QStaticPlugin>
 #include <QStringList>
 #include <QtConcurrentRun>

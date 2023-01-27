@@ -30,6 +30,7 @@ target_link_libraries(kcm_kwindecoration
     KF5::NewStuff
     KF5::QuickAddons
     Qt::Quick
+    Qt::DBus
 )
 
 set(kwin-applywindowdecoration_SRCS

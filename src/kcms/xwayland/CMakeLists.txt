@@ -20,6 +20,7 @@ target_link_libraries(kcm_kwinxwayland
     KF5::I18n
     KF5::KCMUtils
     KF5::QuickAddons
+    KF5::Service
     Wayland::Client
 )
 kpackage_install_package(package kcm_kwinxwayland kcms)
