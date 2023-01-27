@@ -31,6 +31,7 @@ ListView {
             width: view.iconSize
             height: view.iconSize
             anchors.fill: Drag.active ? undefined : parent
+            smooth: false // https://bugreports.qt.io/browse/QTBUG-110796
             Drag.keys: [ "decoButtonRemove", view.key ]
             Drag.active: dragArea.drag.active
             Drag.onActiveChanged: view.dragging = Drag.active

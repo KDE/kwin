@@ -202,6 +202,7 @@ Rectangle {
                         type: model["button"]
                         width: baseLayout.buttonIconSize
                         height: baseLayout.buttonIconSize
+                        smooth: false // https://bugreports.qt.io/browse/QTBUG-110796
                         Drag.keys: [ "decoButtonAdd" ]
                         Drag.active: dragArea.drag.active
                         Drag.onActiveChanged: availableButtonsGrid.dragging = Drag.active
