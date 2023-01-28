@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2023-01-22 07:10+0100\n"
+"PO-Revision-Date: 2023-01-27 08:53+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -1076,7 +1076,7 @@ msgstr "აქტივაცია და დაწევა"
 #: mouse.ui:589
 #, kde-format
 msgid "Maximize Button Actions"
-msgstr ""
+msgstr "მთელ ეკრანზე გაშლის ღილაკის ქმედებები"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_8)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
