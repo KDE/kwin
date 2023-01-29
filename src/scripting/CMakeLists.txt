@@ -1,5 +1,3 @@
-add_subdirectory(v2)
-
 if (KWIN_BUILD_KCMS)
     set(kcm_kwin4_genericscripted_SRCS genericscriptedconfig.cpp)
     qt_add_dbus_interface(kcm_kwin4_genericscripted_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)

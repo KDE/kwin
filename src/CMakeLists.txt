@@ -145,7 +145,6 @@ target_sources(kwin PRIVATE
     scripting/scripting_logging.cpp
     scripting/scriptingutils.cpp
     scripting/tilemodel.cpp
-    scripting/v2/clientmodel.cpp
     scripting/v3/clientmodel.cpp
     scripting/v3/virtualdesktopmodel.cpp
     scripting/windowthumbnailitem.cpp

@@ -309,7 +309,6 @@ void TabBoxHandlerPrivate::show()
 {
 #ifndef KWIN_UNIT_TEST
     if (!m_qmlContext) {
-        qmlRegisterType<SwitcherItem>("org.kde.kwin", 2, 0, "Switcher");
         qmlRegisterType<SwitcherItem>("org.kde.kwin", 3, 0, "TabBoxSwitcher");
         m_qmlContext.reset(new QQmlContext(Scripting::self()->qmlEngine()));
     }
