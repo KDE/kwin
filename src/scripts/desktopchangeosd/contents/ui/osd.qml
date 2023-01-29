@@ -10,7 +10,7 @@ import QtQuick 2.0;
 import QtQuick.Window 2.0;
 import org.kde.plasma.core 2.0 as PlasmaCore;
 import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.kwin 2.0;
+import org.kde.kwin 3.0
 
 PlasmaCore.Dialog {
     id: dialog
@@ -30,21 +30,21 @@ PlasmaCore.Dialog {
         }
 
         function show() {
-            if (dialogItem.currentDesktop == workspace.currentDesktop - 1) {
+            if (dialogItem.currentDesktop == Workspace.currentDesktop - 1) {
                 return;
             }
             dialogItem.previousDesktop = dialogItem.currentDesktop;
             timer.stop();
-            dialogItem.currentDesktop = workspace.currentDesktop - 1;
-            textElement.text = workspace.desktopName(workspace.currentDesktop);
+            dialogItem.currentDesktop = Workspace.currentDesktop - 1;
+            textElement.text = Workspace.desktopName(Workspace.currentDesktop);
             // screen geometry might have changed
-            var screen = workspace.clientArea(KWin.FullScreenArea, workspace.activeScreen, workspace.currentDesktop);
+            var screen = Workspace.clientArea(KWin.FullScreenArea, Workspace.activeScreen, Workspace.currentDesktop);
             dialogItem.screenWidth = screen.width;
             dialogItem.screenHeight = screen.height;
             if (dialogItem.showGrid) {
                 // non dependable properties might have changed
-                view.columns = workspace.desktopGridWidth;
-                view.rows = workspace.desktopGridHeight;
+                view.columns = Workspace.desktopGridWidth;
+                view.rows = Workspace.desktopGridHeight;
             }
             dialog.visible = true;
             // position might have changed
@@ -74,7 +74,7 @@ PlasmaCore.Dialog {
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.NoWrap
             elide: Text.ElideRight
-            text: workspace.desktopName(workspace.currentDesktop)
+            text: Workspace.desktopName(Workspace.currentDesktop)
         }
 
         Grid {
@@ -92,7 +92,7 @@ PlasmaCore.Dialog {
             visible: dialogItem.showGrid
             Repeater {
                 id: repeater
-                model: workspace.desktops
+                model: Workspace.desktops
                 Item {
                     width: view.itemWidth
                     height: view.itemHeight
@@ -273,23 +273,23 @@ PlasmaCore.Dialog {
         }
 
         Connections {
-            target: workspace
+            target: Workspace
             function onCurrentDesktopChanged() {
                 dialogItem.show()
             }
             function onNumberDesktopsChanged() {
-                repeater.model = workspace.desktops;
+                repeater.model = Workspace.desktops;
             }
         }
         Connections {
-            target: options
+            target: Options
             function onConfigChanged() {
                 dialogItem.loadConfig()
             }
         }
         Component.onCompleted: {
-            view.columns = workspace.desktopGridWidth;
-            view.rows = workspace.desktopGridHeight;
+            view.columns = Workspace.desktopGridWidth;
+            view.rows = Workspace.desktopGridHeight;
             dialogItem.loadConfig();
             dialogItem.show();
         }
