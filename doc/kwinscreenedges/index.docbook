@@ -15,13 +15,15 @@
 </authorgroup>
 
 <date>2023-01-30</date>
-<releaseinfo>Plasma 6.0</releaseinfo>
+<releaseinfo>Plasma 5.27</releaseinfo>
 
 <keywordset>
 <keyword>KDE</keyword>
 <keyword>Systemsettings</keyword>
 <keyword>desktop</keyword>
 <keyword>effects</keyword>
+<keyword>screen</keyword>
+<keyword>edge</keyword>
 </keywordset>
 </articleinfo>
 
