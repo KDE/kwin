@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-13 00:58+0000\n"
+"POT-Creation-Date: 2023-01-29 00:59+0000\n"
 "PO-Revision-Date: 2023-01-13 10:48+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -169,7 +169,7 @@ msgstr ""
 "Latentie verminderen door artifacts door schuin trekken van scherm in "
 "vensters in volledig scherm toe te staan"
 
-#: main.cpp:79
+#: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Detectie van OpenGL opnieuw inschakelen"

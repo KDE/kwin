@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-13 00:58+0000\n"
+"POT-Creation-Date: 2023-01-29 00:59+0000\n"
 "PO-Revision-Date: 2023-01-12 10:31\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -157,7 +157,7 @@ msgid ""
 "Reduce latency by allowing screen tearing artifacts in fullscreen windows"
 msgstr ""
 
-#: main.cpp:79
+#: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "重新启用 OpenGL 检测"

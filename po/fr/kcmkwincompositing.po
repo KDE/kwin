@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-13 00:58+0000\n"
+"POT-Creation-Date: 2023-01-29 00:59+0000\n"
 "PO-Revision-Date: 2023-01-14 19:41+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
@@ -176,7 +176,7 @@ msgstr ""
 "Réduire la latence en permettant aux artefacts de déchirure d’écran dans les "
 "fenêtres en mode « Plein écran »"
 
-#: main.cpp:79
+#: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Activer à nouveau la détection OpenGL"
