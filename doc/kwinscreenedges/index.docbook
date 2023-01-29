@@ -14,8 +14,8 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2021-04-09</date>
-<releaseinfo>Plasma 5.20</releaseinfo>
+<date>2023-01-30</date>
+<releaseinfo>Plasma 6.0</releaseinfo>
 
 <keywordset>
 <keyword>KDE</keyword>
@@ -44,8 +44,7 @@ group. This activates the corresponding items in the context menu.</para>
 pushing your mouse cursor against the edge of the screen choose one of the <guilabel>Present 
 Windows</guilabel> effects from the context menu.</para>
 
-<para>You can enable <guilabel>Maximize: Windows dragged to top edge</guilabel>
-or <guilabel>Tile: Windows dragged to left or right edge</guilabel>
+<para>You can enable <guilabel>Maximize: Windows dragged to top edge</guilabel>, <guilabel>Tile: Windows dragged to left or right edge</guilabel> or <guilabel>Trigger quarter tiling in:</guilabel>
 and set a percentage of the screen to trigger the tiling.
 </para>
 
