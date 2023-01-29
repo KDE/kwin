@@ -49,6 +49,8 @@ or <guilabel>Tile: Windows dragged to left or right edge</guilabel>
 and set a percentage of the screen to trigger the tiling.
 </para>
 
+<para>Disable the option <guilabel>Remain active when windows are fullscreen</guilabel> option to supress triggering screen edge actions when an application is running in fullscreen.</para>
+
 <para>Using the <guilabel>Switch desktop on edge</guilabel> item, configure if you want to switch 
 to another desktop when pushing the mouse cursor to an edge of the screen, &eg; only when 
 moving windows.
