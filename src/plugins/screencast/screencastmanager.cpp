@@ -62,7 +62,10 @@ public:
         : ScreenCastStream(new WindowScreenCastSource(window), parent)
         , m_window(window)
     {
+        m_timer.setInterval(0);
+        m_timer.setSingleShot(true);
         setObjectName(window->desktopFileName());
+        connect(&m_timer, &QTimer::timeout, this, &WindowStream::bufferToStream);
         connect(this, &ScreenCastStream::startStreaming, this, &WindowStream::startFeeding);
         connect(this, &ScreenCastStream::stopStreaming, this, &WindowStream::stopFeeding);
     }
@@ -70,33 +73,28 @@ public:
 private:
     void startFeeding()
     {
-        connect(Compositor::self()->scene(), &WorkspaceScene::frameRendered, this, &WindowStream::bufferToStream);
-
         connect(m_window, &Window::damaged, this, &WindowStream::markDirty);
         markDirty();
-        m_window->output()->renderLoop()->scheduleRepaint();
     }
 
     void stopFeeding()
     {
-        disconnect(Compositor::self()->scene(), &WorkspaceScene::frameRendered, this, &WindowStream::bufferToStream);
+        disconnect(m_window, &Window::damaged, this, &WindowStream::markDirty);
+        m_timer.stop();
     }
 
     void markDirty()
     {
-        m_dirty = true;
+        m_timer.start();
     }
 
     void bufferToStream()
     {
-        if (m_dirty) {
-            recordFrame(QRegion(0, 0, m_window->width(), m_window->height()));
-            m_dirty = false;
-        }
+        recordFrame(QRegion(0, 0, m_window->width(), m_window->height()));
     }
 
     Window *m_window;
-    bool m_dirty = false;
+    QTimer m_timer;
 };
 
 void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamV1Interface *waylandStream,

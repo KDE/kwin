@@ -19,6 +19,7 @@
 #include "kwinglutils.h"
 #include "kwinscreencast_logging.h"
 #include "main.h"
+#include "openglbackend.h"
 #include "pipewirecore.h"
 #include "scene/workspacescene.h"
 #include "screencastsource.h"
@@ -378,6 +379,7 @@ void ScreenCastStream::stop()
 
 void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
 {
+    static_cast<OpenGLBackend *>(Compositor::self()->backend())->makeCurrent();
     QRegion damagedRegion = _damagedRegion;
     Q_ASSERT(!m_stopped);
 
