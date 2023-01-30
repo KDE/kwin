@@ -48,6 +48,12 @@ Windows</guilabel> effects from the context menu.</para>
 and set a percentage of the screen to trigger the tiling.
 </para>
 
+<tip>
+<para>
+In the <guilabel>Movement</guilabel> tab of the <guilabel>Window Behavior</guilabel> settings module in the <guilabel>Window Management</guilabel> section of the system settings, you can configure snap zones for windows to moved to the screen edges, center or other windows when they get near them.
+</para>
+</tip>
+
 <para>Disable the option <guilabel>Remain active when windows are fullscreen</guilabel> option to supress triggering screen edge actions when an application is running in fullscreen.</para>
 
 <para>Using the <guilabel>Switch desktop on edge</guilabel> item, configure if you want to switch 
