@@ -48,6 +48,7 @@
 #include <KDecoration2/Decoration>
 
 #include <KDesktopFile>
+#include <KMountPoint>
 
 #include <QDebug>
 #include <QDir>
@@ -3333,6 +3334,26 @@ void Window::setDesktopFileName(const QString &name)
     }
     m_desktopFileName = effectiveName;
     updateWindowRules(Rules::DesktopFile);
+
+    if (auto _pid = pid(); _pid > 0 && !m_desktopFileName.isEmpty() && QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("applications/%1.desktop").arg(m_desktopFileName)).isEmpty()) {
+        // For an AppImage window, its desktop file is stored in a temporary folder
+        QFileInfo exeFile(QStringLiteral("/proc/%1/exe").arg(QString::number(_pid)));
+        if (exeFile.isSymLink()) {
+            const QString targetPath = exeFile.symLinkTarget();
+            if (targetPath.startsWith(QLatin1String("/tmp/.mount"))) {
+                const KMountPoint::List mountList = KMountPoint::currentMountPoints(KMountPoint::BasicInfoNeeded);
+                KMountPoint::Ptr mountPointPtr = mountList.findByPath(targetPath);
+                if (mountPointPtr) {
+                    QDir mountDir(mountPointPtr->mountPoint());
+                    const auto desktopFiles = mountDir.entryInfoList(QStringList{QStringLiteral("*.desktop")}, QDir::Files | QDir::Readable);
+                    if (!desktopFiles.empty()) {
+                        m_desktopFileName = desktopFiles[0].absoluteFilePath();
+                    }
+                }
+            }
+        }
+    }
+
     Q_EMIT desktopFileNameChanged();
 }
 
@@ -3344,7 +3365,22 @@ QString Window::iconFromDesktopFile(const QString &desktopFileName)
     }
 
     KDesktopFile df(absolutePath);
-    return df.readIcon();
+    const QString iconValue = df.readIcon();
+    if (QFileInfo info(iconValue); !info.exists()) {
+        // Is an icon name
+        if (!QIcon::hasThemeIcon(iconValue)) {
+            // For AppImage, the icon is usually in the same folder with its desktop file
+            // See https://docs.appimage.org/reference/appdir.html#general-description
+            QDir dir = QFileInfo(absolutePath).absoluteDir();
+            const auto iconFiles =
+                dir.entryInfoList({QStringLiteral("%1.png").arg(iconValue), QStringLiteral("%1.svg").arg(iconValue)}, QDir::Files | QDir::Readable);
+            if (!iconFiles.empty()) {
+                return iconFiles[0].absoluteFilePath();
+            }
+        }
+    }
+
+    return iconValue;
 }
 
 QString Window::iconFromDesktopFile() const
@@ -3356,6 +3392,10 @@ QString Window::findDesktopFile(const QString &desktopFileName)
 {
     if (desktopFileName.isEmpty()) {
         return {};
+    }
+
+    if (QFileInfo info(desktopFileName); info.exists()) {
+        return info.absoluteFilePath();
     }
 
     const QString desktopFileNameWithPrefix = desktopFileName + QLatin1String(".desktop");

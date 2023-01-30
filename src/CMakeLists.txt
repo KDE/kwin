@@ -197,6 +197,7 @@ target_link_libraries(kwin
     KF5::GlobalAccel
     KF5::GlobalAccelPrivate
     KF5::I18n
+    KF5::KIOCore
     KF5::Package
     KF5::Service
     KF5::WindowSystem
