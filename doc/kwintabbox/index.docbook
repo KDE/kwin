@@ -12,8 +12,8 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2020-12-31</date>
-<releaseinfo>&plasma; 5.21</releaseinfo>
+<date>2023-01-30</date>
+<releaseinfo>&plasma; 5.27</releaseinfo>
 
 <keywordset>
 <keyword>KDE</keyword>
@@ -31,6 +31,17 @@
 
 <para>The Task Switcher allows the user to easily switch between currently open windows using the keyboard.  It is highly configurable, and allows the user to control its behavior, visual appearance, keyboard shortcuts, and window filtering.</para>
 
+<para>
+  <screenshot>
+    <screeninfo>Screenshot of the default Task Switcher</screeninfo>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="taskswitcher.png" format="PNG" />
+      </imageobject>
+    </mediaobject>
+  </screenshot>
+</para>
+
 <para>The Task Switcher is often invoked using the key combination <keycombo>&Alt;&Tab;</keycombo>, but this can be changed. When invoked, it shows a list of all the currently open windows, optionally filtered and augmented according to the configuration settings. For example, the list may be filtered to show only windows that meet certain criteria, such as windows that are currently visible.  Once the window list is shown, the user can cycle forward and backward through all the listed windows by repeatedly hitting the Task Switcher key combination.  Releasing the Task Switcher key combination will activate the window that was selected in the list.</para>
 
 <para>Because the Task Switcher offers so many configuration options, two distinct collections of configuration settings can be defined. These collections are called <guilabel>Main</guilabel> and <guilabel>Alternative</guilabel>, and each can have a unique set of key combinations assigned to them.</para>
@@ -43,7 +54,7 @@
 
 <para>Once a visualization has been selected from the drop-down list, the button to the right of the list can be clicked to see a preview or to configure visualization-specific options.</para>
 
-<para>The <guilabel>Show selected window</guilabel> checkbox determines how clearly the user will see which window will be activated.  If this box is checked, then all windows will be dimmed except for the one that is currently highlighted in the Task Switcher.</para>
+<para>The <guilabel>Show selected window</guilabel> checkbox determines how clearly the user will see which window will be activated.  If this box is checked, then all windows will be hidden except for the one that is currently highlighted in the Task Switcher.</para>
 
 <note><para>There may be cases where the desired Task Switcher visualization cannot be shown.  One of these situations can be when a process called 'compositing' is turned off or disabled.  If this ever happens, the window list will still be shown, but in a very simple format.</para></note>
 </sect2>
@@ -62,11 +73,13 @@
 <title>Content</title>
 <para>The options in this section partially control which windows will appear in the Task Switcher list.</para>
 
-<para>The <guilabel>Sort Order</guilabel> drop-down list specifies whether the windows should be listed in <guilabel>Stacking Order</guilabel> or <guilabel>Recently Used</guilabel> order.  <guilabel>Stacking Order</guilabel> is the order in which the windows appear on the screen, while <guilabel>Recently Used</guilabel> order is the order in which the windows have been used. <guilabel>Recently Used</guilabel> order makes it very easy to switch between the two most frequently used windows because they will always appear in the top 2 positions in the list.</para>
+<para>The <guilabel>Sort Order</guilabel> drop-down list specifies whether the windows should be listed in <guilabel>Stacking Order</guilabel> or <guilabel>Recently Used</guilabel> order.  <guilabel>Stacking Order</guilabel> is the order in which the windows appear on top of each other on the screen, while <guilabel>Recently Used</guilabel> order is the order in which the windows have been used. <guilabel>Recently Used</guilabel> order makes it very easy to switch between the two most frequently used windows because they will always appear in the top 2 positions in the list.</para>
 
 <para>The <guilabel>Include "Show Desktop" icon</guilabel> option will add a Show Desktop option to the window list. This allows the user to easily select the Desktop as the 'window' to show.</para>
 
 <para>The <guilabel>Only one window per application</guilabel> option reduces clutter by only showing one window for each open application.  If an application has multiple windows open, then its most recently activated window will be shown in the list and the others will not be shown.</para>
+
+<para>The <guilabel>Order minimized windows after unminimized windows</guilabel> option will show you all unminimized windows first, even if they are less recent or further at the bottom than some of the minimized windows.</para>
 </sect2>
 
 <sect2 id="filter-windows-by">
