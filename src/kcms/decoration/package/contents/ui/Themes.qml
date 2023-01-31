@@ -26,6 +26,8 @@ KCM.GridView {
 
     view.implicitCellWidth: Kirigami.Units.gridUnit * 18
 
+    framedView: false
+
     view.delegate: KCM.GridDelegate {
         id: delegate
         text: model.display
