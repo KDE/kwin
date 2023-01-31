@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-29 00:59+0000\n"
-"PO-Revision-Date: 2023-01-25 07:03+0100\n"
+"PO-Revision-Date: 2023-01-30 09:25+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -2720,6 +2720,9 @@ msgid ""
 "as active one.\n"
 "Therefore it is not possible to switch to a screen explicitly."
 msgstr ""
+"ფანჯრების მმართველს მითითებული აქვს, რომ ეკრანი, რომელზეც თაგუნა იმყოფება, "
+"აქტიურად ჩათვალოს.\n"
+"ამიტომ ეკრანის პირდაპირ გადართვას ვერ შეძლებთ."
 
 #: virtualdesktops.cpp:693 virtualdesktops.cpp:764
 #, kde-format
