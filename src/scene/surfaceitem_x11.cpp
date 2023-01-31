@@ -242,8 +242,8 @@ void SurfacePixmapX11::create()
     }
     const QRectF bufferGeometry = window->bufferGeometry();
     if (windowGeometry.size() != bufferGeometry.size()) {
-        qCDebug(KWIN_CORE, "Failed to create window pixmap for window 0x%x (mismatched geometry)",
-                window->window());
+        qCDebug(KWIN_CORE, "Failed to create window pixmap for window 0x%x: window size (%fx%f) != buffer size (%fx%f)", window->window(),
+                windowGeometry.size().width(), windowGeometry.size().height(), bufferGeometry.width(), bufferGeometry.height());
         xcb_free_pixmap(connection, pixmap);
         return;
     }
