@@ -4188,7 +4188,7 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
     // Such code is wrong and should be changed to handle the case when the window is shaded,
     // for example using X11Window::clientSize()
 
-    QRectF frameGeometry = rect;
+    QRectF frameGeometry = Xcb::fromXNative(Xcb::toXNative(rect));
 
     if (shade_geometry_change) {
         ; // nothing
