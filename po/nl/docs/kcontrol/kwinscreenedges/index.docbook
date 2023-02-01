@@ -18,9 +18,9 @@
 </authorgroup>
 
 <date
->2021-04-09</date>
+>2023-01-30</date>
 <releaseinfo
->Plasma 5.20</releaseinfo>
+>Plasma 5.27</releaseinfo>
 
 <keywordset>
 <keyword
@@ -31,6 +31,10 @@
 >bureaublad</keyword>
 <keyword
 >effecten</keyword>
+<keyword
+>scherm</keyword>
+<keyword
+>rand</keyword>
 </keywordset>
 </articleinfo>
 
@@ -59,9 +63,27 @@
 <para
 >U kunt <guilabel
 >Maximaliseren: Vensters naar de bovenrand gesleept</guilabel
-> of <guilabel
+>, <guilabel
 >Tegels: Vensters naar de linker of rechter rand gesleept</guilabel
+> of <guilabel
+>Start kwart tegels in:</guilabel
 > inschakelen en een percentage van het scherm instellen om tegels maken te starten. </para>
+
+<tip>
+<para
+>In het tabblad <guilabel
+>Verplaatsing</guilabel
+> van de instellingsmodule <guilabel
+>Venstergedrag</guilabel
+> in de sectie <guilabel
+>Vensterbeheer</guilabel
+> van de systeeminstellingen, kunt u magnetische zones voor vensters configureren om te verplaatsen naar de schermranden, centreren of andere vensters wanneer ze er dichtbij komen. </para>
+</tip>
+
+<para
+>Disable the <guilabel
+>Remain active when windows are fullscreen</guilabel
+> option to suppress triggering screen edge actions when an application is running in fullscreen.</para>
 
 <para
 >Door het item <guilabel

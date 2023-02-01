@@ -18,9 +18,9 @@
 </authorgroup>
 
 <date
->9 d'abril de 2021</date>
+>30 de gener de 2023</date>
 <releaseinfo
->Plasma 5.20</releaseinfo>
+>Plasma 5.27</releaseinfo>
 
 <keywordset>
 <keyword
@@ -31,6 +31,10 @@
 >escriptori</keyword>
 <keyword
 >efectes</keyword>
+<keyword
+>pantalla</keyword>
+<keyword
+>vora</keyword>
 </keywordset>
 </articleinfo>
 
@@ -59,9 +63,27 @@
 <para
 >Podeu habilitar <guilabel
 >Maximitza: Finestres arrossegades a la vora superior</guilabel
-> o <guilabel
+>, <guilabel
 >Mosaic: Finestres arrossegades a la vora dreta o esquerra</guilabel
+> o <guilabel
+>Activador de mosaic en quarts</guilabel
 > i establir un percentatge de la pantalla per a activar el mosaic. </para>
+
+<tip>
+<para
+>A la pestanya <guilabel
+>Moviment</guilabel
+> del mòdul de configuració <guilabel
+>Comportament de la finestra</guilabel
+> a la secció <guilabel
+>Gestió de finestres</guilabel
+> de la configuració del sistema, podeu configurar les zones d'ajust perquè les finestres es moguin a les vores de la pantalla, al centre o a altres finestres quan s'hi apropin. </para>
+</tip>
+
+<para
+>Disable the <guilabel
+>Remain active when windows are fullscreen</guilabel
+> option to suppress triggering screen edge actions when an application is running in fullscreen.</para>
 
 <para
 >Utilitzant l'element <guilabel
