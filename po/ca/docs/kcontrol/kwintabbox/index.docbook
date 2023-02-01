@@ -15,9 +15,9 @@
 </authorgroup>
 
 <date
->31 de desembre de 2020</date>
+>30 de gener de 2023</date>
 <releaseinfo
->&plasma; 5.21</releaseinfo>
+>&plasma; 5.27</releaseinfo>
 
 <keywordset>
 <keyword
@@ -43,6 +43,18 @@
 
 <para
 >El Commutador de tasques permet a l'usuari canviar amb facilitat entre les finestres actualment obertes emprant el teclat. És altament configurable i permet a l'usuari controlar el seu comportament, aparença visual, dreceres de teclat i filtratge de les finestres.</para>
+
+<para>
+  <screenshot>
+    <screeninfo
+>Captura de pantalla del commutador de tasques predeterminat</screeninfo>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="taskswitcher.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
+  </screenshot>
+</para>
 
 <para
 >El Commutador de tasques sovint s'invoca amb la combinació de tecles <keycombo
@@ -81,7 +93,7 @@
 <para
 >La casella de selecció <guilabel
 >Mostra la finestra seleccionada</guilabel
-> determina la claredat amb la qual veurà l'usuari quina finestra s'activarà. Si aquesta opció està marcada, totes les finestres apareixeran atenuades excepte la que està ressaltada al Commutador de tasques.</para>
+> determina la claredat amb la qual veurà l'usuari quina finestra s'activarà. Si aquesta opció està marcada, totes les finestres s'ocultaran excepte la que està ressaltada al Commutador de tasques.</para>
 
 <note
 ><para
@@ -150,7 +162,7 @@
 >Usades recentment</guilabel
 >. L'<guilabel
 >Ordre d'apilament</guilabel
-> és l'ordre en què apareixen les finestres a la pantalla, mentre que l'ordre <guilabel
+> és l'ordre en què apareixen les finestres una sobre l'altra a la pantalla, mentre que l'ordre <guilabel
 >Usades recentment</guilabel
 > és l'ordre en què s'han fet servir les finestres. L'ordre <guilabel
 >Usades recentment</guilabel
@@ -165,6 +177,11 @@
 >L'opció <guilabel
 >Només una finestra per aplicació</guilabel
 > redueix el desordre en només mostrar una finestra per a cada aplicació oberta. Si una aplicació té obertes múltiples finestres, la seva finestra activada més recentment es mostrarà a la llista i les altres no es mostraran.</para>
+
+<para
+>L'opció <guilabel
+>Ordena les finestres minimitzades després de les finestres sense minimitzar</guilabel
+> mostrarà primer totes les finestres sense minimitzar, encara que siguin menys recents o més a la part inferior que algunes de les finestres minimitzades.</para>
 </sect2>
 
 <sect2 id="filter-windows-by">
