@@ -1264,17 +1264,6 @@
 <varlistentry>
 <term
 ><guilabel
->Уступами</guilabel
-></term>
-<listitem>
-<para
->Розташовувати нові вікна уступами, відкриваючи кожне наступне нижче і правіше від активного вікна, починаючи з верхнього лівого кута екрана, якщо ще не відкрито жодного вікна. </para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term
-><guilabel
 >Довільно</guilabel
 ></term>
 <listitem>

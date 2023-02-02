@@ -81,9 +81,9 @@
 </tip>
 
 <para
->Disable the <guilabel
->Remain active when windows are fullscreen</guilabel
-> option to suppress triggering screen edge actions when an application is running in fullscreen.</para>
+>De optie <guilabel
+>Actief blijven wanneer vensters volledig scherm zijn</guilabel
+> uitschakelen om starten van schermrandacties te onderdrukken wanneer een toepassing actief is in volledig scherm.</para>
 
 <para
 >Door het item <guilabel
