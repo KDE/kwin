@@ -92,7 +92,8 @@ BlurEffect::~BlurEffect()
     if (s_blurManager) {
         s_blurManagerRemoveTimer->start(1000);
     }
-    deleteFBOs();
+    m_renderTargets.clear();
+    m_renderTextures.clear();
 }
 
 void BlurEffect::slotScreenGeometryChanged()
@@ -110,24 +111,15 @@ void BlurEffect::slotScreenGeometryChanged()
 
 bool BlurEffect::renderTargetsValid() const
 {
-    return !m_renderTargets.isEmpty() && std::find_if(m_renderTargets.cbegin(), m_renderTargets.cend(), [](const GLFramebuffer *target) {
-                                             return !target->valid();
-                                         })
-        == m_renderTargets.cend();
-}
-
-void BlurEffect::deleteFBOs()
-{
-    qDeleteAll(m_renderTargets);
-    qDeleteAll(m_renderTextures);
-
-    m_renderTargets.clear();
-    m_renderTextures.clear();
+    return !m_renderTargets.empty() && std::all_of(m_renderTargets.cbegin(), m_renderTargets.cend(), [](const auto &target) {
+        return target->valid();
+    });
 }
 
 void BlurEffect::updateTexture()
 {
-    deleteFBOs();
+    m_renderTargets.clear();
+    m_renderTextures.clear();
 
     /* Reserve memory for:
      *  - The original sized texture (1)
@@ -168,19 +160,19 @@ void BlurEffect::updateTexture()
     // anyway.
     const auto screenSize = effects->virtualScreenSize();
     for (int i = 0; i <= m_downSampleIterations; i++) {
-        m_renderTextures.append(new GLTexture(textureFormat, screenSize / (1 << i)));
-        m_renderTextures.constLast()->setFilter(GL_LINEAR);
-        m_renderTextures.constLast()->setWrapMode(GL_CLAMP_TO_EDGE);
+        m_renderTextures.push_back(std::make_unique<GLTexture>(textureFormat, screenSize / (1 << i)));
+        m_renderTextures.back()->setFilter(GL_LINEAR);
+        m_renderTextures.back()->setWrapMode(GL_CLAMP_TO_EDGE);
 
-        m_renderTargets.append(new GLFramebuffer(m_renderTextures.constLast()));
+        m_renderTargets.push_back(std::make_unique<GLFramebuffer>(m_renderTextures.back().get()));
     }
 
     // This last set is used as a temporary helper texture
-    m_renderTextures.append(new GLTexture(textureFormat, screenSize));
-    m_renderTextures.constLast()->setFilter(GL_LINEAR);
-    m_renderTextures.constLast()->setWrapMode(GL_CLAMP_TO_EDGE);
+    m_renderTextures.push_back(std::make_unique<GLTexture>(textureFormat, screenSize));
+    m_renderTextures.back()->setFilter(GL_LINEAR);
+    m_renderTextures.back()->setWrapMode(GL_CLAMP_TO_EDGE);
 
-    m_renderTargets.append(new GLFramebuffer(m_renderTextures.constLast()));
+    m_renderTargets.push_back(std::make_unique<GLFramebuffer>(m_renderTextures.back().get()));
 
     m_renderTargetsValid = renderTargetsValid();
 
@@ -190,16 +182,16 @@ void BlurEffect::updateTexture()
 
     // Upsample
     for (int i = 1; i < m_downSampleIterations; i++) {
-        m_renderTargetStack.push(m_renderTargets[i]);
+        m_renderTargetStack.push(m_renderTargets[i].get());
     }
 
     // Downsample
     for (int i = m_downSampleIterations; i > 0; i--) {
-        m_renderTargetStack.push(m_renderTargets[i]);
+        m_renderTargetStack.push(m_renderTargets[i].get());
     }
 
     // Copysample
-    m_renderTargetStack.push(m_renderTargets[0]);
+    m_renderTargetStack.push(m_renderTargets.front().get());
 
     // Invalidate noise texture
     m_noiseTexture.reset();
@@ -695,7 +687,7 @@ void BlurEffect::doBlur(const RenderTarget &renderTarget, const RenderViewport &
 
     const QRegion expandedBlurRegion = expand(shape) & expand(screen);
 
-    const bool useSRGB = m_renderTextures.constFirst()->internalFormat() == GL_SRGB8_ALPHA8;
+    const bool useSRGB = m_renderTextures.front()->internalFormat() == GL_SRGB8_ALPHA8;
 
     // Upload geometry for the down and upsample iterations
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
@@ -723,7 +715,7 @@ void BlurEffect::doBlur(const RenderTarget &renderTarget, const RenderViewport &
         // our target framebuffer is in logical coordinates. It's a bit ugly but
         // to fix it properly we probably need to do blits in normalized
         // coordinates.
-        m_renderTargets.last()->blitFromFramebuffer(deviceSourceRect, destRect);
+        m_renderTargets.back()->blitFromFramebuffer(deviceSourceRect, destRect);
         GLFramebuffer::pushFramebuffers(m_renderTargetStack);
 
         if (useSRGB) {
@@ -739,7 +731,7 @@ void BlurEffect::doBlur(const RenderTarget &renderTarget, const RenderViewport &
         // our target framebuffer is in logical coordinates. It's a bit ugly but
         // to fix it properly we probably need to do blits in normalized
         // coordinates.
-        m_renderTargets.first()->blitFromFramebuffer(deviceSourceRect, destRect);
+        m_renderTargets.front()->blitFromFramebuffer(deviceSourceRect, destRect);
         GLFramebuffer::pushFramebuffers(m_renderTargetStack);
 
         if (useSRGB) {
@@ -896,7 +888,7 @@ void BlurEffect::copyScreenSampleTexture(GLVertexBuffer *vbo, int blurRectCount,
      * right next to this window.
      */
     m_shader->setBlurRect(blurShape.boundingRect().adjusted(1, 1, -1, -1), effects->virtualScreenSize());
-    m_renderTextures.last()->bind();
+    m_renderTextures.back()->bind();
 
     vbo->draw(GL_TRIANGLES, 0, blurRectCount);
     GLFramebuffer::popFramebuffer();
