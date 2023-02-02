@@ -29,7 +29,8 @@ class X11Window;
 class WorkspaceWrapper : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(KWin::VirtualDesktop *currentVirtualDesktop READ currentVirtualDesktop WRITE setCurrentVirtualDesktop NOTIFY currentVirtualDesktopChanged)
+    Q_PROPERTY(QVector<KWin::VirtualDesktop *> desktops READ desktops NOTIFY desktopsChanged)
+    Q_PROPERTY(KWin::VirtualDesktop *currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY currentDesktopChanged)
     Q_PROPERTY(KWin::Window *activeClient READ activeClient WRITE setActiveClient NOTIFY clientActivated)
     // TODO: write and notify?
     Q_PROPERTY(QSize desktopGridSize READ desktopGridSize NOTIFY desktopLayoutChanged)
@@ -38,10 +39,6 @@ class WorkspaceWrapper : public QObject
     Q_PROPERTY(int workspaceWidth READ workspaceWidth)
     Q_PROPERTY(int workspaceHeight READ workspaceHeight)
     Q_PROPERTY(QSize workspaceSize READ workspaceSize)
-    /**
-     * The number of desktops currently used. Minimum number of desktops is 1, maximum 20.
-     */
-    Q_PROPERTY(int desktops READ numberOfDesktops WRITE setNumberOfDesktops NOTIFY numberDesktopsChanged)
     Q_PROPERTY(int activeScreen READ activeScreen)
     Q_PROPERTY(int numScreens READ numScreens NOTIFY numberScreensChanged)
     Q_PROPERTY(QString currentActivity READ currentActivity WRITE setCurrentActivity NOTIFY currentActivityChanged)
@@ -80,11 +77,9 @@ Q_SIGNALS:
     void clientFullScreenSet(KWin::X11Window *client, bool fullScreen, bool user);
     void clientSetKeepAbove(KWin::X11Window *client, bool keepAbove);
     /**
-     * Signal emitted whenever the number of desktops changed.
-     * To get the current number of desktops use the property desktops.
-     * @param oldNumberOfDesktops The previous number of desktops.
+     * This signal is emitted when a virtual desktop is added or removed.
      */
-    void numberDesktopsChanged(uint oldNumberOfDesktops);
+    void desktopsChanged();
     /**
      * Signal emitted whenever the layout of virtual desktops changed.
      * That is desktopGrid(Size/Width/Height) will have new values.
@@ -137,10 +132,8 @@ Q_SIGNALS:
     void virtualScreenGeometryChanged();
     /**
      * This signal is emitted when the current virtual desktop changes.
-     *
-     * @since 5.23
      */
-    void currentVirtualDesktopChanged();
+    void currentDesktopChanged();
     /**
      * This signal is emitted when the cursor position changes.
      * @see cursorPos()
@@ -191,7 +184,6 @@ public:
 #define GETTERSETTERDEF(rettype, getter, setter) \
     rettype getter() const;                      \
     void setter(rettype val);
-    GETTERSETTERDEF(int, numberOfDesktops, setNumberOfDesktops)
     GETTERSETTERDEF(QString, currentActivity, setCurrentActivity)
     GETTERSETTERDEF(KWin::Window *, activeClient, setActiveClient)
 #undef GETTERSETTERDEF
@@ -208,8 +200,9 @@ public:
     QRect virtualScreenGeometry() const;
     QPoint cursorPos() const;
 
-    VirtualDesktop *currentVirtualDesktop() const;
-    void setCurrentVirtualDesktop(VirtualDesktop *desktop);
+    QVector<VirtualDesktop *> desktops() const;
+    VirtualDesktop *currentDesktop() const;
+    void setCurrentDesktop(VirtualDesktop *desktop);
 
     Q_INVOKABLE int screenAt(const QPointF &pos) const;
 
@@ -249,10 +242,9 @@ public:
      */
     Q_SCRIPTABLE void createDesktop(int position, const QString &name) const;
     /**
-     * Remove the virtual desktop at the requested position
-     * @param position The position of the desktop to be removed. It should be in range [0, count - 1].
+     * Removes the specified virtual desktop.
      */
-    Q_SCRIPTABLE void removeDesktop(int position) const;
+    Q_SCRIPTABLE void removeDesktop(KWin::VirtualDesktop *desktop) const;
     /**
      * Provides support information about the currently running KWin instance.
      */

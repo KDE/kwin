@@ -34,9 +34,10 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
     connect(ws, &Workspace::windowAdded, this, &WorkspaceWrapper::setupClientConnections);
     connect(ws, &Workspace::windowRemoved, this, &WorkspaceWrapper::clientRemoved);
     connect(ws, &Workspace::windowActivated, this, &WorkspaceWrapper::clientActivated);
-    connect(vds, &VirtualDesktopManager::countChanged, this, &WorkspaceWrapper::numberDesktopsChanged);
+    connect(vds, &VirtualDesktopManager::desktopCreated, this, &WorkspaceWrapper::desktopsChanged);
+    connect(vds, &VirtualDesktopManager::desktopRemoved, this, &WorkspaceWrapper::desktopsChanged);
     connect(vds, &VirtualDesktopManager::layoutChanged, this, &WorkspaceWrapper::desktopLayoutChanged);
-    connect(vds, &VirtualDesktopManager::currentChanged, this, &WorkspaceWrapper::currentVirtualDesktopChanged);
+    connect(vds, &VirtualDesktopManager::currentChanged, this, &WorkspaceWrapper::currentDesktopChanged);
     connect(ws, &Workspace::windowDemandsAttentionChanged, this, &WorkspaceWrapper::clientDemandsAttentionChanged);
 #if KWIN_BUILD_ACTIVITIES
     if (KWin::Activities *activities = ws->activities()) {
@@ -63,24 +64,19 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
     }
 }
 
-VirtualDesktop *WorkspaceWrapper::currentVirtualDesktop() const
+VirtualDesktop *WorkspaceWrapper::currentDesktop() const
 {
     return VirtualDesktopManager::self()->currentDesktop();
 }
 
-int WorkspaceWrapper::numberOfDesktops() const
+QVector<VirtualDesktop *> WorkspaceWrapper::desktops() const
 {
-    return VirtualDesktopManager::self()->count();
+    return VirtualDesktopManager::self()->desktops();
 }
 
-void WorkspaceWrapper::setCurrentVirtualDesktop(VirtualDesktop *desktop)
+void WorkspaceWrapper::setCurrentDesktop(VirtualDesktop *desktop)
 {
     VirtualDesktopManager::self()->setCurrent(desktop);
-}
-
-void WorkspaceWrapper::setNumberOfDesktops(int count)
-{
-    VirtualDesktopManager::self()->setCount(count);
 }
 
 Window *WorkspaceWrapper::activeClient() const
@@ -274,14 +270,9 @@ void WorkspaceWrapper::createDesktop(int position, const QString &name) const
     VirtualDesktopManager::self()->createVirtualDesktop(position, name);
 }
 
-void WorkspaceWrapper::removeDesktop(int position) const
+void WorkspaceWrapper::removeDesktop(VirtualDesktop *desktop) const
 {
-    VirtualDesktop *vd = VirtualDesktopManager::self()->desktopForX11Id(position + 1);
-    if (!vd) {
-        return;
-    }
-
-    VirtualDesktopManager::self()->removeVirtualDesktop(vd->id());
+    VirtualDesktopManager::self()->removeVirtualDesktop(desktop->id());
 }
 
 QString WorkspaceWrapper::supportInformation() const

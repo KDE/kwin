@@ -22,8 +22,8 @@ Item {
 
     readonly property bool selected: windowHeap.selectedIndex === index
 
-    // -1 is a special value which means "All Desktops"
-    readonly property bool presentOnCurrentDesktop: client.desktop === KWinComponents.Workspace.currentDesktop || client.desktop === -1
+    // no desktops is a special value which means "All Desktops"
+    readonly property bool presentOnCurrentDesktop: !client.desktops.length || client.desktops.indexOf(KWinComponents.Workspace.currentDesktop) !== -1
     readonly property bool initialHidden: client.minimized || !presentOnCurrentDesktop
     readonly property bool activeHidden: {
         if (windowHeap.showOnly === "activeClass") {

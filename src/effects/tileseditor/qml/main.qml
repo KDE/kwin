@@ -53,7 +53,7 @@ FocusScope {
         Repeater {
             model: KWinComponents.ClientFilterModel {
                 activity: KWinComponents.Workspace.currentActivity
-                desktop: KWinComponents.Workspace.currentVirtualDesktop
+                desktop: KWinComponents.Workspace.currentDesktop
                 screenName: targetScreen.name
                 clientModel: KWinComponents.ClientModel {}
             }

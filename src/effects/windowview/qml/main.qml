@@ -64,7 +64,7 @@ Item {
 
     KWinComponents.DesktopBackgroundItem {
         activity: KWinComponents.Workspace.currentActivity
-        desktop: KWinComponents.Workspace.currentVirtualDesktop
+        desktop: KWinComponents.Workspace.currentDesktop
         outputName: targetScreen.name
 
         layer.enabled: true
@@ -192,7 +192,7 @@ Item {
                     switch (container.effect.mode) {
                         case WindowView.ModeCurrentDesktop:
                         case WindowView.ModeWindowClassCurrentDesktop:
-                            return KWinComponents.Workspace.currentVirtualDesktop;
+                            return KWinComponents.Workspace.currentDesktop;
                         default:
                             return undefined;
                     }
@@ -219,7 +219,7 @@ Item {
         asynchronous: true
 
         model: KWinComponents.ClientFilterModel {
-            desktop: KWinComponents.Workspace.currentVirtualDesktop
+            desktop: KWinComponents.Workspace.currentDesktop
             screenName: targetScreen.name
             clientModel: stackModel
             windowType: KWinComponents.ClientFilterModel.Dock

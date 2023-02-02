@@ -38,8 +38,8 @@ Rectangle {
         organized = false;
     }
 
-    function switchTo(desktopId) {
-        KWinComponents.Workspace.currentDesktop = desktopId;
+    function switchTo(desktop) {
+        KWinComponents.Workspace.currentDesktop = desktop;
         effect.deactivate(effect.animationDuration);
     }
 
@@ -98,11 +98,15 @@ Rectangle {
         } else if (event.key === Qt.Key_Minus) {
             removeButton.clicked();
         } else if (event.key >= Qt.Key_F1 && event.key <= Qt.Key_F12) {
-            const desktopId = (event.key - Qt.Key_F1) + 1;
-            switchTo(desktopId);
+            const desktopId = event.key - Qt.Key_F1;
+            if (desktopId < gridRepeater.count) {
+                switchTo(gridRepeater.itemAt(desktopId).desktop);
+            }
         } else if (event.key >= Qt.Key_0 && event.key <= Qt.Key_9) {
-            const desktopId = event.key === Qt.Key_0 ? 10 : (event.key - Qt.Key_0);
-            switchTo(desktopId);
+            const desktopId = event.key === Qt.Key_0 ? 9 : (event.key - Qt.Key_1);
+            if (desktopId < gridRepeater.count) {
+                switchTo(gridRepeater.itemAt(desktopId).desktop);
+            }
         } else if (event.key === Qt.Key_Up) {
             event.accepted = selectNext(WindowHeap.Direction.Up);
             if (!event.accepted) {
@@ -138,7 +142,7 @@ Rectangle {
         } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Space) {
             for (let i = 0; i < gridRepeater.count; i++) {
                 if (gridRepeater.itemAt(i).focus) {
-                    switchTo(gridRepeater.itemAt(i).desktop.x11DesktopNumber)
+                    switchTo(gridRepeater.itemAt(i).desktop)
                     break;
                 }
             }
@@ -249,7 +253,7 @@ Rectangle {
                 id: thumbnail
 
                 panelOpacity: grid.panelOpacity
-                readonly property bool current: KWinComponents.Workspace.currentVirtualDesktop === desktop
+                readonly property bool current: KWinComponents.Workspace.currentDesktop === desktop
                 z: dragActive ? 1 : 0
                 onCurrentChanged: {
                     if (current) {
@@ -278,7 +282,7 @@ Rectangle {
                 TapHandler {
                     acceptedButtons: Qt.LeftButton
                     onTapped: {
-                        KWinComponents.Workspace.currentVirtualDesktop = thumbnail.desktop;
+                        KWinComponents.Workspace.currentDesktop = thumbnail.desktop;
                         container.effect.deactivate(container.effect.animationDuration);
                     }
                 }

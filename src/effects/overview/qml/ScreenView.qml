@@ -77,7 +77,7 @@ FocusScope {
     KWinComponents.DesktopBackgroundItem {
         id: backgroundItem
         activity: KWinComponents.Workspace.currentActivity
-        desktop: KWinComponents.Workspace.currentVirtualDesktop
+        desktop: KWinComponents.Workspace.currentDesktop
         outputName: targetScreen.name
         property real blurRadius: 0
 
@@ -185,7 +185,7 @@ FocusScope {
                     anchors.fill: parent
                     clientModel: stackModel
                     desktopModel: desktopModel
-                    selectedDesktop: KWinComponents.Workspace.currentVirtualDesktop
+                    selectedDesktop: KWinComponents.Workspace.currentDesktop
                     heap: heap
                 }
             }
@@ -240,7 +240,7 @@ FocusScope {
                 Keys.forwardTo: searchResults
                 model: KWinComponents.ClientFilterModel {
                     activity: KWinComponents.Workspace.currentActivity
-                    desktop: KWinComponents.Workspace.currentVirtualDesktop
+                    desktop: KWinComponents.Workspace.currentDesktop
                     screenName: targetScreen.name
                     clientModel: stackModel
                     filter: effect.searchText
@@ -295,7 +295,7 @@ FocusScope {
 
     Repeater {
         model: KWinComponents.ClientFilterModel {
-            desktop: KWinComponents.Workspace.currentVirtualDesktop
+            desktop: KWinComponents.Workspace.currentDesktop
             screenName: targetScreen.name
             clientModel: stackModel
             windowType: KWinComponents.ClientFilterModel.Dock

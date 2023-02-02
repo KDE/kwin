@@ -151,6 +151,7 @@ KWin::Script::Script(int id, QString scriptName, QString pluginName, QObject *pa
     }
 
     qRegisterMetaType<QList<KWin::Window *>>();
+    qRegisterMetaType<QVector<KWin::VirtualDesktop *>>();
 }
 
 KWin::Script::~Script()

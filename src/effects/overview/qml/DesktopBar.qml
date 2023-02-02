@@ -131,7 +131,7 @@ Item {
                                     }
                                     ScriptAction {
                                         script: {
-                                            KWinComponents.Workspace.currentVirtualDesktop = delegate.desktop;
+                                            KWinComponents.Workspace.currentDesktop = delegate.desktop;
                                             effect.quickDeactivate();
                                         }
                                     }
