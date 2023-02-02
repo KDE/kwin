@@ -59,15 +59,25 @@ public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
     void slotPropertyNotify(KWin::EffectWindow *w, long atom);
-    void slotScreenGeometryChanged();
     void setupDecorationConnections(EffectWindow *w);
 
 private:
+    struct ScreenData
+    {
+        // these are needed because the automatically generated ones are wrong with std::vector<std::unique_ptr<T>> as a member
+        ScreenData() = default;
+        ScreenData(const ScreenData &) = delete;
+        ScreenData &operator=(ScreenData &&) = default;
+
+        std::vector<std::unique_ptr<GLTexture>> renderTargetTextures;
+        std::vector<std::unique_ptr<GLFramebuffer>> renderTargets;
+        QStack<GLFramebuffer *> renderTargetStack;
+    };
+
     QRect expand(const QRect &rect) const;
     QRegion expand(const QRegion &region) const;
-    bool renderTargetsValid() const;
     void initBlurStrengthValues();
-    void updateTexture();
+    void updateTexture(EffectScreen *screen);
     QRegion blurRegion(const EffectWindow *w) const;
     QRegion decorationBlurRegion(const EffectWindow *w) const;
     bool decorationSupportsBlurBehind(const EffectWindow *w) const;
@@ -77,25 +87,27 @@ private:
     void uploadRegion(QVector2D *&map, const QRegion &region, const int downSampleIterations);
     Q_REQUIRED_RESULT bool uploadGeometry(GLVertexBuffer *vbo, const QRegion &blurRegion, const QRegion &windowRegion);
     void generateNoiseTexture();
+    void screenAdded(EffectScreen *screen);
+    void screenRemoved(EffectScreen *screen);
+    void screenGeometryChanged(EffectScreen *screen);
 
-    void upscaleRenderToScreen(const RenderViewport &viewport, GLVertexBuffer *vbo, int vboStart, int blurRectCount, const QMatrix4x4 &screenProjection, QPoint windowPosition);
-    void applyNoise(GLVertexBuffer *vbo, int vboStart, int blurRectCount, const QMatrix4x4 &screenProjection, QPoint windowPosition);
-    void downSampleTexture(GLVertexBuffer *vbo, int blurRectCount);
-    void upSampleTexture(GLVertexBuffer *vbo, int blurRectCount);
-    void copyScreenSampleTexture(GLVertexBuffer *vbo, int blurRectCount, QRegion blurShape, const QMatrix4x4 &screenProjection);
+    void upscaleRenderToScreen(const ScreenData &data, const RenderViewport &viewport, GLVertexBuffer *vbo, int vboStart, int blurRectCount, const QMatrix4x4 &screenProjection, QPoint windowPosition);
+    void upscaleRenderToScreen(const ScreenData &data, GLVertexBuffer *vbo, int vboStart, int blurRectCount, const QMatrix4x4 &screenProjection, QPoint windowPosition);
+    void applyNoise(const ScreenData &data, GLVertexBuffer *vbo, int vboStart, int blurRectCount, const QMatrix4x4 &screenProjection, QPoint windowPosition);
+    void downSampleTexture(const ScreenData &data, GLVertexBuffer *vbo, int blurRectCount);
+    void upSampleTexture(const ScreenData &data, GLVertexBuffer *vbo, int blurRectCount);
+    void copyScreenSampleTexture(const ScreenData &data, const RenderViewport &viewport, GLVertexBuffer *vbo, int blurRectCount, QRegion blurShape, const QMatrix4x4 &screenProjection);
 
 private:
     BlurShader *m_shader;
-    std::vector<std::unique_ptr<GLFramebuffer>> m_renderTargets;
-    std::vector<std::unique_ptr<GLTexture>> m_renderTextures;
-    QStack<GLFramebuffer *> m_renderTargetStack;
+    std::map<EffectScreen *, ScreenData> m_screenData;
 
     std::unique_ptr<GLTexture> m_noiseTexture;
 
-    bool m_renderTargetsValid;
     long net_wm_blur_region = 0;
     QRegion m_paintedArea; // keeps track of all painted areas (from bottom to top)
     QRegion m_currentBlur; // keeps track of the currently blured area of the windows(from bottom to top)
+    EffectScreen *m_currentScreen = nullptr;
 
     int m_downSampleIterations; // number of times the texture will be downsized to half size
     int m_offset;
