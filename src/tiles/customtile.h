@@ -44,7 +44,7 @@ public:
 
 Q_SIGNALS:
     void layoutDirectionChanged(Tile::LayoutDirection direction);
-    void layoutModified();
+    void tileModified();
 
 private:
     Tile::LayoutDirection m_layoutDirection = LayoutDirection::Floating;

@@ -32,13 +32,14 @@ CustomTile::CustomTile(TileManager *tiling, CustomTile *parentItem)
     : Tile(tiling, parentItem)
 {
     setQuickTileMode(QuickTileFlag::Custom);
+    connect(this, &Tile::paddingChanged, this, &CustomTile::tileModified);
     m_geometryLock = true;
 }
 
 CustomTile *CustomTile::createChildAt(const QRectF &relativeGeometry, LayoutDirection layoutDirection, int position)
 {
     CustomTile *tile = new CustomTile(manager(), this);
-    connect(tile, &CustomTile::layoutModified, this, &CustomTile::layoutModified);
+    connect(tile, &CustomTile::tileModified, this, &CustomTile::tileModified);
     tile->setRelativeGeometry(relativeGeometry);
     tile->setLayoutDirection(layoutDirection);
     manager()->model()->beginInsertTile(tile, position);
@@ -157,7 +158,7 @@ void CustomTile::setRelativeGeometry(const QRectF &geom)
 
     Tile::setRelativeGeometry(finalGeom);
     if (parentT) {
-        Q_EMIT parentT->layoutModified();
+        Q_EMIT parentT->tileModified();
     }
     m_geometryLock = false;
 }
