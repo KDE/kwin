@@ -443,13 +443,9 @@ void WorkspaceScene::createStackingOrder()
     // window should not get focus before it's displayed, handle unredirected windows properly and
     // so on.
     for (Window *window : std::as_const(windows)) {
-        if (!window->readyForPainting()) {
-            continue;
+        if (window->windowItem()->isVisible()) {
+            stacking_order.append(window->windowItem());
         }
-        if (!window->windowItem()->isVisible()) {
-            continue;
-        }
-        stacking_order.append(window->windowItem());
     }
 }
 

@@ -126,6 +126,9 @@ void WindowItem::handleWindowClosed(Window *original, Deleted *deleted)
 
 bool WindowItem::computeVisibility() const
 {
+    if (!m_window->readyForPainting()) {
+        return false;
+    }
     if (waylandServer() && waylandServer()->isScreenLocked()) {
         return m_window->isLockScreen() || m_window->isInputMethod() || m_window->isLockScreenOverlay();
     }
