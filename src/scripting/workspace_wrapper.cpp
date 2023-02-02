@@ -21,11 +21,6 @@
 #include "activities.h"
 #endif
 
-#include <QApplication>
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <QDesktopWidget>
-#endif
-
 namespace KWin
 {
 
@@ -35,7 +30,6 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
     KWin::Workspace *ws = KWin::Workspace::self();
     KWin::VirtualDesktopManager *vds = KWin::VirtualDesktopManager::self();
     connect(ws, &Workspace::desktopPresenceChanged, this, &WorkspaceWrapper::desktopPresenceChanged);
-    connect(ws, &Workspace::currentDesktopChanged, this, &WorkspaceWrapper::currentDesktopChanged);
     connect(ws, &Workspace::windowAdded, this, &WorkspaceWrapper::clientAdded);
     connect(ws, &Workspace::windowAdded, this, &WorkspaceWrapper::setupClientConnections);
     connect(ws, &Workspace::windowRemoved, this, &WorkspaceWrapper::clientRemoved);
@@ -61,20 +55,12 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
     connect(ws, &Workspace::outputRemoved, this, [this]() {
         Q_EMIT numberScreensChanged(numScreens());
     });
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    connect(QApplication::desktop(), &QDesktopWidget::resized, this, &WorkspaceWrapper::screenResized);
-#endif
     connect(Cursors::self()->mouse(), &Cursor::posChanged, this, &WorkspaceWrapper::cursorPosChanged);
 
     const QList<Window *> clients = ws->allClientList();
     for (Window *client : clients) {
         setupClientConnections(client);
     }
-}
-
-int WorkspaceWrapper::currentDesktop() const
-{
-    return VirtualDesktopManager::self()->current();
 }
 
 VirtualDesktop *WorkspaceWrapper::currentVirtualDesktop() const
@@ -85,11 +71,6 @@ VirtualDesktop *WorkspaceWrapper::currentVirtualDesktop() const
 int WorkspaceWrapper::numberOfDesktops() const
 {
     return VirtualDesktopManager::self()->count();
-}
-
-void WorkspaceWrapper::setCurrentDesktop(int desktop)
-{
-    VirtualDesktopManager::self()->setCurrent(desktop);
 }
 
 void WorkspaceWrapper::setCurrentVirtualDesktop(VirtualDesktop *desktop)
@@ -262,37 +243,6 @@ QSize WorkspaceWrapper::workspaceSize() const
     return QSize(workspaceWidth(), workspaceHeight());
 }
 
-QSize WorkspaceWrapper::displaySize() const
-{
-    return workspace()->geometry().size();
-}
-
-int WorkspaceWrapper::displayWidth() const
-{
-    return displaySize().width();
-}
-
-int WorkspaceWrapper::displayHeight() const
-{
-    return displaySize().height();
-}
-
-static VirtualDesktop *resolveVirtualDesktop(int desktopId)
-{
-    if (desktopId == 0 || desktopId == -1) {
-        return VirtualDesktopManager::self()->currentDesktop();
-    } else {
-        return VirtualDesktopManager::self()->desktopForX11Id(desktopId);
-    }
-}
-
-QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, int desktop) const
-{
-    const Output *output = Workspace::self()->outputAt(p);
-    const VirtualDesktop *virtualDesktop = resolveVirtualDesktop(desktop);
-    return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), output, virtualDesktop);
-}
-
 QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, VirtualDesktop *desktop) const
 {
     return workspace()->clientArea(static_cast<clientAreaOption>(option), workspace()->outputAt(p), desktop);
@@ -314,47 +264,9 @@ QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, KWin::Window *c) co
     return Workspace::self()->clientArea(static_cast<clientAreaOption>(option), c);
 }
 
-static VirtualDesktop *resolveDesktop(int desktopId)
-{
-    auto vdm = VirtualDesktopManager::self();
-    if (desktopId == NETWinInfo::OnAllDesktops || desktopId == 0) {
-        return vdm->currentDesktop();
-    }
-    return vdm->desktopForX11Id(desktopId);
-}
-
-static Output *resolveOutput(int outputId)
-{
-    if (outputId == -1) {
-        return workspace()->activeOutput();
-    }
-    return workspace()->outputs().value(outputId);
-}
-
-QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, int outputId, int desktopId) const
-{
-    VirtualDesktop *desktop = resolveDesktop(desktopId);
-    if (Q_UNLIKELY(!desktop)) {
-        return QRect();
-    }
-
-    Output *output = resolveOutput(outputId);
-    if (Q_UNLIKELY(!output)) {
-        return QRect();
-    }
-
-    return workspace()->clientArea(static_cast<clientAreaOption>(option), output, desktop);
-}
-
 QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, Output *output, VirtualDesktop *desktop) const
 {
     return workspace()->clientArea(static_cast<clientAreaOption>(option), output, desktop);
-}
-
-QString WorkspaceWrapper::desktopName(int desktop) const
-{
-    const VirtualDesktop *vd = VirtualDesktopManager::self()->desktopForX11Id(desktop);
-    return vd ? vd->name() : QString();
 }
 
 void WorkspaceWrapper::createDesktop(int position, const QString &name) const
@@ -430,12 +342,12 @@ int WorkspaceWrapper::desktopGridHeight() const
 
 int WorkspaceWrapper::workspaceHeight() const
 {
-    return desktopGridHeight() * displayHeight();
+    return desktopGridHeight() * workspace()->geometry().height();
 }
 
 int WorkspaceWrapper::workspaceWidth() const
 {
-    return desktopGridWidth() * displayWidth();
+    return desktopGridWidth() * workspace()->geometry().width();
 }
 
 int WorkspaceWrapper::numScreens() const

@@ -29,10 +29,6 @@ class X11Window;
 class WorkspaceWrapper : public QObject
 {
     Q_OBJECT
-    /**
-     * @deprecated use the currentVirtualDesktop property instead
-     */
-    Q_PROPERTY(int currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY currentDesktopChanged)
     Q_PROPERTY(KWin::VirtualDesktop *currentVirtualDesktop READ currentVirtualDesktop WRITE setCurrentVirtualDesktop NOTIFY currentVirtualDesktopChanged)
     Q_PROPERTY(KWin::Window *activeClient READ activeClient WRITE setActiveClient NOTIFY clientActivated)
     // TODO: write and notify?
@@ -46,21 +42,6 @@ class WorkspaceWrapper : public QObject
      * The number of desktops currently used. Minimum number of desktops is 1, maximum 20.
      */
     Q_PROPERTY(int desktops READ numberOfDesktops WRITE setNumberOfDesktops NOTIFY numberDesktopsChanged)
-    /**
-     * The same of the display, that is all screens.
-     * @deprecated since 5.0 use virtualScreenSize
-     */
-    Q_PROPERTY(QSize displaySize READ displaySize)
-    /**
-     * The width of the display, that is width of all combined screens.
-     * @deprecated since 5.0 use virtualScreenSize
-     */
-    Q_PROPERTY(int displayWidth READ displayWidth)
-    /**
-     * The height of the display, that is height of all combined screens.
-     * @deprecated since 5.0 use virtualScreenSize
-     */
-    Q_PROPERTY(int displayHeight READ displayHeight)
     Q_PROPERTY(int activeScreen READ activeScreen)
     Q_PROPERTY(int numScreens READ numScreens NOTIFY numberScreensChanged)
     Q_PROPERTY(QString currentActivity READ currentActivity WRITE setCurrentActivity NOTIFY currentActivityChanged)
@@ -87,7 +68,6 @@ private:
 
 Q_SIGNALS:
     void desktopPresenceChanged(KWin::Window *client, int desktop);
-    void currentDesktopChanged(int desktop, KWin::Window *client);
     void clientAdded(KWin::Window *client);
     void clientRemoved(KWin::Window *client);
     void clientManaging(KWin::X11Window *client);
@@ -122,15 +102,6 @@ Q_SIGNALS:
      * @param count The new number of screens
      */
     void numberScreensChanged(int count);
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    /**
-     * This signal is emitted when the size of @p screen changes.
-     * Don't forget to fetch an updated client area.
-     *
-     * @deprecated Use QScreen::geometryChanged signal instead.
-     */
-    void screenResized(int screen);
-#endif
     /**
      * Signal emitted whenever the current activity changed.
      * @param id id of the new activity
@@ -221,7 +192,6 @@ public:
     rettype getter() const;                      \
     void setter(rettype val);
     GETTERSETTERDEF(int, numberOfDesktops, setNumberOfDesktops)
-    GETTERSETTERDEF(int, currentDesktop, setCurrentDesktop)
     GETTERSETTERDEF(QString, currentActivity, setCurrentActivity)
     GETTERSETTERDEF(KWin::Window *, activeClient, setActiveClient)
 #undef GETTERSETTERDEF
@@ -231,9 +201,6 @@ public:
     int workspaceWidth() const;
     int workspaceHeight() const;
     QSize workspaceSize() const;
-    int displayWidth() const;
-    int displayHeight() const;
-    QSize displaySize() const;
     int activeScreen() const;
     int numScreens() const;
     QStringList activityList() const;
@@ -258,9 +225,7 @@ public:
      * @param screen The screen for which the area should be considered
      * @param desktop The desktop for which the area should be considered, in general there should not be a difference
      * @returns The specified screen geometry
-     * @deprecated use clientArea(ClientAreaOption option, KWin::Output *output, KWin::VirtualDesktop *desktop)
      */
-    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, int screen, int desktop) const; // TODO Plasma 6: Drop
     Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, KWin::Output *output, KWin::VirtualDesktop *desktop) const;
     /**
      * Overloaded method for convenience.
@@ -268,9 +233,7 @@ public:
      * @param point The coordinates which have to be included in the area
      * @param desktop The desktop for which the area should be considered, in general there should not be a difference
      * @returns The specified screen geometry
-     * @deprecated use clientArea(ClientAreaOption option, const QPoint &point, KWin::VirtualDesktop *desktop)
      */
-    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, const QPoint &point, int desktop) const; // TODO Plasma 6: Drop
     Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, const QPoint &point, KWin::VirtualDesktop *desktop) const;
     /**
      * Overloaded method for convenience.
@@ -279,10 +242,6 @@ public:
      */
     Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, KWin::Window *client) const;
     Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, const KWin::Window *client) const;
-    /**
-     * Returns the name for the given @p desktop.
-     */
-    Q_SCRIPTABLE QString desktopName(int desktop) const;
     /**
      * Create a new virtual desktop at the requested position.
      * @param position The position of the desktop. It should be in range [0, count].
@@ -338,49 +297,6 @@ public Q_SLOTS:
     void slotWindowLower();
     void slotWindowRaiseOrLower();
     void slotActivateAttentionWindow();
-
-    /**
-     * @deprecated since 5.24 use slotWindowMoveLeft()
-     */
-    void slotWindowPackLeft()
-    {
-        slotWindowMoveLeft();
-    }
-    /**
-     * @deprecated since 5.24 use slotWindowMoveRight()
-     */
-    void slotWindowPackRight()
-    {
-        slotWindowMoveRight();
-    }
-    /**
-     * @deprecated since 5.24 use slotWindowMoveUp()
-     */
-    void slotWindowPackUp()
-    {
-        slotWindowMoveUp();
-    }
-    /**
-     * @deprecated since 5.24 use slotWindowMoveDown()
-     */
-    void slotWindowPackDown()
-    {
-        slotWindowMoveDown();
-    }
-    /**
-     * @deprecated since 5.24 use slotWindowExpandHorizontal()
-     */
-    void slotWindowGrowHorizontal()
-    {
-        slotWindowExpandHorizontal();
-    }
-    /**
-     * @deprecated since 5.24 use slotWindowExpandVertical()
-     */
-    void slotWindowGrowVertical()
-    {
-        slotWindowExpandVertical();
-    }
 
     void slotWindowMoveLeft();
     void slotWindowMoveRight();
