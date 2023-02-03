@@ -302,23 +302,3 @@ msgstr "Molt enorme"
 #, kde-format
 msgid "Oversized"
 msgstr "Fora de mida"
-
-#~ msgctxt "popup tip"
-#~ msgid ""
-#~ "Close by double clicking: Keep the window's Menu button pressed until it "
-#~ "appears."
-#~ msgstr ""
-#~ "Tanca amb doble clic: manteniu premut el botó del menú de la finestra "
-#~ "fins que aparegui."
-
-#~ msgid "Menu"
-#~ msgstr "Menú"
-
-#~ msgid "Keep below"
-#~ msgstr "Mantén per sota"
-
-#~ msgid "Keep above"
-#~ msgstr "Mantén al damunt"
-
-#~ msgid "Download New Window Decorations"
-#~ msgstr "Baixa decoracions noves de finestra..."

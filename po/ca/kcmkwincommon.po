@@ -84,7 +84,3 @@ msgstr "Animació en obrir/tancar la finestra"
 #, kde-format
 msgid "KWin development team"
 msgstr "Equip de desenvolupament del KWin"
-
-#~ msgctxt "Category of Desktop Effects, used as section header"
-#~ msgid "Candy"
-#~ msgstr "Llaminadures"
