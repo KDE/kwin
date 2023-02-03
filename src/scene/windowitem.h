@@ -39,7 +39,7 @@ public:
         PAINT_DISABLED_BY_DELETE = 1 << 1,
         PAINT_DISABLED_BY_DESKTOP = 1 << 2,
         PAINT_DISABLED_BY_MINIMIZE = 1 << 3,
-        PAINT_DISABLED_BY_ACTIVITY = 1 << 5
+        PAINT_DISABLED_BY_ACTIVITY = 1 << 4
     };
 
     ~WindowItem() override;
