@@ -401,7 +401,6 @@ public:
     qreal height() const override;
 
     QSizeF basicUnit() const override;
-    QRectF geometry() const override;
     QRectF frameGeometry() const override;
     QRectF bufferGeometry() const override;
     QRectF clientGeometry() const override;
