@@ -306,14 +306,6 @@ static xcb_window_t createGroupWindow(xcb_connection_t *conn,
     return wid;
 }
 
-struct XcbConnectionDeleter
-{
-    void operator()(xcb_connection_t *c)
-    {
-        xcb_disconnect(c);
-    }
-};
-
 void StackingOrderTest::testGroupTransientIsAboveWindowGroup()
 {
     // This test verifies that group transients are always above other
@@ -321,8 +313,7 @@ void StackingOrderTest::testGroupTransientIsAboveWindowGroup()
 
     const QRect geometry = QRect(0, 0, 128, 128);
 
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> conn(
-        xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr conn = Test::createX11Connection();
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
 
@@ -434,8 +425,7 @@ void StackingOrderTest::testRaiseGroupTransient()
 {
     const QRect geometry = QRect(0, 0, 128, 128);
 
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> conn(
-        xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr conn = Test::createX11Connection();
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
 
@@ -565,8 +555,7 @@ void StackingOrderTest::testDeletedGroupTransient()
 
     const QRect geometry = QRect(0, 0, 128, 128);
 
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> conn(
-        xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr conn = Test::createX11Connection();
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
 
@@ -680,8 +669,7 @@ void StackingOrderTest::testDontKeepAboveNonModalDialogGroupTransients()
 
     const QRect geometry = QRect(0, 0, 128, 128);
 
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> conn(
-        xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr conn = Test::createX11Connection();
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
 

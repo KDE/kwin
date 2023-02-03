@@ -675,6 +675,20 @@ bool lockScreen();
  */
 bool unlockScreen();
 
+/**
+ * Creates an X11 connection
+ * Internally a nested event loop is spawned whilst we connect to avoid a deadlock
+ * with X on demand
+ */
+
+struct XcbConnectionDeleter
+{
+    void operator()(xcb_connection_t *pointer);
+};
+
+typedef std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> XcbConnectionPtr;
+XcbConnectionPtr createX11Connection();
+
 MockInputMethod *inputMethod();
 KWayland::Client::Surface *inputPanelSurface();
 

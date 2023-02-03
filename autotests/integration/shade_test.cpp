@@ -62,14 +62,8 @@ void ShadeTest::testShadeGeometry()
     // this test verifies that the geometry is properly restored after shading
     // see BUG: 362501
     // create an xcb window
-    struct XcbConnectionDeleter
-    {
-        void operator()(xcb_connection_t *pointer)
-        {
-            xcb_disconnect(pointer);
-        }
-    };
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());

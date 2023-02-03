@@ -93,7 +93,7 @@ void WindowRuleTest::testApplyInitialMaximizeVert()
     workspace()->slotReconfigure();
 
     // create the test window
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
 
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -159,7 +159,7 @@ void WindowRuleTest::testWindowClassChange()
     workspace()->slotReconfigure();
 
     // create the test window
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
 
     xcb_window_t windowId = xcb_generate_id(c.get());

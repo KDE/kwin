@@ -70,14 +70,6 @@ void ScreenEdgeClientShowTest::init()
     QVERIFY(waylandServer()->windows().isEmpty());
 }
 
-struct XcbConnectionDeleter
-{
-    void operator()(xcb_connection_t *pointer)
-    {
-        xcb_disconnect(pointer);
-    }
-};
-
 void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11_data()
 {
     QTest::addColumn<QRect>("windowGeometry");
@@ -99,7 +91,7 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     // that should trigger a show of the window whenever the cursor is pushed against the screen edge
 
     // create the test window
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     // atom for the screenedge show hide functionality
     Xcb::Atom atom(QByteArrayLiteral("_KDE_NET_WM_SCREEN_EDGE_SHOW"), false, c.get());
@@ -197,7 +189,7 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowX11Touch()
     // that should trigger a show of the window whenever the touch screen swipe gesture is triggered
 
     // create the test window
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     // atom for the screenedge show hide functionality
     Xcb::Atom atom(QByteArrayLiteral("_KDE_NET_WM_SCREEN_EDGE_SHOW"), false, c.get());

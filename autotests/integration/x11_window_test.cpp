@@ -84,14 +84,6 @@ void X11WindowTest::cleanup()
     Test::destroyWaylandConnection();
 }
 
-struct XcbConnectionDeleter
-{
-    void operator()(xcb_connection_t *pointer)
-    {
-        xcb_disconnect(pointer);
-    }
-};
-
 void X11WindowTest::testMinimumSize()
 {
     // This test verifies that the minimum size constraint is correctly applied.
@@ -100,7 +92,7 @@ void X11WindowTest::testMinimumSize()
     kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -206,7 +198,7 @@ void X11WindowTest::testMaximumSize()
     kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -311,7 +303,7 @@ void X11WindowTest::testResizeIncrements()
     kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -395,7 +387,7 @@ void X11WindowTest::testResizeIncrementsNoBaseSize()
     kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -498,7 +490,7 @@ void X11WindowTest::testTrimCaption()
     // this test verifies that caption is properly trimmed
 
     // create an xcb window
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -548,7 +540,7 @@ void X11WindowTest::testFullscreenLayerWithActiveWaylandWindow()
     QCOMPARE(workspace()->outputs().count(), 1);
 
     // first create an X11 window
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -667,7 +659,7 @@ void X11WindowTest::testFocusInWithWaylandLastActiveWindow()
     kwinApp()->setXwaylandScale(scale);
 
     // create an X11 window
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -726,7 +718,7 @@ void X11WindowTest::testX11WindowId()
     kwinApp()->setXwaylandScale(scale);
 
     // create an X11 window
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -801,7 +793,7 @@ void X11WindowTest::testCaptionChanges()
 
     // verifies that caption is updated correctly when the X11 window updates it
     // BUG: 383444
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -876,7 +868,7 @@ void X11WindowTest::testCaptionMultipleWindows()
 
     // BUG 384760
     // create first window
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -952,7 +944,7 @@ void X11WindowTest::testFullscreenWindowGroups()
     QFETCH_GLOBAL(qreal, scale);
     kwinApp()->setXwaylandScale(scale);
 
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());
@@ -1028,7 +1020,7 @@ void X11WindowTest::testActivateFocusedWindow()
     QFETCH_GLOBAL(qreal, scale);
     kwinApp()->setXwaylandScale(scale);
 
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> connection(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr connection = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(connection.get()));
 
     QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
@@ -1096,7 +1088,7 @@ void X11WindowTest::testReentrantMoveResize()
     kwinApp()->setXwaylandScale(scale);
 
     // Create a test window.
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());

@@ -23,14 +23,6 @@
 namespace KWin
 {
 
-struct XcbConnectionDeleter
-{
-    void operator()(xcb_connection_t *pointer)
-    {
-        xcb_disconnect(pointer);
-    }
-};
-
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_xwayland_server_crash-0");
 
 class XwaylandServerCrashTest : public QObject
@@ -69,7 +61,7 @@ void XwaylandServerCrashTest::testCrash()
     // This test verifies that all connected X11 clients get destroyed when Xwayland crashes.
 
     // Create a normal window.
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId1 = xcb_generate_id(c.get());

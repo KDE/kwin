@@ -92,14 +92,7 @@ void PlasmaWindowTest::testCreateDestroyX11PlasmaWindow()
     QSignalSpy plasmaWindowCreatedSpy(m_windowManagement, &KWayland::Client::PlasmaWindowManagement::windowCreated);
 
     // create an xcb window
-    struct XcbConnectionDeleter
-    {
-        void operator()(xcb_connection_t *pointer)
-        {
-            xcb_disconnect(pointer);
-        }
-    };
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     const QRect windowGeometry(0, 0, 100, 200);
     xcb_window_t windowId = xcb_generate_id(c.get());

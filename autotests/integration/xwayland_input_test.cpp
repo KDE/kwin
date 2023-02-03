@@ -63,14 +63,6 @@ void XWaylandInputTest::init()
     QVERIFY(waylandServer()->windows().isEmpty());
 }
 
-struct XcbConnectionDeleter
-{
-    void operator()(xcb_connection_t *pointer)
-    {
-        xcb_disconnect(pointer);
-    }
-};
-
 class X11EventReaderHelper : public QObject
 {
     Q_OBJECT
@@ -123,7 +115,7 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     // this test simulates a pointer enter and pointer leave on a server-side decorated X11 window
 
     // create the test window
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     if (xcb_get_setup(c.get())->release_number < 11800000) {
         QSKIP("XWayland 1.18 required");
@@ -192,7 +184,7 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
 {
     // this test simulates a pointer enter and pointer leave on a client-side decorated X11 window
 
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
 
     if (xcb_get_setup(c.get())->release_number < 11800000) {

@@ -69,7 +69,10 @@ void DontCrashEmptyDecorationTest::testBug361551()
     // there a repaint is scheduled and the resulting texture is invalid if the window size is invalid
 
     // create an xcb window
-    xcb_connection_t *c = xcb_connect(nullptr, nullptr);
+    Test::XcbConnectionPtr connection = Test::createX11Connection();
+    auto c = connection.get();
+
+    QVERIFY(c);
     QVERIFY(!xcb_connection_has_error(c));
 
     xcb_window_t windowId = xcb_generate_id(c);
@@ -93,7 +96,6 @@ void DontCrashEmptyDecorationTest::testBug361551()
     xcb_unmap_window(c, windowId);
     xcb_destroy_window(c, windowId);
     xcb_flush(c);
-    xcb_disconnect(c);
 
     QSignalSpy windowClosedSpy(window, &X11Window::windowClosed);
     QVERIFY(windowClosedSpy.wait());

@@ -279,21 +279,13 @@ void GlobalShortcutsTest::testComponseKey()
     QTRY_COMPARE(triggeredSpy.count(), 0);
 }
 
-struct XcbConnectionDeleter
-{
-    void operator()(xcb_connection_t *pointer)
-    {
-        xcb_disconnect(pointer);
-    }
-};
-
 void GlobalShortcutsTest::testX11WindowShortcut()
 {
 #ifdef NO_XWAYLAND
     QSKIP("x11 test, unnecessary without xwayland");
 #endif
     // create an X11 window
-    std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> c(xcb_connect(nullptr, nullptr));
+    Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     xcb_window_t windowId = xcb_generate_id(c.get());
     const QRect windowGeometry = QRect(0, 0, 10, 20);
