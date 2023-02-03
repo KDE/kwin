@@ -58,8 +58,7 @@ void XWaylandInputTest::init()
 {
     workspace()->setActiveOutput(QPoint(640, 512));
     Cursors::self()->mouse()->setPos(QPoint(640, 512));
-    xcb_warp_pointer(connection(), XCB_WINDOW_NONE, kwinApp()->x11RootWindow(), 0, 0, 0, 0, 640, 512);
-    xcb_flush(connection());
+
     QVERIFY(waylandServer()->windows().isEmpty());
 }
 
@@ -120,6 +119,10 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     if (xcb_get_setup(c.get())->release_number < 11800000) {
         QSKIP("XWayland 1.18 required");
     }
+
+    xcb_warp_pointer(connection(), XCB_WINDOW_NONE, kwinApp()->x11RootWindow(), 0, 0, 0, 0, 640, 512);
+    xcb_flush(connection());
+
     X11EventReaderHelper eventReader(c.get());
     QSignalSpy enteredSpy(&eventReader, &X11EventReaderHelper::entered);
     QSignalSpy leftSpy(&eventReader, &X11EventReaderHelper::left);
@@ -186,6 +189,9 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
 
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
+
+    xcb_warp_pointer(connection(), XCB_WINDOW_NONE, kwinApp()->x11RootWindow(), 0, 0, 0, 0, 640, 512);
+    xcb_flush(connection());
 
     if (xcb_get_setup(c.get())->release_number < 11800000) {
         QSKIP("XWayland 1.18 required");
