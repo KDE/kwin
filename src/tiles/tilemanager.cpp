@@ -65,6 +65,7 @@ TileManager::TileManager(Output *parent)
 
     m_rootTile = std::make_unique<RootTile>(this);
     m_rootTile->setRelativeGeometry(QRectF(0, 0, 1, 1));
+    connect(m_rootTile.get(), &CustomTile::paddingChanged, m_saveTimer.get(), static_cast<void (QTimer::*)()>(&QTimer::start));
     connect(m_rootTile.get(), &CustomTile::layoutModified, m_saveTimer.get(), static_cast<void (QTimer::*)()>(&QTimer::start));
 
     m_quickRootTile = std::make_unique<QuickRootTile>(this);
