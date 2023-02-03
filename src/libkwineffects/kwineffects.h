@@ -322,9 +322,6 @@ public:
 
     enum Feature {
         Nothing = 0,
-        Resize, /**< @deprecated */
-        GeometryTip, /**< @deprecated */
-        Outline, /**< @deprecated */
         ScreenInversion,
         Blur,
         Contrast,
