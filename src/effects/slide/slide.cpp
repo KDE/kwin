@@ -25,9 +25,9 @@ SlideEffect::SlideEffect()
     initConfig<SlideConfig>();
     reconfigure(ReconfigureAll);
 
-    connect(effects, QOverload<int, int, EffectWindow *>::of(&EffectsHandler::desktopChanged),
+    connect(effects, &EffectsHandler::desktopChanged,
             this, &SlideEffect::desktopChanged);
-    connect(effects, QOverload<uint, QPointF, EffectWindow *>::of(&EffectsHandler::desktopChanging),
+    connect(effects, &EffectsHandler::desktopChanging,
             this, &SlideEffect::desktopChanging);
     connect(effects, QOverload<>::of(&EffectsHandler::desktopChangingCancelled),
             this, &SlideEffect::desktopChangingCancelled);

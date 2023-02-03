@@ -1474,15 +1474,6 @@ Q_SIGNALS:
     void desktopChangingCancelled();
 
     /**
-     * @since 4.7
-     * @deprecated
-     */
-    void KWIN_DEPRECATED desktopChanged(int oldDesktop, int newDesktop);
-    /**
-     * @internal
-     */
-    void desktopChangedLegacy(int oldDesktop, int newDesktop);
-    /**
      * Signal emitted when a window moved to another desktop
      * NOTICE that this does NOT imply that the desktop has changed
      * The @param window which is moved to the new desktop

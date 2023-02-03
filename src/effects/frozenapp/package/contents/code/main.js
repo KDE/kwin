@@ -105,7 +105,7 @@ var frozenAppEffect = {
         effects.windowMinimized.connect(frozenAppEffect.cancelAnimation);
         effects.windowUnminimized.connect(frozenAppEffect.restartAnimation);
         effects.windowUnresponsiveChanged.connect(frozenAppEffect.unresponsiveChanged);
-        effects['desktopChanged(int,int)'].connect(frozenAppEffect.desktopChanged);
+        effects.desktopChanged.connect(frozenAppEffect.desktopChanged);
         effects.desktopPresenceChanged.connect(frozenAppEffect.cancelAnimation);
         effects.desktopPresenceChanged.connect(frozenAppEffect.restartAnimation);
 

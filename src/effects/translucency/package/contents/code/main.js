@@ -216,7 +216,7 @@ var translucencyEffect = {
         effects.windowStartUserMovedResized.connect(translucencyEffect.moveResize.start);
         effects.windowFinishUserMovedResized.connect(translucencyEffect.moveResize.finish);
         effects.windowActivated.connect(translucencyEffect.inactive.activated);
-        effects['desktopChanged(int,int)'].connect(translucencyEffect.desktopChanged);
+        effects.desktopChanged.connect(translucencyEffect.desktopChanged);
         translucencyEffect.loadConfig();
     }
 };

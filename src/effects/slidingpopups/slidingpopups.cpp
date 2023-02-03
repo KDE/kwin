@@ -62,7 +62,7 @@ SlidingPopupsEffect::SlidingPopupsEffect()
     connect(effects, &EffectsHandler::xcbConnectionChanged, this, [this]() {
         m_atom = effects->announceSupportProperty(QByteArrayLiteral("_KDE_SLIDE"), this);
     });
-    connect(effects, qOverload<int, int, EffectWindow *>(&EffectsHandler::desktopChanged),
+    connect(effects, &EffectsHandler::desktopChanged,
             this, &SlidingPopupsEffect::stopAnimations);
     connect(effects, &EffectsHandler::activeFullScreenEffectChanged,
             this, &SlidingPopupsEffect::stopAnimations);

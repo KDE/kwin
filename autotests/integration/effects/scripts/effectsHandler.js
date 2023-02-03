@@ -11,6 +11,6 @@ effects.windowMinimized.connect(function(window) {
 effects.windowUnminimized.connect(function(window) {
     sendTestResponse("windowUnminimized - " + window.caption);
 });
-effects['desktopChanged(int,int)'].connect(function(old, current) {
+effects.desktopChanged.connect(function(old, current) {
     sendTestResponse("desktopChanged - " + old + " " + current);
 });
