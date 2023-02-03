@@ -2591,9 +2591,6 @@ public:
     virtual void unminimize() = 0;
     Q_SCRIPTABLE virtual void closeWindow() = 0;
 
-    /// deprecated
-    virtual bool isCurrentTab() const = 0;
-
     /**
      * @since 4.11
      */

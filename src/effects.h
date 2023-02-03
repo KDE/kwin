@@ -458,7 +458,6 @@ public:
     QString windowClass() const override;
     NET::WindowType windowType() const override;
     bool isSkipSwitcher() const override;
-    bool isCurrentTab() const override;
     QString windowRole() const override;
 
     bool isManaged() const override;

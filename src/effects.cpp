@@ -2138,12 +2138,6 @@ MANAGED_HELPER(bool, isUnresponsive, unresponsive, false)
 
 #undef MANAGED_HELPER
 
-// legacy from tab groups, can be removed when no effects use this any more.
-bool EffectWindowImpl::isCurrentTab() const
-{
-    return true;
-}
-
 QString EffectWindowImpl::windowClass() const
 {
     return m_window->resourceName() + QLatin1Char(' ') + m_window->resourceClass();
