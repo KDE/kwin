@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-29 00:59+0000\n"
+"POT-Creation-Date: 2023-02-03 01:01+0000\n"
 "PO-Revision-Date: 2023-01-30 09:25+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -1566,14 +1566,12 @@ msgctxt "Night Color was enabled"
 msgid "Night Color On"
 msgstr "ღამის ფერები ჩართულია"
 
-#: plugins/nightcolor/nightcolormanager.cpp:84
-#: plugins/nightcolor/nightcolormanager.cpp:87
-#: plugins/nightcolor/nightcolormanager.cpp:94
+#: plugins/nightcolor/nightcolormanager.cpp:85
 #, kde-format
 msgid "Toggle Night Color"
 msgstr "ღამის ფერების გადართვა"
 
-#: plugins/nightcolor/nightcolormanager.cpp:471
+#: plugins/nightcolor/nightcolormanager.cpp:462
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "ფერის ტემპერატურის გადახედვა"
@@ -2764,7 +2762,7 @@ msgstr "ერთი სამუშაო მაგიდის დაბლა
 msgid "Switch to Desktop %1"
 msgstr "%1-ე სამუშაო მაგიდაზე გადართვა"
 
-#: window.cpp:3469
+#: window.cpp:3470
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

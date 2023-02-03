@@ -111,6 +111,13 @@
 > ici. Ces bordures larges sont plus faciles à voir pour les mal voyants et plus faciles à déplacer pour les personnes à mobilité réduite ou ayant des difficultés à manipuler la souris.</para>
 </tip>
 
+<tip>
+<para
+>If you are interested in creating your own window decoration, you can learn more about it <ulink url="https://develop.kde.org/docs/extend/plasma/aurorae/"
+>in this tutorial</ulink
+>.</para>
+</tip>
+
 </sect2>
 
 <sect2>

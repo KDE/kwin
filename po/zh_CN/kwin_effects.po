@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-18 00:58+0000\n"
+"POT-Creation-Date: 2023-02-03 01:01+0000\n"
 "PO-Revision-Date: 2023-01-12 10:31\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -738,37 +738,37 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "瓷贴编辑器开关"
 
-#: tileseditor/qml/main.qml:147
+#: tileseditor/qml/main.qml:145
 #, kde-format
 msgid "Padding:"
 msgstr "边距："
 
-#: tileseditor/qml/main.qml:157
+#: tileseditor/qml/main.qml:155
 #, kde-format
 msgid "Load Layout..."
 msgstr "加载布局..."
 
-#: tileseditor/qml/main.qml:271
+#: tileseditor/qml/main.qml:269
 #, kde-format
 msgid "Close"
 msgstr "关闭"
 
-#: tileseditor/qml/TileDelegate.qml:171
+#: tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Horizontally"
 msgstr "水平分割"
 
-#: tileseditor/qml/TileDelegate.qml:178
+#: tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Vertically"
 msgstr "垂直分割"
 
-#: tileseditor/qml/TileDelegate.qml:186 tileseditor/qml/TileDelegate.qml:215
+#: tileseditor/qml/TileDelegate.qml:182 tileseditor/qml/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
 msgstr "添加浮动瓷贴"
 
-#: tileseditor/qml/TileDelegate.qml:195
+#: tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
 msgstr "删除"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-29 00:59+0000\n"
+"POT-Creation-Date: 2023-02-03 01:01+0000\n"
 "PO-Revision-Date: 2023-01-10 21:43+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -1568,14 +1568,12 @@ msgctxt "Night Color was enabled"
 msgid "Night Color On"
 msgstr "இரவு நிறமாற்றம் இயக்கப்பட்டது"
 
-#: plugins/nightcolor/nightcolormanager.cpp:84
-#: plugins/nightcolor/nightcolormanager.cpp:87
-#: plugins/nightcolor/nightcolormanager.cpp:94
+#: plugins/nightcolor/nightcolormanager.cpp:85
 #, kde-format
 msgid "Toggle Night Color"
 msgstr "இரவு நிறமாற்றத்தை நிலைமாற்றி"
 
-#: plugins/nightcolor/nightcolormanager.cpp:471
+#: plugins/nightcolor/nightcolormanager.cpp:462
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "நிறவெப்பநிலையின் முன்னோட்டம்"
@@ -2775,7 +2773,7 @@ msgstr "கீழுள்ள பணிமேடைக்கு தாவு"
 msgid "Switch to Desktop %1"
 msgstr "பணிமேடை %1-க்கு தாவு"
 
-#: window.cpp:3469
+#: window.cpp:3470
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

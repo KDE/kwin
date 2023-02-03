@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-18 00:58+0000\n"
+"POT-Creation-Date: 2023-02-03 01:01+0000\n"
 "PO-Revision-Date: 2022-12-02 14:28+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -747,37 +747,37 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Commuta l'editor de fitxes"
 
-#: tileseditor/qml/main.qml:147
+#: tileseditor/qml/main.qml:145
 #, kde-format
 msgid "Padding:"
 msgstr "Farciment:"
 
-#: tileseditor/qml/main.qml:157
+#: tileseditor/qml/main.qml:155
 #, kde-format
 msgid "Load Layout..."
 msgstr "Carrega una disposició..."
 
-#: tileseditor/qml/main.qml:271
+#: tileseditor/qml/main.qml:269
 #, kde-format
 msgid "Close"
 msgstr "Tanca"
 
-#: tileseditor/qml/TileDelegate.qml:171
+#: tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Horizontally"
 msgstr "Divideix horitzontalment"
 
-#: tileseditor/qml/TileDelegate.qml:178
+#: tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Vertically"
 msgstr "Divideix verticalment"
 
-#: tileseditor/qml/TileDelegate.qml:186 tileseditor/qml/TileDelegate.qml:215
+#: tileseditor/qml/TileDelegate.qml:182 tileseditor/qml/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
 msgstr "Afegeix una fitxa flotant"
 
-#: tileseditor/qml/TileDelegate.qml:195
+#: tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
 msgstr "Suprimeix"

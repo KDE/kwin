@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-29 00:59+0000\n"
+"POT-Creation-Date: 2023-02-03 01:01+0000\n"
 "PO-Revision-Date: 2022-05-14 17:24+0200\n"
 "Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -1578,14 +1578,12 @@ msgctxt "Night Color was enabled"
 msgid "Night Color On"
 msgstr "Natfarver til"
 
-#: plugins/nightcolor/nightcolormanager.cpp:84
-#: plugins/nightcolor/nightcolormanager.cpp:87
-#: plugins/nightcolor/nightcolormanager.cpp:94
+#: plugins/nightcolor/nightcolormanager.cpp:85
 #, kde-format
 msgid "Toggle Night Color"
 msgstr "Slå natfarver til/fra"
 
-#: plugins/nightcolor/nightcolormanager.cpp:471
+#: plugins/nightcolor/nightcolormanager.cpp:462
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr ""
@@ -2827,7 +2825,7 @@ msgstr "Skift ét skrivebord nedad"
 msgid "Switch to Desktop %1"
 msgstr "Skift til skrivebord %1"
 
-#: window.cpp:3469
+#: window.cpp:3470
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

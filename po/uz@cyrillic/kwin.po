@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-29 00:59+0000\n"
+"POT-Creation-Date: 2023-02-03 01:01+0000\n"
 "PO-Revision-Date: 2006-12-17 12:27+0000\n"
 "Last-Translator: Mashrab Kuvatov <kmashrab@uni-bremen.de>\n"
 "Language-Team: Uzbek <floss-uz-l10n@googlegroups.com>\n"
@@ -1569,14 +1569,12 @@ msgctxt "Night Color was enabled"
 msgid "Night Color On"
 msgstr ""
 
-#: plugins/nightcolor/nightcolormanager.cpp:84
-#: plugins/nightcolor/nightcolormanager.cpp:87
-#: plugins/nightcolor/nightcolormanager.cpp:94
+#: plugins/nightcolor/nightcolormanager.cpp:85
 #, kde-format
 msgid "Toggle Night Color"
 msgstr ""
 
-#: plugins/nightcolor/nightcolormanager.cpp:471
+#: plugins/nightcolor/nightcolormanager.cpp:462
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr ""
@@ -2847,7 +2845,7 @@ msgstr "Пастдаги иш столига ўтиш"
 msgid "Switch to Desktop %1"
 msgstr "1 Иш столига ўтиш"
 
-#: window.cpp:3469
+#: window.cpp:3470
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

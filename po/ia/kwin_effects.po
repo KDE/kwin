@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-18 00:58+0000\n"
+"POT-Creation-Date: 2023-02-03 01:01+0000\n"
 "PO-Revision-Date: 2023-01-24 15:51+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -739,37 +739,37 @@ msgstr "%"
 msgid "Toggle Tiles Editor"
 msgstr "Commuta Editor de Tegulas (tiles)"
 
-#: tileseditor/qml/main.qml:147
+#: tileseditor/qml/main.qml:145
 #, kde-format
 msgid "Padding:"
 msgstr "Borrar (Padding):"
 
-#: tileseditor/qml/main.qml:157
+#: tileseditor/qml/main.qml:155
 #, kde-format
 msgid "Load Layout..."
 msgstr "Carga disposition..."
 
-#: tileseditor/qml/main.qml:271
+#: tileseditor/qml/main.qml:269
 #, kde-format
 msgid "Close"
 msgstr "Claude"
 
-#: tileseditor/qml/TileDelegate.qml:171
+#: tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Horizontally"
 msgstr "Divide Horizontalmente"
 
-#: tileseditor/qml/TileDelegate.qml:178
+#: tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Vertically"
 msgstr "Divide verticalmente"
 
-#: tileseditor/qml/TileDelegate.qml:186 tileseditor/qml/TileDelegate.qml:215
+#: tileseditor/qml/TileDelegate.qml:182 tileseditor/qml/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
 msgstr "Adde Tegula flottante"
 
-#: tileseditor/qml/TileDelegate.qml:195
+#: tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
 msgstr "Dele"

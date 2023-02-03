@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-18 00:58+0000\n"
+"POT-Creation-Date: 2023-02-03 01:01+0000\n"
 "PO-Revision-Date: 2023-01-08 18:01+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -738,37 +738,37 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Bật/tắt trình biên tập lát"
 
-#: tileseditor/qml/main.qml:147
+#: tileseditor/qml/main.qml:145
 #, kde-format
 msgid "Padding:"
 msgstr "Phần lót:"
 
-#: tileseditor/qml/main.qml:157
+#: tileseditor/qml/main.qml:155
 #, kde-format
 msgid "Load Layout..."
 msgstr "Tải bố cục..."
 
-#: tileseditor/qml/main.qml:271
+#: tileseditor/qml/main.qml:269
 #, kde-format
 msgid "Close"
 msgstr "Đóng"
 
-#: tileseditor/qml/TileDelegate.qml:171
+#: tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Horizontally"
 msgstr "Tách ngang"
 
-#: tileseditor/qml/TileDelegate.qml:178
+#: tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Vertically"
 msgstr "Tách dọc"
 
-#: tileseditor/qml/TileDelegate.qml:186 tileseditor/qml/TileDelegate.qml:215
+#: tileseditor/qml/TileDelegate.qml:182 tileseditor/qml/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
 msgstr "Thêm ô trôi"
 
-#: tileseditor/qml/TileDelegate.qml:195
+#: tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
 msgstr "Xoá"

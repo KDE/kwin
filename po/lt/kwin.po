@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-29 00:59+0000\n"
+"POT-Creation-Date: 2023-02-03 01:01+0000\n"
 "PO-Revision-Date: 2022-12-12 22:06+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -1586,14 +1586,12 @@ msgctxt "Night Color was enabled"
 msgid "Night Color On"
 msgstr "Naktinė spalva įjungta"
 
-#: plugins/nightcolor/nightcolormanager.cpp:84
-#: plugins/nightcolor/nightcolormanager.cpp:87
-#: plugins/nightcolor/nightcolormanager.cpp:94
+#: plugins/nightcolor/nightcolormanager.cpp:85
 #, kde-format
 msgid "Toggle Night Color"
 msgstr "Perjungti naktinę spalvą"
 
-#: plugins/nightcolor/nightcolormanager.cpp:471
+#: plugins/nightcolor/nightcolormanager.cpp:462
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Spalvos temperatūros peržiūra"
@@ -2808,7 +2806,7 @@ msgstr "Perjungti vienu darbalaukiu į apačią"
 msgid "Switch to Desktop %1"
 msgstr "Perjungti į darbalaukį %1"
 
-#: window.cpp:3469
+#: window.cpp:3470
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

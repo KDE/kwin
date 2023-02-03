@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: கேபசூ 4.1 தமிழாக்கம்\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-18 00:58+0000\n"
+"POT-Creation-Date: 2023-02-03 01:01+0000\n"
 "PO-Revision-Date: 2022-12-06 20:05+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -744,37 +744,37 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr ""
 
-#: tileseditor/qml/main.qml:147
+#: tileseditor/qml/main.qml:145
 #, kde-format
 msgid "Padding:"
 msgstr "இடையிலான இடைவெளி:"
 
-#: tileseditor/qml/main.qml:157
+#: tileseditor/qml/main.qml:155
 #, kde-format
 msgid "Load Layout..."
 msgstr "தளவமைப்பை ஏற்று..."
 
-#: tileseditor/qml/main.qml:271
+#: tileseditor/qml/main.qml:269
 #, kde-format
 msgid "Close"
 msgstr "மூடு"
 
-#: tileseditor/qml/TileDelegate.qml:171
+#: tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Horizontally"
 msgstr "கிடைமட்டமாக பிரி"
 
-#: tileseditor/qml/TileDelegate.qml:178
+#: tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Vertically"
 msgstr "நெடுக்காக பிரி"
 
-#: tileseditor/qml/TileDelegate.qml:186 tileseditor/qml/TileDelegate.qml:215
+#: tileseditor/qml/TileDelegate.qml:182 tileseditor/qml/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
 msgstr ""
 
-#: tileseditor/qml/TileDelegate.qml:195
+#: tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
 msgstr "நீக்கு"
