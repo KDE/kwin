@@ -102,6 +102,10 @@ var translucencyEffect = {
             cancel(window.translucencyInactiveAnimation);
             window.translucencyInactiveAnimation = undefined;
         }
+        if (window.translucencyMoveResizeAnimations !== undefined) {
+            cancel(window.translucencyMoveResizeAnimations);
+            window.translucencyMoveResizeAnimations = undefined;
+        }
     },
     moveResize: {
         start: function (window) {
