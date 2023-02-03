@@ -469,11 +469,6 @@ void Effect::reconfigure(ReconfigureFlags)
 {
 }
 
-void *Effect::proxy()
-{
-    return nullptr;
-}
-
 void Effect::windowInputMouseEvent(QEvent *)
 {
 }

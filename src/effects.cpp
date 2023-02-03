@@ -819,17 +819,6 @@ void EffectsHandlerImpl::registerTouchscreenSwipeShortcut(SwipeDirection directi
     input()->registerTouchscreenSwipeShortcut(direction, fingerCount, action, progressCallback);
 }
 
-void *EffectsHandlerImpl::getProxy(QString name)
-{
-    for (QVector<EffectPair>::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
-        if ((*it).first == name) {
-            return (*it).second->proxy();
-        }
-    }
-
-    return nullptr;
-}
-
 void EffectsHandlerImpl::startMousePolling()
 {
     if (Cursors::self()->mouse()) {

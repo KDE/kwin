@@ -105,7 +105,6 @@ public:
     void registerTouchpadSwipeShortcut(SwipeDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) override;
     void registerTouchpadPinchShortcut(PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback) override;
     void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback) override;
-    void *getProxy(QString name) override;
     void startMousePolling() override;
     void stopMousePolling() override;
     EffectWindow *findWindow(WId id) const override;

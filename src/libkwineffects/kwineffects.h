@@ -361,11 +361,6 @@ public:
     virtual void reconfigure(ReconfigureFlags flags);
 
     /**
-     * Called when another effect requests the proxy for this effect.
-     */
-    virtual void *proxy();
-
-    /**
      * Called before starting to paint the screen.
      * In this method you can:
      * @li set whether the windows or the entire screen will be transformed
@@ -921,12 +916,6 @@ public:
      * @since 5.25
      */
     virtual void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback) = 0;
-
-    /**
-     * Retrieve the proxy class for an effect if it has one. Will return NULL if
-     * the effect isn't loaded or doesn't have a proxy class.
-     */
-    virtual void *getProxy(QString name) = 0;
 
     // Mouse polling
     virtual void startMousePolling() = 0;
