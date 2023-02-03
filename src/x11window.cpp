@@ -4337,7 +4337,7 @@ void X11Window::maximize(MaximizeMode mode)
         return;
     }
 
-    GeometryUpdatesBlocker blocker(this);
+    blockGeometryUpdates(true);
 
     // maximing one way and unmaximizing the other way shouldn't happen,
     // so restore first and then maximize the other way
@@ -4550,6 +4550,7 @@ void X11Window::maximize(MaximizeMode mode)
         break;
     }
 
+    blockGeometryUpdates(false);
     updateAllowedActions();
     updateWindowRules(Rules::MaximizeVert | Rules::MaximizeHoriz | Rules::Position | Rules::Size);
     Q_EMIT quickTileModeChanged();
