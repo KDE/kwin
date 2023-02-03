@@ -394,7 +394,6 @@ public:
     double opacity() const override;
 
     QStringList activities() const override;
-    int desktop() const override;
     QVector<uint> desktops() const override;
     qreal x() const override;
     qreal y() const override;

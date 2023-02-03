@@ -2077,7 +2077,7 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
     Q_PROPERTY(qreal width READ width)
     Q_PROPERTY(qreal x READ x)
     Q_PROPERTY(qreal y READ y)
-    Q_PROPERTY(int desktop READ desktop)
+    Q_PROPERTY(QVector<uint> desktops READ desktops)
     Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops)
     Q_PROPERTY(bool onCurrentDesktop READ isOnCurrentDesktop)
     Q_PROPERTY(QRectF rect READ rect)
@@ -2387,17 +2387,6 @@ public:
     Q_SCRIPTABLE bool isOnDesktop(int d) const;
     bool isOnCurrentDesktop() const;
     bool isOnAllDesktops() const;
-    /**
-     * The desktop this window is in. This makes sense only on X11
-     * where desktops are mutually exclusive, on Wayland it's the last
-     * desktop the window has been added to.
-     * use desktops() instead.
-     * @see desktops()
-     * @deprecated
-     */
-#ifndef KWIN_NO_DEPRECATED
-    virtual int KWIN_DEPRECATED desktop() const = 0; // prefer isOnXXX()
-#endif
     /**
      * All the desktops by number that the window is in. On X11 this list will always have
      * a length of 1, on Wayland can be any subset.
