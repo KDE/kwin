@@ -31,21 +31,6 @@ private:
 };
 typedef QSharedPointer<FullScreenEffectLock> FullScreenEffectLockPtr;
 
-/**
- * References the previous window pixmap to prevent discarding.
- */
-class PreviousWindowPixmapLock
-{
-public:
-    PreviousWindowPixmapLock(EffectWindow *w);
-    ~PreviousWindowPixmapLock();
-
-private:
-    EffectWindow *m_window;
-    Q_DISABLE_COPY(PreviousWindowPixmapLock)
-};
-typedef QSharedPointer<PreviousWindowPixmapLock> PreviousWindowPixmapLockPtr;
-
 class KWINEFFECTS_EXPORT AniData
 {
 public:
@@ -53,7 +38,7 @@ public:
     AniData(AnimationEffect::Attribute a, int meta, const FPx2 &to,
             int delay, const FPx2 &from, bool waitAtSource,
             FullScreenEffectLockPtr = FullScreenEffectLockPtr(),
-            bool keepAlive = true, PreviousWindowPixmapLockPtr previousWindowPixmapLock = {}, GLShader *shader = nullptr);
+            bool keepAlive = true, GLShader *shader = nullptr);
 
     bool isActive() const;
 
@@ -76,7 +61,6 @@ public:
     bool keepAlive;
     EffectWindowDeletedRef deletedRef;
     EffectWindowVisibleRef visibleRef;
-    PreviousWindowPixmapLockPtr previousWindowPixmapLock;
     AnimationEffect::TerminationFlags terminationFlags;
     GLShader *shader{nullptr};
 };

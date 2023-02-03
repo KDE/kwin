@@ -479,9 +479,6 @@ public:
     void unminimize() override;
     void closeWindow() override;
 
-    void referencePreviousWindowPixmap() override;
-    void unreferencePreviousWindowPixmap() override;
-
     QWindow *internalWindow() const override;
 
     const Window *window() const;

@@ -232,7 +232,6 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int 
         }
     }
 
-    PreviousWindowPixmapLockPtr previousPixmap;
     if (a == CrossFadePrevious) {
         CrossFadeEffect::redirect(w);
     }
@@ -246,7 +245,6 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int 
         waitAtSource, // Whether the animation should be kept at source
         fullscreen, // Full screen effect lock
         keepAlive, // Keep alive flag
-        previousPixmap, // Previous window pixmap lock
         shader
         ));
 

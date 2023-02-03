@@ -2281,16 +2281,6 @@ void EffectWindowImpl::closeWindow()
     }
 }
 
-void EffectWindowImpl::referencePreviousWindowPixmap()
-{
-    // TODO: Implement.
-}
-
-void EffectWindowImpl::unreferencePreviousWindowPixmap()
-{
-    // TODO: Implement.
-}
-
 bool EffectWindowImpl::isManaged() const
 {
     return managed;
