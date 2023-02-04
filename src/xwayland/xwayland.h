@@ -57,7 +57,6 @@ Q_SIGNALS:
 private Q_SLOTS:
     void handleXwaylandFinished();
     void handleXwaylandReady();
-    void dispatchEvents();
 
     void handleSelectionLostOwnership();
     void handleSelectionFailedToClaimOwnership();
@@ -65,6 +64,12 @@ private Q_SLOTS:
 
 private:
     friend class XrandrEventFilter;
+
+    enum class DispatchEventsMode {
+        Poll,
+        EventQueue
+    };
+    void dispatchEvents(DispatchEventsMode mode);
 
     void installSocketNotifier();
     void uninstallSocketNotifier();
