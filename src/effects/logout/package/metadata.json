@@ -40,6 +40,7 @@
         "Description[bg]": "Плавен преход към екрана за излизане в системата",
         "Description[ca@valencia]": "Transició suau a la pantalla d'eixida",
         "Description[ca]": "Transició suau a la pantalla de sortida",
+        "Description[cs]": "Plynule přejít na odhlašovací obrazovku",
         "Description[en_GB]": "Smoothly fade to the logout screen",
         "Description[es]": "Desvanecimiento suave para mostrar la pantalla de cierre de sesión",
         "Description[et]": "Sujuv hääbumine sisselogimisekraani ilmumiseni",

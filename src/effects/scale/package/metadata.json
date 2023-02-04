@@ -53,6 +53,7 @@
         "Description[bg]": "Плавно увеличаване и намаляване на мащаба на прозорците при показване или скриване",
         "Description[ca@valencia]": "Fa que les finestres entren o isquen volant quan es mostren o s'oculten",
         "Description[ca]": "Fa que les finestres entrin o surtin volant quan es mostren o s'oculten",
+        "Description[cs]": "Nechá okna plynule zvětšit/zmenšit se, pokud jsou zobrazeny resp. skryty",
         "Description[en_GB]": "Make windows smoothly scale in and out when they are shown or hidden",
         "Description[es]": "Hacer que las ventanas se escalen suavemente al mostrarlas y al ocultarlas",
         "Description[et]": "Skaleerib aknaid sujuvalt, kui need peidetakse või nähtavale tuuakse",

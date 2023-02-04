@@ -40,6 +40,7 @@
         "Description[bg]": "Плавен преход към работния плот при влизане",
         "Description[ca@valencia]": "Transició suau a l'escriptori en connectar-se",
         "Description[ca]": "Transició suau a l'escriptori en connectar-se",
+        "Description[cs]": "Plynule zobrazit plochu po přihlášení",
         "Description[en_GB]": "Smoothly fade to the desktop when logging in",
         "Description[es]": "Desvanecimiento suave para mostrar el escritorio al iniciar sesión",
         "Description[et]": "Töölaua sujuv ilmumine sisselogimisel",

@@ -53,6 +53,7 @@
         "Description[bg]": "Постепенно избледняване при показване и скриване на изскачащите прозорци",
         "Description[ca@valencia]": "Fa que els missatges emergents s'encengen o s'apaguen de manera gradual quan es mostren o s'oculten",
         "Description[ca]": "Fa que els missatges emergents s'encenguin o s'apaguin de manera gradual quan es mostren o s'oculten",
+        "Description[cs]": "Nechá vyskakovací okna plynule zmizet/objevit se, pokud jsou zobrazeny resp. skryty",
         "Description[en_GB]": "Make popups smoothly fade in and out when they are shown or hidden",
         "Description[es]": "Hacer que las ventanas emergentes se desvanezcan y reaparezcan suavemente al mostrarlas y al ocultarlas",
         "Description[et]": "Paneb hüpikaknad sujuvalt hääbuma või tugevnema, kui need peidetakse või nähtavale tuuakse",
