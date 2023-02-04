@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-03 01:01+0000\n"
-"PO-Revision-Date: 2022-06-27 14:36+0200\n"
+"PO-Revision-Date: 2023-01-31 13:11+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 22.12.0\n"
+"X-Generator: Lokalize 22.12.1\n"
 "X-Language: cs_CZ\n"
 "X-Source-Language: en_US\n"
 
@@ -182,7 +182,7 @@ msgstr ""
 #: desktopgrid/desktopgrid_config.ui:123
 #, kde-format
 msgid "&Grid layout mode:"
-msgstr ""
+msgstr "Režim roz&ložení mřížky:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: desktopgrid/desktopgrid_config.ui:137 overview/kcm/overvieweffectkcm.ui:30
@@ -209,7 +209,7 @@ msgstr "Nic"
 #: desktopgrid/desktopgrid_config.ui:155
 #, kde-format
 msgid "Windows layout:"
-msgstr ""
+msgstr "Rozložení oken"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: desktopgrid/desktopgrid_config.ui:171
@@ -569,12 +569,12 @@ msgstr "Rozmazat pozadí:"
 #: overview/kcm/overvieweffectkcm.ui:73
 #, kde-format
 msgid "Ignore minimized windows:"
-msgstr ""
+msgstr "Ignorovat minimalizovaná okna:"
 
 #: overview/qml/DesktopBar.qml:187
 #, kde-format
 msgid "Delete Virtual Desktop"
-msgstr ""
+msgstr "Smazat virtuální plochu"
 
 #: overview/qml/DesktopBar.qml:283
 #, kde-format
@@ -584,18 +584,18 @@ msgstr "Přidat virtuální plochu"
 #: overview/qml/ScreenView.qml:226
 #, kde-format
 msgid "No matching windows"
-msgstr ""
+msgstr "Žádná odpovídající okna"
 
 #: private/qml/WindowHeapDelegate.qml:151
 #, kde-format
 msgid "Drag Down To Close"
-msgstr ""
+msgstr "Pro uzavření táhnout dolů"
 
 #: private/qml/WindowHeapDelegate.qml:461
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
-msgstr ""
+msgstr "Zavřít okno"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InScale)
 #: scale/package/contents/ui/config.ui:46
@@ -641,31 +641,31 @@ msgstr ""
 #, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr ""
+msgstr "Délka malby"
 
 #: showfps/qml/main.qml:162
 #, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
-msgstr ""
+msgstr "Množství barvy"
 
 #: showfps/qml/main.qml:175
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr ""
+msgstr "Současné FPS"
 
 #: showfps/qml/main.qml:184
 #, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr ""
+msgstr "Maximum FPS"
 
 #: showfps/qml/main.qml:192
 #, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
-msgstr ""
+msgstr "Tento efekt není benchmark"
 
 #: showpaint/showpaint.cpp:38 showpaint/showpaint_config.cpp:38
 #, kde-format
@@ -738,7 +738,7 @@ msgstr " %"
 #: tileseditor/tileseditoreffect.cpp:29
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr ""
+msgstr "Přepnout editor dlaždic"
 
 #: tileseditor/qml/main.qml:145
 #, kde-format
@@ -748,7 +748,7 @@ msgstr "Odstup:"
 #: tileseditor/qml/main.qml:155
 #, kde-format
 msgid "Load Layout..."
-msgstr ""
+msgstr "Načíst rozložení..."
 
 #: tileseditor/qml/main.qml:269
 #, kde-format
@@ -758,7 +758,7 @@ msgstr "Zavřít"
 #: tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Horizontally"
-msgstr ""
+msgstr "Rozdělit vodorovně"
 
 #: tileseditor/qml/TileDelegate.qml:174
 #, kde-format
@@ -768,7 +768,7 @@ msgstr "Rozdělit svisle"
 #: tileseditor/qml/TileDelegate.qml:182 tileseditor/qml/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
-msgstr ""
+msgstr "Přidat plovoucí dlaždici"
 
 #: tileseditor/qml/TileDelegate.qml:191
 #, kde-format
@@ -922,7 +922,7 @@ msgstr "Zapnout současná okna (třída okno)"
 #: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:72
 #, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
-msgstr ""
+msgstr "Zapnout současná okna (Třída okna na aktivní ploše)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: windowview/kcm/windowvieweffectkcm.ui:56
@@ -943,7 +943,7 @@ msgstr "Žádná okna"
 #: windowview/qml/main.qml:123
 #, kde-format
 msgid "Filter windows…"
-msgstr ""
+msgstr "Filtrovat okna..."
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: wobblywindows/wobblywindows_config.ui:20

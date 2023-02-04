@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-11 00:48+0000\n"
-"PO-Revision-Date: 2023-01-30 09:27+0100\n"
+"PO-Revision-Date: 2023-02-03 06:20+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -178,7 +178,7 @@ msgstr "ძალა"
 #: optionsmodel.cpp:222
 #, kde-format
 msgid "The window property will be always forced to the given value."
-msgstr ""
+msgstr "ფანჯრის თვისება ყოველთვის მითითებულ მნიშვნელობაზე იქნება დაყენებული."
 
 #: optionsmodel.cpp:224
 #, kde-format
@@ -205,13 +205,15 @@ msgstr "KWin -ის წესები (*.kwinrule)"
 #: package/contents/ui/main.qml:59
 #, kde-format
 msgid "No rules for specific windows are currently set"
-msgstr ""
+msgstr "ამჟამად მითითებული ფანჯრების წესები მითითებული არაა"
 
 #: package/contents/ui/main.qml:60
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New...</interface> button below to add some"
 msgstr ""
+"დასამატებლად დააწკაპუნეთ <interface>ახლის დამატების...</interface> ღილაკს "
+"ქვემოთ"
 
 #: package/contents/ui/main.qml:68
 #, kde-format

@@ -799,7 +799,7 @@ msgstr ""
 "Iste application non forni un classe per le fenestra, assi KWIN non pote "
 "usar lo a corresponder e applicar ulle regulas. Si tu ancora vole applicar "
 "alcun regulas a illo, in loco tu essaya a corresponder con altere "
-"proprietates como le titulo de fenestra.<nt/><nt/> Pro favor tu considera "
+"proprietates como le titulo de fenestra.<nl/><nl/> Pro favor tu considera "
 "reportar iste bug al dispeloppatores del application."
 
 #: rulesmodel.cpp:738

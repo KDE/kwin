@@ -111,6 +111,13 @@
 >. Aquestes vores llargues són fàcils de veure per a usuaris amb visibilitat reduïda, i fàcils de capturar per a gent amb mobilitat reduïda o dificultats en emprar el ratolí.</para>
 </tip>
 
+<tip>
+<para
+>Si esteu interessat en crear la vostra pròpia decoració de finestra, podeu aprendre'n més <ulink url="https://develop.kde.org/docs/extend/plasma/aurorae/"
+>en aquesta guia d'aprenentatge</ulink
+>.</para>
+</tip>
+
 </sect2>
 
 <sect2>
