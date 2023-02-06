@@ -19,9 +19,6 @@ namespace KWin
 class Window;
 class Output;
 
-namespace ScriptingModels::V3
-{
-
 class ClientModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -124,5 +121,4 @@ private:
     bool m_showMinimizedWindows = true;
 };
 
-} // namespace ScriptingModels::V3
 } // namespace KWin

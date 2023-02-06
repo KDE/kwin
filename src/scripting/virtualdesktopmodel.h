@@ -12,9 +12,6 @@ namespace KWin
 {
 class VirtualDesktop;
 
-namespace ScriptingModels::V3
-{
-
 /**
  * The VirtualDesktopModel class provides a data model for the virtual desktops.
  */
@@ -46,5 +43,4 @@ private:
     QVector<KWin::VirtualDesktop *> m_virtualDesktops;
 };
 
-} // namespace ScriptingModels::V3
 } // namespace KWin

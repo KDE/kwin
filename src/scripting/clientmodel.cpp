@@ -11,7 +11,7 @@
 #include "window.h"
 #include "workspace.h"
 
-namespace KWin::ScriptingModels::V3
+namespace KWin
 {
 
 ClientModel::ClientModel(QObject *parent)
@@ -327,4 +327,4 @@ ClientFilterModel::WindowTypes ClientFilterModel::windowTypeMask(Window *client)
     return mask;
 }
 
-} // namespace KWin::ScriptingModels::V3
+} // namespace KWin

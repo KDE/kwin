@@ -7,7 +7,7 @@
 #include "virtualdesktopmodel.h"
 #include "virtualdesktops.h"
 
-namespace KWin::ScriptingModels::V3
+namespace KWin
 {
 
 VirtualDesktopModel::VirtualDesktopModel(QObject *parent)
@@ -88,4 +88,4 @@ int VirtualDesktopModel::rowCount(const QModelIndex &parent) const
     return parent.isValid() ? 0 : m_virtualDesktops.count();
 }
 
-} // namespace KWin::ScriptingModels::V3
+} // namespace KWin

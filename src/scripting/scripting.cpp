@@ -11,17 +11,16 @@
 
 #include "scripting.h"
 // own
+#include "clientmodel.h"
 #include "dbuscall.h"
 #include "desktopbackgrounditem.h"
 #include "kwinquickeffect.h"
 #include "screenedgeitem.h"
 #include "scripting_logging.h"
 #include "scriptingutils.h"
+#include "virtualdesktopmodel.h"
 #include "windowthumbnailitem.h"
 #include "workspace_wrapper.h"
-
-#include "v3/clientmodel.h"
-#include "v3/virtualdesktopmodel.h"
 
 #include "input.h"
 #include "options.h"
@@ -675,9 +674,9 @@ void KWin::Scripting::init()
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 3, 0, "WindowThumbnailItem");
     qmlRegisterType<DBusCall>("org.kde.kwin", 3, 0, "DBusCall");
     qmlRegisterType<ScreenEdgeItem>("org.kde.kwin", 3, 0, "ScreenEdgeItem");
-    qmlRegisterType<ScriptingModels::V3::ClientModel>("org.kde.kwin", 3, 0, "ClientModel");
-    qmlRegisterType<ScriptingModels::V3::ClientFilterModel>("org.kde.kwin", 3, 0, "ClientFilterModel");
-    qmlRegisterType<ScriptingModels::V3::VirtualDesktopModel>("org.kde.kwin", 3, 0, "VirtualDesktopModel");
+    qmlRegisterType<ClientModel>("org.kde.kwin", 3, 0, "ClientModel");
+    qmlRegisterType<ClientFilterModel>("org.kde.kwin", 3, 0, "ClientFilterModel");
+    qmlRegisterType<VirtualDesktopModel>("org.kde.kwin", 3, 0, "VirtualDesktopModel");
     qmlRegisterUncreatableType<KWin::QuickSceneView>("org.kde.kwin", 3, 0, "SceneView", QStringLiteral("Can't instantiate an object of type SceneView"));
 
     qmlRegisterSingletonType<DeclarativeScriptWorkspaceWrapper>("org.kde.kwin", 3, 0, "Workspace", [](QQmlEngine *qmlEngine, QJSEngine *jsEngine) {
