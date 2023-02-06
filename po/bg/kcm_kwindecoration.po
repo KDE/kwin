@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-26 00:58+0000\n"
+"POT-Creation-Date: 2023-02-06 01:01+0000\n"
 "PO-Revision-Date: 2022-05-21 18:34+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <dict@fsa-bg.org>\n"
@@ -196,54 +196,59 @@ msgstr "Пуснете бутона тук, за да го премахнете"
 msgid "Drag buttons between here and the titlebar"
 msgstr "Завлечете бутони от тук и заглавната лента непосредствено отгоре"
 
-#: package/contents/ui/main.qml:18
-#, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr "Този модул ви позволява да конфигурирате декорациите на прозорците."
-
-#: package/contents/ui/main.qml:52
-#, kde-format
-msgctxt "tab label"
-msgid "Theme"
-msgstr "Тема"
-
-#: package/contents/ui/main.qml:56
-#, kde-format
-msgctxt "tab label"
+#: package/contents/ui/ConfigureTitlebar.qml:16
+#, fuzzy, kde-format
+#| msgctxt "tab label"
+#| msgid "Titlebar Buttons"
 msgid "Titlebar Buttons"
 msgstr "Бутони на заглавната лента"
 
-#: package/contents/ui/main.qml:92
-#, kde-format
-msgctxt "Selector label"
-msgid "Window border size:"
-msgstr "Размер на границите на прозорец:"
-
-#: package/contents/ui/main.qml:110
-#, kde-format
-msgctxt "button text"
-msgid "Get New Window Decorations..."
-msgstr "Изтегляне на нови декорации за прозорци..."
-
-#: package/contents/ui/main.qml:139
+#: package/contents/ui/ConfigureTitlebar.qml:35
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
 msgstr "Затваряне на прозорците при двукратно щракане върху бутона на менюто"
 
-#: package/contents/ui/main.qml:156
+#: package/contents/ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
 msgstr "Щракнете и задръжте меню бутона, за да бъде показано менюто."
 
-#: package/contents/ui/main.qml:163
+#: package/contents/ui/ConfigureTitlebar.qml:59
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Показване на подсказките за бутоните на заглавната лента"
 
-#: package/contents/ui/Themes.qml:90
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr "Този модул ви позволява да конфигурирате декорациите на прозорците."
+
+#: package/contents/ui/main.qml:42
+#, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "Размер на границите на прозорец:"
+
+#: package/contents/ui/main.qml:60
+#, fuzzy, kde-format
+#| msgctxt "tab label"
+#| msgid "Titlebar Buttons"
+msgctxt "button text"
+msgid "Configure Titlebar Buttons…"
+msgstr "Бутони на заглавната лента"
+
+#: package/contents/ui/main.qml:65
+#, fuzzy, kde-format
+#| msgctxt "button text"
+#| msgid "Get New Window Decorations..."
+msgctxt "button text"
+msgid "Get New Window Decorations…"
+msgstr "Изтегляне на нови декорации за прозорци..."
+
+#: package/contents/ui/Themes.qml:92
 #, kde-format
 msgid "Edit %1 Theme"
 msgstr "Редактиране на %1 тема"
@@ -292,3 +297,7 @@ msgstr "Много огромен"
 #, kde-format
 msgid "Oversized"
 msgstr "Свръх огромен"
+
+#~ msgctxt "tab label"
+#~ msgid "Theme"
+#~ msgstr "Тема"

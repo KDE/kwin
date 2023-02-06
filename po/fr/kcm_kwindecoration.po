@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-26 00:58+0000\n"
+"POT-Creation-Date: 2023-02-06 01:01+0000\n"
 "PO-Revision-Date: 2021-12-27 22:15+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@neuf.fr>\n"
 "Language-Team: French <kde-francophone@kde.org>\n"
@@ -220,54 +220,59 @@ msgstr "Faites glisser un bouton ici pour le supprimer"
 msgid "Drag buttons between here and the titlebar"
 msgstr "Faites glisser les boutons vers la barre de titre"
 
-#: package/contents/ui/main.qml:18
-#, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr "Ce module vous permet de configurer les décorations de fenêtres."
-
-#: package/contents/ui/main.qml:52
-#, kde-format
-msgctxt "tab label"
-msgid "Theme"
-msgstr "Thème"
-
-#: package/contents/ui/main.qml:56
-#, kde-format
-msgctxt "tab label"
+#: package/contents/ui/ConfigureTitlebar.qml:16
+#, fuzzy, kde-format
+#| msgctxt "tab label"
+#| msgid "Titlebar Buttons"
 msgid "Titlebar Buttons"
 msgstr "Boutons de la barre de titre"
 
-#: package/contents/ui/main.qml:92
-#, kde-format
-msgctxt "Selector label"
-msgid "Window border size:"
-msgstr "Taille de la bordure de la fenêtre :"
-
-#: package/contents/ui/main.qml:110
-#, kde-format
-msgctxt "button text"
-msgid "Get New Window Decorations..."
-msgstr "Obtenir de nouvelles décorations de fenêtres..."
-
-#: package/contents/ui/main.qml:139
+#: package/contents/ui/ConfigureTitlebar.qml:35
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
 msgstr "Fermer les fenêtres en faisant un double clic sur le bouton de menu"
 
-#: package/contents/ui/main.qml:156
+#: package/contents/ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
 msgstr "Cliquez et maintenez le bouton de menu pour afficher le menu."
 
-#: package/contents/ui/main.qml:163
+#: package/contents/ui/ConfigureTitlebar.qml:59
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Afficher les bulles d'aide de la barre de titre"
 
-#: package/contents/ui/Themes.qml:90
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr "Ce module vous permet de configurer les décorations de fenêtres."
+
+#: package/contents/ui/main.qml:42
+#, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "Taille de la bordure de la fenêtre :"
+
+#: package/contents/ui/main.qml:60
+#, fuzzy, kde-format
+#| msgctxt "tab label"
+#| msgid "Titlebar Buttons"
+msgctxt "button text"
+msgid "Configure Titlebar Buttons…"
+msgstr "Boutons de la barre de titre"
+
+#: package/contents/ui/main.qml:65
+#, fuzzy, kde-format
+#| msgctxt "button text"
+#| msgid "Get New Window Decorations..."
+msgctxt "button text"
+msgid "Get New Window Decorations…"
+msgstr "Obtenir de nouvelles décorations de fenêtres..."
+
+#: package/contents/ui/Themes.qml:92
 #, kde-format
 msgid "Edit %1 Theme"
 msgstr "Éditer le thème %1"
@@ -316,6 +321,10 @@ msgstr "Vraiment énorme"
 #, kde-format
 msgid "Oversized"
 msgstr "Sur-dimensionnée"
+
+#~ msgctxt "tab label"
+#~ msgid "Theme"
+#~ msgstr "Thème"
 
 #~ msgctxt "popup tip"
 #~ msgid ""

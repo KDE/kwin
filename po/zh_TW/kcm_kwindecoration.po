@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-26 00:58+0000\n"
+"POT-Creation-Date: 2023-02-06 01:01+0000\n"
 "PO-Revision-Date: 2022-03-08 21:24+0800\n"
 "Last-Translator: Jeff Huang <s8321414@gmail.com>\n"
 "Language-Team: Chinese <zh-l10n@lists.slat.org>\n"
@@ -192,54 +192,59 @@ msgstr "將按鈕丟至此處移除"
 msgid "Drag buttons between here and the titlebar"
 msgstr "在這裡跟標題列間拖曳按鈕"
 
-#: package/contents/ui/main.qml:18
-#, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr "此模組能讓您設定視窗裝飾。"
-
-#: package/contents/ui/main.qml:52
-#, kde-format
-msgctxt "tab label"
-msgid "Theme"
-msgstr "主題"
-
-#: package/contents/ui/main.qml:56
-#, kde-format
-msgctxt "tab label"
+#: package/contents/ui/ConfigureTitlebar.qml:16
+#, fuzzy, kde-format
+#| msgctxt "tab label"
+#| msgid "Titlebar Buttons"
 msgid "Titlebar Buttons"
 msgstr "標題列按鈕"
 
-#: package/contents/ui/main.qml:92
-#, kde-format
-msgctxt "Selector label"
-msgid "Window border size:"
-msgstr "視窗邊框大小："
-
-#: package/contents/ui/main.qml:110
-#, kde-format
-msgctxt "button text"
-msgid "Get New Window Decorations..."
-msgstr "取得新桌面裝飾..."
-
-#: package/contents/ui/main.qml:139
+#: package/contents/ui/ConfigureTitlebar.qml:35
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
 msgstr "雙擊視窗選單按鈕時關閉視窗"
 
-#: package/contents/ui/main.qml:156
+#: package/contents/ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
 msgstr "點擊並按住選單按鈕以顯示選單。"
 
-#: package/contents/ui/main.qml:163
+#: package/contents/ui/ConfigureTitlebar.qml:59
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "顯示標題列按鈕的工具提示"
 
-#: package/contents/ui/Themes.qml:90
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr "此模組能讓您設定視窗裝飾。"
+
+#: package/contents/ui/main.qml:42
+#, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "視窗邊框大小："
+
+#: package/contents/ui/main.qml:60
+#, fuzzy, kde-format
+#| msgctxt "tab label"
+#| msgid "Titlebar Buttons"
+msgctxt "button text"
+msgid "Configure Titlebar Buttons…"
+msgstr "標題列按鈕"
+
+#: package/contents/ui/main.qml:65
+#, fuzzy, kde-format
+#| msgctxt "button text"
+#| msgid "Get New Window Decorations..."
+msgctxt "button text"
+msgid "Get New Window Decorations…"
+msgstr "取得新桌面裝飾..."
+
+#: package/contents/ui/Themes.qml:92
 #, kde-format
 msgid "Edit %1 Theme"
 msgstr "編輯 %1 主題"
@@ -288,6 +293,10 @@ msgstr "非常巨大"
 #, kde-format
 msgid "Oversized"
 msgstr "超出大小"
+
+#~ msgctxt "tab label"
+#~ msgid "Theme"
+#~ msgstr "主題"
 
 #~ msgctxt "popup tip"
 #~ msgid ""

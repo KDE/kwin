@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-26 00:58+0000\n"
+"POT-Creation-Date: 2023-02-06 01:01+0000\n"
 "PO-Revision-Date: 2022-12-25 17:08\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@gmail.com>\n"
 "Language-Team: Belarusian\n"
@@ -199,54 +199,59 @@ msgstr "Перацягніце кнопку сюды, каб выдаліць"
 msgid "Drag buttons between here and the titlebar"
 msgstr "Перацягвайце кнопкі паміж гэтай вобласцю і панэллю загалоўка"
 
-#: package/contents/ui/main.qml:18
-#, kde-format
-msgid "This module lets you configure the window decorations."
-msgstr "Гэты модуль дазваляе наладзіць аздабленне акон."
-
-#: package/contents/ui/main.qml:52
-#, kde-format
-msgctxt "tab label"
-msgid "Theme"
-msgstr "Тэма"
-
-#: package/contents/ui/main.qml:56
-#, kde-format
-msgctxt "tab label"
+#: package/contents/ui/ConfigureTitlebar.qml:16
+#, fuzzy, kde-format
+#| msgctxt "tab label"
+#| msgid "Titlebar Buttons"
 msgid "Titlebar Buttons"
 msgstr "Кнопкі панэлі загалоўка"
 
-#: package/contents/ui/main.qml:92
-#, kde-format
-msgctxt "Selector label"
-msgid "Window border size:"
-msgstr "Памер рамкі акон:"
-
-#: package/contents/ui/main.qml:110
-#, kde-format
-msgctxt "button text"
-msgid "Get New Window Decorations..."
-msgstr "Атрымаць новыя аздабленні..."
-
-#: package/contents/ui/main.qml:139
+#: package/contents/ui/ConfigureTitlebar.qml:35
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
 msgstr "Закрываць вокны падвойным пстрыканнем па кнопцы меню"
 
-#: package/contents/ui/main.qml:156
+#: package/contents/ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
 msgstr "Націсніце і ўтрымлівайце кнопку меню, каб паглядзець меню."
 
-#: package/contents/ui/main.qml:163
+#: package/contents/ui/ConfigureTitlebar.qml:59
 #, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
 msgstr "Паказваць выплыўныя падказкі для кнопак панэлі загалоўка"
 
-#: package/contents/ui/Themes.qml:90
+#: package/contents/ui/main.qml:19
+#, kde-format
+msgid "This module lets you configure the window decorations."
+msgstr "Гэты модуль дазваляе наладзіць аздабленне акон."
+
+#: package/contents/ui/main.qml:42
+#, kde-format
+msgctxt "Selector label"
+msgid "Window border size:"
+msgstr "Памер рамкі акон:"
+
+#: package/contents/ui/main.qml:60
+#, fuzzy, kde-format
+#| msgctxt "tab label"
+#| msgid "Titlebar Buttons"
+msgctxt "button text"
+msgid "Configure Titlebar Buttons…"
+msgstr "Кнопкі панэлі загалоўка"
+
+#: package/contents/ui/main.qml:65
+#, fuzzy, kde-format
+#| msgctxt "button text"
+#| msgid "Get New Window Decorations..."
+msgctxt "button text"
+msgid "Get New Window Decorations…"
+msgstr "Атрымаць новыя аздабленні..."
+
+#: package/contents/ui/Themes.qml:92
 #, kde-format
 msgid "Edit %1 Theme"
 msgstr "Рэдагаваць тэму \"%1\""
@@ -295,6 +300,10 @@ msgstr "Надта вялізная"
 #, kde-format
 msgid "Oversized"
 msgstr "Празмерная"
+
+#~ msgctxt "tab label"
+#~ msgid "Theme"
+#~ msgstr "Тэма"
 
 #~ msgid "Menu"
 #~ msgstr "Меню"

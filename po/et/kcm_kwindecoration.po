@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-26 00:58+0000\n"
+"POT-Creation-Date: 2023-02-06 01:01+0000\n"
 "PO-Revision-Date: 2019-11-01 16:00+0200\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -181,55 +181,60 @@ msgstr "Nupu eemaldamiseks lohista see siia"
 msgid "Drag buttons between here and the titlebar"
 msgstr "Lohista nuppe siit tiitliribale ja tagasi"
 
-#: package/contents/ui/main.qml:18
+#: package/contents/ui/ConfigureTitlebar.qml:16
+#, fuzzy, kde-format
+#| msgctxt "tab label"
+#| msgid "Titlebar Buttons"
+msgid "Titlebar Buttons"
+msgstr "Tiitliriba nupud"
+
+#: package/contents/ui/ConfigureTitlebar.qml:35
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr "Akende sulgemine topeltklõpsuga menüünupule"
+
+#: package/contents/ui/ConfigureTitlebar.qml:52
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr ""
+
+#: package/contents/ui/ConfigureTitlebar.qml:59
+#, kde-format
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "Tiitliriba nuppudel vihjete näitamine"
+
+#: package/contents/ui/main.qml:19
 #, kde-format
 msgid "This module lets you configure the window decorations."
 msgstr "See moodul võimaldab seadistada aknadekoratsioone."
 
-#: package/contents/ui/main.qml:52
-#, kde-format
-msgctxt "tab label"
-msgid "Theme"
-msgstr "Teema"
-
-#: package/contents/ui/main.qml:56
-#, kde-format
-msgctxt "tab label"
-msgid "Titlebar Buttons"
-msgstr "Tiitliriba nupud"
-
-#: package/contents/ui/main.qml:92
+#: package/contents/ui/main.qml:42
 #, fuzzy, kde-format
 #| msgid "Border size:"
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Piirde suurus:"
 
-#: package/contents/ui/main.qml:110
-#, kde-format
+#: package/contents/ui/main.qml:60
+#, fuzzy, kde-format
+#| msgctxt "tab label"
+#| msgid "Titlebar Buttons"
 msgctxt "button text"
-msgid "Get New Window Decorations..."
+msgid "Configure Titlebar Buttons…"
+msgstr "Tiitliriba nupud"
+
+#: package/contents/ui/main.qml:65
+#, fuzzy, kde-format
+#| msgctxt "button text"
+#| msgid "Get New Window Decorations..."
+msgctxt "button text"
+msgid "Get New Window Decorations…"
 msgstr "Hangi uusi aknadekoratsioone ..."
 
-#: package/contents/ui/main.qml:139
-#, kde-format
-msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
-msgstr "Akende sulgemine topeltklõpsuga menüünupule"
-
-#: package/contents/ui/main.qml:156
-#, kde-format
-msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
-msgstr ""
-
-#: package/contents/ui/main.qml:163
-#, kde-format
-msgctxt "checkbox label"
-msgid "Show titlebar button tooltips"
-msgstr "Tiitliriba nuppudel vihjete näitamine"
-
-#: package/contents/ui/Themes.qml:90
+#: package/contents/ui/Themes.qml:92
 #, kde-format
 msgid "Edit %1 Theme"
 msgstr "Muuda teemat %1"
@@ -278,6 +283,10 @@ msgstr "Superhiiglaslik"
 #, kde-format
 msgid "Oversized"
 msgstr "Ülemõõduline"
+
+#~ msgctxt "tab label"
+#~ msgid "Theme"
+#~ msgstr "Teema"
 
 #~ msgctxt "popup tip"
 #~ msgid ""

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-26 00:58+0000\n"
+"POT-Creation-Date: 2023-02-06 01:01+0000\n"
 "PO-Revision-Date: 2020-02-08 15:28+0100\n"
 "Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -182,55 +182,60 @@ msgstr "Slip knappen her for at fjerne den"
 msgid "Drag buttons between here and the titlebar"
 msgstr "Træk knapper her og fra/til titellinjen"
 
-#: package/contents/ui/main.qml:18
+#: package/contents/ui/ConfigureTitlebar.qml:16
+#, fuzzy, kde-format
+#| msgctxt "tab label"
+#| msgid "Titlebar Buttons"
+msgid "Titlebar Buttons"
+msgstr "Titellinjeknapper"
+
+#: package/contents/ui/ConfigureTitlebar.qml:35
+#, kde-format
+msgctxt "checkbox label"
+msgid "Close windows by double clicking the menu button"
+msgstr "Luk vinduer ved at dobbeltklikke på menuknap"
+
+#: package/contents/ui/ConfigureTitlebar.qml:52
+#, kde-format
+msgctxt "popup tip"
+msgid "Click and hold on the menu button to show the menu."
+msgstr ""
+
+#: package/contents/ui/ConfigureTitlebar.qml:59
+#, kde-format
+msgctxt "checkbox label"
+msgid "Show titlebar button tooltips"
+msgstr "Vis værktøjstip for titellinjeknapper"
+
+#: package/contents/ui/main.qml:19
 #, kde-format
 msgid "This module lets you configure the window decorations."
 msgstr "Med dette modul kan du indstille vinduesdekorationerne."
 
-#: package/contents/ui/main.qml:52
-#, kde-format
-msgctxt "tab label"
-msgid "Theme"
-msgstr "Tema"
-
-#: package/contents/ui/main.qml:56
-#, kde-format
-msgctxt "tab label"
-msgid "Titlebar Buttons"
-msgstr "Titellinjeknapper"
-
-#: package/contents/ui/main.qml:92
+#: package/contents/ui/main.qml:42
 #, fuzzy, kde-format
 #| msgid "Border size:"
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Kantstørrelse:"
 
-#: package/contents/ui/main.qml:110
-#, kde-format
+#: package/contents/ui/main.qml:60
+#, fuzzy, kde-format
+#| msgctxt "tab label"
+#| msgid "Titlebar Buttons"
 msgctxt "button text"
-msgid "Get New Window Decorations..."
+msgid "Configure Titlebar Buttons…"
+msgstr "Titellinjeknapper"
+
+#: package/contents/ui/main.qml:65
+#, fuzzy, kde-format
+#| msgctxt "button text"
+#| msgid "Get New Window Decorations..."
+msgctxt "button text"
+msgid "Get New Window Decorations…"
 msgstr "Hent nye vinduesdekorationer..."
 
-#: package/contents/ui/main.qml:139
-#, kde-format
-msgctxt "checkbox label"
-msgid "Close windows by double clicking the menu button"
-msgstr "Luk vinduer ved at dobbeltklikke på menuknap"
-
-#: package/contents/ui/main.qml:156
-#, kde-format
-msgctxt "popup tip"
-msgid "Click and hold on the menu button to show the menu."
-msgstr ""
-
-#: package/contents/ui/main.qml:163
-#, kde-format
-msgctxt "checkbox label"
-msgid "Show titlebar button tooltips"
-msgstr "Vis værktøjstip for titellinjeknapper"
-
-#: package/contents/ui/Themes.qml:90
+#: package/contents/ui/Themes.qml:92
 #, kde-format
 msgid "Edit %1 Theme"
 msgstr "Redigér temaet %1"
@@ -279,6 +284,10 @@ msgstr "Meget enorm"
 #, kde-format
 msgid "Oversized"
 msgstr "Overstørrelse"
+
+#~ msgctxt "tab label"
+#~ msgid "Theme"
+#~ msgstr "Tema"
 
 #~ msgctxt "popup tip"
 #~ msgid ""
