@@ -143,7 +143,6 @@ public:
     bool isMinimizable() const override;
     bool isPlaceable() const override;
     bool isTransient() const override;
-    bool userCanSetFullScreen() const override;
     bool userCanSetNoBorder() const override;
     bool noBorder() const override;
     void setNoBorder(bool set) override;

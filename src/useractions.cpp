@@ -336,7 +336,7 @@ void UserActionsMenu::menuAboutToShow()
     m_shadeOperation->setChecked(m_window->shadeMode() != ShadeNone);
     m_keepAboveOperation->setChecked(m_window->keepAbove());
     m_keepBelowOperation->setChecked(m_window->keepBelow());
-    m_fullScreenOperation->setEnabled(m_window->userCanSetFullScreen());
+    m_fullScreenOperation->setEnabled(m_window->isFullScreenable());
     m_fullScreenOperation->setChecked(m_window->isFullScreen());
     m_noBorderOperation->setEnabled(m_window->userCanSetNoBorder());
     m_noBorderOperation->setChecked(m_window->noBorder());
@@ -750,7 +750,7 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
     QString type;
     switch (op) {
     case Options::FullScreenOp:
-        if (!c->isFullScreen() && c->userCanSetFullScreen()) {
+        if (!c->isFullScreen() && c->isFullScreenable()) {
             type = QStringLiteral("fullscreenaltf3");
         }
         break;

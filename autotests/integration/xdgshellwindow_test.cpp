@@ -438,7 +438,7 @@ void TestXdgShellWindow::testUserCanSetFullscreen()
     QVERIFY(window);
     QVERIFY(window->isActive());
     QVERIFY(!window->isFullScreen());
-    QVERIFY(window->userCanSetFullScreen());
+    QVERIFY(window->isFullScreenable());
 }
 
 void TestXdgShellWindow::testSendFullScreenWindowToAnotherOutput()

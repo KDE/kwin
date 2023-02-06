@@ -3935,16 +3935,6 @@ bool Window::isRequestedFullScreen() const
 }
 
 /**
- * Returns whether requests initiated by the user to enter or leave full screen mode are honored.
- *
- * Default implementation returns @c false.
- */
-bool Window::userCanSetFullScreen() const
-{
-    return false;
-}
-
-/**
  * Asks the Window to enter or leave full screen mode.
  *
  * Default implementation does nothing.

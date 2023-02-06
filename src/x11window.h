@@ -154,7 +154,6 @@ public:
     bool isFullScreenable() const override;
     void setFullScreen(bool set) override;
     bool isFullScreen() const override;
-    bool userCanSetFullScreen() const override;
     int fullScreenMode() const
     {
         return m_fullscreenMode; // only for session saving

@@ -1475,7 +1475,7 @@ bool X11Window::isFullScreenable() const
         }
     }
     // don't check size constrains - some apps request fullscreen despite requesting fixed size
-    return !isSpecialWindow(); // also better disallow only weird types to go fullscreen
+    return isNormalWindow() || isDialog(); // also better disallow only weird types to go fullscreen
 }
 
 bool X11Window::noBorder() const
@@ -2615,7 +2615,7 @@ void X11Window::updateAllowedActions(bool force)
     if (isMaximizable()) {
         allowed_actions |= NET::ActionMax;
     }
-    if (userCanSetFullScreen()) {
+    if (isFullScreenable()) {
         allowed_actions |= NET::ActionFullScreen;
     }
     allowed_actions |= NET::ActionChangeDesktop; // Always (Pagers shouldn't show Docks etc.)
@@ -4651,17 +4651,6 @@ void X11Window::maximize(MaximizeMode mode)
     }
 }
 
-bool X11Window::userCanSetFullScreen() const
-{
-    if (isUnmanaged()) {
-        return false;
-    }
-    if (!isFullScreenable()) {
-        return false;
-    }
-    return isNormalWindow() || isDialog();
-}
-
 void X11Window::setFullScreen(bool set)
 {
     set = rules()->checkFullScreen(set);
@@ -4670,7 +4659,7 @@ void X11Window::setFullScreen(bool set)
     if (wasFullscreen == set) {
         return;
     }
-    if (!userCanSetFullScreen()) {
+    if (!isFullScreenable()) {
         return;
     }
 

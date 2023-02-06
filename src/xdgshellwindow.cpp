@@ -606,11 +606,6 @@ bool XdgToplevelWindow::isTransient() const
     return m_isTransient;
 }
 
-bool XdgToplevelWindow::userCanSetFullScreen() const
-{
-    return true;
-}
-
 bool XdgToplevelWindow::userCanSetNoBorder() const
 {
     return (m_serverDecoration || m_xdgDecoration) && !isFullScreen() && !isShade();
@@ -1432,14 +1427,12 @@ void XdgToplevelWindow::installPalette(ServerSideDecorationPaletteInterface *pal
 
 void XdgToplevelWindow::setFullScreen(bool set)
 {
+    if (!isFullScreenable()) {
+        return;
+    }
+
     set = rules()->checkFullScreen(set);
     if (m_isRequestedFullScreen == set) {
-        return;
-    }
-    if (isSpecialWindow()) {
-        return;
-    }
-    if (!userCanSetFullScreen()) {
         return;
     }
 
