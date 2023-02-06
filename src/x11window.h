@@ -152,7 +152,7 @@ public:
     QRectF iconGeometry() const override;
 
     bool isFullScreenable() const override;
-    void setFullScreen(bool set, bool user = true) override;
+    void setFullScreen(bool set) override;
     bool isFullScreen() const override;
     bool userCanSetFullScreen() const override;
     int fullScreenMode() const

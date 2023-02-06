@@ -277,7 +277,7 @@ void WinInfo::changeState(NET::States state, NET::States mask)
     state &= mask; // for safety, clear all other bits
 
     if ((mask & NET::FullScreen) != 0 && (state & NET::FullScreen) == 0) {
-        m_client->setFullScreen(false, false);
+        m_client->setFullScreen(false);
     }
     if ((mask & NET::Max) == NET::Max) {
         m_client->setMaximize(state & NET::MaxVert, state & NET::MaxHoriz);
@@ -313,7 +313,7 @@ void WinInfo::changeState(NET::States state, NET::States mask)
     }
     // unsetting fullscreen first, setting it last (because e.g. maximize works only for !isFullScreen() )
     if ((mask & NET::FullScreen) != 0 && (state & NET::FullScreen) != 0) {
-        m_client->setFullScreen(true, false);
+        m_client->setFullScreen(true);
     }
 }
 

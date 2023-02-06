@@ -996,7 +996,7 @@ public:
     virtual bool isFullScreen() const;
     virtual bool isRequestedFullScreen() const;
     virtual bool userCanSetFullScreen() const;
-    virtual void setFullScreen(bool set, bool user = true);
+    virtual void setFullScreen(bool set);
 
     QRectF geometryRestore() const;
     virtual bool isMaximizable() const;

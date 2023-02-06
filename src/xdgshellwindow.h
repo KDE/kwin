@@ -154,7 +154,7 @@ public:
     bool takeFocus() override;
     bool wantsInput() const override;
     bool dockWantsInput() const override;
-    void setFullScreen(bool set, bool user) override;
+    void setFullScreen(bool set) override;
     void closeWindow() override;
     void maximize(MaximizeMode mode) override;
 
