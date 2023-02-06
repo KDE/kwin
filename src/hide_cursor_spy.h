@@ -15,6 +15,8 @@ namespace KWin
 class HideCursorSpy : public InputEventSpy
 {
 public:
+    HideCursorSpy();
+
     void pointerEvent(KWin::MouseEvent *event) override;
     void wheelEvent(KWin::WheelEvent *event) override;
     void touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;

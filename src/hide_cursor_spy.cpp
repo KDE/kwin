@@ -14,6 +14,12 @@
 namespace KWin
 {
 
+HideCursorSpy::HideCursorSpy()
+{
+    // hide the cursor by default
+    hideCursor();
+}
+
 void HideCursorSpy::pointerEvent(MouseEvent *event)
 {
     showCursor();
