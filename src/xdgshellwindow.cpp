@@ -1618,12 +1618,8 @@ void XdgToplevelWindow::setFullScreen(bool set, bool user)
     } else {
         m_fullScreenRequestedOutput.clear();
         if (fullscreenGeometryRestore().isValid()) {
-            Output *currentOutput = moveResizeOutput();
             moveResize(QRectF(fullscreenGeometryRestore().topLeft(),
                               constrainFrameSize(fullscreenGeometryRestore().size())));
-            if (currentOutput != moveResizeOutput()) {
-                workspace()->sendWindowToOutput(this, currentOutput);
-            }
         } else {
             // this can happen when the window was first shown already fullscreen,
             // so let the client set the size by itself
