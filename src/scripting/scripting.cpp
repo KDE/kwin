@@ -27,8 +27,8 @@
 #include "screenedge.h"
 #include "tiles/tilemanager.h"
 #include "virtualdesktops.h"
+#include "window.h"
 #include "workspace.h"
-#include "x11window.h"
 // KDE
 #include <KConfigGroup>
 #include <KGlobalAccel>
@@ -687,7 +687,6 @@ void KWin::Scripting::init()
 
     qmlRegisterAnonymousType<KWin::Window>("org.kde.kwin", 3);
     qmlRegisterAnonymousType<KWin::VirtualDesktop>("org.kde.kwin", 3);
-    qmlRegisterAnonymousType<KWin::X11Window>("org.kde.kwin", 3);
     qmlRegisterAnonymousType<QAbstractItemModel>("org.kde.kwin", 3);
     qmlRegisterAnonymousType<KWin::TileManager>("org.kde.kwin", 3);
     // TODO: call the qml types as the C++ types?
