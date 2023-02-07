@@ -81,7 +81,7 @@ FocusScope {
         outputName: targetScreen.name
         property real blurRadius: 0
 
-        layer.enabled: effect.blurBackground
+        layer.enabled: true
         layer.effect: FastBlur {
             radius: backgroundItem.blurRadius
         }

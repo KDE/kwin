@@ -93,7 +93,6 @@ void OverviewEffect::reconfigure(ReconfigureFlags)
     OverviewConfig::self()->read();
     setLayout(OverviewConfig::layoutMode());
     setAnimationDuration(animationTime(300));
-    setBlurBackground(OverviewConfig::blurBackground());
 
     for (const ElectricBorder &border : std::as_const(m_borderActivate)) {
         effects->unreserveElectricBorder(border, this);
@@ -157,19 +156,6 @@ void OverviewEffect::setLayout(int layout)
     if (m_layout != layout) {
         m_layout = layout;
         Q_EMIT layoutChanged();
-    }
-}
-
-bool OverviewEffect::blurBackground() const
-{
-    return m_blurBackground;
-}
-
-void OverviewEffect::setBlurBackground(bool blur)
-{
-    if (m_blurBackground != blur) {
-        m_blurBackground = blur;
-        Q_EMIT blurBackgroundChanged();
     }
 }
 
