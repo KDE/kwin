@@ -87,11 +87,6 @@ class KWIN_EXPORT X11Window : public Window
      * Use with care!
      */
     Q_PROPERTY(bool blocksCompositing READ isBlockingCompositing WRITE setBlockingCompositing NOTIFY blockingCompositingChanged)
-    /**
-     * Whether the Client uses client side window decorations.
-     * Only GTK+ are detected.
-     */
-    Q_PROPERTY(bool clientSideDecorated READ isClientSideDecorated NOTIFY clientSideDecoratedChanged)
     Q_PROPERTY(qulonglong frameId READ frameId CONSTANT)
     Q_PROPERTY(qulonglong windowId READ window CONSTANT)
 public:
@@ -359,33 +354,11 @@ protected:
     void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
     std::unique_ptr<WindowItem> createItem(Scene *scene) override;
 
-    // Signals for the scripting interface
-    // Signals make an excellent way for communication
-    // in between objects as compared to simple function
-    // calls
 Q_SIGNALS:
-    /**
-     * Emitted whenever the Client want to show it menu
-     */
-    void showRequest();
-    /**
-     * Emitted whenever the Client's menu is closed
-     */
-    void menuHidden();
-    /**
-     * Emitted whenever the Client's menu is available
-     */
-    void appMenuAvailable();
-    /**
-     * Emitted whenever the Client's menu is unavailable
-     */
-    void appMenuUnavailable();
-
     /**
      * Emitted whenever the Client's block compositing state changes.
      */
     void blockingCompositingChanged(KWin::X11Window *client);
-    void clientSideDecoratedChanged();
 
 private:
     void exportMappingState(int s); // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
