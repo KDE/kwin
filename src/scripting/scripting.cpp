@@ -22,6 +22,7 @@
 #include "windowthumbnailitem.h"
 #include "workspace_wrapper.h"
 
+#include "core/output.h"
 #include "input.h"
 #include "options.h"
 #include "screenedge.h"
@@ -150,6 +151,7 @@ KWin::Script::Script(int id, QString scriptName, QString pluginName, QObject *pa
         QMetaType::registerConverter<QJSValue, QSizeF>(scriptValueToSizeF);
     }
 
+    qRegisterMetaType<QList<KWin::Output *>>();
     qRegisterMetaType<QList<KWin::Window *>>();
     qRegisterMetaType<QVector<KWin::VirtualDesktop *>>();
 }
@@ -685,6 +687,7 @@ void KWin::Scripting::init()
     });
     qmlRegisterSingletonInstance("org.kde.kwin", 3, 0, "Options", options);
 
+    qmlRegisterAnonymousType<KWin::Output>("org.kde.kwin", 3);
     qmlRegisterAnonymousType<KWin::Window>("org.kde.kwin", 3);
     qmlRegisterAnonymousType<KWin::VirtualDesktop>("org.kde.kwin", 3);
     qmlRegisterAnonymousType<QAbstractItemModel>("org.kde.kwin", 3);

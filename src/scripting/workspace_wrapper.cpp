@@ -49,12 +49,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
 #endif
     connect(ws, &Workspace::geometryChanged, this, &WorkspaceWrapper::virtualScreenSizeChanged);
     connect(ws, &Workspace::geometryChanged, this, &WorkspaceWrapper::virtualScreenGeometryChanged);
-    connect(ws, &Workspace::outputAdded, this, [this]() {
-        Q_EMIT numberScreensChanged(numScreens());
-    });
-    connect(ws, &Workspace::outputRemoved, this, [this]() {
-        Q_EMIT numberScreensChanged(numScreens());
-    });
+    connect(ws, &Workspace::outputsChanged, this, &WorkspaceWrapper::screensChanged);
     connect(Cursors::self()->mouse(), &Cursor::posChanged, this, &WorkspaceWrapper::cursorPosChanged);
 }
 
@@ -319,19 +314,19 @@ int WorkspaceWrapper::workspaceWidth() const
     return desktopGridWidth() * workspace()->geometry().width();
 }
 
-int WorkspaceWrapper::numScreens() const
+Output *WorkspaceWrapper::activeScreen() const
 {
-    return workspace()->outputs().count();
+    return workspace()->activeOutput();
 }
 
-int WorkspaceWrapper::screenAt(const QPointF &pos) const
+QList<Output *> WorkspaceWrapper::screens() const
 {
-    return workspace()->outputs().indexOf(workspace()->outputAt(pos));
+    return workspace()->outputs();
 }
 
-int WorkspaceWrapper::activeScreen() const
+Output *WorkspaceWrapper::screenAt(const QPointF &pos) const
 {
-    return workspace()->outputs().indexOf(workspace()->activeOutput());
+    return workspace()->outputAt(pos);
 }
 
 QRect WorkspaceWrapper::virtualScreenGeometry() const
@@ -344,12 +339,9 @@ QSize WorkspaceWrapper::virtualScreenSize() const
     return workspace()->geometry().size();
 }
 
-void WorkspaceWrapper::sendClientToScreen(Window *client, int screen)
+void WorkspaceWrapper::sendClientToScreen(Window *client, Output *output)
 {
-    Output *output = workspace()->outputs().value(screen);
-    if (output) {
-        workspace()->sendWindowToOutput(client, output);
-    }
+    workspace()->sendWindowToOutput(client, output);
 }
 
 KWin::TileManager *WorkspaceWrapper::tilingForScreen(const QString &screenName) const
@@ -361,13 +353,9 @@ KWin::TileManager *WorkspaceWrapper::tilingForScreen(const QString &screenName) 
     return nullptr;
 }
 
-KWin::TileManager *WorkspaceWrapper::tilingForScreen(int screen) const
+KWin::TileManager *WorkspaceWrapper::tilingForScreen(Output *output) const
 {
-    Output *output = workspace()->outputs().value(screen);
-    if (output) {
-        return workspace()->tileManager(output);
-    }
-    return nullptr;
+    return workspace()->tileManager(output);
 }
 
 QtScriptWorkspaceWrapper::QtScriptWorkspaceWrapper(QObject *parent)

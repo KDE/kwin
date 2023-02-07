@@ -38,8 +38,8 @@ class WorkspaceWrapper : public QObject
     Q_PROPERTY(int workspaceWidth READ workspaceWidth)
     Q_PROPERTY(int workspaceHeight READ workspaceHeight)
     Q_PROPERTY(QSize workspaceSize READ workspaceSize)
-    Q_PROPERTY(int activeScreen READ activeScreen)
-    Q_PROPERTY(int numScreens READ numScreens NOTIFY numberScreensChanged)
+    Q_PROPERTY(KWin::Output *activeScreen READ activeScreen)
+    Q_PROPERTY(QList<KWin::Output *> screens READ screens NOTIFY screensChanged)
     Q_PROPERTY(QString currentActivity READ currentActivity WRITE setCurrentActivity NOTIFY currentActivityChanged)
     Q_PROPERTY(QStringList activities READ activityList NOTIFY activitiesChanged)
     /**
@@ -49,7 +49,7 @@ class WorkspaceWrapper : public QObject
      */
     Q_PROPERTY(QSize virtualScreenSize READ virtualScreenSize NOTIFY virtualScreenSizeChanged)
     /**
-     * The bounding geometry of all outputs combined. Always starts at (0,0) and has
+     * The bounding geometry of all screens combined. Always starts at (0,0) and has
      * virtualScreenSize as it's size.
      * @see virtualScreenSize
      */
@@ -84,10 +84,9 @@ Q_SIGNALS:
      */
     void clientDemandsAttentionChanged(KWin::Window *client, bool set);
     /**
-     * Signal emitted when the number of screens changes.
-     * @param count The new number of screens
+     * Emitted when the output list changes, e.g. an output is connected or removed.
      */
-    void numberScreensChanged(int count);
+    void screensChanged();
     /**
      * Signal emitted whenever the current activity changed.
      * @param id id of the new activity
@@ -184,8 +183,8 @@ public:
     int workspaceWidth() const;
     int workspaceHeight() const;
     QSize workspaceSize() const;
-    int activeScreen() const;
-    int numScreens() const;
+    KWin::Output *activeScreen() const;
+    QList<KWin::Output *> screens() const;
     QStringList activityList() const;
     QSize virtualScreenSize() const;
     QRect virtualScreenGeometry() const;
@@ -195,10 +194,10 @@ public:
     VirtualDesktop *currentDesktop() const;
     void setCurrentDesktop(VirtualDesktop *desktop);
 
-    Q_INVOKABLE int screenAt(const QPointF &pos) const;
+    Q_INVOKABLE KWin::Output *screenAt(const QPointF &pos) const;
 
     Q_INVOKABLE KWin::TileManager *tilingForScreen(const QString &screenName) const;
-    Q_INVOKABLE KWin::TileManager *tilingForScreen(int screen) const;
+    Q_INVOKABLE KWin::TileManager *tilingForScreen(KWin::Output *output) const;
 
     /**
      * Returns the geometry a Client can use with the specified option.
@@ -324,9 +323,9 @@ public Q_SLOTS:
     void slotWindowToDesktopDown();
 
     /**
-     * Sends the Window to the given @p screen.
+     * Sends the Window to the given @p output.
      */
-    void sendClientToScreen(KWin::Window *client, int screen);
+    void sendClientToScreen(KWin::Window *client, KWin::Output *output);
 
     /**
      * Shows an outline at the specified @p geometry.
