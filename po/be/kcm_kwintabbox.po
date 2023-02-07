@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-13 00:58+0000\n"
+"POT-Creation-Date: 2023-02-07 01:01+0000\n"
 "PO-Revision-Date: 2022-12-25 17:08\n"
 "Last-Translator: Zmicier <zmicerturok@gmail.com>\n"
 "Language-Team: Belarusian\n"
@@ -21,38 +21,38 @@ msgstr ""
 "X-Crowdin-File: /main/be/kwin/kcm_kwintabbox.po\n"
 "X-Crowdin-File-ID: 8760\n"
 
-#: kwintabboxconfigform.cpp:80
+#: kwintabboxconfigform.cpp:81
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
 
-#: layoutpreview.cpp:133
+#: layoutpreview.cpp:131
 #, kde-format
 msgid "Show Desktop"
 msgstr "Паказаць працоўны стол"
 
-#: layoutpreview.cpp:163
+#: layoutpreview.cpp:161
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "Працоўны стол 1"
 
-#: main.cpp:58
+#: main.cpp:59
 #, kde-format
 msgid "Main"
 msgstr "Асноўныя"
 
-#: main.cpp:59
+#: main.cpp:60
 #, kde-format
 msgid "Alternative"
 msgstr "Альтэрнатыўны"
 
-#: main.cpp:61
+#: main.cpp:62
 #, kde-format
 msgid "Get New Task Switchers..."
 msgstr "Атрымаць новыя сродкі пераключэння задач..."
 
-#: main.cpp:75
+#: main.cpp:76
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
@@ -238,3 +238,43 @@ msgstr ""
 #, kde-format
 msgid "Show selected window"
 msgstr "Паказваць абранае акно"
+
+#: shortcutsettings.cpp:132
+#, kde-format
+msgid "Walk Through Windows"
+msgstr ""
+
+#: shortcutsettings.cpp:133
+#, kde-format
+msgid "Walk Through Windows (Reverse)"
+msgstr ""
+
+#: shortcutsettings.cpp:134
+#, kde-format
+msgid "Walk Through Windows of Current Application"
+msgstr ""
+
+#: shortcutsettings.cpp:135
+#, kde-format
+msgid "Walk Through Windows of Current Application (Reverse)"
+msgstr ""
+
+#: shortcutsettings.cpp:137
+#, kde-format
+msgid "Walk Through Windows Alternative"
+msgstr ""
+
+#: shortcutsettings.cpp:138
+#, kde-format
+msgid "Walk Through Windows Alternative (Reverse)"
+msgstr ""
+
+#: shortcutsettings.cpp:139
+#, kde-format
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr ""
+
+#: shortcutsettings.cpp:140
+#, kde-format
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr ""

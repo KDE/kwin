@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-13 00:58+0000\n"
+"POT-Creation-Date: 2023-02-07 01:01+0000\n"
 "PO-Revision-Date: 2022-12-15 10:49+0000\n"
 "Last-Translator: gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -21,38 +21,38 @@ msgstr ""
 "\n"
 "\n"
 
-#: kwintabboxconfigform.cpp:80
+#: kwintabboxconfigform.cpp:81
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
 
-#: layoutpreview.cpp:133
+#: layoutpreview.cpp:131
 #, kde-format
 msgid "Show Desktop"
 msgstr "Sýna skjáborðið"
 
-#: layoutpreview.cpp:163
+#: layoutpreview.cpp:161
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "Skjáborð 1"
 
-#: main.cpp:58
+#: main.cpp:59
 #, kde-format
 msgid "Main"
 msgstr "Aðal"
 
-#: main.cpp:59
+#: main.cpp:60
 #, kde-format
 msgid "Alternative"
 msgstr "Vara"
 
-#: main.cpp:61
+#: main.cpp:62
 #, kde-format
 msgid "Get New Task Switchers..."
 msgstr "Sækja nýja verkefnaskipta..."
 
-#: main.cpp:75
+#: main.cpp:76
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
@@ -240,6 +240,50 @@ msgstr ""
 msgid "Show selected window"
 msgstr "Sýna valinn glugga"
 
+#: shortcutsettings.cpp:132
+#, kde-format
+msgid "Walk Through Windows"
+msgstr "Flakka milli glugga"
+
+#: shortcutsettings.cpp:133
+#, kde-format
+msgid "Walk Through Windows (Reverse)"
+msgstr "Flakka milli glugga (afturábak)"
+
+#: shortcutsettings.cpp:134
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative"
+msgid "Walk Through Windows of Current Application"
+msgstr "Flakka milli glugga (varaleið)"
+
+#: shortcutsettings.cpp:135
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative (Reverse)"
+msgid "Walk Through Windows of Current Application (Reverse)"
+msgstr "Flakka milli glugga (varaleið afturábak)"
+
+#: shortcutsettings.cpp:137
+#, kde-format
+msgid "Walk Through Windows Alternative"
+msgstr "Flakka milli glugga (varaleið)"
+
+#: shortcutsettings.cpp:138
+#, kde-format
+msgid "Walk Through Windows Alternative (Reverse)"
+msgstr "Flakka milli glugga (varaleið afturábak)"
+
+#: shortcutsettings.cpp:139
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative"
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "Flakka milli glugga (varaleið)"
+
+#: shortcutsettings.cpp:140
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative (Reverse)"
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "Flakka milli glugga (varaleið afturábak)"
+
 #, fuzzy
 #~| msgid "Show outline of selected window"
 #~ msgid "Outline selected window"
@@ -251,38 +295,6 @@ msgstr "Sýna valinn glugga"
 #~ msgstr ""
 #~ "Þessar stillingar eru notaðar í \"Flakka milli glugga (varaleið)\" "
 #~ "aðgerðum."
-
-#~ msgid "Walk Through Windows"
-#~ msgstr "Flakka milli glugga"
-
-#~ msgid "Walk Through Windows (Reverse)"
-#~ msgstr "Flakka milli glugga (afturábak)"
-
-#~ msgid "Walk Through Windows Alternative"
-#~ msgstr "Flakka milli glugga (varaleið)"
-
-#~ msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgstr "Flakka milli glugga (varaleið afturábak)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative"
-#~ msgid "Walk Through Windows of Current Application"
-#~ msgstr "Flakka milli glugga (varaleið)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgid "Walk Through Windows of Current Application (Reverse)"
-#~ msgstr "Flakka milli glugga (varaleið afturábak)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative"
-#~ msgid "Walk Through Windows of Current Application Alternative"
-#~ msgstr "Flakka milli glugga (varaleið)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-#~ msgstr "Flakka milli glugga (varaleið afturábak)"
 
 #~ msgid "Configure Layout"
 #~ msgstr "Stilla framsetningu"

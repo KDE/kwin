@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-07 01:01+0000\n"
 "PO-Revision-Date: 2023-02-03 06:19+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -1255,12 +1255,12 @@ msgstr "კონფიგურაციის პარამეტრებ�
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "მითითება, რომ KWin ცოტა ხნის წინ n-ჯერ გაითიშა"
 
-#: main_wayland.cpp:315
+#: main_wayland.cpp:302
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Xwayland სერვერის საწყისი საქაღალდის გარეშე გაშვება."
 
-#: main_wayland.cpp:317
+#: main_wayland.cpp:304
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1268,45 +1268,45 @@ msgstr ""
 "Wayland-ის მოსასმენი სოკეტის სახელი. თუ მითითებული არაა, გამოიყენება "
 "'wayland-0'."
 
-#: main_wayland.cpp:320
+#: main_wayland.cpp:307
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "X11 პლატფორმაზე გამოყენებული ფანჯრული რეჟიმის საჩვენებელი X11 ეკრანი."
 
-#: main_wayland.cpp:323
+#: main_wayland.cpp:310
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 "Wayland პლატფორმაზე გამოყენებული ფანჯრული რეჟიმის საჩვენებელი Wayland ეკრანი."
 
-#: main_wayland.cpp:325
+#: main_wayland.cpp:312
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "ვირტუალურ Framebuffer-ში რენდერი."
 
-#: main_wayland.cpp:327
+#: main_wayland.cpp:314
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "ფანჯრის რეჟიმის სიგანე. ნაგულისხმები მნიშვნელობაა 1024."
 
-#: main_wayland.cpp:331
+#: main_wayland.cpp:318
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "ფანჯრის რეჟიმის სიმაღლე. ნაგულისხმები მნიშვნელობაა 768."
 
-#: main_wayland.cpp:336
+#: main_wayland.cpp:323
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "ფანჯრის რეჟიმის გადიდება. ნაგულისხმები მნიშვნელობაა 1."
 
-#: main_wayland.cpp:341
+#: main_wayland.cpp:328
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
 "ფანჯრულ რეჟიმში გამოტანილი ფანჯრების რაოდენობა. ნაგულისხმები მნიშვნელობაა 1"
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:333
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1315,7 +1315,7 @@ msgstr ""
 "Wayland-ის სოკეტი შემომავალი მიერთებებისთვის. შეგიძლიათ მიუთითოთ --socket-"
 "თან ერთად, რათა მისი სახელი მიუთითოთ"
 
-#: main_wayland.cpp:350
+#: main_wayland.cpp:337
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1324,63 +1324,63 @@ msgstr ""
 "XWayland-ის სოკეტი XWayland-ის შემომავალი შეერთებებისთვის. მრავალჯერ "
 "მითითება შესაძლებელია"
 
-#: main_wayland.cpp:354
+#: main_wayland.cpp:341
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "XWayland-ის ეკრანის სახელი, რომელიც წინასწარ გაეშვა"
 
-#: main_wayland.cpp:358
+#: main_wayland.cpp:345
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Xauthority ფაილის სახელი "
 
-#: main_wayland.cpp:362
+#: main_wayland.cpp:349
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr "გავა ამ ასლიდან, რათა ის kwin_wayland_wrapper-მა თავიდან გაუშვას."
 
-#: main_wayland.cpp:364
+#: main_wayland.cpp:351
 #, kde-format
 msgid "Render through drm node."
 msgstr "DRM კვანძით რენდერი."
 
-#: main_wayland.cpp:365
+#: main_wayland.cpp:352
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr "ენის ინფორმაციის მომხმარებლის კონფიგურაციის მაგიერ locale1-დან აღება"
 
-#: main_wayland.cpp:387
+#: main_wayland.cpp:374
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "KWin-ის მიერ გაშვებული შეყვანის მეთოდი."
 
-#: main_wayland.cpp:393
+#: main_wayland.cpp:380
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "სესიის დაბლოკილ რეჟიმში გაშვება."
 
-#: main_wayland.cpp:397
+#: main_wayland.cpp:384
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "სესიის დაბლოკილი ეკრანის მხარდაჭერის გარეშე გაშვება."
 
-#: main_wayland.cpp:402
+#: main_wayland.cpp:389
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "სესის გლობალური მალსახმობების მხარდაჭერის გარეშე გაშვება."
 
-#: main_wayland.cpp:407 main_x11.cpp:418
+#: main_wayland.cpp:394 main_x11.cpp:418
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivities-ის ინტეგრაციის გამორთვა."
 
-#: main_wayland.cpp:412
+#: main_wayland.cpp:399
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "გასვლა KWin-ის მიერ დაყენებული სესიის აპლიკაციის დასრულების შემდეგ."
 
-#: main_wayland.cpp:417
+#: main_wayland.cpp:404
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""

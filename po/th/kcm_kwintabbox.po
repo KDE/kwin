@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-13 00:58+0000\n"
+"POT-Creation-Date: 2023-02-07 01:01+0000\n"
 "PO-Revision-Date: 2010-03-27 23:18+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -17,40 +17,40 @@ msgstr ""
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: kwintabboxconfigform.cpp:80
+#: kwintabboxconfigform.cpp:81
 #, kde-format
 msgid "KWin"
 msgstr ""
 
-#: layoutpreview.cpp:133
+#: layoutpreview.cpp:131
 #, fuzzy, kde-format
 #| msgid "All Desktops"
 msgid "Show Desktop"
 msgstr "หน้าต่างที่อยู่บนพื้นที่ทำงานทั้งหมด"
 
-#: layoutpreview.cpp:163
+#: layoutpreview.cpp:161
 #, fuzzy, kde-format
 #| msgid "All Desktops"
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "หน้าต่างที่อยู่บนพื้นที่ทำงานทั้งหมด"
 
-#: main.cpp:58
+#: main.cpp:59
 #, kde-format
 msgid "Main"
 msgstr "ค่าหลัก ๆ"
 
-#: main.cpp:59
+#: main.cpp:60
 #, kde-format
 msgid "Alternative"
 msgstr "ทางเลือกอื่น"
 
-#: main.cpp:61
+#: main.cpp:62
 #, kde-format
 msgid "Get New Task Switchers..."
 msgstr ""
 
-#: main.cpp:75
+#: main.cpp:76
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
@@ -250,6 +250,50 @@ msgstr ""
 msgid "Show selected window"
 msgstr "แสดงเส้นโดยรอบของหน้าต่างที่ถูกเลือก"
 
+#: shortcutsettings.cpp:132
+#, kde-format
+msgid "Walk Through Windows"
+msgstr "วนสลับหน้าต่าง"
+
+#: shortcutsettings.cpp:133
+#, kde-format
+msgid "Walk Through Windows (Reverse)"
+msgstr "วนสลับหน้าต่าง (ย้อนกลับ)"
+
+#: shortcutsettings.cpp:134
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative"
+msgid "Walk Through Windows of Current Application"
+msgstr "ทางเลือกอื่นของการวนสลับหน้าต่าง (ย้อนกลับ)"
+
+#: shortcutsettings.cpp:135
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative (Reverse)"
+msgid "Walk Through Windows of Current Application (Reverse)"
+msgstr "ทางเลือกอื่นของการวนสลับหน้าต่าง (ย้อนกลับ)"
+
+#: shortcutsettings.cpp:137
+#, kde-format
+msgid "Walk Through Windows Alternative"
+msgstr "ทางเลือกอื่นของการวนสลับหน้าต่าง (ย้อนกลับ)"
+
+#: shortcutsettings.cpp:138
+#, kde-format
+msgid "Walk Through Windows Alternative (Reverse)"
+msgstr "ทางเลือกอื่นของการวนสลับหน้าต่าง (ย้อนกลับ)"
+
+#: shortcutsettings.cpp:139
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative"
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "ทางเลือกอื่นของการวนสลับหน้าต่าง (ย้อนกลับ)"
+
+#: shortcutsettings.cpp:140
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative (Reverse)"
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "ทางเลือกอื่นของการวนสลับหน้าต่าง (ย้อนกลับ)"
+
 #, fuzzy
 #~| msgid "Show outline of selected window"
 #~ msgid "Outline selected window"
@@ -259,38 +303,6 @@ msgstr "แสดงเส้นโดยรอบของหน้าต่า
 #~ "These settings are used by the \"Walk Through Windows Alternative\" "
 #~ "actions."
 #~ msgstr "การตั้งค่าต่าง ๆ เหล่านี้ จะถูกใช้โดยการกระทำ \"ทางเลือกอื่นของการวนสลับหน้าต่าง\""
-
-#~ msgid "Walk Through Windows"
-#~ msgstr "วนสลับหน้าต่าง"
-
-#~ msgid "Walk Through Windows (Reverse)"
-#~ msgstr "วนสลับหน้าต่าง (ย้อนกลับ)"
-
-#~ msgid "Walk Through Windows Alternative"
-#~ msgstr "ทางเลือกอื่นของการวนสลับหน้าต่าง (ย้อนกลับ)"
-
-#~ msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgstr "ทางเลือกอื่นของการวนสลับหน้าต่าง (ย้อนกลับ)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative"
-#~ msgid "Walk Through Windows of Current Application"
-#~ msgstr "ทางเลือกอื่นของการวนสลับหน้าต่าง (ย้อนกลับ)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgid "Walk Through Windows of Current Application (Reverse)"
-#~ msgstr "ทางเลือกอื่นของการวนสลับหน้าต่าง (ย้อนกลับ)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative"
-#~ msgid "Walk Through Windows of Current Application Alternative"
-#~ msgstr "ทางเลือกอื่นของการวนสลับหน้าต่าง (ย้อนกลับ)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-#~ msgstr "ทางเลือกอื่นของการวนสลับหน้าต่าง (ย้อนกลับ)"
 
 #~ msgid "Configure Layout"
 #~ msgstr "ปรับแต่งการจัดวาง"

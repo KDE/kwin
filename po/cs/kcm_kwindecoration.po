@@ -187,11 +187,9 @@ msgid "Drag buttons between here and the titlebar"
 msgstr "Přetáhněte tlačítka odsud na titulkový pruh"
 
 #: package/contents/ui/ConfigureTitlebar.qml:16
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgid "Titlebar Buttons"
-msgstr "Tlačítka titulkového pruhu"
+msgstr ""
 
 #: package/contents/ui/ConfigureTitlebar.qml:35
 #, kde-format
@@ -223,20 +221,16 @@ msgid "Window border size:"
 msgstr "Velikost okraje okna:"
 
 #: package/contents/ui/main.qml:60
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr "Tlačítka titulkového pruhu"
+msgstr ""
 
 #: package/contents/ui/main.qml:65
-#, fuzzy, kde-format
-#| msgctxt "button text"
-#| msgid "Get New Window Decorations..."
+#, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations…"
-msgstr "Získat nové dekorace oken..."
+msgstr ""
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -287,7 +281,3 @@ msgstr "Velmi obrovský"
 #, kde-format
 msgid "Oversized"
 msgstr "Nadměrný"
-
-#~ msgctxt "tab label"
-#~ msgid "Theme"
-#~ msgstr "Motiv"

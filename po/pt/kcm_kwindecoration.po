@@ -198,9 +198,7 @@ msgid "Drag buttons between here and the titlebar"
 msgstr "Arraste os botões entre a barra de título e aqui"
 
 #: package/contents/ui/ConfigureTitlebar.qml:16
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgid "Titlebar Buttons"
 msgstr "Botões da Barra de Título"
 
