@@ -289,7 +289,7 @@ void WorkspaceWrapper::hideOutline()
     workspace()->outline()->hide();
 }
 
-X11Window *WorkspaceWrapper::getClient(qulonglong windowId)
+Window *WorkspaceWrapper::getClient(qulonglong windowId)
 {
     return Workspace::self()->findClient(Predicate::WindowMatch, windowId);
 }
