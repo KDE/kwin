@@ -31,7 +31,6 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
     KWin::VirtualDesktopManager *vds = KWin::VirtualDesktopManager::self();
     connect(ws, &Workspace::desktopPresenceChanged, this, &WorkspaceWrapper::desktopPresenceChanged);
     connect(ws, &Workspace::windowAdded, this, &WorkspaceWrapper::clientAdded);
-    connect(ws, &Workspace::windowAdded, this, &WorkspaceWrapper::setupClientConnections);
     connect(ws, &Workspace::windowRemoved, this, &WorkspaceWrapper::clientRemoved);
     connect(ws, &Workspace::windowActivated, this, &WorkspaceWrapper::clientActivated);
     connect(vds, &VirtualDesktopManager::desktopCreated, this, &WorkspaceWrapper::desktopsChanged);
@@ -57,11 +56,6 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
         Q_EMIT numberScreensChanged(numScreens());
     });
     connect(Cursors::self()->mouse(), &Cursor::posChanged, this, &WorkspaceWrapper::cursorPosChanged);
-
-    const QList<Window *> clients = ws->allClientList();
-    for (Window *client : clients) {
-        setupClientConnections(client);
-    }
 }
 
 VirtualDesktop *WorkspaceWrapper::currentDesktop() const
@@ -278,14 +272,6 @@ void WorkspaceWrapper::removeDesktop(VirtualDesktop *desktop) const
 QString WorkspaceWrapper::supportInformation() const
 {
     return Workspace::self()->supportInformation();
-}
-
-void WorkspaceWrapper::setupClientConnections(Window *client)
-{
-    connect(client, &Window::clientMinimized, this, &WorkspaceWrapper::clientMinimized);
-    connect(client, &Window::clientUnminimized, this, &WorkspaceWrapper::clientUnminimized);
-    connect(client, qOverload<Window *, bool, bool>(&Window::clientMaximizedStateChanged),
-            this, &WorkspaceWrapper::clientMaximizeSet);
 }
 
 void WorkspaceWrapper::showOutline(const QRect &geometry)

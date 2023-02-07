@@ -67,9 +67,6 @@ Q_SIGNALS:
     void desktopPresenceChanged(KWin::Window *client, int desktop);
     void clientAdded(KWin::Window *client);
     void clientRemoved(KWin::Window *client);
-    void clientMinimized(KWin::Window *client);
-    void clientUnminimized(KWin::Window *client);
-    void clientMaximizeSet(KWin::Window *client, bool h, bool v);
     void clientActivated(KWin::Window *client);
     /**
      * This signal is emitted when a virtual desktop is added or removed.
@@ -346,9 +343,6 @@ public Q_SLOTS:
      * Hides the outline previously shown by showOutline.
      */
     void hideOutline();
-
-private Q_SLOTS:
-    void setupClientConnections(Window *client);
 };
 
 class QtScriptWorkspaceWrapper : public WorkspaceWrapper
