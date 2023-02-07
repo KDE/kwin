@@ -26,10 +26,13 @@ function isVideoPlayer(client) {
     return true;
 }
 
-var videowall = function(client, set) {
-    if (set && isVideoPlayer(client)) {
-        client.frameGeometry = workspace.clientArea(KWin.FullArea, 0, 1);
-    }
-};
+function setup(window) {
+    window.fullScreenChanged.connect(() => {
+        if (window.fullScreen && isVideoPlayer(window)) {
+            window.frameGeometry = workspace.clientArea(KWin.FullArea, window);
+        }
+    });
+}
 
-workspace.clientFullScreenSet.connect(videowall);
+workspace.clientAdded.connect(setup);
+workspace.clientList().forEach(setup);

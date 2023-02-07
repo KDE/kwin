@@ -1027,10 +1027,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         info.setOpacityF(opacity());
     });
 
-    // TODO: there's a small problem here - isManaged() depends on the mapping state,
-    // but this client is not yet in Workspace's client list at this point, will
-    // be only done in addClient()
-    Q_EMIT clientManaging(this);
     return true;
 }
 
@@ -4617,7 +4613,6 @@ void X11Window::setFullScreen(bool set, bool user)
 
     updateWindowRules(Rules::Fullscreen | Rules::Position | Rules::Size);
     updateAllowedActions(false);
-    Q_EMIT clientFullScreenSet(this, set, user);
     Q_EMIT fullScreenChanged();
 }
 
