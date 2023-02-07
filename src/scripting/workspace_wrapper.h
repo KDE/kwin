@@ -69,11 +69,8 @@ Q_SIGNALS:
     void clientRemoved(KWin::Window *client);
     void clientMinimized(KWin::Window *client);
     void clientUnminimized(KWin::Window *client);
-    void clientRestored(KWin::X11Window *client);
     void clientMaximizeSet(KWin::Window *client, bool h, bool v);
-    void killWindowCalled(KWin::X11Window *client);
     void clientActivated(KWin::Window *client);
-    void clientSetKeepAbove(KWin::X11Window *client, bool keepAbove);
     /**
      * This signal is emitted when a virtual desktop is added or removed.
      */
