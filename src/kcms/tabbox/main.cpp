@@ -40,6 +40,7 @@
 #include "kwintabboxdata.h"
 #include "kwintabboxsettings.h"
 #include "layoutpreview.h"
+#include "shortcutsettings.h"
 
 K_PLUGIN_FACTORY_WITH_JSON(KWinTabBoxConfigFactory, "kcm_kwintabbox.json", registerPlugin<KWin::KWinTabBoxConfig>(); registerPlugin<KWin::TabBox::KWinTabboxData>();)
 
@@ -54,8 +55,14 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget *parent, const QVariantList &args)
     , m_data(new KWinTabboxData(this))
 {
     QTabWidget *tabWidget = new QTabWidget(this);
-    m_primaryTabBoxUi = new KWinTabBoxConfigForm(KWinTabBoxConfigForm::TabboxType::Main, m_data->tabBoxConfig(), tabWidget);
-    m_alternativeTabBoxUi = new KWinTabBoxConfigForm(KWinTabBoxConfigForm::TabboxType::Alternative, m_data->tabBoxAlternativeConfig(), tabWidget);
+    m_primaryTabBoxUi = new KWinTabBoxConfigForm(KWinTabBoxConfigForm::TabboxType::Main,
+                                                 m_data->tabBoxConfig(),
+                                                 m_data->shortcutConfig(),
+                                                 tabWidget);
+    m_alternativeTabBoxUi = new KWinTabBoxConfigForm(KWinTabBoxConfigForm::TabboxType::Alternative,
+                                                     m_data->tabBoxAlternativeConfig(),
+                                                     m_data->shortcutConfig(),
+                                                     tabWidget);
     tabWidget->addTab(m_primaryTabBoxUi, i18n("Main"));
     tabWidget->addTab(m_alternativeTabBoxUi, i18n("Alternative"));
 
@@ -194,15 +201,15 @@ void KWinTabBoxConfig::createConnections(KWinTabBoxConfigForm *form)
 
 void KWinTabBoxConfig::updateUnmanagedState()
 {
-    bool isNeedSave = false;
-    isNeedSave |= m_data->tabBoxConfig()->isSaveNeeded() || m_primaryTabBoxUi->isShortcutsChanged();
-    isNeedSave |= m_data->tabBoxAlternativeConfig()->isSaveNeeded() || m_alternativeTabBoxUi->isShortcutsChanged();
+    const bool isNeedSave = m_data->tabBoxConfig()->isSaveNeeded()
+        || m_data->tabBoxAlternativeConfig()->isSaveNeeded()
+        || m_data->shortcutConfig()->isSaveNeeded();
 
     unmanagedWidgetChangeState(isNeedSave);
 
-    bool isDefault = true;
-    isDefault &= m_data->tabBoxConfig()->isDefaults() && m_primaryTabBoxUi->isShortcutsDefault();
-    isDefault &= m_data->tabBoxAlternativeConfig()->isDefaults() && m_alternativeTabBoxUi->isShortcutsDefault();
+    const bool isDefault = m_data->tabBoxConfig()->isDefaults()
+        && m_data->tabBoxAlternativeConfig()->isDefaults()
+        && m_data->shortcutConfig()->isDefaults();
 
     unmanagedWidgetDefaultState(isDefault);
 }
@@ -213,14 +220,12 @@ void KWinTabBoxConfig::load()
 
     m_data->tabBoxConfig()->load();
     m_data->tabBoxAlternativeConfig()->load();
+    m_data->shortcutConfig()->load();
 
     m_data->pluginsConfig()->load();
 
     m_primaryTabBoxUi->updateUiFromConfig();
     m_alternativeTabBoxUi->updateUiFromConfig();
-
-    m_primaryTabBoxUi->loadShortcuts();
-    m_alternativeTabBoxUi->loadShortcuts();
 
     updateUnmanagedState();
 }
@@ -234,11 +239,9 @@ void KWinTabBoxConfig::save()
     m_data->pluginsConfig()->setHighlightwindowEnabled(highlightWindows);
     m_data->pluginsConfig()->save();
 
-    m_primaryTabBoxUi->saveShortcuts();
-    m_alternativeTabBoxUi->saveShortcuts();
-
     m_data->tabBoxConfig()->save();
     m_data->tabBoxAlternativeConfig()->save();
+    m_data->shortcutConfig()->save();
 
     KCModule::save();
     updateUnmanagedState();
@@ -252,12 +255,10 @@ void KWinTabBoxConfig::defaults()
 {
     m_data->tabBoxConfig()->setDefaults();
     m_data->tabBoxAlternativeConfig()->setDefaults();
+    m_data->shortcutConfig()->setDefaults();
 
     m_primaryTabBoxUi->updateUiFromConfig();
     m_alternativeTabBoxUi->updateUiFromConfig();
-
-    m_primaryTabBoxUi->resetShortcuts();
-    m_alternativeTabBoxUi->resetShortcuts();
 
     KCModule::defaults();
     updateUnmanagedState();

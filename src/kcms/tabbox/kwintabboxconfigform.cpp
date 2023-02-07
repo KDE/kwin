@@ -11,19 +11,18 @@
 
 #include "kwintabboxconfigform.h"
 #include "kwintabboxsettings.h"
+#include "shortcutsettings.h"
 #include "ui_main.h"
-
-#include <KActionCollection>
-#include <KGlobalAccel>
 
 namespace KWin
 {
 
 using namespace TabBox;
 
-KWinTabBoxConfigForm::KWinTabBoxConfigForm(TabboxType type, TabBoxSettings *config, QWidget *parent)
+KWinTabBoxConfigForm::KWinTabBoxConfigForm(TabboxType type, TabBoxSettings *config, ShortcutSettings *shortcutsConfig, QWidget *parent)
     : QWidget(parent)
     , m_config(config)
+    , m_shortcuts(shortcutsConfig)
     , ui(new Ui::KWinTabBoxConfigForm)
 {
     ui->setupUi(this);
@@ -64,34 +63,22 @@ KWinTabBoxConfigForm::KWinTabBoxConfigForm(TabboxType type, TabBoxSettings *conf
     connect(ui->switchingModeCombo, qOverload<int>(&QComboBox::currentIndexChanged), this, &KWinTabBoxConfigForm::onSwitchingMode);
     connect(ui->effectCombo, qOverload<int>(&QComboBox::currentIndexChanged), this, &KWinTabBoxConfigForm::onEffectCombo);
 
-    auto addShortcut = [this](const char *name, KKeySequenceWidget *widget, const QKeySequence &sequence = QKeySequence()) {
-        QAction *action = m_actionCollection->addAction(name);
-        action->setProperty("isConfigurationAction", true);
-        action->setText(i18n(name));
-
-        m_actionCollection->setDefaultShortcut(action, sequence);
-
-        widget->setCheckActionCollections({m_actionCollection});
+    auto initShortcutWidget = [this](KKeySequenceWidget *widget, const char *name) {
+        widget->setCheckActionCollections({m_shortcuts->actionCollection()});
         widget->setProperty("shortcutAction", name);
         connect(widget, &KKeySequenceWidget::keySequenceChanged, this, &KWinTabBoxConfigForm::onShortcutChanged);
     };
 
-    // Shortcut config. The shortcut belongs to the component "kwin"!
-    m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
-    m_actionCollection->setComponentDisplayName(i18n("KWin"));
-    m_actionCollection->setConfigGroup("Navigation");
-    m_actionCollection->setConfigGlobal(true);
-
     if (TabboxType::Main == type) {
-        addShortcut("Walk Through Windows", ui->scAll, Qt::ALT | Qt::Key_Tab);
-        addShortcut("Walk Through Windows (Reverse)", ui->scAllReverse, Qt::ALT | Qt::SHIFT | Qt::Key_Backtab);
-        addShortcut("Walk Through Windows of Current Application", ui->scCurrent, Qt::ALT | Qt::Key_QuoteLeft);
-        addShortcut("Walk Through Windows of Current Application (Reverse)", ui->scCurrentReverse, Qt::ALT | Qt::Key_AsciiTilde);
+        initShortcutWidget(ui->scAll, "Walk Through Windows");
+        initShortcutWidget(ui->scAllReverse, "Walk Through Windows (Reverse)");
+        initShortcutWidget(ui->scCurrent, "Walk Through Windows of Current Application");
+        initShortcutWidget(ui->scCurrentReverse, "Walk Through Windows of Current Application (Reverse)");
     } else if (TabboxType::Alternative == type) {
-        addShortcut("Walk Through Windows Alternative", ui->scAll);
-        addShortcut("Walk Through Windows Alternative (Reverse)", ui->scAllReverse);
-        addShortcut("Walk Through Windows of Current Application Alternative", ui->scCurrent);
-        addShortcut("Walk Through Windows of Current Application Alternative (Reverse)", ui->scCurrentReverse);
+        initShortcutWidget(ui->scAll, "Walk Through Windows Alternative");
+        initShortcutWidget(ui->scAllReverse, "Walk Through Windows Alternative (Reverse)");
+        initShortcutWidget(ui->scCurrent, "Walk Through Windows of Current Application Alternative");
+        initShortcutWidget(ui->scCurrentReverse, "Walk Through Windows of Current Application Alternative (Reverse)");
     }
 
     updateUiFromConfig();
@@ -247,62 +234,6 @@ QVariant KWinTabBoxConfigForm::effectComboCurrentData(int role) const
     return ui->effectCombo->currentData(role);
 }
 
-void KWinTabBoxConfigForm::loadShortcuts()
-{
-    for (const auto &widget : {ui->scAll, ui->scAllReverse, ui->scCurrent, ui->scCurrentReverse}) {
-        const QString actionName = widget->property("shortcutAction").toString();
-        const auto shortcuts = KGlobalAccel::self()->globalShortcut(QStringLiteral("kwin"), actionName);
-        if (!shortcuts.isEmpty()) {
-            widget->setKeySequence(shortcuts.first());
-        }
-    }
-}
-
-void KWinTabBoxConfigForm::resetShortcuts()
-{
-    for (const auto &widget : {ui->scAll, ui->scAllReverse, ui->scCurrent, ui->scCurrentReverse}) {
-        const QString actionName = widget->property("shortcutAction").toString();
-        QAction *action = m_actionCollection->action(actionName);
-        widget->setKeySequence(m_actionCollection->defaultShortcut(action));
-    }
-}
-
-void KWinTabBoxConfigForm::saveShortcuts()
-{
-    for (const auto &widget : {ui->scAll, ui->scAllReverse, ui->scCurrent, ui->scCurrentReverse}) {
-        const QString actionName = widget->property("shortcutAction").toString();
-        QAction *action = m_actionCollection->action(actionName);
-        KGlobalAccel::self()->setShortcut(action, {action->shortcut()}, KGlobalAccel::NoAutoloading);
-    }
-}
-
-bool KWinTabBoxConfigForm::isShortcutsChanged() const
-{
-    for (const auto &widget : {ui->scAll, ui->scAllReverse, ui->scCurrent, ui->scCurrentReverse}) {
-        const QString actionName = widget->property("shortcutAction").toString();
-        QAction *action = m_actionCollection->action(actionName);
-        const auto shortcuts = KGlobalAccel::self()->globalShortcut(QStringLiteral("kwin"), actionName);
-        const QKeySequence savedShortcut = shortcuts.isEmpty() ? QKeySequence() : shortcuts.first();
-
-        if (action->shortcut() != savedShortcut) {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool KWinTabBoxConfigForm::isShortcutsDefault() const
-{
-    for (const auto &widget : {ui->scAll, ui->scAllReverse, ui->scCurrent, ui->scCurrentReverse}) {
-        const QString actionName = widget->property("shortcutAction").toString();
-        QAction *action = m_actionCollection->action(actionName);
-        if (action->shortcut() != m_actionCollection->defaultShortcut(action)) {
-            return false;
-        }
-    }
-    return true;
-}
-
 void KWinTabBoxConfigForm::tabBoxToggled(bool on)
 {
     // Highlight Windows options is availabled if no TabBox effect is selected
@@ -374,15 +305,8 @@ void KWinTabBoxConfigForm::onEffectCombo()
 
 void KWinTabBoxConfigForm::onShortcutChanged(const QKeySequence &seq)
 {
-    QString actionName;
-    if (sender()) {
-        actionName = sender()->property("shortcutAction").toString();
-    }
-    if (actionName.isEmpty()) {
-        return;
-    }
-    QAction *action = m_actionCollection->action(actionName);
-    action->setShortcut(seq);
+    const QString actionName = sender()->property("shortcutAction").toString();
+    m_shortcuts->setShortcut(actionName, seq);
 
     Q_EMIT configChanged();
 }
@@ -398,6 +322,11 @@ void KWinTabBoxConfigForm::updateUiFromConfig()
     setShowDesktopMode(static_cast<TabBoxConfig::ShowDesktopMode>(m_config->showDesktopMode()));
     setSwitchingModeChanged(static_cast<TabBoxConfig::ClientSwitchingMode>(m_config->switchingMode()));
     setLayoutName(m_config->layoutName());
+
+    for (const auto &widget : {ui->scAll, ui->scAllReverse, ui->scCurrent, ui->scCurrentReverse}) {
+        const QString actionName = widget->property("shortcutAction").toString();
+        widget->setKeySequence(m_shortcuts->shortcut(actionName));
+    }
 
     updateDefaultIndicators();
 }
@@ -454,9 +383,7 @@ void KWinTabBoxConfigForm::updateDefaultIndicators()
 
     for (const auto &widget : {ui->scAll, ui->scAllReverse, ui->scCurrent, ui->scCurrentReverse}) {
         const QString actionName = widget->property("shortcutAction").toString();
-        QAction *action = m_actionCollection->action(actionName);
-        const bool isDefault = (action->shortcut() == m_actionCollection->defaultShortcut(action));
-        applyDefaultIndicator({widget}, isDefault);
+        applyDefaultIndicator({widget}, m_shortcuts->isDefault(actionName));
     }
 }
 

@@ -27,6 +27,11 @@ public:
 
     KActionCollection *actionCollection() const;
 
+    QKeySequence shortcut(const QString &name) const;
+    void setShortcut(const QString &name, const QKeySequence &seq);
+
+    bool isDefault(const QString &name) const;
+
 private:
     KActionCollection *m_actionCollection = nullptr;
 };

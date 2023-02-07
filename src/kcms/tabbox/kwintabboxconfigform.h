@@ -16,8 +16,6 @@
 
 #include "tabboxconfig.h"
 
-class KActionCollection;
-
 namespace Ui
 {
 class KWinTabBoxConfigForm;
@@ -29,6 +27,7 @@ namespace KWin
 namespace TabBox
 {
 class TabBoxSettings;
+class ShortcutSettings;
 }
 
 class KWinTabBoxConfigForm : public QWidget
@@ -46,7 +45,7 @@ public:
         AddonEffect, // i.e not builtin effects
     };
 
-    explicit KWinTabBoxConfigForm(TabboxType type, TabBox::TabBoxSettings *config, QWidget *parent = nullptr);
+    explicit KWinTabBoxConfigForm(TabboxType type, TabBox::TabBoxSettings *config, TabBox::ShortcutSettings *shortcutsConfig, QWidget *parent = nullptr);
     ~KWinTabBoxConfigForm() override;
 
     TabBox::TabBoxSettings *config() const;
@@ -58,12 +57,6 @@ public:
     // EffectCombo Data Model
     void setEffectComboModel(QStandardItemModel *model);
     QVariant effectComboCurrentData(int role = Qt::UserRole) const;
-
-    void loadShortcuts();
-    void resetShortcuts();
-    void saveShortcuts();
-    bool isShortcutsChanged() const;
-    bool isShortcutsDefault() const;
 
 Q_SIGNALS:
     void configChanged();
@@ -111,8 +104,8 @@ private:
     void setLayoutName(const QString &layoutName);
 
 private:
-    KActionCollection *m_actionCollection = nullptr;
     TabBox::TabBoxSettings *m_config = nullptr;
+    TabBox::ShortcutSettings *m_shortcuts = nullptr;
     bool m_showDefaultIndicator = false;
 
     bool m_isHighlightWindowsEnabled = true;

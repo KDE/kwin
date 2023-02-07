@@ -145,5 +145,26 @@ KActionCollection *ShortcutSettings::actionCollection() const
     return m_actionCollection;
 }
 
+QKeySequence ShortcutSettings::shortcut(const QString &name) const
+{
+    QAction *action = m_actionCollection->action(name);
+    Q_ASSERT(action);
+    return action->shortcut();
+}
+
+void ShortcutSettings::setShortcut(const QString &name, const QKeySequence &seq)
+{
+    QAction *action = m_actionCollection->action(name);
+    Q_ASSERT(action);
+    action->setShortcut(seq);
+}
+
+bool ShortcutSettings::isDefault(const QString &name) const
+{
+    QAction *action = m_actionCollection->action(name);
+    Q_ASSERT(action);
+    return action->shortcut() == m_actionCollection->defaultShortcut(action);
+}
+
 } // namespace TabBox
 } // namespace KWin
