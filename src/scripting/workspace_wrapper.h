@@ -24,7 +24,6 @@ class TileManager;
 class Window;
 class Output;
 class VirtualDesktop;
-class X11Window;
 
 class WorkspaceWrapper : public QObject
 {
@@ -246,7 +245,7 @@ public:
      * @param windowId The window Id of the Client
      * @return The found Client or @c null
      */
-    Q_SCRIPTABLE KWin::X11Window *getClient(qulonglong windowId);
+    Q_SCRIPTABLE KWin::Window *getClient(qulonglong windowId);
 
 public Q_SLOTS:
     // all the available key bindings
