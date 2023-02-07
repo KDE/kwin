@@ -203,11 +203,7 @@ Item {
                             onDropped: drop => {
                                 drop.accepted = true;
                                 // dragging a KWin::Window
-                                if (drag.source.desktop === delegate.desktop.x11DesktopNumber) {
-                                    drop.action = Qt.IgnoreAction;
-                                    return;
-                                }
-                                drag.source.desktop = delegate.desktop.x11DesktopNumber;
+                                drag.source.desktops = [delegate.desktop];
                             }
                         }
                     }
@@ -304,8 +300,7 @@ Item {
                         drag.accepted = desktopModel.rowCount() < 20
                     }
                     onDropped: {
-                        desktopModel.create(desktopModel.rowCount());
-                        drag.source.desktop = desktopModel.rowCount() + 1;
+                        drag.source.desktops = [desktopModel.create(desktopModel.rowCount())];
                     }
                 }
             }

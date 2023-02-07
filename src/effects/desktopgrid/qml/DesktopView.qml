@@ -43,11 +43,7 @@ FocusScope {
                 effect.swapDesktops(drag.source.desktop.x11DesktopNumber, desktop.x11DesktopNumber);
             } else {
                 // dragging a KWin::Window
-                if (drag.source.desktop === desktopView.desktop.x11DesktopNumber) {
-                    drop.action = Qt.IgnoreAction;
-                    return;
-                }
-                drag.source.desktop = desktopView.desktop.x11DesktopNumber;
+                drag.source.desktops = [desktopView.desktop];
             }
         }
     }
@@ -61,7 +57,7 @@ FocusScope {
             if (!desktopView.contains(desktopView.mapFromItem(null, pos.x, pos.y))) {
                 return;
             }
-            item.client.desktop = desktopView.desktop.x11DesktopNumber;
+            item.client.desktops = [desktopView.desktop];
         }
     }
     Repeater {
@@ -137,10 +133,10 @@ FocusScope {
             if (eventPoint.event.button === Qt.MiddleButton) {
                 window.closeWindow();
             } else if (eventPoint.event.button === Qt.RightButton) {
-                if (window.desktop > -1) {
-                    window.desktop = -1;
+                if (window.desktops.length) {
+                    window.desktops = [];
                 } else {
-                    window.desktop = desktopView.desktop.x11DesktopNumber;
+                    window.desktops = [desktopView.desktop];
                 }
             }
         }

@@ -316,14 +316,6 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
 
     /**
-     * The desktop this Window is on. If the Window is on all desktops the property has value -1.
-     * This is a legacy property, use x11DesktopIds instead
-     *
-     * @deprecated Use the desktops property instead.
-     */
-    Q_PROPERTY(int desktop READ desktop WRITE setDesktop NOTIFY desktopChanged)
-
-    /**
      * The virtual desktops this client is on. If it's on all desktops, the list is empty.
      */
     Q_PROPERTY(QVector<KWin::VirtualDesktop *> desktops READ desktops WRITE setDesktops NOTIFY desktopChanged)

@@ -23,9 +23,9 @@ VirtualDesktopModel::VirtualDesktopModel(QObject *parent)
     m_virtualDesktops = manager->desktops();
 }
 
-void VirtualDesktopModel::create(uint position, const QString &name)
+VirtualDesktop *VirtualDesktopModel::create(uint position, const QString &name)
 {
-    VirtualDesktopManager::self()->createVirtualDesktop(position, name);
+    return VirtualDesktopManager::self()->createVirtualDesktop(position, name);
 }
 
 void VirtualDesktopModel::remove(uint position)
