@@ -2427,9 +2427,7 @@ void Workspace::desktopResized()
 
 void Workspace::saveOldScreenSizes()
 {
-    olddisplaysize = m_geometry.size();
     m_oldScreenGeometries.clear();
-
     for (const Output *output : std::as_const(m_outputs)) {
         m_oldScreenGeometries.insert(output, output->geometry());
     }
@@ -2713,16 +2711,6 @@ StrutRects Workspace::previousRestrictedMoveArea(const VirtualDesktop *desktop, 
 QHash<const Output *, QRect> Workspace::previousScreenSizes() const
 {
     return m_oldScreenGeometries;
-}
-
-int Workspace::oldDisplayWidth() const
-{
-    return olddisplaysize.width();
-}
-
-int Workspace::oldDisplayHeight() const
-{
-    return olddisplaysize.height();
 }
 
 Output *Workspace::xineramaIndexToOutput(int index) const
