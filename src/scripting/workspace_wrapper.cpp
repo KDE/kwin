@@ -286,14 +286,6 @@ void WorkspaceWrapper::setupClientConnections(Window *client)
     connect(client, &Window::clientUnminimized, this, &WorkspaceWrapper::clientUnminimized);
     connect(client, qOverload<Window *, bool, bool>(&Window::clientMaximizedStateChanged),
             this, &WorkspaceWrapper::clientMaximizeSet);
-
-    X11Window *x11Client = qobject_cast<X11Window *>(client); // TODO: Drop X11-specific signals.
-    if (!x11Client) {
-        return;
-    }
-
-    connect(x11Client, &X11Window::clientManaging, this, &WorkspaceWrapper::clientManaging);
-    connect(x11Client, &X11Window::clientFullScreenSet, this, &WorkspaceWrapper::clientFullScreenSet);
 }
 
 void WorkspaceWrapper::showOutline(const QRect &geometry)

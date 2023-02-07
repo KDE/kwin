@@ -364,9 +364,6 @@ protected:
     // in between objects as compared to simple function
     // calls
 Q_SIGNALS:
-    void clientManaging(KWin::X11Window *);
-    void clientFullScreenSet(KWin::X11Window *, bool, bool);
-
     /**
      * Emitted whenever the Client want to show it menu
      */
