@@ -941,6 +941,9 @@ void AnimationEffect::updateLayerRepaints()
                         t[1] += geometryCompensation(anim->meta & AnimationEffect::Vertical, fx) * sz.height();
                     }
                 }
+                QRect r(entry.key()->frameGeometry().toRect());
+                // Add an inversely transformed rect in the mix, so that in the end it will be non transformed
+                rects << QRect(r.x() - t[0], r.y() - t[1], r.width() / f[0], r.height() / f[1]);
                 break;
             }
             }
