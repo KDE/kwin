@@ -400,11 +400,6 @@ void Window::setReadyForPainting()
     }
 }
 
-int Window::screen() const
-{
-    return workspace()->outputs().indexOf(m_output);
-}
-
 Output *Window::output() const
 {
     return m_output;
@@ -414,7 +409,7 @@ void Window::setOutput(Output *output)
 {
     if (m_output != output) {
         m_output = output;
-        Q_EMIT screenChanged();
+        Q_EMIT outputChanged();
     }
 }
 

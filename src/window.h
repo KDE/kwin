@@ -122,14 +122,9 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
 
     /**
-     * The screen where the window center is on
+     * The output where the window center is on
      */
-    Q_PROPERTY(int screen READ screen NOTIFY screenChanged)
-
-    /**
-     * The output (screen) where the window center is on
-     */
-    Q_PROPERTY(KWin::Output *output READ output NOTIFY screenChanged)
+    Q_PROPERTY(KWin::Output *output READ output NOTIFY outputChanged)
 
     Q_PROPERTY(QRectF rect READ rect)
     Q_PROPERTY(QString resourceName READ resourceName NOTIFY windowClassChanged)
@@ -635,7 +630,6 @@ public:
     qreal height() const;
     bool isOnOutput(Output *output) const;
     bool isOnActiveOutput() const;
-    int screen() const;
     Output *output() const;
     void setOutput(Output *output);
     virtual QPointF clientPos() const
@@ -1465,7 +1459,7 @@ Q_SIGNALS:
      * a screen being removed/added or if the Window's geometry changes.
      * @since 4.11
      */
-    void screenChanged();
+    void outputChanged();
     void skipCloseAnimationChanged();
     /**
      * Emitted whenever the window role of the window changes.

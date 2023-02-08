@@ -26,7 +26,7 @@ class ClientModel : public QAbstractListModel
 public:
     enum Roles {
         ClientRole = Qt::UserRole + 1,
-        ScreenRole,
+        OutputRole,
         DesktopRole,
         ActivityRole
     };

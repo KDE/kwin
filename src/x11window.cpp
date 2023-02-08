@@ -4234,7 +4234,7 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
         Q_EMIT frameGeometryChanged(this, oldFrameGeometry);
     }
     if (oldOutput != m_output) {
-        Q_EMIT screenChanged();
+        Q_EMIT outputChanged();
     }
     Q_EMIT geometryShapeChanged(this, oldFrameGeometry);
 }

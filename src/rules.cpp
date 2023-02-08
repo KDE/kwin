@@ -458,8 +458,9 @@ bool Rules::update(Window *c, int selection)
         desktops = c->desktopIds();
     }
     if NOW_REMEMBER (Screen, screen) {
-        updated = updated || screen != c->screen();
-        screen = c->screen();
+        const int index = workspace()->outputs().indexOf(c->output());
+        updated = updated || screen != index;
+        screen = index;
     }
     if NOW_REMEMBER (Activity, activity) {
         updated = updated || activity != c->activities();

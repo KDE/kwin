@@ -134,7 +134,7 @@ DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *win
             this, &DecorationItem::handleFrameGeometryChanged);
     connect(window, &Window::windowClosed,
             this, &DecorationItem::handleWindowClosed);
-    connect(window, &Window::screenChanged,
+    connect(window, &Window::outputChanged,
             this, &DecorationItem::handleOutputChanged);
 
     connect(decoration, &KDecoration2::Decoration::bordersChanged,
