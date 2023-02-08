@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2020-02-22 13:11+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
@@ -574,15 +574,8 @@ msgstr "Perjungti invertavimo efektą"
 msgid "Layout mode:"
 msgstr "Išdėstymo veiksena:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, fuzzy, kde-format
-#| msgid "Background"
-msgid "Blur background:"
-msgstr "Fonas"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, fuzzy, kde-format
 #| msgid "Ignore &minimized windows"
 msgid "Ignore minimized windows:"
@@ -1210,6 +1203,11 @@ msgstr "Išjungtas"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Pelės sekimas:"
+
+#, fuzzy
+#~| msgid "Background"
+#~ msgid "Blur background:"
+#~ msgstr "Fonas"
 
 #~ msgid "Slide docks"
 #~ msgstr "Praslinkti dokus"

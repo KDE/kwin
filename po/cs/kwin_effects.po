@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2023-01-31 13:11+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -559,14 +559,8 @@ msgstr "Přepnout přehled"
 msgid "Layout mode:"
 msgstr "Režim rozložení:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "Rozmazat pozadí:"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Ignorovat minimalizovaná okna:"
@@ -1162,3 +1156,6 @@ msgstr "Zakázáno"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Sledování myši:"
+
+#~ msgid "Blur background:"
+#~ msgstr "Rozmazat pozadí:"

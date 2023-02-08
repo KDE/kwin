@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2008-08-05 22:26+0200\n"
 "Last-Translator: Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>\n"
 "Language-Team: Occitan (lengadocian) <ubuntu-l10n-oci@lists.ubuntu.com>\n"
@@ -560,15 +560,8 @@ msgstr ""
 msgid "Layout mode:"
 msgstr ""
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, fuzzy, kde-format
-#| msgid "Shadow color:"
-msgid "Blur background:"
-msgstr "Color de l'ombra :"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr ""
@@ -1165,6 +1158,11 @@ msgstr ""
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Shadow color:"
+#~ msgid "Blur background:"
+#~ msgstr "Color de l'ombra :"
 
 #, fuzzy
 #~| msgid "Left"

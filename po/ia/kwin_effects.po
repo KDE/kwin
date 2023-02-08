@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2023-01-24 15:51+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -554,14 +554,8 @@ msgstr "Commuta Vista de insimul"
 msgid "Layout mode:"
 msgstr "Modo de disposition:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "Fundo de disfocalisar:"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Ignora fenestras minimizate"
@@ -1167,6 +1161,9 @@ msgstr "Disactivate"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Tracia le mus:"
+
+#~ msgid "Blur background:"
+#~ msgstr "Fundo de disfocalisar:"
 
 #~ msgid "Slide docks"
 #~ msgstr "Glissa bassinos"

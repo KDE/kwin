@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-07 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2022-12-28 21:03+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -18,11 +18,6 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
 "X-Generator: Lokalize 21.12.3\n"
-
-#: kwintabboxconfigform.cpp:81
-#, kde-format
-msgid "KWin"
-msgstr "KWin"
 
 #: layoutpreview.cpp:131
 #, kde-format
@@ -35,22 +30,22 @@ msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "Biroul 1"
 
-#: main.cpp:59
+#: main.cpp:66
 #, kde-format
 msgid "Main"
 msgstr "Principal"
 
-#: main.cpp:60
+#: main.cpp:67
 #, kde-format
 msgid "Alternative"
 msgstr "Alternativ"
 
-#: main.cpp:62
+#: main.cpp:69
 #, kde-format
 msgid "Get New Task Switchers..."
 msgstr "Obține comutatori de sarcini noi..."
 
-#: main.cpp:76
+#: main.cpp:83
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
@@ -283,6 +278,9 @@ msgstr "Comută printre ferestre alternativ"
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Comută printre ferestre alternativ (invers)"
+
+#~ msgid "KWin"
+#~ msgstr "KWin"
 
 #~ msgid "Tabbox layout preview"
 #~ msgstr "Previzualizare aranjament cutie tab"

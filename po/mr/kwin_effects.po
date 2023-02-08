@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2013-02-12 10:55+0530\n"
 "Last-Translator: Chetan Khona <chetan@kompkin.com>\n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
@@ -582,15 +582,8 @@ msgstr "उलट परिणाम चालू/बंद करा"
 msgid "Layout mode:"
 msgstr "रचना पद्धत :"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, fuzzy, kde-format
-#| msgid "Background"
-msgid "Blur background:"
-msgstr "पार्श्वभूमी"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, fuzzy, kde-format
 #| msgid "Ignore &minimized windows"
 msgid "Ignore minimized windows:"
@@ -1211,6 +1204,11 @@ msgstr "अकार्यान्वित"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "माऊसचा मागोवा :"
+
+#, fuzzy
+#~| msgid "Background"
+#~ msgid "Blur background:"
+#~ msgstr "पार्श्वभूमी"
 
 #~ msgid "&Radius:"
 #~ msgstr "त्रिज्या (&R):"

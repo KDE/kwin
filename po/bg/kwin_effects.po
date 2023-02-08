@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2022-12-05 00:31+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -557,14 +557,8 @@ msgstr "Превключване на прегледа"
 msgid "Layout mode:"
 msgstr "Режим на оформление:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "Замъгляване на фона:"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Игнориране на минимизираните прозорци:"
@@ -1171,3 +1165,6 @@ msgstr "Изключено"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Следене на мишката:"
+
+#~ msgid "Blur background:"
+#~ msgstr "Замъгляване на фона:"

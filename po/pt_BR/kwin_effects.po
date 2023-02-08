@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2023-01-16 23:34-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -562,14 +562,8 @@ msgstr "Ativar visão geral"
 msgid "Layout mode:"
 msgstr "Modo de layout:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "Borrar plano de fundo:"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Ignorar janelas minimizadas:"
@@ -1179,6 +1173,9 @@ msgstr "Desabilitado"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Seguimento do mouse:"
+
+#~ msgid "Blur background:"
+#~ msgstr "Borrar plano de fundo:"
 
 #~ msgid "Slide docks"
 #~ msgstr "Deslizar os docks"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2011-07-12 17:50+0200\n"
 "Last-Translator: Marko Dimjašević <marko@dimjasevic.net>\n"
 "Language-Team: Croatian <kde-croatia-list@lists.sourceforge.net>\n"
@@ -601,15 +601,8 @@ msgstr "Uključi obrnuti efekt"
 msgid "Layout mode:"
 msgstr "Način izg&leda:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, fuzzy, kde-format
-#| msgid "Background"
-msgid "Blur background:"
-msgstr "Pozadina"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, fuzzy, kde-format
 #| msgid "Ignore &minimized windows"
 msgid "Ignore minimized windows:"
@@ -1238,6 +1231,11 @@ msgstr "Onemogućeno"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Praćenje miša:"
+
+#, fuzzy
+#~| msgid "Background"
+#~ msgid "Blur background:"
+#~ msgstr "Pozadina"
 
 #~ msgid "&Radius:"
 #~ msgstr "&Radijus:"

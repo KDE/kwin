@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-07 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2021-12-06 10:16+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -19,11 +19,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Lokalize 21.11.90\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#: kwintabboxconfigform.cpp:81
-#, kde-format
-msgid "KWin"
-msgstr "KWin"
 
 #: layoutpreview.cpp:131
 #, kde-format
@@ -36,22 +31,22 @@ msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "1. asztal"
 
-#: main.cpp:59
+#: main.cpp:66
 #, kde-format
 msgid "Main"
 msgstr "Alap"
 
-#: main.cpp:60
+#: main.cpp:67
 #, kde-format
 msgid "Alternative"
 msgstr "Alternatíva"
 
-#: main.cpp:62
+#: main.cpp:69
 #, kde-format
 msgid "Get New Task Switchers..."
 msgstr "Új feladatváltók letöltése…"
 
-#: main.cpp:76
+#: main.cpp:83
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
@@ -283,6 +278,9 @@ msgstr "Ablakalternatívákon való áthaladás"
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Ablakalternatívákon való áthaladás (visszafele)"
+
+#~ msgid "KWin"
+#~ msgstr "KWin"
 
 #~ msgid "Tabbox layout preview"
 #~ msgstr "Ablakváltó elrendezés előnézete"

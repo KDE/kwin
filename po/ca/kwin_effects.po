@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2022-12-02 14:28+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -561,14 +561,8 @@ msgstr "Commuta a la vista general"
 msgid "Layout mode:"
 msgstr "Mode de disposició:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "Difumina el fons:"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Ignora les finestres minimitzades:"
@@ -1173,3 +1167,6 @@ msgstr "Desactivat"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Seguiment del ratolí:"
+
+#~ msgid "Blur background:"
+#~ msgstr "Difumina el fons:"

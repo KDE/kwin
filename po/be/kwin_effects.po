@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2023-01-06 10:31\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -561,14 +561,8 @@ msgstr "Пераключэнне агляду"
 msgid "Layout mode:"
 msgstr "Рэжым макета:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "Размыццё фону:"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Ігнараванне згорнутых акон:"
@@ -1177,6 +1171,9 @@ msgstr "Адключана"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Адсочванне мышы:"
+
+#~ msgid "Blur background:"
+#~ msgstr "Размыццё фону:"
 
 #, fuzzy
 #~| msgid "&Radius"

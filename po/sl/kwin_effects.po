@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2022-12-18 08:43+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -563,14 +563,8 @@ msgstr "Preklopi pregled"
 msgid "Layout mode:"
 msgstr "Način razporeda:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "Zamegli ozadje:"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Prezri skrčena okna:"
@@ -1175,6 +1169,9 @@ msgstr "Onemogočeno"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Sledenje miški:"
+
+#~ msgid "Blur background:"
+#~ msgstr "Zamegli ozadje:"
 
 #~ msgid "Slide docks"
 #~ msgstr "Oddrsaj sidrišča"

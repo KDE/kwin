@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-07 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2022-06-18 19:25+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: Arabic <kde-l10n-ar@kde.org>\n"
@@ -17,11 +17,6 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 "X-Generator: Lokalize 21.07.70\n"
-
-#: kwintabboxconfigform.cpp:81
-#, kde-format
-msgid "KWin"
-msgstr "ك.وين"
 
 #: layoutpreview.cpp:131
 #, kde-format
@@ -34,22 +29,22 @@ msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "سطح المكتب 1"
 
-#: main.cpp:59
+#: main.cpp:66
 #, kde-format
 msgid "Main"
 msgstr "الرّئيسيّ"
 
-#: main.cpp:60
+#: main.cpp:67
 #, kde-format
 msgid "Alternative"
 msgstr "البديل"
 
-#: main.cpp:62
+#: main.cpp:69
 #, kde-format
 msgid "Get New Task Switchers..."
 msgstr "احصل على مُبدِّل مهام جديد"
 
-#: main.cpp:76
+#: main.cpp:83
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
@@ -274,3 +269,6 @@ msgstr ""
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
+
+#~ msgid "KWin"
+#~ msgstr "ك.وين"

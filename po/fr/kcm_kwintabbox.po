@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-07 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2022-06-16 12:36+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@neuf.fr>\n"
 "Language-Team: French <kde-francophone@kde.org>\n"
@@ -23,11 +23,6 @@ msgstr ""
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
 
-#: kwintabboxconfigform.cpp:81
-#, kde-format
-msgid "KWin"
-msgstr "KWin"
-
 #: layoutpreview.cpp:131
 #, kde-format
 msgid "Show Desktop"
@@ -39,22 +34,22 @@ msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "Bureau 1"
 
-#: main.cpp:59
+#: main.cpp:66
 #, kde-format
 msgid "Main"
 msgstr "Principal"
 
-#: main.cpp:60
+#: main.cpp:67
 #, kde-format
 msgid "Alternative"
 msgstr "Alternatif"
 
-#: main.cpp:62
+#: main.cpp:69
 #, kde-format
 msgid "Get New Task Switchers..."
 msgstr "Obtenir de nouveaux changeurs de tâches..."
 
-#: main.cpp:76
+#: main.cpp:83
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
@@ -246,12 +241,14 @@ msgid "Show selected window"
 msgstr "Affiche la fenêtre sélectionnée"
 
 #: shortcutsettings.cpp:132
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows"
 msgid "Walk Through Windows"
 msgstr "Traverser les fenêtres"
 
 #: shortcutsettings.cpp:133
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows (Reverse)"
 msgstr "Traverser les fenêtres (à l'envers)"
 
@@ -268,12 +265,14 @@ msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Alternative pour traverser les fenêtres (à l'envers)"
 
 #: shortcutsettings.cpp:137
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows Alternative"
 msgstr "Alternative pour traverser les fenêtre"
 
 #: shortcutsettings.cpp:138
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Alternative pour traverser les fenêtres (à l'envers)"
 
@@ -288,6 +287,9 @@ msgstr "Alternative pour traverser les fenêtre"
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Alternative pour traverser les fenêtres (à l'envers)"
+
+#~ msgid "KWin"
+#~ msgstr "KWin"
 
 #~ msgid "Tabbox layout preview"
 #~ msgstr "Aperçu de la disposition de la barre d'onglets"

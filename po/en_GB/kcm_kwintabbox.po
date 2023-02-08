@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-07 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2022-07-22 16:19+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English <kde-l10n-en_gb@kde.org>\n"
@@ -17,11 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 22.04.3\n"
-
-#: kwintabboxconfigform.cpp:81
-#, kde-format
-msgid "KWin"
-msgstr "KWin"
 
 #: layoutpreview.cpp:131
 #, kde-format
@@ -34,22 +29,22 @@ msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "Desktop 1"
 
-#: main.cpp:59
+#: main.cpp:66
 #, kde-format
 msgid "Main"
 msgstr "Main"
 
-#: main.cpp:60
+#: main.cpp:67
 #, kde-format
 msgid "Alternative"
 msgstr "Alternative"
 
-#: main.cpp:62
+#: main.cpp:69
 #, kde-format
 msgid "Get New Task Switchers..."
 msgstr "Get New Task Switchers..."
 
-#: main.cpp:76
+#: main.cpp:83
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
@@ -279,6 +274,9 @@ msgstr "Walk Through Windows Alternative"
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Walk Through Windows Alternative (Reverse)"
+
+#~ msgid "KWin"
+#~ msgstr "KWin"
 
 #, fuzzy
 #~| msgid "Show outline of selected window"

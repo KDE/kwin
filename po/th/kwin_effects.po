@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2010-12-17 21:12+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -594,15 +594,8 @@ msgstr "เปิด/ปิดลูกเล่นกลับค่าสี"
 msgid "Layout mode:"
 msgstr "โหมดการจัดวาง:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, fuzzy, kde-format
-#| msgid "Background"
-msgid "Blur background:"
-msgstr "พื้นหลัง"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, fuzzy, kde-format
 #| msgid "Ignore &minimized windows"
 msgid "Ignore minimized windows:"
@@ -1219,6 +1212,11 @@ msgstr "ถูกปิดการใช้งาน"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "ติดตามตำแหน่งเมาส์:"
+
+#, fuzzy
+#~| msgid "Background"
+#~ msgid "Blur background:"
+#~ msgstr "พื้นหลัง"
 
 #~ msgid "&Radius:"
 #~ msgstr "&รัศมี:"

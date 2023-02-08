@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2022-12-02 19:34+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -558,14 +558,8 @@ msgstr "Attiva/disattiva la panoramica"
 msgid "Layout mode:"
 msgstr "Modalità di disposizione:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "Sfondo sfocato:"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Ignora le finestre minimizzate:"
@@ -1175,6 +1169,9 @@ msgstr "Disabilitato"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Inseguimento del mouse:"
+
+#~ msgid "Blur background:"
+#~ msgstr "Sfondo sfocato:"
 
 #~ msgid "Slide docks"
 #~ msgstr "Scorri le aree di aggancio"

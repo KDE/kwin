@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2022-10-17 10:16+0300\n"
 "Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
@@ -578,14 +578,8 @@ msgstr "Включить или отключить режим обзора"
 msgid "Layout mode:"
 msgstr "Режим расстановки:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "Размытие фона:"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Игнорировать свёрнутые окна:"
@@ -1196,6 +1190,9 @@ msgstr "Отключить"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Отслеживание курсора мыши:"
+
+#~ msgid "Blur background:"
+#~ msgstr "Размытие фона:"
 
 #~ msgid "Slide docks"
 #~ msgstr "Прокручивать панели"

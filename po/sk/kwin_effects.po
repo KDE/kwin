@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2022-05-16 18:28+0200\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -558,14 +558,8 @@ msgstr "Prepnúť prehľad"
 msgid "Layout mode:"
 msgstr "Režim rozloženia:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "Rozmazať pozadie:"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Ignorovať minimalizované okná:"
@@ -1184,6 +1178,9 @@ msgstr "Zakázané"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Sledovanie myši:"
+
+#~ msgid "Blur background:"
+#~ msgstr "Rozmazať pozadie:"
 
 #~ msgid "Slide docks"
 #~ msgstr "Zasunúť doky"

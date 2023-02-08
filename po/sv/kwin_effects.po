@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2022-09-24 16:09+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -559,14 +559,8 @@ msgstr "Ändra översikt"
 msgid "Layout mode:"
 msgstr "Layoutläge:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "Gör bakgrund suddig:"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Ignorera minimerade fönster:"
@@ -1174,6 +1168,9 @@ msgstr "Inaktiverad"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Musföljning:"
+
+#~ msgid "Blur background:"
+#~ msgstr "Gör bakgrund suddig:"
 
 #~ msgid "Slide docks"
 #~ msgstr "Skjut dockningspaneler"

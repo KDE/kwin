@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: கேபசூ 4.1 தமிழாக்கம்\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2022-12-06 20:05+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -556,14 +556,8 @@ msgstr "மேலோட்டத்தை காட்டு/மறை"
 msgid "Layout mode:"
 msgstr "தளவமைக்கும் முறை:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "பின்புலத்தை மங்கலாக்கு:"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "ஒதுக்கப்பட்ட சாளரங்களை பொருட்படுத்தாதே:"
@@ -1171,6 +1165,9 @@ msgstr "முடக்கு"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "சுட்டியை பின்தொடர்தல்:"
+
+#~ msgid "Blur background:"
+#~ msgstr "பின்புலத்தை மங்கலாக்கு:"
 
 #~ msgid "Slide docks"
 #~ msgstr "பலகைகளை நழுவச்செய்"

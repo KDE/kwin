@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2022-12-22 12:16+0000\n"
 "Last-Translator: gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -561,14 +561,8 @@ msgstr "Víxla yfirsýn"
 msgid "Layout mode:"
 msgstr "Framsetningarsnið:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "Gera bakgrunn óskýran:"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Hunsa falda glugga:"
@@ -1176,6 +1170,9 @@ msgstr "Óvirkt"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Músarrakning:"
+
+#~ msgid "Blur background:"
+#~ msgstr "Gera bakgrunn óskýran:"
 
 #~ msgid "Search..."
 #~ msgstr "Leita..."

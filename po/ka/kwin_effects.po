@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2023-01-13 06:52+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -555,14 +555,8 @@ msgstr "გადახედვის ჩართ/გამორთ"
 msgid "Layout mode:"
 msgstr "&განლაგების რეჟიმი:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "ბუნდოვანი ფონი:"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "ჩაკეცილი ფანჯრების იგნორი:"
@@ -1167,6 +1161,9 @@ msgstr "გამორთულია"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "თაგუნას თვალყურის დევნება:"
+
+#~ msgid "Blur background:"
+#~ msgstr "ბუნდოვანი ფონი:"
 
 #~ msgid "Search..."
 #~ msgstr "ძებნა..."

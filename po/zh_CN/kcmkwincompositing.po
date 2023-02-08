@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-29 00:59+0000\n"
-"PO-Revision-Date: 2023-01-12 10:31\n"
+"PO-Revision-Date: 2023-02-07 11:02\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -155,15 +155,9 @@ msgstr "强制最流畅动效"
 #, kde-format
 msgid ""
 "Reduce latency by allowing screen tearing artifacts in fullscreen windows"
-msgstr ""
+msgstr "在全屏窗口中允许画面撕裂以降低延迟"
 
 #: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "重新启用 OpenGL 检测"
-
-#~ msgid "Allows applications to cause screen tearing in fullscreen."
-#~ msgstr "允许应用程序在全屏模式下造成屏幕撕裂现象。"
-
-#~ msgid "Allow tearing in fullscreen"
-#~ msgstr "允许全屏模式下发生屏幕撕裂"

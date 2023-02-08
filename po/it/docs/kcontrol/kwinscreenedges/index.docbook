@@ -46,9 +46,9 @@
 </authorgroup>
 
 <date
->09/04/2021</date>
+>30/01/2023</date>
 <releaseinfo
->Plasma 5.20</releaseinfo>
+>Plasma 5.27</releaseinfo>
 
 <keywordset>
 <keyword
@@ -59,6 +59,10 @@
 >desktop</keyword>
 <keyword
 >effetti</keyword>
+<keyword
+>schermo</keyword>
+<keyword
+>bordo</keyword>
 </keywordset>
 </articleinfo>
 
@@ -66,7 +70,7 @@
 >I bordi attivi dello schermo permettono di attivare degli effetti spingendo il puntatore del mouse sui bordi dello schermo. Qui puoi configurare quali effetti verranno attivati su ogni bordo o angolo dello schermo. </para>
 
 <para
->Fai clic con qualsiasi pulsante del mouse su un quadratino e seleziona un effetto nel menu contestuale. I bordi con un quadratino blu hanno già un effetto associato, un quadratino grigio indica invece che non vi è stato associato nessun effetto.</para>
+>Fai clic con qualsiasi pulsante del mouse su un quadratino e seleziona un effetto nel menu contestuale. I bordi con un quadratino blu hanno già un effetto associato, mentre se no lo hanno ce n'è uno grigio.</para>
 
 <para
 >Il numero di oggetti accessibili nel menu contestuale dipende dalle impostazioni nel modulo <ulink url="help:/kcontrol/kwineffects/index.html"
@@ -89,12 +93,30 @@
 >Massimizza: Finestre trascinate al bordo superiore</guilabel
 > o <guilabel
 >Adatta: Finestre trascinate al bordo destro o sinistro</guilabel
-> ed impostare una percentuale dello schermo che attiverà l'affiancamento. </para>
+> oppure <guilabel
+>Innesca adattamento di un quarto:</guilabel
+> ed impostare una percentuale di schermo che attiverà l'affiancamento. </para>
+
+<tip>
+<para
+>Nella scheda <guilabel
+>Movimento</guilabel
+> del modulo delle impostazioni del <guilabel
+>Comportamento delle finestre</guilabel
+>, nella sezione  <guilabel
+>Gestione delle finestre</guilabel
+> delle impostazioni di sistema, puoi configurare le zone di aggancio delle finestre spostate ai bordi dello schermo, in centro o delle altre finestre quando si avvicinano. </para>
+</tip>
 
 <para
->Usando l'elemento <guilabel
+>Disabilita l'opzione <guilabel
+>Mantieni attivo quando le finestre sono a schermo intero</guilabel
+> per eliminare l'attivazione delle azioni ai bordi dello schermo mentre un'applicazione è in esecuzione a tutto schermo.</para>
+
+<para
+>Usa l'elemento <guilabel
 >Cambia desktop sul bordo</guilabel
-> configura se vuoi passare ad un altro desktop quando spingi il puntatore del mouse su un bordo dello schermo, &eg; solo quando sposti una finestra. </para>
+> per configurare se vuoi passare ad un altro desktop quando spingi il puntatore del mouse su un bordo dello schermo, &eg; solo quando sposti una finestra. </para>
 <para
 >Il <guilabel
 >Ritardo di attivazione</guilabel

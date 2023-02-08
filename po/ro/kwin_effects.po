@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2022-12-28 21:13+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -563,14 +563,8 @@ msgstr "Comută sumarul"
 msgid "Layout mode:"
 msgstr "Regim de aranjare:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "Estompează fundalul:"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Ignoră ferestrele minimizate:"
@@ -1186,6 +1180,9 @@ msgstr "Dezactivat"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Urmărire maus:"
+
+#~ msgid "Blur background:"
+#~ msgstr "Estompează fundalul:"
 
 #~ msgid "Slide docks"
 #~ msgstr "Alunecă andocările"

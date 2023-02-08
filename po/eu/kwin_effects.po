@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2022-12-03 15:51+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -560,14 +560,8 @@ msgstr "Txandakatu ikuspegi orokorra"
 msgid "Layout mode:"
 msgstr "&Diseinu modua:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "Atzealde lausoa:"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Jaramonik ez minimizatutako leihoei:"
@@ -1175,6 +1169,9 @@ msgstr "Desgaituta"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Saguaren jarraipena:"
+
+#~ msgid "Blur background:"
+#~ msgstr "Atzealde lausoa:"
 
 #~ msgid "Slide docks"
 #~ msgstr "Irristatu nasak"

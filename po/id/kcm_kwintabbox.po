@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-07 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2022-09-27 18:12+0700\n"
 "Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -19,11 +19,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 21.12.3\n"
-
-#: kwintabboxconfigform.cpp:81
-#, kde-format
-msgid "KWin"
-msgstr "KWin"
 
 #: layoutpreview.cpp:131
 #, kde-format
@@ -36,22 +31,22 @@ msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "Desktop 1"
 
-#: main.cpp:59
+#: main.cpp:66
 #, kde-format
 msgid "Main"
 msgstr "Utama"
 
-#: main.cpp:60
+#: main.cpp:67
 #, kde-format
 msgid "Alternative"
 msgstr "Alternatif"
 
-#: main.cpp:62
+#: main.cpp:69
 #, kde-format
 msgid "Get New Task Switchers..."
 msgstr "Dapatkan Pengalih Tugas yang Baru..."
 
-#: main.cpp:76
+#: main.cpp:83
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
@@ -241,12 +236,14 @@ msgid "Show selected window"
 msgstr "Tampilkan jendela terpilih"
 
 #: shortcutsettings.cpp:132
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows"
 msgid "Walk Through Windows"
 msgstr "Berjalan Antar Jendela"
 
 #: shortcutsettings.cpp:133
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows (Reverse)"
 msgstr "Berjalan Antar Jendela (Kebalikan)"
 
@@ -263,12 +260,14 @@ msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Berjalan Antar Alternatif Jendela (Kebalikan)"
 
 #: shortcutsettings.cpp:137
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows Alternative"
 msgstr "Berjalan Antar Alternatif Jendela"
 
 #: shortcutsettings.cpp:138
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Berjalan Antar Alternatif Jendela (Kebalikan)"
 
@@ -283,6 +282,9 @@ msgstr "Berjalan Antar Alternatif Jendela"
 #| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Berjalan Antar Alternatif Jendela (Kebalikan)"
+
+#~ msgid "KWin"
+#~ msgstr "KWin"
 
 #, fuzzy
 #~| msgid "Show outline of selected window"

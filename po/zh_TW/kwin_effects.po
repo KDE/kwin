@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2023-01-15 20:17+0800\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
@@ -560,14 +560,8 @@ msgstr "切換總覽"
 msgid "Layout mode:"
 msgstr "佈局模式："
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "模糊背景："
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "忽略已最小化的視窗："
@@ -1168,6 +1162,9 @@ msgstr "已關閉"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "滑鼠追蹤："
+
+#~ msgid "Blur background:"
+#~ msgstr "模糊背景："
 
 #~ msgid "Slide docks"
 #~ msgstr "滑動 dock"

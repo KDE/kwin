@@ -43,9 +43,9 @@
 </authorgroup>
 
 <date
->31/12/2020</date>
+>30/01/2023</date>
 <releaseinfo
->&plasma; 5.21</releaseinfo>
+>&plasma; 5.27</releaseinfo>
 
 <keywordset>
 <keyword
@@ -67,25 +67,37 @@
 
 <sect1 id="windows-navigating">
 <title
->Navigare tra le finestre</title>
+>Navigazione tra le finestre</title>
 
 <para
->Il selettore delle attività permette all'utente di passare facilmente tra le finestre attualmente aperte usando la tastiera. È molto configurabile e permette all'utente di controllare il suo comportamento, l'aspetto visivo, le scorciatoie di tastiera ed il filtraggio delle finestre.</para>
+>Il selettore delle attività permette all'utente di passare facilmente tra le finestre attualmente aperte usando la tastiera. È molto configurabile: è possibile controllare il suo comportamento, l'aspetto visivo, le scorciatoie di tastiera ed il filtraggio delle finestre.</para>
+
+<para>
+  <screenshot>
+    <screeninfo
+>Schermata del selettore delle attività predefinito</screeninfo>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="taskswitcher.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
+  </screenshot>
+</para>
 
 <para
 >Il selettore delle attività è spesso invocato usando la combinazione di tasti <keycombo
 >&Alt;&Tab;</keycombo
->, che però può essere cambiata. Quando invocato, esso mostra un elenco di tutte le finestre attualmente aperte, che sono filtrate facoltativamente oppure ampliate in base alle impostazioni della configurazione. Per esempio, l'elenco può essere filtrato in modo da mostrare solo le finestre che soddisfano certi criteri, ad esempio quelle che sono attualmente visibili. Quando l'elenco viene mostrato l'utente può passare ciclicamente in avanti o all'indietro tra tutte le finestre elencate usando ripetutamente la combinazione di tasti del selettore delle attività: rilasciandola, la finestra che era selezionata nell'elenco verrà attivata.</para>
+>, che però può essere modificata. Quando invocato, esso mostra un elenco di tutte le finestre attualmente aperte; queste possono anche essere filtrate, oppure ampliate in base alle impostazioni della configurazione. Per esempio, l'elenco può essere filtrato in modo da mostrare solo le finestre che soddisfano certi criteri, ad esempio quelle che sono attualmente visibili. Quando l'elenco viene mostrato, l'utente può passare ciclicamente in avanti o all'indietro tra tutte le finestre elencate usando ripetutamente la combinazione di tasti del selettore delle attività: rilasciandola, la finestra che era selezionata nell'elenco verrà attivata.</para>
 
 <para
->Dato che il selettore delle attività offre molte opzioni di configurazione, possono essere definite due raccolte di impostazioni di configurazione, che sono chiamate <guilabel
+>Dato che il selettore delle attività offre molte opzioni di configurazione, possono essere definite due raccolte di impostazioni di configurazione: queste sono chiamate <guilabel
 >Principale</guilabel
 > e <guilabel
 >Alternativo</guilabel
->. Ciascuna può avere un insieme di combinazioni di tasti unico assegnato ad esse.</para>
+>. A ciascuna può essere assegnato un insieme di combinazioni di tasti unico.</para>
 
 <para
->Le opzioni di configurazione per le raccolte Principale Alternativo sono presentate in quattro raggruppamenti, come di seguito elencati:</para>
+>Le opzioni di configurazione per le raccolte Principale Alternativo sono presentate in quattro raggruppamenti, che vengono elencati di seguito:</para>
 
 <sect2 id="visualization">
 <title
@@ -93,7 +105,7 @@
 <para
 >Questo gruppo di opzioni di configurazione controlla come viene visualizzato l'elenco delle finestre nello schermo. La visualizzazione predefinita si chiama <guilabel
 >Brezza</guilabel
->, che elenca tutte le finestre aperte nella parte sinistra delle schermo. Tra le altre visualizzazioni ci sono <guilabel
+>, ed elenca tutte le finestre aperte nella parte sinistra delle schermo. Tra le altre visualizzazioni ci sono <guilabel
 >Selezione circolare</guilabel
 > (un carosello 3D), <guilabel
 >Selezione a pila</guilabel
@@ -101,15 +113,15 @@
 >Medio arrotondato</guilabel
 > (un elenco di icone in stile Microsoft &Windows;), ma puoi scaricarne ed installarne molte altre facendo clic sul pulsante <guibutton
 >Recupera nuovi selettori delle attività...</guibutton
->, che è situato in basso a destra nella finestra.</para>
+>, che si trova nella parte in basso a destra della finestra.</para>
 
 <para
->Una volta che la visualizzazione è stata selezionata dall'elenco a tendina puoi fare clic sul pulsante a destra dell'elenco, per vedere un'anteprima o per configurare le opzioni di visualizzazione specifiche.</para>
+>Una volta che la visualizzazione è stata selezionata dall'elenco a tendina, puoi fare clic sul pulsante a destra dell'elenco: puoi vedere un'anteprima, oppure configurare delle opzioni di visualizzazione specifiche.</para>
 
 <para
 >La casella <guilabel
 >Mostra la finestra selezionata</guilabel
-> determina quanto chiaramente l'utente vedrà la finestra che verrà attivata. Se questa casella è spuntata, tutte le finestre verranno oscurate tranne quella che è attualmente evidenziata nel selettore delle attività.</para>
+> determina quanto chiaramente l'utente vedrà quale finestra verrà attivata. Se questa casella è spuntata, tutte le finestre verranno nascoste tranne quella che è attualmente evidenziata nel selettore delle attività.</para>
 
 <note
 ><para
@@ -155,11 +167,11 @@
 
 <note
 ><para
->Per invocare il selettore delle attività può essere usata una qualsiasi delle scorciatoie di tastiera definite. Per invocarlo invece senza usare la tastiera puoi definire delle azioni per i bordi dello schermo nel modulo <ulink url="help:/kcontrol/kwinscreenedges/index.html"
+>Per invocare il selettore delle attività può essere usata una qualsiasi delle scorciatoie di tastiera definite. Nel modulo <ulink url="help:/kcontrol/kwinscreenedges/index.html"
 ><guilabel
 >Bordi dello schermo</guilabel
 ></ulink
-> delle &systemsettings;.</para
+> delle &systemsettings; puoi invece definire delle azioni per i bordi dello schermo, in modo da poterlo invocare senza usare la tastiera.</para
 ></note>
 </sect2>
 
@@ -176,7 +188,7 @@
 >Ordine di impilamento</guilabel
 > oppure per <guilabel
 >Usate di recente</guilabel
->: il primo è l'ordine nel quale le finestre appaiono sullo schermo, mentre l'altro è l'ordine nel quale le finestre sono state utilizzate. <guilabel
+>: il primo è l'ordine nel quale le finestre appaiono l'una sopra le altre nello schermo, mentre l'altro è l'ordine nel quale le finestre sono state utilizzate. <guilabel
 >Usate di recente</guilabel
 > rende il passaggio tra le due finestre più utilizzate veramente semplice, perché queste appariranno sempre nelle prime due posizioni dell'elenco.</para>
 
@@ -189,6 +201,11 @@
 >L'opzione <guilabel
 >Solo una finestra per applicazione</guilabel
 > diminuisce il disordine, in quanto mostra solo una finestra per ogni applicazione. Se un'applicazione ha più finestre aperte, allora nell'elenco verrà mostrata quella attivata più di recente, mentre le altre non compariranno.</para>
+
+<para
+>L'opzione <guilabel
+>Ordina le finestre minimizzate dopo quelle non minimizzate</guilabel
+> ti mostrerà prima tutte le finestre non minimizzate, anche se sono meno recenti oppure sotto ad altre finestre minimizzate.</para>
 </sect2>
 
 <sect2 id="filter-windows-by">

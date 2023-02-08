@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-08 01:01+0000\n"
 "PO-Revision-Date: 2022-08-19 17:11+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -555,14 +555,8 @@ msgstr "Ümumi baxışı dəyişmək"
 msgid "Layout mode:"
 msgstr "Yerləşdirmə rejimi:"
 
-#. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
-#: overview/kcm/overvieweffectkcm.ui:56
-#, kde-format
-msgid "Blur background:"
-msgstr "Fon bulanıqlığı:"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: overview/kcm/overvieweffectkcm.ui:73
+#: overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Yığılmış pəncərələri yox saymaq:"
@@ -1171,6 +1165,9 @@ msgstr "Söndürülüb"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Siçanın izlənməsi:"
+
+#~ msgid "Blur background:"
+#~ msgstr "Fon bulanıqlığı:"
 
 #~ msgid "Slide docks"
 #~ msgstr "Panelləri sürüşdürmək"
