@@ -212,14 +212,6 @@ public:
     Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, KWin::Output *output, KWin::VirtualDesktop *desktop) const;
     /**
      * Overloaded method for convenience.
-     * @param option The type of area which should be considered
-     * @param point The coordinates which have to be included in the area
-     * @param desktop The desktop for which the area should be considered, in general there should not be a difference
-     * @returns The specified screen geometry
-     */
-    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, const QPoint &point, KWin::VirtualDesktop *desktop) const;
-    /**
-     * Overloaded method for convenience.
      * @param client The Client for which the area should be retrieved
      * @returns The specified screen geometry
      */

@@ -228,11 +228,6 @@ QSize WorkspaceWrapper::workspaceSize() const
     return QSize(workspaceWidth(), workspaceHeight());
 }
 
-QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, const QPoint &p, VirtualDesktop *desktop) const
-{
-    return workspace()->clientArea(static_cast<clientAreaOption>(option), workspace()->outputAt(p), desktop);
-}
-
 QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, const KWin::Window *c) const
 {
     if (!c) {
