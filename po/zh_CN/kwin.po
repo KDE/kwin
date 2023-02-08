@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-03 03:02+0000\n"
-"PO-Revision-Date: 2023-01-12 10:31\n"
+"PO-Revision-Date: 2023-02-07 11:05\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -14,8 +14,8 @@ msgstr ""
 "X-Crowdin-Project: kdeorg\n"
 "X-Crowdin-Project-ID: 269464\n"
 "X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf5-trunk/messages/kwin/kwin.pot\n"
-"X-Crowdin-File-ID: 4119\n"
+"X-Crowdin-File: /kf5-stable/messages/kwin/kwin.pot\n"
+"X-Crowdin-File-ID: 2637\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2241,7 +2241,7 @@ msgstr "折叠(&S)"
 #: useractions.cpp:272
 #, kde-format
 msgid "&No Titlebar and Frame"
-msgstr ""
+msgstr "无标题栏和边框(&N)"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2442,7 +2442,7 @@ msgstr "将窗口放至全屏"
 #: useractions.cpp:1009
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr ""
+msgstr "显示/隐藏窗口标题栏和框架"
 
 #: useractions.cpp:1011
 #, kde-format
