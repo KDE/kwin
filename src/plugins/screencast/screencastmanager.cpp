@@ -179,9 +179,10 @@ void ScreencastManager::streamRegion(KWaylandServer::ScreencastStreamV1Interface
     stream->setObjectName(rectToString(geometry));
     stream->setCursorMode(mode, scale, geometry);
 
-    connect(stream, &ScreenCastStream::startStreaming, waylandStream, [geometry, stream, source] {
+    connect(stream, &ScreenCastStream::startStreaming, waylandStream, [geometry, stream, source, waylandStream] {
         Compositor::self()->scene()->addRepaint(geometry);
 
+        bool found = false;
         const auto allOutputs = workspace()->outputs();
         for (auto output : allOutputs) {
             if (output->geometry().intersects(geometry)) {
@@ -196,7 +197,11 @@ void ScreencastManager::streamRegion(KWaylandServer::ScreencastStreamV1Interface
                     stream->recordFrame(scaleRegion(region.translated(-streamRegion.topLeft()).intersected(streamRegion), source->scale()));
                 };
                 connect(output, &Output::outputChange, stream, bufferToStream);
+                found |= true;
             }
+        }
+        if (!found) {
+            waylandStream->sendFailed(i18n("Region outside the workspace"));
         }
     });
     integrateStreams(waylandStream, stream);
