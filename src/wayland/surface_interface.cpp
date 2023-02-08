@@ -73,7 +73,7 @@ void SurfaceInterfacePrivate::addChild(SubSurfaceInterface *child)
     cached.above.append(child);
     current.above.append(child);
     child->surface()->setOutputs(outputs);
-    child->surface()->setPreferredScale(preferredScale);
+    child->surface()->setPreferredBufferScale(preferredBufferScale);
 
     Q_EMIT q->childSubSurfaceAdded(child);
     Q_EMIT q->childSubSurfacesChanged();
@@ -1109,21 +1109,21 @@ PresentationHint SurfaceInterface::presentationHint() const
     return d->current.presentationHint;
 }
 
-void SurfaceInterface::setPreferredScale(qreal scale)
+void SurfaceInterface::setPreferredBufferScale(qreal scale)
 {
-    if (scale == d->preferredScale) {
+    if (scale == d->preferredBufferScale) {
         return;
     }
-    d->preferredScale = scale;
+    d->preferredBufferScale = scale;
 
     if (d->fractionalScaleExtension) {
         d->fractionalScaleExtension->setPreferredScale(scale);
     }
     for (auto child : qAsConst(d->current.below)) {
-        child->surface()->setPreferredScale(scale);
+        child->surface()->setPreferredBufferScale(scale);
     }
     for (auto child : qAsConst(d->current.above)) {
-        child->surface()->setPreferredScale(scale);
+        child->surface()->setPreferredBufferScale(scale);
     }
 }
 

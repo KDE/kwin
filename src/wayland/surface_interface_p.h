@@ -132,7 +132,7 @@ public:
     qreal pendingScaleOverride = 1.;
 
     QVector<OutputInterface *> outputs;
-    qreal preferredScale = 1.0;
+    qreal preferredBufferScale = 1.0;
 
     LockedPointerV1Interface *lockedPointer = nullptr;
     ConfinedPointerV1Interface *confinedPointer = nullptr;

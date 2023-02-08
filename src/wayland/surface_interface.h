@@ -354,10 +354,10 @@ public:
     PresentationHint presentationHint() const;
 
     /**
-    * Sets a preferred scale that clients should provide buffers in
+     * Sets a preferred buffer scale that clients should provide buffers in
      * @param scale
      */
-    void setPreferredScale(qreal scale);
+    void setPreferredBufferScale(qreal scale);
 
 Q_SIGNALS:
     /**
