@@ -62,6 +62,7 @@
         "Name[tr]": "Kayan Açılır Pencereler",
         "Name[uk]": "Ковзні контекстні вікна",
         "Name[x-test]": "xxSliding Popupsxx",
+        "Name[zh_CN]": "气泡滑动动效",
         "Name[zh_TW]": "滑動的彈出視窗"
     },
     "org.kde.kwin.effect": {

@@ -63,6 +63,7 @@
         "Name[tr]": "Arka Plan Karşıtlığı",
         "Name[uk]": "Контрастність тла",
         "Name[x-test]": "xxBackground Contrastxx",
+        "Name[zh_CN]": "背景对比度",
         "Name[zh_TW]": "背景對比"
     },
     "org.kde.kwin.effect": {
