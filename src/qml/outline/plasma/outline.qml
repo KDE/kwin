@@ -6,6 +6,7 @@
 */
 import QtQuick 2.1
 import QtQuick.Window 2.1
+import org.kde.kwin 3.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 
 Window {
@@ -75,7 +76,7 @@ Window {
         height: 0
 
         enabledBorders: {
-            var maximizedArea = workspace.clientArea(workspace.MaximizeArea, Qt.point(outline.geometry.x, outline.geometry.y), workspace.currentDesktop);
+            var maximizedArea = Workspace.clientArea(Workspace.MaximizeArea, Qt.point(outline.geometry.x, outline.geometry.y), Workspace.currentDesktop);
 
             var left = outline.geometry.x === maximizedArea.x;
             var right = outline.geometry.x + outline.geometry.width === maximizedArea.x + maximizedArea.width;
