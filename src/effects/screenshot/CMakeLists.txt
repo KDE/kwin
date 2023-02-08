@@ -21,11 +21,14 @@ target_link_libraries(kwin4_effect_screenshot PRIVATE
 
     Qt::Concurrent
     Qt::DBus
+    Qt::Quick
 )
 
 if (KWIN_BUILD_NOTIFICATIONS)
     target_link_libraries(kwin4_effect_screenshot PRIVATE KF5::Notifications)
 endif()
+
+install(DIRECTORY qml DESTINATION ${KDE_INSTALL_DATADIR}/kwin/effects/screenshot)
 
 ecm_qt_declare_logging_category(kwin4_effect_screenshot
     HEADER screenshotlogging.h

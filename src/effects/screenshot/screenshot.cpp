@@ -12,10 +12,20 @@
 #include "screenshotdbusinterface1.h"
 #include "screenshotdbusinterface2.h"
 
+#include <input.h>
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
+#include <qevent.h>
+#include <qlist.h>
+#include <workspace.h>
 
+#include <QKeyEvent>
+#include <QKeySequence>
 #include <QPainter>
+#include <QQuickItem>
+#include <QQuickWindow>
+#include <qnamespace.h>
+#include <utility>
 
 namespace KWin
 {
@@ -85,6 +95,7 @@ ScreenShotEffect::ScreenShotEffect()
     connect(effects, &EffectsHandler::screenAdded, this, &ScreenShotEffect::handleScreenAdded);
     connect(effects, &EffectsHandler::screenRemoved, this, &ScreenShotEffect::handleScreenRemoved);
     connect(effects, &EffectsHandler::windowClosed, this, &ScreenShotEffect::handleWindowClosed);
+    connect(effects, &EffectsHandler::screenAboutToLock, this, &ScreenShotEffect::cancel);
 }
 
 ScreenShotEffect::~ScreenShotEffect()
@@ -93,6 +104,283 @@ ScreenShotEffect::~ScreenShotEffect()
     cancelAreaScreenShots();
     cancelScreenScreenShots();
 }
+
+void ScreenShotEffect::startWindowPicker(std::function<void(EffectWindow *)> callback)
+{
+    if (!m_windowScreenShots.isEmpty()) {
+        return;
+    }
+    cancel();
+    m_pickerMode = WindowPicker;
+    m_windowsCallback = callback;
+    setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/effects/screenshot/qml/WindowPicker.qml"))));
+    activatePicker();
+}
+
+void ScreenShotEffect::startScreenPicker(std::function<void(EffectScreen *)> callback)
+{
+    if (!m_screenScreenShots.isEmpty()) {
+        return;
+    }
+    cancel();
+    m_pickerMode = ScreenPicker;
+    m_screensCallback = callback;
+    setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/effects/screenshot/qml/ScreenPicker.qml"))));
+    activatePicker();
+}
+
+void ScreenShotEffect::accept()
+{
+    setRunning(false);
+    if (m_windowsCallback) {
+        QList<EffectWindow *> list;
+        for (auto window : std::as_const(m_selectedWindows)) {
+            list.append(window);
+        }
+        m_windowsCallback(list.first());
+    } else if (m_screensCallback) {
+        m_screensCallback(m_selectedScreens.first());
+    }
+    clearPicker();
+}
+
+void ScreenShotEffect::cancel()
+{
+    setRunning(false);
+    if (m_windowsCallback) {
+        m_windowsCallback(nullptr);
+    } else if (m_screensCallback) {
+        m_screensCallback(nullptr);
+    }
+    clearPicker();
+}
+
+QVariantMap ScreenShotEffect::initialProperties(EffectScreen *screen)
+{
+    if (m_pickerMode == WindowPicker) {
+        QList<QRectF> windowRects;
+        for (const auto *window : std::as_const(Workspace::self()->stackingOrder())) {
+            auto windowRect = window->frameGeometry(); // excludes shadows
+            if (!window->isHiddenInternal() && !window->isMinimized()
+                && screen->geometry().intersects(windowRect.toRect())
+            ) {
+                windowRect.moveTopLeft(screen->mapFromGlobal(windowRect.topLeft()));
+                windowRects.append(windowRect);
+            }
+        }
+        return QVariantMap {
+            {QStringLiteral("effect"), QVariant::fromValue(this)},
+            {QStringLiteral("targetScreen"), QVariant::fromValue(screen)},
+            {QStringLiteral("windowRects"), QVariant::fromValue(windowRects)},
+        };
+    } else if (m_pickerMode == ScreenPicker) {
+        return QVariantMap {
+            {QStringLiteral("effect"), QVariant::fromValue(this)},
+        };
+    }
+    return QVariantMap();
+}
+
+void ScreenShotEffect::activatePicker()
+{
+    if (effects->isScreenLocked()) {
+        return;
+    }
+
+    setRunning(true);
+}
+
+void ScreenShotEffect::clearPicker()
+{
+    m_selectedWindows.clear();
+    m_selectedScreens.clear();
+    m_windowsCallback = nullptr;
+    m_screensCallback = nullptr;
+    m_acceptReleaseKeyEvent = 0;
+    m_pickerMode = NoPicker;
+    setSource({});
+}
+
+EffectScreen *ScreenShotEffect::nextScreenInFocusChain(bool forward)
+{
+    EffectScreen *nextScreen = nullptr;
+    const auto &screens = effects->screens();
+    const int totalScreens = screens.size();
+    if (totalScreens > 1) {
+        auto *const activeScreen = effects->activeScreen();
+        if (forward) {
+            for (int i = 0; i < totalScreens; ++i) {
+                int next = i + 1;
+                if (activeScreen == screens[i] && next < totalScreens) {
+                    // nextScreen is next screen if possible
+                    nextScreen = screens[next];
+                    break;
+                } else if (activeScreen != screens[0] && next >= totalScreens) {
+                    // otherwise, wrap back to the first screen
+                    nextScreen = screens[0];
+                    break;
+                }
+            }
+        } else {
+            const int last = totalScreens - 1;
+            for (int i = last; i >= 0; --i) {
+                int previous = i - 1;
+                if (activeScreen == screens[i] && previous >= 0) {
+                    // nextScreen is previous screen if possible
+                    nextScreen = screens[previous];
+                    break;
+                } else if (activeScreen != screens[last] && previous < 0) {
+                    // otherwise, wrap back to the last screen
+                    nextScreen = screens[last];
+                    break;
+                }
+            }
+        }
+    }
+    return nextScreen;
+}
+
+void ScreenShotEffect::windowInputMouseEvent(QEvent *event)
+{
+    if (event->type() == QEvent::MouseButtonRelease) {
+        auto mouseEvent = static_cast<QMouseEvent *>(event);
+        const auto &buttons = mouseEvent->buttons();
+        if (buttons & Qt::LeftButton) {
+            // screenPos() is globalPos(), but QPointF instead of QPoint.
+            const auto &screenPos = mouseEvent->screenPos();
+            if (m_pickerMode == WindowPicker) {
+                auto window = InputRedirection::self()->findToplevel(screenPos);
+                auto effectWindow = window ? window->effectWindow() : nullptr;
+                if (effectWindow) {
+                    if (m_selectedWindows.contains(effectWindow)) {
+                        m_selectedWindows.removeOne(effectWindow);
+                    } else {
+                        m_selectedWindows.append(effectWindow);
+                    }
+                }
+            } else if (m_pickerMode == ScreenPicker) {
+                // screenAt() only accepts QPoint.
+                auto screen = effects->screenAt(screenPos.toPoint());
+                if (screen) {
+                    if (m_selectedScreens.contains(screen)) {
+                        m_selectedScreens.removeOne(screen);
+                    } else {
+                        m_selectedScreens.append(screen);
+                    }
+                }
+            }
+        } else if (buttons & Qt::RightButton) {
+            event->accept();
+            cancel();
+        }
+    }
+
+    if (!event->isAccepted()) {
+        QuickSceneEffect::windowInputMouseEvent(event);
+    }
+}
+
+void ScreenShotEffect::grabbedKeyboardEvent(QKeyEvent *keyEvent)
+{
+    const uint keys = keyEvent->key() | keyEvent->modifiers();
+    const auto &type = keyEvent->type();
+
+    // accept or cancel
+    if (keyEvent) {
+        keyEvent->accept();
+        accept();
+        return;
+    } else if (keyEvent->matches(QKeySequence::Cancel)
+        || keyEvent->matches(QKeySequence::Close)
+        || keyEvent->matches(QKeySequence::Quit)) {
+        keyEvent->accept();
+        cancel();
+        return;
+    }
+
+    const bool tab = keys == Qt::Key_Tab;
+    const bool backtab = keys == Qt::Key_Backtab
+                      || keys == (uint(Qt::Key_Tab) | uint(Qt::ShiftModifier));
+    auto *const activeView = this->activeView();
+
+    if (!activeView) {
+        return;
+    }
+
+    if (m_pickerMode == WindowPicker) {
+        auto focusedItem = activeView->window()->activeFocusItem();
+        // tab to next view/backtab to previous view
+        if ((tab || backtab) && type == QEvent::KeyPress) {
+            auto nextItem = focusedItem ? focusedItem->nextItemInFocusChain(tab) : nullptr;
+            EffectScreen *nextScreen = nullptr;
+            if (nextItem && nextItem == activeView->rootItem()->nextItemInFocusChain(!tab)) {
+                nextScreen = nextScreenInFocusChain(tab);
+            }
+            if (nextScreen) {
+                keyEvent->accept();
+                m_acceptReleaseKeyEvent = keys;
+                activateView(viewForScreen(nextScreen));
+            }
+        } else if (focusedItem && keys == Qt::Key_Space && type == QEvent::KeyRelease) {
+            QPointF itemCenter = focusedItem->position()
+                               + QPointF(focusedItem->width(), focusedItem->height()) / 2;
+            itemCenter = focusedItem->mapToGlobal(itemCenter);
+            auto window = InputRedirection::self()->findToplevel(itemCenter);
+            auto effectWindow = window ? window->effectWindow() : nullptr;
+            if (effectWindow) {
+                if (m_selectedWindows.contains(effectWindow)) {
+                    m_selectedWindows.removeOne(effectWindow);
+                } else {
+                    m_selectedWindows.append(effectWindow);
+                }
+            }
+        }
+    } else if (m_pickerMode == ScreenPicker) {
+        // tab to next view/backtab to previous view
+        if ((tab || backtab) && type == QEvent::KeyPress) {
+            auto nextScreen = nextScreenInFocusChain(tab);
+            if (nextScreen) {
+                keyEvent->accept();
+                m_acceptReleaseKeyEvent = keys;
+                activateView(viewForScreen(nextScreen));
+            }
+        } else if (keys == Qt::Key_Space && type == QEvent::KeyRelease) {
+            auto screen = activeView->screen();
+            if (screen) {
+                if (m_selectedScreens.contains(screen)) {
+                    m_selectedScreens.removeOne(screen);
+                } else {
+                    m_selectedScreens.append(screen);
+                }
+            }
+        }
+    }
+
+    // It is valid to a bitwise OR with a key and modifiers
+    if (m_acceptReleaseKeyEvent == keys && type == QEvent::KeyRelease) {
+        keyEvent->accept();
+        m_acceptReleaseKeyEvent = 0;
+    }
+
+    if (!keyEvent->isAccepted()) {
+        QuickSceneEffect::grabbedKeyboardEvent(keyEvent);
+    }
+}
+
+// bool ScreenShotEffect::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
+// {
+//     return QuickSceneEffect::touchDown(id, pos, time);
+// }
+// 
+// bool ScreenShotEffect::touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time)
+// {
+//     return QuickSceneEffect::touchMotion(id, pos, time);
+// }
+// 
+// bool ScreenShotEffect::touchUp(qint32 id, std::chrono::microseconds time)
+// {
+//     return QuickSceneEffect::touchUp(id, time);
+// }
 
 QFuture<QImage> ScreenShotEffect::scheduleScreenShot(EffectScreen *screen, ScreenShotFlags flags)
 {
@@ -395,8 +683,10 @@ void ScreenShotEffect::grabPointerImage(QImage &snapshot, int xOffset, int yOffs
 
 bool ScreenShotEffect::isActive() const
 {
-    return (!m_windowScreenShots.isEmpty() || !m_areaScreenShots.isEmpty() || !m_screenScreenShots.isEmpty())
-        && !effects->isScreenLocked();
+    const bool processing = !m_windowScreenShots.isEmpty()
+                         || !m_areaScreenShots.isEmpty()
+                         || !m_screenScreenShots.isEmpty();
+    return (processing || QuickSceneEffect::isActive()) && !effects->isScreenLocked();
 }
 
 int ScreenShotEffect::requestedEffectChainPosition() const

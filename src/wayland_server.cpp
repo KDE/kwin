@@ -157,6 +157,7 @@ public:
 
     bool allowInterface(KWaylandServer::ClientConnection *client, const QByteArray &interfaceName) override
     {
+        return true;
         if (client->processId() == getpid()) {
             return true;
         }

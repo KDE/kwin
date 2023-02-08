@@ -10,7 +10,10 @@
 
 #pragma once
 
-#include <kwineffects.h>
+#include <effects.h>
+#include <kwinquickeffect.h>
+#include <qnamespace.h>
+#include <window.h>
 
 #include <QFuture>
 #include <QFutureInterface>
@@ -44,13 +47,15 @@ struct ScreenShotScreenData;
  * that the screenshot QFuture object can get cancelled if the captured window or the screen is
  * removed.
  */
-class ScreenShotEffect : public Effect
+class ScreenShotEffect : public QuickSceneEffect
 {
     Q_OBJECT
-
 public:
     ScreenShotEffect();
     ~ScreenShotEffect() override;
+
+    void startWindowPicker(std::function<void(EffectWindow *)> callback);
+    void startScreenPicker(std::function<void(EffectScreen *)> callback);
 
     /**
      * Schedules a screenshot of the given @a screen. The returned QFuture can be used to query
@@ -78,12 +83,29 @@ public:
 
     static bool supported();
 
+    void windowInputMouseEvent(QEvent *event) override;
+    void grabbedKeyboardEvent(QKeyEvent *keyEvent) override;
+
+    // bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;
+    // bool touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time) override;
+    // bool touchUp(qint32 id, std::chrono::microseconds time) override;
+
+    Q_INVOKABLE void accept();
+    Q_INVOKABLE void cancel();
+
+protected:
+    QVariantMap initialProperties(EffectScreen *screen) override;
+
 private Q_SLOTS:
     void handleWindowClosed(EffectWindow *window);
     void handleScreenAdded();
     void handleScreenRemoved(EffectScreen *screen);
 
 private:
+    void activatePicker();
+    void clearPicker();
+    EffectScreen *nextScreenInFocusChain(bool forward);
+
     void takeScreenShot(ScreenShotWindowData *screenshot);
     bool takeScreenShot(ScreenShotAreaData *screenshot);
     bool takeScreenShot(ScreenShotScreenData *screenshot);
@@ -94,6 +116,19 @@ private:
 
     void grabPointerImage(QImage &snapshot, int xOffset, int yOffset) const;
     QImage blitScreenshot(const QRect &geometry, qreal devicePixelRatio = 1.0) const;
+
+    enum PickerMode {
+        NoPicker,
+        WindowPicker,
+        ScreenPicker,
+    };
+
+    PickerMode m_pickerMode = PickerMode::NoPicker;
+    QList<KWin::EffectWindowImpl *> m_selectedWindows;
+    QList<KWin::EffectScreen *> m_selectedScreens;
+    std::function<void(EffectWindow *)> m_windowsCallback;
+    std::function<void(EffectScreen *)> m_screensCallback;
+    uint m_acceptReleaseKeyEvent = 0; // represents Qt::Key | Qt::KeyboardModifiers
 
     QVector<ScreenShotWindowData> m_windowScreenShots;
     QVector<ScreenShotAreaData> m_areaScreenShots;

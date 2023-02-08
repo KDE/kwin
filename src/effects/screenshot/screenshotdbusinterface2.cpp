@@ -461,7 +461,8 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
     const QDBusMessage replyMessage = message();
 
     if (kind == 0) {
-        effects->startInteractiveWindowSelection([=, this](EffectWindow *window) {
+        qCDebug(KWIN_SCREENSHOT) << "CaptureInteractive: kind=0 (Window)";
+        m_effect->startWindowPicker([=, this](EffectWindow *window) {
             effects->hideOnScreenMessage(EffectsHandler::OnScreenMessageHideFlag::SkipsCloseAnimation);
 
             if (!window) {
@@ -474,27 +475,29 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
                                new ScreenShotSinkPipe2(fileDescriptor, replyMessage));
             }
         });
-        effects->showOnScreenMessage(i18n("Select window to screen shot with left click or enter.\n"
-                                          "Escape or right click to cancel."),
-                                     QStringLiteral("spectacle"));
+        // effects->startInteractiveWindowSelection();
+        // effects->showOnScreenMessage(i18n("Select window to screen shot with left click or enter.\n"
+        //                                   "Escape or right click to cancel."),
+        //                              QStringLiteral("spectacle"));
     } else {
-        effects->startInteractivePositionSelection([=, this](const QPoint &point) {
+        qCDebug(KWIN_SCREENSHOT) << "CaptureInteractive: kind=1 (Screen)";
+        m_effect->startScreenPicker([=, this](EffectScreen *screen) {
             effects->hideOnScreenMessage(EffectsHandler::OnScreenMessageHideFlag::SkipsCloseAnimation);
 
-            if (point == QPoint(-1, -1)) {
+            if (!screen) {
                 close(fileDescriptor);
 
                 QDBusConnection bus = QDBusConnection::sessionBus();
                 bus.send(replyMessage.createErrorReply(s_errorCancelled, s_errorCancelledMessage));
             } else {
-                EffectScreen *screen = effects->screenAt(point);
                 takeScreenShot(screen, screenShotFlagsFromOptions(options),
                                new ScreenShotSinkPipe2(fileDescriptor, replyMessage));
             }
         });
-        effects->showOnScreenMessage(i18n("Create screen shot with left click or enter.\n"
-                                          "Escape or right click to cancel."),
-                                     QStringLiteral("spectacle"));
+        // effects->startInteractivePositionSelection();
+        // effects->showOnScreenMessage(i18n("Create screen shot with left click or enter.\n"
+        //                                   "Escape or right click to cancel."),
+        //                              QStringLiteral("spectacle"));
     }
 
     setDelayedReply(true);
