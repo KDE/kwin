@@ -55,6 +55,7 @@ void RegionScreenCastSource::updateOutput(Output *output)
         QMatrix4x4 projectionMatrix;
         projectionMatrix.ortho(m_region);
         projectionMatrix.translate(outputGeometry.left() / m_scale, (m_region.bottom() - outputGeometry.bottom()) / m_scale);
+        projectionMatrix.translate(0, m_region.top() / m_scale);
 
         shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
