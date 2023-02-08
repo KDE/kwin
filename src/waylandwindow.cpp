@@ -161,6 +161,7 @@ void WaylandWindow::updateClientOutputs()
     surface()->setOutputs(waylandServer()->display()->outputsIntersecting(frameGeometry().toAlignedRect()));
     if (output()) {
         surface()->setPreferredBufferScale(output()->scale());
+        surface()->setPreferredBufferTransform(output()->transform());
     }
 }
 

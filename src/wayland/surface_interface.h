@@ -359,6 +359,14 @@ public:
      */
     void setPreferredBufferScale(qreal scale);
 
+    /**
+     * Sets the preferred buffer transform for this surface.
+     *
+     * This indicates to the client the preferred buffer transform to use when
+     * attaching buffers to this surface.
+     */
+    void setPreferredBufferTransform(KWin::Output::Transform transform);
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the underlying wl_surface resource is about to be freed.

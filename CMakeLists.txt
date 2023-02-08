@@ -186,7 +186,7 @@ int main() {
     mmap(nullptr, size, PROT_WRITE, MAP_SHARED, fd, 0);
 }" HAVE_MEMFD)
 
-find_package(Wayland 1.21)
+find_package(Wayland 1.22)
 set_package_properties(Wayland PROPERTIES
     TYPE REQUIRED
     PURPOSE "Required for building KWin with Wayland support"

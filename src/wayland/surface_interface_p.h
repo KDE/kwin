@@ -133,6 +133,7 @@ public:
 
     QVector<OutputInterface *> outputs;
     qreal preferredBufferScale = 1.0;
+    KWin::Output::Transform preferredBufferTransform = KWin::Output::Transform::Normal;
 
     LockedPointerV1Interface *lockedPointer = nullptr;
     ConfinedPointerV1Interface *confinedPointer = nullptr;
