@@ -30,6 +30,7 @@ class TextInputV1Interface;
 class TextInputV2Interface;
 class TextInputV3Interface;
 class TouchInterface;
+class XdgToplevelDragV1Interface;
 
 /**
  * Describes the source types for axis events. This indicates to the
@@ -182,6 +183,11 @@ public:
      * @see isDrag
      */
     KWaylandServer::AbstractDataSource *dragSource() const;
+    /**
+     * @returns the toplevel drag if the current drag is a toplevel drag
+     */
+    KWaylandServer::XdgToplevelDragV1Interface *xdgTopleveldrag() const;
+
     /**
      * Sets the current drag target to @p surface.
      *

@@ -65,6 +65,7 @@
 #include "wayland/xdgforeign_v2_interface.h"
 #include "wayland/xdgoutput_v1_interface.h"
 #include "wayland/xdgshell_interface.h"
+#include "wayland/xdgtopleveldrag_v1_interface.h"
 #include "wayland/xwaylandkeyboardgrab_v1_interface.h"
 #include "wayland/xwaylandshell_v1_interface.h"
 #include "workspace.h"
@@ -513,6 +514,7 @@ bool WaylandServer::init(InitializationFlags flags)
 
     m_contentTypeManager = new KWaylandServer::ContentTypeManagerV1Interface(m_display, m_display);
     m_tearingControlInterface = new KWaylandServer::TearingControlManagerV1Interface(m_display, m_display);
+    new XdgToplevelDragManagerV1Interface(m_display, this);
 
     auto screenEdgeManager = new KWaylandServer::ScreenEdgeManagerV1Interface(m_display, m_display);
     connect(screenEdgeManager, &KWaylandServer::ScreenEdgeManagerV1Interface::edgeRequested, this, [this](KWaylandServer::AutoHideScreenEdgeV1Interface *edge) {

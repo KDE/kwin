@@ -5,6 +5,7 @@
 
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
+
 #include "datadevice_interface.h"
 #include "datadevice_interface_p.h"
 #include "datadevicemanager_interface.h"
@@ -124,6 +125,11 @@ void DataDeviceInterfacePrivate::data_device_set_selection(Resource *resource, w
 
     if (dataSource && dataSource->supportedDragAndDropActions() && wl_resource_get_version(dataSource->resource()) >= WL_DATA_SOURCE_ACTION_SINCE_VERSION) {
         wl_resource_post_error(dataSource->resource(), QtWaylandServer::wl_data_source::error_invalid_source, "Data source is for drag and drop");
+        return;
+    }
+
+    if (dataSource && dataSource->xdgToplevelDrag()) {
+        wl_resource_post_error(resource->handle, QtWaylandServer::wl_data_source::error_invalid_source, "Data source is for drag and drop");
         return;
     }
 

@@ -217,6 +217,11 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     BASENAME cursor-shape-v1
 )
 
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL protocols/xdg-toplevel-drag-v1.xml
+    BASENAME xdg-toplevel-drag-v1
+)
+
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
     abstract_drop_handler.cpp
@@ -292,6 +297,7 @@ target_sources(kwin PRIVATE
     xdgforeign_v2_interface.cpp
     xdgoutput_v1_interface.cpp
     xdgshell_interface.cpp
+    xdgtopleveldrag_v1_interface.cpp
     xwaylandkeyboardgrab_v1_interface.cpp
     xwaylandshell_v1_interface.cpp
 )

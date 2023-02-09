@@ -31,6 +31,7 @@
 #include "touch_interface_p.h"
 #include "utils.h"
 #include "utils/common.h"
+#include "xdgtopleveldrag_v1_interface.h"
 
 #include <linux/input.h>
 
@@ -273,6 +274,7 @@ void SeatInterfacePrivate::endDrag()
 
     AbstractDropHandler *dragTargetDevice = drag.target.data();
     AbstractDataSource *dragSource = drag.source;
+
     if (dragSource) {
         // TODO: Also check the current drag-and-drop action.
         if (dragTargetDevice && dragSource->isAccepted()) {
@@ -1212,6 +1214,14 @@ SurfaceInterface *SeatInterface::dragSurface() const
 AbstractDataSource *SeatInterface::dragSource() const
 {
     return d->drag.source;
+}
+
+XdgToplevelDragV1Interface *SeatInterface::xdgTopleveldrag() const
+{
+    if (auto source = qobject_cast<DataSourceInterface *>(d->drag.source)) {
+        return source->xdgToplevelDrag();
+    }
+    return nullptr;
 }
 
 void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)

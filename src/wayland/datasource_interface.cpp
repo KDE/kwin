@@ -7,6 +7,7 @@
 #include "datasource_interface.h"
 #include "clientconnection.h"
 #include "datadevicemanager_interface.h"
+#include "datasource_interface_p.h"
 #include "utils.h"
 // Qt
 #include <QStringList>
@@ -17,27 +18,6 @@
 
 namespace KWaylandServer
 {
-class DataSourceInterfacePrivate : public QtWaylandServer::wl_data_source
-{
-public:
-    DataSourceInterfacePrivate(DataSourceInterface *_q, ::wl_resource *resource);
-
-    DataSourceInterface *q;
-    QStringList mimeTypes;
-    DataDeviceManagerInterface::DnDActions supportedDnDActions = DataDeviceManagerInterface::DnDAction::None;
-    DataDeviceManagerInterface::DnDAction selectedDndAction = DataDeviceManagerInterface::DnDAction::None;
-    bool isAccepted = false;
-
-protected:
-    void data_source_destroy_resource(Resource *resource) override;
-    void data_source_offer(Resource *resource, const QString &mime_type) override;
-    void data_source_destroy(Resource *resource) override;
-    void data_source_set_actions(Resource *resource, uint32_t dnd_actions) override;
-
-private:
-    void offer(const QString &mimeType);
-};
-
 DataSourceInterfacePrivate::DataSourceInterfacePrivate(DataSourceInterface *_q, ::wl_resource *resource)
     : QtWaylandServer::wl_data_source(resource)
     , q(_q)
@@ -92,6 +72,11 @@ void DataSourceInterfacePrivate::data_source_set_actions(Resource *resource, uin
     }
 }
 
+DataSourceInterfacePrivate *DataSourceInterfacePrivate::get(DataSourceInterface *dataSource)
+{
+    return dataSource->d.get();
+}
+
 DataSourceInterface::DataSourceInterface(wl_resource *resource)
     : d(new DataSourceInterfacePrivate(this, resource))
 {
@@ -144,6 +129,7 @@ DataDeviceManagerInterface::DnDAction DataSourceInterface::selectedDndAction() c
 
 void DataSourceInterface::dropPerformed()
 {
+    d->dropPerformed = true;
     if (d->resource()->version() < WL_DATA_SOURCE_DND_DROP_PERFORMED_SINCE_VERSION) {
         return;
     }
@@ -156,6 +142,11 @@ void DataSourceInterface::dndFinished()
         return;
     }
     d->send_dnd_finished();
+}
+
+bool DataSourceInterface::isDropPerformed() const
+{
+    return d->dropPerformed;
 }
 
 void DataSourceInterface::dndAction(DataDeviceManagerInterface::DnDAction action)
@@ -178,11 +169,17 @@ void DataSourceInterface::dndAction(DataDeviceManagerInterface::DnDAction action
 
 void DataSourceInterface::dndCancelled()
 {
+    d->isCanceled = true;
     // for v3 or less, cancel should not be called after a failed drag operation
     if (wl_resource_get_version(resource()) < 3) {
         return;
     }
     d->send_cancelled();
+}
+
+bool DataSourceInterface::isDndCancelled() const
+{
+    return d->isCanceled;
 }
 
 wl_resource *DataSourceInterface::resource() const
@@ -203,6 +200,11 @@ bool DataSourceInterface::isAccepted() const
 void DataSourceInterface::setAccepted(bool accepted)
 {
     d->isAccepted = accepted;
+}
+
+XdgToplevelDragV1Interface *DataSourceInterface::xdgToplevelDrag() const
+{
+    return d->xdgToplevelDrag;
 }
 
 }
