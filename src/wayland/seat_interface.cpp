@@ -327,7 +327,6 @@ void SeatInterface::setHasKeyboard(bool has)
     } else {
         d->capabilities &= ~SeatInterfacePrivate::capability_keyboard;
     }
-    d->accumulatedCapabilities |= d->capabilities;
 
     d->sendCapabilities();
     Q_EMIT hasKeyboardChanged(has);
@@ -343,7 +342,6 @@ void SeatInterface::setHasPointer(bool has)
     } else {
         d->capabilities &= ~SeatInterfacePrivate::capability_pointer;
     }
-    d->accumulatedCapabilities |= d->capabilities;
 
     d->sendCapabilities();
     Q_EMIT hasPointerChanged(has);
@@ -359,7 +357,6 @@ void SeatInterface::setHasTouch(bool has)
     } else {
         d->capabilities &= ~SeatInterfacePrivate::capability_touch;
     }
-    d->accumulatedCapabilities |= d->capabilities;
 
     d->sendCapabilities();
     Q_EMIT hasTouchChanged(has);

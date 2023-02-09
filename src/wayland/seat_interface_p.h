@@ -49,7 +49,6 @@ public:
     QPointer<Display> display;
     QString name;
     std::chrono::milliseconds timestamp = std::chrono::milliseconds::zero();
-    quint32 accumulatedCapabilities = 0;
     quint32 capabilities = 0;
     std::unique_ptr<KeyboardInterface> keyboard;
     std::unique_ptr<PointerInterface> pointer;
