@@ -226,7 +226,6 @@ private:
     void updateDecorationCursor();
     void updateMoveResize();
 
-    void handlePointerChanged();
     void handleFocusedSurfaceChanged();
 
     PointerInputRedirection *m_pointer;

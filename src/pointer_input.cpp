@@ -891,8 +891,6 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     m_decoration.cursor = std::make_unique<ShapeCursorSource>();
     m_serverCursor.cursor = std::make_unique<SurfaceCursorSource>();
 
-    connect(waylandServer()->seat(), &KWaylandServer::SeatInterface::hasPointerChanged,
-            this, &CursorImage::handlePointerChanged);
 #if KWIN_BUILD_SCREENLOCKER
     if (waylandServer()->hasScreenLockerIntegration()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &CursorImage::reevaluteSource);
@@ -924,7 +922,11 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
         m_decoration.cursor->setTheme(m_waylandImage.theme());
     });
 
-    handlePointerChanged();
+    KWaylandServer::PointerInterface *pointer = waylandServer()->seat()->pointer();
+
+    connect(pointer, &KWaylandServer::PointerInterface::focusedSurfaceChanged,
+            this, &CursorImage::handleFocusedSurfaceChanged);
+
     reevaluteSource();
 }
 
@@ -948,16 +950,6 @@ void CursorImage::markAsRendered(std::chrono::milliseconds timestamp)
         return;
     }
     cursorSurface->frameRendered(timestamp.count());
-}
-
-void CursorImage::handlePointerChanged()
-{
-    KWaylandServer::PointerInterface *pointer = waylandServer()->seat()->pointer();
-
-    if (pointer) {
-        connect(pointer, &KWaylandServer::PointerInterface::focusedSurfaceChanged,
-                this, &CursorImage::handleFocusedSurfaceChanged);
-    }
 }
 
 void CursorImage::handleFocusedSurfaceChanged()

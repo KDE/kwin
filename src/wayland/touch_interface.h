@@ -41,7 +41,7 @@ private:
     explicit TouchInterface(SeatInterface *seat);
     std::unique_ptr<TouchInterfacePrivate> d;
 
-    friend class SeatInterface;
+    friend class SeatInterfacePrivate;
     friend class TouchInterfacePrivate;
 };
 
