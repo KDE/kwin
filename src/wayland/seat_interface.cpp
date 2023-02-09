@@ -53,6 +53,9 @@ SeatInterfacePrivate::SeatInterfacePrivate(SeatInterface *q, Display *display)
     textInputV1 = new TextInputV1Interface(q);
     textInputV2 = new TextInputV2Interface(q);
     textInputV3 = new TextInputV3Interface(q);
+    pointer.reset(new PointerInterface(q));
+    keyboard.reset(new KeyboardInterface(q));
+    touch.reset(new TouchInterface(q));
 }
 
 void SeatInterfacePrivate::seat_bind_resource(Resource *resource)
@@ -66,38 +69,20 @@ void SeatInterfacePrivate::seat_bind_resource(Resource *resource)
 
 void SeatInterfacePrivate::seat_get_pointer(Resource *resource, uint32_t id)
 {
-    if (!(accumulatedCapabilities & capability_pointer)) {
-        wl_resource_post_error(resource->handle, 0, "wl_pointer capability is missing");
-        return;
-    }
-    if (pointer) {
-        PointerInterfacePrivate *pointerPrivate = PointerInterfacePrivate::get(pointer.get());
-        pointerPrivate->add(resource->client(), id, resource->version());
-    }
+    PointerInterfacePrivate *pointerPrivate = PointerInterfacePrivate::get(pointer.get());
+    pointerPrivate->add(resource->client(), id, resource->version());
 }
 
 void SeatInterfacePrivate::seat_get_keyboard(Resource *resource, uint32_t id)
 {
-    if (!(accumulatedCapabilities & capability_keyboard)) {
-        wl_resource_post_error(resource->handle, 0, "wl_keyboard capability is missing");
-        return;
-    }
-    if (keyboard) {
-        KeyboardInterfacePrivate *keyboardPrivate = KeyboardInterfacePrivate::get(keyboard.get());
-        keyboardPrivate->add(resource->client(), id, resource->version());
-    }
+    KeyboardInterfacePrivate *keyboardPrivate = KeyboardInterfacePrivate::get(keyboard.get());
+    keyboardPrivate->add(resource->client(), id, resource->version());
 }
 
 void SeatInterfacePrivate::seat_get_touch(Resource *resource, uint32_t id)
 {
-    if (!(accumulatedCapabilities & capability_touch)) {
-        wl_resource_post_error(resource->handle, 0, "wl_touch capability is missing");
-        return;
-    }
-    if (touch) {
-        TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(touch.get());
-        touchPrivate->add(resource->client(), id, resource->version());
-    }
+    TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(touch.get());
+    touchPrivate->add(resource->client(), id, resource->version());
 }
 
 void SeatInterfacePrivate::seat_release(Resource *resource)
@@ -334,56 +319,50 @@ void SeatInterfacePrivate::sendCapabilities()
 
 void SeatInterface::setHasKeyboard(bool has)
 {
-    if (!d->keyboard != has) {
+    if (hasKeyboard() == has) {
         return;
     }
     if (has) {
         d->capabilities |= SeatInterfacePrivate::capability_keyboard;
-        d->keyboard.reset(new KeyboardInterface(this));
     } else {
         d->capabilities &= ~SeatInterfacePrivate::capability_keyboard;
-        d->keyboard.reset();
     }
     d->accumulatedCapabilities |= d->capabilities;
 
     d->sendCapabilities();
-    Q_EMIT hasKeyboardChanged(d->keyboard != nullptr);
+    Q_EMIT hasKeyboardChanged(has);
 }
 
 void SeatInterface::setHasPointer(bool has)
 {
-    if (!d->pointer != has) {
+    if (hasPointer() == has) {
         return;
     }
     if (has) {
         d->capabilities |= SeatInterfacePrivate::capability_pointer;
-        d->pointer.reset(new PointerInterface(this));
     } else {
         d->capabilities &= ~SeatInterfacePrivate::capability_pointer;
-        d->pointer.reset();
     }
     d->accumulatedCapabilities |= d->capabilities;
 
     d->sendCapabilities();
-    Q_EMIT hasPointerChanged(d->pointer != nullptr);
+    Q_EMIT hasPointerChanged(has);
 }
 
 void SeatInterface::setHasTouch(bool has)
 {
-    if (!d->touch != has) {
+    if (hasTouch() == has) {
         return;
     }
     if (has) {
         d->capabilities |= SeatInterfacePrivate::capability_touch;
-        d->touch.reset(new TouchInterface(this));
     } else {
         d->capabilities &= ~SeatInterfacePrivate::capability_touch;
-        d->touch.reset();
     }
     d->accumulatedCapabilities |= d->capabilities;
 
     d->sendCapabilities();
-    Q_EMIT hasTouchChanged(d->touch != nullptr);
+    Q_EMIT hasTouchChanged(has);
 }
 
 void SeatInterface::setName(const QString &name)
@@ -410,17 +389,17 @@ QString SeatInterface::name() const
 
 bool SeatInterface::hasPointer() const
 {
-    return d->pointer != nullptr;
+    return d->capabilities & SeatInterfacePrivate::capability_pointer;
 }
 
 bool SeatInterface::hasKeyboard() const
 {
-    return d->keyboard != nullptr;
+    return d->capabilities & SeatInterfacePrivate::capability_keyboard;
 }
 
 bool SeatInterface::hasTouch() const
 {
-    return d->touch != nullptr;
+    return d->capabilities & SeatInterfacePrivate::capability_touch;
 }
 
 Display *SeatInterface::display() const

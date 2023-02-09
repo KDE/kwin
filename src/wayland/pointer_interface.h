@@ -77,7 +77,7 @@ private:
     explicit PointerInterface(SeatInterface *seat);
     std::unique_ptr<PointerInterfacePrivate> d;
 
-    friend class SeatInterface;
+    friend class SeatInterfacePrivate;
     friend class PointerInterfacePrivate;
 };
 
