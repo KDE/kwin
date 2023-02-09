@@ -35,7 +35,7 @@ public:
     static bool enabledByDefault();
 
     static QMatrix4x4 colorMatrix(qreal contrast, qreal intensity, qreal saturation);
-    void drawWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
+    void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
 
     bool provides(Feature feature) override;
     bool isActive() const override;
@@ -59,7 +59,7 @@ private:
     QRegion contrastRegion(const EffectWindow *w) const;
     bool shouldContrast(const EffectWindow *w, int mask, const WindowPaintData &data) const;
     void updateContrastRegion(EffectWindow *w);
-    void doContrast(EffectWindow *w, const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection);
+    void doContrast(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection);
     void uploadRegion(QVector2D *&map, const QRegion &region, qreal scale);
     Q_REQUIRED_RESULT bool uploadGeometry(GLVertexBuffer *vbo, const QRegion &region, qreal scale);
 

@@ -612,10 +612,10 @@ bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintDa
     return true;
 }
 
-void BlurEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
+void BlurEffect::drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
 {
     if (shouldBlur(w, mask, data)) {
-        const QRect screen = effects->renderTargetRect();
+        const QRect screen = viewport.renderRect().toRect();
         QRegion shape = blurRegion(w).translated(w->pos().toPoint());
 
         // let's do the evil parts - someone wants to blur behind a transformed window
@@ -651,12 +651,12 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, const QRegion &region, Wi
         projectionMatrix.ortho(screen);
 
         if (!shape.isEmpty()) {
-            doBlur(shape, screen, data.opacity(), projectionMatrix, w->isDock() || transientForIsDock, w->frameGeometry().toRect());
+            doBlur(renderTarget, viewport, shape, screen, data.opacity(), projectionMatrix, w->isDock() || transientForIsDock, w->frameGeometry().toRect());
         }
     }
 
     // Draw the window over the blurred area
-    effects->drawWindow(w, mask, region, data);
+    effects->drawWindow(renderTarget, viewport, w, mask, region, data);
 }
 
 void BlurEffect::generateNoiseTexture()
@@ -686,7 +686,7 @@ void BlurEffect::generateNoiseTexture()
     m_noiseTexture->setWrapMode(GL_REPEAT);
 }
 
-void BlurEffect::doBlur(const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection, bool isDock, QRect windowRect)
+void BlurEffect::doBlur(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection, bool isDock, QRect windowRect)
 {
     // Blur would not render correctly on a secondary monitor because of wrong coordinates
     // BUG: 393723
@@ -707,7 +707,7 @@ void BlurEffect::doBlur(const QRegion &shape, const QRect &screen, const float o
     vbo->bindArrays();
 
     const QRect logicalSourceRect = (expandedBlurRegion.boundingRect() & screen).translated(xTranslate, -screen.y());
-    const QRect deviceSourceRect = scaledRect(logicalSourceRect, effects->renderTargetScale()).toRect();
+    const QRect deviceSourceRect = scaledRect(logicalSourceRect, viewport.scale()).toRect();
     const QRect destRect = logicalSourceRect.translated(0, yTranslate + screen.y());
     int blurRectCount = expandedBlurRegion.rectCount() * 6;
 
@@ -767,7 +767,7 @@ void BlurEffect::doBlur(const QRegion &shape, const QRect &screen, const float o
         glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
     }
 
-    upscaleRenderToScreen(vbo, blurRectCount * (m_downSampleIterations + 1), shape.rectCount() * 6, screenProjection, windowRect.topLeft());
+    upscaleRenderToScreen(viewport, vbo, blurRectCount * (m_downSampleIterations + 1), shape.rectCount() * 6, screenProjection, windowRect.topLeft());
 
     if (useSRGB) {
         glDisable(GL_FRAMEBUFFER_SRGB);
@@ -801,12 +801,12 @@ void BlurEffect::doBlur(const QRegion &shape, const QRect &screen, const float o
     vbo->unbindArrays();
 }
 
-void BlurEffect::upscaleRenderToScreen(GLVertexBuffer *vbo, int vboStart, int blurRectCount, const QMatrix4x4 &screenProjection, QPoint windowPosition)
+void BlurEffect::upscaleRenderToScreen(const RenderViewport &viewport, GLVertexBuffer *vbo, int vboStart, int blurRectCount, const QMatrix4x4 &screenProjection, QPoint windowPosition)
 {
     m_renderTextures[1]->bind();
 
     m_shader->bind(BlurShader::UpSampleType);
-    m_shader->setTargetTextureSize(m_renderTextures[0]->size() * effects->renderTargetScale());
+    m_shader->setTargetTextureSize(m_renderTextures[0]->size() * viewport.scale());
 
     m_shader->setOffset(m_offset);
     m_shader->setModelViewProjectionMatrix(screenProjection);

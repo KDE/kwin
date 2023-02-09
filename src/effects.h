@@ -55,16 +55,16 @@ public:
     EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *scene);
     ~EffectsHandlerImpl() override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data) override;
     void postPaintScreen() override;
     void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
     void postPaintWindow(EffectWindow *w) override;
 
     Effect *provides(Effect::Feature ef);
 
-    void drawWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
-    void renderWindow(EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
+    void drawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
+    void renderWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
 
     void activateWindow(EffectWindow *c) override;
     EffectWindow *activeWindow() const override;
@@ -244,7 +244,7 @@ public:
      */
     Effect *findEffect(const QString &name) const;
 
-    void renderOffscreenQuickView(OffscreenQuickView *effectQuickView) const override;
+    void renderOffscreenQuickView(const RenderTarget &renderTarget, const RenderViewport &viewport, OffscreenQuickView *effectQuickView) const override;
 
     SessionState sessionState() const override;
     QList<EffectScreen *> screens() const override;
@@ -253,8 +253,6 @@ public:
     EffectScreen *findScreen(int screenId) const override;
     void renderScreen(EffectScreen *screen) override;
     bool isCursorHidden() const override;
-    QRect renderTargetRect() const override;
-    qreal renderTargetScale() const override;
 
     KWin::EffectWindow *inputPanel() const override;
     bool isInputPanelOverlay() const override;
@@ -597,7 +595,7 @@ public:
     ~EffectFrameImpl() override;
 
     void free() override;
-    void render(const QRegion &region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0) override;
+    void render(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0) override;
     Qt::Alignment alignment() const override;
     void setAlignment(Qt::Alignment alignment) override;
     const QFont &font() const override;

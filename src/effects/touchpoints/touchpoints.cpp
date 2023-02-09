@@ -117,9 +117,9 @@ void TouchPointsEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mi
     effects->prePaintScreen(data, presentTime);
 }
 
-void TouchPointsEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
+void TouchPointsEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data)
 {
-    effects->paintScreen(mask, region, data);
+    effects->paintScreen(renderTarget, viewport, mask, region, data);
 
     paintScreenSetup(mask, region, data);
     for (auto it = m_points.constBegin(), end = m_points.constEnd(); it != end; ++it) {
@@ -129,7 +129,7 @@ void TouchPointsEffect::paintScreen(int mask, const QRegion &region, ScreenPaint
             if (size > 0 && alpha > 0) {
                 QColor color = it->color;
                 color.setAlphaF(alpha);
-                drawCircle(color, it->pos.x(), it->pos.y(), size);
+                drawCircle(viewport, color, it->pos.x(), it->pos.y(), size);
             }
         }
     }
@@ -174,10 +174,10 @@ bool TouchPointsEffect::isActive() const
     return !m_points.isEmpty();
 }
 
-void TouchPointsEffect::drawCircle(const QColor &color, float cx, float cy, float r)
+void TouchPointsEffect::drawCircle(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r)
 {
     if (effects->isOpenGLCompositing()) {
-        drawCircleGl(color, cx, cy, r);
+        drawCircleGl(viewport, color, cx, cy, r);
     } else if (effects->compositingType() == QPainterCompositing) {
         drawCircleQPainter(color, cx, cy, r);
     }
@@ -197,13 +197,13 @@ void TouchPointsEffect::paintScreenFinish(int mask, QRegion region, ScreenPaintD
     }
 }
 
-void TouchPointsEffect::drawCircleGl(const QColor &color, float cx, float cy, float r)
+void TouchPointsEffect::drawCircleGl(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r)
 {
     static const int num_segments = 80;
     static const float theta = 2 * 3.1415926 / float(num_segments);
     static const float c = cosf(theta); // precalculate the sine and cosine
     static const float s = sinf(theta);
-    const auto scale = effects->renderTargetScale();
+    const auto scale = viewport.scale();
     float t;
 
     float x = r; // we start at angle = 0

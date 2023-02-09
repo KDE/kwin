@@ -6,9 +6,10 @@
 
 #pragma once
 
-#include "kwin_export.h"
+#include "kwineffects_export.h"
 
 #include <QImage>
+#include <QMatrix4x4>
 
 #include <variant>
 
@@ -17,24 +18,19 @@ namespace KWin
 
 class GLFramebuffer;
 
-class KWIN_EXPORT RenderTarget
+class KWINEFFECTS_EXPORT RenderTarget
 {
 public:
-    RenderTarget();
     explicit RenderTarget(GLFramebuffer *fbo);
     explicit RenderTarget(QImage *image);
-
-    QSize size() const;
 
     using NativeHandle = std::variant<GLFramebuffer *, QImage *>;
     NativeHandle nativeHandle() const;
 
-    void setDevicePixelRatio(qreal ratio);
-    qreal devicePixelRatio() const;
+    QSize size() const;
 
 private:
     NativeHandle m_nativeHandle;
-    qreal m_devicePixelRatio = 1;
 };
 
 } // namespace KWin

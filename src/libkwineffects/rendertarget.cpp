@@ -10,10 +10,6 @@
 namespace KWin
 {
 
-RenderTarget::RenderTarget()
-{
-}
-
 RenderTarget::RenderTarget(GLFramebuffer *fbo)
     : m_nativeHandle(fbo)
 {
@@ -38,16 +34,6 @@ QSize RenderTarget::size() const
 RenderTarget::NativeHandle RenderTarget::nativeHandle() const
 {
     return m_nativeHandle;
-}
-
-void RenderTarget::setDevicePixelRatio(qreal ratio)
-{
-    m_devicePixelRatio = ratio;
-}
-
-qreal RenderTarget::devicePixelRatio() const
-{
-    return m_devicePixelRatio;
 }
 
 } // namespace KWin

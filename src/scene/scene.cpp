@@ -12,12 +12,6 @@
 namespace KWin
 {
 
-SceneDelegate::SceneDelegate(Scene *scene)
-    : m_scene(scene)
-{
-    m_scene->addDelegate(this);
-}
-
 SceneDelegate::SceneDelegate(Scene *scene, Output *output)
     : m_scene(scene)
     , m_output(output)
@@ -50,7 +44,7 @@ void SceneDelegate::postPaint()
     m_scene->postPaint();
 }
 
-void SceneDelegate::paint(RenderTarget *renderTarget, const QRegion &region)
+void SceneDelegate::paint(const RenderTarget &renderTarget, const QRegion &region)
 {
     m_scene->paint(renderTarget, region.translated(viewport().topLeft()));
 }

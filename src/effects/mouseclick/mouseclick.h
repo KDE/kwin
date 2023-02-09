@@ -97,7 +97,7 @@ public:
     ~MouseClickEffect() override;
     void reconfigure(ReconfigureFlags) override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data) override;
     void postPaintScreen() override;
     bool isActive() const override;
 
@@ -123,7 +123,7 @@ private Q_SLOTS:
 
 private:
     std::unique_ptr<EffectFrame> createEffectFrame(const QPoint &pos, const QString &text);
-    inline void drawCircle(const QColor &color, float cx, float cy, float r);
+    inline void drawCircle(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r);
     inline void paintScreenSetup(int mask, QRegion region, ScreenPaintData &data);
     inline void paintScreenFinish(int mask, QRegion region, ScreenPaintData &data);
 
@@ -135,7 +135,7 @@ private:
 
     void repaint();
 
-    void drawCircleGl(const QColor &color, float cx, float cy, float r);
+    void drawCircleGl(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r);
     void drawCircleQPainter(const QColor &color, float cx, float cy, float r);
     void paintScreenSetupGl(int mask, QRegion region, ScreenPaintData &data);
     void paintScreenFinishGl(int mask, QRegion region, ScreenPaintData &data);

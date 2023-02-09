@@ -66,10 +66,12 @@ void WindowScreenCastSource::render(GLFramebuffer *target)
     data.setProjectionMatrix(projectionMatrix);
     data.setRenderTargetScale(1.0);
 
+    RenderTarget renderTarget(target);
+    RenderViewport viewport(geometry, 1);
     GLFramebuffer::pushFramebuffer(target);
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    Compositor::self()->scene()->renderer()->renderItem(m_window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), data);
+    Compositor::self()->scene()->renderer()->renderItem(renderTarget, viewport, m_window->windowItem(), Scene::PAINT_WINDOW_TRANSFORMED, infiniteRegion(), data);
     GLFramebuffer::popFramebuffer();
 }
 

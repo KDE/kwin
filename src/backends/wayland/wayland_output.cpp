@@ -16,6 +16,7 @@
 
 #include "kwingltexture.h"
 #include "kwinglutils.h"
+#include "renderviewport.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/pointer.h>
@@ -200,14 +201,11 @@ bool WaylandOutput::setCursor(CursorSource *source)
         return false;
     }
 
-    RenderTarget *renderTarget = &beginInfo->renderTarget;
-    renderTarget->setDevicePixelRatio(scale());
-
     RenderLayer renderLayer(m_renderLoop.get());
-    renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene()));
+    renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene(), this));
 
     renderLayer.delegate()->prePaint();
-    renderLayer.delegate()->paint(renderTarget, infiniteRegion());
+    renderLayer.delegate()->paint(beginInfo->renderTarget, infiniteRegion());
     renderLayer.delegate()->postPaint();
 
     cursorLayer->endFrame(infiniteRegion(), infiniteRegion());

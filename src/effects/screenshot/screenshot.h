@@ -70,7 +70,7 @@ public:
      */
     QFuture<QImage> scheduleScreenShot(EffectWindow *window, ScreenShotFlags flags = {});
 
-    void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data) override;
     bool isActive() const override;
     int requestedEffectChainPosition() const override;
 
@@ -83,15 +83,15 @@ private Q_SLOTS:
 
 private:
     void takeScreenShot(ScreenShotWindowData *screenshot);
-    bool takeScreenShot(ScreenShotAreaData *screenshot);
-    bool takeScreenShot(ScreenShotScreenData *screenshot);
+    bool takeScreenShot(const RenderViewport &viewport, ScreenShotAreaData *screenshot);
+    bool takeScreenShot(const RenderViewport &viewport, ScreenShotScreenData *screenshot);
 
     void cancelWindowScreenShots();
     void cancelAreaScreenShots();
     void cancelScreenScreenShots();
 
     void grabPointerImage(QImage &snapshot, int xOffset, int yOffset) const;
-    QImage blitScreenshot(const QRect &geometry, qreal devicePixelRatio = 1.0) const;
+    QImage blitScreenshot(const RenderViewport &viewport, const QRect &geometry, qreal devicePixelRatio = 1.0) const;
 
     std::vector<ScreenShotWindowData> m_windowScreenShots;
     std::vector<ScreenShotAreaData> m_areaScreenShots;

@@ -13,12 +13,17 @@
 namespace KWin
 {
 
+class Output;
+
 class CursorDelegateQPainter final : public RenderLayerDelegate
 {
 public:
-    void paint(RenderTarget *renderTarget, const QRegion &region) override;
+    CursorDelegateQPainter(Output *output);
+
+    void paint(const RenderTarget &renderTarget, const QRegion &region) override;
 
 private:
+    Output *const m_output;
     QImage m_buffer;
 };
 

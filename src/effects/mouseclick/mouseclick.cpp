@@ -94,9 +94,9 @@ void MouseClickEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
     effects->prePaintScreen(data, presentTime);
 }
 
-void MouseClickEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
+void MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data)
 {
-    effects->paintScreen(mask, region, data);
+    effects->paintScreen(renderTarget, viewport, mask, region, data);
 
     paintScreenSetup(mask, region, data);
     for (const auto &click : m_clicks) {
@@ -106,20 +106,20 @@ void MouseClickEffect::paintScreen(int mask, const QRegion &region, ScreenPaintD
             if (size > 0 && alpha > 0) {
                 QColor color = m_colors[click->m_button];
                 color.setAlphaF(alpha);
-                drawCircle(color, click->m_pos.x(), click->m_pos.y(), size);
+                drawCircle(viewport, color, click->m_pos.x(), click->m_pos.y(), size);
             }
         }
 
         if (m_showText && click->m_frame) {
             float frameAlpha = (click->m_time * 2.0f - m_ringLife) / m_ringLife;
             frameAlpha = frameAlpha < 0 ? 1 : -(frameAlpha * frameAlpha) + 1;
-            click->m_frame->render(infiniteRegion(), frameAlpha, frameAlpha);
+            click->m_frame->render(renderTarget, viewport, infiniteRegion(), frameAlpha, frameAlpha);
         }
     }
     for (const auto &tool : std::as_const(m_tabletTools)) {
         const int step = m_ringMaxSize * (1. - tool.m_pressure);
         for (qreal size = m_ringMaxSize; size > 0; size -= step) {
-            drawCircle(tool.m_color, tool.m_globalPosition.x(), tool.m_globalPosition.y(), size);
+            drawCircle(viewport, tool.m_color, tool.m_globalPosition.x(), tool.m_globalPosition.y(), size);
         }
     }
     paintScreenFinish(mask, region, data);
@@ -247,10 +247,10 @@ bool MouseClickEffect::isActive() const
     return m_enabled && (m_clicks.size() != 0 || !m_tabletTools.isEmpty());
 }
 
-void MouseClickEffect::drawCircle(const QColor &color, float cx, float cy, float r)
+void MouseClickEffect::drawCircle(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r)
 {
     if (effects->isOpenGLCompositing()) {
-        drawCircleGl(color, cx, cy, r);
+        drawCircleGl(viewport, color, cx, cy, r);
     } else if (effects->compositingType() == QPainterCompositing) {
         drawCircleQPainter(color, cx, cy, r);
     }
@@ -270,13 +270,13 @@ void MouseClickEffect::paintScreenFinish(int mask, QRegion region, ScreenPaintDa
     }
 }
 
-void MouseClickEffect::drawCircleGl(const QColor &color, float cx, float cy, float r)
+void MouseClickEffect::drawCircleGl(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r)
 {
     static const int num_segments = 80;
     static const float theta = 2 * 3.1415926 / float(num_segments);
     static const float c = cosf(theta); // precalculate the sine and cosine
     static const float s = sinf(theta);
-    const float scale = effects->renderTargetScale();
+    const float scale = viewport.scale();
     float t;
 
     float x = r; // we start at angle = 0

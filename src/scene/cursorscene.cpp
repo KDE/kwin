@@ -5,7 +5,8 @@
 */
 
 #include "scene/cursorscene.h"
-#include "core/rendertarget.h"
+#include "core/output.h"
+#include "libkwineffects/rendertarget.h"
 #include "scene/cursoritem.h"
 #include "scene/itemrenderer.h"
 
@@ -46,20 +47,19 @@ static void resetRepaintsHelper(Item *item, SceneDelegate *delegate)
 void CursorScene::prePaint(SceneDelegate *delegate)
 {
     resetRepaintsHelper(m_rootItem.get(), delegate);
+    m_paintedOutput = delegate->output();
 }
 
 void CursorScene::postPaint()
 {
 }
 
-void CursorScene::paint(RenderTarget *renderTarget, const QRegion &region)
+void CursorScene::paint(const RenderTarget &renderTarget, const QRegion &region)
 {
-    m_renderer->setRenderTargetRect(QRect(QPoint(0, 0), renderTarget->size() / renderTarget->devicePixelRatio()));
-    m_renderer->setRenderTargetScale(renderTarget->devicePixelRatio());
-
-    m_renderer->beginFrame(renderTarget);
-    m_renderer->renderBackground(region);
-    m_renderer->renderItem(m_rootItem.get(), 0, region, WindowPaintData(m_renderer->renderTargetProjectionMatrix()));
+    RenderViewport viewport(QRectF(QPointF(), QSizeF(renderTarget.size()) / m_paintedOutput->scale()), m_paintedOutput->scale());
+    m_renderer->beginFrame(renderTarget, viewport);
+    m_renderer->renderBackground(renderTarget, viewport, region);
+    m_renderer->renderItem(renderTarget, viewport, m_rootItem.get(), 0, region, WindowPaintData(viewport.projectionMatrix()));
     m_renderer->endFrame();
 }
 

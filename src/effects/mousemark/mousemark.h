@@ -25,7 +25,7 @@ public:
     MouseMarkEffect();
     ~MouseMarkEffect() override;
     void reconfigure(ReconfigureFlags) override;
-    void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data) override;
     bool isActive() const override;
     int requestedEffectChainPosition() const override;
 

@@ -6,9 +6,11 @@
 
 #include "cursordelegate_qpainter.h"
 #include "composite.h"
+#include "core/output.h"
 #include "core/renderlayer.h"
-#include "core/rendertarget.h"
 #include "cursor.h"
+#include "rendertarget.h"
+#include "renderviewport.h"
 #include "scene/cursorscene.h"
 
 #include <QPainter>
@@ -16,29 +18,33 @@
 namespace KWin
 {
 
-void CursorDelegateQPainter::paint(RenderTarget *renderTarget, const QRegion &region)
+CursorDelegateQPainter::CursorDelegateQPainter(Output *output)
+    : m_output(output)
+{
+}
+
+void CursorDelegateQPainter::paint(const RenderTarget &renderTarget, const QRegion &region)
 {
     if (!region.intersects(layer()->mapToGlobal(layer()->rect()).toAlignedRect())) {
         return;
     }
 
-    QImage *buffer = std::get<QImage *>(renderTarget->nativeHandle());
+    QImage *buffer = std::get<QImage *>(renderTarget.nativeHandle());
     if (Q_UNLIKELY(!buffer)) {
         return;
     }
 
-    const QSize bufferSize = (Cursors::self()->currentCursor()->rect().size() * renderTarget->devicePixelRatio()).toSize();
+    const QSize bufferSize = (Cursors::self()->currentCursor()->rect().size() * m_output->scale()).toSize();
     if (m_buffer.size() != bufferSize) {
         m_buffer = QImage(bufferSize, QImage::Format_ARGB32_Premultiplied);
     }
 
     RenderTarget offscreenRenderTarget(&m_buffer);
-    offscreenRenderTarget.setDevicePixelRatio(renderTarget->devicePixelRatio());
 
     RenderLayer renderLayer(layer()->loop());
-    renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene()));
+    renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene(), m_output));
     renderLayer.delegate()->prePaint();
-    renderLayer.delegate()->paint(&offscreenRenderTarget, infiniteRegion());
+    renderLayer.delegate()->paint(offscreenRenderTarget, infiniteRegion());
     renderLayer.delegate()->postPaint();
 
     QPainter painter(buffer);

@@ -368,7 +368,7 @@ void Compositor::startupWithWorkspace()
     const QList<Output *> outputs = workspace()->outputs();
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         auto workspaceLayer = new RenderLayer(outputs.constFirst()->renderLoop());
-        workspaceLayer->setDelegate(std::make_unique<SceneDelegate>(m_scene.get()));
+        workspaceLayer->setDelegate(std::make_unique<SceneDelegate>(m_scene.get(), nullptr));
         workspaceLayer->setGeometry(workspace()->geometry());
         connect(workspace(), &Workspace::geometryChanged, workspaceLayer, [workspaceLayer]() {
             workspaceLayer->setGeometry(workspace()->geometry());
@@ -430,9 +430,9 @@ void Compositor::addOutput(Output *output)
     auto cursorLayer = new RenderLayer(output->renderLoop());
     cursorLayer->setVisible(false);
     if (m_backend->compositingType() == OpenGLCompositing) {
-        cursorLayer->setDelegate(std::make_unique<CursorDelegateOpenGL>());
+        cursorLayer->setDelegate(std::make_unique<CursorDelegateOpenGL>(output));
     } else {
-        cursorLayer->setDelegate(std::make_unique<CursorDelegateQPainter>());
+        cursorLayer->setDelegate(std::make_unique<CursorDelegateQPainter>(output));
     }
     cursorLayer->setParent(workspaceLayer);
     cursorLayer->setSuperlayer(workspaceLayer);
@@ -670,12 +670,11 @@ void Compositor::composite(RenderLoop *renderLoop)
 
         if (auto beginInfo = primaryLayer->beginFrame()) {
             auto &[renderTarget, repaint] = beginInfo.value();
-            renderTarget.setDevicePixelRatio(output->scale());
 
             const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(superLayer->rect().toAlignedRect());
             primaryLayer->aboutToStartPainting(bufferDamage);
 
-            paintPass(superLayer, &renderTarget, bufferDamage);
+            paintPass(superLayer, renderTarget, bufferDamage);
             primaryLayer->endFrame(bufferDamage, surfaceDamage);
         }
     }
@@ -730,14 +729,14 @@ void Compositor::preparePaintPass(RenderLayer *layer, QRegion *repaint)
     }
 }
 
-void Compositor::paintPass(RenderLayer *layer, RenderTarget *target, const QRegion &region)
+void Compositor::paintPass(RenderLayer *layer, const RenderTarget &renderTarget, const QRegion &region)
 {
-    layer->delegate()->paint(target, region);
+    layer->delegate()->paint(renderTarget, region);
 
     const auto sublayers = layer->sublayers();
     for (RenderLayer *sublayer : sublayers) {
         if (sublayer->isVisible()) {
-            paintPass(sublayer, target, region);
+            paintPass(sublayer, renderTarget, region);
         }
     }
 }

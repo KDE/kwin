@@ -58,7 +58,7 @@ public:
     SurfaceItem *scanoutCandidate() const override;
     void prePaint(SceneDelegate *delegate) override;
     void postPaint() override;
-    void paint(RenderTarget *renderTarget, const QRegion &region) override;
+    void paint(const RenderTarget &renderTarget, const QRegion &region) override;
 
     virtual bool makeOpenGLContextCurrent();
     virtual void doneOpenGLContextCurrent();
@@ -89,20 +89,20 @@ protected:
     void clearStackingOrder();
     friend class EffectsHandlerImpl;
     // called after all effects had their paintScreen() called
-    void finalPaintScreen(int mask, const QRegion &region, ScreenPaintData &data);
+    void finalPaintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data);
     // shared implementation of painting the screen in the generic
     // (unoptimized) way
     void preparePaintGenericScreen();
-    void paintGenericScreen(int mask, const ScreenPaintData &data);
+    void paintGenericScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const ScreenPaintData &data);
     // shared implementation of painting the screen in an optimized way
     void preparePaintSimpleScreen();
-    void paintSimpleScreen(int mask, const QRegion &region);
+    void paintSimpleScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region);
     // called after all effects had their paintWindow() called
-    void finalPaintWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data);
+    void finalPaintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data);
     // shared implementation, starts painting the window
-    void paintWindow(WindowItem *w, int mask, const QRegion &region);
+    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, WindowItem *w, int mask, const QRegion &region);
     // called after all effects had their drawWindow() called
-    void finalDrawWindow(EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data);
+    void finalDrawWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data);
 
     // saved data for 2nd pass of optimized screen painting
     struct Phase2Data

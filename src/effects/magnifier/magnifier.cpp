@@ -109,20 +109,20 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
     }
 }
 
-void MagnifierEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
+void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data)
 {
-    effects->paintScreen(mask, region, data); // paint normal screen
+    effects->paintScreen(renderTarget, viewport, mask, region, data); // paint normal screen
     if (m_zoom != 1.0) {
         // get the right area from the current rendered screen
         const QRect area = magnifierArea();
         const QPointF cursor = cursorPos();
-        const auto scale = effects->renderTargetScale();
+        const auto scale = viewport.scale();
 
         QRectF srcArea(cursor.x() - (double)area.width() / (m_zoom * 2),
                        cursor.y() - (double)area.height() / (m_zoom * 2),
                        (double)area.width() / m_zoom, (double)area.height() / m_zoom);
         if (effects->isOpenGLCompositing()) {
-            m_fbo->blitFromFramebuffer(effects->mapToRenderTarget(srcArea).toRect());
+            m_fbo->blitFromFramebuffer(viewport.mapToRenderTarget(srcArea).toRect());
             // paint magnifier
             m_texture->bind();
             auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);

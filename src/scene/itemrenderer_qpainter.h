@@ -24,11 +24,11 @@ public:
 
     QPainter *painter() const override;
 
-    void beginFrame(RenderTarget *renderTarget) override;
+    void beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport) override;
     void endFrame() override;
 
-    void renderBackground(const QRegion &region) override;
-    void renderItem(Item *item, int mask, const QRegion &region, const WindowPaintData &data) override;
+    void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region) override;
+    void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data) override;
 
     ImageItem *createImageItem(Scene *scene, Item *parent = nullptr) override;
 

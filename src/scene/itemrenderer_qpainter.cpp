@@ -33,11 +33,11 @@ QPainter *ItemRendererQPainter::painter() const
     return m_painter.get();
 }
 
-void ItemRendererQPainter::beginFrame(RenderTarget *renderTarget)
+void ItemRendererQPainter::beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport)
 {
-    QImage *buffer = std::get<QImage *>(renderTarget->nativeHandle());
+    QImage *buffer = std::get<QImage *>(renderTarget.nativeHandle());
     m_painter->begin(buffer);
-    m_painter->setWindow(renderTargetRect());
+    m_painter->setWindow(viewport.renderRect().toRect());
 }
 
 void ItemRendererQPainter::endFrame()
@@ -45,7 +45,7 @@ void ItemRendererQPainter::endFrame()
     m_painter->end();
 }
 
-void ItemRendererQPainter::renderBackground(const QRegion &region)
+void ItemRendererQPainter::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region)
 {
     m_painter->setCompositionMode(QPainter::CompositionMode_Source);
     for (const QRect &rect : region) {
@@ -54,7 +54,7 @@ void ItemRendererQPainter::renderBackground(const QRegion &region)
     m_painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
 }
 
-void ItemRendererQPainter::renderItem(Item *item, int mask, const QRegion &_region, const WindowPaintData &data)
+void ItemRendererQPainter::renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &_region, const WindowPaintData &data)
 {
     QRegion region = _region;
 
