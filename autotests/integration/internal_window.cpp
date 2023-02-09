@@ -10,10 +10,10 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
 #include "deleted.h"
 #include "effects.h"
 #include "internalwindow.h"
+#include "pointer_input.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -188,7 +188,7 @@ void InternalWindowTest::initTestCase()
 
 void InternalWindowTest::init()
 {
-    Cursors::self()->mouse()->setPos(QPoint(512, 512));
+    input()->pointer()->warp(QPoint(512, 512));
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
     QVERIFY(Test::waitForWaylandKeyboard());
 }
@@ -572,7 +572,7 @@ void InternalWindowTest::testModifierClickUnrestrictedMove()
     QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
 
     // move cursor on window
-    Cursors::self()->mouse()->setPos(internalWindow->frameGeometry().center());
+    input()->pointer()->warp(internalWindow->frameGeometry().center());
 
     // simulate modifier+click
     quint32 timestamp = 1;
@@ -607,7 +607,7 @@ void InternalWindowTest::testModifierScroll()
     workspace()->slotReconfigure();
 
     // move cursor on window
-    Cursors::self()->mouse()->setPos(internalWindow->frameGeometry().center());
+    input()->pointer()->warp(internalWindow->frameGeometry().center());
 
     // set the opacity to 0.5
     internalWindow->setOpacity(0.5);

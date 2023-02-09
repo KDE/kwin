@@ -10,7 +10,6 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
 #include "keyboard_input.h"
 #include "pointer_input.h"
 #include "wayland_server.h"
@@ -72,7 +71,7 @@ void TestWindowSelection::init()
     QVERIFY(Test::waitForWaylandPointer());
 
     workspace()->setActiveOutput(QPoint(640, 512));
-    KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    KWin::input()->pointer()->warp(QPoint(640, 512));
 }
 
 void TestWindowSelection::cleanup()
@@ -95,7 +94,7 @@ void TestWindowSelection::testSelectOnWindowPointer()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QVERIFY(keyboardEnteredSpy.wait());
-    KWin::Cursors::self()->mouse()->setPos(window->frameGeometry().center());
+    KWin::input()->pointer()->warp(window->frameGeometry().center());
     QCOMPARE(input()->pointer()->focus(), window);
     QVERIFY(pointerEnteredSpy.wait());
 
@@ -306,7 +305,7 @@ void TestWindowSelection::testCancelOnWindowPointer()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QVERIFY(keyboardEnteredSpy.wait());
-    KWin::Cursors::self()->mouse()->setPos(window->frameGeometry().center());
+    KWin::input()->pointer()->warp(window->frameGeometry().center());
     QCOMPARE(input()->pointer()->focus(), window);
     QVERIFY(pointerEnteredSpy.wait());
 
@@ -361,7 +360,7 @@ void TestWindowSelection::testCancelOnWindowKeyboard()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QVERIFY(keyboardEnteredSpy.wait());
-    KWin::Cursors::self()->mouse()->setPos(window->frameGeometry().center());
+    KWin::input()->pointer()->warp(window->frameGeometry().center());
     QCOMPARE(input()->pointer()->focus(), window);
     QVERIFY(pointerEnteredSpy.wait());
 
@@ -416,7 +415,7 @@ void TestWindowSelection::testSelectPointPointer()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QVERIFY(keyboardEnteredSpy.wait());
-    KWin::Cursors::self()->mouse()->setPos(window->frameGeometry().center());
+    KWin::input()->pointer()->warp(window->frameGeometry().center());
     QCOMPARE(input()->pointer()->focus(), window);
     QVERIFY(pointerEnteredSpy.wait());
 

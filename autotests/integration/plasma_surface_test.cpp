@@ -10,7 +10,7 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
+#include "pointer_input.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -73,7 +73,7 @@ void PlasmaSurfaceTest::init()
     m_compositor = Test::waylandCompositor();
     m_plasmaShell = Test::waylandPlasmaShell();
 
-    KWin::Cursors::self()->mouse()->setPos(640, 512);
+    KWin::input()->pointer()->warp(QPointF(640, 512));
 }
 
 void PlasmaSurfaceTest::cleanup()
@@ -350,7 +350,7 @@ void PlasmaSurfaceTest::testPanelWindowsCanCover()
     QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
     // trigger screenedge
     QFETCH(QPoint, triggerPoint);
-    KWin::Cursors::self()->mouse()->setPos(triggerPoint);
+    KWin::input()->pointer()->warp(triggerPoint);
     QVERIFY(stackingOrderChangedSpy.wait());
     QCOMPARE(stackingOrderChangedSpy.count(), 1);
     stackingOrder = workspace()->stackingOrder();

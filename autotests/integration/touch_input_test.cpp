@@ -10,7 +10,7 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
+#include "pointer_input.h"
 #include "touch_input.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -74,7 +74,7 @@ void TouchInputTest::init()
     QVERIFY(m_touch->isValid());
 
     workspace()->setActiveOutput(QPoint(640, 512));
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    input()->pointer()->warp(QPoint(640, 512));
 }
 
 void TouchInputTest::cleanup()

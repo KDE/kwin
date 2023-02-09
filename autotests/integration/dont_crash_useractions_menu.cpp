@@ -10,8 +10,6 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
-#include "keyboard_input.h"
 #include "pointer_input.h"
 #include "useractions.h"
 #include "wayland_server.h"
@@ -66,7 +64,7 @@ void TestDontCrashUseractionsMenu::init()
     QVERIFY(Test::setupWaylandConnection());
 
     workspace()->setActiveOutput(QPoint(640, 512));
-    KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    KWin::input()->pointer()->warp(QPoint(640, 512));
 }
 
 void TestDontCrashUseractionsMenu::cleanup()

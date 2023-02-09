@@ -9,6 +9,7 @@
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "main.h"
+#include "pointer_input.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -70,7 +71,7 @@ void LayerShellV1WindowTest::init()
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::LayerShellV1));
 
     workspace()->setActiveOutput(QPoint(640, 512));
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    input()->pointer()->warp(QPoint(640, 512));
 }
 
 void LayerShellV1WindowTest::cleanup()

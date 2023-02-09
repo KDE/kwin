@@ -10,7 +10,7 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
+#include "pointer_input.h"
 #include "tiles/tilemanager.h"
 #include "wayland/seat_interface.h"
 #include "wayland/surface_interface.h"
@@ -68,7 +68,7 @@ void TilesTest::init()
     QVERIFY(Test::waitForWaylandPointer());
 
     workspace()->setActiveOutput(QPoint(640, 512));
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    input()->pointer()->warp(QPoint(640, 512));
     m_output = workspace()->activeOutput();
     m_tileManager = workspace()->tileManager(m_output);
     m_rootTile = m_tileManager->rootTile();
@@ -342,7 +342,7 @@ void TilesTest::resizeTileFromWindow()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
     // Trigger a change.
     QPoint cursorPos = window->frameGeometry().bottomRight().toPoint();
-    Cursors::self()->mouse()->setPos(cursorPos + QPoint(8, 0));
+    input()->pointer()->warp(cursorPos + QPoint(8, 0));
     window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
     QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
 
@@ -384,7 +384,7 @@ void TilesTest::resizeTileFromWindow()
 
     // Trigger a change.
     cursorPos = window->frameGeometry().bottomRight().toPoint();
-    Cursors::self()->mouse()->setPos(cursorPos + QPoint(0, 8));
+    input()->pointer()->warp(cursorPos + QPoint(0, 8));
     window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
     QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(0, 8));
 

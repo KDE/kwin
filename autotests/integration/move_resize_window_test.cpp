@@ -16,6 +16,7 @@
 #include "deleted.h"
 #include "effects.h"
 #include "placement.h"
+#include "pointer_input.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -510,7 +511,7 @@ void MoveResizeWindowTest::testPointerMoveEnd()
 }
 void MoveResizeWindowTest::testClientSideMove()
 {
-    Cursors::self()->mouse()->setPos(640, 512);
+    input()->pointer()->warp(QPointF(640, 512));
     std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
     QSignalSpy pointerEnteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
     QSignalSpy pointerLeftSpy(pointer.get(), &KWayland::Client::Pointer::left);
@@ -523,7 +524,7 @@ void MoveResizeWindowTest::testClientSideMove()
 
     // move pointer into center of geometry
     const QRectF startGeometry = window->frameGeometry();
-    Cursors::self()->mouse()->setPos(startGeometry.center());
+    input()->pointer()->warp(startGeometry.center());
     QVERIFY(pointerEnteredSpy.wait());
     QCOMPARE(pointerEnteredSpy.first().last().toPoint(), QPoint(50, 25));
     // simulate press
@@ -619,7 +620,7 @@ void MoveResizeWindowTest::testNetMove()
     const QRectF origGeo = window->frameGeometry();
 
     // let's move the cursor outside the window
-    Cursors::self()->mouse()->setPos(workspace()->activeOutput()->geometry().center());
+    input()->pointer()->warp(workspace()->activeOutput()->geometry().center());
     QVERIFY(!origGeo.contains(Cursors::self()->mouse()->pos()));
 
     QSignalSpy moveStartSpy(window, &X11Window::clientStartUserMovedResized);
@@ -639,7 +640,7 @@ void MoveResizeWindowTest::testNetMove()
     QCOMPARE(Cursors::self()->mouse()->pos(), origGeo.center());
 
     // let's move a step
-    Cursors::self()->mouse()->setPos(Cursors::self()->mouse()->pos() + QPoint(10, 10));
+    input()->pointer()->warp(Cursors::self()->mouse()->pos() + QPoint(10, 10));
     QCOMPARE(moveStepSpy.count(), 1);
     QCOMPARE(moveStepSpy.first().last(), origGeo.translated(10, 10));
 

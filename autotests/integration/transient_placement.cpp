@@ -10,7 +10,7 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
+#include "pointer_input.h"
 #include "wayland/seat_interface.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
@@ -79,7 +79,7 @@ void TransientPlacementTest::init()
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Decoration | Test::AdditionalWaylandInterface::PlasmaShell));
 
     workspace()->setActiveOutput(QPoint(640, 512));
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    input()->pointer()->warp(QPoint(640, 512));
 }
 
 void TransientPlacementTest::cleanup()

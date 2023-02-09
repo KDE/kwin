@@ -10,6 +10,7 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
+#include "pointer_input.h"
 #include "wayland/clientconnection.h"
 #include "wayland/display.h"
 #include "wayland_server.h"
@@ -75,7 +76,7 @@ void TestFractionalScale::init()
 
     workspace()->setActiveOutput(QPoint(640, 512));
     // put mouse in the middle of screen one
-    KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    KWin::input()->pointer()->warp(QPoint(640, 512));
 }
 
 void TestFractionalScale::cleanup()

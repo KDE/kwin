@@ -12,7 +12,7 @@
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "core/renderbackend.h"
-#include "cursor.h"
+#include "pointer_input.h"
 #include "screenedge.h"
 #include "wayland/keyboard_interface.h"
 #include "wayland/seat_interface.h"
@@ -203,7 +203,7 @@ void LockScreenTest::init()
     m_seat = Test::waylandSeat();
 
     workspace()->setActiveOutput(QPoint(640, 512));
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    input()->pointer()->warp(QPoint(640, 512));
 }
 
 void LockScreenTest::cleanup()

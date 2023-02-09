@@ -9,8 +9,8 @@
 #include "kwin_wayland_test.h"
 
 #include "core/outputbackend.h"
-#include "cursor.h"
 #include "effectloader.h"
+#include "pointer_input.h"
 #include "scripting/scripting.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -79,7 +79,7 @@ void ScreenEdgeTest::initTestCase()
 
 void ScreenEdgeTest::init()
 {
-    KWin::Cursors::self()->mouse()->setPos(640, 512);
+    KWin::input()->pointer()->warp(QPointF(640, 512));
     if (workspace()->showingDesktop()) {
         workspace()->slotToggleShowDesktop();
     }
@@ -145,7 +145,7 @@ void ScreenEdgeTest::testEdge()
 
     // trigger the edge
     QFETCH(QPoint, triggerPos);
-    KWin::Cursors::self()->mouse()->setPos(triggerPos);
+    KWin::input()->pointer()->warp(triggerPos);
     QCOMPARE(showDesktopSpy.count(), 1);
     QVERIFY(workspace()->showingDesktop());
 }
@@ -226,27 +226,27 @@ void ScreenEdgeTest::testEdgeUnregister()
     QSignalSpy showDesktopSpy(workspace(), &Workspace::showingDesktopChanged);
 
     // trigger the edge
-    KWin::Cursors::self()->mouse()->setPos(triggerPos);
+    KWin::input()->pointer()->warp(triggerPos);
     QCOMPARE(showDesktopSpy.count(), 1);
 
     // reset
-    KWin::Cursors::self()->mouse()->setPos(500, 500);
+    KWin::input()->pointer()->warp(QPointF(500, 500));
     workspace()->slotToggleShowDesktop();
     showDesktopSpy.clear();
 
     // trigger again, to show that retriggering works
-    KWin::Cursors::self()->mouse()->setPos(triggerPos);
+    KWin::input()->pointer()->warp(triggerPos);
     QCOMPARE(showDesktopSpy.count(), 1);
 
     // reset
-    KWin::Cursors::self()->mouse()->setPos(500, 500);
+    KWin::input()->pointer()->warp(QPointF(500, 500));
     workspace()->slotToggleShowDesktop();
     showDesktopSpy.clear();
 
     // make the script unregister the edge
     configGroup.writeEntry("mode", "unregister");
     triggerConfigReload();
-    KWin::Cursors::self()->mouse()->setPos(triggerPos);
+    KWin::input()->pointer()->warp(triggerPos);
     QCOMPARE(showDesktopSpy.count(), 0); // not triggered
 
     // force the script to unregister a non-registered edge to prove it doesn't explode

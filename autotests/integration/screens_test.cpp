@@ -10,7 +10,7 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
+#include "pointer_input.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -59,7 +59,7 @@ void ScreensTest::initTestCase()
 void ScreensTest::init()
 {
     workspace()->setActiveOutput(QPoint(640, 512));
-    KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    KWin::input()->pointer()->warp(QPoint(640, 512));
 
     QVERIFY(Test::setupWaylandConnection());
 }
@@ -134,7 +134,7 @@ void ScreensTest::testCurrentWithFollowsMouse()
     QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, geometries));
 
     QFETCH(QPoint, cursorPos);
-    KWin::Cursors::self()->mouse()->setPos(cursorPos);
+    KWin::input()->pointer()->warp(cursorPos);
 
     QFETCH(int, expectedId);
     Output *expected = workspace()->outputs().at(expectedId);
