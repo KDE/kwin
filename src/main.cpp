@@ -659,7 +659,7 @@ ScreenLockerWatcher *Application::screenLockerWatcher() const
 
 PlatformCursorImage Application::cursorImage() const
 {
-    Cursor *cursor = Cursors::self()->currentCursor();
+    Cursor *cursor = Cursor::self();
     return PlatformCursorImage(cursor->image(), cursor->hotspot());
 }
 

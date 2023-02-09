@@ -193,7 +193,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *s
         Q_EMIT desktopGridWidthChanged(width);
         Q_EMIT desktopGridHeightChanged(height);
     });
-    connect(Cursors::self()->mouse(), &Cursor::mouseChanged, this, &EffectsHandler::mouseChanged);
+    connect(Cursor::self(), &Cursor::mouseChanged, this, &EffectsHandler::mouseChanged);
     connect(ws, &Workspace::geometryChanged, this, &EffectsHandler::virtualScreenSizeChanged);
     connect(ws, &Workspace::geometryChanged, this, &EffectsHandler::virtualScreenGeometryChanged);
 #if KWIN_BUILD_ACTIVITIES
@@ -821,15 +821,15 @@ void EffectsHandlerImpl::registerTouchscreenSwipeShortcut(SwipeDirection directi
 
 void EffectsHandlerImpl::startMousePolling()
 {
-    if (Cursors::self()->mouse()) {
-        Cursors::self()->mouse()->startMousePolling();
+    if (Cursor::self()) {
+        Cursor::self()->startMousePolling();
     }
 }
 
 void EffectsHandlerImpl::stopMousePolling()
 {
-    if (Cursors::self()->mouse()) {
-        Cursors::self()->mouse()->stopMousePolling();
+    if (Cursor::self()) {
+        Cursor::self()->stopMousePolling();
     }
 }
 
@@ -1327,8 +1327,8 @@ void EffectsHandlerImpl::connectNotify(const QMetaMethod &signal)
 {
     if (signal == QMetaMethod::fromSignal(&EffectsHandler::cursorShapeChanged)) {
         if (!m_trackingCursorChanges) {
-            connect(Cursors::self()->mouse(), &Cursor::cursorChanged, this, &EffectsHandler::cursorShapeChanged);
-            Cursors::self()->mouse()->startCursorTracking();
+            connect(Cursor::self(), &Cursor::cursorChanged, this, &EffectsHandler::cursorShapeChanged);
+            Cursor::self()->startCursorTracking();
         }
         ++m_trackingCursorChanges;
     }
@@ -1340,8 +1340,8 @@ void EffectsHandlerImpl::disconnectNotify(const QMetaMethod &signal)
     if (signal == QMetaMethod::fromSignal(&EffectsHandler::cursorShapeChanged)) {
         Q_ASSERT(m_trackingCursorChanges > 0);
         if (!--m_trackingCursorChanges) {
-            Cursors::self()->mouse()->stopCursorTracking();
-            disconnect(Cursors::self()->mouse(), &Cursor::cursorChanged, this, &EffectsHandler::cursorShapeChanged);
+            Cursor::self()->stopCursorTracking();
+            disconnect(Cursor::self(), &Cursor::cursorChanged, this, &EffectsHandler::cursorShapeChanged);
         }
     }
     EffectsHandler::disconnectNotify(signal);
@@ -1361,7 +1361,7 @@ void EffectsHandlerImpl::doCheckInputWindowStacking()
 
 QPoint EffectsHandlerImpl::cursorPos() const
 {
-    return Cursors::self()->mouse()->pos();
+    return Cursor::self()->pos();
 }
 
 void EffectsHandlerImpl::reserveElectricBorder(ElectricBorder border, Effect *effect)
@@ -1677,12 +1677,12 @@ PlatformCursorImage EffectsHandlerImpl::cursorImage() const
 
 void EffectsHandlerImpl::hideCursor()
 {
-    Cursors::self()->hideCursor();
+    Cursor::self()->hideCursor();
 }
 
 void EffectsHandlerImpl::showCursor()
 {
-    Cursors::self()->showCursor();
+    Cursor::self()->showCursor();
 }
 
 void EffectsHandlerImpl::startInteractiveWindowSelection(std::function<void(KWin::EffectWindow *)> callback)
@@ -1848,7 +1848,7 @@ void EffectsHandlerImpl::renderScreen(EffectScreen *screen)
 
 bool EffectsHandlerImpl::isCursorHidden() const
 {
-    return Cursors::self()->isCursorHidden();
+    return Cursor::self()->isCursorHidden();
 }
 
 QRect EffectsHandlerImpl::renderTargetRect() const

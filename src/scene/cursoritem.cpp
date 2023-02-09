@@ -21,7 +21,7 @@ CursorItem::CursorItem(Scene *scene, Item *parent)
     : Item(scene, parent)
 {
     refresh();
-    connect(Cursors::self(), &Cursors::currentCursorChanged, this, &CursorItem::refresh);
+    connect(Cursor::self(), &Cursor::cursorChanged, this, &CursorItem::refresh);
 }
 
 CursorItem::~CursorItem()
@@ -30,7 +30,7 @@ CursorItem::~CursorItem()
 
 void CursorItem::refresh()
 {
-    const CursorSource *source = Cursors::self()->currentCursor()->source();
+    const CursorSource *source = Cursor::self()->source();
     if (auto surfaceSource = qobject_cast<const SurfaceCursorSource *>(source)) {
         // TODO Plasma 6: Stop setting XCURSOR_SIZE and scale Xcursor.size in xrdb.
         if (surfaceSource->surface() && surfaceSource->surface()->client() == waylandServer()->xWaylandConnection()) {

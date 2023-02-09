@@ -1257,10 +1257,10 @@ void TestXdgShellWindow::testXdgWindowGeometryInteractiveResize()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
 
     // Go right.
-    QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
+    QPoint cursorPos = KWin::Cursor::self()->pos();
     window->keyPressEvent(Qt::Key_Right);
-    window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
-    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
+    window->updateInteractiveMoveResize(KWin::Cursor::self()->pos());
+    QCOMPARE(KWin::Cursor::self()->pos(), cursorPos + QPoint(8, 0));
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
     states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
@@ -1275,10 +1275,10 @@ void TestXdgShellWindow::testXdgWindowGeometryInteractiveResize()
     QCOMPARE(window->frameGeometry().size(), QSize(188, 80));
 
     // Go down.
-    cursorPos = KWin::Cursors::self()->mouse()->pos();
+    cursorPos = KWin::Cursor::self()->pos();
     window->keyPressEvent(Qt::Key_Down);
-    window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
-    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(0, 8));
+    window->updateInteractiveMoveResize(KWin::Cursor::self()->pos());
+    QCOMPARE(KWin::Cursor::self()->pos(), cursorPos + QPoint(0, 8));
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 4);
     states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();

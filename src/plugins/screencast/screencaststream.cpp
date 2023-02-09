@@ -353,11 +353,11 @@ bool ScreenCastStream::createStream()
     }
 
     if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded) {
-        connect(Cursors::self(), &Cursors::positionChanged, this, [this] {
+        connect(Cursor::self(), &Cursor::posChanged, this, [this] {
             recordFrame({});
         });
     } else if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Metadata) {
-        connect(Cursors::self(), &Cursors::positionChanged, this, &ScreenCastStream::recordCursor);
+        connect(Cursor::self(), &Cursor::posChanged, this, &ScreenCastStream::recordCursor);
     }
 
     return true;
@@ -442,7 +442,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
 
         m_source->render(&dest);
 
-        auto cursor = Cursors::self()->currentCursor();
+        auto cursor = Cursor::self();
         if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
             QPainter painter(&dest);
             const auto position = (cursor->pos() - m_cursor.viewport.topLeft() - cursor->hotspot()) * m_cursor.scale;
@@ -462,7 +462,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
 
         m_source->render(buf->framebuffer());
 
-        auto cursor = Cursors::self()->currentCursor();
+        auto cursor = Cursor::self();
         if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
             if (!cursor->image().isNull()) {
                 GLFramebuffer::pushFramebuffer(buf->framebuffer());
@@ -503,7 +503,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     }
 
     if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Metadata) {
-        sendCursorData(Cursors::self()->currentCursor(),
+        sendCursorData(Cursor::self(),
                        (spa_meta_cursor *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Cursor, sizeof(spa_meta_cursor)));
     }
 
@@ -573,7 +573,7 @@ void ScreenCastStream::recordCursor()
         return;
     }
 
-    if (!m_cursor.viewport.contains(Cursors::self()->currentCursor()->pos()) && !m_cursor.visible) {
+    if (!m_cursor.viewport.contains(Cursor::self()->pos()) && !m_cursor.visible) {
         return;
     }
 
@@ -585,7 +585,7 @@ void ScreenCastStream::recordCursor()
     struct spa_buffer *spa_buffer = m_pendingBuffer->buffer;
     spa_buffer->datas[0].chunk->size = 0;
 
-    sendCursorData(Cursors::self()->currentCursor(),
+    sendCursorData(Cursor::self(),
                    (spa_meta_cursor *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Cursor, sizeof(spa_meta_cursor)));
     addHeader(spa_buffer);
     addDamage(spa_buffer, {});

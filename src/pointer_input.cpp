@@ -86,20 +86,19 @@ void PointerInputRedirection::init()
     InputDeviceHandler::init();
 
     if (!input()->hasPointer()) {
-        Cursors::self()->hideCursor();
+        Cursor::self()->hideCursor();
     }
     connect(input(), &InputRedirection::hasPointerChanged, this, []() {
         if (input()->hasPointer()) {
-            Cursors::self()->showCursor();
+            Cursor::self()->showCursor();
         } else {
-            Cursors::self()->hideCursor();
+            Cursor::self()->hideCursor();
         }
     });
 
-    connect(Cursors::self()->mouse(), &Cursor::rendered, m_cursor, &CursorImage::markAsRendered);
-    connect(m_cursor, &CursorImage::changed, Cursors::self()->mouse(), [this] {
-        Cursors::self()->mouse()->setSource(m_cursor->source());
-        updateCursorOutputs();
+    connect(Cursor::self(), &Cursor::rendered, m_cursor, &CursorImage::markAsRendered);
+    connect(m_cursor, &CursorImage::changed, Cursor::self(), [this] {
+        updateCursor();
     });
     Q_EMIT m_cursor->changed();
 
@@ -767,13 +766,16 @@ void PointerInputRedirection::updatePosition(const QPointF &pos)
     m_pos = p;
 
     workspace()->setActiveCursorOutput(m_pos);
-    updateCursorOutputs();
+    updateCursor();
 
     Q_EMIT input()->globalPointerChanged(m_pos);
 }
 
-void PointerInputRedirection::updateCursorOutputs()
+void PointerInputRedirection::updateCursor()
 {
+    Cursor::self()->setPos(m_pos);
+    Cursor::self()->setSource(m_cursor->source());
+
     KWaylandServer::PointerInterface *pointer = waylandServer()->seat()->pointer();
     if (!pointer) {
         return;
@@ -1038,10 +1040,9 @@ void CursorImage::removeWindowSelectionCursor()
 WaylandCursorImage::WaylandCursorImage(QObject *parent)
     : QObject(parent)
 {
-    Cursor *pointerCursor = Cursors::self()->mouse();
     updateCursorTheme();
 
-    connect(pointerCursor, &Cursor::themeChanged, this, &WaylandCursorImage::updateCursorTheme);
+    connect(Cursor::self(), &Cursor::themeChanged, this, &WaylandCursorImage::updateCursorTheme);
     connect(workspace(), &Workspace::outputsChanged, this, &WaylandCursorImage::updateCursorTheme);
 }
 
@@ -1052,7 +1053,7 @@ KXcursorTheme WaylandCursorImage::theme() const
 
 void WaylandCursorImage::updateCursorTheme()
 {
-    const Cursor *pointerCursor = Cursors::self()->mouse();
+    const Cursor *pointerCursor = Cursor::self();
     qreal targetDevicePixelRatio = 1;
 
     const auto outputs = workspace()->outputs();
@@ -1154,9 +1155,6 @@ InputRedirectionCursor::InputRedirectionCursor(QObject *parent)
     : Cursor(parent)
     , m_currentButtons(Qt::NoButton)
 {
-    Cursors::self()->setMouse(this);
-    connect(input(), &InputRedirection::globalPointerChanged,
-            this, &InputRedirectionCursor::slotPosChanged);
     connect(input(), &InputRedirection::pointerButtonStateChanged,
             this, &InputRedirectionCursor::slotPointerButtonChanged);
 #ifndef KCMRULES
@@ -1171,19 +1169,12 @@ InputRedirectionCursor::~InputRedirectionCursor()
 
 void InputRedirectionCursor::doSetPos()
 {
-    if (input()->supportsPointerWarping()) {
-        input()->warpPointer(currentPos());
-    }
-    slotPosChanged(input()->globalPointer());
-    Q_EMIT posChanged(currentPos());
-}
+    const QPoint oldPos = m_lastPosition;
+    m_lastPosition = currentPos();
 
-void InputRedirectionCursor::slotPosChanged(const QPointF &pos)
-{
-    const QPoint oldPos = currentPos();
-    updatePos(pos.toPoint());
-    Q_EMIT mouseChanged(pos.toPoint(), oldPos, m_currentButtons, m_currentButtons,
+    Q_EMIT mouseChanged(currentPos(), oldPos, m_currentButtons, m_currentButtons,
                         input()->keyboardModifiers(), input()->keyboardModifiers());
+    Q_EMIT posChanged(currentPos());
 }
 
 void InputRedirectionCursor::slotModifiersChanged(Qt::KeyboardModifiers mods, Qt::KeyboardModifiers oldMods)

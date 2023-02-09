@@ -1354,7 +1354,7 @@ Window *Workspace::findWindowToActivateOnDesktop(VirtualDesktop *desktop)
             }
 
             // port to hit test
-            if (window->frameGeometry().toRect().contains(Cursors::self()->mouse()->pos())) {
+            if (window->frameGeometry().toRect().contains(Cursor::self()->pos())) {
                 if (!window->isDesktop()) {
                     return window;
                 }
@@ -1886,7 +1886,7 @@ QString Workspace::supportInformation() const
     support.append(kwinApp()->outputBackend()->supportInformation());
     support.append(QStringLiteral("\n"));
 
-    const Cursor *cursor = Cursors::self()->mouse();
+    const Cursor *cursor = Cursor::self();
     support.append(QLatin1String("Cursor\n"));
     support.append(QLatin1String("======\n"));
     support.append(QLatin1String("themeName: ") + cursor->themeName() + QLatin1Char('\n'));
@@ -2400,16 +2400,16 @@ void Workspace::desktopResized()
 
     // restore cursor position
     const auto oldCursorOutput = std::find_if(m_oldScreenGeometries.cbegin(), m_oldScreenGeometries.cend(), [](const auto &geometry) {
-        return geometry.contains(Cursors::self()->mouse()->pos());
+        return geometry.contains(Cursor::self()->pos());
     });
     if (oldCursorOutput != m_oldScreenGeometries.cend()) {
         const Output *cursorOutput = oldCursorOutput.key();
         if (std::find(m_outputs.cbegin(), m_outputs.cend(), cursorOutput) != m_outputs.cend()) {
             const QRect oldGeometry = oldCursorOutput.value();
             const QRect newGeometry = cursorOutput->geometry();
-            const QPoint relativePosition = Cursors::self()->mouse()->pos() - oldGeometry.topLeft();
+            const QPoint relativePosition = Cursor::self()->pos() - oldGeometry.topLeft();
             const QPoint newRelativePosition(newGeometry.width() * relativePosition.x() / float(oldGeometry.width()), newGeometry.height() * relativePosition.y() / float(oldGeometry.height()));
-            Cursors::self()->mouse()->setPos(newGeometry.topLeft() + newRelativePosition);
+            Cursor::self()->setPos(newGeometry.topLeft() + newRelativePosition);
         }
     }
 
@@ -2766,7 +2766,7 @@ Output *Workspace::activeOutput() const
         if (m_activeCursorOutput) {
             return m_activeCursorOutput;
         } else {
-            return outputAt(Cursors::self()->mouse()->pos());
+            return outputAt(Cursor::self()->pos());
         }
     }
 

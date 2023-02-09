@@ -95,9 +95,9 @@ bool WindowSelector::activate(const QByteArray &cursorName)
 xcb_cursor_t WindowSelector::createCursor(const QByteArray &cursorName)
 {
     if (cursorName.isEmpty()) {
-        return Cursors::self()->mouse()->x11Cursor(Qt::CrossCursor);
+        return Cursor::self()->x11Cursor(Qt::CrossCursor);
     }
-    xcb_cursor_t cursor = Cursors::self()->mouse()->x11Cursor(cursorName);
+    xcb_cursor_t cursor = Cursor::self()->x11Cursor(cursorName);
     if (cursor != XCB_CURSOR_NONE) {
         return cursor;
     }
@@ -153,7 +153,7 @@ void WindowSelector::handleButtonRelease(xcb_button_t button, xcb_window_t windo
         if (m_callback) {
             selectWindowId(window);
         } else if (m_pointSelectionFallback) {
-            m_pointSelectionFallback(Cursors::self()->mouse()->pos());
+            m_pointSelectionFallback(Cursor::self()->pos());
         }
         release();
         return;
@@ -184,12 +184,12 @@ void WindowSelector::handleKeyPress(xcb_keycode_t keycode, uint16_t state)
         mx /= 10;
         my /= 10;
     }
-    Cursors::self()->mouse()->setPos(Cursors::self()->mouse()->pos() + QPoint(mx, my));
+    Cursor::self()->setPos(Cursor::self()->pos() + QPoint(mx, my));
     if (returnPressed) {
         if (m_callback) {
             selectWindowUnderPointer();
         } else if (m_pointSelectionFallback) {
-            m_pointSelectionFallback(Cursors::self()->mouse()->pos());
+            m_pointSelectionFallback(Cursor::self()->pos());
         }
     }
     if (returnPressed || escapePressed) {

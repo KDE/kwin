@@ -72,7 +72,7 @@ public:
     void removeWindowSelectionCursor();
 
     void updatePointerConstraints();
-    void updateCursorOutputs();
+    void updateCursor();
 
     void setEnableConstraints(bool set);
 
@@ -265,12 +265,12 @@ protected:
     void doSetPos() override;
 
 private Q_SLOTS:
-    void slotPosChanged(const QPointF &pos);
     void slotPointerButtonChanged();
     void slotModifiersChanged(Qt::KeyboardModifiers mods, Qt::KeyboardModifiers oldMods);
 
 private:
     Qt::MouseButtons m_currentButtons;
+    QPoint m_lastPosition;
 };
 
 }

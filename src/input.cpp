@@ -1929,23 +1929,20 @@ static KWaylandServer::SeatInterface *findSeat()
     return server->seat();
 }
 
-class SurfaceCursor : public Cursor
+class TabletCursorSource : public ImageCursorSource
 {
 public:
-    explicit SurfaceCursor(KWaylandServer::TabletToolV2Interface *tool)
-        : Cursor(tool)
-        , m_source(std::make_unique<ImageCursorSource>())
+    explicit TabletCursorSource(KWaylandServer::TabletToolV2Interface *tool)
     {
-        setSource(m_source.get());
         connect(tool, &KWaylandServer::TabletToolV2Interface::cursorChanged, this, [this](KWaylandServer::TabletCursorV2 *tcursor) {
             if (!tcursor || tcursor->enteredSerial() == 0) {
                 static WaylandCursorImage defaultCursor;
-                defaultCursor.loadThemeCursor(CursorShape(Qt::CrossCursor), m_source.get());
+                defaultCursor.loadThemeCursor(CursorShape(Qt::CrossCursor), this);
                 return;
             }
             auto cursorSurface = tcursor->surface();
             if (!cursorSurface) {
-                m_source->update(QImage(), QPoint());
+                update(QImage(), QPoint());
                 return;
             }
 
@@ -1964,7 +1961,7 @@ public:
         }
         m_surface = surface;
         m_hotspot = hotspot;
-        connect(m_surface, &KWaylandServer::SurfaceInterface::committed, this, &SurfaceCursor::refresh);
+        connect(m_surface, &KWaylandServer::SurfaceInterface::committed, this, &TabletCursorSource::refresh);
 
         refresh();
     }
@@ -1974,18 +1971,17 @@ private:
     {
         auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(m_surface->buffer());
         if (!buffer) {
-            m_source->update(QImage(), QPoint());
+            update(QImage(), QPoint());
             return;
         }
 
         QImage cursorImage;
         cursorImage = buffer->data().copy();
         cursorImage.setDevicePixelRatio(m_surface->bufferScale());
-        m_source->update(cursorImage, m_hotspot);
+        update(cursorImage, m_hotspot);
     }
 
     QPointer<KWaylandServer::SurfaceInterface> m_surface;
-    std::unique_ptr<ImageCursorSource> m_source;
     QPoint m_hotspot;
 };
 
@@ -2159,9 +2155,11 @@ public:
 
         TabletToolV2Interface *tool = tabletSeat->addTool(getType(tabletToolId), tabletToolId.m_serialId, tabletToolId.m_uniqueId, ifaceCapabilities, tabletToolId.deviceSysName);
 
-        const auto cursor = new SurfaceCursor(tool);
-        Cursors::self()->addCursor(cursor);
+        const auto cursor = new TabletCursorSource(tool);
         m_cursorByTool[tool] = cursor;
+        connect(tool, &QObject::destroyed, this, [this, tool]() {
+            delete m_cursorByTool.take(tool);
+        });
 
         return tool;
     }
@@ -2200,16 +2198,19 @@ public:
             return emulateTabletEvent(event);
         }
 
+        Cursor *cursor = Cursor::self();
+
         switch (event->type()) {
         case QEvent::TabletMove: {
             const auto pos = window->mapToLocal(event->globalPosF());
             tool->sendMotion(pos);
-            m_cursorByTool[tool]->setPos(event->globalPos());
+            cursor->setPos(event->globalPos());
+            cursor->setSource(m_cursorByTool[tool]);
             break;
         }
         case QEvent::TabletEnterProximity: {
-            const QPoint pos = event->globalPos();
-            m_cursorByTool[tool]->setPos(pos);
+            cursor->setPos(event->globalPos());
+            cursor->setSource(m_cursorByTool[tool]);
             tool->sendProximityIn(tablet);
             tool->sendMotion(window->mapToLocal(event->globalPosF()));
             break;
@@ -2218,9 +2219,9 @@ public:
             tool->sendProximityOut();
             break;
         case QEvent::TabletPress: {
-            const auto pos = window->mapToLocal(event->globalPosF());
-            tool->sendMotion(pos);
-            m_cursorByTool[tool]->setPos(event->globalPos());
+            cursor->setPos(event->globalPos());
+            cursor->setSource(m_cursorByTool[tool]);
+            tool->sendMotion(window->mapToLocal(event->globalPosF()));
             tool->sendDown();
             break;
         }
@@ -2349,7 +2350,7 @@ public:
         return true;
     }
 
-    QHash<KWaylandServer::TabletToolV2Interface *, Cursor *> m_cursorByTool;
+    QHash<KWaylandServer::TabletToolV2Interface *, TabletCursorSource *> m_cursorByTool;
 };
 
 static KWaylandServer::AbstractDropHandler *dropHandler(Window *window)

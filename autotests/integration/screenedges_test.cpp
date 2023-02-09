@@ -236,7 +236,7 @@ void ScreenEdgesTest::testPushBack()
     QFETCH(QPoint, trigger);
     Test::pointerMotion(trigger, 0);
     QVERIFY(spy.isEmpty());
-    QTEST(Cursors::self()->mouse()->pos(), "expected");
+    QTEST(Cursor::self()->pos(), "expected");
 }
 
 void ScreenEdgesTest::testClientEdge_data()

@@ -227,7 +227,7 @@ void Workspace::setActiveWindow(Window *window)
     }
     StackingUpdatesBlocker blocker(this);
     ++m_setActiveWindowRecursion;
-    updateFocusMousePosition(Cursors::self()->mouse()->pos());
+    updateFocusMousePosition(Cursor::self()->pos());
     if (m_activeWindow != nullptr) {
         // note that this may call setActiveWindow( NULL ), therefore the recursion counter
         m_activeWindow->setActive(false);
@@ -441,7 +441,7 @@ Window *Workspace::windowUnderMouse(Output *output) const
             continue;
         }
 
-        if (window->frameGeometry().contains(Cursors::self()->mouse()->pos())) {
+        if (window->frameGeometry().contains(Cursor::self()->pos())) {
             return window;
         }
     }

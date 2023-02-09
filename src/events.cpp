@@ -1164,7 +1164,7 @@ void X11Window::NETMoveResize(qreal x_root, qreal y_root, NET::Direction directi
         // move cursor to the provided position to prevent the window jumping there on first movement
         // the expectation is that the cursor is already at the provided position,
         // thus it's more a safety measurement
-        Cursors::self()->mouse()->setPos(QPointF(x_root, y_root));
+        Cursor::self()->setPos(QPointF(x_root, y_root));
         performMouseCommand(Options::MouseMove, QPointF(x_root, y_root));
     } else if (isInteractiveMoveResize() && direction == NET::MoveResizeCancel) {
         finishInteractiveMoveResize(true);
@@ -1197,11 +1197,11 @@ void X11Window::NETMoveResize(qreal x_root, qreal y_root, NET::Direction directi
         updateCursor();
     } else if (direction == NET::KeyboardMove) {
         // ignore mouse coordinates given in the message, mouse position is used by the moving algorithm
-        Cursors::self()->mouse()->setPos(frameGeometry().center());
+        Cursor::self()->setPos(frameGeometry().center());
         performMouseCommand(Options::MouseUnrestrictedMove, frameGeometry().center());
     } else if (direction == NET::KeyboardSize) {
         // ignore mouse coordinates given in the message, mouse position is used by the resizing algorithm
-        Cursors::self()->mouse()->setPos(frameGeometry().bottomRight());
+        Cursor::self()->setPos(frameGeometry().bottomRight());
         performMouseCommand(Options::MouseUnrestrictedResize, frameGeometry().bottomRight());
     }
 }
@@ -1241,7 +1241,7 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
         release(ReleaseReason::Destroyed);
         break;
     case XCB_UNMAP_NOTIFY: {
-        workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event
+        workspace()->updateFocusMousePosition(Cursor::self()->pos()); // may cause leave event
 
         // unmap notify might have been emitted due to a destroy notify
         // but unmap notify gets emitted before the destroy notify, nevertheless at this

@@ -2272,12 +2272,12 @@ void Window::setupWindowManagementInterface()
         closeWindow();
     });
     connect(w, &PlasmaWindowInterface::moveRequested, this, [this]() {
-        Cursors::self()->mouse()->setPos(frameGeometry().center());
-        performMouseCommand(Options::MouseMove, Cursors::self()->mouse()->pos());
+        Cursor::self()->setPos(frameGeometry().center());
+        performMouseCommand(Options::MouseMove, Cursor::self()->pos());
     });
     connect(w, &PlasmaWindowInterface::resizeRequested, this, [this]() {
-        Cursors::self()->mouse()->setPos(frameGeometry().bottomRight());
-        performMouseCommand(Options::MouseResize, Cursors::self()->mouse()->pos());
+        Cursor::self()->setPos(frameGeometry().bottomRight());
+        performMouseCommand(Options::MouseResize, Cursor::self()->pos());
     });
     connect(w, &PlasmaWindowInterface::fullscreenRequested, this, [this](bool set) {
         setFullScreen(set, false);
@@ -2926,7 +2926,7 @@ void Window::keyPressEvent(uint key_code)
     key_code = key_code & ~Qt::KeyboardModifierMask;
     int delta = is_control ? 1 : is_alt ? 32
                                         : 8;
-    QPointF pos = Cursors::self()->mouse()->pos();
+    QPointF pos = Cursor::self()->pos();
     switch (key_code) {
     case Qt::Key_Left:
         pos.rx() -= delta;
@@ -2955,7 +2955,7 @@ void Window::keyPressEvent(uint key_code)
     default:
         return;
     }
-    Cursors::self()->mouse()->setPos(pos);
+    Cursor::self()->setPos(pos);
 }
 
 QSizeF Window::resizeIncrements() const
@@ -3732,7 +3732,7 @@ void Window::setElectricBorderMaximizing(bool maximizing)
 {
     m_electricMaximizing = maximizing;
     if (maximizing) {
-        workspace()->outline()->show(quickTileGeometry(electricBorderMode(), Cursors::self()->mouse()->pos()).toRect(), moveResizeGeometry().toRect());
+        workspace()->outline()->show(quickTileGeometry(electricBorderMode(), Cursor::self()->pos()).toRect(), moveResizeGeometry().toRect());
     } else {
         workspace()->outline()->hide();
     }
@@ -3806,7 +3806,7 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
         return;
     }
 
-    workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event
+    workspace()->updateFocusMousePosition(Cursor::self()->pos()); // may cause leave event
 
     GeometryUpdatesBlocker blocker(this);
 
@@ -3843,7 +3843,7 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
 
             setMaximize(false, false);
 
-            moveResize(quickTileGeometry(mode, keyboard ? moveResizeGeometry().center() : Cursors::self()->mouse()->pos()));
+            moveResize(quickTileGeometry(mode, keyboard ? moveResizeGeometry().center() : Cursor::self()->pos()));
             // Store the mode change
             m_quickTileMode = mode;
         } else {
@@ -3857,7 +3857,7 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
         return;
     }
 
-    QPointF whichScreen = keyboard ? moveResizeGeometry().center() : Cursors::self()->mouse()->pos();
+    QPointF whichScreen = keyboard ? moveResizeGeometry().center() : Cursor::self()->pos();
     if (mode != QuickTileMode(QuickTileFlag::None)) {
         // If trying to tile to the side that the window is already tiled to move the window to the next
         // screen near the tile if it exists and swap the tile side, otherwise toggle the mode (set QuickTileFlag::None)
@@ -3917,8 +3917,8 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
         if (keyboard) {
             tile = workspace()->tileManager(output())->bestTileForPosition(moveResizeGeometry().center());
         } else {
-            Output *output = workspace()->outputAt(Cursors::self()->mouse()->pos());
-            tile = workspace()->tileManager(output)->bestTileForPosition(Cursors::self()->mouse()->pos());
+            Output *output = workspace()->outputAt(Cursor::self()->pos());
+            tile = workspace()->tileManager(output)->bestTileForPosition(Cursor::self()->pos());
         }
         setTile(tile);
     } else {

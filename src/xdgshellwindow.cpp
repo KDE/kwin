@@ -1641,7 +1641,7 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
         return;
     }
 
-    const QRectF clientArea = isElectricBorderMaximizing() ? workspace()->clientArea(MaximizeArea, this, Cursors::self()->mouse()->pos()) : workspace()->clientArea(MaximizeArea, this, moveResizeOutput());
+    const QRectF clientArea = isElectricBorderMaximizing() ? workspace()->clientArea(MaximizeArea, this, Cursor::self()->pos()) : workspace()->clientArea(MaximizeArea, this, moveResizeOutput());
 
     const MaximizeMode oldMode = m_requestedMaximizeMode;
     const QRectF oldGeometry = moveResizeGeometry();

@@ -144,27 +144,27 @@ void MoveResizeWindowTest::testMove()
     QCOMPARE(window->geometryRestore(), QRect());
 
     // send some key events, not going through input redirection
-    const QPoint cursorPos = Cursors::self()->mouse()->pos();
+    const QPoint cursorPos = Cursor::self()->pos();
     window->keyPressEvent(Qt::Key_Right);
-    window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
-    QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
+    window->updateInteractiveMoveResize(Cursor::self()->pos());
+    QCOMPARE(Cursor::self()->pos(), cursorPos + QPoint(8, 0));
     QEXPECT_FAIL("", "First event is ignored", Continue);
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     clientStepUserMovedResizedSpy.clear();
     windowStepUserMovedResizedSpy.clear();
 
     window->keyPressEvent(Qt::Key_Right);
-    window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
-    QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(16, 0));
+    window->updateInteractiveMoveResize(Cursor::self()->pos());
+    QCOMPARE(Cursor::self()->pos(), cursorPos + QPoint(16, 0));
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
     QCOMPARE(windowStepUserMovedResizedSpy.count(), 1);
 
     window->keyPressEvent(Qt::Key_Down | Qt::ALT);
-    window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
+    window->updateInteractiveMoveResize(Cursor::self()->pos());
     QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
     QCOMPARE(windowStepUserMovedResizedSpy.count(), 2);
     QCOMPARE(window->frameGeometry(), QRect(16, 32, 100, 50));
-    QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(16, 32));
+    QCOMPARE(Cursor::self()->pos(), cursorPos + QPoint(16, 32));
 
     // let's end
     QCOMPARE(clientFinishUserMovedResizedSpy.count(), 0);
@@ -240,10 +240,10 @@ void MoveResizeWindowTest::testResize()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
 
     // Trigger a change.
-    const QPoint cursorPos = Cursors::self()->mouse()->pos();
+    const QPoint cursorPos = Cursor::self()->pos();
     window->keyPressEvent(Qt::Key_Right);
-    window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
-    QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
+    window->updateInteractiveMoveResize(Cursor::self()->pos());
+    QCOMPARE(Cursor::self()->pos(), cursorPos + QPoint(8, 0));
 
     // The client should receive a configure event with the new size.
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -264,8 +264,8 @@ void MoveResizeWindowTest::testResize()
 
     // Go down.
     window->keyPressEvent(Qt::Key_Down);
-    window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
-    QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 8));
+    window->updateInteractiveMoveResize(Cursor::self()->pos());
+    QCOMPARE(Cursor::self()->pos(), cursorPos + QPoint(8, 8));
 
     // The client should receive another configure event.
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -621,7 +621,7 @@ void MoveResizeWindowTest::testNetMove()
 
     // let's move the cursor outside the window
     input()->pointer()->warp(workspace()->activeOutput()->geometry().center());
-    QVERIFY(!origGeo.contains(Cursors::self()->mouse()->pos()));
+    QVERIFY(!origGeo.contains(Cursor::self()->pos()));
 
     QSignalSpy moveStartSpy(window, &X11Window::clientStartUserMovedResized);
     QSignalSpy moveEndSpy(window, &X11Window::clientFinishUserMovedResized);
@@ -637,10 +637,10 @@ void MoveResizeWindowTest::testNetMove()
     QCOMPARE(workspace()->moveResizeWindow(), window);
     QVERIFY(window->isInteractiveMove());
     QCOMPARE(window->geometryRestore(), origGeo);
-    QCOMPARE(Cursors::self()->mouse()->pos(), origGeo.center());
+    QCOMPARE(Cursor::self()->pos(), origGeo.center());
 
     // let's move a step
-    input()->pointer()->warp(Cursors::self()->mouse()->pos() + QPoint(10, 10));
+    input()->pointer()->warp(Cursor::self()->pos() + QPoint(10, 10));
     QCOMPARE(moveStepSpy.count(), 1);
     QCOMPARE(moveStepSpy.first().last(), origGeo.translated(10, 10));
 

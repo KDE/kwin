@@ -23,12 +23,12 @@ PlatformCursor::~PlatformCursor() = default;
 
 QPoint PlatformCursor::pos() const
 {
-    return Cursors::self()->mouse()->pos();
+    return Cursor::self()->pos();
 }
 
 void PlatformCursor::setPos(const QPoint &pos)
 {
-    Cursors::self()->mouse()->setPos(pos);
+    Cursor::self()->setPos(pos);
 }
 
 void PlatformCursor::changeCursor(QCursor *windowCursor, QWindow *window)

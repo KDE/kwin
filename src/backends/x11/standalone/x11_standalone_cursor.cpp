@@ -26,7 +26,6 @@ X11Cursor::X11Cursor(QObject *parent, bool xInputSupport)
     , m_hasXInput(xInputSupport)
     , m_needsPoll(false)
 {
-    Cursors::self()->setMouse(this);
     m_resetTimeStampTimer.setSingleShot(true);
     connect(&m_resetTimeStampTimer, &QTimer::timeout, this, &X11Cursor::resetTimeStamp);
     // TODO: How often do we really need to poll?

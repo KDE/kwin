@@ -119,26 +119,26 @@ std::pair<Window *, std::unique_ptr<KWayland::Client::Surface>> TouchInputTest::
 
 void TouchInputTest::testTouchHidesCursor()
 {
-    QCOMPARE(Cursors::self()->isCursorHidden(), false);
+    QCOMPARE(Cursor::self()->isCursorHidden(), false);
     quint32 timestamp = 1;
     Test::touchDown(1, QPointF(125, 125), timestamp++);
-    QCOMPARE(Cursors::self()->isCursorHidden(), true);
+    QCOMPARE(Cursor::self()->isCursorHidden(), true);
     Test::touchDown(2, QPointF(130, 125), timestamp++);
     Test::touchUp(2, timestamp++);
     Test::touchUp(1, timestamp++);
 
     // now a mouse event should show the cursor again
     Test::pointerMotion(QPointF(0, 0), timestamp++);
-    QCOMPARE(Cursors::self()->isCursorHidden(), false);
+    QCOMPARE(Cursor::self()->isCursorHidden(), false);
 
     // touch should hide again
     Test::touchDown(1, QPointF(125, 125), timestamp++);
     Test::touchUp(1, timestamp++);
-    QCOMPARE(Cursors::self()->isCursorHidden(), true);
+    QCOMPARE(Cursor::self()->isCursorHidden(), true);
 
     // wheel should also show
     Test::pointerAxisVertical(1.0, timestamp++);
-    QCOMPARE(Cursors::self()->isCursorHidden(), false);
+    QCOMPARE(Cursor::self()->isCursorHidden(), false);
 }
 
 void TouchInputTest::testMultipleTouchPoints_data()

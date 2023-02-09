@@ -176,7 +176,7 @@ void TestWindowSelection::testSelectOnWindowKeyboard()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QVERIFY(keyboardEnteredSpy.wait());
-    QVERIFY(!window->frameGeometry().contains(KWin::Cursors::self()->mouse()->pos()));
+    QVERIFY(!window->frameGeometry().contains(KWin::Cursor::self()->pos()));
 
     Window *selectedWindow = nullptr;
     auto callback = [&selectedWindow](Window *t) {
@@ -200,16 +200,16 @@ void TestWindowSelection::testSelectOnWindowKeyboard()
         Test::keyboardKeyPressed(key, timestamp++);
         Test::keyboardKeyReleased(key, timestamp++);
     };
-    while (KWin::Cursors::self()->mouse()->pos().x() >= window->frameGeometry().x() + window->frameGeometry().width()) {
+    while (KWin::Cursor::self()->pos().x() >= window->frameGeometry().x() + window->frameGeometry().width()) {
         keyPress(KEY_LEFT);
     }
-    while (KWin::Cursors::self()->mouse()->pos().x() <= window->frameGeometry().x()) {
+    while (KWin::Cursor::self()->pos().x() <= window->frameGeometry().x()) {
         keyPress(KEY_RIGHT);
     }
-    while (KWin::Cursors::self()->mouse()->pos().y() <= window->frameGeometry().y()) {
+    while (KWin::Cursor::self()->pos().y() <= window->frameGeometry().y()) {
         keyPress(KEY_DOWN);
     }
-    while (KWin::Cursors::self()->mouse()->pos().y() >= window->frameGeometry().y() + window->frameGeometry().height()) {
+    while (KWin::Cursor::self()->pos().y() >= window->frameGeometry().y() + window->frameGeometry().height()) {
         keyPress(KEY_UP);
     }
     QFETCH(qint32, key);

@@ -241,7 +241,7 @@ void TestPlacement::testPlaceUnderMouse()
     workspace()->slotReconfigure();
 
     KWin::input()->pointer()->warp(QPoint(200, 300));
-    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), QPoint(200, 300));
+    QCOMPARE(KWin::Cursor::self()->pos(), QPoint(200, 300));
 
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));

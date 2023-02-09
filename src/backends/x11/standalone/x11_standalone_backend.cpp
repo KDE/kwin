@@ -140,7 +140,7 @@ bool X11StandaloneBackend::initialize()
     if (Xcb::Extensions::self()->isRandrAvailable()) {
         m_randrEventFilter = std::make_unique<XrandrEventFilter>(this);
     }
-    connect(Cursors::self(), &Cursors::hiddenChanged, this, &X11StandaloneBackend::updateCursor);
+    connect(Cursor::self(), &Cursor::hiddenChanged, this, &X11StandaloneBackend::updateCursor);
     return true;
 }
 
@@ -213,7 +213,7 @@ PlatformCursorImage X11StandaloneBackend::cursorImage() const
 
 void X11StandaloneBackend::updateCursor()
 {
-    if (Cursors::self()->isCursorHidden()) {
+    if (Cursor::self()->isCursorHidden()) {
         xcb_xfixes_hide_cursor(kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
     } else {
         xcb_xfixes_show_cursor(kwinApp()->x11Connection(), kwinApp()->x11RootWindow());

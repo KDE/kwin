@@ -41,17 +41,17 @@ void PlatformCursorTest::testPos()
     // that is QCursor should work just like KWin::Cursor
 
     // cursor should be centered on screen
-    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(639, 511));
-    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(639, 511));
+    QCOMPARE(Cursor::self()->pos(), QPoint(639, 511));
+    QCOMPARE(Cursor::self()->pos(), QPoint(639, 511));
 
     // let's set the pos through QCursor API
     QCursor::setPos(QPoint(10, 10));
-    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(10, 10));
+    QCOMPARE(Cursor::self()->pos(), QPoint(10, 10));
     QCOMPARE(QCursor::pos(), QPoint(10, 10));
 
     // and let's set the pos through Cursor API
     QCursor::setPos(QPoint(20, 20));
-    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(20, 20));
+    QCOMPARE(Cursor::self()->pos(), QPoint(20, 20));
     QCOMPARE(QCursor::pos(), QPoint(20, 20));
 }
 

@@ -44,7 +44,7 @@ void HideCursorSpy::showCursor()
         return;
     }
     m_cursorHidden = false;
-    Cursors::self()->showCursor();
+    Cursor::self()->showCursor();
 }
 
 void HideCursorSpy::hideCursor()
@@ -53,7 +53,7 @@ void HideCursorSpy::hideCursor()
         return;
     }
     m_cursorHidden = true;
-    Cursors::self()->hideCursor();
+    Cursor::self()->hideCursor();
 }
 
 }

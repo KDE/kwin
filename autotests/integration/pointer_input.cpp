@@ -53,7 +53,7 @@ static PlatformCursorImage loadReferenceThemeCursor_helper(const KXcursorTheme &
 
 static PlatformCursorImage loadReferenceThemeCursor(const QByteArray &name)
 {
-    const Cursor *pointerCursor = Cursors::self()->mouse();
+    const Cursor *pointerCursor = Cursor::self();
 
     const KXcursorTheme theme(pointerCursor->themeName(), pointerCursor->themeSize(), kwinApp()->devicePixelRatio());
     if (theme.isEmpty()) {
@@ -285,7 +285,7 @@ void PointerInputTest::testWarpingDuringFilter()
     QVERIFY(window);
 
     QCOMPARE(window->pos(), QPoint(0, 0));
-    QVERIFY(window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
+    QVERIFY(window->frameGeometry().contains(Cursor::self()->pos()));
 
     // is WindowView effect for top left screen edge loaded
     QVERIFY(static_cast<EffectsHandlerImpl *>(effects)->isEffectLoaded("windowview"));
@@ -293,7 +293,7 @@ void PointerInputTest::testWarpingDuringFilter()
     quint32 timestamp = 0;
     Test::pointerMotion(QPoint(0, 0), timestamp++);
     // screen edges push back
-    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(1, 1));
+    QCOMPARE(Cursor::self()->pos(), QPoint(1, 1));
     QVERIFY(movedSpy.wait());
     QCOMPARE(movedSpy.count(), 2);
     QCOMPARE(movedSpy.at(0).first().toPoint(), QPoint(0, 0));
@@ -365,13 +365,13 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     QVERIFY(windowAddedSpy.wait());
     Window *window = workspace()->activeWindow();
     QVERIFY(window);
-    QVERIFY(window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
+    QVERIFY(window->frameGeometry().contains(Cursor::self()->pos()));
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
 
     // move the cursor to the second screen
     input()->pointer()->warp(QPointF(1500, 300));
-    QVERIFY(!window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
+    QVERIFY(!window->frameGeometry().contains(Cursor::self()->pos()));
     QVERIFY(leftSpy.wait());
 
     // now let's remove the screen containing the cursor
@@ -381,8 +381,8 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     QCOMPARE(workspace()->outputs().count(), 1);
 
     // this should have warped the cursor
-    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(639, 511));
-    QVERIFY(window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
+    QCOMPARE(Cursor::self()->pos(), QPoint(639, 511));
+    QVERIFY(window->frameGeometry().contains(Cursor::self()->pos()));
 
     // and we should get an enter event
     QVERIFY(enteredSpy.wait());
@@ -1126,7 +1126,7 @@ void PointerInputTest::testCursorImage()
     QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
 
     // move cursor somewhere the new window won't open
-    auto cursor = Cursors::self()->mouse();
+    auto cursor = Cursor::self();
     input()->pointer()->warp(QPointF(800, 800));
     auto p = input()->pointer();
     // at the moment it should be the fallback cursor
@@ -1223,7 +1223,7 @@ void PointerInputTest::testEffectOverrideCursorImage()
 
     // we need a pointer to get the enter event and set a cursor
     auto pointer = m_seat->createPointer(m_seat);
-    auto cursor = Cursors::self()->mouse();
+    auto cursor = Cursor::self();
     QVERIFY(pointer);
     QVERIFY(pointer->isValid());
     QSignalSpy enteredSpy(pointer, &KWayland::Client::Pointer::entered);
@@ -1481,8 +1481,8 @@ void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
     auto popupWindow = windowAddedSpy.last().first().value<Window *>();
     QVERIFY(popupWindow);
     QVERIFY(popupWindow != window);
-    QVERIFY(window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
-    QVERIFY(popupWindow->frameGeometry().contains(Cursors::self()->mouse()->pos()));
+    QVERIFY(window->frameGeometry().contains(Cursor::self()->pos()));
+    QVERIFY(popupWindow->frameGeometry().contains(Cursor::self()->pos()));
     QVERIFY(!leftSpy.wait());
 
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
@@ -1571,14 +1571,14 @@ void PointerInputTest::testConfineToScreenGeometry()
     // move pointer to initial position
     QFETCH(QPoint, startPos);
     input()->pointer()->warp(startPos);
-    QCOMPARE(Cursors::self()->mouse()->pos(), startPos);
+    QCOMPARE(Cursor::self()->pos(), startPos);
 
     // perform movement
     QFETCH(QPoint, targetPos);
     Test::pointerMotion(targetPos, 1);
 
     QFETCH(QPoint, expectedPos);
-    QCOMPARE(Cursors::self()->mouse()->pos(), expectedPos);
+    QCOMPARE(Cursor::self()->pos(), expectedPos);
 }
 
 void PointerInputTest::testResizeCursor_data()
@@ -1752,27 +1752,27 @@ void PointerInputTest::testMoveCursor()
 
 void PointerInputTest::testHideShowCursor()
 {
-    QCOMPARE(Cursors::self()->isCursorHidden(), false);
-    Cursors::self()->hideCursor();
-    QCOMPARE(Cursors::self()->isCursorHidden(), true);
-    Cursors::self()->showCursor();
-    QCOMPARE(Cursors::self()->isCursorHidden(), false);
+    QCOMPARE(Cursor::self()->isCursorHidden(), false);
+    Cursor::self()->hideCursor();
+    QCOMPARE(Cursor::self()->isCursorHidden(), true);
+    Cursor::self()->showCursor();
+    QCOMPARE(Cursor::self()->isCursorHidden(), false);
 
-    Cursors::self()->hideCursor();
-    QCOMPARE(Cursors::self()->isCursorHidden(), true);
-    Cursors::self()->hideCursor();
-    Cursors::self()->hideCursor();
-    Cursors::self()->hideCursor();
-    QCOMPARE(Cursors::self()->isCursorHidden(), true);
+    Cursor::self()->hideCursor();
+    QCOMPARE(Cursor::self()->isCursorHidden(), true);
+    Cursor::self()->hideCursor();
+    Cursor::self()->hideCursor();
+    Cursor::self()->hideCursor();
+    QCOMPARE(Cursor::self()->isCursorHidden(), true);
 
-    Cursors::self()->showCursor();
-    QCOMPARE(Cursors::self()->isCursorHidden(), true);
-    Cursors::self()->showCursor();
-    QCOMPARE(Cursors::self()->isCursorHidden(), true);
-    Cursors::self()->showCursor();
-    QCOMPARE(Cursors::self()->isCursorHidden(), true);
-    Cursors::self()->showCursor();
-    QCOMPARE(Cursors::self()->isCursorHidden(), false);
+    Cursor::self()->showCursor();
+    QCOMPARE(Cursor::self()->isCursorHidden(), true);
+    Cursor::self()->showCursor();
+    QCOMPARE(Cursor::self()->isCursorHidden(), true);
+    Cursor::self()->showCursor();
+    QCOMPARE(Cursor::self()->isCursorHidden(), true);
+    Cursor::self()->showCursor();
+    QCOMPARE(Cursor::self()->isCursorHidden(), false);
 }
 
 void PointerInputTest::testDefaultInputRegion()

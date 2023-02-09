@@ -97,8 +97,15 @@ class KWIN_EXPORT Cursor : public QObject
 {
     Q_OBJECT
 public:
-    Cursor(QObject *parent);
+    explicit Cursor(QObject *parent = nullptr);
     ~Cursor() override;
+
+    static Cursor *self();
+
+    void hideCursor();
+    void showCursor();
+    bool isCursorHidden() const;
+
     void startMousePolling();
     void stopMousePolling();
     /**
@@ -203,6 +210,7 @@ Q_SIGNALS:
      * @see stopCursorTracking
      */
     void cursorChanged();
+    void hiddenChanged();
     void themeChanged();
     void rendered(std::chrono::milliseconds timestamp);
 
@@ -257,6 +265,9 @@ private Q_SLOTS:
 private:
     void updateTheme(const QString &name, int size);
     void loadThemeFromKConfig();
+
+    static Cursor *s_self;
+    int m_cursorHideCounter = 0;
     CursorSource *m_source = nullptr;
     QHash<QByteArray, xcb_cursor_t> m_cursors;
     QPoint m_pos;
@@ -264,56 +275,6 @@ private:
     int m_cursorTrackingCounter;
     QString m_themeName;
     int m_themeSize;
-};
-
-class KWIN_EXPORT Cursors : public QObject
-{
-    Q_OBJECT
-public:
-    Cursor *mouse() const
-    {
-        return m_mouse;
-    }
-
-    void setMouse(Cursor *mouse)
-    {
-        if (m_mouse != mouse) {
-            m_mouse = mouse;
-
-            addCursor(m_mouse);
-            setCurrentCursor(m_mouse);
-        }
-    }
-
-    void addCursor(Cursor *cursor);
-    void removeCursor(Cursor *cursor);
-
-    ///@returns the last cursor that moved
-    Cursor *currentCursor() const
-    {
-        return m_currentCursor;
-    }
-
-    void hideCursor();
-    void showCursor();
-    bool isCursorHidden() const;
-
-    static Cursors *self();
-
-Q_SIGNALS:
-    void currentCursorChanged(Cursor *cursor);
-    void hiddenChanged();
-    void positionChanged(Cursor *cursor, const QPoint &position);
-
-private:
-    void emitCurrentCursorChanged();
-    void setCurrentCursor(Cursor *cursor);
-
-    static Cursors *s_self;
-    Cursor *m_currentCursor = nullptr;
-    Cursor *m_mouse = nullptr;
-    QVector<Cursor *> m_cursors;
-    int m_cursorHideCounter = 0;
 };
 
 class InputConfig

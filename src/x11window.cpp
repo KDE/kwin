@@ -281,7 +281,7 @@ X11Window::X11Window()
 
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         connect(this, &X11Window::moveResizeCursorChanged, this, [this](CursorShape cursor) {
-            xcb_cursor_t nativeCursor = Cursors::self()->mouse()->x11Cursor(cursor);
+            xcb_cursor_t nativeCursor = Cursor::self()->x11Cursor(cursor);
             m_frame.defineCursor(nativeCursor);
             if (m_decoInputExtent.isValid()) {
                 m_decoInputExtent.defineCursor(nativeCursor);
@@ -1054,7 +1054,7 @@ void X11Window::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colorma
         0, // back_pixmap
         0, // border_pixel
         colormap, // colormap
-        Cursors::self()->mouse()->x11Cursor(Qt::ArrowCursor)};
+        Cursor::self()->x11Cursor(Qt::ArrowCursor)};
 
     const uint32_t cw_mask = XCB_CW_BACK_PIXMAP
         | XCB_CW_BORDER_PIXEL
@@ -4293,7 +4293,7 @@ void X11Window::maximize(MaximizeMode mode)
 
     QRectF clientArea;
     if (isElectricBorderMaximizing()) {
-        clientArea = workspace()->clientArea(MaximizeArea, this, Cursors::self()->mouse()->pos());
+        clientArea = workspace()->clientArea(MaximizeArea, this, Cursor::self()->pos());
     } else {
         clientArea = workspace()->clientArea(MaximizeArea, this, moveResizeGeometry().center());
     }
@@ -4486,7 +4486,7 @@ void X11Window::maximize(MaximizeMode mode)
         r.setSize(constrainFrameSize(r.size(), SizeModeMax));
         if (r.size() != clientArea.size()) { // to avoid off-by-one errors...
             if (isElectricBorderMaximizing() && r.width() < clientArea.width()) {
-                r.moveLeft(std::max(clientArea.left(), Cursors::self()->mouse()->pos().x() - r.width() / 2));
+                r.moveLeft(std::max(clientArea.left(), Cursor::self()->pos().x() - r.width() / 2));
                 r.moveRight(std::min(clientArea.right(), r.right()));
             } else {
                 r.moveCenter(clientArea.center());
@@ -4574,7 +4574,7 @@ void X11Window::setFullScreen(bool set, bool user)
     setShade(ShadeNone);
 
     if (wasFullscreen) {
-        workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event
+        workspace()->updateFocusMousePosition(Cursor::self()->pos()); // may cause leave event
     } else {
         setFullscreenGeometryRestore(moveResizeGeometry());
     }
@@ -4668,7 +4668,7 @@ bool X11Window::doStartInteractiveMoveResize()
         kwinApp()->updateXTime();
         const xcb_grab_pointer_cookie_t cookie = xcb_grab_pointer_unchecked(kwinApp()->x11Connection(), false, m_moveResizeGrabWindow,
                                                                             XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW,
-                                                                            XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, m_moveResizeGrabWindow, Cursors::self()->mouse()->x11Cursor(cursor()), xTime());
+                                                                            XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, m_moveResizeGrabWindow, Cursor::self()->x11Cursor(cursor()), xTime());
         UniqueCPtr<xcb_grab_pointer_reply_t> pointerGrab(xcb_grab_pointer_reply(kwinApp()->x11Connection(), cookie, nullptr));
         if (pointerGrab && pointerGrab->status == XCB_GRAB_STATUS_SUCCESS) {
             has_grab = true;

@@ -50,7 +50,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject *parent)
     connect(ws, &Workspace::geometryChanged, this, &WorkspaceWrapper::virtualScreenSizeChanged);
     connect(ws, &Workspace::geometryChanged, this, &WorkspaceWrapper::virtualScreenGeometryChanged);
     connect(ws, &Workspace::outputsChanged, this, &WorkspaceWrapper::screensChanged);
-    connect(Cursors::self()->mouse(), &Cursor::posChanged, this, &WorkspaceWrapper::cursorPosChanged);
+    connect(Cursor::self(), &Cursor::posChanged, this, &WorkspaceWrapper::cursorPosChanged);
 }
 
 VirtualDesktop *WorkspaceWrapper::currentDesktop() const
@@ -108,7 +108,7 @@ QStringList WorkspaceWrapper::activityList() const
 
 QPoint WorkspaceWrapper::cursorPos() const
 {
-    return Cursors::self()->mouse()->pos();
+    return Cursor::self()->pos();
 }
 
 #define SLOTWRAPPER(name)          \

@@ -339,31 +339,31 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
 
     workspace()->performWindowOperation(window, Options::UnrestrictedMoveOp);
     QCOMPARE(window, workspace()->moveResizeWindow());
-    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(50, 25));
+    QCOMPARE(Cursor::self()->pos(), QPoint(50, 25));
 
     QFETCH(QPoint, targetPos);
     quint32 timestamp = 1;
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
-    while (Cursors::self()->mouse()->pos().x() > targetPos.x()) {
+    while (Cursor::self()->pos().x() > targetPos.x()) {
         Test::keyboardKeyPressed(KEY_LEFT, timestamp++);
         Test::keyboardKeyReleased(KEY_LEFT, timestamp++);
     }
-    while (Cursors::self()->mouse()->pos().x() < targetPos.x()) {
+    while (Cursor::self()->pos().x() < targetPos.x()) {
         Test::keyboardKeyPressed(KEY_RIGHT, timestamp++);
         Test::keyboardKeyReleased(KEY_RIGHT, timestamp++);
     }
-    while (Cursors::self()->mouse()->pos().y() < targetPos.y()) {
+    while (Cursor::self()->pos().y() < targetPos.y()) {
         Test::keyboardKeyPressed(KEY_DOWN, timestamp++);
         Test::keyboardKeyReleased(KEY_DOWN, timestamp++);
     }
-    while (Cursors::self()->mouse()->pos().y() > targetPos.y()) {
+    while (Cursor::self()->pos().y() > targetPos.y()) {
         Test::keyboardKeyPressed(KEY_UP, timestamp++);
         Test::keyboardKeyReleased(KEY_UP, timestamp++);
     }
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_ENTER, timestamp++);
     Test::keyboardKeyReleased(KEY_ENTER, timestamp++);
-    QCOMPARE(Cursors::self()->mouse()->pos(), targetPos);
+    QCOMPARE(Cursor::self()->pos(), targetPos);
     QVERIFY(!workspace()->moveResizeWindow());
 
     QCOMPARE(quickTileChangedSpy.count(), 1);
@@ -408,7 +408,7 @@ void QuickTilingTest::testQuickTilingPointerMove()
     QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
     workspace()->performWindowOperation(window, Options::UnrestrictedMoveOp);
     QCOMPARE(window, workspace()->moveResizeWindow());
-    QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(50, 25));
+    QCOMPARE(Cursor::self()->pos(), QPoint(50, 25));
 
     QFETCH(QPoint, pointerPos);
     QFETCH(QSize, tileSize);

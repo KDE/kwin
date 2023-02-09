@@ -322,7 +322,7 @@ void Xwayland::handleXwaylandReady()
             this, &Xwayland::handleSelectionFailedToClaimOwnership);
     m_selectionOwner->claim(true);
 
-    Cursor *mouseCursor = Cursors::self()->mouse();
+    Cursor *mouseCursor = Cursor::self();
     if (mouseCursor) {
         Xcb::defineCursor(kwinApp()->x11RootWindow(), mouseCursor->x11Cursor(Qt::ArrowCursor));
     }

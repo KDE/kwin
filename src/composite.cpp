@@ -448,10 +448,10 @@ void Compositor::addOutput(Output *output)
     cursorLayer->setSuperlayer(workspaceLayer);
 
     auto updateCursorLayer = [output, cursorLayer]() {
-        const Cursor *cursor = Cursors::self()->currentCursor();
+        const Cursor *cursor = Cursor::self();
         const QRect layerRect = output->mapFromGlobal(cursor->geometry());
         bool usesHardwareCursor = false;
-        if (!Cursors::self()->isCursorHidden()) {
+        if (!cursor->isCursorHidden()) {
             usesHardwareCursor = output->setCursor(cursor->source()) && output->moveCursor(layerRect.topLeft());
         } else {
             usesHardwareCursor = output->setCursor(nullptr);
@@ -461,7 +461,7 @@ void Compositor::addOutput(Output *output)
         cursorLayer->addRepaintFull();
     };
     auto moveCursorLayer = [output, cursorLayer]() {
-        const Cursor *cursor = Cursors::self()->currentCursor();
+        const Cursor *cursor = Cursor::self();
         const QRect layerRect = output->mapFromGlobal(cursor->geometry());
         const bool usesHardwareCursor = output->moveCursor(layerRect.topLeft());
         cursorLayer->setVisible(cursor->isOnOutput(output) && !usesHardwareCursor);
@@ -470,9 +470,9 @@ void Compositor::addOutput(Output *output)
     };
     updateCursorLayer();
     connect(output, &Output::geometryChanged, cursorLayer, updateCursorLayer);
-    connect(Cursors::self(), &Cursors::currentCursorChanged, cursorLayer, updateCursorLayer);
-    connect(Cursors::self(), &Cursors::hiddenChanged, cursorLayer, updateCursorLayer);
-    connect(Cursors::self(), &Cursors::positionChanged, cursorLayer, moveCursorLayer);
+    connect(Cursor::self(), &Cursor::cursorChanged, cursorLayer, updateCursorLayer);
+    connect(Cursor::self(), &Cursor::hiddenChanged, cursorLayer, updateCursorLayer);
+    connect(Cursor::self(), &Cursor::posChanged, cursorLayer, moveCursorLayer);
 
     addSuperLayer(workspaceLayer);
 }
@@ -700,8 +700,8 @@ void Compositor::composite(RenderLoop *renderLoop)
         const std::chrono::milliseconds frameTime =
             std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());
 
-        if (!Cursors::self()->isCursorHidden()) {
-            Cursor *cursor = Cursors::self()->currentCursor();
+        if (!Cursor::self()->isCursorHidden()) {
+            Cursor *cursor = Cursor::self();
             if (cursor->geometry().intersects(output->geometry())) {
                 cursor->markAsRendered(frameTime);
             }

@@ -343,8 +343,8 @@ void TilesTest::resizeTileFromWindow()
     // Trigger a change.
     QPoint cursorPos = window->frameGeometry().bottomRight().toPoint();
     input()->pointer()->warp(cursorPos + QPoint(8, 0));
-    window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
-    QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
+    window->updateInteractiveMoveResize(Cursor::self()->pos());
+    QCOMPARE(Cursor::self()->pos(), cursorPos + QPoint(8, 0));
 
     // The client should receive a configure event with the new size.
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -385,8 +385,8 @@ void TilesTest::resizeTileFromWindow()
     // Trigger a change.
     cursorPos = window->frameGeometry().bottomRight().toPoint();
     input()->pointer()->warp(cursorPos + QPoint(0, 8));
-    window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
-    QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(0, 8));
+    window->updateInteractiveMoveResize(Cursor::self()->pos());
+    QCOMPARE(Cursor::self()->pos(), cursorPos + QPoint(0, 8));
 
     // The client should receive a configure event with the new size.
     QVERIFY(surfaceConfigureRequestedSpy.wait());

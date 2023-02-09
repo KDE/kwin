@@ -27,7 +27,7 @@ void CursorDelegateQPainter::paint(RenderTarget *renderTarget, const QRegion &re
         return;
     }
 
-    const QSize bufferSize = Cursors::self()->currentCursor()->rect().size() * renderTarget->devicePixelRatio();
+    const QSize bufferSize = Cursor::self()->rect().size() * renderTarget->devicePixelRatio();
     if (m_buffer.size() != bufferSize) {
         m_buffer = QImage(bufferSize, QImage::Format_ARGB32_Premultiplied);
     }

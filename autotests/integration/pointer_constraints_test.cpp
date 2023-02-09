@@ -132,7 +132,7 @@ void TestPointerConstraints::testConfinedPointer()
     if (window->pos() == QPoint(0, 0)) {
         window->move(QPoint(1, 1));
     }
-    QVERIFY(!window->frameGeometry().contains(KWin::Cursors::self()->mouse()->pos()));
+    QVERIFY(!window->frameGeometry().contains(KWin::Cursor::self()->pos()));
 
     // now let's confine
     QCOMPARE(input()->pointer()->isConstrained(), false);
@@ -144,24 +144,24 @@ void TestPointerConstraints::testConfinedPointer()
     QSignalSpy pointerPositionChangedSpy(input(), &InputRedirection::globalPointerChanged);
     KWin::input()->pointer()->warp(QPoint(512, 512));
     QVERIFY(pointerPositionChangedSpy.isEmpty());
-    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), window->frameGeometry().center());
+    QCOMPARE(KWin::Cursor::self()->pos(), window->frameGeometry().center());
 
     // TODO: test relative motion
     QFETCH(PointerFunc, positionFunction);
     const QPointF position = positionFunction(window->frameGeometry());
     KWin::input()->pointer()->warp(position);
     QCOMPARE(pointerPositionChangedSpy.count(), 1);
-    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), position);
+    QCOMPARE(KWin::Cursor::self()->pos(), position);
     // moving one to right should not be possible
     QFETCH(int, xOffset);
     KWin::input()->pointer()->warp(position + QPoint(xOffset, 0));
     QCOMPARE(pointerPositionChangedSpy.count(), 1);
-    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), position);
+    QCOMPARE(KWin::Cursor::self()->pos(), position);
     // moving one to bottom should not be possible
     QFETCH(int, yOffset);
     KWin::input()->pointer()->warp(position + QPoint(0, yOffset));
     QCOMPARE(pointerPositionChangedSpy.count(), 1);
-    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), position);
+    QCOMPARE(KWin::Cursor::self()->pos(), position);
 
     // modifier + click should be ignored
     // first ensure the settings are ok
@@ -281,19 +281,19 @@ void TestPointerConstraints::testLockedPointer()
     // now map the window
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);
     QVERIFY(window);
-    QVERIFY(!window->frameGeometry().contains(KWin::Cursors::self()->mouse()->pos()));
+    QVERIFY(!window->frameGeometry().contains(KWin::Cursor::self()->pos()));
 
     // now let's lock
     QCOMPARE(input()->pointer()->isConstrained(), false);
     KWin::input()->pointer()->warp(window->frameGeometry().center());
-    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), window->frameGeometry().center());
+    QCOMPARE(KWin::Cursor::self()->pos(), window->frameGeometry().center());
     QCOMPARE(input()->pointer()->isConstrained(), true);
     QVERIFY(lockedSpy.wait());
 
     // try to move the pointer
     // TODO: add relative pointer
     KWin::input()->pointer()->warp(window->frameGeometry().center() + QPoint(1, 1));
-    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), window->frameGeometry().center());
+    QCOMPARE(KWin::Cursor::self()->pos(), window->frameGeometry().center());
 
     // deactivate the window, this should unlock
     workspace()->activateWindow(nullptr);
@@ -302,7 +302,7 @@ void TestPointerConstraints::testLockedPointer()
 
     // moving cursor should be allowed again
     KWin::input()->pointer()->warp(window->frameGeometry().center() + QPoint(1, 1));
-    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), window->frameGeometry().center() + QPoint(1, 1));
+    QCOMPARE(KWin::Cursor::self()->pos(), window->frameGeometry().center() + QPoint(1, 1));
 
     lockedPointer.reset(Test::waylandPointerConstraints()->lockPointer(surface.get(), pointer.get(), nullptr, KWayland::Client::PointerConstraints::LifeTime::Persistent));
     QSignalSpy lockedSpy2(lockedPointer.get(), &KWayland::Client::LockedPointer::locked);
@@ -315,7 +315,7 @@ void TestPointerConstraints::testLockedPointer()
     // try to move the pointer
     QCOMPARE(input()->pointer()->isConstrained(), true);
     KWin::input()->pointer()->warp(window->frameGeometry().center());
-    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), window->frameGeometry().center() + QPoint(1, 1));
+    QCOMPARE(KWin::Cursor::self()->pos(), window->frameGeometry().center() + QPoint(1, 1));
 
     // delete pointer lock
     lockedPointer.reset(nullptr);
@@ -327,7 +327,7 @@ void TestPointerConstraints::testLockedPointer()
     // moving cursor should be allowed again
     QCOMPARE(input()->pointer()->isConstrained(), false);
     KWin::input()->pointer()->warp(window->frameGeometry().center());
-    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), window->frameGeometry().center());
+    QCOMPARE(KWin::Cursor::self()->pos(), window->frameGeometry().center());
 }
 
 void TestPointerConstraints::testCloseWindowWithLockedPointer()
@@ -343,12 +343,12 @@ void TestPointerConstraints::testCloseWindowWithLockedPointer()
     // now map the window
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);
     QVERIFY(window);
-    QVERIFY(!window->frameGeometry().contains(KWin::Cursors::self()->mouse()->pos()));
+    QVERIFY(!window->frameGeometry().contains(KWin::Cursor::self()->pos()));
 
     // now let's lock
     QCOMPARE(input()->pointer()->isConstrained(), false);
     KWin::input()->pointer()->warp(window->frameGeometry().center());
-    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), window->frameGeometry().center());
+    QCOMPARE(KWin::Cursor::self()->pos(), window->frameGeometry().center());
     QCOMPARE(input()->pointer()->isConstrained(), true);
     QVERIFY(lockedSpy.wait());
 

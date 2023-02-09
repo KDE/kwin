@@ -516,7 +516,7 @@ void DecorationInputTest::testResizeOutsideWindow()
     default:
         break;
     }
-    QVERIFY(!window->frameGeometry().contains(KWin::Cursors::self()->mouse()->pos()));
+    QVERIFY(!window->frameGeometry().contains(KWin::Cursor::self()->pos()));
 
     // pressing should trigger resize
     PRESS;

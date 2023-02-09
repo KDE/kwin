@@ -31,42 +31,13 @@
 
 namespace KWin
 {
-Cursors *Cursors::s_self = nullptr;
-Cursors *Cursors::self()
+Cursor *Cursor::s_self = nullptr;
+Cursor *Cursor::self()
 {
-    if (!s_self) {
-        s_self = new Cursors;
-    }
     return s_self;
 }
 
-void Cursors::addCursor(Cursor *cursor)
-{
-    Q_ASSERT(!m_cursors.contains(cursor));
-    m_cursors += cursor;
-
-    connect(cursor, &Cursor::posChanged, this, [this, cursor](const QPoint &pos) {
-        setCurrentCursor(cursor);
-        Q_EMIT positionChanged(cursor, pos);
-    });
-}
-
-void Cursors::removeCursor(Cursor *cursor)
-{
-    m_cursors.removeOne(cursor);
-    if (m_currentCursor == cursor) {
-        if (m_cursors.isEmpty()) {
-            m_currentCursor = nullptr;
-        } else {
-            setCurrentCursor(m_cursors.constFirst());
-        }
-    }
-    if (m_mouse == cursor) {
-        m_mouse = nullptr;
-    }
-}
-
-void Cursors::hideCursor()
+void Cursor::hideCursor()
 {
     m_cursorHideCounter++;
     if (m_cursorHideCounter == 1) {
@@ -74,7 +45,7 @@ void Cursors::hideCursor()
     }
 }
 
-void Cursors::showCursor()
+void Cursor::showCursor()
 {
     m_cursorHideCounter--;
     if (m_cursorHideCounter == 0) {
@@ -82,31 +53,9 @@ void Cursors::showCursor()
     }
 }
 
-bool Cursors::isCursorHidden() const
+bool Cursor::isCursorHidden() const
 {
     return m_cursorHideCounter > 0;
-}
-
-void Cursors::setCurrentCursor(Cursor *cursor)
-{
-    if (m_currentCursor == cursor) {
-        return;
-    }
-
-    Q_ASSERT(m_cursors.contains(cursor) || !cursor);
-
-    if (m_currentCursor) {
-        disconnect(m_currentCursor, &Cursor::cursorChanged, this, &Cursors::emitCurrentCursorChanged);
-    }
-    m_currentCursor = cursor;
-    connect(m_currentCursor, &Cursor::cursorChanged, this, &Cursors::emitCurrentCursorChanged);
-
-    Q_EMIT currentCursorChanged(m_currentCursor);
-}
-
-void Cursors::emitCurrentCursorChanged()
-{
-    Q_EMIT currentCursorChanged(m_currentCursor);
 }
 
 Cursor::Cursor(QObject *parent)
@@ -119,11 +68,11 @@ Cursor::Cursor(QObject *parent)
     loadThemeSettings();
     QDBusConnection::sessionBus().connect(QString(), QStringLiteral("/KGlobalSettings"), QStringLiteral("org.kde.KGlobalSettings"),
                                           QStringLiteral("notifyChange"), this, SLOT(slotKGlobalSettingsNotifyChange(int, int)));
+    s_self = this;
 }
 
 Cursor::~Cursor()
 {
-    Cursors::self()->removeCursor(this);
 }
 
 void Cursor::loadThemeSettings()
@@ -172,7 +121,7 @@ void Cursor::slotKGlobalSettingsNotifyChange(int type, int arg)
 
 bool Cursor::isOnOutput(Output *output) const
 {
-    if (Cursors::self()->isCursorHidden()) {
+    if (Cursor::self()->isCursorHidden()) {
         return false;
     }
     return geometry().intersects(output->geometry());
