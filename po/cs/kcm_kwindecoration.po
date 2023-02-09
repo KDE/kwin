@@ -3,22 +3,22 @@
 # Vít Pelčák <vit@pelcak.org>, 2010, 2011, 2012, 2013, 2014, 2015, 2019.
 # Lukáš Tinkl <ltinkl@redhat.com>, 2010.
 # Tomáš Chvátal <tomas.chvatal@gmail.com>, 2013.
-# Vit Pelcak <vit@pelcak.org>, 2021.
+# Vit Pelcak <vit@pelcak.org>, 2021, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-06 01:01+0000\n"
-"PO-Revision-Date: 2021-08-13 10:15+0200\n"
-"Last-Translator: Vit Pelcak <vpelcak@suse.cz>\n"
+"PO-Revision-Date: 2023-02-07 09:09+0100\n"
+"Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 21.04.3\n"
+"X-Generator: Lokalize 22.12.2\n"
 "X-Language: cs_CZ\n"
 "X-Source-Language: en_US\n"
 
@@ -189,7 +189,7 @@ msgstr "Přetáhněte tlačítka odsud na titulkový pruh"
 #: package/contents/ui/ConfigureTitlebar.qml:16
 #, kde-format
 msgid "Titlebar Buttons"
-msgstr ""
+msgstr "Tlačítka titulkového pruhu"
 
 #: package/contents/ui/ConfigureTitlebar.qml:35
 #, kde-format
@@ -224,13 +224,13 @@ msgstr "Velikost okraje okna:"
 #, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr ""
+msgstr "Nastavit tlačítka titulkového pruhu..."
 
 #: package/contents/ui/main.qml:65
 #, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations…"
-msgstr ""
+msgstr "Získat nové dekorace oken…"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format

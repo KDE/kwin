@@ -1156,6 +1156,3 @@ msgstr "Zakázáno"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Sledování myši:"
-
-#~ msgid "Blur background:"
-#~ msgstr "Rozmazat pozadí:"

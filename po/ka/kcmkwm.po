@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2023-01-27 08:53+0100\n"
+"PO-Revision-Date: 2023-02-08 06:09+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -433,7 +433,7 @@ msgstr ""
 #: advanced.ui:35
 #, kde-format
 msgid "On titlebar hover after:"
-msgstr ""
+msgstr "სათაურზე თაგუნას გადატარების შემდეგ:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_ShadeHoverInterval)
 #: advanced.ui:42
@@ -558,7 +558,7 @@ msgstr ""
 #: advanced.ui:136
 #, kde-format
 msgid "Hide utility windows for inactive applications"
-msgstr ""
+msgstr "ხელსაწყოების ფანჯრების დამალვა არააქტიური აპლიკაციებისთვის"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
 #: advanced.ui:143
@@ -570,7 +570,7 @@ msgstr "ვირტუალური სამუშაო მაგიდი�
 #: advanced.ui:153
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
-msgstr ""
+msgstr "ფანჯრის სხვა ვირტუალურ სამუშაო მაგიდაზე აქტივაციისას:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:160
@@ -595,7 +595,7 @@ msgstr "იმ ვირტუალურ სამუშაო მაგიდ
 #: advanced.ui:169
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
-msgstr ""
+msgstr "ფანჯრის მიმდინარე ვირტუალურ სამუშაო მაგიდაზე გადმოტანა"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
 #: focus.ui:22
@@ -773,7 +773,7 @@ msgstr ""
 #: focus.ui:168
 #, kde-format
 msgid "&Raise on hover, delayed by:"
-msgstr ""
+msgstr "&გადატარებისას ამოწევა. დაყოვნების ხანგრძლივობა:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_AutoRaiseInterval)
 #: focus.ui:175
@@ -816,7 +816,7 @@ msgstr ""
 #: focus.ui:216
 #, kde-format
 msgid "&Separate screen focus"
-msgstr ""
+msgstr "&თითოეული ეკრანის ცალცალკე ფოკუსი"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
 #: focus.ui:229
@@ -918,7 +918,7 @@ msgstr ""
 #: main.cpp:202
 #, kde-format
 msgid "&Titlebar Actions"
-msgstr ""
+msgstr "&სათაურის პანელის ქმედებები"
 
 #: main.cpp:208
 #, kde-format
@@ -1018,7 +1018,7 @@ msgstr ""
 #: mouse.ui:143
 #, kde-format
 msgid "Titlebar and Frame Actions"
-msgstr ""
+msgstr "სათაურის პანელის და ჩარჩოს ქმედებები"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: mouse.ui:167
@@ -1083,14 +1083,14 @@ msgstr "მთელ ეკრანზე გაშლის ღილაკი
 #: mouse.ui:598 mouse.ui:611
 #, kde-format
 msgid "Behavior on <em>left</em> click onto the maximize button."
-msgstr ""
+msgstr "<em>მარცხენა</em> ღილაკის ქცევა გადიდების ღილაკზე.."
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_9)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #: mouse.ui:633 mouse.ui:646
 #, kde-format
 msgid "Behavior on <em>middle</em> click onto the maximize button."
-msgstr ""
+msgstr "<em>შუა</em> ღილაკის ქცევა გადიდების ღილაკზე.."
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #: mouse.ui:636
@@ -1103,13 +1103,13 @@ msgstr "შუა &წკაპი:"
 #: mouse.ui:668 mouse.ui:681
 #, kde-format
 msgid "Behavior on <em>right</em> click onto the maximize button."
-msgstr ""
+msgstr "<em>მარჯვენა</em> წკაპის ქცევა გადიდების ღილაკზე."
 
 #. i18n: ectx: property (text), widget (QLabel, borderSnapLabel)
 #: moving.ui:20
 #, kde-format
 msgid "Screen &edge snap zone:"
-msgstr ""
+msgstr "ეკრანის &წიბოს მიმაგრების ზონა:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_BorderSnapZone)
 #: moving.ui:30
@@ -1131,7 +1131,7 @@ msgstr " px"
 #: moving.ui:52
 #, kde-format
 msgid "&Window snap zone:"
-msgstr ""
+msgstr "&ფანჯრის მიმაგრების ზონა:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_WindowSnapZone)
 #: moving.ui:62
@@ -1146,7 +1146,7 @@ msgstr ""
 #: moving.ui:84
 #, kde-format
 msgid "&Center snap zone:"
-msgstr ""
+msgstr "&ცენტრში მიმაგრების ზონა:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_CenterSnapZone)
 #: moving.ui:94
