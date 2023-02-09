@@ -217,11 +217,12 @@ bool DrmOutput::moveCursor(const QPoint &position)
     const QSize layerSize = m_gpu->cursorSize() / scale();
     const QRect layerRect = monitorMatrix.mapRect(QRect(m_cursor.position, layerSize));
     const auto layer = m_pipeline->cursorLayer();
+    const bool wasVisible = layer->isVisible();
     layer->setVisible(true);
     layer->setPosition(layerRect.topLeft());
     m_moveCursorSuccessful = m_pipeline->moveCursor();
     layer->setVisible(m_moveCursorSuccessful);
-    if (!m_moveCursorSuccessful) {
+    if (!m_moveCursorSuccessful || !wasVisible) {
         m_pipeline->setCursor();
     }
     return m_moveCursorSuccessful;
