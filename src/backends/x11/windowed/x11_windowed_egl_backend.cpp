@@ -46,7 +46,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
     m_output->clearExposedArea();
 
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_fbo.get()),
+        .renderTarget = RenderTarget(m_fbo.get(), m_output->geometry(), m_output->scale()),
         .repaint = repaint,
     };
 }
@@ -91,7 +91,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame()
     }
 
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_framebuffer.get()),
+        .renderTarget = RenderTarget(m_framebuffer.get(), QRectF(QPointF(), size()), m_output->scale()),
         .repaint = infiniteRegion(),
     };
 }

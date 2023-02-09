@@ -535,7 +535,7 @@ static inline float geometryCompensation(int flags, float v)
     return 0.5 * (1.0 - v); // half compensation
 }
 
-void AnimationEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void AnimationEffect::paintWindow(const RenderTarget &renderTarget, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     Q_D(AnimationEffect);
     AniMap::const_iterator entry = d->m_animations.constFind(w);
@@ -662,7 +662,7 @@ void AnimationEffect::paintWindow(EffectWindow *w, int mask, QRegion region, Win
         }
     }
 
-    effects->paintWindow(w, mask, region, data);
+    effects->paintWindow(renderTarget, w, mask, region, data);
 }
 
 void AnimationEffect::postPaintScreen()

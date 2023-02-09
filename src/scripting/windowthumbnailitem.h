@@ -9,6 +9,7 @@
 
 #include <QQuickItem>
 #include <QUuid>
+#include <libkwineffects/rendertarget.h>
 
 #include <epoxy/gl.h>
 

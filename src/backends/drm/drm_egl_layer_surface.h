@@ -46,7 +46,7 @@ public:
     EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal);
     ~EglGbmLayerSurface();
 
-    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation, const QMap<uint32_t, QVector<uint64_t>> &formats);
+    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation, const QMap<uint32_t, QVector<uint64_t>> &formats, const QRectF &logicalRect, double scale);
     void aboutToStartPainting(DrmOutput *output, const QRegion &damagedRegion);
     bool endRendering(DrmPlane::Transformations renderOrientation, const QRegion &damagedRegion);
 

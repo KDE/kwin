@@ -163,8 +163,7 @@ bool DrmOutput::setCursor(CursorSource *source)
     const QRect nativeCursorRect = monitorMatrix.mapRect(cursorRect);
     if (nativeCursorRect.width() <= m_gpu->cursorSize().width() && nativeCursorRect.height() <= m_gpu->cursorSize().height()) {
         if (auto beginInfo = layer->beginFrame()) {
-            RenderTarget *renderTarget = &beginInfo->renderTarget;
-            renderTarget->setDevicePixelRatio(scale());
+            const RenderTarget &renderTarget = beginInfo->renderTarget;
 
             RenderLayer renderLayer(m_renderLoop.get());
             renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene()));

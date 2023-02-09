@@ -36,8 +36,8 @@ public:
     QColor paintColor() const;
 
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
-    void paintWindow(KWin::EffectWindow *w, int mask, QRegion region, KWin::WindowPaintData &data) override;
+    void paintScreen(const RenderTarget &renderTarget, int mask, const QRegion &region, ScreenPaintData &data) override;
+    void paintWindow(const RenderTarget &renderTarget, EffectWindow *w, int mask, QRegion region, KWin::WindowPaintData &data) override;
     void postPaintScreen() override;
 
     static bool supported();

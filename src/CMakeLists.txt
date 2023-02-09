@@ -51,7 +51,6 @@ target_sources(kwin PRIVATE
     core/renderlayer.cpp
     core/renderlayerdelegate.cpp
     core/renderloop.cpp
-    core/rendertarget.cpp
     core/session.cpp
     core/session_consolekit.cpp
     core/session_logind.cpp

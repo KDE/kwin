@@ -48,10 +48,10 @@ void ThumbnailAsideEffect::reconfigure(ReconfigureFlags)
     arrange();
 }
 
-void ThumbnailAsideEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
+void ThumbnailAsideEffect::paintScreen(const RenderTarget &renderTarget, int mask, const QRegion &region, ScreenPaintData &data)
 {
     painted = QRegion();
-    effects->paintScreen(mask, region, data);
+    effects->paintScreen(renderTarget, mask, region, data);
 
     const QMatrix4x4 projectionMatrix = data.projectionMatrix();
     for (const Data &d : std::as_const(windows)) {
@@ -60,14 +60,14 @@ void ThumbnailAsideEffect::paintScreen(int mask, const QRegion &region, ScreenPa
             data.multiplyOpacity(opacity);
             QRect region;
             setPositionTransformations(data, region, d.window, d.rect, Qt::KeepAspectRatio);
-            effects->drawWindow(d.window, PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED, region, data);
+            effects->drawWindow(renderTarget, d.window, PAINT_WINDOW_OPAQUE | PAINT_WINDOW_TRANSLUCENT | PAINT_WINDOW_TRANSFORMED, region, data);
         }
     }
 }
 
-void ThumbnailAsideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void ThumbnailAsideEffect::paintWindow(const RenderTarget &renderTarget, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    effects->paintWindow(w, mask, region, data);
+    effects->paintWindow(renderTarget, w, mask, region, data);
     painted |= region;
 }
 

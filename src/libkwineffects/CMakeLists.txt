@@ -30,6 +30,7 @@ set(kwin_EFFECTSLIB_SRCS
     kwinoffscreenquickview.cpp
     kwinquickeffect.cpp
     logging.cpp
+    rendertarget.cpp
     sharedqmlengine.cpp
 )
 

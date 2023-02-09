@@ -16,7 +16,7 @@ namespace KWin
 class CursorDelegateQPainter final : public RenderLayerDelegate
 {
 public:
-    void paint(RenderTarget *renderTarget, const QRegion &region) override;
+    void paint(const RenderTarget &renderTarget, const QRegion &region) override;
 
 private:
     QImage m_buffer;

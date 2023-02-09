@@ -5,7 +5,7 @@
 */
 
 #include "scene/cursorscene.h"
-#include "core/rendertarget.h"
+#include "libkwineffects/rendertarget.h"
 #include "scene/cursoritem.h"
 #include "scene/itemrenderer.h"
 
@@ -52,14 +52,11 @@ void CursorScene::postPaint()
 {
 }
 
-void CursorScene::paint(RenderTarget *renderTarget, const QRegion &region)
+void CursorScene::paint(const RenderTarget &renderTarget, const QRegion &region)
 {
-    m_renderer->setRenderTargetRect(QRect(QPoint(0, 0), renderTarget->size() / renderTarget->devicePixelRatio()));
-    m_renderer->setRenderTargetScale(renderTarget->devicePixelRatio());
-
     m_renderer->beginFrame(renderTarget);
-    m_renderer->renderBackground(region);
-    m_renderer->renderItem(m_rootItem.get(), 0, region, WindowPaintData(m_renderer->renderTargetProjectionMatrix()));
+    m_renderer->renderBackground(renderTarget, region);
+    m_renderer->renderItem(renderTarget, m_rootItem.get(), 0, region, WindowPaintData(renderTarget.projectionMatrix()));
     m_renderer->endFrame();
 }
 

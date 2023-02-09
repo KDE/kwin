@@ -23,7 +23,7 @@ class CursorDelegateOpenGL final : public QObject, public RenderLayerDelegate
 public:
     ~CursorDelegateOpenGL() override;
 
-    void paint(RenderTarget *renderTarget, const QRegion &region) override;
+    void paint(const RenderTarget &renderTarget, const QRegion &region) override;
 
 private:
     std::unique_ptr<GLTexture> m_texture;

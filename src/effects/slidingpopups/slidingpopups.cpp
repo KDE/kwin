@@ -128,11 +128,11 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &da
     effects->prePaintWindow(w, data, presentTime);
 }
 
-void SlidingPopupsEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     auto animationIt = m_animations.constFind(w);
     if (animationIt == m_animations.constEnd()) {
-        effects->paintWindow(w, mask, region, data);
+        effects->paintWindow(renderTarget, w, mask, region, data);
         return;
     }
 
@@ -179,7 +179,7 @@ void SlidingPopupsEffect::paintWindow(EffectWindow *w, int mask, QRegion region,
         region &= QRegion(geo.x(), geo.y(), geo.width(), splitPoint);
     }
 
-    effects->paintWindow(w, mask, region, data);
+    effects->paintWindow(renderTarget, w, mask, region, data);
 }
 
 void SlidingPopupsEffect::postPaintWindow(EffectWindow *w)

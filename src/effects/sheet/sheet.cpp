@@ -93,11 +93,11 @@ void SheetEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std:
     effects->prePaintWindow(w, data, presentTime);
 }
 
-void SheetEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void SheetEffect::paintWindow(const RenderTarget &renderTarget, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     auto animationIt = m_animations.constFind(w);
     if (animationIt == m_animations.constEnd()) {
-        effects->paintWindow(w, mask, region, data);
+        effects->paintWindow(renderTarget, w, mask, region, data);
         return;
     }
 
@@ -108,7 +108,7 @@ void SheetEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
     // this is how the window will be transformed:
     //  [move to the origin] -> [scale] -> [rotate] -> [translate] ->
     //    -> [perspective projection] -> [reverse "move to the origin"]
-    const QMatrix4x4 oldProjMatrix = createPerspectiveMatrix(effects->renderTargetRect(), effects->renderTargetScale());
+    const QMatrix4x4 oldProjMatrix = createPerspectiveMatrix(renderTarget.renderRect(), renderTarget.scale());
     const QRectF windowGeo = w->frameGeometry();
     const QVector3D invOffset = oldProjMatrix.map(QVector3D(windowGeo.center()));
     QMatrix4x4 invOffsetMatrix;
@@ -128,7 +128,7 @@ void SheetEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
 
     data.multiplyOpacity(t);
 
-    effects->paintWindow(w, mask, region, data);
+    effects->paintWindow(renderTarget, w, mask, region, data);
 }
 
 void SheetEffect::postPaintWindow(EffectWindow *w)

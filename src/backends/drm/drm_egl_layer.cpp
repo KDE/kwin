@@ -41,7 +41,8 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::beginFrame()
     m_scanoutBuffer.reset();
     m_dmabufFeedback.renderingSurface();
 
-    return m_surface.startRendering(m_pipeline->bufferSize(), m_pipeline->renderOrientation(), m_pipeline->bufferOrientation(), m_pipeline->formats());
+    return m_surface.startRendering(m_pipeline->bufferSize(), m_pipeline->renderOrientation(), m_pipeline->bufferOrientation(), m_pipeline->formats(),
+                                    m_pipeline->output()->fractionalGeometry(), m_pipeline->output()->scale());
 }
 
 void EglGbmLayer::aboutToStartPainting(const QRegion &damagedRegion)

@@ -29,7 +29,7 @@ public:
 
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
+    void paintWindow(const RenderTarget &renderTarget, EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
     void postPaintWindow(EffectWindow *w) override;
 
     bool isActive() const override;

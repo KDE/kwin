@@ -39,7 +39,7 @@ std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::beginFrame()
         return std::nullopt;
     }
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_swapchain->currentBuffer()->image()),
+        .renderTarget = RenderTarget(m_swapchain->currentBuffer()->image(), m_pipeline->output()->fractionalGeometry(), m_pipeline->output()->scale()),
         .repaint = needsRepaint,
     };
 }
@@ -106,7 +106,7 @@ std::optional<OutputLayerBeginFrameInfo> DrmCursorQPainterLayer::beginFrame()
         return std::nullopt;
     }
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_swapchain->currentBuffer()->image()),
+        .renderTarget = RenderTarget(m_swapchain->currentBuffer()->image(), QRectF(QPoint(), m_pipeline->gpu()->cursorSize() / m_pipeline->output()->scale()), m_pipeline->output()->scale()),
         .repaint = needsRepaint,
     };
 }
@@ -152,7 +152,7 @@ std::optional<OutputLayerBeginFrameInfo> DrmVirtualQPainterLayer::beginFrame()
         m_image = QImage(m_output->pixelSize(), QImage::Format_RGB32);
     }
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(&m_image),
+        .renderTarget = RenderTarget(&m_image, m_output->fractionalGeometry(), m_output->scale()),
         .repaint = QRegion(),
     };
 }

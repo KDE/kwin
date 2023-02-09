@@ -9,6 +9,7 @@
 #include "drm_egl_cursor_layer.h"
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
+#include "drm_output.h"
 #include "drm_pipeline.h"
 
 #include <gbm.h>
@@ -24,7 +25,8 @@ EglGbmCursorLayer::EglGbmCursorLayer(EglGbmBackend *eglBackend, DrmPipeline *pip
 
 std::optional<OutputLayerBeginFrameInfo> EglGbmCursorLayer::beginFrame()
 {
-    return m_surface.startRendering(m_pipeline->gpu()->cursorSize(), m_pipeline->renderOrientation(), DrmPlane::Transformation::Rotate0, m_pipeline->cursorFormats());
+    return m_surface.startRendering(m_pipeline->gpu()->cursorSize(), m_pipeline->renderOrientation(), DrmPlane::Transformation::Rotate0, m_pipeline->cursorFormats(),
+                                    QRectF(QPoint(), m_pipeline->gpu()->cursorSize() / m_pipeline->output()->scale()), m_pipeline->output()->scale());
 }
 
 void EglGbmCursorLayer::aboutToStartPainting(const QRegion &damagedRegion)

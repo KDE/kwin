@@ -132,7 +132,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterPrimaryLayer::beginF
 
     m_buffer = m_swapchain->acquire();
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_buffer->view()),
+        .renderTarget = RenderTarget(m_buffer->view(), m_output->geometry(), m_output->scale()),
         .repaint = repaint,
     };
 }
@@ -184,7 +184,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterCursorLayer::beginFr
     }
 
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(&m_buffer),
+        .renderTarget = RenderTarget(&m_buffer, QRectF(QPointF(), size()), m_output->scale()),
         .repaint = infiniteRegion(),
     };
 }

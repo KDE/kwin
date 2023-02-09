@@ -201,8 +201,7 @@ bool WaylandOutput::setCursor(CursorSource *source)
         return false;
     }
 
-    RenderTarget *renderTarget = &beginInfo->renderTarget;
-    renderTarget->setDevicePixelRatio(scale());
+    const RenderTarget &renderTarget = beginInfo->renderTarget;
 
     RenderLayer renderLayer(m_renderLoop.get());
     renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene()));

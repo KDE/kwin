@@ -49,7 +49,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
     }
 
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_fbo.get()),
+        .renderTarget = RenderTarget(m_fbo.get(), m_output->fractionalGeometry(), m_output->scale()),
         .repaint = infiniteRegion(),
     };
 }

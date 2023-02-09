@@ -325,16 +325,16 @@ void QuickSceneEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
     }
 }
 
-void QuickSceneEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &data)
+void QuickSceneEffect::paintScreen(const RenderTarget &renderTarget, int mask, const QRegion &region, ScreenPaintData &data)
 {
     if (effects->waylandDisplay()) {
         const auto it = d->views.find(data.screen());
         if (it != d->views.end()) {
-            effects->renderOffscreenQuickView(it->second.get());
+            effects->renderOffscreenQuickView(renderTarget, it->second.get());
         }
     } else {
         for (const auto &[screen, screenView] : d->views) {
-            effects->renderOffscreenQuickView(screenView.get());
+            effects->renderOffscreenQuickView(renderTarget, screenView.get());
         }
     }
 }

@@ -44,7 +44,7 @@ public:
     ~ZoomEffect() override;
     void reconfigure(ReconfigureFlags flags) override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(int mask, const QRegion &region, ScreenPaintData &data) override;
+    void paintScreen(const RenderTarget &renderTarget, int mask, const QRegion &region, ScreenPaintData &data) override;
     void postPaintScreen() override;
     bool isActive() const override;
     int requestedEffectChainPosition() const override;
@@ -94,7 +94,7 @@ private:
     };
 
     GLTexture *ensureCursorTexture();
-    OffscreenData *ensureOffscreenData(EffectScreen *screen);
+    OffscreenData *ensureOffscreenData(const RenderTarget &renderTarget, EffectScreen *screen);
     void markCursorTextureDirty();
 
 #if HAVE_ACCESSIBILITY

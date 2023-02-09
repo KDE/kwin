@@ -397,15 +397,14 @@ void WindowThumbnailItem::updateOffscreenTexture()
         m_offscreenTarget.reset(new GLFramebuffer(m_offscreenTexture.get()));
     }
 
+    RenderTarget offscreenRenderTarget(m_offscreenTarget.get(), geometry, m_devicePixelRatio);
     GLFramebuffer::pushFramebuffer(m_offscreenTarget.get());
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    auto scale = Compositor::self()->scene()->renderer()->renderTargetScale();
-
     QMatrix4x4 projectionMatrix;
-    projectionMatrix.ortho(geometry.x() * scale, (geometry.x() + geometry.width()) * scale,
-                           geometry.y() * scale, (geometry.y() + geometry.height()) * scale, -1, 1);
+    projectionMatrix.ortho(geometry.x() * m_devicePixelRatio, (geometry.x() + geometry.width()) * m_devicePixelRatio,
+                           geometry.y() * m_devicePixelRatio, (geometry.y() + geometry.height()) * m_devicePixelRatio, -1, 1);
 
     WindowPaintData data;
     data.setProjectionMatrix(projectionMatrix);
@@ -414,7 +413,7 @@ void WindowThumbnailItem::updateOffscreenTexture()
     // shared across contexts. Unfortunately, this also introduces a latency of 1
     // frame, which is not ideal, but it is acceptable for things such as thumbnails.
     const int mask = Scene::PAINT_WINDOW_TRANSFORMED;
-    Compositor::self()->scene()->renderer()->renderItem(m_client->windowItem(), mask, infiniteRegion(), data);
+    Compositor::self()->scene()->renderer()->renderItem(offscreenRenderTarget, m_client->windowItem(), mask, infiniteRegion(), data);
     GLFramebuffer::popFramebuffer();
 
     // The fence is needed to avoid the case where qtquick renderer starts using

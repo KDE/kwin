@@ -198,7 +198,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
     }
 
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_buffer->framebuffer()),
+        .renderTarget = RenderTarget(m_buffer->framebuffer(), m_waylandOutput->fractionalGeometry(), m_waylandOutput->scale()),
         .repaint = repair,
     };
 }
@@ -256,7 +256,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
 
     m_buffer = m_swapchain->acquire();
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_buffer->framebuffer()),
+        .renderTarget = RenderTarget(m_buffer->framebuffer(), QRectF(QPoint(), size()), m_output->scale()),
         .repaint = infiniteRegion(),
     };
 }
