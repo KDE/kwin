@@ -51,21 +51,21 @@ FocusScope {
         anchors.fill: parent
 
         Repeater {
-            model: KWinComponents.ClientFilterModel {
+            model: KWinComponents.WindowFilterModel {
                 activity: KWinComponents.Workspace.currentActivity
                 desktop: KWinComponents.Workspace.currentDesktop
                 screenName: targetScreen.name
-                clientModel: KWinComponents.ClientModel {}
+                windowModel: KWinComponents.WindowModel {}
             }
 
             KWinComponents.WindowThumbnailItem {
-                wId: model.client.internalId
-                x: model.client.x - targetScreen.geometry.x
-                y: model.client.y - targetScreen.geometry.y
-                width: model.client.width
-                height: model.client.height
-                z: model.client.stackingOrder
-                visible: !model.client.minimized
+                wId: model.window.internalId
+                x: model.window.x - targetScreen.geometry.x
+                y: model.window.y - targetScreen.geometry.y
+                width: model.window.width
+                height: model.window.height
+                z: model.window.stackingOrder
+                visible: !model.window.minimized
             }
         }
         property real blurRadius: root.active ? 64 : 0

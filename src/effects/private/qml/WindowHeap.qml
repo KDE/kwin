@@ -43,7 +43,7 @@ FocusScope {
     property bool animationEnabled: false
     property bool absolutePositioning: true
     property real padding: 0
-    // Either a string "activeClass" or a list internalIds of clients
+    // Either a string "activeClass" or a list internalIds of windows
     property var showOnly: []
 
     required property bool organized
@@ -55,7 +55,7 @@ FocusScope {
     signal windowClicked(QtObject window, EventPoint eventPoint)
 
     function activateIndex(index) {
-        KWinComponents.Workspace.activeClient = windowsInstantiator.objectAt(index).client;
+        KWinComponents.Workspace.activeClient = windowsInstantiator.objectAt(index).window;
         activated();
     }
 
@@ -142,7 +142,7 @@ FocusScope {
 
             onObjectAdded: (index, object) => {
                 object.parent = expoLayout
-                var key = object.client.internalId;
+                var key = object.window.internalId;
                 if (heap.containsDND(key)) {
                     expoLayout.forceLayout();
                     var oldGlobalRect = heap.restoreDND(key);
@@ -372,7 +372,7 @@ FocusScope {
             }
             if (selectedItem) {
                 handled = true;
-                KWinComponents.Workspace.activeClient = selectedItem.client;
+                KWinComponents.Workspace.activeClient = selectedItem.window;
                 activated();
             }
             break;

@@ -16,7 +16,7 @@ import org.kde.kwin.private.desktopgrid 1.0
 FocusScope {
     id: desktopView
 
-    required property QtObject clientModel
+    required property QtObject windowModel
     required property QtObject desktop
     required property var dndManagerStore
     readonly property bool dragActive: heap.dragActive || dragHandler.active || xAnim.running || yAnim.running
@@ -65,22 +65,22 @@ FocusScope {
         }
     }
     Repeater {
-        model: KWinComponents.ClientFilterModel {
+        model: KWinComponents.WindowFilterModel {
             activity: KWinComponents.Workspace.currentActivity
             desktop: desktopView.desktop
             screenName: targetScreen.name
-            clientModel: desktopView.clientModel
-            windowType: KWinComponents.ClientFilterModel.Dock | KWinComponents.ClientFilterModel.Desktop
+            windowModel: desktopView.windowModel
+            windowType: KWinComponents.WindowFilterModel.Dock | KWinComponents.WindowFilterModel.Desktop
         }
 
         KWinComponents.WindowThumbnailItem {
-            wId: model.client.internalId
-            x: model.client.x - targetScreen.geometry.x
-            y: model.client.y - targetScreen.geometry.y
-            z: model.client.stackingOrder
-            width: model.client.width
-            height: model.client.height
-            opacity: model.client.dock ? desktopView.panelOpacity : 1
+            wId: model.window.internalId
+            x: model.window.x - targetScreen.geometry.x
+            y: model.window.y - targetScreen.geometry.y
+            z: model.window.stackingOrder
+            width: model.window.width
+            height: model.window.height
+            opacity: model.window.dock ? desktopView.panelOpacity : 1
         }
     }
 
@@ -117,15 +117,15 @@ FocusScope {
         organized: container.organized
         layout.mode: effect.layout
         dndManagerStore: desktopView.dndManagerStore
-        model: KWinComponents.ClientFilterModel {
+        model: KWinComponents.WindowFilterModel {
             activity: KWinComponents.Workspace.currentActivity
             desktop: desktopView.desktop
             screenName: targetScreen.name
-            clientModel: desktopView.clientModel
-            windowType: ~KWinComponents.ClientFilterModel.Dock &
-                        ~KWinComponents.ClientFilterModel.Desktop &
-                        ~KWinComponents.ClientFilterModel.Notification &
-                        ~KWinComponents.ClientFilterModel.CriticalNotification
+            windowModel: desktopView.windowModel
+            windowType: ~KWinComponents.WindowFilterModel.Dock &
+                        ~KWinComponents.WindowFilterModel.Desktop &
+                        ~KWinComponents.WindowFilterModel.Notification &
+                        ~KWinComponents.WindowFilterModel.CriticalNotification
         }
         delegate: WindowHeapDelegate {
             windowHeap: heap

@@ -16,25 +16,25 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 Item {
     id: thumb
 
-    required property QtObject client
+    required property QtObject window
     required property int index
     required property Item windowHeap
 
     readonly property bool selected: windowHeap.selectedIndex === index
 
     // no desktops is a special value which means "All Desktops"
-    readonly property bool presentOnCurrentDesktop: !client.desktops.length || client.desktops.indexOf(KWinComponents.Workspace.currentDesktop) !== -1
-    readonly property bool initialHidden: client.minimized || !presentOnCurrentDesktop
+    readonly property bool presentOnCurrentDesktop: !window.desktops.length || window.desktops.indexOf(KWinComponents.Workspace.currentDesktop) !== -1
+    readonly property bool initialHidden: window.minimized || !presentOnCurrentDesktop
     readonly property bool activeHidden: {
         if (windowHeap.showOnly === "activeClass") {
             if (!KWinComponents.Workspace.activeClient) {
                 return true;
             } else {
-                return KWinComponents.Workspace.activeClient.resourceName !== client.resourceName;
+                return KWinComponents.Workspace.activeClient.resourceName !== window.resourceName;
             }
         } else {
             return windowHeap.showOnly.length !== 0
-                && windowHeap.showOnly.indexOf(client.internalId) === -1;
+                && windowHeap.showOnly.indexOf(window.internalId) === -1;
         }
     }
 
@@ -70,7 +70,7 @@ Item {
 
     visible: opacity > 0
     z: (activeDragHandler.active || returning.running) ? 1000
-        : client.stackingOrder * (presentOnCurrentDesktop ? 1 : 0.001)
+        : window.stackingOrder * (presentOnCurrentDesktop ? 1 : 0.001)
 
     function restoreDND(oldGlobalRect: rect) {
         thumbSource.restoreDND(oldGlobalRect);
@@ -91,11 +91,11 @@ Item {
 
     KWinComponents.WindowThumbnailItem {
         id: thumbSource
-        wId: thumb.client.internalId
+        wId: thumb.window.internalId
 
         Drag.proposedAction: Qt.MoveAction
         Drag.supportedActions: Qt.MoveAction
-        Drag.source: thumb.client
+        Drag.source: thumb.window
         Drag.hotSpot: Qt.point(
             thumb.activeDragHandler.centroid.pressPosition.x * thumb.targetScale,
             thumb.activeDragHandler.centroid.pressPosition.y * thumb.targetScale)
@@ -105,7 +105,7 @@ Item {
 
         function saveDND() {
             const oldGlobalRect = mapToItem(null, 0, 0, width, height);
-            thumb.windowHeap.saveDND(thumb.client.internalId, oldGlobalRect);
+            thumb.windowHeap.saveDND(thumb.window.internalId, oldGlobalRect);
         }
         function restoreDND(oldGlobalRect: rect) {
             thumb.substate = "reparenting";
@@ -120,7 +120,7 @@ Item {
             thumb.substate = "normal";
         }
         function deleteDND() {
-            thumb.windowHeap.deleteDND(thumb.client.internalId);
+            thumb.windowHeap.deleteDND(thumb.window.internalId);
         }
 
         PlasmaCore.FrameSvgItem {
@@ -157,7 +157,7 @@ Item {
         id: icon
         width: PlasmaCore.Units.iconSizes.large
         height: PlasmaCore.Units.iconSizes.large
-        source: thumb.client.icon
+        source: thumb.window.icon
         usesPlasmaTheme: false
         anchors.horizontalCenter: thumbSource.horizontalCenter
         anchors.bottom: thumbSource.bottom
@@ -171,7 +171,7 @@ Item {
             anchors.top: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             elide: Text.ElideRight
-            text: thumb.client.caption
+            text: thumb.window.caption
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
@@ -181,11 +181,11 @@ Item {
         id: cell
         layout: windowHeap.layout
         enabled: !thumb.activeHidden
-        naturalX: thumb.client.x
-        naturalY: thumb.client.y
-        naturalWidth: thumb.client.width
-        naturalHeight: thumb.client.height
-        persistentKey: thumb.client.internalId
+        naturalX: thumb.window.x
+        naturalY: thumb.window.y
+        naturalWidth: thumb.window.width
+        naturalHeight: thumb.window.height
+        persistentKey: thumb.window.internalId
         bottomMargin: icon.height / 4 + (thumb.windowTitleVisible ? caption.height : 0)
     }
 
@@ -194,17 +194,17 @@ Item {
             name: "initial"
             PropertyChanges {
                 target: thumb
-                x: thumb.client.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.x : 0)
-                y: thumb.client.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.y : 0)
-                width: thumb.client.width
-                height: thumb.client.height
+                x: thumb.window.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.x : 0)
+                y: thumb.window.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.y : 0)
+                width: thumb.window.width
+                height: thumb.window.height
             }
             PropertyChanges {
                 target: thumbSource
                 x: 0
                 y: 0
-                width: thumb.client.width
-                height: thumb.client.height
+                width: thumb.window.width
+                height: thumb.window.height
             }
             PropertyChanges {
                 target: icon
@@ -219,10 +219,10 @@ Item {
             name: "partial"
             PropertyChanges {
                 target: thumb
-                x: (thumb.client.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.x : 0)) * (1 - effect.partialActivationFactor) + cell.x * effect.partialActivationFactor
-                y: (thumb.client.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.y : 0)) * (1 - effect.partialActivationFactor) + cell.y * effect.partialActivationFactor
-                width: thumb.client.width * (1 - effect.partialActivationFactor) + cell.width * effect.partialActivationFactor
-                height: thumb.client.height * (1 - effect.partialActivationFactor) + cell.height * effect.partialActivationFactor
+                x: (thumb.window.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.x : 0)) * (1 - effect.partialActivationFactor) + cell.x * effect.partialActivationFactor
+                y: (thumb.window.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.y : 0)) * (1 - effect.partialActivationFactor) + cell.y * effect.partialActivationFactor
+                width: thumb.window.width * (1 - effect.partialActivationFactor) + cell.width * effect.partialActivationFactor
+                height: thumb.window.height * (1 - effect.partialActivationFactor) + cell.height * effect.partialActivationFactor
                 opacity: thumb.initialHidden
                     ? (thumb.activeHidden ? 0 : effect.partialActivationFactor)
                     : (thumb.activeHidden ? 1 - effect.partialActivationFactor : 1)
@@ -354,7 +354,7 @@ Item {
     TapHandler {
         acceptedButtons: Qt.LeftButton
         onTapped: {
-            KWinComponents.Workspace.activeClient = thumb.client;
+            KWinComponents.Workspace.activeClient = thumb.window;
             thumb.windowHeap.activated();
         }
         onPressedChanged: {
@@ -375,7 +375,7 @@ Item {
         acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
         acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
         onTapped: {
-            thumb.windowHeap.windowClicked(thumb.client, eventPoint)
+            thumb.windowHeap.windowClicked(thumb.window, eventPoint)
         }
     }
 
@@ -455,7 +455,7 @@ Item {
             margins: PlasmaCore.Units.smallSpacing
         }
 
-        visible: thumb.closeButtonVisible && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.client.closeable && !thumb.activeDragHandler.active
+        visible: thumb.closeButtonVisible && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.window.closeable && !thumb.activeDragHandler.active
         LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
 
         text: i18ndc("kwin_effects", "@info:tooltip as in: 'close this window'", "Close window")
@@ -467,7 +467,7 @@ Item {
         PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
         Accessible.name: text
 
-        onClicked: thumb.client.closeWindow();
+        onClicked: thumb.window.closeWindow();
     }
 
     Component.onDestruction: {

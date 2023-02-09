@@ -153,7 +153,7 @@ Rectangle {
     KWinComponents.VirtualDesktopModel {
         id: desktopModel
     }
-    KWinComponents.ClientModel {
+    KWinComponents.WindowModel {
         id: stackModel
     }
 
@@ -268,7 +268,7 @@ Rectangle {
                 width: container.width
                 height: container.height
 
-                clientModel: stackModel
+                windowModel: stackModel
                 dndManagerStore: container.dndManagerStore
                 Rectangle {
                     anchors.fill: parent

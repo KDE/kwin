@@ -10,25 +10,25 @@ import org.kde.kwin 3.0 as KWinComponents
 Item {
     id: desktopView
 
-    required property QtObject clientModel
+    required property QtObject windowModel
     required property QtObject desktop
 
     Repeater {
-        model: KWinComponents.ClientFilterModel {
+        model: KWinComponents.WindowFilterModel {
             activity: KWinComponents.Workspace.currentActivity
             desktop: desktopView.desktop
             screenName: targetScreen.name
-            clientModel: desktopView.clientModel
+            windowModel: desktopView.windowModel
         }
 
         KWinComponents.WindowThumbnailItem {
-            wId: model.client.internalId
-            x: model.client.x - targetScreen.geometry.x
-            y: model.client.y - targetScreen.geometry.y
-            width: model.client.width
-            height: model.client.height
-            z: model.client.stackingOrder
-            visible: !model.client.minimized
+            wId: model.window.internalId
+            x: model.window.x - targetScreen.geometry.x
+            y: model.window.y - targetScreen.geometry.y
+            width: model.window.width
+            height: model.window.height
+            z: model.window.stackingOrder
+            visible: !model.window.minimized
         }
     }
 }

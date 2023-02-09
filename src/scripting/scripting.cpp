@@ -11,7 +11,6 @@
 
 #include "scripting.h"
 // own
-#include "clientmodel.h"
 #include "dbuscall.h"
 #include "desktopbackgrounditem.h"
 #include "kwinquickeffect.h"
@@ -19,6 +18,7 @@
 #include "scripting_logging.h"
 #include "scriptingutils.h"
 #include "virtualdesktopmodel.h"
+#include "windowmodel.h"
 #include "windowthumbnailitem.h"
 #include "workspace_wrapper.h"
 
@@ -677,8 +677,8 @@ void KWin::Scripting::init()
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 3, 0, "WindowThumbnailItem");
     qmlRegisterType<DBusCall>("org.kde.kwin", 3, 0, "DBusCall");
     qmlRegisterType<ScreenEdgeItem>("org.kde.kwin", 3, 0, "ScreenEdgeItem");
-    qmlRegisterType<ClientModel>("org.kde.kwin", 3, 0, "ClientModel");
-    qmlRegisterType<ClientFilterModel>("org.kde.kwin", 3, 0, "ClientFilterModel");
+    qmlRegisterType<WindowModel>("org.kde.kwin", 3, 0, "WindowModel");
+    qmlRegisterType<WindowFilterModel>("org.kde.kwin", 3, 0, "WindowFilterModel");
     qmlRegisterType<VirtualDesktopModel>("org.kde.kwin", 3, 0, "VirtualDesktopModel");
     qmlRegisterUncreatableType<KWin::QuickSceneView>("org.kde.kwin", 3, 0, "SceneView", QStringLiteral("Can't instantiate an object of type SceneView"));
 

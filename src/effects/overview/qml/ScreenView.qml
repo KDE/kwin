@@ -183,7 +183,7 @@ FocusScope {
                 DesktopBar {
                     id: bar
                     anchors.fill: parent
-                    clientModel: stackModel
+                    windowModel: stackModel
                     desktopModel: desktopModel
                     selectedDesktop: KWinComponents.Workspace.currentDesktop
                     heap: heap
@@ -238,17 +238,17 @@ FocusScope {
                 organized: container.organized
                 Keys.priority: Keys.AfterItem
                 Keys.forwardTo: searchResults
-                model: KWinComponents.ClientFilterModel {
+                model: KWinComponents.WindowFilterModel {
                     activity: KWinComponents.Workspace.currentActivity
                     desktop: KWinComponents.Workspace.currentDesktop
                     screenName: targetScreen.name
-                    clientModel: stackModel
+                    windowModel: stackModel
                     filter: effect.searchText
                     minimizedWindows: !effect.ignoreMinimized
-                    windowType: ~KWinComponents.ClientFilterModel.Dock &
-                                ~KWinComponents.ClientFilterModel.Desktop &
-                                ~KWinComponents.ClientFilterModel.Notification &
-                                ~KWinComponents.ClientFilterModel.CriticalNotification
+                    windowType: ~KWinComponents.WindowFilterModel.Dock &
+                                ~KWinComponents.WindowFilterModel.Desktop &
+                                ~KWinComponents.WindowFilterModel.Notification &
+                                ~KWinComponents.WindowFilterModel.CriticalNotification
                 }
                 delegate: WindowHeapDelegate {
                     windowHeap: heap
@@ -267,7 +267,7 @@ FocusScope {
                     }
 
                     opacity: 1 - downGestureProgress
-                    onDownGestureTriggered: client.closeWindow()
+                    onDownGestureTriggered: window.closeWindow()
                 }
                 onActivated: effect.deactivate();
                 onWindowClicked: {
@@ -294,25 +294,25 @@ FocusScope {
     }
 
     Repeater {
-        model: KWinComponents.ClientFilterModel {
+        model: KWinComponents.WindowFilterModel {
             desktop: KWinComponents.Workspace.currentDesktop
             screenName: targetScreen.name
-            clientModel: stackModel
-            windowType: KWinComponents.ClientFilterModel.Dock
+            windowModel: stackModel
+            windowType: KWinComponents.WindowFilterModel.Dock
         }
 
         KWinComponents.WindowThumbnailItem {
             id: windowThumbnail
-            visible: !model.client.hidden && opacity > 0
-            wId: model.client.internalId
-            x: model.client.x - targetScreen.geometry.x
-            y: model.client.y - targetScreen.geometry.y
-            z: model.client.stackingOrder
-            width: model.client.width
-            height: model.client.height
+            visible: !model.window.hidden && opacity > 0
+            wId: model.window.internalId
+            x: model.window.x - targetScreen.geometry.x
+            y: model.window.y - targetScreen.geometry.y
+            z: model.window.stackingOrder
+            width: model.window.width
+            height: model.window.height
             opacity: container.effect.gestureInProgress
                 ? 1 - container.effect.partialActivationFactor
-                : (model.client.hidden || container.organized) ? 0 : 1
+                : (model.window.hidden || container.organized) ? 0 : 1
 
             Behavior on opacity {
                 enabled: !container.effect.gestureInProgress
@@ -321,7 +321,7 @@ FocusScope {
         }
     }
 
-    KWinComponents.ClientModel {
+    KWinComponents.WindowModel {
         id: stackModel
     }
 

@@ -19,38 +19,38 @@ namespace KWin
 class Window;
 class Output;
 
-class ClientModel : public QAbstractListModel
+class WindowModel : public QAbstractListModel
 {
     Q_OBJECT
 
 public:
     enum Roles {
-        ClientRole = Qt::UserRole + 1,
+        WindowRole = Qt::UserRole + 1,
         OutputRole,
         DesktopRole,
         ActivityRole
     };
 
-    explicit ClientModel(QObject *parent = nullptr);
+    explicit WindowModel(QObject *parent = nullptr);
 
     QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
 private:
-    void markRoleChanged(Window *client, int role);
+    void markRoleChanged(Window *window, int role);
 
-    void handleClientAdded(Window *client);
-    void handleClientRemoved(Window *client);
-    void setupClientConnections(Window *client);
+    void handleWindowAdded(Window *window);
+    void handleWindowRemoved(Window *window);
+    void setupWindowConnections(Window *window);
 
-    QList<Window *> m_clients;
+    QList<Window *> m_windows;
 };
 
-class ClientFilterModel : public QSortFilterProxyModel
+class WindowFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
-    Q_PROPERTY(ClientModel *clientModel READ clientModel WRITE setClientModel NOTIFY clientModelChanged)
+    Q_PROPERTY(WindowModel *windowModel READ windowModel WRITE setWindowModel NOTIFY windowModelChanged)
     Q_PROPERTY(QString activity READ activity WRITE setActivity RESET resetActivity NOTIFY activityChanged)
     Q_PROPERTY(KWin::VirtualDesktop *desktop READ desktop WRITE setDesktop RESET resetDesktop NOTIFY desktopChanged)
     Q_PROPERTY(QString filter READ filter WRITE setFilter NOTIFY filterChanged)
@@ -70,10 +70,10 @@ public:
     Q_DECLARE_FLAGS(WindowTypes, WindowType)
     Q_FLAG(WindowTypes)
 
-    explicit ClientFilterModel(QObject *parent = nullptr);
+    explicit WindowFilterModel(QObject *parent = nullptr);
 
-    ClientModel *clientModel() const;
-    void setClientModel(ClientModel *clientModel);
+    WindowModel *windowModel() const;
+    void setWindowModel(WindowModel *windowModel);
 
     QString activity() const;
     void setActivity(const QString &activity);
@@ -104,15 +104,15 @@ Q_SIGNALS:
     void activityChanged();
     void desktopChanged();
     void screenNameChanged();
-    void clientModelChanged();
+    void windowModelChanged();
     void filterChanged();
     void windowTypeChanged();
     void minimizedWindowsChanged();
 
 private:
-    WindowTypes windowTypeMask(Window *client) const;
+    WindowTypes windowTypeMask(Window *window) const;
 
-    ClientModel *m_clientModel = nullptr;
+    WindowModel *m_windowModel = nullptr;
     std::optional<QString> m_activity;
     QPointer<Output> m_output;
     QPointer<VirtualDesktop> m_desktop;

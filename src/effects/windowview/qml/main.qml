@@ -186,7 +186,7 @@ Item {
                 }
                 window.closeWindow();
             }
-            model: KWinComponents.ClientFilterModel {
+            model: KWinComponents.WindowFilterModel {
                 activity: KWinComponents.Workspace.currentActivity
                 desktop: {
                     switch (container.effect.mode) {
@@ -198,18 +198,18 @@ Item {
                     }
                 }
                 screenName: targetScreen.name
-                clientModel: stackModel
+                windowModel: stackModel
                 filter: effect.searchText
                 minimizedWindows: !effect.ignoreMinimized
-                windowType: ~KWinComponents.ClientFilterModel.Dock &
-                            ~KWinComponents.ClientFilterModel.Desktop &
-                            ~KWinComponents.ClientFilterModel.Notification &
-                            ~KWinComponents.ClientFilterModel.CriticalNotification
+                windowType: ~KWinComponents.WindowFilterModel.Dock &
+                            ~KWinComponents.WindowFilterModel.Desktop &
+                            ~KWinComponents.WindowFilterModel.Notification &
+                            ~KWinComponents.WindowFilterModel.CriticalNotification
             }
             delegate: WindowHeapDelegate {
                 windowHeap: heap
                 opacity: 1 - downGestureProgress
-                onDownGestureTriggered: client.closeWindow()
+                onDownGestureTriggered: window.closeWindow()
             }
             onActivated: effect.deactivate(container.effect.animationDuration);
         }
@@ -218,21 +218,21 @@ Item {
     Instantiator {
         asynchronous: true
 
-        model: KWinComponents.ClientFilterModel {
+        model: KWinComponents.WindowFilterModel {
             desktop: KWinComponents.Workspace.currentDesktop
             screenName: targetScreen.name
-            clientModel: stackModel
-            windowType: KWinComponents.ClientFilterModel.Dock
+            windowModel: stackModel
+            windowType: KWinComponents.WindowFilterModel.Dock
         }
 
         KWinComponents.WindowThumbnailItem {
             id: windowThumbnail
-            wId: model.client.internalId
-            x: model.client.x - targetScreen.geometry.x
-            y: model.client.y - targetScreen.geometry.y
-            z: model.client.stackingOrder
+            wId: model.window.internalId
+            x: model.window.x - targetScreen.geometry.x
+            y: model.window.y - targetScreen.geometry.y
+            z: model.window.stackingOrder
             visible: opacity > 0
-            opacity: (model.client.hidden || container.organized) ? 0 : 1
+            opacity: (model.window.hidden || container.organized) ? 0 : 1
 
             Behavior on opacity {
                 NumberAnimation { duration: container.effect.animationDuration; easing.type: Easing.OutCubic }
@@ -244,7 +244,7 @@ Item {
         }
     }
 
-    KWinComponents.ClientModel {
+    KWinComponents.WindowModel {
         id: stackModel
     }
 
