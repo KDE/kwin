@@ -9,8 +9,8 @@
 #include "kwin_wayland_test.h"
 
 #include "core/outputbackend.h"
-#include "cursor.h"
 #include "input.h"
+#include "pointer_input.h"
 #include "scripting/scripting.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
@@ -59,7 +59,7 @@ void KWinBindingsTest::init()
 {
     QVERIFY(Test::setupWaylandConnection());
     workspace()->setActiveOutput(QPoint(640, 512));
-    KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    KWin::input()->pointer()->warp(QPoint(640, 512));
 }
 
 void KWinBindingsTest::cleanup()

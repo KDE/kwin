@@ -14,6 +14,7 @@
 #include "cursor.h"
 #include "effectloader.h"
 #include "main.h"
+#include "pointer_input.h"
 #include "screenedge.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -92,7 +93,7 @@ void ScreenEdgesTest::init()
 {
     workspace()->screenEdges()->recreateEdges();
     Workspace::self()->setActiveOutput(QPoint(640, 512));
-    KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    KWin::input()->pointer()->warp(QPoint(640, 512));
 
     QVERIFY(Test::setupWaylandConnection());
 }

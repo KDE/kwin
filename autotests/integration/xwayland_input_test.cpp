@@ -10,8 +10,8 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
 #include "deleted.h"
+#include "pointer_input.h"
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -57,7 +57,7 @@ void XWaylandInputTest::initTestCase()
 void XWaylandInputTest::init()
 {
     workspace()->setActiveOutput(QPoint(640, 512));
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    input()->pointer()->warp(QPoint(640, 512));
 
     QVERIFY(waylandServer()->windows().isEmpty());
 }
@@ -165,13 +165,13 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     // move pointer into the window, should trigger an enter
     QVERIFY(!window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
     QVERIFY(enteredSpy.isEmpty());
-    Cursors::self()->mouse()->setPos(window->frameGeometry().center());
+    input()->pointer()->warp(window->frameGeometry().center().toPoint());
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window->surface());
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.last().first().toPoint(), (window->frameGeometry().center() - QPointF(window->frameMargins().left(), window->frameMargins().top())).toPoint());
 
     // move out of window
-    Cursors::self()->mouse()->setPos(window->frameGeometry().bottomRight() + QPointF(10, 10));
+    input()->pointer()->warp(window->frameGeometry().bottomRight() + QPointF(10, 10));
     QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.last().first().toPoint(), (window->frameGeometry().center() - QPointF(window->frameMargins().left(), window->frameMargins().top())).toPoint());
 
@@ -253,14 +253,14 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     // Move pointer into the window, should trigger an enter.
     QVERIFY(!window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
     QVERIFY(enteredSpy.isEmpty());
-    Cursors::self()->mouse()->setPos(window->frameGeometry().center());
+    input()->pointer()->warp(window->frameGeometry().center().toPoint());
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window->surface());
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.last().first().toPoint(), QPoint(60, 105));
 
     // Move out of the window, should trigger a leave.
     QVERIFY(leftSpy.isEmpty());
-    Cursors::self()->mouse()->setPos(window->frameGeometry().bottomRight() + QPoint(100, 100));
+    input()->pointer()->warp(window->frameGeometry().bottomRight() + QPoint(100, 100));
     QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.last().first().toPoint(), QPoint(60, 105));
 

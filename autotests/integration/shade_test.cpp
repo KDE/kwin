@@ -10,7 +10,7 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
+#include "pointer_input.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
@@ -54,7 +54,7 @@ void ShadeTest::initTestCase()
 void ShadeTest::init()
 {
     workspace()->setActiveOutput(QPoint(640, 512));
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    input()->pointer()->warp(QPoint(640, 512));
 }
 
 void ShadeTest::testShadeGeometry()

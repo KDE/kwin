@@ -10,9 +10,9 @@
 
 #include "composite.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
 #include "effectloader.h"
 #include "effects.h"
+#include "pointer_input.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
@@ -138,7 +138,7 @@ void TranslucencyTest::testMoveAfterDesktopChange()
     workspace()->sendWindowToDesktop(window, 2, false);
     effects->setCurrentDesktop(2);
     QVERIFY(!m_translucencyEffect->isActive());
-    KWin::Cursors::self()->mouse()->setPos(window->frameGeometry().center());
+    KWin::input()->pointer()->warp(window->frameGeometry().center());
     workspace()->performWindowOperation(window, Options::MoveOp);
     QVERIFY(m_translucencyEffect->isActive());
     QTest::qWait(200);

@@ -10,8 +10,8 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
 #include "deleted.h"
+#include "pointer_input.h"
 #include "screenedge.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -66,7 +66,7 @@ void ScreenEdgeClientShowTest::initTestCase()
 void ScreenEdgeClientShowTest::init()
 {
     workspace()->setActiveOutput(QPoint(640, 512));
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    input()->pointer()->warp(QPoint(640, 512));
     QVERIFY(waylandServer()->windows().isEmpty());
 }
 
@@ -140,7 +140,7 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     // now trigger the edge
     QSignalSpy effectsWindowShownSpy(effects, &EffectsHandler::windowShown);
     QFETCH(QPoint, triggerPos);
-    Cursors::self()->mouse()->setPos(triggerPos);
+    input()->pointer()->warp(triggerPos);
     QVERIFY(!window->isHiddenInternal());
     QCOMPARE(effectsWindowShownSpy.count(), 1);
 
@@ -148,7 +148,7 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     QTest::qWait(1);
 
     // hide window again
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    input()->pointer()->warp(QPoint(640, 512));
     xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atom, XCB_ATOM_CARDINAL, 32, 1, &location);
     xcb_flush(c.get());
     QVERIFY(clientHiddenSpy.wait());
@@ -157,7 +157,7 @@ void ScreenEdgeClientShowTest::testScreenEdgeShowHideX11()
     // resizewhile hidden
     window->moveResize(resizedWindowGeometry);
     // triggerPos shouldn't be valid anymore
-    Cursors::self()->mouse()->setPos(triggerPos);
+    input()->pointer()->warp(triggerPos);
     QVERIFY(window->isHiddenInternal());
 
     // destroy window again

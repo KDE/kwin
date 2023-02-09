@@ -13,6 +13,7 @@
 #include "cursor.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/settings.h"
+#include "pointer_input.h"
 #include "scripting/scripting.h"
 #include "utils/common.h"
 #include "wayland_server.h"
@@ -113,7 +114,7 @@ void QuickTilingTest::init()
     m_compositor = Test::waylandCompositor();
 
     workspace()->setActiveOutput(QPoint(640, 512));
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    input()->pointer()->warp(QPoint(640, 512));
 }
 
 void QuickTilingTest::cleanup()

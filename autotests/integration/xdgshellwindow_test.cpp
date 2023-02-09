@@ -11,11 +11,11 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/settings.h"
 #include "deleted.h"
 #include "effects.h"
+#include "pointer_input.h"
 #include "virtualdesktops.h"
 #include "wayland/clientconnection.h"
 #include "wayland/display.h"
@@ -184,7 +184,7 @@ void TestXdgShellWindow::init()
 
     workspace()->setActiveOutput(QPoint(640, 512));
     // put mouse in the middle of screen one
-    KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    KWin::input()->pointer()->warp(QPoint(640, 512));
 }
 
 void TestXdgShellWindow::cleanup()

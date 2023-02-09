@@ -9,10 +9,10 @@
 #include "kwin_wayland_test.h"
 
 #include "core/outputbackend.h"
-#include "cursor.h"
 #include "input.h"
 #include "internalwindow.h"
 #include "keyboard_input.h"
+#include "pointer_input.h"
 #include "useractions.h"
 #include "wayland/keyboard_interface.h"
 #include "wayland/seat_interface.h"
@@ -76,7 +76,7 @@ void GlobalShortcutsTest::init()
 {
     QVERIFY(Test::setupWaylandConnection());
     workspace()->setActiveOutput(QPoint(640, 512));
-    KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    KWin::input()->pointer()->warp(QPoint(640, 512));
 
     auto xkb = input()->keyboard()->xkb();
     xkb->switchToLayout(0);

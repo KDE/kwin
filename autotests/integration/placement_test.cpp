@@ -11,8 +11,8 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
 #include "placement.h"
+#include "pointer_input.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -66,7 +66,7 @@ void TestPlacement::init()
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::PlasmaShell));
 
     workspace()->setActiveOutput(QPoint(640, 512));
-    KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    KWin::input()->pointer()->warp(QPoint(640, 512));
 }
 
 void TestPlacement::cleanup()
@@ -240,7 +240,7 @@ void TestPlacement::testPlaceUnderMouse()
     group.sync();
     workspace()->slotReconfigure();
 
-    KWin::Cursors::self()->mouse()->setPos(QPoint(200, 300));
+    KWin::input()->pointer()->warp(QPoint(200, 300));
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), QPoint(200, 300));
 
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());

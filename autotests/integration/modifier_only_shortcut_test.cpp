@@ -11,9 +11,9 @@
 #include "kwin_wayland_test.h"
 
 #include "core/outputbackend.h"
-#include "cursor.h"
 #include "input.h"
 #include "keyboard_input.h"
+#include "pointer_input.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "xkb.h"
@@ -96,7 +96,7 @@ void ModifierOnlyShortcutTest::initTestCase()
 void ModifierOnlyShortcutTest::init()
 {
     workspace()->setActiveOutput(QPoint(640, 512));
-    KWin::Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    KWin::input()->pointer()->warp(QPoint(640, 512));
 }
 
 void ModifierOnlyShortcutTest::cleanup()

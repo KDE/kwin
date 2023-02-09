@@ -10,8 +10,8 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
 #include "deleted.h"
+#include "pointer_input.h"
 #include "utils/xcbutils.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -59,7 +59,7 @@ void X11DesktopWindowTest::initTestCase()
 void X11DesktopWindowTest::init()
 {
     workspace()->setActiveOutput(QPoint(640, 512));
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    input()->pointer()->warp(QPoint(640, 512));
 }
 
 void X11DesktopWindowTest::cleanup()

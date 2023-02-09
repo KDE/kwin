@@ -10,8 +10,8 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "cursor.h"
 #include "deleted.h"
+#include "pointer_input.h"
 #include "screenedge.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
@@ -89,7 +89,7 @@ void StrutsTest::init()
     m_plasmaShell = Test::waylandPlasmaShell();
 
     workspace()->setActiveOutput(QPoint(640, 512));
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    input()->pointer()->warp(QPoint(640, 512));
     QVERIFY(waylandServer()->windows().isEmpty());
 }
 
@@ -955,7 +955,7 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     QCOMPARE(window2->pos(), QPoint(1500, 400));
 
     const QRectF origGeo = window2->frameGeometry();
-    Cursors::self()->mouse()->setPos(origGeo.center());
+    input()->pointer()->warp(origGeo.center());
     workspace()->performWindowOperation(window2, Options::MoveOp);
     QTRY_COMPARE(workspace()->moveResizeWindow(), window2);
     QVERIFY(window2->isInteractiveMove());

@@ -148,7 +148,7 @@ void DecorationInputTest::init()
     QVERIFY(Test::waitForWaylandPointer());
 
     workspace()->setActiveOutput(QPoint(640, 512));
-    Cursors::self()->mouse()->setPos(QPoint(640, 512));
+    input()->pointer()->warp(QPoint(640, 512));
 }
 
 void DecorationInputTest::cleanup()
@@ -593,7 +593,7 @@ void DecorationInputTest::testModifierClickUnrestrictedMove()
     QVERIFY(!window->noBorder());
     window->move(workspace()->activeOutput()->geometry().center() - QPoint(window->width() / 2, window->height() / 2));
     // move cursor on window
-    Cursors::self()->mouse()->setPos(QPoint(window->frameGeometry().center().x(), window->y() + window->frameMargins().top() / 2.0));
+    input()->pointer()->warp(QPoint(window->frameGeometry().center().x(), window->y() + window->frameMargins().top() / 2.0));
 
     // simulate modifier+click
     quint32 timestamp = 1;
@@ -655,7 +655,7 @@ void DecorationInputTest::testModifierScrollOpacity()
     QVERIFY(!window->noBorder());
     window->move(workspace()->activeOutput()->geometry().center() - QPoint(window->width() / 2, window->height() / 2));
     // move cursor on window
-    Cursors::self()->mouse()->setPos(QPoint(window->frameGeometry().center().x(), window->y() + window->frameMargins().top() / 2.0));
+    input()->pointer()->warp(QPoint(window->frameGeometry().center().x(), window->y() + window->frameMargins().top() / 2.0));
     // set the opacity to 0.5
     window->setOpacity(0.5);
     QCOMPARE(window->opacity(), 0.5);
@@ -733,7 +733,7 @@ void DecorationInputTest::testTouchEvents()
     QCOMPARE(window->isInteractiveMove(), false);
 
     // let's check that a hover motion is sent if the pointer is on deco, when touch release
-    Cursors::self()->mouse()->setPos(tapPoint);
+    input()->pointer()->warp(tapPoint);
     QCOMPARE(hoverMoveSpy.count(), 2);
     Test::touchDown(0, tapPoint, timestamp++);
     QCOMPARE(hoverMoveSpy.count(), 3);
