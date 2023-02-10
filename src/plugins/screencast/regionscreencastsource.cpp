@@ -54,8 +54,7 @@ void RegionScreenCastSource::updateOutput(Output *output)
         ShaderBinder shaderBinder(ShaderTrait::MapTexture);
         QMatrix4x4 projectionMatrix;
         projectionMatrix.ortho(m_region);
-        projectionMatrix.translate(outputGeometry.left() / m_scale, (m_region.bottom() - outputGeometry.bottom()) / m_scale);
-        projectionMatrix.translate(0, m_region.top() / m_scale);
+        projectionMatrix.translate(outputGeometry.left() / m_scale, outputGeometry.top() / m_scale);
 
         shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
@@ -89,6 +88,7 @@ void RegionScreenCastSource::render(GLFramebuffer *target)
     auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
 
     QMatrix4x4 projectionMatrix;
+    projectionMatrix.scale(1, -1);
     projectionMatrix.ortho(r);
     shader->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
