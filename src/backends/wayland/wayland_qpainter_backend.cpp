@@ -118,7 +118,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::beginFrame
 {
     WaylandQPainterBufferSlot *slot = acquire();
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(&slot->image, m_waylandOutput->geometry(), m_waylandOutput->scale()),
+        .renderTarget = RenderTarget(&slot->image),
         .repaint = accumulateDamage(slot->age),
     };
 }
@@ -146,7 +146,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame(
     }
 
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(&m_backingStore, m_output->fractionalGeometry(), m_output->scale()),
+        .renderTarget = RenderTarget(&m_backingStore),
         .repaint = infiniteRegion(),
     };
 }

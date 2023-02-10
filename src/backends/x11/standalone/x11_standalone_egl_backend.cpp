@@ -166,7 +166,7 @@ OutputLayerBeginFrameInfo EglBackend::beginFrame()
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
 
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_fbo.get(), workspace()->geometry(), 1),
+        .renderTarget = RenderTarget(m_fbo.get()),
         .repaint = repaint,
     };
 }

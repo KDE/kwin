@@ -42,12 +42,12 @@ ShowPaintEffect::ShowPaintEffect()
     connect(toggleAction, &QAction::triggered, this, &ShowPaintEffect::toggle);
 }
 
-void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, int mask, const QRegion &region, ScreenPaintData &data)
+void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const ViewPort &viewPort, int mask, const QRegion &region, ScreenPaintData &data)
 {
     m_painted = QRegion();
-    effects->paintScreen(renderTarget, mask, region, data);
+    effects->paintScreen(renderTarget, viewPort, mask, region, data);
     if (effects->isOpenGLCompositing()) {
-        paintGL(data.projectionMatrix(), renderTarget.scale());
+        paintGL(data.projectionMatrix(), viewPort.scale());
     } else if (effects->compositingType() == QPainterCompositing) {
         paintQPainter();
     }
@@ -56,10 +56,10 @@ void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, int mask, co
     }
 }
 
-void ShowPaintEffect::paintWindow(const RenderTarget &renderTarget, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void ShowPaintEffect::paintWindow(const RenderTarget &renderTarget, const ViewPort &viewPort, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     m_painted |= region;
-    effects->paintWindow(renderTarget, w, mask, region, data);
+    effects->paintWindow(renderTarget, viewPort, w, mask, region, data);
 }
 
 void ShowPaintEffect::paintGL(const QMatrix4x4 &projection, qreal scale)

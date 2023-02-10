@@ -70,7 +70,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame()
         return std::nullopt;
     }
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_gbmSurface->fbo(), m_output->fractionalGeometry(), m_output->scale()),
+        .renderTarget = RenderTarget(m_gbmSurface->fbo()),
         .repaint = m_gbmSurface->repaintRegion(),
     };
 }

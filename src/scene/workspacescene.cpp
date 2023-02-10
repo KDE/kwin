@@ -345,12 +345,12 @@ void WorkspaceScene::postPaint()
     clearStackingOrder();
 }
 
-void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &region)
+void WorkspaceScene::paint(const RenderTarget &renderTarget, const ViewPort &viewPort, const QRegion &region)
 {
-    m_renderer->beginFrame(renderTarget);
+    m_renderer->beginFrame(renderTarget, viewPort);
 
-    ScreenPaintData data(renderTarget.projectionMatrix(), EffectScreenImpl::get(painted_screen));
-    effects->paintScreen(renderTarget, m_paintContext.mask, region, data);
+    ScreenPaintData data(viewPort.projectionMatrix(), EffectScreenImpl::get(painted_screen));
+    effects->paintScreen(renderTarget, viewPort, m_paintContext.mask, region, data);
     m_paintScreenCount = 0;
     Q_EMIT frameRendered();
 
@@ -358,37 +358,37 @@ void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &regi
 }
 
 // the function that'll be eventually called by paintScreen() above
-void WorkspaceScene::finalPaintScreen(const RenderTarget &renderTarget, int mask, const QRegion &region, ScreenPaintData &data)
+void WorkspaceScene::finalPaintScreen(const RenderTarget &renderTarget, const ViewPort &viewPort, int mask, const QRegion &region, ScreenPaintData &data)
 {
     m_paintScreenCount++;
     if (mask & (PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) {
-        paintGenericScreen(renderTarget, mask, data);
+        paintGenericScreen(renderTarget, viewPort, mask, data);
     } else {
-        paintSimpleScreen(renderTarget, mask, region);
+        paintSimpleScreen(renderTarget, viewPort, mask, region);
     }
 }
 
 // The generic painting code that can handle even transformations.
 // It simply paints bottom-to-top.
-void WorkspaceScene::paintGenericScreen(const RenderTarget &renderTarget, int, const ScreenPaintData &)
+void WorkspaceScene::paintGenericScreen(const RenderTarget &renderTarget, const ViewPort &viewPort, int, const ScreenPaintData &)
 {
     if (m_paintContext.mask & PAINT_SCREEN_BACKGROUND_FIRST) {
         if (m_paintScreenCount == 1) {
-            m_renderer->renderBackground(renderTarget, infiniteRegion());
+            m_renderer->renderBackground(renderTarget, viewPort, infiniteRegion());
         }
     } else {
-        m_renderer->renderBackground(renderTarget, infiniteRegion());
+        m_renderer->renderBackground(renderTarget, viewPort, infiniteRegion());
     }
 
     for (const Phase2Data &paintData : std::as_const(m_paintContext.phase2Data)) {
-        paintWindow(renderTarget, paintData.item, paintData.mask, paintData.region);
+        paintWindow(renderTarget, viewPort, paintData.item, paintData.mask, paintData.region);
     }
 }
 
 // The optimized case without any transformations at all.
 // It can paint only the requested region and can use clipping
 // to reduce painting and improve performance.
-void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, int, const QRegion &region)
+void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const ViewPort &viewPort, int, const QRegion &region)
 {
     // This is the occlusion culling pass
     QRegion visible = region;
@@ -405,16 +405,16 @@ void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, int, co
         }
     }
 
-    m_renderer->renderBackground(renderTarget, visible);
+    m_renderer->renderBackground(renderTarget, viewPort, visible);
 
     for (const Phase2Data &paintData : std::as_const(m_paintContext.phase2Data)) {
-        paintWindow(renderTarget, paintData.item, paintData.mask, paintData.region);
+        paintWindow(renderTarget, viewPort, paintData.item, paintData.mask, paintData.region);
     }
 
     if (m_dndIcon) {
         const QRegion repaint = region & m_dndIcon->mapToGlobal(m_dndIcon->boundingRect()).toRect();
         if (!repaint.isEmpty()) {
-            m_renderer->renderItem(renderTarget, m_dndIcon.get(), 0, repaint, WindowPaintData(renderTarget.projectionMatrix()));
+            m_renderer->renderItem(renderTarget, viewPort, m_dndIcon.get(), 0, repaint, WindowPaintData(viewPort.projectionMatrix()));
         }
     }
 }
@@ -450,26 +450,26 @@ void WorkspaceScene::clearStackingOrder()
     stacking_order.clear();
 }
 
-void WorkspaceScene::paintWindow(const RenderTarget &renderTarget, WindowItem *item, int mask, const QRegion &region)
+void WorkspaceScene::paintWindow(const RenderTarget &renderTarget, const ViewPort &viewPort, WindowItem *item, int mask, const QRegion &region)
 {
     if (region.isEmpty()) { // completely clipped
         return;
     }
 
-    WindowPaintData data(renderTarget.projectionMatrix());
-    effects->paintWindow(renderTarget, item->window()->effectWindow(), mask, region, data);
+    WindowPaintData data(viewPort.projectionMatrix());
+    effects->paintWindow(renderTarget, viewPort, item->window()->effectWindow(), mask, region, data);
 }
 
 // the function that'll be eventually called by paintWindow() above
-void WorkspaceScene::finalPaintWindow(const RenderTarget &renderTarget, EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
+void WorkspaceScene::finalPaintWindow(const RenderTarget &renderTarget, const ViewPort &viewPort, EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
 {
-    effects->drawWindow(renderTarget, w, mask, region, data);
+    effects->drawWindow(renderTarget, viewPort, w, mask, region, data);
 }
 
 // will be eventually called from drawWindow()
-void WorkspaceScene::finalDrawWindow(const RenderTarget &renderTarget, EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
+void WorkspaceScene::finalDrawWindow(const RenderTarget &renderTarget, const ViewPort &viewPort, EffectWindowImpl *w, int mask, const QRegion &region, WindowPaintData &data)
 {
-    m_renderer->renderItem(renderTarget, w->windowItem(), mask, region, data);
+    m_renderer->renderItem(renderTarget, viewPort, w->windowItem(), mask, region, data);
 }
 
 bool WorkspaceScene::makeOpenGLContextCurrent()

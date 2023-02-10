@@ -11,6 +11,7 @@
 #include "kwingltexture.h"
 #include "kwinglutils.h"
 #include "libkwineffects/rendertarget.h"
+#include "libkwineffects/viewport.h"
 #include "scene/cursorscene.h"
 
 namespace KWin
@@ -20,7 +21,7 @@ CursorDelegateOpenGL::~CursorDelegateOpenGL()
 {
 }
 
-void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion &region)
+void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const ViewPort &viewPort, const QRegion &region)
 {
     if (!region.intersects(layer()->mapToGlobal(layer()->rect()))) {
         return;
@@ -28,7 +29,7 @@ void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion
 
     // Show the rendered cursor scene on the screen.
     const QRect cursorRect = layer()->mapToGlobal(layer()->rect());
-    const double scale = renderTarget.scale();
+    const double scale = viewPort.scale();
 
     // Render the cursor scene in an offscreen render target.
     const QSize bufferSize = Cursors::self()->currentCursor()->rect().size() * scale;
@@ -37,12 +38,13 @@ void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion
         m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
     }
 
-    RenderTarget offscreenRenderTarget(m_framebuffer.get(), cursorRect, scale);
+    RenderTarget offscreenRenderTarget(m_framebuffer.get());
+    ViewPort offscreenViewPort(cursorRect, scale);
 
     RenderLayer renderLayer(layer()->loop());
     renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene()));
     renderLayer.delegate()->prePaint();
-    renderLayer.delegate()->paint(offscreenRenderTarget, infiniteRegion());
+    renderLayer.delegate()->paint(offscreenRenderTarget, offscreenViewPort, infiniteRegion());
     renderLayer.delegate()->postPaint();
 
     QMatrix4x4 mvp;

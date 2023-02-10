@@ -27,7 +27,7 @@ public:
     ScreenEdgeEffect();
     ~ScreenEdgeEffect() override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(const RenderTarget &renderTarget, int mask, const QRegion &region, ScreenPaintData &data) override;
+    void paintScreen(const RenderTarget &renderTarget, const ViewPort &viewPort, int mask, const QRegion &region, ScreenPaintData &data) override;
     bool isActive() const override;
 
     int requestedEffectChainPosition() const override

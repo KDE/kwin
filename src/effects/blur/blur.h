@@ -41,7 +41,7 @@ public:
     void reconfigure(ReconfigureFlags flags) override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void drawWindow(const RenderTarget &renderTarget, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
+    void drawWindow(const RenderTarget &renderTarget, const ViewPort &viewPort, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) override;
 
     bool provides(Feature feature) override;
     bool isActive() const override;
@@ -74,12 +74,12 @@ private:
     bool decorationSupportsBlurBehind(const EffectWindow *w) const;
     bool shouldBlur(const EffectWindow *w, int mask, const WindowPaintData &data) const;
     void updateBlurRegion(EffectWindow *w);
-    void doBlur(const RenderTarget &renderTarget, const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection, bool isDock, QRect windowRect);
+    void doBlur(const RenderTarget &renderTarget, const ViewPort &viewPort, const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection, bool isDock, QRect windowRect);
     void uploadRegion(QVector2D *&map, const QRegion &region, const int downSampleIterations);
     Q_REQUIRED_RESULT bool uploadGeometry(GLVertexBuffer *vbo, const QRegion &blurRegion, const QRegion &windowRegion);
     void generateNoiseTexture();
 
-    void upscaleRenderToScreen(const RenderTarget &renderTarget, GLVertexBuffer *vbo, int vboStart, int blurRectCount, const QMatrix4x4 &screenProjection, QPoint windowPosition);
+    void upscaleRenderToScreen(const ViewPort &viewPort, GLVertexBuffer *vbo, int vboStart, int blurRectCount, const QMatrix4x4 &screenProjection, QPoint windowPosition);
     void applyNoise(GLVertexBuffer *vbo, int vboStart, int blurRectCount, const QMatrix4x4 &screenProjection, QPoint windowPosition);
     void downSampleTexture(GLVertexBuffer *vbo, int blurRectCount);
     void upSampleTexture(GLVertexBuffer *vbo, int blurRectCount);

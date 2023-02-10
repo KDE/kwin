@@ -16,6 +16,7 @@
 
 #include "kwingltexture.h"
 #include "kwinglutils.h"
+#include "viewport.h"
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/pointer.h>
@@ -202,12 +203,13 @@ bool WaylandOutput::setCursor(CursorSource *source)
     }
 
     const RenderTarget &renderTarget = beginInfo->renderTarget;
+    const ViewPort viewPort(QRect(QPoint(), renderTarget.size() / scale()), scale());
 
     RenderLayer renderLayer(m_renderLoop.get());
     renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene()));
 
     renderLayer.delegate()->prePaint();
-    renderLayer.delegate()->paint(renderTarget, infiniteRegion());
+    renderLayer.delegate()->paint(renderTarget, viewPort, infiniteRegion());
     renderLayer.delegate()->postPaint();
 
     cursorLayer->endFrame(infiniteRegion(), infiniteRegion());

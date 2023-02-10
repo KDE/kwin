@@ -373,10 +373,10 @@ bool ContrastEffect::shouldContrast(const EffectWindow *w, int mask, const Windo
     return true;
 }
 
-void ContrastEffect::drawWindow(const RenderTarget &renderTarget, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
+void ContrastEffect::drawWindow(const RenderTarget &renderTarget, const ViewPort &viewPort, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
 {
     if (shouldContrast(w, mask, data)) {
-        const QRect screen = renderTarget.renderRect().toRect();
+        const QRect screen = viewPort.renderRect().toRect();
         QRegion shape = region & contrastRegion(w).translated(w->pos().toPoint()) & screen;
 
         // let's do the evil parts - someone wants to blur behind a transformed window
@@ -401,17 +401,17 @@ void ContrastEffect::drawWindow(const RenderTarget &renderTarget, EffectWindow *
         }
 
         if (!shape.isEmpty()) {
-            doContrast(renderTarget, w, shape, screen, data.opacity(), data.projectionMatrix());
+            doContrast(renderTarget, viewPort, w, shape, screen, data.opacity(), data.projectionMatrix());
         }
     }
 
     // Draw the window over the contrast area
-    effects->drawWindow(renderTarget, w, mask, region, data);
+    effects->drawWindow(renderTarget, viewPort, w, mask, region, data);
 }
 
-void ContrastEffect::doContrast(const RenderTarget &renderTarget, EffectWindow *w, const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection)
+void ContrastEffect::doContrast(const RenderTarget &renderTarget, const ViewPort &viewPort, EffectWindow *w, const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection)
 {
-    const qreal scale = renderTarget.scale();
+    const qreal scale = viewPort.scale();
     const QRegion actualShape = shape & screen;
     const QRectF r = scaledRect(actualShape.boundingRect(), scale);
 
@@ -430,7 +430,7 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, EffectWindow *
     scratch.setWrapMode(GL_CLAMP_TO_EDGE);
     scratch.bind();
 
-    const QRectF sg = scaledRect(renderTarget.renderRect(), scale);
+    const QRectF sg = scaledRect(viewPort.renderRect(), scale);
     glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, (r.x() - sg.x()), (sg.height() - (r.y() - sg.y() + r.height())),
                         scratch.width(), scratch.height());
 

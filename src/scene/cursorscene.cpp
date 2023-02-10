@@ -52,11 +52,11 @@ void CursorScene::postPaint()
 {
 }
 
-void CursorScene::paint(const RenderTarget &renderTarget, const QRegion &region)
+void CursorScene::paint(const RenderTarget &renderTarget, const ViewPort &viewPort, const QRegion &region)
 {
-    m_renderer->beginFrame(renderTarget);
-    m_renderer->renderBackground(renderTarget, region);
-    m_renderer->renderItem(renderTarget, m_rootItem.get(), 0, region, WindowPaintData(renderTarget.projectionMatrix()));
+    m_renderer->beginFrame(renderTarget, viewPort);
+    m_renderer->renderBackground(renderTarget, viewPort, region);
+    m_renderer->renderItem(renderTarget, viewPort, m_rootItem.get(), 0, region, WindowPaintData(viewPort.projectionMatrix()));
     m_renderer->endFrame();
 }
 

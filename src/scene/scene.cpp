@@ -50,9 +50,9 @@ void SceneDelegate::postPaint()
     m_scene->postPaint();
 }
 
-void SceneDelegate::paint(const RenderTarget &renderTarget, const QRegion &region)
+void SceneDelegate::paint(const RenderTarget &renderTarget, const ViewPort &viewPort, const QRegion &region)
 {
-    m_scene->paint(renderTarget, region.translated(viewport().topLeft()));
+    m_scene->paint(renderTarget, viewPort, region.translated(viewport().topLeft()));
 }
 
 Output *SceneDelegate::output() const

@@ -790,7 +790,7 @@ OutputLayerBeginFrameInfo GlxBackend::beginFrame()
     glXWaitX();
 
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_fbo.get(), workspace()->geometry(), 1),
+        .renderTarget = RenderTarget(m_fbo.get()),
         .repaint = repaint,
     };
 }

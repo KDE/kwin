@@ -680,11 +680,12 @@ void Compositor::composite(RenderLoop *renderLoop)
 
         if (auto beginInfo = primaryLayer->beginFrame()) {
             auto &[renderTarget, repaint] = beginInfo.value();
+            const ViewPort viewPort(output ? output->fractionalGeometry() : workspace()->geometry(), output ? output->scale() : 1);
 
             const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(superLayer->rect());
             primaryLayer->aboutToStartPainting(bufferDamage);
 
-            paintPass(superLayer, renderTarget, bufferDamage);
+            paintPass(superLayer, renderTarget, viewPort, bufferDamage);
             primaryLayer->endFrame(bufferDamage, surfaceDamage);
         }
     }
@@ -739,14 +740,14 @@ void Compositor::preparePaintPass(RenderLayer *layer, QRegion *repaint)
     }
 }
 
-void Compositor::paintPass(RenderLayer *layer, const RenderTarget &renderTarget, const QRegion &region)
+void Compositor::paintPass(RenderLayer *layer, const RenderTarget &renderTarget, const ViewPort &viewPort, const QRegion &region)
 {
-    layer->delegate()->paint(renderTarget, region);
+    layer->delegate()->paint(renderTarget, viewPort, region);
 
     const auto sublayers = layer->sublayers();
     for (RenderLayer *sublayer : sublayers) {
         if (sublayer->isVisible()) {
-            paintPass(sublayer, renderTarget, region);
+            paintPass(sublayer, renderTarget, viewPort, region);
         }
     }
 }

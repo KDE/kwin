@@ -88,16 +88,16 @@ void SnapHelperEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
     effects->prePaintScreen(data, presentTime);
 }
 
-void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, int mask, const QRegion &region, ScreenPaintData &data)
+void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, const ViewPort &viewPort, int mask, const QRegion &region, ScreenPaintData &data)
 {
-    effects->paintScreen(renderTarget, mask, region, data);
+    effects->paintScreen(renderTarget, viewPort, mask, region, data);
 
     const qreal opacityFactor = m_animation.active
         ? m_animation.timeLine.value()
         : 1.0;
     const QList<EffectScreen *> screens = effects->screens();
 
-    const auto scale = renderTarget.scale();
+    const auto scale = viewPort.scale();
 
     // Display the guide
     if (effects->isOpenGLCompositing()) {

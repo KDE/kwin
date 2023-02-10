@@ -16,6 +16,7 @@
 #include <kwineffects_export.h>
 #include <kwinglobals.h>
 #include <rendertarget.h>
+#include <viewport.h>
 
 #include <QEasingCurve>
 #include <QIcon>
@@ -384,7 +385,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void paintScreen(const RenderTarget &renderTarget, int mask, const QRegion &region, ScreenPaintData &data);
+    virtual void paintScreen(const RenderTarget &renderTarget, const ViewPort &viewPort, int mask, const QRegion &region, ScreenPaintData &data);
     /**
      * Called after all the painting has been finished.
      * In this method you can:
@@ -422,7 +423,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void paintWindow(const RenderTarget &renderTarget, EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
+    virtual void paintWindow(const RenderTarget &renderTarget, const ViewPort &viewPort, EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
     /**
      * Called for every window after all painting has been finished.
      * In this method you can:
@@ -461,7 +462,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void drawWindow(const RenderTarget &renderTarget, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data);
+    virtual void drawWindow(const RenderTarget &renderTarget, const ViewPort &viewPort, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data);
 
     virtual void windowInputMouseEvent(QEvent *e);
     virtual void grabbedKeyboardEvent(QKeyEvent *e);
@@ -842,13 +843,13 @@ public:
     ~EffectsHandler() override;
     // for use by effects
     virtual void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) = 0;
-    virtual void paintScreen(const RenderTarget &renderTarget, int mask, const QRegion &region, ScreenPaintData &data) = 0;
+    virtual void paintScreen(const RenderTarget &renderTarget, const ViewPort &viewPort, int mask, const QRegion &region, ScreenPaintData &data) = 0;
     virtual void postPaintScreen() = 0;
     virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) = 0;
-    virtual void paintWindow(const RenderTarget &renderTarget, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) = 0;
+    virtual void paintWindow(const RenderTarget &renderTarget, const ViewPort &viewPort, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) = 0;
     virtual void postPaintWindow(EffectWindow *w) = 0;
-    virtual void drawWindow(const RenderTarget &renderTarget, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) = 0;
-    virtual void renderWindow(const RenderTarget &renderTarget, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) = 0;
+    virtual void drawWindow(const RenderTarget &renderTarget, const ViewPort &viewPort, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) = 0;
+    virtual void renderWindow(const RenderTarget &renderTarget, const ViewPort &viewPort, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) = 0;
     virtual QVariant kwinOption(KWinOption kwopt) = 0;
     /**
      * Sets the cursor while the mouse is intercepted.
@@ -1388,7 +1389,7 @@ public:
      * It can be called at any point during the scene rendering
      * @since 5.18
      */
-    virtual void renderOffscreenQuickView(const RenderTarget &renderTarget, OffscreenQuickView *effectQuickView) const = 0;
+    virtual void renderOffscreenQuickView(const RenderTarget &renderTarget, const ViewPort &viewPort, OffscreenQuickView *effectQuickView) const = 0;
 
     /**
      * The status of the session i.e if the user is logging out
@@ -3689,7 +3690,7 @@ public:
     /**
      * Render the frame.
      */
-    virtual void render(const RenderTarget &renderTarget, const QRegion &region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0) = 0;
+    virtual void render(const RenderTarget &renderTarget, const ViewPort &viewPort, const QRegion &region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0) = 0;
 
     virtual void setPosition(const QPoint &point) = 0;
     /**

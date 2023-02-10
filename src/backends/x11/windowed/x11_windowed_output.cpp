@@ -18,6 +18,7 @@
 #include "core/renderloop_p.h"
 #include "cursorsource.h"
 #include "scene/cursorscene.h"
+#include "viewport.h"
 
 #include <NETWM>
 
@@ -301,12 +302,13 @@ bool X11WindowedOutput::setCursor(CursorSource *source)
     }
 
     const RenderTarget &renderTarget = beginInfo->renderTarget;
+    const ViewPort viewPort(QRectF(QPointF(), renderTarget.size() / scale()), scale());
 
     RenderLayer renderLayer(m_renderLoop.get());
     renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene()));
 
     renderLayer.delegate()->prePaint();
-    renderLayer.delegate()->paint(renderTarget, infiniteRegion());
+    renderLayer.delegate()->paint(renderTarget, viewPort, infiniteRegion());
     renderLayer.delegate()->postPaint();
 
     cursorLayer->endFrame(infiniteRegion(), infiniteRegion());

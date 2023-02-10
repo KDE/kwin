@@ -23,6 +23,7 @@
 #include "drm_layer.h"
 #include "drm_logging.h"
 #include "kwinglutils.h"
+#include "viewport.h"
 // Qt
 #include <QCryptographicHash>
 #include <QMatrix4x4>
@@ -164,12 +165,13 @@ bool DrmOutput::setCursor(CursorSource *source)
     if (nativeCursorRect.width() <= m_gpu->cursorSize().width() && nativeCursorRect.height() <= m_gpu->cursorSize().height()) {
         if (auto beginInfo = layer->beginFrame()) {
             const RenderTarget &renderTarget = beginInfo->renderTarget;
+            const ViewPort viewPort(QRectF(QPoint(), gpu()->cursorSize() / scale()), scale());
 
             RenderLayer renderLayer(m_renderLoop.get());
             renderLayer.setDelegate(std::make_unique<SceneDelegate>(Compositor::self()->cursorScene()));
 
             renderLayer.delegate()->prePaint();
-            renderLayer.delegate()->paint(renderTarget, infiniteRegion());
+            renderLayer.delegate()->paint(renderTarget, viewPort, infiniteRegion());
             renderLayer.delegate()->postPaint();
 
             rendered = layer->endFrame(infiniteRegion(), infiniteRegion());

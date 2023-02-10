@@ -25,7 +25,7 @@ class ColorPickerEffect : public Effect, protected QDBusContext
 public:
     ColorPickerEffect();
     ~ColorPickerEffect() override;
-    void paintScreen(const RenderTarget &renderTarget, int mask, const QRegion &region, ScreenPaintData &data) override;
+    void paintScreen(const RenderTarget &renderTarget, const ViewPort &viewPort, int mask, const QRegion &region, ScreenPaintData &data) override;
     bool isActive() const override;
 
     int requestedEffectChainPosition() const override

@@ -31,6 +31,7 @@ class WorkspaceScene;
 class Window;
 class X11Window;
 class X11SyncManager;
+class ViewPort;
 
 class KWIN_EXPORT Compositor : public QObject
 {
@@ -193,7 +194,7 @@ private:
     void prePaintPass(RenderLayer *layer);
     void postPaintPass(RenderLayer *layer);
     void preparePaintPass(RenderLayer *layer, QRegion *repaint);
-    void paintPass(RenderLayer *layer, const RenderTarget &renderTarget, const QRegion &region);
+    void paintPass(RenderLayer *layer, const RenderTarget &renderTarget, const ViewPort &viewPort, const QRegion &region);
 
     State m_state = State::Off;
     std::unique_ptr<CompositorSelectionOwner> m_selectionOwner;

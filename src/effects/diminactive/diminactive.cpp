@@ -95,13 +95,13 @@ void DimInactiveEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mi
     effects->prePaintScreen(data, presentTime);
 }
 
-void DimInactiveEffect::paintWindow(const RenderTarget &renderTarget, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void DimInactiveEffect::paintWindow(const RenderTarget &renderTarget, const ViewPort &viewPort, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     auto transitionIt = m_transitions.constFind(w);
     if (transitionIt != m_transitions.constEnd()) {
         const qreal transitionProgress = (*transitionIt).value();
         dimWindow(data, m_dimStrength * transitionProgress);
-        effects->paintWindow(renderTarget, w, mask, region, data);
+        effects->paintWindow(renderTarget, viewPort, w, mask, region, data);
         return;
     }
 
@@ -109,7 +109,7 @@ void DimInactiveEffect::paintWindow(const RenderTarget &renderTarget, EffectWind
     if (forceIt != m_forceDim.constEnd()) {
         const qreal forcedStrength = *forceIt;
         dimWindow(data, forcedStrength);
-        effects->paintWindow(renderTarget, w, mask, region, data);
+        effects->paintWindow(renderTarget, viewPort, w, mask, region, data);
         return;
     }
 
@@ -117,7 +117,7 @@ void DimInactiveEffect::paintWindow(const RenderTarget &renderTarget, EffectWind
         dimWindow(data, m_dimStrength);
     }
 
-    effects->paintWindow(renderTarget, w, mask, region, data);
+    effects->paintWindow(renderTarget, viewPort, w, mask, region, data);
 }
 
 void DimInactiveEffect::postPaintScreen()

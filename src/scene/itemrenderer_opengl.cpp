@@ -24,7 +24,7 @@ ImageItem *ItemRendererOpenGL::createImageItem(Scene *scene, Item *parent)
     return new ImageItemOpenGL(scene, parent);
 }
 
-void ItemRendererOpenGL::beginFrame(const RenderTarget &renderTarget)
+void ItemRendererOpenGL::beginFrame(const RenderTarget &renderTarget, const ViewPort &viewPort)
 {
     GLFramebuffer *fbo = std::get<GLFramebuffer *>(renderTarget.nativeHandle());
     GLFramebuffer::pushFramebuffer(fbo);
@@ -225,20 +225,19 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
     context->opacityStack.pop();
 }
 
-void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, const QRegion &region)
+void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, const ViewPort &viewPort, const QRegion &region)
 {
-    if (region == infiniteRegion() || (region.rectCount() == 1 && (*region.begin()) == renderTarget.renderRect())) {
+    if (region == infiniteRegion() || (region.rectCount() == 1 && (*region.begin()) == viewPort.renderRect())) {
         glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT);
     } else if (!region.isEmpty()) {
         glClearColor(0, 0, 0, 0);
         glEnable(GL_SCISSOR_TEST);
 
-        const auto scale = renderTarget.scale();
         const auto targetSize = renderTarget.size();
 
         for (const QRect &r : region) {
-            auto deviceRect = scaledRect(r, scale).toAlignedRect();
+            const auto deviceRect = viewPort.mapToRenderTarget(r);
             glScissor(deviceRect.x(), targetSize.height() - (deviceRect.y() + deviceRect.height()), deviceRect.width(), deviceRect.height());
             glClear(GL_COLOR_BUFFER_BIT);
         }
@@ -247,7 +246,7 @@ void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, cons
     }
 }
 
-void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, Item *item, int mask, const QRegion &region, const WindowPaintData &data)
+void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const ViewPort &viewPort, Item *item, int mask, const QRegion &region, const WindowPaintData &data)
 {
     if (region.isEmpty()) {
         return;
@@ -256,13 +255,13 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, Item *item
     RenderContext renderContext{
         .clip = region,
         .hardwareClipping = region != infiniteRegion() && ((mask & Scene::PAINT_WINDOW_TRANSFORMED) || (mask & Scene::PAINT_SCREEN_TRANSFORMED)),
-        .renderTargetScale = data.renderTargetScale().value_or(renderTarget.scale()),
+        .renderTargetScale = data.renderTargetScale().value_or(viewPort.scale()),
     };
 
     renderContext.transformStack.push(QMatrix4x4());
     renderContext.opacityStack.push(data.opacity());
 
-    item->setTransform(data.toMatrix(renderTarget.scale()));
+    item->setTransform(data.toMatrix(viewPort.scale()));
 
     createRenderNode(item, &renderContext);
 
@@ -328,7 +327,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, Item *item
     // The scissor region must be in the render target local coordinate system.
     QRegion scissorRegion = infiniteRegion();
     if (renderContext.hardwareClipping) {
-        scissorRegion = renderTarget.mapToRenderTarget(region);
+        scissorRegion = viewPort.mapToRenderTarget(region);
     }
 
     const QMatrix4x4 projectionMatrix = data.projectionMatrix();

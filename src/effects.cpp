@@ -388,13 +388,13 @@ void EffectsHandlerImpl::prePaintScreen(ScreenPrePaintData &data, std::chrono::m
     // no special final code
 }
 
-void EffectsHandlerImpl::paintScreen(const RenderTarget &renderTarget, int mask, const QRegion &region, ScreenPaintData &data)
+void EffectsHandlerImpl::paintScreen(const RenderTarget &renderTarget, const ViewPort &viewPort, int mask, const QRegion &region, ScreenPaintData &data)
 {
     if (m_currentPaintScreenIterator != m_activeEffects.constEnd()) {
-        (*m_currentPaintScreenIterator++)->paintScreen(renderTarget, mask, region, data);
+        (*m_currentPaintScreenIterator++)->paintScreen(renderTarget, viewPort, mask, region, data);
         --m_currentPaintScreenIterator;
     } else {
-        m_scene->finalPaintScreen(renderTarget, mask, region, data);
+        m_scene->finalPaintScreen(renderTarget, viewPort, mask, region, data);
     }
 }
 
@@ -416,13 +416,13 @@ void EffectsHandlerImpl::prePaintWindow(EffectWindow *w, WindowPrePaintData &dat
     // no special final code
 }
 
-void EffectsHandlerImpl::paintWindow(const RenderTarget &renderTarget, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
+void EffectsHandlerImpl::paintWindow(const RenderTarget &renderTarget, const ViewPort &viewPort, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
 {
     if (m_currentPaintWindowIterator != m_activeEffects.constEnd()) {
-        (*m_currentPaintWindowIterator++)->paintWindow(renderTarget, w, mask, region, data);
+        (*m_currentPaintWindowIterator++)->paintWindow(renderTarget, viewPort, w, mask, region, data);
         --m_currentPaintWindowIterator;
     } else {
-        m_scene->finalPaintWindow(renderTarget, static_cast<EffectWindowImpl *>(w), mask, region, data);
+        m_scene->finalPaintWindow(renderTarget, viewPort, static_cast<EffectWindowImpl *>(w), mask, region, data);
     }
 }
 
@@ -445,19 +445,19 @@ Effect *EffectsHandlerImpl::provides(Effect::Feature ef)
     return nullptr;
 }
 
-void EffectsHandlerImpl::drawWindow(const RenderTarget &renderTarget, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
+void EffectsHandlerImpl::drawWindow(const RenderTarget &renderTarget, const ViewPort &viewPort, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
 {
     if (m_currentDrawWindowIterator != m_activeEffects.constEnd()) {
-        (*m_currentDrawWindowIterator++)->drawWindow(renderTarget, w, mask, region, data);
+        (*m_currentDrawWindowIterator++)->drawWindow(renderTarget, viewPort, w, mask, region, data);
         --m_currentDrawWindowIterator;
     } else {
-        m_scene->finalDrawWindow(renderTarget, static_cast<EffectWindowImpl *>(w), mask, region, data);
+        m_scene->finalDrawWindow(renderTarget, viewPort, static_cast<EffectWindowImpl *>(w), mask, region, data);
     }
 }
 
-void EffectsHandlerImpl::renderWindow(const RenderTarget &renderTarget, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
+void EffectsHandlerImpl::renderWindow(const RenderTarget &renderTarget, const ViewPort &viewPort, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data)
 {
-    m_scene->finalDrawWindow(renderTarget, static_cast<EffectWindowImpl *>(w), mask, region, data);
+    m_scene->finalDrawWindow(renderTarget, viewPort, static_cast<EffectWindowImpl *>(w), mask, region, data);
 }
 
 bool EffectsHandlerImpl::hasDecorationShadows() const
@@ -1736,7 +1736,7 @@ Effect *EffectsHandlerImpl::findEffect(const QString &name) const
     return (*it).second;
 }
 
-void EffectsHandlerImpl::renderOffscreenQuickView(const RenderTarget &renderTarget, OffscreenQuickView *w) const
+void EffectsHandlerImpl::renderOffscreenQuickView(const RenderTarget &renderTarget, const ViewPort &viewPort, OffscreenQuickView *w) const
 {
     if (!w->isVisible()) {
         return;
@@ -1754,9 +1754,9 @@ void EffectsHandlerImpl::renderOffscreenQuickView(const RenderTarget &renderTarg
         }
 
         GLShader *shader = ShaderManager::instance()->pushShader(traits);
-        const QRectF rect = scaledRect(w->geometry(), renderTarget.scale());
+        const QRectF rect = scaledRect(w->geometry(), viewPort.scale());
 
-        QMatrix4x4 mvp(renderTarget.projectionMatrix());
+        QMatrix4x4 mvp(viewPort.projectionMatrix());
         mvp.translate(rect.x(), rect.y());
         shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
 
@@ -1767,7 +1767,7 @@ void EffectsHandlerImpl::renderOffscreenQuickView(const RenderTarget &renderTarg
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         t->bind();
-        t->render(w->geometry(), renderTarget.scale());
+        t->render(w->geometry(), viewPort.scale());
         t->unbind();
         glDisable(GL_BLEND);
 
@@ -1832,7 +1832,8 @@ void EffectsHandlerImpl::slotOutputRemoved(Output *output)
 
 void EffectsHandlerImpl::renderScreen(EffectScreen *screen)
 {
-    RenderTarget renderTarget(GLFramebuffer::currentFramebuffer(), screen->geometry(), screen->devicePixelRatio());
+    RenderTarget renderTarget(GLFramebuffer::currentFramebuffer());
+    ViewPort viewPort(screen->geometry(), screen->devicePixelRatio());
 
     auto output = static_cast<EffectScreenImpl *>(screen)->platformOutput();
 
@@ -1841,7 +1842,7 @@ void EffectsHandlerImpl::renderScreen(EffectScreen *screen)
     delegate.setLayer(&layer);
 
     m_scene->prePaint(&delegate);
-    m_scene->paint(renderTarget, output->geometry());
+    m_scene->paint(renderTarget, viewPort, output->geometry());
     m_scene->postPaint();
 }
 
@@ -2604,7 +2605,7 @@ void EffectFrameImpl::setPosition(const QPoint &point)
     m_view->setPosition(point);
 }
 
-void EffectFrameImpl::render(const RenderTarget &renderTarget, const QRegion &region, double opacity, double frameOpacity)
+void EffectFrameImpl::render(const RenderTarget &renderTarget, const ViewPort &viewPort, const QRegion &region, double opacity, double frameOpacity)
 {
     if (!m_view->rootItem()) {
         return;
@@ -2615,7 +2616,7 @@ void EffectFrameImpl::render(const RenderTarget &renderTarget, const QRegion &re
     m_view->setOpacity(opacity);
     m_view->setFrameOpacity(frameOpacity);
 
-    effects->renderOffscreenQuickView(renderTarget, m_view);
+    effects->renderOffscreenQuickView(renderTarget, viewPort, m_view);
 }
 
 const QString &EffectFrameImpl::text() const

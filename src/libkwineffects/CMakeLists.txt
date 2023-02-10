@@ -32,6 +32,7 @@ set(kwin_EFFECTSLIB_SRCS
     logging.cpp
     rendertarget.cpp
     sharedqmlengine.cpp
+    viewport.cpp
 )
 
 add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})

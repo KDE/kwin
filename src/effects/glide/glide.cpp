@@ -117,11 +117,11 @@ void GlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std:
     effects->prePaintWindow(w, data, presentTime);
 }
 
-void GlideEffect::paintWindow(const RenderTarget &renderTarget, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void GlideEffect::paintWindow(const RenderTarget &renderTarget, const ViewPort &viewPort, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     auto animationIt = m_animations.constFind(w);
     if (animationIt == m_animations.constEnd()) {
-        effects->paintWindow(renderTarget, w, mask, region, data);
+        effects->paintWindow(renderTarget, viewPort, w, mask, region, data);
         return;
     }
 
@@ -135,9 +135,9 @@ void GlideEffect::paintWindow(const RenderTarget &renderTarget, EffectWindow *w,
     //  [move to the origin] -> [rotate] -> [translate] ->
     //    -> [perspective projection] -> [reverse "move to the origin"]
 
-    const QMatrix4x4 oldProjMatrix = createPerspectiveMatrix(renderTarget.renderRect(), renderTarget.scale());
+    const QMatrix4x4 oldProjMatrix = createPerspectiveMatrix(viewPort.renderRect(), viewPort.scale());
     const auto frame = w->frameGeometry();
-    const QRectF windowGeo = scaledRect(frame, renderTarget.scale());
+    const QRectF windowGeo = scaledRect(frame, viewPort.scale());
     const QVector3D invOffset = oldProjMatrix.map(QVector3D(windowGeo.center()));
     QMatrix4x4 invOffsetMatrix;
     invOffsetMatrix.translate(invOffset.x(), invOffset.y());
@@ -145,7 +145,7 @@ void GlideEffect::paintWindow(const RenderTarget &renderTarget, EffectWindow *w,
     data.setProjectionMatrix(invOffsetMatrix * oldProjMatrix);
 
     // Move the center of the window to the origin.
-    const QRectF screenGeo = scaledRect(renderTarget.renderRect(), renderTarget.scale());
+    const QRectF screenGeo = scaledRect(viewPort.renderRect(), viewPort.scale());
     const QPointF offset = screenGeo.center() - windowGeo.center();
     data.translate(offset.x(), offset.y());
 
@@ -188,7 +188,7 @@ void GlideEffect::paintWindow(const RenderTarget &renderTarget, EffectWindow *w,
     data.setZTranslation(-interpolate(params.distance.from, params.distance.to, t));
     data.multiplyOpacity(interpolate(params.opacity.from, params.opacity.to, t));
 
-    effects->paintWindow(renderTarget, w, mask, region, data);
+    effects->paintWindow(renderTarget, viewPort, w, mask, region, data);
 }
 
 void GlideEffect::postPaintScreen()

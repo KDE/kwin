@@ -69,9 +69,9 @@ void MouseMarkEffect::reconfigure(ReconfigureFlags)
     color.setAlphaF(1.0);
 }
 
-void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, int mask, const QRegion &region, ScreenPaintData &data)
+void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const ViewPort &viewPort, int mask, const QRegion &region, ScreenPaintData &data)
 {
-    effects->paintScreen(renderTarget, mask, region, data); // paint normal screen
+    effects->paintScreen(renderTarget, viewPort, mask, region, data); // paint normal screen
     if (marks.isEmpty() && drawing.isEmpty()) {
         return;
     }
@@ -88,7 +88,7 @@ void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, int mask, co
         vbo->reset();
         vbo->setUseColor(true);
         vbo->setColor(color);
-        const auto scale = renderTarget.scale();
+        const auto scale = viewPort.scale();
         ShaderBinder binder(ShaderTrait::UniformColor);
         binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix());
         QVector<float> verts;

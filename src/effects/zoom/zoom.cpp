@@ -253,10 +253,10 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
     effects->prePaintScreen(data, presentTime);
 }
 
-ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &renderTarget, EffectScreen *screen)
+ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const ViewPort &viewPort, EffectScreen *screen)
 {
-    const QRectF rect = renderTarget.renderRect();
-    const qreal devicePixelRatio = renderTarget.scale();
+    const QRectF rect = viewPort.renderRect();
+    const qreal devicePixelRatio = viewPort.scale();
     const QSize nativeSize = (rect.size() * devicePixelRatio).toSize();
 
     OffscreenData &data = m_offscreenData[effects->waylandDisplay() ? screen : nullptr];
@@ -294,17 +294,17 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
     return &data;
 }
 
-void ZoomEffect::paintScreen(const RenderTarget &renderTarget, int mask, const QRegion &region, ScreenPaintData &data)
+void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const ViewPort &viewPort, int mask, const QRegion &region, ScreenPaintData &data)
 {
-    OffscreenData *offscreenData = ensureOffscreenData(renderTarget, data.screen());
+    OffscreenData *offscreenData = ensureOffscreenData(viewPort, data.screen());
 
     // Render the scene in an offscreen texture and then upscale it.
     GLFramebuffer::pushFramebuffer(offscreenData->framebuffer.get());
-    effects->paintScreen(renderTarget, mask, region, data);
+    effects->paintScreen(renderTarget, viewPort, mask, region, data);
     GLFramebuffer::popFramebuffer();
 
     const QSize screenSize = effects->virtualScreenSize();
-    const auto scale = renderTarget.scale();
+    const auto scale = viewPort.scale();
 
     // mouse-tracking allows navigation of the zoom-area using the mouse.
     qreal xTranslation = 0;

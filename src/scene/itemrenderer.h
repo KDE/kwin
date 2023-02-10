@@ -18,6 +18,7 @@ namespace KWin
 class ImageItem;
 class Item;
 class RenderTarget;
+class ViewPort;
 class Scene;
 class WindowPaintData;
 
@@ -29,11 +30,11 @@ public:
 
     virtual QPainter *painter() const;
 
-    virtual void beginFrame(const RenderTarget &renderTarget);
+    virtual void beginFrame(const RenderTarget &renderTarget, const ViewPort &viewPort);
     virtual void endFrame();
 
-    virtual void renderBackground(const RenderTarget &renderTarget, const QRegion &region) = 0;
-    virtual void renderItem(const RenderTarget &renderTarget, Item *item, int mask, const QRegion &region, const WindowPaintData &data) = 0;
+    virtual void renderBackground(const RenderTarget &renderTarget, const ViewPort &viewPort, const QRegion &region) = 0;
+    virtual void renderItem(const RenderTarget &renderTarget, const ViewPort &viewPort, Item *item, int mask, const QRegion &region, const WindowPaintData &data) = 0;
 
     virtual ImageItem *createImageItem(Scene *scene, Item *parent = nullptr) = 0;
 };

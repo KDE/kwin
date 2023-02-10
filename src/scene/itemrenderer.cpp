@@ -24,7 +24,7 @@ QPainter *ItemRenderer::painter() const
     return nullptr;
 }
 
-void ItemRenderer::beginFrame(const RenderTarget &renderTarget)
+void ItemRenderer::beginFrame(const RenderTarget &renderTarget, const ViewPort &viewPort)
 {
 }
 

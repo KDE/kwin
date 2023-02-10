@@ -64,7 +64,7 @@ void EglGbmLayerSurface::destroyResources()
     m_oldSurface = {};
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation, const QMap<uint32_t, QVector<uint64_t>> &formats, const QRectF &logicalRect, double scale)
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, DrmPlane::Transformations renderOrientation, DrmPlane::Transformations bufferOrientation, const QMap<uint32_t, QVector<uint64_t>> &formats)
 {
     if (!checkSurface(bufferSize, formats)) {
         return std::nullopt;
@@ -99,12 +99,12 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     if (m_shadowBuffer) {
         // the blit after rendering will completely overwrite the back buffer anyways
         return OutputLayerBeginFrameInfo{
-            .renderTarget = RenderTarget(m_shadowBuffer->fbo(), logicalRect, scale),
+            .renderTarget = RenderTarget(m_shadowBuffer->fbo()),
             .repaint = {},
         };
     } else {
         return OutputLayerBeginFrameInfo{
-            .renderTarget = RenderTarget(m_surface.gbmSurface->fbo(), logicalRect, scale),
+            .renderTarget = RenderTarget(m_surface.gbmSurface->fbo()),
             .repaint = m_surface.gbmSurface->repaintRegion(),
         };
     }

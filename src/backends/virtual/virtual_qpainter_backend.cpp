@@ -26,7 +26,7 @@ VirtualQPainterLayer::VirtualQPainterLayer(Output *output)
 std::optional<OutputLayerBeginFrameInfo> VirtualQPainterLayer::beginFrame()
 {
     return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(&m_image, m_output->fractionalGeometry(), m_output->scale()),
+        .renderTarget = RenderTarget(&m_image),
         .repaint = m_output->rect(),
     };
 }

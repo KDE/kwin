@@ -50,16 +50,16 @@ ColorPickerEffect::ColorPickerEffect()
 
 ColorPickerEffect::~ColorPickerEffect() = default;
 
-void ColorPickerEffect::paintScreen(const RenderTarget &renderTarget, int mask, const QRegion &region, ScreenPaintData &data)
+void ColorPickerEffect::paintScreen(const RenderTarget &renderTarget, const ViewPort &viewPort, int mask, const QRegion &region, ScreenPaintData &data)
 {
-    effects->paintScreen(renderTarget, mask, region, data);
+    effects->paintScreen(renderTarget, viewPort, mask, region, data);
 
-    const QRectF geo = renderTarget.renderRect();
+    const QRectF geo = viewPort.renderRect();
     if (m_scheduledPosition != QPoint(-1, -1) && geo.contains(m_scheduledPosition)) {
         uint8_t data[4];
         constexpr GLsizei PIXEL_SIZE = 1;
         const QPoint screenPosition(m_scheduledPosition.x() - geo.x(), m_scheduledPosition.y() - geo.y());
-        const QPoint texturePosition(screenPosition.x() * renderTarget.scale(), (geo.height() - screenPosition.y() - PIXEL_SIZE) * renderTarget.scale());
+        const QPoint texturePosition(screenPosition.x() * viewPort.scale(), (geo.height() - screenPosition.y() - PIXEL_SIZE) * viewPort.scale());
 
         glReadnPixels(texturePosition.x(), texturePosition.y(), PIXEL_SIZE, PIXEL_SIZE, GL_RGBA, GL_UNSIGNED_BYTE, 4, data);
         QDBusConnection::sessionBus().send(m_replyMessage.createReply(QColor(data[0], data[1], data[2])));
