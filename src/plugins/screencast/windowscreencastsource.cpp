@@ -53,8 +53,8 @@ void WindowScreenCastSource::render(GLFramebuffer *target)
 {
     const QRectF geometry = m_window->clientGeometry();
     QMatrix4x4 projectionMatrix;
-    projectionMatrix.ortho(geometry.x(), geometry.x() + geometry.width(),
-                           geometry.y(), geometry.y() + geometry.height(), -1, 1);
+    projectionMatrix.scale(1, -1);
+    projectionMatrix.ortho(geometry);
 
     WindowPaintData data;
     data.setProjectionMatrix(projectionMatrix);
