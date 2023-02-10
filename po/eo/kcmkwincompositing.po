@@ -1,16 +1,17 @@
-# translation of kcmkwincompositing.po to Esperanto
-# Copyright (C) YEAR This_file_is_part_of_KDE
-# This file is distributed under the same license as the PACKAGE package.
+# translation of kcmkwincompositing.pot to Esperanto
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the kwin package.
 # Cindy McKee <cfmckee@gmail.com>, 2007.
 # Axel Rousseau <axel@esperanto-jeunes.org>, 2009.
+# Oliver Kellogg <okellogg@users.sourceforge.net>, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-29 00:59+0000\n"
-"PO-Revision-Date: 2009-11-08 19:30+0100\n"
-"Last-Translator: Axel Rousseau <axel@esperanto-jeunes.org>\n"
+"PO-Revision-Date: 2023-02-09 22:30+0100\n"
+"Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-doc@kde.org>\n"
 "Language: eo\n"
 "MIME-Version: 1.0\n"
@@ -29,6 +30,11 @@ msgid ""
 "you can reset this protection but be aware that this might result in an "
 "immediate crash!"
 msgstr ""
+"OpenGL-komponado (la defaŭlta) kraŝis KWin en la pasinteco.\n"
+"Ĉi tio estis plej verŝajne pro ŝofora cimo.\n"
+"Se vi pensas, ke vi dume ĝisdatigis al stabila pelilo,\n"
+"vi povas restarigi ĉi tiun protekton, sed konsciu, ke tio eble rezultigu "
+"tujan kraŝon!"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
 #: compositing.ui:44
@@ -37,21 +43,21 @@ msgid ""
 "Keeping the window thumbnail always interferes with the minimized state of "
 "windows. This can result in windows not suspending their work when minimized."
 msgstr ""
+"Konservi la fenestran bildeton ĉiam malhelpas la minimumigitan staton de "
+"fenestroj. Ĉi tio povas rezultigi fenestrojn ne suspendi sian laboron kiam "
+"minimumigita."
 
 #. i18n: ectx: property (text), widget (QLabel, compositingLabel)
 #: compositing.ui:56
-#, fuzzy, kde-format
-#| msgid "Compositing type:"
+#, kde-format
 msgid "Compositing:"
-msgstr "Kunmeta tipo:"
+msgstr "Komponado:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
 #: compositing.ui:63
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Enable desktop effects"
+#, kde-format
 msgid "Enable on startup"
-msgstr "Ebligi labortablajn efektojn"
+msgstr "Ebligi ĉe ekfunkciigo"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
 #: compositing.ui:72
@@ -61,12 +67,16 @@ msgid ""
 " This brings performance improvements for e.g. games.\n"
 " The setting can be overruled by window-specific rules."
 msgstr ""
+"Aplikoj povas agordi sugeston por bloki komponadon kiam la fenestro estas "
+"malfermita.\n"
+" Ĉi tio alportas rendimentajn plibonigojn por ekz. ludoj.\n"
+" La agordo povas esti nuligita per fenestrospecifaj reguloj."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
 #: compositing.ui:75
 #, kde-format
 msgid "Allow applications to block compositing"
-msgstr ""
+msgstr "Permesi al aplikoj bloki komponadon"
 
 #. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
 #: compositing.ui:82
@@ -76,16 +86,15 @@ msgstr "Vigligorapideco:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: compositing.ui:119
-#, fuzzy, kde-format
-#| msgid "Very Slow"
+#, kde-format
 msgid "Very slow"
-msgstr "Malrapidega"
+msgstr "Tre malrapida"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: compositing.ui:139
 #, kde-format
 msgid "Instant"
-msgstr ""
+msgstr "Tuj"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
 #: compositing.ui:151
@@ -109,44 +118,43 @@ msgstr "Nur por videblaj fenestroj"
 #: compositing.ui:169
 #, kde-format
 msgid "Always"
-msgstr ""
+msgstr "Ĉiam"
 
 #. i18n: ectx: property (text), widget (QLabel, latencyLabel)
 #: compositing.ui:177
 #, kde-format
 msgid "Latency:"
-msgstr ""
+msgstr "Respondotempo:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
 #: compositing.ui:185
 #, kde-format
 msgid "Force lowest latency (may cause dropped frames)"
-msgstr ""
+msgstr "Devigi plej malaltan respondotempon (povas kaŭzi faligitajn kadrojn)"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
 #: compositing.ui:190
 #, kde-format
 msgid "Prefer lower latency"
-msgstr ""
+msgstr "Preferi pli malaltan respondotempon"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
 #: compositing.ui:195
 #, kde-format
 msgid "Balance of latency and smoothness"
-msgstr ""
+msgstr "Ekvilibro de respondotempo kaj glateco"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
 #: compositing.ui:200
 #, kde-format
 msgid "Prefer smoother animations"
-msgstr ""
+msgstr "Preferi pli glatajn kuraĝigojn"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
 #: compositing.ui:205
-#, fuzzy, kde-format
-#| msgid "Various animations"
+#, kde-format
 msgid "Force smoothest animations"
-msgstr "Diversaj animacioj"
+msgstr "Devigi plej glatajn animaciojn"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowTearing)
 #: compositing.ui:213
@@ -154,306 +162,10 @@ msgstr "Diversaj animacioj"
 msgid ""
 "Reduce latency by allowing screen tearing artifacts in fullscreen windows"
 msgstr ""
+"Redukti respondotempon permesante ekranŝirajn artefaktojn en plenekranaj "
+"fenestroj"
 
 #: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
-msgstr ""
-
-#, fuzzy
-#~| msgid "OpenGL"
-#~ msgid "OpenGL 3.1"
-#~ msgstr "OpenGL"
-
-#, fuzzy
-#~| msgid "OpenGL"
-#~ msgid "OpenGL 2.0"
-#~ msgstr "OpenGL"
-
-#, fuzzy
-#~| msgid "Smooth scaling (slower)"
-#~ msgid "Smooth (slower)"
-#~ msgstr "Glata skalado (pli malrapida)"
-
-#~ msgid "XRender"
-#~ msgstr "XRender"
-
-#~ msgid ""
-#~ "Hint: To find out or configure how to activate an effect, look at the "
-#~ "effect's settings."
-#~ msgstr ""
-#~ "Konsileto: por agordi aŭ eltrovi kiel vi aktivigas efekton, rigardu la "
-#~ "agordon de la efekto"
-
-#, fuzzy
-#~| msgid "Texture filter:"
-#~ msgid "Configure filter"
-#~ msgstr "Tekstura filtrilo:"
-
-#, fuzzy
-#~| msgctxt "@option:check"
-#~| msgid "Enable desktop effects"
-#~ msgid "Exclude internal Desktop Effects"
-#~ msgstr "Ebligi labortablajn efektojn"
-
-#, fuzzy
-#~| msgid "No Effect"
-#~ msgid "Get New Desktop Effects..."
-#~ msgstr "Sen efekto"
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Cindy McKee, Axel Rousseau"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "cfmckee@gmail.com,axel@esperanto-jeunes.org"
-
-#~ msgctxt "Category of Desktop Effects, used as section header"
-#~ msgid "Accessibility"
-#~ msgstr "Alirebleco"
-
-#~ msgctxt "Category of Desktop Effects, used as section header"
-#~ msgid "Appearance"
-#~ msgstr "Aspekto"
-
-#~ msgctxt "Category of Desktop Effects, used as section header"
-#~ msgid "Candy"
-#~ msgstr "Dolĉaĵo"
-
-#~ msgctxt "Category of Desktop Effects, used as section header"
-#~ msgid "Focus"
-#~ msgstr "Fokuso"
-
-#~ msgctxt "Category of Desktop Effects, used as section header"
-#~ msgid "Tools"
-#~ msgstr "Iloj"
-
-#~ msgctxt "Category of Desktop Effects, used as section header"
-#~ msgid "Window Management"
-#~ msgstr "Fenestra administrado"
-
-#, fuzzy
-#~| msgctxt "@option:check"
-#~| msgid "Enable desktop effects"
-#~ msgid "Suspend compositor for full screen windows"
-#~ msgstr "Ebligi labortablajn efektojn"
-
-#, fuzzy
-#~| msgid "OpenGL mode:"
-#~ msgid "OpenGL interface:"
-#~ msgstr "OpenGL-reĝimo:"
-
-#, fuzzy
-#~| msgid "Animation speed:"
-#~ msgid "Animation Speed:"
-#~ msgstr "Vigligorapideco:"
-
-#, fuzzy
-#~| msgid "Keep window thumbnails:"
-#~ msgid "Keep Window Thumbnails:"
-#~ msgstr "Konservi Fenestrajn Miniaturojn:"
-
-#, fuzzy
-#~| msgid "Always (Breaks minimization)"
-#~ msgid "Always (Breaks Animations)"
-#~ msgstr "Ĉiam (Ĉesi minimumigadon)"
-
-#~ msgid "1 second remaining:"
-#~ msgid_plural "%1 seconds remaining:"
-#~ msgstr[0] "1 sekundo restanta"
-#~ msgstr[1] "%1 sekundaj restantaj"
-
-#~ msgid "Confirm Desktop Effects Change"
-#~ msgstr "Konfirmi la ŝanĝon de labortablaj efektoj"
-
-#~ msgid "&Accept Configuration"
-#~ msgstr "&Akcepti agordon"
-
-#~ msgid "&Return to Previous Configuration"
-#~ msgstr "&Reveni al antaŭa agordo"
-
-#~ msgid ""
-#~ "Desktop effects settings have changed.\n"
-#~ "Do you want to keep the new settings?\n"
-#~ "They will be automatically reverted in 10 seconds."
-#~ msgstr ""
-#~ "Agordo de labortablaj efektoj ŝanĝiĝis.\n"
-#~ "Ĉu vi volas konservi la ŝanĝojn?\n"
-#~ "La sistemo aŭtomate revenos al la antaŭa post 10 sekundoj."
-
-#~ msgid "kcmkwincompositing"
-#~ msgstr "kcmkwincompositing"
-
-#~ msgid "KWin Desktop Effects Configuration Module"
-#~ msgstr "KWin labortabla efekta agordilo"
-
-#~ msgid "(c) 2007 Rivo Laks"
-#~ msgstr "(c) 2007 Rivo Laks"
-
-#~ msgid "Rivo Laks"
-#~ msgstr "Rivo Laks"
-
-#, fuzzy
-#~| msgid "No Effect"
-#~ msgid "No effect"
-#~ msgstr "Sen efekto"
-
-#~ msgid "Demos"
-#~ msgstr "Demonstroj"
-
-#~ msgid "Tests"
-#~ msgstr "Testoj"
-
-#, fuzzy
-#~| msgid "The following effects could not be activated:"
-#~ msgctxt "Error Message shown when a desktop effect could not be loaded"
-#~ msgid "One desktop effect could not be loaded."
-#~ msgid_plural "%1 desktop effects could not be loaded."
-#~ msgstr[0] "Tiu efekto ne eblas aktivigi:"
-#~ msgstr[1] "Tiu efekto ne eblas aktivigi:"
-
-#, fuzzy
-#~| msgid "The following effects could not be activated:"
-#~ msgctxt "Window title"
-#~ msgid "List of effects which could not be loaded"
-#~ msgstr "Tiu efekto ne eblas aktivigi:"
-
-#, fuzzy
-#~| msgid "Confirm Desktop Effects Change"
-#~ msgctxt ""
-#~ "Error Message shown when compositing is not active after tried activation"
-#~ msgid "Desktop effect system is not running."
-#~ msgstr "Konfirmi la ŝanĝon de labortablaj efektoj"
-
-#~ msgid "<h1>Desktop Effects</h1>"
-#~ msgstr "<h1>Labortablaj efektoj</h1>"
-
-#~ msgid "General"
-#~ msgstr "Ĝenerala"
-
-#~ msgid "Improved window management"
-#~ msgstr "Plibonigita fenestra administrado"
-
-#~ msgid "Effect for desktop switching:"
-#~ msgstr "Efektoj por labortabla ŝanĝo:"
-
-#~ msgid "Very Fast"
-#~ msgstr "Rapidega"
-
-#~ msgid "Fast"
-#~ msgstr "Rapida"
-
-#~ msgid "Normal"
-#~ msgstr "Normala"
-
-#~ msgid "Slow"
-#~ msgstr "Malrapida"
-
-#~ msgid "Extremely Slow"
-#~ msgstr "Tre Malrapidega"
-
-#~ msgid ""
-#~ "You can find more effects, as well as effect-specific settings, in the "
-#~ "\"All Effects\" tab above."
-#~ msgstr "Vi povas trovi pli efektojn sub la 'Ĉiuj efektoj' langeto"
-
-#~ msgid "All Effects"
-#~ msgstr "Ĉiuj efektoj"
-
-#~ msgid "Advanced"
-#~ msgstr "Altnivelaj"
-
-#~ msgid "OpenGL Options"
-#~ msgstr "OpenGL-opcioj"
-
-#, fuzzy
-#~| msgid "XRender Options"
-#~ msgid "General Options"
-#~ msgstr "XRender-opcioj"
-
-#, fuzzy
-#~| msgid "OpenGL"
-#~ msgid "OpenGL 1.2"
-#~ msgstr "OpenGL"
-
-#~ msgid "Use VSync"
-#~ msgstr "Uzi VSync"
-
-#~ msgid "Effect for window switching:"
-#~ msgstr "Efektoj por fenestra ŝanĝo"
-
-#~ msgid "Enable direct rendering"
-#~ msgstr "Rekta bildigado"
-
-#, fuzzy
-#~| msgid "Compositing is temporarily disabled"
-#~ msgid "Desktop effects are temporarily disabled"
-#~ msgstr "Kunmetitaĵo estas momente malŝaltita"
-
-#, fuzzy
-#~| msgctxt "@option:check"
-#~| msgid "Enable desktop effects"
-#~ msgid "Resume Desktop Effects"
-#~ msgstr "Ebligi labortablajn efektojn"
-
-#~ msgid "Common Settings"
-#~ msgstr "Ordinaraj efektoj"
-
-#~ msgid "Compositing State"
-#~ msgstr "Kunmetitaĵa stato"
-
-#~ msgid "Shadows"
-#~ msgstr "Ombroj"
-
-#~ msgid "Texture From Pixmap"
-#~ msgstr "Teksturo de rastrumbildo"
-
-#~ msgid "Shared Memory"
-#~ msgstr "Komuniga memoro"
-
-#~ msgid "Fallback"
-#~ msgstr "Rezerva"
-
-#~ msgid "Nearest (fastest)"
-#~ msgstr "Plej proksima (plej rapida)"
-
-#~ msgid "Bilinear"
-#~ msgstr "Dulineara"
-
-#~ msgid "Trilinear (best quality)"
-#~ msgstr "Trilineara (plej bona kvalito)"
-
-#~ msgid "Compositing is not supported on your system."
-#~ msgstr "Via sistemo ne subtenas vidaĵan kunmetadon."
-
-#~ msgid "Compositing is active"
-#~ msgstr "Kunmetitaĵo estas aktiva"
-
-#~ msgid "Suspend Compositing"
-#~ msgstr "Kunmetitaĵo paŭziĝas"
-
-#~ msgid "Resume Compositing"
-#~ msgstr "Restarigi kunmetitaĵon"
-
-#~ msgid "Compositing is disabled"
-#~ msgstr "Kunmetitaĵo estas malebligita"
-
-#, fuzzy
-#~| msgid "All Effects"
-#~ msgid "All Desktops"
-#~ msgstr "Ĉiuj efektoj"
-
-#, fuzzy
-#~| msgid "Bilinear"
-#~ msgid "Cylinder"
-#~ msgstr "Dulineara"
-
-#~ msgid "Advanced Compositing Options"
-#~ msgstr "Altnivelaj opcioj por vidaĵaja kunmetado"
-
-#~ msgid "Misc"
-#~ msgstr "Diversaj"
-
-#~ msgid "Keep thumbnails of hidden windows up to date"
-#~ msgstr "Ade ĝisdatigi miniaturojn de kaŝitaj fenestroj"
+msgstr "Reebligi OpenGL-detekton"

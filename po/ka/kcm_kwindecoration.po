@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-06 01:01+0000\n"
-"PO-Revision-Date: 2022-12-03 06:55+0100\n"
+"PO-Revision-Date: 2023-02-09 14:44+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -184,9 +184,7 @@ msgid "Drag buttons between here and the titlebar"
 msgstr "გადაათრიეთ ღილაკები ამ წერტილსა და სათაურის ქუტს შორის"
 
 #: package/contents/ui/ConfigureTitlebar.qml:16
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgid "Titlebar Buttons"
 msgstr "სათაურის ქუდის ღილაკები"
 
@@ -220,20 +218,16 @@ msgid "Window border size:"
 msgstr "ფანჯრის საზღვრის ზომა:"
 
 #: package/contents/ui/main.qml:60
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr "სათაურის ქუდის ღილაკები"
+msgstr "სათაურის ქუდის ღილაკების მორგება…"
 
 #: package/contents/ui/main.qml:65
-#, fuzzy, kde-format
-#| msgctxt "button text"
-#| msgid "Get New Window Decorations..."
+#, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations…"
-msgstr "ფანჯრის ახალი დეკორაციების მიღება..."
+msgstr "ფანჯრის ახალი დეკორაციების მიღება…"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format

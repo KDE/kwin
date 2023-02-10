@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 01:01+0000\n"
+"POT-Creation-Date: 2023-02-07 01:01+0000\n"
 "PO-Revision-Date: 2022-07-26 20:47+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -1258,12 +1258,12 @@ msgstr "Slå av oppsettsval"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Viser at KWin nyleg har krasja n gongar"
 
-#: main_wayland.cpp:315
+#: main_wayland.cpp:302
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Start ein rotlaus Xwayland-tener."
 
-#: main_wayland.cpp:317
+#: main_wayland.cpp:304
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1271,44 +1271,44 @@ msgstr ""
 "Namn på Wayland-socket-en å lytta på. Viss ikkje noko er valt, vert "
 "«wayland-0» brukt."
 
-#: main_wayland.cpp:320
+#: main_wayland.cpp:307
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "X11-skjermbiletet som skal brukast i vindaugsmodus på X11-plattforma."
 
-#: main_wayland.cpp:323
+#: main_wayland.cpp:310
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 "Wayland-skjermbiletet skal brukast i vindaugsmodus på Wayland-plattforma."
 
-#: main_wayland.cpp:325
+#: main_wayland.cpp:312
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Teikn opp til virtuell biletbuffer."
 
-#: main_wayland.cpp:327
+#: main_wayland.cpp:314
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Breidda for vindaugsmodus. Standardbreidda er 1024."
 
-#: main_wayland.cpp:331
+#: main_wayland.cpp:318
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Høgda for vindaugsmodus. Standardhøgda er 768."
 
-#: main_wayland.cpp:336
+#: main_wayland.cpp:323
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Skala for vindaugsmodus. Standardverdi er 1."
 
-#: main_wayland.cpp:341
+#: main_wayland.cpp:328
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr "Talet på vindauge å opna for utdata i vindaugsmodus. Standard er 1."
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:333
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1317,7 +1317,7 @@ msgstr ""
 "Wayland-socket som skal brukast for innkommande tilkoplingar. Du kan "
 "kombinera dette med «--socket» for å gje socket-en namn."
 
-#: main_wayland.cpp:350
+#: main_wayland.cpp:337
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1326,65 +1326,65 @@ msgstr ""
 "Wayland-socket som skal brukast for innkommande tilkoplingar til XWayland. "
 "Kan oppgjevast fleire gongar."
 
-#: main_wayland.cpp:354
+#: main_wayland.cpp:341
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Namn på XWayland-skjerm som er sett opp på førehand"
 
-#: main_wayland.cpp:358
+#: main_wayland.cpp:345
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Namn på xauthority-fil "
 
-#: main_wayland.cpp:362
+#: main_wayland.cpp:349
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Avsluttar denne instansen, slik at du kan startast på nytt med "
 "kwin_wayland_wrapper."
 
-#: main_wayland.cpp:364
+#: main_wayland.cpp:351
 #, kde-format
 msgid "Render through drm node."
 msgstr "Teikn opp gjennom drm-node."
 
-#: main_wayland.cpp:365
+#: main_wayland.cpp:352
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 
-#: main_wayland.cpp:387
+#: main_wayland.cpp:374
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Inndata-metode som KWin startar."
 
-#: main_wayland.cpp:393
+#: main_wayland.cpp:380
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Startar økta i låst modus."
 
-#: main_wayland.cpp:397
+#: main_wayland.cpp:384
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Startar økta utan støtte for skjermlås."
 
-#: main_wayland.cpp:402
+#: main_wayland.cpp:389
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Startar økta utan støtte for globale snarvegar."
 
-#: main_wayland.cpp:407 main_x11.cpp:418
+#: main_wayland.cpp:394 main_x11.cpp:418
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Slå av KActivities-integrasjon."
 
-#: main_wayland.cpp:412
+#: main_wayland.cpp:399
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Avslutt etter at øktprogrammet, som vert starta av KWin, vert lukka."
 
-#: main_wayland.cpp:417
+#: main_wayland.cpp:404
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Program som skal startast når Wayland og XWayland-tenar vert starta"

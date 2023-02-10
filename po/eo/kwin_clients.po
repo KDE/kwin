@@ -1,20 +1,23 @@
 # translation of kwin_clients.po to Esperanto
-#
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the kwin package.
 # Stéphane Fillod <f8cfe@free.fr>, 2007.
 # Cindy McKee <cfmckee@gmail.com>, 2007.
+# Oliver Kellogg <okellogg@users.sourceforge.net>, 2023.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin_clients\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-11-16 00:48+0000\n"
-"PO-Revision-Date: 2007-12-19 12:31-0600\n"
-"Last-Translator: Cindy McKee <cfmckee@gmail.com>\n"
+"PO-Revision-Date: 2023-02-09 22:30+0100\n"
+"Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.4\n"
+"X-Generator: translate-po (https://github.com/zcribe/translate-po)\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: aurorae/src/aurorae.cpp:725
@@ -36,11 +39,10 @@ msgid "Large"
 msgstr "Granda"
 
 #: aurorae/src/aurorae.cpp:728
-#, fuzzy, kde-format
-#| msgid "Large"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
-msgstr "Granda"
+msgstr "Grandega"
 
 #: aurorae/src/aurorae.cpp:729
 #, kde-format
@@ -55,16 +57,15 @@ msgid "Very Huge"
 msgstr "Tre grandega"
 
 #: aurorae/src/aurorae.cpp:731
-#, fuzzy, kde-format
-#| msgid "Resize"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
-msgstr "Regrandigi"
+msgstr "Trogranda"
 
 #: aurorae/src/aurorae.cpp:734
 #, kde-format
 msgid "Button size:"
-msgstr ""
+msgstr "Butongrandeco:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
 #: aurorae/themes/plastik/package/contents/ui/config.ui:14
@@ -76,7 +77,7 @@ msgstr "Agordodialogo"
 #: aurorae/themes/plastik/package/contents/ui/config.ui:23
 #, kde-format
 msgid "Title &Alignment"
-msgstr "Titola ĝis&randigo"
+msgstr "Titola ĝisr&andigo"
 
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
 #: aurorae/themes/plastik/package/contents/ui/config.ui:29
@@ -109,10 +110,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, fuzzy, kde-format
-#| msgid "Colored Window Border"
+#, kde-format
 msgid "Colored window border"
-msgstr "Kolorita fenestra bordo"
+msgstr "Kolora fenestrobordo"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
 #: aurorae/themes/plastik/package/contents/ui/config.ui:66
@@ -129,548 +129,3 @@ msgstr ""
 #, kde-format
 msgid "Animate buttons"
 msgstr "Animacii butonojn"
-
-#~ msgid ""
-#~ "Check this option if you want the titlebar text to have a 3D look with a "
-#~ "shadow behind it."
-#~ msgstr ""
-#~ "Marku ĉi tiun tekston se vi volas doni 3-dimensian aspekton al la teksto "
-#~ "de la titolobreto, per ĵetita ombro."
-
-#~ msgid "Use shadowed &text"
-#~ msgstr "Uzi ombrigitan &tekston"
-
-#, fuzzy
-#~| msgid "Decoration Options"
-#~ msgid "Hide Advanced Configuration Options"
-#~ msgstr "Ornam-opcioj"
-
-#, fuzzy
-#~| msgid "Decoration Options"
-#~ msgid "Show Advanced Configuration Options"
-#~ msgstr "Ornam-opcioj"
-
-#, fuzzy
-#~| msgid "Animate buttons"
-#~ msgid "Animations"
-#~ msgstr "Animacii butonojn"
-
-#, fuzzy
-#~| msgid "Actions Settings"
-#~ msgid "Question - Oxygen Settings"
-#~ msgstr "Agaj Agordoj"
-
-#~ msgid "Regular Expression"
-#~ msgstr "Regulesprimo"
-
-#, fuzzy
-#~| msgid "Center"
-#~ msgid "General"
-#~ msgstr "Centrigita"
-
-#, fuzzy
-#~| msgid "Normal"
-#~ msgctxt "@item:inlistbox Border size:"
-#~ msgid "Normal"
-#~ msgstr "Normala"
-
-#, fuzzy
-#~| msgid "Large"
-#~ msgctxt "@item:inlistbox Border size:"
-#~ msgid "Large"
-#~ msgstr "Granda"
-
-#, fuzzy
-#~| msgid "Large"
-#~ msgctxt "@item:inlistbox Border size:"
-#~ msgid "Very Large"
-#~ msgstr "Granda"
-
-#, fuzzy
-#~| msgid "Huge"
-#~ msgctxt "@item:inlistbox Border size:"
-#~ msgid "Huge"
-#~ msgstr "Tre granda"
-
-#, fuzzy
-#~| msgid "Title &Alignment"
-#~ msgid "Tit&le alignment:"
-#~ msgstr "Titola ĝis&randigo"
-
-#, fuzzy
-#~| msgid "Small"
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Small"
-#~ msgstr "Malgranda"
-
-#~ msgid "Close windows by double clicking the menu button"
-#~ msgstr "Fermi fenestrojn per duobla klako sur la menuobutono"
-
-#, fuzzy
-#~| msgid "Minimize Window"
-#~ msgid "Outline active window title"
-#~ msgstr "Minimumigi fenestron"
-
-#, fuzzy
-#~| msgid "Shade"
-#~ msgid "Shadows"
-#~ msgstr "Suprenvolvi"
-
-#, fuzzy
-#~| msgid "Minimize Window"
-#~ msgid "Active Window Glow"
-#~ msgstr "Minimumigi fenestron"
-
-#, fuzzy
-#~| msgid "Config Dialog"
-#~ msgid "Dialog"
-#~ msgstr "Agordodialogo"
-
-#, fuzzy
-#~| msgid "Minimize Window"
-#~ msgid "Use window title"
-#~ msgstr "Minimumigi fenestron"
-
-#~ msgid "Decoration Options"
-#~ msgstr "Ornam-opcioj"
-
-#, fuzzy
-#~| msgid "Disabled"
-#~ msgctxt "outline window title"
-#~ msgid "Disabled"
-#~ msgstr "Malŝaltita"
-
-#, fuzzy
-#~| msgid "Enabled"
-#~ msgctxt "outline window title"
-#~ msgid "Enabled"
-#~ msgstr "Ebligita"
-
-#, fuzzy
-#~| msgid "Minimize Window"
-#~ msgid "Outline active window title:"
-#~ msgstr "Minimumigi fenestron"
-
-#, fuzzy
-#~| msgid "Minimize Window"
-#~ msgid "Hide window title bar"
-#~ msgstr "Minimumigi fenestron"
-
-#, fuzzy
-#~| msgid "Disabled"
-#~ msgctxt "Add handle to resize windows with no border"
-#~ msgid "Disabled"
-#~ msgstr "Malŝaltita"
-
-#, fuzzy
-#~| msgid "Enabled"
-#~ msgctxt "Add handle to resize windows with no border"
-#~ msgid "Enabled"
-#~ msgstr "Ebligita"
-
-#~ msgid "Move Up"
-#~ msgstr "Movi supren"
-
-#~ msgid "Move Down"
-#~ msgstr "Movi malsupren"
-
-#~ msgid "Add"
-#~ msgstr "Aldoni"
-
-#, fuzzy
-#~| msgid "Restore"
-#~ msgid "Remove"
-#~ msgstr "Restarigi"
-
-#~ msgid "Edit"
-#~ msgstr "Redakti"
-
-#, fuzzy
-#~| msgid "Oxygen"
-#~ msgid "Oxygen Shadow Demo"
-#~ msgstr "Oxygen"
-
-#, fuzzy
-#~| msgid "Minimize Window"
-#~ msgid "Inactive Windows"
-#~ msgstr "Minimumigi fenestron"
-
-#, fuzzy
-#~| msgid "Minimize Window"
-#~ msgid "Active Windows"
-#~ msgstr "Minimumigi fenestron"
-
-#~ msgid "Oxygen"
-#~ msgstr "Oxygen"
-
-#~ msgid "Help"
-#~ msgstr "Helpo"
-
-#~ msgid "Minimize"
-#~ msgstr "Minimumigi"
-
-#~ msgid "Maximize"
-#~ msgstr "Maksimumigi"
-
-#~ msgid "Close"
-#~ msgstr "Fermi"
-
-#~ msgid "Keep Above Others"
-#~ msgstr "Fiksi super aliaj"
-
-#~ msgid "Keep Below Others"
-#~ msgstr "Fiksi sub aliaj"
-
-#, fuzzy
-#~| msgid "On all desktops"
-#~ msgid "On All Desktops"
-#~ msgstr "Sur ĉiuj labortabloj"
-
-#~ msgid "Menu"
-#~ msgstr "Menuo"
-
-#~ msgid "Not on all desktops"
-#~ msgstr "Ne sur ĉiuj labortabloj"
-
-#~ msgid "On all desktops"
-#~ msgstr "Sur ĉiuj labortabloj"
-
-#~ msgid "Unshade"
-#~ msgstr "Malvolvi"
-
-#~ msgid "Shade"
-#~ msgstr "Suprenvolvi"
-
-#~ msgid "Resize"
-#~ msgstr "Regrandigi"
-
-#~ msgid "<b><center>B II preview</center></b>"
-#~ msgstr "<b><center>B II antaŭrigardo</center></b>"
-
-#~ msgid "Restore"
-#~ msgstr "Restarigi"
-
-#~ msgctxt "Help button label, one character"
-#~ msgid "?"
-#~ msgstr "?"
-
-#~ msgid "Draw window frames using &titlebar colors"
-#~ msgstr "Uzi la koloron de la &titolobretoj por la fenestraj kadroj"
-
-#~ msgid ""
-#~ "When selected, the window borders are drawn using the titlebar colors; "
-#~ "otherwise, they are drawn using normal border colors."
-#~ msgstr ""
-#~ "Se ebligita, la koloro de la fenestraj bordoj estas la sama kiel la "
-#~ "titolobreta koloro, alie ili estas la normala koloro."
-
-#~ msgid "Draw &resize handle"
-#~ msgstr "Uzi &regrandigilon"
-
-#~ msgid ""
-#~ "When selected, decorations are drawn with a \"grab handle\" in the bottom "
-#~ "right corner of the windows; otherwise, no grab handle is drawn."
-#~ msgstr ""
-#~ "Se ebligita, ornamaĵoj havas \"tenilon\" en la malsupre-dekstra angulo de "
-#~ "la fenestroj, alie ne."
-
-#, fuzzy
-#~| msgid ""
-#~| "When selected, active titlebars are drawn with a stipple (dotted) "
-#~| "effect; otherwise, they are drawn without the stipple."
-#~ msgid ""
-#~ "When selected, titlebars are automatically relocated to visible "
-#~ "positions; otherwise, they are only moved manually using shift+drag."
-#~ msgstr ""
-#~ "Kiam ebligita, aktivaj titolobretoj havas la efekton de pluraj punktoj, "
-#~ "alie ili ne havas punktojn."
-
-#~ msgid "Actions Settings"
-#~ msgstr "Agaj Agordoj"
-
-#~ msgid "Double click on menu button:"
-#~ msgstr "Duobla klako sur menuobutono:"
-
-#~ msgid "Do Nothing"
-#~ msgstr "Nenion fari"
-
-#~ msgid "Minimize Window"
-#~ msgstr "Minimumigi fenestron"
-
-#~ msgid "Shade Window"
-#~ msgstr "Volvi fenestron"
-
-#~ msgid "Close Window"
-#~ msgstr "Fermi fenestron"
-
-#~ msgid ""
-#~ "An action can be associated to a double click of the menu button. Leave "
-#~ "it to none if in doubt."
-#~ msgstr ""
-#~ "Vi povas ligi agon kun duobla klako de la menuobutono. Se vi ne scias "
-#~ "kion fari, vi povas lasi ĝin \"Nenion fari\"."
-
-#~ msgid "Laptop"
-#~ msgstr "Tekokomputilo"
-
-#, fuzzy
-#~| msgid "Draw &gradients"
-#~ msgid "Radial Gradient"
-#~ msgstr "&Kolortransiroj"
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Axel Rousseau"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "axel@esperanto-jeunes.org"
-
-#, fuzzy
-#~| msgid "Shade"
-#~ msgid "Save"
-#~ msgstr "Suprenvolvi"
-
-#~ msgid "Large"
-#~ msgstr "Granda"
-
-#~ msgid "Small"
-#~ msgstr "Malgranda"
-
-#~ msgid ""
-#~ "Check this option if you want windows to be closed when you double click "
-#~ "the menu button, similar to Microsoft Windows."
-#~ msgstr ""
-#~ "Marku ĉi tiun opcion se vi volas fermi fenestrojn kiam vi duoble klakas "
-#~ "la menuobutonon, simila je la konduto en Microsoft Windows."
-
-#~ msgid "Plastik"
-#~ msgstr "Plastik"
-
-#, fuzzy
-#~| msgid "On all desktops"
-#~ msgid "All Desktops"
-#~ msgstr "Sur ĉiuj labortabloj"
-
-#, fuzzy
-#~| msgid "Close"
-#~ msgid "Close Item"
-#~ msgstr "Fermi"
-
-#, fuzzy
-#~| msgid "Left"
-#~ msgid "&Left"
-#~ msgstr "Maldekstra"
-
-#, fuzzy
-#~| msgid "Center"
-#~ msgid "&Center"
-#~ msgstr "Centrigita"
-
-#, fuzzy
-#~| msgid "Right"
-#~ msgid "&Right"
-#~ msgstr "Dekstra"
-
-#, fuzzy
-#~| msgid "Keep Above Others"
-#~ msgid "Do not keep above others"
-#~ msgstr "Fiksi super aliaj"
-
-#, fuzzy
-#~| msgid "Keep Above Others"
-#~ msgid "Keep above others"
-#~ msgstr "Fiksi super aliaj"
-
-#, fuzzy
-#~| msgid "Keep Below Others"
-#~ msgid "Do not keep below others"
-#~ msgstr "Fiksi sub aliaj"
-
-#, fuzzy
-#~| msgid "Keep Below Others"
-#~ msgid "Keep below others"
-#~ msgstr "Fiksi sub aliaj"
-
-#, fuzzy
-#~| msgid "Disabled"
-#~ msgid "Variable"
-#~ msgstr "Malŝaltita"
-
-#, fuzzy
-#~| msgid "Maximize"
-#~ msgid "Maximum"
-#~ msgstr "Maksimumigi"
-
-#~ msgid "TextLabel"
-#~ msgstr "TextLabel"
-
-#, fuzzy
-#~| msgid "Shade"
-#~ msgid "Shadow style:"
-#~ msgstr "Suprenvolvi"
-
-#~ msgctxt "draw separator"
-#~ msgid "Enabled"
-#~ msgstr "Ebligita"
-
-#~ msgctxt "draw separator"
-#~ msgid "Disabled"
-#~ msgstr "Malŝaltita"
-
-#~ msgid "Installs a KWM theme"
-#~ msgstr "Instalas KWM-estoson"
-
-#~ msgid "Path to a theme config file"
-#~ msgstr "Vojo al etosa agordodosiero"
-
-#~ msgid "<center><b>KWMTheme</b></center>"
-#~ msgstr "<center><b>KWM-etoso</b></center>"
-
-#~ msgid "Sticky"
-#~ msgstr "Fiksa"
-
-#~ msgid "Unsticky"
-#~ msgstr "Malfiksa"
-
-#~ msgid "<center><b>Keramik preview</b></center>"
-#~ msgstr "<center><b>Keramik-antaŭrigardo</b></center>"
-
-#~ msgid "Draw titlebar &stipple effect"
-#~ msgstr "&Punktita efekto en la titolobreto"
-
-#~ msgid ""
-#~ "When selected, active titlebars are drawn with a stipple (dotted) effect; "
-#~ "otherwise, they are drawn without the stipple."
-#~ msgstr ""
-#~ "Kiam ebligita, aktivaj titolobretoj havas la efekton de pluraj punktoj, "
-#~ "alie ili ne havas punktojn."
-
-#~ msgid "Draw g&rab bar below windows"
-#~ msgstr "&Kapta stango sub fenestroj"
-
-#~ msgid ""
-#~ "When selected, decorations are drawn with a \"grab bar\" below windows; "
-#~ "otherwise, no grab bar is drawn."
-#~ msgstr ""
-#~ "Kiam ebligita, ornamaĵoj havas \"kaptan stangon\" sube de la fenestroj, "
-#~ "se ne ebligita, neniu kapta stango aperas."
-
-#~ msgid "Draw &gradients"
-#~ msgstr "&Kolortransiroj"
-
-#~ msgid ""
-#~ "When selected, decorations are drawn with gradients for high-color "
-#~ "displays; otherwise, no gradients are drawn."
-#~ msgstr ""
-#~ "Kiam ebligita, ornamaĵoj havas kolortransirojn (por alt-koloraj ekranoj), "
-#~ "se ne ebligita la ornamaĵoj ne uzas kolortransirojn."
-
-#~ msgid "KDE 2"
-#~ msgstr "KDE 2"
-
-#~ msgid ""
-#~ "When selected, the window decoration borders are drawn using the titlebar "
-#~ "colors; otherwise, they are drawn using normal border colors instead."
-#~ msgstr ""
-#~ "Kiam ebligita, la ornamaĵaj bordoj uzas la koloron de la titolobreto, "
-#~ "alie ili uzas la normalajn bordajn kolorojn."
-
-#~ msgid "Quartz &extra slim"
-#~ msgstr "Quartz &tre malgrasa"
-
-#~ msgid "Quartz window decorations with extra-small title bar."
-#~ msgstr "Quartz-fenestraj ornamaĵoj kiuj havas tre malgrandan titolobreton."
-
-#~ msgid "Quartz"
-#~ msgstr "Quartz"
-
-#~ msgid "Redmond"
-#~ msgstr "Redmond"
-
-#~ msgid "&Show window resize handle"
-#~ msgstr "&Montri la fenestran regrandigilon"
-
-#~ msgid ""
-#~ "When selected, all windows are drawn with a resize handle at the lower "
-#~ "right corner. This makes window resizing easier, especially for "
-#~ "trackballs and other mouse replacements on laptops."
-#~ msgstr ""
-#~ "Kiam ebligita, ĉiuj fenestroj havas regrandigilon en la malsupre-dekstra "
-#~ "angulo. Tio faciligas ŝanĝon de la fenestra grandeco, aparte kiam vi uzas "
-#~ "stirglobon aŭ alian anstataŭigon de muso en via tekokomputilo."
-
-#~ msgid "Here you can change the size of the resize handle."
-#~ msgstr "Ĉi tie vi povas ŝanĝi la grandecon de la regrandigilo mem."
-
-#~ msgid "Medium"
-#~ msgstr "Meza"
-
-#~ msgid "Modern System"
-#~ msgstr "Moderna sistemo"
-
-#~ msgid "Web"
-#~ msgstr "TTT"
-
-#~ msgid "Keramik"
-#~ msgstr "Keramik"
-
-#~ msgid "Display the window &icon in the caption bubble"
-#~ msgstr "Montri la fenestran &piktogramon en la apudskriba veziko"
-
-#~ msgid ""
-#~ "Check this option if you want the window icon to be displayed in the "
-#~ "caption bubble next to the titlebar text."
-#~ msgstr ""
-#~ "Marku ĉi tiun opcion se vi volas vidi la piktogramon de la fenestro ene "
-#~ "de la titoleta veziko apud la titolobreta teksto."
-
-#~ msgid "Draw &small caption bubbles on active windows"
-#~ msgstr "Uzi &malgrandajn apudskribajn vezikojn por aktivaj fenestroj"
-
-#~ msgid ""
-#~ "Check this option if you want the caption bubble to have the same size on "
-#~ "active windows that it has on inactive ones. This option is useful for "
-#~ "laptops or low resolution displays where you want maximize the amount of "
-#~ "space available to the window contents."
-#~ msgstr ""
-#~ "Marku ĉi tiun opcion se vi volas ke apudskribaj vezikoj havu la saman "
-#~ "grandecon por aktivaj fenestroj kiel por neaktivaj fenestroj. Estas utile "
-#~ "se vi uzas tekokomputilon aŭ ekranon kiu havas malaltan distingivon, por "
-#~ "havigi la disponeblan spacon al la fenestra enhavo."
-
-#~ msgid "Draw g&rab bars below windows"
-#~ msgstr "&Kaptaj stangoj sub fenestroj"
-
-#~ msgid ""
-#~ "Check this option if you want a grab bar to be drawn below windows. When "
-#~ "this option is not selected only a thin border will be drawn in its place."
-#~ msgstr ""
-#~ "Marku ĉi tiun opcion se vi volas uzi kaptan stangon sub fenestroj. Kiam "
-#~ "vi ne uzas ĉi tiun opcion, vi vidas nur mallarĝan bordon en tiu loko."
-
-#~ msgid "Drag or Type Theme URL"
-#~ msgstr "Eltiru aŭ tajpu etosan URLon"
-
-#~ msgid "Theme:"
-#~ msgstr "Etoso:"
-
-#, fuzzy
-#~| msgid "Installs a KWM theme"
-#~ msgid "Get New Themes..."
-#~ msgstr "Instalas KWM-estoson"
-
-#, fuzzy
-#~| msgid "Installs a KWM theme"
-#~ msgid "Install New Theme..."
-#~ msgstr "Instalas KWM-estoson"
-
-#, fuzzy
-#~| msgid "Minimize Window"
-#~ msgid "Glow active window"
-#~ msgstr "Minimumigi fenestron"
-
-#, fuzzy
-#~| msgid "Draw window frames using &titlebar colors"
-#~ msgid "Overwrite default title bar colors:"
-#~ msgstr "Uzi la koloron de la &titolobretoj por la fenestraj kadroj"

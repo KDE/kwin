@@ -1,7 +1,9 @@
-# translation of kcmkwindecoration.po to Esperanto
+# translation of kcm_kwindecoration.pot to Esperanto
 # Copyright (C) 2001, 2007 Free Software Foundation, Inc.
+# This file is distributed under the same license as the kwin package.
 # Wolfram Diestel <wolfram@steloj.de>, 2001.
 # Cindy McKee <cfmckee@gmail.com>, 2007.
+# Oliver Kellogg <okellogg@users.sourceforge.net>, 2023.
 #
 # Minuskloj: ĉ ĝ ĵ ĥ ŝ ŭ   Majuskloj: Ĉ Ĝ Ĵ Ĥ Ŝ Ŭ
 #
@@ -10,14 +12,14 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-06 01:01+0000\n"
-"PO-Revision-Date: 2009-12-15 10:43+0100\n"
-"Last-Translator: Axel Rousseau <axel@esperanto-jeunes.org>\n"
+"PO-Revision-Date: 2023-02-09 22:30+0100\n"
+"Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.4\n"
+"X-Generator: translate-po (https://github.com/zcribe/translate-po)\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -35,18 +37,17 @@ msgstr ""
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
 msgid "More actions for this window"
-msgstr ""
+msgstr "Pli da agoj por ĉi tiu fenestro"
 
 #: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
 msgid "Application menu"
-msgstr ""
+msgstr "Aplika menuo"
 
 #: declarative-plugin/buttonsmodel.cpp:57
-#, fuzzy, kde-format
-#| msgid "On All Desktops"
+#, kde-format
 msgid "On all desktops"
-msgstr "Je ĉiuj labortabloj"
+msgstr "Sur ĉiuj labortabloj"
 
 #: declarative-plugin/buttonsmodel.cpp:59
 #, kde-format
@@ -66,7 +67,7 @@ msgstr "Fermi"
 #: declarative-plugin/buttonsmodel.cpp:65
 #, kde-format
 msgid "Context help"
-msgstr ""
+msgstr "Kunteksta helpo"
 
 #: declarative-plugin/buttonsmodel.cpp:67
 #, kde-format
@@ -76,34 +77,33 @@ msgstr "Ombrigi"
 #: declarative-plugin/buttonsmodel.cpp:69
 #, kde-format
 msgid "Keep below other windows"
-msgstr ""
+msgstr "Konservi sub aliaj fenestroj"
 
 #: declarative-plugin/buttonsmodel.cpp:71
 #, kde-format
 msgid "Keep above other windows"
-msgstr ""
+msgstr "Konservi super aliaj fenestroj"
 
 #: kcm.cpp:49
-#, fuzzy, kde-format
-#| msgid "&Window Decoration"
+#, kde-format
 msgid "Window Decorations"
-msgstr "&Fenestro-ornamaĵo"
+msgstr "Fenestraj Dekoracioj"
 
 #: kcm.cpp:53
 #, kde-format
 msgid "Valerio Pilo"
-msgstr ""
+msgstr "Valerio Pilo"
 
 #: kcm.cpp:54
 #, kde-format
 msgid "Author"
-msgstr ""
+msgstr "Aŭtoro"
 
 #: kcm.cpp:183
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
-msgstr ""
+msgstr "Defaŭlto de la etoso (%1)"
 
 #: kwin-applywindowdecoration.cpp:32
 #, kde-format
@@ -112,6 +112,9 @@ msgid ""
 "active session, without accidentally setting it to one that is either not "
 "available, or which is already set."
 msgstr ""
+"Ĉi tiu ilo ebligas al vi agordi la fenestran dekoracian etoson por la "
+"nuntempe aktiva seanco, sen hazarde agordi ĝin al unu, kiu aŭ ne "
+"disponeblas, aŭ kiu jam estas agordita."
 
 #: kwin-applywindowdecoration.cpp:33
 #, kde-format
@@ -120,12 +123,16 @@ msgid ""
 "full path will attempt to find a theme in that directory, and then apply "
 "that if one can be deduced."
 msgstr ""
+"La nomo de la fenestra ornama etoso, kiun vi volas agordi por KWin. Trapasi "
+"plenan vojon provos trovi etoson en tiu dosierujo, kaj poste apliki tion se "
+"oni povas dedukti."
 
 #: kwin-applywindowdecoration.cpp:34
 #, kde-format
 msgid ""
 "Show all the themes available on the system (and which is the current theme)"
 msgstr ""
+"Montru ĉiujn disponeblajn etosojn en la sistemo (kaj kiu estas la nuna etoso)"
 
 #: kwin-applywindowdecoration.cpp:65
 #, kde-format
@@ -133,6 +140,8 @@ msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
 "as your current theme."
 msgstr ""
+"Solvita %1 al la KWin Aurorae-etoso \"%2\", kaj provos agordi tion kiel via "
+"nuna etoso."
 
 #: kwin-applywindowdecoration.cpp:71
 #, kde-format
@@ -140,17 +149,20 @@ msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
 "theme, and we will have to abort, due to having no theme to set"
 msgstr ""
+"Vi provis pasigi dosiervojon, sed ĉi tio ne povis esti solvita al etoso, kaj "
+"ni devos ĉesigi, ĉar ne havas etoso por agordi."
 
 #: kwin-applywindowdecoration.cpp:77
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
 msgstr ""
+"La petita etoso \"%1\" jam estas agordita kiel la fenestro-ornama etoso."
 
 #: kwin-applywindowdecoration.cpp:99
 #, kde-format
 msgid "Successfully applied the cursor theme %1 to your current Plasma session"
-msgstr ""
+msgstr "Sukcese aplikis la kursoran etoso %1 al via nuna Plasma seanco"
 
 #: kwin-applywindowdecoration.cpp:103
 #, kde-format
@@ -158,6 +170,9 @@ msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
 "unrecoverable error. You may find that simply trying again will work."
 msgstr ""
+"Malsukcesis konservi viajn etosajn agordojn - la kialo estas nekonata, sed "
+"ĉi tio estas nereakirebla eraro. Vi eble trovos, ke simple provi denove "
+"funkcios."
 
 #: kwin-applywindowdecoration.cpp:107
 #, kde-format
@@ -165,339 +180,120 @@ msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
 "options: %2"
 msgstr ""
+"Ne eblis trovi etoson \"%1\". La etoso devus esti unu el la sekvaj opcioj: %2"
 
 #: kwin-applywindowdecoration.cpp:112
 #, kde-format
 msgid "You have the following KWin window decoration themes on your system:"
-msgstr ""
+msgstr "Vi havas la jenajn KWin-fenestrajn ornam-etosojn en via sistemo:"
 
 #: package/contents/ui/Buttons.qml:85
 #, kde-format
 msgid "Titlebar"
-msgstr ""
+msgstr "Titolbreto"
 
 #: package/contents/ui/Buttons.qml:245
 #, kde-format
 msgid "Drop button here to remove it"
-msgstr ""
+msgstr "Faligi butonon ĉi tie por forigi ĝin"
 
 #: package/contents/ui/Buttons.qml:261
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
-msgstr ""
+msgstr "Treni butonojn inter ĉi tie kaj la titolbreton"
 
 #: package/contents/ui/ConfigureTitlebar.qml:16
-#, fuzzy, kde-format
-#| msgid "Buttons"
+#, kde-format
 msgid "Titlebar Buttons"
-msgstr "Butonoj"
+msgstr "Butonoj de Titolobreto"
 
 #: package/contents/ui/ConfigureTitlebar.qml:35
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
-msgstr ""
+msgstr "Fermi fenestrojn per duobla klako de la menubutono"
 
 #: package/contents/ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
-msgstr ""
+msgstr "Alklaku kaj tenu premu la menubutonon por montri la menuon."
 
 #: package/contents/ui/ConfigureTitlebar.qml:59
-#, fuzzy, kde-format
-#| msgid "&Show window button tooltips"
+#, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
-msgstr "&Montri helpindikojn pri fenestrobutonoj"
+msgstr "Montri titolbreton butonajn konsiletojn"
 
 #: package/contents/ui/main.qml:19
 #, kde-format
 msgid "This module lets you configure the window decorations."
-msgstr ""
+msgstr "Ĉi tiu modulo ebligas al vi agordi la fenestrajn ornamojn."
 
 #: package/contents/ui/main.qml:42
-#, fuzzy, kde-format
-#| msgid "B&order size:"
+#, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
-msgstr "B&ordogrando:"
+msgstr "Fenestra randgrandeco:"
 
 #: package/contents/ui/main.qml:60
-#, fuzzy, kde-format
-#| msgid "Buttons"
+#, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr "Butonoj"
+msgstr "Agordi Titolbreton-Butonojn..."
 
 #: package/contents/ui/main.qml:65
-#, fuzzy, kde-format
-#| msgid "&Window Decoration"
+#, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations…"
-msgstr "&Fenestro-ornamaĵo"
+msgstr "Akiri novajn fenestrajn ornamojn..."
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
 msgid "Edit %1 Theme"
-msgstr ""
+msgstr "Redakti Etoson %1"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "B&order size:"
+#, kde-format
 msgid "No Borders"
-msgstr "B&ordogrando:"
+msgstr "Neniuj Randoj"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "B&order size:"
+#, kde-format
 msgid "No Side Borders"
-msgstr "B&ordogrando:"
+msgstr "Neniuj Flankaj Randoj"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Tiny"
+#, kde-format
 msgid "Tiny"
 msgstr "Eta"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Normal"
+#, kde-format
 msgid "Normal"
 msgstr "Normala"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Large"
+#, kde-format
 msgid "Large"
 msgstr "Granda"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Large"
+#, kde-format
 msgid "Very Large"
 msgstr "Grandega"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Huge"
+#, kde-format
 msgid "Huge"
 msgstr "Tre granda"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Very Huge"
+#, kde-format
 msgid "Very Huge"
 msgstr "Tre grandega"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Border size:"
-#| msgid "Oversized"
+#, kde-format
 msgid "Oversized"
 msgstr "Troigite grandega"
-
-#~ msgid "Menu"
-#~ msgstr "Menuo"
-
-#, fuzzy
-#~| msgid "Keep Below Others"
-#~ msgid "Keep below"
-#~ msgstr "Teni sub aliaj"
-
-#, fuzzy
-#~| msgid "Keep Above Others"
-#~ msgid "Keep above"
-#~ msgstr "Teni super aliaj"
-
-#, fuzzy
-#~| msgid "&Window Decoration"
-#~ msgid "Download New Window Decorations"
-#~ msgstr "&Fenestro-ornamaĵo"
-
-#, fuzzy
-#~| msgid "Search"
-#~ msgid "Search..."
-#~ msgstr "Serĉi"
-
-#, fuzzy
-#~| msgid "B&order size:"
-#~ msgid "Border si&ze:"
-#~ msgstr "B&ordogrando:"
-
-#, fuzzy
-#~| msgid "&Window Decoration"
-#~ msgid "Configure %1..."
-#~ msgstr "&Fenestro-ornamaĵo"
-
-#, fuzzy
-#~| msgid "Normal"
-#~ msgid "Form"
-#~ msgstr "Normala"
-
-#, fuzzy
-#~| msgid "Buttons"
-#~ msgid "Button size:"
-#~ msgstr "Butonoj"
-
-#, fuzzy
-#~| msgid "Tiny"
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Tiny"
-#~ msgstr "Eta"
-
-#, fuzzy
-#~| msgid "Normal"
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Normal"
-#~ msgstr "Normala"
-
-#, fuzzy
-#~| msgid "Large"
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Large"
-#~ msgstr "Granda"
-
-#, fuzzy
-#~| msgid "Very Large"
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Very Large"
-#~ msgstr "Grandega"
-
-#, fuzzy
-#~| msgid "Huge"
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Huge"
-#~ msgstr "Tre granda"
-
-#, fuzzy
-#~| msgid "Very Huge"
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Very Huge"
-#~ msgstr "Tre grandega"
-
-#, fuzzy
-#~| msgid "Oversized"
-#~ msgctxt "@item:inlistbox Button size:"
-#~ msgid "Oversized"
-#~ msgstr "Troigite grandega"
-
-#~ msgid "KDE"
-#~ msgstr "KDE"
-
-#~ msgid "%1 (unavailable)"
-#~ msgstr "%1 (nehavebla)"
-
-#~ msgid ""
-#~ "To add or remove titlebar buttons, simply <i>drag</i> items between the "
-#~ "available item list and the titlebar preview. Similarly, drag items "
-#~ "within the titlebar preview to re-position them."
-#~ msgstr ""
-#~ "Por aldoni aŭ forigi titolobretajn butonojn, simple <i>ŝovu</i> erojn "
-#~ "inter la la listo de uzeblaj eroj kaj la antaŭrigardo de la titolobreto. "
-#~ "Simile vi povas ŝovi erojn ene de la titolobreto por aliaranĝi ilin."
-
-#~ msgid "Resize"
-#~ msgstr "Regrandigi"
-
-#~ msgid "Help"
-#~ msgstr "Helpo"
-
-#~ msgid "--- spacer ---"
-#~ msgstr "--- spacigilo ---"
-
-#~ msgid ""
-#~ "Enabling this checkbox will show window button tooltips. If this checkbox "
-#~ "is off, no window button tooltips will be shown."
-#~ msgstr ""
-#~ "Se ŝaltita, helpindikoj pri fenestrobutonoj estas montrataj, aliokaze ne."
-
-#, fuzzy
-#~| msgid ""
-#~| "The appropriate settings can be found in the \"Buttons\" Tab; please "
-#~| "note that this option is not available on all styles yet."
-#~ msgid "Please note that this option is not available on all styles yet."
-#~ msgstr ""
-#~ "La koncerna agordo troviĝas sur la paĝo \"Butonoj\". Bonvolu noti, ke tiu "
-#~ "opcio ankoraŭ ne estas uzebla en ĉiuj stiloj."
-
-#~ msgid "Use custom titlebar button &positions"
-#~ msgstr "Uzi &proprajn lokojn en la titolobreto"
-
-#~ msgid "B&order size:"
-#~ msgstr "B&ordogrando:"
-
-#~ msgid "Use this combobox to change the border size of the decoration."
-#~ msgstr ""
-#~ "Uzu la redakteblan falmenuon por ŝanĝi la bordan grandecon de la ornamaĵo."
-
-#~ msgid "Decoration Options"
-#~ msgstr "Ornam-opcioj"
-
-#~ msgid ""
-#~ "Select the window decoration. This is the look and feel of both the "
-#~ "window borders and the window handle."
-#~ msgstr ""
-#~ "Elekti la fenestro-aspekton. Tio estas la aspekto kaj konduto de la "
-#~ "fenstrorandoj kaj la tenilo."
-
-#~ msgid "Window Decoration Control Module"
-#~ msgstr "Agordmodulo pri fenestro-aspekto"
-
-#~ msgid "(c) 2001 Karol Szwed"
-#~ msgstr "(c) 2001 Karol Szwed"
-
-#~ msgid "Karol Szwed"
-#~ msgstr "Karol Szwed"
-
-#~ msgid "Oxygen"
-#~ msgstr "Oxygen"
-
-#~ msgid ""
-#~ "<h1>Window Manager Decoration</h1><p>This module allows you to choose the "
-#~ "window border decorations, as well as titlebar button positions and "
-#~ "custom decoration options.</p>To choose a theme for your window "
-#~ "decoration click on its name and apply your choice by clicking the \"Apply"
-#~ "\" button below. If you do not want to apply your choice you can click "
-#~ "the \"Reset\" button to discard your changes.<p>You can configure each "
-#~ "theme. There are different options specific for each theme.</p><p>On the "
-#~ "\"Buttons\" tab check the \"Use custom titlebar button positions\" box "
-#~ "and you can change the positions of the buttons to your liking.</p>"
-#~ msgstr ""
-#~ "<h1>Fenestroadministrila ornamado</h1><p> La modulo permesas al vi la "
-#~ "elekton de la bordaj ornamaĵoj, poziciojn de la titolobretaj butonoj kaj "
-#~ "viajn proprajn ornamaĵojn.</p> Por elekti etoson por via fenestra "
-#~ "ornamado, alklaku sur la nomo kaj alklaku la \"Apliki\" butonon sube. Se "
-#~ "vi ne volas apliki vian elekton vi povas alklaki la \"Reŝargi\"butonon "
-#~ "por viŝi la ŝanĝojn. <p>Vi povas agordi ĉiun etoson en la \"Agordi "
-#~ "[...]\" langeto. Estas diversaj opcioj por ĉiu etoso.</p><p>En "
-#~ "\"Ĝeneralaj opcioj (se disponebla)\" vi povas ŝalti la \"Butonoj\" "
-#~ "langeton per marki la \"Uzi proprajn poziciojn por la titolobretaj butonoj"
-#~ "\" markobutono. En la \"Butonoj\" langeto vi povas ŝanĝi la poziciojn de "
-#~ "la butonoj laŭplaĉe.</p>"
-
-#~ msgid "Active Window"
-#~ msgstr "Aktiva fenestro"
-
-#~ msgid "Inactive Window"
-#~ msgstr "Neaktiva fenestro"
-
-#~ msgid "kcmkwindecoration"
-#~ msgstr "kcmkwindecoration"
-
-#~ msgid ""
-#~ "No preview available.\n"
-#~ "Most probably there\n"
-#~ "was a problem loading the plugin."
-#~ msgstr ""
-#~ "Neniu antaŭvido estas disponebla.\n"
-#~ "Verŝajne, estis problemo dum la ŝargo de la kromprogrameto."
-
-#~ msgid "&Buttons"
-#~ msgstr "&Butonoj"

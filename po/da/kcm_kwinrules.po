@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-11 00:48+0000\n"
+"POT-Creation-Date: 2023-02-10 00:59+0000\n"
 "PO-Revision-Date: 2020-01-30 19:56+0100\n"
 "Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -427,148 +427,155 @@ msgid ""
 "force the property \"%1\" to \"Yes\"."
 msgstr ""
 
-#: rulesmodel.cpp:359
+#: rulesmodel.cpp:251
+#, kde-format
+msgid ""
+"Readability may be impaired with extremely low opacity values. At 0%, the "
+"window becomes invisible."
+msgstr ""
+
+#: rulesmodel.cpp:378
 #, fuzzy, kde-format
 #| msgid "&Description:"
 msgid "Description"
 msgstr "&Beskrivelse:"
 
-#: rulesmodel.cpp:359 rulesmodel.cpp:367 rulesmodel.cpp:375 rulesmodel.cpp:382
-#: rulesmodel.cpp:388 rulesmodel.cpp:396 rulesmodel.cpp:401 rulesmodel.cpp:407
+#: rulesmodel.cpp:378 rulesmodel.cpp:386 rulesmodel.cpp:394 rulesmodel.cpp:401
+#: rulesmodel.cpp:407 rulesmodel.cpp:415 rulesmodel.cpp:420 rulesmodel.cpp:426
 #, fuzzy, kde-format
 #| msgid "&Window matching"
 msgid "Window matching"
 msgstr "&Vindue-matchning"
 
-#: rulesmodel.cpp:367
+#: rulesmodel.cpp:386
 #, fuzzy, kde-format
 #| msgid "Window &class (application):"
 msgid "Window class (application)"
 msgstr "Vindues&klasse (program):"
 
-#: rulesmodel.cpp:375
+#: rulesmodel.cpp:394
 #, fuzzy, kde-format
 #| msgid "Match w&hole window class"
 msgid "Match whole window class"
 msgstr "Match &hel vinduesklasse"
 
-#: rulesmodel.cpp:382
+#: rulesmodel.cpp:401
 #, fuzzy, kde-format
 #| msgid "Match w&hole window class"
 msgid "Whole window class"
 msgstr "Match &hel vinduesklasse"
 
-#: rulesmodel.cpp:388
+#: rulesmodel.cpp:407
 #, fuzzy, kde-format
 #| msgid "Window &types:"
 msgid "Window types"
 msgstr "Vindues&typer:"
 
-#: rulesmodel.cpp:396
+#: rulesmodel.cpp:415
 #, fuzzy, kde-format
 #| msgid "Window ro&le:"
 msgid "Window role"
 msgstr "Vindues&rolle:"
 
-#: rulesmodel.cpp:401
+#: rulesmodel.cpp:420
 #, fuzzy, kde-format
 #| msgid "Window t&itle:"
 msgid "Window title"
 msgstr "Vinduest&itel:"
 
-#: rulesmodel.cpp:407
+#: rulesmodel.cpp:426
 #, fuzzy, kde-format
 #| msgid "&Machine (hostname):"
 msgid "Machine (hostname)"
 msgstr "&Maskine (værtsnavn):"
 
-#: rulesmodel.cpp:413
+#: rulesmodel.cpp:432
 #, fuzzy, kde-format
 #| msgid "&Position"
 msgid "Position"
 msgstr "&Position"
 
-#: rulesmodel.cpp:413 rulesmodel.cpp:419 rulesmodel.cpp:425 rulesmodel.cpp:430
-#: rulesmodel.cpp:438 rulesmodel.cpp:444 rulesmodel.cpp:463 rulesmodel.cpp:479
-#: rulesmodel.cpp:484 rulesmodel.cpp:489 rulesmodel.cpp:494 rulesmodel.cpp:499
-#: rulesmodel.cpp:506 rulesmodel.cpp:516 rulesmodel.cpp:521 rulesmodel.cpp:526
+#: rulesmodel.cpp:432 rulesmodel.cpp:438 rulesmodel.cpp:444 rulesmodel.cpp:449
+#: rulesmodel.cpp:457 rulesmodel.cpp:463 rulesmodel.cpp:482 rulesmodel.cpp:498
+#: rulesmodel.cpp:503 rulesmodel.cpp:508 rulesmodel.cpp:513 rulesmodel.cpp:518
+#: rulesmodel.cpp:525 rulesmodel.cpp:535 rulesmodel.cpp:540 rulesmodel.cpp:545
 #, fuzzy, kde-format
 #| msgid "&Size && Position"
 msgid "Size & Position"
 msgstr "&Størrelse og position"
 
-#: rulesmodel.cpp:419
+#: rulesmodel.cpp:438
 #, fuzzy, kde-format
 #| msgid "&Size"
 msgid "Size"
 msgstr "S&tørrelse"
 
-#: rulesmodel.cpp:425
+#: rulesmodel.cpp:444
 #, fuzzy, kde-format
 #| msgid "Maximized &horizontally"
 msgid "Maximized horizontally"
 msgstr "Maksimeret &vandret"
 
-#: rulesmodel.cpp:430
+#: rulesmodel.cpp:449
 #, fuzzy, kde-format
 #| msgid "Maximized &vertically"
 msgid "Maximized vertically"
 msgstr "Maksimeret &lodret"
 
-#: rulesmodel.cpp:438
+#: rulesmodel.cpp:457
 #, fuzzy, kde-format
 #| msgid "All Desktops"
 msgid "Virtual Desktop"
 msgstr "Alle skriveborde"
 
-#: rulesmodel.cpp:444
+#: rulesmodel.cpp:463
 #, fuzzy, kde-format
 #| msgid "All Desktops"
 msgid "Virtual Desktops"
 msgstr "Alle skriveborde"
 
-#: rulesmodel.cpp:463
+#: rulesmodel.cpp:482
 #, fuzzy, kde-format
 #| msgid "All Activities"
 msgid "Activities"
 msgstr "Alle aktiviteter"
 
-#: rulesmodel.cpp:479
+#: rulesmodel.cpp:498
 #, kde-format
 msgid "Screen"
 msgstr "Skærm"
 
-#: rulesmodel.cpp:484
+#: rulesmodel.cpp:503
 #, fuzzy, kde-format
 #| msgid "&Fullscreen"
 msgid "Fullscreen"
 msgstr "&Fuldskærm"
 
-#: rulesmodel.cpp:489
+#: rulesmodel.cpp:508
 #, fuzzy, kde-format
 #| msgid "M&inimized"
 msgid "Minimized"
 msgstr "M&inimeret"
 
-#: rulesmodel.cpp:494
+#: rulesmodel.cpp:513
 #, fuzzy, kde-format
 #| msgid "Sh&aded"
 msgid "Shaded"
 msgstr "S&kygget"
 
-#: rulesmodel.cpp:499
+#: rulesmodel.cpp:518
 #, fuzzy, kde-format
 #| msgid "Initial p&lacement"
 msgid "Initial placement"
 msgstr "Indledningsvis p&lacering"
 
-#: rulesmodel.cpp:506
+#: rulesmodel.cpp:525
 #, fuzzy, kde-format
 #| msgid "Ignore requested &geometry"
 msgid "Ignore requested geometry"
 msgstr "Ignorér anmodet &geometri"
 
-#: rulesmodel.cpp:508
+#: rulesmodel.cpp:527
 #, kde-format
 msgid ""
 "Windows can ask to appear in a certain position.\n"
@@ -581,24 +588,24 @@ msgstr ""
 "hvilket kan være ubehageligt hvis klienten misbruger\n"
 "funktionen til ubetinget at dukke op midt på din skærm."
 
-#: rulesmodel.cpp:516
+#: rulesmodel.cpp:535
 #, fuzzy, kde-format
 #| msgid "M&inimum size"
 msgid "Minimum Size"
 msgstr "M&inimumstørrelse"
 
-#: rulesmodel.cpp:521
+#: rulesmodel.cpp:540
 #, fuzzy, kde-format
 #| msgid "M&aximum size"
 msgid "Maximum Size"
 msgstr "M&aksimumstørrelse"
 
-#: rulesmodel.cpp:526
+#: rulesmodel.cpp:545
 #, kde-format
 msgid "Obey geometry restrictions"
 msgstr "Adlyd begrænsninger af geometri"
 
-#: rulesmodel.cpp:528
+#: rulesmodel.cpp:547
 #, kde-format
 msgid ""
 "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
@@ -615,100 +622,100 @@ msgstr ""
 "dimensioner\n"
 "såsom hele skærmområdet."
 
-#: rulesmodel.cpp:537
+#: rulesmodel.cpp:556
 #, kde-format
 msgid "Keep above other windows"
 msgstr ""
 
-#: rulesmodel.cpp:537 rulesmodel.cpp:542 rulesmodel.cpp:547 rulesmodel.cpp:553
-#: rulesmodel.cpp:559 rulesmodel.cpp:565
+#: rulesmodel.cpp:556 rulesmodel.cpp:561 rulesmodel.cpp:566 rulesmodel.cpp:572
+#: rulesmodel.cpp:578 rulesmodel.cpp:584
 #, fuzzy, kde-format
 #| msgid "&Arrangement && Access"
 msgid "Arrangement & Access"
 msgstr "&Arrangement og adgang"
 
-#: rulesmodel.cpp:542
+#: rulesmodel.cpp:561
 #, kde-format
 msgid "Keep below other windows"
 msgstr ""
 
-#: rulesmodel.cpp:547
+#: rulesmodel.cpp:566
 #, fuzzy, kde-format
 #| msgid "Skip &taskbar"
 msgid "Skip taskbar"
 msgstr "Skip &opgavelinje"
 
-#: rulesmodel.cpp:549
+#: rulesmodel.cpp:568
 #, kde-format
 msgid "Window shall (not) appear in the taskbar."
 msgstr "Vinduet skal (ikke) vises i opgavelinjen."
 
-#: rulesmodel.cpp:553
+#: rulesmodel.cpp:572
 #, fuzzy, kde-format
 #| msgid "Skip pa&ger"
 msgid "Skip pager"
 msgstr "Skip skrivebordsvæl&ger"
 
-#: rulesmodel.cpp:555
+#: rulesmodel.cpp:574
 #, kde-format
 msgid "Window shall (not) appear in the manager for virtual desktops"
 msgstr "Vinduet skal (ikke) vises i håndteringen af virtuelle skriveborde"
 
-#: rulesmodel.cpp:559
+#: rulesmodel.cpp:578
 #, fuzzy, kde-format
 #| msgid "Skip &switcher"
 msgid "Skip switcher"
 msgstr "Skip &skifter"
 
-#: rulesmodel.cpp:561
+#: rulesmodel.cpp:580
 #, kde-format
 msgid "Window shall (not) appear in the Alt+Tab list"
 msgstr "Vinduet skal (ikke) vises i Alt+Tab-listen"
 
-#: rulesmodel.cpp:565
+#: rulesmodel.cpp:584
 #, kde-format
 msgid "Shortcut"
 msgstr "Genvej"
 
-#: rulesmodel.cpp:571
+#: rulesmodel.cpp:590
 #, fuzzy, kde-format
 #| msgid "&No titlebar and frame"
 msgid "No titlebar and frame"
 msgstr "&Ingen titellinje og ramme"
 
-#: rulesmodel.cpp:571 rulesmodel.cpp:576 rulesmodel.cpp:582 rulesmodel.cpp:587
-#: rulesmodel.cpp:592 rulesmodel.cpp:603 rulesmodel.cpp:614 rulesmodel.cpp:622
-#: rulesmodel.cpp:635 rulesmodel.cpp:640 rulesmodel.cpp:646 rulesmodel.cpp:651
+#: rulesmodel.cpp:590 rulesmodel.cpp:595 rulesmodel.cpp:601 rulesmodel.cpp:606
+#: rulesmodel.cpp:612 rulesmodel.cpp:623 rulesmodel.cpp:634 rulesmodel.cpp:642
+#: rulesmodel.cpp:655 rulesmodel.cpp:660 rulesmodel.cpp:666 rulesmodel.cpp:671
 #, fuzzy, kde-format
 #| msgid "Appearance && &Fixes"
 msgid "Appearance & Fixes"
 msgstr "Udseende og &rettelser"
 
-#: rulesmodel.cpp:576
+#: rulesmodel.cpp:595
 #, fuzzy, kde-format
 #| msgid "Titlebar color &scheme"
 msgid "Titlebar color scheme"
 msgstr "Farve&tema til titellinjen"
 
-#: rulesmodel.cpp:582
+#: rulesmodel.cpp:601
 #, fuzzy, kde-format
 #| msgid "A&ctive opacity"
 msgid "Active opacity"
 msgstr "A&ktiv ugennemsigtighed"
 
-#: rulesmodel.cpp:587
+#: rulesmodel.cpp:606
 #, fuzzy, kde-format
 #| msgid "I&nactive opacity"
 msgid "Inactive opacity"
 msgstr "I&naktiv ugennemsigtighed"
 
-#: rulesmodel.cpp:592
+#: rulesmodel.cpp:612
 #, fuzzy, kde-format
 #| msgid "&Focus stealing prevention"
 msgid "Focus stealing prevention"
 msgstr "Forhindring af stjålet &fokus"
 
-#: rulesmodel.cpp:594
+#: rulesmodel.cpp:614
 #, kde-format
 msgid ""
 "KWin tries to prevent windows from taking the focus\n"
@@ -723,12 +730,12 @@ msgstr ""
 "\"Ingen\" vil betingelsesløst lade vinduet få fokus, mens\n"
 "\"Ekstrem\" fuldstændigt vil forhindre at det kan tage fokus."
 
-#: rulesmodel.cpp:603
+#: rulesmodel.cpp:623
 #, kde-format
 msgid "Focus protection"
 msgstr "Beskyttelse af fokus"
 
-#: rulesmodel.cpp:605
+#: rulesmodel.cpp:625
 #, kde-format
 msgid ""
 "This controls the focus protection of the currently active window.\n"
@@ -743,13 +750,13 @@ msgstr ""
 "Ellers er det knyttet sammen med den forhindring af\n"
 "at fokus stjæles som er tildelt det vindue der vil have fokus."
 
-#: rulesmodel.cpp:614
+#: rulesmodel.cpp:634
 #, fuzzy, kde-format
 #| msgid "Accept &focus"
 msgid "Accept focus"
 msgstr "Acceptér &fokus"
 
-#: rulesmodel.cpp:616
+#: rulesmodel.cpp:636
 #, kde-format
 msgid ""
 "Windows may prevent to get the focus (activate) when being clicked.\n"
@@ -760,12 +767,12 @@ msgstr ""
 "Omvendt kan du ønske at forhindre et vindue\n"
 "i at få fokus ved museklik."
 
-#: rulesmodel.cpp:622
+#: rulesmodel.cpp:642
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "Ignorér globale genveje"
 
-#: rulesmodel.cpp:624
+#: rulesmodel.cpp:644
 #, kde-format
 msgid ""
 "When used, a window will receive\n"
@@ -786,35 +793,35 @@ msgstr ""
 "eller bruge andre globale genveje (såsom Alt+F2 for at vise KRunner)\n"
 "mens det er aktivt!"
 
-#: rulesmodel.cpp:635
+#: rulesmodel.cpp:655
 #, fuzzy, kde-format
 #| msgid "&Closeable"
 msgid "Closeable"
 msgstr "&Lukbart"
 
-#: rulesmodel.cpp:640
+#: rulesmodel.cpp:660
 #, fuzzy, kde-format
 #| msgid "Window &type"
 msgid "Set window type"
 msgstr "Vindues&type"
 
-#: rulesmodel.cpp:646
+#: rulesmodel.cpp:666
 #, kde-format
 msgid "Desktop file name"
 msgstr "Navn på desktop-fil"
 
-#: rulesmodel.cpp:651
+#: rulesmodel.cpp:671
 #, kde-format
 msgid "Block compositing"
 msgstr "Blokér compositing"
 
-#: rulesmodel.cpp:703
+#: rulesmodel.cpp:723
 #, fuzzy, kde-format
 #| msgid "Window &class (application):"
 msgid "Window class not available"
 msgstr "Vindues&klasse (program):"
 
-#: rulesmodel.cpp:704
+#: rulesmodel.cpp:724
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -824,164 +831,164 @@ msgid ""
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
 
-#: rulesmodel.cpp:738
+#: rulesmodel.cpp:758
 #, fuzzy, kde-format
 #| msgid "Window &types:"
 msgid "All Window Types"
 msgstr "Vindues&typer:"
 
-#: rulesmodel.cpp:739
+#: rulesmodel.cpp:759
 #, kde-format
 msgid "Normal Window"
 msgstr "Normalt vindue"
 
-#: rulesmodel.cpp:740
+#: rulesmodel.cpp:760
 #, kde-format
 msgid "Dialog Window"
 msgstr "Dialogvindue"
 
-#: rulesmodel.cpp:741
+#: rulesmodel.cpp:761
 #, kde-format
 msgid "Utility Window"
 msgstr "Værktøjsvindue"
 
-#: rulesmodel.cpp:742
+#: rulesmodel.cpp:762
 #, kde-format
 msgid "Dock (panel)"
 msgstr "Dok (panel)"
 
-#: rulesmodel.cpp:743
+#: rulesmodel.cpp:763
 #, kde-format
 msgid "Toolbar"
 msgstr "Værktøjslinje"
 
-#: rulesmodel.cpp:744
+#: rulesmodel.cpp:764
 #, kde-format
 msgid "Torn-Off Menu"
 msgstr "Løsrevet menu"
 
-#: rulesmodel.cpp:745
+#: rulesmodel.cpp:765
 #, kde-format
 msgid "Splash Screen"
 msgstr "Opstartsbillede"
 
-#: rulesmodel.cpp:746
+#: rulesmodel.cpp:766
 #, kde-format
 msgid "Desktop"
 msgstr "Skrivebord"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:748
+#: rulesmodel.cpp:768
 #, kde-format
 msgid "Standalone Menubar"
 msgstr "Selvstændig menulinje"
 
-#: rulesmodel.cpp:749
+#: rulesmodel.cpp:769
 #, kde-format
 msgid "On Screen Display"
 msgstr ""
 
-#: rulesmodel.cpp:759
+#: rulesmodel.cpp:779
 #, kde-format
 msgid "All Desktops"
 msgstr "Alle skriveborde"
 
-#: rulesmodel.cpp:761
+#: rulesmodel.cpp:781
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr ""
 
-#: rulesmodel.cpp:780
+#: rulesmodel.cpp:800
 #, kde-format
 msgid "All Activities"
 msgstr "Alle aktiviteter"
 
-#: rulesmodel.cpp:782
+#: rulesmodel.cpp:802
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr ""
 
-#: rulesmodel.cpp:803
+#: rulesmodel.cpp:823
 #, kde-format
 msgid "Default"
 msgstr "Standard"
 
-#: rulesmodel.cpp:804
+#: rulesmodel.cpp:824
 #, kde-format
 msgid "No Placement"
 msgstr "Ingen placering"
 
-#: rulesmodel.cpp:805
+#: rulesmodel.cpp:825
 #, kde-format
 msgid "Minimal Overlapping"
 msgstr "Minimalt overlap"
 
-#: rulesmodel.cpp:806
+#: rulesmodel.cpp:826
 #, kde-format
 msgid "Maximized"
 msgstr "Maksimeret"
 
-#: rulesmodel.cpp:807
+#: rulesmodel.cpp:827
 #, kde-format
 msgid "Centered"
 msgstr "Centreret"
 
-#: rulesmodel.cpp:808
+#: rulesmodel.cpp:828
 #, kde-format
 msgid "Random"
 msgstr "Tilfældig"
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:829
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "I øverste venstre hjørne"
 
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:830
 #, kde-format
 msgid "Under Mouse"
 msgstr "Under musen"
 
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:831
 #, kde-format
 msgid "On Main Window"
 msgstr "På hovedvinduet"
 
-#: rulesmodel.cpp:818
+#: rulesmodel.cpp:838
 #, fuzzy, kde-format
 #| msgctxt "no focus stealing prevention"
 #| msgid "None"
 msgid "None"
 msgstr "Ingen"
 
-#: rulesmodel.cpp:819
+#: rulesmodel.cpp:839
 #, kde-format
 msgid "Low"
 msgstr "Lav"
 
-#: rulesmodel.cpp:820
+#: rulesmodel.cpp:840
 #, kde-format
 msgid "Normal"
 msgstr "Normal"
 
-#: rulesmodel.cpp:821
+#: rulesmodel.cpp:841
 #, kde-format
 msgid "High"
 msgstr "Høj"
 
-#: rulesmodel.cpp:822
+#: rulesmodel.cpp:842
 #, kde-format
 msgid "Extreme"
 msgstr "Ekstrem"
 
-#: rulesmodel.cpp:865
+#: rulesmodel.cpp:885
 #, fuzzy, kde-format
 #| msgid "Unmanaged Window"
 msgid "Unmanaged window"
 msgstr "Ikke-håndteret vindue"
 
-#: rulesmodel.cpp:866
+#: rulesmodel.cpp:886
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
