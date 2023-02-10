@@ -16,6 +16,7 @@
 #include "gesturehandler.h"
 #include "libkwineffects/kwinquickeffect.h"
 #include "screenedgehandler.h"
+#include "scriptedquicksceneeffect.h"
 #include "scripting_logging.h"
 #include "scriptingutils.h"
 #include "shortcuthandler.h"
@@ -34,6 +35,7 @@
 #include "workspace.h"
 // KDE
 #include <KConfigGroup>
+#include <KConfigPropertyMap>
 #include <KGlobalAccel>
 #include <KLocalizedContext>
 #include <KPackage/PackageLoader>
@@ -652,12 +654,14 @@ void KWin::Scripting::init()
     qmlRegisterType<WindowFilterModel>("org.kde.kwin", 3, 0, "WindowFilterModel");
     qmlRegisterType<VirtualDesktopModel>("org.kde.kwin", 3, 0, "VirtualDesktopModel");
     qmlRegisterUncreatableType<KWin::QuickSceneView>("org.kde.kwin", 3, 0, "SceneView", QStringLiteral("Can't instantiate an object of type SceneView"));
+    qmlRegisterType<ScriptedQuickSceneEffect>("org.kde.kwin", 3, 0, "SceneEffect");
 
     qmlRegisterSingletonType<DeclarativeScriptWorkspaceWrapper>("org.kde.kwin", 3, 0, "Workspace", [](QQmlEngine *qmlEngine, QJSEngine *jsEngine) {
         return new DeclarativeScriptWorkspaceWrapper();
     });
     qmlRegisterSingletonInstance("org.kde.kwin", 3, 0, "Options", options);
 
+    qmlRegisterAnonymousType<KConfigPropertyMap>("org.kde.kwin", 3);
     qmlRegisterAnonymousType<KWin::Output>("org.kde.kwin", 3);
     qmlRegisterAnonymousType<KWin::Window>("org.kde.kwin", 3);
     qmlRegisterAnonymousType<KWin::VirtualDesktop>("org.kde.kwin", 3);

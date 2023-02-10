@@ -1,0 +1,20 @@
+{
+    "KPackageStructure": "KWin/Effect",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "user@example.com",
+                "Name": "Real Name"
+            }
+        ],
+        "Category": "Appearance",
+        "Description": "Quick Effect",
+        "EnabledByDefault": true,
+        "Id": "quick-effect",
+        "License": "GPL",
+        "Name": "Quick Effect"
+    },
+    "X-KDE-Ordering": 60,
+    "X-KDE-PluginKeyword": "quick-effect",
+    "X-Plasma-API": "declarativescript"
+}

@@ -9,7 +9,7 @@
 #include "libkwineffects/kwineffects.h"
 #include "libkwineffects/kwinoffscreenquickview.h"
 
-#include <QQmlEngine>
+#include <QQmlComponent>
 
 namespace KWin
 {
@@ -74,6 +74,7 @@ class KWINEFFECTS_EXPORT QuickSceneEffect : public Effect
 {
     Q_OBJECT
     Q_PROPERTY(QuickSceneView *activeView READ activeView NOTIFY activeViewChanged)
+    Q_PROPERTY(QQmlComponent *delegate READ delegate WRITE setDelegate NOTIFY delegateChanged)
 
 public:
     explicit QuickSceneEffect(QObject *parent = nullptr);
@@ -113,6 +114,12 @@ public:
     Q_INVOKABLE void activateView(QuickSceneView *view);
 
     /**
+     * The delegate provides a template defining the contents of each instantiated screen view.
+     */
+    QQmlComponent *delegate() const;
+    void setDelegate(QQmlComponent *delegate);
+
+    /**
      * Returns the source URL.
      */
     QUrl source() const;
@@ -150,6 +157,7 @@ Q_SIGNALS:
     void itemDraggedOutOfScreen(QQuickItem *item, QList<EffectScreen *> screens);
     void itemDroppedOutOfScreen(const QPointF &globalPos, QQuickItem *item, EffectScreen *screen);
     void activeViewChanged(KWin::QuickSceneView *view);
+    void delegateChanged();
 
 protected:
     /**

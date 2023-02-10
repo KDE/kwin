@@ -290,6 +290,9 @@ public:
 private:
     QList<KPluginMetaData> findAllEffects() const;
     KPluginMetaData findEffect(const QString &name) const;
+    bool loadJavascriptEffect(const KPluginMetaData &effect);
+    bool loadDeclarativeEffect(const KPluginMetaData &effect);
+
     QStringList m_loadedEffects;
     EffectLoadQueue<ScriptedEffectLoader, KPluginMetaData> *m_queue;
     QMetaObject::Connection m_queryConnection;

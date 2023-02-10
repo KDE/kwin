@@ -156,6 +156,7 @@ target_sources(kwin PRIVATE
     scripting/gesturehandler.cpp
     scripting/screenedgehandler.cpp
     scripting/scriptedeffect.cpp
+    scripting/scriptedquicksceneeffect.cpp
     scripting/scripting.cpp
     scripting/scripting_logging.cpp
     scripting/scriptingutils.cpp
@@ -212,6 +213,7 @@ target_link_libraries(kwin
     PRIVATE
 
     KF6::ConfigCore
+    KF6::ConfigQml
     KF6::ConfigWidgets
     KF6::CoreAddons
     KF6::Crash
