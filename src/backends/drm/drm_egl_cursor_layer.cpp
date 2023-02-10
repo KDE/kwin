@@ -9,7 +9,6 @@
 #include "drm_egl_cursor_layer.h"
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
-#include "drm_output.h"
 #include "drm_pipeline.h"
 
 #include <gbm.h>
