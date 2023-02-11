@@ -1074,17 +1074,17 @@ void Workspace::initShortcuts()
                 slotWindowToDesktop(desktops[i]);
             }
         };
-        initShortcut(QStringLiteral("Window to Desktop %1").arg(i + 1), i18n("Window to Desktop %1 in Background", i + 1), 0, handler);
+        initShortcut(QStringLiteral("Window to Desktop %1").arg(i + 1), i18n("Move Window to Desktop %1", i + 1), 0, handler);
     }
-    initShortcut("Window to Next Desktop", i18n("Window to Next Desktop in Background"), 0, &Workspace::slotWindowToNextDesktop);
-    initShortcut("Window to Previous Desktop", i18n("Window to Previous Desktop in Background"), 0, &Workspace::slotWindowToPreviousDesktop);
-    initShortcut("Window One Desktop to the Right", i18n("Window One Desktop to the Right in Background"),
+    initShortcut("Window to Next Desktop", i18n("Move Window to Next Desktop"), 0, &Workspace::slotWindowToNextDesktop);
+    initShortcut("Window to Previous Desktop", i18n("Move Window to Previous Desktop"), 0, &Workspace::slotWindowToPreviousDesktop);
+    initShortcut("Window One Desktop to the Right", i18n("Move Window One Desktop to the Right"),
                  Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Right, &Workspace::slotWindowToDesktopRight);
-    initShortcut("Window One Desktop to the Left", i18n("Window One Desktop to the Left in Background"),
+    initShortcut("Window One Desktop to the Left", i18n("Move Window One Desktop to the Left"),
                  Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Left, &Workspace::slotWindowToDesktopLeft);
-    initShortcut("Window One Desktop Up", i18n("Window One Desktop Up in Background"),
+    initShortcut("Window One Desktop Up", i18n("Move Window One Desktop Up"),
                  Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Up, &Workspace::slotWindowToDesktopUp);
-    initShortcut("Window One Desktop Down", i18n("Window One Desktop Down in Background"),
+    initShortcut("Window One Desktop Down", i18n("Move Window One Desktop Down"),
                  Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Down, &Workspace::slotWindowToDesktopDown);
 
     for (uint i = 0; i < vds->maximum(); ++i) {
@@ -1094,17 +1094,17 @@ void Workspace::initShortcuts()
                 slotWindowToDesktopAndSwitch(desktops[i]);
             }
         };
-        initShortcut(QStringLiteral("Window to Desktop %1 and Switch").arg(i + 1), i18n("Window to Desktop %1 in Foreground", i + 1), 0, handler);
+        initShortcut(QStringLiteral("Window to Desktop %1 and Switch").arg(i + 1), i18n("Move Window to Desktop %1 and Switch to it", i + 1), 0, handler);
     }
-    initShortcut("Window to Next Desktop and Switch", i18n("Window to Next Desktop in Foreground"), 0, &Workspace::slotWindowToNextDesktopAndSwitch);
-    initShortcut("Window to Previous Desktop and Switch", i18n("Window to Previous Desktop in Foreground"), 0, &Workspace::slotWindowToPreviousDesktopAndSwitch);
-    initShortcut("Window One Desktop to the Right and Switch", i18n("Window One Desktop to the Right in Foreground"),
+    initShortcut("Window to Next Desktop and Switch", i18n("Move Window to Next Desktop and Switch to it"), 0, &Workspace::slotWindowToNextDesktopAndSwitch);
+    initShortcut("Window to Previous Desktop and Switch", i18n("Move Window to Previous Desktop and Switch to it"), 0, &Workspace::slotWindowToPreviousDesktopAndSwitch);
+    initShortcut("Window One Desktop to the Right and Switch", i18n("Move Window One Desktop to the Right and Switch to it"),
                  Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Right, &Workspace::slotWindowToDesktopRightAndSwitch);
-    initShortcut("Window One Desktop to the Left and Switch", i18n("Window One Desktop to the Left in Foreground"),
+    initShortcut("Window One Desktop to the Left and Switch", i18n("Move Window One Desktop to the Left and Switch to it"),
                  Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Left, &Workspace::slotWindowToDesktopLeftAndSwitch);
-    initShortcut("Window One Desktop Up and Switch", i18n("Window One Desktop Up in Foreground"),
+    initShortcut("Window One Desktop Up and Switch", i18n("Move Window One Desktop Up and Switch to it"),
                  Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Up, &Workspace::slotWindowToDesktopUpAndSwitch);
-    initShortcut("Window One Desktop Down and Switch", i18n("Window One Desktop Down in Foreground"),
+    initShortcut("Window One Desktop Down and Switch", i18n("Move Window One Desktop Down and Switch to it"),
                  Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Down, &Workspace::slotWindowToDesktopDownAndSwitch);
 
     for (int i = 0; i < 8; ++i) {
