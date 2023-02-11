@@ -17,6 +17,7 @@
 #include "screenedgehandler.h"
 #include "scripting_logging.h"
 #include "scriptingutils.h"
+#include "shortcuthandler.h"
 #include "virtualdesktopmodel.h"
 #include "windowmodel.h"
 #include "windowthumbnailitem.h"
@@ -676,6 +677,7 @@ void KWin::Scripting::init()
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 3, 0, "WindowThumbnail");
     qmlRegisterType<DBusCall>("org.kde.kwin", 3, 0, "DBusCall");
     qmlRegisterType<ScreenEdgeHandler>("org.kde.kwin", 3, 0, "ScreenEdgeHandler");
+    qmlRegisterType<ShortcutHandler>("org.kde.kwin", 3, 0, "ShortcutHandler");
     qmlRegisterType<WindowModel>("org.kde.kwin", 3, 0, "WindowModel");
     qmlRegisterType<WindowFilterModel>("org.kde.kwin", 3, 0, "WindowFilterModel");
     qmlRegisterType<VirtualDesktopModel>("org.kde.kwin", 3, 0, "VirtualDesktopModel");
