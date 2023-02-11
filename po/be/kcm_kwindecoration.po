@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-06 01:01+0000\n"
-"PO-Revision-Date: 2022-12-25 17:08\n"
+"PO-Revision-Date: 2023-02-09 08:31\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@gmail.com>\n"
 "Language-Team: Belarusian\n"
 "Language: be\n"
@@ -41,7 +41,7 @@ msgstr "Яшчэ дзеянні для гэтага акна"
 #: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
 msgid "Application menu"
-msgstr "Меню праграм"
+msgstr "Меню праграмы"
 
 #: declarative-plugin/buttonsmodel.cpp:57
 #, kde-format
@@ -200,9 +200,7 @@ msgid "Drag buttons between here and the titlebar"
 msgstr "Перацягвайце кнопкі паміж гэтай вобласцю і панэллю загалоўка"
 
 #: package/contents/ui/ConfigureTitlebar.qml:16
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgid "Titlebar Buttons"
 msgstr "Кнопкі панэлі загалоўка"
 
@@ -236,20 +234,16 @@ msgid "Window border size:"
 msgstr "Памер рамкі акон:"
 
 #: package/contents/ui/main.qml:60
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr "Кнопкі панэлі загалоўка"
+msgstr "Наладжванне кнопак панэляў загалоўкаў…"
 
 #: package/contents/ui/main.qml:65
-#, fuzzy, kde-format
-#| msgctxt "button text"
-#| msgid "Get New Window Decorations..."
+#, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations…"
-msgstr "Атрымаць новыя аздабленні..."
+msgstr "Атрымаць новыя аздабленні…"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format

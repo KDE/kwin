@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-07 01:01+0000\n"
-"PO-Revision-Date: 2023-01-10 10:38+0100\n"
+"PO-Revision-Date: 2023-02-07 10:12+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -2187,11 +2187,12 @@ msgstr "Recorre les finestres de l'aplicació actual (a la inversa)"
 
 #: tabbox/tabbox.cpp:527
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr "Recorre les finestres de l'aplicació actual alternativa"
+msgstr "Recorre les finestres de l'aplicació actual en alternativa"
 
 #: tabbox/tabbox.cpp:528
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr "Recorre les finestres de l'aplicació actual alternativa (a la inversa)"
+msgstr ""
+"Recorre les finestres de l'aplicació actual en alternativa (a la inversa)"
 
 #: tabbox/tabbox.cpp:529
 msgid "Walk Through Desktops"

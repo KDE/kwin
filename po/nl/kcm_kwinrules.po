@@ -10,26 +10,26 @@
 # Freek de Kruijf <f.de.kruijf@hetnet.nl>, 2009, 2010.
 # Freek de Kruijf <freek@opensuse.org>, 2009.
 # Freek de Kruijf <freekdekruijf@kde.nl>, 2009, 2010, 2011, 2012.
-# Freek de Kruijf <f.de.kruijf@gmail.com>, 2011, 2013, 2015, 2017, 2018, 2019, 2020, 2021, 2022.
+# Freek de Kruijf <f.de.kruijf@gmail.com>, 2011, 2013, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-10 00:59+0000\n"
-"PO-Revision-Date: 2022-12-11 14:16+0100\n"
+"PO-Revision-Date: 2023-02-10 13:51+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.12.0\n"
+"X-Generator: Lokalize 22.12.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Tom Albers,Ruurd Pels,Freek de Kruijf - t/m 2022"
+msgstr "Tom Albers,Ruurd Pels,Freek de Kruijf - t/m 2023"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
@@ -457,6 +457,8 @@ msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
 "window becomes invisible."
 msgstr ""
+"Leesbaarheid kan verminderd zijn met erg lage waarden voor dekking. Bij 0% "
+"wordt het venster onzichtbaar."
 
 #: rulesmodel.cpp:378
 #, kde-format

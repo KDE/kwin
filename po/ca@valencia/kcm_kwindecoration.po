@@ -1,9 +1,9 @@
 # Translation of kcm_kwindecoration.po to Catalan (Valencian)
-# Copyright (C) 2001-2021 This_file_is_part_of_KDE
+# Copyright (C) 2001-2023 This_file_is_part_of_KDE
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# Josep M. Ferrer <txemaq@gmail.com>, 2001, 2002, 2007, 2008, 2009, 2010, 2012, 2013, 2014, 2015, 2018, 2019, 2020, 2021.
+# Josep M. Ferrer <txemaq@gmail.com>, 2001, 2002, 2007, 2008, 2009, 2010, 2012, 2013, 2014, 2015, 2018, 2019, 2020, 2021, 2023.
 # Albert Astals Cid <aacid@kde.org>, 2004.
 # Sebastià Pla i Sanz <sps@sastia.com>, 2004, 2005.
 # Antoni Bella Pérez <antonibella5@yahoo.com>, 2017, 2019, 2020.
@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-06 01:01+0000\n"
-"PO-Revision-Date: 2021-10-11 17:47+0200\n"
+"PO-Revision-Date: 2023-02-06 13:17+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -207,9 +207,7 @@ msgid "Drag buttons between here and the titlebar"
 msgstr "Arrossegueu els botons entre ací i la barra de títol"
 
 #: package/contents/ui/ConfigureTitlebar.qml:16
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgid "Titlebar Buttons"
 msgstr "Botons de la barra de títol"
 
@@ -243,20 +241,16 @@ msgid "Window border size:"
 msgstr "Mida de la vora de la finestra:"
 
 #: package/contents/ui/main.qml:60
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr "Botons de la barra de títol"
+msgstr "Configura els botons de la barra de títol…"
 
 #: package/contents/ui/main.qml:65
-#, fuzzy, kde-format
-#| msgctxt "button text"
-#| msgid "Get New Window Decorations..."
+#, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations…"
-msgstr "Obtín decoracions noves de finestra..."
+msgstr "Obtín decoracions noves de finestra…"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -307,7 +301,3 @@ msgstr "Molt enorme"
 #, kde-format
 msgid "Oversized"
 msgstr "Fora de mida"
-
-#~ msgctxt "tab label"
-#~ msgid "Theme"
-#~ msgstr "Tema"
