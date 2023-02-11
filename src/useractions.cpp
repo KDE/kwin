@@ -1088,24 +1088,24 @@ void Workspace::initShortcuts()
                  Qt::META | Qt::CTRL | Qt::SHIFT | Qt::Key_Down, &Workspace::slotWindowToDesktopDown);
 
     for (int i = 0; i < 8; ++i) {
-        initShortcut(QStringLiteral("Window to Screen %1").arg(i), i18n("Window to Screen %1", i), 0, [this, i]() {
+        initShortcut(QStringLiteral("Window to Screen %1").arg(i), i18n("Move Window to Screen %1", i), 0, [this, i]() {
             Output *output = outputs().value(i);
             if (output) {
                 slotWindowToScreen(output);
             }
         });
     }
-    initShortcut("Window to Next Screen", i18n("Window to Next Screen"),
+    initShortcut("Window to Next Screen", i18n("Move Window to Next Screen"),
                  Qt::META | Qt::SHIFT | Qt::Key_Right, &Workspace::slotWindowToNextScreen);
-    initShortcut("Window to Previous Screen", i18n("Window to Previous Screen"),
+    initShortcut("Window to Previous Screen", i18n("Move Window to Previous Screen"),
                  Qt::META | Qt::SHIFT | Qt::Key_Left, &Workspace::slotWindowToPrevScreen);
-    initShortcut("Window One Screen to the Right", i18n("Window One Screen to the Right"),
+    initShortcut("Window One Screen to the Right", i18n("Move Window One Screen to the Right"),
                  0, &Workspace::slotWindowToRightScreen);
-    initShortcut("Window One Screen to the Left", i18n("Window One Screen to the Left"),
+    initShortcut("Window One Screen to the Left", i18n("Move Window One Screen to the Left"),
                  0, &Workspace::slotWindowToLeftScreen);
-    initShortcut("Window One Screen Up", i18n("Window One Screen Up"),
+    initShortcut("Window One Screen Up", i18n("Move Window One Screen Up"),
                  0, &Workspace::slotWindowToAboveScreen);
-    initShortcut("Window One Screen Down", i18n("Window One Screen Down"),
+    initShortcut("Window One Screen Down", i18n("Move Window One Screen Down"),
                  0, &Workspace::slotWindowToBelowScreen);
 
     for (int i = 0; i < 8; ++i) {
