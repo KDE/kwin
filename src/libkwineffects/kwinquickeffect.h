@@ -9,6 +9,8 @@
 #include "kwineffects.h"
 #include "kwinoffscreenquickview.h"
 
+#include <QQmlEngine>
+
 namespace KWin
 {
 
@@ -26,6 +28,8 @@ class QuickSceneEffectPrivate;
 class KWINEFFECTS_EXPORT QuickSceneView : public OffscreenQuickView
 {
     Q_OBJECT
+    Q_PROPERTY(QuickSceneEffect *effect READ effect CONSTANT)
+    Q_PROPERTY(EffectScreen *screen READ screen CONSTANT)
 
 public:
     explicit QuickSceneView(QuickSceneEffect *effect, EffectScreen *screen);
@@ -40,6 +44,9 @@ public:
     bool isDirty() const;
     void markDirty();
     void resetDirty();
+
+    static QuickSceneView *findView(QQuickItem *item);
+    static QuickSceneView *qmlAttachedProperties(QObject *object);
 
 public Q_SLOTS:
     void scheduleRepaint();
@@ -96,7 +103,7 @@ public:
 
     /**
      * Get a view at the given direction from the active view
-     * Returns null if no other views exist in the given direction 
+     * Returns null if no other views exist in the given direction
      */
     Q_INVOKABLE KWin::QuickSceneView *getView(Qt::Edge edge);
 
@@ -166,3 +173,5 @@ private:
 };
 
 } // namespace KWin
+
+QML_DECLARE_TYPEINFO(KWin::QuickSceneView, QML_HAS_ATTACHED_PROPERTIES)

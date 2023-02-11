@@ -18,13 +18,29 @@
 namespace KWin
 {
 
+static QHash<QQuickWindow *, QuickSceneView *> s_views;
+
 class QuickSceneViewIncubator : public QQmlIncubator
 {
 public:
-    QuickSceneViewIncubator(const std::function<void(QuickSceneViewIncubator *)> &statusChangedCallback)
+    QuickSceneViewIncubator(QuickSceneEffect *effect, EffectScreen *screen, const std::function<void(QuickSceneViewIncubator *)> &statusChangedCallback)
         : QQmlIncubator(QQmlIncubator::Asynchronous)
+        , m_effect(effect)
+        , m_screen(screen)
         , m_statusChangedCallback(statusChangedCallback)
     {
+    }
+
+    std::unique_ptr<QuickSceneView> result()
+    {
+        return std::move(m_view);
+    }
+
+    void setInitialState(QObject *object) override
+    {
+        m_view = std::make_unique<QuickSceneView>(m_effect, m_screen);
+        m_view->setAutomaticRepaint(false);
+        m_view->setRootItem(qobject_cast<QQuickItem *>(object));
     }
 
     void statusChanged(QQmlIncubator::Status status) override
@@ -33,7 +49,10 @@ public:
     }
 
 private:
+    QuickSceneEffect *m_effect;
+    EffectScreen *m_screen;
     std::function<void(QuickSceneViewIncubator *)> m_statusChangedCallback;
+    std::unique_ptr<QuickSceneView> m_view;
 };
 
 class QuickSceneEffectPrivate
@@ -74,10 +93,13 @@ QuickSceneView::QuickSceneView(QuickSceneEffect *effect, EffectScreen *screen)
     connect(screen, &EffectScreen::geometryChanged, this, [this, screen]() {
         setGeometry(screen->geometry());
     });
+
+    s_views.insert(window(), this);
 }
 
 QuickSceneView::~QuickSceneView()
 {
+    s_views.remove(window());
 }
 
 QQuickItem *QuickSceneView::rootItem() const
@@ -128,6 +150,23 @@ void QuickSceneView::scheduleRepaint()
 {
     markDirty();
     effects->addRepaint(geometry());
+}
+
+QuickSceneView *QuickSceneView::findView(QQuickItem *item)
+{
+    return s_views.value(item->window());
+}
+
+QuickSceneView *QuickSceneView::qmlAttachedProperties(QObject *object)
+{
+    QQuickItem *item = qobject_cast<QQuickItem *>(object);
+    if (item) {
+        if (QuickSceneView *view = findView(item)) {
+            return view;
+        }
+    }
+    qCWarning(LIBKWINEFFECTS) << "Could not find SceneView for" << object;
+    return nullptr;
 }
 
 QuickSceneEffect::QuickSceneEffect(QObject *parent)
@@ -366,21 +405,19 @@ void QuickSceneEffect::addScreen(EffectScreen *screen)
     properties["width"] = screen->geometry().width();
     properties["height"] = screen->geometry().height();
 
-    auto incubator = new QuickSceneViewIncubator([this, screen](QuickSceneViewIncubator *incubator) {
+    auto incubator = new QuickSceneViewIncubator(this, screen, [this, screen](QuickSceneViewIncubator *incubator) {
         if (incubator->isReady()) {
-            auto view = new QuickSceneView(this, screen);
-            view->setRootItem(qobject_cast<QQuickItem *>(incubator->object()));
+            auto view = incubator->result();
             if (view->contentItem()) {
                 view->contentItem()->setFocus(false);
             }
-            view->setAutomaticRepaint(false);
-            connect(view, &QuickSceneView::repaintNeeded, this, [view]() {
-                effects->addRepaint(view->geometry());
+            connect(view.get(), &QuickSceneView::repaintNeeded, this, [screen]() {
+                effects->addRepaint(screen->geometry());
             });
-            connect(view, &QuickSceneView::renderRequested, view, &QuickSceneView::scheduleRepaint);
-            connect(view, &QuickSceneView::sceneChanged, view, &QuickSceneView::scheduleRepaint);
+            connect(view.get(), &QuickSceneView::renderRequested, view.get(), &QuickSceneView::scheduleRepaint);
+            connect(view.get(), &QuickSceneView::sceneChanged, view.get(), &QuickSceneView::scheduleRepaint);
             view->scheduleRepaint();
-            d->views[screen].reset(view);
+            d->views[screen] = std::move(view);
         } else if (incubator->isError()) {
             qCWarning(LIBKWINEFFECTS) << "Could not create a view for QML file" << d->qmlComponent->url();
             qCWarning(LIBKWINEFFECTS) << incubator->errors();
