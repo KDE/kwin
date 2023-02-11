@@ -13,6 +13,7 @@
 // own
 #include "dbuscall.h"
 #include "desktopbackgrounditem.h"
+#include "gesturehandler.h"
 #include "libkwineffects/kwinquickeffect.h"
 #include "screenedgehandler.h"
 #include "scripting_logging.h"
@@ -645,6 +646,8 @@ void KWin::Scripting::init()
     qmlRegisterType<DBusCall>("org.kde.kwin", 3, 0, "DBusCall");
     qmlRegisterType<ScreenEdgeHandler>("org.kde.kwin", 3, 0, "ScreenEdgeHandler");
     qmlRegisterType<ShortcutHandler>("org.kde.kwin", 3, 0, "ShortcutHandler");
+    qmlRegisterType<SwipeGestureHandler>("org.kde.kwin", 3, 0, "SwipeGestureHandler");
+    qmlRegisterType<PinchGestureHandler>("org.kde.kwin", 3, 0, "PinchGestureHandler");
     qmlRegisterType<WindowModel>("org.kde.kwin", 3, 0, "WindowModel");
     qmlRegisterType<WindowFilterModel>("org.kde.kwin", 3, 0, "WindowFilterModel");
     qmlRegisterType<VirtualDesktopModel>("org.kde.kwin", 3, 0, "VirtualDesktopModel");

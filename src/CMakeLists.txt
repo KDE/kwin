@@ -153,6 +153,7 @@ target_sources(kwin PRIVATE
     screenedge.cpp
     scripting/dbuscall.cpp
     scripting/desktopbackgrounditem.cpp
+    scripting/gesturehandler.cpp
     scripting/screenedgehandler.cpp
     scripting/scriptedeffect.cpp
     scripting/scripting.cpp
