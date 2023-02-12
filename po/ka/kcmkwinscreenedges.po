@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-07-15 00:48+0000\n"
-"PO-Revision-Date: 2022-08-22 06:34+0200\n"
+"PO-Revision-Date: 2023-02-11 06:33+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -95,6 +95,8 @@ msgid ""
 "You can trigger an action by pushing the mouse cursor against the "
 "corresponding screen edge or corner."
 msgstr ""
+"ქმედების გაშვება თაგუნას კურსორის ეკრანის შესაბამის კუთხეში ან კიდეზე "
+"მიწოლით შეგიძლიათ."
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
 #: main.ui:67
@@ -130,13 +132,13 @@ msgstr "ქცევა:"
 #: main.ui:108
 #, kde-format
 msgid "Remain active when windows are fullscreen"
-msgstr ""
+msgstr "აქტიურად დარჩენა, როცა ფანჯრები სრულ ეკრანეზეა"
 
 #. i18n: ectx: property (text), widget (QLabel, electricBorderCornerRatioLabel)
 #: main.ui:115
 #, kde-format
 msgid "Trigger &quarter tiling in:"
-msgstr ""
+msgstr "ფანჯრების მეოთხედამდე &გადიდების სიმაღლე:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, electricBorderCornerRatioSpin)
 #: main.ui:130
@@ -195,6 +197,8 @@ msgid ""
 "Amount of time required for the mouse cursor to be pushed against the edge "
 "of the screen before the action is triggered"
 msgstr ""
+"დრო, რომელიც საჭიროა თაგუნას კურსორის ეკრანის კიდეზე მიწოლიდან ქმედების "
+"ტრიგერამდე"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
 #: main.ui:209
@@ -230,6 +234,7 @@ msgid ""
 "You can trigger an action by swiping from the screen edge towards the center "
 "of the screen."
 msgstr ""
+"ქმედების დატრიგერება ეკრანის კიდიდან ეკრანის ცენტრისკენ გასმით შეგიძლიათ."
 
 #~ msgid "Show Desktop"
 #~ msgstr "სამუშაო მაგიდის ჩვენება"

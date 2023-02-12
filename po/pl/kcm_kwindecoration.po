@@ -1,18 +1,18 @@
 # translation of kcmkwindecoration.po to Polish
-# Version: $Revision: 1643986 $
+# Version: $Revision: 1644360 $
 # translation of kcmkwindecoration.po to
 # Norbert Popiołek <norbert@kde.com.pl>\n"
 # Michał Rudolf <mrudolf@kdewebdev.org>, 2002.
 # Michal Rudolf <mrudolf@kdewebdev.org>, 2002, 2003, 2004, 2005, 2009.
 # Marta Rybczyńska <kde-i18n@rybczynska.net>, 2008, 2009, 2010.
 # Marta Rybczynska <kde-i18n@rybczynska.net>, 2009.
-# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2021, 2022.
+# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-06 01:01+0000\n"
-"PO-Revision-Date: 2022-08-06 09:41+0200\n"
+"PO-Revision-Date: 2023-02-11 08:27+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 ">\n"
-"X-Generator: Lokalize 22.04.1\n"
+"X-Generator: Lokalize 22.12.2\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
@@ -203,9 +203,7 @@ msgid "Drag buttons between here and the titlebar"
 msgstr "Przeciągnij przycisk stąd na pasek tytułu"
 
 #: package/contents/ui/ConfigureTitlebar.qml:16
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgid "Titlebar Buttons"
 msgstr "Przyciski paska tytułu"
 
@@ -239,20 +237,16 @@ msgid "Window border size:"
 msgstr "Rozmiar obramowania okna:"
 
 #: package/contents/ui/main.qml:60
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr "Przyciski paska tytułu"
+msgstr "Ustawienia przycisków paska nazwy..."
 
 #: package/contents/ui/main.qml:65
-#, fuzzy, kde-format
-#| msgctxt "button text"
-#| msgid "Get New Window Decorations..."
+#, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations…"
-msgstr "Pobierz nowy wygląd dla okien..."
+msgstr "Pobierz nowy wygląd dla okien…"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format

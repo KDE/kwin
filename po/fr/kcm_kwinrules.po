@@ -15,20 +15,21 @@
 # Vincent Pinon <vpinon@kde.org>, 2016, 2017.
 # Simon Depiets <sdepiets@gmail.com>, 2018, 2019.
 # Xavier Besnard <xavier.besnard@neuf.fr>, 2020, 2021, 2022.
+# Xavier BESNARD <xavier.besnard]neuf.fr>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-10 00:59+0000\n"
-"PO-Revision-Date: 2022-12-16 21:31+0100\n"
-"Last-Translator: Xavier Besnard <xavier.besnard@neuf.fr>\n"
-"Language-Team: French <kde-francophone@kde.org>\n"
+"PO-Revision-Date: 2023-02-11 16:28+0100\n"
+"Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
+"Language-Team: fr\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.0\n"
+"X-Generator: Lokalize 22.12.1\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -473,6 +474,8 @@ msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
 "window becomes invisible."
 msgstr ""
+"La lisibilité peut être altérée avec des valeurs d’opacité extrêmement "
+"faibles. A 0%, la fenêtre devient invisible."
 
 #: rulesmodel.cpp:378
 #, kde-format
