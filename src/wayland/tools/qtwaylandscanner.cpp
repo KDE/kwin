@@ -42,6 +42,7 @@
 #include <QXmlStreamReader>
 
 #include <vector>
+#include <utility>
 
 class Scanner
 {
