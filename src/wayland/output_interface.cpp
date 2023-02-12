@@ -17,6 +17,8 @@
 #include <QTimer>
 #include <QVector>
 
+#include <cmath>
+
 namespace KWaylandServer
 {
 static const int s_version = 4;
