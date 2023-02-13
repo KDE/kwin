@@ -143,7 +143,7 @@ void DataControlDeviceV1Interface::sendSelection(AbstractDataSource *other)
 
 void DataControlDeviceV1Interface::sendPrimarySelection(KWaylandServer::AbstractDataSource *other)
 {
-    if (d->interfaceVersion() >= ZWLR_DATA_CONTROL_DEVICE_V1_PRIMARY_SELECTION_SINCE_VERSION) {
+    if (d->resource()->version() >= ZWLR_DATA_CONTROL_DEVICE_V1_PRIMARY_SELECTION_SINCE_VERSION) {
         DataControlOfferV1Interface *offer = d->createDataOffer(other);
         d->send_primary_selection(offer ? offer->resource() : nullptr);
     }
