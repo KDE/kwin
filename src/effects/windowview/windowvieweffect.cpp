@@ -137,15 +137,6 @@ WindowViewEffect::~WindowViewEffect()
     QDBusConnection::sessionBus().unregisterObject(s_dbusObjectPath);
 }
 
-QVariantMap WindowViewEffect::initialProperties(EffectScreen *screen)
-{
-    return QVariantMap{
-        {QStringLiteral("effect"), QVariant::fromValue(this)},
-        {QStringLiteral("targetScreen"), QVariant::fromValue(screen)},
-        {QStringLiteral("selectedIds"), QVariant::fromValue(m_windowIds)},
-    };
-}
-
 int WindowViewEffect::animationDuration() const
 {
     return m_animationDuration;
@@ -333,7 +324,7 @@ void WindowViewEffect::activate(const QStringList &windowIds)
         }
     }
     if (!internalIds.isEmpty()) {
-        m_windowIds = internalIds;
+        setSelectedIds(internalIds);
         m_searchText = QString();
         setRunning(true);
     }
@@ -346,7 +337,7 @@ void WindowViewEffect::activate()
     }
 
     m_status = Status::Active;
-    m_windowIds.clear();
+    setSelectedIds(QList<QUuid>());
 
     setGestureInProgress(false);
     setPartialActivationFactor(0);
@@ -417,7 +408,7 @@ void WindowViewEffect::setMode(WindowViewEffect::PresentWindowsMode mode)
     }
 
     if (mode != ModeWindowGroup) {
-        m_windowIds.clear();
+        setSelectedIds(QList<QUuid>());
     }
 
     m_mode = mode;
@@ -462,6 +453,14 @@ bool WindowViewEffect::borderActivated(ElectricBorder border)
     }
 
     return true;
+}
+
+void WindowViewEffect::setSelectedIds(const QList<QUuid> &ids)
+{
+    if (m_windowIds != ids) {
+        m_windowIds = ids;
+        Q_EMIT selectedIdsChanged();
+    }
 }
 
 } // namespace KWin

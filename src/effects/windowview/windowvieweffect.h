@@ -25,6 +25,7 @@ class WindowViewEffect : public QuickSceneEffect
     Q_PROPERTY(qreal partialActivationFactor READ partialActivationFactor NOTIFY partialActivationFactorChanged)
     Q_PROPERTY(bool gestureInProgress READ gestureInProgress NOTIFY gestureInProgressChanged)
     Q_PROPERTY(QString searchText MEMBER m_searchText NOTIFY searchTextChanged)
+    Q_PROPERTY(QList<QUuid> selectedIds MEMBER m_windowIds NOTIFY selectedIdsChanged)
 
 public:
     enum PresentWindowsMode {
@@ -87,12 +88,11 @@ Q_SIGNALS:
     void layoutChanged();
     void ignoreMinimizedChanged();
     void searchTextChanged();
-
-protected:
-    QVariantMap initialProperties(EffectScreen *screen) override;
+    void selectedIdsChanged();
 
 private:
     void realDeactivate();
+    void setSelectedIds(const QList<QUuid> &ids);
 
     QTimer *m_shutdownTimer;
     QList<QUuid> m_windowIds;

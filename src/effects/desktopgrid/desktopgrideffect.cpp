@@ -85,14 +85,6 @@ DesktopGridEffect::~DesktopGridEffect()
 {
 }
 
-QVariantMap DesktopGridEffect::initialProperties(EffectScreen *screen)
-{
-    return QVariantMap{
-        {QStringLiteral("effect"), QVariant::fromValue(this)},
-        {QStringLiteral("targetScreen"), QVariant::fromValue(screen)},
-    };
-}
-
 void DesktopGridEffect::reconfigure(ReconfigureFlags)
 {
     DesktopGridConfig::self()->read();

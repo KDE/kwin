@@ -19,8 +19,8 @@ FocusScope {
     id: container
     focus: true
 
-    required property QtObject effect
-    required property QtObject targetScreen
+    readonly property QtObject effect: KWinComponents.SceneView.effect
+    readonly property QtObject targetScreen: KWinComponents.SceneView.screen
 
     readonly property bool lightBackground: Math.max(PlasmaCore.ColorScope.backgroundColor.r,
                                                      PlasmaCore.ColorScope.backgroundColor.g,

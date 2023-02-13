@@ -80,14 +80,6 @@ OverviewEffect::~OverviewEffect()
 {
 }
 
-QVariantMap OverviewEffect::initialProperties(EffectScreen *screen)
-{
-    return QVariantMap{
-        {QStringLiteral("effect"), QVariant::fromValue(this)},
-        {QStringLiteral("targetScreen"), QVariant::fromValue(screen)},
-    };
-}
-
 void OverviewEffect::reconfigure(ReconfigureFlags)
 {
     OverviewConfig::self()->read();

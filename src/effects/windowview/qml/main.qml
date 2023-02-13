@@ -17,9 +17,8 @@ import org.kde.KWin.Effect.WindowView 1.0
 Item {
     id: container
 
-    required property QtObject effect
-    required property QtObject targetScreen
-    required property var selectedIds
+    readonly property QtObject effect: KWinComponents.SceneView.effect
+    readonly property QtObject targetScreen: KWinComponents.SceneView.screen
 
     property bool animationEnabled: false
     property bool organized: false
@@ -176,7 +175,7 @@ Item {
                     case WindowView.ModeWindowClassCurrentDesktop:
                         return "activeClass";
                     default:
-                        return selectedIds;
+                        return container.effect.selectedIds;
                 }
             }
             layout.mode: effect.layout
