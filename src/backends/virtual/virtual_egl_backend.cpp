@@ -32,9 +32,9 @@ VirtualEglLayer::VirtualEglLayer(Output *output, VirtualEglBackend *backend)
 
 VirtualEglLayer::~VirtualEglLayer() = default;
 
-GLTexture *VirtualEglLayer::texture() const
+std::shared_ptr<GLTexture> VirtualEglLayer::texture() const
 {
-    return m_texture.get();
+    return m_texture;
 }
 
 std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
@@ -57,6 +57,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
 bool VirtualEglLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     glFlush(); // flush pending rendering commands.
+    Q_EMIT m_output->outputChange(damagedRegion);
     return true;
 }
 
@@ -200,6 +201,15 @@ OutputLayer *VirtualEglBackend::primaryLayer(Output *output)
 void VirtualEglBackend::present(Output *output)
 {
     static_cast<VirtualOutput *>(output)->vsyncMonitor()->arm();
+}
+
+std::shared_ptr<GLTexture> VirtualEglBackend::textureForOutput(Output *output) const
+{
+    auto it = m_outputs.find(output);
+    if (it == m_outputs.end()) {
+        return nullptr;
+    }
+    return it->second->texture();
 }
 
 } // namespace
