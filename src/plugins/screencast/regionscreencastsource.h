@@ -41,6 +41,8 @@ public:
     void updateOutput(Output *output);
 
 private:
+    void ensureTexture();
+
     const QRect m_region;
     const qreal m_scale;
     std::unique_ptr<GLFramebuffer> m_target;

@@ -70,7 +70,7 @@ std::chrono::nanoseconds RegionScreenCastSource::clock() const
     return m_last;
 }
 
-void RegionScreenCastSource::render(GLFramebuffer *target)
+void RegionScreenCastSource::ensureTexture()
 {
     if (!m_renderedTexture) {
         m_renderedTexture.reset(new GLTexture(hasAlphaChannel() ? GL_RGBA8 : GL_RGB8, textureSize()));
@@ -82,6 +82,11 @@ void RegionScreenCastSource::render(GLFramebuffer *target)
             }
         }
     }
+}
+
+void RegionScreenCastSource::render(GLFramebuffer *target)
+{
+    ensureTexture();
 
     GLFramebuffer::pushFramebuffer(target);
     QRect r(QPoint(), target->size());
@@ -102,11 +107,8 @@ void RegionScreenCastSource::render(GLFramebuffer *target)
 
 void RegionScreenCastSource::render(QImage *image)
 {
-    GLTexture offscreenTexture(hasAlphaChannel() ? GL_RGBA8 : GL_RGB8, textureSize());
-    GLFramebuffer offscreenTarget(&offscreenTexture);
-
-    render(&offscreenTarget);
-    grabTexture(&offscreenTexture, image);
+    ensureTexture();
+    grabTexture(m_renderedTexture.get(), image);
 }
 
 }
