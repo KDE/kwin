@@ -5,7 +5,6 @@ if (KWIN_BUILD_KCMS)
     target_link_libraries(kcm_kwin4_genericscripted
         KF5::ConfigWidgets #KCModule
         KF5::I18n
-        KF5::Service
         Qt::DBus
         Qt::UiTools
         kwineffects

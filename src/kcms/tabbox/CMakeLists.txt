@@ -29,7 +29,6 @@ target_link_libraries(kcm_kwintabbox
     KF5::KCMUtils
     KF5::NewStuffWidgets
     KF5::Package
-    KF5::Service
     KF5::XmlGui # For kkeysequencewidget
     XCB::XCB
 )

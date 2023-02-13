@@ -7,7 +7,6 @@
 #pragma once
 
 #include <KQuickAddons/ManagedConfigModule>
-#include <KService>
 #include <QAbstractListModel>
 
 #include <kwinxwaylandsettings.h>

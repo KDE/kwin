@@ -34,7 +34,6 @@ set(kcm_screenedges_LIBS
     KF5::I18n
     KF5::Package
     KF5::Plasma
-    KF5::Service
 )
 target_link_libraries(kcm_kwinscreenedges ${X11_LIBRARIES} ${kcm_screenedges_LIBS})
 
