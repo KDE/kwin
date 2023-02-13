@@ -31,6 +31,7 @@ public:
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     EGLSurface surface() const;
     QRegion lastDamage() const;
+    GLFramebuffer *fbo() const;
 
 private:
     void ensureFbo();
@@ -74,6 +75,7 @@ public:
 
     std::unique_ptr<SurfaceTexture> createSurfaceTextureInternal(SurfacePixmapInternal *pixmap) override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmapWayland *pixmap) override;
+    std::shared_ptr<GLTexture> textureForOutput(Output *output) const override;
     void init() override;
     void endFrame(Output *output, const QRegion &renderedRegion, const QRegion &damagedRegion);
     void present(Output *output) override;

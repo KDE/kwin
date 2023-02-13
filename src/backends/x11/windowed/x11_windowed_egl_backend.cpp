@@ -67,6 +67,11 @@ QRegion X11WindowedEglPrimaryLayer::lastDamage() const
     return m_lastDamage;
 }
 
+GLFramebuffer *X11WindowedEglPrimaryLayer::fbo() const
+{
+    return m_fbo.get();
+}
+
 X11WindowedEglCursorLayer::X11WindowedEglCursorLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output)
     : m_output(output)
     , m_backend(backend)
@@ -158,6 +163,7 @@ void X11WindowedEglBackend::present(Output *output)
 {
     const auto &renderOutput = m_outputs[output];
     presentSurface(renderOutput.primaryLayer->surface(), renderOutput.primaryLayer->lastDamage(), output->geometry());
+    Q_EMIT output->outputChange(renderOutput.primaryLayer->lastDamage());
 }
 
 void X11WindowedEglBackend::presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry)
@@ -193,6 +199,19 @@ std::unique_ptr<SurfaceTexture> X11WindowedEglBackend::createSurfaceTextureWayla
 std::unique_ptr<SurfaceTexture> X11WindowedEglBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
 {
     return std::make_unique<BasicEGLSurfaceTextureInternal>(this, pixmap);
+}
+
+std::shared_ptr<GLTexture> X11WindowedEglBackend::textureForOutput(Output *output) const
+{
+    auto it = m_outputs.find(output);
+    if (it == m_outputs.end()) {
+        return nullptr;
+    }
+
+    GLFramebuffer::pushFramebuffer(it->second.primaryLayer->fbo());
+    auto ret = AbstractEglBackend::textureForOutput(output);
+    GLFramebuffer::popFramebuffer();
+    return ret;
 }
 
 } // namespace
