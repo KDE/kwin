@@ -3916,15 +3916,6 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
         if (value_mask & XCB_CONFIG_WINDOW_Y) {
             new_pos.setY(ry);
         }
-        // clever(?) workaround for applications like xv that want to set
-        // the location to the current location but miscalculate the
-        // frame size due to kwin being a double-reparenting window
-        // manager
-        if (new_pos.x() == m_clientGeometry.x() && new_pos.y() == m_clientGeometry.y()
-            && gravity == XCB_GRAVITY_NORTH_WEST && !from_tool) {
-            new_pos.setX(x());
-            new_pos.setY(y());
-        }
         new_pos += gravityAdjustment(xcb_gravity_t(gravity));
         new_pos = clientPosToFramePos(new_pos);
 
