@@ -13,6 +13,7 @@
 #include "x11_windowed_backend.h"
 #include "x11_windowed_output.h"
 // kwin libs
+#include <drm_fourcc.h>
 #include <kwinglplatform.h>
 
 namespace KWin
@@ -72,6 +73,11 @@ GLFramebuffer *X11WindowedEglPrimaryLayer::fbo() const
     return m_fbo.get();
 }
 
+quint32 X11WindowedEglPrimaryLayer::format() const
+{
+    return DRM_FORMAT_RGBA8888;
+}
+
 X11WindowedEglCursorLayer::X11WindowedEglCursorLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output)
     : m_output(output)
     , m_backend(backend)
@@ -113,6 +119,11 @@ bool X11WindowedEglCursorLayer::endFrame(const QRegion &renderedRegion, const QR
     m_output->cursor()->update(buffer.mirrored(false, true), hotspot());
 
     return true;
+}
+
+quint32 X11WindowedEglCursorLayer::format() const
+{
+    return DRM_FORMAT_RGBA8888;
 }
 
 X11WindowedEglBackend::X11WindowedEglBackend(X11WindowedBackend *backend)

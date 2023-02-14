@@ -125,6 +125,11 @@ int WaylandEglLayerBuffer::age() const
     return m_age;
 }
 
+gbm_bo *WaylandEglLayerBuffer::bo() const
+{
+    return m_bo;
+}
+
 WaylandEglLayerSwapchain::WaylandEglLayerSwapchain(const QSize &size, uint32_t format, const QVector<uint64_t> &modifiers, WaylandEglBackend *backend)
     : m_backend(backend)
     , m_size(size)
@@ -282,6 +287,16 @@ bool WaylandEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegio
 
     m_swapchain->release(m_buffer);
     return true;
+}
+
+quint32 WaylandEglCursorLayer::format() const
+{
+    return gbm_bo_get_format(m_buffer->bo());
+}
+
+quint32 WaylandEglPrimaryLayer::format() const
+{
+    return gbm_bo_get_format(m_buffer->bo());
 }
 
 WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)

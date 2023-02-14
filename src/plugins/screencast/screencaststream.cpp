@@ -41,24 +41,30 @@
 namespace KWin
 {
 
-uint32_t spaVideoFormatToDrmFormat(spa_video_format spa_format)
+static spa_video_format drmFourCCToSpaVideoFormat(quint32 format)
 {
-    switch (spa_format) {
-    case SPA_VIDEO_FORMAT_RGBA:
-        return DRM_FORMAT_ABGR8888;
-    case SPA_VIDEO_FORMAT_RGBx:
-        return DRM_FORMAT_XBGR8888;
-    case SPA_VIDEO_FORMAT_BGRA:
-        return DRM_FORMAT_ARGB8888;
-    case SPA_VIDEO_FORMAT_BGRx:
-        return DRM_FORMAT_XRGB8888;
-    case SPA_VIDEO_FORMAT_BGR:
-        return DRM_FORMAT_BGR888;
-    case SPA_VIDEO_FORMAT_RGB:
-        return DRM_FORMAT_RGB888;
+    switch (format) {
+    case DRM_FORMAT_ARGB8888:
+        return SPA_VIDEO_FORMAT_BGRA;
+    case DRM_FORMAT_XRGB8888:
+        return SPA_VIDEO_FORMAT_BGRx;
+    case DRM_FORMAT_RGBA8888:
+        return SPA_VIDEO_FORMAT_ABGR;
+    case DRM_FORMAT_RGBX8888:
+        return SPA_VIDEO_FORMAT_xBGR;
+    case DRM_FORMAT_ABGR8888:
+        return SPA_VIDEO_FORMAT_RGBA;
+    case DRM_FORMAT_XBGR8888:
+        return SPA_VIDEO_FORMAT_RGBx;
+    case DRM_FORMAT_BGRA8888:
+        return SPA_VIDEO_FORMAT_ARGB;
+    case DRM_FORMAT_BGRX8888:
+        return SPA_VIDEO_FORMAT_xRGB;
+    case DRM_FORMAT_NV12:
+        return SPA_VIDEO_FORMAT_NV12;
     default:
-        qCDebug(KWIN_SCREENCAST) << "unknown format" << spa_format;
-        return DRM_FORMAT_INVALID;
+        qCDebug(KWIN_SCREENCAST) << "unknown format" << format;
+        return SPA_VIDEO_FORMAT_xRGB;
     }
 }
 
@@ -158,9 +164,9 @@ void ScreenCastStream::onStreamParamChanged(void *data, uint32_t id, const struc
     }
     if (modifierProperty && (!pw->m_dmabufParams || !receivedModifiers.contains(pw->m_dmabufParams->modifier))) {
         if (modifierProperty->flags & SPA_POD_PROP_FLAG_DONT_FIXATE) {
-            pw->m_dmabufParams = kwinApp()->outputBackend()->testCreateDmaBuf(pw->m_resolution, spaVideoFormatToDrmFormat(pw->videoFormat.format), receivedModifiers);
+            pw->m_dmabufParams = kwinApp()->outputBackend()->testCreateDmaBuf(pw->m_resolution, pw->m_drmFormat, receivedModifiers);
         } else {
-            pw->m_dmabufParams = kwinApp()->outputBackend()->testCreateDmaBuf(pw->m_resolution, spaVideoFormatToDrmFormat(pw->videoFormat.format), {DRM_FORMAT_MOD_INVALID});
+            pw->m_dmabufParams = kwinApp()->outputBackend()->testCreateDmaBuf(pw->m_resolution, pw->m_drmFormat, {DRM_FORMAT_MOD_INVALID});
         }
 
         qCDebug(KWIN_SCREENCAST) << "Stream dmabuf modifiers received, offering our best suited modifier" << pw->m_dmabufParams.has_value();
@@ -333,11 +339,25 @@ bool ScreenCastStream::createStream()
     const QByteArray objname = "kwin-screencast-" + objectName().toUtf8();
     pwStream = pw_stream_new(pwCore->pwCore, objname, nullptr);
 
-    // it could make sense to offer the same format as the source
-    const auto format = m_source->hasAlphaChannel() ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
-    const int drmFormat = spaVideoFormatToDrmFormat(format);
-    m_hasDmaBuf = kwinApp()->outputBackend()->testCreateDmaBuf(m_resolution, drmFormat, {DRM_FORMAT_MOD_INVALID}).has_value();
-    m_modifiers = Compositor::self()->backend()->supportedFormats().value(drmFormat);
+    const auto supported = Compositor::self()->backend()->supportedFormats();
+    auto itModifiers = supported.constFind(m_source->drmFormat());
+
+    // If the offered format is not available for dmabuf, prefer converting to another one than resorting to memfd
+    if (itModifiers == supported.constEnd() && !supported.isEmpty()) {
+        itModifiers = supported.constFind(DRM_FORMAT_ARGB8888);
+        if (itModifiers == supported.constEnd()) {
+            m_drmFormat = itModifiers.key();
+        }
+    }
+
+    if (itModifiers == supported.constEnd()) {
+        m_drmFormat = m_source->drmFormat();
+        m_modifiers = {};
+    } else {
+        m_drmFormat = itModifiers.key();
+        m_modifiers = *itModifiers;
+    }
+    m_hasDmaBuf = kwinApp()->outputBackend()->testCreateDmaBuf(m_resolution, m_drmFormat, {DRM_FORMAT_MOD_INVALID}).has_value();
 
     char buffer[2048];
     QVector<const spa_pod *> params = buildFormats(false, buffer);
@@ -633,7 +653,7 @@ void ScreenCastStream::enqueue()
 
 QVector<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer[2048])
 {
-    const auto format = m_source->hasAlphaChannel() ? SPA_VIDEO_FORMAT_BGRA : SPA_VIDEO_FORMAT_BGR;
+    const auto format = drmFourCCToSpaVideoFormat(m_drmFormat);
     spa_pod_builder podBuilder = SPA_POD_BUILDER_INIT(buffer, 2048);
     spa_fraction minFramerate = SPA_FRACTION(1, 1);
     spa_fraction maxFramerate = SPA_FRACTION(25, 1);
@@ -672,6 +692,9 @@ spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video
     if (format == SPA_VIDEO_FORMAT_BGRA) {
         /* announce equivalent format without alpha */
         spa_pod_builder_add(b, SPA_FORMAT_VIDEO_format, SPA_POD_CHOICE_ENUM_Id(3, format, format, SPA_VIDEO_FORMAT_BGRx), 0);
+    } else if (format == SPA_VIDEO_FORMAT_RGBA) {
+        /* announce equivalent format without alpha */
+        spa_pod_builder_add(b, SPA_FORMAT_VIDEO_format, SPA_POD_CHOICE_ENUM_Id(3, format, format, SPA_VIDEO_FORMAT_RGBx), 0);
     } else {
         spa_pod_builder_add(b, SPA_FORMAT_VIDEO_format, SPA_POD_Id(format), 0);
     }

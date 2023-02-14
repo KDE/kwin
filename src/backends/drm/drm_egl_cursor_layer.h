@@ -36,6 +36,7 @@ public:
     QRegion currentDamage() const override;
     bool checkTestBuffer() override;
     void releaseBuffers() override;
+    quint32 format() const override;
 
 private:
     EglGbmLayerSurface m_surface;

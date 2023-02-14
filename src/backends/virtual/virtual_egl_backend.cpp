@@ -15,6 +15,7 @@
 #include "virtual_backend.h"
 #include "virtual_output.h"
 // kwin libs
+#include <drm_fourcc.h>
 #include <kwinglutils.h>
 
 #ifndef EGL_PLATFORM_SURFACELESS_MESA
@@ -59,6 +60,12 @@ bool VirtualEglLayer::endFrame(const QRegion &renderedRegion, const QRegion &dam
     glFlush(); // flush pending rendering commands.
     Q_EMIT m_output->outputChange(damagedRegion);
     return true;
+}
+
+quint32 VirtualEglLayer::format() const
+{
+    // the texture format is hardcoded in VirtualEglLayer::beginFrame
+    return DRM_FORMAT_RGB888;
 }
 
 VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)

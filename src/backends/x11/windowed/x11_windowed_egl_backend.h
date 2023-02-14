@@ -29,6 +29,7 @@ public:
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    quint32 format() const override;
     EGLSurface surface() const;
     QRegion lastDamage() const;
     GLFramebuffer *fbo() const;
@@ -54,6 +55,7 @@ public:
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    quint32 format() const override;
 
 private:
     X11WindowedOutput *const m_output;

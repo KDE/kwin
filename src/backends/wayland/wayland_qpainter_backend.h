@@ -56,6 +56,7 @@ public:
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    quint32 format() const override;
 
     void remapBuffer();
 
@@ -88,6 +89,7 @@ public:
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    quint32 format() const override;
 
 private:
     WaylandOutput *m_output;

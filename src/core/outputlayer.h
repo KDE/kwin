@@ -54,6 +54,11 @@ public:
     virtual bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) = 0;
 
     /**
+     * Format in which the output data is internally stored in a drm fourcc format
+     */
+    virtual quint32 format() const = 0;
+
+    /**
      * Tries to import the newest buffer of the surface for direct scanout
      * Returns @c true if scanout succeeds, @c false if rendering is necessary
      */

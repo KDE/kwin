@@ -129,6 +129,7 @@ private:
     quint64 m_sequential = 0;
     bool m_hasDmaBuf = false;
     bool m_waitForNewBuffers = false;
+    quint32 m_drmFormat = 0;
 };
 
 } // namespace KWin

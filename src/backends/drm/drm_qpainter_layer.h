@@ -32,6 +32,7 @@ public:
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
     QRegion currentDamage() const override;
     void releaseBuffers() override;
+    quint32 format() const override;
 
 private:
     bool doesSwapchainFit() const;

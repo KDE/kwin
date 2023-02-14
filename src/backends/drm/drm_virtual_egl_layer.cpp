@@ -175,4 +175,9 @@ void VirtualEglGbmLayer::releaseBuffers()
     m_gbmSurface.reset();
     m_oldGbmSurface.reset();
 }
+
+quint32 VirtualEglGbmLayer::format() const
+{
+    return m_gbmSurface->format();
+}
 }

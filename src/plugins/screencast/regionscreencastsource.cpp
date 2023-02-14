@@ -9,6 +9,7 @@
 
 #include <composite.h>
 #include <core/output.h>
+#include <drm_fourcc.h>
 #include <kwingltexture.h>
 #include <kwinglutils.h>
 #include <scene/workspacescene.h>
@@ -36,6 +37,11 @@ QSize RegionScreenCastSource::textureSize() const
 bool RegionScreenCastSource::hasAlphaChannel() const
 {
     return true;
+}
+
+quint32 RegionScreenCastSource::drmFormat() const
+{
+    return DRM_FORMAT_ARGB8888;
 }
 
 void RegionScreenCastSource::updateOutput(Output *output)
@@ -73,7 +79,7 @@ std::chrono::nanoseconds RegionScreenCastSource::clock() const
 void RegionScreenCastSource::ensureTexture()
 {
     if (!m_renderedTexture) {
-        m_renderedTexture.reset(new GLTexture(hasAlphaChannel() ? GL_RGBA8 : GL_RGB8, textureSize()));
+        m_renderedTexture.reset(new GLTexture(GL_RGBA8, textureSize()));
         m_target.reset(new GLFramebuffer(m_renderedTexture.get()));
         const auto allOutputs = workspace()->outputs();
         for (auto output : allOutputs) {

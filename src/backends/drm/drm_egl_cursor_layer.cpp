@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_egl_cursor_layer.h"
+#include "drm_buffer.h"
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
 #include "drm_pipeline.h"
@@ -57,4 +58,8 @@ void EglGbmCursorLayer::releaseBuffers()
     m_surface.destroyResources();
 }
 
+quint32 EglGbmCursorLayer::format() const
+{
+    return m_surface.currentBuffer()->buffer()->format();
+}
 }

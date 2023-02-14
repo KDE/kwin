@@ -10,6 +10,7 @@
 #include "drm_pipeline.h"
 
 #include <QMatrix4x4>
+#include <drm_fourcc.h>
 
 namespace KWin
 {
@@ -19,6 +20,11 @@ DrmOutputLayer::~DrmOutputLayer() = default;
 QRegion DrmOutputLayer::currentDamage() const
 {
     return {};
+}
+
+quint32 DrmOutputLayer::format() const
+{
+    return DRM_FORMAT_RGBA8888;
 }
 
 std::shared_ptr<GLTexture> DrmOutputLayer::texture() const

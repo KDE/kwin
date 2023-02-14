@@ -24,6 +24,7 @@ public:
 
     bool hasAlphaChannel() const override;
     QSize textureSize() const override;
+    quint32 drmFormat() const override;
 
     void render(GLFramebuffer *target) override;
     void render(QImage *image) override;

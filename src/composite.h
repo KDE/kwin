@@ -139,6 +139,13 @@ public:
      */
     virtual void createOpenGLSafePoint(OpenGLSafePoint safePoint);
 
+    /**
+     * @returns the format of the contents in the @p output
+     *
+     * This format is provided using the drm fourcc encoding
+     */
+    uint outputFormat(Output *output);
+
 Q_SIGNALS:
     void compositingToggled(bool active);
     void aboutToDestroy();

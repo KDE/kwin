@@ -25,6 +25,24 @@ static void mirrorVertically(uchar *data, int height, int stride)
     }
 }
 
+static GLenum closestGLType(const QImage &image)
+{
+    switch (image.format()) {
+    case QImage::Format_RGB888:
+        return GL_RGB;
+    case QImage::Format_BGR888:
+        return GL_BGR;
+    case QImage::Format_RGB32:
+    case QImage::Format_RGBX8888:
+    case QImage::Format_RGBA8888:
+    case QImage::Format_RGBA8888_Premultiplied:
+        return GL_RGBA;
+    default:
+        qDebug() << "unknown format" << image.format();
+        return GL_RGBA;
+    }
+}
+
 static void grabTexture(GLTexture *texture, QImage *image)
 {
     const bool invert = !texture->isYInverted();
@@ -40,11 +58,11 @@ static void grabTexture(GLTexture *texture, QImage *image)
 
     texture->bind();
     if (GLPlatform::instance()->isGLES()) {
-        glReadPixels(0, 0, image->width(), image->height(), image->hasAlphaChannel() ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, (GLvoid *)image->bits());
+        glReadPixels(0, 0, image->width(), image->height(), closestGLType(*image), GL_UNSIGNED_BYTE, (GLvoid *)image->bits());
     } else if (GLPlatform::instance()->glVersion() >= kVersionNumber(4, 5)) {
-        glGetTextureImage(texture->texture(), 0, image->hasAlphaChannel() ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, image->sizeInBytes(), image->bits());
+        glGetTextureImage(texture->texture(), 0, closestGLType(*image), GL_UNSIGNED_BYTE, image->sizeInBytes(), image->bits());
     } else {
-        glGetTexImage(texture->target(), 0, image->hasAlphaChannel() ? GL_BGRA : GL_BGR, GL_UNSIGNED_BYTE, image->bits());
+        glGetTexImage(texture->target(), 0, closestGLType(*image), GL_UNSIGNED_BYTE, image->bits());
     }
 
     if (invertNeededAndSupported) {

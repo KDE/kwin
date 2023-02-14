@@ -29,6 +29,7 @@ public:
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    uint format() const override;
 
 private:
     EglBackend *const m_backend;

@@ -638,6 +638,12 @@ void Compositor::handleFrameRequested(RenderLoop *renderLoop)
     composite(renderLoop);
 }
 
+uint Compositor::outputFormat(Output *output)
+{
+    OutputLayer *primaryLayer = m_backend->primaryLayer(output);
+    return primaryLayer->format();
+}
+
 void Compositor::composite(RenderLoop *renderLoop)
 {
     if (m_backend->checkGraphicsReset()) {

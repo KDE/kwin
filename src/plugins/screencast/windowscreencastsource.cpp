@@ -18,6 +18,7 @@
 #include "scene/itemrenderer.h"
 #include "scene/windowitem.h"
 #include "scene/workspacescene.h"
+#include <drm_fourcc.h>
 
 namespace KWin
 {
@@ -28,6 +29,11 @@ WindowScreenCastSource::WindowScreenCastSource(Window *window, QObject *parent)
     , m_offscreenRef(window)
 {
     connect(m_window, &Window::windowClosed, this, &ScreenCastSource::closed);
+}
+
+quint32 WindowScreenCastSource::drmFormat() const
+{
+    return DRM_FORMAT_RGBA8888;
 }
 
 bool WindowScreenCastSource::hasAlphaChannel() const

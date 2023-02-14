@@ -12,6 +12,7 @@
 #include "virtual_output.h"
 
 #include <QPainter>
+#include <drm_fourcc.h>
 
 namespace KWin
 {
@@ -39,6 +40,11 @@ bool VirtualQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion
 QImage *VirtualQPainterLayer::image()
 {
     return &m_image;
+}
+
+quint32 VirtualQPainterLayer::format() const
+{
+    return DRM_FORMAT_RGBX8888;
 }
 
 VirtualQPainterBackend::VirtualQPainterBackend(VirtualBackend *backend)

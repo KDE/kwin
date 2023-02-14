@@ -42,6 +42,7 @@ public:
     GLFramebuffer *framebuffer() const;
     std::shared_ptr<GLTexture> texture() const;
     int age() const;
+    gbm_bo *bo() const;
 
 private:
     WaylandEglBackend *m_backend;
@@ -83,6 +84,7 @@ public:
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    quint32 format() const override;
 
 private:
     WaylandOutput *m_waylandOutput;
@@ -104,6 +106,7 @@ public:
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    quint32 format() const override;
 
 private:
     WaylandOutput *m_output;

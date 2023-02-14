@@ -23,6 +23,7 @@
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QtPlatformHeaders/QEGLNativeContext>
 #endif
+#include <drm_fourcc.h>
 
 namespace KWin
 {
@@ -41,6 +42,11 @@ bool EglLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedReg
 {
     m_backend->endFrame(renderedRegion, damagedRegion);
     return true;
+}
+
+uint EglLayer::format() const
+{
+    return DRM_FORMAT_RGBA8888;
 }
 
 EglBackend::EglBackend(Display *display, X11StandaloneBackend *backend)
@@ -162,7 +168,6 @@ OutputLayerBeginFrameInfo EglBackend::beginFrame()
     if (supportsBufferAge()) {
         repaint = m_damageJournal.accumulate(m_bufferAge, infiniteRegion());
     }
-
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
 
     return OutputLayerBeginFrameInfo{

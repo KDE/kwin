@@ -29,6 +29,7 @@ public:
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
     std::shared_ptr<GLTexture> texture() const;
+    quint32 format() const override;
 
 private:
     VirtualEglBackend *const m_backend;

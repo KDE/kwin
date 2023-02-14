@@ -13,6 +13,7 @@
 
 #include <cerrno>
 #include <cmath>
+#include <drm_fourcc.h>
 #include <string.h>
 #include <sys/shm.h>
 #include <xcb/present.h>
@@ -173,6 +174,17 @@ void X11WindowedQPainterPrimaryLayer::present()
     m_swapchain->release(m_buffer);
 }
 
+quint32 X11WindowedQPainterPrimaryLayer::format() const
+{
+    switch (m_buffer->view()->format()) {
+    case QImage::Format_A2RGB30_Premultiplied:
+        return DRM_FORMAT_ARGB2101010;
+    case QImage::Format_ARGB32_Premultiplied:
+    default:
+        return DRM_FORMAT_ARGB8888;
+    }
+}
+
 X11WindowedQPainterCursorLayer::X11WindowedQPainterCursorLayer(X11WindowedOutput *output)
     : m_output(output)
 {
@@ -190,6 +202,11 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterCursorLayer::beginFr
         .renderTarget = RenderTarget(&m_buffer),
         .repaint = infiniteRegion(),
     };
+}
+
+quint32 X11WindowedQPainterCursorLayer::format() const
+{
+    return DRM_FORMAT_ARGB8888;
 }
 
 bool X11WindowedQPainterCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)

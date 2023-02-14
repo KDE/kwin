@@ -22,6 +22,7 @@ class WindowScreenCastSource : public ScreenCastSource
 public:
     explicit WindowScreenCastSource(Window *window, QObject *parent = nullptr);
 
+    quint32 drmFormat() const override;
     bool hasAlphaChannel() const override;
     QSize textureSize() const override;
 

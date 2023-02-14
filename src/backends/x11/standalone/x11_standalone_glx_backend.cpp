@@ -74,6 +74,7 @@ typedef struct xcb_glx_buffer_swap_complete_event_t
 } xcb_glx_buffer_swap_complete_event_t;
 #endif
 
+#include <drm_fourcc.h>
 #include <tuple>
 
 namespace KWin
@@ -118,6 +119,11 @@ bool GlxLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedReg
 {
     m_backend->endFrame(renderedRegion, damagedRegion);
     return true;
+}
+
+uint GlxLayer::format() const
+{
+    return DRM_FORMAT_RGBA8888;
 }
 
 GlxBackend::GlxBackend(Display *display, X11StandaloneBackend *backend)

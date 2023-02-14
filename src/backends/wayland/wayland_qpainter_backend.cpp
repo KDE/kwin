@@ -18,6 +18,7 @@
 #include <KWayland/Client/surface.h>
 
 #include <cmath>
+#include <drm_fourcc.h>
 
 namespace KWin
 {
@@ -129,6 +130,11 @@ bool WaylandQPainterPrimaryLayer::endFrame(const QRegion &renderedRegion, const 
     return true;
 }
 
+quint32 WaylandQPainterPrimaryLayer::format() const
+{
+    return DRM_FORMAT_RGBA8888;
+}
+
 WaylandQPainterCursorLayer::WaylandQPainterCursorLayer(WaylandOutput *output)
     : m_output(output)
 {
@@ -157,6 +163,11 @@ bool WaylandQPainterCursorLayer::endFrame(const QRegion &renderedRegion, const Q
     KWayland::Client::Buffer::Ptr buffer = m_output->backend()->display()->shmPool()->createBuffer(m_backingStore);
     m_output->cursor()->update(*buffer.lock(), scale(), hotspot().toPoint());
     return true;
+}
+
+quint32 WaylandQPainterCursorLayer::format() const
+{
+    return DRM_FORMAT_RGBA8888;
 }
 
 WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)

@@ -29,6 +29,11 @@ bool OutputScreenCastSource::hasAlphaChannel() const
     return true;
 }
 
+quint32 OutputScreenCastSource::drmFormat() const
+{
+    return Compositor::self()->outputFormat(m_output);
+}
+
 QSize OutputScreenCastSource::textureSize() const
 {
     return m_output->pixelSize();

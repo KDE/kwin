@@ -21,6 +21,7 @@ public:
     explicit ScreenCastSource(QObject *parent = nullptr);
 
     virtual bool hasAlphaChannel() const = 0;
+    virtual quint32 drmFormat() const = 0;
     virtual QSize textureSize() const = 0;
 
     virtual void render(GLFramebuffer *target) = 0;
