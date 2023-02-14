@@ -168,7 +168,6 @@ public:
     OffscreenQuickScene(QObject *parent, ExportMode exportMode);
     ~OffscreenQuickScene();
 
-    QQmlContext *rootContext() const;
     /** top level item in the given source*/
     QQuickItem *rootItem() const;
 

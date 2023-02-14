@@ -11,7 +11,6 @@
 
 #include "kwinglutils.h"
 #include "logging_p.h"
-#include "sharedqmlengine.h"
 
 #include <QGuiApplication>
 #include <QQmlComponent>
@@ -67,11 +66,9 @@ class Q_DECL_HIDDEN OffscreenQuickScene::Private
 {
 public:
     Private()
-        : qmlEngine(SharedQmlEngine::engine())
     {
     }
 
-    SharedQmlEngine::Ptr qmlEngine;
     std::unique_ptr<QQmlComponent> qmlComponent;
     std::unique_ptr<QQuickItem> quickItem;
 };
@@ -540,7 +537,7 @@ void OffscreenQuickScene::setSource(const QUrl &source)
 void OffscreenQuickScene::setSource(const QUrl &source, const QVariantMap &initialProperties)
 {
     if (!d->qmlComponent) {
-        d->qmlComponent.reset(new QQmlComponent(d->qmlEngine.get()));
+        d->qmlComponent.reset(new QQmlComponent(effects->qmlEngine()));
     }
 
     d->qmlComponent->loadUrl(source);
@@ -570,11 +567,6 @@ void OffscreenQuickScene::setSource(const QUrl &source, const QVariantMap &initi
     updateSize();
     connect(contentItem(), &QQuickItem::widthChanged, item, updateSize);
     connect(contentItem(), &QQuickItem::heightChanged, item, updateSize);
-}
-
-QQmlContext *OffscreenQuickScene::rootContext() const
-{
-    return d->qmlEngine->rootContext();
 }
 
 QQuickItem *OffscreenQuickScene::rootItem() const

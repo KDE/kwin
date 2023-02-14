@@ -259,6 +259,8 @@ public:
     KWin::EffectWindow *inputPanel() const override;
     bool isInputPanelOverlay() const override;
 
+    QQmlEngine *qmlEngine() const override;
+
 public Q_SLOTS:
     // slots for D-Bus interface
     Q_SCRIPTABLE void reconfigureEffect(const QString &name);

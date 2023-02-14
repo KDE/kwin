@@ -30,7 +30,6 @@ set(kwin_EFFECTSLIB_SRCS
     kwinoffscreenquickview.cpp
     kwinquickeffect.cpp
     logging.cpp
-    sharedqmlengine.cpp
 )
 
 add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})

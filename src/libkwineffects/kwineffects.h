@@ -48,6 +48,7 @@ class QKeyEvent;
 class QMatrix4x4;
 class QAction;
 class QTabletEvent;
+class QQmlEngine;
 
 /**
  * Logging category to be used inside the KWin effects.
@@ -1430,6 +1431,8 @@ public:
 
     virtual KWin::EffectWindow *inputPanel() const = 0;
     virtual bool isInputPanelOverlay() const = 0;
+
+    virtual QQmlEngine *qmlEngine() const = 0;
 
 Q_SIGNALS:
     /**

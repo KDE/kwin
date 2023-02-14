@@ -28,6 +28,7 @@
 #include "osd.h"
 #include "pointer_input.h"
 #include "scene/itemrenderer.h"
+#include "scripting/scripting.h"
 #include "unmanaged.h"
 #include "x11window.h"
 #if KWIN_BUILD_TABBOX
@@ -1842,6 +1843,11 @@ bool EffectsHandlerImpl::isInputPanelOverlay() const
         return panel->mode() == InputPanelV1Window::Mode::Overlay;
     }
     return true;
+}
+
+QQmlEngine *EffectsHandlerImpl::qmlEngine() const
+{
+    return Scripting::self()->qmlEngine();
 }
 
 //****************************************
