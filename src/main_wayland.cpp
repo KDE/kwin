@@ -208,7 +208,7 @@ void ApplicationWayland::startSession()
         if (!arguments.isEmpty()) {
             QString program = arguments.takeFirst();
             QProcess *p = new QProcess(this);
-            p->setProcessChannelMode(QProcess::ForwardedErrorChannel);
+            p->setProcessChannelMode(QProcess::ForwardedChannels);
             p->setProcessEnvironment(processStartupEnvironment());
             connect(p, qOverload<int, QProcess::ExitStatus>(&QProcess::finished), this, [p](int code, QProcess::ExitStatus status) {
                 p->deleteLater();
@@ -245,7 +245,7 @@ void ApplicationWayland::startSession()
             // note: this will kill the started process when we exit
             // this is going to happen anyway as we are the wayland and X server the app connects to
             QProcess *p = new QProcess(this);
-            p->setProcessChannelMode(QProcess::ForwardedErrorChannel);
+            p->setProcessChannelMode(QProcess::ForwardedChannels);
             p->setProcessEnvironment(processStartupEnvironment());
             p->setProgram(program);
             p->setArguments(arguments);
