@@ -464,15 +464,30 @@ DrmOutputLayer *DrmOutput::primaryLayer() const
     return m_pipeline->primaryLayer();
 }
 
-void DrmOutput::setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation)
+bool DrmOutput::setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation)
 {
-    m_pipeline->setColorTransformation(transformation);
+    m_pipeline->setGammaRamp(transformation);
+    m_pipeline->setCTM(QMatrix3x3());
     if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
         m_pipeline->applyPendingChanges();
         m_renderLoop->scheduleRepaint();
+        return true;
     } else {
         m_pipeline->revertPendingChanges();
+        return false;
     }
 }
 
+bool DrmOutput::setCTM(const QMatrix3x3 &ctm)
+{
+    m_pipeline->setCTM(ctm);
+    if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
+        m_pipeline->applyPendingChanges();
+        m_renderLoop->scheduleRepaint();
+        return true;
+    } else {
+        m_pipeline->revertPendingChanges();
+        return false;
+    }
+}
 }

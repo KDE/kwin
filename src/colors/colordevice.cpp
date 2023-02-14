@@ -54,10 +54,14 @@ public:
     uint temperature = 6500;
 
     std::unique_ptr<ColorPipelineStage> temperatureStage;
+    QVector3D temperatureFactors;
     std::unique_ptr<ColorPipelineStage> brightnessStage;
+    QVector3D brightnessFactors;
     std::unique_ptr<ColorPipelineStage> calibrationStage;
 
     std::shared_ptr<ColorTransformation> transformation;
+    // used if only limited per-channel multiplication is available
+    QVector3D simpleTransformation;
 };
 
 void ColorDevicePrivate::rebuildPipeline()
@@ -99,6 +103,7 @@ void ColorDevicePrivate::rebuildPipeline()
     const auto tmp = std::make_shared<ColorTransformation>(std::move(stages));
     if (tmp->valid()) {
         transformation = tmp;
+        simpleTransformation = brightnessFactors * temperatureFactors;
     }
 }
 
@@ -133,6 +138,8 @@ void ColorDevicePrivate::updateTemperatureToneCurves()
     const qreal zWhitePoint = interpolate(blackbodyColor[blackBodyColorIndex + 2],
                                           blackbodyColor[blackBodyColorIndex + 5],
                                           blendFactor);
+
+    temperatureFactors = QVector3D(xWhitePoint, yWhitePoint, zWhitePoint);
 
     const double redCurveParams[] = {1.0, xWhitePoint, 0.0};
     const double greenCurveParams[] = {1.0, yWhitePoint, 0.0};
@@ -172,6 +179,7 @@ void ColorDevicePrivate::updateBrightnessToneCurves()
     }
 
     const double curveParams[] = {1.0, brightness / 100.0, 0.0};
+    brightnessFactors = QVector3D(brightness / 100.0, brightness / 100.0, brightness / 100.0);
 
     UniqueToneCurvePtr redCurve(cmsBuildParametricToneCurve(nullptr, 2, curveParams));
     if (!redCurve) {
@@ -291,11 +299,6 @@ void ColorDevice::setTemperature(uint temperature)
     Q_EMIT temperatureChanged();
 }
 
-// QString ColorDevice::profile() const
-// {
-//     return d->profile;
-// }
-
 void ColorDevice::setProfile(const QString &profile)
 {
     if (d->profile == profile) {
@@ -310,7 +313,13 @@ void ColorDevice::setProfile(const QString &profile)
 void ColorDevice::update()
 {
     d->rebuildPipeline();
-    d->output->setColorTransformation(d->transformation);
+    if (!d->output->setGammaRamp(d->transformation)) {
+        QMatrix3x3 ctm;
+        ctm(0, 0) = d->simpleTransformation.x();
+        ctm(1, 1) = d->simpleTransformation.y();
+        ctm(2, 2) = d->simpleTransformation.z();
+        d->output->setCTM(ctm);
+    }
 }
 
 void ColorDevice::scheduleUpdate()
