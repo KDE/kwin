@@ -3908,8 +3908,12 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
         gravity = m_geometryHints.windowGravity();
     }
     if (value_mask & configurePositionMask) {
-        QPointF new_pos = framePosToClientPos(pos());
+        QPointF new_pos = pos();
+        if (decoration()) {
+            new_pos += QPointF(borderLeft(), borderTop());
+        }
         new_pos -= gravityAdjustment(xcb_gravity_t(gravity));
+
         if (value_mask & XCB_CONFIG_WINDOW_X) {
             new_pos.setX(rx);
         }
@@ -3925,21 +3929,32 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
             new_pos.setX(x());
             new_pos.setY(y());
         }
-        new_pos += gravityAdjustment(xcb_gravity_t(gravity));
-        new_pos = clientPosToFramePos(new_pos);
 
-        qreal nw = clientSize().width();
-        qreal nh = clientSize().height();
+        new_pos += gravityAdjustment(xcb_gravity_t(gravity));
+        if (decoration()) {
+            new_pos -= QPointF(borderLeft(), borderTop());
+        }
+        new_pos = rules()->checkPosition(new_pos);
+
+        QSizeF requestedClientSize = size();
+        if (decoration()) {
+            requestedClientSize.rwidth() -= borderLeft() + borderRight();
+            requestedClientSize.rheight() -= borderTop() + borderBottom();
+        }
         if (value_mask & XCB_CONFIG_WINDOW_WIDTH) {
-            nw = rw;
+            requestedClientSize.setWidth(rw);
         }
         if (value_mask & XCB_CONFIG_WINDOW_HEIGHT) {
-            nh = rh;
+            requestedClientSize.setHeight(rh);
         }
-        const QSizeF requestedClientSize = constrainClientSize(QSizeF(nw, nh));
-        QSizeF requestedFrameSize = clientSizeToFrameSize(requestedClientSize);
+        requestedClientSize = constrainClientSize(requestedClientSize);
+
+        QSizeF requestedFrameSize = requestedClientSize;
+        if (decoration()) {
+            requestedClientSize.rwidth() += borderLeft() + borderRight();
+            requestedClientSize.rheight() += borderTop() + borderBottom();
+        }
         requestedFrameSize = rules()->checkSize(requestedFrameSize);
-        new_pos = rules()->checkPosition(new_pos);
 
         Output *newOutput = workspace()->outputAt(QRectF(new_pos, requestedFrameSize).center());
         if (newOutput != rules()->checkOutput(newOutput)) {
@@ -3966,17 +3981,25 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
     }
 
     if (value_mask & configureSizeMask && !(value_mask & configurePositionMask)) { // pure resize
-        qreal nw = clientSize().width();
-        qreal nh = clientSize().height();
-        if (value_mask & XCB_CONFIG_WINDOW_WIDTH) {
-            nw = rw;
-        }
-        if (value_mask & XCB_CONFIG_WINDOW_HEIGHT) {
-            nh = rh;
+        QSizeF requestedClientSize = size();
+        if (decoration()) {
+            requestedClientSize.rwidth() -= borderLeft() + borderRight();
+            requestedClientSize.rheight() -= borderTop() + borderBottom();
         }
 
-        const QSizeF requestedClientSize = constrainClientSize(QSizeF(nw, nh));
-        QSizeF requestedFrameSize = clientSizeToFrameSize(requestedClientSize);
+        if (value_mask & XCB_CONFIG_WINDOW_WIDTH) {
+            requestedClientSize.setWidth(rw);
+        }
+        if (value_mask & XCB_CONFIG_WINDOW_HEIGHT) {
+            requestedClientSize.setHeight(rh);
+        }
+        requestedClientSize = constrainClientSize(requestedClientSize);
+
+        QSizeF requestedFrameSize = requestedClientSize;
+        if (decoration()) {
+            requestedClientSize.rwidth() += borderLeft() + borderRight();
+            requestedClientSize.rheight() += borderTop() + borderBottom();
+        }
         requestedFrameSize = rules()->checkSize(requestedFrameSize);
 
         if (requestedFrameSize != size()) { // don't restore if some app sets its own size again
