@@ -372,6 +372,14 @@ Tile *Tile::parentTile() const
     return m_parentTile;
 }
 
+void Tile::visitDescendants(std::function<void(const Tile *child)> callback) const
+{
+    callback(this);
+    for (const Tile *child : m_children) {
+        child->visitDescendants(callback);
+    }
+}
+
 TileManager *Tile::manager() const
 {
     return m_tiling;

@@ -98,6 +98,11 @@ public:
      */
     QList<Tile *> descendants() const;
 
+    /**
+     * Visit all tiles descendant of this tile, recursive
+     */
+    void visitDescendants(std::function<void(const Tile *child)> callback) const;
+
     void resizeFromGravity(Gravity gravity, int x_root, int y_root);
 
     Q_INVOKABLE void resizeByPixels(qreal delta, Qt::Edge edge);
