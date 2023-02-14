@@ -58,7 +58,8 @@ public:
     void leased(DrmLease *lease);
     void leaseEnded();
 
-    void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation) override;
+    bool setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation) override;
+    bool setCTM(const QMatrix3x3 &ctm) override;
 
 private:
     bool setDrmDpmsMode(DpmsMode mode);

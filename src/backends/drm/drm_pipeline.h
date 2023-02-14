@@ -48,6 +48,19 @@ private:
     uint32_t m_blobId = 0;
 };
 
+class DrmCTM
+{
+public:
+    DrmCTM(DrmGpu *gpu, const QMatrix3x3 &ctm);
+    ~DrmCTM();
+
+    uint32_t blobId() const;
+
+private:
+    DrmGpu *const m_gpu;
+    uint32_t m_blobId = 0;
+};
+
 class DrmPipeline
 {
 public:
@@ -125,7 +138,8 @@ public:
     void setSyncMode(RenderLoopPrivate::SyncMode mode);
     void setOverscan(uint32_t overscan);
     void setRgbRange(Output::RgbRange range);
-    void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation);
+    void setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation);
+    void setCTM(const QMatrix3x3 &ctm);
     void setContentType(DrmConnector::DrmContentType type);
 
     enum class CommitMode {
@@ -188,6 +202,7 @@ private:
         RenderLoopPrivate::SyncMode syncMode = RenderLoopPrivate::SyncMode::Fixed;
         std::shared_ptr<ColorTransformation> colorTransformation;
         std::shared_ptr<DrmGammaRamp> gamma;
+        std::shared_ptr<DrmCTM> ctm;
         DrmConnector::DrmContentType contentType = DrmConnector::DrmContentType::Graphics;
 
         std::shared_ptr<DrmPipelineLayer> layer;
