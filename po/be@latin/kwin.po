@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-12 01:00+0000\n"
+"POT-Creation-Date: 2023-02-14 01:00+0000\n"
 "PO-Revision-Date: 2008-12-27 14:55+0200\n"
 "Last-Translator: Ihar Hrachyshka <ihar.hrachyshka@gmail.com>\n"
 "Language-Team: Belarusian Latin <i18n@mova.org>\n"
@@ -2720,42 +2720,43 @@ msgstr "Akno na nižejšy stoł"
 #: useractions.cpp:1091
 #, fuzzy, kde-format
 #| msgid "Window to Screen 1"
-msgid "Window to Screen %1"
+msgid "Move Window to Screen %1"
 msgstr "Akno na ekran „1”"
 
 #: useractions.cpp:1098
-#, kde-format
-msgid "Window to Next Screen"
+#, fuzzy, kde-format
+#| msgid "Window to Next Screen"
+msgid "Move Window to Next Screen"
 msgstr "Akno na nastupny ekran"
 
 #: useractions.cpp:1100
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
-msgid "Window to Previous Screen"
+msgid "Move Window to Previous Screen"
 msgstr "Akno na papieredni stoł"
 
 #: useractions.cpp:1102
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
-msgid "Window One Screen to the Right"
+msgid "Move Window One Screen to the Right"
 msgstr "Akno na praviejšy stoł"
 
 #: useractions.cpp:1104
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
-msgid "Window One Screen to the Left"
+msgid "Move Window One Screen to the Left"
 msgstr "Akno na laviejšy stoł"
 
 #: useractions.cpp:1106
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
-msgid "Window One Screen Up"
+msgid "Move Window One Screen Up"
 msgstr "Akno na ekran „2”"
 
 #: useractions.cpp:1108
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
-msgid "Window One Screen Down"
+msgid "Move Window One Screen Down"
 msgstr "Akno na nižejšy stoł"
 
 #: useractions.cpp:1112

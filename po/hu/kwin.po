@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-12 01:00+0000\n"
+"POT-Creation-Date: 2023-02-14 01:00+0000\n"
 "PO-Revision-Date: 2021-11-23 11:35+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -2662,42 +2662,45 @@ msgid "Window One Desktop Down"
 msgstr "Váltás a lefelé levő asztalra"
 
 #: useractions.cpp:1091
-#, kde-format
-msgid "Window to Screen %1"
+#, fuzzy, kde-format
+#| msgid "Window to Screen %1"
+msgid "Move Window to Screen %1"
 msgstr "Ablak áthelyezése a(z) %1. képernyőre"
 
 #: useractions.cpp:1098
-#, kde-format
-msgid "Window to Next Screen"
+#, fuzzy, kde-format
+#| msgid "Window to Next Screen"
+msgid "Move Window to Next Screen"
 msgstr "Ablak áthelyezése a következő képernyőre"
 
 #: useractions.cpp:1100
-#, kde-format
-msgid "Window to Previous Screen"
+#, fuzzy, kde-format
+#| msgid "Window to Previous Screen"
+msgid "Move Window to Previous Screen"
 msgstr "Ablak áthelyezése az előző képernyőre"
 
 #: useractions.cpp:1102
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
-msgid "Window One Screen to the Right"
+msgid "Move Window One Screen to the Right"
 msgstr "Váltás a jobbra levő asztalra"
 
 #: useractions.cpp:1104
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
-msgid "Window One Screen to the Left"
+msgid "Move Window One Screen to the Left"
 msgstr "Váltás a balra levő asztalra"
 
 #: useractions.cpp:1106
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
-msgid "Window One Screen Up"
+msgid "Move Window One Screen Up"
 msgstr "Ablak áthelyezése a 2. képernyőre"
 
 #: useractions.cpp:1108
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
-msgid "Window One Screen Down"
+msgid "Move Window One Screen Down"
 msgstr "Váltás a lefelé levő asztalra"
 
 #: useractions.cpp:1112

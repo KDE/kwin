@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-12 01:00+0000\n"
+"POT-Creation-Date: 2023-02-14 01:00+0000\n"
 "PO-Revision-Date: 2020-01-11 11:32+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -2759,42 +2759,45 @@ msgid "Window One Desktop Down"
 msgstr "Xanela un escritorio cara baixo"
 
 #: useractions.cpp:1091
-#, kde-format
-msgid "Window to Screen %1"
+#, fuzzy, kde-format
+#| msgid "Window to Screen %1"
+msgid "Move Window to Screen %1"
 msgstr "Xanela á pantalla %1"
 
 #: useractions.cpp:1098
-#, kde-format
-msgid "Window to Next Screen"
+#, fuzzy, kde-format
+#| msgid "Window to Next Screen"
+msgid "Move Window to Next Screen"
 msgstr "Xanela á seguinte pantalla"
 
 #: useractions.cpp:1100
-#, kde-format
-msgid "Window to Previous Screen"
+#, fuzzy, kde-format
+#| msgid "Window to Previous Screen"
+msgid "Move Window to Previous Screen"
 msgstr "Xanela á pantalla anterior"
 
 #: useractions.cpp:1102
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
-msgid "Window One Screen to the Right"
+msgid "Move Window One Screen to the Right"
 msgstr "Xanela un escritorio á dereita"
 
 #: useractions.cpp:1104
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
-msgid "Window One Screen to the Left"
+msgid "Move Window One Screen to the Left"
 msgstr "Xanela un escritorio á esquerda"
 
 #: useractions.cpp:1106
 #, fuzzy, kde-format
 #| msgid "Window to Screen %1"
-msgid "Window One Screen Up"
+msgid "Move Window One Screen Up"
 msgstr "Xanela á pantalla %1"
 
 #: useractions.cpp:1108
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
-msgid "Window One Screen Down"
+msgid "Move Window One Screen Down"
 msgstr "Xanela un escritorio cara baixo"
 
 #: useractions.cpp:1112

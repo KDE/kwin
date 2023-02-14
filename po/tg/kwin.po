@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-12 01:00+0000\n"
+"POT-Creation-Date: 2023-02-14 01:00+0000\n"
 "PO-Revision-Date: 2019-09-23 21:11+0500\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: English <kde-i18n-doc@kde.org>\n"
@@ -2624,42 +2624,45 @@ msgid "Window One Desktop Down"
 msgstr ""
 
 #: useractions.cpp:1091
-#, kde-format
-msgid "Window to Screen %1"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "Window to Screen 3"
+msgid "Move Window to Screen %1"
+msgstr "Тиреза ба Мизи кории 3"
 
 #: useractions.cpp:1098
-#, kde-format
-msgid "Window to Next Screen"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "Move window to group"
+msgid "Move Window to Next Screen"
+msgstr "Переместить это окно на экран %s"
 
 #: useractions.cpp:1100
-#, kde-format
-msgid "Window to Previous Screen"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "Move window to group"
+msgid "Move Window to Previous Screen"
+msgstr "Переместить это окно на экран %s"
 
 #: useractions.cpp:1102
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
-msgid "Window One Screen to the Right"
+msgid "Move Window One Screen to the Right"
 msgstr "Тиреза ба Мизи кории 2"
 
 #: useractions.cpp:1104
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
-msgid "Window One Screen to the Left"
+msgid "Move Window One Screen to the Left"
 msgstr "Тиреза ба Мизи кории 2"
 
 #: useractions.cpp:1106
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
-msgid "Window One Screen Up"
+msgid "Move Window One Screen Up"
 msgstr "Тиреза ба Мизи кории 2"
 
 #: useractions.cpp:1108
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
-msgid "Window One Screen Down"
+msgid "Move Window One Screen Down"
 msgstr "Тиреза ба Мизи кории 2"
 
 #: useractions.cpp:1112
@@ -3043,9 +3046,6 @@ msgstr ""
 
 #~ msgid "Window to Desktop 20"
 #~ msgstr "Тиреза ба Мизи кории 20"
-
-#~ msgid "Window to Screen 3"
-#~ msgstr "Тиреза ба Мизи кории 3"
 
 #~ msgid "Window to Screen 4"
 #~ msgstr "Тиреза ба Мизи кории 4"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-12 01:00+0000\n"
+"POT-Creation-Date: 2023-02-14 01:00+0000\n"
 "PO-Revision-Date: 2002-10-26 11:38SAST\n"
 "Last-Translator: Lwandle Mgidlana <lwandle@translate.org.za>\n"
 "Language-Team: Xhosa <xhosa@translate.org.za>\n"
@@ -2642,40 +2642,40 @@ msgstr "Tshintsha i Desktop Enye Ezantsi"
 #: useractions.cpp:1091
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
-msgid "Window to Screen %1"
+msgid "Move Window to Screen %1"
 msgstr "Window kwi Desktop 1"
 
 #: useractions.cpp:1098
 #, fuzzy, kde-format
 #| msgid "Window to Next Desktop"
-msgid "Window to Next Screen"
+msgid "Move Window to Next Screen"
 msgstr "Window kwi Desktop Elandelayo"
 
 #: useractions.cpp:1100
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
-msgid "Window to Previous Screen"
+msgid "Move Window to Previous Screen"
 msgstr "Window kwi Desktop Edlulileyo"
 
 #: useractions.cpp:1102
 #, fuzzy, kde-format
-msgid "Window One Screen to the Right"
+msgid "Move Window One Screen to the Right"
 msgstr "Tshintsha Enye i Desktop Ekunene"
 
 #: useractions.cpp:1104
 #, fuzzy, kde-format
-msgid "Window One Screen to the Left"
+msgid "Move Window One Screen to the Left"
 msgstr "Tshintsha Enye i Desktop Ekhohlo"
 
 #: useractions.cpp:1106
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 2"
-msgid "Window One Screen Up"
+msgid "Move Window One Screen Up"
 msgstr "Window kwi Desktop 2"
 
 #: useractions.cpp:1108
 #, fuzzy, kde-format
-msgid "Window One Screen Down"
+msgid "Move Window One Screen Down"
 msgstr "Tshintsha i Desktop Enye Ezantsi"
 
 #: useractions.cpp:1112

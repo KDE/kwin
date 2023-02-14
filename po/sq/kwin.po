@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase-workspace\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-12 01:00+0000\n"
+"POT-Creation-Date: 2023-02-14 01:00+0000\n"
 "PO-Revision-Date: 2010-02-21 05:14+0000\n"
 "Last-Translator: Vilson Gjeci <vilsongjeci@gmail.com>\n"
 "Language-Team: Albanian <sq@li.org>\n"
@@ -2649,42 +2649,43 @@ msgstr ""
 #: useractions.cpp:1091
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
-msgid "Window to Screen %1"
+msgid "Move Window to Screen %1"
 msgstr "Ndrysho në Ekranin 1"
 
 #: useractions.cpp:1098
-#, kde-format
-msgid "Window to Next Screen"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "Switch to Screen 1"
+msgid "Move Window to Next Screen"
+msgstr "Ndrysho në Ekranin 1"
 
 #: useractions.cpp:1100
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
-msgid "Window to Previous Screen"
+msgid "Move Window to Previous Screen"
 msgstr "Ndrysho në Ekranin 1"
 
 #: useractions.cpp:1102
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
-msgid "Window One Screen to the Right"
+msgid "Move Window One Screen to the Right"
 msgstr "Ndrysho në Ekranin 1"
 
 #: useractions.cpp:1104
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
-msgid "Window One Screen to the Left"
+msgid "Move Window One Screen to the Left"
 msgstr "Ndrysho në Ekranin 1"
 
 #: useractions.cpp:1106
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
-msgid "Window One Screen Up"
+msgid "Move Window One Screen Up"
 msgstr "Ndrysho në Ekranin 1"
 
 #: useractions.cpp:1108
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
-msgid "Window One Screen Down"
+msgid "Move Window One Screen Down"
 msgstr "Ndrysho në Ekranin 1"
 
 #: useractions.cpp:1112

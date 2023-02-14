@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-12 01:00+0000\n"
+"POT-Creation-Date: 2023-02-14 01:00+0000\n"
 "PO-Revision-Date: 2009-01-16 22:16+0530\n"
 "Last-Translator: Krishna Babu K <kkrothap@redhat.com>\n"
 "Language-Team: Telugu <en@li.org>\n"
@@ -2644,39 +2644,46 @@ msgid "Window One Desktop Down"
 msgstr ""
 
 #: useractions.cpp:1091
-#, kde-format
-msgid "Window to Screen %1"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "&Move"
+msgid "Move Window to Screen %1"
+msgstr "(&M)జరుపు"
 
 #: useractions.cpp:1098
-#, kde-format
-msgid "Window to Next Screen"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "&Move"
+msgid "Move Window to Next Screen"
+msgstr "(&M)జరుపు"
 
 #: useractions.cpp:1100
-#, kde-format
-msgid "Window to Previous Screen"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "&Move"
+msgid "Move Window to Previous Screen"
+msgstr "(&M)జరుపు"
 
 #: useractions.cpp:1102
-#, kde-format
-msgid "Window One Screen to the Right"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "&Move"
+msgid "Move Window One Screen to the Right"
+msgstr "(&M)జరుపు"
 
 #: useractions.cpp:1104
-#, kde-format
-msgid "Window One Screen to the Left"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "&Move"
+msgid "Move Window One Screen to the Left"
+msgstr "(&M)జరుపు"
 
 #: useractions.cpp:1106
-#, kde-format
-msgid "Window One Screen Up"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "&Move"
+msgid "Move Window One Screen Up"
+msgstr "(&M)జరుపు"
 
 #: useractions.cpp:1108
-#, kde-format
-msgid "Window One Screen Down"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "&Move"
+msgid "Move Window One Screen Down"
+msgstr "(&M)జరుపు"
 
 #: useractions.cpp:1112
 #, kde-format

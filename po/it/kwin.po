@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-12 01:00+0000\n"
+"POT-Creation-Date: 2023-02-14 01:00+0000\n"
 "PO-Revision-Date: 2023-01-11 01:18+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -2664,38 +2664,45 @@ msgid "Window One Desktop Down"
 msgstr "Finestra in basso di un desktop"
 
 #: useractions.cpp:1091
-#, kde-format
-msgid "Window to Screen %1"
+#, fuzzy, kde-format
+#| msgid "Window to Screen %1"
+msgid "Move Window to Screen %1"
 msgstr "Finestra sullo schermo %1"
 
 #: useractions.cpp:1098
-#, kde-format
-msgid "Window to Next Screen"
+#, fuzzy, kde-format
+#| msgid "Window to Next Screen"
+msgid "Move Window to Next Screen"
 msgstr "Finestra allo schermo successivo"
 
 #: useractions.cpp:1100
-#, kde-format
-msgid "Window to Previous Screen"
+#, fuzzy, kde-format
+#| msgid "Window to Previous Screen"
+msgid "Move Window to Previous Screen"
 msgstr "Finestra allo schermo precedente"
 
 #: useractions.cpp:1102
-#, kde-format
-msgid "Window One Screen to the Right"
+#, fuzzy, kde-format
+#| msgid "Window One Screen to the Right"
+msgid "Move Window One Screen to the Right"
 msgstr "Finestra una schermata a destra"
 
 #: useractions.cpp:1104
-#, kde-format
-msgid "Window One Screen to the Left"
+#, fuzzy, kde-format
+#| msgid "Window One Screen to the Left"
+msgid "Move Window One Screen to the Left"
 msgstr "Finestra una schermata a sinistra"
 
 #: useractions.cpp:1106
-#, kde-format
-msgid "Window One Screen Up"
+#, fuzzy, kde-format
+#| msgid "Window One Screen Up"
+msgid "Move Window One Screen Up"
 msgstr "Finestra una schermata in alto"
 
 #: useractions.cpp:1108
-#, kde-format
-msgid "Window One Screen Down"
+#, fuzzy, kde-format
+#| msgid "Window One Screen Down"
+msgid "Move Window One Screen Down"
 msgstr "Finestra una schermata in basso"
 
 #: useractions.cpp:1112

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-12 01:00+0000\n"
+"POT-Creation-Date: 2023-02-14 01:00+0000\n"
 "PO-Revision-Date: 2009-01-16 16:49+0530\n"
 "Last-Translator: Amitakhya Phukan <অমিতাক্ষ ফুকন>\n"
 "Language-Team: Assamese <fedora-trans-as@redhat.com>\n"
@@ -2709,42 +2709,43 @@ msgstr "তলৰ ডেষ্কট'পলৈ সংযোগক্ষেত্
 #: useractions.cpp:1091
 #, fuzzy, kde-format
 #| msgid "Window to Screen 1"
-msgid "Window to Screen %1"
+msgid "Move Window to Screen %1"
 msgstr "পৰ্দ্দা ১ লৈ সংযোগক্ষেত্ৰ স্থানান্তৰ কৰক"
 
 #: useractions.cpp:1098
-#, kde-format
-msgid "Window to Next Screen"
+#, fuzzy, kde-format
+#| msgid "Window to Next Screen"
+msgid "Move Window to Next Screen"
 msgstr "পৰবৰ্তী পৰ্দ্দালৈ সংযোগক্ষেত্ৰ স্থানান্তৰ কৰক"
 
 #: useractions.cpp:1100
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
-msgid "Window to Previous Screen"
+msgid "Move Window to Previous Screen"
 msgstr "পূৰ্ববৰ্তী ডেষ্কট'পলৈ সংযোগক্ষেত্ৰ স্থানান্তৰ কৰক"
 
 #: useractions.cpp:1102
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
-msgid "Window One Screen to the Right"
+msgid "Move Window One Screen to the Right"
 msgstr "সোঁফালৰ ডেষ্কট'পলৈ সংযোগক্ষেত্ৰ স্থানান্তৰ কৰক"
 
 #: useractions.cpp:1104
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
-msgid "Window One Screen to the Left"
+msgid "Move Window One Screen to the Left"
 msgstr "বাওঁফালৰ ডেষ্কট'পলৈ সংযোগক্ষেত্ৰ স্থানান্তৰ কৰক"
 
 #: useractions.cpp:1106
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
-msgid "Window One Screen Up"
+msgid "Move Window One Screen Up"
 msgstr "পৰ্দ্দা ২ লৈ সংযোগক্ষেত্ৰ স্থানান্তৰ কৰক"
 
 #: useractions.cpp:1108
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
-msgid "Window One Screen Down"
+msgid "Move Window One Screen Down"
 msgstr "তলৰ ডেষ্কট'পলৈ সংযোগক্ষেত্ৰ স্থানান্তৰ কৰক"
 
 #: useractions.cpp:1112

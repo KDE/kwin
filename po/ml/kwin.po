@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-12 01:00+0000\n"
+"POT-Creation-Date: 2023-02-14 01:00+0000\n"
 "PO-Revision-Date: 2008-07-08 18:58+0530\n"
 "Last-Translator: \n"
 "Language-Team: SMC <smc.org.in>\n"
@@ -2626,41 +2626,42 @@ msgstr "ഒരു പണിയിടം താഴേയ്ക്കു് മാ
 
 #: useractions.cpp:1091
 #, fuzzy, kde-format
-msgid "Window to Screen %1"
+msgid "Move Window to Screen %1"
 msgstr "ജാലകത്തില്‍ നിന്നും സ്ക്രീന്‍ 1-ലേക്കു്"
 
 #: useractions.cpp:1098
-#, kde-format
-msgid "Window to Next Screen"
+#, fuzzy, kde-format
+#| msgid "Window to Next Screen"
+msgid "Move Window to Next Screen"
 msgstr "ജാലകത്തില്‍ നിന്നും അടുത്ത സ്ക്രീനിലേക്കു്"
 
 #: useractions.cpp:1100
 #, fuzzy, kde-format
-msgid "Window to Previous Screen"
+msgid "Move Window to Previous Screen"
 msgstr "മുമ്പോള്ള പണിയിടത്തിലേയ്ക്കു് മാറുക"
 
 #: useractions.cpp:1102
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
-msgid "Window One Screen to the Right"
+msgid "Move Window One Screen to the Right"
 msgstr "ഒരു പണിയിടം വലത്തേയ്ക്കു് മാറുക"
 
 #: useractions.cpp:1104
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
-msgid "Window One Screen to the Left"
+msgid "Move Window One Screen to the Left"
 msgstr "ഒരു പണിയിടം ഇടത്തേയ്ക്കു് മാറുക"
 
 #: useractions.cpp:1106
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
-msgid "Window One Screen Up"
+msgid "Move Window One Screen Up"
 msgstr "ജാലകത്തില്‍ നിന്നും സ്ക്രീന്‍ 2-ലേക്കു്"
 
 #: useractions.cpp:1108
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
-msgid "Window One Screen Down"
+msgid "Move Window One Screen Down"
 msgstr "ഒരു പണിയിടം താഴേയ്ക്കു് മാറുക"
 
 #: useractions.cpp:1112

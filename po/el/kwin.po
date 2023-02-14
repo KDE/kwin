@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-12 01:00+0000\n"
+"POT-Creation-Date: 2023-02-14 01:00+0000\n"
 "PO-Revision-Date: 2017-06-12 16:22+0200\n"
 "Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -2784,42 +2784,45 @@ msgid "Window One Desktop Down"
 msgstr "Μετάβαση μία επιφάνεια εργασίας κάτω"
 
 #: useractions.cpp:1091
-#, kde-format
-msgid "Window to Screen %1"
+#, fuzzy, kde-format
+#| msgid "Window to Screen %1"
+msgid "Move Window to Screen %1"
 msgstr "Παράθυρο στην οθόνη %1"
 
 #: useractions.cpp:1098
-#, kde-format
-msgid "Window to Next Screen"
+#, fuzzy, kde-format
+#| msgid "Window to Next Screen"
+msgid "Move Window to Next Screen"
 msgstr "Παράθυρο στην επόμενη οθόνη"
 
 #: useractions.cpp:1100
-#, kde-format
-msgid "Window to Previous Screen"
+#, fuzzy, kde-format
+#| msgid "Window to Previous Screen"
+msgid "Move Window to Previous Screen"
 msgstr "Παράθυρο στην προηγούμενη οθόνη"
 
 #: useractions.cpp:1102
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
-msgid "Window One Screen to the Right"
+msgid "Move Window One Screen to the Right"
 msgstr "Μετάβαση μία επιφάνεια εργασίας δεξιά"
 
 #: useractions.cpp:1104
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
-msgid "Window One Screen to the Left"
+msgid "Move Window One Screen to the Left"
 msgstr "Μετάβαση μία επιφάνεια εργασίας αριστερά"
 
 #: useractions.cpp:1106
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
-msgid "Window One Screen Up"
+msgid "Move Window One Screen Up"
 msgstr "Παράθυρο στην οθόνη 2"
 
 #: useractions.cpp:1108
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
-msgid "Window One Screen Down"
+msgid "Move Window One Screen Down"
 msgstr "Μετάβαση μία επιφάνεια εργασίας κάτω"
 
 #: useractions.cpp:1112

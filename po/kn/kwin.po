@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-12 01:00+0000\n"
+"POT-Creation-Date: 2023-02-14 01:00+0000\n"
 "PO-Revision-Date: 2011-07-11 12:17+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <kde-l10n-kn@kde.org>\n"
@@ -2708,43 +2708,45 @@ msgid "Window One Desktop Down"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಕೆಳಗಿನ ಕಿಟಕಿ"
 
 #: useractions.cpp:1091
-#, kde-format
-msgid "Window to Screen %1"
+#, fuzzy, kde-format
+#| msgid "Window to Screen %1"
+msgid "Move Window to Screen %1"
 msgstr "%1 ನೇ ತೆರೆಗೆ ಕಿಟಕಿ"
 
 #: useractions.cpp:1098
-#, kde-format
-msgid "Window to Next Screen"
+#, fuzzy, kde-format
+#| msgid "Window to Next Screen"
+msgid "Move Window to Next Screen"
 msgstr "ಮುಂದಿನ ತೆರೆಗೆ ಕಿಟಕಿ"
 
 #: useractions.cpp:1100
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
-msgid "Window to Previous Screen"
+msgid "Move Window to Previous Screen"
 msgstr "ಹಿಂದಿನ ಗಣಕತೆರೆಗೆ ಕಿಟಕಿ"
 
 #: useractions.cpp:1102
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
-msgid "Window One Screen to the Right"
+msgid "Move Window One Screen to the Right"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಬಲಗಡೆಯ ಕಿಟಕಿ "
 
 #: useractions.cpp:1104
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
-msgid "Window One Screen to the Left"
+msgid "Move Window One Screen to the Left"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಎಡಗಡೆಯ ಕಿಟಕಿ"
 
 #: useractions.cpp:1106
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
-msgid "Window One Screen Up"
+msgid "Move Window One Screen Up"
 msgstr "೨ನೇ ತೆರೆಗೆ ಕಿಟಕಿ"
 
 #: useractions.cpp:1108
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
-msgid "Window One Screen Down"
+msgid "Move Window One Screen Down"
 msgstr "ಒಂದು ಗಣಕತೆರೆ ಕೆಳಗಿನ ಕಿಟಕಿ"
 
 #: useractions.cpp:1112

@@ -2,20 +2,20 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Yasen Pramatarov <yasen@lindeas.com>, 2009, 2011.
-# Mincho Kondarev <mkondarev@yahoo.de>, 2022.
+# Mincho Kondarev <mkondarev@yahoo.de>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-08 01:01+0000\n"
-"PO-Revision-Date: 2022-06-19 17:36+0200\n"
+"PO-Revision-Date: 2023-02-13 12:06+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.04.2\n"
+"X-Generator: Lokalize 22.12.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: layoutpreview.cpp:131
@@ -238,42 +238,43 @@ msgstr "Показване на избрания прозорец"
 #: shortcutsettings.cpp:132
 #, kde-format
 msgid "Walk Through Windows"
-msgstr ""
+msgstr "Преминаване през прозорците"
 
 #: shortcutsettings.cpp:133
 #, kde-format
 msgid "Walk Through Windows (Reverse)"
-msgstr ""
+msgstr "Преминаване през прозорците (в обратен ред)"
 
 #: shortcutsettings.cpp:134
 #, kde-format
 msgid "Walk Through Windows of Current Application"
-msgstr ""
+msgstr "Преминаване през прозорци на текущото приложение"
 
 #: shortcutsettings.cpp:135
 #, kde-format
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr ""
+msgstr "Преминаване през прозорци на текущо приложение (в обратен ред)"
 
 #: shortcutsettings.cpp:137
 #, kde-format
 msgid "Walk Through Windows Alternative"
-msgstr ""
+msgstr "Алтернативно преминаване през прозорците"
 
 #: shortcutsettings.cpp:138
 #, kde-format
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr ""
+msgstr "Алтернативно преминаване през прозорците (в обратен ред)"
 
 #: shortcutsettings.cpp:139
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr ""
+msgstr "Алтернативно преминаване през прозорци на текущото приложение"
 
 #: shortcutsettings.cpp:140
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
+"Алтернативно преминаване през прозорци на текущото приложение (в обратен ред)"
 
 #~ msgid "KWin"
 #~ msgstr "KWin"
