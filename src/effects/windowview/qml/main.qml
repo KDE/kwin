@@ -62,7 +62,7 @@ Item {
         }
     }
 
-    KWinComponents.DesktopBackgroundItem {
+    KWinComponents.DesktopBackground {
         activity: KWinComponents.Workspace.currentActivity
         desktop: KWinComponents.Workspace.currentDesktop
         outputName: targetScreen.name
@@ -225,7 +225,7 @@ Item {
             windowType: KWinComponents.WindowFilterModel.Dock
         }
 
-        KWinComponents.WindowThumbnailItem {
+        KWinComponents.WindowThumbnail {
             id: windowThumbnail
             wId: model.window.internalId
             x: model.window.x - targetScreen.geometry.x

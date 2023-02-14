@@ -89,7 +89,7 @@ Item {
     TweenBehavior on width {}
     TweenBehavior on height {}
 
-    KWinComponents.WindowThumbnailItem {
+    KWinComponents.WindowThumbnail {
         id: thumbSource
         wId: thumb.window.internalId
 

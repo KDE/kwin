@@ -58,7 +58,7 @@ FocusScope {
                 windowModel: KWinComponents.WindowModel {}
             }
 
-            KWinComponents.WindowThumbnailItem {
+            KWinComponents.WindowThumbnail {
                 wId: model.window.internalId
                 x: model.window.x - targetScreen.geometry.x
                 y: model.window.y - targetScreen.geometry.y

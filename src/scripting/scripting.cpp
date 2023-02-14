@@ -673,8 +673,8 @@ KWin::Scripting::Scripting(QObject *parent)
 
 void KWin::Scripting::init()
 {
-    qmlRegisterType<DesktopBackgroundItem>("org.kde.kwin", 3, 0, "DesktopBackgroundItem");
-    qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 3, 0, "WindowThumbnailItem");
+    qmlRegisterType<DesktopBackgroundItem>("org.kde.kwin", 3, 0, "DesktopBackground");
+    qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 3, 0, "WindowThumbnail");
     qmlRegisterType<DBusCall>("org.kde.kwin", 3, 0, "DBusCall");
     qmlRegisterType<ScreenEdgeItem>("org.kde.kwin", 3, 0, "ScreenEdgeItem");
     qmlRegisterType<WindowModel>("org.kde.kwin", 3, 0, "WindowModel");

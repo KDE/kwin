@@ -74,7 +74,7 @@ FocusScope {
         }
     }
 
-    KWinComponents.DesktopBackgroundItem {
+    KWinComponents.DesktopBackground {
         id: backgroundItem
         activity: KWinComponents.Workspace.currentActivity
         desktop: KWinComponents.Workspace.currentDesktop
@@ -301,7 +301,7 @@ FocusScope {
             windowType: KWinComponents.WindowFilterModel.Dock
         }
 
-        KWinComponents.WindowThumbnailItem {
+        KWinComponents.WindowThumbnail {
             id: windowThumbnail
             visible: !model.window.hidden && opacity > 0
             wId: model.window.internalId

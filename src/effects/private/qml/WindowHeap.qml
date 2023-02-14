@@ -74,10 +74,10 @@ FocusScope {
         delete dndManagerStore[key];
     }
 
-    KWinComponents.WindowThumbnailItem {
+    KWinComponents.WindowThumbnail {
         id: otherScreenThumbnail
         z: 2
-        property KWinComponents.WindowThumbnailItem cloneOf
+        property KWinComponents.WindowThumbnail cloneOf
         visible: false
         client: cloneOf ? cloneOf.client : null
         width: cloneOf ? cloneOf.width : 0
