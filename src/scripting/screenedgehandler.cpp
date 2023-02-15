@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "screenedgeitem.h"
+#include "screenedgehandler.h"
 
 #include <config-kwin.h>
 
@@ -18,20 +18,20 @@
 namespace KWin
 {
 
-ScreenEdgeItem::ScreenEdgeItem(QObject *parent)
+ScreenEdgeHandler::ScreenEdgeHandler(QObject *parent)
     : QObject(parent)
     , m_enabled(true)
     , m_edge(NoEdge)
     , m_action(new QAction(this))
 {
-    connect(m_action, &QAction::triggered, this, &ScreenEdgeItem::activated);
+    connect(m_action, &QAction::triggered, this, &ScreenEdgeHandler::activated);
 }
 
-ScreenEdgeItem::~ScreenEdgeItem()
+ScreenEdgeHandler::~ScreenEdgeHandler()
 {
 }
 
-void ScreenEdgeItem::setEnabled(bool enabled)
+void ScreenEdgeHandler::setEnabled(bool enabled)
 {
     if (m_enabled == enabled) {
         return;
@@ -42,7 +42,7 @@ void ScreenEdgeItem::setEnabled(bool enabled)
     Q_EMIT enabledChanged();
 }
 
-void ScreenEdgeItem::setEdge(Edge edge)
+void ScreenEdgeHandler::setEdge(Edge edge)
 {
     if (m_edge == edge) {
         return;
@@ -53,7 +53,7 @@ void ScreenEdgeItem::setEdge(Edge edge)
     Q_EMIT edgeChanged();
 }
 
-void ScreenEdgeItem::enableEdge()
+void ScreenEdgeHandler::enableEdge()
 {
     if (!m_enabled || m_edge == NoEdge) {
         return;
@@ -70,7 +70,7 @@ void ScreenEdgeItem::enableEdge()
     }
 }
 
-void ScreenEdgeItem::disableEdge()
+void ScreenEdgeHandler::disableEdge()
 {
     if (!m_enabled || m_edge == NoEdge) {
         return;
@@ -87,7 +87,7 @@ void ScreenEdgeItem::disableEdge()
     }
 }
 
-bool ScreenEdgeItem::borderActivated(ElectricBorder edge)
+bool ScreenEdgeHandler::borderActivated(ElectricBorder edge)
 {
     if (edge != static_cast<ElectricBorder>(m_edge) || !m_enabled) {
         return false;
@@ -96,7 +96,7 @@ bool ScreenEdgeItem::borderActivated(ElectricBorder edge)
     return true;
 }
 
-void ScreenEdgeItem::setMode(Mode mode)
+void ScreenEdgeHandler::setMode(Mode mode)
 {
     if (m_mode == mode) {
         return;

@@ -139,7 +139,7 @@ target_sources(kwin PRIVATE
     screenedge.cpp
     scripting/dbuscall.cpp
     scripting/desktopbackgrounditem.cpp
-    scripting/screenedgeitem.cpp
+    scripting/screenedgehandler.cpp
     scripting/scriptedeffect.cpp
     scripting/scripting.cpp
     scripting/scripting_logging.cpp

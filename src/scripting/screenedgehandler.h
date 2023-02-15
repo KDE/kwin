@@ -25,13 +25,13 @@ namespace KWin
  *
  * Example usage:
  * @code
- * ScreenEdgeItem {
- *     edge: ScreenEdgeItem.LeftEdge
+ * ScreenEdgeHandler {
+ *     edge: ScreenEdgeHandler.LeftEdge
  *     onActivated: doSomething()
  * }
  * @endcode
  */
-class ScreenEdgeItem : public QObject
+class ScreenEdgeHandler : public QObject
 {
     Q_OBJECT
     /**
@@ -68,8 +68,8 @@ public:
         Touch
     };
     Q_ENUM(Mode)
-    explicit ScreenEdgeItem(QObject *parent = nullptr);
-    ~ScreenEdgeItem() override;
+    explicit ScreenEdgeHandler(QObject *parent = nullptr);
+    ~ScreenEdgeHandler() override;
     bool isEnabled() const;
     Edge edge() const;
     Mode mode() const
@@ -101,12 +101,12 @@ private:
     QAction *m_action;
 };
 
-inline bool ScreenEdgeItem::isEnabled() const
+inline bool ScreenEdgeHandler::isEnabled() const
 {
     return m_enabled;
 }
 
-inline ScreenEdgeItem::Edge ScreenEdgeItem::edge() const
+inline ScreenEdgeHandler::Edge ScreenEdgeHandler::edge() const
 {
     return m_edge;
 }

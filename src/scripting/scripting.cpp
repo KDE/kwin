@@ -14,7 +14,7 @@
 #include "dbuscall.h"
 #include "desktopbackgrounditem.h"
 #include "kwinquickeffect.h"
-#include "screenedgeitem.h"
+#include "screenedgehandler.h"
 #include "scripting_logging.h"
 #include "scriptingutils.h"
 #include "virtualdesktopmodel.h"
@@ -676,7 +676,7 @@ void KWin::Scripting::init()
     qmlRegisterType<DesktopBackgroundItem>("org.kde.kwin", 3, 0, "DesktopBackground");
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 3, 0, "WindowThumbnail");
     qmlRegisterType<DBusCall>("org.kde.kwin", 3, 0, "DBusCall");
-    qmlRegisterType<ScreenEdgeItem>("org.kde.kwin", 3, 0, "ScreenEdgeItem");
+    qmlRegisterType<ScreenEdgeHandler>("org.kde.kwin", 3, 0, "ScreenEdgeHandler");
     qmlRegisterType<WindowModel>("org.kde.kwin", 3, 0, "WindowModel");
     qmlRegisterType<WindowFilterModel>("org.kde.kwin", 3, 0, "WindowFilterModel");
     qmlRegisterType<VirtualDesktopModel>("org.kde.kwin", 3, 0, "VirtualDesktopModel");
