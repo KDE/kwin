@@ -463,14 +463,6 @@ class KWIN_EXPORT Window : public QObject
     /**
      * The geometry of this Window. Be aware that depending on resize mode the frameGeometryChanged
      * signal might be emitted at each resize step or only at the end of the resize operation.
-     *
-     * @deprecated Use frameGeometry
-     */
-    Q_PROPERTY(QRectF geometry READ frameGeometry WRITE moveResize NOTIFY frameGeometryChanged)
-
-    /**
-     * The geometry of this Window. Be aware that depending on resize mode the frameGeometryChanged
-     * signal might be emitted at each resize step or only at the end of the resize operation.
      */
     Q_PROPERTY(QRectF frameGeometry READ frameGeometry WRITE moveResize NOTIFY frameGeometryChanged)
 
@@ -1439,11 +1431,6 @@ Q_SIGNALS:
     void opacityChanged(KWin::Window *window, qreal oldOpacity);
     void damaged(KWin::Window *window);
     void inputTransformationChanged();
-    /**
-     * This signal is emitted when the Window's frame geometry changes.
-     * @deprecated since 5.19, use frameGeometryChanged instead
-     */
-    void geometryChanged();
     void geometryShapeChanged(KWin::Window *window, const QRectF &old);
     void windowClosed(KWin::Window *window, KWin::Deleted *deleted);
     void windowShown(KWin::Window *window);

@@ -85,8 +85,6 @@ Window::Window()
 {
     connect(this, &Window::bufferGeometryChanged, this, &Window::inputTransformationChanged);
 
-    // Only for compatibility reasons, drop in the next major release.
-    connect(this, &Window::frameGeometryChanged, this, &Window::geometryChanged);
     connect(this, &Window::geometryShapeChanged, this, &Window::discardShapeRegion);
 
     connect(this, &Window::clientStartUserMovedResized, this, &Window::moveResizedChanged);

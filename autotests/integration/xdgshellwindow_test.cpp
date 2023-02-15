@@ -1613,10 +1613,10 @@ void TestXdgShellWindow::testMaximizeHorizontal()
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
     // Draw contents of the maximized window.
-    QSignalSpy geometryChangedSpy(window, &Window::geometryChanged);
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(1280, 600), Qt::blue);
-    QVERIFY(geometryChangedSpy.wait());
+    QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->size(), QSize(1280, 600));
     QCOMPARE(window->requestedMaximizeMode(), MaximizeHorizontal);
     QCOMPARE(window->maximizeMode(), MaximizeHorizontal);
@@ -1634,7 +1634,7 @@ void TestXdgShellWindow::testMaximizeHorizontal()
     // Draw contents of the restored window.
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(800, 600), Qt::blue);
-    QVERIFY(geometryChangedSpy.wait());
+    QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->size(), QSize(800, 600));
     QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
     QCOMPARE(window->maximizeMode(), MaximizeRestore);
@@ -1692,10 +1692,10 @@ void TestXdgShellWindow::testMaximizeVertical()
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
     // Draw contents of the maximized window.
-    QSignalSpy geometryChangedSpy(window, &Window::geometryChanged);
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(800, 1024), Qt::blue);
-    QVERIFY(geometryChangedSpy.wait());
+    QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->size(), QSize(800, 1024));
     QCOMPARE(window->requestedMaximizeMode(), MaximizeVertical);
     QCOMPARE(window->maximizeMode(), MaximizeVertical);
@@ -1713,7 +1713,7 @@ void TestXdgShellWindow::testMaximizeVertical()
     // Draw contents of the restored window.
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(800, 600), Qt::blue);
-    QVERIFY(geometryChangedSpy.wait());
+    QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->size(), QSize(800, 600));
     QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
     QCOMPARE(window->maximizeMode(), MaximizeRestore);
@@ -1771,10 +1771,10 @@ void TestXdgShellWindow::testMaximizeFull()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Maximized));
 
     // Draw contents of the maximized window.
-    QSignalSpy geometryChangedSpy(window, &Window::geometryChanged);
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(1280, 1024), Qt::blue);
-    QVERIFY(geometryChangedSpy.wait());
+    QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->size(), QSize(1280, 1024));
     QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
     QCOMPARE(window->maximizeMode(), MaximizeFull);
@@ -1792,7 +1792,7 @@ void TestXdgShellWindow::testMaximizeFull()
     // Draw contents of the restored window.
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(800, 600), Qt::blue);
-    QVERIFY(geometryChangedSpy.wait());
+    QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->size(), QSize(800, 600));
     QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
     QCOMPARE(window->maximizeMode(), MaximizeRestore);
