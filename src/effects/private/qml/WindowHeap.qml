@@ -55,7 +55,7 @@ FocusScope {
     signal windowClicked(QtObject window, EventPoint eventPoint)
 
     function activateIndex(index) {
-        KWinComponents.Workspace.activeClient = windowsInstantiator.objectAt(index).window;
+        KWinComponents.Workspace.activeWindow = windowsInstantiator.objectAt(index).window;
         activated();
     }
 
@@ -118,7 +118,7 @@ FocusScope {
         function onItemDroppedOutOfScreen(pos, item, screen) {
             if (screen === targetScreen) {
                 // To actually move we neeed a screen number rather than an EffectScreen
-                KWinComponents.Workspace.sendClientToScreen(item.client, KWinComponents.Workspace.screenAt(pos));
+                KWinComponents.Workspace.sendWindowToScreen(item.client, KWinComponents.Workspace.screenAt(pos));
             }
         }
     }
@@ -372,7 +372,7 @@ FocusScope {
             }
             if (selectedItem) {
                 handled = true;
-                KWinComponents.Workspace.activeClient = selectedItem.window;
+                KWinComponents.Workspace.activeWindow = selectedItem.window;
                 activated();
             }
             break;

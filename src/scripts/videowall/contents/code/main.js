@@ -18,10 +18,10 @@ for (i = 0; i < blacklist.length; ++i)
     blacklist[i] = blacklist[i].trim();
 
 
-function isVideoPlayer(client) {
-    if (applyTo == true && whitelist.indexOf(client.resourceClass.toString()) < 0)
+function isVideoPlayer(window) {
+    if (applyTo == true && whitelist.indexOf(window.resourceClass.toString()) < 0)
         return false; // required whitelist match failed
-    if (ignore == true && blacklist.indexOf(client.resourceClass.toString()) > -1)
+    if (ignore == true && blacklist.indexOf(window.resourceClass.toString()) > -1)
         return false; // required blacklist match hit
     return true;
 }
@@ -34,5 +34,5 @@ function setup(window) {
     });
 }
 
-workspace.clientAdded.connect(setup);
-workspace.clientList().forEach(setup);
+workspace.windowAdded.connect(setup);
+workspace.windowList().forEach(setup);

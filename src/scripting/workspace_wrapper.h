@@ -30,7 +30,7 @@ class WorkspaceWrapper : public QObject
     Q_OBJECT
     Q_PROPERTY(QVector<KWin::VirtualDesktop *> desktops READ desktops NOTIFY desktopsChanged)
     Q_PROPERTY(KWin::VirtualDesktop *currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY currentDesktopChanged)
-    Q_PROPERTY(KWin::Window *activeClient READ activeClient WRITE setActiveClient NOTIFY clientActivated)
+    Q_PROPERTY(KWin::Window *activeWindow READ activeWindow WRITE setActiveWindow NOTIFY windowActivated)
     // TODO: write and notify?
     Q_PROPERTY(QSize desktopGridSize READ desktopGridSize NOTIFY desktopLayoutChanged)
     Q_PROPERTY(int desktopGridWidth READ desktopGridWidth NOTIFY desktopLayoutChanged)
@@ -63,10 +63,10 @@ private:
     Q_DISABLE_COPY(WorkspaceWrapper)
 
 Q_SIGNALS:
-    void desktopPresenceChanged(KWin::Window *client, int desktop);
-    void clientAdded(KWin::Window *client);
-    void clientRemoved(KWin::Window *client);
-    void clientActivated(KWin::Window *client);
+    void desktopPresenceChanged(KWin::Window *window, int desktop);
+    void windowAdded(KWin::Window *window);
+    void windowRemoved(KWin::Window *window);
+    void windowActivated(KWin::Window *window);
     /**
      * This signal is emitted when a virtual desktop is added or removed.
      */
@@ -78,11 +78,11 @@ Q_SIGNALS:
      */
     void desktopLayoutChanged();
     /**
-     * The demands attention state for Client @p c changed to @p set.
-     * @param c The Client for which demands attention changed
+     * The demands attention state for Window @p window changed to @p set.
+     * @param window The Window for which demands attention changed
      * @param set New value of demands attention
      */
-    void clientDemandsAttentionChanged(KWin::Window *client, bool set);
+    void windowDemandsAttentionChanged(KWin::Window *window, bool set);
     /**
      * Emitted when the output list changes, e.g. an output is connected or removed.
      */
@@ -175,7 +175,7 @@ public:
     rettype getter() const;                      \
     void setter(rettype val);
     GETTERSETTERDEF(QString, currentActivity, setCurrentActivity)
-    GETTERSETTERDEF(KWin::Window *, activeClient, setActiveClient)
+    GETTERSETTERDEF(KWin::Window *, activeWindow, setActiveWindow)
 #undef GETTERSETTERDEF
     QSize desktopGridSize() const;
     int desktopGridWidth() const;
@@ -200,7 +200,7 @@ public:
     Q_INVOKABLE KWin::TileManager *tilingForScreen(KWin::Output *output) const;
 
     /**
-     * Returns the geometry a Client can use with the specified option.
+     * Returns the geometry a Window can use with the specified option.
      * This method should be preferred over other methods providing screen sizes as the
      * various options take constraints such as struts set on panels into account.
      * This method is also multi screen aware, but there are also options to get full areas.
@@ -212,11 +212,11 @@ public:
     Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, KWin::Output *output, KWin::VirtualDesktop *desktop) const;
     /**
      * Overloaded method for convenience.
-     * @param client The Client for which the area should be retrieved
+     * @param window The Window for which the area should be retrieved
      * @returns The specified screen geometry
      */
-    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, KWin::Window *client) const;
-    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, const KWin::Window *client) const;
+    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, KWin::Window *window) const;
+    Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, const KWin::Window *window) const;
     /**
      * Create a new virtual desktop at the requested position.
      * @param position The position of the desktop. It should be in range [0, count].
@@ -232,11 +232,11 @@ public:
      */
     Q_SCRIPTABLE QString supportInformation() const;
     /**
-     * Finds the Client with the given @p windowId.
-     * @param windowId The window Id of the Client
-     * @return The found Client or @c null
+     * Finds the Window with the given @p windowId.
+     * @param windowId The window Id of the Window
+     * @return The found Window or @c null
      */
-    Q_SCRIPTABLE KWin::Window *getClient(qulonglong windowId);
+    Q_SCRIPTABLE KWin::Window *getWindow(qulonglong windowId);
 
 public Q_SLOTS:
     // all the available key bindings
@@ -317,7 +317,7 @@ public Q_SLOTS:
     /**
      * Sends the Window to the given @p output.
      */
-    void sendClientToScreen(KWin::Window *client, KWin::Output *output);
+    void sendWindowToScreen(KWin::Window *window, KWin::Output *output);
 
     /**
      * Shows an outline at the specified @p geometry.
@@ -340,9 +340,9 @@ class QtScriptWorkspaceWrapper : public WorkspaceWrapper
     Q_OBJECT
 public:
     /**
-     * List of Clients currently managed by KWin.
+     * List of Windows currently managed by KWin.
      */
-    Q_INVOKABLE QList<KWin::Window *> clientList() const;
+    Q_INVOKABLE QList<KWin::Window *> windowList() const;
 
     explicit QtScriptWorkspaceWrapper(QObject *parent = nullptr);
 };
@@ -351,15 +351,15 @@ class DeclarativeScriptWorkspaceWrapper : public WorkspaceWrapper
 {
     Q_OBJECT
 
-    Q_PROPERTY(QQmlListProperty<KWin::Window> clients READ clients)
+    Q_PROPERTY(QQmlListProperty<KWin::Window> windows READ windows)
 public:
-    QQmlListProperty<KWin::Window> clients();
+    QQmlListProperty<KWin::Window> windows();
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    static int countClientList(QQmlListProperty<KWin::Window> *clients);
-    static KWin::Window *atClientList(QQmlListProperty<KWin::Window> *clients, int index);
+    static int countWindowList(QQmlListProperty<KWin::Window> *windows);
+    static KWin::Window *atWindowList(QQmlListProperty<KWin::Window> *windows, int index);
 #else
-    static qsizetype countClientList(QQmlListProperty<KWin::Window> *clients);
-    static KWin::Window *atClientList(QQmlListProperty<KWin::Window> *clients, qsizetype index);
+    static qsizetype countWindowList(QQmlListProperty<KWin::Window> *windows);
+    static KWin::Window *atWindowList(QQmlListProperty<KWin::Window> *windows, qsizetype index);
 #endif
 
     explicit DeclarativeScriptWorkspaceWrapper(QObject *parent = nullptr);
