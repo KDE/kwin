@@ -1,10 +1,10 @@
-# Kishore G <kishore96@gmail.com>, 2022.
+# Kishore G <kishore96@gmail.com>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-10 00:59+0000\n"
-"PO-Revision-Date: 2022-12-13 19:50+0530\n"
+"PO-Revision-Date: 2023-02-14 21:52+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.0\n"
+"X-Generator: Lokalize 22.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -92,24 +92,23 @@ msgstr "குறிப்பிட்ட செயலியின் அனை�
 #: main.cpp:40
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
-msgstr "இந்த உதவிநிரலை நேரடியாக அழைக்கமுடியாது"
+msgstr "இந்த உதவிநிரலை நேரடியாக துவக்கக்கூடாது"
 
 #: main.cpp:44
-#, fuzzy, kde-format
-#| msgid "Edit Window-Specific Settings"
+#, kde-format
 msgctxt "Window caption for the application wide rules dialog"
 msgid "Edit Application-Specific Settings"
-msgstr "குறிப்பிடப்பட்ட சாளர அமைப்புகளை தொகு"
+msgstr "குறிப்பிடப்பட்ட செயலிக்கான அமைப்புகளைத் திருத்துவது"
 
 #: main.cpp:45
 #, kde-format
 msgid "Edit Window-Specific Settings"
-msgstr "குறிப்பிடப்பட்ட சாளர அமைப்புகளை தொகு"
+msgstr "குறிப்பிடப்பட்ட சாளரத்திற்கான அமைப்புகளைத் திருத்துவது"
 
 #: optionsmodel.cpp:198
 #, kde-format
 msgid "Unimportant"
-msgstr "முக்கியமில்லாத"
+msgstr "முக்கியமில்லை"
 
 #: optionsmodel.cpp:199
 #, kde-format

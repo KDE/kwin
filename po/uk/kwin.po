@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-14 01:00+0000\n"
-"PO-Revision-Date: 2023-01-10 21:37+0200\n"
+"POT-Creation-Date: 2023-02-15 01:00+0000\n"
+"PO-Revision-Date: 2023-02-14 08:17+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -2651,46 +2651,39 @@ msgid "Window One Desktop Down"
 msgstr "Вікно на одну стільницю вниз"
 
 #: useractions.cpp:1091
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move Window to Screen %1"
-msgstr "Вікно на екран %1"
+msgstr "Пересунути вікно на екран %1"
 
 #: useractions.cpp:1098
-#, fuzzy, kde-format
-#| msgid "Window to Next Screen"
+#, kde-format
 msgid "Move Window to Next Screen"
-msgstr "Вікно на наступний екран"
+msgstr "Пересунути вікно на наступний екран"
 
 #: useractions.cpp:1100
-#, fuzzy, kde-format
-#| msgid "Window to Previous Screen"
+#, kde-format
 msgid "Move Window to Previous Screen"
-msgstr "Вікно на попередній екран"
+msgstr "Пересунути вікно на попередній екран"
 
 #: useractions.cpp:1102
-#, fuzzy, kde-format
-#| msgid "Window One Screen to the Right"
+#, kde-format
 msgid "Move Window One Screen to the Right"
-msgstr "Вікно на один екран праворуч"
+msgstr "Пересунути вікно на один екран праворуч"
 
 #: useractions.cpp:1104
-#, fuzzy, kde-format
-#| msgid "Window One Screen to the Left"
+#, kde-format
 msgid "Move Window One Screen to the Left"
-msgstr "Вікно на один екран ліворуч"
+msgstr "Пересунути вікно на один екран ліворуч"
 
 #: useractions.cpp:1106
-#, fuzzy, kde-format
-#| msgid "Window One Screen Up"
+#, kde-format
 msgid "Move Window One Screen Up"
-msgstr "Вікно на один екран вище"
+msgstr "Пересунути вікно на один екран вище"
 
 #: useractions.cpp:1108
-#, fuzzy, kde-format
-#| msgid "Window One Screen Down"
+#, kde-format
 msgid "Move Window One Screen Down"
-msgstr "Вікно на один екран нижче"
+msgstr "Пересунути вікно на один екран нижче"
 
 #: useractions.cpp:1112
 #, kde-format
@@ -2804,7 +2797,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Не відповідає)"
 
-#: workspace.cpp:1813
+#: workspace.cpp:1852
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

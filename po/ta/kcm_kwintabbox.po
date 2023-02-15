@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# Kishore G <kishore96@gmail.com>, 2022.
+# Kishore G <kishore96@gmail.com>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-08 01:01+0000\n"
-"PO-Revision-Date: 2022-06-16 19:54+0530\n"
+"PO-Revision-Date: 2023-02-14 21:56+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.04.2\n"
+"X-Generator: Lokalize 22.12.2\n"
 
 #: layoutpreview.cpp:131
 #, kde-format
@@ -232,42 +232,42 @@ msgstr "தேர்ந்தெடுத்த சாளரத்தை மு�
 #: shortcutsettings.cpp:132
 #, kde-format
 msgid "Walk Through Windows"
-msgstr ""
+msgstr "சாளரங்களின் பட்டியலில் முன்னே செல்"
 
 #: shortcutsettings.cpp:133
 #, kde-format
 msgid "Walk Through Windows (Reverse)"
-msgstr ""
+msgstr "சாளரங்களின் பட்டியலில் பின்னே செல்"
 
 #: shortcutsettings.cpp:134
 #, kde-format
 msgid "Walk Through Windows of Current Application"
-msgstr ""
+msgstr "தற்போதைய செயலியின் சாளரங்களின் பட்டியலில் முன்னே செல்"
 
 #: shortcutsettings.cpp:135
 #, kde-format
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr ""
+msgstr "தற்போதைய செயலியின் சாளரங்களின் பட்டியலில் பின்னே செல்"
 
 #: shortcutsettings.cpp:137
 #, kde-format
 msgid "Walk Through Windows Alternative"
-msgstr ""
+msgstr "சாளரங்களின் பட்டியலில் வேறுவிதமாக முன்னே செல்"
 
 #: shortcutsettings.cpp:138
 #, kde-format
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr ""
+msgstr "சாளரங்களின் பட்டியலில் வேறுவிதமாக பின்னே செல்"
 
 #: shortcutsettings.cpp:139
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr ""
+msgstr "தற்போதைய செயலியின் சாளரங்களின் பட்டியலில் வேறுவிதமாக முன்னே செல்"
 
 #: shortcutsettings.cpp:140
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr ""
+msgstr "தற்போதைய செயலியின் சாளரங்களின் பட்டியலில் வேறுவிதமாக பின்னே செல்"
 
 #~ msgid "KWin"
 #~ msgstr "கேவின்"

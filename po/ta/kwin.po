@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-14 01:00+0000\n"
-"PO-Revision-Date: 2023-01-10 21:43+0530\n"
+"POT-Creation-Date: 2023-02-15 01:00+0000\n"
+"PO-Revision-Date: 2023-02-14 21:59+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 22.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -62,7 +62,7 @@ msgstr ""
 #: composite.cpp:1074
 #, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr ""
+msgstr "GLX/OpenGL கிடைக்கவில்லை."
 
 #: debug_console.cpp:79 debug_console.cpp:84
 #, kde-format
@@ -383,7 +383,7 @@ msgstr ""
 #, kde-format
 msgctxt "Whether the event is an automatic key repeat"
 msgid "Repeat"
-msgstr ""
+msgstr "மீளச்செய்த‍து"
 
 #: debug_console.cpp:307
 #, kde-format
@@ -561,11 +561,10 @@ msgid "Tablet mode"
 msgstr "பலகைக்கணினி பயன்முறை"
 
 #: debug_console.cpp:481
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop 10"
+#, kde-format
 msgctxt "A hardware switch"
 msgid "Switch"
-msgstr "மேசை 10க்கு மாற்று "
+msgstr "நிலைமாற்றி"
 
 #: debug_console.cpp:485
 #, kde-format
@@ -2634,51 +2633,44 @@ msgid "Window One Desktop Down"
 msgstr "சாளரத்தை கீழுள்ள பணிமேடைக்கு அனுப்பு"
 
 #: useractions.cpp:1091
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move Window to Screen %1"
-msgstr "சாளரத்தை காட்சிக் கருவி %1-க்கு அனுப்பு"
+msgstr "சாளரத்தை திரை %1-க்கு அனுப்பு"
 
 #: useractions.cpp:1098
-#, fuzzy, kde-format
-#| msgid "Window to Next Screen"
+#, kde-format
 msgid "Move Window to Next Screen"
-msgstr "சாளரத்தை அடுத்த காட்சிக் கருவிக்கு அனுப்பு"
+msgstr "சாளரத்தை அடுத்த திரைக்கு அனுப்பு"
 
 #: useractions.cpp:1100
-#, fuzzy, kde-format
-#| msgid "Window to Previous Screen"
+#, kde-format
 msgid "Move Window to Previous Screen"
-msgstr "சாளரத்தை முந்தைய காட்சிக் கருவிக்கு அனுப்பு"
+msgstr "சாளரத்தை முந்தைய திரைக்கு அனுப்பு"
 
 #: useractions.cpp:1102
-#, fuzzy, kde-format
-#| msgid "Window One Screen to the Right"
+#, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "சாளரத்தை வலதிலுள்ள திரைக்கு அனுப்பு"
 
 #: useractions.cpp:1104
-#, fuzzy, kde-format
-#| msgid "Window One Screen to the Left"
+#, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "சாளரத்தை இடதிலுள்ள திரைக்கு அனுப்பு"
 
 #: useractions.cpp:1106
-#, fuzzy, kde-format
-#| msgid "Window One Screen Up"
+#, kde-format
 msgid "Move Window One Screen Up"
 msgstr "சாளரத்தை மேலுள்ள திரைக்கு அனுப்பு"
 
 #: useractions.cpp:1108
-#, fuzzy, kde-format
-#| msgid "Window One Screen Down"
+#, kde-format
 msgid "Move Window One Screen Down"
 msgstr "சாளரத்தை கீழுள்ள திரைக்கு அனுப்பு"
 
 #: useractions.cpp:1112
 #, kde-format
 msgid "Switch to Screen %1"
-msgstr "காட்சிக் கருவி %1-க்கு தாவு"
+msgstr "திரை %1-க்கு தாவு"
 
 #: useractions.cpp:1119
 #, kde-format
@@ -2786,7 +2778,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(பதிலளிக்கவில்லை)"
 
-#: workspace.cpp:1813
+#: workspace.cpp:1852
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

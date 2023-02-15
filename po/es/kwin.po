@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-14 01:00+0000\n"
-"PO-Revision-Date: 2023-01-11 00:37+0100\n"
+"POT-Creation-Date: 2023-02-15 01:00+0000\n"
+"PO-Revision-Date: 2023-02-14 23:56+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "First-Translator: Boris Wesslowski <Boris@Wesslowski.com>\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 22.12.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -2665,46 +2665,39 @@ msgid "Window One Desktop Down"
 msgstr "Ventana al escritorio inferior"
 
 #: useractions.cpp:1091
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move Window to Screen %1"
-msgstr "Ventana a la pantalla %1"
+msgstr "Mover ventana a la pantalla %1"
 
 #: useractions.cpp:1098
-#, fuzzy, kde-format
-#| msgid "Window to Next Screen"
+#, kde-format
 msgid "Move Window to Next Screen"
-msgstr "Ventana a la siguiente pantalla"
+msgstr "Mover ventana a la pantalla siguiente"
 
 #: useractions.cpp:1100
-#, fuzzy, kde-format
-#| msgid "Window to Previous Screen"
+#, kde-format
 msgid "Move Window to Previous Screen"
-msgstr "Ventana a la pantalla anterior"
+msgstr "Mover ventana a la pantalla anterior"
 
 #: useractions.cpp:1102
-#, fuzzy, kde-format
-#| msgid "Window One Screen to the Right"
+#, kde-format
 msgid "Move Window One Screen to the Right"
-msgstr "Ventana una pantalla a la derecha"
+msgstr "Mover ventana una pantalla a la derecha"
 
 #: useractions.cpp:1104
-#, fuzzy, kde-format
-#| msgid "Window One Screen to the Left"
+#, kde-format
 msgid "Move Window One Screen to the Left"
-msgstr "Ventana una pantalla a la izquierda"
+msgstr "Mover ventana una pantalla a la izquierda"
 
 #: useractions.cpp:1106
-#, fuzzy, kde-format
-#| msgid "Window One Screen Up"
+#, kde-format
 msgid "Move Window One Screen Up"
-msgstr "Ventana una pantalla arriba"
+msgstr "Mover ventana una pantalla arriba"
 
 #: useractions.cpp:1108
-#, fuzzy, kde-format
-#| msgid "Window One Screen Down"
+#, kde-format
 msgid "Move Window One Screen Down"
-msgstr "Ventana una pantalla abajo"
+msgstr "Mover ventana una pantalla abajo"
 
 #: useractions.cpp:1112
 #, kde-format
@@ -2818,7 +2811,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(no responde)"
 
-#: workspace.cpp:1813
+#: workspace.cpp:1852
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

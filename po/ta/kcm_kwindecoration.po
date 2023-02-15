@@ -1,12 +1,12 @@
 # Copyright (C) 2021 Free Software Foundation, Inc.
 #
-# Kishore G <kishore96@gmail.com>, 2021, 2022.
+# Kishore G <kishore96@gmail.com>, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-06 01:01+0000\n"
-"PO-Revision-Date: 2022-01-30 19:04+0530\n"
+"PO-Revision-Date: 2023-02-14 21:55+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 21.12.1\n"
+"X-Generator: Lokalize 22.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -137,12 +137,13 @@ msgstr ""
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
-msgstr ""
+msgstr "கோரப்பட்ட \"%1\" ஏற்கனவே விளிம்புத்திட்டமாக அமைக்கப்பட்டுள்ளது."
 
 #: kwin-applywindowdecoration.cpp:99
 #, kde-format
 msgid "Successfully applied the cursor theme %1 to your current Plasma session"
 msgstr ""
+"தற்போதைய பிளாஸ்மா அமர்வுக்கு %1 சுட்டிக்குறித்திட்டம் வெற்றிகரமாக செயல்படுத்தப்பட்டுள்ளது"
 
 #: kwin-applywindowdecoration.cpp:103
 #, kde-format
@@ -150,6 +151,8 @@ msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
 "unrecoverable error. You may find that simply trying again will work."
 msgstr ""
+"தெரியாத காரணத்தால் தோற்றத்திட்ட அமைப்புகளை சேமிக்க முடியவில்லை. மறுபடியும் முயற்சித்தால் "
+"இச்சிக்கல் சரியாகலாம்."
 
 #: kwin-applywindowdecoration.cpp:107
 #, kde-format
@@ -157,11 +160,13 @@ msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
 "options: %2"
 msgstr ""
+"\"%1\" என்ற தோற்றத்திட்டத்தை கண்டுபிடிக்க முடியவில்லை. தோற்றத்திட்டம் பின்வருபவற்றில் ஒன்றாக "
+"இருக்க வேண்டும்: %2"
 
 #: kwin-applywindowdecoration.cpp:112
 #, kde-format
 msgid "You have the following KWin window decoration themes on your system:"
-msgstr ""
+msgstr "உங்கள் கணினியில் கீழ்காணும் விளிம்புத்திட்டங்கள் உள்ளன:"
 
 #: package/contents/ui/Buttons.qml:85
 #, kde-format
