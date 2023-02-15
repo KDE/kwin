@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-03 03:02+0000\n"
-"PO-Revision-Date: 2023-01-10 21:43+0530\n"
+"POT-Creation-Date: 2023-02-15 02:49+0000\n"
+"PO-Revision-Date: 2023-02-14 21:59+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 22.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -62,7 +62,7 @@ msgstr ""
 #: composite.cpp:1074
 #, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr ""
+msgstr "GLX/OpenGL கிடைக்கவில்லை."
 
 #: debug_console.cpp:79 debug_console.cpp:84
 #, kde-format
@@ -383,7 +383,7 @@ msgstr ""
 #, kde-format
 msgctxt "Whether the event is an automatic key repeat"
 msgid "Repeat"
-msgstr ""
+msgstr "மீளச்செய்த‍து"
 
 #: debug_console.cpp:307
 #, kde-format
@@ -561,11 +561,10 @@ msgid "Tablet mode"
 msgstr "பலகைக்கணினி பயன்முறை"
 
 #: debug_console.cpp:481
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop 10"
+#, kde-format
 msgctxt "A hardware switch"
 msgid "Switch"
-msgstr "மேசை 10க்கு மாற்று "
+msgstr "நிலைமாற்றி"
 
 #: debug_console.cpp:485
 #, kde-format
@@ -2673,7 +2672,7 @@ msgstr "சாளரத்தை கீழுள்ள திரைக்கு 
 #: useractions.cpp:1112
 #, kde-format
 msgid "Switch to Screen %1"
-msgstr "காட்சிக் கருவி %1-க்கு தாவு"
+msgstr "திரை %1-க்கு தாவு"
 
 #: useractions.cpp:1119
 #, kde-format
@@ -2781,7 +2780,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(பதிலளிக்கவில்லை)"
 
-#: workspace.cpp:1813
+#: workspace.cpp:1852
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
