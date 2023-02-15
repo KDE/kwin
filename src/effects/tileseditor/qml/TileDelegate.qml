@@ -17,7 +17,7 @@ Item {
 
     x: Math.round(tile.absoluteGeometryInScreen.x)
     y: Math.round(tile.absoluteGeometryInScreen.y)
-    z: (tile.layoutDirection === KWinComponents.Tile.Floating ? 1 : 0) + (focus ? 10 : 0)
+    z: focus ? 1000 : 0
     //onZChanged: print(delegate + " "+z)
     width: Math.round(tile.absoluteGeometryInScreen.width)
     height: Math.round(tile.absoluteGeometryInScreen.height)
@@ -126,12 +126,12 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 hoverEnabled: true
-               // enabled: tile.layoutDirection === KWinComponents.Tile.Floating
+                propagateComposedEvents: true
                 property point lastPos
                 onClicked: {
                     delegate.focus = true;
                     if (tile.layoutDirection !== KWinComponents.Tile.Floating) {
-                        effect.deactivate(effect.animationDuration);
+                        mouse.accepted = false;
                     }
                 }
                 onPressed: {

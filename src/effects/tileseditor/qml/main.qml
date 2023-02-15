@@ -46,6 +46,11 @@ FocusScope {
         active = false;
     }
 
+    MouseArea {
+        anchors.fill: parent
+        onClicked: effect.deactivate(effect.animationDuration);
+    }
+
     Item {
         id: blurredWindows
         anchors.fill: parent
