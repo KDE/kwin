@@ -83,6 +83,10 @@ endif()
 
 if (BUILD_TESTING)
     find_package(KPipeWire)
+
+    if (Qt6WaylandClient_VERSION VERSION_GREATER_EQUAL "6.10.0")
+        find_package(Qt6WaylandClientPrivate ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
+    endif()
 endif()
 
 # required frameworks by Core

@@ -559,6 +559,9 @@ Layer Window::belongsToLayer() const
     if (isUnmanaged() || isInternal()) {
         return OverlayLayer;
     }
+    if (isPictureInPicture()) {
+        return PopupLayer;
+    }
     if (isLockScreen() && !waylandServer()) {
         return OverlayLayer;
     }

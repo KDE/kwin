@@ -61,6 +61,7 @@ private:
     bool placeDialog(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
     bool placeUtility(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
     bool placeOnScreenDisplay(Window *c, const QRect &area);
+    bool placePictureInPicture(Window *c, const QRect &area);
 
     // CT needed for cascading+
     struct DesktopCascadingInfo
