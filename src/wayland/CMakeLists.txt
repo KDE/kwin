@@ -39,6 +39,7 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/frog-color-management-v1.xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/wlr-data-control-unstable-v1.xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/wlr-layer-shell-unstable-v1.xml
+        ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-pip-v1.xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-session-management-v1.xml
 
         ${WaylandProtocols_DATADIR}/stable/presentation-time/presentation-time.xml
@@ -171,6 +172,7 @@ target_sources(kwin PRIVATE
     xdgtoplevelicon_v1.cpp
     xwaylandkeyboardgrab_v1.cpp
     xwaylandshell_v1.cpp
+    xxpip_v1.cpp
 )
 
 install(FILES

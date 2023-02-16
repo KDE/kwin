@@ -1,3 +1,7 @@
+if (Qt6_VERSION VERSION_GREATER_EQUAL "6.9.0")
+    add_subdirectory(pip)
+endif()
+
 if(KWIN_BUILD_X11)
     set(normalhintsbasesizetest_SRCS normalhintsbasesizetest.cpp)
     add_executable(normalhintsbasesizetest ${normalhintsbasesizetest_SRCS})

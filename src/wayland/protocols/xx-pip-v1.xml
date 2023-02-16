@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<protocol name="xx_pip_v1">
+  <copyright>
+    Copyright © 2025 Vlad Zahorodnii
+
+    Permission is hereby granted, free of charge, to any person obtaining a
+    copy of this software and associated documentation files (the "Software"),
+    to deal in the Software without restriction, including without limitation
+    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    and/or sell copies of the Software, and to permit persons to whom the
+    Software is furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice (including the next
+    paragraph) shall be included in all copies or substantial portions of the
+    Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE SOFTWARE.
+  </copyright>
+
+  <interface name="xx_pip_shell_v1" version="1">
+    <description summary="create picture-in-picture surfaces">
+      The xx_pip_shell_v1 interface provides a way to create picture-in-picture
+      windows.
+
+      Use cases are for example playing a video in a separate floating window.
+
+      Warning! The protocol described in this file is currently in the testing
+      phase. Backward compatible changes may be added together with the
+      corresponding interface version bump. Backward incompatible changes can
+      only be done by creating a new major version of the extension.
+    </description>
+
+    <enum name="error">
+      <entry name="role" value="0" summary="given wl_surface has another role"/>
+      <entry name="already_constructed" value="1" summary="wl_surface has a buffer attached or committed"/>
+    </enum>
+
+    <request name="destroy" type="destructor">
+      <description summary="destroy xx_pip_shell_v1">
+        Destroy this xx_pip_shell_v1 object. Objects that have been created
+        through this instance are unaffected.
+      </description>
+    </request>
+
+    <request name="get_pip">
+      <description summary="create picture-in-picture surface from a surface">
+        This creates an xx_pip_v1 for the given xdg_surface and gives the
+        associated wl_surface the xx_pip_v1 role.
+
+        If the wl_surface already has a role assigned, a role protocol error
+        will be raised.
+
+        Creating a picture-in-picture surface from a wl_surface which has a
+        buffer attached or committed is a client error, and any attempts by
+        a client to attach or manipulate a buffer prior to the first
+        xx_pip_v1.configure event must also be treated as errors.
+
+        After creating an xx_pip_v1 object and setting it up, the client
+        must perform an initial commit without any buffer attached.
+        The compositor will reply with a xx_pip_v1.configure event.
+        The client must acknowledge it and is then allowed to attach a buffer
+        to map the surface.
+
+        The compositor may deny showing the picture-in-picture surface, in
+        which case it will send the closed event before the first configure
+        event.
+
+        See the documentation of xdg_surface for more details about what an
+        xdg_surface is and how it is used.
+      </description>
+      <arg name="id" type="new_id" interface="xx_pip_v1"/>
+      <arg name="xdg_surface" type="object" interface="xdg_surface"/>
+    </request>
+  </interface>
+
+  <interface name="xx_pip_v1" version="1">
+    <description summary="picture-in-picture surface">
+      This interface defines an xdg_surface role which represents a floating
+      window with some miniature contents, for example a video.
+
+      The picture-in-picture window will be placed above all other windows.
+      Compositor-specific policies may override or customize the behavior
+      and the placement of the xx_pip_v1. For example, the compositor may
+      choose to put the xx_pip_v1 in a screen corner, etc.
+
+      Unmapping an xx_pip_v1 means that the surface cannot be shown
+      by the compositor until it is explicitly mapped again.
+      All active operations (e.g., move, resize) are canceled and all
+      attributes (e.g. title, state, stacking, ...) are discarded for
+      an xx_pip_v1 surface when it is unmapped. The xx_pip_v1 returns to
+      the state it had right after xx_pip_shell_v1.get_pip. The client
+      can re-map the pip by perfoming a commit without any buffer
+      attached, waiting for a configure event and handling it as usual (see
+      xdg_surface description).
+
+      Attaching a null buffer to a picture-in-picture unmaps the surface.
+    </description>
+
+    <enum name="error">
+      <entry name="invalid_size" value="0" summary="invalid surface size provided"/>
+      <entry name="invalid_origin" value="1" summary="invalid origin"/>
+      <entry name="invalid_resize_edge" value="2" summary="invalid resize edge"/>
+    </enum>
+
+    <request name="destroy" type="destructor">
+      <description summary="destroy the xx_pip_v1">
+        This request destroys the role surface and unmaps the surface.
+      </description>
+    </request>
+
+    <request name="set_app_id">
+      <description summary="set application ID">
+        Set an application identifier for the surface.
+
+        The app ID identifies the general class of applications to which
+        the surface belongs. The compositor can use this to group multiple
+        surfaces together, or to determine how to launch a new application.
+
+        For D-Bus activatable applications, the app ID is used as the D-Bus
+        service name.
+
+        The compositor shell will try to group application surfaces together
+        by their app ID. As a best practice, it is suggested to select app
+        ID's that match the basename of the application's .desktop file.
+        For example, "org.freedesktop.FooViewer" where the .desktop file is
+        "org.freedesktop.FooViewer.desktop".
+
+        Like other properties, a set_app_id request can be sent after the
+        xx_pip_v1 has been mapped to update the property.
+
+        See the desktop-entry specification [0] for more details on
+        application identifiers and how they relate to well-known D-Bus
+        names and .desktop files.
+
+        [0] http://standards.freedesktop.org/desktop-entry-spec/
+      </description>
+      <arg name="app_id" type="string"/>
+    </request>
+
+    <request name="set_origin">
+      <description summary="set origin surface">
+        Set the origin surface for the picture-in-picture surface.
+
+        The origin surface is an optional property that specifies a surface
+        from which the picture-in-picture surface has been launched. If set,
+        the compositor may use this hint to play an animation when the
+        picture-in-picture surface is mapped or unmapped. For example, smoothly
+        move the surface from the origin to a screen corner.
+
+        If the specified origin surface is the same as the picture-in-picture
+        surface, the invalid_origin protocol error will be posted.
+
+        The origin surface is double-buffered state, see wl_surface.commit.
+      </description>
+      <arg name="origin" type="object" interface="wl_surface"/>
+    </request>
+
+    <request name="set_origin_rect">
+      <description summary="set origin rect">
+        Set the origin rect within the origin surface for the picture-in-picture
+        surface.
+
+        The origin rect is an optional property that specifies the launch
+        rectangle within the origin surface. The compositor may use this hint
+        to play an animation when the picture-in-picture surface is mapped or
+        unmapped. For example, smoothly move the surface from the origin rect
+        to a screen corner.
+
+        The origin rect is specified in the surface-local coordinate space.
+
+        The compositor ignores the parts of the origin rect that fall outside
+        of the origin surface.
+
+        The origin rect is double-buffered state, see wl_surface.commit.
+      </description>
+      <arg name="x" type="int"/>
+      <arg name="y" type="int"/>
+      <arg name="width" type="uint"/>
+      <arg name="height" type="uint"/>
+    </request>
+
+    <request name="move">
+      <description summary="start an interactive move">
+        Start an interactive, user-driven move of the surface.
+
+        This request must be used in response to some sort of user action
+        like a button press, key press, or touch down event. The passed
+        serial is used to determine the type of interactive move (touch,
+        pointer, etc).
+
+        The server may ignore move requests depending on the state of
+        the surface, or if the passed serial is no longer valid.
+
+        If triggered, the surface will lose the focus of the device
+        (wl_pointer, wl_touch, etc) used for the move. It is up to the
+        compositor to visually indicate that the move is taking place, such as
+        updating a pointer cursor, during the move. There is no guarantee
+        that the device focus will return when the move is completed.
+      </description>
+      <arg name="seat" type="object" interface="wl_seat" summary="the wl_seat of the user event"/>
+      <arg name="serial" type="uint" summary="the serial of the user event"/>
+    </request>
+
+    <enum name="resize_edge">
+      <description summary="edge values for resizing">
+        These values are used to indicate which edge of a surface
+        is being dragged in a resize operation.
+      </description>
+      <entry name="none" value="0"/>
+      <entry name="top" value="1"/>
+      <entry name="bottom" value="2"/>
+      <entry name="left" value="4"/>
+      <entry name="top_left" value="5"/>
+      <entry name="bottom_left" value="6"/>
+      <entry name="right" value="8"/>
+      <entry name="top_right" value="9"/>
+      <entry name="bottom_right" value="10"/>
+    </enum>
+
+    <request name="resize">
+      <description summary="start an interactive resize">
+        Start a user-driven, interactive resize of the surface.
+
+        This request must be used in response to some sort of user action
+        like a button press, key press, or touch down event. The passed
+        serial is used to determine the type of interactive resize (touch,
+        pointer, etc).
+
+        The server may ignore resize requests depending on the state of
+        the surface, or if the passed serial is no longer valid.
+
+        If triggered, the surface also will lose the focus of the device
+        (wl_pointer, wl_touch, etc) used for the resize. It is up to the
+        compositor to visually indicate that the resize is taking place,
+        such as updating a pointer cursor, during the resize. There is no
+        guarantee that the device focus will return when the resize is
+        completed.
+
+        The edges parameter specifies how the surface should be resized,
+        and is one of the values of the resize_edge enum. The compositor
+        may use this information to update the surface position for
+        example when dragging the top left corner. The compositor may also
+        use this information to adapt its behavior, e.g. choose an
+        appropriate cursor image.
+      </description>
+      <arg name="seat" type="object" interface="wl_seat" summary="the wl_seat of the user event"/>
+      <arg name="serial" type="uint" summary="the serial of the user event"/>
+      <arg name="edges" type="uint" enum="resize_edge" summary="which edge or corner is being dragged"/>
+    </request>
+
+    <event name="closed">
+      <description summary="picture-in-picture surface has been closed">
+        The closed event is sent by the compositor when the surface will
+        no longer be shown. Further changes to the surface will be ignored.
+        The client should destroy the resource after receiving this event.
+      </description>
+    </event>
+
+    <event name="configure_bounds">
+      <description summary="surface bounds">
+        The configure_bounds event may be sent prior to a xx_pip_v1.configure
+        event to communicate the bounds a surface size must be constrained to.
+
+        The passed width and height are in surface coordinate space.
+
+        If the surface width or the surface height is greater than the specified
+        surface size bounds, an invalid_size protocol error will be posted.
+
+        The surface bounds subject to compositor policies.
+
+        The bounds may change at any point, and in such a case, a new
+        xx_pip_v1.configure_bounds will be sent, followed by xx_pip_v1.configure and
+        xdg_surface.configure.
+      </description>
+      <arg name="width" type="int"/>
+      <arg name="height" type="int"/>
+    </event>
+
+    <event name="configure_size">
+      <description summary="suggest a surface change">
+        This configure event asks the client to resize its pip surface.
+        The configured state should not be applied immediately. See
+        xdg_surface.configure for details.
+
+        The width and height arguments specify a hint to the window
+        about how its surface should be resized in window geometry
+        coordinates. See set_window_geometry.
+
+        If the width or height arguments are zero, it means the client
+        should decide its own window dimension.
+
+        Clients must send an ack_configure in response to this event. See
+        xdg_surface.configure and xdg_surface.ack_configure for details.
+      </description>
+      <arg name="width" type="int"/>
+      <arg name="height" type="int"/>
+    </event>
+  </interface>
+</protocol>
