@@ -18,6 +18,16 @@ target_link_libraries(pointergestures Qt::Gui Qt::Quick Plasma::KWaylandClient)
 add_executable(cursorhotspottest cursorhotspottest.cpp)
 target_link_libraries(cursorhotspottest Qt::Widgets)
 
+add_executable(xdgpipv1test xdgpipv1.cpp)
+target_link_libraries(xdgpipv1test Qt::Gui Plasma::KWaylandClient Wayland::Client)
+qt6_generate_wayland_protocol_client_sources(xdgpipv1test
+    PRIVATE_CODE
+    FILES
+        ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-pip-v1.xml
+        ${WaylandProtocols_DATADIR}/stable/xdg-shell/xdg-shell.xml
+        ${Wayland_DATADIR}/wayland.xml
+)
+
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(xdgactivationtest-qt6 xdgactivationtest-qt6.cpp)

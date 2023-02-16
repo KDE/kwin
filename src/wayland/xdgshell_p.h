@@ -16,6 +16,7 @@
 namespace KWin
 {
 class XdgToplevelDecorationV1Interface;
+class XXPipV1Interface;
 
 class XdgShellInterfacePrivate : public QtWaylandServer::xdg_wm_base
 {
@@ -118,6 +119,7 @@ public:
     XdgShellInterface *shell = nullptr;
     QPointer<XdgToplevelInterface> toplevel;
     QPointer<XdgPopupInterface> popup;
+    QPointer<XXPipV1Interface> pip;
     QPointer<SurfaceInterface> surface;
     QRect windowGeometry;
     bool firstBufferAttached = false;

@@ -56,6 +56,8 @@ bool Placement::place(Window *c, const QRectF &area)
         return placeTransient(c);
     } else if (c->isTransient() && c->surface()) {
         return placeDialog(c, area.toRect(), options->placement());
+    } else if (c->isPictureInPicture()) {
+        return placePictureInPicture(c, area.toRect());
     } else {
         return place(c, area, options->placement());
     }
@@ -507,6 +509,17 @@ bool Placement::placeOnScreenDisplay(Window *c, const QRect &area)
 bool Placement::placeTransient(Window *c)
 {
     c->moveResize(c->transientPlacement());
+    return true;
+}
+
+bool Placement::placePictureInPicture(Window *c, const QRect &area)
+{
+    Q_ASSERT(area.isValid());
+
+    const qreal x = area.x() + area.width() - c->width();
+    const qreal y = area.y() + area.height() - c->height();
+
+    c->move(QPointF(x, y));
     return true;
 }
 

@@ -750,6 +750,7 @@ public:
     virtual bool isClient() const;
     bool isDeleted() const;
     virtual bool isUnmanaged() const;
+    virtual bool isPictureInPicture() const;
 
     bool isLockScreenOverlay() const;
     void setLockScreenOverlay(bool allowed);
@@ -2049,6 +2050,11 @@ inline bool Window::isOutline() const
 }
 
 inline bool Window::isInternal() const
+{
+    return false;
+}
+
+inline bool Window::isPictureInPicture() const
 {
     return false;
 }

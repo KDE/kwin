@@ -317,6 +317,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/fifo/fifo-v1.xml
     BASENAME fifo-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-pip-v1.xml
+    BASENAME xx-pip-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
@@ -407,6 +411,7 @@ target_sources(kwin PRIVATE
     xdgtoplevelicon_v1.cpp
     xwaylandkeyboardgrab_v1.cpp
     xwaylandshell_v1.cpp
+    xxpip_v1.cpp
 )
 
 install(FILES
