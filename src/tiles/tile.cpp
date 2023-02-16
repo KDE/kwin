@@ -99,6 +99,23 @@ void Tile::setRelativeGeometry(const QRectF &geom)
         return;
     }
 
+    // Don't allow to shrink a tile smaller than a contained window
+    {
+        // FIXME: this is a duplication of windowGeometry()
+        const QRectF outGeom = manager()->output()->fractionalGeometry();
+        QRectF newWindowGeom = QRectF(std::round(outGeom.x() + geom.x() * outGeom.width()),
+                                      std::round(outGeom.y() + geom.y() * outGeom.height()),
+                                      std::round(geom.width() * outGeom.width()),
+                                      std::round(geom.height() * outGeom.height()))
+                                   .intersected(workspace()->clientArea(MaximizeArea, manager()->output(), VirtualDesktopManager::self()->currentDesktop()));
+
+        for (KWin::Window *w : windows()) {
+            if (w->minSize().width() > newWindowGeom.width() || w->minSize().height() > newWindowGeom.height()) {
+                return;
+            }
+        }
+    }
+
     m_relativeGeometry = constrainedGeom;
 
     Q_EMIT relativeGeometryChanged();
