@@ -56,7 +56,6 @@ public:
 
 private:
     bool initializeEgl();
-    bool initBufferConfigs();
     bool initRenderingContext();
 
     void addOutput(Output *output);

@@ -384,41 +384,6 @@ bool WaylandEglBackend::initRenderingContext()
     return makeCurrent();
 }
 
-bool WaylandEglBackend::initBufferConfigs()
-{
-    const EGLint config_attribs[] = {
-        EGL_SURFACE_TYPE,
-        EGL_WINDOW_BIT,
-        EGL_RED_SIZE,
-        1,
-        EGL_GREEN_SIZE,
-        1,
-        EGL_BLUE_SIZE,
-        1,
-        EGL_ALPHA_SIZE,
-        0,
-        EGL_RENDERABLE_TYPE,
-        isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
-        EGL_CONFIG_CAVEAT,
-        EGL_NONE,
-        EGL_NONE,
-    };
-
-    EGLint count;
-    EGLConfig configs[1024];
-    if (eglChooseConfig(eglDisplay(), config_attribs, configs, 1, &count) == EGL_FALSE) {
-        qCCritical(KWIN_WAYLAND_BACKEND) << "choose config failed";
-        return false;
-    }
-    if (count != 1) {
-        qCCritical(KWIN_WAYLAND_BACKEND) << "choose config did not return a config" << count;
-        return false;
-    }
-    setConfig(configs[0]);
-
-    return true;
-}
-
 std::shared_ptr<KWin::GLTexture> WaylandEglBackend::textureForOutput(KWin::Output *output) const
 {
     auto texture = std::make_unique<GLTexture>(GL_RGBA8, output->pixelSize());

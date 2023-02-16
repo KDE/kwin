@@ -143,7 +143,6 @@ public:
 
 private:
     bool initializeEgl();
-    bool initBufferConfigs();
     bool initRenderingContext();
     bool createEglWaylandOutput(Output *output);
     void cleanupSurfaces() override;

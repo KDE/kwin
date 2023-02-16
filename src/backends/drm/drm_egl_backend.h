@@ -86,7 +86,7 @@ public:
 
 private:
     bool initializeEgl();
-    bool initBufferConfigs();
+    bool initBufferConfigs() override;
     bool initRenderingContext();
 
     DrmBackend *m_backend;
