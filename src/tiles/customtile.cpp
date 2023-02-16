@@ -10,6 +10,12 @@
 #include "customtile.h"
 #include "core/output.h"
 #include "tilemanager.h"
+#include "virtualdesktops.h"
+#include "window.h"
+#include "workspace.h"
+
+#include <cmath>
+#include <utility>
 
 namespace KWin
 {
@@ -59,6 +65,23 @@ void CustomTile::setRelativeGeometry(const QRectF &geom)
     // We couldn't set the minimum size and still remain in boundaries, do nothing
     if (finalGeom.right() > 1 || finalGeom.bottom() > 1) {
         return;
+    }
+
+    // Don't allow to shrink a tile smaller than a contained window
+    {
+        // FIXME: this is a duplication of windowGeometry()
+        const QRectF outGeom = manager()->output()->fractionalGeometry();
+        QRectF newWindowGeom = QRectF(std::round(outGeom.x() + geom.x() * outGeom.width()),
+                                      std::round(outGeom.y() + geom.y() * outGeom.height()),
+                                      std::round(geom.width() * outGeom.width()),
+                                      std::round(geom.height() * outGeom.height()))
+                                   .intersected(workspace()->clientArea(MaximizeArea, manager()->output(), VirtualDesktopManager::self()->currentDesktop()));
+
+        for (KWin::Window *w : windows()) {
+            if (w->minSize().width() > newWindowGeom.width() || w->minSize().height() > newWindowGeom.height()) {
+                return;
+            }
+        }
     }
 
     auto *parentT = static_cast<CustomTile *>(parentTile());

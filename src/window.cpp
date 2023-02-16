@@ -3751,7 +3751,8 @@ QRectF Window::quickTileGeometry(QuickTileMode mode, const QPointF &pos) const
 
     if (mode & QuickTileFlag::Custom) {
         Tile *tile = workspace()->tileManager(output)->bestTileForPosition(pos);
-        if (tile) {
+        const QRectF tileGeom = tile->windowGeometry();
+        if (tile && tileGeom.width() >= minSize().width() && tileGeom.height() >= minSize().height()) {
             return tile->windowGeometry();
         } else {
             return QRectF();
@@ -3918,7 +3919,10 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
             Output *output = workspace()->outputAt(Cursors::self()->mouse()->pos());
             tile = workspace()->tileManager(output)->bestTileForPosition(Cursors::self()->mouse()->pos());
         }
-        setTile(tile);
+        const QRectF tileGeom = tile->windowGeometry();
+        if (tileGeom.width() >= minSize().width() && tileGeom.height() >= minSize().height()) {
+            setTile(tile);
+        }
     } else {
         // Use whichScreen to move to next screen when retiling to the same edge as the old behavior
         Output *output = workspace()->outputAt(whichScreen);
