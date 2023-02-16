@@ -150,10 +150,6 @@ KWin::Script::Script(int id, QString scriptName, QString pluginName, QObject *pa
     if (!QMetaType::hasRegisteredConverterFunction<QJSValue, QSizeF>()) {
         QMetaType::registerConverter<QJSValue, QSizeF>(scriptValueToSizeF);
     }
-
-    qRegisterMetaType<QList<KWin::Output *>>();
-    qRegisterMetaType<QList<KWin::Window *>>();
-    qRegisterMetaType<QVector<KWin::VirtualDesktop *>>();
 }
 
 KWin::Script::~Script()
@@ -673,6 +669,10 @@ KWin::Scripting::Scripting(QObject *parent)
 
 void KWin::Scripting::init()
 {
+    qRegisterMetaType<QList<KWin::Output *>>();
+    qRegisterMetaType<QList<KWin::Window *>>();
+    qRegisterMetaType<QVector<KWin::VirtualDesktop *>>();
+
     qmlRegisterType<DesktopBackgroundItem>("org.kde.kwin", 3, 0, "DesktopBackground");
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 3, 0, "WindowThumbnail");
     qmlRegisterType<DBusCall>("org.kde.kwin", 3, 0, "DBusCall");
