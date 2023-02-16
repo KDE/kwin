@@ -19,8 +19,6 @@
 namespace KWin
 {
 
-QSizeF Tile::s_minimumSize = QSizeF(0.15, 0.15);
-
 Tile::Tile(TileManager *tiling, Tile *parent)
     : QObject(parent)
     , m_parentTile(parent)
@@ -92,28 +90,11 @@ void Tile::setGeometryFromAbsolute(const QRectF &geom)
 void Tile::setRelativeGeometry(const QRectF &geom)
 {
     QRectF constrainedGeom = geom;
-    constrainedGeom.setWidth(std::max(constrainedGeom.width(), s_minimumSize.width()));
-    constrainedGeom.setHeight(std::max(constrainedGeom.height(), s_minimumSize.height()));
+    constrainedGeom.setWidth(std::max(constrainedGeom.width(), m_minimumSize.width()));
+    constrainedGeom.setHeight(std::max(constrainedGeom.height(), m_minimumSize.height()));
 
     if (m_relativeGeometry == constrainedGeom) {
         return;
-    }
-
-    // Don't allow to shrink a tile smaller than a contained window
-    {
-        // FIXME: this is a duplication of windowGeometry()
-        const QRectF outGeom = manager()->output()->fractionalGeometry();
-        QRectF newWindowGeom = QRectF(std::round(outGeom.x() + geom.x() * outGeom.width()),
-                                      std::round(outGeom.y() + geom.y() * outGeom.height()),
-                                      std::round(geom.width() * outGeom.width()),
-                                      std::round(geom.height() * outGeom.height()))
-                                   .intersected(workspace()->clientArea(MaximizeArea, manager()->output(), VirtualDesktopManager::self()->currentDesktop()));
-
-        for (KWin::Window *w : windows()) {
-            if (w->minSize().width() > newWindowGeom.width() || w->minSize().height() > newWindowGeom.height()) {
-                return;
-            }
-        }
     }
 
     m_relativeGeometry = constrainedGeom;
@@ -292,6 +273,9 @@ void Tile::addWindow(Window *window)
         window->moveResize(windowGeometry());
         m_windows.append(window);
         window->setTile(this);
+        const QRectF deskGeom = workspace()->clientArea(MaximizeArea, manager()->output(), VirtualDesktopManager::self()->currentDesktop());
+        m_minimumSize = {std::max(m_minimumSize.width(), window->minSize().width() / deskGeom.width()),
+                         std::max(m_minimumSize.height(), window->minSize().height() / deskGeom.height())};
         Q_EMIT windowAdded(window);
         Q_EMIT windowsChanged();
     }
@@ -302,6 +286,12 @@ void Tile::removeWindow(Window *window)
     // We already ensure there is a single copy of window in m_windows
     if (m_windows.removeOne(window)) {
         window->setTile(nullptr);
+        m_minimumSize = {0.15, 0.15};
+        const QRectF deskGeom = workspace()->clientArea(MaximizeArea, manager()->output(), VirtualDesktopManager::self()->currentDesktop());
+        for (Window *w : m_windows) {
+            m_minimumSize = {std::max(m_minimumSize.width(), w->minSize().width() / deskGeom.width()),
+                             std::max(m_minimumSize.height(), w->minSize().height() / deskGeom.height())};
+        }
         Q_EMIT windowRemoved(window);
         Q_EMIT windowsChanged();
     }
@@ -400,6 +390,11 @@ void Tile::visitDescendants(std::function<void(const Tile *child)> callback) con
 TileManager *Tile::manager() const
 {
     return m_tiling;
+}
+
+QSizeF Tile::minimumSize() const
+{
+    return m_minimumSize;
 }
 
 int Tile::row() const

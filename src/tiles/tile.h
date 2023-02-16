@@ -119,10 +119,7 @@ public:
     Tile *parentTile() const;
     TileManager *manager() const;
 
-    static inline QSizeF minimumSize()
-    {
-        return s_minimumSize;
-    }
+    QSizeF minimumSize() const;
 
     void destroyChild(Tile *tile);
 
@@ -158,7 +155,7 @@ private:
 
     TileManager *m_tiling;
     QRectF m_relativeGeometry;
-    static QSizeF s_minimumSize;
+    QSizeF m_minimumSize = QSizeF(0.15, 0.15);
     QuickTileMode m_quickTileMode = QuickTileFlag::None;
     qreal m_padding = 4.0;
 };

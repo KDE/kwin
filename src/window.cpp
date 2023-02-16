@@ -3751,18 +3751,24 @@ QRectF Window::quickTileGeometry(QuickTileMode mode, const QPointF &pos) const
 
     if (mode & QuickTileFlag::Custom) {
         Tile *tile = workspace()->tileManager(output)->bestTileForPosition(pos);
-        const QRectF tileGeom = tile->windowGeometry();
-        if (tile && tileGeom.width() >= minSize().width() && tileGeom.height() >= minSize().height()) {
-            return tile->windowGeometry();
+        if (tile) {
+            const QRectF tileGeom = tile->windowGeometry();
+            if (tileGeom.width() >= minSize().width() && tileGeom.height() >= minSize().height()) {
+                return tile->windowGeometry();
+            } else {
+                return QRectF();
+            }
         } else {
             return QRectF();
         }
     }
 
     Tile *tile = workspace()->tileManager(output)->quickTile(mode);
-    const QRectF tileGeom = tile->windowGeometry();
-    if (tile && tileGeom.width() >= minSize().width() && tileGeom.height() >= minSize().height()) {
-        return tile->windowGeometry();
+    if (tile) {
+        const QRectF tileGeom = tile->windowGeometry();
+        if (tileGeom.width() >= minSize().width() && tileGeom.height() >= minSize().height()) {
+            return tile->windowGeometry();
+        }
     }
     return workspace()->clientArea(MaximizeArea, this, pos);
 }
@@ -3920,17 +3926,21 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
             Output *output = workspace()->outputAt(Cursors::self()->mouse()->pos());
             tile = workspace()->tileManager(output)->bestTileForPosition(Cursors::self()->mouse()->pos());
         }
-        const QRectF tileGeom = tile->windowGeometry();
-        if (tileGeom.width() >= minSize().width() && tileGeom.height() >= minSize().height()) {
-            setTile(tile);
+        if (tile) {
+            const QRectF tileGeom = tile->windowGeometry();
+            if (tileGeom.width() >= minSize().width() && tileGeom.height() >= minSize().height()) {
+                setTile(tile);
+            }
         }
     } else {
         // Use whichScreen to move to next screen when retiling to the same edge as the old behavior
         Output *output = workspace()->outputAt(whichScreen);
         Tile *tile = workspace()->tileManager(output)->quickTile(mode);
-        const QRectF tileGeom = tile->windowGeometry();
-        if (tileGeom.width() >= minSize().width() && tileGeom.height() >= minSize().height()) {
-            setTile(tile);
+        if (tile) {
+            const QRectF tileGeom = tile->windowGeometry();
+            if (tileGeom.width() >= minSize().width() && tileGeom.height() >= minSize().height()) {
+                setTile(tile);
+            }
         }
     }
 
