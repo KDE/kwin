@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-08 01:01+0000\n"
+"POT-Creation-Date: 2023-02-16 01:01+0000\n"
 "PO-Revision-Date: 2022-12-02 14:28+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -741,17 +741,17 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Canvia l'editor de fitxes"
 
-#: tileseditor/qml/main.qml:145
+#: tileseditor/qml/main.qml:150
 #, kde-format
 msgid "Padding:"
 msgstr "Farciment:"
 
-#: tileseditor/qml/main.qml:155
+#: tileseditor/qml/main.qml:160
 #, kde-format
 msgid "Load Layout..."
 msgstr "Carrega una disposició..."
 
-#: tileseditor/qml/main.qml:269
+#: tileseditor/qml/main.qml:274
 #, kde-format
 msgid "Close"
 msgstr "Tanca"

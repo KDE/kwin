@@ -15,14 +15,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-15 01:00+0000\n"
-"PO-Revision-Date: 2023-01-11 21:47+0100\n"
+"PO-Revision-Date: 2023-02-15 20:31+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 22.12.2\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, kde-format
@@ -2655,46 +2655,39 @@ msgid "Window One Desktop Down"
 msgstr "Aldatu leihoa beheko mahaigainera"
 
 #: useractions.cpp:1091
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move Window to Screen %1"
-msgstr "Aldatu leihoa %1 pantailara"
+msgstr "Eraman leihoa %1 pantailara"
 
 #: useractions.cpp:1098
-#, fuzzy, kde-format
-#| msgid "Window to Next Screen"
+#, kde-format
 msgid "Move Window to Next Screen"
-msgstr "Aldatu leihoa hurrengo pantailara"
+msgstr "Eraman leihoa hurrengo pantailara"
 
 #: useractions.cpp:1100
-#, fuzzy, kde-format
-#| msgid "Window to Previous Screen"
+#, kde-format
 msgid "Move Window to Previous Screen"
-msgstr "Aldatu leihoa aurreko pantailara"
+msgstr "Eraman leihoa aurreko pantailara"
 
 #: useractions.cpp:1102
-#, fuzzy, kde-format
-#| msgid "Window One Screen to the Right"
+#, kde-format
 msgid "Move Window One Screen to the Right"
-msgstr "Leihoa, pantaila bat eskuinerantz"
+msgstr "Eraman leihoa pantaila bat eskuinerantz"
 
 #: useractions.cpp:1104
-#, fuzzy, kde-format
-#| msgid "Window One Screen to the Left"
+#, kde-format
 msgid "Move Window One Screen to the Left"
-msgstr "Leihoa, pantaila bat ezkerrerantz"
+msgstr "Eraman leihoa pantaila bat ezkerrerantz"
 
 #: useractions.cpp:1106
-#, fuzzy, kde-format
-#| msgid "Window One Screen Up"
+#, kde-format
 msgid "Move Window One Screen Up"
-msgstr "Leihoa, pantaila bat gorantz"
+msgstr "Eraman leihoa pantaila bat gorantz"
 
 #: useractions.cpp:1108
-#, fuzzy, kde-format
-#| msgid "Window One Screen Down"
+#, kde-format
 msgid "Move Window One Screen Down"
-msgstr "Leihoa, pantaila bat beherantz"
+msgstr "Eraman leihoa pantaila bat beherantz"
 
 #: useractions.cpp:1112
 #, kde-format

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-08 01:01+0000\n"
+"POT-Creation-Date: 2023-02-16 01:01+0000\n"
 "PO-Revision-Date: 2022-12-22 12:42+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -740,17 +740,17 @@ msgstr " ٪"
 msgid "Toggle Tiles Editor"
 msgstr "أظهر/اخف محرر الترتيب"
 
-#: tileseditor/qml/main.qml:145
+#: tileseditor/qml/main.qml:150
 #, kde-format
 msgid "Padding:"
 msgstr "الحشو:"
 
-#: tileseditor/qml/main.qml:155
+#: tileseditor/qml/main.qml:160
 #, kde-format
 msgid "Load Layout..."
 msgstr "حمّل تخطيطًا..."
 
-#: tileseditor/qml/main.qml:269
+#: tileseditor/qml/main.qml:274
 #, kde-format
 msgid "Close"
 msgstr "أغلق"

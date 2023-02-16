@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-06 01:01+0000\n"
-"PO-Revision-Date: 2021-06-10 04:22+0100\n"
+"PO-Revision-Date: 2023-02-15 15:25+0000\n"
 "Last-Translator: José Nuno Pires <zepires@gmail.com>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
 "Language: pt\n"
@@ -232,20 +232,16 @@ msgid "Window border size:"
 msgstr "Tamanho do contorno da janela:"
 
 #: package/contents/ui/main.qml:60
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr "Botões da Barra de Título"
+msgstr "Configurar os Botões da Barra de Título…"
 
 #: package/contents/ui/main.qml:65
-#, fuzzy, kde-format
-#| msgctxt "button text"
-#| msgid "Get New Window Decorations..."
+#, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations…"
-msgstr "Obter Novas Decorações de Janelas..."
+msgstr "Obter Novas Decorações de Janelas…"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -296,7 +292,3 @@ msgstr "Mais do que Enorme"
 #, kde-format
 msgid "Oversized"
 msgstr "Ainda Maior"
-
-#~ msgctxt "tab label"
-#~ msgid "Theme"
-#~ msgstr "Tema"

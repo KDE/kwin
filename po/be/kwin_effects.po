@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-08 01:01+0000\n"
+"POT-Creation-Date: 2023-02-16 01:01+0000\n"
 "PO-Revision-Date: 2023-02-08 13:45\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -742,17 +742,17 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "Пераключыць рэдактар ​​кампанавання"
 
-#: tileseditor/qml/main.qml:145
+#: tileseditor/qml/main.qml:150
 #, kde-format
 msgid "Padding:"
 msgstr "Водступ:"
 
-#: tileseditor/qml/main.qml:155
+#: tileseditor/qml/main.qml:160
 #, kde-format
 msgid "Load Layout..."
 msgstr "Загрузіць макет..."
 
-#: tileseditor/qml/main.qml:269
+#: tileseditor/qml/main.qml:274
 #, kde-format
 msgid "Close"
 msgstr "Закрыць"

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-08 01:01+0000\n"
-"PO-Revision-Date: 2023-02-07 11:02\n"
+"POT-Creation-Date: 2023-02-16 01:01+0000\n"
+"PO-Revision-Date: 2023-02-15 11:04\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -732,17 +732,17 @@ msgstr " %"
 msgid "Toggle Tiles Editor"
 msgstr "瓷贴编辑器开关"
 
-#: tileseditor/qml/main.qml:145
+#: tileseditor/qml/main.qml:150
 #, kde-format
 msgid "Padding:"
 msgstr "边距："
 
-#: tileseditor/qml/main.qml:155
+#: tileseditor/qml/main.qml:160
 #, kde-format
 msgid "Load Layout..."
 msgstr "加载布局..."
 
-#: tileseditor/qml/main.qml:269
+#: tileseditor/qml/main.qml:274
 #, kde-format
 msgid "Close"
 msgstr "关闭"
@@ -1157,6 +1157,3 @@ msgstr "已禁用"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "鼠标定位："
-
-#~ msgid "Blur background:"
-#~ msgstr "虚化背景："
