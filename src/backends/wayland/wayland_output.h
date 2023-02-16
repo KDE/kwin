@@ -49,7 +49,6 @@ public:
 private:
     void sync();
 
-    WaylandBackend *const m_backend;
     KWayland::Client::Pointer *m_pointer = nullptr;
     std::unique_ptr<KWayland::Client::Surface> m_surface;
     wl_buffer *m_buffer = nullptr;
