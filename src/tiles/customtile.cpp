@@ -10,12 +10,6 @@
 #include "customtile.h"
 #include "core/output.h"
 #include "tilemanager.h"
-#include "virtualdesktops.h"
-#include "window.h"
-#include "workspace.h"
-
-#include <cmath>
-#include <utility>
 
 namespace KWin
 {
