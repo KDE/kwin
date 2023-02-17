@@ -24,7 +24,7 @@ class KCMKWinRules : public KQuickAddons::ConfigModule
     Q_PROPERTY(int editIndex READ editIndex NOTIFY editIndexChanged)
 
 public:
-    explicit KCMKWinRules(QObject *parent, const QVariantList &arguments);
+    explicit KCMKWinRules(QObject *parent, const KPluginMetaData &metaData, const QVariantList &arguments);
 
     Q_INVOKABLE void setRuleDescription(int index, const QString &description);
     Q_INVOKABLE void editRule(int index);

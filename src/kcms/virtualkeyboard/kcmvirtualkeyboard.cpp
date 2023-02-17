@@ -6,7 +6,6 @@
 
 #include "kcmvirtualkeyboard.h"
 
-#include <KAboutData>
 #include <KApplicationTrader>
 #include <KConfigGroup>
 #include <KDesktopFile>
@@ -18,18 +17,12 @@
 
 K_PLUGIN_FACTORY_WITH_JSON(KcmVirtualKeyboardFactory, "kcm_virtualkeyboard.json", registerPlugin<KcmVirtualKeyboard>(); registerPlugin<VirtualKeyboardData>();)
 
-KcmVirtualKeyboard::KcmVirtualKeyboard(QObject *parent, const QVariantList &args)
-    : KQuickAddons::ManagedConfigModule(parent)
+KcmVirtualKeyboard::KcmVirtualKeyboard(QObject *parent, const KPluginMetaData &metaData, const QVariantList &args)
+    : KQuickAddons::ManagedConfigModule(parent, metaData, args)
     , m_data(new VirtualKeyboardData(this))
     , m_model(new VirtualKeyboardsModel(this))
 {
     qmlRegisterAnonymousType<VirtualKeyboardSettings>("org.kde.kwin.virtualkeyboardsettings", 1);
-
-    setAboutData(new KAboutData(QStringLiteral("kcm_virtualkeyboard"),
-                                i18n("Virtual Keyboard"),
-                                QStringLiteral("1.0"),
-                                i18n("Choose Virtual Keyboard"),
-                                KAboutLicense::GPL));
 }
 
 KcmVirtualKeyboard::~KcmVirtualKeyboard() = default;

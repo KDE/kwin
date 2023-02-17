@@ -11,7 +11,6 @@
 #include "declarative-plugin/buttonsmodel.h"
 #include "decorationmodel.h"
 
-#include <KAboutData>
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KNSCore/Engine>
@@ -36,8 +35,8 @@ namespace
 const KDecoration2::BorderSize s_defaultRecommendedBorderSize = KDecoration2::BorderSize::Normal;
 }
 
-KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const QVariantList &arguments)
-    : KQuickAddons::ManagedConfigModule(parent, arguments)
+KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const KPluginMetaData &metaData, const QVariantList &arguments)
+    : KQuickAddons::ManagedConfigModule(parent, metaData, arguments)
     , m_themesModel(new KDecoration2::Configuration::DecorationsModel(this))
     , m_proxyThemesModel(new QSortFilterProxyModel(this))
     , m_leftButtonsModel(new KDecoration2::Preview::ButtonsModel(DecorationButtonsList(), this))
@@ -45,15 +44,6 @@ KCMKWinDecoration::KCMKWinDecoration(QObject *parent, const QVariantList &argume
     , m_availableButtonsModel(new KDecoration2::Preview::ButtonsModel(this))
     , m_data(new KWinDecorationData(this))
 {
-    auto about = new KAboutData(QStringLiteral("kcm_kwindecoration"),
-                                i18n("Window Decorations"),
-                                QStringLiteral("1.0"),
-                                QString(),
-                                KAboutLicense::GPL);
-    about->addAuthor(i18n("Valerio Pilo"),
-                     i18n("Author"),
-                     QStringLiteral("vpilo@coldshock.net"));
-    setAboutData(about);
     setButtons(Apply | Default | Help);
     qmlRegisterAnonymousType<QAbstractListModel>("org.kde.kwin.KWinDecoration", 1);
     qmlRegisterAnonymousType<QSortFilterProxyModel>("org.kde.kwin.KWinDecoration", 1);

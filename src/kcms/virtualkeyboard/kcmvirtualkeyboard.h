@@ -42,7 +42,7 @@ class KcmVirtualKeyboard : public KQuickAddons::ManagedConfigModule
     Q_PROPERTY(QAbstractItemModel *model READ keyboardsModel CONSTANT)
 
 public:
-    explicit KcmVirtualKeyboard(QObject *parent = nullptr, const QVariantList &list = QVariantList());
+    explicit KcmVirtualKeyboard(QObject *parent, const KPluginMetaData &metaData, const QVariantList &list);
     ~KcmVirtualKeyboard() override;
 
     VirtualKeyboardSettings *settings() const;

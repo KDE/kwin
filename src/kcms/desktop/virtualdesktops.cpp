@@ -25,15 +25,10 @@ K_PLUGIN_FACTORY_WITH_JSON(VirtualDesktopsFactory,
 namespace KWin
 {
 
-VirtualDesktops::VirtualDesktops(QObject *parent, const QVariantList &args)
-    : KQuickAddons::ManagedConfigModule(parent, args)
+VirtualDesktops::VirtualDesktops(QObject *parent, const KPluginMetaData &metaData, const QVariantList &args)
+    : KQuickAddons::ManagedConfigModule(parent, metaData, args)
     , m_data(new VirtualDesktopsData(this))
 {
-    KAboutData *about = new KAboutData(QStringLiteral("kcm_kwin_virtualdesktops"),
-                                       i18n("Virtual Desktops"),
-                                       QStringLiteral("2.0"), QString(), KAboutLicense::GPL);
-    setAboutData(about);
-
     qmlRegisterAnonymousType<VirtualDesktopsSettings>("org.kde.kwin.kcm.desktop", 0);
 
     setButtons(Apply | Default | Help);

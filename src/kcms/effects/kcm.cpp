@@ -9,7 +9,6 @@
 #include "effectsfilterproxymodel.h"
 #include "effectsmodel.h"
 
-#include <KAboutData>
 #include <KLocalizedString>
 #include <KPluginFactory>
 
@@ -24,20 +23,11 @@ K_PLUGIN_FACTORY_WITH_JSON(DesktopEffectsKCMFactory,
 namespace KWin
 {
 
-DesktopEffectsKCM::DesktopEffectsKCM(QObject *parent, const QVariantList &args)
-    : KQuickAddons::ConfigModule(parent, args)
+DesktopEffectsKCM::DesktopEffectsKCM(QObject *parent, const KPluginMetaData &metaData, const QVariantList &args)
+    : KQuickAddons::ConfigModule(parent, metaData, args)
     , m_model(new EffectsModel(this))
 {
     qmlRegisterType<EffectsFilterProxyModel>("org.kde.private.kcms.kwin.effects", 1, 0, "EffectsFilterProxyModel");
-
-    auto about = new KAboutData(
-        QStringLiteral("kcm_kwin_effects"),
-        i18n("Desktop Effects"),
-        QStringLiteral("2.0"),
-        QString(),
-        KAboutLicense::GPL);
-    about->addAuthor(i18n("Vlad Zahorodnii"), QString(), QStringLiteral("vlad.zahorodnii@kde.org"));
-    setAboutData(about);
 
     setButtons(Apply | Default | Help);
 
