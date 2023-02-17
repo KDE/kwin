@@ -11,6 +11,7 @@
 #include "x11_windowed_logging.h"
 #include "x11_windowed_output.h"
 
+#include <cerrno>
 #include <string.h>
 #include <sys/shm.h>
 #include <xcb/present.h>

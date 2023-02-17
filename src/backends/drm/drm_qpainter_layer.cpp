@@ -19,6 +19,7 @@
 #include "drm_qpainter_backend.h"
 #include "drm_virtual_output.h"
 
+#include <cerrno>
 #include <drm_fourcc.h>
 
 namespace KWin
