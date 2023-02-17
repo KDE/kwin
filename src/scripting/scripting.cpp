@@ -614,14 +614,17 @@ QVariant KWin::JSEngineGlobalMethodsWrapper::readConfig(const QString &key, QVar
 
 void KWin::JSEngineGlobalMethodsWrapper::registerWindow(QQuickWindow *window)
 {
-    QPointer<QQuickWindow> guard = window;
-    connect(
-        window, &QWindow::visibilityChanged, this, [guard](QWindow::Visibility visibility) {
-            if (guard && visibility == QWindow::Hidden) {
-                guard->destroy();
-            }
-        },
-        Qt::QueuedConnection);
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        // Windows stop updating if they are remapped. It seems like a bug in QtXCB.
+        QPointer<QQuickWindow> guard = window;
+        connect(
+            window, &QWindow::visibilityChanged, this, [guard](QWindow::Visibility visibility) {
+                if (guard && visibility == QWindow::Hidden) {
+                    guard->destroy();
+                }
+            },
+            Qt::QueuedConnection);
+    }
 }
 
 bool KWin::JSEngineGlobalMethodsWrapper::registerShortcut(const QString &name, const QString &text, const QKeySequence &keys, QJSValue function)
