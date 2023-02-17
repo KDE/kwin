@@ -1116,7 +1116,6 @@ void Window::setDesktops(QVector<VirtualDesktop *> desktops)
     if (wasOnCurrentDesktop != isOnCurrentDesktop()) {
         Q_EMIT desktopPresenceChanged(this, was_desk);
     }
-    Q_EMIT x11DesktopIdsChanged();
 }
 
 void Window::doSetDesktop()
@@ -1174,19 +1173,6 @@ int Window::desktop() const
 QVector<VirtualDesktop *> Window::desktops() const
 {
     return m_desktops;
-}
-
-QVector<uint> Window::x11DesktopIds() const
-{
-    const auto desks = desktops();
-    QVector<uint> x11Ids;
-    x11Ids.reserve(desks.count());
-    std::transform(desks.constBegin(), desks.constEnd(),
-                   std::back_inserter(x11Ids),
-                   [](const VirtualDesktop *vd) {
-                       return vd->x11DesktopNumber();
-                   });
-    return x11Ids;
 }
 
 QStringList Window::desktopIds() const

@@ -2112,7 +2112,6 @@ MANAGED_HELPER(bool, isFullScreen, isFullScreen, false)
 MANAGED_HELPER(bool, keepAbove, keepAbove, false)
 MANAGED_HELPER(bool, keepBelow, keepBelow, false)
 MANAGED_HELPER(QString, caption, caption, QString());
-MANAGED_HELPER(QVector<uint>, desktops, x11DesktopIds, QVector<uint>());
 MANAGED_HELPER(bool, isMovable, isMovable, false)
 MANAGED_HELPER(bool, isMovableAcrossScreens, isMovableAcrossScreens, false)
 MANAGED_HELPER(bool, isUserMove, isInteractiveMove, false)
@@ -2126,6 +2125,17 @@ MANAGED_HELPER(bool, decorationHasAlpha, decorationHasAlpha, false)
 MANAGED_HELPER(bool, isUnresponsive, unresponsive, false)
 
 #undef MANAGED_HELPER
+
+QVector<uint> EffectWindowImpl::desktops() const
+{
+    const auto desks = m_window->desktops();
+    QVector<uint> ids;
+    ids.reserve(desks.count());
+    std::transform(desks.constBegin(), desks.constEnd(), std::back_inserter(ids), [](const VirtualDesktop *vd) {
+        return vd->x11DesktopNumber();
+    });
+    return ids;
+}
 
 QString EffectWindowImpl::windowClass() const
 {

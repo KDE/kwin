@@ -116,8 +116,6 @@ public:
         return m_wasPopupWindow;
     }
 
-    QVector<uint> x11DesktopIds() const;
-
     /**
      * Whether this Deleted represents the outline.
      */

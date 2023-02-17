@@ -312,7 +312,6 @@ class KWIN_EXPORT Window : public QObject
 
     /**
      * The desktop this Window is on. If the Window is on all desktops the property has value -1.
-     * This is a legacy property, use x11DesktopIds instead
      *
      * @deprecated Use the desktops property instead.
      */
@@ -332,13 +331,6 @@ class KWIN_EXPORT Window : public QObject
      * The activities this client is on. If it's on all activities the property is empty.
      */
     Q_PROPERTY(QStringList activities READ activities WRITE setOnActivities NOTIFY activitiesChanged)
-
-    /**
-     * The x11 ids for all desktops this client is in. On X11 this list will always have a length of 1
-     *
-     * @deprecated prefer using apis that use VirtualDesktop objects
-     */
-    Q_PROPERTY(QVector<uint> x11DesktopIds READ x11DesktopIds NOTIFY x11DesktopIdsChanged)
 
     /**
      * Indicates that the window should not be included on a taskbar.
@@ -987,7 +979,6 @@ public:
      */
     void setDesktops(QVector<VirtualDesktop *> desktops);
 
-    QVector<uint> x11DesktopIds() const;
     QStringList desktopIds() const;
 
     void setMinimized(bool set);
@@ -1513,7 +1504,6 @@ Q_SIGNALS:
     void desktopPresenceChanged(KWin::Window *, int); // to be forwarded by Workspace
     void desktopChanged();
     void activitiesChanged(KWin::Window *window);
-    void x11DesktopIdsChanged();
     void minimizedChanged();
     void clientMinimized(KWin::Window *window, bool animate);
     void clientUnminimized(KWin::Window *window, bool animate);
