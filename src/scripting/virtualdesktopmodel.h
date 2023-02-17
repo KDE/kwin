@@ -31,7 +31,7 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
 public Q_SLOTS:
-    void create(uint position, const QString &name = QString());
+    KWin::VirtualDesktop *create(uint position, const QString &name = QString());
     void remove(uint position);
 
 private:
