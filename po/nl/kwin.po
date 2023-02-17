@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-15 01:00+0000\n"
+"POT-Creation-Date: 2023-02-17 00:59+0000\n"
 "PO-Revision-Date: 2023-02-14 10:44+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -2796,7 +2796,7 @@ msgstr "Een bureaublad omlaag schakelen"
 msgid "Switch to Desktop %1"
 msgstr "Schakel naar bureaublad %1"
 
-#: window.cpp:3465
+#: window.cpp:3463
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

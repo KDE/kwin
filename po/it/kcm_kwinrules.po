@@ -3,14 +3,14 @@
 # Andrea RIZZI <arizzi@pi.infn.it>, 2004.
 # Luciano Montanaro <mikelima@cirulla.net>, 2007, 2008, 2010, 2011.
 # Federico Zenith <federico.zenith@member.fsf.org>, 2010, 2012, 2013, 2014, 2015.
-# Paolo Zamponi <zapaolo@email.it>, 2016, 2017, 2018, 2019, 2020, 2021, 2022.
+# Paolo Zamponi <zapaolo@email.it>, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 # Vincenzo Reale <smart2128vr@gmail.com>, 2020, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-10 00:59+0000\n"
-"PO-Revision-Date: 2022-12-12 16:35+0100\n"
+"PO-Revision-Date: 2023-02-11 08:32+0100\n"
 "Last-Translator: Paolo Zamponi <zapaolo@email.it>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.12.0\n"
+"X-Generator: Lokalize 22.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -452,6 +452,8 @@ msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
 "window becomes invisible."
 msgstr ""
+"La leggibilità potrebbe essere compromessa con valori di opacità "
+"estremamente bassi. Allo 0%, la finestra diventa invisibile."
 
 #: rulesmodel.cpp:378
 #, kde-format
