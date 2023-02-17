@@ -13,7 +13,6 @@
 #include <QStandardPaths>
 #include <QStringList>
 
-#include <KAboutData>
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KMessageBox>

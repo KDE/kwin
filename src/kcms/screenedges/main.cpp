@@ -12,7 +12,6 @@
 #include "main.h"
 #include <kwin_effects_interface.h>
 
-#include <KAboutData>
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KPackage/Package>

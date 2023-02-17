@@ -12,7 +12,6 @@
 
 #include <kwineffects_interface.h>
 
-#include <KAboutData>
 #define TRANSLATION_DOMAIN "kwin_scripting"
 #include <KLocalizedString>
 #include <KLocalizedTranslator>
