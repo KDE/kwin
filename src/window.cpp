@@ -3768,6 +3768,8 @@ QRectF Window::quickTileGeometry(QuickTileMode mode, const QPointF &pos) const
         const QRectF tileGeom = tile->windowGeometry();
         if (tileGeom.width() >= minSize().width() && tileGeom.height() >= minSize().height()) {
             return tile->windowGeometry();
+        } else {
+            return QRectF();
         }
     }
     return workspace()->clientArea(MaximizeArea, this, pos);
