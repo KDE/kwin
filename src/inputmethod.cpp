@@ -114,9 +114,9 @@ void InputMethod::init()
     qCDebug(KWIN_VIRTUALKEYBOARD) << "Registering the DBus interface";
 
     if (waylandServer()) {
-        new TextInputManagerV1Interface(waylandServer()->display());
-        new TextInputManagerV2Interface(waylandServer()->display());
-        new TextInputManagerV3Interface(waylandServer()->display());
+        new TextInputManagerV1Interface(waylandServer()->display(), this);
+        new TextInputManagerV2Interface(waylandServer()->display(), this);
+        new TextInputManagerV3Interface(waylandServer()->display(), this);
 
         connect(waylandServer()->seat(), &SeatInterface::focusedTextInputSurfaceChanged, this, &InputMethod::handleFocusedSurfaceChanged);
 
