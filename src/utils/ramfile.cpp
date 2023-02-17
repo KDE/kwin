@@ -13,6 +13,7 @@
 
 #include <QScopeGuard>
 
+#include <cerrno>
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <unistd.h>
