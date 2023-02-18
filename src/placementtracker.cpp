@@ -39,7 +39,7 @@ void PlacementTracker::add(Window *window)
         return;
     }
     connect(window, &Window::frameGeometryChanged, this, &PlacementTracker::saveGeometry);
-    connect(window, &Window::clientMaximizedStateChanged, this, &PlacementTracker::saveMaximize);
+    connect(window, &Window::maximizedChanged, this, &PlacementTracker::saveMaximize);
     connect(window, &Window::quickTileModeChanged, this, &PlacementTracker::saveQuickTile);
     connect(window, &Window::fullScreenChanged, this, &PlacementTracker::saveFullscreen);
     connect(window, &Window::clientFinishUserMovedResized, this, &PlacementTracker::saveInteractionCounter);
@@ -52,7 +52,7 @@ void PlacementTracker::remove(Window *window)
 {
     if (m_savedWindows.contains(window)) {
         disconnect(window, &Window::frameGeometryChanged, this, &PlacementTracker::saveGeometry);
-        disconnect(window, &Window::clientMaximizedStateChanged, this, &PlacementTracker::saveMaximize);
+        disconnect(window, &Window::maximizedChanged, this, &PlacementTracker::saveMaximize);
         disconnect(window, &Window::quickTileModeChanged, this, &PlacementTracker::saveQuickTile);
         disconnect(window, &Window::fullScreenChanged, this, &PlacementTracker::saveFullscreen);
         disconnect(window, &Window::clientFinishUserMovedResized, this, &PlacementTracker::saveInteractionCounter);

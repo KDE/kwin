@@ -99,7 +99,7 @@ Window::Window()
     connect(this, &Window::clientFinishUserMovedResized, this, [this]() {
         m_keyboardGeometryRestore = QRectF();
     });
-    connect(this, &Window::clientMaximizedStateChanged, this, [this]() {
+    connect(this, &Window::maximizedChanged, this, [this]() {
         m_keyboardGeometryRestore = QRectF();
     });
     connect(this, &Window::fullScreenChanged, this, [this]() {
@@ -2223,7 +2223,7 @@ void Window::setupWindowManagementInterface()
     connect(this, &Window::minimizedChanged, w, [w, this] {
         w->setMinimized(isMinimized());
     });
-    connect(this, &Window::clientMaximizedStateChanged, w, [w](KWin::Window *c, MaximizeMode mode) {
+    connect(this, &Window::maximizedChanged, w, [w](KWin::Window *c, MaximizeMode mode) {
         w->setMaximized(mode == KWin::MaximizeFull);
     });
     connect(this, &Window::demandsAttentionChanged, w, [w, this] {

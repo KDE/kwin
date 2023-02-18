@@ -128,7 +128,7 @@ void MaximizeAnimationTest::testMaximizeRestore()
 
     // Maximize the window.
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-    QSignalSpy maximizeChangedSpy(window, &Window::clientMaximizedStateChanged);
+    QSignalSpy maximizeChangedSpy(window, &Window::maximizedChanged);
 
     workspace()->slotWindowMaximize();
     QVERIFY(surfaceConfigureRequestedSpy.wait());

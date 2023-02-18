@@ -114,7 +114,7 @@ void DontCrashAuroraeDestroyDecoTest::testBorderlessMaximizedWindows()
     QVERIFY(window->readyForPainting());
 
     // simulate click on maximize button
-    QSignalSpy maximizedStateChangedSpy(window, &Window::clientMaximizedStateChanged);
+    QSignalSpy maximizedStateChangedSpy(window, &Window::maximizedChanged);
     quint32 timestamp = 1;
     Test::pointerMotion(window->frameGeometry().topLeft() + scenePoint.toPoint(), timestamp++);
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);

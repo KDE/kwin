@@ -240,7 +240,7 @@ void QuickTilingTest::testQuickMaximizing()
 
     QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-    QSignalSpy maximizeChangedSpy(window, &Window::clientMaximizedStateChanged);
+    QSignalSpy maximizeChangedSpy(window, &Window::maximizedChanged);
 
     window->setQuickTileMode(QuickTileFlag::Maximize, true);
     QCOMPARE(quickTileChangedSpy.count(), 1);

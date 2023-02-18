@@ -290,9 +290,9 @@ void EffectsHandlerImpl::unloadAllEffects()
 void EffectsHandlerImpl::setupWindowConnections(Window *window)
 {
     connect(window, &Window::windowClosed, this, &EffectsHandlerImpl::slotWindowClosed);
-    connect(window, &Window::clientMaximizedStateChanged,
+    connect(window, &Window::maximizedChanged,
             this, &EffectsHandlerImpl::slotClientMaximized);
-    connect(window, static_cast<void (Window::*)(KWin::Window *, MaximizeMode)>(&Window::clientMaximizedStateAboutToChange),
+    connect(window, static_cast<void (Window::*)(KWin::Window *, MaximizeMode)>(&Window::maximizedAboutToChange),
             this, [this](KWin::Window *window, MaximizeMode m) {
                 if (EffectWindowImpl *w = window->effectWindow()) {
                     Q_EMIT windowMaximizedStateAboutToChange(w, m & MaximizeHorizontal, m & MaximizeVertical);
