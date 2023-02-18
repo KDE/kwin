@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules stable\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-10 00:59+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2005-11-26 16:33+0200\n"
 "Last-Translator: Ilze Thirion <ilze.thirion@gmail.com>\n"
 "Language-Team: AFRIKAANS <translate-discuss-af@lists.sourceforge.net>\n"
@@ -13,33 +13,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Frikkie Thirion"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "frix@expertron.co.za"
-
-#: kcmrules.cpp:28
-#, fuzzy, kde-format
-#| msgid "Window &role:"
-msgid "Window Rules"
-msgstr "Venster rol:"
-
-#: kcmrules.cpp:32
-#, kde-format
-msgid "Ismael Asensio"
-msgstr ""
-
-#: kcmrules.cpp:33
-#, kde-format
-msgid "Author"
-msgstr ""
-
-#: kcmrules.cpp:37
+#: kcmrules.cpp:26
 #, fuzzy, kde-format
 #| msgid ""
 #| "<h1>Window-specific Settings</h1> Here you can customize window settings "
@@ -60,17 +34,17 @@ msgstr ""
 "gebruik nie. As jy wel 'n ander venster bestuurder gebruik,verwys asseblief "
 "na hierdie dokumentasie hoe om venster gedrag te pasmaak"
 
-#: kcmrules.cpp:243
+#: kcmrules.cpp:232
 #, kde-format
 msgid "Copy of %1"
 msgstr ""
 
-#: kcmrules.cpp:423
+#: kcmrules.cpp:412
 #, kde-format
 msgid "Application settings for %1"
 msgstr "Toepassings instellings vir %1"
 
-#: kcmrules.cpp:445 rulesmodel.cpp:215
+#: kcmrules.cpp:434 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Venster instellings vir %1"
@@ -962,6 +936,19 @@ msgstr "Op Hoof Venster"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Frikkie Thirion"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "frix@expertron.co.za"
+
+#, fuzzy
+#~| msgid "Window &role:"
+#~ msgid "Window Rules"
+#~ msgstr "Venster rol:"
 
 #, fuzzy
 #~| msgid "Cascade"

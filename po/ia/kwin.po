@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-17 00:59+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2023-01-24 15:53+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -2111,20 +2111,20 @@ msgstr "Nomine de file de scriptorio"
 msgid "Desktop file name rule type"
 msgstr "Typo de regula de nomine de file de scriptorio"
 
-#: scripting/genericscriptedconfig.cpp:70
+#: scripting/genericscriptedconfig.cpp:69
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
 msgstr "Non pote locar metadata de pacchetto"
 
-#: scripting/genericscriptedconfig.cpp:84
+#: scripting/genericscriptedconfig.cpp:83
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
 msgstr "%1 non contine un file de metadata.json valide"
 
-#: scripting/genericscriptedconfig.cpp:90
-#: scripting/genericscriptedconfig.cpp:96
+#: scripting/genericscriptedconfig.cpp:89
+#: scripting/genericscriptedconfig.cpp:95
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"

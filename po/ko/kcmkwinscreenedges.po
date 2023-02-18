@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-15 00:48+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2022-08-09 13:30+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -17,72 +17,62 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Lokalize 21.12.3\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "박신조"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "kde@peremen.name"
-
-#: main.cpp:130 touch.cpp:124
+#: main.cpp:129 touch.cpp:123
 #, kde-format
 msgid "No Action"
 msgstr "동작 없음"
 
-#: main.cpp:131 touch.cpp:125
+#: main.cpp:130 touch.cpp:124
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "바탕 화면 멀리 보기"
 
-#: main.cpp:132 touch.cpp:126
+#: main.cpp:131 touch.cpp:125
 #, kde-format
 msgid "Lock Screen"
 msgstr "잠금 화면"
 
-#: main.cpp:133 touch.cpp:127
+#: main.cpp:132 touch.cpp:126
 #, kde-format
 msgid "Show KRunner"
 msgstr "KRunner 표시"
 
-#: main.cpp:134 touch.cpp:128
+#: main.cpp:133 touch.cpp:127
 #, kde-format
 msgid "Activity Manager"
 msgstr "활동 관리자"
 
-#: main.cpp:135 touch.cpp:129
+#: main.cpp:134 touch.cpp:128
 #, kde-format
 msgid "Application Launcher"
 msgstr "프로그램 실행기"
 
-#: main.cpp:139 touch.cpp:133
+#: main.cpp:138 touch.cpp:132
 #, kde-format
 msgid "Present Windows"
 msgstr "창 진열하기"
 
-#: main.cpp:140 touch.cpp:134
+#: main.cpp:139 touch.cpp:133
 #, kde-format
 msgid "%1 - All Desktops"
 msgstr "%1 - 모든 바탕 화면"
 
-#: main.cpp:141 touch.cpp:135
+#: main.cpp:140 touch.cpp:134
 #, kde-format
 msgid "%1 - Current Desktop"
 msgstr "%1 - 현재 바탕 화면"
 
-#: main.cpp:142 touch.cpp:136
+#: main.cpp:141 touch.cpp:135
 #, kde-format
 msgid "%1 - Current Application"
 msgstr "%1 - 현재 프로그램"
 
-#: main.cpp:144 touch.cpp:138
+#: main.cpp:143 touch.cpp:137
 #, kde-format
 msgid "Toggle window switching"
 msgstr "창 전환 사용/사용 안 함"
 
-#: main.cpp:145 touch.cpp:139
+#: main.cpp:144 touch.cpp:138
 #, kde-format
 msgid "Toggle alternative window switching"
 msgstr "대체 창 전환 사용/사용 안 함"
@@ -229,6 +219,14 @@ msgid ""
 "You can trigger an action by swiping from the screen edge towards the center "
 "of the screen."
 msgstr "동작을 실행하려면 화면 경계선에서 화면 중심으로 미십시오."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "박신조"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "kde@peremen.name"
 
 #~ msgid "Show Desktop"
 #~ msgstr "바탕 화면 표시"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-10 00:59+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2023-01-08 17:52+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -18,32 +18,7 @@ msgstr ""
 "X-Generator: Lokalize 22.12.0\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Nguyễn Hùng Phú,Trần Thế Trung"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "phu.nguyen@kdemail.net,tttrung@hotmail.com"
-
-#: kcmrules.cpp:28
-#, kde-format
-msgid "Window Rules"
-msgstr "Luật cửa sổ"
-
-#: kcmrules.cpp:32
-#, kde-format
-msgid "Ismael Asensio"
-msgstr "Ismael Asensio"
-
-#: kcmrules.cpp:33
-#, kde-format
-msgid "Author"
-msgstr "Tác giả"
-
-#: kcmrules.cpp:37
+#: kcmrules.cpp:26
 #, kde-format
 msgid ""
 "<p><h1>Window-specific Settings</h1> Here you can customize window settings "
@@ -58,17 +33,17 @@ msgstr ""
 "bạn dùng một trình quản lí cửa sổ khác, vui lòng tham khảo tài liệu hướng "
 "dẫn của chương trình đó để biết cách tự chọn ứng xử của cửa sổ.</p>"
 
-#: kcmrules.cpp:243
+#: kcmrules.cpp:232
 #, kde-format
 msgid "Copy of %1"
 msgstr "Bản sao của %1"
 
-#: kcmrules.cpp:423
+#: kcmrules.cpp:412
 #, kde-format
 msgid "Application settings for %1"
 msgstr "Thiết lập ứng dụng cho %1"
 
-#: kcmrules.cpp:445 rulesmodel.cpp:215
+#: kcmrules.cpp:434 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Thiết lập cửa sổ cho %1"
@@ -959,6 +934,23 @@ msgstr "Cửa sổ vô quản lí"
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Không phát hiện được thuộc tính cửa sổ. Cửa sổ này không do KWin quản lí."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Nguyễn Hùng Phú,Trần Thế Trung"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "phu.nguyen@kdemail.net,tttrung@hotmail.com"
+
+#~ msgid "Window Rules"
+#~ msgstr "Luật cửa sổ"
+
+#~ msgid "Ismael Asensio"
+#~ msgstr "Ismael Asensio"
+
+#~ msgid "Author"
+#~ msgstr "Tác giả"
 
 #~ msgid "Error"
 #~ msgstr "Lỗi"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-15 00:48+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2022-08-17 18:07+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -22,72 +22,62 @@ msgstr ""
 "X-Generator: Lokalize 22.04.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Iñigo Salvador Azurmendi,Hizkuntza Politikarako Sailburuordetza"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "xalba@ni.eus,hizpol@ej-gv.es"
-
-#: main.cpp:130 touch.cpp:124
+#: main.cpp:129 touch.cpp:123
 #, kde-format
 msgid "No Action"
 msgstr "Ekintzarik ez"
 
-#: main.cpp:131 touch.cpp:125
+#: main.cpp:130 touch.cpp:124
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Begirada bat mahaigainari"
 
-#: main.cpp:132 touch.cpp:126
+#: main.cpp:131 touch.cpp:125
 #, kde-format
 msgid "Lock Screen"
 msgstr "Giltzatu pantaila"
 
-#: main.cpp:133 touch.cpp:127
+#: main.cpp:132 touch.cpp:126
 #, kde-format
 msgid "Show KRunner"
 msgstr "Erakutsi KRunner"
 
-#: main.cpp:134 touch.cpp:128
+#: main.cpp:133 touch.cpp:127
 #, kde-format
 msgid "Activity Manager"
 msgstr "Jarduera-kudeatzailea"
 
-#: main.cpp:135 touch.cpp:129
+#: main.cpp:134 touch.cpp:128
 #, kde-format
 msgid "Application Launcher"
 msgstr "Aplikazio-abiarazlea"
 
-#: main.cpp:139 touch.cpp:133
+#: main.cpp:138 touch.cpp:132
 #, kde-format
 msgid "Present Windows"
 msgstr "Aurkeztu leihoak"
 
-#: main.cpp:140 touch.cpp:134
+#: main.cpp:139 touch.cpp:133
 #, kde-format
 msgid "%1 - All Desktops"
 msgstr "%1 - Mahaigain guztiak"
 
-#: main.cpp:141 touch.cpp:135
+#: main.cpp:140 touch.cpp:134
 #, kde-format
 msgid "%1 - Current Desktop"
 msgstr "%1 - Uneko mahaigaina"
 
-#: main.cpp:142 touch.cpp:136
+#: main.cpp:141 touch.cpp:135
 #, kde-format
 msgid "%1 - Current Application"
 msgstr "%1 - Uneko aplikazioa"
 
-#: main.cpp:144 touch.cpp:138
+#: main.cpp:143 touch.cpp:137
 #, kde-format
 msgid "Toggle window switching"
 msgstr "Aktibatu/desaktibatu leiho-aldatzea"
 
-#: main.cpp:145 touch.cpp:139
+#: main.cpp:144 touch.cpp:138
 #, kde-format
 msgid "Toggle alternative window switching"
 msgstr "Aktibatu/desaktibatu ordezko leiho-aldatzea"
@@ -266,6 +256,14 @@ msgid ""
 msgstr ""
 "Ekintza bat eragin dezakezu hatzarekin pantailaren ertzetik pantailaren "
 "erdirantz kolpe arin bat emanez."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Iñigo Salvador Azurmendi,Hizkuntza Politikarako Sailburuordetza"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "xalba@ni.eus,hizpol@ej-gv.es"
 
 #~ msgid "Show Desktop"
 #~ msgstr "Erakutsi mahaigaina"

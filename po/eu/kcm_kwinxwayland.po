@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-17 00:51+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2022-12-17 11:08+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque\n"
@@ -19,28 +19,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 22.12.0\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Iñigo Salvador Azurmendi"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "xalba@ni.eus"
-
-#: kcmkwinxwayland.cpp:30
-#, kde-format
-msgid "Legacy X11 App Support"
-msgstr "X11 ondare aplikazioen euskarria"
-
-#: kcmkwinxwayland.cpp:32
-#, kde-format
-msgid "Allow legacy X11 apps to read keystrokes typed in other apps"
-msgstr ""
-"Baimendu X11 ondare aplikazioek beste aplikazio batzuetan tekleatutako tekla-"
-"sakatzeak irakurtzea"
 
 #: package/contents/ui/main.qml:19
 #, kde-format
@@ -106,3 +84,19 @@ msgstr ""
 "saioko segurtasunera murriztuko dela, software maltzurrei pasahitzak "
 "lapurtzen eta tekleatzen duzun testua zelatatzen utziz. Ziurtatu arrisku "
 "hori ulertu eta onartzen duzula."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Iñigo Salvador Azurmendi"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "xalba@ni.eus"
+
+#~ msgid "Legacy X11 App Support"
+#~ msgstr "X11 ondare aplikazioen euskarria"
+
+#~ msgid "Allow legacy X11 apps to read keystrokes typed in other apps"
+#~ msgstr ""
+#~ "Baimendu X11 ondare aplikazioek beste aplikazio batzuetan tekleatutako "
+#~ "tekla-sakatzeak irakurtzea"

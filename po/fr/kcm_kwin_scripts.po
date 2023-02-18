@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm-kwin-scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-09-20 00:47+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2022-09-24 09:04+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@neuf.fr>\n"
 "Language-Team: French <kde-francophone@kde.org>\n"
@@ -27,27 +27,17 @@ msgstr ""
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Joëlle Cornavin, Sébastien Renard, Simon Depiets"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "jcorn@free.fr, renard@kde.org, sdepiets@gmail.com"
-
-#: module.cpp:57
+#: module.cpp:56
 #, kde-format
 msgid "Import KWin Script"
 msgstr "Importer un script KWin"
 
-#: module.cpp:58
+#: module.cpp:57
 #, kde-format
 msgid "*.kwinscript|KWin scripts (*.kwinscript)"
 msgstr "*.kwinscript|scripts KWin (*.kwinscript)"
 
-#: module.cpp:96
+#: module.cpp:95
 #, kde-format
 msgctxt "Placeholder is error message returned from the install service"
 msgid ""
@@ -57,13 +47,13 @@ msgstr ""
 "Impossible d'importer le script sélectionné.\n"
 "%1"
 
-#: module.cpp:108
+#: module.cpp:107
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
 msgstr "Le script « %1 » a été importé avec succès."
 
-#: module.cpp:148
+#: module.cpp:147
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "Erreur durant la désinstallation du script « KWin » : %1"
@@ -83,6 +73,14 @@ msgstr "Installer à partir d'un fichier..."
 #, kde-format
 msgid "Get New Scripts..."
 msgstr "Obtenir de nouveaux scripts..."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Joëlle Cornavin, Sébastien Renard, Simon Depiets"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "jcorn@free.fr, renard@kde.org, sdepiets@gmail.com"
 
 #~ msgid "KWin Scripts"
 #~ msgstr "Scripts KWin"

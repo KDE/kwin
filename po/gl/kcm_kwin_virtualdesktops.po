@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-15 00:49+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2019-10-19 22:07+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -140,10 +140,8 @@ msgstr "%1 ms"
 msgid "Show desktop layout indicators"
 msgstr "Mostrar indicadores da disposición do escritorio"
 
-#: virtualdesktops.cpp:33
-#, kde-format
-msgid "Virtual Desktops"
-msgstr "Escritorios virtuais"
+#~ msgid "Virtual Desktops"
+#~ msgstr "Escritorios virtuais"
 
 #~ msgid "New Desktop"
 #~ msgstr "Novo escritorio"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-10 00:59+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2010-01-29 13:59+0530\n"
 "Last-Translator: Rajesh Ranjan <rajesh672@gmail.com>\n"
 "Language-Team: Maithili <maithili.sf.net>\n"
@@ -22,33 +22,7 @@ msgstr ""
 "\n"
 "\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "संगीता कुमारी"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "sangeeta09@gmail.com"
-
-#: kcmrules.cpp:28
-#, fuzzy, kde-format
-#| msgid "Window &role:"
-msgid "Window Rules"
-msgstr "विंडो भूमिका (&r):"
-
-#: kcmrules.cpp:32
-#, kde-format
-msgid "Ismael Asensio"
-msgstr ""
-
-#: kcmrules.cpp:33
-#, kde-format
-msgid "Author"
-msgstr ""
-
-#: kcmrules.cpp:37
+#: kcmrules.cpp:26
 #, kde-format
 msgid ""
 "<p><h1>Window-specific Settings</h1> Here you can customize window settings "
@@ -58,17 +32,17 @@ msgid ""
 "documentation for how to customize window behavior.</p>"
 msgstr ""
 
-#: kcmrules.cpp:243
+#: kcmrules.cpp:232
 #, kde-format
 msgid "Copy of %1"
 msgstr ""
 
-#: kcmrules.cpp:423
+#: kcmrules.cpp:412
 #, kde-format
 msgid "Application settings for %1"
 msgstr "%1 क' लेल अनुप्रयोग बिन्यास"
 
-#: kcmrules.cpp:445 rulesmodel.cpp:215
+#: kcmrules.cpp:434 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "%1 क' लेल विंडो बिन्यास"
@@ -955,6 +929,19 @@ msgstr "मुख्य विंडो पर"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "संगीता कुमारी"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "sangeeta09@gmail.com"
+
+#, fuzzy
+#~| msgid "Window &role:"
+#~ msgid "Window Rules"
+#~ msgstr "विंडो भूमिका (&r):"
 
 #, fuzzy
 #~| msgid "Cascade"

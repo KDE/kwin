@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-03-26 00:45+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2019-09-30 11:24+0100\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
@@ -17,26 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-POFile-SpellExtra: Vlad Zagorodniy Zahorodnii\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "José Nuno Pires"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "zepires@gmail.com"
-
-#: kcm.cpp:35
-#, kde-format
-msgid "Desktop Effects"
-msgstr "Efeitos do Ecrã"
-
-#: kcm.cpp:39
-#, kde-format
-msgid "Vlad Zahorodnii"
-msgstr "Vlad Zahorodnii"
 
 #: package/contents/ui/Effect.qml:92
 #, kde-format
@@ -92,6 +72,20 @@ msgstr "Excluir os efeitos internos"
 #, kde-format
 msgid "Get New Desktop Effects..."
 msgstr "Obter Novos Efeitos do Ecrã..."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "José Nuno Pires"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "zepires@gmail.com"
+
+#~ msgid "Desktop Effects"
+#~ msgstr "Efeitos do Ecrã"
+
+#~ msgid "Vlad Zahorodnii"
+#~ msgstr "Vlad Zahorodnii"
 
 #~ msgid "Download New Desktop Effects"
 #~ msgstr "Obter Novos Efeitos do Ecrã"

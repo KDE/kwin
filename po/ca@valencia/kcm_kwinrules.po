@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-10 00:59+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2023-02-10 10:02+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -24,32 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Empar Montoro Martín,Sebastià Pla i Sanz"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "montoro_mde@gva.es,sps@sastia.com"
-
-#: kcmrules.cpp:28
-#, kde-format
-msgid "Window Rules"
-msgstr "Regles de les finestres"
-
-#: kcmrules.cpp:32
-#, kde-format
-msgid "Ismael Asensio"
-msgstr "Ismael Asensio"
-
-#: kcmrules.cpp:33
-#, kde-format
-msgid "Author"
-msgstr "Autoria"
-
-#: kcmrules.cpp:37
+#: kcmrules.cpp:26
 #, kde-format
 msgid ""
 "<p><h1>Window-specific Settings</h1> Here you can customize window settings "
@@ -64,17 +39,17 @@ msgstr ""
 "finestres. Si utilitzeu un gestor de finestres diferent, consulteu a la "
 "documentació la manera de personalitzar el comportament de la finestra.</p>"
 
-#: kcmrules.cpp:243
+#: kcmrules.cpp:232
 #, kde-format
 msgid "Copy of %1"
 msgstr "Còpia de %1"
 
-#: kcmrules.cpp:423
+#: kcmrules.cpp:412
 #, kde-format
 msgid "Application settings for %1"
 msgstr "Valors d'aplicació per a %1"
 
-#: kcmrules.cpp:445 rulesmodel.cpp:215
+#: kcmrules.cpp:434 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Valors de la finestra per a %1"
@@ -978,3 +953,20 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "No s'han pogut detectar les propietats de la finestra. KWin no gestiona esta "
 "finestra."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Empar Montoro Martín,Sebastià Pla i Sanz"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "montoro_mde@gva.es,sps@sastia.com"
+
+#~ msgid "Window Rules"
+#~ msgstr "Regles de les finestres"
+
+#~ msgid "Ismael Asensio"
+#~ msgstr "Ismael Asensio"
+
+#~ msgid "Author"
+#~ msgstr "Autoria"

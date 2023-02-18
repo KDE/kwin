@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-06 01:01+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2005-10-20 21:45+0200\n"
 "Last-Translator: Mashrab Kuvatov <kmashrab@uni-bremen.de>\n"
 "Language-Team: Uzbek <floss-uz-l10n@googlegroups.com>\n"
@@ -16,16 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.10.2\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Mashrab Quvatov"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "kmashrab@uni-bremen.de"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -78,23 +68,7 @@ msgstr ""
 msgid "Keep above other windows"
 msgstr ""
 
-#: kcm.cpp:49
-#, fuzzy, kde-format
-#| msgid "&Window Decoration"
-msgid "Window Decorations"
-msgstr "&Oynaning bezaki"
-
-#: kcm.cpp:53
-#, kde-format
-msgid "Valerio Pilo"
-msgstr ""
-
-#: kcm.cpp:54
-#, kde-format
-msgid "Author"
-msgstr ""
-
-#: kcm.cpp:183
+#: kcm.cpp:173
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
@@ -290,6 +264,19 @@ msgstr "Bahaybat"
 #| msgid "Oversized"
 msgid "Oversized"
 msgstr "Juda bahaybat"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Mashrab Quvatov"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "kmashrab@uni-bremen.de"
+
+#, fuzzy
+#~| msgid "&Window Decoration"
+#~ msgid "Window Decorations"
+#~ msgstr "&Oynaning bezaki"
 
 #~ msgid "Menu"
 #~ msgstr "Menyu"

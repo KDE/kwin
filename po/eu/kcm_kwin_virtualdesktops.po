@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-15 00:49+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2022-12-15 07:23+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque\n"
@@ -141,10 +141,8 @@ msgstr "%1 ms"
 msgid "Show desktop layout indicators"
 msgstr "Erakutsi mahaigain-diseinuaren adierazleak"
 
-#: virtualdesktops.cpp:33
-#, kde-format
-msgid "Virtual Desktops"
-msgstr "Alegiazko mahaigainak"
+#~ msgid "Virtual Desktops"
+#~ msgstr "Alegiazko mahaigainak"
 
 #~ msgid "New Desktop"
 #~ msgstr "Mahaigain berria"

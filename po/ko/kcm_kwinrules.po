@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-10 00:59+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2022-05-06 00:08+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -18,32 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Lokalize 21.12.3\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "박신조"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "kde@peremen.name"
-
-#: kcmrules.cpp:28
-#, kde-format
-msgid "Window Rules"
-msgstr "창 규칙"
-
-#: kcmrules.cpp:32
-#, kde-format
-msgid "Ismael Asensio"
-msgstr "Ismael Asensio"
-
-#: kcmrules.cpp:33
-#, kde-format
-msgid "Author"
-msgstr "작성자"
-
-#: kcmrules.cpp:37
+#: kcmrules.cpp:26
 #, kde-format
 msgid ""
 "<p><h1>Window-specific Settings</h1> Here you can customize window settings "
@@ -57,17 +32,17 @@ msgstr ""
 "되지 않습니다. 다른 창 관리자를 사용한다면 창 행동을 사용자 정의하는 방법에 "
 "대해서 창 관리자의 문서를 참고하십시오.</p>"
 
-#: kcmrules.cpp:243
+#: kcmrules.cpp:232
 #, kde-format
 msgid "Copy of %1"
 msgstr "사본 - %1"
 
-#: kcmrules.cpp:423
+#: kcmrules.cpp:412
 #, kde-format
 msgid "Application settings for %1"
 msgstr "%1의 프로그램 설정"
 
-#: kcmrules.cpp:445 rulesmodel.cpp:215
+#: kcmrules.cpp:434 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "%1의 창 설정"
@@ -951,6 +926,23 @@ msgstr "관리되지 않는 창"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "창 속성을 감지할 수 없습니다. KWin에서 관리하는 창이 아닙니다."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "박신조"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "kde@peremen.name"
+
+#~ msgid "Window Rules"
+#~ msgstr "창 규칙"
+
+#~ msgid "Ismael Asensio"
+#~ msgstr "Ismael Asensio"
+
+#~ msgid "Author"
+#~ msgstr "작성자"
 
 #~ msgid "Error"
 #~ msgstr "오류"

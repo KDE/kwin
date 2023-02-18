@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-15 00:49+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2021-05-28 02:11+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -131,10 +131,8 @@ msgstr "%1밀리초"
 msgid "Show desktop layout indicators"
 msgstr "바탕 화면 레이아웃 표시기 표시"
 
-#: virtualdesktops.cpp:33
-#, kde-format
-msgid "Virtual Desktops"
-msgstr "가상 바탕 화면"
+#~ msgid "Virtual Desktops"
+#~ msgstr "가상 바탕 화면"
 
 #~ msgid "New Desktop"
 #~ msgstr "새 바탕 화면"

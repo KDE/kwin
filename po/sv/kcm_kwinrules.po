@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-10 00:59+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2022-04-19 19:39+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -18,32 +18,7 @@ msgstr ""
 "X-Generator: Lokalize 20.08.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Stefan Asserhäll"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "stefan.asserhall@bredband.net"
-
-#: kcmrules.cpp:28
-#, kde-format
-msgid "Window Rules"
-msgstr "Fönsterregler"
-
-#: kcmrules.cpp:32
-#, kde-format
-msgid "Ismael Asensio"
-msgstr "Ismael Asensio"
-
-#: kcmrules.cpp:33
-#, kde-format
-msgid "Author"
-msgstr "Upphovsman"
-
-#: kcmrules.cpp:37
+#: kcmrules.cpp:26
 #, kde-format
 msgid ""
 "<p><h1>Window-specific Settings</h1> Here you can customize window settings "
@@ -58,17 +33,17 @@ msgstr ""
 "fönsterhanterare. Om du använder en annan fönsterhanterare, se dess "
 "dokumentation om hur fönsterbeteende kan anpassas.</p>"
 
-#: kcmrules.cpp:243
+#: kcmrules.cpp:232
 #, kde-format
 msgid "Copy of %1"
 msgstr "Kopia av %1"
 
-#: kcmrules.cpp:423
+#: kcmrules.cpp:412
 #, kde-format
 msgid "Application settings for %1"
 msgstr "Programinställningar för %1"
 
-#: kcmrules.cpp:445 rulesmodel.cpp:215
+#: kcmrules.cpp:434 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "Fönsterinställningar för %1"
@@ -960,6 +935,23 @@ msgstr "Ohanterat fönster"
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Kunde inte detektera fönsteregenskaper. Fönstret hanteras inte av Kwin."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Stefan Asserhäll"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "stefan.asserhall@bredband.net"
+
+#~ msgid "Window Rules"
+#~ msgstr "Fönsterregler"
+
+#~ msgid "Ismael Asensio"
+#~ msgstr "Ismael Asensio"
+
+#~ msgid "Author"
+#~ msgstr "Upphovsman"
 
 #~ msgid "Error"
 #~ msgstr "Fel"

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-15 00:48+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2014-10-20 19:32+0000\n"
 "Last-Translator: Samir Ribić <Unknown>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
@@ -21,74 +21,64 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Samir Ribić"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "samir.ribic@etf.unsa.ba"
-
 # >> @option:check Screen edge action
-#: main.cpp:130 touch.cpp:124
+#: main.cpp:129 touch.cpp:123
 #, kde-format
 msgid "No Action"
 msgstr "Bez radnje"
 
-#: main.cpp:131 touch.cpp:125
+#: main.cpp:130 touch.cpp:124
 #, kde-format
 msgid "Peek at Desktop"
 msgstr ""
 
 # >> @option:check Screen edge action
-#: main.cpp:132 touch.cpp:126
+#: main.cpp:131 touch.cpp:125
 #, kde-format
 msgid "Lock Screen"
 msgstr "Zaključaj ekran"
 
-#: main.cpp:133 touch.cpp:127
+#: main.cpp:132 touch.cpp:126
 #, kde-format
 msgid "Show KRunner"
 msgstr ""
 
-#: main.cpp:134 touch.cpp:128
+#: main.cpp:133 touch.cpp:127
 #, kde-format
 msgid "Activity Manager"
 msgstr ""
 
-#: main.cpp:135 touch.cpp:129
+#: main.cpp:134 touch.cpp:128
 #, kde-format
 msgid "Application Launcher"
 msgstr ""
 
-#: main.cpp:139 touch.cpp:133
+#: main.cpp:138 touch.cpp:132
 #, kde-format
 msgid "Present Windows"
 msgstr ""
 
-#: main.cpp:140 touch.cpp:134
+#: main.cpp:139 touch.cpp:133
 #, kde-format
 msgid "%1 - All Desktops"
 msgstr "%1 - Svi desktopi"
 
-#: main.cpp:141 touch.cpp:135
+#: main.cpp:140 touch.cpp:134
 #, kde-format
 msgid "%1 - Current Desktop"
 msgstr "%1 - Trenutni Desktop"
 
-#: main.cpp:142 touch.cpp:136
+#: main.cpp:141 touch.cpp:135
 #, kde-format
 msgid "%1 - Current Application"
 msgstr "%1 - Trenutna aplikacija"
 
-#: main.cpp:144 touch.cpp:138
+#: main.cpp:143 touch.cpp:137
 #, kde-format
 msgid "Toggle window switching"
 msgstr "Uključi/isključi prebacivanje prozora"
 
-#: main.cpp:145 touch.cpp:139
+#: main.cpp:144 touch.cpp:138
 #, kde-format
 msgid "Toggle alternative window switching"
 msgstr "Uključi/isključi alternativno prebacivanje prozora"
@@ -246,6 +236,14 @@ msgid ""
 "of the screen."
 msgstr ""
 "Za okidanje radnje gurnite pokazivač miša uz ivicu ekrana u smjeru radnje."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Samir Ribić"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "samir.ribic@etf.unsa.ba"
 
 # >> @option:check Screen edge action
 #~ msgid "Show Desktop"

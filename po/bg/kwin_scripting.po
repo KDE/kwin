@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-01 00:48+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2022-11-02 22:47+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -17,30 +17,28 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 22.08.2\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Минчо Кондарев"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "mkondarev@yahoo.de"
-
-#: genericscriptedconfig.cpp:70
+#: genericscriptedconfig.cpp:69
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
 msgstr "Не можа да се намерят метаданните на пакета"
 
-#: genericscriptedconfig.cpp:84
+#: genericscriptedconfig.cpp:83
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
 msgstr "%1 не съдържа валиден файл metadata.json"
 
-#: genericscriptedconfig.cpp:90 genericscriptedconfig.cpp:96
+#: genericscriptedconfig.cpp:89 genericscriptedconfig.cpp:95
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1 не съществува"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Минчо Кондарев"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "mkondarev@yahoo.de"

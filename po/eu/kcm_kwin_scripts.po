@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-09-20 00:47+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2022-09-20 20:43+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -21,27 +21,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 22.08.0\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Iñigo Salvador Azurmendi"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "xalba@ni.eus"
-
-#: module.cpp:57
+#: module.cpp:56
 #, kde-format
 msgid "Import KWin Script"
 msgstr "Inportatu KWin scripta"
 
-#: module.cpp:58
+#: module.cpp:57
 #, kde-format
 msgid "*.kwinscript|KWin scripts (*.kwinscript)"
 msgstr "*.kwinscript|KWin scriptak (*.kwinscript)"
 
-#: module.cpp:96
+#: module.cpp:95
 #, kde-format
 msgctxt "Placeholder is error message returned from the install service"
 msgid ""
@@ -51,13 +41,13 @@ msgstr ""
 "Ezin da inportatu hautatutako scripta.\n"
 "%1"
 
-#: module.cpp:108
+#: module.cpp:107
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
 msgstr "\"%1\" scripta ondo inportatu da."
 
-#: module.cpp:148
+#: module.cpp:147
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "Errorea KWin-en script-a desinstalatzean: %1"
@@ -77,6 +67,14 @@ msgstr "Instalatu fitxategitik..."
 #, kde-format
 msgid "Get New Scripts..."
 msgstr "Lortu script berria..."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Iñigo Salvador Azurmendi"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "xalba@ni.eus"
 
 #~ msgid "KWin Scripts"
 #~ msgstr "KWin scriptak"

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-03-26 00:45+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2022-12-25 17:08\n"
 "Last-Translator: Zmicier <zmicerturok@gmail.com>\n"
 "Language-Team: Belarusian\n"
@@ -20,26 +20,6 @@ msgstr ""
 "X-Crowdin-Language: be\n"
 "X-Crowdin-File: /main/be/kwin/kcm_kwin_effects.po\n"
 "X-Crowdin-File-ID: 8756\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Antikruk"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "nashtlumach@gmail.com"
-
-#: kcm.cpp:35
-#, kde-format
-msgid "Desktop Effects"
-msgstr "Эфекты працоўнага стала"
-
-#: kcm.cpp:39
-#, kde-format
-msgid "Vlad Zahorodnii"
-msgstr "Vlad Zahorodnii"
 
 #: package/contents/ui/Effect.qml:92
 #, kde-format
@@ -95,3 +75,17 @@ msgstr "Выключыць унутраныя эфекты"
 #, kde-format
 msgid "Get New Desktop Effects..."
 msgstr "Атрымаць новыя эфекты працоўнага стала..."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Antikruk"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "nashtlumach@gmail.com"
+
+#~ msgid "Desktop Effects"
+#~ msgstr "Эфекты працоўнага стала"
+
+#~ msgid "Vlad Zahorodnii"
+#~ msgstr "Vlad Zahorodnii"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-03-26 00:45+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2019-10-02 20:50+0300\n"
 "Last-Translator: Moo\n"
 "Language-Team: lt\n"
@@ -18,26 +18,6 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
 "X-Generator: Poedit 2.0.6\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Moo"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "<>"
-
-#: kcm.cpp:35
-#, kde-format
-msgid "Desktop Effects"
-msgstr "Darbalaukio efektai"
-
-#: kcm.cpp:39
-#, kde-format
-msgid "Vlad Zahorodnii"
-msgstr "Vlad Zahorodnii"
 
 #: package/contents/ui/Effect.qml:92
 #, kde-format
@@ -93,6 +73,20 @@ msgstr "Išbraukti vidinius efektus"
 #, kde-format
 msgid "Get New Desktop Effects..."
 msgstr "Gauti naujus darbalaukio efektus..."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Moo"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "<>"
+
+#~ msgid "Desktop Effects"
+#~ msgstr "Darbalaukio efektai"
+
+#~ msgid "Vlad Zahorodnii"
+#~ msgstr "Vlad Zahorodnii"
 
 #~ msgid "Download New Desktop Effects"
 #~ msgstr "Atsisiųsti naujus darbalaukio efektus"

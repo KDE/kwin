@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-01 00:48+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2021-04-27 13:10+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -19,32 +19,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 20.12.0\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Josep M. Ferrer"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "txemaq@gmail.com"
-
-#: kcmvirtualkeyboard.cpp:29
-#, kde-format
-msgid "Virtual Keyboard"
-msgstr "Teclat virtual"
-
-#: kcmvirtualkeyboard.cpp:31
-#, kde-format
-msgid "Choose Virtual Keyboard"
-msgstr "Seleccioneu el teclat virtual"
-
-#: kcmvirtualkeyboard.cpp:68
+#: kcmvirtualkeyboard.cpp:61
 #, kde-format
 msgid "None"
 msgstr "Sense"
 
-#: kcmvirtualkeyboard.cpp:72
+#: kcmvirtualkeyboard.cpp:65
 #, kde-format
 msgid "Do not use any virtual keyboard"
 msgstr "No utilitzar cap teclat virtual"
@@ -53,3 +33,17 @@ msgstr "No utilitzar cap teclat virtual"
 #, kde-format
 msgid "This module lets you choose the virtual keyboard to use."
 msgstr "Este mòdul permet triar el teclat virtual que s'utilitzarà."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Josep M. Ferrer"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "txemaq@gmail.com"
+
+#~ msgid "Virtual Keyboard"
+#~ msgstr "Teclat virtual"
+
+#~ msgid "Choose Virtual Keyboard"
+#~ msgstr "Seleccioneu el teclat virtual"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-06 01:01+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2009-01-02 11:45+0530\n"
 "Last-Translator: Manoj Kumar Giri <mgiri@redhat.com>\n"
 "Language-Team: Oriya <oriya-it@googlegroups.com>\n"
@@ -19,16 +19,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
 "\n"
 "\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr ""
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr ""
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -80,22 +70,7 @@ msgstr ""
 msgid "Keep above other windows"
 msgstr ""
 
-#: kcm.cpp:49
-#, kde-format
-msgid "Window Decorations"
-msgstr ""
-
-#: kcm.cpp:53
-#, kde-format
-msgid "Valerio Pilo"
-msgstr ""
-
-#: kcm.cpp:54
-#, kde-format
-msgid "Author"
-msgstr ""
-
-#: kcm.cpp:183
+#: kcm.cpp:173
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"

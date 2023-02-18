@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-16 01:01+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2021-11-19 13:44+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -943,18 +943,18 @@ msgstr "A jelenlegi ablakok átváltása (ezen az asztalon)"
 msgid "Ignore &minimized windows"
 msgstr "A minimalizált ablakok ki&hagyása"
 
-#: windowview/qml/main.qml:108
+#: windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: windowview/qml/main.qml:108
+#: windowview/qml/main.qml:107
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "Ablakok"
 
-#: windowview/qml/main.qml:123
+#: windowview/qml/main.qml:122
 #, fuzzy, kde-format
 #| msgid "Fullscreen windows"
 msgid "Filter windows…"

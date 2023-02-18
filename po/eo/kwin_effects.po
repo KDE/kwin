@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-16 01:01+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2023-02-09 22:30+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
@@ -927,17 +927,17 @@ msgstr "Ŝalti Prezenti Vindozon (Fenestra klaso sur nuna labortablo)"
 msgid "Ignore &minimized windows"
 msgstr "Ignori &minimigitajn fenestrojn"
 
-#: windowview/qml/main.qml:108
+#: windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Neniuj Alumetoj"
 
-#: windowview/qml/main.qml:108
+#: windowview/qml/main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "Neniuj Fenestroj"
 
-#: windowview/qml/main.qml:123
+#: windowview/qml/main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "Filtri fenestrojn..."

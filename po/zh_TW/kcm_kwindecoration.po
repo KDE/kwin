@@ -10,27 +10,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-06 01:01+0000\n"
-"PO-Revision-Date: 2023-02-07 19:38+0900\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"PO-Revision-Date: 2023-02-18 00:12+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
-"Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
+"Language-Team: Chinese <zh-l10n@linux.org.tw>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "dot tw>\n"
-"X-Generator: Lokalize 23.03.70\n"
+"X-Generator: Lokalize 22.12.2\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "pan93412, Jeff Huang"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "pan93412@gmail.com, s8321414@gmail.com"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -70,34 +60,19 @@ msgstr "內容說明"
 #: declarative-plugin/buttonsmodel.cpp:67
 #, kde-format
 msgid "Shade"
-msgstr "陰影"
+msgstr "收起"
 
 #: declarative-plugin/buttonsmodel.cpp:69
 #, kde-format
 msgid "Keep below other windows"
-msgstr "維持在其他視窗之上"
+msgstr "維持在其他視窗之下"
 
 #: declarative-plugin/buttonsmodel.cpp:71
 #, kde-format
 msgid "Keep above other windows"
-msgstr "維持在其他視窗之下"
+msgstr "維持在其他視窗之上"
 
-#: kcm.cpp:49
-#, kde-format
-msgid "Window Decorations"
-msgstr "桌面裝飾"
-
-#: kcm.cpp:53
-#, kde-format
-msgid "Valerio Pilo"
-msgstr "Valerio Pilo"
-
-#: kcm.cpp:54
-#, kde-format
-msgid "Author"
-msgstr "作者"
-
-#: kcm.cpp:183
+#: kcm.cpp:173
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
@@ -288,6 +263,23 @@ msgstr "非常巨大"
 #, kde-format
 msgid "Oversized"
 msgstr "超出大小"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "pan93412, Jeff Huang"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "pan93412@gmail.com, s8321414@gmail.com"
+
+#~ msgid "Window Decorations"
+#~ msgstr "視窗裝飾"
+
+#~ msgid "Valerio Pilo"
+#~ msgstr "Valerio Pilo"
+
+#~ msgid "Author"
+#~ msgstr "作者"
 
 #~ msgctxt "tab label"
 #~ msgid "Theme"

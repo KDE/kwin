@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-09-20 00:47+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2022-09-21 12:18+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -17,27 +17,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 22.08.1\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Eloy Cuadra"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "ecuadra@eloihr.net"
-
-#: module.cpp:57
+#: module.cpp:56
 #, kde-format
 msgid "Import KWin Script"
 msgstr "Importar guion de KWin"
 
-#: module.cpp:58
+#: module.cpp:57
 #, kde-format
 msgid "*.kwinscript|KWin scripts (*.kwinscript)"
 msgstr "*.kwinscript|Guiones de KWin (*.kwinscript)"
 
-#: module.cpp:96
+#: module.cpp:95
 #, kde-format
 msgctxt "Placeholder is error message returned from the install service"
 msgid ""
@@ -47,13 +37,13 @@ msgstr ""
 "No se puede importar el guion.\n"
 "%1"
 
-#: module.cpp:108
+#: module.cpp:107
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
 msgstr "El guion «%1» se ha importado con éxito."
 
-#: module.cpp:148
+#: module.cpp:147
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "Ha ocurrido un error al desinstalar el guion de KWin: %1"
@@ -73,6 +63,14 @@ msgstr "Instalar desde archivo..."
 #, kde-format
 msgid "Get New Scripts..."
 msgstr "Obtener nuevos guiones..."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Eloy Cuadra"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "ecuadra@eloihr.net"
 
 #~ msgid "KWin Scripts"
 #~ msgstr "Guiones de KWin"

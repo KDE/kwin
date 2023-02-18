@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-10 00:59+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2023-02-10 23:10+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -24,36 +24,7 @@ msgstr ""
 "X-Generator: Lokalize 22.12.2\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr ""
-"Iñigo Salvador Azurmendi,Juan Irigoien,Asier Urio Larrea,Marcos Goyeneche,"
-"Hizkuntza Politikarako Sailburuordetza"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr ""
-"xalba@ni.eus,juanirigoien@yahoo.es,asieriko@gmail.com,marcos@euskalgnu.org,"
-"hizpol@ej-gv.es"
-
-#: kcmrules.cpp:28
-#, kde-format
-msgid "Window Rules"
-msgstr "Leihoko arauak"
-
-#: kcmrules.cpp:32
-#, kde-format
-msgid "Ismael Asensio"
-msgstr "Ismael Asensio"
-
-#: kcmrules.cpp:33
-#, kde-format
-msgid "Author"
-msgstr "Egilea"
-
-#: kcmrules.cpp:37
+#: kcmrules.cpp:26
 #, kde-format
 msgid ""
 "<p><h1>Window-specific Settings</h1> Here you can customize window settings "
@@ -69,17 +40,17 @@ msgstr ""
 "dokumentaziora dagokion leiho-portaera nola pertsonalizatu behar den "
 "jakiteko.</p>"
 
-#: kcmrules.cpp:243
+#: kcmrules.cpp:232
 #, kde-format
 msgid "Copy of %1"
 msgstr "%1(e)n kopia"
 
-#: kcmrules.cpp:423
+#: kcmrules.cpp:412
 #, kde-format
 msgid "Application settings for %1"
 msgstr "%1(r)entzako aplikazio-ezarpenak"
 
-#: kcmrules.cpp:445 rulesmodel.cpp:215
+#: kcmrules.cpp:434 rulesmodel.cpp:215
 #, kde-format
 msgid "Window settings for %1"
 msgstr "%1(r)entzako leiho-ezarpenak"
@@ -983,6 +954,27 @@ msgstr "Kudeatu gabeko leihoa"
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "Ezin dira hauteman leihoaren propietateak. Leihoa ez du KWin-ek kudeatzen."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr ""
+#~ "Iñigo Salvador Azurmendi,Juan Irigoien,Asier Urio Larrea,Marcos Goyeneche,"
+#~ "Hizkuntza Politikarako Sailburuordetza"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr ""
+#~ "xalba@ni.eus,juanirigoien@yahoo.es,asieriko@gmail.com,marcos@euskalgnu."
+#~ "org,hizpol@ej-gv.es"
+
+#~ msgid "Window Rules"
+#~ msgstr "Leihoko arauak"
+
+#~ msgid "Ismael Asensio"
+#~ msgstr "Ismael Asensio"
+
+#~ msgid "Author"
+#~ msgstr "Egilea"
 
 #~ msgid "Error"
 #~ msgstr "Errorea"

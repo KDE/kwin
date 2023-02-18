@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-06 01:01+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2015-11-18 16:23+0200\n"
 "Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -26,18 +26,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Lokalize 2.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Στέργιος Δράμης,Σπύρος Γεωργαράς,Τούσης Μανώλης, Δημήτριος Γλενταδάκης"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr ""
-"sdramis@egnatia.ee.auth.gr,sngeorgaras@otenet.gr,manolis@koppermind."
-"homelinux.org, dglent@gmail.com"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -89,23 +77,7 @@ msgstr ""
 msgid "Keep above other windows"
 msgstr ""
 
-#: kcm.cpp:49
-#, fuzzy, kde-format
-#| msgid "Get New Decorations..."
-msgid "Window Decorations"
-msgstr "Λήψη νέων διακοσμήσεων παραθύρου..."
-
-#: kcm.cpp:53
-#, kde-format
-msgid "Valerio Pilo"
-msgstr ""
-
-#: kcm.cpp:54
-#, kde-format
-msgid "Author"
-msgstr ""
-
-#: kcm.cpp:183
+#: kcm.cpp:173
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
@@ -312,6 +284,22 @@ msgstr "Τερατώδες"
 #| msgid "Oversized"
 msgid "Oversized"
 msgstr "Υπερφυσικό"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr ""
+#~ "Στέργιος Δράμης,Σπύρος Γεωργαράς,Τούσης Μανώλης, Δημήτριος Γλενταδάκης"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr ""
+#~ "sdramis@egnatia.ee.auth.gr,sngeorgaras@otenet.gr,manolis@koppermind."
+#~ "homelinux.org, dglent@gmail.com"
+
+#, fuzzy
+#~| msgid "Get New Decorations..."
+#~ msgid "Window Decorations"
+#~ msgstr "Λήψη νέων διακοσμήσεων παραθύρου..."
 
 #, fuzzy
 #~| msgid "Theme"

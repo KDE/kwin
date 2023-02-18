@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-15 00:49+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2010-01-29 22:40+0100\n"
 "Last-Translator: Bozidar Proevski <bobibobi@freemail.com.mk>\n"
 "Language-Team: Macedonian <mkde-l10n@lists.sourceforge.net>\n"
@@ -137,11 +137,10 @@ msgstr ""
 msgid "Show desktop layout indicators"
 msgstr "Прикажи индикатори за распоред на површините"
 
-#: virtualdesktops.cpp:33
-#, fuzzy, kde-format
-#| msgid "Desktops"
-msgid "Virtual Desktops"
-msgstr "Работни површини"
+#, fuzzy
+#~| msgid "Desktops"
+#~ msgid "Virtual Desktops"
+#~ msgstr "Работни површини"
 
 #, fuzzy
 #~| msgid "Desktops"

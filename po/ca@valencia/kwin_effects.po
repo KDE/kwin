@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-16 01:01+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2022-12-02 14:28+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -932,17 +932,17 @@ msgstr ""
 msgid "Ignore &minimized windows"
 msgstr "Ignora les finestres &minimitzades"
 
-#: windowview/qml/main.qml:108
+#: windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Sense coincidències"
 
-#: windowview/qml/main.qml:108
+#: windowview/qml/main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "Sense finestres"
 
-#: windowview/qml/main.qml:123
+#: windowview/qml/main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "Filtra les finestres…"

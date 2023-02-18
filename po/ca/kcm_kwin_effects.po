@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-03-26 00:45+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2020-07-27 13:17+0200\n"
 "Last-Translator: Antoni Bella Pérez <antonibella5@yahoo.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -20,26 +20,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
 "X-Generator: Lokalize 20.04.3\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Josep M. Ferrer"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "txemaq@gmail.com"
-
-#: kcm.cpp:35
-#, kde-format
-msgid "Desktop Effects"
-msgstr "Efectes d'escriptori"
-
-#: kcm.cpp:39
-#, kde-format
-msgid "Vlad Zahorodnii"
-msgstr "Vlad Zahorodnii"
 
 #: package/contents/ui/Effect.qml:92
 #, kde-format
@@ -95,6 +75,20 @@ msgstr "Exclou els efectes interns"
 #, kde-format
 msgid "Get New Desktop Effects..."
 msgstr "Obtén efectes nous d'escriptori..."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Josep M. Ferrer"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "txemaq@gmail.com"
+
+#~ msgid "Desktop Effects"
+#~ msgstr "Efectes d'escriptori"
+
+#~ msgid "Vlad Zahorodnii"
+#~ msgstr "Vlad Zahorodnii"
 
 #~ msgid "Download New Desktop Effects"
 #~ msgstr "Baixa efectes nous d'escriptori"

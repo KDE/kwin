@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-15 00:48+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2022-12-26 03:37+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
@@ -21,72 +21,62 @@ msgstr ""
 "X-Generator: Lokalize 22.12.0\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Franklin Weng, Jeff Huang"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "franklin@nospam_goodhorse.idv.tw, s8321414@gmail.com"
-
-#: main.cpp:130 touch.cpp:124
+#: main.cpp:129 touch.cpp:123
 #, kde-format
 msgid "No Action"
 msgstr "沒有動作"
 
-#: main.cpp:131 touch.cpp:125
+#: main.cpp:130 touch.cpp:124
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "看一下桌面"
 
-#: main.cpp:132 touch.cpp:126
+#: main.cpp:131 touch.cpp:125
 #, kde-format
 msgid "Lock Screen"
 msgstr "鎖定螢幕"
 
-#: main.cpp:133 touch.cpp:127
+#: main.cpp:132 touch.cpp:126
 #, kde-format
 msgid "Show KRunner"
 msgstr "顯示 KRunner"
 
-#: main.cpp:134 touch.cpp:128
+#: main.cpp:133 touch.cpp:127
 #, kde-format
 msgid "Activity Manager"
 msgstr "活動管理員"
 
-#: main.cpp:135 touch.cpp:129
+#: main.cpp:134 touch.cpp:128
 #, kde-format
 msgid "Application Launcher"
 msgstr "應用程式啟動器"
 
-#: main.cpp:139 touch.cpp:133
+#: main.cpp:138 touch.cpp:132
 #, kde-format
 msgid "Present Windows"
 msgstr "展示視窗"
 
-#: main.cpp:140 touch.cpp:134
+#: main.cpp:139 touch.cpp:133
 #, kde-format
 msgid "%1 - All Desktops"
 msgstr "%1 - 所有桌面"
 
-#: main.cpp:141 touch.cpp:135
+#: main.cpp:140 touch.cpp:134
 #, kde-format
 msgid "%1 - Current Desktop"
 msgstr "%1 - 目前的桌面"
 
-#: main.cpp:142 touch.cpp:136
+#: main.cpp:141 touch.cpp:135
 #, kde-format
 msgid "%1 - Current Application"
 msgstr "%1 - 目前的應用程式"
 
-#: main.cpp:144 touch.cpp:138
+#: main.cpp:143 touch.cpp:137
 #, kde-format
 msgid "Toggle window switching"
 msgstr "切換視窗切換設定"
 
-#: main.cpp:145 touch.cpp:139
+#: main.cpp:144 touch.cpp:138
 #, kde-format
 msgid "Toggle alternative window switching"
 msgstr "切換替代視窗切換設定"
@@ -233,6 +223,14 @@ msgid ""
 "You can trigger an action by swiping from the screen edge towards the center "
 "of the screen."
 msgstr "你可以藉由從螢幕邊緣滑動到螢幕中心來啟動事件。"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Franklin Weng, Jeff Huang"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "franklin@nospam_goodhorse.idv.tw, s8321414@gmail.com"
 
 #~ msgid "Show Desktop"
 #~ msgstr "顯示桌面"

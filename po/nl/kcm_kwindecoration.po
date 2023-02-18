@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-06 01:01+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2023-02-06 11:20+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -26,18 +26,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Lokalize 22.12.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr ""
-"Rinse de Vries,Peter Bosch,Wilbert Berendsen,Freek de Kruijf - t/m "
-"2019;2021;2023"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "rinse@kde.nl,,,freekdekruijf@kde.nl"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -89,22 +77,7 @@ msgstr "Onder andere vensters houden"
 msgid "Keep above other windows"
 msgstr "Boven andere vensters houden"
 
-#: kcm.cpp:49
-#, kde-format
-msgid "Window Decorations"
-msgstr "Vensterdecoraties"
-
-#: kcm.cpp:53
-#, kde-format
-msgid "Valerio Pilo"
-msgstr "Valerio Pilo"
-
-#: kcm.cpp:54
-#, kde-format
-msgid "Author"
-msgstr "Auteur"
-
-#: kcm.cpp:183
+#: kcm.cpp:173
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
@@ -305,6 +278,25 @@ msgstr "Extra enorm"
 #, kde-format
 msgid "Oversized"
 msgstr "Veel te groot"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr ""
+#~ "Rinse de Vries,Peter Bosch,Wilbert Berendsen,Freek de Kruijf - t/m "
+#~ "2019;2021;2023"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "rinse@kde.nl,,,freekdekruijf@kde.nl"
+
+#~ msgid "Window Decorations"
+#~ msgstr "Vensterdecoraties"
+
+#~ msgid "Valerio Pilo"
+#~ msgstr "Valerio Pilo"
+
+#~ msgid "Author"
+#~ msgstr "Auteur"
 
 #~ msgctxt "tab label"
 #~ msgid "Theme"

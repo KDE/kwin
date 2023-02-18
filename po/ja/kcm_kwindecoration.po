@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-06 01:01+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2022-03-12 18:14-0800\n"
 "Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -25,18 +25,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Noboru Sinohara,Toyohiro Asukai,Kurose Shushi,R.Suga"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr ""
-"shinobo@leo.bekkoame.ne.jp,toyohiro@ksmplus.com,md81@bird.email.ne.jp,21r."
-"suga@gmail.com"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -88,22 +76,7 @@ msgstr "他のウィンドウより下に表示"
 msgid "Keep above other windows"
 msgstr "他のウィンドウより上に表示"
 
-#: kcm.cpp:49
-#, kde-format
-msgid "Window Decorations"
-msgstr "ウィンドウの装飾"
-
-#: kcm.cpp:53
-#, kde-format
-msgid "Valerio Pilo"
-msgstr "Valerio Pilo"
-
-#: kcm.cpp:54
-#, kde-format
-msgid "Author"
-msgstr "作者"
-
-#: kcm.cpp:183
+#: kcm.cpp:173
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
@@ -304,6 +277,25 @@ msgstr "さらに大"
 #, kde-format
 msgid "Oversized"
 msgstr "特大"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Noboru Sinohara,Toyohiro Asukai,Kurose Shushi,R.Suga"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr ""
+#~ "shinobo@leo.bekkoame.ne.jp,toyohiro@ksmplus.com,md81@bird.email.ne.jp,21r."
+#~ "suga@gmail.com"
+
+#~ msgid "Window Decorations"
+#~ msgstr "ウィンドウの装飾"
+
+#~ msgid "Valerio Pilo"
+#~ msgstr "Valerio Pilo"
+
+#~ msgid "Author"
+#~ msgstr "作者"
 
 #~ msgctxt "tab label"
 #~ msgid "Theme"

@@ -12,13 +12,13 @@
 # Alexander Potashev <aspotashev@gmail.com>, 2010, 2011, 2014, 2015, 2016, 2018, 2019.
 # Yuri Efremov <yur.arh@gmail.com>, 2013.
 # Alexander Lakhin <exclusion@gmail.com>, 2013.
-# Alexander Yavorsky <kekcuha@gmail.com>, 2019, 2021, 2022.
+# Alexander Yavorsky <kekcuha@gmail.com>, 2019, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-06 01:01+0000\n"
-"PO-Revision-Date: 2022-06-18 09:48+0300\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"PO-Revision-Date: 2023-02-17 11:02+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -31,16 +31,6 @@ msgstr ""
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Григорий Мохин"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "mokhin@bog.msu.ru"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -92,22 +82,7 @@ msgstr "Удерживать окно под остальными окнами"
 msgid "Keep above other windows"
 msgstr "Удерживать окно поверх других окон"
 
-#: kcm.cpp:49
-#, kde-format
-msgid "Window Decorations"
-msgstr "Оформление окон"
-
-#: kcm.cpp:53
-#, kde-format
-msgid "Valerio Pilo"
-msgstr "Valerio Pilo"
-
-#: kcm.cpp:54
-#, kde-format
-msgid "Author"
-msgstr "Автор"
-
-#: kcm.cpp:183
+#: kcm.cpp:173
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
@@ -209,9 +184,7 @@ msgid "Drag buttons between here and the titlebar"
 msgstr "Перетаскивайте кнопки между этой областью и эскизом заголовка окна"
 
 #: package/contents/ui/ConfigureTitlebar.qml:16
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgid "Titlebar Buttons"
 msgstr "Кнопки в заголовке"
 
@@ -245,20 +218,16 @@ msgid "Window border size:"
 msgstr "Размер границ окна:"
 
 #: package/contents/ui/main.qml:60
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr "Кнопки в заголовке"
+msgstr "Настройка кнопок в заголовке…"
 
 #: package/contents/ui/main.qml:65
-#, fuzzy, kde-format
-#| msgctxt "button text"
-#| msgid "Get New Window Decorations..."
+#, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations…"
-msgstr "Загрузить оформления окон..."
+msgstr "Загрузить оформления окон…"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format
@@ -309,6 +278,23 @@ msgstr "Гигантские"
 #, kde-format
 msgid "Oversized"
 msgstr "Невероятно широкие"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Григорий Мохин"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "mokhin@bog.msu.ru"
+
+#~ msgid "Window Decorations"
+#~ msgstr "Оформление окон"
+
+#~ msgid "Valerio Pilo"
+#~ msgstr "Valerio Pilo"
+
+#~ msgid "Author"
+#~ msgstr "Автор"
 
 #~ msgctxt "tab label"
 #~ msgid "Theme"

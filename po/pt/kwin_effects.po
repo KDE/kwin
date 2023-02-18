@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-16 01:01+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2022-12-04 02:32+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -931,17 +931,17 @@ msgstr "Comutar as Janelas Presentes (Classe da janela no ecrã actual)"
 msgid "Ignore &minimized windows"
 msgstr "Ignorar as janelas &minimizadas"
 
-#: windowview/qml/main.qml:108
+#: windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr "Sem Ocorrências"
 
-#: windowview/qml/main.qml:108
+#: windowview/qml/main.qml:107
 #, kde-format
 msgid "No Windows"
 msgstr "Sem Janelas"
 
-#: windowview/qml/main.qml:123
+#: windowview/qml/main.qml:122
 #, kde-format
 msgid "Filter windows…"
 msgstr "Filtrar as janelas…"

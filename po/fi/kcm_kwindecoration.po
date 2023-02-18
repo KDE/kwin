@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-06 01:01+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2021-06-11 12:33+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -25,19 +25,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-POT-Import-Date: 2012-12-01 22:22:23+0000\n"
 "X-Generator: Lokalize 20.04.2\n"
-
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr ""
-"Tommi Nieminen,Tapio Kautto,Teemu Rytilahti,Ilpo Kantonen,Jorma Karvonen"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr ""
-"translator@legisign.org,eleknader@phnet.fi,teemu.rytilahti@kde-fi.org,"
-"ilpo@iki.fi,karvonen.jorma@gmail.com"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -89,22 +76,7 @@ msgstr "Pidä muiden ikkunoiden alla"
 msgid "Keep above other windows"
 msgstr "Pidä muiden ikkunoiden yllä"
 
-#: kcm.cpp:49
-#, kde-format
-msgid "Window Decorations"
-msgstr "Ikkunakehykset"
-
-#: kcm.cpp:53
-#, kde-format
-msgid "Valerio Pilo"
-msgstr "Valerio Pilo"
-
-#: kcm.cpp:54
-#, kde-format
-msgid "Author"
-msgstr "Tekijä"
-
-#: kcm.cpp:183
+#: kcm.cpp:173
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
@@ -305,6 +277,26 @@ msgstr "Aivan valtava"
 #, kde-format
 msgid "Oversized"
 msgstr "Ylisuuri"
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr ""
+#~ "Tommi Nieminen,Tapio Kautto,Teemu Rytilahti,Ilpo Kantonen,Jorma Karvonen"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr ""
+#~ "translator@legisign.org,eleknader@phnet.fi,teemu.rytilahti@kde-fi.org,"
+#~ "ilpo@iki.fi,karvonen.jorma@gmail.com"
+
+#~ msgid "Window Decorations"
+#~ msgstr "Ikkunakehykset"
+
+#~ msgid "Valerio Pilo"
+#~ msgstr "Valerio Pilo"
+
+#~ msgid "Author"
+#~ msgstr "Tekijä"
 
 #~ msgctxt "tab label"
 #~ msgid "Theme"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-07-15 00:48+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2022-05-28 15:46+0200\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -18,72 +18,62 @@ msgstr ""
 "X-Generator: Lokalize 22.04.1\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Roman Paholík"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "wizzardsk@gmail.com"
-
-#: main.cpp:130 touch.cpp:124
+#: main.cpp:129 touch.cpp:123
 #, kde-format
 msgid "No Action"
 msgstr "Žiadna akcia"
 
-#: main.cpp:131 touch.cpp:125
+#: main.cpp:130 touch.cpp:124
 #, kde-format
 msgid "Peek at Desktop"
 msgstr ""
 
-#: main.cpp:132 touch.cpp:126
+#: main.cpp:131 touch.cpp:125
 #, kde-format
 msgid "Lock Screen"
 msgstr "Zamknúť obrazovku"
 
-#: main.cpp:133 touch.cpp:127
+#: main.cpp:132 touch.cpp:126
 #, kde-format
 msgid "Show KRunner"
 msgstr "Zobraziť KRunner"
 
-#: main.cpp:134 touch.cpp:128
+#: main.cpp:133 touch.cpp:127
 #, kde-format
 msgid "Activity Manager"
 msgstr "Správca aktivít"
 
-#: main.cpp:135 touch.cpp:129
+#: main.cpp:134 touch.cpp:128
 #, kde-format
 msgid "Application Launcher"
 msgstr "Spúšťač aplikácií"
 
-#: main.cpp:139 touch.cpp:133
+#: main.cpp:138 touch.cpp:132
 #, kde-format
 msgid "Present Windows"
 msgstr "Aktuálne okná"
 
-#: main.cpp:140 touch.cpp:134
+#: main.cpp:139 touch.cpp:133
 #, kde-format
 msgid "%1 - All Desktops"
 msgstr "%1 - Všetky plochy"
 
-#: main.cpp:141 touch.cpp:135
+#: main.cpp:140 touch.cpp:134
 #, kde-format
 msgid "%1 - Current Desktop"
 msgstr "%1 - Aktuálna plocha"
 
-#: main.cpp:142 touch.cpp:136
+#: main.cpp:141 touch.cpp:135
 #, kde-format
 msgid "%1 - Current Application"
 msgstr "%1 - Aktuálna aplikácia"
 
-#: main.cpp:144 touch.cpp:138
+#: main.cpp:143 touch.cpp:137
 #, kde-format
 msgid "Toggle window switching"
 msgstr "Prepnúť prepínanie okien"
 
-#: main.cpp:145 touch.cpp:139
+#: main.cpp:144 touch.cpp:138
 #, kde-format
 msgid "Toggle alternative window switching"
 msgstr "Prepnúť alternatívne prepínanie okien"
@@ -235,6 +225,14 @@ msgid ""
 "You can trigger an action by swiping from the screen edge towards the center "
 "of the screen."
 msgstr "Na spustenie akcie posuňte kurzor myši z okraja obrazovky v do stredu."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Roman Paholík"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "wizzardsk@gmail.com"
 
 #~ msgid "Show Desktop"
 #~ msgstr "Zobraziť plochu"

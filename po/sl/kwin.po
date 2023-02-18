@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1644779 2023-02-17 01:47:42Z scripty $
+# $Id: kwin.po 1644856 2023-02-18 01:48:31Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-17 00:59+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2023-02-15 08:45+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -2122,20 +2122,20 @@ msgstr "Ime datoteke namizja"
 msgid "Desktop file name rule type"
 msgstr "Vrsta pravila imena datoteke namizja"
 
-#: scripting/genericscriptedconfig.cpp:70
+#: scripting/genericscriptedconfig.cpp:69
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
 msgstr "NI bilo mogoče najti metapodatkov paketa"
 
-#: scripting/genericscriptedconfig.cpp:84
+#: scripting/genericscriptedconfig.cpp:83
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
 msgstr "%1 ne vsebuje veljavne datoteke metadata.json"
 
-#: scripting/genericscriptedconfig.cpp:90
-#: scripting/genericscriptedconfig.cpp:96
+#: scripting/genericscriptedconfig.cpp:89
+#: scripting/genericscriptedconfig.cpp:95
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"

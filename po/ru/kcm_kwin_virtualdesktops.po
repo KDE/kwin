@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-15 00:49+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2022-12-23 10:32+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -148,10 +148,8 @@ msgstr "%1 мс"
 msgid "Show desktop layout indicators"
 msgstr "Схематический обзор всех рабочих столов"
 
-#: virtualdesktops.cpp:33
-#, kde-format
-msgid "Virtual Desktops"
-msgstr "Рабочие столы"
+#~ msgid "Virtual Desktops"
+#~ msgstr "Рабочие столы"
 
 #~ msgid "New Desktop"
 #~ msgstr "Новый рабочий стол"

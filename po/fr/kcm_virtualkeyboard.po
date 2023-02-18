@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-01 00:48+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2021-04-28 10:40+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@neuf.fr>\n"
 "Language-Team: French <kde-francophone@kde.org>\n"
@@ -14,32 +14,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Lokalize 20.12.3\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Xavier Besnard"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "xavier.besnard@neuf.fr"
-
-#: kcmvirtualkeyboard.cpp:29
-#, kde-format
-msgid "Virtual Keyboard"
-msgstr "Clavier virtuel"
-
-#: kcmvirtualkeyboard.cpp:31
-#, kde-format
-msgid "Choose Virtual Keyboard"
-msgstr "Sélectionner un clavier virtuel"
-
-#: kcmvirtualkeyboard.cpp:68
+#: kcmvirtualkeyboard.cpp:61
 #, kde-format
 msgid "None"
 msgstr "Aucun"
 
-#: kcmvirtualkeyboard.cpp:72
+#: kcmvirtualkeyboard.cpp:65
 #, kde-format
 msgid "Do not use any virtual keyboard"
 msgstr "N'utiliser aucun clavier virtuel"
@@ -48,3 +28,17 @@ msgstr "N'utiliser aucun clavier virtuel"
 #, kde-format
 msgid "This module lets you choose the virtual keyboard to use."
 msgstr "Ce module vous laisse choisir quel clavier virtuel utiliser."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Xavier Besnard"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "xavier.besnard@neuf.fr"
+
+#~ msgid "Virtual Keyboard"
+#~ msgstr "Clavier virtuel"
+
+#~ msgid "Choose Virtual Keyboard"
+#~ msgstr "Sélectionner un clavier virtuel"

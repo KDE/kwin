@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-01 00:48+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2021-04-28 08:26+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -18,32 +18,12 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Matjaž Jeran"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "matjaz.jeran@amis.net"
-
-#: kcmvirtualkeyboard.cpp:29
-#, kde-format
-msgid "Virtual Keyboard"
-msgstr "Virtualna tipkovnica"
-
-#: kcmvirtualkeyboard.cpp:31
-#, kde-format
-msgid "Choose Virtual Keyboard"
-msgstr "Izberite virtualno tipkovnico"
-
-#: kcmvirtualkeyboard.cpp:68
+#: kcmvirtualkeyboard.cpp:61
 #, kde-format
 msgid "None"
 msgstr "Nobena"
 
-#: kcmvirtualkeyboard.cpp:72
+#: kcmvirtualkeyboard.cpp:65
 #, kde-format
 msgid "Do not use any virtual keyboard"
 msgstr "Ne uporabljajte virtualne tipkovnice"
@@ -52,3 +32,17 @@ msgstr "Ne uporabljajte virtualne tipkovnice"
 #, kde-format
 msgid "This module lets you choose the virtual keyboard to use."
 msgstr "Ta modul omogoča izbrati virtualno tipkovnico za uporabo."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Matjaž Jeran"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "matjaz.jeran@amis.net"
+
+#~ msgid "Virtual Keyboard"
+#~ msgstr "Virtualna tipkovnica"
+
+#~ msgid "Choose Virtual Keyboard"
+#~ msgstr "Izberite virtualno tipkovnico"

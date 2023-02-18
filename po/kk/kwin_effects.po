@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-16 01:01+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2013-09-30 00:41+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -964,18 +964,18 @@ msgstr "'Терезелерді көрсету' күйін терістеу (н�
 msgid "Ignore &minimized windows"
 msgstr "&Түйіп қойған терезелерді елемеу"
 
-#: windowview/qml/main.qml:108
+#: windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: windowview/qml/main.qml:108
+#: windowview/qml/main.qml:107
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "Терезелер"
 
-#: windowview/qml/main.qml:123
+#: windowview/qml/main.qml:122
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "Filter windows…"

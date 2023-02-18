@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-16 01:01+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2016-08-23 23:15+0300\n"
 "Last-Translator: Ingmārs Dīriņš <melhiors14@gmail.com>\n"
 "Language-Team: Latvian <lata-l10n@googlegroups.com>\n"
@@ -977,18 +977,18 @@ msgstr "Pārslēgt 'Parādīt logus' (Aktīvā darbvirsma)"
 msgid "Ignore &minimized windows"
 msgstr "Ignorēt &minimizētus logus"
 
-#: windowview/qml/main.qml:108
+#: windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: windowview/qml/main.qml:108
+#: windowview/qml/main.qml:107
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "Logi"
 
-#: windowview/qml/main.qml:123
+#: windowview/qml/main.qml:122
 #, fuzzy, kde-format
 #| msgid "Scale window"
 msgid "Filter windows…"

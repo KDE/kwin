@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-16 01:01+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2010-06-01 10:25-0700\n"
 "Last-Translator: Deepayan Sarkar <deepayan.sarkar@gmail.com>\n"
 "Language-Team: Bengali <kde-translation@bengalinux.org>\n"
@@ -961,18 +961,18 @@ msgstr "উইণ্ডো সক্রিয় ডেস্কটপে নিয়
 msgid "Ignore &minimized windows"
 msgstr "মিনিমাই&জ করা উইণ্ডো বাদ দাও"
 
-#: windowview/qml/main.qml:108
+#: windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
 msgstr ""
 
-#: windowview/qml/main.qml:108
+#: windowview/qml/main.qml:107
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "No Windows"
 msgstr "উইণ্ডো"
 
-#: windowview/qml/main.qml:123
+#: windowview/qml/main.qml:122
 #, fuzzy, kde-format
 #| msgid "All &other windows"
 msgid "Filter windows…"

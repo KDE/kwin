@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-15 00:49+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2021-05-27 18:54+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -136,10 +136,8 @@ msgstr "%1 ms"
 msgid "Show desktop layout indicators"
 msgstr "Visa indikering av skrivbordslayout"
 
-#: virtualdesktops.cpp:33
-#, kde-format
-msgid "Virtual Desktops"
-msgstr "Virtuella skrivbord"
+#~ msgid "Virtual Desktops"
+#~ msgstr "Virtuella skrivbord"
 
 #~ msgid "New Desktop"
 #~ msgstr "Nytt skrivbord"
