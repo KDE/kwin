@@ -42,7 +42,7 @@ void PlacementTracker::add(Window *window)
     connect(window, &Window::maximizedChanged, this, &PlacementTracker::saveMaximize);
     connect(window, &Window::quickTileModeChanged, this, &PlacementTracker::saveQuickTile);
     connect(window, &Window::fullScreenChanged, this, &PlacementTracker::saveFullscreen);
-    connect(window, &Window::clientFinishUserMovedResized, this, &PlacementTracker::saveInteractionCounter);
+    connect(window, &Window::interactiveMoveResizeFinished, this, &PlacementTracker::saveInteractionCounter);
     WindowData data = dataForWindow(window);
     m_data[m_currentKey][window] = data;
     m_savedWindows.push_back(window);
@@ -55,7 +55,7 @@ void PlacementTracker::remove(Window *window)
         disconnect(window, &Window::maximizedChanged, this, &PlacementTracker::saveMaximize);
         disconnect(window, &Window::quickTileModeChanged, this, &PlacementTracker::saveQuickTile);
         disconnect(window, &Window::fullScreenChanged, this, &PlacementTracker::saveFullscreen);
-        disconnect(window, &Window::clientFinishUserMovedResized, this, &PlacementTracker::saveInteractionCounter);
+        disconnect(window, &Window::interactiveMoveResizeFinished, this, &PlacementTracker::saveInteractionCounter);
         for (auto &dataMap : m_data) {
             dataMap.remove(window);
         }

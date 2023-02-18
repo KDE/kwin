@@ -327,7 +327,7 @@ void XdgSurfaceWindow::destroyWindow()
     markAsZombie();
     if (isInteractiveMoveResize()) {
         leaveInteractiveMoveResize();
-        Q_EMIT clientFinishUserMovedResized(this);
+        Q_EMIT interactiveMoveResizeFinished(this);
     }
     m_configureTimer->stop();
     cleanTabBox();

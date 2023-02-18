@@ -1242,15 +1242,15 @@ void TestXdgShellWindow::testXdgWindowGeometryInteractiveResize()
     QCOMPARE(window->bufferGeometry().size(), QSize(200, 100));
     QCOMPARE(window->frameGeometry().size(), QSize(180, 80));
 
-    QSignalSpy clientStartMoveResizedSpy(window, &Window::clientStartUserMovedResized);
-    QSignalSpy clientStepUserMovedResizedSpy(window, &Window::clientStepUserMovedResized);
-    QSignalSpy clientFinishUserMovedResizedSpy(window, &Window::clientFinishUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
 
     // Start interactively resizing the window.
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     workspace()->slotWindowResize();
     QCOMPARE(workspace()->moveResizeWindow(), window);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
     Test::XdgToplevel::States states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
@@ -1270,7 +1270,7 @@ void TestXdgShellWindow::testXdgWindowGeometryInteractiveResize()
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(208, 100), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QCOMPARE(window->bufferGeometry().size(), QSize(208, 100));
     QCOMPARE(window->frameGeometry().size(), QSize(188, 80));
 
@@ -1288,13 +1288,13 @@ void TestXdgShellWindow::testXdgWindowGeometryInteractiveResize()
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), QSize(208, 108), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 2);
     QCOMPARE(window->bufferGeometry().size(), QSize(208, 108));
     QCOMPARE(window->frameGeometry().size(), QSize(188, 88));
 
     // Finish resizing the window.
     window->keyPressEvent(Qt::Key_Enter);
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 5);

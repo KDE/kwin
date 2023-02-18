@@ -128,8 +128,8 @@ void PointerInputRedirection::init()
     });
     // connect the move resize of all window
     auto setupMoveResizeConnection = [this](Window *window) {
-        connect(window, &Window::clientStartUserMovedResized, this, &PointerInputRedirection::updateOnStartMoveResize);
-        connect(window, &Window::clientFinishUserMovedResized, this, &PointerInputRedirection::update);
+        connect(window, &Window::interactiveMoveResizeStarted, this, &PointerInputRedirection::updateOnStartMoveResize);
+        connect(window, &Window::interactiveMoveResizeFinished, this, &PointerInputRedirection::update);
     };
     const auto clients = workspace()->allClientList();
     std::for_each(clients.begin(), clients.end(), setupMoveResizeConnection);

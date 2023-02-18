@@ -361,7 +361,7 @@ void InternalWindow::destroyWindow()
     markAsZombie();
     if (isInteractiveMoveResize()) {
         leaveInteractiveMoveResize();
-        Q_EMIT clientFinishUserMovedResized(this);
+        Q_EMIT interactiveMoveResizeFinished(this);
     }
 
     Deleted *deleted = Deleted::create(this);

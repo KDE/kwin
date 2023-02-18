@@ -489,9 +489,9 @@ void QuickTilingTest::testQuickTilingTouchMove()
 
     // Note that interactive move will be started with a delay.
     quint32 timestamp = 1;
-    QSignalSpy clientStartUserMovedResizedSpy(window, &Window::clientStartUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
     Test::touchDown(0, QPointF(window->frameGeometry().center().x(), window->frameGeometry().y() + decoration->borderTop() / 2), timestamp++);
-    QVERIFY(clientStartUserMovedResizedSpy.wait());
+    QVERIFY(interactiveMoveResizeStartedSpy.wait());
     QCOMPARE(window, workspace()->moveResizeWindow());
 
     QFETCH(QPoint, targetPos);

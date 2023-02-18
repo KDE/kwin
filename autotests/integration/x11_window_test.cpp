@@ -117,9 +117,9 @@ void X11WindowTest::testMinimumSize()
     QVERIFY(window);
     QVERIFY(window->isDecorated());
 
-    QSignalSpy clientStartMoveResizedSpy(window, &Window::clientStartUserMovedResized);
-    QSignalSpy clientStepUserMovedResizedSpy(window, &Window::clientStepUserMovedResized);
-    QSignalSpy clientFinishUserMovedResizedSpy(window, &Window::clientFinishUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
 
     // Begin resize.
@@ -127,7 +127,7 @@ void X11WindowTest::testMinimumSize()
     QVERIFY(!window->isInteractiveResize());
     workspace()->slotWindowResize();
     QCOMPARE(workspace()->moveResizeWindow(), window);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QVERIFY(window->isInteractiveResize());
 
     const QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
@@ -135,21 +135,21 @@ void X11WindowTest::testMinimumSize()
     window->keyPressEvent(Qt::Key_Left);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, 0));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QVERIFY(!frameGeometryChangedSpy.wait(10));
     QCOMPARE(window->clientSize().width(), 100 / scale);
 
     window->keyPressEvent(Qt::Key_Right);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos);
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QVERIFY(!frameGeometryChangedSpy.wait(10));
     QCOMPARE(window->clientSize().width(), 100 / scale);
 
     window->keyPressEvent(Qt::Key_Right);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QVERIFY(frameGeometryChangedSpy.wait());
     // whilst X11 window size goes through scale, the increment is a logical value kwin side
     QCOMPARE(window->clientSize().width(), 100 / scale + 8);
@@ -157,28 +157,28 @@ void X11WindowTest::testMinimumSize()
     window->keyPressEvent(Qt::Key_Up);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, -8));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QVERIFY(!frameGeometryChangedSpy.wait(10));
     QCOMPARE(window->clientSize().height(), 200 / scale);
 
     window->keyPressEvent(Qt::Key_Down);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QVERIFY(!frameGeometryChangedSpy.wait(10));
     QCOMPARE(window->clientSize().height(), 200 / scale);
 
     window->keyPressEvent(Qt::Key_Down);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 8));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 2);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->clientSize().height(), 200 / scale + 8);
 
     // Finish the resize operation.
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 0);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 0);
     window->keyPressEvent(Qt::Key_Enter);
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!window->isInteractiveResize());
 
@@ -223,9 +223,9 @@ void X11WindowTest::testMaximumSize()
     QVERIFY(window);
     QVERIFY(window->isDecorated());
 
-    QSignalSpy clientStartMoveResizedSpy(window, &Window::clientStartUserMovedResized);
-    QSignalSpy clientStepUserMovedResizedSpy(window, &Window::clientStepUserMovedResized);
-    QSignalSpy clientFinishUserMovedResizedSpy(window, &Window::clientFinishUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
 
     // Begin resize.
@@ -233,7 +233,7 @@ void X11WindowTest::testMaximumSize()
     QVERIFY(!window->isInteractiveResize());
     workspace()->slotWindowResize();
     QCOMPARE(workspace()->moveResizeWindow(), window);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QVERIFY(window->isInteractiveResize());
 
     const QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
@@ -241,49 +241,49 @@ void X11WindowTest::testMaximumSize()
     window->keyPressEvent(Qt::Key_Right);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QVERIFY(!frameGeometryChangedSpy.wait(10));
     QCOMPARE(window->clientSize().width(), 100 / scale);
 
     window->keyPressEvent(Qt::Key_Left);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos);
-    QVERIFY(!clientStepUserMovedResizedSpy.wait(10));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 0);
+    QVERIFY(!interactiveMoveResizeSteppedSpy.wait(10));
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QCOMPARE(window->clientSize().width(), 100 / scale);
 
     window->keyPressEvent(Qt::Key_Left);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, 0));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->clientSize().width(), 100 / scale - 8);
 
     window->keyPressEvent(Qt::Key_Down);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, 8));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QVERIFY(!frameGeometryChangedSpy.wait(10));
     QCOMPARE(window->clientSize().height(), 200 / scale);
 
     window->keyPressEvent(Qt::Key_Up);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, 0));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QVERIFY(!frameGeometryChangedSpy.wait(10));
     QCOMPARE(window->clientSize().height(), 200 / scale);
 
     window->keyPressEvent(Qt::Key_Up);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, -8));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 2);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->clientSize().height(), 200 / scale - 8);
 
     // Finish the resize operation.
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 0);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 0);
     window->keyPressEvent(Qt::Key_Enter);
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!window->isInteractiveResize());
 
@@ -329,9 +329,9 @@ void X11WindowTest::testResizeIncrements()
     QVERIFY(window);
     QVERIFY(window->isDecorated());
 
-    QSignalSpy clientStartMoveResizedSpy(window, &Window::clientStartUserMovedResized);
-    QSignalSpy clientStepUserMovedResizedSpy(window, &Window::clientStepUserMovedResized);
-    QSignalSpy clientFinishUserMovedResizedSpy(window, &Window::clientFinishUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
 
     // Begin resize.
@@ -339,7 +339,7 @@ void X11WindowTest::testResizeIncrements()
     QVERIFY(!window->isInteractiveResize());
     workspace()->slotWindowResize();
     QCOMPARE(workspace()->moveResizeWindow(), window);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QVERIFY(window->isInteractiveResize());
 
     const QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
@@ -347,7 +347,7 @@ void X11WindowTest::testResizeIncrements()
     window->keyPressEvent(Qt::Key_Right);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QVERIFY(frameGeometryChangedSpy.wait());
 
     //  100 + 8 logical pixels, rounded to resize increments. This will differ on scale
@@ -361,14 +361,14 @@ void X11WindowTest::testResizeIncrements()
     window->keyPressEvent(Qt::Key_Down);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 8));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 2);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->clientSize(), QSize(100, 200) / scale + QSizeF(expectedHorizontalResizeInc, expectedVerticalResizeInc));
 
     // Finish the resize operation.
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 0);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 0);
     window->keyPressEvent(Qt::Key_Enter);
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!window->isInteractiveResize());
 
@@ -413,9 +413,9 @@ void X11WindowTest::testResizeIncrementsNoBaseSize()
     QVERIFY(window);
     QVERIFY(window->isDecorated());
 
-    QSignalSpy clientStartMoveResizedSpy(window, &Window::clientStartUserMovedResized);
-    QSignalSpy clientStepUserMovedResizedSpy(window, &Window::clientStepUserMovedResized);
-    QSignalSpy clientFinishUserMovedResizedSpy(window, &Window::clientFinishUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
 
     // Begin resize.
@@ -423,7 +423,7 @@ void X11WindowTest::testResizeIncrementsNoBaseSize()
     QVERIFY(!window->isInteractiveResize());
     workspace()->slotWindowResize();
     QCOMPARE(workspace()->moveResizeWindow(), window);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QVERIFY(window->isInteractiveResize());
 
     const QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
@@ -431,7 +431,7 @@ void X11WindowTest::testResizeIncrementsNoBaseSize()
     window->keyPressEvent(Qt::Key_Right);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QVERIFY(frameGeometryChangedSpy.wait());
 
     //  100 + 8 pixels, rounded to resize increments. This will differ on scale
@@ -445,14 +445,14 @@ void X11WindowTest::testResizeIncrementsNoBaseSize()
     window->keyPressEvent(Qt::Key_Down);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 8));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 2);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->clientSize(), QSizeF(100, 200) / scale + QSizeF(expectedHorizontalResizeInc, expectedVerticalResizeInc));
 
     // Finish the resize operation.
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 0);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 0);
     window->keyPressEvent(Qt::Key_Enter);
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!window->isInteractiveResize());
 

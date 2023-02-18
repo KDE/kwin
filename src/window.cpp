@@ -87,8 +87,8 @@ Window::Window()
 
     connect(this, &Window::geometryShapeChanged, this, &Window::discardShapeRegion);
 
-    connect(this, &Window::clientStartUserMovedResized, this, &Window::moveResizedChanged);
-    connect(this, &Window::clientFinishUserMovedResized, this, &Window::moveResizedChanged);
+    connect(this, &Window::interactiveMoveResizeStarted, this, &Window::moveResizedChanged);
+    connect(this, &Window::interactiveMoveResizeFinished, this, &Window::moveResizedChanged);
 
     connect(this, &Window::windowShown, this, &Window::hiddenChanged);
     connect(this, &Window::windowHidden, this, &Window::hiddenChanged);
@@ -96,7 +96,7 @@ Window::Window()
     connect(this, &Window::paletteChanged, this, &Window::triggerDecorationRepaint);
 
     // If the user manually moved the window, don't restore it after the keyboard closes
-    connect(this, &Window::clientFinishUserMovedResized, this, [this]() {
+    connect(this, &Window::interactiveMoveResizeFinished, this, [this]() {
         m_keyboardGeometryRestore = QRectF();
     });
     connect(this, &Window::maximizedChanged, this, [this]() {
@@ -1629,7 +1629,7 @@ bool Window::startInteractiveMoveResize()
 
     updateElectricGeometryRestore();
     checkUnrestrictedInteractiveMoveResize();
-    Q_EMIT clientStartUserMovedResized(this);
+    Q_EMIT interactiveMoveResizeStarted(this);
     if (workspace()->screenEdges()->isDesktopSwitchingMovingClients()) {
         workspace()->screenEdges()->reserveDesktopSwitching(true, Qt::Vertical | Qt::Horizontal);
     }
@@ -1670,7 +1670,7 @@ void Window::finishInteractiveMoveResize(bool cancel)
     workspace()->outline()->hide();
 
     m_interactiveMoveResize.counter++;
-    Q_EMIT clientFinishUserMovedResized(this);
+    Q_EMIT interactiveMoveResizeFinished(this);
 }
 
 // This function checks if it actually makes sense to perform a restricted move/resize.
@@ -2130,7 +2130,7 @@ void Window::handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y
             doInteractiveResizeSync(nextMoveResizeGeom);
         }
 
-        Q_EMIT clientStepUserMovedResized(this, nextMoveResizeGeom);
+        Q_EMIT interactiveMoveResizeStepped(this, nextMoveResizeGeom);
     }
 }
 

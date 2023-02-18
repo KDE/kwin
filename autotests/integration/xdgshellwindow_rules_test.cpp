@@ -317,16 +317,16 @@ void TestXdgShellWindowRules::testPositionApply()
     QCOMPARE(m_window->pos(), QPoint(42, 42));
 
     // One should still be able to move the window around.
-    QSignalSpy clientStartMoveResizedSpy(m_window, &Window::clientStartUserMovedResized);
-    QSignalSpy clientStepUserMovedResizedSpy(m_window, &Window::clientStepUserMovedResized);
-    QSignalSpy clientFinishUserMovedResizedSpy(m_window, &Window::clientFinishUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(m_window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(m_window, &Window::interactiveMoveResizeFinished);
 
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     workspace()->slotWindowMove();
     QCOMPARE(workspace()->moveResizeWindow(), m_window);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QVERIFY(m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
 
@@ -334,11 +334,11 @@ void TestXdgShellWindowRules::testPositionApply()
     m_window->keyPressEvent(Qt::Key_Right);
     m_window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QCOMPARE(m_window->pos(), QPoint(50, 42));
 
     m_window->keyPressEvent(Qt::Key_Enter);
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
@@ -366,16 +366,16 @@ void TestXdgShellWindowRules::testPositionRemember()
     QCOMPARE(m_window->pos(), QPoint(42, 42));
 
     // One should still be able to move the window around.
-    QSignalSpy clientStartMoveResizedSpy(m_window, &Window::clientStartUserMovedResized);
-    QSignalSpy clientStepUserMovedResizedSpy(m_window, &Window::clientStepUserMovedResized);
-    QSignalSpy clientFinishUserMovedResizedSpy(m_window, &Window::clientFinishUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(m_window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(m_window, &Window::interactiveMoveResizeFinished);
 
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     workspace()->slotWindowMove();
     QCOMPARE(workspace()->moveResizeWindow(), m_window);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QVERIFY(m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
 
@@ -383,11 +383,11 @@ void TestXdgShellWindowRules::testPositionRemember()
     m_window->keyPressEvent(Qt::Key_Right);
     m_window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QCOMPARE(m_window->pos(), QPoint(50, 42));
 
     m_window->keyPressEvent(Qt::Key_Enter);
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
@@ -416,13 +416,13 @@ void TestXdgShellWindowRules::testPositionForce()
     QCOMPARE(m_window->pos(), QPoint(42, 42));
 
     // User should not be able to move the window.
-    QSignalSpy clientStartMoveResizedSpy(m_window, &Window::clientStartUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     workspace()->slotWindowMove();
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 0);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 0);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
 
@@ -458,16 +458,16 @@ void TestXdgShellWindowRules::testPositionApplyNow()
     // We still have to be able to move the window around.
     QVERIFY(m_window->isMovable());
     QVERIFY(m_window->isMovableAcrossScreens());
-    QSignalSpy clientStartMoveResizedSpy(m_window, &Window::clientStartUserMovedResized);
-    QSignalSpy clientStepUserMovedResizedSpy(m_window, &Window::clientStepUserMovedResized);
-    QSignalSpy clientFinishUserMovedResizedSpy(m_window, &Window::clientFinishUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(m_window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(m_window, &Window::interactiveMoveResizeFinished);
 
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     workspace()->slotWindowMove();
     QCOMPARE(workspace()->moveResizeWindow(), m_window);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QVERIFY(m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
 
@@ -475,11 +475,11 @@ void TestXdgShellWindowRules::testPositionApplyNow()
     m_window->keyPressEvent(Qt::Key_Right);
     m_window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QCOMPARE(m_window->pos(), QPoint(50, 42));
 
     m_window->keyPressEvent(Qt::Key_Enter);
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
@@ -504,13 +504,13 @@ void TestXdgShellWindowRules::testPositionForceTemporarily()
     QCOMPARE(m_window->pos(), QPoint(42, 42));
 
     // User should not be able to move the window.
-    QSignalSpy clientStartMoveResizedSpy(m_window, &Window::clientStartUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     workspace()->slotWindowMove();
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 0);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 0);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
 
@@ -579,16 +579,16 @@ void TestXdgShellWindowRules::testSizeApply()
 
     // One still should be able to resize the window.
     QSignalSpy frameGeometryChangedSpy(m_window, &Window::frameGeometryChanged);
-    QSignalSpy clientStartMoveResizedSpy(m_window, &Window::clientStartUserMovedResized);
-    QSignalSpy clientStepUserMovedResizedSpy(m_window, &Window::clientStepUserMovedResized);
-    QSignalSpy clientFinishUserMovedResizedSpy(m_window, &Window::clientFinishUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(m_window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(m_window, &Window::interactiveMoveResizeFinished);
 
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     workspace()->slotWindowResize();
     QCOMPARE(workspace()->moveResizeWindow(), m_window);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(m_window->isInteractiveResize());
     QVERIFY(m_surfaceConfigureRequestedSpy->wait());
@@ -610,15 +610,15 @@ void TestXdgShellWindowRules::testSizeApply()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
     QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(488, 640));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     m_shellSurface->xdgSurface()->ack_configure(m_surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
     Test::render(m_surface.get(), QSize(488, 640), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(m_window->size(), QSize(488, 640));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
 
     m_window->keyPressEvent(Qt::Key_Enter);
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
@@ -676,16 +676,16 @@ void TestXdgShellWindowRules::testSizeRemember()
 
     // One should still be able to resize the window.
     QSignalSpy frameGeometryChangedSpy(m_window, &Window::frameGeometryChanged);
-    QSignalSpy clientStartMoveResizedSpy(m_window, &Window::clientStartUserMovedResized);
-    QSignalSpy clientStepUserMovedResizedSpy(m_window, &Window::clientStepUserMovedResized);
-    QSignalSpy clientFinishUserMovedResizedSpy(m_window, &Window::clientFinishUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(m_window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(m_window, &Window::interactiveMoveResizeFinished);
 
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     workspace()->slotWindowResize();
     QCOMPARE(workspace()->moveResizeWindow(), m_window);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(m_window->isInteractiveResize());
     QVERIFY(m_surfaceConfigureRequestedSpy->wait());
@@ -707,15 +707,15 @@ void TestXdgShellWindowRules::testSizeRemember()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
     QCOMPARE(m_toplevelConfigureRequestedSpy->last().at(0).toSize(), QSize(488, 640));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     m_shellSurface->xdgSurface()->ack_configure(m_surfaceConfigureRequestedSpy->last().at(0).value<quint32>());
     Test::render(m_surface.get(), QSize(488, 640), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(m_window->size(), QSize(488, 640));
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
 
     m_window->keyPressEvent(Qt::Key_Enter);
-    QCOMPARE(clientFinishUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
@@ -765,13 +765,13 @@ void TestXdgShellWindowRules::testSizeForce()
     QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
 
     // Any attempt to resize the window should not succeed.
-    QSignalSpy clientStartMoveResizedSpy(m_window, &Window::clientStartUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     workspace()->slotWindowResize();
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 0);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 0);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     QVERIFY(!m_surfaceConfigureRequestedSpy->wait(100));
@@ -859,13 +859,13 @@ void TestXdgShellWindowRules::testSizeForceTemporarily()
     QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
 
     // Any attempt to resize the window should not succeed.
-    QSignalSpy clientStartMoveResizedSpy(m_window, &Window::clientStartUserMovedResized);
+    QSignalSpy interactiveMoveResizeStartedSpy(m_window, &Window::interactiveMoveResizeStarted);
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     workspace()->slotWindowResize();
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
-    QCOMPARE(clientStartMoveResizedSpy.count(), 0);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 0);
     QVERIFY(!m_window->isInteractiveMove());
     QVERIFY(!m_window->isInteractiveResize());
     QVERIFY(!m_surfaceConfigureRequestedSpy->wait(100));

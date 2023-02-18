@@ -339,7 +339,7 @@ void X11Window::releaseWindow(bool on_shutdown)
         del = Deleted::create(this);
     }
     if (isInteractiveMoveResize()) {
-        Q_EMIT clientFinishUserMovedResized(this);
+        Q_EMIT interactiveMoveResizeFinished(this);
     }
     Q_EMIT windowClosed(this, del);
     finishCompositing();
@@ -405,7 +405,7 @@ void X11Window::destroyWindow()
     cleanTabBox();
     Deleted *del = Deleted::create(this);
     if (isInteractiveMoveResize()) {
-        Q_EMIT clientFinishUserMovedResized(this);
+        Q_EMIT interactiveMoveResizeFinished(this);
     }
     Q_EMIT windowClosed(this, del);
     finishCompositing(ReleaseReason::Destroyed);

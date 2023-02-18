@@ -541,7 +541,7 @@ void LockScreenTest::testMoveWindow()
 {
     auto [window, surface] = showWindow();
     QVERIFY(window);
-    QSignalSpy clientStepUserMovedResizedSpy(window, &Window::clientStepUserMovedResized);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
     quint32 timestamp = 1;
 
     workspace()->slotWindowMove();
@@ -550,12 +550,12 @@ void LockScreenTest::testMoveWindow()
     Test::keyboardKeyPressed(KEY_RIGHT, timestamp++);
     Test::keyboardKeyReleased(KEY_RIGHT, timestamp++);
     QEXPECT_FAIL("", "First event is ignored", Continue);
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
 
     // TODO adjust once the expected fail is fixed
     Test::keyboardKeyPressed(KEY_RIGHT, timestamp++);
     Test::keyboardKeyReleased(KEY_RIGHT, timestamp++);
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
 
     // while locking our window should continue to be in move resize
     LOCK;
@@ -563,14 +563,14 @@ void LockScreenTest::testMoveWindow()
     QVERIFY(window->isInteractiveMove());
     Test::keyboardKeyPressed(KEY_RIGHT, timestamp++);
     Test::keyboardKeyReleased(KEY_RIGHT, timestamp++);
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
 
     UNLOCK;
     QCOMPARE(workspace()->moveResizeWindow(), window);
     QVERIFY(window->isInteractiveMove());
     Test::keyboardKeyPressed(KEY_RIGHT, timestamp++);
     Test::keyboardKeyReleased(KEY_RIGHT, timestamp++);
-    QCOMPARE(clientStepUserMovedResizedSpy.count(), 2);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 2);
     Test::keyboardKeyPressed(KEY_ESC, timestamp++);
     Test::keyboardKeyReleased(KEY_ESC, timestamp++);
     QVERIFY(!window->isInteractiveMove());

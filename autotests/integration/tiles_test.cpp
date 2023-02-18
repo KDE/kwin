@@ -317,12 +317,12 @@ void TilesTest::resizeTileFromWindow()
     QCOMPARE(window->frameGeometry(), QRect(4, 4, 504, 504));
 
     QCOMPARE(workspace()->activeWindow(), window);
-    QSignalSpy startMoveResizedSpy(window, &Window::clientStartUserMovedResized);
-    QVERIFY(startMoveResizedSpy.isValid());
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    QVERIFY(interactiveMoveResizeStartedSpy.isValid());
     QSignalSpy moveResizedChangedSpy(window, &Window::moveResizedChanged);
     QVERIFY(moveResizedChangedSpy.isValid());
-    QSignalSpy clientFinishUserMovedResizedSpy(window, &Window::clientFinishUserMovedResized);
-    QVERIFY(clientFinishUserMovedResizedSpy.isValid());
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    QVERIFY(interactiveMoveResizeFinishedSpy.isValid());
 
     // begin resize
     QCOMPARE(workspace()->moveResizeWindow(), nullptr);
@@ -330,7 +330,7 @@ void TilesTest::resizeTileFromWindow()
     QCOMPARE(window->isInteractiveResize(), false);
     workspace()->slotWindowResize();
     QCOMPARE(workspace()->moveResizeWindow(), window);
-    QCOMPARE(startMoveResizedSpy.count(), 1);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QCOMPARE(moveResizedChangedSpy.count(), 1);
     QCOMPARE(window->isInteractiveResize(), true);
     QCOMPARE(window->geometryRestore(), QRect());
@@ -371,7 +371,7 @@ void TilesTest::resizeTileFromWindow()
     // Resize vertically
     workspace()->slotWindowResize();
     QCOMPARE(workspace()->moveResizeWindow(), window);
-    QCOMPARE(startMoveResizedSpy.count(), 2);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 2);
     QCOMPARE(moveResizedChangedSpy.count(), 3);
     QCOMPARE(window->isInteractiveResize(), true);
     QCOMPARE(window->geometryRestore(), QRect());
