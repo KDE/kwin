@@ -1425,7 +1425,6 @@ void XdgToplevelWindow::updateMaximizeMode(MaximizeMode maximizeMode)
     m_maximizeMode = maximizeMode;
     updateWindowRules(Rules::MaximizeVert | Rules::MaximizeHoriz);
     Q_EMIT clientMaximizedStateChanged(this, maximizeMode);
-    Q_EMIT clientMaximizedStateChanged(this, maximizeMode & MaximizeHorizontal, maximizeMode & MaximizeVertical);
 }
 
 void XdgToplevelWindow::updateFullScreenMode(bool set)

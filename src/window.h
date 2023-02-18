@@ -1522,7 +1522,6 @@ Q_SIGNALS:
     void captionChanged();
     void clientMaximizedStateAboutToChange(KWin::Window *, MaximizeMode);
     void clientMaximizedStateChanged(KWin::Window *, MaximizeMode);
-    void clientMaximizedStateChanged(KWin::Window *c, bool h, bool v);
     void transientChanged();
     void modalChanged();
     void quickTileModeChanged();

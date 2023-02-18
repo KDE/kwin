@@ -240,8 +240,7 @@ void QuickTilingTest::testQuickMaximizing()
 
     QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-    QSignalSpy maximizeChangedSpy1(window, qOverload<Window *, MaximizeMode>(&Window::clientMaximizedStateChanged));
-    QSignalSpy maximizeChangedSpy2(window, qOverload<Window *, bool, bool>(&Window::clientMaximizedStateChanged));
+    QSignalSpy maximizeChangedSpy(window, &Window::clientMaximizedStateChanged);
 
     window->setQuickTileMode(QuickTileFlag::Maximize, true);
     QCOMPARE(quickTileChangedSpy.count(), 1);
@@ -267,13 +266,9 @@ void QuickTilingTest::testQuickMaximizing()
     QCOMPARE(window->geometryRestore(), QRect(0, 0, 100, 50));
 
     // window is now set to maximised
-    QCOMPARE(maximizeChangedSpy1.count(), 1);
-    QCOMPARE(maximizeChangedSpy1.first().first().value<KWin::Window *>(), window);
-    QCOMPARE(maximizeChangedSpy1.first().last().value<KWin::MaximizeMode>(), MaximizeFull);
-    QCOMPARE(maximizeChangedSpy2.count(), 1);
-    QCOMPARE(maximizeChangedSpy2.first().first().value<KWin::Window *>(), window);
-    QCOMPARE(maximizeChangedSpy2.first().at(1).toBool(), true);
-    QCOMPARE(maximizeChangedSpy2.first().at(2).toBool(), true);
+    QCOMPARE(maximizeChangedSpy.count(), 1);
+    QCOMPARE(maximizeChangedSpy.first().first().value<KWin::Window *>(), window);
+    QCOMPARE(maximizeChangedSpy.first().last().value<KWin::MaximizeMode>(), MaximizeFull);
     QCOMPARE(window->maximizeMode(), MaximizeFull);
 
     // go back to quick tile none
@@ -297,13 +292,9 @@ void QuickTilingTest::testQuickMaximizing()
     QCOMPARE(frameGeometryChangedSpy.count(), 2);
     QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
     QCOMPARE(window->geometryRestore(), QRect(0, 0, 100, 50));
-    QCOMPARE(maximizeChangedSpy1.count(), 2);
-    QCOMPARE(maximizeChangedSpy1.last().first().value<KWin::Window *>(), window);
-    QCOMPARE(maximizeChangedSpy1.last().last().value<KWin::MaximizeMode>(), MaximizeRestore);
-    QCOMPARE(maximizeChangedSpy2.count(), 2);
-    QCOMPARE(maximizeChangedSpy2.last().first().value<KWin::Window *>(), window);
-    QCOMPARE(maximizeChangedSpy2.last().at(1).toBool(), false);
-    QCOMPARE(maximizeChangedSpy2.last().at(2).toBool(), false);
+    QCOMPARE(maximizeChangedSpy.count(), 2);
+    QCOMPARE(maximizeChangedSpy.last().first().value<KWin::Window *>(), window);
+    QCOMPARE(maximizeChangedSpy.last().last().value<KWin::MaximizeMode>(), MaximizeRestore);
 }
 
 void QuickTilingTest::testQuickTilingKeyboardMove_data()
