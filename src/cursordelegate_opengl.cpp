@@ -61,7 +61,7 @@ void CursorDelegateOpenGL::paint(RenderTarget *renderTarget, const QRegion &regi
     m_texture->bind();
     ShaderBinder binder(ShaderTrait::MapTexture);
     binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-    m_texture->render(region, QRect(0, 0, cursorRect.width(), cursorRect.height()), scale);
+    m_texture->render(region, cursorRect.size(), scale);
     m_texture->unbind();
     glDisable(GL_BLEND);
 

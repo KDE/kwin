@@ -101,8 +101,8 @@ public:
     virtual void discard();
     void bind();
     void unbind();
-    void render(const QRect &rect, qreal scale);
-    void render(const QRegion &region, const QRect &rect, qreal scale, bool hardwareClipping = false);
+    void render(const QSizeF &size, double scale);
+    void render(const QRegion &region, const QSizeF &size, double scale, bool hardwareClipping = false);
 
     GLuint texture() const;
     GLenum target() const;

@@ -391,22 +391,21 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
         GLTexture *cursorTexture = ensureCursorTexture();
         if (cursorTexture) {
             const auto cursor = effects->cursorImage();
-            QSize cursorSize = cursor.image().size() / cursor.image().devicePixelRatio();
+            QSizeF cursorSize = QSizeF(cursor.image().size()) / cursor.image().devicePixelRatio();
             if (mousePointer == MousePointerScale) {
                 cursorSize *= zoom;
             }
 
-            const QPoint p = effects->cursorPos() - cursor.hotSpot();
-            QRect rect(p * zoom + QPoint(xTranslation, yTranslation), cursorSize);
+            const QPoint p = (effects->cursorPos() - cursor.hotSpot()) * zoom + QPoint(xTranslation, yTranslation);
 
             cursorTexture->bind();
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
             QMatrix4x4 mvp = data.projectionMatrix();
-            mvp.translate(rect.x() * scale, rect.y() * scale);
+            mvp.translate(p.x() * scale, p.y() * scale);
             s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-            cursorTexture->render(rect, scale);
+            cursorTexture->render(cursorSize, scale);
             ShaderManager::instance()->popShader();
             cursorTexture->unbind();
             glDisable(GL_BLEND);

@@ -59,7 +59,7 @@ void RegionScreenCastSource::updateOutput(Output *output)
         shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
         outputTexture->bind();
-        outputTexture->render(output->geometry(), 1 / m_scale);
+        outputTexture->render(output->geometry().size(), 1 / m_scale);
         outputTexture->unbind();
         GLFramebuffer::popFramebuffer();
     }
@@ -89,16 +89,15 @@ void RegionScreenCastSource::render(GLFramebuffer *target)
     ensureTexture();
 
     GLFramebuffer::pushFramebuffer(target);
-    QRect r(QPoint(), target->size());
     auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
 
     QMatrix4x4 projectionMatrix;
     projectionMatrix.scale(1, -1);
-    projectionMatrix.ortho(r);
+    projectionMatrix.ortho(QRect(QPoint(), target->size()));
     shader->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
     m_renderedTexture->bind();
-    m_renderedTexture->render(r, m_scale);
+    m_renderedTexture->render(target->size(), m_scale);
     m_renderedTexture->unbind();
 
     ShaderManager::instance()->popShader();

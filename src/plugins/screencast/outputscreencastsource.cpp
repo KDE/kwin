@@ -49,17 +49,15 @@ void OutputScreenCastSource::render(GLFramebuffer *target)
         return;
     }
 
-    const QRect geometry(QPoint(), textureSize());
-
     ShaderBinder shaderBinder(ShaderTrait::MapTexture);
     QMatrix4x4 projectionMatrix;
     projectionMatrix.scale(1, -1);
-    projectionMatrix.ortho(scaledRect(geometry, m_output->scale()));
+    projectionMatrix.ortho(QRect(QPoint(), textureSize() * m_output->scale()));
     shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
     GLFramebuffer::pushFramebuffer(target);
     outputTexture->bind();
-    outputTexture->render(geometry, m_output->scale());
+    outputTexture->render(textureSize(), m_output->scale());
     outputTexture->unbind();
     GLFramebuffer::popFramebuffer();
 }

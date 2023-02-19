@@ -506,33 +506,30 @@ void GLTexture::unbind()
     glBindTexture(d->m_target, 0);
 }
 
-void GLTexture::render(const QRect &rect, qreal scale)
+void GLTexture::render(const QSizeF &size, qreal scale)
 {
-    render(infiniteRegion(), rect, scale, false);
+    render(infiniteRegion(), size, scale, false);
 }
 
-void GLTexture::render(const QRegion &region, const QRect &rect, qreal scale, bool hardwareClipping)
+void GLTexture::render(const QRegion &region, const QSizeF &size, double scale, bool hardwareClipping)
 {
     Q_D(GLTexture);
-    if (rect.isEmpty()) {
+    if (size.isEmpty()) {
         return; // nothing to paint and m_vbo is likely nullptr and d->m_cachedSize empty as well, #337090
     }
 
-    QRect destinationRect = scaledRect(rect, scale).toRect();
-    if (destinationRect.size() != d->m_cachedSize) {
-        d->m_cachedSize = destinationRect.size();
-        QRect r(destinationRect);
-        r.moveTo(0, 0);
+    QSizeF destinationSize = (size * scale).toSize();
+    if (destinationSize != d->m_cachedSize) {
+        d->m_cachedSize = destinationSize;
         if (!d->m_vbo) {
             d->m_vbo = std::make_unique<GLVertexBuffer>(KWin::GLVertexBuffer::Static);
         }
 
         const float verts[4 * 2] = {
-            // NOTICE: r.x/y could be replaced by "0", but that would make it unreadable...
-            static_cast<float>(r.x()), static_cast<float>(r.y()),
-            static_cast<float>(r.x()), static_cast<float>(r.y() + destinationRect.height()),
-            static_cast<float>(r.x() + destinationRect.width()), static_cast<float>(r.y()),
-            static_cast<float>(r.x() + destinationRect.width()), static_cast<float>(r.y() + destinationRect.height())};
+            0.0f, 0.0f,
+            0.0f, float(destinationSize.height()),
+            float(destinationSize.width()), 0,
+            float(destinationSize.width()), float(destinationSize.height())};
 
         const float texWidth = (target() == GL_TEXTURE_RECTANGLE_ARB) ? width() : 1.0f;
         const float texHeight = (target() == GL_TEXTURE_RECTANGLE_ARB) ? height() : 1.0f;

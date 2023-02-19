@@ -131,7 +131,7 @@ void MagnifierEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
             mvp.ortho(0, size.width() * scale, size.height() * scale, 0, 0, 65535);
             mvp.translate(area.x() * scale, area.y() * scale);
             s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-            m_texture->render(area, scale);
+            m_texture->render(area.size(), scale);
             ShaderManager::instance()->popShader();
             m_texture->unbind();
             QVector<float> verts;

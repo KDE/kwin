@@ -57,7 +57,7 @@ public:
     int m_unnormalizeActive; // 0 - no, otherwise refcount
     int m_normalizeActive; // 0 - no, otherwise refcount
     std::unique_ptr<GLVertexBuffer> m_vbo;
-    QSize m_cachedSize;
+    QSizeF m_cachedSize;
 
     static void initStatic();
 

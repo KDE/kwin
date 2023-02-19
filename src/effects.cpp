@@ -1767,7 +1767,7 @@ void EffectsHandlerImpl::renderOffscreenQuickView(OffscreenQuickView *w) const
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         t->bind();
-        t->render(w->geometry(), m_scene->renderer()->renderTargetScale());
+        t->render(w->size(), m_scene->renderer()->renderTargetScale());
         t->unbind();
         glDisable(GL_BLEND);
 
