@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-21 00:59+0000\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2015-08-27 20:54+0200\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -1252,12 +1252,12 @@ msgstr "Skru av oppsettsvalg"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Vis at KWin har nylig krasjet n ganger"
 
-#: main_wayland.cpp:314
+#: main_wayland.cpp:302
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Start en rotløs Xwayland-tjener"
 
-#: main_wayland.cpp:316
+#: main_wayland.cpp:304
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1265,113 +1265,113 @@ msgstr ""
 "Navn på Wayland-sokkelen det lyttes på. «wayland-0» brukes hvis ingenting er "
 "satt."
 
-#: main_wayland.cpp:319
+#: main_wayland.cpp:307
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "X11-displayet som ska brukes i vindusmodus på plattformen X11."
 
-#: main_wayland.cpp:322
+#: main_wayland.cpp:310
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "Wayland-displayet som ska brukes i vindusmodus på plattformen Wayland."
 
-#: main_wayland.cpp:324
+#: main_wayland.cpp:312
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr ""
 
-#: main_wayland.cpp:326
+#: main_wayland.cpp:314
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Bredden for vindusmodus. Standardverdi er 1024."
 
-#: main_wayland.cpp:330
+#: main_wayland.cpp:318
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Høyden for vindusmodus. Standardverdi er 768."
 
-#: main_wayland.cpp:335
+#: main_wayland.cpp:323
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr ""
 
-#: main_wayland.cpp:340
+#: main_wayland.cpp:328
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
 
-#: main_wayland.cpp:345
+#: main_wayland.cpp:333
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
 "socket to name the socket"
 msgstr ""
 
-#: main_wayland.cpp:349
+#: main_wayland.cpp:337
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
 
-#: main_wayland.cpp:353
+#: main_wayland.cpp:341
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr ""
 
-#: main_wayland.cpp:357
+#: main_wayland.cpp:345
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr ""
 
-#: main_wayland.cpp:361
+#: main_wayland.cpp:349
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 
-#: main_wayland.cpp:363
+#: main_wayland.cpp:351
 #, kde-format
 msgid "Render through drm node."
 msgstr "Tegn opp gjennom drm-modus."
 
-#: main_wayland.cpp:364
+#: main_wayland.cpp:352
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 
-#: main_wayland.cpp:386
+#: main_wayland.cpp:374
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Inndata-metode som KWin starter."
 
-#: main_wayland.cpp:392
+#: main_wayland.cpp:380
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr ""
 
-#: main_wayland.cpp:396
+#: main_wayland.cpp:384
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr ""
 
-#: main_wayland.cpp:401
+#: main_wayland.cpp:389
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr ""
 
-#: main_wayland.cpp:406 main_x11.cpp:418
+#: main_wayland.cpp:394 main_x11.cpp:418
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr ""
 
-#: main_wayland.cpp:411
+#: main_wayland.cpp:399
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr ""
 
-#: main_wayland.cpp:416
+#: main_wayland.cpp:404
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Programmer som skal startes når Wayland og XWayland-tjener er startet"
@@ -1558,14 +1558,12 @@ msgctxt "Night Color was enabled"
 msgid "Night Color On"
 msgstr ""
 
-#: plugins/nightcolor/nightcolormanager.cpp:84
-#: plugins/nightcolor/nightcolormanager.cpp:87
-#: plugins/nightcolor/nightcolormanager.cpp:94
+#: plugins/nightcolor/nightcolormanager.cpp:85
 #, kde-format
 msgid "Toggle Night Color"
 msgstr ""
 
-#: plugins/nightcolor/nightcolormanager.cpp:471
+#: plugins/nightcolor/nightcolormanager.cpp:462
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr ""
@@ -2092,20 +2090,20 @@ msgstr ""
 msgid "Desktop file name rule type"
 msgstr ""
 
-#: scripting/genericscriptedconfig.cpp:70
+#: scripting/genericscriptedconfig.cpp:69
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
 msgstr ""
 
-#: scripting/genericscriptedconfig.cpp:84
+#: scripting/genericscriptedconfig.cpp:83
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
 msgstr ""
 
-#: scripting/genericscriptedconfig.cpp:90
-#: scripting/genericscriptedconfig.cpp:96
+#: scripting/genericscriptedconfig.cpp:89
+#: scripting/genericscriptedconfig.cpp:95
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
@@ -2624,37 +2622,37 @@ msgstr "Flytt vinduet ett skrivebord ned"
 
 #: useractions.cpp:1091
 #, kde-format
-msgid "Window to Screen %1"
-msgstr "Vindu til skjerm %1"
+msgid "Move Window to Screen %1"
+msgstr ""
 
 #: useractions.cpp:1098
 #, kde-format
-msgid "Window to Next Screen"
-msgstr "Vindu til neste skjerm"
+msgid "Move Window to Next Screen"
+msgstr ""
 
 #: useractions.cpp:1100
 #, kde-format
-msgid "Window to Previous Screen"
-msgstr "Vindu til forrige skjerm"
+msgid "Move Window to Previous Screen"
+msgstr ""
 
 #: useractions.cpp:1102
 #, kde-format
-msgid "Window One Screen to the Right"
+msgid "Move Window One Screen to the Right"
 msgstr ""
 
 #: useractions.cpp:1104
 #, kde-format
-msgid "Window One Screen to the Left"
+msgid "Move Window One Screen to the Left"
 msgstr ""
 
 #: useractions.cpp:1106
 #, kde-format
-msgid "Window One Screen Up"
+msgid "Move Window One Screen Up"
 msgstr ""
 
 #: useractions.cpp:1108
 #, kde-format
-msgid "Window One Screen Down"
+msgid "Move Window One Screen Down"
 msgstr ""
 
 #: useractions.cpp:1112
@@ -2763,13 +2761,13 @@ msgstr "Hopp ett skrivebord ned"
 msgid "Switch to Desktop %1"
 msgstr "Bytt til skrivebord %1"
 
-#: window.cpp:3449
+#: window.cpp:3463
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1813
+#: workspace.cpp:1852
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
