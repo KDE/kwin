@@ -95,7 +95,7 @@ void MouseMarkEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
         for (const Mark &mark : std::as_const(marks)) {
             verts.clear();
             verts.reserve(mark.size() * 2);
-            for (const QPoint &p : std::as_const(mark)) {
+            for (const QPointF &p : std::as_const(mark)) {
                 verts << p.x() * scale << p.y() * scale;
             }
             vbo->setData(verts.size() / 2, 2, verts.data(), nullptr);
@@ -104,7 +104,7 @@ void MouseMarkEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
         if (!drawing.isEmpty()) {
             verts.clear();
             verts.reserve(drawing.size() * 2);
-            for (const QPoint &p : std::as_const(drawing)) {
+            for (const QPointF &p : std::as_const(drawing)) {
                 verts << p.x() * scale << p.y() * scale;
             }
             vbo->setData(verts.size() / 2, 2, verts.data(), nullptr);
@@ -139,7 +139,7 @@ void MouseMarkEffect::drawMark(QPainter *painter, const Mark &mark)
     }
 }
 
-void MouseMarkEffect::slotMouseChanged(const QPoint &pos, const QPoint &,
+void MouseMarkEffect::slotMouseChanged(const QPointF &pos, const QPointF &,
                                        Qt::MouseButtons, Qt::MouseButtons,
                                        Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers)
 {
@@ -164,7 +164,7 @@ void MouseMarkEffect::slotMouseChanged(const QPoint &pos, const QPoint &,
         if (drawing.last() == pos) {
             return;
         }
-        QPoint pos2 = drawing.last();
+        QPointF pos2 = drawing.last();
         drawing.append(pos);
         QRect repaint = QRect(std::min(pos.x(), pos2.x()), std::min(pos.y(), pos2.y()),
                               std::max(pos.x(), pos2.x()), std::max(pos.y(), pos2.y()));
@@ -196,7 +196,7 @@ void MouseMarkEffect::clearLast()
     }
 }
 
-MouseMarkEffect::Mark MouseMarkEffect::createArrow(QPoint arrow_start, QPoint arrow_end)
+MouseMarkEffect::Mark MouseMarkEffect::createArrow(QPointF arrow_start, QPointF arrow_end)
 {
     Mark ret;
     double angle = atan2((double)(arrow_end.y() - arrow_start.y()), (double)(arrow_end.x() - arrow_start.x()));

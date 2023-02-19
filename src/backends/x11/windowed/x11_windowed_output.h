@@ -32,7 +32,7 @@ public:
     explicit X11WindowedCursor(X11WindowedOutput *output);
     ~X11WindowedCursor();
 
-    void update(const QImage &image, const QPoint &hotspot);
+    void update(const QImage &image, const QPointF &hotspot);
 
 private:
     X11WindowedOutput *m_output;
@@ -71,7 +71,7 @@ public:
     QPointF mapFromGlobal(const QPointF &pos) const;
 
     bool setCursor(CursorSource *source) override;
-    bool moveCursor(const QPoint &position) override;
+    bool moveCursor(const QPointF &position) override;
 
     QRegion exposedArea() const;
     void addExposedArea(const QRect &rect);

@@ -33,16 +33,16 @@ public:
     explicit CursorSource(QObject *parent = nullptr);
 
     QImage image() const;
-    QSize size() const;
-    QPoint hotspot() const;
+    QSizeF size() const;
+    QPointF hotspot() const;
 
 Q_SIGNALS:
     void changed();
 
 protected:
     QImage m_image;
-    QSize m_size = QSize(0, 0);
-    QPoint m_hotspot;
+    QSizeF m_size = QSizeF(0, 0);
+    QPointF m_hotspot;
 };
 
 /**
@@ -56,7 +56,7 @@ public:
     explicit ImageCursorSource(QObject *parent = nullptr);
 
 public Q_SLOTS:
-    void update(const QImage &image, const QPoint &hotspot);
+    void update(const QImage &image, const QPointF &hotspot);
 };
 
 /**
@@ -101,7 +101,7 @@ public:
     KWaylandServer::SurfaceInterface *surface() const;
 
 public Q_SLOTS:
-    void update(KWaylandServer::SurfaceInterface *surface, const QPoint &hotspot);
+    void update(KWaylandServer::SurfaceInterface *surface, const QPointF &hotspot);
 
 private:
     QPointer<KWaylandServer::SurfaceInterface> m_surface;

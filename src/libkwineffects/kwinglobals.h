@@ -225,7 +225,7 @@ public:
         , m_hotSpot()
     {
     }
-    explicit PlatformCursorImage(const QImage &image, const QPoint &hotSpot)
+    explicit PlatformCursorImage(const QImage &image, const QPointF &hotSpot)
         : m_image(image)
         , m_hotSpot(hotSpot)
     {
@@ -240,14 +240,14 @@ public:
     {
         return m_image;
     }
-    QPoint hotSpot() const
+    QPointF hotSpot() const
     {
         return m_hotSpot;
     }
 
 private:
     QImage m_image;
-    QPoint m_hotSpot;
+    QPointF m_hotSpot;
 };
 
 /**
@@ -257,6 +257,15 @@ inline KWIN_EXPORT QRect infiniteRegion()
 {
     // INT_MIN / 2 because width/height is used (INT_MIN+INT_MAX==-1)
     return QRect(INT_MIN / 2, INT_MIN / 2, INT_MAX, INT_MAX);
+}
+
+/**
+ * @returns if @a point is contained in @a rect, including the left and top borders
+ * but excluding the right and bottom borders
+ */
+static inline bool exclusiveContains(const QRectF &rect, const QPointF &point)
+{
+    return point.x() >= rect.x() && point.y() >= rect.y() && point.x() < (rect.x() + rect.width()) && point.y() < (rect.y() + rect.height());
 }
 
 } // namespace

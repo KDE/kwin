@@ -115,7 +115,7 @@ void MagnifierEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
     if (m_zoom != 1.0) {
         // get the right area from the current rendered screen
         const QRect area = magnifierArea();
-        const QPoint cursor = cursorPos();
+        const QPointF cursor = cursorPos();
         const auto scale = effects->renderTargetScale();
 
         QRectF srcArea(cursor.x() - (double)area.width() / (m_zoom * 2),
@@ -187,7 +187,7 @@ void MagnifierEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-QRect MagnifierEffect::magnifierArea(QPoint pos) const
+QRect MagnifierEffect::magnifierArea(QPointF pos) const
 {
     return QRect(pos.x() - m_magnifierSize.width() / 2, pos.y() - m_magnifierSize.height() / 2,
                  m_magnifierSize.width(), m_magnifierSize.height());
@@ -253,7 +253,7 @@ void MagnifierEffect::toggle()
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));
 }
 
-void MagnifierEffect::slotMouseChanged(const QPoint &pos, const QPoint &old,
+void MagnifierEffect::slotMouseChanged(const QPointF &pos, const QPointF &old,
                                        Qt::MouseButtons, Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
 {
     if (pos != old && m_zoom != 1) {

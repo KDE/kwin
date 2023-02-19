@@ -321,7 +321,7 @@ Output::DpmsMode Output::dpmsMode() const
     return m_state.dpmsMode;
 }
 
-QMatrix4x4 Output::logicalToNativeMatrix(const QRect &rect, qreal scale, Transform transform)
+QMatrix4x4 Output::logicalToNativeMatrix(const QRectF &rect, qreal scale, Transform transform)
 {
     QMatrix4x4 matrix;
     matrix.scale(scale);
@@ -421,7 +421,7 @@ bool Output::setCursor(CursorSource *source)
     return false;
 }
 
-bool Output::moveCursor(const QPoint &position)
+bool Output::moveCursor(const QPointF &position)
 {
     return false;
 }

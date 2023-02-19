@@ -108,7 +108,7 @@ void ScreencastManager::streamWindow(KWaylandServer::ScreencastStreamV1Interface
     }
 
     auto stream = new WindowStream(window, this);
-    stream->setCursorMode(mode, 1, window->clientGeometry().toRect());
+    stream->setCursorMode(mode, 1, window->clientGeometry());
     if (mode != KWaylandServer::ScreencastV1Interface::CursorMode::Hidden) {
         connect(window, &Window::clientGeometryChanged, stream, [window, stream, mode]() {
             stream->setCursorMode(mode, 1, window->clientGeometry().toRect());

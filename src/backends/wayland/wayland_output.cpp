@@ -214,7 +214,7 @@ bool WaylandOutput::setCursor(CursorSource *source)
     return true;
 }
 
-bool WaylandOutput::moveCursor(const QPoint &position)
+bool WaylandOutput::moveCursor(const QPointF &position)
 {
     // The cursor position is controlled by the host compositor.
     return !m_hasPointerLock;

@@ -93,7 +93,7 @@ public:
     /**
      * The hotspot of the cursor image in surface-relative coordinates.
      */
-    QPoint hotspot() const;
+    QPointF hotspot() const;
     /**
      * The entered serial when the Cursor got set.
      */

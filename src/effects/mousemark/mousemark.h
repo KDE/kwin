@@ -41,18 +41,18 @@ public:
 private Q_SLOTS:
     void clear();
     void clearLast();
-    void slotMouseChanged(const QPoint &pos, const QPoint &old,
+    void slotMouseChanged(const QPointF &pos, const QPointF &old,
                           Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                           Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     void screenLockingChanged(bool locked);
 
 private:
-    typedef QVector<QPoint> Mark;
+    typedef QVector<QPointF> Mark;
     void drawMark(QPainter *painter, const Mark &mark);
-    static Mark createArrow(QPoint arrow_start, QPoint arrow_end);
+    static Mark createArrow(QPointF arrow_start, QPointF arrow_end);
     QVector<Mark> marks;
     Mark drawing;
-    QPoint arrow_start;
+    QPointF arrow_start;
     int width;
     QColor color;
 };

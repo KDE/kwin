@@ -245,7 +245,7 @@ public:
     /**
      * Returns a matrix that can translate into the display's coordinates system
      */
-    static QMatrix4x4 logicalToNativeMatrix(const QRect &rect, qreal scale, Transform transform);
+    static QMatrix4x4 logicalToNativeMatrix(const QRectF &rect, qreal scale, Transform transform);
 
     void setVrrPolicy(RenderLoop::VrrPolicy policy);
     RenderLoop::VrrPolicy vrrPolicy() const;
@@ -261,7 +261,7 @@ public:
     virtual void setColorTransformation(const std::shared_ptr<ColorTransformation> &transformation);
 
     virtual bool setCursor(CursorSource *source);
-    virtual bool moveCursor(const QPoint &position);
+    virtual bool moveCursor(const QPointF &position);
 
 Q_SIGNALS:
     /**

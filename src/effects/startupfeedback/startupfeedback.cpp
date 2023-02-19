@@ -242,7 +242,7 @@ void StartupFeedbackEffect::postPaintScreen()
     effects->postPaintScreen();
 }
 
-void StartupFeedbackEffect::slotMouseChanged(const QPoint &pos, const QPoint &oldpos, Qt::MouseButtons buttons,
+void StartupFeedbackEffect::slotMouseChanged(const QPointF &pos, const QPointF &oldpos, Qt::MouseButtons buttons,
                                              Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers)
 {
     if (m_active) {
@@ -416,7 +416,7 @@ QRect StartupFeedbackEffect::feedbackRect() const
         // nothing
         break;
     }
-    const QPoint cursorPos = effects->cursorPos() + QPoint(xDiff, yDiff + yOffset);
+    const QPoint cursorPos = effects->cursorPos().toPoint() + QPoint(xDiff, yDiff + yOffset);
     QRect rect;
     if (texture) {
         rect = QRect(cursorPos, texture->size());

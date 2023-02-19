@@ -228,7 +228,7 @@ void X11StandaloneBackend::startInteractiveWindowSelection(std::function<void(KW
     m_windowSelector->start(callback, cursorName);
 }
 
-void X11StandaloneBackend::startInteractivePositionSelection(std::function<void(const QPoint &)> callback)
+void X11StandaloneBackend::startInteractivePositionSelection(std::function<void(const QPointF &)> callback)
 {
     if (!m_windowSelector) {
         m_windowSelector = std::make_unique<WindowSelector>();

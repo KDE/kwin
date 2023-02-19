@@ -449,7 +449,7 @@ void Compositor::addOutput(Output *output)
 
     auto updateCursorLayer = [output, cursorLayer]() {
         const Cursor *cursor = Cursors::self()->currentCursor();
-        const QRect layerRect = output->mapFromGlobal(cursor->geometry());
+        const QRectF layerRect = output->mapFromGlobal(cursor->geometry());
         bool usesHardwareCursor = false;
         if (!Cursors::self()->isCursorHidden()) {
             usesHardwareCursor = output->setCursor(cursor->source()) && output->moveCursor(layerRect.topLeft());
@@ -462,7 +462,7 @@ void Compositor::addOutput(Output *output)
     };
     auto moveCursorLayer = [output, cursorLayer]() {
         const Cursor *cursor = Cursors::self()->currentCursor();
-        const QRect layerRect = output->mapFromGlobal(cursor->geometry());
+        const QRectF layerRect = output->mapFromGlobal(cursor->geometry());
         const bool usesHardwareCursor = output->moveCursor(layerRect.topLeft());
         cursorLayer->setVisible(cursor->isOnOutput(output) && !usesHardwareCursor);
         cursorLayer->setGeometry(layerRect);
@@ -682,7 +682,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             auto &[renderTarget, repaint] = beginInfo.value();
             renderTarget.setDevicePixelRatio(output->scale());
 
-            const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(superLayer->rect());
+            const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(superLayer->rect().toAlignedRect());
             primaryLayer->aboutToStartPainting(bufferDamage);
 
             paintPass(superLayer, &renderTarget, bufferDamage);

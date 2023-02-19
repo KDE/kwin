@@ -45,7 +45,7 @@ public:
     }
 private Q_SLOTS:
     void toggle();
-    void slotMouseChanged(const QPoint &pos, const QPoint &old,
+    void slotMouseChanged(const QPointF &pos, const QPointF &old,
                           Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                           Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 

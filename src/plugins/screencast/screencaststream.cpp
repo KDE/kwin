@@ -446,7 +446,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
             QPainter painter(&dest);
             const auto position = (cursor->pos() - m_cursor.viewport.topLeft() - cursor->hotspot()) * m_cursor.scale;
-            painter.drawImage(QRect{position, cursor->image().size()}, cursor->image());
+            painter.drawImage(QRect{position.toPoint(), cursor->image().size()}, cursor->image());
         }
     } else {
         auto &buf = m_dmabufDataForPwBuffer[buffer];
@@ -493,10 +493,10 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
                 ShaderManager::instance()->popShader();
                 GLFramebuffer::popFramebuffer();
 
-                damagedRegion += QRegion{m_cursor.lastRect} | cursorRect;
+                damagedRegion += QRegion{m_cursor.lastRect.toAlignedRect()} | cursorRect.toAlignedRect();
                 m_cursor.lastRect = cursorRect;
             } else {
-                damagedRegion |= m_cursor.lastRect;
+                damagedRegion |= m_cursor.lastRect.toAlignedRect();
                 m_cursor.lastRect = {};
             }
         }
@@ -692,14 +692,14 @@ spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video
     return (spa_pod *)spa_pod_builder_pop(b, &f[0]);
 }
 
-QRect ScreenCastStream::cursorGeometry(Cursor *cursor) const
+QRectF ScreenCastStream::cursorGeometry(Cursor *cursor) const
 {
     if (!m_cursor.texture) {
         return {};
     }
 
     const auto position = (cursor->pos() - m_cursor.viewport.topLeft() - cursor->hotspot()) * m_cursor.scale;
-    return QRect{position, m_cursor.texture->size()};
+    return QRectF{position, m_cursor.texture->size()};
 }
 
 void ScreenCastStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_cursor)
@@ -736,7 +736,7 @@ void ScreenCastStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_
     m_cursor.lastKey = image.cacheKey();
     spa_meta_cursor->bitmap_offset = sizeof(struct spa_meta_cursor);
 
-    const QSize targetSize = cursor->rect().size() * m_cursor.scale;
+    const QSize targetSize = (cursor->rect().size() * m_cursor.scale).toSize();
 
     struct spa_meta_bitmap *spa_meta_bitmap = SPA_MEMBER(spa_meta_cursor,
                                                          spa_meta_cursor->bitmap_offset,
@@ -761,7 +761,7 @@ void ScreenCastStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_
     }
 }
 
-void ScreenCastStream::setCursorMode(KWaylandServer::ScreencastV1Interface::CursorMode mode, qreal scale, const QRect &viewport)
+void ScreenCastStream::setCursorMode(KWaylandServer::ScreencastV1Interface::CursorMode mode, qreal scale, const QRectF &viewport)
 {
     m_cursor.mode = mode;
     m_cursor.scale = scale;

@@ -200,18 +200,18 @@ void ScreenEdgesTest::testPushBack_data()
 {
     QTest::addColumn<KWin::ElectricBorder>("border");
     QTest::addColumn<int>("pushback");
-    QTest::addColumn<QPoint>("trigger");
-    QTest::addColumn<QPoint>("expected");
+    QTest::addColumn<QPointF>("trigger");
+    QTest::addColumn<QPointF>("expected");
 
-    QTest::newRow("top-left-3") << ElectricTopLeft << 3 << QPoint(0, 0) << QPoint(3, 3);
-    QTest::newRow("top-5") << ElectricTop << 5 << QPoint(50, 0) << QPoint(50, 5);
-    QTest::newRow("top-right-2") << ElectricTopRight << 2 << QPoint(1279, 0) << QPoint(1277, 2);
-    QTest::newRow("right-10") << ElectricRight << 10 << QPoint(1279, 50) << QPoint(1269, 50);
-    QTest::newRow("bottom-right-5") << ElectricBottomRight << 5 << QPoint(1279, 1023) << QPoint(1274, 1018);
-    QTest::newRow("bottom-10") << ElectricBottom << 10 << QPoint(50, 1023) << QPoint(50, 1013);
-    QTest::newRow("bottom-left-3") << ElectricBottomLeft << 3 << QPoint(0, 1023) << QPoint(3, 1020);
-    QTest::newRow("left-10") << ElectricLeft << 10 << QPoint(0, 50) << QPoint(10, 50);
-    QTest::newRow("invalid") << ElectricLeft << 10 << QPoint(50, 0) << QPoint(50, 0);
+    QTest::newRow("top-left-3") << ElectricTopLeft << 3 << QPointF(0, 0) << QPointF(3, 3);
+    QTest::newRow("top-5") << ElectricTop << 5 << QPointF(50, 0) << QPointF(50, 5);
+    QTest::newRow("top-right-2") << ElectricTopRight << 2 << QPointF(1279, 0) << QPointF(1277, 2);
+    QTest::newRow("right-10") << ElectricRight << 10 << QPointF(1279, 50) << QPointF(1269, 50);
+    QTest::newRow("bottom-right-5") << ElectricBottomRight << 5 << QPointF(1279, 1023) << QPointF(1274, 1018);
+    QTest::newRow("bottom-10") << ElectricBottom << 10 << QPointF(50, 1023) << QPointF(50, 1013);
+    QTest::newRow("bottom-left-3") << ElectricBottomLeft << 3 << QPointF(0, 1023) << QPointF(3, 1020);
+    QTest::newRow("left-10") << ElectricLeft << 10 << QPointF(0, 50) << QPointF(10, 50);
+    QTest::newRow("invalid") << ElectricLeft << 10 << QPointF(50, 0) << QPointF(50, 0);
 }
 
 void ScreenEdgesTest::testPushBack()
@@ -233,7 +233,7 @@ void ScreenEdgesTest::testPushBack()
     QFETCH(ElectricBorder, border);
     s->reserve(border, &callback, "callback");
 
-    QFETCH(QPoint, trigger);
+    QFETCH(QPointF, trigger);
     Test::pointerMotion(trigger, 0);
     QVERIFY(spy.isEmpty());
     QTEST(Cursors::self()->mouse()->pos(), "expected");

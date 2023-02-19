@@ -419,14 +419,12 @@ void TestWindowSelection::testSelectPointPointer()
     QCOMPARE(input()->pointer()->focus(), window);
     QVERIFY(pointerEnteredSpy.wait());
 
-    QPoint point;
-    auto callback = [&point](const QPoint &p) {
-        point = p;
-    };
-
     // start the interaction
     QCOMPARE(input()->isSelectingWindow(), false);
-    kwinApp()->startInteractivePositionSelection(callback);
+    QPointF point;
+    kwinApp()->startInteractivePositionSelection([&point](const QPointF &p) {
+        point = p;
+    });
     QCOMPARE(input()->isSelectingWindow(), true);
     QCOMPARE(point, QPoint());
     QCOMPARE(keyboardLeftSpy.count(), 0);
@@ -438,8 +436,8 @@ void TestWindowSelection::testSelectPointPointer()
     QCOMPARE(keyboardLeftSpy.count(), 1);
 
     // trying again should not be allowed
-    QPoint point2;
-    kwinApp()->startInteractivePositionSelection([&point2](const QPoint &p) {
+    QPointF point2;
+    kwinApp()->startInteractivePositionSelection([&point2](const QPointF &p) {
         point2 = p;
     });
     QCOMPARE(point2, QPoint(-1, -1));
@@ -483,14 +481,12 @@ void TestWindowSelection::testSelectPointPointer()
 void TestWindowSelection::testSelectPointTouch()
 {
     // this test verifies point selection through touch works
-    QPoint point;
-    auto callback = [&point](const QPoint &p) {
-        point = p;
-    };
-
     // start the interaction
     QCOMPARE(input()->isSelectingWindow(), false);
-    kwinApp()->startInteractivePositionSelection(callback);
+    QPointF point;
+    kwinApp()->startInteractivePositionSelection([&point](const QPointF &p) {
+        point = p;
+    });
     QCOMPARE(input()->isSelectingWindow(), true);
     QCOMPARE(point, QPoint());
 

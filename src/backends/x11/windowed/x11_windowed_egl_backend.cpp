@@ -89,7 +89,8 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame()
 {
     eglMakeCurrent(m_backend->eglDisplay(), EGL_NO_SURFACE, EGL_NO_SURFACE, m_backend->context());
 
-    const QSize bufferSize = size().expandedTo(QSize(64, 64));
+    const auto tmp = size().expandedTo(QSize(64, 64));
+    const QSize bufferSize(std::ceil(tmp.width()), std::ceil(tmp.height()));
     if (!m_texture || m_texture->size() != bufferSize) {
         m_texture = std::make_unique<GLTexture>(GL_RGBA8, bufferSize);
         m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());

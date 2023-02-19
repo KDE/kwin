@@ -23,7 +23,7 @@ PlatformCursor::~PlatformCursor() = default;
 
 QPoint PlatformCursor::pos() const
 {
-    return Cursors::self()->mouse()->pos();
+    return Cursors::self()->mouse()->pos().toPoint();
 }
 
 void PlatformCursor::setPos(const QPoint &pos)

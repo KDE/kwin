@@ -38,7 +38,7 @@ void RenderLayer::setOutputLayer(OutputLayer *layer)
         return;
     }
     if (m_outputLayer) {
-        m_outputLayer->addRepaint(mapToGlobal(boundingRect()));
+        m_outputLayer->addRepaint(mapToGlobal(boundingRect()).toAlignedRect());
     }
     m_outputLayer = layer;
     for (RenderLayer *sublayer : std::as_const(m_sublayers)) {
@@ -101,28 +101,28 @@ void RenderLayer::setDelegate(std::unique_ptr<RenderLayerDelegate> delegate)
     m_delegate->setLayer(this);
 }
 
-QRect RenderLayer::rect() const
+QRectF RenderLayer::rect() const
 {
     return QRect(0, 0, m_geometry.width(), m_geometry.height());
 }
 
-QRect RenderLayer::boundingRect() const
+QRectF RenderLayer::boundingRect() const
 {
     return m_boundingRect;
 }
 
-QRect RenderLayer::geometry() const
+QRectF RenderLayer::geometry() const
 {
     return m_geometry;
 }
 
-void RenderLayer::setGeometry(const QRect &geometry)
+void RenderLayer::setGeometry(const QRectF &geometry)
 {
     if (m_geometry == geometry) {
         return;
     }
     if (m_effectiveVisible && m_outputLayer) {
-        m_outputLayer->addRepaint(mapToGlobal(boundingRect()));
+        m_outputLayer->addRepaint(mapToGlobal(boundingRect()).toAlignedRect());
     }
 
     m_geometry = geometry;
@@ -136,7 +136,7 @@ void RenderLayer::setGeometry(const QRect &geometry)
 
 void RenderLayer::updateBoundingRect()
 {
-    QRect boundingRect = rect();
+    QRectF boundingRect = rect();
     for (const RenderLayer *sublayer : std::as_const(m_sublayers)) {
         boundingRect |= sublayer->boundingRect().translated(sublayer->geometry().topLeft());
     }
@@ -151,7 +151,7 @@ void RenderLayer::updateBoundingRect()
 
 void RenderLayer::addRepaintFull()
 {
-    addRepaint(rect());
+    addRepaint(rect().toAlignedRect());
 }
 
 void RenderLayer::addRepaint(int x, int y, int width, int height)
@@ -216,7 +216,7 @@ void RenderLayer::updateEffectiveVisibility()
         addRepaintFull();
     } else {
         if (m_outputLayer) {
-            m_outputLayer->addRepaint(mapToGlobal(boundingRect()));
+            m_outputLayer->addRepaint(mapToGlobal(boundingRect()).toAlignedRect());
         }
     }
 
@@ -227,7 +227,12 @@ void RenderLayer::updateEffectiveVisibility()
 
 QPoint RenderLayer::mapToGlobal(const QPoint &point) const
 {
-    QPoint result = point;
+    return mapToGlobal(QPointF(point)).toPoint();
+}
+
+QPointF RenderLayer::mapToGlobal(const QPointF &point) const
+{
+    QPointF result = point;
     const RenderLayer *layer = this;
     while (layer) {
         result += layer->geometry().topLeft();
@@ -241,6 +246,11 @@ QRect RenderLayer::mapToGlobal(const QRect &rect) const
     return rect.translated(mapToGlobal(QPoint(0, 0)));
 }
 
+QRectF RenderLayer::mapToGlobal(const QRectF &rect) const
+{
+    return rect.translated(mapToGlobal(QPointF(0, 0)));
+}
+
 QRegion RenderLayer::mapToGlobal(const QRegion &region) const
 {
     if (region.isEmpty()) {
@@ -251,7 +261,12 @@ QRegion RenderLayer::mapToGlobal(const QRegion &region) const
 
 QPoint RenderLayer::mapFromGlobal(const QPoint &point) const
 {
-    QPoint result = point;
+    return mapFromGlobal(QPointF(point)).toPoint();
+}
+
+QPointF RenderLayer::mapFromGlobal(const QPointF &point) const
+{
+    QPointF result = point;
     const RenderLayer *layer = this;
     while (layer) {
         result -= layer->geometry().topLeft();
@@ -263,6 +278,11 @@ QPoint RenderLayer::mapFromGlobal(const QPoint &point) const
 QRect RenderLayer::mapFromGlobal(const QRect &rect) const
 {
     return rect.translated(mapFromGlobal(QPoint(0, 0)));
+}
+
+QRectF RenderLayer::mapFromGlobal(const QRectF &rect) const
+{
+    return rect.translated(mapFromGlobal(QPointF(0, 0)));
 }
 
 QRegion RenderLayer::mapFromGlobal(const QRegion &region) const

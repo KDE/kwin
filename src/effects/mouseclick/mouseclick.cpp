@@ -146,7 +146,7 @@ float MouseClickEffect::computeAlpha(const MouseEvent *click, int ring)
     return (m_ringLife - (float)click->m_time - ringDistance * (ring)) / m_ringLife;
 }
 
-void MouseClickEffect::slotMouseChanged(const QPoint &pos, const QPoint &,
+void MouseClickEffect::slotMouseChanged(const QPointF &pos, const QPointF &,
                                         Qt::MouseButtons buttons, Qt::MouseButtons oldButtons,
                                         Qt::KeyboardModifiers, Qt::KeyboardModifiers)
 {
@@ -159,11 +159,11 @@ void MouseClickEffect::slotMouseChanged(const QPoint &pos, const QPoint &,
     while (--i >= 0) {
         MouseButton *b = m_buttons[i].get();
         if (isPressed(b->m_button, buttons, oldButtons)) {
-            m = std::make_unique<MouseEvent>(i, pos, 0, createEffectFrame(pos, b->m_labelDown), true);
+            m = std::make_unique<MouseEvent>(i, pos.toPoint(), 0, createEffectFrame(pos.toPoint(), b->m_labelDown), true);
             break;
         } else if (isReleased(b->m_button, buttons, oldButtons) && (!b->m_isPressed || b->m_time > m_ringLife)) {
             // we might miss a press, thus also check !b->m_isPressed, bug #314762
-            m = std::make_unique<MouseEvent>(i, pos, 0, createEffectFrame(pos, b->m_labelUp), false);
+            m = std::make_unique<MouseEvent>(i, pos.toPoint(), 0, createEffectFrame(pos.toPoint(), b->m_labelUp), false);
             break;
         }
         b->setPressed(b->m_button & buttons);

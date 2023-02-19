@@ -1359,7 +1359,7 @@ void EffectsHandlerImpl::doCheckInputWindowStacking()
 {
 }
 
-QPoint EffectsHandlerImpl::cursorPos() const
+QPointF EffectsHandlerImpl::cursorPos() const
 {
     return Cursors::self()->mouse()->pos();
 }
@@ -1696,7 +1696,7 @@ void EffectsHandlerImpl::startInteractiveWindowSelection(std::function<void(KWin
     });
 }
 
-void EffectsHandlerImpl::startInteractivePositionSelection(std::function<void(const QPoint &)> callback)
+void EffectsHandlerImpl::startInteractivePositionSelection(std::function<void(const QPointF &)> callback)
 {
     kwinApp()->startInteractivePositionSelection(callback);
 }

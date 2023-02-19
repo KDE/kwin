@@ -93,7 +93,7 @@ public:
     QString desktopName(int desktop) const override;
     bool optionRollOverDesktops() const override;
 
-    QPoint cursorPos() const override;
+    QPointF cursorPos() const override;
     bool grabKeyboard(Effect *effect) override;
     void ungrabKeyboard() override;
     // not performing XGrabPointer
@@ -203,7 +203,7 @@ public:
     void showCursor() override;
 
     void startInteractiveWindowSelection(std::function<void(KWin::EffectWindow *)> callback) override;
-    void startInteractivePositionSelection(std::function<void(const QPoint &)> callback) override;
+    void startInteractivePositionSelection(std::function<void(const QPointF &)> callback) override;
 
     void showOnScreenMessage(const QString &message, const QString &iconName = QString()) override;
     void hideOnScreenMessage(OnScreenMessageHideFlags flags = OnScreenMessageHideFlags()) override;

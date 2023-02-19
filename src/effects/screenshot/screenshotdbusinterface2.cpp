@@ -478,7 +478,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
                                           "Escape or right click to cancel."),
                                      QStringLiteral("spectacle"));
     } else {
-        effects->startInteractivePositionSelection([=, this](const QPoint &point) {
+        effects->startInteractivePositionSelection([=, this](const QPointF &point) {
             effects->hideOnScreenMessage(EffectsHandler::OnScreenMessageHideFlag::SkipsCloseAnimation);
 
             if (point == QPoint(-1, -1)) {
@@ -487,7 +487,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
                 QDBusConnection bus = QDBusConnection::sessionBus();
                 bus.send(replyMessage.createErrorReply(s_errorCancelled, s_errorCancelledMessage));
             } else {
-                EffectScreen *screen = effects->screenAt(point);
+                EffectScreen *screen = effects->screenAt(point.toPoint());
                 takeScreenShot(screen, screenShotFlagsFromOptions(options),
                                new ScreenShotSinkPipe2(fileDescriptor, replyMessage));
             }

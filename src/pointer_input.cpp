@@ -1180,9 +1180,9 @@ void InputRedirectionCursor::doSetPos()
 
 void InputRedirectionCursor::slotPosChanged(const QPointF &pos)
 {
-    const QPoint oldPos = currentPos();
-    updatePos(pos.toPoint());
-    Q_EMIT mouseChanged(pos.toPoint(), oldPos, m_currentButtons, m_currentButtons,
+    const QPointF oldPos = currentPos();
+    updatePos(pos);
+    Q_EMIT mouseChanged(pos, oldPos, m_currentButtons, m_currentButtons,
                         input()->keyboardModifiers(), input()->keyboardModifiers());
 }
 
@@ -1195,7 +1195,7 @@ void InputRedirectionCursor::slotPointerButtonChanged()
 {
     const Qt::MouseButtons oldButtons = m_currentButtons;
     m_currentButtons = input()->qtButtonStates();
-    const QPoint pos = currentPos();
+    const QPointF pos = currentPos();
     Q_EMIT mouseChanged(pos, pos, m_currentButtons, oldButtons, input()->keyboardModifiers(), input()->keyboardModifiers());
 }
 

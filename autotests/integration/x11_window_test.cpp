@@ -130,7 +130,7 @@ void X11WindowTest::testMinimumSize()
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
     QVERIFY(window->isInteractiveResize());
 
-    const QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
+    const QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
 
     window->keyPressEvent(Qt::Key_Left);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
@@ -236,7 +236,7 @@ void X11WindowTest::testMaximumSize()
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
     QVERIFY(window->isInteractiveResize());
 
-    const QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
+    const QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
 
     window->keyPressEvent(Qt::Key_Right);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
@@ -342,7 +342,7 @@ void X11WindowTest::testResizeIncrements()
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
     QVERIFY(window->isInteractiveResize());
 
-    const QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
+    const QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
 
     window->keyPressEvent(Qt::Key_Right);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
@@ -426,7 +426,7 @@ void X11WindowTest::testResizeIncrementsNoBaseSize()
     QCOMPARE(clientStartMoveResizedSpy.count(), 1);
     QVERIFY(window->isInteractiveResize());
 
-    const QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
+    const QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
 
     window->keyPressEvent(Qt::Key_Right);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());

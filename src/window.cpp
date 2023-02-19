@@ -1817,7 +1817,7 @@ void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &gl
     }
 }
 
-void Window::handleInteractiveMoveResize(int x, int y, int x_root, int y_root)
+void Window::handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y_root)
 {
     if (isWaitingForInteractiveMoveResizeSync()) {
         return; // we're still waiting for the client or the timeout

@@ -227,7 +227,7 @@ void ApplicationX11::startInteractiveWindowSelection(std::function<void(KWin::Wi
     static_cast<X11StandaloneBackend *>(outputBackend())->startInteractiveWindowSelection(callback, cursorName);
 }
 
-void ApplicationX11::startInteractivePositionSelection(std::function<void(const QPoint &)> callback)
+void ApplicationX11::startInteractivePositionSelection(std::function<void(const QPointF &)> callback)
 {
     static_cast<X11StandaloneBackend *>(outputBackend())->startInteractivePositionSelection(callback);
 }

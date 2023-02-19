@@ -12,6 +12,7 @@
 #include "x11_windowed_output.h"
 
 #include <cerrno>
+#include <cmath>
 #include <string.h>
 #include <sys/shm.h>
 #include <xcb/present.h>
@@ -179,7 +180,8 @@ X11WindowedQPainterCursorLayer::X11WindowedQPainterCursorLayer(X11WindowedOutput
 
 std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterCursorLayer::beginFrame()
 {
-    const QSize bufferSize = size().expandedTo(QSize(64, 64));
+    const auto tmp = size().expandedTo(QSize(64, 64));
+    const QSize bufferSize(std::ceil(tmp.width()), std::ceil(tmp.height()));
     if (m_buffer.size() != bufferSize) {
         m_buffer = QImage(bufferSize, QImage::Format_ARGB32_Premultiplied);
     }

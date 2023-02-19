@@ -44,7 +44,7 @@ X11WindowedCursor::~X11WindowedCursor()
     }
 }
 
-void X11WindowedCursor::update(const QImage &image, const QPoint &hotspot)
+void X11WindowedCursor::update(const QImage &image, const QPointF &hotspot)
 {
     X11WindowedBackend *backend = m_output->backend();
 
@@ -314,7 +314,7 @@ bool X11WindowedOutput::setCursor(CursorSource *source)
     return true;
 }
 
-bool X11WindowedOutput::moveCursor(const QPoint &position)
+bool X11WindowedOutput::moveCursor(const QPointF &position)
 {
     // The cursor position is controlled by the host compositor.
     return true;

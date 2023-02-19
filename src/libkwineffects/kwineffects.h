@@ -627,7 +627,7 @@ public:
      */
     virtual bool tabletPadRingEvent(int number, int position, bool isFinger, void *tabletPadId);
 
-    static QPoint cursorPos();
+    static QPointF cursorPos();
 
     /**
      * Read animation time from the configuration and possibly adjust using animationTimeFactor().
@@ -819,7 +819,7 @@ class KWINEFFECTS_EXPORT EffectsHandler : public QObject
      */
     Q_PROPERTY(bool decorationsHaveAlpha READ decorationsHaveAlpha)
     Q_PROPERTY(CompositingType compositingType READ compositingType CONSTANT)
-    Q_PROPERTY(QPoint cursorPos READ cursorPos)
+    Q_PROPERTY(QPointF cursorPos READ cursorPos)
     Q_PROPERTY(QSize virtualScreenSize READ virtualScreenSize NOTIFY virtualScreenSizeChanged)
     Q_PROPERTY(QRect virtualScreenGeometry READ virtualScreenGeometry NOTIFY virtualScreenGeometryChanged)
     Q_PROPERTY(bool hasActiveFullScreenEffect READ hasActiveFullScreenEffect NOTIFY hasActiveFullScreenEffectChanged)
@@ -855,7 +855,7 @@ public:
      * @since 4.11
      */
     virtual void defineCursor(Qt::CursorShape shape) = 0;
-    virtual QPoint cursorPos() const = 0;
+    virtual QPointF cursorPos() const = 0;
     virtual bool grabKeyboard(Effect *effect) = 0;
     virtual void ungrabKeyboard() = 0;
     /**
@@ -1332,7 +1332,7 @@ public:
      * @param callback The function to invoke once the interactive position selection ends
      * @since 5.9
      */
-    virtual void startInteractivePositionSelection(std::function<void(const QPoint &)> callback) = 0;
+    virtual void startInteractivePositionSelection(std::function<void(const QPointF &)> callback) = 0;
 
     /**
      * Shows an on-screen-message. To hide it again use hideOnScreenMessage.
@@ -1730,7 +1730,7 @@ Q_SIGNALS:
      * @see startMousePolling
      * @since 4.7
      */
-    void mouseChanged(const QPoint &pos, const QPoint &oldpos,
+    void mouseChanged(const QPointF &pos, const QPointF &oldpos,
                       Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                       Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     /**

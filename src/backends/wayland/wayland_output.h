@@ -66,7 +66,7 @@ public:
 
     RenderLoop *renderLoop() const override;
     bool setCursor(CursorSource *source) override;
-    bool moveCursor(const QPoint &position) override;
+    bool moveCursor(const QPointF &position) override;
 
     void init(const QSize &pixelSize, qreal scale);
 

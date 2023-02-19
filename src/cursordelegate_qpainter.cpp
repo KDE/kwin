@@ -18,7 +18,7 @@ namespace KWin
 
 void CursorDelegateQPainter::paint(RenderTarget *renderTarget, const QRegion &region)
 {
-    if (!region.intersects(layer()->mapToGlobal(layer()->rect()))) {
+    if (!region.intersects(layer()->mapToGlobal(layer()->rect()).toAlignedRect())) {
         return;
     }
 
@@ -27,7 +27,7 @@ void CursorDelegateQPainter::paint(RenderTarget *renderTarget, const QRegion &re
         return;
     }
 
-    const QSize bufferSize = Cursors::self()->currentCursor()->rect().size() * renderTarget->devicePixelRatio();
+    const QSize bufferSize = (Cursors::self()->currentCursor()->rect().size() * renderTarget->devicePixelRatio()).toSize();
     if (m_buffer.size() != bufferSize) {
         m_buffer = QImage(bufferSize, QImage::Format_ARGB32_Premultiplied);
     }

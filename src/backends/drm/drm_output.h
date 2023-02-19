@@ -51,7 +51,7 @@ public:
     void updateDpmsMode(DpmsMode dpmsMode);
 
     bool setCursor(CursorSource *source) override;
-    bool moveCursor(const QPoint &position) override;
+    bool moveCursor(const QPointF &position) override;
 
     DrmLease *lease() const;
     bool addLeaseObjects(QVector<uint32_t> &objectList);
@@ -76,7 +76,7 @@ private:
 
     struct {
         QPointer<CursorSource> source;
-        QPoint position;
+        QPointF position;
     } m_cursor;
 };
 

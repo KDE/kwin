@@ -84,7 +84,7 @@ void MagicLampEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
         // If there's no icon geometry, minimize to the center of the screen
         if (!icon.isValid()) {
             QRect extG = geo;
-            QPoint pt = cursorPos();
+            QPoint pt = cursorPos().toPoint();
             // focussing inside the window is no good, leads to ugly artefacts, find nearest border
             if (extG.contains(pt)) {
                 const int d[2][2] = {{pt.x() - extG.x(), extG.right() - pt.x()},

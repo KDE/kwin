@@ -1257,7 +1257,7 @@ void TestXdgShellWindow::testXdgWindowGeometryInteractiveResize()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
 
     // Go right.
-    QPoint cursorPos = KWin::Cursors::self()->mouse()->pos();
+    QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
     window->keyPressEvent(Qt::Key_Right);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));

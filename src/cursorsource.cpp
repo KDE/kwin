@@ -23,12 +23,12 @@ QImage CursorSource::image() const
     return m_image;
 }
 
-QSize CursorSource::size() const
+QSizeF CursorSource::size() const
 {
     return m_size;
 }
 
-QPoint CursorSource::hotspot() const
+QPointF CursorSource::hotspot() const
 {
     return m_hotspot;
 }
@@ -38,10 +38,10 @@ ImageCursorSource::ImageCursorSource(QObject *parent)
 {
 }
 
-void ImageCursorSource::update(const QImage &image, const QPoint &hotspot)
+void ImageCursorSource::update(const QImage &image, const QPointF &hotspot)
 {
     m_image = image;
-    m_size = image.size() / image.devicePixelRatio();
+    m_size = QSizeF(image.size()) / image.devicePixelRatio();
     m_hotspot = hotspot;
     Q_EMIT changed();
 }
@@ -118,7 +118,7 @@ void ShapeCursorSource::selectSprite(int index)
     const KXcursorSprite &sprite = m_sprites[index];
     m_currentSprite = index;
     m_image = sprite.data();
-    m_size = m_image.size() / m_image.devicePixelRatio();
+    m_size = QSizeF(m_image.size()) / m_image.devicePixelRatio();
     m_hotspot = sprite.hotspot();
     if (sprite.delay().count() && m_sprites.size() > 1) {
         m_delayTimer.start(sprite.delay());
@@ -136,12 +136,12 @@ KWaylandServer::SurfaceInterface *SurfaceCursorSource::surface() const
     return m_surface;
 }
 
-void SurfaceCursorSource::update(KWaylandServer::SurfaceInterface *surface, const QPoint &hotspot)
+void SurfaceCursorSource::update(KWaylandServer::SurfaceInterface *surface, const QPointF &hotspot)
 {
     if (!surface) {
         m_image = QImage();
-        m_size = QSize(0, 0);
-        m_hotspot = QPoint();
+        m_size = QSizeF(0, 0);
+        m_hotspot = QPointF();
         m_surface = nullptr;
     } else {
         // TODO Plasma 6: once Xwayland cursor scaling can be done correctly, remove this
@@ -155,7 +155,7 @@ void SurfaceCursorSource::update(KWaylandServer::SurfaceInterface *surface, cons
         } else {
             m_image = QImage();
         }
-        m_size = (surface->size() * surface->client()->scaleOverride()).toSize();
+        m_size = surface->size() * surface->client()->scaleOverride();
         m_hotspot = hotspot;
         m_surface = surface;
     }

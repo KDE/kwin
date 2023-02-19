@@ -43,7 +43,7 @@ private:
     void hideInfoMessage();
 
     QDBusMessage m_replyMessage;
-    QPoint m_scheduledPosition;
+    QPointF m_scheduledPosition;
     bool m_picking = false;
 };
 

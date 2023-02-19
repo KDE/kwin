@@ -1835,7 +1835,7 @@ protected:
      * Default implementation does nothing.
      */
     virtual void doInteractiveResizeSync(const QRectF &rect);
-    void handleInteractiveMoveResize(int x, int y, int x_root, int y_root);
+    void handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y_root);
     void handleInteractiveMoveResize(const QPointF &local, const QPointF &global);
     void dontInteractiveMoveResize();
 

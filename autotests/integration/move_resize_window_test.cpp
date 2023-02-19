@@ -144,7 +144,7 @@ void MoveResizeWindowTest::testMove()
     QCOMPARE(window->geometryRestore(), QRect());
 
     // send some key events, not going through input redirection
-    const QPoint cursorPos = Cursors::self()->mouse()->pos();
+    const QPointF cursorPos = Cursors::self()->mouse()->pos();
     window->keyPressEvent(Qt::Key_Right);
     window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
     QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
@@ -240,7 +240,7 @@ void MoveResizeWindowTest::testResize()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
 
     // Trigger a change.
-    const QPoint cursorPos = Cursors::self()->mouse()->pos();
+    const QPointF cursorPos = Cursors::self()->mouse()->pos();
     window->keyPressEvent(Qt::Key_Right);
     window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
     QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));

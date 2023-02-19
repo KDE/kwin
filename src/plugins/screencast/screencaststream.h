@@ -59,7 +59,7 @@ public:
      */
     void recordFrame(const QRegion &damagedRegion);
 
-    void setCursorMode(KWaylandServer::ScreencastV1Interface::CursorMode mode, qreal scale, const QRect &viewport);
+    void setCursorMode(KWaylandServer::ScreencastV1Interface::CursorMode mode, qreal scale, const QRectF &viewport);
 
 public Q_SLOTS:
     void recordCursor();
@@ -112,13 +112,13 @@ private:
         KWaylandServer::ScreencastV1Interface::CursorMode mode = KWaylandServer::ScreencastV1Interface::Hidden;
         const QSize bitmapSize = QSize(256, 256);
         qreal scale = 1;
-        QRect viewport;
+        QRectF viewport;
         qint64 lastKey = 0;
-        QRect lastRect;
+        QRectF lastRect;
         std::unique_ptr<GLTexture> texture;
         bool visible = false;
     } m_cursor;
-    QRect cursorGeometry(Cursor *cursor) const;
+    QRectF cursorGeometry(Cursor *cursor) const;
 
     QHash<struct pw_buffer *, std::shared_ptr<DmaBufTexture>> m_dmabufDataForPwBuffer;
 

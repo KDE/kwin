@@ -108,7 +108,7 @@ QStringList WorkspaceWrapper::activityList() const
 
 QPoint WorkspaceWrapper::cursorPos() const
 {
-    return Cursors::self()->mouse()->pos();
+    return Cursors::self()->mouse()->pos().toPoint();
 }
 
 #define SLOTWRAPPER(name)          \

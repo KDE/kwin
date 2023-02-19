@@ -24,22 +24,22 @@ void OutputLayer::setScale(qreal scale)
     m_scale = scale;
 }
 
-QPoint OutputLayer::hotspot() const
+QPointF OutputLayer::hotspot() const
 {
     return m_hotspot;
 }
 
-void OutputLayer::setHotspot(const QPoint &hotspot)
+void OutputLayer::setHotspot(const QPointF &hotspot)
 {
     m_hotspot = hotspot;
 }
 
-QSize OutputLayer::size() const
+QSizeF OutputLayer::size() const
 {
     return m_size;
 }
 
-void OutputLayer::setSize(const QSize &size)
+void OutputLayer::setSize(const QSizeF &size)
 {
     m_size = size;
 }

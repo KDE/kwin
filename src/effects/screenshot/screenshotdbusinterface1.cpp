@@ -541,7 +541,7 @@ void ScreenShotDBusInterface1::screenshotWindowUnderCursor(int mask)
 
     EffectWindow *hoveredWindow = nullptr;
 
-    const QPoint cursor = effects->cursorPos();
+    const QPointF cursor = effects->cursorPos();
     EffectWindowList order = effects->stackingOrder();
     EffectWindowList::const_iterator it = order.constEnd(), first = order.constBegin();
     while (it != first) {
@@ -709,12 +709,12 @@ void ScreenShotDBusInterface1::screenshotScreen(QDBusUnixFileDescriptor fd, bool
         flags |= ScreenShotIncludeCursor;
     }
 
-    effects->startInteractivePositionSelection([this, fileDescriptor, flags](const QPoint &p) {
+    effects->startInteractivePositionSelection([this, fileDescriptor, flags](const QPointF &p) {
         hideInfoMessage();
         if (p == QPoint(-1, -1)) {
             close(fileDescriptor);
         } else {
-            EffectScreen *screen = effects->screenAt(p);
+            EffectScreen *screen = effects->screenAt(p.toPoint());
             if (!screen) {
                 close(fileDescriptor);
                 return;

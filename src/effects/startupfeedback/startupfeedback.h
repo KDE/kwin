@@ -53,7 +53,7 @@ private Q_SLOTS:
     void gotNewStartup(const QString &id, const QIcon &icon);
     void gotRemoveStartup(const QString &id);
     void gotStartupChange(const QString &id, const QIcon &icon);
-    void slotMouseChanged(const QPoint &pos, const QPoint &oldpos, Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+    void slotMouseChanged(const QPointF &pos, const QPointF &oldpos, Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 
 private:
     enum FeedbackType {

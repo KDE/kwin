@@ -33,11 +33,11 @@ public:
     qreal scale() const;
     void setScale(qreal scale);
 
-    QPoint hotspot() const;
-    void setHotspot(const QPoint &hotspot);
+    QPointF hotspot() const;
+    void setHotspot(const QPointF &hotspot);
 
-    QSize size() const;
-    void setSize(const QSize &size);
+    QSizeF size() const;
+    void setSize(const QSizeF &size);
 
     QRegion repaints() const;
     void resetRepaints();
@@ -61,8 +61,8 @@ public:
 
 private:
     QRegion m_repaints;
-    QPoint m_hotspot;
-    QSize m_size;
+    QPointF m_hotspot;
+    QSizeF m_size;
     qreal m_scale = 1.0;
 };
 

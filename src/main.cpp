@@ -672,10 +672,10 @@ void Application::startInteractiveWindowSelection(std::function<void(KWin::Windo
     input()->startInteractiveWindowSelection(callback, cursorName);
 }
 
-void Application::startInteractivePositionSelection(std::function<void(const QPoint &)> callback)
+void Application::startInteractivePositionSelection(std::function<void(const QPointF &)> callback)
 {
     if (!input()) {
-        callback(QPoint(-1, -1));
+        callback(QPointF(-1, -1));
         return;
     }
     input()->startInteractivePositionSelection(callback);

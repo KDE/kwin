@@ -1353,8 +1353,7 @@ Window *Workspace::findWindowToActivateOnDesktop(VirtualDesktop *desktop)
                 continue;
             }
 
-            // port to hit test
-            if (window->frameGeometry().toRect().contains(Cursors::self()->mouse()->pos())) {
+            if (window->hitTest(Cursors::self()->mouse()->pos())) {
                 if (!window->isDesktop()) {
                     return window;
                 }
@@ -2439,15 +2438,15 @@ void Workspace::desktopResized()
 
     // restore cursor position
     const auto oldCursorOutput = std::find_if(m_oldScreenGeometries.cbegin(), m_oldScreenGeometries.cend(), [](const auto &geometry) {
-        return geometry.contains(Cursors::self()->mouse()->pos());
+        return exclusiveContains(geometry, Cursors::self()->mouse()->pos());
     });
     if (oldCursorOutput != m_oldScreenGeometries.cend()) {
         const Output *cursorOutput = oldCursorOutput.key();
         if (std::find(m_outputs.cbegin(), m_outputs.cend(), cursorOutput) != m_outputs.cend()) {
             const QRect oldGeometry = oldCursorOutput.value();
             const QRect newGeometry = cursorOutput->geometry();
-            const QPoint relativePosition = Cursors::self()->mouse()->pos() - oldGeometry.topLeft();
-            const QPoint newRelativePosition(newGeometry.width() * relativePosition.x() / float(oldGeometry.width()), newGeometry.height() * relativePosition.y() / float(oldGeometry.height()));
+            const QPointF relativePosition = Cursors::self()->mouse()->pos() - oldGeometry.topLeft();
+            const QPointF newRelativePosition(newGeometry.width() * relativePosition.x() / float(oldGeometry.width()), newGeometry.height() * relativePosition.y() / float(oldGeometry.height()));
             Cursors::self()->mouse()->setPos(newGeometry.topLeft() + newRelativePosition);
         }
     }

@@ -299,7 +299,7 @@ public:
      *
      * @param callback The function to invoke once the interactive position selection ends
      */
-    virtual void startInteractivePositionSelection(std::function<void(const QPoint &)> callback);
+    virtual void startInteractivePositionSelection(std::function<void(const QPointF &)> callback);
 
     /**
      * Returns a PlatformCursorImage. By default this is created by softwareCursor and

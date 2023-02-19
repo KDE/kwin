@@ -516,7 +516,7 @@ void Edge::pushCursorBack(const QPoint &cursorPos)
     if (isBottom()) {
         y -= distance.height();
     }
-    Cursors::self()->mouse()->setPos(x, y);
+    Cursors::self()->mouse()->setPos(QPoint(x, y));
 }
 
 void Edge::setGeometry(const QRect &geometry)
@@ -648,46 +648,47 @@ void Edge::doStopApproaching()
 {
 }
 
-void Edge::updateApproaching(const QPoint &point)
+void Edge::updateApproaching(const QPointF &point)
 {
-    if (approachGeometry().contains(point)) {
+    if (exclusiveContains(approachGeometry(), point)) {
         int factor = 0;
         const int edgeDistance = m_edges->cornerOffset();
-        auto cornerDistance = [=](const QPoint &corner) {
+        auto cornerDistance = [=](const QPointF &corner) {
             return std::max(std::abs(corner.x() - point.x()), std::abs(corner.y() - point.y()));
         };
+        constexpr double factorScale = 256;
         switch (border()) {
         case ElectricTopLeft:
-            factor = (cornerDistance(approachGeometry().topLeft()) << 8) / edgeDistance;
+            factor = (cornerDistance(approachGeometry().topLeft()) * factorScale) / edgeDistance;
             break;
         case ElectricTopRight:
-            factor = (cornerDistance(approachGeometry().topRight()) << 8) / edgeDistance;
+            factor = (cornerDistance(approachGeometry().topRight()) * factorScale) / edgeDistance;
             break;
         case ElectricBottomRight:
-            factor = (cornerDistance(approachGeometry().bottomRight()) << 8) / edgeDistance;
+            factor = (cornerDistance(approachGeometry().bottomRight()) * factorScale) / edgeDistance;
             break;
         case ElectricBottomLeft:
-            factor = (cornerDistance(approachGeometry().bottomLeft()) << 8) / edgeDistance;
+            factor = (cornerDistance(approachGeometry().bottomLeft()) * factorScale) / edgeDistance;
             break;
         case ElectricTop:
-            factor = (std::abs(point.y() - approachGeometry().y()) << 8) / edgeDistance;
+            factor = (std::abs(point.y() - approachGeometry().y()) * factorScale) / edgeDistance;
             break;
         case ElectricRight:
-            factor = (std::abs(point.x() - approachGeometry().right()) << 8) / edgeDistance;
+            factor = (std::abs(point.x() - approachGeometry().right()) * factorScale) / edgeDistance;
             break;
         case ElectricBottom:
-            factor = (std::abs(point.y() - approachGeometry().bottom()) << 8) / edgeDistance;
+            factor = (std::abs(point.y() - approachGeometry().bottom()) * factorScale) / edgeDistance;
             break;
         case ElectricLeft:
-            factor = (std::abs(point.x() - approachGeometry().x()) << 8) / edgeDistance;
+            factor = (std::abs(point.x() - approachGeometry().x()) * factorScale) / edgeDistance;
             break;
         default:
             break;
         }
-        factor = 256 - factor;
+        factor = factorScale - factor;
         if (m_lastApproachingFactor != factor) {
             m_lastApproachingFactor = factor;
-            Q_EMIT approaching(border(), m_lastApproachingFactor / 256.0f, m_approachGeometry);
+            Q_EMIT approaching(border(), m_lastApproachingFactor / factorScale, m_approachGeometry);
         }
     } else {
         stopApproaching();

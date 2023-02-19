@@ -40,13 +40,13 @@ private Q_SLOTS:
     void zoomIn();
     void zoomOut();
     void toggle();
-    void slotMouseChanged(const QPoint &pos, const QPoint &old,
+    void slotMouseChanged(const QPointF &pos, const QPointF &old,
                           Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                           Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     void slotWindowDamaged();
 
 private:
-    QRect magnifierArea(QPoint pos = cursorPos()) const;
+    QRect magnifierArea(QPointF pos = cursorPos()) const;
     double m_zoom;
     double m_targetZoom;
     bool m_polling; // Mouse polling

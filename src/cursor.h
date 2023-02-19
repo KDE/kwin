@@ -156,17 +156,11 @@ public:
      * Implementing subclasses should prefer to use currentPos which is not performing a check
      * for update.
      */
-    QPoint pos();
+    QPointF pos();
     /**
      * Warps the mouse cursor to new @p pos.
-     * Values will be rounded to an integer
      */
     void setPos(const QPointF &pos);
-    /**
-     * Warps the mouse cursor to new @p pos.
-     */
-    void setPos(const QPoint &pos);
-    void setPos(int x, int y);
     xcb_cursor_t x11Cursor(CursorShape shape);
     /**
      * Notice: if available always use the CursorShape variant to avoid cache duplicates for
@@ -175,9 +169,9 @@ public:
     xcb_cursor_t x11Cursor(const QByteArray &name);
 
     QImage image() const;
-    QPoint hotspot() const;
-    QRect geometry() const;
-    QRect rect() const;
+    QPointF hotspot() const;
+    QRectF geometry() const;
+    QRectF rect() const;
 
     CursorSource *source() const;
     void setSource(CursorSource *source);
@@ -190,8 +184,8 @@ public:
     void markAsRendered(std::chrono::milliseconds timestamp);
 
 Q_SIGNALS:
-    void posChanged(const QPoint &pos);
-    void mouseChanged(const QPoint &pos, const QPoint &oldpos,
+    void posChanged(const QPointF &pos);
+    void mouseChanged(const QPointF &pos, const QPointF &oldpos,
                       Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                       Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     /**
@@ -242,13 +236,12 @@ protected:
      * access to the cursor position this method should be used instead of the static @ref pos, as
      * the static method syncs with the underlying system's cursor.
      */
-    const QPoint &currentPos() const;
+    const QPointF &currentPos() const;
     /**
      * Updates the internal position to @p pos without warping the pointer as
      * setPos does.
      */
-    void updatePos(const QPoint &pos);
-    void updatePos(int x, int y);
+    void updatePos(const QPointF &pos);
 
 private Q_SLOTS:
     void loadThemeSettings();
@@ -259,7 +252,7 @@ private:
     void loadThemeFromKConfig();
     CursorSource *m_source = nullptr;
     QHash<QByteArray, xcb_cursor_t> m_cursors;
-    QPoint m_pos;
+    QPointF m_pos;
     int m_mousePollingCounter;
     int m_cursorTrackingCounter;
     QString m_themeName;
@@ -303,7 +296,7 @@ public:
 Q_SIGNALS:
     void currentCursorChanged(Cursor *cursor);
     void hiddenChanged();
-    void positionChanged(Cursor *cursor, const QPoint &position);
+    void positionChanged(Cursor *cursor, const QPointF &position);
 
 private:
     void emitCurrentCursorChanged();
@@ -337,14 +330,9 @@ private:
     static InputConfig *s_self;
 };
 
-inline const QPoint &Cursor::currentPos() const
+inline const QPointF &Cursor::currentPos() const
 {
     return m_pos;
-}
-
-inline void Cursor::updatePos(int x, int y)
-{
-    updatePos(QPoint(x, y));
 }
 
 inline const QString &Cursor::themeName() const

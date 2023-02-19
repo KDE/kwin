@@ -242,7 +242,8 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
         return std::nullopt;
     }
 
-    const QSize bufferSize = size().expandedTo(QSize(64, 64));
+    const auto tmp = size().expandedTo(QSize(64, 64));
+    const QSize bufferSize(std::ceil(tmp.width()), std::ceil(tmp.height()));
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
         const WaylandLinuxDmabufV1 *dmabuf = m_backend->backend()->display()->linuxDmabuf();
         const uint32_t format = DRM_FORMAT_ARGB8888;
@@ -266,7 +267,7 @@ bool WaylandEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegio
     // Flush rendering commands to the dmabuf.
     glFlush();
 
-    m_output->cursor()->update(m_buffer->buffer(), scale(), hotspot());
+    m_output->cursor()->update(m_buffer->buffer(), scale(), hotspot().toPoint());
 
     m_swapchain->release(m_buffer);
     return true;

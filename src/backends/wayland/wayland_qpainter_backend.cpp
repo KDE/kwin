@@ -140,7 +140,8 @@ WaylandQPainterCursorLayer::~WaylandQPainterCursorLayer()
 
 std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame()
 {
-    const QSize bufferSize = size().expandedTo(QSize(64, 64));
+    const auto tmp = size().expandedTo(QSize(64, 64));
+    const QSize bufferSize(std::ceil(tmp.width()), std::ceil(tmp.height()));
     if (m_backingStore.size() != bufferSize) {
         m_backingStore = QImage(bufferSize, QImage::Format_ARGB32_Premultiplied);
     }
@@ -154,7 +155,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame(
 bool WaylandQPainterCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     KWayland::Client::Buffer::Ptr buffer = m_output->backend()->display()->shmPool()->createBuffer(m_backingStore);
-    m_output->cursor()->update(*buffer.lock(), scale(), hotspot());
+    m_output->cursor()->update(*buffer.lock(), scale(), hotspot().toPoint());
     return true;
 }
 

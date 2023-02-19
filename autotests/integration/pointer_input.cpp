@@ -1659,7 +1659,7 @@ void PointerInputTest::testResizeCursor()
     cursorSurface->attachBuffer(Test::waylandShmPool()->createBuffer(arrowCursor.image()));
     cursorSurface->damage(arrowCursor.image().rect());
     cursorSurface->commit();
-    pointer->setCursor(cursorSurface.get(), arrowCursor.hotSpot());
+    pointer->setCursor(cursorSurface.get(), arrowCursor.hotSpot().toPoint());
     QVERIFY(cursorRenderedSpy.wait());
 
     // start resizing the window
@@ -1727,7 +1727,7 @@ void PointerInputTest::testMoveCursor()
     cursorSurface->attachBuffer(Test::waylandShmPool()->createBuffer(arrowCursor.image()));
     cursorSurface->damage(arrowCursor.image().rect());
     cursorSurface->commit();
-    pointer->setCursor(cursorSurface.get(), arrowCursor.hotSpot());
+    pointer->setCursor(cursorSurface.get(), arrowCursor.hotSpot().toPoint());
     QVERIFY(cursorRenderedSpy.wait());
 
     // start moving the window

@@ -54,8 +54,8 @@ void ColorPickerEffect::paintScreen(int mask, const QRegion &region, ScreenPaint
 {
     effects->paintScreen(mask, region, data);
 
-    const QRect geo = effects->renderTargetRect();
-    if (m_scheduledPosition != QPoint(-1, -1) && geo.contains(m_scheduledPosition)) {
+    const QRectF geo = effects->renderTargetRect();
+    if (m_scheduledPosition != QPoint(-1, -1) && exclusiveContains(geo, m_scheduledPosition)) {
         uint8_t data[4];
         constexpr GLsizei PIXEL_SIZE = 1;
         const QPoint screenPosition(m_scheduledPosition.x() - geo.x(), m_scheduledPosition.y() - geo.y());
@@ -82,9 +82,9 @@ QColor ColorPickerEffect::pick()
     setDelayedReply(true);
     showInfoMessage();
     effects->startInteractivePositionSelection(
-        [this](const QPoint &p) {
+        [this](const QPointF &p) {
             hideInfoMessage();
-            if (p == QPoint(-1, -1)) {
+            if (p == QPointF(-1, -1)) {
                 // error condition
                 QDBusConnection::sessionBus().send(m_replyMessage.createErrorReply(QStringLiteral("org.kde.kwin.ColorPicker.Error.Cancelled"), "Color picking got cancelled"));
                 m_picking = false;

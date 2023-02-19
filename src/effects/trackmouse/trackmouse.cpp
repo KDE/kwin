@@ -90,8 +90,8 @@ void TrackMouseEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
 {
     QTime t = QTime::currentTime();
     m_angle = ((t.second() % 4) * m_angleBase) + (t.msec() / 1000.0 * m_angleBase);
-    m_lastRect[0].moveCenter(cursorPos());
-    m_lastRect[1].moveCenter(cursorPos());
+    m_lastRect[0].moveCenter(cursorPos().toPoint());
+    m_lastRect[1].moveCenter(cursorPos().toPoint());
     data.paint |= m_lastRect[0].adjusted(-1, -1, 1, 1);
 
     effects->prePaintScreen(data, presentTime);
@@ -155,8 +155,8 @@ bool TrackMouseEffect::init()
             return false;
         }
     }
-    m_lastRect[0].moveCenter(cursorPos());
-    m_lastRect[1].moveCenter(cursorPos());
+    m_lastRect[0].moveCenter(cursorPos().toPoint());
+    m_lastRect[1].moveCenter(cursorPos().toPoint());
     m_angle = 0;
     return true;
 }
@@ -187,7 +187,7 @@ void TrackMouseEffect::toggle()
     effects->addRepaint(m_lastRect[0].adjusted(-1, -1, 1, 1));
 }
 
-void TrackMouseEffect::slotMouseChanged(const QPoint &, const QPoint &,
+void TrackMouseEffect::slotMouseChanged(const QPointF &, const QPointF &,
                                         Qt::MouseButtons, Qt::MouseButtons,
                                         Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers)
 {
