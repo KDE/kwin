@@ -161,6 +161,7 @@ target_sources(kwin PRIVATE
     touch_input.cpp
     unmanaged.cpp
     useractions.cpp
+    utils/krect.cpp
     virtualdesktops.cpp
     virtualdesktopsdbustypes.cpp
     virtualkeyboard_dbus.cpp
