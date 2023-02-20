@@ -80,6 +80,7 @@ private:
     KWin::Borders *m_padding;
     QString m_themeName;
 
+    std::unique_ptr<QWindow> m_dummyWindow;
     std::unique_ptr<KWin::OffscreenQuickView> m_view;
 };
 

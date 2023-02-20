@@ -6,6 +6,7 @@
 #include "aurorae.h"
 
 #include "config-kwin.h"
+#include "kwineffects.h"
 
 #include "auroraetheme.h"
 #include "kwinoffscreenquickview.h"
@@ -312,7 +313,18 @@ void Decoration::init()
         m_item->setParentItem(visualParent.value<QQuickItem *>());
         visualParent.value<QQuickItem *>()->setProperty("drawBackground", false);
     } else {
-        m_view = std::make_unique<KWin::OffscreenQuickView>(this, KWin::OffscreenQuickView::ExportMode::Image);
+
+        // This is an ugly hack to make hidpi rendering work as expected on wayland until we switch
+        // to Qt 6.3 or newer. See https://codereview.qt-project.org/c/qt/qtdeclarative/+/361506
+        if (KWin::effects && KWin::effects->waylandDisplay()) {
+            m_dummyWindow.reset(new QWindow());
+            m_dummyWindow->setOpacity(0);
+            m_dummyWindow->resize(1, 1);
+            m_dummyWindow->setFlag(Qt::FramelessWindowHint);
+            m_dummyWindow->setVisible(true);
+        }
+
+        m_view = std::make_unique<KWin::OffscreenQuickView>(this, m_dummyWindow.get(), KWin::OffscreenQuickView::ExportMode::Image);
         m_item->setParentItem(m_view->contentItem());
         auto updateSize = [this]() {
             m_item->setSize(m_view->contentItem()->size());
