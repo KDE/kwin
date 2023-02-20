@@ -166,7 +166,12 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_scale(Resource 
     if (invalid) {
         return;
     }
-    const qreal doubleScale = wl_fixed_to_double(scale);
+    qreal doubleScale = wl_fixed_to_double(scale);
+
+    // the fractional scaling protocol only speaks in unit of 120ths
+    // using the same scale throughout makes that simpler
+    // this also eliminates most loss from wl_fixed
+    doubleScale = std::round(doubleScale * 120) / 120;
 
     if (doubleScale <= 0) {
         qCWarning(KWIN_CORE) << "Requested to scale output device to" << doubleScale << ", but I can't do that.";
