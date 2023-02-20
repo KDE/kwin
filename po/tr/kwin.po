@@ -2653,7 +2653,7 @@ msgstr "Pencere %1. Ekrana"
 #: useractions.cpp:1098
 #, kde-format
 msgid "Window to Next Screen"
-msgstr "Pencere Sonraki Masaüstüne"
+msgstr "Pencere Sonraki Ekrana"
 
 #: useractions.cpp:1100
 #, kde-format
