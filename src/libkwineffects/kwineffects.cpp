@@ -1361,7 +1361,7 @@ EffectWindow *WindowMotionManager::windowAtPoint(QPoint point, bool useStackingO
     // TODO: Stacking order uses EffectsHandler::stackingOrder() then filters by m_managedWindows
     QHash<EffectWindow *, WindowMotion>::ConstIterator it = m_managedWindows.constBegin();
     while (it != m_managedWindows.constEnd()) {
-        if (transformedGeometry(it.key()).contains(point)) {
+        if (exclusiveContains(transformedGeometry(it.key()), point)) {
             return it.key();
         }
         ++it;

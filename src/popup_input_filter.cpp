@@ -56,7 +56,7 @@ bool PopupInputFilter::pointerEvent(MouseEvent *event, quint32 nativeButton)
         }
         if (pointerFocus && pointerFocus->isDecorated()) {
             // test whether it is on the decoration
-            if (!pointerFocus->clientGeometry().contains(event->globalPos())) {
+            if (!exclusiveContains(pointerFocus->clientGeometry(), event->globalPos())) {
                 cancelPopups();
                 return true;
             }
@@ -101,7 +101,7 @@ bool PopupInputFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::mic
     }
     if (pointerFocus && pointerFocus->isDecorated()) {
         // test whether it is on the decoration
-        if (!pointerFocus->clientGeometry().contains(pos)) {
+        if (!exclusiveContains(pointerFocus->clientGeometry(), pos)) {
             cancelPopups();
             return true;
         }

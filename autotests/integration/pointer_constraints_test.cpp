@@ -132,7 +132,7 @@ void TestPointerConstraints::testConfinedPointer()
     if (window->pos() == QPoint(0, 0)) {
         window->move(QPoint(1, 1));
     }
-    QVERIFY(!window->frameGeometry().contains(KWin::Cursors::self()->mouse()->pos()));
+    QVERIFY(!exclusiveContains(window->frameGeometry(), KWin::Cursors::self()->mouse()->pos()));
 
     // now let's confine
     QCOMPARE(input()->pointer()->isConstrained(), false);
@@ -281,7 +281,7 @@ void TestPointerConstraints::testLockedPointer()
     // now map the window
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);
     QVERIFY(window);
-    QVERIFY(!window->frameGeometry().contains(KWin::Cursors::self()->mouse()->pos()));
+    QVERIFY(!exclusiveContains(window->frameGeometry(), KWin::Cursors::self()->mouse()->pos()));
 
     // now let's lock
     QCOMPARE(input()->pointer()->isConstrained(), false);
@@ -343,7 +343,7 @@ void TestPointerConstraints::testCloseWindowWithLockedPointer()
     // now map the window
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);
     QVERIFY(window);
-    QVERIFY(!window->frameGeometry().contains(KWin::Cursors::self()->mouse()->pos()));
+    QVERIFY(!exclusiveContains(window->frameGeometry(), KWin::Cursors::self()->mouse()->pos()));
 
     // now let's lock
     QCOMPARE(input()->pointer()->isConstrained(), false);

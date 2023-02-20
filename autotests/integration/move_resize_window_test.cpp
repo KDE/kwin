@@ -621,7 +621,7 @@ void MoveResizeWindowTest::testNetMove()
 
     // let's move the cursor outside the window
     input()->pointer()->warp(workspace()->activeOutput()->geometry().center());
-    QVERIFY(!origGeo.contains(Cursors::self()->mouse()->pos()));
+    QVERIFY(!exclusiveContains(origGeo, Cursors::self()->mouse()->pos()));
 
     QSignalSpy moveStartSpy(window, &X11Window::clientStartUserMovedResized);
     QSignalSpy moveEndSpy(window, &X11Window::clientFinishUserMovedResized);

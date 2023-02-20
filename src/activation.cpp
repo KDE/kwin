@@ -441,7 +441,7 @@ Window *Workspace::windowUnderMouse(Output *output) const
             continue;
         }
 
-        if (window->frameGeometry().contains(Cursors::self()->mouse()->pos())) {
+        if (exclusiveContains(window->frameGeometry(), Cursors::self()->mouse()->pos())) {
             return window;
         }
     }

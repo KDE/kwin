@@ -163,7 +163,7 @@ void XWaylandInputTest::testPointerEnterLeaveSsd()
     QVERIFY(Test::waitForWaylandSurface(window));
 
     // move pointer into the window, should trigger an enter
-    QVERIFY(!window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
+    QVERIFY(!exclusiveContains(window->frameGeometry(), Cursors::self()->mouse()->pos()));
     QVERIFY(enteredSpy.isEmpty());
     input()->pointer()->warp(window->frameGeometry().center().toPoint());
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window->surface());
@@ -251,7 +251,7 @@ void XWaylandInputTest::testPointerEventLeaveCsd()
     QVERIFY(Test::waitForWaylandSurface(window));
 
     // Move pointer into the window, should trigger an enter.
-    QVERIFY(!window->frameGeometry().contains(Cursors::self()->mouse()->pos()));
+    QVERIFY(!exclusiveContains(window->frameGeometry(), Cursors::self()->mouse()->pos()));
     QVERIFY(enteredSpy.isEmpty());
     input()->pointer()->warp(window->frameGeometry().center().toPoint());
     QCOMPARE(waylandServer()->seat()->focusedPointerSurface(), window->surface());

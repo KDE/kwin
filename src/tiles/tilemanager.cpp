@@ -93,7 +93,7 @@ Tile *TileManager::bestTileForPosition(const QPointF &pos)
             const auto r = t->absoluteGeometry();
             // It's possible for tiles to overlap, so take the one which center is nearer to mouse pos
             qreal distance = (r.center() - pos).manhattanLength();
-            if (!r.contains(pos)) {
+            if (!exclusiveContains(r, pos)) {
                 // This gives a strong preference for tiles that contain the point
                 // still base on distance though as floating tiles can overlap
                 distance += m_output->fractionalGeometry().width();

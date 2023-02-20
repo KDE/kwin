@@ -443,7 +443,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         m_source->render(&dest);
 
         auto cursor = Cursors::self()->currentCursor();
-        if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
+        if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && exclusiveContains(m_cursor.viewport, cursor->pos())) {
             QPainter painter(&dest);
             const auto position = (cursor->pos() - m_cursor.viewport.topLeft() - cursor->hotspot()) * m_cursor.scale;
             painter.drawImage(QRect{position.toPoint(), cursor->image().size()}, cursor->image());
@@ -463,7 +463,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         m_source->render(buf->framebuffer());
 
         auto cursor = Cursors::self()->currentCursor();
-        if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
+        if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && exclusiveContains(m_cursor.viewport, cursor->pos())) {
             if (!cursor->image().isNull()) {
                 GLFramebuffer::pushFramebuffer(buf->framebuffer());
 
@@ -573,7 +573,7 @@ void ScreenCastStream::recordCursor()
         return;
     }
 
-    if (!m_cursor.viewport.contains(Cursors::self()->currentCursor()->pos()) && !m_cursor.visible) {
+    if (!exclusiveContains(m_cursor.viewport, Cursors::self()->currentCursor()->pos()) && !m_cursor.visible) {
         return;
     }
 
@@ -708,7 +708,7 @@ void ScreenCastStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_
         return;
     }
 
-    if (!m_cursor.viewport.contains(cursor->pos())) {
+    if (!exclusiveContains(m_cursor.viewport, cursor->pos())) {
         spa_meta_cursor->id = 0;
         spa_meta_cursor->position.x = -1;
         spa_meta_cursor->position.y = -1;

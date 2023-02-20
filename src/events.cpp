@@ -718,7 +718,7 @@ void X11Window::leaveNotifyEvent(xcb_leave_notify_event_t *e)
             setInteractiveMoveResizeGravity(Gravity::None);
             updateCursor();
         }
-        bool lostMouse = !rect().contains(QPoint(e->event_x, e->event_y));
+        bool lostMouse = !exclusiveContains(rect(), QPointF(e->event_x, e->event_y));
         // 'lostMouse' wouldn't work with e.g. B2 or Keramik, which have non-rectangular decorations
         // (i.e. the LeaveNotify event comes before leaving the rect and no LeaveNotify event
         // comes after leaving the rect) - so lets check if the pointer is really outside the window

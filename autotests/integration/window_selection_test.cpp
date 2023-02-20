@@ -176,7 +176,7 @@ void TestWindowSelection::testSelectOnWindowKeyboard()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
     QVERIFY(keyboardEnteredSpy.wait());
-    QVERIFY(!window->frameGeometry().contains(KWin::Cursors::self()->mouse()->pos()));
+    QVERIFY(!exclusiveContains(window->frameGeometry(), KWin::Cursors::self()->mouse()->pos()));
 
     Window *selectedWindow = nullptr;
     auto callback = [&selectedWindow](Window *t) {
