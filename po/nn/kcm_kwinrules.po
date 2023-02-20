@@ -1,7 +1,7 @@
 # Translation of kcm_kwinrules to Norwegian Nynorsk
 #
 # Gaute Hvoslef Kvalnes <gaute@verdsveven.com>, 2004, 2005.
-# Karl Ove Hufthammer <karl@huftis.org>, 2004, 2007, 2008, 2010, 2015, 2016, 2018, 2019, 2020, 2021, 2022.
+# Karl Ove Hufthammer <karl@huftis.org>, 2004, 2007, 2008, 2010, 2015, 2016, 2018, 2019, 2020, 2021, 2022, 2023.
 # Håvard Korsvoll <korsvoll@skulelinux.no>, 2005, 2009.
 # Eirik U. Birkeland <eirbir@gmail.com>, 2010.
 # Øystein Steffensen-Alværvik <oysteins.omsetting@protonmail.com>, 2018.
@@ -10,14 +10,14 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-18 01:00+0000\n"
-"PO-Revision-Date: 2022-06-18 14:19+0200\n"
+"PO-Revision-Date: 2023-02-19 20:07+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
 "Language: nn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.04.2\n"
+"X-Generator: Lokalize 22.12.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
@@ -769,7 +769,7 @@ msgstr "Blokksamansetjing"
 #: rulesmodel.cpp:723
 #, kde-format
 msgid "Window class not available"
-msgstr ""
+msgstr "Vindaugsklassen er ikkje tilgjengeleg"
 
 #: rulesmodel.cpp:724
 #, kde-kuit-format
@@ -932,7 +932,7 @@ msgstr "Ekstrem"
 #: rulesmodel.cpp:885
 #, kde-format
 msgid "Unmanaged window"
-msgstr ""
+msgstr "Uhandsama vindauge"
 
 #: rulesmodel.cpp:886
 #, kde-format
