@@ -13,6 +13,8 @@
 #include "kwinglutils.h"
 #include "scene/cursorscene.h"
 
+#include <cmath>
+
 namespace KWin
 {
 
@@ -48,7 +50,7 @@ void CursorDelegateOpenGL::paint(RenderTarget *renderTarget, const QRegion &regi
 
     QMatrix4x4 mvp;
     mvp.ortho(QRect(QPoint(0, 0), renderTarget->size()));
-    mvp.translate(cursorRect.x() * scale, cursorRect.y() * scale);
+    mvp.translate(std::round(cursorRect.x() * scale), std::round(cursorRect.y() * scale));
 
     GLFramebuffer *fbo = std::get<GLFramebuffer *>(renderTarget->nativeHandle());
     GLFramebuffer::pushFramebuffer(fbo);
