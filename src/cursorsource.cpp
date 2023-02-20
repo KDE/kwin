@@ -6,6 +6,7 @@
 
 #include "cursorsource.h"
 #include "cursor.h"
+#include "wayland/clientconnection.h"
 #include "wayland/shmclientbuffer.h"
 #include "wayland/surface_interface.h"
 
@@ -143,6 +144,10 @@ void SurfaceCursorSource::update(KWaylandServer::SurfaceInterface *surface, cons
         m_hotspot = QPoint();
         m_surface = nullptr;
     } else {
+        // TODO Plasma 6: once Xwayland cursor scaling can be done correctly, remove this
+        // scaling is intentionally applied "wrong" here to make the cursor stay a consistent size even with un-scaled Xwayland:
+        // - the device pixel ratio of the image is not multiplied by scaleOverride
+        // - the surface size is scaled up with scaleOverride, to un-do the scaling done elsewhere
         auto buffer = qobject_cast<KWaylandServer::ShmClientBuffer *>(surface->buffer());
         if (buffer) {
             m_image = buffer->data().copy();
@@ -150,7 +155,7 @@ void SurfaceCursorSource::update(KWaylandServer::SurfaceInterface *surface, cons
         } else {
             m_image = QImage();
         }
-        m_size = surface->size().toSize();
+        m_size = (surface->size() * surface->client()->scaleOverride()).toSize();
         m_hotspot = hotspot;
         m_surface = surface;
     }
