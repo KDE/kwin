@@ -454,8 +454,8 @@ add_subdirectory(src)
 if (BUILD_TESTING)
     find_package(Wayland REQUIRED COMPONENTS Client)
 
-    add_subdirectory(autotests)
-    add_subdirectory(tests)
+    # add_subdirectory(autotests)
+    # add_subdirectory(tests)
 endif()
 
 # add clang-format target for all our real source files

@@ -100,7 +100,7 @@ public:
     }
     xcb_window_t frameId() const override;
 
-    QRectF inputGeometry() const override;
+    KRectF inputGeometry() const override;
 
     QPointF framePosToClientPos(const QPointF &point) const override;
     QPointF clientPosToFramePos(const QPointF &point) const override;
@@ -351,7 +351,7 @@ protected:
     void doInteractiveResizeSync(const QRectF &rect) override;
     QSizeF resizeIncrements() const override;
     bool acceptsFocus() const override;
-    void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
+    void moveResizeInternal(const KRectF &rect, MoveResizeMode mode) override;
     std::unique_ptr<WindowItem> createItem(Scene *scene) override;
 
 Q_SIGNALS:

@@ -482,7 +482,7 @@ void Placement::placeOnScreenDisplay(Window *c, const QRect &area)
 void Placement::placeTransient(Window *c)
 {
     const auto parent = c->transientFor();
-    const QRectF screen = Workspace::self()->clientArea(parent->isFullScreen() ? FullScreenArea : PlacementArea, parent);
+    const KRectF screen = Workspace::self()->clientArea(parent->isFullScreen() ? FullScreenArea : PlacementArea, parent);
     c->moveResize(c->transientPlacement(screen));
 
     // Potentially a client could set no constraint adjustments
@@ -575,7 +575,7 @@ void Placement::placeMaximizing(Window *c, const QRect &area, PlacementPolicy ne
         nextPlacement = PlacementSmart;
     }
     if (c->isMaximizable() && c->maxSize().width() >= area.width() && c->maxSize().height() >= area.height()) {
-        if (workspace()->clientArea(MaximizeArea, c) == area) {
+        if (workspace()->clientArea(MaximizeArea, c) == QRectF(area)) {
             c->maximize(MaximizeFull);
         } else { // if the geometry doesn't match default maximize area (xinerama case?),
             // it's probably better to use the given area

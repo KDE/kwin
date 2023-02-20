@@ -2508,7 +2508,7 @@ QRectF Workspace::adjustClientArea(Window *window, const QRectF &area) const
     // HACK: workarea handling is not xinerama aware, so if this strut
     // reserves place at a xinerama edge that's inside the virtual screen,
     // ignore the strut for workspace setting.
-    if (area == QRect(QPoint(0, 0), m_geometry.size())) {
+    if (area == QRectF(QPoint(0, 0), m_geometry.size())) {
         if (strutLeft.left() < screenArea.left()) {
             strutLeft = QRect();
         }

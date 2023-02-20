@@ -683,7 +683,7 @@ QPointF Window::mapFromLocal(const QPointF &point) const
     return point + bufferGeometry().topLeft();
 }
 
-QRectF Window::inputGeometry() const
+KRectF Window::inputGeometry() const
 {
     if (isDecorated()) {
         return frameGeometry() + decoration()->resizeOnlyBorders();
@@ -3655,21 +3655,21 @@ QSizeF Window::clientSizeToFrameSize(const QSizeF &size) const
     return QSizeF(width, height);
 }
 
-QRectF Window::frameRectToClientRect(const QRectF &rect) const
+KRectF Window::frameRectToClientRect(const KRectF &rect) const
 {
     const QPointF position = framePosToClientPos(rect.topLeft());
     const QSizeF size = frameSizeToClientSize(rect.size());
-    return QRectF(position, size);
+    return KRectF(position, size);
 }
 
-QRectF Window::clientRectToFrameRect(const QRectF &rect) const
+KRectF Window::clientRectToFrameRect(const KRectF &rect) const
 {
     const QPointF position = clientPosToFramePos(rect.topLeft());
     const QSizeF size = clientSizeToFrameSize(rect.size());
-    return QRectF(position, size);
+    return KRectF(position, size);
 }
 
-QRectF Window::moveResizeGeometry() const
+KRectF Window::moveResizeGeometry() const
 {
     return m_moveResizeGeometry;
 }

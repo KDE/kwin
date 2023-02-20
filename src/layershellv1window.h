@@ -48,7 +48,7 @@ public:
 protected:
     Layer belongsToLayer() const override;
     bool acceptsFocus() const override;
-    void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
+    void moveResizeInternal(const KRectF &rect, MoveResizeMode mode) override;
 
 private:
     void handleSizeChanged();

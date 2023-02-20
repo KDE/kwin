@@ -96,7 +96,7 @@ public:
     void closeWindow() override { /* nothing to do */ }
     bool acceptsFocus() const override { return false; }
     bool belongsToSameApplication(const Window *other, SameApplicationChecks /*checks*/) const override { return other == this; }
-    void moveResizeInternal(const QRectF & /*rect*/, KWin::Window::MoveResizeMode /*mode*/) override
+    void moveResizeInternal(const KRectF & /*rect*/, KWin::Window::MoveResizeMode /*mode*/) override
     { /* nothing to do */
     }
     void updateCaption() override { /* nothing to do */ }

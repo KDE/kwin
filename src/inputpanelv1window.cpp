@@ -170,12 +170,12 @@ NET::WindowType InputPanelV1Window::windowType(bool, int) const
     return NET::Utility;
 }
 
-QRectF InputPanelV1Window::inputGeometry() const
+KRectF InputPanelV1Window::inputGeometry() const
 {
-    return readyForPainting() ? QRectF(surface()->input().boundingRect()).translated(pos()) : QRectF();
+    return readyForPainting() ? KRectF(surface()->input().boundingRect()).translated(pos()) : KRectF();
 }
 
-void InputPanelV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
+void InputPanelV1Window::moveResizeInternal(const KRectF &rect, MoveResizeMode mode)
 {
     updateGeometry(rect);
 }

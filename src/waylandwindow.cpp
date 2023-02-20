@@ -281,9 +281,9 @@ void WaylandWindow::hideClient()
     Q_EMIT windowHidden(this);
 }
 
-QRectF WaylandWindow::frameRectToBufferRect(const QRectF &rect) const
+KRectF WaylandWindow::frameRectToBufferRect(const KRectF &rect) const
 {
-    return QRectF(rect.topLeft(), surface()->size());
+    return KRectF(rect.topLeft(), surface()->size());
 }
 
 void WaylandWindow::updateGeometry(const QRectF &rect)

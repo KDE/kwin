@@ -102,7 +102,7 @@ NET::WindowType XdgSurfaceWindow::windowType(bool direct, int supported_types) c
     return m_windowType;
 }
 
-QRectF XdgSurfaceWindow::inputGeometry() const
+KRectF XdgSurfaceWindow::inputGeometry() const
 {
     return isDecorated() ? Window::inputGeometry() : bufferGeometry();
 }
@@ -288,7 +288,7 @@ void XdgSurfaceWindow::resetHaveNextWindowGeometry()
     m_haveNextWindowGeometry = false;
 }
 
-void XdgSurfaceWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
+void XdgSurfaceWindow::moveResizeInternal(const KRectF &rect, MoveResizeMode mode)
 {
     if (areGeometryUpdatesBlocked()) {
         setPendingMoveResizeMode(mode);
@@ -315,11 +315,11 @@ void XdgSurfaceWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mod
     }
 }
 
-QRectF XdgSurfaceWindow::frameRectToBufferRect(const QRectF &rect) const
+KRectF XdgSurfaceWindow::frameRectToBufferRect(const KRectF &rect) const
 {
     const qreal left = rect.left() + borderLeft() - m_windowGeometry.left();
     const qreal top = rect.top() + borderTop() - m_windowGeometry.top();
-    return QRectF(QPoint(left, top), surface()->size());
+    return KRectF(QPoint(left, top), surface()->size());
 }
 
 void XdgSurfaceWindow::destroyWindow()

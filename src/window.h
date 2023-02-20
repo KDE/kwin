@@ -13,6 +13,7 @@
 #include "options.h"
 #include "rules.h"
 #include "utils/common.h"
+#include "utils/krect.h"
 #include "utils/xcbutils.h"
 
 #include <functional>
@@ -87,7 +88,7 @@ class KWIN_EXPORT Window : public QObject
      * occupies on the screen. This rectangle includes invisible portions of the
      * window, e.g. client-side drop shadows, etc.
      */
-    Q_PROPERTY(QRectF bufferGeometry READ bufferGeometry)
+    Q_PROPERTY(KRectF bufferGeometry READ bufferGeometry)
 
     /**
      * This property holds the position of the Window's frame geometry.
@@ -464,7 +465,7 @@ class KWIN_EXPORT Window : public QObject
      * The geometry of this Window. Be aware that depending on resize mode the frameGeometryChanged
      * signal might be emitted at each resize step or only at the end of the resize operation.
      */
-    Q_PROPERTY(QRectF frameGeometry READ frameGeometry WRITE moveResize NOTIFY frameGeometryChanged)
+    Q_PROPERTY(KRectF frameGeometry READ frameGeometry WRITE moveResize NOTIFY frameGeometryChanged)
 
     /**
      * Whether the Window is currently being moved by the user.
@@ -587,16 +588,16 @@ public:
      * For Wayland windows, this method returns rectangle that the main surface
      * occupies on the screen, in global screen coordinates.
      */
-    QRectF bufferGeometry() const;
+    KRectF bufferGeometry() const;
     /**
      * Returns the geometry of the Window, excluding invisible portions, e.g.
      * server-side and client-side drop shadows, etc.
      */
-    QRectF frameGeometry() const;
+    KRectF frameGeometry() const;
     /**
      * Returns the geometry of the client window, in global screen coordinates.
      */
-    QRectF clientGeometry() const;
+    KRectF clientGeometry() const;
     /**
      * Returns the extents of the server-side decoration.
      *
@@ -612,7 +613,7 @@ public:
      *
      * Default implementation returns same as geometry.
      */
-    virtual QRectF inputGeometry() const;
+    virtual KRectF inputGeometry() const;
     QSizeF size() const;
     QPointF pos() const;
     QRectF rect() const;
@@ -1179,13 +1180,13 @@ public:
      *
      * Notice that size constraints won't be applied.
      */
-    QRectF frameRectToClientRect(const QRectF &rect) const;
+    KRectF frameRectToClientRect(const KRectF &rect) const;
     /**
      * Calculates the matching frame rect for the given client rect @p rect.
      *
      * Notice that size constraints won't be applied.
      */
-    QRectF clientRectToFrameRect(const QRectF &rect) const;
+    KRectF clientRectToFrameRect(const KRectF &rect) const;
 
     /**
      * Returns the last requested geometry. The returned value indicates the bounding
@@ -1196,7 +1197,7 @@ public:
      * that the former specifies the current geometry while the latter specifies the next
      * geometry.
      */
-    QRectF moveResizeGeometry() const;
+    KRectF moveResizeGeometry() const;
 
     /**
      * Returns the output where the last move or resize operation has occurred. The
@@ -1577,9 +1578,9 @@ protected:
     void setDepth(int depth);
 
     Output *m_output = nullptr;
-    QRectF m_frameGeometry;
-    QRectF m_clientGeometry;
-    QRectF m_bufferGeometry;
+    KRectF m_frameGeometry;
+    KRectF m_clientGeometry;
+    KRectF m_bufferGeometry;
     xcb_visualid_t m_visual;
     int bit_depth;
     NETWinInfo *info;
@@ -1720,7 +1721,7 @@ protected:
     };
     MoveResizeMode pendingMoveResizeMode() const;
     void setPendingMoveResizeMode(MoveResizeMode mode);
-    virtual void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) = 0;
+    virtual void moveResizeInternal(const KRectF &rect, MoveResizeMode mode) = 0;
 
     /**
      * @returns whether the Window is currently in move resize mode
@@ -1972,7 +1973,7 @@ private:
     MoveResizeMode m_pendingMoveResizeMode = MoveResizeMode::None;
     friend class GeometryUpdatesBlocker;
     Output *m_moveResizeOutput;
-    QRectF m_moveResizeGeometry;
+    KRectF m_moveResizeGeometry;
     QRectF m_keyboardGeometryRestore;
     QRectF m_maximizeGeometryRestore;
     QRectF m_fullscreenGeometryRestore;
@@ -2050,12 +2051,12 @@ inline void Window::setWindowHandles(xcb_window_t w)
     m_client.reset(w, false);
 }
 
-inline QRectF Window::bufferGeometry() const
+inline KRectF Window::bufferGeometry() const
 {
     return m_bufferGeometry;
 }
 
-inline QRectF Window::clientGeometry() const
+inline KRectF Window::clientGeometry() const
 {
     return m_clientGeometry;
 }
@@ -2065,7 +2066,7 @@ inline QSizeF Window::clientSize() const
     return m_clientGeometry.size();
 }
 
-inline QRectF Window::frameGeometry() const
+inline KRectF Window::frameGeometry() const
 {
     return m_frameGeometry;
 }

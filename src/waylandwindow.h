@@ -33,7 +33,7 @@ public:
     void hideClient() override;
     void showClient() override;
 
-    virtual QRectF frameRectToBufferRect(const QRectF &rect) const;
+    virtual KRectF frameRectToBufferRect(const KRectF &rect) const;
     bool isHidden() const;
 
     void updateDepth();

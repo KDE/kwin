@@ -215,7 +215,7 @@ bool LayerShellV1Window::acceptsFocus() const
     return m_shellSurface->acceptsFocus();
 }
 
-void LayerShellV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
+void LayerShellV1Window::moveResizeInternal(const KRectF &rect, MoveResizeMode mode)
 {
     if (areGeometryUpdatesBlocked()) {
         setPendingMoveResizeMode(mode);
@@ -231,7 +231,7 @@ void LayerShellV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode m
     }
 
     // The surface position is updated synchronously.
-    QRectF updateRect = m_frameGeometry;
+    KRectF updateRect = m_frameGeometry;
     updateRect.moveTopLeft(rect.topLeft());
     updateGeometry(updateRect);
 }

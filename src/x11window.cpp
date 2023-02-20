@@ -2613,7 +2613,7 @@ xcb_window_t X11Window::frameId() const
     return m_frame;
 }
 
-QRectF X11Window::inputGeometry() const
+KRectF X11Window::inputGeometry() const
 {
     // Notice that the buffer geometry corresponds to the geometry of the frame window.
     if (isDecorated()) {
@@ -4156,7 +4156,7 @@ bool X11Window::isMaximizable() const
 /**
  * Reimplemented to inform the client about the new window position.
  */
-void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
+void X11Window::moveResizeInternal(const KRectF &rect, MoveResizeMode mode)
 {
     // Ok, the shading geometry stuff. Generally, code doesn't care about shaded geometry,
     // simply because there are too many places dealing with geometry. Those places
@@ -4169,7 +4169,7 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
     // Such code is wrong and should be changed to handle the case when the window is shaded,
     // for example using X11Window::clientSize()
 
-    QRectF frameGeometry = Xcb::fromXNative(Xcb::toXNative(rect));
+    KRectF frameGeometry = Xcb::fromXNative(Xcb::toXNative(rect));
 
     if (shade_geometry_change) {
         ; // nothing

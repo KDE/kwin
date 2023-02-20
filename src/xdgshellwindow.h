@@ -59,15 +59,15 @@ public:
     ~XdgSurfaceWindow() override;
 
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
-    QRectF frameRectToBufferRect(const QRectF &rect) const override;
-    QRectF inputGeometry() const override;
+    KRectF frameRectToBufferRect(const KRectF &rect) const override;
+    KRectF inputGeometry() const override;
     QMatrix4x4 inputTransformation() const override;
     void destroyWindow() override;
 
     void installPlasmaShellSurface(KWaylandServer::PlasmaShellSurfaceInterface *shellSurface);
 
 protected:
-    void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
+    void moveResizeInternal(const KRectF &rect, MoveResizeMode mode) override;
 
     virtual XdgSurfaceConfigure *sendRoleConfigure() const = 0;
     virtual void handleRoleCommit();

@@ -276,7 +276,7 @@ QRectF InternalWindow::resizeWithChecks(const QRectF &geometry, const QSizeF &si
     return QRectF(moveResizeGeometry().topLeft(), size.boundedTo(area.size()));
 }
 
-void InternalWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
+void InternalWindow::moveResizeInternal(const KRectF &rect, MoveResizeMode mode)
 {
     if (areGeometryUpdatesBlocked()) {
         setPendingMoveResizeMode(mode);

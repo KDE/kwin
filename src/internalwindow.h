@@ -71,7 +71,7 @@ protected:
     bool belongsToSameApplication(const Window *other, SameApplicationChecks checks) const override;
     void doInteractiveResizeSync(const QRectF &rect) override;
     void updateCaption() override;
-    void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
+    void moveResizeInternal(const KRectF &rect, MoveResizeMode mode) override;
     std::unique_ptr<WindowItem> createItem(Scene *scene) override;
 
 private:
