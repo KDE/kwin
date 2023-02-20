@@ -29,27 +29,8 @@ Q_DECLARE_LOGGING_CATEGORY(KWIN_QPAINTER)
 Q_DECLARE_LOGGING_CATEGORY(KWIN_VIRTUALKEYBOARD)
 namespace KWin
 {
-Q_NAMESPACE
 
 const QPoint invalidPoint(INT_MIN, INT_MIN);
-
-enum Layer {
-    UnknownLayer = -1,
-    FirstLayer = 0,
-    DesktopLayer = FirstLayer,
-    BelowLayer,
-    NormalLayer,
-    DockLayer,
-    AboveLayer,
-    NotificationLayer, // layer for windows of type notification
-    ActiveLayer, // active fullscreen, or active dialog
-    PopupLayer, // tooltips, sub- and context menus
-    CriticalNotificationLayer, // layer for notifications that should be shown even on top of fullscreen
-    OnScreenDisplayLayer, // layer for On Screen Display windows such as volume feedback
-    UnmanagedLayer, // layer for override redirect windows.
-    NumLayers, // number of layers, must be last
-};
-Q_ENUM_NS(Layer)
 
 enum StrutArea {
     StrutAreaInvalid = 0, // Null
@@ -102,21 +83,6 @@ inline MaximizeMode operator^(MaximizeMode m1, MaximizeMode m2)
 {
     return MaximizeMode(int(m1) ^ int(m2));
 }
-
-// TODO: could this be in Tile itself?
-enum class QuickTileFlag {
-    None = 0,
-    Left = 1 << 0,
-    Right = 1 << 1,
-    Top = 1 << 2,
-    Bottom = 1 << 3,
-    Custom = 1 << 4,
-    Horizontal = Left | Right,
-    Vertical = Top | Bottom,
-    Maximize = Left | Right | Top | Bottom,
-};
-Q_ENUM_NS(QuickTileFlag);
-Q_DECLARE_FLAGS(QuickTileMode, QuickTileFlag)
 
 void KWIN_EXPORT grabXServer();
 void KWIN_EXPORT ungrabXServer();

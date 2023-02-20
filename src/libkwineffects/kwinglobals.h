@@ -165,6 +165,39 @@ enum class Gravity {
     BottomRight,
 };
 
+enum Layer {
+    UnknownLayer = -1,
+    FirstLayer = 0,
+    DesktopLayer = FirstLayer,
+    BelowLayer,
+    NormalLayer,
+    DockLayer,
+    AboveLayer,
+    NotificationLayer, // layer for windows of type notification
+    ActiveLayer, // active fullscreen, or active dialog
+    PopupLayer, // tooltips, sub- and context menus
+    CriticalNotificationLayer, // layer for notifications that should be shown even on top of fullscreen
+    OnScreenDisplayLayer, // layer for On Screen Display windows such as volume feedback
+    UnmanagedLayer, // layer for override redirect windows.
+    NumLayers, // number of layers, must be last
+};
+Q_ENUM_NS(Layer)
+
+// TODO: could this be in Tile itself?
+enum class QuickTileFlag {
+    None = 0,
+    Left = 1 << 0,
+    Right = 1 << 1,
+    Top = 1 << 2,
+    Bottom = 1 << 3,
+    Custom = 1 << 4,
+    Horizontal = Left | Right,
+    Vertical = Top | Bottom,
+    Maximize = Left | Right | Top | Bottom,
+};
+Q_ENUM_NS(QuickTileFlag);
+Q_DECLARE_FLAGS(QuickTileMode, QuickTileFlag)
+
 inline KWIN_EXPORT xcb_connection_t *connection()
 {
     return reinterpret_cast<xcb_connection_t *>(qApp->property("x11Connection").value<void *>());
