@@ -1042,7 +1042,7 @@ void Workspace::addWaylandWindow(Window *window)
         if (window->requestedMaximizeMode() == MaximizeMode::MaximizeFull) {
             placementDone = true;
         }
-        if (window->rules()->checkPosition(invalidPoint, true) != invalidPoint) {
+        if (window->rules()->checkPositionSafe(invalidPoint, true) != invalidPoint) {
             placementDone = true;
         }
         if (!placementDone) {
