@@ -313,10 +313,10 @@ void ContrastEffect::uploadRegion(QVector2D *&map, const QRegion &region, qreal 
     Q_ASSERT(map);
     for (const QRect &r : region) {
         const auto deviceRect = scaledRect(r, scale);
-        const QVector2D topLeft(deviceRect.x(), deviceRect.y());
-        const QVector2D topRight(deviceRect.x() + deviceRect.width(), deviceRect.y());
-        const QVector2D bottomLeft(deviceRect.x(), deviceRect.y() + deviceRect.height());
-        const QVector2D bottomRight(deviceRect.x() + deviceRect.width(), deviceRect.y() + deviceRect.height());
+        const QVector2D topLeft = roundVector(QVector2D(deviceRect.x(), deviceRect.y()));
+        const QVector2D topRight = roundVector(QVector2D(deviceRect.x() + deviceRect.width(), deviceRect.y()));
+        const QVector2D bottomLeft = roundVector(QVector2D(deviceRect.x(), deviceRect.y() + deviceRect.height()));
+        const QVector2D bottomRight = roundVector(QVector2D(deviceRect.x() + deviceRect.width(), deviceRect.y() + deviceRect.height()));
 
         // First triangle
         *(map++) = topRight;
