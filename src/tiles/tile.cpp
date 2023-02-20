@@ -26,6 +26,9 @@ Tile::Tile(TileManager *tiling, Tile *parent)
     , m_parentTile(parent)
     , m_tiling(tiling)
 {
+    if (m_parentTile) {
+        m_padding = m_parentTile->padding();
+    }
     connect(Workspace::self(), &Workspace::configChanged, this, &Tile::windowGeometryChanged);
 }
 
