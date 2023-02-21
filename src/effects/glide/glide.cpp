@@ -146,8 +146,7 @@ void GlideEffect::paintWindow(EffectWindow *w, int mask, QRegion region, WindowP
     data.setProjectionMatrix(invOffsetMatrix * oldProjMatrix);
 
     // Move the center of the window to the origin.
-    const QRectF screenGeo = scaledRect(effects->renderTargetRect(), scale);
-    const QPointF offset = screenGeo.center() - windowGeo.center();
+    const QPointF offset = effects->renderTargetRect().center() - w->frameGeometry().center();
     data.translate(offset.x(), offset.y());
 
     const GlideParams params = w->isDeleted() ? m_outParams : m_inParams;
