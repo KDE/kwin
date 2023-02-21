@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# Phu Hung Nguyen <phu.nguyen@kdemail.net>, 2021, 2022.
+# Phu Hung Nguyen <phu.nguyen@kdemail.net>, 2021, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-08 01:01+0000\n"
-"PO-Revision-Date: 2022-06-19 14:38+0200\n"
+"PO-Revision-Date: 2023-02-20 11:21+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
 "Language: vi\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 21.12.2\n"
+"X-Generator: Lokalize 22.12.0\n"
 
 #: layoutpreview.cpp:131
 #, kde-format
@@ -236,42 +236,42 @@ msgstr "Hiện cửa sổ được chọn"
 #: shortcutsettings.cpp:132
 #, kde-format
 msgid "Walk Through Windows"
-msgstr ""
+msgstr "Đi qua các cửa sổ"
 
 #: shortcutsettings.cpp:133
 #, kde-format
 msgid "Walk Through Windows (Reverse)"
-msgstr ""
+msgstr "Đi qua các cửa sổ (ngược lại)"
 
 #: shortcutsettings.cpp:134
 #, kde-format
 msgid "Walk Through Windows of Current Application"
-msgstr ""
+msgstr "Đi qua các cửa sổ của ứng dụng hiện tại"
 
 #: shortcutsettings.cpp:135
 #, kde-format
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr ""
+msgstr "Đi qua các cửa sổ của ứng dụng hiện tại (ngược lại)"
 
 #: shortcutsettings.cpp:137
 #, kde-format
 msgid "Walk Through Windows Alternative"
-msgstr ""
+msgstr "Đi qua các cửa sổ, thay thế"
 
 #: shortcutsettings.cpp:138
 #, kde-format
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr ""
+msgstr "Đi qua các cửa sổ, thay thế (ngược lại)"
 
 #: shortcutsettings.cpp:139
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr ""
+msgstr "Đi qua các cửa sổ của ứng dụng hiện tại, thay thế"
 
 #: shortcutsettings.cpp:140
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr ""
+msgstr "Đi qua các cửa sổ của ứng dụng hiện tại, thay thế (ngược lại)"
 
 #~ msgid "KWin"
 #~ msgstr "KWin"

@@ -3,13 +3,13 @@
 #
 # Nguyễn Hưng Vũ <Vu.Hung@techviet.com>, 2002.
 # Phan Vĩnh Thịnh <teppi82@gmail.com>, 2006.
-# Phu Hung Nguyen <phu.nguyen@kdemail.net>, 2021.
+# Phu Hung Nguyen <phu.nguyen@kdemail.net>, 2021, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-18 01:00+0000\n"
-"PO-Revision-Date: 2021-07-31 12:16+0200\n"
+"PO-Revision-Date: 2023-02-20 11:16+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
 "Language: vi\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 20.12.2\n"
+"X-Generator: Lokalize 22.12.0\n"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -171,9 +171,7 @@ msgid "Drag buttons between here and the titlebar"
 msgstr "Kéo các nút vào giữa chỗ này và thanh tiêu đề"
 
 #: package/contents/ui/ConfigureTitlebar.qml:16
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgid "Titlebar Buttons"
 msgstr "Các nút ở thanh tiêu đề"
 
@@ -207,20 +205,16 @@ msgid "Window border size:"
 msgstr "Kích thước viền cửa sổ:"
 
 #: package/contents/ui/main.qml:60
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr "Các nút ở thanh tiêu đề"
+msgstr "Cấu hình các nút ở thanh tiêu đề…"
 
 #: package/contents/ui/main.qml:65
-#, fuzzy, kde-format
-#| msgctxt "button text"
-#| msgid "Get New Window Decorations..."
+#, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations…"
-msgstr "Lấy các trang trí cửa sổ mới..."
+msgstr "Lấy các trang trí cửa sổ mới…"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format

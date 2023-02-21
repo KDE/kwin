@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-18 01:00+0000\n"
-"PO-Revision-Date: 2023-01-08 17:52+0100\n"
+"PO-Revision-Date: 2023-02-20 11:18+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
 "Language: vi\n"
@@ -414,6 +414,8 @@ msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
 "window becomes invisible."
 msgstr ""
+"Khả năng đọc được có thể bị suy giảm với các giá trị độ mờ đục quá thấp. Ở "
+"0%, cửa sổ trở nên vô hình."
 
 #: rulesmodel.cpp:378
 #, kde-format
