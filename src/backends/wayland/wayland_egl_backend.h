@@ -40,6 +40,7 @@ public:
 
     wl_buffer *buffer() const;
     GLFramebuffer *framebuffer() const;
+    std::shared_ptr<GLTexture> texture() const;
     int age() const;
 
 private:
@@ -77,6 +78,7 @@ public:
     ~WaylandEglPrimaryLayer() override;
 
     GLFramebuffer *fbo() const;
+    std::shared_ptr<GLTexture> texture() const;
     void present();
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;

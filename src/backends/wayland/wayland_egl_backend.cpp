@@ -88,6 +88,7 @@ WaylandEglLayerBuffer::WaylandEglLayerBuffer(const QSize &size, uint32_t format,
     zwp_linux_buffer_params_v1_destroy(params);
 
     m_texture = backend->importDmaBufAsTexture(std::move(attributes));
+    m_texture->setYInverted(false);
     m_framebuffer = std::make_unique<GLFramebuffer>(m_texture.get());
 }
 
@@ -112,6 +113,11 @@ wl_buffer *WaylandEglLayerBuffer::buffer() const
 GLFramebuffer *WaylandEglLayerBuffer::framebuffer() const
 {
     return m_framebuffer.get();
+}
+
+std::shared_ptr<GLTexture> WaylandEglLayerBuffer::texture() const
+{
+    return m_texture;
 }
 
 int WaylandEglLayerBuffer::age() const
@@ -169,6 +175,11 @@ WaylandEglPrimaryLayer::~WaylandEglPrimaryLayer()
 GLFramebuffer *WaylandEglPrimaryLayer::fbo() const
 {
     return m_buffer->framebuffer();
+}
+
+std::shared_ptr<GLTexture> WaylandEglPrimaryLayer::texture() const
+{
+    return m_buffer->texture();
 }
 
 std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
@@ -387,12 +398,7 @@ bool WaylandEglBackend::initRenderingContext()
 
 std::shared_ptr<KWin::GLTexture> WaylandEglBackend::textureForOutput(KWin::Output *output) const
 {
-    auto texture = std::make_unique<GLTexture>(GL_RGBA8, output->pixelSize());
-    GLFramebuffer::pushFramebuffer(m_outputs.at(output).primaryLayer->fbo());
-    GLFramebuffer renderTarget(texture.get());
-    renderTarget.blitFromFramebuffer(QRect(0, texture->height(), texture->width(), -texture->height()));
-    GLFramebuffer::popFramebuffer();
-    return texture;
+    return m_outputs.at(output).primaryLayer->texture();
 }
 
 std::unique_ptr<SurfaceTexture> WaylandEglBackend::createSurfaceTextureInternal(SurfacePixmapInternal *pixmap)
