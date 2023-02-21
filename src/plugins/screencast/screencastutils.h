@@ -27,9 +27,10 @@ static void mirrorVertically(uchar *data, int height, int stride)
 
 static void grabTexture(GLTexture *texture, QImage *image)
 {
+    const bool invert = !texture->isYInverted();
     Q_ASSERT(texture->size() == image->size());
     bool isGLES = GLPlatform::instance()->isGLES();
-    bool invertNeeded = isGLES ^ texture->isYInverted();
+    bool invertNeeded = isGLES ^ invert;
     const bool invertNeededAndSupported = invertNeeded && GLPlatform::instance()->supports(PackInvert);
     GLboolean prev;
     if (invertNeededAndSupported) {
