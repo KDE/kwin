@@ -21,6 +21,8 @@
 #include "activities.h"
 #endif
 
+#include <QQmlEngine>
+
 namespace KWin
 {
 
@@ -281,7 +283,9 @@ void WorkspaceWrapper::hideOutline()
 
 Window *WorkspaceWrapper::getClient(qulonglong windowId)
 {
-    return Workspace::self()->findClient(Predicate::WindowMatch, windowId);
+    auto window = Workspace::self()->findClient(Predicate::WindowMatch, windowId);
+    QQmlEngine::setObjectOwnership(window, QQmlEngine::CppOwnership);
+    return window;
 }
 
 QSize WorkspaceWrapper::desktopGridSize() const
@@ -321,7 +325,9 @@ QList<Output *> WorkspaceWrapper::screens() const
 
 Output *WorkspaceWrapper::screenAt(const QPointF &pos) const
 {
-    return workspace()->outputAt(pos);
+    auto output = workspace()->outputAt(pos);
+    QQmlEngine::setObjectOwnership(output, QQmlEngine::CppOwnership);
+    return output;
 }
 
 QRect WorkspaceWrapper::virtualScreenGeometry() const
@@ -343,14 +349,18 @@ KWin::TileManager *WorkspaceWrapper::tilingForScreen(const QString &screenName) 
 {
     Output *output = kwinApp()->outputBackend()->findOutput(screenName);
     if (output) {
-        return workspace()->tileManager(output);
+        auto tileManager = workspace()->tileManager(output);
+        QQmlEngine::setObjectOwnership(tileManager, QQmlEngine::CppOwnership);
+        return tileManager;
     }
     return nullptr;
 }
 
 KWin::TileManager *WorkspaceWrapper::tilingForScreen(Output *output) const
 {
-    return workspace()->tileManager(output);
+    auto tileManager = workspace()->tileManager(output);
+    QQmlEngine::setObjectOwnership(tileManager, QQmlEngine::CppOwnership);
+    return tileManager;
 }
 
 QtScriptWorkspaceWrapper::QtScriptWorkspaceWrapper(QObject *parent)
