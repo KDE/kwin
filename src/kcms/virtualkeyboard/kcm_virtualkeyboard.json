@@ -113,6 +113,5 @@
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"
     ],
-    "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "input-devices"
 }

@@ -108,7 +108,6 @@
     "X-KDE-Keywords[vi]": "kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners,borders,screen borders,desktop borders,desktop corners,corners,cửa sổ,trình quản lí,hiệu ứng,góc,cạnh,viền,hành động,chuyển,bàn làm việc,cạnh màn hình kwin,cạnh bàn làm việc,cạnh màn hình,phóng to cửa sổ,lát cửa sổ,phía bên màn hình,ứng xử của màn hình,chuyển bàn làm việc,bàn làm việc ảo,góc màn hình,viền,viền màn hình,viền bàn làm việc,góc bàn làm việc,góc",
     "X-KDE-Keywords[x-test]": "xxkwinxx,xxwindowxx,xxmanagerxx,xxeffectxx,xxcornerxx,xxedgexx,xxborderxx,xxactionxx,xxswitchxx,xxdesktopxx,xxkwin screen edgesxx,xxdesktop edgesxx,xxscreen edgesxx,xxmaximize windowsxx,xxtile windowsxx,xxside of screenxx,xxscreen behaviorxx,xxswitch desktopxx,xxvirtual desktopxx,xxscreen cornersxx,xxbordersxx,xxscreen bordersxx,xxdesktop bordersxx,xxdesktop cornersxx,xxcornersxx",
     "X-KDE-Keywords[zh_CN]": "kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners,窗口,管理,特效,四角,边角,角落,边缘,操作,切换,桌面,kwin 屏幕边缘,桌面边缘,最大化窗口,平铺窗口,屏幕行为,桌面切换,虚拟桌面,虚拟桌面切换,屏幕角落,屏幕边角,边框,屏幕边框,边沿,屏幕边沿,桌面边框,桌面边沿,桌面边缘,桌面四角,桌面角落,桌面边角",
-    "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "desktopbehavior",
     "X-KDE-Weight": 50
 }

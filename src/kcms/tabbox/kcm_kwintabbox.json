@@ -109,7 +109,6 @@
     "X-KDE-Keywords[vi]": "window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab,apps changer,application changer,app,task,switch,task switcher,cửa sổ,trình chuyển,trình chuyển cửa sổ,chuyển,chuyển cửa sổ,trình chuyển ứng dụng,ứng dụng,tác vụ,chuyển,trình chuyển tác vụ",
     "X-KDE-Keywords[x-test]": "xxwindowxx,xxwindowsxx,xxswitcherxx,xxwindow switcherxx,xxswitchingxx,xxwindow switchingxx,xxalttabxx,xxalt-tabxx,xxalt+tabxx,xxalt tabxx,xxapps changerxx,xxapplication changerxx,xxappxx,xxtaskxx,xxswitchxx,xxtask switcherxx",
     "X-KDE-Keywords[zh_CN]": "window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab,apps changer,application changer,app,task,switch,task switcher,窗口,切换器,窗口切换器,切换,窗口切换,应用切换器,应用程序切换器,应用,应用程序,任务,任务切换器",
-    "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 60
 }

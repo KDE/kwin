@@ -109,7 +109,6 @@
     "X-KDE-Keywords[vi]": "focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,shading,shade,unshade,unshading,activation,activate,nhắm,xếp chỗ,ứng xử của cửa sổ,hành động của cửa sổ,hiệu ứng động,nâng,nâng tự động,cửa sổ,khung,thanh tiêu đề,bấm đúp,bàn làm việc,đính,chuyển động,che,bỏ che,kích hoạt",
     "X-KDE-Keywords[x-test]": "xxfocusxx,xxplacementxx,xxwindow behaviorxx,xxwindow actionsxx,xxanimationxx,xxraisexx,xxauto raisexx,xxwindowsxx,xxframexx,xxtitlebarxx,xxdoubleclickxx,xxdesktopxx,xxsnapxx,xxmovementxx,xxshadingxx,xxshadexx,xxunshadexx,xxunshadingxx,xxactivationxx,xxactivatexx",
     "X-KDE-Keywords[zh_CN]": "focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,shading,shade,unshade,unshading,activation,activate,焦点,放置,位置,窗口行为,窗口操作,动画,提升,自动提升,窗口,框架,标题栏,双击,桌面,吸附,移动,卷起,展开,激活",
-    "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 40
 }

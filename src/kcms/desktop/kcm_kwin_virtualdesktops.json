@@ -115,7 +115,6 @@
     "X-KDE-Keywords[vi]": "desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings,indicator,navigation,cube,slide,workspaces,bàn làm việc,số lượng,bàn làm việc ảo,nhiều bàn làm việc,tổng quan,phụ kiện tổng quan,tiểu ứng dụng tổng quan,thiết lập trình tổng quan,trình chỉ thị,điều hướng,khối hộp,trượt,không gian làm việc",
     "X-KDE-Keywords[x-test]": "xxdesktopxx,xxdesktopsxx,xxnumberxx,xxvirtual desktopxx,xxmultiple desktopsxx,xxpagerxx,xxpager widgetxx,xxpager appletxx,xxpager settingsxx,xxindicatorxx,xxnavigationxx,xxcubexx,xxslidexx,xxworkspacesxx",
     "X-KDE-Keywords[zh_CN]": "desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings,桌面,虚拟桌面,多桌面,切换,虚拟桌面切换器,切换器,切换器组件,切换器设置,指示器,指示色,提示器,提示色,导航,方块,正方体,滑动,工作区,工作空间",
-    "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "desktopbehavior",
     "X-KDE-Weight": 60
 }

@@ -111,7 +111,6 @@
     "X-KDE-Keywords[x-test]": "xxkwinxx,xxwindowxx,xxmanagerxx,xxeffectxx,xxedgexx,xxborderxx,xxactionxx,xxswitchxx,xxdesktopxx,xxdesktop edgesxx,xxscreen edgesxx,xxside of screenxx,xxscreen behaviorxx,xxtouch screenxx",
     "X-KDE-Keywords[zh_CN]": "kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners,窗口,管理,特效,四角,边缘,操作,切换,桌面,kwin 屏幕边缘,桌面边缘,最大化窗口,平铺窗口,屏幕行为,桌面切换,虚拟桌面,虚拟桌面切换,屏幕角落,触摸,触摸屏,触控,触控屏,屏幕",
     "X-KDE-Keywords[zh_TW]": "kwin,window,manager,effect,edge,border,action,switch,desktop,desktop edges,screen edges,side of screen,screen behavior,touch screen",
-    "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "desktopbehavior",
     "X-KDE-Weight": 50
 }

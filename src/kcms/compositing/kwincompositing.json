@@ -109,7 +109,6 @@
     "X-KDE-Keywords[vi]": "kwin,window,manager,compositing,compositor,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects,graphics,latency,vsync,tearing,window thumbnails,scale method,scaling method,backend,cửa sổ,trình quản lí,kết hợp,trình kết hợp,hiệu ứng,hiệu ứng 3D,hiệu ứng 2D,thiết lập phim,hiệu ứng đồ hoạ,hiệu ứng bàn làm việc,đồ hoạ,độ trễ,rách hình,hình nhỏ của cửa sổ,phương pháp đổi cỡ,hậu phương",
     "X-KDE-Keywords[x-test]": "xxkwinxx,xxwindowxx,xxmanagerxx,xxcompositingxx,xxcompositorxx,xxeffectxx,xx3D effectsxx,xx2D effectsxx,xxOpenGLxx,xxXRenderxx,xxvideo settingsxx,xxgraphical effectsxx,xxdesktop effectsxx,xxgraphicsxx,xxlatencyxx,xxvsyncxx,xxtearingxx,xxwindow thumbnailsxx,xxscale methodxx,xxscaling methodxx,xxbackendxx",
     "X-KDE-Keywords[zh_CN]": "kwin,window,manager,compositing,compositor,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects,graphics,latency,vsync,tearing,window thumbnails,scale method,scaling method,backend,窗口,管理器,显示特效混合器,混合器,构图,混成,效果,特效,视效,动效,3D 特效,2D 特效,视频设置,图形效果,图形特效,图形延迟,延迟,垂直同步,撕裂,窗口缩略图,缩放方式,后端,后端程序",
-    "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "display",
     "X-KDE-Weight": 60
 }

@@ -117,7 +117,6 @@
     "X-KDE-Keywords[vi]": "kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,window decorations,titlebar,window buttons,window border,skin,cửa sổ,trình quản lí,viền,kiểu cách,chủ đề,nhìn,cảm,bố cục,nút,quai móc,cạnh,trang trí,trang trí cửa sổ,thanh tiêu đề,nút cửa sổ,viền cửa sổ,da",
     "X-KDE-Keywords[x-test]": "xxkwinxx,xxwindowxx,xxmanagerxx,xxborderxx,xxstylexx,xxthemexx,xxlookxx,xxfeelxx,xxlayoutxx,xxbuttonxx,xxhandlexx,xxedgexx,xxkwmxx,xxdecorationxx,xxwindow decorationsxx,xxtitlebarxx,xxwindow buttonsxx,xxwindow borderxx,xxskinxx",
     "X-KDE-Keywords[zh_CN]": "kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,window decorations,titlebar,window buttons,window border,skin,窗口,管理器,窗口管理器,边框,风格,样式,主题,界面外观,外观,观感,视觉效果,视效,布局,按钮,拖柄,手柄,边缘,装饰,窗口装饰,标题栏,窗口按钮,窗口边框,窗口外框,皮肤",
-    "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "appearance",
     "X-KDE-Weight": 40
 }
