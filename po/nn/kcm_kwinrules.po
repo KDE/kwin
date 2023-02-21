@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-11 00:48+0000\n"
-"PO-Revision-Date: 2023-02-19 20:07+0100\n"
+"PO-Revision-Date: 2023-02-20 21:35+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
 "Language: nn\n"
@@ -58,7 +58,7 @@ msgid ""
 "documentation for how to customize window behavior.</p>"
 msgstr ""
 "<h1>Vindaugsspesifikke innstillingar</h1><p>Her kan du velja "
-"vindaugsinnstillingar som berre gjeld for nokre vindauge.</p><p> erk at "
+"vindaugsinnstillingar som berre gjeld for nokre vindauge.</p><p>Merk at "
 "denne tilpassinga ikkje får verknad dersom du ikkje brukar KWin som "
 "vindaugshandsamar. Dersom du brukar ein annan vindaugshandsamar, bør du sjå "
 "i dokumentasjonen til denne korleis du kan tilpassa vindaugsåtferda.</p>"
@@ -674,12 +674,12 @@ msgstr "Fargeoppsett for tittellinje"
 #: rulesmodel.cpp:582
 #, kde-format
 msgid "Active opacity"
-msgstr "Aktiv gjennomsikt"
+msgstr "Aktiv tettleik"
 
 #: rulesmodel.cpp:587
 #, kde-format
 msgid "Inactive opacity"
-msgstr "Inaktiv gjennomsikt"
+msgstr "Inaktiv tettleik"
 
 #: rulesmodel.cpp:592
 #, kde-format
@@ -798,6 +798,11 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Programmet oppgjev ikkje nokon klasse for vindauget, så KWin kan ikkje bruka "
+"ein klasse for å oppdaga vindauget og ta i bruk reglar. Viss du likevel "
+"ønskjer å bruka automatiske reglar på vindauget, kan du prøva å definera dei "
+"ut frå andre eigenskapar, som vindaugstittelen.<nl/><nl/>Vurder òg å melda "
+"frå om denne feilen til utviklarane av programmet."
 
 #: rulesmodel.cpp:738
 #, kde-format

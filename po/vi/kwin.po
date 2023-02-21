@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-15 02:49+0000\n"
-"PO-Revision-Date: 2023-01-08 17:58+0100\n"
+"PO-Revision-Date: 2023-02-20 11:15+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
 "Language: vi\n"
@@ -2257,10 +2257,9 @@ msgid "&Shade"
 msgstr "Ch&e"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "Không có thanh tiêu đề và khung"
+msgstr "&Không có thanh tiêu đề và khung"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2459,10 +2458,9 @@ msgid "Make Window Fullscreen"
 msgstr "Làm cửa sổ toàn màn hình"
 
 #: useractions.cpp:1009
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "Không có thanh tiêu đề và khung"
+msgstr "Bật/tắt thanh tiêu đề và khung cửa sổ"
 
 #: useractions.cpp:1011
 #, kde-format
