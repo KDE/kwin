@@ -205,4 +205,50 @@ void QuickRootTile::setVerticalSplit(qreal split)
     m_bottomRightTile->setRelativeGeometry(geom);
 }
 
+QRectF QuickRootTile::childGeometryBounds(Tile *child) const
+{
+    QRectF bounds = relativeGeometry();
+
+    // Not fully initialized yet?
+    if (!m_leftVerticalTile
+        || !m_rightVerticalTile
+        || !m_topHorizontalTile
+        || !m_bottomHorizontalTile
+        || !m_topLeftTile
+        || !m_topRightTile
+        || !m_bottomLeftTile
+        || !m_bottomRightTile) {
+        return bounds;
+    }
+
+    qreal minimumLeftWidth = std::max(std::max(m_leftVerticalTile->minimumSize().width(), m_topLeftTile->minimumSize().width()), m_bottomLeftTile->minimumSize().width());
+    qreal minimumRightWidth = std::max(std::max(m_rightVerticalTile->minimumSize().width(), m_topRightTile->minimumSize().width()), m_bottomRightTile->minimumSize().width());
+
+    qreal minimumTopHeight = std::max(std::max(m_topHorizontalTile->minimumSize().height(), m_topLeftTile->minimumSize().height()), m_topRightTile->minimumSize().height());
+    qreal minimumBottomHeight = std::max(std::max(m_bottomHorizontalTile->minimumSize().height(), m_bottomLeftTile->minimumSize().height()), m_bottomRightTile->minimumSize().height());
+
+    if (m_topHorizontalTile.get() == child) {
+        bounds.setBottom(bounds.bottom() - minimumBottomHeight);
+    } else if (m_bottomHorizontalTile.get() == child) {
+        bounds.setTop(bounds.top() + minimumTopHeight);
+    } else if (m_leftVerticalTile.get() == child) {
+        bounds.setRight(bounds.right() - minimumRightWidth);
+    } else if (m_rightVerticalTile.get() == child) {
+        bounds.setLeft(bounds.left() + minimumLeftWidth);
+    } else if (m_topLeftTile.get() == child) {
+        bounds.setBottomRight({bounds.right() - minimumRightWidth,
+                               bounds.bottom() - minimumBottomHeight});
+    } else if (m_topRightTile.get() == child) {
+        bounds.setBottomLeft({bounds.left() + minimumLeftWidth,
+                              bounds.bottom() - minimumBottomHeight});
+    } else if (m_bottomRightTile.get() == child) {
+        bounds.setTopLeft({bounds.left() + minimumLeftWidth,
+                           bounds.top() + minimumTopHeight});
+    } else if (m_bottomLeftTile.get() == child) {
+        bounds.setTopRight({bounds.right() - minimumRightWidth,
+                            bounds.top() + minimumTopHeight});
+    }
+    return bounds;
+}
+
 } // namespace KWin

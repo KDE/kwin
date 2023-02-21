@@ -135,6 +135,8 @@ public:
 Q_SIGNALS:
     void relativeGeometryChanged();
     void absoluteGeometryChanged();
+    void minimumSizeChanged(const QSizeF &size);
+    void maximumSizeChanged(const QSizeF &size);
     void windowGeometryChanged();
     void paddingChanged(qreal padding);
     void rowChanged(int row);
@@ -147,6 +149,9 @@ Q_SIGNALS:
 protected:
     void insertChild(int position, Tile *item);
     void removeChild(Tile *child);
+    void setMinimumSize(const QSizeF &size);
+    // The given child will be able to set its own geometry only inside this rect
+    virtual QRectF childGeometryBounds(Tile *child) const;
 
 private:
     QList<Tile *> m_children;

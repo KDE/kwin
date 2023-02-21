@@ -89,9 +89,11 @@ void Tile::setGeometryFromAbsolute(const QRectF &geom)
 
 void Tile::setRelativeGeometry(const QRectF &geom)
 {
-    QRectF constrainedGeom = geom;
-    constrainedGeom.setWidth(std::max(constrainedGeom.width(), m_minimumSize.width()));
-    constrainedGeom.setHeight(std::max(constrainedGeom.height(), m_minimumSize.height()));
+    const QRectF bounds = parentTile() ? parentTile()->childGeometryBounds(this) : QRectF(0, 0, 1, 1);
+    QRectF constrainedGeom = geom.intersected(bounds);
+    if (constrainedGeom.width() < m_minimumSize.width() || constrainedGeom.height() < m_minimumSize.height()) {
+        return;
+    }
 
     if (m_relativeGeometry == constrainedGeom) {
         return;
@@ -274,8 +276,8 @@ void Tile::addWindow(Window *window)
         m_windows.append(window);
         window->setTile(this);
         const QRectF deskGeom = workspace()->clientArea(MaximizeArea, manager()->output(), VirtualDesktopManager::self()->currentDesktop());
-        m_minimumSize = {std::max(m_minimumSize.width(), window->minSize().width() / deskGeom.width()),
-                         std::max(m_minimumSize.height(), window->minSize().height() / deskGeom.height())};
+        setMinimumSize({std::max(m_minimumSize.width(), window->minSize().width() / deskGeom.width()),
+                        std::max(m_minimumSize.height(), window->minSize().height() / deskGeom.height())});
         Q_EMIT windowAdded(window);
         Q_EMIT windowsChanged();
     }
@@ -286,11 +288,11 @@ void Tile::removeWindow(Window *window)
     // We already ensure there is a single copy of window in m_windows
     if (m_windows.removeOne(window)) {
         window->setTile(nullptr);
-        m_minimumSize = {0.15, 0.15};
+        setMinimumSize({0.15, 0.15});
         const QRectF deskGeom = workspace()->clientArea(MaximizeArea, manager()->output(), VirtualDesktopManager::self()->currentDesktop());
         for (Window *w : m_windows) {
-            m_minimumSize = {std::max(m_minimumSize.width(), w->minSize().width() / deskGeom.width()),
-                             std::max(m_minimumSize.height(), w->minSize().height() / deskGeom.height())};
+            setMinimumSize({std::max(m_minimumSize.width(), w->minSize().width() / deskGeom.width()),
+                            std::max(m_minimumSize.height(), w->minSize().height() / deskGeom.height())});
         }
         Q_EMIT windowRemoved(window);
         Q_EMIT windowsChanged();
@@ -300,6 +302,21 @@ void Tile::removeWindow(Window *window)
 QList<KWin::Window *> Tile::windows() const
 {
     return m_windows;
+}
+
+void Tile::setMinimumSize(const QSizeF &size)
+{
+    // TODO: it should resize tiles if necessary and even deny the operation when doesn't fit?
+    if (m_minimumSize == size) {
+        return;
+    }
+    m_minimumSize = size;
+    Q_EMIT minimumSizeChanged(size);
+}
+
+QRectF Tile::childGeometryBounds(Tile *child) const
+{
+    return m_relativeGeometry;
 }
 
 void Tile::insertChild(int position, Tile *item)

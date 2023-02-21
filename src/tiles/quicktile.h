@@ -32,6 +32,9 @@ public:
     qreal verticalSplit() const;
     void setVerticalSplit(qreal split);
 
+protected:
+    QRectF childGeometryBounds(Tile *child) const override;
+
 private:
     void relayoutToFit(Tile *tile);
 
