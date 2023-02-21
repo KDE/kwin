@@ -3765,12 +3765,7 @@ QRectF Window::quickTileGeometry(QuickTileMode mode, const QPointF &pos) const
 
     Tile *tile = workspace()->tileManager(output)->quickTile(mode);
     if (tile) {
-        const QRectF tileGeom = tile->windowGeometry();
-        if (tileGeom.width() >= minSize().width() && tileGeom.height() >= minSize().height()) {
-            return tile->windowGeometry();
-        } else {
-            return QRectF();
-        }
+        return tile->windowGeometry();
     }
     return workspace()->clientArea(MaximizeArea, this, pos);
 }
@@ -3942,6 +3937,20 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
             const QRectF tileGeom = tile->windowGeometry();
             if (tileGeom.width() >= minSize().width() && tileGeom.height() >= minSize().height()) {
                 setTile(tile);
+            } else {
+                // Grow the tile if possible
+                const QRectF oldGeom = tile->relativeGeometry();
+                QRectF newGeom = oldGeom;
+                newGeom.setSize({std::min(1.0, std::max(minSize().width() / output->fractionalGeometry().width(), oldGeom.width())),
+                                 std::min(1.0, std::max(minSize().height() / output->fractionalGeometry().height(), oldGeom.height()))});
+                newGeom.moveBottomRight({std::min(newGeom.right(), 1.0),
+                                         std::min(newGeom.bottom(), 1.0)});
+                tile->setRelativeGeometry(newGeom);
+                if (tile->relativeGeometry().width() >= newGeom.width() && tile->relativeGeometry().height() >= newGeom.height()) {
+                    setTile(tile);
+                } else {
+                    tile->setRelativeGeometry(oldGeom);
+                }
             }
         }
     }
