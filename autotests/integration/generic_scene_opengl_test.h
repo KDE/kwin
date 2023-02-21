@@ -22,8 +22,8 @@ protected:
 private Q_SLOTS:
     void initTestCase();
     void cleanup();
-    void testRestart();
 
 private:
+    void testRestart();
     QByteArray m_envVariable;
 };

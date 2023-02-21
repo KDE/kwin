@@ -17,6 +17,7 @@
 #include <QtTest>
 
 #include <KWayland/Client/surface.h>
+#include <optional>
 
 #include "qwayland-fractional-scale-v1.h"
 #include "qwayland-idle-inhibit-unstable-v1.h"
@@ -27,6 +28,7 @@
 #include "qwayland-wlr-layer-shell-unstable-v1.h"
 #include "qwayland-xdg-decoration-unstable-v1.h"
 #include "qwayland-xdg-shell.h"
+#include "qwayland-zkde-screencast-unstable-v1.h"
 
 namespace KWayland
 {
@@ -56,6 +58,8 @@ class zwp_input_panel_surface_v1;
 class zwp_text_input_v3;
 class zwp_text_input_manager_v3;
 }
+
+class ScreencastingV1;
 
 namespace KWin
 {
@@ -107,6 +111,7 @@ private:
 namespace Test
 {
 
+class ScreencastingV1;
 class MockInputMethod;
 
 class TextInputManagerV3 : public QtWayland::zwp_text_input_manager_v3
@@ -499,6 +504,7 @@ enum class AdditionalWaylandInterface {
     TextInputManagerV3 = 1 << 13,
     OutputDeviceV2 = 1 << 14,
     FractionalScaleManagerV1 = 1 << 15,
+    ScreencastingV1 = 1 << 16,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -590,6 +596,7 @@ WaylandOutputManagementV2 *waylandOutputManagementV2();
 KWayland::Client::TextInputManager *waylandTextInputManager();
 QVector<KWayland::Client::Output *> waylandOutputs();
 KWayland::Client::Output *waylandOutput(const QString &name);
+ScreencastingV1 *screencasting();
 QVector<WaylandOutputDeviceV2 *> waylandOutputDevicesV2();
 
 bool waitForWaylandSurface(Window *window);
@@ -658,6 +665,8 @@ Window *waitForWaylandWindowShown(int timeout = 5000);
  */
 Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format = QImage::Format_ARGB32, int timeout = 5000);
 
+Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QImage &img, int timeout = 5000);
+
 /**
  * Waits for the @p window to be destroyed.
  */
@@ -692,6 +701,78 @@ XcbConnectionPtr createX11Connection();
 MockInputMethod *inputMethod();
 KWayland::Client::Surface *inputPanelSurface();
 
+class ScreencastingStreamV1 : public QObject, public QtWayland::zkde_screencast_stream_unstable_v1
+{
+    Q_OBJECT
+    friend class ScreencastingV1;
+
+public:
+    ScreencastingStreamV1(QObject *parent)
+        : QObject(parent)
+    {
+    }
+
+    ~ScreencastingStreamV1() override
+    {
+        if (isInitialized()) {
+            close();
+        }
+    }
+
+    quint32 nodeId() const
+    {
+        Q_ASSERT(m_nodeId.has_value());
+        return *m_nodeId;
+    }
+
+    void zkde_screencast_stream_unstable_v1_created(uint32_t node) override
+    {
+        m_nodeId = node;
+        Q_EMIT created(node);
+    }
+
+    void zkde_screencast_stream_unstable_v1_closed() override
+    {
+        Q_EMIT closed();
+    }
+
+    void zkde_screencast_stream_unstable_v1_failed(const QString &error) override
+    {
+        Q_EMIT failed(error);
+    }
+
+Q_SIGNALS:
+    void created(quint32 nodeid);
+    void failed(const QString &error);
+    void closed();
+
+private:
+    std::optional<uint> m_nodeId;
+};
+
+class ScreencastingV1 : public QObject, public QtWayland::zkde_screencast_unstable_v1
+{
+    Q_OBJECT
+public:
+    explicit ScreencastingV1(QObject *parent = nullptr)
+        : QObject(parent)
+    {
+    }
+
+    ScreencastingStreamV1 *createOutputStream(wl_output *output, pointer mode)
+    {
+        auto stream = new ScreencastingStreamV1(this);
+        stream->init(stream_output(output, mode));
+        return stream;
+    }
+
+    ScreencastingStreamV1 *createWindowStream(const QString &uuid, pointer mode)
+    {
+        auto stream = new ScreencastingStreamV1(this);
+        stream->init(stream_window(uuid, mode));
+        return stream;
+    }
+};
 }
 
 }

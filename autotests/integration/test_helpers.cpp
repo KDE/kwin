@@ -17,6 +17,7 @@
 #include "wayland/display.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include <wayland-zkde-screencast-unstable-v1-client-protocol.h>
 
 #include <KWayland/Client/appmenu.h>
 #include <KWayland/Client/compositor.h>
@@ -254,6 +255,7 @@ static struct
     LayerShellV1 *layerShellV1 = nullptr;
     TextInputManagerV3 *textInputManagerV3 = nullptr;
     FractionalScaleManagerV1 *fractionalScaleManagerV1 = nullptr;
+    ScreencastingV1 *screencastingV1 = nullptr;
 } s_waylandConnection;
 
 MockInputMethod *inputMethod()
@@ -422,6 +424,13 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
             if (interface == wp_fractional_scale_manager_v1_interface.name) {
                 s_waylandConnection.fractionalScaleManagerV1 = new FractionalScaleManagerV1();
                 s_waylandConnection.fractionalScaleManagerV1->init(*registry, name, version);
+                return;
+            }
+        }
+        if (flags & AdditionalWaylandInterface::ScreencastingV1) {
+            if (interface == zkde_screencast_unstable_v1_interface.name) {
+                s_waylandConnection.screencastingV1 = new ScreencastingV1();
+                s_waylandConnection.screencastingV1->init(*registry, name, version);
                 return;
             }
         }
@@ -652,6 +661,11 @@ KWayland::Client::Output *waylandOutput(const QString &name)
     return nullptr;
 }
 
+ScreencastingV1 *screencasting()
+{
+    return s_waylandConnection.screencastingV1;
+}
+
 QVector<KWin::Test::WaylandOutputDeviceV2 *> waylandOutputDevicesV2()
 {
     return s_waylandConnection.outputDevicesV2;
@@ -730,11 +744,18 @@ Window *waitForWaylandWindowShown(int timeout)
 
 Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QSize &size, const QColor &color, const QImage::Format &format, int timeout)
 {
+    QImage img(size, format);
+    img.fill(color);
+    return renderAndWaitForShown(surface, img, timeout);
+}
+
+Window *renderAndWaitForShown(KWayland::Client::Surface *surface, const QImage &img, int timeout)
+{
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     if (!windowAddedSpy.isValid()) {
         return nullptr;
     }
-    render(surface, size, color, format);
+    render(surface, img);
     flushWaylandConnection();
     if (!windowAddedSpy.wait(timeout)) {
         return nullptr;
