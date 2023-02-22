@@ -78,10 +78,11 @@ QRegion ItemRenderer::mapToRenderTarget(const QRegion &region) const
 {
     QRegion result;
     for (const QRect &rect : region) {
-        result += QRect((rect.x() - m_renderTargetRect.x()) * m_renderTargetScale,
-                        (rect.y() - m_renderTargetRect.y()) * m_renderTargetScale,
-                        rect.width() * m_renderTargetScale,
-                        rect.height() * m_renderTargetScale);
+        result += QRectF((rect.x() - m_renderTargetRect.x()) * m_renderTargetScale,
+                         (rect.y() - m_renderTargetRect.y()) * m_renderTargetScale,
+                         rect.width() * m_renderTargetScale,
+                         rect.height() * m_renderTargetScale)
+                      .toRect();
     }
     return result;
 }
