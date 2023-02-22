@@ -369,25 +369,6 @@ void Window::finishCompositing(ReleaseReason releaseReason)
     m_windowItem.reset();
 }
 
-void Window::addWorkspaceRepaint(int x, int y, int w, int h)
-{
-    addWorkspaceRepaint(QRectF(x, y, w, h));
-}
-
-void Window::addWorkspaceRepaint(const QRectF &r2)
-{
-    if (Compositor::compositing()) {
-        Compositor::self()->scene()->addRepaint(r2.toAlignedRect());
-    }
-}
-
-void Window::addWorkspaceRepaint(const QRegion &region)
-{
-    if (Compositor::compositing()) {
-        Compositor::self()->scene()->addRepaint(region);
-    }
-}
-
 void Window::setReadyForPainting()
 {
     if (!ready_for_painting) {
@@ -543,7 +524,6 @@ void Window::elevate(bool elevate)
         return;
     }
     effectWindow()->elevate(elevate);
-    addWorkspaceRepaint(visibleGeometry());
 }
 
 pid_t Window::pid() const

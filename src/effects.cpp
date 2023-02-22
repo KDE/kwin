@@ -1143,6 +1143,7 @@ void EffectsHandlerImpl::setElevatedWindow(KWin::EffectWindow *w, bool set)
     if (set) {
         elevated_windows.append(w);
     }
+    addRepaint(w->expandedGeometry());
 }
 
 void EffectsHandlerImpl::setTabBoxWindow(EffectWindow *w)

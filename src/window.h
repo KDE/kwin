@@ -718,10 +718,6 @@ public:
     bool hasAlpha() const;
     virtual bool setupCompositing();
     virtual void finishCompositing(ReleaseReason releaseReason = ReleaseReason::Release);
-    // these call workspace->addRepaint(), but first transform the damage if needed
-    void addWorkspaceRepaint(const QRectF &r);
-    void addWorkspaceRepaint(int x, int y, int w, int h);
-    void addWorkspaceRepaint(const QRegion &region);
     EffectWindowImpl *effectWindow();
     const EffectWindowImpl *effectWindow() const;
     SurfaceItem *surfaceItem() const;
