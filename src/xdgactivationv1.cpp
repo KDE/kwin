@@ -18,7 +18,6 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-#include <KApplicationTrader>
 #include <KDesktopFile>
 
 namespace KWin
@@ -31,25 +30,6 @@ static bool isPrivilegedInWindowManagement(const ClientConnection *client)
     return requestedInterfaces.contains(QLatin1String("org_kde_plasma_window_management")) || requestedInterfaces.contains(QLatin1String("kde_lockscreen_overlay_v1"));
 }
 
-static const QString windowDesktopFileName(Window *window)
-{
-    QString ret = window->desktopFileName();
-    if (!ret.isEmpty()) {
-        return ret;
-    }
-
-    // Fallback to StartupWMClass for legacy apps
-    const auto resourceName = window->resourceName();
-    const auto service = KApplicationTrader::query([&resourceName](const KService::Ptr &service) {
-        return service->property<QString>("StartupWMClass").compare(resourceName, Qt::CaseInsensitive) == 0;
-    });
-
-    if (!service.isEmpty()) {
-        ret = service.constFirst()->desktopEntryName();
-    }
-    return ret;
-}
-
 XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface *activation, QObject *parent)
     : QObject(parent)
 {
@@ -60,7 +40,7 @@ XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface 
         }
 
         // We check that it's not the app that we are trying to activate
-        if (windowDesktopFileName(window) != m_currentActivationToken->applicationId) {
+        if (window->desktopFileName() != m_currentActivationToken->applicationId) {
             // But also that the new one has been requested after the token was requested
             if (window->lastUsageSerial() < m_currentActivationToken->serial) {
                 return;

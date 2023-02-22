@@ -38,6 +38,7 @@
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
 // KDE
+#include <KApplicationTrader>
 #include <KLocalizedString>
 #include <KStartupInfo>
 #include <KX11Extras>
@@ -680,6 +681,15 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     QString desktopFileName = QString::fromUtf8(info->desktopFileName());
     if (desktopFileName.isEmpty()) {
         desktopFileName = QString::fromUtf8(info->gtkApplicationId());
+    }
+    if (desktopFileName.isEmpty()) {
+        // Fallback to StartupWMClass for legacy apps
+        const auto service = KApplicationTrader::query([this](const KService::Ptr &service) {
+            return service->property<QString>("StartupWMClass").compare(resourceName(), Qt::CaseInsensitive) == 0;
+        });
+        if (!service.isEmpty()) {
+            desktopFileName = service.constFirst()->desktopEntryName();
+        }
     }
     setDesktopFileName(rules()->checkDesktopFile(desktopFileName, true));
     getIcons();
