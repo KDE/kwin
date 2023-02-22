@@ -373,7 +373,9 @@ void Connection::processEvents()
         }
         case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE: {
             PointerEvent *pe = static_cast<PointerEvent *>(event.get());
-            Q_EMIT pe->device()->pointerMotionAbsolute(pe->absolutePos(workspace()->geometry().size()), pe->time(), pe->device());
+            if (workspace()) {
+                Q_EMIT pe->device()->pointerMotionAbsolute(pe->absolutePos(workspace()->geometry().size()), pe->time(), pe->device());
+            }
             break;
         }
         case LIBINPUT_EVENT_TOUCH_DOWN: {
