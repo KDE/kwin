@@ -161,7 +161,7 @@ FocusScope {
     function findFirstItem() {
         for (let candidateIndex = 0; candidateIndex < windowsInstantiator.count; ++candidateIndex) {
             const candidateItem = windowsInstantiator.objectAt(candidateIndex);
-            if (!candidateItem.hidden) {
+            if (!candidateItem.activeHidden) {
                 return candidateIndex;
             }
         }
@@ -180,7 +180,7 @@ FocusScope {
         case WindowHeap.Direction.Left:
             for (let candidateIndex = 0; candidateIndex < windowsInstantiator.count; ++candidateIndex) {
                 const candidateItem = windowsInstantiator.objectAt(candidateIndex);
-                if (candidateItem.hidden) {
+                if (candidateItem.activeHidden) {
                     continue;
                 }
 
@@ -205,7 +205,7 @@ FocusScope {
         case WindowHeap.Direction.Right:
             for (let candidateIndex = 0; candidateIndex < windowsInstantiator.count; ++candidateIndex) {
                 const candidateItem = windowsInstantiator.objectAt(candidateIndex);
-                if (candidateItem.hidden) {
+                if (candidateItem.activeHidden) {
                     continue;
                 }
 
@@ -230,7 +230,7 @@ FocusScope {
         case WindowHeap.Direction.Up:
             for (let candidateIndex = 0; candidateIndex < windowsInstantiator.count; ++candidateIndex) {
                 const candidateItem = windowsInstantiator.objectAt(candidateIndex);
-                if (candidateItem.hidden) {
+                if (candidateItem.activeHidden) {
                     continue;
                 }
 
@@ -255,7 +255,7 @@ FocusScope {
         case WindowHeap.Direction.Down:
             for (let candidateIndex = 0; candidateIndex < windowsInstantiator.count; ++candidateIndex) {
                 const candidateItem = windowsInstantiator.objectAt(candidateIndex);
-                if (candidateItem.hidden) {
+                if (candidateItem.activeHidden) {
                     continue;
                 }
 
@@ -361,7 +361,7 @@ FocusScope {
                 // If the window heap has only one visible window, activate it.
                 for (let i = 0; i < windowsInstantiator.count; ++i) {
                     const candidateItem = windowsInstantiator.objectAt(i);
-                    if (candidateItem.hidden) {
+                    if (candidateItem.activeHidden) {
                         continue;
                     } else if (selectedItem) {
                         selectedItem = null;
