@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_clients\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-16 00:48+0000\n"
+"POT-Creation-Date: 2023-02-22 01:00+0000\n"
 "PO-Revision-Date: 2018-07-15 12:08+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@euskalnet.net>\n"
 "Language-Team: Basque <kde-i18n-doc@kde.org>\n"
@@ -23,49 +23,49 @@ msgstr ""
 "X-Generator: Lokalize 2.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: aurorae/src/aurorae.cpp:725
+#: aurorae/src/aurorae.cpp:737
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "Ñimiñoa"
 
-#: aurorae/src/aurorae.cpp:726
+#: aurorae/src/aurorae.cpp:738
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "Arrunta"
 
-#: aurorae/src/aurorae.cpp:727
+#: aurorae/src/aurorae.cpp:739
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "Handia"
 
-#: aurorae/src/aurorae.cpp:728
+#: aurorae/src/aurorae.cpp:740
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "Oso handia"
 
-#: aurorae/src/aurorae.cpp:729
+#: aurorae/src/aurorae.cpp:741
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "Itzela"
 
-#: aurorae/src/aurorae.cpp:730
+#: aurorae/src/aurorae.cpp:742
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "Erraldoia"
 
-#: aurorae/src/aurorae.cpp:731
+#: aurorae/src/aurorae.cpp:743
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "Neurriz kanpokoa"
 
-#: aurorae/src/aurorae.cpp:734
+#: aurorae/src/aurorae.cpp:746
 #, kde-format
 msgid "Button size:"
 msgstr "Botoiaren neurria:"

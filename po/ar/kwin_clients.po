@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_clients\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-16 00:48+0000\n"
+"POT-Creation-Date: 2023-02-22 01:00+0000\n"
 "PO-Revision-Date: 2021-06-29 12:37+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -20,49 +20,49 @@ msgstr ""
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 "X-Generator: Lokalize 21.07.70\n"
 
-#: aurorae/src/aurorae.cpp:725
+#: aurorae/src/aurorae.cpp:737
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "ضئيل"
 
-#: aurorae/src/aurorae.cpp:726
+#: aurorae/src/aurorae.cpp:738
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "عاديّ"
 
-#: aurorae/src/aurorae.cpp:727
+#: aurorae/src/aurorae.cpp:739
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "كبير"
 
-#: aurorae/src/aurorae.cpp:728
+#: aurorae/src/aurorae.cpp:740
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "كبير جدًّا"
 
-#: aurorae/src/aurorae.cpp:729
+#: aurorae/src/aurorae.cpp:741
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "ضخم"
 
-#: aurorae/src/aurorae.cpp:730
+#: aurorae/src/aurorae.cpp:742
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "ضخم جدًّا"
 
-#: aurorae/src/aurorae.cpp:731
+#: aurorae/src/aurorae.cpp:743
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "فوق الطّبيعيّ"
 
-#: aurorae/src/aurorae.cpp:734
+#: aurorae/src/aurorae.cpp:746
 #, kde-format
 msgid "Button size:"
 msgstr "حجم الزّرّ:"

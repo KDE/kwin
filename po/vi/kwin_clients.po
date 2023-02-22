@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_clients\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-11-16 00:48+0000\n"
+"POT-Creation-Date: 2023-02-22 01:00+0000\n"
 "PO-Revision-Date: 2021-07-31 16:11+0200\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -18,49 +18,49 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Lokalize 20.12.2\n"
 
-#: aurorae/src/aurorae.cpp:725
+#: aurorae/src/aurorae.cpp:737
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "Tí hon"
 
-#: aurorae/src/aurorae.cpp:726
+#: aurorae/src/aurorae.cpp:738
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "Thường"
 
-#: aurorae/src/aurorae.cpp:727
+#: aurorae/src/aurorae.cpp:739
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "Lớn"
 
-#: aurorae/src/aurorae.cpp:728
+#: aurorae/src/aurorae.cpp:740
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "Rất lớn"
 
-#: aurorae/src/aurorae.cpp:729
+#: aurorae/src/aurorae.cpp:741
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "Khổng lồ"
 
-#: aurorae/src/aurorae.cpp:730
+#: aurorae/src/aurorae.cpp:742
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "Rất khổng lồ"
 
-#: aurorae/src/aurorae.cpp:731
+#: aurorae/src/aurorae.cpp:743
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "Ngoại cỡ"
 
-#: aurorae/src/aurorae.cpp:734
+#: aurorae/src/aurorae.cpp:746
 #, kde-format
 msgid "Button size:"
 msgstr "Kích cỡ nút:"
