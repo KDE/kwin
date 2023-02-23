@@ -24,7 +24,6 @@
 class KLocalizedString;
 class NETRootInfo;
 class QAction;
-class Options;
 
 namespace KWaylandServer
 {
@@ -33,6 +32,8 @@ class PlasmaVirtualDesktopManagementInterface;
 
 namespace KWin
 {
+
+class Options;
 
 class KWIN_EXPORT VirtualDesktop : public QObject
 {

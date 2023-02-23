@@ -769,7 +769,13 @@ void X11Window::startupIdChanged()
     // launched). However don't affect the window's desktop if it's set to be on all desktops.
 
     if (asn_data.desktop() != 0 && !isOnAllDesktops()) {
-        workspace()->sendWindowToDesktop(this, asn_data.desktop(), true);
+        if (asn_data.desktop() == -1) {
+            workspace()->sendWindowToDesktops(this, {}, true);
+        } else {
+            if (VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(asn_data.desktop())) {
+                workspace()->sendWindowToDesktops(this, {desktop}, true);
+            }
+        }
     }
 
     if (asn_data.xinerama() != -1) {

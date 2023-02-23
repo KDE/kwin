@@ -13,6 +13,7 @@
 #include "effectloader.h"
 #include "effects.h"
 #include "pointer_input.h"
+#include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
@@ -133,10 +134,11 @@ void TranslucencyTest::testMoveAfterDesktopChange()
     QVERIFY(windowAddedSpy.wait());
     QVERIFY(!m_translucencyEffect->isActive());
     // let's send the window to desktop 2
-    effects->setNumberOfDesktops(2);
-    QCOMPARE(effects->numberOfDesktops(), 2);
-    workspace()->sendWindowToDesktop(window, 2, false);
-    effects->setCurrentDesktop(2);
+    VirtualDesktopManager *vds = VirtualDesktopManager::self();
+    vds->setCount(2);
+    const QVector<VirtualDesktop *> desktops = vds->desktops();
+    workspace()->sendWindowToDesktops(window, {desktops[1]}, false);
+    vds->setCurrent(desktops[1]);
     QVERIFY(!m_translucencyEffect->isActive());
     KWin::input()->pointer()->warp(window->frameGeometry().center());
     workspace()->performWindowOperation(window, Options::MoveOp);

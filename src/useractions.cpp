@@ -529,7 +529,7 @@ void UserActionsMenu::desktopPopupAboutToShow()
             return;
         }
         VirtualDesktopManager *vds = VirtualDesktopManager::self();
-        workspace()->sendWindowToDesktop(m_window, vds->currentDesktop()->x11DesktopNumber(), false);
+        workspace()->sendWindowToDesktops(m_window, {vds->currentDesktop()}, false);
     });
 
     action = m_desktopMenu->addAction(i18n("&All Desktops"));
@@ -559,7 +559,7 @@ void UserActionsMenu::desktopPopupAboutToShow()
         action = m_desktopMenu->addAction(basic_name.arg(legacyId).arg(desktop->name().replace(QLatin1Char('&'), QStringLiteral("&&"))));
         connect(action, &QAction::triggered, this, [this, desktop]() {
             if (m_window) {
-                workspace()->sendWindowToDesktop(m_window, desktop->x11DesktopNumber(), false);
+                workspace()->sendWindowToDesktops(m_window, {desktop}, false);
             }
         });
         action->setCheckable(true);
@@ -581,7 +581,7 @@ void UserActionsMenu::desktopPopupAboutToShow()
         VirtualDesktopManager *vds = VirtualDesktopManager::self();
         VirtualDesktop *desktop = vds->createVirtualDesktop(vds->count());
         if (desktop) {
-            workspace()->sendWindowToDesktop(m_window, desktop->x11DesktopNumber(), false);
+            workspace()->sendWindowToDesktops(m_window, {desktop}, false);
         }
     });
     action->setEnabled(vds->count() < vds->maximum());
@@ -1319,7 +1319,7 @@ void Workspace::slotActivateAttentionWindow()
 void Workspace::slotWindowToDesktop(VirtualDesktop *desktop)
 {
     if (USABLE_ACTIVE_WINDOW) {
-        sendWindowToDesktop(m_activeWindow, desktop->x11DesktopNumber(), true);
+        sendWindowToDesktops(m_activeWindow, {desktop}, true);
     }
 }
 

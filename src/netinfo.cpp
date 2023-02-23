@@ -255,9 +255,11 @@ WinInfo::WinInfo(X11Window *c, xcb_window_t window,
 {
 }
 
-void WinInfo::changeDesktop(int desktop)
+void WinInfo::changeDesktop(int desktopId)
 {
-    Workspace::self()->sendWindowToDesktop(m_client, desktop, true);
+    if (VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(desktopId)) {
+        Workspace::self()->sendWindowToDesktops(m_client, {desktop}, true);
+    }
 }
 
 void WinInfo::changeFullscreenMonitors(NETFullscreenMonitors topology)
