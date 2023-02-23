@@ -150,8 +150,10 @@ void PlacementTracker::saveGeometry(Window *window)
     }
 }
 
-void PlacementTracker::saveInteractionCounter(Window *window)
+void PlacementTracker::saveInteractionCounter()
 {
+    Window *window = qobject_cast<Window *>(QObject::sender());
+    Q_ASSERT(window);
     if (m_inhibitCount == 0) {
         m_data[m_currentKey][window].interactiveMoveResizeCount = window->interactiveMoveResizeCount();
     }

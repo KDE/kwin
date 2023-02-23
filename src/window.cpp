@@ -1606,7 +1606,7 @@ bool Window::startInteractiveMoveResize()
 
     updateElectricGeometryRestore();
     checkUnrestrictedInteractiveMoveResize();
-    Q_EMIT interactiveMoveResizeStarted(this);
+    Q_EMIT interactiveMoveResizeStarted();
     if (workspace()->screenEdges()->isDesktopSwitchingMovingClients()) {
         workspace()->screenEdges()->reserveDesktopSwitching(true, Qt::Vertical | Qt::Horizontal);
     }
@@ -1647,7 +1647,7 @@ void Window::finishInteractiveMoveResize(bool cancel)
     workspace()->outline()->hide();
 
     m_interactiveMoveResize.counter++;
-    Q_EMIT interactiveMoveResizeFinished(this);
+    Q_EMIT interactiveMoveResizeFinished();
 }
 
 // This function checks if it actually makes sense to perform a restricted move/resize.
@@ -2107,7 +2107,7 @@ void Window::handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y
             doInteractiveResizeSync(nextMoveResizeGeom);
         }
 
-        Q_EMIT interactiveMoveResizeStepped(this, nextMoveResizeGeom);
+        Q_EMIT interactiveMoveResizeStepped(nextMoveResizeGeom);
     }
 }
 

@@ -51,7 +51,7 @@ private:
     };
 
     void saveGeometry(Window *window);
-    void saveInteractionCounter(Window *window);
+    void saveInteractionCounter();
     void saveMaximize(KWin::Window *window, MaximizeMode mode);
     void saveQuickTile();
     void saveFullscreen();

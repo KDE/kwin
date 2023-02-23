@@ -1507,9 +1507,9 @@ Q_SIGNALS:
     void quickTileModeChanged();
     void moveResizedChanged();
     void moveResizeCursorChanged(CursorShape);
-    void interactiveMoveResizeStarted(KWin::Window *);
-    void interactiveMoveResizeStepped(KWin::Window *, const QRectF &);
-    void interactiveMoveResizeFinished(KWin::Window *);
+    void interactiveMoveResizeStarted();
+    void interactiveMoveResizeStepped(const QRectF &geometry);
+    void interactiveMoveResizeFinished();
     void closeableChanged(bool);
     void minimizeableChanged(bool);
     void shadeableChanged(bool);

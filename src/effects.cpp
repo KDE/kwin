@@ -296,13 +296,13 @@ void EffectsHandlerImpl::setupWindowConnections(Window *window)
                     Q_EMIT windowFrameGeometryAboutToChange(w);
                 }
             });
-    connect(window, &Window::interactiveMoveResizeStarted, this, [this](Window *window) {
+    connect(window, &Window::interactiveMoveResizeStarted, this, [this, window]() {
         Q_EMIT windowStartUserMovedResized(window->effectWindow());
     });
-    connect(window, &Window::interactiveMoveResizeStepped, this, [this](Window *window, const QRectF &geometry) {
+    connect(window, &Window::interactiveMoveResizeStepped, this, [this, window](const QRectF &geometry) {
         Q_EMIT windowStepUserMovedResized(window->effectWindow(), geometry);
     });
-    connect(window, &Window::interactiveMoveResizeFinished, this, [this](Window *window) {
+    connect(window, &Window::interactiveMoveResizeFinished, this, [this, window]() {
         Q_EMIT windowFinishUserMovedResized(window->effectWindow());
     });
     connect(window, &Window::opacityChanged, this, &EffectsHandlerImpl::slotOpacityChanged);
