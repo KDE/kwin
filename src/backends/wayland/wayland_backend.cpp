@@ -431,7 +431,9 @@ WaylandBackend::~WaylandBackend()
     m_seat.reset();
     m_display.reset();
 
-    gbm_device_destroy(m_gbmDevice);
+    if (m_gbmDevice) {
+        gbm_device_destroy(m_gbmDevice);
+    }
     qCDebug(KWIN_WAYLAND_BACKEND) << "Destroyed Wayland display";
 }
 
@@ -554,7 +556,7 @@ void WaylandBackend::togglePointerLock()
 QVector<CompositingType> WaylandBackend::supportedCompositors() const
 {
     QVector<CompositingType> ret;
-    if (m_display->linuxDmabuf()) {
+    if (m_display->linuxDmabuf() && m_gbmDevice) {
         ret.append(OpenGLCompositing);
     }
     ret.append(QPainterCompositing);
