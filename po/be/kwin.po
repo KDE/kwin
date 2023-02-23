@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-21 01:01+0000\n"
+"POT-Creation-Date: 2023-02-23 00:59+0000\n"
 "PO-Revision-Date: 2023-02-09 08:31\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -1178,7 +1178,7 @@ msgstr "Планшэт перамешчаны на %1"
 msgid "Tablets switched outputs"
 msgstr "Пераключаныя вывады планшэтаў"
 
-#: input.cpp:3065
+#: input.cpp:3064
 #, kde-format
 msgid "Touchpad"
 msgstr "Сэнсарная панэль"

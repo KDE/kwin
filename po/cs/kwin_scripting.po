@@ -36,11 +36,3 @@ msgstr "%1 neobsahuje platný soubor metadata.json"
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
 msgstr "%1 neexistuje"
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Vít Pelčák"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "vit@pelcak.org"

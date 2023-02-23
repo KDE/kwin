@@ -135,6 +135,3 @@ msgstr "%1 ms"
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Zobrazit ukazatele rozložení plochy"
-
-#~ msgid "Virtual Desktops"
-#~ msgstr "Virtuální plochy"

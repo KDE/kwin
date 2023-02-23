@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-21 01:01+0000\n"
+"POT-Creation-Date: 2023-02-23 00:59+0000\n"
 "PO-Revision-Date: 2023-02-14 08:17+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -1183,7 +1183,7 @@ msgstr "Виконано перемикання планшета на %1"
 msgid "Tablets switched outputs"
 msgstr "Виконано перемикання виведення планшетів"
 
-#: input.cpp:3065
+#: input.cpp:3064
 #, kde-format
 msgid "Touchpad"
 msgstr "Сенсорна панель"

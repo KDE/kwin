@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-21 01:01+0000\n"
+"POT-Creation-Date: 2023-02-23 00:59+0000\n"
 "PO-Revision-Date: 2023-02-16 09:43+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -1174,7 +1174,7 @@ msgstr "Таблетът е преместен в %1"
 msgid "Tablets switched outputs"
 msgstr "Пренасочени изходи на таблети"
 
-#: input.cpp:3065
+#: input.cpp:3064
 #, kde-format
 msgid "Touchpad"
 msgstr "Тъчпад"

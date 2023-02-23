@@ -917,22 +917,3 @@ msgstr "Nespravované okno"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Lukáš Tinkl,Jakub Friedl,Klára Cihlářová,Marián Kyral,David Kolibáč"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr ""
-#~ "lukas@kde.org,jfriedl@suse.cz,koty@seznam.cz,mkyral@email.cz,"
-#~ "david@kolibac.cz"
-
-#~ msgid "Window Rules"
-#~ msgstr "Pravidla oken"
-
-#~ msgid "Ismael Asensio"
-#~ msgstr "Ismael Asensio"
-
-#~ msgid "Author"
-#~ msgstr "Autor"

@@ -31,17 +31,3 @@ msgstr "Nepoužívat virtuální klávesnici"
 #, kde-format
 msgid "This module lets you choose the virtual keyboard to use."
 msgstr "Tento modul vám umožní nastavit virtuální klávesnici."
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Vít Pelčák"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "vit@pelcak.org"
-
-#~ msgid "Virtual Keyboard"
-#~ msgstr "Virtuální klávesnice"
-
-#~ msgid "Choose Virtual Keyboard"
-#~ msgstr "Vyberte virtuální klávesnici"

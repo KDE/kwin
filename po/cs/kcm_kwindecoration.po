@@ -256,20 +256,3 @@ msgstr "Velmi obrovský"
 #, kde-format
 msgid "Oversized"
 msgstr "Nadměrný"
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Vít Pelčák"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "vit@pelcak.org"
-
-#~ msgid "Window Decorations"
-#~ msgstr "Dekorace oken"
-
-#~ msgid "Valerio Pilo"
-#~ msgstr "Valerio Pilo"
-
-#~ msgid "Author"
-#~ msgstr "Autor"

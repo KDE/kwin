@@ -69,17 +69,3 @@ msgstr "Vyjmout interní efekty"
 #, kde-format
 msgid "Get New Desktop Effects..."
 msgstr "Získat nové efekty pracovní plochy..."
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Vít Pelčák"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "vit@pelcak.org"
-
-#~ msgid "Desktop Effects"
-#~ msgstr "Efekty na ploše"
-
-#~ msgid "Vlad Zahorodnii"
-#~ msgstr "Vlad Zahorodnii"
