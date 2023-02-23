@@ -1377,9 +1377,7 @@ void XdgToplevelWindow::initialize()
     setOnActivities(rules()->checkActivity(activities(), true));
     setDesktops(rules()->checkDesktops(desktops(), true));
     setDesktopFileName(rules()->checkDesktopFile(desktopFileName(), true));
-    if (rules()->checkMinimize(isMinimized(), true)) {
-        minimize(true); // No animation.
-    }
+    setMinimized(rules()->checkMinimize(isMinimized(), true));
     setSkipTaskbar(rules()->checkSkipTaskbar(skipTaskbar(), true));
     setSkipPager(rules()->checkSkipPager(skipPager(), true));
     setSkipSwitcher(rules()->checkSkipSwitcher(skipSwitcher(), true));

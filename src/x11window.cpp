@@ -859,9 +859,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         }
     }
 
-    if (init_minimize) {
-        minimize(true); // No animation
-    }
+    setMinimized(init_minimize);
 
     // Other settings from the previous session
     if (session) {
