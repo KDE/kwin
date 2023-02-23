@@ -65,6 +65,7 @@
         "Description[pl]": "Efekt zmiany kształtu podpowiedzi i powiadomień przy zmianie ich geometrii",
         "Description[pt]": "Animações desvanecidas quando as dicas ou notificações mudam de tamanho",
         "Description[ru]": "При изменении формы всплывающих подсказок или уведомлений они плавно растягиваются или сжимаются",
+        "Description[sk]": "Prelínacia animácia pri tooltipoch alebo notifikáciách pri zmene ich geometrie",
         "Description[sl]": "Animacija navzkrižnega preliva, ko se orodnim namigom ali obvestilom spremeni geometrija",
         "Description[ta]": "கருவித்துப்புகளின் மற்றும் அறிவிப்புகளின் அளவை மாற்றும்போது அவற்றை மங்கசெய்து மாற்றும்",
         "Description[tr]": "Araç ipuçları veya bildirimler boyutları değiştiğinde gösterilecek çapraz geçiş canlandırması",
