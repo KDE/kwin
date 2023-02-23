@@ -978,8 +978,8 @@ public:
     /**
      * Minimizes this window plus its transients
      */
-    void minimize(bool avoid_animation = false);
-    void unminimize(bool avoid_animation = false);
+    void minimize();
+    void unminimize();
     bool isMinimized() const
     {
         return m_minimized;
@@ -1497,8 +1497,6 @@ Q_SIGNALS:
     void desktopChanged();
     void activitiesChanged(KWin::Window *window);
     void minimizedChanged();
-    void clientMinimized(KWin::Window *window, bool animate);
-    void clientUnminimized(KWin::Window *window, bool animate);
     void paletteChanged(const QPalette &p);
     void colorSchemeChanged();
     void captionChanged();

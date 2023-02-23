@@ -39,8 +39,7 @@ void IdleInhibition::registerClient(Window *client)
 
     m_connections[client] = connect(client->surface(), &SurfaceInterface::inhibitsIdleChanged, this, updateInhibit);
     connect(client, &Window::desktopChanged, this, updateInhibit);
-    connect(client, &Window::clientMinimized, this, updateInhibit);
-    connect(client, &Window::clientUnminimized, this, updateInhibit);
+    connect(client, &Window::minimizedChanged, this, updateInhibit);
     connect(client, &Window::windowHidden, this, updateInhibit);
     connect(client, &Window::windowShown, this, updateInhibit);
     connect(client, &Window::windowClosed, this, [this, client]() {

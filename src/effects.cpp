@@ -308,15 +308,10 @@ void EffectsHandlerImpl::setupWindowConnections(Window *window)
         Q_EMIT windowFinishUserMovedResized(window->effectWindow());
     });
     connect(window, &Window::opacityChanged, this, &EffectsHandlerImpl::slotOpacityChanged);
-    connect(window, &Window::clientMinimized, this, [this](Window *window, bool animate) {
-        // TODO: notify effects even if it should not animate?
-        if (animate) {
+    connect(window, &Window::minimizedChanged, this, [this, window]() {
+        if (window->isMinimized()) {
             Q_EMIT windowMinimized(window->effectWindow());
-        }
-    });
-    connect(window, &Window::clientUnminimized, this, [this](Window *window, bool animate) {
-        // TODO: notify effects even if it should not animate?
-        if (animate) {
+        } else {
             Q_EMIT windowUnminimized(window->effectWindow());
         }
     });
