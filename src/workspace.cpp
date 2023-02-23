@@ -770,7 +770,6 @@ void Workspace::updateOutputConfiguration()
 
 void Workspace::setupWindowConnections(Window *window)
 {
-    connect(window, &Window::desktopPresenceChanged, this, &Workspace::desktopPresenceChanged);
     connect(window, &Window::minimizedChanged, this, std::bind(&Workspace::windowMinimizedChanged, this, window));
     connect(window, &Window::fullScreenChanged, m_screenEdges.get(), &ScreenEdges::checkBlocking);
 }

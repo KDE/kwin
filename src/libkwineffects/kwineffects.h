@@ -1460,15 +1460,6 @@ Q_SIGNALS:
     void desktopChangingCancelled();
 
     /**
-     * Signal emitted when a window moved to another desktop
-     * NOTICE that this does NOT imply that the desktop has changed
-     * The @param window which is moved to the new desktop
-     * @param oldDesktop The previous desktop of the window
-     * @param newDesktop The new desktop of the window
-     * @since 4.11.4
-     */
-    void desktopPresenceChanged(KWin::EffectWindow *window, int oldDesktop, int newDesktop);
-    /**
      * Emitted when the virtual desktop grid layout changes
      * @param size new size
      * @since 5.25
@@ -1933,6 +1924,11 @@ Q_SIGNALS:
     void startupRemoved(const QString &id);
 
     void inputPanelChanged();
+
+    /**
+     * This signal is emitted when a window enters or leaves a virtual desktop.
+     */
+    void windowDesktopsChanged(KWin::EffectWindow *window);
 
 protected:
     QVector<EffectPair> loaded_effects;

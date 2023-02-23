@@ -158,12 +158,6 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *s
     connect(ws, &Workspace::currentDesktopChangingCancelled, this, [this]() {
         Q_EMIT desktopChangingCancelled();
     });
-    connect(ws, &Workspace::desktopPresenceChanged, this, [this](Window *window, int old) {
-        if (!window->effectWindow()) {
-            return;
-        }
-        Q_EMIT desktopPresenceChanged(window->effectWindow(), old, window->desktop());
-    });
     connect(ws, &Workspace::windowAdded, this, [this](Window *window) {
         if (window->readyForPainting()) {
             slotWindowShown(window);
@@ -353,6 +347,9 @@ void EffectsHandlerImpl::setupWindowConnections(Window *window)
     });
     connect(window, &Window::decorationChanged, this, [this, window]() {
         Q_EMIT windowDecorationChanged(window->effectWindow());
+    });
+    connect(window, &Window::desktopChanged, this, [this, window]() {
+        Q_EMIT windowDesktopsChanged(window->effectWindow());
     });
 }
 

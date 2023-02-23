@@ -59,7 +59,6 @@ private Q_SLOTS:
     void cleanup();
 
     void testMapUnmap();
-    void testDesktopPresenceChanged();
     void testWindowOutputs();
     void testMinimizeActiveWindow();
     void testFullscreen_data();
@@ -251,36 +250,6 @@ void TestXdgShellWindow::testMapUnmap()
     // Destroy the test window.
     shellSurface.reset();
     QVERIFY(Test::waitForWindowDestroyed(window));
-}
-
-void TestXdgShellWindow::testDesktopPresenceChanged()
-{
-    // this test verifies that the desktop presence changed signals are properly emitted
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
-    QVERIFY(window);
-    QCOMPARE(window->desktop(), 1);
-    effects->setNumberOfDesktops(4);
-    QSignalSpy desktopPresenceChangedClientSpy(window, &Window::desktopPresenceChanged);
-    QSignalSpy desktopPresenceChangedWorkspaceSpy(workspace(), &Workspace::desktopPresenceChanged);
-    QSignalSpy desktopPresenceChangedEffectsSpy(effects, &EffectsHandler::desktopPresenceChanged);
-
-    // let's change the desktop
-    workspace()->sendWindowToDesktop(window, 2, false);
-    QCOMPARE(window->desktop(), 2);
-    QCOMPARE(desktopPresenceChangedClientSpy.count(), 1);
-    QCOMPARE(desktopPresenceChangedWorkspaceSpy.count(), 1);
-    QCOMPARE(desktopPresenceChangedEffectsSpy.count(), 1);
-
-    // verify the arguments
-    QCOMPARE(desktopPresenceChangedClientSpy.first().at(0).value<Window *>(), window);
-    QCOMPARE(desktopPresenceChangedClientSpy.first().at(1).toInt(), 1);
-    QCOMPARE(desktopPresenceChangedWorkspaceSpy.first().at(0).value<Window *>(), window);
-    QCOMPARE(desktopPresenceChangedWorkspaceSpy.first().at(1).toInt(), 1);
-    QCOMPARE(desktopPresenceChangedEffectsSpy.first().at(0).value<EffectWindow *>(), window->effectWindow());
-    QCOMPARE(desktopPresenceChangedEffectsSpy.first().at(1).toInt(), 1);
-    QCOMPARE(desktopPresenceChangedEffectsSpy.first().at(2).toInt(), 2);
 }
 
 void TestXdgShellWindow::testWindowOutputs()

@@ -573,7 +573,6 @@ Q_SIGNALS:
     void geometryChanged();
 
     // Signals required for the scripting interface
-    void desktopPresenceChanged(KWin::Window *, int);
     void currentActivityChanged();
     void currentDesktopChanged(int, KWin::Window *);
     void currentDesktopChanging(uint currentDesktop, QPointF delta, KWin::Window *); // for realtime animations

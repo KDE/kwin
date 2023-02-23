@@ -1494,7 +1494,6 @@ Q_SIGNALS:
      * Emitted whenever the demands attention state changes.
      */
     void demandsAttentionChanged();
-    void desktopPresenceChanged(KWin::Window *, int); // to be forwarded by Workspace
     void desktopChanged();
     void activitiesChanged(KWin::Window *window);
     void minimizedChanged();

@@ -1060,9 +1060,7 @@ void Window::setDesktops(QVector<VirtualDesktop *> desktops)
         return;
     }
 
-    int was_desk = Window::desktop();
-    const bool wasOnCurrentDesktop = isOnCurrentDesktop() && was_desk >= 0;
-
+    const bool wasOnAllDesktops = isOnAllDesktops();
     m_desktops = desktops;
 
     if (windowManagementInterface()) {
@@ -1087,8 +1085,7 @@ void Window::setDesktops(QVector<VirtualDesktop *> desktops)
         info->setDesktop(desktop());
     }
 
-    if ((was_desk == NET::OnAllDesktops) != (desktop() == NET::OnAllDesktops)) {
-        // onAllDesktops changed
+    if (isOnAllDesktops() != wasOnAllDesktops) {
         workspace()->updateOnAllDesktopsOfTransients(this);
     }
 
@@ -1113,9 +1110,6 @@ void Window::setDesktops(QVector<VirtualDesktop *> desktops)
     updateWindowRules(Rules::Desktops);
 
     Q_EMIT desktopChanged();
-    if (wasOnCurrentDesktop != isOnCurrentDesktop()) {
-        Q_EMIT desktopPresenceChanged(this, was_desk);
-    }
 }
 
 void Window::doSetDesktop()

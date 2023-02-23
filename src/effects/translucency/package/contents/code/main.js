@@ -206,8 +206,8 @@ var translucencyEffect = {
     },
     init: function () {
         effect.configChanged.connect(translucencyEffect.loadConfig);
-        effects.desktopPresenceChanged.connect(translucencyEffect.cancelAnimations);
-        effects.desktopPresenceChanged.connect(translucencyEffect.startAnimation);
+        effects.windowDesktopsChanged.connect(translucencyEffect.cancelAnimations);
+        effects.windowDesktopsChanged.connect(translucencyEffect.startAnimation);
         effects.windowAdded.connect(translucencyEffect.startAnimation);
         effects.windowUnminimized.connect(translucencyEffect.startAnimation);
         effects.windowClosed.connect(translucencyEffect.cancelAnimations);
