@@ -10,6 +10,7 @@
 #include "idle_inhibition.h"
 #include "deleted.h"
 #include "input.h"
+#include "virtualdesktops.h"
 #include "wayland/surface_interface.h"
 #include "window.h"
 #include "workspace.h"

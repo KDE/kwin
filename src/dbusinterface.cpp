@@ -365,7 +365,7 @@ VirtualDesktopManagerDBusInterface::VirtualDesktopManagerDBusInterface(VirtualDe
                                                  QStringLiteral("org.kde.KWin.VirtualDesktopManager"),
                                                  this);
 
-    connect(m_manager, &VirtualDesktopManager::currentChanged, this, [this](uint previousDesktop, uint newDesktop) {
+    connect(m_manager, &VirtualDesktopManager::currentChanged, this, [this]() {
         Q_EMIT currentChanged(m_manager->currentDesktop()->id());
     });
 

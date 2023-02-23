@@ -557,8 +557,8 @@ private Q_SLOTS:
     void slotReloadConfig();
     void updateCurrentActivity(const QString &new_activity);
     // virtual desktop handling
-    void slotCurrentDesktopChanged(uint oldDesktop, uint newDesktop);
-    void slotCurrentDesktopChanging(uint currentDesktop, QPointF delta);
+    void slotCurrentDesktopChanged(VirtualDesktop *previousDesktop, VirtualDesktop *newDesktop);
+    void slotCurrentDesktopChanging(VirtualDesktop *currentDesktop, QPointF delta);
     void slotCurrentDesktopChangingCancelled();
     void slotDesktopAdded(VirtualDesktop *desktop);
     void slotDesktopRemoved(VirtualDesktop *desktop);
@@ -574,8 +574,8 @@ Q_SIGNALS:
 
     // Signals required for the scripting interface
     void currentActivityChanged();
-    void currentDesktopChanged(int, KWin::Window *);
-    void currentDesktopChanging(uint currentDesktop, QPointF delta, KWin::Window *); // for realtime animations
+    void currentDesktopChanged(KWin::VirtualDesktop *previousDesktop, KWin::Window *);
+    void currentDesktopChanging(KWin::VirtualDesktop *currentDesktop, QPointF delta, KWin::Window *); // for realtime animations
     void currentDesktopChangingCancelled();
     void windowAdded(KWin::Window *);
     void windowRemoved(KWin::Window *);

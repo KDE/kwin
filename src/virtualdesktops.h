@@ -388,7 +388,7 @@ Q_SIGNALS:
      * @param previousDesktop The virtual desktop changed from
      * @param newDesktop The virtual desktop changed to
      */
-    void currentChanged(uint previousDesktop, uint newDesktop);
+    void currentChanged(KWin::VirtualDesktop *previousDesktop, KWin::VirtualDesktop *newDesktop);
 
     /**
      * Signal emmitted for realtime desktop switching animations.
@@ -397,7 +397,7 @@ Q_SIGNALS:
      * Offset x and y are negative if switching Left and Down.
      * Example: x = 0.6 means 60% of the way to the desktop to the right.
      */
-    void currentChanging(uint currentDesktop, QPointF offset);
+    void currentChanging(KWin::VirtualDesktop *currentDesktop, QPointF offset);
     void currentChangingCancelled();
 
     /**

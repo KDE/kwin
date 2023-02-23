@@ -12,6 +12,7 @@
 #include "scene/surfaceitem_internal.h"
 #include "scene/surfaceitem_wayland.h"
 #include "scene/surfaceitem_x11.h"
+#include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
