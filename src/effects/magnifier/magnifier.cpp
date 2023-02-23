@@ -132,13 +132,15 @@ void MagnifierEffect::paintScreen(int mask, const QRegion &region, ScreenPaintDa
             m_texture->render(area.size(), scale);
             ShaderManager::instance()->popShader();
             m_texture->unbind();
-            QVector<float> verts;
+
             GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
             vbo->reset();
             vbo->setColor(QColor(0, 0, 0));
 
             QRectF areaF = scaledRect(area, scale);
             const QRectF frame = scaledRect(area.adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH), scale);
+            QVector<float> verts;
+            verts.reserve(4 * 6 * 2);
             // top frame
             verts << frame.right() << frame.top();
             verts << frame.left() << frame.top();
