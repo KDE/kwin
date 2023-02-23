@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2015 Martin Gräßlin <mgraesslin@kde.org>
+    SPDX-FileCopyrightText: 2023 Harald Sitter <sitter@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -160,6 +161,7 @@ X11WindowedBackend::X11WindowedBackend(const X11WindowedBackendOptions &options)
 
 X11WindowedBackend::~X11WindowedBackend()
 {
+    destroyOutputs();
     m_pointerDevice.reset();
     m_keyboardDevice.reset();
     m_touchDevice.reset();
@@ -172,6 +174,7 @@ X11WindowedBackend::~X11WindowedBackend()
             xcb_key_symbols_free(m_keySymbols);
         }
         xcb_disconnect(m_connection);
+        m_connection = nullptr;
     }
 }
 
@@ -689,6 +692,16 @@ QVector<CompositingType> X11WindowedBackend::supportedCompositors() const
 Outputs X11WindowedBackend::outputs() const
 {
     return m_outputs;
+}
+
+void X11WindowedBackend::destroyOutputs()
+{
+    while (!m_outputs.isEmpty()) {
+        auto output = m_outputs.takeLast();
+        output->updateEnabled(false);
+        Q_EMIT outputRemoved(output);
+        delete output;
+    }
 }
 
 } // namespace KWin

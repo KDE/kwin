@@ -129,6 +129,7 @@ private:
     void updateSize(xcb_configure_notify_event_t *event);
     void initXInput();
     X11WindowedOutput *findOutput(xcb_window_t window) const;
+    void destroyOutputs();
 
     X11WindowedBackendOptions m_options;
     xcb_connection_t *m_connection = nullptr;
