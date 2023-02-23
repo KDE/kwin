@@ -89,7 +89,6 @@ private:
     {
         std::unique_ptr<GLTexture> texture;
         std::unique_ptr<GLFramebuffer> framebuffer;
-        std::unique_ptr<GLVertexBuffer> vbo;
         QRect viewport;
     };
 
