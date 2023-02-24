@@ -139,7 +139,7 @@ void Module::save()
     PackageStructure *structure = PackageLoader::self()->loadPackageStructure(QStringLiteral("KWin/Script"));
     for (const KPluginMetaData &info : std::as_const(m_pendingDeletions)) {
         // We can get the package root from the entry path
-        QDir root = QFileInfo(info.metaDataFileName()).dir();
+        QDir root = QFileInfo(info.fileName()).dir();
         root.cdUp();
         KJob *uninstallJob = Package(structure).uninstall(info.pluginId(), root.absolutePath());
         connect(uninstallJob, &KJob::result, this, [this, uninstallJob]() {

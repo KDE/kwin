@@ -58,7 +58,7 @@ void AuroraePackage::pathChanged(KPackage::Package *package)
         return;
     }
 
-    KPluginMetaData md(package->metadata().metaDataFileName());
+    KPluginMetaData md(package->metadata().fileName());
 
     if (!md.pluginId().isEmpty()) {
         QString configrc = md.pluginId() + "rc";

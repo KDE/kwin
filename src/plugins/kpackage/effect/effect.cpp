@@ -36,7 +36,7 @@ void EffectPackageStructure::pathChanged(KPackage::Package *package)
         return;
     }
 
-    const KPluginMetaData md(package->metadata().metaDataFileName());
+    const KPluginMetaData md(package->metadata().fileName());
     const QString mainScript = md.value("X-Plasma-MainScript");
     if (mainScript.isEmpty()) {
         return;

@@ -35,7 +35,7 @@ void DecorationPackage::pathChanged(KPackage::Package *package)
         return;
     }
 
-    KPluginMetaData md(package->metadata().metaDataFileName());
+    KPluginMetaData md(package->metadata().fileName());
     QString mainScript = md.value("X-Plasma-MainScript");
 
     if (!mainScript.isEmpty()) {

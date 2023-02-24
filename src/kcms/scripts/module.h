@@ -38,7 +38,7 @@ public:
     Q_INVOKABLE void togglePendingDeletion(const KPluginMetaData &data);
     Q_INVOKABLE bool canDeleteEntry(const KPluginMetaData &data)
     {
-        return QFileInfo(data.metaDataFileName()).isWritable();
+        return QFileInfo(data.fileName()).isWritable();
     }
 
     QList<KPluginMetaData> pendingDeletions()
