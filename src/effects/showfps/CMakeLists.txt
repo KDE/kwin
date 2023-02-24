@@ -12,7 +12,7 @@ kwin4_add_effect_module(kwin4_effect_showfps ${showfps_SOURCES})
 target_link_libraries(kwin4_effect_showfps PRIVATE
     kwineffects
 
-    KF5::I18n
+    KF6::I18n
 
     Qt::Quick
     )

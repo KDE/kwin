@@ -15,10 +15,10 @@ target_link_libraries(kwin4_effect_magnifier PRIVATE
     kwineffects
     kwinglutils
 
-    KF5::ConfigGui
-    KF5::ConfigWidgets
-    KF5::GlobalAccel
-    KF5::I18n
+    KF6::ConfigGui
+    KF6::ConfigWidgets
+    KF6::GlobalAccel
+    KF6::I18n
 )
 
 #######################################
@@ -31,11 +31,11 @@ if (KWIN_BUILD_KCMS)
     kwin_add_effect_config(kwin_magnifier_config ${kwin_magnifier_config_SRCS})
 
     target_link_libraries(kwin_magnifier_config
-        KF5::ConfigWidgets
-        KF5::CoreAddons
-        KF5::GlobalAccel
-        KF5::I18n
-        KF5::XmlGui
+        KF6::ConfigWidgets
+        KF6::CoreAddons
+        KF6::GlobalAccel
+        KF6::I18n
+        KF6::XmlGui
         KWinEffectsInterface
     )
 endif()

@@ -56,7 +56,7 @@ private:
     };
 
     RemoteMatch desktopMatch(const VirtualDesktop *desktop, const WindowsRunnerAction action = ActivateDesktopAction, qreal relevance = 1.0) const;
-    RemoteMatch windowsMatch(const Window *window, const WindowsRunnerAction action = ActivateAction, qreal relevance = 1.0, Plasma::QueryMatch::Type type = Plasma::QueryMatch::ExactMatch) const;
+    RemoteMatch windowsMatch(const Window *window, const WindowsRunnerAction action = ActivateAction, qreal relevance = 1.0, KRunner::QueryMatch::Type type = KRunner::QueryMatch::ExactMatch) const;
     bool actionSupported(const Window *window, const WindowsRunnerAction action) const;
 };
 }

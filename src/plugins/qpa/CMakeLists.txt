@@ -24,7 +24,7 @@ target_compile_definitions(KWinQpaPlugin PRIVATE QT_STATICPLUGIN)
 target_link_libraries(KWinQpaPlugin PRIVATE
     Qt::CorePrivate
     Qt::GuiPrivate
-    Freetype::Freetype # Must be after Qt5 platform support libs
+    Freetype::Freetype # Must be after Qt6 platform support libs
     Fontconfig::Fontconfig
     kwin
 )

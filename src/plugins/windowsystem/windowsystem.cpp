@@ -43,15 +43,6 @@ WId WindowSystem::activeWindow()
     return 0;
 }
 
-bool WindowSystem::allowedActionsSupported()
-{
-    return false;
-}
-
-void WindowSystem::allowExternalProcessWindowActivation(int pid)
-{
-}
-
 bool WindowSystem::compositingActive()
 {
     // wayland is always composited
@@ -73,32 +64,9 @@ int WindowSystem::currentDesktop()
     return 0;
 }
 
-#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 101)
-void WindowSystem::demandAttention(WId win, bool set)
-{
-}
-#endif
-
 QString WindowSystem::desktopName(int desktop)
 {
     return QString();
-}
-
-QPoint WindowSystem::desktopToViewport(int desktop, bool absolute)
-{
-    return QPoint();
-}
-
-#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 0)
-WId WindowSystem::groupLeader(WId window)
-{
-    return 0;
-}
-#endif
-
-bool WindowSystem::icccmCompliantMappingState()
-{
-    return false;
 }
 
 QPixmap WindowSystem::icon(WId win, int width, int height, bool scale, int flags)
@@ -138,10 +106,6 @@ QString WindowSystem::readNameProperty(WId window, long unsigned int atom)
     return QString();
 }
 
-void WindowSystem::setBlockingCompositing(WId window, bool active)
-{
-}
-
 void WindowSystem::setCurrentDesktop(int desktop)
 {
     // KWin internal should not use KWindowSystem to set current desktop
@@ -159,12 +123,6 @@ void WindowSystem::setExtendedStrut(WId win, int left_width, int left_start, int
 void WindowSystem::setStrut(WId win, int left, int right, int top, int bottom)
 {
 }
-
-#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 101)
-void WindowSystem::setIcons(WId win, const QPixmap &icon, const QPixmap &miniIcon)
-{
-}
-#endif
 
 void WindowSystem::setOnActivities(WId win, const QStringList &activities)
 {
@@ -206,10 +164,6 @@ void WindowSystem::setType(WId win, NET::WindowType windowType)
     (*it)->setProperty("kwin_windowType", QVariant::fromValue(windowType));
 }
 
-void WindowSystem::setUserTime(WId win, long int time)
-{
-}
-
 bool WindowSystem::showingDesktop()
 {
     // KWin should not use KWindowSystem for showing desktop state
@@ -220,18 +174,6 @@ QList<WId> WindowSystem::stackingOrder()
 {
     // KWin should not use KWindowSystem for stacking order
     return {};
-}
-
-#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 0)
-WId WindowSystem::transientFor(WId window)
-{
-    return 0;
-}
-#endif
-
-int WindowSystem::viewportToDesktop(const QPoint &pos)
-{
-    return 0;
 }
 
 int WindowSystem::viewportWindowToDesktop(const QRect &r)

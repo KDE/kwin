@@ -31,15 +31,15 @@ set(kwin_kcm_rules_XCB_LIBS
 set(kcm_libs
     Qt::Quick
 
-    KF5::KCMUtils
-    KF5::I18n
-    KF5::QuickAddons
-    KF5::WindowSystem
-    KF5::XmlGui
+    KF6::KCMUtils
+    KF6::I18n
+    KF6::QuickAddons
+    KF6::WindowSystem
+    KF6::XmlGui
 )
 
 if (KWIN_BUILD_ACTIVITIES)
-    set(kcm_libs ${kcm_libs} KF5::Activities)
+    set(kcm_libs ${kcm_libs} KF6::Activities)
 endif()
 target_link_libraries(KWinRulesObjects ${kcm_libs} ${kwin_kcm_rules_XCB_LIBS})
 

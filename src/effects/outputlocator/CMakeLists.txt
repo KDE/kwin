@@ -8,7 +8,7 @@ target_link_libraries(kwin4_effect_outputlocator PRIVATE
     kwineffects
     Qt::DBus
     Qt::Quick
-    KF5::I18n
+    KF6::I18n
 )
 
 install(DIRECTORY qml DESTINATION ${KDE_INSTALL_DATADIR}/kwin/effects/outputlocator)

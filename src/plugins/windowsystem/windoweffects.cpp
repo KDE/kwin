@@ -69,31 +69,6 @@ void WindowEffects::slideWindow(WId id, KWindowEffects::SlideFromLocation locati
     w->setProperty("kwin_slide_offset", offset);
 }
 
-#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 81)
-QList<QSize> WindowEffects::windowSizes(const QList<WId> &ids)
-{
-    return {};
-}
-#endif
-
-#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 82)
-void WindowEffects::presentWindows(WId controller, const QList<WId> &ids)
-{
-}
-#endif
-
-#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 82)
-void WindowEffects::presentWindows(WId controller, int desktop)
-{
-}
-#endif
-
-#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 82)
-void WindowEffects::highlightWindows(WId controller, const QList<WId> &ids)
-{
-}
-#endif
-
 void WindowEffects::enableBlurBehind(WId window, bool enable, const QRegion &region)
 {
     auto w = findWindow(window);
@@ -125,11 +100,5 @@ void WindowEffects::enableBackgroundContrast(WId window, bool enable, qreal cont
         w->setProperty("kwin_background_saturation", {});
     }
 }
-
-#if KWINDOWSYSTEM_BUILD_DEPRECATED_SINCE(5, 67)
-void WindowEffects::markAsDashboard(WId window)
-{
-}
-#endif
 
 }

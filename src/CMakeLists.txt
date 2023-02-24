@@ -189,16 +189,16 @@ target_link_libraries(kwin
     Qt::DBus
     Qt::Quick
 
-    KF5::ConfigCore
-    KF5::ConfigWidgets
-    KF5::CoreAddons
-    KF5::Crash
-    KF5::GlobalAccel
-    KF5::GlobalAccelPrivate
-    KF5::I18n
-    KF5::Package
-    KF5::Service
-    KF5::WindowSystem
+    KF6::ConfigCore
+    KF6::ConfigWidgets
+    KF6::CoreAddons
+    KF6::Crash
+    KF6::GlobalAccel
+    KF6::GlobalAccelPrivate
+    KF6::I18n
+    KF6::Package
+    KF6::Service
+    KF6::WindowSystem
 
     KDecoration2::KDecoration
     KDecoration2::KDecoration2Private
@@ -228,11 +228,11 @@ target_link_libraries(kwin
     lcms2::lcms2
 )
 if (QT_MAJOR_VERSION EQUAL "5")
-    target_link_libraries(kwin Qt5::X11Extras Qt5::XkbCommonSupportPrivate)
+    target_link_libraries(kwin Qt6::X11Extras Qt6::XkbCommonSupportPrivate)
 endif()
 
 if (KWIN_BUILD_NOTIFICATIONS)
-    target_link_libraries(kwin KF5::Notifications)
+    target_link_libraries(kwin KF6::Notifications)
 endif()
 
 kconfig_add_kcfg_files(kwin
@@ -257,7 +257,7 @@ qt_add_dbus_adaptor(kwin_dbus_SRCS org.kde.KWin.Plugins.xml dbusinterface.h KWin
 qt_add_dbus_interface(kwin_dbus_SRCS org.freedesktop.DBus.Properties.xml dbusproperties_interface)
 
 if (KWIN_BUILD_SCREENLOCKER)
-    qt_add_dbus_interface(kwin_dbus_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/kf5_org.freedesktop.ScreenSaver.xml screenlocker_interface)
+    qt_add_dbus_interface(kwin_dbus_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/kf6_org.freedesktop.ScreenSaver.xml screenlocker_interface)
     qt_add_dbus_interface(kwin_dbus_SRCS ${KSCREENLOCKER_DBUS_INTERFACES_DIR}/org.kde.screensaver.xml kscreenlocker_interface)
 endif()
 
@@ -274,7 +274,7 @@ add_subdirectory(xwayland)
 
 if (KWIN_BUILD_ACTIVITIES)
     target_sources(kwin PRIVATE activities.cpp)
-    target_link_libraries(kwin KF5::Activities)
+    target_link_libraries(kwin KF6::Activities)
 endif()
 
 if (KWIN_BUILD_SCREENLOCKER)
@@ -336,9 +336,9 @@ add_subdirectory(plugins)
 
 target_link_libraries(kwin_wayland
     KWinQpaPlugin
-    KF5GlobalAccelKWinPlugin
-    KF5WindowSystemKWinPlugin
-    KF5IdleTimeKWinPlugin
+    KF6GlobalAccelKWinPlugin
+    KF6WindowSystemKWinPlugin
+    KF6IdleTimeKWinPlugin
 )
 
 add_custom_target(

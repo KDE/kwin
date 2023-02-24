@@ -16,11 +16,11 @@ add_library(kcmkwincommon SHARED ${kcmkwincommon_SRC})
 target_link_libraries(kcmkwincommon
     Qt::Core
     Qt::DBus
-    KF5::CoreAddons
-    KF5::ConfigCore
-    KF5::I18n
-    KF5::Package
-    KF5::KCMUtils
+    KF6::CoreAddons
+    KF6::ConfigCore
+    KF6::I18n
+    KF6::Package
+    KF6::KCMUtils
 )
 
 set_target_properties(kcmkwincommon PROPERTIES

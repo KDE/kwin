@@ -12,5 +12,5 @@ target_link_libraries(kwin4_effect_screenedge PRIVATE
     kwineffects
     kwinglutils
 
-    KF5::Plasma
+    KF6::Plasma
 )

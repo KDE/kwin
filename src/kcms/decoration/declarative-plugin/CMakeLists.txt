@@ -16,10 +16,10 @@ target_link_libraries(kdecorationprivatedeclarative
     KDecoration2::KDecoration2Private
     Qt::DBus
     Qt::Quick
-    KF5::CoreAddons
-    KF5::ConfigWidgets
-    KF5::I18n
-    KF5::Service
+    KF6::CoreAddons
+    KF6::ConfigWidgets
+    KF6::I18n
+    KF6::Service
 )
 
 install(TARGETS kdecorationprivatedeclarative DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/kwin/private/kdecoration )

@@ -30,10 +30,10 @@ target_link_libraries(testVirtualDesktops
     Qt::Test
     Qt::Widgets
 
-    KF5::ConfigCore
-    KF5::GlobalAccel
-    KF5::I18n
-    KF5::WindowSystem
+    KF6::ConfigCore
+    KF6::GlobalAccel
+    KF6::I18n
+    KF6::WindowSystem
 )
 add_test(NAME kwin-testVirtualDesktops COMMAND testVirtualDesktops)
 ecm_mark_as_test(testVirtualDesktops)
@@ -54,8 +54,8 @@ target_link_libraries(testClientMachine
     Qt::Test
     Qt::Widgets
 
-    KF5::ConfigCore
-    KF5::WindowSystem
+    KF6::ConfigCore
+    KF6::WindowSystem
 
     XCB::XCB
     XCB::XFIXES
@@ -79,8 +79,8 @@ target_link_libraries(testXcbWrapper
     Qt::Test
     Qt::Widgets
 
-    KF5::ConfigCore
-    KF5::WindowSystem
+    KF6::ConfigCore
+    KF6::WindowSystem
 
     XCB::XCB
 )
@@ -99,8 +99,8 @@ if (XCB_ICCCM_FOUND)
         Qt::Test
         Qt::Widgets
 
-        KF5::ConfigCore
-        KF5::WindowSystem
+        KF6::ConfigCore
+        KF6::WindowSystem
 
         XCB::ICCCM
         XCB::XCB
@@ -123,8 +123,8 @@ target_link_libraries(testXcbWindow
     Qt::Test
     Qt::Widgets
 
-    KF5::ConfigCore
-    KF5::WindowSystem
+    KF6::ConfigCore
+    KF6::WindowSystem
 
     XCB::XCB
 )
@@ -154,7 +154,7 @@ target_link_libraries(testOnScreenNotification
     Qt::Test
     Qt::Widgets # QAction include
 
-    KF5::ConfigCore
+    KF6::ConfigCore
 )
 
 add_test(NAME kwin-testOnScreenNotification COMMAND testOnScreenNotification)
@@ -182,7 +182,7 @@ ecm_mark_as_test(testGestures)
 ########################################################
 add_executable(testX11TimestampUpdate test_x11_timestamp_update.cpp)
 target_link_libraries(testX11TimestampUpdate
-    KF5::CoreAddons
+    KF6::CoreAddons
     Qt::Test
     kwin
 )
@@ -216,15 +216,15 @@ target_link_libraries(testXkb
     Qt::Test
     Qt::Widgets
 
-    KF5::ConfigCore
-    KF5::WindowSystem
+    KF6::ConfigCore
+    KF6::WindowSystem
 
     kwineffects
 
     XKB::XKB
 )
 if (QT_MAJOR_VERSION EQUAL "5")
-    target_link_libraries(testXkb Qt5::XkbCommonSupportPrivate)
+    target_link_libraries(testXkb Qt6::XkbCommonSupportPrivate)
 else()
     target_link_libraries(testXkb Qt::GuiPrivate)
 endif()

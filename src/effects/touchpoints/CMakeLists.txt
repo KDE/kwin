@@ -11,5 +11,5 @@ target_link_libraries(kwin4_effect_touchpoints PRIVATE
     kwineffects
     kwinglutils
 
-    KF5::GlobalAccel
+    KF6::GlobalAccel
 )

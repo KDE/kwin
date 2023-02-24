@@ -27,7 +27,7 @@
 #include <QTemporaryFile>
 
 #include <KSignalHandler>
-#include <UpdateLaunchEnvironmentJob>
+#include <KUpdateLaunchEnvironmentJob>
 
 #include <signal.h>
 
@@ -148,8 +148,8 @@ void KWinWrapper::run()
         }
     }
 
-    auto envSyncJob = new UpdateLaunchEnvironmentJob(env);
-    connect(envSyncJob, &UpdateLaunchEnvironmentJob::finished, this, []() {
+    auto envSyncJob = new KUpdateLaunchEnvironmentJob(env);
+    connect(envSyncJob, &KUpdateLaunchEnvironmentJob::finished, this, []() {
         // The service name is merely there to indicate to the world that we're up and ready with all envs exported
         QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.KWinWrapper"));
     });

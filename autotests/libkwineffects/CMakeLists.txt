@@ -16,7 +16,7 @@ kwineffects_unit_tests(
 
 add_executable(kwinglplatformtest kwinglplatformtest.cpp mock_gl.cpp ../../src/libkwineffects/kwinglplatform.cpp)
 add_test(NAME kwineffects-kwinglplatformtest COMMAND kwinglplatformtest)
-target_link_libraries(kwinglplatformtest Qt::Test Qt::Gui KF5::ConfigCore XCB::XCB)
+target_link_libraries(kwinglplatformtest Qt::Test Qt::Gui KF6::ConfigCore XCB::XCB)
 if (QT_MAJOR_VERSION EQUAL "5")
     target_link_libraries(kwinglplatformtest Qt::X11Extras)
 endif()

@@ -15,12 +15,12 @@ kcmutils_generate_desktop_file(kcm_kwin_effects)
 target_link_libraries(kcm_kwin_effects
     Qt::DBus
 
-    KF5::KCMUtils
-    KF5::I18n
-    KF5::KCMUtils
-    KF5::NewStuff
-    KF5::QuickAddons
-    KF5::XmlGui
+    KF6::KCMUtils
+    KF6::I18n
+    KF6::KCMUtils
+    KF6::NewStuff
+    KF6::QuickAddons
+    KF6::XmlGui
 
     kcmkwincommon
 )

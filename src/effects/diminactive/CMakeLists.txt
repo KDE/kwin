@@ -14,7 +14,7 @@ kwin4_add_effect_module(kwin4_effect_diminactive ${diminactive_SOURCES})
 target_link_libraries(kwin4_effect_diminactive PRIVATE
     kwineffects
 
-    KF5::ConfigGui
+    KF6::ConfigGui
 )
 
 #######################################
@@ -27,9 +27,9 @@ if (KWIN_BUILD_KCMS)
     kwin_add_effect_config(kwin_diminactive_config ${kwin_diminactive_config_SRCS})
 
     target_link_libraries(kwin_diminactive_config
-        KF5::ConfigWidgets
-        KF5::CoreAddons
-        KF5::I18n
+        KF6::ConfigWidgets
+        KF6::CoreAddons
+        KF6::I18n
         Qt::DBus
         KWinEffectsInterface
     )

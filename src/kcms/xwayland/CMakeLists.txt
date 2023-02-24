@@ -17,9 +17,9 @@ target_include_directories(kcm_kwinxwayland PRIVATE ${CMAKE_SOURCE_DIR})
 kcmutils_generate_desktop_file(kcm_kwinxwayland)
 
 target_link_libraries(kcm_kwinxwayland
-    KF5::I18n
-    KF5::KCMUtils
-    KF5::QuickAddons
+    KF6::I18n
+    KF6::KCMUtils
+    KF6::QuickAddons
     Wayland::Client
 )
 kpackage_install_package(package kcm_kwinxwayland kcms)

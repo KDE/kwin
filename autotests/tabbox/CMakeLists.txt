@@ -24,10 +24,10 @@ target_link_libraries(testTabBoxClientModel
     Qt::Widgets
     Qt::GuiPrivate
 
-    KF5::ConfigCore
-    KF5::I18n
-    KF5::Package
-    KF5::WindowSystem
+    KF6::ConfigCore
+    KF6::I18n
+    KF6::Package
+    KF6::WindowSystem
 
     XCB::XCB
 )
@@ -61,10 +61,10 @@ target_link_libraries(testTabBoxHandler
     Qt::Widgets
     Qt::GuiPrivate
 
-    KF5::ConfigCore
-    KF5::I18n
-    KF5::Package
-    KF5::WindowSystem
+    KF6::ConfigCore
+    KF6::I18n
+    KF6::Package
+    KF6::WindowSystem
 
     XCB::XCB
 )

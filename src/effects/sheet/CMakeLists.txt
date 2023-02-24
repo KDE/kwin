@@ -12,5 +12,5 @@ kwin4_add_effect_module(kwin4_effect_sheet ${sheet_SOURCES})
 target_link_libraries(kwin4_effect_sheet PRIVATE
     kwineffects
 
-    KF5::ConfigGui
+    KF6::ConfigGui
 )

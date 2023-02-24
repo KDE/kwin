@@ -24,12 +24,12 @@ kcoreaddons_add_plugin(kcm_kwintabbox SOURCES ${kcm_kwintabbox_PART_SRCS} INSTAL
 kcmutils_generate_desktop_file(kcm_kwintabbox)
 target_link_libraries(kcm_kwintabbox
     Qt::Quick
-    KF5::GlobalAccel
-    KF5::I18n
-    KF5::KCMUtils
-    KF5::NewStuffWidgets
-    KF5::Package
-    KF5::XmlGui # For kkeysequencewidget
+    KF6::GlobalAccel
+    KF6::I18n
+    KF6::KCMUtils
+    KF6::NewStuffWidgets
+    KF6::Package
+    KF6::XmlGui # For kkeysequencewidget
     XCB::XCB
 )
 
