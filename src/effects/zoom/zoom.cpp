@@ -255,11 +255,13 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
 
 ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(EffectScreen *screen)
 {
-    const QRect rect = screen->geometry();
-    const qreal devicePixelRatio = screen->devicePixelRatio();
+    const QRect rect = effects->waylandDisplay() ? screen->geometry() : effects->virtualScreenGeometry();
+    const qreal devicePixelRatio = effects->waylandDisplay() ? screen->devicePixelRatio() : 1;
     const QSize nativeSize = rect.size() * devicePixelRatio;
 
     OffscreenData &data = m_offscreenData[effects->waylandDisplay() ? screen : nullptr];
+    data.viewport = rect;
+
     if (!data.texture || data.texture->size() != nativeSize) {
         data.texture.reset(new GLTexture(GL_RGBA8, nativeSize));
         data.texture->setFilter(GL_LINEAR);
@@ -348,17 +350,15 @@ void ZoomEffect::paintScreen(int mask, const QRegion &region, ScreenPaintData &d
 
     auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
     for (auto &[screen, offscreen] : m_offscreenData) {
-        const QRect geometry = screen->geometry();
-
         QMatrix4x4 matrix;
         matrix.translate(xTranslation * scale, yTranslation * scale);
         matrix.scale(zoom, zoom);
-        matrix.translate(geometry.x() * scale, geometry.y() * scale);
+        matrix.translate(offscreen.viewport.x() * scale, offscreen.viewport.y() * scale);
 
         shader->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix() * matrix);
 
         offscreen.texture->bind();
-        offscreen.texture->render(geometry.size(), scale);
+        offscreen.texture->render(offscreen.viewport.size(), scale);
         offscreen.texture->unbind();
     }
     ShaderManager::instance()->popShader();
