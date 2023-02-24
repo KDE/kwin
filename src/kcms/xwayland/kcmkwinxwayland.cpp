@@ -6,7 +6,6 @@
 
 #include "kcmkwinxwayland.h"
 
-#include <KApplicationTrader>
 #include <KConfigGroup>
 #include <KDesktopFile>
 #include <KLocalizedString>
