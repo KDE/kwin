@@ -13,7 +13,10 @@ set(kwin5_aurorae_PART_SRCS
 )
 
 add_library(kwin5_aurorae MODULE ${kwin5_aurorae_PART_SRCS})
-set_target_properties(kwin5_aurorae PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kdecoration2/")
+set_target_properties(kwin5_aurorae PROPERTIES
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/org.kde.kdecoration2/"
+    LIBRARY_OUTPUT_NAME "org.kde.kwin.aurorae"
+)
 
 target_link_libraries(kwin5_aurorae
     KDecoration2::KDecoration
