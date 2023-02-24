@@ -74,7 +74,7 @@ static QByteArray parseEisaId(const uint8_t *data)
 
         // We have found the EISA ID, it's stored as ASCII.
         if (data[i + 3] == 0xfe) {
-            return QByteArray(reinterpret_cast<const char *>(&data[i + 5]), 12).trimmed();
+            return QByteArray(reinterpret_cast<const char *>(&data[i + 5]), 13).trimmed();
         }
     }
 
@@ -95,7 +95,7 @@ static QByteArray parseMonitorName(const uint8_t *data)
 
         // We have found the monitor name, it's stored as ASCII.
         if (data[i + 3] == 0xfc) {
-            return QByteArray(reinterpret_cast<const char *>(&data[i + 5]), 12).trimmed();
+            return QByteArray(reinterpret_cast<const char *>(&data[i + 5]), 13).trimmed();
         }
     }
 
@@ -115,7 +115,7 @@ static QByteArray parseSerialNumber(const uint8_t *data)
 
         // We have found the serial number, it's stored as ASCII.
         if (data[i + 3] == 0xff) {
-            return QByteArray(reinterpret_cast<const char *>(&data[i + 5]), 12).trimmed();
+            return QByteArray(reinterpret_cast<const char *>(&data[i + 5]), 13).trimmed();
         }
     }
 
