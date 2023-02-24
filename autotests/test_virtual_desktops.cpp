@@ -199,9 +199,9 @@ void TestVirtualDesktops::current()
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     QCOMPARE(vds->current(), (uint)0);
     QFETCH(uint, count);
-    vds->setCount(count);
     QFETCH(uint, init);
-    QVERIFY(vds->setCurrent(init));
+    vds->setCount(count);
+    vds->setCurrent(init);
     QCOMPARE(vds->current(), init);
 
     QSignalSpy spy(vds, &VirtualDesktopManager::currentChanged);

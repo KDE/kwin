@@ -148,9 +148,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *s
     });
     connect(ws, &Workspace::currentDesktopChanged, this, [this](int old, Window *window) {
         const int newDesktop = VirtualDesktopManager::self()->current();
-        if (old != 0 && newDesktop != old) {
-            Q_EMIT desktopChanged(old, newDesktop, window ? window->effectWindow() : nullptr);
-        }
+        Q_EMIT desktopChanged(old, newDesktop, window ? window->effectWindow() : nullptr);
     });
     connect(ws, &Workspace::currentDesktopChanging, this, [this](uint currentDesktop, QPointF offset, KWin::Window *window) {
         Q_EMIT desktopChanging(currentDesktop, offset, window ? window->effectWindow() : nullptr);

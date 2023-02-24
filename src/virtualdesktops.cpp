@@ -595,6 +595,10 @@ void VirtualDesktopManager::setCount(uint count)
         }
     }
 
+    if (!m_current) {
+        m_current = m_desktops.at(0);
+    }
+
     updateRootInfo();
 
     if (!s_loadingDesktopSettings) {

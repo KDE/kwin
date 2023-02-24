@@ -235,9 +235,7 @@ void Workspace::init()
     //  load is needed to be called again when starting xwayalnd to sync to RootInfo, see BUG 385260
     vds->save();
 
-    if (!VirtualDesktopManager::self()->setCurrent(m_initialDesktop)) {
-        VirtualDesktopManager::self()->setCurrent(1);
-    }
+    vds->setCurrent(m_initialDesktop);
 
     reconfigureTimer.setSingleShot(true);
     updateToolWindowsTimer.setSingleShot(true);
