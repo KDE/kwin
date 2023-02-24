@@ -1047,7 +1047,6 @@ void Window::setDesktops(QVector<VirtualDesktop *> desktops)
         return;
     }
 
-    const bool wasOnAllDesktops = isOnAllDesktops();
     m_desktops = desktops;
 
     if (windowManagementInterface()) {
@@ -1067,10 +1066,6 @@ void Window::setDesktops(QVector<VirtualDesktop *> desktops)
                 windowManagementInterface()->removePlasmaVirtualDesktop(desktopId);
             }
         }
-    }
-
-    if (isOnAllDesktops() != wasOnAllDesktops) {
-        workspace()->updateOnAllDesktopsOfTransients(this);
     }
 
     auto transients_stacking_order = workspace()->ensureStackingOrder(transients());
