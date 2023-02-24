@@ -49,7 +49,7 @@ DecoratedClientImpl::DecoratedClientImpl(Window *window, KDecoration2::Decorated
         }
         Q_EMIT decoratedClient->sizeChanged(m_clientSize);
     });
-    connect(window, &Window::desktopChanged, this, [decoratedClient, window]() {
+    connect(window, &Window::desktopsChanged, this, [decoratedClient, window]() {
         Q_EMIT decoratedClient->onAllDesktopsChanged(window->isOnAllDesktops());
     });
     connect(window, &Window::captionChanged, this, [decoratedClient, window]() {

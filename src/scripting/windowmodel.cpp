@@ -34,7 +34,7 @@ void WindowModel::markRoleChanged(Window *window, int role)
 
 void WindowModel::setupWindowConnections(Window *window)
 {
-    connect(window, &Window::desktopChanged, this, [this, window]() {
+    connect(window, &Window::desktopsChanged, this, [this, window]() {
         markRoleChanged(window, DesktopRole);
     });
     connect(window, &Window::outputChanged, this, [this, window]() {

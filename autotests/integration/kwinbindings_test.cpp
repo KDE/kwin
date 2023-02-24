@@ -215,7 +215,7 @@ void KWinBindingsTest::testWindowToDesktop()
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
-    QSignalSpy desktopChangedSpy(window, &Window::desktopChanged);
+    QSignalSpy desktopsChangedSpy(window, &Window::desktopsChanged);
     QCOMPARE(workspace()->activeWindow(), window);
 
     QFETCH(int, desktop);
@@ -232,16 +232,16 @@ void KWinBindingsTest::testWindowToDesktop()
         QDBusConnection::sessionBus().asyncCall(msg);
     };
     invokeShortcut(desktop);
-    QVERIFY(desktopChangedSpy.wait());
+    QVERIFY(desktopsChangedSpy.wait());
     QCOMPARE(window->desktop(), desktop);
     // back to desktop 1
     invokeShortcut(1);
-    QVERIFY(desktopChangedSpy.wait());
+    QVERIFY(desktopsChangedSpy.wait());
     QCOMPARE(window->desktop(), 1);
     // invoke with one desktop too many
     invokeShortcut(desktop + 1);
     // that should fail
-    QVERIFY(!desktopChangedSpy.wait(100));
+    QVERIFY(!desktopsChangedSpy.wait(100));
 }
 
 WAYLANDTEST_MAIN(KWinBindingsTest)

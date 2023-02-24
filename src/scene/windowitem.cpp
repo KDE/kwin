@@ -41,7 +41,7 @@ WindowItem::WindowItem(Window *window, Scene *scene, Item *parent)
     connect(window, &Window::minimizedChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::hiddenChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::activitiesChanged, this, &WindowItem::updateVisibility);
-    connect(window, &Window::desktopChanged, this, &WindowItem::updateVisibility);
+    connect(window, &Window::desktopsChanged, this, &WindowItem::updateVisibility);
     connect(workspace(), &Workspace::currentActivityChanged, this, &WindowItem::updateVisibility);
     connect(workspace(), &Workspace::currentDesktopChanged, this, &WindowItem::updateVisibility);
     updateVisibility();

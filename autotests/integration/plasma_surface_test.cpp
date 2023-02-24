@@ -115,7 +115,7 @@ void PlasmaSurfaceTest::testRoleOnAllDesktops()
     QCOMPARE(window->isOnAllDesktops(), false);
 
     // now let's try to change that
-    QSignalSpy onAllDesktopsSpy(window, &Window::desktopChanged);
+    QSignalSpy onAllDesktopsSpy(window, &Window::desktopsChanged);
     QFETCH(KWayland::Client::PlasmaShellSurface::Role, role);
     plasmaSurface->setRole(role);
     QFETCH(bool, expectedOnAllDesktops);

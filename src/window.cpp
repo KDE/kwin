@@ -1109,7 +1109,7 @@ void Window::setDesktops(QVector<VirtualDesktop *> desktops)
     Workspace::self()->focusChain()->update(this, FocusChain::MakeFirst);
     updateWindowRules(Rules::Desktops);
 
-    Q_EMIT desktopChanged();
+    Q_EMIT desktopsChanged();
 }
 
 void Window::doSetDesktop()

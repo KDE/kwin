@@ -341,7 +341,7 @@ void EffectsHandlerImpl::setupWindowConnections(Window *window)
     connect(window, &Window::decorationChanged, this, [this, window]() {
         Q_EMIT windowDecorationChanged(window->effectWindow());
     });
-    connect(window, &Window::desktopChanged, this, [this, window]() {
+    connect(window, &Window::desktopsChanged, this, [this, window]() {
         Q_EMIT windowDesktopsChanged(window->effectWindow());
     });
 }
