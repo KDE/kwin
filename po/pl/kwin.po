@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1645189 $
+# Version: $Revision: 1645269 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-23 00:59+0000\n"
+"POT-Creation-Date: 2023-02-24 01:00+0000\n"
 "PO-Revision-Date: 2023-01-21 10:05+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -46,12 +46,12 @@ msgid "Your emails"
 msgstr ""
 "mrudolf@kdewebdev.org, norbert@kde.com.pl, lukasz.wojnilowicz@gmail.com"
 
-#: composite.cpp:646
+#: composite.cpp:652
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Wczytano efekty pulpitu na nowo po wyłączeniu grafiki"
 
-#: composite.cpp:875
+#: composite.cpp:881
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -60,7 +60,7 @@ msgstr ""
 "Efekty pulpitu zostały wstrzymane przez inny program.<br/>Możesz wznowić je "
 "kombinacją klawiszy '%1'."
 
-#: composite.cpp:1064
+#: composite.cpp:1070
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -73,12 +73,12 @@ msgstr ""
 "stabilniejszy sterownik, <br> to możesz zdjąć to zabezpieczenie <b>lecz "
 "przygotuj się na natychmiastowe wysypanie!</b></p>"
 
-#: composite.cpp:1071
+#: composite.cpp:1077
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Wymagane rozszerzenia X (XComposite i XDamage) są niedostępne."
 
-#: composite.cpp:1074
+#: composite.cpp:1080
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL jest niedostępny."
@@ -2803,13 +2803,13 @@ msgstr "Przełącz jeden pulpit niżej"
 msgid "Switch to Desktop %1"
 msgstr "Przełącz na pulpit %1"
 
-#: window.cpp:3463
+#: window.cpp:3420
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Nie odpowiada)"
 
-#: workspace.cpp:1851
+#: workspace.cpp:1850
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

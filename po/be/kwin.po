@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-23 00:59+0000\n"
+"POT-Creation-Date: 2023-02-24 01:00+0000\n"
 "PO-Revision-Date: 2023-02-09 08:31\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -34,12 +34,12 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "ihar.hrachyshka@gmail.com, symbol@akeeri.tk, nashtlumach@gmail.com"
 
-#: composite.cpp:646
+#: composite.cpp:652
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Эфекты працоўнага стала перазапушчаныя праз скід графікі"
 
-#: composite.cpp:875
+#: composite.cpp:881
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -48,7 +48,7 @@ msgstr ""
 "Эфекты працоўнага стала былі прыпыненыя іншай праграмай.<br/>Вы можаце "
 "ўзнавіць іх з дапамогай \"%1\"."
 
-#: composite.cpp:1064
+#: composite.cpp:1070
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -62,12 +62,12 @@ msgstr ""
 "абарону<b>, але майце на ўвазе, што гэта можа прывесці да неадкладнага збою!"
 "</b></p>"
 
-#: composite.cpp:1071
+#: composite.cpp:1077
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Неабходныя пашырэнні X (XComposite і XDamage) недаступныя."
 
-#: composite.cpp:1074
+#: composite.cpp:1080
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL недаступны."
@@ -2792,13 +2792,13 @@ msgstr "Пераключыцца на працоўны стол ніжэй"
 msgid "Switch to Desktop %1"
 msgstr "Пераключыцца на працоўны стол \"%1\""
 
-#: window.cpp:3463
+#: window.cpp:3420
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Не адказвае)"
 
-#: workspace.cpp:1851
+#: workspace.cpp:1850
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-23 00:59+0000\n"
+"POT-Creation-Date: 2023-02-24 01:00+0000\n"
 "PO-Revision-Date: 2023-02-14 23:56+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -45,13 +45,13 @@ msgstr ""
 "ecuadra@eloihr.net,jaime@kde.org,vicente@oan.es,yo@miguelrevilla.com,the."
 "blue.valkyrie@gmail.com"
 
-#: composite.cpp:646
+#: composite.cpp:652
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Se han reiniciado los efectos del escritorio debido a un reinicio gráfico"
 
-#: composite.cpp:875
+#: composite.cpp:881
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -60,7 +60,7 @@ msgstr ""
 "Los efectos de escritorio han sido suspendidos por otra aplicación.<br/"
 ">Puede reactivarlos usando el acceso rápido «%1»."
 
-#: composite.cpp:1064
+#: composite.cpp:1070
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -74,13 +74,13 @@ msgstr ""
 "<br>puede reiniciar esta protección pero <b>¡tenga en cuenta que puede "
 "provocar un fallo inmediatamente!</b></p>"
 
-#: composite.cpp:1071
+#: composite.cpp:1077
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "Las extensiones requeridas (XComposite y XDamage) no están disponibles."
 
-#: composite.cpp:1074
+#: composite.cpp:1080
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL no está disponible."
@@ -2805,13 +2805,13 @@ msgstr "Cambiar al escritorio inferior"
 msgid "Switch to Desktop %1"
 msgstr "Cambiar al escritorio %1"
 
-#: window.cpp:3463
+#: window.cpp:3420
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(no responde)"
 
-#: workspace.cpp:1851
+#: workspace.cpp:1850
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

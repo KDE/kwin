@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-23 00:59+0000\n"
+"POT-Creation-Date: 2023-02-24 01:00+0000\n"
 "PO-Revision-Date: 2023-02-09 22:30+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -34,12 +34,12 @@ msgstr ""
 "wolfram@steloj.de,Steffen.Pietsch@BerlinOnline.de,matthias@peick.de,"
 "cfmckee@gmail.com"
 
-#: composite.cpp:646
+#: composite.cpp:652
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Labortablaj efikoj estis rekomencitaj pro grafika restarigo"
 
-#: composite.cpp:875
+#: composite.cpp:881
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -48,7 +48,7 @@ msgstr ""
 "Surtablaj efikoj estas malakceptitaj de alia aplikaĵo.<br/>Vi povas "
 "rekomenci uzi la ŝparvojon '%1'."
 
-#: composite.cpp:1064
+#: composite.cpp:1070
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -61,13 +61,13 @@ msgstr ""
 "al stabila ŝoforo,< br>vi povas restarigi ĉi tiun protekton, sed <b>konsciu, "
 "ke tio povus rezultigi tujan kraŝon!</b></p>"
 
-#: composite.cpp:1071
+#: composite.cpp:1077
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr ""
 "X-kromprogramoj XComposite kaj XDamage estas bezonitaj sed ne estas haveblaj."
 
-#: composite.cpp:1074
+#: composite.cpp:1080
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ne disponeblas."
@@ -2788,13 +2788,13 @@ msgstr "Iri al suba labortablo"
 msgid "Switch to Desktop %1"
 msgstr "Ŝanĝi al labortablo %1"
 
-#: window.cpp:3463
+#: window.cpp:3420
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ne respondante)"
 
-#: workspace.cpp:1851
+#: workspace.cpp:1850
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
