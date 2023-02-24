@@ -97,7 +97,7 @@ void DesktopChainManager::resize(uint previousSize, uint newSize)
     }
 }
 
-void DesktopChainManager::addDesktop(uint previousDesktop, uint currentDesktop)
+void DesktopChainManager::addDesktop(uint currentDesktop)
 {
     m_currentChain.value().add(currentDesktop);
 }

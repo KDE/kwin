@@ -90,10 +90,9 @@ public:
 public Q_SLOTS:
     /**
      * Adds the @p currentDesktop to the currently used desktop chain.
-     * @param previousDesktop The previously used desktop, should be the top element of the chain
      * @param currentDesktop The desktop which should be the new top element of the chain
      */
-    void addDesktop(uint previousDesktop, uint currentDesktop);
+    void addDesktop(uint currentDesktop);
     /**
      * Resizes all managed desktop chains from @p previousSize to @p newSize.
      * @param previousSize The previously used size for the chains

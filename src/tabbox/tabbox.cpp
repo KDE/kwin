@@ -68,7 +68,7 @@ TabBoxHandlerImpl::TabBoxHandlerImpl(TabBox *tabBox)
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     connect(vds, &VirtualDesktopManager::countChanged, m_desktopFocusChain, &DesktopChainManager::resize);
     connect(vds, &VirtualDesktopManager::currentChanged, m_desktopFocusChain, [this](VirtualDesktop *previousDesktop, VirtualDesktop *newDesktop) {
-        m_desktopFocusChain->addDesktop(previousDesktop->x11DesktopNumber(), newDesktop->x11DesktopNumber());
+        m_desktopFocusChain->addDesktop(newDesktop->x11DesktopNumber());
     });
 #if KWIN_BUILD_ACTIVITIES
     if (Workspace::self()->activities()) {
