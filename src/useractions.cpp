@@ -845,20 +845,11 @@ void ShortcutDialog::accept()
 {
     QKeySequence seq = shortcut();
     if (!seq.isEmpty()) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        if (seq[0] == Qt::Key_Escape) {
-#else
         if (seq[0] == QKeyCombination(Qt::Key_Escape)) {
-#endif
             reject();
             return;
         }
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        if (seq[0] == Qt::Key_Space
-            || (seq[0] & Qt::KeyboardModifierMask) == 0) {
-#else
         if (seq[0] == QKeyCombination(Qt::Key_Space) || seq[0].keyboardModifiers() == Qt::NoModifier) {
-#endif
             // clear
             m_ui.keySequenceEdit->clear();
             QDialog::accept();

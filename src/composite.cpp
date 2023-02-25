@@ -325,11 +325,7 @@ bool Compositor::setupStart()
 
     if (!Workspace::self() && m_backend && m_backend->compositingType() == QPainterCompositing) {
         // Force Software QtQuick on first startup with QPainter.
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        QQuickWindow::setSceneGraphBackend(QSGRendererInterface::Software);
-#else
         QQuickWindow::setGraphicsApi(QSGRendererInterface::Software);
-#endif
     }
 
     Q_EMIT sceneCreated();

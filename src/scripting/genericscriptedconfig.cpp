@@ -71,14 +71,6 @@ void GenericScriptedConfig::createUi()
     }
 
     KPluginMetaData metaData(packageRoot + QLatin1String("/metadata.json"));
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    if (!metaData.isValid()) {
-        metaData = KPluginMetaData::fromDesktopFile(packageRoot + QLatin1String("/metadata.desktop"));
-        if (metaData.isValid()) {
-            qWarning("metadata.desktop format is obsolete. Please convert %s to JSON metadata", qPrintable(metaData.fileName()));
-        }
-    }
-#endif
     if (!metaData.isValid()) {
         layout->addWidget(new QLabel(i18nc("Required file does not exist", "%1 does not contain a valid metadata.json file", qPrintable(packageRoot))));
         return;

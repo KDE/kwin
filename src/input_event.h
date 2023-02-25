@@ -210,18 +210,10 @@ public:
 class TabletEvent : public QTabletEvent
 {
 public:
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     TabletEvent(Type t, const QPointingDevice *dev, const QPointF &pos, const QPointF &globalPos,
                 qreal pressure, float xTilt, float yTilt,
                 float tangentialPressure, qreal rotation, float z,
                 Qt::KeyboardModifiers keyState, Qt::MouseButton button, Qt::MouseButtons buttons, const TabletToolId &tabletId);
-#else
-    TabletEvent(Type t, const QPointF &pos, const QPointF &globalPos,
-                int device, int pointerType, qreal pressure, int xTilt, int yTilt,
-                qreal tangentialPressure, qreal rotation, int z,
-                Qt::KeyboardModifiers keyState, qint64 uniqueID,
-                Qt::MouseButton button, Qt::MouseButtons buttons, const TabletToolId &tabletId);
-#endif
 
     const TabletToolId &tabletId() const
     {

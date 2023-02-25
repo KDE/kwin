@@ -29,15 +29,8 @@ add_executable(testWaylandSeat)
 set( testWaylandSeat_SRCS
         test_wayland_seat.cpp
     )
-if (QT_MAJOR_VERSION EQUAL "5")
-    ecm_add_qtwayland_client_protocol(testWaylandSeat_SRCS
-        PROTOCOL ${WaylandProtocols_DATADIR}/unstable/pointer-gestures/pointer-gestures-unstable-v1.xml
-        BASENAME pointer-gestures-unstable-v1
-    )
-else()
-    qt6_generate_wayland_protocol_client_sources(testWaylandSeat FILES
-        ${WaylandProtocols_DATADIR}/unstable/pointer-gestures/pointer-gestures-unstable-v1.xml)
-endif()
+qt6_generate_wayland_protocol_client_sources(testWaylandSeat FILES
+    ${WaylandProtocols_DATADIR}/unstable/pointer-gestures/pointer-gestures-unstable-v1.xml)
 target_sources(testWaylandSeat PRIVATE ${testWaylandSeat_SRCS})
 target_link_libraries( testWaylandSeat Qt::Test Qt::Gui KF6::WaylandClient kwin Wayland::Client Wayland::Server)
 add_test(NAME kwayland-testWaylandSeat COMMAND testWaylandSeat)

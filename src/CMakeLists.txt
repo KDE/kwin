@@ -227,9 +227,6 @@ target_link_libraries(kwin
     Wayland::Server
     lcms2::lcms2
 )
-if (QT_MAJOR_VERSION EQUAL "5")
-    target_link_libraries(kwin Qt6::X11Extras Qt6::XkbCommonSupportPrivate)
-endif()
 
 if (KWIN_BUILD_NOTIFICATIONS)
     target_link_libraries(kwin KF6::Notifications)

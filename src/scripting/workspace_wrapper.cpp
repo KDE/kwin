@@ -377,20 +377,12 @@ QQmlListProperty<KWin::Window> DeclarativeScriptWorkspaceWrapper::clients()
     return QQmlListProperty<KWin::Window>(this, nullptr, &DeclarativeScriptWorkspaceWrapper::countClientList, &DeclarativeScriptWorkspaceWrapper::atClientList);
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-int DeclarativeScriptWorkspaceWrapper::countClientList(QQmlListProperty<KWin::Window> *clients)
-#else
 qsizetype DeclarativeScriptWorkspaceWrapper::countClientList(QQmlListProperty<KWin::Window> *clients)
-#endif
 {
     return workspace()->allClientList().size();
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-KWin::Window *DeclarativeScriptWorkspaceWrapper::atClientList(QQmlListProperty<KWin::Window> *clients, int index)
-#else
 KWin::Window *DeclarativeScriptWorkspaceWrapper::atClientList(QQmlListProperty<KWin::Window> *clients, qsizetype index)
-#endif
 {
     return workspace()->allClientList().at(index);
 }

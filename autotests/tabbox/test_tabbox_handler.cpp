@@ -10,11 +10,7 @@
 #include "clientmodel.h"
 #include "mock_tabboxhandler.h"
 #include <QtTest>
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <private/qtx11extras_p.h>
-#else
-#include <QX11Info>
-#endif
 
 using namespace KWin;
 

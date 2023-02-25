@@ -42,11 +42,7 @@ void DataBridge::init()
     kwinApp()->installNativeEventFilter(this);
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-bool DataBridge::nativeEventFilter(const QByteArray &eventType, void *message, long int *)
-#else
 bool DataBridge::nativeEventFilter(const QByteArray &eventType, void *message, qintptr *)
-#endif
 {
     if (eventType == "xcb_generic_event_t") {
         xcb_generic_event_t *event = static_cast<xcb_generic_event_t *>(message);

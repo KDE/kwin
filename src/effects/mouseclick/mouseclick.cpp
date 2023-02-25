@@ -331,18 +331,6 @@ bool MouseClickEffect::tabletToolEvent(QTabletEvent *event)
     auto &tabletEvent = m_tabletTools[event->uniqueId()];
     if (!tabletEvent.m_color.isValid()) {
         switch (event->pointerType()) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        case QTabletEvent::UnknownPointer:
-        case QTabletEvent::Pen:
-            tabletEvent.m_color = MouseClickConfig::color1();
-            break;
-        case QTabletEvent::Eraser:
-            tabletEvent.m_color = MouseClickConfig::color2();
-            break;
-        case QTabletEvent::Cursor:
-            tabletEvent.m_color = MouseClickConfig::color3();
-            break;
-#else
         case QPointingDevice::PointerType::Unknown:
         case QPointingDevice::PointerType::Generic:
         case QPointingDevice::PointerType::Finger:
@@ -355,7 +343,6 @@ bool MouseClickEffect::tabletToolEvent(QTabletEvent *event)
         case QPointingDevice::PointerType::Cursor:
             tabletEvent.m_color = MouseClickConfig::color3();
             break;
-#endif
         }
     }
     switch (event->type()) {

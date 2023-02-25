@@ -42,13 +42,11 @@ target_link_libraries(kwineffects
         KF6::WindowSystem
         XCB::XCB
     PRIVATE
+        Qt::GuiPrivate
         Qt::Quick
         KF6::I18n
         kwinglutils
 )
-if (QT_MAJOR_VERSION EQUAL "6")
-    target_link_libraries(kwineffects PRIVATE Qt::GuiPrivate)
-endif()
 set_target_properties(kwineffects PROPERTIES
     VERSION ${KWINEFFECTS_VERSION}
     SOVERSION ${KWINEFFECTS_SOVERSION}

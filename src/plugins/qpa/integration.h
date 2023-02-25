@@ -12,11 +12,7 @@
 #include <epoxy/egl.h>
 
 #include <QObject>
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <QtServiceSupport/private/qgenericunixservices_p.h>
-#else
 #include <QtGui/private/qgenericunixservices_p.h>
-#endif
 #include <qpa/qplatformintegration.h>
 
 namespace KWin

@@ -242,11 +242,7 @@ void Xwayland::dispatchEvents(DispatchEventsMode mode)
     auto pollEventFunc = mode == DispatchEventsMode::Poll ? xcb_poll_for_event : xcb_poll_for_queued_event;
 
     while (xcb_generic_event_t *event = pollEventFunc(connection)) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        long result = 0;
-#else
         qintptr result = 0;
-#endif
 
         QAbstractEventDispatcher *dispatcher = QCoreApplication::eventDispatcher();
         dispatcher->filterNativeEvent(QByteArrayLiteral("xcb_generic_event_t"), event, &result);

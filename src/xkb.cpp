@@ -17,11 +17,7 @@
 // Qt
 #include <QKeyEvent>
 #include <QTemporaryFile>
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <QtXkbCommonSupport/private/qxkbcommon_p.h>
-#else
 #include <QtGui/private/qxkbcommon_p.h>
-#endif
 // xkbcommon
 #include <xkbcommon/xkbcommon-compose.h>
 #include <xkbcommon/xkbcommon-keysyms.h>
@@ -576,11 +572,6 @@ Qt::Key Xkb::toQtKey(xkb_keysym_t keySym,
     } else if (qtKey > 0xff && keySym <= 0xff) {
         // XKB_KEY_mu, XKB_KEY_ydiaeresis go here
         qtKey = Qt::Key(keySym);
-#if QT_VERSION_MAJOR < 6 // since Qt 5 LTS is frozen
-    } else if (keySym == XKB_KEY_Sys_Req) {
-        // fixed in QTBUG-92087
-        qtKey = Qt::Key_SysReq;
-#endif
     }
     return qtKey;
 }

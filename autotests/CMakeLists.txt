@@ -51,6 +51,7 @@ set_target_properties(testClientMachine PROPERTIES COMPILE_DEFINITIONS "NO_NONE_
 
 target_link_libraries(testClientMachine
     Qt::Concurrent
+    Qt::GuiPrivate
     Qt::Test
     Qt::Widgets
 
@@ -62,11 +63,6 @@ target_link_libraries(testClientMachine
 
     ${X11_X11_LIB} # to make jenkins happy
 )
-if (QT_MAJOR_VERSION EQUAL "5")
-    target_link_libraries(testClientMachine Qt::X11Extras)
-else()
-    target_link_libraries(testClientMachine Qt::GuiPrivate)
-endif()
 add_test(NAME kwin-testClientMachine COMMAND testClientMachine)
 ecm_mark_as_test(testClientMachine)
 
@@ -76,6 +72,7 @@ ecm_mark_as_test(testClientMachine)
 add_executable(testXcbWrapper test_xcb_wrapper.cpp xcb_scaling_mock.cpp)
 
 target_link_libraries(testXcbWrapper
+    Qt::GuiPrivate
     Qt::Test
     Qt::Widgets
 
@@ -84,11 +81,6 @@ target_link_libraries(testXcbWrapper
 
     XCB::XCB
 )
-if (QT_MAJOR_VERSION EQUAL "5")
-    target_link_libraries(testXcbWrapper Qt::X11Extras)
-else()
-    target_link_libraries(testXcbWrapper Qt::GuiPrivate)
-endif()
 add_test(NAME kwin-testXcbWrapper COMMAND testXcbWrapper)
 ecm_mark_as_test(testXcbWrapper)
 
@@ -96,6 +88,7 @@ if (XCB_ICCCM_FOUND)
     add_executable(testXcbSizeHints test_xcb_size_hints.cpp xcb_scaling_mock.cpp)
     set_target_properties(testXcbSizeHints PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
     target_link_libraries(testXcbSizeHints
+        Qt::GuiPrivate
         Qt::Test
         Qt::Widgets
 
@@ -105,11 +98,6 @@ if (XCB_ICCCM_FOUND)
         XCB::ICCCM
         XCB::XCB
     )
-    if (QT_MAJOR_VERSION EQUAL "5")
-        target_link_libraries(testXcbSizeHints Qt::X11Extras)
-    else()
-        target_link_libraries(testXcbSizeHints Qt::GuiPrivate)
-    endif()
     add_test(NAME kwin-testXcbSizeHints COMMAND testXcbSizeHints)
     ecm_mark_as_test(testXcbSizeHints)
 endif()
@@ -120,6 +108,7 @@ endif()
 add_executable(testXcbWindow test_xcb_window.cpp xcb_scaling_mock.cpp)
 
 target_link_libraries(testXcbWindow
+    Qt::GuiPrivate
     Qt::Test
     Qt::Widgets
 
@@ -128,11 +117,6 @@ target_link_libraries(testXcbWindow
 
     XCB::XCB
 )
-if (QT_MAJOR_VERSION EQUAL "5")
-    target_link_libraries(testXcbWindow Qt::X11Extras)
-else()
-    target_link_libraries(testXcbWindow Qt::GuiPrivate)
-endif()
 add_test(NAME kwin-testXcbWindow COMMAND testXcbWindow)
 ecm_mark_as_test(testXcbWindow)
 
@@ -213,6 +197,7 @@ target_link_libraries(testXkb
     kwin
 
     Qt::Gui
+    Qt::GuiPrivate
     Qt::Test
     Qt::Widgets
 
@@ -223,11 +208,6 @@ target_link_libraries(testXkb
 
     XKB::XKB
 )
-if (QT_MAJOR_VERSION EQUAL "5")
-    target_link_libraries(testXkb Qt6::XkbCommonSupportPrivate)
-else()
-    target_link_libraries(testXkb Qt::GuiPrivate)
-endif()
 add_test(NAME kwin-testXkb COMMAND testXkb)
 ecm_mark_as_test(testXkb)
 

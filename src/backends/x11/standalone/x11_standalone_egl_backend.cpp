@@ -20,9 +20,6 @@
 #include "x11_standalone_overlaywindow.h"
 
 #include <QOpenGLContext>
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <QtPlatformHeaders/QEGLNativeContext>
-#endif
 #include <drm_fourcc.h>
 
 namespace KWin
@@ -97,17 +94,6 @@ void EglBackend::init()
     EGLContext shareContext = EGL_NO_CONTEXT;
     if (qtShareContext) {
         qDebug(KWIN_X11STANDALONE) << "Global share context format:" << qtShareContext->format();
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        const QVariant nativeHandle = qtShareContext->nativeHandle();
-        if (!nativeHandle.canConvert<QEGLNativeContext>()) {
-            setFailed(QStringLiteral("Invalid QOpenGLContext::globalShareContext()"));
-            return;
-        } else {
-            QEGLNativeContext handle = qvariant_cast<QEGLNativeContext>(nativeHandle);
-            shareContext = handle.context();
-            shareDisplay = handle.display();
-        }
-#else
         const auto nativeHandle = qtShareContext->nativeInterface<QNativeInterface::QEGLContext>();
         if (nativeHandle) {
             shareContext = nativeHandle->nativeContext();
@@ -116,7 +102,6 @@ void EglBackend::init()
             setFailed(QStringLiteral("Invalid QOpenGLContext::globalShareContext()"));
             return;
         }
-#endif
     }
     if (shareContext == EGL_NO_CONTEXT) {
         setFailed(QStringLiteral("QOpenGLContext::globalShareContext() is required"));

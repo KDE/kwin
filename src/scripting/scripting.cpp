@@ -170,11 +170,7 @@ void KWin::Script::run()
     m_starting = true;
     QFutureWatcher<QByteArray> *watcher = new QFutureWatcher<QByteArray>(this);
     connect(watcher, &QFutureWatcherBase::finished, this, &Script::slotScriptLoadedFromFile);
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    watcher->setFuture(QtConcurrent::run(this, &KWin::Script::loadScriptFromFile, fileName()));
-#else
     watcher->setFuture(QtConcurrent::run(&KWin::Script::loadScriptFromFile, this, fileName()));
-#endif
 }
 
 QByteArray KWin::Script::loadScriptFromFile(const QString &fileName)

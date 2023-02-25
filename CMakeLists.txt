@@ -46,14 +46,9 @@ find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     UiTools
     Widgets
 )
-if (QT_MAJOR_VERSION EQUAL "5")
-    find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS X11Extras)
-    find_package(Qt6XkbCommonSupport REQUIRED)
-else()
-    find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS WaylandClient ShaderTools)
-    if (Qt6WaylandClient_VERSION VERSION_LESS "6.4.1") # TODO Plasma 6: Drop once minimum Qt version is 6.4.1+
-        include(Qt6WaylandClientMacrosKde)
-    endif()
+find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS WaylandClient ShaderTools)
+if (Qt6WaylandClient_VERSION VERSION_LESS "6.4.1") # TODO Plasma 6: Drop once minimum Qt version is 6.4.1+
+    include(Qt6WaylandClientMacrosKde)
 endif()
 
 find_package(Qt${QT_MAJOR_VERSION}Test ${QT_MIN_VERSION} CONFIG QUIET)
@@ -210,14 +205,6 @@ set_package_properties(PlasmaWaylandProtocols PROPERTIES
     URL "https://invent.kde.org/libraries/plasma-wayland-protocols/"
 )
 
-if (QT_MAJOR_VERSION EQUAL "5")
-    find_package(QtWaylandScanner)
-    set_package_properties(QtWaylandScanner PROPERTIES
-        TYPE REQUIRED
-        PURPOSE "Required for building KWin with Wayland support"
-    )
-endif()
-
 find_package(XKB 0.7.0)
 set_package_properties(XKB PROPERTIES
     TYPE REQUIRED
@@ -312,14 +299,6 @@ set_package_properties(X11_XCB PROPERTIES
     PURPOSE "Required for building X11 windowed backend of kwin_wayland"
     TYPE OPTIONAL
 )
-
-# dependencies for QPA plugin
-if (QT_MAJOR_VERSION EQUAL "5")
-    find_package(Qt6FontDatabaseSupport REQUIRED)
-    find_package(Qt6ThemeSupport REQUIRED)
-    find_package(Qt6ServiceSupport REQUIRED)
-    find_package(Qt6EventDispatcherSupport REQUIRED)
-endif()
 
 find_package(Freetype)
 set_package_properties(Freetype PROPERTIES

@@ -28,11 +28,3 @@ target_link_libraries(KWinQpaPlugin PRIVATE
     Fontconfig::Fontconfig
     kwin
 )
-if (QT_MAJOR_VERSION EQUAL "5")
-    target_link_libraries(KWinQpaPlugin PRIVATE
-        Qt::FontDatabaseSupportPrivate
-        Qt::ThemeSupportPrivate
-        Qt::EventDispatcherSupportPrivate
-        Qt::ServiceSupportPrivate
-    )
-endif()

@@ -304,11 +304,7 @@ void Tile::insertChild(int position, Tile *item)
     const bool wasEmpty = m_children.isEmpty();
     item->setParent(this);
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    m_children.insert(std::clamp(position, 0, m_children.length()), item);
-#else
     m_children.insert(std::clamp<qsizetype>(position, 0, m_children.length()), item);
-#endif
 
     if (wasEmpty) {
         Q_EMIT isLayoutChanged(true);

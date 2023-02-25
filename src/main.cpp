@@ -48,12 +48,7 @@
 #include <QStandardPaths>
 #include <QTranslator>
 #include <qplatformdefs.h>
-
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <private/qtx11extras_p.h>
-#else
-#include <QX11Info>
-#endif
 
 #include <cerrno>
 
@@ -596,11 +591,7 @@ void Application::updateX11Time(xcb_generic_event_t *event)
     setX11Time(time);
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-bool XcbEventFilter::nativeEventFilter(const QByteArray &eventType, void *message, long int *result)
-#else
 bool XcbEventFilter::nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result)
-#endif
 {
     if (eventType == "xcb_generic_event_t") {
         return kwinApp()->dispatchEvent(static_cast<xcb_generic_event_t *>(message));

@@ -769,14 +769,6 @@ void ConfigurationModule::initQml()
     }
 
     KPluginMetaData metaData(packageRoot + QLatin1String("/metadata.json"));
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    if (!metaData.isValid()) {
-        metaData = KPluginMetaData::fromDesktopFile(packageRoot + QLatin1String("/metadata.desktop"));
-        if (metaData.isValid()) {
-            qWarning("metadata.desktop format is obsolete. Please convert %s to JSON metadata", qPrintable(metaData.fileName()));
-        }
-    }
-#endif
     if (!metaData.isValid()) {
         return;
     }

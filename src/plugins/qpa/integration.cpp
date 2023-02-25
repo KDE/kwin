@@ -28,16 +28,10 @@
 #include <qpa/qplatformwindow.h>
 #include <qpa/qwindowsysteminterface.h>
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <QtEventDispatcherSupport/private/qunixeventdispatcher_qpa_p.h>
-#include <QtFontDatabaseSupport/private/qgenericunixfontdatabase_p.h>
-#include <QtThemeSupport/private/qgenericunixthemes_p.h>
-#else
 #include <QtGui/private/qgenericunixeventdispatcher_p.h>
 #include <QtGui/private/qgenericunixfontdatabase_p.h>
 #include <QtGui/private/qgenericunixthemes_p.h>
 #include <QtGui/private/qunixeventdispatcher_qpa_p.h>
-#endif
 
 namespace KWin
 {

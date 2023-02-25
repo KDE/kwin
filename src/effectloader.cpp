@@ -163,11 +163,7 @@ void ScriptedEffectLoader::queryAndLoadAll()
             m_queryConnection = QMetaObject::Connection();
         },
         Qt::QueuedConnection);
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    watcher->setFuture(QtConcurrent::run(this, &ScriptedEffectLoader::findAllEffects));
-#else
     watcher->setFuture(QtConcurrent::run(&ScriptedEffectLoader::findAllEffects, this));
-#endif
 }
 
 QList<KPluginMetaData> ScriptedEffectLoader::findAllEffects() const
