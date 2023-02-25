@@ -1034,20 +1034,6 @@ void Window::doSetDemandsAttention()
 {
 }
 
-void Window::setDesktop(int desktop)
-{
-    const int numberOfDesktops = VirtualDesktopManager::self()->count();
-    if (desktop != NET::OnAllDesktops) { // Do range check
-        desktop = std::max(1, std::min(numberOfDesktops, desktop));
-    }
-
-    QVector<VirtualDesktop *> desktops;
-    if (desktop != NET::OnAllDesktops) {
-        desktops << VirtualDesktopManager::self()->desktopForX11Id(desktop);
-    }
-    setDesktops(desktops);
-}
-
 void Window::setDesktops(QVector<VirtualDesktop *> desktops)
 {
     // on x11 we can have only one desktop at a time

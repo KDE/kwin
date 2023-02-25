@@ -962,7 +962,6 @@ public:
     void setShortcut(const QString &cut);
     bool performMouseCommand(Options::MouseCommand, const QPointF &globalPos);
     void setOnAllDesktops(bool set);
-    void setDesktop(int);
     void enterDesktop(VirtualDesktop *desktop);
     void leaveDesktop(VirtualDesktop *desktop);
 
