@@ -1999,6 +1999,7 @@ void X11Window::doSetSkipSwitcher()
 
 void X11Window::doSetDesktop()
 {
+    info->setDesktop(desktop());
     updateVisibility();
 }
 

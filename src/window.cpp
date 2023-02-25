@@ -1081,9 +1081,6 @@ void Window::setDesktops(QVector<VirtualDesktop *> desktops)
             }
         }
     }
-    if (info) {
-        info->setDesktop(desktop());
-    }
 
     if (isOnAllDesktops() != wasOnAllDesktops) {
         workspace()->updateOnAllDesktopsOfTransients(this);
