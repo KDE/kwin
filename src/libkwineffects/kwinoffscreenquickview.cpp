@@ -190,6 +190,9 @@ OffscreenQuickView::OffscreenQuickView(QObject *parent, QWindow *renderWindow, E
 
 OffscreenQuickView::~OffscreenQuickView()
 {
+    disconnect(d->m_renderControl.get(), &QQuickRenderControl::renderRequested, this, &OffscreenQuickView::handleRenderRequested);
+    disconnect(d->m_renderControl.get(), &QQuickRenderControl::sceneChanged, this, &OffscreenQuickView::handleSceneChanged);
+
     if (d->m_glcontext) {
         // close the view whilst we have an active GL context
         d->m_glcontext->makeCurrent(d->m_offscreenSurface.get());
