@@ -7,14 +7,14 @@
 # Marcus Gama <marcus.gama@gmail.com>, 2006.
 # Diniz Bortolotto <diniz.bortolotto@gmail.com>, 2007, 2008.
 # André Marcelo Alvarenga <alvarenga@kde.org>, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2019.
-# Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2010, 2011, 2012, 2017, 2018, 2019, 2020, 2021, 2022.
+# Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2010, 2011, 2012, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 # Thiago Masato Costa Sueto <herzenschein@gmail.com>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-18 01:00+0000\n"
-"PO-Revision-Date: 2022-05-03 13:37-0300\n"
+"PO-Revision-Date: 2023-02-24 16:22-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 20.04.2\n"
+"X-Generator: Lokalize 21.12.3\n"
 
 #: kcmrules.cpp:26
 #, kde-format
@@ -774,10 +774,9 @@ msgid "Block compositing"
 msgstr "Bloquear composição"
 
 #: rulesmodel.cpp:723
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Classe da janela (aplicativo):"
+msgstr "Classe da janela não disponível"
 
 #: rulesmodel.cpp:724
 #, kde-kuit-format
@@ -938,8 +937,7 @@ msgid "Extreme"
 msgstr "Extremo"
 
 #: rulesmodel.cpp:885
-#, fuzzy, kde-format
-#| msgid "Unmanaged Window"
+#, kde-format
 msgid "Unmanaged window"
 msgstr "Janela sem gerenciamento"
 

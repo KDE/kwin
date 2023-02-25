@@ -5,20 +5,21 @@
 # Markus Slopianka <kamikazow@fishmouth.net>, 2010.
 # Felix Schweighofer <felix.schweighofer@googlemail.com>, 2010.
 # Hendrik Knackstedt <kn.hendrik@gmail.com>, 2011.
+# Jannick Kuhr <opensource@kuhr.org>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-18 01:00+0000\n"
-"PO-Revision-Date: 2022-07-02 12:35+0200\n"
-"Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
+"PO-Revision-Date: 2023-02-22 21:23+0100\n"
+"Last-Translator: Jannick Kuhr <opensource@kuhr.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.04.1\n"
+"X-Generator: Lokalize 22.12.2\n"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: blur/blur_config.ui:17
@@ -189,7 +190,7 @@ msgstr "&Raster-Layout-Modus:"
 #: windowview/kcm/windowvieweffectkcm.ui:30
 #, kde-format
 msgid "Closest"
-msgstr ""
+msgstr "Möglichst eng"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: desktopgrid/desktopgrid_config.ui:142 overview/kcm/overvieweffectkcm.ui:35
@@ -200,17 +201,15 @@ msgstr "Natürlich"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: desktopgrid/desktopgrid_config.ui:147
-#, fuzzy, kde-format
-#| msgid "None"
+#, kde-format
 msgid "None"
-msgstr "Keine(s)"
+msgstr "Keines"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: desktopgrid/desktopgrid_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Windows layout:"
-msgstr "Fenster"
+msgstr "Fenster-Layout:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: desktopgrid/desktopgrid_config.ui:171
@@ -322,10 +321,9 @@ msgid "Toggle Invert Effect on Window"
 msgstr "Invertieren-Effekt für Fenster umschalten"
 
 #: invert/invert.cpp:56
-#, fuzzy, kde-format
-#| msgid "Invert cursor keys"
+#, kde-format
 msgid "Invert Screen Colors"
-msgstr "Pfeiltasten umkehren"
+msgstr "Bildschirmfarben invertieren"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: login/package/contents/ui/config.ui:17
@@ -548,7 +546,7 @@ msgstr ""
 #, kde-format
 msgctxt "@label"
 msgid "Unknown"
-msgstr ""
+msgstr "Unbekannt"
 
 #: overview/kcm/overvieweffectkcm.cpp:41 overview/overvieweffect.cpp:31
 #, kde-format
@@ -571,28 +569,25 @@ msgstr "Minimierte Fenster ignorieren:"
 #: overview/qml/DesktopBar.qml:187
 #, kde-format
 msgid "Delete Virtual Desktop"
-msgstr ""
+msgstr "Virtuelle Arbeitsfläche löschen"
 
 #: overview/qml/DesktopBar.qml:283
-#, fuzzy, kde-format
-#| msgid "Add Desktop"
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "Arbeitsfläche hinzufügen"
+msgstr "Virtuelle Arbeitsfläche hinzufügen"
 
 #: overview/qml/ScreenView.qml:226
-#, fuzzy, kde-format
-#| msgid "Moving windows:"
+#, kde-format
 msgid "No matching windows"
-msgstr "Verschieben von Fenstern:"
+msgstr "Keine passenden Fenster"
 
 #: private/qml/WindowHeapDelegate.qml:151
 #, kde-format
 msgid "Drag Down To Close"
-msgstr ""
+msgstr "Zum Schließen nach unten ziehen"
 
 #: private/qml/WindowHeapDelegate.qml:461
-#, fuzzy, kde-format
-#| msgid "Close window"
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
 msgstr "Fenster schließen"
@@ -661,18 +656,16 @@ msgstr "Ringanzahl:"
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr ""
+msgstr "Aktuelle FPS"
 
 #: showfps/qml/main.qml:184
-#, fuzzy, kde-format
-#| msgid "Maximum &width:"
+#, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr "Maximale &Breite:"
+msgstr "Maximale FPS"
 
 #: showfps/qml/main.qml:192
-#, fuzzy, kde-format
-#| msgid "This effect is not a benchmark"
+#, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Dieser Effekt ist kein Benchmark"
@@ -748,44 +741,42 @@ msgstr " %"
 #: tileseditor/tileseditoreffect.cpp:29
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr ""
+msgstr "Tiling-Editor ein-/ausschalten"
 
 #: tileseditor/qml/main.qml:150
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "Zwischenraum:"
 
 #: tileseditor/qml/main.qml:160
 #, kde-format
 msgid "Load Layout..."
-msgstr ""
+msgstr "Layout laden ..."
 
 #: tileseditor/qml/main.qml:274
 #, kde-format
 msgid "Close"
-msgstr ""
+msgstr "Schließen"
 
 #: tileseditor/qml/TileDelegate.qml:167
-#, fuzzy, kde-format
-#| msgid "Horizontal:"
+#, kde-format
 msgid "Split Horizontally"
-msgstr "Waagerecht:"
+msgstr "Waagerecht aufteilen"
 
 #: tileseditor/qml/TileDelegate.qml:174
-#, fuzzy, kde-format
-#| msgid "Vertical:"
+#, kde-format
 msgid "Split Vertically"
-msgstr "Senkrecht:"
+msgstr "Senkrecht aufteilen"
 
 #: tileseditor/qml/TileDelegate.qml:182 tileseditor/qml/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
-msgstr ""
+msgstr "Schwebende Kachel hinzufügen"
 
 #: tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "Löschen"
 
 #: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
 #, kde-format
@@ -929,13 +920,12 @@ msgstr "Fenster aller Arbeitsflächen anzeigen"
 #: windowview/kcm/windowvieweffectkcm.cpp:56 windowview/windowvieweffect.cpp:63
 #, kde-format
 msgid "Toggle Present Windows (Window class)"
-msgstr "Fenster zeigen umschalten (Fensterklasse)"
+msgstr "Fenster der Fensterklasse anzeigen"
 
 #: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:72
-#, fuzzy, kde-format
-#| msgid "Toggle Present Windows (Current desktop)"
+#, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
-msgstr "Fenster der aktuellen Arbeitsfläche anzeigen"
+msgstr "Fenster der Fensterklasse auf der aktuellen Arbeitsfläche anzeigen"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: windowview/kcm/windowvieweffectkcm.ui:56
@@ -954,10 +944,9 @@ msgid "No Windows"
 msgstr "Keine Fenster"
 
 #: windowview/qml/main.qml:122
-#, fuzzy, kde-format
-#| msgid "Fullscreen windows"
+#, kde-format
 msgid "Filter windows…"
-msgstr "Vollbildfenster"
+msgstr "Fenster filtern ..."
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: wobblywindows/wobblywindows_config.ui:20

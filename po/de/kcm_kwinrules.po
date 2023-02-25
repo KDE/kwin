@@ -4,20 +4,21 @@
 # Frederik Schwarzer <schwarzer@kde.org>, 2009, 2010, 2011, 2012, 2016, 2018, 2022.
 # Burkhard Lück <lueck@hube-lueck.de>, 2011, 2012, 2013, 2014, 2015, 2017, 2018, 2019, 2020, 2021.
 # Frank Steinmetzger <Warp_7@gmx.de>, 2011, 2012.
+# Jannick Kuhr <opensource@kuhr.org>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-18 01:00+0000\n"
-"PO-Revision-Date: 2022-07-02 12:32+0200\n"
-"Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
+"PO-Revision-Date: 2023-02-20 18:06+0100\n"
+"Last-Translator: Jannick Kuhr <opensource@kuhr.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.04.1\n"
+"X-Generator: Lokalize 22.12.2\n"
 
 #: kcmrules.cpp:26
 #, kde-format
@@ -770,10 +771,9 @@ msgid "Block compositing"
 msgstr "Compositing blockieren"
 
 #: rulesmodel.cpp:723
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Fensterklasse (Programm)"
+msgstr "Fensterklasse nicht verfügbar"
 
 #: rulesmodel.cpp:724
 #, kde-kuit-format
@@ -934,8 +934,7 @@ msgid "Extreme"
 msgstr "Extrem"
 
 #: rulesmodel.cpp:885
-#, fuzzy, kde-format
-#| msgid "Unmanaged Window"
+#, kde-format
 msgid "Unmanaged window"
 msgstr "Nicht verwaltetes Fenster"
 

@@ -4,13 +4,13 @@
 #
 # Diniz Bortolotto <diniz.bortolotto@gmail.com>, 2007.
 # André Marcelo Alvarenga <alvarenga@kde.org>, 2009, 2010, 2013, 2014, 2015, 2019.
-# Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2009, 2016, 2018, 2021.
+# Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2009, 2016, 2018, 2021, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwin_virtualdesktops\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-18 01:00+0000\n"
-"PO-Revision-Date: 2021-09-15 08:33-0300\n"
+"PO-Revision-Date: 2023-02-24 16:21-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 20.04.2\n"
+"X-Generator: Lokalize 21.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -31,13 +31,12 @@ msgid "Your emails"
 msgstr "alvarenga@kde.org, jsantiago12tone@gmail.com"
 
 #: desktopsmodel.cpp:191
-#, fuzzy, kde-format
-#| msgid "New Desktop"
+#, kde-format
 msgctxt "A numbered name for virtual desktops"
 msgid "Desktop %1"
 msgid_plural "Desktop %1"
-msgstr[0] "Nova área de trabalho"
-msgstr[1] "Nova área de trabalho"
+msgstr[0] "Área de trabalho %1"
+msgstr[1] "Área de trabalho %1"
 
 #: desktopsmodel.cpp:479
 #, kde-format

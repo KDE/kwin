@@ -10,21 +10,21 @@
 # Diniz Bortolotto <diniz.bortolotto@gmail.com>, 2007, 2008.
 # Fernando Boaglio <boaglio@kde.org>, 2008.
 # André Marcelo Alvarenga <alvarenga@kde.org>, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2019.
-# Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2009, 2010, 2012, 2019, 2020, 2021.
+# Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2009, 2010, 2012, 2019, 2020, 2021, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2021-05-15 14:37-0300\n"
+"PO-Revision-Date: 2023-02-24 16:22-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
-"Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
+"Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 20.04.2\n"
+"X-Generator: Lokalize 21.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -494,35 +494,7 @@ msgstr "&Posicionamento da janela:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_Placement)
 #: advanced.ui:76
-#, fuzzy, kde-format
-#| msgid ""
-#| "<html><head/><body><p>The placement policy determines where a new window "
-#| "will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-"
-#| "bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;"
-#| "\"><li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; "
-#| "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
-#| "font-style:italic;\">Smart</span> will try to achieve a minimum overlap "
-#| "of windows</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-#| "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-#| "style=\" font-style:italic;\">Maximizing</span> will try to maximize "
-#| "every window to fill the whole screen. It might be useful to selectively "
-#| "affect placement of some windows using the window-specific settings.</"
-#| "li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
-#| "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
-#| "font-style:italic;\">Cascade</span> will cascade the windows</li><li "
-#| "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-#| "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-#| "style:italic;\">Random</span> will use a random position</li><li style=\" "
-#| "margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-#| "block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-#| "\">Centered</span> will place the window centered</li><li style=\" margin-"
-#| "top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-#| "indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Zero-"
-#| "cornered</span> will place the window in the top-left corner</li><li "
-#| "style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-"
-#| "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-#| "style:italic;\">Under mouse</span> will place the window under the "
-#| "pointer</li></ul></body></html>"
+#, kde-format
 msgid ""
 "<html><head/><body><p>The placement policy determines where a new window "
 "will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-bottom: "
@@ -561,12 +533,9 @@ msgstr ""
 "colocação de algumas janelas usando as opções específicas de cada uma delas."
 "</li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">Em cascata</span> colocará as janelas em cascata</li><li style=\" "
+"italic;\">Aleatória</span> usará uma posição aleatória</li><li style=\" "
 "margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
 "block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-"\">Aleatória</span> usará uma posição aleatória</li><li style=\" margin-"
-"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-"indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
 "\">Centralizada</span> centralizará a janela</li><li style=\" margin-"
 "top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
 "indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">No canto</"
@@ -663,7 +632,7 @@ msgstr "Ocultar as janelas utilitárias para aplicativos inativos"
 #: advanced.ui:143
 #, kde-format
 msgid "Virtual Desktop behavior:"
-msgstr ""
+msgstr "Comportamento da área de trabalho virtual:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
 #: advanced.ui:153

@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # André Marcelo Alvarenga <alvarenga@kde.org>, 2013.
-# Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2017.
+# Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2017, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin_scripting\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-18 01:00+0000\n"
-"PO-Revision-Date: 2017-07-28 11:58-0300\n"
+"PO-Revision-Date: 2023-02-24 16:21-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -17,25 +17,25 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 2.0\n"
+"X-Generator: Lokalize 21.12.3\n"
 
 #: genericscriptedconfig.cpp:69
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "Não foi possível localizar os metadados do pacote"
 
 #: genericscriptedconfig.cpp:83
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "%1 não contém um arquivo metadata.json válido"
 
 #: genericscriptedconfig.cpp:89 genericscriptedconfig.cpp:95
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "%1 não existe"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

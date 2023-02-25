@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-24 01:00+0000\n"
-"PO-Revision-Date: 2023-01-16 23:33-0300\n"
+"POT-Creation-Date: 2023-02-25 01:02+0000\n"
+"PO-Revision-Date: 2023-02-24 16:25-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -74,7 +74,7 @@ msgstr ""
 #: composite.cpp:1080
 #, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr ""
+msgstr "GLX/OpenGL não está disponível."
 
 #: debug_console.cpp:79 debug_console.cpp:84
 #, kde-format
@@ -1171,14 +1171,12 @@ msgstr "Esperar um pouco"
 #: input.cpp:2009
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "Mover o tablet para a próxima saída"
 
 #: input.cpp:2088
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Tablet moved to %1"
-msgstr "Modo tablet"
+msgstr "Tablet movido para %1"
 
 #: input.cpp:2088
 #, kde-format
@@ -2125,20 +2123,20 @@ msgstr "Tipo de regra de nome do arquivo da área de trabalho"
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "Não foi possível localizar os metadados do pacote"
 
 #: scripting/genericscriptedconfig.cpp:83
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "%1 não contém um arquivo metadata.json válido"
 
 #: scripting/genericscriptedconfig.cpp:89
 #: scripting/genericscriptedconfig.cpp:95
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "%1 não existe"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2273,10 +2271,9 @@ msgid "&Shade"
 msgstr "&Enrolar"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "Sem barra de título e moldura"
+msgstr "&Sem barra de título e moldura"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2347,11 +2344,9 @@ msgid "Show in &Activities"
 msgstr "Mostrar nas a&tividades"
 
 #: useractions.cpp:525
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move the window to that desktop"
-#| msgid "Move to New Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "Mover para a nova área de trabalho"
+msgstr "Mover para a área de &trabalho atual"
 
 #: useractions.cpp:535 useractions.cpp:602
 #, kde-format
@@ -2395,10 +2390,9 @@ msgid "&All Activities"
 msgstr "Tod&as as atividades"
 
 #: useractions.cpp:776
-#, fuzzy, kde-format
-#| msgid "Move to %1 %2"
+#, kde-format
 msgid "Move to %1"
-msgstr "Mover para %1 %2"
+msgstr "Mover para %1"
 
 #: useractions.cpp:901
 #, kde-format
@@ -2609,14 +2603,12 @@ msgid "Switch to Window to the Left"
 msgstr "Mudar para a janela à esquerda"
 
 #: useractions.cpp:1061
-#, fuzzy, kde-format
-#| msgid "Increase Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Aumentar a opacidade da janela ativa em 5%"
 
 #: useractions.cpp:1063
-#, fuzzy, kde-format
-#| msgid "Decrease Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Diminuir a opacidade da janela ativa em 5%"
 
@@ -2818,7 +2810,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(não está respondendo)"
 
-#: workspace.cpp:1850
+#: workspace.cpp:1847
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

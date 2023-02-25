@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-18 01:00+0000\n"
-"PO-Revision-Date: 2023-02-15 11:04\n"
+"PO-Revision-Date: 2023-02-24 12:43\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -919,21 +919,3 @@ msgstr "未管理窗口"
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "无法检测窗口属性。该窗口不受 KWin 管理。"
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "KDE 中国,Guo Yunhe,Coelacanthus,Tyson Tan"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr ""
-#~ "kde-china@kde.org,i@guoyunhe.me,coelacanthus@kde.org,tysontan@tysontan.com"
-
-#~ msgid "Window Rules"
-#~ msgstr "窗口规则"
-
-#~ msgid "Ismael Asensio"
-#~ msgstr "Ismael Asensio"
-
-#~ msgid "Author"
-#~ msgstr "作者"

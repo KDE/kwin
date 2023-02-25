@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-18 01:00+0000\n"
-"PO-Revision-Date: 2023-01-16 23:34-0300\n"
+"PO-Revision-Date: 2023-02-24 16:23-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -204,7 +204,7 @@ msgstr "Natural"
 #: desktopgrid/desktopgrid_config.ui:147
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Nenhum"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: desktopgrid/desktopgrid_config.ui:155
@@ -322,10 +322,9 @@ msgid "Toggle Invert Effect on Window"
 msgstr "Alternar o efeito de inversão na janela"
 
 #: invert/invert.cpp:56
-#, fuzzy, kde-format
-#| msgid "Invert cursor keys"
+#, kde-format
 msgid "Invert Screen Colors"
-msgstr "Inverter teclas de cursores"
+msgstr "Inverter cores da tela"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: login/package/contents/ui/config.ui:17
@@ -749,25 +748,22 @@ msgstr ""
 #: tileseditor/qml/main.qml:160
 #, kde-format
 msgid "Load Layout..."
-msgstr ""
+msgstr "Carregar layout..."
 
 #: tileseditor/qml/main.qml:274
-#, fuzzy, kde-format
-#| msgid "Closest"
+#, kde-format
 msgid "Close"
-msgstr "Mais próximo"
+msgstr "Fechar"
 
 #: tileseditor/qml/TileDelegate.qml:167
-#, fuzzy, kde-format
-#| msgid "Horizontal:"
+#, kde-format
 msgid "Split Horizontally"
-msgstr "Horizontal:"
+msgstr "Dividir horizontalmente"
 
 #: tileseditor/qml/TileDelegate.qml:174
-#, fuzzy, kde-format
-#| msgid "Vertical:"
+#, kde-format
 msgid "Split Vertically"
-msgstr "Vertical:"
+msgstr "Dividir verticalmente"
 
 #: tileseditor/qml/TileDelegate.qml:182 tileseditor/qml/TileDelegate.qml:211
 #, kde-format
@@ -777,7 +773,7 @@ msgstr ""
 #: tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "Excluir"
 
 #: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
 #, kde-format
@@ -946,10 +942,9 @@ msgid "No Windows"
 msgstr "Sem janelas"
 
 #: windowview/qml/main.qml:122
-#, fuzzy, kde-format
-#| msgid "Fullscreen windows"
+#, kde-format
 msgid "Filter windows…"
-msgstr "Janelas em tela cheia"
+msgstr "Filtrar janelas…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: wobblywindows/wobblywindows_config.ui:20

@@ -5,20 +5,21 @@
 # Johannes Obermayr <johannesobermayr@gmx.de>, 2010.
 # Burkhard Lück <lueck@hube-lueck.de>, 2010, 2012, 2014, 2015, 2018, 2020.
 # Frank Steinmetzger <Warp_7@gmx.de>, 2011.
+# Jannick Kuhr <opensource@kuhr.org>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-08 01:01+0000\n"
-"PO-Revision-Date: 2022-07-02 12:32+0200\n"
-"Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
+"PO-Revision-Date: 2023-02-20 18:07+0100\n"
+"Last-Translator: Jannick Kuhr <opensource@kuhr.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.04.1\n"
+"X-Generator: Lokalize 22.12.2\n"
 
 #: layoutpreview.cpp:131
 #, kde-format
@@ -236,50 +237,42 @@ msgid "Show selected window"
 msgstr "Ausgewähltes Fenster anzeigen"
 
 #: shortcutsettings.cpp:132
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows"
+#, kde-format
 msgid "Walk Through Windows"
 msgstr "Zwischen Fenstern wechseln"
 
 #: shortcutsettings.cpp:133
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows (Reverse)"
+#, kde-format
 msgid "Walk Through Windows (Reverse)"
 msgstr "Zwischen Fenstern wechseln (Gegenrichtung)"
 
 #: shortcutsettings.cpp:134
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows of Current Application"
+#, kde-format
 msgid "Walk Through Windows of Current Application"
 msgstr "Zwischen Fenstern der aktuellen Anwendung wechseln"
 
 #: shortcutsettings.cpp:135
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows of Current Application (Reverse)"
+#, kde-format
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Zwischen Fenstern der aktuellen Anwendung wechseln (Gegenrichtung)"
 
 #: shortcutsettings.cpp:137
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows Alternative"
+#, kde-format
 msgid "Walk Through Windows Alternative"
 msgstr "Alternatives Wechseln zwischen Fenstern"
 
 #: shortcutsettings.cpp:138
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows Alternative (Reverse)"
+#, kde-format
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Alternatives Wechseln zwischen Fenstern (Gegenrichtung)"
 
 #: shortcutsettings.cpp:139
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows of Current Application Alternative"
+#, kde-format
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Alternatives Wechseln zwischen Fenstern der aktuellen Anwendung"
 
 #: shortcutsettings.cpp:140
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+#, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Alternatives Wechseln zwischen Fenstern der aktuellen Anwendung "

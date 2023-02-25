@@ -1,19 +1,21 @@
 # Thomas Reitelbach <tr@erdfunkstelle.de>, 2007, 2009.
 # Frederik Schwarzer <schwarzer@kde.org>, 2010, 2012.
 # Burkhard Lück <lueck@hube-lueck.de>, 2013, 2014, 2018, 2019, 2021.
+# Jannick Kuhr <opensource@kuhr.org>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-18 01:00+0000\n"
-"PO-Revision-Date: 2021-06-01 15:07+0200\n"
-"Last-Translator: Burkhard Lück <lueck@hube-lueck.de>\n"
+"PO-Revision-Date: 2023-02-20 18:04+0100\n"
+"Last-Translator: Jannick Kuhr <opensource@kuhr.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 22.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -26,8 +28,7 @@ msgid "Your emails"
 msgstr "tr@erdfunkstelle.de"
 
 #: desktopsmodel.cpp:191
-#, fuzzy, kde-format
-#| msgid "Desktop %1"
+#, kde-format
 msgctxt "A numbered name for virtual desktops"
 msgid "Desktop %1"
 msgid_plural "Desktop %1"
