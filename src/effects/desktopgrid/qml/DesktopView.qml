@@ -131,19 +131,24 @@ FocusScope {
             windowHeap: heap
             closeButtonVisible: false
             windowTitleVisible: false
-        }
-        onActivated: effect.deactivate(effect.animationDuration);
-        onWindowClicked: {
-            if (eventPoint.event.button === Qt.MiddleButton) {
-                window.closeWindow();
-            } else if (eventPoint.event.button === Qt.RightButton) {
-                if (window.desktops.length > 0) {
-                    window.desktops = [];
-                } else {
-                    window.desktops = [desktopView.desktop];
+
+            TapHandler {
+                acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
+                acceptedButtons: Qt.MiddleButton | Qt.RightButton
+                onTapped: {
+                    if (eventPoint.event.button === Qt.MiddleButton) {
+                        window.closeWindow();
+                    } else if (eventPoint.event.button === Qt.RightButton) {
+                        if (window.desktops.length > 0) {
+                            window.desktops = [];
+                        } else {
+                            window.desktops = [desktopView.desktop];
+                        }
+                    }
                 }
             }
         }
+        onActivated: effect.deactivate(effect.animationDuration);
         Behavior on x {
             enabled: !dragHandler.active
             NumberAnimation {

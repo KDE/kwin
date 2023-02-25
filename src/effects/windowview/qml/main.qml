@@ -179,12 +179,6 @@ Item {
                 }
             }
             layout.mode: effect.layout
-            onWindowClicked: {
-                if (eventPoint.event.button !== Qt.MiddleButton) {
-                    return;
-                }
-                window.closeWindow();
-            }
             model: KWinComponents.WindowFilterModel {
                 activity: KWinComponents.Workspace.currentActivity
                 desktop: {
@@ -209,6 +203,12 @@ Item {
                 windowHeap: heap
                 opacity: 1 - downGestureProgress
                 onDownGestureTriggered: window.closeWindow()
+
+                TapHandler {
+                    acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
+                    acceptedButtons: Qt.MiddleButton
+                    onTapped: window.closeWindow();
+                }
             }
             onActivated: effect.deactivate(container.effect.animationDuration);
         }

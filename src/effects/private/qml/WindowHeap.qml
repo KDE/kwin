@@ -51,8 +51,6 @@ FocusScope {
     property bool dragActive: false
 
     signal activated()
-    //TODO: for 5.26 the delegate will be a separate component instead
-    signal windowClicked(QtObject window, EventPoint eventPoint)
 
     function activateIndex(index) {
         KWinComponents.Workspace.activeClient = windowsInstantiator.objectAt(index).window;

@@ -371,14 +371,6 @@ Item {
         }
     }
 
-    TapHandler {
-        acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
-        acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
-        onTapped: {
-            thumb.windowHeap.windowClicked(thumb.window, eventPoint)
-        }
-    }
-
     component DragManager : DragHandler {
         target: null
         dragThreshold: 0

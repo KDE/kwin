@@ -268,13 +268,14 @@ FocusScope {
 
                     opacity: 1 - downGestureProgress
                     onDownGestureTriggered: window.closeWindow()
-                }
-                onActivated: effect.deactivate();
-                onWindowClicked: {
-                    if (eventPoint.event.button === Qt.MiddleButton) {
-                        window.closeWindow();
+
+                    TapHandler {
+                        acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
+                        acceptedButtons: Qt.MiddleButton
+                        onTapped: window.closeWindow()
                     }
                 }
+                onActivated: effect.deactivate();
             }
 
             Milou.ResultsView {
