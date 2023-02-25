@@ -47,12 +47,12 @@ std::unique_ptr<SurfacePixmap> SurfaceItemInternal::createPixmap()
     return std::make_unique<SurfacePixmapInternal>(this);
 }
 
-void SurfaceItemInternal::handleBufferGeometryChanged(Window *window, const QRectF &old)
+void SurfaceItemInternal::handleBufferGeometryChanged(const QRectF &old)
 {
-    if (window->bufferGeometry().size() != old.size()) {
+    if (m_window->bufferGeometry().size() != old.size()) {
         discardPixmap();
     }
-    setSize(window->bufferGeometry().size());
+    setSize(m_window->bufferGeometry().size());
 }
 
 void SurfaceItemInternal::handleWindowClosed(Window *original, Deleted *deleted)

@@ -107,7 +107,7 @@ Window::Window()
     });
 
     // replace on-screen-display on size changes
-    connect(this, &Window::frameGeometryChanged, this, [this](Window *c, const QRectF &old) {
+    connect(this, &Window::frameGeometryChanged, this, [this](const QRectF &old) {
         if (isOnScreenDisplay() && !frameGeometry().isEmpty() && old.size() != frameGeometry().size() && isPlaceable()) {
             GeometryUpdatesBlocker blocker(this);
             workspace()->placement()->place(this, workspace()->clientArea(PlacementArea, this, workspace()->activeOutput()));
@@ -2962,7 +2962,7 @@ void Window::setDecoration(std::shared_ptr<KDecoration2::Decoration> decoration)
             if (!isShade()) {
                 checkWorkspacePosition(oldGeometry);
             }
-            Q_EMIT geometryShapeChanged(this, oldGeometry);
+            Q_EMIT geometryShapeChanged(oldGeometry);
         });
         connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged,
                 this, &Window::updateDecorationInputShape);

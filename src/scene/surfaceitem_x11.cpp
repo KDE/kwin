@@ -138,12 +138,12 @@ void SurfaceItemX11::destroyDamage()
     }
 }
 
-void SurfaceItemX11::handleBufferGeometryChanged(Window *window, const QRectF &old)
+void SurfaceItemX11::handleBufferGeometryChanged(const QRectF &old)
 {
-    if (window->bufferGeometry().size() != old.size()) {
+    if (m_window->bufferGeometry().size() != old.size()) {
         discardPixmap();
     }
-    setSize(window->bufferGeometry().size());
+    setSize(m_window->bufferGeometry().size());
 }
 
 void SurfaceItemX11::handleGeometryShapeChanged()

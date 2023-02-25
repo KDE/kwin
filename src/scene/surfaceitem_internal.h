@@ -31,7 +31,7 @@ public:
     QVector<QRectF> shape() const override;
 
 private Q_SLOTS:
-    void handleBufferGeometryChanged(Window *window, const QRectF &old);
+    void handleBufferGeometryChanged(const QRectF &old);
     void handleWindowClosed(Window *original, Deleted *deleted);
 
 protected:

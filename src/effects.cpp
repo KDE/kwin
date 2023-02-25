@@ -290,12 +290,11 @@ void EffectsHandlerImpl::setupWindowConnections(Window *window)
                     Q_EMIT windowMaximizedStateAboutToChange(w, m & MaximizeHorizontal, m & MaximizeVertical);
                 }
             });
-    connect(window, &Window::frameGeometryAboutToChange,
-            this, [this](KWin::Window *window) {
-                if (EffectWindowImpl *w = window->effectWindow()) {
-                    Q_EMIT windowFrameGeometryAboutToChange(w);
-                }
-            });
+    connect(window, &Window::frameGeometryAboutToChange,  this, [this, window]() {
+        if (EffectWindowImpl *w = window->effectWindow()) {
+            Q_EMIT windowFrameGeometryAboutToChange(w);
+        }
+    });
     connect(window, &Window::interactiveMoveResizeStarted, this, [this, window]() {
         Q_EMIT windowStartUserMovedResized(window->effectWindow());
     });
@@ -314,8 +313,19 @@ void EffectsHandlerImpl::setupWindowConnections(Window *window)
         }
     });
     connect(window, &Window::modalChanged, this, &EffectsHandlerImpl::slotClientModalityChanged);
-    connect(window, &Window::geometryShapeChanged, this, &EffectsHandlerImpl::slotGeometryShapeChanged);
-    connect(window, &Window::frameGeometryChanged, this, &EffectsHandlerImpl::slotFrameGeometryChanged);
+    connect(window, &Window::geometryShapeChanged, this, [this, window](const QRectF &old) {
+        // during late cleanup effectWindow() may be already NULL
+        // in some functions that may still call this
+        if (window->effectWindow()) {
+            Q_EMIT windowGeometryShapeChanged(window->effectWindow(), old);;
+        }
+    });
+    connect(window, &Window::frameGeometryChanged, this, [this, window](const QRectF &oldGeometry) {
+        // effectWindow() might be nullptr during tear down of the client.
+        if (window->effectWindow()) {
+            Q_EMIT windowFrameGeometryChanged(window->effectWindow(), oldGeometry);
+        }
+    });
     connect(window, &Window::damaged, this, &EffectsHandlerImpl::slotWindowDamaged);
     connect(window, &Window::unresponsiveChanged, this, [this, window](bool unresponsive) {
         Q_EMIT windowUnresponsiveChanged(window->effectWindow(), unresponsive);
@@ -350,14 +360,24 @@ void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged *u)
 {
     connect(u, &Unmanaged::windowClosed, this, &EffectsHandlerImpl::slotWindowClosed);
     connect(u, &Unmanaged::opacityChanged, this, &EffectsHandlerImpl::slotOpacityChanged);
-    connect(u, &Unmanaged::geometryShapeChanged, this, &EffectsHandlerImpl::slotGeometryShapeChanged);
-    connect(u, &Unmanaged::frameGeometryChanged, this, &EffectsHandlerImpl::slotFrameGeometryChanged);
-    connect(u, &Unmanaged::damaged, this, &EffectsHandlerImpl::slotWindowDamaged);
+    connect(u, &Unmanaged::geometryShapeChanged, this, [this, u](const QRectF &old) {
+        // during late cleanup effectWindow() may be already NULL
+        // in some functions that may still call this
+        if (u->effectWindow()) {
+            Q_EMIT windowGeometryShapeChanged(u->effectWindow(), old);;
+        }
+    });
+    connect(u, &Unmanaged::frameGeometryChanged, this, [this, u](const QRectF &oldGeometry) {
+        // effectWindow() might be nullptr during tear down of the client.
+        if (u->effectWindow()) {
+            Q_EMIT windowFrameGeometryChanged(u->effectWindow(), oldGeometry);
+        }
+    });    connect(u, &Unmanaged::damaged, this, &EffectsHandlerImpl::slotWindowDamaged);
     connect(u, &Unmanaged::visibleGeometryChanged, this, [this, u]() {
         Q_EMIT windowExpandedGeometryChanged(u->effectWindow());
     });
-    connect(u, &Unmanaged::frameGeometryAboutToChange, this, [this](Window *window) {
-        if (EffectWindowImpl *w = window->effectWindow()) {
+    connect(u, &Unmanaged::frameGeometryAboutToChange, this, [this, u]() {
+        if (EffectWindowImpl *w = u->effectWindow()) {
             Q_EMIT windowFrameGeometryAboutToChange(w);
         }
     });
@@ -559,24 +579,6 @@ void EffectsHandlerImpl::slotWindowDamaged(Window *window)
         return;
     }
     Q_EMIT windowDamaged(window->effectWindow());
-}
-
-void EffectsHandlerImpl::slotGeometryShapeChanged(Window *window, const QRectF &old)
-{
-    // during late cleanup effectWindow() may be already NULL
-    // in some functions that may still call this
-    if (window == nullptr || window->effectWindow() == nullptr) {
-        return;
-    }
-    Q_EMIT windowGeometryShapeChanged(window->effectWindow(), old);
-}
-
-void EffectsHandlerImpl::slotFrameGeometryChanged(Window *window, const QRectF &oldGeometry)
-{
-    // effectWindow() might be nullptr during tear down of the client.
-    if (window->effectWindow()) {
-        Q_EMIT windowFrameGeometryChanged(window->effectWindow(), oldGeometry);
-    }
 }
 
 void EffectsHandlerImpl::setActiveFullScreenEffect(Effect *e)

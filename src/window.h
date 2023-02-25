@@ -1410,7 +1410,7 @@ Q_SIGNALS:
     void opacityChanged(KWin::Window *window, qreal oldOpacity);
     void damaged(KWin::Window *window);
     void inputTransformationChanged();
-    void geometryShapeChanged(KWin::Window *window, const QRectF &old);
+    void geometryShapeChanged(const QRectF &old);
     void windowClosed(KWin::Window *window, KWin::Deleted *deleted);
     void windowShown(KWin::Window *window);
     void windowHidden(KWin::Window *window);
@@ -1456,20 +1456,20 @@ Q_SIGNALS:
     /**
      * This signal is emitted when the Window's buffer geometry changes.
      */
-    void bufferGeometryChanged(KWin::Window *window, const QRectF &oldGeometry);
+    void bufferGeometryChanged(const QRectF &oldGeometry);
     /**
      * This signal is emitted when the Window's frame geometry changes.
      */
-    void frameGeometryChanged(KWin::Window *window, const QRectF &oldGeometry);
+    void frameGeometryChanged(const QRectF &oldGeometry);
     /**
      * This signal is emitted when the Window's client geometry has changed.
      */
-    void clientGeometryChanged(KWin::Window *window, const QRectF &oldGeometry);
+    void clientGeometryChanged(const QRectF &oldGeometry);
 
     /**
      * This signal is emitted when the frame geometry is about to change. the new geometry is not known yet
      */
-    void frameGeometryAboutToChange(KWin::Window *window);
+    void frameGeometryAboutToChange();
 
     /**
      * This signal is emitted when the visible geometry has changed.

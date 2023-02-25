@@ -38,11 +38,21 @@ void PlacementTracker::add(Window *window)
     if (window->isUnmanaged() || window->isAppletPopup() || window->isSpecialWindow()) {
         return;
     }
-    connect(window, &Window::frameGeometryChanged, this, &PlacementTracker::saveGeometry);
-    connect(window, &Window::maximizedChanged, this, &PlacementTracker::saveMaximize);
-    connect(window, &Window::quickTileModeChanged, this, &PlacementTracker::saveQuickTile);
-    connect(window, &Window::fullScreenChanged, this, &PlacementTracker::saveFullscreen);
-    connect(window, &Window::interactiveMoveResizeFinished, this, &PlacementTracker::saveInteractionCounter);
+    connect(window, &Window::frameGeometryChanged, this, [this, window]() {
+        saveGeometry(window);
+    });
+    connect(window, &Window::maximizedChanged, this, [this, window]() {
+        saveMaximize(window);
+    });
+    connect(window, &Window::quickTileModeChanged, this, [this, window]() {
+        saveQuickTile(window);
+    });
+    connect(window, &Window::fullScreenChanged, this, [this, window]() {
+        saveFullscreen(window);
+    });
+    connect(window, &Window::interactiveMoveResizeFinished, this, [this, window]() {
+        saveInteractionCounter(window);
+    });
     WindowData data = dataForWindow(window);
     m_data[m_currentKey][window] = data;
     m_savedWindows.push_back(window);
@@ -51,11 +61,7 @@ void PlacementTracker::add(Window *window)
 void PlacementTracker::remove(Window *window)
 {
     if (m_savedWindows.contains(window)) {
-        disconnect(window, &Window::frameGeometryChanged, this, &PlacementTracker::saveGeometry);
-        disconnect(window, &Window::maximizedChanged, this, &PlacementTracker::saveMaximize);
-        disconnect(window, &Window::quickTileModeChanged, this, &PlacementTracker::saveQuickTile);
-        disconnect(window, &Window::fullScreenChanged, this, &PlacementTracker::saveFullscreen);
-        disconnect(window, &Window::interactiveMoveResizeFinished, this, &PlacementTracker::saveInteractionCounter);
+        disconnect(window, nullptr, this, nullptr);
         for (auto &dataMap : m_data) {
             dataMap.remove(window);
         }
@@ -150,28 +156,24 @@ void PlacementTracker::saveGeometry(Window *window)
     }
 }
 
-void PlacementTracker::saveInteractionCounter()
+void PlacementTracker::saveInteractionCounter(Window *window)
 {
-    Window *window = qobject_cast<Window *>(QObject::sender());
-    Q_ASSERT(window);
     if (m_inhibitCount == 0) {
         m_data[m_currentKey][window].interactiveMoveResizeCount = window->interactiveMoveResizeCount();
     }
 }
 
-void PlacementTracker::saveMaximize(Window *window, MaximizeMode mode)
+void PlacementTracker::saveMaximize(Window *window)
 {
     if (m_inhibitCount == 0) {
         auto &data = m_data[m_currentKey][window];
-        data.maximize = mode;
+        data.maximize = window->maximizeMode();
         data.geometryRestore = window->geometryRestore();
     }
 }
 
-void PlacementTracker::saveQuickTile()
+void PlacementTracker::saveQuickTile(Window *window)
 {
-    Window *window = qobject_cast<Window *>(QObject::sender());
-    Q_ASSERT(window);
     if (m_inhibitCount == 0) {
         auto &data = m_data[m_currentKey][window];
         data.quickTile = window->quickTileMode();
@@ -179,10 +181,8 @@ void PlacementTracker::saveQuickTile()
     }
 }
 
-void PlacementTracker::saveFullscreen()
+void PlacementTracker::saveFullscreen(Window *window)
 {
-    Window *window = qobject_cast<Window *>(QObject::sender());
-    Q_ASSERT(window);
     if (m_inhibitCount == 0) {
         auto &data = m_data[m_currentKey][window];
         data.fullscreen = window->isFullScreen();

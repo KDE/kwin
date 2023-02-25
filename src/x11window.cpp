@@ -1210,7 +1210,7 @@ void X11Window::createDecoration(const QRectF &oldgeom)
 
     moveResize(QRectF(calculateGravitation(false), clientSizeToFrameSize(clientSize())));
     maybeCreateX11DecorationRenderer();
-    Q_EMIT geometryShapeChanged(this, oldgeom);
+    Q_EMIT geometryShapeChanged(oldgeom);
 }
 
 void X11Window::destroyDecoration()
@@ -1222,7 +1222,7 @@ void X11Window::destroyDecoration()
         maybeDestroyX11DecorationRenderer();
         moveResize(QRectF(grav, clientSizeToFrameSize(clientSize())));
         if (!isZombie()) {
-            Q_EMIT geometryShapeChanged(this, oldgeom);
+            Q_EMIT geometryShapeChanged(oldgeom);
         }
     }
     m_decoInputExtent.reset();
@@ -1313,7 +1313,7 @@ void X11Window::setClientFrameExtents(const NETStrut &strut)
     moveResize(moveResizeGeometry());
 
     // This will invalidate the window quads cache.
-    Q_EMIT geometryShapeChanged(this, frameGeometry());
+    Q_EMIT geometryShapeChanged(frameGeometry());
 }
 
 /**
@@ -1416,7 +1416,7 @@ void X11Window::updateShape()
     // Decoration mask (i.e. 'else' here) setting is done in setMask()
     // when the decoration calls it or when the decoration is created/destroyed
     updateInputShape();
-    Q_EMIT geometryShapeChanged(this, frameGeometry());
+    Q_EMIT geometryShapeChanged(frameGeometry());
 }
 
 static Xcb::Window shape_helper_window(XCB_WINDOW_NONE);
@@ -4221,7 +4221,7 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
         return;
     }
 
-    Q_EMIT frameGeometryAboutToChange(this);
+    Q_EMIT frameGeometryAboutToChange();
     const QRectF oldBufferGeometry = m_lastBufferGeometry;
     const QRectF oldFrameGeometry = m_lastFrameGeometry;
     const QRectF oldClientGeometry = m_lastClientGeometry;
@@ -4241,18 +4241,18 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
     workspace()->updateStackingOrder();
 
     if (oldBufferGeometry != m_bufferGeometry) {
-        Q_EMIT bufferGeometryChanged(this, oldBufferGeometry);
+        Q_EMIT bufferGeometryChanged(oldBufferGeometry);
     }
     if (oldClientGeometry != m_clientGeometry) {
-        Q_EMIT clientGeometryChanged(this, oldClientGeometry);
+        Q_EMIT clientGeometryChanged(oldClientGeometry);
     }
     if (oldFrameGeometry != m_frameGeometry) {
-        Q_EMIT frameGeometryChanged(this, oldFrameGeometry);
+        Q_EMIT frameGeometryChanged(oldFrameGeometry);
     }
     if (oldOutput != m_output) {
         Q_EMIT outputChanged();
     }
-    Q_EMIT geometryShapeChanged(this, oldFrameGeometry);
+    Q_EMIT geometryShapeChanged(oldFrameGeometry);
 }
 
 void X11Window::updateServerGeometry()
