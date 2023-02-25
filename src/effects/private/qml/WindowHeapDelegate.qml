@@ -373,7 +373,6 @@ Item {
 
     component DragManager : DragHandler {
         target: null
-        dragThreshold: 0
         grabPermissions: PointerHandler.CanTakeOverFromAnything
         // This does not work when moving pointer fast and pressing along the way
         // See also QTBUG-105903, QTBUG-105904
