@@ -50,9 +50,6 @@ InternalWindow::InternalWindow(QWindow *handle)
     setOnAllDesktops(true);
     setOpacity(m_handle->opacity());
     setSkipCloseAnimation(m_handle->property(s_skipClosePropertyName).toBool());
-
-    // Create scene window, effect window, and update server-side shadow.
-    setupCompositing();
     updateColorScheme();
 
     setMoveResizeGeometry(m_handle->geometry());
@@ -523,6 +520,7 @@ void InternalWindow::setCaption(const QString &caption)
 void InternalWindow::markAsMapped()
 {
     if (!ready_for_painting) {
+        setupCompositing();
         setReadyForPainting();
         workspace()->addInternalWindow(this);
     }
