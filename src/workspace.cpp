@@ -854,17 +854,11 @@ void Workspace::replaceInStack(Window *original, Deleted *deleted)
     const int unconstraintedIndex = unconstrained_stacking_order.indexOf(original);
     if (unconstraintedIndex != -1) {
         unconstrained_stacking_order.replace(unconstraintedIndex, deleted);
-    } else {
-        // This can be the case only if an override-redirect window is unmapped.
-        unconstrained_stacking_order.append(deleted);
     }
 
     const int index = stacking_order.indexOf(original);
     if (index != -1) {
         stacking_order.replace(index, deleted);
-    } else {
-        // This can be the case only if an override-redirect window is unmapped.
-        stacking_order.append(deleted);
     }
 
     for (Constraint *constraint : std::as_const(m_constraints)) {
