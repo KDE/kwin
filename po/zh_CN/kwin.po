@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-25 01:02+0000\n"
+"POT-Creation-Date: 2023-02-26 00:59+0000\n"
 "PO-Revision-Date: 2023-02-24 12:43\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -2119,57 +2119,57 @@ msgstr "对话框"
 msgid "..."
 msgstr "..."
 
-#: tabbox/tabbox.cpp:381
+#: tabbox/tabbox.cpp:383
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "显示桌面"
 
-#: tabbox/tabbox.cpp:521
+#: tabbox/tabbox.cpp:523
 msgid "Walk Through Windows"
 msgstr "遍历窗口"
 
-#: tabbox/tabbox.cpp:522
+#: tabbox/tabbox.cpp:524
 msgid "Walk Through Windows (Reverse)"
 msgstr "遍历窗口(反向)"
 
-#: tabbox/tabbox.cpp:523
+#: tabbox/tabbox.cpp:525
 msgid "Walk Through Windows Alternative"
 msgstr "遍历窗口候选"
 
-#: tabbox/tabbox.cpp:524
+#: tabbox/tabbox.cpp:526
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "遍历窗口候选(反向)"
 
-#: tabbox/tabbox.cpp:525
+#: tabbox/tabbox.cpp:527
 msgid "Walk Through Windows of Current Application"
 msgstr "遍历当前应用程序窗口"
 
-#: tabbox/tabbox.cpp:526
+#: tabbox/tabbox.cpp:528
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "遍历当前应用程序窗口(反向)"
 
-#: tabbox/tabbox.cpp:527
+#: tabbox/tabbox.cpp:529
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "遍历当前应用程序窗口候选"
 
-#: tabbox/tabbox.cpp:528
+#: tabbox/tabbox.cpp:530
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "遍历当前应用程序窗口候选(反向)"
 
-#: tabbox/tabbox.cpp:529
+#: tabbox/tabbox.cpp:531
 msgid "Walk Through Desktops"
 msgstr "遍历桌面"
 
-#: tabbox/tabbox.cpp:530
+#: tabbox/tabbox.cpp:532
 msgid "Walk Through Desktops (Reverse)"
 msgstr "遍历桌面(反向)"
 
-#: tabbox/tabbox.cpp:531
+#: tabbox/tabbox.cpp:533
 msgid "Walk Through Desktop List"
 msgstr "遍历桌面列表"
 
-#: tabbox/tabbox.cpp:532
+#: tabbox/tabbox.cpp:534
 msgid "Walk Through Desktop List (Reverse)"
 msgstr "遍历桌面列表(反向)"
 
@@ -2717,53 +2717,53 @@ msgstr ""
 "窗口管理器已设置为鼠标所在屏幕为活动屏幕。\n"
 "否则将无法明确切换到一个屏幕。"
 
-#: virtualdesktops.cpp:693 virtualdesktops.cpp:764
+#: virtualdesktops.cpp:692 virtualdesktops.cpp:763
 #, kde-format
 msgid "Desktop %1"
 msgstr "桌面 %1"
 
-#: virtualdesktops.cpp:800
+#: virtualdesktops.cpp:799
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "切换到下一个桌面"
 
-#: virtualdesktops.cpp:801
+#: virtualdesktops.cpp:800
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "切换到上一个桌面"
 
-#: virtualdesktops.cpp:804
+#: virtualdesktops.cpp:803
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "切换到右边的桌面"
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "切换到左边的桌面"
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:807
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "切换到上面的桌面"
 
-#: virtualdesktops.cpp:810
+#: virtualdesktops.cpp:809
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "切换到下面的桌面"
 
-#: virtualdesktops.cpp:899
+#: virtualdesktops.cpp:898
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "切换到桌面 %1"
 
-#: window.cpp:3420
+#: window.cpp:3403
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(未响应)"
 
-#: workspace.cpp:1847
+#: workspace.cpp:1845
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

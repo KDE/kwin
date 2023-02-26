@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-25 01:02+0000\n"
+"POT-Creation-Date: 2023-02-26 00:59+0000\n"
 "PO-Revision-Date: 2023-02-20 11:15+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -2136,57 +2136,57 @@ msgstr "Hộp thoại"
 msgid "..."
 msgstr "..."
 
-#: tabbox/tabbox.cpp:381
+#: tabbox/tabbox.cpp:383
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Hiện bàn làm việc"
 
-#: tabbox/tabbox.cpp:521
+#: tabbox/tabbox.cpp:523
 msgid "Walk Through Windows"
 msgstr "Đi qua các cửa sổ"
 
-#: tabbox/tabbox.cpp:522
+#: tabbox/tabbox.cpp:524
 msgid "Walk Through Windows (Reverse)"
 msgstr "Đi qua các cửa sổ (ngược lại)"
 
-#: tabbox/tabbox.cpp:523
+#: tabbox/tabbox.cpp:525
 msgid "Walk Through Windows Alternative"
 msgstr "Đi qua các cửa sổ, thay thế"
 
-#: tabbox/tabbox.cpp:524
+#: tabbox/tabbox.cpp:526
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Đi qua các cửa sổ, thay thế (ngược lại)"
 
-#: tabbox/tabbox.cpp:525
+#: tabbox/tabbox.cpp:527
 msgid "Walk Through Windows of Current Application"
 msgstr "Đi qua các cửa sổ của ứng dụng hiện tại"
 
-#: tabbox/tabbox.cpp:526
+#: tabbox/tabbox.cpp:528
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Đi qua các cửa sổ của ứng dụng hiện tại (ngược lại)"
 
-#: tabbox/tabbox.cpp:527
+#: tabbox/tabbox.cpp:529
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Đi qua các cửa sổ của ứng dụng hiện tại, thay thế"
 
-#: tabbox/tabbox.cpp:528
+#: tabbox/tabbox.cpp:530
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Đi qua các cửa sổ của ứng dụng hiện tại, thay thế (ngược lại)"
 
-#: tabbox/tabbox.cpp:529
+#: tabbox/tabbox.cpp:531
 msgid "Walk Through Desktops"
 msgstr "Đi qua các bàn làm việc"
 
-#: tabbox/tabbox.cpp:530
+#: tabbox/tabbox.cpp:532
 msgid "Walk Through Desktops (Reverse)"
 msgstr "Đi qua các bàn làm việc (ngược lại)"
 
-#: tabbox/tabbox.cpp:531
+#: tabbox/tabbox.cpp:533
 msgid "Walk Through Desktop List"
 msgstr "Đi qua danh sách bàn làm việc"
 
-#: tabbox/tabbox.cpp:532
+#: tabbox/tabbox.cpp:534
 msgid "Walk Through Desktop List (Reverse)"
 msgstr "Đi qua danh sách bàn làm việc (ngược lại)"
 
@@ -2736,53 +2736,53 @@ msgstr ""
 "động.\n"
 "Vì vậy không có cách nào để chuyển sang một màn hình cụ thể được."
 
-#: virtualdesktops.cpp:693 virtualdesktops.cpp:764
+#: virtualdesktops.cpp:692 virtualdesktops.cpp:763
 #, kde-format
 msgid "Desktop %1"
 msgstr "Bàn làm việc %1"
 
-#: virtualdesktops.cpp:800
+#: virtualdesktops.cpp:799
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Chuyển sang bàn làm việc sau"
 
-#: virtualdesktops.cpp:801
+#: virtualdesktops.cpp:800
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Chuyển sang bàn làm việc trước"
 
-#: virtualdesktops.cpp:804
+#: virtualdesktops.cpp:803
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Chuyển sang bàn làm việc bên phải"
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Chuyển sang bàn làm việc bên trái"
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:807
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Chuyển sang bàn làm việc phía trên"
 
-#: virtualdesktops.cpp:810
+#: virtualdesktops.cpp:809
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Chuyển sang bàn làm việc phía dưới"
 
-#: virtualdesktops.cpp:899
+#: virtualdesktops.cpp:898
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Chuyển sang bàn làm việc %1"
 
-#: window.cpp:3420
+#: window.cpp:3403
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Không hồi đáp)"
 
-#: workspace.cpp:1847
+#: workspace.cpp:1845
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

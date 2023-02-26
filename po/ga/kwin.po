@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-25 01:02+0000\n"
+"POT-Creation-Date: 2023-02-26 00:59+0000\n"
 "PO-Revision-Date: 2004-12-03 14:52-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -2177,57 +2177,57 @@ msgstr "Dialóga:"
 msgid "..."
 msgstr ""
 
-#: tabbox/tabbox.cpp:381
+#: tabbox/tabbox.cpp:383
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Taispeáin an Deasc"
 
-#: tabbox/tabbox.cpp:521
+#: tabbox/tabbox.cpp:523
 msgid "Walk Through Windows"
 msgstr "Céimnigh trí na Fuinneoga"
 
-#: tabbox/tabbox.cpp:522
+#: tabbox/tabbox.cpp:524
 msgid "Walk Through Windows (Reverse)"
 msgstr "Céimnigh trí na Fuinneoga (ag cúlú)"
 
-#: tabbox/tabbox.cpp:523
+#: tabbox/tabbox.cpp:525
 msgid "Walk Through Windows Alternative"
 msgstr ""
 
-#: tabbox/tabbox.cpp:524
+#: tabbox/tabbox.cpp:526
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr ""
 
-#: tabbox/tabbox.cpp:525
+#: tabbox/tabbox.cpp:527
 msgid "Walk Through Windows of Current Application"
 msgstr ""
 
-#: tabbox/tabbox.cpp:526
+#: tabbox/tabbox.cpp:528
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr ""
 
-#: tabbox/tabbox.cpp:527
+#: tabbox/tabbox.cpp:529
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr ""
 
-#: tabbox/tabbox.cpp:528
+#: tabbox/tabbox.cpp:530
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 
-#: tabbox/tabbox.cpp:529
+#: tabbox/tabbox.cpp:531
 msgid "Walk Through Desktops"
 msgstr "Céimnigh trí na Deasca"
 
-#: tabbox/tabbox.cpp:530
+#: tabbox/tabbox.cpp:532
 msgid "Walk Through Desktops (Reverse)"
 msgstr "Céimnigh trí na Deasca (ag cúlú)"
 
-#: tabbox/tabbox.cpp:531
+#: tabbox/tabbox.cpp:533
 msgid "Walk Through Desktop List"
 msgstr "Céimnigh trí Liosta na nDeasc"
 
-#: tabbox/tabbox.cpp:532
+#: tabbox/tabbox.cpp:534
 msgid "Walk Through Desktop List (Reverse)"
 msgstr "Céimnigh trí Liosta na nDeasc (ag cúlú)"
 
@@ -2817,53 +2817,53 @@ msgid ""
 "Therefore it is not possible to switch to a screen explicitly."
 msgstr ""
 
-#: virtualdesktops.cpp:693 virtualdesktops.cpp:764
+#: virtualdesktops.cpp:692 virtualdesktops.cpp:763
 #, kde-format
 msgid "Desktop %1"
 msgstr "Deasc %1"
 
-#: virtualdesktops.cpp:800
+#: virtualdesktops.cpp:799
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Téigh go dtí an Chéad Deasc Eile"
 
-#: virtualdesktops.cpp:801
+#: virtualdesktops.cpp:800
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Téigh go dtí an Deasc roimhe seo"
 
-#: virtualdesktops.cpp:804
+#: virtualdesktops.cpp:803
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Téigh go dtí an Deasc ar dheis"
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Téigh go dtí an Deasc ar chlé"
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:807
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Téigh Suas Deasc Amháin"
 
-#: virtualdesktops.cpp:810
+#: virtualdesktops.cpp:809
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Téigh Síos Deasc Amháin"
 
-#: virtualdesktops.cpp:899
+#: virtualdesktops.cpp:898
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Téigh go Deasc %1"
 
-#: window.cpp:3420
+#: window.cpp:3403
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1847
+#: workspace.cpp:1845
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

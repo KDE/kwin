@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-25 01:02+0000\n"
+"POT-Creation-Date: 2023-02-26 00:59+0000\n"
 "PO-Revision-Date: 2017-05-22 05:42-0400\n"
 "Last-Translator: Elkana Bardugo <ttv200@gmail.com>\n"
 "Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
@@ -2184,57 +2184,57 @@ msgstr ""
 msgid "..."
 msgstr ""
 
-#: tabbox/tabbox.cpp:381
+#: tabbox/tabbox.cpp:383
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "הצג את שולחן העבודה"
 
-#: tabbox/tabbox.cpp:521
+#: tabbox/tabbox.cpp:523
 msgid "Walk Through Windows"
 msgstr "עבור בין החלונות"
 
-#: tabbox/tabbox.cpp:522
+#: tabbox/tabbox.cpp:524
 msgid "Walk Through Windows (Reverse)"
 msgstr "עבור בין החלונות (הפוך)"
 
-#: tabbox/tabbox.cpp:523
+#: tabbox/tabbox.cpp:525
 msgid "Walk Through Windows Alternative"
 msgstr "עבור בין החלונות (חלופי)"
 
-#: tabbox/tabbox.cpp:524
+#: tabbox/tabbox.cpp:526
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "עבור בין החלונות (חלופי הפוך)"
 
-#: tabbox/tabbox.cpp:525
+#: tabbox/tabbox.cpp:527
 msgid "Walk Through Windows of Current Application"
 msgstr "עבור בין החלונות של היישום הנוכחי"
 
-#: tabbox/tabbox.cpp:526
+#: tabbox/tabbox.cpp:528
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "עבור בין החלונות של היישום הנוכחי (הפוך)"
 
-#: tabbox/tabbox.cpp:527
+#: tabbox/tabbox.cpp:529
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "עבור בין החלונות של היישום הנוכחי (חלופי)"
 
-#: tabbox/tabbox.cpp:528
+#: tabbox/tabbox.cpp:530
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "עבור בין החלונות של היישום הנוכחי (חלופי הפוך)"
 
-#: tabbox/tabbox.cpp:529
+#: tabbox/tabbox.cpp:531
 msgid "Walk Through Desktops"
 msgstr "עבור בין שולחנות העבודה"
 
-#: tabbox/tabbox.cpp:530
+#: tabbox/tabbox.cpp:532
 msgid "Walk Through Desktops (Reverse)"
 msgstr "עבור בין שולחנות העבודה (הפוך)"
 
-#: tabbox/tabbox.cpp:531
+#: tabbox/tabbox.cpp:533
 msgid "Walk Through Desktop List"
 msgstr "עבור בין רשימת שולחנות העבודה"
 
-#: tabbox/tabbox.cpp:532
+#: tabbox/tabbox.cpp:534
 msgid "Walk Through Desktop List (Reverse)"
 msgstr "עבור בין רשימת שולחנות העבודה (הפוך)"
 
@@ -2816,53 +2816,53 @@ msgid ""
 "Therefore it is not possible to switch to a screen explicitly."
 msgstr ""
 
-#: virtualdesktops.cpp:693 virtualdesktops.cpp:764
+#: virtualdesktops.cpp:692 virtualdesktops.cpp:763
 #, kde-format
 msgid "Desktop %1"
 msgstr "שולחן עבודה %1"
 
-#: virtualdesktops.cpp:800
+#: virtualdesktops.cpp:799
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "עבור אל שולחן העבודה הבא"
 
-#: virtualdesktops.cpp:801
+#: virtualdesktops.cpp:800
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "עבור אל שולחן העבודה הקודם"
 
-#: virtualdesktops.cpp:804
+#: virtualdesktops.cpp:803
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "עבור שולחן עבודה אחד ימינה"
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "עבור שולחן עבודה אחד שמאלה"
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:807
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "עבור שולחן עבודה אחד למעלה"
 
-#: virtualdesktops.cpp:810
+#: virtualdesktops.cpp:809
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "עבור שולחן עבודה אחד למטה"
 
-#: virtualdesktops.cpp:899
+#: virtualdesktops.cpp:898
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "עבור לשולחן עבודה %1"
 
-#: window.cpp:3420
+#: window.cpp:3403
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(לא מגיב)"
 
-#: workspace.cpp:1847
+#: workspace.cpp:1845
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

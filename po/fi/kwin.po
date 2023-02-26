@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-25 01:02+0000\n"
+"POT-Creation-Date: 2023-02-26 00:59+0000\n"
 "PO-Revision-Date: 2022-10-28 22:06+0300\n"
 "Last-Translator: Lasse Liehu <lasse.liehu@iki.fi>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -2165,57 +2165,57 @@ msgstr "Valintaikkuna"
 msgid "..."
 msgstr "…"
 
-#: tabbox/tabbox.cpp:381
+#: tabbox/tabbox.cpp:383
 #, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Näytä työpöytä"
 
-#: tabbox/tabbox.cpp:521
+#: tabbox/tabbox.cpp:523
 msgid "Walk Through Windows"
 msgstr "Selaa ikkunoita"
 
-#: tabbox/tabbox.cpp:522
+#: tabbox/tabbox.cpp:524
 msgid "Walk Through Windows (Reverse)"
 msgstr "Selaa ikkunoita taaksepäin"
 
-#: tabbox/tabbox.cpp:523
+#: tabbox/tabbox.cpp:525
 msgid "Walk Through Windows Alternative"
 msgstr "Selaa ikkunoita (vaihtoehtoinen)"
 
-#: tabbox/tabbox.cpp:524
+#: tabbox/tabbox.cpp:526
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Selaa ikkunoita taaksepäin (vaihtoehtoinen)"
 
-#: tabbox/tabbox.cpp:525
+#: tabbox/tabbox.cpp:527
 msgid "Walk Through Windows of Current Application"
 msgstr "Selaa nykyisen sovelluksen ikkunoita"
 
-#: tabbox/tabbox.cpp:526
+#: tabbox/tabbox.cpp:528
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Selaa nykyisen sovelluksen ikkunoita taaksepäin"
 
-#: tabbox/tabbox.cpp:527
+#: tabbox/tabbox.cpp:529
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Selaa nykyisen sovelluksen ikkunoita (vaihtoehtoinen)"
 
-#: tabbox/tabbox.cpp:528
+#: tabbox/tabbox.cpp:530
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Selaa nykyisen sovelluksen ikkunoita taaksepäin (vaihtoehtoinen)"
 
-#: tabbox/tabbox.cpp:529
+#: tabbox/tabbox.cpp:531
 msgid "Walk Through Desktops"
 msgstr "Selaa työpöytiä"
 
-#: tabbox/tabbox.cpp:530
+#: tabbox/tabbox.cpp:532
 msgid "Walk Through Desktops (Reverse)"
 msgstr "Selaa työpöytiä taaksepäin"
 
-#: tabbox/tabbox.cpp:531
+#: tabbox/tabbox.cpp:533
 msgid "Walk Through Desktop List"
 msgstr "Selaa työpöytäluetteloa"
 
-#: tabbox/tabbox.cpp:532
+#: tabbox/tabbox.cpp:534
 msgid "Walk Through Desktop List (Reverse)"
 msgstr "Selaa työpöytäluetteloa taaksepäin"
 
@@ -2789,54 +2789,54 @@ msgstr ""
 "hiiri on.\n"
 "Siksi näytölle ei voi erikseen käskeä siirtymään."
 
-#: virtualdesktops.cpp:693 virtualdesktops.cpp:764
+#: virtualdesktops.cpp:692 virtualdesktops.cpp:763
 #, kde-format
 msgid "Desktop %1"
 msgstr "Työpöytä %1"
 
-#: virtualdesktops.cpp:800
+#: virtualdesktops.cpp:799
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Vaihda seuraavalle työpöydälle"
 
-#: virtualdesktops.cpp:801
+#: virtualdesktops.cpp:800
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Vaihda edelliselle työpöydälle"
 
 # Näissä neljässä Switch one desktop to the X -käännöksessä on yritetty kääntää niin, että jonot tulevat aakkostettuna peräkkäin; erikseen kirjoitetut ”alas päin” jne. ovat kielitoimiston uudemman suosituksen mukaisia
-#: virtualdesktops.cpp:804
+#: virtualdesktops.cpp:803
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Vaihda työpöytää oikealle päin"
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Vaihda työpöytää vasemmalle päin"
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:807
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Vaihda työpöytää ylös päin"
 
-#: virtualdesktops.cpp:810
+#: virtualdesktops.cpp:809
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Vaihda työpöytää alas päin"
 
-#: virtualdesktops.cpp:899
+#: virtualdesktops.cpp:898
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Vaihda työpöydälle %1"
 
-#: window.cpp:3420
+#: window.cpp:3403
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ei vastaa)"
 
-#: workspace.cpp:1847
+#: workspace.cpp:1845
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

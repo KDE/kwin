@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-25 01:02+0000\n"
+"POT-Creation-Date: 2023-02-26 00:59+0000\n"
 "PO-Revision-Date: 2008-11-21 01:39+0100\n"
 "Last-Translator: Eduard Werner <edi.werner@gmx.de>\n"
 "Language-Team: en_US <kde-i18n-doc@lists.kde.org>\n"
@@ -2150,70 +2150,70 @@ msgstr ""
 msgid "..."
 msgstr ""
 
-#: tabbox/tabbox.cpp:381
+#: tabbox/tabbox.cpp:383
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Na &dźěłowy powjerch"
 
-#: tabbox/tabbox.cpp:521
+#: tabbox/tabbox.cpp:523
 msgid "Walk Through Windows"
 msgstr "Z jedneho wokna k druhemu hić"
 
-#: tabbox/tabbox.cpp:522
-msgid "Walk Through Windows (Reverse)"
-msgstr "Z jedneho wokna k druhemu hić (dozady)"
-
-#: tabbox/tabbox.cpp:523
-#, fuzzy
-#| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows Alternative"
-msgstr "Z jedneho wokna k druhemu hić (dozady)"
-
 #: tabbox/tabbox.cpp:524
-#, fuzzy
-#| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows Alternative (Reverse)"
+msgid "Walk Through Windows (Reverse)"
 msgstr "Z jedneho wokna k druhemu hić (dozady)"
 
 #: tabbox/tabbox.cpp:525
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application"
+msgid "Walk Through Windows Alternative"
 msgstr "Z jedneho wokna k druhemu hić (dozady)"
 
 #: tabbox/tabbox.cpp:526
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application (Reverse)"
+msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Z jedneho wokna k druhemu hić (dozady)"
 
 #: tabbox/tabbox.cpp:527
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application Alternative"
+msgid "Walk Through Windows of Current Application"
 msgstr "Z jedneho wokna k druhemu hić (dozady)"
 
 #: tabbox/tabbox.cpp:528
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Z jedneho wokna k druhemu hić (dozady)"
 
 #: tabbox/tabbox.cpp:529
+#, fuzzy
+#| msgid "Walk Through Windows (Reverse)"
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "Z jedneho wokna k druhemu hić (dozady)"
+
+#: tabbox/tabbox.cpp:530
+#, fuzzy
+#| msgid "Walk Through Windows (Reverse)"
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "Z jedneho wokna k druhemu hić (dozady)"
+
+#: tabbox/tabbox.cpp:531
 msgid "Walk Through Desktops"
 msgstr "Z jednoho dźěłoweho powjercha k druhemu hić"
 
-#: tabbox/tabbox.cpp:530
+#: tabbox/tabbox.cpp:532
 msgid "Walk Through Desktops (Reverse)"
 msgstr "Z jednoho dźěłoweho powjercha k druhemu hić (dozady)"
 
-#: tabbox/tabbox.cpp:531
+#: tabbox/tabbox.cpp:533
 msgid "Walk Through Desktop List"
 msgstr "Lisćinu dźěłowych powjerchow přeńć"
 
-#: tabbox/tabbox.cpp:532
+#: tabbox/tabbox.cpp:534
 msgid "Walk Through Desktop List (Reverse)"
 msgstr "Lisćinu dźěłowych powjerchow přeńć (dozady)"
 
@@ -2809,54 +2809,54 @@ msgid ""
 "Therefore it is not possible to switch to a screen explicitly."
 msgstr ""
 
-#: virtualdesktops.cpp:693 virtualdesktops.cpp:764
+#: virtualdesktops.cpp:692 virtualdesktops.cpp:763
 #, kde-format
 msgid "Desktop %1"
 msgstr "Dźěłowy powjerch %1"
 
-#: virtualdesktops.cpp:800
+#: virtualdesktops.cpp:799
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Na přichodny dźěłowy powjerch hić"
 
-#: virtualdesktops.cpp:801
+#: virtualdesktops.cpp:800
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Na předchadny dźěłowy powjerch hić"
 
-#: virtualdesktops.cpp:804
+#: virtualdesktops.cpp:803
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Na dźěłowy powjerch naprawo hić"
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Na dźěłowy powjerch nalěwo hić"
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:807
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Na wyši dźěłowy powjerch hić"
 
-#: virtualdesktops.cpp:810
+#: virtualdesktops.cpp:809
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Na delni dźěłowy powjerch hić"
 
-#: virtualdesktops.cpp:899
+#: virtualdesktops.cpp:898
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgid "Switch to Desktop %1"
 msgstr "Na dźěłowy powjerch 1 hić"
 
-#: window.cpp:3420
+#: window.cpp:3403
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1847
+#: workspace.cpp:1845
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

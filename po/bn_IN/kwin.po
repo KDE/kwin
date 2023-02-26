@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-25 01:02+0000\n"
+"POT-Creation-Date: 2023-02-26 00:59+0000\n"
 "PO-Revision-Date: 2008-12-22 16:10+0530\n"
 "Last-Translator: Runa Bhattacharjee <runab@redhat.com>\n"
 "Language-Team: Bengali INDIA <fedora-trans-bn_IN@redhat.com>\n"
@@ -2164,70 +2164,70 @@ msgstr ""
 msgid "..."
 msgstr ""
 
-#: tabbox/tabbox.cpp:381
+#: tabbox/tabbox.cpp:383
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "চিহ্নিত ডেস্কটপে স্থানান্তর (&D)"
 
-#: tabbox/tabbox.cpp:521
+#: tabbox/tabbox.cpp:523
 msgid "Walk Through Windows"
 msgstr "উইন্ডোগুলি পরিদর্শন করুন"
 
-#: tabbox/tabbox.cpp:522
-msgid "Walk Through Windows (Reverse)"
-msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
-
-#: tabbox/tabbox.cpp:523
-#, fuzzy
-#| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows Alternative"
-msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
-
 #: tabbox/tabbox.cpp:524
-#, fuzzy
-#| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows Alternative (Reverse)"
+msgid "Walk Through Windows (Reverse)"
 msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
 
 #: tabbox/tabbox.cpp:525
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application"
+msgid "Walk Through Windows Alternative"
 msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
 
 #: tabbox/tabbox.cpp:526
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application (Reverse)"
+msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
 
 #: tabbox/tabbox.cpp:527
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application Alternative"
+msgid "Walk Through Windows of Current Application"
 msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
 
 #: tabbox/tabbox.cpp:528
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
 
 #: tabbox/tabbox.cpp:529
+#, fuzzy
+#| msgid "Walk Through Windows (Reverse)"
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
+
+#: tabbox/tabbox.cpp:530
+#, fuzzy
+#| msgid "Walk Through Windows (Reverse)"
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "উইন্ডোগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
+
+#: tabbox/tabbox.cpp:531
 msgid "Walk Through Desktops"
 msgstr "ডেস্কটপগুলি পরিদর্শন করুন"
 
-#: tabbox/tabbox.cpp:530
+#: tabbox/tabbox.cpp:532
 msgid "Walk Through Desktops (Reverse)"
 msgstr "ডেস্কটপগুলি পরিদর্শন করুন (বিপরীত দিশায়)"
 
-#: tabbox/tabbox.cpp:531
+#: tabbox/tabbox.cpp:533
 msgid "Walk Through Desktop List"
 msgstr "ডেস্কটপ তালিকা পরিদর্শন করুন"
 
-#: tabbox/tabbox.cpp:532
+#: tabbox/tabbox.cpp:534
 msgid "Walk Through Desktop List (Reverse)"
 msgstr "ডেস্কটপ তালিকা পরিদর্শন করুন (বিপরীত দিশায়)"
 
@@ -2817,54 +2817,54 @@ msgid ""
 "Therefore it is not possible to switch to a screen explicitly."
 msgstr ""
 
-#: virtualdesktops.cpp:693 virtualdesktops.cpp:764
+#: virtualdesktops.cpp:692 virtualdesktops.cpp:763
 #, kde-format
 msgid "Desktop %1"
 msgstr "ডেস্কটপ %1"
 
-#: virtualdesktops.cpp:800
+#: virtualdesktops.cpp:799
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "পরবর্তী ডেস্কটপে পরিবর্তন করুন"
 
-#: virtualdesktops.cpp:801
+#: virtualdesktops.cpp:800
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "পূর্ববর্তী ডেস্কটপে পরিবর্তন করুন"
 
-#: virtualdesktops.cpp:804
+#: virtualdesktops.cpp:803
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "ডানদিকের ডেস্কটপে পরিবর্তন করুন"
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "বাঁদিকের ডেস্কটপে পরিবর্তন করুন"
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:807
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "উপরের ডেস্কটপে পরিবর্তন করুন"
 
-#: virtualdesktops.cpp:810
+#: virtualdesktops.cpp:809
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "নীচের ডেস্কটপে পরিবর্তন করুন"
 
-#: virtualdesktops.cpp:899
+#: virtualdesktops.cpp:898
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgid "Switch to Desktop %1"
 msgstr "ডেস্কটপ ১-এ পরিবর্তন করুন"
 
-#: window.cpp:3420
+#: window.cpp:3403
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1847
+#: workspace.cpp:1845
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

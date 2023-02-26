@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-25 01:02+0000\n"
+"POT-Creation-Date: 2023-02-26 00:59+0000\n"
 "PO-Revision-Date: 2006-12-17 12:27+0000\n"
 "Last-Translator: Mashrab Kuvatov <kmashrab@uni-bremen.de>\n"
 "Language-Team: Uzbek <floss-uz-l10n@googlegroups.com>\n"
@@ -2156,70 +2156,70 @@ msgstr ""
 msgid "..."
 msgstr ""
 
-#: tabbox/tabbox.cpp:381
+#: tabbox/tabbox.cpp:383
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "1 Иш столига ўтиш"
 
-#: tabbox/tabbox.cpp:521
+#: tabbox/tabbox.cpp:523
 msgid "Walk Through Windows"
 msgstr "Ойнадан-ойнага ўтиш"
 
-#: tabbox/tabbox.cpp:522
-msgid "Walk Through Windows (Reverse)"
-msgstr "Ойнадан-ойнага ўтиш (тескарисига)"
-
-#: tabbox/tabbox.cpp:523
-#, fuzzy
-#| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows Alternative"
-msgstr "Ойнадан-ойнага ўтиш (тескарисига)"
-
 #: tabbox/tabbox.cpp:524
-#, fuzzy
-#| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows Alternative (Reverse)"
+msgid "Walk Through Windows (Reverse)"
 msgstr "Ойнадан-ойнага ўтиш (тескарисига)"
 
 #: tabbox/tabbox.cpp:525
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application"
+msgid "Walk Through Windows Alternative"
 msgstr "Ойнадан-ойнага ўтиш (тескарисига)"
 
 #: tabbox/tabbox.cpp:526
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application (Reverse)"
+msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Ойнадан-ойнага ўтиш (тескарисига)"
 
 #: tabbox/tabbox.cpp:527
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application Alternative"
+msgid "Walk Through Windows of Current Application"
 msgstr "Ойнадан-ойнага ўтиш (тескарисига)"
 
 #: tabbox/tabbox.cpp:528
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Ойнадан-ойнага ўтиш (тескарисига)"
 
 #: tabbox/tabbox.cpp:529
+#, fuzzy
+#| msgid "Walk Through Windows (Reverse)"
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "Ойнадан-ойнага ўтиш (тескарисига)"
+
+#: tabbox/tabbox.cpp:530
+#, fuzzy
+#| msgid "Walk Through Windows (Reverse)"
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "Ойнадан-ойнага ўтиш (тескарисига)"
+
+#: tabbox/tabbox.cpp:531
 msgid "Walk Through Desktops"
 msgstr "Иш столини улисидан-булисига ўтиш"
 
-#: tabbox/tabbox.cpp:530
+#: tabbox/tabbox.cpp:532
 msgid "Walk Through Desktops (Reverse)"
 msgstr "Иш столини улисидан-булисига ўтиш (тескарисига)"
 
-#: tabbox/tabbox.cpp:531
+#: tabbox/tabbox.cpp:533
 msgid "Walk Through Desktop List"
 msgstr "Иш столини улисидан-булисига ўтиш"
 
-#: tabbox/tabbox.cpp:532
+#: tabbox/tabbox.cpp:534
 msgid "Walk Through Desktop List (Reverse)"
 msgstr "Иш столини улисидан-булисига ўтиш (тескарисига)"
 
@@ -2804,54 +2804,54 @@ msgid ""
 "Therefore it is not possible to switch to a screen explicitly."
 msgstr ""
 
-#: virtualdesktops.cpp:693 virtualdesktops.cpp:764
+#: virtualdesktops.cpp:692 virtualdesktops.cpp:763
 #, kde-format
 msgid "Desktop %1"
 msgstr "Иш столи %1"
 
-#: virtualdesktops.cpp:800
+#: virtualdesktops.cpp:799
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Кейинги иш столига ўтиш"
 
-#: virtualdesktops.cpp:801
+#: virtualdesktops.cpp:800
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Олдинги иш столига ўтиш"
 
-#: virtualdesktops.cpp:804
+#: virtualdesktops.cpp:803
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Ўнгдаги иш столига ўтиш"
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Чапдаги иш столига ўтиш"
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:807
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Юқоридаги иш столига ўтиш"
 
-#: virtualdesktops.cpp:810
+#: virtualdesktops.cpp:809
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Пастдаги иш столига ўтиш"
 
-#: virtualdesktops.cpp:899
+#: virtualdesktops.cpp:898
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgid "Switch to Desktop %1"
 msgstr "1 Иш столига ўтиш"
 
-#: window.cpp:3420
+#: window.cpp:3403
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1847
+#: workspace.cpp:1845
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

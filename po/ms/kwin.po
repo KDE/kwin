@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-25 01:02+0000\n"
+"POT-Creation-Date: 2023-02-26 00:59+0000\n"
 "PO-Revision-Date: 2010-08-23 19:35+0800\n"
 "Last-Translator: Sharuzzaman Ahmat Raslan <sharuzzaman@gmail.com>\n"
 "Language-Team: Malay <kedidiemas@yahoogroups.com>\n"
@@ -2154,70 +2154,70 @@ msgstr ""
 msgid "..."
 msgstr ""
 
-#: tabbox/tabbox.cpp:381
+#: tabbox/tabbox.cpp:383
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Papar Desktop"
 
-#: tabbox/tabbox.cpp:521
+#: tabbox/tabbox.cpp:523
 msgid "Walk Through Windows"
 msgstr "Lalu Ikut Tetingkap"
 
-#: tabbox/tabbox.cpp:522
-msgid "Walk Through Windows (Reverse)"
-msgstr "Lalu Ikut Tetingkap (Songsang)"
-
-#: tabbox/tabbox.cpp:523
-#, fuzzy
-#| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows Alternative"
-msgstr "Lalu Ikut Tetingkap (Songsang)"
-
 #: tabbox/tabbox.cpp:524
-#, fuzzy
-#| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows Alternative (Reverse)"
+msgid "Walk Through Windows (Reverse)"
 msgstr "Lalu Ikut Tetingkap (Songsang)"
 
 #: tabbox/tabbox.cpp:525
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application"
+msgid "Walk Through Windows Alternative"
 msgstr "Lalu Ikut Tetingkap (Songsang)"
 
 #: tabbox/tabbox.cpp:526
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application (Reverse)"
+msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Lalu Ikut Tetingkap (Songsang)"
 
 #: tabbox/tabbox.cpp:527
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application Alternative"
+msgid "Walk Through Windows of Current Application"
 msgstr "Lalu Ikut Tetingkap (Songsang)"
 
 #: tabbox/tabbox.cpp:528
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Lalu Ikut Tetingkap (Songsang)"
 
 #: tabbox/tabbox.cpp:529
+#, fuzzy
+#| msgid "Walk Through Windows (Reverse)"
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "Lalu Ikut Tetingkap (Songsang)"
+
+#: tabbox/tabbox.cpp:530
+#, fuzzy
+#| msgid "Walk Through Windows (Reverse)"
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "Lalu Ikut Tetingkap (Songsang)"
+
+#: tabbox/tabbox.cpp:531
 msgid "Walk Through Desktops"
 msgstr "Lalu Ikut Ruang Kerja"
 
-#: tabbox/tabbox.cpp:530
+#: tabbox/tabbox.cpp:532
 msgid "Walk Through Desktops (Reverse)"
 msgstr "Lalu Ikut Ruang Kerja (Songsang)"
 
-#: tabbox/tabbox.cpp:531
+#: tabbox/tabbox.cpp:533
 msgid "Walk Through Desktop List"
 msgstr "Lalu Ikut Senarai Ruang Kerja"
 
-#: tabbox/tabbox.cpp:532
+#: tabbox/tabbox.cpp:534
 msgid "Walk Through Desktop List (Reverse)"
 msgstr "Lalu Ikut Senarai Ruang Kerja (Songsang)"
 
@@ -2817,54 +2817,54 @@ msgid ""
 "Therefore it is not possible to switch to a screen explicitly."
 msgstr ""
 
-#: virtualdesktops.cpp:693 virtualdesktops.cpp:764
+#: virtualdesktops.cpp:692 virtualdesktops.cpp:763
 #, kde-format
 msgid "Desktop %1"
 msgstr "Ruang Kerja %1"
 
-#: virtualdesktops.cpp:800
+#: virtualdesktops.cpp:799
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Tukar ke Ruang Kerja Seterusnya"
 
-#: virtualdesktops.cpp:801
+#: virtualdesktops.cpp:800
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Tukar ke Ruang Kerja Sebelumnya"
 
-#: virtualdesktops.cpp:804
+#: virtualdesktops.cpp:803
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Tukar Satu Ruang Kerja ke Kanan"
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Tukar Satu Ruang Kerja ke Kiri"
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:807
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Tukar Satu Ruang Kerja ke Atas"
 
-#: virtualdesktops.cpp:810
+#: virtualdesktops.cpp:809
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Tukar Satu Ruang Kerja ke Bawah"
 
-#: virtualdesktops.cpp:899
+#: virtualdesktops.cpp:898
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgid "Switch to Desktop %1"
 msgstr "Tukar ke Ruang Kerja 1"
 
-#: window.cpp:3420
+#: window.cpp:3403
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1847
+#: workspace.cpp:1845
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

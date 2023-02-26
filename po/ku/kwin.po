@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-25 01:02+0000\n"
+"POT-Creation-Date: 2023-02-26 00:59+0000\n"
 "PO-Revision-Date: 2009-01-06 03:15+0200\n"
 "Last-Translator: Omer Ensari <oensari@gmail.com>\n"
 "Language-Team: Kurdish <gnu-ku-wergerandin at lists dot sourceforge dot "
@@ -2152,70 +2152,70 @@ msgstr "Diyalog:"
 msgid "..."
 msgstr ""
 
-#: tabbox/tabbox.cpp:381
+#: tabbox/tabbox.cpp:383
 #, fuzzy, kde-format
 #| msgid "Show Desktop Grid"
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Izxere ya Sermasê Nîşan Bide"
 
-#: tabbox/tabbox.cpp:521
+#: tabbox/tabbox.cpp:523
 msgid "Walk Through Windows"
 msgstr "Pace yan Bigere"
 
-#: tabbox/tabbox.cpp:522
-msgid "Walk Through Windows (Reverse)"
-msgstr "Pace yan Bigere (Çepkî)"
-
-#: tabbox/tabbox.cpp:523
-#, fuzzy
-#| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows Alternative"
-msgstr "Pace yan Bigere (Çepkî)"
-
 #: tabbox/tabbox.cpp:524
-#, fuzzy
-#| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows Alternative (Reverse)"
+msgid "Walk Through Windows (Reverse)"
 msgstr "Pace yan Bigere (Çepkî)"
 
 #: tabbox/tabbox.cpp:525
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application"
+msgid "Walk Through Windows Alternative"
 msgstr "Pace yan Bigere (Çepkî)"
 
 #: tabbox/tabbox.cpp:526
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application (Reverse)"
+msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Pace yan Bigere (Çepkî)"
 
 #: tabbox/tabbox.cpp:527
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application Alternative"
+msgid "Walk Through Windows of Current Application"
 msgstr "Pace yan Bigere (Çepkî)"
 
 #: tabbox/tabbox.cpp:528
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
-msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Pace yan Bigere (Çepkî)"
 
 #: tabbox/tabbox.cpp:529
+#, fuzzy
+#| msgid "Walk Through Windows (Reverse)"
+msgid "Walk Through Windows of Current Application Alternative"
+msgstr "Pace yan Bigere (Çepkî)"
+
+#: tabbox/tabbox.cpp:530
+#, fuzzy
+#| msgid "Walk Through Windows (Reverse)"
+msgid "Walk Through Windows of Current Application Alternative (Reverse)"
+msgstr "Pace yan Bigere (Çepkî)"
+
+#: tabbox/tabbox.cpp:531
 msgid "Walk Through Desktops"
 msgstr "Sermaseyan Bigere"
 
-#: tabbox/tabbox.cpp:530
+#: tabbox/tabbox.cpp:532
 msgid "Walk Through Desktops (Reverse)"
 msgstr "Sermaseyan Bigere (Çepkî)"
 
-#: tabbox/tabbox.cpp:531
+#: tabbox/tabbox.cpp:533
 msgid "Walk Through Desktop List"
 msgstr "Lîsteya Sermaseyan Bigere"
 
-#: tabbox/tabbox.cpp:532
+#: tabbox/tabbox.cpp:534
 msgid "Walk Through Desktop List (Reverse)"
 msgstr "Lîsteya Sermaseyan Bigere (Çepkî)"
 
@@ -2805,54 +2805,54 @@ msgid ""
 "Therefore it is not possible to switch to a screen explicitly."
 msgstr ""
 
-#: virtualdesktops.cpp:693 virtualdesktops.cpp:764
+#: virtualdesktops.cpp:692 virtualdesktops.cpp:763
 #, kde-format
 msgid "Desktop %1"
 msgstr "Sermaseya %1"
 
-#: virtualdesktops.cpp:800
+#: virtualdesktops.cpp:799
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Biçe Sermase ya Pêş"
 
-#: virtualdesktops.cpp:801
+#: virtualdesktops.cpp:800
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Biçe Sermase ya Paş"
 
-#: virtualdesktops.cpp:804
+#: virtualdesktops.cpp:803
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Biçe Sermase ya Rastê"
 
-#: virtualdesktops.cpp:806
+#: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Biçe Sermase ya Çepê"
 
-#: virtualdesktops.cpp:808
+#: virtualdesktops.cpp:807
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Biçe Sermase ya Jorê"
 
-#: virtualdesktops.cpp:810
+#: virtualdesktops.cpp:809
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Biçe Sermase ya Jêrê"
 
-#: virtualdesktops.cpp:899
+#: virtualdesktops.cpp:898
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgid "Switch to Desktop %1"
 msgstr "Biçe Sermase ya 1ê"
 
-#: window.cpp:3420
+#: window.cpp:3403
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1847
+#: workspace.cpp:1845
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
