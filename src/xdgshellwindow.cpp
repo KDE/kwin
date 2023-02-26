@@ -90,7 +90,6 @@ XdgSurfaceWindow::XdgSurfaceWindow(XdgSurfaceInterface *shellSurface)
 
 XdgSurfaceWindow::~XdgSurfaceWindow()
 {
-    qDeleteAll(m_configureEvents);
 }
 
 NET::WindowType XdgSurfaceWindow::windowType(bool direct, int supported_types) const
@@ -294,12 +293,13 @@ void XdgSurfaceWindow::destroyWindow()
         Q_EMIT interactiveMoveResizeFinished();
     }
     m_configureTimer->stop();
+    qDeleteAll(m_configureEvents);
+    m_configureEvents.clear();
     cleanTabBox();
     Deleted *deleted = Deleted::create(this);
     Q_EMIT closed(deleted);
     StackingUpdatesBlocker blocker(workspace());
     workspace()->rulebook()->discardUsed(this, true);
-    setDecoration(nullptr);
     cleanGrouping();
     waylandServer()->removeWindow(this);
 

@@ -21,14 +21,12 @@ class KWIN_EXPORT Deleted : public Window
 public:
     static Deleted *create(Window *c);
 
-    QMargins frameMargins() const override;
     int desktop() const override;
     QStringList activities() const override;
     QVector<VirtualDesktop *> desktops() const override;
     QPointF clientPos() const override;
     bool isDeleted() const override;
     xcb_window_t frameId() const override;
-    void layoutDecorationRects(QRectF &left, QRectF &top, QRectF &right, QRectF &bottom) const override;
     Layer layer() const override
     {
         return m_layer;
@@ -107,18 +105,12 @@ private:
     void copyToDeleted(Window *c);
     ~Deleted() override; // deleted only using unrefWindow()
 
-    QMargins m_frameMargins;
-
     int desk;
     QStringList activityList;
     QRectF contentsRect; // for clientPos()/clientSize()
     xcb_window_t m_frame;
     QVector<VirtualDesktop *> m_desktops;
 
-    QRectF decoration_left;
-    QRectF decoration_right;
-    QRectF decoration_top;
-    QRectF decoration_bottom;
     Layer m_layer;
     bool m_shade;
     QList<Window *> m_mainWindows;

@@ -56,7 +56,6 @@ void Deleted::copyToDeleted(Window *window)
 {
     Q_ASSERT(!window->isDeleted());
     Window::copyToDeleted(window);
-    m_frameMargins = window->frameMargins();
     desk = window->desktop();
     m_desktops = window->desktops();
     activityList = window->activities();
@@ -66,12 +65,6 @@ void Deleted::copyToDeleted(Window *window)
     m_type = window->windowType();
     m_windowRole = window->windowRole();
     m_shade = window->isShade();
-    if (window->isDecorated()) {
-        window->layoutDecorationRects(decoration_left,
-                                      decoration_top,
-                                      decoration_right,
-                                      decoration_bottom);
-    }
     m_mainWindows = window->mainWindows();
     for (Window *w : std::as_const(m_mainWindows)) {
         connect(w, &Window::closed, this, &Deleted::mainWindowClosed);
@@ -88,11 +81,6 @@ void Deleted::copyToDeleted(Window *window)
     m_wasPopupWindow = window->isPopupWindow();
     m_wasOutline = window->isOutline();
     m_wasLockScreen = window->isLockScreen();
-}
-
-QMargins Deleted::frameMargins() const
-{
-    return m_frameMargins;
 }
 
 int Deleted::desktop() const
@@ -113,14 +101,6 @@ QVector<VirtualDesktop *> Deleted::desktops() const
 QPointF Deleted::clientPos() const
 {
     return contentsRect.topLeft();
-}
-
-void Deleted::layoutDecorationRects(QRectF &left, QRectF &top, QRectF &right, QRectF &bottom) const
-{
-    left = decoration_left;
-    top = decoration_top;
-    right = decoration_right;
-    bottom = decoration_bottom;
 }
 
 bool Deleted::isDeleted() const

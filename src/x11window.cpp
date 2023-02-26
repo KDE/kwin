@@ -386,7 +386,6 @@ void X11Window::releaseWindow(bool on_shutdown)
         workspace()->windowHidden(this);
     }
     m_frame.unmap(); // Destroying decoration would cause ugly visual effect
-    destroyDecoration();
     cleanGrouping();
     workspace()->removeX11Window(this);
     if (!on_shutdown) {
@@ -401,7 +400,8 @@ void X11Window::releaseWindow(bool on_shutdown)
     m_client.deleteProperty(atoms->kde_net_wm_user_creation_time);
     m_client.deleteProperty(atoms->net_frame_extents);
     m_client.deleteProperty(atoms->kde_net_wm_frame_strut);
-    m_client.reparent(kwinApp()->x11RootWindow(), m_bufferGeometry.x(), m_bufferGeometry.y());
+    const QPointF grav = calculateGravitation(true);
+    m_client.reparent(kwinApp()->x11RootWindow(), grav.x(), grav.y());
     xcb_change_save_set(c, XCB_SET_MODE_DELETE, m_client);
     m_client.selectInput(XCB_EVENT_MASK_NO_EVENT);
     if (on_shutdown) {
@@ -450,7 +450,6 @@ void X11Window::destroyWindow()
     setModal(false);
     hidden = true; // So that it's not considered visible anymore
     workspace()->windowHidden(this);
-    destroyDecoration();
     cleanGrouping();
     workspace()->removeX11Window(this);
     if (WinInfo *cinfo = dynamic_cast<WinInfo *>(info)) {

@@ -168,10 +168,6 @@ void DecorationItem::handleFrameGeometryChanged()
 void DecorationItem::handleWindowClosed(Window *deleted)
 {
     m_window = deleted;
-
-    // If the decoration is about to be destroyed, render the decoration for the last time.
-    effects->makeOpenGLContextCurrent();
-    preprocess();
 }
 
 DecorationRenderer *DecorationItem::renderer() const

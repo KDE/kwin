@@ -126,7 +126,6 @@ Window::~Window()
         m_tile->removeWindow(this);
     }
     Q_ASSERT(m_blockGeometryUpdates == 0);
-    Q_ASSERT(m_decoration.decoration == nullptr);
     delete info;
 }
 
@@ -224,6 +223,16 @@ void Window::copyToDeleted(Window *c)
     m_modal = c->m_modal;
     m_keepAbove = c->m_keepAbove;
     m_keepBelow = c->m_keepBelow;
+    m_active = c->m_active;
+    m_palette = c->m_palette;
+    if (c->m_decoration.decoration) {
+        c->m_decoration.decoration->setParent(this);
+        m_decoration.decoration = c->m_decoration.decoration;
+    }
+    if (c->m_decoration.client) {
+        c->m_decoration.client->setWindow(this);
+        m_decoration.client = c->m_decoration.client;
+    }
 }
 
 // before being deleted, remove references to everything that's now
