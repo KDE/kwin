@@ -105,6 +105,7 @@ public:
     QPointer<SurfaceInterface> surface;
     bool firstBufferAttached = false;
     bool isConfigured = false;
+    bool isInitialized = false;
 
     XdgSurfaceState next;
     XdgSurfaceState current;
