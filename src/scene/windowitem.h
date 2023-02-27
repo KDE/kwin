@@ -64,6 +64,7 @@ private Q_SLOTS:
     void updateSurfaceVisibility();
     void updatePosition();
     void updateOpacity();
+    void updateStackingOrder();
 
 private:
     bool computeVisibility() const;

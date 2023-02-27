@@ -348,6 +348,7 @@ bool Window::setupCompositing()
     updateShadow();
 
     m_windowItem = createItem(scene);
+    m_windowItem->setParentItem(scene->containerItem());
     m_effectWindow->setWindowItem(m_windowItem.get());
 
     connect(windowItem(), &WindowItem::positionChanged, this, &Window::visibleGeometryChanged);

@@ -85,6 +85,7 @@ namespace KWin
 
 WorkspaceScene::WorkspaceScene(std::unique_ptr<ItemRenderer> renderer)
     : Scene(std::move(renderer))
+    , m_containerItem(std::make_unique<Item>(this))
 {
 }
 
@@ -94,8 +95,6 @@ WorkspaceScene::~WorkspaceScene()
 
 void WorkspaceScene::initialize()
 {
-    connect(workspace(), &Workspace::stackingOrderChanged, this, &WorkspaceScene::addRepaintFull);
-
     setGeometry(workspace()->geometry());
     connect(workspace(), &Workspace::geometryChanged, this, [this]() {
         setGeometry(workspace()->geometry());
@@ -130,6 +129,11 @@ void WorkspaceScene::createDndIconItem()
 void WorkspaceScene::destroyDndIconItem()
 {
     m_dndIcon.reset();
+}
+
+Item *WorkspaceScene::containerItem() const
+{
+    return m_containerItem.get();
 }
 
 QRegion WorkspaceScene::damage() const
@@ -426,14 +430,14 @@ void WorkspaceScene::paintSimpleScreen(int, const QRegion &region)
 void WorkspaceScene::createStackingOrder()
 {
     // Create a list of all windows in the stacking order
-    QList<Window *> windows = workspace()->stackingOrder();
+    QList<Item *> items = m_containerItem->sortedChildItems();
 
     // Move elevated windows to the top of the stacking order
     const QList<EffectWindow *> elevatedList = static_cast<EffectsHandlerImpl *>(effects)->elevatedWindows();
     for (EffectWindow *c : elevatedList) {
-        Window *t = static_cast<EffectWindowImpl *>(c)->window();
-        windows.removeAll(t);
-        windows.append(t);
+        WindowItem *item = static_cast<EffectWindowImpl *>(c)->windowItem();
+        items.removeAll(item);
+        items.append(item);
     }
 
     // Skip windows that are not yet ready for being painted and if screen is locked skip windows
@@ -442,9 +446,10 @@ void WorkspaceScene::createStackingOrder()
     // TODO? This cannot be used so carelessly - needs protections against broken clients, the
     // window should not get focus before it's displayed, handle unredirected windows properly and
     // so on.
-    for (Window *window : std::as_const(windows)) {
-        if (window->windowItem()->isVisible()) {
-            stacking_order.append(window->windowItem());
+    for (Item *item : std::as_const(items)) {
+        WindowItem *windowItem = static_cast<WindowItem *>(item);
+        if (windowItem->isVisible()) {
+            stacking_order.append(windowItem);
         }
     }
 }

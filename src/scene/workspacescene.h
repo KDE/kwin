@@ -52,6 +52,8 @@ public:
 
     void initialize();
 
+    Item *containerItem() const;
+
     QRegion damage() const override;
     SurfaceItem *scanoutCandidate() const override;
     void prePaint(SceneDelegate *delegate) override;
@@ -133,6 +135,7 @@ private:
     // how many times finalPaintScreen() has been called
     int m_paintScreenCount = 0;
     PaintContext m_paintContext;
+    std::unique_ptr<Item> m_containerItem;
     std::unique_ptr<DragAndDropIconItem> m_dndIcon;
 };
 
