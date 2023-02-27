@@ -4,14 +4,15 @@
 # Fuminobu TAKEYAMA <ftake@geeko.jp>, 2015.
 # TAKANO Yuji <takachan@running-dog.net>, 2015.
 # Fumiaki Okushi <fumiaki.okushi@gmail.com>, 2015.
+# Ryuichi Yamada <ryuichi_ya220@outlook.jp>, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-30 00:54+0000\n"
-"PO-Revision-Date: 2015-05-22 22:20-0700\n"
-"Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
+"PO-Revision-Date: 2023-02-22 17:02+0900\n"
+"Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -20,17 +21,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Lokalize 22.12.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Yukiko Bando"
+msgstr "Yukiko Bando, Ryuichi Yamada"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "ybando@k6.dion.ne.jp"
+msgstr "ybando@k6.dion.ne.jp, ryuichi_ya220@outlook.jp"
 
 #: effectsmodel.cpp:52
 #, kde-format
@@ -51,12 +52,10 @@ msgid "Focus"
 msgstr "フォーカス"
 
 #: effectsmodel.cpp:55
-#, fuzzy, kde-format
-#| msgctxt "Category of Desktop Effects, used as section header"
-#| msgid "Virtual Desktop Switching Animation"
+#, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Peek at Desktop Animation"
-msgstr "仮想デスクトップの切り替えアニメーション"
+msgstr "デスクトップを覗くアニメーション"
 
 #: effectsmodel.cpp:56
 #, kde-format
@@ -68,7 +67,7 @@ msgstr "ツール"
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Virtual Desktop Switching Animation"
-msgstr "仮想デスクトップの切り替えアニメーション"
+msgstr "仮想デスクトップ切り替えアニメーション"
 
 #: effectsmodel.cpp:58
 #, kde-format
@@ -80,9 +79,9 @@ msgstr "ウィンドウマネージメント"
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Window Open/Close Animation"
-msgstr ""
+msgstr "ウィンドウ開閉アニメーション"
 
 #: effectsmodel.cpp:241
 #, kde-format
 msgid "KWin development team"
-msgstr ""
+msgstr "KWin 開発チーム"
