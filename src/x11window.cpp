@@ -756,7 +756,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         // Placement needs to be after setting size
         workspace()->placement()->place(this, area);
         // The client may have been moved to another screen, update placement area.
-        area = workspace()->clientArea(PlacementArea, this);
+        area = workspace()->clientArea(PlacementArea, this, moveResizeOutput());
         dontKeepInArea = true;
         placementDone = true;
     }
@@ -3726,11 +3726,11 @@ void X11Window::getWmNormalHints()
             if ((!isSpecialWindow() || isToolbar()) && !isFullScreen()) {
                 // try to keep the window in its xinerama screen if possible,
                 // if that fails at least keep it visible somewhere
-                QRectF area = workspace()->clientArea(MovementArea, this);
+                QRectF area = workspace()->clientArea(MovementArea, this, moveResizeOutput());
                 if (area.contains(origClientGeometry)) {
                     keepInArea(area);
                 }
-                area = workspace()->clientArea(WorkArea, this);
+                area = workspace()->clientArea(WorkArea, this, moveResizeOutput());
                 if (area.contains(origClientGeometry)) {
                     keepInArea(area);
                 }
@@ -3940,7 +3940,7 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
         GeometryUpdatesBlocker blocker(this);
         move(new_pos);
         resize(requestedFrameSize);
-        QRectF area = workspace()->clientArea(WorkArea, this);
+        QRectF area = workspace()->clientArea(WorkArea, this, moveResizeOutput());
         if (!from_tool && (!isSpecialWindow() || isToolbar()) && !isFullScreen()
             && area.contains(origClientGeometry)) {
             keepInArea(area);
@@ -3976,11 +3976,11 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
             if (!from_tool && (!isSpecialWindow() || isToolbar()) && !isFullScreen()) {
                 // try to keep the window in its xinerama screen if possible,
                 // if that fails at least keep it visible somewhere
-                QRectF area = workspace()->clientArea(MovementArea, this);
+                QRectF area = workspace()->clientArea(MovementArea, this, moveResizeOutput());
                 if (area.contains(origClientGeometry)) {
                     keepInArea(area);
                 }
-                area = workspace()->clientArea(WorkArea, this);
+                area = workspace()->clientArea(WorkArea, this, moveResizeOutput());
                 if (area.contains(origClientGeometry)) {
                     keepInArea(area);
                 }
@@ -4285,7 +4285,7 @@ void X11Window::maximize(MaximizeMode mode)
     if (isElectricBorderMaximizing()) {
         clientArea = workspace()->clientArea(MaximizeArea, this, Cursors::self()->mouse()->pos());
     } else {
-        clientArea = workspace()->clientArea(MaximizeArea, this, moveResizeGeometry().center());
+        clientArea = workspace()->clientArea(MaximizeArea, this, moveResizeOutput());
     }
 
     MaximizeMode old_mode = max_mode;
@@ -4588,7 +4588,7 @@ void X11Window::setFullScreen(bool set, bool user)
         if (info->fullscreenMonitors().isSet()) {
             moveResize(fullscreenMonitorsArea(info->fullscreenMonitors()));
         } else {
-            moveResize(workspace()->clientArea(FullScreenArea, this));
+            moveResize(workspace()->clientArea(FullScreenArea, this, moveResizeOutput()));
         }
     } else {
         Q_ASSERT(!fullscreenGeometryRestore().isNull());
@@ -4650,7 +4650,7 @@ bool X11Window::doStartInteractiveMoveResize()
         // This reportedly improves smoothness of the moveresize operation,
         // something with Enter/LeaveNotify events, looks like XFree performance problem or something *shrug*
         // (https://lists.kde.org/?t=107302193400001&r=1&w=2)
-        QRectF r = workspace()->clientArea(FullArea, this);
+        QRectF r = workspace()->clientArea(FullArea, this, moveResizeOutput());
         m_moveResizeGrabWindow.create(Xcb::toXNative(r), XCB_WINDOW_CLASS_INPUT_ONLY, 0, nullptr, kwinApp()->x11RootWindow());
         m_moveResizeGrabWindow.map();
         m_moveResizeGrabWindow.raise();
