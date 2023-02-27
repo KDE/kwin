@@ -155,6 +155,7 @@ void XdgSurfaceInterfacePrivate::reset()
 {
     firstBufferAttached = false;
     isConfigured = false;
+    isInitialized = false;
     current = XdgSurfaceState{};
     next = XdgSurfaceState{};
     Q_EMIT q->resetOccurred();
@@ -321,8 +322,9 @@ void XdgToplevelInterfacePrivate::commit()
         Q_EMIT q->maximumSizeChanged(current.maximumSize);
     }
 
-    if (!xdgSurfacePrivate->isConfigured) {
+    if (!xdgSurfacePrivate->isInitialized) {
         Q_EMIT q->initializeRequested();
+        xdgSurfacePrivate->isInitialized = true;
     }
 }
 
@@ -622,8 +624,9 @@ void XdgPopupInterfacePrivate::commit()
 
     xdgSurfacePrivate->commit();
 
-    if (!xdgSurfacePrivate->isConfigured) {
+    if (!xdgSurfacePrivate->isInitialized) {
         Q_EMIT q->initializeRequested();
+        xdgSurfacePrivate->isInitialized = true;
     }
 }
 
