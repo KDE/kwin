@@ -1,10 +1,11 @@
+# Ryuichi Yamada <ryuichi_ya220@outlook.jp>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm-kwin-scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-18 01:00+0000\n"
-"PO-Revision-Date: 2012-02-05 20:17-0800\n"
-"Last-Translator: Japanese KDE translation team <kde-jp@kde.org>\n"
+"PO-Revision-Date: 2023-02-04 01:49+0900\n"
+"Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -13,16 +14,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
+"X-Generator: Lokalize 22.12.1\n"
 
 #: module.cpp:56
 #, kde-format
 msgid "Import KWin Script"
-msgstr ""
+msgstr "KWin スクリプトをインポートする"
 
 #: module.cpp:57
 #, kde-format
 msgid "*.kwinscript|KWin scripts (*.kwinscript)"
-msgstr ""
+msgstr "*.kwinscript|KWin スクリプト (*.kwinscript)"
 
 #: module.cpp:95
 #, kde-format
@@ -31,30 +33,32 @@ msgid ""
 "Cannot import selected script.\n"
 "%1"
 msgstr ""
+"KWin スクリプトをインポートできません。\n"
+"%1"
 
 #: module.cpp:107
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
-msgstr ""
+msgstr "\"%1\" のインポートに成功しました。"
 
 #: module.cpp:147
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
-msgstr ""
+msgstr "KWin スクリプト %1 のアンインストールに失敗しました: %1"
 
 #: package/contents/ui/main.qml:47
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete..."
-msgstr ""
+msgstr "削除..."
 
 #: package/contents/ui/main.qml:60
 #, kde-format
 msgid "Install from File..."
-msgstr ""
+msgstr "ファイルからインストール..."
 
 #: package/contents/ui/main.qml:64
 #, kde-format
 msgid "Get New Scripts..."
-msgstr ""
+msgstr "新しいスクリプトを入手..."

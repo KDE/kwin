@@ -4,21 +4,22 @@
 # Shinichi Tsunoda <tsuno@ngy.1st.ne.jp>, 2005.
 # Yukiko Bando <ybando@k6.dion.ne.jp>, 2006, 2007, 2010.
 # R.Suga <21r.suga@gmail.com>, 2022.
-# Fumiaki Okushi <fumiaki.okushi@gmail.com>, 2005, 2015, 2022.
+# Ryuichi Yamada <ryuichi_ya220@outlook.jp>, 2023.
+# Fumiaki Okushi <fumiaki.okushi@gmail.com>, 2005, 2015, 2022, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-18 01:00+0000\n"
-"PO-Revision-Date: 2022-03-12 18:20-0800\n"
+"PO-Revision-Date: 2023-02-25 14:48-0800\n"
 "Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 22.12.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -197,7 +198,7 @@ msgstr "ファイルを選択"
 #: package/contents/ui/FileDialogLoader.qml:26
 #, kde-format
 msgid "KWin Rules (*.kwinrule)"
-msgstr "KWin ルール(*.kwinrule)"
+msgstr "KWin ルール (*.kwinrule)"
 
 #: package/contents/ui/main.qml:59
 #, kde-format
@@ -358,7 +359,7 @@ msgstr "いいえ"
 #: package/contents/ui/ValueEditor.qml:178
 #, kde-format
 msgid "%1 %"
-msgstr "%1 %"
+msgstr "%1%"
 
 #: package/contents/ui/RulesEditor.qml:277
 #, kde-format
@@ -435,7 +436,7 @@ msgstr "一致するウィンドウ"
 #: rulesmodel.cpp:386
 #, kde-format
 msgid "Window class (application)"
-msgstr "ウィンドウクラス(アプリケーション)"
+msgstr "ウィンドウクラス (アプリケーション)"
 
 #: rulesmodel.cpp:394
 #, kde-format
@@ -465,7 +466,7 @@ msgstr "ウィンドウタイトル"
 #: rulesmodel.cpp:426
 #, kde-format
 msgid "Machine (hostname)"
-msgstr "マシン(ホスト名)"
+msgstr "マシン (ホスト名)"
 
 #: rulesmodel.cpp:432
 #, kde-format
@@ -576,8 +577,8 @@ msgid ""
 "This may be pointless and the restriction prevents arbitrary dimensions\n"
 "like your complete screen area."
 msgstr ""
-"(例)ターミナルまたはビデオプレーヤーは、特定のアスペクト比を維持するか、\n"
-"1より大きい値(例えば、1つの文字の寸法)だけ大きくなるように要求できます。\n"
+"例: ターミナルまたは動画プレーヤーは、特定のアスペクト比を維持するか、\n"
+"1より大きい値 (例えば、1つの文字の寸法) だけ大きくなるように要求できます。\n"
 "これは無意味である可能性があり、制限によって画面領域全体のような\n"
 "任意のサイズが妨げられます。"
 
@@ -647,7 +648,7 @@ msgstr "外観と改善"
 #: rulesmodel.cpp:595
 #, kde-format
 msgid "Titlebar color scheme"
-msgstr "タイトルバーの色スキーム"
+msgstr "タイトルバーのカラースキーム"
 
 #: rulesmodel.cpp:601
 #, kde-format
@@ -674,7 +675,7 @@ msgid ""
 "\"Extreme\" will completely prevent it from taking the focus."
 msgstr ""
 "KWin は、別のウィンドウで作業しているときにウィンドウがフォーカスを奪う\n"
-"(\"アクティブ化\")ことを防ごうとしますが、これが失敗したり、機能しなくなった"
+"(\"アクティブ化\") ことを防ごうとしますが、これが失敗したり、機能しなくなった"
 "りすることがあります。\n"
 "\"なし\" は無条件にこのウィンドウがフォーカスを取得できるようにしますが、\n"
 "\"最高\" は完全にフォーカスを取得できないようにします。"
@@ -710,8 +711,8 @@ msgid ""
 "On the other hand you might wish to prevent a window\n"
 "from getting focused on a mouse click."
 msgstr ""
-"ウィンドウは、クリックされたときにフォーカスを取得(アクティブ化)できない場合"
-"があります。\n"
+"ウィンドウは、クリックされたときにフォーカスを取得 (アクティブ化) できない場"
+"合があります。\n"
 "一方、クリックによってフォーカスされないようにしたい場合もあります。"
 
 #: rulesmodel.cpp:642
@@ -737,7 +738,7 @@ msgstr ""
 "\n"
 "警告:\n"
 "アクティブな間は、ウィンドウの外で Alt+Tab を押したり、\n"
-"他のグローバルショートカット(KRunner を表示するための Alt+F2 など)\n"
+"他のグローバルショートカット (KRunner を表示するための Alt+F2 など)\n"
 "を使用したりすることはできません。"
 
 #: rulesmodel.cpp:655
@@ -761,10 +762,9 @@ msgid "Block compositing"
 msgstr "コンポジットをブロック"
 
 #: rulesmodel.cpp:723
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "ウィンドウクラス(アプリケーション)"
+msgstr "ウィンドウクラスが利用できません"
 
 #: rulesmodel.cpp:724
 #, kde-kuit-format
@@ -775,12 +775,15 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"このアプリケーションはウィンドウクラスを提供していません。そのため、KWin は"
+"ウィンドウクラスを利用してルールを適用することができません。ウィンドウタイト"
+"ルのような、他のプロパティを利用してルールの適用を試みてください。<nl/><nl/>"
+"アプリケーションの開発者にこのバグを報告することも検討してください。"
 
 #: rulesmodel.cpp:758
-#, fuzzy, kde-format
-#| msgid "Window types"
+#, kde-format
 msgid "All Window Types"
-msgstr "ウィンドウタイプ"
+msgstr "すべてのウィンドウタイプ"
 
 #: rulesmodel.cpp:759
 #, kde-format
@@ -800,7 +803,7 @@ msgstr "ユーティリティウィンドウ"
 #: rulesmodel.cpp:762
 #, kde-format
 msgid "Dock (panel)"
-msgstr "ドック(パネル)"
+msgstr "ドック (パネル)"
 
 #: rulesmodel.cpp:763
 #, kde-format
@@ -842,7 +845,7 @@ msgstr "すべてのデスクトップ"
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
-msgstr ""
+msgstr "すべてのデスクトップでウィンドウを利用可能にする"
 
 #: rulesmodel.cpp:800
 #, kde-format
@@ -853,7 +856,7 @@ msgstr "すべてのアクティビティ"
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
-msgstr ""
+msgstr "すべてのアクティビティでウィンドウを利用可能にする"
 
 #: rulesmodel.cpp:823
 #, kde-format
@@ -926,10 +929,9 @@ msgid "Extreme"
 msgstr "最高"
 
 #: rulesmodel.cpp:885
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "Unmanaged window"
-msgstr "メインウィンドウの上"
+msgstr "管理されていないウィンドウ"
 
 #: rulesmodel.cpp:886
 #, kde-format
@@ -937,20 +939,3 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "ウィンドウプロパティを検出できませんでした。このウィンドウは KWin によって管"
 "理されていません。"
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Kenshi Muto,Shinichi Tsunoda,R.Suga"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "kmuto@debian.org,tsuno@ngy.1st.ne.jp,21r.suga@gmail.com"
-
-#~ msgid "Window Rules"
-#~ msgstr "ウィンドウルール"
-
-#~ msgid "Ismael Asensio"
-#~ msgstr "Ismael Asensio"
-
-#~ msgid "Author"
-#~ msgstr "作者"

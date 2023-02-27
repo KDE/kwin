@@ -6,14 +6,15 @@
 # Shinichi Tsunoda <tsuno@ngy.1st.ne.jp>, 2005.
 # Yukiko Bando <ybando@k6.dion.ne.jp>, 2006, 2007, 2008, 2009, 2010.
 # Taiki Komoda <kom@kde.gr.jp>, 2010.
+# Ryuichi Yamada <ryuichi_ya220@outlook.jp>, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-18 01:00+0000\n"
-"PO-Revision-Date: 2010-09-25 16:49-0700\n"
-"Last-Translator: Fumiaki Okushi <okushi@kde.gr.jp>\n"
+"PO-Revision-Date: 2023-02-23 18:29+0900\n"
+"Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -22,14 +23,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 1.0\n"
+"X-Generator: Lokalize 22.12.2\n"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: blur/blur_config.ui:17
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Blur strength:"
-msgstr "強さ(&S):"
+msgstr "ぼけの強さ:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
@@ -47,10 +47,9 @@ msgstr "強"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
 #: blur/blur_config.ui:83
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Noise strength:"
-msgstr "強さ(&S):"
+msgstr "ノイズの強さ:"
 
 #: colorpicker/colorpicker.cpp:101
 #, kde-format
@@ -69,7 +68,7 @@ msgstr ""
 #: windowview/kcm/windowvieweffectkcm.cpp:36 zoom/zoom_config.cpp:58
 #, kde-format
 msgid "KWin"
-msgstr ""
+msgstr "KWin"
 
 #: desktopgrid/desktopgrid_config.cpp:54 desktopgrid/desktopgrideffect.cpp:35
 #, kde-format
@@ -166,10 +165,9 @@ msgstr "カスタム"
 
 #. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
 #: desktopgrid/desktopgrid_config.ui:48
-#, fuzzy, kde-format
-#| msgid "Number of &rows:"
+#, kde-format
 msgid "N&umber of rows:"
-msgstr "横列の数(&R):"
+msgstr "横列の数(&U):"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: desktopgrid/desktopgrid_config.ui:103
@@ -185,17 +183,16 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: desktopgrid/desktopgrid_config.ui:123
-#, fuzzy, kde-format
-#| msgid "&Layout mode:"
+#, kde-format
 msgid "&Grid layout mode:"
-msgstr "配置モード(&L):"
+msgstr "グリッド配置モード(&G):"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: desktopgrid/desktopgrid_config.ui:137 overview/kcm/overvieweffectkcm.ui:30
 #: windowview/kcm/windowvieweffectkcm.ui:30
 #, kde-format
 msgid "Closest"
-msgstr ""
+msgstr "クローゼット"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: desktopgrid/desktopgrid_config.ui:142 overview/kcm/overvieweffectkcm.ui:35
@@ -212,10 +209,9 @@ msgstr "なし"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: desktopgrid/desktopgrid_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Windows layout:"
-msgstr "ウィンドウ"
+msgstr "ウィンドウレイアウト:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: desktopgrid/desktopgrid_config.ui:171
@@ -225,29 +221,25 @@ msgstr "開始"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: diminactive/diminactive_config.ui:17
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Strength:"
-msgstr "強さ(&S):"
+msgstr "強さ:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Dim)
 #: diminactive/diminactive_config.ui:40
 #, kde-format
 msgid "Dim:"
-msgstr ""
+msgstr "暗くする:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
 #: diminactive/diminactive_config.ui:47
-#, fuzzy, kde-format
-#| msgid "Do not animate panels"
+#, kde-format
 msgid "Docks and panels"
-msgstr "パネルは動かさない"
+msgstr "ドックとパネル"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: diminactive/diminactive_config.ui:54
-#, fuzzy, kde-format
-#| msgctxt "@title:group actions when clicking on desktop"
-#| msgid "Desktop"
+#, kde-format
 msgid "Desktop"
 msgstr "デスクトップ"
 
@@ -266,40 +258,33 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
 #: diminactive/diminactive_config.ui:75
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Fullscreen windows"
-msgstr "ウィンドウ"
+msgstr "フルスクリーンウィンドウ"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: glide/glide_config.ui:19 scale/package/contents/ui/config.ui:17
-#, fuzzy, kde-format
-#| msgid "Fading duration:"
+#, kde-format
 msgid "Duration:"
-msgstr "フェードの長さ:"
+msgstr "経過時間:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: glide/glide_config.ui:32 scale/package/contents/ui/config.ui:30
-#, fuzzy, kde-format
-#| msgctxt "Duration of rotation"
-#| msgid "Default"
+#, kde-format
 msgid "Default"
 msgstr "標準"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
 #: glide/glide_config.ui:35 scale/package/contents/ui/config.ui:33
-#, fuzzy, kde-format
-#| msgid " millisecond"
-#| msgid_plural " milliseconds"
+#, kde-format
 msgid " milliseconds"
 msgstr " ミリ秒"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: glide/glide_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Animation"
+#, kde-format
 msgid "Window Open Animation"
-msgstr "アニメーション"
+msgstr "開くウィンドウのアニメーション"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
@@ -326,10 +311,9 @@ msgstr ""
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
 #: glide/glide_config.ui:148
-#, fuzzy, kde-format
-#| msgid "Animation"
+#, kde-format
 msgid "Window Close Animation"
-msgstr "アニメーション"
+msgstr "閉じるウィンドウのアニメーション"
 
 #: invert/invert.cpp:42 invert/invert_config.cpp:38
 #, kde-format
@@ -367,9 +351,7 @@ msgstr "標準"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
 #: magiclamp/magiclamp_config.ui:39
-#, fuzzy, kde-format
-#| msgid " millisecond"
-#| msgid_plural " milliseconds"
+#, kde-format
 msgid "milliseconds"
 msgstr " ミリ秒"
 
@@ -405,22 +387,19 @@ msgid "Toggle Mouse Click Effect"
 msgstr "色調反転効果をオン/オフ"
 
 #: mouseclick/mouseclick.cpp:41
-#, fuzzy, kde-format
-#| msgid "Left"
+#, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "左"
 
 #: mouseclick/mouseclick.cpp:42
-#, fuzzy, kde-format
-#| msgid "Middle button:"
+#, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
-msgstr "中ボタン:"
+msgstr "中"
 
 #: mouseclick/mouseclick.cpp:43
-#, fuzzy, kde-format
-#| msgid "Right"
+#, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
 msgstr "右"
@@ -443,31 +422,27 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, button1_label)
 #: mouseclick/mouseclick_config.ui:37
-#, fuzzy, kde-format
-#| msgid "Left button:"
+#, kde-format
 msgid "Left Mouse Button Color:"
-msgstr "左ボタン:"
+msgstr "左ボタンの色:"
 
 #. i18n: ectx: property (text), widget (QLabel, button2_label)
 #: mouseclick/mouseclick_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Middle button:"
+#, kde-format
 msgid "Middle Mouse Button Color:"
-msgstr "中ボタン:"
+msgstr "中ボタンの色:"
 
 #. i18n: ectx: property (text), widget (QLabel, button3_label)
 #: mouseclick/mouseclick_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Right button:"
+#, kde-format
 msgid "Right Mouse Button Color:"
-msgstr "右ボタン:"
+msgstr "右ボタンの色:"
 
 #. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
 #: mouseclick/mouseclick_config.ui:91
-#, fuzzy, kde-format
-#| msgid "Advanced"
+#, kde-format
 msgid "Advanced Settings"
-msgstr "詳細"
+msgstr "詳細設定"
 
 #. i18n: ectx: property (title), widget (QGroupBox, rings)
 #: mouseclick/mouseclick_config.ui:97
@@ -477,17 +452,14 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, ring_line_width_label)
 #: mouseclick/mouseclick_config.ui:103
-#, fuzzy, kde-format
-#| msgid "&Width:"
+#, kde-format
 msgid "Line Width:"
-msgstr "幅(&W):"
+msgstr "線の幅:"
 
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, kcfg_LineWidth)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
 #: mouseclick/mouseclick_config.ui:119 mouseclick/mouseclick_config.ui:171
-#, fuzzy, kde-format
-#| msgid " pixel"
-#| msgid_plural " pixels"
+#, kde-format
 msgid " pixel"
 msgstr " ピクセル"
 
@@ -527,14 +499,13 @@ msgstr "テキスト"
 #: mouseclick/mouseclick_config.ui:216
 #, kde-format
 msgid "Font:"
-msgstr ""
+msgstr "フォント:"
 
 #. i18n: ectx: property (text), widget (QLabel, showtext_label)
 #: mouseclick/mouseclick_config.ui:233
-#, fuzzy, kde-format
-#| msgid "Show desktop"
+#, kde-format
 msgid "Show Text:"
-msgstr "デスクトップを表示"
+msgstr "テキストを表示:"
 
 #: mousemark/mousemark.cpp:39
 #, kde-format
@@ -552,9 +523,7 @@ msgid "Clear Mouse Marks"
 msgstr "マウスマークをクリア"
 
 #: mousemark/mousemark_config.cpp:100
-#, fuzzy, kde-format
-#| msgid " pixel"
-#| msgid_plural " pixels"
+#, kde-format
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
@@ -585,13 +554,12 @@ msgstr ""
 #, kde-format
 msgctxt "@label"
 msgid "Unknown"
-msgstr ""
+msgstr "不明"
 
 #: overview/kcm/overvieweffectkcm.cpp:41 overview/overvieweffect.cpp:31
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgid "Toggle Overview"
-msgstr "色調反転効果をオン/オフ"
+msgstr "オーバービューをオン/オフ"
 
 # ACCELERATOR added by translator
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
@@ -603,22 +571,19 @@ msgstr "配置モード(&L):"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: overview/kcm/overvieweffectkcm.ui:43
-#, fuzzy, kde-format
-#| msgid "Ignore &minimized windows"
+#, kde-format
 msgid "Ignore minimized windows:"
-msgstr "最小化されたウィンドウは無視する(&M)"
+msgstr "最小化されたウィンドウは無視する:"
 
 #: overview/qml/DesktopBar.qml:187
 #, kde-format
 msgid "Delete Virtual Desktop"
-msgstr ""
+msgstr "仮想デスクトップを削除"
 
 #: overview/qml/DesktopBar.qml:283
-#, fuzzy, kde-format
-#| msgctxt "@title:group actions when clicking on desktop"
-#| msgid "Desktop"
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "デスクトップ"
+msgstr "仮想デスクトップを追加"
 
 #: overview/qml/ScreenView.qml:226
 #, fuzzy, kde-format
@@ -632,8 +597,7 @@ msgid "Drag Down To Close"
 msgstr ""
 
 #: private/qml/WindowHeapDelegate.qml:461
-#, fuzzy, kde-format
-#| msgid "Close window"
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
 msgstr "ウィンドウを閉じる"
@@ -728,13 +692,13 @@ msgstr ""
 #: slide/slide_config.ui:23
 #, kde-format
 msgid "Horizontal:"
-msgstr ""
+msgstr "水平:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
 #: slide/slide_config.ui:46
 #, kde-format
 msgid "Vertical:"
-msgstr ""
+msgstr "垂直:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
 #: slide/slide_config.ui:72
@@ -784,42 +748,42 @@ msgstr " %"
 #: tileseditor/tileseditoreffect.cpp:29
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr ""
+msgstr "タイルエディタ"
 
 #: tileseditor/qml/main.qml:150
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "余白:"
 
 #: tileseditor/qml/main.qml:160
 #, kde-format
 msgid "Load Layout..."
-msgstr ""
+msgstr "レイアウトを読み込む..."
 
 #: tileseditor/qml/main.qml:274
 #, kde-format
 msgid "Close"
-msgstr ""
+msgstr "閉じる"
 
 #: tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Horizontally"
-msgstr ""
+msgstr "水平に分割する"
 
 #: tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Vertically"
-msgstr ""
+msgstr "垂直に分割する"
 
 #: tileseditor/qml/TileDelegate.qml:182 tileseditor/qml/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
-msgstr ""
+msgstr "フロートタイルを追加"
 
 #: tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "削除"
 
 #: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
 #, kde-format
@@ -830,20 +794,19 @@ msgstr "マウスを捕捉"
 #: trackmouse/trackmouse_config.ui:26
 #, kde-format
 msgid "Trigger effect with:"
-msgstr ""
+msgstr "エフェクトのトリガー:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
 #: trackmouse/trackmouse_config.ui:33
 #, kde-format
 msgid "Keyboard shortcut:"
-msgstr ""
+msgstr "キーボードショートカット:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
 #: trackmouse/trackmouse_config.ui:43
-#, fuzzy, kde-format
-#| msgid "Modifier keys"
+#, kde-format
 msgid "Modifier keys:"
-msgstr "修飾キー"
+msgstr "修飾キー:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Alt)
 #: trackmouse/trackmouse_config.ui:65
@@ -981,13 +944,12 @@ msgstr "最小化されたウィンドウは無視する(&M)"
 #: windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
-msgstr ""
+msgstr "一致なし"
 
 #: windowview/qml/main.qml:107
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "No Windows"
-msgstr "ウィンドウ"
+msgstr "ウィンドウはありません"
 
 #: windowview/qml/main.qml:122
 #, fuzzy, kde-format
@@ -1098,12 +1060,12 @@ msgstr "右へ移動"
 #: zoom/zoom_config.cpp:94
 #, kde-format
 msgid "Move Up"
-msgstr ""
+msgstr "上へ移動"
 
 #: zoom/zoom_config.cpp:101
 #, kde-format
 msgid "Move Down"
-msgstr ""
+msgstr "下へ移動"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
@@ -1211,8 +1173,3 @@ msgstr "無効"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr ""
-
-#, fuzzy
-#~| msgid "Background"
-#~ msgid "Blur background:"
-#~ msgstr "背景"
