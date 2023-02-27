@@ -34,35 +34,6 @@
 namespace KWin
 {
 
-class EffectQuickRenderControl : public QQuickRenderControl
-{
-    Q_OBJECT
-
-public:
-    explicit EffectQuickRenderControl(OffscreenQuickView *view, QWindow *renderWindow)
-        : QQuickRenderControl(view)
-        , m_view(view)
-        , m_renderWindow(renderWindow)
-    {
-    }
-
-    QWindow *renderWindow(QPoint *offset) override
-    {
-        if (offset) {
-            if (m_renderWindow) {
-                *offset = m_renderWindow->mapFromGlobal(m_view->geometry().topLeft());
-            } else {
-                *offset = QPoint(0, 0);
-            }
-        }
-        return m_renderWindow;
-    }
-
-private:
-    OffscreenQuickView *m_view;
-    QPointer<QWindow> m_renderWindow;
-};
-
 class Q_DECL_HIDDEN OffscreenQuickView::Private
 {
 public:
@@ -111,20 +82,10 @@ OffscreenQuickView::OffscreenQuickView(QObject *parent)
 }
 
 OffscreenQuickView::OffscreenQuickView(QObject *parent, ExportMode exportMode)
-    : OffscreenQuickView(parent, nullptr, exportMode)
-{
-}
-
-OffscreenQuickView::OffscreenQuickView(QObject *parent, QWindow *renderWindow)
-    : OffscreenQuickView(parent, renderWindow, effects ? ExportMode::Texture : ExportMode::Image)
-{
-}
-
-OffscreenQuickView::OffscreenQuickView(QObject *parent, QWindow *renderWindow, ExportMode exportMode)
     : QObject(parent)
     , d(new OffscreenQuickView::Private)
 {
-    d->m_renderControl = std::make_unique<EffectQuickRenderControl>(this, renderWindow);
+    d->m_renderControl = std::make_unique<QQuickRenderControl>();
 
     d->m_view = std::make_unique<QQuickWindow>(d->m_renderControl.get());
     d->m_view->setFlags(Qt::FramelessWindowHint);
@@ -263,7 +224,11 @@ void OffscreenQuickView::update()
                 return;
             }
         }
-        d->m_view->setRenderTarget(QQuickRenderTarget::fromOpenGLTexture(d->m_fbo->texture(), d->m_fbo->size()));
+
+        QQuickRenderTarget renderTarget = QQuickRenderTarget::fromOpenGLTexture(d->m_fbo->texture(), d->m_fbo->size());
+        renderTarget.setDevicePixelRatio(d->m_view->devicePixelRatio());
+
+        d->m_view->setRenderTarget(renderTarget);
     }
 
     d->m_renderControl->polishItems();
@@ -555,18 +520,6 @@ void OffscreenQuickView::Private::updateTouchState(Qt::TouchPointState state, qi
 
 OffscreenQuickScene::OffscreenQuickScene(QObject *parent)
     : OffscreenQuickView(parent)
-    , d(new OffscreenQuickScene::Private)
-{
-}
-
-OffscreenQuickScene::OffscreenQuickScene(QObject *parent, QWindow *renderWindow)
-    : OffscreenQuickView(parent, renderWindow)
-    , d(new OffscreenQuickScene::Private)
-{
-}
-
-OffscreenQuickScene::OffscreenQuickScene(QObject *parent, QWindow *renderWindow, ExportMode exportMode)
-    : OffscreenQuickView(parent, renderWindow, exportMode)
     , d(new OffscreenQuickScene::Private)
 {
 }

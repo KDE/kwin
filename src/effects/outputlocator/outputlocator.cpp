@@ -74,13 +74,9 @@ void OutputLocatorEffect::show()
         return;
     }
 
-    // Needed until Qt6 https://codereview.qt-project.org/c/qt/qtdeclarative/+/361506
-    m_dummyWindow = std::make_unique<QWindow>();
-    m_dummyWindow->create();
-
     const auto screens = effects->screens();
     for (const auto screen : screens) {
-        auto scene = new OffscreenQuickScene(this, m_dummyWindow.get());
+        auto scene = new OffscreenQuickScene(this);
         scene->setSource(m_qmlUrl, {{QStringLiteral("outputName"), outputName(screen)}, {QStringLiteral("resolution"), screen->geometry().size()}, {QStringLiteral("scale"), screen->devicePixelRatio()}});
         QRectF geometry(0, 0, scene->rootItem()->implicitWidth(), scene->rootItem()->implicitHeight());
         geometry.moveCenter(screen->geometry().center());

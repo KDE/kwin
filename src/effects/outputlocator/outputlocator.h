@@ -9,7 +9,6 @@
 #include <kwineffects.h>
 
 #include <QTimer>
-#include <QWindow>
 
 namespace KWin
 {
@@ -31,7 +30,6 @@ public Q_SLOTS:
 private:
     QUrl m_qmlUrl;
     QTimer m_showTimer;
-    std::unique_ptr<QWindow> m_dummyWindow;
     QMap<EffectScreen *, OffscreenQuickScene *> m_scenesByScreens;
 };
 }

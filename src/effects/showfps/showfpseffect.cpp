@@ -9,7 +9,6 @@
 #include "showfpseffect.h"
 
 #include <QQmlContext>
-#include <QWindow>
 
 namespace KWin
 {
@@ -69,9 +68,7 @@ void ShowFpsEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millis
     }
 
     if (!m_scene) {
-        m_window = std::make_unique<QWindow>();
-        m_window->create();
-        m_scene = std::make_unique<OffscreenQuickScene>(nullptr, m_window.get());
+        m_scene = std::make_unique<OffscreenQuickScene>(nullptr);
         const auto url = QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/effects/showfps/qml/main.qml")));
         m_scene->setSource(url, {{QStringLiteral("effect"), QVariant::fromValue(this)}});
     }
