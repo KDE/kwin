@@ -22,6 +22,11 @@ OutputScreenCastSource::OutputScreenCastSource(Output *output, QObject *parent)
     , m_output(output)
 {
     connect(m_output, &QObject::destroyed, this, &ScreenCastSource::closed);
+    connect(m_output, &Output::enabledChanged, this, [this] {
+        if (!m_output->isEnabled()) {
+            Q_EMIT closed();
+        }
+    });
 }
 
 bool OutputScreenCastSource::hasAlphaChannel() const
