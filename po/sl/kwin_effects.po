@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-02-28 01:00+0000\n"
 "PO-Revision-Date: 2022-12-18 08:43+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -589,7 +589,7 @@ msgstr "Ni ustreznih oken"
 msgid "Drag Down To Close"
 msgstr "Povleci dol za zaprtje"
 
-#: private/qml/WindowHeapDelegate.qml:461
+#: private/qml/WindowHeapDelegate.qml:453
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"

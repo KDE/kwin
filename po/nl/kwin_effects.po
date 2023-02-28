@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-02-28 01:00+0000\n"
 "PO-Revision-Date: 2022-12-02 14:53+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -588,7 +588,7 @@ msgstr "Geen overeenkomende vensters"
 msgid "Drag Down To Close"
 msgstr "Omlaag slepen om te sluiten"
 
-#: private/qml/WindowHeapDelegate.qml:461
+#: private/qml/WindowHeapDelegate.qml:453
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"

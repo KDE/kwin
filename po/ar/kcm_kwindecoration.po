@@ -8,23 +8,23 @@
 # AbdulAziz AlSharif <a.a-a.s@hotmail.com>, 2007.
 # Youssef Chahibi <chahibi@gmail.com>, 2007.
 # zayed <zayed.alsaidi@gmail.com>, 2008.
-# Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2010, 2021.
+# Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2010, 2021, 2023.
 # Safa Alfulaij <safa1996alfulaij@gmail.com>, ٢٠١٦.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-18 01:00+0000\n"
-"PO-Revision-Date: 2021-07-20 00:38+0400\n"
+"PO-Revision-Date: 2023-02-16 12:17+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
-"Language-Team: \n"
+"Language-Team: ar\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-"X-Generator: Lokalize 19.12.3\n"
+"X-Generator: Lokalize 21.12.3\n"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
@@ -174,9 +174,7 @@ msgid "Drag buttons between here and the titlebar"
 msgstr "اسحب الأزرار من وإلا شريط العنوان"
 
 #: package/contents/ui/ConfigureTitlebar.qml:16
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgid "Titlebar Buttons"
 msgstr "أزرار شريط العنوان"
 
@@ -210,20 +208,16 @@ msgid "Window border size:"
 msgstr "حجم حافة النافذة:"
 
 #: package/contents/ui/main.qml:60
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr "أزرار شريط العنوان"
+msgstr "اضبط أزرار شريط العنوان…"
 
 #: package/contents/ui/main.qml:65
-#, fuzzy, kde-format
-#| msgctxt "button text"
-#| msgid "Get New Window Decorations..."
+#, kde-format
 msgctxt "button text"
 msgid "Get New Window Decorations…"
-msgstr "اجلب زخرفة جديدة..."
+msgstr "اجلب زخرفة جديدة…"
 
 #: package/contents/ui/Themes.qml:92
 #, kde-format

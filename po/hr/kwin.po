@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin 0\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-26 00:59+0000\n"
+"POT-Creation-Date: 2023-02-28 01:00+0000\n"
 "PO-Revision-Date: 2011-07-12 17:48+0200\n"
 "Last-Translator: Marko Dimjašević <marko@dimjasevic.net>\n"
 "Language-Team: Croatian <kde-croatia-list@lists.sourceforge.net>\n"
@@ -2862,13 +2862,13 @@ msgstr "Prebaci na donju radnu površinu"
 msgid "Switch to Desktop %1"
 msgstr "Prebaci na radnu površinu %1"
 
-#: window.cpp:3403
+#: window.cpp:3404
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1845
+#: workspace.cpp:1839
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

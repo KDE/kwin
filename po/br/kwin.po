@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-26 00:59+0000\n"
+"POT-Creation-Date: 2023-02-28 01:00+0000\n"
 "PO-Revision-Date: 2004-07-08 17:18+0200\n"
 "Last-Translator: Thierry Vignaud <tvignaud.com>\n"
 "Language-Team: Brezhoneg <Suav.Icb.fr>\n"
@@ -2838,13 +2838,13 @@ msgstr "Gwintañ d'ur burev izeloc'h"
 msgid "Switch to Desktop %1"
 msgstr "Gwintañ da Burev 1"
 
-#: window.cpp:3403
+#: window.cpp:3404
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1845
+#: workspace.cpp:1839
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

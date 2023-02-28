@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-26 00:59+0000\n"
-"PO-Revision-Date: 2023-02-23 06:12+0900\n"
+"POT-Creation-Date: 2023-02-28 01:00+0000\n"
+"PO-Revision-Date: 2023-02-27 22:21+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Chinese <zh-l10n@linux.org.tw>\n"
 "Language: zh_TW\n"
@@ -2579,12 +2579,12 @@ msgstr "切換到左方視窗"
 #: useractions.cpp:1061
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr "增加作用中的視窗的不透明度 5%"
+msgstr "將作用中視窗的不透明度增加 5%"
 
 #: useractions.cpp:1063
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr "減少作用中的視窗的不透明度 5%"
+msgstr "將作用中視窗的不透明度減少 5%"
 
 #: useractions.cpp:1066
 #, kde-format
@@ -2709,7 +2709,7 @@ msgstr "砍掉程式"
 #: useractions.cpp:1134
 #, kde-format
 msgid "Suspend Compositing"
-msgstr "暫停混合"
+msgstr "暫停合成器"
 
 #: useractions.cpp:1195
 #, kde-format
@@ -2744,12 +2744,12 @@ msgstr "切換到上一個桌面"
 #: virtualdesktops.cpp:803
 #, kde-format
 msgid "Switch One Desktop to the Right"
-msgstr "往右移動一個桌面"
+msgstr "切換到右方的桌面"
 
 #: virtualdesktops.cpp:805
 #, kde-format
 msgid "Switch One Desktop to the Left"
-msgstr "往左移動一個桌面"
+msgstr "切換到左方的桌面"
 
 #: virtualdesktops.cpp:807
 #, kde-format
@@ -2766,13 +2766,13 @@ msgstr "切換到下面的桌面"
 msgid "Switch to Desktop %1"
 msgstr "切換到桌面 %1"
 
-#: window.cpp:3403
+#: window.cpp:3404
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "（沒有回應）"
 
-#: workspace.cpp:1845
+#: workspace.cpp:1839
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

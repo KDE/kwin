@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-26 00:59+0000\n"
-"PO-Revision-Date: 2023-01-14 16:45+0400\n"
+"POT-Creation-Date: 2023-02-28 01:00+0000\n"
+"PO-Revision-Date: 2023-02-16 12:16+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -2623,46 +2623,39 @@ msgid "Window One Desktop Down"
 msgstr "انقل النافذة إلى سطح المكتب الأسفل"
 
 #: useractions.cpp:1091
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move Window to Screen %1"
-msgstr "انقل النّافذة إلى الشاشة %1"
+msgstr "حرّك النّافذة إلى الشاشة %1"
 
 #: useractions.cpp:1098
-#, fuzzy, kde-format
-#| msgid "Window to Next Screen"
+#, kde-format
 msgid "Move Window to Next Screen"
-msgstr "انقل النّافذة إلى الشاشة التّالية"
+msgstr "حرّك النّافذة إلى الشاشة التّالية"
 
 #: useractions.cpp:1100
-#, fuzzy, kde-format
-#| msgid "Window to Previous Screen"
+#, kde-format
 msgid "Move Window to Previous Screen"
-msgstr "انقل النّافذة إلى الشاشة السابقة"
+msgstr "حرّك النّافذة إلى الشاشة السابقة"
 
 #: useractions.cpp:1102
-#, fuzzy, kde-format
-#| msgid "Window One Screen to the Right"
+#, kde-format
 msgid "Move Window One Screen to the Right"
-msgstr "انقل النافذة إلى شاشة اليمنى التالية"
+msgstr "حرّك النافذة إلى شاشة اليمنى التالية"
 
 #: useractions.cpp:1104
-#, fuzzy, kde-format
-#| msgid "Window One Screen to the Left"
+#, kde-format
 msgid "Move Window One Screen to the Left"
-msgstr "انقل النافذة إلى الشاشة اليسرى التالية"
+msgstr "حرّك النافذة إلى الشاشة اليسرى التالية"
 
 #: useractions.cpp:1106
-#, fuzzy, kde-format
-#| msgid "Window One Screen Up"
+#, kde-format
 msgid "Move Window One Screen Up"
-msgstr "انقل النّافذة إلى الشاشة العليا التالية"
+msgstr "حرّك النّافذة إلى الشاشة العليا التالية"
 
 #: useractions.cpp:1108
-#, fuzzy, kde-format
-#| msgid "Window One Screen Down"
+#, kde-format
 msgid "Move Window One Screen Down"
-msgstr "انقل النافذة إلى الشاشة السفلى التالية"
+msgstr "حرّك النافذة إلى الشاشة السفلى التالية"
 
 #: useractions.cpp:1112
 #, kde-format
@@ -2769,13 +2762,13 @@ msgstr "بدّل إلى سطح المكتب الأسفل"
 msgid "Switch to Desktop %1"
 msgstr "بدّل إلى سطح المكتب %1"
 
-#: window.cpp:3403
+#: window.cpp:3404
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(لا يستجيب)"
 
-#: workspace.cpp:1845
+#: workspace.cpp:1839
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
