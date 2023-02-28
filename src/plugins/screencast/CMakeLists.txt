@@ -1,5 +1,5 @@
-add_library(KWinScreencastPlugin OBJECT)
-target_sources(KWinScreencastPlugin PRIVATE
+kcoreaddons_add_plugin(screencast INSTALL_NAMESPACE "kwin/plugins")
+target_sources(screencast PRIVATE
     eglnativefence.cpp
     main.cpp
     outputscreencastsource.cpp
@@ -11,12 +11,11 @@ target_sources(KWinScreencastPlugin PRIVATE
     windowscreencastsource.cpp
 )
 
-ecm_qt_declare_logging_category(KWinScreencastPlugin
+ecm_qt_declare_logging_category(screencast
     HEADER kwinscreencast_logging.h
     IDENTIFIER KWIN_SCREENCAST
     CATEGORY_NAME kwin_screencast
     DEFAULT_SEVERITY Warning
 )
 
-target_compile_definitions(KWinScreencastPlugin PRIVATE QT_STATICPLUGIN)
-target_link_libraries(KWinScreencastPlugin kwin PkgConfig::PipeWire)
+target_link_libraries(screencast kwin PkgConfig::PipeWire)

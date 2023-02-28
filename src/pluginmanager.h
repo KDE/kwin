@@ -10,7 +10,6 @@
 
 #include <QHash>
 #include <QObject>
-#include <QStaticPlugin>
 
 #include <KPluginMetaData>
 
@@ -18,7 +17,6 @@ namespace KWin
 {
 
 class Plugin;
-class PluginFactory;
 
 /**
  * The PluginManager class loads and unloads binary compositor extensions.
@@ -39,13 +37,9 @@ public Q_SLOTS:
     void unloadPlugin(const QString &pluginId);
 
 private:
-    bool loadStaticPlugin(const QString &pluginId);
-    bool loadDynamicPlugin(const KPluginMetaData &metadata);
-    bool loadDynamicPlugin(const QString &pluginId);
-    bool instantiatePlugin(const QString &pluginId, PluginFactory *factory);
+    bool loadPlugin(const KPluginMetaData &metadata);
 
     std::map<QString, std::unique_ptr<Plugin>> m_plugins;
-    QHash<QString, QStaticPlugin> m_staticPlugins;
 };
 
 } // namespace KWin

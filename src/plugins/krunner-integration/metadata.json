@@ -1,6 +1,5 @@
 {
     "KPlugin": {
-        "EnabledByDefault": true,
-        "Id": "kwin5_plugin_krunner"
+        "EnabledByDefault": true
     }
 }

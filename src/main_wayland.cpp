@@ -55,9 +55,6 @@ Q_IMPORT_PLUGIN(KWinIntegrationPlugin)
 Q_IMPORT_PLUGIN(KGlobalAccelImpl)
 Q_IMPORT_PLUGIN(KWindowSystemKWinPlugin)
 Q_IMPORT_PLUGIN(KWinIdleTimePoller)
-#if PipeWire_FOUND
-Q_IMPORT_PLUGIN(ScreencastManagerFactory)
-#endif
 
 namespace KWin
 {

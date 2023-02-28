@@ -345,10 +345,6 @@ add_custom_target(
             ${CMAKE_CURRENT_BINARY_DIR}/org.kde.KWin.TabletModeManager.xml
 )
 
-if (PipeWire_FOUND)
-    target_link_libraries(kwin_wayland KWinScreencastPlugin)
-endif()
-
 install(FILES kwin.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})
 if (KWIN_BUILD_NOTIFICATIONS)
     install(FILES kwin.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFYRCDIR})
