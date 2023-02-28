@@ -124,6 +124,24 @@ void WindowItem::unrefVisible(int reason)
     updateVisibility();
 }
 
+void WindowItem::elevate()
+{
+    // Not ideal, but it's also highly unlikely that there are more than 1000 windows. The
+    // elevation constantly increases so it's possible to force specific stacking order. It
+    // can potentially overflow, but it's unlikely to happen because windows are elevated
+    // rarely.
+    static int elevation = 1000;
+
+    m_elevation = elevation++;
+    updateStackingOrder();
+}
+
+void WindowItem::deelevate()
+{
+    m_elevation.reset();
+    updateStackingOrder();
+}
+
 void WindowItem::handleWindowClosed(Window *original, Window *deleted)
 {
     m_window = deleted;
@@ -262,7 +280,11 @@ void WindowItem::updateOpacity()
 
 void WindowItem::updateStackingOrder()
 {
-    setZ(m_window->stackingOrder());
+    if (m_elevation.has_value()) {
+        setZ(m_elevation.value());
+    } else {
+        setZ(m_window->stackingOrder());
+    }
 }
 
 void WindowItem::markDamaged()

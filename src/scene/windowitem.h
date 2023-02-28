@@ -51,6 +51,9 @@ public:
     void refVisible(int reason);
     void unrefVisible(int reason);
 
+    void elevate();
+    void deelevate();
+
 protected:
     explicit WindowItem(Window *window, Scene *scene, Item *parent = nullptr);
     void updateSurfaceItem(SurfaceItem *surfaceItem);
@@ -75,6 +78,7 @@ private:
     std::unique_ptr<SurfaceItem> m_surfaceItem;
     std::unique_ptr<DecorationItem> m_decorationItem;
     std::unique_ptr<ShadowItem> m_shadowItem;
+    std::optional<int> m_elevation;
     int m_forceVisibleByHiddenCount = 0;
     int m_forceVisibleByDeleteCount = 0;
     int m_forceVisibleByDesktopCount = 0;

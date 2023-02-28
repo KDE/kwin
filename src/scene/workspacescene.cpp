@@ -427,23 +427,7 @@ void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
 
 void WorkspaceScene::createStackingOrder()
 {
-    // Create a list of all windows in the stacking order
     QList<Item *> items = m_containerItem->sortedChildItems();
-
-    // Move elevated windows to the top of the stacking order
-    const QList<EffectWindow *> elevatedList = static_cast<EffectsHandlerImpl *>(effects)->elevatedWindows();
-    for (EffectWindow *c : elevatedList) {
-        WindowItem *item = static_cast<EffectWindowImpl *>(c)->windowItem();
-        items.removeAll(item);
-        items.append(item);
-    }
-
-    // Skip windows that are not yet ready for being painted and if screen is locked skip windows
-    // that are neither lockscreen nor inputmethod windows.
-    //
-    // TODO? This cannot be used so carelessly - needs protections against broken clients, the
-    // window should not get focus before it's displayed, handle unredirected windows properly and
-    // so on.
     for (Item *item : std::as_const(items)) {
         WindowItem *windowItem = static_cast<WindowItem *>(item);
         if (windowItem->isVisible()) {

@@ -178,7 +178,6 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *s
     });
     connect(ws, &Workspace::deletedRemoved, this, [this](KWin::Window *d) {
         Q_EMIT windowDeleted(d->effectWindow());
-        elevated_windows.removeAll(d->effectWindow());
     });
     connect(ws->sessionManager(), &SessionManager::stateChanged, this, &KWin::EffectsHandler::sessionStateChanged);
     connect(vds, &VirtualDesktopManager::countChanged, this, &EffectsHandler::numberDesktopsChanged);
@@ -1097,11 +1096,13 @@ EffectWindowList EffectsHandlerImpl::stackingOrder() const
 
 void EffectsHandlerImpl::setElevatedWindow(KWin::EffectWindow *w, bool set)
 {
-    elevated_windows.removeAll(w);
+    WindowItem *item = static_cast<EffectWindowImpl *>(w)->windowItem();
+
     if (set) {
-        elevated_windows.append(w);
+        item->elevate();
+    } else {
+        item->deelevate();
     }
-    addRepaint(w->expandedGeometry());
 }
 
 void EffectsHandlerImpl::setTabBoxWindow(EffectWindow *w)

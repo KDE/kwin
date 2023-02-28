@@ -183,8 +183,6 @@ public:
     QStringList loadedEffects() const;
     QStringList listOfEffects() const;
     void unloadAllEffects();
-
-    QList<EffectWindow *> elevatedWindows() const;
     QStringList activeEffects() const;
 
     /**
@@ -313,7 +311,6 @@ protected:
 
     Effect *keyboard_grab_effect;
     Effect *fullscreen_effect;
-    QList<EffectWindow *> elevated_windows;
     QMultiMap<int, EffectPair> effect_order;
     QHash<long, int> registered_atoms;
 
@@ -620,14 +617,6 @@ private:
     EffectFrameQuickScene *m_view;
     QRect m_geometry;
 };
-
-inline QList<EffectWindow *> EffectsHandlerImpl::elevatedWindows() const
-{
-    if (isScreenLocked()) {
-        return QList<EffectWindow *>();
-    }
-    return elevated_windows;
-}
 
 inline xcb_window_t EffectsHandlerImpl::x11RootWindow() const
 {
