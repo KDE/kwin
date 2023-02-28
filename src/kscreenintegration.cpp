@@ -111,6 +111,32 @@ static QMap<Output *, QJsonObject> outputsConfig(const QVector<Output *> &output
     return ret;
 }
 
+static std::optional<QJsonObject> globalOutputConfig(Output *output)
+{
+    const QString kscreenPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kscreen/"));
+    if (kscreenPath.isEmpty()) {
+        return std::nullopt;
+    }
+    const auto hash = outputHash(output);
+    // use connector specific data if available, unspecific data if not
+    QFile f(kscreenPath % hash % output->name());
+    if (!f.open(QIODevice::ReadOnly)) {
+        f.setFileName(kscreenPath % hash);
+        if (!f.open(QIODevice::ReadOnly)) {
+            qCWarning(KWIN_CORE) << "Could not open file" << f.fileName();
+            return std::nullopt;
+        }
+    }
+
+    QJsonParseError error;
+    const auto doc = QJsonDocument::fromJson(f.readAll(), &error);
+    if (error.error != QJsonParseError::NoError) {
+        qCWarning(KWIN_CORE) << "Failed to parse" << f.fileName() << error.errorString();
+        return std::nullopt;
+    }
+    return doc.object();
+}
+
 /// See KScreen::Output::Rotation
 enum Rotation {
     None = 1,
@@ -161,8 +187,10 @@ std::optional<std::pair<OutputConfiguration, QVector<Output *>>> readOutputConfi
         }
         auto props = cfg.changeSet(output);
         const QJsonObject outputInfo = outputsInfo[output];
+        const auto globalOutputInfo = globalOutputConfig(output);
         qCDebug(KWIN_CORE) << "Reading output configuration for " << output;
-        if (!outputInfo.isEmpty()) {
+        if (!outputInfo.isEmpty() || globalOutputInfo.has_value()) {
+            // settings that are per output setup:
             props->enabled = outputInfo["enabled"].toBool(true);
             if (outputInfo["primary"].toBool()) {
                 outputOrder.push_back(std::make_pair(1, output));
@@ -181,16 +209,18 @@ std::optional<std::pair<OutputConfiguration, QVector<Output *>>> readOutputConfi
             }
             const QJsonObject pos = outputInfo["pos"].toObject();
             props->pos = QPoint(pos["x"].toInt(), pos["y"].toInt());
-            if (const QJsonValue scale = outputInfo["scale"]; !scale.isUndefined()) {
+
+            // settings that are independent of per output setups:
+            const auto &globalInfo = globalOutputInfo ? globalOutputInfo.value() : outputInfo;
+            if (const QJsonValue scale = globalInfo["scale"]; !scale.isUndefined()) {
                 props->scale = scale.toDouble(1.);
             }
-            props->transform = KScreenIntegration::toDrmTransform(outputInfo["rotation"].toInt());
+            props->transform = KScreenIntegration::toDrmTransform(globalInfo["rotation"].toInt());
+            props->overscan = static_cast<uint32_t>(globalInfo["overscan"].toInt(props->overscan));
+            props->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(globalInfo["vrrpolicy"].toInt(static_cast<uint32_t>(props->vrrPolicy)));
+            props->rgbRange = static_cast<Output::RgbRange>(globalInfo["rgbrange"].toInt(static_cast<uint32_t>(props->rgbRange)));
 
-            props->overscan = static_cast<uint32_t>(outputInfo["overscan"].toInt(props->overscan));
-            props->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(outputInfo["vrrpolicy"].toInt(static_cast<uint32_t>(props->vrrPolicy)));
-            props->rgbRange = static_cast<Output::RgbRange>(outputInfo["rgbrange"].toInt(static_cast<uint32_t>(props->rgbRange)));
-
-            if (const QJsonObject modeInfo = outputInfo["mode"].toObject(); !modeInfo.isEmpty()) {
+            if (const QJsonObject modeInfo = globalInfo["mode"].toObject(); !modeInfo.isEmpty()) {
                 if (auto mode = KScreenIntegration::parseMode(output, modeInfo)) {
                     props->mode = mode;
                 }
