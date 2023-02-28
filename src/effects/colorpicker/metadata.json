@@ -41,7 +41,6 @@
         "Description[zh_CN]": "拾色器专用辅助特效",
         "Description[zh_TW]": "支援挑選顏色",
         "EnabledByDefault": true,
-        "Id": "colorpicker",
         "License": "GPL",
         "Name": "Color Picker",
         "Name[ar]": "منتق الألوان",

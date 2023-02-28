@@ -16,8 +16,8 @@ kconfig_add_kcfg_files(zoom_SOURCES
     zoomconfig.kcfgc
 )
 
-kwin4_add_effect_module(kwin4_effect_zoom ${zoom_SOURCES})
-target_link_libraries(kwin4_effect_zoom PRIVATE
+kwin4_add_effect_module(zoom ${zoom_SOURCES})
+target_link_libraries(zoom PRIVATE
     kwineffects
     kwinglutils
 
@@ -28,8 +28,8 @@ target_link_libraries(kwin4_effect_zoom PRIVATE
 )
 
 if (HAVE_ACCESSIBILITY)
-    target_include_directories(kwin4_effect_zoom PRIVATE ${QACCESSIBILITYCLIENT_INCLUDE_DIR})
-    target_link_libraries(kwin4_effect_zoom PRIVATE ${QACCESSIBILITYCLIENT_LIBRARY})
+    target_include_directories(zoom PRIVATE ${QACCESSIBILITYCLIENT_INCLUDE_DIR})
+    target_link_libraries(zoom PRIVATE ${QACCESSIBILITYCLIENT_LIBRARY})
 endif()
 
 #######################################

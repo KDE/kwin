@@ -40,7 +40,6 @@
         "Description[zh_CN]": "窗口显示/隐藏时呈现滑翔过渡动效",
         "Description[zh_TW]": "讓視窗出現與消失時使用滑行效果",
         "EnabledByDefault": false,
-        "Id": "glide",
         "License": "GPL",
         "Name": "Glide",
         "Name[ar]": "الطيران",

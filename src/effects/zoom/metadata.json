@@ -41,7 +41,6 @@
         "Description[zh_CN]": "放大显示整个桌面，视图跟随鼠标移动",
         "Description[zh_TW]": "放大整個桌面",
         "EnabledByDefault": true,
-        "Id": "zoom",
         "License": "GPL",
         "Name": "Zoom",
         "Name[ar]": "تكبير",

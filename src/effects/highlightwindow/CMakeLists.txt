@@ -7,8 +7,8 @@ set(highlightwindow_SOURCES
     main.cpp
 )
 
-kwin4_add_effect_module(kwin4_effect_highlightwindow ${highlightwindow_SOURCES})
-target_link_libraries(kwin4_effect_highlightwindow PRIVATE
+kwin4_add_effect_module(highlightwindow ${highlightwindow_SOURCES})
+target_link_libraries(highlightwindow PRIVATE
     kwineffects
 
     Qt::DBus

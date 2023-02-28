@@ -40,7 +40,6 @@
         "Description[zh_CN]": "鼠标按键按下时显示动效，在进行录屏演示时非常有用",
         "Description[zh_TW]": "點擊滑鼠按鍵時顯示一個動畫。這在螢幕錄影或投影片播放時很有用",
         "EnabledByDefault": false,
-        "Id": "mouseclick",
         "License": "GPL",
         "Name": "Mouse Click Animation",
         "Name[ar]": "حركة نقرة الفأرة",

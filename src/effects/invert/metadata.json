@@ -41,7 +41,6 @@
         "Description[zh_CN]": "对桌面和窗口的颜色进行反相显示",
         "Description[zh_TW]": "反轉桌面和視窗的顏色",
         "EnabledByDefault": false,
-        "Id": "invert",
         "License": "GPL",
         "Name": "Invert",
         "Name[ar]": "اعكس",

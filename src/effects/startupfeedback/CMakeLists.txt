@@ -8,8 +8,8 @@ set(startupfeedback_SOURCES
     startupfeedback.qrc
 )
 
-kwin4_add_effect_module(kwin4_effect_startupfeedback ${startupfeedback_SOURCES})
-target_link_libraries(kwin4_effect_startupfeedback PRIVATE
+kwin4_add_effect_module(startupfeedback ${startupfeedback_SOURCES})
+target_link_libraries(startupfeedback PRIVATE
     kwineffects
     kwinglutils
 

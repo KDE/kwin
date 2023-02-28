@@ -40,7 +40,6 @@
         "Description[zh_CN]": "所有虚拟桌面缩小后显示在一套网格中",
         "Description[zh_TW]": "縮小顯示讓所有桌面都同時顯示在格線內",
         "EnabledByDefault": true,
-        "Id": "desktopgrid",
         "License": "GPL",
         "Name": "Desktop Grid",
         "Name[ar]": "شبكة سطح المكتب",

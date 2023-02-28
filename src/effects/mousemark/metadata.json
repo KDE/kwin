@@ -41,7 +41,6 @@
         "Description[zh_CN]": "用鼠标光标直接在屏幕上画出线条",
         "Description[zh_TW]": "讓您能在桌面上畫線",
         "EnabledByDefault": false,
-        "Id": "mousemark",
         "License": "GPL",
         "Name": "Mouse Mark",
         "Name[ar]": "علامة الفأرة",

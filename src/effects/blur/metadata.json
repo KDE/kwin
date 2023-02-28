@@ -40,7 +40,6 @@
         "Description[zh_CN]": "对半透明窗口的背景进行虚化处理",
         "Description[zh_TW]": "模糊半透明視窗的背景",
         "EnabledByDefault": true,
-        "Id": "blur",
         "License": "GPL",
         "Name": "Blur",
         "Name[ar]": "غشاوة",

@@ -41,7 +41,6 @@
         "Description[zh_CN]": "激活时突出显示鼠标所在位置",
         "Description[zh_TW]": "觸發時強調顯示滑鼠游標讓它比較容易被找到",
         "EnabledByDefault": false,
-        "Id": "trackmouse",
         "License": "GPL",
         "Name": "Track Mouse",
         "Name[ar]": "تتبع الفارة",

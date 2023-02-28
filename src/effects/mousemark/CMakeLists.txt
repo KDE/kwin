@@ -10,8 +10,8 @@ kconfig_add_kcfg_files(mousemark_SOURCES
     mousemarkconfig.kcfgc
 )
 
-kwin4_add_effect_module(kwin4_effect_mousemark ${mousemark_SOURCES})
-target_link_libraries(kwin4_effect_mousemark PRIVATE
+kwin4_add_effect_module(mousemark ${mousemark_SOURCES})
+target_link_libraries(mousemark PRIVATE
     kwineffects
     kwinglutils
 

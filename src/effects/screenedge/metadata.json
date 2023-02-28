@@ -41,7 +41,6 @@
         "Description[zh_CN]": "接近屏幕边缘时高亮显示",
         "Description[zh_TW]": "接近一個螢幕邊緣時突顯它",
         "EnabledByDefault": true,
-        "Id": "screenedge",
         "License": "GPL",
         "Name": "Screen Edge",
         "Name[ar]": "حافّة الشّاشة",

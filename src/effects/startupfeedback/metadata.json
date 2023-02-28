@@ -40,7 +40,6 @@
         "Description[zh_CN]": "程序启动动效反馈辅助效果",
         "Description[zh_TW]": "啟動回饋輔助效果",
         "EnabledByDefault": true,
-        "Id": "startupfeedback",
         "License": "GPL",
         "Name": "Startup Feedback",
         "Name[ar]": "مؤشر البدء",

@@ -40,7 +40,6 @@
         "Description[zh_CN]": "屏幕截图工具的辅助效果",
         "Description[zh_TW]": "螢幕快照工具輔助效果",
         "EnabledByDefault": true,
-        "Id": "screenshot",
         "License": "GPL",
         "Name": "Screenshot",
         "Name[ar]": "لقطة شاشة",

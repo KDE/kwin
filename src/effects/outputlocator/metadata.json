@@ -1,6 +1,5 @@
 {
     "KPlugin": {
-        "Id": "outputlocator",
         "License": "GPL",
         "Category": "Appearance",
         "EnabledByDefault": true,

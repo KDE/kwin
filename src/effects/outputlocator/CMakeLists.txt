@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 
-kwin4_add_effect_module(kwin4_effect_outputlocator main.cpp outputlocator.cpp)
-target_link_libraries(kwin4_effect_outputlocator PRIVATE
+kwin4_add_effect_module(outputlocator main.cpp outputlocator.cpp)
+target_link_libraries(outputlocator PRIVATE
     kwineffects
     Qt::DBus
     Qt::Quick

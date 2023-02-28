@@ -40,7 +40,6 @@
         "Description[zh_CN]": "虚拟桌面切换时呈现滑动动效",
         "Description[zh_TW]": "在虛擬桌面間切換時使用滑動效果",
         "EnabledByDefault": true,
-        "Id": "slide",
         "License": "GPL",
         "Name": "Slide",
         "Name[ar]": "أزْلِق",

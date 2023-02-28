@@ -40,7 +40,6 @@
         "Description[zh_CN]": "鼠标悬停在任务栏项上时突出显示对应的窗口",
         "Description[zh_TW]": "滑鼠移至工作列項目上時突顯其對應的視窗",
         "EnabledByDefault": true,
-        "Id": "highlightwindow",
         "License": "GPL",
         "Name": "Highlight Window",
         "Name[ar]": "إبراز النوافذ",

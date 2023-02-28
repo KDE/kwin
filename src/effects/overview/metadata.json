@@ -41,7 +41,6 @@
         "Description[zh_CN]": "显示包含当前所有虚拟桌面和窗口的桌面概览",
         "Description[zh_TW]": "讓您一覽虛擬桌面與視窗的總覽",
         "EnabledByDefault": true,
-        "Id": "overview",
         "License": "GPL",
         "Name": "Overview",
         "Name[ar]": "نظرة عامة",

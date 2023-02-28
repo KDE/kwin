@@ -40,7 +40,6 @@
         "Description[zh_CN]": "增强半透明窗口背景区域内容的对比度，改善其可读性",
         "Description[zh_TW]": "改善半透明視窗後方的對比與可讀性",
         "EnabledByDefault": true,
-        "Id": "contrast",
         "License": "GPL",
         "Name": "Background Contrast",
         "Name[ar]": "تباين الخلفية",

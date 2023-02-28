@@ -6,8 +6,8 @@ set(blendchanges_SOURCES
     blendchanges.cpp
 )
 
-kwin4_add_effect_module(kwin4_effect_blend ${blendchanges_SOURCES})
-target_link_libraries(kwin4_effect_blend PRIVATE
+kwin4_add_effect_module(blendchanges ${blendchanges_SOURCES})
+target_link_libraries(blendchanges PRIVATE
     kwineffects
     kwinglutils
     Qt::DBus

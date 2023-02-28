@@ -39,7 +39,6 @@
         "Description[zh_CN]": "激活一个窗口时呈现其他窗口的后滑动效",
         "Description[zh_TW]": "在另一個視窗被移到上層時把視窗滑到後面去",
         "EnabledByDefault": false,
-        "Id": "slideback",
         "License": "GPL",
         "Name": "Slide Back",
         "Name[ar]": "التمرير الخلفي",

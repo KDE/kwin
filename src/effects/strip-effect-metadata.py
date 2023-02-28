@@ -17,7 +17,6 @@ def main():
     stripped_json = dict(KPlugin=dict())
     with open(args.source, "r") as src:
         original_json = json.load(src)
-        stripped_json["KPlugin"]["Id"] = original_json["KPlugin"]["Id"]
         stripped_json["KPlugin"]["EnabledByDefault"] = original_json["KPlugin"]["EnabledByDefault"]
 
     with open(args.output, "w") as dst:

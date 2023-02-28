@@ -41,7 +41,6 @@
         "Description[zh_CN]": "突出显示最近更新过的桌面区域",
         "Description[zh_TW]": "突顯桌面上剛被更新的區域",
         "EnabledByDefault": false,
-        "Id": "showpaint",
         "License": "GPL",
         "Name": "Show Paint",
         "Name[ar]": "أظهر الطلاء",

@@ -41,7 +41,6 @@
         "Description[zh_CN]": "窗口被移动时会呈现惯性晃动特效",
         "Description[zh_TW]": "移動視窗時讓它們變形",
         "EnabledByDefault": false,
-        "Id": "wobblywindows",
         "License": "GPL",
         "Name": "Wobbly Windows",
         "Name[ar]": "نوافذ متذبذبة",

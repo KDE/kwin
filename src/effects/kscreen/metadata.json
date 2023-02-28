@@ -40,7 +40,6 @@
         "Description[zh_CN]": "KScreen 的辅助特效",
         "Description[zh_TW]": "KScreen 輔助效果",
         "EnabledByDefault": true,
-        "Id": "kscreen",
         "License": "GPL",
         "Name": "Kscreen",
         "Name[ar]": "شاشة.ك",

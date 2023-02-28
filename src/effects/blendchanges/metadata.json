@@ -40,7 +40,6 @@
         "Description[zh_CN]": "动画过渡系统风格更改",
         "Description[zh_TW]": "為系統風格變化使用動畫效果",
         "EnabledByDefault": true,
-        "Id": "blendchanges",
         "License": "GPL",
         "Name": "Blend Changes",
         "Name[ar]": "تغييرات الخلط",

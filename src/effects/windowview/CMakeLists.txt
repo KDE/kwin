@@ -17,9 +17,9 @@ kconfig_add_kcfg_files(windowview_SOURCES
 
 qt_add_dbus_adaptor(windowview_SOURCES org.kde.KWin.Effect.WindowView1.xml windowvieweffect.h KWin::WindowViewEffect)
 
-kwin4_add_effect_module(kwin4_effect_windowview ${windowview_SOURCES})
+kwin4_add_effect_module(windowview ${windowview_SOURCES})
 
-target_link_libraries(kwin4_effect_windowview PRIVATE
+target_link_libraries(windowview PRIVATE
     kwineffects
 
     KF6::ConfigGui

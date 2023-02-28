@@ -41,7 +41,6 @@
         "Description[zh_CN]": "动态显示变形",
         "Description[zh_TW]": "為顯示設定變更使用動畫效果",
         "EnabledByDefault": true,
-        "Id": "screentransform",
         "License": "GPL",
         "Name": "Transform",
         "Name[ar]": "التّحويل",

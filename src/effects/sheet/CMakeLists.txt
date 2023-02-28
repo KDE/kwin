@@ -8,8 +8,8 @@ set(sheet_SOURCES
 )
 kconfig_add_kcfg_files(sheet_SOURCES sheetconfig.kcfgc)
 
-kwin4_add_effect_module(kwin4_effect_sheet ${sheet_SOURCES})
-target_link_libraries(kwin4_effect_sheet PRIVATE
+kwin4_add_effect_module(sheet ${sheet_SOURCES})
+target_link_libraries(sheet PRIVATE
     kwineffects
 
     KF6::ConfigGui

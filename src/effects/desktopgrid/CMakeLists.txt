@@ -12,9 +12,9 @@ kconfig_add_kcfg_files(desktopgrid_SOURCES
 )
 
 
-kwin4_add_effect_module(kwin4_effect_desktopgrid ${desktopgrid_SOURCES})
+kwin4_add_effect_module(desktopgrid ${desktopgrid_SOURCES})
 
-target_link_libraries(kwin4_effect_desktopgrid PRIVATE
+target_link_libraries(desktopgrid PRIVATE
     kwineffects
 
     KF6::ConfigGui

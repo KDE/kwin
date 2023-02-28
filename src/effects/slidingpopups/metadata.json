@@ -40,7 +40,6 @@
         "Description[zh_CN]": "气泡显示/隐藏时呈现滑动动效",
         "Description[zh_TW]": "提供滑動動畫予 Plasma 彈出視窗",
         "EnabledByDefault": true,
-        "Id": "slidingpopups",
         "License": "GPL",
         "Name": "Sliding Popups",
         "Name[ar]": "منبثقات التمرير",

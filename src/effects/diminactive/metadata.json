@@ -41,7 +41,6 @@
         "Description[zh_CN]": "非活动的窗口将会变暗",
         "Description[zh_TW]": "將非作用中視窗變暗",
         "EnabledByDefault": false,
-        "Id": "diminactive",
         "License": "GPL",
         "Name": "Dim Inactive",
         "Name[ar]": "تعتيم الخامل",

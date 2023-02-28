@@ -41,7 +41,6 @@
         "Description[zh_CN]": "窗口最小化时绘制仿照神灯的过渡动画",
         "Description[zh_TW]": "最小化視窗時模擬魔術燈",
         "EnabledByDefault": false,
-        "Id": "magiclamp",
         "License": "GPL",
         "Name": "Magic Lamp",
         "Name[ar]": "المصباح السحري",
