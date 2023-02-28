@@ -6,7 +6,7 @@ ShadingLanguageVersion=1.30
 
 [Settings]
 LooseBinding=true
-GLSL=false
+GLSL=true
 TextureNPOT=true
 Mesa=true
 Lima=true
