@@ -62,7 +62,6 @@ if (BUILD_TESTING)
     if (Qt6WaylandClient_VERSION VERSION_LESS "6.4.1") # TODO Plasma 6: Drop once minimum Qt version is 6.4.1+
         include(Qt6WaylandClientMacrosKde)
     endif()
-    find_package(Wayland REQUIRED COMPONENTS Client)
 endif()
 
 # required frameworks by Core
