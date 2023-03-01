@@ -1,5 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2018 Marco Martin <mart@kde.org>
+    SPDX-FileCopyrightText: 2023 Harald Sitter <sitter@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 
@@ -127,7 +128,8 @@ TabletModeManager::TabletModeManager()
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin"),
                                                  QStringLiteral("org.kde.KWin.TabletModeManager"),
                                                  this,
-                                                 QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals);
+                                                 // NOTE: slots must be exported for properties to work correctly
+                                                 QDBusConnection::ExportAllProperties | QDBusConnection::ExportAllSignals | QDBusConnection::ExportAllSlots);
 
     if (waylandServer()) {
         connect(input(), &InputRedirection::hasTabletModeSwitchChanged, this, &TabletModeManager::hasTabletModeInputChanged);
