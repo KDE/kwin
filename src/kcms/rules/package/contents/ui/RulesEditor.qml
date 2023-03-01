@@ -85,9 +85,9 @@ ScrollViewKCM {
             text: checked ? i18n("Close") : i18n("Add Property...")
             icon.name: checked ? "dialog-close" : "list-add"
             checkable: true
-            checked: propertySheet.sheetOpen
+            checked: propertySheet.visible
             onToggled: {
-                propertySheet.sheetOpen = checked;
+                propertySheet.visible = checked;
             }
         }
         Item {
@@ -97,7 +97,7 @@ ScrollViewKCM {
             id: detectButton
             text: i18n("Detect Window Properties")
             icon.name: "edit-find"
-            enabled: !propertySheet.sheetOpen && !errorDialog.visible
+            enabled: !propertySheet.visible && !errorDialog.visible
             onClicked: {
                 overlayModel.onlySuggestions = true;
                 kcm.rulesModel.detectWindowProperties(Math.max(delaySpin.value * 1000,
@@ -136,7 +136,7 @@ ScrollViewKCM {
                 return;
             }
             overlayModel.onlySuggestions = true;
-            propertySheet.sheetOpen = true;
+            propertySheet.visible = true;
         }
         function onShowErrorMessage(title, message) {
             errorDialog.title = title
@@ -254,9 +254,9 @@ ScrollViewKCM {
             }
         }
 
-        onSheetOpenChanged: {
+        onVisibleChanged: {
             searchField.text = "";
-            if (sheetOpen) {
+            if (visible) {
                 searchField.forceActiveFocus();
             } else {
                 overlayModel.onlySuggestions = false;
