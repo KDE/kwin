@@ -46,10 +46,6 @@ find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     UiTools
     Widgets
 )
-find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS WaylandClient ShaderTools)
-if (Qt6WaylandClient_VERSION VERSION_LESS "6.4.1") # TODO Plasma 6: Drop once minimum Qt version is 6.4.1+
-    include(Qt6WaylandClientMacrosKde)
-endif()
 
 find_package(Qt${QT_MAJOR_VERSION}Test ${QT_MIN_VERSION} CONFIG QUIET)
 set_package_properties(Qt${QT_MAJOR_VERSION}Test PROPERTIES
@@ -59,6 +55,14 @@ set_package_properties(Qt${QT_MAJOR_VERSION}Test PROPERTIES
 add_feature_info("Qt${QT_MAJOR_VERSION}Test" Qt${QT_MAJOR_VERSION}Test_FOUND "Required for building tests")
 if (NOT Qt${QT_MAJOR_VERSION}Test_FOUND)
     set(BUILD_TESTING OFF CACHE BOOL "Build the testing tree.")
+endif()
+
+if (BUILD_TESTING)
+    find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS WaylandClient)
+    if (Qt6WaylandClient_VERSION VERSION_LESS "6.4.1") # TODO Plasma 6: Drop once minimum Qt version is 6.4.1+
+        include(Qt6WaylandClientMacrosKde)
+    endif()
+    find_package(Wayland REQUIRED COMPONENTS Client)
 endif()
 
 # required frameworks by Core
@@ -430,8 +434,6 @@ add_subdirectory(data)
 add_subdirectory(src)
 
 if (BUILD_TESTING)
-    find_package(Wayland REQUIRED COMPONENTS Client)
-
     add_subdirectory(autotests)
     add_subdirectory(tests)
 endif()
