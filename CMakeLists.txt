@@ -427,7 +427,6 @@ if (KF6DocTools_FOUND)
 endif()
 
 add_subdirectory(data)
-add_subdirectory(kconf_update)
 add_subdirectory(src)
 
 if (BUILD_TESTING)
