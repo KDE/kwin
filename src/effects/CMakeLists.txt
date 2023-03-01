@@ -34,7 +34,7 @@ macro(KWIN4_ADD_EFFECT_MODULE name)
     kcoreaddons_add_plugin(${name} STATIC SOURCES ${ARGN} INSTALL_NAMESPACE "kwin/effects/plugins")
     set_property(TARGET ${name} PROPERTY POSITION_INDEPENDENT_CODE ON)
     kwin_strip_builtin_effect_metadata(${name} metadata.json)
-    install(FILES metadata.json DESTINATION ${KDE_INSTALL_DATADIR}/kwin/builtin-effects/${name}/)
+    install(FILES metadata.json DESTINATION ${KDE_INSTALL_DATADIR}/kwin/builtin-effects/ RENAME ${name}.json)
 endmacro()
 
 # Install the KWin/Effect service type

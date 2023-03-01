@@ -225,8 +225,8 @@ void EffectsModel::loadBuiltInEffects(const KConfigGroup &kwinConfig)
                                                          QStringLiteral("kwin/builtin-effects"),
                                                          QStandardPaths::LocateDirectory);
 
-    const QStringList nameFilters{QStringLiteral("metadata.json")};
-    QDirIterator it(rootDirectory, nameFilters, QDir::Files, QDirIterator::Subdirectories);
+    const QStringList nameFilters{QStringLiteral("*.json")};
+    QDirIterator it(rootDirectory, nameFilters, QDir::Files);
     while (it.hasNext()) {
         it.next();
 
