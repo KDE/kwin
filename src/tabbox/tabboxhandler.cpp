@@ -285,7 +285,7 @@ QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
     }
     m_qmlComponent->loadUrl(QUrl::fromLocalFile(file));
     if (m_qmlComponent->isError()) {
-        qCDebug(KWIN_TABBOX) << "Component failed to load: " << m_qmlComponent->errors();
+        qCWarning(KWIN_TABBOX) << "Component failed to load: " << m_qmlComponent->errors();
         QStringList args;
         args << QStringLiteral("--passivepopup") << i18n("The Window Switcher installation is broken, resources are missing.\n"
                                                          "Contact your distribution about this.")
