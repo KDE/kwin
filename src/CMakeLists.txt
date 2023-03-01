@@ -27,6 +27,10 @@ set_target_properties(kwin PROPERTIES
    SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
+target_compile_definitions(kwin PRIVATE
+    -DTRANSLATION_DOMAIN=\"kwin\"
+)
+
 target_sources(kwin PRIVATE
     3rdparty/xcursor.c
     activation.cpp
@@ -304,6 +308,9 @@ target_link_libraries(kwin_x11
     KWinX11Platform
     kwin
 )
+target_compile_definitions(kwin_x11 PRIVATE
+    -DTRANSLATION_DOMAIN=\"kwin\"
+)
 kcoreaddons_target_static_plugins(kwin_x11 "kwin/effects/plugins")
 
 install(TARGETS kwin ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
@@ -314,6 +321,9 @@ add_executable(kwin_wayland main_wayland.cpp)
 target_link_libraries(kwin_wayland
     kwin
     KWinXwaylandServerModule
+)
+target_compile_definitions(kwin_wayland PRIVATE
+    -DTRANSLATION_DOMAIN=\"kwin\"
 )
 kcoreaddons_target_static_plugins(kwin_wayland "kwin/effects/plugins")
 
