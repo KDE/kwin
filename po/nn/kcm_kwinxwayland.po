@@ -25,8 +25,8 @@ msgid ""
 "This module lets configure which keyboard events are forwarded to X11 apps "
 "regardless of their focus."
 msgstr ""
-"Her kan du velja kva taste­hendingar som skal vidare­sendast til X11-"
-"program, uavhengig av kva fokus dei har."
+"Her kan du velja kva taste­hendingar som skal vidare­sendast til X11-program, "
+"uavhengig av kva fokus dei har."
 
 #: package/contents/ui/main.qml:49
 #, kde-format

@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-28 01:00+0000\n"
+"POT-Creation-Date: 2023-03-01 23:30+0000\n"
 "PO-Revision-Date: 2023-02-20 00:38+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -36,12 +36,12 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "tulliana@gmail.com, volkangezer@gmail.com, emir_sari@icloud.com"
 
-#: composite.cpp:652
+#: composite.cpp:648
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Grafik sıfırlaması nedeniyle masaüstü efektleri yeniden başlatıldı"
 
-#: composite.cpp:881
+#: composite.cpp:877
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -50,7 +50,7 @@ msgstr ""
 "Masaüstü efektleri başka bir uygulama tarafından beklemeye alındı.<br/>'%1' "
 "kısayolunu kullanarak tekrar etkinleştirebilirsiniz."
 
-#: composite.cpp:1070
+#: composite.cpp:1066
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -64,12 +64,12 @@ msgstr ""
 "düşünüyorsanız<br>bu korumayı sıfırlayabilirsiniz; ancak <b>bir hata "
 "durumunda KWin'in anında çökeceğini not edin!</b></p>"
 
-#: composite.cpp:1077
+#: composite.cpp:1073
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Gereken X genişletmeleri (XComposite ve XDamage) kullanılabilir değil."
 
-#: composite.cpp:1080
+#: composite.cpp:1076
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL, kullanılabilir değil."
@@ -1042,88 +1042,88 @@ msgstr "Pano"
 msgid "Primary Selection"
 msgstr "Birincil Seçim"
 
-#: helpers/killer/killer.cpp:34
+#: helpers/killer/killer.cpp:30
 #, kde-format
 msgid "Window Manager"
 msgstr "Pencere Yöneticisi"
 
-#: helpers/killer/killer.cpp:38
+#: helpers/killer/killer.cpp:34
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "Sonlandırılacak uygulamanın süreç numarası"
 
-#: helpers/killer/killer.cpp:38
+#: helpers/killer/killer.cpp:34
 #, kde-format
 msgid "pid"
 msgstr "pid"
 
-#: helpers/killer/killer.cpp:40
+#: helpers/killer/killer.cpp:36
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "Uygulamanın çalıştığı makinenin adı"
 
-#: helpers/killer/killer.cpp:40
+#: helpers/killer/killer.cpp:36
 #, kde-format
 msgid "hostname"
 msgstr "makine adı"
 
-#: helpers/killer/killer.cpp:42
+#: helpers/killer/killer.cpp:38
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "Sonlandırılacak pencerenin başlığı"
 
-#: helpers/killer/killer.cpp:42
+#: helpers/killer/killer.cpp:38
 #, kde-format
 msgid "caption"
 msgstr "başlık"
 
-#: helpers/killer/killer.cpp:44
+#: helpers/killer/killer.cpp:40
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "Sonlandırılacak uygulamanın adı"
 
-#: helpers/killer/killer.cpp:44
+#: helpers/killer/killer.cpp:40
 #, kde-format
 msgid "name"
 msgstr "ad"
 
-#: helpers/killer/killer.cpp:46
+#: helpers/killer/killer.cpp:42
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "Uygulamanın ait olduğu kaynağın kimliği"
 
-#: helpers/killer/killer.cpp:46
+#: helpers/killer/killer.cpp:42
 #, kde-format
 msgid "id"
 msgstr "kimlik"
 
-#: helpers/killer/killer.cpp:48
+#: helpers/killer/killer.cpp:44
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "Sonlandırma için kullanıcı davranışı süresi"
 
-#: helpers/killer/killer.cpp:48
+#: helpers/killer/killer.cpp:44
 #, kde-format
 msgid "time"
 msgstr "zaman"
 
-#: helpers/killer/killer.cpp:50
+#: helpers/killer/killer.cpp:46
 #, kde-format
 msgid "KWin helper utility"
 msgstr "KWin yardımcı uygulaması"
 
-#: helpers/killer/killer.cpp:74
+#: helpers/killer/killer.cpp:70
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Bu yardımcı uygulama doğrudan çağrılmayı desteklemiyor."
 
-#: helpers/killer/killer.cpp:84
+#: helpers/killer/killer.cpp:80
 #, kde-format
 msgctxt "@info"
 msgid "<b>Application \"%1\" is not responding</b>"
 msgstr "<b>\"%1\" uygulaması yanıt vermiyor</b>"
 
-#: helpers/killer/killer.cpp:86
+#: helpers/killer/killer.cpp:82
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1133,7 +1133,7 @@ msgstr ""
 "<para>\"%2\" uygulamasından (Süreç Kimliği: %3) \"%1\" penceresini kapatmaya "
 "çalıştınız; ancak uygulama yanıt vermiyor.</para>"
 
-#: helpers/killer/killer.cpp:88
+#: helpers/killer/killer.cpp:84
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1144,7 +1144,7 @@ msgstr ""
 "\"%1\" penceresini kapatmaya çalıştınız; ancak uygulama yanıt vermiyor.</"
 "para>"
 
-#: helpers/killer/killer.cpp:91
+#: helpers/killer/killer.cpp:87
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1156,12 +1156,12 @@ msgstr ""
 "para><para><warning>Uygulamayı sonlandırmak tüm alt pencerelerini "
 "kapatacaktır. Kaydedilmemiş veriler kaybedilecek.</warning></para>"
 
-#: helpers/killer/killer.cpp:94
+#: helpers/killer/killer.cpp:90
 #, kde-format
 msgid "&Terminate Application %1"
 msgstr "%1 Uygulamasını &Sonlandır"
 
-#: helpers/killer/killer.cpp:95
+#: helpers/killer/killer.cpp:91
 #, kde-format
 msgid "Wait Longer"
 msgstr "Daha Fazla Bekle"
@@ -1200,121 +1200,121 @@ msgstr ""
 "Sol tıklama veya Enter tuşu ile pencereyi kapatmak için pencereyi seçin.\n"
 "İptal etmek için ESC tuşuna basın veya sağ tıklayın."
 
-#: main.cpp:179
+#: main.cpp:174
 #, kde-format
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:181 main.cpp:204
+#: main.cpp:176 main.cpp:199
 #, kde-format
 msgid "KDE window manager"
 msgstr "KDE pencere yöneticisi"
 
-#: main.cpp:183
+#: main.cpp:178
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2019, KDE Geliştiricileri"
 
-#: main.cpp:185
+#: main.cpp:180
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:186
+#: main.cpp:181
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:187
+#: main.cpp:182
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:188
+#: main.cpp:183
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:189
+#: main.cpp:184
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:190
+#: main.cpp:185
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:191
+#: main.cpp:186
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:192
+#: main.cpp:187
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:201
+#: main.cpp:196
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Yapılandırma seçeneklerini iptal et"
 
-#: main.cpp:202
+#: main.cpp:197
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "KWin uygulamasının kaç kez çöktüğünü göster"
 
-#: main_wayland.cpp:302
+#: main_wayland.cpp:299
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Köksüz bir Xwayland sunucusu başlat."
 
-#: main_wayland.cpp:304
+#: main_wayland.cpp:301
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
 "Dinlenecek Wayland soketinin adı. Ayarlanmazsa \"wayland-0\" kullanılır."
 
-#: main_wayland.cpp:307
+#: main_wayland.cpp:304
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "X11 platformunda pencereli kipte kullanılacak X11 Ekranı."
 
-#: main_wayland.cpp:310
+#: main_wayland.cpp:307
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "Wayland platformunda pencereli kipte kullanılacak Wayland Ekranı."
 
-#: main_wayland.cpp:312
+#: main_wayland.cpp:309
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Sanal bir çerçeve arabelleğine sun."
 
-#: main_wayland.cpp:314
+#: main_wayland.cpp:311
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Pencereli kipin genişliği. Öntanımlı genişlik 1024'tür."
 
-#: main_wayland.cpp:318
+#: main_wayland.cpp:315
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Pencereli kipin yüksekliği. Öntanımlı yükseklik 768'tir."
 
-#: main_wayland.cpp:323
+#: main_wayland.cpp:320
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Pencerelenmiş kipin ölçeği. Öntanımlı değer 1'dir."
 
-#: main_wayland.cpp:328
+#: main_wayland.cpp:325
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
 "Pencere kipinde çıkış olarak açılacak pencere sayısı. Öntanımlı değer 1'dir"
 
-#: main_wayland.cpp:333
+#: main_wayland.cpp:330
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1323,7 +1323,7 @@ msgstr ""
 "Gelen bağlantılar için kullanılacak Wayland yuvası; yuvayı adlandırmak için "
 "--socket ile birlikte kullanılabilir"
 
-#: main_wayland.cpp:337
+#: main_wayland.cpp:334
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1332,72 +1332,72 @@ msgstr ""
 "XWayland'in gelen bağlantıları için kullanılacak XWayland yuvası; bu, birden "
 "çok kez ayarlanabilir"
 
-#: main_wayland.cpp:341
+#: main_wayland.cpp:338
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Önayarlanmış XWayland ekranı"
 
-#: main_wayland.cpp:345
+#: main_wayland.cpp:342
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "xauthority dosyasının adı "
 
-#: main_wayland.cpp:349
+#: main_wayland.cpp:346
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Bu örnekten çıkar; böylece kwin_wayland_wrapper tarafından yeniden "
 "başlatılabilir."
 
-#: main_wayland.cpp:351
+#: main_wayland.cpp:348
 #, kde-format
 msgid "Render through drm node."
 msgstr "Drm düğümü ile sunun."
 
-#: main_wayland.cpp:352
+#: main_wayland.cpp:349
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr "Yerel ayar bilgisini kullanıcı yapılandırması yerine locale1'den çıkar"
 
-#: main_wayland.cpp:374
+#: main_wayland.cpp:371
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "KWin'i başlatan girdi yöntemi."
 
-#: main_wayland.cpp:380
+#: main_wayland.cpp:377
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Oturumu kilitli kipte başlatır."
 
-#: main_wayland.cpp:384
+#: main_wayland.cpp:381
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Oturumu, kilit ekranı desteği olmadan başlatır."
 
-#: main_wayland.cpp:389
+#: main_wayland.cpp:386
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Oturumu, global kısayollar desteği olmadan başlatır."
 
-#: main_wayland.cpp:394 main_x11.cpp:418
+#: main_wayland.cpp:391 main_x11.cpp:414
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivities tümleşmesini devre dışı bırak."
 
-#: main_wayland.cpp:399
+#: main_wayland.cpp:396
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr ""
 "KWin tarafından başlatılan oturum uygulaması kapatıldıktan sonra çıkın."
 
-#: main_wayland.cpp:404
+#: main_wayland.cpp:401
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
 "Wayland ve Xwayland sunucuları başlatıldıktan sonra başlatılacak uygulamalar"
 
-#: main_x11.cpp:67
+#: main_x11.cpp:63
 #, kde-format
 msgid ""
 "KWin is unstable.\n"
@@ -1408,7 +1408,7 @@ msgstr ""
 "Kısa bir sürede birkaç kez çökmüş gibi görünüyor.\n"
 "Çalıştırmak için başka bir pencere yöneticisi seçebilirsiniz:"
 
-#: main_x11.cpp:259
+#: main_x11.cpp:255
 #, kde-format
 msgid ""
 "kwin: unable to claim manager selection, another wm running? (try using --"
@@ -1417,12 +1417,12 @@ msgstr ""
 "kwin: yönetici seçimi yapılamıyor, başka bir py(wm) çalışıyor olabilir? (--"
 "replace komutunu deneyin)\n"
 
-#: main_x11.cpp:280
+#: main_x11.cpp:276
 #, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: farklı bir pencere yöneticisi çalışıyor (--replace deneyin)\n"
 
-#: main_x11.cpp:411
+#: main_x11.cpp:407
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Çalışmakta olan ICCCM2.0 uyumlu pencere yöneticisini değiştir"
@@ -2117,14 +2117,14 @@ msgctxt "Error message"
 msgid "Could not locate package metadata"
 msgstr "Paket üst verisi bulunamadı"
 
-#: scripting/genericscriptedconfig.cpp:83
+#: scripting/genericscriptedconfig.cpp:75
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
 msgstr "%1, geçerli bir metadata.json dosyası içermiyor"
 
-#: scripting/genericscriptedconfig.cpp:89
-#: scripting/genericscriptedconfig.cpp:95
+#: scripting/genericscriptedconfig.cpp:81
+#: scripting/genericscriptedconfig.cpp:87
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
@@ -2386,354 +2386,354 @@ msgstr "Tüm &Etkinlikler"
 msgid "Move to %1"
 msgstr "%1 Konumuna Taşı"
 
-#: useractions.cpp:901
+#: useractions.cpp:892
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> kullanımda"
 
-#: useractions.cpp:903
+#: useractions.cpp:894
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> %3 içerisinde %2 tarafından kullanılıyor"
 
-#: useractions.cpp:983
+#: useractions.cpp:974
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "Pencere İşlemleri Menüsü"
 
-#: useractions.cpp:985
+#: useractions.cpp:976
 #, kde-format
 msgid "Close Window"
 msgstr "Pencereyi Kapat"
 
-#: useractions.cpp:987
+#: useractions.cpp:978
 #, kde-format
 msgid "Maximize Window"
 msgstr "Pencereyi Büyüt"
 
-#: useractions.cpp:989
+#: useractions.cpp:980
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Pencereyi Dikey Büyüt"
 
-#: useractions.cpp:991
+#: useractions.cpp:982
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Pencereyi Yatay Büyüt"
 
-#: useractions.cpp:993
+#: useractions.cpp:984
 #, kde-format
 msgid "Minimize Window"
 msgstr "Pencereyi Simge Durumuna Küçült"
 
-#: useractions.cpp:995
+#: useractions.cpp:986
 #, kde-format
 msgid "Shade Window"
 msgstr "Pencereyi Perdele"
 
-#: useractions.cpp:997
+#: useractions.cpp:988
 #, kde-format
 msgid "Move Window"
 msgstr "Pencereyi Taşı"
 
-#: useractions.cpp:999
+#: useractions.cpp:990
 #, kde-format
 msgid "Resize Window"
 msgstr "Pencereyi Yeniden Boyutlandır"
 
-#: useractions.cpp:1001
+#: useractions.cpp:992
 #, kde-format
 msgid "Raise Window"
 msgstr "Pencereyi Alçalt"
 
-#: useractions.cpp:1003
+#: useractions.cpp:994
 #, kde-format
 msgid "Lower Window"
 msgstr "Pencereyi İndir"
 
-#: useractions.cpp:1005
+#: useractions.cpp:996
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Pencereyi Büyüt/Küçült"
 
-#: useractions.cpp:1007
+#: useractions.cpp:998
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Pencereyi Tam Ekran Yap"
 
-#: useractions.cpp:1009
+#: useractions.cpp:1000
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Başlık Çubuğunu ve Çerçeveyi Aç/Kapat"
 
-#: useractions.cpp:1011
+#: useractions.cpp:1002
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Pencereyi Diğerlerinin Üzerinde Tut"
 
-#: useractions.cpp:1013
+#: useractions.cpp:1004
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Pencereyi Diğerlerinin Altında Tut"
 
-#: useractions.cpp:1015
+#: useractions.cpp:1006
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Pencere Etkinleştirme Denemesi"
 
-#: useractions.cpp:1017
+#: useractions.cpp:1008
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Pencere Kısayolunu Ayarla"
 
-#: useractions.cpp:1019
+#: useractions.cpp:1010
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Pencereyi Merkeze Taşı"
 
-#: useractions.cpp:1021
+#: useractions.cpp:1012
 #, kde-format
 msgid "Move Window Right"
 msgstr "Pencereyi Sağa Taşı"
 
-#: useractions.cpp:1023
+#: useractions.cpp:1014
 #, kde-format
 msgid "Move Window Left"
 msgstr "Pencereyi Sola Taşı"
 
-#: useractions.cpp:1025
+#: useractions.cpp:1016
 #, kde-format
 msgid "Move Window Up"
 msgstr "Pencereyi Yukarıya Taşı"
 
-#: useractions.cpp:1027
+#: useractions.cpp:1018
 #, kde-format
 msgid "Move Window Down"
 msgstr "Pencereyi Aşağıya Taşı"
 
-#: useractions.cpp:1029
+#: useractions.cpp:1020
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Pencereyi Yatay Genişlet"
 
-#: useractions.cpp:1031
+#: useractions.cpp:1022
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Pencereyi Dikey Genişlet"
 
-#: useractions.cpp:1033
+#: useractions.cpp:1024
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Pencereyi Yatay Küçült"
 
-#: useractions.cpp:1035
+#: useractions.cpp:1026
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Pencereyi Dikey Küçült"
 
-#: useractions.cpp:1037
+#: useractions.cpp:1028
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Pencereyi Sola Hızlı Döşe"
 
-#: useractions.cpp:1039
+#: useractions.cpp:1030
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Pencereyi Sağa Hızlı Döşe"
 
-#: useractions.cpp:1041
+#: useractions.cpp:1032
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Pencereyi Üste Hızlı Döşe"
 
-#: useractions.cpp:1043
+#: useractions.cpp:1034
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Pencereyi Alta Hızlı Döşe"
 
-#: useractions.cpp:1045
+#: useractions.cpp:1036
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Pencereyi Üst Sola Hızlı Döşe"
 
-#: useractions.cpp:1047
+#: useractions.cpp:1038
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Pencereyi Alt Sola Hızlı Döşe"
 
-#: useractions.cpp:1049
+#: useractions.cpp:1040
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Pencereyi Üst Sağa Hızlı Döşe"
 
-#: useractions.cpp:1051
+#: useractions.cpp:1042
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Pencereyi Alt Sağa Hızlı Döşe"
 
-#: useractions.cpp:1053
+#: useractions.cpp:1044
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Yukarıdaki Masaüstüne Geç"
 
-#: useractions.cpp:1055
+#: useractions.cpp:1046
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Aşağıdaki Masaüstüne Geç"
 
-#: useractions.cpp:1057
+#: useractions.cpp:1048
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Sağdaki Pencereye Geç"
 
-#: useractions.cpp:1059
+#: useractions.cpp:1050
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Soldaki Pencereye Geç"
 
-#: useractions.cpp:1061
+#: useractions.cpp:1052
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Etkin Pencerenin Matlığını %​5 Artır"
 
-#: useractions.cpp:1063
+#: useractions.cpp:1054
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Etkin Pencerenin Matlığını %​5 Azalt"
 
-#: useractions.cpp:1066
+#: useractions.cpp:1057
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Pencere'yi Tüm Masaüstlerinde Bulundur"
 
-#: useractions.cpp:1077
+#: useractions.cpp:1068
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Pencere %1. Masaüstüne"
 
-#: useractions.cpp:1079
+#: useractions.cpp:1070
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Pencere Sonraki Masaüstüne"
 
-#: useractions.cpp:1080
+#: useractions.cpp:1071
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Pencere Önceki Masaüstüne"
 
-#: useractions.cpp:1081
+#: useractions.cpp:1072
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Pencere Bir Sağ Masaüstüne"
 
-#: useractions.cpp:1083
+#: useractions.cpp:1074
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Pencere Bir Sol Masaüstüne"
 
-#: useractions.cpp:1085
+#: useractions.cpp:1076
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Pencere Bir Üst Masaüstüne"
 
-#: useractions.cpp:1087
+#: useractions.cpp:1078
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Pencere Bir Alt Masaüstüne"
 
-#: useractions.cpp:1091
+#: useractions.cpp:1082
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Pencereyi %1. Ekrana Taşı"
 
-#: useractions.cpp:1098
+#: useractions.cpp:1089
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Pencereyi Sonraki Ekrana Taşı"
 
-#: useractions.cpp:1100
+#: useractions.cpp:1091
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Pencereyi Önceki Ekrana Taşı"
 
-#: useractions.cpp:1102
+#: useractions.cpp:1093
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "Pencereyi Bir Sağ Ekrana Taşı"
 
-#: useractions.cpp:1104
+#: useractions.cpp:1095
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "Pencereyi Bir Sol Ekrana Taşı"
 
-#: useractions.cpp:1106
+#: useractions.cpp:1097
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "Pencereyi Bir Ekran Yukarı Taşı"
 
-#: useractions.cpp:1108
+#: useractions.cpp:1099
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "Pencereyi Bir Ekran Aşağı Taşı"
 
-#: useractions.cpp:1112
+#: useractions.cpp:1103
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "%1. Ekrana Geç"
 
-#: useractions.cpp:1119
+#: useractions.cpp:1110
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Sonraki Ekrana Geç"
 
-#: useractions.cpp:1120
+#: useractions.cpp:1111
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Önceki Ekrana Geç"
 
-#: useractions.cpp:1121
+#: useractions.cpp:1112
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "Sağdaki Ekrana Geç"
 
-#: useractions.cpp:1123
+#: useractions.cpp:1114
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "Soldaki Ekrana Geç"
 
-#: useractions.cpp:1125
+#: useractions.cpp:1116
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "Yukarıdaki Ekrana Geç"
 
-#: useractions.cpp:1127
+#: useractions.cpp:1118
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "Aşağıdaki Ekrana Geç"
 
-#: useractions.cpp:1130
+#: useractions.cpp:1121
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Masaüstüne Bak"
 
-#: useractions.cpp:1133
+#: useractions.cpp:1124
 #, kde-format
 msgid "Kill Window"
 msgstr "Pencereyi Öldür"
 
-#: useractions.cpp:1134
+#: useractions.cpp:1125
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "Bileşikliği Askıya Al"
 
-#: useractions.cpp:1195
+#: useractions.cpp:1186
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Pencereyi Etkinleştir (%1)"
 
-#: useractions.cpp:1332
+#: useractions.cpp:1323
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
@@ -2784,19 +2784,30 @@ msgstr "Bir Alt Masaüstüne Geç"
 msgid "Switch to Desktop %1"
 msgstr "%1. Masaüstüne Geç"
 
-#: window.cpp:3404
+#: window.cpp:3399
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Yanıt Vermiyor)"
 
-#: workspace.cpp:1839
-#, kde-format
+#: workspace.cpp:1835
+#, fuzzy, kde-format
+#| msgctxt "Introductory text shown in the support information."
+#| msgid ""
+#| "KWin Support Information:\n"
+#| "The following information should be used when requesting support on e.g. "
+#| "https://forum.kde.org.\n"
+#| "It provides information about the currently running instance, which "
+#| "options are used,\n"
+#| "what OpenGL driver and which effects are running.\n"
+#| "Please post the information provided underneath this introductory text to "
+#| "a paste bin service\n"
+#| "like https://paste.kde.org instead of pasting into support threads.\n"
 msgctxt "Introductory text shown in the support information."
 msgid ""
 "KWin Support Information:\n"
 "The following information should be used when requesting support on e.g. "
-"https://forum.kde.org.\n"
+"https://discuss.kde.org.\n"
 "It provides information about the currently running instance, which options "
 "are used,\n"
 "what OpenGL driver and which effects are running.\n"

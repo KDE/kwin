@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_clients\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-22 01:00+0000\n"
+"POT-Creation-Date: 2023-03-01 23:30+0000\n"
 "PO-Revision-Date: 2015-02-08 12:03+0200\n"
 "Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -24,49 +24,49 @@ msgstr ""
 "X-Generator: Lokalize 1.5\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: aurorae/src/aurorae.cpp:737
+#: aurorae/src/aurorae.cpp:726
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "Μικροσκοπικό"
 
-#: aurorae/src/aurorae.cpp:738
+#: aurorae/src/aurorae.cpp:727
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "Κανονικό"
 
-#: aurorae/src/aurorae.cpp:739
+#: aurorae/src/aurorae.cpp:728
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "Μεγάλο"
 
-#: aurorae/src/aurorae.cpp:740
+#: aurorae/src/aurorae.cpp:729
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "Πολύ μεγάλο"
 
-#: aurorae/src/aurorae.cpp:741
+#: aurorae/src/aurorae.cpp:730
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "Τεράστιο"
 
-#: aurorae/src/aurorae.cpp:742
+#: aurorae/src/aurorae.cpp:731
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "Υπερ-τεράστιο"
 
-#: aurorae/src/aurorae.cpp:743
+#: aurorae/src/aurorae.cpp:732
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "Υπερμεγέθες"
 
-#: aurorae/src/aurorae.cpp:746
+#: aurorae/src/aurorae.cpp:735
 #, kde-format
 msgid "Button size:"
 msgstr "Μέγεθος κουμπιού:"

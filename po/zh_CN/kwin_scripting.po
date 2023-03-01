@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-01 23:30+0000\n"
 "PO-Revision-Date: 2023-02-24 12:43\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -23,13 +23,13 @@ msgctxt "Error message"
 msgid "Could not locate package metadata"
 msgstr "无法定位软件包元数据"
 
-#: genericscriptedconfig.cpp:83
+#: genericscriptedconfig.cpp:75
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
 msgstr "%1 不包含有效的 metadata.json 文件"
 
-#: genericscriptedconfig.cpp:89 genericscriptedconfig.cpp:95
+#: genericscriptedconfig.cpp:81 genericscriptedconfig.cpp:87
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"

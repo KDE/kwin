@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm-kwin-scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2020-03-14 03:43+0100\n"
+"POT-Creation-Date: 2023-02-18 01:00+0000\n"
 "PO-Revision-Date: 2017-10-14 23:06+0200\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -18,43 +18,18 @@ msgstr ""
 "X-Text-Markup: kde4\n"
 "X-Environment: kde\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Časlav Ilić"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "caslav.ilic@gmx.net"
-
-#: module.cpp:49
-#, kde-format
-msgid "KWin Scripts"
-msgstr "KWinove skripte"
-
-#: module.cpp:51
-#, kde-format
-msgid "Configure KWin scripts"
-msgstr "Podesite KWinove skripte"
-
-#: module.cpp:54
-#, kde-format
-msgid "Tamás Krutki"
-msgstr "Tamaš Krutki"
-
 # >> @title:window
-#: module.cpp:84
+#: module.cpp:56
 #, kde-format
 msgid "Import KWin Script"
 msgstr "Uvoz KWinove skripte"
 
-#: module.cpp:85
+#: module.cpp:57
 #, kde-format
 msgid "*.kwinscript|KWin scripts (*.kwinscript)"
 msgstr "*.kwinscript|KWinove skripte (*.kwinscript)"
 
-#: module.cpp:104
+#: module.cpp:95
 #, kde-format
 msgctxt "Placeholder is error message returned from the install service"
 msgid ""
@@ -64,26 +39,49 @@ msgstr ""
 "Ne mogu da uvezem izabranu skriptu.\n"
 "%1"
 
-#: module.cpp:118
+#: module.cpp:107
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
 msgstr "Skripta „%1“ uspešno uvezena."
 
-#. i18n: ectx: property (windowTitle), widget (QWidget, Module)
-#: module.ui:14
+#: module.cpp:147
 #, kde-format
-msgid "KWin script configuration"
-msgstr "Podešavanje KWinovih skripti"
+msgid "Error when uninstalling KWin Script: %1"
+msgstr ""
 
-#. i18n: ectx: property (text), widget (QPushButton, importScriptButton)
-#: module.ui:55
+#: package/contents/ui/main.qml:47
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Delete..."
+msgstr ""
+
+#: package/contents/ui/main.qml:60
 #, kde-format
 msgid "Install from File..."
 msgstr ""
 
-#. i18n: ectx: property (text), widget (KNS3::Button, ghnsButton)
-#: module.ui:67
+#: package/contents/ui/main.qml:64
 #, kde-format
 msgid "Get New Scripts..."
 msgstr "Dobavi nove skripte..."
+
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Časlav Ilić"
+
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "caslav.ilic@gmx.net"
+
+#~ msgid "KWin Scripts"
+#~ msgstr "KWinove skripte"
+
+#~ msgid "Configure KWin scripts"
+#~ msgstr "Podesite KWinove skripte"
+
+#~ msgid "Tamás Krutki"
+#~ msgstr "Tamaš Krutki"
+
+#~ msgid "KWin script configuration"
+#~ msgstr "Podešavanje KWinovih skripti"

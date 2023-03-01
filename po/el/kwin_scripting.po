@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-01 23:30+0000\n"
 "PO-Revision-Date: 2017-04-11 17:03+0200\n"
 "Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -23,13 +23,13 @@ msgctxt "Error message"
 msgid "Could not locate package metadata"
 msgstr ""
 
-#: genericscriptedconfig.cpp:83
+#: genericscriptedconfig.cpp:75
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
 msgstr ""
 
-#: genericscriptedconfig.cpp:89 genericscriptedconfig.cpp:95
+#: genericscriptedconfig.cpp:81 genericscriptedconfig.cpp:87
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"

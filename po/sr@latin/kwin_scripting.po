@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_scripting\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2019-05-20 03:25+0200\n"
+"POT-Creation-Date: 2023-03-01 23:30+0000\n"
 "PO-Revision-Date: 2017-05-01 19:44+0200\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -18,94 +18,87 @@ msgstr ""
 "X-Text-Markup: kde4\n"
 "X-Environment: kde\n"
 
-#, kde-format
-msgctxt "NAME OF TRANSLATORS"
-msgid "Your names"
-msgstr "Časlav Ilić"
-
-#, kde-format
-msgctxt "EMAIL OF TRANSLATORS"
-msgid "Your emails"
-msgstr "caslav.ilic@gmx.net"
-
-#: genericscriptedconfig.cpp:81
+#: genericscriptedconfig.cpp:69
 #, kde-format
 msgctxt "Error message"
-msgid "Plugin does not provide configuration file in expected location"
-msgstr "Priključak ne daje postavni fajl na očekivanoj lokaciji"
-
-#: scripting.cpp:128
-#, kde-format
-msgctxt "Assertion failed in KWin script with given value"
-msgid "Assertion failed: %1 is not null"
-msgstr "Tvrdnja propala: %1 nije nulto."
-
-#: scripting.cpp:146
-#, kde-format
-msgctxt "Assertion failed in KWin script"
-msgid "Assertion failed: argument is null"
-msgstr "Tvrdnja propala: argument nije nulti."
-
-#: scripting.cpp:188
-#, kde-format
-msgctxt "Error in KWin Script"
-msgid ""
-"Invalid number of arguments. At least service, path, interface and method "
-"need to be provided"
+msgid "Could not locate package metadata"
 msgstr ""
-"Loš broj argumenata. Mora se zadati bar servis, putanja, sučelje i metod."
 
-#: scripting.cpp:194
+#: genericscriptedconfig.cpp:75
 #, kde-format
-msgctxt "Error in KWin Script"
-msgid ""
-"Invalid type. Service, path, interface and method need to be string values"
-msgstr "Loš tip. Servis, putanja, sučelje i metod moraju biti niske."
+msgctxt "Required file does not exist"
+msgid "%1 does not contain a valid metadata.json file"
+msgstr ""
 
-#: scriptingutils.cpp:28
+#: genericscriptedconfig.cpp:81 genericscriptedconfig.cpp:87
 #, kde-format
-msgctxt "syntax error in KWin script"
-msgid "Invalid number of arguments"
-msgstr "Loš broj argumenata."
+msgctxt "Required file does not exist"
+msgid "%1 does not exist"
+msgstr ""
 
-#: scriptingutils.cpp:41
-#, kde-format
-msgctxt "KWin Scripting function received incorrect value for an expected type"
-msgid "%1 is not a variant type"
-msgstr "%1 nije varijantni tip."
+#~ msgctxt "NAME OF TRANSLATORS"
+#~ msgid "Your names"
+#~ msgstr "Časlav Ilić"
 
-#: scriptingutils.h:51
-#, kde-format
-msgctxt "KWin Scripting function received incorrect value for an expected type"
-msgid "%1 is not of required type"
-msgstr "%1 nije traženog tipa."
+#~ msgctxt "EMAIL OF TRANSLATORS"
+#~ msgid "Your emails"
+#~ msgstr "caslav.ilic@gmx.net"
 
-#: scriptingutils.h:158
-#, kde-format
-msgctxt "KWin Scripting error thrown due to incorrect argument"
-msgid "Second argument to registerScreenEdge needs to be a callback"
-msgstr "Drugi argument u registerScreenEdge mora biti kontrapoziv."
+#~ msgctxt "Error message"
+#~ msgid "Plugin does not provide configuration file in expected location"
+#~ msgstr "Priključak ne daje postavni fajl na očekivanoj lokaciji"
 
-#: scriptingutils.h:213
-#, kde-format
-msgctxt "KWin Scripting error thrown due to incorrect argument"
-msgid "Second argument to registerTouchScreenEdge needs to be a callback"
-msgstr "Drugi argument u registerTouchScreenEdge mora biti kontrapoziv."
+#~ msgctxt "Assertion failed in KWin script with given value"
+#~ msgid "Assertion failed: %1 is not null"
+#~ msgstr "Tvrdnja propala: %1 nije nulto."
 
-#: scriptingutils.h:250
-#, kde-format
-msgctxt "KWin Scripting error thrown due to incorrect argument"
-msgid "Argument for registerUserActionsMenu needs to be a callback"
-msgstr "Argument u registerUserActionsMenu mora biti kontrapoziv."
+#~ msgctxt "Assertion failed in KWin script"
+#~ msgid "Assertion failed: argument is null"
+#~ msgstr "Tvrdnja propala: argument nije nulti."
 
-#: scriptingutils.h:305
-#, kde-format
-msgctxt "Assertion failed in KWin script with given value"
-msgid "Assertion failed: %1"
-msgstr "Tvrdnja propala: %1"
+#~ msgctxt "Error in KWin Script"
+#~ msgid ""
+#~ "Invalid number of arguments. At least service, path, interface and method "
+#~ "need to be provided"
+#~ msgstr ""
+#~ "Loš broj argumenata. Mora se zadati bar servis, putanja, sučelje i metod."
 
-#: scriptingutils.h:316
-#, kde-format
-msgctxt "Assertion failed in KWin script with expected value and actual value"
-msgid "Assertion failed: Expected %1, got %2"
-msgstr "Tvrdnja propala: očekivano %1, dobijeno %2."
+#~ msgctxt "Error in KWin Script"
+#~ msgid ""
+#~ "Invalid type. Service, path, interface and method need to be string values"
+#~ msgstr "Loš tip. Servis, putanja, sučelje i metod moraju biti niske."
+
+#~ msgctxt "syntax error in KWin script"
+#~ msgid "Invalid number of arguments"
+#~ msgstr "Loš broj argumenata."
+
+#~ msgctxt ""
+#~ "KWin Scripting function received incorrect value for an expected type"
+#~ msgid "%1 is not a variant type"
+#~ msgstr "%1 nije varijantni tip."
+
+#~ msgctxt ""
+#~ "KWin Scripting function received incorrect value for an expected type"
+#~ msgid "%1 is not of required type"
+#~ msgstr "%1 nije traženog tipa."
+
+#~ msgctxt "KWin Scripting error thrown due to incorrect argument"
+#~ msgid "Second argument to registerScreenEdge needs to be a callback"
+#~ msgstr "Drugi argument u registerScreenEdge mora biti kontrapoziv."
+
+#~ msgctxt "KWin Scripting error thrown due to incorrect argument"
+#~ msgid "Second argument to registerTouchScreenEdge needs to be a callback"
+#~ msgstr "Drugi argument u registerTouchScreenEdge mora biti kontrapoziv."
+
+#~ msgctxt "KWin Scripting error thrown due to incorrect argument"
+#~ msgid "Argument for registerUserActionsMenu needs to be a callback"
+#~ msgstr "Argument u registerUserActionsMenu mora biti kontrapoziv."
+
+#~ msgctxt "Assertion failed in KWin script with given value"
+#~ msgid "Assertion failed: %1"
+#~ msgstr "Tvrdnja propala: %1"
+
+#~ msgctxt ""
+#~ "Assertion failed in KWin script with expected value and actual value"
+#~ msgid "Assertion failed: Expected %1, got %2"
+#~ msgstr "Tvrdnja propala: očekivano %1, dobijeno %2."

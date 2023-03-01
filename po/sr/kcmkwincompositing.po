@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2020-04-22 03:59+0200\n"
+"POT-Creation-Date: 2023-01-29 00:59+0000\n"
 "PO-Revision-Date: 2017-10-30 23:08+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -21,15 +21,21 @@ msgstr ""
 "X-Environment: kde\n"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
-#: compositing.ui:32
-#, kde-format
+#: compositing.ui:31
+#, fuzzy, kde-format
+#| msgid ""
+#| "OpenGL compositing (the default) has crashed KWin in the past.\n"
+#| "This was most likely due to a driver bug.\n"
+#| "If you think that you have meanwhile upgraded to a stable driver,\n"
+#| "you can reset this protection but be aware that this might result in an "
+#| "immediate crash!\n"
+#| "Alternatively, you might want to use the XRender backend instead."
 msgid ""
 "OpenGL compositing (the default) has crashed KWin in the past.\n"
 "This was most likely due to a driver bug.\n"
 "If you think that you have meanwhile upgraded to a stable driver,\n"
 "you can reset this protection but be aware that this might result in an "
-"immediate crash!\n"
-"Alternatively, you might want to use the XRender backend instead."
+"immediate crash!"
 msgstr ""
 "ОпенГЛ слагање (подразумевано) умело је раније да сруши К‑вин.\n"
 "\" \"Највероватнији узрок томе био је дефект драјвера.Ову заштиту можете "
@@ -38,18 +44,8 @@ msgstr ""
 "изазвати моментални пад!\n"
 "Уместо овога можете покушати и са позадином Икс‑рендер."
 
-#. i18n: ectx: property (text), widget (KMessageWidget, scaleWarning)
-#: compositing.ui:45
-#, kde-format
-msgid ""
-"Scale method \"Accurate\" is not supported by all hardware and can cause "
-"performance regressions and rendering artifacts."
-msgstr ""
-"Прецизно слагање не подржава сав хардвер, па може доћи до погоршања "
-"перформанси и сметњи у рендеровању."
-
 #. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
-#: compositing.ui:68
+#: compositing.ui:44
 #, kde-format
 msgid ""
 "Keeping the window thumbnail always interferes with the minimized state of "
@@ -58,131 +54,21 @@ msgstr ""
 "Трајно задржавање сличице прозора меша се у минимизовано стање прозора. "
 "Програми могу да не реагују на предвиђен начин када им је прозор минимизован."
 
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
-#: compositing.ui:80
+#. i18n: ectx: property (text), widget (QLabel, compositingLabel)
+#: compositing.ui:56
 #, kde-format
-msgid "Enable compositor on startup"
+msgid "Compositing:"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
+#: compositing.ui:63
+#, fuzzy, kde-format
+#| msgid "Enable compositor on startup"
+msgid "Enable on startup"
 msgstr "Активирај слагач при покретању"
 
-#. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
-#: compositing.ui:87
-#, kde-format
-msgid "Animation speed:"
-msgstr "Брзина анимације:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_3)
-#: compositing.ui:124
-#, kde-format
-msgid "Very slow"
-msgstr "врло споро"
-
-#. i18n: ectx: property (text), widget (QLabel, label)
-#: compositing.ui:144
-#, kde-format
-msgid "Instant"
-msgstr "тренутно"
-
-#. i18n: ectx: property (text), widget (QLabel, scaleMethodLabel)
-#: compositing.ui:156
-#, kde-format
-msgid "Scale method:"
-msgstr "Начин скалирања:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_XRenderSmoothScale)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
-#: compositing.ui:166 compositing.ui:180
-#, kde-format
-msgid "Crisp"
-msgstr "оштро"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_XRenderSmoothScale)
-#: compositing.ui:171
-#, kde-format
-msgid "Smooth (slower)"
-msgstr "глатко (спорије)"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
-#: compositing.ui:185
-#, kde-format
-msgid "Smooth"
-msgstr "глатко"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glTextureFilter)
-#: compositing.ui:190
-#, kde-format
-msgid "Accurate"
-msgstr "прецизно"
-
-#. i18n: ectx: property (text), widget (QLabel, label_2)
-#: compositing.ui:207
-#, kde-format
-msgid "Rendering backend:"
-msgstr "Рендерска позадина:"
-
-#. i18n: ectx: property (text), widget (QLabel, label_5)
-#: compositing.ui:224
-#, kde-format
-msgid "Tearing prevention (\"vsync\"):"
-msgstr "Спречавање цепања (в‑синхро):"
-
-# >> @item:inlistbox Tearing Prevention (VSync)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:232 compositing.ui:268
-#, kde-format
-msgid "Never"
-msgstr "никад"
-
-# >> @item:inlistbox Tearing Prevention (VSync)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:237
-#, kde-format
-msgid "Automatic"
-msgstr "аутоматско"
-
-# >> @item:inlistbox Tearing Prevention (VSync)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:242
-#, kde-format
-msgid "Only when cheap"
-msgstr "само ако је јефтино"
-
-# >> @item:inlistbox Tearing Prevention (VSync)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:247
-#, kde-format
-msgid "Full screen repaints"
-msgstr "исцртавање целог екрана"
-
-# >> @item:inlistbox Tearing Prevention (VSync)
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_glPreferBufferSwap)
-#: compositing.ui:252
-#, kde-format
-msgid "Re-use screen content"
-msgstr "рециклирање садржаја екрана"
-
-#. i18n: ectx: property (text), widget (QLabel, label_6)
-#: compositing.ui:260
-#, kde-format
-msgid "Keep window thumbnails:"
-msgstr "Држи сличице прозора:"
-
-# >> @item:inlistbox Keep window thumbnails:
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:273
-#, kde-format
-msgid "Only for Shown Windows"
-msgstr "само за приказане прозоре"
-
-# >> @item:inlistbox Keep window thumbnails:
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
-#: compositing.ui:278
-#, kde-format
-msgid "Always"
-msgstr "увек"
-
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:288
+#: compositing.ui:72
 #, kde-format
 msgid ""
 "Applications can set a hint to block compositing when the window is open.\n"
@@ -195,49 +81,170 @@ msgstr ""
 "Поставка може да се потисне посебним правилима по прозору."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
-#: compositing.ui:291
+#: compositing.ui:75
 #, kde-format
 msgid "Allow applications to block compositing"
 msgstr "Програми могу да блокирају слагање"
 
-#: main.cpp:96
+#. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
+#: compositing.ui:82
+#, kde-format
+msgid "Animation speed:"
+msgstr "Брзина анимације:"
+
+#. i18n: ectx: property (text), widget (QLabel, label_3)
+#: compositing.ui:119
+#, kde-format
+msgid "Very slow"
+msgstr "врло споро"
+
+#. i18n: ectx: property (text), widget (QLabel, label)
+#: compositing.ui:139
+#, kde-format
+msgid "Instant"
+msgstr "тренутно"
+
+#. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
+#: compositing.ui:151
+#, kde-format
+msgid "Keep window thumbnails:"
+msgstr "Држи сличице прозора:"
+
+# >> @item:inlistbox Tearing Prevention (VSync)
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:159
+#, kde-format
+msgid "Never"
+msgstr "никад"
+
+# >> @item:inlistbox Keep window thumbnails:
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:164
+#, kde-format
+msgid "Only for Shown Windows"
+msgstr "само за приказане прозоре"
+
+# >> @item:inlistbox Keep window thumbnails:
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
+#: compositing.ui:169
+#, kde-format
+msgid "Always"
+msgstr "увек"
+
+#. i18n: ectx: property (text), widget (QLabel, latencyLabel)
+#: compositing.ui:177
+#, kde-format
+msgid "Latency:"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:185
+#, kde-format
+msgid "Force lowest latency (may cause dropped frames)"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:190
+#, kde-format
+msgid "Prefer lower latency"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:195
+#, kde-format
+msgid "Balance of latency and smoothness"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:200
+#, kde-format
+msgid "Prefer smoother animations"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LatencyPolicy)
+#: compositing.ui:205
+#, kde-format
+msgid "Force smoothest animations"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowTearing)
+#: compositing.ui:213
+#, kde-format
+msgid ""
+"Reduce latency by allowing screen tearing artifacts in fullscreen windows"
+msgstr ""
+
+#: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Поново активирај откривање опенГЛ‑а"
 
-#: main.cpp:148
-#, kde-format
-msgid ""
-"\"Only when cheap\" only prevents tearing for full screen changes like a "
-"video."
-msgstr ""
-"Опција „само ако је јефтино“ спречава цепкање при изменама целог екрана, као "
-"у видео записима."
+#~ msgid ""
+#~ "Scale method \"Accurate\" is not supported by all hardware and can cause "
+#~ "performance regressions and rendering artifacts."
+#~ msgstr ""
+#~ "Прецизно слагање не подржава сав хардвер, па може доћи до погоршања "
+#~ "перформанси и сметњи у рендеровању."
 
-#: main.cpp:152
-#, kde-format
-msgid "\"Full screen repaints\" can cause performance problems."
-msgstr "Опција „исцртавање целог екрана“ може лоше да утиче на перформансе."
+#~ msgid "Scale method:"
+#~ msgstr "Начин скалирања:"
 
-#: main.cpp:156
-#, kde-format
-msgid ""
-"\"Re-use screen content\" causes severe performance problems on MESA drivers."
-msgstr ""
-"„рециклирање садржаја екрана“ јако лоше утиче на перформансе са Месиним "
-"драјверима."
+#~ msgid "Crisp"
+#~ msgstr "оштро"
 
-#: main.cpp:176
-#, kde-format
-msgid "OpenGL 3.1"
-msgstr "опенГЛ 3.1"
+#~ msgid "Smooth (slower)"
+#~ msgstr "глатко (спорије)"
 
-#: main.cpp:177
-#, kde-format
-msgid "OpenGL 2.0"
-msgstr "опенГЛ 2.0"
+#~ msgid "Smooth"
+#~ msgstr "глатко"
 
-#: main.cpp:178
-#, kde-format
-msgid "XRender"
-msgstr "Икс‑рендер"
+#~ msgid "Accurate"
+#~ msgstr "прецизно"
+
+#~ msgid "Rendering backend:"
+#~ msgstr "Рендерска позадина:"
+
+#~ msgid "Tearing prevention (\"vsync\"):"
+#~ msgstr "Спречавање цепања (в‑синхро):"
+
+# >> @item:inlistbox Tearing Prevention (VSync)
+#~ msgid "Automatic"
+#~ msgstr "аутоматско"
+
+# >> @item:inlistbox Tearing Prevention (VSync)
+#~ msgid "Only when cheap"
+#~ msgstr "само ако је јефтино"
+
+# >> @item:inlistbox Tearing Prevention (VSync)
+#~ msgid "Full screen repaints"
+#~ msgstr "исцртавање целог екрана"
+
+# >> @item:inlistbox Tearing Prevention (VSync)
+#~ msgid "Re-use screen content"
+#~ msgstr "рециклирање садржаја екрана"
+
+#~ msgid ""
+#~ "\"Only when cheap\" only prevents tearing for full screen changes like a "
+#~ "video."
+#~ msgstr ""
+#~ "Опција „само ако је јефтино“ спречава цепкање при изменама целог екрана, "
+#~ "као у видео записима."
+
+#~ msgid "\"Full screen repaints\" can cause performance problems."
+#~ msgstr "Опција „исцртавање целог екрана“ може лоше да утиче на перформансе."
+
+#~ msgid ""
+#~ "\"Re-use screen content\" causes severe performance problems on MESA "
+#~ "drivers."
+#~ msgstr ""
+#~ "„рециклирање садржаја екрана“ јако лоше утиче на перформансе са Месиним "
+#~ "драјверима."
+
+#~ msgid "OpenGL 3.1"
+#~ msgstr "опенГЛ 3.1"
+
+#~ msgid "OpenGL 2.0"
+#~ msgstr "опенГЛ 2.0"
+
+#~ msgid "XRender"
+#~ msgstr "Икс‑рендер"

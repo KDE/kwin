@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_clients\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-22 01:00+0000\n"
+"POT-Creation-Date: 2023-03-01 23:30+0000\n"
 "PO-Revision-Date: 2013-10-13 02:36+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "\n"
 "\n"
 
-#: aurorae/src/aurorae.cpp:737
+#: aurorae/src/aurorae.cpp:726
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "Tiny"
@@ -32,31 +32,31 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
 msgstr "Шағын"
 
-#: aurorae/src/aurorae.cpp:738
+#: aurorae/src/aurorae.cpp:727
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "Кәдімгі"
 
-#: aurorae/src/aurorae.cpp:739
+#: aurorae/src/aurorae.cpp:728
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
 msgstr "Үлкен"
 
-#: aurorae/src/aurorae.cpp:740
+#: aurorae/src/aurorae.cpp:729
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Large"
 msgstr "Оте үлкен"
 
-#: aurorae/src/aurorae.cpp:741
+#: aurorae/src/aurorae.cpp:730
 #, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
 msgstr "Зор"
 
-#: aurorae/src/aurorae.cpp:742
+#: aurorae/src/aurorae.cpp:731
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "Very Huge"
@@ -64,7 +64,7 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
 msgstr "Өте зор"
 
-#: aurorae/src/aurorae.cpp:743
+#: aurorae/src/aurorae.cpp:732
 #, fuzzy, kde-format
 #| msgctxt "@item:inlistbox Border size:"
 #| msgid "Oversized"
@@ -72,7 +72,7 @@ msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
 msgstr "Шектен асқан"
 
-#: aurorae/src/aurorae.cpp:746
+#: aurorae/src/aurorae.cpp:735
 #, fuzzy, kde-format
 #| msgid "B&utton size:"
 msgid "Button size:"
