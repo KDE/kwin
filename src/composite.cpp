@@ -384,7 +384,8 @@ void Compositor::startupWithWorkspace()
 
     m_state = State::On;
 
-    for (X11Window *window : Workspace::self()->clientList()) {
+    const auto windows = workspace()->allClientList();
+    for (Window *window : windows) {
         window->setupCompositing();
     }
     for (Unmanaged *window : Workspace::self()->unmanagedList()) {
@@ -392,13 +393,6 @@ void Compositor::startupWithWorkspace()
     }
     for (InternalWindow *window : workspace()->internalWindows()) {
         window->setupCompositing();
-    }
-
-    if (auto *server = waylandServer()) {
-        const auto windows = server->windows();
-        for (Window *window : windows) {
-            window->setupCompositing();
-        }
     }
 
     // Sets also the 'effects' pointer.
@@ -515,7 +509,8 @@ void Compositor::stop()
     effects = nullptr;
 
     if (Workspace::self()) {
-        for (X11Window *window : Workspace::self()->clientList()) {
+        const auto windows = workspace()->allClientList();
+        for (Window *window : windows) {
             window->finishCompositing();
         }
         for (Unmanaged *window : Workspace::self()->unmanagedList()) {
@@ -534,13 +529,6 @@ void Compositor::stop()
 
         disconnect(workspace(), &Workspace::outputAdded, this, &Compositor::addOutput);
         disconnect(workspace(), &Workspace::outputRemoved, this, &Compositor::removeOutput);
-    }
-
-    if (waylandServer()) {
-        const QList<Window *> toFinishCompositing = waylandServer()->windows();
-        for (Window *window : toFinishCompositing) {
-            window->finishCompositing();
-        }
     }
 
     const auto superlayers = m_superlayers;

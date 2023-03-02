@@ -38,7 +38,6 @@ WaylandWindow::WaylandWindow(SurfaceInterface *surface)
 {
     setSurface(surface);
     setDepth(32);
-    setupCompositing();
 
     connect(surface, &SurfaceInterface::shadowChanged,
             this, &WaylandWindow::updateShadow);
@@ -321,6 +320,14 @@ void WaylandWindow::updateGeometry(const QRectF &rect)
         Q_EMIT outputChanged();
     }
     Q_EMIT geometryShapeChanged(oldFrameGeometry);
+}
+
+void WaylandWindow::markAsMapped()
+{
+    if (Q_UNLIKELY(!ready_for_painting)) {
+        setupCompositing();
+        setReadyForPainting();
+    }
 }
 
 } // namespace KWin

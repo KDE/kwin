@@ -52,10 +52,6 @@ XdgSurfaceWindow::XdgSurfaceWindow(XdgSurfaceInterface *shellSurface)
             this, &XdgSurfaceWindow::destroyWindow);
     connect(shellSurface->surface(), &SurfaceInterface::committed,
             this, &XdgSurfaceWindow::handleCommit);
-#if 0 // TODO: Refactor kwin core in order to uncomment this code.
-    connect(shellSurface->surface(), &SurfaceInterface::mapped,
-            this, &XdgSurfaceWindow::setReadyForPainting);
-#endif
     connect(shellSurface, &XdgSurfaceInterface::aboutToBeDestroyed,
             this, &XdgSurfaceWindow::destroyWindow);
     connect(shellSurface->surface(), &SurfaceInterface::aboutToBeDestroyed,
@@ -174,7 +170,7 @@ void XdgSurfaceWindow::handleCommit()
     m_lastAcknowledgedConfigure.reset();
     m_lastAcknowledgedConfigureSerial.reset();
 
-    setReadyForPainting();
+    markAsMapped();
 }
 
 void XdgSurfaceWindow::handleRolePrecommit()

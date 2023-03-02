@@ -47,6 +47,7 @@ protected:
 
     void cleanGrouping();
     void updateGeometry(const QRectF &rect);
+    void markAsMapped();
 
 private:
     void updateClientOutputs();

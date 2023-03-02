@@ -189,7 +189,7 @@ void InputPanelV1Window::maybeShow()
 {
     const bool shouldShow = m_mode == Mode::Overlay || (m_mode == Mode::VirtualKeyboard && m_allowed && m_virtualKeyboardShouldBeShown);
     if (shouldShow && !isZombie() && surface()->isMapped()) {
-        setReadyForPainting();
+        markAsMapped();
         reposition();
         showClient();
     }
