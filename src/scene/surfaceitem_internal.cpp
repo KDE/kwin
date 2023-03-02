@@ -7,7 +7,6 @@
 #include "scene/surfaceitem_internal.h"
 #include "composite.h"
 #include "core/renderbackend.h"
-#include "deleted.h"
 #include "internalwindow.h"
 
 #include <QOpenGLFramebufferObject>
@@ -55,7 +54,7 @@ void SurfaceItemInternal::handleBufferGeometryChanged(const QRectF &old)
     setSize(m_window->bufferGeometry().size());
 }
 
-void SurfaceItemInternal::handleWindowClosed(Window *original, Deleted *deleted)
+void SurfaceItemInternal::handleWindowClosed(Window *original, Window *deleted)
 {
     m_window = deleted;
 }

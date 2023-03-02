@@ -7,8 +7,8 @@
 #include "scene/surfaceitem_x11.h"
 #include "composite.h"
 #include "core/renderbackend.h"
-#include "deleted.h"
 #include "x11syncmanager.h"
+#include "x11window.h"
 
 namespace KWin
 {
@@ -49,7 +49,7 @@ Window *SurfaceItemX11::window() const
     return m_window;
 }
 
-void SurfaceItemX11::handleWindowClosed(Window *original, Deleted *deleted)
+void SurfaceItemX11::handleWindowClosed(Window *original, Window *deleted)
 {
     m_window = deleted;
 }

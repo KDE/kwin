@@ -13,7 +13,6 @@
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "cursor.h"
-#include "deleted.h"
 #include "effects.h"
 #include "placement.h"
 #include "pointer_input.h"
@@ -82,7 +81,6 @@ private:
 void MoveResizeWindowTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::MaximizeMode>("MaximizeMode");
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));

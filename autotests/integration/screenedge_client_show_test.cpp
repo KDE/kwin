@@ -10,7 +10,6 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "deleted.h"
 #include "pointer_input.h"
 #include "screenedge.h"
 #include "wayland_server.h"
@@ -41,7 +40,6 @@ private Q_SLOTS:
 void ScreenEdgeClientShowTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::Deleted *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, QVector<QRect>() << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024)));

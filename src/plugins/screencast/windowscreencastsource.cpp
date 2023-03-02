@@ -10,7 +10,6 @@
 #include "composite.h"
 #include "core/output.h"
 #include "core/renderloop.h"
-#include "deleted.h"
 #include "effects.h"
 #include "libkwineffects/kwineffects.h"
 #include "libkwineffects/kwingltexture.h"

@@ -21,7 +21,6 @@
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
 #endif
-#include "deleted.h"
 #include "tablet_input.h"
 #include "touch_input.h"
 #include "wayland/display.h"

@@ -49,7 +49,6 @@ namespace KWin
 class Group;
 class Output;
 class ClientMachine;
-class Deleted;
 class EffectWindowImpl;
 class Tile;
 class Scene;
@@ -1409,7 +1408,7 @@ Q_SIGNALS:
     void damaged(KWin::Window *window);
     void inputTransformationChanged();
     void geometryShapeChanged(const QRectF &old);
-    void windowClosed(KWin::Window *window, KWin::Deleted *deleted);
+    void windowClosed(KWin::Window *window, KWin::Window *deleted);
     void windowShown(KWin::Window *window);
     void windowHidden(KWin::Window *window);
     /**

@@ -20,7 +20,6 @@
 #include "cursordelegate_qpainter.h"
 #include "dbusinterface.h"
 #include "decorations/decoratedclient.h"
-#include "deleted.h"
 #include "effects.h"
 #include "ftrace.h"
 #include "internalwindow.h"

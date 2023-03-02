@@ -6,7 +6,6 @@
 
 #include "scene/shadowitem.h"
 #include "composite.h"
-#include "deleted.h"
 #include "scene/workspacescene.h"
 #include "shadow.h"
 
@@ -68,7 +67,7 @@ void ShadowItem::handleTextureChanged()
     m_textureDirty = true;
 }
 
-void ShadowItem::handleWindowClosed(Window *original, Deleted *deleted)
+void ShadowItem::handleWindowClosed(Window *original, Window *deleted)
 {
     m_window = deleted;
 }

@@ -10,7 +10,6 @@
 
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "deleted.h"
 #include "effects.h"
 #include "internalwindow.h"
 #include "pointer_input.h"
@@ -171,7 +170,6 @@ void HelperWindow::keyReleaseEvent(QKeyEvent *event)
 void InternalWindowTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::InternalWindow *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));

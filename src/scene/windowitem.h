@@ -17,7 +17,6 @@ namespace KWin
 {
 class Window;
 class DecorationItem;
-class Deleted;
 class InternalWindow;
 class Shadow;
 class ShadowItem;
@@ -57,7 +56,7 @@ protected:
     void updateSurfaceItem(SurfaceItem *surfaceItem);
 
 private Q_SLOTS:
-    void handleWindowClosed(Window *original, Deleted *deleted);
+    void handleWindowClosed(Window *original, Window *deleted);
     void updateDecorationItem();
     void updateShadowItem();
     void updateSurfacePosition();

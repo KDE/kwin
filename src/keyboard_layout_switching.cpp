@@ -7,7 +7,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "keyboard_layout_switching.h"
-#include "deleted.h"
 #include "keyboard_layout.h"
 #include "virtualdesktops.h"
 #include "window.h"

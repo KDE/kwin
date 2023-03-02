@@ -10,7 +10,6 @@
 
 #include "composite.h"
 #include "core/outputbackend.h"
-#include "deleted.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "scripting/scriptedeffect.h"
@@ -43,7 +42,6 @@ private Q_SLOTS:
 
 void DontCrashCancelAnimationFromAnimationEndedTest::initTestCase()
 {
-    qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::Window *>();
     QVERIFY(waylandServer()->init(s_socketName));
     QMetaObject::invokeMethod(kwinApp()->outputBackend(), "setVirtualOutputs", Qt::DirectConnection, Q_ARG(QVector<QRect>, QVector<QRect>() << QRect(0, 0, 1280, 1024) << QRect(1280, 0, 1280, 1024)));

@@ -10,7 +10,6 @@
 #include "core/outputbackend.h"
 #include "core/renderbackend.h"
 #include "cursor.h"
-#include "deleted.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "kwin_wayland_test.h"
@@ -49,7 +48,6 @@ void SlidingPopupsTest::initTestCase()
 {
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::Effect *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));

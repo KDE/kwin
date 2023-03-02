@@ -21,7 +21,6 @@
 #include "core/renderbackend.h"
 #include "core/renderlayer.h"
 #include "cursor.h"
-#include "deleted.h"
 #include "group.h"
 #include "input_event.h"
 #include "internalwindow.h"
@@ -177,7 +176,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, WorkspaceScene *s
     connect(ws, &Workspace::windowActivated, this, [this](Window *window) {
         Q_EMIT windowActivated(window ? window->effectWindow() : nullptr);
     });
-    connect(ws, &Workspace::deletedRemoved, this, [this](KWin::Deleted *d) {
+    connect(ws, &Workspace::deletedRemoved, this, [this](KWin::Window *d) {
         Q_EMIT windowDeleted(d->effectWindow());
         elevated_windows.removeAll(d->effectWindow());
     });
@@ -525,7 +524,7 @@ void EffectsHandlerImpl::slotUnmanagedShown(Window *window)
     Q_EMIT windowAdded(u->effectWindow());
 }
 
-void EffectsHandlerImpl::slotWindowClosed(Window *original, Deleted *d)
+void EffectsHandlerImpl::slotWindowClosed(Window *original, Window *d)
 {
     original->disconnect(this);
     if (d) {
@@ -1976,16 +1975,16 @@ const EffectWindowGroup *EffectWindowImpl::group() const
 
 void EffectWindowImpl::refWindow()
 {
-    if (auto d = static_cast<Deleted *>(m_window->isDeleted() ? m_window : nullptr)) {
-        return d->ref();
+    if (m_window->isDeleted()) {
+        return m_window->ref();
     }
     Q_UNREACHABLE(); // TODO
 }
 
 void EffectWindowImpl::unrefWindow()
 {
-    if (auto d = static_cast<Deleted *>(m_window->isDeleted() ? m_window : nullptr)) {
-        return d->unref(); // delays deletion in case
+    if (m_window->isDeleted()) {
+        return m_window->unref();
     }
     Q_UNREACHABLE(); // TODO
 }
@@ -2041,43 +2040,25 @@ WINDOW_HELPER(bool, isLockScreen, isLockScreen)
 WINDOW_HELPER(pid_t, pid, pid)
 WINDOW_HELPER(qlonglong, windowId, window)
 WINDOW_HELPER(QUuid, internalId, internalId)
+WINDOW_HELPER(bool, isMinimized, isMinimized)
+WINDOW_HELPER(bool, isModal, isModal)
+WINDOW_HELPER(bool, isFullScreen, isFullScreen)
+WINDOW_HELPER(bool, keepAbove, keepAbove)
+WINDOW_HELPER(bool, keepBelow, keepBelow)
+WINDOW_HELPER(QString, caption, caption)
+WINDOW_HELPER(bool, isMovable, isMovable)
+WINDOW_HELPER(bool, isMovableAcrossScreens, isMovableAcrossScreens)
+WINDOW_HELPER(bool, isUserMove, isInteractiveMove)
+WINDOW_HELPER(bool, isUserResize, isInteractiveResize)
+WINDOW_HELPER(QRectF, iconGeometry, iconGeometry)
+WINDOW_HELPER(bool, isSpecialWindow, isSpecialWindow)
+WINDOW_HELPER(bool, acceptsFocus, wantsInput)
+WINDOW_HELPER(QIcon, icon, icon)
+WINDOW_HELPER(bool, isSkipSwitcher, skipSwitcher)
+WINDOW_HELPER(bool, decorationHasAlpha, decorationHasAlpha)
+WINDOW_HELPER(bool, isUnresponsive, unresponsive)
 
 #undef WINDOW_HELPER
-
-// TODO: Merge Window and Deleted.
-#define MANAGED_HELPER(rettype, prototype, propertyname, defaultValue)                     \
-    rettype EffectWindowImpl::prototype() const                                            \
-    {                                                                                      \
-        auto client = static_cast<Window *>(m_window->isClient() ? m_window : nullptr);    \
-        if (client) {                                                                      \
-            return client->propertyname();                                                 \
-        }                                                                                  \
-        auto deleted = static_cast<Deleted *>(m_window->isDeleted() ? m_window : nullptr); \
-        if (deleted) {                                                                     \
-            return deleted->propertyname();                                                \
-        }                                                                                  \
-        return defaultValue;                                                               \
-    }
-
-MANAGED_HELPER(bool, isMinimized, isMinimized, false)
-MANAGED_HELPER(bool, isModal, isModal, false)
-MANAGED_HELPER(bool, isFullScreen, isFullScreen, false)
-MANAGED_HELPER(bool, keepAbove, keepAbove, false)
-MANAGED_HELPER(bool, keepBelow, keepBelow, false)
-MANAGED_HELPER(QString, caption, caption, QString());
-MANAGED_HELPER(bool, isMovable, isMovable, false)
-MANAGED_HELPER(bool, isMovableAcrossScreens, isMovableAcrossScreens, false)
-MANAGED_HELPER(bool, isUserMove, isInteractiveMove, false)
-MANAGED_HELPER(bool, isUserResize, isInteractiveResize, false)
-MANAGED_HELPER(QRectF, iconGeometry, iconGeometry, QRectF())
-MANAGED_HELPER(bool, isSpecialWindow, isSpecialWindow, true)
-MANAGED_HELPER(bool, acceptsFocus, wantsInput, true) // We don't actually know...
-MANAGED_HELPER(QIcon, icon, icon, QIcon())
-MANAGED_HELPER(bool, isSkipSwitcher, skipSwitcher, false)
-MANAGED_HELPER(bool, decorationHasAlpha, decorationHasAlpha, false)
-MANAGED_HELPER(bool, isUnresponsive, unresponsive, false)
-
-#undef MANAGED_HELPER
 
 QVector<uint> EffectWindowImpl::desktops() const
 {
@@ -2193,15 +2174,7 @@ EffectWindowList getMainWindows(T *c)
 
 EffectWindowList EffectWindowImpl::mainWindows() const
 {
-    if (auto client = static_cast<Window *>(m_window->isClient() ? m_window : nullptr)) {
-        return getMainWindows(client);
-    }
-
-    if (auto deleted = static_cast<Deleted *>(m_window->isDeleted() ? m_window : nullptr)) {
-        return getMainWindows(deleted);
-    }
-
-    return {};
+    return getMainWindows(m_window);
 }
 
 void EffectWindowImpl::setData(int role, const QVariant &data)

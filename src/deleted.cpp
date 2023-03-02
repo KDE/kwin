@@ -25,12 +25,7 @@ Deleted::Deleted()
     , m_frame(XCB_WINDOW_NONE)
     , m_layer(UnknownLayer)
     , m_shade(false)
-    , m_minimized(false)
-    , m_modal(false)
-    , m_wasClient(false)
     , m_fullscreen(false)
-    , m_keepAbove(false)
-    , m_keepBelow(false)
     , m_wasPopupWindow(false)
     , m_wasOutline(false)
     , m_wasLockScreen(false)
@@ -80,16 +75,11 @@ void Deleted::copyToDeleted(Window *window)
                                       decoration_right,
                                       decoration_bottom);
     }
-    m_wasClient = true;
-    m_minimized = window->isMinimized();
-    m_modal = window->isModal();
     m_mainWindows = window->mainWindows();
     for (Window *w : std::as_const(m_mainWindows)) {
         connect(w, &Window::windowClosed, this, &Deleted::mainWindowClosed);
     }
     m_fullscreen = window->isFullScreen();
-    m_keepAbove = window->keepAbove();
-    m_keepBelow = window->keepBelow();
     m_caption = window->caption();
 
     for (auto vd : std::as_const(m_desktops)) {

@@ -10,7 +10,6 @@
 #include "composite.h"
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "deleted.h"
 #include "effects.h"
 #include "kwingltexture.h"
 #include "outputscreencastsource.h"

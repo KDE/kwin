@@ -9,7 +9,6 @@
 #include "composite.h"
 #include "core/output.h"
 #include "decorations/decoratedclient.h"
-#include "deleted.h"
 #include "scene/workspacescene.h"
 
 #include <cmath>
@@ -166,7 +165,7 @@ void DecorationItem::handleFrameGeometryChanged()
     setSize(m_window->size().toSize());
 }
 
-void DecorationItem::handleWindowClosed(Window *original, Deleted *deleted)
+void DecorationItem::handleWindowClosed(Window *original, Window *deleted)
 {
     m_window = deleted;
 

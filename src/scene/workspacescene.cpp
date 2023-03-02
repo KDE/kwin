@@ -57,7 +57,6 @@
 #include "core/output.h"
 #include "core/renderlayer.h"
 #include "core/renderloop.h"
-#include "deleted.h"
 #include "effects.h"
 #include "internalwindow.h"
 #include "libkwineffects/renderviewport.h"

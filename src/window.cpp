@@ -220,6 +220,10 @@ void Window::copyToDeleted(Window *c)
     m_shapeRegionIsValid = c->m_shapeRegionIsValid;
     m_shapeRegion = c->m_shapeRegion;
     m_stackingOrder = c->m_stackingOrder;
+    m_minimized = c->m_minimized;
+    m_modal = c->m_modal;
+    m_keepAbove = c->m_keepAbove;
+    m_keepBelow = c->m_keepBelow;
 }
 
 // before being deleted, remove references to everything that's now

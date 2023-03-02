@@ -8,7 +8,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "idle_inhibition.h"
-#include "deleted.h"
 #include "input.h"
 #include "virtualdesktops.h"
 #include "wayland/surface_interface.h"

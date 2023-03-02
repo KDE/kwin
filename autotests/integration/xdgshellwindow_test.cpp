@@ -13,7 +13,6 @@
 #include "core/outputbackend.h"
 #include "decorations/decorationbridge.h"
 #include "decorations/settings.h"
-#include "deleted.h"
 #include "effects.h"
 #include "pointer_input.h"
 #include "virtualdesktops.h"
@@ -160,7 +159,6 @@ void TestXdgShellWindow::testXdgWindowRepositioning()
 
 void TestXdgShellWindow::initTestCase()
 {
-    qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWayland::Client::Output *>();
 

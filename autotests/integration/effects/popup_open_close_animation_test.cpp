@@ -10,7 +10,6 @@
 #include "kwin_wayland_test.h"
 
 #include "core/outputbackend.h"
-#include "deleted.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "internalwindow.h"
@@ -48,7 +47,6 @@ void PopupOpenCloseAnimationTest::initTestCase()
     qputenv("XDG_DATA_DIRS", QCoreApplication::applicationDirPath().toUtf8());
 
     qRegisterMetaType<KWin::Window *>();
-    qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::InternalWindow *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));

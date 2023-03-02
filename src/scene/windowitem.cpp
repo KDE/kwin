@@ -5,7 +5,6 @@
 */
 
 #include "scene/windowitem.h"
-#include "deleted.h"
 #include "internalwindow.h"
 #include "scene/decorationitem.h"
 #include "scene/shadowitem.h"
@@ -125,7 +124,7 @@ void WindowItem::unrefVisible(int reason)
     updateVisibility();
 }
 
-void WindowItem::handleWindowClosed(Window *original, Deleted *deleted)
+void WindowItem::handleWindowClosed(Window *original, Window *deleted)
 {
     m_window = deleted;
 }

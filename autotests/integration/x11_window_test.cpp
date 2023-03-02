@@ -12,7 +12,6 @@
 #include "composite.h"
 #include "core/outputbackend.h"
 #include "cursor.h"
-#include "deleted.h"
 #include "effectloader.h"
 #include "effects.h"
 #include "wayland_server.h"
@@ -62,7 +61,6 @@ void X11WindowTest::initTestCase_data()
 
 void X11WindowTest::initTestCase()
 {
-    qRegisterMetaType<KWin::Deleted *>();
     qRegisterMetaType<KWin::Window *>();
     QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
@@ -749,7 +747,7 @@ void X11WindowTest::testX11WindowId()
     QUuid deletedUuid;
     QCOMPARE(deletedUuid.isNull(), true);
 
-    connect(window, &X11Window::windowClosed, this, [&deletedUuid](Window *, Deleted *d) {
+    connect(window, &X11Window::windowClosed, this, [&deletedUuid](Window *, Window *d) {
         deletedUuid = d->internalId();
     });
 
