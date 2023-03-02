@@ -68,6 +68,24 @@ static spa_video_format drmFourCCToSpaVideoFormat(quint32 format)
     }
 }
 
+QImage::Format spaToQImageFormat(quint32 format)
+{
+    switch (format) {
+    case SPA_VIDEO_FORMAT_BGRx:
+    case SPA_VIDEO_FORMAT_BGRA:
+        return QImage::Format_BGR30;
+    case SPA_VIDEO_FORMAT_BGR:
+        return QImage::Format_BGR888;
+    case SPA_VIDEO_FORMAT_RGBx:
+        return QImage::Format_RGBX8888;
+    case SPA_VIDEO_FORMAT_RGBA:
+        return QImage::Format_RGBA8888_Premultiplied;
+    default:
+        qCDebug(KWIN_SCREENCAST) << "unknown spa format" << format;
+        return QImage::Format_RGB32;
+    }
+}
+
 void ScreenCastStream::onStreamStateChanged(void *data, pw_stream_state old, pw_stream_state state, const char *error_message)
 {
     ScreenCastStream *pw = static_cast<ScreenCastStream *>(data);
@@ -450,7 +468,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         const int bpp = data && !hasAlpha ? 3 : 4;
         const uint stride = SPA_ROUND_UP_N(size.width() * bpp, 4);
 
-        QImage dest(data, size.width(), size.height(), stride, hasAlpha ? QImage::Format_RGBA8888_Premultiplied : QImage::Format_RGB888);
+        QImage dest(data, size.width(), size.height(), stride, spaToQImageFormat(videoFormat.format));
         if (dest.sizeInBytes() > spa_data->maxsize) {
             qCDebug(KWIN_SCREENCAST) << "Failed to record frame: frame is too big";
             pw_stream_queue_buffer(pwStream, buffer);
