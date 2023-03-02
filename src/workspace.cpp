@@ -969,6 +969,7 @@ void Workspace::addUnmanaged(Unmanaged *window)
 {
     m_unmanaged.append(window);
     addToStack(window);
+    updateStackingOrder(true);
 }
 
 /**
@@ -991,6 +992,7 @@ void Workspace::removeUnmanaged(Unmanaged *window)
     Q_ASSERT(m_unmanaged.contains(window));
     m_unmanaged.removeAll(window);
     removeFromStack(window);
+    updateStackingOrder();
     Q_EMIT unmanagedRemoved(window);
 }
 
