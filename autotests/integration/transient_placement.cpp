@@ -99,6 +99,14 @@ void TransientPlacementTest::testXdgPopup_data()
     // ----------------------------------------------------------------
     // window in the middle, plenty of room either side: Changing anchor
 
+    const PopupLayout layoutNone{
+        .anchorRect = QRect(50, 50, 400, 400),
+        .size = QSize(200, 200),
+        .anchor = Test::XdgPositioner::anchor_top_left,
+        .gravity = Test::XdgPositioner::gravity_top_left,
+    };
+    QTest::newRow("no constraint adjustments") << QSize(500, 500) << QPoint(0, 0) << layoutNone << QRect(50 - 200, 50 - 200, 200, 200);
+
     const PopupLayout layoutAnchorCenter{
         .anchorRect = QRect(50, 50, 400, 400),
         .size = QSize(200, 200),
@@ -498,6 +506,7 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     std::unique_ptr<Test::XdgPositioner> positioner(Test::createXdgPositioner());
     positioner->set_size(200, 200);
     positioner->set_anchor_rect(50, 500, 200, 200);
+    positioner->set_constraint_adjustment(Test::XdgPositioner::constraint_adjustment_slide_x | Test::XdgPositioner::constraint_adjustment_slide_y);
 
     std::unique_ptr<Test::XdgPopup> transientShellSurface(Test::createXdgPopupSurface(transientSurface.get(), parentShellSurface->xdgSurface(), positioner.get()));
     auto transient = Test::renderAndWaitForShown(transientSurface.get(), QSize(200, 200), Qt::red);
@@ -532,6 +541,7 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     std::unique_ptr<Test::XdgPositioner> positioner2(Test::createXdgPositioner());
     positioner2->set_size(200, 200);
     positioner2->set_anchor_rect(anchorRect2.x(), anchorRect2.y(), anchorRect2.width(), anchorRect2.height());
+    positioner2->set_constraint_adjustment(Test::XdgPositioner::constraint_adjustment_slide_x | Test::XdgPositioner::constraint_adjustment_slide_y);
     transientShellSurface.reset(Test::createXdgPopupSurface(transientSurface.get(), parentShellSurface->xdgSurface(), positioner2.get()));
     transient = Test::renderAndWaitForShown(transientSurface.get(), QSize(200, 200), Qt::red);
     QVERIFY(transient);

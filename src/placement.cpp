@@ -484,16 +484,6 @@ void Placement::placeTransient(Window *c)
     const auto parent = c->transientFor();
     const QRectF screen = Workspace::self()->clientArea(parent->isFullScreen() ? FullScreenArea : PlacementArea, parent);
     c->moveResize(c->transientPlacement(screen));
-
-    // Potentially a client could set no constraint adjustments
-    // and we'll be offscreen.
-
-    // The spec implies we should place window the offscreen. However,
-    // practically Qt doesn't set any constraint adjustments yet so we can't.
-    // Also kwin generally doesn't let clients do what they want
-    if (!screen.contains(c->moveResizeGeometry().toAlignedRect())) {
-        c->keepInArea(screen);
-    }
 }
 
 void Placement::placeDialog(Window *c, const QRect &area, PlacementPolicy nextPlacement)
