@@ -52,7 +52,6 @@ protected:
 
 public Q_SLOTS:
     void slotWindowClosed(KWin::EffectWindow *c);
-    void slotWindowDeleted(KWin::EffectWindow *w);
     void slotWindowDataChanged(KWin::EffectWindow *w, int role);
 
 private:

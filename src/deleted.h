@@ -23,7 +23,6 @@ public:
     // used by effects to keep the window around for e.g. fadeout effects when it's destroyed
     void refWindow();
     void unrefWindow();
-    void discard();
     QMargins frameMargins() const override;
     int desktop() const override;
     QStringList activities() const override;

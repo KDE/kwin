@@ -59,7 +59,6 @@ SheetEffect::SheetEffect()
 
     connect(effects, &EffectsHandler::windowAdded, this, &SheetEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowClosed, this, &SheetEffect::slotWindowClosed);
-    connect(effects, &EffectsHandler::windowDeleted, this, &SheetEffect::slotWindowDeleted);
 }
 
 void SheetEffect::reconfigure(ReconfigureFlags flags)
@@ -226,11 +225,6 @@ void SheetEffect::slotWindowClosed(EffectWindow *w)
     w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
 
     w->addRepaintFull();
-}
-
-void SheetEffect::slotWindowDeleted(EffectWindow *w)
-{
-    m_animations.remove(w);
 }
 
 bool SheetEffect::isSheetWindow(EffectWindow *w) const

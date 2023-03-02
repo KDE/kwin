@@ -75,7 +75,6 @@ public:
 private Q_SLOTS:
     void windowAdded(EffectWindow *w);
     void windowClosed(EffectWindow *w);
-    void windowDeleted(EffectWindow *w);
     void windowDataChanged(EffectWindow *w, int role);
 
 private:

@@ -228,7 +228,6 @@ void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
 
 void SlidingPopupsEffect::slotWindowDeleted(EffectWindow *w)
 {
-    m_animations.remove(w);
     m_animationsData.remove(w);
 }
 

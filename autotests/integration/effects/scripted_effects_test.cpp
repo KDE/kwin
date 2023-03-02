@@ -444,21 +444,24 @@ void ScriptedEffectsTest::testKeepAlive()
     QCOMPARE(effect->state().count(), 0);
 
     // trigger windowClosed signal
+    QSignalSpy deletedRemovedSpy(workspace(), &Workspace::deletedRemoved);
     surface.reset();
     QVERIFY(effectOutputSpy.count() == 1 || effectOutputSpy.wait());
 
     if (keepAlive) {
         QCOMPARE(effect->state().count(), 1);
+        QCOMPARE(deletedRemovedSpy.count(), 0);
 
         QTest::qWait(500);
         QCOMPARE(effect->state().count(), 1);
+        QCOMPARE(deletedRemovedSpy.count(), 0);
 
         QTest::qWait(500 + 100); // 100ms is extra safety margin
+        QCOMPARE(deletedRemovedSpy.count(), 1);
         QCOMPARE(effect->state().count(), 0);
     } else {
         // the test effect doesn't keep the window alive, so it should be
         // removed immediately
-        QSignalSpy deletedRemovedSpy(workspace(), &Workspace::deletedRemoved);
         QVERIFY(deletedRemovedSpy.count() == 1 || deletedRemovedSpy.wait(100)); // 100ms is less than duration of the animation
         QCOMPARE(effect->state().count(), 0);
     }

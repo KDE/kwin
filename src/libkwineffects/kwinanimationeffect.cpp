@@ -57,7 +57,14 @@ AnimationEffect::AnimationEffect()
     QMetaObject::invokeMethod(this, &AnimationEffect::init, Qt::QueuedConnection);
 }
 
-AnimationEffect::~AnimationEffect() = default;
+AnimationEffect::~AnimationEffect()
+{
+    Q_D(AnimationEffect);
+    if (d->m_isInitialized) {
+        disconnect(effects, &EffectsHandler::windowDeleted, this, &AnimationEffect::_windowDeleted);
+    }
+    d->m_animations.clear();
+}
 
 void AnimationEffect::init()
 {
@@ -408,6 +415,7 @@ bool AnimationEffect::cancel(quint64 animationId)
     for (AniMap::iterator entry = d->m_animations.begin(), mapEnd = d->m_animations.end(); entry != mapEnd; ++entry) {
         for (QList<AniData>::iterator anim = entry->first.begin(), animEnd = entry->first.end(); anim != animEnd; ++anim) {
             if (anim->id == animationId) {
+                EffectWindowDeletedRef ref = std::move(anim->deletedRef); // delete window once we're done updating m_animations
                 if (anim->shader && std::none_of(entry->first.begin(), entry->first.end(), [animationId] (const auto &anim) { return anim.id != animationId && anim.shader; })) {
                     unredirect(entry.key());
                 }
@@ -670,6 +678,7 @@ void AnimationEffect::postPaintScreen()
     Q_D(AnimationEffect);
     d->m_animationsTouched = false;
     bool damageDirty = false;
+    std::vector<EffectWindowDeletedRef> zombies;
 
     for (auto entry = d->m_animations.begin(); entry != d->m_animations.end();) {
         bool invalidateLayerRect = false;
@@ -703,6 +712,12 @@ void AnimationEffect::postPaintScreen()
                 for (int i = 0; i < animCounter; ++i) {
                     ++anim;
                 }
+            }
+            // If it's a closed window, keep it alive for a little bit longer until we're done
+            // updating m_animations. Otherwise our windowDeleted slot can access m_animations
+            // while we still modify it.
+            if (!anim->deletedRef.isNull()) {
+                zombies.emplace_back(std::move(anim->deletedRef));
             }
             anim = entry->first.erase(anim);
             invalidateLayerRect = damageDirty = true;

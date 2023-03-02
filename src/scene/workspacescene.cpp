@@ -322,12 +322,6 @@ void WorkspaceScene::preparePaintSimpleScreen()
 
 void WorkspaceScene::postPaint()
 {
-    for (WindowItem *w : std::as_const(stacking_order)) {
-        effects->postPaintWindow(w->window()->effectWindow());
-    }
-
-    effects->postPaintScreen();
-
     if (waylandServer()) {
         const std::chrono::milliseconds frameTime =
             std::chrono::duration_cast<std::chrono::milliseconds>(painted_screen->renderLoop()->lastPresentationTimestamp());
@@ -346,6 +340,12 @@ void WorkspaceScene::postPaint()
             m_dndIcon->frameRendered(frameTime.count());
         }
     }
+
+    for (WindowItem *w : std::as_const(stacking_order)) {
+        effects->postPaintWindow(w->window()->effectWindow());
+    }
+
+    effects->postPaintScreen();
 
     clearStackingOrder();
 }

@@ -70,7 +70,6 @@ GlideEffect::GlideEffect()
 
     connect(effects, &EffectsHandler::windowAdded, this, &GlideEffect::windowAdded);
     connect(effects, &EffectsHandler::windowClosed, this, &GlideEffect::windowClosed);
-    connect(effects, &EffectsHandler::windowDeleted, this, &GlideEffect::windowDeleted);
     connect(effects, &EffectsHandler::windowDataChanged, this, &GlideEffect::windowDataChanged);
 }
 
@@ -279,11 +278,6 @@ void GlideEffect::windowClosed(EffectWindow *w)
     animation.timeLine.setEasingCurve(QEasingCurve::OutCurve);
 
     effects->addRepaintFull();
-}
-
-void GlideEffect::windowDeleted(EffectWindow *w)
-{
-    m_animations.remove(w);
 }
 
 void GlideEffect::windowDataChanged(EffectWindow *w, int role)

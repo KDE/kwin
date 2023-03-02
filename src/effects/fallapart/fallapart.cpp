@@ -28,7 +28,6 @@ FallApartEffect::FallApartEffect()
     initConfig<FallApartConfig>();
     reconfigure(ReconfigureAll);
     connect(effects, &EffectsHandler::windowClosed, this, &FallApartEffect::slotWindowClosed);
-    connect(effects, &EffectsHandler::windowDeleted, this, &FallApartEffect::slotWindowDeleted);
     connect(effects, &EffectsHandler::windowDataChanged, this, &FallApartEffect::slotWindowDataChanged);
 }
 
@@ -183,11 +182,6 @@ void FallApartEffect::slotWindowClosed(EffectWindow *c)
     animation.visibleRef = EffectWindowVisibleRef(c, EffectWindow::PAINT_DISABLED_BY_DELETE);
 
     redirect(c);
-}
-
-void FallApartEffect::slotWindowDeleted(EffectWindow *c)
-{
-    windows.remove(c);
 }
 
 void FallApartEffect::slotWindowDataChanged(EffectWindow *w, int role)

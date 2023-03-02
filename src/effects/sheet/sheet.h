@@ -42,7 +42,6 @@ public:
 private Q_SLOTS:
     void slotWindowAdded(EffectWindow *w);
     void slotWindowClosed(EffectWindow *w);
-    void slotWindowDeleted(EffectWindow *w);
 
 private:
     bool isSheetWindow(EffectWindow *w) const;

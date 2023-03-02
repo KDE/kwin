@@ -252,14 +252,6 @@ bool Compositor::setupStart()
 
     initializeX11();
 
-    // There might still be a deleted around, needs to be cleared before
-    // creating the scene (BUG 333275).
-    if (Workspace::self()) {
-        while (!Workspace::self()->deletedList().isEmpty()) {
-            Workspace::self()->deletedList().first()->discard();
-        }
-    }
-
     Q_EMIT aboutToToggleCompositing();
 
     const QVector<CompositingType> availableCompositors = kwinApp()->outputBackend()->supportedCompositors();
@@ -522,9 +514,6 @@ void Compositor::stop()
         if (auto *con = kwinApp()->x11Connection()) {
             xcb_composite_unredirect_subwindows(con, kwinApp()->x11RootWindow(),
                                                 XCB_COMPOSITE_REDIRECT_MANUAL);
-        }
-        while (!workspace()->deletedList().isEmpty()) {
-            workspace()->deletedList().first()->discard();
         }
 
         disconnect(workspace(), &Workspace::outputAdded, this, &Compositor::addOutput);

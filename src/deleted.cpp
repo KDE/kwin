@@ -62,13 +62,6 @@ Deleted *Deleted::create(Window *c)
     return d;
 }
 
-// to be used only from Workspace::finishCompositing()
-void Deleted::discard()
-{
-    delete_refcount = 0;
-    delete this;
-}
-
 void Deleted::copyToDeleted(Window *window)
 {
     Q_ASSERT(!window->isDeleted());
@@ -120,11 +113,7 @@ void Deleted::unrefWindow()
     if (--delete_refcount > 0) {
         return;
     }
-    // needs to be delayed
-    // a) when calling from effects, otherwise it'd be rather complicated to handle the case of the
-    // window going away during a painting pass
-    // b) to prevent dangeling pointers in the stacking order, see bug #317765
-    deleteLater();
+    delete this;
 }
 
 QMargins Deleted::frameMargins() const
