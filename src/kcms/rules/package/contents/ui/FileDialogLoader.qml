@@ -4,8 +4,9 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 
-import QtQuick 2.14
-import QtQuick.Dialogs 1.0 as QtDialogs
+import QtCore
+import QtQuick
+import QtQuick.Dialogs as QtDialogs
 
 Loader {
     id: root
@@ -21,8 +22,8 @@ Loader {
         id: fileDialog
 
         title: root.title
-        selectExisting: !root.isSaveDialog
-        folder: root.lastFolder || shortcuts.home
+        fileMode: root.isSaveDialog ? FileDialog.SaveFile : FileDialog.OpenFile
+        currentFolder: root.lastFolder || StandardPaths.standardLocations(StandardPaths.HomeLocation)[0]
         nameFilters: [ i18n("KWin Rules (*.kwinrule)") ]
         defaultSuffix: "*.kwinrule"
 
@@ -31,9 +32,9 @@ Loader {
         }
 
         onAccepted: {
-            root.lastFolder = folder;
-            if (fileUrl != "") {
-                root.fileSelected(fileUrl);
+            root.lastFolder = currentFolder;
+            if (selectedFile != "") {
+                root.fileSelected(selectedFile);
             }
             root.active = false;
         }
