@@ -562,6 +562,9 @@ class KWIN_EXPORT Window : public QObject
 public:
     ~Window() override;
 
+    void ref();
+    void unref();
+
     virtual xcb_window_t frameId() const;
     xcb_window_t window() const;
     /**
@@ -1866,6 +1869,7 @@ private:
     void maybeSendFrameCallback();
 
     // when adding new data members, check also copyToDeleted()
+    int m_refCount = 1;
     QUuid m_internalId;
     Xcb::Window m_client;
     bool is_shape;

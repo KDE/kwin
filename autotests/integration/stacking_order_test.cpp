@@ -185,7 +185,7 @@ struct WindowUnrefDeleter
     void operator()(Deleted *d)
     {
         if (d != nullptr) {
-            d->unrefWindow();
+            d->unref();
         }
     }
 };
@@ -244,7 +244,7 @@ void StackingOrderTest::testDeletedTransient()
 
     // Close the top-most transient.
     connect(transient2, &Window::windowClosed, this, [](Window *original, Deleted *deleted) {
-        deleted->refWindow();
+        deleted->ref();
     });
 
     QSignalSpy windowClosedSpy(transient2, &Window::windowClosed);
@@ -647,7 +647,7 @@ void StackingOrderTest::testDeletedGroupTransient()
 
     // Unmap the transient.
     connect(transient, &X11Window::windowClosed, this, [](Window *original, Deleted *deleted) {
-        deleted->refWindow();
+        deleted->ref();
     });
 
     QSignalSpy windowClosedSpy(transient, &X11Window::windowClosed);

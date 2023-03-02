@@ -130,6 +130,19 @@ Window::~Window()
     delete info;
 }
 
+void Window::ref()
+{
+    ++m_refCount;
+}
+
+void Window::unref()
+{
+    --m_refCount;
+    if (m_refCount == 0) {
+        delete this;
+    }
+}
+
 QDebug operator<<(QDebug debug, const Window *window)
 {
     QDebugStateSaver saver(debug);

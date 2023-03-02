@@ -22,7 +22,6 @@ namespace KWin
 
 Deleted::Deleted()
     : Window()
-    , delete_refcount(1)
     , m_frame(XCB_WINDOW_NONE)
     , m_layer(UnknownLayer)
     , m_shade(false)
@@ -40,10 +39,6 @@ Deleted::Deleted()
 
 Deleted::~Deleted()
 {
-    if (delete_refcount != 0) {
-        qCCritical(KWIN_CORE) << "Deleted client has non-zero reference count (" << delete_refcount << ")";
-    }
-    Q_ASSERT(delete_refcount == 0);
     if (workspace()) {
         workspace()->removeDeleted(this);
     }
@@ -106,14 +101,6 @@ void Deleted::copyToDeleted(Window *window)
     m_wasPopupWindow = window->isPopupWindow();
     m_wasOutline = window->isOutline();
     m_wasLockScreen = window->isLockScreen();
-}
-
-void Deleted::unrefWindow()
-{
-    if (--delete_refcount > 0) {
-        return;
-    }
-    delete this;
 }
 
 QMargins Deleted::frameMargins() const
