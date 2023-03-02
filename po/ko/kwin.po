@@ -66,7 +66,8 @@ msgstr ""
 "할 수도 있습니다.</p>"
 
 #: composite.cpp:1071
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Required X extensions (XComposite and XDamage) are not available."
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "필요한 X 확장 XComposite와 XDamage를 사용할 수 없습니다."
 
@@ -1959,7 +1960,7 @@ msgstr "제목 표시줄 없음 규칙 종류"
 #: rulesettings.kcfg:315
 #, kde-format
 msgid "Titlebar color and scheme"
-msgstr "제목 표시줄 색과 색 배열"
+msgstr "제목 표시줄 색과 색 구성표"
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:318
