@@ -21,7 +21,6 @@ int main(int argc, char *argv[])
 
     KLocalizedString::setApplicationDomain("kcm_kwinrules");
 
-    app.setAttribute(Qt::AA_UseHighDpiPixmaps, true);
     app.setApplicationName("kwin_rules_dialog");
     app.setWindowIcon(QIcon::fromTheme("preferences-system-windows-actions"));
     app.setApplicationVersion("2.0");
