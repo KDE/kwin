@@ -293,20 +293,28 @@ void SeatInterfacePrivate::endDrag()
 
 void SeatInterfacePrivate::updateSelection(DataDeviceInterface *dataDevice)
 {
+    DataSourceInterface *selection = dataDevice->selection();
     // if the update is from the focussed window we should inform the active client
     if (!(globalKeyboard.focus.surface && (*globalKeyboard.focus.surface->client() == dataDevice->client()))) {
+        if (selection) {
+            selection->cancel();
+        }
         return;
     }
-    q->setSelection(dataDevice->selection());
+    q->setSelection(selection);
 }
 
 void SeatInterfacePrivate::updatePrimarySelection(PrimarySelectionDeviceV1Interface *primarySelectionDevice)
 {
+    PrimarySelectionSourceV1Interface *selection = primarySelectionDevice->selection();
     // if the update is from the focussed window we should inform the active client
     if (!(globalKeyboard.focus.surface && (*globalKeyboard.focus.surface->client() == primarySelectionDevice->client()))) {
+        if (selection) {
+            selection->cancel();
+        }
         return;
     }
-    q->setPrimarySelection(primarySelectionDevice->selection());
+    q->setPrimarySelection(selection);
 }
 
 void SeatInterfacePrivate::sendCapabilities()
