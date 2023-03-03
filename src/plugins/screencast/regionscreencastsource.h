@@ -28,7 +28,7 @@ public:
     QSize textureSize() const override;
 
     void render(GLFramebuffer *target) override;
-    void render(QImage *image) override;
+    void render(spa_data *spa, spa_video_format format) override;
     std::chrono::nanoseconds clock() const override;
 
     QRect region() const

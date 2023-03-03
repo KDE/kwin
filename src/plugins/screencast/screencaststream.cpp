@@ -450,20 +450,20 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         const int bpp = data && !hasAlpha ? 3 : 4;
         const uint stride = SPA_ROUND_UP_N(size.width() * bpp, 4);
 
-        QImage dest(data, size.width(), size.height(), stride, hasAlpha ? QImage::Format_RGBA8888_Premultiplied : QImage::Format_RGB888);
-        if (dest.sizeInBytes() > spa_data->maxsize) {
+        if ((stride * size.height()) > spa_data->maxsize) {
             qCDebug(KWIN_SCREENCAST) << "Failed to record frame: frame is too big";
             pw_stream_queue_buffer(pwStream, buffer);
             return;
         }
 
-        spa_data->chunk->size = dest.sizeInBytes();
-        spa_data->chunk->stride = dest.bytesPerLine();
+        spa_data->chunk->stride = stride;
+        spa_data->chunk->size = stride * size.height();
 
-        m_source->render(&dest);
+        m_source->render(spa_data, videoFormat.format);
 
         auto cursor = Cursors::self()->currentCursor();
         if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && exclusiveContains(m_cursor.viewport, cursor->pos())) {
+            QImage dest(data, size.width(), size.height(), stride, hasAlpha ? QImage::Format_RGBA8888_Premultiplied : QImage::Format_RGB888);
             QPainter painter(&dest);
             const auto position = (cursor->pos() - m_cursor.viewport.topLeft() - cursor->hotspot()) * m_cursor.scale;
             painter.drawImage(QRect{position.toPoint(), cursor->image().size()}, cursor->image());

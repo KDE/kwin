@@ -110,10 +110,10 @@ void RegionScreenCastSource::render(GLFramebuffer *target)
     GLFramebuffer::popFramebuffer();
 }
 
-void RegionScreenCastSource::render(QImage *image)
+void RegionScreenCastSource::render(spa_data *spa, spa_video_format format)
 {
     ensureTexture();
-    grabTexture(m_renderedTexture.get(), image);
+    grabTexture(m_renderedTexture.get(), spa, format);
 }
 
 }
