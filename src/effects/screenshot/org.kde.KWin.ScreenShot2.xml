@@ -269,5 +269,45 @@
             <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap" />
             <arg name="results" type="a{sv}" direction="out" />
         </method>
+
+        <!--
+            CaptureWorkspace:
+            @options: Optional vardict with screenshot options
+            @pipe: The pipe file descriptor where the screenshot will be written
+
+            Take a screenshot of the workspace, i.e. all screens united. The
+            application that requests the screenshot must have the org.kde.KWin.ScreenShot2
+            interface listed in the X-KDE-DBUS-Restricted-Interfaces desktop file
+            entry.
+
+            Supported since version 3.
+
+            Available @options include:
+
+            * "include-cursor" (b): Whether the cursor should be included.
+                                    Defaults to false
+            * "native-resolution" (b): Whether the screenshot should be in
+                                       native size. Defaults to false
+
+            The following results get returned via the @results vardict:
+
+            * "type" (s): The type of the image written to the pipe. Currently,
+                          the only supported type is "raw"
+            * "width" (u): The width of the image. Available only if the image
+                           type is "raw"
+            * "height" (u): The height of the image. Available only if the image
+                            type is "raw"
+            * "stride" (u): The number of bytes per row. Available only if the
+                            image type is "raw"
+            * "format" (u): The image format, as defined in QImage::Format.
+                            Available only if the image type is "raw"
+        -->
+        <method name="CaptureWorkspace">
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QVariantMap" />
+            <arg name="options" type="a{sv}" direction="in" />
+            <arg name="pipe" type="h" direction="in" />
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap" />
+            <arg name="results" type="a{sv}" direction="out" />
+        </method>
     </interface>
 </node>
