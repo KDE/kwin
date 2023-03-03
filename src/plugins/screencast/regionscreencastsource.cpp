@@ -100,13 +100,13 @@ void RegionScreenCastSource::render(GLFramebuffer *target)
     GLFramebuffer::popFramebuffer();
 }
 
-void RegionScreenCastSource::render(QImage *image)
+void RegionScreenCastSource::render(spa_data *spa, spa_video_format format)
 {
     GLTexture offscreenTexture(hasAlphaChannel() ? GL_RGBA8 : GL_RGB8, textureSize());
     GLFramebuffer offscreenTarget(&offscreenTexture);
 
     render(&offscreenTarget);
-    grabTexture(&offscreenTexture, image);
+    grabTexture(&offscreenTexture, spa, format);
 }
 
 }
