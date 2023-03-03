@@ -65,6 +65,7 @@ private Q_SLOTS:
     void updatePosition();
     void updateOpacity();
     void updateStackingOrder();
+    void addSurfaceItemDamageConnects(Item *item);
 
 private:
     bool computeVisibility() const;
