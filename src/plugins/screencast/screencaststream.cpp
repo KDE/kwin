@@ -62,6 +62,26 @@ uint32_t spaVideoFormatToDrmFormat(spa_video_format spa_format)
     }
 }
 
+static QImage::Format SpaToQImageFormat(quint32 format)
+{
+    switch (format) {
+    case SPA_VIDEO_FORMAT_BGRx:
+    case SPA_VIDEO_FORMAT_BGRA:
+        return QImage::Format_RGBA8888_Premultiplied; // TODO: Add BGR to QImage
+    case SPA_VIDEO_FORMAT_BGR:
+        return QImage::Format_BGR888;
+    case SPA_VIDEO_FORMAT_RGBx:
+        return QImage::Format_RGBX8888;
+    case SPA_VIDEO_FORMAT_RGB:
+        return QImage::Format_RGB888;
+    case SPA_VIDEO_FORMAT_RGBA:
+        return QImage::Format_RGBA8888_Premultiplied;
+    default:
+        qCWarning(KWIN_SCREENCAST) << "unknown spa format" << format;
+        return QImage::Format_RGB32;
+    }
+}
+
 void ScreenCastStream::onStreamStateChanged(void *data, pw_stream_state old, pw_stream_state state, const char *error_message)
 {
     ScreenCastStream *pw = static_cast<ScreenCastStream *>(data);
@@ -443,7 +463,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
 
         auto cursor = Cursors::self()->currentCursor();
         if (m_cursor.mode == KWaylandServer::ScreencastV1Interface::Embedded && m_cursor.viewport.contains(cursor->pos())) {
-            QImage dest(data, size.width(), size.height(), stride, hasAlpha ? QImage::Format_RGBA8888_Premultiplied : QImage::Format_RGB888);
+            QImage dest(data, size.width(), size.height(), stride, SpaToQImageFormat(videoFormat.format));
             QPainter painter(&dest);
             const auto position = (cursor->pos() - m_cursor.viewport.topLeft() - cursor->hotspot()) * m_cursor.scale;
             painter.drawImage(QRect{position, cursor->image().size()}, cursor->image());
