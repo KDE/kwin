@@ -9,6 +9,7 @@
 #include "screenshotdbusinterface2.h"
 #include "screenshot2adaptor.h"
 #include "screenshotlogging.h"
+#include "utils/filedescriptor.h"
 #include "utils/serviceutils.h"
 
 #include <KLocalizedString>
@@ -18,6 +19,7 @@
 #include <QtConcurrent>
 
 #include <errno.h>
+#include <fcntl.h>
 #include <poll.h>
 #include <string.h>
 #include <unistd.h>
@@ -47,11 +49,22 @@ static ScreenShotFlags screenShotFlagsFromOptions(const QVariantMap &options)
     return flags;
 }
 
-static void writeBufferToPipe(int fileDescriptor, const QByteArray &buffer)
+static void writeBufferToPipe(FileDescriptor fileDescriptor, const QByteArray &buffer)
 {
+    const int flags = fcntl(fileDescriptor.get(), F_GETFL, 0);
+    if (flags == -1) {
+        qCWarning(KWIN_SCREENSHOT) << "failed to get screenshot fd flags:" << strerror(errno);
+        return;
+    }
+    if (!(flags & O_NONBLOCK)) {
+        if (fcntl(fileDescriptor.get(), F_SETFL, flags | O_NONBLOCK) == -1) {
+            qCWarning(KWIN_SCREENSHOT) << "failed to make screenshot fd non blocking:" << strerror(errno);
+            return;
+        }
+    }
+
     QFile file;
-    if (!file.open(fileDescriptor, QIODevice::WriteOnly, QFileDevice::AutoCloseHandle)) {
-        close(fileDescriptor);
+    if (!file.open(fileDescriptor.get(), QIODevice::WriteOnly)) {
         qCWarning(KWIN_SCREENSHOT) << Q_FUNC_INFO << "failed to open pipe:" << file.errorString();
         return;
     }
@@ -59,7 +72,7 @@ static void writeBufferToPipe(int fileDescriptor, const QByteArray &buffer)
     qint64 remainingSize = buffer.size();
 
     pollfd pfds[1];
-    pfds[0].fd = fileDescriptor;
+    pfds[0].fd = fileDescriptor.get();
     pfds[0].events = POLLOUT;
 
     while (true) {
@@ -251,7 +264,7 @@ void ScreenShotSinkPipe2::flush(const QImage &image)
     QtConcurrent::run([](int fileDescriptor, const QImage &image) {
         const QByteArray buffer(reinterpret_cast<const char *>(image.constBits()),
                                 image.sizeInBytes());
-        writeBufferToPipe(fileDescriptor, buffer);
+        writeBufferToPipe(FileDescriptor(fileDescriptor), buffer);
     },
                       m_fileDescriptor, image);
 
