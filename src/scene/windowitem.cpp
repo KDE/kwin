@@ -172,6 +172,17 @@ void WindowItem::updatePosition()
     setPosition(m_window->pos());
 }
 
+void WindowItem::addSurfaceItemDamageConnects(Item *item)
+{
+    auto surfaceItem = static_cast<SurfaceItem *>(item);
+    connect(surfaceItem, &SurfaceItem::damaged, this, &WindowItem::markDamaged);
+    connect(surfaceItem, &SurfaceItem::childAdded, this, &WindowItem::addSurfaceItemDamageConnects);
+    const auto childItems = item->childItems();
+    for (const auto &child : childItems) {
+        addSurfaceItemDamageConnects(child);
+    }
+}
+
 void WindowItem::updateSurfaceItem(SurfaceItem *surfaceItem)
 {
     m_surfaceItem.reset(surfaceItem);
@@ -180,12 +191,7 @@ void WindowItem::updateSurfaceItem(SurfaceItem *surfaceItem)
         connect(m_window, &Window::shadeChanged, this, &WindowItem::updateSurfaceVisibility);
         connect(m_window, &Window::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
         connect(m_window, &Window::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
-
-        connect(surfaceItem, &SurfaceItem::damaged, this, &WindowItem::markDamaged);
-        connect(surfaceItem, &SurfaceItem::childAdded, this, [this](Item *item) {
-            auto surfaceItem = static_cast<SurfaceItem *>(item);
-            connect(surfaceItem, &SurfaceItem::damaged, this, &WindowItem::markDamaged);
-        });
+        addSurfaceItemDamageConnects(surfaceItem);
 
         updateSurfacePosition();
         updateSurfaceVisibility();
