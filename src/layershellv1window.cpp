@@ -250,7 +250,6 @@ void LayerShellV1Window::handleUnmapped()
 void LayerShellV1Window::handleCommitted()
 {
     if (surface()->buffer()) {
-        updateDepth();
         setReadyForPainting();
     }
 }

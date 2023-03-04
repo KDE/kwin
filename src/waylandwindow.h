@@ -36,7 +36,6 @@ public:
     virtual QRectF frameRectToBufferRect(const QRectF &rect) const;
     bool isHidden() const;
 
-    void updateDepth();
     void setCaption(const QString &caption);
 
 protected:

@@ -182,7 +182,6 @@ void InputPanelV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode m
 
 void InputPanelV1Window::handleMapped()
 {
-    updateDepth();
     maybeShow();
 }
 

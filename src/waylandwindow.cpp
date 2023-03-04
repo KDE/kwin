@@ -37,6 +37,7 @@ Q_DECLARE_FLAGS(WaylandGeometryTypes, WaylandGeometryType)
 WaylandWindow::WaylandWindow(SurfaceInterface *surface)
 {
     setSurface(surface);
+    setDepth(32);
     setupCompositing();
 
     connect(surface, &SurfaceInterface::shadowChanged,
@@ -217,15 +218,6 @@ void WaylandWindow::doSetActive()
     if (isActive()) { // TODO: Xwayland clients must be unfocused somewhere else.
         StackingUpdatesBlocker blocker(workspace());
         workspace()->focusToNull();
-    }
-}
-
-void WaylandWindow::updateDepth()
-{
-    if (surface()->buffer()->hasAlphaChannel()) {
-        setDepth(32);
-    } else {
-        setDepth(24);
     }
 }
 
