@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-04 02:12+0000\n"
 "PO-Revision-Date: 2023-02-10 23:10+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -55,33 +55,33 @@ msgstr "%1(r)entzako aplikazio-ezarpenak"
 msgid "Window settings for %1"
 msgstr "%1(r)entzako leiho-ezarpenak"
 
-#: main.cpp:31
+#: main.cpp:30
 #, kde-format
 msgid "KWinRules KCM launcher"
 msgstr "KWinRules KCM abiarazlea"
 
-#: main.cpp:32
+#: main.cpp:31
 #, kde-format
 msgid "KWin id of the window for special window settings."
 msgstr "Leihoaren «Kwin» identifikatzailea leiho ezarpen berezietarako."
 
-#: main.cpp:33
+#: main.cpp:32
 #, kde-format
 msgid "Whether the settings should affect all windows of the application."
 msgstr "Ezarpenek aplikazioaren leiho guztiei eragingo dien ala ez."
 
-#: main.cpp:40
+#: main.cpp:39
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Laguntza-utilitate honi ez litzaioke zuzenean deitu behar."
 
-#: main.cpp:44
+#: main.cpp:43
 #, kde-format
 msgctxt "Window caption for the application wide rules dialog"
 msgid "Edit Application-Specific Settings"
 msgstr "Editatu aplikazioaren ezarpen espezifikoak"
 
-#: main.cpp:45
+#: main.cpp:44
 #, kde-format
 msgid "Edit Window-Specific Settings"
 msgstr "Editatu leihoen ezarpen espezifikoak"
@@ -192,12 +192,12 @@ msgstr ""
 "Leihoko propietatea emandako baliora behartuko da ezkutatu arte\n"
 "(ekintza hau ezabatuko da leihoa ezkutatu ondoren)."
 
-#: package/contents/ui/FileDialogLoader.qml:14
+#: package/contents/ui/FileDialogLoader.qml:15
 #, kde-format
 msgid "Select File"
 msgstr "Hautatu fitxategia"
 
-#: package/contents/ui/FileDialogLoader.qml:26
+#: package/contents/ui/FileDialogLoader.qml:27
 #, kde-format
 msgid "KWin Rules (*.kwinrule)"
 msgstr "KWin arauak (*.kwinrule)"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-01 23:30+0000\n"
+"POT-Creation-Date: 2023-03-04 02:12+0000\n"
 "PO-Revision-Date: 2022-10-17 23:50+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -1030,89 +1030,89 @@ msgstr "Mübadilə yaddaşı"
 msgid "Primary Selection"
 msgstr "İlkin seçim"
 
-#: helpers/killer/killer.cpp:30
+#: helpers/killer/killer.cpp:29
 #, kde-format
 msgid "Window Manager"
 msgstr "Pəncərə Meneceri"
 
-#: helpers/killer/killer.cpp:34
+#: helpers/killer/killer.cpp:33
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "Bağlanacaq tətbiqlərin PİD-i"
 
 # PİD - Çoxtapşırıqlı Əməliyyat Sistemlərində prosesin özünəməxsus nömrəsi.
-#: helpers/killer/killer.cpp:34
+#: helpers/killer/killer.cpp:33
 #, kde-format
 msgid "pid"
 msgstr "pid"
 
-#: helpers/killer/killer.cpp:36
+#: helpers/killer/killer.cpp:35
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "Tətbiqin işlək olduğu host adı"
 
-#: helpers/killer/killer.cpp:36
+#: helpers/killer/killer.cpp:35
 #, kde-format
 msgid "hostname"
 msgstr "host_adı"
 
-#: helpers/killer/killer.cpp:38
+#: helpers/killer/killer.cpp:37
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "Bağlanacaq pəncərənin başlığı"
 
-#: helpers/killer/killer.cpp:38
+#: helpers/killer/killer.cpp:37
 #, kde-format
 msgid "caption"
 msgstr "başlıq"
 
-#: helpers/killer/killer.cpp:40
+#: helpers/killer/killer.cpp:39
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "Bağlanacaq tətbiqin adı"
 
-#: helpers/killer/killer.cpp:40
+#: helpers/killer/killer.cpp:39
 #, kde-format
 msgid "name"
 msgstr "ad"
 
-#: helpers/killer/killer.cpp:42
+#: helpers/killer/killer.cpp:41
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "Tətbiqə aid mənbənin İD-si"
 
-#: helpers/killer/killer.cpp:42
+#: helpers/killer/killer.cpp:41
 #, kde-format
 msgid "id"
 msgstr "id"
 
-#: helpers/killer/killer.cpp:44
+#: helpers/killer/killer.cpp:43
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "İstifadəçinin xitam vermə fəaliyyətinin müddəti"
 
-#: helpers/killer/killer.cpp:44
+#: helpers/killer/killer.cpp:43
 #, kde-format
 msgid "time"
 msgstr "vaxt"
 
-#: helpers/killer/killer.cpp:46
+#: helpers/killer/killer.cpp:45
 #, kde-format
 msgid "KWin helper utility"
 msgstr "KWin köməkçi vasitəsi"
 
-#: helpers/killer/killer.cpp:70
+#: helpers/killer/killer.cpp:69
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Bu köməkçi vasitə birbaşa çağırıla bilməz"
 
-#: helpers/killer/killer.cpp:80
+#: helpers/killer/killer.cpp:79
 #, kde-format
 msgctxt "@info"
 msgid "<b>Application \"%1\" is not responding</b>"
 msgstr "<b>\"%1\" tətbiqi cavab vermir</b>"
 
-#: helpers/killer/killer.cpp:82
+#: helpers/killer/killer.cpp:81
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1122,7 +1122,7 @@ msgstr ""
 "<para>Siz \"%2\" tətbiqinddəki \"%1\" pəncərəsini bağlamağa cəhd etdiniz "
 "(Prosesin İD-si: %3) lakin bu tətbiq cavab vermir.</para>"
 
-#: helpers/killer/killer.cpp:84
+#: helpers/killer/killer.cpp:83
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1133,7 +1133,7 @@ msgstr ""
 "pəncərəsini bağlamağa cəhd etdiniz (Prosesin İD-si: %3) lakin bu tətbiq "
 "cavab vermir.</para>"
 
-#: helpers/killer/killer.cpp:87
+#: helpers/killer/killer.cpp:86
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1145,12 +1145,12 @@ msgstr ""
 "bağlanması ona aid bütün pəncərələri bağlayacaq. Bu halda saxlanılmamış "
 "məlumatlar itiriləcəkdir.</warning></para>"
 
-#: helpers/killer/killer.cpp:90
+#: helpers/killer/killer.cpp:89
 #, kde-format
 msgid "&Terminate Application %1"
 msgstr "%1 &Tətbiqibi bağlamaq"
 
-#: helpers/killer/killer.cpp:91
+#: helpers/killer/killer.cpp:90
 #, kde-format
 msgid "Wait Longer"
 msgstr "Bir az daha gözləmək"
@@ -1256,12 +1256,12 @@ msgstr "Tənzimləmə seçimlərini söndürmək"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "KWin-də neçə dəfə xəta baş verdiyini göstərir"
 
-#: main_wayland.cpp:299
+#: main_wayland.cpp:298
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Köksüz Xwayland serverini başlatmaq."
 
-#: main_wayland.cpp:301
+#: main_wayland.cpp:300
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1269,39 +1269,39 @@ msgstr ""
 "Qoşulma üçün Wayland soketinin adı. Standart olaraq \"wayland-0\" istifadə "
 "olunur."
 
-#: main_wayland.cpp:304
+#: main_wayland.cpp:303
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "X11 platformasında pəncərə rejimində istifadə olunacaq X11 Ekranı."
 
-#: main_wayland.cpp:307
+#: main_wayland.cpp:306
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 "Wayland platformasında pəncərə rejimində istifadə olunacaq Wayland Ekranı."
 
-#: main_wayland.cpp:309
+#: main_wayland.cpp:308
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Virtual framebuferə vizualizasiya etmək."
 
-#: main_wayland.cpp:311
+#: main_wayland.cpp:310
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Pəncərə rejimi halında pəncərənin eni. Standart en - 1024"
 
-#: main_wayland.cpp:315
+#: main_wayland.cpp:314
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr ""
 "Pəncərə rejimi halında pəncərənin hündürlüyü. Standart hündürlük - 1024"
 
-#: main_wayland.cpp:320
+#: main_wayland.cpp:319
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Pəncərə rejimi halında pəncərənin miqyası. Standart miqyas - 1024"
 
-#: main_wayland.cpp:325
+#: main_wayland.cpp:324
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1309,7 +1309,7 @@ msgstr ""
 "Pəncərəli rejimdə çıxışlar kimi açılacaq pəncərələrin sayı. Standart dəyər - "
 "1"
 
-#: main_wayland.cpp:330
+#: main_wayland.cpp:329
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1318,7 +1318,7 @@ msgstr ""
 "Daxil olan bağlantıları istifadə etmək üçün Wayland soketi. Bu, soket adına "
 "--socket ilə birləşdirilə bilər"
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:333
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1327,65 +1327,65 @@ msgstr ""
 "XWayland daxil olan bağlantılarını istifadə etmək üçün XWayland soketi. Bunu "
 "bir neçə dəfə qurmaq olar"
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:337
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Əvvəlcədən qurulmuş XWayland görüntüsünün adı"
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:341
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "xauthority faylının adı "
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:345
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Bu nümunədən çıxır və beləcə, kwin_wayland_wrapper tərəfindən yenidən "
 "başladıla bilir"
 
-#: main_wayland.cpp:348
+#: main_wayland.cpp:347
 #, kde-format
 msgid "Render through drm node."
 msgstr "DRM vasitəsi ilə təsvirin işlənməsi"
 
-#: main_wayland.cpp:349
+#: main_wayland.cpp:348
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 
-#: main_wayland.cpp:371
+#: main_wayland.cpp:370
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "KWin başladılan daixil olma üsulu."
 
-#: main_wayland.cpp:377
+#: main_wayland.cpp:376
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Sesiyanı kilid rejimində başladır."
 
-#: main_wayland.cpp:381
+#: main_wayland.cpp:380
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Sesiyanı ekran kilidli olmadan başladır."
 
-#: main_wayland.cpp:386
+#: main_wayland.cpp:385
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Sesiyanı qlobal qısayollar dəstəklənməsi olmadan başladır."
 
-#: main_wayland.cpp:391 main_x11.cpp:414
+#: main_wayland.cpp:390 main_x11.cpp:420
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KDE İş otaqları ilə inteqrasiyanı söndürmək"
 
-#: main_wayland.cpp:396
+#: main_wayland.cpp:395
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "KWin tərəfindən başladılan sesiya tətbiqi bağlandıqdan sonra çıxmaq."
 
-#: main_wayland.cpp:401
+#: main_wayland.cpp:400
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Wayland və Xwayland başladıqdan sonra başladılacaq tətbiqlər"
@@ -1417,7 +1417,7 @@ msgstr ""
 "kwin: başqa pəncərə meneceri başladılıb (--replace istifadə edərək cəhd "
 "edin)\n"
 
-#: main_x11.cpp:407
+#: main_x11.cpp:413
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Artıq başladılmış, ICCCM2.0-yə uyğun pəncərə menecerini əvəzləmək"
@@ -2801,7 +2801,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Cavab Yoxdur)"
 
-#: workspace.cpp:1835
+#: workspace.cpp:1837
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-04 02:12+0000\n"
 "PO-Revision-Date: 2012-06-13 15:34+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -48,34 +48,34 @@ msgstr "ការ​កំណត់​កម្មវិធី​សម្រា
 msgid "Window settings for %1"
 msgstr "ការ​កំណត់​បង្អួច​សម្រាប់ %1"
 
-#: main.cpp:31
+#: main.cpp:30
 #, kde-format
 msgid "KWinRules KCM launcher"
 msgstr ""
 
-#: main.cpp:32
+#: main.cpp:31
 #, fuzzy, kde-format
 #| msgid "WId of the window for special window settings."
 msgid "KWin id of the window for special window settings."
 msgstr "WId នៃ​បង្អួច​សម្រាប់​ការ​កំណត់​បង្អួច​សំខាន់ៗ ។"
 
-#: main.cpp:33
+#: main.cpp:32
 #, kde-format
 msgid "Whether the settings should affect all windows of the application."
 msgstr "ថា​តើ​ការ​កំណត់​គួរ​តែ​ប៉ះពាល់​បង្អួច​ទាំងអស់​នៃ​កម្មវិធី ។"
 
-#: main.cpp:40
+#: main.cpp:39
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "ឧបករណ៍​ប្រើប្រាស់​កម្មវិធី​ជំនួយ​នេះ​ទំនង​ជា​មិន​បាន​ហៅ​ដោយ​ផ្ទាល់ទេ ។"
 
-#: main.cpp:44
+#: main.cpp:43
 #, kde-format
 msgctxt "Window caption for the application wide rules dialog"
 msgid "Edit Application-Specific Settings"
 msgstr "កែ​សម្រួល​ការ​កំណត់កម្មវិធី​​ជាក់លាក់"
 
-#: main.cpp:45
+#: main.cpp:44
 #, kde-format
 msgid "Edit Window-Specific Settings"
 msgstr "កែ​សម្រួល​ការ​កំណត់​បង្អួច​ជាក់លាក់"
@@ -183,12 +183,12 @@ msgid ""
 "(this action will be deleted after the window is hidden)."
 msgstr ""
 
-#: package/contents/ui/FileDialogLoader.qml:14
+#: package/contents/ui/FileDialogLoader.qml:15
 #, kde-format
 msgid "Select File"
 msgstr ""
 
-#: package/contents/ui/FileDialogLoader.qml:26
+#: package/contents/ui/FileDialogLoader.qml:27
 #, kde-format
 msgid "KWin Rules (*.kwinrule)"
 msgstr ""

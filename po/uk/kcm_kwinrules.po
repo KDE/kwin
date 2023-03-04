@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-04 02:12+0000\n"
 "PO-Revision-Date: 2023-02-10 08:47+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -53,33 +53,33 @@ msgstr "Параметри програми для %1"
 msgid "Window settings for %1"
 msgstr "Параметри вікна для %1"
 
-#: main.cpp:31
+#: main.cpp:30
 #, kde-format
 msgid "KWinRules KCM launcher"
 msgstr "Засіб запуску KCM KWinRules"
 
-#: main.cpp:32
+#: main.cpp:31
 #, kde-format
 msgid "KWin id of the window for special window settings."
 msgstr "Ідентифікатор KWin вікна для особливих параметрів вікна."
 
-#: main.cpp:33
+#: main.cpp:32
 #, kde-format
 msgid "Whether the settings should affect all windows of the application."
 msgstr "Чи параметри мають стосуватись всіх вікон програми."
 
-#: main.cpp:40
+#: main.cpp:39
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Цю допоміжну утиліту не можна викликати напряму."
 
-#: main.cpp:44
+#: main.cpp:43
 #, kde-format
 msgctxt "Window caption for the application wide rules dialog"
 msgid "Edit Application-Specific Settings"
 msgstr "Зміна параметрів вікон окремих програм"
 
-#: main.cpp:45
+#: main.cpp:44
 #, kde-format
 msgid "Edit Window-Specific Settings"
 msgstr "Зміна параметрів вікон"
@@ -193,12 +193,12 @@ msgstr ""
 "вікно не буде приховано\n"
 "(цю дію буде вилучено після приховування вікна)."
 
-#: package/contents/ui/FileDialogLoader.qml:14
+#: package/contents/ui/FileDialogLoader.qml:15
 #, kde-format
 msgid "Select File"
 msgstr "Вибір файла"
 
-#: package/contents/ui/FileDialogLoader.qml:26
+#: package/contents/ui/FileDialogLoader.qml:27
 #, kde-format
 msgid "KWin Rules (*.kwinrule)"
 msgstr "правила KWin (*.kwinrule)"

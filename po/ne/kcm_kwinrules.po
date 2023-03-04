@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-04 02:12+0000\n"
 "PO-Revision-Date: 2007-11-01 20:28+0545\n"
 "Last-Translator: Shyam Krishna Bal <shyamkrishna_bal@yahoo.com>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -49,35 +49,35 @@ msgstr "%1 का लागि अनुप्रयोग सेटिङ"
 msgid "Window settings for %1"
 msgstr "%1 का लागि सञ्झ्याल सेटिङ"
 
-#: main.cpp:31
+#: main.cpp:30
 #, kde-format
 msgid "KWinRules KCM launcher"
 msgstr ""
 
-#: main.cpp:32
+#: main.cpp:31
 #, fuzzy, kde-format
 #| msgid "WId of the window for special window settings."
 msgid "KWin id of the window for special window settings."
 msgstr "विशेष सञ्झ्याल सेटिङका लागि सञ्झ्यालको WId"
 
-#: main.cpp:33
+#: main.cpp:32
 #, kde-format
 msgid "Whether the settings should affect all windows of the application."
 msgstr "सेटिङले अनुप्रयोगको सबै सञ्झ्याललाई असर गर्छ या गर्दैन ।"
 
-#: main.cpp:40
+#: main.cpp:39
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "यो मद्दत युटिलिटीलाई प्रत्यक्ष रूपमा कल गरिदैन ।"
 
-#: main.cpp:44
+#: main.cpp:43
 #, fuzzy, kde-format
 #| msgid "Edit Window-Specific Settings"
 msgctxt "Window caption for the application wide rules dialog"
 msgid "Edit Application-Specific Settings"
 msgstr "सञ्झ्याल निर्दिष्ट सेटिङ प्रविष्ट गर्नुहोस्"
 
-#: main.cpp:45
+#: main.cpp:44
 #, kde-format
 msgid "Edit Window-Specific Settings"
 msgstr "सञ्झ्याल निर्दिष्ट सेटिङ प्रविष्ट गर्नुहोस्"
@@ -175,12 +175,12 @@ msgid ""
 "(this action will be deleted after the window is hidden)."
 msgstr ""
 
-#: package/contents/ui/FileDialogLoader.qml:14
+#: package/contents/ui/FileDialogLoader.qml:15
 #, kde-format
 msgid "Select File"
 msgstr ""
 
-#: package/contents/ui/FileDialogLoader.qml:26
+#: package/contents/ui/FileDialogLoader.qml:27
 #, kde-format
 msgid "KWin Rules (*.kwinrule)"
 msgstr ""

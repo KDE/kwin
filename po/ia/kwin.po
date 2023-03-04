@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-01 23:30+0000\n"
+"POT-Creation-Date: 2023-03-04 02:12+0000\n"
 "PO-Revision-Date: 2023-02-24 23:29+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -1035,89 +1035,89 @@ msgstr "Area de transferentia"
 msgid "Primary Selection"
 msgstr "Selection Primari"
 
-#: helpers/killer/killer.cpp:30
+#: helpers/killer/killer.cpp:29
 #, kde-format
 msgid "Window Manager"
 msgstr "Gerente de Fenestra"
 
-#: helpers/killer/killer.cpp:34
+#: helpers/killer/killer.cpp:33
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "PID del application de terminar"
 
-#: helpers/killer/killer.cpp:34
+#: helpers/killer/killer.cpp:33
 #, kde-format
 msgid "pid"
 msgstr "pid"
 
-#: helpers/killer/killer.cpp:36
+#: helpers/killer/killer.cpp:35
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "Nomine de hospite super le qual le application es exequite"
 
-#: helpers/killer/killer.cpp:36
+#: helpers/killer/killer.cpp:35
 #, kde-format
 msgid "hostname"
 msgstr "nomine de hospite"
 
-#: helpers/killer/killer.cpp:38
+#: helpers/killer/killer.cpp:37
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "Titulo (Caption) del fenestra que il debe esser terminate"
 
-#: helpers/killer/killer.cpp:38
+#: helpers/killer/killer.cpp:37
 #, kde-format
 msgid "caption"
 msgstr "legenda"
 
-#: helpers/killer/killer.cpp:40
+#: helpers/killer/killer.cpp:39
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "Nomine de application que il debe esser terminate"
 
-#: helpers/killer/killer.cpp:40
+#: helpers/killer/killer.cpp:39
 #, kde-format
 msgid "name"
 msgstr "nomine"
 
-#: helpers/killer/killer.cpp:42
+#: helpers/killer/killer.cpp:41
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "ID de ressource pertinente al application"
 
-#: helpers/killer/killer.cpp:42
+#: helpers/killer/killer.cpp:41
 #, kde-format
 msgid "id"
 msgstr "id"
 
-#: helpers/killer/killer.cpp:44
+#: helpers/killer/killer.cpp:43
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "Tempore de action de usator causante termination"
 
-#: helpers/killer/killer.cpp:44
+#: helpers/killer/killer.cpp:43
 #, kde-format
 msgid "time"
 msgstr "tempore"
 
-#: helpers/killer/killer.cpp:46
+#: helpers/killer/killer.cpp:45
 #, kde-format
 msgid "KWin helper utility"
 msgstr "Utilitate de adjuta de KWin"
 
-#: helpers/killer/killer.cpp:70
+#: helpers/killer/killer.cpp:69
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr ""
 "Iste utilitate de adjuta il non es supponite de esser appellate directemente."
 
-#: helpers/killer/killer.cpp:80
+#: helpers/killer/killer.cpp:79
 #, kde-format
 msgctxt "@info"
 msgid "<b>Application \"%1\" is not responding</b>"
 msgstr "<b>Application '\"%1' non responde</b>"
 
-#: helpers/killer/killer.cpp:82
+#: helpers/killer/killer.cpp:81
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1127,7 +1127,7 @@ msgstr ""
 "<para>Tu essayava clauder fenestra \"%1\" ex application \"%2\" (ID de "
 "processo: %3) ma le application non es respondente. </para>"
 
-#: helpers/killer/killer.cpp:84
+#: helpers/killer/killer.cpp:83
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1138,7 +1138,7 @@ msgstr ""
 "processo: %3) executante sur hopite \"%4\", ma le application non es "
 "respondente. </para>"
 
-#: helpers/killer/killer.cpp:87
+#: helpers/killer/killer.cpp:86
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1150,12 +1150,12 @@ msgstr ""
 "termina le application on claudera omne su fenestras filio. Omne datos non "
 "salveguardate essera perdite</warning></para>"
 
-#: helpers/killer/killer.cpp:90
+#: helpers/killer/killer.cpp:89
 #, kde-format
 msgid "&Terminate Application %1"
 msgstr "&Termina Application %1"
 
-#: helpers/killer/killer.cpp:91
+#: helpers/killer/killer.cpp:90
 #, kde-format
 msgid "Wait Longer"
 msgstr "Attende plus longe"
@@ -1259,53 +1259,53 @@ msgstr "Dishabilita optiones de configuration"
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Il indica que KWin ha ruinate n vices"
 
-#: main_wayland.cpp:299
+#: main_wayland.cpp:298
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Initia un servior Xwayland sin radice."
 
-#: main_wayland.cpp:301
+#: main_wayland.cpp:300
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
 "Nomine del socket Wayland ubi ascoltar. Si non fixate \"wayland-0\" es usate."
 
-#: main_wayland.cpp:304
+#: main_wayland.cpp:303
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr ""
 "Le monstrator  X11 de usar in modo in fenestra (windowed) sur platteforma "
 "X11."
 
-#: main_wayland.cpp:307
+#: main_wayland.cpp:306
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 "Le monstrator Wayland de usar in modo sub fenestra (windowed) sur "
 "platteforma Wayland."
 
-#: main_wayland.cpp:309
+#: main_wayland.cpp:308
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Render a un framebuffer virtual."
 
-#: main_wayland.cpp:311
+#: main_wayland.cpp:310
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Le largessa per modo sub fenestras. Largessa predefinite es 1024."
 
-#: main_wayland.cpp:315
+#: main_wayland.cpp:314
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Le altessa per modo sub fenestras. Altessa predefinite es 768."
 
-#: main_wayland.cpp:320
+#: main_wayland.cpp:319
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Le scala per modo sub fenestras. Valor predefinite es 1."
 
-#: main_wayland.cpp:325
+#: main_wayland.cpp:324
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1313,7 +1313,7 @@ msgstr ""
 "Le numero de fenestras a aperir como exitos in modo sub fenestras. Valor "
 "predefinite es 1"
 
-#: main_wayland.cpp:330
+#: main_wayland.cpp:329
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1322,7 +1322,7 @@ msgstr ""
 "Socket Wayland a usar per connexiones in arrivata. Isto pote esser combinate "
 "con --socket per nominar le socket"
 
-#: main_wayland.cpp:334
+#: main_wayland.cpp:333
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1331,29 +1331,29 @@ msgstr ""
 "Socket XWayland a usr per connexiones de Wwayland in arrivata. Isto poter "
 "esser fixate multiple vices"
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:337
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Nomine del monstrator de xwayland que ha essite pre-configurate"
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:341
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Nomine del file de xauthority "
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:345
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
 "Exi iste instantia assi que illo pote esser restartate per "
 "kwin_wayland_wrapper."
 
-#: main_wayland.cpp:348
+#: main_wayland.cpp:347
 #, kde-format
 msgid "Render through drm node."
 msgstr "Render a transverso nodo drm."
 
-#: main_wayland.cpp:349
+#: main_wayland.cpp:348
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
@@ -1361,37 +1361,37 @@ msgstr ""
 "Extrahe information locale ex locale1 plus tosto que ex le configuration del "
 "usator"
 
-#: main_wayland.cpp:371
+#: main_wayland.cpp:370
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Methodo de entrata que KWin starta."
 
-#: main_wayland.cpp:377
+#: main_wayland.cpp:376
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Initia le session in modo serrate."
 
-#: main_wayland.cpp:381
+#: main_wayland.cpp:380
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Initia le session sin supporto de bloco de schermo."
 
-#: main_wayland.cpp:386
+#: main_wayland.cpp:385
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Initia le session sin supporto de vias breve global."
 
-#: main_wayland.cpp:391 main_x11.cpp:414
+#: main_wayland.cpp:390 main_x11.cpp:420
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Disactiva integration de KActivities."
 
-#: main_wayland.cpp:396
+#: main_wayland.cpp:395
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Exi post que le application de session, initiate per KWin, ha cessate."
 
-#: main_wayland.cpp:401
+#: main_wayland.cpp:400
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Programmas a initiar, quando servitores Wayland e Xwayland ha initiate"
@@ -1422,7 +1422,7 @@ msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
 "kwin:  un altere gestor de fenestra  es executante (tu prova --replace)\n"
 
-#: main_x11.cpp:407
+#: main_x11.cpp:413
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Reimplacia gerente de fenestra con facente ICCCM2.0 ja executante"
@@ -2791,7 +2791,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(non respondente)"
 
-#: workspace.cpp:1835
+#: workspace.cpp:1837
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.1\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-04 02:12+0000\n"
 "PO-Revision-Date: 2021-11-18 14:18+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -47,35 +47,35 @@ msgstr "%1 alkalmazásbeállításai"
 msgid "Window settings for %1"
 msgstr "%1 ablakbeállításai"
 
-#: main.cpp:31
+#: main.cpp:30
 #, kde-format
 msgid "KWinRules KCM launcher"
 msgstr "KWinRules beállítómodul-indító"
 
-#: main.cpp:32
+#: main.cpp:31
 #, kde-format
 msgid "KWin id of the window for special window settings."
 msgstr "A beállítandó ablak KWin azonosítója."
 
-#: main.cpp:33
+#: main.cpp:32
 #, kde-format
 msgid "Whether the settings should affect all windows of the application."
 msgstr ""
 "Ez határozza meg, hogy az alkalmazás összes ablakára érvényes legyen-e a "
 "beállítás."
 
-#: main.cpp:40
+#: main.cpp:39
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Ezt a segédprogramot nem közvetlenül kell elindítani."
 
-#: main.cpp:44
+#: main.cpp:43
 #, kde-format
 msgctxt "Window caption for the application wide rules dialog"
 msgid "Edit Application-Specific Settings"
 msgstr "Egyedi alkalmazásbeállítások módosítása"
 
-#: main.cpp:45
+#: main.cpp:44
 #, kde-format
 msgid "Edit Window-Specific Settings"
 msgstr "Az egyedi ablakbeállítások módosítása"
@@ -187,12 +187,12 @@ msgstr ""
 "Az ablaktulajdonság a megadott értékre lesz kényszerítve, amíg nem rejtik\n"
 "(a művelet az ablak rejtése után törlésre kerül)."
 
-#: package/contents/ui/FileDialogLoader.qml:14
+#: package/contents/ui/FileDialogLoader.qml:15
 #, kde-format
 msgid "Select File"
 msgstr "Fájl kiválasztása"
 
-#: package/contents/ui/FileDialogLoader.qml:26
+#: package/contents/ui/FileDialogLoader.qml:27
 #, kde-format
 msgid "KWin Rules (*.kwinrule)"
 msgstr "KWin szabályok (*.kwinrule)"

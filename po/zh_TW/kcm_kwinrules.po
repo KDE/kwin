@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-04 02:12+0000\n"
 "PO-Revision-Date: 2023-02-19 10:08+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Chinese <zh-l10n@linux.org.tw>\n"
@@ -52,33 +52,33 @@ msgstr "%1 的應用程式設定"
 msgid "Window settings for %1"
 msgstr "%1 的視窗設定"
 
-#: main.cpp:31
+#: main.cpp:30
 #, kde-format
 msgid "KWinRules KCM launcher"
 msgstr "KWinRules KCM 啟動器"
 
-#: main.cpp:32
+#: main.cpp:31
 #, kde-format
 msgid "KWin id of the window for special window settings."
 msgstr "用於設定特殊視窗的視窗 KWin ID。"
 
-#: main.cpp:33
+#: main.cpp:32
 #, kde-format
 msgid "Whether the settings should affect all windows of the application."
 msgstr "這些設定是否要套用到此應用程式的所有視窗。"
 
-#: main.cpp:40
+#: main.cpp:39
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "這個協助工具不是用來被直接呼叫的。"
 
-#: main.cpp:44
+#: main.cpp:43
 #, kde-format
 msgctxt "Window caption for the application wide rules dialog"
 msgid "Edit Application-Specific Settings"
 msgstr "編輯特定應用程式的設定"
 
-#: main.cpp:45
+#: main.cpp:44
 #, kde-format
 msgid "Edit Window-Specific Settings"
 msgstr "編輯特定視窗的設定"
@@ -184,12 +184,12 @@ msgstr ""
 "視窗屬性在隱藏前皆會強制設為指定的值\n"
 "(此動作會在視窗隱藏後刪除)。"
 
-#: package/contents/ui/FileDialogLoader.qml:14
+#: package/contents/ui/FileDialogLoader.qml:15
 #, kde-format
 msgid "Select File"
 msgstr "選擇檔案"
 
-#: package/contents/ui/FileDialogLoader.qml:26
+#: package/contents/ui/FileDialogLoader.qml:27
 #, kde-format
 msgid "KWin Rules (*.kwinrule)"
 msgstr "KWin 規則 (*.kwinrule)"

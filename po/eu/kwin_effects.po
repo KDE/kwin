@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-01 23:30+0000\n"
+"POT-Creation-Date: 2023-03-04 02:12+0000\n"
 "PO-Revision-Date: 2022-12-03 15:51+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -617,7 +617,7 @@ msgid "Screenshot saved to %1"
 msgstr "Pantaila-argazkia hona gorde da %1"
 
 #: screenshot/screenshotdbusinterface1.cpp:800
-#: screenshot/screenshotdbusinterface2.cpp:477
+#: screenshot/screenshotdbusinterface2.cpp:490
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -628,7 +628,7 @@ msgstr ""
 "«Ihes» edo eskuin-klik uzteko."
 
 #: screenshot/screenshotdbusinterface1.cpp:803
-#: screenshot/screenshotdbusinterface2.cpp:495
+#: screenshot/screenshotdbusinterface2.cpp:508
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

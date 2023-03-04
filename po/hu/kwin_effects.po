@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-01 23:30+0000\n"
+"POT-Creation-Date: 2023-03-04 02:12+0000\n"
 "PO-Revision-Date: 2021-11-19 13:44+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -623,7 +623,7 @@ msgid "Screenshot saved to %1"
 msgstr "Képernyőkép mentve ide: %1"
 
 #: screenshot/screenshotdbusinterface1.cpp:800
-#: screenshot/screenshotdbusinterface2.cpp:477
+#: screenshot/screenshotdbusinterface2.cpp:490
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -633,7 +633,7 @@ msgstr ""
 "Megszakításhoz nyomja meg az Escape-et vagy a jobb egérgombot."
 
 #: screenshot/screenshotdbusinterface1.cpp:803
-#: screenshot/screenshotdbusinterface2.cpp:495
+#: screenshot/screenshotdbusinterface2.cpp:508
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

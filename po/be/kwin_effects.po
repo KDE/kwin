@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-01 23:30+0000\n"
+"POT-Creation-Date: 2023-03-04 02:12+0000\n"
 "PO-Revision-Date: 2023-02-08 13:45\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -618,7 +618,7 @@ msgid "Screenshot saved to %1"
 msgstr "Здымак экрана захаваны ў %1"
 
 #: screenshot/screenshotdbusinterface1.cpp:800
-#: screenshot/screenshotdbusinterface2.cpp:477
+#: screenshot/screenshotdbusinterface2.cpp:490
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -629,7 +629,7 @@ msgstr ""
 "Націсніце \"Escape\" або пстрыкніце правай кнопкай мышы, каб скасаваць."
 
 #: screenshot/screenshotdbusinterface1.cpp:803
-#: screenshot/screenshotdbusinterface2.cpp:495
+#: screenshot/screenshotdbusinterface2.cpp:508
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-01 23:30+0000\n"
+"POT-Creation-Date: 2023-03-04 02:12+0000\n"
 "PO-Revision-Date: 2022-12-22 12:42+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -618,7 +618,7 @@ msgid "Screenshot saved to %1"
 msgstr "حفظت لقطة شاشة في %1"
 
 #: screenshot/screenshotdbusinterface1.cpp:800
-#: screenshot/screenshotdbusinterface2.cpp:477
+#: screenshot/screenshotdbusinterface2.cpp:490
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -628,7 +628,7 @@ msgstr ""
 "للإلغاء اضغط زر الهروب أو انقر بزر الفأرة الأيمن ."
 
 #: screenshot/screenshotdbusinterface1.cpp:803
-#: screenshot/screenshotdbusinterface2.cpp:495
+#: screenshot/screenshotdbusinterface2.cpp:508
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

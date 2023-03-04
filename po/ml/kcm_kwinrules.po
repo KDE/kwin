@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-04 02:12+0000\n"
 "PO-Revision-Date: 2019-12-12 22:33+0000\n"
 "Last-Translator: Vivek KJ Pazhedath <vivekkj2004@gmail.com>\n"
 "Language-Team: Swathanthra|സ്വതന്ത്ര Malayalam|മലയാളം Computing|കമ്പ്യൂട്ടിങ്ങ്  <smc-"
@@ -43,33 +43,33 @@ msgstr "%1 എന്ന പ്രയോഗത്തിന്റെ സജ്ജ�
 msgid "Window settings for %1"
 msgstr "%1 ന്റെ ജാലക സജ്ജീകരണങ്ങള്‍"
 
-#: main.cpp:31
+#: main.cpp:30
 #, kde-format
 msgid "KWinRules KCM launcher"
 msgstr ""
 
-#: main.cpp:32
+#: main.cpp:31
 #, kde-format
 msgid "KWin id of the window for special window settings."
 msgstr ""
 
-#: main.cpp:33
+#: main.cpp:32
 #, kde-format
 msgid "Whether the settings should affect all windows of the application."
 msgstr "ക്രമീകരണങ്ങള്‍ എല്ലാ പ്രയോഗത്തിന്റെയും ജാലകങ്ങളില്‍ വേണമോ"
 
-#: main.cpp:40
+#: main.cpp:39
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "ഈ സഹായ ഉപാധി നേരിട്ടു് വിളിക്കാന്‍ പാടില്ലാത്തതാകുന്നു."
 
-#: main.cpp:44
+#: main.cpp:43
 #, fuzzy, kde-format
 msgctxt "Window caption for the application wide rules dialog"
 msgid "Edit Application-Specific Settings"
 msgstr "ജാലകത്തിനു പ്രസക്തമായ സജ്ജീകരണങ്ങള്‍ ചിട്ടപ്പെടുത്തുക"
 
-#: main.cpp:45
+#: main.cpp:44
 #, kde-format
 msgid "Edit Window-Specific Settings"
 msgstr "ജാലകത്തിനു പ്രസക്തമായ സജ്ജീകരണങ്ങള്‍ ചിട്ടപ്പെടുത്തുക"
@@ -167,12 +167,12 @@ msgid ""
 "(this action will be deleted after the window is hidden)."
 msgstr ""
 
-#: package/contents/ui/FileDialogLoader.qml:14
+#: package/contents/ui/FileDialogLoader.qml:15
 #, kde-format
 msgid "Select File"
 msgstr ""
 
-#: package/contents/ui/FileDialogLoader.qml:26
+#: package/contents/ui/FileDialogLoader.qml:27
 #, kde-format
 msgid "KWin Rules (*.kwinrule)"
 msgstr ""

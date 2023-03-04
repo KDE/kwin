@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-04 02:12+0000\n"
 "PO-Revision-Date: 2017-05-16 06:53-0400\n"
 "Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
 "Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
@@ -48,34 +48,34 @@ msgstr "הגדרות עבור יישום %1"
 msgid "Window settings for %1"
 msgstr "הגדרות עבור חלון %1"
 
-#: main.cpp:31
+#: main.cpp:30
 #, kde-format
 msgid "KWinRules KCM launcher"
 msgstr ""
 
-#: main.cpp:32
+#: main.cpp:31
 #, fuzzy, kde-format
 #| msgid "WId of the window for special window settings."
 msgid "KWin id of the window for special window settings."
 msgstr "זהוי החלון (WId) של החלון עבור הגדרות מיוחדות."
 
-#: main.cpp:33
+#: main.cpp:32
 #, kde-format
 msgid "Whether the settings should affect all windows of the application."
 msgstr "האם ההגדרות צריכות להשפיע על כל החלונות של היישום."
 
-#: main.cpp:40
+#: main.cpp:39
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "This helper utility is not supposed to be called directly."
 
-#: main.cpp:44
+#: main.cpp:43
 #, kde-format
 msgctxt "Window caption for the application wide rules dialog"
 msgid "Edit Application-Specific Settings"
 msgstr "ערוך הגדרות ליישומים ספציפיים"
 
-#: main.cpp:45
+#: main.cpp:44
 #, kde-format
 msgid "Edit Window-Specific Settings"
 msgstr "ערוך הגדרות לחלונות ספציפיים"
@@ -173,12 +173,12 @@ msgid ""
 "(this action will be deleted after the window is hidden)."
 msgstr ""
 
-#: package/contents/ui/FileDialogLoader.qml:14
+#: package/contents/ui/FileDialogLoader.qml:15
 #, kde-format
 msgid "Select File"
 msgstr ""
 
-#: package/contents/ui/FileDialogLoader.qml:26
+#: package/contents/ui/FileDialogLoader.qml:27
 #, fuzzy, kde-format
 #| msgid "KWin Rule (*.kwinrule)"
 msgid "KWin Rules (*.kwinrule)"
