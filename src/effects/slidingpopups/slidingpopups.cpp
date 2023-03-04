@@ -186,6 +186,7 @@ void SlidingPopupsEffect::postPaintWindow(EffectWindow *w)
 {
     auto animationIt = m_animations.find(w);
     if (animationIt != m_animations.end()) {
+        effects->addRepaint(w->expandedGeometry());
         if ((*animationIt).timeLine.done()) {
             if (!w->isDeleted()) {
                 w->setData(WindowForceBackgroundContrastRole, QVariant());
@@ -193,7 +194,6 @@ void SlidingPopupsEffect::postPaintWindow(EffectWindow *w)
             }
             m_animations.erase(animationIt);
         }
-        effects->addRepaint(w->expandedGeometry());
     }
 
     effects->postPaintWindow(w);
