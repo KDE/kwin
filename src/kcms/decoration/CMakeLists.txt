@@ -27,7 +27,6 @@ target_link_libraries(kcm_kwindecoration
     KDecoration2::KDecoration
     KF6::I18n
     KF6::KCMUtils
-    KF6::NewStuff
     KF6::QuickAddons
     Qt::Quick
     Qt::DBus

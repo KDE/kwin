@@ -18,7 +18,6 @@ target_link_libraries(kcm_kwin_effects
     KF6::KCMUtils
     KF6::I18n
     KF6::KCMUtils
-    KF6::NewStuff
     KF6::QuickAddons
     KF6::XmlGui
 
