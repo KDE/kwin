@@ -1307,11 +1307,6 @@ void Window::minimize()
     doMinimize();
 
     updateWindowRules(Rules::Minimize);
-
-    if (options->moveMinimizedWindowsToEndOfTabBoxFocusChain()) {
-        Workspace::self()->focusChain()->update(this, FocusChain::MakeFirstMinimized);
-    }
-
     Q_EMIT minimizedChanged();
 }
 

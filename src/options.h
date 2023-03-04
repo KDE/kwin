@@ -707,11 +707,6 @@ public:
         return m_windowsBlockCompositing;
     }
 
-    bool moveMinimizedWindowsToEndOfTabBoxFocusChain() const
-    {
-        return m_MoveMinimizedWindowsToEndOfTabBoxFocusChain;
-    }
-
     QStringList modifierOnlyDBusShortcut(Qt::KeyboardModifier mod) const;
     LatencyPolicy latencyPolicy() const;
     RenderTimeEstimator renderTimeEstimator() const;
@@ -773,7 +768,6 @@ public:
     void setGlPreferBufferSwap(char glPreferBufferSwap);
     void setGlPlatformInterface(OpenGLPlatformInterface interface);
     void setWindowsBlockCompositing(bool set);
-    void setMoveMinimizedWindowsToEndOfTabBoxFocusChain(bool set);
     void setLatencyPolicy(LatencyPolicy policy);
     void setRenderTimeEstimator(RenderTimeEstimator estimator);
     void setAllowTearing(bool allow);
@@ -1032,7 +1026,6 @@ private:
     GlSwapStrategy m_glPreferBufferSwap;
     OpenGLPlatformInterface m_glPlatformInterface;
     bool m_windowsBlockCompositing;
-    bool m_MoveMinimizedWindowsToEndOfTabBoxFocusChain;
 
     WindowOperation OpTitlebarDblClick;
     WindowOperation opMaxButtonRightClick = defaultOperationMaxButtonRightClick();
