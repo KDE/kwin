@@ -11,15 +11,11 @@
 #include "decorations/decoratedclient.h"
 #include "deleted.h"
 #include "scene/workspacescene.h"
-#include "utils/common.h"
-#include "window.h"
 
 #include <cmath>
 
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
-
-#include <QPainter>
 
 namespace KWin
 {
@@ -85,38 +81,6 @@ void DecorationRenderer::setDevicePixelRatio(qreal dpr)
         m_devicePixelRatio = dpr;
         invalidate();
     }
-}
-
-QImage DecorationRenderer::renderToImage(const QRect &geo)
-{
-    Q_ASSERT(m_client);
-
-    // Guess the pixel format of the X pixmap into which the QImage will be copied.
-    QImage::Format format;
-    const int depth = client()->window()->depth();
-    switch (depth) {
-    case 30:
-        format = QImage::Format_A2RGB30_Premultiplied;
-        break;
-    case 24:
-    case 32:
-        format = QImage::Format_ARGB32_Premultiplied;
-        break;
-    default:
-        qCCritical(KWIN_CORE) << "Unsupported client depth" << depth;
-        format = QImage::Format_ARGB32_Premultiplied;
-        break;
-    };
-
-    QImage image(geo.width() * m_devicePixelRatio, geo.height() * m_devicePixelRatio, format);
-    image.setDevicePixelRatio(m_devicePixelRatio);
-    image.fill(Qt::transparent);
-    QPainter p(&image);
-    p.setRenderHint(QPainter::Antialiasing);
-    p.setWindow(QRect(geo.topLeft(), geo.size() * effectiveDevicePixelRatio()));
-    p.setClipRect(geo);
-    renderToPainter(&p, geo);
-    return image;
 }
 
 void DecorationRenderer::renderToPainter(QPainter *painter, const QRect &rect)

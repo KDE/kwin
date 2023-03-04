@@ -46,6 +46,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QMouseEvent>
+#include <QPainter>
 #include <QProcess>
 // xcb
 #include <xcb/xcb_icccm.h>
@@ -194,7 +195,32 @@ void X11DecorationRenderer::render(const QRegion &region)
         if (!geo.isValid()) {
             return;
         }
-        QImage image = renderToImage(geo);
+
+        // Guess the pixel format of the X pixmap into which the QImage will be copied.
+        QImage::Format format;
+        const int depth = client()->window()->depth();
+        switch (depth) {
+        case 30:
+            format = QImage::Format_A2RGB30_Premultiplied;
+            break;
+        case 24:
+        case 32:
+            format = QImage::Format_ARGB32_Premultiplied;
+            break;
+        default:
+            qCCritical(KWIN_CORE) << "Unsupported client depth" << depth;
+            format = QImage::Format_ARGB32_Premultiplied;
+            break;
+        };
+
+        QImage image(geo.width(), geo.height(), format);
+        image.fill(Qt::transparent);
+        QPainter p(&image);
+        p.setRenderHint(QPainter::Antialiasing);
+        p.setWindow(geo);
+        p.setClipRect(geo);
+        renderToPainter(&p, geo);
+
         xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, client()->window()->frameId(), m_gc,
                       image.width(), image.height(), geo.x(), geo.y(), 0, client()->window()->depth(),
                       image.sizeInBytes(), image.constBits());
