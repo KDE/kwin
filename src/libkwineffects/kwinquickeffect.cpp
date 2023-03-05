@@ -360,10 +360,10 @@ void QuickSceneEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
     }
 }
 
-void QuickSceneEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data)
+void QuickSceneEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
     if (effects->waylandDisplay()) {
-        const auto it = d->views.find(data.screen());
+        const auto it = d->views.find(screen);
         if (it != d->views.end()) {
             effects->renderOffscreenQuickView(renderTarget, viewport, it->second.get());
         }

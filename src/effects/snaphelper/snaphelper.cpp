@@ -88,9 +88,9 @@ void SnapHelperEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
     effects->prePaintScreen(data, presentTime);
 }
 
-void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data)
+void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
-    effects->paintScreen(renderTarget, viewport, mask, region, data);
+    effects->paintScreen(renderTarget, viewport, mask, region, screen);
 
     const qreal opacityFactor = m_animation.active
         ? m_animation.timeLine.value()
@@ -105,7 +105,7 @@ void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, const Rende
         vbo->reset();
         vbo->setUseColor(true);
         ShaderBinder binder(ShaderTrait::UniformColor);
-        binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix());
+        binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, viewport.projectionMatrix());
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

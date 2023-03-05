@@ -272,16 +272,15 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderViewport 
     return &data;
 }
 
-void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data)
+void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
-    OffscreenData *offscreenData = ensureOffscreenData(viewport, data.screen());
+    OffscreenData *offscreenData = ensureOffscreenData(viewport, screen);
 
     // Render the scene in an offscreen texture and then upscale it.
     RenderTarget offscreenRenderTarget(offscreenData->framebuffer.get());
-    RenderViewport offscreenViewport(data.screen()->geometry(), data.screen()->devicePixelRatio(), offscreenRenderTarget);
-    ScreenPaintData offscreenPaintData{offscreenViewport.projectionMatrix(), data.screen()};
+    RenderViewport offscreenViewport(screen->geometry(), screen->devicePixelRatio(), offscreenRenderTarget);
     GLFramebuffer::pushFramebuffer(offscreenData->framebuffer.get());
-    effects->paintScreen(offscreenRenderTarget, offscreenViewport, mask, region, offscreenPaintData);
+    effects->paintScreen(offscreenRenderTarget, offscreenViewport, mask, region, screen);
     GLFramebuffer::popFramebuffer();
 
     const QSize screenSize = effects->virtualScreenSize();
@@ -358,7 +357,7 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
         matrix.scale(zoom, zoom);
         matrix.translate(offscreen.viewport.x() * scale, offscreen.viewport.y() * scale);
 
-        shader->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix() * matrix);
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, viewport.projectionMatrix() * matrix);
 
         offscreen.texture->bind();
         offscreen.texture->render(offscreen.viewport.size(), scale);
@@ -385,7 +384,7 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
-            QMatrix4x4 mvp = data.projectionMatrix();
+            QMatrix4x4 mvp = viewport.projectionMatrix();
             mvp.translate(p.x() * scale, p.y() * scale);
             s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
             cursorTexture->render(cursorSize, scale);

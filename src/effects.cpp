@@ -402,13 +402,13 @@ void EffectsHandlerImpl::prePaintScreen(ScreenPrePaintData &data, std::chrono::m
     // no special final code
 }
 
-void EffectsHandlerImpl::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data)
+void EffectsHandlerImpl::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
     if (m_currentPaintScreenIterator != m_activeEffects.constEnd()) {
-        (*m_currentPaintScreenIterator++)->paintScreen(renderTarget, viewport, mask, region, data);
+        (*m_currentPaintScreenIterator++)->paintScreen(renderTarget, viewport, mask, region, screen);
         --m_currentPaintScreenIterator;
     } else {
-        m_scene->finalPaintScreen(renderTarget, viewport, mask, region, data);
+        m_scene->finalPaintScreen(renderTarget, viewport, mask, region, screen);
     }
 }
 

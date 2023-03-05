@@ -407,51 +407,6 @@ void WindowPaintData::setRenderTargetScale(qreal scale)
     d->renderTargetScale = scale;
 }
 
-class ScreenPaintData::Private
-{
-public:
-    QMatrix4x4 projectionMatrix;
-    EffectScreen *screen = nullptr;
-};
-
-ScreenPaintData::ScreenPaintData()
-    : d(new Private())
-{
-}
-
-ScreenPaintData::ScreenPaintData(const QMatrix4x4 &projectionMatrix, EffectScreen *screen)
-    : d(new Private())
-{
-    d->projectionMatrix = projectionMatrix;
-    d->screen = screen;
-}
-
-ScreenPaintData::~ScreenPaintData() = default;
-
-ScreenPaintData::ScreenPaintData(const ScreenPaintData &other)
-    : d(new Private())
-{
-    d->projectionMatrix = other.d->projectionMatrix;
-    d->screen = other.d->screen;
-}
-
-ScreenPaintData &ScreenPaintData::operator=(const ScreenPaintData &rhs)
-{
-    d->projectionMatrix = rhs.d->projectionMatrix;
-    d->screen = rhs.d->screen;
-    return *this;
-}
-
-QMatrix4x4 ScreenPaintData::projectionMatrix() const
-{
-    return d->projectionMatrix;
-}
-
-EffectScreen *ScreenPaintData::screen() const
-{
-    return d->screen;
-}
-
 //****************************************
 // Effect
 //****************************************
@@ -487,9 +442,9 @@ void Effect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds 
     effects->prePaintScreen(data, presentTime);
 }
 
-void Effect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data)
+void Effect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
-    effects->paintScreen(renderTarget, viewport, mask, region, data);
+    effects->paintScreen(renderTarget, viewport, mask, region, screen);
 }
 
 void Effect::postPaintScreen()

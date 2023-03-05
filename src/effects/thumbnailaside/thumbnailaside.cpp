@@ -48,15 +48,14 @@ void ThumbnailAsideEffect::reconfigure(ReconfigureFlags)
     arrange();
 }
 
-void ThumbnailAsideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data)
+void ThumbnailAsideEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
     painted = QRegion();
-    effects->paintScreen(renderTarget, viewport, mask, region, data);
+    effects->paintScreen(renderTarget, viewport, mask, region, screen);
 
-    const QMatrix4x4 projectionMatrix = data.projectionMatrix();
     for (const Data &d : std::as_const(windows)) {
         if (painted.intersects(d.rect)) {
-            WindowPaintData data(projectionMatrix);
+            WindowPaintData data(viewport.projectionMatrix());
             data.multiplyOpacity(opacity);
             QRect region;
             setPositionTransformations(data, region, d.window, d.rect, Qt::KeepAspectRatio);

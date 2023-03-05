@@ -94,11 +94,13 @@ void MouseClickEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
     effects->prePaintScreen(data, presentTime);
 }
 
-void MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data)
+void MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
-    effects->paintScreen(renderTarget, viewport, mask, region, data);
+    effects->paintScreen(renderTarget, viewport, mask, region, screen);
 
-    paintScreenSetup(mask, region, data);
+    if (effects->isOpenGLCompositing()) {
+        paintScreenSetupGl(viewport.projectionMatrix());
+    }
     for (const auto &click : m_clicks) {
         for (int i = 0; i < m_ringCount; ++i) {
             float alpha = computeAlpha(click.get(), i);
@@ -122,7 +124,9 @@ void MouseClickEffect::paintScreen(const RenderTarget &renderTarget, const Rende
             drawCircle(viewport, tool.m_color, tool.m_globalPosition.x(), tool.m_globalPosition.y(), size);
         }
     }
-    paintScreenFinish(mask, region, data);
+    if (effects->isOpenGLCompositing()) {
+        paintScreenFinishGl();
+    }
 }
 
 void MouseClickEffect::postPaintScreen()
@@ -256,20 +260,6 @@ void MouseClickEffect::drawCircle(const RenderViewport &viewport, const QColor &
     }
 }
 
-void MouseClickEffect::paintScreenSetup(int mask, QRegion region, ScreenPaintData &data)
-{
-    if (effects->isOpenGLCompositing()) {
-        paintScreenSetupGl(mask, region, data);
-    }
-}
-
-void MouseClickEffect::paintScreenFinish(int mask, QRegion region, ScreenPaintData &data)
-{
-    if (effects->isOpenGLCompositing()) {
-        paintScreenFinishGl(mask, region, data);
-    }
-}
-
 void MouseClickEffect::drawCircleGl(const RenderViewport &viewport, const QColor &color, float cx, float cy, float r)
 {
     static const int num_segments = 80;
@@ -309,17 +299,17 @@ void MouseClickEffect::drawCircleQPainter(const QColor &color, float cx, float c
     painter->restore();
 }
 
-void MouseClickEffect::paintScreenSetupGl(int, QRegion, ScreenPaintData &data)
+void MouseClickEffect::paintScreenSetupGl(const QMatrix4x4 &projectionMatrix)
 {
     GLShader *shader = ShaderManager::instance()->pushShader(ShaderTrait::UniformColor);
-    shader->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix());
+    shader->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
 
     glLineWidth(m_lineWidth);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void MouseClickEffect::paintScreenFinishGl(int, QRegion, ScreenPaintData &)
+void MouseClickEffect::paintScreenFinishGl()
 {
     glDisable(GL_BLEND);
 

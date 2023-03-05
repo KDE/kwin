@@ -356,8 +356,7 @@ void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &regi
 
     m_renderer->beginFrame(renderTarget, viewport);
 
-    ScreenPaintData data(viewport.projectionMatrix(), EffectScreenImpl::get(painted_screen));
-    effects->paintScreen(renderTarget, viewport, m_paintContext.mask, region, data);
+    effects->paintScreen(renderTarget, viewport, m_paintContext.mask, region, EffectScreenImpl::get(painted_screen));
     m_paintScreenCount = 0;
     Q_EMIT frameRendered();
 
@@ -365,11 +364,11 @@ void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &regi
 }
 
 // the function that'll be eventually called by paintScreen() above
-void WorkspaceScene::finalPaintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data)
+void WorkspaceScene::finalPaintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
     m_paintScreenCount++;
     if (mask & (PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) {
-        paintGenericScreen(renderTarget, viewport, mask, data);
+        paintGenericScreen(renderTarget, viewport, mask, screen);
     } else {
         paintSimpleScreen(renderTarget, viewport, mask, region);
     }
@@ -377,7 +376,7 @@ void WorkspaceScene::finalPaintScreen(const RenderTarget &renderTarget, const Re
 
 // The generic painting code that can handle even transformations.
 // It simply paints bottom-to-top.
-void WorkspaceScene::paintGenericScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int, const ScreenPaintData &)
+void WorkspaceScene::paintGenericScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int, EffectScreen *screen)
 {
     if (m_paintContext.mask & PAINT_SCREEN_BACKGROUND_FIRST) {
         if (m_paintScreenCount == 1) {

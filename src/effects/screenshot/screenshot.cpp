@@ -196,10 +196,10 @@ void ScreenShotEffect::cancelScreenScreenShots()
     m_screenScreenShots.clear();
 }
 
-void ScreenShotEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data)
+void ScreenShotEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
-    m_paintedScreen = data.screen();
-    effects->paintScreen(renderTarget, viewport, mask, region, data);
+    m_paintedScreen = screen;
+    effects->paintScreen(renderTarget, viewport, mask, region, screen);
 
     for (ScreenShotWindowData &data : m_windowScreenShots) {
         takeScreenShot(&data);

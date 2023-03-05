@@ -101,12 +101,12 @@ void OutputLocatorEffect::hide()
     effects->addRepaint(repaintRegion);
 }
 
-void OutputLocatorEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, KWin::ScreenPaintData &data)
+void OutputLocatorEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, KWin::EffectScreen *screen)
 {
-    effects->paintScreen(renderTarget, viewport, mask, region, data);
+    effects->paintScreen(renderTarget, viewport, mask, region, screen);
     // On X11 all screens are painted at once
     if (effects->waylandDisplay()) {
-        if (auto scene = m_scenesByScreens.value(data.screen())) {
+        if (auto scene = m_scenesByScreens.value(screen)) {
             effects->renderOffscreenQuickView(renderTarget, viewport, scene);
         }
     } else {

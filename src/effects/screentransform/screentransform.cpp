@@ -176,13 +176,11 @@ static QRectF lerp(const QRectF &a, const QRectF &b, qreal t)
     return ret;
 }
 
-void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, KWin::ScreenPaintData &data)
+void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, KWin::EffectScreen *screen)
 {
-    EffectScreen *screen = data.screen();
-
     auto it = m_states.find(screen);
     if (it == m_states.end() || !it->m_captured) {
-        effects->paintScreen(renderTarget, viewport, mask, region, data);
+        effects->paintScreen(renderTarget, viewport, mask, region, screen);
         return;
     }
 
@@ -197,8 +195,7 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
     RenderViewport fboViewport(viewport.renderRect(), viewport.scale(), fboRenderTarget);
 
     GLFramebuffer::pushFramebuffer(it->m_current.framebuffer.get());
-    ScreenPaintData adjustedData{fboViewport.projectionMatrix(), data.screen()};
-    effects->paintScreen(fboRenderTarget, fboViewport, mask, region, adjustedData);
+    effects->paintScreen(fboRenderTarget, fboViewport, mask, region, screen);
     GLFramebuffer::popFramebuffer();
 
     const qreal blendFactor = it->m_timeLine.value();
@@ -209,7 +206,7 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
 
     // Projection matrix + rotate transform.
     const QVector3D transformOrigin(screenRect.center());
-    QMatrix4x4 modelViewProjectionMatrix(data.projectionMatrix());
+    QMatrix4x4 modelViewProjectionMatrix(viewport.projectionMatrix());
     modelViewProjectionMatrix.translate(transformOrigin * scale);
     modelViewProjectionMatrix.rotate(angle, 0, 0, 1);
     modelViewProjectionMatrix.translate(-transformOrigin * scale);

@@ -87,7 +87,6 @@ class WindowQuadList;
 class WindowPrePaintData;
 class WindowPaintData;
 class ScreenPrePaintData;
-class ScreenPaintData;
 
 typedef QPair<QString, Effect *> EffectPair;
 typedef QList<KWin::EffectWindow *> EffectWindowList;
@@ -386,7 +385,7 @@ public:
      * In OpenGL based compositing, the frameworks ensures that the context is current
      * when this method is invoked.
      */
-    virtual void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data);
+    virtual void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen);
     /**
      * Called after all the painting has been finished.
      * In this method you can:
@@ -844,7 +843,7 @@ public:
     ~EffectsHandler() override;
     // for use by effects
     virtual void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) = 0;
-    virtual void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data) = 0;
+    virtual void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) = 0;
     virtual void postPaintScreen() = 0;
     virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) = 0;
     virtual void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, const QRegion &region, WindowPaintData &data) = 0;
@@ -3329,33 +3328,6 @@ public:
 
 private:
     const std::unique_ptr<WindowPaintDataPrivate> d;
-};
-
-class KWINEFFECTS_EXPORT ScreenPaintData
-{
-public:
-    ScreenPaintData();
-    ScreenPaintData(const QMatrix4x4 &projectionMatrix, EffectScreen *screen = nullptr);
-    ScreenPaintData(const ScreenPaintData &other);
-    ~ScreenPaintData();
-
-    ScreenPaintData &operator=(const ScreenPaintData &rhs);
-
-    /**
-     * The projection matrix used by the scene for the current rendering pass.
-     * On non-OpenGL compositors it's set to Identity matrix.
-     * @since 5.6
-     */
-    QMatrix4x4 projectionMatrix() const;
-
-    /**
-     * Returns the currently rendered screen. It's always the primary screen on X11.
-     */
-    EffectScreen *screen() const;
-
-private:
-    class Private;
-    std::unique_ptr<Private> d;
 };
 
 class KWINEFFECTS_EXPORT ScreenPrePaintData

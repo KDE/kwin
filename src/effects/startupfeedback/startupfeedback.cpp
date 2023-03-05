@@ -194,9 +194,9 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono
     effects->prePaintScreen(data, presentTime);
 }
 
-void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data)
+void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
-    effects->paintScreen(renderTarget, viewport, mask, region, data);
+    effects->paintScreen(renderTarget, viewport, mask, region, screen);
     if (m_active) {
         GLTexture *texture;
         switch (m_type) {
@@ -221,7 +221,7 @@ void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const 
             ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
         }
         const auto scale = viewport.scale();
-        QMatrix4x4 mvp = data.projectionMatrix();
+        QMatrix4x4 mvp = viewport.projectionMatrix();
         mvp.translate(m_currentGeometry.x() * scale, m_currentGeometry.y() * scale);
         ShaderManager::instance()->getBoundShader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
         texture->render(m_currentGeometry.size(), scale);

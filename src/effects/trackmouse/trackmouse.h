@@ -29,7 +29,7 @@ public:
     TrackMouseEffect();
     ~TrackMouseEffect() override;
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data) override;
+    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen) override;
     void postPaintScreen() override;
     void reconfigure(ReconfigureFlags) override;
     bool isActive() const override;

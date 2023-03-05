@@ -97,9 +97,9 @@ void TrackMouseEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
     effects->prePaintScreen(data, presentTime);
 }
 
-void TrackMouseEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data)
+void TrackMouseEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
-    effects->paintScreen(renderTarget, viewport, mask, region, data); // paint normal screen
+    effects->paintScreen(renderTarget, viewport, mask, region, screen); // paint normal screen
 
     if (effects->isOpenGLCompositing() && m_texture[0] && m_texture[1]) {
         ShaderBinder binder(ShaderTrait::MapTexture);
@@ -109,7 +109,7 @@ void TrackMouseEffect::paintScreen(const RenderTarget &renderTarget, const Rende
         }
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-        QMatrix4x4 matrix(data.projectionMatrix());
+        QMatrix4x4 matrix(viewport.projectionMatrix());
         const QPointF p = m_lastRect[0].topLeft() + QPoint(m_lastRect[0].width() / 2.0, m_lastRect[0].height() / 2.0);
         const float x = p.x();
         const float y = p.y();

@@ -109,9 +109,9 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
     }
 }
 
-void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data)
+void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
-    effects->paintScreen(renderTarget, viewport, mask, region, data); // paint normal screen
+    effects->paintScreen(renderTarget, viewport, mask, region, screen); // paint normal screen
     if (m_zoom != 1.0) {
         // get the right area from the current rendered screen
         const QRect area = magnifierArea();
@@ -126,7 +126,7 @@ void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const Render
             // paint magnifier
             m_texture->bind();
             auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
-            QMatrix4x4 mvp = data.projectionMatrix();
+            QMatrix4x4 mvp = viewport.projectionMatrix();
             mvp.translate(area.x() * scale, area.y() * scale);
             s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
             m_texture->render(area.size(), scale);
@@ -172,7 +172,7 @@ void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const Render
             vbo->setData(verts.size() / 2, 2, verts.constData(), nullptr);
 
             ShaderBinder binder(ShaderTrait::UniformColor);
-            binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, data.projectionMatrix());
+            binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, viewport.projectionMatrix());
             vbo->render(GL_TRIANGLES);
         }
     }

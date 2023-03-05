@@ -42,12 +42,12 @@ ShowPaintEffect::ShowPaintEffect()
     connect(toggleAction, &QAction::triggered, this, &ShowPaintEffect::toggle);
 }
 
-void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, ScreenPaintData &data)
+void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, EffectScreen *screen)
 {
     m_painted = QRegion();
-    effects->paintScreen(renderTarget, viewport, mask, region, data);
+    effects->paintScreen(renderTarget, viewport, mask, region, screen);
     if (effects->isOpenGLCompositing()) {
-        paintGL(data.projectionMatrix(), viewport.scale());
+        paintGL(viewport.projectionMatrix(), viewport.scale());
     } else if (effects->compositingType() == QPainterCompositing) {
         paintQPainter();
     }
