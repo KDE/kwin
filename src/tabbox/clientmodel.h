@@ -81,7 +81,7 @@ public:
      */
     TabBoxClientList clientList() const
     {
-        return m_clientList;
+        return m_mutableClientList;
     }
 
 public Q_SLOTS:
@@ -93,12 +93,13 @@ public Q_SLOTS:
     void activate(int index);
 
 private:
-    TabBoxClientList createFocusChainClientList(int desktop, const QSharedPointer<TabBoxClient> &start,
-                                                TabBoxClientList &stickyClients) const;
-    TabBoxClientList createStackingOrderClientList(int desktop, const QSharedPointer<TabBoxClient> &start,
-                                                   TabBoxClientList &stickyClients) const;
+    void createFocusChainClientList(int desktop, const QSharedPointer<TabBoxClient> &start,
+        TabBoxClientList &stickyClients);
+    void createStackingOrderClientList(int desktop, const QSharedPointer<TabBoxClient> &start,
+        TabBoxClientList &stickyClients);
 
     TabBoxClientList m_clientList;
+    TabBoxClientList m_mutableClientList;
 };
 
 } // namespace Tabbox
