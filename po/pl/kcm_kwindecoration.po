@@ -1,5 +1,5 @@
 # translation of kcmkwindecoration.po to Polish
-# Version: $Revision: 1644856 $
+# Version: $Revision: 1646071 $
 # translation of kcmkwindecoration.po to
 # Norbert Popiołek <norbert@kde.com.pl>\n"
 # Michał Rudolf <mrudolf@kdewebdev.org>, 2002.
@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-05 03:09+0000\n"
 "PO-Revision-Date: 2023-02-11 08:27+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -74,7 +74,7 @@ msgstr "Utrzymuj pod innymi oknami"
 msgid "Keep above other windows"
 msgstr "Utrzymuj nad innymi oknami"
 
-#: kcm.cpp:173
+#: kcm.cpp:172
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"

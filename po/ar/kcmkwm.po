@@ -393,7 +393,7 @@ msgid ""
 "Here you can customize KDE's behavior when scrolling with the mouse wheel in "
 "a window while pressing the modifier key."
 msgstr ""
-"هنا يمكنك تخصيص سلوك الكيدي عند التمرير بواسطة عجلة الفأرة في النافذة أثناء "
+"هنا يمكنك تخصيص سلوك الكِيدِي عند التمرير بواسطة عجلة الفأرة في النافذة أثناء "
 "الضغط على المفتاح المغيّر."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
@@ -1627,7 +1627,7 @@ msgstr ""
 #~ "Here you can customize KDE's behavior when clicking somewhere into a "
 #~ "window while pressing a modifier key."
 #~ msgstr ""
-#~ "هنا يمكنك تخصيص سلوك كدي عند النقر في مكان في النافذة أثناء الضغط على "
+#~ "هنا يمكنك تخصيص سلوك كِيدِي عند النقر في مكان في النافذة أثناء الضغط على "
 #~ "مفتاح مغيير."
 
 #~ msgctxt "no border snap zone"

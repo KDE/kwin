@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-05 03:09+0000\n"
 "PO-Revision-Date: 2023-02-19 19:56+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -73,7 +73,7 @@ msgstr "Hald under andre vindauge"
 msgid "Keep above other windows"
 msgstr "Hald over andre vindauge"
 
-#: kcm.cpp:173
+#: kcm.cpp:172
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"

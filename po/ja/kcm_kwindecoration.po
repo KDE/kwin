@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-05 03:09+0000\n"
 "PO-Revision-Date: 2023-02-23 18:19+0900\n"
 "Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -77,7 +77,7 @@ msgstr "他のウィンドウより下に表示"
 msgid "Keep above other windows"
 msgstr "他のウィンドウより上に表示"
 
-#: kcm.cpp:173
+#: kcm.cpp:172
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"

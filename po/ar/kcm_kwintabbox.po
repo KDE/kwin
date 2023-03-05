@@ -72,7 +72,7 @@ msgstr "المستخدَم حديثًا"
 #: main.ui:60
 #, kde-format
 msgid "Stacking order"
-msgstr "ترتيب التّكديس"
+msgstr "ترتيب التّكِيدِيس"
 
 #. i18n: ectx: property (text), widget (QCheckBox, oneAppWindow)
 #: main.ui:68

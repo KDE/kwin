@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-05 03:09+0000\n"
 "PO-Revision-Date: 2023-02-16 12:17+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -76,7 +76,7 @@ msgstr "أبقها أسفل النوافذ الأخرى"
 msgid "Keep above other windows"
 msgstr "أبقها أعلى النوافذ الأخرى"
 
-#: kcm.cpp:173
+#: kcm.cpp:172
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
@@ -367,7 +367,7 @@ msgstr "فوق الطّبيعيّ"
 #~ msgstr "مضخم الحجم"
 
 #~ msgid "KDE"
-#~ msgstr "كدي"
+#~ msgstr "كِيدِي"
 
 #~ msgid "%1 (unavailable)"
 #~ msgstr "%1 ( غير متوفر )"

@@ -467,7 +467,7 @@ msgstr "أزرار التحريك"
 #~ "ذلك, لا تدرّجات سيتم رسمها."
 
 #~ msgid "KDE 2"
-#~ msgstr "كدي 2"
+#~ msgstr "كِيدِي 2"
 
 #~ msgid ""
 #~ "When selected, the window decoration borders are drawn using the titlebar "

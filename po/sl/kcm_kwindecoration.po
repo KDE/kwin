@@ -1,7 +1,7 @@
 # translation of kcmkwindecoration.po to
 # Translation of kcmkwindecoration.po to Slovenian
 # SLOVENIAN TRANSLATION OF K DESKTOP ENVIRONMENT.
-# $Id: kcm_kwindecoration.po 1644856 2023-02-18 01:48:31Z scripty $
+# $Id: kcm_kwindecoration.po 1646071 2023-03-05 03:28:26Z scripty $
 # $Source$
 #
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-18 01:00+0000\n"
+"POT-Creation-Date: 2023-03-05 03:09+0000\n"
 "PO-Revision-Date: 2023-02-07 08:35+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -77,7 +77,7 @@ msgstr "Drži pod drugimi okni"
 msgid "Keep above other windows"
 msgstr "Drži nad drugimi okni"
 
-#: kcm.cpp:173
+#: kcm.cpp:172
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"

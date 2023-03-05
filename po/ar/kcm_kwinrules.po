@@ -1123,7 +1123,7 @@ msgstr "لا يمكن اكتشاف خواص النافذة. لا تدار الن
 #~ "selecting a specific window in an application, as they set whole window "
 #~ "class to contain both application and window role."
 #~ msgstr ""
-#~ "مع بعض التطبيقات (ليس ضمن كدي) ، يكفي صنف النافذة لاختيار نافذة محددة في "
+#~ "مع بعض التطبيقات (ليس ضمن كِيدِي) ، يكفي صنف النافذة لاختيار نافذة محددة في "
 #~ "التطبيق ؛ حيث أنهم يضعون كامل صنف النافذة ليحوي التطبيق و دور النافذة."
 
 #~ msgid "Use &whole window class (specific window)"

@@ -220,7 +220,7 @@ msgstr "أظهر مؤشرات تخطيط سطح المكتب"
 #~ msgid ""
 #~ "Here you can set how many virtual desktops you want on your KDE desktop."
 #~ msgstr ""
-#~ "يمكنك هنا تعيين عدد أسطح المكتب الوهميّة التي تريدها في سطح مكتب كدي."
+#~ "يمكنك هنا تعيين عدد أسطح المكتب الوهميّة التي تريدها في سطح مكتب كِيدِي."
 
 #~ msgid "&Number of desktops:"
 #~ msgstr "&عدد أسطح المكتب:"
