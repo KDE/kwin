@@ -372,7 +372,7 @@ msgstr "فوق الطّبيعيّ"
 #~ msgstr "مضخم الحجم"
 
 #~ msgid "KDE"
-#~ msgstr "كدي"
+#~ msgstr "كِيدِي"
 
 #~ msgid "%1 (unavailable)"
 #~ msgstr "%1 ( غير متوفر )"

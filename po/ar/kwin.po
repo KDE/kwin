@@ -1195,12 +1195,12 @@ msgstr "كوين"
 #: main.cpp:181 main.cpp:204
 #, kde-format
 msgid "KDE window manager"
-msgstr "مدير كدي للنّوافذ"
+msgstr "مدير كِيدِي للنّوافذ"
 
 #: main.cpp:183
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
-msgstr "© 1999-2019 لمطوري «كدي»"
+msgstr "© 1999-2019 لمطوري «كِيدِي»"
 
 #: main.cpp:185
 #, kde-format
