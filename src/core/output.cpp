@@ -199,7 +199,7 @@ QSize Output::pixelSize() const
     return orientateSize(modeSize());
 }
 
-QByteArray Output::edid() const
+const Edid &Output::edid() const
 {
     return m_information.edid;
 }
@@ -222,6 +222,9 @@ Output::SubPixel Output::subPixel() const
 void Output::applyChanges(const OutputConfiguration &config)
 {
     auto props = config.constChangeSet(this);
+    if (!props) {
+        return;
+    }
     Q_EMIT aboutToChange();
 
     State next = m_state;

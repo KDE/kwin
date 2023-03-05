@@ -11,6 +11,7 @@
 #include <kwin_export.h>
 
 #include "renderloop.h"
+#include "utils/edid.h"
 
 #include <QDebug>
 #include <QMatrix3x3>
@@ -235,7 +236,7 @@ public:
     SubPixel subPixel() const;
     QString description() const;
     Capabilities capabilities() const;
-    QByteArray edid() const;
+    const Edid &edid() const;
     QList<std::shared_ptr<OutputMode>> modes() const;
     std::shared_ptr<OutputMode> currentMode() const;
     DpmsMode dpmsMode() const;
@@ -328,7 +329,7 @@ protected:
         QString serialNumber;
         QString eisaId;
         QSize physicalSize;
-        QByteArray edid;
+        Edid edid;
         SubPixel subPixel = SubPixel::Unknown;
         Capabilities capabilities;
         Transform panelOrientation = Transform::Normal;

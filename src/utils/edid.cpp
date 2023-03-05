@@ -15,6 +15,7 @@
 #include <QStandardPaths>
 
 #include <KLocalizedString>
+#include <QCryptographicHash>
 
 namespace KWin
 {
@@ -175,6 +176,9 @@ Edid::Edid(const void *data, uint32_t size)
     m_monitorName = parseMonitorName(bytes);
     m_serialNumber = parseSerialNumber(bytes);
     m_vendor = parseVendor(bytes);
+    QCryptographicHash hash(QCryptographicHash::Md5);
+    hash.addData(m_raw);
+    m_hash = QString::fromLatin1(hash.result().toHex());
 
     m_isValid = true;
 }
@@ -239,6 +243,11 @@ QString Edid::nameString() const
     } else {
         return i18n("unknown");
     }
+}
+
+QString Edid::hash() const
+{
+    return m_hash;
 }
 
 } // namespace KWin

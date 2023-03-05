@@ -65,10 +65,12 @@ bool OutputBackend::applyOutputChanges(const OutputConfiguration &config)
     QVector<Output *> toBeEnabledOutputs;
     QVector<Output *> toBeDisabledOutputs;
     for (const auto &output : availableOutputs) {
-        if (config.constChangeSet(output)->enabled) {
-            toBeEnabledOutputs << output;
-        } else {
-            toBeDisabledOutputs << output;
+        if (const auto changeset = config.constChangeSet(output)) {
+            if (changeset->enabled) {
+                toBeEnabledOutputs << output;
+            } else {
+                toBeDisabledOutputs << output;
+            }
         }
     }
     for (const auto &output : toBeEnabledOutputs) {

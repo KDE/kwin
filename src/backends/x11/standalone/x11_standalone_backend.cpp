@@ -377,7 +377,7 @@ void X11StandaloneBackend::doUpdateOutputs()
                             information.manufacturer = edid.manufacturerString();
                             information.model = edid.monitorName();
                             information.serialNumber = edid.serialNumber();
-                            information.edid = data;
+                            information.edid = edid;
                         }
                     }
 

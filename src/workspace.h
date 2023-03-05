@@ -78,6 +78,7 @@ class PlaceholderOutput;
 class Placement;
 class OutputConfiguration;
 class TileManager;
+class OutputConfigurationStore;
 
 class KWIN_EXPORT Workspace : public QObject
 {
@@ -632,7 +633,6 @@ private:
     QList<Output *> m_outputs;
     Output *m_activeOutput = nullptr;
     Output *m_activeCursorOutput = nullptr;
-    QString m_outputsHash;
     QVector<Output *> m_outputOrder;
 
     Window *m_activeWindow;
@@ -723,6 +723,7 @@ private:
     PlaceholderOutput *m_placeholderOutput = nullptr;
     std::unique_ptr<PlaceholderInputEventFilter> m_placeholderFilter;
     std::map<Output *, std::unique_ptr<TileManager>> m_tileManagers;
+    std::unique_ptr<OutputConfigurationStore> m_outputConfigStore;
 
 private:
     friend bool performTransiencyCheck();

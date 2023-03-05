@@ -77,7 +77,7 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
         .serialNumber = edid->serialNumber(),
         .eisaId = edid->eisaId(),
         .physicalSize = conn->physicalSize(),
-        .edid = edid->raw(),
+        .edid = *edid,
         .subPixel = conn->subpixel(),
         .capabilities = capabilities,
         .panelOrientation = DrmConnector::toKWinTransform(conn->panelOrientation()),

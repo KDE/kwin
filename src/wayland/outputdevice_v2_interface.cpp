@@ -484,7 +484,7 @@ void OutputDeviceV2Interface::updateCurrentMode()
 
 void OutputDeviceV2Interface::updateEdid()
 {
-    d->m_edid = d->m_handle->edid();
+    d->m_edid = d->m_handle->edid().raw();
     const auto clientResources = d->resourceMap();
     for (const auto &resource : clientResources) {
         d->sendEdid(resource);

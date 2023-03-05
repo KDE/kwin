@@ -108,6 +108,7 @@ target_sources(kwin PRIVATE
     options.cpp
     osd.cpp
     outline.cpp
+    outputconfigurationstore.cpp
     placeholderinputeventfilter.cpp
     placeholderoutput.cpp
     placement.cpp

@@ -74,12 +74,15 @@ public:
      */
     QString nameString() const;
 
+    QString hash() const;
+
 private:
     QSize m_physicalSize;
     QByteArray m_vendor;
     QByteArray m_eisaId;
     QByteArray m_monitorName;
     QByteArray m_serialNumber;
+    QString m_hash;
 
     QByteArray m_raw;
     bool m_isValid = false;

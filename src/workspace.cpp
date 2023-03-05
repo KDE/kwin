@@ -46,8 +46,8 @@
 #include "tabbox/tabbox.h"
 #endif
 #include "decorations/decorationbridge.h"
-#include "kscreenintegration.h"
 #include "main.h"
+#include "outputconfigurationstore.h"
 #include "placeholderinputeventfilter.h"
 #include "placeholderoutput.h"
 #include "placementtracker.h"
@@ -130,6 +130,7 @@ Workspace::Workspace()
     , m_focusChain(std::make_unique<FocusChain>())
     , m_applicationMenu(std::make_unique<ApplicationMenu>())
     , m_placementTracker(std::make_unique<PlacementTracker>(this))
+    , m_outputConfigStore(std::make_unique<OutputConfigurationStore>())
 {
     // If KWin was already running it saved its configuration after loosing the selection -> Reread
     QFuture<void> reparseConfigFuture = QtConcurrent::run(&Options::reparseConfiguration, options);
@@ -277,8 +278,8 @@ QString Workspace::getPlacementTrackerHash()
     QStringList hashes;
     for (const auto &output : std::as_const(m_outputs)) {
         QCryptographicHash hash(QCryptographicHash::Md5);
-        if (!output->edid().isEmpty()) {
-            hash.addData(output->edid());
+        if (output->edid().isValid()) {
+            hash.addData(output->edid().raw());
         } else {
             hash.addData(output->name().toLatin1());
         }
@@ -537,18 +538,13 @@ void Workspace::updateOutputConfiguration()
         setOutputOrder(newOrder);
     };
 
-    m_outputsHash = KScreenIntegration::connectedOutputsHash(outputs);
-    if (const auto config = KScreenIntegration::readOutputConfig(outputs, m_outputsHash)) {
-        const auto &[cfg, order] = config.value();
-        if (!kwinApp()->outputBackend()->applyOutputChanges(cfg)) {
-            qCWarning(KWIN_CORE) << "Applying KScreen config failed!";
-            setFallbackOutputOrder();
-            return;
-        }
-        setOutputOrder(order);
-    } else {
+    const auto &[cfg, order] = m_outputConfigStore->queryConfig(outputs);
+    if (!kwinApp()->outputBackend()->applyOutputChanges(cfg)) {
+        qCWarning(KWIN_CORE) << "Applying output config failed!";
         setFallbackOutputOrder();
+        return;
     }
+    setOutputOrder(order);
 }
 
 void Workspace::setupWindowConnections(Window *window)

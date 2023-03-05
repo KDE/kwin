@@ -26,10 +26,8 @@ namespace KScreenIntegration
 /// See KScreen::Output::hashMd5
 static QString outputHash(Output *output)
 {
-    if (!output->edid().isEmpty()) {
-        QCryptographicHash hash(QCryptographicHash::Md5);
-        hash.addData(output->edid());
-        return QString::fromLatin1(hash.result().toHex());
+    if (output->edid().isValid()) {
+        return output->edid().hash();
     } else {
         return output->name();
     }

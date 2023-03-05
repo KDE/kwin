@@ -473,11 +473,13 @@ bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
             if (output->isNonDesktop()) {
                 continue;
             }
-            output->queueChanges(config);
-            if (config.constChangeSet(output)->enabled) {
-                toBeEnabled << output;
-            } else {
-                toBeDisabled << output;
+            if (const auto changeset = config.constChangeSet(output)) {
+                output->queueChanges(config);
+                if (changeset->enabled) {
+                    toBeEnabled << output;
+                } else {
+                    toBeDisabled << output;
+                }
             }
         }
         if (gpu->testPendingConfiguration() != DrmPipeline::Error::None) {
