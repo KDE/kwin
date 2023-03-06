@@ -255,7 +255,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     RenderContext renderContext{
         .clip = region,
         .hardwareClipping = region != infiniteRegion() && ((mask & Scene::PAINT_WINDOW_TRANSFORMED) || (mask & Scene::PAINT_SCREEN_TRANSFORMED)),
-        .renderTargetScale = data.renderTargetScale().value_or(viewport.scale()),
+        .renderTargetScale = viewport.scale(),
     };
 
     renderContext.transformStack.push(QMatrix4x4());

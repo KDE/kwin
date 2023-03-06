@@ -64,7 +64,6 @@ void WindowScreenCastSource::render(GLFramebuffer *target)
 
     WindowPaintData data;
     data.setProjectionMatrix(projectionMatrix);
-    data.setRenderTargetScale(1.0);
 
     RenderTarget renderTarget(target);
     RenderViewport viewport(geometry, 1, renderTarget);

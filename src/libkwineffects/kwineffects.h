@@ -3317,15 +3317,6 @@ public:
      */
     QMatrix4x4 &rprojectionMatrix();
 
-    /**
-     * An override for the scale the window should be rendered at.
-     *
-     * When set, this value will be used instead of the window's output scale
-     * when rendering.
-     */
-    std::optional<qreal> renderTargetScale() const;
-    void setRenderTargetScale(qreal scale);
-
 private:
     const std::unique_ptr<WindowPaintDataPrivate> d;
 };
