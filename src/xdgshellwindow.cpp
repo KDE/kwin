@@ -205,37 +205,6 @@ void XdgSurfaceWindow::maybeUpdateMoveResizeGeometry(const QRectF &rect)
     setMoveResizeGeometry(rect);
 }
 
-static QRectF gravitateGeometry(const QRectF &rect, const QRectF &bounds, Gravity gravity)
-{
-    QRectF geometry = rect;
-
-    switch (gravity) {
-    case Gravity::TopLeft:
-        geometry.moveRight(bounds.right());
-        geometry.moveBottom(bounds.bottom());
-        break;
-    case Gravity::Top:
-    case Gravity::TopRight:
-        geometry.moveLeft(bounds.left());
-        geometry.moveBottom(bounds.bottom());
-        break;
-    case Gravity::Right:
-    case Gravity::BottomRight:
-    case Gravity::Bottom:
-    case Gravity::None:
-        geometry.moveLeft(bounds.left());
-        geometry.moveTop(bounds.top());
-        break;
-    case Gravity::BottomLeft:
-    case Gravity::Left:
-        geometry.moveRight(bounds.right());
-        geometry.moveTop(bounds.top());
-        break;
-    }
-
-    return geometry;
-}
-
 void XdgSurfaceWindow::handleNextWindowGeometry()
 {
     const QRectF boundingGeometry = surface()->boundingRect();

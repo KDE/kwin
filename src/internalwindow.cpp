@@ -392,8 +392,12 @@ void InternalWindow::present(const std::shared_ptr<QOpenGLFramebufferObject> fbo
     Q_ASSERT(m_internalImage.isNull());
 
     const QSizeF bufferSize = fbo->size() / bufferScale();
+    QRectF geometry(pos(), clientSizeToFrameSize(bufferSize));
+    if (isInteractiveResize()) {
+        geometry = gravitateGeometry(geometry, moveResizeGeometry(), interactiveMoveResizeGravity());
+    }
 
-    commitGeometry(QRectF(pos(), clientSizeToFrameSize(bufferSize)));
+    commitGeometry(geometry);
     markAsMapped();
 
     m_internalFBO = fbo;
@@ -407,8 +411,12 @@ void InternalWindow::present(const QImage &image, const QRegion &damage)
     Q_ASSERT(m_internalFBO == nullptr);
 
     const QSize bufferSize = image.size() / bufferScale();
+    QRectF geometry(pos(), clientSizeToFrameSize(bufferSize));
+    if (isInteractiveResize()) {
+        geometry = gravitateGeometry(geometry, moveResizeGeometry(), interactiveMoveResizeGravity());
+    }
 
-    commitGeometry(QRectF(pos(), clientSizeToFrameSize(bufferSize)));
+    commitGeometry(geometry);
     markAsMapped();
 
     m_internalImage = image;
