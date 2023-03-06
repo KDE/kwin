@@ -262,7 +262,7 @@ void ItemRendererOpenGL::renderItem(Item *item, int mask, const QRegion &region,
     renderContext.transformStack.push(QMatrix4x4());
     renderContext.opacityStack.push(data.opacity());
 
-    item->setTransform(data.toMatrix(renderTargetScale()));
+    item->setTransform(data.toMatrix(renderContext.renderTargetScale));
 
     createRenderNode(item, &renderContext);
 
