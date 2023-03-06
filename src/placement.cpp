@@ -602,21 +602,33 @@ void Placement::cascadeIfCovering(Window *window, const QRectF &area)
     // cascade until confirmed no total overlap or not enough space to cascade
     while (!noOverlap) {
         noOverlap = true;
+        QRectF coveredArea;
         // check current position candidate for overlaps with other windows
         for (auto l = workspace()->stackingOrder().crbegin(); l != workspace()->stackingOrder().crend(); ++l) {
             auto other = *l;
-            if (isIrrelevant(other, window, desktop)) {
+            if (isIrrelevant(other, window, desktop) || !other->frameGeometry().intersects(possibleGeo)) {
                 continue;
             }
 
-            if (possibleGeo.contains(other->frameGeometry())) {
-                // placed window would completely overlap the other window: try to cascade it from the topleft of that other window
+            if (possibleGeo.contains(other->frameGeometry()) && !coveredArea.contains(other->frameGeometry())) {
+                // placed window would completely overlap another window which is not already
+                // covered by other windows: try to cascade it from the topleft of that other
+                // window
                 noOverlap = false;
                 possibleGeo.moveTopLeft(other->pos() + offset);
                 if (possibleGeo.right() > area.right() || possibleGeo.bottom() > area.bottom()) {
-                    // new cascaded geometry would be out of the bounds of the placement area: abort the cascading and keep the window in the original position
+                    // new cascaded geometry would be out of the bounds of the placement area:
+                    // abort the cascading and keep the window in the original position
                     return;
                 }
+                break;
+            }
+
+            // keep track of the area occupied by other windows as we go from top to bottom
+            // in the stacking order, so we don't need to bother trying to avoid overlap with
+            // windows which are already covered up by other windows anyway
+            coveredArea |= other->frameGeometry();
+            if (coveredArea.contains(area)) {
                 break;
             }
         }
