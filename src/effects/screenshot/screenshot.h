@@ -13,7 +13,6 @@
 #include <kwineffects.h>
 
 #include <QFuture>
-#include <QFutureInterface>
 #include <QImage>
 #include <QObject>
 
@@ -94,9 +93,9 @@ private:
     void grabPointerImage(QImage &snapshot, int xOffset, int yOffset) const;
     QImage blitScreenshot(const QRect &geometry, qreal devicePixelRatio = 1.0) const;
 
-    QVector<ScreenShotWindowData> m_windowScreenShots;
-    QVector<ScreenShotAreaData> m_areaScreenShots;
-    QVector<ScreenShotScreenData> m_screenScreenShots;
+    std::vector<ScreenShotWindowData> m_windowScreenShots;
+    std::vector<ScreenShotAreaData> m_areaScreenShots;
+    std::vector<ScreenShotScreenData> m_screenScreenShots;
 
     std::unique_ptr<ScreenShotDBusInterface2> m_dbusInterface2;
     EffectScreen *m_paintedScreen = nullptr;
