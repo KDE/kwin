@@ -282,14 +282,17 @@ void EffectsHandlerImpl::unloadAllEffects()
 void EffectsHandlerImpl::setupWindowConnections(Window *window)
 {
     connect(window, &Window::windowClosed, this, &EffectsHandlerImpl::slotWindowClosed);
-    connect(window, &Window::maximizedChanged,
-            this, &EffectsHandlerImpl::slotClientMaximized);
-    connect(window, static_cast<void (Window::*)(KWin::Window *, MaximizeMode)>(&Window::maximizedAboutToChange),
-            this, [this](KWin::Window *window, MaximizeMode m) {
-                if (EffectWindowImpl *w = window->effectWindow()) {
-                    Q_EMIT windowMaximizedStateAboutToChange(w, m & MaximizeHorizontal, m & MaximizeVertical);
-                }
-            });
+    connect(window, &Window::maximizedChanged, this, [this, window]() {
+        if (EffectWindowImpl *w = window->effectWindow()) {
+            const MaximizeMode mode = window->maximizeMode();
+            Q_EMIT windowMaximizedStateChanged(w, mode & MaximizeHorizontal, mode & MaximizeVertical);
+        }
+    });
+    connect(window, &Window::maximizedAboutToChange, this, [this, window](MaximizeMode m) {
+        if (EffectWindowImpl *w = window->effectWindow()) {
+            Q_EMIT windowMaximizedStateAboutToChange(w, m & MaximizeHorizontal, m & MaximizeVertical);
+        }
+    });
     connect(window, &Window::frameGeometryAboutToChange,  this, [this, window]() {
         if (EffectWindowImpl *w = window->effectWindow()) {
             Q_EMIT windowFrameGeometryAboutToChange(w);
@@ -493,31 +496,6 @@ void EffectsHandlerImpl::startPaint()
     m_currentDrawWindowIterator = m_activeEffects.constBegin();
     m_currentPaintWindowIterator = m_activeEffects.constBegin();
     m_currentPaintScreenIterator = m_activeEffects.constBegin();
-}
-
-void EffectsHandlerImpl::slotClientMaximized(Window *window, MaximizeMode maxMode)
-{
-    bool horizontal = false;
-    bool vertical = false;
-    switch (maxMode) {
-    case MaximizeHorizontal:
-        horizontal = true;
-        break;
-    case MaximizeVertical:
-        vertical = true;
-        break;
-    case MaximizeFull:
-        horizontal = true;
-        vertical = true;
-        break;
-    case MaximizeRestore: // fall through
-    default:
-        // default - nothing to do
-        break;
-    }
-    if (EffectWindowImpl *w = window->effectWindow()) {
-        Q_EMIT windowMaximizedStateChanged(w, horizontal, vertical);
-    }
 }
 
 void EffectsHandlerImpl::slotOpacityChanged(Window *window, qreal oldOpacity)

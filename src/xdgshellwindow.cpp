@@ -1390,7 +1390,7 @@ void XdgToplevelWindow::updateMaximizeMode(MaximizeMode maximizeMode)
     }
     m_maximizeMode = maximizeMode;
     updateWindowRules(Rules::MaximizeVert | Rules::MaximizeHoriz);
-    Q_EMIT maximizedChanged(this, maximizeMode);
+    Q_EMIT maximizedChanged();
 }
 
 void XdgToplevelWindow::updateFullScreenMode(bool set)
@@ -1616,7 +1616,7 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
         return;
     }
 
-    Q_EMIT maximizedAboutToChange(this, mode);
+    Q_EMIT maximizedAboutToChange(mode);
     m_requestedMaximizeMode = mode;
 
     // call into decoration update borders

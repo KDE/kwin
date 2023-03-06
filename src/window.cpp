@@ -2179,8 +2179,8 @@ void Window::setupWindowManagementInterface()
     connect(this, &Window::minimizedChanged, w, [w, this] {
         w->setMinimized(isMinimized());
     });
-    connect(this, &Window::maximizedChanged, w, [w](KWin::Window *c, MaximizeMode mode) {
-        w->setMaximized(mode == KWin::MaximizeFull);
+    connect(this, &Window::maximizedChanged, w, [w, this]() {
+        w->setMaximized(maximizeMode() == MaximizeFull);
     });
     connect(this, &Window::demandsAttentionChanged, w, [w, this] {
         w->setDemandsAttention(isDemandingAttention());

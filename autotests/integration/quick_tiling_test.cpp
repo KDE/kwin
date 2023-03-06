@@ -267,8 +267,6 @@ void QuickTilingTest::testQuickMaximizing()
 
     // window is now set to maximised
     QCOMPARE(maximizeChangedSpy.count(), 1);
-    QCOMPARE(maximizeChangedSpy.first().first().value<KWin::Window *>(), window);
-    QCOMPARE(maximizeChangedSpy.first().last().value<KWin::MaximizeMode>(), MaximizeFull);
     QCOMPARE(window->maximizeMode(), MaximizeFull);
 
     // go back to quick tile none
@@ -293,8 +291,6 @@ void QuickTilingTest::testQuickMaximizing()
     QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
     QCOMPARE(window->geometryRestore(), QRect(0, 0, 100, 50));
     QCOMPARE(maximizeChangedSpy.count(), 2);
-    QCOMPARE(maximizeChangedSpy.last().first().value<KWin::Window *>(), window);
-    QCOMPARE(maximizeChangedSpy.last().last().value<KWin::MaximizeMode>(), MaximizeRestore);
 }
 
 void QuickTilingTest::testQuickTilingKeyboardMove_data()

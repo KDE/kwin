@@ -1499,8 +1499,8 @@ Q_SIGNALS:
     void paletteChanged(const QPalette &p);
     void colorSchemeChanged();
     void captionChanged();
-    void maximizedAboutToChange(KWin::Window *, MaximizeMode);
-    void maximizedChanged(KWin::Window *, MaximizeMode);
+    void maximizedAboutToChange(MaximizeMode mode);
+    void maximizedChanged();
     void transientChanged();
     void modalChanged();
     void quickTileModeChanged();

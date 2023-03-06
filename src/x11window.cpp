@@ -4352,7 +4352,7 @@ void X11Window::maximize(MaximizeMode mode)
         maximize(MaximizeRestore); // restore
     }
 
-    Q_EMIT maximizedAboutToChange(this, mode);
+    Q_EMIT maximizedAboutToChange(mode);
     max_mode = mode;
 
     // save sizes for restoring, if maximalizing
@@ -4562,7 +4562,7 @@ void X11Window::maximize(MaximizeMode mode)
     Q_EMIT quickTileModeChanged();
 
     if (max_mode != old_mode) {
-        Q_EMIT maximizedChanged(this, max_mode);
+        Q_EMIT maximizedChanged();
     }
 }
 
