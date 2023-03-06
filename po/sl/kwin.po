@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1645974 2023-03-04 02:27:05Z scripty $
+# $Id: kwin.po 1646145 2023-03-06 02:27:23Z scripty $
 # $Source$
 #
 #
@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
-"PO-Revision-Date: 2023-02-15 08:45+0100\n"
+"POT-Creation-Date: 2023-03-06 02:13+0000\n"
+"PO-Revision-Date: 2023-03-04 10:12+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -2799,19 +2799,8 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(se ne odziva)"
 
-#: workspace.cpp:1837
-#, fuzzy, kde-format
-#| msgctxt "Introductory text shown in the support information."
-#| msgid ""
-#| "KWin Support Information:\n"
-#| "The following information should be used when requesting support on e.g. "
-#| "https://forum.kde.org.\n"
-#| "It provides information about the currently running instance, which "
-#| "options are used,\n"
-#| "what OpenGL driver and which effects are running.\n"
-#| "Please post the information provided underneath this introductory text to "
-#| "a paste bin service\n"
-#| "like https://paste.kde.org instead of pasting into support threads.\n"
+#: workspace.cpp:1634
+#, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
 "KWin Support Information:\n"
@@ -2825,7 +2814,8 @@ msgid ""
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
 "Podrobnosti o podpori za KWin:\n"
-"Naslednje podatke uporabite pri iskanju pomoči, npr: https://forum.kde.org.\n"
+"Naslednje podatke uporabite pri iskanju pomoči, npr: https://discuss.kde."
+"org.\n"
 "Podatki vsebujejo podrobnosti o trenutno zagnanem pojavku, uporabljenih\n"
 "možnostih, gonilniku za grafično kartico in dejavnih namiznih učinkih.\n"
 "Podatke pod tem uvodnim besedilom objavite na storitev paste bin service\n"
