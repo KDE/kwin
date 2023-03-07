@@ -410,20 +410,16 @@ void ScreenShotEffect::handleScreenRemoved(EffectScreen *screen)
 {
     cancelAreaScreenShots();
 
-    for (int i = m_screenScreenShots.size() - 1; i >= 0; --i) {
-        if (m_screenScreenShots[i].screen == screen) {
-            m_screenScreenShots.erase(m_screenScreenShots.begin() + i);
-        }
-    }
+    std::erase_if(m_screenScreenShots, [screen](const auto &screenshot) {
+        return screenshot.screen == screen;
+    });
 }
 
 void ScreenShotEffect::handleWindowClosed(EffectWindow *window)
 {
-    for (int i = m_windowScreenShots.size() - 1; i >= 0; --i) {
-        if (m_windowScreenShots[i].window == window) {
-            m_windowScreenShots.erase(m_windowScreenShots.begin() + i);
-        }
-    }
+    std::erase_if(m_windowScreenShots, [window](const auto &screenshot) {
+        return screenshot.window == window;
+    };
 }
 
 } // namespace KWin
