@@ -2001,7 +2001,6 @@ Window *Workspace::findToplevel(const QUuid &internalId) const
 void Workspace::forEachToplevel(std::function<void(Window *)> func)
 {
     std::for_each(m_allClients.constBegin(), m_allClients.constEnd(), func);
-    std::for_each(deleted.constBegin(), deleted.constEnd(), func);
     std::for_each(m_unmanaged.constBegin(), m_unmanaged.constEnd(), func);
     std::for_each(m_internalWindows.constBegin(), m_internalWindows.constEnd(), func);
 }
