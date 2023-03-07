@@ -68,7 +68,7 @@ void IdleInhibition::uninhibit(Window *client)
 
 void IdleInhibition::update(Window *client)
 {
-    if (client->isInternal()) {
+    if (client->isInternal() || client->isUnmanaged()) {
         return;
     }
 
@@ -89,7 +89,7 @@ void IdleInhibition::slotWorkspaceCreated()
 
 void IdleInhibition::slotDesktopChanged()
 {
-    workspace()->forEachAbstractClient([this](Window *c) {
+    workspace()->forEachToplevel([this](Window *c) {
         update(c);
     });
 }

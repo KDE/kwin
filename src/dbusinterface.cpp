@@ -210,10 +210,7 @@ QVariantMap DBusInterface::queryWindowInfo()
 
 QVariantMap DBusInterface::getWindowInfo(const QString &uuid)
 {
-    const auto id = QUuid::fromString(uuid);
-    const auto client = workspace()->findAbstractClient([&id](const Window *c) {
-        return c->internalId() == id;
-    });
+    const auto client = workspace()->findToplevel(QUuid::fromString(uuid));
     if (client) {
         return clientToVariantMap(client);
     } else {

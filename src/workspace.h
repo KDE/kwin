@@ -125,7 +125,6 @@ public:
      * @see findClient(Predicate, xcb_window_t)
      */
     X11Window *findClient(std::function<bool(const X11Window *)> func) const;
-    Window *findAbstractClient(std::function<bool(const Window *)> func) const;
     /**
      * @brief Finds the Client matching the given match @p predicate for the given window.
      *
@@ -136,7 +135,6 @@ public:
      */
     X11Window *findClient(Predicate predicate, xcb_window_t w) const;
     void forEachClient(std::function<void(X11Window *)> func);
-    void forEachAbstractClient(std::function<void(Window *)> func);
     Unmanaged *findUnmanaged(std::function<bool(const Unmanaged *)> func) const;
     /**
      * @brief Finds the Unmanaged with the given window id.

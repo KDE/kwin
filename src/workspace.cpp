@@ -1931,17 +1931,6 @@ X11Window *Workspace::findClient(std::function<bool(const X11Window *)> func) co
     return nullptr;
 }
 
-Window *Workspace::findAbstractClient(std::function<bool(const Window *)> func) const
-{
-    if (Window *ret = Window::findInList(m_allClients, func)) {
-        return ret;
-    }
-    if (InternalWindow *ret = Window::findInList(m_internalWindows, func)) {
-        return ret;
-    }
-    return nullptr;
-}
-
 Unmanaged *Workspace::findUnmanaged(std::function<bool(const Unmanaged *)> func) const
 {
     return Window::findInList(m_unmanaged, func);
@@ -2007,16 +1996,10 @@ void Workspace::forEachToplevel(std::function<void(Window *)> func)
 
 bool Workspace::hasWindow(const Window *c)
 {
-    return findAbstractClient([&c](const Window *test) {
+    return findToplevel([&c](const Window *test) {
                return test == c;
            })
         != nullptr;
-}
-
-void Workspace::forEachAbstractClient(std::function<void(Window *)> func)
-{
-    std::for_each(m_allClients.constBegin(), m_allClients.constEnd(), func);
-    std::for_each(m_internalWindows.constBegin(), m_internalWindows.constEnd(), func);
 }
 
 Window *Workspace::findInternal(QWindow *w) const
