@@ -307,7 +307,7 @@ void TestXdgShellWindow::testMinimizeActiveWindow()
     QVERIFY(window->isMinimized());
 
     // unminimize again
-    window->unminimize();
+    window->setMinimized(false);
     QVERIFY(!window->isMinimized());
     QVERIFY(!window->isActive());
     QVERIFY(window->wantsInput());
@@ -905,12 +905,12 @@ void TestXdgShellWindow::testMinimizeWindowWithTransients()
     QVERIFY(window->hasTransient(transient, false));
 
     // minimize the main window, the transient should be minimized as well
-    window->minimize();
+    window->setMinimized(true);
     QVERIFY(window->isMinimized());
     QVERIFY(transient->isMinimized());
 
     // unminimize the main window, the transient should be unminimized as well
-    window->unminimize();
+    window->setMinimized(false);
     QVERIFY(!window->isMinimized());
     QVERIFY(!transient->isMinimized());
 }

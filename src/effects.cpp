@@ -2245,14 +2245,14 @@ void EffectWindowImpl::elevate(bool elevate)
 void EffectWindowImpl::minimize()
 {
     if (m_window->isClient()) {
-        m_window->minimize();
+        m_window->setMinimized(true);
     }
 }
 
 void EffectWindowImpl::unminimize()
 {
     if (m_window->isClient()) {
-        m_window->unminimize();
+        m_window->setMinimized(false);
     }
 }
 

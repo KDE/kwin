@@ -199,10 +199,10 @@ void ScriptedEffectsTest::testEffectsHandler()
     waitFor("stackingOrder - 1 WindowA");
 
     // windowMinimsed
-    c->minimize();
+    c->setMinimized(true);
     waitFor("windowMinimized - WindowA");
 
-    c->unminimize();
+    c->setMinimized(false);
     waitFor("windowUnminimized - WindowA");
 
     surface.reset();

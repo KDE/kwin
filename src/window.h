@@ -974,11 +974,6 @@ public:
     QStringList desktopIds() const;
 
     void setMinimized(bool set);
-    /**
-     * Minimizes this window plus its transients
-     */
-    void minimize();
-    void unminimize();
     bool isMinimized() const
     {
         return m_minimized;

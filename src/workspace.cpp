@@ -2144,28 +2144,28 @@ void Workspace::updateMinimizedOfTransients(Window *window)
             }
             // but to keep them to eg. watch progress or whatever
             if (!(*it)->isMinimized()) {
-                (*it)->minimize();
+                (*it)->setMinimized(true);
                 updateMinimizedOfTransients((*it));
             }
         }
         if (window->isModal()) { // if a modal dialog is minimized, minimize its mainwindow too
             const auto windows = window->mainWindows();
             for (Window *main : std::as_const(windows)) {
-                main->minimize();
+                main->setMinimized(true);
             }
         }
     } else {
         // else unmiminize the transients
         for (auto it = window->transients().constBegin(); it != window->transients().constEnd(); ++it) {
             if ((*it)->isMinimized()) {
-                (*it)->unminimize();
+                (*it)->setMinimized(false);
                 updateMinimizedOfTransients((*it));
             }
         }
         if (window->isModal()) {
             const auto windows = window->mainWindows();
             for (Window *main : std::as_const(windows)) {
-                main->unminimize();
+                main->setMinimized(false);
             }
         }
     }

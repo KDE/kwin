@@ -1244,7 +1244,7 @@ void Workspace::performWindowOperation(Window *window, Options::WindowOperation 
         takeActivity(window, ActivityFocus | ActivityRaise);
         break;
     case Options::MinimizeOp:
-        window->minimize();
+        window->setMinimized(true);
         break;
     case Options::ShadeOp:
         window->performMouseCommand(Options::MouseShade, Cursors::self()->mouse()->pos());

@@ -1223,7 +1223,7 @@ void XdgToplevelWindow::handleUnfullscreenRequested()
 
 void XdgToplevelWindow::handleMinimizeRequested()
 {
-    minimize();
+    setMinimized(true);
 }
 
 void XdgToplevelWindow::handleTransientForChanged()

@@ -156,9 +156,13 @@ DELEGATE(requestToggleKeepBelow, KeepBelowOp)
     }
 
 DELEGATE(requestContextHelp, showContextHelp)
-DELEGATE(requestMinimize, minimize)
 
 #undef DELEGATE
+
+void DecoratedClientImpl::requestMinimize()
+{
+    m_window->setMinimized(true);
+}
 
 void DecoratedClientImpl::requestClose()
 {

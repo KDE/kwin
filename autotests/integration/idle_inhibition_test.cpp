@@ -169,11 +169,11 @@ void TestIdleInhibition::testDontInhibitWhenMinimized()
     QCOMPARE(input()->idleInhibitors(), QList<Window *>{window});
 
     // Minimize the window, the idle inhibitor object should not be honored.
-    window->minimize();
+    window->setMinimized(true);
     QCOMPARE(input()->idleInhibitors(), QList<Window *>{});
 
     // Unminimize the window, the idle inhibitor object should be honored back again.
-    window->unminimize();
+    window->setMinimized(false);
     QCOMPARE(input()->idleInhibitors(), QList<Window *>{window});
 
     // Destroy the test window.

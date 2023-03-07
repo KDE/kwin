@@ -1527,7 +1527,7 @@ void TestXdgShellWindowRules::testMinimizeApply()
     QVERIFY(m_window->isMinimized());
 
     // We should still be able to unminimize the window.
-    m_window->unminimize();
+    m_window->setMinimized(false);
     QVERIFY(!m_window->isMinimized());
 
     // If we re-open the window, it should be minimized back again.
@@ -1548,7 +1548,7 @@ void TestXdgShellWindowRules::testMinimizeRemember()
     QVERIFY(!m_window->isMinimized());
 
     // Minimize the window.
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
 
     // If we open the window again, it should be minimized.
@@ -1569,7 +1569,7 @@ void TestXdgShellWindowRules::testMinimizeForce()
     QVERIFY(!m_window->isMinimized());
 
     // Any attempt to minimize the window should fail.
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(!m_window->isMinimized());
 
     // If we re-open the window, the minimized state should still be forced.
@@ -1577,7 +1577,7 @@ void TestXdgShellWindowRules::testMinimizeForce()
     createTestWindow();
     QVERIFY(!m_window->isMinimizable());
     QVERIFY(!m_window->isMinimized());
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(!m_window->isMinimized());
 
     destroyTestWindow();
@@ -1596,7 +1596,7 @@ void TestXdgShellWindowRules::testMinimizeApplyNow()
     QVERIFY(m_window->isMinimized());
 
     // One is still able to unminimize the window.
-    m_window->unminimize();
+    m_window->setMinimized(false);
     QVERIFY(!m_window->isMinimized());
 
     // The rule should not be applied again.
@@ -1616,7 +1616,7 @@ void TestXdgShellWindowRules::testMinimizeForceTemporarily()
     QVERIFY(!m_window->isMinimized());
 
     // Any attempt to minimize the window should fail until the window is closed.
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(!m_window->isMinimized());
 
     // The rule should be discarded when the window is closed.
@@ -1624,7 +1624,7 @@ void TestXdgShellWindowRules::testMinimizeForceTemporarily()
     createTestWindow();
     QVERIFY(m_window->isMinimizable());
     QVERIFY(!m_window->isMinimized());
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
 
     destroyTestWindow();
@@ -2257,7 +2257,7 @@ void TestXdgShellWindowRules::testShortcutDontAffect()
 
     createTestWindow();
     QCOMPARE(m_window->shortcut(), QKeySequence());
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
 
     // If we press the window shortcut, nothing should happen.
@@ -2285,7 +2285,7 @@ void TestXdgShellWindowRules::testShortcutApply()
     QSignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
     quint32 timestamp = 1;
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2299,7 +2299,7 @@ void TestXdgShellWindowRules::testShortcutApply()
     // One can also change the shortcut.
     m_window->setShortcut(QStringLiteral("Ctrl+Alt+2"));
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2311,7 +2311,7 @@ void TestXdgShellWindowRules::testShortcutApply()
     QVERIFY(!m_window->isMinimized());
 
     // The old shortcut should do nothing.
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2344,7 +2344,7 @@ void TestXdgShellWindowRules::testShortcutRemember()
     QSignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
     quint32 timestamp = 1;
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2358,7 +2358,7 @@ void TestXdgShellWindowRules::testShortcutRemember()
     // Change the window shortcut to Ctrl+Alt+2.
     m_window->setShortcut(QStringLiteral("Ctrl+Alt+2"));
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2391,7 +2391,7 @@ void TestXdgShellWindowRules::testShortcutForce()
     QSignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
     quint32 timestamp = 1;
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2405,7 +2405,7 @@ void TestXdgShellWindowRules::testShortcutForce()
     // Any attempt to change the window shortcut should not succeed.
     m_window->setShortcut(QStringLiteral("Ctrl+Alt+2"));
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2437,7 +2437,7 @@ void TestXdgShellWindowRules::testShortcutApplyNow()
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
     QSignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
     quint32 timestamp = 1;
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2451,7 +2451,7 @@ void TestXdgShellWindowRules::testShortcutApplyNow()
     // Assign a different shortcut.
     m_window->setShortcut(QStringLiteral("Ctrl+Alt+2"));
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_2}));
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2481,7 +2481,7 @@ void TestXdgShellWindowRules::testShortcutForceTemporarily()
     QSignalSpy minimizedChangedSpy(m_window, &Window::minimizedChanged);
     quint32 timestamp = 1;
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
@@ -2495,7 +2495,7 @@ void TestXdgShellWindowRules::testShortcutForceTemporarily()
     // Any attempt to change the window shortcut should not succeed.
     m_window->setShortcut(QStringLiteral("Ctrl+Alt+2"));
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
-    m_window->minimize();
+    m_window->setMinimized(true);
     QVERIFY(m_window->isMinimized());
     Test::keyboardKeyPressed(KEY_LEFTCTRL, timestamp++);
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);

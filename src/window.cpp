@@ -1294,33 +1294,16 @@ bool Window::titlebarPositionUnderMouse() const
 
 void Window::setMinimized(bool set)
 {
-    set ? minimize() : unminimize();
-}
-
-void Window::minimize()
-{
-    if (!isMinimizable() || isMinimized()) {
+    const bool effectiveSet = rules()->checkMinimize(set);
+    if (m_minimized == effectiveSet) {
         return;
     }
 
-    m_minimized = true;
-    doMinimize();
-
-    updateWindowRules(Rules::Minimize);
-    Q_EMIT minimizedChanged();
-}
-
-void Window::unminimize()
-{
-    if (!isMinimized()) {
+    if (effectiveSet && !isMinimizable()) {
         return;
     }
 
-    if (rules()->checkMinimize(false)) {
-        return;
-    }
-
-    m_minimized = false;
+    m_minimized = effectiveSet;
     doMinimize();
 
     updateWindowRules(Rules::Minimize);
@@ -2212,11 +2195,7 @@ void Window::setupWindowManagementInterface()
         setFullScreen(set, false);
     });
     connect(w, &PlasmaWindowInterface::minimizedRequested, this, [this](bool set) {
-        if (set) {
-            minimize();
-        } else {
-            unminimize();
-        }
+        setMinimized(set);
     });
     connect(w, &PlasmaWindowInterface::maximizedRequested, this, [this](bool set) {
         maximize(set ? MaximizeFull : MaximizeRestore);
@@ -2418,7 +2397,7 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPointF &globa
         maximize(MaximizeRestore);
         break;
     case Options::MouseMinimize:
-        minimize();
+        setMinimized(true);
         break;
     case Options::MouseAbove: {
         StackingUpdatesBlocker blocker(workspace());
@@ -4408,12 +4387,7 @@ void Window::applyWindowRules()
     setOnActivities(activities());
     // Type
     maximize(requestedMaximizeMode());
-    // Minimize : functions don't check, and there are two functions
-    if (client_rules->checkMinimize(isMinimized())) {
-        minimize();
-    } else {
-        unminimize();
-    }
+    setMinimized(isMinimized());
     setShade(shadeMode());
     setOriginalSkipTaskbar(skipTaskbar());
     setSkipPager(skipPager());
