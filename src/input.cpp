@@ -2636,6 +2636,7 @@ void InputRedirection::setupWorkspace()
 
         setupTouchpadShortcuts();
         setupInputFilters();
+        updateScreens();
     }
 }
 
