@@ -145,7 +145,7 @@ enum Rotation {
     Right = 8,
 };
 
-Output::Transform toDrmTransform(int rotation)
+Output::Transform toKWinTransform(int rotation)
 {
     switch (Rotation(rotation)) {
     case None:
@@ -207,18 +207,27 @@ std::optional<std::pair<OutputConfiguration, QVector<Output *>>> readOutputConfi
             } else {
                 outputOrder.push_back(std::make_pair(0, output));
             }
-            const QJsonObject pos = outputInfo["pos"].toObject();
-            props->pos = QPoint(pos["x"].toInt(), pos["y"].toInt());
+            if (const QJsonObject pos = outputInfo["pos"].toObject(); !pos.isEmpty()) {
+                props->pos = QPoint(pos["x"].toInt(), pos["y"].toInt());
+            }
 
             // settings that are independent of per output setups:
             const auto &globalInfo = globalOutputInfo ? globalOutputInfo.value() : outputInfo;
             if (const QJsonValue scale = globalInfo["scale"]; !scale.isUndefined()) {
                 props->scale = scale.toDouble(1.);
             }
-            props->transform = KScreenIntegration::toDrmTransform(globalInfo["rotation"].toInt());
-            props->overscan = static_cast<uint32_t>(globalInfo["overscan"].toInt(props->overscan));
-            props->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(globalInfo["vrrpolicy"].toInt(static_cast<uint32_t>(props->vrrPolicy)));
-            props->rgbRange = static_cast<Output::RgbRange>(globalInfo["rgbrange"].toInt(static_cast<uint32_t>(props->rgbRange)));
+            if (const QJsonValue rotation = globalInfo["rotation"]; !rotation.isUndefined()) {
+                props->transform = KScreenIntegration::toKWinTransform(rotation.toInt());
+            }
+            if (const QJsonValue overscan = globalInfo["overscan"]; !overscan.isUndefined()) {
+                props->overscan = globalInfo["overscan"].toInt();
+            }
+            if (const QJsonValue vrrpolicy = globalInfo["vrrpolicy"]; !vrrpolicy.isUndefined()) {
+                props->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(vrrpolicy.toInt());
+            }
+            if (const QJsonValue rgbrange = globalInfo["rgbrange"]; !rgbrange.isUndefined()) {
+                props->rgbRange = static_cast<Output::RgbRange>(rgbrange.toInt());
+            }
 
             if (const QJsonObject modeInfo = globalInfo["mode"].toObject(); !modeInfo.isEmpty()) {
                 if (auto mode = KScreenIntegration::parseMode(output, modeInfo)) {

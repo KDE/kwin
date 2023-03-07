@@ -13,25 +13,15 @@ namespace KWin
 
 std::shared_ptr<OutputChangeSet> OutputConfiguration::changeSet(Output *output)
 {
-    const auto ptr = constChangeSet(output);
-    m_properties[output] = ptr;
-    return ptr;
+    auto &ret = m_properties[output];
+    if (!ret) {
+        ret = std::make_shared<OutputChangeSet>();
+    }
+    return ret;
 }
 
 std::shared_ptr<OutputChangeSet> OutputConfiguration::constChangeSet(Output *output) const
 {
-    if (!m_properties.contains(output)) {
-        auto props = std::make_shared<OutputChangeSet>();
-        props->enabled = output->isEnabled();
-        props->pos = output->geometry().topLeft();
-        props->scale = output->scale();
-        props->mode = output->currentMode();
-        props->transform = output->transform();
-        props->overscan = output->overscan();
-        props->rgbRange = output->rgbRange();
-        props->vrrPolicy = output->vrrPolicy();
-        return props;
-    }
     return m_properties[output];
 }
 }
