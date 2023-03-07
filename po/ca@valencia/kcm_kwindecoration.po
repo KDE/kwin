@@ -276,20 +276,3 @@ msgstr "Molt enorme"
 #, kde-format
 msgid "Oversized"
 msgstr "Fora de mida"
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Josep M. Ferrer,Albert Astals Cid,Sebastià Pla i Sanz"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "txemaq@post.com,aacid@kde.org,sps@sastia.com"
-
-#~ msgid "Window Decorations"
-#~ msgstr "Decoració de les finestres"
-
-#~ msgid "Valerio Pilo"
-#~ msgstr "Valerio Pilo"
-
-#~ msgid "Author"
-#~ msgstr "Autoria"

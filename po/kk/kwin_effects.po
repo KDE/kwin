@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-07 02:21+0000\n"
 "PO-Revision-Date: 2013-09-30 00:41+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -631,19 +631,6 @@ msgstr "Анимация"
 msgid "Window close scale:"
 msgstr "Анимация"
 
-#: screenshot/screenshotdbusinterface1.cpp:478
-#, kde-format
-msgctxt "Notification caption that a screenshot got saved to file"
-msgid "Screenshot"
-msgstr ""
-
-#: screenshot/screenshotdbusinterface1.cpp:479
-#, kde-format
-msgctxt "Notification with path to screenshot file"
-msgid "Screenshot saved to %1"
-msgstr ""
-
-#: screenshot/screenshotdbusinterface1.cpp:800
 #: screenshot/screenshotdbusinterface2.cpp:490
 #, kde-format
 msgid ""
@@ -651,7 +638,6 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: screenshot/screenshotdbusinterface1.cpp:803
 #: screenshot/screenshotdbusinterface2.cpp:508
 #, kde-format
 msgid ""

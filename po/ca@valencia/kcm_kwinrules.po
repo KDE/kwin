@@ -953,20 +953,3 @@ msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
 "No s'han pogut detectar les propietats de la finestra. KWin no gestiona esta "
 "finestra."
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Empar Montoro Martín,Sebastià Pla i Sanz"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "montoro_mde@gva.es,sps@sastia.com"
-
-#~ msgid "Window Rules"
-#~ msgstr "Regles de les finestres"
-
-#~ msgid "Ismael Asensio"
-#~ msgstr "Ismael Asensio"
-
-#~ msgid "Author"
-#~ msgstr "Autoria"

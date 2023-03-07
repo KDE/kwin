@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-07 02:21+0000\n"
 "PO-Revision-Date: 2020-06-05 22:39+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -611,19 +611,6 @@ msgstr "Akna avamise skaleerimine:"
 msgid "Window close scale:"
 msgstr "Akna sulgemise skaleerimine:"
 
-#: screenshot/screenshotdbusinterface1.cpp:478
-#, kde-format
-msgctxt "Notification caption that a screenshot got saved to file"
-msgid "Screenshot"
-msgstr "Ekraanipilt"
-
-#: screenshot/screenshotdbusinterface1.cpp:479
-#, kde-format
-msgctxt "Notification with path to screenshot file"
-msgid "Screenshot saved to %1"
-msgstr "Ekraanipilt salvestati asukohta %1"
-
-#: screenshot/screenshotdbusinterface1.cpp:800
 #: screenshot/screenshotdbusinterface2.cpp:490
 #, kde-format
 msgid ""
@@ -633,7 +620,6 @@ msgstr ""
 "Vali aken ekraanipildi tegemiseks vasakklõpsu või Enteriga.\n"
 "Loobumiseks tee paremklõps või vali Escape."
 
-#: screenshot/screenshotdbusinterface1.cpp:803
 #: screenshot/screenshotdbusinterface2.cpp:508
 #, kde-format
 msgid ""
@@ -1181,6 +1167,14 @@ msgstr "Välja lülitatud"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Hiire jälgimine:"
+
+#~ msgctxt "Notification caption that a screenshot got saved to file"
+#~ msgid "Screenshot"
+#~ msgstr "Ekraanipilt"
+
+#~ msgctxt "Notification with path to screenshot file"
+#~ msgid "Screenshot saved to %1"
+#~ msgstr "Ekraanipilt salvestati asukohta %1"
 
 #, fuzzy
 #~| msgid "Background"

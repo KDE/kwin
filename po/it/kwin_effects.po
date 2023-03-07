@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-07 02:21+0000\n"
 "PO-Revision-Date: 2022-12-02 19:34+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -602,19 +602,6 @@ msgstr "Scala di apertura della finestra:"
 msgid "Window close scale:"
 msgstr "Scala di chiusura della finestra:"
 
-#: screenshot/screenshotdbusinterface1.cpp:478
-#, kde-format
-msgctxt "Notification caption that a screenshot got saved to file"
-msgid "Screenshot"
-msgstr "Schermata"
-
-#: screenshot/screenshotdbusinterface1.cpp:479
-#, kde-format
-msgctxt "Notification with path to screenshot file"
-msgid "Screenshot saved to %1"
-msgstr "Schermata salvata in %1"
-
-#: screenshot/screenshotdbusinterface1.cpp:800
 #: screenshot/screenshotdbusinterface2.cpp:490
 #, kde-format
 msgid ""
@@ -625,7 +612,6 @@ msgstr ""
 "Invio.\n"
 "Esc o il clic del tasto destro per annullare."
 
-#: screenshot/screenshotdbusinterface1.cpp:803
 #: screenshot/screenshotdbusinterface2.cpp:508
 #, kde-format
 msgid ""
@@ -1169,6 +1155,14 @@ msgstr "Disabilitato"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Inseguimento del mouse:"
+
+#~ msgctxt "Notification caption that a screenshot got saved to file"
+#~ msgid "Screenshot"
+#~ msgstr "Schermata"
+
+#~ msgctxt "Notification with path to screenshot file"
+#~ msgid "Screenshot saved to %1"
+#~ msgstr "Schermata salvata in %1"
 
 #~ msgid "Blur background:"
 #~ msgstr "Sfondo sfocato:"

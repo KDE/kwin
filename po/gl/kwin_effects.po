@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-07 02:21+0000\n"
 "PO-Revision-Date: 2020-01-11 11:32+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -618,19 +618,6 @@ msgstr "Escala de apertura de xanela:"
 msgid "Window close scale:"
 msgstr "Escala de peche de xanela:"
 
-#: screenshot/screenshotdbusinterface1.cpp:478
-#, kde-format
-msgctxt "Notification caption that a screenshot got saved to file"
-msgid "Screenshot"
-msgstr "Captura de pantalla"
-
-#: screenshot/screenshotdbusinterface1.cpp:479
-#, kde-format
-msgctxt "Notification with path to screenshot file"
-msgid "Screenshot saved to %1"
-msgstr "A captura de pantalla gardouse en %1"
-
-#: screenshot/screenshotdbusinterface1.cpp:800
 #: screenshot/screenshotdbusinterface2.cpp:490
 #, kde-format
 msgid ""
@@ -640,7 +627,6 @@ msgstr ""
 "Clic esquerdo ou Intro para seleccionar a xanela para capturar.\n"
 "Esc ou clic secundario para cancelar."
 
-#: screenshot/screenshotdbusinterface1.cpp:803
 #: screenshot/screenshotdbusinterface2.cpp:508
 #, kde-format
 msgid ""
@@ -1196,6 +1182,14 @@ msgstr "Desactivado"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Seguimento do rato:"
+
+#~ msgctxt "Notification caption that a screenshot got saved to file"
+#~ msgid "Screenshot"
+#~ msgstr "Captura de pantalla"
+
+#~ msgctxt "Notification with path to screenshot file"
+#~ msgid "Screenshot saved to %1"
+#~ msgstr "A captura de pantalla gardouse en %1"
 
 #, fuzzy
 #~| msgid "Background"

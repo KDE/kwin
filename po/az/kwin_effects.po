@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-07 02:21+0000\n"
 "PO-Revision-Date: 2022-08-19 17:11+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -599,19 +599,6 @@ msgstr "Açılan pəncərənin ilkin miqyası:"
 msgid "Window close scale:"
 msgstr "Bağlanan pəncərənin son miqyası:"
 
-#: screenshot/screenshotdbusinterface1.cpp:478
-#, kde-format
-msgctxt "Notification caption that a screenshot got saved to file"
-msgid "Screenshot"
-msgstr "Ekranın şəkli"
-
-#: screenshot/screenshotdbusinterface1.cpp:479
-#, kde-format
-msgctxt "Notification with path to screenshot file"
-msgid "Screenshot saved to %1"
-msgstr "Ekran şəkli %1-də saxlanıldı"
-
-#: screenshot/screenshotdbusinterface1.cpp:800
 #: screenshot/screenshotdbusinterface2.cpp:490
 #, kde-format
 msgid ""
@@ -621,7 +608,6 @@ msgstr ""
 "Sol klik və ya enter düyməsi ilə şəkili çəkiləcək pəncərəni seçmək.\n"
 "Bundan imtina etmək üçün Escape və ya sağ klik."
 
-#: screenshot/screenshotdbusinterface1.cpp:803
 #: screenshot/screenshotdbusinterface2.cpp:508
 #, kde-format
 msgid ""
@@ -1165,6 +1151,14 @@ msgstr "Söndürülüb"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Siçanın izlənməsi:"
+
+#~ msgctxt "Notification caption that a screenshot got saved to file"
+#~ msgid "Screenshot"
+#~ msgstr "Ekranın şəkli"
+
+#~ msgctxt "Notification with path to screenshot file"
+#~ msgid "Screenshot saved to %1"
+#~ msgstr "Ekran şəkli %1-də saxlanıldı"
 
 #~ msgid "Blur background:"
 #~ msgstr "Fon bulanıqlığı:"

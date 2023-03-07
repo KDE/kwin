@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: கேபசூ 4.1 தமிழாக்கம்\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-07 02:21+0000\n"
 "PO-Revision-Date: 2022-12-06 20:05+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -600,19 +600,6 @@ msgstr "சாளர திறப்புக்கான அளவுமாற�
 msgid "Window close scale:"
 msgstr "சாளரத்தை மூடும்போது அளவுமாற்றம்:"
 
-#: screenshot/screenshotdbusinterface1.cpp:478
-#, kde-format
-msgctxt "Notification caption that a screenshot got saved to file"
-msgid "Screenshot"
-msgstr "திரைப்பிடிப்பு"
-
-#: screenshot/screenshotdbusinterface1.cpp:479
-#, kde-format
-msgctxt "Notification with path to screenshot file"
-msgid "Screenshot saved to %1"
-msgstr "திரைப்பிடிப்பு %1 என்ற இடத்திற்கு சேமிக்கப்பட்டது"
-
-#: screenshot/screenshotdbusinterface1.cpp:800
 #: screenshot/screenshotdbusinterface2.cpp:490
 #, kde-format
 msgid ""
@@ -623,7 +610,6 @@ msgstr ""
 "தேர்ந்தெடுங்கள்.\n"
 "கைவிட escape விசையை அல்லது வலது க்ளிக்கை பயன்படுத்துங்கள்."
 
-#: screenshot/screenshotdbusinterface1.cpp:803
 #: screenshot/screenshotdbusinterface2.cpp:508
 #, kde-format
 msgid ""
@@ -1165,6 +1151,14 @@ msgstr "முடக்கு"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "சுட்டியை பின்தொடர்தல்:"
+
+#~ msgctxt "Notification caption that a screenshot got saved to file"
+#~ msgid "Screenshot"
+#~ msgstr "திரைப்பிடிப்பு"
+
+#~ msgctxt "Notification with path to screenshot file"
+#~ msgid "Screenshot saved to %1"
+#~ msgstr "திரைப்பிடிப்பு %1 என்ற இடத்திற்கு சேமிக்கப்பட்டது"
 
 #~ msgid "Blur background:"
 #~ msgstr "பின்புலத்தை மங்கலாக்கு:"

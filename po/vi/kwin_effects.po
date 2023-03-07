@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 02:12+0000\n"
+"POT-Creation-Date: 2023-03-07 02:21+0000\n"
 "PO-Revision-Date: 2023-01-08 18:01+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -597,19 +597,6 @@ msgstr "Cỡ mở cửa sổ:"
 msgid "Window close scale:"
 msgstr "Cỡ đóng cửa sổ:"
 
-#: screenshot/screenshotdbusinterface1.cpp:478
-#, kde-format
-msgctxt "Notification caption that a screenshot got saved to file"
-msgid "Screenshot"
-msgstr "Ảnh chụp màn hình"
-
-#: screenshot/screenshotdbusinterface1.cpp:479
-#, kde-format
-msgctxt "Notification with path to screenshot file"
-msgid "Screenshot saved to %1"
-msgstr "Ảnh chụp màn hình được lưu vào %1"
-
-#: screenshot/screenshotdbusinterface1.cpp:800
 #: screenshot/screenshotdbusinterface2.cpp:490
 #, kde-format
 msgid ""
@@ -619,7 +606,6 @@ msgstr ""
 "Bấm trái hoặc enter để chọn cửa sổ để chụp ảnh màn hình.\n"
 "Escape hoặc bấm phải để huỷ."
 
-#: screenshot/screenshotdbusinterface1.cpp:803
 #: screenshot/screenshotdbusinterface2.cpp:508
 #, kde-format
 msgid ""
@@ -1158,6 +1144,14 @@ msgstr "Tắt"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr "Theo dõi chuột"
+
+#~ msgctxt "Notification caption that a screenshot got saved to file"
+#~ msgid "Screenshot"
+#~ msgstr "Ảnh chụp màn hình"
+
+#~ msgctxt "Notification with path to screenshot file"
+#~ msgid "Screenshot saved to %1"
+#~ msgstr "Ảnh chụp màn hình được lưu vào %1"
 
 #~ msgid "Blur background:"
 #~ msgstr "Nền mờ:"

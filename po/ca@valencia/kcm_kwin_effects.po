@@ -75,17 +75,3 @@ msgstr "Exclou els efectes interns"
 #, kde-format
 msgid "Get New Desktop Effects..."
 msgstr "Obtín efectes nous d'escriptori..."
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Josep M. Ferrer"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "txemaq@gmail.com"
-
-#~ msgid "Desktop Effects"
-#~ msgstr "Efectes de l'escriptori"
-
-#~ msgid "Vlad Zahorodnii"
-#~ msgstr "Vlad Zahorodnii"
