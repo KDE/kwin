@@ -4,6 +4,7 @@
 
     SPDX-FileCopyrightText: 2019 David Edmundson <davidedmundson@kde.org>
     SPDX-FileCopyrightText: 2019 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
+    SPDX-FileCopyrightText: 2023 Natalie Clarius <natalie_clarius@yahoo.de>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -50,6 +51,10 @@ private Q_SLOTS:
     void testPlaceZeroCornered();
     void testPlaceRandom();
     void testFullscreen();
+    void testCascadeIfCovering();
+    void testCascadeIfCoveringIgnoreNonCovering();
+    void testCascadeIfCoveringIgnoreOutOfArea();
+    void testCascadeIfCoveringIgnoreAlreadyCovered();
 
 private:
     void setPlacementPolicy(PlacementPolicy policy);
@@ -359,6 +364,143 @@ void TestPlacement::testFullscreen()
     window->sendToOutput(outputs[1]);
     QCOMPARE(window->frameGeometry(), outputs[1]->geometry());
     QCOMPARE(geometryChangedSpy.count(), 2);
+}
+
+void TestPlacement::testCascadeIfCovering()
+{
+    // This test verifies that the cascade-if-covering adjustment works for the Centered placement
+    // policy.
+
+    KConfigGroup group = kwinApp()->config()->group("Windows");
+    group.writeEntry("Placement", Placement::policyToString(PlacementCentered));
+    group.sync();
+    workspace()->slotReconfigure();
+
+    // window should be in center
+    std::unique_ptr<KWayland::Client::Surface> surface1(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.get()));
+    Window *window1 = Test::renderAndWaitForShown(surface1.get(), QSize(100, 50), Qt::red);
+    QVERIFY(window1);
+    QCOMPARE(window1->pos(), QPoint(590, 487));
+    QCOMPARE(window1->size(), QSize(100, 50));
+
+    // window should be cascaded to avoid overlapping window 1
+    std::unique_ptr<KWayland::Client::Surface> surface2(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.get()));
+    Window *window2 = Test::renderAndWaitForShown(surface2.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(window2);
+    QCOMPARE(window2->pos(), window1->pos() + workspace()->cascadeOffset(window2));
+    QCOMPARE(window2->size(), QSize(100, 50));
+
+    // window should be cascaded to avoid overlapping window 1 and 2
+    std::unique_ptr<KWayland::Client::Surface> surface3(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface3(Test::createXdgToplevelSurface(surface3.get()));
+    Window *window3 = Test::renderAndWaitForShown(surface3.get(), QSize(100, 50), Qt::green);
+    QVERIFY(window3);
+    QCOMPARE(window3->pos(), window2->pos() + workspace()->cascadeOffset(window3));
+    QCOMPARE(window3->size(), QSize(100, 50));
+
+    shellSurface3.reset();
+    QVERIFY(Test::waitForWindowDestroyed(window3));
+    shellSurface2.reset();
+    QVERIFY(Test::waitForWindowDestroyed(window2));
+    shellSurface1.reset();
+    QVERIFY(Test::waitForWindowDestroyed(window1));
+}
+
+void TestPlacement::testCascadeIfCoveringIgnoreNonCovering()
+{
+    // This test verifies that the cascade-if-covering adjustment doesn't take effect when the
+    // other window wouldn't be fully covered.
+
+    KConfigGroup group = kwinApp()->config()->group("Windows");
+    group.writeEntry("Placement", Placement::policyToString(PlacementCentered));
+    group.sync();
+    workspace()->slotReconfigure();
+
+    std::unique_ptr<KWayland::Client::Surface> surface1(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.get()));
+    Window *window1 = Test::renderAndWaitForShown(surface1.get(), QSize(100, 50), Qt::red);
+    QVERIFY(window1);
+
+    // window should not be cascaded since it wouldn't fully overlap
+    std::unique_ptr<KWayland::Client::Surface> surface2(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.get()));
+    Window *window2 = Test::renderAndWaitForShown(surface2.get(), QSize(50, 50), Qt::blue);
+    QVERIFY(window2);
+    QCOMPARE(window2->pos(), QPoint(615, 487));
+    QCOMPARE(window2->size(), QSize(50, 50));
+
+    shellSurface2.reset();
+    QVERIFY(Test::waitForWindowDestroyed(window2));
+    shellSurface1.reset();
+    QVERIFY(Test::waitForWindowDestroyed(window1));
+}
+
+void TestPlacement::testCascadeIfCoveringIgnoreOutOfArea()
+{
+    // This test verifies that the cascade-if-covering adjustment doesn't take effect when there is
+    // not enough space on the placement area to cascade.
+
+    KConfigGroup group = kwinApp()->config()->group("Windows");
+    group.writeEntry("Placement", Placement::policyToString(PlacementCentered));
+    group.sync();
+    workspace()->slotReconfigure();
+
+    std::unique_ptr<KWayland::Client::Surface> surface1(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.get()));
+    Window *window1 = Test::renderAndWaitForShown(surface1.get(), QSize(100, 50), Qt::red);
+    QVERIFY(window1);
+
+    // window should not be cascaded since it would be out of bounds of work area
+    std::unique_ptr<KWayland::Client::Surface> surface2(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.get()));
+    Window *window2 = Test::renderAndWaitForShown(surface2.get(), QSize(1280, 1024), Qt::blue);
+    QVERIFY(window2);
+    QCOMPARE(window2->pos(), QPoint(0, 0));
+    QCOMPARE(window2->size(), QSize(1280, 1024));
+
+    shellSurface2.reset();
+    QVERIFY(Test::waitForWindowDestroyed(window2));
+    shellSurface1.reset();
+    QVERIFY(Test::waitForWindowDestroyed(window1));
+}
+
+void TestPlacement::testCascadeIfCoveringIgnoreAlreadyCovered()
+{
+    // This test verifies that the cascade-if-covering adjustment doesn't take effect when the
+    // other window is already fully covered by other windows anyway.
+
+    KConfigGroup group = kwinApp()->config()->group("Windows");
+    group.writeEntry("Placement", Placement::policyToString(PlacementCentered));
+    group.sync();
+    workspace()->slotReconfigure();
+
+    std::unique_ptr<KWayland::Client::Surface> surface1(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.get()));
+    Window *window1 = Test::renderAndWaitForShown(surface1.get(), QSize(100, 50), Qt::red);
+    QVERIFY(window1);
+
+    std::unique_ptr<KWayland::Client::Surface> surface2(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.get()));
+    Window *window2 = Test::renderAndWaitForShown(surface2.get(), QSize(1280, 1024), Qt::blue);
+    QVERIFY(window2);
+
+    // window should not be cascaded since the small window is already fully covered by the
+    // large window anyway
+    std::unique_ptr<KWayland::Client::Surface> surface3(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface3(Test::createXdgToplevelSurface(surface3.get()));
+    Window *window3 = Test::renderAndWaitForShown(surface3.get(), QSize(100, 50), Qt::green);
+    QVERIFY(window3);
+    QCOMPARE(window3->pos(), QPoint(590, 487));
+    QCOMPARE(window3->size(), QSize(100, 50));
+
+    shellSurface3.reset();
+    QVERIFY(Test::waitForWindowDestroyed(window3));
+    shellSurface2.reset();
+    QVERIFY(Test::waitForWindowDestroyed(window2));
+    shellSurface1.reset();
+    QVERIFY(Test::waitForWindowDestroyed(window1));
 }
 
 WAYLANDTEST_MAIN(TestPlacement)
