@@ -1078,7 +1078,7 @@ EffectWindow *EffectsHandlerImpl::findWindow(QWindow *w) const
 
 EffectWindow *EffectsHandlerImpl::findWindow(const QUuid &id) const
 {
-    if (Window *window = workspace()->findToplevel(id)) {
+    if (Window *window = workspace()->findWindow(id)) {
         return window->effectWindow();
     }
     return nullptr;

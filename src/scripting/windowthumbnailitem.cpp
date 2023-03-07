@@ -257,7 +257,7 @@ void WindowThumbnailItem::setWId(const QUuid &wId)
     }
     m_wId = wId;
     if (!m_wId.isNull()) {
-        setClient(workspace()->findToplevel(wId));
+        setClient(workspace()->findWindow(wId));
     } else if (m_client) {
         m_client = nullptr;
         updateImplicitSize();

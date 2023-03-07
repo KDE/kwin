@@ -89,7 +89,7 @@ void IdleInhibition::slotWorkspaceCreated()
 
 void IdleInhibition::slotDesktopChanged()
 {
-    workspace()->forEachToplevel([this](Window *c) {
+    workspace()->forEachWindow([this](Window *c) {
         update(c);
     });
 }

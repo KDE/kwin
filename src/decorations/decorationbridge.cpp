@@ -133,7 +133,7 @@ bool DecorationBridge::initPlugin()
 
 static void recreateDecorations()
 {
-    Workspace::self()->forEachToplevel([](Window *window) {
+    Workspace::self()->forEachWindow([](Window *window) {
         window->invalidateDecoration();
     });
 }

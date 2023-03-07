@@ -3362,7 +3362,7 @@ Window *Window::findWindowWithSameCaption() const
     auto fetchNameInternalPredicate = [this](const Window *cl) {
         return (!cl->isSpecialWindow() || cl->isToolbar()) && cl != this && cl->captionNormal() == captionNormal() && cl->captionSuffix() == captionSuffix();
     };
-    return workspace()->findToplevel(fetchNameInternalPredicate);
+    return workspace()->findWindow(fetchNameInternalPredicate);
 }
 
 QString Window::caption() const

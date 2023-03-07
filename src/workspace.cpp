@@ -1966,7 +1966,7 @@ X11Window *Workspace::findClient(Predicate predicate, xcb_window_t w) const
     return nullptr;
 }
 
-Window *Workspace::findToplevel(std::function<bool(const Window *)> func) const
+Window *Workspace::findWindow(std::function<bool(const Window *)> func) const
 {
     if (auto *ret = Window::findInList(m_allClients, func)) {
         return ret;
@@ -1980,14 +1980,14 @@ Window *Workspace::findToplevel(std::function<bool(const Window *)> func) const
     return nullptr;
 }
 
-Window *Workspace::findToplevel(const QUuid &internalId) const
+Window *Workspace::findWindow(const QUuid &internalId) const
 {
-    return findToplevel([internalId](const KWin::Window *l) -> bool {
+    return findWindow([internalId](const KWin::Window *l) -> bool {
         return internalId == l->internalId();
     });
 }
 
-void Workspace::forEachToplevel(std::function<void(Window *)> func)
+void Workspace::forEachWindow(std::function<void(Window *)> func)
 {
     std::for_each(m_allClients.constBegin(), m_allClients.constEnd(), func);
     std::for_each(m_unmanaged.constBegin(), m_unmanaged.constEnd(), func);
@@ -1996,7 +1996,7 @@ void Workspace::forEachToplevel(std::function<void(Window *)> func)
 
 bool Workspace::hasWindow(const Window *c)
 {
-    return findToplevel([&c](const Window *test) {
+    return findWindow([&c](const Window *test) {
                return test == c;
            })
         != nullptr;

@@ -144,10 +144,10 @@ public:
      */
     Unmanaged *findUnmanaged(xcb_window_t w) const;
     void forEachUnmanaged(std::function<void(Unmanaged *)> func);
-    Window *findToplevel(std::function<bool(const Window *)> func) const;
-    void forEachToplevel(std::function<void(Window *)> func);
 
-    Window *findToplevel(const QUuid &internalId) const;
+    Window *findWindow(const QUuid &internalId) const;
+    Window *findWindow(std::function<bool(const Window *)> func) const;
+    void forEachWindow(std::function<void(Window *)> func);
 
     /**
      * @brief Finds a Window for the internal window @p w.

@@ -206,7 +206,7 @@ void WindowsRunner::Run(const QString &id, const QString &actionId)
         return;
     }
 
-    const auto window = workspace()->findToplevel(QUuid::fromString(objectId));
+    const auto window = workspace()->findWindow(QUuid::fromString(objectId));
     if (!window || !window->isClient()) {
         return;
     }
