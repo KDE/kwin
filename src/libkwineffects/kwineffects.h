@@ -1705,9 +1705,6 @@ Q_SIGNALS:
      * @since 4.7
      */
     void tabBoxKeyEvent(QKeyEvent *event);
-    void currentTabAboutToChange(KWin::EffectWindow *from, KWin::EffectWindow *to);
-    void tabAdded(KWin::EffectWindow *from, KWin::EffectWindow *to); // from merged with to
-    void tabRemoved(KWin::EffectWindow *c, KWin::EffectWindow *group); // c removed from group
     /**
      * Signal emitted when mouse changed.
      * If an effect needs to get updated mouse positions, it needs to first call startMousePolling.

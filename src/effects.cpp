@@ -535,21 +535,6 @@ void EffectsHandlerImpl::slotClientModalityChanged()
     Q_EMIT windowModalityChanged(static_cast<X11Window *>(sender())->effectWindow());
 }
 
-void EffectsHandlerImpl::slotCurrentTabAboutToChange(EffectWindow *from, EffectWindow *to)
-{
-    Q_EMIT currentTabAboutToChange(from, to);
-}
-
-void EffectsHandlerImpl::slotTabAdded(EffectWindow *w, EffectWindow *to)
-{
-    Q_EMIT tabAdded(w, to);
-}
-
-void EffectsHandlerImpl::slotTabRemoved(EffectWindow *w, EffectWindow *leaderOfFormerGroup)
-{
-    Q_EMIT tabRemoved(w, leaderOfFormerGroup);
-}
-
 void EffectsHandlerImpl::slotWindowDamaged(Window *window)
 {
     if (!window->effectWindow()) {

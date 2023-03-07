@@ -260,10 +260,6 @@ public:
     bool isInputPanelOverlay() const override;
 
 public Q_SLOTS:
-    void slotCurrentTabAboutToChange(EffectWindow *from, EffectWindow *to);
-    void slotTabAdded(EffectWindow *from, EffectWindow *to);
-    void slotTabRemoved(EffectWindow *c, EffectWindow *newActiveWindow);
-
     // slots for D-Bus interface
     Q_SCRIPTABLE void reconfigureEffect(const QString &name);
     Q_SCRIPTABLE bool loadEffect(const QString &name);
