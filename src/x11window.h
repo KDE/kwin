@@ -69,26 +69,7 @@ private:
 class KWIN_EXPORT X11Window : public Window
 {
     Q_OBJECT
-    /**
-     * By how much the window wishes to grow/shrink at least. Usually QSize(1,1).
-     * MAY BE DISOBEYED BY THE WM! It's only for information, do NOT rely on it at all.
-     * The value is evaluated each time the getter is called.
-     * Because of that no changed signal is provided.
-     */
-    Q_PROPERTY(QSizeF basicUnit READ basicUnit)
-    /**
-     * A client can block compositing. That is while the Client is alive and the state is set,
-     * Compositing is suspended and is resumed when there are no Clients blocking compositing any
-     * more.
-     *
-     * This is actually set by a window property, unfortunately not used by the target application
-     * group. For convenience it's exported as a property to the scripts.
-     *
-     * Use with care!
-     */
-    Q_PROPERTY(bool blocksCompositing READ isBlockingCompositing WRITE setBlockingCompositing NOTIFY blockingCompositingChanged)
-    Q_PROPERTY(qulonglong frameId READ frameId CONSTANT)
-    Q_PROPERTY(qulonglong windowId READ window CONSTANT)
+
 public:
     explicit X11Window();
     ~X11Window() override; ///< Use destroyWindow() or releaseWindow()
