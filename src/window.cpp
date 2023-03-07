@@ -3497,7 +3497,7 @@ void Window::updateActivities(bool includeTransients)
         m_blockedActivityUpdatesRequireTransients |= includeTransients;
         return;
     }
-    Q_EMIT activitiesChanged(this);
+    Q_EMIT activitiesChanged();
     m_blockedActivityUpdatesRequireTransients = false; // reset
     Workspace::self()->focusChain()->update(this, FocusChain::MakeFirst);
     updateWindowRules(Rules::Activity);

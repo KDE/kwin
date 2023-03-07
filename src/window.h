@@ -1489,7 +1489,7 @@ Q_SIGNALS:
      */
     void demandsAttentionChanged();
     void desktopsChanged();
-    void activitiesChanged(KWin::Window *window);
+    void activitiesChanged();
     void minimizedChanged();
     void paletteChanged(const QPalette &p);
     void colorSchemeChanged();
