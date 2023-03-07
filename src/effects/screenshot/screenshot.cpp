@@ -419,7 +419,7 @@ void ScreenShotEffect::handleWindowClosed(EffectWindow *window)
 {
     std::erase_if(m_windowScreenShots, [window](const auto &screenshot) {
         return screenshot.window == window;
-    };
+    });
 }
 
 } // namespace KWin
