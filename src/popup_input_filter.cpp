@@ -30,7 +30,6 @@ void PopupInputFilter::handleWindowAdded(Window *window)
     }
     if (window->hasPopupGrab()) {
         // TODO: verify that the Window is allowed as a popup
-        connect(window, &Window::windowShown, this, &PopupInputFilter::handleWindowAdded, Qt::UniqueConnection);
         connect(window, &Window::windowClosed, this, &PopupInputFilter::handleWindowRemoved, Qt::UniqueConnection);
         m_popupWindows << window;
     }
