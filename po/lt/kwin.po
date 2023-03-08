@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-06 02:13+0000\n"
+"POT-Creation-Date: 2023-03-08 02:24+0000\n"
 "PO-Revision-Date: 2022-12-12 22:06+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -30,12 +30,12 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "rch@richard.eu.org,dgvirtual@akl.lt, <>"
 
-#: composite.cpp:648
+#: composite.cpp:636
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Darbalaukio efektai buvo paleisti iš naujo dėl grafikos atstatymo"
 
-#: composite.cpp:877
+#: composite.cpp:865
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -44,7 +44,7 @@ msgstr ""
 "Darbalaukio efektus pristabdė kita programa.<br/>Galite juos pratęsti "
 "naudodami spartųjį klavišą „%1“."
 
-#: composite.cpp:1066
+#: composite.cpp:1054
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -66,12 +66,12 @@ msgstr ""
 "p><p>Kaip alternatyva, galite naudoti XRender programinę sąsają vietoje "
 "OpenGL.</p>"
 
-#: composite.cpp:1073
+#: composite.cpp:1061
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Privaloma X praplėtimai  (XComposite and XDamage) nerasti."
 
-#: composite.cpp:1076
+#: composite.cpp:1064
 #, fuzzy, kde-format
 #| msgid "GLX/OpenGL and XRender/XFixes are not available."
 msgid "GLX/OpenGL is not available."
@@ -1185,7 +1185,7 @@ msgstr "Planšetė perkelta į %1"
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3064
+#: input.cpp:3065
 #, kde-format
 msgid "Touchpad"
 msgstr "Jutiklinis kilimėlis"
@@ -2809,7 +2809,7 @@ msgstr "Perjungti vienu darbalaukiu į apačią"
 msgid "Switch to Desktop %1"
 msgstr "Perjungti į darbalaukį %1"
 
-#: window.cpp:3399
+#: window.cpp:3373
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

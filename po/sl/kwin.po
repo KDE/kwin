@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1646145 2023-03-06 02:27:23Z scripty $
+# $Id: kwin.po 1646284 2023-03-08 02:39:41Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-06 02:13+0000\n"
+"POT-Creation-Date: 2023-03-08 02:24+0000\n"
 "PO-Revision-Date: 2023-03-04 10:12+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -43,14 +43,14 @@ msgstr ""
 "roman.maurer@amis.net,gregor.rakar@kiss.si,jlp@holodeck1.com,andrejm@ubuntu."
 "si,matjaz.jeran@amis.net,miles@filmsi.net"
 
-#: composite.cpp:648
+#: composite.cpp:636
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Namizni učinki so bili znova zagnani zaradi ponovnega zagona grafičnega "
 "sistema"
 
-#: composite.cpp:877
+#: composite.cpp:865
 #, kde-format
 msgid ""
 "Desktop effects have been suspended by another application.<br/>You can "
@@ -59,7 +59,7 @@ msgstr ""
 "Nek program je prestavil namizne učinke v pripravljenost.<br/>Da jih spet "
 "vklopite, lahko uporabite bližnjico »%1«."
 
-#: composite.cpp:1066
+#: composite.cpp:1054
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -73,12 +73,12 @@ msgstr ""
 "to zaščito, a <b>zavedajte se, da ima to lahko za posledico takojšnje "
 "sesutje!</b></p>"
 
-#: composite.cpp:1073
+#: composite.cpp:1061
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Zahtevani razširitvi X (XComposite in XDamage) nista na voljo."
 
-#: composite.cpp:1076
+#: composite.cpp:1064
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ni na voljo."
@@ -1189,7 +1189,7 @@ msgstr "Tablični računalnik prenesen na %1"
 msgid "Tablets switched outputs"
 msgstr "Tablični računalniki so preklopili izhode"
 
-#: input.cpp:3064
+#: input.cpp:3065
 #, kde-format
 msgid "Touchpad"
 msgstr "Drsna ploščica"
@@ -2793,7 +2793,7 @@ msgstr "Preklopi na eno namizje navzdol"
 msgid "Switch to Desktop %1"
 msgstr "Preklopi na namizje %1"
 
-#: window.cpp:3399
+#: window.cpp:3373
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
