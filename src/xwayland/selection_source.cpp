@@ -16,6 +16,7 @@
 #include "wayland/seat_interface.h"
 #include "wayland_server.h"
 
+#include <fcntl.h>
 #include <unistd.h>
 
 #include <xwayland_logging.h>
@@ -147,7 +148,7 @@ bool WlSource::checkStartTransfer(xcb_selection_request_event_t *event)
     }
 
     int p[2];
-    if (pipe(p) == -1) {
+    if (pipe2(p, O_CLOEXEC) == -1) {
         qCWarning(KWIN_XWL) << "Pipe failed. Not sending selection.";
         return false;
     }
