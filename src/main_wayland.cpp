@@ -505,7 +505,7 @@ int main(int argc, char *argv[])
         int fd = parser.value(waylandSocketFdOption).toInt(&ok);
         if (ok) {
             // make sure we don't leak this FD to children
-            fcntl(fd, F_SETFD, O_CLOEXEC);
+            fcntl(fd, F_SETFD, FD_CLOEXEC);
             server->display()->addSocketFileDescriptor(fd, socketName);
         } else {
             std::cerr << "FATAL ERROR: could not parse socket FD" << std::endl;
@@ -589,7 +589,7 @@ int main(int argc, char *argv[])
                 int fd = fdString.toInt(&ok);
                 if (ok) {
                     // make sure we don't leak this FD to children
-                    fcntl(fd, F_SETFD, O_CLOEXEC);
+                    fcntl(fd, F_SETFD, FD_CLOEXEC);
                     a.addXwaylandSocketFileDescriptor(fd);
                 }
             }
