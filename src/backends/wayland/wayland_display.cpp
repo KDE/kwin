@@ -23,6 +23,7 @@
 #include <QWaitCondition>
 
 #include <drm_fourcc.h>
+#include <fcntl.h>
 #include <poll.h>
 #include <unistd.h>
 #include <wayland-client.h>
@@ -52,7 +53,7 @@ public:
         , m_reading(true)
         , m_quitting(false)
     {
-        if (pipe(m_quitPipe) == -1) {
+        if (pipe2(m_quitPipe, O_CLOEXEC) == -1) {
             qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to create quite pipe in WaylandEventThread";
         }
     }
