@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the kwin_effects package.
 # Andhika Padmawan <andhika.padmawan@gmail.com>, 2010-2014.
 # Wantoyo <wantoyek@gmail.com>, 2017, 2018, 2019, 2020, 2021, 2022.
-# Linerly <linerly@protonmail.com>, 2022.
+# Linerly <linerly@protonmail.com>, 2022, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-03 03:02+0000\n"
-"PO-Revision-Date: 2022-11-17 20:11+0700\n"
+"PO-Revision-Date: 2023-03-07 12:57+0700\n"
 "Last-Translator: Linerly <linerly@protonmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
 "Language: id\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.08.3\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: blur/blur_config.ui:17
@@ -950,10 +950,9 @@ msgid "No Windows"
 msgstr "Tidak Ada Jendela"
 
 #: windowview/qml/main.qml:123
-#, fuzzy, kde-format
-#| msgid "Fullscreen windows"
+#, kde-format
 msgid "Filter windows…"
-msgstr "Jendela layar-penuh"
+msgstr "Filter jendela..."
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: wobblywindows/wobblywindows_config.ui:20
