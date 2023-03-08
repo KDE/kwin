@@ -411,7 +411,7 @@ WaylandBackend::WaylandBackend(const WaylandBackendOptions &options, QObject *pa
     , m_options(options)
 {
     char const *drm_render_node = "/dev/dri/renderD128";
-    m_drmFileDescriptor = FileDescriptor(open(drm_render_node, O_RDWR));
+    m_drmFileDescriptor = FileDescriptor(open(drm_render_node, O_RDWR | O_CLOEXEC));
     if (!m_drmFileDescriptor.isValid()) {
         qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to open drm render node" << drm_render_node;
         m_gbmDevice = nullptr;
