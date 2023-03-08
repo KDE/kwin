@@ -51,6 +51,7 @@ private Q_SLOTS:
     void testActivate_data();
     void testActivate();
     void testUnmap();
+    void testScreenEdge();
 };
 
 void LayerShellV1WindowTest::initTestCase()
@@ -72,7 +73,7 @@ void LayerShellV1WindowTest::initTestCase()
 
 void LayerShellV1WindowTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::LayerShellV1));
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::LayerShellV1 | Test::AdditionalWaylandInterface::ScreenEdgeV1));
 
     workspace()->setActiveOutput(QPoint(640, 512));
     input()->pointer()->warp(QPoint(640, 512));
@@ -608,6 +609,61 @@ void LayerShellV1WindowTest::testUnmap()
     // Destroy the window.
     shellSurface.reset();
     QVERIFY(Test::waitForWindowClosed(window));
+}
+
+void LayerShellV1WindowTest::testScreenEdge()
+{
+    // Create a layer shell surface.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::LayerSurfaceV1> shellSurface(Test::createLayerSurfaceV1(surface.get(), QStringLiteral("test")));
+    std::unique_ptr<Test::AutoHideScreenEdgeV1> screenEdge(Test::createAutoHideScreenEdgeV1(surface.get(), Test::ScreenEdgeManagerV1::border_bottom));
+
+    // Set the initial state of the layer surface.
+    shellSurface->set_layer(Test::LayerShellV1::layer_top);
+    shellSurface->set_anchor(Test::LayerSurfaceV1::anchor_bottom);
+    shellSurface->set_size(100, 50);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    // Wait for the compositor to position the surface.
+    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    QVERIFY(configureRequestedSpy.wait());
+    const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
+
+    // Map the layer surface.
+    shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
+    Window *window = Test::renderAndWaitForShown(surface.get(), requestedSize, Qt::red);
+    QVERIFY(window);
+    QVERIFY(!window->isActive());
+
+    // The layer surface will be hidden and shown when the screen edge is activated or deactivated.
+    QSignalSpy windowShowSpy(window, &Window::windowShown);
+    QSignalSpy windowHiddenSpy(window, &Window::windowHidden);
+    screenEdge->activate();
+    QVERIFY(windowHiddenSpy.wait());
+    QVERIFY(!window->isShown());
+
+    screenEdge->deactivate();
+    QVERIFY(windowShowSpy.wait());
+    QVERIFY(window->isShown());
+
+    // The layer surface will be shown when the screen edge is triggered.
+    screenEdge->activate();
+    QVERIFY(windowHiddenSpy.wait());
+    QVERIFY(!window->isShown());
+
+    Test::pointerMotion(QPointF(640, 1023), 0);
+    Test::pointerMotion(QPointF(640, 512), 1);
+    QVERIFY(windowShowSpy.wait());
+    QVERIFY(window->isShown());
+
+    // The layer surface will be shown when the screen edge is destroyed.
+    screenEdge->activate();
+    QVERIFY(windowHiddenSpy.wait());
+    QVERIFY(!window->isShown());
+
+    screenEdge.reset();
+    QVERIFY(windowShowSpy.wait());
+    QVERIFY(window->isShown());
 }
 
 } // namespace KWin

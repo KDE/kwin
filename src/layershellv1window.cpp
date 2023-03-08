@@ -7,8 +7,10 @@
 #include "layershellv1window.h"
 #include "core/output.h"
 #include "layershellv1integration.h"
+#include "screenedge.h"
 #include "wayland/layershell_v1_interface.h"
 #include "wayland/output_interface.h"
+#include "wayland/screenedge_v1_interface.h"
 #include "wayland/surface_interface.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -173,6 +175,9 @@ bool LayerShellV1Window::hasStrut() const
 
 void LayerShellV1Window::destroyWindow()
 {
+    if (m_screenEdge) {
+        m_screenEdge->disconnect(this);
+    }
     m_shellSurface->disconnect(this);
     m_shellSurface->surface()->disconnect(this);
 
@@ -288,6 +293,55 @@ void LayerShellV1Window::setVirtualKeyboardGeometry(const QRectF &geo)
 
     m_virtualKeyboardGeometry = geo;
     scheduleRearrange();
+}
+
+void LayerShellV1Window::showOnScreenEdge()
+{
+    // ShowOnScreenEdge can be called by an Edge, and hideClient could destroy the Edge
+    // Use the singleshot to avoid use-after-free
+    QTimer::singleShot(0, this, &LayerShellV1Window::deactivateScreenEdge);
+}
+
+void LayerShellV1Window::installAutoHideScreenEdgeV1(KWaylandServer::AutoHideScreenEdgeV1Interface *edge)
+{
+    m_screenEdge = edge;
+
+    connect(edge, &KWaylandServer::AutoHideScreenEdgeV1Interface::destroyed,
+            this, &LayerShellV1Window::deactivateScreenEdge);
+    connect(edge, &KWaylandServer::AutoHideScreenEdgeV1Interface::activateRequested,
+            this, &LayerShellV1Window::activateScreenEdge);
+    connect(edge, &KWaylandServer::AutoHideScreenEdgeV1Interface::deactivateRequested,
+            this, &LayerShellV1Window::deactivateScreenEdge);
+
+    connect(this, &LayerShellV1Window::frameGeometryChanged, edge, [this]() {
+        if (m_screenEdgeActive) {
+            reserveScreenEdge();
+        }
+    });
+}
+
+void LayerShellV1Window::reserveScreenEdge()
+{
+    hideClient();
+    workspace()->screenEdges()->reserve(this, m_screenEdge->border());
+}
+
+void LayerShellV1Window::unreserveScreenEdge()
+{
+    showClient();
+    workspace()->screenEdges()->reserve(this, ElectricNone);
+}
+
+void LayerShellV1Window::activateScreenEdge()
+{
+    m_screenEdgeActive = true;
+    reserveScreenEdge();
+}
+
+void LayerShellV1Window::deactivateScreenEdge()
+{
+    m_screenEdgeActive = false;
+    unreserveScreenEdge();
 }
 
 } // namespace KWin

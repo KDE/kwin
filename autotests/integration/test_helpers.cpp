@@ -227,6 +227,21 @@ IdleInhibitorV1::~IdleInhibitorV1()
     destroy();
 }
 
+ScreenEdgeManagerV1::~ScreenEdgeManagerV1()
+{
+    destroy();
+}
+
+AutoHideScreenEdgeV1::AutoHideScreenEdgeV1(ScreenEdgeManagerV1 *manager, KWayland::Client::Surface *surface, uint32_t border)
+    : QtWayland::kde_auto_hide_screen_edge_v1(manager->get_auto_hide_screen_edge(border, *surface))
+{
+}
+
+AutoHideScreenEdgeV1::~AutoHideScreenEdgeV1()
+{
+    destroy();
+}
+
 static struct
 {
     KWayland::Client::ConnectionThread *connection = nullptr;
@@ -257,6 +272,7 @@ static struct
     TextInputManagerV3 *textInputManagerV3 = nullptr;
     FractionalScaleManagerV1 *fractionalScaleManagerV1 = nullptr;
     ScreencastingV1 *screencastingV1 = nullptr;
+    ScreenEdgeManagerV1 *screenEdgeManagerV1 = nullptr;
 } s_waylandConnection;
 
 MockInputMethod *inputMethod()
@@ -435,6 +451,13 @@ bool setupWaylandConnection(AdditionalWaylandInterfaces flags)
                 return;
             }
         }
+        if (flags & AdditionalWaylandInterface::ScreenEdgeV1) {
+            if (interface == kde_screen_edge_manager_v1_interface.name) {
+                s_waylandConnection.screenEdgeManagerV1 = new ScreenEdgeManagerV1();
+                s_waylandConnection.screenEdgeManagerV1->init(*registry, name, version);
+                return;
+            }
+        }
     });
 
     QSignalSpy allAnnounced(registry, &KWayland::Client::Registry::interfacesAnnounced);
@@ -561,6 +584,10 @@ void destroyWaylandConnection()
     s_waylandConnection.outputManagementV2 = nullptr;
     delete s_waylandConnection.fractionalScaleManagerV1;
     s_waylandConnection.fractionalScaleManagerV1 = nullptr;
+    delete s_waylandConnection.screencastingV1;
+    s_waylandConnection.screencastingV1 = nullptr;
+    delete s_waylandConnection.screenEdgeManagerV1;
+    s_waylandConnection.screenEdgeManagerV1 = nullptr;
 
     delete s_waylandConnection.queue; // Must be destroyed last
     s_waylandConnection.queue = nullptr;
@@ -967,6 +994,17 @@ IdleInhibitorV1 *createIdleInhibitorV1(KWayland::Client::Surface *surface)
     }
 
     return new IdleInhibitorV1(manager, surface);
+}
+
+AutoHideScreenEdgeV1 *createAutoHideScreenEdgeV1(KWayland::Client::Surface *surface, uint32_t border)
+{
+    ScreenEdgeManagerV1 *manager = s_waylandConnection.screenEdgeManagerV1;
+    if (!manager) {
+        qWarning() << "Could not create an kde_auto_hide_screen_edge_v1 because kde_screen_edge_manager_v1 global is not bound";
+        return nullptr;
+    }
+
+    return new AutoHideScreenEdgeV1(manager, surface, border);
 }
 
 bool waitForWindowClosed(Window *window)

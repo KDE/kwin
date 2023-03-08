@@ -24,6 +24,7 @@
 #include "qwayland-input-method-unstable-v1.h"
 #include "qwayland-kde-output-device-v2.h"
 #include "qwayland-kde-output-management-v2.h"
+#include "qwayland-kde-screen-edge-v1.h"
 #include "qwayland-text-input-unstable-v3.h"
 #include "qwayland-wlr-layer-shell-unstable-v1.h"
 #include "qwayland-xdg-decoration-unstable-v1.h"
@@ -487,6 +488,21 @@ private:
     int m_preferredScale = 120;
 };
 
+class ScreenEdgeManagerV1 : public QObject, public QtWayland::kde_screen_edge_manager_v1
+{
+    Q_OBJECT
+public:
+    ~ScreenEdgeManagerV1() override;
+};
+
+class AutoHideScreenEdgeV1 : public QObject, public QtWayland::kde_auto_hide_screen_edge_v1
+{
+    Q_OBJECT
+public:
+    AutoHideScreenEdgeV1(ScreenEdgeManagerV1 *manager, KWayland::Client::Surface *surface, uint32_t border);
+    ~AutoHideScreenEdgeV1() override;
+};
+
 enum class AdditionalWaylandInterface {
     Seat = 1 << 0,
     Decoration = 1 << 1,
@@ -505,6 +521,7 @@ enum class AdditionalWaylandInterface {
     OutputDeviceV2 = 1 << 14,
     FractionalScaleManagerV1 = 1 << 15,
     ScreencastingV1 = 1 << 16,
+    ScreenEdgeV1 = 1 << 17,
 };
 Q_DECLARE_FLAGS(AdditionalWaylandInterfaces, AdditionalWaylandInterface)
 
@@ -650,6 +667,7 @@ XdgPopup *createXdgPopupSurface(KWayland::Client::Surface *surface, XdgSurface *
 
 XdgToplevelDecorationV1 *createXdgToplevelDecorationV1(XdgToplevel *toplevel, QObject *parent = nullptr);
 IdleInhibitorV1 *createIdleInhibitorV1(KWayland::Client::Surface *surface);
+AutoHideScreenEdgeV1 *createAutoHideScreenEdgeV1(KWayland::Client::Surface *surface, uint32_t border);
 
 /**
  * Creates a shared memory buffer of @p size in @p color and attaches it to the @p surface.

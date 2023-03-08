@@ -10,6 +10,7 @@
 
 namespace KWaylandServer
 {
+class AutoHideScreenEdgeV1Interface;
 class LayerSurfaceV1Interface;
 }
 
@@ -44,6 +45,9 @@ public:
     void destroyWindow() override;
     void closeWindow() override;
     void setVirtualKeyboardGeometry(const QRectF &geo) override;
+    void showOnScreenEdge() override;
+
+    void installAutoHideScreenEdgeV1(KWaylandServer::AutoHideScreenEdgeV1Interface *edge);
 
 protected:
     Layer belongsToLayer() const override;
@@ -58,10 +62,16 @@ private:
     void handleOutputEnabledChanged();
     void handleOutputDestroyed();
     void scheduleRearrange();
+    void activateScreenEdge();
+    void deactivateScreenEdge();
+    void reserveScreenEdge();
+    void unreserveScreenEdge();
 
     Output *m_desiredOutput;
     LayerShellV1Integration *m_integration;
     KWaylandServer::LayerSurfaceV1Interface *m_shellSurface;
+    QPointer<KWaylandServer::AutoHideScreenEdgeV1Interface> m_screenEdge;
+    bool m_screenEdgeActive = false;
     NET::WindowType m_windowType;
 };
 

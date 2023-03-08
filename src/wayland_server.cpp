@@ -16,6 +16,7 @@
 #include "idle_inhibition.h"
 #include "inputpanelv1integration.h"
 #include "layershellv1integration.h"
+#include "layershellv1window.h"
 #include "main.h"
 #include "utils/serviceutils.h"
 #include "virtualdesktops.h"
@@ -49,6 +50,7 @@
 #include "wayland/pointergestures_v1_interface.h"
 #include "wayland/primaryselectiondevicemanager_v1_interface.h"
 #include "wayland/relativepointer_v1_interface.h"
+#include "wayland/screenedge_v1_interface.h"
 #include "wayland/seat_interface.h"
 #include "wayland/server_decoration_interface.h"
 #include "wayland/server_decoration_palette_interface.h"
@@ -509,6 +511,13 @@ bool WaylandServer::init(InitializationFlags flags)
 
     m_contentTypeManager = new KWaylandServer::ContentTypeManagerV1Interface(m_display, m_display);
     m_tearingControlInterface = new KWaylandServer::TearingControlManagerV1Interface(m_display, m_display);
+
+    auto screenEdgeManager = new KWaylandServer::ScreenEdgeManagerV1Interface(m_display, m_display);
+    connect(screenEdgeManager, &KWaylandServer::ScreenEdgeManagerV1Interface::edgeRequested, this, [this](KWaylandServer::AutoHideScreenEdgeV1Interface *edge) {
+        if (auto window = qobject_cast<LayerShellV1Window *>(findWindow(edge->surface()))) {
+            window->installAutoHideScreenEdgeV1(edge);
+        }
+    });
 
     return true;
 }
