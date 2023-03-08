@@ -60,8 +60,7 @@ static int wl_socket_lock(struct wl_socket *socket)
 
     snprintf(socket->lock_addr, sizeof socket->lock_addr, "%s%s", socket->addr.sun_path, LOCK_SUFFIX);
 
-    // differing from wl_display, we don't set O_CLOEXEC so that we can pass to the child
-    socket->fd_lock = open(socket->lock_addr, O_CREAT | O_RDWR, (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP));
+    socket->fd_lock = open(socket->lock_addr, O_CREAT | O_CLOEXEC | O_RDWR, (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP));
 
     if (socket->fd_lock < 0) {
         printf("unable to open lockfile %s check permissions\n", socket->lock_addr);
