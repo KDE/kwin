@@ -211,14 +211,13 @@ bool X11WindowedBackend::initialize()
     if (presentExtension && presentExtension->present) {
         m_presentOpcode = presentExtension->major_opcode;
         xcb_present_query_version_cookie_t cookie = xcb_present_query_version(m_connection, 1, 2);
-        xcb_present_query_version_reply_t *reply = xcb_present_query_version_reply(m_connection, cookie, nullptr);
+        UniqueCPtr<xcb_present_query_version_reply_t> reply(xcb_present_query_version_reply(m_connection, cookie, nullptr));
         if (!reply) {
             qCWarning(KWIN_X11WINDOWED) << "Requested Present extension version is unsupported";
             return false;
         }
         m_presentMajorVersion = reply->major_version;
         m_presentMinorVersion = reply->minor_version;
-        free(reply);
     } else {
         qCWarning(KWIN_X11WINDOWED) << "Present X11 extension is unavailable";
         return false;
@@ -227,7 +226,7 @@ bool X11WindowedBackend::initialize()
     const xcb_query_extension_reply_t *shmExtension = xcb_get_extension_data(m_connection, &xcb_shm_id);
     if (shmExtension && shmExtension->present) {
         xcb_shm_query_version_cookie_t cookie = xcb_shm_query_version(m_connection);
-        xcb_shm_query_version_reply_t *reply = xcb_shm_query_version_reply(m_connection, cookie, nullptr);
+        UniqueCPtr<xcb_shm_query_version_reply_t> reply(xcb_shm_query_version_reply(m_connection, cookie, nullptr));
         if (!reply) {
             qCWarning(KWIN_X11WINDOWED) << "Requested SHM extension version is unsupported";
         } else {
@@ -236,7 +235,6 @@ bool X11WindowedBackend::initialize()
             } else {
                 m_hasShm = true;
             }
-            free(reply);
         }
     }
 
