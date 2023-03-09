@@ -16,6 +16,8 @@
 #include "kwineffects.h"
 #include "kwinglplatform.h"
 #include "logging_p.h"
+#include "rendertarget.h"
+#include "renderviewport.h"
 
 #include <QFile>
 #include <QHash>

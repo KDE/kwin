@@ -10,6 +10,8 @@
 #include "composite.h"
 #include "core/renderbackend.h"
 #include "effects.h"
+#include "libkwineffects/rendertarget.h"
+#include "libkwineffects/renderviewport.h"
 #include "scene/itemrenderer.h"
 #include "scene/windowitem.h"
 #include "scene/workspacescene.h"

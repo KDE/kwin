@@ -7,6 +7,8 @@
 #include "kwinoffscreeneffect.h"
 #include "kwingltexture.h"
 #include "kwinglutils.h"
+#include "rendertarget.h"
+#include "renderviewport.h"
 
 namespace KWin
 {

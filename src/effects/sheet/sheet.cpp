@@ -15,6 +15,8 @@
 // KConfigSkeleton
 #include "sheetconfig.h"
 
+#include "renderviewport.h"
+
 // Qt
 #include <QMatrix4x4>
 #include <qmath.h>

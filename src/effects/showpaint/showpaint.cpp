@@ -11,6 +11,7 @@
 #include "showpaint.h"
 
 #include <kwinglutils.h>
+#include <renderviewport.h>
 
 #include <KGlobalAccel>
 #include <KLocalizedString>

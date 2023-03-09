@@ -19,6 +19,7 @@
 
 #include <KGlobalAccel>
 #include <kwinglutils.h>
+#include <renderviewport.h>
 
 namespace KWin
 {

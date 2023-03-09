@@ -11,6 +11,8 @@
 // KConfigSkeleton
 #include "blurconfig.h"
 
+#include "rendertarget.h"
+#include "renderviewport.h"
 #include "utils/xcbutils.h"
 #include "wayland/blur_interface.h"
 #include "wayland/display.h"

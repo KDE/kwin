@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include "rendertarget.h"
-#include "renderviewport.h"
 #include <kwinconfig.h>
 #include <kwineffects_export.h>
 #include <kwinglobals.h>
@@ -87,6 +85,8 @@ class WindowQuadList;
 class WindowPrePaintData;
 class WindowPaintData;
 class ScreenPrePaintData;
+class RenderTarget;
+class RenderViewport;
 
 typedef QPair<QString, Effect *> EffectPair;
 typedef QList<KWin::EffectWindow *> EffectWindowList;

@@ -12,6 +12,7 @@
 
 #include <QAction>
 #include <kwinglutils.h>
+#include <renderviewport.h>
 
 #include <KConfigGroup>
 #include <KGlobalAccel>

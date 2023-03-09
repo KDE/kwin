@@ -10,6 +10,7 @@
 // KWin
 #include <kwingltexture.h>
 #include <kwinglutils.h>
+#include <renderviewport.h>
 // KDE
 #include <Plasma/Svg>
 // Qt

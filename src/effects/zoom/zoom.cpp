@@ -25,6 +25,8 @@
 #include <kstandardaction.h>
 
 #include <kwinglutils.h>
+#include <rendertarget.h>
+#include <renderviewport.h>
 
 namespace KWin
 {

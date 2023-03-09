@@ -11,6 +11,7 @@
 #include "snaphelper.h"
 
 #include <kwinglutils.h>
+#include <renderviewport.h>
 
 #include <QPainter>
 

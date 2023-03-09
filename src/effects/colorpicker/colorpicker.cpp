@@ -12,6 +12,8 @@
 #include <QDBusMetaType>
 #include <kwinglutils.h>
 #include <kwinglutils_funcs.h>
+#include <rendertarget.h>
+#include <renderviewport.h>
 
 Q_DECLARE_METATYPE(QColor)
 

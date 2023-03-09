@@ -18,6 +18,7 @@
 #include <QAction>
 #include <kwinconfig.h>
 #include <kwinglplatform.h>
+#include <renderviewport.h>
 
 #include <QPainter>
 
