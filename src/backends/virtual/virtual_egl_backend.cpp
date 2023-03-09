@@ -46,6 +46,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
     if (!m_texture || m_texture->size() != nativeSize) {
         m_fbo.reset();
         m_texture = std::make_unique<GLTexture>(GL_RGB8, nativeSize);
+        m_texture->setContentTransform(TextureTransform::MirrorY);
         m_fbo = std::make_unique<GLFramebuffer>(m_texture.get());
     }
 
