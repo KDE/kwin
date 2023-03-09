@@ -8,8 +8,10 @@
 */
 #include "xkb.h"
 #include "dbusproperties_interface.h"
+#include "inputmethod.h"
 #include "utils/c_ptr.h"
 #include "utils/common.h"
+#include "wayland/inputmethod_v1_interface.h"
 #include "wayland/keyboard_interface.h"
 #include "wayland/seat_interface.h"
 // frameworks
@@ -328,6 +330,9 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
 
     createKeymapFile();
     forwardModifiers();
+    if (auto *inputmethod = kwinApp()->inputMethod()) {
+        inputmethod->forwardModifiers(InputMethod::Force);
+    }
     updateModifiers();
 }
 
@@ -338,6 +343,13 @@ void Xkb::createKeymapFile()
         return;
     }
     m_seat->keyboard()->setKeymap(currentKeymap);
+    auto *inputmethod = kwinApp()->inputMethod();
+    if (!inputmethod) {
+        return;
+    }
+    if (auto *keyboardGrab = inputmethod->keyboardGrab()) {
+        keyboardGrab->sendKeymap(currentKeymap);
+    }
 }
 
 QByteArray Xkb::keymapContents() const
