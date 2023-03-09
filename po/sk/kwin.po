@@ -14,14 +14,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-08 03:00+0000\n"
-"PO-Revision-Date: 2023-02-22 20:38+0100\n"
+"PO-Revision-Date: 2023-03-08 17:45+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #, kde-format
@@ -1180,11 +1180,9 @@ msgid "Move the tablet to the next output"
 msgstr ""
 
 #: input.cpp:2088
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Tablet moved to %1"
-msgstr "Režim tabletu"
+msgstr "Tablet presunutý na %1"
 
 #: input.cpp:2088
 #, kde-format
@@ -2604,16 +2602,14 @@ msgid "Switch to Window to the Left"
 msgstr "Prepnúť na okno doľava"
 
 #: useractions.cpp:1061
-#, fuzzy, kde-format
-#| msgid "Increase Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr "Zvýšiť krytie aktívneho okna o 5 %"
+msgstr "Zvýšiť nepriehľadnosť aktívneho okna o 5%"
 
 #: useractions.cpp:1063
-#, fuzzy, kde-format
-#| msgid "Decrease Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr "Znížiť krytie aktívneho okna o 5 %"
+msgstr "Znížiť nepriehľadnosť aktívneho okna o 5%"
 
 #: useractions.cpp:1066
 #, kde-format
@@ -2671,28 +2667,24 @@ msgid "Window to Previous Screen"
 msgstr "Okno na predošlú obrazovku"
 
 #: useractions.cpp:1102
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "Okno o jednu pracovnú plochu doprava"
+msgstr "Okno o jednu obrazovku napravo"
 
 #: useractions.cpp:1104
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "Okno o jednu pracovnú plochu doľava"
+msgstr "Okno o jednu obrazovku naľavo"
 
 #: useractions.cpp:1106
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "Okno na obrazovku %1"
+msgstr "Okno o jednu obrazovku hore"
 
 #: useractions.cpp:1108
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "Okno o jednu pracovnú plochu dolu"
+msgstr "Okno o jednu obrazovku dolu"
 
 #: useractions.cpp:1112
 #, kde-format
@@ -2710,28 +2702,24 @@ msgid "Switch to Previous Screen"
 msgstr "Prepnúť na predošlú obrazovku"
 
 #: useractions.cpp:1121
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Prepnúť na okno doprava"
+msgstr "Prepnúť na obrazovku napravo"
 
 #: useractions.cpp:1123
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Prepnúť na okno doľava"
+msgstr "Prepnúť na obrazovku naľavo"
 
 #: useractions.cpp:1125
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Prepnúť na obrazovku %1"
+msgstr "Prepnúť na obrazovku hore"
 
 #: useractions.cpp:1127
-#, fuzzy, kde-format
-#| msgid "Switch to Screen %1"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Prepnúť na obrazovku %1"
+msgstr "Prepnúť na obrazovku dole"
 
 #: useractions.cpp:1130
 #, kde-format
