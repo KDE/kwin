@@ -33,7 +33,6 @@ private Q_SLOTS:
     void initTestCase();
     void init();
     void cleanup();
-    void testApplyInitialMaximizeVert_data();
     void testApplyInitialMaximizeVert();
     void testWindowClassChange();
 };
@@ -76,14 +75,6 @@ struct XcbConnectionDeleter
     }
 };
 
-void WindowRuleTest::testApplyInitialMaximizeVert_data()
-{
-    QTest::addColumn<QByteArray>("role");
-
-    QTest::newRow("lowercase") << QByteArrayLiteral("mainwindow");
-    QTest::newRow("CamelCase") << QByteArrayLiteral("MainWindow");
-}
-
 void WindowRuleTest::testApplyInitialMaximizeVert()
 {
     // this test creates the situation of BUG 367554: creates a window and initial apply maximize vertical
@@ -113,7 +104,7 @@ void WindowRuleTest::testApplyInitialMaximizeVert()
     xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
     xcb_icccm_set_wm_class(c.get(), windowId, 9, "kpat\0kpat");
 
-    QFETCH(QByteArray, role);
+    const QByteArray role = QByteArrayLiteral("mainwindow");
     xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_window_role, XCB_ATOM_STRING, 8, role.length(), role.constData());
 
     NETWinInfo info(c.get(), windowId, rootWindow(), NET::WMAllProperties, NET::WM2AllProperties);

@@ -326,10 +326,10 @@ bool Rules::matchWMClass(const QString &match_class, const QString &match_name) 
         if (wmclassmatch == RegExpMatch && !QRegularExpression(wmclass).match(cwmclass).hasMatch()) {
             return false;
         }
-        if (wmclassmatch == ExactMatch && cwmclass.compare(wmclass, Qt::CaseInsensitive) != 0) { // TODO Plasma 6: Make it case sensitive
+        if (wmclassmatch == ExactMatch && cwmclass != wmclass) {
             return false;
         }
-        if (wmclassmatch == SubstringMatch && !cwmclass.contains(wmclass, Qt::CaseInsensitive)) { // TODO Plasma 6: Make it case sensitive
+        if (wmclassmatch == SubstringMatch && !cwmclass.contains(wmclass)) {
             return false;
         }
     }
@@ -342,10 +342,10 @@ bool Rules::matchRole(const QString &match_role) const
         if (windowrolematch == RegExpMatch && !QRegularExpression(windowrole).match(match_role).hasMatch()) {
             return false;
         }
-        if (windowrolematch == ExactMatch && match_role.compare(windowrole, Qt::CaseInsensitive) != 0) { // TODO Plasma 6: Make it case sensitive
+        if (windowrolematch == ExactMatch && match_role != windowrole) {
             return false;
         }
-        if (windowrolematch == SubstringMatch && !match_role.contains(windowrole, Qt::CaseInsensitive)) { // TODO Plasma 6: Make it case sensitive
+        if (windowrolematch == SubstringMatch && !match_role.contains(windowrole)) {
             return false;
         }
     }
