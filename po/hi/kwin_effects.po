@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-07 02:21+0000\n"
+"POT-Creation-Date: 2023-03-10 02:27+0000\n"
 "PO-Revision-Date: 2021-08-22 12:47+0530\n"
 "Last-Translator: Raghavendra Kamath <raghu@raghukamath.com>\n"
 "Language-Team: kde-hindi\n"
@@ -52,7 +52,7 @@ msgstr "सामर्थ्य (&S):"
 msgid "Noise strength:"
 msgstr "सामर्थ्य (&S):"
 
-#: colorpicker/colorpicker.cpp:101
+#: colorpicker/colorpicker.cpp:100
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
