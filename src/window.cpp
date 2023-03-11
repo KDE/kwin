@@ -3099,12 +3099,12 @@ void Window::showContextHelp()
 {
 }
 
-QPointer<Decoration::DecoratedClientImpl> Window::decoratedClient() const
+Decoration::DecoratedClientImpl *Window::decoratedClient() const
 {
     return m_decoration.client;
 }
 
-void Window::setDecoratedClient(QPointer<Decoration::DecoratedClientImpl> client)
+void Window::setDecoratedClient(Decoration::DecoratedClientImpl *client)
 {
     m_decoration.client = client;
 }

@@ -1618,7 +1618,7 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
     // call into decoration update borders
     if (m_nextDecoration && !(options->borderlessMaximizedWindows() && m_requestedMaximizeMode == KWin::MaximizeFull)) {
         changeMaximizeRecursion = true;
-        const auto c = m_nextDecoration->client().toStrongRef();
+        const auto c = m_nextDecoration->client();
         if ((m_requestedMaximizeMode & MaximizeVertical) != (oldMode & MaximizeVertical)) {
             Q_EMIT c->maximizedVerticallyChanged(m_requestedMaximizeMode & MaximizeVertical);
         }

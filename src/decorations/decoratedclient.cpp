@@ -31,7 +31,7 @@ DecoratedClientImpl::DecoratedClientImpl(Window *window, KDecoration2::Decorated
     , m_window(window)
     , m_clientSize(window->clientSize().toSize())
 {
-    window->setDecoratedClient(QPointer<DecoratedClientImpl>(this));
+    window->setDecoratedClient(this);
     connect(window, &Window::activeChanged, this, [decoratedClient, window]() {
         Q_EMIT decoratedClient->activeChanged(window->isActive());
     });

@@ -9,6 +9,7 @@
 #include <KDecoration2/Private/DecorationSettingsPrivate>
 #include <QAbstractListModel>
 #include <QObject>
+#include <QPointer>
 
 namespace KDecoration2
 {
