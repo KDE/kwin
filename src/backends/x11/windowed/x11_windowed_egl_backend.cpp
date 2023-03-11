@@ -259,9 +259,9 @@ quint32 X11WindowedEglCursorLayer::format() const
 }
 
 X11WindowedEglBackend::X11WindowedEglBackend(X11WindowedBackend *backend)
-    : EglOnXBackend(backend->connection(), backend->display(), backend->rootWindow())
-    , m_backend(backend)
+    : m_backend(backend)
 {
+    setIsDirectRendering(true);
 }
 
 X11WindowedEglBackend::~X11WindowedEglBackend()
@@ -274,22 +274,64 @@ X11WindowedBackend *X11WindowedEglBackend::backend() const
     return m_backend;
 }
 
+bool X11WindowedEglBackend::initializeEgl()
+{
+    initClientExtensions();
+    EGLDisplay dpy = kwinApp()->outputBackend()->sceneEglDisplay();
+
+    // Use eglGetPlatformDisplayEXT() to get the display pointer
+    // if the implementation supports it.
+    if (dpy == EGL_NO_DISPLAY) {
+        const bool havePlatformBase = hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base"));
+        if (havePlatformBase) {
+            // Make sure that the X11 platform is supported
+            if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_x11")) && !hasClientExtension(QByteArrayLiteral("EGL_KHR_platform_x11"))) {
+                qCWarning(KWIN_X11WINDOWED) << "EGL_EXT_platform_base is supported, but neither EGL_EXT_platform_x11 nor EGL_KHR_platform_x11 is supported."
+                                            << "Cannot create EGLDisplay on X11";
+                return false;
+            }
+
+            dpy = eglGetPlatformDisplayEXT(EGL_PLATFORM_X11_EXT, m_backend->display(), nullptr);
+        } else {
+            dpy = eglGetDisplay(m_backend->display());
+        }
+    }
+
+    if (dpy == EGL_NO_DISPLAY) {
+        return false;
+    }
+    setEglDisplay(dpy);
+    return initEglAPI();
+}
+
+bool X11WindowedEglBackend::initRenderingContext()
+{
+    initBufferConfigs();
+
+    if (!createContext()) {
+        return false;
+    }
+
+    return makeCurrent();
+}
+
 void X11WindowedEglBackend::init()
 {
-    EglOnXBackend::init();
+    qputenv("EGL_PLATFORM", "x11");
 
-    if (!isFailed()) {
-        initWayland();
+    if (!initializeEgl()) {
+        setFailed(QStringLiteral("Could not initialize egl"));
+        return;
     }
-}
+    if (!initRenderingContext()) {
+        setFailed(QStringLiteral("Could not initialize rendering context"));
+        return;
+    }
 
-void X11WindowedEglBackend::cleanupSurfaces()
-{
-    m_outputs.clear();
-}
+    initKWinGL();
+    initBufferAge();
+    initWayland();
 
-bool X11WindowedEglBackend::createSurfaces()
-{
     const auto &outputs = m_backend->outputs();
     for (const auto &output : outputs) {
         X11WindowedOutput *x11Output = static_cast<X11WindowedOutput *>(output);
@@ -298,7 +340,11 @@ bool X11WindowedEglBackend::createSurfaces()
             .cursorLayer = std::make_unique<X11WindowedEglCursorLayer>(this, x11Output),
         };
     }
-    return true;
+}
+
+void X11WindowedEglBackend::cleanupSurfaces()
+{
+    m_outputs.clear();
 }
 
 void X11WindowedEglBackend::present(Output *output)

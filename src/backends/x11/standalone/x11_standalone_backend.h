@@ -46,6 +46,10 @@ public:
     ~X11StandaloneBackend() override;
     bool initialize() override;
 
+    Display *display() const;
+    xcb_connection_t *connection() const;
+    xcb_window_t rootWindow() const;
+
     std::unique_ptr<OpenGLBackend> createOpenGLBackend() override;
     QVector<CompositingType> supportedCompositors() const override;
 

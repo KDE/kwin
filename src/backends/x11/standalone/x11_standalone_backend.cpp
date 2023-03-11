@@ -125,6 +125,21 @@ X11StandaloneBackend::~X11StandaloneBackend()
     XRenderUtils::cleanup();
 }
 
+Display *X11StandaloneBackend::display() const
+{
+    return m_x11Display;
+}
+
+xcb_connection_t *X11StandaloneBackend::connection() const
+{
+    return kwinApp()->x11Connection();
+}
+
+xcb_window_t X11StandaloneBackend::rootWindow() const
+{
+    return kwinApp()->x11RootWindow();
+}
+
 bool X11StandaloneBackend::initialize()
 {
     if (!QX11Info::isPlatformX11()) {

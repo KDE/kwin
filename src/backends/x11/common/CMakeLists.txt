@@ -6,6 +6,5 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 endif()
 target_sources(kwin PRIVATE
     kwinxrenderutils.cpp
-    x11_common_egl_backend.cpp
     x11_common_logging.cpp
 )

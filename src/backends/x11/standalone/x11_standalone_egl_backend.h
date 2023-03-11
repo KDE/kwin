@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "../common/x11_common_egl_backend.h"
 #include "core/outputlayer.h"
-#include "openglsurfacetexture_x11.h"
+#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
+#include "platformsupport/scenes/opengl/openglsurfacetexture_x11.h"
 #include "utils/damagejournal.h"
 
 #include <kwingltexture.h>
@@ -35,7 +35,7 @@ private:
     EglBackend *const m_backend;
 };
 
-class EglBackend : public EglOnXBackend
+class EglBackend : public AbstractEglBackend
 {
     Q_OBJECT
 
@@ -53,12 +53,14 @@ public:
     OutputLayer *primaryLayer(Output *output) override;
 
 protected:
-    bool createSurfaces() override;
+    bool initBufferConfigs() override;
+    bool initRenderingContext();
 
 private:
     void screenGeometryChanged();
     void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
     void vblank(std::chrono::nanoseconds timestamp);
+    EGLSurface createSurface(xcb_window_t window);
 
     X11StandaloneBackend *m_backend;
     std::unique_ptr<SoftwareVsyncMonitor> m_vsyncMonitor;
@@ -68,6 +70,8 @@ private:
     int m_bufferAge = 0;
     QRegion m_lastRenderedRegion;
     std::unique_ptr<EglLayer> m_layer;
+    int m_havePostSubBuffer = false;
+    bool m_havePlatformBase = false;
 };
 
 class EglPixmapTexture : public GLTexture

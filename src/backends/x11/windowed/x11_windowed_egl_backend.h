@@ -8,9 +8,9 @@
 */
 #pragma once
 
-#include "../common/x11_common_egl_backend.h"
 #include "core/outputlayer.h"
 #include "kwinglutils.h"
+#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 
 #include <QMap>
 
@@ -103,7 +103,7 @@ private:
 /**
  * @brief OpenGL Backend using Egl windowing system over an X overlay window.
  */
-class X11WindowedEglBackend : public EglOnXBackend
+class X11WindowedEglBackend : public AbstractEglBackend
 {
     Q_OBJECT
 
@@ -124,9 +124,11 @@ public:
 
 protected:
     void cleanupSurfaces() override;
-    bool createSurfaces() override;
 
 private:
+    bool initializeEgl();
+    bool initRenderingContext();
+
     struct Layers
     {
         std::unique_ptr<X11WindowedEglPrimaryLayer> primaryLayer;
