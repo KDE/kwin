@@ -172,14 +172,13 @@ class ScreenShotSinkPipe2 : public QObject
 
 public:
     ScreenShotSinkPipe2(int fileDescriptor, QDBusMessage replyMessage);
-    ~ScreenShotSinkPipe2();
 
     void cancel();
     void flush(const QImage &image);
 
 private:
     QDBusMessage m_replyMessage;
-    int m_fileDescriptor;
+    FileDescriptor m_fileDescriptor;
 };
 
 ScreenShotSource2::ScreenShotSource2(const QFuture<QImage> &future)
@@ -233,13 +232,6 @@ ScreenShotSinkPipe2::ScreenShotSinkPipe2(int fileDescriptor, QDBusMessage replyM
 {
 }
 
-ScreenShotSinkPipe2::~ScreenShotSinkPipe2()
-{
-    if (m_fileDescriptor != -1) {
-        close(m_fileDescriptor);
-    }
-}
-
 void ScreenShotSinkPipe2::cancel()
 {
     QDBusConnection::sessionBus().send(m_replyMessage.createErrorReply(s_errorCancelled,
@@ -248,7 +240,7 @@ void ScreenShotSinkPipe2::cancel()
 
 void ScreenShotSinkPipe2::flush(const QImage &image)
 {
-    if (m_fileDescriptor == -1) {
+    if (!m_fileDescriptor.isValid()) {
         return;
     }
 
@@ -261,15 +253,11 @@ void ScreenShotSinkPipe2::flush(const QImage &image)
     results.insert(QStringLiteral("stride"), quint32(image.bytesPerLine()));
     QDBusConnection::sessionBus().send(m_replyMessage.createReply(results));
 
-    QtConcurrent::run([](int fileDescriptor, const QImage &image) {
+    QtConcurrent::run([fileDescriptor = std::move(m_fileDescriptor), image]() mutable {
         const QByteArray buffer(reinterpret_cast<const char *>(image.constBits()),
                                 image.sizeInBytes());
-        writeBufferToPipe(FileDescriptor(fileDescriptor), buffer);
-    },
-                      m_fileDescriptor, image);
-
-    // The ownership of the pipe file descriptor has been moved to the worker thread.
-    m_fileDescriptor = -1;
+        writeBufferToPipe(std::move(fileDescriptor), buffer);
+    });
 }
 
 ScreenShotDBusInterface2::ScreenShotDBusInterface2(ScreenShotEffect *effect)
